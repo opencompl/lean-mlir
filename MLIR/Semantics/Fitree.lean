@@ -106,6 +106,14 @@ def Fitree.bind {E R T} (t: Fitree E T) (k: T → Fitree E R) :=
   | Ret r => k r
   | Vis e k' => Vis e (fun r => bind (k' r) k)
 
+-- TODO: consider making this a coercion
+def Fitree.inject {E: Type → Type} {F: Type → Type} {T} [Member E F]
+    (fe: Fitree E T): Fitree F T :=
+  match fe with 
+  | Ret r => Ret r
+  | Vis e k' => Vis (Member.inject _ e) (fun r => inject (k' r))
+  
+
 def Fitree.map {E } (f: α → β) (fa: Fitree E α): Fitree E β :=
    match fa with
    | .Ret r => .Ret (f r)

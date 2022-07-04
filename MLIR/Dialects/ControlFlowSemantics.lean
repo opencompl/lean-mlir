@@ -102,10 +102,10 @@ instance: Semantics cf where
 -/
 
 def run_dummy_cf_region: Region (dummy + cf) → String := fun r =>
-  runLogged (semanticsRegion 99 r) SSAEnv.empty |>.fst |>.snd
+  runLogged (semanticsRegion 99 r []) SSAEnv.empty |>.fst |>.snd
 
 def run_dummy_cf_region': Region (dummy + cf) → String := fun r =>
-  let t := semanticsRegion 99 r
+  let t := semanticsRegion 99 r []
   let t := interp_ub! t
   let t := interp_ssa t SSAEnv.empty
   let t: Fitree ControlFlowOp _ := interp (Fitree.case_ DummyE.handle

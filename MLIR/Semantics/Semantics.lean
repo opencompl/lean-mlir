@@ -13,10 +13,32 @@ import MLIR.AST
 open MLIR.AST
 
 
+-- | Abbreviation with a typeclass context?
+@[simp]
+abbrev TypedArgs (δ: Dialect α σ ε) := List ((τ: MLIRType δ) × MLIRType.eval τ)
+
+-- | TODO: throw error if we don't have enough names
+def denoteTypedArgs (args: TypedArgs Δ) (names: List SSAVal): Fitree (UBE +' SSAEnvE Δ) PUnit :=
+ match args with 
+ | [] => return ()
+ | ⟨τ, val⟩::args =>
+    match names with 
+    | [] => return ()
+    | name :: names => do 
+        Fitree.trigger (SSAEnvE.Set τ name val)
+        return ()
+    
+
 inductive BlockResult {α σ ε} (δ: Dialect α σ ε)
-| Branch (bb: BBName) (args: List SSAVal)
-| Ret (rets:  List ((τ : MLIRType δ) × MLIRType.eval τ))
+| Branch (bb: BBName) (args: List SSAVal) -- TODO: make this typed
+| Ret (rets:  TypedArgs δ)
 | Next (val: (τ: MLIRType δ) × τ.eval)
+
+def BlockResult.toTypedArgs {δ: Dialect α σ ε} (blockResult: BlockResult δ) :=
+  match blockResult with 
+  | .Branch bb args => []
+  | .Ret rets => rets
+  | .Next val => []
 
 instance : Inhabited (BlockResult δ) where
   default := .Ret []
@@ -30,7 +52,7 @@ instance (δ: Dialect α σ ε): ToString (BlockResult δ) where
 -- Interpreted operation, like MLIR.AST.Op, but with less syntax
 inductive IOp (δ: Dialect α σ ε) := | mk
   (name:    String)
-  (args:    List ((τ: MLIRType δ) × τ.eval))
+  (args:    TypedArgs δ)
   (bbargs:  List BBName)
   (regions: Nat)
   (attrs:   AttrDict δ)
@@ -38,8 +60,8 @@ inductive IOp (δ: Dialect α σ ε) := | mk
 
 -- Effect to run a region
 -- TODO: change this to also deal with scf.if and yield.
-inductive RegionE (Δ: Dialect α' σ' ε'): Type -> Type
-| RunRegion (ix: Nat): RegionE Δ (BlockResult Δ)
+inductive RegionE (Δ: Dialect α σ ε): Type -> Type
+| RunRegion (ix: Nat) (args: TypedArgs Δ): RegionE Δ (BlockResult Δ)
 
 class Semantics (δ: Dialect α σ ε)  where
   -- Events modeling the dialect's computational behavior. Usually operations
@@ -80,6 +102,8 @@ def denoteOp (op: Op Δ):
       let args ← (List.zip args0 τs).mapM (fun (name, τ) => do
           return ⟨τ, ← Fitree.trigger <| SSAEnvE.Get τ name⟩)
       -- Evaluate regions
+      -- We write it this way to make the structurral recursion
+      -- clear to lean.
       let regions := denoteRegions regions0
       -- Built the interpreted operation
       let iop : IOp Δ := IOp.mk name args bbargs regions0.length attrs (.fn (.tuple τs) t)
@@ -88,7 +112,8 @@ def denoteOp (op: Op Δ):
       | some t =>
           interp (fun _ e =>
             match e with
-            | Sum.inl (RegionE.RunRegion ix) => regions.get! ix
+            | Sum.inl (RegionE.RunRegion i xs) => 
+                 regions.get! i xs
             | Sum.inr <| Sum.inl ube => Fitree.trigger ube
             | Sum.inr <| Sum.inr se => Fitree.trigger se
           ) t
@@ -114,38 +139,43 @@ def denoteBBStmt (bbstmt: BasicBlockStmt Δ):
   | .StmtOp op =>
       denoteOp op
 
-def denoteBB (bb: BasicBlock Δ):
-    Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ) :=
-  -- TODO: Bind basic block arguments before running the basic block
-  -- TODO: Any checks on the BlockResults of intermediate ops?
-  match bb with
-  | .mk name args [] =>
-      return BlockResult.Next ⟨.unit, ()⟩
-  | .mk name args [stmt] =>
-      denoteBBStmt stmt
-  | .mk name args (stmt :: stmts) => do
+def denoteBBStmts (stmts: List (BasicBlockStmt Δ))
+  : Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ) :=
+ match stmts with 
+ | [] => return BlockResult.Next ⟨.unit, ()⟩
+ | [stmt] => denoteBBStmt stmt
+ | stmt::stmts => do 
       let _ ← denoteBBStmt stmt
-      denoteBB (.mk name args stmts)
+      denoteBBStmts stmts
 
-def denoteRegion (r: Region Δ):
+def denoteBB (bb: BasicBlock Δ) (args: TypedArgs Δ):
+    Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ) := do
+  match bb with 
+  | BasicBlock.mk name formalArgsAndTypes stmts => 
+     -- TODO: check that types in [TypedArgs] is equal to types at [bb.args]
+     -- TODO: Any checks on the BlockResults of intermediate ops?
+     let formalArgs : List SSAVal:= formalArgsAndTypes.map Prod.fst
+     Fitree.inject (denoteTypedArgs args formalArgs)
+     denoteBBStmts stmts
+
+def denoteRegions (rs: List (Region Δ)):
+    List (TypedArgs Δ → Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ)) := 
+ match rs with 
+ | [] => []
+ | r :: rs => (denoteRegion r) :: denoteRegions rs
+
+def denoteRegion(r: Region Δ)  (args: TypedArgs Δ):
     Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ) :=
   -- We only define semantics for single-basic-block regions
   -- TODO: Pass region arguments
   -- TODO: Forward region's return type and value
   match r with
   | .mk [bb] =>
-      denoteBB bb
+      denoteBB bb args
   | _ => do
       Fitree.trigger (UBE.DebugUB s!"invalid denoteRegion (>1 bb): {r}")
       return BlockResult.Next ⟨.unit, ()⟩
-
-def denoteRegions (l: List (Region Δ)):
-    List (Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ)) :=
-  match l with
-  | [] => []
-  | r::l => denoteRegion r :: denoteRegions l
 end
-
 
 instance
     {α₁ σ₁ ε₁} {δ₁: Dialect α₁ σ₁ ε₁}
@@ -159,30 +189,30 @@ instance
     (S₂.semantics_op op).map (.translate Member.inject)
   handle := Fitree.case_ S₁.handle S₂.handle
 
+
+
 def semanticsRegionRec
-    [inst: CoeDialect δ Δ]
     [S: Semantics Δ]
-    (fuel: Nat) (r: Region δ) (bb: BasicBlock δ):
+    (fuel: Nat) (r: Region Δ) (bb: BasicBlock Δ) (entryArgs: TypedArgs Δ):
     Fitree (UBE +' SSAEnvE Δ +' S.E) (BlockResult Δ) :=
   match fuel with
   | 0 => return .Next ⟨.unit, ()⟩
   | fuel' + 1 => do
-      match ← denoteBB Δ bb with
+      match ← denoteBB Δ bb entryArgs with
         | .Branch bbname args =>
             -- TODO: Pass the block arguments
             match r.getBasicBlock bbname with
-            | some bb' => semanticsRegionRec fuel' r bb'
+            | some bb' => semanticsRegionRec fuel' r bb' []
             | none => return .Next ⟨.unit, ()⟩
         | .Ret rets => return .Ret rets
         | .Next v => return .Next v
 
 -- TODO: Pass region arguments
 -- TODO: Forward region's return type and value
-def semanticsRegion {Gα Gσ Gε} {Gδ: Dialect Gα Gσ Gε} [S: Semantics Gδ]
-    (fuel: Nat) (r: Region Gδ):
-    Fitree (UBE +' SSAEnvE Gδ +' S.E) Unit := do
-  let _ ← semanticsRegionRec fuel r (r.bbs.get! 0)
-
+def semanticsRegion {Δ: Dialect α σ ε} [S: Semantics Δ]
+    (fuel: Nat) (r: Region Δ) (entryArgs: TypedArgs Δ):
+    Fitree (UBE +' SSAEnvE Δ +' S.E) Unit := do
+  let _ ← semanticsRegionRec fuel r (r.bbs.get! 0) entryArgs
 
 
 def run! {Δ: Dialect α' σ' ε'} [S: Semantics Δ] {R}
@@ -226,8 +256,10 @@ instance (δ: Dialect α σ ε) [Semantics δ]: Denote δ Op where
 instance (δ: Dialect α σ ε) [Semantics δ]: Denote δ BasicBlockStmt where
   denote bbstmt := denoteBBStmt δ bbstmt
 
+-- TODO: this a pretty big back tbh, because we assume
+-- that a BB has no args.
 instance (δ: Dialect α σ ε) [Semantics δ]: Denote δ BasicBlock where
-  denote bb := denoteBB δ bb
+  denote bb := denoteBB δ bb (args := [])
 
 
 -- Not for regions because we need to specify the fuel
