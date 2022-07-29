@@ -216,14 +216,12 @@ macro_rules
 declare_syntax_cat mlir_bb
 declare_syntax_cat mlir_entry_bb
 declare_syntax_cat mlir_region
-declare_syntax_cat mlir_bb_stmt
-declare_syntax_cat mlir_bb_stmts
-declare_syntax_cat mlir_op_results
 declare_syntax_cat mlir_op
 declare_syntax_cat mlir_op_args
 declare_syntax_cat mlir_op_successor_args
 declare_syntax_cat mlir_op_type
 declare_syntax_cat mlir_op_operand
+declare_syntax_cat mlir_ops
 declare_syntax_cat mlir_type
 
 -- syntax strLit mlir_op_args ":" mlir_op_type : mlir_op -- no region
@@ -279,11 +277,13 @@ def succ0 :  BBName := ([mlir_op_successor_arg| ^bb])
 
 syntax "[mlir_type|" mlir_type "]" : term
 
+-- TODO: Tuple and function types don't really exists (hardcoded Op notation)
+
 syntax "(" mlir_type,* ")" : mlir_type
 macro_rules
 | `([mlir_type| ( $xs,* )]) => do
       let xs <- xs.getElems.mapM (fun x => `([mlir_type| $x]))
-      let x <- quoteMList xs.toList (<- `(MLIRTy))
+      let x <- quoteMList xs.toList (<- `(MLIRType _))
       `(MLIRType.tuple $x)
 
 -- syntax "(" mlir_type ")" : mlir_type
@@ -561,35 +561,6 @@ example : MLIRType (builtin + Dialect.empty) := [mlir_type| tensor<* × f32>]
 -- =========================
 
 
-
--- EDSL MLIR OP CALL, MLIR BB STMT
--- ===============================
-
--- syntax strLit mlir_op_args ":" mlir_type : mlir_op
-
-syntax "[mlir_op|" mlir_op "]" : term
-
-
-
-syntax mlir_op: mlir_bb_stmt
-syntax mlir_op_operand "=" mlir_op : mlir_bb_stmt
-syntax mlir_op_operand ":" numLit "=" mlir_op : mlir_bb_stmt
-
-syntax "[mlir_bb_stmt|" mlir_bb_stmt "]" : term
-
-macro_rules
-  | `([mlir_bb_stmt| $$($q)]) => `(coe $q)
-
-macro_rules
-  | `([mlir_bb_stmt| $call:mlir_op ]) =>
-       `(BasicBlockStmt.StmtOp ([mlir_op| $call]))
-  | `([mlir_bb_stmt| $res:mlir_op_operand = $call:mlir_op]) =>
-       `(BasicBlockStmt.StmtAssign ([mlir_op_operand| $res]) none ([mlir_op| $call]))
-  | `([mlir_bb_stmt| $res:mlir_op_operand : $ix:num = $call:mlir_op]) =>
-       `(BasicBlockStmt.StmtAssign ([mlir_op_operand| $res]) (some $ix) ([mlir_op| $call]))
-
-
-
 -- EDSL MLIR BASIC BLOCK OPERANDS
 -- ==============================
 
@@ -609,21 +580,23 @@ macro_rules
 
 
 
-syntax "^" ident ":" mlir_bb_stmts : mlir_bb
-syntax "^" ident "(" sepBy(mlir_bb_operand, ",") ")" ":" mlir_bb_stmts : mlir_bb
+syntax "^" ident ":" mlir_ops : mlir_bb
+syntax "^" ident "(" sepBy(mlir_bb_operand, ",") ")" ":" mlir_ops : mlir_bb
 
-syntax (mlir_bb_stmt)* : mlir_bb_stmts
+syntax (mlir_op)* : mlir_ops
 
-syntax "[mlir_bb_stmts|" mlir_bb_stmts "]" : term
+syntax "[mlir_op|" mlir_op "]" : term
+syntax "[mlir_ops|" mlir_ops "]" : term
+
 macro_rules
-| `([mlir_bb_stmts| $[ $stmts ]*  ]) => do
-      let initList: TSyntax `term <- `(@List.nil (MLIR.AST.BasicBlockStmt Dialect.empty))
-      let l ← stmts.foldrM (init := initList)
-        fun x (xs: TSyntax `term) => `([mlir_bb_stmt|$x] :: $xs)
+| `([mlir_ops| $[ $ops ]*  ]) => do
+      let initList: TSyntax `term <- `(@List.nil (MLIR.AST.Op _))
+      let l ← ops.foldrM (init := initList)
+        fun x (xs: TSyntax `term) => `([mlir_op|$x] :: $xs)
       return l
 
 macro_rules
-  | `([mlir_bb_stmts| $$($q)]) => `(coe $q)
+  | `([mlir_ops| $$($q)]) => `(coe $q)
 
 
 
@@ -631,13 +604,13 @@ syntax "[mlir_bb|" mlir_bb "]": term
 
 
 macro_rules
-| `([mlir_bb| ^ $name:ident ( $operands,* ) : $stmts ]) => do
-   let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRTy))
+| `([mlir_bb| ^ $name:ident ( $operands,* ) : $ops ]) => do
+   let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
    let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
-   let opsList <- `([mlir_bb_stmts| $stmts])
+   let opsList <- `([mlir_ops| $ops])
    `(BasicBlock.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
-| `([mlir_bb| ^ $name:ident : $stmts ]) => do
-   let opsList <- `([mlir_bb_stmts| $stmts])
+| `([mlir_bb| ^ $name:ident : $ops ]) => do
+   let opsList <- `([mlir_ops| $ops])
    `(BasicBlock.mk $(Lean.quote (name.getId.toString)) [] $opsList)
 
 
@@ -646,13 +619,13 @@ macro_rules
 
 
 syntax mlir_bb : mlir_entry_bb
-syntax mlir_bb_stmts : mlir_entry_bb
+syntax mlir_ops : mlir_entry_bb
 syntax "[mlir_entry_bb|" mlir_entry_bb "]" : term
 
 
 macro_rules
-| `([mlir_entry_bb| $stmts:mlir_bb_stmts ]) => do
-   let opsList <- `([mlir_bb_stmts| $stmts])
+| `([mlir_entry_bb| $ops:mlir_ops ]) => do
+   let opsList <- `([mlir_ops| $ops])
    `(BasicBlock.mk "entry" [] $opsList)
 
 macro_rules
@@ -939,7 +912,7 @@ syntax "[mlir_attr_dict|" mlir_attr_dict "]" : term
 macro_rules
 | `([mlir_attr_dict| {  $attrEntries,* } ]) => do
         let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
-        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry Dialect.empty))
+        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
         `(AttrDict.mk $attrsList)
 
 def attrDict0 : AttrDict builtin := [mlir_attr_dict| {}]
@@ -952,28 +925,44 @@ syntax mlir_attr_dict : mlir_attr_val
 macro_rules
 | `([mlir_attr_val| $v:mlir_attr_dict]) => `(AttrValue.dict [mlir_attr_dict| $v])
 
-def nestedAttrDict0 := [mlir_attr_dict| {foo = {bar = "baz"} }]
+def nestedAttrDict0 : AttrDict Dialect.empty := [mlir_attr_dict| {foo = {bar = "baz"} }]
 #print nestedAttrDict0
 
 -- MLIR OPS WITH REGIONS AND ATTRIBUTES AND BASIC BLOCK ARGS
 -- =========================================================
 
-
-syntax strLit "(" mlir_op_operand,* ")"
-  ("[" mlir_op_successor_arg,* "]")? ("(" mlir_region,* ")")?  (mlir_attr_dict)? ":" mlir_type : mlir_op
-
+-- TODO: Does not support %var:index = ...
+syntax
+  (mlir_op_operand "=")?
+  strLit "(" mlir_op_operand,* ")"
+         ("[" mlir_op_successor_arg,* "]")?
+         ("(" mlir_region,* ")")?
+         (mlir_attr_dict)?
+  ":" "(" mlir_type,* ")" "->" mlir_type : mlir_op
 
 macro_rules
   | `([mlir_op| $$($x) ]) => return x
 
 macro_rules
-  | `([mlir_op| $name:str
-        ( $operands,* )
+  | `([mlir_op|
+        $[ $resName = ]?
+        $name:str
+        ( $operandsNames,* )
         $[ [ $succ,* ] ]?
         $[ ( $rgns,* ) ]?
-        $[ $attrDict ]? : $ty:mlir_type ]) => do
-        let operandsList <- operands.getElems.mapM (fun x => `([mlir_op_operand| $x]))
-        let operandsList <- quoteMList operandsList.toList (<- `(MLIR.AST.SSAVal))
+        $[ $attrDict ]?
+        : ( $operandsTypes,* ) -> $resType ]) => do
+
+        -- TODO: Needs a consistency check that `resName=none ↔ resType=.unit`
+        let res ← match resName with
+        | none => `(@List.nil (MLIR.AST.TypedSSAVal _))
+        | some name => `([([mlir_op_operand| $name], [mlir_type| $resType])])
+
+        -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
+        let operands: List (MacroM <| TSyntax `term) :=
+          List.zipWith (fun x y => `(([mlir_op_operand| $x], [mlir_type| $y])))
+          operandsNames.getElems.toList operandsTypes.getElems.toList
+        let operands ← quoteMList (← operands.mapM id) (← `(MLIR.AST.TypedSSAVal _))
 
         let succList <- match succ with
                 | none => `(@List.nil MLIR.AST.BBName)
@@ -984,26 +973,26 @@ macro_rules
                           | none => `(AttrDict.mk [])
                           | some dict => `([mlir_attr_dict| $dict])
         let rgnsList <- match rgns with
-                  | none => `(@List.nil (MLIR.AST.Region Dialect.empty))
+                  | none => `(@List.nil (MLIR.AST.Region _))
                   | some rgns => do
                     let rngs <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
-                    quoteMList rngs.toList (<- `(MLIR.AST.Region Dialect.empty))
+                    quoteMList rngs.toList (<- `(MLIR.AST.Region _))
 
         `(Op.mk $name -- name
-                $operandsList -- operands
+                $res
+                $operands -- operands
                 $succList -- bbs
                 $rgnsList -- regions
-                $attrDict -- attrs
-                [mlir_type| $ty]) -- type
+                $attrDict) -- attrs
 
 
 
-def bbstmt1 : BasicBlockStmt Dialect.empty :=
-  [mlir_bb_stmt| "foo"(%x, %y) : (i32, i32) -> i32]
-#print bbstmt1
-def bbstmt2: BasicBlockStmt builtin :=
-  [mlir_bb_stmt| %z = "foo"(%x, %y) : (i32, i32) -> i32]
-#print bbstmt2
+def op1 : Op Dialect.empty :=
+  [mlir_op| "foo"(%x, %y) : (i32, i32) -> i32]
+#print op1
+def op2: Op builtin :=
+  [mlir_op| %z = "foo"(%x, %y) : (i32, i32) -> i32]
+#print op2
 
 def bbop1 : SSAVal × MLIRTy := [mlir_bb_operand| %x : i32 ]
 #print bbop1
@@ -1094,7 +1083,7 @@ def opRgnAttr0 : Op builtin := [mlir_op|
    "func"() (
     {
      ^bb0(%arg0:i32, %arg1:i32):
-      %zero = "std.addi"(%arg0 , %arg1) : (i32, i32) -> i32
+      %zero = "std.addi"(%arg0 , %arg1) : (i32, i16) -> i64
       "std.return"(%zero) : (i32) -> ()
     }){sym_name = "add", type = (i32, i32) -> i32} : () -> ()
    "module_terminator"() : () -> ()
@@ -1112,33 +1101,42 @@ def opcall2 : Op builtin := [mlir_op| "foo" (%x, %y) [^bb1, ^bb2] : (i32, i32) -
 -- | Builtins
 -- =========
 
-syntax "func" mlir_attr_val_symbol "(" sepBy(mlir_bb_operand, ",") ")" mlir_region : mlir_op
+-- TODO: Move to `func` dialect
+syntax
+  "func" mlir_attr_val_symbol "(" mlir_bb_operand,* ")" ( "->" mlir_type )? "{"
+    mlir_ops
+  "}" : mlir_op
 
--- | note that this only supports single BB region.
--- | TODO: add support for multi BB region.
 macro_rules
-| `([mlir_op| func $name:mlir_attr_val_symbol ( $args,* )  $rgn ]) => do
-     let argsList <- args.getElems.mapM (fun x => `([mlir_bb_operand| $x]))
-     let argsList <- quoteMList argsList.toList
-                      (<- `(MLIR.AST.SSAVal × MLIR.AST.MLIRType Dialect.empty))
+| `([mlir_op| func $name:mlir_attr_val_symbol ( $args,* ) $[ -> $ret:mlir_type ]? { $ops } ]) => do
+     -- Make the arguments for the entry block
+     let bbargs ← args.getElems.mapM (fun x => `([mlir_bb_operand| $x]))
+     let bbargs ← quoteMList bbargs.toList (← `(MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
+     -- Make the entry block (the only block)
+     let bb ← `(BasicBlock.mk "entry" $bbargs [mlir_ops| $ops])
+     -- Make the region
+     let rgn ← `(Region.mk [$bb])
 
-     let typesList <- args.getElems.mapM (fun x => `(Prod.snd [mlir_bb_operand| $x]))
-     let typesList <- quoteMList typesList.toList (<- `(MLIR.AST.MLIRType Dialect.empty))
+     -- Make the function signature
+     let argTypes ← args.getElems.mapM (fun x => `(Prod.snd [mlir_bb_operand| $x]))
+     let argTypes ← quoteMList argTypes.toList (← `(MLIR.AST.MLIRType _))
+     let retType ← match ret with
+       | none => `(MLIRType.tuple [])
+       | some τ => `([mlir_type| $τ])
+     let signature ← `(MLIRType.fn (MLIRType.tuple $argTypes) $retType)
 
-     let rgn <- `([mlir_region| $rgn])
-     let rgn <- `(($rgn).ensureEntryBlock.setEntryBlockArgs $argsList)
-     let argTys <- `(($argsList).map Prod.snd)
-     let ty <-  `(MLIRType.fn (MLIRType.tuple $typesList) MLIRType.unit)
-     let attrs <- `(AttrDict.empty.addType "type" $ty)
-     let attrs <- `(($attrs).add (AttrEntry.mk "sym_name" [mlir_attr_val_symbol| $name]))
-
-     `(Op.mk "func" [] [] [$rgn] $attrs $ty)
+     -- Make the entire operation
+     let attrs ← `(AttrDict.mk [
+        AttrEntry.mk "function_type" (AttrValue.type $signature),
+        AttrEntry.mk "sym_name" [mlir_attr_val_symbol| $name]
+      ])
+     `(Op.mk "func" [] [] [] [$rgn] $attrs)
 
 
 def func1 : Op Dialect.empty := [mlir_op| func @"main"() {
-  ^entry:
-    %x = "asm.int" () { "val" = 32 } : () -> (i32)
+  %x = "asm.int" () { "val" = 32 } : () -> (i32)
 }]
+#print func1
 
 syntax "module" "{" mlir_op* "}" : mlir_op
 
@@ -1147,12 +1145,12 @@ macro_rules
      let initList <- `([Op.empty "module_terminator"])
      let ops <- ops.foldrM (init := initList) fun x xs => `([mlir_op| $x] :: $xs)
      let rgn <- `(Region.fromOps $ops)
-     `(Op.mk "module" [] [] [$rgn] AttrDict.empty [mlir_type| () -> ()])
+     `(Op.mk "module" [] [] [] [$rgn] AttrDict.empty)
 
 def mod1 : Op builtin := [mlir_op| module { }]
 #print mod1
 
-def mod2 : Op builtin := [mlir_op| module { "dummy.dummy"(): () }]
+def mod2 : Op builtin := [mlir_op| module { "dummy.dummy"(): () -> () }]
 #print mod2
 
 --- MEMREF+TENSOR

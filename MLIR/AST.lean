@@ -96,6 +96,9 @@ abbrev MLIRTy := @MLIRType _ _ _ Dialect.empty
 abbrev MLIRType.i1: MLIRType δ := MLIRType.int .Signless 1
 abbrev MLIRType.i32: MLIRType δ := MLIRType.int .Signless 32
 
+-- An SSA value with a type
+abbrev TypedSSAVal (δ: Dialect α σ ε) := SSAVal × MLIRType δ
+
 mutual
 -- | TODO: factor Symbol out from AttrValue
 inductive AttrValue (δ: Dialect α σ ε) :=
@@ -138,22 +141,17 @@ mutual
 -- | TODO: make these arguments optional?
 inductive Op (δ: Dialect α σ ε) where
  | mk: (name: String)
-      -> (args: List SSAVal)
+      -> (res: List (TypedSSAVal δ))
+      -> (args: List (TypedSSAVal δ))
       -> (bbs: List BBName)
       -> (regions: List (Region δ))
       -> (attrs: AttrDict δ)
-      -> (ty: MLIRType δ)
       -> Op δ
-
-inductive BasicBlockStmt (δ: Dialect α σ ε) where
-| StmtAssign : SSAVal -> (ix: Option Int) -> Op δ -> BasicBlockStmt δ
-| StmtOp : Op δ -> BasicBlockStmt δ
-
 
 inductive BasicBlock (δ: Dialect α σ ε) where
 | mk: (name: String)
       -> (args: List (SSAVal × MLIRType δ))
-      -> (ops: List (BasicBlockStmt δ)) -> BasicBlock δ
+      -> (ops: List (Op δ)) -> BasicBlock δ
 
 inductive Region (δ: Dialect α σ ε) where
 | mk: (bbs: List (BasicBlock δ)) -> Region δ
@@ -172,22 +170,40 @@ inductive Module (δ: Dialect α σ ε) where
 
 
 def Op.name: Op δ -> String
-| Op.mk name args bbs regions attrs ty => name
+| Op.mk name .. => name
 
-def Op.args: Op δ -> List SSAVal
-| Op.mk name args bbs regions attrs ty => args
+def Op.res: Op δ -> List (TypedSSAVal δ)
+| Op.mk _ res .. => res
+
+def Op.resNames: Op δ → List SSAVal
+| Op.mk _ res .. => res.map Prod.fst
+
+def Op.resTypes: Op δ → List (MLIRType δ)
+| Op.mk _ res .. => res.map Prod.snd
+
+def Op.args: Op δ -> List (TypedSSAVal δ)
+| Op.mk _ _ args .. => args
+
+def Op.argNames: Op δ → List SSAVal
+| Op.mk _ _ args .. => args.map Prod.fst
+
+def Op.argTypes: Op δ → List (MLIRType δ)
+| Op.mk _ _ args .. => args.map Prod.snd
 
 def Op.bbs: Op δ -> List BBName
-| Op.mk name args bbs regions attrs ty => bbs
+| Op.mk _ _ _ bbs .. => bbs
 
 def Op.regions: Op δ -> List (Region δ)
-| Op.mk name args bbs regions attrs ty => regions
+| Op.mk _ _ _ _ regions _ => regions
 
 def Op.attrs: Op δ -> AttrDict δ
-| Op.mk name args bbs regions attrs ty => attrs
+| Op.mk _ _ _ _ _ attrs => attrs
 
-def Op.ty: Op δ -> MLIRType δ
-| Op.mk name args bbs regions attrs ty => ty
+def Op.type: Op δ -> MLIRType δ
+| Op.mk _ [r] args .. =>
+    .fn (.tuple <| args.map Prod.snd) r.snd
+| Op.mk _ res args .. =>
+    .fn (.tuple <| args.map Prod.snd) (.tuple <| res.map Prod.snd)
 
 def Region.bbs (r: Region δ): List (BasicBlock δ) :=
   match r with
@@ -271,18 +287,14 @@ instance {δ₁: Dialect α₁ σ₁ ε₁} {δ₂: Dialect α₂ σ₂ ε₂} [
     Coe (List (SSAVal × MLIRType δ₁)) (List (SSAVal × MLIRType δ₂)) where
   coe := List.map (fun (v, τ) => (v, Coe.coe τ))
 
-def BasicBlockStmt.op: BasicBlockStmt δ ->  Op δ
-| BasicBlockStmt.StmtAssign val ix op => op
-| BasicBlockStmt.StmtOp op => op
 
 def BasicBlock.name (bb: BasicBlock δ): BBName :=
   match bb with
-  | BasicBlock.mk name args stmts => BBName.mk name
+  | BasicBlock.mk name args ops => BBName.mk name
 
-
-def BasicBlock.stmts (bb: BasicBlock δ): List (BasicBlockStmt δ) :=
+def BasicBlock.ops (bb: BasicBlock δ): List (Op δ) :=
   match bb with
-  | BasicBlock.mk name args stmts => stmts
+  | BasicBlock.mk name args ops => ops
 
 def Region.getBasicBlock (r: Region δ) (name: BBName): Option (BasicBlock δ) :=
   r.bbs.find? (fun bb => bb.name == name)
@@ -339,20 +351,16 @@ mutual
 variable [δ₁: Dialect α₁ σ₁ ε₁] [δ₂: Dialect α₂ σ₂ ε₂] [c: CoeDialect δ₁ δ₂]
 
 def coeOp: Op δ₁ → Op δ₂
-  | .mk name args bbs regions attrs τ =>
-      .mk name args bbs (coeRegionList regions) (Coe.coe attrs) (Coe.coe τ)
+  | .mk name res args bbs regions attrs =>
+      .mk name res args bbs (coeRegionList regions) (Coe.coe attrs)
 
-def coeBasicBlockStmt: BasicBlockStmt δ₁ → BasicBlockStmt δ₂
-  | .StmtAssign val ix op => .StmtAssign val ix (coeOp op)
-  | .StmtOp op => .StmtOp (coeOp op)
-
-def coeBasicBlockStmtList:
-    List (BasicBlockStmt δ₁) → List (BasicBlockStmt δ₂)
+def coeOpList:
+    List (Op δ₁) → List (Op δ₂)
   | [] => []
-  | s :: bbstmts => coeBasicBlockStmt s :: coeBasicBlockStmtList bbstmts
+  | s :: ops => coeOp s :: coeOpList ops
 
 def coeBasicBlock: BasicBlock δ₁ → BasicBlock δ₂
-  | .mk name args ops => .mk name args (coeBasicBlockStmtList ops)
+  | .mk name args ops => .mk name args (coeOpList ops)
 
 def coeBasicBlockList: List (BasicBlock δ₁) → List (BasicBlock δ₂)
   | [] => []
@@ -371,12 +379,8 @@ instance {δ₁: Dialect α₁ σ₁ ε₁} {δ₂: Dialect α₂ σ₂ ε₂} [
   coe := coeOp
 
 instance {δ₁: Dialect α₁ σ₁ ε₁} {δ₂: Dialect α₂ σ₂ ε₂} [CoeDialect δ₁ δ₂]:
-    Coe (BasicBlockStmt δ₁) (BasicBlockStmt δ₂) where
-  coe := coeBasicBlockStmt
-
-instance {δ₁: Dialect α₁ σ₁ ε₁} {δ₂: Dialect α₂ σ₂ ε₂} [CoeDialect δ₁ δ₂]:
-    Coe (List (BasicBlockStmt δ₁)) (List (BasicBlockStmt δ₂)) where
-  coe := coeBasicBlockStmtList
+    Coe (List (Op δ₁)) (List (Op δ₂)) where
+  coe := coeOpList
 
 instance {δ₁: Dialect α₁ σ₁ ε₁} {δ₂: Dialect α₂ σ₂ ε₂} [CoeDialect δ₁ δ₂]:
     Coe (BasicBlock δ₁) (BasicBlock δ₂) where
@@ -490,15 +494,16 @@ instance : ToFormat SSAVal where
 -- | would be so much nicer if I could pretend that these had real instances.
 mutual
 
-def op_to_doc: Op δ → Doc
-    | (Op.mk name args bbs rgns attrs ty) =>
+def op_to_doc (op: Op δ): Doc :=
+    match op with
+    | (Op.mk name res args bbs rgns attrs) =>
         /- v3: macros + if stuff-/
         [doc|
           "\"" name "\""
-          "(" (args),* ")"
+          "(" (op.argNames),* ")"
           (ifdoc bbs.isEmpty then "" else "[" (bbs),* "]")
           (ifdoc rgns.isEmpty then "" else "(" (nest (list_rgn_to_doc rgns);*) ")")
-          attrs ":" ty]
+          attrs ":" op.type]
 
         /- v2: macros, but no if stuff
         [doc|
@@ -521,25 +526,18 @@ def op_to_doc: Op δ → Doc
 
         doc_name ++ doc_args ++  doc_bbs ++ doc_rgns ++ doc attrs ++ " : " ++ doc ty -/
 
-def bb_stmt_to_doc: BasicBlockStmt δ → Doc
-  | BasicBlockStmt.StmtAssign lhs none rhs =>
-      [doc| lhs "="  (op_to_doc rhs) ]
-  | BasicBlockStmt.StmtAssign lhs (some ix) rhs =>
-      [doc| lhs ":" ix "="  (op_to_doc rhs) ]
-  | BasicBlockStmt.StmtOp rhs => (op_to_doc rhs)
-
-def list_bb_stmt_to_doc: List (BasicBlockStmt δ) → List Doc
+def list_op_to_doc: List (Op δ) → List Doc
   | [] => []
-  | stmt :: stmts => bb_stmt_to_doc stmt :: list_bb_stmt_to_doc stmts
+  | op :: ops => op_to_doc op :: list_op_to_doc ops
 
 -- | TODO: fix the dugly syntax
 def bb_to_doc: BasicBlock δ → Doc
-  | (BasicBlock.mk name args stmts) =>
+  | (BasicBlock.mk name args ops) =>
     [doc| {
         (ifdoc args.isEmpty
          then  "^" name ":"
          else  "^" name "(" (args.map $ fun (v, t) => [doc| v ":" t]),* ")" ":");
-        (nest list_bb_stmt_to_doc stmts);* ; } ]
+        (nest list_op_to_doc ops);* ; } ]
 
 def list_bb_to_doc: List (BasicBlock δ) → List Doc
   | [] => []
@@ -577,30 +575,22 @@ def MLIRType.unit : MLIRType δ := MLIRType.tuple []
 def AttrDict.empty : AttrDict δ := AttrDict.mk []
 
 def Op.empty (name: String) : Op δ :=
-  Op.mk name [] [] [] AttrDict.empty (.fn MLIRType.unit MLIRType.unit)
+  Op.mk name [] [] [] [] AttrDict.empty
 -- | TODO: needs to happen in a monad to ensure that ty has the right type!
-def Op.addArg (o: Op δ) (a: SSAVal) (t: MLIRType δ): Op δ :=
+def Op.addArg (o: Op δ) (arg: TypedSSAVal δ): Op δ :=
   match o with
-  | Op.mk name args bbs regions attrs ty =>
-    let ty' := match ty with
-               | .fn (.tuple ins) outs =>
-                   .fn (.tuple $ ins ++ [t]) outs
-               | _ => .fn (.tuple [t]) MLIRType.unit
-    Op.mk name (args ++ [a]) bbs regions attrs ty'
+  | Op.mk name res args bbs regions attrs =>
+    Op.mk name res (args ++ [arg]) bbs regions attrs
 
-def Op.addResult (o: Op δ) (t: MLIRType δ): Op δ :=
+def Op.addResult (o: Op δ) (new_res: TypedSSAVal δ): Op δ :=
  match o with
- | Op.mk name args bbs regions attrs ty =>
-    let ty' := match ty with
-               | .fn ins (.tuple outs) =>
-                   .fn ins (.tuple $ outs ++ [t])
-               | _ => .fn (.tuple []) (.tuple [t])
-    Op.mk name args bbs regions attrs ty'
+ | Op.mk name res args bbs regions attrs =>
+    Op.mk name (res ++ [new_res]) args bbs regions attrs
 
 def Op.appendRegion (o: Op δ) (r: Region δ): Op δ :=
   match o with
-  | Op.mk name args bbs regions attrs ty =>
-      Op.mk name args bbs (regions ++ [r]) attrs ty
+  | Op.mk name res args bbs regions attrs =>
+      Op.mk name res args bbs (regions ++ [r]) attrs
 
 
 -- | Note: AttrEntry can be given as String × AttrValue
@@ -635,17 +625,17 @@ def AttrDict.addType (attrs: AttrDict δ) (k: String) (v: MLIRType δ): AttrDict
 -- | Note: AttrEntry can be given as String × AttrValue
 def Op.addAttr (o: Op δ) (k: String) (v: AttrValue δ): Op δ :=
  match o with
- | Op.mk name args bbs regions attrs ty =>
-    Op.mk name args bbs regions (attrs.add (k, v)) ty
+ | Op.mk name res args bbs regions attrs =>
+    Op.mk name res args bbs regions (attrs.add (k, v))
 
 def BasicBlock.empty (name: String): BasicBlock δ := BasicBlock.mk name [] []
-def BasicBlock.appendStmt (bb: BasicBlock δ) (stmt: BasicBlockStmt δ): BasicBlock δ :=
+def BasicBlock.appendOp (bb: BasicBlock δ) (op: Op δ): BasicBlock δ :=
   match bb with
-  | BasicBlock.mk name args bbs => BasicBlock.mk name args (bbs ++ [stmt])
+  | BasicBlock.mk name args bbs => BasicBlock.mk name args (bbs ++ [op])
 
-def BasicBlock.appendStmts (bb: BasicBlock δ) (stmts: List (BasicBlockStmt δ)): BasicBlock δ :=
+def BasicBlock.appendOps (bb: BasicBlock δ) (ops: List (Op δ)): BasicBlock δ :=
   match bb with
-  | BasicBlock.mk name args bbs => BasicBlock.mk name args (bbs ++ stmts)
+  | BasicBlock.mk name args bbs => BasicBlock.mk name args (bbs ++ ops)
 
 def Region.empty: Region δ := Region.mk []
 
@@ -654,9 +644,6 @@ def Region.appendBasicBlock (r: Region δ) (bb: BasicBlock δ) : Region δ :=
 
 instance : Pretty (Op δ) where
   doc := op_to_doc
-
-instance : Pretty (BasicBlockStmt δ) where
-  doc := bb_stmt_to_doc
 
 instance : Pretty (BasicBlock δ) where
   doc := bb_to_doc
@@ -692,16 +679,13 @@ instance : Pretty (Module δ) where
     | Module.mk fs attrs =>
       Doc.VGroup (attrs.map doc ++ fs.map doc)
 
-instance : Coe (Op δ) (BasicBlockStmt δ) where
-   coe := BasicBlockStmt.StmtOp
-
 def Region.fromBlock (bb: BasicBlock δ): Region δ := Region.mk [bb]
 def BasicBlock.fromOps (os: List (Op δ)) (name: String := "entry"): BasicBlock δ :=
-  BasicBlock.mk name [] (os.map BasicBlockStmt.StmtOp)
+  BasicBlock.mk name [] os
 
 def BasicBlock.setArgs (bb: BasicBlock δ) (args: List (SSAVal × MLIRType δ)) : Region δ :=
 match bb with
-  | (BasicBlock.mk name _ stmts) => (BasicBlock.mk name args stmts)
+  | (BasicBlock.mk name _ ops) => (BasicBlock.mk name args ops)
 
 def Region.fromOps (os: List (Op δ)): Region δ := Region.mk [BasicBlock.fromOps os]
 
@@ -715,14 +699,14 @@ def Op.singletonRegion (o: Op δ): Region δ :=
 
 def Op.mutateSingletonRegion (o: Op δ) (f: Region δ -> Region δ): Op δ :=
  match o with
- | Op.mk name args bbs [r] attrs ty => Op.mk name args bbs [f r] attrs ty
+ | Op.mk name res args bbs [r] attrs => Op.mk name res args bbs [f r] attrs
  | _ => o -- panic ("expected op with single region: " ++ (doc o))
 
 
 mutual
 -- | TODO: how the fuck do we run this lens?!
 inductive ValLens (δ: Dialect α σ ε): Type -> Type _ where
-| id: ValLens δ SSAVal
+| id: ValLens δ (TypedSSAVal δ)
 | op: (opKind: String) -> (lens: OpLens δ o) -> ValLens δ o
 
 inductive OpLens (δ: Dialect α σ ε): Type -> Type _ where
@@ -790,7 +774,7 @@ def Lensed.mapM [Lensed s l]  [Monad m] (lens: l t) (sval: s) (tfun: t -> m t): 
 -- | TODO: for now, when lens fails, we just return.
 mutual
 -- | how can this lens ever be run? Very interesting...
-def vallens_update {f: Type _ -> Type _} {t: Type _} [Applicative f] (lens: ValLens δ t) (transform: t -> f t) (src: SSAVal) : f SSAVal :=
+def vallens_update {f: Type _ -> Type _} {t: Type _} [Applicative f] (lens: ValLens δ t) (transform: t -> f t) (src: TypedSSAVal δ) : f (TypedSSAVal δ) :=
     match lens with
     | ValLens.id => transform src
     | ValLens.op kind oplens => pure src -- TODO: how do we encode this?
@@ -800,17 +784,17 @@ def oplens_update {f: Type _ -> Type _} {t: Type _} [Applicative f] (lens: OpLen
     | OpLens.id => transform src
     | OpLens.arg ix vlens =>
         match src with
-        | Op.mk name args bbs regions attrs ty =>
+        | Op.mk res name args bbs regions attrs =>
         match args.get? ix with
         | none => Pure.pure src
-        | some v => Functor.map (fun v => Op.mk name (args.set ix v) bbs regions attrs ty)
+        | some v => Functor.map (fun v => Op.mk res name (args.set ix v) bbs regions attrs)
                                (vallens_update vlens transform v)
     | OpLens.region ix rlens =>
       match src with
-      | Op.mk name args bbs  regions attrs ty =>
+      | Op.mk name res args bbs  regions attrs =>
       match regions.get? ix with
       | none => Pure.pure src
-      | some r =>  Functor.map (fun r => Op.mk name args bbs (regions.set ix r) attrs ty)
+      | some r =>  Functor.map (fun r => Op.mk name res args bbs (regions.set ix r) attrs)
                                (regionlens_update rlens transform r)
 
 def regionlens_update {f: Type _ -> Type _} {t: Type _} [Applicative f] (lens: RegionLens δ t) (transform: t -> f t) (src: Region δ) : f (Region δ) :=
@@ -832,11 +816,9 @@ def blocklens_update {f: Type _ -> Type _} {t: Type _}[Applicative f] (lens: Bas
       | BasicBlock.mk name args ops =>
         match ops.get? ix with
         | none => Pure.pure src
-        | some stmt =>
-            let stmt := match stmt with
-            | BasicBlockStmt.StmtAssign lhs ix op => (BasicBlockStmt.StmtAssign lhs ix) <$> (oplens_update oplens transform op)
-            | BasicBlockStmt.StmtOp op => BasicBlockStmt.StmtOp <$> (oplens_update oplens transform op)
-            (fun stmt => BasicBlock.mk name args (ops.set ix stmt)) <$> stmt
+        | some op =>
+            let op_f := oplens_update oplens transform op
+            (fun op => BasicBlock.mk name args (ops.set ix op)) <$> op_f
 end
 
 instance : Lensed (Op δ) (OpLens δ) where
@@ -873,6 +855,6 @@ match r with
 | (Region.mk bbs) =>
   match bbs with
   | []  => r
-  | ((BasicBlock.mk name _ stmts) :: bbs) => Region.mk $ (BasicBlock.mk name args stmts) :: bbs
+  | ((BasicBlock.mk name _ ops) :: bbs) => Region.mk $ (BasicBlock.mk name args ops) :: bbs
 
 end MLIR.AST
