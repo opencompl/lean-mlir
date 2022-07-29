@@ -45,30 +45,31 @@ def run_loop_bounded
   match n with
   | 0 => return start
   | .succ n' => do
-    let (_: BlockResult Δ) <- Fitree.trigger (RegionE.RunRegion 0 [⟨MLIRType.index, ix⟩])
+    let (_: BlockResult Δ) <- Fitree.trigger (RegionE.RunRegion 0 [⟨MLIRType.i32, FinInt.ofInt 32 ix⟩])
     run_loop_bounded n' (ix + 1) (.Ret [])
 
 
 -- | TODO: refactor to (1) an effect, (2) an interpretation
 -- | TODO: use the return type of Scf.For. For now, just do unit.
+#check MLIRType.eval
 def scf_semantics_op: IOp Δ →
       Option (Fitree (RegionE Δ +' UBE +' ScfE) (BlockResult Δ))
 
   | IOp.mk "scf.if" [⟨.i1, b⟩] [] 2 _ _ =>
       some (Fitree.trigger <| RegionE.RunRegion (if b == 1 then 0 else 1) [])
 
-  | IOp.mk "scf.for" [⟨.index, lo⟩, ⟨.index, hi⟩, ⟨.index, step⟩] [] 1 _ _ => some do
-    let nsteps : Int := (hi - lo) / step
+  | IOp.mk "scf.for" [⟨.i32, lo⟩, ⟨.i32, hi⟩, ⟨.i32, step⟩] [] 1 _ _ => some do
+    let nsteps : Int := (hi.toSint - lo.toSint) / step.toSint
     run_loop_bounded_stepped
       (a := BlockResult Δ)
       (n := nsteps.toNat)
-      (lo := lo)
-      (step := step)
+      (lo := lo.toSint)
+      (step := step.toSint)
       (accum := default)
-      (eff := (fun i _ => Fitree.trigger <| RegionE.RunRegion 0 [⟨.index, i⟩]))
+      (eff := (fun i _ => Fitree.trigger <| RegionE.RunRegion 0 [⟨.i32, FinInt.ofInt _ i⟩]))
 
-  | IOp.mk "scf.for'" [⟨.index, lo⟩, ⟨.index, hi⟩] [] 1 _ _ => some do
-      run_loop_bounded (n := (hi - lo).toNat) (ix := lo) (BlockResult.Ret [])
+  | IOp.mk "scf.for'" [⟨.i32, lo⟩, ⟨.i32, hi⟩] [] 1 _ _ => some do
+      run_loop_bounded (n := (hi.toSint - lo.toSint).toNat) (ix := lo.toSint) (BlockResult.Ret [])
 
   | IOp.mk "scf.yield" vs [] 0 _ _ =>
     some <| return BlockResult.Ret vs
@@ -139,22 +140,23 @@ theorem run_SSAEnvE_get [Δ: Dialect α σ ε] [S: Semantics Δ]
 namespace SCF.FOR_PEELING
 def LHS (r: Region scf): Region scf := [mlir_region|
 {
-  "scf.for'" (%c0, %cn_plus_1) ($(r)) : (index, index) -> ()
+  "scf.for'" (%c0, %cn_plus_1) ($(r)) : (i32, i32) -> ()
 }]
 def RHS  (r: Region scf): Region scf := [mlir_region|
 {
-  "scf.execute_region" (%c0) ($(r)) : (index) -> ()
-  "scf.for'" (%c1, %cn_plus_1) ($(r)) : (index, index) -> ()
+  "scf.execute_region" (%c0) ($(r)) : (i32) -> ()
+  "scf.for'" (%c1, %cn_plus_1) ($(r)) : (i32, i32) -> ()
 }]
+
 def INPUT (n: Nat): SSAEnv scf := SSAEnv.One [
-  ⟨"cn", .index, n⟩,
-  ⟨"cn_plus_1", .index, n + 1⟩,
-  ⟨"c0", .index, 0⟩,
-  ⟨"c1", .index, 1⟩]
+  ⟨"cn", .i32, FinInt.ofInt 32 n⟩,
+  ⟨"cn_plus_1", .i32, FinInt.ofInt 32 <| n + 1⟩,
+  ⟨"c0", .i32, 0⟩,
+  ⟨"c1", .i32, 1⟩]
 
 theorem peel_run_loop_bounded {n: Nat} {ix: Int} (start: BlockResult Δ):
   run_loop_bounded (n+1) ix start =
-  Fitree.bind (Fitree.trigger <| RegionE.RunRegion 0 [⟨.index, ix⟩])
+  Fitree.bind (Fitree.trigger <| RegionE.RunRegion 0 [⟨.i32, FinInt.ofInt 32 ix⟩])
     (fun (_: BlockResult Δ) => run_loop_bounded n (ix+1) (.Ret [])) := rfl
 
 -- The main requirement for this theorem is that `r` satisfies SSA invariants,

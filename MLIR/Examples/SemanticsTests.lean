@@ -193,23 +193,23 @@ def for_trivial := Test.mk (func_ + scf + arith) "for_trivial.mlir" [mlir_region
 }]
 
 def for_bound := Test.mk (func_ + scf + arith) "for_bound.mlir" [mlir_region| {
-  %lower = "arith.constant"() {value =  0: index}: () -> index
-  %upper = "arith.constant"() {value = 18: index}: () -> index
-  %step  = "arith.constant"() {value =  1: index}: () -> index
+  %lower = "arith.constant"() {value =  0: i32}: () -> i32
+  %upper = "arith.constant"() {value = 18: i32}: () -> i32
+  %step  = "arith.constant"() {value =  1: i32}: () -> i32
 
   "scf.for"(%lower, %upper, %step) ({
-    ^bb(%i: index):
-      %b1 = "arith.cmpi"(%i, %lower) {predicate = 5 /- sge -/}: (index, index) -> i1
+    ^bb(%i: i32):
+      %b1 = "arith.cmpi"(%i, %lower) {predicate = 5 /- sge -/}: (i32, i32) -> i1
       "cf.assert"(%b1) {msg="<FAILED>"}: (i1) -> ()
 
-      %b2 = "arith.cmpi"(%i, %upper) {predicate = 3 /- sle -/}: (index, index) -> i1
+      %b2 = "arith.cmpi"(%i, %upper) {predicate = 3 /- sle -/}: (i32, i32) -> i1
       "cf.assert"(%b2) {msg="<FAILED>"}: (i1) -> ()
 
-      "scf.yield"(%step): (index) -> ()
-  }): (index, index, index) -> ()
+      "scf.yield"(%step): (i32) -> ()
+  }): (i32, i32, i32) -> ()
 
-  %z = "arith.constant" () {value = 0: index}: () -> index
-  "func.return" (%z): (index) -> ()
+  %z = "arith.constant" () {value = 0: i32}: () -> i32
+  "func.return" (%z): (i32) -> ()
 }]
 
 def allTests: Array Test := #[
