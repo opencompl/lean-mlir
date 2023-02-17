@@ -52,6 +52,7 @@ inductive Expr: OR -> Type where
    (arg : Var)
    (regions : Expr .Rs)
    (const: Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
+| tuple (ret: String) (a1 a2: Var): Expr .O -- %out = tuple (%v1, %v2)
 | region (arg : Var) (ops : Expr .Os): Expr .R -- '{ ^entry(arg:argty) ops* }'
 
 abbrev Op := Expr .O
@@ -59,7 +60,10 @@ abbrev Region := Expr .R
 abbrev Ops := Expr .Os
   
 def Op.Ret : Op → Var
-| .op ret _ _ _ _ => ret  
+| .op ret _ _ _ _ => ret 
+| .tuple retname arg1 arg2 => 
+   { name := retname,
+     kind := .pair arg1.kind arg2.kind : Var}
 
 
 
@@ -152,6 +156,13 @@ def AST.Expr.denote {kind: OR}
     TopM.set retv (os.denote sem)
 | .regionsnil => []
 | .regionscons r rs => r.denote sem :: (rs.denote sem)
+| .tuple ret arg1 arg2 => do
+   let val1 ←TopM.get arg1
+   let val2 ← TopM.get arg2
+   return { name := ret,
+            kind := .pair arg1.kind arg2.kind,
+            val := (val1, val2)
+          } -- build a pair
 | .op ret name arg rs const => do 
     let val ← TopM.get arg 
     let op' : Op' :=
@@ -179,9 +190,14 @@ declare_syntax_cat dsl_var
 declare_syntax_cat dsl_const
 declare_syntax_cat dsl_kind
 
-syntax sepBy1(ident, ",") :dsl_kind
+syntax sepBy1(ident, "×") :dsl_kind
 syntax "%"ident ":" dsl_kind : dsl_var
-syntax dsl_var "=" str ("(" dsl_var ")")? ("[" dsl_region,* "]")? ("{" dsl_const "}")? : dsl_op
+syntax dsl_var "="
+      str
+      ("(" dsl_var ")")?
+      ("[" dsl_region,* "]")?
+      ("{" dsl_const "}")? ";": dsl_op
+syntax "%" ident "="  "(" dsl_var "," dsl_var ")" ";": dsl_op
 syntax num : dsl_const 
 syntax "{" ("^(" dsl_var "):")?  dsl_op dsl_op*  "}" : dsl_region
 syntax "[dsl_op|" dsl_op "]" : term 
@@ -199,7 +215,7 @@ def AST.Ops.fromList: Op → List Op → Ops
 
 open Lean Macro in 
 macro_rules
-| `([dsl_kind| $[ $ks ],* ]) => do
+| `([dsl_kind| $[ $ks ]×* ]) => do
     let mut out ← `(AST.Kind.unit)
     for k in ks do
       let cur ← match k.getId.toString with 
@@ -209,9 +225,9 @@ macro_rules
     return out
 
 macro_rules
-| `([dsl_var| %$name:ident : $kind]) => do 
+| `([dsl_var| %$name:ident : $kind:dsl_kind]) => do 
     `({ name := $(Lean.quote name.getId.toString),
-        kind := `([dsl_kind| $kind]) : Var})
+        kind := [dsl_kind| $kind] : Var})
 
 macro_rules
 | `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
@@ -233,6 +249,7 @@ macro_rules
       $[ ( $arg:dsl_var ) ]?
       $[ [ $rgns,* ] ]? 
       $[ { $const } ]?
+      ;
       ]) => do
       let res_term ← `([dsl_var| $res])
       let arg_term ← match arg with 
@@ -240,23 +257,27 @@ macro_rules
           | .none => `(AST.Var.unit)
       let name_term := Lean.quote name.getString
       let rgns_term ← match rgns with
-        | .none => `([])
+        | .none => `(.regionsnil)
         | .some rgns => 
            let rgns ← rgns.getElems.mapM (fun stx => `([dsl_region| $stx]))
            `([ $rgns,* ])
       let const_term ←
         match const with
-        | .none => `(Const.Unit)
+        | .none => `(Const.unit)
         | .some c => `([dsl_const| $c])
       `(Expr.op $res_term $name_term $arg_term $rgns_term $const_term)
 
+macro_rules
+| `([dsl_op| %$res:ident = ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
+    let res_term := Lean.quote res.getId.toString
+    let arg1_term ← `([dsl_var| $arg1 ])
+    let arg2_term ← `([dsl_var| $arg2 ])
+    `(Expr.tuple $res_term $arg1_term $arg2_term)
 
 end DSL
 
 namespace Arith
 def sem: (o: Op') → TopM (o.retkind.eval)
-| { name := "unit",
-    retkind := .unit} => return () 
 | { name := "constant",
     const := .int x,
     retkind := .int} => return x 
@@ -272,11 +293,21 @@ def sem: (o: Op') → TopM (o.retkind.eval)
 | op => TopM.error s!"unknown op: {op.name}"
 end Arith
 
-def example1 : Region :=
+def eg_kind_int := [dsl_kind| int]
+#reduce eg_kind_int
+
+def eg_var : AST.Var := [dsl_var| %y : int]
+#reduce eg_var
+
+def eg_region_sub :=
  [dsl_region| {
-   %one : int = "constant" {1}
-   %two : int = "constant" {2}
+   %one : int = "constant" {1};
+   %two : int = "constant" {2};
+   %t = (%one : int , %two : int);
+   %x : int = "sub"(%t : int × int);
  }]
+#reduce eg_region_sub
+
 namespace Scf
 end Scf
 
