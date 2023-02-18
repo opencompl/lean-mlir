@@ -21,46 +21,14 @@ inductive Kind where
 | unit: Kind
 deriving Inhabited, DecidableEq, BEq
 
-instance : ToString Kind where
-  toString k := 
-    let rec go : Kind →String  
-    | .int => "int"
-    | .nat => "nat"
-    | .float => "float"
-    | .unit => "unit"
-    | .tensor1d => "tensor1d"
-    | .tensor2d => "tensor2d"
-    | .pair p q => s!"({go p}, {go q})"
-    go k
-
 -- A binding of 'name' with kind 'Kind'
 structure Var where
   name : String
   kind : Kind
 deriving Inhabited, DecidableEq, BEq
 
-instance : ToString Var where 
-  toString x := "%" ++ x.name ++ ":" ++ toString x.kind 
-
 @[match_pattern]
 def Var.unit : Var := { name := "_", kind := .unit }
-
--- compile time constant values.
-inductive Const where
-| int: Int → Const
-| float: Float → Const 
-| unit: Const
-| pair: Const → Const → Const
-deriving BEq 
-
-instance : ToString Const where
-  toString :=
-    let rec go : Const → String  
-    | .int i => toString i
-    | .float f => toString f
-    | .unit => "()"
-    | .pair p q => s!"({go p}, {go q})"
-    go
 
 -- Tag for variants of Op/Region hybrid
 inductive OR: Type
@@ -73,27 +41,17 @@ inductive Expr: OR -> Type where
 | opscons: Expr .O -> Expr .Os -> Expr .Os -- cons cell 'op :: ops'
 | op (ret : Var)
    (name : String)
-   (arg : List Var)
-   (const: List Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
+   (arg : List Var): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
 
 abbrev Op := Expr .O
 abbrev Ops := Expr .Os
 
 def Op.mk (ret: Var := Var.unit)
   (name: String)
-  (arg: Var := Var.unit)
-  (const := Const.unit) : Op := Expr.op ret name [arg] [const]
--- Append an 'Op' to the end of the 'Ops' list.
-def Ops.snoc: Ops → Op → Ops
-| .opsone o, o' => .opscons o (.opsone o')
-| .opscons o os, o' => .opscons o (Ops.snoc os o')
+  (arg: Var := Var.unit) : Op := Expr.op ret name [arg]
 
 def Op.Ret : Op → Var
-| .op ret _ _ _ => ret 
-
-
-
-
+| .op ret _ _ => ret 
 
 -- Lean type that corresponds to kind.
 @[reducible, simp]
@@ -116,51 +74,13 @@ structure Val where
   kind: Kind
   val: kind.eval
 
-instance : BEq Val where
-  beq a b := 
-    let rec go a b := 
-    match a, b with
-    | {kind := .int, val := a}, {kind := .int, val := b} => a == b
-    | {kind := .float, val := a}, {kind := .float, val := b} => a == b
-    | {kind := .unit, val := a}, {kind := .unit, val := b} => a == b
-    | {kind := .pair p q, val := ⟨a, a'⟩}, {kind := .pair r s, val := ⟨b, b'⟩ } => 
-      go ⟨p, a⟩ ⟨r, b⟩ && go ⟨q, a'⟩ ⟨s, b'⟩
-    | _, _ => False
-    go a b
  
 def Val.unit : Val := { kind := Kind.unit, val := () }
-
-def Val.toString (v: Val): String :=
-  match v  with
-  | { kind := .nat, val := v} => "nat"
-  | { kind := .tensor2d, val := v} => "tensor2d"
-  | { kind := .tensor1d, val := _ } => "<tensor1d.val>"
-  | {kind := .int, val := val } => 
-      let S : ToString Int := inferInstance
-      S.toString val
-  | {kind := .float, val := val } => 
-      let S : ToString Float := inferInstance
-      S.toString val
-  | {kind := .unit, val := () } => "()"
-  | {kind := .pair p q, val := (x, y) } => 
-      let xstr := Val.toString ({ kind := p, val := x})
-      let ystr := Val.toString { kind := q, val := y}
-      s!"({xstr}, {ystr})"
-
-instance : ToString Val where
-  toString := Val.toString
 
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
   name : String  
-deriving BEq
 
-def NamedVal.toString (nv: NamedVal): String :=
- s!"{nv.name} := {Val.toString nv.toVal}"
-
-
-instance : ToString NamedVal where
-  toString := NamedVal.toString
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
 def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
@@ -238,7 +158,7 @@ def OpM.toTopM: OpM a → TopM a
 def Val.cast (val: Val) (t: Kind): OpM t.eval :=
   if H : val.kind = t
   then pure (H ▸ val.val)
-  else OpM.error s!"mismatched type {val.kind} ≠ {t}"
+  else OpM.error s!"mismatched type "
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
@@ -246,24 +166,13 @@ inductive Op' where
 | mk
   (name : String)
   (argval : List Val)
-  (const: List Const)
 
 def Op'.name: Op' → String 
-| .mk name argval const => name 
+| .mk name argval => name 
 
 def Op'.argval: Op' → List Val 
-| .mk name argval const => argval
+| .mk name argval => argval
 
-def Op'.const: Op' → List Const 
-| .mk name argval const => const
-
-
-
-instance : ToString Op' where
-  toString x := 
-    x.name ++ "(" ++ toString x.argval ++ ")" ++
-
-    " {" ++ toString x.const ++ "}"
 
 @[reducible]
 def AST.OR.denoteType: OR -> Type
@@ -276,12 +185,11 @@ def AST.Expr.denote {kind: OR}
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
     OpM.set retv (os.denote sem)
-| .op ret name args const => do 
+| .op ret name args  => do 
     let vals ← args.mapM OpM.get
     let op' : Op' := .mk
       name
       (vals.map NamedVal.toVal)
-      const
     let out ← sem op'
     if ret.kind = out.kind
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
@@ -298,22 +206,22 @@ namespace Arith
 
 set_option pp.all true in 
 def sem: (o: Op') → OpM Val
-| .mk "float" [] [(.float x)] => return ⟨.float, x+1⟩
-| .mk "float2" [⟨.float, x⟩] [] => return ⟨.float, x + x⟩
-| .mk "int2" [⟨.int, x⟩] [] => return ⟨.int, x + x⟩
-| .mk "nat2" [⟨.nat, x⟩] [] => return ⟨.nat, x + x⟩
-| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  []  => 
+| .mk "float" [] => return ⟨.float, x+1⟩
+| .mk "float2" [⟨.float, x⟩] => return ⟨.float, x + x⟩
+| .mk "int2" [⟨.int, x⟩] => return ⟨.int, x + x⟩
+| .mk "nat2" [⟨.nat, x⟩] => return ⟨.nat, x + x⟩
+| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]   => 
       return ⟨.int, (x + y)⟩
-| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] [] => 
+| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] => 
       return ⟨.int, (x - y)⟩
-| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] => 
+| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] => 
     let i := t ix 
     return ⟨.int, i + i⟩
-| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] => 
+| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] => 
     let i := t 0 0
     let j := t 1 1
     return ⟨.int, i + i⟩
-| op => OpM.error s!"unknown op: {op}"
+| op => OpM.error s!"unknown op"
 
 
 open AST in 
