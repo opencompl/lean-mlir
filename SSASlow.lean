@@ -1,3 +1,5 @@
+import Mathlib.Data.Int.Basic
+open Mathlib
 open Std 
 
 namespace AST
@@ -7,7 +9,10 @@ Kinds of values. We must have 'pair' to take multiple arguments.
 -/
 inductive Kind where
 | int : Kind
+| nat: Kind 
 | float : Kind
+| tensor1d: Kind
+| tensor2d: Kind
 | pair : Kind -> Kind -> Kind
 | unit: Kind
 deriving Inhabited, DecidableEq, BEq
@@ -16,8 +21,11 @@ instance : ToString Kind where
   toString k := 
     let rec go : Kind →String  
     | .int => "int"
+    | .nat => "nat"
     | .float => "float"
     | .unit => "unit"
+    | .tensor1d => "tensor1d"
+    | .tensor2d => "tensor2d"
     | .pair p q => s!"({go p}, {go q})"
     go k
 
@@ -134,8 +142,11 @@ instance : ToString (Expr k) where
 @[reducible, simp]
 def Kind.eval: Kind -> Type
 | .int => Int
+| .nat => Nat
 | .unit => Unit
 | .float => Float
+| .tensor1d => Nat → Int
+| .tensor2d => Nat → Nat → Int  
 | .pair p q => p.eval × q.eval
 
 end AST
@@ -164,6 +175,9 @@ def Val.unit : Val := { kind := Kind.unit, val := () }
 
 def Val.toString (v: Val): String :=
   match v  with
+  | { kind := .nat, val := v} => "nat"
+  | { kind := .tensor2d, val := v} => "tensor2d"
+  | { kind := .tensor1d, val := _ } => "<tensor1d.val>"
   | {kind := .int, val := val } => 
       let S : ToString Int := inferInstance
       S.toString val
@@ -206,7 +220,7 @@ inductive Env where
 
 
 abbrev ErrorKind := String
-abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
+abbrev TopM (α : Type) : Type := StateT Env (Except ErrorKind) α
 
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
@@ -218,13 +232,17 @@ def Env.get (var: Var): Env → Except ErrorKind var.kind.eval
     then pure (H ▸ val) 
     else env'.get var 
 
-def ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
-def ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
-  reader ∘ f 
+def TopM.get (var: Var): TopM var.kind.eval := do 
+  let e ← StateT.get 
+  Env.get var e
 
-def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
-def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := 
-  ReaderT.withEnv (Env.set nv.var nv.val) k
+def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do 
+  let e ← StateT.get
+  let e' := Env.set nv.var nv.val e
+  StateT.set e'
+  let out ← k
+  StateT.set e 
+  return out 
 
 def TopM.error (e: ErrorKind) : TopM α := Except.error e
 
@@ -288,44 +306,9 @@ def AST.Expr.denote {kind: OR}
 
 def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
-(arg : Val := Val.unit) : Except ErrorKind NamedVal := 
+(arg : Val := Val.unit) : Except ErrorKind (NamedVal × Env) := 
   (expr.denote sem arg).run env
 
-
-theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β), 
- ma >>= (fun a => ma >>= (fun a' => k a a')) =
- ma >>= (fun a => k a a) := by {
-  intros ma k;
-  funext env;
-  simp[ReaderT.bind];
-  simp[bind];
-  simp[ReaderT.bind];
-  simp[bind];
-  simp[Except.bind];
-  cases H:(ma env) <;> simp;
-}
-
-theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM γ), 
- ma >>= (fun a => mb >>= (fun b => k a b)) =
- mb >>= (fun b => ma >>= (fun a => k a b)) := by {
-  intros ma mb k;
-  funext env;
-  simp[ReaderT.bind];
-  simp[bind];
-  simp[ReaderT.bind];
-  simp[bind];
-  simp[Except.bind];
-  cases H:(ma env) <;> simp;
-  case h.error e => {
-    cases H':(mb env) <;> simp;
-    case error e' => {
-      -- TODO: they are equal, upto error :(. We need rewriting wrt equiv rel.
-      -- We need either 'generalized rewriting', or we spend some time
-      -- investigating quotient types.
-      sorry 
-    }
-  }
-}
 
 end Semantics
 
@@ -372,7 +355,7 @@ open Lean Macro in
 def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
   match k.getId.toString with 
   | "int" => `(AST.Kind.int)
-  | unk => (throwErrorAt k s!"unknown kind '{unk}'")
+  | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
 
 
 open Lean Macro in 
@@ -461,10 +444,18 @@ def sem: (o: Op') → TopM (o.retkind.eval)
     retkind := .int,
     argval := ⟨.pair .int .int, (x, y)⟩ } => 
       return (x - y)
-
+| { name := "tensor1d",
+    retkind := .int,
+    argval := ⟨.pair .tensor1d .nat, ⟨t, ix⟩⟩ } => 
+    return (t 0 + t 1 + t ix)
+| { name := "tensor2d",
+    retkind := .int,
+    argval := ⟨.pair .tensor2d (.pair .nat .nat), ⟨t, ⟨i, j⟩⟩⟩ } => 
+    return (t i j + t 0 0 + t 1 1 + t i i - t j j)
 | op => TopM.error s!"unknown op: {op}"
 
-def eg_region_sub :=
+open AST in 
+def eg_region_sub : Region :=
  [dsl_region| {
    %one : int = "constant" {1};
    %two : int = "constant" {2};
@@ -473,6 +464,14 @@ def eg_region_sub :=
  }]
 #reduce eg_region_sub
 
+open AST in 
+theorem Fail: runRegion sem eg_region_sub   = .ok output  := by {
+  simp[runRegion];
+  simp[StateT.run]
+  simp[Expr.denote];
+  simp[bind];
+  simp[sem]; -- SLOW, but not timeout level slow
+}
 
 end Arith
 
@@ -670,7 +669,7 @@ def runRegionTest :
     IO.println r
     let v? := (r.denote sem arg).run env
     match v? with 
-    | .ok v => 
+    | .ok ⟨v, env⟩ => 
       if v == expected
       then
         IO.println s!"{v}. OK"; return True
@@ -690,7 +689,7 @@ def runRegionTestXfail :
     IO.println r
     let v? := (r.denote sem arg).run env
     match v? with 
-    | .ok v => 
+    | .ok ⟨v, env⟩ => 
         IO.println s!"ERROR: expected failure, but succeeded with '{v}'."; 
         return False
     | .error e => 
