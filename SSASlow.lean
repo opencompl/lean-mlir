@@ -2,8 +2,11 @@ import Mathlib.Data.Int.Basic
 import Mathlib.Data.Int.Lemmas
 open Mathlib
 open Std 
+open Int
+open Nat
 
 namespace AST
+
 
 /-
 Kinds of values. We must have 'pair' to take multiple arguments.
@@ -78,7 +81,7 @@ inductive Expr: OR -> Type where
    (regions : Expr .Rs)
    (const: List Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
 | tuple (ret: String) (a1 a2: Var): Expr .O -- %out = tuple (%v1, %v2)
-| region (arg : Var) (ops : Expr .Os): Expr .R -- '{ ^entry(arg:argty) ops* }'
+| region (arg : List Var) (ops : Expr .Os): Expr .R -- '{ ^entry(arg:argty) ops* }'
 
 abbrev Op := Expr .O
 abbrev Region := Expr .R
@@ -129,7 +132,7 @@ def Expr.format : Expr k → Format
       "(" ++ toString a1 ++ ", " ++ toString a2 ++ ")"
 | .region arg ops => 
     let argfmt : Format :=
-    if arg == Var.unit then "" else "^(" ++ toString arg ++ ")"
+    if arg == [] then "" else "^(" ++ toString arg ++ ")"
     "{" ++ argfmt ++ 
       Format.nest 2 (.line ++ ops.format) ++ .line ++ "}"
 instance ⦃k: OR⦄: ToFormat (Expr k) where
@@ -224,8 +227,19 @@ inductive OpM (a: Type) where
 | Ret: a →OpM a
 | Get: Var → (NamedVal → OpM a) → OpM a
 | Set: (v: NamedVal) → (rest: OpM a) → OpM a   
-| RunRegion: (a → OpM a) → a → OpM a
+-- | RunRegion: (List Val → OpM a) → OpM a
 | Error: String → OpM a 
+
+def OpM.bind: OpM α → (α → OpM β) → OpM β
+| .Ret a, f => f a
+| .Error s, _f => .Error s
+| .Get v k, f => .Get v (fun w => (k w).bind f)
+| .Set v rest, f => .Set v (rest.bind f)
+-- | .RunRegion g args, f=> .RunRegion (fun a => (g a).bind f) args
+
+instance : Monad OpM where
+  pure := .Ret
+  bind := OpM.bind
 
 abbrev ErrorKind := String
 abbrev TopM (α : Type) : Type := StateT Env (Except ErrorKind) α
@@ -244,6 +258,7 @@ def Env.get (var: Var): Env → Except ErrorKind NamedVal
 def TopM.get (var: Var): TopM NamedVal := do 
   let e ← StateT.get 
   Env.get var e
+def OpM.get (var: Var): OpM NamedVal := OpM.Get var pure
 
 def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do 
   let e ← StateT.get
@@ -252,8 +267,11 @@ def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do
   let out ← k
   StateT.set e 
   return out 
+def OpM.set (nv: NamedVal)  (k: OpM α): OpM α := OpM.Set nv k
+def OpM.set' (nv: NamedVal) : OpM Unit := OpM.Set nv (pure ())
 
 def TopM.error (e: ErrorKind) : TopM α := Except.error e
+def OpM.error (e: ErrorKind): OpM α := OpM.Error e
 
 def OpM.toTopM: OpM a → TopM a
 | OpM.Ret a => return a
@@ -263,13 +281,12 @@ def OpM.toTopM: OpM a → TopM a
     (k out).toTopM 
 | OpM.Set nv rest => do
    TopM.set nv (rest.toTopM)
-| OpM.RunRegion k args => 
-   (k args).toTopM
+-- | OpM.RunRegion k args =>  (k args).toTopM
 
-def Val.cast (val: Val) (t: Kind): TopM t.eval :=
+def Val.cast (val: Val) (t: Kind): OpM t.eval :=
   if H : val.kind = t
   then pure (H ▸ val.val)
-  else TopM.error s!"mismatched type {val.kind} ≠ {t}"
+  else OpM.error s!"mismatched type {val.kind} ≠ {t}"
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
@@ -277,77 +294,78 @@ inductive Op' where
 | mk
   (name : String)
   (argval : List Val)
-  (regions: List (Val → TopM NamedVal))
+  (regions: List (List Val → OpM NamedVal))
   (const: List Const)
-  (retkind: Kind): Op'
 
 def Op'.name: Op' → String 
-| .mk name argval regions const retkind => name 
+| .mk name argval regions const => name 
 
 def Op'.argval: Op' → List Val 
-| .mk name argval regions const retkind => argval
+| .mk name argval regions const => argval
 
-def Op'.regions: Op' → List (Val → TopM NamedVal) 
-| .mk name argval regions const retkind => regions
+def Op'.regions: Op' → List (List Val → OpM NamedVal) 
+| .mk name argval regions const => regions
 
 def Op'.const: Op' → List Const 
-| .mk name argval regions const retkind => const
+| .mk name argval regions const => const
 
-def Op'.retkind: Op' → Kind 
-| .mk name argval regions const retkind => retkind
 
 
 instance : ToString Op' where
   toString x := 
     x.name ++ "(" ++ toString x.argval ++ ")" ++
     " [" ++ "#" ++ toString x.regions.length ++ "]" ++
-    " {" ++ toString x.const ++ "}" ++ " → " ++ toString x.retkind
+    " {" ++ toString x.const ++ "}"
 
 @[reducible]
 def AST.OR.denoteType: OR -> Type
-| .O => TopM NamedVal
-| .Os => TopM NamedVal
-| .R => Val → TopM NamedVal
-| .Rs => List (Val → TopM NamedVal) -- TODO: is 'List' here correct?
+| .O => OpM NamedVal
+| .Os => OpM NamedVal
+| .R => List Val → OpM NamedVal
+| .Rs => List (List Val → OpM NamedVal) -- TODO: is 'List' here correct?
 
 
 def AST.Expr.denote {kind: OR}
- (sem: (o: Op') → TopM Val): Expr kind → kind.denoteType 
+ (sem: (o: Op') → OpM Val): Expr kind → kind.denoteType 
 | .opsone o => AST.Expr.denote (kind := .O) sem o
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
-    TopM.set retv (os.denote sem)
+    OpM.set retv (os.denote sem)
 | .regionsnil => []
 | .regionscons r rs => r.denote sem :: (rs.denote sem)
 | .tuple ret arg1 arg2 => do
-   let val1 ←TopM.get arg1
-   let val2 ← TopM.get arg2
+   let val1 ←OpM.get arg1
+   let val2 ← OpM.get arg2
    return { name := ret,
             kind := .pair val1.kind val2.kind,
             val := (val1.val, val2.val)
           } -- build a pair
 | .op ret name args rs const => do 
-    let vals ← args.mapM TopM.get
+    let vals ← args.mapM OpM.get
     let op' : Op' := .mk
       name
       (vals.map NamedVal.toVal)
       (rs.denote sem)
       const
-      ret.kind
     let out ← sem op'
     if ret.kind = out.kind
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
-    else TopM.error "unexpected return kind '{}', expected {}"
+    else OpM.error "unexpected return kind '{}', expected {}"
     -- return ret.toNamedVal out
-| .region arg ops => fun val => do
+| .region args ops => fun vals => do
     -- TODO: improve dependent typing here
-    let val' ← val.cast arg.kind
-    TopM.set (arg.toNamedVal val') (ops.denote sem)
+    -- let val' ← val.cast arg.kind
+    -- OpM.set (arg.toNamedVal val') (ops.denote sem)
+    for argval in (args.zip vals) do
+      let arg := argval.fst
+      let val := argval.snd
+      OpM.set' { name := arg.name, kind := val.kind, val := val.val}
+    ops.denote sem
 
-def runRegion (sem : (o: Op') → TopM Val) (expr: AST.Expr .R)
+def runRegion (sem : (o: Op') → OpM Val) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
-(arg : Val := Val.unit) : Except ErrorKind (NamedVal × Env) := 
-  (expr.denote sem arg).run env
+(args : List Val := []) : Except ErrorKind (NamedVal × Env) := 
+  (expr.denote sem args).toTopM.run env
 
 
 end Semantics
@@ -425,7 +443,7 @@ macro_rules
 | `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
    let ops ← `([dsl_ops| $op $ops*]) 
    match arg with 
-   | .none => `(Expr.region Var.unit $ops)
+   | .none => `(Expr.region [] $ops)
    | .some arg => do
       let arg_term ← `([dsl_var| $arg ])
       `(Expr.region $arg_term $ops)
@@ -481,18 +499,24 @@ end DSL
 
 namespace Arith
 
-def sem: (o: Op') → TopM Val
-| .mk "constant" [] _ [(.int x)] .int => return ⟨.int, x⟩
-| .mk "float" [] _ [(.float x)] .float => return ⟨.float, x+1⟩
-| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  _ [] .int => 
+def sem: (o: Op') → OpM Val
+| .mk "constant" [] _ [(.int x)]  => return ⟨.int, x⟩
+| .mk "float" [] _ [(.float x)] => return ⟨.float, x+1⟩
+| .mk "float2" [⟨.float, x⟩] _ [] => return ⟨.float, x + x⟩
+| .mk "int2" [⟨.int, x⟩] _ [] => return ⟨.int, x + x⟩
+| .mk "nat2" [⟨.nat, x⟩] _ [] => return ⟨.nat, x + x⟩
+| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  _ []  => 
       return ⟨.int, (x + y)⟩
-| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] _ [] .int => 
+| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] _ [] => 
       return ⟨.int, (x - y)⟩
-| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] [] .int => 
+| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] [] => 
     return ⟨.int, (t 0 + t 1 + t ix)⟩
-| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] [] .int => 
-    return ⟨.int, (t j j)⟩
-| op => TopM.error s!"unknown op: {op}"
+| .mk "pair" [⟨.pair .int .nat, ⟨x, y⟩⟩] _ _ => return ⟨.nat, y⟩ 
+| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] [] => 
+    let i := t 0 0
+    let j := t 1 1
+    return ⟨.int, i + i⟩
+| op => OpM.error s!"unknown op: {op}"
 
 open AST in 
 def eg_region_sub : Region :=
@@ -507,11 +531,13 @@ def eg_region_sub : Region :=
 open AST in 
 theorem Fail: runRegion sem eg_region_sub   = .ok output  := by {
   simp[eg_region_sub];
+  -- ERROR: failed to generate equality theorems for `match` expression `Arith.sem.match_1`
   simp[sem]; -- SLOW, but not timeout level slow
   simp[runRegion];
   simp[StateT.run]
   simp[Expr.denote];
   simp[bind];
+  simp[StateT.bind];
 }
 
 end Arith
