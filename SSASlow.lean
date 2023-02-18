@@ -1,4 +1,5 @@
 import Mathlib.Data.Int.Basic
+import Mathlib.Data.Int.Lemmas
 open Mathlib
 open Std 
 
@@ -38,6 +39,7 @@ deriving Inhabited, DecidableEq, BEq
 instance : ToString Var where 
   toString x := "%" ++ x.name ++ ":" ++ toString x.kind 
 
+@[match_pattern]
 def Var.unit : Var := { name := "_", kind := .unit }
 
 -- compile time constant values.
@@ -72,9 +74,9 @@ inductive Expr: OR -> Type where
 | regionscons: Expr .R -> Expr .Rs -> Expr .Rs -- cons cell 'region :: regions'
 | op (ret : Var)
    (name : String)
-   (arg : Var)
+   (arg : List Var)
    (regions : Expr .Rs)
-   (const: Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
+   (const: List Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
 | tuple (ret: String) (a1 a2: Var): Expr .O -- %out = tuple (%v1, %v2)
 | region (arg : Var) (ops : Expr .Os): Expr .R -- '{ ^entry(arg:argty) ops* }'
 
@@ -87,7 +89,7 @@ def Op.mk (ret: Var := Var.unit)
   (name: String)
   (arg: Var := Var.unit)
   (regions := Expr.regionsnil)
-  (const := Const.unit): Op := Expr.op ret name arg regions const
+  (const := Const.unit) : Op := Expr.op ret name [arg] regions [const]
 -- Append an 'Op' to the end of the 'Ops' list.
 def Ops.snoc: Ops → Op → Ops
 | .opsone o, o' => .opscons o (.opsone o')
@@ -111,10 +113,10 @@ def Expr.format : Expr k → Format
 | .regionscons r rs => r.format ++ .line ++ rs.format
 | .op ret name arg rs const => 
     let constfmt : Format := 
-      if const == .unit then ""
+      if const == [] then ""
       else "{" ++ toString const ++ "}"
     let argfmt : Format :=
-      if arg == Var.unit then ""
+      if arg == [] then ""
       else "(" ++ toString arg ++ ")"
     let rsfmt : Format := 
       if Regions.isEmpty rs then ""
@@ -218,21 +220,28 @@ inductive Env where
 | empty: Env
 | cons (var: Var) (val: var.kind.eval) (rest: Env): Env 
 
+inductive OpM (a: Type) where 
+| Ret: a →OpM a
+| Get: Var → (NamedVal → OpM a) → OpM a
+| Set: (v: NamedVal) → (rest: OpM a) → OpM a   
+| RunRegion: (a → OpM a) → a → OpM a
+| Error: String → OpM a 
 
 abbrev ErrorKind := String
 abbrev TopM (α : Type) : Type := StateT Env (Except ErrorKind) α
 
+
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
-def Env.get (var: Var): Env → Except ErrorKind var.kind.eval  
+def Env.get (var: Var): Env → Except ErrorKind NamedVal 
 | .empty => Except.error s!"unknown var {var.name}"
 | .cons var' val env' => 
     if H : var = var'
-    then pure (H ▸ val) 
+    then pure <| var.toNamedVal (H ▸ val) 
     else env'.get var 
 
-def TopM.get (var: Var): TopM var.kind.eval := do 
+def TopM.get (var: Var): TopM NamedVal := do 
   let e ← StateT.get 
   Env.get var e
 
@@ -246,6 +255,17 @@ def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do
 
 def TopM.error (e: ErrorKind) : TopM α := Except.error e
 
+def OpM.toTopM: OpM a → TopM a
+| OpM.Ret a => return a
+| OpM.Error e => TopM.error e
+| OpM.Get var k => do 
+    let out ← TopM.get var
+    (k out).toTopM 
+| OpM.Set nv rest => do
+   TopM.set nv (rest.toTopM)
+| OpM.RunRegion k args => 
+   (k args).toTopM
+
 def Val.cast (val: Val) (t: Kind): TopM t.eval :=
   if H : val.kind = t
   then pure (H ▸ val.val)
@@ -253,12 +273,29 @@ def Val.cast (val: Val) (t: Kind): TopM t.eval :=
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
-structure Op' where
-  name : String
-  argval : Val := ⟨.unit, ()⟩
-  regions: List (Val → TopM NamedVal) := []
-  const: Const := .unit
-  retkind: Kind 
+inductive Op' where
+| mk
+  (name : String)
+  (argval : List Val)
+  (regions: List (Val → TopM NamedVal))
+  (const: List Const)
+  (retkind: Kind): Op'
+
+def Op'.name: Op' → String 
+| .mk name argval regions const retkind => name 
+
+def Op'.argval: Op' → List Val 
+| .mk name argval regions const retkind => argval
+
+def Op'.regions: Op' → List (Val → TopM NamedVal) 
+| .mk name argval regions const retkind => regions
+
+def Op'.const: Op' → List Const 
+| .mk name argval regions const retkind => const
+
+def Op'.retkind: Op' → Kind 
+| .mk name argval regions const retkind => retkind
+
 
 instance : ToString Op' where
   toString x := 
@@ -275,7 +312,7 @@ def AST.OR.denoteType: OR -> Type
 
 
 def AST.Expr.denote {kind: OR}
- (sem: (o: Op') → TopM (o.retkind.eval)): Expr kind → kind.denoteType 
+ (sem: (o: Op') → TopM Val): Expr kind → kind.denoteType 
 | .opsone o => AST.Expr.denote (kind := .O) sem o
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
@@ -286,25 +323,28 @@ def AST.Expr.denote {kind: OR}
    let val1 ←TopM.get arg1
    let val2 ← TopM.get arg2
    return { name := ret,
-            kind := .pair arg1.kind arg2.kind,
-            val := (val1, val2)
+            kind := .pair val1.kind val2.kind,
+            val := (val1.val, val2.val)
           } -- build a pair
-| .op ret name arg rs const => do 
-    let val ← TopM.get arg 
-    let op' : Op' :=
-      { name := name
-      , argval := ⟨arg.kind, val⟩
-      , regions := rs.denote sem
-      , const := const
-      , retkind := ret.kind }
+| .op ret name args rs const => do 
+    let vals ← args.mapM TopM.get
+    let op' : Op' := .mk
+      name
+      (vals.map NamedVal.toVal)
+      (rs.denote sem)
+      const
+      ret.kind
     let out ← sem op'
-    return ret.toNamedVal out
+    if ret.kind = out.kind
+    then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
+    else TopM.error "unexpected return kind '{}', expected {}"
+    -- return ret.toNamedVal out
 | .region arg ops => fun val => do
     -- TODO: improve dependent typing here
     let val' ← val.cast arg.kind
     TopM.set (arg.toNamedVal val') (ops.denote sem)
 
-def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
+def runRegion (sem : (o: Op') → TopM Val) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
 (arg : Val := Val.unit) : Except ErrorKind (NamedVal × Env) := 
   (expr.denote sem arg).run env
@@ -415,7 +455,7 @@ macro_rules
         match const with
         | .none => `(Const.unit)
         | .some c => `([dsl_const| $c])
-      `(Expr.op $res_term $name_term $arg_term $rgns_term $const_term)
+      `(Expr.op $res_term $name_term [$arg_term] $rgns_term [$const_term])
 
 macro_rules
 | `([dsl_op| %$res:ident = ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
@@ -431,27 +471,27 @@ def eg_var : AST.Var := [dsl_var| %y : int]
 #reduce eg_var
 end DSL
 
+ /-
+  (name : String)
+  (argval : Val)
+  (regions: List (Val → TopM NamedVal))
+  (const: Const)
+  (retkind: Kind): Op'
+-/
+
 namespace Arith
-def sem: (o: Op') → TopM (o.retkind.eval)
-| { name := "constant",
-    const := .int x,
-    retkind := .int} => return x 
-| { name := "add",
-    retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } => 
-      return (x + y)
-| { name := "sub",
-    retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } => 
-      return (x - y)
-| { name := "tensor1d",
-    retkind := .int,
-    argval := ⟨.pair .tensor1d .nat, ⟨t, ix⟩⟩ } => 
-    return (t 0 + t 1 + t ix)
-| { name := "tensor2d",
-    retkind := .int,
-    argval := ⟨.pair .tensor2d (.pair .nat .nat), ⟨t, ⟨i, j⟩⟩⟩ } => 
-    return (t i j + t 0 0 + t 1 1 + t i i - t j j)
+
+def sem: (o: Op') → TopM Val
+| .mk "constant" [] _ [(.int x)] .int => return ⟨.int, x⟩
+| .mk "float" [] _ [(.float x)] .float => return ⟨.float, x+1⟩
+| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  _ [] .int => 
+      return ⟨.int, (x + y)⟩
+| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] _ [] .int => 
+      return ⟨.int, (x - y)⟩
+| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] [] .int => 
+    return ⟨.int, (t 0 + t 1 + t ix)⟩
+| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] [] .int => 
+    return ⟨.int, (t j j)⟩
 | op => TopM.error s!"unknown op: {op}"
 
 open AST in 
@@ -466,280 +506,15 @@ def eg_region_sub : Region :=
 
 open AST in 
 theorem Fail: runRegion sem eg_region_sub   = .ok output  := by {
+  simp[eg_region_sub];
+  simp[sem]; -- SLOW, but not timeout level slow
   simp[runRegion];
   simp[StateT.run]
   simp[Expr.denote];
   simp[bind];
-  simp[sem]; -- SLOW, but not timeout level slow
 }
 
 end Arith
 
-namespace Scf
 
-def repeatM: Nat → (Val → TopM Val) → Val → TopM Val
-| 0, _ => pure
-| .succ n, f => f >=> repeatM n f
- 
-
-def sem: (o: Op') → TopM (o.retkind.eval) 
-| { name := "if",
-    argval := ⟨.int, cond⟩,
-    regions := [rthen, relse],
-    retkind := .int -- hack: we assume that we always return ints.
-  } => do 
-    let rrun := if cond ≠ 0 then rthen else relse
-    let v ← rrun Val.unit
-    v.cast .int
-| { name := "twice",
-    regions := [r],
-    retkind := .int
-  } => do
-    let v ← r Val.unit
-    let w ← r Val.unit -- run a region twice, check that it is same as running once.
-    w.cast .int  
-| { name := "for",
-    regions := [r],
-    retkind := .int,
-    argval := ⟨.pair .int .int, ⟨init, niters⟩⟩
-  } => do
-    let niters : Nat := 
-      match niters with
-      | .ofNat n => n 
-      | _ => 0
-    let loopEffect := (fun v => NamedVal.toVal <$> (r v)) 
-    let w ← repeatM niters loopEffect ⟨.int, init⟩
-    w.cast .int 
-| op => TopM.error s!"unknown op {op}"
-end Scf
-
-namespace Combine
-def combineSem: (s1 s2: (o: Op') → TopM o.retkind.eval) → 
-    (x: Op') → TopM x.retkind.eval := 
-  fun s1 s2 o => 
-     let f1 := (s1 o)
-     let f2 := (s2 o)
-     fun env => (f1 env).orElseLazy (fun () => f2 env) 
-
-end Combine
-
-namespace Examples
-open AST 
-def eg_arith_shadow : Region := [dsl_region| {
-  %x : int = "constant"{0};
-  %x : int = "constant"{1};
-  %x : int = "constant"{2};
-  %x : int = "constant"{3};
-  %x : int = "constant"{4};
-}]
-
-def eg_scf_ite_true : Region := [dsl_region| {
-  %cond : int = "constant"{1};
-  %out : int = "if" (%cond : int) [{
-    %out_then : int = "constant"{42};
-  }, {
-    %out_else : int = "constant"{0};
-  }];
-}]
-
-def eg_scf_ite_false : Region := [dsl_region| {
-  %cond : int = "constant"{0};
-  %out : int = "if" (%cond : int) [{
-    %out_then : int = "constant"{42};
-  }, {
-    %out_else : int = "constant"{0};
-  }];
-}]
-
-def eg_scf_run_twice : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %x : int = "twice" [{
-      %one : int = "constant"{1};
-      %xone = (%x : int, %one : int);
-      %x : int = "add"(%xone : int × int);
-  }];
-}]
-
-def eg_scf_well_scoped : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %one : int = "constant"{1}; -- one is outside.
-  %x : int = "twice" [{
-      %xone = (%x : int, %one : int); -- one is accessed here.
-      %x : int = "add"(%xone : int × int);
-  }];
-}]
-
-def eg_scf_ill_scoped : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %x : int = "twice" [{
-      %y : int = "constant"{42};
-  }];
-  -- %y should NOT be accessible here
-  %out = (%y : int, %y : int);
-}]
-
-def eg_scf_for: Region := [dsl_region| {
-  %x : int = "constant"{10};  -- 10 iterations
-  %init : int = "constant"{32}; -- start value
-  %xinit = (%x : int, %init : int);
-  %out : int = "for"(%xinit : int × int)[{
-    ^(%xcur : int):
-      %one : int = "constant"{1};
-      %xcur_one = (%xcur : int, %one : int);
-      %xnext : int = "add"(%xcur_one : int × int);
-  }];
-}]
-
-
-
-end Examples
-
-namespace Rewriting
-open AST 
-
-inductive TypingCtx 
-| nil: TypingCtx
-| cons: Var → TypingCtx → TypingCtx  
-
-
-inductive TypingContextInEnv: Env → TypingCtx → Prop where 
-| Nil: (e: Env) → TypingContextInEnv e .nil
-| Cons: (e: Env) →
-  (e.get var).isOk → -- current
-  TypingContextInEnv e ctx' → -- rest
-  TypingContextInEnv e (.cons v ctx')  
-
-/- Replace the final Op with the new seqence of Ops -/
-def Ops.replaceOne (os: Ops) (new: Ops) : Ops :=
-  match os with
-  | .opsone o => new
-  | .opscons o os => .opscons o (Ops.replaceOne os new)
-  
-structure Peephole where
-  findbegin: TypingCtx -- free variables.
-  findmid : Ops -- stuff in the pattern. The last op is to be replaced.
-  replace : Ops -- replacement ops. can use 'findbegin'.
-  sem: (o : Op') → TopM (Kind.eval o.retkind) 
-  -- TODO: Once again, we need to reason 'upto error'. 
-  replaceCorrect: ∀ (env: Env), 
-      (findmid.denote sem).run env =
-      (replace.denote sem).run env
-end Rewriting
-
-namespace RewriteExamples
-open Rewriting 
-open AST 
-section SubXX
- def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
-  findbegin := .cons ⟨arg, .int⟩ .nil,
-  findmid := 
-      let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
-      let sub := Op.mk 
-                  (name := "sub")
-                  (ret := ⟨res, .int⟩) 
-                  (arg := ⟨pairname, .pair .int .int⟩)
-      .opscons pair (.opsone sub),
-  replace :=
-    let const := Op.mk
-                  (name := "const")
-                  (ret := ⟨res, .int⟩)
-                  (const := Const.int 0)
-    .opsone (const),
-  sem := Arith.sem,
-  replaceCorrect := fun env => by {
-    sorry
-  }
- }
-end SubXX
-
-end RewriteExamples
-namespace Theorems
--- SCF for loop peeling
-
-end Theorems
-
-namespace Test
-def runRegionTest : 
-  (sem: (o: Op') → TopM o.retkind.eval) →
-  (r: AST.Region) → 
-  (expected: NamedVal) →
-  (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool := 
-  fun sem r expected arg env => do
-    IO.println r
-    let v? := (r.denote sem arg).run env
-    match v? with 
-    | .ok ⟨v, env⟩ => 
-      if v == expected
-      then
-        IO.println s!"{v}. OK"; return True
-      else 
-        IO.println s!"ERROR: computed '{v}', expected '{expected}'."
-        return False
-    | .error e => 
-      IO.println s!"ERROR: '{e}'. Expected '{expected}'."
-      return False
-
-def runRegionTestXfail : 
-  (sem: (o: Op') → TopM o.retkind.eval) →
-  (r: AST.Region) → 
-  (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool := 
-  fun sem r arg env => do
-    IO.println r
-    let v? := (r.denote sem arg).run env
-    match v? with 
-    | .ok ⟨v, env⟩ => 
-        IO.println s!"ERROR: expected failure, but succeeded with '{v}'."; 
-        return False
-    | .error e => 
-      IO.println s!"OK: Succesfully xfailed '{e}'."
-      return True
-
-end Test
-
-
-open Arith Scf Combine DSL Examples Test in 
-def main : IO UInt32 := do 
-  let tests := 
-  [runRegionTest 
-    (sem := Arith.sem)
-    (r := eg_region_sub)
-    (expected := { name := "x", kind := .int, val := -1}),
-  runRegionTest 
-    (sem := Arith.sem)
-    (r := eg_arith_shadow)
-    (expected := { name := "x", kind := .int, val := 4}),
-   runRegionTest 
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_ite_true)
-    (expected := { name := "out", kind := .int, val := 42}),
-  runRegionTest 
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_ite_false)
-    (expected := { name := "out", kind := .int, val := 0}),
-  runRegionTest 
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_run_twice)
-    (expected := { name := "x", kind := .int, val := 42}),
-  runRegionTest 
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_well_scoped)
-    (expected := { name := "x", kind := .int, val := 42}),
-  runRegionTestXfail
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_ill_scoped),
-  runRegionTest 
-    (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_for)
-    (expected := { name := "out", kind := .int, val := 42})]
-  let mut total := 0
-  let mut correct := 0
-  for t in tests do
-    total := total + 1
-    IO.println s!"---Test {total}---"
-    let pass? ← t 
-    if pass? then correct := correct + 1
-  IO.println "---"
-  IO.println s!"Tests: {correct} successful/{total}"
-  return (if correct == total then 0 else 1)
+def main : IO Unit := return ()
