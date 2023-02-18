@@ -500,7 +500,6 @@ end DSL
 namespace Arith
 
 def sem: (o: Op') → OpM Val
-| .mk "constant" [] _ [(.int x)]  => return ⟨.int, x⟩
 | .mk "float" [] _ [(.float x)] => return ⟨.float, x+1⟩
 | .mk "float2" [⟨.float, x⟩] _ [] => return ⟨.float, x + x⟩
 | .mk "int2" [⟨.int, x⟩] _ [] => return ⟨.int, x + x⟩
@@ -510,8 +509,8 @@ def sem: (o: Op') → OpM Val
 | .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] _ [] => 
       return ⟨.int, (x - y)⟩
 | .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] [] => 
-    return ⟨.int, (t 0 + t 1 + t ix)⟩
-| .mk "pair" [⟨.pair .int .nat, ⟨x, y⟩⟩] _ _ => return ⟨.nat, y⟩ 
+    let i := t ix 
+    return ⟨.int, i + i⟩
 | .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] [] => 
     let i := t 0 0
     let j := t 1 1
@@ -531,7 +530,9 @@ def eg_region_sub : Region :=
 open AST in 
 theorem Fail: runRegion sem eg_region_sub   = .ok output  := by {
   simp[eg_region_sub];
-  -- ERROR: failed to generate equality theorems for `match` expression `Arith.sem.match_1`
+  -- ERROR:
+  -- tactic 'simp' failed, nested error:
+  -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
   simp[sem]; -- SLOW, but not timeout level slow
   simp[runRegion];
   simp[StateT.run]
