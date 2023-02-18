@@ -138,9 +138,20 @@ structure Val where
   kind: Kind
   val: kind.eval
 
+instance : BEq Val where
+  beq a b := 
+    let rec go a b := 
+    match a, b with
+    | {kind := .int, val := a}, {kind := .int, val := b} => a == b
+    | {kind := .float, val := a}, {kind := .float, val := b} => a == b
+    | {kind := .unit, val := a}, {kind := .unit, val := b} => a == b
+    | {kind := .pair p q, val := ⟨a, a'⟩}, {kind := .pair r s, val := ⟨b, b'⟩ } => 
+      go ⟨p, a⟩ ⟨r, b⟩ && go ⟨q, a'⟩ ⟨s, b'⟩
+    | _, _ => False
+    go a b
+ 
 def Val.unit : Val := { kind := Kind.unit, val := () }
 
-#check ToString
 def Val.toString (v: Val): String :=
   match v  with
   | {kind := .int, val := val } => 
@@ -161,6 +172,7 @@ instance : ToString Val where
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
   name : String  
+deriving BEq
 
 def NamedVal.toString (nv: NamedVal): String :=
  s!"{nv.name} := {Val.toString nv.toVal}"
@@ -440,6 +452,13 @@ end Combine
 
 namespace Examples
 open AST 
+def eg_arith_shadow : Region := [dsl_region| {
+  %x : int = "constant"{0};
+  %x : int = "constant"{1};
+  %x : int = "constant"{2};
+  %x : int = "constant"{3};
+  %x : int = "constant"{4};
+}]
 
 def eg_scf_ite_true : Region := [dsl_region| {
   %cond : int = "constant"{1};
@@ -461,22 +480,56 @@ def eg_scf_ite_false : Region := [dsl_region| {
 
 end Examples
 
+namespace Test
+def runRegionTest : 
+  (sem: (o: Op') → TopM o.retkind.eval) →
+  (r: AST.Region) → 
+  (expected: NamedVal) →
+  (arg: Val := Val.unit ) →
+  (env: Env := Env.empty) → IO Bool := 
+  fun sem r expected arg env => do
+    IO.println r
+    let v? := (r.denote sem arg).run env
+    match v? with 
+    | .ok v => 
+      if v == expected
+      then
+        IO.println s!"{v}. OK"; return True
+      else 
+        IO.println s!"ERROR: computed '{v}', expected '{expected}'."
+        return False
+    | .error e => 
+      IO.println s!"ERROR: '{e}'. Expected '{expected}'."
+      return False
+end Test
 
-open Arith Scf Combine DSL Examples in 
-def main : IO Unit := do 
-  IO.println eg_region_sub
-  let out : Except ErrorKind NamedVal := runRegion Arith.sem eg_region_sub
-  IO.println out
-  IO.println "--"
 
-  IO.println eg_scf_ite_true
-  let out : Except ErrorKind NamedVal := 
-    runRegion (combineSem Arith.sem Scf.sem) eg_scf_ite_true
-  IO.println out 
-  IO.println "--"
-
-  IO.println eg_scf_ite_false
-  let out : Except ErrorKind NamedVal := 
-    runRegion (combineSem Arith.sem Scf.sem) eg_scf_ite_false
-  IO.println out 
-  IO.println "--"
+open Arith Scf Combine DSL Examples Test in 
+def main : IO UInt32 := do 
+  let tests := 
+  [runRegionTest 
+    (sem := Arith.sem)
+    (r := eg_region_sub)
+    (expected := { name := "x", kind := .int, val := -1}),
+  runRegionTest 
+    (sem := Arith.sem)
+    (r := eg_arith_shadow)
+    (expected := { name := "x", kind := .int, val := 4}),
+   runRegionTest 
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_ite_true)
+    (expected := { name := "out", kind := .int, val := 42}),
+  runRegionTest 
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_ite_false)
+    (expected := { name := "out", kind := .int, val := 0})]
+  let mut total := 0
+  let mut correct := 0
+  for t in tests do
+    total := total + 1
+    IO.println s!"---Test {total}---"
+    let pass? ← t 
+    if pass? then correct := correct + 1
+  IO.println "---"
+  IO.println s!"Tests: {correct} successful/{total}"
+  return (if correct == total then 0 else 1)
