@@ -1,3 +1,5 @@
+open Std 
+
 namespace AST
 
 /-
@@ -8,7 +10,7 @@ inductive Kind where
 | float : Kind
 | pair : Kind -> Kind -> Kind
 | unit: Kind
-deriving Inhabited, DecidableEq
+deriving Inhabited, DecidableEq, BEq
 
 instance : ToString Kind where
   toString k := 
@@ -23,9 +25,12 @@ instance : ToString Kind where
 structure Var where
   name : String
   kind : Kind
-deriving Inhabited, DecidableEq 
+deriving Inhabited, DecidableEq, BEq
 
-def Var.unit : Var := { name := "<unit>", kind := .unit }
+instance : ToString Var where 
+  toString x := "%" ++ x.name ++ ":" ++ toString x.kind 
+
+def Var.unit : Var := { name := "_", kind := .unit }
 
 -- compile time constant values.
 inductive Const where
@@ -33,6 +38,16 @@ inductive Const where
 | float: Float → Const 
 | unit: Const
 | pair: Const → Const → Const
+deriving BEq 
+
+instance : ToString Const where
+  toString :=
+    let rec go : Const → String  
+    | .int i => toString i
+    | .float f => toString f
+    | .unit => "()"
+    | .pair p q => s!"({go p}, {go q})"
+    go
 
 -- Tag for variants of Op/Region hybrid
 inductive OR: Type
@@ -57,6 +72,7 @@ inductive Expr: OR -> Type where
 
 abbrev Op := Expr .O
 abbrev Region := Expr .R
+abbrev Regions := Expr .Rs
 abbrev Ops := Expr .Os
   
 def Op.Ret : Op → Var
@@ -64,6 +80,43 @@ def Op.Ret : Op → Var
 | .tuple retname arg1 arg2 => 
    { name := retname,
      kind := .pair arg1.kind arg2.kind : Var}
+
+def Regions.isEmpty: Regions → Bool
+| .regionsnil => True
+| .regionscons _ _ => False
+
+
+def Expr.format : Expr k → Format 
+| .opsone o => o.format
+| .opscons o os => o.format ++ .line ++ os.format
+| .regionsnil => Format.nil
+| .regionscons r rs => r.format ++ .line ++ rs.format
+| .op ret name arg rs const => 
+    let constfmt : Format := 
+      if const == .unit then ""
+      else "{" ++ toString const ++ "}"
+    let argfmt : Format :=
+      if arg == Var.unit then ""
+      else "(" ++ toString arg ++ ")"
+    let rsfmt : Format := 
+      if Regions.isEmpty rs then ""
+      else (Expr.format rs).bracket "[" "]" 
+    .text (toString ret ++ " = " ++ name) ++ 
+    argfmt ++ rsfmt ++ constfmt
+| .tuple ret a1 a2 => 
+    .text <|
+      "%" ++ toString ret ++ " = " ++ 
+      "(" ++ toString a1 ++ ", " ++ toString a2 ++ ")"
+| .region arg ops => 
+    let argfmt : Format :=
+    if arg == Var.unit then "" else "^(" ++ toString arg ++ ")"
+    "[" ++ argfmt ++ 
+      Format.nest 2 (.line ++ ops.format) ++ .line ++ "]"
+instance ⦃k: OR⦄: ToFormat (Expr k) where
+  format := Expr.format
+
+instance : ToString (Expr k) where
+   toString := Format.pretty ∘ format
 
 
 
@@ -85,9 +138,36 @@ structure Val where
   kind: Kind
   val: kind.eval
 
+def Val.unit : Val := { kind := Kind.unit, val := () }
+
+#check ToString
+def Val.toString (v: Val): String :=
+  match v  with
+  | {kind := .int, val := val } => 
+      let S : ToString Int := inferInstance
+      S.toString val
+  | {kind := .float, val := val } => 
+      let S : ToString Float := inferInstance
+      S.toString val
+  | {kind := .unit, val := () } => "()"
+  | {kind := .pair p q, val := (x, y) } => 
+      let xstr := Val.toString ({ kind := p, val := x})
+      let ystr := Val.toString { kind := q, val := y}
+      s!"({xstr}, {ystr})"
+
+instance : ToString Val where
+  toString := Val.toString
+
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
   name : String  
+
+def NamedVal.toString (nv: NamedVal): String :=
+ s!"{nv.name} := {Val.toString nv.toVal}"
+
+
+instance : ToString NamedVal where
+  toString := NamedVal.toString
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
 def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
@@ -139,6 +219,12 @@ structure Op' where
   regions: List (Val → TopM NamedVal) := []
   const: Const := .unit
   retkind: Kind 
+
+instance : ToString Op' where
+  toString x := 
+    x.name ++ "(" ++ toString x.argval ++ ")" ++
+    " [" ++ "#" ++ toString x.regions.length ++ "]" ++
+    " {" ++ toString x.const ++ "}" ++ " → " ++ toString x.retkind
 
 @[reducible]
 def AST.OR.denoteType: OR -> Type
@@ -214,15 +300,23 @@ def AST.Ops.fromList: Op → List Op → Ops
 
 
 open Lean Macro in 
+def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
+  match k.getId.toString with 
+  | "int" => `(AST.Kind.int)
+  | unk => (throwErrorAt k s!"unknown kind '{unk}'")
+
+
+open Lean Macro in 
 macro_rules
 | `([dsl_kind| $[ $ks ]×* ]) => do
-    let mut out ← `(AST.Kind.unit)
-    for k in ks do
-      let cur ← match k.getId.toString with 
-          | "int" => `(AST.Kind.int)
-          | unk => (throwErrorAt k s!"unknown kind '{unk}'")
-      out ← `(AST.Kind.pair $out $cur) 
-    return out
+    if ks.isEmpty 
+    then `(AST.Kind.unit)
+    else 
+      let mut out ← parseKind ks[0]!
+      for k in ks.pop do
+        let cur ← parseKind k
+        out ← `(AST.Kind.pair $out $cur) 
+      return out
 
 macro_rules
 | `([dsl_var| %$name:ident : $kind:dsl_kind]) => do 
@@ -290,7 +384,7 @@ def sem: (o: Op') → TopM (o.retkind.eval)
     argval := ⟨.pair .int .int, (x, y)⟩ } => 
       return (x - y)
 
-| op => TopM.error s!"unknown op: {op.name}"
+| op => TopM.error s!"unknown op: {op}"
 end Arith
 
 def eg_kind_int := [dsl_kind| int]
@@ -311,4 +405,9 @@ def eg_region_sub :=
 namespace Scf
 end Scf
 
-def main : IO Unit := return ()
+open Arith DSL in 
+def main : IO Unit := do 
+  IO.print eg_region_sub
+  let out : Except ErrorKind NamedVal :=
+     (eg_region_sub.denote Arith.sem Val.unit).run Env.empty
+  IO.print out
