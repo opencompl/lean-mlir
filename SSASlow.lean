@@ -66,80 +66,32 @@ instance : ToString Const where
 inductive OR: Type
 | O -- Single Op
 | Os -- Multiple Ops
-| R -- Single Region
-| Rs -- Multiple Regions
 
 -- Tagged expressiontrees
 inductive Expr: OR -> Type where
 | opsone: Expr .O -> Expr .Os -- terminator in a sequence of Ops
 | opscons: Expr .O -> Expr .Os -> Expr .Os -- cons cell 'op :: ops'
-| regionsnil : Expr .Rs -- empty sequence of regions
-| regionscons: Expr .R -> Expr .Rs -> Expr .Rs -- cons cell 'region :: regions'
 | op (ret : Var)
    (name : String)
    (arg : List Var)
-   (regions : Expr .Rs)
    (const: List Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
-| tuple (ret: String) (a1 a2: Var): Expr .O -- %out = tuple (%v1, %v2)
-| region (arg : List Var) (ops : Expr .Os): Expr .R -- '{ ^entry(arg:argty) ops* }'
 
 abbrev Op := Expr .O
-abbrev Region := Expr .R
-abbrev Regions := Expr .Rs
 abbrev Ops := Expr .Os
 
 def Op.mk (ret: Var := Var.unit)
   (name: String)
   (arg: Var := Var.unit)
-  (regions := Expr.regionsnil)
-  (const := Const.unit) : Op := Expr.op ret name [arg] regions [const]
+  (const := Const.unit) : Op := Expr.op ret name [arg] [const]
 -- Append an 'Op' to the end of the 'Ops' list.
 def Ops.snoc: Ops → Op → Ops
 | .opsone o, o' => .opscons o (.opsone o')
 | .opscons o os, o' => .opscons o (Ops.snoc os o')
 
 def Op.Ret : Op → Var
-| .op ret _ _ _ _ => ret 
-| .tuple retname arg1 arg2 => 
-   { name := retname,
-     kind := .pair arg1.kind arg2.kind : Var}
-
-def Regions.isEmpty: Regions → Bool
-| .regionsnil => True
-| .regionscons _ _ => False
+| .op ret _ _ _ => ret 
 
 
-def Expr.format : Expr k → Format 
-| .opsone o => o.format
-| .opscons o os => o.format ++ .line ++ os.format
-| .regionsnil => Format.nil
-| .regionscons r rs => r.format ++ .line ++ rs.format
-| .op ret name arg rs const => 
-    let constfmt : Format := 
-      if const == [] then ""
-      else "{" ++ toString const ++ "}"
-    let argfmt : Format :=
-      if arg == [] then ""
-      else "(" ++ toString arg ++ ")"
-    let rsfmt : Format := 
-      if Regions.isEmpty rs then ""
-      else (Format.nest 1 <| "[" ++ .line ++ Expr.format rs) ++ "]"
-    .text (toString ret ++ " = " ++ name) ++ 
-    argfmt ++ rsfmt ++ constfmt
-| .tuple ret a1 a2 => 
-    .text <|
-      "%" ++ toString ret ++ " = " ++ 
-      "(" ++ toString a1 ++ ", " ++ toString a2 ++ ")"
-| .region arg ops => 
-    let argfmt : Format :=
-    if arg == [] then "" else "^(" ++ toString arg ++ ")"
-    "{" ++ argfmt ++ 
-      Format.nest 2 (.line ++ ops.format) ++ .line ++ "}"
-instance ⦃k: OR⦄: ToFormat (Expr k) where
-  format := Expr.format
-
-instance : ToString (Expr k) where
-   toString := Format.pretty ∘ format
 
 
 
@@ -294,36 +246,29 @@ inductive Op' where
 | mk
   (name : String)
   (argval : List Val)
-  (regions: List (List Val → OpM NamedVal))
   (const: List Const)
 
 def Op'.name: Op' → String 
-| .mk name argval regions const => name 
+| .mk name argval const => name 
 
 def Op'.argval: Op' → List Val 
-| .mk name argval regions const => argval
-
-def Op'.regions: Op' → List (List Val → OpM NamedVal) 
-| .mk name argval regions const => regions
+| .mk name argval const => argval
 
 def Op'.const: Op' → List Const 
-| .mk name argval regions const => const
+| .mk name argval const => const
 
 
 
 instance : ToString Op' where
   toString x := 
     x.name ++ "(" ++ toString x.argval ++ ")" ++
-    " [" ++ "#" ++ toString x.regions.length ++ "]" ++
+
     " {" ++ toString x.const ++ "}"
 
 @[reducible]
 def AST.OR.denoteType: OR -> Type
 | .O => OpM NamedVal
 | .Os => OpM NamedVal
-| .R => List Val → OpM NamedVal
-| .Rs => List (List Val → OpM NamedVal) -- TODO: is 'List' here correct?
-
 
 def AST.Expr.denote {kind: OR}
  (sem: (o: Op') → OpM Val): Expr kind → kind.denoteType 
@@ -331,204 +276,53 @@ def AST.Expr.denote {kind: OR}
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
     OpM.set retv (os.denote sem)
-| .regionsnil => []
-| .regionscons r rs => r.denote sem :: (rs.denote sem)
-| .tuple ret arg1 arg2 => do
-   let val1 ←OpM.get arg1
-   let val2 ← OpM.get arg2
-   return { name := ret,
-            kind := .pair val1.kind val2.kind,
-            val := (val1.val, val2.val)
-          } -- build a pair
-| .op ret name args rs const => do 
+| .op ret name args const => do 
     let vals ← args.mapM OpM.get
     let op' : Op' := .mk
       name
       (vals.map NamedVal.toVal)
-      (rs.denote sem)
       const
     let out ← sem op'
     if ret.kind = out.kind
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
     else OpM.error "unexpected return kind '{}', expected {}"
-    -- return ret.toNamedVal out
-| .region args ops => fun vals => do
-    -- TODO: improve dependent typing here
-    -- let val' ← val.cast arg.kind
-    -- OpM.set (arg.toNamedVal val') (ops.denote sem)
-    for argval in (args.zip vals) do
-      let arg := argval.fst
-      let val := argval.snd
-      OpM.set' { name := arg.name, kind := val.kind, val := val.val}
-    ops.denote sem
 
-def runRegion (sem : (o: Op') → OpM Val) (expr: AST.Expr .R)
-(env :  Env := Env.empty)
-(args : List Val := []) : Except ErrorKind (NamedVal × Env) := 
-  (expr.denote sem args).toTopM.run env
+def runOps (sem : (o: Op') → OpM Val) (expr: AST.Expr .Os)
+(env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
+  (expr.denote sem).toTopM.run env
 
 
 end Semantics
 
-namespace DSL
-open AST
-
-declare_syntax_cat dsl_op
-declare_syntax_cat dsl_type
-declare_syntax_cat dsl_ops
-declare_syntax_cat dsl_region
-declare_syntax_cat dsl_var
-declare_syntax_cat dsl_const
-declare_syntax_cat dsl_kind
-
-syntax sepBy1(ident, "×") :dsl_kind
-syntax "%"ident ":" dsl_kind : dsl_var
-syntax dsl_var "="
-      str
-      ("(" dsl_var ")")?
-      ("[" dsl_region,* "]")?
-      ("{" dsl_const "}")? ";": dsl_op
-syntax "%" ident "="  "(" dsl_var "," dsl_var ")" ";": dsl_op
-syntax num : dsl_const 
-syntax "{" ("^(" dsl_var "):")?  dsl_op dsl_op*  "}" : dsl_region
-syntax "[dsl_op|" dsl_op "]" : term 
-syntax "[dsl_ops|" dsl_op dsl_op* "]" : term 
-syntax "[dsl_region|" dsl_region "]" : term 
-syntax "[dsl_var|" dsl_var "]" : term
-syntax "[dsl_kind|" dsl_kind "]" : term
-syntax "[dsl_const|" dsl_const "]" : term 
-
-
-@[simp]
-def AST.Ops.fromList: Op → List Op → Ops
-| op, [] => .opsone op
-| op, op'::ops => .opscons op (AST.Ops.fromList op' ops)
-
-@[simp]
-def AST.Regions.fromList: List Region → Regions
-| [] => .regionsnil
-| r :: rs => .regionscons r (AST.Regions.fromList rs)
-
-open Lean Macro in 
-def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
-  match k.getId.toString with 
-  | "int" => `(AST.Kind.int)
-  | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
-
-
-open Lean Macro in 
-macro_rules
-| `([dsl_kind| $[ $ks ]×* ]) => do
-    if ks.isEmpty 
-    then `(AST.Kind.unit)
-    else 
-      let mut out ← parseKind ks[0]!
-      for k in ks.pop do
-        let cur ← parseKind k
-        out ← `(AST.Kind.pair $out $cur) 
-      return out
-
-macro_rules
-| `([dsl_var| %$name:ident : $kind:dsl_kind]) => do 
-    `({ name := $(Lean.quote name.getId.toString),
-        kind := [dsl_kind| $kind] : Var})
-
-macro_rules
-| `([dsl_ops| $op $ops*]) => do 
-   let op_term ← `([dsl_op| $op])
-   let ops_term ← ops.mapM (fun op => `([dsl_op| $op ]))
-   `(AST.Ops.fromList $op_term [ $ops_term,* ])
-
-macro_rules
-| `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
-   let ops ← `([dsl_ops| $op $ops*]) 
-   match arg with 
-   | .none => `(Expr.region [] $ops)
-   | .some arg => do
-      let arg_term ← `([dsl_var| $arg ])
-      `(Expr.region $arg_term $ops)
-
-macro_rules
-| `([dsl_const| $x:num ]) => `(Const.int $x)
-
-open Lean Syntax in 
-macro_rules
-| `([dsl_op| $res:dsl_var = $name:str
-      $[ ( $arg:dsl_var ) ]?
-      $[ [ $rgns,* ] ]? 
-      $[ { $const } ]?
-      ;
-      ]) => do
-      let res_term ← `([dsl_var| $res])
-      let arg_term ← match arg with 
-          | .some arg => `([dsl_var| $arg])
-          | .none => `(AST.Var.unit)
-      let name_term := Lean.quote name.getString
-      let rgns_term ← match rgns with
-        | .none => `(.regionsnil)
-        | .some rgns => 
-           let rgns ← rgns.getElems.mapM (fun stx => `([dsl_region| $stx]))
-           `(AST.Regions.fromList [ $rgns,* ])
-      let const_term ←
-        match const with
-        | .none => `(Const.unit)
-        | .some c => `([dsl_const| $c])
-      `(Expr.op $res_term $name_term [$arg_term] $rgns_term [$const_term])
-
-macro_rules
-| `([dsl_op| %$res:ident = ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
-    let res_term := Lean.quote res.getId.toString
-    let arg1_term ← `([dsl_var| $arg1 ])
-    let arg2_term ← `([dsl_var| $arg2 ])
-    `(Expr.tuple $res_term $arg1_term $arg2_term)
-
-def eg_kind_int := [dsl_kind| int]
-#reduce eg_kind_int
-
-def eg_var : AST.Var := [dsl_var| %y : int]
-#reduce eg_var
-end DSL
-
- /-
-  (name : String)
-  (argval : Val)
-  (regions: List (Val → TopM NamedVal))
-  (const: Const)
-  (retkind: Kind): Op'
--/
-
 namespace Arith
 
+set_option pp.all true in 
 def sem: (o: Op') → OpM Val
-| .mk "float" [] _ [(.float x)] => return ⟨.float, x+1⟩
-| .mk "float2" [⟨.float, x⟩] _ [] => return ⟨.float, x + x⟩
-| .mk "int2" [⟨.int, x⟩] _ [] => return ⟨.int, x + x⟩
-| .mk "nat2" [⟨.nat, x⟩] _ [] => return ⟨.nat, x + x⟩
-| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  _ []  => 
+| .mk "float" [] [(.float x)] => return ⟨.float, x+1⟩
+| .mk "float2" [⟨.float, x⟩] [] => return ⟨.float, x + x⟩
+| .mk "int2" [⟨.int, x⟩] [] => return ⟨.int, x + x⟩
+| .mk "nat2" [⟨.nat, x⟩] [] => return ⟨.nat, x + x⟩
+| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]  []  => 
       return ⟨.int, (x + y)⟩
-| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] _ [] => 
+| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] [] => 
       return ⟨.int, (x - y)⟩
-| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] [] => 
+| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] [] => 
     let i := t ix 
     return ⟨.int, i + i⟩
-| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] [] => 
+| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] [] => 
     let i := t 0 0
     let j := t 1 1
     return ⟨.int, i + i⟩
 | op => OpM.error s!"unknown op: {op}"
 
+
 open AST in 
-def eg_region_sub : Region :=
- [dsl_region| {
-   %one : int = "constant" {1};
-   %two : int = "constant" {2};
-   %t = (%one : int , %two : int);
-   %x : int = "sub"(%t : int × int);
- }]
+def eg_region_sub : Ops := 
+  .opsone (Op.mk (name := "float") )
 #reduce eg_region_sub
 
 open AST in 
-theorem Fail: runRegion sem eg_region_sub   = .ok output  := by {
+theorem Fail: runOps sem eg_region_sub   = .ok output  := by {
   simp[eg_region_sub];
   -- ERROR:
   -- tactic 'simp' failed, nested error:
