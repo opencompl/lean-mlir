@@ -30,21 +30,10 @@ deriving Inhabited, DecidableEq, BEq
 @[match_pattern]
 def Var.unit : Var := { name := "_", kind := .unit }
 
--- Tag for variants of Op/Region hybrid
-inductive OR: Type
-| O -- Single Op
-
--- Tagged expressiontrees
-inductive Expr: OR -> Type where
+inductive Op: Type where
 | op (ret : Var)
    (name : String)
-   (arg : List Var): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
-
-abbrev Op := Expr .O
-
-def Op.mk (ret: Var := Var.unit)
-  (name: String)
-  (arg: Var := Var.unit) : Op := Expr.op ret name [arg]
+   (arg : List Var): Op 
 
 
 -- Lean type that corresponds to kind.
@@ -120,36 +109,27 @@ def TopM.error (e: ErrorKind) : TopM α := Except.error e
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
 inductive Op' where
-| mk
-  (name : String)
-  (argval : List Val)
+| mk (name : String) (argval : List Val)
 
-@[reducible]
-def AST.OR.denoteType: OR -> Type
-| .O => TopM NamedVal
-
-def AST.Expr.denote {kind: OR}
- (sem: (o: Op') → TopM Val): Expr kind → kind.denoteType 
+def AST.Op.denote 
+ (sem: (o: Op') → TopM Val): Op  → TopM NamedVal 
 | .op ret name args  => do 
     let vals ← args.mapM TopM.get
-    let op' : Op' := .mk
-      name
-      (vals.map NamedVal.toVal)
+    let op' : Op' := .mk name (vals.map NamedVal.toVal)
     let out ← sem op'
     if ret.kind = out.kind
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
     else TopM.error "unexpected return kind '{}', expected {}"
 
-def runOp (sem : (o: Op') → TopM Val) (expr: AST.Expr .O)
+def runOp (sem : (o: Op') → TopM Val) (Op: AST.Op)
 (env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
-  (expr.denote sem).run env
+  (Op.denote sem).run env
 
 
 end Semantics
 
 namespace Arith
 
-set_option pp.all true in 
 def sem: (o: Op') → TopM Val
 | .mk "float" [⟨.float, x⟩] => return ⟨.float, x+1⟩
 | .mk "float2" [⟨.float, x⟩] => return ⟨.float, x + x⟩
@@ -170,14 +150,14 @@ def sem: (o: Op') → TopM Val
 
 
 open AST in 
-theorem Fail: runOp sem  (Op.mk (name := "float"))   = .ok output  := by {
+theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
   simp[sem]; -- SLOW, but not timeout level slow
   simp[runRegion];
   simp[StateT.run]
-  simp[Expr.denote];
+  simp[Op.denote];
   simp[bind];
   simp[StateT.bind];
 }
