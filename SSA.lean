@@ -30,7 +30,7 @@ deriving Inhabited, DecidableEq, BEq
 instance : ToString Var where 
   toString x := "%" ++ x.name ++ ":" ++ toString x.kind 
 
-def Var.unit : Var := { name := "_", kind := .unit }
+abbrev Var.unit : Var := { name := "_", kind := .unit }
 
 -- compile time constant values.
 inductive Const where
@@ -192,9 +192,11 @@ instance : ToString NamedVal where
   toString := NamedVal.toString
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
+@[simp]
 def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
  { kind := var.kind, val := value, name := var.name }
 
+@[simp]
 def NamedVal.var (nv: NamedVal): Var :=
   { name := nv.name, kind := nv.kind }
 
@@ -259,15 +261,35 @@ abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
-def Env.get (var: Var): Env → Except ErrorKind var.kind.eval  
-| .empty => Except.error s!"unknown var {var.name}"
+-- We need to produce values of type '()' for eg. ops with zero agruments.
+-- Here, we ensure that Env.get for a var of type 'Unit' will always succeed and return '()',
+-- becuse there is not need not to. This allows us to use 'Unit' to signal zero arguments,
+-- wthout have to make up a fake name for a variable of type 'Unit'
+def Env.get (var: Var): Env → Except ErrorKind var.kind.eval
+| .empty => match var.kind with
+            | .unit => Except.ok ()
+            | _ =>  Except.error s!"unknown var {var.name}"
 | .cons var' val env' => 
-    if H : var = var'
-    then pure (H ▸ val) 
-    else env'.get var 
+      if H : var = var'
+      then pure (H ▸ val) 
+      else env'.get var 
 
-def ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
-def ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
+theorem Env.get.unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.ok () := 
+  match e with 
+  | .empty => by rfl 
+  | .cons var' val' env' => 
+       if H :⟨name, .unit⟩ = var'
+       then by {
+        simp[get];
+        simp[H];
+        simp only [pure, Except.pure];
+       }
+       else by {
+        simp[Env.get, H];
+        exact (Env.get.unit name env')
+      }
+abbrev ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
+abbrev ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
   reader ∘ f 
 
 def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
@@ -667,16 +689,67 @@ structure Peephole where
   replace : Ops -- replacement ops. can use 'findbegin'.
   sem: (o : Op') → TopM (Kind.eval o.retkind) 
   -- TODO: Once again, we need to reason 'upto error'. 
-  replaceCorrect: ∀ (env: Env), 
-      (findmid.denote sem).run env =
-      (replace.denote sem).run env
+  replaceCorrect: ∀ (env: Env) (FIND: (findmid.denote sem env).isOk), 
+      (findmid.denote sem) env =
+      (replace.denote sem) env
 end Rewriting
 
 namespace RewriteExamples
 open Rewriting 
 open AST 
 section SubXX
- def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
+
+theorem Expr.denote_opscons:  
+  (Expr.opscons o os).denote sem =  
+    (o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) := by { rfl; }
+
+theorem Expr.denote_opsone:
+  (Expr.opsone o).denote sem = o.denote sem := by { rfl; }
+
+theorem Expr.denote_op:
+  (Op.mk ret name arg rs const ).denote sem =
+  TopM.get arg >>= fun val => 
+    let op' : Op' :=
+      { name := name
+      , argval := ⟨arg.kind, val⟩
+      , regions := rs.denote sem
+      , const := const
+      , retkind := ret.kind }
+    sem op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
+  := by { rfl; }
+
+theorem Expr.denote_opscons_k {β: Type} 
+  (k: NamedVal → Env → Except ErrorKind β) : 
+  ((Expr.opscons o os).denote sem >>= k) env =  
+    ((o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) >>= k) env := by { rfl; }
+
+theorem Expr.denote_tuple:  (Expr.tuple ret o o').denote sem =  
+    (TopM.get o >>= fun oval => TopM.get o' >>= fun o'val => 
+      fun _ => Except.ok 
+        { name := ret,
+          kind := .pair o.kind o'.kind,
+          val := (oval, o'val)
+        }) := by { rfl; }
+
+theorem Expr.denote_regionsnil: Expr.regionsnil.denote sem = [] := by rfl
+
+-- Get the value of 'TopM.get' that matches the current 'Env.cons' cell
+theorem TopM.get.cons_eq:  TopM.get v (Env.cons v val env') = Except.ok val := by {
+  simp only[TopM.get, ReaderT.get, bind, ReaderT.bind, pure, Except.bind, Except.pure, Env.get];
+  simp;
+}
+
+theorem TopM.get.Var.unit: TopM.get Var.unit e = Except.ok () := by {
+  simp only[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.ok, Except.pure];
+  simp[AST.Var.unit];
+  apply Env.get.unit;
+}
+
+theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
+  sorry 
+}
+
+def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   findbegin := .cons ⟨arg, .int⟩ .nil,
   findmid := 
       let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
@@ -687,15 +760,45 @@ section SubXX
       .opscons pair (.opsone sub),
   replace :=
     let const := Op.mk
-                  (name := "const")
+                  (name := "constant")
                   (ret := ⟨res, .int⟩)
                   (const := Const.int 0)
     .opsone (const),
   sem := Arith.sem,
-  replaceCorrect := fun env => by {
-    sorry
+  replaceCorrect := fun env  => by {
+    simp;
+    rw[Expr.denote_opscons];
+    rw[Expr.denote_tuple];
+    simp;
+    simp[bind, ReaderT.bind];
+    cases ARG:TopM.get { name := arg, kind := Kind.int } env <;> simp;
+    case error e => {
+      simp[Except.bind, Except.isOk, Except.toBool];
+    }
+    case ok v => {
+      simp[Except.bind, TopM.set];
+      rw[Expr.denote_opsone];
+      rw[Expr.denote_op];
+      simp only[bind, ReaderT.bind, Except.bind];
+      simp[ARG];
+      simp[Env.set];
+      rw[TopM.get.cons_eq];
+      simp;
+      rw[Expr.denote_opsone];
+      rw[Expr.denote_op];
+      simp[bind, ReaderT.bind, Except.bind]
+      rw[TopM.get.Var.unit];
+      simp;
+      simp only [Expr.denote_regionsnil];
+      simp[Arith.sem];
+      simp only[Int.sub_n_n, pure, ReaderT.pure, Except.pure];
+      intros K;
+      constructor;
+    }
   }
  }
+
+ #check Repr
 end SubXX
 
 end RewriteExamples
