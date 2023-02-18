@@ -100,7 +100,7 @@ def Expr.format : Expr k → Format
       else "(" ++ toString arg ++ ")"
     let rsfmt : Format := 
       if Regions.isEmpty rs then ""
-      else (Expr.format rs).bracket "[" "]" 
+      else (Format.nest 1 <| "[" ++ .line ++ Expr.format rs) ++ "]"
     .text (toString ret ++ " = " ++ name) ++ 
     argfmt ++ rsfmt ++ constfmt
 | .tuple ret a1 a2 => 
@@ -110,8 +110,8 @@ def Expr.format : Expr k → Format
 | .region arg ops => 
     let argfmt : Format :=
     if arg == Var.unit then "" else "^(" ++ toString arg ++ ")"
-    "[" ++ argfmt ++ 
-      Format.nest 2 (.line ++ ops.format) ++ .line ++ "]"
+    "{" ++ argfmt ++ 
+      Format.nest 2 (.line ++ ops.format) ++ .line ++ "}"
 instance ⦃k: OR⦄: ToFormat (Expr k) where
   format := Expr.format
 
@@ -263,6 +263,13 @@ def AST.Expr.denote {kind: OR}
     -- TODO: improve dependent typing here
     let val' ← val.cast arg.kind
     TopM.set (arg.toNamedVal val') (ops.denote sem)
+
+def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
+(env :  Env := Env.empty)
+(arg : Val := Val.unit) : Except ErrorKind NamedVal := 
+  (expr.denote sem arg).run env
+
+
 end Semantics
 
 namespace DSL
@@ -298,6 +305,10 @@ def AST.Ops.fromList: Op → List Op → Ops
 | op, [] => .opsone op
 | op, op'::ops => .opscons op (AST.Ops.fromList op' ops)
 
+@[simp]
+def AST.Regions.fromList: List Region → Regions
+| [] => .regionsnil
+| r :: rs => .regionscons r (AST.Regions.fromList rs)
 
 open Lean Macro in 
 def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
@@ -354,7 +365,7 @@ macro_rules
         | .none => `(.regionsnil)
         | .some rgns => 
            let rgns ← rgns.getElems.mapM (fun stx => `([dsl_region| $stx]))
-           `([ $rgns,* ])
+           `(AST.Regions.fromList [ $rgns,* ])
       let const_term ←
         match const with
         | .none => `(Const.unit)
@@ -391,11 +402,6 @@ def sem: (o: Op') → TopM (o.retkind.eval)
 
 | op => TopM.error s!"unknown op: {op}"
 
-def runRegion (expr: AST.Expr .R)
-(env :  Env := Env.empty)
-(arg : Val := Val.unit) : Except ErrorKind NamedVal := 
-(expr.denote Arith.sem arg).run env
-
 def eg_region_sub :=
  [dsl_region| {
    %one : int = "constant" {1};
@@ -409,10 +415,68 @@ def eg_region_sub :=
 end Arith
 
 namespace Scf
+
+def sem: (o: Op') → TopM (o.retkind.eval) 
+| { name := "if",
+    argval := ⟨.int, cond⟩,
+    regions := [rthen, relse],
+    retkind := .int -- hack: we assume that we always return ints.
+  } => do 
+    let rrun := if cond ≠ 0 then rthen else relse
+    let v ← rrun Val.unit
+    v.cast .int
+| op => TopM.error s!"unknown op {op}"
 end Scf
 
-open Arith DSL in 
+namespace Combine
+def combineSem: (s1 s2: (o: Op') → TopM o.retkind.eval) → 
+    (x: Op') → TopM x.retkind.eval := 
+  fun s1 s2 o => 
+     let f1 := (s1 o)
+     let f2 := (s2 o)
+     fun env => (f1 env).orElseLazy (fun () => f2 env) 
+
+end Combine
+
+namespace Examples
+open AST 
+
+def eg_scf_ite_true : Region := [dsl_region| {
+  %cond : int = "constant"{1};
+  %out : int = "if" (%cond : int) [{
+    %out_then : int = "constant"{42};
+  }, {
+    %out_else : int = "constant"{0};
+  }];
+}]
+
+def eg_scf_ite_false : Region := [dsl_region| {
+  %cond : int = "constant"{0};
+  %out : int = "if" (%cond : int) [{
+    %out_then : int = "constant"{42};
+  }, {
+    %out_else : int = "constant"{0};
+  }];
+}]
+
+end Examples
+
+
+open Arith Scf Combine DSL Examples in 
 def main : IO Unit := do 
-  IO.print eg_region_sub
-  let out : Except ErrorKind NamedVal := Arith.runRegion eg_region_sub
-  IO.print out
+  IO.println eg_region_sub
+  let out : Except ErrorKind NamedVal := runRegion Arith.sem eg_region_sub
+  IO.println out
+  IO.println "--"
+
+  IO.println eg_scf_ite_true
+  let out : Except ErrorKind NamedVal := 
+    runRegion (combineSem Arith.sem Scf.sem) eg_scf_ite_true
+  IO.println out 
+  IO.println "--"
+
+  IO.println eg_scf_ite_false
+  let out : Except ErrorKind NamedVal := 
+    runRegion (combineSem Arith.sem Scf.sem) eg_scf_ite_false
+  IO.println out 
+  IO.println "--"
