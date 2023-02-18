@@ -368,6 +368,11 @@ macro_rules
     let arg2_term ← `([dsl_var| $arg2 ])
     `(Expr.tuple $res_term $arg1_term $arg2_term)
 
+def eg_kind_int := [dsl_kind| int]
+#reduce eg_kind_int
+
+def eg_var : AST.Var := [dsl_var| %y : int]
+#reduce eg_var
 end DSL
 
 namespace Arith
@@ -385,13 +390,11 @@ def sem: (o: Op') → TopM (o.retkind.eval)
       return (x - y)
 
 | op => TopM.error s!"unknown op: {op}"
-end Arith
 
-def eg_kind_int := [dsl_kind| int]
-#reduce eg_kind_int
-
-def eg_var : AST.Var := [dsl_var| %y : int]
-#reduce eg_var
+def runRegion (expr: AST.Expr .R)
+(env :  Env := Env.empty)
+(arg : Val := Val.unit) : Except ErrorKind NamedVal := 
+(expr.denote Arith.sem arg).run env
 
 def eg_region_sub :=
  [dsl_region| {
@@ -402,12 +405,14 @@ def eg_region_sub :=
  }]
 #reduce eg_region_sub
 
+
+end Arith
+
 namespace Scf
 end Scf
 
 open Arith DSL in 
 def main : IO Unit := do 
   IO.print eg_region_sub
-  let out : Except ErrorKind NamedVal :=
-     (eg_region_sub.denote Arith.sem Val.unit).run Env.empty
+  let out : Except ErrorKind NamedVal := Arith.runRegion eg_region_sub
   IO.print out
