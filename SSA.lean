@@ -74,7 +74,17 @@ abbrev Op := Expr .O
 abbrev Region := Expr .R
 abbrev Regions := Expr .Rs
 abbrev Ops := Expr .Os
-  
+
+def Op.mk (ret: Var := Var.unit)
+  (name: String)
+  (arg: Var := Var.unit)
+  (regions := Expr.regionsnil)
+  (const := Const.unit): Op := Expr.op ret name arg regions const
+-- Append an 'Op' to the end of the 'Ops' list.
+def Ops.snoc: Ops → Op → Ops
+| .opsone o, o' => .opscons o (.opsone o')
+| .opscons o os, o' => .opscons o (Ops.snoc os o')
+
 def Op.Ret : Op → Var
 | .op ret _ _ _ _ => ret 
 | .tuple retname arg1 arg2 => 
@@ -201,7 +211,7 @@ abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
-def Env.get (var: Var): Env → TopM var.kind.eval  
+def Env.get (var: Var): Env → Except ErrorKind var.kind.eval  
 | .empty => Except.error s!"unknown var {var.name}"
 | .cons var' val env' => 
     if H : var = var'
@@ -212,7 +222,7 @@ def ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
 def ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
   reader ∘ f 
 
-def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= Env.get var
+def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
 def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := 
   ReaderT.withEnv (Env.set nv.var nv.val) k
 
@@ -282,6 +292,41 @@ def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
   (expr.denote sem arg).run env
 
 
+theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β), 
+ ma >>= (fun a => ma >>= (fun a' => k a a')) =
+ ma >>= (fun a => k a a) := by {
+  intros ma k;
+  funext env;
+  simp[ReaderT.bind];
+  simp[bind];
+  simp[ReaderT.bind];
+  simp[bind];
+  simp[Except.bind];
+  cases H:(ma env) <;> simp;
+}
+
+theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM γ), 
+ ma >>= (fun a => mb >>= (fun b => k a b)) =
+ mb >>= (fun b => ma >>= (fun a => k a b)) := by {
+  intros ma mb k;
+  funext env;
+  simp[ReaderT.bind];
+  simp[bind];
+  simp[ReaderT.bind];
+  simp[bind];
+  simp[Except.bind];
+  cases H:(ma env) <;> simp;
+  case h.error e => {
+    cases H':(mb env) <;> simp;
+    case error e' => {
+      -- TODO: they are equal, upto error :(. We need rewriting wrt equiv rel.
+      -- We need either 'generalized rewriting', or we spend some time
+      -- investigating quotient types.
+      sorry 
+    }
+  }
+}
+
 end Semantics
 
 namespace DSL
@@ -306,6 +351,7 @@ syntax "%" ident "="  "(" dsl_var "," dsl_var ")" ";": dsl_op
 syntax num : dsl_const 
 syntax "{" ("^(" dsl_var "):")?  dsl_op dsl_op*  "}" : dsl_region
 syntax "[dsl_op|" dsl_op "]" : term 
+syntax "[dsl_ops|" dsl_op dsl_op* "]" : term 
 syntax "[dsl_region|" dsl_region "]" : term 
 syntax "[dsl_var|" dsl_var "]" : term
 syntax "[dsl_kind|" dsl_kind "]" : term
@@ -347,10 +393,14 @@ macro_rules
         kind := [dsl_kind| $kind] : Var})
 
 macro_rules
-| `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
+| `([dsl_ops| $op $ops*]) => do 
    let op_term ← `([dsl_op| $op])
    let ops_term ← ops.mapM (fun op => `([dsl_op| $op ]))
-   let ops ← `(AST.Ops.fromList $op_term [ $ops_term,* ])
+   `(AST.Ops.fromList $op_term [ $ops_term,* ])
+
+macro_rules
+| `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
+   let ops ← `([dsl_ops| $op $ops*]) 
    match arg with 
    | .none => `(Expr.region Var.unit $ops)
    | .some arg => do
@@ -511,7 +561,7 @@ def eg_scf_run_twice : Region := [dsl_region| {
   }];
 }]
 
-def eg_scf_well_scoped_1 : Region := [dsl_region| {
+def eg_scf_well_scoped : Region := [dsl_region| {
   %x : int = "constant"{41};
   %one : int = "constant"{1}; -- one is outside.
   %x : int = "twice" [{
@@ -520,7 +570,7 @@ def eg_scf_well_scoped_1 : Region := [dsl_region| {
   }];
 }]
 
-def eg_scf_ill_scoped_1 : Region := [dsl_region| {
+def eg_scf_ill_scoped : Region := [dsl_region| {
   %x : int = "constant"{41};
   %x : int = "twice" [{
       %y : int = "constant"{42};
@@ -544,6 +594,70 @@ def eg_scf_for: Region := [dsl_region| {
 
 
 end Examples
+
+namespace Rewriting
+open AST 
+
+inductive TypingCtx 
+| nil: TypingCtx
+| cons: Var → TypingCtx → TypingCtx  
+
+
+inductive TypingContextInEnv: Env → TypingCtx → Prop where 
+| Nil: (e: Env) → TypingContextInEnv e .nil
+| Cons: (e: Env) →
+  (e.get var).isOk → -- current
+  TypingContextInEnv e ctx' → -- rest
+  TypingContextInEnv e (.cons v ctx')  
+
+/- Replace the final Op with the new seqence of Ops -/
+def Ops.replaceOne (os: Ops) (new: Ops) : Ops :=
+  match os with
+  | .opsone o => new
+  | .opscons o os => .opscons o (Ops.replaceOne os new)
+  
+structure Peephole where
+  findbegin: TypingCtx -- free variables.
+  findmid : Ops -- stuff in the pattern. The last op is to be replaced.
+  replace : Ops -- replacement ops. can use 'findbegin'.
+  sem: (o : Op') → TopM (Kind.eval o.retkind) 
+  -- TODO: Once again, we need to reason 'upto error'. 
+  replaceCorrect: ∀ (env: Env), 
+      (findmid.denote sem).run env =
+      (replace.denote sem).run env
+end Rewriting
+
+namespace RewriteExamples
+open Rewriting 
+open AST 
+section SubXX
+ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
+  findbegin := .cons ⟨arg, .int⟩ .nil,
+  findmid := 
+      let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
+      let sub := Op.mk 
+                  (name := "sub")
+                  (ret := ⟨res, .int⟩) 
+                  (arg := ⟨pairname, .pair .int .int⟩)
+      .opscons pair (.opsone sub),
+  replace :=
+    let const := Op.mk
+                  (name := "const")
+                  (ret := ⟨res, .int⟩)
+                  (const := Const.int 0)
+    .opsone (const),
+  sem := Arith.sem,
+  replaceCorrect := fun env => by {
+    sorry
+  }
+ }
+end SubXX
+
+end RewriteExamples
+namespace Theorems
+-- SCF for loop peeling
+
+end Theorems
 
 namespace Test
 def runRegionTest : 
@@ -611,11 +725,11 @@ def main : IO UInt32 := do
     (expected := { name := "x", kind := .int, val := 42}),
   runRegionTest 
     (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_well_scoped_1)
+    (r := eg_scf_well_scoped)
     (expected := { name := "x", kind := .int, val := 42}),
   runRegionTestXfail
     (sem := Combine.combineSem Scf.sem Arith.sem)
-    (r := eg_scf_ill_scoped_1),
+    (r := eg_scf_ill_scoped),
   runRegionTest 
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_for)
