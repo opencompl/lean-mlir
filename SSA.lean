@@ -1,3 +1,10 @@
+import Mathlib.Tactic.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.LibrarySearch
+import Mathlib.Tactic.Cases
+import Std.Data.Int.Basic
+
 open Std 
 
 namespace AST
@@ -439,7 +446,7 @@ open Lean Macro in
 def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
   match k.getId.toString with 
   | "int" => `(AST.Kind.int)
-  | unk => (throwErrorAt k s!"unknown kind '{unk}'")
+  | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
 
 
 open Lean Macro in 
@@ -746,7 +753,7 @@ theorem TopM.get.Var.unit: TopM.get Var.unit e = Except.ok () := by {
 }
 
 theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
-  sorry 
+  linarith 
 }
 
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
@@ -766,30 +773,32 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
     .opsone (const),
   sem := Arith.sem,
   replaceCorrect := fun env  => by {
-    simp;
+    simp only;
     rw[Expr.denote_opscons];
     rw[Expr.denote_tuple];
-    simp;
+    simp  only [Kind.eval._eq_1, bind_assoc];
     simp[bind, ReaderT.bind];
     cases ARG:TopM.get { name := arg, kind := Kind.int } env <;> simp;
     case error e => {
-      simp[Except.bind, Except.isOk, Except.toBool];
+      simp only [Except.isOk, Except.toBool, Except.bind, IsEmpty.forall_iff]
     }
     case ok v => {
-      simp[Except.bind, TopM.set];
+      simp only [Except.bind, TopM.set, NamedVal.var, Function.comp_apply]
       rw[Expr.denote_opsone];
       rw[Expr.denote_op];
       simp only[bind, ReaderT.bind, Except.bind];
-      simp[ARG];
-      simp[Env.set];
+      simp only[Kind.eval, Kind.eval._eq_1, Var.toNamedVal]
+      simp only[Env.set];
       rw[TopM.get.cons_eq];
-      simp;
+      simp only;
       rw[Expr.denote_opsone];
       rw[Expr.denote_op];
       simp[bind, ReaderT.bind, Except.bind]
       rw[TopM.get.Var.unit];
-      simp;
+      simp only;
       simp only [Expr.denote_regionsnil];
+      -- simp only bug:
+      -- simp only [Arith.sem, Kind.eval._eq_1, Arith.sem.match_1.eq_3, sub_self, Arith.sem.match_1.eq_1]
       simp[Arith.sem];
       simp only[Int.sub_n_n, pure, ReaderT.pure, Except.pure];
       intros K;
