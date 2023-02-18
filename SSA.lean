@@ -205,7 +205,55 @@ inductive Env where
 | cons (var: Var) (val: var.kind.eval) (rest: Env): Env 
 
 
-abbrev ErrorKind := String
+-- truncation of a type that smashes everything into a single equivalence class.
+inductive trunc (α: Type): α → α → Prop
+| trunc: trunc α a a' -- smash everthing.
+
+instance EquivalenceTrunc : Equivalence (trunc α) where 
+  refl _ := .trunc 
+  symm _  := .trunc
+  trans _ _ := .trunc 
+
+instance SetoidTrunc (α : Type) : Setoid α where
+   r := trunc α
+   iseqv := EquivalenceTrunc
+
+/-
+The type of Error is computationally 'String', but logically just a point.
+this allows us to ignore error states in proofs [they are all identified as equal],
+while still allowing computationally relevant errors.
+-/
+abbrev ErrorKind : Type := Quotient (SetoidTrunc String)
+
+/-
+Cursed: We cast from 'ErrorKind' which is a quotient of 'String' into 'String'
+since we know that these have the same RuntimeRep.
+-/
+unsafe def ErrorKind.toStringImpl (e: ErrorKind): String := unsafeCast e
+@[implemented_by ErrorKind.toStringImpl]
+partial def ErrorKind.toString (_: ErrorKind): String := "<<error>>"
+instance : ToString ErrorKind where
+  toString := ErrorKind.toString
+
+abbrev ErrorKind.mk (s: String) : Quotient (SetoidTrunc String) := 
+  Quotient.mk' s
+
+-- Coerce from regular strings into errors.
+instance : Coe String ErrorKind where
+  coe := ErrorKind.mk
+  
+@[simp]
+def ErrorKind.subsingleton (e: ErrorKind) (e': ErrorKind): e = e' := by {
+  apply Quotient.ind;
+  intros a;
+  apply Eq.symm;
+  apply Quotient.ind;
+  intros b;
+  apply Quotient.sound;
+  constructor;
+}
+
+
 abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
 
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
@@ -319,10 +367,7 @@ theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM
   case h.error e => {
     cases H':(mb env) <;> simp;
     case error e' => {
-      -- TODO: they are equal, upto error :(. We need rewriting wrt equiv rel.
-      -- We need either 'generalized rewriting', or we spend some time
-      -- investigating quotient types.
-      sorry 
+      apply ErrorKind.subsingleton;
     }
   }
 }
