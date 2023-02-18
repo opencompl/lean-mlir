@@ -196,7 +196,7 @@ inductive Env where
 
 
 abbrev ErrorKind := String
-abbrev TopM α := ReaderT Env (Except ErrorKind) α
+abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
 
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
@@ -428,6 +428,11 @@ end Arith
 
 namespace Scf
 
+def repeatM: Nat → (Val → TopM Val) → Val → TopM Val
+| 0, _ => pure
+| .succ n, f => f >=> repeatM n f
+ 
+
 def sem: (o: Op') → TopM (o.retkind.eval) 
 | { name := "if",
     argval := ⟨.int, cond⟩,
@@ -437,6 +442,25 @@ def sem: (o: Op') → TopM (o.retkind.eval)
     let rrun := if cond ≠ 0 then rthen else relse
     let v ← rrun Val.unit
     v.cast .int
+| { name := "twice",
+    regions := [r],
+    retkind := .int
+  } => do
+    let v ← r Val.unit
+    let w ← r Val.unit -- run a region twice, check that it is same as running once.
+    w.cast .int  
+| { name := "for",
+    regions := [r],
+    retkind := .int,
+    argval := ⟨.pair .int .int, ⟨init, niters⟩⟩
+  } => do
+    let niters : Nat := 
+      match niters with
+      | .ofNat n => n 
+      | _ => 0
+    let loopEffect := (fun v => NamedVal.toVal <$> (r v)) 
+    let w ← repeatM niters loopEffect ⟨.int, init⟩
+    w.cast .int 
 | op => TopM.error s!"unknown op {op}"
 end Scf
 
@@ -478,6 +502,47 @@ def eg_scf_ite_false : Region := [dsl_region| {
   }];
 }]
 
+def eg_scf_run_twice : Region := [dsl_region| {
+  %x : int = "constant"{41};
+  %x : int = "twice" [{
+      %one : int = "constant"{1};
+      %xone = (%x : int, %one : int);
+      %x : int = "add"(%xone : int × int);
+  }];
+}]
+
+def eg_scf_well_scoped_1 : Region := [dsl_region| {
+  %x : int = "constant"{41};
+  %one : int = "constant"{1}; -- one is outside.
+  %x : int = "twice" [{
+      %xone = (%x : int, %one : int); -- one is accessed here.
+      %x : int = "add"(%xone : int × int);
+  }];
+}]
+
+def eg_scf_ill_scoped_1 : Region := [dsl_region| {
+  %x : int = "constant"{41};
+  %x : int = "twice" [{
+      %y : int = "constant"{42};
+  }];
+  -- %y should NOT be accessible here
+  %out = (%y : int, %y : int);
+}]
+
+def eg_scf_for: Region := [dsl_region| {
+  %x : int = "constant"{10};  -- 10 iterations
+  %init : int = "constant"{32}; -- start value
+  %xinit = (%x : int, %init : int);
+  %out : int = "for"(%xinit : int × int)[{
+    ^(%xcur : int):
+      %one : int = "constant"{1};
+      %xcur_one = (%xcur : int, %one : int);
+      %xnext : int = "add"(%xcur_one : int × int);
+  }];
+}]
+
+
+
 end Examples
 
 namespace Test
@@ -501,6 +566,23 @@ def runRegionTest :
     | .error e => 
       IO.println s!"ERROR: '{e}'. Expected '{expected}'."
       return False
+
+def runRegionTestXfail : 
+  (sem: (o: Op') → TopM o.retkind.eval) →
+  (r: AST.Region) → 
+  (arg: Val := Val.unit ) →
+  (env: Env := Env.empty) → IO Bool := 
+  fun sem r arg env => do
+    IO.println r
+    let v? := (r.denote sem arg).run env
+    match v? with 
+    | .ok v => 
+        IO.println s!"ERROR: expected failure, but succeeded with '{v}'."; 
+        return False
+    | .error e => 
+      IO.println s!"OK: Succesfully xfailed '{e}'."
+      return True
+
 end Test
 
 
@@ -522,7 +604,22 @@ def main : IO UInt32 := do
   runRegionTest 
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_ite_false)
-    (expected := { name := "out", kind := .int, val := 0})]
+    (expected := { name := "out", kind := .int, val := 0}),
+  runRegionTest 
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_run_twice)
+    (expected := { name := "x", kind := .int, val := 42}),
+  runRegionTest 
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_well_scoped_1)
+    (expected := { name := "x", kind := .int, val := 42}),
+  runRegionTestXfail
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_ill_scoped_1),
+  runRegionTest 
+    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (r := eg_scf_for)
+    (expected := { name := "out", kind := .int, val := 42})]
   let mut total := 0
   let mut correct := 0
   for t in tests do
