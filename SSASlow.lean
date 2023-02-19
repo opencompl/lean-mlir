@@ -1,5 +1,3 @@
-import Mathlib.Data.Int.Basic
-
 namespace AST
 
 /-
