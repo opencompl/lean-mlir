@@ -38,3 +38,11 @@ theorem Fail: sem (.op "x" [⟨.k_a, 0⟩]) = output  := by {
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
   simp only[sem];
 }
+
+-- The timeout disappears with the following changes
+-- x Change 'Int' to 'Unit'
+-- x Remove List
+-- x Hardcode 'val : Int'
+-- x Remove 'k_f' case
+-- x remove '.op "h"' case
+-- x remove name from Op
