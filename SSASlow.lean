@@ -17,7 +17,6 @@ structure Var where
   kind : Kind
 deriving Inhabited, DecidableEq, BEq
 
-@[match_pattern]
 def Var.unit : Var := { name := "_", kind := .kind_a }
 
 inductive Op: Type where
