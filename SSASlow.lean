@@ -113,8 +113,7 @@ def sem: (o: Op') → TopM Val
 | .mk "e" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | .mk "f" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | .mk "g" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "h" [⟨.tensor2d, _⟩, ⟨.kind_a, _⟩, ⟨.kind_a, _⟩] => 
-    return ⟨.kind_a, 0⟩
+| .mk "h" [⟨.tensor2d, _⟩] => return ⟨.kind_a, 0⟩
 | _ => return ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
