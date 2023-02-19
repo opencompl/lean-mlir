@@ -6,7 +6,7 @@ inductive Kind where
 | k_e : Kind
 | k_f : Kind
 
-@[reducible, simp]
+@[reducible]
 def Kind.eval: Kind -> Type
 | .k_a => Int
 | .k_b => Int
