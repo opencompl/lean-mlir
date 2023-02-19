@@ -1,20 +1,20 @@
 inductive Kind where
-| kind_a : Kind
-| kind_b : Kind
-| kind_c : Kind 
-| kind_d : Kind
-| kind_e : Kind
-| kind_f : Kind
+| k_a : Kind
+| k_b : Kind
+| k_c : Kind 
+| k_d : Kind
+| k_e : Kind
+| k_f : Kind
 deriving Inhabited, DecidableEq, BEq
 
 @[reducible, simp]
 def Kind.eval: Kind -> Type
-| .kind_a => Int
-| .kind_b => Int
-| .kind_c => Int
-| .kind_d => Int
-| .kind_e => Int
-| .kind_f => Int
+| .k_a => Int
+| .k_b => Int
+| .k_c => Int
+| .k_d => Int
+| .k_e => Int
+| .k_f => Int
 
 structure Val where
   kind: Kind
@@ -24,20 +24,20 @@ inductive Op where
 | mk (name : String) (argval : List Val)
 
 def runOp (sem : (o: Op) → Val) : Val  := 
-  let op' : Op := .mk "x" [⟨.kind_a, 0⟩] 
+  let op' : Op := .mk "x" [⟨.k_a, 0⟩] 
   let out := sem op'
   { kind := out.kind, val := out.val : Val }
 
 def sem: (o: Op) → Val
-| .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "b" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "c" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "d" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "e" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "f" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "g" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| .mk "h" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
-| _ => ⟨.kind_a, 0⟩
+| .mk "a" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "b" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "c" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "d" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "e" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "f" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "g" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .mk "h" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| _ => ⟨.k_a, 0⟩
 
 set_option maxHeartbeats 200000
 theorem Fail: runOp sem = output  := by {
