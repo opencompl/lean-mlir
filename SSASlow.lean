@@ -42,7 +42,7 @@ def Kind.eval: Kind -> Type
 | .nat => Int
 | .unit => Unit
 | .float => Int
-| .tensor1d => Int → Int
+| .tensor1d => Int
 | .tensor2d => Int → Int → Int
 | .pair  => Int
 
