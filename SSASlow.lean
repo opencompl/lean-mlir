@@ -1,6 +1,3 @@
-/-
-Kinds of values.
--/
 inductive Kind where
 | kind_a : Kind
 | kind_b : Kind
@@ -10,7 +7,6 @@ inductive Kind where
 | kind_f : Kind
 deriving Inhabited, DecidableEq, BEq
 
--- Lean type that corresponds to kind.
 @[reducible, simp]
 def Kind.eval: Kind -> Type
 | .kind_a => Int
@@ -20,22 +16,19 @@ def Kind.eval: Kind -> Type
 | .kind_e => Int
 | .kind_f => Int
 
--- A kind and a value of that kind.
 structure Val where
   kind: Kind
   val: kind.eval
 
--- Runtime denotation of an Op, that has evaluated its arguments,
--- and expects a return value of type ⟦retkind⟧ 
-inductive Op' where
+inductive Op where
 | mk (name : String) (argval : List Val)
 
-def runOp (sem : (o: Op') → Val) : Val  := 
-  let op' : Op' := .mk "x" [⟨.kind_a, 0⟩] 
+def runOp (sem : (o: Op) → Val) : Val  := 
+  let op' : Op := .mk "x" [⟨.kind_a, 0⟩] 
   let out := sem op'
   { kind := out.kind, val := out.val : Val }
 
-def sem: (o: Op') → Val
+def sem: (o: Op) → Val
 | .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
 | .mk "b" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
 | .mk "c" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
