@@ -5,7 +5,6 @@ inductive Kind where
 | k_d : Kind
 | k_e : Kind
 | k_f : Kind
-deriving Inhabited, DecidableEq, BEq
 
 @[reducible, simp]
 def Kind.eval: Kind -> Type
