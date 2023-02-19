@@ -141,7 +141,7 @@ def sem: (o: Op') → TopM Val
 
 
 open AST in 
-theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
+theorem Fail: runOp sem (Op.op  Var.unit "float" [])   = .ok output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
