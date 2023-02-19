@@ -8,7 +8,7 @@ inductive Kind where
 | kind_d : Kind
 | kind_e : Kind
 | kind_f : Kind
-| tensor2d: Kind
+| kind_g : Kind
 deriving Inhabited, DecidableEq, BEq
 
 -- A binding of 'name' with kind 'Kind'
@@ -34,7 +34,7 @@ def Kind.eval: Kind -> Type
 | .kind_d => Int
 | .kind_e => Int
 | .kind_f => Int
-| .tensor2d => Int → Int → Int
+| .kind_g => Int → Int → Int
 
 -- A kind and a value of that kind.
 structure Val where
@@ -113,7 +113,7 @@ def sem: (o: Op') → TopM Val
 | .mk "e" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | .mk "f" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | .mk "g" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "h" [⟨.tensor2d, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "h" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | _ => return ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
