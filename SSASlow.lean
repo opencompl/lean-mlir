@@ -117,7 +117,7 @@ def sem: (o: Op') → TopM Val
 | _ => return ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: runOp sem (Op.op  Var.unit "float" [])   = .ok output  := by {
+theorem Fail: runOp sem (Op.op  Var.unit "float" [Var.unit])   = .ok output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
