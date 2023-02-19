@@ -56,10 +56,6 @@ inductive Env where
 | empty: Env
 | cons (var: Var) (val: var.kind.eval) (rest: Env): Env 
 
-abbrev ErrorKind := String
-abbrev TopM (α : Type) : Type := StateT Env (Except ErrorKind) α
-
-
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
@@ -70,48 +66,36 @@ def Env.get (var: Var): Env → NamedVal
     then var.toNamedVal (H ▸ val) 
     else env'.get var 
 
-def TopM.get (var: Var): TopM NamedVal := do 
-  let e ← StateT.get 
-  pure <| Env.get var e
-
-def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do 
-  let e ← StateT.get
-  let e' := Env.set nv.var nv.val e
-  StateT.set e'
-  let out ← k
-  StateT.set e 
-  return out 
-
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
 inductive Op' where
 | mk (name : String) (argval : List Val)
 
 def Op.denote 
- (sem: (o: Op') → TopM Val): Op  → TopM NamedVal 
-| .op ret name args  => do 
-    let vals ← args.mapM TopM.get
+ (sem: (o: Op') → Val) (env: Env) : Op  → NamedVal 
+| .op ret name args  => 
+    let vals := args.map (λ a => Env.get a env)
     let op' : Op' := .mk name (vals.map NamedVal.toVal)
-    let out ← sem op'
-    return { name := ret.name, kind := out.kind, val := out.val : NamedVal }
+    let out := sem op'
+    { name := ret.name, kind := out.kind, val := out.val : NamedVal }
 
-def runOp (sem : (o: Op') → TopM Val) (Op: Op)
-(env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
-  (Op.denote sem).run env
+def runOp (sem : (o: Op') → Val) (Op: Op)
+(env :  Env := Env.empty) : NamedVal  := 
+  (Op.denote sem env)
 
-def sem: (o: Op') → TopM Val
-| .mk "a" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "b" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "c" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "d" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "e" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "f" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "g" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| .mk "h" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
-| _ => return ⟨.kind_a, 0⟩
+def sem: (o: Op') → Val
+| .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "b" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "c" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "d" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "e" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "f" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "g" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| .mk "h" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
+| _ => ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: runOp sem (Op.op  Var.unit "float" [Var.unit])   = .ok output  := by {
+theorem Fail: runOp sem (Op.op  Var.unit "float" [Var.unit]) = output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
