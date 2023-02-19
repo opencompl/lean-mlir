@@ -10,16 +10,10 @@ inductive Kind where
 | kind_f : Kind
 deriving Inhabited, DecidableEq, BEq
 
--- A binding of 'name' with kind 'Kind'
-structure Var where
-  name : String
-  kind : Kind
-deriving Inhabited, DecidableEq, BEq
-
-def Var.unit : Var := { name := "_", kind := .kind_a }
+def Kind.unit : Kind := .kind_a
 
 inductive Op: Type where
-| op (arg : List Var): Op 
+| op (arg : List Kind): Op 
 
 -- Lean type that corresponds to kind.
 @[reducible, simp]
@@ -63,7 +57,7 @@ def sem: (o: Op') → Val
 | _ => ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: runOp sem (Op.op [Var.unit]) = output  := by {
+theorem Fail: runOp sem (Op.op [Kind.unit]) = output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
