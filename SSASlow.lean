@@ -16,8 +16,8 @@ inductive Kind where
 | nat: Kind 
 | tensor1d: Kind
 | tensor2d: Kind
-| pair : Kind -> Kind -> Kind
 | unit: Kind
+| pair: Kind
 deriving Inhabited, DecidableEq, BEq
 
 -- A binding of 'name' with kind 'Kind'
@@ -44,7 +44,7 @@ def Kind.eval: Kind -> Type
 | .float => Int
 | .tensor1d => Int → Int
 | .tensor2d => Int → Int → Int
-| .pair p q => p.eval × q.eval
+| .pair  => Int
 
 end AST
 
