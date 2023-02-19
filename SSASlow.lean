@@ -43,14 +43,10 @@ section Semantics
 structure Val where
   kind: Kind
   val: kind.eval
-
  
-def Val.unit : Val := { kind := Kind.kind_a, val := 0 }
-
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
   name : String  
-
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
 def Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
