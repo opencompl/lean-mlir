@@ -127,8 +127,6 @@ def runOp (sem : (o: Op') → TopM Val) (Op: AST.Op)
 
 end Semantics
 
-namespace Arith
-
 def sem: (o: Op') → TopM Val
 | .mk "a" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "b" [⟨.int, x⟩] => return ⟨.int, x⟩
@@ -150,5 +148,3 @@ theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
   simp[sem]; -- SLOW, but not timeout level slow
 
 }
-
-end Arith
