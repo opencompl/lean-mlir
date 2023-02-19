@@ -33,12 +33,8 @@ def sem: (o: Op) → Val
 | .op "h" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
 | _ => ⟨.k_a, 0⟩
 
-set_option maxHeartbeats 200000
 theorem Fail: sem (.op "x" [⟨.k_a, 0⟩]) = output  := by {
-  -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
-  
-  simp only[sem]; -- SLOW, but not timeout level slow
-
+  simp only[sem];
 }
