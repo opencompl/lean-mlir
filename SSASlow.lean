@@ -97,7 +97,7 @@ def Op.denote
     let out ← sem op'
     if ret.kind = out.kind
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
-    else TopM.error "unexpected return kind '{}', expected {}"
+    else return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
 
 def runOp (sem : (o: Op') → TopM Val) (Op: Op)
 (env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
