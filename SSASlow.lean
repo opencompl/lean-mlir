@@ -11,13 +11,13 @@ namespace AST
 Kinds of values.
 -/
 inductive Kind where
-| float : Kind
-| int : Kind
-| nat: Kind 
-| tensor1d: Kind
+| kind_a : Kind
+| kind_b : Kind
+| kind_c : Kind 
+| kind_d : Kind
+| kind_e : Kind
+| kind_f : Kind
 | tensor2d: Kind
-| unit: Kind
-| pair: Kind
 deriving Inhabited, DecidableEq, BEq
 
 -- A binding of 'name' with kind 'Kind'
@@ -27,7 +27,7 @@ structure Var where
 deriving Inhabited, DecidableEq, BEq
 
 @[match_pattern]
-def Var.unit : Var := { name := "_", kind := .unit }
+def Var.unit : Var := { name := "_", kind := .kind_a }
 
 inductive Op: Type where
 | op (ret : Var)
@@ -38,13 +38,13 @@ inductive Op: Type where
 -- Lean type that corresponds to kind.
 @[reducible, simp]
 def Kind.eval: Kind -> Type
-| .int => Int
-| .nat => Int
-| .unit => Unit
-| .float => Int
-| .tensor1d => Int
+| .kind_a => Int
+| .kind_b => Int
+| .kind_c => Int
+| .kind_d => Int
+| .kind_e => Int
+| .kind_f => Int
 | .tensor2d => Int → Int → Int
-| .pair  => Int
 
 end AST
 
@@ -57,7 +57,7 @@ structure Val where
   val: kind.eval
 
  
-def Val.unit : Val := { kind := Kind.unit, val := () }
+def Val.unit : Val := { kind := Kind.kind_a, val := 0 }
 
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
@@ -128,16 +128,16 @@ def runOp (sem : (o: Op') → TopM Val) (Op: AST.Op)
 end Semantics
 
 def sem: (o: Op') → TopM Val
-| .mk "a" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "b" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "c" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "d" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "e" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "f" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "g" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "h" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.int, _⟩] => 
-    return ⟨.int, 0⟩
-| _ => return ⟨.int, 0⟩
+| .mk "a" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "b" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "c" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "d" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "e" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "f" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "g" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "h" [⟨.tensor2d, _⟩, ⟨.kind_a, _⟩, ⟨.kind_a, _⟩] => 
+    return ⟨.kind_a, 0⟩
+| _ => return ⟨.kind_a, 0⟩
 
 
 open AST in 
