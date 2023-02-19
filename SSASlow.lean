@@ -10,8 +10,6 @@ inductive Kind where
 | kind_f : Kind
 deriving Inhabited, DecidableEq, BEq
 
-def Kind.unit : Kind := .kind_a
-
 -- Lean type that corresponds to kind.
 @[reducible, simp]
 def Kind.eval: Kind -> Type
