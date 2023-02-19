@@ -9,12 +9,12 @@ namespace AST
 
 
 /-
-Kinds of values. We must have 'pair' to take multiple arguments.
+Kinds of values.
 -/
 inductive Kind where
+| float : Kind
 | int : Kind
 | nat: Kind 
-| float : Kind
 | tensor1d: Kind
 | tensor2d: Kind
 | pair : Kind -> Kind -> Kind
@@ -131,17 +131,13 @@ end Semantics
 namespace Arith
 
 def sem: (o: Op') → TopM Val
-| .mk "float" [⟨.float, x⟩] => return ⟨.float, x+1⟩
-| .mk "float2" [⟨.float, x⟩] => return ⟨.float, x + x⟩
-| .mk "int2" [⟨.int, x⟩] => return ⟨.int, x + x⟩
-| .mk "nat2" [⟨.nat, x⟩] => return ⟨.nat, x + x⟩
-| .mk "add" [⟨.int, x⟩, ⟨.int, y⟩]   => 
-      return ⟨.int, (x + y)⟩
-| .mk "sub" [⟨.int, x⟩, ⟨.int, y⟩] => 
-      return ⟨.int, (x - y)⟩
-| .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] => 
-    let i := t ix 
-    return ⟨.int, i + i⟩
+| .mk "float" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "float2" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "int2" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "nat2" [⟨.nat, x⟩] => return ⟨.nat, x⟩
+| .mk "add" [⟨.nat, x⟩] => return ⟨.nat, x⟩
+| .mk "sub" [⟨.nat, x⟩] => return ⟨.nat, x⟩
+| .mk "tensor1d" [⟨.nat, x⟩] => return ⟨.nat, x⟩
 | .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, _⟩, ⟨.nat, _⟩] => 
     let i := t 0 0
     return ⟨.int, i + i⟩
