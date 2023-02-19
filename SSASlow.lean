@@ -63,16 +63,16 @@ abbrev TopM (α : Type) : Type := StateT Env (Except ErrorKind) α
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
-def Env.get (var: Var): Env → Except ErrorKind NamedVal 
-| .empty => .ok { name := "<unk>", kind := .kind_a, val := 0 : NamedVal }
+def Env.get (var: Var): Env → NamedVal 
+| .empty => { name := "<unk>", kind := .kind_a, val := 0 : NamedVal }
 | .cons var' val env' => 
     if H : var = var'
-    then pure <| var.toNamedVal (H ▸ val) 
+    then var.toNamedVal (H ▸ val) 
     else env'.get var 
 
 def TopM.get (var: Var): TopM NamedVal := do 
   let e ← StateT.get 
-  Env.get var e
+  pure <| Env.get var e
 
 def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do 
   let e ← StateT.get
