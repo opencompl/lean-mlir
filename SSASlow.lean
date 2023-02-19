@@ -37,8 +37,6 @@ def Kind.eval: Kind -> Type
 | .kind_f => Int
 | .tensor2d => Int → Int → Int
 
-section Semantics
-
 -- A kind and a value of that kind.
 structure Val where
   kind: Kind
@@ -107,9 +105,6 @@ def Op.denote
 def runOp (sem : (o: Op') → TopM Val) (Op: Op)
 (env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
   (Op.denote sem).run env
-
-
-end Semantics
 
 def sem: (o: Op') → TopM Val
 | .mk "a" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
