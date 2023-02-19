@@ -136,8 +136,8 @@ def sem: (o: Op') → TopM Val
 | .mk "d" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "e" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "f" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "tensor1d" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "tensor2d" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.int, _⟩] => 
+| .mk "g" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "h" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.int, _⟩] => 
     return ⟨.int, 0⟩
 | _ => TopM.error s!"unknown op"
 
