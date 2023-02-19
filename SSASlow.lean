@@ -23,7 +23,6 @@ inductive Op: Type where
    (name : String)
    (arg : List Var): Op 
 
-
 -- Lean type that corresponds to kind.
 @[reducible, simp]
 def Kind.eval: Kind -> Type
@@ -50,38 +49,21 @@ def Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal :=
 def NamedVal.var (nv: NamedVal): Var :=
   { name := nv.name, kind := nv.kind }
 
--- Well typed environments; cons cells of
--- bindings of variables to values of type ⟦var.kind⟧
-inductive Env where
-| empty: Env
-| cons (var: Var) (val: var.kind.eval) (rest: Env): Env 
-
-def Env.set (var: Var) (val: var.kind.eval): Env → Env
-| env => (.cons var val env)
-
-def Env.get (var: Var): Env → NamedVal 
-| .empty => { name := "<unk>", kind := .kind_a, val := 0 : NamedVal }
-| .cons var' val env' => 
-    if H : var = var'
-    then var.toNamedVal (H ▸ val) 
-    else env'.get var 
-
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
 inductive Op' where
 | mk (name : String) (argval : List Val)
 
 def Op.denote 
- (sem: (o: Op') → Val) (env: Env) : Op  → NamedVal 
+ (sem: (o: Op') → Val) : Op  → NamedVal 
 | .op ret name args  => 
-    let vals := args.map (λ a => Env.get a env)
+    let vals := args.map (λ _ => { name := "<unk>", kind := .kind_a, val := 0 : NamedVal })
     let op' : Op' := .mk name (vals.map NamedVal.toVal)
     let out := sem op'
     { name := ret.name, kind := out.kind, val := out.val : NamedVal }
 
-def runOp (sem : (o: Op') → Val) (Op: Op)
-(env :  Env := Env.empty) : NamedVal  := 
-  (Op.denote sem env)
+def runOp (sem : (o: Op') → Val) (Op: Op) : NamedVal  := 
+  (Op.denote sem)
 
 def sem: (o: Op') → Val
 | .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
