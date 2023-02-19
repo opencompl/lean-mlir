@@ -55,14 +55,14 @@ inductive Op' where
 | mk (name : String) (argval : List Val)
 
 def Op.denote 
- (sem: (o: Op') → Val) : Op  → NamedVal 
-| .op ret name args  => 
+ (sem: (o: Op') → Val) : Op  → Val 
+| .op _ name args  => 
     let vals := args.map (λ _ => { name := "<unk>", kind := .kind_a, val := 0 : NamedVal })
     let op' : Op' := .mk name (vals.map NamedVal.toVal)
     let out := sem op'
-    { name := ret.name, kind := out.kind, val := out.val : NamedVal }
+    { kind := out.kind, val := out.val : Val }
 
-def runOp (sem : (o: Op') → Val) (Op: Op) : NamedVal  := 
+def runOp (sem : (o: Op') → Val) (Op: Op) : Val  := 
   (Op.denote sem)
 
 def sem: (o: Op') → Val
