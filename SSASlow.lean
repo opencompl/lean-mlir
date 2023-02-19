@@ -37,17 +37,6 @@ def Kind.eval: Kind -> Type
 structure Val where
   kind: Kind
   val: kind.eval
- 
--- The return value of an SSA operation, with a name, kind, and value of that kind.
-structure NamedVal extends Val where
-  name : String  
-
--- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
-def Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
- { kind := var.kind, val := value, name := var.name }
-
-def NamedVal.var (nv: NamedVal): Var :=
-  { name := nv.name, kind := nv.kind }
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
@@ -56,9 +45,8 @@ inductive Op' where
 
 def Op.denote 
  (sem: (o: Op') → Val) : Op  → Val 
-| .op _ name args  => 
-    let vals := args.map (λ _ => { name := "<unk>", kind := .kind_a, val := 0 : NamedVal })
-    let op' : Op' := .mk name (vals.map NamedVal.toVal)
+| .op _ name _ => 
+    let op' : Op' := .mk name [⟨.kind_a, 0⟩] 
     let out := sem op'
     { kind := out.kind, val := out.val : Val }
 
