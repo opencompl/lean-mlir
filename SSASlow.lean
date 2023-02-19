@@ -123,13 +123,13 @@ def runOp (sem : (o: Op') → TopM Val) (Op: AST.Op)
 end Semantics
 
 def sem: (o: Op') → TopM Val
-| .mk "a" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "b" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "c" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "d" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "e" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "f" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
-| .mk "g" [⟨.kind_a, x⟩] => return ⟨.kind_a, x⟩
+| .mk "a" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "b" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "c" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "d" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "e" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "f" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
+| .mk "g" [⟨.kind_a, _⟩] => return ⟨.kind_a, 0⟩
 | .mk "h" [⟨.tensor2d, _⟩, ⟨.kind_a, _⟩, ⟨.kind_a, _⟩] => 
     return ⟨.kind_a, 0⟩
 | _ => return ⟨.kind_a, 0⟩
