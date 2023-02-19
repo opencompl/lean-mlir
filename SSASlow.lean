@@ -1,5 +1,3 @@
-namespace AST
-
 /-
 Kinds of values.
 -/
@@ -39,10 +37,7 @@ def Kind.eval: Kind -> Type
 | .kind_f => Int
 | .tensor2d => Int → Int → Int
 
-end AST
-
 section Semantics
-open AST
 
 -- A kind and a value of that kind.
 structure Val where
@@ -58,7 +53,7 @@ structure NamedVal extends Val where
 
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
-def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
+def Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
  { kind := var.kind, val := value, name := var.name }
 
 def NamedVal.var (nv: NamedVal): Var :=
@@ -103,7 +98,7 @@ def TopM.error (e: ErrorKind) : TopM α := Except.error e
 inductive Op' where
 | mk (name : String) (argval : List Val)
 
-def AST.Op.denote 
+def Op.denote 
  (sem: (o: Op') → TopM Val): Op  → TopM NamedVal 
 | .op ret name args  => do 
     let vals ← args.mapM TopM.get
@@ -113,7 +108,7 @@ def AST.Op.denote
     then return { name := ret.name,  kind := out.kind, val := out.val : NamedVal }
     else TopM.error "unexpected return kind '{}', expected {}"
 
-def runOp (sem : (o: Op') → TopM Val) (Op: AST.Op)
+def runOp (sem : (o: Op') → TopM Val) (Op: Op)
 (env :  Env := Env.empty) : Except ErrorKind (NamedVal × Env) := 
   (Op.denote sem).run env
 
@@ -133,7 +128,6 @@ def sem: (o: Op') → TopM Val
 | _ => return ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-open AST in 
 theorem Fail: runOp sem (Op.op  Var.unit "float" [])   = .ok output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
