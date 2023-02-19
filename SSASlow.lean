@@ -42,6 +42,9 @@ def Op.denote
     let out := sem op'
     { kind := out.kind, val := out.val : Val }
 
+def runOp (sem : (o: Op') → Val) (Op: Op) : Val  := 
+  (Op.denote sem)
+
 def sem: (o: Op') → Val
 | .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
 | .mk "b" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
@@ -54,7 +57,7 @@ def sem: (o: Op') → Val
 | _ => ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: (Op.op [Kind.unit]).denote sem = output  := by {
+theorem Fail: runOp sem (Op.op [Kind.unit]) = output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
