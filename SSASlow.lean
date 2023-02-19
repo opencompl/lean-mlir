@@ -137,7 +137,7 @@ def sem: (o: Op') → TopM Val
 | .mk "g" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "h" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.int, _⟩] => 
     return ⟨.int, 0⟩
-| _ => TopM.error s!"unknown op"
+| _ => return ⟨.int, 0⟩
 
 
 open AST in 
