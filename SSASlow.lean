@@ -3,7 +3,6 @@ import Mathlib.Data.Int.Lemmas
 open Mathlib
 open Std 
 open Int
-open Nat
 
 namespace AST
 
@@ -40,11 +39,11 @@ inductive Op: Type where
 @[reducible, simp]
 def Kind.eval: Kind -> Type
 | .int => Int
-| .nat => Nat
+| .nat => Int
 | .unit => Unit
-| .float => Float
-| .tensor1d => Nat → Int
-| .tensor2d => Nat → Nat → Int  
+| .float => Int
+| .tensor1d => Int → Int
+| .tensor2d => Int → Int → Int
 | .pair p q => p.eval × q.eval
 
 end AST
