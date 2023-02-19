@@ -46,3 +46,4 @@ theorem Fail: sem (.op "x" [⟨.k_a, 0⟩]) = output  := by {
 -- x Remove 'k_f' case
 -- x remove '.op "h"' case
 -- x remove name from Op
+-- x remove 'reducible'
