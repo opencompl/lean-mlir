@@ -136,8 +136,8 @@ def sem: (o: Op') → TopM Val
 | .mk "d" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "e" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "f" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "tensor1d" [⟨.nat, x⟩] => return ⟨.nat, x⟩
-| .mk "tensor2d" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.nat, _⟩] => 
+| .mk "tensor1d" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "tensor2d" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.int, _⟩] => 
     return ⟨.int, 0⟩
 | _ => TopM.error s!"unknown op"
 
@@ -148,6 +148,7 @@ theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
   simp[sem]; -- SLOW, but not timeout level slow
+
 }
 
 end Arith
