@@ -64,7 +64,7 @@ def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
 
 def Env.get (var: Var): Env → Except ErrorKind NamedVal 
-| .empty => Except.error s!"unknown var {var.name}"
+| .empty => .ok { name := "<unk>", kind := .kind_a, val := 0 : NamedVal }
 | .cons var' val env' => 
     if H : var = var'
     then pure <| var.toNamedVal (H ▸ val) 
