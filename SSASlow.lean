@@ -12,9 +12,6 @@ deriving Inhabited, DecidableEq, BEq
 
 def Kind.unit : Kind := .kind_a
 
-inductive Op: Type where
-| op (arg : List Kind): Op 
-
 -- Lean type that corresponds to kind.
 @[reducible, simp]
 def Kind.eval: Kind -> Type
@@ -35,15 +32,10 @@ structure Val where
 inductive Op' where
 | mk (name : String) (argval : List Val)
 
-def Op.denote 
- (sem: (o: Op') → Val) : Op  → Val 
-| .op _ => 
-    let op' : Op' := .mk "x" [⟨.kind_a, 0⟩] 
-    let out := sem op'
-    { kind := out.kind, val := out.val : Val }
-
-def runOp (sem : (o: Op') → Val) (Op: Op) : Val  := 
-  (Op.denote sem)
+def runOp (sem : (o: Op') → Val) : Val  := 
+  let op' : Op' := .mk "x" [⟨.kind_a, 0⟩] 
+  let out := sem op'
+  { kind := out.kind, val := out.val : Val }
 
 def sem: (o: Op') → Val
 | .mk "a" [⟨.kind_a, _⟩] => ⟨.kind_a, 0⟩
@@ -57,7 +49,7 @@ def sem: (o: Op') → Val
 | _ => ⟨.kind_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: runOp sem (Op.op [Kind.unit]) = output  := by {
+theorem Fail: runOp sem = output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
