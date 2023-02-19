@@ -152,6 +152,3 @@ theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
 }
 
 end Arith
-
-
-def main : IO Unit := return ()
