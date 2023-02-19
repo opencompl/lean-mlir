@@ -20,21 +20,21 @@ structure Val where
   val: kind.eval
 
 inductive Op where
-| mk (name : String) (argval : List Val)
+| op (name : String) (argval : List Val)
 
 def sem: (o: Op) → Val
-| .mk "a" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "b" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "c" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "d" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "e" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "f" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "g" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
-| .mk "h" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "a" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "b" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "c" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "d" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "e" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "f" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "g" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
+| .op "h" [⟨.k_a, _⟩] => ⟨.k_a, 0⟩
 | _ => ⟨.k_a, 0⟩
 
 set_option maxHeartbeats 200000
-theorem Fail: sem (.mk "x" [⟨.k_a, 0⟩]) = output  := by {
+theorem Fail: sem (.op "x" [⟨.k_a, 0⟩]) = output  := by {
   -- ERROR:
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
