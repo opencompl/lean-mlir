@@ -42,7 +42,7 @@ structure Val where
   kind: Kind
   val: kind.eval
  
--- The retun value of an SSA operation, with a name, kind, and value of that kind.
+-- The return value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
   name : String  
 
