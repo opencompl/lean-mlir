@@ -34,7 +34,7 @@ def Kind.eval: Kind -> Type
 | .kind_d => Int
 | .kind_e => Int
 | .kind_f => Int
-| .kind_g => Int → Int → Int
+| .kind_g => Int
 
 -- A kind and a value of that kind.
 structure Val where
