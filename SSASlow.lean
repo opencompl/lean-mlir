@@ -142,11 +142,10 @@ def sem: (o: Op') → TopM Val
 | .mk "tensor1d" [⟨.tensor1d, t⟩, ⟨.nat, ix⟩] => 
     let i := t ix 
     return ⟨.int, i + i⟩
-| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, i⟩, ⟨.nat, j⟩] => 
+| .mk "tensor2d" [⟨.tensor2d, t⟩, ⟨.int, _⟩, ⟨.nat, _⟩] => 
     let i := t 0 0
-    let j := t 1 1
     return ⟨.int, i + i⟩
-| op => TopM.error s!"unknown op"
+| _ => TopM.error s!"unknown op"
 
 
 open AST in 
@@ -155,11 +154,6 @@ theorem Fail: runOp sem  (Op.op  Var.unit "float" [])   = .ok output  := by {
   -- tactic 'simp' failed, nested error:
   -- (deterministic) timeout at 'whnf', maximum number of heartbeats (200000) has been reached (use 'set_option maxHeartbeats <num>' to set the limit)
   simp[sem]; -- SLOW, but not timeout level slow
-  simp[runRegion];
-  simp[StateT.run]
-  simp[Op.denote];
-  simp[bind];
-  simp[StateT.bind];
 }
 
 end Arith
