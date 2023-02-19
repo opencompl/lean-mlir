@@ -130,12 +130,12 @@ end Semantics
 namespace Arith
 
 def sem: (o: Op') → TopM Val
-| .mk "float" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "float2" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "int2" [⟨.int, x⟩] => return ⟨.int, x⟩
-| .mk "nat2" [⟨.nat, x⟩] => return ⟨.nat, x⟩
-| .mk "add" [⟨.nat, x⟩] => return ⟨.nat, x⟩
-| .mk "sub" [⟨.nat, x⟩] => return ⟨.nat, x⟩
+| .mk "a" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "b" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "c" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "d" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "e" [⟨.int, x⟩] => return ⟨.int, x⟩
+| .mk "f" [⟨.int, x⟩] => return ⟨.int, x⟩
 | .mk "tensor1d" [⟨.nat, x⟩] => return ⟨.nat, x⟩
 | .mk "tensor2d" [⟨.tensor2d, _⟩, ⟨.int, _⟩, ⟨.nat, _⟩] => 
     return ⟨.int, 0⟩
