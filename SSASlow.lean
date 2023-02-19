@@ -1,11 +1,6 @@
 import Mathlib.Data.Int.Basic
-import Mathlib.Data.Int.Lemmas
-open Mathlib
-open Std 
-open Int
 
 namespace AST
-
 
 /-
 Kinds of values.
