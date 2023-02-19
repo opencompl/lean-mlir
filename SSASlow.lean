@@ -82,8 +82,6 @@ def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := do
   StateT.set e 
   return out 
 
-def TopM.error (e: ErrorKind) : TopM α := Except.error e
-
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧ 
 inductive Op' where
