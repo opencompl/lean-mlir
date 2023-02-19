@@ -8,7 +8,6 @@ inductive Kind where
 | kind_d : Kind
 | kind_e : Kind
 | kind_f : Kind
-| kind_g : Kind
 deriving Inhabited, DecidableEq, BEq
 
 -- A binding of 'name' with kind 'Kind'
@@ -34,7 +33,6 @@ def Kind.eval: Kind -> Type
 | .kind_d => Int
 | .kind_e => Int
 | .kind_f => Int
-| .kind_g => Int
 
 -- A kind and a value of that kind.
 structure Val where
