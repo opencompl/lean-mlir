@@ -500,37 +500,13 @@ theorem Expr.denote_opscons_inv
           dsimp only at oval';
           dsimp only[ReaderT.pure, pure, Except.pure] at H;
           injection H with oval'_EQ;
+          induction oval'_EQ;
+          simp;
           exists oval';
-          dsimp only[SEM, oval'_EQ]; -- TODO: proof is slow by the time we reach here.
-          dsimp only[oval'_EQ, Op.Ret, Var.toNamedVal];
-          constructor <;> simp only[oval'_EQ]; -- EXAMPLE, TODO: needs to be 'SIMP'
-          rw[<- SUCCESS];
-          -- tactic 'Lean.Parser.Tactic.changeWith' has not been implemented :(
-          -- change { name := oval.name, kind := oval.toVal.kind } with oval
-          cases oval; case mk oval_val oval_name => {-- TODO: how to write this cleanly? I was 'destruct'
-          have RET : ret = { name := oval_name, kind := oval_val.kind } := by {
-            simp at oval'_EQ;
-            simp;
-            cases ret;
-            case mk ret_name ret_kind => 
-            simp;
-            simp at oval'_EQ;
-            simp[oval'_EQ];
-            simp[<- oval'_EQ.left];
-          };
-          cases RET; case refl => { 
-            simp at *;
-            simp[<- oval'_EQ];
-            cases oval_val; case mk oval_val_kind oval_val_val => {
-              simp at *;
-              induction oval'_EQ;
-              case refl => { rfl } ;
-            }
-          }
-        }}
-      }  
+          }  
+        }
+      }
     }
-  }
 }
 
 -- unfold denote for tuple.
