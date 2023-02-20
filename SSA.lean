@@ -7,6 +7,7 @@ import Std.Data.Int.Basic
 
 open Std 
 
+
 namespace AST
 
 /-
@@ -401,6 +402,160 @@ theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM
   }
 }
 
+-- unfold Expr.denote for opscons
+theorem Expr.denote_opscons:  
+  (Expr.opscons o os).denote sem =  
+    (o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) := by { rfl; }
+
+-- unfold Expr.denote for opsone
+theorem Expr.denote_opsone:
+  (Expr.opsone o).denote sem = o.denote sem := by { rfl; }
+
+-- unfold Expr.denote for op
+theorem Expr.denote_op:
+  (Op.mk ret name arg rs const ).denote sem =
+  TopM.get arg >>= fun val => 
+    let op' : Op' :=
+      { name := name
+      , argval := ⟨arg.kind, val⟩
+      , regions := rs.denote sem
+      , const := const
+      , retkind := ret.kind }
+    sem op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
+  := by { rfl; }
+
+-- how to simply Expr.denote_op, assuming the environment lookup is correct.
+theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions) (const: Const)
+  (sem: (o' : Op') → TopM o'.retkind.eval)
+  (env: Env)
+  (argval: arg.kind.eval)
+  (ARGVAL: env.get arg = .ok argval)
+  (outval : ret.kind.eval)
+  (SEM: sem { name := name
+            , argval := ⟨arg.kind, argval⟩
+            , regions := rs.denote sem
+            , const := const
+            , retkind := ret.kind } env = Except.ok outval) :
+  (Op.mk ret name arg rs const).denote sem env = Except.ok (ret.toNamedVal outval)
+  := by {
+      rw[Expr.denote_op];
+      simp[TopM.get, ReaderT.get, pure, bind, ReaderT.bind, Except.pure, Except.bind, ARGVAL, SEM];
+   }
+
+
+-- 'opscons o os' @ env is the same as 'os @ (env[o.ret = o.val])'.
+-- That is, if 'o' succeeds, the 'os' proceeds evaluation with 'env' which
+-- has been updated for 'o.ret' with 'o.val'.
+theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.Ret o).kind.eval)
+  (sem : (o' : Op') → TopM o'.retkind.eval) (env: Env)
+  (OVAL: o.denote sem env = Except.ok (o.Ret.toNamedVal outval)) :
+  (Expr.opscons o os).denote sem env = os.denote sem (env.set o.Ret outval) := by {
+    rw[Expr.denote_opscons];
+    simp[bind, ReaderT.bind, OVAL, Except.bind, TopM.set];
+}
+
+
+
+-- If opscons succeeds, then 'o' succeded and 'os' succeeded
+-- (inversion principle).
+-- TODO: this is a super ugly proof. Learn how to make it small.
+theorem Expr.denote_opscons_inv 
+(SUCCESS: Expr.denote sem (Expr.opscons o os) env = Except.ok finalval) : 
+∃ (oval: (Op.Ret o).kind.eval),
+  (o.denote sem env = Except.ok ((Op.Ret o).toNamedVal oval)) ∧
+  (os.denote sem (env.set (Op.Ret o) oval) = Except.ok finalval) := by {
+    rw[Expr.denote_opscons] at SUCCESS;
+    dsimp only[bind, ReaderT.bind, Except.bind, TopM.set] at SUCCESS;
+    simp[Expr.denote_op] at SUCCESS;
+    cases H:(Expr.denote sem o env) <;> simp[H] at SUCCESS;
+    case ok oval => {
+      cases o;
+      case tuple ret a1 a2 => { -- TODO: refactor this as an inversion principle for tuples
+        simp[Expr.denote] at H;
+        simp[bind, ReaderT.bind, Except.bind] at H;
+        cases A1VAL:(TopM.get a1 env) <;> simp[A1VAL] at H;
+        case ok a1val => {
+          cases A2VAL:(TopM.get a2 env) <;> simp[A2VAL] at H;
+          case ok a2val => {
+            simp[pure, ReaderT.pure, Except.pure] at H;
+            induction H;
+            case refl => {
+              simp;
+              exists a1val;
+              exists a2val;
+            }
+          }
+        }
+      }
+      case op ret name arg regions const => { -- TODO: refactor this as inversion for Ops.
+        dsimp only[Expr.denote] at H;
+        dsimp only[TopM.get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure] at H;
+        cases ENV_AT_ARG:(Env.get arg env) <;> simp[ENV_AT_ARG] at H;
+        case ok argval => {
+        cases SEM:sem { name := name, 
+                        argval := { kind := arg.kind, val := argval },
+                        regions := Expr.denote sem regions, const := const,
+                        retkind := ret.kind } env <;> simp[SEM] at H;
+        case ok oval' => {
+          dsimp only at oval';
+          dsimp only[ReaderT.pure, pure, Except.pure] at H;
+          injection H with oval'_EQ;
+          exists oval';
+          dsimp only[SEM, oval'_EQ]; -- TODO: proof is slow by the time we reach here.
+          dsimp only[oval'_EQ, Op.Ret, Var.toNamedVal];
+          constructor <;> simp only[oval'_EQ]; -- EXAMPLE, TODO: needs to be 'SIMP'
+          rw[<- SUCCESS];
+          -- tactic 'Lean.Parser.Tactic.changeWith' has not been implemented :(
+          -- change { name := oval.name, kind := oval.toVal.kind } with oval
+          cases oval; case mk oval_val oval_name => {-- TODO: how to write this cleanly? I was 'destruct'
+          have RET : ret = { name := oval_name, kind := oval_val.kind } := by {
+            simp at oval'_EQ;
+            simp;
+            cases ret;
+            case mk ret_name ret_kind => 
+            simp;
+            simp at oval'_EQ;
+            simp[oval'_EQ];
+            simp[<- oval'_EQ.left];
+          };
+          cases RET; case refl => { 
+            simp at *;
+            simp[<- oval'_EQ];
+            cases oval_val; case mk oval_val_kind oval_val_val => {
+              simp at *;
+              induction oval'_EQ;
+              case refl => { rfl } ;
+            }
+          }
+        }}
+      }  
+    }
+  }
+}
+
+-- unfold denote for tuple.
+theorem Expr.denote_tuple:  (Expr.tuple ret o o').denote sem =  
+    (TopM.get o >>= fun oval => TopM.get o' >>= fun o'val => 
+      fun _ => Except.ok 
+        { name := ret,
+          kind := .pair o.kind o'.kind,
+          val := (oval, o'val)
+        }) := by { rfl; }
+
+theorem Expr.denote_regionsnil: Expr.regionsnil.denote sem = [] := by rfl
+
+-- Get the value of 'TopM.get' that matches the current 'Env.cons' cell
+theorem TopM.get.cons_eq:  TopM.get v (Env.cons v val env') = Except.ok val := by {
+  simp only[TopM.get, ReaderT.get, bind, ReaderT.bind, pure, Except.bind, Except.pure, Env.get];
+  simp;
+}
+
+theorem TopM.get.Var.unit: TopM.get Var.unit e = Except.ok () := by {
+  simp only[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.ok, Except.pure];
+  simp[AST.Var.unit];
+  apply Env.get.unit;
+}
+
 end Semantics
 
 namespace DSL
@@ -705,52 +860,7 @@ namespace RewriteExamples
 open Rewriting 
 open AST 
 section SubXX
-
-theorem Expr.denote_opscons:  
-  (Expr.opscons o os).denote sem =  
-    (o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) := by { rfl; }
-
-theorem Expr.denote_opsone:
-  (Expr.opsone o).denote sem = o.denote sem := by { rfl; }
-
-theorem Expr.denote_op:
-  (Op.mk ret name arg rs const ).denote sem =
-  TopM.get arg >>= fun val => 
-    let op' : Op' :=
-      { name := name
-      , argval := ⟨arg.kind, val⟩
-      , regions := rs.denote sem
-      , const := const
-      , retkind := ret.kind }
-    sem op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
-  := by { rfl; }
-
-theorem Expr.denote_opscons_k {β: Type} 
-  (k: NamedVal → Env → Except ErrorKind β) : 
-  ((Expr.opscons o os).denote sem >>= k) env =  
-    ((o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) >>= k) env := by { rfl; }
-
-theorem Expr.denote_tuple:  (Expr.tuple ret o o').denote sem =  
-    (TopM.get o >>= fun oval => TopM.get o' >>= fun o'val => 
-      fun _ => Except.ok 
-        { name := ret,
-          kind := .pair o.kind o'.kind,
-          val := (oval, o'val)
-        }) := by { rfl; }
-
-theorem Expr.denote_regionsnil: Expr.regionsnil.denote sem = [] := by rfl
-
--- Get the value of 'TopM.get' that matches the current 'Env.cons' cell
-theorem TopM.get.cons_eq:  TopM.get v (Env.cons v val env') = Except.ok val := by {
-  simp only[TopM.get, ReaderT.get, bind, ReaderT.bind, pure, Except.bind, Except.pure, Env.get];
-  simp;
-}
-
-theorem TopM.get.Var.unit: TopM.get Var.unit e = Except.ok () := by {
-  simp only[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.ok, Except.pure];
-  simp[AST.Var.unit];
-  apply Env.get.unit;
-}
+-- x - x ~= 0
 
 theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
   linarith 
@@ -807,12 +917,132 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
   }
  }
 
- #check Repr
 end SubXX
 
+section ForFusion
+-- peel loop iterations out.
+
+def for_fusion (r: Region) (n m : String)
+  (n_plus_m n_m: String) 
+  (out1 out2: String)
+  (n_init m_out1: String)
+  (init init_n_plus_m: String) : Peephole := {
+  findbegin := .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
+               (.cons ⟨init, .int⟩
+               (.cons ⟨n, .int⟩
+               (.cons ⟨m, .int⟩ .nil))))
+  findmid := 
+      let n_init_op := Expr.tuple n_init ⟨n, .int⟩ ⟨out1, .int⟩
+      let loop1 := Op.mk 
+                  (name := "for")
+                  (ret := ⟨out1, .int⟩) 
+                  (arg := ⟨n_init, .pair .int .int⟩)
+                  (regions := .regionscons r .regionsnil)
+      let m_out1_op := Expr.tuple m_out1 ⟨m, .int⟩ ⟨out2, .int⟩
+      let loop2 := Op.mk 
+                  (name := "for")
+                  (ret := ⟨out2, .int⟩) 
+                  (arg := ⟨m_out1, .pair .int .int⟩)
+                  (regions := .regionscons r .regionsnil)
+      .opscons n_init_op (.opscons loop1 (.opscons m_out1_op (.opsone loop2))),
+  replace :=
+    let n_m_op := Expr.tuple n_m ⟨n, .int⟩ ⟨m, .int⟩
+    let n_plus_m_op := Op.mk (ret := ⟨n_plus_m, .int⟩) (name := "add") (arg := ⟨n_m, .int⟩)
+    let init_n_plus_m_op := Expr.tuple init_n_plus_m ⟨init, .int⟩ ⟨n_plus_m, .int⟩
+    let loop_nm_op := 
+        Op.mk 
+          (name := "for")
+          (ret := ⟨out1, .int⟩) 
+          (arg := ⟨init_n_plus_m, .pair .int .int⟩)
+          (regions := .regionscons r .regionsnil)
+    .opsone (loop_nm_op),
+  sem := Combine.combineSem Scf.sem Arith.sem,
+  replaceCorrect := fun env => by {
+    dsimp only;
+    dsimp only [Except.bind, TopM.set, NamedVal.var, Function.comp_apply];
+    rw[Expr.denote_opscons];
+    rw[Expr.denote_tuple];
+    dsimp only [bind, ReaderT.bind, Except.bind, TopM.set, NamedVal.var, Function.comp_apply];
+    cases NVAL:TopM.get { name := n, kind := Kind.int } env;
+    case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
+    case ok nval => 
+    dsimp only;
+    cases OUT_ONE_VAL:TopM.get { name := out1, kind := Kind.int } env;
+    case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
+    case ok out1_val =>
+    dsimp only;
+    repeat rw[Expr.denote_opscons];
+    repeat rw[Expr.denote_tuple];
+    repeat rw[Expr.denote_regionscons];
+    repeat rw[Expr.denote_regionsnil];
+    repeat rw[Expr.denote_opsone];
+    repeat rw[Expr.denote_op];
+    dsimp only;
+
+    dsimp only[Combine.combineSem, Arith.sem, Scf.sem, Except.orElseLazy];
+    sorry
+  }
+}
+end ForFusion
+
 end RewriteExamples
+
+
+namespace RewritingHoare
+open AST 
+/-
+A theory of rewriting, plus helper lemmas phrased along a hoare logic.
+-/
+-- https://softwarefoundations.cis.upenn.edu/plf-current/Hoare.html
+def assertion (t: Type) : Type := t → Prop
+def assertion_implies (P Q: assertion T) : Prop := ∀ (e: T), P e → Q e
+
+notation P:80 "->>" Q:80 => assertion_implies P Q 
+
+abbrev assertion_iff (P Q: assertion T) : Prop := P ->> Q ∧ Q ->> P
+notation P:80 "<<->>" Q:80 => assertion_iff P Q
+
+def hoare_triple_region (P: assertion Env) (r: Expr .R) (Q: assertion (Except ErrorKind NamedVal)) : Prop := 
+ ∀ (e: Env) (sem : (o : Op') → TopM o.retkind.eval) (v: Val), P e -> Q (r.denote sem v e) 
+
+def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion NamedVal) : Prop := 
+ ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv), 
+   P e -> Q nv
+
+def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : Prop := 
+ ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv), 
+   P e -> Q nv 
+
+def assertion_and (P Q: assertion T) : assertion T := fun (v: T) => P v ∧ Q v
+notation P:80 "h∧" Q:80 => assertion_and P Q -- how does this work?
+
+-- TODO: consider using this?
+def assertion_var (var: Var) (Q: assertion NamedVal) :  assertion Env :=
+  fun env => ∃ (val: var.kind.eval), env.get var = .ok val ∧ Q (var.toNamedVal val)
+
+
+theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
+ (QR: hoare_triple_ops (assertion_var o.Ret Q) os R) : hoare_triple_ops P (.opscons o os) R := by {
+  dsimp only[hoare_triple_ops];
+  intros envbegin outval sem DENOTECONS;
+  dsimp only[hoare_triple_ops] at QR;
+  dsimp only[hoare_triple_op] at PQ;
+  dsimp only[Expr.denote];
+  dsimp[bind, ReaderT.bind, Except.bind];
+  cases H:Expr.denote Pe o envbegin <;> simp[IsEmpty.forall_iff];
+  case ok oval => {
+    intros SEM Pewitness;
+    apply QR (SEM := SEM);
+    apply Expr.denote_opscons_success_op;
+    -- Expr.denote Pe o e = Except.ok oval
+    -- Need a theorem that says that this implies that 'env' has a value at op.ret.
+  }
+
+ }
+end RewritingHoare
+
+
 namespace Theorems
--- SCF for loop peeling
 
 end Theorems
 
