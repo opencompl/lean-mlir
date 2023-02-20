@@ -1062,6 +1062,7 @@ def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : 
 def assertion_and (P Q: assertion T) : assertion T := fun (v: T) => P v ∧ Q v
 notation P:80 "h∧" Q:80 => assertion_and P Q -- how does this work?
 
+
 -- TODO: consider using this?
 def assertion_var (var: Var) (Q: assertion NamedVal) :  assertion Env :=
   fun env => ∃ (val: var.kind.eval), env.get var = .ok val ∧ Q (var.toNamedVal val)
@@ -1084,6 +1085,28 @@ theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
   apply PQ (SEM := OSEM);
   apply P_AT_ENVBEGIN;
  }
+
+
+-- Weaken precondition: (P' ->> P) /\ P c Q => P' c Q
+theorem hoare_triple_op.precondition (P P' Q) (o: Op) (PQ: hoare_triple_op P o Q) (P'P: P' ->> P) :
+  hoare_triple_op P' o Q := by {
+    simp[hoare_triple_op] at *;
+    simp[assertion_implies] at *;
+    intros e nv sem EVAL P'e_HOLDS;
+    apply PQ (sem := sem) (nv := nv) (e := e) (SEM := EVAL)
+    simp[P'P,P'e_HOLDS];
+}
+
+-- Strengthen postcondition
+theorem hoare_triple_op.postcondition (P Q Q') (o: Op) (PQ: hoare_triple_op P o Q) (QQ': Q ->> Q') :
+  hoare_triple_op P o Q' := by {
+    simp[hoare_triple_op] at *;
+    simp[assertion_implies] at *;
+    intros e nv sem EVAL Pe_HOLDS;
+    apply QQ';
+    apply PQ (sem := sem) (nv := nv) (e := e) (SEM := EVAL);
+    apply Pe_HOLDS;
+}
 
 -- If the op can be run whenevr Q holds, then the precondition
 -- is the value upon running the environment
