@@ -996,24 +996,23 @@ notation P:80 "h∧" Q:80 => assertion_and P Q -- how does this work?
 def assertion_var (var: Var) (Q: assertion NamedVal) :  assertion Env :=
   fun env => ∃ (val: var.kind.eval), env.get var = .ok val ∧ Q (var.toNamedVal val)
 
-
+-- hoare triple for sequencing o with os.
 theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
  (QR: hoare_triple_ops (assertion_var o.Ret Q) os R) : hoare_triple_ops P (.opscons o os) R := by {
   dsimp only[hoare_triple_ops];
   intros envbegin outval sem DENOTECONS;
+  have ⟨oval', OSEM, OS_SEM⟩ := Expr.denote_opscons_inv DENOTECONS;
   dsimp only[hoare_triple_ops] at QR;
   dsimp only[hoare_triple_op] at PQ;
-  dsimp only[Expr.denote];
-  dsimp[bind, ReaderT.bind, Except.bind];
-  cases H:Expr.denote Pe o envbegin <;> simp[IsEmpty.forall_iff];
-  case ok oval => {
-    intros SEM Pewitness;
-    apply QR (SEM := SEM);
-    apply Expr.denote_opscons_success_op;
-    -- Expr.denote Pe o e = Except.ok oval
-    -- Need a theorem that says that this implies that 'env' has a value at op.ret.
-  }
-
+  intros P_AT_ENVBEGIN;
+  apply QR (SEM := OS_SEM);
+  specialize PQ envbegin (Var.toNamedVal (Op.Ret o) oval') sem;
+  simp[assertion_var];
+  exists oval';
+  simp[Env.get, pure, Except.pure];
+  simp[Var.toNamedVal] at PQ;
+  apply PQ (SEM := OSEM);
+  apply P_AT_ENVBEGIN;
  }
 end RewritingHoare
 
