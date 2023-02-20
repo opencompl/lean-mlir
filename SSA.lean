@@ -1191,6 +1191,16 @@ theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
   linarith 
 }
 
+def rewriteCorrect' (find : Ops) -- stuff in the pattern. The last op is to be replaced.
+  (replace : Ops) -- replacement ops. can use 'findbegin'.
+  (sem: (o : Op') → TopM (Kind.eval o.retkind)) : Prop :=
+  ∀ (findnv: NamedVal), -- for all values ...
+  hoare_triple_ops 
+    (fun env => find.denote sem env = .ok findnv) -- that find produces...
+    replace
+    (fun replacenv => findnv = replacenv) -- replace must produce the same value.
+
+
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   findbegin := .cons ⟨arg, .int⟩ .nil,
   findmid := 
