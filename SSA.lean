@@ -364,6 +364,17 @@ def AST.Expr.denote {kind: OR}
     let val' ← val.cast arg.kind
     TopM.set (arg.toNamedVal val') (ops.denote sem)
 
+-- Write this separately for defEq purposes.
+def Op'.fromOp (sem: (o: Op') → TopM (o.retkind.eval)) 
+  (ret: Var) (name: String) (arg: Var) (argval: arg.kind.eval) (rs: Regions) (const: Const) : Op' := 
+      { name := name
+      , argval := ⟨arg.kind, argval⟩
+      , regions := rs.denote sem
+      , const := const
+      , retkind := ret.kind
+  }
+
+
 def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
 (arg : Val := Val.unit) : Except ErrorKind NamedVal := 
@@ -415,7 +426,7 @@ theorem Expr.denote_opsone:
 theorem Expr.denote_op:
   (Op.mk ret name arg rs const ).denote sem =
   TopM.get arg >>= fun val => 
-    let op' : Op' :=
+    let op' : Op' := -- TODO: use Op'.fromOp
       { name := name
       , argval := ⟨arg.kind, val⟩
       , regions := rs.denote sem
@@ -431,15 +442,12 @@ theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions
   (argval: arg.kind.eval)
   (ARGVAL: env.get arg = .ok argval)
   (outval : ret.kind.eval)
-  (SEM: sem { name := name
-            , argval := ⟨arg.kind, argval⟩
-            , regions := rs.denote sem
-            , const := const
-            , retkind := ret.kind } env = Except.ok outval) :
+  (SEM: sem (Op'.fromOp sem ret name arg argval rs const) env = Except.ok outval) :
   (Op.mk ret name arg rs const).denote sem env = Except.ok (ret.toNamedVal outval)
   := by {
       rw[Expr.denote_op];
-      simp[TopM.get, ReaderT.get, pure, bind, ReaderT.bind, Except.pure, Except.bind, ARGVAL, SEM];
+      simp[Op'.fromOp] at SEM;
+      simp[Op'.fromOp, TopM.get, ReaderT.get, pure, bind, ReaderT.bind, Except.pure, Except.bind, ARGVAL, SEM];
    }
 
 
@@ -455,6 +463,68 @@ theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.Ret o).kind.eval)
 }
 
 
+-- If tuple succeeds, then:
+-- 1. The arguments exists in 'env'.
+-- 2. The value in 'env' is that of the tuple arguments, tupled up.
+theorem Expr.denote_tuple_inv
+  (SUCCESS: Expr.denote sem (Expr.tuple retname arg1 arg2) env = Except.ok outval) : 
+    ∃ argval1, env.get arg1 = .ok argval1 ∧
+    ∃ argval2, env.get arg2 = .ok argval2 ∧
+    outval = { name := retname, kind := .pair arg1.kind arg2.kind, val := ⟨argval1, argval2 ⟩} := by {
+    simp[Expr.denote, bind, ReaderT.bind, Except.bind] at SUCCESS;
+    cases ARGVAL1:TopM.get arg1 env <;> simp[ARGVAL1] at SUCCESS;
+    case ok argval1 => {
+      simp[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.pure] at ARGVAL1;
+      simp[ARGVAL1];
+
+      cases ARGVAL2:TopM.get arg2 env <;> simp[ARGVAL2] at SUCCESS;
+      case ok argval2 => {
+        simp[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.pure] at ARGVAL2;
+        simp[ARGVAL2];
+        simp[pure, ReaderT.pure, Except.pure] at SUCCESS;
+        simp[SUCCESS];
+      }
+    }
+}
+
+
+-- If op succeeds, then:
+-- 1. the arguments exists in 'env'.
+-- 2. 'sem' succeeded
+-- 3. The value returned by 'Expr.denote' is the boxed value in 'sem'.
+theorem Expr.denote_op_inv
+  (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) : 
+    ∃ argval, env.get arg = .ok argval ∧
+    ∃ (outval_val : ret.kind.eval),
+      (sem (Op'.fromOp sem ret name arg argval regions const) env = pure outval_val /\
+       outval = ret.toNamedVal outval_val)   := by {
+    -- rw[Expr.denote_op] at SUCCESS; -- TODO: find out why 'rw' does not work here.
+
+    simp[Expr.denote, bind, ReaderT.bind, Except.bind] at SUCCESS;
+    cases ARGVAL:TopM.get arg env <;> simp[ARGVAL] at SUCCESS;
+    case ok argval => {
+      exists argval;
+      simp[TopM.get, bind, ReaderT.bind, Except.bind] at ARGVAL;
+      simp[ReaderT.get, pure, Except.pure] at ARGVAL;
+      simp[ARGVAL];
+
+      cases SEMVAL:sem { name := name,
+                          argval := { kind := arg.kind, val := argval },
+                          regions := Expr.denote sem regions, const := const,
+                          retkind := ret.kind } env;
+      case error ERROR => {
+        simp[SEMVAL] at SUCCESS;
+      }
+      case ok semval => {
+        simp at semval;
+        exists semval;
+        simp[pure, Except.pure];
+        simp[SEMVAL] at SUCCESS;
+        simp[pure, Except.pure, ReaderT.pure] at SUCCESS;
+        simp[SUCCESS];
+      }
+    }
+}
 
 -- If opscons succeeds, then 'o' succeded and 'os' succeeded
 -- (inversion principle).
@@ -1014,6 +1084,16 @@ theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
   apply PQ (SEM := OSEM);
   apply P_AT_ENVBEGIN;
  }
+
+-- If the op can be run whenevr Q holds, then the precondition
+-- is the value upon running the environment
+-- at that env, and setting the value.
+-- TODO: implement this, and hoare_tuple.
+/-
+theorem hoare_op 
+ (OSUCCESS: ∀ (e: Env), ∃ (v: ret.kind.eval),  
+ hoare_triple_op (fun env => env.set ret v) (Expr.op ret name arg rgns const) Q := by  sorry
+-/
 end RewritingHoare
 
 
