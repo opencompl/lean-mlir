@@ -93,11 +93,12 @@ def Ops.snoc: Ops → Op → Ops
 | .opsone o, o' => .opscons o (.opsone o')
 | .opscons o os, o' => .opscons o (Ops.snoc os o')
 
-def Op.Ret : Op → Var
+def Op.ret : Op → Var
 | .op ret _ _ _ _ => ret 
 | .tuple retname arg1 arg2 => 
    { name := retname,
      kind := .pair arg1.kind arg2.kind : Var}
+
 
 def Regions.isEmpty: Regions → Bool
 | .regionsnil => True
@@ -454,10 +455,10 @@ theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions
 -- 'opscons o os' @ env is the same as 'os @ (env[o.ret = o.val])'.
 -- That is, if 'o' succeeds, the 'os' proceeds evaluation with 'env' which
 -- has been updated for 'o.ret' with 'o.val'.
-theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.Ret o).kind.eval)
+theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.ret o).kind.eval)
   (sem : (o' : Op') → TopM o'.retkind.eval) (env: Env)
-  (OVAL: o.denote sem env = Except.ok (o.Ret.toNamedVal outval)) :
-  (Expr.opscons o os).denote sem env = os.denote sem (env.set o.Ret outval) := by {
+  (OVAL: o.denote sem env = Except.ok (o.ret.toNamedVal outval)) :
+  (Expr.opscons o os).denote sem env = os.denote sem (env.set o.ret outval) := by {
     rw[Expr.denote_opscons];
     simp[bind, ReaderT.bind, OVAL, Except.bind, TopM.set];
 }
@@ -492,7 +493,7 @@ theorem Expr.denote_tuple_inv
 -- 1. the arguments exists in 'env'.
 -- 2. 'sem' succeeded
 -- 3. The value returned by 'Expr.denote' is the boxed value in 'sem'.
-theorem Expr.denote_op_inv
+theorem Expr.denote_assign_inv
   (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) : 
     ∃ argval, env.get arg = .ok argval ∧
     ∃ (outval_val : ret.kind.eval),
@@ -526,14 +527,50 @@ theorem Expr.denote_op_inv
     }
 }
 
+-- What we can say about a op in general. Note that this is a good deal weaker
+-- than what we can say if we know what kind of op it is.
+theorem Expr.denote_op_inv {op: Op}
+  (SUCCESS: Expr.denote sem op env = Except.ok outval) :
+  ∃ (retval : (Op.ret op).kind.eval), 
+    outval = { name := (Op.ret op).name, kind := (Op.ret op).kind, val := retval}  := by {
+    cases op;
+    case op ret name arg regions const => {
+      have ⟨argval, ⟨argsucc, ⟨outval_val, ⟨OUTVAL_SEM, OUTVAL⟩ ⟩⟩⟩ := Expr.denote_assign_inv SUCCESS;
+      exists outval_val;
+    }
+    case tuple ret arg1 arg2 => {
+      have ⟨argval1, ⟨ARGVAL1, ⟨argval2, ⟨ARGVAL2, OUTVAL⟩⟩⟩⟩ := Expr.denote_tuple_inv SUCCESS;
+      simp[Op.ret];
+      exists argval1, argval2;
+    }
+  }
+
+-- inversion for 'opsone' is the same as denote_op_inv.
+theorem Expr.denote_opsone_inv {op: Op}
+  (SUCCESS: Expr.denote sem (.opsone op) env = Except.ok outval) :
+  ∃ (retval : (Op.ret op).kind.eval), 
+    outval = { name := (Op.ret op).name, kind := (Op.ret op).kind, val := retval}  := by {
+    cases op;
+    case op ret name arg regions const => {
+      have ⟨argval, ⟨argsucc, ⟨outval_val, ⟨OUTVAL_SEM, OUTVAL⟩ ⟩⟩⟩ := Expr.denote_assign_inv SUCCESS;
+      exists outval_val;
+    }
+    case tuple ret arg1 arg2 => {
+      have ⟨argval1, ⟨ARGVAL1, ⟨argval2, ⟨ARGVAL2, OUTVAL⟩⟩⟩⟩ := Expr.denote_tuple_inv SUCCESS;
+      simp[Op.ret];
+      exists argval1, argval2;
+    }
+  }
+
+
 -- If opscons succeeds, then 'o' succeded and 'os' succeeded
 -- (inversion principle).
 -- TODO: this is a super ugly proof. Learn how to make it small.
 theorem Expr.denote_opscons_inv 
 (SUCCESS: Expr.denote sem (Expr.opscons o os) env = Except.ok finalval) : 
-∃ (oval: (Op.Ret o).kind.eval),
-  (o.denote sem env = Except.ok ((Op.Ret o).toNamedVal oval)) ∧
-  (os.denote sem (env.set (Op.Ret o) oval) = Except.ok finalval) := by {
+∃ (oval: (Op.ret o).kind.eval),
+  (o.denote sem env = Except.ok ((Op.ret o).toNamedVal oval)) ∧
+  (os.denote sem (env.set (Op.ret o) oval) = Except.ok finalval) := by {
     rw[Expr.denote_opscons] at SUCCESS;
     dsimp only[bind, ReaderT.bind, Except.bind, TopM.set] at SUCCESS;
     simp[Expr.denote_op] at SUCCESS;
@@ -1048,28 +1085,50 @@ notation P:80 "->>" Q:80 => assertion_implies P Q
 abbrev assertion_iff (P Q: assertion T) : Prop := P ->> Q ∧ Q ->> P
 notation P:80 "<<->>" Q:80 => assertion_iff P Q
 
-def hoare_triple_region (P: assertion Env) (r: Expr .R) (Q: assertion (Except ErrorKind NamedVal)) : Prop := 
- ∀ (e: Env) (sem : (o : Op') → TopM o.retkind.eval) (v: Val), P e -> Q (r.denote sem v e) 
+-- def hoare_triple_region (P: assertion Env) (r: Expr .R) (Q: assertion (Except ErrorKind NamedVal)) : Prop := 
+--  ∀ (e: Env) (sem : (o : Op') → TopM o.retkind.eval) (v: Val), P e -> Q (r.denote sem v e) 
 
-def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion NamedVal) : Prop := 
+-- P op Q: for all environments where P env holds, so does Q (env[op.name := op.val]).
+def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion Env) : Prop := 
  ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv), 
-   P e -> Q nv
+   P e -> Q (e.set { name := nv.name, kind := nv.kind} nv.val)
 
+-- P ops Q: for all environments where 'P env' holds, 'Q returnval' holds. 
 def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : Prop := 
- ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv), 
-   P e -> Q nv 
+ ∀ (e: Env) (retval: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok retval), 
+   P e -> Q retval 
 
 def assertion_and (P Q: assertion T) : assertion T := fun (v: T) => P v ∧ Q v
 notation P:80 "h∧" Q:80 => assertion_and P Q -- how does this work?
 
-
--- TODO: consider using this?
-def assertion_var (var: Var) (Q: assertion NamedVal) :  assertion Env :=
+-- lift an assertion about values into ones about environments.
+def assertion.val2env (var: Var) (Q: assertion NamedVal) :  assertion Env :=
   fun env => ∃ (val: var.kind.eval), env.get var = .ok val ∧ Q (var.toNamedVal val)
 
+-- for (P (ops_single op) Q) to hold, we need (P op (fun env => Q(env[op.ret]) to hold.
+-- In more words, for Q to hold at the value of 'op', we create the assertion
+-- on the full environment that 'Q' holds at 'op.ret' of the environment.
+theorem hoare_triple_ops.single (P: assertion Env) (Q: assertion NamedVal)
+ (op: Op)
+ (PQ: hoare_triple_op P op (Q.val2env op.ret)) :
+  hoare_triple_ops P (Expr.opsone op) Q := by {
+    simp[hoare_triple_op, hoare_triple_ops] at *;
+    intros e retval sem EVAL_OPSONE PEWITNESS;
+    have ⟨retval_val, RETVAL⟩:= Expr.denote_opsone_inv EVAL_OPSONE;
+    specialize PQ e retval sem EVAL_OPSONE PEWITNESS;
+    cases RETVAL;
+    case refl => {
+      simp at PQ;
+      simp[assertion.val2env] at PQ;
+      have ⟨val, ⟨ENV_AT_RET, QVAL⟩⟩ := PQ
+      simp[Env.get, pure, Except.pure] at ENV_AT_RET;
+      cases ENV_AT_RET <;> simp[QVAL];
+    }
+  }
+
 -- hoare triple for sequencing o with os.
-theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
- (QR: hoare_triple_ops (assertion_var o.Ret Q) os R) : hoare_triple_ops P (.opscons o os) R := by {
+theorem hoare_triple_ops.cons (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
+ (QR: hoare_triple_ops Q os R) : hoare_triple_ops P (.opscons o os) R := by {
   dsimp only[hoare_triple_ops];
   intros envbegin outval sem DENOTECONS;
   have ⟨oval', OSEM, OS_SEM⟩ := Expr.denote_opscons_inv DENOTECONS;
@@ -1077,11 +1136,7 @@ theorem hoare_seq_ops (P Q R) (o: Op) (os: Ops) (PQ: hoare_triple_op P o Q)
   dsimp only[hoare_triple_op] at PQ;
   intros P_AT_ENVBEGIN;
   apply QR (SEM := OS_SEM);
-  specialize PQ envbegin (Var.toNamedVal (Op.Ret o) oval') sem;
-  simp[assertion_var];
-  exists oval';
-  simp[Env.get, pure, Except.pure];
-  simp[Var.toNamedVal] at PQ;
+  specialize PQ envbegin (Var.toNamedVal (Op.ret o) oval') sem;
   apply PQ (SEM := OSEM);
   apply P_AT_ENVBEGIN;
  }
