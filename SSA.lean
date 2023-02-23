@@ -5,7 +5,7 @@ import Mathlib.Tactic.LibrarySearch
 import Mathlib.Tactic.Cases
 import Std.Data.Int.Basic
 
-open Std 
+open Std
 
 
 namespace AST
@@ -21,8 +21,8 @@ inductive Kind where
 deriving Inhabited, DecidableEq, BEq
 
 instance : ToString Kind where
-  toString k := 
-    let rec go : Kind →String  
+  toString k :=
+    let rec go : Kind →String
     | .int => "int"
     | .float => "float"
     | .unit => "unit"
@@ -35,22 +35,22 @@ structure Var where
   kind : Kind
 deriving Inhabited, DecidableEq, BEq
 
-instance : ToString Var where 
-  toString x := "%" ++ x.name ++ ":" ++ toString x.kind 
+instance : ToString Var where
+  toString x := "%" ++ x.name ++ ":" ++ toString x.kind
 
 abbrev Var.unit : Var := { name := "_", kind := .unit }
 
 -- compile time constant values.
 inductive Const where
 | int: Int → Const
-| float: Float → Const 
+| float: Float → Const
 | unit: Const
 | pair: Const → Const → Const
-deriving BEq 
+deriving BEq
 
 instance : ToString Const where
   toString :=
-    let rec go : Const → String  
+    let rec go : Const → String
     | .int i => toString i
     | .float f => toString f
     | .unit => "()"
@@ -95,8 +95,8 @@ def Ops.snoc: Ops → Op → Ops
 
 @[simp]
 def Op.ret : Op → Var
-| .op ret _ _ _ _ => ret 
-| .tuple retname arg1 arg2 => 
+| .op ret _ _ _ _ => ret
+| .tuple retname arg1 arg2 =>
    { name := retname,
      kind := .pair arg1.kind arg2.kind : Var}
 
@@ -106,31 +106,31 @@ def Regions.isEmpty: Regions → Bool
 | .regionscons _ _ => False
 
 
-def Expr.format : Expr k → Format 
+def Expr.format : Expr k → Format
 | .opsone o => o.format
 | .opscons o os => o.format ++ .line ++ os.format
 | .regionsnil => Format.nil
 | .regionscons r rs => r.format ++ .line ++ rs.format
-| .op ret name arg rs const => 
-    let constfmt : Format := 
+| .op ret name arg rs const =>
+    let constfmt : Format :=
       if const == .unit then ""
       else "{" ++ toString const ++ "}"
     let argfmt : Format :=
       if arg == Var.unit then ""
       else "(" ++ toString arg ++ ")"
-    let rsfmt : Format := 
+    let rsfmt : Format :=
       if Regions.isEmpty rs then ""
       else (Format.nest 1 <| "[" ++ .line ++ Expr.format rs) ++ "]"
-    .text (toString ret ++ " = " ++ name) ++ 
+    .text (toString ret ++ " = " ++ name) ++
     argfmt ++ rsfmt ++ constfmt
-| .tuple ret a1 a2 => 
+| .tuple ret a1 a2 =>
     .text <|
-      "%" ++ toString ret ++ " = " ++ 
+      "%" ++ toString ret ++ " = " ++
       "(" ++ toString a1 ++ ", " ++ toString a2 ++ ")"
-| .region arg ops => 
+| .region arg ops =>
     let argfmt : Format :=
     if arg == Var.unit then "" else "^(" ++ toString arg ++ ")"
-    "{" ++ argfmt ++ 
+    "{" ++ argfmt ++
       Format.nest 2 (.line ++ ops.format) ++ .line ++ "}"
 instance ⦃k: OR⦄: ToFormat (Expr k) where
   format := Expr.format
@@ -159,29 +159,29 @@ structure Val where
   val: kind.eval
 
 instance : BEq Val where
-  beq a b := 
-    let rec go a b := 
+  beq a b :=
+    let rec go a b :=
     match a, b with
     | {kind := .int, val := a}, {kind := .int, val := b} => a == b
     | {kind := .float, val := a}, {kind := .float, val := b} => a == b
     | {kind := .unit, val := a}, {kind := .unit, val := b} => a == b
-    | {kind := .pair p q, val := ⟨a, a'⟩}, {kind := .pair r s, val := ⟨b, b'⟩ } => 
+    | {kind := .pair p q, val := ⟨a, a'⟩}, {kind := .pair r s, val := ⟨b, b'⟩ } =>
       go ⟨p, a⟩ ⟨r, b⟩ && go ⟨q, a'⟩ ⟨s, b'⟩
     | _, _ => False
     go a b
- 
+
 def Val.unit : Val := { kind := Kind.unit, val := () }
 
 def Val.toString (v: Val): String :=
   match v  with
-  | {kind := .int, val := val } => 
+  | {kind := .int, val := val } =>
       let S : ToString Int := inferInstance
       S.toString val
-  | {kind := .float, val := val } => 
+  | {kind := .float, val := val } =>
       let S : ToString Float := inferInstance
       S.toString val
   | {kind := .unit, val := () } => "()"
-  | {kind := .pair p q, val := (x, y) } => 
+  | {kind := .pair p q, val := (x, y) } =>
       let xstr := Val.toString ({ kind := p, val := x})
       let ystr := Val.toString { kind := q, val := y}
       s!"({xstr}, {ystr})"
@@ -191,7 +191,7 @@ instance : ToString Val where
 
 -- The retun value of an SSA operation, with a name, kind, and value of that kind.
 structure NamedVal extends Val where
-  name : String  
+  name : String
 deriving BEq
 
 def NamedVal.toString (nv: NamedVal): String :=
@@ -203,7 +203,7 @@ instance : ToString NamedVal where
 
 -- Given a 'Var' of kind 'kind', and a value of type 〚kind⟧, build a 'Val'
 @[simp]
-def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal := 
+def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal :=
  { kind := var.kind, val := value, name := var.name }
 
 @[simp]
@@ -214,17 +214,17 @@ def NamedVal.var (nv: NamedVal): Var :=
 -- bindings of variables to values of type ⟦var.kind⟧
 inductive Env where
 | empty: Env
-| cons (var: Var) (val: var.kind.eval) (rest: Env): Env 
+| cons (var: Var) (val: var.kind.eval) (rest: Env): Env
 
 
 -- truncation of a type that smashes everything into a single equivalence class.
 inductive trunc (α: Type): α → α → Prop
 | trunc: trunc α a a' -- smash everthing.
 
-instance EquivalenceTrunc : Equivalence (trunc α) where 
-  refl _ := .trunc 
+instance EquivalenceTrunc : Equivalence (trunc α) where
+  refl _ := .trunc
   symm _  := .trunc
-  trans _ _ := .trunc 
+  trans _ _ := .trunc
 
 instance SetoidTrunc (α : Type) : Setoid α where
    r := trunc α
@@ -247,13 +247,13 @@ partial def ErrorKind.toString (_: ErrorKind): String := "<<error>>"
 instance : ToString ErrorKind where
   toString := ErrorKind.toString
 
-abbrev ErrorKind.mk (s: String) : Quotient (SetoidTrunc String) := 
+abbrev ErrorKind.mk (s: String) : Quotient (SetoidTrunc String) :=
   Quotient.mk' s
 
 -- Coerce from regular strings into errors.
 instance : Coe String ErrorKind where
   coe := ErrorKind.mk
-  
+
 @[simp]
 def ErrorKind.subsingleton (e: ErrorKind) (e': ErrorKind): e = e' := by {
   apply Quotient.ind;
@@ -279,15 +279,15 @@ def Env.get (var: Var): Env → Except ErrorKind var.kind.eval
 | .empty => match var.kind with
             | .unit => Except.ok ()
             | _ =>  Except.error s!"unknown var {var.name}"
-| .cons var' val env' => 
+| .cons var' val env' =>
       if H : var = var'
-      then pure (H ▸ val) 
-      else env'.get var 
+      then pure (H ▸ val)
+      else env'.get var
 
-theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.ok () := 
-  match e with 
-  | .empty => by rfl 
-  | .cons var' val' env' => 
+theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.ok () :=
+  match e with
+  | .empty => by rfl
+  | .cons var' val' env' =>
        if H :⟨name, .unit⟩ = var'
        then by {
         simp[get];
@@ -300,7 +300,7 @@ theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.o
       }
 abbrev ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
 abbrev ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
-  reader ∘ f 
+  reader ∘ f
 
 def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
 
@@ -310,7 +310,7 @@ theorem TopM.get_unit (name: String) (env: Env): TopM.get ⟨name, .unit⟩ env 
   simp[Env.get_unit];
 }
 
-def TopM.set (nv: NamedVal)  (k: TopM α): TopM α := 
+def TopM.set (nv: NamedVal)  (k: TopM α): TopM α :=
   ReaderT.withEnv (Env.set nv.var nv.val) k
 
 def TopM.error (e: ErrorKind) : TopM α := Except.error e
@@ -321,16 +321,16 @@ def Val.cast (val: Val) (t: Kind): TopM t.eval :=
   else TopM.error s!"mismatched type {val.kind} ≠ {t}"
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
--- and expects a return value of type ⟦retkind⟧ 
+-- and expects a return value of type ⟦retkind⟧
 structure Op' where
   name : String
   argval : Val := ⟨.unit, ()⟩
   regions: List (Val → TopM NamedVal) := []
   const: Const := .unit
-  retkind: Kind 
+  retkind: Kind
 
 instance : ToString Op' where
-  toString x := 
+  toString x :=
     x.name ++ "(" ++ toString x.argval ++ ")" ++
     " [" ++ "#" ++ toString x.regions.length ++ "]" ++
     " {" ++ toString x.const ++ "}" ++ " → " ++ toString x.retkind
@@ -344,7 +344,7 @@ def AST.OR.denoteType: OR -> Type
 
 
 def AST.Expr.denote {kind: OR}
- (sem: (o: Op') → TopM (o.retkind.eval)): Expr kind → kind.denoteType 
+ (sem: (o: Op') → TopM (o.retkind.eval)): Expr kind → kind.denoteType
 | .opsone o => AST.Expr.denote (kind := .O) sem o
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
@@ -358,8 +358,8 @@ def AST.Expr.denote {kind: OR}
             kind := .pair arg1.kind arg2.kind,
             val := (val1, val2)
           } -- build a pair
-| .op ret name arg rs const => do 
-    let val ← TopM.get arg 
+| .op ret name arg rs const => do
+    let val ← TopM.get arg
     let op' : Op' :=
       { name := name
       , argval := ⟨arg.kind, val⟩
@@ -374,8 +374,8 @@ def AST.Expr.denote {kind: OR}
     TopM.set (arg.toNamedVal val') (ops.denote sem)
 
 -- Write this separately for defEq purposes.
-def Op'.fromOp (sem: (o: Op') → TopM (o.retkind.eval)) 
-  (ret: Var) (name: String) (arg: Var) (argval: arg.kind.eval) (rs: Regions) (const: Const) : Op' := 
+def Op'.fromOp (sem: (o: Op') → TopM (o.retkind.eval))
+  (ret: Var) (name: String) (arg: Var) (argval: arg.kind.eval) (rs: Regions) (const: Const) : Op' :=
       { name := name
       , argval := ⟨arg.kind, argval⟩
       , regions := rs.denote sem
@@ -386,11 +386,11 @@ def Op'.fromOp (sem: (o: Op') → TopM (o.retkind.eval))
 
 def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
-(arg : Val := Val.unit) : Except ErrorKind NamedVal := 
+(arg : Val := Val.unit) : Except ErrorKind NamedVal :=
   (expr.denote sem arg).run env
 
 
-theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β), 
+theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β),
  ma >>= (fun a => ma >>= (fun a' => k a a')) =
  ma >>= (fun a => k a a) := by {
   intros ma k;
@@ -403,7 +403,7 @@ theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β),
   cases H:(ma env) <;> simp;
 }
 
-theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM γ), 
+theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM γ),
  ma >>= (fun a => mb >>= (fun b => k a b)) =
  mb >>= (fun b => ma >>= (fun a => k a b)) := by {
   intros ma mb k;
@@ -423,8 +423,8 @@ theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM
 }
 
 -- unfold Expr.denote for opscons
-theorem Expr.denote_opscons:  
-  (Expr.opscons o os).denote sem =  
+theorem Expr.denote_opscons:
+  (Expr.opscons o os).denote sem =
     (o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) := by { rfl; }
 
 -- unfold Expr.denote for opsone
@@ -434,7 +434,7 @@ theorem Expr.denote_opsone:
 -- unfold Expr.denote for op
 theorem Expr.denote_op:
   (Op.mk ret name arg rs const ).denote sem =
-  TopM.get arg >>= fun val => 
+  TopM.get arg >>= fun val =>
     let op' : Op' := -- TODO: use Op'.fromOp
       { name := name
       , argval := ⟨arg.kind, val⟩
@@ -476,7 +476,7 @@ theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.ret o).kind.eval)
 -- 1. The arguments exists in 'env'.
 -- 2. The value in 'env' is that of the tuple arguments, tupled up.
 theorem Expr.denote_tuple_inv
-  (SUCCESS: Expr.denote sem (Expr.tuple retname arg1 arg2) env = Except.ok outval) : 
+  (SUCCESS: Expr.denote sem (Expr.tuple retname arg1 arg2) env = Except.ok outval) :
     ∃ argval1, env.get arg1 = .ok argval1 ∧
     ∃ argval2, env.get arg2 = .ok argval2 ∧
     outval = { name := retname, kind := .pair arg1.kind arg2.kind, val := ⟨argval1, argval2 ⟩} := by {
@@ -502,7 +502,7 @@ theorem Expr.denote_tuple_inv
 -- 2. 'sem' succeeded
 -- 3. The value returned by 'Expr.denote' is the boxed value in 'sem'.
 theorem Expr.denote_assign_inv
-  (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) : 
+  (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) :
     ∃ argval, env.get arg = .ok argval ∧
     ∃ (outval_val : ret.kind.eval),
       (sem (Op'.fromOp sem ret name arg argval regions const) env = pure outval_val /\
@@ -539,7 +539,7 @@ theorem Expr.denote_assign_inv
 -- than what we can say if we know what kind of op it is.
 theorem Expr.denote_op_inv {op: Op}
   (SUCCESS: Expr.denote sem op env = Except.ok outval) :
-  ∃ (retval : (Op.ret op).kind.eval), 
+  ∃ (retval : (Op.ret op).kind.eval),
     outval = { name := (Op.ret op).name, kind := (Op.ret op).kind, val := retval}  := by {
     cases op;
     case op ret name arg regions const => {
@@ -556,7 +556,7 @@ theorem Expr.denote_op_inv {op: Op}
 -- inversion for 'opsone' is the same as denote_op_inv.
 theorem Expr.denote_opsone_inv {op: Op}
   (SUCCESS: Expr.denote sem (.opsone op) env = Except.ok outval) :
-  ∃ (retval : (Op.ret op).kind.eval), 
+  ∃ (retval : (Op.ret op).kind.eval),
     outval = { name := (Op.ret op).name, kind := (Op.ret op).kind, val := retval}  := by {
     cases op;
     case op ret name arg regions const => {
@@ -586,8 +586,8 @@ theorem Expr.denote_opsone_assign_inv
 -- If opscons succeeds, then 'o' succeded and 'os' succeeded
 -- (inversion principle).
 -- TODO: this is a super ugly proof. Learn how to make it small.
-theorem Expr.denote_opscons_inv 
-(SUCCESS: Expr.denote sem (Expr.opscons o os) env = Except.ok finalval) : 
+theorem Expr.denote_opscons_inv
+(SUCCESS: Expr.denote sem (Expr.opscons o os) env = Except.ok finalval) :
 ∃ (oval: (Op.ret o).kind.eval),
   (o.denote sem env = Except.ok ((Op.ret o).toNamedVal oval)) ∧
   (os.denote sem (env.set (Op.ret o) oval) = Except.ok finalval) := by {
@@ -618,7 +618,7 @@ theorem Expr.denote_opscons_inv
         dsimp only[TopM.get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure] at H;
         cases ENV_AT_ARG:(Env.get arg env) <;> simp[ENV_AT_ARG] at H;
         case ok argval => {
-        cases SEM:sem { name := name, 
+        cases SEM:sem { name := name,
                         argval := { kind := arg.kind, val := argval },
                         regions := Expr.denote sem regions, const := const,
                         retkind := ret.kind } env <;> simp[SEM] at H;
@@ -629,16 +629,16 @@ theorem Expr.denote_opscons_inv
           induction oval'_EQ;
           simp[SUCCESS] at *;
           exact SUCCESS;
-          }  
+          }
         }
       }
     }
 }
 
 -- unfold denote for tuple.
-theorem Expr.denote_tuple:  (Expr.tuple ret o o').denote sem =  
-    (TopM.get o >>= fun oval => TopM.get o' >>= fun o'val => 
-      fun _ => Except.ok 
+theorem Expr.denote_tuple:  (Expr.tuple ret o o').denote sem =
+    (TopM.get o >>= fun oval => TopM.get o' >>= fun o'val =>
+      fun _ => Except.ok
         { name := ret,
           kind := .pair o.kind o'.kind,
           val := (oval, o'val)
@@ -668,25 +668,28 @@ declare_syntax_cat dsl_type
 declare_syntax_cat dsl_ops
 declare_syntax_cat dsl_region
 declare_syntax_cat dsl_var
+declare_syntax_cat dsl_var_name
 declare_syntax_cat dsl_const
 declare_syntax_cat dsl_kind
 
 syntax sepBy1(ident, "×") :dsl_kind
-syntax "%"ident ":" dsl_kind : dsl_var
+syntax ident : dsl_var_name
+syntax "%"dsl_var_name ":" dsl_kind : dsl_var
 syntax dsl_var "="
       str
       ("(" dsl_var ")")?
       ("[" dsl_region,* "]")?
       ("{" dsl_const "}")? ";": dsl_op
 syntax "%" ident "="  "(" dsl_var "," dsl_var ")" ";": dsl_op
-syntax num : dsl_const 
+syntax num : dsl_const
 syntax "{" ("^(" dsl_var "):")?  dsl_op dsl_op*  "}" : dsl_region
-syntax "[dsl_op|" dsl_op "]" : term 
-syntax "[dsl_ops|" dsl_op dsl_op* "]" : term 
-syntax "[dsl_region|" dsl_region "]" : term 
+syntax "[dsl_op|" dsl_op "]" : term
+syntax "[dsl_ops|" dsl_op dsl_op* "]" : term
+syntax "[dsl_region|" dsl_region "]" : term
 syntax "[dsl_var|" dsl_var "]" : term
 syntax "[dsl_kind|" dsl_kind "]" : term
-syntax "[dsl_const|" dsl_const "]" : term 
+syntax "[dsl_const|" dsl_const "]" : term
+syntax "[dsl_var_name|" dsl_var_name "]" : term
 
 
 @[simp]
@@ -699,64 +702,77 @@ def AST.Regions.fromList: List Region → Regions
 | [] => .regionsnil
 | r :: rs => .regionscons r (AST.Regions.fromList rs)
 
-open Lean Macro in 
-def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) := 
-  match k.getId.toString with 
+open Lean Macro in
+def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) :=
+  match k.getId.toString with
   | "int" => `(AST.Kind.int)
   | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
 
 
-open Lean Macro in 
+open Lean Macro in
 macro_rules
 | `([dsl_kind| $[ $ks ]×* ]) => do
-    if ks.isEmpty 
+    if ks.isEmpty
     then `(AST.Kind.unit)
-    else 
+    else
       let mut out ← parseKind ks[0]!
       for k in ks.pop do
         let cur ← parseKind k
-        out ← `(AST.Kind.pair $out $cur) 
+        out ← `(AST.Kind.pair $out $cur)
       return out
+| `([dsl_kind| $$($q:term)]) => `(($q : Kind))
+
+open Lean Macro in
+macro_rules
+| `([dsl_var_name| $name:ident ]) =>
+      return (Lean.quote name.getId.toString : TSyntax `term)
+| `([dsl_var_name| $$($q:term)]) => `(($q : String))
 
 macro_rules
-| `([dsl_var| %$name:ident : $kind:dsl_kind]) => do 
-    `({ name := $(Lean.quote name.getId.toString),
+| `([dsl_var| %$name:dsl_var_name : $kind:dsl_kind]) => do
+    `({ name := [dsl_var_name| $name],
         kind := [dsl_kind| $kind] : Var})
+| `([dsl_var| $$($q:term)]) => `(($q : Var))
 
 macro_rules
-| `([dsl_ops| $op $ops*]) => do 
+| `([dsl_ops| $op $ops*]) => do
    let op_term ← `([dsl_op| $op])
    let ops_term ← ops.mapM (fun op => `([dsl_op| $op ]))
    `(AST.Ops.fromList $op_term [ $ops_term,* ])
 
 macro_rules
+| `([dsl_ops| $$($q)]) => `(($q : Ops))
+
+macro_rules
 | `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
-   let ops ← `([dsl_ops| $op $ops*]) 
-   match arg with 
+   let ops ← `([dsl_ops| $op $ops*])
+   match arg with
    | .none => `(Expr.region Var.unit $ops)
    | .some arg => do
       let arg_term ← `([dsl_var| $arg ])
       `(Expr.region $arg_term $ops)
+| `([dsl_region| $$($q)]) => `(($q : Region))
 
 macro_rules
 | `([dsl_const| $x:num ]) => `(Const.int $x)
+| `([dsl_region| $$($q)]) => `(($q : Const))
 
-open Lean Syntax in 
+open Lean Syntax in
 macro_rules
 | `([dsl_op| $res:dsl_var = $name:str
       $[ ( $arg:dsl_var ) ]?
-      $[ [ $rgns,* ] ]? 
+      $[ [ $rgns,* ] ]?
       $[ { $const } ]?
       ;
       ]) => do
       let res_term ← `([dsl_var| $res])
-      let arg_term ← match arg with 
+      let arg_term ← match arg with
           | .some arg => `([dsl_var| $arg])
           | .none => `(AST.Var.unit)
       let name_term := Lean.quote name.getString
       let rgns_term ← match rgns with
         | .none => `(.regionsnil)
-        | .some rgns => 
+        | .some rgns =>
            let rgns ← rgns.getElems.mapM (fun stx => `([dsl_region| $stx]))
            `(AST.Regions.fromList [ $rgns,* ])
       let const_term ←
@@ -764,6 +780,7 @@ macro_rules
         | .none => `(Const.unit)
         | .some c => `([dsl_const| $c])
       `(Expr.op $res_term $name_term $arg_term $rgns_term $const_term)
+| `([dsl_op| $$($q)]) => `(($q : Op))
 
 macro_rules
 | `([dsl_op| %$res:ident = ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
@@ -777,20 +794,27 @@ def eg_kind_int := [dsl_kind| int]
 
 def eg_var : AST.Var := [dsl_var| %y : int]
 #reduce eg_var
+
+def eg_var_2 : AST.Var := [dsl_var| %$("y") : int ]
+#reduce eg_var_2
+
+def eg_var_3 : AST.Var := let name := "name";  let ty := Kind.int;  [dsl_var| %$(name) : $(ty) ]
+#reduce eg_var_3
+
 end DSL
 
 namespace Arith
 def sem: (o: Op') → TopM (o.retkind.eval)
 | { name := "constant",
     const := .int x,
-    retkind := .int} => return x 
+    retkind := .int} => return x
 | { name := "add",
     retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } => 
+    argval := ⟨.pair .int .int, (x, y)⟩ } =>
       return (x + y)
 | { name := "sub",
     retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } => 
+    argval := ⟨.pair .int .int, (x, y)⟩ } =>
       return (x - y)
 
 | op => TopM.error s!"unknown op: {op}"
@@ -809,17 +833,118 @@ end Arith
 
 namespace Scf
 
-def repeatM: Nat → (Val → TopM Val) → Val → TopM Val
-| 0, _ => pure
-| .succ n, f => f >=> repeatM n f
- 
+def repeatM (n: Nat) (f: Val → TopM Val) : Val → TopM Val :=
+  n.repeat (f >=> .) pure
 
-def sem: (o: Op') → TopM (o.retkind.eval) 
+
+theorem repeatM.peel_left: ∀ (n: Nat) (f: Val → TopM Val),
+  repeatM (n+1) f = f >=> repeatM n f := by {
+    intros n f;
+    simp[repeatM, Nat.repeat];
+}
+-- This theorem is now useless
+-- theorem repeatM.peel_left: repeatM (n+1) f = f >=> repeatM n f := rfl
+
+-- kleisli arrow is associative.
+theorem kleisliRight.assoc {m: Type → Type}
+  [M: Monad m] [LM: LawfulMonad m]
+  {α β γ δ: Type}
+  (f: α → m β) (g: β → m γ) (h: γ → m δ) :
+  (f >=> g) >=> h = f >=> (g >=> h) := by {
+  funext x;
+  simp[Bind.kleisliRight];
+}
+
+-- pure is left identity
+@[simp]
+theorem kleisliRight.pure_id_left {m: Type → Type}
+  [M: Monad m] [LM: LawfulMonad m]
+  {α β: Type}
+  (f: α → m β) :
+  pure >=> f = f := by {
+  funext x;
+  simp[Bind.kleisliRight];
+}
+
+-- pure is left identity
+@[simp]
+theorem kleisliRight.pure_id_right {m: Type → Type}
+  [M: Monad m] [LM: LawfulMonad m]
+  {α β: Type}
+  (f: α → m β) :
+  f >=> pure = f:= by {
+  funext x;
+  simp[Bind.kleisliRight];
+}
+
+-- The above shows that (>=>, pure) forms a category.
+
+@[simp] theorem repeatM.zero: repeatM 0 f = pure := rfl
+@[simp] theorem repeatM.one: repeatM 1 f = f := by simp [repeatM, Nat.repeat]
+@[simp] theorem repeatM.succ: repeatM (Nat.succ n) f = f >=> repeatM n f := rfl
+
+-- composing repeatM is the same as adding the repeat
+-- counter.
+theorem repeatM.compose: (repeatM n f) >=> (repeatM m f) = repeatM (n+m) f := by
+  revert m
+  induction n <;> intros m <;> simp
+  case succ n' IH =>
+    simp [Nat.succ_add, kleisliRight.assoc, IH]
+
+theorem repeatM.peel_right: repeatM (n+1) f = repeatM n f >=> f := by
+  induction n <;> simp at *
+  case succ _ IH => rw [kleisliRight.assoc, IH]
+
+theorem repeatM.commute_f: repeatM n f >=> f = f >=> repeatM n f := by
+  simp [←peel_right]
+
+-- pull a function that commutes with f to the left of repeatM
+@[simp] -- pull simple stuff to the left.
+theorem repeatM.commuting_pull_left
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  (repeatM n f) >=> g = g >=> repeatM n f := by
+  induction n <;> simp
+  case succ n' IH =>
+    simp [kleisliRight.assoc, IH]
+    simp [←kleisliRight.assoc, COMMUTES]
+
+theorem repeatM.commuting_pull_right
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  g >=> repeatM n f = repeatM n f >=> g := (commuting_pull_left COMMUTES).symm
+
+-- TODO: decision procedure for free theory of
+-- commuting functions?
+theorem repeatM.commuting_commute
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f) :
+  repeatM n f >=> repeatM m g = repeatM m g >=> repeatM n f := by
+  induction n <;> simp
+  case succ n' IH =>
+    rw [kleisliRight.assoc, IH]
+    simp [←kleisliRight.assoc]
+    rw [commuting_pull_left COMMUTES.symm]
+
+-- to show (f >=> k) = (f >=> h), it suffices to show that k = h
+theorem kleisli.cancel_left [M: Monad m] (f: α → m β) (k h : β → m γ) (H: k = h) :
+  f >=> k = f >=> h := by {
+    rw[H];
+}
+
+theorem repeatM.commuting_compose
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  (repeatM n f) >=> repeatM n g = repeatM n (f >=> g) := by
+  induction n <;> simp
+  case succ n' IH =>
+    rw [←kleisliRight.assoc _ g _, kleisliRight.assoc _ _ g]
+    rw [commuting_pull_left COMMUTES]
+    rw [←kleisliRight.assoc f g _, kleisliRight.assoc (f >=> g) _ _, IH]
+
+
+def sem: (o: Op') → TopM (o.retkind.eval)
 | { name := "if",
     argval := ⟨.int, cond⟩,
     regions := [rthen, relse],
     retkind := .int -- hack: we assume that we always return ints.
-  } => do 
+  } => do
     let rrun := if cond ≠ 0 then rthen else relse
     let v ← rrun Val.unit
     v.cast .int
@@ -829,34 +954,34 @@ def sem: (o: Op') → TopM (o.retkind.eval)
   } => do
     let v ← r Val.unit
     let w ← r Val.unit -- run a region twice, check that it is same as running once.
-    w.cast .int  
+    w.cast .int
 | { name := "for",
     regions := [r],
     retkind := .int,
     argval := ⟨.pair .int .int, ⟨init, niters⟩⟩
   } => do
-    let niters : Nat := 
+    let niters : Nat :=
       match niters with
-      | .ofNat n => n 
+      | .ofNat n => n
       | _ => 0
-    let loopEffect := (fun v => NamedVal.toVal <$> (r v)) 
+    let loopEffect := (fun v => NamedVal.toVal <$> (r v))
     let w ← repeatM niters loopEffect ⟨.int, init⟩
-    w.cast .int 
+    w.cast .int
 | op => TopM.error s!"unknown op {op}"
 end Scf
 
 namespace Combine
-def combineSem: (s1 s2: (o: Op') → TopM o.retkind.eval) → 
-    (x: Op') → TopM x.retkind.eval := 
-  fun s1 s2 o => 
+def combineSem: (s1 s2: (o: Op') → TopM o.retkind.eval) →
+    (x: Op') → TopM x.retkind.eval :=
+  fun s1 s2 o =>
      let f1 := (s1 o)
      let f2 := (s2 o)
-     fun env => (f1 env).orElseLazy (fun () => f2 env) 
+     fun env => (f1 env).orElseLazy (fun () => f2 env)
 
 end Combine
 
 namespace Examples
-open AST 
+open AST
 def eg_arith_shadow : Region := [dsl_region| {
   %x : int = "constant"{0};
   %x : int = "constant"{1};
@@ -927,54 +1052,54 @@ def eg_scf_for: Region := [dsl_region| {
 end Examples
 
 namespace Rewriting
-open AST 
+open AST
 
-inductive TypingCtx 
+inductive TypingCtx
 | nil: TypingCtx
-| cons: Var → TypingCtx → TypingCtx  
+| cons: Var → TypingCtx → TypingCtx
 
 
-inductive TypingContextInEnv: Env → TypingCtx → Prop where 
+inductive TypingContextInEnv: Env → TypingCtx → Prop where
 | Nil: (e: Env) → TypingContextInEnv e .nil
 | Cons: (e: Env) →
   (e.get var).isOk → -- current
   TypingContextInEnv e ctx' → -- rest
-  TypingContextInEnv e (.cons v ctx')  
+  TypingContextInEnv e (.cons v ctx')
 
 /- Replace the final Op with the new seqence of Ops -/
 def Ops.replaceOne (os: Ops) (new: Ops) : Ops :=
   match os with
   | .opsone o => new
   | .opscons o os => .opscons o (Ops.replaceOne os new)
-  
+
 structure Peephole where
   findbegin: TypingCtx -- free variables.
   findmid : Ops -- stuff in the pattern. The last op is to be replaced.
   replace : Ops -- replacement ops. can use 'findbegin'.
-  sem: (o : Op') → TopM (Kind.eval o.retkind) 
-  -- TODO: Once again, we need to reason 'upto error'. 
+  sem: (o : Op') → TopM (Kind.eval o.retkind)
+  -- TODO: Once again, we need to reason 'upto error'.
   replaceCorrect: ∀ (env: Env) (findval : NamedVal)
-      (FIND: findmid.denote sem env = .ok findval), 
-      (replace.denote sem) env = .ok findval 
+      (FIND: findmid.denote sem env = .ok findval),
+      (replace.denote sem) env = .ok findval
 end Rewriting
 
 namespace RewriteExamples
-open Rewriting 
-open AST 
+open Rewriting
+open AST
 section SubXX
 -- x - x ~= 0
 
 theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
-  linarith 
+  linarith
 }
 
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   findbegin := .cons ⟨arg, .int⟩ .nil,
-  findmid := 
+  findmid :=
       let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
-      let sub := Op.mk 
+      let sub := Op.mk
                   (name := "sub")
-                  (ret := ⟨res, .int⟩) 
+                  (ret := ⟨res, .int⟩)
                   (arg := ⟨pairname, .pair .int .int⟩)
       .opscons pair (.opsone sub),
   replace :=
@@ -1025,7 +1150,7 @@ section ForFusion
 -- peel loop iterations out.
 
 def for_fusion (r: Region) (n m : String)
-  (n_plus_m n_m: String) 
+  (n_plus_m n_m: String)
   (out1 out2: String)
   (n_init m_out1: String)
   (init init_n_plus_m: String) : Peephole := {
@@ -1033,17 +1158,17 @@ def for_fusion (r: Region) (n m : String)
                (.cons ⟨init, .int⟩
                (.cons ⟨n, .int⟩
                (.cons ⟨m, .int⟩ .nil))))
-  findmid := 
+  findmid :=
       let n_init_op := Expr.tuple n_init ⟨n, .int⟩ ⟨out1, .int⟩
-      let loop1 := Op.mk 
+      let loop1 := Op.mk
                   (name := "for")
-                  (ret := ⟨out1, .int⟩) 
+                  (ret := ⟨out1, .int⟩)
                   (arg := ⟨n_init, .pair .int .int⟩)
                   (regions := .regionscons r .regionsnil)
       let m_out1_op := Expr.tuple m_out1 ⟨m, .int⟩ ⟨out2, .int⟩
-      let loop2 := Op.mk 
+      let loop2 := Op.mk
                   (name := "for")
-                  (ret := ⟨out2, .int⟩) 
+                  (ret := ⟨out2, .int⟩)
                   (arg := ⟨m_out1, .pair .int .int⟩)
                   (regions := .regionscons r .regionsnil)
       .opscons n_init_op (.opscons loop1 (.opscons m_out1_op (.opsone loop2))),
@@ -1051,10 +1176,10 @@ def for_fusion (r: Region) (n m : String)
     let n_m_op := Expr.tuple n_m ⟨n, .int⟩ ⟨m, .int⟩
     let n_plus_m_op := Op.mk (ret := ⟨n_plus_m, .int⟩) (name := "add") (arg := ⟨n_m, .int⟩)
     let init_n_plus_m_op := Expr.tuple init_n_plus_m ⟨init, .int⟩ ⟨n_plus_m, .int⟩
-    let loop_nm_op := 
-        Op.mk 
+    let loop_nm_op :=
+        Op.mk
           (name := "for")
-          (ret := ⟨out1, .int⟩) 
+          (ret := ⟨out1, .int⟩)
           (arg := ⟨init_n_plus_m, .pair .int .int⟩)
           (regions := .regionscons r .regionsnil)
     .opsone (loop_nm_op),
@@ -1067,7 +1192,7 @@ def for_fusion (r: Region) (n m : String)
     dsimp only [bind, ReaderT.bind, Except.bind, TopM.set, NamedVal.var, Function.comp_apply];
     cases NVAL:TopM.get { name := n, kind := Kind.int } env;
     case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
-    case ok nval => 
+    case ok nval =>
     dsimp only;
     cases OUT_ONE_VAL:TopM.get { name := out1, kind := Kind.int } env;
     case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
@@ -1091,7 +1216,7 @@ end RewriteExamples
 
 
 namespace RewritingHoare
-open AST 
+open AST
 open Rewriting
 /-
 A theory of rewriting, plus helper lemmas phrased along a hoare logic.
@@ -1100,23 +1225,23 @@ A theory of rewriting, plus helper lemmas phrased along a hoare logic.
 def assertion (t: Type) : Type := t → Prop
 def assertion_implies (P Q: assertion T) : Prop := ∀ (e: T), P e → Q e
 
-notation P:80 "->>" Q:80 => assertion_implies P Q 
+notation P:80 "->>" Q:80 => assertion_implies P Q
 
 abbrev assertion_iff (P Q: assertion T) : Prop := P ->> Q ∧ Q ->> P
 notation P:80 "<<->>" Q:80 => assertion_iff P Q
 
--- def hoare_triple_region (P: assertion Env) (r: Expr .R) (Q: assertion (Except ErrorKind NamedVal)) : Prop := 
---  ∀ (e: Env) (sem : (o : Op') → TopM o.retkind.eval) (v: Val), P e -> Q (r.denote sem v e) 
+-- def hoare_triple_region (P: assertion Env) (r: Expr .R) (Q: assertion (Except ErrorKind NamedVal)) : Prop :=
+--  ∀ (e: Env) (sem : (o : Op') → TopM o.retkind.eval) (v: Val), P e -> Q (r.denote sem v e)
 
 -- P op Q: for all environments where P env holds, so does Q (env[op.name := op.val]).
-def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion Env) : Prop := 
- ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv), 
+def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion Env) : Prop :=
+ ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv),
    P e -> Q (e.set { name := nv.name, kind := nv.kind} nv.val)
 
--- P ops Q: for all environments where 'P env' holds, 'Q returnval' holds. 
-def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : Prop := 
- ∀ (e: Env) (retval: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok retval), 
-   P e -> Q retval 
+-- P ops Q: for all environments where 'P env' holds, 'Q returnval' holds.
+def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : Prop :=
+ ∀ (e: Env) (retval: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok retval),
+   P e -> Q retval
 
 def assertion_and (P Q: assertion T) : assertion T := fun (v: T) => P v ∧ Q v
 notation P:80 "h∧" Q:80 => assertion_and P Q -- how does this work?
@@ -1183,19 +1308,20 @@ theorem hoare_triple_op.postcondition (P Q Q') (o: Op) (PQ: hoare_triple_op P o 
     apply Pe_HOLDS;
 }
 
+
 -- more conceptual proof, still does not use full hoare logic machinery, only a fragment.
 section SubXXHoare
 -- x - x ~= 0
 
 theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
-  linarith 
+  linarith
 }
 
 def rewriteCorrect' (find : Ops) -- stuff in the pattern. The last op is to be replaced.
   (replace : Ops) -- replacement ops. can use 'findbegin'.
   (sem: (o : Op') → TopM (Kind.eval o.retkind)) : Prop :=
   ∀ (findnv: NamedVal), -- for all values ...
-  hoare_triple_ops 
+  hoare_triple_ops
     (fun env => find.denote sem env = .ok findnv) -- that find produces...
     replace
     (fun replacenv => findnv = replacenv) -- replace must produce the same value.
@@ -1203,11 +1329,11 @@ def rewriteCorrect' (find : Ops) -- stuff in the pattern. The last op is to be r
 
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   findbegin := .cons ⟨arg, .int⟩ .nil,
-  findmid := 
+  findmid :=
       let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
-      let sub := Op.mk 
+      let sub := Op.mk
                   (name := "sub")
-                  (ret := ⟨res, .int⟩) 
+                  (ret := ⟨res, .int⟩)
                   (arg := ⟨pairname, .pair .int .int⟩)
       .opscons pair (.opsone sub),
   replace :=
@@ -1228,7 +1354,7 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
       simp[Env.get, pure, Except.pure] at X3;
       have ⟨x1x2_eq_x3, ⟨x4, ⟨X4, X5⟩⟩⟩ := X3
       simp at *;
-      cases x1x2_eq_x3; case refl => { 
+      cases x1x2_eq_x3; case refl => {
         cases X5; case refl => {
           simp[Op.ret, Op.mk] at *;
           -- now simplify RHS
@@ -1254,6 +1380,52 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
 
 end SubXXHoare
 
+
+section ForFusionHoare
+-- peel loop iterations out.
+
+def for_fusion (r: Region) (n m : String)
+  (n_plus_m n_m: String)
+  (out1 out2: String)
+  (n_init m_out1: String)
+  (init init_n_plus_m: String) : Peephole := {
+  findbegin := .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
+               (.cons ⟨init, .int⟩
+               (.cons ⟨n, .int⟩
+               (.cons ⟨m, .int⟩ .nil))))
+  findmid :=
+      let n_init_op := Expr.tuple n_init ⟨n, .int⟩ ⟨out1, .int⟩
+      let loop1 := Op.mk
+                  (name := "for")
+                  (ret := ⟨out1, .int⟩)
+                  (arg := ⟨n_init, .pair .int .int⟩)
+                  (regions := .regionscons r .regionsnil)
+      let m_out1_op := Expr.tuple m_out1 ⟨m, .int⟩ ⟨out2, .int⟩
+      let loop2 := Op.mk
+                  (name := "for")
+                  (ret := ⟨out2, .int⟩)
+                  (arg := ⟨m_out1, .pair .int .int⟩)
+                  (regions := .regionscons r .regionsnil)
+      .opscons n_init_op (.opscons loop1 (.opscons m_out1_op (.opsone loop2))),
+  replace :=
+    let n_m_op := Expr.tuple n_m ⟨n, .int⟩ ⟨m, .int⟩
+    let n_plus_m_op := Op.mk (ret := ⟨n_plus_m, .int⟩) (name := "add") (arg := ⟨n_m, .int⟩)
+    let init_n_plus_m_op := Expr.tuple init_n_plus_m ⟨init, .int⟩ ⟨n_plus_m, .int⟩
+    let loop_nm_op :=
+        Op.mk
+          (name := "for")
+          (ret := ⟨out1, .int⟩)
+          (arg := ⟨init_n_plus_m, .pair .int .int⟩)
+          (regions := .regionscons r .regionsnil)
+    .opsone (loop_nm_op),
+  sem := Combine.combineSem Scf.sem Arith.sem,
+  replaceCorrect := fun env findval S0 => by {
+    sorry
+  }
+}
+end ForFusionHoare
+
+
 end RewritingHoare
 
 
@@ -1262,77 +1434,77 @@ namespace Theorems
 end Theorems
 
 namespace Test
-def runRegionTest : 
+def runRegionTest :
   (sem: (o: Op') → TopM o.retkind.eval) →
-  (r: AST.Region) → 
+  (r: AST.Region) →
   (expected: NamedVal) →
   (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool := 
+  (env: Env := Env.empty) → IO Bool :=
   fun sem r expected arg env => do
     IO.println r
     let v? := (r.denote sem arg).run env
-    match v? with 
-    | .ok v => 
+    match v? with
+    | .ok v =>
       if v == expected
       then
         IO.println s!"{v}. OK"; return True
-      else 
+      else
         IO.println s!"ERROR: computed '{v}', expected '{expected}'."
         return False
-    | .error e => 
+    | .error e =>
       IO.println s!"ERROR: '{e}'. Expected '{expected}'."
       return False
 
-def runRegionTestXfail : 
+def runRegionTestXfail :
   (sem: (o: Op') → TopM o.retkind.eval) →
-  (r: AST.Region) → 
+  (r: AST.Region) →
   (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool := 
+  (env: Env := Env.empty) → IO Bool :=
   fun sem r arg env => do
     IO.println r
     let v? := (r.denote sem arg).run env
-    match v? with 
-    | .ok v => 
-        IO.println s!"ERROR: expected failure, but succeeded with '{v}'."; 
+    match v? with
+    | .ok v =>
+        IO.println s!"ERROR: expected failure, but succeeded with '{v}'.";
         return False
-    | .error e => 
+    | .error e =>
       IO.println s!"OK: Succesfully xfailed '{e}'."
       return True
 
 end Test
 
 
-open Arith Scf Combine DSL Examples Test in 
-def main : IO UInt32 := do 
-  let tests := 
-  [runRegionTest 
+open Arith Scf Combine DSL Examples Test in
+def main : IO UInt32 := do
+  let tests :=
+  [runRegionTest
     (sem := Arith.sem)
     (r := eg_region_sub)
     (expected := { name := "x", kind := .int, val := -1}),
-  runRegionTest 
+  runRegionTest
     (sem := Arith.sem)
     (r := eg_arith_shadow)
     (expected := { name := "x", kind := .int, val := 4}),
-   runRegionTest 
+   runRegionTest
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_ite_true)
     (expected := { name := "out", kind := .int, val := 42}),
-  runRegionTest 
+  runRegionTest
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_ite_false)
     (expected := { name := "out", kind := .int, val := 0}),
-  runRegionTest 
+  runRegionTest
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_run_twice)
     (expected := { name := "x", kind := .int, val := 42}),
-  runRegionTest 
+  runRegionTest
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_well_scoped)
     (expected := { name := "x", kind := .int, val := 42}),
   runRegionTestXfail
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_ill_scoped),
-  runRegionTest 
+  runRegionTest
     (sem := Combine.combineSem Scf.sem Arith.sem)
     (r := eg_scf_for)
     (expected := { name := "out", kind := .int, val := 42})]
@@ -1341,7 +1513,7 @@ def main : IO UInt32 := do
   for t in tests do
     total := total + 1
     IO.println s!"---Test {total}---"
-    let pass? ← t 
+    let pass? ← t
     if pass? then correct := correct + 1
   IO.println "---"
   IO.println s!"Tests: {correct} successful/{total}"
