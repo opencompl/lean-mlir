@@ -15,6 +15,7 @@ Kinds of values. We must have 'pair' to take multiple arguments.
 -/
 inductive Kind where
 | int : Kind
+| nat : Kind
 | float : Kind
 | pair : Kind -> Kind -> Kind
 | unit: Kind
@@ -23,6 +24,7 @@ deriving Inhabited, DecidableEq, BEq
 instance : ToString Kind where
   toString k :=
     let rec go : Kind →String
+    | .nat => "nat"
     | .int => "int"
     | .float => "float"
     | .unit => "unit"
@@ -144,6 +146,7 @@ instance : ToString (Expr k) where
 @[reducible, simp]
 def Kind.eval: Kind -> Type
 | .int => Int
+| .nat => Nat
 | .unit => Unit
 | .float => Float
 | .pair p q => p.eval × q.eval
@@ -174,6 +177,9 @@ def Val.unit : Val := { kind := Kind.unit, val := () }
 
 def Val.toString (v: Val): String :=
   match v  with
+  | {kind := .nat, val := val } =>
+      let S : ToString Nat := inferInstance
+      S.toString val
   | {kind := .int, val := val } =>
       let S : ToString Int := inferInstance
       S.toString val
@@ -322,23 +328,67 @@ def TopM.set (nv: NamedVal)  (k: TopM α): TopM α :=
 
 def TopM.error (e: ErrorKind) : TopM α := Except.error e
 
-def Val.cast (val: Val) (t: Kind): TopM t.eval :=
+def Val.cast (val: Val) (t: Kind): Except ErrorKind t.eval :=
   if H : val.kind = t
-  then pure (H ▸ val.val)
-  else TopM.error s!"mismatched type {val.kind} ≠ {t}"
+  then .ok (H ▸ val.val)
+  else .error s!"mismatched type {val.kind} ≠ {t}"
 
 -- Runtime denotation of an Op, that has evaluated its arguments,
 -- and expects a return value of type ⟦retkind⟧
 structure Op' where
-  name : String
   argval : Val := ⟨.unit, ()⟩
   regions: List (Val → TopM NamedVal) := []
   const: Const := .unit
   retkind: Kind
 
+structure Semantic where
+  name: String
+  run: (o : Op') → TopM o.retkind.eval
+
+inductive Semantics where
+| nil
+| cons: Semantic → Semantics → Semantics
+
+@[simp]
+def Semantics.append: Semantics → Semantics → Semantics
+| .nil, sems => sems
+| .cons sem sems, sems' => .cons sem (Semantics.append sems sems')
+
+def Semantics.run: (name: String) → (o : Op') → Semantics → TopM o.retkind.eval
+| oname, o, .nil => TopM.error s!"unknown op {oname}"
+| oname, o, .cons sem sems =>
+    if oname = sem.name
+    then sem.run o
+    else Semantics.run oname o sems
+
+theorem Semantics.run.eq
+  {name: String}
+  {o: Op'}
+  {sems: Semantics}
+  {sem: Semantic}
+  (NAME_EQ: sem.name = name):
+  Semantics.run name o (Semantics.cons sem sems) = sem.run o := by {
+    simp[Semantics.run, Semantics.cons];
+    intros H;
+    simp[NAME_EQ] at H;
+  }
+
+theorem Semantics.run.neq
+  {name: String}
+  {o: Op'}
+  {sems: Semantics}
+  {sem: Semantic}
+  (NAME_NEQ: sem.name ≠ name):
+  Semantics.run name o (Semantics.cons sem sems) = sems.run name o := by {
+    simp[Semantics.run, Semantics.cons];
+    intros H;
+    simp [H] at NAME_NEQ;
+  }
+
+
 instance : ToString Op' where
   toString x :=
-    x.name ++ "(" ++ toString x.argval ++ ")" ++
+    "(" ++ toString x.argval ++ ")" ++
     " [" ++ "#" ++ toString x.regions.length ++ "]" ++
     " {" ++ toString x.const ++ "}" ++ " → " ++ toString x.retkind
 
@@ -351,7 +401,7 @@ def AST.OR.denoteType: OR -> Type
 
 
 def AST.Expr.denote {kind: OR}
- (sem: (o: Op') → TopM (o.retkind.eval)): Expr kind → kind.denoteType
+ (sem: Semantics): Expr kind → kind.denoteType
 | .opsone o => AST.Expr.denote (kind := .O) sem o
 | .opscons o os => do
     let retv ← AST.Expr.denote (kind := .O) sem o
@@ -368,12 +418,11 @@ def AST.Expr.denote {kind: OR}
 | .op ret name arg rs const => do
     let val ← TopM.get arg
     let op' : Op' :=
-      { name := name
-      , argval := ⟨arg.kind, val⟩
+      { argval := ⟨arg.kind, val⟩
       , regions := rs.denote sem
       , const := const
       , retkind := ret.kind }
-    let out ← sem op'
+    let out ← sem.run name op'
     return ret.toNamedVal out
 | .region arg ops => fun val => do
     -- TODO: improve dependent typing here
@@ -382,17 +431,16 @@ def AST.Expr.denote {kind: OR}
 
 
 -- Write this separately for defEq purposes.
-def Op'.fromOp (sem: (o: Op') → TopM (o.retkind.eval))
-  (ret: Var) (name: String) (arg: Var) (argval: arg.kind.eval) (rs: Regions) (const: Const) : Op' :=
-      { name := name
-      , argval := ⟨arg.kind, argval⟩
+def Op'.fromOp (sem: Semantics)
+  (ret: Var) (arg: Var) (argval: arg.kind.eval) (rs: Regions) (const: Const) : Op' :=
+      { argval := ⟨arg.kind, argval⟩
       , regions := rs.denote sem
       , const := const
       , retkind := ret.kind
   }
 
 
-def runRegion (sem : (o: Op') → TopM o.retkind.eval) (expr: AST.Expr .R)
+def runRegion (sem : Semantics) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
 (arg : Val := Val.unit) : Except ErrorKind NamedVal :=
   (expr.denote sem arg).run env
@@ -444,22 +492,21 @@ theorem Expr.denote_op:
   (Op.mk ret name arg rs const ).denote sem =
   TopM.get arg >>= fun val =>
     let op' : Op' := -- TODO: use Op'.fromOp
-      { name := name
-      , argval := ⟨arg.kind, val⟩
+      { argval := ⟨arg.kind, val⟩
       , regions := rs.denote sem
       , const := const
       , retkind := ret.kind }
-    sem op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
+    sem.run name op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
   := by { rfl; }
 
 -- how to simply Expr.denote_op, assuming the environment lookup is correct.
 theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions) (const: Const)
-  (sem: (o' : Op') → TopM o'.retkind.eval)
+  (sem: Semantics)
   (env: Env)
   (argval: arg.kind.eval)
   (ARGVAL: env.get arg = .ok argval)
   (outval : ret.kind.eval)
-  (SEM: sem (Op'.fromOp sem ret name arg argval rs const) env = Except.ok outval) :
+  (SEM: sem.run name (Op'.fromOp sem ret arg argval rs const) env = Except.ok outval) :
   (Op.mk ret name arg rs const).denote sem env = Except.ok (ret.toNamedVal outval)
   := by {
       rw[Expr.denote_op];
@@ -472,7 +519,7 @@ theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions
 -- That is, if 'o' succeeds, the 'os' proceeds evaluation with 'env' which
 -- has been updated for 'o.ret' with 'o.val'.
 theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.ret o).kind.eval)
-  (sem : (o' : Op') → TopM o'.retkind.eval) (env: Env)
+  (sem : Semantics) (env: Env)
   (OVAL: o.denote sem env = Except.ok (o.ret.toNamedVal outval)) :
   (Expr.opscons o os).denote sem env = os.denote sem (env.set o.ret outval) := by {
     rw[Expr.denote_opscons];
@@ -513,7 +560,7 @@ theorem Expr.denote_op_assign_inv
   (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) :
     ∃ argval, env.get arg = .ok argval ∧
     ∃ (outval_val : ret.kind.eval),
-      (sem (Op'.fromOp sem ret name arg argval regions const) env = pure outval_val /\
+      (sem.run name (Op'.fromOp sem ret arg argval regions const) env = pure outval_val /\
        outval = ret.toNamedVal outval_val)   := by {
     -- rw[Expr.denote_op] at SUCCESS; -- TODO: find out why 'rw' does not work here.
 
@@ -525,10 +572,10 @@ theorem Expr.denote_op_assign_inv
       simp[ReaderT.get, pure, Except.pure] at ARGVAL;
       simp[ARGVAL];
 
-      cases SEMVAL:sem { name := name,
-                          argval := { kind := arg.kind, val := argval },
-                          regions := Expr.denote sem regions, const := const,
-                          retkind := ret.kind } env;
+      cases SEMVAL:sem.run name
+                    { argval := { kind := arg.kind, val := argval },
+                      regions := Expr.denote sem regions, const := const,
+                      retkind := ret.kind } env;
       case error ERROR => {
         simp[SEMVAL] at SUCCESS;
       }
@@ -583,7 +630,7 @@ theorem Expr.denote_opsone_assign_inv
   (SUCCESS: Expr.denote sem (Expr.opsone (Expr.op ret name arg regions const)) env = Except.ok outval) :
  ∃ argval, env.get arg = .ok argval ∧
     ∃ (outval_val : ret.kind.eval),
-      (sem (Op'.fromOp sem ret name arg argval regions const) env = pure outval_val /\
+      (sem.run name (Op'.fromOp sem ret arg argval regions const) env = pure outval_val /\
        outval = ret.toNamedVal outval_val)  := by {
         simp[Expr.denote_opsone] at SUCCESS;
         apply Expr.denote_op_assign_inv SUCCESS;
@@ -626,10 +673,10 @@ theorem Expr.denote_opscons_inv
         dsimp only[TopM.get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure] at H;
         cases ENV_AT_ARG:(Env.get arg env) <;> simp[ENV_AT_ARG] at H;
         case ok argval => {
-        cases SEM:sem { name := name,
-                        argval := { kind := arg.kind, val := argval },
-                        regions := Expr.denote sem regions, const := const,
-                        retkind := ret.kind } env <;> simp[SEM] at H;
+        cases SEM:sem.run name
+                          { argval := { kind := arg.kind, val := argval },
+                            regions := Expr.denote sem regions, const := const,
+                            retkind := ret.kind } env <;> simp[SEM] at H;
         case ok oval' => {
           dsimp only at oval';
           dsimp only[ReaderT.pure, pure, Except.pure] at H;
@@ -678,10 +725,10 @@ theorem Expr.denote_opscons_inv'
         dsimp only[TopM.get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure] at H;
         cases ENV_AT_ARG:(Env.get arg env) <;> simp[ENV_AT_ARG] at H;
         case ok argval => {
-        cases SEM:sem { name := name,
-                        argval := { kind := arg.kind, val := argval },
-                        regions := Expr.denote sem regions, const := const,
-                        retkind := ret.kind } env <;> simp[SEM] at H;
+        cases SEM:sem.run name
+                          { argval := { kind := arg.kind, val := argval },
+                            regions := Expr.denote sem regions, const := const,
+                            retkind := ret.kind } env <;> simp[SEM] at H;
         case ok oval' => {
           dsimp only at oval';
           dsimp only[ReaderT.pure, pure, Except.pure] at H;
@@ -772,6 +819,7 @@ open Lean Macro in
 def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) :=
   match k.getId.toString with
   | "int" => `(AST.Kind.int)
+  | "nat" => `(AST.Kind.nat)
   | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
 
 
@@ -781,10 +829,10 @@ macro_rules
     if ks.isEmpty
     then `(AST.Kind.unit)
     else
-      let mut out ← parseKind ks[0]!
-      for k in ks.pop do
+      let mut out ← parseKind ks[ks.size - 1]!
+      for k in ks.pop.reverse do
         let cur ← parseKind k
-        out ← `(AST.Kind.pair $out $cur)
+        out ← `(AST.Kind.pair $cur $out)
       return out
 | `([dsl_kind| $$($q:term)]) => `(($q : Kind))
 
@@ -857,6 +905,14 @@ macro_rules
 
 def eg_kind_int := [dsl_kind| int]
 #reduce eg_kind_int
+
+def eg_kind_int_times_nat := [dsl_kind| int × nat]
+#reduce eg_kind_int_times_nat
+
+def eg_kind_int_times_nat_times_nat := [dsl_kind| int × nat × nat]
+#reduce eg_kind_int_times_nat_times_nat
+
+
 
 def eg_var : AST.Var := [dsl_var| %y : int]
 #reduce eg_var
@@ -931,20 +987,32 @@ end Unexpander
 end DSL
 
 namespace Arith
-def sem: (o: Op') → TopM (o.retkind.eval)
-| { name := "constant",
-    const := .int x,
-    retkind := .int} => return x
-| { name := "add",
-    retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } =>
-      return (x + y)
-| { name := "sub",
-    retkind := .int,
-    argval := ⟨.pair .int .int, (x, y)⟩ } =>
-      return (x - y)
 
-| op => TopM.error s!"unknown op: {op}"
+def const : Semantic := {
+  name := "constant"
+  run := fun o => match o with
+  | { const := .int x, retkind := .int} => return x
+  | _ => TopM.error "unknown op"
+}
+
+def add : Semantic := {
+  name := "add"
+  run := fun o => match o with
+  | { retkind := .int,
+      argval := ⟨.pair .int .int, (x, y)⟩ } => return x + y
+  | _ => TopM.error "unknown op"
+}
+
+def sub : Semantic := {
+  name := "sub"
+  run := fun o => match o with
+  | { retkind := .int,
+      argval := ⟨.pair .int .int, (x, y)⟩ } => return x - y
+  | _ => TopM.error "unknown op"
+}
+
+def sem: Semantics :=
+  .cons const (.cons add (.cons sub .nil))
 
 def eg_region_sub :=
  [dsl_region| {
@@ -1066,63 +1134,59 @@ theorem repeatM.commuting_compose
     rw [←kleisliRight.assoc f g _, kleisliRight.assoc (f >=> g) _ _, IH]
 
 
-def sem: (o: Op') → TopM (o.retkind.eval)
-| { name := "if",
-    argval := ⟨.int, cond⟩,
-    regions := [rthen, relse],
-    retkind := .int -- hack: we assume that we always return ints.
-  } => do
-    let rrun := if cond ≠ 0 then rthen else relse
-    let v ← rrun Val.unit
-    v.cast .int
-| { name := "twice",
-    regions := [r],
-    retkind := .int
-  } => do
-    let v ← r Val.unit
-    let w ← r Val.unit -- run a region twice, check that it is same as running once.
-    w.cast .int
-| { name := "for",
-    regions := [r],
-    retkind := .int,
-    argval := ⟨.pair .int .int, ⟨init, niters⟩⟩
-  } => do
-    let niters : Nat :=
-      match niters with
-      | .ofNat n => n
-      | _ => 0
+def if_ : Semantic := {
+  name := "if"
+  run := fun o => match o with
+  | { argval := ⟨.int, cond⟩,
+      regions := [rthen, relse],
+      retkind := .int -- hack: we assume that we always return ints.
+    } => do
+      let rrun := if cond ≠ 0 then rthen else relse
+      let v ← rrun Val.unit
+      v.cast .int
+  | _ => TopM.error "unknown op"
+}
+
+def twice : Semantic := {
+  name := "twice"
+  run := fun o => match o with
+  | { regions := [r],
+      retkind := .int
+    } => do
+      let v ← r Val.unit
+      let w ← r Val.unit -- run a region twice, check that it is same as running once.
+      w.cast .int
+  | _ => TopM.error "unknown op"
+}
+
+def for_ : Semantic := {
+  name := "for"
+  run := fun o => match o with
+  | { regions := [r],
+      retkind := .int,
+      argval := ⟨.pair .nat .int, ⟨niters, init⟩⟩
+    } =>
+      let loopEffect := (fun v => NamedVal.toVal <$> (r v))
+      repeatM niters loopEffect ⟨.int, init⟩ >=> Val.cast (t := .int)
+  | _ => TopM.error "unknown op"
+}
+
+def for_.run:
+  Semantic.run
+    Scf.for_
+    { argval := ⟨.pair .nat .int, ⟨niters, init ⟩⟩,
+      regions := [r]
+      const := .unit,
+      retkind := .int
+    } = ((do
     let loopEffect := (fun v => NamedVal.toVal <$> (r v))
-    let w ← repeatM niters loopEffect ⟨.int, init⟩
-    w.cast .int
-| op => TopM.error s!"unknown op {op}"
+    repeatM niters loopEffect ⟨.int, init⟩ >=> Val.cast (t := .int)) :
+      TopM Int) := rfl
+
+def sem : Semantics :=
+  .cons Scf.for_ (.cons Scf.twice (.cons Scf.if_ .nil))
+
 end Scf
-
-namespace Combine
-
-/-
-This is a poor way to combine semantics.
-Instead, refactor semantics to be such that we only define
-the semantics on a per-op basis. Then, we dispatch
-the semantics via a hash map. This allows us to simplify
-the dispatch (not via opaque functions), and also give us the
-niceness of semantics-per-op.
--/
-def combineSem: (s1 s2: (o: Op') → TopM o.retkind.eval) →
-    (x: Op') → TopM x.retkind.eval :=
-  fun s1 s2 o =>
-     let f1 := (s1 o)
-     let f2 := (s2 o)
-     fun env => (f1 env).orElseLazy (fun () => f2 env)
-
-
-theorem combineSem.run_left {s1 s2: (o: Op') → TopM o.retkind.eval} {env: Env}
-  {o: Op'} {v: o.retkind.eval} (S1: s1 o env = Except.ok v) :
-  combineSem s1 s2 o env = Except.ok v := by {
-    simp [combineSem, S1, Except.orElseLazy];
-  }
-
-
-end Combine
 
 namespace Examples
 open AST
@@ -1220,144 +1284,12 @@ structure Peephole where
   findbegin: TypingCtx -- free variables.
   findmid : Ops -- stuff in the pattern. The last op is to be replaced.
   replace : Ops -- replacement ops. can use 'findbegin'.
-  sem: (o : Op') → TopM (Kind.eval o.retkind)
+  sem: Semantics
   -- TODO: Once again, we need to reason 'upto error'.
   replaceCorrect: ∀ (env: Env) (findval : NamedVal)
       (FIND: findmid.denote sem env = .ok findval),
       (replace.denote sem) env = .ok findval
 end Rewriting
-
-namespace RewriteExamples
-open Rewriting
-open AST
-section SubXX
--- x - x ~= 0
-
-theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
-  linarith
-}
-
-def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
-  findbegin := .cons ⟨arg, .int⟩ .nil,
-  findmid :=
-      let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
-      let sub := Op.mk
-                  (name := "sub")
-                  (ret := ⟨res, .int⟩)
-                  (arg := ⟨pairname, .pair .int .int⟩)
-      .opscons pair (.opsone sub),
-  replace :=
-    let const := Op.mk
-                  (name := "constant")
-                  (ret := ⟨res, .int⟩)
-                  (const := Const.int 0)
-    .opsone (const),
-  sem := Arith.sem,
-  replaceCorrect := fun env findval  => by {
-    simp only;
-    rw[Expr.denote_opscons];
-    rw[Expr.denote_tuple];
-    simp  only [Kind.eval._eq_1, bind_assoc];
-    simp[bind, ReaderT.bind];
-    cases ARG:TopM.get { name := arg, kind := Kind.int } env <;> simp;
-    case error e => {
-      simp only [Except.isOk, Except.toBool, Except.bind, IsEmpty.forall_iff]
-    }
-    case ok v => {
-      simp only [Except.bind, TopM.set, NamedVal.var, Function.comp_apply]
-      rw[Expr.denote_opsone];
-      rw[Expr.denote_op];
-      simp only[bind, ReaderT.bind, Except.bind];
-      simp only[Kind.eval, Kind.eval._eq_1, Var.toNamedVal]
-      simp only[Env.set];
-      rw[TopM.get.cons_eq];
-      simp only;
-      rw[Expr.denote_opsone];
-      rw[Expr.denote_op];
-      simp[bind, ReaderT.bind, Except.bind]
-      rw[TopM.get.Var.unit];
-      simp only;
-      simp only [Expr.denote_regionsnil];
-      -- simp only bug:
-      -- simp only [Arith.sem, Kind.eval._eq_1, Arith.sem.match_1.eq_3, sub_self, Arith.sem.match_1.eq_1]
-      simp[Arith.sem];
-      simp only[Int.sub_n_n, pure, ReaderT.pure, Except.pure];
-      intros FINDVAL;
-      simp[FINDVAL];
-    }
-  }
- }
-
-end SubXX
-
-section ForFusion
--- peel loop iterations out.
-
-def for_fusion (r: Region) (n m : String)
-  (n_plus_m n_m: String)
-  (out1 out2: String)
-  (n_init m_out1: String)
-  (init init_n_plus_m: String) : Peephole := {
-  findbegin := .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
-               (.cons ⟨init, .int⟩
-               (.cons ⟨n, .int⟩
-               (.cons ⟨m, .int⟩ .nil))))
-  findmid :=
-      let n_init_op := Expr.tuple n_init ⟨n, .int⟩ ⟨out1, .int⟩
-      let loop1 := Op.mk
-                  (name := "for")
-                  (ret := ⟨out1, .int⟩)
-                  (arg := ⟨n_init, .pair .int .int⟩)
-                  (regions := .regionscons r .regionsnil)
-      let m_out1_op := Expr.tuple m_out1 ⟨m, .int⟩ ⟨out2, .int⟩
-      let loop2 := Op.mk
-                  (name := "for")
-                  (ret := ⟨out2, .int⟩)
-                  (arg := ⟨m_out1, .pair .int .int⟩)
-                  (regions := .regionscons r .regionsnil)
-      .opscons n_init_op (.opscons loop1 (.opscons m_out1_op (.opsone loop2))),
-  replace :=
-    let n_m_op := Expr.tuple n_m ⟨n, .int⟩ ⟨m, .int⟩
-    let n_plus_m_op := Op.mk (ret := ⟨n_plus_m, .int⟩) (name := "add") (arg := ⟨n_m, .int⟩)
-    let init_n_plus_m_op := Expr.tuple init_n_plus_m ⟨init, .int⟩ ⟨n_plus_m, .int⟩
-    let loop_nm_op :=
-        Op.mk
-          (name := "for")
-          (ret := ⟨out1, .int⟩)
-          (arg := ⟨init_n_plus_m, .pair .int .int⟩)
-          (regions := .regionscons r .regionsnil)
-    .opsone (loop_nm_op),
-  sem := Combine.combineSem Scf.sem Arith.sem,
-  replaceCorrect := fun env findval => by {
-    dsimp only;
-    dsimp only [Except.bind, TopM.set, NamedVal.var, Function.comp_apply];
-    rw[Expr.denote_opscons];
-    rw[Expr.denote_tuple];
-    dsimp only [bind, ReaderT.bind, Except.bind, TopM.set, NamedVal.var, Function.comp_apply];
-    cases NVAL:TopM.get { name := n, kind := Kind.int } env;
-    case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
-    case ok nval =>
-    dsimp only;
-    cases OUT_ONE_VAL:TopM.get { name := out1, kind := Kind.int } env;
-    case error => simp only[Except.isOk, Except.toBool, IsEmpty.forall_iff];
-    case ok out1_val =>
-    dsimp only;
-    repeat rw[Expr.denote_opscons];
-    repeat rw[Expr.denote_tuple];
-    repeat rw[Expr.denote_regionscons];
-    repeat rw[Expr.denote_regionsnil];
-    repeat rw[Expr.denote_opsone];
-    repeat rw[Expr.denote_op];
-    dsimp only;
-
-    dsimp only[Combine.combineSem, Arith.sem, Scf.sem, Except.orElseLazy];
-    sorry
-  }
-}
-end ForFusion
-
-end RewriteExamples
-
 
 namespace RewritingHoare
 open AST
@@ -1379,12 +1311,12 @@ notation P:80 "<<->>" Q:80 => assertion_iff P Q
 
 -- P op Q: for all environments where P env holds, so does Q (env[op.name := op.val]).
 def hoare_triple_op (P: assertion Env) (r: Expr .O) (Q: assertion Env) : Prop :=
- ∀ (e: Env) (nv: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok nv),
+ ∀ (e: Env) (nv: NamedVal) (sem : Semantics) (SEM: r.denote sem e = .ok nv),
    P e -> Q (e.set { name := nv.name, kind := nv.kind} nv.val)
 
 -- P ops Q: for all environments where 'P env' holds, 'Q returnval' holds.
 def hoare_triple_ops (P: assertion Env) (r: Expr .Os) (Q: assertion NamedVal) : Prop :=
- ∀ (e: Env) (retval: NamedVal) (sem : (o : Op') → TopM o.retkind.eval) (SEM: r.denote sem e = .ok retval),
+ ∀ (e: Env) (retval: NamedVal) (sem : Semantics) (SEM: r.denote sem e = .ok retval),
    P e -> Q retval
 
 def assertion_and (P Q: assertion T) : assertion T := fun (v: T) => P v ∧ Q v
@@ -1463,7 +1395,7 @@ theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
 
 def rewriteCorrect' (find : Ops) -- stuff in the pattern. The last op is to be replaced.
   (replace : Ops) -- replacement ops. can use 'findbegin'.
-  (sem: (o : Op') → TopM (Kind.eval o.retkind)) : Prop :=
+  (sem: Semantics) : Prop :=
   ∀ (findnv: NamedVal), -- for all values ...
   hoare_triple_ops
     (fun env => find.denote sem env = .ok findnv) -- that find produces...
@@ -1483,14 +1415,14 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
   sem := Arith.sem,
   replaceCorrect := fun env findval S0 => by {
     dsimp only at *;
-    have ⟨x0, ⟨S1, S2⟩⟩ := Expr.denote_opscons_inv S0;
+    have ⟨x0, S1, S2⟩ := Expr.denote_opscons_inv S0;
     simp [Op.ret] at *;
-    have ⟨x1, ⟨X1, ⟨x2, ⟨X2, S3⟩⟩⟩⟩ := Expr.denote_tuple_inv S1;
+    have ⟨x1, X1, x2, X2, S3⟩ := Expr.denote_tuple_inv S1;
     simp at S3;
     cases S3; case refl => {
       have ⟨x3, X3⟩ := Expr.denote_opsone_assign_inv S2;
       simp[Env.get, pure, Except.pure] at X3;
-      have ⟨x1x2_eq_x3, ⟨x4, ⟨X4, X5⟩⟩⟩ := X3
+      have ⟨x1x2_eq_x3, x4, X4, X5⟩ := X3
       simp at *;
       cases x1x2_eq_x3; case refl => {
         cases X5; case refl => {
@@ -1500,8 +1432,15 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
           dsimp only[Expr.denote_op];
           dsimp only[bind, ReaderT.bind, Except.bind, TopM.get_unit];
           simp only[TopM.get_unit]; -- TODO: Example where 'simp' is necessary!
+
           simp only[Arith.sem, Expr.denote, pure, ReaderT.pure, Except.pure];
-          simp only[Op'.fromOp, Arith.sem, Expr.denote] at X4;
+          rewrite[Semantics.run.eq (name := "constant") (by simp)]
+          simp only [Semantic.run, Arith.const, pure, ReaderT.pure, Except.pure];
+          simp only[Arith.sem] at X4;
+          rewrite[Semantics.run.neq (name := "sub") (by simp)] at X4;
+          rewrite[Semantics.run.neq (name := "sub") (by simp)] at X4;
+          rewrite[Semantics.run.eq (name := "sub") (by simp)] at X4;
+          simp only [Arith.sub, Semantic.run, Op'.fromOp, Arith.sem, Expr.denote] at X4;
           simp[pure, ReaderT.pure, Except.pure] at X4;
           simp[X4];
           have X1_EQ_X2 : Except.ok x1 = Except.ok x2 := by {
@@ -1530,21 +1469,21 @@ def for_fusion (r: Region) (n m : String)
   findbegin :=
     .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
                (.cons ⟨init, .int⟩
-               (.cons ⟨n, .int⟩
-               (.cons ⟨m, .int⟩ .nil))))
+               (.cons ⟨n, .nat⟩
+               (.cons ⟨m, .nat⟩ .nil))))
   findmid := [dsl_ops|
-    % $(n_init) = tuple( %$(n) : int, %$(init) : int);
-    % $(out1) : int = "for" ( %$(n_init) : int × int) [$(r)];
-    % $(m_out1) = tuple( %$(m) : int, %$(out1) : int);
-    % $(out2) : int = "for" ( %$(m_out1) : int × int) [$(r)];
+    % $(n_init) = tuple( %$(n) : nat, %$(init) : int);
+    % $(out1) : int = "for" ( %$(n_init) : nat × int) [$(r)];
+    % $(m_out1) = tuple( %$(m) : nat, %$(out1) : int);
+    % $(out2) : int = "for" ( %$(m_out1) : nat × int) [$(r)];
   ]
   replace := [dsl_ops|
-    % $(n_m) = tuple( %$(n) : int, %$(m) : int);
-    % $(n_plus_m) : int = "add" ( %$(n_m) : int × int);
-    % $(n_plus_m_init) = tuple( %$(n_plus_m) : int, %$(init) : int);
-    % $(out2) : int = "for" ( %$(n_plus_m_init) : int × int) [$(r)];
+    % $(n_m) = tuple( %$(n) : nat, %$(m) : nat);
+    % $(n_plus_m) : nat = "add" ( %$(n_m) : nat × nat);
+    % $(n_plus_m_init) = tuple( %$(n_plus_m) : nat, %$(init) : int);
+    % $(out2) : int = "for" ( %$(n_plus_m_init) : nat × int) [$(r)];
   ]
-  sem := Combine.combineSem Scf.sem Arith.sem,
+  sem := Semantics.append Scf.sem Arith.sem,
   replaceCorrect := fun env1 findval S1_ => by {
     simp at *; -- simplify builders.
     have ⟨x1, S1, env2, ENV2, S2_⟩ := Expr.denote_opscons_inv' S1_;
@@ -1577,6 +1516,9 @@ def for_fusion (r: Region) (n m : String)
     rw[Expr.denote_regionsnil] at X2OUT;
     -- | this needs to be a 'simp', not a 'dsimp', because the match
     -- is complex?
+    rw[Semantics.run.eq (name := "for") (by simp)] at X2OUT;
+    rw[Scf.for_.run] at X2OUT;
+    simp at X2OUT;
     sorry
   }
 }
@@ -1592,7 +1534,7 @@ end Theorems
 
 namespace Test
 def runRegionTest :
-  (sem: (o: Op') → TopM o.retkind.eval) →
+  (sem: Semantics) →
   (r: AST.Region) →
   (expected: NamedVal) →
   (arg: Val := Val.unit ) →
@@ -1613,7 +1555,7 @@ def runRegionTest :
       return False
 
 def runRegionTestXfail :
-  (sem: (o: Op') → TopM o.retkind.eval) →
+  (sem: Semantics) →
   (r: AST.Region) →
   (arg: Val := Val.unit ) →
   (env: Env := Env.empty) → IO Bool :=
@@ -1631,7 +1573,7 @@ def runRegionTestXfail :
 end Test
 
 
-open Arith Scf Combine DSL Examples Test in
+open Arith Scf DSL Examples Test in
 def main : IO UInt32 := do
   let tests :=
   [runRegionTest
@@ -1643,26 +1585,26 @@ def main : IO UInt32 := do
     (r := eg_arith_shadow)
     (expected := { name := "x", kind := .int, val := 4}),
    runRegionTest
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_ite_true)
     (expected := { name := "out", kind := .int, val := 42}),
   runRegionTest
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_ite_false)
     (expected := { name := "out", kind := .int, val := 0}),
   runRegionTest
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_run_twice)
     (expected := { name := "x", kind := .int, val := 42}),
   runRegionTest
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_well_scoped)
     (expected := { name := "x", kind := .int, val := 42}),
   runRegionTestXfail
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_ill_scoped),
   runRegionTest
-    (sem := Combine.combineSem Scf.sem Arith.sem)
+    (sem := Semantics.append Scf.sem Arith.sem)
     (r := eg_scf_for)
     (expected := { name := "out", kind := .int, val := 42})]
   let mut total := 0
