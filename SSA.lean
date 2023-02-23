@@ -674,15 +674,15 @@ declare_syntax_cat dsl_kind
 
 syntax sepBy1(ident, "×") :dsl_kind
 syntax ident : dsl_var_name
-syntax "%"dsl_var_name ":" dsl_kind : dsl_var
+syntax "%" dsl_var_name ":" dsl_kind : dsl_var
 syntax dsl_var "="
       str
-      ("(" dsl_var ")")?
+      ("("dsl_var ")")?
       ("[" dsl_region,* "]")?
       ("{" dsl_const "}")? ";": dsl_op
-syntax "%" ident "="  "(" dsl_var "," dsl_var ")" ";": dsl_op
+syntax "%" dsl_var_name "=" "tuple" "(" dsl_var "," dsl_var ")" ";": dsl_op
 syntax num : dsl_const
-syntax "{" ("^(" dsl_var "):")?  dsl_op dsl_op*  "}" : dsl_region
+syntax "{" ("^(" dsl_var ")" ":")?  dsl_op dsl_op*  "}" : dsl_region
 syntax "[dsl_op|" dsl_op "]" : term
 syntax "[dsl_ops|" dsl_op dsl_op* "]" : term
 syntax "[dsl_region|" dsl_region "]" : term
@@ -783,8 +783,8 @@ macro_rules
 | `([dsl_op| $$($q)]) => `(($q : Op))
 
 macro_rules
-| `([dsl_op| %$res:ident = ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
-    let res_term := Lean.quote res.getId.toString
+| `([dsl_op| %$res:dsl_var_name = tuple ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
+    let res_term ← `([dsl_var_name| $res])
     let arg1_term ← `([dsl_var| $arg1 ])
     let arg2_term ← `([dsl_var| $arg2 ])
     `(Expr.tuple $res_term $arg1_term $arg2_term)
@@ -798,8 +798,15 @@ def eg_var : AST.Var := [dsl_var| %y : int]
 def eg_var_2 : AST.Var := [dsl_var| %$("y") : int ]
 #reduce eg_var_2
 
-def eg_var_3 : AST.Var := let name := "name";  let ty := Kind.int;  [dsl_var| %$(name) : $(ty) ]
+def eg_var_3 : AST.Var :=
+  let name := "name";  let ty := Kind.int;  [dsl_var| %$(name) : $(ty) ]
 #reduce eg_var_3
+
+def eg_op : AST.Op :=
+  let name := "name";  let ty := Kind.int;
+  [dsl_op| %res : int = "foo" ( %$(name) : $(ty) ); ]
+#reduce eg_var_3
+
 
 end DSL
 
@@ -823,7 +830,7 @@ def eg_region_sub :=
  [dsl_region| {
    %one : int = "constant" {1};
    %two : int = "constant" {2};
-   %t = (%one : int , %two : int);
+   %t = tuple(%one : int , %two : int);
    %x : int = "sub"(%t : int × int);
  }]
 #reduce eg_region_sub
@@ -901,7 +908,7 @@ theorem repeatM.commute_f: repeatM n f >=> f = f >=> repeatM n f := by
 -- pull a function that commutes with f to the left of repeatM
 @[simp] -- pull simple stuff to the left.
 theorem repeatM.commuting_pull_left
-  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f) :
   (repeatM n f) >=> g = g >=> repeatM n f := by
   induction n <;> simp
   case succ n' IH =>
@@ -909,7 +916,7 @@ theorem repeatM.commuting_pull_left
     simp [←kleisliRight.assoc, COMMUTES]
 
 theorem repeatM.commuting_pull_right
-  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f) :
   g >=> repeatM n f = repeatM n f >=> g := (commuting_pull_left COMMUTES).symm
 
 -- TODO: decision procedure for free theory of
@@ -930,7 +937,7 @@ theorem kleisli.cancel_left [M: Monad m] (f: α → m β) (k h : β → m γ) (H
 }
 
 theorem repeatM.commuting_compose
-  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f):
+  {f g: Val → TopM Val} (COMMUTES: f >=> g = g >=> f) :
   (repeatM n f) >=> repeatM n g = repeatM n (f >=> g) := by
   induction n <;> simp
   case succ n' IH =>
@@ -1012,7 +1019,7 @@ def eg_scf_run_twice : Region := [dsl_region| {
   %x : int = "constant"{41};
   %x : int = "twice" [{
       %one : int = "constant"{1};
-      %xone = (%x : int, %one : int);
+      %xone = tuple(%x : int, %one : int);
       %x : int = "add"(%xone : int × int);
   }];
 }]
@@ -1021,7 +1028,7 @@ def eg_scf_well_scoped : Region := [dsl_region| {
   %x : int = "constant"{41};
   %one : int = "constant"{1}; -- one is outside.
   %x : int = "twice" [{
-      %xone = (%x : int, %one : int); -- one is accessed here.
+      %xone = tuple(%x : int, %one : int); -- one is accessed here.
       %x : int = "add"(%xone : int × int);
   }];
 }]
@@ -1032,17 +1039,17 @@ def eg_scf_ill_scoped : Region := [dsl_region| {
       %y : int = "constant"{42};
   }];
   -- %y should NOT be accessible here
-  %out = (%y : int, %y : int);
+  %out = tuple(%y : int, %y : int);
 }]
 
 def eg_scf_for: Region := [dsl_region| {
   %x : int = "constant"{10};  -- 10 iterations
   %init : int = "constant"{32}; -- start value
-  %xinit = (%x : int, %init : int);
+  %xinit = tuple(%x : int, %init : int);
   %out : int = "for"(%xinit : int × int)[{
     ^(%xcur : int):
       %one : int = "constant"{1};
-      %xcur_one = (%xcur : int, %one : int);
+      %xcur_one = tuple(%xcur : int, %one : int);
       %xnext : int = "add"(%xcur_one : int × int);
   }];
 }]
@@ -1329,19 +1336,13 @@ def rewriteCorrect' (find : Ops) -- stuff in the pattern. The last op is to be r
 
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   findbegin := .cons ⟨arg, .int⟩ .nil,
-  findmid :=
-      let pair := Expr.tuple pairname ⟨arg, .int⟩ ⟨arg, .int⟩
-      let sub := Op.mk
-                  (name := "sub")
-                  (ret := ⟨res, .int⟩)
-                  (arg := ⟨pairname, .pair .int .int⟩)
-      .opscons pair (.opsone sub),
-  replace :=
-    let const := Op.mk
-                  (name := "constant")
-                  (ret := ⟨res, .int⟩)
-                  (const := Const.int 0)
-    .opsone (const),
+  findmid := [dsl_ops|
+    % $(pairname) = tuple( %$(arg) : int, %$(arg) : int);
+    % $(res) : int = "sub"( %$(pairname) : int × int);
+  ]
+  replace := [dsl_ops|
+    % $(res) : int = "constant" {0};
+  ]
   sem := Arith.sem,
   replaceCorrect := fun env findval S0 => by {
     dsimp only at *;
