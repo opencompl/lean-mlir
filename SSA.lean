@@ -807,6 +807,60 @@ def eg_op : AST.Op :=
   [dsl_op| %res : int = "foo" ( %$(name) : $(ty) ); ]
 #reduce eg_var_3
 
+section Unexpander
+
+/-
+Support for pretty printing our AST.Expr to make writing proofs easier.
+-/
+/-
+@[app_unexpander Var.mk] def unexpandVar: Lean.PrettyPrinter.Unexpander
+| `($_ $nm $kind) => `($nm $kind)
+| _ => throw ()
+
+@[app_unexpander Val.mk] def unexpandVal: Lean.PrettyPrinter.Unexpander
+| `($_ $kind $val) => `($val $kind)
+| _ => throw ()
+
+@[app_unexpander Kind.pair] def unexpandKindPair: Lean.PrettyPrinter.Unexpander
+| `($_ $l $r) => `($l × $r)
+| _ => throw ()
+
+@[app_unexpander Expr.tuple] def unexpandExprTuple: Lean.PrettyPrinter.Unexpander
+| `($_ $ret $l $r) => `($ret = "tuple" ( $l , $r ))
+| _ => throw ()
+
+open Lean Macro PrettyPrinter in
+@[app_unexpander Expr.op] def unexpandExprOp: Lean.PrettyPrinter.Unexpander
+| `($_ $ret $name $arg regionsnil $const) => `($ret = "op" $name ( $arg ) $const)
+-- | `($_ $ret $name $arg $regions Const.unit) => `($ret = "op" $name ( $arg ) $regions)
+| `($_ $ret $name $arg $regions $const) => `($ret = "op" $name ( $arg ) $regions  $const)
+| _ => sorry
+
+@[app_unexpander Expr.opscons] def unexpandExprOpscons: Lean.PrettyPrinter.Unexpander
+| `($_ $o $os) => `($o / $os)
+| _ => throw ()
+
+@[app_unexpander Expr.opsone] def unexpandExprOpsone: Lean.PrettyPrinter.Unexpander
+| `($_ $o) => `($o)
+| _ => throw ()
+
+@[app_unexpander Expr.regionscons] def unexpandRegionsnil : Lean.PrettyPrinter.Unexpander
+| `($_ ) => `(())
+
+
+@[app_unexpander Expr.regionscons] def unexpandRegionsCons : Lean.PrettyPrinter.Unexpander
+| `($_ $r Expr.regionsnil) => `($r)
+| _ => throw ()
+
+@[app_unexpander Const.unit] def unexpandConstUnit : Lean.PrettyPrinter.Unexpander
+| `($_) => `(())
+
+@[app_unexpander Const.int] def unexpandConstInt : Lean.PrettyPrinter.Unexpander
+| `($_ $i:num)  => `($i)
+| _ => throw ()
+-/
+end Unexpander
+
 
 end DSL
 
