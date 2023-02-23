@@ -755,7 +755,7 @@ macro_rules
 
 macro_rules
 | `([dsl_const| $x:num ]) => `(Const.int $x)
-| `([dsl_region| $$($q)]) => `(($q : Const))
+| `([dsl_const| $$($q)]) => `(($q : Const))
 
 open Lean Syntax in
 macro_rules
@@ -1389,38 +1389,27 @@ def for_fusion (r: Region) (n m : String)
   (n_plus_m n_m: String)
   (out1 out2: String)
   (n_init m_out1: String)
-  (init init_n_plus_m: String) : Peephole := {
-  findbegin := .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
+  (init n_plus_m_init: String) : Peephole := {
+  findbegin :=
+    .cons ⟨out1, .int⟩ (TypingCtx.cons ⟨out2, .int⟩
                (.cons ⟨init, .int⟩
                (.cons ⟨n, .int⟩
                (.cons ⟨m, .int⟩ .nil))))
-  findmid :=
-      let n_init_op := Expr.tuple n_init ⟨n, .int⟩ ⟨out1, .int⟩
-      let loop1 := Op.mk
-                  (name := "for")
-                  (ret := ⟨out1, .int⟩)
-                  (arg := ⟨n_init, .pair .int .int⟩)
-                  (regions := .regionscons r .regionsnil)
-      let m_out1_op := Expr.tuple m_out1 ⟨m, .int⟩ ⟨out2, .int⟩
-      let loop2 := Op.mk
-                  (name := "for")
-                  (ret := ⟨out2, .int⟩)
-                  (arg := ⟨m_out1, .pair .int .int⟩)
-                  (regions := .regionscons r .regionsnil)
-      .opscons n_init_op (.opscons loop1 (.opscons m_out1_op (.opsone loop2))),
-  replace :=
-    let n_m_op := Expr.tuple n_m ⟨n, .int⟩ ⟨m, .int⟩
-    let n_plus_m_op := Op.mk (ret := ⟨n_plus_m, .int⟩) (name := "add") (arg := ⟨n_m, .int⟩)
-    let init_n_plus_m_op := Expr.tuple init_n_plus_m ⟨init, .int⟩ ⟨n_plus_m, .int⟩
-    let loop_nm_op :=
-        Op.mk
-          (name := "for")
-          (ret := ⟨out1, .int⟩)
-          (arg := ⟨init_n_plus_m, .pair .int .int⟩)
-          (regions := .regionscons r .regionsnil)
-    .opsone (loop_nm_op),
+  findmid := [dsl_ops|
+    % $(n_init) = tuple( %$(n) : int, %$(init) : int);
+    % $(out1) : int = "for" ( %$(n_init) : int × int) [$(r)];
+    % $(m_out1) = tuple( %$(m) : int, %$(out1) : int);
+    % $(out2) : int = "for" ( %$(m_out1) : int × int) [$(r)];
+  ]
+  replace := [dsl_ops|
+    % $(n_m) = tuple( %$(n) : int, %$(m) : int);
+    % $(n_plus_m) : int = "add" ( %$(n_m) : int × int);
+    % $(n_plus_m_init) = tuple( %$(n_plus_m) : int, %$(init) : int);
+    % $(out2) : int = "for" ( %$(n_plus_m_init) : int × int) [$(r)];
+  ]
   sem := Combine.combineSem Scf.sem Arith.sem,
   replaceCorrect := fun env findval S0 => by {
+    simp at *; -- simplify builders.
     sorry
   }
 }
