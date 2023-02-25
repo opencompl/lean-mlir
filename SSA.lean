@@ -68,6 +68,42 @@ inductive OR: Type
 | R -- Single Region
 | Rs -- Multiple Regions
 
+inductive OpName where
+| arith.constant
+| arith.add
+| arith.sub
+| arith.mul
+| scf.if
+| scf.for
+| scf.twice
+| scf.run
+| unknown
+deriving DecidableEq
+
+instance : ToString OpName where
+  toString
+    | .arith.constant => "arith.constant"
+    | .arith.add => "arith.add"
+    | .arith.sub => "arith.sub"
+    | .arith.mul => "arith.mul"
+    | .scf.if => "scf.if"
+    | .scf.for => "scf.for"
+    | .scf.twice => "scf.twice"
+    | .scf.run => "scf.run"
+    | .unknown => "<unknown>"
+
+@[simp]
+def OpName.fromString : String -> OpName
+  | "arith.constant" => OpName.arith.constant
+  | "arith.add" => OpName.arith.add
+  | "arith.sub" => OpName.arith.sub
+  | "arith.mul" => OpName.arith.mul
+  | "scf.if" => OpName.scf.if
+  | "scf.for" => OpName.scf.for
+  | "scf.twice" => OpName.scf.twice
+  | "scf.run" => OpName.scf.run
+  | _ => OpName.unknown
+
 -- Tagged expressiontrees
 inductive Expr: OR -> Type where
 | opsone: Expr .O -> Expr .Os -- terminator in a sequence of Ops
@@ -75,7 +111,7 @@ inductive Expr: OR -> Type where
 | regionsnil : Expr .Rs -- empty sequence of regions
 | regionscons: Expr .R -> Expr .Rs -> Expr .Rs -- cons cell 'region :: regions'
 | op (ret : Var)
-   (name : String)
+   (name : OpName)
    (arg : Var)
    (regions : Expr .Rs)
    (const: Const): Expr .O -- '%ret:retty = 'name'(%var:varty) [regions*] {const}'
@@ -88,7 +124,7 @@ abbrev Regions := Expr .Rs
 abbrev Ops := Expr .Os
 
 abbrev Op.mk (ret: Var := Var.unit)
-  (name: String)
+  (name: OpName)
   (arg: Var := Var.unit)
   (regions := Expr.regionsnil)
   (const := Const.unit): Op := Expr.op ret name arg regions const
@@ -125,7 +161,7 @@ def Expr.format : Expr k → Format
     let rsfmt : Format :=
       if Regions.isEmpty rs then ""
       else (Format.nest 1 <| "[" ++ .line ++ Expr.format rs) ++ "]"
-    .text (toString ret ++ " = " ++ name) ++
+    .text (toString ret ++ " = " ++ toString name) ++
     argfmt ++ rsfmt ++ constfmt
 | .tuple ret a1 a2 =>
     .text <|
@@ -356,7 +392,7 @@ structure Op' where
 -- The single semantic unit, where the user provides the semantics
 -- of a single op of a given 'name'.
 structure Semantic where
-  name: String
+  name: OpName
   run: (o : Op') → TopM o.retkind.eval
 
 
@@ -373,7 +409,7 @@ def Semantics.append: Semantics → Semantics → Semantics
 | .nil, sems => sems
 | .cons sem sems, sems' => .cons sem (Semantics.append sems sems')
 
-def Semantics.run: (name: String) → (o : Op') → Semantics → TopM o.retkind.eval
+def Semantics.run: (name: OpName) → (o : Op') → Semantics → TopM o.retkind.eval
 | oname, o, .nil => TopM.error s!"unknown op {oname}"
 | oname, o, .cons sem sems =>
     if oname = sem.name
@@ -381,7 +417,7 @@ def Semantics.run: (name: String) → (o : Op') → Semantics → TopM o.retkind
     else Semantics.run oname o sems
 
 theorem Semantics.run.eq
-  {name: String}
+  {name: OpName}
   {o: Op'}
   {sems: Semantics}
   {sem: Semantic}
@@ -393,7 +429,7 @@ theorem Semantics.run.eq
   }
 
 theorem Semantics.run.neq
-  {name: String}
+  {name: OpName}
   {o: Op'}
   {sems: Semantics}
   {sem: Semantic}
@@ -406,8 +442,7 @@ theorem Semantics.run.neq
 
 
 instance : ToString Op' where
-  toString x :=
-    "(" ++ toString x.argval ++ ")" ++
+  toString x := "(" ++ toString x.argval ++ ")" ++
     " [" ++ "#" ++ toString x.regions.length ++ "]" ++
     " {" ++ toString x.const ++ "}" ++ " → " ++ toString x.retkind
 
@@ -516,7 +551,7 @@ theorem Expr.denote_op:
   := by { rfl; }
 
 -- how to simply Expr.denote_op, assuming the environment lookup is correct.
-theorem Expr.denote_op_success (ret: Var) (name: String) (arg: Var) (rs: Regions) (const: Const)
+theorem Expr.denote_op_success (ret: Var) (name: OpName) (arg: Var) (rs: Regions) (const: Const)
   (sem: Semantics)
   (env: Env)
   (argval: arg.kind.eval)
@@ -959,7 +994,7 @@ macro_rules
       let arg_term ← match arg with
           | .some arg => `([dsl_var| $arg])
           | .none => `(AST.Var.unit)
-      let name_term := Lean.quote name.getString
+      let name_term := name
       let rgns_term ← match rgns with
         | .none => `(.regionsnil)
         | .some rgns =>
@@ -969,7 +1004,7 @@ macro_rules
         match const with
         | .none => `(Const.unit)
         | .some c => `([dsl_const| $c])
-      `(Expr.op $res_term $name_term $arg_term $rgns_term $const_term)
+      `(Expr.op $res_term (OpName.fromString ($name_term : String)) $arg_term $rgns_term $const_term)
 | `([dsl_op| $$($q)]) => `(($q : Op))
 
 macro_rules
@@ -1002,7 +1037,7 @@ def eg_var_3 : AST.Var :=
 
 def eg_op : AST.Op :=
   let name := "name";  let ty := Kind.int;
-  [dsl_op| %res : int = "foo" ( %$(name) : $(ty) ); ]
+  [dsl_op| %res : int = "arith.sub" ( %$(name) : $(ty) ); ]
 #reduce eg_var_3
 
 section Unexpander
@@ -1065,14 +1100,14 @@ end DSL
 namespace Arith
 
 def const : Semantic := {
-  name := "constant"
+  name := .arith.constant
   run := fun o => match o with
   | { const := .int x, retkind := .int} => return x
   | _ => TopM.error "unknown op"
 }
 
 def add : Semantic := {
-  name := "add"
+  name := .arith.add
   run := fun o => match o with
   | { retkind := .int,
       argval := ⟨.pair .int .int, (x, y)⟩ } => return x + y
@@ -1080,7 +1115,7 @@ def add : Semantic := {
 }
 
 def sub : Semantic := {
-  name := "sub"
+  name := .arith.sub
   run := fun o => match o with
   | { retkind := .int,
       argval := ⟨.pair .int .int, (x, y)⟩ } => return x - y
@@ -1092,10 +1127,10 @@ def sem: Semantics :=
 
 def eg_region_sub :=
  [dsl_region| {
-   %one : int = "constant" {1};
-   %two : int = "constant" {2};
+   %one : int = "arith.constant" {1};
+   %two : int = "arith.constant" {2};
    %t = tuple(%one : int , %two : int);
-   %x : int = "sub"(%t : int × int);
+   %x : int = "arith.sub"(%t : int × int);
  }]
 #reduce eg_region_sub
 
@@ -1211,7 +1246,7 @@ theorem repeatM.commuting_compose
 
 
 def if_ : Semantic := {
-  name := "if"
+  name := .scf.if
   run := fun o => match o with
   | { argval := ⟨.int, cond⟩,
       regions := [rthen, relse],
@@ -1224,7 +1259,7 @@ def if_ : Semantic := {
 }
 
 def twice : Semantic := {
-  name := "twice"
+  name := .scf.twice
   run := fun o => match o with
   | { regions := [r],
       retkind := .int
@@ -1236,7 +1271,7 @@ def twice : Semantic := {
 }
 
 def for_ : Semantic := {
-  name := "for"
+  name := .scf.for
   run := fun o => match o with
   | { regions := [r],
       retkind := .int,
@@ -1265,19 +1300,19 @@ end Scf
 namespace Examples
 open AST
 def eg_arith_shadow : Region := [dsl_region| {
-  %x : int = "constant"{0};
-  %x : int = "constant"{1};
-  %x : int = "constant"{2};
-  %x : int = "constant"{3};
-  %x : int = "constant"{4};
+  %x : int = "arith.constant"{0};
+  %x : int = "arith.constant"{1};
+  %x : int = "arith.constant"{2};
+  %x : int = "arith.constant"{3};
+  %x : int = "arith.constant"{4};
 }]
 
 def eg_scf_ite_true : Region := [dsl_region| {
-  %cond : int = "constant"{1};
-  %out : int = "if" (%cond : int) [{
-    %out_then : int = "constant"{42};
+  %cond : int = "arith.constant"{1};
+  %out : int = "scf.if" (%cond : int) [{
+    %out_then : int = "arith.constant"{42};
   }, {
-    %out_else : int = "constant"{0};
+    %out_else : int = "arith.constant"{0};
   }];
 }]
 
@@ -1285,52 +1320,52 @@ def eg_scf_ite_true : Region := [dsl_region| {
 
 -- f: Unit → a ∼ a
 def eg_scf_ite_false : Region := [dsl_region| {
-  %cond : int = "constant"{0};
-  %out : int = "if" (%cond : int) [{
-    %out_then : int = "constant"{42};
+  %cond : int = "arith.constant"{0};
+  %out : int = "scf.if" (%cond : int) [{
+    %out_then : int = "arith.constant"{42};
   }, {
-    %out_else : int = "constant"{0};
+    %out_else : int = "arith.constant"{0};
   }];
 }]
 
 #print eg_scf_ite_false
 
 def eg_scf_run_twice : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %x : int = "twice" [{
-      %one : int = "constant"{1};
+  %x : int = "arith.constant"{41};
+  %x : int = "scf.twice" [{
+      %one : int = "arith.constant"{1};
       %xone = tuple(%x : int, %one : int);
-      %x : int = "add"(%xone : int × int);
+      %x : int = "arith.add"(%xone : int × int);
   }];
 }]
 
 def eg_scf_well_scoped : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %one : int = "constant"{1}; -- one is outside.
-  %x : int = "twice" [{
+  %x : int = "arith.constant"{41};
+  %one : int = "arith.constant"{1}; -- one is outside.
+  %x : int = "scf.twice" [{
       %xone = tuple(%x : int, %one : int); -- one is accessed here.
-      %x : int = "add"(%xone : int × int);
+      %x : int = "arith.add"(%xone : int × int);
   }];
 }]
 
 def eg_scf_ill_scoped : Region := [dsl_region| {
-  %x : int = "constant"{41};
-  %x : int = "twice" [{
-      %y : int = "constant"{42};
+  %x : int = "arith.constant"{41};
+  %x : int = "scf.twice" [{
+      %y : int = "arith.constant"{42};
   }];
   -- %y should NOT be accessible here
   %out = tuple(%y : int, %y : int);
 }]
 
 def eg_scf_for: Region := [dsl_region| {
-  %x : int = "constant"{10};  -- 10 iterations
-  %init : int = "constant"{32}; -- start value
+  %x : int = "arith.constant"{10};  -- 10 iterations
+  %init : int = "arith.constant"{32}; -- start value
   %xinit = tuple(%x : int, %init : int);
-  %out : int = "for"(%xinit : int × int)[{
+  %out : int = "scf.for"(%xinit : int × int)[{
     ^(%xcur : int):
-      %one : int = "constant"{1};
+      %one : int = "arith.constant"{1};
       %xcur_one = tuple(%xcur : int, %one : int);
-      %xnext : int = "add"(%xcur_one : int × int);
+      %xnext : int = "arith.add"(%xcur_one : int × int);
   }];
 }]
 
@@ -1417,10 +1452,10 @@ theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
 def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
   find := [dsl_ops|
     % $(pairname) = tuple( %$(arg) : int, %$(arg) : int);
-    % $(res) : int = "sub"( %$(pairname) : int × int);
+    % $(res) : int = "arith.sub" ( %$(pairname) : int × int);
   ]
   replace := [dsl_ops|
-    % $(res) : int = "constant" {0};
+    % $(res) : int = "arith.constant" {0};
   ]
   sem := Arith.sem,
   replaceCorrect := fun env findval S0 => by {
@@ -1444,12 +1479,12 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
           simp only[TopM.get_unit]; -- TODO: Example where 'simp' is necessary!
 
           simp only[Arith.sem, Expr.denote, pure, ReaderT.pure, Except.pure];
-          rewrite[Semantics.run.eq (name := "constant") (by simp)]
+          rewrite[Semantics.run.eq (name := .arith.constant) (by simp)]
           simp only [Semantic.run, Arith.const, pure, ReaderT.pure, Except.pure];
           simp only[Arith.sem] at X4;
-          rewrite[Semantics.run.neq (name := "sub") (by simp)] at X4;
-          rewrite[Semantics.run.neq (name := "sub") (by simp)] at X4;
-          rewrite[Semantics.run.eq (name := "sub") (by simp)] at X4;
+          rewrite[Semantics.run.neq (name := .arith.sub) (by simp)] at X4;
+          rewrite[Semantics.run.neq (name := .arith.sub) (by simp)] at X4;
+          rewrite[Semantics.run.eq (name := .arith.sub) (by simp)] at X4;
           simp only [Arith.sub, Semantic.run, Op'.fromOp, Arith.sem, Expr.denote] at X4;
           simp[pure, ReaderT.pure, Except.pure] at X4;
           simp[X4];
@@ -1527,15 +1562,15 @@ def for_fusion (r: Region) (n m : String)
     simp at X4ARG;
     cases X4ARG; case refl =>
 
-    rw[Semantics.run.eq (name := "for") (by simp)] at X2RET;
+    -- rw[Semantics.run.eq (name := .scf.for) (by simp)] at X2RET;
     simp[Op'.fromOp] at X2RET;
     simp[Expr.denote_regionscons, Expr.denote_regionsnil] at X2RET;
-    rw[Scf.for_.run] at X2RET;
+    -- rw[Scf.for_.run] at X2RET;
 
-    rw[Semantics.run.eq (name := "for") (by simp)] at X4RET;
+    -- rw[Semantics.run.eq (name := .scf.for) (by simp)] at X4RET;
     simp[Op'.fromOp] at X4RET;
     simp[Expr.denote_regionscons, Expr.denote_regionsnil] at X4RET;
-    rw[Scf.for_.run] at X4RET;
+    -- rw[Scf.for_.run] at X4RET;
 
     rw[ENV3] at X32;
     simp[Env.get_set_eq] at X32;
