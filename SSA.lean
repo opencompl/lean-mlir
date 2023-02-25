@@ -210,12 +210,6 @@ def AST.Var.toNamedVal (var: Var) (value: var.kind.eval): NamedVal :=
 def NamedVal.var (nv: NamedVal): Var :=
   { name := nv.name, kind := nv.kind }
 
--- Well typed environments; cons cells of
--- bindings of variables to values of type ⟦var.kind⟧
-inductive Env where
-| empty: Env
-| cons (var: Var) (val: var.kind.eval) (rest: Env): Env
-
 
 -- truncation of a type that smashes everything into a single equivalence class.
 inductive trunc (α: Type): α → α → Prop
@@ -265,8 +259,12 @@ def ErrorKind.subsingleton (e: ErrorKind) (e': ErrorKind): e = e' := by {
   constructor;
 }
 
+-- Well typed environments; cons cells of
+-- bindings of variables to values of type ⟦var.kind⟧
+inductive Env where
+| empty: Env
+| cons (var: Var) (val: var.kind.eval) (rest: Env): Env
 
-abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
 
 def Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
@@ -298,9 +296,18 @@ theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.o
         simp[Env.get, H];
         exact (Env.get_unit name env')
       }
+
 abbrev ReaderT.get [Monad m]: ReaderT ρ m ρ := fun x => pure x
+
 abbrev ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): ReaderT ρ m α :=
   reader ∘ f
+
+
+abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
+-- TopM α = Env -> Except ErrorKind α
+-- bind :: TopM a -> (a -> TopM b) -> TopM b
+-- pure :: a -> TopM a
+
 
 def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
 
