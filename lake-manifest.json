@@ -1,5 +1,5 @@
 {"version": 4,
- "packagesDir": "./lake-packages",
+ "packagesDir": "lake-packages",
  "packages":
  [{"git":
    {"url": "https://github.com/gebner/quote4",
@@ -22,6 +22,6 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "6fa803ed895e75ed6bcd93a68e24e722fd24d295",
+    "rev": "91551dc48283dd869f9422d38bbde52f2265d995",
     "name": "Mathlib",
     "inputRev?": "master"}}]}
