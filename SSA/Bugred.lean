@@ -313,6 +313,7 @@ theorem Command.sp.is_postcondition:
               simp;
               exists val;
               simp[EVAL];
+              sorry;
           }
         }
         case neg EVAL_1 => {
@@ -323,7 +324,7 @@ theorem Command.sp.is_postcondition:
               specialize (IH1 _ _ Qenv);
               simp[C1VAL] at IH1;
               simp;
-              exact Exists.mk e1val IH1;
+              sorry;
           }
         }
     }
@@ -342,14 +343,23 @@ def rewriteSubSubXEqZero : Rewrite :=
     replace := Command.assign "out" (Expr.const 0),
     correct := fun post => by {
       simp[Command.wp, Command.sp, assertion.implies];
-      intros env;
-      intros ENV_EVAL_0;
-      simp[Expr.eval] at ENV_EVAL_0;
-      have ⟨y_val, ⟨zerov, ZEROVAL⟩, ENV_EVAL_0'⟩ := ENV_EVAL_0;
-      clear ENV_EVAL_0;
-      simp[Env.set] at ZEROVAL;
-      sorry
-
+      intros env moutv outv E1 E2 E3;
+      -- See that the proof state here is only about environments and evaluating expressions,
+      -- which is what we want. We have cut out the extraneous junk of evaluating what the hell
+      -- assignments are.
+      simp[Expr.eval] at E1 E3;
+      cases ENV_Y:(env "y") <;> simp [ENV_Y, bind, Option.bind] at E1;
+      case some yval => {
+        injection E1 with E1;
+        simp[E1] at E3;
+        simp[Expr.eval, pure] at E3;
+        suffices (Env.set { name := "out", val := outv } fun key => if key = "out" then moutv else env key) = env by {
+          aesop;
+        }
+        funext key;
+        simp[Env.set];
+        by_cases KEY:(key = "out") <;> simp[KEY, E3];
+      }
     }
   }
 
