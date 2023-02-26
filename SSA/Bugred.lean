@@ -86,8 +86,16 @@ def Command.exec : Command → TopM Unit
 
 def assertion  := Env → Prop
 
+/-
+Hoare triple assering partial correctness.
+If the environment satisfies P and then program
+runs successfully, then the final environment satisfies Q.
+-/
 def hoare_triple (P: assertion) (c: Command) (Q: assertion) : Prop :=
-  ∀ (env: Env), P env → ∃ st , c.exec.run env = .some ⟨(), st⟩ ∧ Q st
+  ∀ (env: Env), P env →
+    match (c.exec.run env) with
+    | .none => True
+    | .some ((), st) => Q st
 
 -- weakest precondition
 def Command.wp (Q: assertion): Command → assertion
@@ -122,12 +130,10 @@ theorem Command.wp.assign.is_precondition:
     intros env expr_val EXPR_VAL Qenv';
     simp[get, getThe, MonadStateOf.get, StateT.get, bind, StateT.bind, pure, liftM, monadLift, MonadLift.monadLift,
       StateT.lift];
-    exists (Env.set { name := name, val := expr_val } env);
-    simp[Qenv'];
-    exists (expr_val, env);
     simp[EXPR_VAL];
     simp[TopM.updateEnv, set, StateT.set, StateT.run, StateT.pure, bind, StateT.bind, pure, liftM, monadLift, MonadLift.monadLift,
       StateT.lift, get, getThe, MonadStateOf.get, StateT.get];
+    simp[Qenv'];
 }
 
 
@@ -154,12 +160,18 @@ theorem Command.wp.is_precondition:
         StateT.lift];
       simp[hoare_triple] at IH1;
       specialize (IH1 _ _ Penv);
-      have ⟨st', EXEC_C1, Pst'⟩ := IH1;
-      specialize (IH2 _ _ Pst');
-      have ⟨st'', EXEC_C2, Qst''⟩ := IH2;
-      exists st'';
-      simp[EXEC_C1, EXEC_C2];
-      exact Qst'';
+      simp[Option.bind];
+      cases H: (exec c1 env);
+      case none => {
+        simp[H] at *;
+      }
+      case some unit_st => {
+        have (unit, st) := unit_st;
+        simp at *;
+        simp[H] at IH1;
+        specialize (IH2 _ _ IH1);
+        exact IH2;
+      }
     }
     case if_ e c1 c2 IH1 IH2 => {
       intros Q;
@@ -188,17 +200,20 @@ theorem Command.wp.is_precondition:
 -- strongest postcondition
 def Command.sp (P: assertion): Command → assertion
 | Command.skip => P
-| (Command.assign x e) => fun env =>
-      ((e.eval env).isSome = True) ->
-          ∃ oldv, let oldenv := env.set ⟨x, oldv⟩; P oldenv /\ e.eval env = .some oldv
+| (Command.assign x e) => fun newenv =>
+      ∃ (oldv : Option Nat),
+      let oldenv : Env := fun (key :String) => if key = x
+                          then oldv
+                          else newenv key;
+                          P oldenv /\ e.eval oldenv = newenv x
 | (Command.seq c₁ c₂) =>
     let sp1 := c₁.sp P
     let sp2 := c₂.sp sp1
     sp2
 | (Command.if_ e c₁ c₂) =>
   fun env => ∃ v,
-    (Expr.eval env e = .some v ∧
-      (v = 0 ∧ Command.sp P c₁ env) ∨ (v ≠ 0 ∧ Command.sp P c₂ env))
+    Expr.eval env e = .some v ∧ -- this is wrong, we should talk about the old environment! Jesus.
+      (if v = 0 then Command.sp P c₂ env else Command.sp P c₁ env )
 
 
 theorem Command.sp.skip.is_postcondition:
@@ -207,9 +222,7 @@ theorem Command.sp.skip.is_postcondition:
     simp[hoare_triple, sp, exec, pure, StateT.run, StateT.pure];
 }
 
-/-
-TODO: how to prove strongest post-condition for assignment?
--/
+
 theorem Command.sp.assign.is_postcondition:
   ∀ {c: Command} {name: String} {val: Expr} {C: c = Command.assign name val}
     {P: assertion}, hoare_triple P c (c.sp P) := by {
@@ -225,12 +238,97 @@ theorem Command.sp.assign.is_postcondition:
     cases EXPR_VAL:(Expr.eval env expr);
     case none => {
       simp[EXPR_VAL];
-      contradiction;
+    }
+    case some val => {
+      simp[EXPR_VAL];
+      simp[Penv];
+      let oldval := env name;
+      exists oldval;
+      suffices (fun key => if key = name then oldval else Env.set { name := name, val := val } env key) = env by {
+        rw[this];
+        simp[Penv, EXPR_VAL, Env.set];
+      }
+      funext needle;
+      by_cases NEEDLE:needle = name <;> simp[Env.set, NEEDLE];
     }
 }
 
 theorem Command.sp.is_postcondition:
-  ∀ (P: assertion) (c: Command), hoare_triple P c (c.sp P) := by { sorry }
+  ∀ (P: assertion) (c: Command), hoare_triple P c (c.sp P) := by {
+
+    intros P c;
+    revert P;
+    induction c;
+    case skip => {
+      intros P;
+      apply Command.sp.skip.is_postcondition;
+    }
+    case assign x e => {
+      intros P;
+      apply Command.sp.assign.is_postcondition (C := rfl)
+    }
+    /- Wow, copilot auto-generated the 'seq' case! -/
+    case seq c1 c2 IH1 IH2 => {
+      simp[sp];
+      intros P;
+      simp[hoare_triple, exec, pure, StateT.run, StateT.pure] at *;
+      intros env Penv;
+      simp[get, getThe, MonadStateOf.get, StateT.get, bind, StateT.bind, pure, liftM, monadLift, MonadLift.monadLift,
+        StateT.lift];
+      simp[hoare_triple] at IH1;
+      specialize (IH1 _ _ Penv);
+      simp[Option.bind];
+      cases H: (exec c1 env);
+      case none => {
+        simp[H] at *;
+      }
+      case some unit_st => {
+        have (unit, st) := unit_st;
+        simp at *;
+        simp[H] at IH1;
+        specialize (IH2 _ _ IH1);
+        exact IH2;
+      }
+    }
+    case if_ e c1 c2 IH1 IH2 => {
+      intros Q;
+      simp[sp];
+      simp[hoare_triple, exec, pure, StateT.run, StateT.pure] at *;
+      intros env Qenv;
+      simp[get, getThe, MonadStateOf.get, StateT.get, bind, StateT.bind, pure, liftM, monadLift, MonadLift.monadLift,
+        StateT.lift];
+      simp[wp] at Qenv;
+      simp[Option.bind];
+      cases EVAL: (Expr.eval env e) <;> simp[EVAL];
+      case some val => {
+        simp at *;
+        by_cases (val = 0);
+        case pos EVAL_0 => {
+          simp[EVAL_0];
+          cases C2VAL : (exec c2 env) <;> simp;
+          case some unit_and_env' => {
+              have (unit, env') := unit_and_env';
+              specialize (IH2 _ _ Qenv);
+              simp[C2VAL] at IH2;
+              simp;
+              exists val;
+              simp[EVAL];
+          }
+        }
+        case neg EVAL_1 => {
+          simp[EVAL_1];
+          cases C1VAL : (exec c1 env) <;> simp;
+          case some unit_and_e1val => {
+              have (unit, e1val) := unit_and_e1val;
+              specialize (IH1 _ _ Qenv);
+              simp[C1VAL] at IH1;
+              simp;
+              exact Exists.mk e1val IH1;
+          }
+        }
+    }
+  }
+}
 
 structure Rewrite where
   find: Command
