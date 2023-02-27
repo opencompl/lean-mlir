@@ -1,6 +1,9 @@
 -- We create a verified conversion from SSA minus Regions (ie, a sequence
 -- of let bindings) into an expression tree. We prove that this
 -- conversion preserves program semantics.
+import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Function
+import Mathlib.Data.Set.Image
 import Aesop
 
 -- Kinds of values
@@ -17,7 +20,7 @@ inductive ExprKind
 abbrev Var := String
 
 -- Well typed, simply typed kinds of ops. eg. 'add' takes two 'ints' and returns an 'int'
-inductive OpKind : Kind →Kind → Type
+inductive OpKind : Kind → Kind → Type
 | add: OpKind (.pair int int) int
 | const : OpKind unit int
 | sub: OpKind (.pair int int) int
@@ -214,7 +217,7 @@ def EvalContext.bottom (kindMotive: Kind → Type) : EvalContext kindMotive := f
 def EvalContext.bind {kindMotive: Kind → Type}
   (bindname : String) (bindk: Kind) (bindv: kindMotive bindk)
   (ctx: EvalContext kindMotive) : EvalContext kindMotive :=
-  fun name => if (bindname = name) then .some ⟨bindk, bindv⟩ else ctx name
+  fun name => if (name = bindname) then .some ⟨bindk, bindv⟩ else ctx name
 
 -- lookup a binding by both name and kind.
 def EvalContext.lookupByKind {kindMotive: Kind → Type} (ctx: EvalContext kindMotive)
@@ -243,7 +246,7 @@ noncomputable def Expr.fold? -- version of fold that returns option.
     | .some argv =>
         match ctx ret with
         | .some _ => .none
-        | .none => ctx.bind ret o (opFold opkind argv) 
+        | .none => ctx.bind ret o (opFold opkind argv)
 | .pair ret arg1 k1 arg2 k2 =>
   match ctx.lookupByKind arg1 k1, ctx.lookupByKind arg2 k2 with
     | .some arg1v, .some arg2v =>
@@ -259,7 +262,10 @@ noncomputable def Expr.fold? -- version of fold that returns option.
 #print Expr.fold?.match_3
 
 
--- if 'Expr.fold?' succeeds, then the final environment contains a value of 
+/-
+TODO: simplify by using the proofs of 'EvalContext.toDefContext.preimage_*'
+-/
+-- if 'Expr.fold?' succeeds, then the final environment contains a value of
 -- kind 'retKind' at name 'retVar'
 theorem Expr.fold?_succeeds_implies_ret_exists
   {kindMotive: Kind → Type} -- what each kind is compiled into.
@@ -267,7 +273,7 @@ theorem Expr.fold?_succeeds_implies_ret_exists
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
   (evalctx evalctx' : EvalContext kindMotive)
   (e : Expr ek)
-  (SUCCESS: .some evalctx' = e.fold? opFold pairFold evalctx):  
+  (SUCCESS: .some evalctx' = e.fold? opFold pairFold evalctx):
   { val: kindMotive e.retKind // evalctx'.lookupByKind e.retVar e.retKind = .some val } := by {
     revert evalctx' evalctx;
     induction e <;> intros evalctx evalctx' SUCCESS;
@@ -285,7 +291,7 @@ theorem Expr.fold?_succeeds_implies_ret_exists
                 apply Eq.refl;
             }
         }
-      } 
+      }
     }
     case pair ret arg1 kind1 arg2 kind2 => {
       simp[fold?] at *;
@@ -320,9 +326,9 @@ theorem Expr.fold?_succeeds_implies_ret_exists
             specialize (IH2 _ _ (Eq.symm OP2_VAL));
             rw[retKind];
             exact IH2;
-          } 
+          }
         }
-    } 
+    }
 }
 
 
@@ -356,7 +362,7 @@ def EvalContext.toDefContext (ctx: EvalContext kindMotive): DefContext :=
     | .none => .none
     | .some ⟨k, _kv⟩ => k
 
--- show that 'evalcontext' and 'todefcontext' agree. 
+-- show that 'evalcontext' and 'todefcontext' agree.
 theorem EvalContext.toDefContext.agreement:
 ∀ ⦃ctx: EvalContext kindMotive⦄  ⦃name: String⦄,
   (ctx name).isSome ↔ (ctx.toDefContext name).isSome := by {
@@ -364,6 +370,70 @@ theorem EvalContext.toDefContext.agreement:
     simp[toDefContext];
     cases ctx name <;> simp;
 }
+
+section ExprFoldExtraction
+
+/-
+Showing that a value can be extracted out of Expr.fold?
+whenever the expr is well formed.
+-/
+
+-- If 'dctx' has a value at 'name', then so does 'ectx' at 'name' if
+-- 'dctx' came from 'ectx'.
+theorem EvalContext.toDefContext.preimage_some
+  { kindMotive: Kind → Type} -- what each kind is compiled into.
+  {ectx: EvalContext kindMotive}
+  {dctx: DefContext}
+  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {name : String}
+  {kind : Kind}
+  (LOOKUP: dctx name = .some kind) :
+  ∃ (val : kindMotive kind), ectx name = .some ⟨kind, val⟩ := by {
+    rewrite[← DCTX] at LOOKUP;
+    simp[toDefContext] at LOOKUP;
+    rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
+}
+
+theorem EvalContext.toDefContext.preimage_none
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {ectx: EvalContext kindMotive}
+  {dctx: DefContext}
+  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {name : String}
+  (LOOKUP: dctx name = .none) :
+  ectx name = .none := by {
+    rewrite[← DCTX] at LOOKUP;
+    simp[toDefContext] at LOOKUP;
+    rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
+}
+
+theorem EvalContext.toDefContext.bind
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {ectx: EvalContext kindMotive}
+  {dctx: DefContext}
+  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {kind : Kind}
+  {val: kindMotive kind}
+  {name: String} :
+  (EvalContext.bind name kind val ectx).toDefContext = DefContext.bind name kind dctx := by {
+    funext key;
+    simp[toDefContext, DefContext.bind, EvalContext.bind];
+    by_cases NAME:(key = name) <;> simp[NAME];
+    case neg => {
+      simp[NAME];
+      simp[toDefContext];
+      cases DCTX_KEY:(dctx key);
+      case none => {
+        have ECTX_KEY := EvalContext.toDefContext.preimage_none DCTX DCTX_KEY;
+        simp[ECTX_KEY];
+      }
+      case some => {
+        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toDefContext.preimage_some DCTX DCTX_KEY;
+        simp[ECTX_KEY];
+      }
+    }
+}
+
 -- 'fold?' will return a 'some' value
 -- Note that here, we must ford DEFCTX, since to perform induction on 'wellformed',
 -- we need the indexes of 'wellformed' to be variables.
@@ -378,8 +448,40 @@ theorem Expr.fold?_succeeds_iff_expr_wellformed
   (WF: ExprWellFormed defctx e defctx') :  ∃ evalctx',
   (e.fold? opFold pairFold evalctx = .some evalctx') ∧
   (evalctx'.toDefContext = defctx') := by {
-    sorry
+    revert evalctx;
+    induction WF;
+    case assign i o ret arg evalctx_defctx name ARG RET => {
+      intros evalctx EVALCTX_DEFCTX;
+      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG;
+      have RET_VAL := EvalContext.toDefContext.preimage_none EVALCTX_DEFCTX RET;
+      simp[fold?] at *;
+      simp[EvalContext.lookupByKind] at *;
+      simp[ARG_VAL];
+      simp[RET_VAL];
+      apply EvalContext.toDefContext.bind EVALCTX_DEFCTX;
+    }
+    case pair defctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
+      intros evalctx EVALCTX_DEFCTX;
+      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG1;
+      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG2;
+      have RET_VAL := EvalContext.toDefContext.preimage_none EVALCTX_DEFCTX RET;
+      simp[fold?];
+      simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
+      apply EvalContext.toDefContext.bind EVALCTX_DEFCTX;
+    }
+    case ops op ops ctxbegin ctxend ctxmid WF_OP WF_OPS IH1 IH2 => {
+      intros evalctx EVALCTX_DEFCTX;
+      simp[fold?];
+      -- @chris: how do I do this while specializing IH1?
+      have ⟨evalctx1, EVALCTX1, EVALCTX1_DEFCTX⟩ := IH1 evalctx EVALCTX_DEFCTX;
+      simp[EVALCTX1];
+      have ⟨evalctx2, EVALCTX2, EVALCTX2_DEFCTX⟩ := IH2 evalctx1 EVALCTX1_DEFCTX;
+      simp[EVALCTX2];
+      apply EVALCTX2_DEFCTX;
+    }
 }
+
+end ExprFoldExtraction
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
@@ -394,7 +496,7 @@ def Tree.eval
   : Tree k → kindMotive k
 | .assign opk ti =>
     opFold opk (ti.eval kindMotive opFold pairFold)
-| .pair ta tb => 
+| .pair ta tb =>
     pairFold
       (ta.eval kindMotive opFold pairFold)
       (tb.eval kindMotive opFold pairFold)
@@ -404,9 +506,9 @@ def Tree.eval
 Convert an 'Expr' into a tree. Show that this succeeds if 'e' passes well formedness.
 -/
 noncomputable def Expr.toTree? (ctx: EvalContext Tree) (e : Expr ek): Option (Tree (e.retKind)) :=
-  do 
+  do
   let env ← Expr.fold? (Tree.assign) (Tree.pair) ctx e
-  let val ← env.lookupByKind e.retVar e.retKind 
+  let val ← env.lookupByKind e.retVar e.retKind
   return val
 
 -- Annoying, this does not help, since it does not let us talk about program fragments.
