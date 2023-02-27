@@ -187,17 +187,25 @@ def Expr.wellFormed (e: Expr k) (ctx: DefContext := DefContext.bottom): Prop
 
 -- context necessary for evaluating expressions.
 def EvalContext (kindMotive: Kind → Type) : Type
-  := String → (kind: Kind) → Option (kindMotive kind)
+  := String → Option ((kind: Kind) × (kindMotive kind))
 
 -- empty evaluation context.
-def EvalContext.bottom (kindMotive: Kind → Type) : EvalContext kindMotive := fun _ _ => .none
+def EvalContext.bottom (kindMotive: Kind → Type) : EvalContext kindMotive := fun _  => .none
 
 -- add a binding into the evaluation context.
 def EvalContext.bind {kindMotive: Kind → Type} 
   (bindname : String) (bindk: Kind) (bindv: kindMotive bindk)
   (ctx: EvalContext kindMotive) : EvalContext kindMotive := 
-  fun name kind => if H : ((bindname = name) ∧ (kind = bindk))
-  then H.right ▸ bindv else ctx name kind
+  fun name => if (bindname = name) then .some ⟨bindk, bindv⟩ else ctx name
+
+def EvalContext.lookupByKind {kindMotive: Kind → Type} (ctx: EvalContext kindMotive)
+  (name : String) (needlekind: Kind) : Option (kindMotive needlekind) :=
+  match ctx name with
+  | .none => .none
+  | .some ⟨k, kv⟩ =>
+      if NEEDLE : needlekind = k
+      then NEEDLE ▸ kv
+      else .none 
 
 /-
 TODO: why is this 'noncomputable' ?
@@ -211,19 +219,25 @@ noncomputable def Expr.fold? -- version of fold that returns option.
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
   (ctx : EvalContext kindMotive): (e : Expr ek) → Option (kindMotive e.retKind)
 | .assign (i := i) (o := o) ret opkind arg =>
-    match ctx arg i with
-    | .some argv => opFold opkind argv 
+    match ctx.lookupByKind arg i with
     | .none => .none
+    | .some argv => 
+        match ctx ret with
+        | .some _ => .none 
+        | .none => opFold opkind argv
 | .pair ret arg1 k1 arg2 k2 => 
-  match ctx arg1 k1, ctx arg2 k2 with 
-    | .some arg1v, .some arg2v => pairFold arg1v arg2v
+  match ctx.lookupByKind arg1 k1, ctx.lookupByKind arg2 k2 with 
+    | .some arg1v, .some arg2v => 
+      match ctx ret with
+      | .some _ => .none
+      | .none => pairFold arg1v arg2v
     | _, _ => .none
 | .ops o1 o2 => 
   match o1.fold? opFold pairFold ctx with
   | .none => .none
   | .some v => 
-    let ctx' := ctx.bind (Op.ret o1) o1.retKind v 
-    o2.fold? opFold pairFold ctx' 
+      let ctx' := ctx.bind (Op.ret o1) o1.retKind v 
+      o2.fold? opFold pairFold ctx' 
 #print Expr.fold?.match_3
 
 
@@ -249,10 +263,70 @@ def extraction : Nat :=
 #reduce extraction -- 42
 end extractFromOption
 
-def EvalContext.toDefContext (ctx: EvalContext kindMotive): DefContext := sorry
+-- Treat an eval context as a def context by ignoring the eval value.
+def EvalContext.toDefContext (ctx: EvalContext kindMotive): DefContext := 
+  fun name => 
+    match ctx name with 
+    | .none => .none
+    | .some ⟨k, _kv⟩ => k
 
 -- 'fold?' will return a 'some' value 
 theorem Expr.fold?_succeeds_iff_expr_wellformed
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)  
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (evalctx : EvalContext kindMotive)
+  (e : Expr ek)
+  (WF: e.wellFormed evalctx.toDefContext) : (e.fold? opFold pairFold evalctx).isSome := by {
+    simp[wellFormed] at WF;
+    have ⟨ctx', WF⟩ := WF;
+    induction WF; -- this does not work because WF has 'evalctx.toDefContext' as argument. use fording.
+    revert WF;
+    revert evalctx;
+    induction e;
+    case assign i o ret kind arg => {
+      intros evalctx WF;
+      simp[Expr.fold?];
+      simp[wellFormed] at WF;
+      have ⟨ctx', WF⟩ := WF;
+      cases WF; case assign RET ARG => {
+          simp[EvalContext.lookupByKind];
+          simp[EvalContext.toDefContext] at RET;
+          simp[EvalContext.toDefContext] at ARG;
+          cases EVALCTX_AT_ARG:(evalctx arg) <;> simp[EVALCTX_AT_ARG] at ARG <;> simp[ARG];
+          case some argval => {
+            induction ARG; case refl => { simp; }
+          } 
+      }
+    }
+    case pair ret arg1 k1 arg2 k2 => {
+      intros evalctx WF;
+      simp[Expr.fold?];
+      simp[wellFormed] at WF;
+      have ⟨ctx', WF⟩ := WF;
+      cases WF; case pair RET ARG1 ARG2 => {
+        sorry;
+      }
+    }
+    case ops op1 op2 IH1 IH2 => {
+      intros evalctx WF;
+      simp[Expr.fold?];
+      simp[wellFormed] at WF;
+      have ⟨ctxend, WF⟩ := WF;
+      cases WF; case ops ctxmid WF1 WF2 => {
+        simp[wellFormed] at IH1;
+        specialize IH1 evalctx ctxmid WF1;
+        cases FOLD_OP1:((fold? (fun {i o} => opFold) (fun {i i'} => pairFold) evalctx op1)) <;>
+          simp[FOLD_OP1] at IH1 <;> simp; case some op1_val => {
+            apply IH2;
+            simp[wellFormed];
+                
+            
+
+        }
+      }
+    }
+}
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
