@@ -72,26 +72,31 @@ inductive Turnip (e : Env) (Γ : Context) : Kind → Type
   | decl : {k : Kind} → Decl e k → Turnip e Γ k
   | const : {k : Kind} → Const k → Turnip e Γ k
   | var : {k : Kind} → Var Γ k → Turnip e Γ k
+  | pair : {k₁ k₂ : Kind} → Turnip e Γ k₁ →
+      Turnip e Γ k₂ → Turnip e Γ (Kind.pair k₁ k₂)
+  | fst : {k₁ k₂ : Kind} → Turnip e Γ (Kind.pair k₁ k₂) → Turnip e Γ k₁
+  | snd : {k₁ k₂ : Kind} → Turnip e Γ (Kind.pair k₁ k₂) → Turnip e Γ k₂
 
 -- -- Tagged expressiontrees
 inductive Expr (e : Env) : Context → Kind → Type where
   | _let {Γ : Context}
-    {cod dom k : Kind}
-    (func : Turnip e Γ (dom.arrow cod))
-    (arg : Turnip e Γ cod)
-    (exp : Expr e (Γ.snoc dom) k)
-    -- let _ : dom = decl arg in exp
+    {a b k : Kind}
+    (f : Turnip e Γ (a.arrow b))
+    (x : Turnip e Γ a)
+    (exp : Expr e (Γ.snoc b) k)
+    -- let _ : b = f x in exp
     : Expr e Γ k
-  | letf {Γ : Context}
-    {cod dom k : Kind}
-    (func : Turnip e Γ (dom.arrow cod))
-    (arg : Turnip e Γ cod)
-    (exp : Expr e (Γ.snoc dom) k)
+  | letlam {Γ : Context}
+    {dom a cod k : Kind}
+    (f : Turnip e (Γ.snoc dom) (a.arrow cod))
+    (x : Turnip e (Γ.snoc dom) a)
+    (exp : Expr e (Γ.snoc (dom.arrow cod)) k)
+    -- let _ : dom → cod := λ _, f x in exp
     : Expr e Γ k
   | app {Γ : Context}
-    {cod dom : Kind}
-    (func : Turnip e Γ (dom.arrow cod))
-    (arg : Turnip e Γ cod)
+    {a b : Kind}
+    (func : Turnip e Γ (a.arrow b))
+    (arg : Turnip e Γ a)
     : Expr e Γ cod
 
 
