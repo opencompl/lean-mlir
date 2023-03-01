@@ -98,7 +98,7 @@ inductive ExprWellFormed : DefContext → Expr kind → DefContext → Type wher
   ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) (ctx.bind ret (Kind.pair k1 k2))
 | ops
   {ctxbegin ctxend : DefContext}
-  ⦃ctxmid : DefContext⦄
+  {ctxmid : DefContext}
   (WF1: ExprWellFormed ctxbegin op1 ctxmid)
   (WF2: ExprWellFormed ctxmid op2 ctxend) :
   ExprWellFormed ctxbegin (Expr.ops op1 op2) ctxend
@@ -459,6 +459,7 @@ whenever the expr is well formed.
 
 -- If 'dctx' has a value at 'name', then so does 'ectx' at 'name' if
 -- 'dctx' came from 'ectx'.
+-- @chris: what's the mathlib version of this?
 theorem EvalContext.toDefContext.preimage_some
   { kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
@@ -467,7 +468,7 @@ theorem EvalContext.toDefContext.preimage_some
   {name : String}
   {kind : Kind}
   (LOOKUP: dctx name = .some kind) :
-  ∃ (val : kindMotive kind), ectx name = .some ⟨kind, val⟩ := by {
+  { val : kindMotive kind // ectx name = .some ⟨kind, val⟩ } := by {
     rewrite[← DCTX] at LOOKUP;
     simp[toDefContext] at LOOKUP;
     rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
@@ -578,15 +579,22 @@ theorem Expr.fold?_isSome_if_expr_wellformed
 end ExprFoldExtraction
 
 
+-- ERROR: IR check failed at 'Expr.fold', error: unknown declaration EvalContext.toDefContext.preimage_some'
 def Expr.fold
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  (evalctx : EvalContext kindMotive)
-  (e : Expr ek)
-  (defctx : DefContext)
-  (WF: ExprWellFormed defctx e defctx') : kindMotive e.retKind := sorry
-
+  {evalctx : EvalContext kindMotive}
+  {e : Expr ek}
+  {defctx : DefContext}
+  (DEFCTX: evalctx.toDefContext = defctx)
+  (WF: ExprWellFormed defctx e defctx') : kindMotive e.retKind :=
+  match ek, e, WF with
+  | .O, .assign (i := i) (o := o)  ret ekind arg, .assign ARG RET =>
+    let ⟨arg_val, ARG_VAL⟩ := EvalContext.toDefContext.preimage_some DEFCTX ARG;
+    opFold ekind arg_val
+  | .O, .pair ret arg1 k1 arg2 k2, .pair .. => sorry
+  | .Os, .ops op ops', .ops .. => sorry
 
 
 -- Expression tree which produces a value of kind 'Kind'.
