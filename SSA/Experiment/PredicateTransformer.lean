@@ -335,7 +335,12 @@ structure Rewrite where
   find: Command
   replace : Command
   correct: ∀ (post: assertion), (replace.sp (find.wp post)).implies post
-
+---
+-- {???} <find> {<post>}
+-- {wp(<post>)} <find> {<post>}
+-- {wp(<post>)} <replace> {???}
+-- {wp(<post>)} <replace> {sp(wp(<post>>))}
+-- sp(wp(<post>>)) => <post>
 
 def rewriteSubSubXEqZero : Rewrite :=
   {
@@ -354,10 +359,9 @@ def rewriteSubSubXEqZero : Rewrite :=
         simp[E1] at E3;
         simp[Expr.eval, pure] at E3;
         suffices (Env.set { name := "out", val := outv } fun key => if key = "out" then moutv else env key) = env by {
-          aesop;
+          subst E1; simp_all only
         }
-        funext key;
-        simp[Env.set];
+        funext key; simp[Env.set];
         by_cases KEY:(key = "out") <;> simp[KEY, E3];
       }
     }
