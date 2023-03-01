@@ -69,83 +69,83 @@ inductive ExprTree where
 | pair: ExprTree → ExprTree → ExprTree
 | compute: ExprTree → ExprKind → ExprTree
 
--- A DefContext that tracks which variables have been defined.
-def DefContext := String → Option Kind
+-- A TypingContext that tracks which variables have been defined.
+def TypingContext := String → Option Kind
 
 -- empty def context
-def DefContext.bottom : DefContext := fun _ => .none
+def TypingContext.bottom : TypingContext := fun _ => .none
 
 -- bind the name 'name' of kind 'kind' to the def context 'ctx.
-def DefContext.bind (bindname : String) (bindkind: Kind) (ctx: DefContext): DefContext :=
+def TypingContext.bind (bindname : String) (bindkind: Kind) (ctx: TypingContext): TypingContext :=
   fun name => if name = bindname then bindkind else ctx name
 
 -- inductive propsition which asserts when an expression is well formed.
-inductive ExprWellFormed : DefContext → Expr kind → DefContext → Type where
+inductive ExprWellTyped : TypingContext → Expr kind → TypingContext → Type where
 | assign
     {ret arg : Var}
-    {ctx : DefContext}
+    {ctx : TypingContext}
     {kind: OpKind i o}
     (ARG : ctx arg = .some i)
     (RET: ctx ret = .none) :
-    ExprWellFormed ctx (Op.assign ret kind arg) (ctx.bind ret o)
+    ExprWellTyped ctx (Op.assign ret kind arg) (ctx.bind ret o)
 | pair
-  {ctx : DefContext}
+  {ctx : TypingContext}
   {ret arg1 arg2 : Var}
   {k1 k2 : Kind}
   (ARG1 : ctx arg1 = .some k1)
   (ARG2 : ctx arg2 = .some k2)
   (RET: ctx ret = .none) :
-  ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) (ctx.bind ret (Kind.pair k1 k2))
+  ExprWellTyped ctx (Op.pair ret arg1 k1 arg2 k2) (ctx.bind ret (Kind.pair k1 k2))
 | ops
-  {ctxbegin ctxend : DefContext}
-  {ctxmid : DefContext}
-  (WF1: ExprWellFormed ctxbegin op1 ctxmid)
-  (WF2: ExprWellFormed ctxmid op2 ctxend) :
-  ExprWellFormed ctxbegin (Expr.ops op1 op2) ctxend
+  {ctxbegin ctxend : TypingContext}
+  {ctxmid : TypingContext}
+  (WF1: ExprWellTyped ctxbegin op1 ctxmid)
+  (WF2: ExprWellTyped ctxmid op2 ctxend) :
+  ExprWellTyped ctxbegin (Expr.ops op1 op2) ctxend
 
 -- forded version of `assign` that allows an arbitrary `ctx'`, while stipuating
 -- what conditions `ctx'` needs to satisfy
-def ExprWellFormed.mk_assign
+def ExprWellTyped.mk_assign
   {kind : OpKind i o}
   (ARG: ctx arg = .some i)
   (RET: ctx ret = .none)
   (CTX': ctx' = ctx.bind ret o)
-  : ExprWellFormed ctx (Op.assign ret kind arg) ctx' :=
-    CTX' ▸ (ExprWellFormed.assign ARG RET) -- @chris: is this evil?
+  : ExprWellTyped ctx (Op.assign ret kind arg) ctx' :=
+    CTX' ▸ (ExprWellTyped.assign ARG RET) -- @chris: is this evil?
 
 -- forded version of `pair` that allows an arbitrary `ctx'`, while stipuating
 -- what conditions `ctx'` needs to satisfy
-def ExprWellFormed.mk_pair
+def ExprWellTyped.mk_pair
   {k1 k2: Kind}
   (ARG1: ctx arg1 = .some k1)
   (ARG2: ctx arg2 = .some k2)
   (RET: ctx ret = .none)
   (CTX': ctx' = ctx.bind ret (Kind.pair k1 k2))
-  : ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) ctx' :=
-    CTX' ▸ (ExprWellFormed.pair ARG1 ARG2 RET) -- @chris: is this evil?
+  : ExprWellTyped ctx (Op.pair ret arg1 k1 arg2 k2) ctx' :=
+    CTX' ▸ (ExprWellTyped.pair ARG1 ARG2 RET) -- @chris: is this evil?
 
--- inversion theorems for 'ExprWellFormed'
-def ExprWellFormed.assign_inv {ctx ctx' : DefContext} {ret arg : Var} {kind: OpKind i o}
-  (WF: ExprWellFormed ctx (Op.assign ret kind arg) ctx'):
+-- inversion theorems for 'ExprWellTyped'
+def ExprWellTyped.assign_inv {ctx ctx' : TypingContext} {ret arg : Var} {kind: OpKind i o}
+  (WF: ExprWellTyped ctx (Op.assign ret kind arg) ctx'):
   ctx arg = .some i ∧ ctx ret = .none ∧ ctx' = ctx.bind ret o :=
   match WF with
-  | ExprWellFormed.assign ARG RET => ⟨ARG, RET, rfl⟩
+  | ExprWellTyped.assign ARG RET => ⟨ARG, RET, rfl⟩
 
-def ExprWellFormed.pair_inv {ctx ctx' : DefContext} {ret arg1 arg2 : Var} {k1 k2 : Kind}
-  (WF: ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) ctx') :
+def ExprWellTyped.pair_inv {ctx ctx' : TypingContext} {ret arg1 arg2 : Var} {k1 k2 : Kind}
+  (WF: ExprWellTyped ctx (Op.pair ret arg1 k1 arg2 k2) ctx') :
   ctx arg1 = .some k1 ∧ ctx arg2 = .some k2 ∧ ctx ret = .none ∧ ctx' = ctx.bind ret (Kind.pair k1 k2) :=
   match WF with
-  | ExprWellFormed.pair ARG1 ARG2 RET => ⟨ARG1, ARG2, RET, rfl⟩
+  | ExprWellTyped.pair ARG1 ARG2 RET => ⟨ARG1, ARG2, RET, rfl⟩
 
-def ExprWellFormed.ops_inv {ctxbegin ctxend : DefContext} {op1 : Expr .O} {ops : Expr .Os}
-  (WF: ExprWellFormed ctxbegin (Expr.ops op1 ops) ctxend) :
-  Σ ctxmid, (ExprWellFormed ctxbegin op1 ctxmid) ×  (ExprWellFormed ctxmid ops ctxend) :=
+def ExprWellTyped.ops_inv {ctxbegin ctxend : TypingContext} {op1 : Expr .O} {ops : Expr .Os}
+  (WF: ExprWellTyped ctxbegin (Expr.ops op1 ops) ctxend) :
+  Σ ctxmid, (ExprWellTyped ctxbegin op1 ctxmid) ×  (ExprWellTyped ctxmid ops ctxend) :=
   match WF with
-  | ExprWellFormed.ops (ctxmid := ctxmid)  WF1 WF2 => ⟨ctxmid, WF1, WF2⟩
+  | ExprWellTyped.ops (ctxmid := ctxmid)  WF1 WF2 => ⟨ctxmid, WF1, WF2⟩
 
 
 -- computational version of 'ExpreWellFormed' for reflection.
-def ExprWellFormed.compute : Expr kind → DefContext → Option DefContext
+def ExprWellTyped.compute : Expr kind → TypingContext → Option TypingContext
 | (.assign (i := i) (o := o) ret kind arg), ctx =>
     if ctx ret ≠ .none
     then .none
@@ -158,14 +158,14 @@ def ExprWellFormed.compute : Expr kind → DefContext → Option DefContext
     else if ctx arg2 ≠ k2 then .none
     else .some (ctx.bind ret (Kind.pair k1 k2))
 | (Expr.ops op1 op2), ctx =>
-    Option.bind (ExprWellFormed.compute op1 ctx) (ExprWellFormed.compute op2)
+    Option.bind (ExprWellTyped.compute op1 ctx) (ExprWellTyped.compute op2)
 
 -- completeness: if the inducitve propositoin holds, then the decision
 -- procedure says yes.
-theorem ExprWellFormed.prop_implies_compute:
-  ∀ {ctx ctx' : DefContext} {expr : Expr kind},
-  ExprWellFormed ctx expr ctx' ->
-  .some ctx' = ExprWellFormed.compute expr ctx := by {
+theorem ExprWellTyped.prop_implies_compute:
+  ∀ {ctx ctx' : TypingContext} {expr : Expr kind},
+  ExprWellTyped ctx expr ctx' ->
+  .some ctx' = ExprWellTyped.compute expr ctx := by {
   intros ctx ctx' expr;
   revert ctx ctx';
   induction expr;
@@ -199,18 +199,18 @@ theorem ExprWellFormed.prop_implies_compute:
 
 -- a expr and a ctx uniquely determine a ctx' if it exists.
 -- @chris: is there a name for this? Should I make this a `FunLike`?
-theorem ExprWellFormed.deterministic
-  {ctx ctx' ctx'' : DefContext} {expr : Expr kind}
-  (WF1: ExprWellFormed ctx expr ctx') (WF2: ExprWellFormed ctx expr ctx'') : ctx' = ctx'' := by {
-    have COMPUTE1 := ExprWellFormed.prop_implies_compute WF1;
-    have COMPUTE2 := ExprWellFormed.prop_implies_compute WF2;
+theorem ExprWellTyped.deterministic
+  {ctx ctx' ctx'' : TypingContext} {expr : Expr kind}
+  (WF1: ExprWellTyped ctx expr ctx') (WF2: ExprWellTyped ctx expr ctx'') : ctx' = ctx'' := by {
+    have COMPUTE1 := ExprWellTyped.prop_implies_compute WF1;
+    have COMPUTE2 := ExprWellTyped.prop_implies_compute WF2;
     rw[← COMPUTE1] at COMPUTE2;
     injection COMPUTE2 with EQ;
     exact (Eq.symm EQ); -- @chris: why is this not a simp lemma?
  }
 
 
-instance : Subsingleton (@ExprWellFormed ek ctx op ctx') :=
+instance : Subsingleton (@ExprWellTyped ek ctx op ctx') :=
  ⟨fun wf1 wf2 => by {
     induction wf1;
     case assign i o ret arg ctx kind ARG RET => {
@@ -222,8 +222,8 @@ instance : Subsingleton (@ExprWellFormed ek ctx op ctx') :=
     case ops op' ops' ctxbegin ctxend ctxmid WF_OP WF_OPS IH_OP IH_OPS => {
       cases wf2;
       case ops ctxmid' WF_OP' WF_OPS' => {
-        -- Need a theorem that ExprWellFormed returns a deterministic "ctx'"
-        have CTXMID_EQ: ctxmid = ctxmid' := ExprWellFormed.deterministic WF_OP WF_OP';
+        -- Need a theorem that ExprWellTyped returns a deterministic "ctx'"
+        have CTXMID_EQ: ctxmid = ctxmid' := ExprWellTyped.deterministic WF_OP WF_OP';
         subst CTXMID_EQ;
         have IH_OP' := IH_OP WF_OP';
         have IH_OPS' := IH_OPS WF_OPS';
@@ -235,22 +235,22 @@ instance : Subsingleton (@ExprWellFormed ek ctx op ctx') :=
 ⟩
 
 -- (compute = true) => (stuff holds)
-theorem ExprWellFormed.compute_implies_prop:
-  ∀ {ctx ctx' : DefContext} {expr : Expr kind},
-  .some ctx' = ExprWellFormed.compute expr ctx ->
-  ExprWellFormed ctx expr ctx' := by {
+theorem ExprWellTyped.compute_implies_prop:
+  ∀ {ctx ctx' : TypingContext} {expr : Expr kind},
+  .some ctx' = ExprWellTyped.compute expr ctx ->
+  ExprWellTyped ctx expr ctx' := by {
   intros ctx ctx' expr;
   revert ctx ctx';
   induction expr;
   case assign ret kind arg => {
     intros ctx ctx' COMPUTE;
     simp[compute] at COMPUTE;
-    apply ExprWellFormed.mk_assign <;> aesop;
+    apply ExprWellTyped.mk_assign <;> aesop;
   }
   case pair ret arg1 arg2 => {
     intros ctx ctx' COMPUTE;
     simp[compute] at COMPUTE;
-    apply ExprWellFormed.mk_pair <;> aesop;
+    apply ExprWellTyped.mk_pair <;> aesop;
   }
   case ops o1 o2 IH1 IH2 => {
     intros ctx ctx'' COMPUTE;
@@ -258,20 +258,20 @@ theorem ExprWellFormed.compute_implies_prop:
     cases CTXO1:(compute o1 ctx) <;> simp[CTXO1] at COMPUTE; case some ctx' => {
       cases CTXO2:(compute o2 ctx') <;> simp[CTXO2] at COMPUTE; case some ctx''_2 => {
         subst COMPUTE;
-        apply ExprWellFormed.ops (ctxmid := ctx') <;> aesop;
+        apply ExprWellTyped.ops (ctxmid := ctx') <;> aesop;
       }
     }
   }
 }
 
--- Reflection tactic to reflect the proof level 'ExprWellFormed'
--- into computation level 'ExprWellFormed.compute'
+-- Reflection tactic to reflect the proof level 'ExprWellTyped'
+-- into computation level 'ExprWellTyped.compute'
 -- @chris: is this theorem even useful?
-theorem ExprWellFormed.reflect (ctx : DefContext) (expr : Expr kind) :
-  { ctxfun : DefContext // .some ctxfun = ExprWellFormed.compute expr ctx } ≃
-  Σ (ctxprop : DefContext), (ExprWellFormed ctx expr ctxprop) := {
-    toFun := fun ctxfun => ⟨ctxfun.val, ExprWellFormed.compute_implies_prop ctxfun.property⟩
-    invFun := fun WF => ⟨WF.fst, ExprWellFormed.prop_implies_compute WF.snd⟩,
+theorem ExprWellTyped.reflect (ctx : TypingContext) (expr : Expr kind) :
+  { ctxfun : TypingContext // .some ctxfun = ExprWellTyped.compute expr ctx } ≃
+  Σ (ctxprop : TypingContext), (ExprWellTyped ctx expr ctxprop) := {
+    toFun := fun ctxfun => ⟨ctxfun.val, ExprWellTyped.compute_implies_prop ctxfun.property⟩
+    invFun := fun WF => ⟨WF.fst, ExprWellTyped.prop_implies_compute WF.snd⟩,
     left_inv := by { intros CTXFUN; simp; },
     right_inv := by {
       intros WF; cases WF with | mk => simp;
@@ -280,13 +280,14 @@ theorem ExprWellFormed.reflect (ctx : DefContext) (expr : Expr kind) :
 
 -- An expression is said to well formed if it is well formed
 -- starting from the given context.
-def Expr.wellFormed (e: Expr k) (ctx: DefContext := DefContext.bottom) : Type
-  := Σ ctx', ExprWellFormed ctx e ctx'
+def Expr.wellFormed (e: Expr k) (ctx: TypingContext := TypingContext.bottom) : Type
+  := Σ ctx', ExprWellTyped ctx e ctx'
 
 
 -- context necessary for evaluating expressions.
 def EvalContext (kindMotive: Kind → Type) : Type
   := String → Option ((kind: Kind) × (kindMotive kind))
+
 
 -- empty evaluation context.
 def EvalContext.bottom (kindMotive: Kind → Type) : EvalContext kindMotive := fun _  => .none
@@ -306,6 +307,34 @@ def EvalContext.lookupByKind {kindMotive: Kind → Type} (ctx: EvalContext kindM
       if NEEDLE : needlekind = k
       then NEEDLE ▸ kv
       else .none
+
+/-  Expression evalation as a relation. -/
+-- (kernel) arg #10 of 'ExprEval.ops' contains a non valid occurrence of the datatypes being declared
+inductive ExprEval {kindMotive : Kind → Type}
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')) :
+  (EvalContext kindMotive) → Expr ek → (EvalContext kindMotive) → Type where
+  | assign {ctx: EvalContext kindMotive}
+    {i o : Kind}
+    {opkind: OpKind i o}
+    {argv: kindMotive i}
+    (ARG: ctx.lookupByKind arg i = .some argv)
+    (RET: ctx ret = .none)
+    : ExprEval opFold pairFold ctx (Op.assign ret opkind arg) (ctx.bind ret o (opFold opkind argv))
+  | tuple
+    {ctx: EvalContext kindMotive}
+    {v1: kindMotive k1}
+    {v2: kindMotive k2}
+    (ARG1: ctx.lookupByKind arg1 k1 = .some v1)
+    (ARG2: ctx.lookupByKind arg1 k2 = .some v2)
+    : ExprEval opFold pairFold ctx (Op.pair ret arg1 k1 arg2 k2) (ctx.bind ret (Kind.pair k1 k2) (pairFold v1 v2))
+  | ops
+    {ctxbegin: EvalContext kindMotive} (ctxmid: EvalContext kindMotive) {ctxend: EvalContext kindMotive}
+    (EVAL_OP: ExprEval opFold pairFold ctx op ctxmid)
+    (EVAL_OPS: ExprEval opFold pairFold ctxmid ops ctxend)
+    : ExprEval opFold pairFold ctx (Expr.ops op ops) ctxend
+
+
 
 /-
 TODO: @chris why is this 'noncomputable' ?
@@ -341,7 +370,7 @@ noncomputable def Expr.fold? -- version of fold that returns option.
 
 
 /-
-TODO: simplify by using the proofs of 'EvalContext.toDefContext.preimage_*'
+TODO: simplify by using the proofs of 'EvalContext.toTypingContext.preimage_*'
 -/
 -- if 'Expr.fold?' succeeds, then the final environment contains a value of
 -- kind 'retKind' at name 'retVar'
@@ -435,18 +464,18 @@ def extraction : Nat :=
 end extractFromOption
 
 -- Treat an eval context as a def context by ignoring the eval value.
-def EvalContext.toDefContext (ctx: EvalContext kindMotive): DefContext :=
+def EvalContext.toTypingContext (ctx: EvalContext kindMotive): TypingContext :=
   fun name =>
     match ctx name with
     | .none => .none
     | .some ⟨k, _kv⟩ => k
 
 -- show that 'evalcontext' and 'todefcontext' agree.
-theorem EvalContext.toDefContext.agreement:
+theorem EvalContext.toTypingContext.agreement:
 ∀ ⦃ctx: EvalContext kindMotive⦄  ⦃name: String⦄,
-  (ctx name).isSome ↔ (ctx.toDefContext name).isSome := by {
+  (ctx name).isSome ↔ (ctx.toTypingContext name).isSome := by {
     intros ctx name;
-    simp[toDefContext];
+    simp[toTypingContext];
     cases ctx name <;> simp;
 }
 
@@ -460,55 +489,55 @@ whenever the expr is well formed.
 -- If 'dctx' has a value at 'name', then so does 'ectx' at 'name' if
 -- 'dctx' came from 'ectx'.
 -- @chris: what's the mathlib version of this?
-theorem EvalContext.toDefContext.preimage_some
+def EvalContext.toTypingContext.preimage_some
   { kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
-  {dctx: DefContext}
-  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {dctx: TypingContext}
+  (DCTX: EvalContext.toTypingContext ectx = dctx)
   {name : String}
   {kind : Kind}
   (LOOKUP: dctx name = .some kind) :
   { val : kindMotive kind // ectx name = .some ⟨kind, val⟩ } := by {
     rewrite[← DCTX] at LOOKUP;
-    simp[toDefContext] at LOOKUP;
+    simp[toTypingContext] at LOOKUP;
     rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
 }
 
-theorem EvalContext.toDefContext.preimage_none
+theorem EvalContext.toTypingContext.preimage_none
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
-  {dctx: DefContext}
-  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {dctx: TypingContext}
+  (DCTX: EvalContext.toTypingContext ectx = dctx)
   {name : String}
   (LOOKUP: dctx name = .none) :
   ectx name = .none := by {
     rewrite[← DCTX] at LOOKUP;
-    simp[toDefContext] at LOOKUP;
+    simp[toTypingContext] at LOOKUP;
     rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
 }
 
-theorem EvalContext.toDefContext.bind
+theorem EvalContext.toTypingContext.bind
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
-  {dctx: DefContext}
-  (DCTX: EvalContext.toDefContext ectx = dctx)
+  {dctx: TypingContext}
+  (DCTX: EvalContext.toTypingContext ectx = dctx)
   {kind : Kind}
   {val: kindMotive kind}
   {name: String} :
-  (EvalContext.bind name kind val ectx).toDefContext = DefContext.bind name kind dctx := by {
+  (EvalContext.bind name kind val ectx).toTypingContext = TypingContext.bind name kind dctx := by {
     funext key;
-    simp[toDefContext, DefContext.bind, EvalContext.bind];
+    simp[toTypingContext, TypingContext.bind, EvalContext.bind];
     by_cases NAME:(key = name) <;> simp[NAME];
     case neg => {
       simp[NAME];
-      simp[toDefContext];
+      simp[toTypingContext];
       cases DCTX_KEY:(dctx key);
       case none => {
-        have ECTX_KEY := EvalContext.toDefContext.preimage_none DCTX DCTX_KEY;
+        have ECTX_KEY := EvalContext.toTypingContext.preimage_none DCTX DCTX_KEY;
         simp[ECTX_KEY];
       }
       case some => {
-        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toDefContext.preimage_some DCTX DCTX_KEY;
+        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toTypingContext.preimage_some DCTX DCTX_KEY;
         simp[ECTX_KEY];
       }
     }
@@ -522,32 +551,32 @@ theorem Expr.fold?_succeeds_if_expr_wellformed
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
   {evalctx : EvalContext kindMotive}
-  {defctx defctx': DefContext}
-  (DEFCTX: evalctx.toDefContext = defctx)
+  {defctx defctx': TypingContext}
+  (DEFCTX: evalctx.toTypingContext = defctx)
   {e : Expr ek}
-  (WF: ExprWellFormed defctx e defctx') :  ∃ evalctx',
+  (WF: ExprWellTyped defctx e defctx') :  ∃ evalctx',
   (e.fold? opFold pairFold evalctx = .some evalctx') ∧
-  (evalctx'.toDefContext = defctx') := by {
+  (evalctx'.toTypingContext = defctx') := by {
     revert evalctx;
     induction WF;
     case assign i o ret arg evalctx_defctx name ARG RET => {
       intros evalctx EVALCTX_DEFCTX;
-      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG;
-      have RET_VAL := EvalContext.toDefContext.preimage_none EVALCTX_DEFCTX RET;
+      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG;
+      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
       simp[fold?] at *;
       simp[EvalContext.lookupByKind] at *;
       simp[ARG_VAL];
       simp[RET_VAL];
-      apply EvalContext.toDefContext.bind EVALCTX_DEFCTX;
+      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
     }
     case pair defctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
       intros evalctx EVALCTX_DEFCTX;
-      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG1;
-      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toDefContext.preimage_some EVALCTX_DEFCTX ARG2;
-      have RET_VAL := EvalContext.toDefContext.preimage_none EVALCTX_DEFCTX RET;
+      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG1;
+      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG2;
+      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
       simp[fold?];
       simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
-      apply EvalContext.toDefContext.bind EVALCTX_DEFCTX;
+      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
     }
     case ops op ops ctxbegin ctxend ctxmid WF_OP WF_OPS IH1 IH2 => {
       intros evalctx EVALCTX_DEFCTX;
@@ -566,9 +595,9 @@ theorem Expr.fold?_isSome_if_expr_wellformed
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
   {evalctx : EvalContext kindMotive}
-  (DEFCTX: evalctx.toDefContext = defctx)
+  (DEFCTX: evalctx.toTypingContext = defctx)
   {e : Expr ek}
-  (WF: Σ defctx', ExprWellFormed defctx e defctx') :
+  (WF: Σ defctx', ExprWellTyped defctx e defctx') :
   (e.fold? opFold pairFold evalctx).isSome := by{
     rcases WF with ⟨defctx', WF⟩;
     obtain ⟨evalctx', EVALCTX', EVALCTX_DEFCTX'⟩ := Expr.fold?_succeeds_if_expr_wellformed DEFCTX WF;
@@ -579,23 +608,27 @@ theorem Expr.fold?_isSome_if_expr_wellformed
 end ExprFoldExtraction
 
 
--- ERROR: IR check failed at 'Expr.fold', error: unknown declaration EvalContext.toDefContext.preimage_some'
+-- ERROR: IR check failed at 'Expr.fold', error: unknown declaration EvalContext.toTypingContext.preimage_
 def Expr.fold
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
   {evalctx : EvalContext kindMotive}
   {e : Expr ek}
-  {defctx : DefContext}
-  (DEFCTX: evalctx.toDefContext = defctx)
-  (WF: ExprWellFormed defctx e defctx') : kindMotive e.retKind :=
+  {defctx defctx' : TypingContext}
+  (DEFCTX: evalctx.toTypingContext = defctx)
+  (WF: ExprWellTyped defctx e defctx') : kindMotive e.retKind :=
   match ek, e, WF with
   | .O, .assign (i := i) (o := o)  ret ekind arg, .assign ARG RET =>
-    let ⟨arg_val, ARG_VAL⟩ := EvalContext.toDefContext.preimage_some DEFCTX ARG;
+    let ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG;
     opFold ekind arg_val
-  | .O, .pair ret arg1 k1 arg2 k2, .pair .. => sorry
-  | .Os, .ops op ops', .ops .. => sorry
-
+  | .O, .pair ret arg1 k1 arg2 k2, .pair ARG1 ARG2 RET =>
+      let ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG1;
+      let ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG2;
+      pairFold arg1_val arg2_val
+  | .Os, .ops op ops', .ops (ctxmid := ctxmid) (ctxend := ctxend) OP OPS =>
+      let foo := Expr.fold opFold pairFold _ _ _;
+      _
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
