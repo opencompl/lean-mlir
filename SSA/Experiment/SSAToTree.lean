@@ -20,7 +20,7 @@ inductive ExprKind
 abbrev Var := String
 
 -- Well typed, simply typed kinds of ops. eg. 'add' takes two 'ints' and returns an 'int'
-inductive OpKind : Kind → Kind → Type
+ inductive OpKind : Kind → Kind → Type
 | add: OpKind (.pair int int) int
 | const : OpKind unit int
 | sub: OpKind (.pair int int) int
@@ -80,7 +80,7 @@ def DefContext.bind (bindname : String) (bindkind: Kind) (ctx: DefContext): DefC
   fun name => if name = bindname then bindkind else ctx name
 
 -- inductive propsition which asserts when an expression is well formed.
-inductive ExprWellFormed : DefContext → Expr kind → DefContext → Prop where
+inductive ExprWellFormed : DefContext → Expr kind → DefContext → Type where
 | assign
     {ret arg : Var}
     {ctx : DefContext}
@@ -103,6 +103,47 @@ inductive ExprWellFormed : DefContext → Expr kind → DefContext → Prop wher
   (WF2: ExprWellFormed ctxmid op2 ctxend) :
   ExprWellFormed ctxbegin (Expr.ops op1 op2) ctxend
 
+-- forded version of `assign` that allows an arbitrary `ctx'`, while stipuating
+-- what conditions `ctx'` needs to satisfy
+def ExprWellFormed.mk_assign
+  {kind : OpKind i o}
+  (ARG: ctx arg = .some i)
+  (RET: ctx ret = .none)
+  (CTX': ctx' = ctx.bind ret o)
+  : ExprWellFormed ctx (Op.assign ret kind arg) ctx' :=
+    CTX' ▸ (ExprWellFormed.assign ARG RET) -- @chris: is this evil?
+
+-- forded version of `pair` that allows an arbitrary `ctx'`, while stipuating
+-- what conditions `ctx'` needs to satisfy
+def ExprWellFormed.mk_pair
+  {k1 k2: Kind}
+  (ARG1: ctx arg1 = .some k1)
+  (ARG2: ctx arg2 = .some k2)
+  (RET: ctx ret = .none)
+  (CTX': ctx' = ctx.bind ret (Kind.pair k1 k2))
+  : ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) ctx' :=
+    CTX' ▸ (ExprWellFormed.pair ARG1 ARG2 RET) -- @chris: is this evil?
+
+-- inversion theorems for 'ExprWellFormed'
+def ExprWellFormed.assign_inv {ctx ctx' : DefContext} {ret arg : Var} {kind: OpKind i o}
+  (WF: ExprWellFormed ctx (Op.assign ret kind arg) ctx'):
+  ctx arg = .some i ∧ ctx ret = .none ∧ ctx' = ctx.bind ret o :=
+  match WF with
+  | ExprWellFormed.assign ARG RET => ⟨ARG, RET, rfl⟩
+
+def ExprWellFormed.pair_inv {ctx ctx' : DefContext} {ret arg1 arg2 : Var} {k1 k2 : Kind}
+  (WF: ExprWellFormed ctx (Op.pair ret arg1 k1 arg2 k2) ctx') :
+  ctx arg1 = .some k1 ∧ ctx arg2 = .some k2 ∧ ctx ret = .none ∧ ctx' = ctx.bind ret (Kind.pair k1 k2) :=
+  match WF with
+  | ExprWellFormed.pair ARG1 ARG2 RET => ⟨ARG1, ARG2, RET, rfl⟩
+
+def ExprWellFormed.ops_inv {ctxbegin ctxend : DefContext} {op1 : Expr .O} {ops : Expr .Os}
+  (WF: ExprWellFormed ctxbegin (Expr.ops op1 ops) ctxend) :
+  Σ ctxmid, (ExprWellFormed ctxbegin op1 ctxmid) ×  (ExprWellFormed ctxmid ops ctxend) :=
+  match WF with
+  | ExprWellFormed.ops (ctxmid := ctxmid)  WF1 WF2 => ⟨ctxmid, WF1, WF2⟩
+
+
 -- computational version of 'ExpreWellFormed' for reflection.
 def ExprWellFormed.compute : Expr kind → DefContext → Option DefContext
 | (.assign (i := i) (o := o) ret kind arg), ctx =>
@@ -119,42 +160,10 @@ def ExprWellFormed.compute : Expr kind → DefContext → Option DefContext
 | (Expr.ops op1 op2), ctx =>
     Option.bind (ExprWellFormed.compute op1 ctx) (ExprWellFormed.compute op2)
 
--- (compute = true) => (stuff holds)
-theorem ExprWellFormed.compute_implies_prop:
-  ∀ (ctx ctx' : DefContext) (expr : Expr kind),
-  .some ctx' = ExprWellFormed.compute expr ctx ->
-  ExprWellFormed ctx expr ctx' := by {
-  intros ctx ctx' expr;
-  revert ctx ctx';
-  induction expr;
-  case assign ret kind arg => {
-    intros ctx ctx' COMPUTE;
-    simp[compute] at COMPUTE;
-    aesop; constructor <;> aesop;
-  }
-  case pair ret arg1 arg2 => {
-    intros ctx ctx' COMPUTE;
-    simp[compute] at COMPUTE;
-    aesop; constructor <;> aesop;
-  }
-  case ops o1 o2 IH1 IH2 => {
-    intros ctx ctx'' COMPUTE;
-    simp[compute] at COMPUTE;
-    cases CTXO1:(compute o1 ctx) <;> simp[CTXO1] at COMPUTE; case some ctx' => {
-      cases CTXO2:(compute o2 ctx') <;> simp[CTXO2] at COMPUTE; case some ctx''_2 => {
-       -- | TODO @chris: how to write this nicer, to prevent the induction COMPUTE;
-        induction COMPUTE; case refl => {
-          apply ExprWellFormed.ops (ctxmid := ctx') <;> aesop;
-        }
-      }
-    }
-  }
-}
-
 -- completeness: if the inducitve propositoin holds, then the decision
 -- procedure says yes.
 theorem ExprWellFormed.prop_implies_compute:
-  ∀ (ctx ctx' : DefContext) (expr : Expr kind),
+  ∀ {ctx ctx' : DefContext} {expr : Expr kind},
   ExprWellFormed ctx expr ctx' ->
   .some ctx' = ExprWellFormed.compute expr ctx := by {
   intros ctx ctx' expr;
@@ -179,8 +188,8 @@ theorem ExprWellFormed.prop_implies_compute:
     cases WELLFORMED;
     case ops ctx' WF1 WF2 => {
       simp[compute];
-      specialize (IH1 _ _ WF1);
-      specialize (IH2 _ _ WF2);
+      specialize (IH1 WF1);
+      specialize (IH2 WF2);
       cases OP1:(compute op1 ctx) <;> simp[OP1] at IH1;
       cases OP2:(compute op2 ctx') <;> simp[OP2] at IH2;
       aesop;
@@ -188,22 +197,91 @@ theorem ExprWellFormed.prop_implies_compute:
   }
 }
 
--- Reflection tactic to reflect the proof level 'ExprWellFormed'
--- into computation level 'ExprWellFormed.compute'
-theorem ExprWellFormed.reflect :
-  ∀ (ctx ctx' : DefContext) (expr : Expr kind),
-  .some ctx' = ExprWellFormed.compute expr ctx <->
+-- a expr and a ctx uniquely determine a ctx' if it exists.
+-- @chris: is there a name for this? Should I make this a `FunLike`?
+theorem ExprWellFormed.deterministic
+  {ctx ctx' ctx'' : DefContext} {expr : Expr kind}
+  (WF1: ExprWellFormed ctx expr ctx') (WF2: ExprWellFormed ctx expr ctx'') : ctx' = ctx'' := by {
+    have COMPUTE1 := ExprWellFormed.prop_implies_compute WF1;
+    have COMPUTE2 := ExprWellFormed.prop_implies_compute WF2;
+    rw[← COMPUTE1] at COMPUTE2;
+    injection COMPUTE2 with EQ;
+    exact (Eq.symm EQ); -- @chris: why is this not a simp lemma?
+ }
+
+
+instance : Subsingleton (@ExprWellFormed ek ctx op ctx') :=
+ ⟨fun wf1 wf2 => by {
+    induction wf1;
+    case assign i o ret arg ctx kind ARG RET => {
+      cases wf2; simp[proofIrrel];
+    };
+    case pair ret arg1 arg2 k1 k2 ARG1 ARG2 RET => {
+      cases wf2; simp[proofIrrel];
+    };
+    case ops op' ops' ctxbegin ctxend ctxmid WF_OP WF_OPS IH_OP IH_OPS => {
+      cases wf2;
+      case ops ctxmid' WF_OP' WF_OPS' => {
+        -- Need a theorem that ExprWellFormed returns a deterministic "ctx'"
+        have CTXMID_EQ: ctxmid = ctxmid' := ExprWellFormed.deterministic WF_OP WF_OP';
+        subst CTXMID_EQ;
+        have IH_OP' := IH_OP WF_OP';
+        have IH_OPS' := IH_OPS WF_OPS';
+        simp[proofIrrel];
+        constructor <;> assumption;
+      }
+    }
+  }
+⟩
+
+-- (compute = true) => (stuff holds)
+theorem ExprWellFormed.compute_implies_prop:
+  ∀ {ctx ctx' : DefContext} {expr : Expr kind},
+  .some ctx' = ExprWellFormed.compute expr ctx ->
   ExprWellFormed ctx expr ctx' := by {
   intros ctx ctx' expr;
-  constructor
-  case mp => { apply ExprWellFormed.compute_implies_prop; }
-  case mpr => { apply ExprWellFormed.prop_implies_compute; }
+  revert ctx ctx';
+  induction expr;
+  case assign ret kind arg => {
+    intros ctx ctx' COMPUTE;
+    simp[compute] at COMPUTE;
+    apply ExprWellFormed.mk_assign <;> aesop;
+  }
+  case pair ret arg1 arg2 => {
+    intros ctx ctx' COMPUTE;
+    simp[compute] at COMPUTE;
+    apply ExprWellFormed.mk_pair <;> aesop;
+  }
+  case ops o1 o2 IH1 IH2 => {
+    intros ctx ctx'' COMPUTE;
+    simp[compute] at COMPUTE;
+    cases CTXO1:(compute o1 ctx) <;> simp[CTXO1] at COMPUTE; case some ctx' => {
+      cases CTXO2:(compute o2 ctx') <;> simp[CTXO2] at COMPUTE; case some ctx''_2 => {
+        subst COMPUTE;
+        apply ExprWellFormed.ops (ctxmid := ctx') <;> aesop;
+      }
+    }
+  }
 }
+
+-- Reflection tactic to reflect the proof level 'ExprWellFormed'
+-- into computation level 'ExprWellFormed.compute'
+-- @chris: is this theorem even useful?
+theorem ExprWellFormed.reflect (ctx : DefContext) (expr : Expr kind) :
+  { ctxfun : DefContext // .some ctxfun = ExprWellFormed.compute expr ctx } ≃
+  Σ (ctxprop : DefContext), (ExprWellFormed ctx expr ctxprop) := {
+    toFun := fun ctxfun => ⟨ctxfun.val, ExprWellFormed.compute_implies_prop ctxfun.property⟩
+    invFun := fun WF => ⟨WF.fst, ExprWellFormed.prop_implies_compute WF.snd⟩,
+    left_inv := by { intros CTXFUN; simp; },
+    right_inv := by {
+      intros WF; cases WF with | mk => simp;
+    }
+  }
 
 -- An expression is said to well formed if it is well formed
 -- starting from the given context.
-def Expr.wellFormed (e: Expr k) (ctx: DefContext := DefContext.bottom): Prop
-  := ∃ ctx', ExprWellFormed ctx e ctx'
+def Expr.wellFormed (e: Expr k) (ctx: DefContext := DefContext.bottom) : Type
+  := Σ ctx', ExprWellFormed ctx e ctx'
 
 
 -- context necessary for evaluating expressions.
@@ -352,6 +430,7 @@ def extraction : Nat :=
       rw[H] at CONTRA;
       simp at CONTRA;
   }
+#print extraction
 #reduce extraction -- 42
 end extractFromOption
 
@@ -437,14 +516,14 @@ theorem EvalContext.toDefContext.bind
 -- 'fold?' will return a 'some' value
 -- Note that here, we must ford DEFCTX, since to perform induction on 'wellformed',
 -- we need the indexes of 'wellformed' to be variables.
-theorem Expr.fold?_succeeds_iff_expr_wellformed
+theorem Expr.fold?_succeeds_if_expr_wellformed
   {kindMotive: Kind → Type} -- what each kind is compiled into.
-  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  (evalctx : EvalContext kindMotive)
-  (defctx defctx': DefContext)
+  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
+  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
+  {evalctx : EvalContext kindMotive}
+  {defctx defctx': DefContext}
   (DEFCTX: evalctx.toDefContext = defctx)
-  (e : Expr ek)
+  {e : Expr ek}
   (WF: ExprWellFormed defctx e defctx') :  ∃ evalctx',
   (e.fold? opFold pairFold evalctx = .some evalctx') ∧
   (evalctx'.toDefContext = defctx') := by {
@@ -472,16 +551,43 @@ theorem Expr.fold?_succeeds_iff_expr_wellformed
     case ops op ops ctxbegin ctxend ctxmid WF_OP WF_OPS IH1 IH2 => {
       intros evalctx EVALCTX_DEFCTX;
       simp[fold?];
-      -- @chris: how do I do this while specializing IH1?
-      have ⟨evalctx1, EVALCTX1, EVALCTX1_DEFCTX⟩ := IH1 evalctx EVALCTX_DEFCTX;
+      obtain ⟨evalctx1, EVALCTX1, EVALCTX1_DEFCTX⟩ := IH1 EVALCTX_DEFCTX;
       simp[EVALCTX1];
-      have ⟨evalctx2, EVALCTX2, EVALCTX2_DEFCTX⟩ := IH2 evalctx1 EVALCTX1_DEFCTX;
+      obtain ⟨evalctx2, EVALCTX2, EVALCTX2_DEFCTX⟩ := IH2 EVALCTX1_DEFCTX;
       simp[EVALCTX2];
       apply EVALCTX2_DEFCTX;
     }
 }
 
+-- 'Expr.fold?' returns a value that 'isSome' if the expression is well formed.
+theorem Expr.fold?_isSome_if_expr_wellformed
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
+  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
+  {evalctx : EvalContext kindMotive}
+  (DEFCTX: evalctx.toDefContext = defctx)
+  {e : Expr ek}
+  (WF: Σ defctx', ExprWellFormed defctx e defctx') :
+  (e.fold? opFold pairFold evalctx).isSome := by{
+    rcases WF with ⟨defctx', WF⟩;
+    obtain ⟨evalctx', EVALCTX', EVALCTX_DEFCTX'⟩ := Expr.fold?_succeeds_if_expr_wellformed DEFCTX WF;
+    simp[Option.isSome];
+    rw[EVALCTX'];
+}
+
 end ExprFoldExtraction
+
+
+def Expr.fold
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (evalctx : EvalContext kindMotive)
+  (e : Expr ek)
+  (defctx : DefContext)
+  (WF: ExprWellFormed defctx e defctx') : kindMotive e.retKind := sorry
+
+
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
