@@ -5,7 +5,7 @@ import Mathlib.Tactic.LibrarySearch
 import Mathlib.Tactic.Cases
 import Mathlib.Data.Quot
 import Mathlib.Data.List.AList
-import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.CategoryTheory.EpiMono
 import Std.Data.Int.Basic
 import Mathlib.Tactic.Reassoc
 
@@ -60,6 +60,7 @@ inductive Context : Type
 inductive Var : (Γ : Context) → Kind → Type where
   | zero (Γ : Context) (k : Kind) : Var (Γ.snoc k) k
   | succ {Γ : Context} {k₁ k₂ : Kind} : Var Γ k₁ → Var (Γ.snoc k₂) k₁
+  deriving DecidableEq
 
 @[elab_as_elim]
 def Var.elim {Γ : Context} {k₁ : Kind} {motive : ∀ k₂, Var (Γ.snoc k₁) k₂ → Sort _} {k₂ : Kind} :
@@ -201,8 +202,7 @@ theorem toSnoc_comp_snocElim {Γ₁ Γ₂  : Context} {k : Kind} (f : Γ₁ ⟶ 
 @[ext]
 theorem snoc_ext {Γ₁ Γ₂  : Context} {k : Kind} {f g : Γ₁.snoc k ⟶ Γ₂}
     (h₁ : f (Var.zero _ _) = g (Var.zero _ _))
-    (h₂ : toSnoc ≫ f = toSnoc ≫ g)
-     : f = g := by
+    (h₂ : toSnoc ≫ f = toSnoc ≫ g) : f = g := by
   funext k v
   cases v
   . exact h₁
@@ -229,6 +229,9 @@ def Context.append (Γ₁ : Context) : Context → Context
   | .nil => Γ₁
   | .snoc Γ₂ k => (Γ₁.append Γ₂).snoc k
 
+instance : IsEmpty (Var (Context.nil) k) where
+  false := fun v => match v with.
+
 instance (Γ : Context) : Unique (Context.nil ⟶ Γ) where
   default := fun _ v => match v with.
   uniq := fun f => by funext k v; cases v
@@ -236,8 +239,21 @@ instance (Γ : Context) : Unique (Context.nil ⟶ Γ) where
 def Context.single (k : Kind) : Context :=
   Context.snoc Context.nil k
 
+instance : Unique (Var (Context.single k) k) where
+  default := Var.zero _ _
+  uniq := fun v => match v with | Var.zero _ _ => rfl
+
+instance : Subsingleton (Var (Context.single k₁) k₂) :=
+  ⟨fun v₁ v₂ => match v₁, v₂ with | Var.zero _ _, Var.zero _ _ => rfl⟩
+
 def Context.singleElim {Γ : Context} (v : Var Γ k) : Context.single k ⟶ Γ :=
   snocElim default v
+
+theorem Context.singleElim_injective {Γ : Context} :
+   Function.Injective (Context.singleElim : Var Γ k → (Context.single k ⟶ Γ)) :=
+  fun v₁ v₂ h => by
+    have : singleElim v₁ (Var.zero _ _) = singleElim v₂ (Var.zero _ _) := by rw [h]
+    simpa using this
 
 @[simp]
 theorem Context.singleElim_zero {Γ : Context} (v : Var Γ k) :
@@ -277,8 +293,7 @@ theorem Context.append_ext : ∀ {Γ₁ Γ₂ Γ₃ : Context} {f g : Γ₁.appe
     (have : (inr ≫ f) (Var.zero _ _) = (inr ≫ g) (Var.zero _ _) := by rw [h₂]
      by simpa using this)
     (Context.append_ext h₁
-      (have : toSnoc ≫ (inr ≫ f) = toSnoc ≫ (inr ≫ g) := by
-          rw [h₂]
+      (have : toSnoc ≫ (inr ≫ f) = toSnoc ≫ (inr ≫ g) := by rw [h₂]
        by simpa [inr, snocHom] using this))
 
 @[simp]
@@ -373,13 +388,122 @@ theorem Expr.changeVars_eval : ∀ {k : Kind} {Γ₁ Γ₂ : Context} (f : Γ₁
   | _, _, _, f, .retμrn x, g => by simp
 
 def Var.preimage : {Γ₁ Γ₂ : Context} → (Γ₁ ⟶ Γ₂) → Var Γ₂ k → Option (Var Γ₁ k)
-  | _, _, h, .succ v => .succ (h v)
-  | _, _, h, .zero => .zero
+  | Context.nil, _, _, _ => none
+  | Context.snoc _ k', _, f, v =>
+    match Var.preimage (toSnoc ≫ f) v with
+    | none => if h : ∃ h : k' = k, f (Var.zero _ _) = h ▸ v
+        then some (h.fst ▸ Var.zero _ _) else none
+    | some v' => some (toSnoc v')
+
+theorem Var.eq_of_mem_preimage : ∀ {Γ₁ Γ₂ : Context} {f : Γ₁ ⟶ Γ₂} {v : Var Γ₂ k}
+    {v' : Var Γ₁ k}, Var.preimage f v = some v' → f v' = v
+  | Context.snoc _ k', _, f, v, v', h => by
+    simp only [Var.preimage] at h
+    cases h' : preimage (toSnoc ≫ f) v
+    . simp only [h'] at h
+      split_ifs at h with h₁
+      cases h
+      rcases h₁ with ⟨rfl, h₁⟩
+      exact h₁
+    . simp only [h', Option.some.injEq] at h
+      rw [← Var.eq_of_mem_preimage h', ← h]
+      simp
+
+theorem Var.preimage_eq_none_iff : ∀ {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) (v : Var Γ₂ k),
+    Var.preimage f v = none ↔ ∀ (v' : Var Γ₁ k), f v' ≠ v
+  | Context.nil, _, _, _ => by simp [Var.preimage]
+  | Context.snoc _ k', _, f, v => by
+      rw [Var.preimage]
+      cases h : preimage (toSnoc ≫ f) v
+      . rw [Var.preimage_eq_none_iff] at h
+        simp only [dite_eq_right_iff, forall_exists_index, ne_eq]
+        constructor
+        . intro h' v'
+          cases v'
+          . exact h' rfl
+          exact h _
+        . intro h' heq
+          cases heq
+          exact h' _
+      . simp only [ne_eq, false_iff, not_forall, not_not]
+        rw [← Var.eq_of_mem_preimage h]
+        simp
+
+theorem mono_iff_injective {f : Γ₁ ⟶ Γ₂} :
+    Mono f ↔ (∀ k, Function.Injective (@f k)) := by
+  constructor
+  . intro h k v₁ v₂ hv
+    refine Context.singleElim_injective
+      (Mono.right_cancellation (f := f)
+        (Context.singleElim v₁) (Context.singleElim v₂) ?_)
+    funext k v
+    cases v with
+    | zero _ _ => simp [hv]
+    | succ v => cases v
+  . intro h
+    constructor
+    intro Γ₃ g i gi
+    funext k v
+    apply h
+    rw [← Context.comp_apply g f, gi, Context.comp_apply]
+
+theorem injective {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) [Mono f] :
+    ∀ k, Function.Injective (@f k) := by
+  rw [← mono_iff_injective]; infer_instance
+
+@[simp]
+theorem Context.eq_iff {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) [Mono f] {k : Kind} (v₁ v₂ : Var Γ₁ k) :
+    f v₁ = f v₂ ↔ v₁ = v₂ := (injective f k).eq_iff
+
+instance : Mono (@toSnoc Γ k) :=
+  mono_iff_injective.2 (fun _ _ h => by simp [toSnoc] at *)
+
+instance {k : Kind} (v : Var Γ k) : Mono (Context.singleElim v) :=
+  mono_iff_injective.2 (fun _ _ _ _ => Subsingleton.elim _ _)
+
+def Context.union : ∀ {Γ₁ Γ₂ Γ₃ : Context}, (Γ₁ ⟶ Γ₃) → (Γ₂ ⟶ Γ₃) → Context
+  | Γ₁, .nil, _, _, _ => Γ₁
+  | _, .snoc _ k, _, f, g =>
+    let U := Context.union f (toSnoc ≫ g)
+    match Var.preimage f (g (Var.zero _ _)) with
+    | none => U.snoc k
+    | some _ => U
+
+def unionInl : ∀ {Γ₁ Γ₂ Γ₃ : Context} (f : Γ₁ ⟶ Γ₃) (g : Γ₂ ⟶ Γ₃),
+    Γ₁ ⟶ (Context.union f g)
+  | _, .nil, _, _, _ => 𝟙 _
+  | _, .snoc Γ₂ k, _, f, g => by
+    simp only [Context.union]
+    cases h : Var.preimage f (g (Var.zero _ _))
+    . exact unionInl _ _ ≫ toSnoc
+    . exact unionInl _ _
+
+def unionInr : ∀ {Γ₁ Γ₂ Γ₃ : Context} (f : Γ₁ ⟶ Γ₃) (g : Γ₂ ⟶ Γ₃),
+    Γ₂ ⟶ (Context.union f g)
+  | _, .nil, _, _, _ => default
+  | _, .snoc Γ₂ k, vadd_add_assoc, f, g => by
+    simp only [Context.union]
+    cases h : Var.preimage f (g (Var.zero _ _)) with
+    | none => exact Context.snocHom (unionInr _ _)
+    | some v => exact snocElim (unionInr _ _) $ by
+                  simp
+                  exact unionInl _ _ v
+
+def Context.unionEmb : ∀ {Γ₁ Γ₂ Γ₃ : Context} (f : Γ₁ ⟶ Γ₃) (g : Γ₂ ⟶ Γ₃),
+    (Context.union f g) ⟶ Γ₃
+  | _, .nil, _, f, g => f
+  | _, .snoc Γ₂ k, _, f, g => by
+    simp only [Context.union]
+    cases h : Var.preimage f (g (Var.zero _ _)) with
+    | none => exact snocElim (Context.unionEmb _ _) (g (Var.zero _ _))
+    | some v => _
+
 
 end changeVars
 
 section shrinkContext
 
+--This is bad in the pair case. Need unions of contexts.
 @[simp]
 def Tuple.shrinkContext {Γ : Context} : {k : Kind} → (t : Tuple e Γ k) →
     (Γ' : Context) × (Γ' ⟶ Γ) × Tuple e Γ' k
