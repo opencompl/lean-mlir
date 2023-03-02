@@ -780,14 +780,67 @@ def Expr.fold
   | .O, .assign (i := i) (o := o)  ret ekind arg, .assign ARG RET =>
     let ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG;
     let evalctx' := evalctx.bind ret o (opFold ekind arg_val);
-    Sigma.mk evalctx' (ExprEval.mk_assign _ _ _ ⟩
-    _
+    { fst := evalctx',
+      snd := by {
+        apply ExprEval.mk_assign;
+        case ARG => {
+          simp[EvalContext.lookupByKind];
+          simp[ARG_VAL];
+          rfl;
+        }
+        case RET => {
+          simp[EvalContext.lookupByKind];
+          apply EvalContext.toTypingContext.preimage_none (DCTX := DEFCTX) RET;
+        }
+        case CTX' => {
+          rfl;
+        }
+      } }
   | .O, .pair ret arg1 k1 arg2 k2, .pair ARG1 ARG2 RET =>
       let ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG1;
       let ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some DEFCTX ARG2;
-      sorry
+      let evalctx' := evalctx.bind ret (Kind.pair k1 k2) (pairFold arg1_val arg2_val);
+      { fst := evalctx',
+        snd := by {
+          apply ExprEval.mk_pair;
+          case ARG1 => {
+            simp[EvalContext.lookupByKind];
+            simp[ARG1_VAL];
+            rfl;
+          }
+          case ARG2 => {
+            simp[EvalContext.lookupByKind];
+            simp[ARG2_VAL];
+            rfl;
+          }
+          case RET => {
+            simp[EvalContext.lookupByKind];
+            apply EvalContext.toTypingContext.preimage_none (DCTX := DEFCTX) RET;
+          }
+          case CTX' => {
+            rfl;
+          }
+        } }
   | .Os, .ops op ops', .ops (ctxmid := ctxmid) (ctxend := ctxend) OP OPS =>
-      sorry
+      let ⟨evalctx1, EVALCTX1⟩ := Expr.fold opFold pairFold DEFCTX OP;
+      let defctx1 := evalctx1.toTypingContext;
+      let DEFCTX1 : evalctx1.toTypingContext = defctx1 := rfl;
+      let ⟨evalctx2, EVALCTX2⟩ := Expr.fold opFold pairFold DEFCTX1 OPS;
+      { fst := evalctx2,
+        snd := by {
+          apply ExprEval.mk_ops;
+          case OP => {
+            simp[EVALCTX1];
+            rfl;
+          }
+          case OPS => {
+            simp[EVALCTX2];
+            rfl;
+          }
+          case CTX' => {
+            rfl;
+          }
+        } }
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
