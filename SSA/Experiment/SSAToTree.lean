@@ -511,6 +511,135 @@ def Expr.fold? -- version of fold that returns option.
       o2.fold? opFold pairFold ctx'
 #print Expr.fold?.match_3
 
+theorem Expr.fold?_succeeds_implies_ret_exists
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (evalctx evalctx' : EvalContext kindMotive)
+  (e : Expr ek)
+  (SUCCESS: .some evalctx' = e.fold? opFold pairFold evalctx):
+  { val: kindMotive e.retKind // evalctx'.lookupByKind e.retVar e.retKind = .some val } := by {
+    revert evalctx' evalctx;
+    induction e <;> intros evalctx evalctx' SUCCESS;
+    case assign i o ret kind arg => {
+      simp[fold?] at *;
+      simp[EvalContext.lookupByKind] at *;
+      -- | TODO: @chris: how to avoid nesting?
+      cases ARG_VAL:(evalctx arg) <;> simp[ARG_VAL] at SUCCESS; case some arg_val => {
+        by_cases ARG_VAL_FST:(i = arg_val.fst); case neg => {aesop; }; case pos => {
+            subst ARG_VAL_FST; simp at *;
+            cases RET_VAL:(evalctx ret) <;> simp[RET_VAL] at SUCCESS; case none => {
+              simp[SUCCESS, EvalContext.bind];
+                aesop_subst SUCCESS;
+                apply Subtype.mk;
+                apply Eq.refl;
+            }
+        }
+      }
+    }
+    case pair ret arg1 kind1 arg2 kind2 => {
+      simp[fold?] at *;
+      simp[EvalContext.lookupByKind] at *;
+      cases ARG1_VAL:(evalctx arg1) <;> simp[ARG1_VAL] at SUCCESS;
+      case some arg1_val => {
+       by_cases ARG1_KIND:(kind1 = arg1_val.fst); case neg => { aesop }; case pos => {
+        subst ARG1_KIND; simp at SUCCESS;
+          cases ARG2_VAL:(evalctx arg2) <;> simp[ARG2_VAL] at SUCCESS;
+          case some arg2_val => {
+            by_cases ARG2_KIND:(kind2 = arg2_val.fst); case neg => { aesop }; case pos => {
+              subst ARG2_KIND; simp at SUCCESS;
+              cases RET_VAL:(evalctx ret) <;> simp[RET_VAL] at SUCCESS; case none => {
+                simp[SUCCESS];
+                rw[retVar];
+                simp[EvalContext.bind];
+                aesop;
+              }
+            }
+          }
+        }
+      }
+    }
+    case ops op1 op2 IH1 IH2 => {
+      simp[fold?] at *;
+      cases OP1_VAL:(fold? (fun {i o} => opFold) (fun {i i'} => pairFold) evalctx op1) <;>
+      simp[OP1_VAL] at SUCCESS; case some op1_val => {
+          cases OP2_VAL:(fold? (fun {i o} => opFold) (fun {i i'} => pairFold) op1_val op2) <;>
+          simp[OP2_VAL] at SUCCESS; case some op2_val => {
+            rw[retVar];
+            subst SUCCESS;
+            specialize (IH2 _ _ (Eq.symm OP2_VAL));
+            rw[retKind];
+            exact IH2;
+          }
+        }
+    }
+}
+
+
+
+-- 'fold?' will return a 'some' value
+-- Note that here, we must ford DEFCTX, since to perform induction on 'wellformed',
+-- we need the indexes of 'wellformed' to be variables.
+theorem Expr.fold?_succeeds_if_expr_wellformed
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
+  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
+  {evalctx : EvalContext kindMotive}
+  {defctx defctx': TypingContext}
+  (DEFCTX: evalctx.toTypingContext = defctx)
+  {e : Expr ek}
+  (WF: ExprWellTyped defctx e defctx') :  ∃ evalctx',
+  (e.fold? opFold pairFold evalctx = .some evalctx') ∧
+  (evalctx'.toTypingContext = defctx') := by {
+    revert evalctx;
+    induction WF;
+    case assign i o ret arg evalctx_defctx name ARG RET => {
+      intros evalctx EVALCTX_DEFCTX;
+      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG;
+      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
+      simp[fold?] at *;
+      simp[EvalContext.lookupByKind] at *;
+      simp[ARG_VAL];
+      simp[RET_VAL];
+      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
+    }
+    case pair defctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
+      intros evalctx EVALCTX_DEFCTX;
+      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG1;
+      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG2;
+      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
+      simp[fold?];
+      simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
+      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
+    }
+    case ops op ops ctxbegin ctxend ctxmid WF_OP WF_OPS IH1 IH2 => {
+      intros evalctx EVALCTX_DEFCTX;
+      simp[fold?];
+      obtain ⟨evalctx1, EVALCTX1, EVALCTX1_DEFCTX⟩ := IH1 EVALCTX_DEFCTX;
+      simp[EVALCTX1];
+      obtain ⟨evalctx2, EVALCTX2, EVALCTX2_DEFCTX⟩ := IH2 EVALCTX1_DEFCTX;
+      simp[EVALCTX2];
+      apply EVALCTX2_DEFCTX;
+    }
+}
+
+-- 'Expr.fold?' returns a value that 'isSome' if the expression is well formed.
+theorem Expr.fold?_isSome_if_expr_wellformed
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
+  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
+  {evalctx : EvalContext kindMotive}
+  (DEFCTX: evalctx.toTypingContext = defctx)
+  {e : Expr ek}
+  (WF: Σ defctx', ExprWellTyped defctx e defctx') :
+  (e.fold? opFold pairFold evalctx).isSome := by{
+    rcases WF with ⟨defctx', WF⟩;
+    obtain ⟨evalctx', EVALCTX', EVALCTX_DEFCTX'⟩ := Expr.fold?_succeeds_if_expr_wellformed DEFCTX WF;
+    simp[Option.isSome];
+    rw[EVALCTX'];
+}
+
+
 abbrev ExprEval.compute? {kindMotive: Kind → Type}
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
@@ -595,172 +724,18 @@ theorem ExprEval.compute?_implies_prop
       }
   }
 
-
--- def ExprEval.WellTyped_always_relates
---   {kindMotive: Kind → Type}
---   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
---   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
---   {ctx: EvalContext kindMotive}
---   {e: Expr ek}
---   {ctx': EvalContext kindMotive}
---   (TYPED: ExprWellTyped ctx.toTypingContext e ctx'.toTypingContext):
---   ExprEval opFold pairFold ctx e ctx' :=
-/-
-TODO: simplify by using the proofs of 'EvalContext.toTypingContext.preimage_*'
--/
--- if 'Expr.fold?' succeeds, then the final environment contains a value of
--- kind 'retKind' at name 'retVar'
-theorem Expr.fold?_succeeds_implies_ret_exists
-  {kindMotive: Kind → Type} -- what each kind is compiled into.
-  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  (evalctx evalctx' : EvalContext kindMotive)
-  (e : Expr ek)
-  (SUCCESS: .some evalctx' = e.fold? opFold pairFold evalctx):
-  { val: kindMotive e.retKind // evalctx'.lookupByKind e.retVar e.retKind = .some val } := by {
-    revert evalctx' evalctx;
-    induction e <;> intros evalctx evalctx' SUCCESS;
-    case assign i o ret kind arg => {
-      simp[fold?] at *;
-      simp[EvalContext.lookupByKind] at *;
-      -- | TODO: @chris: how to avoid nesting?
-      cases ARG_VAL:(evalctx arg) <;> simp[ARG_VAL] at SUCCESS; case some arg_val => {
-        by_cases ARG_VAL_FST:(i = arg_val.fst); case neg => {aesop; }; case pos => {
-            subst ARG_VAL_FST; simp at *;
-            cases RET_VAL:(evalctx ret) <;> simp[RET_VAL] at SUCCESS; case none => {
-              simp[SUCCESS, EvalContext.bind];
-                aesop_subst SUCCESS;
-                apply Subtype.mk;
-                apply Eq.refl;
-            }
-        }
-      }
-    }
-    case pair ret arg1 kind1 arg2 kind2 => {
-      simp[fold?] at *;
-      simp[EvalContext.lookupByKind] at *;
-      cases ARG1_VAL:(evalctx arg1) <;> simp[ARG1_VAL] at SUCCESS;
-      case some arg1_val => {
-       by_cases ARG1_KIND:(kind1 = arg1_val.fst); case neg => { aesop }; case pos => {
-        subst ARG1_KIND; simp at SUCCESS;
-          cases ARG2_VAL:(evalctx arg2) <;> simp[ARG2_VAL] at SUCCESS;
-          case some arg2_val => {
-            by_cases ARG2_KIND:(kind2 = arg2_val.fst); case neg => { aesop }; case pos => {
-              subst ARG2_KIND; simp at SUCCESS;
-              cases RET_VAL:(evalctx ret) <;> simp[RET_VAL] at SUCCESS; case none => {
-                simp[SUCCESS];
-                rw[retVar];
-                simp[EvalContext.bind];
-                aesop;
-              }
-            }
-          }
-        }
-      }
-    }
-    case ops op1 op2 IH1 IH2 => {
-      simp[fold?] at *;
-      cases OP1_VAL:(fold? (fun {i o} => opFold) (fun {i i'} => pairFold) evalctx op1) <;>
-      simp[OP1_VAL] at SUCCESS; case some op1_val => {
-          cases OP2_VAL:(fold? (fun {i o} => opFold) (fun {i i'} => pairFold) op1_val op2) <;>
-          simp[OP2_VAL] at SUCCESS; case some op2_val => {
-            rw[retVar];
-            subst SUCCESS;
-            specialize (IH2 _ _ (Eq.symm OP2_VAL));
-            rw[retKind];
-            exact IH2;
-          }
-        }
-    }
-}
-
-
-
-namespace extractFromOption
-/-
-Show how having a partial computation, plus a proof that the partial computation
-is in fact total allows us to extract out the value of the partial computation.
--/
-def partialcomp : Option Nat := .some 42
-theorem partialcomp_succeeds: partialcomp.isSome = true := by {
-  simp[partialcomp];
-}
-
--- function that extracts value from partialcomp.
-def extraction : Nat :=
-  match H : partialcomp with
-  | .some v => v
-  | .none => by {
-      have CONTRA := partialcomp_succeeds;
-      rw[H] at CONTRA;
-      simp at CONTRA;
-  }
-#print extraction
-#reduce extraction -- 42
-end extractFromOption
-
-
--- 'fold?' will return a 'some' value
--- Note that here, we must ford DEFCTX, since to perform induction on 'wellformed',
--- we need the indexes of 'wellformed' to be variables.
-theorem Expr.fold?_succeeds_if_expr_wellformed
-  {kindMotive: Kind → Type} -- what each kind is compiled into.
+-- If `ExprEval ctx e ctx'` holds, then `ctx` is well typed
+theorem ExprEval.well_typed
+  {kindMotive: Kind → Type}
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
-  {evalctx : EvalContext kindMotive}
-  {defctx defctx': TypingContext}
-  (DEFCTX: evalctx.toTypingContext = defctx)
-  {e : Expr ek}
-  (WF: ExprWellTyped defctx e defctx') :  ∃ evalctx',
-  (e.fold? opFold pairFold evalctx = .some evalctx') ∧
-  (evalctx'.toTypingContext = defctx') := by {
-    revert evalctx;
-    induction WF;
-    case assign i o ret arg evalctx_defctx name ARG RET => {
-      intros evalctx EVALCTX_DEFCTX;
-      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG;
-      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
-      simp[fold?] at *;
-      simp[EvalContext.lookupByKind] at *;
-      simp[ARG_VAL];
-      simp[RET_VAL];
-      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
-    }
-    case pair defctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
-      intros evalctx EVALCTX_DEFCTX;
-      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG1;
-      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some EVALCTX_DEFCTX ARG2;
-      have RET_VAL := EvalContext.toTypingContext.preimage_none EVALCTX_DEFCTX RET;
-      simp[fold?];
-      simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
-      apply EvalContext.toTypingContext.bind EVALCTX_DEFCTX;
-    }
-    case ops op ops ctxbegin ctxend ctxmid WF_OP WF_OPS IH1 IH2 => {
-      intros evalctx EVALCTX_DEFCTX;
-      simp[fold?];
-      obtain ⟨evalctx1, EVALCTX1, EVALCTX1_DEFCTX⟩ := IH1 EVALCTX_DEFCTX;
-      simp[EVALCTX1];
-      obtain ⟨evalctx2, EVALCTX2, EVALCTX2_DEFCTX⟩ := IH2 EVALCTX1_DEFCTX;
-      simp[EVALCTX2];
-      apply EVALCTX2_DEFCTX;
-    }
-}
+  {ctx: EvalContext kindMotive}
+  {e: Expr ek}
+  {ctx': EvalContext kindMotive}
+  (PROP: ExprEval opFold pairFold ctx e ctx') :
+  ExprWellTyped ctx.toTypingContext e ctx'.toTypingContext := by sorry
 
--- 'Expr.fold?' returns a value that 'isSome' if the expression is well formed.
-theorem Expr.fold?_isSome_if_expr_wellformed
-  {kindMotive: Kind → Type} -- what each kind is compiled into.
-  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
-  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
-  {evalctx : EvalContext kindMotive}
-  (DEFCTX: evalctx.toTypingContext = defctx)
-  {e : Expr ek}
-  (WF: Σ defctx', ExprWellTyped defctx e defctx') :
-  (e.fold? opFold pairFold evalctx).isSome := by{
-    rcases WF with ⟨defctx', WF⟩;
-    obtain ⟨evalctx', EVALCTX', EVALCTX_DEFCTX'⟩ := Expr.fold?_succeeds_if_expr_wellformed DEFCTX WF;
-    simp[Option.isSome];
-    rw[EVALCTX'];
-}
+
 
 end ExprFoldExtraction
 
@@ -822,20 +797,36 @@ def Expr.fold
           }
         } }
   | .Os, .ops op ops', .ops (ctxmid := ctxmid) (ctxend := ctxend) OP OPS =>
-      let ⟨evalctx1, EVALCTX1⟩ := Expr.fold opFold pairFold DEFCTX OP;
-      let defctx1 := evalctx1.toTypingContext;
-      let DEFCTX1 : evalctx1.toTypingContext = defctx1 := rfl;
-      let ⟨evalctx2, EVALCTX2⟩ := Expr.fold opFold pairFold DEFCTX1 OPS;
+      let ⟨ectxmid, ECTXMID⟩ := Expr.fold opFold pairFold DEFCTX OP;
+      let defctx1 := ectxmid.toTypingContext;
+      let DEFCTX1 : ectxmid.toTypingContext = defctx1 := rfl;
+      /-
+      since we have:
+       WellTyped[defctx; op; ctxmid]
+      as well as:
+        ExprEval[evalctx; op; ectxmid],
+      we derive:
+          WellTyped[evalctx.toTypingContext; op; ectxmid.toTypingContext]
+      but since WellTyped is deterministic, we can derive:
+          ectxmid.toTypingContext = ctxmid
+      from this, we can continue to evaluate `OPS`, since we now know that:
+        1. ectxmid.toTypingContext = ctxmid
+        2. ExprWellTyped ctxmid ops' ctxend
+        ie, we know that 'evalctxmid' corresponds to the well typed IH about ctxmid.
+
+      -/
+      let WELLTYPED_ECTX : ExprWellTyped defctx op (EvalContext.toTypingContext ectxmid) := DEFCTX ▸ ECTXMID.well_typed;
+      let DEFCTX_MID : ectxmid.toTypingContext = ctxmid :=
+        ExprWellTyped.deterministic WELLTYPED_ECTX OP;
+      let ⟨evalctx2, EVALCTX2⟩ := Expr.fold opFold pairFold DEFCTX_MID OPS;
       { fst := evalctx2,
         snd := by {
           apply ExprEval.mk_ops;
-          case OP => {
-            simp[EVALCTX1];
-            rfl;
+          case EVAL_OP => {
+            apply ECTXMID;
           }
-          case OPS => {
-            simp[EVALCTX2];
-            rfl;
+          case EVAL_OPS => {
+            apply EVALCTX2;
           }
           case CTX' => {
             rfl;
