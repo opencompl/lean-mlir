@@ -368,7 +368,6 @@ whenever the expr is well formed.
 
 -- If 'dctx' has a value at 'name', then so does 'ectx' at 'name' if
 -- 'dctx' came from 'ectx'.
--- @chris: what's the mathlib version of this?
 def EvalContext.toTypingContext.preimage_some
   { kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
@@ -402,7 +401,7 @@ theorem EvalContext.toTypingContext.bind
   {dctx: TypingContext}
   (DCTX: EvalContext.toTypingContext ectx = dctx)
   {kind : Kind}
-{val: kindMotive kind}
+  {val: kindMotive kind}
   {name: String} :
   (EvalContext.bind name kind val ectx).toTypingContext = TypingContext.bind name kind dctx := by {
     funext key;
@@ -534,7 +533,6 @@ def ExprEval.extractResult
 
 
 /-
-TODO: @chris why is this 'noncomputable' ?
 failed to compile definition, consider marking it as 'noncomputable'
 because it depends on 'Expr.fold?.match_3',
 and it does not have executable code
@@ -853,68 +851,7 @@ def Expr.fold
       { fst := evalctx2,
         snd := ExprEval.mk_ops (EVAL_OP := ECTXMID) (EVAL_OPS := EVALCTX2) (CTX' := rfl) }
 
-
--- Expression tree which produces a value of kind 'Kind'.
--- This is the initial algebra of the fold.
-inductive Tree : Kind → Type where
-| assign:  OpKind i o → Tree i → Tree o
-| pair: Tree a → Tree b → Tree (Kind.pair a b)
-
--- Convert an expression to a tree by folding into the tree algebra
-def Expr.toTree {ectx: EvalContext Tree} {ctx': TypingContext} (e : Expr ek)
-  (WELLTYPED: ExprWellTyped ectx.toTypingContext e ctx'): Tree (e.retKind) :=
-    (e.fold
-        (opFold := fun opk ti => Tree.assign opk ti)
-        (pairFold := fun  ti ti' => Tree.pair ti ti')
-        (DEFCTX := rfl)
-        (WF := WELLTYPED)).snd.extractResult
-
-section Evaluation
-/-
-we define 'Expr.eval', 'Expr.toTree', and 'Tree.eval' and show that the diagram below commutes:
-  Expr.eval = Tree.eval ∘ Expr.toTree
--/
-variable (kindMotive: Kind → Type)
-variable (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-variable (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-
-def Tree.eval : Tree k → kindMotive k
-| .assign opk ti => opFold opk ti.eval
-| .pair ta tb =>
-    pairFold ta.eval tb.eval
-
--- Convert a well typed 'Expr' into a tree
-def Expr.eval {ectx : EvalContext kindMotive} {ctx': TypingContext}
-  (WELLTYPED: ExprWellTyped ectx.toTypingContext e ctx'): kindMotive (e.retKind) :=
-  (e.fold (opFold := opFold) (pairFold := pairFold) (WF := WELLTYPED) (DEFCTX := rfl)).snd.extractResult
-
--- the diagram commutes for closd terms: Expr.eval = Tree.eval ∘ Expr.toTree
-theorem Tree.eval.sound_closed
-  {ctx' : TypingContext}
-  {ek: ExprKind}
-  {e: Expr ek}
-  (WELLTYPED_KIND: ExprWellTyped (@EvalContext.bottom kindMotive).toTypingContext  e ctx')
-  (WELLTYPED_TREE: ExprWellTyped (@EvalContext.bottom Tree).toTypingContext  e ctx')
-  : e.eval kindMotive opFold pairFold (WELLTYPED_KIND) =
-      (e.toTree WELLTYPED_TREE).eval kindMotive opFold pairFold := by {
-        cases WELLTYPED_KIND;
-        case assign i o ret kind arg ARG RET => {
-          cases WELLTYPED_TREE;
-          case assign  ARG' RET' => {
-            simp[Expr.eval, Expr.toTree, Expr.fold, ExprEval.extractResult, eval];
-            sorry
-          }
-        }
-        case pair => sorry
-        case ops => sorry
-}
-
-
-
-end Evaluation
-
 section OpenEvaluation
-
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
@@ -933,6 +870,73 @@ def EvalContext.map
     | .none => .none
     | .some ⟨k, vk⟩ => .some ⟨k, f vk⟩
 
+def Sigma.mapRight {T: Type} {f f': T → Type} (map: ∀ {t: T}, f t → f' t):
+  (Σ (a: T), f a) → Σ (a: T), f' a :=
+  fun ⟨a, fa⟩ => ⟨a, map fa⟩
+
+-- The result of mapping on an evaluation context is a mapped vaue
+theorem EvalContext.map_some
+  {kindMotive: Kind → Type}
+  {kindMotive': Kind → Type}
+  {ectx: EvalContext kindMotive}
+  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k)
+  {v: Σ (k: Kind), kindMotive k}
+  (LOOKUP: ectx arg = .some v) :
+  (ectx.map f) arg = .some (v.mapRight f) := by {
+  simp[map, Sigma.mapRight, LOOKUP]
+}
+
+-- The result of mapping on an evaluation context is `none` if it was
+-- originally none.
+theorem EvalContext.map_none
+  {kindMotive: Kind → Type}
+  {kindMotive': Kind → Type}
+  {ectx: EvalContext kindMotive}
+  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k)
+  (LOOKUP: ectx arg = Option.none) :
+  ((ectx.map f) arg = Option.none) := by {
+    simp[map, Sigma.mapRight, LOOKUP];
+  }
+
+-- If the typing context that arose from an evaluation context has key with kind `k`,
+-- then the mapped evaluation context at the key has the same kind `k`
+theorem EvalContext.toTypingContext.map_some
+  {kindMotive: Kind → Type}
+  {kindMotive': Kind → Type}
+  {ectx: EvalContext kindMotive}
+  {k: Kind}
+  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k)
+  (LOOKUP: EvalContext.toTypingContext ectx arg = some k) :
+  EvalContext.toTypingContext (EvalContext.map (fun {k} => f) ectx) arg = some k := by {
+    have VAL := EvalContext.toTypingContext.preimage_some (DCTX := rfl) LOOKUP;
+    simp[map, EvalContext.toTypingContext, VAL.property];
+}
+
+-- If the typing context that arose from an evaluation context does not have a key,
+-- then the mapped evaluation context does not have the key,
+theorem EvalContext.toTypingContext.map_none
+  {kindMotive: Kind → Type}
+  {kindMotive': Kind → Type}
+  {ectx: EvalContext kindMotive}
+  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
+  (LOOKUP: EvalContext.toTypingContext ectx arg = none) :
+  EvalContext.toTypingContext (EvalContext.map (fun {k} => f) ectx) arg = none := by {
+    have VAL := EvalContext.toTypingContext.preimage_none (DCTX := rfl) LOOKUP;
+    simp[map, EvalContext.toTypingContext, VAL];
+}
+
+-- mapping preserves the typing context.
+theorem EvalContext.toTypingContext.map
+  {kindMotive: Kind → Type}
+  {kindMotive': Kind → Type}
+  (ectx: EvalContext kindMotive)
+  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k):
+  EvalContext.toTypingContext ectx =
+  EvalContext.toTypingContext (ectx.map f) := by {
+    funext arg;
+    cases H:(ectx arg) <;>  simp[toTypingContext, EvalContext.map, H];
+}
+
 /-
 We need a way to transport well-typedness along evaluation context morphisms.
 If we know that an expression is well typed, then we should be able to transport
@@ -941,13 +945,33 @@ it along a 'EvalContext.map' [which is yet to be defined.]
 def ExprWellTyped.transportAlongMap
  {kindMotive: Kind → Type}
  {kindMotive': Kind → Type}
-  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
-  {ectx: EvalContext kindMotive}
-  {ek: ExprKind}
-  {e: Expr ek}
-  {ctx': TypingContext}
-  (WELLTYPED: ExprWellTyped ectx.toTypingContext e ctx')
-  : ExprWellTyped (ectx.map f).toTypingContext e ctx' := sorry
+ (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
+ {ectx: EvalContext kindMotive}
+ {ek: ExprKind}
+ {e: Expr ek}
+ {ctx': TypingContext}
+ (WELLTYPED: ExprWellTyped ectx.toTypingContext e ctx')
+  : ExprWellTyped (ectx.map f).toTypingContext e ctx' := by {
+  cases WELLTYPED;
+  case assign i o ret arg kind ARG RET => {
+    apply ExprWellTyped.mk_assign;
+    apply EvalContext.toTypingContext.map_some (LOOKUP := ARG);
+    apply EvalContext.toTypingContext.map_none (LOOKUP := RET);
+    simp[EvalContext.toTypingContext.map (f := f)];
+  }
+  case pair ret arg1 arg2 k1 k2 ARG ARG' RET => {
+    apply ExprWellTyped.mk_pair;
+    apply EvalContext.toTypingContext.map_some (LOOKUP := ARG);
+    apply EvalContext.toTypingContext.map_some (LOOKUP := ARG');
+    apply EvalContext.toTypingContext.map_none (LOOKUP := RET);
+    simp[EvalContext.toTypingContext.map (f := f)];
+  }
+  case ops op1 op2 ctxmid WF1 WF2 => {
+    constructor;
+    exact (EvalContext.toTypingContext.map ectx f ▸ WF1);
+    exact WF2;
+  }
+}
 
 
 -- Convert an expression to a tree by folding into the tree algebra
