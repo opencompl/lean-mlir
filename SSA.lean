@@ -5,6 +5,7 @@ import Mathlib.Tactic.LibrarySearch
 import Mathlib.Tactic.Cases
 import Mathlib.Data.Quot
 import Std.Data.Int.Basic
+import SSA.Experiment.SSAToTree
 
 open Std
 
