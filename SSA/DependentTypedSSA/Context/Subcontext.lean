@@ -2,6 +2,7 @@ import SSA.DependentTypedSSA.Context.Basic
 import Mathlib.Data.SetLike.Basic
 import Mathlib.Order.Lattice
 import Mathlib.Data.Bool.Basic
+import Mathlib.Order.GaloisConnection
 
 namespace AST
 
@@ -48,9 +49,80 @@ def toSnocMem {k : Kind} (Δ : Subcontext Γ) : Subcontext (Γ.snoc k)
   | _, Var.zero _ _ => true
   | _, Var.succ v => Δ v
 
+@[mono]
+theorem toSnocMem_monotone : {Γ : Context} → {k : Kind} → Monotone (@toSnocMem Γ k)
+  | _, _, _, _, _, k, Var.zero _ _ => by
+    simp [toSnocMem]
+  | _, _, Δ₁, Δ₂, h, k, Var.succ v => by
+    simp [toSnocMem]
+    exact h _ v
+
+def ofSnoc_toSnocMem_GaloisInsertion {Γ : Context} {k : Kind} :
+    GaloisInsertion (@ofSnoc Γ k) (@toSnocMem Γ k) :=
+  GaloisInsertion.monotoneIntro
+    toSnocMem_monotone
+    ofSnoc_monotone
+    (fun a k v => by cases v <;> simp only [ofSnoc, toSnocMem, le_refl, Bool.le_true])
+    (fun b => ext $ fun k v => by cases v <;> simp only [ofSnoc, toSnocMem])
+
+@[simp]
+theorem ofSnoc_toSnocMem {k : Kind} {Γ : Context} (Δ : Subcontext Γ) :
+    ofSnoc (toSnocMem Δ : Subcontext (Γ.snoc k)) = Δ :=
+  ofSnoc_toSnocMem_GaloisInsertion.l_u_eq _
+
+@[simp]
+theorem le_toSnocMem_iff {k : Kind} {Γ : Context} {Δ₁ : Subcontext (Γ.snoc k)}
+    {Δ₂ : Subcontext Γ} : Δ₁ ≤ toSnocMem Δ₂ ↔ ofSnoc Δ₁ ≤ Δ₂  :=
+  ofSnoc_toSnocMem_GaloisInsertion.gc.le_iff_le.symm
+
+theorem toSnocMem_le_iff_le {k : Kind} {Γ : Context} {Δ₁ Δ₂  : Subcontext Γ} :
+    (toSnocMem Δ₁ : Subcontext (Γ.snoc k)) ≤ toSnocMem Δ₂ ↔ Δ₁ ≤ Δ₂ :=
+  ofSnoc_toSnocMem_GaloisInsertion.u_le_u_iff
+
 def toSnocNotMem {k : Kind} (Δ : Subcontext Γ) : Subcontext (Γ.snoc k)
   | _, Var.zero _ _ => false
   | _, Var.succ v => Δ v
+
+@[mono]
+theorem toSnocNotMem_monotone : {Γ : Context} → {k : Kind} → Monotone (@toSnocNotMem Γ k)
+  | _, _, _, _, _, k, Var.zero _ _ => by
+    simp [toSnocNotMem]
+  | _, _, Δ₁, Δ₂, h, k, Var.succ v => by
+    simp [toSnocNotMem]
+    exact h _ v
+
+def toSnocNotMem_ofSnoc_GaloisCoinsertion {Γ : Context} {k : Kind} :
+    GaloisCoinsertion (@toSnocNotMem Γ k) (@ofSnoc Γ k) :=
+  GaloisCoinsertion.monotoneIntro
+    ofSnoc_monotone
+    toSnocNotMem_monotone
+    (fun a k v => by cases v <;> simp [ofSnoc, toSnocNotMem])
+    (fun b => by simp [ofSnoc, toSnocNotMem])
+
+@[simp]
+theorem toSnocNotMem_ofSnoc {k : Kind} {Γ : Context} (Δ : Subcontext Γ) :
+    ofSnoc (toSnocNotMem Δ : Subcontext (Γ.snoc k)) = Δ :=
+  toSnocNotMem_ofSnoc_GaloisCoinsertion.u_l_eq _
+
+@[simp]
+theorem toSnocNotMem_le_iff {k : Kind} {Γ : Context} {Δ₁ : Subcontext Γ}
+    {Δ₂ : Subcontext (Γ.snoc k)} :
+    (toSnocNotMem Δ₁ : Subcontext (Γ.snoc k)) ≤ Δ₂ ↔ Δ₁ ≤ ofSnoc Δ₂ :=
+  toSnocNotMem_ofSnoc_GaloisCoinsertion.gc.le_iff_le
+
+theorem toSnocNotMem_le_iff_le {k : Kind} {Γ : Context} {Δ₁ Δ₂  : Subcontext Γ} :
+    (toSnocNotMem Δ₁ : Subcontext (Γ.snoc k)) ≤ toSnocNotMem Δ₂ ↔ Δ₁ ≤ Δ₂ :=
+  toSnocNotMem_ofSnoc_GaloisCoinsertion.l_le_l_iff
+
+@[simp]
+theorem toSnocNotMem_le_toSnocMem {k : Kind} (Δ : Subcontext Γ) :
+    (toSnocNotMem Δ : Subcontext (Γ.snoc k)) ≤ toSnocMem Δ :=
+  fun k v => by cases v <;> simp [toSnocNotMem, toSnocMem]
+
+@[simp]
+theorem toSnocMem_not_le_toSnocNotMem {k : Kind} (Δ₁ Δ₂ : Subcontext Γ) :
+    ¬(toSnocMem Δ₁ : Subcontext (Γ.snoc k)) ≤ toSnocNotMem Δ₂ :=
+  fun h => absurd (h _ (Var.zero _ _)) (by simp [toSnocNotMem, toSnocMem])
 
 theorem toSnocMem_ofSnoc_of_mem {k} (Δ : Subcontext (Γ.snoc k)) (h : Δ (Var.zero _ _)) :
     toSnocMem (ofSnoc Δ) = Δ := by
@@ -71,9 +143,9 @@ def recOn {motive : (Γ : Context) → Subcontext Γ → Sort _} :
     {Γ : Context} →
     (Δ : Subcontext Γ) →
     (nil : motive Context.nil ⊥) →
-    (snoc_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocMem Δ)) →
-    (snoc_not_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocNotMem Δ)) →
     motive Γ Δ
   | .nil, Δ, n, _, _ => by convert n; exact Subsingleton.elim _ _
@@ -89,37 +161,37 @@ def recOn {motive : (Γ : Context) → Subcontext Γ → Sort _} :
 @[simp]
 theorem recOn_nil_bot {motive : (Γ : Context) → Subcontext Γ → Sort _}
     (nil : motive Context.nil ⊥)
-    (snoc_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocMem Δ))
-    (snoc_not_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocNotMem Δ)) :
-    recOn (⊥ : Subcontext Context.nil) nil snoc_mem snoc_not_mem = nil :=
+    recOn (⊥ : Subcontext Context.nil) nil snocMem snocNotMem = nil :=
   rfl
 
 @[simp]
 theorem recOn_toSnocMem {motive : (Γ : Context) → Subcontext Γ → Sort _}
     {Γ k} (Δ : Subcontext Γ)
     (nl : motive Context.nil ⊥)
-    (snoc_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocMem Δ))
-    (snoc_not_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocNotMem Δ)) :
-    (recOn (toSnocMem Δ : Subcontext (Γ.snoc k)) nl snoc_mem snoc_not_mem
+    (recOn (toSnocMem Δ : Subcontext (Γ.snoc k)) nl snocMem snocNotMem
       : motive (Γ.snoc k) (toSnocMem Δ)) =
-      snoc_mem _ _ _ (recOn Δ nl snoc_mem snoc_not_mem : motive Γ Δ) :=
+      snocMem _ _ _ (recOn Δ nl snocMem snocNotMem : motive Γ Δ) :=
   rfl
 
 @[simp]
 theorem recOn_toSnocNotMem {motive : (Γ : Context) → Subcontext Γ → Sort _}
     {Γ k} (Δ : Subcontext Γ)
     (nl : motive Context.nil ⊥)
-    (snoc_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocMem Δ))
-    (snoc_not_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocNotMem Δ)) :
-    (recOn (toSnocNotMem Δ : Subcontext (Γ.snoc k)) nl snoc_mem snoc_not_mem
+    (recOn (toSnocNotMem Δ : Subcontext (Γ.snoc k)) nl snocMem snocNotMem
       : motive (Γ.snoc k) (toSnocNotMem Δ)) =
-      snoc_not_mem _ _ _ (recOn Δ nl snoc_mem snoc_not_mem : motive Γ Δ) :=
+      snocNotMem _ _ _ (recOn Δ nl snocMem snocNotMem : motive Γ Δ) :=
   rfl
 
 @[coe] def toContext {Γ : Context} (Δ : Subcontext Γ) : Context :=
@@ -156,48 +228,145 @@ instance ofSubcontext.Mono {Γ : Context}
     (fun _ _ _ h => by simp [ofSubcontext_toSnocMem]; infer_instance)
     (fun _ _ _ h => by simp [ofSubcontext_toSnocNotMem]; apply mono_comp)
 
-def leRecOn {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂)
-    {motive : (Γ : Context) → Subcontext Γ → SubContext Γ → Sort _}
-    (start : motive )
-    (snoc_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
-      motive (Γ.snoc k) (toSnocMem Δ))
-    (snoc_not_mem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
-      motive (Γ.snoc k) (toSnocNotMem Δ)) :
-    motive Γ Δ₁ → motive Γ Δ₂ :=
-  recOn Δ₁
-    (fun _ => nil)
-    (fun _ _ _ => snoc_mem _ _ _)
-    (fun _ _ _ => snoc_not_mem _ _ _)
-
-def ofLE : {Γ : Context} → {Δ₁ Δ₂ : Subcontext Γ} → (h : Δ₁ ≤ Δ₂) →
-    (Δ₁ : Context) ⟶ Δ₂
-  | .nil, _, _, _ => by dsimp [toContext]; exact (𝟙 _)
-  | .snoc _ k, Δ₁, Δ₂, h =>
-    if h₁ : Δ₁ (Var.zero _ _)
-    then by
-      simp [h₁, toContext, le_def.1 h h₁]
-      exact snocHom (ofLE (ofSnoc_monotone h))
-    else
-      if h₂ : Δ₂ (Var.zero _ _)
-      then by
-        simp [h₂, toContext, h₁]
-        exact ofLE (ofSnoc_monotone h) ≫ toSnoc
-      else by
-        simp [h₁, h₂, toContext]
-        exact ofLE (ofSnoc_monotone h)
+def leRecOn {motive : (Γ : Context) → (Δ₁ Δ₂ : Subcontext Γ) → Δ₁ ≤ Δ₂ → Sort _}
+    {Γ : Context} {Δ₁ Δ₂  : Subcontext Γ} (h : Δ₁ ≤ Δ₂)
+    (nil : motive Context.nil ⊥ ⊥ (le_refl _))
+    (snocNotMem_snocNotMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocNotMem Δ₂) (toSnocNotMem_monotone h))
+    (snocNotMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocMem Δ₂)
+        (le_trans (toSnocNotMem_le_toSnocMem _) (toSnocMem_monotone h)))
+    (snocMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocMem Δ₁) (toSnocMem Δ₂) (toSnocMem_monotone h)) :
+    motive Γ Δ₁ Δ₂ h := by
+  induction Δ₂ using recOn with
+  | nil =>
+     simpa [le_bot_iff.1 h]
+  | snocMem Γ k Δ₂ ih =>
+    cases Δ₁ using recOn with
+    | snocMem _ _ Δ₂ => exact snocMem_snocMem _ _ _ _ _ (ih (toSnocMem_le_iff_le.1 h))
+    | snocNotMem _ _ Δ₂ => exact snocNotMem_snocMem _ _ _ _ _ (ih $ by simpa using h)
+  | snocNotMem Γ k Δ₂ ih =>
+    cases Δ₁ using recOn with
+    | snocMem _ _ Δ₂ => simp at h
+    | snocNotMem _ _ Δ₂ => exact snocNotMem_snocNotMem _ _ _ _ _ (ih $ by simpa using h)
 
 @[simp]
-theorem ofLE_refl : {Γ : Context} → {Δ : Subcontext Γ} → ofLE (le_refl Δ) = 𝟙 (Δ : Context)
-  | .nil, _ => rfl
-  | .snoc _ k, Δ => by
-    funext k v
-    dsimp [ofLE, toContext]
-    split_ifs with h
-    . simp only [h, ofLE, toContext]
-      rw [cast_apply (α := Kind) (snocHom (ofLE (_ : ofSnoc Δ ≤ ofSnoc Δ))) k (by simp [h])]
-      rw [cast_apply]
+theorem leRecOn_bot_bot_nil {motive : (Γ : Context) → (Δ₁ Δ₂ : Subcontext Γ) → Δ₁ ≤ Δ₂ → Sort _}
+    (nil : motive Context.nil ⊥ ⊥ (le_refl _))
+    (snocNotMem_snocNotMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocNotMem Δ₂) (toSnocNotMem_monotone h))
+    (snocNotMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocMem Δ₂)
+        (le_trans (toSnocNotMem_le_toSnocMem _) (toSnocMem_monotone h)))
+    (snocMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocMem Δ₁) (toSnocMem Δ₂) (toSnocMem_monotone h)) :
+    leRecOn (le_refl (⊥ : Subcontext Context.nil)) nil snocNotMem_snocNotMem
+      snocNotMem_snocMem snocMem_snocMem = nil :=
+  rfl
 
-    . simp [h]
+@[simp]
+theorem leRecOn_snocNotMem_snocNotMem
+    {motive : (Γ : Context) → (Δ₁ Δ₂ : Subcontext Γ) → Δ₁ ≤ Δ₂ → Sort _}
+    (nil : motive Context.nil ⊥ ⊥ (le_refl _))
+    (snocNotMem_snocNotMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocNotMem Δ₂) (toSnocNotMem_monotone h))
+    (snocNotMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocMem Δ₂)
+        (le_trans (toSnocNotMem_le_toSnocMem _) (toSnocMem_monotone h)))
+    (snocMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocMem Δ₁) (toSnocMem Δ₂) (toSnocMem_monotone h))
+    (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ) (h : Δ₁ ≤ Δ₂) :
+    leRecOn (toSnocNotMem_monotone h) nil snocNotMem_snocNotMem snocNotMem_snocMem
+      snocMem_snocMem = snocNotMem_snocNotMem _ k _ _ h (leRecOn h nil snocNotMem_snocNotMem
+        snocNotMem_snocMem snocMem_snocMem) :=
+  rfl
+
+@[simp]
+theorem leRecOn_snocNotMem_snocMem
+    {motive : (Γ : Context) → (Δ₁ Δ₂ : Subcontext Γ) → Δ₁ ≤ Δ₂ → Sort _}
+    (nil : motive Context.nil ⊥ ⊥ (le_refl _))
+    (snocNotMem_snocNotMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocNotMem Δ₂) (toSnocNotMem_monotone h))
+    (snocNotMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocMem Δ₂)
+        (le_trans (toSnocNotMem_le_toSnocMem _) (toSnocMem_monotone h)))
+    (snocMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocMem Δ₁) (toSnocMem Δ₂) (toSnocMem_monotone h))
+    (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ) (h : Δ₁ ≤ Δ₂) :
+    leRecOn ((toSnocNotMem_le_toSnocMem _).trans (toSnocMem_monotone h))
+      nil snocNotMem_snocNotMem snocNotMem_snocMem
+      snocMem_snocMem = snocNotMem_snocMem _ k _ _ h (leRecOn h nil snocNotMem_snocNotMem
+        snocNotMem_snocMem snocMem_snocMem) :=
+  rfl
+
+@[simp]
+theorem leRecOn_snocMem_snocMem
+    {motive : (Γ : Context) → (Δ₁ Δ₂ : Subcontext Γ) → Δ₁ ≤ Δ₂ → Sort _}
+    (nil : motive Context.nil ⊥ ⊥ (le_refl _))
+    (snocNotMem_snocNotMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocNotMem Δ₂) (toSnocNotMem_monotone h))
+    (snocNotMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocNotMem Δ₁) (toSnocMem Δ₂)
+        (le_trans (toSnocNotMem_le_toSnocMem _) (toSnocMem_monotone h)))
+    (snocMem_snocMem : ∀ (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ)
+      (h : Δ₁ ≤ Δ₂), motive Γ Δ₁ Δ₂ h →
+      motive (Γ.snoc k) (toSnocMem Δ₁) (toSnocMem Δ₂) (toSnocMem_monotone h))
+    (Γ : Context) (k : Kind) (Δ₁ Δ₂ : Subcontext Γ) (h : Δ₁ ≤ Δ₂) :
+    leRecOn (toSnocMem_monotone h) nil snocNotMem_snocNotMem snocNotMem_snocMem
+      snocMem_snocMem = snocMem_snocMem _ k _ _ h (leRecOn h nil snocNotMem_snocNotMem
+        snocNotMem_snocMem snocMem_snocMem) :=
+  rfl
+
+attribute [elab_as_elim] leRecOn
+
+def ofLE {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) : (Δ₁ : Context) ⟶ Δ₂ :=
+  leRecOn h
+    (𝟙 _)
+    (fun _ _ _ _ _ f => f)
+    (fun _ _ _ _ _ f => f ≫ toSnoc)
+    (fun _ _ _ _ _ f => snocHom f)
+
+@[simp]
+theorem ofLE_comp_ofSubcontext {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) :
+    ofLE h ≫ ofSubcontext Δ₂ = ofSubcontext Δ₁ :=
+  leRecOn h
+    rfl
+    (fun Γ k Δ₁ Δ₂ h ih => by
+      dsimp [ofLE, ofSubcontext] at *
+      rw [leRecOn_snocNotMem_snocNotMem (h := h), ← Category.assoc, ih])
+    (fun Γ k Δ₁ Δ₂ h ih => by
+      dsimp [ofLE, ofSubcontext, snocHom] at *
+      rw [leRecOn_snocNotMem_snocMem (h := h), ← ih]
+      rfl)
+    (fun Γ k Δ₁ Δ₂ h ih => by
+      dsimp [ofLE, ofSubcontext, snocHom] at *
+      rw [leRecOn_snocMem_snocMem (h := h), ← ih]
+      funext k v; cases v <;> rfl)
+
+@[simp]
+theorem ofLE_refl {Γ : Context} {Δ : Subcontext Γ} : ofLE (le_refl Δ) = 𝟙 (Δ : Context) :=
+  Mono.right_cancellation (f := ofSubcontext Δ) _ _ (by simp)
+
+@[simp]
+theorem ofLE_trans {Γ : Context} {Δ₁ Δ₂ Δ₃ : Subcontext Γ}
+    (h₁ : Δ₁ ≤ Δ₂) (h₂ : Δ₂ ≤ Δ₃) :
+    ofLE (le_trans h₁ h₂) = ofLE h₁ ≫ ofLE h₂ :=
+  Mono.right_cancellation (f := ofSubcontext Δ₃) _ _ (by simp)
 
 end Subcontext
 
