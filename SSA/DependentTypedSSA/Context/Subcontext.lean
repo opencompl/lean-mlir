@@ -311,6 +311,35 @@ theorem ofLE_trans {Γ : Context} {Δ₁ Δ₂ Δ₃ : Subcontext Γ}
     ofLE (le_trans h₁ h₂) = ofLE h₁ ≫ ofLE h₂ :=
   Mono.right_cancellation (f := ofSubcontext Δ₃) _ _ (by simp)
 
+@[elab_as_elim]
+def snocCasesOn {motive : (Γ : Context) → (k : Kind) → Subcontext (Γ.snoc k) → Sort _}
+    {Γ : Context} {k : Kind}
+    (Δ : Subcontext (Γ.snoc k))
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive _ k (toSnocMem Δ))
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ),  motive _ k (toSnocNotMem Δ)) :
+    motive _ _ Δ := by
+  cases Δ using recOn with
+  | snocMem Γ k Δ => exact snocMem _ _ _
+  | snocNotMem Γ k Δ => exact snocNotMem _ _ _
+
+@[simp]
+theorem snocCasesOn_toSnocMem
+    {motive : (Γ : Context) → (k : Kind) → Subcontext (Γ.snoc k) → Sort _}
+    {Γ : Context} {k : Kind} (Δ : Subcontext Γ)
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive _ k (toSnocMem Δ))
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ),  motive _ k (toSnocNotMem Δ)) :
+    snocCasesOn (toSnocMem Δ) snocMem snocNotMem = snocMem Γ k Δ :=
+  rfl
+
+@[simp]
+theorem snocCasesOn_toSnocNotMem
+    {motive : (Γ : Context) → (k : Kind) → Subcontext (Γ.snoc k) → Sort _}
+    {Γ : Context} {k : Kind} (Δ : Subcontext Γ)
+    (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive _ k (toSnocMem Δ))
+    (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ),  motive _ k (toSnocNotMem Δ)) :
+    snocCasesOn (toSnocNotMem Δ) snocMem snocNotMem = snocNotMem Γ k Δ :=
+  rfl
+
 end Subcontext
 
 end AST
