@@ -7,6 +7,7 @@ import Mathlib.Data.Quot
 import Std.Data.Int.Basic
 import SSA.Experiment.SSAToTree
 
+#check Kind
 open Std
 
 
