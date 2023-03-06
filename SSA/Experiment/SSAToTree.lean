@@ -1268,7 +1268,41 @@ theorem Expr.eval_ops
     simp[EVAL_OP1];
   }
 
-theorem Expr.toOpenTree_ops
+theorem ExprWellTyped.transport_along_eq
+{ctx ctx': TypingContext}
+{e: Expr ek k}
+(WT: ExprWellTyped ctx e)
+(Eq: ctx = ctx') :
+ExprWellTyped ctx' e := by {
+  subst Eq;
+  assumption;
+}
+
+-- All contexts that show that an expression is well typed is uniquely determined
+-- by the well typing relation,
+theorem ExprWellTyped.deterministic_ctx
+{ctx ctx': TypingContext}
+{e: Expr ek k}
+(WT: ExprWellTyped ctx e)
+(WT': ExprWellTyped ctx' e) :
+ctx = ctx' := by {
+  induction e;
+  sorry
+}
+
+theorem ExprWellTyped.subsingleton_upto_ctx
+{ctx ctx': TypingContext}
+{e: Expr ek k}
+(WT: ExprWellTyped ctx e)
+(WT': ExprWellTyped ctx' e) :
+HEq WT  WT':= by {
+  have Eq: ctx = ctx' := ExprWellTyped.deterministic_ctx WT WT';
+  subst Eq;
+  simp;
+}
+
+
+theorem Expr_toOpenTree_ops
   {ectx : EvalContext kindMotive}
   {op1: Expr .O k}
   {op2: Expr .Os k2}
@@ -1279,7 +1313,40 @@ theorem Expr.toOpenTree_ops
   (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext ectx)) op2) :
   Expr.toOpenTree (ExprWellTyped.ops op1 op2 WT1 WT2) =
     Expr.toOpenTree (WT2.extendEvalContext (Expr.eval opFold pairFold WT1)) := by {
-      sorry
+    have WT1_TREE : ExprWellTyped (EvalContext.toTypingContext (EvalContext.map (fun {k} => OpenTree.var) ectx)) op1 := by {
+      apply ExprWellTyped.map;
+      assumption;
+    }
+    have WT2_TREE :
+      ExprWellTyped (TypingContext.bind (Expr.retVar op1) k
+      (EvalContext.toTypingContext (EvalContext.map (fun {k} => OpenTree.var) ectx)))
+        op2 := by {
+          apply ExprWellTyped.transport_along_eq WT2;
+          simp[← EvalContext.toTypingContext_map];
+    }
+    simp[Expr.toOpenTree];
+    have RW_EVAL_OPS :=
+      Expr.eval_ops (ectx := ectx.map OpenTree.var)
+                (op1 := op1)
+                (op2 := op2)
+                (opFold := OpenTree.assign)
+                (pairFold := OpenTree.pair)
+                WT1_TREE
+                WT2_TREE;
+    have CTX1_EQ : EvalContext.toTypingContext ectx = EvalContext.toTypingContext (ectx.map OpenTree.var) := by {
+      apply EvalContext.toTypingContext_map;
+    }
+
+    have CTX2_EQ : EvalContext.toTypingContext (ectx.bind op1.retVar k v) =
+      TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext (ectx.map OpenTree.var)) := by {
+      simp[EvalContext.toTypingContext_bind (DCTX := rfl)];
+      simp[← EvalContext.toTypingContext_map];
+    }
+
+    have WT1_EQ_WT1_TREE : HEq WT1 WT1_TREE := by {
+      apply ExprWellTyped.subsingleton_upto_ctx;
+    };
+    sorry
   }
 
 
@@ -1295,7 +1362,7 @@ theorem OpenTree.eval_sound_open_ops
     simp only[Expr.eval_ops];
     have  EVAL_OP := OpenTree.eval_sound_open_op opFold pairFold WT1;
     simp[←EVAL_OP];
-    have H3 := Expr.toOpenTree_ops opFold pairFold WT1 (Expr.eval opFold pairFold WT1) WT2;
+    have H3 := Expr_toOpenTree_ops opFold pairFold WT1 (Expr.eval opFold pairFold WT1) WT2;
     simp[H3];
     apply OpenTree.eval_sound_open_ops;
   }
