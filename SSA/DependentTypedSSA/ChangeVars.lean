@@ -27,7 +27,7 @@ theorem Tuple.changeVars_comp_apply (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) 
   by simp
 
 @[simp]
-theorem Tuple.changeVars_eval (f : Γ₁ ⟶ Γ₂) (t : Tuple e Γ₁ k) (g : Γ₂.eval) :
+theorem Tuple.eval_changeVars (f : Γ₁ ⟶ Γ₂) (t : Tuple e Γ₁ k) (g : Γ₂.eval) :
     (t.changeVars f).eval s g = t.eval s (Context.evalMap f g) := by
   induction t <;> simp [*] at *
 
@@ -62,10 +62,10 @@ theorem Expr.changeVars_comp (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) :
   funext <| fun t => t.changeVars_comp_apply _ _
 
 @[simp]
-theorem Expr.changeVars_eval : ∀ {k : Kind} {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂)
+theorem Expr.eval_changeVars : ∀ {k : Kind} {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂)
     (e : Expr e Γ₁ k) (g : Γ₂.eval), (e.changeVars f).eval s g = e.eval s (Context.evalMap f g)
-  | _, _, _, f, ._let f' x e, g => by simp [Expr.changeVars_eval _ e]
-  | _, _, _, f, .letlam f' x e, g => by simp [Expr.changeVars_eval _ e]
+  | _, _, _, f, ._let f' x e, g => by simp [Expr.eval_changeVars _ e]
+  | _, _, _, f, .letlam f' x e, g => by simp [Expr.eval_changeVars _ e]
   | _, _, _, f, .retμrn x, g => by simp
 
 end AST

@@ -51,6 +51,10 @@ theorem Context.evalMap_comp (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) :
     Context.evalMap (f ≫ g) = Context.evalMap f ∘ Context.evalMap g :=
   rfl
 
+theorem Context.evalMap_comp_apply (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) (v : Γ₃.eval) :
+    Context.evalMap (f ≫ g) v = Context.evalMap f (Context.evalMap g v) :=
+  rfl
+
 @[simp]
 theorem Context.evalMap_snocHom {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) (g : (Γ₂.snoc k).eval) :
     Context.evalMap (Context.snocHom f) g = fun _ v => v.elim

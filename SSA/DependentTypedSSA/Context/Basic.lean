@@ -20,6 +20,20 @@ def Var.elim {Γ : Context} {k₁ : Kind} {motive : ∀ k₂, Var (Γ.snoc k₁)
   | .zero _ _, _, h => h
   | .succ v, hsucc, _ => hsucc _ v
 
+@[simp]
+theorem Var.elim_zero {Γ : Context} {k₁ : Kind} {motive : ∀ k₂, Var (Γ.snoc k₁) k₂ → Sort _}
+    (succ : ∀ k₂ v, motive k₂ (.succ v))
+    (zero : motive _ (.zero Γ k₁)) :
+    (Var.elim (motive := motive) (Var.zero Γ k₁) succ zero) = zero :=
+  rfl
+
+@[simp]
+theorem Var.elim_succ {Γ : Context} {k₁ : Kind} {motive : ∀ k₂, Var (Γ.snoc k₁) k₂ → Sort _}
+    (v : Var Γ k₁) (succ : ∀ k₂ v, motive k₂ (.succ v))
+    (zero : motive _ (.zero Γ k₁)) :
+    (Var.elim (motive := motive) (.succ v) succ zero) = succ _ v :=
+  rfl
+
 namespace Context
 
 open CategoryTheory

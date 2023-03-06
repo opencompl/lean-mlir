@@ -202,6 +202,17 @@ theorem recOn_toSnocNotMem {motive : (Γ : Context) → Subcontext Γ → Sort _
 
 instance : Coe (Subcontext Γ) Context := ⟨toContext⟩
 
+theorem toContext_nil : (⊥ : Subcontext Context.nil).toContext = Context.nil :=
+  rfl
+
+theorem toContext_toSnocMem {Γ k} (Δ : Subcontext Γ) :
+    (toSnocMem Δ : Subcontext (Γ.snoc k)).toContext = (toContext Δ).snoc k :=
+  rfl
+
+theorem toContext_toSnocNotMem {Γ k} (Δ : Subcontext Γ) :
+    (toSnocNotMem Δ : Subcontext (Γ.snoc k)).toContext = (Δ : Context) :=
+  rfl
+
 def ofSubcontext {Γ : Context} (Δ : Subcontext Γ) : (Δ : Context) ⟶ Γ :=
   recOn Δ
     (𝟙 _)
@@ -277,6 +288,11 @@ def restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
         (fun _ h => by simp [toSnocNotMem] at h)
         ih) v
 
+-- @[simp] theorem restrictVar_snocMem_succ {Γ : Context} {k : Kind} {v : Var Γ k₂}
+--     {Δ : Subcontext Γ} (hv : (toSnocMem Δ v.succ)) :
+--     restrictVar hv = restrictVar (show Δ v from _) :=
+--   by cases v; rfl
+
 @[simp]
 theorem ofSubcontext_restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
     {v : Var Γ k} → (hv : Δ v) → ofSubcontext Δ (restrictVar hv) = v :=
@@ -293,6 +309,14 @@ theorem ofSubcontext_restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} 
       | zero _ _ => simp [toSnocNotMem] at hv)
     v
 
+@[elab_as_elim]
+def Var.subcontextCasesOn {Γ : Context} {k : Kind} {Δ : Subcontext Γ}
+    {motive : Var Δ k → Sort _} (v : Var Δ k)
+    (h : ∀ (v : Var Γ k) (hv : Δ v), motive (restrictVar hv)) : motive v := by
+  convert h (ofSubcontext _ v) (app_ofSubcontext _ _)
+  apply mono_iff_injective.1 (ofSubcontext.Mono Δ)
+  simp
+
 def ofLE {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) : (Δ₁ : Context) ⟶ Δ₂ :=
   fun k v => restrictVar (v := ofSubcontext Δ₁ v)  (le_def.1 h (by simp))
 
@@ -300,6 +324,12 @@ def ofLE {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) : (�
 theorem ofLE_comp_ofSubcontext {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) :
     ofLE h ≫ ofSubcontext Δ₂ = ofSubcontext Δ₁ := by
   funext k v; simp [ofLE]
+
+@[simp]
+theorem ofSubcontext_ofLE_apply {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) :
+    ∀ (v : Var Δ₁ k), ofSubcontext Δ₂ (ofLE h v) = ofSubcontext Δ₁ v := by
+  rw [←ofLE_comp_ofSubcontext h]; simp
+
 
 @[simp]
 theorem ofLE_refl {Γ : Context} {Δ : Subcontext Γ} : ofLE (le_refl Δ) = 𝟙 (Δ : Context) :=
@@ -339,6 +369,25 @@ theorem snocCasesOn_toSnocNotMem
     (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ),  motive _ k (toSnocNotMem Δ)) :
     snocCasesOn (toSnocNotMem Δ) snocMem snocNotMem = snocNotMem Γ k Δ :=
   rfl
+
+def ofSubcontextSnocOfNotMem {Γ : Context} {k : Kind} {Δ : Subcontext (Γ.snoc k)}
+    (h : ¬ Δ (Var.zero _ _)) : (Δ : Context) ⟶ Γ :=
+  snocCasesOn Δ
+    (fun _ _ _ h => by simp [toSnocMem] at h)
+    (fun _ _ Δ _ => ofSubcontext Δ)
+    h
+
+@[simp]
+theorem ofSubcontextSnocOfNotMem_restrictVar_succ
+    {Γ : Context} {k₁ k₂ : Kind} {Δ : Subcontext (Γ.snoc k₁)}
+    (h : ¬ Δ (Var.zero _ _)) (v : Var Γ k₂) (hv : Δ (Var.succ v)):
+    ofSubcontextSnocOfNotMem h (restrictVar hv) = v := by
+  induction Δ using snocCasesOn with
+  | snocMem _ _ h => contradiction
+  | snocNotMem _ _ Δ =>
+      simp [ofSubcontextSnocOfNotMem, snocCasesOn_toSnocNotMem]
+      have : restrictVar hv = @restrictVar _ _ Δ v hv := rfl
+      rw [this, ofSubcontext_restrictVar]
 
 end Subcontext
 
