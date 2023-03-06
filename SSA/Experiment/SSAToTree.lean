@@ -1035,6 +1035,23 @@ def ExprWellTyped.map
   }
 }
 
+theorem ExprWellTyped.map_ops
+ {kindMotive: Kind → Type}
+ {kindMotive': Kind → Type}
+ (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
+ {ectx: EvalContext kindMotive}
+ {op: Op k}
+ {ops: Ops ks}
+ (WT: ExprWellTyped ectx.toTypingContext (Expr.ops op ops)) :
+ ExprWellTyped (ectx.map f).toTypingContext (Expr.ops op ops) =
+  ExprWellTyped (ectx.toTypingContext) (Expr.ops op ops) := by {
+    cases WT;
+    case ops WT1 WT2 => {
+      have TYPING_CONTEXT_MAP := EvalContext.toTypingContext_map ectx f;
+      simp[TYPING_CONTEXT_MAP];
+    }
+}
+
 -- Convert a well typed 'Expr' into a value, as asked by 'kindMotive'
 def Expr.eval {ectx : EvalContext kindMotive}
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -1073,14 +1090,14 @@ theorem Expr.eval_implies_eval?_some
 }
 
 -- If we know that `eval?` has a vaulue, then we can compute the mapped value,
-theorem Expr.eval?_map_some
-  {kindMotive: Kind → Type} -- what each kind is compiled into.
-  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  {ctx : EvalContext kindMotive}
-  {e : Expr ek k}
-  {val: kindMotive k}
-  (SUCCESS: e.eval? opFold pairFold ctx = .some val): True := sorry
+-- theorem Expr.eval?_map_some
+--   {kindMotive: Kind → Type} -- what each kind is compiled into.
+--   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+--   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+--   {ctx : EvalContext kindMotive}
+--   {e : Expr ek k}
+--   {val: kindMotive k}
+--   (SUCCESS: e.eval? opFold pairFold ctx = .some val): True := sxorry
 
 -- Convert an expression to a tree by folding into the tree algebra
 def Expr.toOpenTree? (ectx: EvalContext kindMotive) (e : Expr ek k): Option (OpenTree kindMotive k) :=
@@ -1090,7 +1107,7 @@ def Expr.toOpenTree? (ectx: EvalContext kindMotive) (e : Expr ek k): Option (Ope
         (ectx.map (OpenTree.var (kindMotive := kindMotive)))
 
 -- Convert an expression to a tree by folding into the tree algebra
-def Expr.toOpenTree {ectx: EvalContext kindMotive} {e : Expr ek k}
+abbrev Expr.toOpenTree {ectx: EvalContext kindMotive} {e : Expr ek k}
   (WT: ExprWellTyped ectx.toTypingContext e): OpenTree kindMotive k :=
     (e.eval
         (opFold := fun opk ti => OpenTree.assign opk ti)
@@ -1109,30 +1126,20 @@ def OpenTree.eval
   | .pair ta tb =>
       pairFold (ta.eval opFold pairFold) (tb.eval opFold pairFold)
 
--- If op is well typed in `ctx`, then it is well typed in `cctx.extend...`
-theorem ExprWellTyped.op_extend
-  {expr: Expr ek k}
-  (WT1: ExprWellTyped ctx expr)
-  {kind: Kind}
-  {name: String}:
-  ExprWellTyped (ctx.bind name kind) expr := by {
-    sorry
-  }
-
 
 -- If 'Expr.toOpenTree?', 'Expr.eval?', and 'OpenTree.eval?' are all defined, then we can show that
 -- the expected diagram commutes.
-theorem OpenTree.eval?_sound_open
-  {ectx : EvalContext kindMotive}
-  {e: Expr ek k}
-  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')):
-  Option.map (OpenTree.eval kindMotive opFold pairFold) (e.toOpenTree? ectx) =
-    e.eval? opFold pairFold ectx :=
-  match e with
-  | .assign ret ekind arg => sorry
-  | .pair .. => sorry
-  | .ops .. => sorry
+-- theorem OpenTree.eval?_sound_open
+--   {ectx : EvalContext kindMotive}
+--   {e: Expr ek k}
+--   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+--   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')):
+--   Option.map (OpenTree.eval kindMotive opFold pairFold) (e.toOpenTree? ectx) =
+--     e.eval? opFold pairFold ectx :=
+--   match e with
+--   | .assign ret ekind arg => sxorry
+--   | .pair .. => sxorry
+--   | .ops .. => sxorry
 
 -- the diagram commutes for open terms: Expr.eval = OpenTree.eval ∘ Expr.toOpenTree
 -- for open terms, we need to add variables to our trees.
@@ -1222,6 +1229,27 @@ def ExprWellTyped.extendEvalContext
     assumption;
 }
 
+-- if we know that 'op1' is well typed at 'ectx', and that 'op2' is well typed at
+-- 'ectx.bind op1.retVar k val', then 'op2' is well typed at
+theorem ExprWellTyped.bind
+  {ectx : EvalContext kindMotive}
+  {op: Expr .O k}
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (WT1: ExprWellTyped ectx.toTypingContext op)
+  (v: kindMotive k)
+  (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op) k (EvalContext.toTypingContext ectx)) op2) :
+    ExprWellTyped (EvalContext.toTypingContext (ectx.bind  op.retVar k v)) op2 := by {
+    have H : (EvalContext.toTypingContext (ectx.bind op.retVar k v)) =
+      TypingContext.bind (Expr.retVar op) k (EvalContext.toTypingContext ectx) := by {
+        simp[EvalContext.toTypingContext_bind (DCTX := rfl)];
+      };
+    rw[H];
+    assumption;
+}
+
+-- show that evaluating `(op1 :: op2)` is the same as evaluation `op1` followed by evaluating `op2`
+-- in the extended context
 theorem Expr.eval_ops
   {ectx : EvalContext kindMotive}
   {op1: Expr .O k}
@@ -1240,7 +1268,6 @@ theorem Expr.eval_ops
     simp[EVAL_OP1];
   }
 
-
 theorem Expr.toOpenTree_ops
   {ectx : EvalContext kindMotive}
   {op1: Expr .O k}
@@ -1248,29 +1275,12 @@ theorem Expr.toOpenTree_ops
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
   (WT1: ExprWellTyped ectx.toTypingContext op1)
+  (v: kindMotive k)
   (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext ectx)) op2) :
   Expr.toOpenTree (ExprWellTyped.ops op1 op2 WT1 WT2) =
-    Expr.toOpenTree  (WT2.extendEvalContext (Expr.toOpenTree WT1)) := by {
-
+    Expr.toOpenTree (WT2.extendEvalContext (Expr.eval opFold pairFold WT1)) := by {
+      sorry
   }
--- theorem OpenTree.eval_ops
---   {ectx : EvalContext kindMotive}
---   {op1: Expr .O k}
---   {op2: Expr .Os k2}
---   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
---   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
---   (WT1: ExprWellTyped ectx.toTypingContext op1)
---   (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext ectx)) op2) :
---   (Expr.toOpenTree (Expr.ops op1 op2) (ExprWellTyped.ops op1 op2 WT1 WT2)) =
---   Expr.toOpenTree op2 ()
---     (WT2.extendEvalContext (Expr.eval opFold pairFold WT1)) := by {
---     simp[Expr.eval, Expr.eval?];
---     have EVAL_OP1 : Expr.eval? opFold pairFold ectx op1 = .some (Expr.eval opFold pairFold WT1) := by {
---       apply Expr.eval_implies_eval?_some (EVAL := rfl)
---     };
---     simp[EVAL_OP1];
---   }
-
 
 
 theorem OpenTree.eval_sound_open_ops
@@ -1283,17 +1293,11 @@ theorem OpenTree.eval_sound_open_ops
   cases WT;
   case ops k op1 op2 WT1 WT2 => {
     simp only[Expr.eval_ops];
-    have WT1' : ExprWellTyped (EvalContext.toTypingContext (ectx.map (OpenTree.var (kindMotive := kindMotive)))) op1 := by {
-      apply ExprWellTyped.map;
-      assumption;
-    };
     have  EVAL_OP := OpenTree.eval_sound_open_op opFold pairFold WT1;
-
     simp[←EVAL_OP];
-    have  H1 := OpenTree.eval?_sound_open_op_well_typed opFold pairFold WT1;
-    have  H2 := OpenTree.eval?_sound_open_op_well_typed (OpenTree.assign) (OpenTree.pair) WT1'
-      (e := op1) (ectx := EvalContext.map (fun {k} => var) ectx);
-
+    have H3 := Expr.toOpenTree_ops opFold pairFold WT1 (Expr.eval opFold pairFold WT1) WT2;
+    simp[H3];
+    apply OpenTree.eval_sound_open_ops;
   }
 }
 
