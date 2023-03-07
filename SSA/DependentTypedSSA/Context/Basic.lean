@@ -1,4 +1,5 @@
 import Mathlib.CategoryTheory.EpiMono
+import Mathlib.Data.Fintype.Basic
 import SSA.DependentTypedSSA.Kind
 
 namespace AST
@@ -33,6 +34,21 @@ theorem Var.elim_succ {Γ : Context} {k₁ : Kind} {motive : ∀ k₂, Var (Γ.s
     (zero : motive _ (.zero Γ k₁)) :
     (Var.elim (motive := motive) (.succ v) succ zero) = succ _ v :=
   rfl
+
+instance Var.Fintype : ∀ (Γ : Context) (k : Kind), Fintype (Var Γ k)
+  | .nil, _ => ⟨∅, fun v => by cases v⟩
+  | Context.snoc Γ k₁, k₂ =>
+    let F := Var.Fintype Γ k₂
+    if h : k₁ = k₂
+    then by
+      subst h
+      exact ⟨⟨Var.zero _ _ ::ₘ (F.elems.1.map Var.succ),
+              Multiset.nodup_cons.2 ⟨by simp,
+              (Multiset.nodup_map_iff_inj_on F.elems.2).2 (by simp)⟩⟩,
+            fun v => by
+              cases v <;> simp [Fintype.complete]⟩
+    else ⟨F.elems.map ⟨Var.succ, fun _ => by simp⟩,
+      fun v => by cases v <;> simp [Fintype.complete] at *⟩
 
 namespace Context
 
