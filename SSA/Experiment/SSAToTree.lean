@@ -80,6 +80,8 @@ def TypingContext.bottom : TypingContext := fun _ => .none
 def TypingContext.bind (bindname : String) (bindkind: Kind) (ctx: TypingContext): TypingContext :=
   fun name => if name = bindname then bindkind else ctx name
 
+notation ctx "[" bindname " ↦ " bindk  "]" => TypingContext.bind bindname bindk ctx
+
 /-
 Actually, I feel like I am stupid. We don't usually write the typing judgement
 as 'returning' a context, we write it as 'having' a context. So, I think I need
@@ -531,8 +533,6 @@ theorem Expr.eval?_ops
     cases H:eval? (fun {i o} => opFold) (fun {i i'} => pairFold) ctx o1  <;> simp[H];
   }
 
-
-
 -- 'eval?' will return a 'some' value
 -- Note that here, we must ford TCTX, since to perform induction on 'wellformed',
 -- we need the indexes of 'wellformed' to be variables.
@@ -720,57 +720,6 @@ theorem EvalContext.toTypingContext_map
     cases H:(ectx arg) <;> simp[toTypingContext, EvalContext.map, H];
 }
 
--- /-
--- We need a way to transport well-typedness along evaluation context morphisms.
--- If we know that an expression is well typed, then we should be able to transport
--- it along a 'EvalContext.map' [which is yet to be defined.]
--- -/
--- def ExprWellTyped.map
---  {kindMotive: Kind → Type}
---  {kindMotive': Kind → Type}
---  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
---  {ectx: EvalContext kindMotive}
---  {tctx: TypingContext}
---  (TCTX: ectx.toTypingContext = tctx)
---  {ek: ExprKind}
---  {e: Expr ek k}
---  (WT: ExprWellTyped tctx e)
---   : ExprWellTyped (ectx.map f).toTypingContext e := by {
---   cases WT;
---   case assign i o ret arg ARG RET => {
---     apply ExprWellTyped.mk_assign;
---     apply EvalContext.toTypingContext_map_some (LOOKUP := ARG);
---     apply EvalContext.toTypingContext_map_none (LOOKUP := RET);
---   }
---   case pair ret arg1 arg2 k1 k2 ARG ARG' RET => {
---     apply ExprWellTyped.mk_pair;
---     apply EvalContext.toTypingContext_map_some (LOOKUP := ARG);
---     apply EvalContext.toTypingContext_map_some (LOOKUP := ARG');
---     apply EvalContext.toTypingContext_map_none (LOOKUP := RET);
---   }
---   case ops op1 op2 ctxmid WT1 WT2 => {
---     constructor;
---     exact (EvalContext.toTypingContext_map ectx f ▸ WT1);
---     exact (EvalContext.toTypingContext_map ectx f ▸ WT2);
---   }
--- }
-
--- theorem ExprWellTyped.map_ops
---  {kindMotive: Kind → Type}
---  {kindMotive': Kind → Type}
---  (f: ∀ {k : Kind}, kindMotive k → kindMotive' k) -- naturality.
---  {ectx: EvalContext kindMotive}
---  {op: Op k}
---  {ops: Ops ks}
---  (WT: ExprWellTyped ectx.toTypingContext (Expr.ops op ops)) :
---  ExprWellTyped (ectx.map f).toTypingContext (Expr.ops op ops) =
---   ExprWellTyped (ectx.toTypingContext) (Expr.ops op ops) := by {
---     cases WT;
---     case ops WT1 WT2 => {
---       have TYPING_CONTEXT_MAP := EvalContext.toTypingContext_map ectx f;
---       simp[TYPING_CONTEXT_MAP];
---     }
--- }
 
 -- Convert a well typed 'Expr' into a value, as asked by 'kindMotive'
 def Expr.eval {ectx : EvalContext kindMotive}
@@ -785,8 +734,42 @@ def Expr.eval {ectx : EvalContext kindMotive}
       (opFold := opFold) (pairFold := pairFold)
       (TCTX := TCTX) (WT := WT))
 
+
 notation "expr⟦⟧[" opFold ", " pairFold "," TCTX ", " WT " ⊧ " "⟦" e "⟧" "]" =>
   Expr.eval opFold pairFold TCTX WT (e := e)
+
+
+-- Unfold `Expr.eval` for `Expr.ops`.
+theorem Expr.eval_ops
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (ectx ectx' : EvalContext kindMotive)
+  (o1: Expr .O k1)
+  (o2: Expr .Os k2)
+  (tctx : TypingContext)
+  (WT_OPS: ExprWellTyped tctx (Expr.ops o1 o2))
+  (WT_OP1 : ExprWellTyped tctx o1)
+  (WT_OP2: ExprWellTyped tctx' o2)
+  (ECTX_TCTX: ectx.toTypingContext = tctx)
+  (ECTX': ectx' = ectx.bind o1.retVar k1 (Expr.eval opFold pairFold (e := o1) (ectx := ectx) (tctx := tctx) ECTX_TCTX WT_OP1))
+  (TCTX': tctx' = tctx.bind o1.retVar k1)
+  (ECTX'_TCTX': ectx'.toTypingContext = tctx'):
+  Expr.eval (k := k2)  opFold pairFold (e := Expr.ops o1 o2) (ectx := ectx) (tctx := tctx) ECTX_TCTX WT_OPS =
+    @Expr.eval kindMotive ectx' opFold pairFold (e := o2)  (tctx := tctx') ECTX'_TCTX' WT_OP2 := by {
+      subst ECTX';
+      subst TCTX';
+      simp[Expr.eval];
+      simp[Expr.eval?_ops];
+      congr;
+      have E1VAL :
+        expr⟦⟧?[fun {i o} => opFold, fun {i i'} => pairFold ; ectx ⊧ ⟦o1⟧] =
+        Expr.eval opFold pairFold (e := o1) (ectx := ectx) (tctx := tctx) ECTX_TCTX WT_OP1 := by {
+          simp[Expr.eval];
+        };
+        simp[E1VAL];
+}
+
 
 theorem Option.get_none_elim:
   (Option.get none P = v)-> False := by {
@@ -863,17 +846,6 @@ theorem Expr.eval?_implies_eval
     simp[EVAL?];
 }
 
-
--- If we know that `eval?` has a vaulue, then we can compute the mapped value,
--- theorem Expr.eval?_map_some
---   {kindMotive: Kind → Type} -- what each kind is compiled into.
---   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
---   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
---   {ctx : EvalContext kindMotive}
---   {e : Expr ek k}
---   {val: kindMotive k}
---   (SUCCESS: e.eval? opFold pairFold ctx = .some val): True := sxorry
-
 -- Convert an expression to a tree by folding into the tree algebra
 def Expr.toOpenTree? (treectx: EvalContext (OpenTree kindMotive)) (e : Expr ek k): Option (OpenTree kindMotive k) :=
     e.eval?
@@ -898,6 +870,25 @@ abbrev Expr.toOpenTree {treectx: EvalContext (OpenTree kindMotive)} {e : Expr ek
 
 notation "expr→tree[" TCTX "; " WT " ⊧ " e "]" => Expr.toOpenTree TCTX WT (e := e)
 
+-- unfold a `toOpenTree` of `Expr.ops`
+def Expr.toOpenTree_ops
+  (kindMotive: Kind → Type)
+  (treectx treectx' : EvalContext (OpenTree kindMotive))
+  (o1: Expr .O k1)
+  (o2: Expr .Os k2)
+  (WT_OPS: ExprWellTyped tctx (Expr.ops o1 o2))
+  (WT_OP1 : ExprWellTyped tctx o1)
+  (WT_OP2: ExprWellTyped tctx' o2)
+  (TREECTX_TCTX: treectx.toTypingContext = tctx)
+  (TREECTX': treectx' = treectx.bind o1.retVar k1 (o1.toOpenTree TREECTX_TCTX WT_OP1))
+  (TCTX': tctx' = tctx.bind o1.retVar k1)
+  (TREECTX'_TCTX':treectx'.toTypingContext = tctx') :
+  (Expr.ops o1 o2).toOpenTree TREECTX_TCTX WT_OPS =
+    o2.toOpenTree TREECTX'_TCTX' WT_OP2 := by {
+      simp[toOpenTree];
+      apply Expr.eval_ops <;> assumption;
+}
+
 theorem Expr.toOpenTree?_toOpenTree_eq
   {treectx: EvalContext (OpenTree kindMotive)}
   {e : Expr ek k}
@@ -921,7 +912,6 @@ def OpenTree.eval
       pairFold (ta.eval opFold pairFold) (tb.eval opFold pairFold)
 
 notation "evaltree[" kindMotive ", " opFold "," pairFold " ⊧ " "⟦" tree "⟧" "]" => OpenTree.eval kindMotive opFold pairFold tree
-
 
 
 -- In hindsight, it was probably easier to separately define evaluation and converting to a tree.
@@ -986,9 +976,9 @@ def ValidTreeContext.isTypingContext
 
 -- using (EvalContext.map var) provides a valid tree context.
 theorem ValidTreeContext.map_is_valid_tree_context
-  {ectx : EvalContext kindMotive}
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
-  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')):
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  (ectx : EvalContext kindMotive):
   ValidTreeContext opFold pairFold ectx (ectx.map (OpenTree.var )) := by {
     constructor;
     case ectx_to_treectx => {
@@ -1138,20 +1128,6 @@ theorem ValidContext.lookup_by_kind_ectx_to_treectx
   }
 
 
--- If 'Expr.toOpenTree?', 'Expr.eval?', and 'OpenTree.eval?' are all defined, then we can show that
--- the expected diagram commutes.
--- theorem OpenTree.eval?_sound_open
---   {ectx : EvalContext kindMotive}
---   {e: Expr ek k}
---   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
---   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')):
---   Option.map (OpenTree.eval kindMotive opFold pairFold) (e.toOpenTree? ectx) =
---     e.eval? opFold pairFold ectx :=
---   match e with
---   | .assign ret ekind arg => sxorry
---   | .pair .. => sxorry
---   | .ops .. => sxorry
-
 -- the diagram commutes for open terms: Expr.eval = OpenTree.eval ∘ Expr.toOpenTree
 -- for open terms, we need to add variables to our trees.
 theorem OpenTree.eval_sound_open_op
@@ -1219,6 +1195,61 @@ theorem OpenTree.eval_sound_open_op
   }
 
 
+theorem OpenTree.eval_sound_open_ops
+  {ectx : EvalContext kindMotive}
+  {e: Expr .Os k}
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  {tctx: TypingContext}
+  {treectx: EvalContext (OpenTree kindMotive)}
+  (ECTX_TCTX: ↑ectx = tctx)
+  (TREECTX_TCTX: treectx = tctx)
+  (WT: ExprWellTyped tctx e)
+  {TREECTX_ECTX: ValidTreeContext opFold pairFold ectx treectx}:
+  (e.toOpenTree TREECTX_TCTX WT).eval opFold pairFold = e.eval opFold pairFold ECTX_TCTX WT :=
+    match WT with
+    | .ops (op1 := op1) (op2 := ops2) (ctxmid := ctxmid) (WT1 := WT1) (CTXMID := CTXMID) (WT2 := WT2) => by {
+      rw[Expr.eval_ops (WT_OP1 := WT1) (WT_OP2 := WT2) (ECTX' := rfl) (TCTX' := by simp[CTXMID])
+          (ECTX'_TCTX' := by {
+            rw[← CTXMID];
+            rw[EvalContext.toTypingContext_bind (TCTX := ECTX_TCTX)];
+          }) ];
+      rw[Expr.toOpenTree_ops (WT_OP1 := WT1) (WT_OP2 := WT2) (TREECTX_TCTX := TREECTX_TCTX) (TREECTX' := rfl) (TCTX' := by simp[CTXMID])
+          (TREECTX'_TCTX' := by {
+            rw[← CTXMID];
+            rw[EvalContext.toTypingContext_bind (TCTX := TREECTX_TCTX)];
+          })
+        ];
+
+      have EVAL_OP : (op1.toOpenTree TREECTX_TCTX _).eval opFold pairFold = op1.eval opFold pairFold ECTX_TCTX WT1 := by {
+        apply OpenTree.eval_sound_open_op;
+        assumption;
+      }
+
+      simp_rw[← EVAL_OP];
+      simp;
+      apply OpenTree.eval_sound_open_ops;
+      apply ValidTreeContext.bind <;> try assumption;
+      simp[EVAL_OP];
+    }
+
+-- evaluation of any operation is sound if the evalcontext and treecontext match.
+theorem OpenTree.eval_sound
+  {ectx : EvalContext kindMotive}
+  {e: Expr ek k}
+  (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
+  (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
+  {tctx: TypingContext}
+  {treectx: EvalContext (OpenTree kindMotive)}
+  (ECTX_TCTX: ↑ectx = tctx)
+  (TREECTX_TCTX: treectx = tctx)
+  (WT: ExprWellTyped tctx e)
+  {TREECTX_ECTX: ValidTreeContext opFold pairFold ectx treectx}:
+  (e.toOpenTree TREECTX_TCTX WT).eval opFold pairFold = e.eval opFold pairFold ECTX_TCTX WT :=
+  match ek with
+  | .O => by { apply OpenTree.eval_sound_open_op; assumption; }
+  | .Os => by { apply OpenTree.eval_sound_open_ops; assumption; }
+
 -- If the op is well-typed, then `Expr.eval?` will equal `OpenTree.eval <$> Expr.toOpenTree?`
 theorem OpenTree.eval?_sound_open_ops_well_typed
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -1279,55 +1310,20 @@ theorem OpenTree.eval?_sound_open_ops_well_typed
       }
 }
 
-
--- if we know that 'op1' is well typed at 'ectx', then extending
--- 'ectx' with some value 'val' for 'op1'
-def ExprWellTyped.extendEvalContext
-  {ectx : EvalContext kindMotive}
-  {op1: Expr .O k}
-  {op2: Expr .Os k2}
-  (val: kindMotive k)
-  (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext ectx)) op2) :
-  ExprWellTyped (EvalContext.toTypingContext (ectx.bind op1.retVar k val)) op2 := by {
-    have H : (EvalContext.toTypingContext (ectx.bind op1.retVar k val)) =
-      TypingContext.bind (Expr.retVar op1) k (EvalContext.toTypingContext ectx) := by {
-        apply EvalContext.toTypingContext_bind;
-        simp[EvalContext.toTypingContext, EvalContext.bind];
-      };
-    rw[H];
-    assumption;
-}
-
--- if we know that 'op1' is well typed at 'ectx', and that 'op2' is well typed at
--- 'ectx.bind op1.retVar k val', then 'op2' is well typed at
-theorem ExprWellTyped.bind
-  {ectx : EvalContext kindMotive}
-  {op: Expr .O k}
+-- main theorem: converting to an open tree and evaluating is sound
+def diagram_commutes
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  (WT1: ExprWellTyped ectx.toTypingContext op)
-  (v: kindMotive k)
-  (WT2: ExprWellTyped (TypingContext.bind (Expr.retVar op) k (EvalContext.toTypingContext ectx)) op2) :
-    ExprWellTyped (EvalContext.toTypingContext (ectx.bind  op.retVar k v)) op2 := by {
-    have H : (EvalContext.toTypingContext (ectx.bind op.retVar k v)) =
-      TypingContext.bind (Expr.retVar op) k (EvalContext.toTypingContext ectx) := by {
-        simp[EvalContext.toTypingContext_bind (TCTX := rfl)];
-      };
-    rw[H];
-    assumption;
+  {ectx : EvalContext kindMotive}
+  {e: Expr .Os k}
+  (TCTX: ectx.toTypingContext = tctx)
+  (WT: ExprWellTyped tctx e) :
+  (e.toOpenTree (treectx := ectx.map OpenTree.var)
+    (TCTX := EvalContext.toTypingContext_map _ _ TCTX) (WT := WT)).eval kindMotive opFold pairFold =
+  e.eval opFold pairFold TCTX WT := by {
+      have TREECTX := ValidTreeContext.map_is_valid_tree_context opFold pairFold ectx;
+      apply OpenTree.eval_sound; assumption;
 }
-
-
-theorem ExprWellTyped.transport_along_eq
-{ctx ctx': TypingContext}
-{e: Expr ek k}
-(WT: ExprWellTyped ctx e)
-(Eq: ctx = ctx') :
-ExprWellTyped ctx' e := by {
-  subst Eq;
-  assumption;
-}
-
 
 end OpenEvaluation
 -- Annoying, this does not help, since it does not let us talk about program fragments.
