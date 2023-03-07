@@ -361,7 +361,7 @@ def EvalContext.toTypingContext (ctx: EvalContext kindMotive): TypingContext :=
 instance : Coe (EvalContext kindMotive) TypingContext := ⟨EvalContext.toTypingContext⟩
 
 -- show that 'evalcontext' and 'todefcontext' agree.
-theorem EvalContext.toTypingContext.agreement:
+theorem EvalContext.toTypingContext_agreement:
 ∀ ⦃ctx: EvalContext kindMotive⦄  ⦃name: String⦄,
   (ctx name).isSome ↔ (ctx.toTypingContext name).isSome := by {
     intros ctx name;
@@ -379,7 +379,7 @@ whenever the expr is well formed.
 
 -- If 'tctx' has a value at 'name', then so does 'ectx' at 'name' if
 -- 'tctx' came from 'ectx'.
-def EvalContext.toTypingContext.preimage_some
+def EvalContext.toTypingContext_preimage_some
   { kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
   {tctx: TypingContext}
@@ -393,16 +393,6 @@ def EvalContext.toTypingContext.preimage_some
     rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
 }
 
--- Same as EvalContext.toTypingContext.preimage_some, without the fording on 'tctx'
-def EvalContext.toTypingContext_preimage_some'
-  { kindMotive: Kind → Type} -- what each kind is compiled into.
-  {ectx: EvalContext kindMotive}
-  {kind : Kind}
-  (LOOKUP: ectx.toTypingContext name = .some kind) :
-  { val : kindMotive kind // ectx name = .some ⟨kind, val⟩ } := by {
-    simp[toTypingContext] at LOOKUP;
-    rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
-}
 
 def EvalContext.toTypingContext_preimage_lookupByKind_some'
   {kindMotive: Kind → Type} -- what each kind is compiled into.
@@ -491,7 +481,7 @@ theorem EvalContext.toTypingContext_bind
         simp[ECTX_KEY];
       }
       case some => {
-        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toTypingContext.preimage_some TCTX TCTX_KEY;
+        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toTypingContext_preimage_some TCTX TCTX_KEY;
         simp[ECTX_KEY];
       }
     }
@@ -559,7 +549,7 @@ theorem Expr.eval?_succeeds_if_expr_wellformed
     induction WT;
     case assign i o ret arg ectx_tctx name ARG RET => {
       intros ectx TCTX;
-      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext.preimage_some TCTX ARG;
+      have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG;
       have RET_VAL := EvalContext.toTypingContext_preimage_none TCTX RET;
       simp[eval?] at *;
       simp[EvalContext.lookupByKind] at *;
@@ -571,8 +561,8 @@ theorem Expr.eval?_succeeds_if_expr_wellformed
 
     case pair tctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
       intros ectx TCTX;
-      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext.preimage_some TCTX ARG1;
-      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext.preimage_some TCTX ARG2;
+      have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG1;
+      have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG2;
       have RET_VAL := EvalContext.toTypingContext_preimage_none TCTX RET;
       simp[eval?];
       simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
@@ -679,7 +669,7 @@ theorem EvalContext.toTypingContext_map_some
   (f: ∀ {k : Kind}, kindMotive k → kindMotive' k)
   (LOOKUP: EvalContext.toTypingContext ectx arg = some k) :
   EvalContext.toTypingContext (EvalContext.map (fun {k} => f) ectx) arg = some k := by {
-    have VAL := EvalContext.toTypingContext.preimage_some (TCTX := rfl) LOOKUP;
+    have VAL := EvalContext.toTypingContext_preimage_some (TCTX := rfl) LOOKUP;
     simp[map, EvalContext.toTypingContext, VAL.property];
 }
 
@@ -942,15 +932,17 @@ notation "evaltree[" kindMotive ", " opFold "," pairFold " ⊧ " "⟦" tree "⟧
 structure ValidTreeContext
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
-  (ectx: EvalContext kindMotive) (treectx: EvalContext (OpenTree kindMotive)) : Prop where
+  (ectx: EvalContext kindMotive) (treectx: EvalContext (OpenTree kindMotive))  where
     ectx_to_treectx :
         ∀ (key: String) (kind: Kind) (val: kindMotive kind),
           ectx key = .some ⟨kind, val⟩ →
-        ∃ treeval, treectx key = .some ⟨kind, treeval⟩ ∧ OpenTree.eval kindMotive opFold pairFold treeval = val
+        { treeval : OpenTree kindMotive kind //
+          treectx key = .some ⟨kind, treeval⟩ ∧ OpenTree.eval kindMotive opFold pairFold treeval = val }
     treectx_to_ectx :
         ∀ (key: String) (kind: Kind) (treeval: OpenTree kindMotive kind),
           treectx key = .some ⟨kind, treeval⟩ →
-          ∃ val, ectx key = .some ⟨kind, val⟩ ∧ OpenTree.eval kindMotive opFold pairFold treeval = val
+          { val : kindMotive kind  //
+              ectx key = .some ⟨kind, val⟩ ∧ OpenTree.eval kindMotive opFold pairFold treeval = val }
 
 notation "ectx~treectx[" opFold ", " pairFold " ⊧ " ectx " ~ " treectx "]" =>
   ValidTreeContext opFold pairFold ectx treectx
@@ -979,21 +971,14 @@ def ValidTreeContext.isTypingContext
         have ⟨kind, treeval⟩ := kind_and_treeval;
         -- this is kind of annoying, I need to evaluate the tree value
         -- to get that the value we have is a legitimate value.
-        let val := treeval.eval kindMotive opFold pairFold;
-        specialize (TREECTX key kind val);
-        have CONTRA := TREECTX.mpr ⟨treeval, by {
-          constructor;
-          simp[TREECTX_KEY];
-          rfl;
-        }⟩;
-        simp[CONTRA] at ECTX_KEY; -- contradiction.
+        have ECTX_VAL := (TREECTX.treectx_to_ectx key kind treeval TREECTX_KEY);
+        have ⟨ectx_val, ECTX_KEY', _⟩ := ECTX_VAL;
+        simp[ECTX_KEY'] at ECTX_KEY;
       }
     }
     case h.some kind_val => {
       have ⟨kind, val⟩ := kind_val;
-      specialize (TREECTX key kind val);
-      have VAL_TREE := TREECTX.mp ECTX_KEY;
-      have ⟨val_tree, TREE_KEY, TREE_EVAL⟩ := VAL_TREE;
+      have ⟨val_tree, TREE_KEY, TREE_EVAL⟩ := (TREECTX.ectx_to_treectx key kind val ECTX_KEY);
       simp[TREE_KEY, TREE_EVAL];
       simp[← TCTX, ECTX_KEY];
     }
@@ -1005,19 +990,20 @@ theorem ValidTreeContext.map_is_valid_tree_context
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')):
   ValidTreeContext opFold pairFold ectx (ectx.map (OpenTree.var )) := by {
-    unfold ValidTreeContext;
-    intros key kind val;
     constructor;
-    case mp => {
+    case ectx_to_treectx => {
+    intros key kind val;
       intros  H;
       simp[ValidTreeContext, EvalContext.map];
       simp[H];
       simp[OpenTree.eval];
+      apply Subtype.mk (val := OpenTree.var val);
+      simp[OpenTree.eval];
     }
-    case mpr => {
-      intros  H;
-      have ⟨val', ECTX, TREE_EVAL⟩ := H;
-      simp[EvalContext.map] at ECTX;
+    case treectx_to_ectx => {
+      intros key kind treeval;
+      intros ECTX;
+      simp[ValidTreeContext, EvalContext.map] at ECTX ⊢;
       cases KEY:(ectx key) <;> simp [KEY] at ECTX ⊢;
       case some val => {
         let ⟨VAL_FST, VAL_SND⟩ := ECTX;
@@ -1025,9 +1011,9 @@ theorem ValidTreeContext.map_is_valid_tree_context
         case refl => {
           cases VAL_SND;
           case refl => {
-            simp[OpenTree.eval] at TREE_EVAL;
-            subst TREE_EVAL;
-            rfl;
+            simp at ECTX;
+            apply Subtype.mk (val := val.snd);
+            simp[OpenTree.eval];
           }
         }
       }
@@ -1047,9 +1033,9 @@ theorem ValidTreeContext.bind
   (TREE: tree.eval opFold pairFold = value)
   (name: String) :
   ValidTreeContext opFold pairFold (ectx.bind name kind value) (treectx.bind name kind tree) := by {
-  intros key kind val;
   constructor;
-  case mp => {
+  case ectx_to_treectx => {
+    intros key kind val;
     intros H;
     simp at H ⊢;
     simp[ValidTreeContext, EvalContext.bind] at TREECTX H ⊢;
@@ -1061,106 +1047,97 @@ theorem ValidTreeContext.bind
       subst KOP;
       subst EQ;
       simp at H TREECTX ⊢;
-      exact TREE;
+      apply Subtype.mk (val := tree) (property := by simp[TREE])
     }
     case neg => {
       simp[KEY] at H TREECTX ⊢;
-      specialize (TREECTX key kind val);
-      apply TREECTX.mp; assumption;
+      have H := TREECTX.ectx_to_treectx key kind val H;
+      apply H;
     }
   }
-  case mpr => {
+  case treectx_to_ectx => {
+    intros key kind tree;
     simp;
-    intros tree TREECTX_KEY EVAL_TREE;
-    simp [EvalContext.bind] at TREECTX_KEY EVAL_TREE ⊢;
+    intros TREECTX_KEY;
+
+    simp [EvalContext.bind] at TREECTX_KEY TREECTX_KEY ⊢;
     by_cases KEY:(key = name);
     case pos => {
       subst KEY;
-      simp at TREECTX_KEY EVAL_TREE ⊢;
+      simp at TREECTX_KEY ⊢;
       have ⟨KOP, VAR⟩ := TREECTX_KEY;
       subst KOP;
       simp at VAR ⊢;
       subst VAR;
-      simp at EVAL_TREE ⊢;
-      simp[OpenTree.eval] at EVAL_TREE ⊢;
-      rw[← EVAL_TREE, ← TREE];
+      subst TREE;
+      apply Subtype.mk (val :=  evaltree[kindMotive, fun {i o} => opFold,fun {i i'} => pairFold ⊧ ⟦tree⟧])
+                    (property := by simp);
     }
     case neg => {
-      simp[KEY] at TREECTX_KEY EVAL_TREE ⊢;
-      specialize (TREECTX key kind val);
-      apply TREECTX.mpr;
-      exists tree;
+      simp[KEY] at TREECTX_KEY ⊢;
+      subst TREE;
+      have H := TREECTX.treectx_to_ectx key kind tree TREECTX_KEY;
+      simp at H;
+      exact H;
     }
   }
 }
 
 
--- given that `treectx[name:kind]? = .some treeval` and `ectx[name:kind]? = .some (v)`,
--- then `v = treeval.eval`
-theorem ValidContext.lookup_by_kind
+-- given that `treectx[name] = .some treeval`, then
+--  `ectx[name] = .some (treeval.eval)`,
+theorem ValidContext.lookup_treectx_to_ectx
   {ectx : EvalContext kindMotive}
   {treectx: EvalContext (OpenTree kindMotive)}
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
   (TREECTX: ValidTreeContext opFold pairFold ectx treectx)
-  (name: String) (kind: Kind) (treeval: OpenTree kindMotive kind):
-  (treectx.lookupByKind name kind) = .some treeval ↔
-  (ectx.lookupByKind name kind) = .some (OpenTree.eval kindMotive opFold pairFold treeval ) := by {
-  constructor;
-  case mp => {
+  (key: String) (treeval: OpenTree kindMotive kind)
+  (TREECTX_KEY: treectx key = .some ⟨kind, treeval⟩):
+  (ectx key) = .some ⟨kind, treeval.eval opFold pairFold⟩ := by {
+    have ⟨val, VAL_AT_ECTX, VAL⟩ := TREECTX.treectx_to_ectx key kind treeval TREECTX_KEY;
+    simp[VAL_AT_ECTX, VAL]
+}
+
+-- TODO: deprecate `lookupByKind`.
+-- given that `treectx[name:kind]? = .some treeval`, then
+--  `ectx[name:kind]? = .some (treeval.eval)`,
+theorem ValidContext.lookup_by_kind_treectx_to_ectx
+  {ectx : EvalContext kindMotive}
+  {treectx: EvalContext (OpenTree kindMotive)}
+  {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
+  {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
+  (TREECTX: ValidTreeContext opFold pairFold ectx treectx)
+  (key: String) (kind: Kind) (treeval: OpenTree kindMotive kind)
+  (TREECTX_KEY: treectx.lookupByKind key kind = .some treeval):
+  (ectx.lookupByKind key kind) = .some (OpenTree.eval kindMotive opFold pairFold treeval ) := by {
     simp[ValidTreeContext] at TREECTX;
-    specialize (TREECTX name kind (OpenTree.eval  kindMotive opFold pairFold treeval ));
-    intros TREE_AT_KEY;
-    rw [← EvalContext.lookupByKind_lookup_some];
-    apply TREECTX.mpr;
-    exists treeval;
-    have TREEVAL := EvalContext.lookupByKind_lookup_some_inv TREE_AT_KEY;
-    simp[TREEVAL];
-  }
-  case mpr => {
-    intros ECTX_AT_KEY;
-    have H := (TREECTX name kind (OpenTree.eval  kindMotive opFold pairFold treeval ));
-    simp[EvalContext.lookupByKind] at ECTX_AT_KEY ⊢;
-    cases ectx_at_key:(ectx name) <;> simp[ectx_at_key] at ECTX_AT_KEY ⊢;
-    case some val => {
-      cases val;
-      case mk val_kind val_val => {
-        by_cases KIND:(kind = val_kind) <;> simp[KIND] at ECTX_AT_KEY ⊢;
-        case pos => {
-          subst KIND;
-          simp at ECTX_AT_KEY ⊢;
-          subst ECTX_AT_KEY;
-          have ⟨treectx_val, TREECTX_AT_NAME, TREECTX_EVALCTX_AGREE⟩ := (H.mp ectx_at_key);
-          simp[TREECTX_AT_NAME] at TREECTX_EVALCTX_AGREE ⊢;
-          have H' := (TREECTX.reverse name kind treectx_val);
-          simp[EvalContext.lookupByKind] at H' ⊢;
-          specialize (H' TREECTX_AT_NAME);
-          simp at H' ⊢;
-          rw[ectx_at_key] at H';
-          sorry
-        }
-      }
-    }
-  }
+    -- @chris: is this a good simp lemma?
+    have TREEVAL := EvalContext.lookupByKind_lookup_some_inv TREECTX_KEY;
+    have ⟨val, ECTX_AT_VAL, VAL⟩ := TREECTX.treectx_to_ectx key kind treeval TREEVAL;
+    simp[ECTX_AT_VAL] at VAL ⊢;
+    simp[EvalContext.lookupByKind, ECTX_AT_VAL, VAL] at VAL ⊢;
 }
 
 
--- looking up 'ectx' and 'treectx' agree if we evaluate the 'treectx' value.
-theorem ValidTreeContext.lookup_agree_eval
+theorem ValidContext.lookup_by_kind_ectx_to_treectx
   {ectx : EvalContext kindMotive}
   {treectx: EvalContext (OpenTree kindMotive)}
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
   {pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')}
   (TREECTX: ValidTreeContext opFold pairFold ectx treectx)
-  (VCTX: (ectx.lookupByKind name kind) = .some val)
-  (VTREE: (treectx.lookupByKind name kind) = .some treeval):
-    val = OpenTree.eval  kindMotive opFold pairFold treeval  := by {
-  simp[ValidTreeContext] at TREECTX;
-  specialize (TREECTX name kind val);
-  have ⟨MP, MPR⟩ := TREECTX;
-  simp[ValidContext.lookup_by_kind];
-  sorry
-}
+  (key: String) (kind: Kind) (val: kindMotive kind)
+  (ECTX_AT_KEY: ectx.lookupByKind key kind = .some val):
+  { tree: OpenTree kindMotive kind //
+    treectx.lookupByKind key kind = .some tree ∧ val = OpenTree.eval kindMotive opFold pairFold tree } := by {
+    have VAL := EvalContext.lookupByKind_lookup_some_inv ECTX_AT_KEY;
+    have ⟨treeval, TREECTX_AT_KEY, TREEVAL⟩ := TREECTX.ectx_to_treectx key kind val VAL;
+    simp[TREECTX_AT_KEY];
+    simp[EvalContext.lookupByKind, TREECTX_AT_KEY, TREEVAL];
+    apply Subtype.mk (val := treeval) (property := by simp[TREEVAL]);
+  }
+
+
 -- If 'Expr.toOpenTree?', 'Expr.eval?', and 'OpenTree.eval?' are all defined, then we can show that
 -- the expected diagram commutes.
 -- theorem OpenTree.eval?_sound_open
@@ -1192,49 +1169,52 @@ theorem OpenTree.eval_sound_open_op
     cases WT;
     case assign argk ret arg opkind ARG_WT RET_WT => {
       -- TODO: find a nice way to clean up the preimage/map/toTyping finagling.
-      simp[Expr.eval, Expr.toOpenTree, OpenTree.eval, Expr.eval?];
-      let ⟨arg_at_tctx, ARG_AT_TCTX⟩ := EvalContext.toTypingContext_preimage_lookupByKind_some' TREECTX_TCTX ARG_WT;
-      simp[ARG_AT_TCTX];
-      -- let ARG_MAPPED_VAL :=
-      --   EvalContext.lookupByKind_map_some (f := fun {k} x => @var kindMotive k x) ARG_AT_TCTX.property;
-      -- simp[ARG_MAPPED_VAL];
-      -- ret
-      have RET_AT_TCTX := EvalContext.toTypingContext_preimage_none TREECTX_TCTX RET_WT;
-      simp[RET_AT_TCTX];
-      simp[eval];
-
-      let ⟨arg_at_ectx, ARG_AT_ECTX⟩ := EvalContext.toTypingContext_preimage_lookupByKind_some' ECTX_TCTX ARG_WT;
-      simp[ARG_AT_ECTX];
-
-
-      -- have RET_MAPPED_VAL := EvalContext.map_none (f := fun {k} x => @var kindMotive k x) RET_AT_TCTX;
-      let RET_AT_ECTX := EvalContext.toTypingContext_preimage_none ECTX_TCTX RET_WT;
-      simp[RET_AT_ECTX];
-
-      congr;
-      simp[← ARG_AT_ECTX];
-      simp[Subtype.val];
-
+      -- ARG:
+      -- we have an ectx since the assignment is well typed
+      have ⟨ectx_at_arg, ECTX_AT_ARG⟩ := EvalContext.toTypingContext_preimage_some ECTX_TCTX ARG_WT;
+      -- since ectx ~ treectx, we have treeval that associates correctly with ectx_at_arg
+      have ⟨tctx_at_arg, TCTX_AT_ARG, TCTX_AT_ARG_VAL⟩ :=
+          TREECTX_ECTX.ectx_to_treectx arg argk ectx_at_arg ECTX_AT_ARG;
+      simp[Expr.eval, Expr.toOpenTree, OpenTree.eval, Expr.eval?, EvalContext.lookupByKind];
+      simp[ECTX_AT_ARG, TCTX_AT_ARG, TCTX_AT_ARG_VAL];
+      -- RET:
+      -- ectx, treectx at ret have none since we are well typed.
+      have ECTX_AT_RET := EvalContext.toTypingContext_preimage_none ECTX_TCTX RET_WT;
+      have TREECTX_AT_RET := EvalContext.toTypingContext_preimage_none TREECTX_TCTX RET_WT;
+      simp[ECTX_AT_RET, TREECTX_AT_RET];
+      simp[OpenTree.eval];
+      -- COMMUTES:
+      -- use correspondence between ectx and treectx to get the value of the argument.
+      rw[←TCTX_AT_ARG_VAL];
     }
     case pair ret arg1 arg2 k1 k2 ARG1 ARG2 RET => {
-      simp[Expr.eval, Expr.toOpenTree, OpenTree.eval, Expr.eval?];
-      -- arg1
-      let ARG1_VAL := EvalContext.toTypingContext_preimage_lookupByKind_some' ECTX_TCTX ARG1;
-      simp[ARG1_VAL.property];
-      let ARG1_MAPPED_VAL :=
-        EvalContext.lookupByKind_map_some (f := fun {k} x => @var kindMotive k x) ARG1_VAL.property;
-      simp[ARG1_MAPPED_VAL];
-      -- arg2
-      let ARG2_VAL := EvalContext.toTypingContext_preimage_lookupByKind_some' ECTX_TCTX ARG2;
-      simp[ARG2_VAL.property];
-      let ARG2_MAPPED_VAL :=
-        EvalContext.lookupByKind_map_some (f := fun {k} x => @var kindMotive k x) ARG2_VAL.property;
-      simp[ARG2_MAPPED_VAL];
-      -- ret
-      have RET_VAL := EvalContext.toTypingContext_preimage_none ECTX_TCTX RET;
-      have RET_MAPPED_VAL := EvalContext.map_none (f := fun {k} x => @var kindMotive k x) RET_VAL;
-      simp[RET_MAPPED_VAL, RET_VAL];
-      simp[eval];
+      -- ARG1:
+      -- we have an ectx since the assignment is well typed
+      have ⟨ectx_at_arg1, ECTX_AT_ARG1⟩ := EvalContext.toTypingContext_preimage_some ECTX_TCTX ARG1;
+      -- since ectx ~ treectx, we have treeval that associates correctly with ectx_at_arg
+      have ⟨tctx_at_arg1, TCTX_AT_ARG1, TCTX_AT_ARG1_VAL⟩ :=
+          TREECTX_ECTX.ectx_to_treectx arg1 k1 ectx_at_arg1 ECTX_AT_ARG1;
+      simp[Expr.eval, Expr.toOpenTree, OpenTree.eval, Expr.eval?, EvalContext.lookupByKind];
+      simp[ECTX_AT_ARG1, TCTX_AT_ARG1, TCTX_AT_ARG1_VAL];
+
+      -- ARG2:
+      -- we have an ectx since the assignment is well typed
+      have ⟨ectx_at_arg2, ECTX_AT_ARG2⟩ := EvalContext.toTypingContext_preimage_some ECTX_TCTX ARG2;
+      -- since ectx ~ treectx, we have treeval that associates correctly with ectx_at_arg
+      have ⟨tctx_at_arg2, TCTX_AT_ARG2, TCTX_AT_ARG2_VAL⟩ :=
+          TREECTX_ECTX.ectx_to_treectx arg2 k2 ectx_at_arg2 ECTX_AT_ARG2;
+      simp[Expr.eval, Expr.toOpenTree, OpenTree.eval, Expr.eval?, EvalContext.lookupByKind];
+      simp[ECTX_AT_ARG2, TCTX_AT_ARG2, TCTX_AT_ARG2_VAL];
+
+      -- RET:
+      -- ectx, treectx at ret have none since we are well typed.
+      have ECTX_AT_RET := EvalContext.toTypingContext_preimage_none ECTX_TCTX RET;
+      have TREECTX_AT_RET := EvalContext.toTypingContext_preimage_none TREECTX_TCTX RET;
+      simp[ECTX_AT_RET, TREECTX_AT_RET];
+      simp[OpenTree.eval];
+      -- COMMUTES:
+      -- use correspondence between ectx and treectx to get the value of the argument.
+      rw[←TCTX_AT_ARG1_VAL, ← TCTX_AT_ARG2_VAL];
     }
   }
 
