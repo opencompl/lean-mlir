@@ -97,6 +97,7 @@ This solves the entire collection of problems around showing that we return a co
 deterministically and so on.
 -/
 -- inductive propsition which asserts when an expression is well formed.
+@[aesop constructors safe, aesop cases safe]
 inductive ExprWellTyped : {ek: ExprKind} → {k: Kind} → TypingContext → Expr ek k →  Type where
 | assign
     {ret arg : Var}
@@ -147,6 +148,7 @@ def EvalContext.bind {kindMotive: Kind → Type}
 notation ctx "[" bindname ":" bindk " ↦ "  bindv  "]" => EvalContext.bind bindname bindk bindv ctx
 
 -- lookup a binding by both name and kind.
+@[simp]
 def EvalContext.lookupByKind {kindMotive: Kind → Type} (ctx: EvalContext kindMotive)
   (name : String) (needlekind: Kind) : Option (kindMotive needlekind) :=
   match ctx name with
@@ -161,26 +163,17 @@ notation ctx "[" name ":" bindk "]?" => EvalContext.lookupByKind ctx name bindk
 
 -- Simplify `lookupByKind` when we have a syntactically
 -- matching `lookup`result.
+@[aesop destruct safe]
 theorem EvalContext.lookupByKind_lookup_some_inv {kindMotive: Kind → Type} {ectx: EvalContext kindMotive}
   {k: Kind} {v: kindMotive k} {name: String}
   (LOOKUP: ectx.lookupByKind name k = .some v) :
   ectx name = some { fst := k, snd := v } := by {
     simp[EvalContext.lookupByKind, LOOKUP] at LOOKUP ⊢;
-    cases VAL:(ectx name) <;> simp[VAL] at LOOKUP;
-    case some kv => {
-      have ⟨k', v'⟩ := kv;
-      simp at LOOKUP;
-      by_cases K_EQ:(k = k') <;> simp[K_EQ] at LOOKUP;
-      case pos => {
-        subst K_EQ;
-        simp at LOOKUP ⊢;
-        exact LOOKUP;
-      }
-    }
+    aesop;
   }
 
 -- Treat an eval context as a def context by ignoring the eval value.
-@[coe]
+@[coe, aesop safe]
 def EvalContext.toTypingContext (ctx: EvalContext kindMotive): TypingContext :=
   fun name =>
     match ctx name with
@@ -193,6 +186,7 @@ instance : Coe (EvalContext kindMotive) TypingContext := ⟨EvalContext.toTyping
 
 -- If 'tctx' has a value at 'name', then so does 'ectx' at 'name' if
 -- 'tctx' came from 'ectx'.
+@[aesop safe]
 def EvalContext.toTypingContext_preimage_some
   { kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
@@ -202,13 +196,11 @@ def EvalContext.toTypingContext_preimage_some
   {kind : Kind}
   (LOOKUP: tctx name = .some kind) :
   { val : kindMotive kind // ectx name = .some ⟨kind, val⟩ } := by {
-    rewrite[← TCTX] at LOOKUP;
-    simp[toTypingContext] at LOOKUP;
-    rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
+    simp[toTypingContext] at TCTX; aesop;
 }
 
 
-
+@[aesop norm]
 theorem EvalContext.toTypingContext_preimage_none
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
@@ -217,15 +209,28 @@ theorem EvalContext.toTypingContext_preimage_none
   {name : String}
   (LOOKUP: tctx name = .none) :
   ectx name = .none := by {
-    rewrite[← TCTX] at LOOKUP;
-    simp[toTypingContext] at LOOKUP;
-    rcases H:(ectx name) with _ | ⟨⟨val_kind, val_val⟩⟩ <;> aesop;
+    simp[toTypingContext] at TCTX; aesop;
 }
+
+@[aesop norm]
+theorem EvalContext.toTypingContext_preimage_none_inv
+  {kindMotive: Kind → Type} -- what each kind is compiled into.
+  {ectx: EvalContext kindMotive}
+  {tctx: TypingContext}
+  (TCTX: EvalContext.toTypingContext ectx = tctx)
+  {name : String}
+  (LOOKUP: ectx name = .none) :
+  tctx name = .none := by {
+    simp[toTypingContext] at TCTX; aesop;
+
+}
+
 
 
 
 -- ((name, kind, val) :: ectx).toTypingContext = (name, kind) :: ectx.toTypingContext
 -- Alternatively, 'toTypingContext' is a homomorphism of contexts.
+@[aesop simp norm]
 theorem EvalContext.toTypingContext_bind
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {ectx: EvalContext kindMotive}
@@ -237,22 +242,11 @@ theorem EvalContext.toTypingContext_bind
   (EvalContext.bind arg kind val ectx).toTypingContext = TypingContext.bind arg kind tctx := by {
     funext key;
     simp[toTypingContext, TypingContext.bind, EvalContext.bind];
-    by_cases NAME:(key = arg) <;> simp[NAME];
-    case neg => {
-      simp[NAME];
-      simp[toTypingContext];
-      cases TCTX_KEY:(tctx key);
-      case none => {
-        have ECTX_KEY := EvalContext.toTypingContext_preimage_none TCTX TCTX_KEY;
-        simp[ECTX_KEY];
-      }
-      case some => {
-        have ⟨ectx_val, ECTX_KEY⟩:= EvalContext.toTypingContext_preimage_some TCTX TCTX_KEY;
-        simp[ECTX_KEY];
-      }
-    }
+    -- | TODO: golf
+    by_cases NAME:(key = arg) <;> simp[NAME]; aesop
 }
 
+@[aesop norm unfold 1000]
 def Expr.eval? -- version of fold that returns option.
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -282,6 +276,7 @@ notation "expr⟦⟧?[" opFold ", " pairFold " ; " ctx " ⊧ " "⟦" e "⟧" "]"
 
 
 -- unfolding theorem for 'eval?' at ops
+@[aesop norm unfold 1000]
 theorem Expr.eval?_ops
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -293,13 +288,14 @@ theorem Expr.eval?_ops
   match Expr.eval? opFold pairFold ctx o1 with
   | .none => .none
   | .some v => Expr.eval? opFold pairFold (ctx.bind o1.retVar k1 v) o2 := by {
-    simp[eval?];
-    cases H:eval? (fun {i o} => opFold) (fun {i i'} => pairFold) ctx o1  <;> simp[H];
+    simp[eval?]; aesop;
   }
 
 -- 'eval?' will return a 'some' value
 -- Note that here, we must ford TCTX, since to perform induction on 'wellformed',
 -- we need the indexes of 'wellformed' to be variables.
+-- set_option trace.aesop.steps true in
+@[aesop norm 1000]
 theorem Expr.eval?_succeeds_if_expr_wellformed
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
@@ -312,26 +308,24 @@ theorem Expr.eval?_succeeds_if_expr_wellformed
     revert ectx;
     induction WT;
     case assign i o ret arg ectx_tctx name ARG RET => {
+
       intros ectx TCTX;
+
+      -- aesop
+      -- TODO: how to have aesop automatically do this?
       have ⟨arg_val, ARG_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG;
       have RET_VAL := EvalContext.toTypingContext_preimage_none TCTX RET;
-      simp[eval?] at *;
-      simp[EvalContext.lookupByKind] at *;
-      simp[ARG_VAL];
-      simp[RET_VAL];
-      apply Subtype.mk (opFold name arg_val);
-      rfl
+      aesop  (options := { maxRuleApplicationDepth := 0, maxRuleApplications := 0, traceScript := true});
     }
 
     case pair tctx  ret arg1 arg2 k1 k2 ARG1 ARG2 RET  => {
       intros ectx TCTX;
+      -- TODO: how to aesopify?
       have ⟨arg1_val, ARG1_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG1;
       have ⟨arg2_val, ARG2_VAL⟩ := EvalContext.toTypingContext_preimage_some TCTX ARG2;
       have RET_VAL := EvalContext.toTypingContext_preimage_none TCTX RET;
-      simp[eval?];
-      simp[EvalContext.lookupByKind, ARG1_VAL, ARG2_VAL, RET_VAL];
-      apply Subtype.mk (pairFold arg1_val arg2_val);
-      rfl
+
+      aesop  (options := { maxRuleApplicationDepth := 0, maxRuleApplications := 0, traceScript := true});
       -- apply EvalContext.toTypingContext_bind TCTX;
     }
     case ops op ops ctxbegin ctxend ctxmid _WT_OP MID _WT_OPS IH1 IH2 => {
@@ -342,6 +336,7 @@ theorem Expr.eval?_succeeds_if_expr_wellformed
       simp[out1.property];
       apply IH2;
       apply EvalContext.toTypingContext_bind TCTX;
+      -- TODO: how to aesopify?
     }
 }
 
@@ -357,7 +352,7 @@ theorem Expr.eval?_isSome_if_expr_wellformed
   (e.eval? opFold pairFold ectx).isSome := by {
     simp[Option.isSome];
     let val := Expr.eval?_succeeds_if_expr_wellformed TCTX WT (opFold := opFold) (pairFold := pairFold);
-    simp[val.property];
+    aesop -- TODO: how to aesopify?
 }
 
 
@@ -371,7 +366,7 @@ inductive OpenTree (kindMotive: Kind → Type) : Kind → Type where
 | pair: OpenTree kindMotive a → OpenTree kindMotive b → OpenTree kindMotive (Kind.pair a b)
 | var: {k: Kind} → kindMotive k → OpenTree kindMotive k
 
-
+@[aesop norm unfold 1000]
 def EvalContext.map
   {kindMotive: Kind → Type}
   {kindMotive': Kind → Type}
@@ -385,6 +380,7 @@ notation:max ectx " <$> " f => EvalContext.map f ectx
 
 
 -- mapping preserves the typing context.
+@[aesop safe]
 theorem EvalContext.toTypingContext_map
   {kindMotive: Kind → Type}
   {kindMotive': Kind → Type}
@@ -400,6 +396,7 @@ theorem EvalContext.toTypingContext_map
 
 
 -- Convert a well typed 'Expr' into a value, as asked by 'kindMotive'
+@[aesop norm unfold 1000]
 def Expr.eval {ectx : EvalContext kindMotive}
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
@@ -445,16 +442,14 @@ theorem Expr.eval_ops
         Expr.eval opFold pairFold (e := o1) (ectx := ectx) (tctx := tctx) ECTX_TCTX WT_OP1 := by {
           simp[Expr.eval];
         };
-        simp[E1VAL];
+      simp[E1VAL];
 }
 
 
-theorem Option.get_none_elim: (Option.get none P = v) → False := by {
-    simp at P;
-  }
-
+theorem Option.get_none_elim: (Option.get none P = v) → False := by aesop
 
 -- show under what conditions eval? and 'eval' agree.
+@[aesop unsafe, aesop forward safe]
 theorem Expr.eval_implies_eval?
   {ectx : EvalContext kindMotive}
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -463,21 +458,10 @@ theorem Expr.eval_implies_eval?
   {TCTX: ectx.toTypingContext = tctx}
   {WT: ExprWellTyped tctx e} :
   (EVAL: Expr.eval opFold pairFold TCTX WT = v) →
-  (e.eval? opFold pairFold ectx = .some v) := by {
-    intro EVAL;
-    simp[Expr.eval?, Expr.eval] at EVAL ⊢;
-    cases VAL: (e.eval? opFold pairFold ectx);
-    simp[VAL] at EVAL ⊢;
-    case none => {
-      simp[Option.get_none_elim EVAL];
-    }
-    case some val => {
-      simp[VAL] at EVAL ⊢;
-      subst val;
-      rfl;
-    }
-}
+  (e.eval? opFold pairFold ectx = .some v) := by aesop
+
 -- Convert an expression to a tree by folding into the tree algebra
+@[aesop norm unfold 1000]
 def Expr.toOpenTree? (treectx: EvalContext (OpenTree kindMotive)) (e : Expr ek k): Option (OpenTree kindMotive k) :=
     e.eval?
         (opFold := fun opk ti => OpenTree.assign (kindMotive := kindMotive) opk ti)
@@ -488,6 +472,7 @@ def Expr.toOpenTree? (treectx: EvalContext (OpenTree kindMotive)) (e : Expr ek k
 notation "expr→tree?[" treectx " ; " e "]" => Expr.toOpenTree? treectx e
 
 -- Convert an expression to a tree by folding into the tree algebra
+@[aesop norm unfold 1000]
 abbrev Expr.toOpenTree {treectx: EvalContext (OpenTree kindMotive)} {e : Expr ek k}
   (TCTX: treectx.toTypingContext = tctx)
   (WT: ExprWellTyped tctx e): OpenTree kindMotive k :=
@@ -502,6 +487,7 @@ abbrev Expr.toOpenTree {treectx: EvalContext (OpenTree kindMotive)} {e : Expr ek
 notation "expr→tree[" TCTX "; " WT " ⊧ " e "]" => Expr.toOpenTree TCTX WT (e := e)
 
 -- unfold a `toOpenTree` of `Expr.ops`
+@[aesop norm]
 def Expr.toOpenTree_ops
   (kindMotive: Kind → Type)
   (treectx treectx' : EvalContext (OpenTree kindMotive))
@@ -522,6 +508,7 @@ def Expr.toOpenTree_ops
 
 -- we define 'Expr.eval', 'Expr.toTree', and 'Tree.eval' and show that the diagram below commutes:
 -- Expr.eval = Tree.eval ∘ Expr.toTree
+@[aesop norm unfold 1000]
 def OpenTree.eval
   (kindMotive: Kind → Type)
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -540,6 +527,7 @@ notation "evaltree[" kindMotive ", " opFold "," pairFold " ⊧ " "⟦" tree "⟧
 -- wherever ectx is evaluated.
 -- TODO: this is a trashfire. It is not worth the "proof reuse" we get out of
 -- this unification. As usual, @lyxsia has impeccable taste when it comes to dependent typing.
+@[aesop safe, aesop forward safe, aesop cases safe]
 structure ValidTreeContext
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
@@ -558,6 +546,12 @@ structure ValidTreeContext
 notation "ectx~treectx[" opFold ", " pairFold " ⊧ " ectx " ~ " treectx "]" =>
   ValidTreeContext opFold pairFold ectx treectx
 
+-- #print Aesop.Options
+set_option trace.aesop.steps true in
+set_option trace.aesop.steps.tree true in
+set_option trace.aesop.steps.normalization
+ true in
+@[aesop safe, aesop forward safe]
 def ValidTreeContext.isTypingContext
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
@@ -578,61 +572,38 @@ def ValidTreeContext.isTypingContext
       cases TREECTX_KEY:(treectx key) <;> simp[TREECTX_KEY];
       simp[← TCTX, ECTX_KEY];
       case some kind_and_treeval => {
+
         -- contradiction
         have ⟨kind, treeval⟩ := kind_and_treeval;
+        -- aesop -- how to make aesop use treecx_to_ectx?
+
         -- this is kind of annoying, I need to evaluate the tree value
         -- to get that the value we have is a legitimate value.
         have ECTX_VAL := (TREECTX.treectx_to_ectx key kind treeval TREECTX_KEY);
-        have ⟨ectx_val, ECTX_KEY', _⟩ := ECTX_VAL;
-        simp[ECTX_KEY'] at ECTX_KEY;
+        aesop -- we need aesop to make use TREEECTX.treectx_to_ectx.
       }
     }
     case h.some kind_val => {
       have ⟨kind, val⟩ := kind_val;
       have ⟨val_tree, TREE_KEY, TREE_EVAL⟩ := (TREECTX.ectx_to_treectx key kind val ECTX_KEY);
-      simp[TREE_KEY, TREE_EVAL];
-      simp[← TCTX, ECTX_KEY];
+      aesop -- how to make aesop use TREE_KEY?
     }
   }
 
 -- using (EvalContext.map var) provides a valid tree context.
+@[aesop safe forward, aesop safe]
 theorem ValidTreeContext.map_is_valid_tree_context
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
   (ectx : EvalContext kindMotive):
   ValidTreeContext opFold pairFold ectx (ectx.map (OpenTree.var )) := by {
-    constructor;
-    case ectx_to_treectx => {
-    intros key kind val;
-      intros  H;
-      simp[ValidTreeContext, EvalContext.map];
-      simp[H];
-      simp[OpenTree.eval];
-      apply Subtype.mk (val := OpenTree.var val);
-      simp[OpenTree.eval];
-    }
-    case treectx_to_ectx => {
-      intros key kind treeval;
-      intros ECTX;
-      simp[ValidTreeContext, EvalContext.map] at ECTX ⊢;
-      cases KEY:(ectx key) <;> simp [KEY] at ECTX ⊢;
-      case some val => {
-        let ⟨VAL_FST, VAL_SND⟩ := ECTX;
-        induction VAL_FST;
-        case refl => {
-          cases VAL_SND;
-          case refl => {
-            simp at ECTX;
-            apply Subtype.mk (val := val.snd);
-            simp[OpenTree.eval];
-          }
-        }
-      }
-    }
+    constructor <;> aesop;
 }
 
 -- if `tree.eval = value`, then binding `key` to `tree` in `treectx` is maintains
 -- the validity of the context
+-- | This is un-aesopable.
+@[aesop safe forward, aesop safe]
 theorem ValidTreeContext.bind
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
   (pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i'))
@@ -681,6 +652,7 @@ theorem ValidTreeContext.bind
       simp at VAR ⊢;
       subst VAR;
       subst TREE;
+      -- aesop -- TODO: aesop doesn't even work at the last step!
       apply Subtype.mk (val :=  evaltree[kindMotive, fun {i o} => opFold,fun {i i'} => pairFold ⊧ ⟦tree⟧])
                     (property := by simp);
     }
