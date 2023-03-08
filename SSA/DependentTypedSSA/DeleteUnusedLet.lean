@@ -115,7 +115,7 @@ theorem Expr.eval_letIf
   split_ifs with h
   . exact rfl
   . conv_rhs => dsimp [eval]; rw [← Expr.eval_shrinkContext]
-    simp
+    simp only [eval_changeVars, Context.evalMap]
     congr
     funext x v
     induction v using Var.subcontextCasesOn with
@@ -142,7 +142,7 @@ theorem Expr.eval_letlamIf {Γ : Context} {dom a cod k : Kind}
   split_ifs with h
   . exact rfl
   . conv_rhs => dsimp [eval]; rw [← Expr.eval_shrinkContext]
-    simp
+    simp only [eval_changeVars, Context.evalMap]
     congr
     funext x v
     induction v using Var.subcontextCasesOn with
@@ -158,10 +158,11 @@ def Expr.deleteUnusedLets {env : Env} : ∀ {Γ : Context} {k : Kind},
   | _, _, .retμrn x => .retμrn x
 
 @[simp]
-theorem Expr.eval_deleteUnusedLets {s : Semantics env} : ∀ {Γ : Context} {k : Kind} (e : Expr env Γ k)
+theorem Expr.eval_deleteUnusedLets {s : Semantics env} :
+    ∀ {Γ : Context} {k : Kind} (e : Expr env Γ k)
     (g : Γ.eval), e.deleteUnusedLets.eval s g = e.eval s g
   | _, _, ._let (b := b) f x e => by simp [Expr.deleteUnusedLets]
-  | _, _, .letlam (dom := dom) (cod := cod) f x e => by simp [Expr.deleteUnusedLets]
+  | _, _, .letlam  f x e => by simp [Expr.deleteUnusedLets]
   | _, k, .retμrn x => by simp [Expr.deleteUnusedLets]
 
 end AST

@@ -32,6 +32,11 @@ instance : Unique (Subcontext Context.nil) :=
       intro v
       cases v }
 
+@[simp]
+theorem bot_apply {Γ : Context} {k : Kind} (v : Var Γ k) :
+    (⊥ : Subcontext Γ) v = false :=
+  rfl
+
 theorem le_def : Δ₁ ≤ Δ₂ ↔ ∀ {k} {v : Var Γ k}, Δ₁ v → Δ₂ v :=
   show (∀ (k) (v : Var Γ k), Δ₁ v ≤ Δ₂ v) ↔ ∀ (k) (v : Var Γ k), Δ₁ v → Δ₂ v by
     simp only [Bool.le_iff_imp]
@@ -183,8 +188,7 @@ theorem recOn_toSnocMem {motive : (Γ : Context) → Subcontext Γ → Sort _}
 
 @[simp]
 theorem recOn_toSnocNotMem {motive : (Γ : Context) → Subcontext Γ → Sort _}
-    {Γ k} (Δ : Subcontext Γ)
-    (nl : motive Context.nil ⊥)
+    {Γ k} (Δ : Subcontext Γ) (nl : motive Context.nil ⊥)
     (snocMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
       motive (Γ.snoc k) (toSnocMem Δ))
     (snocNotMem : ∀ (Γ k) (Δ : Subcontext Γ), motive  _ Δ →
@@ -239,6 +243,38 @@ instance ofSubcontext.Mono {Γ : Context}
     (fun _ _ _ h => by simp [ofSubcontext_toSnocMem]; infer_instance)
     (fun _ _ _ h => by simp [ofSubcontext_toSnocNotMem]; apply mono_comp)
 
+def restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
+    (v : Var Γ k) → Δ v → Var Δ k :=
+  @fun v =>
+  recOn Δ
+    (fun _ h => by simp [bot_apply] at h)
+    (fun Γ _ _ ih v =>
+      v.elim
+        (fun k v ih hv => toSnoc (ih v hv))
+        (fun _ _ => Var.zero _ _)
+        ih)
+    (fun Γ _ _ ih v =>
+      v.elim
+        (fun k v ih hv => ih v hv)
+        (fun _ h => by simp [toSnocNotMem] at h)
+        ih) v
+
+@[simp]
+theorem ofSubcontext_restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
+    {v : Var Γ k} → (hv : Δ v) → ofSubcontext Δ (restrictVar v hv) = v :=
+  @fun v =>
+  recOn Δ
+    (fun _ _ => Subsingleton.elim _ _)
+    (fun Γ k Δ ih v hv => by
+      cases v with
+      | succ v => conv_rhs => rw [←ih v hv]
+      | zero _ _ => rfl)
+    (fun Γ k Δ ih v hv => by
+      cases v with
+      | succ v => conv_rhs => rw [←ih v hv]
+      | zero _ _ => simp [toSnocNotMem] at hv)
+    v
+
 @[simp]
 theorem app_ofSubcontext {Γ : Context} (Δ : Subcontext Γ) : ∀ (v : Var Δ k),
     Δ (ofSubcontext (Δ : Subcontext Γ) v) = true :=
@@ -249,6 +285,8 @@ theorem app_ofSubcontext {Γ : Context} (Δ : Subcontext Γ) : ∀ (v : Var Δ k
       . rfl
       . exact ih _)
     (fun Γ k Δ ih v => ih _)
+
+
 
 def singleton {Γ : Context} {k : Kind} (v : Var Γ k) : Subcontext Γ :=
   fun k' v' => ∃ h : k = k', v = by rw [h]; exact v'
@@ -267,55 +305,41 @@ theorem singleton_le_iff {Γ : Context} {k : Kind} {v : Var Γ k}
     subst hk hv
     assumption⟩
 
-@[simp]
-theorem bot_apply {Γ : Context} {k : Kind} (v : Var Γ k) :
-    (⊥ : Subcontext Γ) v = false :=
-  rfl
-
-def restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
-    {v : Var Γ k} → Δ v → Var Δ k :=
-  @fun v =>
-  recOn Δ
-    (fun _ h => by simp [bot_apply] at h)
-    (fun Γ _ _ ih v =>
-      v.elim
-        (fun k v ih hv => toSnoc (ih v hv))
-        (fun _ _ => Var.zero _ _)
-        ih)
-    (fun Γ _ _ ih v =>
-      v.elim
-        (fun k v ih hv => ih v hv)
-        (fun _ h => by simp [toSnocNotMem] at h)
-        ih) v
-
--- @[simp] theorem restrictVar_snocMem_succ {Γ : Context} {k : Kind} {v : Var Γ k₂}
---     {Δ : Subcontext Γ} (hv : (toSnocMem Δ v.succ)) :
---     restrictVar hv = restrictVar (show Δ v from _) :=
---   by cases v; rfl
-
-@[simp]
-theorem ofSubcontext_restrictVar {Γ : Context} {k : Kind} {Δ : Subcontext Γ} :
-    {v : Var Γ k} → (hv : Δ v) → ofSubcontext Δ (restrictVar hv) = v :=
-  @fun v =>
-  recOn Δ
-    (fun _ _ => Subsingleton.elim _ _)
-    (fun Γ k Δ ih v hv => by
-      cases v with
-      | succ v => conv_rhs => rw [←ih v hv]
-      | zero _ _ => rfl)
-    (fun Γ k Δ ih v hv => by
-      cases v with
-      | succ v => conv_rhs => rw [←ih v hv]
-      | zero _ _ => simp [toSnocNotMem] at hv)
-    v
-
 @[elab_as_elim]
-def Var.subcontextCasesOn {Γ : Context} {k : Kind} {Δ : Subcontext Γ}
+def _root_.AST.Var.subcontextCasesOn {Γ : Context} {k : Kind} {Δ : Subcontext Γ}
     {motive : Var Δ k → Sort _} (v : Var Δ k)
-    (h : ∀ (v : Var Γ k) (hv : Δ v), motive (restrictVar hv)) : motive v := by
+    (h : ∀ (v : Var Γ k) (hv : Δ v), motive (restrictVar v hv)) : motive v := by
   convert h (ofSubcontext _ v) (app_ofSubcontext _ _)
   apply mono_iff_injective.1 (ofSubcontext.Mono Δ)
   simp
+
+def map {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) (Δ : Subcontext Γ₁) : Subcontext Γ₂ :=
+  @fun _ v => (∃ v', Δ v' ∧ f v' = v : Bool)
+
+theorem map_apply {Γ₁ Γ₂ : Context} (Δ : Subcontext Γ₁) (f : Γ₁ ⟶ Γ₂) (v : Var Γ₂ k) :
+    map f Δ v = ∃ v', Δ v' ∧ f v' = v :=
+  by simp [map]
+
+-- def restrictToMap {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) (Δ : Subcontext Γ₁) :
+--     (Δ : Context) ⟶ map f Δ :=
+--   fun k v => _
+
+def comap {Γ₁ Γ₂ : Context}(f : Γ₁ ⟶ Γ₂) (Δ : Subcontext Γ₂) : Subcontext Γ₁ :=
+  @fun _ v => Δ (f v)
+
+theorem comap_apply {Γ₁ Γ₂ : Context} (Δ : Subcontext Γ₂) (f : Γ₁ ⟶ Γ₂) (v : Var Γ₁ k) :
+    comap f Δ v = Δ (f v) :=
+  rfl
+
+theorem map_comap_galoisConnection {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) :
+    GaloisConnection (map f) (comap f) :=
+  fun Δ₁ Δ₂ => (by simp [le_def, map, comap])
+
+-- def snocElim {Γ₁ Γ₂  : Context} {k : Kind} {Δ : Subcontext (Γ₁.snoc k)}
+--     (ofsnoc : (ofSnoc Δ : Context) ⟶ Γ₂)
+--     (zero : Δ (Var.zero _ _) → Var Γ₂ k) :
+--     (Δ : Context) ⟶ Γ₂ :=
+--   _
 
 def ofLE {Γ : Context} {Δ₁ Δ₂ : Subcontext Γ} (h : Δ₁ ≤ Δ₂) : (Δ₁ : Context) ⟶ Δ₂ :=
   fun k v => restrictVar (v := ofSubcontext Δ₁ v)  (le_def.1 h (by simp))
@@ -381,12 +405,12 @@ def ofSubcontextSnocOfNotMem {Γ : Context} {k : Kind} {Δ : Subcontext (Γ.snoc
 theorem ofSubcontextSnocOfNotMem_restrictVar_succ
     {Γ : Context} {k₁ k₂ : Kind} {Δ : Subcontext (Γ.snoc k₁)}
     (h : ¬ Δ (Var.zero _ _)) (v : Var Γ k₂) (hv : Δ (Var.succ v)):
-    ofSubcontextSnocOfNotMem h (restrictVar hv) = v := by
+    ofSubcontextSnocOfNotMem h (restrictVar _ hv) = v := by
   induction Δ using snocCasesOn with
   | snocMem _ _ h => contradiction
   | snocNotMem _ _ Δ =>
       simp [ofSubcontextSnocOfNotMem, snocCasesOn_toSnocNotMem]
-      have : restrictVar hv = @restrictVar _ _ Δ v hv := rfl
+      have : restrictVar _ hv = @restrictVar _ _ Δ v hv := rfl
       rw [this, ofSubcontext_restrictVar]
 
 end Subcontext
