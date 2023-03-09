@@ -28,16 +28,17 @@ abbrev Var := String
 
 -- Well typed, simply typed kinds of ops. eg. 'add' takes two 'ints' and returns an 'int'
  inductive OpKind : Kind → Kind → Type
-| add: OpKind (.pair int int) int
-| const : OpKind unit int
-| sub: OpKind (.pair int int) int
-| negate: OpKind int int
+| add: OpKind (.pair .int .int) .int
+| const : OpKind .unit .int
+| sub: OpKind (.pair .int .int) .int
+| negate: OpKind .int .int
 
 
 inductive Expr : ExprKind → Kind → Type where
 | assign (ret : Var) (kind: OpKind i o) (arg: Var) : Expr .O o -- ret = kind (arg)
 | pair (ret : Var) (arg1: Var) (k1: Kind) (arg2 : Var) (k2: Kind) : Expr .O (Kind.pair k1 k2) -- ret = (arg1, arg2)
 | ops: Expr .O kop → Expr .Os ks → Expr .Os ks -- op ;; ops.
+| single: Expr .O kop → Expr .Os kop
 
 -- the return variable of the expression. ie, what is the
 -- name of the final value that this expression computes.
@@ -45,6 +46,7 @@ abbrev Expr.retVar : Expr ek k → Var
 | .assign (ret := ret) .. => ret
 | .pair (ret := ret)  .. => ret
 | .ops _ o2 => o2.retVar
+| .single o => o.retVar
 
 abbrev Op := Expr .O
 abbrev Ops := Expr .Os
@@ -271,12 +273,11 @@ def Expr.eval? -- version of fold that returns option.
   match o1.eval? opFold pairFold ctx with
   | .none => .none
   | .some v =>  o2.eval? opFold pairFold (ctx.bind o1.retVar kop v)
-
+| .single o => o.eval? opFold pairFold ctx
 notation "expr⟦⟧?[" opFold ", " pairFold " ; " ctx " ⊧ " "⟦" e "⟧" "]" => Expr.eval? opFold pairFold  ctx e
 
 
 -- unfolding theorem for 'eval?' at ops
-@[aesop norm unfold 1000]
 theorem Expr.eval?_ops
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   (opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o)
@@ -295,7 +296,7 @@ theorem Expr.eval?_ops
 -- Note that here, we must ford TCTX, since to perform induction on 'wellformed',
 -- we need the indexes of 'wellformed' to be variables.
 -- set_option trace.aesop.steps true in
-@[aesop norm 1000]
+@[aesop safe 1000]
 theorem Expr.eval?_succeeds_if_expr_wellformed
   {kindMotive: Kind → Type} -- what each kind is compiled into.
   {opFold: {i o: Kind} → OpKind i o → kindMotive i → kindMotive o}
@@ -352,12 +353,10 @@ theorem Expr.eval?_isSome_if_expr_wellformed
   (e.eval? opFold pairFold ectx).isSome := by {
     simp[Option.isSome];
     let val := Expr.eval?_succeeds_if_expr_wellformed TCTX WT (opFold := opFold) (pairFold := pairFold);
-    aesop -- TODO: how to aesopify?
+    simp[val.property];
 }
 
 
-
-section OpenEvaluation
 
 -- Expression tree which produces a value of kind 'Kind'.
 -- This is the initial algebra of the fold.
@@ -805,6 +804,193 @@ def diagram_commutes
       apply OpenTree.eval_sound; assumption;
 }
 
-end OpenEvaluation
+section EDSL
+
+declare_syntax_cat dsl_op
+declare_syntax_cat dsl_type
+declare_syntax_cat dsl_ops
+declare_syntax_cat dsl_region
+declare_syntax_cat dsl_var
+declare_syntax_cat dsl_var_name
+declare_syntax_cat dsl_const
+declare_syntax_cat dsl_kind
+
+syntax sepBy1(ident, "×") :dsl_kind
+syntax ident : dsl_var_name
+syntax "%" dsl_var_name ":" dsl_kind : dsl_var
+syntax dsl_var "="
+      str
+      ("("dsl_var ")")?
+      ("[" dsl_region,* "]")?
+      ("{" dsl_const "}")? ";": dsl_op
+syntax "%" dsl_var_name "=" "tuple" "(" dsl_var "," dsl_var ")" ";": dsl_op
+syntax num : dsl_const
+syntax "{" ("^(" dsl_var ")" ":")?  dsl_op dsl_op*  "}" : dsl_region
+syntax "[dsl_op|" dsl_op "]" : term
+syntax "[dsl_ops|" dsl_op dsl_op* "]" : term
+syntax "[dsl_region|" dsl_region "]" : term
+syntax "[dsl_var|" dsl_var "]" : term
+syntax "[dsl_kind|" dsl_kind "]" : term
+syntax "[dsl_const|" dsl_const "]" : term
+syntax "[dsl_var_name|" dsl_var_name "]" : term
+
+
+-- @[simp]
+-- def AST.Ops.fromList: Expr k1 → Expr k2 → Expr k2
+-- | op, [] => .opsone op
+-- | op, op'::ops => .opscons op (AST.Ops.fromList op' ops)
+
+-- @[simp]
+-- def AST.Regions.fromList: List Region → Regions
+-- | [] => .regionsnil
+-- | r :: rs => .regionscons r (AST.Regions.fromList rs)
+
+open Lean Macro in
+def parseKind (k: TSyntax `ident) : MacroM (TSyntax `term) :=
+  match k.getId.toString with
+  | "int" => `(AST.Kind.int)
+  | "nat" => `(AST.Kind.nat)
+  | unk => (Macro.throwErrorAt k s!"unknown kind '{unk}'")
+
+
+open Lean Macro in
+macro_rules
+| `([dsl_kind| $[ $ks ]×* ]) => do
+    if ks.isEmpty
+    then `(AST.Kind.unit)
+    else
+      let mut out ← parseKind ks[ks.size - 1]!
+      for k in ks.pop.reverse do
+        let cur ← parseKind k
+        out ← `(AST.Kind.pair $cur $out)
+      return out
+| `([dsl_kind| $$($q:term)]) => `(($q : Kind))
+
+open Lean Macro in
+macro_rules
+| `([dsl_var_name| $name:ident ]) =>
+      return (Lean.quote name.getId.toString : TSyntax `term)
+| `([dsl_var_name| $$($q:term)]) => `(($q : String))
+
+macro_rules
+| `([dsl_var| %$name:dsl_var_name : $kind:dsl_kind]) => do
+    `({ name := [dsl_var_name| $name],
+        kind := [dsl_kind| $kind] : Var})
+| `([dsl_var| $$($q:term)]) => `(($q : Var))
+
+macro_rules
+| `([dsl_ops| $op $ops*]) => do
+   let op_term ← `([dsl_op| $op])
+   let ops_term ← ops.mapM (fun op => `([dsl_op| $op ]))
+   `(AST.Ops.fromList $op_term [ $ops_term,* ])
+
+macro_rules
+| `([dsl_ops| $$($q)]) => `(($q : Ops))
+
+-- macro_rules
+-- | `([dsl_region| { $[ ^( $arg:dsl_var ): ]? $op $ops* } ]) => do
+--    let ops ← `([dsl_ops| $op $ops*])
+--    match arg with
+--    | .none => `(Expr.region Var.unit $ops)
+--    | .some arg => do
+--       let arg_term ← `([dsl_var| $arg ])
+--       `(Expr.region $arg_term $ops)
+-- | `([dsl_region| $$($q)]) => `(($q : Region))
+
+-- macro_rules
+-- | `([dsl_const| $x:num ]) => `(Const.int $x)
+-- | `([dsl_const| $$($q)]) => `(($q : Const))
+
+-- open Lean Syntax in
+-- macro_rules
+-- | `([dsl_op| $res:dsl_var = $name:str
+--       $[ ( $arg:dsl_var ) ]?
+--       $[ [ $rgns,* ] ]?
+--       $[ { $const } ]?
+--       ;
+--       ]) => do
+--       let res_term ← `([dsl_var| $res])
+--       let arg_term ← match arg with
+--           | .some arg => `([dsl_var| $arg])
+--           | .none => `(AST.Var.unit)
+--       let name_term := name
+--       let rgns_term ← match rgns with
+--         | .none => `(.regionsnil)
+--         | .some rgns =>
+--            let rgns ← rgns.getElems.mapM (fun stx => `([dsl_region| $stx]))
+--            `(AST.Regions.fromList [ $rgns,* ])
+--       let const_term ←
+--         match const with
+--         | .none => `(Const.unit)
+--         | .some c => `([dsl_const| $c])
+--       `(Expr.op $res_term (OpName.fromString ($name_term : String)) $arg_term $rgns_term $const_term)
+-- | `([dsl_op| $$($q)]) => `(($q : Op))
+
+-- macro_rules
+-- | `([dsl_op| %$res:dsl_var_name = tuple ( $arg1:dsl_var , $arg2:dsl_var) ; ]) => do
+--     let res_term ← `([dsl_var_name| $res])
+--     let arg1_term ← `([dsl_var| $arg1 ])
+--     let arg2_term ← `([dsl_var| $arg2 ])
+--     `(Expr.tuple $res_term $arg1_term $arg2_term)
+
+
+end EDSL
+
+section Examples
+
+
+@[simp, reducible]
+def Kind.eval : Kind → Type
+| .int => Int
+| .pair k1 k2 => k1.eval × k2.eval
+| .unit => Unit
+
+def OpKind.opFold {i o : Kind}: OpKind i o → i.eval → o.eval
+| .add, (x, y) => x + y
+| .sub, (x, y) => x - y
+| .negate, x => -x
+| .const, () => 0 -- this is cheating, but whatever.
+
+def OpKind.pairFold {i i' : Kind}: i.eval → i'.eval → (Kind.pair i i').eval
+| x, y => (x, y)
+
+
+structure ExprRewrite where
+  kindMotive : Kind → Type
+  opFold {i o: Kind}: OpKind i o → kindMotive i → kindMotive o
+  pairFold: {i i': Kind} → kindMotive i → kindMotive i' → kindMotive (Kind.pair i i')
+  k : Kind
+  find : Expr .Os k
+  replace : Expr .Os k
+  tctx : TypingContext
+  WT_FIND : ExprWellTyped tctx find -- the find pattern is well typed at tctx.
+  WT_REPLACE : ExprWellTyped tctx replace
+  -- A rewrite is correct iff for every evaluation context where the
+  -- exprsesion is well typed, the result of evaluating the find pattern equals
+  -- the replace pattern.
+  REWRITE : ∀ (ectx : EvalContext kindMotive) (ECTX: ectx.toTypingContext = tctx),
+    find.eval opFold pairFold ECTX WT_FIND = replace.eval opFold pairFold ECTX WT_REPLACE
+
+
+def sub_x_x_equals_zero : ExprRewrite where
+  kindMotive := Kind.eval
+  opFold := OpKind.opFold
+  pairFold := OpKind.pairFold
+  k := .int
+  find := Expr.ops
+          (Expr.pair "x_x" "x" .int "x" .int)
+          (Expr.single (Expr.assign "y" .sub "x_x"))
+  replace := Expr.single (Expr.assign "y" .const "_")
+  tctx := TypingContext.bottom [ "x" ↦ .int] ["_" ↦ .int]
+  WT_FIND := by {
+
+    sorry
+  }
+  WT_REPLACE := by sorry
+  REWRITE := by sorry
+
+end Examples
+
 
 end ToTree
+
