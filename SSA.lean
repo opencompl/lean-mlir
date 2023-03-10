@@ -199,6 +199,17 @@ instance Kind.bEqEval: (k : Kind) → BEq k.eval
     letI : BEq q.eval := Kind.bEqEval _
     infer_instance
 
+def Kind.default (k: Kind): k.eval :=
+  match k with
+  | .int => 0
+  | .nat => 0
+  | .unit => ()
+  | .float => 0.0
+  | .pair p q => (p.default, q.default)
+
+instance KindDefault (k: Kind) : Inhabited (k.eval) where
+  default := Kind.default _
+
 end AST
 
 section Semantics
@@ -320,7 +331,7 @@ def ErrorKind.subsingleton (e: ErrorKind) (e': ErrorKind): e = e' := by {
 
 
 -- Env → Except ErrorKind α
-abbrev TopM (α : Type) : Type := ReaderT Env (Except ErrorKind) α
+abbrev TopM (α : Type) : Type := ReaderT Env Id α
 
 abbrev Env.set (var: Var) (val: var.kind.eval): Env → Env
 | env => (.cons var val env)
@@ -329,32 +340,29 @@ abbrev Env.set (var: Var) (val: var.kind.eval): Env → Env
 -- Here, we ensure that Env.get for a var of type 'Unit' will always succeed and return '()',
 -- becuse there is not need not to. This allows us to use 'Unit' to signal zero arguments,
 -- wthout have to make up a fake name for a variable of type 'Unit'
-def Env.get (var: Var): Env → Except ErrorKind var.kind.eval
+def Env.get (var: Var): Env → var.kind.eval
 | .empty => match var.kind with
-            | .unit => Except.ok ()
-            | _ =>  Except.error s!"unknown var {var.name}"
+            | .unit =>  ()
+            | _ =>  default
 | .cons var' val env' =>
       if H : var = var'
-      then pure (H ▸ val)
+      then (H ▸ val)
       else env'.get var
 
-theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = Except.ok () :=
+theorem Env.get_unit (name: String) (e: Env): e.get ⟨name, .unit⟩ = () :=
   match e with
   | .empty => by rfl
   | .cons var' val' env' =>
        if H :⟨name, .unit⟩ = var'
        then by {
         simp[get];
-        simp[H];
-        simp only [pure, Except.pure];
        }
        else by {
         simp[Env.get, H];
-        exact (Env.get_unit name env')
       }
 
 theorem Env.get_set_eq (env: Env) (var: Var)  (val: var.kind.eval):
-  (env.set var val).get var = Except.ok val := by {
+  (env.set var val).get var = val := by {
     induction env <;> simp[get, set, Env.set, Env.get, pure, Except.pure];
 }
 
@@ -366,21 +374,17 @@ abbrev ReaderT.withEnv [Monad m] (f: ρ → ρ) (reader: ReaderT ρ m α): Reade
 def TopM.get (var: Var): TopM var.kind.eval := ReaderT.get >>= (fun _ => (Env.get var))
 
 -- the unit type will always successfully return '()'
-theorem TopM.get_unit (name: String) (env: Env): TopM.get ⟨name, .unit⟩ env = Except.ok () := by {
+theorem TopM.get_unit (name: String) (env: Env): TopM.get ⟨name, .unit⟩ env = () := by {
   simp[get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure];
-  simp[Env.get_unit];
 }
 
 def TopM.set (nv: NamedVal)  (k: TopM α): TopM α :=
   ReaderT.withEnv (Env.set nv.var nv.val) k
 
-def TopM.error (e: ErrorKind) : TopM α := Except.error e
-
-def Val.cast (val: Val) (t: Kind): Except ErrorKind t.eval :=
+def Val.cast (val: Val) (t: Kind): t.eval :=
   if H : val.kind = t
-  then .ok (H ▸ val.val)
-  else .error s!"mismatched type {val.kind} ≠ {t}"
-
+  then .(H ▸ val.val)
+  else default
 -- Runtime values of arguments to an Op, This is the argument value,
 -- the evaluated regions, and the constant.
 structure Op' where
@@ -410,7 +414,7 @@ def Semantics.append: Semantics → Semantics → Semantics
 | .cons sem sems, sems' => .cons sem (Semantics.append sems sems')
 
 def Semantics.run: (name: OpName) → (o : Op') → Semantics → TopM o.retkind.eval
-| oname, o, .nil => TopM.error s!"unknown op {oname}"
+| oname, o, .nil => return default
 | oname, o, .cons sem sems =>
     if oname = sem.name
     then sem.run o
@@ -480,7 +484,7 @@ def AST.Expr.denote {kind: OR}
     return ret.toNamedVal out
 | .region arg ops => fun val => do
     -- TODO: improve dependent typing here
-    let val' ← val.cast arg.kind
+    let val' := val.cast arg.kind
     TopM.set (arg.toNamedVal val') (NamedVal.toVal <$> (ops.denote sem))
 
 
@@ -496,7 +500,7 @@ def Op'.fromOp (sem: Semantics)
 
 def runRegion (sem : Semantics) (expr: AST.Expr .R)
 (env :  Env := Env.empty)
-(arg : Val := Val.unit) : Except ErrorKind Val :=
+(arg : Val := Val.unit) : Val :=
   (expr.denote sem arg).run env
 
 
@@ -508,9 +512,6 @@ theorem TopM_idempotent: ∀ (ma: TopM α) (k: α → α → TopM β),
   simp[ReaderT.bind];
   simp[bind];
   simp[ReaderT.bind];
-  simp[bind];
-  simp[Except.bind];
-  cases H:(ma env) <;> simp;
 }
 
 theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM γ),
@@ -521,12 +522,6 @@ theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM
   simp[ReaderT.bind];
   simp[bind];
   simp[ReaderT.bind];
-  simp[bind];
-  simp[Except.bind];
-  cases H:(ma env) <;> simp;
-  case h.error e => {
-    cases H':(mb env) <;> simp;
-  }
 }
 
 -- unfold Expr.denote for opscons
@@ -547,7 +542,7 @@ theorem Expr.denote_op:
       , regions := rs.denote sem
       , const := const
       , retkind := ret.kind }
-    sem.run name op' >>= fun out => fun env => Except.ok <| ret.toNamedVal out
+    sem.run name op' >>= fun out => fun env => ret.toNamedVal out
   := by { rfl; }
 
 -- how to simply Expr.denote_op, assuming the environment lookup is correct.
@@ -555,14 +550,15 @@ theorem Expr.denote_op_success (ret: Var) (name: OpName) (arg: Var) (rs: Regions
   (sem: Semantics)
   (env: Env)
   (argval: arg.kind.eval)
-  (ARGVAL: env.get arg = .ok argval)
+  (ARGVAL: env.get arg = argval)
   (outval : ret.kind.eval)
-  (SEM: sem.run name (Op'.fromOp sem ret arg argval rs const) env = Except.ok outval) :
-  (Op.mk ret name arg rs const).denote sem env = Except.ok (ret.toNamedVal outval)
+  (SEM: sem.run name (Op'.fromOp sem ret arg argval rs const) env = outval) :
+  (Op.mk ret name arg rs const).denote sem env = (ret.toNamedVal outval)
   := by {
       rw[Expr.denote_op];
       simp[Op'.fromOp] at SEM;
       simp[Op'.fromOp, TopM.get, ReaderT.get, pure, bind, ReaderT.bind, Except.pure, Except.bind, ARGVAL, SEM];
+      aesop
    }
 
 
@@ -571,10 +567,11 @@ theorem Expr.denote_op_success (ret: Var) (name: OpName) (arg: Var) (rs: Regions
 -- has been updated for 'o.ret' with 'o.val'.
 theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.ret o).kind.eval)
   (sem : Semantics) (env: Env)
-  (OVAL: o.denote sem env = Except.ok (o.ret.toNamedVal outval)) :
+  (OVAL: o.denote sem env =  (o.ret.toNamedVal outval)) :
   (Expr.opscons o os).denote sem env = os.denote sem (env.set o.ret outval) := by {
     rw[Expr.denote_opscons];
     simp[bind, ReaderT.bind, OVAL, Except.bind, TopM.set];
+    sorry
 }
 
 
@@ -582,24 +579,15 @@ theorem Expr.denote_opscons_success_op (o: Op) (outval: (Op.ret o).kind.eval)
 -- 1. The arguments exists in 'env'.
 -- 2. The value in 'env' is that of the tuple arguments, tupled up.
 theorem Expr.denote_tuple_inv
-  (SUCCESS: Expr.denote sem (Expr.tuple retname arg1 arg2) env = Except.ok outval) :
-    ∃ argval1, env.get arg1 = .ok argval1 ∧
-    ∃ argval2, env.get arg2 = .ok argval2 ∧
+  (SUCCESS: Expr.denote sem (Expr.tuple retname arg1 arg2) env = outval) :
+    ∃ argval1, env.get arg1 = argval1 ∧
+    ∃ argval2, env.get arg2 = argval2 ∧
     outval = { name := retname, kind := .pair arg1.kind arg2.kind, val := ⟨argval1, argval2 ⟩} := by {
     simp[Expr.denote, bind, ReaderT.bind, Except.bind] at SUCCESS;
-    cases ARGVAL1:TopM.get arg1 env <;> simp[ARGVAL1] at SUCCESS;
-    case ok argval1 => {
-      simp[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.pure] at ARGVAL1;
-      simp[ARGVAL1];
 
-      cases ARGVAL2:TopM.get arg2 env <;> simp[ARGVAL2] at SUCCESS;
-      case ok argval2 => {
-        simp[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.pure] at ARGVAL2;
-        simp[ARGVAL2];
-        simp[pure, ReaderT.pure, Except.pure] at SUCCESS;
-        simp[SUCCESS];
-      }
-    }
+      simp[TopM.get, bind, ReaderT.bind, Except.bind, ReaderT.get, pure, Except.pure] at SUCCESS ⊢;
+      simp[pure, ReaderT.pure, Except.pure] at SUCCESS ⊢  ;
+      aesop;
 }
 
 
@@ -608,37 +596,21 @@ theorem Expr.denote_tuple_inv
 -- 2. 'sem' succeeded
 -- 3. The value returned by 'Expr.denote' is the boxed value in 'sem'.
 theorem Expr.denote_op_assign_inv
-  (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = Except.ok outval) :
-    ∃ argval, env.get arg = .ok argval ∧
+  (SUCCESS: Expr.denote sem (Expr.op ret name arg regions const) env = outval) :
+    ∃ argval, env.get arg = argval ∧
     ∃ (outval_val : ret.kind.eval),
       (sem.run name (Op'.fromOp sem ret arg argval regions const) env = pure outval_val /\
        outval = ret.toNamedVal outval_val)   := by {
     -- rw[Expr.denote_op] at SUCCESS; -- TODO: find out why 'rw' does not work here.
 
     simp[Expr.denote, bind, ReaderT.bind, Except.bind] at SUCCESS;
-    cases ARGVAL:TopM.get arg env <;> simp[ARGVAL] at SUCCESS;
-    case ok argval => {
-      exists argval;
-      simp[TopM.get, bind, ReaderT.bind, Except.bind] at ARGVAL;
-      simp[ReaderT.get, pure, Except.pure] at ARGVAL;
-      simp[ARGVAL];
-
-      cases SEMVAL:sem.run name
-                    { argval := { kind := arg.kind, val := argval },
-                      regions := Expr.denote sem regions, const := const,
-                      retkind := ret.kind } env;
-      case error ERROR => {
-        simp[SEMVAL] at SUCCESS;
-      }
-      case ok semval => {
-        simp at semval;
-        exists semval;
-        simp[pure, Except.pure];
-        simp[SEMVAL] at SUCCESS;
-        simp[pure, Except.pure, ReaderT.pure] at SUCCESS;
-        simp[SUCCESS];
-      }
-    }
+      simp[TopM.get, bind, ReaderT.bind, Except.bind] at SUCCESS ⊢;
+      simp[ReaderT.get, pure, Except.pure] at SUCCESS ⊢;
+      simp[SUCCESS];
+      simp[pure, Except.pure];
+      simp[pure, Except.pure, ReaderT.pure] at SUCCESS;
+      simp[SUCCESS];
+      aesop
 }
 
 -- What we can say about a op in general. Note that this is a good deal weaker
@@ -1103,7 +1075,7 @@ def const : Semantic := {
   name := .arith.constant
   run := fun o => match o with
   | { const := .int x, retkind := .int} => return x
-  | _ => TopM.error "unknown op"
+  | _ => default
 }
 
 def add : Semantic := {
@@ -1111,7 +1083,7 @@ def add : Semantic := {
   run := fun o => match o with
   | { retkind := .int,
       argval := ⟨.pair .int .int, (x, y)⟩ } => return x + y
-  | _ => TopM.error "unknown op"
+  | _ => default
 }
 
 def sub : Semantic := {
@@ -1119,7 +1091,7 @@ def sub : Semantic := {
   run := fun o => match o with
   | { retkind := .int,
       argval := ⟨.pair .int .int, (x, y)⟩ } => return x - y
-  | _ => TopM.error "unknown op"
+  | _ => default
 }
 
 def sem: Semantics :=
@@ -1254,8 +1226,8 @@ def if_ : Semantic := {
     } => do
       let rrun := if cond ≠ 0 then rthen else relse
       let v ← rrun Val.unit
-      v.cast .int
-  | _ => TopM.error "unknown op"
+      return .int
+  | _ => default
 }
 
 def twice : Semantic := {
@@ -1266,8 +1238,8 @@ def twice : Semantic := {
     } => do
       let v ← r Val.unit
       let w ← r Val.unit -- run a region twice, check that it is same as running once.
-      w.cast .int
-  | _ => TopM.error "unknown op"
+      return w.cast .int
+  | _ => default
 }
 
 def for_ : Semantic := {
@@ -1400,9 +1372,11 @@ structure Peephole where
   replace : Ops -- replacement ops. can use 'findbegin'.
   sem: Semantics
   -- TODO: Once again, we need to reason 'upto error'.
-  replaceCorrect: ∀ (env: Env) (origval : NamedVal)
-      (FIND: find.denote sem env = .ok origval),
-      (replace.denote sem) env = .ok origval
+  replaceCorrect: ∀ (env: Env),
+      find.denote sem env = replace.denote sem env
+
+      -- (FIND: find.denote sem env = origval),
+      -- (replace.denote sem) env =  origval
 end Rewriting
 
 namespace RewritingHoare
@@ -1427,10 +1401,10 @@ notation P:80 "h∧" Q:80 => assertion.and P Q -- how does this work?
 def assertion.prop (p: Prop): assertion T := fun (_v: T) => p
 
 def assertion.mapsto (v: Var) (val: v.kind.eval): assertion Env :=
-  fun (e: Env) => e.get v = .ok val
+  fun (e: Env) => e.get v =  val
 
 def assertion.maps (v: Var): assertion Env :=
-  fun (e: Env) => ∃ (val: v.kind.eval), (e.get v) = Except.ok val
+  fun (e: Env) => ∃ (val: v.kind.eval), (e.get v) = val
 
 notation "h[" v:80 "↦" val:80 "]" => assertion.mapsto v val
 notation "hprop(" p:80 ")" => assertion.prop p
@@ -1458,45 +1432,9 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
     % $(res) : int = "arith.constant" {0};
   ]
   sem := Arith.sem,
-  replaceCorrect := fun env findval S0 => by {
-    dsimp only at *;
-    have ⟨x0, S1, S2⟩ := Expr.denote_opscons_inv S0;
-    simp [Op.ret] at *;
-    have ⟨x1, X1, x2, X2, S3⟩ := Expr.denote_tuple_inv S1;
-    simp at S3;
-    cases S3; case refl => {
-      have ⟨x3, X3⟩ := Expr.denote_opsone_assign_inv S2;
-      simp[Env.get, pure, Except.pure] at X3;
-      have ⟨x1x2_eq_x3, x4, X4, X5⟩ := X3
-      simp at *;
-      cases x1x2_eq_x3; case refl => {
-        cases X5; case refl => {
-          simp[Op.ret, Op.mk] at *;
-          -- now simplify RHS
-          dsimp only[Expr.denote_opsone];
-          dsimp only[Expr.denote_op];
-          dsimp only[bind, ReaderT.bind, Except.bind, TopM.get_unit];
-          simp only[TopM.get_unit]; -- TODO: Example where 'simp' is necessary!
-
-          simp only[Arith.sem, Expr.denote, pure, ReaderT.pure, Except.pure];
-          rewrite[Semantics.run.eq (name := .arith.constant) (by simp)]
-          simp only [Semantic.run, Arith.const, pure, ReaderT.pure, Except.pure];
-          simp only[Arith.sem] at X4;
-          rewrite[Semantics.run.neq (name := .arith.sub) (by simp)] at X4;
-          rewrite[Semantics.run.neq (name := .arith.sub) (by simp)] at X4;
-          rewrite[Semantics.run.eq (name := .arith.sub) (by simp)] at X4;
-          simp only [Arith.sub, Semantic.run, Op'.fromOp, Arith.sem, Expr.denote] at X4;
-          simp[pure, ReaderT.pure, Except.pure] at X4;
-          simp[X4];
-          have X1_EQ_X2 : Except.ok x1 = Except.ok x2 := by {
-            rw [<- X1, <- X2];
-          }
-          injection X1_EQ_X2 with X1_EQ_X2;
-          simp[X1_EQ_X2] at X4;
-          simp[X4];
-        }
-      }
-    }
+  replaceCorrect := fun env => by {
+    simp[Expr.denote, TopM.get, TopM.set, ReaderT.get, bind, Env.get, ReaderT.bind, pure, ReaderT.pure, Semantics.run, Semantic.run,
+      Arith.sub, Arith.const] at *;
     }
  }
 
@@ -1537,47 +1475,10 @@ def for_fusion (r: Region) (n m : String)
     % $(out2) : int = "for" ( %$(n_plus_m_init) : nat × int) [$(r)];
   ]
   sem := Semantics.append Scf.sem Arith.sem,
-  replaceCorrect := fun env1 findval S1_ => by {
-    simp at *; -- simplify builders.
-    have ⟨x11, x12, env2, X11, X12, ENV2, S2_⟩ := Expr.denote_opscons_tuple_inv' S1_;
-    clear S1_;
-    -- how to clear shadowed vars, so I don't need the jank S2_?
-    have ⟨x2arg, x2ret, env3, X2ARG, X2RET, ENV3, S3_⟩ := Expr.denote_opscons_op_assign_inv' S2_;
-    clear S2_;
-    have ⟨x31, x32, env4, X31, X32, ENV4, S4_⟩ := Expr.denote_opscons_tuple_inv' S3_;
-    clear S3_;
-    have ⟨x4arg, X4ARG, x4ret, X4RET, FINDVAL⟩ := Expr.denote_opsone_assign_inv S4_;
-    clear S4_;
-
-    simp at x11; simp at x12; simp at x2arg; simp at x2ret;
-    simp at x31; simp at x32; simp at x4arg; simp at x4ret;
-    simp at ENV2; simp at ENV3; simp at ENV4;
-
-    rw[ENV2] at X2ARG;
-    rw[Env.get_set_eq] at X2ARG;
-    simp at X2ARG;
-    cases X2ARG; case refl =>
-    rw[ENV4] at X4ARG;
-    rw[Env.get_set_eq] at X4ARG;
-    simp at X4ARG;
-    cases X4ARG; case refl =>
-
-    -- rw[Semantics.run.eq (name := .scf.for) (by simp)] at X2RET;
-    simp[Op'.fromOp] at X2RET;
-    simp[Expr.denote_regionscons, Expr.denote_regionsnil] at X2RET;
-    -- rw[Scf.for_.run] at X2RET;
-
-    -- rw[Semantics.run.eq (name := .scf.for) (by simp)] at X4RET;
-    simp[Op'.fromOp] at X4RET;
-    simp[Expr.denote_regionscons, Expr.denote_regionsnil] at X4RET;
-    -- rw[Scf.for_.run] at X4RET;
-
-    rw[ENV3] at X32;
-    simp[Env.get_set_eq] at X32;
-    cases X32; case refl =>
-    rw[ENV3] at X31;
-    -- TODO: finish this ugly proof.
-    sorry
+  replaceCorrect := fun env1 => by {
+     simp[Expr.denote, TopM.get, TopM.set, ReaderT.get, bind, Env.get, ReaderT.bind, pure, ReaderT.pure, Semantics.run, Semantic.run,
+      Arith.sub, Arith.const, Scf.sem, Scf.for_] at *;
+      constructor;
   }
 }
 end ForFusionHoare
