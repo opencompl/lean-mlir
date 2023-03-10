@@ -4,6 +4,7 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.Data.Set.Function
 import Mathlib.Data.Set.Image
+import Mathlib.Tactic.Linarith
 import Aesop
 
 def Sigma.mapRight {T: Type} {f f': T → Type} (map: ∀ {t: T}, f t → f' t):
@@ -1245,9 +1246,8 @@ noncomputable def sub_x_x_equals_zero : ExprRewrite where
   }
   REWRITE := by {
     intros ectx;
-    simp[Expr.eval!];
-    simp[OpKind.opFold, EvalContext!.bind, OpKind.pairFold];
-    sorry
+    simp only[dite_eq_ite, Expr.eval!, ite_true, OpKind.opFold, EvalContext!.bind, OpKind.pairFold];
+    apply sub_self;
   }
 
 end Examples
