@@ -530,11 +530,13 @@ theorem TopM_commutative: ∀ (ma: TopM α) (mb: TopM β) (k: α → β → TopM
 }
 
 -- unfold Expr.denote for opscons
+-- TODO: why not?  @[simp]
 theorem Expr.denote_opscons:
   (Expr.opscons o os).denote sem =
     (o.denote sem >>= fun retv => TopM.set retv (os.denote sem)) := by { rfl; }
 
 -- unfold Expr.denote for opsone
+-- TODO: why not? @[simp]
 theorem Expr.denote_opsone:
   (Expr.opsone o).denote sem = o.denote sem := by { rfl; }
 
@@ -1394,15 +1396,22 @@ def Ops.replaceOne (os: Ops) (new: Ops) : Ops :=
   | .opsone o => new
   | .opscons o os => .opscons o (Ops.replaceOne os new)
 
-structure Peephole where
-  -- findbegin: TypingCtx -- free variables.
+structure Replacement where
   find : Ops -- stuff in the pattern. The last op is to be replaced.
   replace : Ops -- replacement ops. can use 'findbegin'.
   sem: Semantics
+
+@[reducible]
+protected def Replacement.Correct (replacement : Replacement) : Prop :=
+  ∀ (env: Env) (origval : NamedVal)
+      (FIND: replacement.find.denote replacement.sem env = .ok origval), -- why is this not a ->?
+      (replacement.replace.denote replacement.sem) env = .ok origval
+
+structure Peephole extends Replacement where
+  -- findbegin: TypingCtx -- free variables.
   -- TODO: Once again, we need to reason 'upto error'.
-  replaceCorrect: ∀ (env: Env) (origval : NamedVal)
-      (FIND: find.denote sem env = .ok origval),
-      (replace.denote sem) env = .ok origval
+  replaceCorrect: Replacement.Correct { find := find, replace := replace, sem := sem }
+
 end Rewriting
 
 namespace RewritingHoare
@@ -1448,8 +1457,7 @@ theorem Int.sub_n_n (n: Int) : n - n = 0 := by {
   linarith
 }
 
-
-def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephole := {
+def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Replacement := {
   find := [dsl_ops|
     % $(pairname) = tuple( %$(arg) : int, %$(arg) : int);
     % $(res) : int = "arith.sub" ( %$(pairname) : int × int);
@@ -1457,9 +1465,15 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
   replace := [dsl_ops|
     % $(res) : int = "arith.constant" {0};
   ]
-  sem := Arith.sem,
-  replaceCorrect := fun env findval S0 => by {
-    dsimp only at *;
+  sem := Arith.sem
+  }
+
+  -- The lambda here looked confusing. I tried refactoring a bit to make it flow better,
+  -- splitting the data and the proof.
+def sub_x_x_equals_zero_correct (res: String) (arg: String) (pairname: String) : Replacement.Correct (sub_x_x_equals_zero res arg pairname) := by {
+    intros env findval S0
+    unfold sub_x_x_equals_zero at *;
+    dsimp only  at *;
     have ⟨x0, S1, S2⟩ := Expr.denote_opscons_inv S0;
     simp [Op.ret] at *;
     have ⟨x1, X1, x2, X2, S3⟩ := Expr.denote_tuple_inv S1;
@@ -1477,7 +1491,6 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
           dsimp only[Expr.denote_op];
           dsimp only[bind, ReaderT.bind, Except.bind, TopM.get_unit];
           simp only[TopM.get_unit]; -- TODO: Example where 'simp' is necessary!
-
           simp only[Arith.sem, Expr.denote, pure, ReaderT.pure, Except.pure];
           rewrite[Semantics.run.eq (name := .arith.constant) (by simp)]
           simp only [Semantic.run, Arith.const, pure, ReaderT.pure, Except.pure];
@@ -1497,9 +1510,10 @@ def sub_x_x_equals_zero (res: String) (arg: String) (pairname: String) : Peephol
         }
       }
     }
-    }
  }
 
+def sub_x_x_equals_zero_peephole (res: String) (arg: String) (pairname: String) : Peephole :=
+  Peephole.mk (sub_x_x_equals_zero res arg pairname) (sub_x_x_equals_zero_correct res arg pairname)
 
 end SubXXHoare
 
