@@ -11,4 +11,4 @@ lean_exe «ssa» {
   supportInterpreter := true
 }
 
-require Mathlib from git "https://github.com/leanprover-community/mathlib4" @ "master"
+require Mathlib from git "https://github.com/leanprover-community/mathlib4" @ "54bf6e049c974a9f9c03aea75f3f3f0a040afdc4"
