@@ -5,17 +5,15 @@ import Mathlib.Tactic.LibrarySearch
 import Mathlib.Tactic.Cases
 import Mathlib.Data.Quot
 import Std.Data.Int.Basic
-import SSA.Experiment.SSAToTree
 
-#check Kind
 open Std
-
 
 #check RBMap
 namespace AST
 
 /-
 Kinds of values. We must have 'pair' to take multiple arguments.
+TODO: Does it make sense to make this a typeclass?
 -/
 inductive Kind where
 | int : Kind

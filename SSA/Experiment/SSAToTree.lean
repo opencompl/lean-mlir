@@ -991,6 +991,8 @@ def sub_x_x_equals_zero : ExprRewrite where
 
 end Examples
 
-
 end ToTree
 
+def main : IO UInt32 := do
+  IO.println "Hello, tree!"
+  pure 0
