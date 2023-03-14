@@ -351,6 +351,9 @@ theorem TopM.get_unit (name: String) (env: Env): TopM.get ⟨name, .unit⟩ env 
   simp[get, ReaderT.get, bind, ReaderT.bind, Except.bind, pure, Except.pure];
 }
 
+theorem TopM_get (name: String)  (kind: Kind) (k: kind.eval → TopM β):
+  (TopM.get ⟨name, kind⟩) >>= k =  fun env => (k (env ⟨name, kind⟩)) env := rfl
+
 def TopM.set (nv: NamedVal)  (k: TopM α): TopM α :=
   ReaderT.withEnv (Env.set nv.var nv.val) k
 
@@ -466,6 +469,17 @@ theorem Expr.denote_opscons:
 -- unfold Expr.denote for opsone
 theorem Expr.denote_opsone:
   (Expr.opsone o).denote sem = o.denote sem := by { rfl; }
+
+
+theorem Expr.denote_tuple:
+  (Expr.tuple ret arg1 arg2).denote sem =
+  do
+   let val1 ←TopM.get arg1
+   let val2 ← TopM.get arg2
+   return { name := ret,
+            kind := .pair arg1.kind arg2.kind,
+            val := (val1, val2)
+          } := by rfl
 
 -- unfold Expr.denote for op
 theorem Expr.denote_op:
@@ -1171,11 +1185,26 @@ def for_fusion (r: Region) (n m : String)
 
   replaceCorrect := fun env1 => by {
     simp;
-    simp[Expr.denote];
-    sorry
+    generalize SEM:((fun name =>
+      match (motive := OpName → (o : Op') → TopM (Kind.eval o.retkind)) name with
+      | OpName.arith.add => Arith.add.run
+      | OpName.scf.for => Scf.for_.run
+      | x => fun op env => default)) = sem;
+
+
+
+    simp only[Expr.denote_opscons, Expr.denote_tuple, TopM_get];
+    simp[TopM_get];
+    simp[TopM_get];
+    -- simp does not simplify 'TopM_get' again.
+
+    rw[Expr.denote_opscons];
+    rw[Expr.denote_tuple];
+    -- simp[Expr.denote];
+    -- sorry
+
     -- simp[TopM.get, ReaderT.get,  Env.get, bind, ReaderT.bind, TopM.set, pure, ReaderT.pure, Scf.for_, Env.set, Expr.denote];
-    --  simp[Expr.denote, TopM.get, TopM.set, ReaderT.get, bind, Env.get, ReaderT.bind, pure, ReaderT.pure, Semantic.run
-    --   Scf.for_.run ] at *;
+    -- simp[Expr.denote, TopM.get, TopM.set, ReaderT.get, bind, Env.get, ReaderT.bind, pure, ReaderT.pure, Semantic.run];
   }
 }
 end ForFusionHoare
