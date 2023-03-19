@@ -98,11 +98,21 @@ def x_minus_x_equals_zero (env: Env):
     simp;
   }
 
-def x_mul_commute (env: Env):
+def x_mul_commute_val_eq (env: Env):
   let p : AST S .O := .assign .x2 .mul (.x0, .x1)
   let q : AST S .O := .assign .x2 .mul (.x1, .x0)
-  p.eval env = q.eval env := by {
+  (p.eval env).fst = (q.eval env).fst := by {
     simp;
+    sorry
+  }
+
+
+def x_mul_commute_env_eq (env: Env):
+  let p : AST S .O := .assign .x2 .mul (.x0, .x1)
+  let q : AST S .O := .assign .x2 .mul (.x1, .x0)
+  (p.eval env).snd = (q.eval env).snd := by {
+    simp;
+    funext ix;
     sorry
   }
 
