@@ -1,9 +1,12 @@
-name: std4 test build
+name: build & docs
 on:
   push:
     branches:
       - "main"
   pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -24,7 +27,7 @@ jobs:
         run: |
           lake build
 
-      - name: Generate docs
+      - name: Generate docs 📜
         run: |
           ./docgen.sh
       - name: Deploy 🚀
