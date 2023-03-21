@@ -17,3 +17,7 @@ lean_exe «tree» {
 }
 
 require Mathlib from git "https://github.com/leanprover-community/mathlib4" @ "54bf6e049c974a9f9c03aea75f3f3f0a040afdc4"
+
+meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
+  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"
+

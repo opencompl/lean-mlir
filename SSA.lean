@@ -210,6 +210,7 @@ def Kind.default (k: Kind): k.eval :=
 instance KindDefault (k: Kind) : Inhabited (k.eval) where
   default := Kind.default _
 
+
 end AST
 
 section Semantics
@@ -279,6 +280,21 @@ def NamedVal.var (nv: NamedVal): Var :=
 -- bindings of variables to values of type ⟦var.kind⟧
 abbrev Env := (v: Var) → v.kind.eval
 
+
+instance : Inhabited ((k: Kind) → Kind.eval k) where 
+  default := 
+    let rec go := fun k => 
+      match k with 
+      | .unit => () 
+      | .pair p q => (go p, go q)
+      | .float => 0
+      | .int => 0
+      | .nat => 0
+    go 
+
+def Env.empty := fun (v : Var) => 
+  let f : (k: Kind) → Kind.eval k := default
+  f v.kind
 
 -- truncation of a type that smashes everything into a single equivalence class.
 inductive trunc (α: Type): α → α → Prop
@@ -962,6 +978,17 @@ def twice : Semantic := {
   | _ => default
 }
 
+def run : Semantic := {
+  name := .scf.run
+  run := fun o => match o with
+  | { regions := [r],
+      retkind := .int
+    } => do
+      let v ← r Val.unit
+      return v.cast .int
+  | _ => default
+}
+
 def for_ : Semantic := {
   name := .scf.for
   run := fun o => match o with
@@ -1197,9 +1224,9 @@ def for_fusion (r: Region) (n m : String)
     simp[TopM_get];
     simp[TopM_get];
     -- simp does not simplify 'TopM_get' again.
-
-    rw[Expr.denote_opscons];
-    rw[Expr.denote_tuple];
+    sorry
+    -- rw[Expr.denote_opscons];
+    -- rw[Expr.denote_tuple];
     -- simp[Expr.denote];
     -- sorry
 
@@ -1218,45 +1245,52 @@ namespace Theorems
 end Theorems
 
 namespace Test
-def runRegionTest :
-  (sem: Semantics) →
-  (r: AST.Region) →
-  (expected: Val) →
-  (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool :=
-  fun sem r expected arg env => do
+def runRegionTest
+  (sem: Semantics)
+  (r: AST.Region)
+  (expected: Val)
+  (arg: Val := Val.unit )
+  (env: Env := Env.empty) : IO Bool := do
     IO.println r
-    let v? := (r.denote sem arg).run env
-    match v? with
-    | .ok v =>
-      if v == expected
-      then
-        IO.println s!"{v}. OK"; return True
-      else
+    let v : Val := (r.denote sem arg).run env
+    if v == expected
+    then
+      IO.println s!"{v}. OK"; return True
+    else
         IO.println s!"ERROR: computed '{v}', expected '{expected}'."
         return False
-    | .error e =>
-      IO.println s!"ERROR: '{e}'. Expected '{expected}'."
-      return False
 
-def runRegionTestXfail :
-  (sem: Semantics) →
-  (r: AST.Region) →
-  (arg: Val := Val.unit ) →
-  (env: Env := Env.empty) → IO Bool :=
-  fun sem r arg env => do
-    IO.println r
-    let v? := (r.denote sem arg).run env
-    match v? with
-    | .ok v =>
-        IO.println s!"ERROR: expected failure, but succeeded with '{v}'.";
-        return False
-    | .error e =>
-      IO.println s!"OK: Succesfully xfailed '{e}'."
-      return True
+-- there is no notion of failure.
+-- def runRegionTestXfail :
+--   (sem: Semantics) →
+--   (r: AST.Region) →
+--   (arg: Val := Val.unit ) →
+--   (env: Env := Env.empty) → IO Bool :=
+--   fun sem r arg env => do
+--     IO.println r
+--     let v : Val := (r.denote sem arg).run env
+--     match v? with
+--     | .ok v =>
+--         IO.println s!"ERROR: expected failure, but succeeded with '{v}'.";
+--         return False
+--     | .error e =>
+--       IO.println s!"OK: Succesfully xfailed '{e}'."
+--       return True
 
 end Test
 
+
+open Arith Scf in 
+def arith_plus_scf.sem : Semantics := fun name =>
+    match name with
+    | .arith.constant => const.run
+    | .arith.add => add.run
+    | .arith.sub => sub.run
+    | .scf.if => if_.run
+    | .scf.for => for_.run
+    | .scf.twice => twice.run
+    | .scf.run => run.run
+    | _ => default
 
 open Arith Scf DSL Examples Test in
 def main : IO UInt32 := do
@@ -1269,27 +1303,24 @@ def main : IO UInt32 := do
     (sem := Arith.sem)
     (r := eg_arith_shadow)
     (expected := { kind := .int, val := 4}),
-   runRegionTest
-    (sem := Semantics.append Scf.sem Arith.sem)
+  runRegionTest
+    (sem := arith_plus_scf.sem)
     (r := eg_scf_ite_true)
     (expected := { kind := .int, val := 42}),
   runRegionTest
-    (sem := Semantics.append Scf.sem Arith.sem)
+    (sem := arith_plus_scf.sem)
     (r := eg_scf_ite_false)
     (expected := { kind := .int, val := 0}),
   runRegionTest
-    (sem := Semantics.append Scf.sem Arith.sem)
+    (sem := arith_plus_scf.sem)
     (r := eg_scf_run_twice)
     (expected := { kind := .int, val := 42}),
   runRegionTest
-    (sem := Semantics.append Scf.sem Arith.sem)
+    (sem := arith_plus_scf.sem)
     (r := eg_scf_well_scoped)
     (expected := { kind := .int, val := 42}),
-  runRegionTestXfail
-    (sem := Semantics.append Scf.sem Arith.sem)
-    (r := eg_scf_ill_scoped),
   runRegionTest
-    (sem := Semantics.append Scf.sem Arith.sem)
+    (sem := arith_plus_scf.sem)
     (r := eg_scf_for)
     (expected := { kind := .int, val := 42})]
   let mut total := 0
