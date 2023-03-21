@@ -7,6 +7,8 @@ import Aesop
 -- Thus, we eschew the need to have proofs, and simply YOLO translate from
 -- the origina SSA + Regions program into Tree.
 
+namespace SSA2Tree
+
 inductive VarName
 | x0
 | x1
@@ -157,8 +159,8 @@ def x_add_4_times_mul_val_eq (env: Env):
     ]
   (p.eval env).fst = (q.eval env).fst := by {
     simp only [AST.ofList, AST.eval, UserSemantics.opcodeEval]
+    sorry
      -- still get environments when reasoning about sequence of operations.
-     sorry
   }
 
 end MultipleInstruction
@@ -196,7 +198,7 @@ def AST.toCTree_ (e : CTree.Env opcode) : AST opcode astk → CTree opcode × CT
 
 -- wrap every element in a (.leaf) constructor
 @[simp]
-def CTree.Env.ofEnv (e: _root_.Env) :  CTree.Env opcode :=
+def CTree.Env.ofEnv (e: SSA2Tree.Env) :  CTree.Env opcode :=
    fun name => .leaf (e name)
 
 -- this converts an AST into a CTree, given an environment
@@ -258,3 +260,5 @@ def x_add_4_times_mul_val_eq (env: Env):
     linarith
   }
 end MultipleInstructionTree
+
+end SSA2Tree
