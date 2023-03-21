@@ -1,0 +1,1 @@
+{"name":"Lean.Meta.Tactic.AC","instances":[],"imports":["Init","Lean.Meta.Tactic.AC.Main"],"declarations":[]}

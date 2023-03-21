@@ -1,0 +1,1 @@
+{"name":"Init.Data.Nat","instances":[],"imports":["Init.Data.Nat.Basic","Init.Data.Nat.Div","Init.Data.Nat.Gcd","Init.Data.Nat.Bitwise","Init.Data.Nat.Control","Init.Data.Nat.Log2","Init.Data.Nat.Power2","Init.Data.Nat.Linear","Init.Data.Nat.SOM"],"declarations":[]}

@@ -1,0 +1,1 @@
+{"name":"Init.Data.Fin.Log2","instances":[],"imports":["Init.Data.Nat.Log2"],"declarations":[{"sourceLink":"https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Data/Fin/Log2.lean#L9-L9","name":"Fin.log2","kind":"def","docLink":"./Init/Data/Fin/Log2.html#Fin.log2","doc":""}]}

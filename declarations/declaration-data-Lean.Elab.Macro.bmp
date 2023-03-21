@@ -1,0 +1,1 @@
+{"name":"Lean.Elab.Macro","instances":[],"imports":["Init","Lean.Elab.MacroArgUtil"],"declarations":[{"sourceLink":"https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Lean/Elab/Macro.lean#L13-L43","name":"Lean.Elab.Command.elabMacro","kind":"def","docLink":"./Lean/Elab/Macro.html#Lean.Elab.Command.elabMacro","doc":""}]}

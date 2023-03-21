@@ -1,0 +1,28 @@
+<html lang="en"><head><meta charset="UTF-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1"></meta><link rel="stylesheet" href="../.././style.css"></link><link rel="stylesheet" href="../.././src/pygments.css"></link><link rel="shortcut icon" href="../.././favicon.ico"></link><link rel="prefetch" href="../.././/declarations/declaration-data.bmp" as="image"></link><title>Lean.Elab.Config</title><script defer="true" src="../.././mathjax-config.js"></script><script defer="true" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script defer="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>const SITE_ROOT="../.././";</script><script>const MODULE_NAME="Lean.Elab.Config";</script><script type="module" src="../.././search.js"></script><script type="module" src="../.././how-about.js"></script><script type="module" src="../.././instances.js"></script><script type="module" src="../.././importedBy.js"></script></head><body><input id="nav_toggle" type="checkbox"></input><header><h1><label for="nav_toggle"></label>Documentation</h1><p class="header_filename break_within"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Config</span></p><form action="https://google.com/search" method="get" id="search_form"><input type="hidden" name="sitesearch" value="https://leanprover-community.github.io/mathlib4_docs"></input><input type="text" name="q" autocomplete="off"></input>&#32;
+            <button id="search_button" onclick="javascript: form.action='../.././search.html';">Search</button><button>Google site search</button></form></header><nav class="internal_nav"><h3><a class="break_within" href="#top"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Config</span></a></h3><p class="gh_nav_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Lean/Elab/Config.lean">source</a></p><div class="imports"><details><summary>Imports</summary><ul><li><a href="../.././Init.html">Init</a></li><li><a href="../.././Lean/Meta/Basic.html">Lean.Meta.Basic</a></li></ul></details><details><summary>Imported by</summary><ul id="imported-by-Lean.Elab.Config" class="imported-by-list"></ul></details></div><div class="nav_link"><a class="break_within" href="#Lean.Elab.Term.setElabConfig"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">setElabConfig</span></a></div></nav><main>
+<div class="decl" id="Lean.Elab.Term.setElabConfig"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Lean/Elab/Config.lean#L56-L57">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Config.html#Lean.Elab.Term.setElabConfig"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">setElabConfig</span></a></span><span class="decl_args">
+<span class="fn">(cfg : <a href="../.././Lean/Meta/Basic.html#Lean.Meta.Config">Lean.Meta.Config</a>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.Config">Lean.Meta.Config</a></div></div><p>Set <code>isDefEq</code> configuration for the elaborator.
+Note that we enable all approximations but <code>quasiPatternApprox</code></p><p>In Lean3 and Lean 4, we used to use the quasi-pattern approximation during elaboration.
+The example:</p><pre><code>def ex : StateT δ (StateT σ Id) σ :=
+monadLift (get : StateT σ Id σ)
+</code></pre><p>demonstrates why it produces counterintuitive behavior.
+We have the <code>Monad-lift</code> application:</p><pre><code>@monadLift ?m ?n ?c ?α (get : StateT σ id σ) : ?n ?α
+</code></pre><p>It produces the following unification problem when we process the expected type:</p><pre><code>?n ?α =?= StateT δ (StateT σ id) σ
+==> (approximate using first-order unification)
+?n := StateT δ (StateT σ id)
+?α := σ
+</code></pre><p>Then, we need to solve:</p><pre><code>?m ?α =?= StateT σ id σ
+==> instantiate metavars
+?m σ =?= StateT σ id σ
+==> (approximate since it is a quasi-pattern unification constraint)
+?m := fun σ => StateT σ id σ
+</code></pre><p>Note that the constraint is not a Milner pattern because σ is in
+the local context of <code>?m</code>. We are ignoring the other possible solutions:</p><pre><code>?m := fun σ' => StateT σ id σ
+?m := fun σ' => StateT σ' id σ
+?m := fun σ' => StateT σ id σ'
+</code></pre><p>We need the quasi-pattern approximation for elaborating recursor-like expressions (e.g., dependent <code>match with</code> expressions).</p><p>If we had use first-order unification, then we would have produced
+the right answer: <code>?m := StateT σ id</code></p><p>Haskell would work on this example since it always uses
+first-order unification.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>
+<nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

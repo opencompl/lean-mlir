@@ -1,0 +1,1 @@
+{"name":"Init.Data.List","instances":[],"imports":["Init.Data.List.Basic","Init.Data.List.BasicAux","Init.Data.List.Control"],"declarations":[]}

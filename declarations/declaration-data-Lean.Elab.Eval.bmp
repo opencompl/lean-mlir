@@ -1,0 +1,1 @@
+{"name":"Lean.Elab.Eval","instances":[],"imports":["Init","Lean.Meta.Eval","Lean.Elab.SyntheticMVars"],"declarations":[{"sourceLink":"https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Lean/Elab/Eval.lean#L12-L17","name":"Lean.Elab.Term.evalTerm","kind":"def","docLink":"./Lean/Elab/Eval.html#Lean.Elab.Term.evalTerm","doc":""}]}

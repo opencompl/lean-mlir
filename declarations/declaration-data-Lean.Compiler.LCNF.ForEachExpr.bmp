@@ -1,0 +1,1 @@
+{"name":"Lean.Compiler.LCNF.ForEachExpr","instances":[],"imports":["Init","Lean.Util.ForEachExpr","Lean.Compiler.LCNF.Basic"],"declarations":[]}

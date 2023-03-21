@@ -1,0 +1,1 @@
+{"name":"Lean.Meta.Tactic.Simp","instances":[],"imports":["Init","Lean.Meta.Tactic.Simp.SimpTheorems","Lean.Meta.Tactic.Simp.SimpCongrTheorems","Lean.Meta.Tactic.Simp.Types","Lean.Meta.Tactic.Simp.Main","Lean.Meta.Tactic.Simp.Rewrite","Lean.Meta.Tactic.Simp.SimpAll"],"declarations":[]}

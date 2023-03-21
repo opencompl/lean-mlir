@@ -1,0 +1,387 @@
+<html lang="en"><head><meta charset="UTF-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1"></meta><link rel="stylesheet" href="../.././style.css"></link><link rel="stylesheet" href="../.././src/pygments.css"></link><link rel="shortcut icon" href="../.././favicon.ico"></link><link rel="prefetch" href="../.././/declarations/declaration-data.bmp" as="image"></link><title>Init.Control.Basic</title><script defer="true" src="../.././mathjax-config.js"></script><script defer="true" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script defer="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>const SITE_ROOT="../.././";</script><script>const MODULE_NAME="Init.Control.Basic";</script><script type="module" src="../.././search.js"></script><script type="module" src="../.././how-about.js"></script><script type="module" src="../.././instances.js"></script><script type="module" src="../.././importedBy.js"></script></head><body><input id="nav_toggle" type="checkbox"></input><header><h1><label for="nav_toggle"></label>Documentation</h1><p class="header_filename break_within"><span class="name">Init</span>.<span class="name">Control</span>.<span class="name">Basic</span></p><form action="https://google.com/search" method="get" id="search_form"><input type="hidden" name="sitesearch" value="https://leanprover-community.github.io/mathlib4_docs"></input><input type="text" name="q" autocomplete="off"></input>&#32;
+            <button id="search_button" onclick="javascript: form.action='../.././search.html';">Search</button><button>Google site search</button></form></header><nav class="internal_nav"><h3><a class="break_within" href="#top"><span class="name">Init</span>.<span class="name">Control</span>.<span class="name">Basic</span></a></h3><p class="gh_nav_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean">source</a></p><div class="imports"><details><summary>Imports</summary><ul><li><a href="../.././Init/Core.html">Init.Core</a></li></ul></details><details><summary>Imported by</summary><ul id="imported-by-Init.Control.Basic" class="imported-by-list"></ul></details></div><div class="nav_link"><a class="break_within" href="#Functor.mapRev"><span class="name">Functor</span>.<span class="name">mapRev</span></a></div><div class="nav_link"><a class="break_within" href="#«term_<&>_»"><span class="name">«term_<&>_»</span></a></div><div class="nav_link"><a class="break_within" href="#Functor.discard"><span class="name">Functor</span>.<span class="name">discard</span></a></div><div class="nav_link"><a class="break_within" href="#Alternative"><span class="name">Alternative</span></a></div><div class="nav_link"><a class="break_within" href="#instOrElse"><span class="name">instOrElse</span></a></div><div class="nav_link"><a class="break_within" href="#guard"><span class="name">guard</span></a></div><div class="nav_link"><a class="break_within" href="#optional"><span class="name">optional</span></a></div><div class="nav_link"><a class="break_within" href="#ToBool"><span class="name">ToBool</span></a></div><div class="nav_link"><a class="break_within" href="#instToBoolBool"><span class="name">instToBoolBool</span></a></div><div class="nav_link"><a class="break_within" href="#bool"><span class="name">bool</span></a></div><div class="nav_link"><a class="break_within" href="#orM"><span class="name">orM</span></a></div><div class="nav_link"><a class="break_within" href="#«term_<||>_»"><span class="name">«term_<||>_»</span></a></div><div class="nav_link"><a class="break_within" href="#andM"><span class="name">andM</span></a></div><div class="nav_link"><a class="break_within" href="#«term_<&&>_»"><span class="name">«term_<&&>_»</span></a></div><div class="nav_link"><a class="break_within" href="#notM"><span class="name">notM</span></a></div><div class="nav_link"><a class="break_within" href="#MonadControl"><span class="name">MonadControl</span></a></div><div class="nav_link"><a class="break_within" href="#MonadControlT"><span class="name">MonadControlT</span></a></div><div class="nav_link"><a class="break_within" href="#instMonadControlT"><span class="name">instMonadControlT</span></a></div><div class="nav_link"><a class="break_within" href="#instMonadControlT_1"><span class="name">instMonadControlT_1</span></a></div><div class="nav_link"><a class="break_within" href="#controlAt"><span class="name">controlAt</span></a></div><div class="nav_link"><a class="break_within" href="#control"><span class="name">control</span></a></div><div class="nav_link"><a class="break_within" href="#ForM"><span class="name">ForM</span></a></div><div class="nav_link"><a class="break_within" href="#Bind.kleisliRight"><span class="name">Bind</span>.<span class="name">kleisliRight</span></a></div><div class="nav_link"><a class="break_within" href="#Bind.kleisliLeft"><span class="name">Bind</span>.<span class="name">kleisliLeft</span></a></div><div class="nav_link"><a class="break_within" href="#Bind.bindLeft"><span class="name">Bind</span>.<span class="name">bindLeft</span></a></div><div class="nav_link"><a class="break_within" href="#«term_>=>_»"><span class="name">«term_>=>_»</span></a></div><div class="nav_link"><a class="break_within" href="#«term_<=<_»"><span class="name">«term_<=<_»</span></a></div><div class="nav_link"><a class="break_within" href="#«term_=<<_»"><span class="name">«term_=<<_»</span></a></div></nav><main>
+<div class="decl" id="Functor.mapRev"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L12-L13">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Functor.mapRev"><span class="name">Functor</span>.<span class="name">mapRev</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{f : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Functor">Functor</a> <span class="fn">f</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn"><span class="fn">f</span> <span class="fn">α</span></span> → <span class="fn">(<span class="fn"><span class="fn">α</span> → <span class="fn">β</span></span>) → <span class="fn"><span class="fn">f</span> <span class="fn">β</span></span></span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><span class="fn">a</span> <a href="../.././Init/Control/Basic.html#Functor.mapRev">&lt&amp&gt</a> <span class="fn">f</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><span class="fn">f</span> <a href="../.././Init/Prelude.html#Functor.map">&lt$&gt</a> <span class="fn">a</span></span></span></li></ul></details></div></div><div class="decl" id="«term_<&>_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L15-L15">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_<&>_»"><span class="name">«term_<&>_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#«term_<&>_»">«term_&lt&amp&gt_»</a> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.trailingNode">Lean.ParserDescr.trailingNode</a> <span class="fn">`term_&lt&amp&gt_</span> <span class="fn">100</span> <span class="fn">101</span>
+    (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.binary">Lean.ParserDescr.binary</a> <span class="fn">`andthen</span> (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.symbol">Lean.ParserDescr.symbol</a> <span class="fn">&quot &lt&amp&gt &quot</span></span>) (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.cat">Lean.ParserDescr.cat</a> <span class="fn">`term</span> <span class="fn">100</span></span>)</span>)</span></span></li></ul></details></div></div><div class="decl" id="Functor.discard"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L18-L19">source</a></div><div class="attributes">@[inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Functor.discard"><span class="name">Functor</span>.<span class="name">discard</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{f : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Functor">Functor</a> <span class="fn">f</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(x : <span class="fn"><span class="fn">f</span> <span class="fn">α</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">f</span> <a href="../.././Init/Prelude.html#PUnit">PUnit</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#Functor.discard">discard</a> <span class="fn">x</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Prelude.html#Functor.mapConst">Functor.mapConst</a> <a href="../.././Init/Prelude.html#PUnit.unit">PUnit.unit</a> <span class="fn">x</span></span></span></li></ul></details></div></div><div class="decl" id="Alternative"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L23-L25">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Alternative"><span class="name">Alternative</span></a></span><span class="decl_args">
+<span class="fn">(f : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="decl_extends">extends</span><span class="decl_parent">
+<span class="fn"><a class="break_within" href="../.././Init/Prelude.html#Applicative"><span class="name">Applicative</span></a></span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> (max(u+1)v)</div></div><ul class="structure_fields" id="Alternative.mk"><li id="Alternative.failure" class="structure_field"><div class="structure_field_info">failure : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn">f</span> <span class="fn">α</span></span></span></div></li><li id="Alternative.orElse" class="structure_field"><div class="structure_field_info">orElse : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">f</span> <span class="fn">α</span></span> → <span class="fn">(<span class="fn"><a href="../.././Init/Prelude.html#Unit">Unit</a> → <span class="fn"><span class="fn">f</span> <span class="fn">α</span></span></span>) → <span class="fn"><span class="fn">f</span> <span class="fn">α</span></span></span></span></span></div></li></ul><details class="instances"><summary>Instances</summary><ul id="instances-list-Alternative" class="instances-list"></ul></details></div></div><div class="decl" id="instOrElse"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L27-L27">source</a></div><div class="decl_header"><span class="decl_kind">instance</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#instOrElse"><span class="name">instOrElse</span></a></span><span class="decl_args">
+<span class="fn">(f : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(α : <a href="../.././foundational_types.html">Type</a> u)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#Alternative">Alternative</a> <span class="fn">f</span></span>]</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Init/Prelude.html#OrElse">OrElse</a> (<span class="fn"><span class="fn">f</span> <span class="fn">α</span></span>)</span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#instOrElse">instOrElse</a> <span class="fn">f</span> <span class="fn">α</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">{ <span class="fn">orElse</span> := <span class="fn">Alternative.orElse</span> }</span></span></li></ul></details></div></div><div class="decl" id="guard"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L33-L34">source</a></div><div class="attributes">@[inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#guard"><span class="name">guard</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{f : <span class="fn"><a href="../.././foundational_types.html">Type</a> → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#Alternative">Alternative</a> <span class="fn">f</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(p : <a href="../.././foundational_types.html">Prop</a>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Decidable">Decidable</a> <span class="fn">p</span></span>]</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">f</span> <a href="../.././Init/Prelude.html#Unit">Unit</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#guard">guard</a> <span class="fn">p</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">if <span class="fn">p</span> then <span class="fn"><a href="../.././Init/Prelude.html#Pure.pure">pure</a> <a href="../.././Init/Prelude.html#Unit.unit">()</a></span> else <span class="fn">failure</span></span></span></li></ul></details></div></div><div class="decl" id="optional"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L36-L37">source</a></div><div class="attributes">@[inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#optional"><span class="name">optional</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{f : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#Alternative">Alternative</a> <span class="fn">f</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="decl_args">
+<span class="fn">(x : <span class="fn"><span class="fn">f</span> <span class="fn">α</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">f</span> (<span class="fn"><a href="../.././Init/Prelude.html#Option">Option</a> <span class="fn">α</span></span>)</span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#optional">optional</a> <span class="fn">x</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Prelude.html#HOrElse.hOrElse">HOrElse.hOrElse</a> (<span class="fn"><span class="fn">some</span> <a href="../.././Init/Prelude.html#Functor.map">&lt$&gt</a> <span class="fn">x</span></span>) <span class="fn">fun <span class="fn">x</span> =&gt <span class="fn"><a href="../.././Init/Prelude.html#Pure.pure">pure</a> <span class="fn">none</span></span></span></span></span></li></ul></details></div></div><div class="decl" id="ToBool"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L39-L40">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#ToBool"><span class="name">ToBool</span></a></span><span class="decl_args">
+<span class="fn">(α : <a href="../.././foundational_types.html">Type</a> u)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> u</div></div><ul class="structure_fields" id="ToBool.mk"><li id="ToBool.toBool" class="structure_field"><div class="structure_field_info">toBool : <span class="fn"><span class="fn">α</span> → <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></li></ul><details class="instances"><summary>Instances</summary><ul id="instances-list-ToBool" class="instances-list"></ul></details></div></div><div class="decl" id="instToBoolBool"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L44-L45">source</a></div><div class="decl_header"><span class="decl_kind">instance</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#instToBoolBool"><span class="name">instToBoolBool</span></a></span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Init/Control/Basic.html#ToBool">ToBool</a> <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#instToBoolBool">instToBoolBool</a> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">{ <span class="fn">toBool</span> := <span class="fn">fun <span class="fn">b</span> =&gt <span class="fn">b</span></span> }</span></span></li></ul></details></div></div><div class="decl" id="bool"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L47-L50">source</a></div><div class="attributes">@[macro_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#bool"><span class="name">bool</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> v}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool">ToBool</a> <span class="fn">β</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(f : <span class="fn">α</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(t : <span class="fn">α</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(b : <span class="fn">β</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn">α</span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#bool">bool</a> <span class="fn">f</span> <span class="fn">t</span> <span class="fn">b</span></span> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn">match <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool.toBool">toBool</a> <span class="fn">b</span></span> with
+  | <a href="../.././Init/Prelude.html#Bool.false">true</a> =&gt <span class="fn">t</span>
+  | <a href="../.././Init/Prelude.html#Bool.false">false</a> =&gt <a href="../.././Init/Prelude.html#Bool.false">f</a></span></span></li></ul></details></div></div><div class="decl" id="orM"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L52-L56">source</a></div><div class="attributes">@[macro_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#orM"><span class="name">orM</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Monad">Monad</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool">ToBool</a> <span class="fn">β</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(x : <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(y : <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn">(<span class="fn"><span class="fn">x</span> <a href="../.././Init/Control/Basic.html#orM">&lt||&gt</a> <span class="fn">y</span></span>) <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">do
+  let b ← <span class="fn">x</span>
+  <span class="fn">match <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool.toBool">toBool</a> <span class="fn">b</span></span> with
+    | <a href="../.././Init/Prelude.html#Bool.false">true</a> =&gt <span class="fn"><a href="../.././Init/Prelude.html#Pure.pure">pure</a> <span class="fn">b</span></span>
+    | <a href="../.././Init/Prelude.html#Bool.false">false</a> =&gt <a href="../.././Init/Prelude.html#Bool.false">y</a></span></span></span></li></ul></details></div></div><div class="decl" id="«term_<||>_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L58-L58">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_<||>_»"><span class="name">«term_<||>_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#«term_<||>_»">«term_&lt||&gt_»</a> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.trailingNode">Lean.ParserDescr.trailingNode</a> <span class="fn">`term_&lt||&gt_</span> <span class="fn">30</span> <span class="fn">31</span>
+    (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.binary">Lean.ParserDescr.binary</a> <span class="fn">`andthen</span> (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.symbol">Lean.ParserDescr.symbol</a> <span class="fn">&quot &lt||&gt &quot</span></span>) (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.cat">Lean.ParserDescr.cat</a> <span class="fn">`term</span> <span class="fn">30</span></span>)</span>)</span></span></li></ul></details></div></div><div class="decl" id="andM"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L60-L64">source</a></div><div class="attributes">@[macro_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#andM"><span class="name">andM</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Monad">Monad</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool">ToBool</a> <span class="fn">β</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(x : <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(y : <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn">(<span class="fn"><span class="fn">x</span> <a href="../.././Init/Control/Basic.html#andM">&lt&amp&amp&gt</a> <span class="fn">y</span></span>) <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">do
+  let b ← <span class="fn">x</span>
+  <span class="fn">match <span class="fn"><a href="../.././Init/Control/Basic.html#ToBool.toBool">toBool</a> <span class="fn">b</span></span> with
+    | <a href="../.././Init/Prelude.html#Bool.false">true</a> =&gt <span class="fn">y</span>
+    | <a href="../.././Init/Prelude.html#Bool.false">false</a> =&gt <a href="../.././Init/Prelude.html#Bool.false"><a href="../.././Init/Prelude.html#Pure.pure">pure</a> <span class="fn">b</span></a></span></span></span></li></ul></details></div></div><div class="decl" id="«term_<&&>_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L66-L66">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_<&&>_»"><span class="name">«term_<&&>_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="notM"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L68-L69">source</a></div><div class="attributes">@[macro_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#notM"><span class="name">notM</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Applicative">Applicative</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(x : <span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#Bool">Bool</a></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#notM">notM</a> <span class="fn">x</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Prelude.html#not">not</a> <a href="../.././Init/Prelude.html#Functor.map">&lt$&gt</a> <span class="fn">x</span></span></span></li></ul></details></div></div><div class="mod_doc"><h1 class="markdown-heading" id="How MonadControl works">How <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> works <a class="hover-link" href="#How MonadControl works">#</a></h1><p>There is a <a href="https://lexi-lambda.github.io/blog/2019/09/07/demystifying-monadbasecontrol/">tutorial by Alexis King</a> that this docstring is based on.</p><p>Suppose we have <code>foo : ∀ α, IO α → IO α∀ α, IO α → IO α→ IO α</code> and <code>bar : StateT σ IO β</code> (ie, <code>bar : σ → IO (σ × β)→ IO (σ × β)× β)</code>).
+We might want to 'map' <code>bar</code> by <code>foo</code>. Concretely we would write this as:</p><pre><code class="language-lean">opaque foo : ∀ {α}, IO α → IO α
+opaque bar : StateT σ IO β
+
+def mapped_foo : StateT σ IO β := do
+  let s ← get
+  let (b, s') ← liftM <| foo <| StateT.run bar s
+  set s'
+  return b
+∀ {α}, IO α → IO α
+opaque bar : StateT σ IO β
+
+def mapped_foo : StateT σ IO β := do
+  let s ← get
+  let (b, s') ← liftM <| foo <| StateT.run bar s
+  set s'
+  return b
+→ IO α
+opaque bar : StateT σ IO β
+
+def mapped_foo : StateT σ IO β := do
+  let s ← get
+  let (b, s') ← liftM <| foo <| StateT.run bar s
+  set s'
+  return b
+← get
+  let (b, s') ← liftM <| foo <| StateT.run bar s
+  set s'
+  return b
+← liftM <| foo <| StateT.run bar s
+  set s'
+  return b
+</code></pre><p>This is fine but it's not going to generalise, what if we replace <code>StateT Nat IO</code> with a large tower of monad transformers?
+We would have to rewrite the above to handle each of the <code>run</code> functions for each transformer in the stack.</p><p>Is there a way to generalise <code>run</code> as a kind of inverse of <code>lift</code>?
+We have <code>lift : m α → StateT σ m α→ StateT σ m α</code> for all <code>m</code>, but we also need to 'unlift' the state.
+But <code>unlift : StateT σ IO α → IO α→ IO α</code> can't be implemented. So we need something else.</p><p>If we look at the definition of <code>mapped_foo</code>, we see that <code>lift <| foo <| StateT.run bar s</code>
+has the type <code>IO (σ × β)× β)</code>. The key idea is that <code>σ × β× β</code> contains all of the information needed to reconstruct the state and the new value.</p><p>Now lets define some values to generalise <code>mapped_foo</code>:</p><ul>
+<li>Write <code>IO (σ × β)× β)</code> as <code>IO (stM β)</code></li>
+<li>Write <code>StateT.run . s</code> as <code>mapInBase : StateT σ IO α → IO (stM β)→ IO (stM β)</code></li>
+<li>Define <code>restoreM : IO (stM α) → StateT σ IO α→ StateT σ IO α</code> as below</li>
+</ul><pre><code class="language-lean">def stM (α : Type) := α × σ
+
+def restoreM (x : IO (stM α)) : StateT σ IO α := do
+  let (a,s) ← liftM x
+  set s
+  return a
+× σ
+
+def restoreM (x : IO (stM α)) : StateT σ IO α := do
+  let (a,s) ← liftM x
+  set s
+  return a
+← liftM x
+  set s
+  return a
+</code></pre><p>To get:</p><pre><code class="language-lean">def mapped_foo' : StateT σ IO β := do
+  let s ← get
+  let mapInBase := fun z => StateT.run z s
+  restoreM <| foo <| mapInBase bar
+← get
+  let mapInBase := fun z => StateT.run z s
+  restoreM <| foo <| mapInBase bar
+</code></pre><p>and finally define</p><pre><code class="language-lean">def control {α : Type}
+  (f : ({β : Type} → StateT σ IO β → IO (stM β)) → IO (stM α))
+  : StateT σ IO α := do
+  let s ← get
+  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
+  let r : IO (stM α) := f mapInBase
+  restoreM r
+→ StateT σ IO β → IO (stM β)) → IO (stM α))
+  : StateT σ IO α := do
+  let s ← get
+  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
+  let r : IO (stM α) := f mapInBase
+  restoreM r
+→ IO (stM β)) → IO (stM α))
+  : StateT σ IO α := do
+  let s ← get
+  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
+  let r : IO (stM α) := f mapInBase
+  restoreM r
+→ IO (stM α))
+  : StateT σ IO α := do
+  let s ← get
+  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
+  let r : IO (stM α) := f mapInBase
+  restoreM r
+← get
+  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
+  let r : IO (stM α) := f mapInBase
+  restoreM r
+</code></pre><p>Now we can write <code>mapped_foo</code> as:</p><pre><code class="language-lean">def mapped_foo'' : StateT σ IO β :=
+  control (fun mapInBase => foo (mapInBase bar))
+</code></pre><p>The core idea of <code>mapInBase</code> is that given any <code>β</code>, it runs an instance of
+<code>StateT σ IO β</code> and 'packages' the result and state as  <code>IO (stM β)</code> so that it can be piped through <code>foo</code>.
+Once it's been through <code>foo</code> we can then unpack the state again with <code><a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a></code>.
+Hence we can apply <code>foo</code> to <code>bar</code> without losing track of the state.</p><p>Here <code>stM β = σ × β× β</code> is the 'packaged result state', but we can generalise:
+if we have a tower <code>StateT σ₁ <| StateT σ₂ <| IO</code>, then the
+composite packaged state is going to be <code>stM₁₂ β := σ₁ × σ₂ × β× σ₂ × β× β</code> or <code>stM₁₂ := stM₁ ∘ stM₂∘ stM₂</code>.</p><p><code>MonadControl m n</code> means that when programming in the monad <code>n</code>,
+we can switch to a base monad <code>m</code> using <code><a href="../.././Init/Control/Basic.html#control">control</a></code>, just like with <code><a href="../.././Init/Prelude.html#liftM">liftM</a></code>.
+In contrast to <code><a href="../.././Init/Prelude.html#liftM">liftM</a></code>, however, we also get a function <code>runInBase</code> that
+allows us to "lower" actions in <code>n</code> into <code>m</code>.
+This is really useful when we have large towers of monad transformers, as we do in the metaprogramming library.</p><p>For example there is a function <code>withNewMCtxDepthImp : MetaM α → MetaM α→ MetaM α</code> that runs the input monad instance
+in a new nested metavariable context. We can lift this to <code>withNewMctxDepth : n α → n α→ n α</code> using <code>MonadControlT MetaM n</code>
+(<code><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a></code> is the transitive closure of <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code>).
+Which means that we can also run <code>withNewMctxDepth</code> in the <code>Tactic</code> monad without needing to
+faff around with lifts and all the other boilerplate needed in <code>mapped_foo</code>.</p><h2 class="markdown-heading" id="Relationship to MonadFunctor">Relationship to <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code> <a class="hover-link" href="#Relationship to MonadFunctor">#</a></h2><p>A stricter form of <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> is <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code>, which defines
+<code>monadMap {α} : (∀ {β}, m β → m β) → n α → n α∀ {β}, m β → m β) → n α → n α→ m β) → n α → n α→ n α → n α→ n α</code>. Using <code>monadMap</code> it is also possible to define <code>mapped_foo</code> above.
+However there are some mappings which can't be derived using <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code>. For example:</p><pre><code class="language-lean,ignore"> @[inline] def map1MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → MetaM α) → MetaM α) {α} (k : β → n α) : n α :=
+   control fun runInBase => f fun b => runInBase <| k b
+
+ @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ MetaM α) → MetaM α) {α} (k : β → n α) : n α :=
+   control fun runInBase => f fun b => runInBase <| k b
+
+ @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ MetaM α) {α} (k : β → n α) : n α :=
+   control fun runInBase => f fun b => runInBase <| k b
+
+ @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ n α) : n α :=
+   control fun runInBase => f fun b => runInBase <| k b
+
+ @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ MetaM α) {α} (k : β → γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ γ → n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+→ n α) : n α :=
+   control fun runInBase => f fun b c => runInBase <| k b c
+</code></pre><p>In <code>monadMap</code>, we can only 'run in base' a single computation in <code>n</code> into the base monad <code>m</code>.
+Using <code><a href="../.././Init/Control/Basic.html#control">control</a></code> means that <code>runInBase</code> can be used multiple times.</p></div><div class="decl" id="MonadControl"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L189-L192">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#MonadControl"><span class="name">MonadControl</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(n : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> w</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> (max(max(u+1)v)w)</div></div><ul class="structure_fields" id="MonadControl.mk"><li id="MonadControl.stM" class="structure_field"><div class="structure_field_info">stM : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> u</span></div></li><li id="MonadControl.liftWith" class="structure_field"><div class="structure_field_info">liftWith : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn">(<span class="fn">(<span class="fn">{<span class="fn">β</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">n</span> <span class="fn">β</span></span> → <span class="fn"><span class="fn">m</span> (<span class="fn"><span class="fn">stM</span> <span class="fn">β</span></span>)</span></span></span>) → <span class="fn"><span class="fn">m</span> <span class="fn">α</span></span></span>) → <span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></span></span></div></li><li id="MonadControl.restoreM" class="structure_field"><div class="structure_field_info">restoreM : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">m</span> (<span class="fn"><span class="fn">stM</span> <span class="fn">α</span></span>)</span> → <span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></span></span></div></li></ul><p>MonadControl is a way of stating that the monad <code>m</code> can be 'run inside' the monad <code>n</code>.</p><p>This is the same as <a href="https://hackage.haskell.org/package/monad-control-1.0.3.1/docs/Control-Monad-Trans-Control.html#t:MonadBaseControl"><code>MonadBaseControl</code></a> in Haskell.
+To learn about <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code>, see the comment above this docstring.</p><details class="instances"><summary>Instances</summary><ul id="instances-list-MonadControl" class="instances-list"></ul></details></div></div><div class="decl" id="MonadControlT"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L195-L198">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#MonadControlT"><span class="name">MonadControlT</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(n : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> w</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> (max(max(u+1)v)w)</div></div><ul class="structure_fields" id="MonadControlT.mk"><li id="MonadControlT.stM" class="structure_field"><div class="structure_field_info">stM : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> u</span></div></li><li id="MonadControlT.liftWith" class="structure_field"><div class="structure_field_info">liftWith : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn">(<span class="fn">(<span class="fn">{<span class="fn">β</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">n</span> <span class="fn">β</span></span> → <span class="fn"><span class="fn">m</span> (<span class="fn"><span class="fn">stM</span> <span class="fn">β</span></span>)</span></span></span>) → <span class="fn"><span class="fn">m</span> <span class="fn">α</span></span></span>) → <span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></span></span></div></li><li id="MonadControlT.restoreM" class="structure_field"><div class="structure_field_info">restoreM : <span class="fn">{<span class="fn">α</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">stM</span> <span class="fn">α</span></span> → <span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></span></span></div></li></ul><p>Transitive closure of MonadControl.</p><details class="instances"><summary>Instances</summary><ul id="instances-list-MonadControlT" class="instances-list"></ul></details></div></div><div class="decl" id="instMonadControlT"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L203-L206">source</a></div><div class="attributes">@[always_inline]</div>
+<div class="decl_header"><span class="decl_kind">instance</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#instMonadControlT"><span class="name">instMonadControlT</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u_1 → <a href="../.././foundational_types.html">Type</a> u_2</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(n : <span class="fn"><a href="../.././foundational_types.html">Type</a> u_1 → <a href="../.././foundational_types.html">Type</a> u_3</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(o : <span class="fn"><a href="../.././foundational_types.html">Type</a> u_1 → <a href="../.././foundational_types.html">Type</a> u_4</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a> <span class="fn">n</span> <span class="fn">o</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> <span class="fn">m</span> <span class="fn">n</span></span>]</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> <span class="fn">m</span> <span class="fn">o</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="instMonadControlT_1"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L208-L211">source</a></div><div class="decl_header"><span class="decl_kind">instance</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#instMonadControlT_1"><span class="name">instMonadControlT_1</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Pure">Pure</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> <span class="fn">m</span> <span class="fn">m</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#instMonadControlT_1">instMonadControlT_1</a> <span class="fn">m</span></span> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn">{ <span class="fn">stM</span> := <span class="fn">fun <span class="fn">α</span> =&gt <span class="fn">α</span></span>, <span class="fn">liftWith</span> := <span class="fn">fun {<span class="fn">α</span>} <span class="fn">f</span> =&gt <span class="fn"><span class="fn">f</span> <span class="fn">fun {<span class="fn">β</span>} <span class="fn">x</span> =&gt <span class="fn">x</span></span></span></span>, <span class="fn">restoreM</span> := <span class="fn">fun {<span class="fn">α</span>} <span class="fn">x</span> =&gt <span class="fn"><a href="../.././Init/Prelude.html#Pure.pure">pure</a> <span class="fn">x</span></span></span> }</span></span></li></ul></details></div></div><div class="decl" id="controlAt"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L214-L216">source</a></div><div class="attributes">@[inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#controlAt"><span class="name">controlAt</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="impl_arg"><span class="decl_args">
+<span class="fn">{n : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> w</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> <span class="fn">m</span> <span class="fn">n</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Bind">Bind</a> <span class="fn">n</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="decl_args">
+<span class="fn">(f : <span class="fn">(<span class="fn">{<span class="fn">β</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">n</span> <span class="fn">β</span></span> → <span class="fn"><span class="fn">m</span> (<span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT.stM">stM</a> <span class="fn">m</span> <span class="fn">n</span> <span class="fn">β</span></span>)</span></span></span>) → <span class="fn"><span class="fn">m</span> (<span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT.stM">stM</a> <span class="fn">m</span> <span class="fn">n</span> <span class="fn">α</span></span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#controlAt">controlAt</a> <span class="fn">m</span> <span class="fn">f</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT.liftWith">liftWith</a> <span class="fn">f</span></span> <a href="../.././Init/Prelude.html#Bind.bind">&gt&gt=</a> <span class="fn">restoreM</span></span></span></li></ul></details></div></div><div class="decl" id="control"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L219-L221">source</a></div><div class="attributes">@[inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#control"><span class="name">control</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{n : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> w</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> <span class="fn">m</span> <span class="fn">n</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Bind">Bind</a> <span class="fn">n</span></span>]</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="decl_args">
+<span class="fn">(f : <span class="fn">(<span class="fn">{<span class="fn">β</span> : <a href="../.././foundational_types.html">Type</a> u} → <span class="fn"><span class="fn"><span class="fn">n</span> <span class="fn">β</span></span> → <span class="fn"><span class="fn">m</span> (<span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT.stM">stM</a> <span class="fn">m</span> <span class="fn">n</span> <span class="fn">β</span></span>)</span></span></span>) → <span class="fn"><span class="fn">m</span> (<span class="fn"><a href="../.././Init/Control/Basic.html#MonadControlT.stM">stM</a> <span class="fn">m</span> <span class="fn">n</span> <span class="fn">α</span></span>)</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">n</span> <span class="fn">α</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#control">control</a> <span class="fn">f</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Control/Basic.html#controlAt">controlAt</a> <span class="fn">m</span> <span class="fn">f</span></span></span></li></ul></details></div></div><div class="decl" id="ForM"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L230-L231">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#ForM"><span class="name">ForM</span></a></span><span class="decl_args">
+<span class="fn">(m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> v</span>)</span></span>
+<span class="decl_args">
+<span class="fn">(γ : <a href="../.././foundational_types.html">Type</a> w₁)</span></span>
+<span class="decl_args">
+<span class="fn">(α : <span class="fn"><a href="../.././Init/Prelude.html#outParam">outParam</a> (<a href="../.././foundational_types.html">Type</a> w₂)</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> (max(max(max(u+1)v)w₁)w₂)</div></div><ul class="structure_fields" id="ForM.mk"><li id="ForM.forM" class="structure_field"><div class="structure_field_info">forM : <span class="fn">[<span class="fn">inst</span> : <span class="fn"><a href="../.././Init/Prelude.html#Monad">Monad</a> <span class="fn">m</span></span>] → <span class="fn"><span class="fn">γ</span> → <span class="fn">(<span class="fn"><span class="fn">α</span> → <span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#PUnit">PUnit</a></span></span>) → <span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#PUnit">PUnit</a></span></span></span></span></div></li></ul><p>Typeclass for the polymorphic <code><a href="../.././Init/Control/Basic.html#ForM.forM">forM</a></code> operation described in the "do unchained" paper.
+Remark:</p><ul>
+<li><code>γ</code> is a "container" type of elements of type <code>α</code>.</li>
+<li><code>α</code> is treated as an output parameter by the typeclass resolution procedure.
+That is, it tries to find an instance using only <code>m</code> and <code>γ</code>.</li>
+</ul><details class="instances"><summary>Instances</summary><ul id="instances-list-ForM" class="instances-list"></ul></details></div></div><div class="decl" id="Bind.kleisliRight"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L237-L238">source</a></div><div class="attributes">@[always_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Bind.kleisliRight"><span class="name">Bind</span>.<span class="name">kleisliRight</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u_1 → <a href="../.././foundational_types.html">Type</a> u_2</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{γ : <a href="../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Bind">Bind</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(f₁ : <span class="fn"><span class="fn">α</span> → <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(f₂ : <span class="fn"><span class="fn">β</span> → <span class="fn"><span class="fn">m</span> <span class="fn">γ</span></span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(a : <span class="fn">α</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <span class="fn">γ</span></span></div></div><p>Left-to-right composition of Kleisli arrows.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn">(<a href="../.././Init/Control/Basic.html#Bind.kleisliRight"><span class="fn">f₁</span> <a href="../.././Init/Control/Basic.html#Bind.kleisliRight">&gt=&gt</a> <span class="fn">f₂</span></a>) <span class="fn">a</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><span class="fn"><span class="fn">f₁</span> <span class="fn">a</span></span> <a href="../.././Init/Prelude.html#Bind.bind">&gt&gt=</a> <span class="fn">f₂</span></span></span></li></ul></details></div></div><div class="decl" id="Bind.kleisliLeft"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L242-L243">source</a></div><div class="attributes">@[always_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Bind.kleisliLeft"><span class="name">Bind</span>.<span class="name">kleisliLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u_1 → <a href="../.././foundational_types.html">Type</a> u_2</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{γ : <a href="../.././foundational_types.html">Type</a> u_1}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Bind">Bind</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(f₂ : <span class="fn"><span class="fn">β</span> → <span class="fn"><span class="fn">m</span> <span class="fn">γ</span></span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(f₁ : <span class="fn"><span class="fn">α</span> → <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(a : <span class="fn">α</span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <span class="fn">γ</span></span></div></div><p>Right-to-left composition of Kleisli arrows.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn">(<a href="../.././Init/Control/Basic.html#Bind.kleisliLeft"><span class="fn">f₂</span> <a href="../.././Init/Control/Basic.html#Bind.kleisliLeft">&lt=&lt</a> <span class="fn">f₁</span></a>) <span class="fn">a</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><span class="fn"><span class="fn">f₁</span> <span class="fn">a</span></span> <a href="../.././Init/Prelude.html#Bind.bind">&gt&gt=</a> <span class="fn">f₂</span></span></span></li></ul></details></div></div><div class="decl" id="Bind.bindLeft"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L247-L248">source</a></div><div class="attributes">@[always_inline]</div>
+<div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#Bind.bindLeft"><span class="name">Bind</span>.<span class="name">bindLeft</span></a></span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{α : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{m : <span class="fn"><a href="../.././foundational_types.html">Type</a> u → <a href="../.././foundational_types.html">Type</a> u_1</span>}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">{β : <a href="../.././foundational_types.html">Type</a> u}</span></span>
+</span><span class="impl_arg"><span class="decl_args">
+<span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Bind">Bind</a> <span class="fn">m</span></span>]</span></span>
+</span><span class="decl_args">
+<span class="fn">(f : <span class="fn"><span class="fn">α</span> → <span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></span>)</span></span>
+<span class="decl_args">
+<span class="fn">(ma : <span class="fn"><span class="fn">m</span> <span class="fn">α</span></span>)</span></span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <span class="fn">β</span></span></div></div><p>Same as <code><a href="../.././Init/Prelude.html#Bind.bind">Bind.bind</a></code> but with arguments swapped.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><span class="fn">f</span> <a href="../.././Init/Control/Basic.html#Bind.bindLeft">=&lt&lt</a> <span class="fn">ma</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><span class="fn">ma</span> <a href="../.././Init/Prelude.html#Bind.bind">&gt&gt=</a> <span class="fn">f</span></span></span></li></ul></details></div></div><div class="decl" id="«term_>=>_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L252-L252">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_>=>_»"><span class="name">«term_>=>_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><p>Left-to-right composition of Kleisli arrows.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#«term_>=>_»">«term_&gt=&gt_»</a> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.trailingNode">Lean.ParserDescr.trailingNode</a> <span class="fn">`term_&gt=&gt_</span> <span class="fn">55</span> <span class="fn">56</span>
+    (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.binary">Lean.ParserDescr.binary</a> <span class="fn">`andthen</span> (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.symbol">Lean.ParserDescr.symbol</a> <span class="fn">&quot &gt=&gt &quot</span></span>) (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.cat">Lean.ParserDescr.cat</a> <span class="fn">`term</span> <span class="fn">55</span></span>)</span>)</span></span></li></ul></details></div></div><div class="decl" id="«term_<=<_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L253-L253">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_<=<_»"><span class="name">«term_<=<_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><p>Right-to-left composition of Kleisli arrows.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#«term_<=<_»">«term_&lt=&lt_»</a> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.trailingNode">Lean.ParserDescr.trailingNode</a> <span class="fn">`term_&lt=&lt_</span> <span class="fn">55</span> <span class="fn">56</span>
+    (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.binary">Lean.ParserDescr.binary</a> <span class="fn">`andthen</span> (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.symbol">Lean.ParserDescr.symbol</a> <span class="fn">&quot &lt=&lt &quot</span></span>) (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.cat">Lean.ParserDescr.cat</a> <span class="fn">`term</span> <span class="fn">55</span></span>)</span>)</span></span></li></ul></details></div></div><div class="decl" id="«term_=<<_»"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3f6c5f17db30c2a2dcaca1b9e9faec4e2cf04b95/src/Init/Control/Basic.lean#L254-L254">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#«term_=<<_»"><span class="name">«term_=<<_»</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Init/Prelude.html#Lean.TrailingParserDescr">Lean.TrailingParserDescr</a></div></div><p>Same as <code><a href="../.././Init/Prelude.html#Bind.bind">Bind.bind</a></code> but with arguments swapped.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Init/Control/Basic.html#«term_=<<_»">«term_=&lt&lt_»</a> <a href="../.././Init/Prelude.html#Eq">=</a>   <span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.trailingNode">Lean.ParserDescr.trailingNode</a> <span class="fn">`term_=&lt&lt_</span> <span class="fn">55</span> <span class="fn">56</span>
+    (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.binary">Lean.ParserDescr.binary</a> <span class="fn">`andthen</span> (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.symbol">Lean.ParserDescr.symbol</a> <span class="fn">&quot =&lt&lt &quot</span></span>) (<span class="fn"><a href="../.././Init/Prelude.html#Lean.ParserDescr.cat">Lean.ParserDescr.cat</a> <span class="fn">`term</span> <span class="fn">55</span></span>)</span>)</span></span></li></ul></details></div></div></main>
+<nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>
