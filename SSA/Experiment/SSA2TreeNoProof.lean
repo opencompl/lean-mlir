@@ -1,6 +1,6 @@
 import Mathlib.Tactic.Linarith
 import Aesop
--- A translation from SSA + Regions to Tree, with no proofs.
+-- A translation from SSA to Tree, with no proofs.
 -- this allows for easy unfolding of the semantics.
 -- If we carry around proofs of well formedness, the dependent typing
 -- of the well-formedness leads to stuck terms.
