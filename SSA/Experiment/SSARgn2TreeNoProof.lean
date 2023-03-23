@@ -230,14 +230,13 @@ def loop (n : Nat) (f : Int → Int) (v : Int) : Int :=
 @[simp]
 instance :  UserSemantics Opcode  where
   opcodeEval
-  | .not, ⟨a, _⟩, [] => if a = 0 then 1 else 0
-  | .mul, ⟨a, b⟩, [] => a * b
-  | .add, ⟨a, b⟩, [] => a + b
-  | .const i, ⟨_a, _b⟩, [] => i
-  | .ite, ⟨v, _⟩, [t, e] => if v ≠ 0 then t ⟨v, 0⟩ else e ⟨v, 0⟩
-  | .run, ⟨v, w⟩, [r] => r ⟨v, w⟩
-  | .runnot, ⟨v, w⟩, [r] => r ⟨if v = 0 then 0 else 1, w⟩
-  | .loop, ⟨n, init⟩, [r] => loop n.toNat (fun i => r ⟨i, 0⟩) init
+  | .not, ⟨a, _⟩, _ => if a = 0 then 1 else 0
+  | .mul, ⟨a, b⟩, _ => a * b
+  | .add, ⟨a, b⟩, _ => a + b
+  | .const i, ⟨_a, _b⟩, _ => i
+  | .run, ⟨v, w⟩, r => r ⟨v, w⟩
+  | .runnot, ⟨v, w⟩, r => r ⟨if v = 0 then 0 else 1, w⟩
+  | .loop, ⟨n, init⟩, r => loop n.toNat (fun i => r ⟨i, 0⟩) init
   | _, _, _ => 42
 
 
@@ -249,13 +248,14 @@ def x_add_4_times_mul_val_eq (env: Env Int):
       ]
   let q : AST Opcode .Os := Ops.ofList [
         .assign .x1 (.const 4) (.x0, .x0) .rgn0
-      , .assign .x2 .mul (.x3, .x0) .rgn0 -- WRONG
+      , .assign .x2 .mul (.x1, .x0) .rgn0
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp only [Ops.ofList, AST.eval, Ops.toCtree,  AST.toCtree_];
     -- see that there are environments, which are folded away when calling
     -- Ctree.eval.
     simp[Ctree.eval];
+    linarith
   }
 
 
@@ -271,8 +271,6 @@ def run_inline (env: Env Int) (o : AST Opcode .Os):
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp
-    -- see that this cannot be simplified away by pure 'simp'. Some thought
-    -- is needed here.
   }
 
 def runnot_inline (env: Env Int) (r : AST Opcode .R):
@@ -288,6 +286,8 @@ def runnot_inline (env: Env Int) (r : AST Opcode .R):
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp
+    -- this stil cannot be simplified away, since we need to reason about
+    -- what happens when we have regions.
   }
 
 end MultipleInstructionTree
