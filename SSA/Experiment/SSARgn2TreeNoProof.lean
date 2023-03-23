@@ -235,7 +235,7 @@ instance :  UserSemantics Opcode  where
   | .add, ⟨a, b⟩, _ => a + b
   | .const i, ⟨_a, _b⟩, _ => i
   | .run, ⟨v, w⟩, r => r ⟨v, w⟩
-  | .runnot, ⟨v, w⟩, r => r ⟨if v = 0 then 0 else 1, w⟩
+  | .runnot, ⟨v, w⟩, r => r ⟨if v = 0 then 1 else 0, w⟩
   | .loop, ⟨n, init⟩, r => loop n.toNat (fun i => r ⟨i, 0⟩) init
   | _, _, _ => 42
 
@@ -277,17 +277,24 @@ def runnot_inline (env: Env Int) (r : AST Opcode .R):
   let p : AST Opcode .Os :=
       Ops.ofList [
       .assign .y1 .not ⟨.x0, .null⟩ .rgn0
-      , .assign .y2 .run (.y1, .x1) r
+      , .assign .z1 .run (.y1, .x1) r
       ]
   let q : AST Opcode .Os := Ops.ofList [
-      .assign .x2 .runnot (.x0, .x1) (AST.rgn ⟨.z1, .z2⟩ (Ops.ofList [
+      .assign .y1 .not ⟨.x0, .null⟩ .rgn0
+      , .assign .z1 .runnot (.x0, .x1) (AST.rgn ⟨.z1, .z2⟩ (Ops.ofList [
         .assign .y2 .run ⟨.z1, .z2⟩ r
       ]))
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp
-    -- this stil cannot be simplified away, since we need to reason about
-    -- what happens when we have regions.
+    -- this stil cannot be simplified away, since this is in fact false.
+    -- We need some notion of the fact that z1, z2 is free in 'r',
+    -- so that we can say that we can remove 'z2, z1' in the 'q'
+    -- environment when we run 'r'.
+    -- if we have this, then we are good, and we can prove the theorem.
+    -- but how do we convince people that use MLIR that this is a sensible
+    -- thing to reason about?
+    sorry
   }
 
 end MultipleInstructionTree
