@@ -19,6 +19,14 @@ inductive VarName
 | x5
 | x6
 | x7
+| y1
+| y2
+| y3
+| y4
+| z1
+| z2
+| z3
+| z4
 deriving DecidableEq
 
 section StxSem
@@ -88,6 +96,12 @@ instance [Inhabited opcode] : Inhabited (AST opcode .R) where
 instance : Inhabited (AST opcode .Rs) where
   default := .rgns0
 
+@[simp]
+def Regions.ofRegion : AST opcode .R → AST opcode .Rs 
+| r => .rgnsmany r .rgns0 
+
+instance : Coe (AST opcode .R) (AST opcode .Rs) := ⟨Regions.ofRegion⟩
+#check DecidableEq
 @[simp]
 def Regions.ofList : List (AST opcode .R) → AST opcode .Rs
 | [] => .rgns0
@@ -233,6 +247,8 @@ inductive Opcode
 | mul
 | loop : Opcode
 | ite : Opcode
+| run : Opcode 
+| runnot : Opcode 
 | not : Opcode
 | const : Int → Opcode
 deriving Inhabited
@@ -250,6 +266,8 @@ instance :  UserSemantics Opcode  where
   | .add, ⟨a, b⟩, [] => a + b
   | .const i, ⟨_a, _b⟩, [] => i
   | .ite, ⟨v, _⟩, [t, e] => if v ≠ 0 then t ⟨v, 0⟩ else e ⟨v, 0⟩
+  | .run, ⟨v, w⟩, [r] => r ⟨v, w⟩
+  | .runnot, ⟨v, w⟩, [r] => r ⟨if v = 0 then 0 else 1, w⟩
   | .loop, ⟨n, init⟩, [r] => loop n.toNat (fun i => r ⟨i, 0⟩) init
   | _, _, _ => 42
 
@@ -273,6 +291,41 @@ def x_add_4_times_mul_val_eq (env: Env Int):
     linarith
   }
 
+
+def run_inline (env: Env Int) (o : AST Opcode .Os):
+  let p : AST Opcode .Os :=
+      Ops.ofList [
+      .assign .x2 .add (.x0, .x1) .rgns0 
+      ]
+  let q : AST Opcode .Os := Ops.ofList [
+      .assign .x2 .run (.x0, .x1) (AST.rgn ⟨.x5, .x6⟩ (Ops.ofList [
+        .assign .y1 .add (.x5, .x6) .rgns0
+      ]))
+    ]
+  (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
+    simp
+    -- see that this cannot be simplified away by pure 'simp'. Some thought
+    -- is needed here.
+  }
+
+def runnot_inline (env: Env Int) (r : AST Opcode .R):
+  let p : AST Opcode .Os :=
+      Ops.ofList [
+      .assign .y1 .not ⟨.x0, .null⟩ .rgns0
+      , .assign .y2 .run (.x1, .y1) r
+      ]
+  let q : AST Opcode .Os := Ops.ofList [
+      .assign .x2 .runnot (.x0, .x1) (AST.rgn ⟨.z1, .z2⟩ (Ops.ofList [
+        .assign .y2 .run ⟨.z1, .z2⟩ r
+      ]))
+    ]
+  (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
+    simp
+    -- see that this cannot be simplified away by pure 'simp'. Some thought
+    -- is needed here.
+    sorry
+  }
+
 def ite_switch_branch_negate_cond (env: Env Int) (r1 r2 : AST Opcode .R):
   let p : AST Opcode .Os :=
       Ops.ofList [
@@ -284,9 +337,10 @@ def ite_switch_branch_negate_cond (env: Env Int) (r1 r2 : AST Opcode .R):
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp
+    by_cases X0:env VarName.x0 = 0  <;> simp[X0]
+    
     -- see that this cannot be simplified away by pure 'simp'. Some thought
     -- is needed here.
-    by_cases X0:(env VarName.x0 = 0) <;> simp[X0]
     sorry
     sorry
   }
