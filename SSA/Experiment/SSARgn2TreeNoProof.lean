@@ -249,7 +249,7 @@ def x_add_4_times_mul_val_eq (env: Env Int):
       ]
   let q : AST Opcode .Os := Ops.ofList [
         .assign .x1 (.const 4) (.x0, .x0) .rgn0
-      , .assign .x2 .mul (.x1, .x0) .rgn0
+      , .assign .x2 .mul (.x3, .x0) .rgn0 -- WRONG
     ]
   (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
     simp only [Ops.ofList, AST.eval, Ops.toCtree,  AST.toCtree_];
