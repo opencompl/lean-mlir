@@ -87,8 +87,6 @@ instance [Inhabited opcode] : Inhabited (AST opcode .Os) where
 instance [Inhabited opcode] : Inhabited (AST opcode .R) where
   default := .rgn (.x0, .x0) default
 
-instance : Inhabited (AST opcode .Rs) where
-  default := .rgn0
 
 
 @[simp]
