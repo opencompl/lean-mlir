@@ -3,11 +3,11 @@
 <div class="decl" id="IO.Promise"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Init/System/Promise.lean#L29-L29">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Init/System/Promise.html#IO.Promise"><span class="name">IO</span>.<span class="name">Promise</span></a></span><span class="decl_args">
 <span class="fn">(α : <a href="../.././foundational_types.html">Type</a>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a></div></div><p><code>Promise α</code> allows you to create a <code>Task α</code> whose value is provided later by calling <code><a href="../.././Init/System/Promise.html#IO.Promise.resolve">resolve</a></code>.</p><p>Typical usage is as follows:</p><ol>
-<li><code>let promise ← Promise.<a href="../.././Init/System/Promise.html#IO.Promise.new">new</a>← Promise.<a href="../.././Init/System/Promise.html#IO.Promise.new">new</a></code> creates a promise</li>
-<li><code>promise.result : Task α</code> can now be passed around</li>
+<span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a></div></div><p><code><a href="../.././Init/System/Promise.html#IO.Promise">Promise</a> α</code> allows you to create a <code><a href="../.././Init/Core.html#Task">Task</a> α</code> whose value is provided later by calling <code><a href="../.././Init/System/Promise.html#IO.Promise.resolve">resolve</a></code>.</p><p>Typical usage is as follows:</p><ol>
+<li><code>let promise ← <a href="../.././Init/System/Promise.html#IO.Promise.new">Promise.new</a></code> creates a promise</li>
+<li><code>promise.<a href="../.././Init/System/Promise.html#IO.Promise.result">result</a> : <a href="../.././Init/Core.html#Task">Task</a> α</code> can now be passed around</li>
 <li><code>promise.result.get</code> blocks until the promise is resolved</li>
-<li><code>promise.resolve a</code> resolves the promise</li>
+<li><code>promise.<a href="../.././Init/System/Promise.html#IO.Promise.resolve">resolve</a> a</code> resolves the promise</li>
 <li><code>promise.result.get</code> now returns <code>a</code></li>
 </ol><p>Every promise must eventually be resolved.
 Otherwise the memory used for the promise will be leaked,

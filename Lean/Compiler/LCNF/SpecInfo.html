@@ -28,10 +28,7 @@ The motivation is to minimize the number of code specializations that have littl
 performance. For example, let's consider the function.</p><pre><code>def liftMacroM
     {α : Type} {m : Type → Type}
     [Monad m] [MonadMacroAdapter m] [MonadEnv m] [MonadRecDepth m] [MonadError m]
-    [MonadResolveName m] [MonadTrace m] [MonadOptions m] [AddMessageContext m] [MonadLiftT IO m] (x : MacroM α) : m α := do
-→ Type}
-    [Monad m] [MonadMacroAdapter m] [MonadEnv m] [MonadRecDepth m] [MonadError m]
-    [MonadResolveName m] [MonadTrace m] [MonadOptions m] [AddMessageContext m] [MonadLiftT IO m] (x : MacroM α) : m α := do
+    [MonadResolveName m] [MonadTrace m] [MonadOptions m] [AddMessageContext m] [MonadLiftT <a href="../../.././Init/System/IO.html#IO">IO</a> m] (x : MacroM α) : m α := do
 </code></pre><p>The parameter <code>α</code> does not occur in any local instance, and <code>x</code> is marked as <code>.<a href="../../.././Lean/Compiler/LCNF/SpecInfo.html#Lean.Compiler.LCNF.SpecParamInfo.other">other</a></code> since the function
 is not tagged as <code>[specialize]</code>. There is little value in considering <code>α</code> during code specialization,
 but if we do many copies of this function will be generated.

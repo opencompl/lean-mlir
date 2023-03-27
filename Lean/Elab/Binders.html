@@ -62,7 +62,7 @@ create two new free variables <code>a</code> and <code>b</code>, push these to t
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.elabForall"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">elabForall</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElab">Lean.Elab.Term.TermElab</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Term.precheckArrow"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L269-L273">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.precheckArrow"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">precheckArrow</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Elab/Quotation/Precheck.html#Lean.Elab.Term.Quotation.Precheck">Lean.Elab.Term.Quotation.Precheck</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Term.elabArrow"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L275-L282">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.elabArrow"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">elabArrow</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElab">Lean.Elab.Term.TermElab</a></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Term.elabDepArrow"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L288-L293">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
-<span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.elabDepArrow"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">elabDepArrow</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElab">Lean.Elab.Term.TermElab</a></div></div><p>The dependent arrow. <code>(x : α) → β→ β</code> is equivalent to <code>∀ x : α, β∀ x : α, β</code>, but we usually
+<span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.elabDepArrow"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">elabDepArrow</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElab">Lean.Elab.Term.TermElab</a></div></div><p>The dependent arrow. <code>(x : α) → β</code> is equivalent to <code>∀ x : α, β</code>, but we usually
 reserve the latter for propositions. Also written as <code>Π x : α, β</code> (the "Pi-type")
 in the literature.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Term.expandFunBinders"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L338-L378">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.expandFunBinders"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">expandFunBinders</span></a></span><span class="decl_args">
@@ -133,13 +133,9 @@ match @x_1, @x_2 with
 </code></pre><p>If <code>useExplicit = true</code>, we add a <code>@</code> before <code>fun</code> to disable implicit lambdas. We disable them when processing <code>let</code> and <code>let rec</code> declarations
 to make sure the behavior is consistent with top-level declarations where we can write</p><pre><code>def f : {α : Type} → α → α
   | _, a => a
-→ α → α
-  | _, a => a
-→ α
-  | _, a => a
 </code></pre><p>We use <code>useExplicit = false</code> when we are elaborating the <code>fun | ... => ... | ...</code> notation. See issue #1132.
 If <code>@fun</code> is used with this notation, the we set <code>useExplicit = true</code>.
-We also use <code>useExplicit = false</code> when processing <code>instance ... where</code> notation declarations. The motivation is to have compact declarations such as</p><pre><code>instance [Alternative m] : MonadLiftT Option m where
+We also use <code>useExplicit = false</code> when processing <code>instance ... where</code> notation declarations. The motivation is to have compact declarations such as</p><pre><code>instance [Alternative m] : <a href="../.././Init/Prelude.html#MonadLiftT">MonadLiftT</a> <a href="../.././Init/Prelude.html#Option">Option</a> m where
 monadLift -- We don't want to provide the implicit arguments of `monadLift` here. One should use `monadLift := @fun ...` if they want to provide them.
   | some a => pure a
   | none => failure
@@ -166,22 +162,13 @@ Example</p><pre><code>| 0, true => ... f 0 ...
 where
   f x := g x + 1
 
-  g : Nat → Nat
-    | 0   => 1
-    | x+1 => f x
-→ Nat
+  g : <a href="../.././Init/Prelude.html#Nat">Nat</a> → <a href="../.././Init/Prelude.html#Nat">Nat</a>
     | 0   => 1
     | x+1 => f x
 </code></pre><p>expands into</p><pre><code>fux x_1 x_2 =>
   let rec
     f x := g x + 1,
-    g : Nat → Nat
-      | 0   => 1
-      | x+1 => f x
-  match x_1, x_2 with
-  | 0, true => ... f 0 ...
-  | i, _    => ... f i + g i ...
-→ Nat
+    g : <a href="../.././Init/Prelude.html#Nat">Nat</a> → <a href="../.././Init/Prelude.html#Nat">Nat</a>
       | 0   => 1
       | x+1 => f x
   match x_1, x_2 with
@@ -219,7 +206,7 @@ where
 <span class="fn">(elabBodyFirst : <a href="../.././Init/Prelude.html#Bool">Bool</a>)</span></span>
 <span class="decl_args">
 <span class="fn">(usedLetOnly : <a href="../.././Init/Prelude.html#Bool">Bool</a>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElabM">Lean.Elab.TermElabM</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span></div></div><p>If <code>useLetExpr</code> is true, then a kernel let-expression <code>let x : type := val; body</code> is created.
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElabM">Lean.Elab.TermElabM</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span></div></div><p>If <code>useLetExpr</code> is true, then a kernel let-expression <code>let x : <a href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.BinderView.type">type</a> := val; body</code> is created.
 Otherwise, we create a term of the form <code>(fun (x : type) => body) val</code></p><p>The default elaboration order is <code><a href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.LetIdDeclView.binders">binders</a></code>, <code>typeStx</code>, <code>valStx</code>, and <code>body</code>.
 If <code>elabBodyFirst == true</code>, then we use the order <code><a href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.LetIdDeclView.binders">binders</a></code>, <code>typeStx</code>, <code>body</code>, and <code>valStx</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Term.LetIdDeclView"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L686-L690">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Binders.html#Lean.Elab.Term.LetIdDeclView"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">LetIdDeclView</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a></div></div><ul class="structure_fields" id="Lean.Elab.Term.LetIdDeclView.mk"><li id="Lean.Elab.Term.LetIdDeclView.id" class="structure_field"><div class="structure_field_info">id : <a href="../.././Init/Prelude.html#Lean.Syntax">Lean.Syntax</a></div></li><li id="Lean.Elab.Term.LetIdDeclView.binders" class="structure_field"><div class="structure_field_info">binders : <span class="fn"><a href="../.././Init/Prelude.html#Array">Array</a> <a href="../.././Init/Prelude.html#Lean.Syntax">Lean.Syntax</a></span></div></li><li id="Lean.Elab.Term.LetIdDeclView.type" class="structure_field"><div class="structure_field_info">type : <a href="../.././Init/Prelude.html#Lean.Syntax">Lean.Syntax</a></div></li><li id="Lean.Elab.Term.LetIdDeclView.value" class="structure_field"><div class="structure_field_info">value : <a href="../.././Init/Prelude.html#Lean.Syntax">Lean.Syntax</a></div></li></ul><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.Elab.Term.LetIdDeclView" class="instances-for-list"></ul></details></div></div><div class="decl" id="Lean.Elab.Term.mkLetIdDeclView"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Binders.lean#L692-L699">source</a></div><div class="decl_header"><span class="decl_kind">def</span>

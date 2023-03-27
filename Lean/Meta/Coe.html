@@ -36,49 +36,37 @@ Note that we reduce <code>type</code> using transparency <code>[reducible]</code
 <span class="fn">(expectedType : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> (<span class="fn"><a href="../.././Init/Prelude.html#Option">Option</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span>)</span></div></div><p>Try coercions and monad lifts to make sure <code>e</code> has type <code>expectedType</code>.</p><p>If <code>expectedType</code> is of the form <code>n β</code>, we try monad lifts and other extensions.</p><p>Extensions for monads.</p><ol>
 <li>Try to unify <code>n</code> and <code>m</code>. If it succeeds, then we use</li>
-</ol><pre><code>coeM {m : Type u → Type v} {α β : Type u} [∀ a, CoeT α a β] [Monad m] (x : m α) : m β
-→ Type v} {α β : Type u} [∀ a, CoeT α a β] [Monad m] (x : m α) : m β
-∀ a, CoeT α a β] [Monad m] (x : m α) : m β
+</ol><pre><code>coeM {m : Type u → Type v} {α β : Type u} [∀ a, <a href="../.././Init/Coe.html#CoeT">CoeT</a> α a β] [Monad m] (x : m α) : m β
 </code></pre><p><code>n</code> must be a <code><a href="../.././Init/Prelude.html#Monad">Monad</a></code> to use this one.</p><ol start="2">
 <li>If there is monad lift from <code>m</code> to <code>n</code> and we can unify <code>α</code> and <code>β</code>, we use</li>
-</ol><pre><code>liftM : ∀ {m : Type u_1 → Type u_2} {n : Type u_1 → Type u_3} [self : MonadLiftT m n] {α : Type u_1}, m α → n α
-∀ {m : Type u_1 → Type u_2} {n : Type u_1 → Type u_3} [self : MonadLiftT m n] {α : Type u_1}, m α → n α
-→ Type u_2} {n : Type u_1 → Type u_3} [self : MonadLiftT m n] {α : Type u_1}, m α → n α
-→ Type u_3} [self : MonadLiftT m n] {α : Type u_1}, m α → n α
-→ n α
-</code></pre><p>Note that <code>n</code> may not be a <code><a href="../.././Init/Prelude.html#Monad">Monad</a></code> in this case. This happens quite a bit in code such as</p><pre><code>def g (x : Nat) : IO Nat := do
-  IO.println x
+</ol><pre><code><a href="../.././Init/Prelude.html#liftM">liftM</a> : ∀ {m : Type u_1 → Type u_2} {n : Type u_1 → Type u_3} [self : <a href="../.././Init/Prelude.html#MonadLiftT">MonadLiftT</a> m n] {α : Type u_1}, m α → n α
+</code></pre><p>Note that <code>n</code> may not be a <code><a href="../.././Init/Prelude.html#Monad">Monad</a></code> in this case. This happens quite a bit in code such as</p><pre><code>def g (x : Nat) : <a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> := do
+  <a href="../.././Init/System/IO.html#IO.println">IO.println</a> x
   pure x
 
-def f {m} [MonadLiftT IO m] : m Nat :=
+def f {m} [MonadLiftT <a href="../.././Init/System/IO.html#IO">IO</a> m] : m <a href="../.././Init/Prelude.html#Nat">Nat</a> :=
   g 10
 
 </code></pre><ol start="3">
 <li>If there is a monad lift from <code>m</code> to <code>n</code> and a coercion from <code>α</code> to <code>β</code>, we use</li>
-</ol><pre><code>liftCoeM {m : Type u → Type v} {n : Type u → Type w} {α β : Type u} [MonadLiftT m n] [∀ a, CoeT α a β] [Monad n] (x : m α) : n β
-→ Type v} {n : Type u → Type w} {α β : Type u} [MonadLiftT m n] [∀ a, CoeT α a β] [Monad n] (x : m α) : n β
-→ Type w} {α β : Type u} [MonadLiftT m n] [∀ a, CoeT α a β] [Monad n] (x : m α) : n β
-∀ a, CoeT α a β] [Monad n] (x : m α) : n β
+</ol><pre><code>liftCoeM {m : Type u → Type v} {n : Type u → Type w} {α β : Type u} [MonadLiftT m n] [∀ a, <a href="../.././Init/Coe.html#CoeT">CoeT</a> α a β] [Monad n] (x : m α) : n β
 </code></pre><p>Note that approach 3 does not subsume 1 because it is only applicable if there is a coercion from <code>α</code> to <code>β</code> for all values in <code>α</code>.
-This is not the case for example for <code>pure $ x > 0</code> when the expected type is <code>IO Bool</code>. The given type is <code>IO Prop</code>, and
-we only have a coercion from decidable propositions.  Approach 1 works because it constructs the coercion <code>CoeT (m Prop) (pure $ x > 0) (m Bool)</code>
+This is not the case for example for <code>pure $ x > 0</code> when the expected type is <code><a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Bool">Bool</a></code>. The given type is <code><a href="../.././Init/System/IO.html#IO">IO</a> Prop</code>, and
+we only have a coercion from decidable propositions.  Approach 1 works because it constructs the coercion <code><a href="../.././Init/Coe.html#CoeT">CoeT</a> (m Prop) (pure $ x > 0) (m Bool)</code>
 using the instance <code>pureCoeDepProp</code>.</p><p>Note that, approach 2 is more powerful than <code>tryCoe</code>.
 Recall that type class resolution never assigns metavariables created by other modules.
-Now, consider the following scenario</p><pre><code class="language-lean">def g (x : Nat) : IO Nat := ...
-deg h (x : Nat) : StateT Nat IO Nat := do
+Now, consider the following scenario</p><pre><code class="language-lean">def g (x : Nat) : <a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> := ...
+deg h (x : Nat) : <a href="../.././Init/Control/State.html#StateT">StateT</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> := do
 v ← g x;
 IO.Println v;
 ...
-← g x;
-IO.Println v;
-...
 </code></pre><p>Let's assume there is no other occurrence of <code>v</code> in <code>h</code>.
-Thus, we have that the expected of <code>g x</code> is <code>StateT Nat IO ?α</code>,
-and the given type is <code>IO Nat</code>. So, even if we add a coercion.</p><pre><code>instance {α m n} [MonadLiftT m n] {α} : Coe (m α) (n α) := ...
-</code></pre><p>It is not applicable because TC would have to assign <code>?α := Nat</code>.
-On the other hand, TC can easily solve <code>[MonadLiftT IO (StateT Nat IO)]</code>
+Thus, we have that the expected of <code>g x</code> is <code><a href="../.././Init/Control/State.html#StateT">StateT</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/System/IO.html#IO">IO</a> ?α</code>,
+and the given type is <code><a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Nat">Nat</a></code>. So, even if we add a coercion.</p><pre><code>instance {α m n} [MonadLiftT m n] {α} : <a href="../.././Init/Coe.html#Coe">Coe</a> (m α) (n α) := ...
+</code></pre><p>It is not applicable because TC would have to assign <code>?α := <a href="../.././Init/Prelude.html#Nat">Nat</a></code>.
+On the other hand, TC can easily solve <code>[MonadLiftT <a href="../.././Init/System/IO.html#IO">IO</a> (StateT <a href="../.././Init/Prelude.html#Nat">Nat</a> IO)]</code>
 since this goal does not contain any metavariables. And then, we
-convert <code>g x</code> into <code>liftM $ g x</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.coerce?"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Coe.lean#L203-L210">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+convert <code>g x</code> into <code><a href="../.././Init/Prelude.html#liftM">liftM</a> $ g x</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.coerce?"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Coe.lean#L203-L210">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Meta/Coe.html#Lean.Meta.coerce?"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">coerce?</span></a></span><span class="decl_args">
 <span class="fn">(expr : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args">

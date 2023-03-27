@@ -46,23 +46,20 @@ it contains only free variables tagged as ground</p><details><summary>Equations<
 <span class="fn">(decl : <a href="../../.././Lean/Compiler/LCNF/Basic.html#Lean.Compiler.LCNF.LetDecl">Lean.Compiler.LCNF.LetDecl</a>)</span></span>
 <span class="decl_args">
 <span class="fn">(x : <span class="fn"><a href="../../.././Lean/Compiler/LCNF/Specialize.html#Lean.Compiler.LCNF.Specialize.SpecializeM">Lean.Compiler.LCNF.Specialize.SpecializeM</a> <span class="fn">α</span></span>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Lean/Compiler/LCNF/Specialize.html#Lean.Compiler.LCNF.Specialize.SpecializeM">Lean.Compiler.LCNF.Specialize.SpecializeM</a> <span class="fn">α</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="mod_doc"><h1 class="markdown-heading" id="Dependency collector for the code specialization function">Dependency collector for the code specialization function. <a class="hover-link" href="#Dependency collector for the code specialization function">#</a></h1><p>During code specialization, we select which arguments are going to be used during the specialization.
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Lean/Compiler/LCNF/Specialize.html#Lean.Compiler.LCNF.Specialize.SpecializeM">Lean.Compiler.LCNF.Specialize.SpecializeM</a> <span class="fn">α</span></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="mod_doc"><h1 class="markdown-heading" id="Dependency-collector-for-the-code-specialization-function">Dependency collector for the code specialization function. <a class="hover-link" href="#Dependency-collector-for-the-code-specialization-function">#</a></h1><p>During code specialization, we select which arguments are going to be used during the specialization.
 Then, we have to collect their dependencies. For example, suppose are trying to specialize the following <code><a href="../../.././Init/System/IO.html#IO.println">IO.println</a></code>
 and <code><a href="../../.././Init/Data/List/Control.html#List.forM">List.forM</a></code> applications in the following example:</p><pre><code>    def f xs a.1 :=
-      let _x.2 := @instMonadEIO IO.Error
-      let _x.5 := instToStringString
-      let _x.9 := instToStringNat
+      let _x.2 := @instMonadEIO <a href="../../.././Init/System/IOError.html#IO.Error">IO.Error</a>
+      let _x.5 := <a href="../../.././Init/Data/ToString/Basic.html#instToStringString">instToStringString</a>
+      let _x.9 := <a href="../../.././Init/Data/ToString/Basic.html#instToStringNat">instToStringNat</a>
       let _x.6 := "hello"
-      let _x.61 := @IO.println String _x.5 _x.6 a.1 -- (*)
+      let _x.61 := @IO.println <a href="../../.././Init/Prelude.html#String">String</a> _x.5 _x.6 a.1 -- (*)
       cases _x.61
-      | EStateM.Result.ok a.6 a.7 =>
+      | <a href="../../.././Init/Prelude.html#EStateM.Result.ok">EStateM.Result.ok</a> a.6 a.7 =>
         fun _f.72 _y.69 _y.70 :=
-          let _x.71 := @IO.println Nat _x.9 _y.69 _y.70 -- (*)
+          let _x.71 := @IO.println <a href="../../.././Init/Prelude.html#Nat">Nat</a> _x.9 _y.69 _y.70 -- (*)
           _x.71
-        let _x.65 := @List.forM (fun α => PUnit → EStateM.Result IO.Error PUnit α) _x.2 Nat xs _f.72 a.7 -- (*)
-        ...
-      ...
-→ EStateM.Result IO.Error PUnit α) _x.2 Nat xs _f.72 a.7 -- (*)
+        let _x.65 := @List.forM (fun α => <a href="../../.././Init/Prelude.html#PUnit">PUnit</a> → <a href="../../.././Init/Prelude.html#EStateM.Result">EStateM.Result</a> <a href="../../.././Init/System/IOError.html#IO.Error">IO.Error</a> <a href="../../.././Init/Prelude.html#PUnit">PUnit</a> α) _x.2 <a href="../../.././Init/Prelude.html#Nat">Nat</a> xs _f.72 a.7 -- (*)
         ...
       ...
 </code></pre><p>For <code><a href="../../.././Init/System/IO.html#IO.println">IO.println</a></code> the <code>SpecArgInfo</code> is <code>[N, I, O, O]</code>, i.e., only the first two arguments are considered
@@ -73,17 +70,12 @@ For the <code><a href="../../.././Init/Data/List/Control.html#List.forM">List.fo
 The collected values are used to construct a key to identify the specialization. Arguments that were not considered are
 replaced with <code><a href="../../.././Init/Prelude.html#lcErased">lcErased</a></code>. The key is used to make sure we don't keep generating the same specialization over and over again.
 This is not an optimization, it is essential to prevent the code specializer from looping while specializing recursive functions.
-The keys for these two applications are the terms.</p><pre><code>@IO.println Nat instToStringNat lcErased lcErased
+The keys for these two applications are the terms.</p><pre><code>@IO.println <a href="../../.././Init/Prelude.html#Nat">Nat</a> <a href="../../.././Init/Data/ToString/Basic.html#instToStringNat">instToStringNat</a> <a href="../../.././Init/Prelude.html#lcErased">lcErased</a> <a href="../../.././Init/Prelude.html#lcErased">lcErased</a>
 </code></pre><p>and</p><pre><code>@List.forM
-  (fun α => PUnit → EStateM.Result IO.Error PUnit α)
-  (@instMonadEIO IO.Error) Nat lcErased
+  (fun α => <a href="../../.././Init/Prelude.html#PUnit">PUnit</a> → <a href="../../.././Init/Prelude.html#EStateM.Result">EStateM.Result</a> <a href="../../.././Init/System/IOError.html#IO.Error">IO.Error</a> <a href="../../.././Init/Prelude.html#PUnit">PUnit</a> α)
+  (@instMonadEIO IO.Error) <a href="../../.././Init/Prelude.html#Nat">Nat</a> <a href="../../.././Init/Prelude.html#lcErased">lcErased</a>
   (fun _y.69 _y.70 =>
-   let _x.71 := @IO.println Nat instToStringNat _y.69 _y.70;
-  _x.71)
-→ EStateM.Result IO.Error PUnit α)
-  (@instMonadEIO IO.Error) Nat lcErased
-  (fun _y.69 _y.70 =>
-   let _x.71 := @IO.println Nat instToStringNat _y.69 _y.70;
+   let _x.71 := @IO.println <a href="../../.././Init/Prelude.html#Nat">Nat</a> <a href="../../.././Init/Data/ToString/Basic.html#instToStringNat">instToStringNat</a> _y.69 _y.70;
   _x.71)
 </code></pre><p>The keys never contain free variables or loose bound variables.</p></div><div class="decl" id="Lean.Compiler.LCNF.Specialize.Collector.collect"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Compiler/LCNF/Specialize.lean#L137-L152">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../../.././Lean/Compiler/LCNF/Specialize.html#Lean.Compiler.LCNF.Specialize.Collector.collect"><span class="name">Lean</span>.<span class="name">Compiler</span>.<span class="name">LCNF</span>.<span class="name">Specialize</span>.<span class="name">Collector</span>.<span class="name">collect</span></a></span><span class="decl_args">

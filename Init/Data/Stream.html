@@ -1,22 +1,13 @@
 <html lang="en"><head><meta charset="UTF-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1"></meta><link rel="stylesheet" href="../.././style.css"></link><link rel="stylesheet" href="../.././src/pygments.css"></link><link rel="shortcut icon" href="../.././favicon.ico"></link><link rel="prefetch" href="../.././/declarations/declaration-data.bmp" as="image"></link><title>Init.Data.Stream</title><script defer="true" src="../.././mathjax-config.js"></script><script defer="true" src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script defer="true" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><script>const SITE_ROOT="../.././";</script><script>const MODULE_NAME="Init.Data.Stream";</script><script type="module" src="../.././search.js"></script><script type="module" src="../.././how-about.js"></script><script type="module" src="../.././instances.js"></script><script type="module" src="../.././importedBy.js"></script></head><body><input id="nav_toggle" type="checkbox"></input><header><h1><label for="nav_toggle"></label>Documentation</h1><p class="header_filename break_within"><span class="name">Init</span>.<span class="name">Data</span>.<span class="name">Stream</span></p><form action="https://google.com/search" method="get" id="search_form"><input type="hidden" name="sitesearch" value="https://leanprover-community.github.io/mathlib4_docs"></input><input type="text" name="q" autocomplete="off"></input>&#32;
             <button id="search_button" onclick="javascript: form.action='../.././search.html';">Search</button><button>Google site search</button></form></header><nav class="internal_nav"><h3><a class="break_within" href="#top"><span class="name">Init</span>.<span class="name">Data</span>.<span class="name">Stream</span></a></h3><p class="gh_nav_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Init/Data/Stream.lean">source</a></p><div class="imports"><details><summary>Imports</summary><ul><li><a href="../.././Init/Data/Range.html">Init.Data.Range</a></li><li><a href="../.././Init/Data/Array/Subarray.html">Init.Data.Array.Subarray</a></li></ul></details><details><summary>Imported by</summary><ul id="imported-by-Init.Data.Stream" class="imported-by-list"></ul></details></div><div class="nav_link"><a class="break_within" href="#ToStream"><span class="name">ToStream</span></a></div><div class="nav_link"><a class="break_within" href="#Stream"><span class="name">Stream</span></a></div><div class="nav_link"><a class="break_within" href="#Stream.forIn"><span class="name">Stream</span>.<span class="name">forIn</span></a></div><div class="nav_link"><a class="break_within" href="#Stream.forIn.visit"><span class="name">Stream</span>.<span class="name">forIn</span>.<span class="name">visit</span></a></div><div class="nav_link"><a class="break_within" href="#instForIn"><span class="name">instForIn</span></a></div><div class="nav_link"><a class="break_within" href="#instToStreamList"><span class="name">instToStreamList</span></a></div><div class="nav_link"><a class="break_within" href="#instToStreamArraySubarray"><span class="name">instToStreamArraySubarray</span></a></div><div class="nav_link"><a class="break_within" href="#instToStreamSubarray"><span class="name">instToStreamSubarray</span></a></div><div class="nav_link"><a class="break_within" href="#instToStreamStringSubstring"><span class="name">instToStreamStringSubstring</span></a></div><div class="nav_link"><a class="break_within" href="#instToStreamRange"><span class="name">instToStreamRange</span></a></div><div class="nav_link"><a class="break_within" href="#instStreamProdProd"><span class="name">instStreamProdProd</span></a></div><div class="nav_link"><a class="break_within" href="#instStreamList"><span class="name">instStreamList</span></a></div><div class="nav_link"><a class="break_within" href="#instStreamSubarray"><span class="name">instStreamSubarray</span></a></div><div class="nav_link"><a class="break_within" href="#instStreamRangeNat"><span class="name">instStreamRangeNat</span></a></div><div class="nav_link"><a class="break_within" href="#instStreamSubstringChar"><span class="name">instStreamSubstringChar</span></a></div></nav><main>
-<div class="mod_doc"><p>Remark: we considered using the following alternative design</p><pre><code>structure Stream (α : Type u) where
+<div class="mod_doc"><p>Remark: we considered using the following alternative design</p><pre><code>structure <a href="../.././Init/Data/Stream.html#Stream">Stream</a> (α : Type u) where
   stream : Type u
-  next? : stream → Option (α × stream)
+  <a href="../.././Init/Data/Stream.html#Stream.next?">next?</a> : stream → <a href="../.././Init/Prelude.html#Option">Option</a> (α × stream)
 
-class ToStream (collection : Type u) (value : outParam (Type v)) where
-  toStream : collection → Stream value
-→ Option (α × stream)
-
-class ToStream (collection : Type u) (value : outParam (Type v)) where
-  toStream : collection → Stream value
-× stream)
-
-class ToStream (collection : Type u) (value : outParam (Type v)) where
-  toStream : collection → Stream value
-→ Stream value
+class <a href="../.././Init/Data/Stream.html#ToStream">ToStream</a> (collection : Type u) (value : <a href="../.././Init/Prelude.html#outParam">outParam</a> (Type v)) where
+  <a href="../.././Init/Data/Stream.html#ToStream.toStream">toStream</a> : collection → <a href="../.././Init/Data/Stream.html#Stream">Stream</a> value
 </code></pre><p>where <code><a href="../.././Init/Data/Stream.html#Stream">Stream</a></code> is not a class, and its state is encapsulated.
-The key problem is that the type <code>Stream α</code> "lives" in a universe higher than <code>α</code>.
+The key problem is that the type <code><a href="../.././Init/Data/Stream.html#Stream">Stream</a> α</code> "lives" in a universe higher than <code>α</code>.
 This is a problem because we want to use <code><a href="../.././Init/Data/Stream.html#Stream">Stream</a></code>s in monadic code.</p></div><div class="decl" id="ToStream"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Init/Data/Stream.lean#L43-L44">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
 <span class="decl_name"><a class="break_within" href="../.././Init/Data/Stream.html#ToStream"><span class="name">ToStream</span></a></span><span class="decl_args">
 <span class="fn">(collection : <a href="../.././foundational_types.html">Type</a> u)</span></span>
@@ -25,9 +16,9 @@ This is a problem because we want to use <code><a href="../.././Init/Data/Stream
 <span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a> u</div></div><ul class="structure_fields" id="ToStream.mk"><li id="ToStream.toStream" class="structure_field"><div class="structure_field_info">toStream : <span class="fn"><span class="fn">collection</span> → <span class="fn">stream</span></span></div></li></ul><p>Streams are used to implement parallel <code>for</code> statements.
 Example:</p><pre><code>for x in xs, y in ys do
   ...
-</code></pre><p>is expanded into</p><pre><code>let mut s := toStream ys
+</code></pre><p>is expanded into</p><pre><code>let mut s := <a href="../.././Init/Data/Stream.html#ToStream.toStream">toStream</a> ys
 for x in xs do
-  match Stream.next? s with
+  match <a href="../.././Init/Data/Stream.html#Stream.next?">Stream.next?</a> s with
   | none => break
   | some (y, s') =>
     s := s'

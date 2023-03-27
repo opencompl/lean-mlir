@@ -34,31 +34,31 @@ This method assumes all <code>preDefs</code> have arity 1, and have already been
 Here is a small example. Suppose the input is</p><pre><code>f x :=
   match x.2.1, x.2.2.1, x.2.2.2 with
   | 0, a, b => a
-  | Nat.succ n, a, b => (g ⟨x.1, n, a, b⟩).fst
+  | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b => (g ⟨x.1, n, a, b⟩).fst
 g x :=
   match x.2.1, x.2.2.1, x.2.2.2 with
   | 0, a, b => (a, b)
-  | Nat.succ n, a, b => (h ⟨x.1, n, a, b⟩, a)
+  | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b => (h ⟨x.1, n, a, b⟩, a)
 h x =>
   match x.2.1, x.2.2.1, x.2.2.2 with
   | 0, a, b => b
-  | Nat.succ n, a, b => f ⟨x.1, n, a, b⟩
+  | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b => f ⟨x.1, n, a, b⟩
 </code></pre><p>this method produces the following pre definition</p><pre><code>f._mutual x :=
-  PSum.casesOn x
+  <a href="../../../.././Init/Core.html#PSum.casesOn">PSum.casesOn</a> x
     (fun val =>
       match val.2.1, val.2.2.1, val.2.2.2 with
       | 0, a, b => a
-      | Nat.succ n, a, b => (f._mutual (PSum.inr (PSum.inl ⟨val.1, n, a, b⟩))).fst
+      | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b => (f._mutual (PSum.inr (PSum.inl ⟨val.1, n, a, b⟩))).fst
     fun val =>
-      PSum.casesOn val
+      <a href="../../../.././Init/Core.html#PSum.casesOn">PSum.casesOn</a> val
         (fun val =>
           match val.2.1, val.2.2.1, val.2.2.2 with
           | 0, a, b => (a, b)
-          | Nat.succ n, a, b => (f._mutual (PSum.inr (PSum.inr ⟨val.1, n, a, b⟩)), a)
+          | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b => (f._mutual (PSum.inr (PSum.inr ⟨val.1, n, a, b⟩)), a)
         fun val =>
           match val.2.1, val.2.2.1, val.2.2.2 with
           | 0, a, b => b
-          | Nat.succ n, a, b =>
+          | <a href="../../../.././Init/Prelude.html#Nat.succ">Nat.succ</a> n, a, b =>
             f._mutual (PSum.inl ⟨val.1, n, a, b⟩)
 </code></pre><p>Remark: <code>preDefsOriginal</code> is used for error reporting, it contains the definitions before applying <code>packDomain</code>.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>
 <nav class="nav"><iframe src="../../../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

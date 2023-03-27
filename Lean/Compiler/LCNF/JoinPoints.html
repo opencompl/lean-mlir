@@ -27,13 +27,13 @@ res
 </code></pre><p>The majority (if not all) tail calls will be brought into this form
 by the simplifier pass.</p><p>Furthermore a <code>fun</code> disqualifies as a join point if turning it into a join
 point would turn a call to it into an out of scope join point.
-This can happen if we have something like:</p><pre><code>def test (b : Bool) (x y : Nat) : Nat :=
-  fun myjp x => Nat.add x (Nat.add x x)
+This can happen if we have something like:</p><pre><code>def test (b : Bool) (x y : Nat) : <a href="../../.././Init/Prelude.html#Nat">Nat</a> :=
+  fun myjp x => <a href="../../.././Init/Prelude.html#Nat.add">Nat.add</a> x (Nat.add x x)
   fun f y =>
-    let x := Nat.add y y
+    let x := <a href="../../.././Init/Prelude.html#Nat.add">Nat.add</a> y y
     myjp x
   fun f y =>
-    let x := Nat.mul y y
+    let x := <a href="../../.././Init/Prelude.html#Nat.mul">Nat.mul</a> y y
     myjp x
   cases b (f x) (g y)
 </code></pre><p><code>f</code> and <code>g</code> can be detected as a join point right away, however

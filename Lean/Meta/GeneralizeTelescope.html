@@ -42,8 +42,8 @@ Moreover, for any type correct lambda abstraction <code>f</code> constructed usi
 The application <code>f e_1 ... e_n</code> is also type correct.</p><p>The <code>kabstract</code> method is used to "locate" and abstract forward dependencies.
 That is, an occurrence of <code>e_i</code> in the of <code>e_j</code> for <code>j > i</code>.</p><p>The method checks whether the abstract types <code>A_i</code> are type correct. Here is an example
 where <code><a href="../.././Lean/Meta/GeneralizeTelescope.html#Lean.Meta.generalizeTelescope">generalizeTelescope</a></code> fails to create the telescope <code>x_1 ... x_n</code>.
-Assume the local context contains <code>(n : Nat := 10) (xs : Vec Nat n) (ys : Vec Nat 10) (h : xs = ys)</code>.
+Assume the local context contains <code>(n : <a href="../.././Init/Prelude.html#Nat">Nat</a> := 10) (xs : Vec <a href="../.././Init/Prelude.html#Nat">Nat</a> n) (ys : Vec <a href="../.././Init/Prelude.html#Nat">Nat</a> 10) (h : xs = ys)</code>.
 Then, assume we invoke <code><a href="../.././Lean/Meta/GeneralizeTelescope.html#Lean.Meta.generalizeTelescope">generalizeTelescope</a></code> with <code>es := #[10, xs, ys, h]</code>
-A type error is detected when processing <code>h</code>'s type. At this point, the method had successfully produced</p><pre><code>  (x_1 : Nat) (xs : Vec Nat n) (x_2 : Vec Nat x_1)
+A type error is detected when processing <code>h</code>'s type. At this point, the method had successfully produced</p><pre><code>  (x_1 : Nat) (xs : Vec <a href="../.././Init/Prelude.html#Nat">Nat</a> n) (x_2 : Vec <a href="../.././Init/Prelude.html#Nat">Nat</a> x_1)
 </code></pre><p>and the type for the new variable abstracting <code>h</code> is <code>xs = x_2</code> which is not type correct.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>
 <nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

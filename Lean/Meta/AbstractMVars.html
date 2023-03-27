@@ -27,8 +27,8 @@ The result contains</p><ul>
 <li>And an expression of the form <code>fun (m_1 : A_1) ... (m_k : A_k) => e'</code>, where
 <code>k</code> equal to the number of (expr) metavariables abstracted, and <code>e'</code> is <code>e</code> after we
 replace the metavariables.</li>
-</ul><p>Example: given <code>f.{?u} ?m1</code> where <code>?m1 : ?m2 Nat</code>, <code>?m2 : Type -> Type</code>. This function returns
-<code>{ levels := #[u], size := 2, expr := (fun (m2 : Type -> Type) (m1 : m2 Nat) => f.{u} m1) }</code></p><p>This API can be used to "transport" to a different metavariable context.
+</ul><p>Example: given <code>f.{?u} ?m1</code> where <code>?m1 : ?m2 <a href="../.././Init/Prelude.html#Nat">Nat</a></code>, <code>?m2 : Type -> Type</code>. This function returns
+<code>{ levels := #[u], size := 2, <a href="../.././Lean/Meta/AbstractMVars.html#Lean.Meta.AbstractMVarsResult.expr">expr</a> := (fun (m2 : Type -> Type) (m1 : m2 Nat) => f.{u} m1) }</code></p><p>This API can be used to "transport" to a different metavariable context.
 Given a new metavariable context, we replace the <code>AbstractMVarsResult.levels</code> with
 new fresh universe metavariables, and instantiate the <code>(m_i : A_i)</code> in the lambda-expression
 with new fresh metavariables.</p><p>Application: we use this method to cache the results of type class resolution.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.openAbstractMVarsResult"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/AbstractMVars.lean#L136-L139">source</a></div><div class="decl_header"><span class="decl_kind">def</span>

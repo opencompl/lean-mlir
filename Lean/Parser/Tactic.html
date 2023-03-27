@@ -10,27 +10,26 @@
 See <a href="https://leanprover.github.io/theorem_proving_in_lean4/induction_and_recursion.html">Induction and Recursion</a>.
 The syntax for the <code><a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.match">match</a></code> tactic is the same as term-mode <code><a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.match">match</a></code>, except that
 the match arms are tactics instead of expressions.</p><pre><code>example (n : Nat) : n = n := by
-  match n with
-  | 0 => rfl
+  <a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.match">match</a> n with
+  | 0 => <a href="../.././Init/Prelude.html#rfl">rfl</a>
   | i+1 => simp
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Parser.Tactic.introMatch"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Parser/Tactic.lean#L64-L65">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.introMatch"><span class="name">Lean</span>.<span class="name">Parser</span>.<span class="name">Tactic</span>.<span class="name">introMatch</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Parser/Types.html#Lean.Parser.Parser">Lean.Parser.Parser</a></div></div><p>The tactic</p><pre><code>intro
 | pat1 => tac1
 | pat2 => tac2
 </code></pre><p>is the same as:</p><pre><code>intro x
-match x with
+<a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.match">match</a> x with
 | pat1 => tac1
 | pat2 => tac2
 </code></pre><p>That is, <code>intro</code> can be followed by match arms and it introduces the values while
 doing a pattern match. This is equivalent to <code>fun</code> with match arms in term mode.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Parser.Tactic.decide"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Parser/Tactic.lean#L75-L76">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.decide"><span class="name">Lean</span>.<span class="name">Parser</span>.<span class="name">Tactic</span>.<span class="name">decide</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Parser/Types.html#Lean.Parser.Parser">Lean.Parser.Parser</a></div></div><p><code><a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.decide">decide</a></code> will attempt to prove a goal of type <code>p</code> by synthesizing an instance
-of <code>Decidable p</code> and then evaluating it to <code>isTrue ..</code>. Because this uses kernel
+of <code><a href="../.././Init/Prelude.html#Decidable">Decidable</a> p</code> and then evaluating it to <code>isTrue ..</code>. Because this uses kernel
 computation to evaluate the term, it may not work in the presence of definitions
-by well founded recursion, since this requires reducing proofs.</p><pre><code>example : 2 + 2 ≠ 5 := by decide
-≠ 5 := by decide
+by well founded recursion, since this requires reducing proofs.</p><pre><code>example : 2 + 2 ≠ 5 := by <a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.decide">decide</a>
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Parser.Tactic.nativeDecide"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Parser/Tactic.lean#L91-L92">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.nativeDecide"><span class="name">Lean</span>.<span class="name">Parser</span>.<span class="name">Tactic</span>.<span class="name">nativeDecide</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Parser/Types.html#Lean.Parser.Parser">Lean.Parser.Parser</a></div></div><p><code>native_decide</code> will attempt to prove a goal of type <code>p</code> by synthesizing an instance
-of <code>Decidable p</code> and then evaluating it to <code>isTrue ..</code>. Unlike <code><a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.decide">decide</a></code>, this
+of <code><a href="../.././Init/Prelude.html#Decidable">Decidable</a> p</code> and then evaluating it to <code>isTrue ..</code>. Unlike <code><a href="../.././Lean/Parser/Tactic.html#Lean.Parser.Tactic.decide">decide</a></code>, this
 uses <code>#eval</code> to evaluate the decidability instance.</p><p>This should be used with care because it adds the entire lean compiler to the trusted
 part, and the axiom <code>ofReduceBool</code> will show up in <code>#print axioms</code> for theorems using
 this method or anything that transitively depends on them. Nevertheless, because it is

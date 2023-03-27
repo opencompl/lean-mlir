@@ -31,43 +31,23 @@ indexing/retrieving terms. For example, <code>iota</code> reduction is not perfo
 and <code>simpleReduce := true</code> in <code>simp</code>.</p><p>Motivations:</p><ul>
 <li>In <code>simp</code>, we want to have <code>simp</code> theorem such as</li>
 </ul><pre><code>@[simp] theorem liftOn_mk (a : α) (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) :
-    Quot.liftOn (Quot.mk r a) f h = f a := rfl
-→ γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) :
-    Quot.liftOn (Quot.mk r a) f h = f a := rfl
-∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) :
-    Quot.liftOn (Quot.mk r a) f h = f a := rfl
-→ f a₁ = f a₂) :
-    Quot.liftOn (Quot.mk r a) f h = f a := rfl
+    <a href="../.././Init/Core.html#Quot.liftOn">Quot.liftOn</a> (Quot.<a href="../.././Lean/Meta/DiscrTreeTypes.html#Lean.Meta.DiscrTree.mk">mk</a> r a) f h = f a := <a href="../.././Init/Prelude.html#rfl">rfl</a>
 </code></pre><p>If we enable <code>iota</code>, then the lhs is reduced to <code>f a</code>.</p><ul>
 <li>During type class resolution, we often want to reduce types using even <code>iota</code>.
 Example:</li>
 </ul><pre><code>inductive Ty where
   | int
-  | bool
+  | <a href="../.././Init/Control/Basic.html#bool">bool</a>
 
 @[reducible] def Ty.interp (ty : Ty) : Type :=
-  Ty.casesOn (motive := fun _ => Type) ty Int Bool
+  Ty.casesOn (motive := fun _ => Type) ty <a href="../.././Init/Data/Int/Basic.html#Int">Int</a> <a href="../.././Init/Prelude.html#Bool">Bool</a>
 
 def test {a b c : Ty} (f : a.interp → b.interp → c.interp) (x : a.interp) (y : b.interp) : c.interp :=
   f x y
 
 def f (a b : Ty.bool.interp) : Ty.bool.interp :=
-  -- We want to synthesize `BEq Ty.bool.interp` here, and it will fail
-  -- if we do not reduce `Ty.bool.interp` to `Bool`.
-  test (.==.) a b
-→ b.interp → c.interp) (x : a.interp) (y : b.interp) : c.interp :=
-  f x y
-
-def f (a b : Ty.bool.interp) : Ty.bool.interp :=
-  -- We want to synthesize `BEq Ty.bool.interp` here, and it will fail
-  -- if we do not reduce `Ty.bool.interp` to `Bool`.
-  test (.==.) a b
-→ c.interp) (x : a.interp) (y : b.interp) : c.interp :=
-  f x y
-
-def f (a b : Ty.bool.interp) : Ty.bool.interp :=
-  -- We want to synthesize `BEq Ty.bool.interp` here, and it will fail
-  -- if we do not reduce `Ty.bool.interp` to `<a href="../.././Init/Prelude.html#Bool">Bool</a>`.
+  -- We want to synthesize `BEq Ty.bool.interp` here, <a href="../.././Init/Prelude.html#and">and</a> it will fail
+  -- if we do <a href="../.././Init/Prelude.html#not">not</a> reduce `Ty.bool.interp` to `Bool`.
   test (.==.) a b
 </code></pre><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.Meta.DiscrTree" class="instances-for-list"></ul></details></div></div></main>
 <nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

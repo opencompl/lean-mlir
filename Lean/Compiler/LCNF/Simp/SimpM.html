@@ -117,8 +117,8 @@ and set the <code><a href="../../../.././Lean/Compiler/LCNF/Simp/SimpM.html#Lean
 <span class="decl_args">
 <span class="fn">(fvarId' : <a href="../../../.././Lean/Expr.html#Lean.FVarId">Lean.FVarId</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Lean/Compiler/LCNF/Simp/SimpM.html#Lean.Compiler.LCNF.Simp.SimpM">Lean.Compiler.LCNF.Simp.SimpM</a> <a href="../../../.././Init/Prelude.html#Unit">Unit</a></span></div></div><p>Similar to <code>LCNF.<a href="../../../.././Lean/Compiler/LCNF/Simp/SimpM.html#Lean.Compiler.LCNF.Simp.addFVarSubst">addFVarSubst</a></code>. That is, add the entry
-<code>fvarId ↦ fvarId'↦ fvarId'</code> to the free variable substitution.
+<code>fvarId ↦ fvarId'</code> to the free variable substitution.
 If <code>fvarId</code> has a non-internal binder name <code>n</code>, but <code>fvarId'</code> does not,
-this method also adds the entry <code>fvarId' ↦ n↦ n</code> to the <code><a href="../../../.././Lean/Compiler/LCNF/Simp/SimpM.html#Lean.Compiler.LCNF.Simp.State.binderRenaming">binderRenaming</a></code> map.
+this method also adds the entry <code>fvarId' ↦ n</code> to the <code><a href="../../../.././Lean/Compiler/LCNF/Simp/SimpM.html#Lean.Compiler.LCNF.Simp.State.binderRenaming">binderRenaming</a></code> map.
 The goal is to preserve user provided names.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>
 <nav class="nav"><iframe src="../../../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

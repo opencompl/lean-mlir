@@ -5,24 +5,24 @@
 <span class="fn">(cfg : <a href="../.././Lean/Meta/Basic.html#Lean.Meta.Config">Lean.Meta.Config</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.Config">Lean.Meta.Config</a></div></div><p>Set <code>isDefEq</code> configuration for the elaborator.
 Note that we enable all approximations but <code>quasiPatternApprox</code></p><p>In Lean3 and Lean 4, we used to use the quasi-pattern approximation during elaboration.
-The example:</p><pre><code>def ex : StateT δ (StateT σ Id) σ :=
-monadLift (get : StateT σ Id σ)
+The example:</p><pre><code>def ex : <a href="../.././Init/Control/State.html#StateT">StateT</a> δ (StateT σ Id) σ :=
+monadLift (get : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Control/Id.html#Id">Id</a> σ)
 </code></pre><p>demonstrates why it produces counterintuitive behavior.
-We have the <code>Monad-lift</code> application:</p><pre><code>@monadLift ?m ?n ?c ?α (get : StateT σ id σ) : ?n ?α
-</code></pre><p>It produces the following unification problem when we process the expected type:</p><pre><code>?n ?α =?= StateT δ (StateT σ id) σ
+We have the <code>Monad-lift</code> application:</p><pre><code>@monadLift ?m ?n ?c ?α (get : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ) : ?n ?α
+</code></pre><p>It produces the following unification problem when we process the expected type:</p><pre><code>?n ?α =?= <a href="../.././Init/Control/State.html#StateT">StateT</a> δ (StateT σ id) σ
 ==> (approximate using first-order unification)
-?n := StateT δ (StateT σ id)
+?n := <a href="../.././Init/Control/State.html#StateT">StateT</a> δ (StateT σ id)
 ?α := σ
-</code></pre><p>Then, we need to solve:</p><pre><code>?m ?α =?= StateT σ id σ
+</code></pre><p>Then, we need to solve:</p><pre><code>?m ?α =?= <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ
 ==> instantiate metavars
-?m σ =?= StateT σ id σ
+?m σ =?= <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ
 ==> (approximate since it is a quasi-pattern unification constraint)
-?m := fun σ => StateT σ id σ
+?m := fun σ => <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ
 </code></pre><p>Note that the constraint is not a Milner pattern because σ is in
-the local context of <code>?m</code>. We are ignoring the other possible solutions:</p><pre><code>?m := fun σ' => StateT σ id σ
-?m := fun σ' => StateT σ' id σ
-?m := fun σ' => StateT σ id σ'
+the local context of <code>?m</code>. We are ignoring the other possible solutions:</p><pre><code>?m := fun σ' => <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ
+?m := fun σ' => <a href="../.././Init/Control/State.html#StateT">StateT</a> σ' <a href="../.././Init/Prelude.html#id">id</a> σ
+?m := fun σ' => <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a> σ'
 </code></pre><p>We need the quasi-pattern approximation for elaborating recursor-like expressions (e.g., dependent <code>match with</code> expressions).</p><p>If we had use first-order unification, then we would have produced
-the right answer: <code>?m := StateT σ id</code></p><p>Haskell would work on this example since it always uses
+the right answer: <code>?m := <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/Prelude.html#id">id</a></code></p><p>Haskell would work on this example since it always uses
 first-order unification.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>
 <nav class="nav"><iframe src="../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

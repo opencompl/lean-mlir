@@ -7,19 +7,13 @@ to them at <code><a href="../.././Lean/Elab/MutualDef.html#Lean.Elab.DefViewElab
 <div class="decl_header"><span class="decl_kind">abbrev</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/MutualDef.html#Lean.Elab.Term.MutualClosure.UsedFVarsMap"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Term</span>.<span class="name">MutualClosure</span>.<span class="name">UsedFVarsMap</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a></div></div><p>A mapping from FVarId to Set of FVarIds.</p><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Lean/Elab/MutualDef.html#Lean.Elab.Term.MutualClosure.UsedFVarsMap">Lean.Elab.Term.MutualClosure.UsedFVarsMap</a> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Lean/Expr.html#Lean.FVarIdMap">Lean.FVarIdMap</a> <a href="../.././Lean/Expr.html#Lean.FVarIdSet">Lean.FVarIdSet</a></span></span></li></ul></details></div></div><div class="mod_doc"><p>The let-recs may invoke each other. Example:</p><pre><code>let rec
   f (x : Nat) := g x + y
-  g : Nat → Nat
-    | 0   => 1
-    | x+1 => f x + z
-→ Nat
+  g : <a href="../.././Init/Prelude.html#Nat">Nat</a> → <a href="../.././Init/Prelude.html#Nat">Nat</a>
     | 0   => 1
     | x+1 => f x + z
 </code></pre><p><code>y</code> is free variable in <code>f</code>, and <code>z</code> is a free variable in <code>g</code>.
 To close <code>f</code> and <code>g</code>, <code>y</code> and <code>z</code> must be in the closure of both.
 That is, we need to generate the top-level definitions.</p><pre><code>def f (y z x : Nat) := g y z x + y
-def g (y z : Nat) : Nat → Nat
-  | 0 => 1
-  | x+1 => f y z x + z
-→ Nat
+def g (y z : Nat) : <a href="../.././Init/Prelude.html#Nat">Nat</a> → <a href="../.././Init/Prelude.html#Nat">Nat</a>
   | 0 => 1
   | x+1 => f y z x + z
 </code></pre></div><div class="decl" id="Lean.Elab.Term.MutualClosure.FixPoint.State"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/MutualDef.lean#L407-L409">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>

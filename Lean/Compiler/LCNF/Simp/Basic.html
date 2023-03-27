@@ -6,5 +6,5 @@
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Lean/Compiler/LCNF/CompilerM.html#Lean.Compiler.LCNF.CompilerM">Lean.Compiler.LCNF.CompilerM</a> (<span class="fn"><a href="../../../.././Init/Prelude.html#Option">Option</a> <a href="../../../.././Lean/Compiler/LCNF/Basic.html#Lean.Compiler.LCNF.FunDecl">Lean.Compiler.LCNF.FunDecl</a></span>)</span></div></div><p>Similar to <code>findFunDecl?</code>, but follows aliases (i.e., <code>let _x.i := _x.j</code>).
 Consider the following example</p><pre><code>fun _f.1 ... := ...
 let _x.2 := _f.1
-</code></pre><p><code>findFunDecl? _x.2</code> returns <code>none</code>, but <code>findFunDecl'? _x.2</code> returns the declaration for <code>_f.1</code>.</p></div></div></main>
+</code></pre><p><code>findFunDecl? _x.2</code> returns <code>none</code>, but <code><a href="../../../.././Lean/Compiler/LCNF/Simp/Basic.html#Lean.Compiler.LCNF.Simp.findFunDecl'?">findFunDecl'?</a> _x.2</code> returns the declaration for <code>_f.1</code>.</p></div></div></main>
 <nav class="nav"><iframe src="../../../.././navbar.html" class="navframe" frameBorder="0"></iframe></nav></body></html>

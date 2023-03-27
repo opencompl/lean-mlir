@@ -46,38 +46,14 @@ from the explicit ones.</p><details><summary>Equations</summary><ul class="equat
 <span class="fn">(motiveArg : <a href="../../.././Lean/Expr.html#Lean.MVarId">Lean.MVarId</a>)</span></span>
 <span class="decl_args">
 <span class="fn">(targets : <span class="fn"><a href="../../.././Init/Prelude.html#Array">Array</a> <a href="../../.././Lean/Expr.html#Lean.FVarId">Lean.FVarId</a></span>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../../.././Init/Prelude.html#Unit">Unit</a></span></div></div><p>Given a goal <code>... targets ... |- C[targets]</code> associated with <code><a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Alt.mvarId">mvarId</a></code>, assign
-<code>motiveArg := fun targets => C[targets]</code></p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Tactic.ElimApp.reorderAlts"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Tactic/Induction.lean#L251-L262">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../../.././Init/Prelude.html#Unit">Unit</a></span></div></div><p>Given a goal <code>... <a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Context.targets">targets</a> ... |- C[targets]</code> associated with <code><a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Alt.mvarId">mvarId</a></code>, assign
+<code>motiveArg := fun <a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Context.targets">targets</a> => C[targets]</code></p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Tactic.ElimApp.reorderAlts"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Tactic/Induction.lean#L251-L262">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.reorderAlts"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Tactic</span>.<span class="name">ElimApp</span>.<span class="name">reorderAlts</span></a></span><span class="decl_args">
 <span class="fn">(alts : <span class="fn"><a href="../../.././Init/Prelude.html#Array">Array</a> <a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Alt">Lean.Elab.Tactic.ElimApp.Alt</a></span>)</span></span>
 <span class="decl_args">
 <span class="fn">(altsSyntax : <span class="fn"><a href="../../.././Init/Prelude.html#Array">Array</a> <a href="../../.././Init/Prelude.html#Lean.Syntax">Lean.Syntax</a></span>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Init/Prelude.html#Array">Array</a> <a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.Alt">Lean.Elab.Tactic.ElimApp.Alt</a></span></div></div><p>If <code>altsSyntax</code> is not empty we reorder <code><a href="../../.././Lean/Elab/Tactic/Induction.html#Lean.Elab.Tactic.ElimApp.State.alts">alts</a></code> using the order the alternatives have been provided
 in <code>altsSyntax</code>. Motivations:</p><p>1- It improves the effectiveness of the <code>checkpoint</code> and <code>save</code> tactics. Consider the following example:</p><pre><code class="language-lean">example (h₁ : p ∨ q) (h₂ : p → x = 0) (h₃ : q → y = 0) : x * y = 0 := by
-  cases h₁ with
-  | inr h =>
-    sleep 5000 -- sleeps for 5 seconds
-    save
-    have : y = 0 := h₃ h
-    -- We can confortably work here
-  | inl h => stop ...
-∨ q) (h₂ : p → x = 0) (h₃ : q → y = 0) : x * y = 0 := by
-  cases h₁ with
-  | inr h =>
-    sleep 5000 -- sleeps for 5 seconds
-    save
-    have : y = 0 := h₃ h
-    -- We can confortably work here
-  | inl h => stop ...
-→ x = 0) (h₃ : q → y = 0) : x * y = 0 := by
-  cases h₁ with
-  | inr h =>
-    sleep 5000 -- sleeps for 5 seconds
-    save
-    have : y = 0 := h₃ h
-    -- We can confortably work here
-  | inl h => stop ...
-→ y = 0) : x * y = 0 := by
   cases h₁ with
   | inr h =>
     sleep 5000 -- sleeps for 5 seconds

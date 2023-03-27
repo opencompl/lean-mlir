@@ -3,96 +3,23 @@
 <div class="decl" id="Lean.Meta.Match.State"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Match/Match.lean#L66-L68">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>
 <span class="decl_name"><a class="break_within" href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.State"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">Match</span>.<span class="name">State</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../../.././foundational_types.html">Type</a></div></div><ul class="structure_fields" id="Lean.Meta.Match.State.mk"><li id="Lean.Meta.Match.State.used" class="structure_field"><div class="structure_field_info">used : <span class="fn"><a href="../../.././Lean/Data/HashSet.html#Lean.HashSet">Lean.HashSet</a> <a href="../../.././Init/Prelude.html#Nat">Nat</a></span></div></li><li id="Lean.Meta.Match.State.counterExamples" class="structure_field"><div class="structure_field_info">counterExamples : <span class="fn"><a href="../../.././Init/Prelude.html#List">List</a> (<span class="fn"><a href="../../.././Init/Prelude.html#List">List</a> <a href="../../.././Lean/Meta/Match/Basic.html#Lean.Meta.Match.Example">Lean.Meta.Match.Example</a></span>)</span></div></li></ul><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.Meta.Match.State" class="instances-for-list"></ul></details></div></div><div class="mod_doc"><p>Note that we decided to store pending constraints to address issues exposed by #1279 and #1361.
 Here is a simplified version of the example on this issue (see test: <code>1279_simplified.lean</code>)</p><pre><code class="language-lean">inductive Arrow : Type → Type → Type 1
-  | id   : Arrow a a
-  | unit : Arrow Unit Unit
+  | <a href="../../.././Init/Prelude.html#id">id</a>   : Arrow a a
+  | unit : Arrow <a href="../../.././Init/Prelude.html#Unit">Unit</a> <a href="../../.././Init/Prelude.html#Unit">Unit</a>
   | comp : Arrow β γ → Arrow α β → Arrow α γ
-deriving Repr
+deriving <a href="../../.././Init/Data/Repr.html#Repr">Repr</a>
 
 def Arrow.compose (f : Arrow β γ) (g : Arrow α β) : Arrow α γ :=
   match f, g with
   | id, g => g
-  | f, id => f
-  | f, g => comp f g
-→ Type → Type 1
-  | id   : Arrow a a
-  | unit : Arrow Unit Unit
-  | comp : Arrow β γ → Arrow α β → Arrow α γ
-deriving Repr
-
-def Arrow.compose (f : Arrow β γ) (g : Arrow α β) : Arrow α γ :=
-  match f, g with
-  | id, g => g
-  | f, id => f
-  | f, g => comp f g
-→ Type 1
-  | id   : Arrow a a
-  | unit : Arrow Unit Unit
-  | comp : Arrow β γ → Arrow α β → Arrow α γ
-deriving Repr
-
-def Arrow.compose (f : Arrow β γ) (g : Arrow α β) : Arrow α γ :=
-  match f, g with
-  | id, g => g
-  | f, id => f
-  | f, g => comp f g
-→ Arrow α β → Arrow α γ
-deriving Repr
-
-def Arrow.compose (f : Arrow β γ) (g : Arrow α β) : Arrow α γ :=
-  match f, g with
-  | id, g => g
-  | f, id => f
-  | f, g => comp f g
-→ Arrow α γ
-deriving Repr
-
-def Arrow.compose (f : Arrow β γ) (g : Arrow α β) : Arrow α γ :=
-  match f, g with
-  | id, g => g
-  | f, id => f
+  | f, <a href="../../.././Init/Prelude.html#id">id</a> => f
   | f, g => comp f g
 </code></pre><p>The initial state for the <code>match</code>-expression above is</p><pre><code class="language-lean">[Meta.Match.match] remaining variables: [β✝:(Type), γ✝:(Type), f✝:(Arrow β✝ γ✝), g✝:(Arrow α β✝)]
 alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
+  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.<a href="../../.././Init/Prelude.html#id">id</a> .(β)), g] => h_1 β g
+  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.<a href="../../.././Init/Prelude.html#id">id</a> .(α))] => h_2 γ f
   [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝:(Type), γ✝:(Type), f✝:(Arrow β✝ γ✝), g✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝:(Type), f✝:(Arrow β✝ γ✝), g✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝:(Arrow β✝ γ✝), g✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝ γ✝), g✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝), g✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝:(Arrow α β✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-✝)]
-alternatives:
-  [β:(Type), g:(Arrow α β)] |- [β, .(β), (Arrow.id .(β)), g] => h_1 β g
-  [γ:(Type), f:(Arrow α γ)] |- [.(α), γ, f, (Arrow.id .(α))] => h_2 γ f
-  [β:(Type), γ:(Type), f:(Arrow β γ), g:(Arrow α β)] |- [β, γ, f, g] => h_3 β γ f g
-</code></pre><p>The first step is a variable-transition which replaces <code>β</code> with <code>β✝✝</code> in the first and third alternatives.
-The constraint <code>β✝ ≋ α✝ ≋ α≋ α</code> in the second alternative used to be discarded. We now store it at the
+</code></pre><p>The first step is a variable-transition which replaces <code>β</code> with <code>β✝</code> in the first and third alternatives.
+The constraint <code>β✝ ≋ α</code> in the second alternative used to be discarded. We now store it at the
 alternative <code>cnstrs</code> field.</p></div><div class="decl" id="Lean.Meta.Match.processInaccessibleAsCtor"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Match/Match.lean#L373-L390">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.processInaccessibleAsCtor"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">Match</span>.<span class="name">processInaccessibleAsCtor</span></a></span><span class="decl_args">
 <span class="fn">(alt : <a href="../../.././Lean/Meta/Match/Basic.html#Lean.Meta.Match.Alt">Lean.Meta.Match.Alt</a>)</span></span>
@@ -145,7 +72,7 @@ see issue #1237.</p><details><summary>Equations</summary><ul class="equations"><
 <span class="fn">(input : <a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput">Lean.Meta.Match.MkMatcherInput</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../../.././Lean/Meta/Match/Basic.html#Lean.Meta.Match.MatcherResult">Lean.Meta.Match.MatcherResult</a></span></div></div><p>Create a dependent matcher for <code><a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput.matchType">matchType</a></code> where <code><a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput.matchType">matchType</a></code> is of the form
 <code>(a_1 : A_1) -> (a_2 : A_2[a_1]) -> ... -> (a_n : A_n[a_1, a_2, ... a_{n-1}]) -> B[a_1, ..., a_n]</code>
-where <code>n = numDiscrs</code>, and the <code><a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput.lhss">lhss</a></code> are the left-hand-sides of the <code>match</code>-expression alternatives.
+where <code>n = <a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput.numDiscrs">numDiscrs</a></code>, and the <code><a href="../../.././Lean/Meta/Match/Match.html#Lean.Meta.Match.MkMatcherInput.lhss">lhss</a></code> are the left-hand-sides of the <code>match</code>-expression alternatives.
 Each <code>AltLHS</code> has a list of local declarations and a list of patterns.
 The number of patterns must be the same in each <code>AltLHS</code>.
 The generated matcher has the structure described at <code>MatcherInfo</code>. The motive argument is of the form

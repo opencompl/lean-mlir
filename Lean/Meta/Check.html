@@ -12,26 +12,26 @@ whether terms produced by tactics and <code>isDefEq</code> are type correct.</p>
 <span class="decl_args">
 <span class="fn">(b : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> (<span class="fn"><a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a> <a href="../.././Init/Prelude.html#Prod">×</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span>)</span></div></div><p>Given two expressions <code>a</code> and <code>b</code>, this method tries to annotate terms with <code>pp.explicit := true</code> to
-expose "implicit" differences. For example, suppose <code>a</code> and <code>b</code> are of the form</p><pre><code class="language-lean">@HashMap Nat Nat eqInst hasInst1
-@HashMap Nat Nat eqInst hasInst2
-</code></pre><p>By default, the pretty printer formats both of them as <code>HashMap Nat Nat</code>.
+expose "implicit" differences. For example, suppose <code>a</code> and <code>b</code> are of the form</p><pre><code class="language-lean">@HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> eqInst hasInst1
+@HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> eqInst hasInst2
+</code></pre><p>By default, the pretty printer formats both of them as <code>HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a></code>.
 So, counterintuitive error messages such as</p><pre><code class="language-lean">error: application type mismatch
   HashMap.insert m
 argument
   m
 has type
-  HashMap Nat Nat
+  HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a>
 but is expected to have type
-  HashMap Nat Nat
+  HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a>
 </code></pre><p>would be produced.
 By adding <code>pp.explicit := true</code>, we can generate the more informative error</p><pre><code class="language-lean">error: application type mismatch
   HashMap.insert m
 argument
   m
 has type
-  @HashMap Nat Nat eqInst hasInst1
+  @HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> eqInst hasInst1
 but is expected to have type
-  @HashMap Nat Nat eqInst hasInst2
+  @HashMap <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> eqInst hasInst2
 </code></pre><p>Remark: this method implements a simple heuristic, we should extend it as we find other counterintuitive
 error messages.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.addPPExplicitToExposeDiff.visit"><div class="opaque"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Check.lean#L78-L103">source</a></div><div class="decl_header"><span class="decl_kind">partial def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Meta/Check.html#Lean.Meta.addPPExplicitToExposeDiff.visit"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">addPPExplicitToExposeDiff</span>.<span class="name">visit</span></a></span><span class="decl_args">

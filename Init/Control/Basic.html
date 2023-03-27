@@ -120,144 +120,62 @@
 <span class="fn">[inst : <span class="fn"><a href="../.././Init/Prelude.html#Applicative">Applicative</a> <span class="fn">m</span></span>]</span></span>
 </span><span class="decl_args">
 <span class="fn">(x : <span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#Bool">Bool</a></span>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#notM">notM</a> <span class="fn">x</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Prelude.html#not">not</a> <a href="../.././Init/Prelude.html#Functor.map">&lt$&gt</a> <span class="fn">x</span></span></span></li></ul></details></div></div><div class="mod_doc"><h1 class="markdown-heading" id="How MonadControl works">How <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> works <a class="hover-link" href="#How MonadControl works">#</a></h1><p>There is a <a href="https://lexi-lambda.github.io/blog/2019/09/07/demystifying-monadbasecontrol/">tutorial by Alexis King</a> that this docstring is based on.</p><p>Suppose we have <code>foo : ∀ α, IO α → IO α∀ α, IO α → IO α→ IO α</code> and <code>bar : StateT σ IO β</code> (ie, <code>bar : σ → IO (σ × β)→ IO (σ × β)× β)</code>).
-We might want to 'map' <code>bar</code> by <code>foo</code>. Concretely we would write this as:</p><pre><code class="language-lean">opaque foo : ∀ {α}, IO α → IO α
-opaque bar : StateT σ IO β
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><span class="fn"><a href="../.././Init/Control/Basic.html#notM">notM</a> <span class="fn">x</span></span> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn"><a href="../.././Init/Prelude.html#not">not</a> <a href="../.././Init/Prelude.html#Functor.map">&lt$&gt</a> <span class="fn">x</span></span></span></li></ul></details></div></div><div class="mod_doc"><h1 class="markdown-heading" id="How-MonadControl-works">How <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> works <a class="hover-link" href="#How-MonadControl-works">#</a></h1><p>There is a <a href="https://lexi-lambda.github.io/blog/2019/09/07/demystifying-monadbasecontrol/">tutorial by Alexis King</a> that this docstring is based on.</p><p>Suppose we have <code>foo : ∀ α, <a href="../.././Init/System/IO.html#IO">IO</a> α → <a href="../.././Init/System/IO.html#IO">IO</a> α</code> and <code>bar : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β</code> (ie, <code>bar : σ → <a href="../.././Init/System/IO.html#IO">IO</a> (σ × β)</code>).
+We might want to 'map' <code>bar</code> by <code>foo</code>. Concretely we would write this as:</p><pre><code class="language-lean">opaque foo : ∀ {α}, <a href="../.././Init/System/IO.html#IO">IO</a> α → <a href="../.././Init/System/IO.html#IO">IO</a> α
+opaque bar : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β
 
-def mapped_foo : StateT σ IO β := do
+def mapped_foo : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β := do
   let s ← get
-  let (b, s') ← liftM <| foo <| StateT.run bar s
+  let (b, s') ← <a href="../.././Init/Prelude.html#liftM">liftM</a> <| foo <| <a href="../.././Init/Control/State.html#StateT.run">StateT.run</a> bar s
   set s'
   return b
-∀ {α}, IO α → IO α
-opaque bar : StateT σ IO β
-
-def mapped_foo : StateT σ IO β := do
-  let s ← get
-  let (b, s') ← liftM <| foo <| StateT.run bar s
-  set s'
-  return b
-→ IO α
-opaque bar : StateT σ IO β
-
-def mapped_foo : StateT σ IO β := do
-  let s ← get
-  let (b, s') ← liftM <| foo <| StateT.run bar s
-  set s'
-  return b
-← get
-  let (b, s') ← liftM <| foo <| StateT.run bar s
-  set s'
-  return b
-← liftM <| foo <| StateT.run bar s
-  set s'
-  return b
-</code></pre><p>This is fine but it's not going to generalise, what if we replace <code>StateT Nat IO</code> with a large tower of monad transformers?
+</code></pre><p>This is fine but it's not going to generalise, what if we replace <code><a href="../.././Init/Control/State.html#StateT">StateT</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> <a href="../.././Init/System/IO.html#IO">IO</a></code> with a large tower of monad transformers?
 We would have to rewrite the above to handle each of the <code>run</code> functions for each transformer in the stack.</p><p>Is there a way to generalise <code>run</code> as a kind of inverse of <code>lift</code>?
-We have <code>lift : m α → StateT σ m α→ StateT σ m α</code> for all <code>m</code>, but we also need to 'unlift' the state.
-But <code>unlift : StateT σ IO α → IO α→ IO α</code> can't be implemented. So we need something else.</p><p>If we look at the definition of <code>mapped_foo</code>, we see that <code>lift <| foo <| StateT.run bar s</code>
-has the type <code>IO (σ × β)× β)</code>. The key idea is that <code>σ × β× β</code> contains all of the information needed to reconstruct the state and the new value.</p><p>Now lets define some values to generalise <code>mapped_foo</code>:</p><ul>
-<li>Write <code>IO (σ × β)× β)</code> as <code>IO (stM β)</code></li>
-<li>Write <code>StateT.run . s</code> as <code>mapInBase : StateT σ IO α → IO (stM β)→ IO (stM β)</code></li>
-<li>Define <code>restoreM : IO (stM α) → StateT σ IO α→ StateT σ IO α</code> as below</li>
-</ul><pre><code class="language-lean">def stM (α : Type) := α × σ
+We have <code>lift : m α → <a href="../.././Init/Control/State.html#StateT">StateT</a> σ m α</code> for all <code>m</code>, but we also need to 'unlift' the state.
+But <code>unlift : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> α → <a href="../.././Init/System/IO.html#IO">IO</a> α</code> can't be implemented. So we need something else.</p><p>If we look at the definition of <code>mapped_foo</code>, we see that <code>lift <| foo <| <a href="../.././Init/Control/State.html#StateT.run">StateT.run</a> bar s</code>
+has the type <code><a href="../.././Init/System/IO.html#IO">IO</a> (σ × β)</code>. The key idea is that <code>σ × β</code> contains all of the information needed to reconstruct the state and the new value.</p><p>Now lets define some values to generalise <code>mapped_foo</code>:</p><ul>
+<li>Write <code><a href="../.././Init/System/IO.html#IO">IO</a> (σ × β)</code> as <code><a href="../.././Init/System/IO.html#IO">IO</a> (stM β)</code></li>
+<li>Write <code><a href="../.././Init/Control/State.html#StateT.run">StateT.run</a> . s</code> as <code>mapInBase : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> α → <a href="../.././Init/System/IO.html#IO">IO</a> (stM β)</code></li>
+<li>Define <code><a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a> : <a href="../.././Init/System/IO.html#IO">IO</a> (stM α) → <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> α</code> as below</li>
+</ul><pre><code class="language-lean">def <a href="../.././Init/Control/Basic.html#MonadControl.stM">stM</a> (α : Type) := α × σ
 
-def restoreM (x : IO (stM α)) : StateT σ IO α := do
-  let (a,s) ← liftM x
+def <a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a> (x : <a href="../.././Init/System/IO.html#IO">IO</a> (stM α)) : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> α := do
+  let (a,s) ← <a href="../.././Init/Prelude.html#liftM">liftM</a> x
   set s
   return a
-× σ
-
-def restoreM (x : IO (stM α)) : StateT σ IO α := do
-  let (a,s) ← liftM x
-  set s
-  return a
-← liftM x
-  set s
-  return a
-</code></pre><p>To get:</p><pre><code class="language-lean">def mapped_foo' : StateT σ IO β := do
+</code></pre><p>To get:</p><pre><code class="language-lean">def mapped_foo' : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β := do
   let s ← get
-  let mapInBase := fun z => StateT.run z s
-  restoreM <| foo <| mapInBase bar
-← get
-  let mapInBase := fun z => StateT.run z s
-  restoreM <| foo <| mapInBase bar
-</code></pre><p>and finally define</p><pre><code class="language-lean">def control {α : Type}
-  (f : ({β : Type} → StateT σ IO β → IO (stM β)) → IO (stM α))
-  : StateT σ IO α := do
+  let mapInBase := fun z => <a href="../.././Init/Control/State.html#StateT.run">StateT.run</a> z s
+  <a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a> <| foo <| mapInBase bar
+</code></pre><p>and finally define</p><pre><code class="language-lean">def <a href="../.././Init/Control/Basic.html#control">control</a> {α : Type}
+  (f : ({β : Type} → <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β → <a href="../.././Init/System/IO.html#IO">IO</a> (stM β)) → <a href="../.././Init/System/IO.html#IO">IO</a> (stM α))
+  : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> α := do
   let s ← get
-  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
-  let r : IO (stM α) := f mapInBase
-  restoreM r
-→ StateT σ IO β → IO (stM β)) → IO (stM α))
-  : StateT σ IO α := do
-  let s ← get
-  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
-  let r : IO (stM α) := f mapInBase
-  restoreM r
-→ IO (stM β)) → IO (stM α))
-  : StateT σ IO α := do
-  let s ← get
-  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
-  let r : IO (stM α) := f mapInBase
-  restoreM r
-→ IO (stM α))
-  : StateT σ IO α := do
-  let s ← get
-  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
-  let r : IO (stM α) := f mapInBase
-  restoreM r
-← get
-  let mapInBase := fun {β} (z : StateT σ IO β) => StateT.run z s
-  let r : IO (stM α) := f mapInBase
-  restoreM r
-</code></pre><p>Now we can write <code>mapped_foo</code> as:</p><pre><code class="language-lean">def mapped_foo'' : StateT σ IO β :=
-  control (fun mapInBase => foo (mapInBase bar))
+  let mapInBase := fun {β} (z : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β) => <a href="../.././Init/Control/State.html#StateT.run">StateT.run</a> z s
+  let r : <a href="../.././Init/System/IO.html#IO">IO</a> (stM α) := f mapInBase
+  <a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a> r
+</code></pre><p>Now we can write <code>mapped_foo</code> as:</p><pre><code class="language-lean">def mapped_foo'' : <a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β :=
+  <a href="../.././Init/Control/Basic.html#control">control</a> (fun mapInBase => foo (mapInBase bar))
 </code></pre><p>The core idea of <code>mapInBase</code> is that given any <code>β</code>, it runs an instance of
-<code>StateT σ IO β</code> and 'packages' the result and state as  <code>IO (stM β)</code> so that it can be piped through <code>foo</code>.
+<code><a href="../.././Init/Control/State.html#StateT">StateT</a> σ <a href="../.././Init/System/IO.html#IO">IO</a> β</code> and 'packages' the result and state as  <code><a href="../.././Init/System/IO.html#IO">IO</a> (stM β)</code> so that it can be piped through <code>foo</code>.
 Once it's been through <code>foo</code> we can then unpack the state again with <code><a href="../.././Init/Control/Basic.html#MonadControl.restoreM">restoreM</a></code>.
-Hence we can apply <code>foo</code> to <code>bar</code> without losing track of the state.</p><p>Here <code>stM β = σ × β× β</code> is the 'packaged result state', but we can generalise:
-if we have a tower <code>StateT σ₁ <| StateT σ₂ <| IO</code>, then the
-composite packaged state is going to be <code>stM₁₂ β := σ₁ × σ₂ × β× σ₂ × β× β</code> or <code>stM₁₂ := stM₁ ∘ stM₂∘ stM₂</code>.</p><p><code>MonadControl m n</code> means that when programming in the monad <code>n</code>,
+Hence we can apply <code>foo</code> to <code>bar</code> without losing track of the state.</p><p>Here <code><a href="../.././Init/Control/Basic.html#MonadControl.stM">stM</a> β = σ × β</code> is the 'packaged result state', but we can generalise:
+if we have a tower <code><a href="../.././Init/Control/State.html#StateT">StateT</a> σ₁ <| <a href="../.././Init/Control/State.html#StateT">StateT</a> σ₂ <| <a href="../.././Init/System/IO.html#IO">IO</a></code>, then the
+composite packaged state is going to be <code>stM₁₂ β := σ₁ × σ₂ × β</code> or <code>stM₁₂ := stM₁ ∘ stM₂</code>.</p><p><code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a> m n</code> means that when programming in the monad <code>n</code>,
 we can switch to a base monad <code>m</code> using <code><a href="../.././Init/Control/Basic.html#control">control</a></code>, just like with <code><a href="../.././Init/Prelude.html#liftM">liftM</a></code>.
 In contrast to <code><a href="../.././Init/Prelude.html#liftM">liftM</a></code>, however, we also get a function <code>runInBase</code> that
 allows us to "lower" actions in <code>n</code> into <code>m</code>.
-This is really useful when we have large towers of monad transformers, as we do in the metaprogramming library.</p><p>For example there is a function <code>withNewMCtxDepthImp : MetaM α → MetaM α→ MetaM α</code> that runs the input monad instance
-in a new nested metavariable context. We can lift this to <code>withNewMctxDepth : n α → n α→ n α</code> using <code>MonadControlT MetaM n</code>
+This is really useful when we have large towers of monad transformers, as we do in the metaprogramming library.</p><p>For example there is a function <code>withNewMCtxDepthImp : MetaM α → MetaM α</code> that runs the input monad instance
+in a new nested metavariable context. We can lift this to <code>withNewMctxDepth : n α → n α</code> using <code><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a> MetaM n</code>
 (<code><a href="../.././Init/Control/Basic.html#MonadControlT">MonadControlT</a></code> is the transitive closure of <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code>).
 Which means that we can also run <code>withNewMctxDepth</code> in the <code>Tactic</code> monad without needing to
-faff around with lifts and all the other boilerplate needed in <code>mapped_foo</code>.</p><h2 class="markdown-heading" id="Relationship to MonadFunctor">Relationship to <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code> <a class="hover-link" href="#Relationship to MonadFunctor">#</a></h2><p>A stricter form of <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> is <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code>, which defines
-<code>monadMap {α} : (∀ {β}, m β → m β) → n α → n α∀ {β}, m β → m β) → n α → n α→ m β) → n α → n α→ n α → n α→ n α</code>. Using <code>monadMap</code> it is also possible to define <code>mapped_foo</code> above.
+faff around with lifts and all the other boilerplate needed in <code>mapped_foo</code>.</p><h2 class="markdown-heading" id="Relationship-to-MonadFunctor">Relationship to <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code> <a class="hover-link" href="#Relationship-to-MonadFunctor">#</a></h2><p>A stricter form of <code><a href="../.././Init/Control/Basic.html#MonadControl">MonadControl</a></code> is <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code>, which defines
+<code>monadMap {α} : (∀ {β}, m β → m β) → n α → n α</code>. Using <code>monadMap</code> it is also possible to define <code>mapped_foo</code> above.
 However there are some mappings which can't be derived using <code><a href="../.././Init/Prelude.html#MonadFunctor">MonadFunctor</a></code>. For example:</p><pre><code class="language-lean,ignore"> @[inline] def map1MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → MetaM α) → MetaM α) {α} (k : β → n α) : n α :=
-   control fun runInBase => f fun b => runInBase <| k b
+   <a href="../.././Init/Control/Basic.html#control">control</a> fun runInBase => f fun b => runInBase <| k b
 
  @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ MetaM α) → MetaM α) {α} (k : β → n α) : n α :=
-   control fun runInBase => f fun b => runInBase <| k b
-
- @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ MetaM α) {α} (k : β → n α) : n α :=
-   control fun runInBase => f fun b => runInBase <| k b
-
- @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ n α) : n α :=
-   control fun runInBase => f fun b => runInBase <| k b
-
- @[inline] def map2MetaM [MonadControlT MetaM n] [Monad n] (f : forall {α}, (β → γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ γ → MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ MetaM α) → MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ MetaM α) {α} (k : β → γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ γ → n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
-→ n α) : n α :=
-   control fun runInBase => f fun b c => runInBase <| k b c
+   <a href="../.././Init/Control/Basic.html#control">control</a> fun runInBase => f fun b c => runInBase <| k b c
 </code></pre><p>In <code>monadMap</code>, we can only 'run in base' a single computation in <code>n</code> into the base monad <code>m</code>.
 Using <code><a href="../.././Init/Control/Basic.html#control">control</a></code> means that <code>runInBase</code> can be used multiple times.</p></div><div class="decl" id="MonadControl"><div class="class"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Init/Control/Basic.lean#L189-L192">source</a></div><div class="decl_header"><span class="decl_kind">class</span>
 <span class="decl_name"><a class="break_within" href="../.././Init/Control/Basic.html#MonadControl"><span class="name">MonadControl</span></a></span><span class="decl_args">

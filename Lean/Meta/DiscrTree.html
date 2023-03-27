@@ -15,15 +15,15 @@ we want to ignore. We ignore implicit arguments and proofs.</li>
 </ul><p>We reduce terms using <code>TransparencyMode.reducible</code>. Thus, all reducible
 definitions in an expression <code>e</code> are unfolded before we insert it into the
 discrimination tree.</p><p>Recall that projections from classes are <strong>NOT</strong> reducible.
-For example, the expressions <code>Add.add α (ringAdd ?α ?s) ?x ?x</code>
-and <code>Add.add Nat Nat.hasAdd a b</code> generates paths with the following keys
+For example, the expressions <code><a href="../.././Init/Prelude.html#Add.add">Add.add</a> α (ringAdd ?α ?s) ?x ?x</code>
+and <code><a href="../.././Init/Prelude.html#Add.add">Add.add</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> Nat.hasAdd a b</code> generates paths with the following keys
 respctively</p><pre><code>⟨Add.add, 4⟩, *, *, *, *
 ⟨Add.add, 4⟩, *, *, ⟨a,0⟩, ⟨b,0⟩
-</code></pre><p>That is, we don't reduce <code>Add.add Nat inst a b</code> into <code>Nat.add a b</code>.
+</code></pre><p>That is, we don't reduce <code><a href="../.././Init/Prelude.html#Add.add">Add.add</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> inst a b</code> into <code><a href="../.././Init/Prelude.html#Nat.add">Nat.add</a> a b</code>.
 We say the <code><a href="../.././Init/Prelude.html#Add.add">Add.add</a></code> applications are the de-facto canonical forms in
 the metaprogramming framework.
 Moreover, it is the metaprogrammer's responsibility to re-pack applications such as
-<code>Nat.add a b</code> into <code>Add.add Nat inst a b</code>.</p><p>Remark: we store the arity in the keys
+<code><a href="../.././Init/Prelude.html#Nat.add">Nat.add</a> a b</code> into <code><a href="../.././Init/Prelude.html#Add.add">Add.add</a> <a href="../.././Init/Prelude.html#Nat">Nat</a> inst a b</code>.</p><p>Remark: we store the arity in the keys
 1- To be able to implement the "skip" operation when retrieving "candidate"
 unifiers.
 2- Distinguish partial applications <code>f a</code>, <code>f a b</code>, and <code>f a b c</code>.</p></div><div class="decl" id="Lean.Meta.DiscrTree.Key.ctorIdx"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/DiscrTree.lean#L50-L57">source</a></div><div class="decl_header"><span class="decl_kind">def</span>

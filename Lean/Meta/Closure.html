@@ -5,20 +5,20 @@ creating auxiliary definitions. Here, we say a term is "open" if
 it contains free/meta-variables.</p><p>The "closure" is performed by lambda abstracting the
 free/meta-variables. Recall that in dependent type theory
 lambda abstracting a let-variable may produce type incorrect terms.
-For example, given the context</p><pre><code class="language-lean">(n : Nat := 20)
+For example, given the context</p><pre><code class="language-lean">(n : <a href="../.././Init/Prelude.html#Nat">Nat</a> := 20)
 (x : Vector α n)
 (y : Vector α 20)
 </code></pre><p>the term <code>x = y</code> is correct. However, its closure using lambda abstractions
 is not.</p><pre><code class="language-lean">fun (n : Nat) (x : Vector α n) (y : Vector α 20) => x = y
 </code></pre><p>A previous version of this module would address this issue by
 always use let-expressions to abstract let-vars. In the example above,
-it would produce</p><pre><code class="language-lean">let n : Nat := 20; fun (x : Vector α n) (y : Vector α 20) => x = y
+it would produce</p><pre><code class="language-lean">let n : <a href="../.././Init/Prelude.html#Nat">Nat</a> := 20; fun (x : Vector α n) (y : Vector α 20) => x = y
 </code></pre><p>This approach produces correct result, but produces unsatisfactory
 results when we want to create auxiliary definitions.
 For example, consider the context</p><pre><code class="language-lean">(x : Nat)
-(y : Nat := fact x)
+(y : <a href="../.././Init/Prelude.html#Nat">Nat</a> := fact x)
 </code></pre><p>and the term <code>h (g y)</code>, now suppose we want to create an auxiliary definition for <code>y</code>.
-The previous version of this module would compute the auxiliary definition</p><pre><code class="language-lean">def aux := fun (x : Nat) => let y : Nat := fact x; h (g y)
+The previous version of this module would compute the auxiliary definition</p><pre><code class="language-lean">def aux := fun (x : Nat) => let y : <a href="../.././Init/Prelude.html#Nat">Nat</a> := fact x; h (g y)
 </code></pre><p>and would return the term <code>aux x</code> as a substitute for <code>h (g y)</code>.
 This is correct, but we will re-evaluate <code>fact x</code> whenever we use <code>aux</code>.
 In this module, we produce</p><pre><code class="language-lean">def aux := fun (y : Nat) => h (g y)
@@ -38,26 +38,16 @@ the type of one of the lambdas, we simply zeta-expand it there.
 As a final example consider the context</p><pre><code class="language-lean">(x_1 : Nat)
 (x_2 : Nat)
 (x_3 : Nat)
-(x   : Nat := fact (10 + x_1 + x_2 + x_3))
-(ty  : Type := Nat → Nat)
+(x   : <a href="../.././Init/Prelude.html#Nat">Nat</a> := fact (10 + x_1 + x_2 + x_3))
+(ty  : Type := <a href="../.././Init/Prelude.html#Nat">Nat</a> → Nat)
 (f   : ty := fun x => x)
-(n   : Nat := 20)
+(n   : <a href="../.././Init/Prelude.html#Nat">Nat</a> := 20)
 (z   : f 10)
-→ Nat)
-(f   : ty := fun x => x)
-(n   : Nat := 20)
-(z   : f 10)
-</code></pre><p>and we use this module to compute an auxiliary definition for the term</p><pre><code class="language-lean">(let y  : { v : Nat // v = n } := ⟨20, rfl⟩; y.1 + n + f x, z + 10)
-</code></pre><p>we obtain</p><pre><code class="language-lean">def aux (x : Nat) (f : Nat → Nat) (z : Nat) : Nat×Nat :=
-let n : Nat := 20;
+</code></pre><p>and we use this module to compute an auxiliary definition for the term</p><pre><code class="language-lean">(let y  : { v : <a href="../.././Init/Prelude.html#Nat">Nat</a> // v = n } := ⟨20, rfl⟩; y.1 + n + f x, z + 10)
+</code></pre><p>we obtain</p><pre><code class="language-lean">def aux (x : Nat) (f : <a href="../.././Init/Prelude.html#Nat">Nat</a> → Nat) (z : Nat) : Nat×Nat :=
+let n : <a href="../.././Init/Prelude.html#Nat">Nat</a> := 20;
 (let y : {v // v=n} := {val := 20, property := ex._proof_1}; y.val+n+f x, z+10)
-→ Nat) (z : Nat) : Nat×Nat :=
-let n : Nat := 20;
-(let y : {v // v=n} := {val := 20, property := ex._proof_1}; y.val+n+f x, z+10)
-×Nat :=
-let n : Nat := 20;
-(let y : {v // v=n} := {val := 20, property := ex._proof_1}; y.val+n+f x, z+10)
-</code></pre><p>BTW, this module also provides the <code>zeta : Bool</code> flag. When set to true, it
+</code></pre><p>BTW, this module also provides the <code><a href="../.././Lean/Meta/Closure.html#Lean.Meta.Closure.Context.zeta">zeta</a> : <a href="../.././Init/Prelude.html#Bool">Bool</a></code> flag. When set to true, it
 expands all let-variables occurring in the target expression.</p></div><div class="decl" id="Lean.Meta.Closure.ToProcessElement"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Closure.lean#L99-L102">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Meta/Closure.html#Lean.Meta.Closure.ToProcessElement"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">Closure</span>.<span class="name">ToProcessElement</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href="../.././foundational_types.html">Type</a></div></div><ul class="structure_fields" id="Lean.Meta.Closure.ToProcessElement.mk"><li id="Lean.Meta.Closure.ToProcessElement.fvarId" class="structure_field"><div class="structure_field_info">fvarId : <a href="../.././Lean/Expr.html#Lean.FVarId">Lean.FVarId</a></div></li><li id="Lean.Meta.Closure.ToProcessElement.newFVarId" class="structure_field"><div class="structure_field_info">newFVarId : <a href="../.././Lean/Expr.html#Lean.FVarId">Lean.FVarId</a></div></li></ul><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.Meta.Closure.ToProcessElement" class="instances-for-list"></ul></details></div></div><div class="decl" id="Lean.Meta.Closure.instInhabitedToProcessElement"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Closure.lean#L102-L102">source</a></div><div class="decl_header"><span class="decl_kind">instance</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Meta/Closure.html#Lean.Meta.Closure.instInhabitedToProcessElement"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">Closure</span>.<span class="name">instInhabitedToProcessElement</span></a></span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Init/Prelude.html#Inhabited">Inhabited</a> <a href="../.././Lean/Meta/Closure.html#Lean.Meta.Closure.ToProcessElement">Lean.Meta.Closure.ToProcessElement</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation"><span class="fn"><a href="../.././Lean/Meta/Closure.html#Lean.Meta.Closure.instInhabitedToProcessElement">Lean.Meta.Closure.instInhabitedToProcessElement</a> <a href="../.././Init/Prelude.html#Eq">=</a> <span class="fn">{ <span class="fn">default</span> := <span class="fn">{ <span class="fn">fvarId</span> := <span class="fn">default</span>, <span class="fn">newFVarId</span> := <span class="fn">default</span> }</span> }</span></span></li></ul></details></div></div><div class="decl" id="Lean.Meta.Closure.Context"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Closure.lean#L104-L105">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>

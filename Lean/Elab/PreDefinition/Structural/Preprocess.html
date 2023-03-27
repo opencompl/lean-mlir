@@ -7,10 +7,7 @@
 <span class="fn">(recFnName : <a href="../../../.././Init/Prelude.html#Lean.Name">Lean.Name</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../../../.././Lean/CoreM.html#Lean.Core.CoreM">Lean.CoreM</a> <a href="../../../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span></div></div><p>Beta reduce terms where the recursive function occurs in the lambda term.
 This is useful to improve the effectiveness of <code>elimRecursion</code>.
-Example:</p><pre><code>def f : Nat → Nat
-  | 0 => 1
-  | i+1 => (fun x => f x) i
-→ Nat
+Example:</p><pre><code>def f : <a href="../../../.././Init/Prelude.html#Nat">Nat</a> → <a href="../../../.././Init/Prelude.html#Nat">Nat</a>
   | 0 => 1
   | i+1 => (fun x => f x) i
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div></main>

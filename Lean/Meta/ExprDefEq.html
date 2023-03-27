@@ -15,7 +15,7 @@
 <span class="fn">(s : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args">
 <span class="fn">(t : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../.././Lean/Data/LBool.html#Lean.LBool">Lean.LBool</a></span></div></div><p>Support for constraints of the form <code>("..." =?= String.mk cs)</code></p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.isEtaUnassignedMVar"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/ExprDefEq.lean#L127-L136">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../.././Lean/Data/LBool.html#Lean.LBool">Lean.LBool</a></span></div></div><p>Support for constraints of the form <code>("..." =?= <a href="../.././Init/Prelude.html#String.mk">String.mk</a> cs)</code></p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.isEtaUnassignedMVar"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/ExprDefEq.lean#L127-L136">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Meta/ExprDefEq.html#Lean.Meta.isEtaUnassignedMVar"><span class="name">Lean</span>.<span class="name">Meta</span>.<span class="name">isEtaUnassignedMVar</span></a></span><span class="decl_args">
 <span class="fn">(e : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> <a href="../.././Init/Prelude.html#Bool">Bool</a></span></div></div><p>Return <code>true</code> if <code>e</code> is of the form <code>fun (x_1 ... x_n) => ?m x_1 ... x_n)</code>, and <code>?m</code> is unassigned.
@@ -29,32 +29,12 @@ that depend on them. They should be processed after the implict ones.
 <code>postponedHO</code> is used to handle applications involving functions that
 contain higher order output parameters. Example:</p><pre><code class="language-lean">getElem :
   {cont : Type u_1} → {idx : Type u_2} → {elem : Type u_3} →
-  {dom : cont → idx → Prop} → [self : GetElem cont idx elem dom] →
+  {dom : cont → idx → Prop} → [self : <a href="../.././Init/Prelude.html#GetElem">GetElem</a> cont idx elem dom] →
   (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ {idx : Type u_2} → {elem : Type u_3} →
-  {dom : cont → idx → Prop} → [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ {elem : Type u_3} →
-  {dom : cont → idx → Prop} → [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→
-  {dom : cont → idx → Prop} → [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ idx → Prop} → [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ Prop} → [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ [self : GetElem cont idx elem dom] →
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→
-  (xs : cont) → (i : idx) → (h : dom xs i) → elem
-→ (i : idx) → (h : dom xs i) → elem
-→ (h : dom xs i) → elem
-→ elem
 </code></pre><p>The argumengs <code>dom</code> and <code>h</code> must be processed after all implicit arguments
 otherwise higher-order unification problems are generated. See issue #1299,
 when trying to solve</p><pre><code>getElem ?a ?i ?h =?= getElem a i (Fin.val_lt_of_le i ...)
-</code></pre><p>we have to solve the constraint</p><pre><code>?dom a i.val =?= LT.lt i.val (Array.size a)
+</code></pre><p>we have to solve the constraint</p><pre><code>?dom a i.val =?= <a href="../.././Init/Prelude.html#LT.lt">LT.lt</a> i.val (Array.size a)
 </code></pre><p>by solving after the instance has been synthesized, we reduce this constraint to
 a simple check.</p></div>ok: <span class="fn"><span class="fn"><a href="../.././Init/Prelude.html#Array">Array</a> <a href="../.././Init/Prelude.html#Nat">Nat</a></span> → <span class="fn"><a href="../.././Init/Prelude.html#Array">Array</a> <a href="../.././Init/Prelude.html#Nat">Nat</a></span> → <a href="../.././Lean/Meta/ExprDefEq.html#Lean.Meta.DefEqArgsFirstPassResult">Lean.Meta.DefEqArgsFirstPassResult</a></span></li></ul><p>Result type for <code>isDefEqArgsFirstPass</code>.</p><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.Meta.DefEqArgsFirstPassResult" class="instances-for-list"></ul></details></div></div><div class="decl" id="Lean.Meta.isDefEqBindingDomain"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/ExprDefEq.lean#L277-L292">source</a></div><div class="attributes">@[specialize #[]]</div>
 <div class="decl_header"><span class="decl_kind">def</span>
@@ -91,10 +71,10 @@ We also use <code>?m@C</code> as a shorthand for <code>C |- ?m : t</code> where 
 4) For every metavariable `?m'@C'` occurring in `t`, `C'` is a subprefix of `C`
 5) `?m` does not occur in `t`
 ​ let-variables.
-2) `a₁ ... aₙ` are not in `C`
+2) `a₁ ... aₙ` are <a href="../.././Init/Prelude.html#not">not</a> in `C`
 3) `t` only contains free variables in `C` and/or `{a₁, ..., aₙ}`
 4) For every metavariable `?m'@C'` occurring in `t`, `C'` is a subprefix of `C`
-5) `?m` does not occur in `t`
+5) `?m` does <a href="../.././Init/Prelude.html#not">not</a> occur in `t`
 </code></pre><p>Claim: we don't have to check free variable declarations. That is,
 if <code>t</code> contains a reference to <code>x : A := v</code>, we don't need to check <code>v</code>.
 Reason: The reference to <code>x</code> is a free variable, and it must be in <code>C</code> (by 1 and 3).
@@ -144,16 +124,16 @@ then we use first-order unification (if <code>config.foApprox</code> is set to t
 </code></pre><p>A7) When <code>foApprox</code>, we may use another approximation (<code>constApprox</code>) for solving constraints of the form
 <code>?m s₁ ... sₙ =?= t</code>
 where <code>s₁ ... sₙ</code> are arbitrary terms. We solve them by assigning the constant function to <code>?m</code>.
-<code>?m := fun _ ... _ => t</code></p><pre><code> In general, this approximation may produce bad solutions, and may prevent coercions from being tried.
- For example, consider the term `pure (x > 0)` with inferred type `?m Prop` and expected type `IO Bool`.
+<code>?m := fun _ ... _ => t</code></p><pre><code> In general, this approximation may produce bad solutions, <a href="../.././Init/Prelude.html#and">and</a> may prevent coercions from being tried.
+ For example, consider the term `pure (x > 0)` with inferred type `?m Prop` <a href="../.././Init/Prelude.html#and">and</a> expected type `IO Bool`.
  In this situation, the
  elaborator generates the unification constraint
  ```
- ?m Prop =?= IO Bool
+ ?m Prop =?= <a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#Bool">Bool</a>
  ```
- It is not a higher-order pattern, nor first-order approximation is applicable. However, constant approximation
- produces the bogus solution `?m := fun _ => IO Bool`, and prevents the system from using the coercion from
- the decidable proposition `x > 0` to `<a href="../.././Init/Prelude.html#Bool">Bool</a>`.
+ It is <a href="../.././Init/Prelude.html#not">not</a> a higher-order pattern, nor first-order approximation is applicable. However, constant approximation
+ produces the bogus solution `?m := fun _ => <a href="../.././Init/System/IO.html#IO">IO</a> Bool`, <a href="../.././Init/Prelude.html#and">and</a> prevents the system from using the coercion from
+ the decidable proposition `x > 0` to `Bool`.
 
  On the other hand, the constant approximation is desirable for elaborating the term
  ```
@@ -162,20 +142,20 @@ where <code>s₁ ... sₙ</code> are arbitrary terms. We solve them by assigning
  with expected type `IO String`.
  In this example, the following unification contraint is generated.
  ```
- ?m () String =?= IO String
+ ?m () <a href="../.././Init/Prelude.html#String">String</a> =?= <a href="../.././Init/System/IO.html#IO">IO</a> <a href="../.././Init/Prelude.html#String">String</a>
  ```
- It is not a higher-order pattern, first-order approximation reduces it to
+ It is <a href="../.././Init/Prelude.html#not">not</a> a higher-order pattern, first-order approximation reduces it to
  ```
- ?m () =?= IO
+ ?m () =?= <a href="../.././Init/System/IO.html#IO">IO</a>
  ```
  which fails to be solved. However, constant approximation solves it by assigning
  ```
- ?m := fun _ => IO
+ ?m := fun _ => <a href="../.././Init/System/IO.html#IO">IO</a>
  ```
  Note that `f`s type is `(x : ?α) -> ?m x String`. The metavariable `?m` may depend on `x`.
  If `constApprox` is set to true, we use constant approximation. Otherwise, we use a heuristic to decide
- whether we should apply it or not. The heuristic is based on observing where the constraints above come from.
- In the first example, the constraint `?m Prop =?= IO Bool` come from polymorphic method where `?m` is expected to
+ whether we should apply it <a href="../.././Init/Prelude.html#or">or</a> not. The heuristic is based on <a href="../.././Init/Control/Except.html#observing">observing</a> where the constraints above come from.
+ In the first example, the constraint `?m Prop =?= <a href="../.././Init/System/IO.html#IO">IO</a> Bool` come from polymorphic method where `?m` is expected to
  be a **function** of type `Type -> Type`. In the second example, the first argument of `?m` is used to model
  a **potential** dependency on `x`. By using constant approximation here, we are just saying the type of `f`
  does **not** depend on `x`. We claim this is a reasonable approximation in practice. Moreover, it is expected
@@ -288,7 +268,7 @@ an assigning <code>?m := fun _ ... _ => ?n</code></p></div></div><div class="dec
 <span class="decl_args">
 <span class="fn">(v : <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Meta/Basic.html#Lean.Meta.MetaM">Lean.MetaM</a> (<span class="fn"><a href="../.././Init/Prelude.html#Option">Option</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span>)</span></div></div><p>Auxiliary function for handling constraints of the form <code>?m a₁ ... aₙ =?= v</code>.
-It will check whether we can perform the assignment</p><pre><code>?m := fun fvars => v
+It will check whether we can perform the assignment</p><pre><code>?m := fun <a href="../.././Lean/Meta/ExprDefEq.html#Lean.Meta.CheckAssignment.Context.fvars">fvars</a> => v
 </code></pre><p>The result is <code>none</code> if the assignment can't be performed.
 The result is <code>some newV</code> where <code>newV</code> is a possibly updated <code>v</code>. This method may need
 to unfold let-declarations.</p><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Meta.whenUndefDo"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/ExprDefEq.lean#L1619-L1624">source</a></div><div class="attributes">@[inline]</div>

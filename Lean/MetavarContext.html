@@ -6,12 +6,12 @@ assignments. It is used in the elaborator, tactic framework, unifier
 the requirements imposed by these modules.</p><ul>
 <li>We may invoke TC while executing <code>isDefEq</code>. We need this feature to
 be able to solve unification problems such as:</li>
-</ul><pre><code>f ?a (ringAdd ?s) ?x ?y =?= f Int intAdd n m
+</ul><pre><code>f ?a (ringAdd ?s) ?x ?y =?= f <a href=".././Init/Data/Int/Basic.html#Int">Int</a> intAdd n m
 </code></pre><p>where <code>(?a : Type) (?s : Ring ?a) (?x ?y : ?a)</code>
 During <code>isDefEq</code> (i.e., unification), it will need to solve the constrain</p><pre><code>ringAdd ?s =?= intAdd
 </code></pre><p>We say <code>ringAdd ?s</code> is stuck because it cannot be reduced until we
 synthesize the term <code>?s : Ring ?a</code> using TC. This can be done since we
-have assigned <code>?a := Int</code> when solving <code>?a =?= Int</code>.</p><ul>
+have assigned <code>?a := <a href=".././Init/Data/Int/Basic.html#Int">Int</a></code> when solving <code>?a =?= <a href=".././Init/Data/Int/Basic.html#Int">Int</a></code>.</p><ul>
 <li>
 <p>TC uses <code>isDefEq</code>, and <code>isDefEq</code> may create TC problems as shown
 above. Thus, we may have nested TC problems.</p>
@@ -24,9 +24,9 @@ context for outer TC.</p>
 <li>
 <p>TC should not assign metavariables created by the elaborator, simp,
 tactic framework, and outer TC problems. Reason: TC commits to the
-first solution it finds. Consider the TC problem <code>Coe Nat ?x</code>,
+first solution it finds. Consider the TC problem <code><a href=".././Init/Coe.html#Coe">Coe</a> <a href=".././Init/Prelude.html#Nat">Nat</a> ?x</code>,
 where <code>?x</code> is a metavariable created by the caller. There are many
-solutions to this problem (e.g., <code>?x := Int</code>, <code>?x := Real</code>, ...),
+solutions to this problem (e.g., <code>?x := <a href=".././Init/Data/Int/Basic.html#Int">Int</a></code>, <code>?x := Real</code>, ...),
 and it doesn’t make sense to commit to the first one since TC does
 not know the constraints the caller may impose on <code>?x</code> after the
 TC problem is solved.
@@ -57,9 +57,9 @@ trigger an arbitrary number of nested TC problems.</p>
 <li>
 <p>Here are some possible call stack traces we could have in Lean3 (and Lean4).</p>
 </li>
-</ul><pre><code>Elaborator (-> TC -> isDefEq)+
-Elaborator -> isDefEq (-> TC -> isDefEq)*
-Elaborator -> simp -> isDefEq (-> TC -> isDefEq)*
+</ul><pre><code>Elaborator (-> <a href=".././Init/Core.html#TC">TC</a> -> isDefEq)+
+Elaborator -> isDefEq (-> <a href=".././Init/Core.html#TC">TC</a> -> isDefEq)*
+Elaborator -> simp -> isDefEq (-> <a href=".././Init/Core.html#TC">TC</a> -> isDefEq)*
 </code></pre><p>In Lean4, TC may also invoke tactics in the future.</p><ul>
 <li>
 <p>In Lean3 and Lean4, TC metavariables are not really short-lived. We
@@ -85,7 +85,7 @@ whether they have been assigned by <code>isDefEq</code>, and then still synthesi
 them, and check whether the synthesized result is compatible with the one
 assigned by <code>isDefEq</code>.</p>
 <p>c) SyntheticOpaque metavariables are never assigned by <code>isDefEq</code>.
-That is, the constraint <code>?n =?= Nat.succ Nat.zero</code> always fail
+That is, the constraint <code>?n =?= <a href=".././Init/Prelude.html#Nat.succ">Nat.succ</a> <a href=".././Init/Prelude.html#Nat.zero">Nat.zero</a></code> always fail
 if <code>?n</code> is a syntheticOpaque metavariable. This kind of metavariable
 is created by tactics such as <code>intro</code>. Reason: in the tactic framework,
 subgoals as represented as metavariables, and a subgoal <code>?n</code> is considered
@@ -129,17 +129,17 @@ abstracting a let-decl free variable <code>x</code>, and the local context of
 </li>
 </ul><pre><code>let x : T := v; t[?m]
 </code></pre><p>will be ill-formed if we later assign a term <code>s</code> to <code>?m</code>, and
-<code>s</code> contains free variable <code>x</code>. Again, assume the type of <code>?m</code> is <code>A[x]</code>.</p><pre><code>1- If `?m` is natural or synthetic, then we create `?n : (let x : T := v; A[x])` with
-and local context := local context of `?m` - `x`, we assign `?m := ?n`,
-and produce the term `let x : T := v; t[?n]`. That is, we are just making
+<code>s</code> contains free variable <code>x</code>. Again, assume the type of <code>?m</code> is <code>A[x]</code>.</p><pre><code>1- If `?m` is <a href=".././Lean/MetavarContext.html#Lean.MetavarKind.natural">natural</a> <a href=".././Init/Prelude.html#or">or</a> synthetic, then we create `?n : (let x : T := v; A[x])` with
+<a href=".././Init/Prelude.html#and">and</a> local context := local context of `?m` - `x`, we <a href=".././Lean/MetavarContext.html#Lean.MVarId.assign">assign</a> `?m := ?n`,
+<a href=".././Init/Prelude.html#and">and</a> produce the term `let x : T := v; t[?n]`. That is, we are just making
 sure `?n` must never be assigned to a term containing `x`.
 
-2- If `?m` is syntheticOpaque, we create a fresh syntheticOpaque `?n`
-with type `?n : T -> (let x : T := v; A[x])` and local context := local context of `?m` - `x`,
-create the delayed assignment `?n #[x] := ?m`, and produce the term `let x : T := v; t[?n x]`.
-Now suppose we assign `s` to `?m`. We do not assign the term `fun (x : T) => s` to `?n`, since
-`fun (x : T) => s` may not even be type correct. Instead, we just replace applications `?n r`
-with `s[x/r]`. The term `r` may not necessarily be a bound variable. For example, a tactic
+2- If `?m` is syntheticOpaque, we create a fresh <a href=".././Lean/MetavarContext.html#Lean.MetavarKind.syntheticOpaque">syntheticOpaque</a> `?n`
+with <a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.type">type</a> `?n : T -> (let x : T := v; A[x])` <a href=".././Init/Prelude.html#and">and</a> local context := local context of `?m` - `x`,
+create the delayed assignment `?n #[x] := ?m`, <a href=".././Init/Prelude.html#and">and</a> produce the term `let x : T := v; t[?n x]`.
+Now suppose we <a href=".././Lean/MetavarContext.html#Lean.MVarId.assign">assign</a> `s` to `?m`. We do <a href=".././Init/Prelude.html#not">not</a> <a href=".././Lean/MetavarContext.html#Lean.MVarId.assign">assign</a> the term `fun (x : T) => s` to `?n`, since
+`fun (x : T) => s` may <a href=".././Init/Prelude.html#not">not</a> even be <a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.type">type</a> correct. Instead, we just replace applications `?n r`
+with `s[x/r]`. The term `r` may <a href=".././Init/Prelude.html#not">not</a> necessarily be a bound variable. For example, a tactic
 may have reduced `let x : T := v; t[?n x]` into `t[?n v]`.
 We are essentially using the pair "delayed assignment + application" to implement a delayed
 substitution.
@@ -147,8 +147,8 @@ substitution.
 <li>We use TC for implementing coercions. Both Joe Hendrix and Reid Barton
 reported a nasty limitation. In Lean3, TC will not be used if there are
 metavariables in the TC problem. For example, the elaborator will not try
-to synthesize <code>Coe Nat ?x</code>. This is good, but this constraint is too
-strict for problems such as <code>Coe (Vector Bool ?n) (BV ?n)</code>. The coercion
+to synthesize <code><a href=".././Init/Coe.html#Coe">Coe</a> <a href=".././Init/Prelude.html#Nat">Nat</a> ?x</code>. This is good, but this constraint is too
+strict for problems such as <code><a href=".././Init/Coe.html#Coe">Coe</a> (Vector <a href=".././Init/Prelude.html#Bool">Bool</a> ?n) (BV ?n)</code>. The coercion
 exists independently of <code>?n</code>. Thus, during TC, we want <code>isDefEq</code> to throw
 an exception instead of return <code>false</code> whenever it tries to assign
 a metavariable owned by its caller. The idea is to sign to the caller that
@@ -170,7 +170,7 @@ trying to invoke TC again.</li>
 Example: Elaborator (depth = 0) -> Simplifier matcher (depth = 1) -> TC (level = 2) -> TC (level = 3) -> ...</p>
 </li>
 <li>
-<p>When <code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext">MetavarContext</a></code> is at depth N, <code>isDefEq</code> does not assign variables from <code>depth < N</code>.</p>
+<p>When <code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext">MetavarContext</a></code> is at depth N, <code>isDefEq</code> does not assign variables from <code><a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.depth">depth</a> < N</code>.</p>
 </li>
 <li>
 <p>Metavariables from depth N+1 must be fully assigned before we return to level N.</p>
@@ -239,10 +239,10 @@ problems. The depth keeps track of this information and ensures
 that unification subproblems cannot leak information out, by unifying
 based on depth.</p></div><div class="structure_field_info">depth : <a href=".././Init/Prelude.html#Nat">Nat</a></div></li><li id="Lean.MetavarDecl.localInstances" class="structure_field"><div class="structure_field_info">localInstances : <a href=".././Lean/MetavarContext.html#Lean.LocalInstances">Lean.LocalInstances</a></div></li><li id="Lean.MetavarDecl.kind" class="structure_field"><div class="structure_field_info">kind : <a href=".././Lean/MetavarContext.html#Lean.MetavarKind">Lean.MetavarKind</a></div></li><li id="Lean.MetavarDecl.numScopeArgs" class="structure_field"><div class="structure_field_doc"><p>See comment at <code>CheckAssignment</code> <code>Meta/ExprDefEq.lean</code></p></div><div class="structure_field_info">numScopeArgs : <a href=".././Init/Prelude.html#Nat">Nat</a></div></li><li id="Lean.MetavarDecl.index" class="structure_field"><div class="structure_field_doc"><p>We use this field to track how old a metavariable is. It is set using a counter at <code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext">MetavarContext</a></code></p></div><div class="structure_field_info">index : <a href=".././Init/Prelude.html#Nat">Nat</a></div></li></ul><p>Information about a metavariable.</p><details class="instances"><summary>Instances For</summary><ul id="instances-for-list-Lean.MetavarDecl" class="instances-for-list"></ul></details></div></div><div class="decl" id="Lean.instInhabitedMetavarDecl"><div class="instance"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/MetavarContext.lean#L284-L284">source</a></div><div class="decl_header"><span class="decl_kind">instance</span>
 <span class="decl_name"><a class="break_within" href=".././Lean/MetavarContext.html#Lean.instInhabitedMetavarDecl"><span class="name">Lean</span>.<span class="name">instInhabitedMetavarDecl</span></a></span><span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href=".././Init/Prelude.html#Inhabited">Inhabited</a> <a href=".././Lean/MetavarContext.html#Lean.MetavarDecl">Lean.MetavarDecl</a></span></div></div><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.DelayedMetavarAssignment"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/MetavarContext.lean#L300-L302">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>
-<span class="decl_name"><a class="break_within" href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment"><span class="name">Lean</span>.<span class="name">DelayedMetavarAssignment</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href=".././foundational_types.html">Type</a></div></div><ul class="structure_fields" id="Lean.DelayedMetavarAssignment.mk"><li id="Lean.DelayedMetavarAssignment.fvars" class="structure_field"><div class="structure_field_info">fvars : <span class="fn"><a href=".././Init/Prelude.html#Array">Array</a> <a href=".././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span></div></li><li id="Lean.DelayedMetavarAssignment.mvarIdPending" class="structure_field"><div class="structure_field_info">mvarIdPending : <a href=".././Lean/Expr.html#Lean.MVarId">Lean.MVarId</a></div></li></ul><p>A delayed assignment for a metavariable <code>?m</code>. It represents an assignment of the form <code>?m := (fun fvars => (mkMVar mvarIdPending))</code>.
+<span class="decl_name"><a class="break_within" href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment"><span class="name">Lean</span>.<span class="name">DelayedMetavarAssignment</span></a></span><span class="decl_args"> :</span><div class="decl_type"><a href=".././foundational_types.html">Type</a></div></div><ul class="structure_fields" id="Lean.DelayedMetavarAssignment.mk"><li id="Lean.DelayedMetavarAssignment.fvars" class="structure_field"><div class="structure_field_info">fvars : <span class="fn"><a href=".././Init/Prelude.html#Array">Array</a> <a href=".././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span></div></li><li id="Lean.DelayedMetavarAssignment.mvarIdPending" class="structure_field"><div class="structure_field_info">mvarIdPending : <a href=".././Lean/Expr.html#Lean.MVarId">Lean.MVarId</a></div></li></ul><p>A delayed assignment for a metavariable <code>?m</code>. It represents an assignment of the form <code>?m := (fun <a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.fvars">fvars</a> => (mkMVar mvarIdPending))</code>.
 <code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.mvarIdPending">mvarIdPending</a></code> is a <code><a href=".././Lean/MetavarContext.html#Lean.MetavarKind.syntheticOpaque">syntheticOpaque</a></code> metavariable that has not been synthesized yet. The delayed assignment becomes a real one
 as soon as <code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.mvarIdPending">mvarIdPending</a></code> has been fully synthesized.
-<code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.fvars">fvars</a></code> are variables in the <code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.mvarIdPending">mvarIdPending</a></code> local context.</p><p>See the comment below <code>assignDelayedMVar </code> for the rationale of delayed assignments.</p><p>Recall that we use a locally nameless approach when dealing with binders. Suppose we are
+<code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.fvars">fvars</a></code> are variables in the <code><a href=".././Lean/MetavarContext.html#Lean.DelayedMetavarAssignment.mvarIdPending">mvarIdPending</a></code> local context.</p><p>See the comment below <code><a href=".././Lean/MetavarContext.html#Lean.assignDelayedMVar">assignDelayedMVar</a> </code> for the rationale of delayed assignments.</p><p>Recall that we use a locally nameless approach when dealing with binders. Suppose we are
 trying to synthesize <code>?n</code> in the expression <code>e</code>, in the context of <code>(fun x => e)</code>.
 The metavariable <code>?n</code> might depend on the bound variable <code>x</code>. However, since we are locally nameless,
 the bound variable <code>x</code> is in fact represented by some free variable <code>fvar_x</code>. Thus, when we exit
@@ -319,8 +319,8 @@ For more information about delayed abstraction, see the docstring for <code><a h
 <span class="fn">(mvarId : <a href=".././Lean/Expr.html#Lean.MVarId">Lean.MVarId</a>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><span class="fn">m</span> <a href=".././Lean/Expr.html#Lean.MVarId">Lean.MVarId</a></span></div></div><p>Given a sequence of delayed assignments</p><pre><code>mvarId₁ := mvarId₂ ...;
 ...
-mvarIdₙ := mvarId_root ...  -- where `mvarId_root` is not delayed assigned
-</code></pre><p>in <code><a href=".././Lean/MetavarContext.html#Lean.DependsOn.State.mctx">mctx</a></code>, <code>getDelayedRoot mctx mvarId₁</code> return <code>mvarId_root</code>.
+mvarIdₙ := mvarId_root ...  -- where `mvarId_root` is <a href=".././Init/Prelude.html#not">not</a> delayed assigned
+</code></pre><p>in <code><a href=".././Lean/MetavarContext.html#Lean.DependsOn.State.mctx">mctx</a></code>, <code>getDelayedRoot <a href=".././Lean/MetavarContext.html#Lean.DependsOn.State.mctx">mctx</a> mvarId₁</code> return <code>mvarId_root</code>.
 If <code>mvarId₁</code> is not delayed assigned then return <code>mvarId₁</code></p></div></div><div class="decl" id="Lean.isLevelMVarAssigned"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/MetavarContext.lean#L368-L369">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href=".././Lean/MetavarContext.html#Lean.isLevelMVarAssigned"><span class="name">Lean</span>.<span class="name">isLevelMVarAssigned</span></a></span><span class="impl_arg"><span class="decl_args">
 <span class="fn">{m : <span class="fn"><a href=".././foundational_types.html">Type</a> → <a href=".././foundational_types.html">Type</a></span>}</span></span>
@@ -484,11 +484,11 @@ We try avoid synthetic terms such as <code>((fun x y => t) a b)</code> in the ou
 This kind of term may be generated when instantiating metavariable assignments.
 This module tries to avoid their generation because they often introduce unnecessary dependencies and
 may affect automation.</p><p>When elaborating terms, we use metavariables to represent "holes". Each hole has a context which includes
-all free variables that may be used to "fill" the hole. Suppose, we create a metavariable (hole) <code>?m : Nat</code> in a context
+all free variables that may be used to "fill" the hole. Suppose, we create a metavariable (hole) <code>?m : <a href=".././Init/Prelude.html#Nat">Nat</a></code> in a context
 containing <code>(x : Nat) (y : Nat) (b : Bool)</code>, then we can assign terms such as <code>x + y</code> to <code>?m</code> since <code>x</code> and <code>y</code>
 are in the context used to create <code>?m</code>. Now, suppose we have the term <code>?m + 1</code> and we want to create the lambda expression
 <code>fun x => ?m + 1</code>. This term is not correct since we may assign to <code>?m</code> a term containing <code>x</code>.
-We address this issue by create a synthetic metavariable <code>?n : Nat → Nat→ Nat</code> and adding the delayed assignment
+We address this issue by create a synthetic metavariable <code>?n : <a href=".././Init/Prelude.html#Nat">Nat</a> → <a href=".././Init/Prelude.html#Nat">Nat</a></code> and adding the delayed assignment
 <code>?n #[x] := ?m</code>, and the term <code>fun x => ?n x + 1</code>. When we later assign a term <code>t[x]</code> to <code>?m</code>, <code>fun x => t[x]</code> is assigned to
 <code>?n</code>, and if we substitute it at <code>fun x => ?n x + 1</code>, we produce <code>fun x => ((fun x => t[x]) x) + 1</code>.
 To avoid this term eta-expanded term, we apply beta-reduction when instantiating metavariable assignments in this module.
@@ -829,14 +829,14 @@ recursive definitions. The <code><a href=".././Lean/MetavarContext.html#Lean.Met
 introduced in Lean3 to address issue https://github.com/leanprover/lean/issues/1258.
 In Lean4, this solution is not satisfactory because all definitions/theorems are potentially
 recursive. So, even a simple (incomplete) definition such as</p><pre><code>variables {α : Type} in
-def f (a : α) : List α :=
+def f (a : α) : <a href=".././Init/Prelude.html#List">List</a> α :=
 _
 </code></pre><p>would trigger the <code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext.MkBinding.Exception.revertFailure">Exception.revertFailure</a></code> exception. In the definition above,
-the elaborator creates the auxiliary definition <code>f : {α : Type} → List α→ List α</code>.
-The <code>_</code> is elaborated as a new fresh variable <code>?m</code> that contains <code>α : Type</code>, <code>a : α</code>, and <code>f : α → List α→ List α</code> in its context,
+the elaborator creates the auxiliary definition <code>f : {α : Type} → <a href=".././Init/Prelude.html#List">List</a> α</code>.
+The <code>_</code> is elaborated as a new fresh variable <code>?m</code> that contains <code>α : Type</code>, <code>a : α</code>, and <code>f : α → <a href=".././Init/Prelude.html#List">List</a> α</code> in its context,
 When we try to create the lambda <code>fun {α : Type} (a : α) => ?m</code>, we first need to create
 an auxiliary <code>?n</code> which does not contain <code>α</code> and <code>a</code> in its context. That is,
-we create the metavariable <code>?n : {α : Type} → (a : α) → (f : α → List α) → List α→ (a : α) → (f : α → List α) → List α→ (f : α → List α) → List α→ List α) → List α→ List α</code>,
+we create the metavariable <code>?n : {α : Type} → (a : α) → (f : α → <a href=".././Init/Prelude.html#List">List</a> α) → <a href=".././Init/Prelude.html#List">List</a> α</code>,
 add the delayed assignment <code>?n #[α, a, f] := ?m</code>, and create the lambda
 <code>fun {α : Type} (a : α) => ?n α a f</code>.
 See <code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext.MkBinding.elimMVarDeps">elimMVarDeps</a></code> for more information.
@@ -972,7 +972,7 @@ If <code>usedLetOnly == true</code> then <code>let</code> expressions are create
 <span class="fn">[inst : <span class="fn"><a href=".././Lean/MetavarContext.html#Lean.MonadMCtx">Lean.MonadMCtx</a> <span class="fn">m</span></span>]</span></span>
 </span><span class="decl_args">
 <span class="fn">(lctx : <a href=".././Lean/LocalContext.html#Lean.LocalContext">Lean.LocalContext</a>)</span></span>
-<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href=".././Lean/Expr.html#Lean.Expr">Lean.Expr</a> → <span class="fn"><span class="fn">m</span> <a href=".././Init/Prelude.html#Bool">Bool</a></span></span></div></div><p><code>isWellFormed lctx e</code> returns true iff</p><ul>
+<span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href=".././Lean/Expr.html#Lean.Expr">Lean.Expr</a> → <span class="fn"><span class="fn">m</span> <a href=".././Init/Prelude.html#Bool">Bool</a></span></span></div></div><p><code><a href=".././Lean/MetavarContext.html#Lean.MetavarContext.isWellFormed">isWellFormed</a> <a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.lctx">lctx</a> e</code> returns true iff</p><ul>
 <li>All locals in <code>e</code> are declared in <code><a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.lctx">lctx</a></code></li>
 <li>All metavariables <code>?m</code> in <code>e</code> have a local context which is a subprefix of <code><a href=".././Lean/MetavarContext.html#Lean.MetavarDecl.lctx">lctx</a></code> or are assigned, and the assignment is well-formed.</li>
 </ul></div></div><div class="decl" id="Lean.MetavarContext.LevelMVarToParam.Context"><div class="structure"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/MetavarContext.lean#L1267-L1270">source</a></div><div class="decl_header"><span class="decl_kind">structure</span>

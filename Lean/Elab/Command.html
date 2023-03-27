@@ -150,30 +150,15 @@ macro expansion etc.</p><details><summary>Equations</summary><ul class="equation
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.CommandElabM">Lean.Elab.Command.CommandElabM</a> <span class="fn">α</span></span></div></div><p>Lift the <code>TermElabM</code> monadic action <code>x</code> into a <code><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.CommandElabM">CommandElabM</a></code> monadic action.</p><p>Note that <code>x</code> is executed with an empty message log. Thus, <code>x</code> cannot modify/view messages produced by
 previous commands.</p><p>If you need to access the free variables corresponding to the ones declared using the <code>variable</code> command,
 consider using <code><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.runTermElabM">runTermElabM</a></code>.</p><p>Recall that <code>TermElabM</code> actions can automatically lift <code>MetaM</code> and <code>CoreM</code> actions.
-Example:</p><pre><code>import Lean
+Example:</p><pre><code>import <a href="../.././Lean.html">Lean</a>
 
-open Lean Elab Command Meta
+open <a href="../.././Lean.html">Lean</a> Elab Command Meta
 
-def printExpr (e : Expr) : MetaM Unit := do
-  IO.println s!"{← ppExpr e} : {← ppExpr (← inferType e)}"
-
-#eval
-  liftTermElabM do
-    printExpr (mkConst ``Nat)
-← ppExpr e} : {← ppExpr (← inferType e)}"
+def printExpr (e : Expr) : MetaM <a href="../.././Init/Prelude.html#Unit">Unit</a> := do
+  <a href="../.././Init/System/IO.html#IO.println">IO.println</a> s!"{← ppExpr e} : {← ppExpr (← inferType e)}"
 
 #eval
-  liftTermElabM do
-    printExpr (mkConst ``Nat)
-← ppExpr (← inferType e)}"
-
-#eval
-  liftTermElabM do
-    printExpr (mkConst ``Nat)
-← inferType e)}"
-
-#eval
-  liftTermElabM do
+  <a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.liftTermElabM">liftTermElabM</a> do
     printExpr (mkConst ``Nat)
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Command.runTermElabM"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Command.lean#L433-L450">source</a></div><div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Command.html#Lean.Elab.Command.runTermElabM"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Command</span>.<span class="name">runTermElabM</span></a></span><span class="impl_arg"><span class="decl_args">
@@ -182,27 +167,17 @@ def printExpr (e : Expr) : MetaM Unit := do
 <span class="fn">(elabFn : <span class="fn"><span class="fn"><a href="../.././Init/Prelude.html#Array">Array</a> <a href="../.././Lean/Expr.html#Lean.Expr">Lean.Expr</a></span> → <span class="fn"><a href="../.././Lean/Elab/Term.html#Lean.Elab.Term.TermElabM">Lean.Elab.TermElabM</a> <span class="fn">α</span></span></span>)</span></span>
 <span class="decl_args"> :</span><div class="decl_type"><span class="fn"><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.CommandElabM">Lean.Elab.Command.CommandElabM</a> <span class="fn">α</span></span></div></div><p>Execute the monadic action <code>elabFn xs</code> as a <code><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.CommandElabM">CommandElabM</a></code> monadic action, where <code>xs</code> are free variables
 corresponding to all active scoped variables declared using the <code>variable</code> command.</p><p>This method is similar to <code><a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.liftTermElabM">liftTermElabM</a></code>, but it elaborates all scoped variables declared using the <code>variable</code>
-command.</p><p>Example:</p><pre><code>import Lean
+command.</p><p>Example:</p><pre><code>import <a href="../.././Lean.html">Lean</a>
 
-open Lean Elab Command Meta
+open <a href="../.././Lean.html">Lean</a> Elab Command Meta
 
 variable {α : Type u} {f : α → α}
 variable (n : Nat)
 
 #eval
-  runTermElabM fun xs => do
+  <a href="../.././Lean/Elab/Command.html#Lean.Elab.Command.runTermElabM">runTermElabM</a> fun xs => do
     for x in xs do
-      IO.println s!"{← ppExpr x} : {← ppExpr (← inferType x)}"
-→ α}
-variable (n : Nat)
-
-#eval
-  runTermElabM fun xs => do
-    for x in xs do
-      IO.println s!"{← ppExpr x} : {← ppExpr (← inferType x)}"
-← ppExpr x} : {← ppExpr (← inferType x)}"
-← ppExpr (← inferType x)}"
-← inferType x)}"
+      <a href="../.././Init/System/IO.html#IO.println">IO.println</a> s!"{← ppExpr x} : {← ppExpr (← inferType x)}"
 </code></pre><details><summary>Equations</summary><ul class="equations"><li class="equation">One or more equations did not get rendered due to their size.</li></ul></details></div></div><div class="decl" id="Lean.Elab.Command.catchExceptions"><div class="def"><div class="gh_link"><a href="https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Elab/Command.lean#L452-L453">source</a></div><div class="attributes">@[inline]</div>
 <div class="decl_header"><span class="decl_kind">def</span>
 <span class="decl_name"><a class="break_within" href="../.././Lean/Elab/Command.html#Lean.Elab.Command.catchExceptions"><span class="name">Lean</span>.<span class="name">Elab</span>.<span class="name">Command</span>.<span class="name">catchExceptions</span></a></span><span class="decl_args">
