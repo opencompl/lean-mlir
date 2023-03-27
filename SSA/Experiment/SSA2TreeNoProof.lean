@@ -253,6 +253,8 @@ def x_add_4_times_mul_val_eq (env: Env):
     -- see that there are environments, which are folded away when calling
     -- CTree.eval.
     simp[CTree.eval];
+    generalize (env VarName.x0) = x
+    clear env
     -- ⊢ env VarName.x0 + env VarName.x0 + (env VarName.x0 + env VarName.x0) =
     --    4 * env VarName.x0
     -- Ideally, we have proof automation that relabels (env _) into a new

@@ -7,6 +7,7 @@ import Mathlib.Data.Quot
 import Std.Data.Int.Basic
 import SSA.Experiment.SSA2TreeNoProof
 import SSA.Experiment.SSARgn2TreeNoProof
+import SSA.Experiment.SSARgnVar2TreeNoProof
 
 open Std
 
@@ -283,18 +284,18 @@ def NamedVal.var (nv: NamedVal): Var :=
 abbrev Env := (v: Var) → v.kind.eval
 
 
-instance : Inhabited ((k: Kind) → Kind.eval k) where 
-  default := 
-    let rec go := fun k => 
-      match k with 
-      | .unit => () 
+instance : Inhabited ((k: Kind) → Kind.eval k) where
+  default :=
+    let rec go := fun k =>
+      match k with
+      | .unit => ()
       | .pair p q => (go p, go q)
       | .float => 0
       | .int => 0
       | .nat => 0
-    go 
+    go
 
-def Env.empty := fun (v : Var) => 
+def Env.empty := fun (v : Var) =>
   let f : (k: Kind) → Kind.eval k := default
   f v.kind
 
@@ -1282,7 +1283,7 @@ def runRegionTest
 end Test
 
 
-open Arith Scf in 
+open Arith Scf in
 def arith_plus_scf.sem : Semantics := fun name =>
     match name with
     | .arith.constant => const.run

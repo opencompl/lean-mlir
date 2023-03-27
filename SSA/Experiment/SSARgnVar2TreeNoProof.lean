@@ -9,6 +9,14 @@ import Aesop
 
 namespace SSARgn2Tree
 
+inductive RgnName
+| r0
+| r1
+| r2
+| r3
+| r4
+deriving DecidableEq
+
 inductive VarName
 | null
 | x0
@@ -29,27 +37,32 @@ inductive VarName
 | z4
 deriving DecidableEq
 
+
+
 section StxSem
 
 -- | The environment is a mapping from variable names to values.
-abbrev Env (α : Type) := VarName → α
+abbrev Env (k : Type) (α : Type) := k → α
+
 
 -- | Extend the environment with a new variable.
 @[simp]
-def Env.extend (name : VarName) (v : α) (e: Env α) : Env α :=
+def Env.extend [DecidableEq k] (name : k) (v : α) (e: Env k α) : Env k α :=
   fun name' => if name = name' then v else e name'
 
 @[simp]
-def Env.empty [Inhabited α] : Env α :=
+def Env.empty [Inhabited α] : Env k α :=
   fun _ => default
 
 @[simp]
-def Env.map (f : α → β) (e : Env α) : Env β :=
+def Env.map (f : α → β) (e : Env k α) : Env k β :=
   fun name => f (e name)
 
 notation "∅" => Env.empty
 notation e "[" name "↦" v "]" => Env.extend name v e
 
+abbrev VarEnv (α : Type) := Env VarName α
+abbrev RgnEnv (α : Type) := Env RgnName α
 
 -- The input semantics given by the user.
 class UserSemantics (opcode : Type)  where
@@ -73,6 +86,7 @@ inductive AST (opcode : Type): ASTKind → Type where
 | ops1 (op : AST opcode .O) :  AST opcode .Os
 | opsmany (op : AST opcode .O) (ops : AST opcode .Os) : AST opcode .Os
 | rgn (args : VarName × VarName) (body : AST opcode .Os) : AST opcode .R
+| rgnvar (var : RgnName) : AST opcode .R
 | rgn0 : AST opcode .R
 
 def AST.retname : AST opcode .O → VarName
@@ -106,23 +120,25 @@ def ASTKind.eval : ASTKind → Type
 -- evaluate an operation with repect to a particular user semantics.
 @[simp]
 def AST.eval [S: UserSemantics opcode]
-  {astk: ASTKind} (e: Env Int): AST opcode astk → astk.eval × Env Int
+  {astk: ASTKind} (e: VarEnv Int)
+  (re: RgnEnv (Int × Int → Int)): AST opcode astk → astk.eval × VarEnv Int
 | .assign ret op args r =>
     let (arg1, arg2) := args
-    let retval := S.opcodeEval op (e arg1, e arg2) (r.eval e).fst
+    let retval := S.opcodeEval op (e arg1, e arg2) (r.eval e re).fst
     (retval, e.extend ret retval)
 | .ops1 op =>
-   let (out, env) := op.eval e
+   let (out, env) := op.eval e re
    (out, env)
 | .opsmany op ops =>
-    let e' := (op.eval e).snd
-    ops.eval e'
+    let e' := (op.eval e re).snd
+    ops.eval e' re
+| .rgnvar v => (re v, e)
 | .rgn args body =>
     (fun vals =>
       let e := Env.empty
       let e1 := e.extend args.fst vals.fst
       let e2 := e1.extend args.snd vals.snd
-      let (outval, _) := body.eval e2
+      let (outval, _e) := body.eval e2 re
       outval, e)
 | .rgn0 => (fun _ => default, e)
 
@@ -156,8 +172,8 @@ instance : Inhabited (Ctree opcode .R) where
 -- convert an AST into a closed tree under the given environment
 -- note that translation into a closed tree needs an environment,
 -- to learn the values of variables.
--- This version has an `_` in the name since it needs a `Ctree.Env`, not an
--- `Env`. We will writea helper that converts `Env` into `Ctree.Env`.
+-- This version has an `_` in the name since it needs a `Ctree.VarEnv`, not an
+-- `Env`. We will writea helper that converts `Env` into `Ctree.VarEnv`.
 @[simp, reducible]
 def ASTKind.toCTree (opcode : Type) : ASTKind → Type
 | .O => Ctree opcode .O
@@ -165,44 +181,55 @@ def ASTKind.toCTree (opcode : Type) : ASTKind → Type
 | .R => Ctree opcode .R
 
 @[simp]
-def AST.toCtree_ {astk: ASTKind} (e : Env (Ctree opcode .O)) :
-  AST opcode astk → (astk.toCTree opcode) × Env (Ctree opcode .O)
+def AST.toCtree_ {astk: ASTKind} (e : VarEnv (Ctree opcode .O))
+  (re: RgnEnv (Ctree opcode .R)):
+  AST opcode astk → (astk.toCTree opcode) × VarEnv (Ctree opcode .O)
 | .assign ret opcode (u, v) r =>
-    let rval := (r.toCtree_ e).fst
+    let rval := (r.toCtree_ e re).fst
     let t := .binop opcode (e u) (e v) rval
     (t, e.extend ret t)
+| .rgnvar var => (re var, e)
 | .rgn0 => (.rgn0, e)
 | .rgn args body =>
     (.rgn fun vals =>
-      let e := Env.empty
       let e1 := e.extend args.fst (.leaf vals.fst)
       let e2 := e1.extend args.snd (.leaf vals.snd)
-      (body.toCtree_ e2).fst, e)
+      (body.toCtree_ e2 re).fst, e)
 | .ops1 op =>
-  let (val, e) :=op.toCtree_ e
+  let (val, e) := op.toCtree_ e re
   (val, e)
 | .opsmany os o =>
-    let (_, e) := os.toCtree_ e
-    o.toCtree_ e
+    let (_, e) := os.toCtree_ e re
+    o.toCtree_ e re
 
 -- wrap every element in a (.leaf) constructor
 @[simp]
-def Ctree.Env.ofEnv (e: Env Int) : Env (Ctree opcode .O) :=
+def Ctree.VarEnv.ofEnv (e: VarEnv Int) : VarEnv (Ctree opcode .O) :=
    fun name => .leaf (e name)
+
+-- TODO: should these be coercions?
+@[simp]
+def Ctree.RgnEnv.ofEnv (re: RgnEnv (Int × Int → Int)) :
+  RgnEnv (Ctree opcode .R) :=
+   fun name => Ctree.rgn (fun args => .leaf (re name args))
 
 -- this converts an AST into a Ctree, given an environment
 -- and an AST.
 @[simp]
-def Op.toCtree (a: AST opcode .O) (e: Env Int): Ctree opcode .O :=
-    (a.toCtree_ (Ctree.Env.ofEnv e)).fst
+def Op.toCtree (a: AST opcode .O) (e: VarEnv Int)
+  (re: RgnEnv (Int × Int → Int)) : Ctree opcode .O :=
+    (a.toCtree_ (Ctree.VarEnv.ofEnv e) (Ctree.RgnEnv.ofEnv re)).fst
 
 @[simp]
-def Ops.toCtree (a: AST opcode .Os) (e: Env Int) : Ctree opcode .O :=
-    (a.toCtree_ (Ctree.Env.ofEnv e)).fst
+def Ops.toCtree (a: AST opcode .Os)
+  (e: VarEnv Int) (re: RgnEnv (Int × Int → Int)) : Ctree opcode .O :=
+    (a.toCtree_ (Ctree.VarEnv.ofEnv e) (Ctree.RgnEnv.ofEnv re)).fst
 
 @[simp]
-def Region.toCtree (a: AST opcode .R) (e: Env Int) : Ctree opcode .R :=
-    (a.toCtree_ (Ctree.Env.ofEnv e)).fst
+def Region.toCtree (a: AST opcode .R)
+  (e: VarEnv Int)
+  (re: RgnEnv (Int × Int → Int)): Ctree opcode .R :=
+    (a.toCtree_ (Ctree.VarEnv.ofEnv e) (Ctree.RgnEnv.ofEnv re)).fst
 
 
 -- evaluate a Ctree. note that this needs no environment.
@@ -212,7 +239,6 @@ def CtreeKind.eval : CtreeKind → Type
 | .R => Int × Int → Int
 
 -- Note: is this literally "just" staging the partial evaluation against the environment?
-@[simp]
 def Ctree.eval [UserSemantics opcode] : Ctree opcode treek → treek.eval
 | .binop o l r rs =>
   UserSemantics.opcodeEval o (l.eval, r.eval) rs.eval
@@ -252,7 +278,7 @@ instance :  UserSemantics Opcode  where
   | _, _, _ => 42
 
 
-def x_add_4_times_mul_val_eq (env: Env Int):
+def x_add_4_times_mul_val_eq (env: VarEnv Int):
   let p : AST Opcode .Os :=
       Ops.ofList [
       .assign .x1 .add (.x0, .x0) .rgn0,
@@ -262,7 +288,7 @@ def x_add_4_times_mul_val_eq (env: Env Int):
         .assign .x1 (.const 4) (.x0, .x0) .rgn0
       , .assign .x2 .mul (.x1, .x0) .rgn0
     ]
-  (Ops.toCtree p env).eval = (Ops.toCtree q env).eval := by {
+  (Ops.toCtree p env renv).eval = (Ops.toCtree q env renv).eval := by {
     simp only [Ops.ofList, AST.eval, Ops.toCtree,  AST.toCtree_];
     -- see that there are environments, which are folded away when calling
     -- Ctree.eval.
@@ -271,38 +297,51 @@ def x_add_4_times_mul_val_eq (env: Env Int):
   }
 
 
-def run_inline:
+def run_inline :
   let p : AST Opcode .R :=
     AST.rgn ⟨.x0, .x1⟩ $ Ops.ofList [
       .assign .x2 .add (.x0, .x1) .rgn0 -- x2 := x0 + x1
       ]
   let q : AST Opcode .R :=
     AST.rgn ⟨.x0, .x1⟩ $ Ops.ofList [
-      .assign .x2 .run (.x0, .x1) (AST.rgn ⟨.x5, .x6⟩ (Ops.ofList [ -- x2 := run (x0, x1) { ^(x5, x6): return x5 + x6 }
+      .assign .x2 .run (.x0, .x1) (AST.rgn ⟨.x5, .x6⟩ (Ops.ofList [
+        -- x2 := run (x0, x1) { ^(x5, x6): return x5 + x6 }
         .assign .y1 .add (.x5, .x6) .rgn0
       ]))
     ]
-  (Region.toCtree p Env.empty).eval = (Region.toCtree q Env.empty).eval := by {
+  (Region.toCtree p Env.empty Env.empty).eval =
+  (Region.toCtree q Env.empty Env.empty).eval := by {
     simp
+    dsimp only[Ctree.eval]
   }
 
 
 -- trying to convert an AST to a Ctree at any environment
 -- is equivalent to converting it in an empty environment.
 @[simp]
-theorem AST.toCtree_rgn_equiv_empty (r: AST opcode .R) [Inhabited opcode] :
-  (AST.toCtree_ env r).fst = (AST.toCtree_ Env.empty r).fst := by {
-   simp
-   cases r <;> simp;
+theorem AST.toCtree_rgn_equiv_empty
+  (r: AST opcode .R)
+  [Inhabited opcode] :
+  AST.toCtree_ env renv r = AST.toCtree_ Env.empty renv r := by {
 }
 
-def runnot_inline :
+def runnot_inline:
   let p : AST Opcode .R :=
     AST.rgn ⟨.x0, .x1⟩ $ Ops.ofList [
-      .assign .y1 .run ⟨.x0, .x1⟩ r -- y1 := r(x0, x1)
+      .assign .y1 .run ⟨.x0, .x1⟩ (.rgnvar .r1) -- y1 := r(x0, x1)
     ]
-  (Region.toCtree p Env.empty).eval = (Region.toCtree r Env.empty).eval := by {
+  (Region.toCtree p Env.empty Env.empty).eval =
+  (Region.toCtree (.rgnvar .r1 : AST Opcode .R) Env.empty Env.empty).eval := by {
     simp
+    simp[Ctree.eval];
+    -- this stil cannot be simplified away, since this is in fact false.
+    -- We need some notion of the fact that z1, z2 is free in 'r',
+    -- so that we can say that we can remove 'z2, z1' in the 'q'
+    -- environment when we run 'r'.
+    -- if we have this, then we are good, and we can prove the theorem.
+    -- but how do we convince people that use MLIR that this is a sensible
+    -- thing to reason about?
+
   }
 
 end MultipleInstructionTree
