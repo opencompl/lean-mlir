@@ -7,7 +7,7 @@ import Aesop
 -- Thus, we eschew the need to have proofs, and simply YOLO translate from
 -- the origina SSA + Regions program into Tree.
 
-namespace SSARgn2Tree
+namespace SSARgnVar2Tree
 
 inductive RgnName
 | r0
@@ -188,9 +188,10 @@ def AST.toCtree_ {astk: ASTKind} (e : VarEnv (Ctree opcode .O))
     let rval := (r.toCtree_ e re).fst
     let t := .binop opcode (e u) (e v) rval
     (t, e.extend ret t)
-| .rgnvar var => (re var, e)
-| .rgn0 => (.rgn0, e)
+| .rgnvar var => let e := Env.empty; (re var, e)
+| .rgn0 => let e := Env.empty; (.rgn0, e)
 | .rgn args body =>
+    let e := Env.empty -- NOTE: regions are now isolated from above
     (.rgn fun vals =>
       let e1 := e.extend args.fst (.leaf vals.fst)
       let e2 := e1.extend args.snd (.leaf vals.snd)
@@ -323,6 +324,7 @@ theorem AST.toCtree_rgn_equiv_empty
   (r: AST opcode .R)
   [Inhabited opcode] :
   AST.toCtree_ env renv r = AST.toCtree_ Env.empty renv r := by {
+  simp; cases r <;> simp;
 }
 
 def runnot_inline:
@@ -346,4 +348,4 @@ def runnot_inline:
 
 end MultipleInstructionTree
 
-end SSARgn2Tree
+end SSARgnVar2Tree
