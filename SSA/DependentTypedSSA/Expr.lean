@@ -3,12 +3,10 @@ import SSA.DependentTypedSSA.Context.Basic
 
 namespace AST
 
-def Env : Type :=
-  String → Option Kind
+def Env : Type 1 := Kind → Type
 
-structure Decl (e : Env) (k : Kind) : Type :=
-  ( name : String )
-  ( mem : k ∈ e name )
+def Decl (e : Env) (k : Kind) : Type :=
+  e k
 
 inductive Tuple (e : Env) (Γ : Context) : Kind → Type
   | decl : {k : Kind} → Decl e k → Tuple e Γ k
@@ -19,7 +17,7 @@ inductive Tuple (e : Env) (Γ : Context) : Kind → Type
   | fst : {k₁ k₂ : Kind} → Tuple e Γ (Kind.pair k₁ k₂) → Tuple e Γ k₁
   | snd : {k₁ k₂ : Kind} → Tuple e Γ (Kind.pair k₁ k₂) → Tuple e Γ k₂
 
-inductive Expr (e : Env) : Context → Kind → Type where
+inductive Expr (e : Env) : Context → Kind → Type 1 where
   | _let {Γ : Context}
     {a b k : Kind}
     (f : Decl e (a.arrow b)) --Should be decl

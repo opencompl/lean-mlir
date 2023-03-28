@@ -55,10 +55,4 @@ theorem Context.evalMap_comp_apply (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) (
     Context.evalMap (f ≫ g) v = Context.evalMap f (Context.evalMap g v) :=
   rfl
 
-@[simp]
-theorem Context.evalMap_snocHom {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂) (g : (Γ₂.snoc k).eval) :
-    Context.evalMap (Context.snocHom f) g = fun _ v => v.elim
-      (fun _ v => g (Var.succ (f v))) (g (Var.zero _ _)) := by
-  funext k v; cases v <;> simp [Var.elim, snocHom, evalMap, snocElim, toSnoc]
-
 end AST

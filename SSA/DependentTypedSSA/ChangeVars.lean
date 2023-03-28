@@ -43,7 +43,7 @@ def Expr.changeVars : {Γ₁ Γ₂ : Context} → (Γ₁ ⟶ Γ₂) → Expr e �
 @[simp]
 theorem Expr.changeVars_id :
     (Expr.changeVars (𝟙 Γ₁) : Expr e Γ₁ k → Expr e Γ₁ k) = id :=
-  funext <| fun t => by induction t <;> simp [*] at *
+  funext <| fun t => by induction t <;> simp [*, Expr.changeVars] at *
 
 theorem Expr.changeVars_comp_apply : ∀ {Γ₁ Γ₂ Γ₃} (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃)
     (ex : Expr e Γ₁ k),
@@ -64,7 +64,7 @@ theorem Expr.changeVars_comp (f : Γ₁ ⟶ Γ₂) (g : Γ₂ ⟶ Γ₃) :
 @[simp]
 theorem Expr.eval_changeVars : ∀ {k : Kind} {Γ₁ Γ₂ : Context} (f : Γ₁ ⟶ Γ₂)
     (e : Expr e Γ₁ k) (g : Γ₂.eval), (e.changeVars f).eval s g = e.eval s (Context.evalMap f g)
-  | _, _, _, f, ._let f' x e, g => by simp [Expr.eval_changeVars _ e]
+  | _, _, _, f, ._let f' x e, g => by  simp [Expr.eval_changeVars _ e]
   | _, _, _, f, .letlam f' x e, g => by simp [Expr.eval_changeVars _ e]
   | _, _, _, f, .retμrn x, g => by simp
 
