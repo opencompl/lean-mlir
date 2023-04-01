@@ -8,15 +8,23 @@ namespace LC
 -- pure simply typed lambda calculus
 structure Tensor1d (α : Type) where
   size : Nat
-  val :  Nat → α
+  val :  Fin size → α
+
+-- TODO: create equivalence relation for tensors
+-- that says tensors are equivalent if they have the same size and
+-- the same values at each index upto the size.
+
 
 def Tensor1d.empty [Inhabited α] : Tensor1d α where
   size := 0
   val := fun _ => default
 
-def Tensor1d.extract (t: Tensor1d α) (l: Nat) (len: Nat) : Tensor1d α where
+def Tensor1d.extract [Inhabited α] (t: Tensor1d α) (l: Nat) (len: Nat) : Tensor1d α where
   size := len
-  val := fun ix => t.val (l + ix)
+  val := fun ix =>
+    let ix' := l + ix
+    if H : ix' < t.size then t.val ⟨ix', H⟩
+    else default
 
 def Tensor1d.map (f : α → α) (t : Tensor1d α) : Tensor1d α where
   size := t.size
@@ -27,45 +35,46 @@ def Tensor1d.fill (t: Tensor1d α) (v: α) : Tensor1d α where
   val := fun _ix => v
 
 -- insert a slice into a tensor.
-def Tensor1d.insertslice (t: Tensor1d α) (ix: Nat) (slice : Tensor1d α) : Tensor1d α where
+def Tensor1d.insertslice (t: Tensor1d α) (sliceix: Nat) (slice : Tensor1d α) : Tensor1d α where
   size := t.size + slice.size
-  val := fun i =>
-    if i < ix then t.val i
-    else if i < ix + slice.size then slice.val (i - ix)
-    else t.val (i - slice.size)
+  val := fun ix => sorry
 
 
 -- | TODO: implement fold
-def Tensor1d.fold_rec (n: Nat) (arr: Nat → α) (f: β → α → β) (seed: β): β :=
-  match n with
-  | 0 => seed
-  | n + 1 => f (Tensor1d.fold_rec n arr f seed) (arr n)
+-- def Tensor1d.fold_rec (n: Nat) (arr: Nat → α) (f: β → α → β) (seed: β): β :=
+--   match n with
+--   | 0 => seed
+--   | n + 1 => f (Tensor1d.fold_rec n arr f seed) (arr n)
 
-def Tensor1d.fold (f : β → α → β)  (seed : β) (t : Tensor1d α) : β :=
-  Tensor1d.fold_rec t.size t.val f seed
+-- def Tensor1d.fold (f : β → α → β)  (seed : β) (t : Tensor1d α) : β :=
+--   Tensor1d.fold_rec t.size t.val f seed
 
 structure Tensor2d (α : Type) where
-  size : Nat × Nat
-  val :  Nat × Nat → α
+  size0 : Nat
+  size1 : Nat
+  val :  Fin size0 → Fin size1 → α
 
 def Tensor2d.transpose (t: Tensor2d α) : Tensor2d α where
-  size := (t.size.2, t.size.1)
-  val := fun ix => t.val (ix.2, ix.1)
+  size0 := t.size1
+  size1 := t.size0
+  val := fun ix0 => fun ix1 => t.val ix1 ix0
 
 
 -- theorem 1: extract (map) = map extract
-
-theorem Tensor1d.extract_map (t: Tensor1d α):
+theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α):
   (t.extract left len).map f = (t.map f).extract left len := by {
     simp[Tensor1d.extract, Tensor1d.map]
+    funext ix
+     by_cases H : ix < t.size;
+    sorry
 }
 
 -- theorem 2: extract (fill v) = fill (extract v)
 
-theorem Tensor1d.extract_fill (t: Tensor1d α):
-  (t.extract left len).fill v = (t.fill v).extract left len := by {
-    simp[Tensor1d.extract, Tensor1d.fill]
-}
+-- theorem Tensor1d.extract_fill (t: Tensor1d α):
+--   (t.extract left len).fill v = (t.fill v).extract left len := by {
+--     simp[Tensor1d.extract, Tensor1d.fill]
+-- }
 
 -- theorem 3 : map fusion -- map (f ∘ g) = map f ∘ map g
 theorem Tensor1d.map_fusion (t: Tensor1d α):
@@ -100,6 +109,7 @@ theorem scf.for.peel_end (n : Nat) (f : Nat → β → β) (seed : β) :
 
 -- theorem 3: for fusion: if computations commute, then they can be fused.
 -- TODO:
+/-
 theorem scf.for.fusion (n : Nat) (f g : Nat → β → β)  (seed : β)
   (COMMUTE : ∀ (ix : ℕ)  (v : β),  f ix (g ix v) = g ix (f ix v)) :
   scf.for.loop f n n (scf.for.loop g n n seed) =
@@ -113,6 +123,8 @@ theorem scf.for.fusion (n : Nat) (f g : Nat → β → β)  (seed : β)
       sorry
     }
   }
+-/
+
 
 theorem scf.for.zero_n (f: Nat → β → β) (seed : β) :
   scf.for 0 f seed = seed := by {
@@ -125,6 +137,7 @@ theorem scf.for.zero_n (f: Nat → β → β) (seed : β) :
   }
 
 -- theorem 3 : arbitrary for peeling
+/-
 theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
   scf.for.loop f (n + m) ((n + m) - n) (scf.for.loop f n (n - 0) seed) = scf.for.loop f (n + m) (n + m - 0) seed := by {
     simp[scf.for.loop]
@@ -139,7 +152,7 @@ theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
       sorry
     }
   }
-
+-/
 
 
 -- theorem 4 : tiling
@@ -264,6 +277,92 @@ def SSA.eval [S : UserSemantics Op] (e: Env Val) (re: Env (Val → Val)) : SSA O
 | .rgnvar v => re v
 | .rgn0 => id
 | .rgn arg body => fun val => body.eval (e.set arg val) re
+
+section EDSL
+
+declare_syntax_cat dsl_region
+declare_syntax_cat dsl_op
+declare_syntax_cat dsl_expr
+declare_syntax_cat dsl_stmt
+declare_syntax_cat dsl_terminator
+declare_syntax_cat dsl_var
+declare_syntax_cat dsl_val
+declare_syntax_cat dsl_rgnvar
+
+-- ops are defined by someone else
+syntax "[dsl_op|" dsl_op "]" : term
+
+-- DSL variables
+syntax "%v" num : dsl_var
+
+syntax "[dsl_var|" dsl_var "]" : term
+open Lean Macro in
+macro_rules
+| `([dsl_var| %v $n]) => `(SSA.var (Int.ofNat $(Lean.quote n.getNat)))
+
+example : [dsl_var| %v0] = SSA.var (Op := Unit) 0 := by
+  simp
+
+-- DSL Region variables
+syntax "%r" num : dsl_rgnvar
+
+syntax "[dsl_rgnvar|" dsl_rgnvar "]" : term
+open Lean Macro in
+macro_rules
+| `([dsl_rgnvar| %r $n]) => `(SSA.rgnvar (Int.ofNat $(Lean.quote n.getNat)))
+
+example : [dsl_rgnvar| %r0] = SSA.rgnvar (Op := Unit) 0 := by
+  simp
+
+syntax "pair: "  dsl_var ws dsl_var : dsl_expr
+syntax "op:" dsl_op dsl_var (dsl_region)? : dsl_expr
+syntax "const:" dsl_val : dsl_expr
+syntax dsl_var : dsl_expr
+syntax "[dsl_expr|" dsl_expr "]" : term
+syntax "[dsl_val|" dsl_val "]" : term
+syntax "[dsl_region|" dsl_region "]" : term
+syntax "[dsl_stmt|" dsl_stmt "]" : term
+syntax "[dsl_terminator|" dsl_terminator "]" : term
+
+syntax term : dsl_val
+macro_rules
+| `([dsl_val| $t:term]) => return t
+
+macro_rules
+| `([dsl_expr| const: $v:dsl_val]) =>
+    `(SSA.const [dsl_val| $v])
+| `([dsl_expr| pair: $a $b]) =>
+    `(SSA.pair [dsl_var| $a] [dsl_var| $b])
+| `([dsl_expr| $v:dsl_var]) =>
+    `(SSA.var [dsl_var| $v])
+| `([dsl_expr| op: $o:dsl_op $arg:dsl_var $[ $r? ]?]) =>
+    match r? with
+    | .none => `(SSA.op [dsl_op| $o] [dsl_var| $arg ] SSA.rgn0)
+    | .some r => `(SSA.op [dsl_op| $o] [dsl_var| $arg ] [dsl_region| $r])
+
+
+declare_syntax_cat dsl_assign
+syntax dsl_var " := " dsl_expr : dsl_assign
+syntax "[dsl_assign| " dsl_assign "]" : term
+macro_rules
+| `([dsl_assign| $v:dsl_var := $e:dsl_expr ]) =>
+    `(fun rest => SSA.assign [dsl_var| $v] [dsl_expr| $e] rest)
+
+syntax sepBy(dsl_assign, ";") : dsl_stmt
+syntax  "[dsl_stmt|" dsl_stmt "]" : term
+
+
+syntax "ret " dsl_var : dsl_terminator
+macro_rules
+| `([dsl_terminator| ret $v:dsl_var]) =>
+    `(fun stmt => SSA.ret stmt [dsl_var| $v])
+
+syntax "rgn " dsl_var " => " dsl_stmt ";" dsl_terminator : dsl_region
+macro_rules
+| `([dsl_region| rgn $v:dsl_var => $s: dsl_stmt ; $term:dsl_terminator]) =>
+    `(SSA.rgn [dsl_var| $v] ([dsl_terminator| $term] <| [dsl_stmt| $s] SSA.nop))
+
+end EDSL
 
 namespace ArithScfLinalg
 
