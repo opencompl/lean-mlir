@@ -8,7 +8,7 @@ namespace LC
 -- pure simply typed lambda calculus
 structure Tensor1d (α : Type) where
   size : Nat
-  val :  Fin size → α
+  val :  Nat → α
 
 -- TODO: create equivalence relation for tensors
 -- that says tensors are equivalent if they have the same size and
@@ -19,29 +19,82 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
   size := 0
   val := fun _ => default
 
-def Tensor1d.extract [Inhabited α] (t: Tensor1d α) (l: Nat) (len: Nat) : Tensor1d α where
-  size := len
-  val := fun ix =>
-    let ix' := l + ix
-    if H : ix' < t.size then t.val ⟨ix', H⟩
+
+
+-- [0..[left..left+len)..size)
+-- if the (left + len) is larger than size, then we don't have a valid extract,
+-- so we return a size zero tensor.
+def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
+  (left: Nat) (len: Nat) : Tensor1d α := 
+  let right := if (left + len) < t.size then left + len else 0
+  let size := right - left
+  { size := size, val := fun ix =>
+    if left + len < t.size
+    then if (ix < len) then t.val (ix + left) else default 
     else default
-
-def Tensor1d.map (f : α → α) (t : Tensor1d α) : Tensor1d α where
+  }
+def Tensor1d.map (f : α → α) (t : Tensor1d α) [Inhabited α] : Tensor1d α where
   size := t.size
-  val := fun ix => f (t.val ix)
+  val := fun ix => if ix < t.size then f (t.val ix) else default
 
-def Tensor1d.fill (t: Tensor1d α) (v: α) : Tensor1d α where
+-- Note that this theorem is wrong if we cannot state what happens
+-- when we are out of bounds, because the side that is (map extract) will have
+-- (f default), while (extract map) will be (default)
+-- theorem 1: extract (map) = map extract
+theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Nat) :
+  (t.extract left len).map f = (t.map f).extract left len := by {
+    simp[Tensor1d.extract, Tensor1d.map]
+    funext ix;
+    by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
+    by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
+    have IX_INBOUNDS : ix + left < t.size := by linarith
+    simp[IX_INBOUNDS]
+}
+
+def Tensor1d.fill (t: Tensor1d α) (v: α) [Inhabited α]: Tensor1d α where
   size := t.size
-  val := fun _ix => v
+  val := fun ix => if ix < t.size then v else default
+
+
+-- theorem 2: extract (fill v) = fill (extract v)
+
+theorem Tensor1d.extract_fill [Inhabited α] (t: Tensor1d α):
+  (t.extract left len).fill v = (t.fill v).extract left len := by {
+    simp[Tensor1d.extract, Tensor1d.fill]
+    funext ix;
+    by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
+    by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
+    have IX_INBOUNDS : ix + left < t.size := by linarith
+    simp[IX_INBOUNDS]
+}
+
 
 -- insert a slice into a tensor.
-def Tensor1d.insertslice (t: Tensor1d α) (sliceix: Nat) (slice : Tensor1d α) : Tensor1d α where
+def Tensor1d.insertslice (t: Tensor1d α)
+  (sliceix: Nat)
+  (slice : Tensor1d α) : Tensor1d α where
   size := t.size + slice.size
-  val := fun ix => sorry
-
+  val := fun ix => 
+    if IX_LT_SLICEIX: ix.val < sliceix.val then t.val ⟨ix, by { 
+      have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
+      linarith
+    }⟩
+    else if IX_LT_SLICE_END: (ix.val < sliceix.val + slice.size)
+      then t.val ⟨ix - slice.size, by {
+        have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
+        -- IX_LT_SLICE_END : ix < sliceix + slice.size => ix - slice.size < sliceix
+        -- TODO: why can't linarith find this?
+        have : ix - slice.size < sliceix := by sorry 
+        linarith
+      }⟩
+    else t.val ⟨ix - sliceix - slice.size, by {
+        have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
+        have : ix < t.size + slice.size := ix.isLt
+        sorry -- immediate from the above...
+    }⟩
 
 -- | TODO: implement fold
--- def Tensor1d.fold_rec (n: Nat) (arr: Nat → α) (f: β → α → β) (seed: β): β :=
+-- def Tensor1d.fold_rec (n: Nat) (arr: Fin n → α) (f: β → α → β) (seed: β): β :=
 --   match n with
 --   | 0 => seed
 --   | n + 1 => f (Tensor1d.fold_rec n arr f seed) (arr n)
@@ -60,21 +113,12 @@ def Tensor2d.transpose (t: Tensor2d α) : Tensor2d α where
   val := fun ix0 => fun ix1 => t.val ix1 ix0
 
 
--- theorem 1: extract (map) = map extract
-theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α):
-  (t.extract left len).map f = (t.map f).extract left len := by {
-    simp[Tensor1d.extract, Tensor1d.map]
-    funext ix
-     by_cases H : ix < t.size;
-    sorry
+-- transpose is an involution
+theorem Tensor2d.transpose_involutive (t: Tensor2d α):
+  (t.transpose).transpose = t := by {
+    simp[Tensor2d.transpose]
 }
 
--- theorem 2: extract (fill v) = fill (extract v)
-
--- theorem Tensor1d.extract_fill (t: Tensor1d α):
---   (t.extract left len).fill v = (t.fill v).extract left len := by {
---     simp[Tensor1d.extract, Tensor1d.fill]
--- }
 
 -- theorem 3 : map fusion -- map (f ∘ g) = map f ∘ map g
 theorem Tensor1d.map_fusion (t: Tensor1d α):
@@ -184,12 +228,6 @@ theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE :4 ∣ t.size) (f :
     }
 }
 
--- transpose is an involution
-
-theorem Tensor2d.transpose_involutive (t: Tensor2d α):
-  (t.transpose).transpose = t := by {
-    simp[Tensor2d.transpose]
-}
 
 
 
