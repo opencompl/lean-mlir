@@ -16,7 +16,7 @@
   {"git":
    {"url": "https://github.com/leanprover/doc-gen4",
     "subDir?": null,
-    "rev": "23eb55fc2200105db554a4d7056191b445b44030",
+    "rev": "b9421b9a12b148d9279a881cce227affdb09ed08",
     "name": "doc-gen4",
     "inputRev?": "main"}},
   {"git":
