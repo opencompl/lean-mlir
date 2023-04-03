@@ -374,8 +374,8 @@ inductive SSA (Op: Type): SSAIndex → Type where
 | rgnvar (v: Var) : SSA Op .REGION
 | var (v: Var) : SSA Op .EXPR
 
-instance : Coe Val Expr where
-  coe := Expr.const
+instance : Coe Val (SSA op .EXPR) where
+  coe := SSA.const
 
 abbrev Expr (Op: Type) := SSA Op .EXPR
 abbrev Stmt (Op: Type) := SSA Op .STMT
@@ -601,6 +601,7 @@ theorem extract_map (e: Env Val) (v: Nat) (re: Env (Val → Val)):
     -- need to know that x0 has the right 'type' (tensor1d).
     cases v0 <;> simp;
     simp[Tensor1d.extract_map]
+    
   }
 
 end ArithScfLinalg
