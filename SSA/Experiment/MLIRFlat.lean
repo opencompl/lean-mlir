@@ -6,18 +6,21 @@ import Mathlib.Data.Int.Basic
 namespace LC
 
 -- pure simply typed lambda calculus
-structure Tensor1d (α : Type) where
+structure Tensor1d (α : Type) [Inhabited α] where
   size : Nat
   val :  Nat → α
+  spec : ∀ (ix: Nat), ix >= size -> val ix = default
 
 -- TODO: create equivalence relation for tensors
 -- that says tensors are equivalent if they have the same size and
 -- the same values at each index upto the size.
-
-
 def Tensor1d.empty [Inhabited α] : Tensor1d α where
   size := 0
   val := fun _ => default
+  spec := by {
+    intros _ix _IX
+    simp[val];
+  }
 
 
 
@@ -28,14 +31,30 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
   (left: Nat) (len: Nat) : Tensor1d α := 
   let right := if (left + len) < t.size then left + len else 0
   let size := right - left
-  { size := size, val := fun ix =>
+  { size := size,
+    val := fun ix =>
     if left + len < t.size
     then if (ix < len) then t.val (ix + left) else default 
-    else default
+    else default,
+    spec := by {
+      intros ix IX;
+      by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
+      simp[A] at right
+      -- TODO: how to substitute?
+      have LEN : len < t.size := by linarith 
+      sorry
+    }
   }
-def Tensor1d.map (f : α → α) (t : Tensor1d α) [Inhabited α] : Tensor1d α where
+def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α where
   size := t.size
   val := fun ix => if ix < t.size then f (t.val ix) else default
+  spec := by {
+    intros ix IX;
+    simp;
+    intros H 
+    have CONTRA : False := by linarith
+    simp at CONTRA
+  }
 
 -- Note that this theorem is wrong if we cannot state what happens
 -- when we are out of bounds, because the side that is (map extract) will have
@@ -51,10 +70,16 @@ theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Nat) :
     simp[IX_INBOUNDS]
 }
 
-def Tensor1d.fill (t: Tensor1d α) (v: α) [Inhabited α]: Tensor1d α where
+def Tensor1d.fill [Inhabited α] (t: Tensor1d α) (v: α) : Tensor1d α where
   size := t.size
   val := fun ix => if ix < t.size then v else default
-
+  spec := by {
+    intros ix IX;
+    simp;
+    intros H 
+    have CONTRA : False := by linarith
+    simp at CONTRA
+  }
 
 -- theorem 2: extract (fill v) = fill (extract v)
 
@@ -70,28 +95,83 @@ theorem Tensor1d.extract_fill [Inhabited α] (t: Tensor1d α):
 
 
 -- insert a slice into a tensor.
-def Tensor1d.insertslice (t: Tensor1d α)
+-- if 'sliceix' is larger than t.size, then the tensor is illegal
+def Tensor1d.insertslice  [Inhabited α] (t: Tensor1d α)
   (sliceix: Nat)
   (slice : Tensor1d α) : Tensor1d α where
-  size := t.size + slice.size
+  size := if sliceix > t.size then 0 else t.size + slice.size
   val := fun ix => 
-    if IX_LT_SLICEIX: ix.val < sliceix.val then t.val ⟨ix, by { 
-      have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
-      linarith
-    }⟩
-    else if IX_LT_SLICE_END: (ix.val < sliceix.val + slice.size)
-      then t.val ⟨ix - slice.size, by {
-        have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
-        -- IX_LT_SLICE_END : ix < sliceix + slice.size => ix - slice.size < sliceix
-        -- TODO: why can't linarith find this?
-        have : ix - slice.size < sliceix := by sorry 
-        linarith
-      }⟩
-    else t.val ⟨ix - sliceix - slice.size, by {
-        have SLICEIX_LT_T : sliceix.val < t.size := sliceix.isLt
-        have : ix < t.size + slice.size := ix.isLt
-        sorry -- immediate from the above...
-    }⟩
+    if sliceix > t.size then default -- slice invalid
+    else if ix >= t.size + slice.size then default -- index invalid
+    else 
+      let go (ix: Nat) : α :=
+        if ix < sliceix then t.val sliceix
+        else if ix < sliceix + slice.size then slice.val (ix - sliceix)
+        else t.val (ix - (sliceix + slice.size))
+      go ix
+  spec := by {
+    intros ix 
+    intros H 
+    by_cases A:(sliceix > t.size) <;> simp[A]
+    simp[A] at H
+    by_cases B:(ix < t.size + slice.size) <;> simp[B]
+    have CONTRA : False := by linarith
+    simp at CONTRA
+  }
+
+theorem not_lt_is_geq {a b: Nat} (NOT_LT: ¬ (a < b)): a >= b := by {
+  linarith
+}
+-- extracting an inserted slice returns the slice.
+-- need preconditions to verify that this is well formed.
+-- TODO: show tobias this example of how we need ability to talk
+-- about failure.
+-- Also show how this proof is manual, and yet disgusting, because of lack of
+-- proof automation. We want 'match goal'.
+theorem extractslice_insertslice [Inhabited α] 
+  (t: Tensor1d α)
+  (sliceix: Nat)
+  (slice: Tensor1d α)
+  (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
+  : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
+    simp[Tensor1d.insertslice, Tensor1d.extract]
+    cases slice <;> simp; 
+    case mk slicesize sliceval spec => {
+      by_cases A:(t.size < sliceix) <;> simp[A]
+      case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
+      case neg => {
+        have B : t.size >= sliceix := not_lt_is_geq A
+
+        by_cases C:(sliceix < t.size) <;> simp[C]
+        case neg => {simp[Tensor1d.insertslice, Tensor1d.extract, A, B, C] at CORRECT }
+        case pos => {
+            funext ix
+            by_cases D: (ix < slicesize) <;> simp[D]
+            case neg => {
+              -- here we fail, because we do not know that 'slice' behaves like a
+              -- real tensor that returns 'default' outside of its range.
+              -- This is something we need to add into the spec of a Tensor.
+              have E : ix >= slicesize := by linarith 
+              simp[spec _ E]
+            }
+            case pos => {
+              simp
+              norm_num
+              by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
+              case pos => { 
+                have CONTRA : False := by linarith;
+                simp at CONTRA;
+              }
+              case neg => {
+                intros K
+                have CONTRA : False := by linarith
+                simp at CONTRA
+              }
+            } 
+        }
+      }
+    } 
+}
 
 -- | TODO: implement fold
 -- def Tensor1d.fold_rec (n: Nat) (arr: Fin n → α) (f: β → α → β) (seed: β): β :=
@@ -113,17 +193,19 @@ def Tensor2d.transpose (t: Tensor2d α) : Tensor2d α where
   val := fun ix0 => fun ix1 => t.val ix1 ix0
 
 
--- transpose is an involution
+-- theorem: transpose is an involution
 theorem Tensor2d.transpose_involutive (t: Tensor2d α):
   (t.transpose).transpose = t := by {
     simp[Tensor2d.transpose]
 }
 
 
--- theorem 3 : map fusion -- map (f ∘ g) = map f ∘ map g
-theorem Tensor1d.map_fusion (t: Tensor1d α):
+-- theorem: map fusion -- map (f ∘ g) = map f ∘ map g
+theorem Tensor1d.map_fusion [Inhabited α] (t: Tensor1d α):
   (t.map (g ∘ f)) = (t.map f).map g := by {
     simp[Tensor1d.map]
+    funext ix
+    by_cases H:(ix < t.size) <;> simp[H] 
 }
 
 -- for loop
