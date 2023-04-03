@@ -570,7 +570,7 @@ macro_rules
 | `([dsl_op| extract1d]) => `(op.extract1d)
 
 theorem extract_map (e: Env Val) (re: Env (Val → Val)): 
-  SSA.eval e re [dsl_region| dsl_rgn %v0 => 
+  SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 => 
     %v1 := op:map1d %v0 { %r0 };
     %v2 := const:42;
     %v3 := const:43;
@@ -578,10 +578,10 @@ theorem extract_map (e: Env Val) (re: Env (Val → Val)):
     %v5 := op:extract1d %v4
     dsl_ret %v5
   ] = 
-  SSA.eval e re [dsl_region| dsl_rgn %v0 => 
+  SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 => 
     %v1 := const:42;
     %v2 := const:43;
-    %v3 := triple: %v1 %v2 %v3;
+    %v3 := triple: %v0 %v1 %v2;
     %v4 := op:extract1d %v3;
     %v5 := op:map1d %v4 { %r0 }
     dsl_ret %v5
@@ -593,8 +593,9 @@ theorem extract_map (e: Env Val) (re: Env (Val → Val)):
     simp[OP_SEMANTICS]
     -- @tobias: pay attention here, where we are forced to do
     -- case analysis because we don't have good typing information.
-    -- need to know that x0 has the right 'type' (tensor1d)
-    cases x0 <;> simp
+    -- need to know that x0 has the right 'type' (tensor1d).
+    cases x0 <;> simp;
+    simp[Tensor1d.extract_map]
   }
 
 end ArithScfLinalg
