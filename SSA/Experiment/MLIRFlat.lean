@@ -283,31 +283,14 @@ theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
 
 -- theorem 4 : tiling
 -- proof obligation for chris :)
-theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE :4 ∣ t.size) (f : α → α):
+theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f : α → α):
   t.map f = scf.for (t.size / 4) (fun i acc =>
     let tile := t.extract (i * 4) 4
     let mapped_tile := tile.map f
     let out := acc.insertslice (i * 4) mapped_tile
     out) (Tensor1d.empty) := by {
     cases t;
-    case mk size val =>
-    simp at SIZE ⊢;
-    have : { n : Nat //  size = n * 4 } := by {
-      norm_num at SIZE
-      -- have ⟨x, y⟩ := SIZE
-      sorry
-    }
-    have ⟨n, N⟩ := this
-    rw[N];
-    revert size
-    induction n
-    case zero => {
-      simp[scf.for, scf.for.loop]
-      sorry
-    }
-    case succ n IH => {
-      sorry
-    }
+    sorry
 }
 
 
@@ -326,6 +309,16 @@ inductive Val where
 | inr : Val → Val
 deriving Inhabited
 
+instance : OfNat Val (n: Nat) where
+  ofNat := .nat n
+
+-- instance : Neg Val where
+
+instance : Coe Bool Val where
+  coe := Val.bool
+
+instance : Coe Unit Val where
+  coe := fun () => Val.unit
 
 def Val.int! : Val → Int
 | .int i => i
@@ -418,9 +411,10 @@ syntax "%v" num : dsl_var
 syntax "[dsl_var|" dsl_var "]" : term
 open Lean Macro in
 macro_rules
-| `([dsl_var| %v $n]) => `(SSA.var (Int.ofNat $(Lean.quote n.getNat)))
+| `([dsl_var| %v $n]) => 
+  `(Int.ofNat $(Lean.quote n.getNat))
 
-example : [dsl_var| %v0] = SSA.var (Op := Unit) 0 := by
+example : [dsl_var| %v0] =  0 := by
   simp
 
 -- DSL Region variables
@@ -468,19 +462,47 @@ macro_rules
 | `([dsl_assign| $v:dsl_var := $e:dsl_expr ]) =>
     `(fun rest => SSA.assign [dsl_var| $v] [dsl_expr| $e] rest)
 
-syntax sepBy(dsl_assign, ";") : dsl_stmt
-syntax  "[dsl_stmt|" dsl_stmt "]" : term
+example : [dsl_assign| %v0 := const:42 ] = 
+  (fun rest => SSA.assign (Op := Unit) 0 (SSA.const 42) rest) := by {
+    funext rest
+    dsimp[Int.ofNat]
+}
 
+syntax sepBy(dsl_assign, ";") : dsl_stmt
+macro_rules
+| `([dsl_stmt|  $[ $ss:dsl_assign ];*  ]) => do 
+  let mut out ← `(id)
+  for s in ss do 
+    out ← `($out ∘ [dsl_assign| $s ])
+  return out
+
+example : [dsl_stmt| %v0 := const:42 ; %v1 := const:44  ] = 
+  (fun rest => 
+    SSA.assign (Op := Unit) 0 (SSA.const 42) 
+    (SSA.assign 1 (SSA.const 44) rest)) := by {
+    funext rest
+    simp
+}
 
 syntax "ret " dsl_var : dsl_terminator
 macro_rules
 | `([dsl_terminator| ret $v:dsl_var]) =>
     `(fun stmt => SSA.ret stmt [dsl_var| $v])
 
-syntax "rgn " dsl_var " => " dsl_stmt ";" dsl_terminator : dsl_region
+syntax "rgn " dsl_var " => " (dsl_stmt)?  "ret " dsl_var : dsl_region
 macro_rules
-| `([dsl_region| rgn $v:dsl_var => $s: dsl_stmt ; $term:dsl_terminator]) =>
-    `(SSA.rgn [dsl_var| $v] ([dsl_terminator| $term] <| [dsl_stmt| $s] SSA.nop))
+| `([dsl_region| rgn $v:dsl_var => $[ $s?: dsl_stmt ]? ret $retv:dsl_var]) => do
+    let s : Lean.Syntax ← do 
+          match s? with 
+          | .none => `(fun x => x)
+          | .some s => `([dsl_stmt| $s]) 
+    `(SSA.rgn ([dsl_var| $v]) ([dsl_terminator| ret $retv] <| ($s SSA.nop)))
+
+example : [dsl_region| rgn %v0 =>
+  ret %v0
+] = SSA.rgn 0 (SSA.ret (SSA.nop (Op := Unit)) 0) := by {
+  rfl
+}
 
 end EDSL
 
@@ -511,13 +533,11 @@ instance : UserSemantics op where
   | .for_, (.pair (.nat n) (.int seed)), r =>
       .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
   | .map1d, (.tensor1d t), r => .tensor1d <| t.map fun v => (r (.int v)).int!
-  | .fold1d, (.pair (.tensor1d t) (.int seed)), r =>
-      .int <| t.fold (fun acc v => (r (.pair (.int acc) (.int v))).int!) seed
   | .extract, (.triple (.tensor1d t) (.nat l) (.nat len)), _ =>
       .tensor1d <| t.extract l len
   | _, _, _ => default
 
--- TODO: port Hacker's delight examples.
+
 
 end ArithScfLinalg
 
