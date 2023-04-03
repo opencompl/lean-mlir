@@ -314,20 +314,25 @@ instance : OfNat Val (n: Nat) where
 
 -- instance : Neg Val where
 
+@[simp]
 instance : Coe Bool Val where
   coe := Val.bool
 
+@[simp]
 instance : Coe Unit Val where
   coe := fun () => Val.unit
 
+@[simp]
 def Val.int! : Val → Int
 | .int i => i
 | _ => default
 
+@[simp]
 def Val.nat! : Val → Nat
 | .nat i => i
 | _ => default
 
+@[simp]
 def Val.bool! : Val → Bool
 | .bool i => i
 | _ => default
@@ -337,9 +342,11 @@ abbrev Var := Int
 
 abbrev Env (α: Type) := Var → α
 
+@[simp]
 def Env.empty {α : Type} [Inhabited α]: Env α := fun _ => default
 notation "∅" =>  Env.empty
 
+@[simp]
 def Env.set (e: Env α) (var: Var) (val: α) :=
   fun needle => if needle == var then val else e needle
 notation e "[" var " := " val "]" => Env.set e var val
@@ -359,6 +366,7 @@ inductive SSA (Op: Type): SSAIndex → Type where
 | nop : SSA Op .STMT
 | ret (above : SSA Op .STMT) (v: Var): SSA Op .TERMINATOR
 | pair (fst snd : Var) : SSA Op .EXPR
+| triple (fst snd third : Var) : SSA Op .EXPR
 | op (o : Op) (arg: Var) (rgn: SSA Op .REGION) : SSA Op .EXPR
 | const (k: Val) : SSA Op .EXPR
 | rgn (arg: Var) (body: SSA Op .TERMINATOR) : SSA Op .REGION
@@ -384,6 +392,7 @@ def SSA.eval [S : UserSemantics Op] (e: Env Val) (re: Env (Val → Val)) : SSA O
 | .nop => e
 | .ret above v => (above.eval e re) v
 | .pair fst snd => (e fst).pair (e snd)
+| .triple fst snd third => Val.triple (e fst) (e snd) (e third)
 | .const v => v
 | .op o arg r => S.eval o (e arg) (r.eval Env.empty re)
 | .var v => e v
@@ -428,8 +437,9 @@ macro_rules
 example : [dsl_rgnvar| %r0] = SSA.rgnvar (Op := Unit) 0 := by
   simp
 
-syntax "pair: "  dsl_var ws dsl_var : dsl_expr
-syntax "op:" dsl_op dsl_var (dsl_region)? : dsl_expr
+syntax "pair:"  dsl_var dsl_var : dsl_expr
+syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
+syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
 syntax "const:" dsl_val : dsl_expr
 syntax dsl_var : dsl_expr
 syntax "[dsl_expr|" dsl_expr "]" : term
@@ -447,9 +457,11 @@ macro_rules
     `(SSA.const [dsl_val| $v])
 | `([dsl_expr| pair: $a $b]) =>
     `(SSA.pair [dsl_var| $a] [dsl_var| $b])
+| `([dsl_expr| triple: $a $b $c]) =>
+    `(SSA.triple [dsl_var| $a] [dsl_var| $b] [dsl_var| $c])
 | `([dsl_expr| $v:dsl_var]) =>
     `(SSA.var [dsl_var| $v])
-| `([dsl_expr| op: $o:dsl_op $arg:dsl_var $[ $r? ]?]) =>
+| `([dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]?]) =>
     match r? with
     | .none => `(SSA.op [dsl_op| $o] [dsl_var| $arg ] SSA.rgn0)
     | .some r => `(SSA.op [dsl_op| $o] [dsl_var| $arg ] [dsl_region| $r])
@@ -491,7 +503,7 @@ macro_rules
 | `([dsl_terminator| dsl_ret $v:dsl_var]) =>
     `(fun stmt => SSA.ret stmt [dsl_var| $v])
 
-syntax "dsl_rgn " dsl_var " => " (dsl_stmt)?  "dsl_ret " dsl_var : dsl_region
+syntax "dsl_rgn" dsl_var "=>" (dsl_stmt)?  "dsl_ret " dsl_var : dsl_region
 macro_rules
 | `([dsl_region| dsl_rgn $v:dsl_var => $[ $s?: dsl_stmt ]? dsl_ret $retv:dsl_var]) => do
     let s : Lean.Syntax ← do 
@@ -506,6 +518,17 @@ example : [dsl_region| dsl_rgn %v0 =>
   rfl
 }
 
+-- example : [dsl_region| dsl_rgn %v0 =>
+--   %v0 := const:42
+--   dsl_ret %v0
+-- ] = SSA.rgn 0 (SSA.assign 0 (SSA.const 42 <| SSA.ret (SSA.nop (Op := Unit)) 0)) := by {
+--   rfl
+-- }
+
+syntax dsl_rgnvar : dsl_region
+macro_rules
+| `([dsl_region| $v:dsl_rgnvar]) => `([dsl_rgnvar| $v ])
+
 end EDSL
 
 namespace ArithScfLinalg
@@ -519,14 +542,14 @@ inductive op
 | if_
 | fold1d -- fold
 | map1d
-| extract
+| extract1d
 | fill
 | transpose
 deriving DecidableEq
 
 
 
-instance : UserSemantics op where
+instance OP_SEMANTICS : UserSemantics op where
   eval
   | .add, .pair (.int x) (.int y), _ => .int (x + y)
   | .sub, .pair (.int x) (.int y), _ => .int (x - y)
@@ -535,11 +558,44 @@ instance : UserSemantics op where
   | .for_, (.pair (.nat n) (.int seed)), r =>
       .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
   | .map1d, (.tensor1d t), r => .tensor1d <| t.map fun v => (r (.int v)).int!
-  | .extract, (.triple (.tensor1d t) (.nat l) (.nat len)), _ =>
+  | .extract1d, (.triple (.tensor1d t) (.nat l) (.nat len)), _ =>
       .tensor1d <| t.extract l len
   | _, _, _ => default
 
+syntax "map1d" : dsl_op
+syntax "extract1d" : dsl_op
 
+macro_rules
+| `([dsl_op| map1d]) => `(op.map1d)
+| `([dsl_op| extract1d]) => `(op.extract1d)
+
+theorem extract_map (e: Env Val) (re: Env (Val → Val)): 
+  SSA.eval e re [dsl_region| dsl_rgn %v0 => 
+    %v1 := op:map1d %v0 { %r0 };
+    %v2 := const:42;
+    %v3 := const:43;
+    %v4 := triple: %v1 %v2 %v3;
+    %v5 := op:extract1d %v4
+    dsl_ret %v5
+  ] = 
+  SSA.eval e re [dsl_region| dsl_rgn %v0 => 
+    %v1 := const:42;
+    %v2 := const:43;
+    %v3 := triple: %v1 %v2 %v3;
+    %v4 := op:extract1d %v3;
+    %v5 := op:map1d %v4 { %r0 }
+    dsl_ret %v5
+  ] := by {
+    simp -- simplify away syntax
+    simp[SSA.eval] -- simplify away evaluation.
+    funext x0
+    simp[Env.set]
+    simp[OP_SEMANTICS]
+    -- @tobias: pay attention here, where we are forced to do
+    -- case analysis because we don't have good typing information.
+    -- need to know that x0 has the right 'type' (tensor1d)
+    cases x0 <;> simp
+  }
 
 end ArithScfLinalg
 
