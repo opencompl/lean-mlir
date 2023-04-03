@@ -2,6 +2,7 @@ import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
+import Mathlib.Data.List.Basic
 
 namespace LC
 
@@ -28,20 +29,20 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
 -- if the (left + len) is larger than size, then we don't have a valid extract,
 -- so we return a size zero tensor.
 def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
-  (left: Nat) (len: Nat) : Tensor1d α := 
+  (left: Nat) (len: Nat) : Tensor1d α :=
   let right := if (left + len) < t.size then left + len else 0
   let size := right - left
   { size := size,
     val := fun ix =>
     if left + len < t.size
-    then if (ix < len) then t.val (ix + left) else default 
+    then if (ix < len) then t.val (ix + left) else default
     else default,
     spec := by {
       intros ix IX;
       by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
       simp[A] at right
       -- TODO: how to substitute?
-      have LEN : len < t.size := by linarith 
+      have LEN : len < t.size := by linarith
       sorry
     }
   }
@@ -51,7 +52,7 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
   spec := by {
     intros ix IX;
     simp;
-    intros H 
+    intros H
     have CONTRA : False := by linarith
     simp at CONTRA
   }
@@ -76,7 +77,7 @@ def Tensor1d.fill [Inhabited α] (t: Tensor1d α) (v: α) : Tensor1d α where
   spec := by {
     intros ix IX;
     simp;
-    intros H 
+    intros H
     have CONTRA : False := by linarith
     simp at CONTRA
   }
@@ -100,18 +101,18 @@ def Tensor1d.insertslice  [Inhabited α] (t: Tensor1d α)
   (sliceix: Nat)
   (slice : Tensor1d α) : Tensor1d α where
   size := if sliceix > t.size then 0 else t.size + slice.size
-  val := fun ix => 
+  val := fun ix =>
     if sliceix > t.size then default -- slice invalid
     else if ix >= t.size + slice.size then default -- index invalid
-    else 
+    else
       let go (ix: Nat) : α :=
         if ix < sliceix then t.val sliceix
         else if ix < sliceix + slice.size then slice.val (ix - sliceix)
         else t.val (ix - (sliceix + slice.size))
       go ix
   spec := by {
-    intros ix 
-    intros H 
+    intros ix
+    intros H
     by_cases A:(sliceix > t.size) <;> simp[A]
     simp[A] at H
     by_cases B:(ix < t.size + slice.size) <;> simp[B]
@@ -128,14 +129,33 @@ theorem not_lt_is_geq {a b: Nat} (NOT_LT: ¬ (a < b)): a >= b := by {
 -- about failure.
 -- Also show how this proof is manual, and yet disgusting, because of lack of
 -- proof automation. We want 'match goal'.
-theorem extractslice_insertslice [Inhabited α] 
+
+def _root_.List.extractSlice (t : List α) (left len : ℕ) : List α :=
+  (t.drop left).take len
+
+def _root_.List.insertSlice (t : List α) (left : ℕ) (slice : List α) : List α :=
+  (t.take left) ++ slice ++ (t.drop left)
+
+theorem extractSlice_insertSlice [Inhabited α]
+    (t : List α) (sliceix : ℕ) (slice : List α)
+    (h1 : sliceix ≤ t.length) :
+    (t.insertSlice sliceix slice).extractSlice sliceix slice.length = slice := by
+  rw [List.extractSlice, List.insertSlice]
+  rw [List.drop_append_eq_append_drop, List.drop_append_eq_append_drop]
+  simp only [List.length_take, ge_iff_le, le_min_iff, le_refl, true_and, List.length_append, List.drop_drop,
+    List.append_assoc]
+  rw [List.drop_eq_nil_of_le, List.nil_append, min_eq_left h1, Nat.sub_self, List.drop,
+    List.take_append_of_le_length, List.take_length]
+  all_goals { simp }
+
+theorem extractslice_insertslice [Inhabited α]
   (t: Tensor1d α)
   (sliceix: Nat)
   (slice: Tensor1d α)
   (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
   : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
     simp[Tensor1d.insertslice, Tensor1d.extract]
-    cases slice <;> simp; 
+    cases slice <;> simp;
     case mk slicesize sliceval spec => {
       by_cases A:(t.size < sliceix) <;> simp[A]
       case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
@@ -151,14 +171,14 @@ theorem extractslice_insertslice [Inhabited α]
               -- here we fail, because we do not know that 'slice' behaves like a
               -- real tensor that returns 'default' outside of its range.
               -- This is something we need to add into the spec of a Tensor.
-              have E : ix >= slicesize := by linarith 
+              have E : ix >= slicesize := by linarith
               simp[spec _ E]
             }
             case pos => {
               simp
               norm_num
               by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
-              case pos => { 
+              case pos => {
                 have CONTRA : False := by linarith;
                 simp at CONTRA;
               }
@@ -167,10 +187,10 @@ theorem extractslice_insertslice [Inhabited α]
                 have CONTRA : False := by linarith
                 simp at CONTRA
               }
-            } 
+            }
         }
       }
-    } 
+    }
 }
 
 -- | TODO: implement fold
@@ -205,11 +225,11 @@ theorem Tensor1d.map_fusion [Inhabited α] (t: Tensor1d α):
   (t.map (g ∘ f)) = (t.map f).map g := by {
     simp[Tensor1d.map]
     funext ix
-    by_cases H:(ix < t.size) <;> simp[H] 
+    by_cases H:(ix < t.size) <;> simp[H]
 }
 
 -- for loop
-def scf.for.loop (f : Nat → β → β) (n n_minus_i: Nat) (acc: β) : β :=
+def scf.for.loop (f : Nat → β → β) (n n_minus_i : Nat) (acc : β) : β :=
   let i := n - n_minus_i
   match n_minus_i with
     | 0 => acc
@@ -219,6 +239,8 @@ def scf.for.loop (f : Nat → β → β) (n n_minus_i: Nat) (acc: β) : β :=
 def scf.for (n: Nat) (f: Nat → β → β) (seed: β) : β :=
   let i := 0
   scf.for.loop f n (n - i) seed
+
+#print List.foldl
 
 -- theorem 1 : for peeling at beginning
 theorem scf.for.peel_begin (n : Nat) (f : Nat → β → β) (seed : β) :
@@ -283,7 +305,7 @@ theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
 
 -- theorem 4 : tiling
 -- proof obligation for chris :)
-theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE :4 ∣ t.size) (f : α → α):
+theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f : α → α):
   t.map f = scf.for (t.size / 4) (fun i acc =>
     let tile := t.extract (i * 4) 4
     let mapped_tile := tile.map f
