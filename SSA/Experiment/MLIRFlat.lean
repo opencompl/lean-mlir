@@ -374,6 +374,9 @@ inductive SSA (Op: Type): SSAIndex → Type where
 | rgnvar (v: Var) : SSA Op .REGION
 | var (v: Var) : SSA Op .EXPR
 
+instance : Coe Val Expr where
+  coe := Expr.const
+
 abbrev Expr (Op: Type) := SSA Op .EXPR
 abbrev Stmt (Op: Type) := SSA Op .STMT
 
@@ -441,6 +444,7 @@ syntax "pair:"  dsl_var dsl_var : dsl_expr
 syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
 syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
 syntax "const:" dsl_val : dsl_expr
+syntax "meta:" term : dsl_expr
 syntax dsl_var : dsl_expr
 syntax "[dsl_expr|" dsl_expr "]" : term
 syntax "[dsl_val|" dsl_val "]" : term
@@ -455,6 +459,7 @@ macro_rules
 macro_rules
 | `([dsl_expr| const: $v:dsl_val]) =>
     `(SSA.const [dsl_val| $v])
+| `([dsl_expr| meta: $v:term]) => return v
 | `([dsl_expr| pair: $a $b]) =>
     `(SSA.pair [dsl_var| $a] [dsl_var| $b])
 | `([dsl_expr| triple: $a $b $c]) =>
@@ -569,17 +574,17 @@ macro_rules
 | `([dsl_op| map1d]) => `(op.map1d)
 | `([dsl_op| extract1d]) => `(op.extract1d)
 
-theorem extract_map (e: Env Val) (re: Env (Val → Val)): 
+theorem extract_map (e: Env Val) (v: Nat) (re: Env (Val → Val)): 
   SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 => 
     %v1 := op:map1d %v0 { %r0 };
-    %v2 := const:42;
+    %v2 := meta:(Val.nat v);
     %v3 := const:43;
     %v4 := triple: %v1 %v2 %v3;
     %v5 := op:extract1d %v4
     dsl_ret %v5
   ] = 
   SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 => 
-    %v1 := const:42;
+    %v1 := meta:(Val.nat v);
     %v2 := const:43;
     %v3 := triple: %v0 %v1 %v2;
     %v4 := op:extract1d %v3;
@@ -588,13 +593,13 @@ theorem extract_map (e: Env Val) (re: Env (Val → Val)):
   ] := by {
     simp -- simplify away syntax
     simp[SSA.eval] -- simplify away evaluation.
-    funext x0
+    funext v0
     simp[Env.set]
     simp[OP_SEMANTICS]
     -- @tobias: pay attention here, where we are forced to do
     -- case analysis because we don't have good typing information.
     -- need to know that x0 has the right 'type' (tensor1d).
-    cases x0 <;> simp;
+    cases v0 <;> simp;
     simp[Tensor1d.extract_map]
   }
 
