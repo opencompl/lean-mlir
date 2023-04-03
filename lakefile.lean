@@ -5,9 +5,14 @@ package «SSA»
 
 lean_lib SSA
 
-@[default_target]
 lean_exe «ssa» {
   root := `SSA
+  supportInterpreter := true
+}
+
+@[default_target]
+lean_exe «mlirflat» {
+  root := `SSA.Experiment.MLIRFlat
   supportInterpreter := true
 }
 

@@ -8,7 +8,6 @@ import Std.Data.Int.Basic
 import SSA.Experiment.SSA2TreeNoProof
 import SSA.Experiment.SSARgn2TreeNoProof
 import SSA.Experiment.SSARgnVar2TreeNoProof
-import SSA.Experiment.MLIRFlat
 
 open Std
 

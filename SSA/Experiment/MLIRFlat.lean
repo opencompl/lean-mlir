@@ -391,7 +391,7 @@ def SSA.eval [S : UserSemantics Op] (e: Env Val) (re: Env (Val → Val)) : SSA O
 | .rgn0 => id
 | .rgn arg body => fun val => body.eval (e.set arg val) re
 
-section EDSL
+namespace EDSL
 
 declare_syntax_cat dsl_region
 declare_syntax_cat dsl_op
@@ -484,22 +484,24 @@ example : [dsl_stmt| %v0 := const:42 ; %v1 := const:44  ] =
     simp
 }
 
-syntax "ret " dsl_var : dsl_terminator
+-- | this sucks, it becomes super global.
+syntax "dsl_ret " dsl_var : dsl_terminator
+
 macro_rules
-| `([dsl_terminator| ret $v:dsl_var]) =>
+| `([dsl_terminator| dsl_ret $v:dsl_var]) =>
     `(fun stmt => SSA.ret stmt [dsl_var| $v])
 
-syntax "rgn " dsl_var " => " (dsl_stmt)?  "ret " dsl_var : dsl_region
+syntax "dsl_rgn " dsl_var " => " (dsl_stmt)?  "dsl_ret " dsl_var : dsl_region
 macro_rules
-| `([dsl_region| rgn $v:dsl_var => $[ $s?: dsl_stmt ]? ret $retv:dsl_var]) => do
+| `([dsl_region| dsl_rgn $v:dsl_var => $[ $s?: dsl_stmt ]? dsl_ret $retv:dsl_var]) => do
     let s : Lean.Syntax ← do 
           match s? with 
           | .none => `(fun x => x)
           | .some s => `([dsl_stmt| $s]) 
-    `(SSA.rgn ([dsl_var| $v]) ([dsl_terminator| ret $retv] <| ($s SSA.nop)))
+    `(SSA.rgn ([dsl_var| $v]) ([dsl_terminator| dsl_ret $retv] <| ($s SSA.nop)))
 
-example : [dsl_region| rgn %v0 =>
-  ret %v0
+example : [dsl_region| dsl_rgn %v0 =>
+  dsl_ret %v0
 ] = SSA.rgn 0 (SSA.ret (SSA.nop (Op := Unit)) 0) := by {
   rfl
 }
@@ -542,3 +544,5 @@ instance : UserSemantics op where
 end ArithScfLinalg
 
 end LC
+
+def main : IO Unit := return ()
