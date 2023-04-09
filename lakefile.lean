@@ -17,7 +17,7 @@ lean_exe «tree» {
   supportInterpreter := true
 }
 
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "b0625e5"
+require Mathlib from git "https://github.com/leanprover-community/mathlib4" @ "b0625e5"
 
 meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
   require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"
