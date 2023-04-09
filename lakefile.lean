@@ -6,14 +6,8 @@ package «SSA»
 lean_lib SSA
 
 @[default_target]
-lean_exe «alive» {
-  root := `Alive
-  supportInterpreter := true
-}
-
-lean_exe «tree» {
-  root := `SSA.Experiment.SSAToTree
-  supportInterpreter := true
+lean_lib «alive» {
+  roots := #[`Alive]
 }
 
 -- NOTE: this must be 'm'mathlib, as indicated from:

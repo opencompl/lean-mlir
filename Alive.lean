@@ -1,3 +1,3 @@
 import SSA
-
-def main : IO Unit := return ()
+import Alive.AddSub
+import Alive.Template
