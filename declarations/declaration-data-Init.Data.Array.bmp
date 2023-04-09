@@ -1,1 +1,0 @@
-{"name":"Init.Data.Array","instances":[],"imports":["Init.Data.Array.Basic","Init.Data.Array.QSort","Init.Data.Array.BinSearch","Init.Data.Array.InsertionSort","Init.Data.Array.DecidableEq","Init.Data.Array.Mem","Init.Data.Array.BasicAux"],"declarations":[]}

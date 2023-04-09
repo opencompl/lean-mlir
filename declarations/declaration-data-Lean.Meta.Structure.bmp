@@ -1,1 +1,0 @@
-{"name":"Lean.Meta.Structure","instances":[],"imports":["Init","Lean.Structure","Lean.Meta.AppBuilder"],"declarations":[{"sourceLink":"https://github.com/leanprover/lean4/blob/3d21124445b32e61af1ba313eed40b708117dfeb/src/Lean/Meta/Structure.lean#L13-L19","name":"Lean.Meta.getStructureName","kind":"def","docLink":"./Lean/Meta/Structure.html#Lean.Meta.getStructureName","doc":""}]}

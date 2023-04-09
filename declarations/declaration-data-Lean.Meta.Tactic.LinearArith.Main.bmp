@@ -1,1 +1,0 @@
-{"name":"Lean.Meta.Tactic.LinearArith.Main","instances":[],"imports":["Init","Lean.Meta.Tactic.LinearArith.Nat"],"declarations":[]}

@@ -1,1 +1,0 @@
-{"name":"Init.Data.UInt","instances":[],"imports":["Init.Data.UInt.Basic","Init.Data.UInt.Log2"],"declarations":[]}
