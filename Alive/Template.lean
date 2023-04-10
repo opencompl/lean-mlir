@@ -1,4 +1,5 @@
 import Mathlib.Data.Fin.Basic
+import Mathlib.Init.Data.Int.Bitwise
 import SSA.Framework
 
 abbrev Width := Nat -- bit width
@@ -14,28 +15,53 @@ inductive op
 | const (width : Width) (i : MachineInt)
 
 inductive val
-| int : (w : Width) → Fin (2 ^ w) → val
+| int : (w : Width) → Int → val
 | pair : val → val → val
 | triple : val → val → val → val
 
 instance : Inhabited val where
-  default := .int 0 ⟨0, by simp⟩
+  default := .int 0 0
 
+-- @Chris: these are DUMMY DEFINITIONS! They need to be modified.
 @[simp] def val.add (w : Width) (x y : val) : val :=
   match x with
-  | .int w1 v1 =>
+  | .int _w1 v1 =>
     match y with
-    | .int w2 v2 =>
-      if H : w1 = w2
-      then val.int w1 <| v1 + (H ▸ v2) -- if they have the same width, then add and succeed.
-      else default
+    | .int _w2 v2 => .int 0 <| (v1 + v2) % w
     | _ => default
   | _ => default
-@[simp] def val.and (w : Width) (x y : val) : val := x -- if they have the same width, then take bitwise 'and' and succeed.
-@[simp] def val.negate (w : Width) (x : val) : val := x -- negate the number.
-@[simp] def val.or (w : Width) (x y : val) : val := x
-@[simp] def val.sub (w : Width) (x y : val) : val := x
-@[simp] def val.xor (w : Width) (x y : val) : val := x
+@[simp] def val.and (w : Width) (x y : val) : val :=
+  match x with
+  | .int _w1 v1 =>
+    match y with
+    | .int _w2 v2 => .int 0 <| (Int.land v1 v2) % w
+    | _ => default
+  | _ => default
+@[simp] def val.negate (w : Width) (x : val) : val :=
+  match x with
+  | .int _w1 v1 => .int 0 <| (- v1) % w
+  | _ => default
+@[simp] def val.or (w : Width) (x y : val) : val :=
+  match x with
+  | .int _w1 v1 =>
+    match y with
+    | .int _w2 v2 => .int 0 <| (Int.lor v1 v2) % w
+    | _ => default
+  | _ => default
+@[simp] def val.sub (w : Width) (x y : val) : val :=
+  match x with
+  | .int _w1 v1 =>
+    match y with
+    | .int _w2 v2 => .int 0 <| (Int.sub v1 v2) % w
+    | _ => default
+  | _ => default
+@[simp] def val.xor (w : Width) (x y : val) : val :=
+  match x with
+  | .int _w1 v1 =>
+    match y with
+    | .int _w2 v2 => .int 0 <| (Int.lxor' v1 v2) % w
+    | _ => default
+  | _ => default
 
 @[simp]
 def op.eval (o : op) (v : val) (_rgn : val → val) : val :=
