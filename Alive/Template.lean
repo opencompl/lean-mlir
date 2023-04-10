@@ -1,5 +1,4 @@
-
-
+import Mathlib.Data.Fin.Basic
 import SSA.Framework
 
 abbrev Width := Nat -- bit width
@@ -15,14 +14,25 @@ inductive op
 | const (width : Width) (i : MachineInt)
 
 inductive val
-| int : Width → MachineInt → val
+| int : (w : Width) → Fin (2 ^ w) → val
 | pair : val → val → val
 | triple : val → val → val → val
-deriving Inhabited
 
-@[simp] def val.add (w : Width) (x y : val) : val := x
-@[simp] def val.and (w : Width) (x y : val) : val := x
-@[simp] def val.negate (w : Width) (x : val) : val := x
+instance : Inhabited val where
+  default := .int 0 ⟨0, by simp⟩
+
+@[simp] def val.add (w : Width) (x y : val) : val :=
+  match x with
+  | .int w1 v1 =>
+    match y with
+    | .int w2 v2 =>
+      if H : w1 = w2
+      then val.int w1 <| v1 + (H ▸ v2) -- if they have the same width, then add and succeed.
+      else default
+    | _ => default
+  | _ => default
+@[simp] def val.and (w : Width) (x y : val) : val := x -- if they have the same width, then take bitwise 'and' and succeed.
+@[simp] def val.negate (w : Width) (x : val) : val := x -- negate the number.
 @[simp] def val.or (w : Width) (x y : val) : val := x
 @[simp] def val.sub (w : Width) (x y : val) : val := x
 @[simp] def val.xor (w : Width) (x y : val) : val := x

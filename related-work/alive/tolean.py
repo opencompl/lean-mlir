@@ -83,7 +83,8 @@ DUMMY_ARG = 424242
 
 
 class SSAConstValue:
-    def __init__(self, s:str): # C, C2, or 1, 2, etc.
+    def __init__(self, s:str): # C, C2, or 1, 2, etc. but not things like (C1+C2)
+        assert s.isalnum() 
         self.val = s
 
     def __str__(self):
@@ -137,7 +138,7 @@ def SSAConstExpr(s : str):
 
 # parse constant expressions such as -C, ^C, etc.
 def SSAConst(s : str):
-    if s[0].isupper() or s[0].isdigit():
+    if s.isalnum():
         return SSAConstValue(s)
     else:
         return SSAConstExpr(s)
@@ -186,8 +187,8 @@ class SSAOp:
         if len(self.args) == 2:
             vararg0 = self.args[0].compile_to_lean_tree()
             vararg1 = self.args[1].compile_to_lean_tree()
-            out = f"(Tree.pair {vararg0} {vararg1})"
-            out = f"(Tree.op (.{self.op} w) {out})"
+            arg = f"(Tree.pair ({vararg0}) ({vararg1}))"
+            out = f"(Tree.op (.{self.op} w) ({arg}))"
             return out
         else:
             raise CompileException(f"cannot compile {self}")
@@ -283,15 +284,15 @@ def test_to_tree(test: Test):
     out += str(test.find) + "\n"
     out += "=>\n"
     out += str(test.replace) + "\n"
-    out += "-/"
+    out += "-/\n"
     out += (f"def thm{test.ix}_tree : ")
     out += ("Tree.eval (Op := op) (Val := val)  (\n")
     out += (alive_ir_to_tree(test.find))
-    out += (")  = \n");
+    out += (") = \n");
     out += ("  Tree.eval (Op := op) (Val := val) (\n")
     out += (alive_ir_to_tree(test.replace))
     out += (")");
-    out += ("\n  := by simp[Tree.eval]; sorry")
+    out += ("\n  := by simp[Tree.eval]; try sorry")
     return out
 
 def test_to_lean(test: Test):
@@ -303,7 +304,7 @@ def test_to_lean(test: Test):
     out += str(test.find) + "\n"
     out += "=>\n"
     out += str(test.replace) + "\n"
-    out += "-/"
+    out += "-/\n"
     out += (f"def thm{test.ix}_ssa : ")
     out += ("SSA.eval (Op := op) (Val := val) e re  [dsl_bb|\n");
     out += (alive_ir_to_lean(test.find))
@@ -312,7 +313,7 @@ def test_to_lean(test: Test):
     out += ("  SSA.eval (Op := op) (Val := val) e re [dsl_bb|\n");
     out += (alive_ir_to_lean(test.replace))
     out += ("  ]");
-    out += ("\n  := by simp[SSA.eval]; sorry")
+    out += ("\n  := by simp[SSA.eval]; try sorry")
     return out
 
 def to_lean(source_file_path: str, dest_file_path: str):
