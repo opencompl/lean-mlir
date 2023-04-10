@@ -251,7 +251,7 @@ def alive_ir_to_lean(ir: str) -> str:
     last = 0
     for (lhs, rhs) in assigns:
         last = rhs.compile_to_lean_stmt(env, lean_stmts)
-        env[lhs] = last
+        env[lhs.s] = last
     out = ""
     out += ";\n".join(["  " + str(s) for s in lean_stmts])
     out += f"\n  dsl_ret %v{last}\n"

@@ -19,23 +19,23 @@ def thm0_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v1 := op:const(w, C2) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:or(w) %v2;
-  %v6 := op:const(w, C1) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:xor(w) %v7;
-  %v11 := op:const(w, 1) %v424242;
-  %v12 := pair: %v10 %v11;
-  %v13 := op:add(w) %v12;
-  %v17 := pair: %v15 %v16;
-  %v18 := op:add(w) %v17
-  dsl_ret %v18
-  ]  =
+  %v5 := op:const(w, C1) %v424242;
+  %v6 := pair: %v3 %v5;
+  %v7 := op:xor(w) %v6;
+  %v9 := op:const(w, 1) %v424242;
+  %v10 := pair: %v7 %v9;
+  %v11 := op:add(w) %v10;
+  %v14 := pair: %v11 %v13;
+  %v15 := op:add(w) %v14
+  dsl_ret %v15
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v1 := op:const(w, C1) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:and(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:sub(w) %v7
-  dsl_ret %v8
+  %v6 := pair: %v5 %v3;
+  %v7 := op:sub(w) %v6
+  dsl_ret %v7
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -54,7 +54,7 @@ def thm0_tree : Tree.eval (Op := op) (Val := val)  (
   let vY := (Tree.op (.or w) ((Tree.pair (vZ) ((Tree.op (.const w C2) dummy)))))
   let vX := (Tree.op (.xor w) ((Tree.pair (vY) ((Tree.op (.const w C1) dummy)))))
   let vLHS := (Tree.op (.add w) ((Tree.pair (vX) ((Tree.op (.const w 1) dummy)))))
-  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) =
+  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vand := (Tree.op (.and w) ((Tree.pair (vZ) ((Tree.op (.const w C1) dummy)))))
   (Tree.op (.sub w) ((Tree.pair (vRHS) (vand)))))
@@ -75,24 +75,24 @@ def thm1_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v1 := op:const(w, C1) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:and(w) %v2;
-  %v6 := op:const(w, C1) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:xor(w) %v7;
-  %v11 := op:const(w, 1) %v424242;
-  %v12 := pair: %v10 %v11;
-  %v13 := op:add(w) %v12;
-  %v17 := pair: %v15 %v16;
-  %v18 := op:add(w) %v17
-  dsl_ret %v18
-  ]  =
+  %v5 := op:const(w, C1) %v424242;
+  %v6 := pair: %v3 %v5;
+  %v7 := op:xor(w) %v6;
+  %v9 := op:const(w, 1) %v424242;
+  %v10 := pair: %v7 %v9;
+  %v11 := op:add(w) %v10;
+  %v14 := pair: %v11 %v13;
+  %v15 := op:add(w) %v14
+  dsl_ret %v15
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v1 := op:const(w, C1) %v424242;
   %v2 := op:negate(w) %v1;
   %v3 := pair: %v0 %v2;
   %v4 := op:or(w) %v3;
-  %v8 := pair: %v6 %v7;
-  %v9 := op:sub(w) %v8
-  dsl_ret %v9
+  %v7 := pair: %v6 %v4;
+  %v8 := op:sub(w) %v7
+  dsl_ret %v8
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -111,7 +111,7 @@ def thm1_tree : Tree.eval (Op := op) (Val := val)  (
   let vY := (Tree.op (.and w) ((Tree.pair (vZ) ((Tree.op (.const w C1) dummy)))))
   let vX := (Tree.op (.xor w) ((Tree.pair (vY) ((Tree.op (.const w C1) dummy)))))
   let vLHS := (Tree.op (.add w) ((Tree.pair (vX) ((Tree.op (.const w 1) dummy)))))
-  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) =
+  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vor := (Tree.op (.or w) ((Tree.pair (vZ) (Tree.op (.negate w) (Tree.op (.const w C1) dummy)))))
   (Tree.op (.sub w) ((Tree.pair (vRHS) (vor)))))
@@ -131,21 +131,21 @@ def thm2_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v1 := op:const(w, C2) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:and(w) %v2;
-  %v6 := op:const(w, C1) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:xor(w) %v7;
-  %v12 := pair: %v10 %v11;
-  %v13 := op:add(w) %v12
-  dsl_ret %v13
-  ]  =
+  %v5 := op:const(w, C1) %v424242;
+  %v6 := pair: %v3 %v5;
+  %v7 := op:xor(w) %v6;
+  %v10 := pair: %v7 %v9;
+  %v11 := op:add(w) %v10
+  dsl_ret %v11
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v1 := op:const(w, C2) %v424242;
   %v2 := op:negate(w) %v1;
   %v3 := pair: %v0 %v2;
   %v4 := op:or(w) %v3;
-  %v8 := pair: %v6 %v7;
-  %v9 := op:sub(w) %v8
-  dsl_ret %v9
+  %v7 := pair: %v6 %v4;
+  %v8 := op:sub(w) %v7
+  dsl_ret %v8
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -162,7 +162,7 @@ def thm2_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 def thm2_tree : Tree.eval (Op := op) (Val := val)  (
   let vY := (Tree.op (.and w) ((Tree.pair (vZ) ((Tree.op (.const w C2) dummy)))))
   let vLHS := (Tree.op (.xor w) ((Tree.pair (vY) ((Tree.op (.const w C1) dummy)))))
-  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) =
+  (Tree.op (.add w) ((Tree.pair (vLHS) (vRHS))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vor := (Tree.op (.or w) ((Tree.pair (vZ) (Tree.op (.negate w) (Tree.op (.const w C2) dummy)))))
   (Tree.op (.sub w) ((Tree.pair (vRHS) (vor)))))
@@ -180,7 +180,7 @@ def thm3_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2
   dsl_ret %v3
-  ]  =
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v1 := op:const(w, C) %v424242;
   %v2 := pair: %v0 %v1;
@@ -197,7 +197,7 @@ def thm3_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 %a = xor %x, C
 -/
 def thm3_tree : Tree.eval (Op := op) (Val := val)  (
-  (Tree.op (.add w) ((Tree.pair (vx) ((Tree.op (.const w C) dummy)))))) =
+  (Tree.op (.add w) ((Tree.pair (vx) ((Tree.op (.const w C) dummy)))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.xor w) ((Tree.pair (vx) ((Tree.op (.const w C) dummy))))))
   := by simp[Tree.eval]; try sorry
@@ -214,10 +214,10 @@ def thm14_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v0 := op:const(w, 0) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:add(w) %v7
-  dsl_ret %v8
-  ]  =
+  %v6 := pair: %v3 %v5;
+  %v7 := op:add(w) %v6
+  dsl_ret %v7
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2
@@ -235,7 +235,7 @@ def thm14_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm14_tree : Tree.eval (Op := op) (Val := val)  (
   let vna := (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (va))))
-  (Tree.op (.add w) ((Tree.pair (vna) (vb))))) =
+  (Tree.op (.add w) ((Tree.pair (vna) (vb))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.sub w) ((Tree.pair (vb) (va)))))
   := by simp[Tree.eval]; try sorry
@@ -257,17 +257,17 @@ def thm15_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v5 := op:const(w, 0) %v424242;
   %v7 := pair: %v5 %v6;
   %v8 := op:sub(w) %v7;
-  %v12 := pair: %v10 %v11;
-  %v13 := op:add(w) %v12
-  dsl_ret %v13
-  ]  =
+  %v10 := pair: %v3 %v8;
+  %v11 := op:add(w) %v10
+  dsl_ret %v11
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2;
   %v5 := op:const(w, 0) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:sub(w) %v7
-  dsl_ret %v8
+  %v6 := pair: %v5 %v3;
+  %v7 := op:sub(w) %v6
+  dsl_ret %v7
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -284,7 +284,7 @@ def thm15_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 def thm15_tree : Tree.eval (Op := op) (Val := val)  (
   let vna := (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (va))))
   let vnb := (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (vb))))
-  (Tree.op (.add w) ((Tree.pair (vna) (vnb))))) =
+  (Tree.op (.add w) ((Tree.pair (vna) (vnb))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vab := (Tree.op (.add w) ((Tree.pair (va) (vb))))
   (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (vab)))))
@@ -302,10 +302,10 @@ def thm16_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v0 := op:const(w, 0) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:add(w) %v7
-  dsl_ret %v8
-  ]  =
+  %v6 := pair: %v5 %v3;
+  %v7 := op:add(w) %v6
+  dsl_ret %v7
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2
@@ -323,7 +323,7 @@ def thm16_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm16_tree : Tree.eval (Op := op) (Val := val)  (
   let vnb := (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (vb))))
-  (Tree.op (.add w) ((Tree.pair (va) (vnb))))) =
+  (Tree.op (.add w) ((Tree.pair (va) (vnb))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.sub w) ((Tree.pair (va) (vb)))))
   := by simp[Tree.eval]; try sorry
@@ -339,7 +339,7 @@ def thm17_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2
   dsl_ret %v3
-  ]  =
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:or(w) %v2
@@ -355,7 +355,7 @@ def thm17_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 %r = or %x, %y
 -/
 def thm17_tree : Tree.eval (Op := op) (Val := val)  (
-  (Tree.op (.add w) ((Tree.pair (vx) (vy))))) =
+  (Tree.op (.add w) ((Tree.pair (vx) (vy))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.or w) ((Tree.pair (vx) (vy)))))
   := by simp[Tree.eval]; try sorry
@@ -373,19 +373,19 @@ def thm19_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v1 := op:const(w, C2) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:and(w) %v2;
-  %v6 := op:const(w, C1) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:add(w) %v7
-  dsl_ret %v8
-  ]  =
+  %v5 := op:const(w, C1) %v424242;
+  %v6 := pair: %v3 %v5;
+  %v7 := op:add(w) %v6
+  dsl_ret %v7
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v1 := op:const(w, C1) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2;
-  %v6 := op:const(w, C2) %v424242;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:and(w) %v7
-  dsl_ret %v8
+  %v5 := op:const(w, C2) %v424242;
+  %v6 := pair: %v3 %v5;
+  %v7 := op:and(w) %v6
+  dsl_ret %v7
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -400,7 +400,7 @@ def thm19_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm19_tree : Tree.eval (Op := op) (Val := val)  (
   let vxc2 := (Tree.op (.and w) ((Tree.pair (vx) ((Tree.op (.const w C2) dummy)))))
-  (Tree.op (.add w) ((Tree.pair (vxc2) ((Tree.op (.const w C1) dummy)))))) =
+  (Tree.op (.add w) ((Tree.pair (vxc2) ((Tree.op (.const w C1) dummy)))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vxc1 := (Tree.op (.add w) ((Tree.pair (vx) ((Tree.op (.const w C1) dummy)))))
   (Tree.op (.and w) ((Tree.pair (vxc1) ((Tree.op (.const w C2) dummy))))))
@@ -420,10 +420,10 @@ def thm24_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v3 := op:and(w) %v2;
   %v5 := pair: %v0 %v1;
   %v6 := op:xor(w) %v5;
-  %v10 := pair: %v8 %v9;
-  %v11 := op:add(w) %v10
-  dsl_ret %v11
-  ]  =
+  %v8 := pair: %v3 %v6;
+  %v9 := op:add(w) %v8
+  dsl_ret %v9
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:or(w) %v2
@@ -443,7 +443,7 @@ def thm24_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 def thm24_tree : Tree.eval (Op := op) (Val := val)  (
   let vaab := (Tree.op (.and w) ((Tree.pair (va) (vb))))
   let vaob := (Tree.op (.xor w) ((Tree.pair (va) (vb))))
-  (Tree.op (.add w) ((Tree.pair (vaab) (vaob))))) =
+  (Tree.op (.add w) ((Tree.pair (vaab) (vaob))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.or w) ((Tree.pair (va) (vb)))))
   := by simp[Tree.eval]; try sorry
@@ -462,10 +462,10 @@ def thm25_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v3 := op:and(w) %v2;
   %v5 := pair: %v0 %v1;
   %v6 := op:or(w) %v5;
-  %v10 := pair: %v8 %v9;
-  %v11 := op:add(w) %v10
-  dsl_ret %v11
-  ]  =
+  %v8 := pair: %v3 %v6;
+  %v9 := op:add(w) %v8
+  dsl_ret %v9
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2
@@ -485,7 +485,7 @@ def thm25_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 def thm25_tree : Tree.eval (Op := op) (Val := val)  (
   let vlhs := (Tree.op (.and w) ((Tree.pair (va) (vb))))
   let vrhs := (Tree.op (.or w) ((Tree.pair (va) (vb))))
-  (Tree.op (.add w) ((Tree.pair (vlhs) (vrhs))))) =
+  (Tree.op (.add w) ((Tree.pair (vlhs) (vrhs))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.add w) ((Tree.pair (va) (vb)))))
   := by simp[Tree.eval]; try sorry
@@ -502,10 +502,10 @@ def thm31_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v0 := op:const(w, 0) %v424242;
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:sub(w) %v7
-  dsl_ret %v8
-  ]  =
+  %v6 := pair: %v5 %v3;
+  %v7 := op:sub(w) %v6
+  dsl_ret %v7
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2
@@ -523,7 +523,7 @@ def thm31_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm31_tree : Tree.eval (Op := op) (Val := val)  (
   let vna := (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (va))))
-  (Tree.op (.sub w) ((Tree.pair (vx) (vna))))) =
+  (Tree.op (.sub w) ((Tree.pair (vx) (vna))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.add w) ((Tree.pair (vx) (va)))))
   := by simp[Tree.eval]; try sorry
@@ -539,10 +539,10 @@ def thm31_tree : Tree.eval (Op := op) (Val := val)  (
 def thm43_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:add(w) %v2;
-  %v6 := pair: %v0 %v5;
-  %v7 := op:sub(w) %v6
-  dsl_ret %v7
-  ]  =
+  %v5 := pair: %v0 %v3;
+  %v6 := op:sub(w) %v5
+  dsl_ret %v6
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v0 := op:const(w, 0) %v424242;
   %v2 := pair: %v0 %v1;
@@ -561,7 +561,7 @@ def thm43_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm43_tree : Tree.eval (Op := op) (Val := val)  (
   let vOp1 := (Tree.op (.add w) ((Tree.pair (vX) (vY))))
-  (Tree.op (.sub w) ((Tree.pair (vX) (vOp1))))) =
+  (Tree.op (.sub w) ((Tree.pair (vX) (vOp1))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (vY)))))
   := by simp[Tree.eval]; try sorry
@@ -577,10 +577,10 @@ def thm43_tree : Tree.eval (Op := op) (Val := val)  (
 def thm44_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v6 := pair: %v5 %v0;
-  %v7 := op:sub(w) %v6
-  dsl_ret %v7
-  ]  =
+  %v5 := pair: %v3 %v0;
+  %v6 := op:sub(w) %v5
+  dsl_ret %v6
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v0 := op:const(w, 0) %v424242;
   %v2 := pair: %v0 %v1;
@@ -599,7 +599,7 @@ def thm44_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm44_tree : Tree.eval (Op := op) (Val := val)  (
   let vOp0 := (Tree.op (.sub w) ((Tree.pair (vX) (vY))))
-  (Tree.op (.sub w) ((Tree.pair (vOp0) (vX))))) =
+  (Tree.op (.sub w) ((Tree.pair (vOp0) (vX))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.sub w) ((Tree.pair ((Tree.op (.const w 0) dummy)) (vY)))))
   := by simp[Tree.eval]; try sorry
@@ -618,10 +618,10 @@ def thm45_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v3 := op:or(w) %v2;
   %v5 := pair: %v0 %v1;
   %v6 := op:xor(w) %v5;
-  %v10 := pair: %v8 %v9;
-  %v11 := op:sub(w) %v10
-  dsl_ret %v11
-  ]  =
+  %v8 := pair: %v3 %v6;
+  %v9 := op:sub(w) %v8
+  dsl_ret %v9
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:and(w) %v2
@@ -641,7 +641,7 @@ def thm45_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 def thm45_tree : Tree.eval (Op := op) (Val := val)  (
   let vOp0 := (Tree.op (.or w) ((Tree.pair (vA) (vB))))
   let vOp1 := (Tree.op (.xor w) ((Tree.pair (vA) (vB))))
-  (Tree.op (.sub w) ((Tree.pair (vOp0) (vOp1))))) =
+  (Tree.op (.sub w) ((Tree.pair (vOp0) (vOp1))))) = 
   Tree.eval (Op := op) (Val := val) (
   (Tree.op (.and w) ((Tree.pair (vA) (vB)))))
   := by simp[Tree.eval]; try sorry
@@ -658,16 +658,16 @@ def thm45_tree : Tree.eval (Op := op) (Val := val)  (
 def thm47_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:sub(w) %v7
-  dsl_ret %v8
-  ]  =
+  %v6 := pair: %v5 %v3;
+  %v7 := op:sub(w) %v6
+  dsl_ret %v7
+  ]  = 
   SSA.eval (Op := op) (Val := val) e re [dsl_bb|
   %v2 := pair: %v0 %v1;
   %v3 := op:sub(w) %v2;
-  %v7 := pair: %v5 %v6;
-  %v8 := op:add(w) %v7
-  dsl_ret %v8
+  %v6 := pair: %v5 %v3;
+  %v7 := op:add(w) %v6
+  dsl_ret %v7
   ]
   := by simp[SSA.eval]; try sorry
 
@@ -682,7 +682,7 @@ def thm47_ssa : SSA.eval (Op := op) (Val := val) e re  [dsl_bb|
 -/
 def thm47_tree : Tree.eval (Op := op) (Val := val)  (
   let vOp1 := (Tree.op (.sub w) ((Tree.pair (vY) (vZ))))
-  (Tree.op (.sub w) ((Tree.pair (vX) (vOp1))))) =
+  (Tree.op (.sub w) ((Tree.pair (vX) (vOp1))))) = 
   Tree.eval (Op := op) (Val := val) (
   let vs := (Tree.op (.sub w) ((Tree.pair (vZ) (vY))))
   (Tree.op (.add w) ((Tree.pair (vX) (vs)))))

@@ -23,39 +23,39 @@ instance : Inhabited val where
   default := .int 0 0
 
 -- @Chris: these are DUMMY DEFINITIONS! They need to be modified.
-@[simp] def val.add (w : Width) (x y : val) : val :=
+def val.add (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>
     match y with
     | .int _w2 v2 => .int 0 <| (v1 + v2) % w
     | _ => default
   | _ => default
-@[simp] def val.and (w : Width) (x y : val) : val :=
+def val.and (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>
     match y with
     | .int _w2 v2 => .int 0 <| (Int.land v1 v2) % w
     | _ => default
   | _ => default
-@[simp] def val.negate (w : Width) (x : val) : val :=
+def val.negate (w : Width) (x : val) : val :=
   match x with
   | .int _w1 v1 => .int 0 <| (- v1) % w
   | _ => default
-@[simp] def val.or (w : Width) (x y : val) : val :=
+def val.or (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>
     match y with
     | .int _w2 v2 => .int 0 <| (Int.lor v1 v2) % w
     | _ => default
   | _ => default
-@[simp] def val.sub (w : Width) (x y : val) : val :=
+def val.sub (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>
     match y with
     | .int _w2 v2 => .int 0 <| (Int.sub v1 v2) % w
     | _ => default
   | _ => default
-@[simp] def val.xor (w : Width) (x y : val) : val :=
+def val.xor (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>
     match y with
