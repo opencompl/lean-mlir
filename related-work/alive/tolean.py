@@ -76,6 +76,8 @@ class SSAVar:
             env[self.s] = v
             return v
 
+    def compile_to_lean_tree(self) -> str:
+        return f"v{self.s}"
 
 DUMMY_ARG = 424242
 
@@ -95,6 +97,9 @@ class SSAConstValue:
         lean_stmts.append(LeanOp(v, f"const(w, {self.val})", DUMMY_ARG))
         return v
 
+    def compile_to_lean_tree(self) -> str:
+        return f"(Tree.op (.const w {self.val}) dummy)"
+
 
 class CompileException(RuntimeError):
     pass
@@ -102,7 +107,7 @@ class CompileException(RuntimeError):
 class SSAConstUnaryExpr:
     def __init__(self, op, val):
         assert isinstance(op, str)
-        assert isinstance(val, str)
+        assert isinstance(val, str) # TODO: make this an SSAConstValue
         self.op = op
         self.val = val
 
@@ -119,6 +124,10 @@ class SSAConstUnaryExpr:
         ovar = len(env) + len(lean_stmts)
         lean_stmts.append(LeanOp(ovar, f"{self.op}(w)", oconst))
         return ovar
+
+    def compile_to_lean_tree(self) -> str:
+        const = f"Tree.op (.const w {self.val}) dummy"
+        return f"Tree.op (.{self.op} w) ({const})"
 
 def SSAConstExpr(s : str):
     if s[0] == '~':
@@ -157,7 +166,7 @@ class SSAOp:
     def __repr__(self):
         return self.__str__()
 
-    def compile_to_lean_stmt(self, env, lean_stmts):
+    def compile_to_lean_stmt(self, env, lean_stmts) -> int:
         if len(self.args) == 2:
             vararg0 = self.args[0].compile_to_lean_stmt(env, lean_stmts)
             vararg1 = self.args[1].compile_to_lean_stmt(env, lean_stmts)
@@ -170,6 +179,16 @@ class SSAOp:
             lean_stmts.append(out)
 
             return varout
+        else:
+            raise CompileException(f"cannot compile {self}")
+
+    def compile_to_lean_tree(self) -> str:
+        if len(self.args) == 2:
+            vararg0 = self.args[0].compile_to_lean_tree()
+            vararg1 = self.args[1].compile_to_lean_tree()
+            out = f"(Tree.pair {vararg0} {vararg1})"
+            out = f"(Tree.op (.{self.op} w) {out})"
+            return out
         else:
             raise CompileException(f"cannot compile {self}")
 
@@ -237,12 +256,55 @@ def alive_ir_to_lean(ir: str) -> str:
     out += f"\n  dsl_ret %v{last}\n"
     return out
 
+def alive_ir_to_tree(ir: str) -> str:
+    assigns = []
+    for line in ir.split("\n"):
+        # %out = <blah>
+        lhs = line.split("=")[0].strip()
+        rhs = line.split("=")[1].strip()
+        lhs = SSAVar(lhs)
+        rhs = SSAOp(rhs)
+        assigns.append((lhs, rhs))
+
+    out = ""
+    for (lhs, rhs) in assigns[:-1]:
+        cur = rhs.compile_to_lean_tree()
+        out += f"  let {lhs.compile_to_lean_tree()} := {cur}\n"
+    cur = "  " + assigns[-1][1].compile_to_lean_tree()
+    out += cur
+    return out
+
+def test_to_tree(test: Test):
+    out = ""
+    out += ("\n\n")
+    out += (f"-- Name:{test.name}\n")
+    out += (f"-- precondition: {test.pre if test.pre is not None else 'NONE'}\n")
+    out += "/-\n"
+    out += str(test.find) + "\n"
+    out += "=>\n"
+    out += str(test.replace) + "\n"
+    out += "-/"
+    out += (f"def thm{test.ix}_tree : ")
+    out += ("Tree.eval (Op := op) (Val := val)  (\n")
+    out += (alive_ir_to_tree(test.find))
+    out += (")  = \n");
+    out += ("  Tree.eval (Op := op) (Val := val) (\n")
+    out += (alive_ir_to_tree(test.replace))
+    out += (")");
+    out += ("\n  := by simp[Tree.eval]; sorry")
+    return out
+
 def test_to_lean(test: Test):
     out = ""
     out += ("\n\n")
     out += (f"-- Name:{test.name}\n")
     out += (f"-- precondition: {test.pre if test.pre is not None else 'NONE'}\n")
-    out += (f"def thm{test.ix} (Width: Nat) : ")
+    out += "/-\n"
+    out += str(test.find) + "\n"
+    out += "=>\n"
+    out += str(test.replace) + "\n"
+    out += "-/"
+    out += (f"def thm{test.ix}_ssa : ")
     out += ("SSA.eval (Op := op) (Val := val) e re  [dsl_bb|\n");
     out += (alive_ir_to_lean(test.find))
     out += ("  ]");
@@ -281,6 +343,9 @@ def to_lean(source_file_path: str, dest_file_path: str):
         for t in tests: 
             try:
                 out = test_to_lean(t)
+                f.write(out); f.flush()
+
+                out = test_to_tree(t)
                 f.write(out); f.flush()
             except CompileException as c:
                 print(f"ERROR: {c}")
