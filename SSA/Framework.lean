@@ -4,48 +4,66 @@ import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 
 abbrev Var := Int
+abbrev RegionVar := Int
 
-abbrev Env (α: Type) := Var → α
-
-@[simp]
-def Env.empty {α : Type} [Inhabited α]: Env α := fun _ => default
-notation "∅" =>  Env.empty
-
-@[simp]
-def Env.set (e: Env α) (var: Var) (val: α) :=
-  fun needle => if needle == var then val else e needle
-notation e "[" var " := " val "]" => Env.set e var val
-
-
--- RHS of an assignment
+/-- Us mucking around to avoid mutual inductives.  -/
 inductive SSAIndex : Type
+/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
 | STMT
+/-- Ways of making an RHS -/
 | EXPR
+/-- The final instruction in a region. Must be a return -/
 | TERMINATOR
+/-- a lambda -/
 | REGION
 
 -- NOTE: multiple regions can be converted into a single region by tagging the
 -- input appropriately with inl/inr.
 inductive SSA (Op : Type) : SSAIndex → Type where
+/-- lhs := rhs; rest of the program -/
 | assign (lhs : Var) (rhs : SSA Op .EXPR) (rest : SSA Op .STMT) : SSA Op .STMT
+/-- no operation. -/
 | nop : SSA Op .STMT
+/-- above; ret v -/
 | ret (above : SSA Op .STMT) (v : Var) : SSA Op .TERMINATOR
+/-- (fst, snd) -/
 | pair (fst snd : Var) : SSA Op .EXPR
+/-- (fst, snd, third) -/
 | triple (fst snd third : Var) : SSA Op .EXPR
+/-- op (arg) { rgn } rgn is an argument to the operation -/
 | op (o : Op) (arg : Var) (rgn : SSA Op .REGION) : SSA Op .EXPR
+/- fun arg => body -/
 | rgn (arg : Var) (body : SSA Op .TERMINATOR) : SSA Op .REGION
+/- no function / non-existence of region. -/
 | rgn0 : SSA Op .REGION
-| rgnvar (v : Var) : SSA Op .REGION
+/- a region variable. --/
+| rgnvar (v : RegionVar) : SSA Op .REGION
+/-- a variable. -/
 | var (v : Var) : SSA Op .EXPR
 
 abbrev Expr (Op : Type) := SSA Op .EXPR
 abbrev Stmt (Op : Type) := SSA Op .STMT
 
 
+/-- Evaluation context. There is only one type in the semantics and that type is Val -/
+abbrev Env (Val : Type) := Var → Val
+
+@[simp]
+def Env.empty {Val : Type} [Inhabited Val]: Env Val := fun _ => default
+notation "∅" =>  Env.empty
+
+@[simp]
+def Env.set (e : Env Val) (var : Var) (val : Val) :=
+  fun needle => if needle == var then val else e needle
+notation e "[" var " := " val "]" => Env.set e var val
 
 class UserSemantics (Op : Type) (Val : Type) extends Inhabited Val where
+  /-- `Op` is semantically a function `Val → (Val → Val) → Val`
+      for every operation, produce a result `Val` given the
+      input variable value (⟦val⟧ : Val)
+      and input region value (⟦rgn⟧ : Val → Val) -/
   eval : (o : Op) → (arg : Val) → (rgn : Val → Val) → Val
-  -- TODO: split into separate typeclass?
+  /-- Okay Yuck -/
   valPair : Val → Val → Val
   valTriple : Val → Val → Val → Val
 
