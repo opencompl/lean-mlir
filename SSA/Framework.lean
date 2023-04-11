@@ -26,17 +26,17 @@ inductive SSAIndex : Type
 
 -- NOTE: multiple regions can be converted into a single region by tagging the
 -- input appropriately with inl/inr.
-inductive SSA (Op: Type): SSAIndex → Type where
-| assign (lhs: Var) (rhs: SSA Op .EXPR) (rest: SSA Op .STMT) : SSA Op .STMT
+inductive SSA (Op : Type) : SSAIndex → Type where
+| assign (lhs : Var) (rhs : SSA Op .EXPR) (rest : SSA Op .STMT) : SSA Op .STMT
 | nop : SSA Op .STMT
-| ret (above : SSA Op .STMT) (v: Var): SSA Op .TERMINATOR
+| ret (above : SSA Op .STMT) (v : Var) : SSA Op .TERMINATOR
 | pair (fst snd : Var) : SSA Op .EXPR
 | triple (fst snd third : Var) : SSA Op .EXPR
-| op (o : Op) (arg: Var) (rgn: SSA Op .REGION) : SSA Op .EXPR
-| rgn (arg: Var) (body: SSA Op .TERMINATOR) : SSA Op .REGION
+| op (o : Op) (arg : Var) (rgn : SSA Op .REGION) : SSA Op .EXPR
+| rgn (arg : Var) (body : SSA Op .TERMINATOR) : SSA Op .REGION
 | rgn0 : SSA Op .REGION
-| rgnvar (v: Var) : SSA Op .REGION
-| var (v: Var) : SSA Op .EXPR
+| rgnvar (v : Var) : SSA Op .REGION
+| var (v : Var) : SSA Op .EXPR
 
 abbrev Expr (Op : Type) := SSA Op .EXPR
 abbrev Stmt (Op : Type) := SSA Op .STMT
@@ -44,7 +44,7 @@ abbrev Stmt (Op : Type) := SSA Op .STMT
 
 
 class UserSemantics (Op : Type) (Val : Type) extends Inhabited Val where
-  eval: (o: Op) → (arg: Val) → (rgn: Val → Val) → Val
+  eval : (o : Op) → (arg : Val) → (rgn : Val → Val) → Val
   -- TODO: split into separate typeclass?
   valPair : Val → Val → Val
   valTriple : Val → Val → Val → Val
@@ -71,7 +71,7 @@ def SSA.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : S
 inductive Tree (Op : Type) (Val : Type) where
 | pair (e1 e2 : Tree Op Val)
 | op (op : Op) (t : Tree Op Val)
-| oprgn (op : Op) (t : Tree Op Val) (r: Val → Tree Op Val)
+| oprgn (op : Op) (t : Tree Op Val) (r : Val → Tree Op Val)
 
 def Tree.eval [S: UserSemantics Op Val] : Tree Op Val → Val
 | .pair e1 e2 => S.valPair e1.eval e2.eval
