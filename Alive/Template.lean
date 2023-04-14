@@ -1,9 +1,9 @@
 import Mathlib.Data.Fin.Basic
 import Mathlib.Init.Data.Int.Bitwise
-import SSA.Framework
+import SSA.WellTypedFramework
 
 abbrev Width := Nat -- bit width
-abbrev MachineInt := Nat -- machine integers.
+abbrev MachineInt := Nat -- machine integers. What about overflow? or negative numbers for that matter?
 
 inductive op
 | add (width : Width)
@@ -62,6 +62,7 @@ def val.xor (w : Width) (x y : val) : val :=
     | .int _w2 v2 => .int 0 <| (Int.lxor' v1 v2) % w
     | _ => default
   | _ => default
+
 
 @[simp]
 def op.eval (o : op) (v : val) (_rgn : val → val) : val :=
@@ -137,3 +138,90 @@ def thm1  :
 --     %v1 = op:add
 --   ]
 end Example
+
+
+inductive WellTypedOp : op → val → Prop
+  | add : ∀ (w : Width) (x y : Int), WellTypedOp (op.add w) $ .pair (.int w x) (.int w y)
+  | and : ∀ (w : Width) (x y : Int), WellTypedOp (op.and w) $ .pair (.int w x) (.int w y)
+  | negate : ∀ (w : Width) (x : Int), WellTypedOp (op.negate w) $ .int w x
+  | or : ∀ (w : Width) (x y : Int), WellTypedOp (op.or w) $ .pair (.int w x) (.int w y)
+  | sub : ∀ (w : Width) (x y : Int), WellTypedOp (op.sub w) $ .pair (.int w x) (.int w y)
+  | xor : ∀ (w : Width) (x y : Int), WellTypedOp (op.xor w) $ .pair (.int w x) (.int w y)
+
+instance (o : op) (v : val) : Decidable (WellTypedOp o v) :=
+  match o, v with
+  | .add w, .pair (.int w₁ x) (.int w₂ y) =>
+    if h₁ : w = w₁ then
+      if h₂ : w = w₂ then
+        isTrue (by
+         rw [← h₁,← h₂]
+         apply WellTypedOp.add
+         )
+      else
+        isFalse (by
+          intro h; cases h; contradiction)
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | .and w, .pair (.int w₁ x) (.int w₂ y) =>
+    if h₁ : w = w₁ then
+      if h₂ : w = w₂ then
+        isTrue (by
+         rw [← h₁,← h₂]
+         apply WellTypedOp.and
+         )
+      else
+        isFalse (by
+          intro h; cases h; contradiction)
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | .negate w, .int w₁ x =>
+    if h₁ : w = w₁ then
+      isTrue (by
+       rw [← h₁]
+       apply WellTypedOp.negate
+       )
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | .or w, .pair (.int w₁ x) (.int w₂ y) =>
+    if h₁ : w = w₁ then
+      if h₂ : w = w₂ then
+        isTrue (by
+         rw [← h₁,← h₂]
+         apply WellTypedOp.or
+         )
+      else
+        isFalse (by
+          intro h; cases h; contradiction)
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | .sub w, .pair (.int w₁ x) (.int w₂ y) =>
+    if h₁ : w = w₁ then
+      if h₂ : w = w₂ then
+        isTrue (by
+         rw [← h₁,← h₂]
+         apply WellTypedOp.sub
+         )
+      else
+        isFalse (by
+          intro h; cases h; contradiction)
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | .xor w, .pair (.int w₁ x) (.int w₂ y) =>
+    if h₁ : w = w₁ then
+      if h₂ : w = w₂ then
+        isTrue (by
+         rw [← h₁,← h₂]
+         apply WellTypedOp.xor
+         )
+      else
+        isFalse (by
+          intro h; cases h; contradiction)
+    else
+      isFalse (by
+        intro h; cases h; contradiction)
+  | _, _ => isFalse (by sorry) -- TODO: there has to be a better way to automate this...

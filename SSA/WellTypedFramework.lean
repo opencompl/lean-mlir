@@ -136,3 +136,6 @@ def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
   | .rgnvar v => re v
   | .rgn0 => sorry
   | .rgn arg body => sorry
+
+class OpArity (Op : Type) {BaseType : Type} where
+  arity : Op → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
