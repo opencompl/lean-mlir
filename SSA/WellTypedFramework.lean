@@ -1,5 +1,6 @@
 import SSA.Framework
 
+-- Why do we ask for them to make this explicitly?
 class TypeSemantics (Kind : Type) : Type 1 where
   toType : Kind → Type
   pair : Kind → Kind → Kind
@@ -11,6 +12,55 @@ class TypeSemantics (Kind : Type) : Type 1 where
   fstTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k1
   sndTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k2
   trdTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k3
+
+-- Couldn't we do something like this for them?
+inductive TypeSemanticsInstance (BaseType : Type) : Type where
+  | base : BaseType → TypeSemanticsInstance BaseType
+  | pair : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
+  | triple : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
+
+namespace TypeSemanticsInstance
+
+def toType {BaseType : Type} : TypeSemanticsInstance BaseType → Type
+  | .base _ => BaseType
+  | .pair k₁ k₂ => (toType k₁) × (toType k₂)
+  | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
+
+def mkPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
+  | k₁, k₂ => (k₁, k₂)
+
+def mkTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
+  | k₁, k₂, k₃ => (k₁, k₂, k₃)
+
+def fstPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₁
+  | (k₁, _) => k₁
+
+def sndPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₂
+  | (_, k₂) => k₂
+
+def fstTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
+  | (k₁, _, _) => k₁
+
+def sndTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
+  | (_, k₂, _) => k₂
+
+def trdTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
+  | (_, _, k₃) => k₃
+
+end TypeSemanticsInstance
+
+instance {Kind : Type} : TypeSemantics (TypeSemanticsInstance Kind) where
+  toType := TypeSemanticsInstance.toType
+  pair := TypeSemanticsInstance.pair
+  triple := TypeSemanticsInstance.triple
+  mkPair := TypeSemanticsInstance.mkPair
+  fstPair := TypeSemanticsInstance.fstPair
+  sndPair := TypeSemanticsInstance.sndPair
+  mkTriple := TypeSemanticsInstance.mkTriple
+  fstTriple := TypeSemanticsInstance.fstTriple
+  sndTriple := TypeSemanticsInstance.sndTriple
+  trdTriple := TypeSemanticsInstance.trdTriple
+
 
 open TypeSemantics
 
@@ -81,7 +131,7 @@ def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
       let ⟨k₃, third⟩ ← e third
       pure <| ⟨TypeSemantics.triple k₁ k₂ k₃, mkTriple fst snd third⟩
   | .op o arg r => do
-      pure <| ⟨_, TypedUserSemantics.eval o _ _⟩
+      sorry -- pure <| ⟨_, TypedUserSemantics.eval o _ _⟩
   | .var v => e v
   | .rgnvar v => re v
   | .rgn0 => sorry
