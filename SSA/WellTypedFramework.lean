@@ -18,6 +18,7 @@ inductive TypeSemanticsInstance (BaseType : Type) : Type where
   | base : BaseType → TypeSemanticsInstance BaseType
   | pair : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
   | triple : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
+  | unit : TypeSemanticsInstance BaseType
 
 namespace TypeSemanticsInstance
 
@@ -25,6 +26,7 @@ def toType {BaseType : Type} : TypeSemanticsInstance BaseType → Type
   | .base _ => BaseType
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
+  | .unit => Unit
 
 def mkPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
   | k₁, k₂ => (k₁, k₂)
@@ -137,5 +139,16 @@ def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
   | .rgn0 => sorry
   | .rgn arg body => sorry
 
-class OpArity (Op : Type) {BaseType : Type} where
-  arity : Op → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
+class OpArity (Op : Type) where
+  arity : Op → TypeSemanticsInstance Unit × TypeSemanticsInstance Unit
+
+-- This is ignoring the output for now; I'm also mapping to bools becase I forget how to define this as an inductive proposition
+def WellTypedArity {BaseType : Type} : TypeSemanticsInstance Unit → TypeSemanticsInstance BaseType → Bool
+    | .unit, .unit => true
+    | .base (), .base _ => true
+    | .pair k₁ k₂, .pair k₁' k₂' => WellTypedArity k₁ k₁' && WellTypedArity k₂ k₂'
+    | .triple k₁ k₂ k₃, .triple k₁' k₂' k₃' => WellTypedArity k₁ k₁' && WellTypedArity k₂ k₂' && WellTypedArity k₃ k₃'
+    | _, _ => false
+
+def WellTypedAp (Op : Type) (BaseType : Type) [OpArity Op] : Op → TypeSemanticsInstance BaseType → Bool
+  | o, k => WellTypedArity (OpArity.arity o).1 k

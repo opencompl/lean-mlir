@@ -5,6 +5,12 @@ import SSA.WellTypedFramework
 abbrev Width := Nat -- bit width
 abbrev MachineInt := Nat -- machine integers. What about overflow? or negative numbers for that matter?
 
+structure BaseVal where
+ (width : Width)
+ (val : MachineInt)
+
+abbrev val := TypeSemanticsInstance BaseVal
+
 inductive op
 | add (width : Width)
 | and (width : Width)
@@ -14,10 +20,22 @@ inductive op
 | xor (width : Width)
 | const (width : Width) (i : MachineInt)
 
-inductive val
-| int : (w : Width) → Int → val
-| pair : val → val → val
-| triple : val → val → val → val
+instance : OpArity op where
+  arity := fun o => match o with
+    | .add _ => (.pair (.base ()) (.base ()) , .base ())
+    | .and _ => (.pair (.base ()) (.base ()) , .base ())
+    | .negate _ => ((.base ()) , (.base ()))
+    | .or _ => (.pair (.base ()) (.base ()) , .base ())
+    | .sub _ => (.pair (.base ()) (.base ()) , .base ())
+    | .xor _ => (.pair (.base ()) (.base ()) , .base ())
+    | .const _ _ => (.unit, (.base ()))
+
+instance : TypeSemantics val where
+  toType := fun v => match v with
+    | .int w x => .int x % (2^w)
+    | .pair x y => .pair (toType x) (toType y)
+    | .triple x y z => .triple (toType x) (toType y) (toType z)
+  default := .int 0 0
 
 instance : Inhabited val where
   default := .int 0 0
