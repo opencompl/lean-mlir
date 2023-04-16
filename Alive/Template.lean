@@ -3,51 +3,70 @@ import Mathlib.Init.Data.Int.Bitwise
 import SSA.WellTypedFramework
 
 abbrev Width := Nat -- bit width
-abbrev MachineInt := Nat -- machine integers. What about overflow? or negative numbers for that matter?
 
-structure BaseVal where
- (width : Width)
+-- machine integers. What about overflow? or negative numbers for that matter?
+abbrev MachineInt := Nat
+
+def DepTypedBaseVal (_w : Width) : Type := MachineInt
+
+instance (_w : Width ): DecidableEq (DepTypedBaseVal _w) := instDecidableEqNat
+
+def DepTypedBaseVal.toNat (w : Width) : DepTypedBaseVal w → Nat
+  | n => n
+def DepTypedBaseVal.fromNat (w : Width) : Nat → DepTypedBaseVal w
+  | n => n
+
+instance (w : Width) : Add (DepTypedBaseVal w) where
+  add x y := x.toNat + y.toNat
+
+instance (w : Width) : HMod (DepTypedBaseVal w) Width (DepTypedBaseVal w) where
+  hMod x y :=
+    let xNat : Nat := x.toNat
+    let yNat : Nat := y
+    DepTypedBaseVal.fromNat w (xNat % yNat)
+
+structure BaseVal  where
  (val : MachineInt)
+ (width : Width)
+ deriving DecidableEq
 
+
+variable (w : Width)
 abbrev val := TypeSemanticsInstance BaseVal
 
-inductive op
-| add (width : Width)
-| and (width : Width)
-| negate (width : Width)
-| or (width : Width)
-| sub (width : Width)
-| xor (width : Width)
-| const (width : Width) (i : MachineInt)
+instance : DecidableEq val := sorry -- should be derivable, can't get Lean to accept it
 
-instance : OpArity op where
+inductive op (w : Width)
+| add
+| and
+| negate
+| or
+| sub
+| xor
+| const (val : MachineInt)
+
+instance : OpArity (op w) where
   arity := fun o => match o with
-    | .add _ => (.pair (.base ()) (.base ()) , .base ())
-    | .and _ => (.pair (.base ()) (.base ()) , .base ())
-    | .negate _ => ((.base ()) , (.base ()))
-    | .or _ => (.pair (.base ()) (.base ()) , .base ())
-    | .sub _ => (.pair (.base ()) (.base ()) , .base ())
-    | .xor _ => (.pair (.base ()) (.base ()) , .base ())
-    | .const _ _ => (.unit, (.base ()))
-
-instance : TypeSemantics val where
-  toType := fun v => match v with
-    | .int w x => .int x % (2^w)
-    | .pair x y => .pair (toType x) (toType y)
-    | .triple x y z => .triple (toType x) (toType y) (toType z)
-  default := .int 0 0
-
-instance : Inhabited val where
-  default := .int 0 0
+    | .add => (.pair (.base ()) (.base ()) , .base ())
+    | .and => (.pair (.base ()) (.base ()) , .base ())
+    | .negate => ((.base ()) , (.base ()))
+    | .or => (.pair (.base ()) (.base ()) , .base ())
+    | .sub => (.pair (.base ()) (.base ()) , .base ())
+    | .xor => (.pair (.base ()) (.base ()) , .base ())
+    | .const _ => (.unit, (.base ()))
 
 -- @Chris: these are DUMMY DEFINITIONS! They need to be modified.
-def val.add (w : Width) (x y : val) : val :=
-  match x with
-  | .int _w1 v1 =>
-    match y with
-    | .int _w2 v2 => .int 0 <| (v1 + v2) % w
-    | _ => default
-  | _ => default
+
+def val.add (x y : DepTypedBaseVal w) : DepTypedBaseVal w :=
+  (x + y) % w
+
+
+def val.add_untyped (input : TypeSemanticsInstance BaseVal) : TypeSemanticsInstance BaseVal :=
+-- This would be a WellTypedAt as inductive proposition with a Decidable instance
+match (typeCheck input) with
+  | .typed (.pair (.base ()) (.base ()))  (.pair (.base v₁) (.base v₂)) => .base { width := w, val := val.add v₁.width v₁.val v₂.val}
+  | _ => .unit
+
 def val.and (w : Width) (x y : val) : val :=
   match x with
   | .int _w1 v1 =>

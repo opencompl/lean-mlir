@@ -14,13 +14,21 @@ class TypeSemantics (Kind : Type) : Type 1 where
   trdTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k3
 
 -- Couldn't we do something like this for them?
+--
 inductive TypeSemanticsInstance (BaseType : Type) : Type where
   | base : BaseType → TypeSemanticsInstance BaseType
   | pair : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
   | triple : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
   | unit : TypeSemanticsInstance BaseType
 
+
+abbrev Arity := TypeSemanticsInstance Unit
+
 namespace TypeSemanticsInstance
+
+variable {BaseType : Type}
+
+instance {BaseType : Type} : Inhabited (TypeSemanticsInstance BaseType) where default := TypeSemanticsInstance.unit
 
 def toType {BaseType : Type} : TypeSemanticsInstance BaseType → Type
   | .base _ => BaseType
@@ -48,6 +56,12 @@ def sndTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType
 
 def trdTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
   | (_, _, k₃) => k₃
+
+def arity {BaseType : Type} : TypeSemanticsInstance BaseType → Arity
+  | .base _ => .base ()
+  | .pair k₁ k₂ => .pair (arity k₁) (arity k₂)
+  | .triple k₁ k₂ k₃ => .triple (arity k₁) (arity k₂) (arity k₃)
+  | .unit => .unit
 
 end TypeSemanticsInstance
 
@@ -142,13 +156,38 @@ def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
 class OpArity (Op : Type) where
   arity : Op → TypeSemanticsInstance Unit × TypeSemanticsInstance Unit
 
--- This is ignoring the output for now; I'm also mapping to bools becase I forget how to define this as an inductive proposition
-def WellTypedArity {BaseType : Type} : TypeSemanticsInstance Unit → TypeSemanticsInstance BaseType → Bool
-    | .unit, .unit => true
-    | .base (), .base _ => true
-    | .pair k₁ k₂, .pair k₁' k₂' => WellTypedArity k₁ k₁' && WellTypedArity k₂ k₂'
-    | .triple k₁ k₂ k₃, .triple k₁' k₂' k₃' => WellTypedArity k₁ k₁' && WellTypedArity k₂ k₂' && WellTypedArity k₃ k₃'
-    | _, _ => false
+-- I guess this is undecidable in general but clearly semi-decidable for the cases we care; don't know how to deal with this in TypeClasses
+inductive IsTyped {BaseType : Type} : TypeSemanticsInstance BaseType → Type → Prop
+  | unit : IsTyped (.unit) Unit
+  | base (v : BaseType) : IsTyped (.base v) BaseType
+  | pair (t₁ t₂ : Type) (v₁ v₂ : TypeSemanticsInstance BaseType) (_ : IsTyped v₁ t₁) (_ : IsTyped v₂ t₂) : IsTyped (.pair v₁ v₂) (t₁ × t₂)
 
-def WellTypedAp (Op : Type) (BaseType : Type) [OpArity Op] : Op → TypeSemanticsInstance BaseType → Bool
-  | o, k => WellTypedArity (OpArity.arity o).1 k
+
+inductive  TypeCheckResult {BaseType : Type} : Type
+  | unknown
+  | typed (arity : Arity) (val : TypeSemanticsInstance BaseType)
+
+def typeCheck {BaseType : Type 0} : TypeSemanticsInstance BaseType → @TypeCheckResult BaseType
+  | .unit => TypeCheckResult.unknown
+  | .base v => .typed (.base ()) (.base v)
+  | .pair v₁ v₂ =>
+      match typeCheck v₁, typeCheck v₂ with
+      | TypeCheckResult.typed a₁ v₁, TypeCheckResult.typed a₂ v₂ => TypeCheckResult.typed (.pair a₁ a₂) (.pair v₁ v₂)
+      | _, _ => TypeCheckResult.unknown
+  | .triple v₁ v₂ v₃ =>
+      match typeCheck v₁, typeCheck v₂, typeCheck v₃ with
+      | TypeCheckResult.typed a₁ v₁, TypeCheckResult.typed a₂ v₂, TypeCheckResult.typed a₃ v₃ => TypeCheckResult.typed (.triple a₁ a₂ a₃) (.triple v₁ v₂ v₃)
+      | _, _, _ => TypeCheckResult.unknown
+
+
+  --| triple  (t₁ t₂ t₂ : Type) (v₁ v₂ v₃ : TypeSemanticsInstance BaseType) (_ : IsTyped v₁ t₁) (_ : IsTyped v₂ t₂) (_ : IsTyped v₃ t₃) : IsTyped (.triple v₁ v₂ v₃) (t₁ × t₂ × t₃)
+  --
+-- This is ignoring the output for now.
+inductive WellTypedArity {BaseType : Type} : TypeSemanticsInstance Unit → TypeSemanticsInstance BaseType → Prop
+    | unit : WellTypedArity (.unit) (.unit)
+    | base (v : BaseType) : WellTypedArity (.base ()) (.base v)
+    | pair (k₁ k₂ : TypeSemanticsInstance BaseType) (k₁' k₂' : TypeSemanticsInstance Unit) (_h₁ : WellTypedArity k₁' k₁) (_h₂ : WellTypedArity k₂' k₂)  : WellTypedArity (.pair k₁' k₂') (.pair k₁ k₂)
+    -- triple ...
+
+inductive WellTypedAp {Op : Type} {BaseType : Type} [OpArity Op] : Op → TypeSemanticsInstance BaseType → Prop
+  | mk (o : Op) (v : TypeSemanticsInstance BaseType) (hwt : WellTypedArity (OpArity.arity o).1 v) : WellTypedAp o v
