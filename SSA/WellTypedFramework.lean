@@ -2,6 +2,7 @@ import SSA.Framework
 
 class TypeSemantics (Kind : Type) : Type 1 where
   toType : Kind → Type
+  unit : Kind
   pair : Kind → Kind → Kind
   triple : Kind → Kind → Kind → Kind
   mkPair : ∀ {k1 k2 : Kind}, toType k1 → toType k2 → toType (pair k1 k2)
@@ -26,6 +27,51 @@ variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op K
 
 namespace TypedUserSemantics
 
+inductive Context (Kind : Type) where
+  | empty : Context Kind
+  | push : Context Kind → Var → Kind → Context Kind
+
+inductive CVar {Kind : Type} : Context Kind → Kind → Type where
+  | here : ∀ {Γ : Context Kind} {k : Kind}, CVar (Γ.push v k) k
+  | there : ∀ {Γ : Context Kind} {k₁ k₂ : Kind} {v : Var}, CVar Γ k₁ → CVar (Γ.push v k₂) k₁
+
+/-- Us mucking around to avoid mutual inductives.  -/
+inductive TSSAIndex : Type
+/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
+| STMT
+/-- Ways of making an RHS -/
+| EXPR : Kind → TSSAIndex
+/-- The final instruction in a region. Must be a return -/
+| TERMINATOR : Kind → TSSAIndex
+/-- a lambda -/
+| REGION : Kind → Kind → TSSAIndex
+
+inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
+    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
+  /-- lhs := rhs; rest of the program -/
+  | assign {k : Kind} (lhs : Var) (rhs : TSSA Op Γ Γr (.EXPR k))
+      (rest : TSSA Op (Γ.push lhs k) Γr .STMT) : TSSA Op Γ Γr .STMT
+  /-- no operation. -/
+  | nop : TSSA Op Γ Γr .STMT
+  /-- above; ret v -/
+  | ret {k : Kind} (above : TSSA Op Γ Γr .STMT) (v : CVar Γ k) : TSSA Op Γ Γr (.TERMINATOR k)
+  /-- (fst, snd) -/
+  | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA Op Γ Γr (.EXPR (pair k₁ k₂))
+  /-- (fst, snd, third) -/
+  | triple (fst : CVar Γ k₁) (snd : CVar Γ k₂) (third : CVar Γ k₃) : TSSA Op Γ Γr (.EXPR (triple k₁ k₂ k₃))
+  /-- op (arg) { rgn } rgn is an argument to the operation -/
+  | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : TSSA Op Γ Γr (.REGION (rgnDom o) (rgnCod o))) :
+      TSSA Op Γ Γr (.EXPR (outKind o))
+  /- fun arg => body -/
+  | rgn {arg : Var} {dom cod : Kind} (body : TSSA Op (Γ.push arg dom) Γr (.TERMINATOR cod)) :
+      TSSA Op Γ Γr (.REGION dom cod)
+  /- no function / non-existence of region. -/
+  | rgn0 : TSSA Op Γ Γr (.REGION unit unit)
+  /- a region variable. --/
+  | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
+  /-- a variable. -/
+
+-- If we have a well-typed environment then we can define the type of variables in the environment? hmmm
 abbrev EnvT :=
   Var → Option (Σ (k : Kind), toType k)
 
@@ -81,7 +127,9 @@ def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
       let ⟨k₃, third⟩ ← e third
       pure <| ⟨TypeSemantics.triple k₁ k₂ k₃, mkTriple fst snd third⟩
   | .op o arg r => do
-      pure <| ⟨_, TypedUserSemantics.eval o _ _⟩
+      let ⟨k₁, k₂, f⟩ ← r.teval e re
+      if ⟨(e arg).1 k₁ = argKind o
+        pure <| ⟨_, TypedUserSemantics.eval o _ _⟩
   | .var v => e v
   | .rgnvar v => re v
   | .rgn0 => sorry
