@@ -71,6 +71,10 @@ inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantic
   | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
   /-- a variable. -/
 
+/- TODO - Write a translation that takes a pair of SSA and optionally returns a pair
+ of valid contexts and TSSA. Write the evaluation for a TSSA. -/
+
+
 -- If we have a well-typed environment then we can define the type of variables in the environment? hmmm
 abbrev EnvT :=
   Var → Option (Σ (k : Kind), toType k)
