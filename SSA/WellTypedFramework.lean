@@ -23,9 +23,10 @@ class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
   eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outKind o)
 
-variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
 
 namespace TypedUserSemantics
+
+variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
 
 inductive Context (Kind : Type) where
   | empty : Context Kind
@@ -70,10 +71,52 @@ inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantic
   /- a region variable. --/
   | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
   /-- a variable. -/
-
+  | var (v : CVar Γ k) : TSSA Op Γ Γr (.EXPR k)
 /- TODO - Write a translation that takes a pair of SSA and optionally returns a pair
  of valid contexts and TSSA. Write the evaluation for a TSSA. -/
 
+variable {Op Kind}
+
+@[simp]
+def Context.eval (Γ : Context Kind) : Type :=
+  ∀ ⦃k : Kind⦄, CVar Γ k → toType k
+
+@[simp]
+def TSSAindex.eval : TSSAIndex Kind → Type
+  | .STMT Γ' => Context.eval Γ'
+  | .EXPR k => toType k
+  | .TERMINATOR k => toType k
+  | .REGION dom cod => toType dom → toType cod
+
+@[simp]
+def TSSA.eval : {Γ : Context Kind} → {Γr : Context (Kind × Kind)} →
+    {i : TSSAIndex Kind} → i.eval
+
+
+end TypedUserSemantics
+
+class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
+  argKind : Op → Kind
+  rgnDom : Op → Kind
+  rgnCod : Op → Kind
+  outKind : Op → Kind
+  eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
+    toType (rgnCod o)) → toType (outKind o)
+
+variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
+
+namespace TypedUserSemantics
+
+inductive Context (Kind : Type) where
+  | empty : Context Kind
+  | push : Context Kind → Var → Kind → Context Kind
+
+inductive CVar {Kind : Type} : Context Kind → Kind → Type where
+  | here : ∀ {Γ : Context Kind} {k : Kind}, CVar (Γ.push v k) k
+  | there : ∀ {Γ : Context Kind} {k₁ k₂ : Kind} {v : Var}, CVar Γ k₁ → CVar (Γ.push v k₂) k₁
+
+/-- Us mucking around to avoid mutual inductives.  -/
+inductive TSS
 
 -- If we have a well-typed environment then we can define the type of variables in the environment? hmmm
 abbrev EnvT :=
@@ -107,6 +150,10 @@ def RegEnv.set (e : RegEnv Kind) (var : Var) {k₁ k₂ : Kind} (val : toType k�
 end TypedUserSemantics
 
 open TypedUserSemantics
+
+def Context.eval : Context Kind → Type :=
+  | .empty => ∅
+  | .push Γ v k => Γ.eval.set v (toType k)
 
 def TSSAIndex.eval : TSSAIndex Kind → Type
   | .STMT => EnvT Kind
