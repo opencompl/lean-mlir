@@ -38,7 +38,7 @@ inductive CVar {Kind : Type} : Context Kind → Kind → Type where
 /-- Us mucking around to avoid mutual inductives.  -/
 inductive TSSAIndex : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
-| STMT
+| STMT : Context Kind → TSSAIndex
 /-- Ways of making an RHS -/
 | EXPR : Kind → TSSAIndex
 /-- The final instruction in a region. Must be a return -/
@@ -50,11 +50,11 @@ inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantic
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
   /-- lhs := rhs; rest of the program -/
   | assign {k : Kind} (lhs : Var) (rhs : TSSA Op Γ Γr (.EXPR k))
-      (rest : TSSA Op (Γ.push lhs k) Γr .STMT) : TSSA Op Γ Γr .STMT
+      (rest : TSSA Op (Γ.push lhs k) Γr (.STMT Γ')) : TSSA Op Γ Γr (.STMT (Γ'.push lhs k))
   /-- no operation. -/
-  | nop : TSSA Op Γ Γr .STMT
+  | nop : TSSA Op Γ Γr (.STMT Context.empty)
   /-- above; ret v -/
-  | ret {k : Kind} (above : TSSA Op Γ Γr .STMT) (v : CVar Γ k) : TSSA Op Γ Γr (.TERMINATOR k)
+  | ret {k : Kind} (above : TSSA Op Γ Γr (.STMT Γ')) (v : CVar Γ' k) : TSSA Op Γ Γr (.TERMINATOR k)
   /-- (fst, snd) -/
   | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA Op Γ Γr (.EXPR (pair k₁ k₂))
   /-- (fst, snd, third) -/
@@ -108,7 +108,7 @@ end TypedUserSemantics
 
 open TypedUserSemantics
 
-def SSAIndex.teval : SSAIndex → Type
+def TSSAIndex.eval : TSSAIndex Kind → Type
   | .STMT => EnvT Kind
   | .TERMINATOR => Option (Σ (k : Kind), toType k)
   | .EXPR => Option (Σ (k : Kind), toType k)
