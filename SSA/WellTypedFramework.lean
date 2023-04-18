@@ -13,6 +13,14 @@ class TypeSemantics (Kind : Type) : Type 1 where
   sndTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k2
   trdTriple : ∀ {k1 k2 k3 : Kind}, toType (triple k1 k2 k3) → toType k3
 
+inductive KindExpr (Kind : Type) : Type
+  | ofKind : Kind → KindExpr Kind
+  | unit : KindExpr Kind
+  | pair : KindExpr Kind → KindExpr Kind → KindExpr Kind
+  | triple : KindExpr Kind → KindExpr Kind → KindExpr Kind → KindExpr Kind
+
+
+
 open TypeSemantics
 
 class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
@@ -26,8 +34,6 @@ class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
 
 namespace TypedUserSemantics
 
-variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
-
 inductive Context (Kind : Type) where
   | empty : Context Kind
   | push : Context Kind → Var → Kind → Context Kind
@@ -36,42 +42,74 @@ inductive CVar {Kind : Type} : Context Kind → Kind → Type where
   | here : ∀ {Γ : Context Kind} {k : Kind}, CVar (Γ.push v k) k
   | there : ∀ {Γ : Context Kind} {k₁ k₂ : Kind} {v : Var}, CVar Γ k₁ → CVar (Γ.push v k₂) k₁
 
-/-- Us mucking around to avoid mutual inductives.  -/
-inductive TSSAIndex : Type
-/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
-| STMT : Context Kind → TSSAIndex
-/-- Ways of making an RHS -/
-| EXPR : Kind → TSSAIndex
-/-- The final instruction in a region. Must be a return -/
-| TERMINATOR : Kind → TSSAIndex
-/-- a lambda -/
-| REGION : Kind → Kind → TSSAIndex
 
-inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
-    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
+-- inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
+--     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
+--   /-- lhs := rhs; rest of the program -/
+--   | assign {k : Kind} (lhs : Var) (rhs : TSSA Op Γ Γr (.EXPR k))
+--       (rest : TSSA Op (Γ.push lhs k) Γr (.STMT Γ')) : TSSA Op Γ Γr (.STMT (Γ'.push lhs k))
+--   /-- no operation. -/
+--   | nop : TSSA Op Γ Γr (.STMT Context.empty)
+--   /-- above; ret v -/
+--   | ret {k : Kind} (above : TSSA Op Γ Γr (.STMT Γ')) (v : CVar Γ' k) : TSSA Op Γ Γr (.TERMINATOR k)
+--   /-- (fst, snd) -/
+--   | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA Op Γ Γr (.EXPR (pair k₁ k₂))
+--   /-- (fst, snd, third) -/
+--   | triple (fst : CVar Γ k₁) (snd : CVar Γ k₂) (third : CVar Γ k₃) : TSSA Op Γ Γr (.EXPR (triple k₁ k₂ k₃))
+--   /-- op (arg) { rgn } rgn is an argument to the operation -/
+--   | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : TSSA Op Γ Γr (.REGION (rgnDom o) (rgnCod o))) :
+--       TSSA Op Γ Γr (.EXPR (outKind o))
+--   /- fun arg => body -/
+--   | rgn {arg : Var} {dom cod : Kind} (body : TSSA Op (Γ.push arg dom) Γr (.TERMINATOR cod)) :
+--       TSSA Op Γ Γr (.REGION dom cod)
+--   /- no function / non-existence of region. -/
+--   | rgn0 : TSSA Op Γ Γr (.REGION unit unit)
+--   /- a region variable. --/
+--   | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
+--   /-- a variable. -/
+--   | var (v : CVar Γ k) : TSSA Op Γ Γr (.EXPR k)
+
+mutual
+
+inductive TSSA_STMT (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Context Kind → Type where
   /-- lhs := rhs; rest of the program -/
-  | assign {k : Kind} (lhs : Var) (rhs : TSSA Op Γ Γr (.EXPR k))
-      (rest : TSSA Op (Γ.push lhs k) Γr (.STMT Γ')) : TSSA Op Γ Γr (.STMT (Γ'.push lhs k))
+  | assign {k : Kind} (lhs : Var) (rhs : TSSA_EXPR Op Γ Γr k)
+      (rest : TSSA_STMT Op (Γ.push lhs k) Γr Γ') : TSSA_STMT Op Γ Γr (Γ'.push lhs k)
   /-- no operation. -/
-  | nop : TSSA Op Γ Γr (.STMT Context.empty)
+  | nop : TSSA_STMT Op Γ Γr Context.empty
   /-- above; ret v -/
-  | ret {k : Kind} (above : TSSA Op Γ Γr (.STMT Γ')) (v : CVar Γ' k) : TSSA Op Γ Γr (.TERMINATOR k)
+
+inductive TSSA_TERMINATOR (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Type where
+  /-- above; ret v -/
+  | ret {k : Kind} (above : TSSA_STMT Op Γ Γr Γ') (v : CVar Γ' k) : TSSA_TERMINATOR Op Γ Γr k
+
+inductive TSSA_EXPR (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Type where
   /-- (fst, snd) -/
-  | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA Op Γ Γr (.EXPR (pair k₁ k₂))
+  | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA_EXPR Op Γ Γr (pair k₁ k₂)
   /-- (fst, snd, third) -/
-  | triple (fst : CVar Γ k₁) (snd : CVar Γ k₂) (third : CVar Γ k₃) : TSSA Op Γ Γr (.EXPR (triple k₁ k₂ k₃))
+  | triple (fst : CVar Γ k₁) (snd : CVar Γ k₂) (third : CVar Γ k₃) : TSSA_EXPR Op Γ Γr (triple k₁ k₂ k₃)
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : TSSA Op Γ Γr (.REGION (rgnDom o) (rgnCod o))) :
-      TSSA Op Γ Γr (.EXPR (outKind o))
-  /- fun arg => body -/
-  | rgn {arg : Var} {dom cod : Kind} (body : TSSA Op (Γ.push arg dom) Γr (.TERMINATOR cod)) :
-      TSSA Op Γ Γr (.REGION dom cod)
-  /- no function / non-existence of region. -/
-  | rgn0 : TSSA Op Γ Γr (.REGION unit unit)
-  /- a region variable. --/
-  | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
+  | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : TSSA_REGION Op Γ Γr (.REGION (rgnDom o) (rgnCod o))) :
+      TSSA_EXPR Op Γ Γr (.EXPR (outKind o))
   /-- a variable. -/
-  | var (v : CVar Γ k) : TSSA Op Γ Γr (.EXPR k)
+  | var (v : CVar Γ k) : TSSA_EXPR Op Γ Γr (.EXPR k)
+
+inductive TSSA_REGION (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+    (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Kind → Type where
+  /- fun arg => body -/
+  | rgn {arg : Var} {dom cod : Kind} (body : TSSA_TERMINATOR Op (Γ.push arg dom) Γr (.TERMINATOR cod)) :
+      TSSA_REGION Op Γ Γr (.REGION dom cod)
+  /- no function / non-existence of region. -/
+  | rgn0 : TSSA_REGION Op Γ Γr (.REGION unit unit)
+  /- a region variable. --/
+  | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA_REGION Op Γ Γr (.REGION k₁ k₂)
+
+end
+
+
 /- TODO - Write a translation that takes a pair of SSA and optionally returns a pair
  of valid contexts and TSSA. Write the evaluation for a TSSA. -/
 

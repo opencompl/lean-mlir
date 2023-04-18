@@ -6,44 +6,40 @@ import Mathlib.Data.Int.Basic
 abbrev Var := Int
 abbrev RegionVar := Int
 
-/-- Us mucking around to avoid mutual inductives.  -/
-inductive SSAIndex : Type
-/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
-| STMT
-/-- Ways of making an RHS -/
-| EXPR
-/-- The final instruction in a region. Must be a return -/
-| TERMINATOR
-/-- a lambda -/
-| REGION
-
 -- NOTE: multiple regions can be converted into a single region by tagging the
 -- input appropriately with inl/inr.
-inductive SSA (Op : Type) : SSAIndex → Type where
-/-- lhs := rhs; rest of the program -/
-| assign (lhs : Var) (rhs : SSA Op .EXPR) (rest : SSA Op .STMT) : SSA Op .STMT
-/-- no operation. -/
-| nop : SSA Op .STMT
-/-- above; ret v -/
-| ret (above : SSA Op .STMT) (v : Var) : SSA Op .TERMINATOR
-/-- (fst, snd) -/
-| pair (fst snd : Var) : SSA Op .EXPR
-/-- (fst, snd, third) -/
-| triple (fst snd third : Var) : SSA Op .EXPR
-/-- op (arg) { rgn } rgn is an argument to the operation -/
-| op (o : Op) (arg : Var) (rgn : SSA Op .REGION) : SSA Op .EXPR
-/- fun arg => body -/
-| rgn (arg : Var) (body : SSA Op .TERMINATOR) : SSA Op .REGION
-/- no function / non-existence of region. -/
-| rgn0 : SSA Op .REGION
-/- a region variable. --/
-| rgnvar (v : RegionVar) : SSA Op .REGION
-/-- a variable. -/
-| var (v : Var) : SSA Op .EXPR
+mutual
 
-abbrev Expr (Op : Type) := SSA Op .EXPR
-abbrev Stmt (Op : Type) := SSA Op .STMT
+/-- List of LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
+inductive SSA_STMT (Op : Type) where
+  /-- lhs := rhs; rest of the program -/
+  | assign (lhs : Var) (rhs : SSA_EXPR Op) (rest : SSA_STMT Op) : SSA_STMT Op
+  /-- no operation. -/
+  | nop : SSA_STMT Op
 
+/-- The final instruction in a region. Must be a return -/
+inductive SSA_TERMINATOR (Op : Type) where
+  /-- above; ret v -/
+  | ret (above : SSA_STMT Op) (v : Var) : SSA_TERMINATOR Op
+
+/-- Ways of making an RHS -/
+inductive SSA_EXPR (Op : Type) where
+  /-- (fst, snd) -/
+  | pair (fst snd : Var) : SSA_EXPR Op
+  /-- (fst, snd, third) -/
+  | triple (fst snd third : Var) : SSA_EXPR Op
+  /-- op (arg) { rgn } rgn is an argument to the operation -/
+  | op (o : Op) (arg : Var) (rgn : SSA_REGION Op) : SSA_EXPR Op
+  /-- a variable. -/
+  | var (v : Var) : SSA_EXPR Op
+
+/-- a lambda -/
+inductive SSA_REGION (Op : Type) where
+  | rgn (arg : Var) (body : SSA_TERMINATOR Op) : SSA_REGION Op
+  | rgn0 : SSA_REGION Op
+  | rgnvar (v : RegionVar) : SSA_REGION Op
+
+end
 
 /-- Evaluation context. There is only one type in the semantics and that type is Val -/
 abbrev Env (Val : Type) := Var → Val
@@ -67,24 +63,29 @@ class UserSemantics (Op : Type) (Val : Type) extends Inhabited Val where
   valPair : Val → Val → Val
   valTriple : Val → Val → Val → Val
 
-def SSAIndex.eval (Val : Type) : SSAIndex → Type
-| .STMT => Env Val
-| .TERMINATOR => Val
-| .EXPR => Val
-| .REGION => Val -> Val
+mutual
 
-def SSA.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA Op k → k.eval Val
-| .assign lhs rhs rest =>
-  rest.eval (e.set lhs (rhs.eval e re)) re
-| .nop => e
-| .ret above v => (above.eval e re) v
-| .pair fst snd => S.valPair (e fst) (e snd)
-| .triple fst snd third => S.valTriple (e fst) (e snd) (e third)
-| .op o arg r => S.eval o (e arg) (r.eval Env.empty re)
-| .var v => e v
-| .rgnvar v => re v
-| .rgn0 => id
-| .rgn arg body => fun val => body.eval (e.set arg val) re
+def SSA_STMT.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA_STMT Op → Env Val
+  | .assign lhs rhs rest =>
+      rest.eval (e.set lhs (rhs.eval e re)) re
+  | .nop => e
+
+def SSA_TERMINATOR.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA_TERMINATOR Op → Val
+  | .ret above v => (above.eval e re) v
+
+def SSA_EXPR.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA_EXPR Op → Val
+  | .pair fst snd => S.valPair (e fst) (e snd)
+  | .triple fst snd third => S.valTriple (e fst) (e snd) (e third)
+  | .op o arg r => S.eval o (e arg) (r.eval Env.empty re)
+  | .var v => e v
+
+def SSA_REGION.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA_REGION Op → Val → Val
+  | .rgn arg body => fun val => body.eval (e.set arg val) re
+  | .rgn0 => id
+  | .rgnvar v => re v
+
+end
+decreasing_by sorry
 
 inductive Tree (Op : Type) (Val : Type) where
 | pair (e1 e2 : Tree Op Val)
