@@ -68,44 +68,45 @@ inductive CVar {Kind : Type} : Context Kind → Kind → Type where
 --   | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA Op Γ Γr (.REGION k₁ k₂)
 --   /-- a variable. -/
 --   | var (v : CVar Γ k) : TSSA Op Γ Γr (.EXPR k)
-
+set_option hygiene false in
+set_option tactic.hygienic false
 mutual
 
-inductive TSSA_STMT (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+inductive TSSA_STMT (Op : Type) {Kind : Type} [h : TypeSemantics Kind] [h' : TypedUserSemantics Op Kind] :
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Context Kind → Type where
   /-- lhs := rhs; rest of the program -/
   | assign {k : Kind} (lhs : Var) (rhs : TSSA_EXPR Op Γ Γr k)
-      (rest : TSSA_STMT Op (Γ.push lhs k) Γr Γ') : TSSA_STMT Op Γ Γr (Γ'.push lhs k)
+      (rest : TSSA_STMT Op (Γ.push lhs k) Γr Γ') : @TSSA_STMT Op _ h h' Γ Γr (Γ'.push lhs k)
   /-- no operation. -/
   | nop : TSSA_STMT Op Γ Γr Context.empty
   /-- above; ret v -/
 
-inductive TSSA_TERMINATOR (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+inductive TSSA_TERMINATOR (Op : Type) {Kind : Type} [h : TypeSemantics Kind] [h' : TypedUserSemantics Op Kind]:
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Type where
   /-- above; ret v -/
-  | ret {k : Kind} (above : TSSA_STMT Op Γ Γr Γ') (v : CVar Γ' k) : TSSA_TERMINATOR Op Γ Γr k
+  | ret {k : Kind} (above : TSSA_STMT Op Γ Γr Γ') (v : CVar Γ' k) : @TSSA_TERMINATOR Op _ h h' Γ Γr k
 
-inductive TSSA_EXPR (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+inductive TSSA_EXPR (Op : Type) {Kind : Type} [h : TypeSemantics Kind] [h' : TypedUserSemantics Op Kind] :
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Type where
   /-- (fst, snd) -/
   | pair (fst : CVar Γ k₁) (snd : CVar Γ k₂) : TSSA_EXPR Op Γ Γr (pair k₁ k₂)
   /-- (fst, snd, third) -/
   | triple (fst : CVar Γ k₁) (snd : CVar Γ k₂) (third : CVar Γ k₃) : TSSA_EXPR Op Γ Γr (triple k₁ k₂ k₃)
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : TSSA_REGION Op Γ Γr (.REGION (rgnDom o) (rgnCod o))) :
-      TSSA_EXPR Op Γ Γr (.EXPR (outKind o))
+  | op (o : Op) (arg : CVar Γ (argKind o)) (rgn : @TSSA_REGION Op _ h h' Γ Γr (rgnDom o) (rgnCod o)) :
+      TSSA_EXPR Op Γ Γr (outKind o)
   /-- a variable. -/
-  | var (v : CVar Γ k) : TSSA_EXPR Op Γ Γr (.EXPR k)
+  | var (v : CVar Γ k) : TSSA_EXPR Op Γ Γr k
 
-inductive TSSA_REGION (Op : Type) {Kind : Type} [TypeSemantics Kind] :
+inductive TSSA_REGION (Op : Type) {Kind : Type} [h : TypeSemantics Kind] [h' : TypedUserSemantics Op Kind] :
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → Kind → Kind → Type where
   /- fun arg => body -/
-  | rgn {arg : Var} {dom cod : Kind} (body : TSSA_TERMINATOR Op (Γ.push arg dom) Γr (.TERMINATOR cod)) :
-      TSSA_REGION Op Γ Γr (.REGION dom cod)
+  | rgn {arg : Var} {dom cod : Kind} (body : @TSSA_TERMINATOR Op _ h h' (Γ.push arg dom) Γr cod) :
+      TSSA_REGION Op Γ Γr dom cod
   /- no function / non-existence of region. -/
-  | rgn0 : TSSA_REGION Op Γ Γr (.REGION unit unit)
+  | rgn0 : TSSA_REGION Op Γ Γr unit unit
   /- a region variable. --/
-  | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA_REGION Op Γ Γr (.REGION k₁ k₂)
+  | rgnvar (v : CVar Γr (k₁, k₂)) : TSSA_REGION Op Γ Γr k₁ k₂
 
 end
 
