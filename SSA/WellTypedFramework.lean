@@ -82,7 +82,11 @@ def Context.eval (Γ : Context Kind) : Type :=
   ∀ ⦃k : Kind⦄, CVar Γ k → toType k
 
 @[simp]
-def TSSAindex.eval : TSSAIndex Kind → Type
+def Context.evalr (Γr : Context (Kind × Kind)) : Type :=
+  ∀ ⦃k₁ k₂ : Kind⦄, CVar Γr (k₁, k₂) → toType k₁ → toType k₂
+
+@[simp]
+def TSSAIndex.eval : TSSAIndex Kind → Type
   | .STMT Γ' => Context.eval Γ'
   | .EXPR k => toType k
   | .TERMINATOR k => toType k
@@ -90,98 +94,29 @@ def TSSAindex.eval : TSSAIndex Kind → Type
 
 @[simp]
 def TSSA.eval : {Γ : Context Kind} → {Γr : Context (Kind × Kind)} →
-    {i : TSSAIndex Kind} → i.eval
-
-
-end TypedUserSemantics
-
-class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
-  argKind : Op → Kind
-  rgnDom : Op → Kind
-  rgnCod : Op → Kind
-  outKind : Op → Kind
-  eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
-    toType (rgnCod o)) → toType (outKind o)
-
-variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
-
-namespace TypedUserSemantics
-
-inductive Context (Kind : Type) where
-  | empty : Context Kind
-  | push : Context Kind → Var → Kind → Context Kind
-
-inductive CVar {Kind : Type} : Context Kind → Kind → Type where
-  | here : ∀ {Γ : Context Kind} {k : Kind}, CVar (Γ.push v k) k
-  | there : ∀ {Γ : Context Kind} {k₁ k₂ : Kind} {v : Var}, CVar Γ k₁ → CVar (Γ.push v k₂) k₁
-
-/-- Us mucking around to avoid mutual inductives.  -/
-inductive TSS
-
--- If we have a well-typed environment then we can define the type of variables in the environment? hmmm
-abbrev EnvT :=
-  Var → Option (Σ (k : Kind), toType k)
-
-variable {Op} {Kind}
-
-@[simp]
-def EnvT.empty : EnvT Kind := fun _ => none
-notation "∅" =>  Env.empty
-
-@[simp]
-def EnvT.set (e : EnvT Kind) (var : Var) {k : Kind} (val : toType k) : EnvT Kind :=
-  fun needle => if needle == var then some ⟨k, val⟩ else e needle
-notation e "[" var " := " val "]" => EnvT.set e var val
-
-variable (Op) (Kind)
-
-abbrev RegEnv : Type :=
-  Var → Option (Σ (k₁ k₂ : Kind), toType k₁ → toType k₂)
-
-variable {Op} {Kind}
-
-@[simp]
-def RegEnv.empty : RegEnv Kind := fun _ => none
-
-@[simp]
-def RegEnv.set (e : RegEnv Kind) (var : Var) {k₁ k₂ : Kind} (val : toType k₁ → toType k₂) : RegEnv Kind :=
-  fun needle => if needle == var then some ⟨k₁, k₂, val⟩ else e needle
+    {i : TSSAIndex Kind} → TSSA Op Γ Γr i → Γ.eval → Γr.evalr → i.eval
+  | Γ, Γr, _, .assign lhs rhs rest => fun c₁ c₂ _ v =>
+    match v with
+    | CVar.here => rhs.eval c₁ c₂
+    | CVar.there v => rest.eval
+      (fun _ v' =>
+        match v' with
+        | CVar.here => rhs.eval c₁ c₂
+        | CVar.there v'' => c₁ v'') c₂ v
+  | _, _, _, .nop => fun _ _ _ v => by cases v
+  | _, _, _, .ret above v => fun c₁ c₂ => above.eval c₁ c₂ v
+  | _, _, _, .pair fst snd => fun c₁ _ => mkPair (c₁ fst) (c₁ snd)
+  | _, _, _, .triple fst snd third =>
+    fun c₁ _ => mkTriple (c₁ fst) (c₁ snd) (c₁ third)
+  | _, _, _, TSSA.op o arg rg => fun c₁ c₂ =>
+    TypedUserSemantics.eval o (c₁ arg) (rg.eval c₁ c₂)
+  | _, _, _, .rgn body => fun c₁ c₂ arg =>
+    body.eval (fun _ v =>
+      match v with
+      | CVar.here => arg
+      | CVar.there v' => c₁ v') c₂
+  | _, _, _, .rgn0 => fun _ _ => id
+  | _, _, _, .rgnvar v => fun _ c₂ => c₂ v
+  | _, _, _, .var v => fun c₁ _ => c₁ v
 
 end TypedUserSemantics
-
-open TypedUserSemantics
-
-def Context.eval : Context Kind → Type :=
-  | .empty => ∅
-  | .push Γ v k => Γ.eval.set v (toType k)
-
-def TSSAIndex.eval : TSSAIndex Kind → Type
-  | .STMT => EnvT Kind
-  | .TERMINATOR => Option (Σ (k : Kind), toType k)
-  | .EXPR => Option (Σ (k : Kind), toType k)
-  | .REGION => Option (Σ (k₁ k₂ : Kind), toType k₁ → toType k₂)
-
-variable {Op} {Kind}
-
-def SSA.teval (e : EnvT Kind) (re : RegEnv Kind) : SSA Op k → k.teval Kind
-  | .assign lhs rhs rest => fun val =>
-    do rest.teval (e.set lhs (← (rhs.teval e re)).2) re val
-  | .nop => e
-  | .ret above v => (above.teval e re) v
-  | .pair fst snd => do
-      let ⟨k₁, fst⟩ ← e fst
-      let ⟨k₂, snd⟩ ← e snd
-      pure <| ⟨TypeSemantics.pair k₁ k₂, mkPair fst snd⟩
-  | .triple fst snd third => do
-      let ⟨k₁, fst⟩ ← e fst
-      let ⟨k₂, snd⟩ ← e snd
-      let ⟨k₃, third⟩ ← e third
-      pure <| ⟨TypeSemantics.triple k₁ k₂ k₃, mkTriple fst snd third⟩
-  | .op o arg r => do
-      let ⟨k₁, k₂, f⟩ ← r.teval e re
-      if ⟨(e arg).1 k₁ = argKind o
-        pure <| ⟨_, TypedUserSemantics.eval o _ _⟩
-  | .var v => e v
-  | .rgnvar v => re v
-  | .rgn0 => sorry
-  | .rgn arg body => sorry
