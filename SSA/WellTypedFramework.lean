@@ -57,6 +57,20 @@ def TSSAIndex.toSSAIndex : TSSAIndex Kind → SSAIndex
   | .TERMINATOR _ => .TERMINATOR
   | .REGION _ _ => .REGION
 
+@[simp]
+def _root_.SSAIndex.ExtraData (Kind : Type) : SSAIndex → Type
+  | .STMT => Context Kind
+  | .EXPR => Kind
+  | .TERMINATOR => Kind
+  | .REGION => Kind × Kind
+
+@[simp]
+def _root_.SSAIndex.toTSSAIndex {Kind : Type} : (i : SSAIndex) → i.ExtraData Kind → TSSAIndex Kind
+  | .STMT, Γ => .STMT Γ
+  | .EXPR, k => .EXPR k
+  | .TERMINATOR, k => .TERMINATOR k
+  | .REGION, (k₁, k₂) => .REGION k₁ k₂
+
 inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
   /-- lhs := rhs; rest of the program -/
@@ -131,16 +145,16 @@ def TSSA.eval : {Γ : Context Kind} → {Γr : Context (Kind × Kind)} →
 
 variable [DecidableEq Kind]
 /-- Lookup a variable in a context given a type.
-It finds the last thing in the context with the right type. -/
+It finds the last thing in the context with the right name. -/
 @[simp]
-def Context.lookup : (Γ : Context Kind) → (v : Var) → (k : Kind) → Option (CVar Γ k)
-  | Context.empty, _, _ => none
-  | Context.push Γ v' k', v, k =>
-    match Γ.lookup v k with
-    | some v => some (CVar.there v)
+def Context.lookup : (Γ : Context Kind) → (v : Var) → Option (Σ k : Kind, CVar Γ k)
+  | Context.empty, _ => none
+  | Context.push Γ v' _, v =>
+    match Γ.lookup v with
+    | some ⟨_, v⟩ => some ⟨_, CVar.there v⟩
     | none =>
-      if h : v = v' ∧ k = k'
-      then h.1 ▸ h.2 ▸ some CVar.here
+      if h : v = v'
+      then h ▸ some ⟨_, CVar.here⟩
       else none
 
 @[simp]
@@ -157,17 +171,29 @@ def getKindEXPR : {i' : TSSAIndex Kind // i'.toSSAIndex = .EXPR} → Kind
   | ⟨.EXPR k, _⟩ => k
 
 @[simp]
-def SSAtoTSSA : {i : SSAIndex} → SSA Op i → Option (Σ (Γ : Context Kind) (Γr : Context (Kind × Kind))
-      (i':{i' : TSSAIndex Kind // i'.toSSAIndex = i}), TSSA Op Γ Γr i')
+def Context.union : (Γ : Context Kind) → (Γ' : Context Kind) → Context Kind
+  | Context.empty, Γ' => Γ'
+  | Context.push Γ v k, Γ' =>
+    match Γ'.in v with
+    | true => Γ.union Γ'
+    | false => Context.push (Γ.union Γ') v k
+
+-- Need morphisms of contexts.
+
+@[simp]
+def SSAtoTSSA : {i : SSAIndex} → SSA Op i →
+    Option (Σ (Γ : Context Kind) (Γr : Context (Kind × Kind))
+      (d : i.ExtraData Kind),  TSSA Op Γ Γr (i.toTSSAIndex d))
   | _, SSA.assign lhs rhs rest => do
-    let ⟨(Γ : Context Kind), Γr, i', rest⟩ ← SSAtoTSSA rest
-    let ⟨(Γ₂ : Context Kind), Γr₂, i₂, rhs⟩ ← SSAtoTSSA rhs
-    match Γ.lookup lhs (getKindEXPR i₂) with
-    | none => _
-    | some _ => _
-  | _, SSA.nop => _
-  | _, SSA.ret above v => _
-  | _, SSA.pair fst snd => _
+    let ⟨(Γ : Context Kind), Γr, d, rest⟩ ← SSAtoTSSA rest
+    let ⟨(Γ₂ : Context Kind), Γr₂, d₂, rhs⟩ ← SSAtoTSSA rhs
+    return sorry
+  | _, SSA.nop => some ⟨Context.empty, Context.empty, _, TSSA.nop⟩
+  | _, SSA.ret above v => do
+    let ⟨(Γ : Context Kind), Γr, d, above⟩ ← SSAtoTSSA above
+    let v' ← d.lookup v
+    some ⟨Γ, Γr, _, TSSA.ret above v'.2⟩
+  | _, SSA.pair fst snd => sorry
   | _, SSA.triple fst snd third => _
   | _, SSA.op o arg rg => _
   | _, SSA.rgn _ body => _
