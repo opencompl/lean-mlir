@@ -1,4 +1,5 @@
 import SSA.Framework
+import Mathlib.Data.Option.Basic
 
 class TypeSemantics (Kind : Type) : Type 1 where
   toType : Kind → Type
@@ -31,10 +32,12 @@ variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op K
 inductive Context (Kind : Type) where
   | empty : Context Kind
   | push : Context Kind → Var → Kind → Context Kind
+  deriving DecidableEq
 
 inductive CVar {Kind : Type} : Context Kind → Kind → Type where
   | here : ∀ {Γ : Context Kind} {k : Kind}, CVar (Γ.push v k) k
   | there : ∀ {Γ : Context Kind} {k₁ k₂ : Kind} {v : Var}, CVar Γ k₁ → CVar (Γ.push v k₂) k₁
+  deriving DecidableEq
 
 /-- Us mucking around to avoid mutual inductives.  -/
 inductive TSSAIndex : Type
@@ -46,6 +49,13 @@ inductive TSSAIndex : Type
 | TERMINATOR : Kind → TSSAIndex
 /-- a lambda -/
 | REGION : Kind → Kind → TSSAIndex
+
+@[simp]
+def TSSAIndex.toSSAIndex : TSSAIndex Kind → SSAIndex
+  | .STMT _ => .STMT
+  | .EXPR _ => .EXPR
+  | .TERMINATOR _ => .TERMINATOR
+  | .REGION _ _ => .REGION
 
 inductive TSSA (Op : Type) {Kind : Type} [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
     (Γ : Context Kind) → (Γr : Context (Kind × Kind)) → TSSAIndex Kind → Type where
@@ -118,5 +128,51 @@ def TSSA.eval : {Γ : Context Kind} → {Γr : Context (Kind × Kind)} →
   | _, _, _, .rgn0 => fun _ _ => id
   | _, _, _, .rgnvar v => fun _ c₂ => c₂ v
   | _, _, _, .var v => fun c₁ _ => c₁ v
+
+variable [DecidableEq Kind]
+/-- Lookup a variable in a context given a type.
+It finds the last thing in the context with the right type. -/
+@[simp]
+def Context.lookup : (Γ : Context Kind) → (v : Var) → (k : Kind) → Option (CVar Γ k)
+  | Context.empty, _, _ => none
+  | Context.push Γ v' k', v, k =>
+    match Γ.lookup v k with
+    | some v => some (CVar.there v)
+    | none =>
+      if h : v = v' ∧ k = k'
+      then h.1 ▸ h.2 ▸ some CVar.here
+      else none
+
+@[simp]
+def Context.in : (Γ : Context Kind) → (v : Var) → Bool
+  | Context.empty, _ => false
+  | Context.push Γ v' _, v => v = v' || Γ.in v
+
+@[simp]
+def getContextSTMT : {i' : TSSAIndex Kind // i'.toSSAIndex = .STMT} → Context Kind
+  | ⟨.STMT Γ, _⟩ => Γ
+
+@[simp]
+def getKindEXPR : {i' : TSSAIndex Kind // i'.toSSAIndex = .EXPR} → Kind
+  | ⟨.EXPR k, _⟩ => k
+
+@[simp]
+def SSAtoTSSA : {i : SSAIndex} → SSA Op i → Option (Σ (Γ : Context Kind) (Γr : Context (Kind × Kind))
+      (i':{i' : TSSAIndex Kind // i'.toSSAIndex = i}), TSSA Op Γ Γr i')
+  | _, SSA.assign lhs rhs rest => do
+    let ⟨(Γ : Context Kind), Γr, i', rest⟩ ← SSAtoTSSA rest
+    let ⟨(Γ₂ : Context Kind), Γr₂, i₂, rhs⟩ ← SSAtoTSSA rhs
+    match Γ.lookup lhs (getKindEXPR i₂) with
+    | none => _
+    | some _ => _
+  | _, SSA.nop => _
+  | _, SSA.ret above v => _
+  | _, SSA.pair fst snd => _
+  | _, SSA.triple fst snd third => _
+  | _, SSA.op o arg rg => _
+  | _, SSA.rgn _ body => _
+  | _, SSA.rgn0 => _
+  | _, SSA.rgnvar v => _
+  | _, SSA.var v => _
 
 end TypedUserSemantics

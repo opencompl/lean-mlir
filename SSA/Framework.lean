@@ -6,6 +6,9 @@ import Mathlib.Data.Int.Basic
 abbrev Var := Int
 abbrev RegionVar := Int
 
+instance : DecidableEq Var := by
+  infer_instance
+
 /-- Us mucking around to avoid mutual inductives.  -/
 inductive SSAIndex : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
