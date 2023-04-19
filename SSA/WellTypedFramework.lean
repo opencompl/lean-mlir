@@ -2,6 +2,7 @@ import SSA.Framework
 import Mathlib.Data.Option.Basic
 
 -- Why do we ask for them to make this explicitly?
+-- I don't think we want this type class anyway, because we don't have all the identities like fstPair (pair x _) = x and such
 class TypeSemantics (Kind : Type) : Type 1 where
   toType : Kind → Type
   unit : Kind
@@ -17,49 +18,52 @@ class TypeSemantics (Kind : Type) : Type 1 where
 
 -- Couldn't we do something like this for them?
 --
-inductive TypeSemanticsInstance (BaseType : Type) : Type where
+class TypeSemanticsBase (BaseType : Type) : Type 1 where
+  toType : BaseType → Type
+
+inductive TypeSemanticsInstance (BaseType : Type) [TypeSemanticsBase BaseType]: Type where
   | base : BaseType → TypeSemanticsInstance BaseType
   | pair : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
   | triple : TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType → TypeSemanticsInstance BaseType
   | unit : TypeSemanticsInstance BaseType
 
-
+instance : TypeSemanticsBase Unit where toType := fun _ => Unit
 abbrev Arity := TypeSemanticsInstance Unit
 
 namespace TypeSemanticsInstance
 
 variable {BaseType : Type}
 
-instance {BaseType : Type} : Inhabited (TypeSemanticsInstance BaseType) where default := TypeSemanticsInstance.unit
+instance {BaseType : Type} [TypeSemanticsBase BaseType]: Inhabited (TypeSemanticsInstance BaseType) where default := TypeSemanticsInstance.unit
 
-def toType {BaseType : Type} : TypeSemanticsInstance BaseType → Type
-  | .base _ => BaseType
+def toType {BaseType : Type} [TypeSemanticsBase BaseType] : TypeSemanticsInstance BaseType → Type
+  | .base t => TypeSemanticsBase.toType t
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
 
-def mkPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
+def mkPair {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
   | k₁, k₂ => (k₁, k₂)
 
-def mkTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
+def mkTriple {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ k₃ : TypeSemanticsInstance BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
   | k₁, k₂, k₃ => (k₁, k₂, k₃)
 
-def fstPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₁
+def fstPair {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₁
   | (k₁, _) => k₁
 
-def sndPair {BaseType : Type} {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₂
+def sndPair {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ : TypeSemanticsInstance BaseType} : toType (.pair k₁ k₂) → toType k₂
   | (_, k₂) => k₂
 
-def fstTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
+def fstTriple {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
   | (k₁, _, _) => k₁
 
-def sndTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
+def sndTriple {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
   | (_, k₂, _) => k₂
 
-def trdTriple {BaseType : Type} {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
+def trdTriple {BaseType : Type} [TypeSemanticsBase BaseType] {k₁ k₂ k₃ : TypeSemanticsInstance BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
   | (_, _, k₃) => k₃
 
-def arity {BaseType : Type} : TypeSemanticsInstance BaseType → Arity
+def arity {BaseType : Type} [TypeSemanticsBase BaseType] : TypeSemanticsInstance BaseType → Arity
   | .base _ => .base ()
   | .pair k₁ k₂ => .pair (arity k₁) (arity k₂)
   | .triple k₁ k₂ k₃ => .triple (arity k₁) (arity k₂) (arity k₃)
@@ -67,7 +71,7 @@ def arity {BaseType : Type} : TypeSemanticsInstance BaseType → Arity
 
 end TypeSemanticsInstance
 
-instance {Kind : Type} : TypeSemantics (TypeSemanticsInstance Kind) where
+instance {BaseType : Type} [TypeSemanticsBase BaseType] : TypeSemantics (TypeSemanticsInstance BaseType) where
   toType := TypeSemanticsInstance.toType
   pair := TypeSemanticsInstance.pair
   triple := TypeSemanticsInstance.triple
@@ -79,8 +83,8 @@ instance {Kind : Type} : TypeSemantics (TypeSemanticsInstance Kind) where
   sndTriple := TypeSemanticsInstance.sndTriple
   trdTriple := TypeSemanticsInstance.trdTriple
   unit := TypeSemanticsInstance.unit
-
 open TypeSemantics
+
 
 class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
   argKind : Op → Kind
@@ -95,6 +99,7 @@ namespace TypedUserSemantics
 
 variable (Op : Type) (Kind : Type) [TypeSemantics Kind] [TypedUserSemantics Op Kind]
 
+-- This will not be permutation-invariant...
 inductive Context (Kind : Type) where
   | empty : Context Kind
   | push : Context Kind → Var → Kind → Context Kind
@@ -249,18 +254,19 @@ open TypedUserSemantics
 class OpArity (Op : Type) where
   arity : Op → TypeSemanticsInstance Unit × TypeSemanticsInstance Unit
 
+variable {BaseType : Type} [instTypeSemanticsBaseBaseType : TypeSemanticsBase BaseType]
 -- I guess this is undecidable in general but clearly semi-decidable for the cases we care; don't know how to deal with this in TypeClasses
-inductive IsTyped {BaseType : Type} : TypeSemanticsInstance BaseType → Type → Prop
+inductive IsTyped  : TypeSemanticsInstance BaseType → Type → Prop
   | unit : IsTyped (.unit) Unit
   | base (v : BaseType) : IsTyped (.base v) BaseType
   | pair (t₁ t₂ : Type) (v₁ v₂ : TypeSemanticsInstance BaseType) (_ : IsTyped v₁ t₁) (_ : IsTyped v₂ t₂) : IsTyped (.pair v₁ v₂) (t₁ × t₂)
 
 
-inductive  TypeCheckResult {BaseType : Type} : Type
+inductive  TypeCheckResult : Type
   | unknown
   | typed (arity : Arity) (val : TypeSemanticsInstance BaseType)
 
-def typeCheck {BaseType : Type 0} : TypeSemanticsInstance BaseType → @TypeCheckResult BaseType
+def typeCheck : TypeSemanticsInstance BaseType → @TypeCheckResult BaseType instTypeSemanticsBaseBaseType
   | .unit => TypeCheckResult.unknown
   | .base v => .typed (.base ()) (.base v)
   | .pair v₁ v₂ =>
@@ -276,13 +282,13 @@ def typeCheck {BaseType : Type 0} : TypeSemanticsInstance BaseType → @TypeChec
   --| triple  (t₁ t₂ t₂ : Type) (v₁ v₂ v₃ : TypeSemanticsInstance BaseType) (_ : IsTyped v₁ t₁) (_ : IsTyped v₂ t₂) (_ : IsTyped v₃ t₃) : IsTyped (.triple v₁ v₂ v₃) (t₁ × t₂ × t₃)
   --
 -- This is ignoring the output for now.
-inductive WellTypedArity {BaseType : Type} : TypeSemanticsInstance Unit → TypeSemanticsInstance BaseType → Prop
+inductive WellTypedArity : TypeSemanticsInstance Unit → TypeSemanticsInstance BaseType → Prop
     | unit : WellTypedArity (.unit) (.unit)
     | base (v : BaseType) : WellTypedArity (.base ()) (.base v)
     | pair (k₁ k₂ : TypeSemanticsInstance BaseType) (k₁' k₂' : TypeSemanticsInstance Unit) (_h₁ : WellTypedArity k₁' k₁) (_h₂ : WellTypedArity k₂' k₂)  : WellTypedArity (.pair k₁' k₂') (.pair k₁ k₂)
     -- triple ...
 
-inductive WellTypedAp {Op : Type} {BaseType : Type} [OpArity Op] : Op → TypeSemanticsInstance BaseType → Prop
+inductive WellTypedAp {Op : Type} [OpArity Op] : Op → TypeSemanticsInstance BaseType → Prop
   | mk (o : Op) (v : TypeSemanticsInstance BaseType) (hwt : WellTypedArity (OpArity.arity o).1 v) : WellTypedAp o v
 -- Need morphisms of contexts.
 
@@ -300,11 +306,11 @@ def SSAtoTSSA : {i : SSAIndex} → SSA Op i →
     let v' ← d.lookup v
     some ⟨Γ, Γr, _, TSSA.ret above v'.2⟩
   | _, SSA.pair fst snd => sorry
-  | _, SSA.triple fst snd third => _
-  | _, SSA.op o arg rg => _
-  | _, SSA.rgn _ body => _
-  | _, SSA.rgn0 => _
-  | _, SSA.rgnvar v => _
-  | _, SSA.var v => _
+  | _, SSA.triple fst snd third => sorry
+  | _, SSA.op o arg rg => sorry
+  | _, SSA.rgn _ body => sorry
+  | _, SSA.rgn0 => sorry
+  | _, SSA.rgnvar v => sorry
+  | _, SSA.var v => sorry
 
 end TypedUserSemantics

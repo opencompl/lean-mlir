@@ -1,3 +1,6 @@
+import SSA.Framework
+import SSA.WellTypedFramework
+
 namespace Examples
 
 inductive SimpleKind
@@ -59,5 +62,27 @@ def typeCheckPair : UntypedPair → Option (TypedPair k₁ k₂)
 -- #eval typeCheckPair (UntypedPair.mk (SimpleVal.nat 42) (SimpleVal.bool true))
 -- don't know how to synthesize implicit argument
 -- don't know how to synthesize implicit argument
+--
+inductive SimpleOp
+  | add
+  | xor
+
+inductive SimpleApp
+  | add ( v : TypedPair (.nat) (.nat) ) : SimpleApp
+  | xor ( v : TypedPair (.bool) (.bool) ) : SimpleApp
+
+def AppUntyped : SimpleOp → UntypedPair → Option SimpleApp
+ | .add, pair => match typeCheckPair pair with
+   | some v => match v with
+     | @TypedPair.mk (.nat) (.nat) _ _ _ _ => some $ SimpleApp.add v
+   | none => none
+  | .xor, pair => match typeCheckPair pair with
+   | some v => match v with
+     | @TypedPair.mk (.bool) (.bool) _ _ _ _ => some $ SimpleApp.xor v
+   | none => none
+
+
+#check AppUntyped .add (UntypedPair.mk (SimpleVal.nat 42) (SimpleVal.nat 1))
+
 
 end Examples
