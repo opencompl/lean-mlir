@@ -24,38 +24,66 @@ class TypedUserSemantics (Op : Type) (Kind : Type) [TypeSemantics Kind] where
   eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outKind o)
 
-inductive TypeData (Kind : Type) (v : Var) : Type
-  | none : TypeData Kind v
-  | some : Kind → TypeData Kind v
-  | any : TypeData Kind v
-  | unused : TypeData Kind v -- Or bound
+inductive TypeData (Kind : Type) : Type
+  | none : TypeData Kind
+  | some : Kind → TypeData Kind
+  | any : TypeData Kind
+  | unused : TypeData Kind -- Or bound
 
-def TypeData.toType {Kind : Type} [TypeSemantics Kind] {v : Var} :
-    TypeData Kind v → Type
+@[simp]
+def TypeData.inf (Kind : Type) [DecidableEq Kind] :
+    TypeData Kind → TypeData Kind → TypeData Kind
+  | .none, _ => .none
+  | _, .none => .none
+  | .some k₁, .some k₂ => if k₁ = k₂ then .some k₁ else .none
+  | .some k, _ => .some k
+  | _, .some k => .some k
+  | .any, _ => .any
+  | _, .any => .any
+  | _, _ => .unused
+
+--@[simp]
+def TypeData.toType {Kind : Type} [TypeSemantics Kind] :
+    TypeData Kind → Type
   | TypeData.none => Empty
   | TypeData.some k => TypeSemantics.toType k
   | TypeData.any => Σ (k : Kind), TypeSemantics.toType k
   | TypeData.unused => Unit
 
-@[simp]
-def SSAIndex.teval (Op : Type) (Kind : Type) [TypeSemantics Kind]
-    [TypedUserSemantics Op Kind] : SSAIndex → Type
-  | .STMT => Σ (sem : ∀ v : Var, TypeData Kind v), (∀ v, (sem v).toType)
-  | .REGION => Σ k₁ k₂ : Kind, TypeSemantics.toType k₁ → TypeSemantics.toType k₂
-  | .TERMINATOR => Σ k : Kind, TypeSemantics.toType k
-  | .EXPR => Σ k : Kind, TypeSemantics.toType k
+def TypeData.rToType {Kind : Type} [TypeSemantics Kind] :
+    TypeData (Kind × Kind) → Type
+  | TypeData.none => Empty
+  | TypeData.some (k₁, k₂) => TypeSemantics.toType k₁ → TypeSemantics.toType k₂
+  | TypeData.any => Σ (k₁ k₂ : Kind),
+      TypeSemantics.toType k₁ → TypeSemantics.toType k₂
+  | TypeData.unused => Unit
+
+-- @[simp]
+-- def SSAIndex.teval (Op : Type) (Kind : Type) [TypeSemantics Kind]
+--     [TypedUserSemantics Op Kind] : SSAIndex → Type
+--   | .STMT => Σ (sem : Var → TypeData Kind), (∀ v, (sem v).toType)
+--   | .REGION => Σ k₁ k₂ : Kind, TypeSemantics.toType k₁ → TypeSemantics.toType k₂
+--   | .TERMINATOR => Σ k : Kind, TypeSemantics.toType k
+--   | .EXPR => Σ k : Kind, TypeSemantics.toType k
+
+def SSAIndex.teval (Op : Type) {Kind : Type} [TypeSemantics Kind]
+    [TypedUserSemantics Op Kind] (sem : Var → TypeData Kind) :
+    SSAIndex → Type
+  | .TERMINATOR => Σ (v : Var), ((∀ v, (sem v).toType) → (sem v).toType)
+  | .EXPR => Σ (t : TypeData Kind), ((∀ v, (sem v).toType) → t.toType)
+  | .REGION => Σ (t : TypeData (Kind × Kind)), ((∀ v, (sem v).toType) → t.rToType)
+  | .STMT => (∀ v, (sem v).toType) → Σ (s : Var → TypeData Kind),  (∀ v, (s v).toType)
 
 open TypeData
 
 def SSA.teval [TypeSemantics Kind] [TypedUserSemantics Op Kind] :
     {k : SSAIndex} → SSA Op k →
-    Σ (sem : ∀ v : Var, TypeData Kind v),
-    ((∀ v, (sem v).toType) → k.teval Op Kind)
+    Σ (sem : Var → TypeData Kind),k.teval Op sem
 | _, .assign lhs rhs rest =>
-  let ⟨sem₁, eval₁⟩ := SSA.teval (Kind := Kind) rest
-  let ⟨sem₂, eval₂⟩ := SSA.teval (Kind := Kind) rhs
-  ⟨fun v => if v = lhs then .unused else sem₁ v, fun cont => by
-    dsimp
+  let ⟨sem₁, rest⟩ := SSA.teval (Kind := Kind) rest
+  let ⟨sem₂, rhs⟩ := SSA.teval (Kind := Kind) rhs
+  ⟨fun v => if v = lhs then .unused else sem₁ v, fun cont =>
+    ⟨fun v => if v = lhs then _ else _, _⟩
 
       ⟩
 | _, .nop => _
