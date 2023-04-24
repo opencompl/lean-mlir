@@ -101,6 +101,19 @@ def unifyVar (v : Var) (t : TypeData) : K TypeData := do
   updateType v k'
   return k'
 
+def unifyRVar (v : Var) (dom : TypeData) (cod : TypeData) : K (TypeData × TypeData) := do
+  let s ← StateT.get
+  let dom' ← unify dom (s.2 v).1
+  let cod' ← unify cod (s.2 v).2
+  return (dom', cod')
+
+@[simp]
+def assignAny (t : Var → TypeData) (v : Var) :
+    K (Var → TypeData) :=
+  match t v with
+  | .unused => return fun v' => if v' = v then .any else t v'
+  | _ => failure
+
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
   | _,  .assign lhs rhs rest, t => do
@@ -108,8 +121,8 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     assignVar lhs k
     let t' ← inferType TS rest t
     return t'
-  | _, .nop, k => getVars
-  | _, .ret above v, _ => return (v, ← getVarType v)
+  | _, .nop, _ => getVars
+  | _, .ret _ v, _ => return (v, ← getVarType v)
   | _, .pair fst snd, k => do
     match k with
     | .any => return (.pair (← getVarType fst) (← getVarType snd))
@@ -129,9 +142,15 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
       (TypedUserSemantics.rgnDom TS o, TypedUserSemantics.rgnCod TS o)
     return (TypedUserSemantics.outKind TS o).toTypeData
   | _, .var v, k => unifyVar v k
-  | _, .rgnvar v, _ => _
-  | _, .rgn0, k => _
-  | _, .rgn arg body, _ => _
+  | _, .rgnvar v, k => unifyRVar v k.1 k.2
+  | _, .rgn0, k => do
+    let _ ← unify k.1 Kind.unit.toTypeData
+    let _ ← unify k.2 Kind.unit.toTypeData
+    return (Kind.unit.toTypeData, Kind.unit.toTypeData)
+  | _, .rgn arg body, k => do
+    let s ← StateT.get
+    let t ← StateT.run (inferType TS body ⟨arg, k.2⟩) (← assignAny s.1 arg, s.2)
+    return (t.2.1 arg, t.1.2)
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
 --     TypeData Kind → TypeData Kind → TypeData Kind
@@ -214,10 +233,7 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
 --   fun v' => if h : v = v' then by subst h; simp; exact fun _ => ()
 --     else by simp [h]; exact id
 
-@[simp]
-def assign (t : Var → TypeData) (v : Var) (k : TypeData) :
-    Var → TypeData :=
-  fun v' => if v = v' then (t v).inf k else t v'
+
 
 -- @[simp]
 -- def ofAssign [DecidableEq Kind] [TypeSemantics Kind] (t : Var → TypeData Kind) (v : Var) (k : TypeData Kind) :
