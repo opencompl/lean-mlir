@@ -53,7 +53,7 @@ def TypeData.toType (TS : TypeSemantics) : TypeData → Type
 @[simp]
 def SSAIndex.ieval (Op : Type) (TS : TypeSemantics)
     [TypedUserSemantics Op TS] : SSAIndex → Type
-  | .TERMINATOR => Var × TypeData
+  | .TERMINATOR => TypeData
   | .EXPR => TypeData
   | .REGION => TypeData × TypeData
   | .STMT => Var →TypeData
@@ -114,6 +114,9 @@ def assignAny (t : Var → TypeData) (v : Var) :
   | .unused => return fun v' => if v' = v then .any else t v'
   | _ => failure
 
+/-- Given an expected type, tries to infer the type of an expression.
+The state consists of the expected type of any free variables, and this state is
+updated based on the new information. -/
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
   | _,  .assign lhs rhs rest, t => do
@@ -122,7 +125,10 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     let t' ← inferType TS rest t
     return t'
   | _, .nop, _ => getVars
-  | _, .ret _ v, _ => return (v, ← getVarType v)
+  | _, .ret s v, k => do
+    let _ ← inferType TS s (fun v' => if v = v' then k else .unused)
+    let k' ← unifyVar v k
+    return k'
   | _, .pair fst snd, k => do
     match k with
     | .any => return (.pair (← getVarType fst) (← getVarType snd))
@@ -131,11 +137,15 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
       let k₂' ← unifyVar snd k₂
       return .pair k₁' k₂'
     | _ => failure
-  | _, .triple fst snd trd, _ => do
-    let k₁ ← getVarType fst
-    let k₂ ← getVarType snd
-    let k₃ ← getVarType trd
-    return .triple k₁ k₂ k₃
+  | _, .triple fst snd trd, k => do
+    match k with
+    | .any => return (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd))
+    | .triple k₁ k₂ k₃ => do
+      let k₁' ← unifyVar fst k₁
+      let k₂' ← unifyVar snd k₂
+      let k₃' ← unifyVar trd k₃
+      return .triple k₁' k₂' k₃'
+    | _ => failure
   | _,  .op o arg r, _ => do
     let _ ← unifyVar arg (TypedUserSemantics.argKind TS o)
     let _ ← inferType TS r
@@ -149,8 +159,8 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     return (Kind.unit.toTypeData, Kind.unit.toTypeData)
   | _, .rgn arg body, k => do
     let s ← StateT.get
-    let t ← StateT.run (inferType TS body ⟨arg, k.2⟩) (← assignAny s.1 arg, s.2)
-    return (t.2.1 arg, t.1.2)
+    let t ← StateT.run (inferType TS body k.2) (← assignAny s.1 arg, s.2)
+    return (t.2.1 arg, t.1)
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
 --     TypeData Kind → TypeData Kind → TypeData Kind
