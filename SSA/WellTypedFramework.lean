@@ -56,12 +56,16 @@ def SSAIndex.ieval (Op : Type) (TS : TypeSemantics)
   | .TERMINATOR => TypeData
   | .EXPR => TypeData
   | .REGION => TypeData × TypeData
-  | .STMT => Var →TypeData
+  | .STMT => Unit
 
 abbrev K : Type → Type := StateT ((Var → TypeData) × (Var → (TypeData × TypeData))) Option
 
 def getVarType (v : Var) : K TypeData :=
   do let s ← StateT.get; return (s.1 v)
+
+def run {α : Type} (x : K α) (s : (Var → TypeData) × (Var → (TypeData × TypeData))) :
+    Option (α × (Var → TypeData) × (Var → (TypeData × TypeData))) :=
+  StateT.run x s
 
 def getVars : K (Var → TypeData) :=
   do let s ← StateT.get; return s.1
@@ -108,27 +112,32 @@ def unifyRVar (v : Var) (dom : TypeData) (cod : TypeData) : K (TypeData × TypeD
   return (dom', cod')
 
 @[simp]
-def assignAny (t : Var → TypeData) (v : Var) :
-    K (Var → TypeData) :=
+def assignAny (t : Var → TypeData) (v : Var) : K Unit :=
   match t v with
-  | .unused => return fun v' => if v' = v then .any else t v'
+  | .unused => assignVar v .any
   | _ => failure
 
+--Probably wrong. Think about this a lot.
 /-- Given an expected type, tries to infer the type of an expression.
 The state consists of the expected type of any free variables, and this state is
 updated based on the new information. -/
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
-  | _,  .assign lhs rhs rest, t => do
+  | _,  .assign lhs rhs rest, _ => do
+    let t ← getVars
     let k ← inferType TS rhs (t lhs)
     assignVar lhs k
-    let t' ← inferType TS rest t
+    let t' ← inferType TS rest ()
     return t'
-  | _, .nop, _ => getVars
+  | _, .nop, _ => return ()
   | _, .ret s v, k => do
-    let _ ← inferType TS s (fun v' => if v = v' then k else .unused)
-    let k' ← unifyVar v k
-    return k'
+    let kinds ← StateT.get
+    let k' ← run (do
+      let _ ← unifyVar v k
+      inferType TS s ()
+      let k ← getVarType v
+      return k) kinds
+    return k'.1
   | _, .pair fst snd, k => do
     match k with
     | .any => return (.pair (← getVarType fst) (← getVarType snd))
@@ -159,7 +168,7 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     return (Kind.unit.toTypeData, Kind.unit.toTypeData)
   | _, .rgn arg body, k => do
     let s ← StateT.get
-    let t ← StateT.run (inferType TS body k.2) (← assignAny s.1 arg, s.2)
+    let t ← StateT.run (do assignAny s.1 arg; inferType TS body k.2) s
     return (t.2.1 arg, t.1)
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
