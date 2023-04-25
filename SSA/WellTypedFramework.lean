@@ -56,7 +56,7 @@ def SSAIndex.ieval (Op : Type) (TS : TypeSemantics)
   | .TERMINATOR => TypeData
   | .EXPR => TypeData
   | .REGION => TypeData × TypeData
-  | .STMT => Unit
+  | .STMT => List Var
 
 abbrev K : Type → Type := StateT ((Var → TypeData) × (Var → (TypeData × TypeData))) Option
 
@@ -79,6 +79,8 @@ def assignVar (v : Var) (t : TypeData) : K Unit := do
   | .unused => updateType v t
   | _ => failure
 
+/-- Does not change the state. Fails if impossible to unify or if either
+input is `unused` -/
 def unify : (t₁ t₂ : TypeData) → K TypeData
   | .unused, _ => failure
   | _, .unused => failure
@@ -117,27 +119,36 @@ def assignAny (t : Var → TypeData) (v : Var) : K Unit :=
   | .unused => assignVar v .any
   | _ => failure
 
+def unassignVars (l : List Var) : K Unit := do
+  l.forM (fun v => updateType v .unused)
+
 --Probably wrong. Think about this a lot.
 /-- Given an expected type, tries to infer the type of an expression.
 The state consists of the expected type of any free variables, and this state is
-updated based on the new information. -/
+updated based on the new information.
+* If `STMT` then return a list of names of variables used in the `STMT`.
+Change the state to include types for all variables assigned in the `STMT`.
+Ignore expected type, because this is a list of variables anyway.
+Fails if assigned variable is not `unused` in initial state.
+* If `TERMINATOR` then change state for free variables, but not bound ones.
+Return the type of the returned variable. Fails when bound variable is not `unused` initially
+* If `EXPR`, then return type of expression, and do not change the type of bound
+variables, only free variables.
+* If `REGION` then as for `EXPR`  -/
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
   | _,  .assign lhs rhs rest, _ => do
     let t ← getVars
     let k ← inferType TS rhs (t lhs)
     assignVar lhs k
-    let t' ← inferType TS rest ()
-    return t'
-  | _, .nop, _ => return ()
+    let l ← inferType TS rest []
+    return lhs :: l
+  | _, .nop, _ => return []
   | _, .ret s v, k => do
-    let kinds ← StateT.get
-    let k' ← run (do
-      let _ ← unifyVar v k
-      inferType TS s ()
-      let k ← getVarType v
-      return k) kinds
-    return k'.1
+    let l ← inferType TS s []
+    let k' ← unifyVar v k
+    unassignVars l
+    return k'
   | _, .pair fst snd, k => do
     match k with
     | .any => return (.pair (← getVarType fst) (← getVarType snd))
@@ -167,9 +178,10 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     let _ ← unify k.2 Kind.unit.toTypeData
     return (Kind.unit.toTypeData, Kind.unit.toTypeData)
   | _, .rgn arg body, k => do
-    let s ← StateT.get
-    let t ← StateT.run (do assignAny s.1 arg; inferType TS body k.2) s
-    return (t.2.1 arg, t.1)
+    let cod ← inferType TS body k.2
+    let dom ← unifyVar arg k.1
+    unassignVars [arg]
+    return (cod, dom)
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
 --     TypeData Kind → TypeData Kind → TypeData Kind
