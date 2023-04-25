@@ -122,7 +122,6 @@ def assignAny (t : Var → TypeData) (v : Var) : K Unit :=
 def unassignVars (l : List Var) : K Unit := do
   l.forM (fun v => updateType v .unused)
 
---Probably wrong. Think about this a lot.
 /-- Given an expected type, tries to infer the type of an expression.
 The state consists of the expected type of any free variables, and this state is
 updated based on the new information.
