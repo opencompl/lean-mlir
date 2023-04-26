@@ -1,6 +1,8 @@
 import SSA.Framework
 import Mathlib.Data.Option.Basic
 
+-- @chris: generalize to take a `BaseType` as an argument.
+-- @chris: rename to `UserType`
 inductive Kind : Type
   | ofNat : ℕ → Kind
   | unit : Kind
@@ -137,6 +139,7 @@ Return the type of the returned variable. Fails when bound variable is not `unus
 * If `EXPR`, then return type of expression, and do not change the type of bound
 variables, only free variables.
 * If `REGION` then as for `EXPR`  -/
+-- @chris: the type signature should be `SSA Op i → K (Context BaseType)`?
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
   | _,  .assign lhs rhs rest, _ => do
@@ -189,6 +192,9 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     let cod ← inferType TS body k.2
     unassignVars [arg]
     return (dom, cod)
+
+-- @chris: TODO: implement `eval`:
+--   `SSA Op i → Environment (Option Context BaseType) → Option i.eval` or some such.
 
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
