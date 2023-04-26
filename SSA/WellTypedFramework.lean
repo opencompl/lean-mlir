@@ -27,24 +27,29 @@ class TypedUserSemantics (Op : Type) (TS : TypeSemantics) where
 
 inductive TypeData : Type
   | some : Nat → TypeData
+  | unit : TypeData
   | pair : TypeData → TypeData → TypeData
   | triple : TypeData → TypeData → TypeData → TypeData
   | any : TypeData
   | unused : TypeData -- Or bound
 
+
 @[coe]
 def Kind.toTypeData : Kind → TypeData
   | Kind.ofNat n => TypeData.some n
-  | Kind.unit => TypeData.some 0
+  | Kind.unit => TypeData.unit
   | Kind.pair k₁ k₂ => TypeData.pair (Kind.toTypeData k₁) (Kind.toTypeData k₂)
   | Kind.triple k₁ k₂ k₃ => TypeData.triple (Kind.toTypeData k₁) (Kind.toTypeData k₂)
     (Kind.toTypeData k₃)
 
 instance : Coe Kind TypeData := ⟨Kind.toTypeData⟩
 
+/- Kind.toType = Kind.toTypeData.toType -/
+
 @[simp]
 def TypeData.toType (TS : TypeSemantics) : TypeData → Type
   | TypeData.some k => TS k
+  | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => t₁.toType TS × t₂.toType TS
   | TypeData.triple t₁ t₂ t₃ => t₁.toType TS × t₂.toType TS × t₃.toType TS
   | TypeData.any => Σ (k : Kind), k.toType TS
@@ -60,15 +65,12 @@ def SSAIndex.ieval (Op : Type) (TS : TypeSemantics)
 
 abbrev K : Type → Type := StateT ((Var → TypeData) × (Var → (TypeData × TypeData))) Option
 
-def getVarType (v : Var) : K TypeData :=
-  do let s ← StateT.get; return (s.1 v)
-
-def run {α : Type} (x : K α) (s : (Var → TypeData) × (Var → (TypeData × TypeData))) :
-    Option (α × (Var → TypeData) × (Var → (TypeData × TypeData))) :=
-  StateT.run x s
 
 def getVars : K (Var → TypeData) :=
-  do let s ← StateT.get; return s.1
+  do return (← StateT.get).1
+
+def getVarType (v : Var) : K TypeData :=
+  do return (← getVars) v
 
 def updateType (v : Var) (t : TypeData) : K Unit := do
   StateT.modifyGet (fun s => ((), fun v' => if v' = v then t else s.1 v', s.2))
@@ -80,7 +82,7 @@ def assignVar (v : Var) (t : TypeData) : K Unit := do
   | _ => failure
 
 /-- Does not change the state. Fails if impossible to unify or if either
-input is `unused` -/
+input is `unused`. TypeData is a meet semilattice with top element `any`.  -/
 def unify : (t₁ t₂ : TypeData) → K TypeData
   | .unused, _ => failure
   | _, .unused => failure
@@ -99,6 +101,7 @@ def unify : (t₁ t₂ : TypeData) → K TypeData
     let k₂' ← unify k₂ t₂
     let k₃' ← unify k₃ t₃
     return .triple k₁' k₂' k₃'
+  | .unit, .unit => return .unit
   | _, _ => failure
 
 def unifyVar (v : Var) (t : TypeData) : K TypeData := do
@@ -137,8 +140,7 @@ variables, only free variables.
 def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     {i : SSAIndex} → SSA Op i → (i.ieval Op TS) → K (i.ieval Op TS)
   | _,  .assign lhs rhs rest, _ => do
-    let t ← getVars
-    let k ← inferType TS rhs (t lhs)
+    let k ← inferType TS rhs (← getVarType lhs)
     assignVar lhs k
     let l ← inferType TS rest []
     return lhs :: l
@@ -149,6 +151,8 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     unassignVars l
     return k'
   | _, .pair fst snd, k => do
+    unify (.pair (← getVarType fst) (← getVarType snd)) k
+    /-
     match k with
     | .any => return (.pair (← getVarType fst) (← getVarType snd))
     | .pair k₁ k₂ => do
@@ -156,7 +160,10 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
       let k₂' ← unifyVar snd k₂
       return .pair k₁' k₂'
     | _ => failure
+    -/
   | _, .triple fst snd trd, k => do
+    unify (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd)) k
+    /-
     match k with
     | .any => return (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd))
     | .triple k₁ k₂ k₃ => do
@@ -165,6 +172,7 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
       let k₃' ← unifyVar trd k₃
       return .triple k₁' k₂' k₃'
     | _ => failure
+    -/
   | _,  .op o arg r, _ => do
     let _ ← unifyVar arg (TypedUserSemantics.argKind TS o)
     let _ ← inferType TS r
@@ -177,10 +185,11 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     let _ ← unify k.2 Kind.unit.toTypeData
     return (Kind.unit.toTypeData, Kind.unit.toTypeData)
   | _, .rgn arg body, k => do
-    let cod ← inferType TS body k.2
     let dom ← unifyVar arg k.1
+    let cod ← inferType TS body k.2
     unassignVars [arg]
-    return (cod, dom)
+    return (dom, cod)
+
 -- @[simp]
 -- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
 --     TypeData Kind → TypeData Kind → TypeData Kind
