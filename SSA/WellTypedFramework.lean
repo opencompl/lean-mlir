@@ -1,43 +1,88 @@
 import SSA.Framework
 import Mathlib.Data.Option.Basic
 
--- @chris: generalize to take a `BaseType` as an argument.
--- @chris: rename to `UserType`
-inductive Kind : Type
-  | ofNat : ℕ → Kind
-  | unit : Kind
-  | pair : Kind → Kind → Kind
-  | triple : Kind → Kind → Kind → Kind
-deriving DecidableEq
+class BaseTypeClass (BaseType : Type) : Type 1 where
+  toType : BaseType → Type
+
+instance : BaseTypeClass Unit where toType := fun _ => Unit
+
+inductive UserType (T : Type) [BaseTypeClass T]: Type where
+  | base : T → UserType T
+  | pair : UserType T → UserType T → UserType T
+  | triple : UserType T → UserType T → UserType T → UserType T
+  | unit : UserType T
+
+namespace UserType
+
+variable {BaseType : Type}
+
+instance {BaseType : Type} [BaseTypeClass BaseType]: Inhabited (UserType BaseType) where default := UserType.unit
+
+def toType {BaseType : Type} [BaseTypeClass BaseType] : UserType BaseType → Type
+  | .base t => BaseTypeClass.toType t
+  | .pair k₁ k₂ => (toType k₁) × (toType k₂)
+  | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
+  | .unit => Unit
+
+def mkPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
+  | k₁, k₂ => (k₁, k₂)
+
+def mkTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
+  | k₁, k₂, k₃ => (k₁, k₂, k₃)
+
+def fstPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₁
+  | (k₁, _) => k₁
+
+def sndPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₂
+  | (_, k₂) => k₂
+
+def fstTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
+  | (k₁, _, _) => k₁
+
+def sndTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
+  | (_, k₂, _) => k₂
+
+def trdTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
+  | (_, _, k₃) => k₃
+
+end UserType
+
 
 def TypeSemantics : Type 1 :=
   ℕ → Type
 
-def Kind.toType (TS : TypeSemantics) : Kind → Type
-  | Kind.ofNat n => TS n
-  | Kind.unit => Unit
-  | Kind.pair k₁ k₂ => Kind.toType TS k₁ × Kind.toType TS k₂
-  | Kind.triple k₁ k₂ k₃ => Kind.toType TS k₁ × Kind.toType TS k₂ × Kind.toType TS k₃
+inductive NatBaseType (TS : TypeSemantics) : Type
+  | ofNat : ℕ → NatBaseType TS
+deriving DecidableEq
+
+variable {TS : TypeSemantics}
+
+instance : BaseTypeClass (NatBaseType TS) where toType :=
+  fun n => match n with
+    | .ofNat m => TS m
+
+abbrev Kind := UserType (NatBaseType TS)
 
 class TypedUserSemantics (Op : Type) (TS : TypeSemantics) where
-  argKind : Op → Kind
-  rgnDom : Op → Kind
-  rgnCod : Op → Kind
-  outKind : Op → Kind
-  eval : ∀ (o : Op), (argKind o).toType TS → ((rgnDom o).toType TS →
-    (rgnCod o).toType TS) → (outKind o).toType TS
+  argKind : Op → UserType (NatBaseType TS)
+  rgnDom : Op → UserType (NatBaseType TS)
+  rgnCod : Op → UserType (NatBaseType TS)
+  outKind : Op → UserType (NatBaseType TS)
+  eval : ∀ (o : Op), (argKind o).toType → ((rgnDom o).toType →
+    (rgnCod o).toType) → (outKind o).toType
 
+-- This is like a UserData, UserValue or UserTerm right? (if the other is UserType)
 inductive TypeData : Type
-  | some : Nat → TypeData
+  | some : BaseType → TypeData
   | unit : TypeData
   | pair : TypeData → TypeData → TypeData
   | triple : TypeData → TypeData → TypeData → TypeData
   | any : TypeData
   | unused : TypeData -- Or bound
 
-
+-- I don't understand this
 @[coe]
-def Kind.toTypeData : Kind → TypeData
+def Kind.toTypeData : UserType (NatBaseType TS) → TypeData
   | Kind.ofNat n => TypeData.some n
   | Kind.unit => TypeData.unit
   | Kind.pair k₁ k₂ => TypeData.pair (Kind.toTypeData k₁) (Kind.toTypeData k₂)
