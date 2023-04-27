@@ -1,12 +1,12 @@
 import SSA.Framework
 import Mathlib.Data.Option.Basic
 
-class BaseTypeClass (BaseType : Type) [DecidableEq BaseType] : Type 1 where
+class BaseTypeClass (BaseType : Type)  : Type 1 where
   toType : BaseType → Type
 
 instance : BaseTypeClass Unit where toType := fun _ => Unit
 
-inductive UserType (T : Type) [DecidableEq T] [BaseTypeClass T] : Type where
+inductive UserType (T : Type) : Type where
   | base : T → UserType T
   | pair : UserType T → UserType T → UserType T
   | triple : UserType T → UserType T → UserType T → UserType T
@@ -14,44 +14,47 @@ inductive UserType (T : Type) [DecidableEq T] [BaseTypeClass T] : Type where
 
 namespace UserType
 
-instance {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType]: Inhabited (UserType BaseType) where default := UserType.unit
+instance: Inhabited (UserType BaseType) where default := UserType.unit
 
-def toType {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] : UserType BaseType → Type
+def toType [BaseTypeClass BaseType] : UserType BaseType → Type
   | .base t => BaseTypeClass.toType t
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
 
-def mkPair {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
+def mkPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
   | k₁, k₂ => (k₁, k₂)
 
-def mkTriple {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
+def mkTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
   | k₁, k₂, k₃ => (k₁, k₂, k₃)
 
-def fstPair {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₁
+def fstPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₁
   | (k₁, _) => k₁
 
-def sndPair {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₂
+def sndPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₂
   | (_, k₂) => k₂
 
-def fstTriple {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
+def fstTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
   | (k₁, _, _) => k₁
 
-def sndTriple {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
+def sndTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
   | (_, k₂, _) => k₂
 
-def trdTriple {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
+def trdTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
   | (_, _, k₃) => k₃
 
 end UserType
 
 
-structure UserData {BaseType : Type} [DecidableEq BaseType] [BaseTypeClass BaseType] where
+structure UserData {BaseType : Type} [BaseTypeClass BaseType] where
   type : UserType BaseType
   value : type.toType
 
 
-inductive  TypeData (BaseType : Type) [DecidableEq BaseType] [BaseTypeClass BaseType] : Type
+-- @goens: I suggest removing [DecidableEq ...] [BaseTypeClass ...]
+-- We do not keep typeclass constraints on definitions, only on use sites.
+-- See the Haskell rationale: 
+inductive  TypeData (BaseType : Type) : Type
   | some : BaseType → TypeData BaseType
   | unit : TypeData BaseType
   | pair : TypeData BaseType → TypeData BaseType → TypeData BaseType
@@ -60,7 +63,7 @@ inductive  TypeData (BaseType : Type) [DecidableEq BaseType] [BaseTypeClass Base
   | unused : TypeData BaseType -- Or bound
 
 @[coe]
-def UserType.toTypeData [DecidableEq BaseType] [BaseTypeClass BaseType] : UserType BaseType → TypeData BaseType
+def UserType.toTypeData [BaseTypeClass BaseType] : UserType BaseType → TypeData BaseType
   | UserType.base t => TypeData.some t
   | UserType.unit => TypeData.unit
   | UserType.pair k₁ k₂ => TypeData.pair (UserType.toTypeData k₁) (UserType.toTypeData k₂)
@@ -70,7 +73,7 @@ def UserType.toTypeData [DecidableEq BaseType] [BaseTypeClass BaseType] : UserTy
 variable {BaseType : Type} [instDecidableEqBaseType : DecidableEq BaseType] [instBaseTypeClass : BaseTypeClass BaseType]
 instance : Coe (UserType BaseType) (TypeData BaseType) := ⟨UserType.toTypeData⟩
 
-class TypedUserSemantics (Op : Type) (BaseType : Type) [DecidableEq BaseType] [BaseTypeClass BaseType] where
+class TypedUserSemantics (Op : Type) (BaseType : Type) [BaseTypeClass BaseType] where
   argKind : Op → UserType BaseType
   rgnDom : Op → UserType BaseType
   rgnCod : Op → UserType BaseType
@@ -84,7 +87,7 @@ def TypeData.toType : TypeData BaseType → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
-  | TypeData.any => Σ (k : UserType BaseType), @UserType.toType BaseType instDecidableEqBaseType instBaseTypeClass k
+  | TypeData.any => Σ (k : UserType BaseType), UserType.toType k
   | TypeData.unused => Unit
 
 theorem TypeDataToTypeEqUserTypeToType (a : UserType BaseType) : a.toType = TypeData.toType a.toTypeData :=
@@ -95,26 +98,26 @@ theorem TypeDataToTypeEqUserTypeToType (a : UserType BaseType) : a.toType = Type
 
 
 @[simp]
-def SSAIndex.ieval (Op : Type)
-    [TypedUserSemantics Op BaseType] : SSAIndex → Type
+def SSAIndex.ieval (Op : Type) (BaseType : Type) : SSAIndex → Type
   | .TERMINATOR => TypeData BaseType
   | .EXPR => TypeData BaseType
   | .REGION => TypeData BaseType × TypeData BaseType
   | .STMT => List Var
 
-abbrev K : Type → Type := StateT ((Var → TypeData BaseType) × (Var → (TypeData  BaseType × TypeData BaseType))) Option
+abbrev K (BaseType : Type)  
+  : Type → Type := StateT ((Var → TypeData BaseType) × (Var → (TypeData  BaseType × TypeData BaseType))) Option
 
 -- Lean gets very picky here and wants to get all instances passed explicit to be sure they're the same
-def getVars  : @K BaseType instDecidableEqBaseType instBaseTypeClass (Var → @TypeData BaseType instDecidableEqBaseType instBaseTypeClass) :=
+def getVars : K BaseType (Var → TypeData BaseType) :=
   do return (← StateT.get).1
 
-def getVarType (v : Var) : @K BaseType instDecidableEqBaseType instBaseTypeClass (TypeData BaseType) :=
+def getVarType (v : Var) : K BaseType (TypeData BaseType) :=
   do return (← getVars) v
 
-def updateType (v : Var) (t : TypeData BaseType) : @K BaseType instDecidableEqBaseType instBaseTypeClass Unit := do
+def updateType (v : Var) (t : TypeData BaseType) : K BaseType Unit := do
   StateT.modifyGet (fun s => ((), fun v' => if v' = v then t else s.1 v', s.2))
 
-def assignVar (v : Var) (t : TypeData BaseType) : @K BaseType instDecidableEqBaseType instBaseTypeClass Unit := do
+def assignVar (v : Var) (t : TypeData BaseType) : K BaseType Unit := do
   let k ← getVarType v
   match k with
   | .unused => updateType v t
@@ -122,7 +125,7 @@ def assignVar (v : Var) (t : TypeData BaseType) : @K BaseType instDecidableEqBas
 
 /-- Does not change the state. Fails if impossible to unify or if either
 input is `unused`. TypeData is a meet semilattice with top element `any`.  -/
-def unify : (t₁ t₂ : TypeData BaseType) → @K BaseType instDecidableEqBaseType instBaseTypeClass (TypeData BaseType)
+def unify : (t₁ t₂ : TypeData BaseType) → K BaseType (TypeData BaseType)
   | .unused, _ => failure
   | _, .unused => failure
   | .any, k => return k
@@ -143,25 +146,25 @@ def unify : (t₁ t₂ : TypeData BaseType) → @K BaseType instDecidableEqBaseT
   | .unit, .unit => return .unit
   | _, _ => failure
 
-def unifyVar (v : Var) (t : TypeData BaseType) : @K BaseType instDecidableEqBaseType instBaseTypeClass (TypeData BaseType) := do
+def unifyVar (v : Var) (t : TypeData BaseType) : K BaseType  (TypeData BaseType) := do
   let k ← getVarType v
   let k' ← unify k t
   updateType v k'
   return k'
 
-def unifyRVar (v : Var) (dom : TypeData BaseType) (cod : TypeData BaseType) : @K BaseType instDecidableEqBaseType instBaseTypeClass (TypeData  BaseType × TypeData BaseType) := do
+def unifyRVar (v : Var) (dom : TypeData BaseType) (cod : TypeData BaseType) : K BaseType (TypeData  BaseType × TypeData BaseType) := do
   let s ← StateT.get
   let dom' ← unify dom (s.2 v).1
   let cod' ← unify cod (s.2 v).2
   return (dom', cod')
 
 @[simp]
-def assignAny (t : Var → TypeData BaseType) (v : Var) : @K BaseType instDecidableEqBaseType instBaseTypeClass Unit :=
+def assignAny (t : Var → TypeData BaseType) (v : Var) : K BaseType Unit :=
   match t v with
   | .unused => assignVar v .any
   | _ => failure
 
-def unassignVars (l : List Var) : @K BaseType instDecidableEqBaseType instBaseTypeClass Unit := do
+def unassignVars (l : List Var) : K BaseType Unit := do
   l.forM (fun v => updateType v .unused)
 
 /-- Given an expected type, tries to infer the type of an expression.
@@ -177,10 +180,10 @@ Return the type of the returned variable. Fails when bound variable is not `unus
 variables, only free variables.
 * If `REGION` then as for `EXPR`  -/
 -- @chris: the type signature should be `SSA Op i → K (Context BaseType)`?
-def inferType {Op : Type} [ instUS : TypedUserSemantics Op BaseType] :
+def inferType {Op : Type}  [TUS : TypedUserSemantics Op BaseType] :
     {i : SSAIndex} → SSA Op i →
-    (@SSAIndex.ieval BaseType instDecidableEqBaseType instBaseTypeClass Op instUS i)
-    → @K BaseType instDecidableEqBaseType instBaseTypeClass (@SSAIndex.ieval BaseType instDecidableEqBaseType instBaseTypeClass Op instUS i)
+    (i.ieval Op BaseType)
+    → K BaseType (i.ieval Op BaseType)
   | _,  .assign lhs rhs rest, _ => do
     let k ← inferType rhs (← getVarType lhs)
     assignVar lhs k
@@ -194,33 +197,14 @@ def inferType {Op : Type} [ instUS : TypedUserSemantics Op BaseType] :
     return k'
   | _, .pair fst snd, k => do
     unify (.pair (← getVarType fst) (← getVarType snd)) k
-    /-
-    match k with
-    | .any => return (.pair (← getVarType fst) (← getVarType snd))
-    | .pair k₁ k₂ => do
-      let k₁' ← unifyVar fst k₁
-      let k₂' ← unifyVar snd k₂
-      return .pair k₁' k₂'
-    | _ => failure
-    -/
   | _, .triple fst snd trd, k => do
     unify (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd)) k
-    /-
-    match k with
-    | .any => return (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd))
-    | .triple k₁ k₂ k₃ => do
-      let k₁' ← unifyVar fst k₁
-      let k₂' ← unifyVar snd k₂
-      let k₃' ← unifyVar trd k₃
-      return .triple k₁' k₂' k₃'
-    | _ => failure
-    -/
   | _,  .op o arg r, _ => do
-    --let _ ← unifyVar arg (TypedUserSemantics.argKind o)
-    --let _ ← inferType r
-    --  (TypedUserSemantics.rgnDom o, TypedUserSemantics.rgnCod o)
-    --return (TypedUserSemantics.outKind o).toTypeData
-    sorry
+    let _ ← unifyVar arg (TUS.argKind o)
+    let dom := TUS.rgnDom o 
+    let cod := TUS.rgnCod o
+    let _ ← inferType r (dom, cod)
+    return (TypedUserSemantics.outKind o).toTypeData
   | _, .var v, k => unifyVar v k
   | _, .rgnvar v, k => unifyRVar v k.1 k.2
   | _, .rgn0, k => do
