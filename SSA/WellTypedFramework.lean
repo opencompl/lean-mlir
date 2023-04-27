@@ -1,10 +1,14 @@
 import SSA.Framework
 import Mathlib.Data.Option.Basic
 
-class BaseTypeClass (BaseType : Type)  : Type 1 where
+/-
+Typeclass for a `baseType` which is a godel code of 
+Lean types.
+-/
+class Godel (BaseType : Type)  : Type 1 where
   toType : BaseType → Type
 
-instance : BaseTypeClass Unit where toType := fun _ => Unit
+instance : Godel Unit where toType := fun _ => Unit
 
 inductive UserType (T : Type) : Type where
   | base : T → UserType T
@@ -16,42 +20,42 @@ namespace UserType
 
 instance: Inhabited (UserType BaseType) where default := UserType.unit
 
-def toType [BaseTypeClass BaseType] : UserType BaseType → Type
-  | .base t => BaseTypeClass.toType t
+def toType [Godel BaseType] : UserType BaseType → Type
+  | .base t => Godel.toType t
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
 
-def mkPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
+def mkPair {BaseType : Type} [Godel BaseType] {k₁ k₂ : UserType BaseType}: toType k₁ → toType k₂ → toType (.pair k₁ k₂)
   | k₁, k₂ => (k₁, k₂)
 
-def mkTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
+def mkTriple {BaseType : Type} [Godel BaseType] {k₁ k₂ k₃ : UserType BaseType}: toType k₁ → toType k₂ → toType k₃ → toType (.triple k₁ k₂ k₃)
   | k₁, k₂, k₃ => (k₁, k₂, k₃)
 
-def fstPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₁
+def fstPair {BaseType : Type} [Godel BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₁
   | (k₁, _) => k₁
 
-def sndPair {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₂
+def sndPair {BaseType : Type} [Godel BaseType] {k₁ k₂ : UserType BaseType} : toType (.pair k₁ k₂) → toType k₂
   | (_, k₂) => k₂
 
-def fstTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
+def fstTriple {BaseType : Type} [Godel BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₁
   | (k₁, _, _) => k₁
 
-def sndTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
+def sndTriple {BaseType : Type} [Godel BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₂
   | (_, k₂, _) => k₂
 
-def trdTriple {BaseType : Type} [BaseTypeClass BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
+def trdTriple {BaseType : Type} [Godel BaseType] {k₁ k₂ k₃ : UserType BaseType} : toType (.triple k₁ k₂ k₃) → toType k₃
   | (_, _, k₃) => k₃
 
 end UserType
 
 
-structure UserData {BaseType : Type} [BaseTypeClass BaseType] where
+structure UserData {BaseType : Type} [Godel BaseType] where
   type : UserType BaseType
   value : type.toType
 
 
--- @goens: I suggest removing [DecidableEq ...] [BaseTypeClass ...]
+-- @goens: I suggest removing [DecidableEq ...] [Godel ...]
 -- We do not keep typeclass constraints on definitions, only on use sites.
 -- See the Haskell rationale: 
 inductive  TypeData (BaseType : Type) : Type
@@ -63,17 +67,17 @@ inductive  TypeData (BaseType : Type) : Type
   | unused : TypeData BaseType -- Or bound
 
 @[coe]
-def UserType.toTypeData [BaseTypeClass BaseType] : UserType BaseType → TypeData BaseType
+def UserType.toTypeData [Godel BaseType] : UserType BaseType → TypeData BaseType
   | UserType.base t => TypeData.some t
   | UserType.unit => TypeData.unit
   | UserType.pair k₁ k₂ => TypeData.pair (UserType.toTypeData k₁) (UserType.toTypeData k₂)
   | UserType.triple k₁ k₂ k₃ => TypeData.triple (UserType.toTypeData k₁) (UserType.toTypeData k₂)
     (UserType.toTypeData k₃)
 
-variable {BaseType : Type} [instDecidableEqBaseType : DecidableEq BaseType] [instBaseTypeClass : BaseTypeClass BaseType]
+variable {BaseType : Type} [instDecidableEqBaseType : DecidableEq BaseType] [instGodel : Godel BaseType]
 instance : Coe (UserType BaseType) (TypeData BaseType) := ⟨UserType.toTypeData⟩
 
-class TypedUserSemantics (Op : Type) (BaseType : Type) [BaseTypeClass BaseType] where
+class TypedUserSemantics (Op : Type) (BaseType : Type) [Godel BaseType] where
   argKind : Op → UserType BaseType
   rgnDom : Op → UserType BaseType
   rgnCod : Op → UserType BaseType
@@ -83,7 +87,7 @@ class TypedUserSemantics (Op : Type) (BaseType : Type) [BaseTypeClass BaseType] 
 
 @[simp]
 def TypeData.toType : TypeData BaseType → Type
-  | TypeData.some t => BaseTypeClass.toType t
+  | TypeData.some t => Godel.toType t
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
@@ -380,7 +384,7 @@ inductive NatBaseType (TS : TypeSemantics) : Type
   | ofNat : ℕ → NatBaseType TS
 deriving DecidableEq
 
-instance : BaseTypeClass (NatBaseType TS) where toType :=
+instance : Godel (NatBaseType TS) where toType :=
   fun n => match n with
     | .ofNat m => TS m
 
@@ -394,5 +398,5 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂)
   | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
-  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instDecidableEqNatBaseType (@instBaseTypeClassNatBaseTypeInstDecidableEqNatBaseType TS) k
+  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instDecidableEqNatBaseType (@instGodelNatBaseTypeInstDecidableEqNatBaseType TS) k
   | TypeData.unused => Unit
