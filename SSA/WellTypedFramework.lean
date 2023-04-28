@@ -5,13 +5,13 @@ import Mathlib.Data.Option.Basic
 Typeclass for a `baseType` which is a godel code of 
 Lean types.
 -/
-class Godel (β : Type)  : Type 1 where
+class Goedel (β : Type)  : Type 1 where
   toType : β → Type
-open Godel /- make toType publically visible in module. -/
+open Goedel /- make toType publically visible in module. -/
 
-notation "⟦" x "⟧" => Godel.toType x
+notation "⟦" x "⟧" => Goedel.toType x
 
-instance : Godel Unit where toType := fun _ => Unit
+instance : Goedel Unit where toType := fun _ => Unit
 
 inductive UserType (T : Type) : Type where
   | base : T → UserType T
@@ -23,40 +23,40 @@ namespace UserType
 
 instance: Inhabited (UserType β) where default := UserType.unit
 
-def toType [Godel β] : UserType β → Type
+def toType [Goedel β] : UserType β → Type
   | .base t =>  ⟦t⟧
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
 
-instance [Godel β] : Godel (UserType β) where 
+instance [Goedel β] : Goedel (UserType β) where
   toType := toType 
 
-def mkPair [Godel β] {k₁ k₂ : UserType β}: ⟦k₁⟧ → ⟦k₂⟧ → ⟦k₁.pair k₂⟧
+def mkPair [Goedel β] {k₁ k₂ : UserType β}: ⟦k₁⟧ → ⟦k₂⟧ → ⟦k₁.pair k₂⟧
   | k₁, k₂ => (k₁, k₂)
 
-def mkTriple [Godel β] {k₁ k₂ k₃ : UserType β}: ⟦k₁⟧ → ⟦k₂⟧ → ⟦k₃⟧ → ⟦k₁.triple k₂ k₃⟧
+def mkTriple [Goedel β] {k₁ k₂ k₃ : UserType β}: ⟦k₁⟧ → ⟦k₂⟧ → ⟦k₃⟧ → ⟦k₁.triple k₂ k₃⟧
   | k₁, k₂, k₃ => (k₁, k₂, k₃)
 
-def fstPair [Godel β] {k₁ k₂ : UserType β} : ⟦k₁.pair k₂⟧ → ⟦k₁⟧
+def fstPair [Goedel β] {k₁ k₂ : UserType β} : ⟦k₁.pair k₂⟧ → ⟦k₁⟧
   | (k₁, _) => k₁
 
-def sndPair [Godel β] {k₁ k₂ : UserType β} : ⟦k₁.pair k₂⟧ → ⟦k₂⟧
+def sndPair [Goedel β] {k₁ k₂ : UserType β} : ⟦k₁.pair k₂⟧ → ⟦k₂⟧
   | (_, k₂) => k₂
 
-def fstTriple [Godel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₁⟧
+def fstTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₁⟧
   | (k₁, _, _) => k₁
 
-def sndTriple [Godel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₂⟧
+def sndTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₂⟧
   | (_, k₂, _) => k₂
 
-def trdTriple [Godel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₃⟧
+def trdTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k₃⟧ → ⟦k₃⟧
   | (_, _, k₃) => k₃
 
 end UserType
 
 
-structure UserData [Godel β] where
+structure UserData [Goedel β] where
   type : UserType β
   value : toType type
 
@@ -70,17 +70,17 @@ inductive  TypeData (β : Type) : Type
   | unused : TypeData β -- Or bound
 
 @[coe]
-def UserType.toTypeData [Godel β] : UserType β → TypeData β
+def UserType.toTypeData [Goedel β] : UserType β → TypeData β
   | UserType.base t => TypeData.some t
   | UserType.unit => TypeData.unit
   | UserType.pair k₁ k₂ => TypeData.pair (UserType.toTypeData k₁) (UserType.toTypeData k₂)
   | UserType.triple k₁ k₂ k₃ => TypeData.triple (UserType.toTypeData k₁) (UserType.toTypeData k₂)
     (UserType.toTypeData k₃)
 
-variable {β : Type} [instDecidableEqBaseType : DecidableEq β] [instGodel : Godel β]
+variable {β : Type} [instDecidableEqBaseType : DecidableEq β] [instGoedel : Goedel β]
 instance : Coe (UserType β) (TypeData β) := ⟨UserType.toTypeData⟩
 
-class TypedUserSemantics (Op : Type) (β : Type) [Godel β] where
+class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] where
   argKind : Op → UserType β
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
@@ -90,21 +90,21 @@ class TypedUserSemantics (Op : Type) (β : Type) [Godel β] where
 
 @[simp]
 def TypeData.toType : TypeData β → Type
-  | TypeData.some t => Godel.toType t
+  | TypeData.some t => Goedel.toType t
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
   | TypeData.any => Σ (k : UserType β), ⟦k⟧
   | TypeData.unused => Unit
 
-instance : Godel (TypeData β) where 
+instance : Goedel (TypeData β) where
   toType := TypeData.toType
 
 theorem TypeDataToTypeEqUserTypeToType (a : UserType β) : 
   toType a = TypeData.toType a.toTypeData :=
   by
     induction a <;> 
-      (simp [Godel.toType, TypeData.toType, UserType.toType] at * <;> aesop)
+      (simp [Goedel.toType, TypeData.toType, UserType.toType] at * <;> aesop)
 
 
 @[simp]
@@ -390,7 +390,7 @@ inductive NatBaseType (TS : TypeSemantics) : Type
   | ofNat : ℕ → NatBaseType TS
 deriving DecidableEq
 
-instance : Godel (NatBaseType TS) where toType :=
+instance : Goedel (NatBaseType TS) where toType :=
   fun n => match n with
     | .ofNat m => TS m
 
@@ -404,5 +404,5 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂)
   | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
-  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instDecidableEqNatBaseType (@instGodelNatBaseTypeInstDecidableEqNatBaseType TS) k
+  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
   | TypeData.unused => Unit
