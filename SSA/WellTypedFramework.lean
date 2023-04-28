@@ -77,17 +77,18 @@ def getVarType (v : Var) : K TypeData :=
 def updateType (v : Var) (t : TypeData) : K Unit := do
   StateT.modifyGet (fun s => ((), fun v' => if v' = v then t else s.1 v', s.2))
 
+/-- assign a variable. Fails if the variable is not unused to start with -/
 def assignVar (v : Var) (t : TypeData) : K Unit := do
   let k ← getVarType v
   match k with
   | .unused => updateType v t
   | _ => failure
 
-/-- Does not change the state. Fails if impossible to unify or if either
-input is `unused`. TypeData is a meet semilattice with top element `any`.  -/
+/-- Does not change the state. Fails if impossible to unify.
+TypeData is a meet semilattice with top element `unused`.  -/
 def unify : (t₁ t₂ : TypeData) → K TypeData
-  | .unused, _ => failure
-  | _, .unused => failure
+  | .unused, k => return k
+  | k, .unused => return k
   | .any, k => return k
   | k, .any => return k
   | .some k₁, .some k₂ => do
@@ -155,27 +156,8 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     return k'
   | _, .pair fst snd, k => do
     unify (.pair (← getVarType fst) (← getVarType snd)) k
-    /-
-    match k with
-    | .any => return (.pair (← getVarType fst) (← getVarType snd))
-    | .pair k₁ k₂ => do
-      let k₁' ← unifyVar fst k₁
-      let k₂' ← unifyVar snd k₂
-      return .pair k₁' k₂'
-    | _ => failure
-    -/
   | _, .triple fst snd trd, k => do
     unify (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd)) k
-    /-
-    match k with
-    | .any => return (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd))
-    | .triple k₁ k₂ k₃ => do
-      let k₁' ← unifyVar fst k₁
-      let k₂' ← unifyVar snd k₂
-      let k₃' ← unifyVar trd k₃
-      return .triple k₁' k₂' k₃'
-    | _ => failure
-    -/
   | _,  .op o arg r, _ => do
     let _ ← unifyVar arg (TypedUserSemantics.argKind TS o)
     let _ ← inferType TS r
@@ -192,127 +174,6 @@ def inferType {Op : Type} (TS : TypeSemantics) [TypedUserSemantics Op TS] :
     let cod ← inferType TS body k.2
     unassignVars [arg]
     return (dom, cod)
-
--- @chris: TODO: implement `eval`:
---   `SSA Op i → Environment (Option Context BaseType) → Option i.eval` or some such.
-
--- @[simp]
--- def TypeData.inf {Kind : Type} [DecidableEq Kind] :
---     TypeData Kind → TypeData Kind → TypeData Kind
---   | .none, _ => .none
---   | _, .none => .none
---   | .some k₁, .some k₂ => if k₁ = k₂ then .some k₁ else .none
---   | .some k, _ => .some k
---   | _, .some k => .some k
---   | .any, _ => .any
---   | _, .any => .any
---   | _, _ => .unused
-
-
-
--- @[simp]
--- def ofInfLeft [DecidableEq Kind] [TypeSemantics Kind] :
---     {t₁ t₂ : TypeData Kind} → (t₁.inf t₂).toType → t₁.toType
---   | .unused, .unused, x => x
---   | .unused, _, _ => ()
---   | .any, .unused, x => x
---   | .any, .any, x => x
---   | .any, .some _, x => ⟨_, x⟩
---   | .some _, .unused, x => x
---   | .some _, .any, x => x
---   | .some k₁, .some k₂, x =>
---       if h : k₁ = k₂
---       then by
---         subst h
---         simp at x
---         exact x
---       else by simp [h] at x; exact Empty.elim x
-
--- @[simp]
--- def ofInfRight [DecidableEq Kind] [TypeSemantics Kind] :
---     {t₁ t₂ : TypeData Kind} → (t₁.inf t₂).toType → t₂.toType
---   | .unused, .unused, x => x
---   | _, .unused, _ => ()
---   | .unused, .any, x => x
---   | .any, .any, x => x
---   | .some _, .any, x => ⟨_, x⟩
---   | .unused, .some _, x => x
---   | .any, .some _, x => x
---   | .some k₁, .some k₂, x =>
---       if h : k₁ = k₂
---       then by
---         subst h
---         simp at x
---         exact x
---       else by simp [h] at x; exact Empty.elim x
-
--- @[simp]
--- def toInfLeft [DecidableEq Kind] [TypeSemantics Kind] :
---     {t₁ t₂ : TypeData Kind} → t₁.toType → t₂.toType → (t₁.inf t₂).toType
---   | .unused, .unused, x, y => by simp; exact ()
---   | .unused, .any, x, y => y
---   | .unused, .some _, x, y => y
---   | .any, .unused, x, y => x
---   | .any, .any, x, y => x
---   | .any, .some _, x, y => y
---   | .some _, .unused, x, y => x
---   | .some _, .any, x, y => x
---   | .some k₁, .some k₂, x, y =>
---     if h : k₁ = k₂
---     then by
---       subst h
---       simp
---       exact x
---     else by simp [h]
-
-
-
--- @[simp]
--- def unassign (t : Var → TypeData Kind) (v : Var) :
---     Var → TypeData Kind :=
---   fun v' => if v = v' then .unused else t v'
-
--- @[simp]
--- def toUnassign [TypeSemantics Kind] (t : Var → TypeData Kind) (v : Var) :
---     ∀ v', (t v').toType → (unassign t v v').toType :=
---   fun v' => if h : v = v' then by subst h; simp; exact fun _ => ()
---     else by simp [h]; exact id
-
-
-
--- @[simp]
--- def ofAssign [DecidableEq Kind] [TypeSemantics Kind] (t : Var → TypeData Kind) (v : Var) (k : TypeData Kind) :
---     ∀ v', (assign t v k v').toType → (t v').toType :=
---   fun v' =>
---   if h : v = v'
---   then by simp only [h, assign, if_true]; exact ofInfLeft
---   else by simp only [h, assign, if_false]; exact id
-
--- @[simp]
--- def toAssign [DecidableEq Kind] [TypeSemantics Kind]
---    (t : Var → TypeData Kind) (v : Var) (k : TypeData Kind) (semk : TypeData.toType k) :
---     ∀ v', (t v').toType → (assign t v k v').toType :=
---   fun v' =>
---   if h : v = v'
---   then by simp only [h, assign, if_true]; _
---   else by simp only [h, assign, if_false]; exact id
-
--- @[simp]
--- def TypeData.rToType {Kind : Type} [TypeSemantics Kind] :
---     TypeData (Kind × Kind) → Type
---   | TypeData.none => Empty
---   | TypeData.some (k₁, k₂) => TypeSemantics.toType k₁ → TypeSemantics.toType k₂
---   | TypeData.any => Σ (k₁ k₂ : Kind),
---       TypeSemantics.toType k₁ → TypeSemantics.toType k₂
---   | TypeData.unused => Unit
-
--- @[simp]
--- def SSAIndex.teval (Op : Type) (Kind : Type) [TypeSemantics Kind]
---     [TypedUserSemantics Op Kind] : SSAIndex → Type
---   | .STMT => Σ (sem : Var → TypeData Kind), (∀ v, (sem v).toType)
---   | .REGION => Σ k₁ k₂ : Kind, TypeSemantics.toType k₁ → TypeSemantics.toType k₂
---   | .TERMINATOR => Σ k : Kind, TypeSemantics.toType k
---   | .EXPR => Σ k : Kind, TypeSemantics.toType k
 
 @[simp]
 def SSAIndex.teval (Op : Type)  (TS : TypeSemantics)
