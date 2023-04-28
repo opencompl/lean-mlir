@@ -57,7 +57,7 @@ def trdTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k
 end UserType
 
 
-structure UserData [Goedel β] where
+structure UserData {β : Type} [Goedel β] where
   type : UserType β
   value : toType type
 
@@ -80,6 +80,14 @@ def UserType.toTypeData [Goedel β] : UserType β → TypeData β
 
 variable {β : Type} [instDecidableEqBaseType : DecidableEq β] [instGoedel : Goedel β]
 instance : Coe (UserType β) (TypeData β) := ⟨UserType.toTypeData⟩
+
+def TypeData.toUserType : TypeData β → Option (UserType β)
+  | TypeData.some t => do return UserType.base t
+  | TypeData.unit => do return UserType.unit
+  | TypeData.pair k₁ k₂ => do UserType.pair (← k₁.toUserType) (← k₂.toUserType)
+  | TypeData.triple k₁ k₂ k₃ => do UserType.triple (← k₁.toUserType) (← k₂.toUserType) (← k₃.toUserType)
+  | TypeData.any => none
+  | TypeData.unused => none
 
 class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] where
   argKind : Op → UserType β
@@ -110,12 +118,51 @@ theorem TypeDataToTypeEqUserTypeToType (a : UserType β) :
 def Context (α : Type) : Type :=
   AList (fun _ : Var => α)
 
+instance {α : Type} : EmptyCollection (Context α) := by
+  dsimp [Context]; infer_instance
+
+def Context.pmapCore {α β : Type} (f : α → Option β) :
+    List (Σ _ : Var, α) → Option (List (Σ _ : Var, β))
+  | [] => some []
+  | (⟨v, a⟩ :: l) => do
+    let b ← f a
+    let l' ← Context.pmapCore f l
+    some (⟨v, b⟩ :: l')
+
+theorem Context.pmapCore_keys {α β : Type} (f : α → Option β) :
+    ∀ (l : List (Σ _ : Var, α)),
+    ∀ l' ∈ (Context.pmapCore f l), l'.keys = l.keys
+  | [] => by simp [Context.pmapCore]
+  | (a::l) => by
+    rintro l'
+    simp only [Context.pmapCore, List.keys_cons]
+    cases h : f a.2
+    . simp [bind]
+    . cases h' : pmapCore f l
+      . simp [bind]
+      . simp only [Option.some_bind, Option.mem_def, Option.some.injEq, bind]
+        rintro rfl
+        rw [← Context.pmapCore_keys f _ _ h']
+        simp
+
+def Context.pmap {α β : Type} (f : α → Option β) (l : Context α) : Option (Context β) := by
+  cases h : Context.pmapCore f l.1 with
+  | none => exact none
+  | some l' => exact some ⟨l', by rw [List.NodupKeys, Context.pmapCore_keys _ _ _ h]; exact l.2⟩
+
+
 @[simp]
 def SSAIndex.ieval (β : Type) : SSAIndex → Type
   | .TERMINATOR => TypeData β
   | .EXPR => TypeData β
   | .REGION => TypeData β × TypeData β
   | .STMT => List Var
+
+def SSAIndex.ieval.any {β : Type} : (i : SSAIndex) → i.ieval β
+  | .TERMINATOR => TypeData.any
+  | .EXPR => TypeData.any
+  | .REGION => (TypeData.any, TypeData.any)
+  | .STMT => []
 
 abbrev K (β : Type)
   : Type → Type := StateT ((Context (TypeData β)) × (Context (TypeData β × TypeData β))) Option
@@ -203,18 +250,18 @@ Return the type of the returned variable. Fails when bound variable is not `unus
 variables, only free variables.
 * If `REGION` then as for `EXPR`  -/
 -- @chris: the type signature should be `SSA Op i → K (Context β)`?
-def inferType {Op : Type}  [TUS : TypedUserSemantics Op β] :
+def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
     {i : SSAIndex} → SSA Op i →
     (i.ieval β)
     → K β (i.ieval β)
   | _,  .assign lhs rhs rest, _ => do
-    let k ← inferType rhs (← getVarType lhs)
+    let k ← inferTypeCore rhs (← getVarType lhs)
     assignVar lhs k
-    let l ← inferType rest []
+    let l ← inferTypeCore rest []
     return lhs :: l
   | _, .nop, _ => return []
   | _, .ret s v, k => do
-    let l ← inferType s []
+    let l ← inferTypeCore s []
     let k' ← unifyVar v k
     unassignVars l
     return k'
@@ -226,7 +273,7 @@ def inferType {Op : Type}  [TUS : TypedUserSemantics Op β] :
     let _ ← unifyVar arg (TUS.argKind o)
     let dom := TUS.rgnDom o
     let cod := TUS.rgnCod o
-    let _ ← inferType r (dom, cod)
+    let _ ← inferTypeCore r (dom, cod)
     return (TypedUserSemantics.outKind o).toTypeData
   | _, .var v, k => unifyVar v k
   | _, .rgnvar v, k => unifyRVar v k.1 k.2
@@ -236,9 +283,17 @@ def inferType {Op : Type}  [TUS : TypedUserSemantics Op β] :
     return (UserType.unit.toTypeData, UserType.unit.toTypeData)
   | _, .rgn arg body, k => do
     let dom ← unifyVar arg k.1
-    let cod ← inferType body k.2
+    let cod ← inferTypeCore body k.2
     unassignVars [arg]
     return (dom, cod)
+
+def inferType {Op : Type} [TypedUserSemantics Op β]
+    {i : SSAIndex} (e : SSA Op i) :
+    Option ((i.ieval β) × Context (UserType β) × Context (UserType β × UserType β)) := do
+  let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) (∅, ∅)
+  return (k.1, ← k.2.1.pmap TypeData.toUserType, ← k.2.2.pmap
+    fun x => do return (← x.1.toUserType, ← x.2.toUserType))
+
 
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
