@@ -108,7 +108,7 @@ theorem TypeDataToTypeEqUserTypeToType (a : UserType β) :
 
 
 @[simp]
-def SSAIndex.ieval (Op : Type) (β : Type) : SSAIndex → Type
+def SSAIndex.ieval (β : Type) : SSAIndex → Type
   | .TERMINATOR => TypeData β
   | .EXPR => TypeData β
   | .REGION => TypeData β × TypeData β
@@ -193,8 +193,8 @@ variables, only free variables.
 -- @chris: the type signature should be `SSA Op i → K (Context β)`?
 def inferType {Op : Type}  [TUS : TypedUserSemantics Op β] :
     {i : SSAIndex} → SSA Op i →
-    (i.ieval Op β)
-    → K β (i.ieval Op β)
+    (i.ieval β)
+    → K β (i.ieval β)
   | _,  .assign lhs rhs rest, _ => do
     let k ← inferType rhs (← getVarType lhs)
     assignVar lhs k
