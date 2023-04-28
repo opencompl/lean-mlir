@@ -1,5 +1,6 @@
 import SSA.Framework
 import Mathlib.Data.Option.Basic
+import Mathlib.Data.List.AList
 
 /-
 Typeclass for a `baseType` which is a godel code of
@@ -106,6 +107,8 @@ theorem TypeDataToTypeEqUserTypeToType (a : UserType β) :
     induction a <;>
       (simp [Goedel.toType, TypeData.toType, UserType.toType] at * <;> aesop)
 
+def Context (α : Type) : Type :=
+  AList (fun _ : Var => α)
 
 @[simp]
 def SSAIndex.ieval (β : Type) : SSAIndex → Type
@@ -115,17 +118,26 @@ def SSAIndex.ieval (β : Type) : SSAIndex → Type
   | .STMT => List Var
 
 abbrev K (β : Type)
-  : Type → Type := StateT ((Var → TypeData β) × (Var → (TypeData  β × TypeData β))) Option
+  : Type → Type := StateT ((Context (TypeData β)) × (Context (TypeData β × TypeData β))) Option
 
 -- Lean gets very picky here and wants to get all instances passed explicit to be sure they're the same
-def getVars : K β (Var → TypeData β) :=
-  do return (← StateT.get).1
+def getVars : K β (Var → TypeData β) := do
+  let al := (← StateT.get).1
+  return (fun v => match al.lookup v with
+    | some t => t
+    | none => TypeData.unused)
+
+def getRVars : K β (Var → TypeData β × TypeData β) := do
+  let al := (← StateT.get).2
+  return (fun v => match al.lookup v with
+    | some t => t
+    | none => (TypeData.unused, TypeData.unused))
 
 def getVarType (v : Var) : K β (TypeData β) :=
   do return (← getVars) v
 
 def updateType (v : Var) (t : TypeData β) : K β Unit := do
-  StateT.modifyGet (fun s => ((), fun v' => if v' = v then t else s.1 v', s.2))
+  StateT.modifyGet (fun s => ((), s.1.insert v t, s.2))
 
 /-- assign a variable. Fails if the variable is not unused to start with -/
 def assignVar (v : Var) (t : TypeData β) : K β Unit := do
@@ -164,9 +176,9 @@ def unifyVar (v : Var) (t : TypeData β) : K β  (TypeData β) := do
   return k'
 
 def unifyRVar (v : Var) (dom : TypeData β) (cod : TypeData β) : K β (TypeData  β × TypeData β) := do
-  let s ← StateT.get
-  let dom' ← unify dom (s.2 v).1
-  let cod' ← unify cod (s.2 v).2
+  let s ← getRVars
+  let dom' ← unify dom (s v).1
+  let cod' ← unify cod (s v).2
   return (dom', cod')
 
 @[simp]
