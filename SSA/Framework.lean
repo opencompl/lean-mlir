@@ -53,7 +53,8 @@ abbrev Env (Val : Type) := Var → Val
 
 @[simp]
 def Env.empty {Val : Type} [Inhabited Val]: Env Val := fun _ => default
-notation "∅" =>  Env.empty
+
+instance [Inhabited Val] : EmptyCollection (Env Val) := ⟨Env.empty⟩
 
 @[simp]
 def Env.set (e : Env Val) (var : Var) (val : Val) :=
