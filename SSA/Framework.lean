@@ -3,6 +3,7 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 
+namespace SSA
 abbrev Var := Int
 abbrev RegionVar := Int
 
@@ -241,3 +242,4 @@ macro_rules
 
 end EDSL
 
+end SSA

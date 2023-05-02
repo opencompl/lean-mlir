@@ -6,6 +6,8 @@ import Mathlib.Data.List.AList
 Typeclass for a `baseType` which is a godel code of
 Lean types.
 -/
+
+
 class Goedel (β : Type)  : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
@@ -13,6 +15,8 @@ open Goedel /- make toType publically visible in module. -/
 notation "⟦" x "⟧" => Goedel.toType x
 
 instance : Goedel Unit where toType := fun _ => Unit
+
+namespace SSA
 
 inductive UserType (T : Type) : Type where
   | base : T → UserType T
@@ -355,3 +359,5 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
   | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
   | TypeData.unused => Unit
+
+end SSA
