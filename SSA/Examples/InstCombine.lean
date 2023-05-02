@@ -1,31 +1,26 @@
 import SSA.WellTypedFramework
 
-namespace Arith
+namespace InstCombine
 
 -- TODO: base these on the actual arith dialect and the target rewrite(s)
 inductive BaseType
-  | Nat
-  | Bool
+  | BitVector (width : Nat)
   deriving Repr, DecidableEq
 
 instance : Goedel BaseType where
   toType := fun
-    | BaseType.Nat => Nat
-    | BaseType.Bool => Bool
+    | BaseType.BitVector _ => List Bool
 
 abbrev UserType := SSA.UserType BaseType
 
 inductive Op
-  | Add
-  | Sub
-  | Mul
-  | Div
-  | Eq
-  | Lt
-  | Gt
   | And
   | Or
   | Not
+  | Xor
+  | ShiftLeft
+  | ShiftRight
+  | LShr
   deriving Repr, DecidableEq
 
 def argKind : Op → UserType := sorry
@@ -41,3 +36,5 @@ instance : SSA.TypedUserSemantics Op BaseType where
   rgnCod := rgnCod
   outKind := outKind
   eval := eval
+
+end InstCombine
