@@ -19,6 +19,8 @@ inductive UserType (T : Type) : Type where
   | pair : UserType T → UserType T → UserType T
   | triple : UserType T → UserType T → UserType T → UserType T
   | unit : UserType T
+  | region : UserType T → UserType T → UserType T
+  deriving DecidableEq
 
 namespace UserType
 
@@ -29,6 +31,7 @@ def toType [Goedel β] : UserType β → Type
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
+  | .region k₁ k₂ => toType k₁ → toType k₂
 
 instance [Goedel β] : Goedel (UserType β) where
   toType := toType
@@ -67,6 +70,7 @@ inductive  TypeData (β : Type) : Type
   | unit : TypeData β
   | pair : TypeData β → TypeData β → TypeData β
   | triple : TypeData β → TypeData β → TypeData β → TypeData β
+  | region : TypeData β → TypeData β → TypeData β
   | any : TypeData β
   | unused : TypeData β -- Or bound
 
@@ -77,6 +81,7 @@ def UserType.toTypeData [Goedel β] : UserType β → TypeData β
   | UserType.pair k₁ k₂ => TypeData.pair (UserType.toTypeData k₁) (UserType.toTypeData k₂)
   | UserType.triple k₁ k₂ k₃ => TypeData.triple (UserType.toTypeData k₁) (UserType.toTypeData k₂)
     (UserType.toTypeData k₃)
+  | UserType.region k₁ k₂ => TypeData.region (UserType.toTypeData k₁) (UserType.toTypeData k₂)
 
 variable {β : Type} [instDecidableEqBaseType : DecidableEq β] [instGoedel : Goedel β]
 instance : Coe (UserType β) (TypeData β) := ⟨UserType.toTypeData⟩
@@ -86,6 +91,7 @@ def TypeData.toUserType : TypeData β → Option (UserType β)
   | TypeData.unit => do return UserType.unit
   | TypeData.pair k₁ k₂ => do UserType.pair (← k₁.toUserType) (← k₂.toUserType)
   | TypeData.triple k₁ k₂ k₃ => do UserType.triple (← k₁.toUserType) (← k₂.toUserType) (← k₃.toUserType)
+  | TypeData.region k₁ k₂ => do UserType.region (← k₁.toUserType) (← k₂.toUserType)
   | TypeData.any => none
   | TypeData.unused => none
 
@@ -114,6 +120,7 @@ def TypeData.toType : TypeData β → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
+  | TypeData.region t₁ t₂ => (TypeData.toType t₁) → (TypeData.toType t₂)
   | TypeData.any => Σ (k : UserType β), ⟦k⟧
   | TypeData.unused => Unit
 
@@ -166,36 +173,30 @@ def Context.pmap {α β : Type} (f : α → Option β) (l : Context α) : Option
 def SSAIndex.ieval (β : Type) : SSAIndex → Type
   | .TERMINATOR => TypeData β
   | .EXPR => TypeData β
-  | .REGION => TypeData β × TypeData β
+  | .REGION => TypeData β
   | .STMT => List Var
 
 def SSAIndex.ieval.any {β : Type} : (i : SSAIndex) → i.ieval β
   | .TERMINATOR => TypeData.any
   | .EXPR => TypeData.any
-  | .REGION => (TypeData.any, TypeData.any)
+  | .REGION => TypeData.region TypeData.any TypeData.any
   | .STMT => []
 
 abbrev K (β : Type)
-  : Type → Type := StateT ((Context (TypeData β)) × (Context (TypeData β × TypeData β))) Option
+  : Type → Type := StateT (Context (TypeData β)) Option
 
 -- Lean gets very picky here and wants to get all instances passed explicit to be sure they're the same
 def getVars : K β (Var → TypeData β) := do
-  let al := (← StateT.get).1
+  let al := (← StateT.get)
   return (fun v => match al.lookup v with
     | some t => t
     | none => TypeData.unused)
-
-def getRVars : K β (Var → TypeData β × TypeData β) := do
-  let al := (← StateT.get).2
-  return (fun v => match al.lookup v with
-    | some t => t
-    | none => (TypeData.unused, TypeData.unused))
 
 def getVarType (v : Var) : K β (TypeData β) :=
   do return (← getVars) v
 
 def updateType (v : Var) (t : TypeData β) : K β Unit := do
-  StateT.modifyGet (fun s => ((), s.1.insert v t, s.2))
+  StateT.modifyGet (fun s => ((), s.insert v t))
 
 /-- assign a variable. Fails if the variable is not unused to start with -/
 def assignVar (v : Var) (t : TypeData β) : K β Unit := do
@@ -216,14 +217,11 @@ def unify : (t₁ t₂ : TypeData β) → K β (TypeData β)
     then return .some k₁
     else failure
   | .pair k₁ k₂, .pair t₁ t₂ => do
-    let k₁' ← unify k₁ t₁
-    let k₂' ← unify k₂ t₂
-    return .pair k₁' k₂'
+    return .pair (← unify k₁ t₁) (← unify k₂ t₂)
   | .triple k₁ k₂ k₃, .triple t₁ t₂ t₃ => do
-    let k₁' ← unify k₁ t₁
-    let k₂' ← unify k₂ t₂
-    let k₃' ← unify k₃ t₃
-    return .triple k₁' k₂' k₃'
+    return .triple (← unify k₁ t₁) (← unify k₂ t₂) (← unify k₃ t₃)
+  | .region k₁ k₂, .region t₁ t₂ => do
+    return .region (← unify k₁ t₁) (← unify k₂ t₂)
   | .unit, .unit => return .unit
   | _, _ => failure
 
@@ -232,12 +230,6 @@ def unifyVar (v : Var) (t : TypeData β) : K β  (TypeData β) := do
   let k' ← unify k t
   updateType v k'
   return k'
-
-def unifyRVar (v : Var) (dom : TypeData β) (cod : TypeData β) : K β (TypeData  β × TypeData β) := do
-  let s ← getRVars
-  let dom' ← unify dom (s v).1
-  let cod' ← unify cod (s v).2
-  return (dom', cod')
 
 @[simp]
 def assignAny (t : Var → TypeData β) (v : Var) : K β Unit :=
@@ -284,24 +276,27 @@ def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
     let _ ← unifyVar arg (TUS.argUserType o)
     let dom := TUS.rgnDom o
     let cod := TUS.rgnCod o
-    let _ ← inferTypeCore r (dom, cod)
+    let _ ← inferTypeCore r (.region dom cod)
     return (TypedUserSemantics.outUserType o).toTypeData
   | _, .var v, k => unifyVar v k
-  | _, .rgnvar v, k => unifyRVar v k.1 k.2
+  | _, .rgnvar v, k => do
+    unifyVar v (← unify k (.region TypeData.any TypeData.any))
   | _, .rgn0, k => do
-    return (← unify k.1 UserType.unit.toTypeData, ← unify k.2 UserType.unit.toTypeData)
+    unify k (.region TypeData.unit TypeData.unit)
   | _, .rgn arg body, k => do
-    let dom ← unifyVar arg k.1
-    let cod ← inferTypeCore body k.2
-    unassignVars [arg]
-    return (dom, cod)
+    match ← unify k (.region TypeData.any TypeData.any) with
+    | .region dom cod => do
+      let dom ← unifyVar arg dom
+      let cod ← inferTypeCore body cod
+      unassignVars [arg]
+      return .region dom cod
+    | _ => failure
 
 def inferType {Op : Type} [TypedUserSemantics Op β]
     {i : SSAIndex} (e : SSA Op i) :
-    Option ((i.ieval β) × Context (UserType β) × Context (UserType β × UserType β)) := do
-  let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) (∅, ∅)
-  return (k.1, ← k.2.1.pmap TypeData.toUserType, ← k.2.2.pmap
-    fun x => do return (← x.1.toUserType, ← x.2.toUserType))
+    Option ((i.ieval β) × Context (UserType β)) := do
+  let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) ∅
+  return (k.1, ← k.2.pmap TypeData.toUserType)
 
 def EnvC (c : Context (UserType β)) :=
   ∀ (v : Var), (c.lookup v).elim Unit UserType.toType
@@ -324,20 +319,46 @@ def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   . exact fun _ => none
   . exact fun x => some ⟨_, x⟩
 
--- def SSA.teval {Op : Type} [TypedUserSemantics Op β]
---   (e : EnvU β) (er : ) :
---   (e : EnvC c) → SSA Op k → k.eval Val
--- | .assign lhs rhs rest =>
---     rest.teval (e.set lhs (rhs.eval e re)) re
--- | .nop => _
--- | .ret above v => _
--- | .pair fst snd => _
--- | .triple fst snd third => _
--- | .op o arg r => _
--- | .var v => _
--- | .rgnvar v => _
--- | .rgn0 => _
--- | .rgn arg body => _
+def EnvU.set : EnvU β → Var → UVal β → EnvU β
+  | e, v, u => fun v' => if v = v' then u else e v'
+
+def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
+    [TypedUserSemantics Op β] : SSAIndex → Type
+| .STMT => EnvU β
+| .TERMINATOR => UVal β
+| .EXPR => UVal β
+| .REGION => UVal β
+
+def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
+  (e : EnvU β) : SSA Op k → Option (k.teval Op β)
+| .assign lhs rhs rest => do
+  rest.teval (e.set lhs (← rhs.teval e))
+| .nop => return e
+| .ret above v => do (← above.teval e) v
+| .pair fst snd => do
+  let fst ← e fst
+  let snd ← e snd
+  return ⟨.pair fst.fst snd.fst, (fst.2, snd.2)⟩
+| .triple fst snd third => do
+  let fst ← e fst
+  let snd ← e snd
+  let third ← e third
+  return ⟨.triple fst.fst snd.fst third.fst, (fst.2, snd.2, third.2)⟩
+| .op o arg r => do
+  let ⟨argK, argV⟩ ← e arg
+  let ⟨r₁, r₂⟩  ← r.teval (e.set arg ⟨argK, argV⟩)
+  if h : TUS.argUserType o = argK ∧
+    .region (TUS.rgnDom o)  (TUS.rgnCod o) = r₁
+    then by
+          cases' h with h₁ h₂
+          subst h₁ h₂
+          dsimp [UserType.toType] at r₂
+          exact some ⟨_, TUS.eval o argV r₂⟩
+    else none
+| .var v => e v
+| .rgnvar v => e v
+| .rgn0 => return ⟨.region .unit .unit, id⟩
+| .rgn arg body => do sorry
 
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
