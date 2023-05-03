@@ -8,6 +8,7 @@ class Goedel (β : Type)  : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
 
+@[reducible]
 notation "⟦" x "⟧" => Goedel.toType x
 
 instance : Goedel Unit where toType := fun _ => Unit
@@ -26,6 +27,7 @@ namespace UserType
 
 instance: Inhabited (UserType β) where default := UserType.unit
 
+@[reducible]
 def toType [Goedel β] : UserType β → Type
   | .base t =>  ⟦t⟧
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
