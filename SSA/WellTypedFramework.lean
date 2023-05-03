@@ -298,15 +298,23 @@ def inferType {Op : Type} [TypedUserSemantics Op β]
   let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) ∅
   return (k.1, ← k.2.pmap TypeData.toUserType)
 
+/-- TODO: add documentation for this... -/
 def EnvC (c : Context (UserType β)) :=
   ∀ (v : Var), (c.lookup v).elim Unit UserType.toType
+
+--instance {β : Type} [Goedel β] {c : Context (UserType β)}: EmptyCollection (EnvC c) := by
+--  sorry
 
 variable (β)
 
 def UVal := Σ (k : UserType β), k.toType
 
+/-- TODO: add documentation for this... -/
 def EnvU : Type :=
   Var → Option (UVal β)
+
+instance {β : Type} [Goedel β] : EmptyCollection (EnvU β) where
+  emptyCollection := (fun _ => none)
 
 variable {β}
 
@@ -362,30 +370,5 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
 
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
-
--- We can recover the case with the TypeSemantics as an instance
-def TypeSemantics : Type 1 :=
-  ℕ → Type
-
-inductive NatBaseType (TS : TypeSemantics) : Type
-  | ofNat : ℕ → NatBaseType TS
-deriving DecidableEq
-
-instance : Goedel (NatBaseType TS) where toType :=
-  fun n => match n with
-    | .ofNat m => TS m
-
-variable {TS : TypeSemantics}
-abbrev NatUserType := UserType (NatBaseType TS)
-abbrev NatTypeData := TypeData (NatBaseType TS)
-
-@[simp]
-def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
-  | TypeData.some (.ofNat k) => TS k
-  | TypeData.unit => Unit
-  | TypeData.pair t₁ t₂ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂)
-  | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
-  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
-  | TypeData.unused => Unit
 
 end SSA
