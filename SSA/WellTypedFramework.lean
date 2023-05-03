@@ -2,12 +2,8 @@ import SSA.Framework
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.AList
 
-/-
-Typeclass for a `baseType` which is a godel code of
-Lean types.
--/
-
-
+/-- Typeclass for a `baseType` which is a Gödel code of
+Lean types. -/
 class Goedel (β : Type)  : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
@@ -93,13 +89,24 @@ def TypeData.toUserType : TypeData β → Option (UserType β)
   | TypeData.any => none
   | TypeData.unused => none
 
+/-- Typeclass for a user semantics of `Op`, with base type `β`.
+    The type β has to implement the `Goedel` typeclass, mapping into `Lean` types.
+    This typeclass has several arguments that have to be defined to give semantics to
+    the operations of type `Op`:
+    * `argUserType` and `outUserType`, functions of type `Op → UserType β`, give the type of the
+      arguments and the output of the operation.
+    * `rgnDom` and `rgnCod`, functions of type `Op → UserType β`, give the type of the
+      domain and codomain of regions within the operation.
+    * `eval` gives the actual evaluation semantics of the operation, by defining a function for
+      every operation `o : Op` of type `toType (argUserType o) → (toType (rgnDom o) → toType (rgnCod o)) → toType (outUserType o)`.
+-/
 class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] where
-  argKind : Op → UserType β
+  argUserType : Op → UserType β
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
-  outKind : Op → UserType β
-  eval : ∀ (o : Op), toType (argKind o)  → (toType (rgnDom o) →
-    toType (rgnCod o)) → toType (outKind o)
+  outUserType : Op → UserType β
+  eval : ∀ (o : Op), toType (argUserType o)  → (toType (rgnDom o) →
+    toType (rgnCod o)) → toType (outUserType o)
 
 @[simp]
 def TypeData.toType : TypeData β → Type
@@ -274,11 +281,11 @@ def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
   | _, .triple fst snd trd, k => do
     unify (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd)) k
   | _,  .op o arg r, _ => do
-    let _ ← unifyVar arg (TUS.argKind o)
+    let _ ← unifyVar arg (TUS.argUserType o)
     let dom := TUS.rgnDom o
     let cod := TUS.rgnCod o
     let _ ← inferTypeCore r (dom, cod)
-    return (TypedUserSemantics.outKind o).toTypeData
+    return (TypedUserSemantics.outUserType o).toTypeData
   | _, .var v, k => unifyVar v k
   | _, .rgnvar v, k => unifyRVar v k.1 k.2
   | _, .rgn0, k => do

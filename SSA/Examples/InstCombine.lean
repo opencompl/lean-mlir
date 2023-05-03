@@ -13,14 +13,14 @@ instance : Goedel BaseType where
 
 abbrev UserType := SSA.UserType BaseType
 
+-- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive Op
-  | And
-  | Or
-  | Not
-  | Xor
-  | ShiftLeft
-  | ShiftRight
-  | LShr
+  | and
+  | or
+  | xor
+  | shr
+  | lshr
+  | ashr
   deriving Repr, DecidableEq
 
 def argKind : Op → UserType := sorry
@@ -38,3 +38,10 @@ instance : SSA.TypedUserSemantics Op BaseType where
   eval := eval
 
 end InstCombine
+/-
+Optimization: InstCombineShift: 239
+  %Op0 = shl %X, C
+  %r = lshr %Op0, C
+=>
+  %r = and %X, (-1 u>> C)
+-/
