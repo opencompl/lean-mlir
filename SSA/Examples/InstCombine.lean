@@ -50,42 +50,51 @@ def BitVector.or : ∀ {w : Width}, BitVector w → BitVector w → BitVector w 
 def BitVector.xor : ∀ {w : Width}, BitVector w → BitVector w → BitVector w := (· ^^^ ·)
 
 theorem Nat.zero_lt_pow {m n : Nat} : (0 < n) → 0 < n^m := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-    intro h
-    rw [Nat.pow_succ]
-    exact Nat.mul_pos (ih h) h
+induction m with
+| zero => simp
+| succ m ih =>
+  intro h
+  rw [Nat.pow_succ]
+  exact Nat.mul_pos (ih h) h
 
 theorem Width.zero_lt_pow_2 {w : Width} : 0 < 2^w.val := by
-  have h : 0 < 2 := Nat.zero_lt_succ 1
-  exact @Nat.zero_lt_pow w.val 2 h
+have h : 0 < 2 := Nat.zero_lt_succ 1
+exact @Nat.zero_lt_pow w.val 2 h
 
 def Width.nat_pow (n : Nat) (w : Width) : Nat :=
- n ^ w
+n ^ w
 
 theorem Nat.gt_of_lt {a b : Nat} : a < b → b > a := by simp
 
 def _root_.Nat.asBitVector (n : Nat) {w : Width} : BitVector w :=
-  { val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
+{ val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
 
 def BitVector.shl {w : Width} (op₁ op₂ : BitVector w) : BitVector w :=
- op₁.val * (2^op₂.val) |>.asBitVector
+op₁.val * (2^op₂.val) |>.asBitVector
 
 def BitVector.lshr {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ >>> op₂
 def BitVector.ashr {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ >>> op₂ -- not capturing the difference here obviously
 def BitVector.shl' {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ <<< op₂
 
+def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun ⟨a, b⟩ => f a b
 
+#check Op.rec
+
+-- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20reduction.20of.20dependent.20return.20type/near/276044057
 def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDom o) →
   Goedel.toType (rgnCod o)) → Goedel.toType (outUserType o) :=
-  fun o arg _ => match o, arg with
-    | Op.and w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.and x y
-    | Op.or w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.or x y
-    | Op.xor w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.xor x y
-    | Op.lshr w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.lshr x y
-    | Op.ashr w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.ashr x y
-    | Op.shl w, SSA.UserType.pair x y => fun (x y : BitVector w) => UserType.base $ BitVector.shl x y
+  fun o arg _ => Op.rec
+    (fun w => uncurry $ @BitVector.and w)
+    (fun w => uncurry $ @BitVector.or w)
+    (fun w => uncurry $ @BitVector.xor w)
+    (fun w => uncurry $ @BitVector.shl w)
+    (fun w => uncurry $ @BitVector.lshr w)
+    (fun w => uncurry $ @BitVector.ashr w)
+    o
+
+#reduce Goedel.toType (outUserType (Op.and ⟨2,by simp⟩))
+#reduce fun w => Goedel.toType (outUserType (Op.and w))
+#reduce fun w =>  BitVector w × BitVector w → BitVector w
 
 instance : SSA.TypedUserSemantics Op BaseType where
 argUserType := argUserType
