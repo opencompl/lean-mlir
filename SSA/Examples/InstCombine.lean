@@ -78,23 +78,21 @@ def BitVector.shl' {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op�
 
 def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun ⟨a, b⟩ => f a b
 
-#check Op.rec
 
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20reduction.20of.20dependent.20return.20type/near/276044057
+-- #check Op.casesOn
 def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDom o) →
   Goedel.toType (rgnCod o)) → Goedel.toType (outUserType o) :=
-  fun o arg _ => Op.rec
+  fun o arg _ => Op.casesOn o
     (fun w => uncurry $ @BitVector.and w)
     (fun w => uncurry $ @BitVector.or w)
     (fun w => uncurry $ @BitVector.xor w)
     (fun w => uncurry $ @BitVector.shl w)
     (fun w => uncurry $ @BitVector.lshr w)
     (fun w => uncurry $ @BitVector.ashr w)
-    o
+    arg
 
-#reduce Goedel.toType (outUserType (Op.and ⟨2,by simp⟩))
-#reduce fun w => Goedel.toType (outUserType (Op.and w))
-#reduce fun w =>  BitVector w × BitVector w → BitVector w
+def foo : True := default
 
 instance : SSA.TypedUserSemantics Op BaseType where
 argUserType := argUserType

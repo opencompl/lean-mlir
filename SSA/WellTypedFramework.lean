@@ -8,7 +8,6 @@ class Goedel (β : Type)  : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
 
-@[reducible]
 notation "⟦" x "⟧" => Goedel.toType x
 
 instance : Goedel Unit where toType := fun _ => Unit
