@@ -5,39 +5,69 @@ namespace InstCombine
 
 abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
 
-inductive BaseType
-  | bitvec (w : Width) : BaseType
+
+def Fin.coeLt {n m : Nat} : n ≤ m → Fin n → Fin m :=
+  fun h i => match i with
+    | ⟨i, h'⟩ => ⟨i, Nat.lt_of_lt_of_le h' h⟩
+
 
 inductive LengthIndexedList (α : Type u) : Nat → Type u where
    | nil : LengthIndexedList α 0
    | cons : α → LengthIndexedList α n → LengthIndexedList α (n + 1)
   deriving Repr, DecidableEq
 
-def LengthIndexedList.fromList {α : Type u} (l : List α) : LengthIndexedList α (List.length l) :=
+namespace LengthIndexedList
+
+def fromList {α : Type u} (l : List α) : LengthIndexedList α (List.length l) :=
   match l with
   | [] => LengthIndexedList.nil
   | x :: xs => LengthIndexedList.cons x (LengthIndexedList.fromList xs)
 
-theorem _root_.Nat.lt_succ_lt_succ : {a b : Nat} → Nat.succ a < Nat.succ b → a < b := by
-  sorry
+def map {α β : Type u} (f : α → β) {n : Nat} : LengthIndexedList α n → LengthIndexedList β n
+  | nil => nil
+  | cons x xs => cons (f x) (map f xs)
 
-def LengthIndexList.nth {α : Type u} {n : Nat} (l : LengthIndexedList α n) (i : Fin n) : α :=
-  match l, i with
-  | LengthIndexedList.cons x _, ⟨0, _⟩ => x
-  | LengthIndexedList.cons _ xs, ⟨i + 1, h⟩ => nth xs ⟨i, Nat.lt_succ_lt_succ h⟩
 
 @[simp]
-def LengthIndexedList.foldl {α β : Type u} {n : Nat} (f : β → α → β) (acc : β) : LengthIndexedList α n → β
+def foldl {α β : Type u} {n : Nat} (f : β → α → β) (acc : β) : LengthIndexedList α n → β
   | nil => acc
   | cons x xs => LengthIndexedList.foldl f (f acc x) xs
 
 @[simp]
-def LengthIndexedList.zipWith {α β γ : Type u} {n : Nat} (f : α → β → γ) :
+def zipWith {α β γ : Type u} {n : Nat} (f : α → β → γ) :
     LengthIndexedList α n → LengthIndexedList β n → LengthIndexedList γ n
   | nil, nil => nil
   | cons x xs, cons y ys => cons (f x y) (zipWith f xs ys)
 
---
+def nth {α : Type u} {n : Nat} (l : LengthIndexedList α n) (i : Fin n) : α :=
+  match l, i with
+  | LengthIndexedList.cons x _, ⟨0, _⟩ => x
+  | LengthIndexedList.cons _ xs, ⟨i + 1, h⟩ => nth xs ⟨i, Nat.succ_lt_succ_iff.1 h⟩
+
+instance : GetElem (LengthIndexedList α n) Nat α fun _xs i => LT.lt i n where
+  getElem xs i h := nth xs ⟨i, h⟩
+
+def NatEq {α : Type u} {n m : Nat} : n = m → LengthIndexedList α n → LengthIndexedList α m :=
+  fun h l => match h, l with
+    | rfl, l => l
+
+def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
+  match n with
+    | 0 => LengthIndexedList.nil
+    | m + 1 =>
+      let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
+    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
+
+@[simp]
+theorem finRangeIndex {n : Nat} (i : Fin n) : nth (finRange n) i = i := by
+  match i with
+  | ⟨idx,hidx⟩ => sorry
+
+end LengthIndexedList
+
+inductive BaseType
+  | bitvec (w : Width) : BaseType
+
 structure BitVector (width : Width) where
   (bits : LengthIndexedList Bool width)
   deriving Repr, DecidableEq
@@ -45,19 +75,35 @@ structure BitVector (width : Width) where
 def BitVectorFun {width : Width} := Fin width.val → Bool
 
 def BitVectorFun.fromList {width : Width} (l : LengthIndexedList Bool width.val) : @BitVectorFun width :=
-  fun i =>
+  fun i => l[i]
+
+def BitVectorFun.fromBitVector {width : Width} (bv : BitVector width) : @BitVectorFun width :=
+  BitVectorFun.fromList bv.bits
+
+def BitVectorFun.toList {width : Width} (f : @BitVectorFun width) : LengthIndexedList Bool width.val :=
+  let indices := LengthIndexedList.finRange width.val
+  indices.map f
+
+def BitVectorFun.toBitVector {width : Width} (f : @BitVectorFun width) : BitVector width := ⟨BitVectorFun.toList f⟩
+
+instance {width : Width} : Coe (@BitVectorFun width) (BitVector width) := ⟨BitVectorFun.toBitVector⟩
+instance {width : Width} : Coe (BitVector width) (@BitVectorFun width) := ⟨BitVectorFun.fromBitVector⟩
+
+theorem BitVectorFun.toListFromList {width : Width} (l : LengthIndexedList Bool width.val) :
+  BitVectorFun.toList (BitVectorFun.fromList l) = l := by
+    simp [BitVectorFun.toList, BitVectorFun.fromList]
+    sorry
+
+theorem BitVectorFun.toBitVectorFromBitVector {width : Width} (l : BitVector width) :
+  BitVectorFun.toBitVector (BitVectorFun.fromBitVector l) = l := by
+  simp [BitVectorFun.toBitVector, BitVectorFun.fromBitVector]
+  try apply BitVectorFun.toListFromList
+  sorry
 
 def nextSignificantBit (val : Nat) (b : Bool) := 2 * val + if (b = true) then 1 else 0
 
--- We could instead just define this directly as Fin (2^width)
 def RawBitVectorVal {w : Width} (x : LengthIndexedList Bool w) : Nat :=
   x.foldl nextSignificantBit 0
-
--- #eval RawBitVectorVal (LengthIndexedList.fromList [false,true]) -- 1
--- #eval RawBitVectorVal (LengthIndexedList.fromList [true,false,false,false]) -- 8
--- #eval RawBitVectorVal $ LengthIndexedList.fromList [true,true,false,false,false] -- 24
--- #eval RawBitVectorVal $ LengthIndexedList.fromList [true,false,false,false, true] -- 17
-#eval RawBitVectorVal $ (LengthIndexedList.fromList [true,false,false,false]).cons true -- 24
 
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
   simp [nextSignificantBit]
