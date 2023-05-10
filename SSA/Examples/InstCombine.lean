@@ -71,6 +71,8 @@ structure BitVector (width : Width) where
   (bits : LengthIndexedList Bool width)
   deriving Repr, DecidableEq
 
+def BitVector.width {width : Width} (_ : BitVector width) : Width := width
+
 instance (width : Width) : Inhabited (BitVector width) :=
   ⟨⟨by convert LengthIndexedList.fromList (List.replicate width true); simp⟩⟩
 
@@ -167,6 +169,7 @@ inductive Op
 | shl (w : Width) : Op
 | lshr (w : Width) : Op
 | ashr (w : Width) : Op
+| const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
 -- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
@@ -178,6 +181,7 @@ def argUserType : Op → UserType
 | Op.shl w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.lshr w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.ashr w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
+| Op.const _ => .unit
 
 def outUserType : Op → UserType
 | Op.and w => .base (BaseType.bitvec w)
@@ -186,6 +190,7 @@ def outUserType : Op → UserType
 | Op.shl w => .base (BaseType.bitvec w)
 | Op.lshr w => .base (BaseType.bitvec w)
 | Op.ashr w => .base (BaseType.bitvec w)
+| Op.const c => .base (BaseType.bitvec c.width)
 
 def rgnDom : Op → UserType := fun _ => .unit
 def rgnCod : Op → UserType := fun _ => .unit
@@ -245,6 +250,7 @@ def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDo
         some $ uncurry BitVector.lshr arg
     | Op.ashr _ => fun arg _ =>
         some $ uncurry BitVector.ashr arg
+    | Op.const c => fun _ _ => some c
 
 instance : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
@@ -261,9 +267,40 @@ Optimization: InstCombineShift: 279
   %r = and %X, (-1 << C)
 -/
 
-theorem InstCombineShift239_base : ∀ w : Width, ∀ x C : BitVector w,
+theorem InstCombineShift279_base : ∀ w : Width, ∀ x C : BitVector w,
   BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
   sorry
+
+syntax "lshr" ident : dsl_op
+syntax "shl" ident : dsl_op
+syntax "and" ident : dsl_op
+syntax "const" ident : dsl_op
+macro_rules
+  | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
+  | `([dsl_op| shl $w ]) => `(Op.shl $w)
+  | `([dsl_op| and $w ]) => `(Op.and $w)
+  | `([dsl_op| const $w ]) => `(Op.const $w)
+
+open SSA in
+theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
+  let minus_one : BitVector w := (-1).toBitVector
+  [dsl_region| dsl_rgn %v0  =>
+    %v1 := op: const C %v42;
+    %v2 := pair: %v0 %v1;
+    %v3 := op: lshr w %v2;
+    %v4 := pair: %v3 %v1;
+    %v5 := op: shl w %v4
+    dsl_ret %v5] =
+  [dsl_region| dsl_rgn %v0 =>
+    %v1 := op: const minus_one %v42;
+    %v2 := op: const C %v42;
+    %v3 := pair: %v1 %v2;
+    %v4 := op: shl w %v3;
+    %v5 := pair: %v0 %v4;
+    %v6 := op: and w %v5
+    dsl_ret %v6] := by
+    simp
+
 
 
 end InstCombine
