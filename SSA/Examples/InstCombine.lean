@@ -66,6 +66,9 @@ end LengthIndexedList
 
 inductive BaseType
   | bitvec (w : Width) : BaseType
+  deriving DecidableEq
+
+instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 
 structure BitVector (width : Width) where
   (bits : LengthIndexedList Bool width)
@@ -247,7 +250,7 @@ def eval (o : Op)
     | Op.ashr _ => uncurry BitVector.ashr arg
     | Op.const c => c
 
-instance : SSA.TypedUserSemantics Op BaseType where
+instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
   rgnDom := rgnDom
   rgnCod := rgnCod
@@ -276,17 +279,22 @@ macro_rules
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
 
+
+
+#check @SSA.SSA.teval
 open SSA in
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   let minus_one : BitVector w := (-1).toBitVector
-  [dsl_region| dsl_rgn %v0  =>
+  let Γ : EnvU BaseType := ∅ -- for metavariable in typeclass
+  --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
+  SSA.teval Γ [dsl_region| dsl_rgn %v0  =>
     %v1 := op: const C %v42;
     %v2 := pair: %v0 %v1;
     %v3 := op: lshr w %v2;
     %v4 := pair: %v3 %v1;
     %v5 := op: shl w %v4
     dsl_ret %v5] =
-  [dsl_region| dsl_rgn %v0 =>
+  SSA.teval Γ [dsl_region| dsl_rgn %v0 =>
     %v1 := op: const minus_one %v42;
     %v2 := op: const C %v42;
     %v3 := pair: %v1 %v2;
@@ -294,8 +302,6 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     %v5 := pair: %v0 %v4;
     %v6 := op: and w %v5
     dsl_ret %v6] := by
-    simp
-
-
+    simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType]
 
 end InstCombine
