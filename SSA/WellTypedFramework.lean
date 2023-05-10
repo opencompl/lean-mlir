@@ -100,8 +100,8 @@ class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] where
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
   outKind : Op → UserType β
-  eval : ∀ (o : Op), toType (argKind o)  → (toType (rgnDom o) →
-    toType (rgnCod o)) → toType (outKind o)
+  eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
+    Option (toType (rgnCod o))) → Option (toType (outKind o))
 
 @[simp]
 def TypeData.toType : TypeData β → Type
@@ -313,13 +313,13 @@ def EnvU.set : EnvU β → Var → UVal β → EnvU β
 
 def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
     [TypedUserSemantics Op β] : SSAIndex → Type
-| .STMT => EnvU β
-| .TERMINATOR => UVal β
-| .EXPR => UVal β
-| .REGION => UVal β
+| .STMT => Option (EnvU β)
+| .TERMINATOR => Option (UVal β)
+| .EXPR => Option (UVal β)
+| .REGION => ∀ (k₁ k₂ : UserType β), k₁.toType → Option k₂.toType
 
 def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
-  (e : EnvU β) : SSA Op k → Option (k.teval Op β)
+  (e : EnvU β) : SSA Op k → k.teval Op β
 | .assign lhs rhs rest => do
   rest.teval (e.set lhs (← rhs.teval e))
 | .nop => return e
@@ -335,19 +335,31 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
   return ⟨.triple fst.fst snd.fst third.fst, (fst.2, snd.2, third.2)⟩
 | .op o arg r => do
   let ⟨argK, argV⟩ ← e arg
-  let ⟨r₁, r₂⟩  ← r.teval (e.set arg ⟨argK, argV⟩)
-  if h : TUS.argKind o = argK ∧
-    .region (TUS.rgnDom o)  (TUS.rgnCod o) = r₁
+  let f := teval e r
+  if h : TUS.argKind o = argK
     then by
-          cases' h with h₁ h₂
-          subst h₁ h₂
-          dsimp [UserType.toType] at r₂
-          exact some ⟨_, TUS.eval o argV r₂⟩
+          subst argK
+          exact do some ⟨TUS.outKind o, ← TUS.eval o argV (f _ _)⟩
     else none
 | .var v => e v
-| .rgnvar v => e v
-| .rgn0 => return ⟨.region .unit .unit, id⟩
-| .rgn arg body => do sorry
+| .rgnvar v => fun k₁ k₂ x => do
+  let ⟨k, f⟩ ← e v
+  match k, f with
+  | .region dom cod, f =>
+    if h : k₁ = dom ∧ k₂ = cod
+      then by
+            rcases h with ⟨rfl, rfl⟩
+            exact some (f x)
+      else none
+  | _, _ => failure
+| .rgn0 => fun _ _ _ => do failure
+| .rgn arg body => fun k₁ k₂ x => do
+  let fx ← teval (e.set arg ⟨k₁, x⟩) body
+  match fx with
+  | ⟨k₂', y⟩ =>
+    if h : k₂' = k₂
+    then by subst h; exact some y
+    else none
 
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
@@ -376,3 +388,4 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
   | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
   | TypeData.unused => Unit
+  | TypeData.region t₁ t₂ => (NatTypeData.toType TS t₁) → (NatTypeData.toType TS t₂)
