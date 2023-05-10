@@ -5,7 +5,6 @@ namespace InstCombine
 
 abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
 
-
 def Fin.coeLt {n m : Nat} : n ≤ m → Fin n → Fin m :=
   fun h i => match i with
     | ⟨i, h'⟩ => ⟨i, Nat.lt_of_lt_of_le h' h⟩
@@ -105,8 +104,11 @@ theorem BitVectorFun.toBitVectorFromBitVector {width : Width} (l : BitVector wid
 
 def nextSignificantBit (val : Nat) (b : Bool) := 2 * val + if (b = true) then 1 else 0
 
+def RawBitVectorVal {w : Width} (x : LengthIndexedList Bool w) : Nat :=
+  x.foldl nextSignificantBit 0
+
 def BitVector.asRawUInt {w : Width} (x : BitVector w) : Nat :=
-  x.bits.foldl nextSignificantBit 0
+  RawBitVectorVal x.bits
 
 def BitVector.asUInt {w : Width} (x : BitVector w) : (Fin $ 2^w) :=
   ⟨x.asRawUInt, sorry⟩
@@ -121,7 +123,6 @@ def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
       else
         0
 
-
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
   simp [nextSignificantBit]
 
@@ -132,42 +133,23 @@ theorem RawBitVectorFalse {w : Width} {x : LengthIndexedList Bool w} :
   (LengthIndexedList.cons false x).foldl nextSignificantBit 0 = x.foldl nextSignificantBit 0 := by simp[LengthIndexedList.foldl, nextSignificantBitFalse]
 
 theorem foldNextSignificantBit {w : Nat} {x : LengthIndexedList Bool w} {v : Nat} :
-  x.foldl nextSignificantBit n = 2^w + x.foldl nextSignificantBit 0 := by
-    induction x with
-      | nil => simp[LengthIndexedList.foldl, nextSignificantBit]
-      | cons b bs ih => simp
-
-theorem RawBitVectorValNil : RawBitVectorVal (LengthIndexedList.nil) = 0 := by
-  simp [RawBitVectorVal]
-
--- Appends to the most significant bit
-theorem RawBitVectorValConsTrue {w : Width} (x : LengthIndexedList Bool w) (b : Bool) :
-    RawBitVectorVal (x.cons true) =  2 * RawBitVectorVal x + 1 := by
-      simp [RawBitVectorVal, LengthIndexedList.foldl]
-      rw [LengthIndexedList.foldl]
+  x.foldl nextSignificantBit n = 2^w + x.foldl nextSignificantBit 0 := sorry
 
 
-
-theorem RawBitVectorValGrowth {w : Width} (x : LengthIndexedList Bool (w - 1)) : ∀ b : Bool, RawBitVectorVal (x.cons b) ≤ 2 * RawBitVectorVal x := by
-  intro b; cases b with
-   | false => simp [RawBitVectorVal]; rw [Nat.two_mul]
-              apply Nat.le_add_left
-   | true => simp [RawBitVectorVal]; unfold LengthIndexedList.foldl <;> cases w
+-- theorem RawBitVectorValGrowth {w : Width} (x : LengthIndexedList Bool (w - 1)) : ∀ b : Bool, RawBitVectorVal (x.cons b) ≤ 2 * RawBitVectorVal x + 1 := by
+--   intro b; cases b with
+--    | false => simp [RawBitVectorVal]; rw [Nat.two_mul]
+--               apply Nat.le_add_left
+--    | true => simp [RawBitVectorVal]; unfold LengthIndexedList.foldl <;> cases w
 
 
 theorem BitVector.valRawLT {w : Width} (x : LengthIndexedList Bool w) : RawBitVectorVal x < 2^w := by
   simp [RawBitVectorVal]
-  induction x with
-  | nil => simp
-  | cons b bs ih => cases b with
-    | false => rw [Nat.pow_succ,Nat.mul_two]
-               apply Nat.lt_add_right
-               simp [LengthIndexedList.foldl] at *
-               exact ih
-    | true => simp  [LengthIndexedList.foldl] at *
-
+  sorry
 
 def BitVector.unsigned {w : Width} (x : BitVector w) : Fin (2^w) :=
+  ⟨x.asRawUInt, BitVector.valRawLT x.bits⟩
+
 instance : Goedel BaseType where
 toType := fun
   | .bitvec w => BitVector w
@@ -205,9 +187,7 @@ def outUserType : Op → UserType
 def rgnDom : Op → UserType := sorry
 def rgnCod : Op → UserType := sorry
 
-def BitVector.and : ∀ {w : Width}, BitVector w → BitVector w → BitVector w := (· &&& ·)
-def BitVector.or : ∀ {w : Width}, BitVector w → BitVector w → BitVector w := (· ||| ·)
-def BitVector.xor : ∀ {w : Width}, BitVector w → BitVector w → BitVector w := (· ^^^ ·)
+def _root_.Fin.toBitVector (w : Width) (x : Fin w.val) : BitVector w := sorry
 
 theorem Nat.zero_lt_pow {m n : Nat} : (0 < n) → 0 < n^m := by
 induction m with
@@ -229,12 +209,13 @@ theorem Nat.gt_of_lt {a b : Nat} : a < b → b > a := by simp
 def _root_.Nat.asBitVector (n : Nat) {w : Width} : BitVector w :=
 { val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
 
-def BitVector.shl {w : Width} (op₁ op₂ : BitVector w) : BitVector w :=
-op₁.val * (2^op₂.val) |>.asBitVector
+def BitVector.and {w : Width} (x y : BitVector w) : BitVector w := x.asUInt &&& y.asUInt |>.toBitVector
+def BitVector.or {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ||| y.asUInt |>.toBitVector
+def BitVector.xor {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ^^^ y.asUInt |>.toBitVector
+def BitVector.shl {w : Width} (x y : BitVector w) : BitVector w := x.asUInt <<< y.asUInt |>.toBitVector
+def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>> y.asUInt |>.toBitVector
+def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
-def BitVector.lshr {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ >>> op₂
-def BitVector.ashr {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ >>> op₂ -- not capturing the difference here obviously
-def BitVector.shl' {w : Width} (op₁ op₂ : BitVector w) : BitVector w := op₁ <<< op₂
 
 def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun ⟨a, b⟩ => f a b
 
