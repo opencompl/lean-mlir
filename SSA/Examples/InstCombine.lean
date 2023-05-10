@@ -232,25 +232,20 @@ def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>>
 def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
 
-def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun ⟨a, b⟩ => f a b
+def uncurry (f : α → β → γ) (pair : α × β) : γ := f pair.fst pair.snd
 
-def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDom o) →
-  Option (Goedel.toType (rgnCod o))) → Option (Goedel.toType (outUserType o)) :=
-  fun o =>
+def eval (o : Op)
+  (arg: Goedel.toType (argUserType o))
+  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
+  Option (Goedel.toType (outUserType o)) := .some <|
     match o with
-    | Op.and _ => fun arg _ =>
-        some $ uncurry BitVector.and arg
-    | Op.or _ => fun arg _ =>
-        some $ uncurry BitVector.or arg
-    | Op.xor _ => fun arg _ =>
-        some $ uncurry BitVector.xor arg
-    | Op.shl _ => fun arg _ =>
-        some $ uncurry BitVector.shl arg
-    | Op.lshr _ => fun arg _ =>
-        some $ uncurry BitVector.lshr arg
-    | Op.ashr _ => fun arg _ =>
-        some $ uncurry BitVector.ashr arg
-    | Op.const c => fun _ _ => some c
+    | Op.and _ => uncurry BitVector.and arg
+    | Op.or _ => uncurry BitVector.or arg
+    | Op.xor _ => uncurry BitVector.xor arg
+    | Op.shl _ => uncurry BitVector.shl arg
+    | Op.lshr _ => uncurry BitVector.lshr arg
+    | Op.ashr _ => uncurry BitVector.ashr arg
+    | Op.const c => c
 
 instance : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
