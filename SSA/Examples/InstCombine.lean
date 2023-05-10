@@ -72,6 +72,9 @@ structure BitVector (width : Width) where
   (bits : LengthIndexedList Bool width)
   deriving Repr, DecidableEq
 
+instance (width : Width) : Inhabited (BitVector width) :=
+  ⟨⟨by convert LengthIndexedList.fromList (List.replicate width true); simp⟩⟩
+
 def BitVectorFun {width : Width} := Fin width.val → Bool
 
 def BitVectorFun.fromList {width : Width} (l : LengthIndexedList Bool width.val) : @BitVectorFun width :=
@@ -239,15 +242,21 @@ def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun �
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20reduction.20of.20dependent.20return.20type/near/276044057
 -- #check Op.casesOn
 def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDom o) →
-  Goedel.toType (rgnCod o)) → Goedel.toType (outUserType o) :=
-  fun o arg _ => Op.casesOn o
-    (fun w => uncurry $ @BitVector.and w)
-    (fun w => uncurry $ @BitVector.or w)
-    (fun w => uncurry $ @BitVector.xor w)
-    (fun w => uncurry $ @BitVector.shl w)
-    (fun w => uncurry $ @BitVector.lshr w)
-    (fun w => uncurry $ @BitVector.ashr w)
-    arg
+  Option (Goedel.toType (rgnCod o))) → Option (Goedel.toType (outUserType o)) :=
+  fun o =>
+    match o with
+    | Op.and _ => fun arg _ =>
+        some $ uncurry BitVector.and arg
+    | Op.or _ => fun arg _ =>
+        some $ uncurry BitVector.or arg
+    | Op.xor _ => fun arg _ =>
+        some $ uncurry BitVector.xor arg
+    | Op.shl _ => fun arg _ =>
+        some $ uncurry BitVector.shl arg
+    | Op.lshr _ => fun arg _ =>
+        some $ uncurry BitVector.lshr arg
+    | Op.ashr _ => fun arg _ =>
+        some $ uncurry BitVector.ashr arg
 
 instance : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
@@ -265,7 +274,7 @@ Optimization: InstCombineShift: 279
 -/
 
 theorem InstCombineShift239_base : ∀ w : Width, ∀ x C : BitVector w,
-  BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (BitVector.mk ⟨-1, sorry⟩ C) :=
+  BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (BitVector.mk ⟨-1, sorry⟩ C)) :=
 
 
 end InstCombine
