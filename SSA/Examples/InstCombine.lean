@@ -102,8 +102,22 @@ theorem BitVectorFun.toBitVectorFromBitVector {width : Width} (l : BitVector wid
 
 def nextSignificantBit (val : Nat) (b : Bool) := 2 * val + if (b = true) then 1 else 0
 
-def RawBitVectorVal {w : Width} (x : LengthIndexedList Bool w) : Nat :=
-  x.foldl nextSignificantBit 0
+def BitVector.asRawUInt {w : Width} (x : BitVector w) : Nat :=
+  x.bits.foldl nextSignificantBit 0
+
+def BitVector.asUInt {w : Width} (x : BitVector w) : (Fin $ 2^w) :=
+  ⟨x.asRawUInt, sorry⟩
+
+def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
+  match w, x.bits with
+    | ⟨.succ n, _⟩, .cons s rest  =>
+      let sign := if s = true then -1 else 1
+      if h : n > 0 then
+        let abs : BitVector ⟨n, h⟩ := ⟨rest⟩
+        sign * (2^w.val - abs.asRawUInt)
+      else
+        0
+
 
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
   simp [nextSignificantBit]
@@ -114,8 +128,6 @@ theorem nextSignificantBitFalse {val : Nat} : nextSignificantBit val false = 2 *
 theorem RawBitVectorFalse {w : Width} {x : LengthIndexedList Bool w} :
   (LengthIndexedList.cons false x).foldl nextSignificantBit 0 = x.foldl nextSignificantBit 0 := by simp[LengthIndexedList.foldl, nextSignificantBitFalse]
 
-def testExample := fun n => [true,false,true].foldl nextSignificantBit n
-#eval [0,1,2,3,4,5].map testExample
 theorem foldNextSignificantBit {w : Nat} {x : LengthIndexedList Bool w} {v : Nat} :
   x.foldl nextSignificantBit n = 2^w + x.foldl nextSignificantBit 0 := by
     induction x with
