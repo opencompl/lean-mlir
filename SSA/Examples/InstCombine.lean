@@ -123,6 +123,9 @@ def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
       else
         0
 
+def BitVector.asInt {w : Width} (x : BitVector w) : Int :=
+  x.twosCompliment
+
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
   simp [nextSignificantBit]
 
@@ -184,10 +187,8 @@ def outUserType : Op → UserType
 | Op.lshr w => .base (BaseType.bitvec w)
 | Op.ashr w => .base (BaseType.bitvec w)
 
-def rgnDom : Op → UserType := sorry
-def rgnCod : Op → UserType := sorry
-
-def _root_.Fin.toBitVector (w : Width) (x : Fin w.val) : BitVector w := sorry
+def rgnDom : Op → UserType := fun _ => .unit
+def rgnCod : Op → UserType := fun _ => .unit
 
 theorem Nat.zero_lt_pow {m n : Nat} : (0 < n) → 0 < n^m := by
 induction m with
@@ -206,22 +207,28 @@ n ^ w
 
 theorem Nat.gt_of_lt {a b : Nat} : a < b → b > a := by simp
 
-def _root_.Nat.asBitVector (n : Nat) {w : Width} : BitVector w :=
-{ val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
+def _root_.Nat.toFinWidth (n : Nat) (w : Width) : Fin (2^w.val) :=
+ { val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
+
+def _root_.Fin.toBitVectorFun {w : Width} (x : Fin (2^w.val)) : @BitVectorFun w :=
+  fun i => x.val.testBit i.val
+
+def _root_.Fin.toBitVector {w : Width} (x : Fin (2^w.val)) : BitVector w :=
+  x.toBitVectorFun.toBitVector
+
+def _root_.Int.toBitVector {w : Width} (x : Int) : BitVector w :=
+   Nat.toFinWidth x.natAbs w |>.toBitVector
 
 def BitVector.and {w : Width} (x y : BitVector w) : BitVector w := x.asUInt &&& y.asUInt |>.toBitVector
 def BitVector.or {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ||| y.asUInt |>.toBitVector
 def BitVector.xor {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ^^^ y.asUInt |>.toBitVector
 def BitVector.shl {w : Width} (x y : BitVector w) : BitVector w := x.asUInt <<< y.asUInt |>.toBitVector
 def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>> y.asUInt |>.toBitVector
-def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := x.twosCompliment >>> y.twosCompliment |>.toBitVector
+def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
 
 def uncurry {α β γ : Type} (f : α → β → γ) : α × β → γ := fun ⟨a, b⟩ => f a b
 
-
--- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20reduction.20of.20dependent.20return.20type/near/276044057
--- #check Op.casesOn
 def eval : ∀ (o : Op), Goedel.toType (argUserType o) → (Goedel.toType (rgnDom o) →
   Option (Goedel.toType (rgnCod o))) → Option (Goedel.toType (outUserType o)) :=
   fun o =>
@@ -255,7 +262,8 @@ Optimization: InstCombineShift: 279
 -/
 
 theorem InstCombineShift239_base : ∀ w : Width, ∀ x C : BitVector w,
-  BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (BitVector.mk ⟨-1, sorry⟩ C)) :=
+  BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
+  sorry
 
 
 end InstCombine
