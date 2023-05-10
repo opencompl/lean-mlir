@@ -30,6 +30,8 @@ inductive SSA (Op : Type) : SSAIndex → Type where
 | nop : SSA Op .STMT
 /-- above; ret v -/
 | ret (above : SSA Op .STMT) (v : Var) : SSA Op .TERMINATOR
+/-- () -/
+| unit : SSA Op .EXPR
 /-- (fst, snd) -/
 | pair (fst snd : Var) : SSA Op .EXPR
 /-- (fst, snd, third) -/
@@ -69,6 +71,7 @@ class UserSemantics (Op : Type) (Val : Type) extends Inhabited Val where
       and input region value (⟦rgn⟧ : Val → Val) -/
   eval : (o : Op) → (arg : Val) → (rgn : Val → Val) → Val
   /-- Okay Yuck -/
+  valUnit : Val 
   valPair : Val → Val → Val
   valTriple : Val → Val → Val → Val
 
@@ -82,6 +85,7 @@ def SSA.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : S
 | .assign lhs rhs rest =>
   rest.eval (e.set lhs (rhs.eval e re)) re
 | .nop => e
+| .unit => S.valUnit 
 | .ret above v => (above.eval e re) v
 | .pair fst snd => S.valPair (e fst) (e snd)
 | .triple fst snd third => S.valTriple (e fst) (e snd) (e third)
@@ -141,6 +145,7 @@ example : [dsl_rgnvar| %r0] = SSA.rgnvar (Op := Unit) 0 := by
 
 syntax "const:" dsl_val : dsl_expr
 syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
+syntax "unit:"  : dsl_expr
 syntax "pair:"  dsl_var dsl_var : dsl_expr
 syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
 syntax dsl_var : dsl_expr
@@ -157,6 +162,7 @@ macro_rules
 | `([dsl_val| $t:term]) => return t
 
 macro_rules
+| `([dsl_expr| unit: ]) => `(SSA.unit)
 | `([dsl_expr| pair: $a $b]) =>
     `(SSA.pair [dsl_var| $a] [dsl_var| $b])
 | `([dsl_expr| triple: $a $b $c]) =>

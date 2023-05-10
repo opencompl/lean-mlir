@@ -288,6 +288,7 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   let Γ : EnvU BaseType := ∅ -- for metavariable in typeclass
   --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
   SSA.teval Γ [dsl_region| dsl_rgn %v0  =>
+    %v42 := unit: ;
     %v1 := op: const C %v42;
     %v2 := pair: %v0 %v1;
     %v3 := op: lshr w %v2;
@@ -295,6 +296,7 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     %v5 := op: shl w %v4
     dsl_ret %v5] =
   SSA.teval Γ [dsl_region| dsl_rgn %v0 =>
+    %v42 := unit: ;
     %v1 := op: const minus_one %v42;
     %v2 := op: const C %v42;
     %v3 := pair: %v1 %v2;
@@ -302,6 +304,15 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     %v5 := pair: %v0 %v4;
     %v6 := op: and w %v5
     dsl_ret %v6] := by
-    simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType]
-
+      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType,
+        TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType]
+      -- intros a b c;
+      -- funext k1;
+      -- funext k2;
+      -- funext x;
+      -- -- is the time due to it re-elaborating the syntax, or due to the proof steps?
+      -- simp[Bind.bind];
+      -- simp[Option.bind];
+      -- simp[eval];
+      sorry
 end InstCombine

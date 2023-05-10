@@ -269,6 +269,8 @@ def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
     let k' ← unifyVar v k
     unassignVars l
     return k'
+  | _, .unit, k => do
+    unify .unit k
   | _, .pair fst snd, k => do
     unify (.pair (← getVarType fst) (← getVarType snd)) k
   | _, .triple fst snd trd, k => do
@@ -343,6 +345,7 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
 | .assign lhs rhs rest => do
   rest.teval (e.set lhs (← rhs.teval e))
 | .nop => return e
+| .unit => return ⟨.unit, ()⟩
 | .ret above v => do (← above.teval e) v
 | .pair fst snd => do
   let fst ← e fst
