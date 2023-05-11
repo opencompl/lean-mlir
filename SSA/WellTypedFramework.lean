@@ -375,7 +375,10 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
             exact some (f x)
       else none
   | _, _ => failure
-| .rgn0 => fun _ _ _ => do failure
+| .rgn0 => fun k₁ k₂ _ =>
+    if h : k₁ = .unit ∧ k₂ = .unit
+    then by rcases h with ⟨rfl, rfl⟩; exact return ()
+    else none
 | .rgn arg body => fun k₁ k₂ x => do
   let fx ← teval (e.set arg ⟨k₁, x⟩) body
   match fx with
