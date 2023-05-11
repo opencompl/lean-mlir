@@ -7,6 +7,16 @@ theorem InstCombineShift279_base : ∀ w : Width, ∀ x C : BitVector w,
   BitVector.shl (BitVector.lshr x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
   sorry
 
+-- Why do these not get set?
+register_simp_attr SSA.teval
+register_simp_attr EnvU.set
+register_simp_attr Op.const
+register_simp_attr argUserType
+register_simp_attr eval
+register_simp_attr outUserType
+register_simp_attr BitVector.width
+register_simp_attr uncurry
+
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   let minus_one : BitVector w := (-1).toBitVector
   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
