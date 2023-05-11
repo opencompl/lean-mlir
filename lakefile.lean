@@ -1,7 +1,8 @@
 import Lake
 open Lake DSL
 
-package «SSA»
+package «SSA» where
+  precompileModules := true
 
 lean_lib SSA
 

@@ -321,6 +321,7 @@ instance {β : Type} [Goedel β] : EmptyCollection (EnvU β) where
 
 variable {β}
 
+@[simp]
 def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   dsimp [EnvC] at *
   intro v
@@ -330,9 +331,11 @@ def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   . exact fun _ => none
   . exact fun x => some ⟨_, x⟩
 
+@[simp]
 def EnvU.set : EnvU β → Var → UVal β → EnvU β
   | e, v, u => fun v' => if v = v' then u else e v'
 
+@[simp]
 def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
     [TypedUserSemantics Op β] : SSAIndex → Type
 | .STMT => Option (EnvU β)
@@ -340,6 +343,7 @@ def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
 | .EXPR => Option (UVal β)
 | .REGION => ∀ (k₁ k₂ : UserType β), k₁.toType → Option k₂.toType
 
+@[simp]
 def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
   (e : EnvU β) : SSA Op k → k.teval Op β
 | .assign lhs rhs rest => do
@@ -417,3 +421,11 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.region t₁ t₂ => (NatTypeData.toType TS t₁) → (NatTypeData.toType TS t₂)
 
 end SSA
+
+register_simp_attr Bind.bind
+register_simp_attr Option.bind
+register_simp_attr TypedUserSemantics.eval
+register_simp_attr TypedUserSemantics.argUserType
+register_simp_attr TypedUserSemantics.outUserType
+register_simp_attr TypedUserSemantics.regionDom
+register_simp_attr TypedUserSemantics.regionCod

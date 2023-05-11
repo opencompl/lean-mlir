@@ -74,6 +74,7 @@ structure BitVector (width : Width) where
   (bits : LengthIndexedList Bool width)
   deriving Repr, DecidableEq
 
+@[simp]
 def BitVector.width {width : Width} (_ : BitVector width) : Width := width
 
 instance (width : Width) : Inhabited (BitVector width) :=
@@ -176,7 +177,7 @@ inductive Op
 deriving Repr, DecidableEq
 
 -- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
-@[reducible]
+@[simp]
 def argUserType : Op → UserType
 | Op.and w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.or w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
@@ -186,6 +187,7 @@ def argUserType : Op → UserType
 | Op.ashr w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
+@[simp]
 def outUserType : Op → UserType
 | Op.and w => .base (BaseType.bitvec w)
 | Op.or w => .base (BaseType.bitvec w)
@@ -195,7 +197,9 @@ def outUserType : Op → UserType
 | Op.ashr w => .base (BaseType.bitvec w)
 | Op.const c => .base (BaseType.bitvec c.width)
 
+@[simp]
 def rgnDom : Op → UserType := fun _ => .unit
+@[simp]
 def rgnCod : Op → UserType := fun _ => .unit
 
 theorem Nat.zero_lt_pow {m n : Nat} : (0 < n) → 0 < n^m := by
@@ -235,8 +239,10 @@ def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>>
 def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
 
+@[simp]
 def uncurry (f : α → β → γ) (pair : α × β) : γ := f pair.fst pair.snd
 
+@[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
@@ -266,7 +272,7 @@ Optimization: InstCombineShift: 279
 -/
 
 theorem InstCombineShift279_base : ∀ w : Width, ∀ x C : BitVector w,
-  BitVector.lshr (BitVector.shl x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
+  BitVector.shl (BitVector.lshr x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
   sorry
 
 syntax "lshr" ident : dsl_op
@@ -279,6 +285,16 @@ macro_rules
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
 
+
+
+      -- intros a b c;
+      -- funext k1;
+      -- funext k2;
+      -- funext x;
+      -- -- is the time due to it re-elaborating the syntax, or due to the proof steps?
+      -- simp[Bind.bind];
+      -- simp[Option.bind];
+      -- simp[eval];
 
 open SSA in
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
@@ -305,16 +321,9 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     %v6 := op: and w %v5
     dsl_ret %v6] (SSA.UserType.base (BaseType.bitvec w))
     (SSA.UserType.base (BaseType.bitvec w)) := by
-      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType,
-        TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType,
-        Bind.bind, Option.bind, eval, outUserType, BitVector.width]
-      -- intros a b c;
-      -- funext k1;
-      -- funext k2;
-      -- funext x;
-      -- -- is the time due to it re-elaborating the syntax, or due to the proof steps?
-      -- simp[Bind.bind];
-      -- simp[Option.bind];
-      -- simp[eval];
-      sorry
+      intros w C minus_one Γ e
+      funext x
+      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType, Bind.bind, Option.bind, eval, outUserType, BitVector.width, uncurry]
+      rw [InstCombineShift279_base]
+
 end InstCombine
