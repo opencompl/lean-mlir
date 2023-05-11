@@ -280,22 +280,22 @@ macro_rules
   | `([dsl_op| const $w ]) => `(Op.const $w)
 
 
-
-#check @SSA.SSA.teval
 open SSA in
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   let minus_one : BitVector w := (-1).toBitVector
-  let Γ : EnvU BaseType := ∅ -- for metavariable in typeclass
+  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
+  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
   --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
-  SSA.teval Γ [dsl_region| dsl_rgn %v0  =>
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0  =>
     %v42 := unit: ;
     %v1 := op: const C %v42;
     %v2 := pair: %v0 %v1;
     %v3 := op: lshr w %v2;
     %v4 := pair: %v3 %v1;
     %v5 := op: shl w %v4
-    dsl_ret %v5] =
-  SSA.teval Γ [dsl_region| dsl_rgn %v0 =>
+    dsl_ret %v5] (SSA.UserType.base (BaseType.bitvec w))
+    (SSA.UserType.base (BaseType.bitvec w)) =
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
     %v42 := unit: ;
     %v1 := op: const minus_one %v42;
     %v2 := op: const C %v42;
@@ -303,9 +303,11 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     %v4 := op: shl w %v3;
     %v5 := pair: %v0 %v4;
     %v6 := op: and w %v5
-    dsl_ret %v6] := by
+    dsl_ret %v6] (SSA.UserType.base (BaseType.bitvec w))
+    (SSA.UserType.base (BaseType.bitvec w)) := by
       simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType,
-        TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType]
+        TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType,
+        Bind.bind, Option.bind, eval, outUserType, BitVector.width]
       -- intros a b c;
       -- funext k1;
       -- funext k2;
