@@ -43,5 +43,7 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     (SSA.UserType.base (BaseType.bitvec w)) := by
       intros w C minus_one Γ e
       funext x
-      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType, Bind.bind, Option.bind, eval, outUserType, BitVector.width, uncurry]
+      checkpoint
+      simp [TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, Bind.bind, Option.bind]
       rw [InstCombineShift279_base]
+
