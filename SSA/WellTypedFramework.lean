@@ -32,7 +32,7 @@ def toType [Goedel β] : UserType β → Type
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
-  | .region k₁ k₂ => toType k₁ → toType k₂
+  | .region k₁ k₂ => toType k₁ → Option (toType k₂)
 
 instance [Goedel β] : Goedel (UserType β) where
   toType := toType
@@ -121,7 +121,7 @@ def TypeData.toType : TypeData β → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
-  | TypeData.region t₁ t₂ => (TypeData.toType t₁) → (TypeData.toType t₂)
+  | TypeData.region t₁ t₂ => (TypeData.toType t₁) → Option (TypeData.toType t₂)
   | TypeData.any => Σ (k : UserType β), ⟦k⟧
   | TypeData.unused => Unit
 
@@ -372,7 +372,7 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
     if h : k₁ = dom ∧ k₂ = cod
       then by
             rcases h with ⟨rfl, rfl⟩
-            exact some (f x)
+            exact f x
       else none
   | _, _ => failure
 | .rgn0 => fun k₁ k₂ _ =>
