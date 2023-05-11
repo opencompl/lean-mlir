@@ -13,7 +13,7 @@ lean_lib «alive» {
 
 -- NOTE: this must be 'm'mathlib, as indicated from:
 --  https://github.com/leanprover-community/mathlib4#using-mathlib4-as-a-dependency
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "72b511e"
+require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "eff4459"
 
 meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
   require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "b9421b9"
