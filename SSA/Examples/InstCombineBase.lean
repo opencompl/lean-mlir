@@ -1,68 +1,10 @@
 import SSA.WellTypedFramework
-import Aesop
+import SSA.Util
 
 namespace InstCombine
 
 abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
 
-def Fin.coeLt {n m : Nat} : n ≤ m → Fin n → Fin m :=
-  fun h i => match i with
-    | ⟨i, h'⟩ => ⟨i, Nat.lt_of_lt_of_le h' h⟩
-
-
-inductive LengthIndexedList (α : Type u) : Nat → Type u where
-   | nil : LengthIndexedList α 0
-   | cons : α → LengthIndexedList α n → LengthIndexedList α (n + 1)
-  deriving Repr, DecidableEq
-
-namespace LengthIndexedList
-
-def fromList {α : Type u} (l : List α) : LengthIndexedList α (List.length l) :=
-  match l with
-  | [] => LengthIndexedList.nil
-  | x :: xs => LengthIndexedList.cons x (LengthIndexedList.fromList xs)
-
-def map {α β : Type u} (f : α → β) {n : Nat} : LengthIndexedList α n → LengthIndexedList β n
-  | nil => nil
-  | cons x xs => cons (f x) (map f xs)
-
-
-@[simp]
-def foldl {α β : Type u} {n : Nat} (f : β → α → β) (acc : β) : LengthIndexedList α n → β
-  | nil => acc
-  | cons x xs => LengthIndexedList.foldl f (f acc x) xs
-
-@[simp]
-def zipWith {α β γ : Type u} {n : Nat} (f : α → β → γ) :
-    LengthIndexedList α n → LengthIndexedList β n → LengthIndexedList γ n
-  | nil, nil => nil
-  | cons x xs, cons y ys => cons (f x y) (zipWith f xs ys)
-
-def nth {α : Type u} {n : Nat} (l : LengthIndexedList α n) (i : Fin n) : α :=
-  match l, i with
-  | LengthIndexedList.cons x _, ⟨0, _⟩ => x
-  | LengthIndexedList.cons _ xs, ⟨i + 1, h⟩ => nth xs ⟨i, Nat.succ_lt_succ_iff.1 h⟩
-
-instance : GetElem (LengthIndexedList α n) Nat α fun _xs i => LT.lt i n where
-  getElem xs i h := nth xs ⟨i, h⟩
-
-def NatEq {α : Type u} {n m : Nat} : n = m → LengthIndexedList α n → LengthIndexedList α m :=
-  fun h l => match h, l with
-    | rfl, l => l
-
-def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
-  match n with
-    | 0 => LengthIndexedList.nil
-    | m + 1 =>
-      let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
-    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
-
-@[simp]
-theorem finRangeIndex {n : Nat} (i : Fin n) : nth (finRange n) i = i := by
-  match i with
-  | ⟨idx,hidx⟩ => sorry
-
-end LengthIndexedList
 
 inductive BaseType
   | bitvec (w : Width) : BaseType
@@ -240,9 +182,6 @@ def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x
 
 
 @[simp]
-def uncurry (f : α → β → γ) (pair : α × β) : γ := f pair.fst pair.snd
-
-@[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
@@ -271,10 +210,6 @@ Optimization: InstCombineShift: 279
   %r = and %X, (-1 << C)
 -/
 
-theorem InstCombineShift279_base : ∀ w : Width, ∀ x C : BitVector w,
-  BitVector.shl (BitVector.lshr x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
-  sorry
-
 syntax "lshr" ident : dsl_op
 syntax "shl" ident : dsl_op
 syntax "and" ident : dsl_op
@@ -295,35 +230,5 @@ macro_rules
       -- simp[Bind.bind];
       -- simp[Option.bind];
       -- simp[eval];
-
-open SSA in
-theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
-  let minus_one : BitVector w := (-1).toBitVector
-  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
-  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
-  --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0  =>
-    %v42 := unit: ;
-    %v1 := op: const C %v42;
-    %v2 := pair: %v0 %v1;
-    %v3 := op: lshr w %v2;
-    %v4 := pair: %v3 %v1;
-    %v5 := op: shl w %v4
-    dsl_ret %v5] (SSA.UserType.base (BaseType.bitvec w))
-    (SSA.UserType.base (BaseType.bitvec w)) =
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v42 := unit: ;
-    %v1 := op: const minus_one %v42;
-    %v2 := op: const C %v42;
-    %v3 := pair: %v1 %v2;
-    %v4 := op: shl w %v3;
-    %v5 := pair: %v0 %v4;
-    %v6 := op: and w %v5
-    dsl_ret %v6] (SSA.UserType.base (BaseType.bitvec w))
-    (SSA.UserType.base (BaseType.bitvec w)) := by
-      intros w C minus_one Γ e
-      funext x
-      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType, Bind.bind, Option.bind, eval, outUserType, BitVector.width, uncurry]
-      rw [InstCombineShift279_base]
 
 end InstCombine
