@@ -3,6 +3,7 @@ import Mathlib.Tactic.Linarith
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 
+namespace SSA
 abbrev Var := Int
 abbrev RegionVar := Int
 
@@ -29,6 +30,8 @@ inductive SSA (Op : Type) : SSAIndex → Type where
 | nop : SSA Op .STMT
 /-- above; ret v -/
 | ret (above : SSA Op .STMT) (v : Var) : SSA Op .TERMINATOR
+/-- () -/
+| unit : SSA Op .EXPR
 /-- (fst, snd) -/
 | pair (fst snd : Var) : SSA Op .EXPR
 /-- (fst, snd, third) -/
@@ -61,13 +64,14 @@ def Env.set (e : Env Val) (var : Var) (val : Val) :=
   fun needle => if needle == var then val else e needle
 notation e "[" var " := " val "]" => Env.set e var val
 
-class UserSemantics (Op : Type) (Val : Type) extends Inhabited Val where
+class UserSemantics (Op : Type) (Val : Type) [Inhabited Val] where
   /-- `Op` is semantically a function `Val → (Val → Val) → Val`
       for every operation, produce a result `Val` given the
       input variable value (⟦val⟧ : Val)
       and input region value (⟦rgn⟧ : Val → Val) -/
   eval : (o : Op) → (arg : Val) → (rgn : Val → Val) → Val
   /-- Okay Yuck -/
+  valUnit : Val 
   valPair : Val → Val → Val
   valTriple : Val → Val → Val → Val
 
@@ -77,10 +81,11 @@ def SSAIndex.eval (Val : Type) : SSAIndex → Type
 | .EXPR => Val
 | .REGION => Val -> Val
 
-def SSA.eval [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA Op k → k.eval Val
+def SSA.eval [Inhabited Val] [S : UserSemantics Op Val] (e: Env Val) (re: Env (Val → Val)) : SSA Op k → k.eval Val
 | .assign lhs rhs rest =>
   rest.eval (e.set lhs (rhs.eval e re)) re
 | .nop => e
+| .unit => S.valUnit 
 | .ret above v => (above.eval e re) v
 | .pair fst snd => S.valPair (e fst) (e snd)
 | .triple fst snd third => S.valTriple (e fst) (e snd) (e third)
@@ -95,7 +100,7 @@ inductive Tree (Op : Type) (Val : Type) where
 | op (op : Op) (t : Tree Op Val)
 | oprgn (op : Op) (t : Tree Op Val) (r : Val → Tree Op Val)
 
-def Tree.eval [S: UserSemantics Op Val] : Tree Op Val → Val
+def Tree.eval [Inhabited Val] [S: UserSemantics Op Val] : Tree Op Val → Val
 | .pair e1 e2 => S.valPair e1.eval e2.eval
 | .op o t => S.eval o (t.eval) (fun _ => default)
 | .oprgn o t r => S.eval o t.eval (fun v => (r v).eval)
@@ -140,6 +145,7 @@ example : [dsl_rgnvar| %r0] = SSA.rgnvar (Op := Unit) 0 := by
 
 syntax "const:" dsl_val : dsl_expr
 syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
+syntax "unit:"  : dsl_expr
 syntax "pair:"  dsl_var dsl_var : dsl_expr
 syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
 syntax dsl_var : dsl_expr
@@ -156,6 +162,7 @@ macro_rules
 | `([dsl_val| $t:term]) => return t
 
 macro_rules
+| `([dsl_expr| unit: ]) => `(SSA.unit)
 | `([dsl_expr| pair: $a $b]) =>
     `(SSA.pair [dsl_var| $a] [dsl_var| $b])
 | `([dsl_expr| triple: $a $b $c]) =>
@@ -241,3 +248,4 @@ macro_rules
 
 end EDSL
 
+end SSA

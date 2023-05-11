@@ -2,10 +2,8 @@ import SSA.Framework
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.AList
 
-/-
-Typeclass for a `baseType` which is a godel code of
-Lean types.
--/
+/-- Typeclass for a `baseType` which is a Gödel code of
+Lean types. -/
 class Goedel (β : Type)  : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
@@ -13,6 +11,8 @@ open Goedel /- make toType publically visible in module. -/
 notation "⟦" x "⟧" => Goedel.toType x
 
 instance : Goedel Unit where toType := fun _ => Unit
+
+namespace SSA
 
 inductive UserType (T : Type) : Type where
   | base : T → UserType T
@@ -26,12 +26,13 @@ namespace UserType
 
 instance: Inhabited (UserType β) where default := UserType.unit
 
+@[reducible]
 def toType [Goedel β] : UserType β → Type
   | .base t =>  ⟦t⟧
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
-  | .region k₁ k₂ => toType k₁ → toType k₂
+  | .region k₁ k₂ => toType k₁ → Option (toType k₂)
 
 instance [Goedel β] : Goedel (UserType β) where
   toType := toType
@@ -95,13 +96,24 @@ def TypeData.toUserType : TypeData β → Option (UserType β)
   | TypeData.any => none
   | TypeData.unused => none
 
+/-- Typeclass for a user semantics of `Op`, with base type `β`.
+    The type β has to implement the `Goedel` typeclass, mapping into `Lean` types.
+    This typeclass has several arguments that have to be defined to give semantics to
+    the operations of type `Op`:
+    * `argUserType` and `outUserType`, functions of type `Op → UserType β`, give the type of the
+      arguments and the output of the operation.
+    * `rgnDom` and `rgnCod`, functions of type `Op → UserType β`, give the type of the
+      domain and codomain of regions within the operation.
+    * `eval` gives the actual evaluation semantics of the operation, by defining a function for
+      every operation `o : Op` of type `toType (argUserType o) → (toType (rgnDom o) → toType (rgnCod o)) → toType (outUserType o)`.
+-/
 class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] where
-  argKind : Op → UserType β
+  argUserType : Op → UserType β
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
-  outKind : Op → UserType β
-  eval : ∀ (o : Op), toType (argKind o) → (toType (rgnDom o) →
-    Option (toType (rgnCod o))) → Option (toType (outKind o))
+  outUserType : Op → UserType β
+  eval : ∀ (o : Op), toType (argUserType o) → (toType (rgnDom o) →
+    Option (toType (rgnCod o))) → Option (toType (outUserType o))
 
 @[simp]
 def TypeData.toType : TypeData β → Type
@@ -109,7 +121,7 @@ def TypeData.toType : TypeData β → Type
   | TypeData.unit => Unit
   | TypeData.pair t₁ t₂ => (TypeData.toType  t₁) × (TypeData.toType t₂)
   | TypeData.triple t₁ t₂ t₃ => (TypeData.toType t₁) × (TypeData.toType t₂) × (TypeData.toType t₃)
-  | TypeData.region t₁ t₂ => (TypeData.toType t₁) → (TypeData.toType t₂)
+  | TypeData.region t₁ t₂ => (TypeData.toType t₁) → Option (TypeData.toType t₂)
   | TypeData.any => Σ (k : UserType β), ⟦k⟧
   | TypeData.unused => Unit
 
@@ -257,16 +269,18 @@ def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
     let k' ← unifyVar v k
     unassignVars l
     return k'
+  | _, .unit, k => do
+    unify .unit k
   | _, .pair fst snd, k => do
     unify (.pair (← getVarType fst) (← getVarType snd)) k
   | _, .triple fst snd trd, k => do
     unify (.triple (← getVarType fst) (← getVarType snd) (← getVarType trd)) k
   | _,  .op o arg r, _ => do
-    let _ ← unifyVar arg (TUS.argKind o)
+    let _ ← unifyVar arg (TUS.argUserType o)
     let dom := TUS.rgnDom o
     let cod := TUS.rgnCod o
     let _ ← inferTypeCore r (.region dom cod)
-    return (TypedUserSemantics.outKind o).toTypeData
+    return (TypedUserSemantics.outUserType o).toTypeData
   | _, .var v, k => unifyVar v k
   | _, .rgnvar v, k => do
     unifyVar v (← unify k (.region TypeData.any TypeData.any))
@@ -287,18 +301,27 @@ def inferType {Op : Type} [TypedUserSemantics Op β]
   let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) ∅
   return (k.1, ← k.2.pmap TypeData.toUserType)
 
+/-- TODO: add documentation for this... -/
 def EnvC (c : Context (UserType β)) :=
   ∀ (v : Var), (c.lookup v).elim Unit UserType.toType
+
+--instance {β : Type} [Goedel β] {c : Context (UserType β)}: EmptyCollection (EnvC c) := by
+--  sorry
 
 variable (β)
 
 def UVal := Σ (k : UserType β), k.toType
 
+/-- TODO: add documentation for this... -/
 def EnvU : Type :=
   Var → Option (UVal β)
 
+instance {β : Type} [Goedel β] : EmptyCollection (EnvU β) where
+  emptyCollection := (fun _ => none)
+
 variable {β}
 
+@[simp]
 def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   dsimp [EnvC] at *
   intro v
@@ -308,9 +331,11 @@ def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   . exact fun _ => none
   . exact fun x => some ⟨_, x⟩
 
+@[simp]
 def EnvU.set : EnvU β → Var → UVal β → EnvU β
   | e, v, u => fun v' => if v = v' then u else e v'
 
+@[simp]
 def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
     [TypedUserSemantics Op β] : SSAIndex → Type
 | .STMT => Option (EnvU β)
@@ -318,11 +343,13 @@ def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
 | .EXPR => Option (UVal β)
 | .REGION => ∀ (k₁ k₂ : UserType β), k₁.toType → Option k₂.toType
 
+@[simp]
 def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
   (e : EnvU β) : SSA Op k → k.teval Op β
 | .assign lhs rhs rest => do
   rest.teval (e.set lhs (← rhs.teval e))
 | .nop => return e
+| .unit => return ⟨.unit, ()⟩
 | .ret above v => do (← above.teval e) v
 | .pair fst snd => do
   let fst ← e fst
@@ -336,10 +363,10 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
 | .op o arg r => do
   let ⟨argK, argV⟩ ← e arg
   let f := teval e r
-  if h : TUS.argKind o = argK
+  if h : TUS.argUserType o = argK
     then by
           subst argK
-          exact do some ⟨TUS.outKind o, ← TUS.eval o argV (f _ _)⟩
+          exact do some ⟨TUS.outUserType o, ← TUS.eval o argV (f _ _)⟩
     else none
 | .var v => e v
 | .rgnvar v => fun k₁ k₂ x => do
@@ -349,10 +376,13 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
     if h : k₁ = dom ∧ k₂ = cod
       then by
             rcases h with ⟨rfl, rfl⟩
-            exact some (f x)
+            exact f x
       else none
   | _, _ => failure
-| .rgn0 => fun _ _ _ => do failure
+| .rgn0 => fun k₁ k₂ _ =>
+    if h : k₁ = .unit ∧ k₂ = .unit
+    then by rcases h with ⟨rfl, rfl⟩; exact return ()
+    else none
 | .rgn arg body => fun k₁ k₂ x => do
   let fx ← teval (e.set arg ⟨k₁, x⟩) body
   match fx with
@@ -389,3 +419,13 @@ def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
   | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
   | TypeData.unused => Unit
   | TypeData.region t₁ t₂ => (NatTypeData.toType TS t₁) → (NatTypeData.toType TS t₂)
+
+end SSA
+
+register_simp_attr Bind.bind
+register_simp_attr Option.bind
+register_simp_attr TypedUserSemantics.eval
+register_simp_attr TypedUserSemantics.argUserType
+register_simp_attr TypedUserSemantics.outUserType
+register_simp_attr TypedUserSemantics.regionDom
+register_simp_attr TypedUserSemantics.regionCod
