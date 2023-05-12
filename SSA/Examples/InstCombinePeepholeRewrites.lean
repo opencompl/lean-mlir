@@ -18,25 +18,19 @@ register_simp_attr BitVector.width
 register_simp_attr uncurry
 
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
-  let minus_one : BitVector w := (-1).toBitVector
   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
   ∀ (e : EnvC Γ),  -- for metavariable in typeclass
   --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0  =>
-    %v42 := unit: ;
-    %v1 := op: const C %v42
-    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
-    (SSA.UserType.base (BaseType.bitvec w)) =
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v42 := unit: ;
-    %v1 := op: const C %v42
-    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
-    (SSA.UserType.base (BaseType.bitvec w)) := by
-      intros w C minus_one Γ e
+  SSA.teval (Op := Op) (β := BaseType) e.toEnvU [dsl_region| dsl_rgn %v0  =>
+    %v42 := unit:
+    dsl_ret %v42] (SSA.UserType.unit) (SSA.UserType.unit) =
+  SSA.teval (Op := Op) (β := BaseType) e.toEnvU [dsl_region| dsl_rgn %v0 =>
+    %v42 := unit:
+    dsl_ret %v42] (SSA.UserType.unit) (SSA.UserType.unit) := by
+      intros w C Γ e
       funext x
       checkpoint
       simp [TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, Bind.bind, Option.bind]
-      rw [InstCombineShift279_base]
 
 #print InstCombineShift279
 
