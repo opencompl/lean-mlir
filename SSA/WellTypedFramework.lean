@@ -329,7 +329,7 @@ def EnvC.toEnvU {c : Context (UserType β)} (e : EnvC c) : EnvU β := by
   revert ev
   cases c.lookup v
   . exact fun _ => none
-  . exact fun x => some ⟨_, x⟩
+  . exact fun x => return ⟨_, x⟩
 
 @[simp]
 def EnvU.set : EnvU β → Var → UVal β → EnvU β
@@ -366,7 +366,7 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
   if h : TUS.argUserType o = argK
     then by
           subst argK
-          exact do some ⟨TUS.outUserType o, ← TUS.eval o argV (f _ _)⟩
+          exact do return ⟨TUS.outUserType o, ← TUS.eval o argV (f _ _)⟩
     else none
 | .var v => e v
 | .rgnvar v => fun k₁ k₂ x => do
@@ -388,7 +388,7 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
   match fx with
   | ⟨k₂', y⟩ =>
     if h : k₂' = k₂
-    then by subst h; exact some y
+    then by subst h; exact return y
     else none
 
 -- @chris: TODO: implement `eval`:

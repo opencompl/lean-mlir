@@ -17,6 +17,8 @@ register_simp_attr outUserType
 register_simp_attr BitVector.width
 register_simp_attr uncurry
 
+theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
+
 theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   let minus_one : BitVector w := (-1).toBitVector
   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
@@ -43,5 +45,16 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     (SSA.UserType.base (BaseType.bitvec w)) := by
       intros w C minus_one Γ e
       funext x
-      simp [SSA.teval, EnvU.set, TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, argUserType, Bind.bind, Option.bind, eval, outUserType, BitVector.width, uncurry]
-      rw [InstCombineShift279_base]
+      simp only [SSA.teval, Function.comp, id.def,
+        EnvU.set, if_true, pure_bind,
+        TypedUserSemantics.argUserType, argUserType,
+        TypedUserSemantics.rgnDom, rgnDom,
+        TypedUserSemantics.rgnCod, rgnCod,
+        TypedUserSemantics.outUserType, outUserType,
+        TypedUserSemantics.eval,
+        argUserType, dite_true, if_false,
+        eq_self_iff_true, EnvC.toEnvU, Option.elim,
+        AList.lookup, List.dlookup, eval, true_and, and_true,
+        Option.some_eq_pure,
+        BitVector.width, List.foldr, pure_bind, uncurry]
+
