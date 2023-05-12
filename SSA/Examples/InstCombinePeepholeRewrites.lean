@@ -24,26 +24,19 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
   --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
   SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0  =>
     %v42 := unit: ;
-    %v1 := op: const C %v42;
-    %v2 := pair: %v0 %v1;
-    %v3 := op: lshr w %v2;
-    %v4 := pair: %v3 %v1;
-    %v5 := op: shl w %v4
-    dsl_ret %v5] (SSA.UserType.base (BaseType.bitvec w))
+    %v1 := op: const C %v42
+    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
     (SSA.UserType.base (BaseType.bitvec w)) =
   SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
     %v42 := unit: ;
-    %v1 := op: const minus_one %v42;
-    %v2 := op: const C %v42;
-    %v3 := pair: %v1 %v2;
-    %v4 := op: shl w %v3;
-    %v5 := pair: %v0 %v4;
-    %v6 := op: and w %v5
-    dsl_ret %v6] (SSA.UserType.base (BaseType.bitvec w))
+    %v1 := op: const C %v42
+    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
     (SSA.UserType.base (BaseType.bitvec w)) := by
       intros w C minus_one Γ e
       funext x
       checkpoint
       simp [TypedUserSemantics.argUserType, TypedUserSemantics.outUserType, TypedUserSemantics.eval, Op.const, Bind.bind, Option.bind]
       rw [InstCombineShift279_base]
+
+#print InstCombineShift279
 
