@@ -4,8 +4,8 @@ import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 
 namespace SSA
-abbrev Var := Int
-abbrev RegionVar := Int
+abbrev Var := Nat
+abbrev RegionVar := Nat
 
 instance : DecidableEq Var := by
   infer_instance
@@ -127,7 +127,7 @@ syntax "[dsl_var|" dsl_var "]" : term
 open Lean Macro in
 macro_rules
 | `([dsl_var| %v $n]) =>
-  `(Int.ofNat $(Lean.quote n.getNat))
+  `($(Lean.quote n.getNat))
 
 example : [dsl_var| %v0] =  0 := by
   simp
@@ -138,7 +138,7 @@ syntax "%r" num : dsl_rgnvar
 syntax "[dsl_rgnvar|" dsl_rgnvar "]" : term
 open Lean Macro in
 macro_rules
-| `([dsl_rgnvar| %r $n]) => `(SSA.rgnvar (Int.ofNat $(Lean.quote n.getNat)))
+| `([dsl_rgnvar| %r $n]) => `(SSA.rgnvar ($(Lean.quote n.getNat)))
 
 example : [dsl_rgnvar| %r0] = SSA.rgnvar (Op := Unit) 0 := by
   simp
@@ -185,7 +185,7 @@ macro_rules
 example : [dsl_assign| %v0 := %v42 ] =
   (fun rest => SSA.assign (Op := Unit) 0 (SSA.var 42) rest) := by {
     funext rest
-    dsimp[Int.ofNat]
+    dsimp
 }
 
 syntax sepBy(dsl_assign, ";") : dsl_stmt
