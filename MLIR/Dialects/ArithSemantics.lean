@@ -1,6 +1,7 @@
 /-
 ## `arith` dialect
 
+
 This file formalises part of the `arith` dialect. The goal is to showcase
 operations on multiple types (with overloading) and basic reasoning. `arith`
 does not have new datatypes, but it supports operations on tensors and vectors,
@@ -222,20 +223,20 @@ individual operations and then substituting them as needed.
 
 private abbrev ops.constant (output: SSAVal) (value: Int):
     Op arith :=
-  Op.mk "arith.constant" [⟨output, .i32⟩] [] [] (.mk [.mk "value" (.int value .i32)])
+  Op.mk "arith.constant" [⟨output, .i32⟩] [] .regionsnil (.mk [.mk "value" (.int value .i32)])
 
 private abbrev ops.negi (output input: SSAVal): Op arith :=
-  .mk "arith.negi" [⟨output, .i32⟩] [⟨input, .i32⟩] [] (.mk [])
+  .mk "arith.negi" [⟨output, .i32⟩] [⟨input, .i32⟩] .regionsnil (.mk [])
 
 private abbrev ops.zext (sz₁ sz₂: Nat) (output input: SSAVal): Op arith :=
-  .mk "arith.zext" [⟨output, .int .Signless sz₂⟩] [⟨input, .int .Signless sz₁⟩] [] (.mk [])
+  .mk "arith.zext" [⟨output, .int .Signless sz₂⟩] [⟨input, .int .Signless sz₁⟩] .regionsnil (.mk [])
 
 private abbrev ops.select (output cond t f: SSAVal): Op arith :=
-  .mk "arith.select" [⟨output, .i32⟩] [⟨cond, .i1⟩, ⟨t, .i32⟩, ⟨f, .i32⟩] [] (.mk [])
+  .mk "arith.select" [⟨output, .i32⟩] [⟨cond, .i1⟩, ⟨t, .i32⟩, ⟨f, .i32⟩] .regionsnil (.mk [])
 
 private abbrev ops._binary (name: String) (output lhs rhs: SSAVal):
     Op arith :=
-  .mk name [⟨output, .i32⟩] [⟨lhs, .i32⟩, ⟨rhs, .i32⟩] [] (.mk [])
+  .mk name [⟨output, .i32⟩] [⟨lhs, .i32⟩, ⟨rhs, .i32⟩] .regionsnil (.mk [])
 
 private abbrev ops.addi := ops._binary "arith.addi"
 private abbrev ops.subi := ops._binary "arith.subi"
@@ -366,27 +367,27 @@ theorem equivalent (n m: FinInt 32):
     run ⟦RHS⟧ (SSAEnv.One [ ("n", ⟨.i32, n⟩), ("m", ⟨.i32, m⟩) ]) := by
   simp [LHS, RHS,
         run, StateT.run,
-        denoteOp, bind, List.mapM, StateT.bind, denoteOpArgs, List.mapM,
+        OpRegion.denoteTop, bind, List.mapM, StateT.bind, denoteOpArgs, List.mapM,
         List.mapM.loop, Except.bind, TopM.get, StateT.get, pure, Except.pure,
-        StateT.pure, TopM.mapDenoteRegion, OpM.toTopM, TopM.set, StateT.set, MLIRType.eval,
+        StateT.pure, OpM.toTopM, TopM.set, StateT.set, MLIRType.eval,
         SSAEnv.get, SSAEnv.getT, cast];
   simp [FinInt.add_comm']
 
-def th1 : PeepholeRewriteOp arith := 
+def th1 : PeepholeRewriteOp arith :=
 {
-  findRoot := MTerm.buildOp "arith.addi" 
+  findRoot := MTerm.buildOp "arith.addi"
         [MTerm.buildOperand "n" .i32, MTerm.buildOperand "m" .i32]
         [MTerm.buildOperand "r" .i32]
   , findSubtree := []
-  , replaceSubtree := [MTerm.buildOp "arith.addi" 
+  , replaceSubtree := [MTerm.buildOp "arith.addi"
         [MTerm.buildOperand "m" .i32, MTerm.buildOperand "n" .i32]
         [MTerm.buildOperand "r" .i32]]
   , wellformed := by {
-     intros toplevelProg _prog matchCtx replacedProg matchctx domctx 
+     intros toplevelProg _prog matchCtx replacedProg matchctx domctx
      intros MATCH FIND SUBST DOMFIND
      simp [List.append] at *;
      sorry
-  } 
+  }
   , correct := by {
      intros toplevelProg _prog matchCtx replacedProg matchctx domctx
      intros MATCH FIND SUBST DOMFIND

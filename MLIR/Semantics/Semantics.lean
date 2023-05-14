@@ -209,11 +209,11 @@ def OpM.denoteRegion {Δ: Dialect α σ ε}
 
 -- Denote the list of regions with an abstract `OpM.runRegion`
 def OpM.denoteRegions {Δ: Dialect α σ ε}
-  (regions: List (Region Δ))
+  (regions: Regions Δ)
   (ix: Nat): List (TypedArgs Δ → OpM Δ (TypedArgs Δ)) :=
  match regions with
- | [] => []
- | r :: rs => (OpM.denoteRegion r ix) :: OpM.denoteRegions rs (ix + 1)
+ | .regionsnil => []
+ | .regionscons r rs => (OpM.denoteRegion r ix) :: OpM.denoteRegions rs (ix + 1)
 
 -- Denote a region by using its denotation function from the list
 -- of regions. TODO: refactor to use Option
@@ -236,36 +236,41 @@ def OpM.toTopM (rs0: List (TypedArgs Δ → TopM Δ (TypedArgs Δ))):
 | OpM.RunRegion ix args k => do
        let ret <- TopM.denoteRegionsByIx rs0 ix args
        OpM.toTopM rs0 (k ret)
-mutual
-variable (Δ: Dialect α' σ' ε') [S: Semantics Δ]
 
--- unfolded version of List.map denoteRegion.
--- This allows the termination checker to view the termination.
-def TopM.mapDenoteRegion:
-  List (Region Δ) →
-  List (TypedArgs Δ → TopM Δ (TypedArgs Δ))
-| [] => []
-| r :: rs =>
-  let f := denoteRegion r
-  (TopM.scoped ∘ f) :: TopM.mapDenoteRegion rs
+/-
+The denotation of an op/sequence of ops has type (TypedArgs Δ).
+The denotation of a region has type (TypedArgs Δ → TypedArgs Δ).
+The denotation of a list of regions  is List (TypedArgs Δ → TypedArgs Δ).
+The return type of 'denoteTop' is dispatched based on the nested inductive tag
+-/
+abbrev MLIR.AST.OR.denoteTopType (Δ: Dialect α' σ' ε'): OR → Type :=
+fun ty => match ty with
+| .O => TopM Δ (TypedArgs Δ)
+| .Os => TopM Δ (TypedArgs Δ)
+| .R => TypedArgs Δ → TopM Δ (TypedArgs Δ)
+| .Rs  => List (TypedArgs Δ → TopM Δ (TypedArgs Δ))
+
 
 def denoteOpArgs (args: List (TypedSSAVal Δ)) : TopM Δ (List (TypedArg Δ)) := do
   args.mapM (fun (name, τ) => do
         pure ⟨τ, ← TopM.get τ name⟩)
 
--- Convert a region to its denotation to establish finiteness.
--- Then use this finiteness condition to evaluate region semantics.
--- Use the morphism from OpM to TopM.
-def denoteOp (op: Op Δ):
-    TopM Δ (TypedArgs Δ) :=
-  match op with
-  | .mk name res0 args0 regions0 attrs => do
+def MLIR.AST.OpRegion.denoteTop (Δ: Dialect α' σ' ε') [S: Semantics Δ]:
+  (or: OpRegion Δ k) → k.denoteTopType Δ
+| .opsnil => return []
+| .opscons o .opsnil =>  o.denoteTop Δ
+| .opscons o os => do
+    let _ ← o.denoteTop Δ
+    os.denoteTop Δ
+| .regionsnil => []
+| .regionscons r rs => r.denoteTop Δ :: rs.denoteTop Δ
+| .op name res0 args0 regions0 attrs => do
       let resTy := res0.map Prod.snd
       let args ← denoteOpArgs args0
       -- Built the interpreted operation
       let iop : IOp Δ := IOp.mk name resTy args (OpM.denoteRegions regions0 0) attrs
       -- Use the dialect-provided semantics, and substitute regions
-      let ret ← OpM.toTopM (TopM.mapDenoteRegion regions0) (S.semantics_op iop)
+      let ret ← OpM.toTopM (regions0.denoteTop Δ) (S.semantics_op iop)
       match res0 with
       | [] => pure ()
       | [res] => match ret with
@@ -273,333 +278,10 @@ def denoteOp (op: Op Δ):
           | _ => TopM.raiseUB s!"denoteOp: expected 1 return value, got '{ret}'"
       | _ => TopM.raiseUB s!"denoteOp: expected 0 or 1 results, got '{res0}'"
       return ret
-  -- denote a sequence of ops
-def denoteOps (stmts: List (Op Δ)): TopM Δ (TypedArgs Δ) :=
-   match stmts with
-   | [] => return  []
-   | [stmt] => denoteOp stmt
-   | (stmt :: stmts') => do
-        let _ ← denoteOp stmt
-        denoteOps stmts'
-
-def denoteRegion (rgn: Region Δ) (args: TypedArgs Δ):
-    TopM Δ (TypedArgs Δ) := do
-  match rgn with
-  | Region.mk name formalArgsAndTypes ops =>
-     -- TODO: check that types in [TypedArgs] is equal to types at [bb.args]
-     -- TODO: Any checks on the BlockResults of intermediate ops?
-     let formalArgs : List SSAVal := formalArgsAndTypes.map Prod.fst
-     denoteTypedArgs args formalArgs
-     denoteOps ops
-end
-termination_by
-  mapDenoteRegion _ _ _ _ _ rgns =>  by {
-   exact (sizeOf rgns)
-  }
-  denoteOp sem op  => sizeOf op
-  denoteOps stmts _ => sizeOf stmts
-  denoteRegion rgn _ => sizeOf rgn
-
-
-
-
-section Retraction
-
-variable {α₁ σ₁ ε₁} {δ₁: Dialect α₁ σ₁ ε₁}
- variable   {α₂ σ₂ ε₂} {δ₂: Dialect α₂ σ₂ ε₂}
-
--- TODO: create holes for things that are unknown? eg. use `undefined?
-def MLIRType.retractLeft: MLIRType (δ₁ + δ₂) → MLIRType δ₁
-| .int sgn sz => .int sgn sz -- : Signedness -> Nat -> MLIRType δ
-| .float sz => .float sz -- : Nat -> MLIRType δ
-| .index => .index --:  MLIRType δ
-| .tensor1d => .tensor1d
-| .tensor2d => .tensor2d
-| .tensor4d => .tensor4d
-| .erased => .erased
-| .undefined s => .undefined s-- : String → MLIRType δ
-| .extended (Sum.inl σ₁) => .extended σ₁ -- : σ → MLIRType δ
-| .extended (Sum.inr σ₂) => .erased
-
-def MLIRType.swapDialect: MLIRType (δ₁ + δ₂) -> MLIRType (δ₂ + δ₁)
-| .int sgn sz => (.int sgn sz) -- : Signedness -> Nat -> MLIRType δ
-| .float sz => (.float sz) -- : Nat -> MLIRType δ
-| .index => (.index) --:  MLIRType δ
-| .erased => .erased
-| .tensor1d => .tensor1d
-| .tensor2d => .tensor2d
-| .tensor4d => .tensor4d
-| .undefined s => (.undefined s) -- : String → MLIRType δ
-| .extended (Sum.inl σ₁) => .extended (Sum.inr σ₁)
-| .extended (Sum.inr σ₂) => .extended (Sum.inl σ₂)
-
-
-def TypedArg.swapDialect: TypedArg (δ₁ + δ₂) -> TypedArg (δ₂ + δ₁)
-| ⟨.int sgn sz, v ⟩ =>  ⟨ .int sgn sz, v ⟩ -- : Signedness -> Nat -> MLIRType δ
-| ⟨ .float sz, v ⟩ =>  ⟨.float sz, v ⟩ -- : Nat -> MLIRType δ
-| ⟨.index, v⟩ => ⟨.index, v ⟩ --:  MLIRType δ
-| ⟨.undefined s, v ⟩ =>  ⟨.undefined s, v⟩ -- : String → MLIRType δ
-
-| ⟨.tensor1d, v⟩ => ⟨.tensor1d, v ⟩
-| ⟨.tensor2d, v⟩ => ⟨.tensor2d, v ⟩
-| ⟨.tensor4d, v⟩ => ⟨.tensor4d, v ⟩
-| ⟨.extended (Sum.inl σ₁), v ⟩ => ⟨.extended (Sum.inr σ₁), v⟩
-| ⟨.extended (Sum.inr σ₂), v ⟩ => ⟨.extended (Sum.inl σ₂), v⟩
-| ⟨.erased, ()⟩ => ⟨.erased, ()⟩
-
-@[reducible, simp]
-def TypedArgs.swapDialect (ts: TypedArgs (δ₁ + δ₂)): TypedArgs (δ₂ + δ₁) :=
-  ts.map TypedArg.swapDialect
-
-
-
-def TypedArg.retractLeft (t: TypedArg (δ₁ + δ₂)):  TypedArg δ₁ :=
-match t with
-| ⟨.int sgn sz, v ⟩ =>  ⟨ .int sgn sz, v ⟩ -- : Signedness -> Nat -> MLIRType δ
-| ⟨ .float sz, v ⟩ => ⟨.float sz, v ⟩ -- : Nat -> MLIRType δ
-| ⟨.index, v⟩ => ⟨.index, v ⟩ --:  MLIRType δ
-| ⟨.tensor1d, v⟩ =>  ⟨.tensor1d,v ⟩
-| ⟨.tensor2d, v⟩ =>  ⟨.tensor2d,v ⟩
-| ⟨.tensor4d, v⟩ =>  ⟨.tensor4d,v ⟩
-| ⟨.undefined s, v ⟩ =>  ⟨.undefined s, v⟩ -- : String → MLIRType δ
-| ⟨.extended (Sum.inl σ₁), v ⟩ =>  ⟨.extended σ₁, v⟩ -- : σ → MLIRType δ
-| ⟨.extended (Sum.inr σ₂), v ⟩ => ⟨.erased, () ⟩
-| ⟨.erased, ()⟩ =>  ⟨.erased, ()⟩
-
-def TypedArg.retractRight (t: TypedArg (δ₁ + δ₂)):  TypedArg δ₂ :=
-match t with
-| ⟨.int sgn sz, v ⟩ =>  ⟨ .int sgn sz, v ⟩ -- : Signedness -> Nat -> MLIRType δ
-| ⟨ .float sz, v ⟩ => ⟨.float sz, v ⟩ -- : Nat -> MLIRType δ
-| ⟨.index, v⟩ => ⟨.index, v ⟩ --:  MLIRType δ
-| ⟨.tensor1d, v⟩ =>  ⟨.tensor1d,v ⟩
-| ⟨.tensor2d, v⟩ =>  ⟨.tensor2d,v ⟩
-| ⟨.tensor4d, v⟩ =>  ⟨.tensor4d,v ⟩
-| ⟨.undefined s, v ⟩ =>  ⟨.undefined s, v⟩ -- : String → MLIRType δ
-| ⟨.extended (Sum.inl σ₁), v ⟩ =>  ⟨.erased, ()⟩ -- : σ → MLIRType δ
-| ⟨.extended (Sum.inr σ₂), v ⟩ => ⟨.extended σ₂, v ⟩
-| ⟨.erased, ()⟩ =>  ⟨.erased, ()⟩
-
-
-@[reducible, simp]
-def TypedArgs.retractLeft (ts: TypedArgs (δ₁ + δ₂)): TypedArgs δ₁ :=
-  ts.map TypedArg.retractLeft
-
-@[reducible, simp]
-def TypedArgs.retractRight (ts: TypedArgs (δ₁ + δ₂)): TypedArgs δ₂ :=
-  ts.map TypedArg.retractRight
-
--- TODO: define the attribute dictionary retraction.
--- Will need to rectact over entries, which will need a retraction over values.
-mutual
-def AttrValues.retractLeft: List (AttrValue  (δ₁ + δ₂)) -> List (AttrValue δ₁)
-| [] => []
-| a::as => a.retractLeft:: AttrValues.retractLeft as
-
-def MLIR.AST.AttrValue.retractLeft: AttrValue (δ₁ + δ₂) -> AttrValue δ₁
-| .symbol s => .symbol s
-| .permutation p => .permutation p
-| .nat n => .nat n
-| .str s => .str s
-| .int i t => .int i (MLIRType.retractLeft t)
-| .bool b => .bool b
-| .float f t => .float f (MLIRType.retractLeft t)
-| .type t => .type (MLIRType.retractLeft t)
-| .affine aff => .affine aff
-| .list as => .list <| AttrValues.retractLeft as
-| .extended (.inl x) => .extended x
-| .extended (.inr _) => .erased
-| .erased => .erased
-| .opaque_ dialect value => .opaque_ dialect value
-| .opaqueElements dialect value ty => .opaqueElements dialect value .erased
-| .unit => .unit
-| .dict d => .dict <| d.retractLeft
-| .alias x => .alias x
-| .nestedsymbol x y => .nestedsymbol x.retractLeft y.retractLeft
-
-
-def MLIR.AST.AttrEntry.retractLeft: AttrEntry (δ₁ + δ₂) -> AttrEntry δ₁
-| .mk k v => .mk k v.retractLeft
-
-def AttrEntries.retractLeft: List (AttrEntry (δ₁ + δ₂)) -> List (AttrEntry δ₁)
-| [] => []
-| e :: es => e.retractLeft :: AttrEntries.retractLeft es
-
-def MLIR.AST.AttrDict.retractLeft: AttrDict (δ₁ + δ₂) -> AttrDict δ₁
-| .mk es => AttrDict.mk (AttrEntries.retractLeft es)
-end
-termination_by
-  AttrValues.retractLeft xs => sizeOf xs
-  MLIR.AST.AttrValue.retractLeft attrval => sizeOf attrval
-  MLIR.AST.AttrDict.retractLeft attrdict => sizeOf attrdict
-  AttrEntries.retractLeft attrentries => sizeOf attrentries
-  MLIR.AST.AttrEntry.retractLeft attrentry => sizeOf attrentry
-
-
--- Retract right
-mutual
-def AttrValues.swapDialect: List (AttrValue  (δ₁ + δ₂)) -> List (AttrValue (δ₂  + δ₁))
-| [] => []
-| a::as => a.swapDialect:: AttrValues.swapDialect as
-
-def MLIR.AST.AttrValue.swapDialect: AttrValue (δ₁ + δ₂) -> AttrValue (δ₂ + δ₁)
-| .symbol s => .symbol s
-| .permutation p => .permutation p
-| .nat n => .nat n
-| .str s => .str s
-| .int i t => .int i (MLIRType.swapDialect t)
-| .bool b => .bool b
-| .float f t => .float f (MLIRType.swapDialect t)
-| .type t => .type (MLIRType.swapDialect t)
-| .affine aff => .affine aff
-| .list as => .list <| AttrValues.swapDialect as
-| .extended (.inl x) => .extended (.inr x)
-| .extended (.inr x) => .extended (.inl x)
-| .erased => .erased
-| .opaque_ dialect value => .opaque_ dialect value
-| .opaqueElements dialect value ty => .opaqueElements dialect value .erased
-| .unit => .unit
-| .dict d => .dict <| d.swapDialect
-| .alias x => .alias x
-| .nestedsymbol x y => .nestedsymbol x.swapDialect y.swapDialect
-
-
-def MLIR.AST.AttrEntry.swapDialect: AttrEntry (δ₁ + δ₂) -> AttrEntry (δ₂ + δ₁)
-| .mk k v => .mk k v.swapDialect
-
-def AttrEntries.swapDialect: List (AttrEntry (δ₁ + δ₂)) -> List (AttrEntry (δ₂ + δ₁))
-| [] => []
-| e :: es => e.swapDialect :: AttrEntries.swapDialect es
-
-def MLIR.AST.AttrDict.swapDialect: AttrDict (δ₁ + δ₂) -> AttrDict (δ₂ + δ₁)
-| .mk es => AttrDict.mk (AttrEntries.swapDialect es)
-
-
-end -- ends the mutual block
-termination_by
-  AttrValues.swapDialect _ x  => sizeOf x
-  MLIR.AST.AttrValue.swapDialect _ x  => sizeOf x
-  MLIR.AST.AttrDict.swapDialect _ x  => sizeOf x
-  AttrEntries.swapDialect _ x => sizeOf x
-  MLIR.AST.AttrEntry.swapDialect _ x => sizeOf x
-
-
-def OpM.swapDialect: OpM (δ₁ + δ₂) (TypedArgs (δ₁ + δ₂)) -> OpM (δ₂ + δ₁) (TypedArgs (δ₁ + δ₂))
-| OpM.Ret r => OpM.Ret r
-| OpM.Unhandled s => OpM.Unhandled s
-| OpM.Error s => OpM.Error s
-| OpM.RunRegion ix args k =>
-  OpM.RunRegion ix (TypedArgs.swapDialect args) (fun retargs =>
-              OpM.swapDialect (k (TypedArgs.swapDialect retargs)))
-
-def IOp.swapDialect: IOp (δ₁ + δ₂) -> IOp (δ₂ + δ₁)
-| IOp.mk  (name:    String) -- TODO: name should come from an Enum in δ.
-  (resTy:   List (MLIRType (δ₁ + δ₂)))
-  (args:    TypedArgs (δ₁ + δ₂))
-  (regions: List (TypedArgs (δ₁ + δ₂) -> OpM (δ₁ + δ₂) (TypedArgs (δ₁ + δ₂))))
-  (attrs:   AttrDict (δ₁ + δ₂)) =>
-     IOp.mk name
-        (resTy.map MLIRType.swapDialect)
-        (args.map TypedArg.swapDialect)
-        (AttrDict.swapDialect attrs)
-        -- conjugate region by swapping dialect.
-        (regions := regions.map  (fun rgnEff => (fun args =>
-                 (rgnEff (TypedArgs.swapDialect args)).swapDialect.map TypedArgs.swapDialect)))
-
--- a -> a + b
-def TypedArg.injectLeft: TypedArg (δ₁) -> TypedArg (δ₁ +  δ₂)
-| ⟨.int sgn sz, v ⟩ =>  ⟨ .int sgn sz, v ⟩ -- : Signedness -> Nat -> MLIRType δ
-| ⟨ .float sz, v ⟩ =>  ⟨.float sz, v ⟩ -- : Nat -> MLIRType δ
-| ⟨.index, v⟩ => ⟨.index, v ⟩ --:  MLIRType δ
-| ⟨.undefined s, v ⟩ =>  ⟨.undefined s, v⟩ -- : String → MLIRType δ
-| ⟨.tensor1d, v⟩ => ⟨.tensor1d, v ⟩
-| ⟨.tensor2d, v⟩ => ⟨.tensor2d, v ⟩
-| ⟨.tensor4d, v⟩ => ⟨.tensor4d, v ⟩
-| ⟨.extended σ, v ⟩ => ⟨.extended (Sum.inl σ), v⟩
-| ⟨.erased, ()⟩ => ⟨.erased, ()⟩
-
-
-@[reducible, simp]
-def TypedArg.injectRight: TypedArg δ₂ -> TypedArg (δ₁ + δ₂) :=
-  TypedArg.swapDialect ∘ TypedArg.injectLeft
-
-@[reducible, simp]
-def TypedArgs.injectLeft (ts: TypedArgs (δ₁)): TypedArgs (δ₁ + δ₂) :=
-  ts.map TypedArg.injectLeft
-
-@[reducible, simp]
-def TypedArgs.injectRight (ts: TypedArgs (δ₂)): TypedArgs (δ₁ + δ₂) :=
-  ts.map TypedArg.injectRight
-
-def OpM.retractLeft [Inhabited R]: OpM (δ₁+ δ₂) R -> OpM δ₁  R
-| OpM.Error s => OpM.Error s
-| OpM.Unhandled s => OpM.Unhandled s
-| OpM.Ret r => OpM.Ret r
-| OpM.RunRegion ix args k =>
-  OpM.RunRegion ix args.retractLeft (fun results => (k results.injectLeft).retractLeft)
-
--- Retract an IOp to the left component.
--- TODO: IOp needs to be profunctorial, region can use more stuff than the operation
--- strictly has?
-def IOp.retractLeft: IOp (δ₁ + δ₂) -> IOp δ₁
-| IOp.mk  (name:    String) -- TODO: name should come from an Enum in δ.
-  (resTys:   List (MLIRType (δ₁ + δ₂)))
-  (args:    TypedArgs (δ₁ + δ₂))
-  (regions: List (TypedArgs (δ₁ + δ₂) -> OpM (δ₁+δ₂) (TypedArgs (δ₁ + δ₂))))
-  (attrs:   AttrDict (δ₁ + δ₂)) =>
-  let resTys' := resTys.map MLIRType.retractLeft
-  let args' := args.map TypedArg.retractLeft
-  let attrs' := AttrDict.retractLeft attrs
-  let regions' := regions.map (fun rgnEff =>
-    (fun args => (rgnEff args.injectLeft).retractLeft.map TypedArgs.retractLeft ))
-  (IOp.mk name resTys' args' regions' attrs')
-
-def IOp.retractRight (op: IOp (δ₁ + δ₂)): IOp δ₂ :=
-  IOp.retractLeft (IOp.swapDialect op)
-
-def OpM.injectLeft: OpM δ₁ (TypedArgs δ₁) -> OpM (δ₁ + δ₂) (TypedArgs (δ₁ + δ₂))
-| OpM.Ret r => OpM.Ret r.injectLeft
-| OpM.Error s => OpM.Error s
-| OpM.Unhandled s => OpM.Unhandled s
-| OpM.RunRegion ix args k =>
-  OpM.RunRegion ix args.injectLeft (fun args => (k args.retractLeft).injectLeft)
-
-@[simp, reducible]
-def OpM.injectRight: OpM δ₂ (TypedArgs δ₂) -> OpM (δ₁ + δ₂) (TypedArgs (δ₁ + δ₂))
-| OpM.Ret r => OpM.Ret r.injectRight
-| OpM.Error s => OpM.Error s
-| OpM.Unhandled s => OpM.Unhandled s
-| OpM.RunRegion ix args k =>
-  OpM.RunRegion ix args.injectRight (fun args => (k args.retractRight).injectRight)
-
-
-
--- Or the two OpM, using unhandled as the unit for the or.
-def OpM.orUnhandled: OpM δ₁ (TypedArgs δ₁)
-  -> OpM δ₂ (TypedArgs δ₂) -> OpM (δ₁ + δ₂) (TypedArgs (δ₁ + δ₂))
-| OpM.Error e, _ => OpM.Error e
-| _, OpM.Error e => OpM.Error e
-| OpM.Unhandled x, OpM.Unhandled y => OpM.Unhandled s!"(({δ₁.name}) ({x}) | ({δ₂.name}) ({y}))"
-| OpM.Unhandled _, x => x.injectRight
-| x, _ => x.injectLeft
-
-
-
--- TODO: Allow the semantics to be defined in such a way that a dialect like `scf`
--- can successfully 'forward' extended type arguments.
-instance
-    {α₁ σ₁ ε₁} {δ₁: Dialect α₁ σ₁ ε₁}
-    {α₂ σ₂ ε₂} {δ₂: Dialect α₂ σ₂ ε₂}
-    [S₁: Semantics δ₁]
-    [S₂: Semantics δ₂]
-    : Semantics (δ₁ + δ₂) where
-  -- semantics_op: IOp Δ → Fitree (RegionE Δ +' UBE) (BlockResult Δ)
-  semantics_op op :=
-    let op₁ := IOp.retractLeft op
-    let op₂ := IOp.retractRight op
-    let res1 :=  (S₁.semantics_op op₁)
-    let res2 :=  (S₂.semantics_op op₂)
-    OpM.orUnhandled res1 res2
-
+| .region _name args body => fun (argvals : TypedArgs Δ) => TopM.scoped do
+     let formalArgs : List SSAVal := args.map Prod.fst
+     denoteTypedArgs argvals formalArgs
+     body.denoteTop Δ
 
 
 def run! {Δ: Dialect α' σ' ε'}  {R} [Inhabited R]
@@ -631,6 +313,7 @@ def semanticPostCondition₂ {Δ: Dialect α' σ' ε'}
 ### Denotation notation
 -/
 
+
 class Denote (δ: Dialect α σ ε) [S: Semantics δ]
     (T: {α σ: Type} → {ε: σ → Type} → Dialect α σ ε → Type) where
   denote: T δ → TopM δ (TypedArgs δ)
@@ -638,17 +321,17 @@ class Denote (δ: Dialect α σ ε) [S: Semantics δ]
 notation "⟦ " t " ⟧" => Denote.denote t
 
 instance DenoteOp (δ: Dialect α σ ε) [Semantics δ]: Denote δ Op where
-  denote op := denoteOp δ op
+  denote op := op.denoteTop δ
 -- This only works for single-BB regions with no arguments
 instance DenoteRegion (δ: Dialect α σ ε) [Semantics δ]: Denote δ Region where
-  denote r := denoteRegion δ r []
+  denote r := r.denoteTop δ []
 
 -- Not for regions because we need to specify the fuel
 
 @[simp] theorem Denote.denoteOp [Semantics δ]:
-  Denote.denote (self := DenoteOp δ) op = denoteOp δ op := rfl
+  Denote.denote (self := DenoteOp δ) op =  op.denoteTop δ := rfl
 @[simp] theorem Denote.denoteRegion [Semantics δ]:
-  Denote.denote (self := DenoteRegion δ) r = denoteRegion δ r [] := rfl
+  Denote.denote (self := DenoteRegion δ) r =  r.denoteTop δ [] := rfl
 
 /-
 ### Simplification tactics for semantics monad
@@ -675,6 +358,19 @@ macro "simp_semantics_monad" "at" "*" : tactic =>
 ### General proofs on denotation of programs
 -/
 
+
+/-
+## TODO: find out how to state the theorem!
+theorem denote_equiv {Δ: Dialect α σ ε} [S: Semantics Δ] : ∀ ⦃or: OpRegion Δ k⦄,
+    ∀ ⦃env r env'⦄,
+    or.denoteTop Δ  env = Except.ok (r, env') →
+    ∀ ⦃env₂⦄, env.equiv env₂ →
+    ∃ env₂', env'.equiv env₂' ∧
+      or.deonteTop Δ env₂ = Except.ok (r, env₂')
+-/
+
+
+/-
 theorem denoteOpArgs_res [S: Semantics Δ] ⦃args: List (TypedSSAVal Δ)⦄:
     ∀ ⦃env r env'⦄, denoteOpArgs Δ args env = Except.ok (r, env') →
     env' = env := by
@@ -867,7 +563,6 @@ theorem OpM.toTopM_regions_equiv {Δ: Dialect α σ ε}
     rw [HIx]; simp
     assumption
 
-
 theorem denoteOp_equiv {Δ: Dialect α σ ε} [S: Semantics Δ] : ∀ ⦃op: Op Δ⦄,
     ∀ ⦃env r env'⦄,
     denoteOp Δ op env = Except.ok (r, env') →
@@ -925,23 +620,23 @@ theorem denoteOp_equiv {Δ: Dialect α σ ε} [S: Semantics Δ] : ∀ ⦃op: Op 
               -/
 
 theorem denoteOps_equiv {Δ: Dialect α σ ε} [S: Semantics Δ]:
-  ∀ ⦃ops: List (Op Δ)⦄ ⦃env res env'⦄,
-  denoteOps Δ ops env = Except.ok (res, env') →
+  ∀ ⦃ops: Ops Δ⦄ ⦃env res env'⦄,
+  ops.denoteTop Δ  env = Except.ok (res, env') →
   ∀ ⦃env₂⦄, env.equiv env₂ →
   ∃ env₂', env'.equiv env₂' ∧
-  denoteOps Δ ops env₂ = Except.ok (res, env₂')
-  | [] => by
+  ops.denoteTop Δ env₂ = Except.ok (res, env₂')
+  | .opsnil => by
     intros env res env' H env₂ Henv₂
-    simp [denoteOps] at *; simp_monad at *
+    simp [OpRegion.denoteTop] at *; simp_monad at *
     cases H; subst res env
     constructor <;> simp; try assumption
-  | head::tail => by
+  | .opscons head tail => by
     intros env res env' H env₂ Henv₂
-    unfold denoteOps at H; simp_monad at H
+    unfold OpRegion.denoteTop at H; simp_monad at H
     match TAIL: tail with
-    | .nil =>
+    | .opsnil =>
       apply denoteOp_equiv <;> assumption
-    | .cons head2 tail2 =>
+    | .opscons head2 tail2 =>
       simp [denoteOps] at *; simp_monad at *
       split at H <;> try contradiction
       case h_2 headR HHeadR =>
@@ -958,7 +653,7 @@ theorem denoteRegion_equiv {Δ: Dialect α σ ε} [S: Semantics Δ] ⦃region⦄
     ∃ env₂', env'.equiv env₂' ∧
     denoteRegion Δ region args env₂ = Except.ok (res, env₂') := by
   cases region
-  case mk rName rArgs rOps =>
+  case region rName rArgs rOps =>
   intros args env res env' H env₂ Henv₂
   simp [denoteRegion] at *; simp_monad at *
   (split at H <;> try contradiction); rename_i argsR HargsR
@@ -1147,6 +842,7 @@ def mapDenoteRegion_env_set_preserves {Δ: Dialect α σ ε} [S: Semantics Δ]:
     ∀ τ v, ∃ env₂', (env'.set name τ v).equiv env₂' ∧
     region args (env.set name τ v)  = Except.ok (res, env₂') :=
   by sorry
+-/
 
 /-
 ### PostSSAEnv
@@ -1285,12 +981,12 @@ theorem run_denoteRegion {Δ: Dialect α σ ε} {S: Semantics Δ}
  (env: SSAEnv Δ)
  (name: String)
  (formals: List (TypedSSAVal Δ))
- (ops: List (Op Δ)):
-     run (denoteRegion Δ (Region.mk name formals ops) args) env = run
-      (do
+ (ops: Ops Δ):
+     run ((Region.mk name formals ops).denoteTop Δ args) env = run
+      (TopM.scoped do
         denoteTypedArgs args (List.map Prod.fst formals)
-        denoteOps Δ ops) env
- := by { simp[denoteRegion]; }
+        ops.denoteTop Δ) env
+ := by { simp[OpRegion.denoteTop]; }
 
 /-
 denotation of empty typed args is success
@@ -1303,35 +999,36 @@ theorem run_denoteTypedArgs_nil {Δ: Dialect α σ ε} {S: Semantics Δ}
 
 theorem run_denoteOps_nil {Δ: Dialect α σ ε} {S: Semantics Δ}
   (env: SSAEnv Δ):
-  run (denoteOps Δ []) env = Except.ok ([], env) := by {
-  simp[denoteOps];
+  run (OpRegion.opsnil.denoteTop Δ) env = Except.ok ([], env) := by {
+  simp[OpRegion.denoteTop];
   simp [pure, StateT.pure, run, StateT.run, Except.pure];
 }
 
+/- TODO: Consider fording? -/
 theorem run_denoteOps_cons {Δ: Dialect α σ ε} {S: Semantics Δ}
-  (env: SSAEnv Δ) (op op': Op Δ) (ops: List (Op Δ)):
-  run (denoteOps Δ (op :: op' :: ops)) env =
-  run (do let _ ← denoteOp Δ op; denoteOps Δ (op' :: ops)) env := by {
-  simp[denoteOps];
+  (env: SSAEnv Δ) (op op': Op Δ) (ops: Ops Δ):
+  run ((OpRegion.opscons op (.opscons op' ops)).denoteTop Δ) env =
+  run (do let _ ← op.denoteTop Δ; (OpRegion.opscons op' ops).denoteTop Δ) env := by {
+  simp[OpRegion.denoteTop];
 }
 
 theorem run_denoteOps_singleton {Δ: Dialect α σ ε} {S: Semantics Δ}
   (env: SSAEnv Δ) (op: Op Δ):
-  run (denoteOps Δ [op]) env = run (denoteOp Δ op) env := by {
-  simp[denoteOps];
+  run ((OpRegion.opscons op .opsnil).denoteTop Δ) env = run (op.denoteTop Δ) env := by {
+  simp[OpRegion.denoteTop];
 }
 
 theorem run_denoteOp {Δ: Dialect α σ ε} {S: Semantics Δ}
   (env: SSAEnv Δ)
   (name : String)
   (res args : List (TypedSSAVal Δ))
-  (regions : List (Region Δ))
+  (regions : Regions Δ)
   (attrs : AttrDict Δ) :
-   run (denoteOp Δ (Op.mk name res args regions attrs)) env =
+   run ((Op.mk name res args regions attrs).denoteTop Δ) env =
    run (do
-        let args ← denoteOpArgs Δ args
+        let args ← denoteOpArgs args
         let ret ←
-          OpM.toTopM (TopM.mapDenoteRegion Δ regions)
+          OpM.toTopM (regions.denoteTop Δ)
               (Semantics.semantics_op (IOp.mk name (List.map Prod.snd res) args (OpM.denoteRegions regions 0) attrs))
         match res with
           | [] => pure ret
@@ -1346,7 +1043,7 @@ theorem run_denoteOp {Δ: Dialect α σ ε} {S: Semantics Δ}
           | x => do
             TopM.raiseUB (toString "denoteOp: expected 0 or 1 results, got '" ++ toString res ++ toString "'")
             pure ret) env := by {
-   simp [denoteOp];
+   simp [OpRegion.denoteTop];
 }
 
 /-
@@ -1355,9 +1052,9 @@ run_denoteOpArgs_cons_{success,failure}
 -/
 theorem run_denoteOpArgs_cons_ {Δ: Dialect α σ ε} {S: Semantics Δ}
   {env: SSAEnv Δ} {name: SSAVal}  {ty: MLIRType Δ} {args: List (TypedSSAVal Δ)}:
-  run (denoteOpArgs Δ (⟨name, ty⟩::args)) env = run (do
+  run (denoteOpArgs (⟨name, ty⟩::args)) env = run (do
      let x ← TopM.get ty name
-     let xs ← denoteOpArgs Δ args
+     let xs ← denoteOpArgs args
      return ⟨ty, x⟩::xs
   ) env := by {
   simp[denoteOpArgs];
@@ -1405,22 +1102,22 @@ theorem run_denoteOpArgs_cons_success
   {name: SSAVal}
   {ENV: SSAEnv.get name ty env = .some v}
   {args: List (TypedSSAVal Δ)}:
-  run (denoteOpArgs Δ (⟨name, ty⟩::args)) env =
-  match run (denoteOpArgs Δ args) env with
+  run (denoteOpArgs (⟨name, ty⟩::args)) env =
+  match run (denoteOpArgs args) env with
     | Except.ok (xs, env') => Except.ok (⟨ty, v⟩::xs, env')
     | Except.error e => Except.error e := by {
   simp[run_denoteOpArgs_cons_];
   simp [run_bind];
   simp[run_TopM_get_success (ENV := ENV)];
   simp[pure, StateT.pure, run, StateT.run, Except.pure];
-  cases denoteOpArgs Δ args env <;> simp
+  cases denoteOpArgs args env <;> simp
 }
 
 
 
 theorem run_denoteOpArgs_nil {Δ: Dialect α σ ε} {S: Semantics Δ}
   {env: SSAEnv Δ}:
-  run (denoteOpArgs Δ []) env = Except.ok ([], env) := by {
+  run (denoteOpArgs []) env = Except.ok ([], env) := by {
   simp[denoteOpArgs];
   simp[run, pure, StateT.run, StateT.pure, Except.pure];
 }
@@ -1469,30 +1166,32 @@ theorem run_OpM_toTopM_Ret
 theorem TopM_mapDenoteRegion_cons
   {Δ: Dialect α σ ε} [S: Semantics Δ]
   {r: Region Δ}
-  {rs: List (Region Δ)}:
-  TopM.mapDenoteRegion Δ (List.cons r rs) =
-  TopM.scoped ∘ denoteRegion Δ r :: TopM.mapDenoteRegion Δ rs := by {
-  simp[TopM.mapDenoteRegion];
+  {rs: Regions Δ}:
+  (OpRegion.regionscons r rs).denoteTop Δ =
+  r.denoteTop Δ :: rs.denoteTop Δ := by {
+  simp[OpRegion.denoteTop];
 }
+
+
 theorem TopM_mapDenoteRegion_nil
   {Δ: Dialect α σ ε} [S: Semantics Δ]:
-  TopM.mapDenoteRegion Δ List.nil = [] := by {
-  simp[TopM.mapDenoteRegion];
+  OpRegion.regionsnil.denoteTop Δ  = [] := by {
+  simp[OpRegion.denoteTop];
 }
 
 theorem OpM_denoteRegions_cons
   {Δ: Dialect α σ ε}
   {r: Region Δ}
-  {rs: List (Region Δ)}
+  {rs: Regions Δ}
   {ix: Nat}:
-    OpM.denoteRegions (r::rs) ix =
+    OpM.denoteRegions (.regionscons r rs) ix =
     OpM.denoteRegion r ix :: OpM.denoteRegions rs (ix + 1) := by {
   simp[OpM.denoteRegions];
 
 }
 theorem OpM_denoteRegions_nil
   {Δ: Dialect α σ ε} {ix: Nat}:
-    OpM.denoteRegions (Δ := Δ) [] ix = [] := by {
+    OpM.denoteRegions (Δ := Δ) .regionsnil ix = [] := by {
    simp[OpM.denoteRegions];
 }
 

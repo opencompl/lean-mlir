@@ -388,7 +388,7 @@ def MTerm.concretizeOp (m: MTerm δ) (ctx: VarCtx δ) : Option (Op δ) :=
     let res ← MTerm.concretizeOperands mRes ctx
     match res with
     | [resVal] =>
-      return .mk mName [resVal] operands [] (AttrDict.mk [])
+      return .mk mName [resVal] operands .regionsnil (AttrDict.mk [])
     | _ => none
   | _ => none
 
@@ -475,7 +475,7 @@ def matchMSSAVals (operands: List (TypedSSAVal δ)) (mOperands: List (MTerm δ))
 -- Match a basic block statement with an MTerm.
 def matchMOp (op: Op δ) (mterm: MTerm δ) (ctx: VarCtx δ) : Option (VarCtx δ) :=
   match op, mterm with
-  | Op.mk name res operands [] (AttrDict.mk []),
+  | Op.mk name res operands .regionsnil (AttrDict.mk []),
     .App .OP [ .ConstString mName, .App (.LIST .MOperand) mOperands,
       .App (.LIST .MOperand) mRes ] =>
     if name != mName then
@@ -507,12 +507,12 @@ def matchAllMOpInOp (op: Op δ) (mOp: MTerm δ) (ctx: VarCtx δ)
     | none => nextMatches
 
 -- Get all possible operations matching an MTerm in a list of ops.
-def matchAllMOpInOps (ops: List (Op δ)) (mOp: MTerm δ)
+def matchAllMOpInOps (ops: (Ops δ)) (mOp: MTerm δ)
                      (ctx: VarCtx δ) : List (Op δ × VarCtx δ) :=
   match ops with
-  | op::ops' => (matchAllMOpInOp op mOp ctx).append
+  | .opscons op ops' => (matchAllMOpInOp op mOp ctx).append
     (matchAllMOpInOps ops' mOp ctx)
-  | [] => []
+  | .opsnil => []
 
 -- Get all possible operations matching an MTerm in a basic block.
 def matchAllMOpInRegion (rgn: Region δ) (mOp: MTerm δ)
@@ -522,13 +522,13 @@ def matchAllMOpInRegion (rgn: Region δ) (mOp: MTerm δ)
   | .mk _ _ ops => matchAllMOpInOps ops mOp ctx
 
 -- Get all possible operations matching an MTerm in a list of regions.
-def matchAllMOpInRegions (regions: List (Region δ)) (mOp: MTerm δ)
+def matchAllMOpInRegions (regions: (Regions δ)) (mOp: MTerm δ)
                          (ctx: VarCtx δ) :
     List (Op δ × VarCtx δ) :=
   match regions with
-  | region::regions' => (matchAllMOpInRegion region mOp ctx).append
+  | .regionscons region regions' => (matchAllMOpInRegion region mOp ctx).append
     (matchAllMOpInRegions regions' mOp ctx)
-  | [] => []
+  | .regionsnil => []
 end
 termination_by
   matchAllMOpInOp op _ _ => sizeOf op
@@ -567,7 +567,7 @@ def matchMProgInOpAux (op: Op δ) (mOps: List (MTerm δ))
     | none => matchMProgInOpAux op mOps matchOps'
   | [] => none
 end
--- TODO: how to use lex ordering for termination? Proof of termination: lex ordering on (mOps, matchOps)
+
 decreasing_by sorry
 /-
 termination_by
@@ -654,34 +654,16 @@ The operation to match should not have any regions or attributes.
 
 def eqOp (op1 op2: Op δ) : Bool :=
   match op1, op2 with
-  | .mk name res args [] (.mk []), .mk name' res' args' [] (.mk []) =>
+  | .mk name res args .regionsnil (.mk []), .mk name' res' args' .regionsnil (.mk []) =>
     name == name' && res == res' && args == args'
   | _, _ => false
 
-mutual
-variable (mOp: Op δ)
 
-def isOpInOp (op: Op δ) : Bool :=
-  eqOp op mOp ||
-    (match op with
-     | .mk _ _ _ regions _ => isOpInRegions regions)
-
-def isOpInRegions (regions: List (Region δ)) : Bool :=
-  match regions with
-  | [] => False
-  | region::regions' => isOpInRegion region || isOpInRegions regions'
-
-def isOpInRegion (rgn: Region δ) : Bool :=
-  match rgn with
-  | .mk _ _ ops => isOpInOps ops
-
-def isOpInOps (ops: List (Op δ)) : Bool :=
-  match ops with
-  | [] => False
-  | op::ops' => isOpInOp op || isOpInOps ops'
-end
- termination_by
-  isOpInOp op => sizeOf op
-  isOpInRegions rgns => sizeOf rgns
-  isOpInRegion rgn => sizeOf rgn
-  isOpInOps ops => sizeOf ops
+def isOpIn (mOp: Op δ) : OpRegion δ k → Bool
+| .op name res args regions attrs =>
+    eqOp (.op name res args regions attrs) mOp || isOpIn mOp regions
+| .opsnil => False
+| .opscons o os => isOpIn mOp o || isOpIn mOp os
+| .region name args body => isOpIn mOp body
+| .regionsnil => False
+| .regionscons r rs => isOpIn mOp r || isOpIn mOp rs

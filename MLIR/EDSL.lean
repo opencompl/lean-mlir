@@ -593,13 +593,13 @@ macro_rules
 | `([mlir_region| { ^ $name:ident ( $operands,* ) : $ops }  ]) => do
    let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
    let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
-   let opsList <- `([mlir_ops| $ops])
+   let opsList <- `(Ops.fromList [mlir_ops| $ops])
    `(Region.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
 | `([mlir_region| {  ^ $name:ident : $ops } ]) => do
-   let opsList <- `([mlir_ops| $ops])
+   let opsList <- `(Ops.fromList [mlir_ops| $ops])
    `(Region.mk $(Lean.quote (name.getId.toString)) [] $opsList)
 | `([mlir_region| { $ops:mlir_ops } ]) => do
-   let opsList <- `([mlir_ops| $ops])
+   let opsList <- `(Ops.fromList [mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
 
 
@@ -922,10 +922,10 @@ macro_rules
                           | none => `(AttrDict.mk [])
                           | some dict => `([mlir_attr_dict| $dict])
         let rgnsList <- match rgns with
-                  | none => `(@List.nil (MLIR.AST.Region _))
+                  | none => `(OpRegion.regionsnil)
                   | some rgns => do
-                    let rngs <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
-                    quoteMList rngs.toList (<- `(MLIR.AST.Region _))
+                    let rgns <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
+                    `(Regions.fromList [$rgns,*])
 
         `(Op.mk $name -- name
                 $res -- results
@@ -958,10 +958,10 @@ macro_rules
                           | none => `(AttrDict.mk [])
                           | some dict => `([mlir_attr_dict| $dict])
         let rgnsList <- match rgns with
-                  | none => `(@List.nil (MLIR.AST.Region _))
+                  | none => `(OpRegion.regionsnil)
                   | some rgns => do
-                    let rngs <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
-                    quoteMList rngs.toList (<- `(MLIR.AST.Region _))
+                    let rgns <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
+                    `(Regions.fromList [$rgns,*])
 
         `(Op.mk $name -- name
                 $res -- results
@@ -1104,7 +1104,7 @@ macro_rules
      let initList <- `([Op.empty "module_terminator"])
      let ops <- ops.foldrM (init := initList) fun x xs => `([mlir_op| $x] :: $xs)
      let rgn <- `(Region.fromOps $ops)
-     `(Op.mk "module" [] [] [$rgn] AttrDict.empty)
+     `(Op.mk "module" [] [] (Regions.fromList [$rgn]) AttrDict.empty)
 
 def mod1 : Op builtin := [mlir_op| module { }]
 #print mod1

@@ -52,49 +52,34 @@ def operandsDefinitionObeySSA (args: List (TypedSSAVal δ)) (ctx: DomContext δ)
 Check that an IR satisfies SSA.
 -/
 
-mutual
-def singleBBRegionOpObeySSA (op: Op δ) (ctx: DomContext δ) : Option (DomContext δ) :=
-  match op with
-  | Op.mk _ results operands regions _ => do
+def MLIR.AST.OpRegion.obeysSSA (op: OpRegion δ k) (ctx: DomContext δ):  Option (DomContext δ) :=
+match op with
+| .op _ results operands regions _ => do
     -- Check operands
     let _ ← match operandsDefinitionObeySSA operands ctx with
             | true => pure ctx
             | false => none
     -- Check regions
-    let _ <- singleBBRegionRegionsObeySSA regions ctx
+    let _ <- OpRegion.obeysSSA regions ctx
     -- Check results
     let ctx' <- match results with
              | [] => ctx
              | [result] => valDefinitionObeySSA result ctx
              | _ => none
     ctx'
+| .opsnil => ctx
+| .opscons o os =>  (o.obeysSSA ctx).bind (os.obeysSSA)
 
-def singleBBRegionRegionsObeySSA (regions: List (Region δ)) (ctx: DomContext δ) : Option (DomContext δ) :=
-  match regions with
-  | region::regions' => do
-    let _ <- (singleBBRegionObeySSA region ctx)
-    let _ <- (singleBBRegionRegionsObeySSA regions' ctx)
-    ctx
-  | [] => some ctx
+| .regionsnil => .some ctx
+| .regionscons r rs => do
+    -- reuse ctx!
+    let _ <- OpRegion.obeysSSA r ctx
+    let _ <- OpRegion.obeysSSA rs ctx
+    return ctx
+| .region name args stmts => do
+    let ctx' <- args.foldlM (fun ctx arg => valDefinitionObeySSA arg ctx) ctx
+    OpRegion.obeysSSA stmts ctx'
 
-def singleBBRegionObeySSA (region: Region δ) (ctx: DomContext δ) : Option (DomContext δ) :=
-  match region with
-  | .mk name args stmts =>
-    (args.foldlM (fun ctx arg => valDefinitionObeySSA arg ctx) ctx).bind
-    (singleBBRegionOpsObeySSA stmts)
-
-
-def singleBBRegionOpsObeySSA (ops: List (Op δ)) (ctx: DomContext δ) : Option (DomContext δ) :=
-  match ops with
-  | op::ops' => (singleBBRegionOpObeySSA op ctx).bind (singleBBRegionOpsObeySSA ops')
-  | [] => some ctx
-end
-
-termination_by
-  singleBBRegionOpObeySSA  op _ => sizeOf op
-  singleBBRegionRegionsObeySSA regions _=> sizeOf regions
-  singleBBRegionObeySSA rgn _ => sizeOf rgn
-  singleBBRegionOpsObeySSA ops _ => sizeOf ops
 
 /-
 ### Uniqueness of SSA names
@@ -124,41 +109,16 @@ def valDefHasUniqueNames (ctx: NameContext) (val: SSAVal)
   else
     none
 
-mutual
-def hasUniqueNamesOp (op: Op δ) (ctx: NameContext) : Option NameContext :=
-  match op with
-  | Op.mk _ _ _ regions _ => hasUniqueNamesRegions regions ctx
-
-def hasUniqueNamesRegions (regions: List (Region δ)) (ctx: NameContext) :
-    Option NameContext :=
-  match regions with
-  | region::regions' => do
-    let ctx' <- (hasUniqueNamesRegion region ctx)
-    (hasUniqueNamesRegions regions' ctx')
-  | [] => none
-
-def hasUniqueNamesRegion (rgn: Region δ) (ctx: NameContext) :
-    Option NameContext :=
-  match rgn with
-  | .mk _ args ops => do
-    let ctx' ←
-      args.foldlM (fun ctx arg => valDefHasUniqueNames ctx arg.fst) ctx
-    hasUniqueNamesOps ops ctx'
-
-def hasUniqueNamesOps (ops: List (Op δ)) (ctx: NameContext) :
-    Option NameContext :=
-  match ops with
-  | op::ops' => do
-    let ctx' ← hasUniqueNamesOp op ctx
-    hasUniqueNamesOps ops' ctx'
-  | [] => none
-end
-
-termination_by
-  hasUniqueNamesOp  op _ => sizeOf op
-  hasUniqueNamesRegion regions _=> sizeOf regions
-  hasUniqueNamesRegions rgn _ => sizeOf rgn
-  hasUniqueNamesOps ops _ => sizeOf ops
+def MLIR.AST.OpRegion.hasUniqueNames (o: OpRegion δ k) (ctx: NameContext): Option NameContext :=
+match o with
+| .op _ _ _ regions _ => regions.hasUniqueNames ctx
+| .opsnil => none -- wtf
+| .opscons o os => (o.hasUniqueNames ctx).bind os.hasUniqueNames
+| .regionsnil => none --wtf?
+| .regionscons r rs => (r.hasUniqueNames ctx).bind (rs.hasUniqueNames)
+| .region name args ops => do
+    let ctx' ← args.foldlM (fun ctx arg => valDefHasUniqueNames ctx arg.fst) ctx
+    ops.hasUniqueNames ctx'
 
 
 /-
@@ -170,41 +130,28 @@ Get the definition of a variable, or check if it is used
 def isDefined (var: SSAVal) (op: Op δ) : Bool :=
   var ∈ op.resNames
 
-mutual
-variable (mVar: SSAVal)
+def isDefined' (var: SSAVal) (res: List (TypedSSAVal δ)) : Bool :=
+  var ∈ res.map Prod.fst
 
-def isSSADefInOp (op: Op δ) : Bool :=
-  match op with
-  | .mk _ _ _ regions _ => isDefined mVar op || isSSADefInRegions regions
-
-def isSSADefInRegions (regions: List (Region δ)) : Bool :=
-  match regions with
-  | [] => False
-  | region::regions' => isSSADefInRegion region || isSSADefInRegions regions'
-
-def isSSADefInRegion (rgn: Region δ) : Bool :=
-  match rgn with
-  | .mk _ _ ops => isSSADefInOps ops
-
-def isSSADefInOps (ops: List (Op δ)) : Bool :=
-  match ops with
-  | [] => False
-  | op::ops' => isSSADefInOp op || isSSADefInOps ops'
-end
-
-termination_by
-  isSSADefInOp  op _ => sizeOf op
-  isSSADefInRegions regions _=> sizeOf regions
-  isSSADefInRegion rgn _ => sizeOf rgn
-  isSSADefInOps ops _ => sizeOf ops
-
+def MLIR.AST.OpRegion.isSSADef (mVar: SSAVal) (or: OpRegion δ k): Bool :=
+match or with
+| .op _ res _ regions _ => isDefined' mVar res || regions.isSSADef mVar
+| .region _ _ ops => ops.isSSADef mVar
+| .opsnil => False
+| .opscons o os => o.isSSADef mVar || os.isSSADef mVar
+| .regionsnil => False
+| .regionscons r rs => r.isSSADef mVar || rs.isSSADef mVar
 
 /-
 Check if the variable used by the operation.
 Do not check inside the regions inside the operation.
 -/
+
 def isUsed (var: SSAVal) (op: Op δ) : Bool :=
   var ∈ op.argNames
+
+def isUsed' (var: SSAVal) (args: List (TypedSSAVal δ)) : Bool :=
+  var ∈ args.map Prod.fst
 
 /-
 Check if `op` is used by `user`.
@@ -215,73 +162,33 @@ def isOpUsed (op user: Op δ) : Bool :=
   op.resNames.any (fun arg => isUsed arg user)
 
 
-mutual
-variable (mVar: SSAVal)
-
-def isSSAUsedInOp (op: Op δ) : Bool :=
-  match op with
-  | .mk _ _ _ regions _ =>
-    isUsed mVar op || isSSAUsedInRegions regions
-
-def isSSAUsedInRegions (regions: List (Region δ)) : Bool :=
-  match regions with
-  | [] => False
-  | region::regions' => isSSAUsedInRegion region || isSSAUsedInRegions regions'
+def MLIR.AST.OpRegion.isUsed (mVar: SSAVal) (or: OpRegion δ k): Bool :=
+match or with
+| .op _ _ args regions _ => isUsed' mVar args || regions.isUsed mVar
+| .region _ _ ops => ops.isUsed mVar
+| .opsnil => False
+| .opscons o os => o.isUsed mVar || os.isUsed mVar
+| .regionsnil => False
+| .regionscons r rs => r.isUsed mVar || rs.isUsed mVar
 
 
-def isSSAUsedInRegion (rgn: Region δ) : Bool :=
-  match rgn with
-  | .mk _ _ ops => isSSAUsedInOps ops
+def MLIR.AST.OpRegion.getDefiningOp (mVar: SSAVal) (or: OpRegion δ k): Option (Op δ) :=
+match or with
+| .op name res args regions attrs =>
+   if isDefined' mVar res then some (.op name res args regions attrs)
+   else regions.getDefiningOp mVar
+| .region _ _ ops => ops.getDefiningOp mVar
+| .opsnil => none
+| .opscons o os =>
+    match o.getDefiningOp mVar with
+    | .some v => .some v
+    | .none => os.getDefiningOp mVar
+| .regionsnil => none
+| .regionscons r rs =>
+    match r.getDefiningOp mVar with
+    | .some v => .some v
+    | .none => rs.getDefiningOp mVar
 
-def isSSAUsedInOps (ops: List (Op δ)) : Bool :=
-  match ops with
-  | [] => False
-  | op::ops' => isSSAUsedInOp op || isSSAUsedInOps ops'
-end
-
-termination_by
-  isSSAUsedInOp  op _ => sizeOf op
-  isSSAUsedInRegions regions _=> sizeOf regions
-  isSSAUsedInRegion rgn _ => sizeOf rgn
-  isSSAUsedInOps ops _ => sizeOf ops
-
-
-
-mutual
-variable (mVar: SSAVal)
-
-def getDefiningOpInOp (op: Op δ) : Option (Op δ) :=
-  if mVar ∈ op.resNames then
-    some op
-  else
-    match op with
-    | .mk _ _ _ regions _ => getDefiningOpInRegions regions
-
-def getDefiningOpInRegions (regions: List (Region δ)) : Option (Op δ) :=
-  match regions with
-  | [] => none
-  | region::regions' =>
-    (getDefiningOpInRegion region).orElse
-    (fun () => getDefiningOpInRegions regions')
-
-def getDefiningOpInRegion (rgn: Region δ) : Option (Op δ) :=
-  match rgn with
-  | .mk _ _ ops => getDefiningOpInOps ops
-
-def getDefiningOpInOps (ops: List (Op δ)) : Option (Op δ) :=
-  match ops with
-  | [] => none
-  | op::ops' =>
-    match getDefiningOpInOp op with
-    | some op => some op
-    | none => getDefiningOpInOps ops'
-end
-
-termination_by
-  getDefiningOpInOp op _ => sizeOf op
-  getDefiningOpInRegions regions _=> sizeOf regions
-  getDefiningOpInRegion rgn _ => sizeOf rgn
-  getDefiningOpInOps ops _ => sizeOf ops
 
 
 
@@ -290,46 +197,27 @@ Check if the variable is free in a program.
 A variable is free if it is not used or defined in the program.
 -/
 
-mutual
-variable (var: SSAVal)
-
-def isVarFreeInOp (op: Op δ) : Bool :=
-  match op with
-  | .mk _ _ _ regions _ => ¬isUsed var op && ¬isDefined var op && isVarFreeInRegions regions
-
-def isVarFreeInRegions (regions: List (Region δ)) : Bool :=
-  match regions with
-  | [] => False
-  | region::regions' =>
-      isVarFreeInRegion region && isVarFreeInRegions regions'
-
-def isVarFreeInRegion (rgn: Region δ) : Bool :=
-  match rgn with
-  | .mk _ _ ops => isVarFreeInOps ops
-
-def isVarFreeInOps (ops: List (Op δ)) : Bool :=
-  match ops with
-  | [] => False
-  | op::ops' => isVarFreeInOp op && isVarFreeInOps ops'
-end
-termination_by
-  isVarFreeInOp  op _ => sizeOf op
-  isVarFreeInRegions regions _=> sizeOf regions
-  isVarFreeInRegion rgn _ => sizeOf rgn
-  isVarFreeInOps ops _ => sizeOf ops
-
+def MLIR.AST.OpRegion.isVarFree (mVar: SSAVal) (or: OpRegion δ k): Bool :=
+match or with
+| .op _ rets args regions _ =>
+   ¬ isUsed' mVar args && ¬ isDefined' mVar rets && regions.isVarFree mVar
+| .region _ _ ops => ops.isVarFree mVar
+| .opsnil => False
+| .opscons o os => o.isVarFree mVar && os.isVarFree mVar
+| .regionsnil => False
+| .regionscons r rs => r.isVarFree mVar && rs.isVarFree mVar
 
 def freeInOp_implies_not_used :
-    isVarFreeInOp var op -> ¬isUsed var op := by
-  unfold isVarFreeInOp
+    op.isVarFree var  -> ¬isUsed var op := by
+  unfold OpRegion.isVarFree
   cases op
   simp
   intros H1 H2 H3
   assumption
 
 def freeInOp_implies_not_defined :
-    isVarFreeInOp var op -> ¬isDefined var op := by
-  unfold isVarFreeInOp
+    op.isVarFree var -> ¬isDefined var op := by
+  unfold OpRegion.isVarFree
   cases op
   simp
   intros H1 H2 H3
