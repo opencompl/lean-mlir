@@ -48,14 +48,14 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
       simp only [SSA.teval, Function.comp, id.def,
         EnvU.set, if_true, pure_bind,
         TypedUserSemantics.argUserType, argUserType,
-        TypedUserSemantics.rgnDom, rgnDom,
-        TypedUserSemantics.rgnCod, rgnCod,
+        TypedUserSemantics.rgnDom,
+        TypedUserSemantics.rgnCod,
         TypedUserSemantics.outUserType, outUserType,
         TypedUserSemantics.eval,
-        argUserType, dite_true, if_false,
-        eq_self_iff_true, EnvC.toEnvU, Option.elim,
-        AList.lookup, List.dlookup, eval, true_and, and_true,
+        dite_true, if_false,
+        EnvC.toEnvU, Option.elim,
+        eval,
         Option.some_eq_pure,
-        BitVector.width, List.foldr, pure_bind, uncurry]
+        BitVector.width, uncurry]
       congr
       rw [InstCombineShift279_base]
