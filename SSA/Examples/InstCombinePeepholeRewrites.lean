@@ -45,17 +45,29 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     (SSA.UserType.base (BaseType.bitvec w)) := by
       intros w C minus_one Γ e
       funext x
-      simp only [SSA.teval, Function.comp, id.def,
-        EnvU.set, if_true, pure_bind,
-        TypedUserSemantics.argUserType, argUserType,
-        TypedUserSemantics.rgnDom,
-        TypedUserSemantics.rgnCod,
-        TypedUserSemantics.outUserType, outUserType,
-        TypedUserSemantics.eval,
-        dite_true, if_false,
-        EnvC.toEnvU, Option.elim,
-        eval,
-        Option.some_eq_pure,
-        BitVector.width, uncurry]
+      simp only [SSA.teval]
+      simp only [Function.comp]
+      simp only [id.def]
+      simp only [SSA.teval]
+      simp only [TypedUserSemantics.outUserType]
+      simp only [TypedUserSemantics.argUserType]
+      simp only [TypedUserSemantics.rgnDom]
+      simp only [TypedUserSemantics.rgnCod]
+      simp only [TypedUserSemantics.eval]
+      simp only [outUserType]
+      simp only [eval]
+      simp only [EnvU.set]
+      simp only [if_true]
+      simp only [argUserType]
+      simp only [Option.some_eq_pure]
+      simp only [EnvC.toEnvU]
+      simp only [uncurry]
+      simp only [pure_bind]
+      simp only [if_false]
+      simp only [Option.elim]
+      simp only [BitVector.width]
+      simp only [pure_bind, dite_true]
+      simp only [if_true]
+
       congr
       rw [InstCombineShift279_base]
