@@ -14,6 +14,7 @@ instance : Goedel Unit where toType := fun _ => Unit
 
 namespace SSA
 
+/-- A `UserType` is a type of an `SSA` program. -/
 inductive UserType (T : Type) : Type where
   | base : T → UserType T
   | pair : UserType T → UserType T → UserType T
@@ -65,7 +66,12 @@ structure UserData {β : Type} [Goedel β] where
   type : UserType β
   value : toType type
 
-
+/-- `TypeData` is a `Type` used to represent a potentially unknown `UserType`,
+usually of a variable in the context.
+for the purposes of type inference of `SSA`. `any` means that the `UserType`
+is completely unknown, `unused` means that a variable is unused, `pair` means that
+it is known that the type is a pair, but the elements of the pair are not necessarily
+known and so on. -/
 inductive  TypeData (β : Type) : Type
   | some : β → TypeData β
   | unit : TypeData β
@@ -183,24 +189,25 @@ def SSAIndex.ieval.any {β : Type} : (i : SSAIndex) → i.ieval β
   | .REGION => TypeData.region TypeData.any TypeData.any
   | .STMT => []
 
-abbrev K (β : Type)
+/-- A Monad used to keep track of a typing context for variables during `inferType`. -/
+abbrev TypeContextM (β : Type)
   : Type → Type := StateT (Context (TypeData β)) Option
 
 -- Lean gets very picky here and wants to get all instances passed explicit to be sure they're the same
-def getVars : K β (Var → TypeData β) := do
+def getVars : TypeContextM β (Var → TypeData β) := do
   let al := (← StateT.get)
   return (fun v => match al.lookup v with
     | some t => t
     | none => TypeData.unused)
 
-def getVarType (v : Var) : K β (TypeData β) :=
+def getVarType (v : Var) : TypeContextM β (TypeData β) :=
   do return (← getVars) v
 
-def updateType (v : Var) (t : TypeData β) : K β Unit := do
+def updateType (v : Var) (t : TypeData β) : TypeContextM β Unit := do
   StateT.modifyGet (fun s => ((), s.insert v t))
 
 /-- assign a variable. Fails if the variable is not unused to start with -/
-def assignVar (v : Var) (t : TypeData β) : K β Unit := do
+def assignVar (v : Var) (t : TypeData β) : TypeContextM β Unit := do
   let k ← getVarType v
   match k with
   | .unused => updateType v t
@@ -208,7 +215,7 @@ def assignVar (v : Var) (t : TypeData β) : K β Unit := do
 
 /-- Does not change the state. Fails if impossible to unify.
 TypeData is a meet semilattice with top element `unused`.  -/
-def unify : (t₁ t₂ : TypeData β) → K β (TypeData β)
+def unify : (t₁ t₂ : TypeData β) → TypeContextM β (TypeData β)
   | .unused, k => return k
   | k, .unused => return k
   | .any, k => return k
@@ -226,19 +233,19 @@ def unify : (t₁ t₂ : TypeData β) → K β (TypeData β)
   | .unit, .unit => return .unit
   | _, _ => failure
 
-def unifyVar (v : Var) (t : TypeData β) : K β  (TypeData β) := do
+def unifyVar (v : Var) (t : TypeData β) : TypeContextM β  (TypeData β) := do
   let k ← getVarType v
   let k' ← unify k t
   updateType v k'
   return k'
 
 @[simp]
-def assignAny (t : Var → TypeData β) (v : Var) : K β Unit :=
+def assignAny (t : Var → TypeData β) (v : Var) : TypeContextM β Unit :=
   match t v with
   | .unused => assignVar v .any
   | _ => failure
 
-def unassignVars (l : List Var) : K β Unit := do
+def unassignVars (l : List Var) : TypeContextM β Unit := do
   l.forM (fun v => updateType v .unused)
 
 /-- Given an expected type, tries to infer the type of an expression.
@@ -253,11 +260,11 @@ Return the type of the returned variable. Fails when bound variable is not `unus
 * If `EXPR`, then return type of expression, and do not change the type of bound
 variables, only free variables.
 * If `REGION` then as for `EXPR`  -/
--- @chris: the type signature should be `SSA Op i → K (Context β)`?
+-- @chris: the type signature should be `SSA Op i → TypeContextM (Context β)`?
 def inferTypeCore {Op : Type}  [TUS : TypedUserSemantics Op β] :
     {i : SSAIndex} → SSA Op i →
     (i.ieval β)
-    → K β (i.ieval β)
+    → TypeContextM β (i.ieval β)
   | _,  .assign lhs rhs rest, _ => do
     let k ← inferTypeCore rhs (← getVarType lhs)
     assignVar lhs k
@@ -301,7 +308,8 @@ def inferType {Op : Type} [TypedUserSemantics Op β]
   let k ← inferTypeCore (β := β) e (SSAIndex.ieval.any i) ∅
   return (k.1, ← k.2.pmap TypeData.toUserType)
 
-/-- TODO: add documentation for this... -/
+/-- A typed evaluation environment, given a typing context `c`, an `EnvC c`
+contains semantics for all of the variables in the `Context`, `c`. -/
 def EnvC (c : Context (UserType β)) :=
   ∀ (v : Var), (c.lookup v).elim Unit UserType.toType
 
@@ -310,9 +318,10 @@ def EnvC (c : Context (UserType β)) :=
 
 variable (β)
 
+/-- An untyped value - the semantics of many programs will return a `UVal` -/
 def UVal := Σ (k : UserType β), k.toType
 
-/-- TODO: add documentation for this... -/
+/-- An untyped evaluation environment, contains optional semantics for all variables. -/
 def EnvU : Type :=
   Var → Option (UVal β)
 
