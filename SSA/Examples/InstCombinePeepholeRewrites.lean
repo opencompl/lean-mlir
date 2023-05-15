@@ -57,4 +57,5 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
         AList.lookup, List.dlookup, eval, true_and, and_true,
         Option.some_eq_pure,
         BitVector.width, List.foldr, pure_bind, uncurry]
+      congr
       rw [InstCombineShift279_base]
