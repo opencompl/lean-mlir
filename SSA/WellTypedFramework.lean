@@ -14,7 +14,11 @@ instance : Goedel Unit where toType := fun _ => Unit
 
 namespace SSA
 
-/-- A `UserType` is a type of an `SSA` program. -/
+/-- A `UserType` is a type of user-defined values in `SSA` programs.
+    The main objective of `UserType` is to be able to have decidability
+    properties, like decidable equality, for the restricted set of types
+    in the user-defined semantics, since Lean's `Type` does not have these
+    properties. -/
 inductive UserType (β : Type) : Type where
   | base : β → UserType β
   | pair : UserType β → UserType β → UserType β
