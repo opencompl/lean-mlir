@@ -78,3 +78,59 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
       simp only [dite_true]
       congr
       rw [InstCombineShift279_base]
+
+
+theorem InstCombineTrivial: ∀ w : Width, ∀ C : BitVector w,
+  let minus_one : BitVector w := (-1).toBitVector
+  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
+  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
+  --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0  =>
+    %v42 := unit: ;
+    %v1 := op: const C %v42
+    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
+    (SSA.UserType.base (BaseType.bitvec w)) =
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
+    %v42 := unit: ;
+    %v43 := unit: ;
+    %v44 := unit: ;
+    %v45 := unit: ;
+    %v46 := unit: ;
+    %v47 := unit: ;
+    %v48 := unit: ;
+    %v49 := unit: ;
+    %v1 := op: const minus_one %v42
+    dsl_ret %v1] (SSA.UserType.base (BaseType.bitvec w))
+    (SSA.UserType.base (BaseType.bitvec w)) := by
+      intros w C minus_one Γ e
+      funext x
+      simp only [SSA.teval]
+      simp only [Function.comp]
+      simp only [id.def]
+      simp only [SSA.teval]
+      simp only [EnvU.set]
+      simp only [if_false]
+      simp only [TypedUserSemantics.outUserType]
+      simp only [TypedUserSemantics.argUserType]
+      simp only [TypedUserSemantics.rgnDom]
+      simp only [TypedUserSemantics.rgnCod]
+      simp only [TypedUserSemantics.eval]
+      simp only [outUserType]
+      simp only [eval]
+      simp only [if_true]
+      simp only [argUserType]
+      simp only [Option.some_eq_pure]
+      simp only [EnvC.toEnvU]
+      simp only [uncurry]
+      simp only [pure_bind]
+      simp only [if_false]
+      simp only [BitVector.width]
+      simp only [dite_true]
+      simp only [pure_bind]
+      simp only [if_true]
+      simp only [pure_bind]
+      simp only [dite_true]
+
+      congr
+      rfl
+
