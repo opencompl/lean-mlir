@@ -4,7 +4,7 @@ import Mathlib.Data.List.AList
 
 /-- Typeclass for a `baseType` which is a Gödel code of
 Lean types. -/
-class Goedel (β : Type)  : Type 1 where
+class Goedel (β : Type) : Type 1 where
   toType : β → Type
 open Goedel /- make toType publically visible in module. -/
 
@@ -15,12 +15,12 @@ instance : Goedel Unit where toType := fun _ => Unit
 namespace SSA
 
 /-- A `UserType` is a type of an `SSA` program. -/
-inductive UserType (T : Type) : Type where
-  | base : T → UserType T
-  | pair : UserType T → UserType T → UserType T
-  | triple : UserType T → UserType T → UserType T → UserType T
-  | unit : UserType T
-  | region : UserType T → UserType T → UserType T
+inductive UserType (β : Type) : Type where
+  | base : β → UserType β
+  | pair : UserType β → UserType β → UserType β
+  | triple : UserType β → UserType β → UserType β → UserType β
+  | unit : UserType β
+  | region : UserType β → UserType β → UserType β
   deriving DecidableEq
 
 namespace UserType
@@ -399,7 +399,6 @@ def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
     if h : k₂' = k₂
     then by subst h; exact return y
     else none
-
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
 
