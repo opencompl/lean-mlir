@@ -45,16 +45,36 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
     (SSA.UserType.base (BaseType.bitvec w)) := by
       intros w C minus_one Γ e
       funext x
-      simp only [SSA.teval, Function.comp, id.def,
-        EnvU.set, if_true, pure_bind,
-        TypedUserSemantics.argUserType, argUserType,
-        TypedUserSemantics.rgnDom, rgnDom,
-        TypedUserSemantics.rgnCod, rgnCod,
-        TypedUserSemantics.outUserType, outUserType,
-        TypedUserSemantics.eval,
-        argUserType, dite_true, if_false,
-        eq_self_iff_true, EnvC.toEnvU, Option.elim,
-        AList.lookup, List.dlookup, eval, true_and, and_true,
-        Option.some_eq_pure,
-        BitVector.width, List.foldr, pure_bind, uncurry]
-
+      simp only [SSA.teval]
+      simp only [Function.comp]
+      simp only [id.def]
+      simp only [SSA.teval]
+      simp only [EnvU.set]
+      simp only [if_false]
+      simp only [if_true]
+      simp only [TypedUserSemantics.outUserType]
+      simp only [TypedUserSemantics.argUserType]
+      simp only [TypedUserSemantics.rgnDom]
+      simp only [TypedUserSemantics.rgnCod]
+      simp only [TypedUserSemantics.eval]
+      simp only [outUserType]
+      simp only [eval]
+      simp only [if_true]
+      simp only [argUserType]
+      simp only [Option.some_eq_pure]
+      simp only [EnvC.toEnvU]
+      simp only [uncurry]
+      simp only [Option.elim]
+      simp only [BitVector.width]
+      simp only [pure_bind]
+      simp only [dite_true]
+      simp only [pure_bind]
+      simp only [dite_true]
+      simp only [pure_bind]
+      simp only [dite_true]
+      simp only [pure_bind]
+      simp only [if_true]
+      simp only [pure_bind]
+      simp only [dite_true]
+      congr
+      rw [InstCombineShift279_base]
