@@ -75,9 +75,6 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
       simp only [pure_bind]
       simp only [if_true]
       simp only [pure_bind]
-      simp only [if_true]
-      simp only [dite_eq_ite]
-      simp only [ite_true]
-
+      simp only [dite_true]
       congr
       rw [InstCombineShift279_base]
