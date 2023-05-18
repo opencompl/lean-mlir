@@ -37,7 +37,7 @@ def toType [Goedel β] : UserType β → Type
   | .pair k₁ k₂ => (toType k₁) × (toType k₂)
   | .triple k₁ k₂ k₃ => toType k₁ × toType k₂ × toType k₃
   | .unit => Unit
-  | .region k₁ k₂ => toType k₁ → Option (toType k₂)
+  | .region k₁ k₂ => toType k₁ →toType k₂
 
 instance [Goedel β] : Goedel (UserType β) where
   toType := toType
@@ -102,7 +102,7 @@ instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
 
 def EnvC [Goedel β] (c : Context β)  :=
-  ∀ (a : UserType β), c.Var a → ⟦a⟧
+  ∀ ⦃a : UserType β⦄, c.Var a → ⟦a⟧
 
 inductive TSSAIndex (β : Type) : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
@@ -121,7 +121,7 @@ def TSSAIndex.eval [Goedel β] : TSSAIndex β → Type
   | .TERMINATOR T => toType T
   | .REGION dom cod => toType dom → toType cod
 
-open OperationTypes
+open OperationTypes UserType
 
 inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
     (Γ : Context β) → TSSAIndex β → Type where
@@ -135,7 +135,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   /-- (fst, snd) -/
   | pair (fst : Γ.Var T₁) (snd : Γ.Var T₂) : TSSA Op Γ (.EXPR (.pair T₁ T₂))
   /-- (fst, snd, third) -/
-  | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple k₁ k₂ k₃))
+  | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple T₁ T₂ T₃))
   /-- op (arg) { rgn } rgn is an argument to the operation -/
   | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Γ (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
@@ -151,26 +151,29 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
 
 @[simp]
 def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
-  {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) →  i.eval
+  {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
 | Γ, _, .assign lhs rhs rest => fun e T v =>
     match v with
     | Context.Var.first => rhs.eval e
-    | Context.Var.next _ => _
-      -- (fun _ v' =>
-      --   match v' with
-      --   | CVar.here => rhs.eval c₁ c₂
-      --   | CVar.there v'' => c₁ v'') c₂ v
-  | _, _, .nop => _
-  | _, _, .ret above v => _
-  | _, _, .pair fst snd => _
-  | _, _, .triple fst snd third => _
-  | _, _, TSSA.op o arg rg => _
-  | _, _, .rgn body => _
-  | _, _, .rgn0 => _
-  | _, _, .rgnvar v => _
-  | _, _, .var v => _
--- @chris: TODO: implement `eval`:
---   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
+    | Context.Var.next v => rest.eval
+      (fun _ v' =>
+        match v' with
+        | Context.Var.first => rhs.eval e
+        | Context.Var.next v'' => e v'') v
+  | _, _, .nop => fun _ _ v => by cases v
+  | _, _, .ret above v => fun e => above.eval e v
+  | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
+  | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
+  | _, _, TSSA.op o arg rg => fun e =>
+    TypedUserSemantics.eval o (e arg) (rg.eval e)
+  | _, _, .rgn body => fun e arg =>
+      body.eval (fun _ v =>
+        match v with
+        | Context.Var.first => arg
+        | Context.Var.next v' => e v')
+  | _, _, .rgn0 => fun _ => id
+  | _, _, .rgnvar v => fun e => e v
+  | _, _, .var v => fun e => e v
 
 -- We can recover the case with the TypeSemantics as an instance
 def TypeSemantics : Type 1 :=
@@ -186,17 +189,6 @@ instance : Goedel (NatBaseType TS) where toType :=
 
 variable {TS : TypeSemantics}
 abbrev NatUserType := UserType (NatBaseType TS)
-abbrev NatTypeData := TypeData (NatBaseType TS)
-
-@[simp]
-def NatTypeData.toType (TS : TypeSemantics) : @NatTypeData TS → Type
-  | TypeData.some (.ofNat k) => TS k
-  | TypeData.unit => Unit
-  | TypeData.pair t₁ t₂ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂)
-  | TypeData.triple t₁ t₂ t₃ => (NatTypeData.toType TS t₁) × (NatTypeData.toType TS t₂) × (NatTypeData.toType TS t₃)
-  | TypeData.any => Σ (k : NatUserType), @UserType.toType (@NatBaseType TS) instGoedelNatBaseType k
-  | TypeData.unused => Unit
-  | TypeData.region t₁ t₂ => (NatTypeData.toType TS t₁) → (NatTypeData.toType TS t₂)
 
 end SSA
 
