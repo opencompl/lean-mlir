@@ -74,6 +74,7 @@ def op.eval (o : op) (v : val) (_rgn : val → val) : val :=
  | .sub w => match v with | .pair x y => val.sub w x y | _ => default
  | .xor w => match v with | .pair x y => val.xor w x y | _ => default
 
+/-
 @[simp]
 instance S : UserSemantics op val where
   eval := op.eval
@@ -137,3 +138,5 @@ def thm1  :
 --     %v1 = op:add
 --   ]
 end Example
+
+-/

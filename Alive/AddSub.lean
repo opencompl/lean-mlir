@@ -3,7 +3,7 @@ import SSA.Framework
 import Alive.Template
 
 
-
+/-
 -- Name:AddSub:1040
 -- precondition: Pre: C2 == ~C1
 /-
@@ -687,3 +687,4 @@ def thm47_tree : Tree.eval (Op := op) (Val := val)  (
   let vs := (Tree.op (.sub w) ((Tree.pair (vZ) (vY))))
   (Tree.op (.add w) ((Tree.pair (vX) (vs)))))
   := by simp[Tree.eval]; try sorry
+-/
