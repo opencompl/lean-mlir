@@ -1,13 +1,18 @@
 import SSA.WellTypedFramework
 import SSA.Util
+import Aesop
 
 namespace InstCombine
 
 abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
 
+instance {n : Nat} [inst : NeZero n] : OfNat Width n where
+  ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
 
 inductive BaseType
   | bitvec (w : Width) : BaseType
+  | poison : BaseType
+  | ub : BaseType
   deriving DecidableEq
 
 instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
@@ -71,7 +76,7 @@ def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
       else
         0
 
-def BitVector.asInt {w : Width} (x : BitVector w) : Int :=
+def BitVector.asSInt {w : Width} (x : BitVector w) : Int :=
   x.twosCompliment
 
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
@@ -104,8 +109,25 @@ def BitVector.unsigned {w : Width} (x : BitVector w) : Fin (2^w) :=
 instance : Goedel BaseType where
 toType := fun
   | .bitvec w => BitVector w
+  | .poison => Unit
+  | .ub => Unit
 
 abbrev UserType := SSA.UserType BaseType
+
+
+
+inductive Comparison
+    | eq -- equal
+    | ne -- not equal
+    | ugt -- unsigned greater than
+    | uge --  unsigned greater or equal
+    | ult -- unsigned less than
+    | ule -- unsigned less or equal
+    | sgt -- signed greater than
+    | sge -- signed greater or equal
+    | slt -- signed less than
+    | sle -- signed less or equal
+  deriving Repr, DecidableEq
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive Op
@@ -115,19 +137,29 @@ inductive Op
 | shl (w : Width) : Op
 | lshr (w : Width) : Op
 | ashr (w : Width) : Op
+| select (w : Width) : Op
+| add (w : Width) : Op
+| mul (w : Width) : Op
+| sub (w : Width) : Op
+| sdiv (w : Width) : Op
+| icmp (c : Comparison) (w : Width) : Op
 | const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
 @[simp]
 def argUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
+| Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
+| Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp]
 def outUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
+| Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.select w =>
   .base (BaseType.bitvec w)
+| Op.icmp _ _ => .base (BaseType.bitvec 1)
 | Op.const c => .base (BaseType.bitvec c.width)
 
 @[simp]
@@ -171,6 +203,78 @@ def BitVector.shl {w : Width} (x y : BitVector w) : BitVector w := x.asUInt <<< 
 def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>> y.asUInt |>.toBitVector
 def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
+def BitVector.add {w : Width} (x y : BitVector w) : Option $ BitVector w :=
+  let res := x.asUInt.1 + y.asUInt.1
+  if h : res < 2^w then
+    some (⟨res, h⟩ : Fin (2^w)).toBitVector
+  else
+    none
+
+def BitVector.mul {w : Width} (x y : BitVector w) : Option $ BitVector w :=
+  let res := x.asUInt.1 * y.asUInt.1
+  if h : res < 2^w then
+    some (⟨res, h⟩ : Fin (2^w)).toBitVector
+  else
+    none
+
+/--
+The value produced is the integer difference of the two operands.
+If the difference has unsigned overflow, the result returned is the mathematical result modulo 2ⁿ, where n is the bit width of the result.
+Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
+-/
+def BitVector.sub {w : Width} (x y : BitVector w) : BitVector w := x.asUInt - y.asUInt |>.toBitVector
+
+/--
+The value produced is the unsigned integer quotient of the two operands.
+Note that unsigned integer division and signed integer division are distinct operations; for signed integer division, use ‘sdiv’.
+Division by zero is undefined behavior.
+-/
+def BitVector.udiv {w : Width} (x y : BitVector w) : Option $ BitVector w :=
+  if y.asUInt ≠ 0 then
+    some $ x.asUInt / y.asUInt |>.toBitVector
+  else
+    none
+
+
+/--
+The value produced is the signed integer quotient of the two operands rounded towards zero.
+Note that signed integer division and unsigned integer division are distinct operations; for unsigned integer division, use ‘udiv’.
+Division by zero is undefined behavior.
+Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
+-/
+def BitVector.sdiv {w : Width} (x y : BitVector w) : Option $ BitVector w := panic! -- TODO
+
+/--
+    eq: yields true if the operands are equal, false otherwise. No sign interpretation is necessary or performed.
+    ne: yields true if the operands are unequal, false otherwise. No sign interpretation is necessary or performed.
+    ugt: interprets the operands as unsigned values and yields true if op1 is greater than op2.
+    uge: interprets the operands as unsigned values and yields true if op1 is greater than or equal to op2.
+    ult: interprets the operands as unsigned values and yields true if op1 is less than op2.
+    ule: interprets the operands as unsigned values and yields true if op1 is less than or equal to op2.
+    sgt: interprets the operands as signed values and yields true if op1 is greater than op2.
+    sge: interprets the operands as signed values and yields true if op1 is greater than or equal to op2.
+    slt: interprets the operands as signed values and yields true if op1 is less than op2.
+    sle: interprets the operands as signed values and yields true if op1 is less than or equal to op2.
+-/
+def BitVector.icmp {w : Width} (c : Comparison) (x y : BitVector w) : BitVector 1 :=
+  match c with
+  | .eq => if x.asUInt = y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .ne => if x.asUInt ≠ y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .ugt => if x.asUInt > y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .uge => if x.asUInt ≥ y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .ult => if x.asUInt < y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .ule => if x.asUInt ≤ y.asUInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .sgt => if x.asSInt > y.asSInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .sge => if x.asSInt ≥ y.asSInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .slt => if x.asSInt < y.asSInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+  | .sle => if x.asSInt ≤ y.asSInt then ⟨LengthIndexedList.fromList [true]⟩ else ⟨LengthIndexedList.fromList [false]⟩
+
+
+/--
+ If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
+-/
+def BitVector.select {w : Width} (c : BitVector 1) (x y : BitVector w) : BitVector w :=
+    if c.bits = LengthIndexedList.fromList [true] then x else y
 
 @[simp]
 def eval (o : Op)

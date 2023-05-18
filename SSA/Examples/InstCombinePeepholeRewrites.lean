@@ -78,3 +78,48 @@ theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
       simp only [dite_true]
       congr
       rw [InstCombineShift279_base]
+
+/-
+Name: 805
+%r = sdiv 1, %X
+  =>
+%inc = add %X, 1
+%c = icmp ult %inc, 3
+%r = select %c, %X, 0
+-/
+
+
+/-
+Name: SimplifyDivRemOfSelect
+; FIXME: applies to *div/*rem
+%sel = select %c, %Y, 0
+%r = udiv %X, %sel
+  =>
+%r = udiv %X, %Y
+
+
+; FIXME: cannot do the remaining part of SimplifyDivRemOfSelect
+-/
+
+
+/-
+Name: 290 & 292
+%Op0 = shl 1, %Y
+%r = mul %Op0, %Op1
+  =>
+%r = shl %Op1, %Y
+-/
+
+
+/-
+Name: Select:746
+%c = icmp slt %A, 0
+%minus = sub 0, %A
+%abs = select %c, %A, %minus
+%c2 = icmp sgt %abs, 0
+%minus2 = sub 0, %abs
+%abs2 = select %c2, %abs, %minus2
+  =>
+%c3 = icmp sgt %A, 0
+%abs2 = select %c3, %A, %minus
+-/
