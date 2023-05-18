@@ -2,35 +2,11 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
-   {"url": "https://github.com/xubaiw/CMark.lean",
-    "subDir?": null,
-    "rev": "2cc7cdeef67184f84db6731450e4c2b258c28fe8",
-    "name": "CMark",
-    "inputRev?": "main"}},
-  {"git":
-   {"url": "https://github.com/leanprover/lake",
-    "subDir?": null,
-    "rev": "257fc59a6464f5732a4f49e7dda0fc37475819fb",
-    "name": "lake",
-    "inputRev?": "master"}},
-  {"git":
-   {"url": "https://github.com/leanprover/doc-gen4",
-    "subDir?": null,
-    "rev": "e888e9cc383f838ef8f519e6941e32fe5c48df1b",
-    "name": "doc-gen4",
-    "inputRev?": "e888e9c"}},
-  {"git":
-   {"url": "https://github.com/mhuisi/lean4-cli",
-    "subDir?": null,
-    "rev": "5a858c32963b6b19be0d477a30a1f4b6c120be7e",
-    "name": "Cli",
-    "inputRev?": "nightly"}},
-  {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "eff4459bbf65f545383feac6b2a857a8b798d4dd",
+    "rev": "968d650c1517a7a6859d4cd126b61558cdf80b66",
     "name": "mathlib",
-    "inputRev?": "eff4459"}},
+    "inputRev?": "968d650"}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,
@@ -40,24 +16,12 @@
   {"git":
    {"url": "https://github.com/JLimperg/aesop",
     "subDir?": null,
-    "rev": "cdc00b640d0179910ebaa9c931e3b733a04b881c",
+    "rev": "409f3b050034337664d21e41fe1cc1bf7f5daec0",
     "name": "aesop",
     "inputRev?": "master"}},
   {"git":
-   {"url": "https://github.com/hargonix/LeanInk",
-    "subDir?": null,
-    "rev": "2447df5cc6e48eb965c3c3fba87e46d353b5e9f1",
-    "name": "leanInk",
-    "inputRev?": "doc-gen"}},
-  {"git":
-   {"url": "https://github.com/fgdorais/lean4-unicode-basic",
-    "subDir?": null,
-    "rev": "ce508dcd1fd49ba15675861aafd864572a0b8252",
-    "name": "UnicodeBasic",
-    "inputRev?": "main"}},
-  {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "6006307d2ceb8743fea7e00ba0036af8654d0347",
+    "rev": "3156cd5b375d1a932d590c918b7ad50e3be11947",
     "name": "std",
     "inputRev?": "main"}}]}
