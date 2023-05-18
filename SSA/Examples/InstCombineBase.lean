@@ -118,25 +118,16 @@ inductive Op
 | const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
--- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
 @[simp]
 def argUserType : Op → UserType
-| Op.and w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.or w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.xor w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.shl w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.lshr w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.ashr w => .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+  .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp]
 def outUserType : Op → UserType
-| Op.and w => .base (BaseType.bitvec w)
-| Op.or w => .base (BaseType.bitvec w)
-| Op.xor w => .base (BaseType.bitvec w)
-| Op.shl w => .base (BaseType.bitvec w)
-| Op.lshr w => .base (BaseType.bitvec w)
-| Op.ashr w => .base (BaseType.bitvec w)
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+  .base (BaseType.bitvec w)
 | Op.const c => .base (BaseType.bitvec c.width)
 
 @[simp]
