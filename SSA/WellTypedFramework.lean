@@ -88,77 +88,87 @@ class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] extends OperationTy
   eval : ∀ (o : Op), toType (argUserType o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outUserType o)
 
-inductive Context (α : Type) : Type
-  | empty : Context α
-  | cons : Var → α → Context α → Context α
+inductive Context (β : Type) : Type
+  | empty : Context β
+  | cons : Var → (UserType β) → Context β → Context β
 
-inductive Context.Var {α : Type} : Context α → α → Type
-  | first {Γ : Context α} (v : SSA.Var) (a : α) :
+inductive Context.Var {β : Type} : Context β → UserType β → Type
+  | first {Γ : Context β} {v : SSA.Var} {a : UserType β} :
       Context.Var (Context.cons v a Γ) a
-  | next {Γ : Context α} :
+  | next {Γ : Context β} :
       Context.Var Γ a → Context.Var (Context.cons v' a' Γ) a
 
 instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
 
-def EnvC [Goedel β] (c : Context (UserType β)) :=
+def EnvC [Goedel β] (c : Context β)  :=
   ∀ (a : UserType β), c.Var a → ⟦a⟧
 
-@[simp]
-def SSAIndex.teval (Op : Type) (β : Type) [Goedel β]
-    [OperationTypes Op β] : SSAIndex → Type
-| .STMT => Option (EnvU β)
-| .TERMINATOR => Option (UVal β)
-| .EXPR => Option (UVal β)
-| .REGION => ∀ (k₁ k₂ : UserType β), k₁.toType → Option k₂.toType
+inductive TSSAIndex (β : Type) : Type
+/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
+| STMT : Context β → TSSAIndex β
+/-- Ways of making an RHS -/
+| EXPR : UserType β → TSSAIndex β
+/-- The final instruction in a region. Must be a return -/
+| TERMINATOR : UserType β → TSSAIndex β
+/-- a lambda -/
+| REGION : UserType β → UserType β → TSSAIndex β
 
 @[simp]
-def SSA.teval {Op : Type} [TUS : TypedUserSemantics Op β]
-  (e : EnvU β) : SSA Op k → k.teval Op β
-| .assign lhs rhs rest => do
-  rest.teval (e.set lhs (← rhs.teval e))
-| .nop => return e
-| .unit => return ⟨.unit, ()⟩
-| .ret above v => do (← above.teval e) v
-| .pair fst snd => do
-  let fst ← e fst
-  let snd ← e snd
-  return ⟨.pair fst.fst snd.fst, (fst.2, snd.2)⟩
-| .triple fst snd third => do
-  let fst ← e fst
-  let snd ← e snd
-  let third ← e third
-  return ⟨.triple fst.fst snd.fst third.fst, (fst.2, snd.2, third.2)⟩
-| .op o arg r => do
-  let ⟨argK, argV⟩ ← e arg
-  let f := teval e r
-  if h : TUS.argUserType o = argK
-    then by
-          subst argK
-          exact do return ⟨TUS.outUserType o, ← TUS.eval o argV (f _ _)⟩
-    else none
-| .var v => e v
-| .rgnvar v => fun k₁ k₂ x => do
-  let ⟨k, f⟩ ← e v
-  match k, f with
-  | .region dom cod, f =>
-    if h : k₁ = dom ∧ k₂ = cod
-      then by
-            rcases h with ⟨rfl, rfl⟩
-            exact f x
-      else none
-  | _, _ => failure
-| .rgn0 => fun k₁ k₂ _ =>
-    if h : k₁ = .unit ∧ k₂ = .unit
-    then by rcases h with ⟨rfl, rfl⟩; exact return ()
-    else none
-| .rgn arg body => fun k₁ k₂ x => do
-  let fx ← teval (e.set arg ⟨k₁, x⟩) body
-  match fx with
-  | ⟨k₂', y⟩ =>
-    if h : k₂' = k₂
-    then by subst h; exact return y
-    else none
+def TSSAIndex.eval [Goedel β] : TSSAIndex β → Type
+  | .STMT Γ => EnvC Γ
+  | .EXPR T => toType T
+  | .TERMINATOR T => toType T
+  | .REGION dom cod => toType dom → toType cod
+
+open OperationTypes
+
+inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
+    (Γ : Context β) → TSSAIndex β → Type where
+  /-- lhs := rhs; rest of the program -/
+  | assign {T : UserType β} (lhs : Var) (rhs : TSSA Op Γ (.EXPR T))
+      (rest : TSSA Op (Γ.cons lhs T) (.STMT Γ')) : TSSA Op Γ (.STMT (Γ'.cons lhs T))
+  /-- no operation. -/
+  | nop : TSSA Op Γ (.STMT ∅)
+  /-- above; ret v -/
+  | ret (above : TSSA Op Γ (.STMT Γ')) (v : Γ'.Var T) : TSSA Op Γ  (.TERMINATOR T)
+  /-- (fst, snd) -/
+  | pair (fst : Γ.Var T₁) (snd : Γ.Var T₂) : TSSA Op Γ (.EXPR (.pair T₁ T₂))
+  /-- (fst, snd, third) -/
+  | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple k₁ k₂ k₃))
+  /-- op (arg) { rgn } rgn is an argument to the operation -/
+  | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Γ (.REGION (rgnDom o) (rgnCod o))) :
+      TSSA Op Γ (.EXPR (outUserType o))
+  /- fun arg => body -/
+  | rgn {arg : Var} {dom cod : UserType β} (body : TSSA Op (Γ.cons arg dom) (.TERMINATOR cod)) :
+      TSSA Op Γ (.REGION dom cod)
+  /- no function / non-existence of region. -/
+  | rgn0 : TSSA Op Γ (.REGION unit unit)
+  /- a region variable. --/
+  | rgnvar (v : Γ.Var (.region T₁ T₂)) : TSSA Op Γ (.REGION T₁ T₂)
+  /-- a variable. -/
+  | var (v : Γ.Var T) : TSSA Op Γ (.EXPR T)
+
+@[simp]
+def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
+  {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) →  i.eval
+| Γ, _, .assign lhs rhs rest => fun e T v =>
+    match v with
+    | Context.Var.first => rhs.eval e
+    | Context.Var.next _ => _
+      -- (fun _ v' =>
+      --   match v' with
+      --   | CVar.here => rhs.eval c₁ c₂
+      --   | CVar.there v'' => c₁ v'') c₂ v
+  | _, _, .nop => _
+  | _, _, .ret above v => _
+  | _, _, .pair fst snd => _
+  | _, _, .triple fst snd third => _
+  | _, _, TSSA.op o arg rg => _
+  | _, _, .rgn body => _
+  | _, _, .rgn0 => _
+  | _, _, .rgnvar v => _
+  | _, _, .var v => _
 -- @chris: TODO: implement `eval`:
 --   `SSA Op i → Environment (Option Context β) → Option i.eval` or some such.
 
