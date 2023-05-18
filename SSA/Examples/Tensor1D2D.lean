@@ -1,5 +1,10 @@
 import SSA.Framework
+import SSA.WellTypedFramework
+import SSA.Util
 
+/-
+simple examples of 1D and 2D tensor transformations, as per MLIR tensors.
+-/
 
 namespace Val
 -- pure simply typed lambda calculus
@@ -293,48 +298,6 @@ theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f 
 
 
 
-inductive Val where
-| int : Int → Val
-| unit : Val
-| nat : Nat → Val
-| bool : Bool → Val
-| tensor1d : Tensor1d Int → Val
-| tensor2d : Tensor2d Int → Val
-| pair : Val → Val → Val
-| triple : Val → Val → Val → Val
-| inl : Val → Val
-| inr : Val → Val
-deriving Inhabited
-
-instance : OfNat Val (n: Nat) where
-  ofNat := .nat n
-
--- instance : Neg Val where
-
-@[simp]
-instance : Coe Bool Val where
-  coe := Val.bool
-
-@[simp]
-instance : Coe Unit Val where
-  coe := fun () => Val.unit
-
-@[simp]
-def Val.int! : Val → Int
-| .int i => i
-| _ => default
-
-@[simp]
-def Val.nat! : Val → Nat
-| .nat i => i
-| _ => default
-
-@[simp]
-def Val.bool! : Val → Bool
-| .bool i => i
-| _ => default
-
-end Val
 
 
 
@@ -342,74 +305,157 @@ namespace ArithScfLinalg
 
 open Val
 
-inductive op
+inductive Op
 | add
-| const (v: Val)
+| const (v: Int)
 | sub
-| mul
-| run
-| for_
-| if_
-| fold1d -- fold
+-- | mul
+-- | run
+-- | for_
+-- | if_
+-- | fold1d -- fold
 | map1d
 | extract1d
-| fill
-| transpose
+-- | fill
+-- | transpose
+
+inductive BaseType
+| int : BaseType
+| nat : BaseType
+| tensor1d  : BaseType
+| tensor2d : BaseType
+deriving DecidableEq, Inhabited
+
+instance : Goedel BaseType where 
+  toType
+  | .int => Int
+  | .nat => Nat
+  | .tensor1d => Tensor1d Int 
+  | .tensor2d => Tensor2d Int 
 
 
+abbrev UserType := SSA.UserType BaseType
 
-instance OP_SEMANTICS : UserSemantics op Val where
-  eval
-  | .const v, _, _ => v
-  | .add, .pair (.int x) (.int y), _ => .int (x + y)
-  | .sub, .pair (.int x) (.int y), _ => .int (x - y)
-  | .run, v, r => r v
-  | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
-  | .for_, (.pair (.nat n) (.int seed)), r =>
-      .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
-  | .map1d, (.tensor1d t), r => .tensor1d <| t.map fun v => (r (.int v)).int!
-  | .extract1d, (.triple (.tensor1d t) (.nat l) (.nat len)), _ =>
-      .tensor1d <| t.extract l len
-  | _, _, _ => default
-  valPair := Val.pair
-  valTriple := Val.triple
+-- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
+@[simp]
+def argUserType : Op → UserType
+| Op.add => .pair (.base BaseType.int) (.base BaseType.int)
+| Op.sub => .pair (.base BaseType.int) (.base BaseType.int)
+| Op.map1d => .base BaseType.tensor1d
+| Op.extract1d => .triple (.base BaseType.tensor1d) (.base BaseType.nat) (.base BaseType.nat)
+| Op.const _ => .unit 
+
+@[simp]
+def outUserType : Op → UserType
+| Op.add => .base (BaseType.int)
+| Op.sub => .base (BaseType.int)
+| Op.const _ => .base (BaseType.int)
+| Op.map1d =>  .base BaseType.tensor1d
+| Op.extract1d =>  .base BaseType.tensor1d
+
+@[simp]
+def rgnDom : Op → UserType
+| Op.add => .unit
+| Op.sub => .unit
+| Op.const _ => .unit
+| Op.map1d => .base BaseType.int
+| Op.extract1d => .unit
+
+@[simp]
+def rgnCod : Op → UserType
+| Op.add => .unit
+| Op.sub => .unit
+| Op.const _ => .unit
+| Op.map1d => .base BaseType.int
+| Op.extract1d => .unit
+
+def eval (o : Op)
+  (arg: Goedel.toType (argUserType o))
+  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
+  Option (Goedel.toType (outUserType o)) := .some <|
+  match o with 
+  | .const v => v
+  | .add =>
+    let (x, y) := arg;
+    let x : Int := x;
+    let y : Int := y;
+    x + y
+  | .sub => 
+    let (x, y) := arg;
+    let x : Int := x;
+    let y : Int := y;
+    x - y
+  -- | .run, v, r => r v
+  -- | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
+  -- | .for_, (.pair (.nat n) (.int seed)), r =>
+      -- .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
+  | .map1d => 
+    let t : Tensor1d Int := arg;
+    -- @sid: @chris, the `option` is bad :( I don't want the option. 
+    let r : Int → Option Int := _rgn; 
+    let t' := t.map fun v => (r v).get!
+    t'
+  | .extract1d => 
+    let (t, l, len) := arg; 
+    let t : Tensor1d Int := t;
+    let l : Nat := l;
+    let len : Nat := len;
+    t.extract l len
+
+
+instance TUS : SSA.TypedUserSemantics Op BaseType where
+  argUserType := argUserType
+  rgnDom := rgnDom
+  rgnCod := rgnCod
+  outUserType := outUserType
+  eval := eval
 
 syntax "map1d" : dsl_op
 syntax "extract1d" : dsl_op
 syntax "const" "(" term ")" : dsl_op
 
 macro_rules
-| `([dsl_op| map1d]) => `(op.map1d)
-| `([dsl_op| extract1d]) => `(op.extract1d)
-| `([dsl_op| const ($x)]) => `(op.const $x) -- note that we use the syntax extension to enrich the base DSL
+| `([dsl_op| map1d]) => `(Op.map1d)
+| `([dsl_op| extract1d]) => `(Op.extract1d)
+| `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
 
-theorem extract_map (e: Env Val) (v: Nat) (re: Env (Val → Val)):
-  SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 =>
+-- Why do these not get set?
+register_simp_attr SSA.teval
+register_simp_attr EnvU.set
+-- register_simp_attr Op.const
+register_simp_attr argUserType
+register_simp_attr eval
+register_simp_attr outUserType
+-- register_simp_attr BitVector.width
+register_simp_attr uncurry
+
+-- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
+
+
+open SSA in 
+theorem extract_map : 
+  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
+  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
     %v1 := op:map1d %v0 { %r0 };
-    %v2 := op:const(Val.nat v) %v42;
-    %v3 := op:const(Val.nat 43) %v42;
+    %v2 := op:const(v) %v42;
+    %v3 := op:const(43) %v42;
     %v4 := triple:%v1 %v2 %v3;
     %v5 := op:extract1d %v4
     dsl_ret %v5
   ] =
-  SSA.eval (Op := op) e re [dsl_region| dsl_rgn %v0 =>
-    %v1 := op:const(Val.nat v) %v42;
-    %v2 := op:const(Val.nat 43) %v42;
+  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
+    %v1 := op:const(v) %v42;
+    %v2 := op:const(43) %v42;
     %v3 := triple: %v0 %v1 %v2;
     %v4 := op:extract1d %v3;
     %v5 := op:map1d %v4 { %r0 }
     dsl_ret %v5
   ] := by {
-    simp -- simplify away syntax
-    simp[SSA.eval] -- simplify away evaluation.
-    funext v0
-    simp[Env.set]
-    simp[OP_SEMANTICS]
-    -- @tobias: pay attention here, where we are forced to do
-    -- case analysis because we don't have good typing information.
-    -- need to know that x0 has the right 'type' (tensor1d).
-    cases v0 <;> simp;
-    simp[Tensor1d.extract_map]
+    intros Γ e;
+    funext v0;
+    sorry
+    -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
   }
 
 end ArithScfLinalg
