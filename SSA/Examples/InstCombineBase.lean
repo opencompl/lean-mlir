@@ -3,48 +3,45 @@ import SSA.Util
 
 namespace InstCombine
 
-abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
-
-
 inductive BaseType
-  | bitvec (w : Width) : BaseType
+  | bitvec (w : ℕ+) : BaseType
   deriving DecidableEq
 
-instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
+instance {w : ℕ+} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 
-structure BitVector (width : Width) where
+structure BitVector (width : ℕ+) where
   (bits : LengthIndexedList Bool width)
   deriving Repr, DecidableEq
 
 @[simp]
-def BitVector.width {width : Width} (_ : BitVector width) : Width := width
+def BitVector.width {width : ℕ+} (_ : BitVector width) : ℕ+ := width
 
-instance (width : Width) : Inhabited (BitVector width) :=
+instance (width : ℕ+) : Inhabited (BitVector width) :=
   ⟨⟨by convert LengthIndexedList.fromList (List.replicate width true); simp⟩⟩
 
-def BitVectorFun {width : Width} := Fin width.val → Bool
+def BitVectorFun {width : ℕ+} := Fin width.val → Bool
 
-def BitVectorFun.fromList {width : Width} (l : LengthIndexedList Bool width.val) : @BitVectorFun width :=
+def BitVectorFun.fromList {width : ℕ+} (l : LengthIndexedList Bool width.val) : @BitVectorFun width :=
   fun i => l[i]
 
-def BitVectorFun.fromBitVector {width : Width} (bv : BitVector width) : @BitVectorFun width :=
+def BitVectorFun.fromBitVector {width : ℕ+} (bv : BitVector width) : @BitVectorFun width :=
   BitVectorFun.fromList bv.bits
 
-def BitVectorFun.toList {width : Width} (f : @BitVectorFun width) : LengthIndexedList Bool width.val :=
+def BitVectorFun.toList {width : ℕ+} (f : @BitVectorFun width) : LengthIndexedList Bool width.val :=
   let indices := LengthIndexedList.finRange width.val
   indices.map f
 
-def BitVectorFun.toBitVector {width : Width} (f : @BitVectorFun width) : BitVector width := ⟨BitVectorFun.toList f⟩
+def BitVectorFun.toBitVector {width : ℕ+} (f : @BitVectorFun width) : BitVector width := ⟨BitVectorFun.toList f⟩
 
-instance {width : Width} : Coe (@BitVectorFun width) (BitVector width) := ⟨BitVectorFun.toBitVector⟩
-instance {width : Width} : Coe (BitVector width) (@BitVectorFun width) := ⟨BitVectorFun.fromBitVector⟩
+instance {width : ℕ+} : Coe (@BitVectorFun width) (BitVector width) := ⟨BitVectorFun.toBitVector⟩
+instance {width : ℕ+} : Coe (BitVector width) (@BitVectorFun width) := ⟨BitVectorFun.fromBitVector⟩
 
-theorem BitVectorFun.toListFromList {width : Width} (l : LengthIndexedList Bool width.val) :
+theorem BitVectorFun.toListFromList {width : ℕ+} (l : LengthIndexedList Bool width.val) :
   BitVectorFun.toList (BitVectorFun.fromList l) = l := by
     simp [BitVectorFun.toList, BitVectorFun.fromList]
     sorry
 
-theorem BitVectorFun.toBitVectorFromBitVector {width : Width} (l : BitVector width) :
+theorem BitVectorFun.toBitVectorFromBitVector {width : ℕ+} (l : BitVector width) :
   BitVectorFun.toBitVector (BitVectorFun.fromBitVector l) = l := by
   simp [BitVectorFun.toBitVector, BitVectorFun.fromBitVector]
   try apply BitVectorFun.toListFromList
@@ -52,16 +49,16 @@ theorem BitVectorFun.toBitVectorFromBitVector {width : Width} (l : BitVector wid
 
 def nextSignificantBit (val : Nat) (b : Bool) := 2 * val + if (b = true) then 1 else 0
 
-def RawBitVectorVal {w : Width} (x : LengthIndexedList Bool w) : Nat :=
+def RawBitVectorVal {w : ℕ+} (x : LengthIndexedList Bool w) : Nat :=
   x.foldl nextSignificantBit 0
 
-def BitVector.asRawUInt {w : Width} (x : BitVector w) : Nat :=
+def BitVector.asRawUInt {w : ℕ+} (x : BitVector w) : Nat :=
   RawBitVectorVal x.bits
 
-def BitVector.asUInt {w : Width} (x : BitVector w) : (Fin $ 2^w) :=
+def BitVector.asUInt {w : ℕ+} (x : BitVector w) : (Fin $ 2^w) :=
   ⟨x.asRawUInt, sorry⟩
 
-def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
+def BitVector.twosCompliment {w : ℕ+} (x : BitVector w) : Int :=
   match w, x.bits with
     | ⟨.succ n, _⟩, .cons s rest  =>
       let sign := if s = true then -1 else 1
@@ -71,7 +68,7 @@ def BitVector.twosCompliment {w : Width} (x : BitVector w) : Int :=
       else
         0
 
-def BitVector.asInt {w : Width} (x : BitVector w) : Int :=
+def BitVector.asInt {w : ℕ+} (x : BitVector w) : Int :=
   x.twosCompliment
 
 theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * val + 1 := by
@@ -80,25 +77,25 @@ theorem nextSignificantBitTrue {val : Nat} : nextSignificantBit val true = 2 * v
 theorem nextSignificantBitFalse {val : Nat} : nextSignificantBit val false = 2 * val := by
   simp [nextSignificantBit]
 
-theorem RawBitVectorFalse {w : Width} {x : LengthIndexedList Bool w} :
+theorem RawBitVectorFalse {w : ℕ+} {x : LengthIndexedList Bool w} :
   (LengthIndexedList.cons false x).foldl nextSignificantBit 0 = x.foldl nextSignificantBit 0 := by simp[LengthIndexedList.foldl, nextSignificantBitFalse]
 
 theorem foldNextSignificantBit {w : Nat} {x : LengthIndexedList Bool w} {v : Nat} :
   x.foldl nextSignificantBit n = 2^w + x.foldl nextSignificantBit 0 := sorry
 
 
--- theorem RawBitVectorValGrowth {w : Width} (x : LengthIndexedList Bool (w - 1)) : ∀ b : Bool, RawBitVectorVal (x.cons b) ≤ 2 * RawBitVectorVal x + 1 := by
+-- theorem RawBitVectorValGrowth {w : ℕ+} (x : LengthIndexedList Bool (w - 1)) : ∀ b : Bool, RawBitVectorVal (x.cons b) ≤ 2 * RawBitVectorVal x + 1 := by
 --   intro b; cases b with
 --    | false => simp [RawBitVectorVal]; rw [Nat.two_mul]
 --               apply Nat.le_add_left
 --    | true => simp [RawBitVectorVal]; unfold LengthIndexedList.foldl <;> cases w
 
 
-theorem BitVector.valRawLT {w : Width} (x : LengthIndexedList Bool w) : RawBitVectorVal x < 2^w := by
+theorem BitVector.valRawLT {w : ℕ+} (x : LengthIndexedList Bool w) : RawBitVectorVal x < 2^w := by
   simp [RawBitVectorVal]
   sorry
 
-def BitVector.unsigned {w : Width} (x : BitVector w) : Fin (2^w) :=
+def BitVector.unsigned {w : ℕ+} (x : BitVector w) : Fin (2^w) :=
   ⟨x.asRawUInt, BitVector.valRawLT x.bits⟩
 
 instance : Goedel BaseType where
@@ -109,12 +106,12 @@ abbrev UserType := SSA.UserType BaseType
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive Op
-| and (w : Width) : Op
-| or (w : Width) : Op
-| xor (w : Width) : Op
-| shl (w : Width) : Op
-| lshr (w : Width) : Op
-| ashr (w : Width) : Op
+| and (w : ℕ+) : Op
+| or (w : ℕ+) : Op
+| xor (w : ℕ+) : Op
+| shl (w : ℕ+) : Op
+| lshr (w : ℕ+) : Op
+| ashr (w : ℕ+) : Op
 | const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
@@ -143,40 +140,40 @@ induction m with
   rw [Nat.pow_succ]
   exact Nat.mul_pos (ih h) h
 
-theorem Width.zero_lt_pow_2 {w : Width} : 0 < 2^w.val := by
+theorem _root_.PNat.zero_lt_pow_2 {w : ℕ+} : 0 < 2^w.val := by
 have h : 0 < 2 := Nat.zero_lt_succ 1
 exact @Nat.zero_lt_pow w.val 2 h
 
-def Width.nat_pow (n : Nat) (w : Width) : Nat :=
+def _root_.PNat.nat_pow (n : Nat) (w : ℕ+) : Nat :=
 n ^ w
 
 theorem Nat.gt_of_lt {a b : Nat} : a < b → b > a := by simp
 
-def _root_.Nat.toFinWidth (n : Nat) (w : Width) : Fin (2^w.val) :=
+def _root_.Nat.toFinPNat (n : Nat) (w : ℕ+) : Fin (2^w.val) :=
  { val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
 
-def _root_.Fin.toBitVectorFun {w : Width} (x : Fin (2^w.val)) : @BitVectorFun w :=
+def _root_.Fin.toBitVectorFun {w : ℕ+} (x : Fin (2^w.val)) : @BitVectorFun w :=
   fun i => x.val.testBit i.val
 
-def _root_.Fin.toBitVector {w : Width} (x : Fin (2^w.val)) : BitVector w :=
+def _root_.Fin.toBitVector {w : ℕ+} (x : Fin (2^w.val)) : BitVector w :=
   x.toBitVectorFun.toBitVector
 
-def _root_.Int.toBitVector {w : Width} (x : Int) : BitVector w :=
-   Nat.toFinWidth x.natAbs w |>.toBitVector
+def _root_.Int.toBitVector {w : ℕ+} (x : Int) : BitVector w :=
+   Nat.toFinPNat x.natAbs w |>.toBitVector
 
-def BitVector.and {w : Width} (x y : BitVector w) : BitVector w := x.asUInt &&& y.asUInt |>.toBitVector
-def BitVector.or {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ||| y.asUInt |>.toBitVector
-def BitVector.xor {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ^^^ y.asUInt |>.toBitVector
-def BitVector.shl {w : Width} (x y : BitVector w) : BitVector w := x.asUInt <<< y.asUInt |>.toBitVector
-def BitVector.lshr {w : Width} (x y : BitVector w) : BitVector w := x.asUInt >>> y.asUInt |>.toBitVector
-def BitVector.ashr {w : Width} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
+def BitVector.and {w : ℕ+} (x y : BitVector w) : BitVector w := x.asUInt &&& y.asUInt |>.toBitVector
+def BitVector.or {w : ℕ+} (x y : BitVector w) : BitVector w := x.asUInt ||| y.asUInt |>.toBitVector
+def BitVector.xor {w : ℕ+} (x y : BitVector w) : BitVector w := x.asUInt ^^^ y.asUInt |>.toBitVector
+def BitVector.shl {w : ℕ+} (x y : BitVector w) : BitVector w := x.asUInt <<< y.asUInt |>.toBitVector
+def BitVector.lshr {w : ℕ+} (x y : BitVector w) : BitVector w := x.asUInt >>> y.asUInt |>.toBitVector
+def BitVector.ashr {w : ℕ+} (x y : BitVector w) : BitVector w := default -- x.twosCompliment >>> y.twosCompliment |>.toBitVector
 
 
 @[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
-  Option (Goedel.toType (outUserType o)) := .some <|
+  (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
+  Goedel.toType (outUserType o) := 
     match o with
     | Op.and _ => uncurry BitVector.and arg
     | Op.or _ => uncurry BitVector.or arg
