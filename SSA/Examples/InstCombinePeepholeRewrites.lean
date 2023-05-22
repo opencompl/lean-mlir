@@ -22,14 +22,14 @@ example : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bi
   TSSA.ret 
     (TSSA.assign 'a'.toNat (TSSA.pair Context.Var.first Context.Var.first) <|
       TSSA.assign 'y'.toNat 
-      /- The error here is an application Type mismatch for
-        `TSSA.op ?m.1523 Context.Var.first` . I don't understand why it says
-        `?m.1523` when I have given that argument explicitly. If it
-        uses what I gave it, then the type should be correct.  -/
-      (TSSA.op (.and 32) Context.Var.first _) <|
-     TSSA.assign 'z'.toNat _ <|
+      (TSSA.op (Op.and 32) Context.Var.first TSSA.rgn0) <|
+     TSSA.assign 'b'.toNat (TSSA.pair Context.Var.first 
+       (Context.Var.next <| Context.Var.next <| Context.Var.first)) <|
+     TSSA.assign 'z'.toNat 
+       (TSSA.op (Op.or 32) Context.Var.first TSSA.rgn0) <|
      TSSA.nop) 
-    _
+    (Context.Var.next <| Context.Var.next <| Context.Var.next <| 
+      Context.Var.first)
 
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
