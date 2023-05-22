@@ -78,26 +78,26 @@ end UserType
     * `eval` gives the actual evaluation semantics of the operation, by defining a function for
       every operation `o : Op` of type `toType (argUserType o) → (toType (rgnDom o) → toType (rgnCod o)) → toType (outUserType o)`.
 -/
-class OperationTypes (Op : Type) (β : Type) where
+class OperationTypes (Op : Type) (β : outParam Type) where
   argUserType : Op → UserType β
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
   outUserType : Op → UserType β
 
-class TypedUserSemantics (Op : Type) (β : Type) [Goedel β] extends OperationTypes Op β where
+class TypedUserSemantics (Op : Type) (β : outParam Type) [Goedel β] extends OperationTypes Op β where
   eval : ∀ (o : Op), toType (argUserType o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outUserType o)
 
 inductive Context (β : Type) : Type
   | empty : Context β
-  | cons : Var → (UserType β) → Context β → Context β
+  | snoc : Context β → Var → (UserType β) → Context β
 
 inductive Context.Var {β : Type} : Context β → UserType β → Type
-  | first {Γ : Context β} {v : SSA.Var} {a : UserType β} :
-      Context.Var (Context.cons v a Γ) a
-  | next {Γ : Context β} :
-      Context.Var Γ a → Context.Var (Context.cons v' a' Γ) a
-
+  | prev {Γ : Context β} :
+      Context.Var Γ a → Context.Var (Context.snoc Γ v' a') a
+  | last {Γ : Context β} {v : SSA.Var} {a : UserType β} :
+      Context.Var (Context.snoc Γ v a) a
+  
 instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
 
@@ -126,10 +126,11 @@ open OperationTypes UserType
 inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
     (Γ : Context β) → TSSAIndex β → Type where
   /-- lhs := rhs; rest of the program -/
-  | assign {T : UserType β} (lhs : Var) (rhs : TSSA Op Γ (.EXPR T))
-      (rest : TSSA Op (Γ.cons lhs T) (.STMT Γ')) : TSSA Op Γ (.STMT (Γ'.cons lhs T))
+  | assign {T : UserType β} 
+      (rest : TSSA Op Γ (.STMT Γ')) 
+      (lhs : Var) (rhs : TSSA Op Γ' (.EXPR T)) : TSSA Op Γ (.STMT (Γ'.snoc lhs T))
   /-- no operation. -/
-  | nop : TSSA Op Γ (.STMT ∅)
+  | nop : TSSA Op Γ (.STMT Γ)
   /-- above; ret v -/
   | ret (above : TSSA Op Γ (.STMT Γ')) (v : Γ'.Var T) : TSSA Op Γ  (.TERMINATOR T)
   /-- (fst, snd) -/
@@ -140,7 +141,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Γ (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
-  | rgn {arg : Var} {dom cod : UserType β} (body : TSSA Op (Γ.cons arg dom) (.TERMINATOR cod)) :
+  | rgn {arg : Var} {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.TERMINATOR cod)) :
       TSSA Op Γ (.REGION dom cod)
   /- no function / non-existence of region. -/
   | rgn0 : TSSA Op Γ (.REGION unit unit)
@@ -152,15 +153,11 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
 @[simp]
 def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
-| Γ, _, .assign lhs rhs rest => fun e T v =>
+| Γ, _, .assign rest lhs rhs => fun e T v =>
     match v with
-    | Context.Var.first => rhs.eval e
-    | Context.Var.next v => rest.eval
-      (fun _ v' =>
-        match v' with
-        | Context.Var.first => rhs.eval e
-        | Context.Var.next v'' => e v'') v
-  | _, _, .nop => fun _ _ v => by cases v
+    | Context.Var.prev v => rest.eval e v
+    | Context.Var.last => rhs.eval (rest.eval e)
+  | _, _, .nop => fun e => e 
   | _, _, .ret above v => fun e => above.eval e v
   | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
   | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
@@ -169,8 +166,8 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .rgn body => fun e arg =>
       body.eval (fun _ v =>
         match v with
-        | Context.Var.first => arg
-        | Context.Var.next v' => e v')
+        | Context.Var.prev v' => e v'
+        | Context.Var.last => arg)
   | _, _, .rgn0 => fun _ => id
   | _, _, .rgnvar v => fun e => e v
   | _, _, .var v => fun e => e v

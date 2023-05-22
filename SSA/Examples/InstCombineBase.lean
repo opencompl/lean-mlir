@@ -115,13 +115,13 @@ inductive Op
 | const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
-@[simp]
+@[simp, reducible]
 def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
-@[simp]
+@[simp, reducible]
 def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
   .base (BaseType.bitvec w)
