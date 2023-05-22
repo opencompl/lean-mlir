@@ -3,7 +3,7 @@ import SSA.Examples.InstCombineBase
 
 open SSA InstCombine
 
-theorem InstCombineShift279_base : ∀ w : Width, ∀ x C : BitVector w,
+theorem InstCombineShift279_base : ∀ w : ℕ+, ∀ x C : BitVector w,
   BitVector.shl (BitVector.lshr x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
   sorry
 
@@ -17,9 +17,23 @@ register_simp_attr outUserType
 register_simp_attr BitVector.width
 register_simp_attr uncurry
 
+example : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) := 
+  TSSA.rgn (arg := 'x'.toNat) <|
+  TSSA.ret 
+    (TSSA.assign 'a'.toNat (TSSA.pair Context.Var.first Context.Var.first) <|
+      TSSA.assign 'y'.toNat 
+      /- The error here is an application Type mismatch for
+        `TSSA.op ?m.1523 Context.Var.first` . I don't understand why it says
+        `?m.1523` when I have given that argument explicitly. If it
+        uses what I gave it, then the type should be correct.  -/
+      (TSSA.op (.and 32) Context.Var.first _) <|
+     TSSA.assign 'z'.toNat _ <|
+     TSSA.nop) 
+    _
+
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
-theorem InstCombineShift279 : ∀ w : Width, ∀ C : BitVector w,
+theorem InstCombineShift279 : ∀ w : ℕ+, ∀ C : BitVector w,
   let minus_one : BitVector w := (-1).toBitVector
   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
   ∀ (e : EnvC Γ),  -- for metavariable in typeclass
