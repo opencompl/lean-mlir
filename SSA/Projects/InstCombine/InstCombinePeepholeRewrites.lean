@@ -1,6 +1,5 @@
-import SSA
-import SSA.WellTypedFramework
-import InstCombine.InstCombineBase
+import SSA.Core.WellTypedFramework
+import SSA.Projects.InstCombine.InstCombineBase
 
 open SSA InstCombine
 

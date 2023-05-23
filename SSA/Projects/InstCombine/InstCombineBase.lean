@@ -1,5 +1,5 @@
-import SSA.WellTypedFramework
-import SSA.Util
+import SSA.Core.WellTypedFramework
+import SSA.Core.Util
 
 namespace InstCombine
 
