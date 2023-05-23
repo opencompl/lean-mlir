@@ -8,14 +8,14 @@ theorem InstCombineShift279_base : ∀ w : ℕ+, ∀ x C : BitVector w,
   sorry
 
 -- Why do these not get set?
-register_simp_attr SSA.teval
-register_simp_attr EnvU.set
-register_simp_attr Op.const
-register_simp_attr argUserType
-register_simp_attr eval
-register_simp_attr outUserType
-register_simp_attr BitVector.width
-register_simp_attr uncurry
+-- Activate to crash @commit a2df44f6 | register_simp_attr SSA.teval
+-- Activate to crash @commit a2df44f6 | register_simp_attr EnvU.set
+-- Activate to crash @commit a2df44f6 | register_simp_attr Op.const
+-- Activate to crash @commit a2df44f6 | register_simp_attr argUserType
+-- Activate to crash @commit a2df44f6 | register_simp_attr eval
+-- Activate to crash @commit a2df44f6 | register_simp_attr outUserType
+-- Activate to crash @commit a2df44f6 | register_simp_attr BitVector.width
+-- Activate to crash @commit a2df44f6 | register_simp_attr uncurry
 
 def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
   TSSA.rgn (arg := 'x'.toNat) <|
