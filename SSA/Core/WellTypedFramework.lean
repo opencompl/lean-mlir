@@ -129,6 +129,8 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   | assign {T : UserType β}
       (rest : TSSA Op Γ (.STMT Γ'))
       (lhs : Var) (rhs : TSSA Op Γ' (.EXPR T)) : TSSA Op Γ (.STMT (Γ'.snoc lhs T))
+  /-- build a unit value -/
+  | unit : TSSA Op Γ (.EXPR .unit)
   /-- no operation. -/
   | nop : TSSA Op Γ (.STMT Γ)
   /-- above; ret v -/
@@ -141,7 +143,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Γ (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
-  | rgn {arg : Var} {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.TERMINATOR cod)) :
+  | rgn (arg : Var) {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.TERMINATOR cod)) :
       TSSA Op Γ (.REGION dom cod)
   /- no function / non-existence of region. -/
   | rgn0 : TSSA Op Γ (.REGION unit unit)
@@ -163,7 +165,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e =>
     TypedUserSemantics.eval o (e arg) (rg.eval e)
-  | _, _, .rgn body => fun e arg =>
+  | _, _, .rgn _arg body => fun e arg =>
       body.eval (fun _ v =>
         match v with
         | Context.Var.prev v' => e v'
@@ -171,6 +173,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .rgn0 => fun _ => id
   | _, _, .rgnvar v => fun e => e v
   | _, _, .var v => fun e => e v
+  | _, _, .unit => fun _ => ()
 
 -- We can recover the case with the TypeSemantics as an instance
 def TypeSemantics : Type 1 :=
@@ -193,13 +196,14 @@ end SSA
 namespace EDSL
 open Lean HashMap Macro
 
+
 declare_syntax_cat dsl_region
 declare_syntax_cat dsl_bb
 declare_syntax_cat dsl_op
 declare_syntax_cat dsl_expr
 declare_syntax_cat dsl_stmt
 declare_syntax_cat dsl_assign
-declare_syntax_cat dsl_terminator
+-- declare_syntax_cat dsl_terminator
 declare_syntax_cat dsl_var
 declare_syntax_cat dsl_val
 declare_syntax_cat dsl_rgnvar
@@ -219,20 +223,23 @@ scoped syntax dsl_var : dsl_expr
 scoped syntax dsl_var " := " dsl_expr : dsl_assign
 scoped syntax sepBy(dsl_assign, ";") : dsl_stmt
 -- | this sucks, it becomes super global.
-scoped syntax "dsl_ret " dsl_var : dsl_terminator
-scoped syntax "dsl_rgn" dsl_var "=>" dsl_bb : dsl_region
-scoped syntax "dsl_bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
+-- scoped syntax "dsl_ret " dsl_var : dsl_terminator
+scoped syntax "rgn{" dsl_var "=>" dsl_bb "}" : dsl_region
+scoped syntax "^bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
 
 open Lean Elab Macro in
 
 structure SSAElabContext where
   vars : Array Nat -- list of variables, in order of occurrence
 
-def SSAElabContext.addVar (ctx : SSAElabContext) : SSAElabContext :=
-  { ctx with vars := ctx.vars.push ctx.vars.size }
+abbrev SSAElabM (α : Type) := StateT SSAElabContext MacroM α
 
-def SSAElabContext.getIndex? (ctx : SSAElabContext) (var : Nat) : Option Nat :=
-  ctx.vars.findIdx? (fun v => v == var)
+def SSAElabContext.addVar (var : Nat): SSAElabM Unit := do 
+  dbg_trace s!"added var {var}"
+  modify fun ctx => { ctx with vars := ctx.vars.push var }
+
+def SSAElabContext.getIndex? (var : Nat) : SSAElabM (Option Nat) := do
+  return (← get).vars.findIdx? (fun v => v == var)
 
 /-- extract out the index (nat) of the dsl_var -/
 def dslVarToIx : TSyntax `dsl_var → Nat
@@ -241,70 +248,91 @@ def dslVarToIx : TSyntax `dsl_var → Nat
 
 /-- convert a de-bruijn into a intrinsically well typed context variable -/
 def idxToContextVar : Nat → MacroM (TSyntax `term)
-| 0 => `(Context.Var.last)
-| n+1 => do `(Context.Var.prev $(← idxToContextVar n))
+| 0 => `(SSA.Context.Var.last)
+| n+1 => do `(SSA.Context.Var.prev $(← idxToContextVar n))
 
-def elabStxVar (ctx : SSAElabContext): TSyntax `dsl_var → MacroM (TSyntax `term)
-| `(dsl_var| %v $var) =>
-  match ctx.getIndex? var.getNat with
+def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
+| `(dsl_var| %v $var) => do
+  match ← SSAElabContext.getIndex? var.getNat with
   | .some ix => idxToContextVar ix
   | .none => Macro.throwErrorAt var s!"variable '{var}' not in scope"
 | _ => unreachable!
 
+
 -- TODO: these are StateT over `SSAElabContext`.
 mutual
-partial def elabRgn (ctx : SSAElabContext) : TSyntax `dsl_region → MacroM (TSyntax `term)
-| `(dsl_region| dsl_rgn $v:dsl_var => $bb:dsl_bb) => do sorry
+partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
+| `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do 
+  -- let velab ← elabStxVar v
+  let velab := Lean.quote (dslVarToIx v) -- natural number.
+  SSAElabContext.addVar (dslVarToIx v) -- add variable.
+  let bb ← elabBB bb
+  `(SSA.TSSA.rgn $velab $bb)
 | _ => Macro.throwUnsupported
 
-partial def elabAssign (ctx : SSAElabContext) : TSyntax `dsl_assign → MacroM (TSyntax `term)
+partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 | `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
-  let v ← elabStxVar ctx v
-  let e ← elabStxExpr ctx e
-  `(fun rest => SSA.assign rest $v $e)
+  let e ← elabStxExpr e
+  SSAElabContext.addVar (dslVarToIx v) -- add variable.
+  let velab := Lean.quote (dslVarToIx v) -- natural number.
+  `(fun rest => SSA.TSSA.assign rest $velab $e)
 | _ => Macro.throwUnsupported
 
-partial def elabTerminator (ctx : SSAElabContext) : TSyntax `dsl_terminator → MacroM (TSyntax `term)
-| `(dsl_terminator| dsl_ret $v:dsl_var) => do
-  let v ← elabStxVar ctx v
-  `(fun rest => SSA.ret rest $v)
+-- partial def elabTerminator : TSyntax `dsl_terminator → SSAElabM (TSyntax `term)
+-- | `(dsl_terminator| dsl_ret $v:dsl_var) => do
+--   let v ← elabStxVar v
+--   `(fun rest => SSA.ret rest $v)
+-- | _ => Macro.throwUnsupported
+
+partial def elabStmt : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
+| `(dsl_stmt| $ss:dsl_assign;*) => do
+  let mut out ← `(id)
+  for s in ss.getElems do
+    let selab ← elabAssign s
+    out ← `($out ∘ $selab)
+  return out
 | _ => Macro.throwUnsupported
 
-partial def elabStmt (ctx : SSAElabContext) : TSyntax `dsl_stmt → MacroM (TSyntax `term)
-| `(dsl_stmt| $ss:dsl_stmt) => sorry
 
-partial def elabBB (ctx : SSAElabContext) : TSyntax `dsl_bb → MacroM (TSyntax `term)
-| `(dsl_bb| dsl_bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
-    let s : Lean.Syntax ← do
-          match s? with
-          | .none => `(fun x => x)
-          | .some s => `(elabStmt ctx s)
-    let retv ← elabStxVar ctx retv
-    `(SSA.ret ($s SSA.nop) $retv)
+partial def elabBB : TSyntax `dsl_bb → SSAElabM (TSyntax `term)
+| `(dsl_bb| ^bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
+    let selab : Lean.Syntax ←
+        match s? with
+        | .none => `(fun x => x)
+        | .some s => elabStmt s
+    let retv ← elabStxVar retv
+    -- `(SSA.TSSA.xx)
+    `(SSA.TSSA.ret ($selab SSA.TSSA.nop) $retv)
 | _ => Macro.throwUnsupported
 
-partial def elabStxExpr (ctx : SSAElabContext ) : TSyntax `dsl_expr → MacroM (TSyntax `term)
-| `(dsl_expr| unit:) => `(SSA.unit)
-| `(dsl_expr| pair: $a $b) => `(SSA.pair (← elabStxExpr ctx a) (← elabStxExpr ctx b))
-| `(dsl_expr| triple: $a $b $c) => `(SSA.triple (← elabStxExpr ctx a) (← elabStxExpr ctx b) (← elabStxExpr ctx c))
-| `(dsl_expr| $v:dsl_var) => elabStxVar ctx v
+partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
+| `(dsl_expr| unit:) => `(SSA.TSSA.unit)
+| `(dsl_expr| pair: $a $b) => `(SSA.TSSA.pair (← elabStxExpr ctx a) (← elabStxExpr ctx b))
+| `(dsl_expr| triple: $a $b $c) => `(SSA.TSSA.triple (← elabStxExpr ctx a) (← elabStxExpr ctx b) (← elabStxExpr ctx c))
+| `(dsl_expr| $v:dsl_var) => elabStxVar v
 | `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]? ) => do
-  let arg ← elabStxVar ctx arg
+  let arg ← elabStxVar arg
   let rgn ← match r? with
-    | none => `(SSA.rgn0)
-    | some r => elabRgn ctx r -- TODO: can a region affect stuff outside?
-  `(SSA.op [dsl_op| $o] $arg $rgn)
+    | none => `(SSA.TSSA.rgn0)
+    | some r => elabRgn r -- TODO: can a region affect stuff outside?
+  `(SSA.TSSA.op [dsl_op| $o] $arg $rgn)
 | _ => Macro.throwUnsupported
 end
 
--- scoped syntax "[dsl_bb|" dsl_bb "]" : term
+scoped syntax "[dsl_bb|" dsl_bb "]" : term
+macro_rules
+| `([dsl_bb| $bb:dsl_bb]) => do
+  let ctx : SSAElabContext := {  vars := #[] }
+  let (outTerm, _outCtx) ← (elabBB bb).run ctx
+  return outTerm
+
 -- scoped syntax "[dsl_expr|" dsl_expr "]" : term
 scoped syntax "[dsl_region|" dsl_region "]" : term
 macro_rules
 | `([dsl_region| $r:dsl_region]) => do
   let ctx : SSAElabContext := {  vars := #[] }
-  `(elabRgn ctx r)
-
+  let (outTerm, _outCtx) ← (elabRgn r).run ctx
+  return outTerm
 -- scoped syntax "[dsl_stmt|" dsl_stmt "]" : term
 -- scoped syntax "[dsl_terminator|" dsl_terminator "]" : term
 -- scoped syntax "[dsl_val|" dsl_val "]" : term

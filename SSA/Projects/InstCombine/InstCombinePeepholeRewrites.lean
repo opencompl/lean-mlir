@@ -28,6 +28,7 @@ def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (
     Context.Var.last
 
 
+
 example : thingy.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
@@ -49,6 +50,14 @@ def thingy2 : TSSA Op
 example : thingy2.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
+
+open EDSL in 
+def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
+  [dsl_bb|
+    ^bb
+      %v0 := unit:
+      dsl_ret %v0
+  ] 
 
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 -- @Goens fix this
