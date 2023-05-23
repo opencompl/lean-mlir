@@ -1,6 +1,6 @@
-import SSA.Framework
-import SSA.WellTypedFramework
-import SSA.Util
+import SSA.Core.Framework
+import SSA.Core.WellTypedFramework
+import SSA.Core.Util
 
 /-
 simple examples of 1D and 2D tensor transformations, as per MLIR tensors.
@@ -326,12 +326,12 @@ inductive BaseType
 | tensor2d : BaseType
 deriving DecidableEq, Inhabited
 
-instance : Goedel BaseType where 
+instance : Goedel BaseType where
   toType
   | .int => Int
   | .nat => Nat
-  | .tensor1d => Tensor1d Int 
-  | .tensor2d => Tensor2d Int 
+  | .tensor1d => Tensor1d Int
+  | .tensor2d => Tensor2d Int
 
 
 abbrev UserType := SSA.UserType BaseType
@@ -343,7 +343,7 @@ def argUserType : Op → UserType
 | Op.sub => .pair (.base BaseType.int) (.base BaseType.int)
 | Op.map1d => .base BaseType.tensor1d
 | Op.extract1d => .triple (.base BaseType.tensor1d) (.base BaseType.nat) (.base BaseType.nat)
-| Op.const _ => .unit 
+| Op.const _ => .unit
 
 @[simp]
 def outUserType : Op → UserType
@@ -373,14 +373,14 @@ def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
   Option (Goedel.toType (outUserType o)) := .some <|
-  match o with 
+  match o with
   | .const v => v
   | .add =>
     let (x, y) := arg;
     let x : Int := x;
     let y : Int := y;
     x + y
-  | .sub => 
+  | .sub =>
     let (x, y) := arg;
     let x : Int := x;
     let y : Int := y;
@@ -389,27 +389,30 @@ def eval (o : Op)
   -- | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
   -- | .for_, (.pair (.nat n) (.int seed)), r =>
       -- .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
-  | .map1d => 
+  | .map1d =>
     let t : Tensor1d Int := arg;
-    -- @sid: @chris, the `option` is bad :( I don't want the option. 
-    let r : Int → Option Int := _rgn; 
+    -- @sid: @chris, the `option` is bad :( I don't want the option.
+    let r : Int → Option Int := _rgn;
     let t' := t.map fun v => (r v).get!
     t'
-  | .extract1d => 
-    let (t, l, len) := arg; 
+  | .extract1d =>
+    let (t, l, len) := arg;
     let t : Tensor1d Int := t;
     let l : Nat := l;
     let len : Nat := len;
     t.extract l len
 
 
+/-
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
   rgnDom := rgnDom
   rgnCod := rgnCod
   outUserType := outUserType
   eval := eval
+-/
 
+/-
 syntax "map1d" : dsl_op
 syntax "extract1d" : dsl_op
 syntax "const" "(" term ")" : dsl_op
@@ -418,6 +421,7 @@ macro_rules
 | `([dsl_op| map1d]) => `(Op.map1d)
 | `([dsl_op| extract1d]) => `(Op.extract1d)
 | `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
+-/
 
 -- Why do these not get set?
 register_simp_attr SSA.teval
@@ -431,9 +435,9 @@ register_simp_attr uncurry
 
 -- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
-
-open SSA in 
-theorem extract_map : 
+/-
+open SSA in
+theorem extract_map :
   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
   ∀ (e : EnvC Γ),  -- for metavariable in typeclass
   SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
@@ -452,10 +456,9 @@ theorem extract_map :
     %v5 := op:map1d %v4 { %r0 }
     dsl_ret %v5
   ] := by {
-    intros Γ e;
-    funext v0;
     sorry
     -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
   }
+-/
 
 end ArithScfLinalg

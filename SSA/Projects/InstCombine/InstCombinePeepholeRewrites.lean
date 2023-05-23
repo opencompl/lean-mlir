@@ -1,5 +1,6 @@
+import SSA
 import SSA.WellTypedFramework
-import SSA.Examples.InstCombineBase
+import InstCombine.InstCombineBase
 
 open SSA InstCombine
 
@@ -17,14 +18,14 @@ register_simp_attr outUserType
 register_simp_attr BitVector.width
 register_simp_attr uncurry
 
-def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) := 
+def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
   TSSA.rgn (arg := 'x'.toNat) <|
-  TSSA.ret 
-    (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop 
-      'a'.toNat (TSSA.pair Context.Var.last Context.Var.last)) 
-      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0)) 
-      'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev)) 
-      'z'.toNat (TSSA.op (Op.or 32) Context.Var.last TSSA.rgn0)) 
+  TSSA.ret
+    (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop
+      'a'.toNat (TSSA.pair Context.Var.last Context.Var.last))
+      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0))
+      'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev))
+      'z'.toNat (TSSA.op (Op.or 32) Context.Var.last TSSA.rgn0))
     Context.Var.last
 
 
@@ -32,15 +33,15 @@ example : thingy.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
 
-def thingy2 : TSSA Op 
-  ((Context.empty.snoc 'x'.toNat (.base $ .bitvec 32)).snoc 
-    'Α'.toNat (.base $ .bitvec 16)) 
-  (.TERMINATOR (.base $ .bitvec 32)) := 
-  TSSA.ret 
+def thingy2 : TSSA Op
+  ((Context.empty.snoc 'x'.toNat (.base $ .bitvec 32)).snoc
+    'Α'.toNat (.base $ .bitvec 16))
+  (.TERMINATOR (.base $ .bitvec 32)) :=
+  TSSA.ret
     (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign
-      TSSA.nop 
-      'a'.toNat (TSSA.pair Context.Var.last.prev Context.Var.last.prev)) 
-      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0)) 
+      TSSA.nop
+      'a'.toNat (TSSA.pair Context.Var.last.prev Context.Var.last.prev))
+      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0))
       'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev))
       'c'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev))
       'z'.toNat (TSSA.op (Op.or 32) Context.Var.last.prev TSSA.rgn0))

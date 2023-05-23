@@ -1,4 +1,4 @@
-import SSA.Framework
+import SSA.Core.Framework
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.AList
 
@@ -97,7 +97,7 @@ inductive Context.Var {β : Type} : Context β → UserType β → Type
       Context.Var Γ a → Context.Var (Context.snoc Γ v' a') a
   | last {Γ : Context β} {v : SSA.Var} {a : UserType β} :
       Context.Var (Context.snoc Γ v a) a
-  
+
 instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
 
@@ -126,8 +126,8 @@ open OperationTypes UserType
 inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
     (Γ : Context β) → TSSAIndex β → Type where
   /-- lhs := rhs; rest of the program -/
-  | assign {T : UserType β} 
-      (rest : TSSA Op Γ (.STMT Γ')) 
+  | assign {T : UserType β}
+      (rest : TSSA Op Γ (.STMT Γ'))
       (lhs : Var) (rhs : TSSA Op Γ' (.EXPR T)) : TSSA Op Γ (.STMT (Γ'.snoc lhs T))
   /-- no operation. -/
   | nop : TSSA Op Γ (.STMT Γ)
@@ -157,7 +157,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
     match v with
     | Context.Var.prev v => rest.eval e v
     | Context.Var.last => rhs.eval (rest.eval e)
-  | _, _, .nop => fun e => e 
+  | _, _, .nop => fun e => e
   | _, _, .ret above v => fun e => above.eval e v
   | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
   | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)

@@ -117,13 +117,13 @@ deriving Repr, DecidableEq
 
 @[simp, reducible]
 def argUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp, reducible]
 def outUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w => 
+| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w =>
   .base (BaseType.bitvec w)
 | Op.const c => .base (BaseType.bitvec c.width)
 
@@ -173,7 +173,7 @@ def BitVector.ashr {w : ℕ+} (x y : BitVector w) : BitVector w := default -- x.
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
-  Goedel.toType (outUserType o) := 
+  Goedel.toType (outUserType o) :=
     match o with
     | Op.and _ => uncurry BitVector.and arg
     | Op.or _ => uncurry BitVector.or arg

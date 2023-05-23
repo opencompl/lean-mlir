@@ -4,7 +4,7 @@ import Mathlib.Data.Fintype.Sigma
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
-import SSA.Bits.Defs
+import SSA.Experimental.Bits.Defs
 
 open Sum
 
