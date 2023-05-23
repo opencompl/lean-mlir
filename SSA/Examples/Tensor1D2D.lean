@@ -47,6 +47,7 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
       sorry
     }
   }
+
 def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α where
   size := t.size
   val := fun ix => if ix < t.size then f (t.val ix) else default
@@ -57,6 +58,20 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
     have CONTRA : False := by linarith
     simp at CONTRA
   }
+
+
+-- This should morally be some sort of `mapM`
+def Tensor1d.map? [Inhabited α] (f : α → Option α) (t : Tensor1d α) : Option (Tensor1d α) :=
+  size := t.size
+  val := fun ix => if ix < t.size then f (t.val ix) else default
+  spec := by {
+    intros ix IX;
+    simp;
+    intros H
+    have CONTRA : False := by linarith
+    simp at CONTRA
+  }
+
 
 -- Note that this theorem is wrong if we cannot state what happens
 -- when we are out of bounds, because the side that is (map extract) will have
@@ -137,7 +152,7 @@ theorem extractslice_insertslice [Inhabited α]
   (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
   : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
     simp[Tensor1d.insertslice, Tensor1d.extract]
-    cases slice <;> simp;
+    cases slice ; simp;
     case mk slicesize sliceval spec => {
       by_cases A:(t.size < sliceix) <;> simp[A]
       case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
@@ -372,19 +387,19 @@ def rgnCod : Op → UserType
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
-  Option (Goedel.toType (outUserType o)) := .some <|
+  Option (Goedel.toType (outUserType o)) :=
   match o with 
-  | .const v => v
+  | .const v => some v
   | .add =>
     let (x, y) := arg;
     let x : Int := x;
     let y : Int := y;
-    x + y
+    some $ x + y
   | .sub => 
     let (x, y) := arg;
     let x : Int := x;
     let y : Int := y;
-    x - y
+    some $ x - y
   -- | .run, v, r => r v
   -- | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
   -- | .for_, (.pair (.nat n) (.int seed)), r =>
@@ -393,14 +408,16 @@ def eval (o : Op)
     let t : Tensor1d Int := arg;
     -- @sid: @chris, the `option` is bad :( I don't want the option. 
     let r : Int → Option Int := _rgn; 
-    let t' := t.map fun v => (r v).get!
-    t'
+    let t' := t.map fun v => match (r v).get with
+      | some v' => v'
+      | none => 0;
+    some t'
   | .extract1d => 
     let (t, l, len) := arg; 
     let t : Tensor1d Int := t;
     let l : Nat := l;
     let len : Nat := len;
-    t.extract l len
+    some $ t.extract l len
 
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
@@ -429,7 +446,7 @@ register_simp_attr outUserType
 -- register_simp_attr BitVector.width
 register_simp_attr uncurry
 
--- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
+theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
 
 open SSA in 
@@ -453,7 +470,15 @@ theorem extract_map :
     dsl_ret %v5
   ] := by {
     intros Γ e;
-    funext v0;
+    funext v0
+    simp only [SSA.teval, Function.comp, id.def, SSA.teval, EnvU.set, if_false, if_true,
+               TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+               TypedUserSemantics.rgnDom, TypedUserSemantics.rgnCod,
+               TypedUserSemantics.eval, outUserType, eval, if_true,
+               argUserType, Option.some_eq_pure, EnvC.toEnvU,
+               uncurry, Option.elim, pure_bind, dite_true, pure_bind,
+               dite_true, pure_bind, dite_true, pure_bind, if_true,
+               pure_bind, dite_true, Eq.rec, And.rec, Tensor1d.map]
     sorry
     -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
   }
