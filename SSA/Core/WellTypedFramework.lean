@@ -238,8 +238,12 @@ def SSAElabContext.addVar (var : Nat): SSAElabM Unit := do
   dbg_trace s!"added var {var}"
   modify fun ctx => { ctx with vars := ctx.vars.push var }
 
+-- given an array [x, y, z], the index of 'z' is '0' (though its index is '2' in the array),
+-- since we cound from the back. 
 def SSAElabContext.getIndex? (var : Nat) : SSAElabM (Option Nat) := do
-  return (← get).vars.findIdx? (fun v => v == var)
+  match (← get).vars.findIdx? (fun v => v == var) with 
+  | .some ixFromFront => return ((← get).vars.size - 1) - ixFromFront 
+  | .none => return none
 
 /-- extract out the index (nat) of the dsl_var -/
 def dslVarToIx : TSyntax `dsl_var → MacroM Nat
@@ -275,7 +279,7 @@ partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
   let e ← elabStxExpr e
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
-  `(fun rest => SSA.TSSA.assign rest $velab $e)
+  `(fun prev => SSA.TSSA.assign prev $velab $e)
 | _ => Macro.throwUnsupported
 
 -- partial def elabTerminator : TSyntax `dsl_terminator → SSAElabM (TSyntax `term)
@@ -284,6 +288,12 @@ partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 --   `(fun rest => SSA.ret rest $v)
 -- | _ => Macro.throwUnsupported
 
+-- TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop) <s1data>) <s2data>) <s3data>)
+-- s1 : (fun prev1 => SSA.assign (<prev1>) <s1data>)
+-- s2 : (fun prev2 => SSA.assign (<prev2>) <s2data>)
+-- s3 : (fun prev3 => SSA.assign (<prev3>) <s3data>)
+-- fun x => s3 ( s2 (s1 x) )
+-- (s3 ∘ (s2 ∘ (s1 ∘ id)))
 partial def elabStmt : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
 | `(dsl_stmt| $ss:dsl_assign;*) => do
   let mut out ← `(id)

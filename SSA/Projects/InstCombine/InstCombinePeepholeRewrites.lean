@@ -51,6 +51,14 @@ example : thingy2.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
 
+def thingy3 (C: BitVector 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+  TSSA.ret 
+    (TSSA.assign (TSSA.assign TSSA.nop
+    'x'.toNat (TSSA.unit))
+    'y'.toNat (TSSA.op (Op.const C) Context.Var.last TSSA.rgn0))
+    Context.Var.last
+
+
 open EDSL in 
 def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
   [dsl_bb|
@@ -59,6 +67,7 @@ def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
       dsl_ret %v0
   ] 
 
+set_option trace.Elab true in
 open EDSL in 
 def example_macro_2 (C : BitVector 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
   [dsl_bb|
@@ -67,6 +76,8 @@ def example_macro_2 (C : BitVector 32) : TSSA Op Context.empty (.TERMINATOR (.ba
       %v1 := op: const C %v0
       dsl_ret %v1
   ] 
+
+#print example_macro_2
 
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 -- @Goens fix this
