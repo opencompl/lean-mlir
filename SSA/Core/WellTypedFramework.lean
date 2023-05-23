@@ -229,20 +229,21 @@ scoped syntax "^bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
 
 open Lean Elab Macro in
 
+-- TODO: keep track of types of the variables, and use this to throw correct errors.
+
 structure SSAElabContext where
   vars : Array Nat -- list of variables, in order of occurrence
 
 abbrev SSAElabM (α : Type) := StateT SSAElabContext MacroM α
 
-def SSAElabContext.addVar (var : Nat): SSAElabM Unit := do 
-  dbg_trace s!"added var {var}"
+def SSAElabContext.addVar (var : Nat): SSAElabM Unit := do
   modify fun ctx => { ctx with vars := ctx.vars.push var }
 
 -- given an array [x, y, z], the index of 'z' is '0' (though its index is '2' in the array),
--- since we cound from the back. 
+-- since we cound from the back.
 def SSAElabContext.getIndex? (var : Nat) : SSAElabM (Option Nat) := do
-  match (← get).vars.findIdx? (fun v => v == var) with 
-  | .some ixFromFront => return ((← get).vars.size - 1) - ixFromFront 
+  match (← get).vars.findIdx? (fun v => v == var) with
+  | .some ixFromFront => return ((← get).vars.size - 1) - ixFromFront
   | .none => return none
 
 /-- extract out the index (nat) of the dsl_var -/
@@ -263,11 +264,9 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 | stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
 
--- TODO: these are StateT over `SSAElabContext`.
 mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
-| `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do 
-  -- let velab ← elabStxVar v
+| `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
   let bb ← elabBB bb
@@ -282,11 +281,6 @@ partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
   `(fun prev => SSA.TSSA.assign prev $velab $e)
 | _ => Macro.throwUnsupported
 
--- partial def elabTerminator : TSyntax `dsl_terminator → SSAElabM (TSyntax `term)
--- | `(dsl_terminator| dsl_ret $v:dsl_var) => do
---   let v ← elabStxVar v
---   `(fun rest => SSA.ret rest $v)
--- | _ => Macro.throwUnsupported
 
 -- TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop) <s1data>) <s2data>) <s3data>)
 -- s1 : (fun prev1 => SSA.assign (<prev1>) <s1data>)
@@ -311,14 +305,20 @@ partial def elabBB : TSyntax `dsl_bb → SSAElabM (TSyntax `term)
         | .none => `(fun x => x)
         | .some s => elabStmt s
     let retv ← elabStxVar retv
-    -- `(SSA.TSSA.xx)
     `(SSA.TSSA.ret ($selab SSA.TSSA.nop) $retv)
 | _ => Macro.throwUnsupported
 
 partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
 | `(dsl_expr| unit:) => `(SSA.TSSA.unit)
-| `(dsl_expr| pair: $a $b) => `(SSA.TSSA.pair (← elabStxExpr ctx a) (← elabStxExpr ctx b))
-| `(dsl_expr| triple: $a $b $c) => `(SSA.TSSA.triple (← elabStxExpr ctx a) (← elabStxExpr ctx b) (← elabStxExpr ctx c))
+| `(dsl_expr| pair: $a $b) => do
+    let aelab ← elabStxVar a
+    let belab ← elabStxVar b
+    `(SSA.TSSA.pair $aelab $belab)
+| `(dsl_expr| triple: $a $b $c) => do
+  let aelab ← elabStxVar a
+  let belab ← elabStxVar b
+  let celab ← elabStxVar c
+  `(SSA.TSSA.triple $aelab $belab $celab)
 | `(dsl_expr| $v:dsl_var) => elabStxVar v
 | `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]? ) => do
   let arg ← elabStxVar arg
@@ -336,13 +336,15 @@ macro_rules
   let (outTerm, _outCtx) ← (elabBB bb).run ctx
   return outTerm
 
--- scoped syntax "[dsl_expr|" dsl_expr "]" : term
 scoped syntax "[dsl_region|" dsl_region "]" : term
 macro_rules
 | `([dsl_region| $r:dsl_region]) => do
   let ctx : SSAElabContext := {  vars := #[] }
   let (outTerm, _outCtx) ← (elabRgn r).run ctx
   return outTerm
+
+-- TODO: consider allowing users to build pieces of syntax.
+-- scoped syntax "[dsl_expr|" dsl_expr "]" : term
 -- scoped syntax "[dsl_stmt|" dsl_stmt "]" : term
 -- scoped syntax "[dsl_terminator|" dsl_terminator "]" : term
 -- scoped syntax "[dsl_val|" dsl_val "]" : term

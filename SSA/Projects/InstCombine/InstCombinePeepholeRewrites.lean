@@ -52,32 +52,61 @@ example : thingy2.eval = sorry := by
   admit
 
 def thingy3 (C: BitVector 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
-  TSSA.ret 
+  TSSA.ret
     (TSSA.assign (TSSA.assign TSSA.nop
     'x'.toNat (TSSA.unit))
     'y'.toNat (TSSA.op (Op.const C) Context.Var.last TSSA.rgn0))
     Context.Var.last
 
 
-open EDSL in 
+open EDSL in
 def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
   [dsl_bb|
     ^bb
       %v0 := unit:
       dsl_ret %v0
-  ] 
+  ]
 
 set_option trace.Elab true in
-open EDSL in 
+open EDSL in
 def example_macro_2 (C : BitVector 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
   [dsl_bb|
     ^bb
       %v0 := unit: ;
       %v1 := op: const C %v0
       dsl_ret %v1
-  ] 
+  ]
 
-#print example_macro_2
+open EDSL in
+def example_macro_3_0 : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
+  [dsl_region|
+    rgn{ %v0 =>
+      ^bb
+        dsl_ret %v0
+  }]
+
+
+open EDSL in
+def example_macro_3_1 : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
+  [dsl_region|
+    rgn{ %v0 =>
+      ^bb
+        %v1 := pair: %v0 %v0 ;
+        %v2 := op: lshr 32 %v1
+        dsl_ret %v2
+  }]
+
+open EDSL in
+def example_macro_3 : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
+  [dsl_region|
+    rgn{ %v0 =>
+      ^bb
+        %v1 := pair: %v0 %v0 ;
+        %v2 := op: lshr 32 %v1 ;
+        %v3 := pair: %v2 %v0 ;
+        %v4 := op: shl 32 %v3
+        dsl_ret %v4
+  }]
 
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 -- @Goens fix this

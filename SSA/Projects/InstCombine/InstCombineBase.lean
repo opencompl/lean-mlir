@@ -199,10 +199,10 @@ Optimization: InstCombineShift: 279
 -/
 
 open EDSL
-syntax "lshr" ident : dsl_op
-syntax "shl" ident : dsl_op
-syntax "and" ident : dsl_op
-syntax "const" ident : dsl_op
+syntax "lshr" term : dsl_op
+syntax "shl" term : dsl_op
+syntax "and" term : dsl_op
+syntax "const" term : dsl_op
 macro_rules
   | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
   | `([dsl_op| shl $w ]) => `(Op.shl $w)
