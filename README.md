@@ -8,6 +8,8 @@ proof assistant.
 
 #### Directory Structure
 
+This directory structure is heavily inspired by the [Research Codebase Manifesto](https://www.moderndescartes.com/essays/research_code/).
+
 
 - `SSA/Core`: Libraries for reusable components. Code is reviewed to
   engineering standards. Code is tested, covered by continuous integration, and
