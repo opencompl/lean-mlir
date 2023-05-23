@@ -1,0 +1,1 @@
+{"name":"Lean.Linter","instances":[],"imports":["Init","Lean.Linter.Util","Lean.Linter.Builtin","Lean.Linter.Deprecated","Lean.Linter.UnusedVariables","Lean.Linter.MissingDocs"],"declarations":[]}
