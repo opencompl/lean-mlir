@@ -189,6 +189,130 @@ abbrev NatUserType := UserType (NatBaseType TS)
 
 end SSA
 
+
+namespace EDSL
+open Lean HashMap Macro
+
+declare_syntax_cat dsl_region
+declare_syntax_cat dsl_bb
+declare_syntax_cat dsl_op
+declare_syntax_cat dsl_expr
+declare_syntax_cat dsl_stmt
+declare_syntax_cat dsl_assign
+declare_syntax_cat dsl_terminator
+declare_syntax_cat dsl_var
+declare_syntax_cat dsl_val
+declare_syntax_cat dsl_rgnvar
+
+-- ops are defined by someone else
+scoped syntax "[dsl_op|" dsl_op "]" : term
+
+-- DSL variables
+scoped syntax "%v" num : dsl_var
+
+
+scoped syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
+scoped syntax "unit:"  : dsl_expr
+scoped syntax "pair:"  dsl_var dsl_var : dsl_expr
+scoped syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
+scoped syntax dsl_var : dsl_expr
+scoped syntax dsl_var " := " dsl_expr : dsl_assign
+scoped syntax sepBy(dsl_assign, ";") : dsl_stmt
+-- | this sucks, it becomes super global.
+scoped syntax "dsl_ret " dsl_var : dsl_terminator
+scoped syntax "dsl_rgn" dsl_var "=>" dsl_bb : dsl_region
+scoped syntax "dsl_bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
+
+open Lean Elab Macro in
+
+structure SSAElabContext where
+  vars : Array Nat -- list of variables, in order of occurrence
+
+def SSAElabContext.addVar (ctx : SSAElabContext) : SSAElabContext :=
+  { ctx with vars := ctx.vars.push ctx.vars.size }
+
+def SSAElabContext.getIndex? (ctx : SSAElabContext) (var : Nat) : Option Nat :=
+  ctx.vars.findIdx? (fun v => v == var)
+
+/-- extract out the index (nat) of the dsl_var -/
+def dslVarToIx : TSyntax `dsl_var → Nat
+| `(dsl_var| %v $ix) => ix.getNat
+| _ => unreachable!
+
+/-- convert a de-bruijn into a intrinsically well typed context variable -/
+def idxToContextVar : Nat → MacroM (TSyntax `term)
+| 0 => `(Context.Var.last)
+| n+1 => do `(Context.Var.prev $(← idxToContextVar n))
+
+def elabStxVar (ctx : SSAElabContext): TSyntax `dsl_var → MacroM (TSyntax `term)
+| `(dsl_var| %v $var) =>
+  match ctx.getIndex? var.getNat with
+  | .some ix => idxToContextVar ix
+  | .none => Macro.throwErrorAt var s!"variable '{var}' not in scope"
+| _ => unreachable!
+
+-- TODO: these are StateT over `SSAElabContext`.
+mutual
+partial def elabRgn (ctx : SSAElabContext) : TSyntax `dsl_region → MacroM (TSyntax `term)
+| `(dsl_region| dsl_rgn $v:dsl_var => $bb:dsl_bb) => do sorry
+| _ => Macro.throwUnsupported
+
+partial def elabAssign (ctx : SSAElabContext) : TSyntax `dsl_assign → MacroM (TSyntax `term)
+| `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
+  let v ← elabStxVar ctx v
+  let e ← elabStxExpr ctx e
+  `(fun rest => SSA.assign rest $v $e)
+| _ => Macro.throwUnsupported
+
+partial def elabTerminator (ctx : SSAElabContext) : TSyntax `dsl_terminator → MacroM (TSyntax `term)
+| `(dsl_terminator| dsl_ret $v:dsl_var) => do
+  let v ← elabStxVar ctx v
+  `(fun rest => SSA.ret rest $v)
+| _ => Macro.throwUnsupported
+
+partial def elabStmt (ctx : SSAElabContext) : TSyntax `dsl_stmt → MacroM (TSyntax `term)
+| `(dsl_stmt| $ss:dsl_stmt) => sorry
+
+partial def elabBB (ctx : SSAElabContext) : TSyntax `dsl_bb → MacroM (TSyntax `term)
+| `(dsl_bb| dsl_bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
+    let s : Lean.Syntax ← do
+          match s? with
+          | .none => `(fun x => x)
+          | .some s => `(elabStmt ctx s)
+    let retv ← elabStxVar ctx retv
+    `(SSA.ret ($s SSA.nop) $retv)
+| _ => Macro.throwUnsupported
+
+partial def elabStxExpr (ctx : SSAElabContext ) : TSyntax `dsl_expr → MacroM (TSyntax `term)
+| `(dsl_expr| unit:) => `(SSA.unit)
+| `(dsl_expr| pair: $a $b) => `(SSA.pair (← elabStxExpr ctx a) (← elabStxExpr ctx b))
+| `(dsl_expr| triple: $a $b $c) => `(SSA.triple (← elabStxExpr ctx a) (← elabStxExpr ctx b) (← elabStxExpr ctx c))
+| `(dsl_expr| $v:dsl_var) => elabStxVar ctx v
+| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]? ) => do
+  let arg ← elabStxVar ctx arg
+  let rgn ← match r? with
+    | none => `(SSA.rgn0)
+    | some r => elabRgn ctx r -- TODO: can a region affect stuff outside?
+  `(SSA.op [dsl_op| $o] $arg $rgn)
+| _ => Macro.throwUnsupported
+end
+
+-- scoped syntax "[dsl_bb|" dsl_bb "]" : term
+-- scoped syntax "[dsl_expr|" dsl_expr "]" : term
+scoped syntax "[dsl_region|" dsl_region "]" : term
+macro_rules
+| `([dsl_region| $r:dsl_region]) => do
+  let ctx : SSAElabContext := {  vars := #[] }
+  `(elabRgn ctx r)
+
+-- scoped syntax "[dsl_stmt|" dsl_stmt "]" : term
+-- scoped syntax "[dsl_terminator|" dsl_terminator "]" : term
+-- scoped syntax "[dsl_val|" dsl_val "]" : term
+-- scoped syntax "[dsl_assign| " dsl_assign "]" : term
+
+end EDSL
+
+
 register_simp_attr Bind.bind
 register_simp_attr Option.bind
 register_simp_attr TypedUserSemantics.eval

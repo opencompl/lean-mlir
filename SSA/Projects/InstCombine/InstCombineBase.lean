@@ -198,6 +198,7 @@ Optimization: InstCombineShift: 279
   %r = and %X, (-1 << C)
 -/
 
+open EDSL
 syntax "lshr" ident : dsl_op
 syntax "shl" ident : dsl_op
 syntax "and" ident : dsl_op
@@ -207,16 +208,5 @@ macro_rules
   | `([dsl_op| shl $w ]) => `(Op.shl $w)
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
-
-
-
-      -- intros a b c;
-      -- funext k1;
-      -- funext k2;
-      -- funext x;
-      -- -- is the time due to it re-elaborating the syntax, or due to the proof steps?
-      -- simp[Bind.bind];
-      -- simp[Option.bind];
-      -- simp[eval];
 
 end InstCombine
