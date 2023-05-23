@@ -59,6 +59,15 @@ def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
       dsl_ret %v0
   ] 
 
+open EDSL in 
+def example_macro_2 (C : BitVector 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+  [dsl_bb|
+    ^bb
+      %v0 := unit: ;
+      %v1 := op: const C %v0
+      dsl_ret %v1
+  ] 
+
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 -- @Goens fix this
 -- @bollu fix notation

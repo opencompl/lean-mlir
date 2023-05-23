@@ -242,9 +242,9 @@ def SSAElabContext.getIndex? (var : Nat) : SSAElabM (Option Nat) := do
   return (← get).vars.findIdx? (fun v => v == var)
 
 /-- extract out the index (nat) of the dsl_var -/
-def dslVarToIx : TSyntax `dsl_var → Nat
-| `(dsl_var| %v $ix) => ix.getNat
-| _ => unreachable!
+def dslVarToIx : TSyntax `dsl_var → MacroM Nat
+| `(dsl_var| %v $ix) => return ix.getNat
+| stx => Macro.throwErrorAt stx s!"expected variable %v<n>, found {stx}"
 
 /-- convert a de-bruijn into a intrinsically well typed context variable -/
 def idxToContextVar : Nat → MacroM (TSyntax `term)
@@ -256,7 +256,7 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
   match ← SSAElabContext.getIndex? var.getNat with
   | .some ix => idxToContextVar ix
   | .none => Macro.throwErrorAt var s!"variable '{var}' not in scope"
-| _ => unreachable!
+| stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
 
 -- TODO: these are StateT over `SSAElabContext`.
@@ -264,8 +264,8 @@ mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
 | `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do 
   -- let velab ← elabStxVar v
-  let velab := Lean.quote (dslVarToIx v) -- natural number.
-  SSAElabContext.addVar (dslVarToIx v) -- add variable.
+  let velab := Lean.quote (← dslVarToIx v) -- natural number.
+  SSAElabContext.addVar (← dslVarToIx v) -- add variable.
   let bb ← elabBB bb
   `(SSA.TSSA.rgn $velab $bb)
 | _ => Macro.throwUnsupported
@@ -273,8 +273,8 @@ partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
 partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 | `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
   let e ← elabStxExpr e
-  SSAElabContext.addVar (dslVarToIx v) -- add variable.
-  let velab := Lean.quote (dslVarToIx v) -- natural number.
+  SSAElabContext.addVar (← dslVarToIx v) -- add variable.
+  let velab := Lean.quote (← dslVarToIx v) -- natural number.
   `(fun rest => SSA.TSSA.assign rest $velab $e)
 | _ => Macro.throwUnsupported
 
@@ -289,7 +289,7 @@ partial def elabStmt : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
   let mut out ← `(id)
   for s in ss.getElems do
     let selab ← elabAssign s
-    out ← `($out ∘ $selab)
+    out ← `($selab ∘ $out)
   return out
 | _ => Macro.throwUnsupported
 
