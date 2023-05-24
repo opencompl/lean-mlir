@@ -175,6 +175,53 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .var v => fun e => e v
   | _, _, .unit => fun _ => ()
 
+-- TODO: understand synthesization order.
+class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type → Type)) [Goedel β] extends OperationTypes Op β where
+  evalM (o : Op)
+    (arg: UserType.toType (argUserType o))
+    (rgn : UserType.toType (rgnDom o) → M (UserType.toType (rgnCod o))) : M (UserType.toType (outUserType o))
+
+@[simp]
+def TSSAIndex.evalM [Goedel β] (M : Type → Type): TSSAIndex β → Type
+  | .STMT Γ => M (EnvC Γ)
+  | .EXPR T => M (UserType.toType T)
+  | .TERMINATOR T => M (UserType.toType T)
+  | .REGION dom cod => UserType.toType dom → M (UserType.toType cod)
+
+
+
+@[simp]
+def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserSemanticsM Op β M] [Monad M] :
+  {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → (i.evalM M)
+  | Γ, _, .assign rest lhs rhs => fun e => do
+    let e' ← rest.evalM e
+    let rhsv ← rhs.evalM e'
+    return fun T v => 
+      match v with
+      | Context.Var.prev v => e' v
+      | Context.Var.last => rhsv
+  | _, _, .nop => fun e => return e
+  | _, _, .ret above v => fun e => do 
+    let e' ← TSSA.evalM above e 
+    return e' v
+  | _, _, .pair fst snd => fun e => do 
+    return mkPair (e fst) (e snd)
+  | _, _, .triple fst snd third => fun e => do 
+    return mkTriple (e fst) (e snd) (e third)
+  | _, _, TSSA.op o arg rg => fun e => do 
+    let rgv := rg.evalM e
+    TypedUserSemanticsM.evalM o (e arg) rgv
+  | _, _, .rgn _arg body => fun e arg => do
+      body.evalM (fun _ v =>
+        match v with
+        | Context.Var.prev v' => e v'
+        | Context.Var.last => arg)
+  | _, _, .rgn0 => fun _ => fun x => return x
+  -- TODO: this forces all uses of `rgnvar` to be pure. Rather, we should allow impure `rgnvar`.
+  | _, _, .rgnvar v => fun e => fun x => return (e v x)
+  | _, _, .var v => fun e => return (e v)
+  | _, _, .unit => fun _ => return ()
+
 -- We can recover the case with the TypeSemantics as an instance
 def TypeSemantics : Type 1 :=
   ℕ → Type
