@@ -217,7 +217,8 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
         | Context.Var.prev v' => e v'
         | Context.Var.last => arg)
   | _, _, .rgn0 => fun _ => fun x => return x
-  | _, _, .rgnvar v => sorry -- TODO: what to do about rgnvar?
+  -- TODO: this forces all uses of `rgnvar` to be pure. Rather, we should allow impure `rgnvar`.
+  | _, _, .rgnvar v => fun e => fun x => return (e v x)
   | _, _, .var v => fun e => return (e v)
   | _, _, .unit => fun _ => return ()
 
@@ -225,6 +226,7 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
 def TypeSemantics : Type 1 :=
   ℕ → Type
 
+#check Id
 inductive NatBaseType (TS : TypeSemantics) : Type
   | ofNat : ℕ → NatBaseType TS
 deriving DecidableEq
