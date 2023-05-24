@@ -11,6 +11,10 @@ namespace Bitvec
 
 def width : Bitvec n → Nat := fun _ => n
 
+-- Shouldn't this be inferred from the instance above? (as Bitvec is @[reducible])
+instance {n : Nat} [NeZero n] : GetElem (Bitvec n) (Fin n) Bool (fun _ _ => True) where
+  getElem := fun v i _ => v.1[i.val]
+
 instance (n : Nat) : Inhabited (Bitvec n) :=
   ⟨List.replicate n true, by apply List.length_replicate⟩
 
@@ -31,15 +35,15 @@ def toFun {width : Nat} : Bitvec width → Fun width :=
 instance {width : Nat} : Coe (Fun width) (Bitvec width) := ⟨@ofFun width⟩
 instance {width : Nat} : Coe (Bitvec width) (Fun width) := ⟨@toFun width⟩
 
-
 /--
 The value produced is the unsigned integer quotient of the two operands.
 Note that unsigned integer division and signed integer division are distinct operations; for signed integer division, use ‘sdiv’.
 Division by zero is undefined behavior.
 -/
-def Bitvec.udiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
- panic! "unimplemented" -- TODO: adapt this to Mathlib style (with carry, no overflow, etc) 
-
+def udiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
+  match y.toNat with
+    | 0 => none
+    | _ => some $ Bitvec.ofNat w (x.toNat / y.toNat)
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
@@ -47,12 +51,33 @@ Note that signed integer division and unsigned integer division are distinct ope
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
-def Bitvec.sdiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := panic! "unimlpmented" -- TODO: adapt this to Mathlib style (with carry, no overflow, etc)
+def sdiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
+  match y.toInt with
+    | 0 => none
+    | _ => match w with
+      | 0 => some Vector.nil
+      | w' + 1 => some $ Bitvec.ofInt w' (x.toInt / y.toInt)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
-def Bitvec.select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
+def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
     if c = true ::ᵥ Vector.nil then x else y
+
+theorem bitwise_eq_eq {w : Nat} (x y : Bitvec w) [ wneq0 : NeZero w] :
+ (forall i : Fin w, x[i] = y[i]) ↔ x = y := sorry
+    
+-- from InstCombine/Shift:279
+theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
+  Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) :=
+  sorry -- TODO: make sure the semantics are the same here
+
+
+-- from InstCombine/:805
+theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w.succ} :
+  Bitvec.sdiv (Bitvec.ofInt w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w.succ 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w.succ 0)) :=
+  sorry -- TODO: make sure the semantics are the same here
+  -- Looks pretty ugly/random, can we make it more readable
+
 
 end Bitvec

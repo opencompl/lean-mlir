@@ -3,10 +3,6 @@ import SSA.Projects.InstCombine.InstCombineBase
 
 open SSA InstCombine
 
-theorem InstCombineShift279_base : ∀ w : ℕ+, ∀ x C : BitVector w,
-  BitVector.shl (BitVector.lshr x C) C = BitVector.and x (BitVector.shl (-1).toBitVector C) :=
-  sorry
-
 -- Why do these not get set?
 -- Activate to crash @commit a2df44f6 | register_simp_attr SSA.teval
 -- Activate to crash @commit a2df44f6 | register_simp_attr EnvU.set
@@ -14,7 +10,7 @@ theorem InstCombineShift279_base : ∀ w : ℕ+, ∀ x C : BitVector w,
 -- Activate to crash @commit a2df44f6 | register_simp_attr argUserType
 -- Activate to crash @commit a2df44f6 | register_simp_attr eval
 -- Activate to crash @commit a2df44f6 | register_simp_attr outUserType
--- Activate to crash @commit a2df44f6 | register_simp_attr BitVector.width
+-- Activate to crash @commit a2df44f6 | register_simp_attr Bitvec.width
 -- Activate to crash @commit a2df44f6 | register_simp_attr uncurry
 
 def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
@@ -51,7 +47,7 @@ example : thingy2.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
 
-def thingy3 (C: BitVector 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+def thingy3 (C: Bitvec 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
   TSSA.ret
     (TSSA.assign (TSSA.assign TSSA.nop
     'x'.toNat (TSSA.unit))
@@ -69,7 +65,7 @@ def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
 
 set_option trace.Elab true in
 open EDSL in
-def example_macro_2 (C : BitVector 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+def example_macro_2 (C : Bitvec 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
   [dsl_bb|
     ^bb
       %v0 := unit: ;
@@ -111,8 +107,8 @@ def example_macro_3 : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32))
 theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 -- @Goens fix this
 -- @bollu fix notation
--- theorem InstCombineShift279 : ∀ w : ℕ+, ∀ C : BitVector w,
---   let minus_one : BitVector w := (-1).toBitVector
+-- theorem InstCombineShift279 : ∀ w : ℕ+, ∀ C : Bitvec w,
+--   let minus_one : Bitvec w := (-1).toBitvec
 --   let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
 --   ∀ (e : EnvC Γ),  -- for metavariable in typeclass
 --   --@SSA.teval BaseType instDecidableEqBaseType instGoedelBaseType SSAIndex.REGION Op TUS
@@ -157,7 +153,7 @@ theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 --       simp only [EnvC.toEnvU]
 --       simp only [uncurry]
 --       simp only [Option.elim]
---       simp only [BitVector.width]
+--       simp only [Bitvec.width]
 --       simp only [pure_bind]
 --       simp only [dite_true]
 --       simp only [pure_bind]
