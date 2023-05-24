@@ -1,4 +1,4 @@
-import SSA.Bits.Lemmas
+import SSA.Experimental.Bits.Lemmas
 
 open Fintype Term
 

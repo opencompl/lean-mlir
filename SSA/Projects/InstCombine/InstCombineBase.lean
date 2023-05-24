@@ -1,13 +1,13 @@
-import SSA.WellTypedFramework
-import SSA.Util
-import Aesop
+import SSA.Core.WellTypedFramework
+import SSA.Core.Util
 
 namespace InstCombine
 
-abbrev Width := { x : Nat // x > 0 } -- difference with { x : Nat  | 0 < x }?
+abbrev Width := ℕ+
 
 instance {n : Nat} [inst : NeZero n] : OfNat Width n where
   ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
+
 
 inductive BaseType
   | bitvec (w : Width) : BaseType
@@ -146,7 +146,7 @@ inductive Op
 | const (val : BitVector w) : Op
 deriving Repr, DecidableEq
 
-@[simp]
+@[simp, reducible]
 def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.icmp _ w =>
@@ -154,7 +154,7 @@ def argUserType : Op → UserType
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
-@[simp]
+@[simp, reducible]
 def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.select w =>
@@ -175,16 +175,16 @@ induction m with
   rw [Nat.pow_succ]
   exact Nat.mul_pos (ih h) h
 
-theorem Width.zero_lt_pow_2 {w : Width} : 0 < 2^w.val := by
+theorem _root_.PNat.zero_lt_pow_2 {w : Width} : 0 < 2^w.val := by
 have h : 0 < 2 := Nat.zero_lt_succ 1
 exact @Nat.zero_lt_pow w.val 2 h
 
-def Width.nat_pow (n : Nat) (w : Width) : Nat :=
+def _root_.PNat.nat_pow (n : Nat) (w : Width) : Nat :=
 n ^ w
 
 theorem Nat.gt_of_lt {a b : Nat} : a < b → b > a := by simp
 
-def _root_.Nat.toFinWidth (n : Nat) (w : Width) : Fin (2^w.val) :=
+def _root_.Nat.toFinPNat (n : Nat) (w : Width) : Fin (2^w.val) :=
  { val := n % (2^w), isLt := (Nat.mod_lt n w.zero_lt_pow_2) }
 
 def _root_.Fin.toBitVectorFun {w : Width} (x : Fin (2^w.val)) : @BitVectorFun w :=
@@ -194,7 +194,7 @@ def _root_.Fin.toBitVector {w : Width} (x : Fin (2^w.val)) : BitVector w :=
   x.toBitVectorFun.toBitVector
 
 def _root_.Int.toBitVector {w : Width} (x : Int) : BitVector w :=
-   Nat.toFinWidth x.natAbs w |>.toBitVector
+   Nat.toFinPNat x.natAbs w |>.toBitVector
 
 def BitVector.and {w : Width} (x y : BitVector w) : BitVector w := x.asUInt &&& y.asUInt |>.toBitVector
 def BitVector.or {w : Width} (x y : BitVector w) : BitVector w := x.asUInt ||| y.asUInt |>.toBitVector
@@ -279,8 +279,8 @@ def BitVector.select {w : Width} (c : BitVector 1) (x y : BitVector w) : BitVect
 @[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
-  Option (Goedel.toType (outUserType o)) := .some <|
+  (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
+  Goedel.toType (outUserType o) :=
     match o with
     | Op.and _ => uncurry BitVector.and arg
     | Op.or _ => uncurry BitVector.or arg
@@ -289,6 +289,7 @@ def eval (o : Op)
     | Op.lshr _ => uncurry BitVector.lshr arg
     | Op.ashr _ => uncurry BitVector.ashr arg
     | Op.const c => c
+    | _ => sorry
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
@@ -305,25 +306,15 @@ Optimization: InstCombineShift: 279
   %r = and %X, (-1 << C)
 -/
 
-syntax "lshr" ident : dsl_op
-syntax "shl" ident : dsl_op
-syntax "and" ident : dsl_op
-syntax "const" ident : dsl_op
+open EDSL
+syntax "lshr" term : dsl_op
+syntax "shl" term : dsl_op
+syntax "and" term : dsl_op
+syntax "const" term : dsl_op
 macro_rules
   | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
   | `([dsl_op| shl $w ]) => `(Op.shl $w)
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
-
-
-
-      -- intros a b c;
-      -- funext k1;
-      -- funext k2;
-      -- funext x;
-      -- -- is the time due to it re-elaborating the syntax, or due to the proof steps?
-      -- simp[Bind.bind];
-      -- simp[Option.bind];
-      -- simp[eval];
 
 end InstCombine
