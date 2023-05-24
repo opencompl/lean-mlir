@@ -226,7 +226,6 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
 def TypeSemantics : Type 1 :=
   ℕ → Type
 
-#check Id
 inductive NatBaseType (TS : TypeSemantics) : Type
   | ofNat : ℕ → NatBaseType TS
 deriving DecidableEq
