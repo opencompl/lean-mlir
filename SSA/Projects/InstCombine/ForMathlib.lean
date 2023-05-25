@@ -35,12 +35,56 @@ def toFun {width : Nat} : Bitvec width → Fun width :=
 instance {width : Nat} : Coe (Fun width) (Bitvec width) := ⟨@ofFun width⟩
 instance {width : Nat} : Coe (Bitvec width) (Fun width) := ⟨@toFun width⟩
 
+def ofVector : Vector Bool n → Bitvec n := id
+
+-- inspired by: https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Defining.20my.20own.20numerals
+-- not ideal solution, as hard to type, but should be ok for now
+prefix:max "𝟶"   => fun v => ofVector (Vector.cons false v)
+prefix:max "𝟷"   => fun v => ofVector (Vector.cons true v)
+notation:max "𝟶"   => ofVector (Vector.cons false (@Vector.nil Bool))
+notation:max "𝟷"   => ofVector (Vector.cons true (@Vector.nil Bool))
+
+instance : Add (Bitvec n) where add := Bitvec.add
+instance : Sub (Bitvec n) where sub := Bitvec.sub
+
+-- examples:
+-- #eval (𝟷𝟶𝟷𝟷).toNat
+-- #eval (𝟶𝟷𝟷𝟷).toNat
+-- #eval (𝟶𝟷𝟷𝟷) + (𝟷𝟶𝟷𝟷) |>.toNat
+-- #eval 𝟷𝟶𝟷𝟷 + 𝟶𝟷𝟷𝟷
+-- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) true
+-- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) false
+-- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) true |>.toNat
+-- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) false |>.toNat
+-- 
+-- #eval Bitvec.adc (𝟶) (𝟶) true
+-- #eval Bitvec.adc (𝟶) (𝟶) false
+
+theorem adc_add_nat {n : Nat} {x y : Bitvec n} : (Bitvec.adc x y false).toNat = x.toNat + y.toNat := sorry
+
+theorem add_add_nat_mod_2_pow_n {n : Nat} {x y : Bitvec n} : (x + y).toNat = (x.toNat + y.toNat) % 2^n := sorry
+
+def add? {n : Nat} (x y : Bitvec n) : Option (Bitvec n) := match Bitvec.adc x y false with
+  -- | true ::ᵥ z => some z
+  -- | Vector.cons true z => some z
+  /- the above yields an error with pattern match:
+  ```
+  invalid patterns, `z` is an explicit pattern variable, but it only occurs in positions that are inaccessible to pattern matching
+  { val := true :: .(z.1), property := (_ : Nat.succ (List.length ↑z) = Nat.succ n) }
+  ```
+  Either this needs the @[...] annotation that I've forgotten how it goes, or it should go into bollu's Entemology.
+  -/
+  | ⟨false :: z,hcons⟩ => some ⟨z, by aesop⟩
+  | _ => none -- overflow
+
+theorem some_add?_eq_add {n : Nat} {x y z : Bitvec n} : add? x y = some z → x + y = z := sorry
+
 /--
 The value produced is the unsigned integer quotient of the two operands.
 Note that unsigned integer division and signed integer division are distinct operations; for signed integer division, use ‘sdiv’.
 Division by zero is undefined behavior.
 -/
-def udiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
+def udiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   match y.toNat with
     | 0 => none
     | _ => some $ Bitvec.ofNat w (x.toNat / y.toNat)
@@ -51,7 +95,7 @@ Note that signed integer division and unsigned integer division are distinct ope
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
-def sdiv {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
+def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
   match y.toInt with
     | 0 => none
     | _ => match w with
@@ -72,10 +116,9 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) :=
   sorry -- TODO: make sure the semantics are the same here
 
-
 -- from InstCombine/:805
 theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w.succ} :
-  Bitvec.sdiv (Bitvec.ofInt w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w.succ 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w.succ 0)) :=
+  Bitvec.sdiv? (Bitvec.ofInt w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w.succ 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w.succ 0)) :=
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
 
