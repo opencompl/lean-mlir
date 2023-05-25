@@ -11,8 +11,7 @@ instance {n : Nat} [inst : NeZero n] : OfNat Width n where
 
 inductive BaseType
   | bitvec (w : Width) : BaseType
-  | poison : BaseType
-  | ub : BaseType
+  | option_bitvec (w : Width) : BaseType
   deriving DecidableEq
 
 instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
@@ -20,13 +19,10 @@ instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 @[simp]
 def Bitvec.width {n : Nat} [hNeZero : NeZero n] (_ : Bitvec n) : Width := ⟨n, by sorry⟩
 
-
-
 instance : Goedel BaseType where
 toType := fun
   | .bitvec w => Bitvec w
-  | .poison => Unit
-  | .ub => Unit
+  | .option_bitvec w => Option $ Bitvec w
 
 abbrev UserType := SSA.UserType BaseType
 
@@ -68,6 +64,7 @@ inductive Op
 | mul (w : Width) : Op
 | sub (w : Width) : Op
 | sdiv (w : Width) : Op
+| udiv (w : Width) : Op
 | icmp (c : Comparison) (w : Width) : Op
 | const {w : Width} (val : Bitvec w) : Op
 deriving Repr, DecidableEq
@@ -75,7 +72,7 @@ deriving Repr, DecidableEq
 @[simp, reducible]
 def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.icmp _ w =>
+| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
@@ -83,8 +80,10 @@ def argUserType : Op → UserType
 @[simp, reducible]
 def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.add w | Op.mul w | Op.sub w | Op.sdiv w | Op.select w =>
+| Op.sub w |  Op.select w =>
   .base (BaseType.bitvec w)
+| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w  =>
+  .base (BaseType.option_bitvec w)
 | Op.icmp _ _ => .base (BaseType.bitvec 1)
 | @Op.const width _ => .base (BaseType.bitvec width)
 
@@ -111,8 +110,10 @@ def eval (o : Op)
       | (arg₁,arg₂) => Bitvec.sshr arg₁ arg₂.toNat
     | Op.const c => c
     | Op.sub _ => uncurry Bitvec.sub arg
-    | Op.add _ => uncurry Bitvec.add arg
-    | Op.mul _ => uncurry Bitvec.mul arg
+    | Op.add _ => uncurry Bitvec.add? arg
+    | Op.mul _ => uncurry Bitvec.mul? arg
+    | Op.sdiv _ => uncurry Bitvec.sdiv? arg
+    | Op.udiv _ => uncurry Bitvec.udiv? arg
     | _ => sorry
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where

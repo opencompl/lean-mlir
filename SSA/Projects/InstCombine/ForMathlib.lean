@@ -64,20 +64,30 @@ theorem adc_add_nat {n : Nat} {x y : Bitvec n} : (Bitvec.adc x y false).toNat = 
 
 theorem add_add_nat_mod_2_pow_n {n : Nat} {x y : Bitvec n} : (x + y).toNat = (x.toNat + y.toNat) % 2^n := sorry
 
+-- see https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Pattern.20matching.20subtypes
 def add? {n : Nat} (x y : Bitvec n) : Option (Bitvec n) := match Bitvec.adc x y false with
-  -- | true ::ᵥ z => some z
-  -- | Vector.cons true z => some z
-  /- the above yields an error with pattern match:
-  ```
-  invalid patterns, `z` is an explicit pattern variable, but it only occurs in positions that are inaccessible to pattern matching
-  { val := true :: .(z.1), property := (_ : Nat.succ (List.length ↑z) = Nat.succ n) }
-  ```
-  Either this needs the @[...] annotation that I've forgotten how it goes, or it should go into bollu's Entemology.
-  -/
   | ⟨false :: z,hcons⟩ => some ⟨z, by aesop⟩
   | _ => none -- overflow
 
+
 theorem some_add?_eq_add {n : Nat} {x y z : Bitvec n} : add? x y = some z → x + y = z := sorry
+
+/-
+#eval  (𝟷𝟶𝟷𝟷).toNat * (𝟷𝟶𝟷𝟷).toNat
+#eval  Bitvec.mul (𝟷𝟶𝟷𝟷) (𝟷𝟶𝟷𝟷) |>.toNat
+-/
+protected def mul? {n : Nat} (x y : Bitvec n) : Option (Bitvec n) := do
+  let f r b := do 
+    let op₁ ← Bitvec.add? r r 
+    let op₂ ← Bitvec.add? op₁ y
+    return cond b op₂ op₁
+  (x.toList).foldlM f 0
+
+/-
+#eval  Bitvec.mul? (𝟷𝟶𝟷𝟷) (𝟷𝟶𝟷𝟷)
+#eval  Bitvec.mul? (𝟶𝟶𝟶𝟶𝟶𝟶𝟷𝟶𝟷𝟷) (𝟶𝟶𝟶𝟶𝟶𝟶𝟷𝟶𝟷𝟷) |>.get!|>.toNat
+-/
+theorem mul?_some_eq_mul : ∀ {n : Nat} {x y z : Bitvec n}, Bitvec.mul? x y = some z → x * y = z := sorry
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
