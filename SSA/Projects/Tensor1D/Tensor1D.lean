@@ -1,4 +1,3 @@
-import SSA.Core.Framework
 import SSA.Core.WellTypedFramework
 import SSA.Core.Util
 
@@ -307,7 +306,7 @@ open Val
 
 inductive Op
 | add
-| const (v: Int)
+| const (v: Nat)
 | sub
 -- | mul
 -- | run
@@ -349,7 +348,7 @@ def argUserType : Op → UserType
 def outUserType : Op → UserType
 | Op.add => .base (BaseType.int)
 | Op.sub => .base (BaseType.int)
-| Op.const _ => .base (BaseType.int)
+| Op.const _ => .base (BaseType.nat)
 | Op.map1d =>  .base BaseType.tensor1d
 | Op.extract1d =>  .base BaseType.tensor1d
 
@@ -432,23 +431,22 @@ register_simp_attr uncurry
 -- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
 open SSA EDSL in
-theorem extract_map (r0 : TSSA Op _ _) :
-  ∀ (e : Env Val) (re : Env (Val → Val)),  -- for metavariable in typeclass
-  SSA.eval e re [dsl_region| rgn{ %v0 =>
+theorem extract_map (r0 : TSSA Op Context.empty _) :
+  TSSA.eval (e := e) [dsl_region| rgn{ %v0 =>
     ^bb
       %v42 := unit: ;
       %v1 := op:map1d %v0, rgn$(r0) ; -- TODO: add syntax for DSL regions.
       %v2 := op:const(v) %v42;
-      %v3 := op:const(43) %v42;
+      %v3 := op:const(101) %v42;
       %v4 := triple:%v1 %v2 %v3;
       %v5 := op:extract1d %v4
       dsl_ret %v5
   }] =
-  SSA.eval e re [dsl_region| rgn{ %v0 =>
+  TSSA.eval (e := e) [dsl_region| rgn{ %v0 =>
     ^bb
       %v42 := unit: ;
       %v1 := op:const(v) %v42;
-      %v2 := op:const(43) %v42;
+      %v2 := op:const(101) %v42;
       %v3 := triple: %v0 %v1 %v2;
       %v4 := op:extract1d %v3;
       -- jeez, so having intrinsically well typed terms means that I
@@ -457,8 +455,13 @@ theorem extract_map (r0 : TSSA Op _ _) :
       %v5 := op:map1d %v4, rgn$(r0) -- TODO: add syntax for region variables
       dsl_ret %v5
   }] := by {
-    sorry
-    -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
+    simp
+    simp[TypedUserSemantics.eval];
+    simp[eval];
+    funext arg;
+    simp[UserType.mkTriple]
+    generalize R : TSSA.eval r0 EnvC.empty = rval 
+    simp[Tensor1d.extract_map]
   }
 
 end ArithScfLinalg
