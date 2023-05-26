@@ -262,7 +262,7 @@ scoped syntax "[dsl_op|" dsl_op "]" : term
 scoped syntax "%v" num : dsl_var
 
 
-scoped syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
+scoped syntax "op:" dsl_op dsl_var ("," dsl_region)? : dsl_expr
 scoped syntax "unit:"  : dsl_expr
 scoped syntax "pair:"  dsl_var dsl_var : dsl_expr
 scoped syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
@@ -273,6 +273,8 @@ scoped syntax sepBy(dsl_assign, ";") : dsl_stmt
 -- scoped syntax "dsl_ret " dsl_var : dsl_terminator
 scoped syntax "rgn{" dsl_var "=>" dsl_bb "}" : dsl_region
 scoped syntax "^bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
+
+scoped syntax "rgn$(" term ")" : dsl_region
 
 open Lean Elab Macro in
 
@@ -313,6 +315,7 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 
 mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
+| `(dsl_region| rgn$($v)) => return v
 | `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
@@ -367,7 +370,7 @@ partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
   let celab ← elabStxVar c
   `(SSA.TSSA.triple $aelab $belab $celab)
 | `(dsl_expr| $v:dsl_var) => elabStxVar v
-| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]? ) => do
+| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[, $r? ]? ) => do
   let arg ← elabStxVar arg
   let rgn ← match r? with
     | none => `(SSA.TSSA.rgn0)

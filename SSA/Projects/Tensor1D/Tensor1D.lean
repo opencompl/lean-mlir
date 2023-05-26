@@ -371,8 +371,8 @@ def rgnCod : Op → UserType
 
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
-  Option (Goedel.toType (outUserType o)) := .some <|
+  (_rgn : (Goedel.toType (rgnDom o) → (Goedel.toType (rgnCod o)))) :
+  (Goedel.toType (outUserType o)) :=
   match o with
   | .const v => v
   | .add =>
@@ -391,9 +391,8 @@ def eval (o : Op)
       -- .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
   | .map1d =>
     let t : Tensor1d Int := arg;
-    -- @sid: @chris, the `option` is bad :( I don't want the option.
-    let r : Int → Option Int := _rgn;
-    let t' := t.map fun v => (r v).get!
+    let r : Int → Int := _rgn;
+    let t' := t.map r
     t'
   | .extract1d =>
     let (t, l, len) := arg;
@@ -403,25 +402,22 @@ def eval (o : Op)
     t.extract l len
 
 
-/-
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
   rgnDom := rgnDom
   rgnCod := rgnCod
   outUserType := outUserType
   eval := eval
--/
 
-/-
 syntax "map1d" : dsl_op
 syntax "extract1d" : dsl_op
 syntax "const" "(" term ")" : dsl_op
 
+open EDSL in
 macro_rules
 | `([dsl_op| map1d]) => `(Op.map1d)
 | `([dsl_op| extract1d]) => `(Op.extract1d)
 | `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
--/
 
 -- Why do these not get set?
 register_simp_attr SSA.teval
@@ -435,30 +431,34 @@ register_simp_attr uncurry
 
 -- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
-/-
-open SSA in
-theorem extract_map :
-  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
-  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v1 := op:map1d %v0 { %r0 };
-    %v2 := op:const(v) %v42;
-    %v3 := op:const(43) %v42;
-    %v4 := triple:%v1 %v2 %v3;
-    %v5 := op:extract1d %v4
-    dsl_ret %v5
-  ] =
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v1 := op:const(v) %v42;
-    %v2 := op:const(43) %v42;
-    %v3 := triple: %v0 %v1 %v2;
-    %v4 := op:extract1d %v3;
-    %v5 := op:map1d %v4 { %r0 }
-    dsl_ret %v5
-  ] := by {
+open SSA EDSL in
+theorem extract_map (r0 : TSSA Op _ _) :
+  ∀ (e : Env Val) (re : Env (Val → Val)),  -- for metavariable in typeclass
+  SSA.eval e re [dsl_region| rgn{ %v0 =>
+    ^bb
+      %v42 := unit: ;
+      %v1 := op:map1d %v0, rgn$(r0) ; -- TODO: add syntax for DSL regions.
+      %v2 := op:const(v) %v42;
+      %v3 := op:const(43) %v42;
+      %v4 := triple:%v1 %v2 %v3;
+      %v5 := op:extract1d %v4
+      dsl_ret %v5
+  }] =
+  SSA.eval e re [dsl_region| rgn{ %v0 =>
+    ^bb
+      %v42 := unit: ;
+      %v1 := op:const(v) %v42;
+      %v2 := op:const(43) %v42;
+      %v3 := triple: %v0 %v1 %v2;
+      %v4 := op:extract1d %v3;
+      -- jeez, so having intrinsically well typed terms means that I
+      -- cannot reuse the same variable r0 as they occur in different
+      -- contexts. crazy!
+      %v5 := op:map1d %v4, rgn$(r0) -- TODO: add syntax for region variables
+      dsl_ret %v5
+  }] := by {
     sorry
     -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
   }
--/
 
 end ArithScfLinalg
