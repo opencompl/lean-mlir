@@ -22,15 +22,11 @@ def Fun (width : Nat) := Fin width → Bool
 
 /-- convert `Bitvec n` to `Fin n → Bool` -/
 def ofFun {width : Nat} : Fun width → Bitvec width :=
-  match width with
-    | 0 => fun _ => ⟨List.nil, rfl⟩
-    | n + 1 => fun f => sorry
+  Vector.ofFn
 
 /-- convert `Fin n → Bool` to `Bitvec n` -/
 def toFun {width : Nat} : Bitvec width → Fun width :=
-    match width with
-        | 0 => fun _ => Fin.elim0
-        | n + 1 => fun bv i => bv[i]
+    Vector.get
 
 instance {width : Nat} : Coe (Fun width) (Bitvec width) := ⟨@ofFun width⟩
 instance {width : Nat} : Coe (Bitvec width) (Fun width) := ⟨@toFun width⟩
@@ -59,6 +55,27 @@ instance : Sub (Bitvec n) where sub := Bitvec.sub
 -- 
 -- #eval Bitvec.adc (𝟶) (𝟶) true
 -- #eval Bitvec.adc (𝟶) (𝟶) false
+
+theorem ofNat_surjective : Function.Surjective (Bitvec.ofNat n : ℕ → Bitvec n) := 
+  Function.surjective_iff_hasRightInverse.2 ⟨Bitvec.toNat, ofNat_toNat⟩  
+
+def carryXor (x y c : Bool) : Bool × Bool := (Bitvec.carry x y c, Bitvec.xor3 x y c)
+
+theorem foldl_addLsb_add : ∀ (n k : ℕ) (x : List Bool), 
+    x.foldl addLsb (n + k) = 2 ^ x.length * k + x.foldl addLsb n
+  | n, k, [] => by simp [addLsb, add_comm, add_assoc, add_left_comm]
+  | n, k, a::l => by
+    rw [List.foldl_cons, List.foldl_cons, addLsb, addLsb]
+    have : (n + k) + (n + k) + cond a 1 0 = (n + n + cond a 1 0) + (k + k) :=
+      by simp [add_assoc, add_comm, add_left_comm]
+    rw [this, foldl_addLsb_add _ (k + k) l]
+    simp [pow_succ, two_mul, mul_add, add_mul, add_assoc]
+  
+theorem foldl_addLsb_cons_zero (a : Bool) (x : List Bool) :
+    (a::x).foldl addLsb 0 = 2^x.length * cond a 1 0 + x.foldl addLsb 0 :=
+  calc (a::x).foldl addLsb 0
+     = x.foldl addLsb (0 + 0 + cond a 1 0) := rfl
+   _ = _ := by rw [foldl_addLsb_add]
 
 theorem adc_add_nat {n : Nat} {x y : Bitvec n} : (Bitvec.adc x y false).toNat = x.toNat + y.toNat := sorry
 
