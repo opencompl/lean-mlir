@@ -4,20 +4,20 @@ import SSA.Projects.InstCombine.ForMathlib
 
 namespace InstCombine
 
-abbrev Width := ℕ+
-
-instance {n : Nat} [inst : NeZero n] : OfNat Width n where
-  ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
+-- allow to create constants of width 0 too, so that type unification doesn't fail because of coercionbbrev Width := ℕ+
+-- abbrev Width := ℕ+
+-- instance {n : Nat} [inst : NeZero n] : OfNat Width n where
+--   ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
 
 inductive BaseType
-  | bitvec (w : Width) : BaseType
-  | option_bitvec (w : Width) : BaseType
+  | bitvec (w : Nat) : BaseType
+  | option_bitvec (w : Nat) : BaseType
   deriving DecidableEq
 
-instance {w : Width} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
+instance {w : Nat} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 
 @[simp]
-def Bitvec.width {n : Nat} [hNeZero : NeZero n] (_ : Bitvec n) : Width := ⟨n, by sorry⟩
+def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
 
 instance : Goedel BaseType where
 toType := fun
@@ -53,20 +53,20 @@ inductive Comparison
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive Op
-| and (w : Width) : Op
-| or (w : Width) : Op
-| xor (w : Width) : Op
-| shl (w : Width) : Op
-| lshr (w : Width) : Op
-| ashr (w : Width) : Op
-| select (w : Width) : Op
-| add (w : Width) : Op
-| mul (w : Width) : Op
-| sub (w : Width) : Op
-| sdiv (w : Width) : Op
-| udiv (w : Width) : Op
-| icmp (c : Comparison) (w : Width) : Op
-| const {w : Width} (val : Bitvec w) : Op
+| and (w : Nat) : Op
+| or (w : Nat) : Op
+| xor (w : Nat) : Op
+| shl (w : Nat) : Op
+| lshr (w : Nat) : Op
+| ashr (w : Nat) : Op
+| select (w : Nat) : Op
+| add (w : Nat) : Op
+| mul (w : Nat) : Op
+| sub (w : Nat) : Op
+| sdiv (w : Nat) : Op
+| udiv (w : Nat) : Op
+| icmp (c : Comparison) (w : Nat) : Op
+| const {w : Nat} (val : Bitvec w) : Op
 deriving Repr, DecidableEq
 
 @[simp, reducible]
