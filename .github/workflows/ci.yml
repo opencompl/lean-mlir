@@ -25,6 +25,7 @@ jobs:
 
       - name: Compile 🧐
         run: |
+          lake exe cache get # download cache of mathlib docs.
           lake build
 
       - name: Generate docs 📜
