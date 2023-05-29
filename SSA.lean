@@ -12,6 +12,7 @@ import SSA.Core.WellTypedFramework
 import SSA.Projects.InstCombine.InstCombinePeepholeRewrites
 import SSA.Projects.InstCombine.InstCombineAlive
 import SSA.Projects.Tensor1D.Tensor1D
+import SSA.Projects.CompassStraightedge.CompassStraightedge
 
 
 -- EXPERIMENTAL
