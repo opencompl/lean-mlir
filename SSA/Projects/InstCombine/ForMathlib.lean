@@ -20,6 +20,11 @@ instance (n : Nat) : Inhabited (Bitvec n) :=
 
 def Fun (width : Nat) := Fin width → Bool
 
+def ofInt' (n : Nat) (z : Int) : Bitvec n :=
+  match n with
+    | 0 => ⟨List.nil, rfl⟩
+    | m + 1 => Bitvec.ofInt m z
+
 /-- convert `Bitvec n` to `Fin n → Bool` -/
 def ofFun {width : Nat} : Fun width → Bitvec width :=
   match width with
@@ -108,9 +113,7 @@ Overflow also leads to undefined behavior; this is a rare case, but can occur, f
 def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
   match y.toInt with
     | 0 => none
-    | _ => match w with
-      | 0 => some Vector.nil
-      | w' + 1 => some $ Bitvec.ofInt w' (x.toInt / y.toInt)
+    | _ => some $ Bitvec.ofInt' w (x.toInt / y.toInt)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
@@ -122,13 +125,13 @@ theorem bitwise_eq_eq {w : Nat} (x y : Bitvec w) [ wneq0 : NeZero w] :
  (forall i : Fin w, x[i] = y[i]) ↔ x = y := sorry
     
 -- from InstCombine/Shift:279
-theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
-  Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) :=
+theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w} :
+  Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt' w (-1)) C.toNat) :=
   sorry -- TODO: make sure the semantics are the same here
 
 -- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w.succ} :
-  Bitvec.sdiv? (Bitvec.ofInt w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w.succ 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w.succ 0)) :=
+theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} :
+  Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
 
