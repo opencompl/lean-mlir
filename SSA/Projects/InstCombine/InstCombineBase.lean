@@ -114,10 +114,10 @@ def eval (o : Op)
       | (arg₁,arg₂) => Bitvec.sshr arg₁ arg₂.toNat
     | Op.const c => c
     | Op.sub _ => (uncurry Bitvec.sub arg)
-    | Op.add _ => (uncurry Bitvec.add? arg).get!
-    | Op.mul _ => (uncurry Bitvec.mul? arg).get!
-    | Op.sdiv _ => (uncurry Bitvec.sdiv? arg).get!
-    | Op.udiv _ => (uncurry Bitvec.udiv? arg).get!
+    | Op.add _ => sorry  --(uncurry Bitvec.add? arg)
+    | Op.mul _ => sorry  --(uncurry Bitvec.mul? arg)
+    | Op.sdiv _ => sorry  --(uncurry Bitvec.sdiv? arg)
+    | Op.udiv _ => sorry -- (uncurry Bitvec.udiv? arg)
     | _ => sorry
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
