@@ -11,7 +11,6 @@ namespace InstCombine
 
 inductive BaseType
   | bitvec (w : Nat) : BaseType
-  | option_bitvec (w : Nat) : BaseType
   deriving DecidableEq
 
 instance {w : Nat} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
@@ -22,7 +21,6 @@ def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
 instance : Goedel BaseType where
 toType := fun
   | .bitvec w => Bitvec w
-  | .option_bitvec w => Option $ Bitvec w
 
 abbrev UserType := SSA.UserType BaseType
 
@@ -55,6 +53,7 @@ inductive Comparison
 inductive Op
 | and (w : Nat) : Op
 | or (w : Nat) : Op
+| not (w : Nat) : Op
 | xor (w : Nat) : Op
 | shl (w : Nat) : Op
 | lshr (w : Nat) : Op
@@ -74,16 +73,20 @@ def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
+| Op.not w => .base (BaseType.bitvec w)
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp, reducible]
 def outUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
+| Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.sub w |  Op.select w =>
   .base (BaseType.bitvec w)
+ -- @goens: please keep this 'bitvec', and model the option inside it, because
+ -- that is how it works in LLVM (and in Alive). The type is that of bit vectors,
+ -- and bitvectors might have poison (ie, a special bottom / .none value.)
 | Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w  =>
-  .base (BaseType.option_bitvec w)
+  .base (BaseType.bitvec w)
 | Op.icmp _ _ => .base (BaseType.bitvec 1)
 | @Op.const width _ => .base (BaseType.bitvec width)
 
@@ -93,6 +96,7 @@ def rgnDom : Op → UserType := fun _ => .unit
 def rgnCod : Op → UserType := fun _ => .unit
 
 -- TODO: compare with LLVM semantics
+-- TODO, @goens: Make everything take 'Option Bitvec', and handle the poison case.
 @[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
@@ -109,11 +113,11 @@ def eval (o : Op)
     | Op.ashr _ => match arg with
       | (arg₁,arg₂) => Bitvec.sshr arg₁ arg₂.toNat
     | Op.const c => c
-    | Op.sub _ => uncurry Bitvec.sub arg
-    | Op.add _ => uncurry Bitvec.add? arg
-    | Op.mul _ => uncurry Bitvec.mul? arg
-    | Op.sdiv _ => uncurry Bitvec.sdiv? arg
-    | Op.udiv _ => uncurry Bitvec.udiv? arg
+    | Op.sub _ => (uncurry Bitvec.sub arg)
+    | Op.add _ => sorry  --(uncurry Bitvec.add? arg)
+    | Op.mul _ => sorry  --(uncurry Bitvec.mul? arg)
+    | Op.sdiv _ => sorry  --(uncurry Bitvec.sdiv? arg)
+    | Op.udiv _ => sorry -- (uncurry Bitvec.udiv? arg)
     | _ => sorry
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
@@ -122,6 +126,17 @@ instance TUS : SSA.TypedUserSemantics Op BaseType where
   rgnCod := rgnCod
   outUserType := outUserType
   eval := eval
+
+/-- Create a bitvector in the two's complement representation from an `int`
+  We need such a coercion to keep the bit-width the same, as compared to the
+  Mathlib version which adds an extra bit!
+  @goens: can you figure out how to do this properly? Once again,
+  the API I define below is what I would expect in LLVM!
+-/
+-- protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
+def Bitvec.ofInt' (n : ℕ) (i : Int) : Bitvec n :=
+  Bitvec.ofNat n (Int.toNat i)
+
 
 /-
 Optimization: InstCombineShift: 279
@@ -132,14 +147,24 @@ Optimization: InstCombineShift: 279
 -/
 
 open EDSL
-syntax "lshr" term : dsl_op
-syntax "shl" term : dsl_op
+syntax "add" term : dsl_op
 syntax "and" term : dsl_op
 syntax "const" term : dsl_op
+syntax "lshr" term : dsl_op
+syntax "not" term : dsl_op
+syntax "or" term : dsl_op
+syntax "shl" term : dsl_op
+syntax "sub" term : dsl_op
+syntax "xor" term : dsl_op
 macro_rules
-  | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
-  | `([dsl_op| shl $w ]) => `(Op.shl $w)
+  | `([dsl_op| add $w ]) => `(Op.add $w)
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
-
+  | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
+  | `([dsl_op| not $w ]) => `(Op.not $w)
+  | `([dsl_op| or $w ]) => `(Op.or $w)
+  | `([dsl_op| shl $w ]) => `(Op.shl $w)
+  | `([dsl_op| sub $w ]) => `(Op.sub $w)
+  | `([dsl_op| xor $w ]) => `(Op.xor $w)
+  
 end InstCombine
