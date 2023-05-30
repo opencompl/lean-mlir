@@ -1,3 +1,6 @@
 [submodule "related-work/alive/alive"]
 	path = related-work/alive/alive
 	url = https://github.com/bollu/alive.git
+[submodule "SSA/Experimental/lean3bits"]
+	path = SSA/Experimental/lean3bits
+	url = https://github.com/ChrisHughes24/lean3bits
