@@ -438,7 +438,7 @@ theorem Refinement.refl {w : Nat} :∀ x : Option (Bitvec w), Refinement x x := 
 
 theorem Refinement.trans {w : Nat} : ∀ x y z : Option (Bitvec w), Refinement x y → Refinement y z → Refinement x z := by
   intro x y z h₁ h₂
-  cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } <;> try {apply Refinement.bothSome; assumption}
+  cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
   rename_i x y hxy y h 
   rw [hxy, h]; apply Refinement.refl
 
@@ -457,6 +457,13 @@ instance {w : Nat} : DecidableRel (@Refinement w) := by
   
 
 instance {w : Nat} : LE (Option (Bitvec w)) := ⟨Refinement⟩
+instance {w : Nat} : LT (Option (Bitvec w)) := ⟨ fun x y => x ≤ y ∧ ¬y ≤ x ⟩ 
+
+instance {w : Nat} : Preorder (Option $ Bitvec w) where
+  le := Refinement
+  le_refl := Refinement.refl
+  le_trans := Refinement.trans
+
 -- from InstCombine/:805
 theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w ≥ 3) (hx : x.toNat ≠ 0) :
   Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
