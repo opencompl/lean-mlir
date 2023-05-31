@@ -1,4 +1,3 @@
-import SSA.Core.Framework
 import SSA.Core.WellTypedFramework
 import SSA.Core.Util
 
@@ -47,7 +46,6 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
       sorry
     }
   }
-
 def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α where
   size := t.size
   val := fun ix => if ix < t.size then f (t.val ix) else default
@@ -58,20 +56,6 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
     have CONTRA : False := by linarith
     simp at CONTRA
   }
-
-
--- This should morally be some sort of `mapM`
-def Tensor1d.map? [Inhabited α] (f : α → Option α) (t : Tensor1d α) : Option (Tensor1d α) :=
-  size := t.size
-  val := fun ix => if ix < t.size then f (t.val ix) else default
-  spec := by {
-    intros ix IX;
-    simp;
-    intros H
-    have CONTRA : False := by linarith
-    simp at CONTRA
-  }
-
 
 -- Note that this theorem is wrong if we cannot state what happens
 -- when we are out of bounds, because the side that is (map extract) will have
@@ -152,7 +136,7 @@ theorem extractslice_insertslice [Inhabited α]
   (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
   : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
     simp[Tensor1d.insertslice, Tensor1d.extract]
-    cases slice ; simp;
+    cases slice <;> simp;
     case mk slicesize sliceval spec => {
       by_cases A:(t.size < sliceix) <;> simp[A]
       case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
@@ -322,7 +306,7 @@ open Val
 
 inductive Op
 | add
-| const (v: Int)
+| const (v: Nat)
 | sub
 -- | mul
 -- | run
@@ -364,7 +348,7 @@ def argUserType : Op → UserType
 def outUserType : Op → UserType
 | Op.add => .base (BaseType.int)
 | Op.sub => .base (BaseType.int)
-| Op.const _ => .base (BaseType.int)
+| Op.const _ => .base (BaseType.nat)
 | Op.map1d =>  .base BaseType.tensor1d
 | Op.extract1d =>  .base BaseType.tensor1d
 
@@ -386,8 +370,8 @@ def rgnCod : Op → UserType
 
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Option (Goedel.toType (rgnCod o)))) :
-  Option (Goedel.toType (outUserType o)) := .some <|
+  (_rgn : (Goedel.toType (rgnDom o) → (Goedel.toType (rgnCod o)))) :
+  (Goedel.toType (outUserType o)) :=
   match o with
   | .const v => v
   | .add =>
@@ -399,44 +383,40 @@ def eval (o : Op)
     let (x, y) := arg;
     let x : Int := x;
     let y : Int := y;
-    some $ x - y
+    x - y
   -- | .run, v, r => r v
   -- | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
   -- | .for_, (.pair (.nat n) (.int seed)), r =>
       -- .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
   | .map1d =>
     let t : Tensor1d Int := arg;
-    -- @sid: @chris, the `option` is bad :( I don't want the option.
-    let r : Int → Option Int := _rgn;
-    let t' := t.map fun v => (r v).get!
+    let r : Int → Int := _rgn;
+    let t' := t.map r
     t'
   | .extract1d =>
     let (t, l, len) := arg;
     let t : Tensor1d Int := t;
     let l : Nat := l;
     let len : Nat := len;
-    some $ t.extract l len
+    t.extract l len
 
 
-/-
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
   rgnDom := rgnDom
   rgnCod := rgnCod
   outUserType := outUserType
   eval := eval
--/
 
-/-
 syntax "map1d" : dsl_op
 syntax "extract1d" : dsl_op
 syntax "const" "(" term ")" : dsl_op
 
+open EDSL in
 macro_rules
 | `([dsl_op| map1d]) => `(Op.map1d)
 | `([dsl_op| extract1d]) => `(Op.extract1d)
 | `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
--/
 
 -- Why do these not get set?
 register_simp_attr SSA.teval
@@ -448,32 +428,40 @@ register_simp_attr outUserType
 -- register_simp_attr BitVector.width
 register_simp_attr uncurry
 
-theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
+-- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
-/-
-open SSA in
-theorem extract_map :
-  let Γ : Context UserType := List.toAList [⟨42, .unit⟩]
-  ∀ (e : EnvC Γ),  -- for metavariable in typeclass
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v1 := op:map1d %v0 { %r0 };
-    %v2 := op:const(v) %v42;
-    %v3 := op:const(43) %v42;
-    %v4 := triple:%v1 %v2 %v3;
-    %v5 := op:extract1d %v4
-    dsl_ret %v5
-  ] =
-  SSA.teval e.toEnvU [dsl_region| dsl_rgn %v0 =>
-    %v1 := op:const(v) %v42;
-    %v2 := op:const(43) %v42;
-    %v3 := triple: %v0 %v1 %v2;
-    %v4 := op:extract1d %v3;
-    %v5 := op:map1d %v4 { %r0 }
-    dsl_ret %v5
-  ] := by {
-    sorry
-    -- @chris, @andres: Can I have some help rewriting this to eliminate all the overhead?
+open SSA EDSL in
+theorem extract_map (r0 : TSSA Op Context.empty _) :
+  TSSA.eval (e := e) [dsl_region| rgn{ %v0 =>
+    ^bb
+      %v42 := unit: ;
+      %v1 := op:map1d %v0, rgn$(r0) ; -- TODO: add syntax for DSL regions.
+      %v2 := op:const(v) %v42;
+      %v3 := op:const(101) %v42;
+      %v4 := triple:%v1 %v2 %v3;
+      %v5 := op:extract1d %v4
+      dsl_ret %v5
+  }] =
+  TSSA.eval (e := e) [dsl_region| rgn{ %v0 =>
+    ^bb
+      %v42 := unit: ;
+      %v1 := op:const(v) %v42;
+      %v2 := op:const(101) %v42;
+      %v3 := triple: %v0 %v1 %v2;
+      %v4 := op:extract1d %v3;
+      -- jeez, so having intrinsically well typed terms means that I
+      -- cannot reuse the same variable r0 as they occur in different
+      -- contexts. crazy!
+      %v5 := op:map1d %v4, rgn$(r0) -- TODO: add syntax for region variables
+      dsl_ret %v5
+  }] := by {
+    simp
+    simp[TypedUserSemantics.eval];
+    simp[eval];
+    funext arg;
+    simp[UserType.mkTriple]
+    generalize R : TSSA.eval r0 EnvC.empty = rval 
+    simp[Tensor1d.extract_map]
   }
--/
 
 end ArithScfLinalg

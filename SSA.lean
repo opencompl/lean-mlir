@@ -10,6 +10,7 @@ import SSA.Core.WellTypedFramework
 
 -- Eventually, all projects must be imported.
 import SSA.Projects.InstCombine.InstCombinePeepholeRewrites
+import SSA.Projects.InstCombine.InstCombineAlive
 import SSA.Projects.Tensor1D.Tensor1D
 
 

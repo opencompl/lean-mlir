@@ -92,7 +92,7 @@ inductive Context (β : Type) : Type
   | empty : Context β
   | snoc : Context β → Var → (UserType β) → Context β
 
-inductive Context.Var {β : Type} : Context β → UserType β → Type
+inductive Context.Var {β : Type} : (Γ : Context β) → UserType β → Type
   | prev {Γ : Context β} :
       Context.Var Γ a → Context.Var (Context.snoc Γ v' a') a
   | last {Γ : Context β} {v : SSA.Var} {a : UserType β} :
@@ -103,6 +103,14 @@ instance {α : Type} : EmptyCollection (Context α) :=
 
 def EnvC [Goedel β] (c : Context β)  :=
   ∀ ⦃a : UserType β⦄, c.Var a → ⟦a⟧
+
+def Context.Var.emptyElim {β : Type} {a : UserType β} 
+  (v : Context.Var Context.empty a) : P := by {
+    cases v;
+}
+
+def EnvC.empty [Goedel β] : EnvC (Context.empty (β := β)) :=
+  fun _a v => v.emptyElim
 
 inductive TSSAIndex (β : Type) : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
@@ -140,7 +148,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   /-- (fst, snd, third) -/
   | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple T₁ T₂ T₃))
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Γ (.REGION (rgnDom o) (rgnCod o))) :
+  | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Context.empty (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
   | rgn (arg : Var) {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.TERMINATOR cod)) :
@@ -164,7 +172,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
   | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e =>
-    TypedUserSemantics.eval o (e arg) (rg.eval e)
+    TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
   | _, _, .rgn _arg body => fun e arg =>
       body.eval (fun _ v =>
         match v with
@@ -209,7 +217,7 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
   | _, _, .triple fst snd third => fun e => do 
     return mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e => do 
-    let rgv := rg.evalM e
+    let rgv := rg.evalM EnvC.empty
     TypedUserSemanticsM.evalM o (e arg) rgv
   | _, _, .rgn _arg body => fun e arg => do
       body.evalM (fun _ v =>
@@ -262,7 +270,7 @@ scoped syntax "[dsl_op|" dsl_op "]" : term
 scoped syntax "%v" num : dsl_var
 
 
-scoped syntax "op:" dsl_op dsl_var ("{" dsl_region "}")? : dsl_expr
+scoped syntax "op:" dsl_op dsl_var ("," dsl_region)? : dsl_expr
 scoped syntax "unit:"  : dsl_expr
 scoped syntax "pair:"  dsl_var dsl_var : dsl_expr
 scoped syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
@@ -273,6 +281,8 @@ scoped syntax sepBy(dsl_assign, ";") : dsl_stmt
 -- scoped syntax "dsl_ret " dsl_var : dsl_terminator
 scoped syntax "rgn{" dsl_var "=>" dsl_bb "}" : dsl_region
 scoped syntax "^bb"  (dsl_stmt)?  "dsl_ret " dsl_var : dsl_bb
+
+scoped syntax "rgn$(" term ")" : dsl_region
 
 open Lean Elab Macro in
 
@@ -313,6 +323,7 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 
 mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
+| `(dsl_region| rgn$($v)) => return v
 | `(dsl_region| rgn{ $v:dsl_var => $bb:dsl_bb }) => do
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
@@ -367,7 +378,7 @@ partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
   let celab ← elabStxVar c
   `(SSA.TSSA.triple $aelab $belab $celab)
 | `(dsl_expr| $v:dsl_var) => elabStxVar v
-| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[{ $r? }]? ) => do
+| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[, $r? ]? ) => do
   let arg ← elabStxVar arg
   let rgn ← match r? with
     | none => `(SSA.TSSA.rgn0)

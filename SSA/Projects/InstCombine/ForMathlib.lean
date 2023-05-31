@@ -28,6 +28,11 @@ instance (n : Nat) : Inhabited (Bitvec n) :=
 
 def Fun (width : Nat) := Fin width → Bool
 
+def ofInt' (n : Nat) (z : Int) : Bitvec n :=
+  match n with
+    | 0 => ⟨List.nil, rfl⟩
+    | m + 1 => Bitvec.ofInt m z
+
 /-- convert `Bitvec n` to `Fin n → Bool` -/
 def ofFun {width : Nat} : Fun width → Bitvec width :=
   Vector.ofFn
@@ -320,9 +325,7 @@ Overflow also leads to undefined behavior; this is a rare case, but can occur, f
 def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
   match y.toInt with
     | 0 => none
-    | _ => match w with
-      | 0 => some Vector.nil
-      | w' + 1 => some $ Bitvec.ofInt w' (x.toInt / y.toInt)
+    | _ => some $ Bitvec.ofInt' w (x.toInt / y.toInt)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
@@ -422,8 +425,8 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
 -- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w.succ} :
-  Bitvec.sdiv? (Bitvec.ofInt w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w.succ 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w.succ 0)) :=
+theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} :
+  Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
 
