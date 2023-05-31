@@ -426,24 +426,24 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
 -- A lot of this should probably go to a differet file here and not Mathlib
-inductive Refinement {w : Nat} : Option (Bitvec w) → Option (Bitvec w) → Prop
-  | bothSome {x y : Bitvec w } : x = y → Refinement (some x) (some y)
-  | noneAny {x? : Option (Bitvec w)} : Refinement none x?
+inductive Refinement {α : Type u} : Option α → Option α → Prop
+  | bothSome {x y : α } : x = y → Refinement (some x) (some y)
+  | noneAny {x? : Option α} : Refinement none x?
 
-theorem Refinement.refl {w : Nat} :∀ x : Option (Bitvec w), Refinement x x := by 
-  intro x
-  cases x
+namespace Refinement
+
+theorem Refinement.refl {α: Type u} : ∀ x : Option α, Refinement x x := by 
+  intro x ; cases x
   apply Refinement.noneAny
   apply Refinement.bothSome; rfl
 
-theorem Refinement.trans {w : Nat} : ∀ x y z : Option (Bitvec w), Refinement x y → Refinement y z → Refinement x z := by
+theorem Refinement.trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
   intro x y z h₁ h₂
   cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
   rename_i x y hxy y h 
   rw [hxy, h]; apply Refinement.refl
 
-instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
-instance {w : Nat} : DecidableRel (@Refinement w) := by
+instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
   intro x y
   cases x <;> cases y
   { apply isTrue; exact Refinement.noneAny}
@@ -454,15 +454,12 @@ instance {w : Nat} : DecidableRel (@Refinement w) := by
     { apply isFalse; intro h; cases h; contradiction } 
     { apply isTrue; apply Refinement.bothSome; assumption }
   }
-  
 
-instance {w : Nat} : LE (Option (Bitvec w)) := ⟨Refinement⟩
-instance {w : Nat} : LT (Option (Bitvec w)) := ⟨ fun x y => x ≤ y ∧ ¬y ≤ x ⟩ 
+end Refinement
 
-instance {w : Nat} : Preorder (Option $ Bitvec w) where
-  le := Refinement
-  le_refl := Refinement.refl
-  le_trans := Refinement.trans
+infix:50 " ⊑ " => Refinement
+
+instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
 
 theorem toInt_injective : ∀ {w : Nat}, Function.Injective (Bitvec.toInt : Bitvec w → ℤ)
   | 0, ⟨[], _⟩, ⟨[], _⟩, rfl => rfl
@@ -509,7 +506,7 @@ theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (h
   admit
 
 theorem one_sdiv_ref_add_cmp_select :
-  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ≤
+  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ⊑ 
   Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry
 
