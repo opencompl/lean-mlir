@@ -4,6 +4,7 @@ import Mathlib.Algebra.Group.InjSurj
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Int.Cast.Lemmas
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Order.Basic
 
 namespace Vector
 
@@ -424,6 +425,42 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_get] <;> simp [Nat.lt_succ_iff, *] }
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
+-- A lot of this should probably go to a differet file here and not Mathlib
+inductive Refinement {α : Type u} : Option α → Option α → Prop
+  | bothSome {x y : α } : x = y → Refinement (some x) (some y)
+  | noneAny {x? : Option α} : Refinement none x?
+
+namespace Refinement
+
+theorem Refinement.refl {α: Type u} : ∀ x : Option α, Refinement x x := by 
+  intro x ; cases x
+  apply Refinement.noneAny
+  apply Refinement.bothSome; rfl
+
+theorem Refinement.trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
+  intro x y z h₁ h₂
+  cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
+  rename_i x y hxy y h 
+  rw [hxy, h]; apply Refinement.refl
+
+instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
+  intro x y
+  cases x <;> cases y
+  { apply isTrue; exact Refinement.noneAny}
+  { apply isTrue; exact Refinement.noneAny }
+  { apply isFalse; intro h; cases h }
+  { rename_i val val'
+    cases (decEq val val')
+    { apply isFalse; intro h; cases h; contradiction } 
+    { apply isTrue; apply Refinement.bothSome; assumption }
+  }
+
+end Refinement
+
+infix:50 " ⊑ " => Refinement
+
+instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
+
 theorem toInt_injective : ∀ {w : Nat}, Function.Injective (Bitvec.toInt : Bitvec w → ℤ)
   | 0, ⟨[], _⟩, ⟨[], _⟩, rfl => rfl
   | n+1, ⟨a::x, hx⟩, ⟨b::y, hy⟩, h => by
@@ -459,7 +496,7 @@ theorem toInt_one : ∀ {w : ℕ} (_hw : 1 < w), Bitvec.toInt (1 : Bitvec w) = 1
     simp [*, Bitvec.toInt, Bitvec.toNat_one]
 
 -- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x ≠ 0) :
+theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x ≠ 0) :
   Bitvec.sdiv? 1 x = Option.some (Bitvec.select 
     (((x + 1).toNat < 3) ::ᵥ Vector.nil) x 0) := by
   have hw0 : w ≠ 0 := by rintro rfl; simp at hw  
@@ -467,5 +504,10 @@ theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x
     select, Vector.head, toNat_add, toNat_one,
     if_neg hw0, Bool.cond_decide, Option.some.injEq, toInt_one hw]
   admit
+
+theorem one_sdiv_ref_add_cmp_select :
+  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ⊑ 
+  Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
+  sorry
 
 end Bitvec
