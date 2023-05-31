@@ -4,6 +4,7 @@ import Mathlib.Algebra.Group.InjSurj
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Int.Cast.Lemmas
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Order.Basic
 
 namespace Vector
 
@@ -424,11 +425,47 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_get] <;> simp [Nat.lt_succ_iff, *] }
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
+-- A lot of this should probably go to a differet file here and not Mathlib
+inductive Refinement {w : Nat} : Option (Bitvec w) → Option (Bitvec w) → Prop
+  | bothSome {x y : Bitvec w } : x = y → Refinement (some x) (some y)
+  | noneAny {x? : Option (Bitvec w)} : Refinement none x?
+
+theorem Refinement.refl {w : Nat} :∀ x : Option (Bitvec w), Refinement x x := by 
+  intro x
+  cases x
+  apply Refinement.noneAny
+  apply Refinement.bothSome; rfl
+
+theorem Refinement.trans {w : Nat} : ∀ x y z : Option (Bitvec w), Refinement x y → Refinement y z → Refinement x z := by
+  intro x y z h₁ h₂
+  cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } <;> try {apply Refinement.bothSome; assumption}
+  rename_i x y hxy y h 
+  rw [hxy, h]; apply Refinement.refl
+
+instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
+instance {w : Nat} : DecidableRel (@Refinement w) := by
+  intro x y
+  cases x <;> cases y
+  { apply isTrue; exact Refinement.noneAny}
+  { apply isTrue; exact Refinement.noneAny }
+  { apply isFalse; intro h; cases h }
+  { rename_i val val'
+    cases (decEq val val')
+    { apply isFalse; intro h; cases h; contradiction } 
+    { apply isTrue; apply Refinement.bothSome; assumption }
+  }
+  
+
+instance {w : Nat} : LE (Option (Bitvec w)) := ⟨Refinement⟩
 -- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x.toNat ≠ 0) :
+theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w ≥ 3) (hx : x.toNat ≠ 0) :
   Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
 
+theorem one_sdiv_ref_add_cmp_select : 
+  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ≤ 
+  Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
+  sorry
 
 end Bitvec
