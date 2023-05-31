@@ -425,7 +425,7 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
 -- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} :
+theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x.toNat ≠ 0) :
   Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
