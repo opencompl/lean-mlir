@@ -323,15 +323,15 @@ Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
 def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
-  match y.toInt with
-    | 0 => none
-    | _ => some $ Bitvec.ofInt' w (x.toInt / y.toInt)
+  if y.toInt = 0 
+  then none
+  else some $ Bitvec.ofInt' w (x.toInt / y.toInt)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
-    if c = true ::ᵥ Vector.nil then x else y
+  cond c.head x y
 
 theorem bitwise_eq_eq {w : Nat} {x y : Bitvec w} :
     (forall i : Fin w, x[i] = y[i]) ↔ x = y :=
@@ -424,11 +424,48 @@ theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
   { rw [List.get?_eq_get] <;> simp [Nat.lt_succ_iff, *] }
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
--- from InstCombine/:805
-theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x.toNat ≠ 0) :
-  Bitvec.sdiv? (Bitvec.ofInt' w 1) x = Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat 3) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
-  sorry -- TODO: make sure the semantics are the same here
-  -- Looks pretty ugly/random, can we make it more readable
+theorem toInt_injective : ∀ {w : Nat}, Function.Injective (Bitvec.toInt : Bitvec w → ℤ)
+  | 0, ⟨[], _⟩, ⟨[], _⟩, rfl => rfl
+  | n+1, ⟨a::x, hx⟩, ⟨b::y, hy⟩, h => by
+      dsimp [Bitvec.toInt, Vector.head] at h
+      apply Vector.toList_injective
+      cases a <;> cases b
+      { simp [Vector.tail] at h
+        apply_fun Vector.toList ∘ Bitvec.ofNat n at h
+        simpa [Bitvec.ofNat_toNat, Vector.toList_injective.eq_iff] using h }
+      { simp at h }
+      { simp at h }
+      { simp [Vector.tail] at h
+        apply_fun Vector.toList ∘ Bitvec.ofNat n at h
+        simpa [Bitvec.ofNat_toNat, Vector.toList_injective.eq_iff, Bitvec.not,
+          (List.map_injective_iff.2 _).eq_iff] using h }
 
+theorem toInt_zero {w : Nat} : (0 : Bitvec w).toInt = 0 := by
+  simp [Bitvec.toInt]
+  cases' w with w
+  . rfl
+  . have : Vector.head (0 : Bitvec (w + 1)) = false := rfl
+    have : Vector.tail (0 : Bitvec (w + 1)) = 0 := rfl
+    simp [*]
+
+@[simp]
+theorem toInt_eq_zero {w : Nat} (b : Bitvec w) : b.toInt = 0 ↔ b = 0 := by
+  rw [← toInt_injective.eq_iff, toInt_zero]
+
+theorem toInt_one : ∀ {w : ℕ} (_hw : 1 < w), Bitvec.toInt (1 : Bitvec w) = 1 
+  | w+2, _ => by 
+    have : Vector.head (1 : Bitvec (w+2)) = false := rfl
+    have : Vector.tail (1 : Bitvec (w+2)) = 1 := rfl
+    simp [*, Bitvec.toInt, Bitvec.toNat_one]
+
+-- from InstCombine/:805
+theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x ≠ 0) :
+  Bitvec.sdiv? 1 x = Option.some (Bitvec.select 
+    (((x + 1).toNat < 3) ::ᵥ Vector.nil) x 0) := by
+  have hw0 : w ≠ 0 := by rintro rfl; simp at hw  
+  simp only [sdiv?, toInt_eq_zero, hx, ite_false, Option.map_some', 
+    select, Vector.head, toNat_add, toNat_one,
+    if_neg hw0, Bool.cond_decide, Option.some.injEq, toInt_one hw]
+  admit
 
 end Bitvec
