@@ -7,16 +7,20 @@ import Mathlib.Data.ZMod.Basic
 
 namespace Vector
 
-instance {α : Type u} {n : Nat} [NeZero n] : GetElem (Vector α n) (Fin n) α (fun _ _ => True) where
+instance {α : Type u} {n : Nat} : GetElem (Vector α n) (Fin n) α (fun _ _ => True) where
   getElem := fun v i _ => v.1[i.val]
 
+@[simp]
+theorem getElem_eq_get {α : Type u} {n : Nat} (v : Vector α n) (i : Fin n) : v[i] = v.get i := rfl
+
 end Vector
+
 namespace Bitvec
 
 def width : Bitvec n → Nat := fun _ => n
 
 -- Shouldn't this be inferred from the instance above? (as Bitvec is @[reducible])
-instance {n : Nat} [NeZero n] : GetElem (Bitvec n) (Fin n) Bool (fun _ _ => True) where
+instance {n : Nat} : GetElem (Bitvec n) (Fin n) Bool (fun _ _ => True) where
   getElem := fun v i _ => v.1[i.val]
 
 instance (n : Nat) : Inhabited (Bitvec n) :=
@@ -148,12 +152,17 @@ theorem ofZMod_add {n : ℕ} (x y : ZMod (2 ^n)) :
     Bitvec.ofZMod (x + y) = Bitvec.ofZMod x + Bitvec.ofZMod y := by 
   rw [← toZMod_ofZMod x, ← toZMod_ofZMod y, ← toZMod_add, toZMod_ofZMod, toZMod_ofZMod, ofZMod_toZMod]
 
+theorem zero_def : (0 : Bitvec n) = ⟨List.replicate n false, (0 : Bitvec n).2⟩  := rfl
+
 theorem toList_zero : Vector.toList (0 : Bitvec n) = List.replicate n false := rfl
 
 @[simp]
 theorem toNat_zero : ∀ {n : Nat}, (0 : Bitvec n).toNat = 0
   | 0 => rfl
   | n+1 => by simpa [Bitvec.toNat, toList_zero, bitsToNat] using @toNat_zero n
+
+theorem ofNat_zero : Bitvec.ofNat w 0 = 0 := by
+  rw [← toNat_zero, ofNat_toNat]
 
 @[simp]
 theorem toZMod_zero : ∀ {n : Nat}, (0 : Bitvec n).toZMod = 0 := 
@@ -321,13 +330,96 @@ def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
 def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
     if c = true ::ᵥ Vector.nil then x else y
 
-theorem bitwise_eq_eq {w : Nat} (x y : Bitvec w) [ wneq0 : NeZero w] :
- (forall i : Fin w, x[i] = y[i]) ↔ x = y := sorry
-    
+theorem bitwise_eq_eq {w : Nat} {x y : Bitvec w} :
+    (forall i : Fin w, x[i] = y[i]) ↔ x = y :=
+  ⟨Vector.ext, fun h _ => h ▸ rfl⟩ 
+
+theorem ext_get? {w : Nat} {x y : Bitvec w} (h : ∀ i, x.toList.get? i = y.toList.get? i) : x = y := by
+  rcases x with ⟨x, rfl⟩
+  rcases y with ⟨y, hy⟩
+  exact Vector.toList_injective $ List.ext h
+
+@[simp]
+theorem toList_cong {w₁ w₂ : Nat} (h : w₁ = w₂) (b : Bitvec w₁) : (Bitvec.cong h b).toList = b.toList := 
+  by subst h; rfl
+
+theorem get?_shl (x : Bitvec n) (i j : ℕ) : 
+    (x.shl i).toList.get? j = 
+      if i + j < n 
+      then x.toList.get? (i + j) 
+      else if j < n then false
+      else none := by
+  unfold shl
+  rcases x with ⟨x, rfl⟩
+  simp only [toList_cong, Vector.toList_append, Vector.toList_drop, Vector.toList_mk, Bool.forall_bool,
+    add_eq_zero, and_imp, Vector.replicate]
+  split_ifs with h₁ h₂
+  { rw [List.get?_append, List.get?_drop]
+    . rw [List.length_drop]
+      exact Nat.lt_sub_of_add_lt (add_comm i j ▸ h₁) }
+  { rw [List.get?_append_right, List.get?_eq_get, List.get_replicate]
+    . exact Nat.sub_lt_left_of_lt_add (by simpa [add_comm] using h₁) (by simpa)
+    . simpa [add_comm] using h₁ }
+  { rw [List.get?_eq_none]
+    simpa using h₂ }
+  
+theorem get?_ushr (x : Bitvec n) (i j : ℕ) : 
+    (x.ushr i).toList.get? j = 
+      if j < x.length
+      then if j < i
+        then some false
+        else x.toList.get? (j - i)
+      else none := by
+  unfold ushr
+  rcases x with ⟨x, rfl⟩
+  simp only [fillShr, Vector.replicate, ge_iff_le, toList_cong, Vector.toList_append, 
+    Vector.toList_mk, Vector.toList_take, Bool.forall_bool, tsub_eq_zero_iff_le]
+  split_ifs with h₁ h₂
+  { rw [List.get?_append, List.get?_eq_get, List.get_replicate]
+    . simp [*] at *
+    . simp [*] at * }
+  { have : i < x.length := lt_of_le_of_lt (le_of_not_lt h₂) h₁
+    rw [min_eq_right (le_of_lt this), List.get?_append_right, List.get?_take]
+    simp
+    . exact Nat.sub_lt_left_of_lt_add (by simpa using h₂) 
+        (by simpa [Nat.add_sub_cancel' (le_of_lt this)] using h₁)
+    . simpa using h₂ }
+  { rw [List.get?_eq_none]
+    . rw [min_def]
+      split_ifs with h
+      { simpa [Nat.sub_eq_zero_of_le h] using h₁ }
+      { simpa [Nat.add_sub_cancel' (le_of_not_le h)] using h₁  } }
+
+theorem get?_and (x y : Bitvec n) (i : ℕ) : 
+    (x.and y).toList.get? i = do return (← x.toList.get? i) && (← y.toList.get? i) := by
+  rcases x with ⟨x, rfl⟩
+  rcases y with ⟨y, hy⟩
+  simp [Bitvec.and, Vector.map₂, List.get?_zip_with]
+  cases (List.get? x i) <;> cases (List.get? y i) <;> simp [bind, pure]
+
+theorem get?_ofInt_neg_one : (Bitvec.ofInt w (-1)).toList.get? i = 
+    if i ≤ w then some true else none := by
+  show (true ::ᵥ Bitvec.not (Bitvec.ofNat w 0)).toList.get? i = _
+  simp only [Vector.cons, Bitvec.not, Vector.map, ofNat_zero, zero_def, List.map_replicate, Bool.not_false,
+    Vector.toList_mk, List.cons.injEq, and_imp, forall_apply_eq_imp_iff', forall_eq']
+  rw [← List.replicate_succ]
+  split_ifs with h
+  { rw [List.get?_eq_get, List.get_replicate] <;> simp [*, Nat.lt_succ_iff] at * }
+  { rw [List.get?_eq_none] 
+    simpa [Nat.succ_le_iff, not_le] using h }
+
 -- from InstCombine/Shift:279
 theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
-  Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) :=
-  sorry -- TODO: make sure the semantics are the same here
+    Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) := by
+  apply ext_get?
+  intro i
+  rw [get?_shl, get?_ushr, get?_and]
+  simp only [pure, bind, Nat.lt_succ_iff, get?_ofInt_neg_one, get?_shl]
+  split_ifs with h₁ h₂ h₃
+  { simp at h₂ }
+  { simp }
+  { rw [List.get?_eq_get] <;> simp [Nat.lt_succ_iff, *] }
+  { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
 -- from InstCombine/:805
 theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w.succ} :
