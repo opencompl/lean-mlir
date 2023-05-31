@@ -202,31 +202,31 @@ open Term
 | negOne, _vars => negOneSeq
 | Term.and t₁ t₂, vars =>
   andSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
 | Term.or t₁ t₂, vars =>
   orSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
 | Term.xor t₁ t₂, vars =>
   xorSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
 | not t, vars => notSeq (Term.evalFin t vars)
 | ls t, vars => lsSeq (Term.evalFin t vars)
 | add t₁ t₂, vars =>
   addSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
 | sub t₁ t₂, vars =>
   subSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLe (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]) i)))
 | neg t, vars => negSeq (Term.evalFin t vars)
 | incr t, vars => incrSeq (Term.evalFin t vars)
 | decr t, vars => decrSeq (Term.evalFin t vars)
@@ -601,7 +601,7 @@ def composeBinary
     PropagateStruc (Fin (max (arity t₁) (arity t₂))) :=
   p.compose (Fin (max (arity t₁) (arity t₂)))
     (λ b => Fin (cond b (arity t₁) (arity t₂)))
-    (λ b i => Fin.castLe (by cases b <;> simp) i)
+    (λ b i => Fin.castLE (by cases b <;> simp) i)
     (λ b => match b with
       | true => q₁.toPropagateStruc
       | false => q₂.toPropagateStruc)
@@ -621,8 +621,8 @@ def composeBinary
     (q₂ : PropagateSolution t₂)
     (x : Fin (max (arity t₁) (arity t₂)) → ℕ → Bool) :
     (composeBinary p q₁ q₂).eval x = p.eval
-      (λ b => cond b (t₁.evalFin (fun i => x (Fin.castLe (by simp) i)))
-                  (t₂.evalFin (fun i => x (Fin.castLe (by simp) i)))) := by
+      (λ b => cond b (t₁.evalFin (fun i => x (Fin.castLE (by simp) i)))
+                  (t₂.evalFin (fun i => x (Fin.castLE (by simp) i)))) := by
   rw [composeBinary, PropagateStruc.eval_compose, q₁.good, q₂.good]
   congr
   ext b
@@ -799,7 +799,7 @@ lemma propagate_eq_of_carry_eq (seq₁ seq₂ : β → ℕ → Bool)
       { rw [propagate_succ2, h₁, propagate_succ2]
         have := h₃ 0
         simp [*] at * } } }
-  { erw [Nat.add_succ, propagate_succ2, propagate_succ2, Nat.add_eq, Nat.add_eq]
+  { erw [Nat.add_succ, propagate_succ2, propagate_succ2, Nat.add_eq]
     simp [← Nat.succ_eq_add_one, ← Nat.add_succ, h₃ _ _ (le_refl _)]
     congr
     . apply propagateCarry2_eq_of_carry_eq
@@ -914,6 +914,6 @@ lemma eval_eq_iff_xorSeq_eq_zero (t₁ t₂ : Term) :
   { intro h seq n
     have := h (λ j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else λ _ => false) n
     simp at this
-    convert this }
+    convert this using 1 }
   { intro h seq m
     exact h (λ j => seq j) _ }
