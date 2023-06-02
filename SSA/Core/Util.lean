@@ -3,6 +3,24 @@ import Mathlib.Data.Fin.Basic
 @[simp]
 def uncurry (f : α → β → γ) (pair : α × β) : γ := f pair.fst pair.snd
 
+@[simp]
+def pairBind [Monad m] (f : α → β → m γ) (pair : (m α × m β)) : m γ := do
+  let fst ← pair.fst
+  let snd ← pair.snd
+  f fst snd
+
+@[simp]
+def pairMapM [Monad m] (f : α → β → γ) (pair : (m α × m β)) : m γ := do
+  let fst ← pair.fst
+  let snd ← pair.snd
+  return f fst snd
+
+@[simp]
+def tripleMapM [Monad m] (f : α → β → γ → δ) (triple : (m α × m β × m γ)) : m δ := do
+  let (fstM,sndM,trdM) := triple
+  let (fst,snd,trd) := (← fstM,← sndM,← trdM)
+  return f fst snd trd
+
 def Fin.coeLt {n m : Nat} : n ≤ m → Fin n → Fin m :=
   fun h i => match i with
     | ⟨i, h'⟩ => ⟨i, Nat.lt_of_lt_of_le h' h⟩

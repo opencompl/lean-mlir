@@ -20,7 +20,7 @@ def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
 
 instance : Goedel BaseType where
 toType := fun
-  | .bitvec w => Bitvec w
+  | .bitvec w => Option $ Bitvec w
 
 abbrev UserType := SSA.UserType BaseType
 
@@ -82,9 +82,6 @@ def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.sub w |  Op.select w =>
   .base (BaseType.bitvec w)
- -- @goens: please keep this 'bitvec', and model the option inside it, because
- -- that is how it works in LLVM (and in Alive). The type is that of bit vectors,
- -- and bitvectors might have poison (ie, a special bottom / .none value.)
 | Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w  =>
   .base (BaseType.bitvec w)
 | Op.icmp _ _ => .base (BaseType.bitvec 1)
@@ -103,22 +100,32 @@ def eval (o : Op)
   (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
   Goedel.toType (outUserType o) :=
     match o with
-    | Op.and _ => uncurry Bitvec.and arg
-    | Op.or _ => uncurry Bitvec.or arg
-    | Op.xor _ => uncurry Bitvec.xor arg
-    | Op.shl _ => match arg with
-      | (arg₁,arg₂) => Bitvec.shl arg₁ arg₂.toNat
-    | Op.lshr _ => match arg with
-      | (arg₁,arg₂) => Bitvec.ushr arg₁ arg₂.toNat
-    | Op.ashr _ => match arg with
-      | (arg₁,arg₂) => Bitvec.sshr arg₁ arg₂.toNat
-    | Op.const c => c
-    | Op.sub _ => (uncurry Bitvec.sub arg)
-    | Op.add _ => sorry  --(uncurry Bitvec.add? arg)
-    | Op.mul _ => sorry  --(uncurry Bitvec.mul? arg)
-    | Op.sdiv _ => sorry  --(uncurry Bitvec.sdiv? arg)
-    | Op.udiv _ => sorry -- (uncurry Bitvec.udiv? arg)
-    | _ => sorry
+    | Op.and _ => pairMapM Bitvec.and arg
+    | Op.or _ => pairMapM Bitvec.or arg
+    | Op.xor _ => pairMapM Bitvec.xor arg
+    | Op.shl _ => pairMapM (fun fst snd => Bitvec.shl fst snd.toNat) arg
+    | Op.lshr _ => pairMapM (fun fst snd => Bitvec.ushr fst snd.toNat) arg
+    | Op.ashr _ => pairMapM (fun fst snd => Bitvec.sshr fst snd.toNat) arg
+    | Op.const c => Option.some c
+    | Op.sub _ => pairMapM Bitvec.sub arg
+    | Op.add _ => pairBind Bitvec.add? arg
+    | Op.mul _ => pairBind Bitvec.mul? arg
+    | Op.sdiv _ => pairBind Bitvec.sdiv? arg
+    | Op.udiv _ => pairBind Bitvec.udiv? arg
+    | Op.not _ => Option.map Bitvec.not arg
+    | Op.select _ => tripleMapM Bitvec.select arg
+    | Op.icmp c _ => match c with
+      | Comparison.eq => pairMapM (fun x y => (x == y) ::ᵥ Vector.nil) arg
+      | Comparison.ne => pairMapM (fun x y => (x != y) ::ᵥ Vector.nil) arg
+      | Comparison.sgt => pairMapM (fun x y => (x.toInt > y.toInt) ::ᵥ Vector.nil) arg
+      | Comparison.sge => pairMapM (fun x y => (x.toInt ≥ y.toInt) ::ᵥ Vector.nil) arg
+      | Comparison.slt => pairMapM (fun x y => (x.toInt < y.toInt) ::ᵥ Vector.nil) arg
+      | Comparison.sle => pairMapM (fun x y => (x.toInt ≤ y.toInt) ::ᵥ Vector.nil) arg
+      | Comparison.ugt => pairMapM (fun x y => (x.toNat > y.toNat) ::ᵥ Vector.nil) arg
+      | Comparison.uge => pairMapM (fun x y => (x.toNat ≥ y.toNat) ::ᵥ Vector.nil) arg
+      | Comparison.ult => pairMapM (fun x y => (x.toNat < y.toNat) ::ᵥ Vector.nil) arg
+      | Comparison.ule => pairMapM (fun x y => (x.toNat ≤ y.toNat) ::ᵥ Vector.nil) arg
+
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType

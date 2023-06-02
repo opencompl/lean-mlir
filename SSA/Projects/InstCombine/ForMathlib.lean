@@ -510,4 +510,8 @@ theorem one_sdiv_ref_add_cmp_select :
   Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry
 
+def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
+
+instance : Coe Bool (Bitvec 1) := ⟨fun b => b ::ᵥ Vector.nil⟩
+
 end Bitvec
