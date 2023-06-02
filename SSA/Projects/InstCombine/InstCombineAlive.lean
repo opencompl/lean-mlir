@@ -70,9 +70,8 @@ intro w Z C RHS Z' C1 RHS'
 simp [TSSA.eval, Function.comp, id.def
       TypedUserSemantics.eval, Context.Var,
       TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-      UserType.mkPair]
-unfold TypedUserSemantics.eval
-simp [TUS]
+      UserType.mkPair, TUS]
+sorry
 
 
 -- Name:AddSub:1152
