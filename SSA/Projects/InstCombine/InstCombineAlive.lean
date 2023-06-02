@@ -65,7 +65,15 @@ example : forall (w : Nat) (Z C1 RHS Z C1 RHS : Nat),TSSA.eval
   %v15 := op:sub w %v14
   dsl_ret %v15
   ]
-  := by sorry
+  := by 
+intro w Z C RHS Z' C1 RHS'
+simp [TSSA.eval, Function.comp, id.def
+      TypedUserSemantics.eval, Context.Var,
+      TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+      UserType.mkPair]
+unfold TypedUserSemantics.eval
+simp [TUS]
+
 
 -- Name:AddSub:1152
 -- precondition: true
