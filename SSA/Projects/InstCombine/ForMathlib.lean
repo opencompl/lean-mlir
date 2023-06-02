@@ -512,6 +512,8 @@ theorem one_sdiv_ref_add_cmp_select :
 
 def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
 
-instance : Coe Bool (Bitvec 1) := ⟨fun b => b ::ᵥ Vector.nil⟩
+def fromBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
+
+instance : Coe Bool (Bitvec 1) := ⟨fromBool⟩
 
 end Bitvec

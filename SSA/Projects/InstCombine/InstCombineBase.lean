@@ -115,16 +115,16 @@ def eval (o : Op)
     | Op.not _ => Option.map Bitvec.not arg
     | Op.select _ => tripleMapM Bitvec.select arg
     | Op.icmp c _ => match c with
-      | Comparison.eq => pairMapM (fun x y => (x == y) ::ᵥ Vector.nil) arg
-      | Comparison.ne => pairMapM (fun x y => (x != y) ::ᵥ Vector.nil) arg
-      | Comparison.sgt => pairMapM (fun x y => (x.toInt > y.toInt) ::ᵥ Vector.nil) arg
-      | Comparison.sge => pairMapM (fun x y => (x.toInt ≥ y.toInt) ::ᵥ Vector.nil) arg
-      | Comparison.slt => pairMapM (fun x y => (x.toInt < y.toInt) ::ᵥ Vector.nil) arg
-      | Comparison.sle => pairMapM (fun x y => (x.toInt ≤ y.toInt) ::ᵥ Vector.nil) arg
-      | Comparison.ugt => pairMapM (fun x y => (x.toNat > y.toNat) ::ᵥ Vector.nil) arg
-      | Comparison.uge => pairMapM (fun x y => (x.toNat ≥ y.toNat) ::ᵥ Vector.nil) arg
-      | Comparison.ult => pairMapM (fun x y => (x.toNat < y.toNat) ::ᵥ Vector.nil) arg
-      | Comparison.ule => pairMapM (fun x y => (x.toNat ≤ y.toNat) ::ᵥ Vector.nil) arg
+      | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
+      | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg
+      | Comparison.sgt => pairMapM (fun x y => ↑(decide $ x.toInt > y.toInt)) arg
+      | Comparison.sge => pairMapM (fun x y => ↑(decide $ x.toInt ≥ y.toInt)) arg
+      | Comparison.slt => pairMapM (fun x y => ↑(decide $ x.toInt < y.toInt)) arg
+      | Comparison.sle => pairMapM (fun x y => ↑(decide $ x.toInt ≤ y.toInt)) arg
+      | Comparison.ugt => pairMapM (fun x y => ↑(decide $ x.toNat > y.toNat)) arg
+      | Comparison.uge => pairMapM (fun x y => ↑(decide $ x.toNat ≥ y.toNat)) arg
+      | Comparison.ult => pairMapM (fun x y => ↑(decide $ x.toNat < y.toNat)) arg
+      | Comparison.ule => pairMapM (fun x y => ↑(decide $ x.toNat ≤ y.toNat)) arg
 
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
