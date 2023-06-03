@@ -66,12 +66,13 @@ example : forall (w : Nat) (Z C1 RHS Z C1 RHS : Nat),TSSA.eval
   dsl_ret %v15
   ]
   := by 
-intro w Z C RHS Z' C1 RHS'
-simp [TSSA.eval, Function.comp, id.def
-      TypedUserSemantics.eval, Context.Var,
-      TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-      UserType.mkPair, TUS]
-sorry
+  intro w Z C RHS Z' C1 RHS'
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 
 -- Name:AddSub:1152
@@ -83,6 +84,8 @@ sorry
   %r = xor %x, %y
 
 -/
+
+
 open SSA EDSL in
 example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   (Op := Op) (e := e)
@@ -108,7 +111,14 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   %v4 := op:xor w %v3
   dsl_ret %v4
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1164
 -- precondition: true
@@ -152,7 +162,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v7 := op:sub w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1165
 -- precondition: true
@@ -208,7 +225,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v13 := op:sub w %v12
   dsl_ret %v13
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1176
 -- precondition: true
@@ -252,7 +276,14 @@ example : forall (w : Nat) (b a b a : Nat),TSSA.eval
   %v7 := op:sub w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1295
 -- precondition: true
@@ -300,7 +331,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:or w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1309
 -- precondition: true
@@ -348,7 +386,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:add w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1309-2
 -- precondition: true
@@ -396,7 +441,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:add w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1309-3
 -- precondition: true
@@ -444,7 +496,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:add w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1539
 -- precondition: true
@@ -488,7 +547,14 @@ example : forall (w : Nat) (a x a x : Nat),TSSA.eval
   %v7 := op:add w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1546
 -- precondition: true
@@ -532,7 +598,14 @@ example : forall (w : Nat) (a x a x : Nat),TSSA.eval
   %v7 := op:add w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1556
 -- precondition: true
@@ -568,7 +641,14 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   %v4 := op:xor w %v3
   dsl_ret %v4
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1560
 -- precondition: true
@@ -604,7 +684,14 @@ example : forall (w : Nat) (a a : Nat),TSSA.eval
   %v4 := op:xor w %v3
   dsl_ret %v4
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1614
 -- precondition: true
@@ -647,7 +734,14 @@ example : forall (w : Nat) (X Y X Y : Nat),TSSA.eval
   %v7 := op:sub w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1619
 -- precondition: true
@@ -690,7 +784,14 @@ example : forall (w : Nat) (X Y X Y : Nat),TSSA.eval
   %v7 := op:sub w %v6
   dsl_ret %v7
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AddSub:1624
 -- precondition: true
@@ -738,7 +839,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v8 := op:and w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1230  ~A & ~B -> ~(A | B)
 -- precondition: true
@@ -794,7 +902,14 @@ example : forall (w : Nat) (notOp0 notOp1 notOp0 notOp1 : Nat),TSSA.eval
   %v13 := op:xor w %v12
   dsl_ret %v13
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1241 (A|B) & ~(A&B) => A^B
 -- precondition: true
@@ -850,7 +965,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v11 := op:xor w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1247 ~(A&B) & (A|B) => A^B
 -- precondition: true
@@ -906,7 +1028,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v11 := op:xor w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1253 A & (A^B) -> A & ~B
 -- precondition: true
@@ -952,7 +1081,14 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   %v9 := op:and w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1280 (~A|B)&A -> A&B
 -- precondition: true
@@ -1002,7 +1138,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v9 := op:and w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
 -- precondition: true
@@ -1062,7 +1205,14 @@ example : forall (w : Nat) (A B C A B C : Nat),TSSA.eval
   %v14 := op:and w %v13
   dsl_ret %v14
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:1294 (A | B) & ((~A) ^ B) -> (A & B)
 -- precondition: true
@@ -1118,7 +1268,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v11 := op:and w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2113   ((~A & B) | A) -> (A | B)
 -- precondition: true
@@ -1168,7 +1325,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v9 := op:or w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
 -- precondition: true
@@ -1218,7 +1382,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v9 := op:or w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2123   (A & (~B)) | (A ^ B) -> (A ^ B)
 -- precondition: true
@@ -1274,7 +1445,14 @@ example : forall (w : Nat) (B A B A : Nat),TSSA.eval
   %v11 := op:xor w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2188
 -- precondition: true
@@ -1338,7 +1516,14 @@ example : forall (w : Nat) (D A D A : Nat),TSSA.eval
   %v14 := op:xor w %v13
   dsl_ret %v14
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2231  (A ^ B) | ((B ^ C) ^ A) -> (A ^ B) | C
 -- precondition: true
@@ -1394,7 +1579,14 @@ example : forall (w : Nat) (A B C A B C : Nat),TSSA.eval
   %v11 := op:or w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
 -- precondition: true
@@ -1447,7 +1639,14 @@ example : forall (w : Nat) (B C A A C B : Nat),TSSA.eval
   %v11 := op:or w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2247  (~A | ~B) == (~(A & B))
 -- precondition: true
@@ -1503,7 +1702,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v13 := op:xor w %v12
   dsl_ret %v13
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2263
 -- precondition: true
@@ -1545,7 +1751,14 @@ example : forall (w : Nat) (op0 B op0 B : Nat),TSSA.eval
   %v6 := op:or w %v5
   dsl_ret %v6
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2264
 -- precondition: true
@@ -1599,7 +1812,14 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   %v12 := op:or w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2265
 -- precondition: true
@@ -1647,7 +1867,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v8 := op:or w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2284
 -- precondition: true
@@ -1701,7 +1928,14 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   %v12 := op:or w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2285
 -- precondition: true
@@ -1755,7 +1989,14 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   %v12 := op:or w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2297
 -- precondition: true
@@ -1811,7 +2052,14 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   %v11 := op:xor w %v10
   dsl_ret %v11
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2367
 -- precondition: true
@@ -1858,7 +2106,14 @@ example : forall (w : Nat) (A C1 op1 A op1 C1 : Nat),TSSA.eval
   %v9 := op:or w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2416
 -- precondition: true
@@ -1913,7 +2168,14 @@ example : forall (w : Nat) (nx y y nx : Nat),TSSA.eval
   %v12 := op:or w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2417
 -- precondition: true
@@ -1968,7 +2230,14 @@ example : forall (w : Nat) (nx y y nx : Nat),TSSA.eval
   %v12 := op:and w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2429
 -- precondition: true
@@ -2019,7 +2288,14 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   %v12 := op:or w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2430
 -- precondition: true
@@ -2070,7 +2346,14 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   %v12 := op:and w %v11
   dsl_ret %v12
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2581  (B|A)^B -> A & ~B
 -- precondition: true
@@ -2116,7 +2399,14 @@ example : forall (w : Nat) (a op1 op1 a : Nat),TSSA.eval
   %v9 := op:and w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2587  (B&A)^A -> ~B & A
 -- precondition: true
@@ -2162,7 +2452,14 @@ example : forall (w : Nat) (a op1 a op1 : Nat),TSSA.eval
   %v9 := op:and w %v8
   dsl_ret %v9
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2595
 -- precondition: true
@@ -2210,7 +2507,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:xor w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2607
 -- precondition: true
@@ -2274,7 +2578,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v14 := op:xor w %v13
   dsl_ret %v14
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2617
 -- precondition: true
@@ -2338,7 +2649,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v14 := op:xor w %v13
   dsl_ret %v14
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2627
 -- precondition: true
@@ -2395,7 +2713,14 @@ example : forall (w : Nat) (a c b a b c : Nat),TSSA.eval
   %v14 := op:xor w %v13
   dsl_ret %v14
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2647
 -- precondition: true
@@ -2443,7 +2768,14 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   %v8 := op:or w %v7
   dsl_ret %v8
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
 
 -- Name:AndOrXor:2658
 -- precondition: true
@@ -2505,4 +2837,11 @@ example : forall (w : Nat) (b a a b : Nat),TSSA.eval
   %v15 := op:xor w %v14
   dsl_ret %v15
   ]
-  := by sorry
+  := by 
+  intros
+  simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUS]
+  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  sorry
