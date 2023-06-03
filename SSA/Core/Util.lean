@@ -1,4 +1,5 @@
 import Mathlib.Data.Fin.Basic
+import Lean
 
 @[simp]
 def uncurry (f : α → β → γ) (pair : α × β) : γ := f pair.fst pair.snd
@@ -79,3 +80,8 @@ theorem finRangeIndex {n : Nat} (i : Fin n) : nth (finRange n) i = i := by
   | ⟨idx,hidx⟩ => sorry
 
 end LengthIndexedList
+
+elab "print_goal_as_error " : tactic => do
+  let target ← Lean.Elab.Tactic.getMainTarget
+  throwError target
+  pure ()
