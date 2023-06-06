@@ -1,5 +1,6 @@
 import Mathlib.Data.Vector
 import Mathlib.Data.Bitvec.Basic -- we should add a `Bitvec.lean` in Mathlib/Data/
+import SSA.Experimental.Bits.Defs
 
 namespace Vector
 
@@ -29,13 +30,32 @@ def ofInt' (n : Nat) (z : Int) : Bitvec n :=
 def ofFun {width : Nat} : Fun width → Bitvec width :=
   match width with
     | 0 => fun _ => ⟨List.nil, rfl⟩
-    | n + 1 => fun f => sorry
+    | n + 1 => fun f => f (n + 1) ::ᵥ @ofFun n (fun i => f i)
 
 /-- convert `Fin n → Bool` to `Bitvec n` -/
 def toFun {width : Nat} : Bitvec width → Fun width :=
     match width with
         | 0 => fun _ => Fin.elim0
-        | n + 1 => fun bv i => bv[i]
+        | n + 1 => fun bv i => 
+          have instNeZero : NeZero (n + 1) := inferInstance
+          have instGetElem : GetElem (Bitvec (n + 1)) (Fin (n + 1)) Bool (fun _ _ => True) := inferInstance
+          bv[i]
+
+theorem ofFun_toFun {width : Nat} {f : Fun width} : toFun (ofFun f) = f := by
+  funext i
+  cases width
+  case zero => exact Fin.elim0 i
+  case succ n => 
+    simp [toFun, ofFun]
+    sorry
+
+theorem toFun_ofFun {width : Nat} {bv : Bitvec width} : ofFun (toFun bv) = bv := by
+  cases width
+  case zero => simp
+  case succ n => 
+    simp [toFun, ofFun]
+    sorry
+
 
 instance {width : Nat} : Coe (Fun width) (Bitvec width) := ⟨@ofFun width⟩
 instance {width : Nat} : Coe (Bitvec width) (Fun width) := ⟨@toFun width⟩
@@ -135,5 +155,50 @@ theorem one_sdiv_eq_add_cmp_select {w : Nat} {x : Bitvec w} :
   sorry -- TODO: make sure the semantics are the same here
   -- Looks pretty ugly/random, can we make it more readable
 
+abbrev NatFun := Nat → Bool -- TODO: find a better name
+
+namespace NatFun
+
+def ofBitvecFun {w : Nat} (x : Bitvec.Fun w) : NatFun := 
+  fun n => if h : n < w 
+    then x ⟨n, h⟩
+    else false
+
+def toBitvecFun {w : Nat} (x : NatFun) : Bitvec.Fun w :=
+  fun ⟨n, _⟩ => x n
+
+theorem toBitvecFun_ofBitvecFun {w : Nat} {x : Fun w} :
+ NatFun.toBitvecFun (NatFun.ofBitvecFun x) = x := by
+ funext x
+ simp [NatFun.toBitvecFun, NatFun.ofBitvecFun]
+
+theorem ofBitvecFun_toBitvecFun_eq_width {w : Nat} {x : NatFun} :
+ ∀ i : Fin w, NatFun.ofBitvecFun (@NatFun.toBitvecFun w x) i = x i := by
+ intro i
+ simp [NatFun.toBitvecFun, NatFun.ofBitvecFun]
+
+instance : Add NatFun := ⟨addSeq⟩
+
+
+def ofBitvec {w : Nat} (x : Bitvec w) : NatFun := ofBitvecFun $ Bitvec.toFun x
+
+@[reducible]
+def toBitvec {w : Nat} (x : NatFun) : Bitvec w := Bitvec.ofFun $ toBitvecFun x
+
+-- def toBitvec_eq_bit {w : Nat} [NeZero w] (x : NatFun) (n : Fin w) : (toBitvec x)[n] = x n.1 := by
+--   simp [toBitvec, toBitvecFun, Bitvec.ofFun, Bitvec.toFun]
+
+theorem toBitvec_ofBitvec {w : Nat} (x : NatFun) : 
+  ∀ i : Fin w, ofBitvec (@toBitvec w x) i = x i := by
+  simp [toBitvec, ofBitvec]
+  intro i
+  rw [ofFun_toFun, ofBitvecFun_toBitvecFun_eq_width]
+
+theorem toBitvec_add_hom {x y : NatFun} {w : Nat} : @toBitvec w x + @NatFun.toBitvec w y = @NatFun.toBitvec w (x + y) := by
+  simp [toBitvec, toBitvecFun, addSeq, Bitvec.ofFun, Bitvec.add, Add.add, ofFun]
+
+
+
+end NatFun
 
 end Bitvec
