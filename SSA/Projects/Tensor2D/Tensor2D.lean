@@ -71,44 +71,49 @@ inductive Op
 | add
 | const (v: Nat)
 | sub
+| map2d
+| fill2d
 
 inductive BaseType
 | int : BaseType
 | nat : BaseType
+| tensor2d : BaseType
 deriving DecidableEq, Inhabited
 
-instance : Goedel BaseType where
-  toType
-  | .int => Int
-  | .nat => Nat
+def BaseType.toType : BaseType → Type
+| .int => Int
+| .nat => Nat
+| .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
+instance : Goedel BaseType where toType := BaseType.toType
 
 abbrev UserType := SSA.UserType BaseType
 
 -- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
 @[simp]
 def argUserType : Op → UserType
-| Op.add => .pair (.base BaseType.int) (.base BaseType.int)
-| Op.sub => .pair (.base BaseType.int) (.base BaseType.int)
-| Op.const _ => .unit
+| Op.add => ↑(BaseType.int, BaseType.int)
+| Op.sub => ↑(BaseType.int, BaseType.int)
+| Op.const _ => ()
+| Op.map2d => BaseType.tensor2d
+| Op.fill2d => (BaseType.int, BaseType.tensor2d)
 
 @[simp]
 def outUserType : Op → UserType
-| Op.add => .base (BaseType.int)
-| Op.sub => .base (BaseType.int)
-| Op.const _ => .base (BaseType.nat)
+| Op.add => BaseType.int
+| Op.sub => BaseType.int
+| Op.const _ => BaseType.nat
+| Op.map2d | Op.fill2d => BaseType.tensor2d
 
 @[simp]
 def rgnDom : Op → UserType
-| Op.add => .unit
-| Op.sub => .unit
-| Op.const _ => .unit
+| Op.add | Op.sub | Op.const _ | Op.fill2d  => .unit
+| Op.map2d => BaseType.int
 
 @[simp]
 def rgnCod : Op → UserType
-| Op.add => .unit
-| Op.sub => .unit
-| Op.const _ => .unit
+| Op.add | Op.sub | Op.const _ | Op.fill2d  => .unit
+| Op.map2d => BaseType.int
 
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
@@ -126,6 +131,13 @@ def eval (o : Op)
     let x : Int := x;
     let y : Int := y;
     x - y
+  | .map2d => 
+    let t : Tensor2d' Int := arg
+    let f : Int → Int := _rgn
+    t.map f
+  | .fill2d => 
+    let (v, t) : Int × Tensor2d' Int  := arg
+    t.fill v
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
@@ -134,23 +146,23 @@ instance TUS : SSA.TypedUserSemantics Op BaseType where
   outUserType := outUserType
   eval := eval
 
-syntax "map1d" : dsl_op
-syntax "extract1d" : dsl_op
-syntax "const" "(" term ")" : dsl_op
+syntax "map2d" : dsl_op2
+syntax "fill2d" : dsl_op2
 
-open EDSL in
+open EDSL2 in
 macro_rules
-| `([dsl_op| map1d]) => `(Op.map1d)
-| `([dsl_op| extract1d]) => `(Op.extract1d)
-| `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
+| `([dsl_op2| map2d]) => `(Op.map2d)
+| `([dsl_op2| fill2d]) => `(Op.fill2d)
 
 
 
 open SSA EDSL2 in
-theorem map_functorial_edsl :
+theorem map_fill_2d :
   TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
-    return ()
+    return op:fill2d ($expr2(i), op:map2d $expr2(v), $rgn2(f))
   ] =
   TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
-    return ()
-  ] := sorry
+    return op:map2d (op:fill2d ($expr2(i), $expr2(v))), $rgn2(f)
+  ] := by {
+    sorry
+  }
