@@ -247,6 +247,213 @@ abbrev NatUserType := UserType (NatBaseType TS)
 
 end SSA
 
+namespace EDSL2
+open Lean Elab Macro
+
+
+/-- syntax extension point for users. -/
+declare_syntax_cat dsl_op2
+
+scoped syntax "[dsl_op2|" dsl_op2 "]" : term
+syntax dsl_var2 := "%v" num
+
+/-- nonterminal for expresions. -/
+declare_syntax_cat dsl_expr2
+declare_syntax_cat dsl_region2
+
+
+/-
+This is a fancier syntax, which allows expressions in the
+intermediate nodes. This is elaborated into SSA, with temporary
+variable names.
+-/
+syntax dsl_var2 : dsl_expr2
+scoped syntax "()" : dsl_expr2
+scoped syntax "(" dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
+scoped syntax "(" dsl_expr2 "," dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
+scoped syntax "op:" dsl_op2 dsl_expr2 ("," dsl_region2)? : dsl_expr2 
+syntax dsl_assign2 := dsl_var2 ":= " dsl_expr2 ";"
+syntax dsl_bb2 := (dsl_assign2)* "return " dsl_expr2 
+
+scoped syntax "{" dsl_var2 "=>" dsl_bb2 "}" : dsl_region2
+scoped syntax "rgn2$(" term ")" : dsl_region2
+
+structure SSAElabContext where
+  vars : Array Nat -- list of variables, in order of occurrence
+  
+abbrev SSAElabM (α : Type) := StateT SSAElabContext MacroM α
+
+def SSAElabContext.addVar (var : Nat) : SSAElabM Unit := do
+  modify fun ctx => { ctx with vars := ctx.vars.push var }
+
+/- generate a fresh variable for temporary use. -/
+def SSAElabContext.freshSyntheticVar : SSAElabM Nat := do
+  -- This is a hack. We assign fresh variables an index > 99999.
+  -- Ideally, we should have two different scopes, one for
+  -- user defined variables, and one for synthetic variables.
+  let synthv := 9999 + (← get).vars.size 
+  SSAElabContext.addVar synthv
+  return synthv 
+
+-- given an array [x, y, z], the index of 'z' is '0' (though its index is '2' in the array),
+-- since we cound from the back.
+def SSAElabContext.getIndex? (var : Nat) : SSAElabM (Option Nat) := do
+  match (← get).vars.findIdx? (fun v => v == var) with
+  | .some ixFromFront => return ((← get).vars.size - 1) - ixFromFront
+  | .none => return none
+
+/-- extract out the index (nat) of the dsl_var -/
+def dslVarToIx : TSyntax ``dsl_var2 → MacroM Nat
+| `(dsl_var2| %v $ix) => return ix.getNat
+| stx => Macro.throwErrorAt stx s!"expected variable %v<n>, found {stx}"
+
+/-- convert a de-bruijn into a intrinsically well typed context variable -/
+def idxToContextVar : Nat → MacroM (TSyntax `term)
+| 0 => `(SSA.Context.Var.last)
+| n+1 => do `(SSA.Context.Var.prev $(← idxToContextVar n))
+
+def elabStxVar : TSyntax ``EDSL2.dsl_var2 → SSAElabM (TSyntax `term)
+| `(dsl_var2| %v $var) => do
+  match ← SSAElabContext.getIndex? var.getNat with
+  | .some ix => idxToContextVar ix
+  | .none => Macro.throwErrorAt var s!"variable '{var}' not in scope"
+| stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
+
+
+
+structure ElabWithTemporaries (α : Type) where 
+  temporaries : Array (TSyntax `term)
+  val : α
+deriving Inhabited 
+
+def ElabWithTemporaries.of (val : α) : ElabWithTemporaries α where 
+  temporaries := #[]
+  val := val
+
+def ElabWithTemporaries.fromTemporaries (temporaries : Array (TSyntax `term)) :
+   ElabWithTemporaries Unit := { temporaries := temporaries, val := Unit.unit }
+
+def composeStmts (fs : Array (TSyntax `term)) : SSAElabM (TSyntax `term) := do 
+      let mut out ← `(id)
+      for f in fs do
+        out ← `($f ∘ $out)
+      return out
+
+def ElabWithTemporaries.composeStmts (e : ElabWithTemporaries α) : SSAElabM (TSyntax `term) :=
+  EDSL2.composeStmts e.temporaries
+
+-- returns the syntax to access a variable.
+def ElabWithTemporaries.toAssign (e : ElabWithTemporaries (TSyntax `term))
+  : SSAElabM (ElabWithTemporaries (TSyntax `term)) := do 
+  let v : ℕ ← SSAElabContext.freshSyntheticVar
+  let vstx : TSyntax `term ← idxToContextVar 0
+  let assign : TSyntax `term ← `(fun prev => SSA.TSSA.assign prev $vstx $(e.val))
+  return {
+    temporaries := e.temporaries.push assign,
+    val := vstx
+  }
+
+mutual
+partial def elabRgn : TSyntax `dsl_region2 → SSAElabM (TSyntax `term)
+| `(dsl_region2| rgn2$($v)) => return v
+| `(dsl_region2| { $v:dsl_var2 => $bb:dsl_bb2 }) => do
+  let velab := Lean.quote (← dslVarToIx v) -- natural number.
+  SSAElabContext.addVar (← dslVarToIx v) -- add variable.
+  let bb ← elabBB bb
+  `(SSA.TSSA.rgn $velab $bb)
+| _ => Macro.throwUnsupported
+
+partial def elabAssign : TSyntax ``dsl_assign2 → SSAElabM (ElabWithTemporaries Unit)
+| `(dsl_assign2| $v:dsl_var2 := $rhs:dsl_expr2 ;) => do
+  let rhselab : ElabWithTemporaries (TSyntax `term) ← elabStxExpr rhs
+  SSAElabContext.addVar (← dslVarToIx v) -- add variable.
+  let velab := Lean.quote (← dslVarToIx v) -- natural number.
+  let assign ← `(fun prev => SSA.TSSA.assign prev $velab $(rhselab.val))
+  return { temporaries := rhselab.temporaries.push assign, val := Unit.unit }
+| _ => Macro.throwUnsupported
+
+
+
+-- TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop) <s1data>) <s2data>) <s3data>)
+-- s1 : (fun prev1 => SSA.assign (<prev1>) <s1data>)
+-- s2 : (fun prev2 => SSA.assign (<prev2>) <s2data>)
+-- s3 : (fun prev3 => SSA.assign (<prev3>) <s3data>)
+-- fun x => s3 ( s2 (s1 x) )
+-- (s3 ∘ (s2 ∘ (s1 ∘ id)))
+partial def elabStmts (ss : Array (TSyntax `EDSL2.dsl_assign2)) : SSAElabM (ElabWithTemporaries Unit) := do
+  let mut fs : Array (TSyntax `term) := #[]
+  for s in ss do
+    let selab : ElabWithTemporaries Unit ← elabAssign s
+    fs := fs ++ selab.temporaries 
+  return .fromTemporaries fs
+
+partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
+| `(dsl_bb2| $[ $ss:dsl_assign2 ]* return $rete:dsl_expr2) => do
+    let selab : ElabWithTemporaries Unit ← elabStmts ss
+    let retElab : ElabWithTemporaries (TSyntax `term) ← elabStxExpr rete
+    let retv : ElabWithTemporaries (TSyntax `term) ← retElab.toAssign
+    let selab ← composeStmts (selab.temporaries ++ retv.temporaries)
+    `(SSA.TSSA.ret ($selab SSA.TSSA.nop) $(retv.val))
+| _ => Macro.throwUnsupported
+
+/-- insert intermediate let bindings to produce -/
+-- partial def exprToVar : TSyntax ``dsl_expr2 → SSAElabM (TSyntax `term)
+
+-- e → (stmts, e)
+partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (ElabWithTemporaries (TSyntax `term))
+| `(dsl_expr2| ()) => do
+  return ElabWithTemporaries.of (← `(SSA.TSSA.unit))
+| `(dsl_expr2| ($a, $b)) => do
+    let aelab ← elabStxExpr a
+    let belab ← elabStxExpr b
+    return { 
+        temporaries := aelab.temporaries ++ belab.temporaries,
+        val := ← `(SSA.TSSA.pair $(aelab.val) $(belab.val))
+      : ElabWithTemporaries _
+    }
+| `(dsl_expr2| ($a, $b, $c)) => do
+  let aelab ← elabStxExpr a
+  let belab ← elabStxExpr b
+  let celab ← elabStxExpr c
+  return {
+      temporaries := aelab.temporaries ++ belab.temporaries ++ celab.temporaries,
+      val := ← `(SSA.TSSA.triple $(aelab.val) $(belab.val) $(celab.val))
+    : ElabWithTemporaries _
+  }
+| `(dsl_expr2| $v:dsl_var2) => do 
+  return {
+    temporaries := #[],
+    val := ← elabStxVar v
+    : ElabWithTemporaries _
+  }
+| `(dsl_expr2| op: $o:dsl_op2 $arg:dsl_expr2 $[, $r?:dsl_region2 ]? ) => do
+  let argelab ← elabStxExpr arg
+  let rgn ← match r? with
+    | none => `(SSA.TSSA.rgn0)
+    | some r => elabRgn r -- TODO: can a region affect stuff outside?
+  let val ← `(SSA.TSSA.op [dsl_op2| $o] $(argelab.val) $rgn)
+  return {
+    temporaries := argelab.temporaries,
+    val := val
+  }
+| _ => Macro.throwUnsupported
+end
+
+scoped syntax "[dsl_bb2|" dsl_bb2 "]" : term
+macro_rules
+| `([dsl_bb2| $bb:dsl_bb2]) => do
+  let ctx : SSAElabContext := {  vars := #[] }
+  let (outTerm, _outCtx) ← (elabBB bb).run ctx
+  return outTerm
+
+scoped syntax "[dsl_region2|" dsl_region2 "]" : term
+macro_rules
+| `([dsl_region2| $r:dsl_region2]) => do
+  let ctx : SSAElabContext := {  vars := #[] }
+  let (outTerm, _outCtx) ← (elabRgn r).run ctx
+  return outTerm
+
+end EDSL2
 
 namespace EDSL
 open Lean HashMap Macro
