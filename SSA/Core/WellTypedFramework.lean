@@ -104,7 +104,7 @@ instance {α : Type} : EmptyCollection (Context α) :=
 def EnvC [Goedel β] (c : Context β)  :=
   ∀ ⦃a : UserType β⦄, c.Var a → ⟦a⟧
 
-def Context.Var.emptyElim {β : Type} {a : UserType β} 
+def Context.Var.emptyElim {β : Type} {a : UserType β}
   (v : Context.Var Context.empty a) : P := by {
     cases v;
 }
@@ -204,19 +204,19 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
   | Γ, _, .assign rest lhs rhs => fun e => do
     let e' ← rest.evalM e
     let rhsv ← rhs.evalM e'
-    return fun T v => 
+    return fun T v =>
       match v with
       | Context.Var.prev v => e' v
       | Context.Var.last => rhsv
   | _, _, .nop => fun e => return e
-  | _, _, .ret above v => fun e => do 
-    let e' ← TSSA.evalM above e 
+  | _, _, .ret above v => fun e => do
+    let e' ← TSSA.evalM above e
     return e' v
-  | _, _, .pair fst snd => fun e => do 
+  | _, _, .pair fst snd => fun e => do
     return mkPair (e fst) (e snd)
-  | _, _, .triple fst snd third => fun e => do 
+  | _, _, .triple fst snd third => fun e => do
     return mkTriple (e fst) (e snd) (e third)
-  | _, _, TSSA.op o arg rg => fun e => do 
+  | _, _, TSSA.op o arg rg => fun e => do
     let rgv := rg.evalM EnvC.empty
     TypedUserSemanticsM.evalM o (e arg) rgv
   | _, _, .rgn _arg body => fun e arg => do
@@ -271,16 +271,16 @@ syntax dsl_var2 : dsl_expr2
 scoped syntax "()" : dsl_expr2
 scoped syntax "(" dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
 scoped syntax "(" dsl_expr2 "," dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
-scoped syntax "op:" dsl_op2 dsl_expr2 ("," dsl_region2)? : dsl_expr2 
+scoped syntax "op:" dsl_op2 dsl_expr2 ("," dsl_region2)? : dsl_expr2
 syntax dsl_assign2 := dsl_var2 ":= " dsl_expr2 ";"
-syntax dsl_bb2 := (dsl_assign2)* "return " dsl_expr2 
+syntax dsl_bb2 := (dsl_assign2)* "return " dsl_expr2
 
 scoped syntax "{" dsl_var2 "=>" dsl_bb2 "}" : dsl_region2
 scoped syntax "rgn2$(" term ")" : dsl_region2
 
 structure SSAElabContext where
   vars : Array Nat -- list of variables, in order of occurrence
-  
+
 abbrev SSAElabM (α : Type) := StateT SSAElabContext MacroM α
 
 def SSAElabContext.addVar (var : Nat) : SSAElabM Unit := do
@@ -291,9 +291,9 @@ def SSAElabContext.freshSyntheticVar : SSAElabM Nat := do
   -- This is a hack. We assign fresh variables an index > 99999.
   -- Ideally, we should have two different scopes, one for
   -- user defined variables, and one for synthetic variables.
-  let synthv := 9999 + (← get).vars.size 
+  let synthv := 9999 + (← get).vars.size
   SSAElabContext.addVar synthv
-  return synthv 
+  return synthv
 
 -- given an array [x, y, z], the index of 'z' is '0' (though its index is '2' in the array),
 -- since we cound from the back.
@@ -321,19 +321,22 @@ def elabStxVar : TSyntax ``EDSL2.dsl_var2 → SSAElabM (TSyntax `term)
 
 
 
-structure ElabWithTemporaries (α : Type) where 
+structure ElabWithTemporaries (α : Type) where
   temporaries : Array (TSyntax `term)
   val : α
-deriving Inhabited 
+deriving Inhabited
 
-def ElabWithTemporaries.of (val : α) : ElabWithTemporaries α where 
+instance [ToString α] : ToString (ElabWithTemporaries α) where
+  toString elabv := s!"'{elabv.temporaries}' ⊢ '{elabv.val}'"
+
+def ElabWithTemporaries.ofVal (val : α) : ElabWithTemporaries α where
   temporaries := #[]
   val := val
 
 def ElabWithTemporaries.fromTemporaries (temporaries : Array (TSyntax `term)) :
    ElabWithTemporaries Unit := { temporaries := temporaries, val := Unit.unit }
 
-def composeStmts (fs : Array (TSyntax `term)) : SSAElabM (TSyntax `term) := do 
+def composeStmts (fs : Array (TSyntax `term)) : SSAElabM (TSyntax `term) := do
       let mut out ← `(id)
       for f in fs do
         out ← `($f ∘ $out)
@@ -344,13 +347,14 @@ def ElabWithTemporaries.composeStmts (e : ElabWithTemporaries α) : SSAElabM (TS
 
 -- returns the syntax to access a variable.
 def ElabWithTemporaries.toAssign (e : ElabWithTemporaries (TSyntax `term))
-  : SSAElabM (ElabWithTemporaries (TSyntax `term)) := do 
+  : SSAElabM (ElabWithTemporaries (TSyntax `term)) := do
   let v : ℕ ← SSAElabContext.freshSyntheticVar
-  let vstx : TSyntax `term ← idxToContextVar 0
+  let vstx := Lean.quote v  -- recall that 'Var' is just a ℕ, used to name stuff. It has no semantic meaning.
+  let ctxvarstx : TSyntax `term ← idxToContextVar 0 -- future referrers of this variable ought to use the actual context.var
   let assign : TSyntax `term ← `(fun prev => SSA.TSSA.assign prev $vstx $(e.val))
   return {
     temporaries := e.temporaries.push assign,
-    val := vstx
+    val := ctxvarstx
   }
 
 mutual
@@ -384,7 +388,7 @@ partial def elabStmts (ss : Array (TSyntax `EDSL2.dsl_assign2)) : SSAElabM (Elab
   let mut fs : Array (TSyntax `term) := #[]
   for s in ss do
     let selab : ElabWithTemporaries Unit ← elabAssign s
-    fs := fs ++ selab.temporaries 
+    fs := fs ++ selab.temporaries
   return .fromTemporaries fs
 
 partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
@@ -392,8 +396,11 @@ partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
     let selab : ElabWithTemporaries Unit ← elabStmts ss
     let retElab : ElabWithTemporaries (TSyntax `term) ← elabStxExpr rete
     let retv : ElabWithTemporaries (TSyntax `term) ← retElab.toAssign
-    let selab ← composeStmts (selab.temporaries ++ retv.temporaries)
-    `(SSA.TSSA.ret ($selab SSA.TSSA.nop) $(retv.val))
+    let selabFinal ← composeStmts (selab.temporaries ++ retv.temporaries)
+    dbg_trace "selab: '{selab}'"
+    dbg_trace "  ⊢ retElab: '{retElab}'"
+    dbg_trace "  ⊢.. retv: '{retv}'"
+    `(SSA.TSSA.ret ($selabFinal SSA.TSSA.nop) $(retv.val))
 | _ => Macro.throwUnsupported
 
 /-- insert intermediate let bindings to produce -/
@@ -402,11 +409,11 @@ partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
 -- e → (stmts, e)
 partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (ElabWithTemporaries (TSyntax `term))
 | `(dsl_expr2| ()) => do
-  return ElabWithTemporaries.of (← `(SSA.TSSA.unit))
+  return ElabWithTemporaries.ofVal (← `(SSA.TSSA.unit))
 | `(dsl_expr2| ($a, $b)) => do
     let aelab ← elabStxExpr a
     let belab ← elabStxExpr b
-    return { 
+    return {
         temporaries := aelab.temporaries ++ belab.temporaries,
         val := ← `(SSA.TSSA.pair $(aelab.val) $(belab.val))
       : ElabWithTemporaries _
@@ -420,7 +427,7 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (ElabWithTemporaries (
       val := ← `(SSA.TSSA.triple $(aelab.val) $(belab.val) $(celab.val))
     : ElabWithTemporaries _
   }
-| `(dsl_expr2| $v:dsl_var2) => do 
+| `(dsl_expr2| $v:dsl_var2) => do
   return {
     temporaries := #[],
     val := ← elabStxVar v
