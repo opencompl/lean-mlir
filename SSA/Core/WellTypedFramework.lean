@@ -97,6 +97,36 @@ def trdTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k
 end UserType
 
 
+namespace Example
+
+inductive UserType (β : Type) : Type where
+  | base : β → UserType β
+  | pair : UserType β → UserType β → UserType β
+
+@[match_pattern]
+def UserType.ofBase : β → UserType β := UserType.base
+
+@[match_pattern]
+def UserType.ofPair : UserType β × UserType β → UserType β
+| (b, b') => .pair b b'
+
+instance : Coe β (UserType β) where coe := UserType.ofBase
+
+instance : Coe (UserType β × UserType β) (UserType β) where
+  coe := UserType.ofPair
+
+inductive Ty | A | B
+
+def fooExplicit : UserType Ty := .pair (.base .A) (.base .B)
+def fooImplicit1 : UserType Ty := ↑(UserType.base Ty.A, UserType.base Ty.B)
+def fooImplicit2 : UserType Ty := ↑Ty.A
+
+instance [A : Coe α (UserType β)] [A' : Coe α' (UserType β)]: Coe (α × α') (UserType β) where
+  coe
+  | (a, a') => UserType.pair (A.coe a) (A'.coe a')
+
+def fooImplicit4 : UserType Ty := Coe.coe (Ty.A, Ty.B)
+end Example
 
 /-- Typeclass for a user semantics of `Op`, with base type `β`.
     The type β has to implement the `Goedel` typeclass, mapping into `Lean` types.
@@ -203,6 +233,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
   | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e =>
+    -- | TODO: (e arg) seems to get reduced?
     TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
   | _, _, .rgn _arg body => fun e arg =>
       body.eval (fun _ v =>
@@ -308,8 +339,8 @@ syntax dsl_assign2 := dsl_var2 ":= " dsl_expr2 ";"
 syntax dsl_bb2 := (dsl_assign2)* "return " dsl_expr2
 
 scoped syntax "{" dsl_var2 "=>" dsl_bb2 "}" : dsl_region2
-scoped syntax "$rgn2(" term ")" : dsl_region2
-scoped syntax "$expr2(" term ")" : dsl_expr2
+-- scoped syntax "$(" term ")" : dsl_region2
+-- scoped syntax "$(" term ")" : dsl_expr2
 
 inductive ElabVar
 | User (n : ℕ)
@@ -410,7 +441,7 @@ def ElabWithTemporaries.toAssign (e : ElabWithTemporaries (TSyntax `term))
 
 mutual
 partial def elabRgn : TSyntax `dsl_region2 → SSAElabM (TSyntax `term)
-| `(dsl_region2| $rgn2($v)) => return v
+| `(dsl_region2| $$($v)) => return v
 | `(dsl_region2| { $vstx:dsl_var2 => $bbstx:dsl_bb2 }) => do
   let var ← dslVarToElabVar vstx
   SSAElabContext.addVar (← dslVarToElabVar vstx) -- add variable.
@@ -458,7 +489,7 @@ partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
 
 -- e → (stmts, e)
 partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (ElabWithTemporaries ElabVar)
-| `(dsl_expr2| $expr2($v)) => do 
+| `(dsl_expr2| $$($v)) => do 
   let exprElab : ElabWithTemporaries (TSyntax `term) := ElabWithTemporaries.ofVal v
   exprElab.toAssign
 | `(dsl_expr2| ( $e:dsl_expr2 )) => elabStxExpr e

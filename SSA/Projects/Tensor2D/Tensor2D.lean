@@ -155,14 +155,41 @@ macro_rules
 | `([dsl_op2| fill2d]) => `(Op.fill2d)
 
 
+-- Why do these not get set?
+register_simp_attr SSA.teval
+register_simp_attr EnvU.set
+-- register_simp_attr Op.const
+register_simp_attr argUserType
+register_simp_attr eval
+register_simp_attr outUserType
+-- register_simp_attr BitVector.width
+register_simp_attr uncurry
+
+-- TODO: what is the most convenient way to state extract?
+-- TODO: there is no way in MLIR to talk about composition of functions, so `map . map` is out.
 
 open SSA EDSL2 in
 theorem map_fill_2d :
   TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
-    return op:fill2d ($expr2(i), op:map2d $expr2(v), $rgn2(f))
+    return op:fill2d ($(i), op:map2d $(v), $(f))
   ] =
   TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
-    return op:map2d (op:fill2d ($expr2(i), $expr2(v))), $rgn2(f)
+    return op:map2d (op:fill2d ($(i), $(v))), $(f)
   ] := by {
+    dsimp only[TSSAIndex.eval, TSSA.eval]
+    -- TODO: at this point, why do we have (eval Op.map2d (TSSA.eval v fun T v => ...))? why is the TSSA.eval unfolded?
+    -- TODO: it seems to be that `(e arg)` in TSSA.eval gets evaluated eagerly. I do not want it to β-reduce this redex. Can I control this @chris?
+    -- TODO: at this point, having a tactic to find and replace subterms would be awesome.
+    -- TODO2: We should not let the proof state explode to this anyway.
+    simp[UserType.mkPair]
+    generalize I:(TSSA.eval i e) = ival 
+    generalize F:(TSSA.eval f EnvC.empty) = f 
+    generalize ARG:(TSSA.eval v fun T v =>
+          match T, v with
+          | T, Context.Var.prev v => e v
+          | .(UserType.UserType.ofBase BaseType.int), Context.Var.last => ival) = arg
+    -- TODO: this cannot even be generalized, even though it is the same subterm.
+    simp only[TypedUserSemantics.eval, eval]
+    rw[Tensor2d'.]
     sorry
   }
