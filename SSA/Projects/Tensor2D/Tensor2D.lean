@@ -185,14 +185,14 @@ macro_rules
 
 
 -- Why do these not get set?
-register_simp_attr SSA.teval
-register_simp_attr EnvU.set
+-- register_simp_attr SSA.teval
+-- register_simp_attr EnvU.set
 -- register_simp_attr Op.const
-register_simp_attr argUserType
-register_simp_attr eval
-register_simp_attr outUserType
--- register_simp_attr BitVector.width
-register_simp_attr uncurry
+-- register_simp_attr argUserType
+-- register_simp_attr eval
+-- register_simp_attr outUserType
+-- -- register_simp_attr BitVector.width
+-- register_simp_attr uncurry
 
 -- NOTE: there is no way in MLIR to talk about composition of functions, so `map . map` is out
 --       as a peephole rewrite
