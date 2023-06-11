@@ -334,7 +334,7 @@ scoped syntax "()" : dsl_expr2
 scoped syntax "(" dsl_expr2 ")" : dsl_expr2
 scoped syntax "(" dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
 scoped syntax "(" dsl_expr2 "," dsl_expr2 "," dsl_expr2 ")" : dsl_expr2
-scoped syntax "op:" dsl_op2 dsl_expr2 ("," dsl_region2)? : dsl_expr2
+scoped syntax "op:" dsl_op2 ws dsl_expr2 (ws dsl_region2)? : dsl_expr2
 syntax dsl_assign2 := dsl_var2 ":= " dsl_expr2 ";"
 syntax dsl_bb2 := (dsl_assign2)* "return " dsl_expr2
 
@@ -518,7 +518,7 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (ElabWithTemporaries E
 | `(dsl_expr2| $v:dsl_var2) => do
     let var : ElabVar ← dslVarToElabVar v
     return ElabWithTemporaries.ofVal var
-| `(dsl_expr2| op: $o:dsl_op2 $arg:dsl_expr2 $[, $r?:dsl_region2 ]? ) => do
+| `(dsl_expr2| op: $o:dsl_op2 $arg:dsl_expr2 $[ $r?:dsl_region2 ]? ) => do
   let argelab ← elabStxExpr arg
   let rgn ← match r? with
     | none => `(SSA.TSSA.rgn0)
@@ -618,6 +618,7 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
   match ← SSAElabContext.getIndex? var.getNat with
   | .some ix => idxToContextVar ix
   | .none => Macro.throwErrorAt var s!"variable '{var}' not in scope"
+| `(dsl_var| $$($x)) => return x
 | stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
 
