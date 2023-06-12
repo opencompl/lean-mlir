@@ -6,25 +6,25 @@ import SSA.Core.Util
 
 /-- Tensor2d with existential dimension sizes. -/
 structure Tensor2d' (α : Type) where
-  n₀ : ℕ
-  n₁ : ℕ
-  mat : Matrix (Fin n₀) (Fin n₁) α
+  dim₀ : ℕ
+  dim₁ : ℕ
+  mat : Matrix (Fin dim₀) (Fin dim₁) α
 
 def Tensor2d'.error (α : Type) : Tensor2d' α where
-  n₀ := 0
-  n₁ := 0
+  dim₀ := 0
+  dim₁ := 0
   mat := Matrix.of fun x _y => x.elim0
 
 def Tensor2d'.transpose (t : Tensor2d' α) : Tensor2d' α where
-  n₀ := t.n₁
-  n₁ := t.n₀
+  dim₀ := t.dim₁
+  dim₁ := t.dim₀
   mat := t.mat.transpose
 
 theorem Tensor2d'.transpose_transpose (t : Tensor2d' α) : t.transpose.transpose = t := rfl
 
 def Tensor2d'.map (f : α → β) (t : Tensor2d' α) : Tensor2d' β where
-  n₀ := t.n₀
-  n₁ := t.n₁
+  dim₀ := t.dim₀
+  dim₁ := t.dim₁
   mat := t.mat.map f
 
 theorem Tensor2d'.map_functorial (g : β → γ) (f : α → β) (t : Tensor2d' α) : t.map (g ∘ f) = (t.map f).map g := rfl
@@ -39,14 +39,14 @@ def Tensor2d'.fill (v : β) (t : Tensor2d' α) : Tensor2d' β := t.map (const v)
 
 /-- extract a submatrix of (sz₀ × sz₁) size at offset (δ₀, δ₁). Fails if this is out of bounds. -/
 def Tensor2d'.extract (δ₀ δ₁ : ℕ) (sz₀ sz₁ : ℕ) (t : Tensor2d' α) : (Tensor2d' α) :=
-  if SZ0 : δ₀ + sz₀ ≤ t.n₀ then
-    if SZ1 : δ₁ + sz₁ ≤ t.n₁ then
+  if SZ0 : δ₀ + sz₀ ≤ t.dim₀ then
+    if SZ1 : δ₁ + sz₁ ≤ t.dim₁ then
       {
-        n₀ := sz₀,
-        n₁ := sz₁,
+        dim₀ := sz₀,
+        dim₁ := sz₁,
         mat := Matrix.of fun (ix₀ : Fin sz₀) (ix₁ : Fin sz₁) =>
-          have INBOUNDS0 : δ₀ + ix₀ < t.n₀ := by linarith[ix₀.isLt]
-          have INBOUNDS1 : δ₁ + ix₁ < t.n₁ := by linarith[ix₁.isLt]
+          have INBOUNDS0 : δ₀ + ix₀ < t.dim₀ := by linarith[ix₀.isLt]
+          have INBOUNDS1 : δ₁ + ix₁ < t.dim₁ := by linarith[ix₁.isLt]
           t.mat ⟨δ₀ + ix₀, INBOUNDS0⟩ ⟨δ₁ + ix₁, INBOUNDS1⟩
         : Tensor2d' α
       }
@@ -57,12 +57,12 @@ def Tensor2d'.extract (δ₀ δ₁ : ℕ) (sz₀ sz₁ : ℕ) (t : Tensor2d' α)
 theorem Tensor2d'.map_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α) (f : α → β) :
   (t.map f).extract δ₀ δ₁ sz₀ sz₁ = (t.extract δ₀ δ₁ sz₀ sz₁).map f := by {
     simp only [extract];
-    have MAP_n₀ : (map f t).n₀ = t.n₀ := rfl
-    simp only [MAP_n₀]
-    have MAP_n₁ : (map f t).n₁ = t.n₁ := rfl
-    simp only [MAP_n₁]
-    by_cases H₀ : δ₀ + sz₀ ≤ t.n₀ <;> simp[H₀, Tensor2d'.map_error];
-    by_cases H₁ : δ₁ + sz₁ ≤ t.n₁ <;> simp[H₁, Tensor2d'.map_error];
+    have MAP_dim₀ : (map f t).dim₀ = t.dim₀ := rfl
+    simp only [MAP_dim₀]
+    have MAP_dim₁ : (map f t).dim₁ = t.dim₁ := rfl
+    simp only [MAP_dim₁]
+    by_cases H₀ : δ₀ + sz₀ ≤ t.dim₀ <;> simp[H₀, Tensor2d'.map_error];
+    by_cases H₁ : δ₁ + sz₁ ≤ t.dim₁ <;> simp[H₁, Tensor2d'.map_error];
     simp only [map, Matrix.map, Matrix.of_apply, Int.ofNat_add_ofNat, Eq.ndrec, Int.rawCast, Int.cast_id,
       Nat.rawCast, Nat.cast_id, Int.ofNat_eq_coe, eq_mp_eq_cast, id_eq]
 }
@@ -183,23 +183,14 @@ macro_rules
 | `([dsl_op2| constTensor($t)]) => `(Op.constTensor $t)
 | `([dsl_op2| constInt($t)]) => `(Op.constInt $t)
 
-
--- Why do these not get set?
--- register_simp_attr SSA.teval
--- register_simp_attr EnvU.set
--- register_simp_attr Op.const
--- register_simp_attr argUserType
--- register_simp_attr eval
--- register_simp_attr outUserType
--- -- register_simp_attr BitVector.width
--- register_simp_attr uncurry
-
 -- NOTE: there is no way in MLIR to talk about composition of functions, so `map . map` is out
 --       as a peephole rewrite
-
-
 -- TODO: enable not writing the unit argument if not used.
--- TOTHINK: See that there is no way to 
+-- TOTHINK: See that we encode the variables as constant values.
+--          We should instead be able to have these be SSA variables of the
+--          correct type. Not sure how to achieve this, as doing this
+--          naively leads to errors about incorrect types:
+--          https://github.com/bollu/ssa/issues/28
 open SSA EDSL2 in
 theorem map_fill_2d 
     (t : Tensor2d' Int)
