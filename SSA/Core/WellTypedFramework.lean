@@ -446,9 +446,6 @@ partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
     let selab : ElabWithTemporaries Unit ← elabStmts ss
     let retElab : ElabWithTemporaries ElabVar ← elabStxExpr rete
     let selabFinal ← composeStmts (selab.temporaries ++ retElab.temporaries)
-    dbg_trace "selab: '{selab}'"
-    dbg_trace "  ⊢ retElab: '{retElab}'"
-    dbg_trace "  ⊢.. retv: '{retElab}'"
     `(SSA.TSSA.ret ($selabFinal SSA.TSSA.nop) $(← retElab.val.quoteAsContextVar))
 | _ => Macro.throwUnsupported
 

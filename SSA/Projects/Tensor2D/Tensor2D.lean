@@ -4,10 +4,16 @@ import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
 
 
+/-- Type of tensor dimensions and indexes into tensor dimensions.
+  NOTE: see interaction with `linarith` where we need to unfold `Index` into `ℕ`
+    https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Ergonomics.3A.20linarith.20does.20not.20work.20on.20Nat.20alias/near/365631549
+-/
+abbrev Index := ℕ
+
 /-- Tensor2d with existential dimension sizes. -/
 structure Tensor2d' (α : Type) where
-  dim₀ : ℕ
-  dim₁ : ℕ
+  dim₀ : Index
+  dim₁ : Index
   mat : Matrix (Fin dim₀) (Fin dim₁) α
 
 def Tensor2d'.error (α : Type) : Tensor2d' α where
@@ -38,15 +44,15 @@ def const (a : α) (_b : β) : α := a
 def Tensor2d'.fill (v : β) (t : Tensor2d' α) : Tensor2d' β := t.map (const v)
 
 /-- extract a submatrix of (sz₀ × sz₁) size at offset (δ₀, δ₁). Fails if this is out of bounds. -/
-def Tensor2d'.extract (δ₀ δ₁ : ℕ) (sz₀ sz₁ : ℕ) (t : Tensor2d' α) : (Tensor2d' α) :=
+def Tensor2d'.extract (δ₀ δ₁ : Index) (sz₀ sz₁ : Index) (t : Tensor2d' α) : (Tensor2d' α) :=
   if SZ0 : δ₀ + sz₀ ≤ t.dim₀ then
     if SZ1 : δ₁ + sz₁ ≤ t.dim₁ then
       {
         dim₀ := sz₀,
         dim₁ := sz₁,
         mat := Matrix.of fun (ix₀ : Fin sz₀) (ix₁ : Fin sz₁) =>
-          have INBOUNDS0 : δ₀ + ix₀ < t.dim₀ := by linarith[ix₀.isLt]
-          have INBOUNDS1 : δ₁ + ix₁ < t.dim₁ := by linarith[ix₁.isLt]
+          have INBOUNDS0 : δ₀ + ix₀ < t.dim₀ := by simp[Index] at *; linarith[ix₀.isLt]
+          have INBOUNDS1 : δ₁ + ix₁ < t.dim₁ := by simp[Index] at *; linarith[ix₁.isLt]
           t.mat ⟨δ₀ + ix₀, INBOUNDS0⟩ ⟨δ₁ + ix₁, INBOUNDS1⟩
         : Tensor2d' α
       }
@@ -76,7 +82,7 @@ theorem Tensor2d'.fill_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α
 inductive Op
 | add
 -- TODO: generalize 'const'
-| constNat (v: Nat) | constTensor (t : Tensor2d' Int) | constInt (v : Int)
+| constIx (v: Nat) | constTensor (t : Tensor2d' Int) | constInt (v : Int)
 | sub
 | map2d
 | fill2d
@@ -84,13 +90,13 @@ inductive Op
 
 inductive BaseType
 | int : BaseType
-| nat : BaseType
+| ix : BaseType
 | tensor2d : BaseType
 deriving DecidableEq, Inhabited
 
 def BaseType.toType : BaseType → Type
 | .int => Int
-| .nat => Nat
+| .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
 instance : Goedel BaseType where toType := BaseType.toType
@@ -102,18 +108,18 @@ abbrev UserType := SSA.UserType BaseType
 def argUserType : Op → UserType
 | Op.add => ↑(BaseType.int, BaseType.int)
 | Op.sub => ↑(BaseType.int, BaseType.int)
-| Op.constNat _  => ()
+| Op.constIx _  => ()
 | Op.constTensor _  => ()
 | Op.constInt _  => ()
 | Op.map2d => BaseType.tensor2d
 | Op.fill2d => (BaseType.int, BaseType.tensor2d)
-| Op.extract2d => (((BaseType.nat, BaseType.nat), (BaseType.nat, BaseType.nat)), BaseType.tensor2d)
+| Op.extract2d => (((BaseType.ix, BaseType.ix), (BaseType.ix, BaseType.ix)), BaseType.tensor2d)
 
 @[simp]
 def outUserType : Op → UserType
 | Op.add => BaseType.int
 | Op.sub => BaseType.int
-| Op.constNat _ => BaseType.nat 
+| Op.constIx _ => BaseType.ix 
 | Op.constTensor _ => BaseType.tensor2d
 | Op.constInt _ => BaseType.int
 | Op.map2d | Op.fill2d => BaseType.tensor2d
@@ -122,13 +128,13 @@ def outUserType : Op → UserType
 @[simp]
 def rgnDom : Op → UserType
 | Op.add | Op.sub | Op.fill2d | Op.extract2d  => .unit
-| Op.constNat _ | Op.constTensor _ | Op.constInt _ => .unit
+| Op.constIx _ | Op.constTensor _ | Op.constInt _ => .unit
 | Op.map2d => BaseType.int
 
 @[simp]
 def rgnCod : Op → UserType
 | Op.add | Op.sub | Op.fill2d  | Op.extract2d => .unit
-| Op.constNat _ | Op.constTensor _ | Op.constInt _ => .unit
+| Op.constIx _ | Op.constTensor _ | Op.constInt _ => .unit
 | Op.map2d => BaseType.int
 
 def eval (o : Op)
@@ -136,7 +142,7 @@ def eval (o : Op)
   (_rgn : (Goedel.toType (rgnDom o) → (Goedel.toType (rgnCod o)))) :
   (Goedel.toType (outUserType o)) :=
   match o with
-  | .constNat v => v
+  | .constIx v => v
   | .constTensor v => v
   | .constInt v => v
   | .add => 
@@ -151,7 +157,7 @@ def eval (o : Op)
     x - y
   | .map2d => 
     let t : Tensor2d' Int := arg
-    let f : Int → Int := _rgn -- FAILS.
+    let f : Int → Int := _rgn
     t.map f
   | .fill2d => 
     let (v, t) : Int × Tensor2d' Int  := arg
@@ -170,7 +176,7 @@ instance TUS : SSA.TypedUserSemantics Op BaseType where
 syntax "map2d" : dsl_op2
 syntax "fill2d" : dsl_op2
 syntax "extract2d" : dsl_op2
-syntax "constNat" "(" term ")" : dsl_op2
+syntax "constIx" "(" term ")" : dsl_op2
 syntax "constTensor" "(" term ")" : dsl_op2
 syntax "constInt" "(" term ")" : dsl_op2
 
@@ -179,7 +185,7 @@ macro_rules
 | `([dsl_op2| map2d]) => `(Op.map2d)
 | `([dsl_op2| fill2d]) => `(Op.fill2d)
 | `([dsl_op2| extract2d]) => `(Op.extract2d)
-| `([dsl_op2| constNat($t)]) => `(Op.constNat $t)
+| `([dsl_op2| constIx($t)]) => `(Op.constIx $t)
 | `([dsl_op2| constTensor($t)]) => `(Op.constTensor $t)
 | `([dsl_op2| constInt($t)]) => `(Op.constInt $t)
 
@@ -194,20 +200,20 @@ macro_rules
 open SSA EDSL2 in
 theorem map_fill_2d 
     (t : Tensor2d' Int)
-    (sz₀ sz₁ ix₀ ix₁: Nat) 
+    (sz₀ sz₁ ix₀ ix₁: Index) 
     (i : Int):
   TSSA.eval
   (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
     return op:fill2d (op:constInt(i) (), 
       op:extract2d (
-          ((op:constNat(sz₀) () , op:constNat(sz₁) ()),
-           (op:constNat(ix₀) (), op:constNat(ix₁) ())),
+          ((op:constIx(sz₀) () , op:constIx(sz₁) ()),
+           (op:constIx(ix₀) (), op:constIx(ix₁) ())),
            op:constTensor(t) ()))
   ] =
   TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
     return op:extract2d 
-      (((op:constNat(sz₀) (), op:constNat(sz₁) ()),
-        (op:constNat(ix₀) (), op:constNat(ix₁) ())),
+      (((op:constIx(sz₀) (), op:constIx(sz₁) ()),
+        (op:constIx(ix₀) (), op:constIx(ix₁) ())),
         op:fill2d (op:constInt(i) (), op:constTensor(t) ()))
   ] := by {
     dsimp only[TSSAIndex.eval, TSSA.eval]
