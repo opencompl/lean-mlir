@@ -96,38 +96,6 @@ def trdTriple [Goedel β] {k₁ k₂ k₃ : UserType β} : ⟦k₁.triple k₂ k
 
 end UserType
 
-
-namespace Example
-
-inductive UserType (β : Type) : Type where
-  | base : β → UserType β
-  | pair : UserType β → UserType β → UserType β
-
-@[match_pattern]
-def UserType.ofBase : β → UserType β := UserType.base
-
-@[match_pattern]
-def UserType.ofPair : UserType β × UserType β → UserType β
-| (b, b') => .pair b b'
-
-instance : Coe β (UserType β) where coe := UserType.ofBase
-
-instance : Coe (UserType β × UserType β) (UserType β) where
-  coe := UserType.ofPair
-
-inductive Ty | A | B
-
-def fooExplicit : UserType Ty := .pair (.base .A) (.base .B)
-def fooImplicit1 : UserType Ty := ↑(UserType.base Ty.A, UserType.base Ty.B)
-def fooImplicit2 : UserType Ty := ↑Ty.A
-
-instance [A : Coe α (UserType β)] [A' : Coe α' (UserType β)]: Coe (α × α') (UserType β) where
-  coe
-  | (a, a') => UserType.pair (A.coe a) (A'.coe a')
-
-def fooImplicit4 : UserType Ty := Coe.coe (Ty.A, Ty.B)
-end Example
-
 /-- Typeclass for a user semantics of `Op`, with base type `β`.
     The type β has to implement the `Goedel` typeclass, mapping into `Lean` types.
     This typeclass has several arguments that have to be defined to give semantics to
