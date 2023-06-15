@@ -11,11 +11,11 @@ structure ExecConfig where
 def parseArgs : Cli.Parsed → Except String ExecConfig := 
 fun args => do
   let dialect ← match args.flag? "dialect" with
-      | none => Inhabited.default
+      | none => Except.ok Inhabited.default
       | some d => match Dialect.fromString (d.as! $ String) with
         | some d => pure d
         | none => throw s!"unknown dialect: {d}"
-  let test ← match args.flag? "test" with
+  let test ← match args.positionalArg? "test" with
       | none => throw "no test specified"
       | some t => match dialect.getTest (t.as! $ String) with
         | some t => pure t
@@ -30,8 +30,7 @@ fun args => do
                   return {dialect := dialect, test := test, 
                           args := (by simp [h]; exact PUnit.unit),
                           params := params}
-                else
-                  throw "Unsupported input type"    
+                else throw "Unsupported input type"    
       | _ => throw "Unsupported input type"
 
 
