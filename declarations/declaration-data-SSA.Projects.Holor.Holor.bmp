@@ -1,1 +1,0 @@
-{"name":"SSA.Projects.Holor.Holor","instances":[],"imports":["Init","SSA.Core.WellTypedFramework","SSA.Core.Util","Mathlib.Data.Holor"],"declarations":[]}
