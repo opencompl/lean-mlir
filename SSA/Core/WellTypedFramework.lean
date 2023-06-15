@@ -141,6 +141,8 @@ def Context.Var.emptyElim {β : Type} {a : UserType β}
 def EnvC.empty [Goedel β] : EnvC (Context.empty (β := β)) :=
   fun _a v => v.emptyElim
 
+instance [Goedel β] : EmptyCollection (EnvC (Context.empty (β := β))) := ⟨EnvC.empty⟩
+
 inductive TSSAIndex (β : Type) : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
 | STMT : Context β → TSSAIndex β
@@ -684,3 +686,13 @@ register_simp_attr TypedUserSemantics.argUserType
 register_simp_attr TypedUserSemantics.outUserType
 register_simp_attr TypedUserSemantics.regionDom
 register_simp_attr TypedUserSemantics.regionCod
+
+
+structure SSA.Executable [Goedel β] where
+  (input : SSA.UserType β)
+  (output : SSA.UserType β)
+  (code : input.toType → output.toType)
+
+structure SSA.Test [Goedel β] where
+  (name : String)
+  (codes : List Nat → (SSA.Executable (β := β))) -- TODO: generalize params
