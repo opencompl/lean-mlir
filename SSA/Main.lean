@@ -1,5 +1,5 @@
 import SSA.Core.WellTypedFramework
-import SSA.Projects.Dialect
+import SSA.Core.Dialect
 import Cli
 
 structure ExecConfig where
@@ -55,5 +55,3 @@ def mainCmd := `[Cli|
 
 def main (args : List String): IO UInt32 :=
   mainCmd.validate args
-
-
