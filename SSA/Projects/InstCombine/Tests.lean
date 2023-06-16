@@ -32,8 +32,8 @@ def getTest : String → Option (SSA.Test (β := BaseType))
        some { 
         name := "test1",
         codes := fun params => {
-           input := SSA.UserType.unit,
-           output := SSA.UserType.base (BaseType.bitvec params[0]!),
+           inputType := SSA.UserType.unit,
+           outputType := SSA.UserType.base (BaseType.bitvec params[0]!),
            code := fun _ => test1 params
          }
        }

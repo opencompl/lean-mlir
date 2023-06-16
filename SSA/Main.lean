@@ -6,7 +6,7 @@ structure ExecConfig where
   (dialect : Dialect)
   (test : dialect.testType)
   (params : List Nat)
-  (args : (test.codes params).input.toType)
+  (args : (test.codes params).inputType.toType)
 
 def parseArgs : Cli.Parsed → Except String ExecConfig := 
 fun args => do
@@ -26,7 +26,7 @@ fun args => do
   match args.flag? "args" with
      -- TODO: this is very clumsy to make sure things typecheck. 
      -- Can we make it more generic?
-      | none => if h : (test.codes params).input = SSA.UserType.unit then 
+      | none => if h : (test.codes params).inputType = SSA.UserType.unit then 
                   return {dialect := dialect, test := test, 
                           args := (by simp [h]; exact PUnit.unit),
                           params := params}

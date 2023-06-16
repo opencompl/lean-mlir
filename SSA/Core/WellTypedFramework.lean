@@ -688,11 +688,11 @@ register_simp_attr TypedUserSemantics.regionDom
 register_simp_attr TypedUserSemantics.regionCod
 
 
-structure SSA.Executable [Goedel β] where
-  (input : SSA.UserType β)
-  (output : SSA.UserType β)
-  (code : input.toType → output.toType)
+structure SSA.Function [Goedel β] where
+  (inputType : SSA.UserType β)
+  (outputType : SSA.UserType β)
+  (code : inputType.toType → outputType.toType)
 
 structure SSA.Test [Goedel β] where
   (name : String)
-  (codes : List Nat → (SSA.Executable (β := β))) -- TODO: generalize params
+  (codes : List Nat → (SSA.Function (β := β))) -- TODO: generalize params
