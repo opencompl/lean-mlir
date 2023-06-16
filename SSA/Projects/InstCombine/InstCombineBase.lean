@@ -178,6 +178,7 @@ macro_rules
 -- Would like to move this away from InstCombine but we need to resolve TUS
 -- Could also have a (global) typeclass to find these or pass it as an argument
 -- to simp_mlir
+open SSA in
 macro "simp_mlir": tactic => 
   `(tactic| 
       (simp [TSSA.eval, Function.comp, id.def
