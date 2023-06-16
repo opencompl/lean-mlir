@@ -1,0 +1,54 @@
+<html lang="en" class="alectryon-standalone"><head><meta charset="UTF-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1"></meta><link rel="stylesheet" href="../../.././src/alectryon.css"></link><link rel="stylesheet" href="../../.././src/pygments.css"></link><link rel="stylesheet" href="../../.././src/docutils_basic.css"></link><link rel="shortcut icon" href="../../.././favicon.ico"></link><script defer="true" src="../../.././src/alectryon.js"></script></head><body><article class="alectryon-root alectryon-centered"><div class="alectryon-banner">Built with <a href="https://github.com/leanprover/doc-gen4">doc-gen4</a>, running Lean4.
+      Bubbles (<span class="alectryon-bubble"></span>) indicate interactive fragments: hover for details, tap to reveal contents.
+      Use <kbd>Ctrl+↑</kbd><kbd>Ctrl+↓</kbd>to navigate, <kbd>Ctrl+🖱️</kbd>to focus.
+      On Mac, use <kbd>Cmd</kbd>instead of <kbd>Ctrl</kbd>.
+    </div><pre class="alectryon-io highlight"><span class="alectryon-wsp"><span class="alectryon-token">import SSA.Core.WellTypedFramework
+
+</span><span class="alectryon-token"><span class="k">open</span></span><span class="alectryon-token"> SSA 
+
+</span><span class="alectryon-token"><span class="k">variable</span></span><span class="alectryon-token"> [</span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>TUS</var><b>: </b><span><a href="../../.././SSA/Core/WellTypedFramework.html#SSA.TUSInstance">TUSInstance</a></span></span></div></blockquote></div></small></div><span class="nv">TUS</span></span><span class="alectryon-token"> : </span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>TUSInstance</var><b>: </b><span><a href="../../.././foundational_types.html">Type</a> 1</span></span></div></blockquote></div></small></div>TUSInstance</span><span class="alectryon-token">]
+
+</span><span class="alectryon-token"><span class="k">macro</span></span><span class="alectryon-token"> "simp_mlir": </span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>tactic</var><b>: </b><span><a href="../../.././Init/Notation.html#Lean.Parser.Category">Lean.Parser.Category</a></span></span></div></blockquote></div></small></div>tactic</span><span class="alectryon-token"> => 
+  </span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>`(tactic| 
+      (simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</var><b>: </b><span><span class="fn"><span class="fn">?m.179</span> <span class="fn">?m.182</span></span></span></span></div></blockquote></div></small></div>`(tactic| 
+      (</span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>`(tactic| 
+      (simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</var><b>: </b><span><span class="fn"><span class="fn">?m.179</span> <span class="fn">?m.182</span></span></span></span></div></blockquote></div></small></div><span class="k">simp</span></span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>`(tactic| 
+      (simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</var><b>: </b><span><span class="fn"><span class="fn">?m.179</span> <span class="fn">?m.182</span></span></span></span></div></blockquote></div></small></div> [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       </span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>`(tactic| 
+      (simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</var><b>: </b><span><span class="fn"><span class="fn">?m.179</span> <span class="fn">?m.182</span></span></span></span></div></blockquote></div></small></div><span class="k">simp</span></span><span class="alectryon-token"><div class="alectryon-type-info-wrapper"><small class="alectryon-type-info"><div class="alectryon-goals"><blockquote class="alectryon-goal"><div class="goal-hyps"><span class="hyp-type"><var>`(tactic| 
+      (simp [TSSA.eval, Function.comp, id.def
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, TUSInstance.TUS] ; 
+       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</var><b>: </b><span><span class="fn"><span class="fn">?m.179</span> <span class="fn">?m.182</span></span></span></span></div></blockquote></div></small></div> [bind_assoc, Option.bind_eq_some', Option.some_bind', 
+             Option.bind_eq_bind, pure])
+   )</span></span></pre></article></body></html>
