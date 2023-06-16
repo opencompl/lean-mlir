@@ -1,1 +1,0 @@
-{"name":"SSA.Core.Tactic","instances":[],"imports":["Init","SSA.Core.WellTypedFramework"],"declarations":[{"sourceLink":"https://github.com/bollu/ssa/blob/e0f4c0cd401d2e3aecae7999c4fde8246e2b2b8c/SSA/Core/Tactic.lean#L5-L13","name":"tacticSimp_mlir","kind":"def","docLink":"./SSA/Core/Tactic.html#tacticSimp_mlir","doc":""}]}
