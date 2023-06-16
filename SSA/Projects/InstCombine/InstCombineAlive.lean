@@ -4,7 +4,6 @@ import SSA.Projects.InstCombine.InstCombineAliveStatements
 
 open SSA InstCombine
 
-
 -- Name:AddSub:1043
 -- precondition: true
 /-
@@ -68,13 +67,8 @@ example : forall (w : Nat) (Z C1 RHS Z C1 RHS : Nat),TSSA.eval
   ]
   := by 
   intro w Z C RHS Z' C1 RHS'
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement1
-
 
 -- Name:AddSub:1152
 -- precondition: true
@@ -115,11 +109,7 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement2
 
 -- Name:AddSub:1164
@@ -167,11 +157,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement3
 
 -- Name:AddSub:1165
@@ -231,11 +217,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement4
 
 -- Name:AddSub:1176
@@ -283,11 +265,7 @@ example : forall (w : Nat) (b a b a : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement5
 
 -- Name:AddSub:1295
@@ -339,11 +317,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement6
 
 -- Name:AddSub:1309
@@ -395,11 +369,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement7
 
 -- Name:AddSub:1309-2
@@ -451,11 +421,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement8
 
 -- Name:AddSub:1309-3
@@ -507,11 +473,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement9
 
 -- Name:AddSub:1539
@@ -559,11 +521,7 @@ example : forall (w : Nat) (a x a x : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement10
 
 -- Name:AddSub:1546
@@ -611,11 +569,7 @@ example : forall (w : Nat) (a x a x : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement11
 
 -- Name:AddSub:1556
@@ -655,11 +609,7 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement12
 
 -- Name:AddSub:1560
@@ -699,11 +649,7 @@ example : forall (w : Nat) (a a : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement13
 
 -- Name:AddSub:1614
@@ -750,11 +696,7 @@ example : forall (w : Nat) (X Y X Y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement14
 
 -- Name:AddSub:1619
@@ -801,11 +743,7 @@ example : forall (w : Nat) (X Y X Y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement15
 
 -- Name:AddSub:1624
@@ -857,11 +795,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement16
 
 -- Name:AndOrXor:1230  ~A & ~B -> ~(A | B)
@@ -921,11 +855,7 @@ example : forall (w : Nat) (notOp0 notOp1 notOp0 notOp1 : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement17
 
 -- Name:AndOrXor:1241 (A|B) & ~(A&B) => A^B
@@ -985,11 +915,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement18
 
 -- Name:AndOrXor:1247 ~(A&B) & (A|B) => A^B
@@ -1049,11 +975,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement19
 
 -- Name:AndOrXor:1253 A & (A^B) -> A & ~B
@@ -1103,11 +1025,7 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement20
 
 -- Name:AndOrXor:1280 (~A|B)&A -> A&B
@@ -1161,11 +1079,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement21
 
 -- Name:AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
@@ -1229,11 +1143,7 @@ example : forall (w : Nat) (A B C A B C : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement22
 
 -- Name:AndOrXor:1294 (A | B) & ((~A) ^ B) -> (A & B)
@@ -1293,11 +1203,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement23
 
 -- Name:AndOrXor:2113   ((~A & B) | A) -> (A | B)
@@ -1351,11 +1257,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement24
 
 -- Name:AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
@@ -1409,11 +1311,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement25
 
 -- Name:AndOrXor:2123   (A & (~B)) | (A ^ B) -> (A ^ B)
@@ -1473,11 +1371,7 @@ example : forall (w : Nat) (B A B A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement26
 
 -- Name:AndOrXor:2188
@@ -1545,11 +1439,7 @@ example : forall (w : Nat) (D A D A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement27
 
 -- Name:AndOrXor:2231  (A ^ B) | ((B ^ C) ^ A) -> (A ^ B) | C
@@ -1609,11 +1499,7 @@ example : forall (w : Nat) (A B C A B C : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement28
 
 -- Name:AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
@@ -1670,11 +1556,7 @@ example : forall (w : Nat) (B C A A C B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement29
 
 -- Name:AndOrXor:2247  (~A | ~B) == (~(A & B))
@@ -1734,11 +1616,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement30
 
 -- Name:AndOrXor:2263
@@ -1784,11 +1662,7 @@ example : forall (w : Nat) (op0 B op0 B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement31
 
 -- Name:AndOrXor:2264
@@ -1846,11 +1720,7 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement32
 
 -- Name:AndOrXor:2265
@@ -1902,11 +1772,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement33
 
 -- Name:AndOrXor:2284
@@ -1964,11 +1830,7 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement34
 
 -- Name:AndOrXor:2285
@@ -2026,11 +1888,7 @@ example : forall (w : Nat) (A B B A : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement35
 
 -- Name:AndOrXor:2297
@@ -2090,11 +1948,7 @@ example : forall (w : Nat) (A B A B : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement36
 
 -- Name:AndOrXor:2367
@@ -2145,11 +1999,7 @@ example : forall (w : Nat) (A C1 op1 A op1 C1 : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement37
 
 -- Name:AndOrXor:2416
@@ -2208,11 +2058,7 @@ example : forall (w : Nat) (nx y y nx : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement38
 
 -- Name:AndOrXor:2417
@@ -2271,11 +2117,7 @@ example : forall (w : Nat) (nx y y nx : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement39
 
 -- Name:AndOrXor:2429
@@ -2330,11 +2172,7 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement40
 
 -- Name:AndOrXor:2430
@@ -2389,11 +2227,7 @@ example : forall (w : Nat) (x y x y : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement41
 
 -- Name:AndOrXor:2581  (B|A)^B -> A & ~B
@@ -2443,11 +2277,7 @@ example : forall (w : Nat) (a op1 op1 a : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement42
 
 -- Name:AndOrXor:2587  (B&A)^A -> ~B & A
@@ -2497,11 +2327,7 @@ example : forall (w : Nat) (a op1 a op1 : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement43
 
 -- Name:AndOrXor:2595
@@ -2553,11 +2379,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement44
 
 -- Name:AndOrXor:2607
@@ -2625,11 +2447,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement45
 
 -- Name:AndOrXor:2617
@@ -2697,11 +2515,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement46
 
 -- Name:AndOrXor:2627
@@ -2762,11 +2576,7 @@ example : forall (w : Nat) (a c b a b c : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement47
 
 -- Name:AndOrXor:2647
@@ -2818,11 +2628,7 @@ example : forall (w : Nat) (a b a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement48
 
 -- Name:AndOrXor:2658
@@ -2888,9 +2694,5 @@ example : forall (w : Nat) (b a a b : Nat),TSSA.eval
   ]
   := by 
   intros
-  simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS]
-  simp [bind_assoc, Option.bind_eq_some', Option.some_bind', Option.bind_eq_bind, pure]
+  simp_mlir
   apply statement49
