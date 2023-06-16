@@ -117,13 +117,6 @@ class TypedUserSemantics (Op : Type) (β : outParam Type) [Goedel β] extends Op
   eval : ∀ (o : Op), toType (argUserType o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outUserType o)
 
--- TODO: this should probably evolve into a "Dialect" typeclass
-class TUSInstance where
-  (β : Type)
-  (Op : Type)
-  (instGoedel : Goedel β)
-  (TUS : TypedUserSemantics Op β)
-
 inductive Context (β : Type) : Type
   | empty : Context β
   | snoc : Context β → Var → (UserType β) → Context β

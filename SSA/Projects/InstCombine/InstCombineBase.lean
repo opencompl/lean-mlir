@@ -175,10 +175,4 @@ macro_rules
   | `([dsl_op| xor $w ]) => `(Op.xor $w)
   
 
-instance : SSA.TUSInstance where
-  β := BaseType
-  Op := Op
-  instGoedel := instGoedelBaseType
-  TUS := TUS
-
 end InstCombine
