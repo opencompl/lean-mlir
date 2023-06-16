@@ -175,18 +175,10 @@ macro_rules
   | `([dsl_op| xor $w ]) => `(Op.xor $w)
   
 
--- Would like to move this away from InstCombine but we need to resolve TUS
--- Could also have a (global) typeclass to find these or pass it as an argument
--- to simp_mlir
-open SSA in
-macro "simp_mlir": tactic => 
-  `(tactic| 
-      (simp [TSSA.eval, Function.comp, id.def
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, TUS] ; 
-       simp [bind_assoc, Option.bind_eq_some', Option.some_bind', 
-             Option.bind_eq_bind, pure])
-   )
+instance : SSA.TUSInstance where
+  β := BaseType
+  Op := Op
+  instGoedel := instGoedelBaseType
+  TUS := TUS
 
 end InstCombine
