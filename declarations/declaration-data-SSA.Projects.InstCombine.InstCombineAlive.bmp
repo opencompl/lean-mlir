@@ -1,1 +1,1 @@
-{"name":"SSA.Projects.InstCombine.InstCombineAlive","instances":[],"imports":["Init","SSA.Core.WellTypedFramework","SSA.Projects.InstCombine.InstCombineBase","SSA.Projects.InstCombine.InstCombineAliveStatements"],"declarations":[]}
+{"name":"SSA.Projects.InstCombine.InstCombineAlive","instances":[],"imports":["Init","SSA.Core.WellTypedFramework","SSA.Core.Tactic","SSA.Projects.InstCombine.InstCombineBase","SSA.Projects.InstCombine.InstCombineAliveStatements"],"declarations":[]}
