@@ -326,7 +326,50 @@ Overflow also leads to undefined behavior; this is a rare case, but can occur, f
 def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
   if y.toInt = 0 
   then none
-  else some $ Bitvec.ofInt' w (x.toInt / y.toInt)
+  else 
+    let div := (x.toInt / y.toInt)
+    if div < 2^w 
+      then some $ Bitvec.ofInt' w div
+      else none
+
+/--
+This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
+Note that unsigned integer remainder and signed integer remainder are distinct operations; for signed integer remainder, use ‘srem’.
+Taking the remainder of a division by zero is undefined behavior. 
+-/
+def urem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
+  if y.toNat = 0 
+  then none
+  else some $ Bitvec.ofNat w (x.toNat % y.toNat)
+
+def _root_.Int.rem (x y : Int) : Int :=
+  if x ≥ 0 then (x % y) else ((x % y) - |y|)
+
+-- TODO: prove this to make sure it's the right implementation!
+theorem _root_.Int.rem_sign_dividend : 
+  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
+
+/--
+This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1), 
+not the modulo operator (where the result is either zero or has the same sign as the divisor, op2) of a value.
+For more information about the difference, see The Math Forum.
+For a table of how this is implemented in various languages, please see Wikipedia: modulo operation.
+Note that signed integer remainder and unsigned integer remainder are distinct operations; for unsigned integer remainder, use ‘urem’.
+Taking the remainder of a division by zero is undefined behavior.
+For vectors, if any element of the divisor is zero, the operation has undefined behavior.
+Overflow also leads to undefined behavior; this is a rare case, but can occur, for example,
+by taking the remainder of a 32-bit division of -2147483648 by -1.
+(The remainder doesn’t actually overflow, but this rule lets srem be implemented using instructions that return both the result
+of the division and the remainder.)
+-/
+def srem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
+  if y.toInt = 0 
+  then none
+  else
+    let div := (x.toInt / y.toInt)
+    if div < 2^w 
+      then some $ Bitvec.ofInt' w (x.toInt.rem y.toInt)
+      else none
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.

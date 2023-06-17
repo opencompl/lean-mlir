@@ -58,8 +58,8 @@ inductive Op
 | shl (w : Nat) : Op
 | lshr (w : Nat) : Op
 | ashr (w : Nat) : Op
--- | urem (w : Nat) : Op
--- | srem (w : Nat) : Op
+| urem (w : Nat) : Op
+| srem (w : Nat) : Op
 | select (w : Nat) : Op
 | add (w : Nat) : Op
 | mul (w : Nat) : Op
@@ -75,7 +75,8 @@ deriving Repr, DecidableEq
 @[simp, reducible]
 def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w | Op.icmp _ w =>
+| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w 
+| Op.srem w | Op.urem w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.not w | Op.neg w | Op.copy w => .base (BaseType.bitvec w)
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
@@ -86,7 +87,7 @@ def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.sub w |  Op.select w | Op.neg w | Op.copy w =>
   .base (BaseType.bitvec w)
-| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w  =>
+| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w | Op.srem w | Op.urem w =>
   .base (BaseType.bitvec w)
 | Op.icmp _ _ => .base (BaseType.bitvec 1)
 | @Op.const width _ => .base (BaseType.bitvec width)
@@ -115,6 +116,8 @@ def eval (o : Op)
     | Op.mul _ => pairBind Bitvec.mul? arg
     | Op.sdiv _ => pairBind Bitvec.sdiv? arg
     | Op.udiv _ => pairBind Bitvec.udiv? arg
+    | Op.urem _ => pairBind Bitvec.urem? arg
+    | Op.srem _ => pairBind Bitvec.srem? arg
     | Op.not _ => Option.map Bitvec.not arg
     | Op.copy _ => arg
     | Op.neg _ => Option.map Bitvec.neg arg
@@ -174,6 +177,8 @@ syntax "copy" term : dsl_op
 syntax "mul" term : dsl_op
 syntax "sdiv" term : dsl_op
 syntax "udiv" term : dsl_op
+syntax "urem" term : dsl_op
+syntax "srem" term : dsl_op
 syntax "select" term : dsl_op
 syntax "icmp eq" term : dsl_op
 syntax "icmp ne" term : dsl_op
@@ -201,6 +206,8 @@ macro_rules
   | `([dsl_op| copy $w ]) => `(Op.copy $w)
   | `([dsl_op| sdiv $w ]) => `(Op.sdiv $w)
   | `([dsl_op| udiv $w ]) => `(Op.udiv $w)
+  | `([dsl_op| urem $w ]) => `(Op.urem $w)
+  | `([dsl_op| srem $w ]) => `(Op.urem $w)
   | `([dsl_op| mul $w ]) => `(Op.mul $w)
   | `([dsl_op| select $w ]) => `(Op.select $w)
   | `([dsl_op| icmp eq $w ]) => `(Op.icmp Comparison.eq $w)
