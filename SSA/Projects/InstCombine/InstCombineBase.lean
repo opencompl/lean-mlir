@@ -66,10 +66,14 @@ inductive Op
 | shl (w : Nat) : Op
 | lshr (w : Nat) : Op
 | ashr (w : Nat) : Op
+| urem (w : Nat) : Op
+| srem (w : Nat) : Op
 | select (w : Nat) : Op
 | add (w : Nat) : Op
 | mul (w : Nat) : Op
 | sub (w : Nat) : Op
+| neg (w: Nat) : Op
+| copy (w: Nat) : Op
 | sdiv (w : Nat) : Op
 | udiv (w : Nat) : Op
 | icmp (c : Comparison) (w : Nat) : Op
@@ -79,18 +83,19 @@ deriving Repr, DecidableEq
 @[simp, reducible]
 def argUserType : Op → UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w | Op.icmp _ w =>
+| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w 
+| Op.srem w | Op.urem w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.not w => .base (BaseType.bitvec w)
+| Op.not w | Op.neg w | Op.copy w => .base (BaseType.bitvec w)
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp, reducible]
 def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.sub w |  Op.select w =>
+| Op.sub w |  Op.select w | Op.neg w | Op.copy w =>
   .base (BaseType.bitvec w)
-| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w  =>
+| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w | Op.srem w | Op.urem w =>
   .base (BaseType.bitvec w)
 | Op.icmp _ _ => .base (BaseType.bitvec 1)
 | @Op.const width _ => .base (BaseType.bitvec width)
@@ -101,7 +106,6 @@ def rgnDom : Op → UserType := fun _ => .unit
 def rgnCod : Op → UserType := fun _ => .unit
 
 -- TODO: compare with LLVM semantics
--- TODO, @goens: Make everything take 'Option Bitvec', and handle the poison case.
 @[simp]
 def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
@@ -120,7 +124,11 @@ def eval (o : Op)
     | Op.mul _ => pairBind Bitvec.mul? arg
     | Op.sdiv _ => pairBind Bitvec.sdiv? arg
     | Op.udiv _ => pairBind Bitvec.udiv? arg
+    | Op.urem _ => pairBind Bitvec.urem? arg
+    | Op.srem _ => pairBind Bitvec.srem? arg
     | Op.not _ => Option.map Bitvec.not arg
+    | Op.copy _ => arg
+    | Op.neg _ => Option.map Bitvec.neg arg
     | Op.select _ => tripleMapM Bitvec.select arg
     | Op.icmp c _ => match c with
       | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
@@ -166,20 +174,59 @@ syntax "add" term : dsl_op
 syntax "and" term : dsl_op
 syntax "const" term : dsl_op
 syntax "lshr" term : dsl_op
+syntax "ashr" term : dsl_op
 syntax "not" term : dsl_op
 syntax "or" term : dsl_op
 syntax "shl" term : dsl_op
 syntax "sub" term : dsl_op
 syntax "xor" term : dsl_op
+syntax "neg" term : dsl_op
+syntax "copy" term : dsl_op
+syntax "mul" term : dsl_op
+syntax "sdiv" term : dsl_op
+syntax "udiv" term : dsl_op
+syntax "urem" term : dsl_op
+syntax "srem" term : dsl_op
+syntax "select" term : dsl_op
+syntax "icmp eq" term : dsl_op
+syntax "icmp ne" term : dsl_op
+syntax "icmp ugt" term : dsl_op
+syntax "icmp uge" term : dsl_op
+syntax "icmp ult" term : dsl_op
+syntax "icmp ule" term : dsl_op
+syntax "icmp sgt" term : dsl_op
+syntax "icmp sge" term : dsl_op
+syntax "icmp slt" term : dsl_op
+syntax "icmp sle" term : dsl_op
+
 macro_rules
   | `([dsl_op| add $w ]) => `(Op.add $w)
   | `([dsl_op| and $w ]) => `(Op.and $w)
   | `([dsl_op| const $w ]) => `(Op.const $w)
   | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
+  | `([dsl_op| ashr $w ]) => `(Op.ashr $w)
   | `([dsl_op| not $w ]) => `(Op.not $w)
   | `([dsl_op| or $w ]) => `(Op.or $w)
   | `([dsl_op| shl $w ]) => `(Op.shl $w)
   | `([dsl_op| sub $w ]) => `(Op.sub $w)
   | `([dsl_op| xor $w ]) => `(Op.xor $w)
-  
+  | `([dsl_op| neg $w ]) => `(Op.neg $w)
+  | `([dsl_op| copy $w ]) => `(Op.copy $w)
+  | `([dsl_op| sdiv $w ]) => `(Op.sdiv $w)
+  | `([dsl_op| udiv $w ]) => `(Op.udiv $w)
+  | `([dsl_op| urem $w ]) => `(Op.urem $w)
+  | `([dsl_op| srem $w ]) => `(Op.urem $w)
+  | `([dsl_op| mul $w ]) => `(Op.mul $w)
+  | `([dsl_op| select $w ]) => `(Op.select $w)
+  | `([dsl_op| icmp eq $w ]) => `(Op.icmp Comparison.eq $w)
+  | `([dsl_op| icmp ne $w ]) => `(Op.icmp Comparison.ne $w)
+  | `([dsl_op| icmp ugt $w ]) => `(Op.icmp Comparison.ugt $w)
+  | `([dsl_op| icmp uge $w ]) => `(Op.icmp Comparison.uge $w)
+  | `([dsl_op| icmp ult $w ]) => `(Op.icmp Comparison.ult $w)
+  | `([dsl_op| icmp ule $w ]) => `(Op.icmp Comparison.ule $w)
+  | `([dsl_op| icmp sgt $w ]) => `(Op.icmp Comparison.sgt $w)
+  | `([dsl_op| icmp sge $w ]) => `(Op.icmp Comparison.sge $w)
+  | `([dsl_op| icmp slt $w ]) => `(Op.icmp Comparison.slt $w)
+  | `([dsl_op| icmp sle $w ]) => `(Op.icmp Comparison.sle $w)
+
 end InstCombine

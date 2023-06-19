@@ -2,7 +2,6 @@ import Lake
 open Lake DSL
 
 package «SSA» where
-  precompileModules := false
 
 @[default_target]
 lean_lib SSA {
@@ -38,7 +37,7 @@ lean_exe mlirnatural {
 
 -- NOTE: this must be 'm'mathlib, as indicated from:
 --  https://github.com/leanprover-community/mathlib4#using-mathlib4-as-a-dependency
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "968d650"
+require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "4d3d2de"
 
 require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 

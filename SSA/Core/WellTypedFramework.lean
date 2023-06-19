@@ -277,21 +277,6 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
   | _, _, .var v => fun e => return (e v)
   | _, _, .unit => fun _ => return ()
 
--- We can recover the case with the TypeSemantics as an instance
-def TypeSemantics : Type 1 :=
-  ℕ → Type
-
-inductive NatBaseType (TS : TypeSemantics) : Type
-  | ofNat : ℕ → NatBaseType TS
-deriving DecidableEq
-
-instance : Goedel (NatBaseType TS) where toType :=
-  fun n => match n with
-    | .ofNat m => TS m
-
-variable {TS : TypeSemantics}
-abbrev NatUserType := UserType (NatBaseType TS)
-
 end SSA
 
 namespace EDSL2
