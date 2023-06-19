@@ -13,6 +13,10 @@ inductive BaseType
   | bitvec (w : Nat) : BaseType
   deriving DecidableEq
 
+instance : Repr BaseType where 
+  reprPrec 
+    | .bitvec w, _ => "bitvec<" ++ repr w ++">"
+
 instance {w : Nat} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 
 @[simp]
@@ -21,6 +25,10 @@ def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
 instance : Goedel BaseType where
 toType := fun
   | .bitvec w => Option $ Bitvec w
+
+instance : Repr (Bitvec n) where
+  reprPrec
+    | v, n => reprPrec (Bitvec.toInt v) n
 
 abbrev UserType := SSA.UserType BaseType
 

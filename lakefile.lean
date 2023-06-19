@@ -2,15 +2,15 @@ import Lake
 open Lake DSL
 
 package «SSA» where
-  precompileModules := true
+  precompileModules := false
 
 @[default_target]
 lean_lib SSA {
   roots := #[`SSA]
 }
 
-lean_exe mlirnat {
-  root := `SSA.Main
+lean_exe mlirnatural {
+  root := `SSA.MLIRNatural
 }
 -- -- PROJECTS
 -- -- ========

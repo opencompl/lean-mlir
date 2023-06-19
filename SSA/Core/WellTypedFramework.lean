@@ -29,6 +29,21 @@ inductive UserType (β : Type) : Type where
 
 namespace UserType
 
+open Lean in 
+instance [Repr β] : Repr (UserType β) where
+  reprPrec := 
+    let rec go : UserType β → ℕ → Format
+    | .base b, n => reprPrec b n
+    | .pair b₁ b₂, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ ")"
+    | .triple b₁ b₂ b₃, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ "," ++ go b₃ n ++")"
+    | .unit, n => reprPrec () n
+    | .region bdom bcod, n => 
+      go bdom (n + 1) ++ " →" ++ go bcod (n + 1)
+  go
+
+
 @[match_pattern]
 def UserType.ofBase : β → UserType β := UserType.base
 
@@ -686,13 +701,3 @@ register_simp_attr TypedUserSemantics.argUserType
 register_simp_attr TypedUserSemantics.outUserType
 register_simp_attr TypedUserSemantics.regionDom
 register_simp_attr TypedUserSemantics.regionCod
-
-
-structure SSA.Function [Goedel β] where
-  (inputType : SSA.UserType β)
-  (outputType : SSA.UserType β)
-  (code : inputType.toType → outputType.toType)
-
-structure SSA.Test [Goedel β] where
-  (name : String)
-  (codes : List Nat → (SSA.Function (β := β))) -- TODO: generalize params
