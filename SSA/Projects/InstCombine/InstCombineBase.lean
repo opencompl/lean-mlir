@@ -15,7 +15,7 @@ inductive BaseType
 
 instance : Repr BaseType where 
   reprPrec 
-    | .bitvec w, _ => "bitvec<" ++ repr w ++">"
+    | .bitvec w, _ => "i" ++ repr w
 
 instance {w : Nat} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
 
