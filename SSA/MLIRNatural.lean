@@ -50,7 +50,7 @@ def runTest (name : String) (arg : String) : IO Bool := do
     IO.println s!"Test {name} not found"; return false
 
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
-  let testName := args.positionalArg! "testName"
+  let testName := args.positionalArg! "test-name"
   let testArg := args.positionalArg! "arg"
   match (← runTest testName.value testArg.value) with 
   | true => return 0
