@@ -28,7 +28,7 @@ jobs:
           lake exe cache get # download cache of mathlib docs.
           lake build SSA
 
-      - name: Compile executable 🧐
+      - name: Compile Executable 🧐
         run: |
           lake exe cache get # download cache of mathlib docs.
           lake build mlirnatural 
