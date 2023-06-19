@@ -1,10 +1,6 @@
 import SSA.Projects.InstCombine.InstCombineBase
 
 namespace InstCombine
-
-def tIdx (w : Nat) := (SSA.TSSAIndex.TERMINATOR (SSA.UserType.base (BaseType.bitvec w)))
-
-
 open SSA EDSL in
 def test1 (params : Nat × Nat × Nat) : IO Bool := do 
   let (w, A, B) := params

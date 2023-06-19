@@ -61,7 +61,7 @@ def mainCmd := `[Cli|
     "MLIR♮: Reference Semantics"
     ARGS:
       test: String; "Name of test"
-      arg: String;      "Test argument to be parsed by lean"
+      arg: String;  "Test argument to be parsed by lean"
     ]
 
 def main (args : List String): IO UInt32 :=
