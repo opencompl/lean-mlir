@@ -29,6 +29,21 @@ inductive UserType (β : Type) : Type where
 
 namespace UserType
 
+open Lean in 
+instance [Repr β] : Repr (UserType β) where
+  reprPrec := 
+    let rec go : UserType β → ℕ → Format
+    | .base b, n => reprPrec b n
+    | .pair b₁ b₂, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ ")"
+    | .triple b₁ b₂ b₃, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ "," ++ go b₃ n ++")"
+    | .unit, n => reprPrec () n
+    | .region bdom bcod, n => 
+      go bdom (n + 1) ++ " →" ++ go bcod (n + 1)
+  go
+
+
 @[match_pattern]
 def UserType.ofBase : β → UserType β := UserType.base
 
@@ -140,6 +155,8 @@ def Context.Var.emptyElim {β : Type} {a : UserType β}
 
 def EnvC.empty [Goedel β] : EnvC (Context.empty (β := β)) :=
   fun _a v => v.emptyElim
+
+instance [Goedel β] : EmptyCollection (EnvC (Context.empty (β := β))) := ⟨EnvC.empty⟩
 
 inductive TSSAIndex (β : Type) : Type
 /-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/

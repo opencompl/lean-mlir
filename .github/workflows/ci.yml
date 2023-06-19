@@ -23,11 +23,20 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Compile 🧐
+      - name: Compile Library 🧐
         run: |
           lake exe cache get # download cache of mathlib docs.
-          lake build
+          lake build SSA
 
+      - name: Compile Executable 🧐
+        run: |
+          lake exe cache get # download cache of mathlib docs.
+          lake build mlirnatural 
+
+      - name: Run executable ⚙️
+        run: |
+          ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some 3$"
+  
       - name: Generate docs 📜
         run: |
           ./docgen.sh

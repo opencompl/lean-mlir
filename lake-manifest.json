@@ -8,6 +8,12 @@
     "name": "proofwidgets",
     "inputRev?": "v0.0.10"}},
   {"git":
+   {"url": "https://github.com/mhuisi/lean4-cli.git",
+    "subDir?": null,
+    "rev": "5a858c32963b6b19be0d477a30a1f4b6c120be7e",
+    "name": "Cli",
+    "inputRev?": "nightly"}},
+  {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
     "rev": "4d3d2de8df93350f8e825deb31287cbbdfd4c8d0",
