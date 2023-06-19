@@ -27,6 +27,19 @@ inductive UserType (β : Type) : Type where
   | region : UserType β → UserType β → UserType β
   deriving DecidableEq
 
+open Lean in 
+instance [Repr β] : Repr (UserType β) where
+  reprPrec := 
+    let rec go : UserType β → ℕ → Format
+    | .base b, n => reprPrec b n
+    | .pair b₁ b₂, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ ")"
+    | .triple b₁ b₂ b₃, n => 
+      "(" ++ go b₁ n ++ ", " ++ go b₂ n ++ "," ++ go b₃ n ++")"
+    | .unit, n => reprPrec () n
+    | .region bdom bcod, n => 
+      go bdom (n + 1) ++ " →" ++ go bcod (n + 1)
+  go
 namespace UserType
 
 @[match_pattern]

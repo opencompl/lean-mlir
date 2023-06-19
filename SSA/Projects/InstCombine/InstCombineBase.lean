@@ -1,5 +1,6 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Util
+import SSA.Core.IR
 import SSA.Projects.InstCombine.ForMathlib
 
 namespace InstCombine
@@ -145,6 +146,9 @@ def Bitvec.ofInt' (n : ℕ) (i : Int) : Bitvec n :=
   Bitvec.ofNat n (Int.toNat i)
 
 
+def irMetadata : IRMetadata := 
+  IRMetadata.ofTypedUserSemantics "llvm" Op 
+
 /-
 Optimization: InstCombineShift: 279
   %Op0 = lshr %X, C
@@ -175,3 +179,4 @@ macro_rules
   | `([dsl_op| xor $w ]) => `(Op.xor $w)
   
 end InstCombine
+

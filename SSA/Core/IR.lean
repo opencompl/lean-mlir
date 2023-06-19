@@ -7,28 +7,32 @@ Author: Andres Goens, Siddharth Bhat
 
 import SSA.Core.WellTypedFramework
 
+open Lean 
+
 /--
-Structure used to parse IRs from the command line and run
-user defined programs.
+A test case for an IR. This is used to test the IR parser.
 -/
-structure IRMetadata : Type 1 where 
+structure IRTest where
   name : String
   opType : Type 
   baseType : Type
   goedelBaseType : Goedel baseType
+  reprBaseType : Repr baseType
   typedUserSemantics : SSA.TypedUserSemantics opType baseType 
+  inputTypeCode : SSA.UserType baseType
+  outputTypeCode : SSA.UserType baseType
+  reprTypeCode : Repr baseType
+  test : ⟦inputTypeCode⟧ → ⟦outputTypeCode⟧ 
 
-open Lean 
-
-builtin_initialize irMetadataExt : TagDeclarationExtension ←
-  mkTagDeclarationExtension -- (name := `ir_metadata)
-
-builtin_initialize
-  registerBuiltinAttribute {
-    name  := `ir_metadata
-    descr := "tag instances of `SSA.IR.IRMetadata` for parsing and printing support from the frontend."
-    add   := fun declName stx kind => do
-      Attribute.Builtin.ensureNoArgs stx
-      -- unless kind == AttributeKind.global do throwError "invalid attribute 'cpass', must be global"
-      modifyEnv <| irMetadataExt.tag (declName := declName)
-  }
+def IRTest.ofFun (name : String) (Op : Type)
+  [Goedel β] [Repr β] [SSA.TypedUserSemantics Op β] (inputTypeCode : SSA.UserType β)
+  (outputTypeCode : SSA.UserType β) (test : ⟦inputTypeCode⟧ → ⟦outputTypeCode⟧) : IRTest where 
+  name := name
+  opType := Op
+  baseType := β
+  reprBaseType := inferInstance
+  goedelBaseType := inferInstance
+  typedUserSemantics := inferInstance
+  inputTypeCode := inputTypeCode
+  outputTypeCode := outputTypeCode
+  test := test

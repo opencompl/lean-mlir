@@ -3,9 +3,24 @@ Toplevel test runner for MLIRNatural.
 Authors: Andres Goens, Siddharth Bhat
 -/
 import SSA.Core.WellTypedFramework
--- import SSA.Core.IR
--- import SSA.Projects.InstCombine
+import SSA.Core.IR
+import SSA.Projects.InstCombine.InstCombineBase
 import Cli
+
+abbrev CliError := String
+
+def IRs : Array IRMetadata := #[
+  InstCombine.irMetadata
+]
+
+
+/--
+Find an IR by name. `O(n)` is perfectly all right.
+-/
+def findIR? (name : String) : Except CliError IRMetadata := do
+  for ir in IRs do 
+    if ir.name == name then return ir
+  throw s!"unknown IR: {name}"
 
 /--
 mapping of test names to tests. 
@@ -22,6 +37,7 @@ structure ExecConfig where
 
 def parseArgs (args : Cli.Parsed) : Except String ExecConfig := do 
   throw s!"unknown IR 'foo'"
+  let dialect ← (args.flag? "dialect").getD  findIR? 
 -- fun args => do
 --   let dialect ← match args.flag? "dialect" with
 --       | none => Except.ok Inhabited.default
@@ -58,7 +74,7 @@ def mainCmd := `[Cli|
     mlirnat VIA runMainCmd;
     "MLIR♮: Reference Semantics"
     FLAGS:
-      D, "dialect" : String;             "Dialect/Semantics to use (default: InstCombine)"
+      I, "ir" : String;                  "IR to use (default: InstCombine)"
       a, "args" : String;                "Arguments to pass to the test"
       p, "params" : Array Nat;           "Parameters for the test"
     ARGS:
