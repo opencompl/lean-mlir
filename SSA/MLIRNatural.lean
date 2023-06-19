@@ -11,7 +11,7 @@ instance [A : Cli.ParseableType α] [B : Cli.ParseableType β] [C : Cli.Parseabl
     name :=  s!"({A.name} × {B.name} × {C.name})"
     parse? str := do
       let str := str.trim.splitOn ","
-      match str with 
+      match str with
       | [a, b, c] => do
         let a ← A.parse? a.trim
         let b ← B.parse? b.trim
@@ -32,35 +32,35 @@ def Test.ofFn (name : String) ⦃params : Type⦄ [Cli.ParseableType params]
   name := name
   params := _
   paramsParseable := inferInstance
-  testFn := testFn 
+  testFn := testFn
 
 
-def tests : List Test := [ 
+def tests : List Test := [
   Test.ofFn "instcombine-test1" InstCombine.test1
 ]
 
 def runTest (name : String) (arg : String) : IO Bool := do
-  match tests.find? (·.name == name) with 
-  | .some t => do 
+  match tests.find? (·.name == name) with
+  | .some t => do
     let .some p := t.paramsParseable.parse? arg
       | IO.println s!"Could not parse argument {arg} for test {name}";
         return False
     t.testFn p
-  | .none => 
+  | .none =>
     IO.println s!"Test {name} not found"; return false
 
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
-  let testName := args.positionalArg! "testName"
+  let test := args.positionalArg! "test"
   let testArg := args.positionalArg! "arg"
-  match (← runTest testName.value testArg.value) with 
+  match (← runTest test.value testArg.value) with
   | true => return 0
   | false => return 1
 
 def mainCmd := `[Cli|
-    mlirnat VIA runMainCmd;
+    mlirnatural VIA runMainCmd;
     "MLIR♮: Reference Semantics"
     ARGS:
-      testName: String; "Name of test"
+      test: String; "Name of test"
       arg: String;      "Test argument to be parsed by lean"
     ]
 
