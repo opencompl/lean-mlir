@@ -10,7 +10,7 @@ set_option trace.profiler true
 
 theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Nat), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
@@ -19,7 +19,7 @@ theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Nat), TSSA.eval
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
