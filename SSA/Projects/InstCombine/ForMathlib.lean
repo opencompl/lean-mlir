@@ -29,11 +29,6 @@ instance (n : Nat) : Inhabited (Bitvec n) :=
 
 def Fun (width : Nat) := Fin width → Bool
 
-def ofInt' (n : Nat) (z : Int) : Bitvec n :=
-  match n with
-    | 0 => ⟨List.nil, rfl⟩
-    | m + 1 => Bitvec.ofInt m z
-
 /-- convert `Bitvec n` to `Fin n → Bool` -/
 def ofFun {width : Nat} : Fun width → Bitvec width :=
   Vector.ofFn
@@ -329,7 +324,7 @@ def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   else 
     let div := (x.toInt / y.toInt)
     if div < 2^w 
-      then some $ Bitvec.ofInt' w div
+      then some $ Bitvec.ofInt w div
       else none
 
 /--
@@ -368,7 +363,7 @@ def srem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   else
     let div := (x.toInt / y.toInt)
     if div < 2^w 
-      then some $ Bitvec.ofInt' w (x.toInt.rem y.toInt)
+      then some $ Bitvec.ofInt w (x.toInt.rem y.toInt)
       else none
 
 /--
@@ -548,7 +543,7 @@ theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (h
   admit
 
 theorem one_sdiv_ref_add_cmp_select :
-  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ⊑ 
+  (Bitvec.sdiv? (Bitvec.ofInt w 1) x) ⊑ 
   Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry
 
