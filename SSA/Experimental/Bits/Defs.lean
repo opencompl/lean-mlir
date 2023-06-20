@@ -110,22 +110,3 @@ instance : One Term := ⟨one⟩
 instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
 
-example (op : (ℕ → Bool) → (ℕ → Bool) → (ℕ → Bool)) 
-    (h₁ : ∀ x y, op x y = op (xorSeq x y) (lsSeq (andSeq x y)))
-    (h₂ : ∀ x y, andSeq (op x (lsSeq y)) oneSeq = andSeq x oneSeq)
-    (h₃ : ∀ x y, lsSeq (op x y) = op (lsSeq x) (lsSeq y)) :
-    op = addSeq := by
-  ext x y i
-  induction i with
-  | zero => 
-    have := congr_fun (h₂ (xorSeq x y) (andSeq x y)) 0
-    simp only [andSeq, xorSeq, lsSeq, oneSeq, beq_self_eq_true, Bool.and_true,
-      addSeq, addSeqAux] at this ⊢ 
-    rw [← this, h₁ x y]
-    simp [xorSeq, lsSeq, andSeq]
-  | succ i ih => 
-    have : op x y i = lsSeq (op x y) i.succ := by simp [lsSeq]
-    rw [this] at ih
-    simp [addSeq, addSeqAux] at ih ⊢
-    
-    
