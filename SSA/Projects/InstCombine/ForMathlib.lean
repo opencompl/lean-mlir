@@ -29,11 +29,6 @@ instance (n : Nat) : Inhabited (Bitvec n) :=
 
 def Fun (width : Nat) := Fin width → Bool
 
-def ofInt' (n : Nat) (z : Int) : Bitvec n :=
-  match n with
-    | 0 => ⟨List.nil, rfl⟩
-    | m + 1 => Bitvec.ofInt m z
-
 /-- convert `Bitvec n` to `Fin n → Bool` -/
 def ofFun {width : Nat} : Fun width → Bitvec width :=
   Vector.ofFn
@@ -329,7 +324,7 @@ def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   else 
     let div := (x.toInt / y.toInt)
     if div < 2^w 
-      then some $ Bitvec.ofInt' w div
+      then some $ Bitvec.ofInt w div
       else none
 
 /--
@@ -368,7 +363,7 @@ def srem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   else
     let div := (x.toInt / y.toInt)
     if div < 2^w 
-      then some $ Bitvec.ofInt' w (x.toInt.rem y.toInt)
+      then some $ Bitvec.ofInt w (x.toInt.rem y.toInt)
       else none
 
 /--
@@ -444,27 +439,31 @@ theorem get?_and (x y : Bitvec n) (i : ℕ) :
   simp [Bitvec.and, Vector.map₂, List.get?_zip_with]
   cases (List.get? x i) <;> cases (List.get? y i) <;> simp [bind, pure]
 
+theorem match_does_not_fold_away : List.get ((Bitvec.ofInt w (-1)).toList) i = true := by
+  rw [← Option.some_inj, ← List.get?_eq_get]
+  simp [ofNat_zero, Bitvec.ofInt, show -1 = Int.negSucc 0 by rfl, Bitvec.not, toList_zero]
+  simp [Vector.replicate]; rw [List.get?_eq_get, List.get_replicate]
+  simpa using i.2
+
 theorem get?_ofInt_neg_one : (Bitvec.ofInt w (-1)).toList.get? i = 
-    if i ≤ w then some true else none := by
-  show (true ::ᵥ Bitvec.not (Bitvec.ofNat w 0)).toList.get? i = _
+    if i < w then some true else none := by
   simp only [Vector.cons, Bitvec.not, Vector.map, ofNat_zero, zero_def, List.map_replicate, Bool.not_false,
     Vector.toList_mk, List.cons.injEq, and_imp, forall_apply_eq_imp_iff', forall_eq']
-  rw [← List.replicate_succ]
   split_ifs with h
-  { rw [List.get?_eq_get, List.get_replicate] <;> simp [*, Nat.lt_succ_iff] at * }
-  { rw [List.get?_eq_none] 
-    simpa [Nat.succ_le_iff, not_le] using h }
+  { rw [List.get?_eq_get]; simp [match_does_not_fold_away]; simp; assumption }
+  { rw [List.get?_eq_none]; simp only [Vector.toList_length]; linarith }
 
 -- from InstCombine/Shift:279
-theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w.succ} :
+theorem shl_ushr_eq_and_shl {w : Nat} {x C : Bitvec w} :
     Bitvec.shl (Bitvec.ushr x C.toNat) C.toNat = Bitvec.and x (Bitvec.shl (Bitvec.ofInt w (-1)) C.toNat) := by
   apply ext_get?
   intro i
   rw [get?_shl, get?_ushr, get?_and]
-  simp only [pure, bind, Nat.lt_succ_iff, get?_ofInt_neg_one, get?_shl]
-  split_ifs with h₁ h₂ h₃
-  { simp at h₂ }
-  { simp }
+  simp only [pure, bind, Nat.lt_succ_iff, get?_ofInt_neg_one, get?_shl, Vector.length]
+  simp only [add_lt_iff_neg_left, not_lt_zero', ge_iff_le, add_le_iff_nonpos_right, nonpos_iff_eq_zero,
+    add_tsub_cancel_left, Bool.forall_bool, ite_false]
+  split_ifs with h₁ h₂
+  { simp only [Bool.forall_bool, Option.some_bind, Bool.and_true, Option.bind_some] }
   { rw [List.get?_eq_get] <;> simp [Nat.lt_succ_iff, *] }
   { rw [List.get?_eq_none.2] <;> simp [Nat.succ_le_iff, not_le, *] at *; assumption }
 
@@ -549,7 +548,7 @@ theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (h
   admit
 
 theorem one_sdiv_ref_add_cmp_select :
-  (Bitvec.sdiv? (Bitvec.ofInt' w 1) x) ⊑ 
+  (Bitvec.sdiv? (Bitvec.ofInt w 1) x) ⊑ 
   Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry
 
