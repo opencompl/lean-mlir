@@ -209,26 +209,26 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
 @[simp]
 def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
-| Γ, _, .assign rest lhs rhs => fun e T v =>
+| Γ, _, .assign rest lhs rhs, e => fun T v =>
     match v with
     | Context.Var.prev v => rest.eval e v
     | Context.Var.last => rhs.eval (rest.eval e)
-  | _, _, .nop => fun e => e
-  | _, _, .ret above v => fun e => above.eval e v
-  | _, _, .pair fst snd => fun e => mkPair (e fst) (e snd)
-  | _, _, .triple fst snd third => fun e => mkTriple (e fst) (e snd) (e third)
-  | _, _, TSSA.op o arg rg => fun e =>
+  | _, _, .nop, e => e
+  | _, _, .ret above v, e => above.eval e v
+  | _, _, .pair fst snd, e => mkPair (e fst) (e snd)
+  | _, _, .triple fst snd third, e => mkTriple (e fst) (e snd) (e third)
+  | _, _, TSSA.op o arg rg, e=>
     -- | TODO: (e arg) seems to get reduced?
     TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
-  | _, _, .rgn _arg body => fun e arg =>
+  | _, _, .rgn _arg body, e => fun arg =>
       body.eval (fun _ v =>
         match v with
         | Context.Var.prev v' => e v'
         | Context.Var.last => arg)
-  | _, _, .rgn0 => fun _ => id
-  | _, _, .rgnvar v => fun e => e v
-  | _, _, .var v => fun e => e v
-  | _, _, .unit => fun _ => ()
+  | _, _, .rgn0, _ => id
+  | _, _, .rgnvar v, e => e v
+  | _, _, .var v, e => e v
+  | _, _, .unit, _ => ()
 
 -- TODO: understand synthesization order.
 class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type → Type)) [Goedel β] extends OperationTypes Op β where
