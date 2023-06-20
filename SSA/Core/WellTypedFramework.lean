@@ -590,12 +590,13 @@ partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
   `(SSA.TSSA.rgn $velab $bb)
 | _ => Macro.throwUnsupported
 
-partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
+partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 | `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
   let e ← elabStxExpr e
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
-  `(fun next => SSA.TSSA.assign $velab $e next)
+  let next ← mkNext
+  `(SSA.TSSA.assign $velab $e $next)
 | _ => Macro.throwUnsupported
 
 
@@ -612,11 +613,8 @@ where go
   | [] => do
     let retv ← elabStxVar ret
     `(SSA.TSSA.ret $retv)
-  | s::ss => do
-    let s ← elabAssign s 
-    let rest ←go ss 
-    `($s $rest)
-
+  | s::ss =>
+    elabAssign (go ss) s
 
 partial def elabBB : TSyntax `dsl_bb → SSAElabM (TSyntax `term)
 | `(dsl_bb| ^bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
