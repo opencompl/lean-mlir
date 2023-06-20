@@ -445,7 +445,7 @@ theorem get?_ofInt_neg_one : (Bitvec.ofInt w (-1)).toList.get? i =
   simp only [Vector.cons, Bitvec.not, Vector.map, ofNat_zero, zero_def, List.map_replicate, Bool.not_false,
     Vector.toList_mk, List.cons.injEq, and_imp, forall_apply_eq_imp_iff', forall_eq']
   split_ifs with h
-  { rw [List.get?_eq_get]; simp only [Option.some.injEq]; simp[Bitvec.ofInt, Int.negSucc]; sorry; linarith}
+  { rw [List.get?_eq_get]; simp only [Option.some.injEq]; simp[← Option.some_inj, ← List.get?_eq_get]}
   { rw [List.get?_eq_none]; simp only [Vector.toList_length]; linarith }
 
 -- from InstCombine/Shift:279
