@@ -1,5 +1,6 @@
 import Mathlib.Data.Vector
-import Mathlib.Data.Bitvec.Basic
+import Mathlib.Data.Bitvec.Defs
+import Mathlib.Data.Bitvec.Lemmas
 import Mathlib.Algebra.Group.InjSurj
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Int.Cast.Lemmas
