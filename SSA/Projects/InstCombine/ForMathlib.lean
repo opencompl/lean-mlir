@@ -283,7 +283,6 @@ def add? {n : Nat} (x y : Bitvec n) : Option (Bitvec n) := match Bitvec.adc x y 
   | ⟨false :: z,hcons⟩ => some ⟨z, by aesop⟩
   | _ => none -- overflow
 
-
 theorem some_add?_eq_add {n : Nat} {x y z : Bitvec n} : add? x y = some z → x + y = z := sorry
 
 /-
