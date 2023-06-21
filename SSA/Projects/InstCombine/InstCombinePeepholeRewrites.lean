@@ -32,7 +32,7 @@ example : thingy.eval = sorry := by
 def thingy2 : TSSA Op
   ((Context.empty.snoc 'x'.toNat (.base $ .bitvec 32)).snoc
     'Α'.toNat (.base $ .bitvec 16))
-  (.TERMINATOR (.base $ .bitvec 32)) :=
+  (.STMT (.base $ .bitvec 32)) :=
   TSSA.ret
     (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign
       TSSA.nop
@@ -47,7 +47,7 @@ example : thingy2.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
 
-def thingy3 (C: Bitvec 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+def thingy3 (C: Bitvec 32): TSSA Op Context.empty (.STMT (.base $ .bitvec 32)) :=
   TSSA.ret
     (TSSA.assign (TSSA.assign TSSA.nop
     'x'.toNat (TSSA.unit))
@@ -56,7 +56,7 @@ def thingy3 (C: Bitvec 32): TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 
 
 
 open EDSL in
-def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
+def example_macro_1 : TSSA Op Context.empty (.STMT (.unit)) :=
   [dsl_bb|
     ^bb
       %v0 := unit:
@@ -65,7 +65,7 @@ def example_macro_1 : TSSA Op Context.empty (.TERMINATOR (.unit)) :=
 
 set_option trace.Elab true in
 open EDSL in
-def example_macro_2 (C : Bitvec 32) : TSSA Op Context.empty (.TERMINATOR (.base $ .bitvec 32)) :=
+def example_macro_2 (C : Bitvec 32) : TSSA Op Context.empty (.STMT (.base $ .bitvec 32)) :=
   [dsl_bb|
     ^bb
       %v0 := unit: ;
