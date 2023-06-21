@@ -159,20 +159,17 @@ def EnvC.empty [Goedel β] : EnvC (Context.empty (β := β)) :=
 instance [Goedel β] : EmptyCollection (EnvC (Context.empty (β := β))) := ⟨EnvC.empty⟩
 
 inductive TSSAIndex (β : Type) : Type
-/-- LHS := RHS. LHS is a `Var` and RHS is an `SSA Op .EXPR` -/
-| STMT : Context β → TSSAIndex β
 /-- Ways of making an RHS -/
 | EXPR : UserType β → TSSAIndex β
-/-- The final instruction in a region. Must be a return -/
-| TERMINATOR : UserType β → TSSAIndex β
+/-- A statement eventually returning a value of type `β` -/
+| STMT : UserType β → TSSAIndex β
 /-- a lambda -/
 | REGION : UserType β → UserType β → TSSAIndex β
 
 @[simp]
 def TSSAIndex.eval [Goedel β] : TSSAIndex β → Type
-  | .STMT Γ => EnvC Γ
+  | .STMT T => toType T
   | .EXPR T => toType T
-  | .TERMINATOR T => toType T
   | .REGION dom cod => toType dom → toType cod
 
 open OperationTypes UserType
@@ -181,14 +178,13 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
     (Γ : Context β) → TSSAIndex β → Type where
   /-- lhs := rhs; rest of the program -/
   | assign {T : UserType β}
-      (rest : TSSA Op Γ (.STMT Γ'))
-      (lhs : Var) (rhs : TSSA Op Γ' (.EXPR T)) : TSSA Op Γ (.STMT (Γ'.snoc lhs T))
+      (lhs : Var) (rhs : TSSA Op Γ (.EXPR T))
+      (rest : TSSA Op (Γ.snoc lhs T) (.STMT T'))
+      : TSSA Op Γ (.STMT T')
   /-- build a unit value -/
   | unit : TSSA Op Γ (.EXPR .unit)
-  /-- no operation. -/
-  | nop : TSSA Op Γ (.STMT Γ)
   /-- above; ret v -/
-  | ret (above : TSSA Op Γ (.STMT Γ')) (v : Γ'.Var T) : TSSA Op Γ  (.TERMINATOR T)
+  | ret (v : Γ.Var T) : TSSA Op Γ (.STMT T)
   /-- (fst, snd) -/
   | pair (fst : Γ.Var T₁) (snd : Γ.Var T₂) : TSSA Op Γ (.EXPR (.pair T₁ T₂))
   /-- (fst, snd, third) -/
@@ -197,7 +193,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Context.empty (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
-  | rgn (arg : Var) {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.TERMINATOR cod)) :
+  | rgn (arg : Var) {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.STMT cod)) :
       TSSA Op Γ (.REGION dom cod)
   /- no function / non-existence of region. -/
   | rgn0 : TSSA Op Γ (.REGION unit unit)
@@ -207,28 +203,27 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   | var (v : Γ.Var T) : TSSA Op Γ (.EXPR T)
 
 @[simp]
-def TSSA.eval {Op β : Type} [Goedel β] [TUS : TypedUserSemantics Op β] :
+def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
-| Γ, _, .assign rest lhs rhs, e => fun T v =>
-    match v with
-    | Context.Var.prev v => rest.eval e v
-    | Context.Var.last => rhs.eval (rest.eval e)
-  | _, _, .nop, e => e
-  | _, _, .ret above v, e => above.eval e v
-  | _, _, .pair fst snd, e => mkPair (e fst) (e snd)
-  | _, _, .triple fst snd third, e => mkTriple (e fst) (e snd) (e third)
-  | _, _, TSSA.op o arg rg, e=>
-    -- | TODO: (e arg) seems to get reduced?
-    TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
-  | _, _, .rgn _arg body, e => fun arg =>
-      body.eval (fun _ v =>
-        match v with
-        | Context.Var.prev v' => e v'
-        | Context.Var.last => arg)
-  | _, _, .rgn0, _ => id
-  | _, _, .rgnvar v, e => e v
-  | _, _, .var v, e => e v
-  | _, _, .unit, _ => ()
+| Γ, _, .assign lhs rhs rest, e =>
+    rest.eval (fun
+      | _, Context.Var.prev v => e v
+      | _, Context.Var.last => rhs.eval e)
+| _, _, .ret v, e => e v
+| _, _, .pair fst snd, e => mkPair (e fst) (e snd)
+| _, _, .triple fst snd third, e => mkTriple (e fst) (e snd) (e third)
+| _, _, TSSA.op o arg rg, e =>
+  -- | TODO: (e arg) seems to get reduced?
+  TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
+| _, _, .rgn _arg body, e => fun arg =>
+    body.eval (fun _ v =>
+      match v with
+      | Context.Var.prev v' => e v'
+      | Context.Var.last => arg)
+| _, _, .rgn0, e => id
+| _, _, .rgnvar v, e => e v
+| _, _, .var v, e => e v
+| _, _, .unit, e => ()
 
 -- TODO: understand synthesization order.
 class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type → Type)) [Goedel β] extends OperationTypes Op β where
@@ -238,9 +233,8 @@ class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type �
 
 @[simp]
 def TSSAIndex.evalM [Goedel β] (M : Type → Type): TSSAIndex β → Type
-  | .STMT Γ => M (EnvC Γ)
   | .EXPR T => M (UserType.toType T)
-  | .TERMINATOR T => M (UserType.toType T)
+  | .STMT T => M (UserType.toType T)
   | .REGION dom cod => UserType.toType dom → M (UserType.toType cod)
 
 
@@ -248,17 +242,14 @@ def TSSAIndex.evalM [Goedel β] (M : Type → Type): TSSAIndex β → Type
 @[simp]
 def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserSemanticsM Op β M] [Monad M] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → (i.evalM M)
-  | Γ, _, .assign rest lhs rhs => fun e => do
-    let e' ← rest.evalM e
-    let rhsv ← rhs.evalM e'
-    return fun T v =>
+  | Γ, _, .assign lhs rhs rest => fun e => do
+    let rhsv ← rhs.evalM e
+    rest.evalM fun T v =>
       match v with
-      | Context.Var.prev v => e' v
+      | Context.Var.prev v => e v
       | Context.Var.last => rhsv
-  | _, _, .nop => fun e => return e
-  | _, _, .ret above v => fun e => do
-    let e' ← TSSA.evalM above e
-    return e' v
+  | _, _, .ret v => fun e => do
+    return e v
   | _, _, .pair fst snd => fun e => do
     return mkPair (e fst) (e snd)
   | _, _, .triple fst snd third => fun e => do
@@ -599,12 +590,13 @@ partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
   `(SSA.TSSA.rgn $velab $bb)
 | _ => Macro.throwUnsupported
 
-partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
+partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 | `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
   let e ← elabStxExpr e
   SSAElabContext.addVar (← dslVarToIx v) -- add variable.
   let velab := Lean.quote (← dslVarToIx v) -- natural number.
-  `(fun prev => SSA.TSSA.assign prev $velab $e)
+  let next ← mkNext
+  `(SSA.TSSA.assign $velab $e $next)
 | _ => Macro.throwUnsupported
 
 
@@ -614,24 +606,23 @@ partial def elabAssign : TSyntax `dsl_assign → SSAElabM (TSyntax `term)
 -- s3 : (fun prev3 => SSA.assign (<prev3>) <s3data>)
 -- fun x => s3 ( s2 (s1 x) )
 -- (s3 ∘ (s2 ∘ (s1 ∘ id)))
-partial def elabStmt : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
-| `(dsl_stmt| $ss:dsl_assign;*) => do
-  let mut out ← `(id)
-  for s in ss.getElems do
-    let selab ← elabAssign s
-    out ← `($selab ∘ $out)
-  return out
-| _ => Macro.throwUnsupported
-
+partial def elabStmt (ret : TSyntax `dsl_var) : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
+  | `(dsl_stmt| $ss:dsl_assign;*) => go ss.getElems.toList
+  | _ => Macro.throwUnsupported
+where go
+  | [] => do
+    let retv ← elabStxVar ret
+    `(SSA.TSSA.ret $retv)
+  | s::ss =>
+    elabAssign (go ss) s
 
 partial def elabBB : TSyntax `dsl_bb → SSAElabM (TSyntax `term)
 | `(dsl_bb| ^bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
-    let selab : Lean.Syntax ←
-        match s? with
-        | .none => `(fun x => x)
-        | .some s => elabStmt s
-    let retv ← elabStxVar retv
-    `(SSA.TSSA.ret ($selab SSA.TSSA.nop) $retv)
+    match s? with
+    | .none => do
+      let retv ← elabStxVar retv
+      `(SSA.TSSA.ret $retv)
+    | .some s => elabStmt retv s
 | _ => Macro.throwUnsupported
 
 partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
