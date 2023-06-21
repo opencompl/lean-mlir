@@ -112,23 +112,23 @@ def eval (o : Op)
   (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
   Goedel.toType (outUserType o) :=
     match o with
-    | Op.and _ => pairMapM Bitvec.and arg
-    | Op.or _ => pairMapM Bitvec.or arg
-    | Op.xor _ => pairMapM Bitvec.xor arg
+    | Op.and _ => pairMapM (.&&&.) arg
+    | Op.or _ => pairMapM (.|||.) arg
+    | Op.xor _ => pairMapM (.^^^.) arg
     | Op.shl _ => pairMapM (fun fst snd => Bitvec.shl fst snd.toNat) arg
     | Op.lshr _ => pairMapM (fun fst snd => Bitvec.ushr fst snd.toNat) arg
     | Op.ashr _ => pairMapM (fun fst snd => Bitvec.sshr fst snd.toNat) arg
     | Op.const c => Option.some c
-    | Op.sub _ => pairMapM Bitvec.sub arg
-    | Op.add _ => pairMapM Bitvec.add arg
-    | Op.mul _ => pairMapM Bitvec.mul arg
+    | Op.sub _ => pairMapM (.-.) arg
+    | Op.add _ => pairMapM (.+.) arg
+    | Op.mul _ => pairMapM (.*.) arg
     | Op.sdiv _ => pairBind Bitvec.sdiv? arg
     | Op.udiv _ => pairBind Bitvec.udiv? arg
     | Op.urem _ => pairBind Bitvec.urem? arg
     | Op.srem _ => pairBind Bitvec.srem? arg
-    | Op.not _ => Option.map Bitvec.not arg
+    | Op.not _ => Option.map (~~~.) arg
     | Op.copy _ => arg
-    | Op.neg _ => Option.map Bitvec.neg arg
+    | Op.neg _ => Option.map (-.) arg
     | Op.select _ => tripleMapM Bitvec.select arg
     | Op.icmp c _ => match c with
       | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
