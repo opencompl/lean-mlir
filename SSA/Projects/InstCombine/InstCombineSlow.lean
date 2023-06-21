@@ -1,7 +1,6 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Tactic
 import SSA.Core.Util
-import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.InstCombineBase
 import SSA.Projects.InstCombine.InstCombineAliveStatements
 
@@ -127,4 +126,4 @@ theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
   := by
       intros
       simp_mlir
-      simp [Bitvec.Refinement.refine_some_some]
+      simp [Bitvec.Refinement.bothSome]
