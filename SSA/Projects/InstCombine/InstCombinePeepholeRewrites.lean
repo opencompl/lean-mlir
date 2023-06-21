@@ -15,14 +15,11 @@ open SSA InstCombine
 
 def thingy : TSSA Op ∅ (TSSAIndex.REGION (.base (BaseType.bitvec 32)) (.base (.bitvec 32))) :=
   TSSA.rgn (arg := 'x'.toNat) <|
-  TSSA.ret
-    (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop
-      'a'.toNat (TSSA.pair Context.Var.last Context.Var.last))
-      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0))
-      'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev))
-      'z'.toNat (TSSA.op (Op.or 32) Context.Var.last TSSA.rgn0))
-    Context.Var.last
-
+  TSSA.assign 'a'.toNat (TSSA.pair Context.Var.last Context.Var.last) <|
+  TSSA.assign 'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0) <|
+  TSSA.assign 'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev) <|
+  TSSA.assign 'z'.toNat (TSSA.op (Op.or 32) Context.Var.last TSSA.rgn0) <|
+  TSSA.ret Context.Var.last
 
 
 example : thingy.eval = sorry := by
@@ -33,27 +30,21 @@ def thingy2 : TSSA Op
   ((Context.empty.snoc 'x'.toNat (.base $ .bitvec 32)).snoc
     'Α'.toNat (.base $ .bitvec 16))
   (.STMT (.base $ .bitvec 32)) :=
-  TSSA.ret
-    (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign
-      TSSA.nop
-      'a'.toNat (TSSA.pair Context.Var.last.prev Context.Var.last.prev))
-      'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0))
-      'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev))
-      'c'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev))
-      'z'.toNat (TSSA.op (Op.or 32) Context.Var.last.prev TSSA.rgn0))
-    Context.Var.last
+  TSSA.assign 'a'.toNat (TSSA.pair Context.Var.last.prev Context.Var.last.prev) <|
+  TSSA.assign 'y'.toNat (TSSA.op (Op.and 32) Context.Var.last TSSA.rgn0) <|
+  TSSA.assign 'b'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev) <|
+  TSSA.assign 'c'.toNat (TSSA.pair Context.Var.last Context.Var.last.prev.prev.prev) <|
+  TSSA.assign 'z'.toNat (TSSA.op (Op.or 32) Context.Var.last.prev TSSA.rgn0) <|
+  TSSA.ret Context.Var.last
 
 example : thingy2.eval = sorry := by
   simp [TypedUserSemantics.eval, UserType.mkPair]
   admit
 
 def thingy3 (C: Bitvec 32): TSSA Op Context.empty (.STMT (.base $ .bitvec 32)) :=
-  TSSA.ret
-    (TSSA.assign (TSSA.assign TSSA.nop
-    'x'.toNat (TSSA.unit))
-    'y'.toNat (TSSA.op (Op.const C) Context.Var.last TSSA.rgn0))
-    Context.Var.last
-
+  TSSA.assign 'x'.toNat (TSSA.unit) <|
+  TSSA.assign 'y'.toNat (TSSA.op (Op.const C) Context.Var.last TSSA.rgn0) <|
+  TSSA.ret Context.Var.last
 
 open EDSL in
 def example_macro_1 : TSSA Op Context.empty (.STMT (.unit)) :=
