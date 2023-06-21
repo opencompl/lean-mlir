@@ -82,12 +82,10 @@ inductive OffsetOp : Nat -> Type
 
 abbrev FinVec (n: Nat) (α : Type) := Fin n → α  
 
-abbrev NatBelow (n: Nat) := { i : Nat // i < n }
-
 structure BasicBlock where
   len : Nat
   -- | TODO: generalize index to k-tuples for nesting.
-  insts : (ix: Fin len) -> (OffsetOp noperands × FinVec noperands (Fin ix))
+  insts : (ix: Fin len) -> Σ (noperands : Nat), OffsetOp noperands × FinVec noperands (Fin ix)
   
 def emptyBB : BasicBlock := {
    len := 0,
@@ -95,20 +93,23 @@ def emptyBB : BasicBlock := {
 }
 
 
-def appendBB { noperands: Nat } (bb: BasicBlock) (inst: OffsetOp noperands) (v: FinVec noperands (Fin bb.len)) : BasicBlock := {
+def appendBB (bb: BasicBlock) (inst: OffsetOp noperands)
+  (v: FinVec noperands (Fin bb.len)) : BasicBlock := {
     len := bb.len + 1
     insts := fun ix =>
       if H : ix < bb.len
-      then (have : ix.val < bb.len + 1 := by linarith
-            bb.insts ⟨ix.val, H⟩ )
-      else (inst, v) -- ix == bb.len 
+      then bb.insts ⟨ix.val, H⟩
+      else 
+        have H : Fin bb.len = Fin ix := by 
+          have : ix = bb.len := by linarith[ix.isLt]
+          simp [this]
+        ⟨noperands, inst, H ▸ v⟩  
   }
 
 -- 0 -> Const 2
 -- 1 +1 / 2
 -- (let x = v in e) <-> (fun x => e)  v
 open Lean in 
-def foo : Expr := sorry
 
 instance : Pure OpM where
  pure a := .Return_ a
