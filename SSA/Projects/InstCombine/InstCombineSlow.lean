@@ -250,3 +250,304 @@ theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
       intros
       simp_mlir
       simp [Bitvec.Refinement.bothSome]
+
+
+-- This is getting very slow with larger bitwidths.
+-- AKA: This runs in a compute out when replacing 8 by 16.
+theorem alive_fixed_size_integer: TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 8)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 8 4) %v0
+  dsl_ret %v1
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 8)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 8 4) %v0
+  dsl_ret %v1
+  ]
+  := by
+      intros
+      simp [TSSA.eval, Function.comp, id.def, TypedUserSemantics,
+        TypedUserSemantics.eval, Context.Var,
+        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+        UserType.mkPair, UserType.mkTriple]
+
+theorem alive_constant_fold_1: forall (w : Nat), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (0)) %v0
+  dsl_ret %v1
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v000 := unit: ;
+  %v001 := op:const (Bitvec.ofInt w (0)) %v000;
+  %v100 := pair:%v001 %v001;
+  %v101 := op:add w %v100
+  dsl_ret %v101
+  ]
+  := by
+      intros
+      simp_mlir
+      sorry
+
+
+theorem alive_constant_fold_10: forall (w : Nat), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (0)) %v0
+  dsl_ret %v1
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v000 := unit: ;
+  %v001 := op:const (Bitvec.ofInt w (0)) %v000;
+  %v100 := pair:%v001 %v001;
+  %v101 := op:add w %v100;
+  %v110 := pair:%v101 %v001;
+  %v111 := op:add w %v110;
+  %v120 := pair:%v111 %v001;
+  %v121 := op:add w %v120;
+  %v130 := pair:%v121 %v001;
+  %v131 := op:add w %v130;
+  %v140 := pair:%v131 %v001;
+  %v141 := op:add w %v140;
+  %v150 := pair:%v141 %v001;
+  %v151 := op:add w %v150;
+  %v160 := pair:%v151 %v001;
+  %v161 := op:add w %v160;
+  %v170 := pair:%v161 %v001;
+  %v171 := op:add w %v170;
+  %v180 := pair:%v171 %v001;
+  %v181 := op:add w %v180;
+  %v190 := pair:%v181 %v001;
+  %v191 := op:add w %v190
+  dsl_ret %v191
+  ]
+  := by
+      intros
+      simp_mlir
+      sorry
+
+
+theorem alive_constant_fold_100: forall (w : Nat), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (0)) %v0
+  dsl_ret %v1
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v000 := unit: ;
+  %v001 := op:const (Bitvec.ofInt w (0)) %v000;
+  %v100 := pair:%v001 %v001;
+  %v101 := op:add w %v100;
+  %v110 := pair:%v101 %v001;
+  %v111 := op:add w %v110;
+  %v120 := pair:%v111 %v001;
+  %v121 := op:add w %v120;
+  %v130 := pair:%v121 %v001;
+  %v131 := op:add w %v130;
+  %v140 := pair:%v131 %v001;
+  %v141 := op:add w %v140;
+  %v150 := pair:%v141 %v001;
+  %v151 := op:add w %v150;
+  %v160 := pair:%v151 %v001;
+  %v161 := op:add w %v160;
+  %v170 := pair:%v161 %v001;
+  %v171 := op:add w %v170;
+  %v180 := pair:%v171 %v001;
+  %v181 := op:add w %v180;
+  %v190 := pair:%v181 %v001;
+  %v191 := op:add w %v190;
+  %v200 := pair:%v191 %v001;
+  %v201 := op:add w %v200;
+  %v210 := pair:%v201 %v001;
+  %v211 := op:add w %v210;
+  %v220 := pair:%v211 %v001;
+  %v221 := op:add w %v220;
+  %v230 := pair:%v221 %v001;
+  %v231 := op:add w %v230;
+  %v240 := pair:%v231 %v001;
+  %v241 := op:add w %v240;
+  %v250 := pair:%v241 %v001;
+  %v251 := op:add w %v250;
+  %v260 := pair:%v251 %v001;
+  %v261 := op:add w %v260;
+  %v270 := pair:%v261 %v001;
+  %v271 := op:add w %v270;
+  %v280 := pair:%v271 %v001;
+  %v281 := op:add w %v280;
+  %v290 := pair:%v281 %v001;
+  %v291 := op:add w %v290;
+  %v300 := pair:%v291 %v001;
+  %v301 := op:add w %v300;
+  %v310 := pair:%v301 %v001;
+  %v311 := op:add w %v310;
+  %v320 := pair:%v311 %v001;
+  %v321 := op:add w %v320;
+  %v330 := pair:%v321 %v001;
+  %v331 := op:add w %v330;
+  %v340 := pair:%v331 %v001;
+  %v341 := op:add w %v340;
+  %v350 := pair:%v341 %v001;
+  %v351 := op:add w %v350;
+  %v360 := pair:%v351 %v001;
+  %v361 := op:add w %v360;
+  %v370 := pair:%v361 %v001;
+  %v371 := op:add w %v370;
+  %v380 := pair:%v371 %v001;
+  %v381 := op:add w %v380;
+  %v390 := pair:%v381 %v001;
+  %v391 := op:add w %v390;
+  %v400 := pair:%v391 %v001;
+  %v401 := op:add w %v400;
+  %v410 := pair:%v401 %v001;
+  %v411 := op:add w %v410;
+  %v420 := pair:%v411 %v001;
+  %v421 := op:add w %v420;
+  %v430 := pair:%v421 %v001;
+  %v431 := op:add w %v430;
+  %v440 := pair:%v431 %v001;
+  %v441 := op:add w %v440;
+  %v450 := pair:%v441 %v001;
+  %v451 := op:add w %v450;
+  %v460 := pair:%v451 %v001;
+  %v461 := op:add w %v460;
+  %v470 := pair:%v461 %v001;
+  %v471 := op:add w %v470;
+  %v480 := pair:%v471 %v001;
+  %v481 := op:add w %v480;
+  %v490 := pair:%v481 %v001;
+  %v491 := op:add w %v490;
+  %v500 := pair:%v491 %v001;
+  %v501 := op:add w %v500;
+  %v510 := pair:%v501 %v001;
+  %v511 := op:add w %v510;
+  %v520 := pair:%v511 %v001;
+  %v521 := op:add w %v520;
+  %v530 := pair:%v521 %v001;
+  %v531 := op:add w %v530;
+  %v540 := pair:%v531 %v001;
+  %v541 := op:add w %v540;
+  %v550 := pair:%v541 %v001;
+  %v551 := op:add w %v550;
+  %v560 := pair:%v551 %v001;
+  %v561 := op:add w %v560;
+  %v570 := pair:%v561 %v001;
+  %v571 := op:add w %v570;
+  %v580 := pair:%v571 %v001;
+  %v581 := op:add w %v580;
+  %v590 := pair:%v581 %v001;
+  %v591 := op:add w %v590;
+  %v600 := pair:%v591 %v001;
+  %v601 := op:add w %v600;
+  %v610 := pair:%v601 %v001;
+  %v611 := op:add w %v610;
+  %v620 := pair:%v611 %v001;
+  %v621 := op:add w %v620;
+  %v630 := pair:%v621 %v001;
+  %v631 := op:add w %v630;
+  %v640 := pair:%v631 %v001;
+  %v641 := op:add w %v640;
+  %v650 := pair:%v641 %v001;
+  %v651 := op:add w %v650;
+  %v660 := pair:%v651 %v001;
+  %v661 := op:add w %v660;
+  %v670 := pair:%v661 %v001;
+  %v671 := op:add w %v670;
+  %v680 := pair:%v671 %v001;
+  %v681 := op:add w %v680;
+  %v690 := pair:%v681 %v001;
+  %v691 := op:add w %v690;
+  %v700 := pair:%v691 %v001;
+  %v701 := op:add w %v700;
+  %v710 := pair:%v701 %v001;
+  %v711 := op:add w %v710;
+  %v720 := pair:%v711 %v001;
+  %v721 := op:add w %v720;
+  %v730 := pair:%v721 %v001;
+  %v731 := op:add w %v730;
+  %v740 := pair:%v731 %v001;
+  %v741 := op:add w %v740;
+  %v750 := pair:%v741 %v001;
+  %v751 := op:add w %v750;
+  %v760 := pair:%v751 %v001;
+  %v761 := op:add w %v760;
+  %v770 := pair:%v761 %v001;
+  %v771 := op:add w %v770;
+  %v780 := pair:%v771 %v001;
+  %v781 := op:add w %v780;
+  %v790 := pair:%v781 %v001;
+  %v791 := op:add w %v790;
+  %v800 := pair:%v791 %v001;
+  %v801 := op:add w %v800;
+  %v810 := pair:%v801 %v001;
+  %v811 := op:add w %v810;
+  %v820 := pair:%v811 %v001;
+  %v821 := op:add w %v820;
+  %v830 := pair:%v821 %v001;
+  %v831 := op:add w %v830;
+  %v840 := pair:%v831 %v001;
+  %v841 := op:add w %v840;
+  %v850 := pair:%v841 %v001;
+  %v851 := op:add w %v850;
+  %v860 := pair:%v851 %v001;
+  %v861 := op:add w %v860;
+  %v870 := pair:%v861 %v001;
+  %v871 := op:add w %v870;
+  %v880 := pair:%v871 %v001;
+  %v881 := op:add w %v880;
+  %v890 := pair:%v881 %v001;
+  %v891 := op:add w %v890;
+  %v900 := pair:%v891 %v001;
+  %v901 := op:add w %v900;
+  %v910 := pair:%v901 %v001;
+  %v911 := op:add w %v910;
+  %v920 := pair:%v911 %v001;
+  %v921 := op:add w %v920;
+  %v930 := pair:%v921 %v001;
+  %v931 := op:add w %v930;
+  %v940 := pair:%v931 %v001;
+  %v941 := op:add w %v940;
+  %v950 := pair:%v941 %v001;
+  %v951 := op:add w %v950;
+  %v960 := pair:%v951 %v001;
+  %v961 := op:add w %v960;
+  %v970 := pair:%v961 %v001;
+  %v971 := op:add w %v970;
+  %v980 := pair:%v971 %v001;
+  %v981 := op:add w %v980;
+  %v990 := pair:%v981 %v001;
+  %v991 := op:add w %v990
+  dsl_ret %v991
+  ]
+  := by
+      intros
+      simp_mlir
+      sorry
