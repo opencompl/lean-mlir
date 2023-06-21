@@ -131,7 +131,7 @@ theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
 
 theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
@@ -140,7 +140,7 @@ theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
