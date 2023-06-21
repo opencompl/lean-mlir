@@ -1,3 +1,5 @@
+import Mathlib.Tactic.Linarith
+
 open Lean
 
 -- Things that are inexpressible in pure expression tree / AST form;
@@ -75,7 +77,7 @@ inductive OffsetOp : Nat -> Type
 
 
 -- (v : OffsetOp 2)
--- inductiion on (OffsetOp 2), you need to 'deduce' that Const can never happen, 
+-- induction on (OffsetOp 2), you need to 'deduce' that Const can never happen, 
 -- v = Add
 
 abbrev FinVec (n: Nat) (α : Type) := Fin n → α  
@@ -83,22 +85,22 @@ abbrev FinVec (n: Nat) (α : Type) := Fin n → α
 abbrev NatBelow (n: Nat) := { i : Nat // i < n }
 
 structure BasicBlock where
-  len 
+  len : Nat
   -- | TODO: generalize index to k-tuples for nesting.
   insts : (ix: Fin len) -> (OffsetOp noperands × FinVec noperands (Fin ix))
   
-
 def emptyBB : BasicBlock := {
    len := 0,
-   insts := fun ix => Fin.elimZero ix
+   insts := fun ix => Fin.elim0 ix
 }
 
-def appendBB (bb: BasicBlock) (inst: OffsetOp noperands) (v: FinVec noperands (Fin bb.len)) :=
-  {
+
+def appendBB { noperands: Nat } (bb: BasicBlock) (inst: OffsetOp noperands) (v: FinVec noperands (Fin bb.len)) : BasicBlock := {
     len := bb.len + 1
     insts := fun ix =>
       if H : ix < bb.len
-      then (bb.insts ix)
+      then (have : ix.val < bb.len + 1 := by linarith
+            bb.insts ⟨ix.val, H⟩ )
       else (inst, v) -- ix == bb.len 
   }
 
