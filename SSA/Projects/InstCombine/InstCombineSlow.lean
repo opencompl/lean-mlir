@@ -120,7 +120,130 @@ theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
   %v97 := unit: ;
   %v98 := unit: ;
   %v99 := unit: ;
-  %v100 := op:const (Bitvec.ofInt w Z) %v 99
+  %v100 := op:const (Bitvec.ofInt w Z) %v99
+  dsl_ret %v100
+  ]
+  := by
+      intros
+      simp_mlir
+      simp [Bitvec.Refinement.bothSome]
+
+
+theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w Z) %v0
+  dsl_ret %v1
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w Z) %v0;
+  %v2 := op:const (Bitvec.ofInt w Z) %v0;
+  %v3 := op:const (Bitvec.ofInt w Z) %v0;
+  %v4 := op:const (Bitvec.ofInt w Z) %v0;
+  %v5 := op:const (Bitvec.ofInt w Z) %v0;
+  %v6 := op:const (Bitvec.ofInt w Z) %v0;
+  %v7 := op:const (Bitvec.ofInt w Z) %v0;
+  %v8 := op:const (Bitvec.ofInt w Z) %v0;
+  %v9 := op:const (Bitvec.ofInt w Z) %v0;
+  %v10 := op:const (Bitvec.ofInt w Z) %v0;
+  %v11 := op:const (Bitvec.ofInt w Z) %v0;
+  %v12 := op:const (Bitvec.ofInt w Z) %v0;
+  %v13 := op:const (Bitvec.ofInt w Z) %v0;
+  %v14 := op:const (Bitvec.ofInt w Z) %v0;
+  %v15 := op:const (Bitvec.ofInt w Z) %v0;
+  %v16 := op:const (Bitvec.ofInt w Z) %v0;
+  %v17 := op:const (Bitvec.ofInt w Z) %v0;
+  %v18 := op:const (Bitvec.ofInt w Z) %v0;
+  %v19 := op:const (Bitvec.ofInt w Z) %v0;
+  %v20 := op:const (Bitvec.ofInt w Z) %v0;
+  %v21 := op:const (Bitvec.ofInt w Z) %v0;
+  %v22 := op:const (Bitvec.ofInt w Z) %v0;
+  %v23 := op:const (Bitvec.ofInt w Z) %v0;
+  %v24 := op:const (Bitvec.ofInt w Z) %v0;
+  %v25 := op:const (Bitvec.ofInt w Z) %v0;
+  %v26 := op:const (Bitvec.ofInt w Z) %v0;
+  %v27 := op:const (Bitvec.ofInt w Z) %v0;
+  %v28 := op:const (Bitvec.ofInt w Z) %v0;
+  %v29 := op:const (Bitvec.ofInt w Z) %v0;
+  %v30 := op:const (Bitvec.ofInt w Z) %v0;
+  %v31 := op:const (Bitvec.ofInt w Z) %v0;
+  %v32 := op:const (Bitvec.ofInt w Z) %v0;
+  %v33 := op:const (Bitvec.ofInt w Z) %v0;
+  %v34 := op:const (Bitvec.ofInt w Z) %v0;
+  %v35 := op:const (Bitvec.ofInt w Z) %v0;
+  %v36 := op:const (Bitvec.ofInt w Z) %v0;
+  %v37 := op:const (Bitvec.ofInt w Z) %v0;
+  %v38 := op:const (Bitvec.ofInt w Z) %v0;
+  %v39 := op:const (Bitvec.ofInt w Z) %v0;
+  %v40 := op:const (Bitvec.ofInt w Z) %v0;
+  %v41 := op:const (Bitvec.ofInt w Z) %v0;
+  %v42 := op:const (Bitvec.ofInt w Z) %v0;
+  %v43 := op:const (Bitvec.ofInt w Z) %v0;
+  %v44 := op:const (Bitvec.ofInt w Z) %v0;
+  %v45 := op:const (Bitvec.ofInt w Z) %v0;
+  %v46 := op:const (Bitvec.ofInt w Z) %v0;
+  %v47 := op:const (Bitvec.ofInt w Z) %v0;
+  %v48 := op:const (Bitvec.ofInt w Z) %v0;
+  %v49 := op:const (Bitvec.ofInt w Z) %v0;
+  %v50 := op:const (Bitvec.ofInt w Z) %v0;
+  %v51 := op:const (Bitvec.ofInt w Z) %v0;
+  %v52 := op:const (Bitvec.ofInt w Z) %v0;
+  %v53 := op:const (Bitvec.ofInt w Z) %v0;
+  %v54 := op:const (Bitvec.ofInt w Z) %v0;
+  %v55 := op:const (Bitvec.ofInt w Z) %v0;
+  %v56 := op:const (Bitvec.ofInt w Z) %v0;
+  %v57 := op:const (Bitvec.ofInt w Z) %v0;
+  %v58 := op:const (Bitvec.ofInt w Z) %v0;
+  %v59 := op:const (Bitvec.ofInt w Z) %v0;
+  %v60 := op:const (Bitvec.ofInt w Z) %v0;
+  %v61 := op:const (Bitvec.ofInt w Z) %v0;
+  %v62 := op:const (Bitvec.ofInt w Z) %v0;
+  %v63 := op:const (Bitvec.ofInt w Z) %v0;
+  %v64 := op:const (Bitvec.ofInt w Z) %v0;
+  %v65 := op:const (Bitvec.ofInt w Z) %v0;
+  %v66 := op:const (Bitvec.ofInt w Z) %v0;
+  %v67 := op:const (Bitvec.ofInt w Z) %v0;
+  %v68 := op:const (Bitvec.ofInt w Z) %v0;
+  %v69 := op:const (Bitvec.ofInt w Z) %v0;
+  %v70 := op:const (Bitvec.ofInt w Z) %v0;
+  %v71 := op:const (Bitvec.ofInt w Z) %v0;
+  %v72 := op:const (Bitvec.ofInt w Z) %v0;
+  %v73 := op:const (Bitvec.ofInt w Z) %v0;
+  %v74 := op:const (Bitvec.ofInt w Z) %v0;
+  %v75 := op:const (Bitvec.ofInt w Z) %v0;
+  %v76 := op:const (Bitvec.ofInt w Z) %v0;
+  %v77 := op:const (Bitvec.ofInt w Z) %v0;
+  %v78 := op:const (Bitvec.ofInt w Z) %v0;
+  %v79 := op:const (Bitvec.ofInt w Z) %v0;
+  %v80 := op:const (Bitvec.ofInt w Z) %v0;
+  %v81 := op:const (Bitvec.ofInt w Z) %v0;
+  %v82 := op:const (Bitvec.ofInt w Z) %v0;
+  %v83 := op:const (Bitvec.ofInt w Z) %v0;
+  %v84 := op:const (Bitvec.ofInt w Z) %v0;
+  %v85 := op:const (Bitvec.ofInt w Z) %v0;
+  %v86 := op:const (Bitvec.ofInt w Z) %v0;
+  %v87 := op:const (Bitvec.ofInt w Z) %v0;
+  %v88 := op:const (Bitvec.ofInt w Z) %v0;
+  %v89 := op:const (Bitvec.ofInt w Z) %v0;
+  %v90 := op:const (Bitvec.ofInt w Z) %v0;
+  %v91 := op:const (Bitvec.ofInt w Z) %v0;
+  %v92 := op:const (Bitvec.ofInt w Z) %v0;
+  %v93 := op:const (Bitvec.ofInt w Z) %v0;
+  %v94 := op:const (Bitvec.ofInt w Z) %v0;
+  %v95 := op:const (Bitvec.ofInt w Z) %v0;
+  %v96 := op:const (Bitvec.ofInt w Z) %v0;
+  %v97 := op:const (Bitvec.ofInt w Z) %v0;
+  %v98 := op:const (Bitvec.ofInt w Z) %v0;
+  %v99 := op:const (Bitvec.ofInt w Z) %v0;
+  %v100 := op:const (Bitvec.ofInt w Z) %v0
   dsl_ret %v100
   ]
   := by
