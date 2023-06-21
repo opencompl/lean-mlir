@@ -1,6 +1,5 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Tactic
-import SSA.Core.Util
 import SSA.Projects.InstCombine.InstCombineBase
 import SSA.Projects.InstCombine.InstCombineAliveStatements
 
@@ -23,7 +22,7 @@ open SSA InstCombine EDSL
   %r = sub %RHS, %or
 
 -/
-theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Nat), TSSA.eval
+theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -79,7 +78,7 @@ theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Nat), TSSA.eval
   %r = xor %x, %y
 
 -/
-theorem alive_AddSub_1152: forall (x y : Nat), TSSA.eval
+theorem alive_AddSub_1152: forall (x y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
   [dsl_bb|
@@ -116,7 +115,7 @@ theorem alive_AddSub_1152: forall (x y : Nat), TSSA.eval
   %a = shl %b, 1
 
 -/
-theorem alive_AddSub_1156 : forall (w : Nat) (b : Nat), TSSA.eval
+theorem alive_AddSub_1156 : forall (w : Nat) (b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -152,7 +151,7 @@ theorem alive_AddSub_1156 : forall (w : Nat) (b : Nat), TSSA.eval
   %a = shl nsw %b, 1
 
 -/
-theorem alive_AddSub_1156_2 : forall (w : Nat) (b : Nat), TSSA.eval
+theorem alive_AddSub_1156_2 : forall (w : Nat) (b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -188,7 +187,7 @@ theorem alive_AddSub_1156_2 : forall (w : Nat) (b : Nat), TSSA.eval
   %a = shl nuw %b, 1
 
 -/
-theorem alive_AddSub_1156_3 : forall (w : Nat) (b : Nat), TSSA.eval
+theorem alive_AddSub_1156_3 : forall (w : Nat) (b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -226,7 +225,7 @@ theorem alive_AddSub_1156_3 : forall (w : Nat) (b : Nat), TSSA.eval
   %c = sub %b, %a
 
 -/
-theorem alive_AddSub_1164 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1164 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -274,7 +273,7 @@ theorem alive_AddSub_1164 : forall (w : Nat) (a b : Nat), TSSA.eval
   %c = sub 0, %ab
 
 -/
-theorem alive_AddSub_1165 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1165 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -328,7 +327,7 @@ theorem alive_AddSub_1165 : forall (w : Nat) (a b : Nat), TSSA.eval
   %c = sub %a, %b
 
 -/
-theorem alive_AddSub_1176 : forall (w : Nat) (b a : Nat), TSSA.eval
+theorem alive_AddSub_1176 : forall (w : Nat) (b a : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -373,7 +372,7 @@ theorem alive_AddSub_1176 : forall (w : Nat) (b a : Nat), TSSA.eval
   %r = sub (C - 1), %x
 
 -/
-theorem alive_AddSub_1202 : forall (w : Nat) (x C : Nat), TSSA.eval
+theorem alive_AddSub_1202 : forall (w : Nat) (x C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -423,7 +422,7 @@ theorem alive_AddSub_1202 : forall (w : Nat) (x C : Nat), TSSA.eval
   %c = or %a, %b
 
 -/
-theorem alive_AddSub_1295 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1295 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -472,7 +471,7 @@ theorem alive_AddSub_1295 : forall (w : Nat) (a b : Nat), TSSA.eval
   %c = add %a, %b
 
 -/
-theorem alive_AddSub_1309 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1309 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -521,7 +520,7 @@ theorem alive_AddSub_1309 : forall (w : Nat) (a b : Nat), TSSA.eval
   %c = add nsw %a, %b
 
 -/
-theorem alive_AddSub_1309_2 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1309_2 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -570,7 +569,7 @@ theorem alive_AddSub_1309_2 : forall (w : Nat) (a b : Nat), TSSA.eval
   %c = add nuw %a, %b
 
 -/
-theorem alive_AddSub_1309_3 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AddSub_1309_3 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -617,7 +616,7 @@ theorem alive_AddSub_1309_3 : forall (w : Nat) (a b : Nat), TSSA.eval
   %r = add %x, %a
 
 -/
-theorem alive_AddSub_1539 : forall (w : Nat) (a x : Nat), TSSA.eval
+theorem alive_AddSub_1539 : forall (w : Nat) (a x : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -660,7 +659,7 @@ theorem alive_AddSub_1539 : forall (w : Nat) (a x : Nat), TSSA.eval
   %r = add %x, -C
 
 -/
-theorem alive_AddSub_1539_2 : forall (w : Nat) (x C : Nat), TSSA.eval
+theorem alive_AddSub_1539_2 : forall (w : Nat) (x C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -700,7 +699,7 @@ theorem alive_AddSub_1539_2 : forall (w : Nat) (x C : Nat), TSSA.eval
   %r = add nsw %x, %a
 
 -/
-theorem alive_AddSub_1546 : forall (w : Nat) (a x : Nat), TSSA.eval
+theorem alive_AddSub_1546 : forall (w : Nat) (a x : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -743,7 +742,7 @@ theorem alive_AddSub_1546 : forall (w : Nat) (a x : Nat), TSSA.eval
   %r = xor %x, %y
 
 -/
-theorem alive_AddSub_1556: forall (x y : Nat), TSSA.eval
+theorem alive_AddSub_1556: forall (x y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
   [dsl_bb|
@@ -780,7 +779,7 @@ theorem alive_AddSub_1556: forall (x y : Nat), TSSA.eval
   %r = xor %a, -1
 
 -/
-theorem alive_AddSub_1560 : forall (w : Nat) (a : Nat), TSSA.eval
+theorem alive_AddSub_1560 : forall (w : Nat) (a : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -819,7 +818,7 @@ theorem alive_AddSub_1560 : forall (w : Nat) (a : Nat), TSSA.eval
   %r = add %x, (C + 1)
 
 -/
-theorem alive_AddSub_1564 : forall (w : Nat) (x C : Nat), TSSA.eval
+theorem alive_AddSub_1564 : forall (w : Nat) (x C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -867,7 +866,7 @@ theorem alive_AddSub_1564 : forall (w : Nat) (x C : Nat), TSSA.eval
   %r = sub (C - C2), %X
 
 -/
-theorem alive_AddSub_1574 : forall (w : Nat) (X C2 C : Nat), TSSA.eval
+theorem alive_AddSub_1574 : forall (w : Nat) (X C2 C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -914,7 +913,7 @@ theorem alive_AddSub_1574 : forall (w : Nat) (X C2 C : Nat), TSSA.eval
   %r = sub 0, %Y
 
 -/
-theorem alive_AddSub_1614 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_AddSub_1614 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -958,7 +957,7 @@ theorem alive_AddSub_1614 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = sub 0, %Y
 
 -/
-theorem alive_AddSub_1619 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_AddSub_1619 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1004,7 +1003,7 @@ theorem alive_AddSub_1619 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = and %A, %B
 
 -/
-theorem alive_AddSub_1624 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AddSub_1624 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1052,7 +1051,7 @@ theorem alive_AddSub_1624 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = xor %a, (C1 & C2)
 
 -/
-theorem alive_AndOrXor_135 : forall (w : Nat) (X C1 C2 : Nat), TSSA.eval
+theorem alive_AndOrXor_135 : forall (w : Nat) (X C1 C2 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1102,7 +1101,7 @@ theorem alive_AndOrXor_135 : forall (w : Nat) (X C1 C2 : Nat), TSSA.eval
   %r = and %o, C2
 
 -/
-theorem alive_AndOrXor_144 : forall (w : Nat) (X C1 C2 : Nat), TSSA.eval
+theorem alive_AndOrXor_144 : forall (w : Nat) (X C1 C2 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1140,372 +1139,6 @@ theorem alive_AndOrXor_144 : forall (w : Nat) (X C1 C2 : Nat), TSSA.eval
      simp_mlir
      apply bitvec_AndOrXor_144 
 
--- Name:AndOrXor:698
--- precondition: true
-/-
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, 0
-  %op1 = icmp eq %a2, 0
-  %r = and %op0, %op1
-
-=>
-  %or = or %b, %d
-  %a3 = and %a, %or
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, 0
-  %op1 = icmp eq %a2, 0
-  %r = icmp eq %a3, 0
-
--/
-theorem alive_AndOrXor_698: forall (a b d : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:and 1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v9 := pair:%v4 %v8;
-  %v10 := op:icmp eq  1 %v9;
-  %v11 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v12 := pair:%v7 %v11;
-  %v13 := op:icmp eq  1 %v12;
-  %v14 := pair:%v10 %v13;
-  %v15 := op:and 1 %v14
-  dsl_ret %v15
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v6 := pair:%v5 %v4;
-  %v7 := op:and 1 %v6;
-  %v8 := pair:%v5 %v1;
-  %v9 := op:and 1 %v8;
-  %v10 := pair:%v5 %v2;
-  %v11 := op:and 1 %v10;
-  %v12 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v13 := pair:%v9 %v12;
-  %v14 := op:icmp eq  1 %v13;
-  %v15 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v16 := pair:%v11 %v15;
-  %v17 := op:icmp eq  1 %v16;
-  %v18 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v19 := pair:%v7 %v18;
-  %v20 := op:icmp eq  1 %v19
-  dsl_ret %v20
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_698
-
--- Name:AndOrXor:709
--- precondition: true
-/-
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, %b
-  %op1 = icmp eq %a2, %d
-  %r = and %op0, %op1
-
-=>
-  %or = or %b, %d
-  %a3 = and %a, %or
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, %b
-  %op1 = icmp eq %a2, %d
-  %r = icmp eq %a3, %or
-
--/
-theorem alive_AndOrXor_709: forall (a b d : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:and 1 %v6;
-  %v8 := pair:%v4 %v2;
-  %v9 := op:icmp eq  1 %v8;
-  %v10 := pair:%v7 %v5;
-  %v11 := op:icmp eq  1 %v10;
-  %v12 := pair:%v9 %v11;
-  %v13 := op:and 1 %v12
-  dsl_ret %v13
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v6 := pair:%v5 %v4;
-  %v7 := op:and 1 %v6;
-  %v8 := pair:%v5 %v1;
-  %v9 := op:and 1 %v8;
-  %v10 := pair:%v5 %v2;
-  %v11 := op:and 1 %v10;
-  %v12 := pair:%v9 %v1;
-  %v13 := op:icmp eq  1 %v12;
-  %v14 := pair:%v11 %v2;
-  %v15 := op:icmp eq  1 %v14;
-  %v16 := pair:%v7 %v4;
-  %v17 := op:icmp eq  1 %v16
-  dsl_ret %v17
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_709
-
--- Name:AndOrXor:716
--- precondition: true
-/-
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, %a
-  %op1 = icmp eq %a2, %a
-  %r = and %op0, %op1
-
-=>
-  %a4 = and %b, %d
-  %a3 = and %a, %a4
-  %a1 = and %a, %b
-  %a2 = and %a, %d
-  %op0 = icmp eq %a1, %a
-  %op1 = icmp eq %a2, %a
-  %r = icmp eq %a3, %a
-
--/
-theorem alive_AndOrXor_716: forall (a b d : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:and 1 %v6;
-  %v8 := pair:%v4 %v1;
-  %v9 := op:icmp eq  1 %v8;
-  %v10 := pair:%v7 %v1;
-  %v11 := op:icmp eq  1 %v10;
-  %v12 := pair:%v9 %v11;
-  %v13 := op:and 1 %v12
-  dsl_ret %v13
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (d)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v6 := pair:%v5 %v4;
-  %v7 := op:and 1 %v6;
-  %v8 := pair:%v5 %v1;
-  %v9 := op:and 1 %v8;
-  %v10 := pair:%v5 %v2;
-  %v11 := op:and 1 %v10;
-  %v12 := pair:%v9 %v5;
-  %v13 := op:icmp eq  1 %v12;
-  %v14 := pair:%v11 %v5;
-  %v15 := op:icmp eq  1 %v14;
-  %v16 := pair:%v7 %v5;
-  %v17 := op:icmp eq  1 %v16
-  dsl_ret %v17
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_716
-
--- Name:AndOrXor:794
--- precondition: true
-/-
-  %op0 = icmp sgt %a, %b
-  %op1 = icmp ne %a, %b
-  %r = and %op0, %op1
-
-=>
-  %op0 = icmp sgt %a, %b
-  %op1 = icmp ne %a, %b
-  %r = icmp sgt %a, %b
-
--/
-theorem alive_AndOrXor_794: forall (a b : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp sgt  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v4 %v6;
-  %v8 := op:and 1 %v7
-  dsl_ret %v8
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp sgt  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v1 %v2;
-  %v8 := op:icmp sgt  1 %v7
-  dsl_ret %v8
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_794
-
--- Name:AndOrXor:827
--- precondition: true
-/-
-  %op0 = icmp eq %a, 0
-  %op1 = icmp eq %b, 0
-  %r = and %op0, %op1
-
-=>
-  %o = or %a, %b
-  %op0 = icmp eq %a, 0
-  %op1 = icmp eq %b, 0
-  %r = icmp eq %o, 0
-
--/
-theorem alive_AndOrXor_827: forall (a b : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp eq  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v6 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v7 := pair:%v5 %v6;
-  %v8 := op:icmp eq  1 %v7;
-  %v9 := pair:%v4 %v8;
-  %v10 := op:and 1 %v9
-  dsl_ret %v10
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:icmp eq  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v9 := pair:%v2 %v8;
-  %v10 := op:icmp eq  1 %v9;
-  %v11 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v12 := pair:%v4 %v11;
-  %v13 := op:icmp eq  1 %v12
-  dsl_ret %v13
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_827
-
--- Name:AndOrXor:887-2
--- precondition: true
-/-
-  %op0 = icmp eq %a, C1
-  %op1 = icmp ne %a, C1
-  %r = and %op0, %op1
-
-=>
-  %op0 = icmp eq %a, C1
-  %op1 = icmp ne %a, C1
-  %r = false
-
--/
-theorem alive_AndOrXor_887_2: forall (a C1 : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C1)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp eq  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v4 %v6;
-  %v8 := op:and 1 %v7
-  dsl_ret %v8
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C1)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp eq  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := op:const  (Vector.cons false Vector.nil) %v0;
-  %v8 := op:copy 1 %v7
-  dsl_ret %v8
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_887_2
 
 -- Name:AndOrXor:1230  ~A & ~B -> ~(A | B)
 -- precondition: true
@@ -1521,7 +1154,7 @@ theorem alive_AndOrXor_887_2: forall (a C1 : Nat), TSSA.eval
   %r = xor %or, -1
 
 -/
-theorem alive_AndOrXor_1230__ : forall (w : Nat) (notOp0 notOp1 : Nat), TSSA.eval
+theorem alive_AndOrXor_1230__A__B___A__B : forall (w : Nat) (notOp0 notOp1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1562,7 +1195,7 @@ theorem alive_AndOrXor_1230__ : forall (w : Nat) (notOp0 notOp1 : Nat), TSSA.eva
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1230__ 
+     apply bitvec_AndOrXor_1230__A__B___A__B 
 
 -- Name:AndOrXor:1241 (A|B) & ~(A&B) => A^B
 -- precondition: true
@@ -1579,7 +1212,7 @@ theorem alive_AndOrXor_1230__ : forall (w : Nat) (notOp0 notOp1 : Nat), TSSA.eva
   %r = xor %A, %B
 
 -/
-theorem alive_AndOrXor_1241_ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_1241_AB__AB__AB : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1619,7 +1252,7 @@ theorem alive_AndOrXor_1241_ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1241_ 
+     apply bitvec_AndOrXor_1241_AB__AB__AB 
 
 -- Name:AndOrXor:1247 ~(A&B) & (A|B) => A^B
 -- precondition: true
@@ -1636,7 +1269,7 @@ theorem alive_AndOrXor_1241_ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = xor %A, %B
 
 -/
-theorem alive_AndOrXor_1247_ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_1247_AB__AB__AB : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1676,7 +1309,7 @@ theorem alive_AndOrXor_1247_ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1247_ 
+     apply bitvec_AndOrXor_1247_AB__AB__AB 
 
 -- Name:AndOrXor:1253 A & (A^B) -> A & ~B
 -- precondition: true
@@ -1690,7 +1323,7 @@ theorem alive_AndOrXor_1247_ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = and %A, %notB
 
 -/
-theorem alive_AndOrXor_1253_A_ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_1253_A__AB___A__B : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1723,7 +1356,7 @@ theorem alive_AndOrXor_1253_A_ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1253_A_ 
+     apply bitvec_AndOrXor_1253_A__AB___A__B 
 
 -- Name:AndOrXor:1280 (~A|B)&A -> A&B
 -- precondition: true
@@ -1738,7 +1371,7 @@ theorem alive_AndOrXor_1253_A_ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = and %A, %B
 
 -/
-theorem alive_AndOrXor_1280_ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_1280_ABA___AB : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1774,7 +1407,7 @@ theorem alive_AndOrXor_1280_ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1280_ 
+     apply bitvec_AndOrXor_1280_ABA___AB 
 
 -- Name:AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
 -- precondition: true
@@ -1792,7 +1425,7 @@ theorem alive_AndOrXor_1280_ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = and %op0, %negC
 
 -/
-theorem alive_AndOrXor_1288_ : forall (w : Nat) (A B C : Nat), TSSA.eval
+theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C : forall (w : Nat) (A B C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1835,7 +1468,7 @@ theorem alive_AndOrXor_1288_ : forall (w : Nat) (A B C : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1288_ 
+     apply bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:1294 (A | B) & ((~A) ^ B) -> (A & B)
 -- precondition: true
@@ -1852,7 +1485,7 @@ theorem alive_AndOrXor_1288_ : forall (w : Nat) (A B C : Nat), TSSA.eval
   %r = and %A, %B
 
 -/
-theorem alive_AndOrXor_1294_ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_1294_A__B__A__B___A__B : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -1892,273 +1525,11 @@ theorem alive_AndOrXor_1294_ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_1294_ 
+     apply bitvec_AndOrXor_1294_A__B__A__B___A__B 
 
--- Name:AndOrXor:1683-1
--- precondition: true
-/-
-  %op0 = icmp ugt %a, %b
-  %op1 = icmp eq %a, %b
-  %r = or %op0, %op1
 
-=>
-  %op0 = icmp ugt %a, %b
-  %op1 = icmp eq %a, %b
-  %r = icmp uge %a, %b
 
--/
-theorem alive_AndOrXor_1683_1: forall (a b : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp ugt  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp eq  1 %v5;
-  %v7 := pair:%v4 %v6;
-  %v8 := op:or 1 %v7
-  dsl_ret %v8
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp ugt  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp eq  1 %v5;
-  %v7 := pair:%v1 %v2;
-  %v8 := op:icmp uge  1 %v7
-  dsl_ret %v8
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_1683_1
-
--- Name:AndOrXor:1683-2
--- precondition: true
-/-
-  %op0 = icmp uge %a, %b
-  %op1 = icmp ne %a, %b
-  %r = or %op0, %op1
-
-=>
-  %op0 = icmp uge %a, %b
-  %op1 = icmp ne %a, %b
-  %r = true
-
--/
-theorem alive_AndOrXor_1683_2: forall (a b : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp uge  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v4 %v6;
-  %v8 := op:or 1 %v7
-  dsl_ret %v8
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp uge  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := op:const  (Vector.cons true Vector.nil) %v0;
-  %v8 := op:copy 1 %v7
-  dsl_ret %v8
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_1683_2
-
--- Name:AndOrXor:1704
--- precondition: true
-/-
-  %cmp1 = icmp eq %B, 0
-  %cmp2 = icmp ult %A, %B
-  %r = or %cmp1, %cmp2
-
-=>
-  %b1 = add %B, -1
-  %cmp1 = icmp eq %B, 0
-  %cmp2 = icmp ult %A, %B
-  %r = icmp uge %b1, %A
-
--/
-theorem alive_AndOrXor_1704: forall (B A : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp eq  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v6 := pair:%v5 %v1;
-  %v7 := op:icmp ult  1 %v6;
-  %v8 := pair:%v4 %v7;
-  %v9 := op:or 1 %v8
-  dsl_ret %v9
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (-1)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:add 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:icmp eq  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v9 := pair:%v8 %v1;
-  %v10 := op:icmp ult  1 %v9;
-  %v11 := pair:%v4 %v8;
-  %v12 := op:icmp uge  1 %v11
-  dsl_ret %v12
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_1704
-
--- Name:AndOrXor:1705
--- precondition: true
-/-
-  %cmp1 = icmp eq %B, 0
-  %cmp2 = icmp ugt %B, %A
-  %r = or %cmp1, %cmp2
-
-=>
-  %b1 = add %B, -1
-  %cmp1 = icmp eq %B, 0
-  %cmp2 = icmp ugt %B, %A
-  %r = icmp uge %b1, %A
-
--/
-theorem alive_AndOrXor_1705: forall (B A : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp eq  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:icmp ugt  1 %v6;
-  %v8 := pair:%v4 %v7;
-  %v9 := op:or 1 %v8
-  dsl_ret %v9
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (-1)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:add 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:icmp eq  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v9 := pair:%v1 %v8;
-  %v10 := op:icmp ugt  1 %v9;
-  %v11 := pair:%v4 %v8;
-  %v12 := op:icmp uge  1 %v11
-  dsl_ret %v12
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_1705
-
--- Name:AndOrXor:1733
--- precondition: true
-/-
-  %cmp1 = icmp ne %A, 0
-  %cmp2 = icmp ne %B, 0
-  %r = or %cmp1, %cmp2
-
-=>
-  %or = or %A, %B
-  %cmp1 = icmp ne %A, 0
-  %cmp2 = icmp ne %B, 0
-  %r = icmp ne %or, 0
-
--/
-theorem alive_AndOrXor_1733: forall (A B : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp ne  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v6 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v7 := pair:%v5 %v6;
-  %v8 := op:icmp ne  1 %v7;
-  %v9 := pair:%v4 %v8;
-  %v10 := op:or 1 %v9
-  dsl_ret %v10
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (A)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v6 := pair:%v1 %v5;
-  %v7 := op:icmp ne  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v9 := pair:%v2 %v8;
-  %v10 := op:icmp ne  1 %v9;
-  %v11 := op:const (Bitvec.ofInt 1 (0)) %v0;
-  %v12 := pair:%v4 %v11;
-  %v13 := op:icmp ne  1 %v12
-  dsl_ret %v13
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_1733
-
+--
 -- Name:AndOrXor:2063  (X ^ C1) | C2 --> (X | C2) ^ (C1 & ~C2)
 -- precondition: true
 /-
@@ -2171,7 +1542,7 @@ theorem alive_AndOrXor_1733: forall (A B : Nat), TSSA.eval
   %r = xor %or, (C1 & ~C)
 
 -/
-theorem alive_AndOrXor_2063__ : forall (w : Nat) (x C1 C : Nat), TSSA.eval
+theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 : forall (w : Nat) (x C1 C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2208,7 +1579,7 @@ theorem alive_AndOrXor_2063__ : forall (w : Nat) (x C1 C : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2063__ 
+     apply bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 
 
 -- Name:AndOrXor:2113   ((~A & B) | A) -> (A | B)
 -- precondition: true
@@ -2223,7 +1594,7 @@ theorem alive_AndOrXor_2063__ : forall (w : Nat) (x C1 C : Nat), TSSA.eval
   %r = or %A, %B
 
 -/
-theorem alive_AndOrXor_2113___ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2113___A__B__A___A__B : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2259,7 +1630,7 @@ theorem alive_AndOrXor_2113___ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2113___ 
+     apply bitvec_AndOrXor_2113___A__B__A___A__B 
 
 -- Name:AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
 -- precondition: true
@@ -2274,7 +1645,7 @@ theorem alive_AndOrXor_2113___ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %negA, %B
 
 -/
-theorem alive_AndOrXor_2118___ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2118___A__B__A___A__B : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2310,7 +1681,7 @@ theorem alive_AndOrXor_2118___ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2118___ 
+     apply bitvec_AndOrXor_2118___A__B__A___A__B 
 
 -- Name:AndOrXor:2123   (A & (~B)) | (A ^ B) -> (A ^ B)
 -- precondition: true
@@ -2327,7 +1698,7 @@ theorem alive_AndOrXor_2118___ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = xor %A, %B
 
 -/
-theorem alive_AndOrXor_2123___ : forall (w : Nat) (B A : Nat), TSSA.eval
+theorem alive_AndOrXor_2123___A__B__A__B___A__B : forall (w : Nat) (B A : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2367,7 +1738,7 @@ theorem alive_AndOrXor_2123___ : forall (w : Nat) (B A : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2123___ 
+     apply bitvec_AndOrXor_2123___A__B__A__B___A__B 
 
 -- Name:AndOrXor:2188
 -- precondition: true
@@ -2386,7 +1757,7 @@ theorem alive_AndOrXor_2123___ : forall (w : Nat) (B A : Nat), TSSA.eval
   %r = xor %A, %D
 
 -/
-theorem alive_AndOrXor_2188 : forall (w : Nat) (D A : Nat), TSSA.eval
+theorem alive_AndOrXor_2188 : forall (w : Nat) (D A : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2449,7 +1820,7 @@ theorem alive_AndOrXor_2188 : forall (w : Nat) (D A : Nat), TSSA.eval
   %r = or %op0, %C
 
 -/
-theorem alive_AndOrXor_2231__ : forall (w : Nat) (A B C : Nat), TSSA.eval
+theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C : forall (w : Nat) (A B C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2489,7 +1860,7 @@ theorem alive_AndOrXor_2231__ : forall (w : Nat) (A B C : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2231__ 
+     apply bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
 -- precondition: true
@@ -2505,7 +1876,7 @@ theorem alive_AndOrXor_2231__ : forall (w : Nat) (A B C : Nat), TSSA.eval
   %r = or %B, %a
 
 -/
-theorem alive_AndOrXor_2243__ : forall (w : Nat) (B C A : Nat), TSSA.eval
+theorem alive_AndOrXor_2243__B__C__A__B___B__A__C : forall (w : Nat) (B C A : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2543,7 +1914,7 @@ theorem alive_AndOrXor_2243__ : forall (w : Nat) (B C A : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2243__ 
+     apply bitvec_AndOrXor_2243__B__C__A__B___B__A__C 
 
 -- Name:AndOrXor:2247  (~A | ~B) == (~(A & B))
 -- precondition: true
@@ -2559,7 +1930,7 @@ theorem alive_AndOrXor_2243__ : forall (w : Nat) (B C A : Nat), TSSA.eval
   %r = xor %a, -1
 
 -/
-theorem alive_AndOrXor_2247__ : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2247__A__B__A__B : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2600,7 +1971,7 @@ theorem alive_AndOrXor_2247__ : forall (w : Nat) (A B : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2247__ 
+     apply bitvec_AndOrXor_2247__A__B__A__B 
 
 -- Name:AndOrXor:2263
 -- precondition: true
@@ -2613,7 +1984,7 @@ theorem alive_AndOrXor_2247__ : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %op0, %B
 
 -/
-theorem alive_AndOrXor_2263 : forall (w : Nat) (op0 B : Nat), TSSA.eval
+theorem alive_AndOrXor_2263 : forall (w : Nat) (op0 B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2659,7 +2030,7 @@ theorem alive_AndOrXor_2263 : forall (w : Nat) (op0 B : Nat), TSSA.eval
   %r = or %A, %nb
 
 -/
-theorem alive_AndOrXor_2264 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2264 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2713,7 +2084,7 @@ theorem alive_AndOrXor_2264 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %A, %B
 
 -/
-theorem alive_AndOrXor_2265 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2265 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2763,7 +2134,7 @@ theorem alive_AndOrXor_2265 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %A, %not
 
 -/
-theorem alive_AndOrXor_2284 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2284 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2818,7 +2189,7 @@ theorem alive_AndOrXor_2284 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %A, %not
 
 -/
-theorem alive_AndOrXor_2285 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2285 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2874,7 +2245,7 @@ theorem alive_AndOrXor_2285 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = xor %na, %B
 
 -/
-theorem alive_AndOrXor_2297 : forall (w : Nat) (A B : Nat), TSSA.eval
+theorem alive_AndOrXor_2297 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2928,7 +2299,7 @@ theorem alive_AndOrXor_2297 : forall (w : Nat) (A B : Nat), TSSA.eval
   %r = or %i, C1
 
 -/
-theorem alive_AndOrXor_2367 : forall (w : Nat) (A C1 op1 : Nat), TSSA.eval
+theorem alive_AndOrXor_2367 : forall (w : Nat) (A C1 op1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -2979,7 +2350,7 @@ theorem alive_AndOrXor_2367 : forall (w : Nat) (A C1 op1 : Nat), TSSA.eval
   %r = select i1 %x, %t, %f
 
 -/
-theorem alive_AndOrXor_2375 : forall (w : Nat) (x A B C D : Nat), TSSA.eval
+theorem alive_AndOrXor_2375 : forall (w : Nat) (x A B C D : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3039,7 +2410,7 @@ theorem alive_AndOrXor_2375 : forall (w : Nat) (x A B C D : Nat), TSSA.eval
   %r = or %nx, %ny
 
 -/
-theorem alive_AndOrXor_2416 : forall (w : Nat) (nx y : Nat), TSSA.eval
+theorem alive_AndOrXor_2416 : forall (w : Nat) (nx y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3095,7 +2466,7 @@ theorem alive_AndOrXor_2416 : forall (w : Nat) (nx y : Nat), TSSA.eval
   %r = and %nx, %ny
 
 -/
-theorem alive_AndOrXor_2417 : forall (w : Nat) (nx y : Nat), TSSA.eval
+theorem alive_AndOrXor_2417 : forall (w : Nat) (nx y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3150,7 +2521,7 @@ theorem alive_AndOrXor_2417 : forall (w : Nat) (nx y : Nat), TSSA.eval
   %r = or %nx, %ny
 
 -/
-theorem alive_AndOrXor_2429 : forall (w : Nat) (x y : Nat), TSSA.eval
+theorem alive_AndOrXor_2429 : forall (w : Nat) (x y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3202,7 +2573,7 @@ theorem alive_AndOrXor_2429 : forall (w : Nat) (x y : Nat), TSSA.eval
   %r = and %nx, %ny
 
 -/
-theorem alive_AndOrXor_2430 : forall (w : Nat) (x y : Nat), TSSA.eval
+theorem alive_AndOrXor_2430 : forall (w : Nat) (x y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3254,7 +2625,7 @@ theorem alive_AndOrXor_2430 : forall (w : Nat) (x y : Nat), TSSA.eval
   %r = ashr %x, %y
 
 -/
-theorem alive_AndOrXor_2443 : forall (w : Nat) (x y : Nat), TSSA.eval
+theorem alive_AndOrXor_2443 : forall (w : Nat) (x y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3293,49 +2664,6 @@ theorem alive_AndOrXor_2443 : forall (w : Nat) (x y : Nat), TSSA.eval
      simp_mlir
      apply bitvec_AndOrXor_2443 
 
--- Name:AndOrXor:2453
--- precondition: true
-/-
-  %op0 = icmp slt %x, %y
-  %r = xor %op0, -1
-
-=>
-  %op0 = icmp slt %x, %y
-  %r = icmp sge %x, %y
-
--/
-theorem alive_AndOrXor_2453: forall (x y : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (x)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (y)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp slt  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (-1)) %v0;
-  %v6 := pair:%v4 %v5;
-  %v7 := op:xor 1 %v6
-  dsl_ret %v7
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (x)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (y)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp slt  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp sge  1 %v5
-  dsl_ret %v6
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_2453
 
 -- Name:AndOrXor:2475
 -- precondition: true
@@ -3348,7 +2676,7 @@ theorem alive_AndOrXor_2453: forall (x y : Nat), TSSA.eval
   %r = add %x, (-1 - C)
 
 -/
-theorem alive_AndOrXor_2475 : forall (w : Nat) (C x : Nat), TSSA.eval
+theorem alive_AndOrXor_2475 : forall (w : Nat) (C x : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3395,7 +2723,7 @@ theorem alive_AndOrXor_2475 : forall (w : Nat) (C x : Nat), TSSA.eval
   %r = sub (-1 - C), %x
 
 -/
-theorem alive_AndOrXor_2486 : forall (w : Nat) (x C : Nat), TSSA.eval
+theorem alive_AndOrXor_2486 : forall (w : Nat) (x C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3443,7 +2771,7 @@ theorem alive_AndOrXor_2486 : forall (w : Nat) (x C : Nat), TSSA.eval
   %r = and %a, %nop1
 
 -/
-theorem alive_AndOrXor_2581__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
+theorem alive_AndOrXor_2581__BAB___A__B : forall (w : Nat) (a op1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3476,7 +2804,7 @@ theorem alive_AndOrXor_2581__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2581__ 
+     apply bitvec_AndOrXor_2581__BAB___A__B 
 
 -- Name:AndOrXor:2587  (B&A)^A -> ~B & A
 -- precondition: true
@@ -3490,7 +2818,7 @@ theorem alive_AndOrXor_2581__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
   %r = and %na, %op1
 
 -/
-theorem alive_AndOrXor_2587__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
+theorem alive_AndOrXor_2587__BAA___B__A : forall (w : Nat) (a op1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3523,7 +2851,7 @@ theorem alive_AndOrXor_2587__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_AndOrXor_2587__ 
+     apply bitvec_AndOrXor_2587__BAA___B__A 
 
 -- Name:AndOrXor:2595
 -- precondition: true
@@ -3538,7 +2866,7 @@ theorem alive_AndOrXor_2587__ : forall (w : Nat) (a op1 : Nat), TSSA.eval
   %r = xor %a, %b
 
 -/
-theorem alive_AndOrXor_2595 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AndOrXor_2595 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3591,7 +2919,7 @@ theorem alive_AndOrXor_2595 : forall (w : Nat) (a b : Nat), TSSA.eval
   %r = xor %a, %b
 
 -/
-theorem alive_AndOrXor_2607 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AndOrXor_2607 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3656,7 +2984,7 @@ theorem alive_AndOrXor_2607 : forall (w : Nat) (a b : Nat), TSSA.eval
   %r = xor %a, %b
 
 -/
-theorem alive_AndOrXor_2617 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AndOrXor_2617 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3719,7 +3047,7 @@ theorem alive_AndOrXor_2617 : forall (w : Nat) (a b : Nat), TSSA.eval
   %r = xor %and, %c
 
 -/
-theorem alive_AndOrXor_2627 : forall (w : Nat) (a c b : Nat), TSSA.eval
+theorem alive_AndOrXor_2627 : forall (w : Nat) (a c b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3775,7 +3103,7 @@ theorem alive_AndOrXor_2627 : forall (w : Nat) (a c b : Nat), TSSA.eval
   %r = or %a, %b
 
 -/
-theorem alive_AndOrXor_2647 : forall (w : Nat) (a b : Nat), TSSA.eval
+theorem alive_AndOrXor_2647 : forall (w : Nat) (a b : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3827,7 +3155,7 @@ theorem alive_AndOrXor_2647 : forall (w : Nat) (a b : Nat), TSSA.eval
   %r = xor %and, -1
 
 -/
-theorem alive_AndOrXor_2658 : forall (w : Nat) (b a : Nat), TSSA.eval
+theorem alive_AndOrXor_2658 : forall (w : Nat) (b a : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3874,54 +3202,6 @@ theorem alive_AndOrXor_2658 : forall (w : Nat) (b a : Nat), TSSA.eval
      simp_mlir
      apply bitvec_AndOrXor_2658 
 
--- Name:AndOrXor:2663
--- precondition: true
-/-
-  %op0 = icmp ule %a, %b
-  %op1 = icmp ne %a, %b
-  %r = xor %op0, %op1
-
-=>
-  %op0 = icmp ule %a, %b
-  %op1 = icmp ne %a, %b
-  %r = icmp uge %a, %b
-
--/
-theorem alive_AndOrXor_2663: forall (a b : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp ule  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v4 %v6;
-  %v8 := op:xor 1 %v7
-  dsl_ret %v8
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:icmp ule  1 %v3;
-  %v5 := pair:%v1 %v2;
-  %v6 := op:icmp ne  1 %v5;
-  %v7 := pair:%v1 %v2;
-  %v8 := op:icmp uge  1 %v7
-  dsl_ret %v8
-  ]
-  := by
-     simp_mlir
-     apply bitvec_AndOrXor_2663
 
 -- Name:152
 -- precondition: true
@@ -3932,7 +3212,7 @@ theorem alive_AndOrXor_2663: forall (a b : Nat), TSSA.eval
   %r = sub 0, %x
 
 -/
-theorem alive_152 : forall (w : Nat) (x : Nat), TSSA.eval
+theorem alive_152 : forall (w : Nat) (x : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -3960,6 +3240,53 @@ theorem alive_152 : forall (w : Nat) (x : Nat), TSSA.eval
      simp_mlir
      apply bitvec_152 
 
+-- Name:160
+-- precondition: true
+/-
+  %sh = shl i7 %x, C2
+  %r = mul %sh, C1
+
+=>
+  %sh = shl i7 %x, C2
+  %r = mul %x, (C1 << C2)
+
+-/
+theorem alive_160: forall (x C2 C1 : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 7)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 7 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 7 (C2)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 7 %v3;
+  %v5 := op:const (Bitvec.ofInt 7 (C1)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:mul 7 %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 7)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 7 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 7 (C2)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 7 %v3;
+  %v5 := op:const (Bitvec.ofInt 7 (C1)) %v0;
+  %v6 := pair:%v5 %v2;
+  %v7 := op:shl 7 %v6;
+  %v8 := pair:%v1 %v7;
+  %v9 := op:mul 7 %v8
+  dsl_ret %v9
+  ]
+  := by
+     simp_mlir
+     apply bitvec_160
+
 -- Name:229
 -- precondition: true
 /-
@@ -3973,7 +3300,7 @@ theorem alive_152 : forall (w : Nat) (x : Nat), TSSA.eval
   %r = add %tmp, %mul
 
 -/
-theorem alive_229 : forall (w : Nat) (X C1 Op1 : Nat), TSSA.eval
+theorem alive_229 : forall (w : Nat) (X C1 Op1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4024,7 +3351,7 @@ theorem alive_229 : forall (w : Nat) (X C1 Op1 : Nat), TSSA.eval
   %r = mul %X, %Y
 
 -/
-theorem alive_239 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_239 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4075,7 +3402,7 @@ theorem alive_239 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = %X
 
 -/
-theorem alive_265 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_265 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4117,7 +3444,7 @@ theorem alive_265 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = %X
 
 -/
-theorem alive_265_2 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_265_2 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4161,7 +3488,7 @@ theorem alive_265_2 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = sub 0, %X
 
 -/
-theorem alive_266 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_266 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4213,7 +3540,7 @@ theorem alive_266 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = sub 0, %X
 
 -/
-theorem alive_266_2 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_266_2 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4252,6 +3579,206 @@ theorem alive_266_2 : forall (w : Nat) (X Y : Nat), TSSA.eval
      simp_mlir
      apply bitvec_266_2 
 
+-- Name:275
+-- precondition: true
+/-
+  %div = udiv i5 %X, %Y
+  %r = mul %div, %Y
+
+=>
+  %rem = urem %X, %Y
+  %div = udiv i5 %X, %Y
+  %r = sub %X, %rem
+
+-/
+theorem alive_275: forall (X Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:udiv 5 %v3;
+  %v5 := pair:%v4 %v2;
+  %v6 := op:mul 5 %v5
+  dsl_ret %v6
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:urem 5 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:udiv 5 %v5;
+  %v7 := pair:%v1 %v4;
+  %v8 := op:sub 5 %v7
+  dsl_ret %v8
+  ]
+  := by
+     simp_mlir
+     apply bitvec_275
+
+-- Name:275-2
+-- precondition: true
+/-
+  %div = sdiv i5 %X, %Y
+  %r = mul %div, %Y
+
+=>
+  %rem = srem %X, %Y
+  %div = sdiv i5 %X, %Y
+  %r = sub %X, %rem
+
+-/
+theorem alive_275_2: forall (X Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sdiv 5 %v3;
+  %v5 := pair:%v4 %v2;
+  %v6 := op:mul 5 %v5
+  dsl_ret %v6
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:srem 5 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:sdiv 5 %v5;
+  %v7 := pair:%v1 %v4;
+  %v8 := op:sub 5 %v7
+  dsl_ret %v8
+  ]
+  := by
+     simp_mlir
+     apply bitvec_275_2
+
+-- Name:276
+-- precondition: true
+/-
+  %div = sdiv i5 %X, %Y
+  %negY = sub 0, %Y
+  %r = mul %div, %negY
+
+=>
+  %rem = srem %X, %Y
+  %div = sdiv i5 %X, %Y
+  %negY = sub 0, %Y
+  %r = sub %rem, %X
+
+-/
+theorem alive_276: forall (X Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sdiv 5 %v3;
+  %v5 := op:const (Bitvec.ofInt 5 (0)) %v0;
+  %v6 := pair:%v5 %v2;
+  %v7 := op:sub 5 %v6;
+  %v8 := pair:%v4 %v7;
+  %v9 := op:mul 5 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:srem 5 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:sdiv 5 %v5;
+  %v7 := op:const (Bitvec.ofInt 5 (0)) %v0;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:sub 5 %v8;
+  %v10 := pair:%v4 %v1;
+  %v11 := op:sub 5 %v10
+  dsl_ret %v11
+  ]
+  := by
+     simp_mlir
+     apply bitvec_276
+
+-- Name:276-2
+-- precondition: true
+/-
+  %div = udiv i5 %X, %Y
+  %negY = sub 0, %Y
+  %r = mul %div, %negY
+
+=>
+  %rem = urem %X, %Y
+  %div = udiv i5 %X, %Y
+  %negY = sub 0, %Y
+  %r = sub %rem, %X
+
+-/
+theorem alive_276_2: forall (X Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:udiv 5 %v3;
+  %v5 := op:const (Bitvec.ofInt 5 (0)) %v0;
+  %v6 := pair:%v5 %v2;
+  %v7 := op:sub 5 %v6;
+  %v8 := pair:%v4 %v7;
+  %v9 := op:mul 5 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 5)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 5 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 5 (Y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:urem 5 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:udiv 5 %v5;
+  %v7 := op:const (Bitvec.ofInt 5 (0)) %v0;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:sub 5 %v8;
+  %v10 := pair:%v4 %v1;
+  %v11 := op:sub 5 %v10
+  dsl_ret %v11
+  ]
+  := by
+     simp_mlir
+     apply bitvec_276_2
+
 -- Name:283
 -- precondition: true
 /-
@@ -4261,7 +3788,7 @@ theorem alive_266_2 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = and %X, %Y
 
 -/
-theorem alive_283: forall (X Y : Nat), TSSA.eval
+theorem alive_283: forall (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
   [dsl_bb|
@@ -4300,7 +3827,7 @@ theorem alive_283: forall (X Y : Nat), TSSA.eval
   %r = shl %Op1, %Y
 
 -/
-theorem alive_290_ : forall (w : Nat) (Y Op1 : Nat), TSSA.eval
+theorem alive_290__292 : forall (w : Nat) (Y Op1 : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4332,7 +3859,7 @@ theorem alive_290_ : forall (w : Nat) (Y Op1 : Nat), TSSA.eval
   ]
   := by
      simp_mlir
-     apply bitvec_290_ 
+     apply bitvec_290__292 
 
 -- Name:SimplifyDivRemOfSelect
 -- precondition: true
@@ -4345,7 +3872,7 @@ theorem alive_290_ : forall (w : Nat) (Y Op1 : Nat), TSSA.eval
   %r = udiv %X, %Y
 
 -/
-theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (c Y X : Nat), TSSA.eval
+theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (c Y X : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4381,6 +3908,239 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (c Y X : Nat), TSSA.eval
      simp_mlir
      apply bitvec_SimplifyDivRemOfSelect 
 
+-- Name:805
+-- precondition: true
+/-
+  %r = sdiv 1, %X
+
+=>
+  %inc = add %X, 1
+  %c = icmp ult %inc, 3
+  %r = select i1 %c, %X, 0
+
+-/
+theorem alive_805 : forall (w : Nat) (X : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (1)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sdiv w %v3
+  dsl_ret %v4
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:add w %v3;
+  %v5 := op:const (Bitvec.ofInt w (3)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:icmp ult  w %v6;
+  %v8 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v9 := triple:%v7 %v1 %v8;
+  %v10 := op:select w %v9
+  dsl_ret %v10
+  ]
+  := by
+     simp_mlir
+     apply bitvec_805 
+
+-- Name:820
+-- precondition: true
+/-
+  %Z = srem i9 %X, %Op1
+  %Op0 = sub %X, %Z
+  %r = sdiv %Op0, %Op1
+
+=>
+  %Z = srem i9 %X, %Op1
+  %Op0 = sub %X, %Z
+  %r = sdiv %X, %Op1
+
+-/
+theorem alive_820: forall (X Op1 : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (Op1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:srem 9 %v3;
+  %v5 := pair:%v1 %v4;
+  %v6 := op:sub 9 %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:sdiv 9 %v7
+  dsl_ret %v8
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (Op1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:srem 9 %v3;
+  %v5 := pair:%v1 %v4;
+  %v6 := op:sub 9 %v5;
+  %v7 := pair:%v1 %v2;
+  %v8 := op:sdiv 9 %v7
+  dsl_ret %v8
+  ]
+  := by
+     simp_mlir
+     apply bitvec_820
+
+-- Name:820'
+-- precondition: true
+/-
+  %Z = urem i9 %X, %Op1
+  %Op0 = sub %X, %Z
+  %r = udiv %Op0, %Op1
+
+=>
+  %Z = urem i9 %X, %Op1
+  %Op0 = sub %X, %Z
+  %r = udiv %X, %Op1
+
+-/
+theorem alive_820': forall (X Op1 : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (Op1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:urem 9 %v3;
+  %v5 := pair:%v1 %v4;
+  %v6 := op:sub 9 %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:udiv 9 %v7
+  dsl_ret %v8
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (Op1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:urem 9 %v3;
+  %v5 := pair:%v1 %v4;
+  %v6 := op:sub 9 %v5;
+  %v7 := pair:%v1 %v2;
+  %v8 := op:udiv 9 %v7
+  dsl_ret %v8
+  ]
+  := by
+     simp_mlir
+     apply bitvec_820'
+
+-- Name:891
+-- precondition: true
+/-
+  %s = shl i13 1, %N
+  %r = udiv %x, %s
+
+=>
+  %s = shl i13 1, %N
+  %r = lshr %x, %N
+
+-/
+theorem alive_891: forall (N x : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 13)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 13 (1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 13 (N)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 13 %v3;
+  %v5 := op:const (Bitvec.ofInt 13 (x)) %v0;
+  %v6 := pair:%v5 %v4;
+  %v7 := op:udiv 13 %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 13)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 13 (1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 13 (N)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 13 %v3;
+  %v5 := op:const (Bitvec.ofInt 13 (x)) %v0;
+  %v6 := pair:%v5 %v2;
+  %v7 := op:lshr 13 %v6
+  dsl_ret %v7
+  ]
+  := by
+     simp_mlir
+     apply bitvec_891
+
+-- Name:891-exact
+-- precondition: true
+/-
+  %s = shl i13 1, %N
+  %r = udiv exact %x, %s
+
+=>
+  %s = shl i13 1, %N
+  %r = lshr exact %x, %N
+
+-/
+theorem alive_891_exact: forall (N x : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 13)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 13 (1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 13 (N)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 13 %v3;
+  %v5 := op:const (Bitvec.ofInt 13 (x)) %v0;
+  %v6 := pair:%v5 %v4;
+  %v7 := op:udiv 13 %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 13)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 13 (1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 13 (N)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 13 %v3;
+  %v5 := op:const (Bitvec.ofInt 13 (x)) %v0;
+  %v6 := pair:%v5 %v2;
+  %v7 := op:lshr 13 %v6
+  dsl_ret %v7
+  ]
+  := by
+     simp_mlir
+     apply bitvec_891_exact
+
 -- Name:1030
 -- precondition: true
 /-
@@ -4390,7 +4150,7 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (c Y X : Nat), TSSA.eval
   %r = sub 0, %X
 
 -/
-theorem alive_1030 : forall (w : Nat) (X : Nat), TSSA.eval
+theorem alive_1030 : forall (w : Nat) (X : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4418,239 +4178,705 @@ theorem alive_1030 : forall (w : Nat) (X : Nat), TSSA.eval
      simp_mlir
      apply bitvec_1030 
 
--- Name:Select:846
+
+-- Name:Select:485-2
 -- precondition: true
 /-
-  %A = select i1 %B, true, %C
+  %c = icmp ult i32 %x, 0
+  %r = select i1 %c, %A, %B
 
 =>
-  %A = or %B, %C
+  %c = icmp ult i32 %x, 0
+  %r = %B
 
 -/
-theorem alive_Select_846: forall (B C : Nat), TSSA.eval
+theorem alive_Select_485_2 : forall (w : Nat) (x A B : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const  (Vector.cons true Vector.nil) %v0;
-  %v3 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v4 := triple:%v1 %v2 %v3;
-  %v5 := op:select 1 %v4
-  dsl_ret %v5
+  %v1 := op:const (Bitvec.ofInt 32 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 32 (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp ult  32 %v3;
+  %v5 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v6 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v7 := triple:%v4 %v5 %v6;
+  %v8 := op:select w %v7
+  dsl_ret %v8
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C)) %v0;
+  %v1 := op:const (Bitvec.ofInt 32 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 32 (0)) %v0;
   %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3
-  dsl_ret %v4
+  %v4 := op:icmp ult  32 %v3;
+  %v5 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v6 := op:copy w %v5
+  dsl_ret %v6
   ]
   := by
      simp_mlir
-     apply bitvec_Select_846
+     apply bitvec_Select_485_2 
 
--- Name:Select:850
+-- Name:Select:489-2
 -- precondition: true
 /-
-  %A = select i1 %B, false, %C
+  %c = icmp ugt i32 %x, -1
+  %r = select i1 %c, %A, %B
 
 =>
-  %notb = xor i1 %B, true
-  %A = and %notb, %C
+  %c = icmp ugt i32 %x, -1
+  %r = %B
 
 -/
-theorem alive_Select_850: forall (B C : Nat), TSSA.eval
+theorem alive_Select_489_2 : forall (w : Nat) (x A B : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const  (Vector.cons false Vector.nil) %v0;
-  %v3 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v4 := triple:%v1 %v2 %v3;
-  %v5 := op:select 1 %v4
-  dsl_ret %v5
+  %v1 := op:const (Bitvec.ofInt 32 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 32 (-1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp ugt  32 %v3;
+  %v5 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v6 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v7 := triple:%v4 %v5 %v6;
+  %v8 := op:select w %v7
+  dsl_ret %v8
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const  (Vector.cons true Vector.nil) %v0;
+  %v1 := op:const (Bitvec.ofInt 32 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 32 (-1)) %v0;
   %v3 := pair:%v1 %v2;
-  %v4 := op:xor 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v6 := pair:%v4 %v5;
-  %v7 := op:and 1 %v6
+  %v4 := op:icmp ugt  32 %v3;
+  %v5 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v6 := op:copy w %v5
+  dsl_ret %v6
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_489_2 
+
+-- Name:Select:637
+-- precondition: true
+/-
+  %c = icmp eq %X, C
+  %r = select i1 %c, %X, %Y
+
+=>
+  %c = icmp eq %X, C
+  %r = select i1 %c, C, %Y
+
+-/
+theorem alive_Select_637 : forall (w : Nat) (X C Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp eq  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v6 := triple:%v4 %v1 %v5;
+  %v7 := op:select w %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp eq  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v6 := triple:%v4 %v2 %v5;
+  %v7 := op:select w %v6
   dsl_ret %v7
   ]
   := by
      simp_mlir
-     apply bitvec_Select_850
+     apply bitvec_Select_637 
 
--- Name:Select:855
+-- Name:Select:641
 -- precondition: true
 /-
-  %A = select i1 %B, %C, false
+  %c = icmp ne %X, C
+  %r = select i1 %c, %Y, %X
 
 =>
-  %A = and %B, %C
+  %c = icmp ne %X, C
+  %r = select i1 %c, %Y, C
 
 -/
-theorem alive_Select_855: forall (B C : Nat), TSSA.eval
+theorem alive_Select_641 : forall (w : Nat) (X C Y : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v3 := op:const  (Vector.cons false Vector.nil) %v0;
-  %v4 := triple:%v1 %v2 %v3;
-  %v5 := op:select 1 %v4
-  dsl_ret %v5
+  %v1 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp ne  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v6 := triple:%v4 %v5 %v1;
+  %v7 := op:select w %v6
+  dsl_ret %v7
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C)) %v0;
+  %v1 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (C)) %v0;
   %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3
-  dsl_ret %v4
-  ]
-  := by
-     simp_mlir
-     apply bitvec_Select_855
-
--- Name:Select:859
--- precondition: true
-/-
-  %A = select i1 %B, %C, true
-
-=>
-  %notb = xor i1 %B, true
-  %A = or %notb, %C
-
--/
-theorem alive_Select_859: forall (B C : Nat), TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v3 := op:const  (Vector.cons true Vector.nil) %v0;
-  %v4 := triple:%v1 %v2 %v3;
-  %v5 := op:select 1 %v4
-  dsl_ret %v5
-  ]  ⊑
-  TSSA.eval
-  (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
-  [dsl_bb|
-  ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (B)) %v0;
-  %v2 := op:const  (Vector.cons true Vector.nil) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:xor 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (C)) %v0;
-  %v6 := pair:%v4 %v5;
-  %v7 := op:or 1 %v6
+  %v4 := op:icmp ne  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v6 := triple:%v4 %v5 %v2;
+  %v7 := op:select w %v6
   dsl_ret %v7
   ]
   := by
      simp_mlir
-     apply bitvec_Select_859
+     apply bitvec_Select_641 
 
--- Name:Select:851
+-- Name:Select:699
 -- precondition: true
 /-
-  %r = select i1 %a, %b, %a
+  %c = icmp uge %A, %B
+  %umax = select i1 %c, %A, %B
+  %c2 = icmp uge %umax, %B
+  %umax2 = select i1 %c2, %umax, %B
 
 =>
-  %r = and %a, %b
+  %c = icmp uge %A, %B
+  %umax = select i1 %c, %A, %B
+  %c2 = icmp uge %umax, %B
+  %umax2 = select i1 %c, %A, %B
 
 -/
-theorem alive_Select_851: forall (a b : Nat), TSSA.eval
+theorem alive_Select_699 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := triple:%v1 %v2 %v1;
-  %v4 := op:select 1 %v3
-  dsl_ret %v4
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp uge  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:icmp uge  w %v7;
+  %v9 := triple:%v8 %v6 %v2;
+  %v10 := op:select w %v9
+  dsl_ret %v10
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
   %v3 := pair:%v1 %v2;
-  %v4 := op:and 1 %v3
-  dsl_ret %v4
+  %v4 := op:icmp uge  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:icmp uge  w %v7;
+  %v9 := triple:%v4 %v1 %v2;
+  %v10 := op:select w %v9
+  dsl_ret %v10
   ]
   := by
      simp_mlir
-     apply bitvec_Select_851
+     apply bitvec_Select_699 
 
--- Name:Select:852
+-- Name:Select:700
 -- precondition: true
 /-
-  %r = select i1 %a, %a, %b
+  %c = icmp slt %A, %B
+  %smin = select i1 %c, %A, %B
+  %c2 = icmp slt %smin, %B
+  %smin2 = select i1 %c2, %smin, %B
 
 =>
-  %r = or %a, %b
+  %c = icmp slt %A, %B
+  %smin = select i1 %c, %A, %B
+  %c2 = icmp slt %smin, %B
+  %smin2 = select i1 %c, %A, %B
 
 -/
-theorem alive_Select_852: forall (a b : Nat), TSSA.eval
+theorem alive_Select_700 : forall (w : Nat) (A B : Int), TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
-  %v3 := triple:%v1 %v1 %v2;
-  %v4 := op:select 1 %v3
-  dsl_ret %v4
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp slt  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:icmp slt  w %v7;
+  %v9 := triple:%v8 %v6 %v2;
+  %v10 := op:select w %v9
+  dsl_ret %v10
   ]  ⊑
   TSSA.eval
   (Op := Op) (e := e)
-  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 1)))
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (a)) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (b)) %v0;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
   %v3 := pair:%v1 %v2;
-  %v4 := op:or 1 %v3
-  dsl_ret %v4
+  %v4 := op:icmp slt  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v2;
+  %v8 := op:icmp slt  w %v7;
+  %v9 := triple:%v4 %v1 %v2;
+  %v10 := op:select w %v9
+  dsl_ret %v10
   ]
   := by
      simp_mlir
-     apply bitvec_Select_852
+     apply bitvec_Select_700 
+
+-- Name:Select:704
+-- precondition: true
+/-
+  %c = icmp slt %A, %B
+  %smin = select i1 %c, %A, %B
+  %c2 = icmp sge %smin, %A
+  %smax = select i1 %c2, %smin, %A
+
+=>
+  %c = icmp slt %A, %B
+  %smin = select i1 %c, %A, %B
+  %c2 = icmp sge %smin, %A
+  %smax = %A
+
+-/
+theorem alive_Select_704 : forall (w : Nat) (A B : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp slt  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v1;
+  %v8 := op:icmp sge  w %v7;
+  %v9 := triple:%v8 %v6 %v1;
+  %v10 := op:select w %v9
+  dsl_ret %v10
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp slt  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v1;
+  %v8 := op:icmp sge  w %v7;
+  %v9 := op:copy w %v1
+  dsl_ret %v9
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_704 
+
+-- Name:Select:705
+-- precondition: true
+/-
+  %c = icmp sge %A, %B
+  %umax = select i1 %c, %A, %B
+  %c2 = icmp slt %umax, %A
+  %umin = select i1 %c2, %umax, %A
+
+=>
+  %c = icmp sge %A, %B
+  %umax = select i1 %c, %A, %B
+  %c2 = icmp slt %umax, %A
+  %umin = %A
+
+-/
+theorem alive_Select_705 : forall (w : Nat) (A B : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sge  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v1;
+  %v8 := op:icmp slt  w %v7;
+  %v9 := triple:%v8 %v6 %v1;
+  %v10 := op:select w %v9
+  dsl_ret %v10
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (B)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sge  w %v3;
+  %v5 := triple:%v4 %v1 %v2;
+  %v6 := op:select w %v5;
+  %v7 := pair:%v6 %v1;
+  %v8 := op:icmp slt  w %v7;
+  %v9 := op:copy w %v1
+  dsl_ret %v9
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_705 
+
+-- Name:Select:740
+-- precondition: true
+/-
+  %c = icmp sgt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp sgt %abs, -1
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c2, %abs, %minus2
+
+=>
+  %c = icmp sgt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp sgt %abs, -1
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c, %A, %minus
+
+-/
+theorem alive_Select_740 : forall (w : Nat) (A : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sgt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v1 %v7;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp sgt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v12 %v9 %v15;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sgt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v1 %v7;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp sgt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v4 %v1 %v7;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_740 
+
+-- Name:Select:741
+-- precondition: true
+/-
+  %c = icmp sgt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %minus, %A
+  %c2 = icmp sgt %abs, -1
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c2, %minus2, %abs
+
+=>
+  %c = icmp sgt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %minus, %A
+  %c2 = icmp sgt %abs, -1
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c, %minus, %A
+
+-/
+theorem alive_Select_741 : forall (w : Nat) (A : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sgt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v7 %v1;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp sgt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v12 %v15 %v9;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sgt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v7 %v1;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp sgt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v4 %v7 %v1;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_741 
+
+-- Name:Select:746
+-- precondition: true
+/-
+  %c = icmp slt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp sgt %abs, 0
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c2, %abs, %minus2
+
+=>
+  %minus = sub 0, %A
+  %c3 = icmp sgt %A, 0
+  %c = icmp slt %A, 0
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp sgt %abs, 0
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c3, %A, %minus
+
+-/
+theorem alive_Select_746 : forall (w : Nat) (A : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp slt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v1 %v7;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp sgt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v12 %v9 %v15;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sub w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v2 %v5;
+  %v7 := op:icmp sgt  w %v6;
+  %v8 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v9 := pair:%v2 %v8;
+  %v10 := op:icmp slt  w %v9;
+  %v11 := triple:%v10 %v2 %v4;
+  %v12 := op:select w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v12 %v13;
+  %v15 := op:icmp sgt  w %v14;
+  %v16 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v17 := pair:%v16 %v12;
+  %v18 := op:sub w %v17;
+  %v19 := triple:%v7 %v2 %v4;
+  %v20 := op:select w %v19
+  dsl_ret %v20
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_746 
+
+-- Name:Select:747
+-- precondition: true
+/-
+  %c = icmp sgt %A, 0
+  %minus = sub 0, %A
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp slt %abs, 0
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c2, %abs, %minus2
+
+=>
+  %minus = sub 0, %A
+  %c3 = icmp slt %A, 0
+  %c = icmp sgt %A, 0
+  %abs = select i1 %c, %A, %minus
+  %c2 = icmp slt %abs, 0
+  %minus2 = sub 0, %abs
+  %abs2 = select i1 %c3, %A, %minus
+
+-/
+theorem alive_Select_747 : forall (w : Nat) (A : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:icmp sgt  w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v5 %v1;
+  %v7 := op:sub w %v6;
+  %v8 := triple:%v4 %v1 %v7;
+  %v9 := op:select w %v8;
+  %v10 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:icmp slt  w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v13 %v9;
+  %v15 := op:sub w %v14;
+  %v16 := triple:%v12 %v9 %v15;
+  %v17 := op:select w %v16
+  dsl_ret %v17
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (Bitvec.ofInt w (A)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sub w %v3;
+  %v5 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v6 := pair:%v2 %v5;
+  %v7 := op:icmp slt  w %v6;
+  %v8 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v9 := pair:%v2 %v8;
+  %v10 := op:icmp sgt  w %v9;
+  %v11 := triple:%v10 %v2 %v4;
+  %v12 := op:select w %v11;
+  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v14 := pair:%v12 %v13;
+  %v15 := op:icmp slt  w %v14;
+  %v16 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v17 := pair:%v16 %v12;
+  %v18 := op:sub w %v17;
+  %v19 := triple:%v7 %v2 %v4;
+  %v20 := op:select w %v19
+  dsl_ret %v20
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_747 
+
 
 
 -- Name:Select:962
@@ -4667,7 +4893,7 @@ theorem alive_Select_852: forall (a b : Nat), TSSA.eval
   %r = add %x, %yz
 
 -/
-theorem alive_Select_962 : forall (w : Nat) (x y z c : Nat), TSSA.eval
+theorem alive_Select_962 : forall (w : Nat) (x y z c : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4709,6 +4935,122 @@ theorem alive_Select_962 : forall (w : Nat) (x y z c : Nat), TSSA.eval
      simp_mlir
      apply bitvec_Select_962 
 
+-- Name:Select:967a
+-- precondition: true
+/-
+  %sum = add i9 %x, %y
+  %dif = sub %x, %y
+  %r = select i1 %c, %sum, %dif
+
+=>
+  %neg = sub 0, %y
+  %sel = select i1 %c, %y, %neg
+  %sum = add i9 %x, %y
+  %dif = sub %x, %y
+  %r = add %x, %sel
+
+-/
+theorem alive_Select_967a: forall (x y c : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:add 9 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:sub 9 %v5;
+  %v7 := op:const (Bitvec.ofInt 1 (c)) %v0;
+  %v8 := triple:%v7 %v4 %v6;
+  %v9 := op:select 9 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (0)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sub 9 %v3;
+  %v5 := op:const (Bitvec.ofInt 1 (c)) %v0;
+  %v6 := triple:%v5 %v2 %v4;
+  %v7 := op:select 9 %v6;
+  %v8 := op:const (Bitvec.ofInt 9 (x)) %v0;
+  %v9 := pair:%v8 %v2;
+  %v10 := op:add 9 %v9;
+  %v11 := pair:%v8 %v2;
+  %v12 := op:sub 9 %v11;
+  %v13 := pair:%v8 %v7;
+  %v14 := op:add 9 %v13
+  dsl_ret %v14
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_967a
+
+-- Name:Select:967b
+-- precondition: true
+/-
+  %sum = sub i9 %x, %y
+  %dif = add %x, %y
+  %r = select i1 %c, %sum, %dif
+
+=>
+  %neg = sub 0, %y
+  %sel = select i1 %c, %neg, %y
+  %sum = sub i9 %x, %y
+  %dif = add %x, %y
+  %r = add %x, %sel
+
+-/
+theorem alive_Select_967b: forall (x y c : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (x)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sub 9 %v3;
+  %v5 := pair:%v1 %v2;
+  %v6 := op:add 9 %v5;
+  %v7 := op:const (Bitvec.ofInt 1 (c)) %v0;
+  %v8 := triple:%v7 %v4 %v6;
+  %v9 := op:select 9 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 9)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 9 (0)) %v0;
+  %v2 := op:const (Bitvec.ofInt 9 (y)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:sub 9 %v3;
+  %v5 := op:const (Bitvec.ofInt 1 (c)) %v0;
+  %v6 := triple:%v5 %v4 %v2;
+  %v7 := op:select 9 %v6;
+  %v8 := op:const (Bitvec.ofInt 9 (x)) %v0;
+  %v9 := pair:%v8 %v2;
+  %v10 := op:sub 9 %v9;
+  %v11 := pair:%v8 %v2;
+  %v12 := op:add 9 %v11;
+  %v13 := pair:%v8 %v7;
+  %v14 := op:add 9 %v13
+  dsl_ret %v14
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_967b
+
 -- Name:Select:1070
 -- precondition: true
 /-
@@ -4720,7 +5062,7 @@ theorem alive_Select_962 : forall (w : Nat) (x y z c : Nat), TSSA.eval
   %r = select i1 %c, %W, %Y
 
 -/
-theorem alive_Select_1070 : forall (w : Nat) (c W Z Y : Nat), TSSA.eval
+theorem alive_Select_1070 : forall (w : Nat) (c W Z Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4767,7 +5109,7 @@ theorem alive_Select_1070 : forall (w : Nat) (c W Z Y : Nat), TSSA.eval
   %r = select i1 %c, %X, %Z
 
 -/
-theorem alive_Select_1078 : forall (w : Nat) (c W Z X : Nat), TSSA.eval
+theorem alive_Select_1078 : forall (w : Nat) (c W Z X : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4803,6 +5145,53 @@ theorem alive_Select_1078 : forall (w : Nat) (c W Z X : Nat), TSSA.eval
      simp_mlir
      apply bitvec_Select_1078 
 
+-- Name:Select:1087
+-- precondition: true
+/-
+  %c = xor i1 %val, true
+  %r = select i1 %c, %X, %Y
+
+=>
+  %c = xor i1 %val, true
+  %r = select i1 %val, %Y, %X
+
+-/
+theorem alive_Select_1087 : forall (w : Nat) (val X Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 1 (val)) %v0;
+  %v2 := op:const  (Vector.cons true Vector.nil) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:xor 1 %v3;
+  %v5 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v6 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v7 := triple:%v4 %v5 %v6;
+  %v8 := op:select w %v7
+  dsl_ret %v8
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 1 (val)) %v0;
+  %v2 := op:const  (Vector.cons true Vector.nil) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:xor 1 %v3;
+  %v5 := op:const (Bitvec.ofInt w (Y)) %v0;
+  %v6 := op:const (Bitvec.ofInt w (X)) %v0;
+  %v7 := triple:%v1 %v5 %v6;
+  %v8 := op:select w %v7
+  dsl_ret %v8
+  ]
+  := by
+     simp_mlir
+     apply bitvec_Select_1087 
+
 -- Name:Select:1100
 -- precondition: true
 /-
@@ -4812,7 +5201,7 @@ theorem alive_Select_1078 : forall (w : Nat) (c W Z X : Nat), TSSA.eval
   %r = %X
 
 -/
-theorem alive_Select_1100 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_Select_1100 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4848,7 +5237,7 @@ theorem alive_Select_1100 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = %Y
 
 -/
-theorem alive_Select_1105 : forall (w : Nat) (X Y : Nat), TSSA.eval
+theorem alive_Select_1105 : forall (w : Nat) (X Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4886,7 +5275,7 @@ theorem alive_Select_1105 : forall (w : Nat) (X Y : Nat), TSSA.eval
   %r = and %X, (-1 u>> C)
 
 -/
-theorem alive_InstCombineShift__239 : forall (w : Nat) (X C : Nat), TSSA.eval
+theorem alive_InstCombineShift__239 : forall (w : Nat) (X C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4932,7 +5321,7 @@ theorem alive_InstCombineShift__239 : forall (w : Nat) (X C : Nat), TSSA.eval
   %r = and %X, (-1 << C)
 
 -/
-theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Nat), TSSA.eval
+theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -4967,6 +5356,173 @@ theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Nat), TSSA.eval
      simp_mlir
      apply bitvec_InstCombineShift__279 
 
+-- Name:InstCombineShift: 351
+-- precondition: true
+/-
+  %Op0 = mul i7 %X, C1
+  %r = shl %Op0, C2
+
+=>
+  %Op0 = mul i7 %X, C1
+  %r = mul %X, (C1 << C2)
+
+-/
+theorem alive_InstCombineShift__351: forall (X C1 C2 : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 7)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 7 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 7 (C1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:mul 7 %v3;
+  %v5 := op:const (Bitvec.ofInt 7 (C2)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:shl 7 %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 7)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 7 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 7 (C1)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:mul 7 %v3;
+  %v5 := op:const (Bitvec.ofInt 7 (C2)) %v0;
+  %v6 := pair:%v2 %v5;
+  %v7 := op:shl 7 %v6;
+  %v8 := pair:%v1 %v7;
+  %v9 := op:mul 7 %v8
+  dsl_ret %v9
+  ]
+  := by
+     simp_mlir
+     apply bitvec_InstCombineShift__351
+
+-- Name:InstCombineShift: 422-1
+-- precondition: true
+/-
+  %Op1 = lshr i31 %X, C
+  %Op0 = add %Y, %Op1
+  %r = shl %Op0, C
+
+=>
+  %s = shl %Y, C
+  %a = add %s, %X
+  %Op1 = lshr i31 %X, C
+  %Op0 = add %Y, %Op1
+  %r = and %a, (-1 << C)
+
+-/
+theorem alive_InstCombineShift__422_1: forall (X C Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:lshr 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v6 := pair:%v5 %v4;
+  %v7 := op:add 31 %v6;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:shl 31 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:add 31 %v6;
+  %v8 := pair:%v5 %v2;
+  %v9 := op:lshr 31 %v8;
+  %v10 := pair:%v1 %v9;
+  %v11 := op:add 31 %v10;
+  %v12 := op:const (Bitvec.ofInt 31 (-1)) %v0;
+  %v13 := pair:%v12 %v2;
+  %v14 := op:shl 31 %v13;
+  %v15 := pair:%v7 %v14;
+  %v16 := op:and 31 %v15
+  dsl_ret %v16
+  ]
+  := by
+     simp_mlir
+     apply bitvec_InstCombineShift__422_1
+
+-- Name:InstCombineShift: 422-2
+-- precondition: true
+/-
+  %Op1 = ashr i31 %X, C
+  %Op0 = add %Y, %Op1
+  %r = shl %Op0, C
+
+=>
+  %s = shl %Y, C
+  %a = add %s, %X
+  %Op1 = ashr i31 %X, C
+  %Op0 = add %Y, %Op1
+  %r = and %a, (-1 << C)
+
+-/
+theorem alive_InstCombineShift__422_2: forall (X C Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:ashr 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v6 := pair:%v5 %v4;
+  %v7 := op:add 31 %v6;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:shl 31 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:add 31 %v6;
+  %v8 := pair:%v5 %v2;
+  %v9 := op:ashr 31 %v8;
+  %v10 := pair:%v1 %v9;
+  %v11 := op:add 31 %v10;
+  %v12 := op:const (Bitvec.ofInt 31 (-1)) %v0;
+  %v13 := pair:%v12 %v2;
+  %v14 := op:shl 31 %v13;
+  %v15 := pair:%v7 %v14;
+  %v16 := op:and 31 %v15
+  dsl_ret %v16
+  ]
+  := by
+     simp_mlir
+     apply bitvec_InstCombineShift__422_2
+
 -- Name:InstCombineShift: 440
 -- precondition: true
 /-
@@ -4984,7 +5540,7 @@ theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Nat), TSSA.eval
   %r = xor %a, %y2
 
 -/
-theorem alive_InstCombineShift__440 : forall (w : Nat) (X C C2 Y : Nat), TSSA.eval
+theorem alive_InstCombineShift__440 : forall (w : Nat) (X C C2 Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -5034,6 +5590,66 @@ theorem alive_InstCombineShift__440 : forall (w : Nat) (X C C2 Y : Nat), TSSA.ev
      simp_mlir
      apply bitvec_InstCombineShift__440 
 
+-- Name:InstCombineShift: 458
+-- precondition: true
+/-
+  %s = ashr i31 %X, C
+  %Op0 = sub %s, %Y
+  %r = shl %Op0, C
+
+=>
+  %s2 = shl %Y, C
+  %a = sub %X, %s2
+  %s = ashr i31 %X, C
+  %Op0 = sub %s, %Y
+  %r = and %a, (-1 << C)
+
+-/
+theorem alive_InstCombineShift__458: forall (X C Y : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:ashr 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:sub 31 %v6;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:shl 31 %v8
+  dsl_ret %v9
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (Y)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (C)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (X)) %v0;
+  %v6 := pair:%v5 %v4;
+  %v7 := op:sub 31 %v6;
+  %v8 := pair:%v5 %v2;
+  %v9 := op:ashr 31 %v8;
+  %v10 := pair:%v9 %v1;
+  %v11 := op:sub 31 %v10;
+  %v12 := op:const (Bitvec.ofInt 31 (-1)) %v0;
+  %v13 := pair:%v12 %v2;
+  %v14 := op:shl 31 %v13;
+  %v15 := pair:%v7 %v14;
+  %v16 := op:and 31 %v15
+  dsl_ret %v16
+  ]
+  := by
+     simp_mlir
+     apply bitvec_InstCombineShift__458
+
 -- Name:InstCombineShift: 476
 -- precondition: true
 /-
@@ -5051,7 +5667,7 @@ theorem alive_InstCombineShift__440 : forall (w : Nat) (X C C2 Y : Nat), TSSA.ev
   %r = or %a, %s2
 
 -/
-theorem alive_InstCombineShift__476 : forall (w : Nat) (X C C2 Y : Nat), TSSA.eval
+theorem alive_InstCombineShift__476 : forall (w : Nat) (X C C2 Y : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -5113,7 +5729,7 @@ theorem alive_InstCombineShift__476 : forall (w : Nat) (X C C2 Y : Nat), TSSA.ev
   %r = xor %s2, (C2 u>> C)
 
 -/
-theorem alive_InstCombineShift__497 : forall (w : Nat) (X C2 C : Nat), TSSA.eval
+theorem alive_InstCombineShift__497 : forall (w : Nat) (X C2 C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -5151,7 +5767,7 @@ theorem alive_InstCombineShift__497 : forall (w : Nat) (X C2 C : Nat), TSSA.eval
      simp_mlir
      apply bitvec_InstCombineShift__497 
 
--- Name:InstCombineShift: 497
+-- Name:InstCombineShift: 497'''
 -- precondition: true
 /-
   %Op0 = add %X, C2
@@ -5163,7 +5779,7 @@ theorem alive_InstCombineShift__497 : forall (w : Nat) (X C2 C : Nat), TSSA.eval
   %r = add %s2, (C2 << C)
 
 -/
-theorem alive_InstCombineShift__497' : forall (w : Nat) (X C2 C : Nat), TSSA.eval
+theorem alive_InstCombineShift__497''' : forall (w : Nat) (X C2 C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -5199,7 +5815,7 @@ theorem alive_InstCombineShift__497' : forall (w : Nat) (X C2 C : Nat), TSSA.eva
   ]
   := by
      simp_mlir
-     apply bitvec_InstCombineShift__497' 
+     apply bitvec_InstCombineShift__497''' 
 
 -- Name:InstCombineShift: 582
 -- precondition: true
@@ -5212,7 +5828,7 @@ theorem alive_InstCombineShift__497' : forall (w : Nat) (X C2 C : Nat), TSSA.eva
   %r = and %X, (-1 u>> C)
 
 -/
-theorem alive_InstCombineShift__582 : forall (w : Nat) (X C : Nat), TSSA.eval
+theorem alive_InstCombineShift__582 : forall (w : Nat) (X C : Int), TSSA.eval
   (Op := Op) (e := e)
   (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
@@ -5246,3 +5862,50 @@ theorem alive_InstCombineShift__582 : forall (w : Nat) (X C : Nat), TSSA.eval
   := by
      simp_mlir
      apply bitvec_InstCombineShift__582 
+
+-- Name:InstCombineShift: 724
+-- precondition: true
+/-
+  %Op0 = shl i31 C1, %A
+  %r = shl %Op0, C2
+
+=>
+  %Op0 = shl i31 C1, %A
+  %r = shl (C1 << C2), %A
+
+-/
+theorem alive_InstCombineShift__724: forall (C1 A C2 : Int), TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (C1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (A)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (C2)) %v0;
+  %v6 := pair:%v4 %v5;
+  %v7 := op:shl 31 %v6
+  dsl_ret %v7
+  ]  ⊑
+  TSSA.eval
+  (Op := Op) (e := e)
+  (i := TSSAIndex.TERMINATOR (UserType.base (BaseType.bitvec 31)))
+  [dsl_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Bitvec.ofInt 31 (C1)) %v0;
+  %v2 := op:const (Bitvec.ofInt 31 (A)) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:shl 31 %v3;
+  %v5 := op:const (Bitvec.ofInt 31 (C2)) %v0;
+  %v6 := pair:%v1 %v5;
+  %v7 := op:shl 31 %v6;
+  %v8 := pair:%v7 %v2;
+  %v9 := op:shl 31 %v8
+  dsl_ret %v9
+  ]
+  := by
+     simp_mlir
+     apply bitvec_InstCombineShift__724
