@@ -120,8 +120,8 @@ def eval (o : Op)
     | Op.ashr _ => pairMapM (fun fst snd => Bitvec.sshr fst snd.toNat) arg
     | Op.const c => Option.some c
     | Op.sub _ => pairMapM Bitvec.sub arg
-    | Op.add _ => pairBind Bitvec.add? arg
-    | Op.mul _ => pairBind Bitvec.mul? arg
+    | Op.add _ => pairMapM Bitvec.add arg
+    | Op.mul _ => pairMapM Bitvec.mul arg
     | Op.sdiv _ => pairBind Bitvec.sdiv? arg
     | Op.udiv _ => pairBind Bitvec.udiv? arg
     | Op.urem _ => pairBind Bitvec.urem? arg
