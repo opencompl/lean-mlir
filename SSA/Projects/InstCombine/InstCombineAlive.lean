@@ -1,10 +1,10 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Tactic
+import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.InstCombineBase
 import SSA.Projects.InstCombine.InstCombineAliveStatements
 
 open SSA InstCombine EDSL
-
 
 -- Name:AddSub:1043
 -- precondition: true
@@ -67,6 +67,7 @@ theorem alive_AddSub_1043 : forall (w : Nat) (Z C1 RHS : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1043 
 
 -- Name:AddSub:1152
@@ -104,6 +105,7 @@ theorem alive_AddSub_1152: forall (x y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1152
 
 -- Name:AddSub:1156
@@ -140,6 +142,7 @@ theorem alive_AddSub_1156 : forall (w : Nat) (b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1156 
 
 -- Name:AddSub:1156-2
@@ -176,6 +179,7 @@ theorem alive_AddSub_1156_2 : forall (w : Nat) (b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1156_2 
 
 -- Name:AddSub:1156-3
@@ -212,6 +216,7 @@ theorem alive_AddSub_1156_3 : forall (w : Nat) (b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1156_3 
 
 -- Name:AddSub:1164
@@ -257,6 +262,7 @@ theorem alive_AddSub_1164 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1164 
 
 -- Name:AddSub:1165
@@ -314,6 +320,7 @@ theorem alive_AddSub_1165 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1165 
 
 -- Name:AddSub:1176
@@ -359,6 +366,7 @@ theorem alive_AddSub_1176 : forall (w : Nat) (b a : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1176 
 
 -- Name:AddSub:1202
@@ -407,6 +415,7 @@ theorem alive_AddSub_1202 : forall (w : Nat) (x C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1202 
 
 -- Name:AddSub:1295
@@ -456,6 +465,7 @@ theorem alive_AddSub_1295 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1295 
 
 -- Name:AddSub:1309
@@ -505,6 +515,7 @@ theorem alive_AddSub_1309 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1309 
 
 -- Name:AddSub:1309-2
@@ -554,6 +565,7 @@ theorem alive_AddSub_1309_2 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1309_2 
 
 -- Name:AddSub:1309-3
@@ -603,6 +615,7 @@ theorem alive_AddSub_1309_3 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1309_3 
 
 -- Name:AddSub:1539
@@ -648,6 +661,7 @@ theorem alive_AddSub_1539 : forall (w : Nat) (a x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1539 
 
 -- Name:AddSub:1539-2
@@ -686,6 +700,7 @@ theorem alive_AddSub_1539_2 : forall (w : Nat) (x C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1539_2 
 
 -- Name:AddSub:1546
@@ -731,6 +746,7 @@ theorem alive_AddSub_1546 : forall (w : Nat) (a x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1546 
 
 -- Name:AddSub:1556
@@ -768,6 +784,7 @@ theorem alive_AddSub_1556: forall (x y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1556
 
 -- Name:AddSub:1560
@@ -805,6 +822,7 @@ theorem alive_AddSub_1560 : forall (w : Nat) (a : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1560 
 
 -- Name:AddSub:1564
@@ -853,6 +871,7 @@ theorem alive_AddSub_1564 : forall (w : Nat) (x C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1564 
 
 -- Name:AddSub:1574
@@ -900,6 +919,7 @@ theorem alive_AddSub_1574 : forall (w : Nat) (X C2 C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1574 
 
 -- Name:AddSub:1614
@@ -944,6 +964,7 @@ theorem alive_AddSub_1614 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1614 
 
 -- Name:AddSub:1619
@@ -988,6 +1009,7 @@ theorem alive_AddSub_1619 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1619 
 
 -- Name:AddSub:1624
@@ -1037,6 +1059,7 @@ theorem alive_AddSub_1624 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AddSub_1624 
 
 -- Name:AndOrXor:135
@@ -1087,6 +1110,7 @@ theorem alive_AndOrXor_135 : forall (w : Nat) (X C1 C2 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_135 
 
 -- Name:AndOrXor:144
@@ -1137,6 +1161,7 @@ theorem alive_AndOrXor_144 : forall (w : Nat) (X C1 C2 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_144 
 
 
@@ -1195,6 +1220,7 @@ theorem alive_AndOrXor_1230__A__B___A__B : forall (w : Nat) (notOp0 notOp1 : Int
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1230__A__B___A__B 
 
 -- Name:AndOrXor:1241 (A|B) & ~(A&B) => A^B
@@ -1252,6 +1278,7 @@ theorem alive_AndOrXor_1241_AB__AB__AB : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1241_AB__AB__AB 
 
 -- Name:AndOrXor:1247 ~(A&B) & (A|B) => A^B
@@ -1309,6 +1336,7 @@ theorem alive_AndOrXor_1247_AB__AB__AB : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1247_AB__AB__AB 
 
 -- Name:AndOrXor:1253 A & (A^B) -> A & ~B
@@ -1356,6 +1384,7 @@ theorem alive_AndOrXor_1253_A__AB___A__B : forall (w : Nat) (A B : Int), TSSA.ev
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1253_A__AB___A__B 
 
 -- Name:AndOrXor:1280 (~A|B)&A -> A&B
@@ -1407,6 +1436,7 @@ theorem alive_AndOrXor_1280_ABA___AB : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1280_ABA___AB 
 
 -- Name:AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
@@ -1468,6 +1498,7 @@ theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C : forall (w : Nat) (A B C : 
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:1294 (A | B) & ((~A) ^ B) -> (A & B)
@@ -1525,6 +1556,7 @@ theorem alive_AndOrXor_1294_A__B__A__B___A__B : forall (w : Nat) (A B : Int), TS
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_1294_A__B__A__B___A__B 
 
 
@@ -1579,6 +1611,7 @@ theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 : forall (w : Nat) (x C1
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 
 
 -- Name:AndOrXor:2113   ((~A & B) | A) -> (A | B)
@@ -1630,6 +1663,7 @@ theorem alive_AndOrXor_2113___A__B__A___A__B : forall (w : Nat) (A B : Int), TSS
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2113___A__B__A___A__B 
 
 -- Name:AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
@@ -1681,6 +1715,7 @@ theorem alive_AndOrXor_2118___A__B__A___A__B : forall (w : Nat) (A B : Int), TSS
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2118___A__B__A___A__B 
 
 -- Name:AndOrXor:2123   (A & (~B)) | (A ^ B) -> (A ^ B)
@@ -1738,6 +1773,7 @@ theorem alive_AndOrXor_2123___A__B__A__B___A__B : forall (w : Nat) (B A : Int), 
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2123___A__B__A__B___A__B 
 
 -- Name:AndOrXor:2188
@@ -1803,6 +1839,7 @@ theorem alive_AndOrXor_2188 : forall (w : Nat) (D A : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2188 
 
 -- Name:AndOrXor:2231  (A ^ B) | ((B ^ C) ^ A) -> (A ^ B) | C
@@ -1860,6 +1897,7 @@ theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C : forall (w : Nat) (A B C :
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
@@ -1914,6 +1952,7 @@ theorem alive_AndOrXor_2243__B__C__A__B___B__A__C : forall (w : Nat) (B C A : In
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2243__B__C__A__B___B__A__C 
 
 -- Name:AndOrXor:2247  (~A | ~B) == (~(A & B))
@@ -1971,6 +2010,7 @@ theorem alive_AndOrXor_2247__A__B__A__B : forall (w : Nat) (A B : Int), TSSA.eva
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2247__A__B__A__B 
 
 -- Name:AndOrXor:2263
@@ -2014,6 +2054,7 @@ theorem alive_AndOrXor_2263 : forall (w : Nat) (op0 B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2263 
 
 -- Name:AndOrXor:2264
@@ -2069,6 +2110,7 @@ theorem alive_AndOrXor_2264 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2264 
 
 -- Name:AndOrXor:2265
@@ -2118,6 +2160,7 @@ theorem alive_AndOrXor_2265 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2265 
 
 -- Name:AndOrXor:2284
@@ -2173,6 +2216,7 @@ theorem alive_AndOrXor_2284 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2284 
 
 -- Name:AndOrXor:2285
@@ -2228,6 +2272,7 @@ theorem alive_AndOrXor_2285 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2285 
 
 -- Name:AndOrXor:2297
@@ -2285,6 +2330,7 @@ theorem alive_AndOrXor_2297 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2297 
 
 -- Name:AndOrXor:2367
@@ -2333,6 +2379,7 @@ theorem alive_AndOrXor_2367 : forall (w : Nat) (A C1 op1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2367 
 
 -- Name:AndOrXor:2375
@@ -2394,6 +2441,7 @@ theorem alive_AndOrXor_2375 : forall (w : Nat) (x A B C D : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2375 
 
 -- Name:AndOrXor:2416
@@ -2450,6 +2498,7 @@ theorem alive_AndOrXor_2416 : forall (w : Nat) (nx y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2416 
 
 -- Name:AndOrXor:2417
@@ -2506,6 +2555,7 @@ theorem alive_AndOrXor_2417 : forall (w : Nat) (nx y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2417 
 
 -- Name:AndOrXor:2429
@@ -2558,6 +2608,7 @@ theorem alive_AndOrXor_2429 : forall (w : Nat) (x y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2429 
 
 -- Name:AndOrXor:2430
@@ -2610,6 +2661,7 @@ theorem alive_AndOrXor_2430 : forall (w : Nat) (x y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2430 
 
 -- Name:AndOrXor:2443
@@ -2662,6 +2714,7 @@ theorem alive_AndOrXor_2443 : forall (w : Nat) (x y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2443 
 
 
@@ -2710,6 +2763,7 @@ theorem alive_AndOrXor_2475 : forall (w : Nat) (C x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2475 
 
 -- Name:AndOrXor:2486
@@ -2757,6 +2811,7 @@ theorem alive_AndOrXor_2486 : forall (w : Nat) (x C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2486 
 
 -- Name:AndOrXor:2581  (B|A)^B -> A & ~B
@@ -2804,6 +2859,7 @@ theorem alive_AndOrXor_2581__BAB___A__B : forall (w : Nat) (a op1 : Int), TSSA.e
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2581__BAB___A__B 
 
 -- Name:AndOrXor:2587  (B&A)^A -> ~B & A
@@ -2851,6 +2907,7 @@ theorem alive_AndOrXor_2587__BAA___B__A : forall (w : Nat) (a op1 : Int), TSSA.e
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2587__BAA___B__A 
 
 -- Name:AndOrXor:2595
@@ -2900,6 +2957,7 @@ theorem alive_AndOrXor_2595 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2595 
 
 -- Name:AndOrXor:2607
@@ -2965,6 +3023,7 @@ theorem alive_AndOrXor_2607 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2607 
 
 -- Name:AndOrXor:2617
@@ -3030,6 +3089,7 @@ theorem alive_AndOrXor_2617 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2617 
 
 -- Name:AndOrXor:2627
@@ -3088,6 +3148,7 @@ theorem alive_AndOrXor_2627 : forall (w : Nat) (a c b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2627 
 
 -- Name:AndOrXor:2647
@@ -3137,6 +3198,7 @@ theorem alive_AndOrXor_2647 : forall (w : Nat) (a b : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2647 
 
 -- Name:AndOrXor:2658
@@ -3200,6 +3262,7 @@ theorem alive_AndOrXor_2658 : forall (w : Nat) (b a : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_AndOrXor_2658 
 
 
@@ -3238,6 +3301,7 @@ theorem alive_152 : forall (w : Nat) (x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_152 
 
 -- Name:160
@@ -3285,6 +3349,7 @@ theorem alive_160: forall (x C2 C1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_160
 
 -- Name:229
@@ -3336,6 +3401,7 @@ theorem alive_229 : forall (w : Nat) (X C1 Op1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_229 
 
 -- Name:239
@@ -3389,6 +3455,7 @@ theorem alive_239 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_239 
 
 -- Name:265
@@ -3431,6 +3498,7 @@ theorem alive_265 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp?
      apply bitvec_265 
 
 -- Name:265-2
@@ -3473,6 +3541,7 @@ theorem alive_265_2 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_265_2 
 
 -- Name:266
@@ -3525,6 +3594,7 @@ theorem alive_266 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_266 
 
 -- Name:266-2
@@ -3577,6 +3647,7 @@ theorem alive_266_2 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_266_2 
 
 -- Name:275
@@ -3623,6 +3694,7 @@ theorem alive_275: forall (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_275
 
 -- Name:275-2
@@ -3669,6 +3741,7 @@ theorem alive_275_2: forall (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_275_2
 
 -- Name:276
@@ -3723,6 +3796,7 @@ theorem alive_276: forall (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_276
 
 -- Name:276-2
@@ -3777,6 +3851,7 @@ theorem alive_276_2: forall (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_276_2
 
 -- Name:283
@@ -3814,6 +3889,7 @@ theorem alive_283: forall (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_283
 
 -- Name:290 & 292
@@ -3859,6 +3935,7 @@ theorem alive_290__292 : forall (w : Nat) (Y Op1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_290__292 
 
 -- Name:SimplifyDivRemOfSelect
@@ -3906,6 +3983,7 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (c Y X : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_SimplifyDivRemOfSelect 
 
 -- Name:805
@@ -3951,6 +4029,7 @@ theorem alive_805 : forall (w : Nat) (X : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_805 
 
 -- Name:820
@@ -4000,6 +4079,7 @@ theorem alive_820: forall (X Op1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_820
 
 -- Name:820'
@@ -4049,6 +4129,7 @@ theorem alive_820': forall (X Op1 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_820'
 
 -- Name:891
@@ -4094,6 +4175,7 @@ theorem alive_891: forall (N x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_891
 
 -- Name:891-exact
@@ -4139,6 +4221,7 @@ theorem alive_891_exact: forall (N x : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_891_exact
 
 -- Name:1030
@@ -4176,6 +4259,7 @@ theorem alive_1030 : forall (w : Nat) (X : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_1030 
 
 
@@ -4222,6 +4306,7 @@ theorem alive_Select_485_2 : forall (w : Nat) (x A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_485_2 
 
 -- Name:Select:489-2
@@ -4267,6 +4352,7 @@ theorem alive_Select_489_2 : forall (w : Nat) (x A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_489_2 
 
 -- Name:Select:637
@@ -4312,6 +4398,7 @@ theorem alive_Select_637 : forall (w : Nat) (X C Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_637 
 
 -- Name:Select:641
@@ -4357,6 +4444,7 @@ theorem alive_Select_641 : forall (w : Nat) (X C Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_641 
 
 -- Name:Select:699
@@ -4412,6 +4500,7 @@ theorem alive_Select_699 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_699 
 
 -- Name:Select:700
@@ -4467,6 +4556,7 @@ theorem alive_Select_700 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_700 
 
 -- Name:Select:704
@@ -4521,6 +4611,7 @@ theorem alive_Select_704 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_704 
 
 -- Name:Select:705
@@ -4575,6 +4666,7 @@ theorem alive_Select_705 : forall (w : Nat) (A B : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_705 
 
 -- Name:Select:740
@@ -4648,6 +4740,7 @@ theorem alive_Select_740 : forall (w : Nat) (A : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_740 
 
 -- Name:Select:741
@@ -4721,6 +4814,7 @@ theorem alive_Select_741 : forall (w : Nat) (A : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_741 
 
 -- Name:Select:746
@@ -4798,6 +4892,7 @@ theorem alive_Select_746 : forall (w : Nat) (A : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_746 
 
 -- Name:Select:747
@@ -4875,6 +4970,7 @@ theorem alive_Select_747 : forall (w : Nat) (A : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_747 
 
 
@@ -4933,6 +5029,7 @@ theorem alive_Select_962 : forall (w : Nat) (x y z c : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_962 
 
 -- Name:Select:967a
@@ -4991,6 +5088,7 @@ theorem alive_Select_967a: forall (x y c : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_967a
 
 -- Name:Select:967b
@@ -5049,6 +5147,7 @@ theorem alive_Select_967b: forall (x y c : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_967b
 
 -- Name:Select:1070
@@ -5096,6 +5195,7 @@ theorem alive_Select_1070 : forall (w : Nat) (c W Z Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_1070 
 
 -- Name:Select:1078
@@ -5143,6 +5243,7 @@ theorem alive_Select_1078 : forall (w : Nat) (c W Z X : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_1078 
 
 -- Name:Select:1087
@@ -5190,6 +5291,7 @@ theorem alive_Select_1087 : forall (w : Nat) (val X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_1087 
 
 -- Name:Select:1100
@@ -5226,6 +5328,7 @@ theorem alive_Select_1100 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_1100 
 
 -- Name:Select:1105
@@ -5262,6 +5365,7 @@ theorem alive_Select_1105 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_Select_1105 
 
 -- Name:InstCombineShift: 239
@@ -5308,6 +5412,7 @@ theorem alive_InstCombineShift__239 : forall (w : Nat) (X C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__239 
 
 -- Name:InstCombineShift: 279
@@ -5354,6 +5459,7 @@ theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__279 
 
 -- Name:InstCombineShift: 351
@@ -5401,6 +5507,7 @@ theorem alive_InstCombineShift__351: forall (X C1 C2 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__351
 
 -- Name:InstCombineShift: 422-1
@@ -5461,6 +5568,7 @@ theorem alive_InstCombineShift__422_1: forall (X C Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__422_1
 
 -- Name:InstCombineShift: 422-2
@@ -5521,6 +5629,7 @@ theorem alive_InstCombineShift__422_2: forall (X C Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__422_2
 
 -- Name:InstCombineShift: 440
@@ -5588,6 +5697,7 @@ theorem alive_InstCombineShift__440 : forall (w : Nat) (X C C2 Y : Int), TSSA.ev
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__440 
 
 -- Name:InstCombineShift: 458
@@ -5648,6 +5758,7 @@ theorem alive_InstCombineShift__458: forall (X C Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__458
 
 -- Name:InstCombineShift: 476
@@ -5715,6 +5826,7 @@ theorem alive_InstCombineShift__476 : forall (w : Nat) (X C C2 Y : Int), TSSA.ev
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__476 
 
 -- Name:InstCombineShift: 497
@@ -5765,6 +5877,7 @@ theorem alive_InstCombineShift__497 : forall (w : Nat) (X C2 C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__497 
 
 -- Name:InstCombineShift: 497'''
@@ -5815,6 +5928,7 @@ theorem alive_InstCombineShift__497''' : forall (w : Nat) (X C2 C : Int), TSSA.e
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__497''' 
 
 -- Name:InstCombineShift: 582
@@ -5861,6 +5975,7 @@ theorem alive_InstCombineShift__582 : forall (w : Nat) (X C : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__582 
 
 -- Name:InstCombineShift: 724
@@ -5908,4 +6023,5 @@ theorem alive_InstCombineShift__724: forall (C1 A C2 : Int), TSSA.eval
   ]
   := by
      simp_mlir
+     simp_alive
      apply bitvec_InstCombineShift__724
