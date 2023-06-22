@@ -3498,7 +3498,7 @@ theorem alive_265 : forall (w : Nat) (X Y : Int), TSSA.eval
   ]
   := by
      simp_mlir
-     simp?
+     simp_alive
      apply bitvec_265 
 
 -- Name:265-2
