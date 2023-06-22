@@ -136,11 +136,17 @@ inductive Context (β : Type) : Type
   | empty : Context β
   | snoc : Context β → Var → (UserType β) → Context β
 
-inductive Context.Var {β : Type} : (Γ : Context β) → UserType β → Type
-  | prev {Γ : Context β} :
-      Context.Var Γ a → Context.Var (Context.snoc Γ v' a') a
-  | last {Γ : Context β} {v : SSA.Var} {a : UserType β} :
-      Context.Var (Context.snoc Γ v a) a
+def Context.length : Context β → Nat
+  | .empty => 0
+  | .snoc Γ _ _ => Γ.length + 1
+
+def Context.getType : (Γ : Context β) → Fin Γ.length → UserType β
+  | .snoc _ _ t, ⟨0, _⟩   => t
+  | .snoc Γ _ _, ⟨i+1, h⟩ => Γ.getType ⟨i, Nat.lt_of_succ_lt_succ h⟩
+
+structure Context.Var (Γ : Context β) (α : UserType β) : Type where
+  idx : Fin Γ.length
+  of_type : Γ.getType idx = α
 
 instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
@@ -149,9 +155,8 @@ def EnvC [Goedel β] (c : Context β)  :=
   ∀ ⦃a : UserType β⦄, c.Var a → ⟦a⟧
 
 def Context.Var.emptyElim {β : Type} {a : UserType β}
-  (v : Context.Var Context.empty a) : P := by {
-    cases v;
-}
+    (v : Context.Var Context.empty a) : P :=
+  v.idx.elim0
 
 def EnvC.empty [Goedel β] : EnvC (Context.empty (β := β)) :=
   fun _a v => v.emptyElim
@@ -207,8 +212,8 @@ def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
 | Γ, _, .assign lhs rhs rest, e =>
     rest.eval (fun
-      | _, Context.Var.prev v => e v
-      | _, Context.Var.last => rhs.eval e)
+      | _, { idx := ⟨i + 1, h⟩, of_type } => e { idx := ⟨i, Nat.lt_of_succ_lt_succ h⟩, of_type }
+      | _, { idx := ⟨0, _⟩, of_type := rfl } => rhs.eval e)
 | _, _, .ret v, e => e v
 | _, _, .pair fst snd, e => mkPair (e fst) (e snd)
 | _, _, .triple fst snd third, e => mkTriple (e fst) (e snd) (e third)
@@ -216,10 +221,9 @@ def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
   -- | TODO: (e arg) seems to get reduced?
   TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
 | _, _, .rgn _arg body, e => fun arg =>
-    body.eval (fun _ v =>
-      match v with
-      | Context.Var.prev v' => e v'
-      | Context.Var.last => arg)
+    body.eval (fun
+      | _, { idx := ⟨i + 1, h⟩, of_type } => e { idx := ⟨i, Nat.lt_of_succ_lt_succ h⟩, of_type }
+      | _, { idx := ⟨0, _⟩, of_type := rfl } => arg)
 | _, _, .rgn0, e => id
 | _, _, .rgnvar v, e => e v
 | _, _, .var v, e => e v
@@ -244,10 +248,9 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → (i.evalM M)
   | Γ, _, .assign lhs rhs rest => fun e => do
     let rhsv ← rhs.evalM e
-    rest.evalM fun T v =>
-      match v with
-      | Context.Var.prev v => e v
-      | Context.Var.last => rhsv
+    rest.evalM fun
+      | _, { idx := ⟨i + 1, h⟩, of_type } => e { idx := ⟨i, Nat.lt_of_succ_lt_succ h⟩, of_type }
+      | _, { idx := ⟨0, _⟩, of_type := rfl } => rhsv
   | _, _, .ret v => fun e => do
     return e v
   | _, _, .pair fst snd => fun e => do
@@ -258,10 +261,9 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
     let rgv := rg.evalM EnvC.empty
     TypedUserSemanticsM.evalM o (e arg) rgv
   | _, _, .rgn _arg body => fun e arg => do
-      body.evalM (fun _ v =>
-        match v with
-        | Context.Var.prev v' => e v'
-        | Context.Var.last => arg)
+      body.evalM (fun
+        | _, { idx := ⟨i + 1, h⟩, of_type } => e { idx := ⟨i, Nat.lt_of_succ_lt_succ h⟩, of_type }
+        | _, { idx := ⟨0, _⟩, of_type := rfl } => arg)
   | _, _, .rgn0 => fun _ => fun x => return x
   -- TODO: this forces all uses of `rgnvar` to be pure. Rather, we should allow impure `rgnvar`.
   | _, _, .rgnvar v => fun e => fun x => return (e v x)
@@ -568,8 +570,7 @@ def dslVarToIx : TSyntax `dsl_var → MacroM Nat
 
 /-- convert a de-bruijn into a intrinsically well typed context variable -/
 def idxToContextVar : Nat → MacroM (TSyntax `term)
-| 0 => `(SSA.Context.Var.last)
-| n+1 => do `(SSA.Context.Var.prev $(← idxToContextVar n))
+  | i => `({ idx := Fin.mk $(quote i) (by (repeat apply Nat.succ_lt_succ); apply Nat.zero_lt_succ), of_type := rfl })
 
 def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 | `(dsl_var| %v $var) => do

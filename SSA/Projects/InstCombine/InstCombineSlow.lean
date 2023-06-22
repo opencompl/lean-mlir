@@ -8,7 +8,7 @@ import SSA.Projects.InstCombine.InstCombineAliveStatements
 open SSA InstCombine EDSL
 
 theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
@@ -132,7 +132,7 @@ theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
 
 
 theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
@@ -258,7 +258,7 @@ theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
 -- This is getting very slow with larger bitwidths.
 -- AKA: This runs in a compute out when replacing 8 by 16.
 theorem alive_fixed_size_integer: TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec 8)))
   [dsl_bb|
   ^bb
@@ -282,8 +282,10 @@ theorem alive_fixed_size_integer: TSSA.eval
         TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
         UserType.mkPair, UserType.mkTriple]
 
+set_option trace.profiler true
+set_option pp.oneline true
 theorem alive_constant_fold_1: forall (w : Nat), TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
@@ -308,9 +310,8 @@ theorem alive_constant_fold_1: forall (w : Nat), TSSA.eval
       simp_alive
       sorry
 
-
 theorem alive_constant_fold_10: forall (w : Nat), TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
@@ -334,28 +335,19 @@ theorem alive_constant_fold_10: forall (w : Nat), TSSA.eval
   %v130 := pair:%v121 %v001;
   %v131 := op:add w %v130;
   %v140 := pair:%v131 %v001;
-  %v141 := op:add w %v140;
-  %v150 := pair:%v141 %v001;
-  %v151 := op:add w %v150;
-  %v160 := pair:%v151 %v001;
-  %v161 := op:add w %v160;
-  %v170 := pair:%v161 %v001;
-  %v171 := op:add w %v170;
-  %v180 := pair:%v171 %v001;
-  %v181 := op:add w %v180;
-  %v190 := pair:%v181 %v001;
-  %v191 := op:add w %v190
-  dsl_ret %v191
+  %v141 := op:add w %v140
+  dsl_ret %v141
   ]
   := by
       intros
       simp_mlir
       simp_alive
       sorry
+      #exit
 
 
 theorem alive_constant_fold_100: forall (w : Nat), TSSA.eval
-  (Op := Op) (e := e)
+  (Op := Op) (e := e) (Γ := ∅)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
