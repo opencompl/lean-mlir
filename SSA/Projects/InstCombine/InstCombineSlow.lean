@@ -1,6 +1,7 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Tactic
 import SSA.Core.Util
+import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.InstCombineBase
 import SSA.Projects.InstCombine.InstCombineAliveStatements
 
@@ -126,6 +127,7 @@ theorem alive_many_units : forall (w : Nat) (Z : Int), TSSA.eval
   := by
       intros
       simp_mlir
+      simp_alive
       simp [Bitvec.Refinement.bothSome]
 
 
@@ -249,6 +251,7 @@ theorem alive_many_consts: forall (w : Nat) (Z : Int), TSSA.eval
   := by
       intros
       simp_mlir
+      simp_alive
       simp [Bitvec.Refinement.bothSome]
 
 
@@ -302,6 +305,7 @@ theorem alive_constant_fold_1: forall (w : Nat), TSSA.eval
   := by
       intros
       simp_mlir
+      simp_alive
       sorry
 
 
@@ -346,6 +350,7 @@ theorem alive_constant_fold_10: forall (w : Nat), TSSA.eval
   := by
       intros
       simp_mlir
+      simp_alive
       sorry
 
 
@@ -550,4 +555,5 @@ theorem alive_constant_fold_100: forall (w : Nat), TSSA.eval
   := by
       intros
       simp_mlir
+      simp_alive
       sorry
