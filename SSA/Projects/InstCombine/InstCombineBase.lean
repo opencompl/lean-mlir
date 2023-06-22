@@ -73,7 +73,6 @@ inductive Op
 | mul (w : Nat) : Op
 | sub (w : Nat) : Op
 | neg (w: Nat) : Op
-| copy (w: Nat) : Op
 | sdiv (w : Nat) : Op
 | udiv (w : Nat) : Op
 | icmp (c : Comparison) (w : Nat) : Op
@@ -86,14 +85,14 @@ def argUserType : Op → UserType
 | Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w 
 | Op.srem w | Op.urem w | Op.icmp _ w =>
   .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.not w | Op.neg w | Op.copy w => .base (BaseType.bitvec w)
+| Op.not w | Op.neg w => .base (BaseType.bitvec w)
 | Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
 | Op.const _ => .unit
 
 @[simp, reducible]
 def outUserType : Op → UserType
 | Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.sub w |  Op.select w | Op.neg w | Op.copy w =>
+| Op.sub w |  Op.select w | Op.neg w =>
   .base (BaseType.bitvec w)
 | Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w | Op.srem w | Op.urem w =>
   .base (BaseType.bitvec w)
@@ -127,7 +126,6 @@ def eval (o : Op)
     | Op.urem _ => pairBind Bitvec.urem? arg
     | Op.srem _ => pairBind Bitvec.srem? arg
     | Op.not _ => Option.map (~~~.) arg
-    | Op.copy _ => arg
     | Op.neg _ => Option.map (-.) arg
     | Op.select _ => tripleMapM Bitvec.select arg
     | Op.icmp c _ => match c with
@@ -181,7 +179,6 @@ syntax "shl" term : dsl_op
 syntax "sub" term : dsl_op
 syntax "xor" term : dsl_op
 syntax "neg" term : dsl_op
-syntax "copy" term : dsl_op
 syntax "mul" term : dsl_op
 syntax "sdiv" term : dsl_op
 syntax "udiv" term : dsl_op
@@ -211,7 +208,6 @@ macro_rules
   | `([dsl_op| sub $w ]) => `(Op.sub $w)
   | `([dsl_op| xor $w ]) => `(Op.xor $w)
   | `([dsl_op| neg $w ]) => `(Op.neg $w)
-  | `([dsl_op| copy $w ]) => `(Op.copy $w)
   | `([dsl_op| sdiv $w ]) => `(Op.sdiv $w)
   | `([dsl_op| udiv $w ]) => `(Op.udiv $w)
   | `([dsl_op| urem $w ]) => `(Op.urem $w)
