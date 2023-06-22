@@ -4,11 +4,6 @@ import SSA.Projects.InstCombine.ForMathlib
 
 namespace InstCombine
 
--- allow to create constants of width 0 too, so that type unification doesn't fail because of coercionbbrev Width := ℕ+
--- abbrev Width := ℕ+
--- instance {n : Nat} [inst : NeZero n] : OfNat Width n where
---   ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
-
 inductive BaseType
   | bitvec (w : Nat) : BaseType
   deriving DecidableEq
