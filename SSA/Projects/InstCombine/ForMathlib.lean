@@ -469,6 +469,10 @@ inductive Refinement {α : Type u} : Option α → Option α → Prop
   | bothSome {x y : α } : x = y → Refinement (some x) (some y)
   | noneAny {x? : Option α} : Refinement none x?
 
+theorem refinement_some_some {α : Type u} {x y : α} :
+  Refinement (some x) (some y) ↔ x = y :=
+  ⟨by intro h; cases h; assumption, Refinement.bothSome⟩
+
 namespace Refinement
 
 theorem Refinement.refl {α: Type u} : ∀ x : Option α, Refinement x x := by 
