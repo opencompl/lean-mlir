@@ -50,9 +50,6 @@ prefix:max "𝟷"   => fun v => ofVector (Vector.cons true v)
 notation:max "𝟶"   => ofVector (Vector.cons false (@Vector.nil Bool))
 notation:max "𝟷"   => ofVector (Vector.cons true (@Vector.nil Bool))
 
-instance : Add (Bitvec n) where add := Bitvec.add
-instance : Sub (Bitvec n) where sub := Bitvec.sub
-
 -- examples:
 -- #eval (𝟷𝟶𝟷𝟷).toNat
 -- #eval (𝟶𝟷𝟷𝟷).toNat
