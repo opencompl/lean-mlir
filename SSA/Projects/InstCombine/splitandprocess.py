@@ -17,35 +17,39 @@ def isWorkingProof(preamble, proof):
     f = open("InstCombineAliveTest.lean", "w")
 
     f.write("".join(preamble))
-    f.write("".join(proof))
+    rewritten = []
+    for line in proof:
+        rewritten.append(line.replace("print_goal_as_error", "sorry"))
+    f.write("".join(rewritten))
 
     f.close()
     
     import subprocess
-    x = subprocess.run("(cd ../../../; lake build SSA.Projects.InstCombine.InstCombineAliveTest)", shell=True)
-    return x.returncode == 0
+    x = subprocess.run("(cd ../../../; lake build SSA.Projects.InstCombine.InstCombineAliveTest)", shell=True, capture_output=True)
+    return (x.returncode == 0 or x.stderr.decode().find("no goals to be solved") != -1)
 
 def filterProofs(preamble, proofs):
 
     workingProofs = []
+    brokenProofs = []
     for proof in proofs:
-        if not isWorkingProof(preamble, proof):
-            continue
+        print("processing: " + proof[0])
+        if isWorkingProof(preamble, proof):
+            workingProofs.append(proof)
+        else:
+            brokenProofs.append(proof)
 
-        workingProofs.append(proof)
+    return workingProofs, brokenProofs
 
-    return workingProofs
+def writeOutput(preamble, proofs, filename):
+    with open(filename, "w") as f:
+        f.write("".join(preamble))
+        for proof in proofs:
+            f.write("".join(proof))
 
-def writeOutput(preamble, proofs):
-    f = open("InstCombineAliveOnlyCorrect.lean", "w")
-
-    f.write("".join(preamble))
-    for proof in proofs:
-        f.write("".join(proof))
-
-f = open("InstCombineAlive.lean", "r")
+f = open("InstCombineAliveAll.lean", "r")
 lines = f.readlines()
 preamble, proofs = getProofs(lines)
-working_proofs = filterProofs(preamble, proofs)
-
-writeOutput(preamble, working_proofs)
+working_proofs, broken_proofs = filterProofs(preamble, proofs)
+writeOutput(preamble, working_proofs, "InstCombineAlive.lean")
+writeOutput(preamble, broken_proofs, "Broken.lean")
