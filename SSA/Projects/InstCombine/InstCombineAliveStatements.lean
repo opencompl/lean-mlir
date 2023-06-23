@@ -5,7 +5,7 @@ theorem bitvec_AddSub_1043 :
 :=sorry
 
 theorem bitvec_AddSub_1152:
- True
+  ∀ (y x : Bitvec 1), x + y = x ^^^ y
 :=sorry
 
 theorem bitvec_AddSub_1156 :
@@ -65,7 +65,7 @@ theorem bitvec_AddSub_1546 :
 :=sorry
 
 theorem bitvec_AddSub_1556:
- True
+ ∀ (y x : Bitvec 1), x - y = x ^^^ y
 :=sorry
 
 theorem bitvec_AddSub_1560 :
@@ -358,7 +358,7 @@ theorem bitvec_266_2 :
 :=sorry
 
 theorem bitvec_283:
- True
+ ∀ (Y X : Bitvec 1), X * Y = X &&& Y
 :=sorry
 
 theorem bitvec_290__292 :
@@ -370,27 +370,29 @@ theorem bitvec_1030 :
 :=sorry
 
 theorem bitvec_Select_846:
- True
+ ∀ (C B : Bitvec 1), tripleMapM Bitvec.select (some B, some (Bitvec.ofBool true), some C) ⊑ some (B ||| C)
 :=sorry
 
 theorem bitvec_Select_850:
- True
+ ∀ (C B : Bitvec 1),
+  tripleMapM Bitvec.select (some B, some (Bitvec.ofBool false), some C) ⊑ some ((B ^^^ Bitvec.ofBool true) &&& C)
 :=sorry
 
 theorem bitvec_Select_855:
- True
+ ∀ (C B : Bitvec 1), tripleMapM Bitvec.select (some B, some C, some (Bitvec.ofBool false)) ⊑ some (B &&& C)
 :=sorry
 
 theorem bitvec_Select_859:
- True
+ ∀ (C B : Bitvec 1),
+  tripleMapM Bitvec.select (some B, some C, some (Bitvec.ofBool true)) ⊑ some (B ^^^ Bitvec.ofBool true ||| C)
 :=sorry
 
 theorem bitvec_Select_851:
- True
+ ∀ (a b : Bitvec 1), tripleMapM Bitvec.select (some a, some b, some a) ⊑ some (a &&& b)
 :=sorry
 
 theorem bitvec_Select_852:
- True
+ ∀ (a b : Bitvec 1), tripleMapM Bitvec.select (some a, some a, some b) ⊑ some (a ||| b)
 :=sorry
 
 theorem bitvec_Select_1100 :

@@ -70,7 +70,7 @@ theorem alive_AddSub_1043 : forall (w : Nat) (C1 Z RHS : Bitvec w)
   := by
      simp_mlir
      try simp_alive
-     try apply bitvec_AddSub_1043 
+     try apply bitvec_AddSub_1043
 
 -- Name:AddSub:1152
 -- precondition: true
@@ -147,7 +147,7 @@ theorem alive_AddSub_1156 : forall (w : Nat) (b : Bitvec w)
   := by
      simp_mlir
      try simp_alive
-     try apply bitvec_AddSub_1156 
+     try apply bitvec_AddSub_1156
 
 -- Name:AddSub:1156-2
 -- precondition: true
