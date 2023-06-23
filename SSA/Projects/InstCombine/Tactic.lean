@@ -13,3 +13,10 @@ macro "simp_alive": tactic =>
       )
    )
 
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        skip --placeholder, as `simp` will currently timeout sometimes
+      )
+   )
+
