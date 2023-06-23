@@ -469,6 +469,10 @@ inductive Refinement {α : Type u} : Option α → Option α → Prop
   | bothSome {x y : α } : x = y → Refinement (some x) (some y)
   | noneAny {x? : Option α} : Refinement none x?
 
+theorem Refinement.some_some {α : Type u} {x y : α} :
+  Refinement (some x) (some y) ↔ x = y :=
+  ⟨by intro h; cases h; assumption, Refinement.bothSome⟩
+
 namespace Refinement
 
 theorem Refinement.refl {α: Type u} : ∀ x : Option α, Refinement x x := by 
@@ -551,8 +555,11 @@ theorem one_sdiv_ref_add_cmp_select :
 
 def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
 
-def fromBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
+def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 
-instance : Coe Bool (Bitvec 1) := ⟨fromBool⟩
+@[simp]
+def ofInt' {w} (i : Int) := Bitvec.ofInt w i
+
+instance : Coe Bool (Bitvec 1) := ⟨ofBool⟩
 
 end Bitvec
