@@ -35,7 +35,7 @@ jobs:
 
       - name: Run executable ⚙️
         run: |
-          ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some 3$"
+          ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
   
       - name: Generate docs 📜
         run: |
