@@ -5,9 +5,9 @@ open SSA
 macro "simp_mlir": tactic => 
   `(tactic| 
       (
-       simp only [TSSA.eval, Function.comp, id.def, TypedUserSemantics,
-        TypedUserSemantics.eval, Context.Var,
-        TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
-        UserType.mkPair, UserType.mkTriple]
+       simp (config := {decide := false}) only [TSSA.eval, Function.comp,
+         id.def, TypedUserSemantics, TypedUserSemantics.eval, Context.Var,
+         TypedUserSemantics.outUserType, TypedUserSemantics.argUserType,
+         UserType.mkPair, UserType.mkTriple]
       )
    )
