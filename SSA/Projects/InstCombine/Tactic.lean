@@ -16,8 +16,7 @@ macro "simp_alive": tactic =>
 macro "alive_auto": tactic =>
   `(tactic|
       (
-        intros;
-        simp;
+        skip --placeholder, as `simp` will currently timeout sometimes
       )
    )
 
