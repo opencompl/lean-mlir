@@ -9,20 +9,20 @@ theorem bitvec_AddSub_1043 :
 theorem bitvec_AddSub_1152:
  ∀ (y x : Bitvec 1), x + y = x ^^^ y
 := by alive_auto
-      try admit
+      try sorry
 
 theorem bitvec_AddSub_1156 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = Bitvec.shl b (Bitvec.toNat (Bitvec.ofInt w 1))
+ ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< Bitvec.ofInt w 1
 := by alive_auto
       try sorry
 
 theorem bitvec_AddSub_1156_2 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = Bitvec.shl b (Bitvec.toNat (Bitvec.ofInt w 1))
+ ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< Bitvec.ofInt w 1
 := by alive_auto
       try sorry
 
 theorem bitvec_AddSub_1156_3 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = Bitvec.shl b (Bitvec.toNat (Bitvec.ofInt w 1))
+ ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< Bitvec.ofInt w 1
 := by alive_auto
       try sorry
 
@@ -409,7 +409,7 @@ theorem bitvec_152 :
       try sorry
 
 theorem bitvec_160:
- ∀ (x C1 C2 : Bitvec 7), Bitvec.shl x (Bitvec.toNat C2) * C1 = x * Bitvec.shl C1 (Bitvec.toNat C2)
+ ∀ (x C1 C2 : Bitvec 7), x <<< C2 * C1 = x * C1 <<< C2
 := by alive_auto
       try sorry
 
@@ -477,7 +477,7 @@ theorem bitvec_283:
       try sorry
 
 theorem bitvec_290__292 :
- ∀ (w : ℕ) (Y Op1 : Bitvec w), Bitvec.shl (Bitvec.ofInt w 1) (Bitvec.toNat Y) * Op1 = Bitvec.shl Op1 (Bitvec.toNat Y)
+ ∀ (w : ℕ) (Y Op1 : Bitvec w), Bitvec.ofInt w 1 <<< Y * Op1 = Op1 <<< Y
 := by alive_auto
       try sorry
 
@@ -496,14 +496,12 @@ theorem bitvec_820':
       try sorry
 
 theorem bitvec_891:
- ∀ (x N : Bitvec 13),
-  Bitvec.udiv? x (Bitvec.shl (Bitvec.ofInt 13 1) (Bitvec.toNat N)) ⊑ some (Bitvec.ushr x (Bitvec.toNat N))
+ ∀ (x N : Bitvec 13), Bitvec.udiv? x (Bitvec.ofInt 13 1 <<< N) ⊑ some (x >>> N)
 := by alive_auto
       try sorry
 
 theorem bitvec_891_exact:
- ∀ (x N : Bitvec 13),
-  Bitvec.udiv? x (Bitvec.shl (Bitvec.ofInt 13 1) (Bitvec.toNat N)) ⊑ some (Bitvec.ushr x (Bitvec.toNat N))
+ ∀ (x N : Bitvec 13), Bitvec.udiv? x (Bitvec.ofInt 13 1 <<< N) ⊑ some (x >>> N)
 := by alive_auto
       try sorry
 
@@ -518,122 +516,101 @@ theorem bitvec_1049:
       try sorry
 
 theorem bitvec_Select_846:
- ∀ (C B : Bitvec 1), tripleMapM Bitvec.select (some B, some (Bitvec.ofBool true), some C) ⊑ some (B ||| C)
+ ∀ (C B : Bitvec 1), Bitvec.select B (Bitvec.ofBool true) C = B ||| C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_850:
- ∀ (C B : Bitvec 1),
-  tripleMapM Bitvec.select (some B, some (Bitvec.ofBool false), some C) ⊑ some ((B ^^^ Bitvec.ofBool true) &&& C)
+ ∀ (C B : Bitvec 1), Bitvec.select B (Bitvec.ofBool false) C = (B ^^^ Bitvec.ofBool true) &&& C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_855:
- ∀ (C B : Bitvec 1), tripleMapM Bitvec.select (some B, some C, some (Bitvec.ofBool false)) ⊑ some (B &&& C)
+ ∀ (C B : Bitvec 1), Bitvec.select B C (Bitvec.ofBool false) = B &&& C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_859:
- ∀ (C B : Bitvec 1),
-  tripleMapM Bitvec.select (some B, some C, some (Bitvec.ofBool true)) ⊑ some (B ^^^ Bitvec.ofBool true ||| C)
+ ∀ (C B : Bitvec 1), Bitvec.select B C (Bitvec.ofBool true) = B ^^^ Bitvec.ofBool true ||| C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_851:
- ∀ (a b : Bitvec 1), tripleMapM Bitvec.select (some a, some b, some a) ⊑ some (a &&& b)
+ ∀ (a b : Bitvec 1), Bitvec.select a b a = a &&& b
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_852:
- ∀ (a b : Bitvec 1), tripleMapM Bitvec.select (some a, some a, some b) ⊑ some (a ||| b)
+ ∀ (a b : Bitvec 1), Bitvec.select a a b = a ||| b
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_1100 :
- ∀ (w : ℕ) (Y X : Bitvec w), tripleMapM Bitvec.select (some (Bitvec.ofBool true), some X, some Y) ⊑ some X
+ ∀ (w : ℕ) (Y X : Bitvec w), Bitvec.select (Bitvec.ofBool true) X Y = X
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_1105 :
- ∀ (w : ℕ) (Y X : Bitvec w), tripleMapM Bitvec.select (some (Bitvec.ofBool false), some X, some Y) ⊑ some Y
+ ∀ (w : ℕ) (Y X : Bitvec w), Bitvec.select (Bitvec.ofBool false) X Y = Y
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__239 :
- ∀ (w : ℕ) (X C : Bitvec w),
-  Bitvec.ushr (Bitvec.shl X (Bitvec.toNat C)) (Bitvec.toNat C) =
-    X &&& Bitvec.ushr (Bitvec.ofInt w (-1)) (Bitvec.toNat C)
+ ∀ (w : ℕ) (X C : Bitvec w), X <<< C >>> C = X &&& Bitvec.ofInt w (-1) >>> C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__279 :
- ∀ (w : ℕ) (X C : Bitvec w),
-  Bitvec.shl (Bitvec.ushr X (Bitvec.toNat C)) (Bitvec.toNat C) = X &&& Bitvec.shl (Bitvec.ofInt w (-1)) (Bitvec.toNat C)
+ ∀ (w : ℕ) (X C : Bitvec w), X >>> C <<< C = X &&& Bitvec.ofInt w (-1) <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__351:
- ∀ (X C1 C2 : Bitvec 7), Bitvec.shl (X * C1) (Bitvec.toNat C2) = X * Bitvec.shl C1 (Bitvec.toNat C2)
+ ∀ (X C1 C2 : Bitvec 7), (X * C1) <<< C2 = X * C1 <<< C2
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__422_1:
- ∀ (Y X C : Bitvec 31),
-  Bitvec.shl (Y + Bitvec.ushr X (Bitvec.toNat C)) (Bitvec.toNat C) =
-    Bitvec.shl Y (Bitvec.toNat C) + X &&& Bitvec.shl (Bitvec.ofInt 31 (-1)) (Bitvec.toNat C)
+ ∀ (Y X C : Bitvec 31), (Y + X >>> C) <<< C = Y <<< C + X &&& Bitvec.ofInt 31 (-1) <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__422_2:
- ∀ (Y X C : Bitvec 31),
-  Bitvec.shl (Y + Bitvec.sshr X (Bitvec.toNat C)) (Bitvec.toNat C) =
-    Bitvec.shl Y (Bitvec.toNat C) + X &&& Bitvec.shl (Bitvec.ofInt 31 (-1)) (Bitvec.toNat C)
+ ∀ (Y X C : Bitvec 31), (Y + Bitvec.sshr X (Bitvec.toNat C)) <<< C = Y <<< C + X &&& Bitvec.ofInt 31 (-1) <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__440 :
- ∀ (w : ℕ) (Y X C C2 : Bitvec w),
-  Bitvec.shl (Y ^^^ Bitvec.ushr X (Bitvec.toNat C) &&& C2) (Bitvec.toNat C) =
-    X &&& Bitvec.shl C2 (Bitvec.toNat C) ^^^ Bitvec.shl Y (Bitvec.toNat C)
+ ∀ (w : ℕ) (Y X C C2 : Bitvec w), (Y ^^^ X >>> C &&& C2) <<< C = X &&& C2 <<< C ^^^ Y <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__458:
- ∀ (Y X C : Bitvec 31),
-  Bitvec.shl (Bitvec.sshr X (Bitvec.toNat C) - Y) (Bitvec.toNat C) =
-    X - Bitvec.shl Y (Bitvec.toNat C) &&& Bitvec.shl (Bitvec.ofInt 31 (-1)) (Bitvec.toNat C)
+ ∀ (Y X C : Bitvec 31), (Bitvec.sshr X (Bitvec.toNat C) - Y) <<< C = X - Y <<< C &&& Bitvec.ofInt 31 (-1) <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__476 :
- ∀ (w : ℕ) (Y X C C2 : Bitvec w),
-  Bitvec.shl (Bitvec.ushr X (Bitvec.toNat C) &&& C2 ||| Y) (Bitvec.toNat C) =
-    X &&& Bitvec.shl C2 (Bitvec.toNat C) ||| Bitvec.shl Y (Bitvec.toNat C)
+ ∀ (w : ℕ) (Y X C C2 : Bitvec w), (X >>> C &&& C2 ||| Y) <<< C = X &&& C2 <<< C ||| Y <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__497 :
- ∀ (w : ℕ) (X C C2 : Bitvec w),
-  Bitvec.ushr (X ^^^ C2) (Bitvec.toNat C) = Bitvec.ushr X (Bitvec.toNat C) ^^^ Bitvec.ushr C2 (Bitvec.toNat C)
+ ∀ (w : ℕ) (X C C2 : Bitvec w), (X ^^^ C2) >>> C = X >>> C ^^^ C2 >>> C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__497''' :
- ∀ (w : ℕ) (X C C2 : Bitvec w),
-  Bitvec.shl (X + C2) (Bitvec.toNat C) = Bitvec.shl X (Bitvec.toNat C) + Bitvec.shl C2 (Bitvec.toNat C)
+ ∀ (w : ℕ) (X C C2 : Bitvec w), (X + C2) <<< C = X <<< C + C2 <<< C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__582 :
- ∀ (w : ℕ) (X C : Bitvec w),
-  Bitvec.ushr (Bitvec.shl X (Bitvec.toNat C)) (Bitvec.toNat C) =
-    X &&& Bitvec.ushr (Bitvec.ofInt w (-1)) (Bitvec.toNat C)
+ ∀ (w : ℕ) (X C : Bitvec w), X <<< C >>> C = X &&& Bitvec.ofInt w (-1) >>> C
 := by alive_auto
       try sorry
 
 theorem bitvec_InstCombineShift__724:
- ∀ (A C2 C1 : Bitvec 31),
-  Bitvec.shl (Bitvec.shl C1 (Bitvec.toNat A)) (Bitvec.toNat C2) =
-    Bitvec.shl (Bitvec.shl C1 (Bitvec.toNat C2)) (Bitvec.toNat A)
-:= by alive_auto
-      try sorry
+ ∀ (A C2 C1 : Bitvec 31), C1 <<< A <<< C2 = C1 <<< C2 <<< A
+
+:=sorry

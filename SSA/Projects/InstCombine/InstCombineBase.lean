@@ -115,9 +115,9 @@ def eval (o : Op)
     | Op.and _ => pairMapM (.&&&.) arg
     | Op.or _ => pairMapM (.|||.) arg
     | Op.xor _ => pairMapM (.^^^.) arg
-    | Op.shl _ => pairMapM (fun fst snd => Bitvec.shl fst snd.toNat) arg
-    | Op.lshr _ => pairMapM (fun fst snd => Bitvec.ushr fst snd.toNat) arg
-    | Op.ashr _ => pairMapM (fun fst snd => Bitvec.sshr fst snd.toNat) arg
+    | Op.shl _ => pairMapM (. <<< .) arg
+    | Op.lshr _ => pairMapM (. >>> .) arg
+    | Op.ashr _ => pairMapM (. >>>ₛ .) arg
     | Op.const c => Option.some c
     | Op.sub _ => pairMapM (.-.) arg
     | Op.add _ => pairMapM (.+.) arg
