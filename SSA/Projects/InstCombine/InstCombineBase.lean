@@ -4,11 +4,6 @@ import SSA.Projects.InstCombine.ForMathlib
 
 namespace InstCombine
 
--- allow to create constants of width 0 too, so that type unification doesn't fail because of coercionbbrev Width := ℕ+
--- abbrev Width := ℕ+
--- instance {n : Nat} [inst : NeZero n] : OfNat Width n where
---   ofNat := ⟨n, (by have h : n ≠ 0 := inst.out; cases n <;> aesop )⟩
-
 inductive BaseType
   | bitvec (w : Nat) : BaseType
   deriving DecidableEq
@@ -149,25 +144,6 @@ instance TUS : SSA.TypedUserSemantics Op BaseType where
   rgnCod := rgnCod
   outUserType := outUserType
   eval := eval
-
-/-- Create a bitvector in the two's complement representation from an `int`
-  We need such a coercion to keep the bit-width the same, as compared to the
-  Mathlib version which adds an extra bit!
-  @goens: can you figure out how to do this properly? Once again,
-  the API I define below is what I would expect in LLVM!
--/
--- protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
-def Bitvec.ofInt' (n : ℕ) (i : Int) : Bitvec n :=
-  Bitvec.ofNat n (Int.toNat i)
-
-
-/-
-Optimization: InstCombineShift: 279
-  %Op0 = lshr %X, C
-  %r = shl %Op0, C
-=>
-  %r = and %X, (-1 << C)
--/
 
 open EDSL
 syntax "add" term : dsl_op
