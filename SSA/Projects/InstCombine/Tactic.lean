@@ -13,3 +13,11 @@ macro "simp_alive": tactic =>
       )
    )
 
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        intros;
+        simp;
+      )
+   )
+
