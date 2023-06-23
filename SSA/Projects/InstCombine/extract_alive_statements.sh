@@ -14,8 +14,8 @@ rg "theorem" $INST_COMBINE_PREFIX/$ALIVE_FILE | gsed 's/:.*/:/' | gsed 's/alive_
 
 #sed's R command will read one line at a time from a file and insert it
 gsed -i "/_THEOREM/R $THEOREMS_TEMP_FILE" "$INST_COMBINE_PREFIX/$OUTPUT_FILE"
-gsed -i "s/INSERT_THEOREM/:= alive_auto\n      try sorry\n/" "$INST_COMBINE_PREFIX/$OUTPUT_FILE" #add sorries
-gsed -i "2d" "$INST_COMBINE_PREFIX/$OUTPUT_FILE" #remove first instance
+gsed -i "s/INSERT_THEOREM/:= by alive_auto\n      try sorry\n/" "$INST_COMBINE_PREFIX/$OUTPUT_FILE" #add sorries
+gsed -i -e "3d" -e "4d" "$INST_COMBINE_PREFIX/$OUTPUT_FILE" #remove first instance of by alive_auto and sorry
 echo "\n:=sorry" >> "$INST_COMBINE_PREFIX/$OUTPUT_FILE"  #add last one
 
 #now replace print_goal_as_error's with recovered theorem statements

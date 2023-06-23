@@ -562,4 +562,6 @@ def ofInt' {w} (i : Int) := Bitvec.ofInt w i
 
 instance : Coe Bool (Bitvec 1) := ⟨ofBool⟩
 
+infixl:75 ">>>ₛ" => fun x y => Bitvec.sshr x (Bitvec.toNat y)
+
 end Bitvec

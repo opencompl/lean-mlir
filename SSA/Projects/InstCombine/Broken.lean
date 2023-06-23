@@ -66,7 +66,7 @@ theorem alive_AndOrXor_2375 : forall (w : Nat) (A x C B D : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:SimplifyDivRemOfSelect
@@ -115,7 +115,7 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (Y X c : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:805
@@ -162,7 +162,7 @@ theorem alive_805 : forall (w : Nat) (X : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:637
@@ -210,7 +210,7 @@ theorem alive_Select_637 : forall (w : Nat) (Y C : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:641
@@ -258,7 +258,7 @@ theorem alive_Select_641 : forall (w : Nat) (Y C : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:699
@@ -315,7 +315,7 @@ theorem alive_Select_699 : forall (w : Nat) (A B : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:700
@@ -372,7 +372,7 @@ theorem alive_Select_700 : forall (w : Nat) (A B : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:704
@@ -428,7 +428,7 @@ theorem alive_Select_704 : forall (w : Nat) (A B : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:705
@@ -484,7 +484,7 @@ theorem alive_Select_705 : forall (w : Nat) (A B : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:740
@@ -559,7 +559,7 @@ theorem alive_Select_740 : forall (w : Nat) (A : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:741
@@ -634,7 +634,7 @@ theorem alive_Select_741 : forall (w : Nat) (A : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:746
@@ -713,7 +713,7 @@ theorem alive_Select_746 : forall (w : Nat) (A : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:747
@@ -792,7 +792,7 @@ theorem alive_Select_747 : forall (w : Nat) (A : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:858
@@ -839,7 +839,7 @@ theorem alive_Select_858 : forall (w : Nat) (a b : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:859'
@@ -886,7 +886,7 @@ theorem alive_Select_859' : forall (w : Nat) (a b : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:962
@@ -945,7 +945,7 @@ theorem alive_Select_962 : forall (w : Nat) (y c z : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:1070
@@ -994,7 +994,7 @@ theorem alive_Select_1070 : forall (w : Nat) (Y c Z W : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:1078
@@ -1043,7 +1043,7 @@ theorem alive_Select_1078 : forall (w : Nat) (X c Z W : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
 -- Name:Select:1087
@@ -1092,6 +1092,6 @@ theorem alive_Select_1087 : forall (w : Nat) (Y X val : Bitvec 1)
   ]
   := by
      simp_mlir
-     simp_alive
+     try simp_alive
      print_goal_as_error
 
