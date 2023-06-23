@@ -69,7 +69,7 @@ theorem alive_AddSub_1043 : forall (w : Nat) (C1 Z RHS : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1043 
 
 -- Name:AddSub:1152
@@ -108,7 +108,7 @@ theorem alive_AddSub_1152: forall (y x : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1152
 
 -- Name:AddSub:1156
@@ -146,7 +146,7 @@ theorem alive_AddSub_1156 : forall (w : Nat) (b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1156 
 
 -- Name:AddSub:1156-2
@@ -184,7 +184,7 @@ theorem alive_AddSub_1156_2 : forall (w : Nat) (b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1156_2 
 
 -- Name:AddSub:1156-3
@@ -222,7 +222,7 @@ theorem alive_AddSub_1156_3 : forall (w : Nat) (b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1156_3 
 
 -- Name:AddSub:1164
@@ -269,7 +269,7 @@ theorem alive_AddSub_1164 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1164 
 
 -- Name:AddSub:1165
@@ -328,7 +328,7 @@ theorem alive_AddSub_1165 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1165 
 
 -- Name:AddSub:1176
@@ -375,7 +375,7 @@ theorem alive_AddSub_1176 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1176 
 
 -- Name:AddSub:1202
@@ -425,7 +425,7 @@ theorem alive_AddSub_1202 : forall (w : Nat) (x C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1202 
 
 -- Name:AddSub:1295
@@ -476,7 +476,7 @@ theorem alive_AddSub_1295 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1295 
 
 -- Name:AddSub:1309
@@ -527,7 +527,7 @@ theorem alive_AddSub_1309 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1309 
 
 -- Name:AddSub:1309-2
@@ -578,7 +578,7 @@ theorem alive_AddSub_1309_2 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1309_2 
 
 -- Name:AddSub:1309-3
@@ -629,7 +629,7 @@ theorem alive_AddSub_1309_3 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1309_3 
 
 -- Name:AddSub:1539
@@ -676,7 +676,7 @@ theorem alive_AddSub_1539 : forall (w : Nat) (a x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1539 
 
 -- Name:AddSub:1539-2
@@ -716,7 +716,7 @@ theorem alive_AddSub_1539_2 : forall (w : Nat) (x C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1539_2 
 
 -- Name:AddSub:1546
@@ -763,7 +763,7 @@ theorem alive_AddSub_1546 : forall (w : Nat) (a x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1546 
 
 -- Name:AddSub:1556
@@ -802,7 +802,7 @@ theorem alive_AddSub_1556: forall (y x : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1556
 
 -- Name:AddSub:1560
@@ -841,7 +841,7 @@ theorem alive_AddSub_1560 : forall (w : Nat) (a : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1560 
 
 -- Name:AddSub:1564
@@ -891,7 +891,7 @@ theorem alive_AddSub_1564 : forall (w : Nat) (x C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1564 
 
 -- Name:AddSub:1574
@@ -940,7 +940,7 @@ theorem alive_AddSub_1574 : forall (w : Nat) (X C C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1574 
 
 -- Name:AddSub:1614
@@ -986,7 +986,7 @@ theorem alive_AddSub_1614 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1614 
 
 -- Name:AddSub:1619
@@ -1032,7 +1032,7 @@ theorem alive_AddSub_1619 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1619 
 
 -- Name:AddSub:1624
@@ -1083,7 +1083,7 @@ theorem alive_AddSub_1624 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AddSub_1624 
 
 -- Name:AndOrXor:135
@@ -1135,7 +1135,7 @@ theorem alive_AndOrXor_135 : forall (w : Nat) (X C1 C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_135 
 
 -- Name:AndOrXor:144
@@ -1187,7 +1187,7 @@ theorem alive_AndOrXor_144 : forall (w : Nat) (X C1 C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_144 
 
 -- Name:AndOrXor:698
@@ -1263,7 +1263,7 @@ theorem alive_AndOrXor_698 : forall (w : Nat) (a b d : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_698 
 
 -- Name:AndOrXor:709
@@ -1334,7 +1334,7 @@ theorem alive_AndOrXor_709 : forall (w : Nat) (a b d : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_709 
 
 -- Name:AndOrXor:716
@@ -1405,7 +1405,7 @@ theorem alive_AndOrXor_716 : forall (w : Nat) (a b d : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_716 
 
 -- Name:AndOrXor:794
@@ -1456,7 +1456,7 @@ theorem alive_AndOrXor_794 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_794 
 
 -- Name:AndOrXor:827
@@ -1515,7 +1515,7 @@ theorem alive_AndOrXor_827 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_827 
 
 -- Name:AndOrXor:887-2
@@ -1560,13 +1560,13 @@ theorem alive_AndOrXor_887_2 : forall (w : Nat) (a C1 : Bitvec w)
   %v4 := op:icmp eq  w %v3;
   %v5 := pair:%v1 %v2;
   %v6 := op:icmp ne  w %v5;
-  %v7 := op:const (Bitvec.ofBool false) %v0;
+  %v7 := op:const (↑false) %v0;
   %v8 := op:copy 1 %v7
   dsl_ret %v8
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_887_2 
 
 -- Name:AndOrXor:1230  ~A & ~B -> ~(A | B)
@@ -1625,7 +1625,7 @@ theorem alive_AndOrXor_1230__A__B___A__B : forall (w : Nat) (notOp0 notOp1 : Bit
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1230__A__B___A__B 
 
 -- Name:AndOrXor:1241 (A|B) & ~(A&B) => A^B
@@ -1684,7 +1684,7 @@ theorem alive_AndOrXor_1241_AB__AB__AB : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1241_AB__AB__AB 
 
 -- Name:AndOrXor:1247 ~(A&B) & (A|B) => A^B
@@ -1743,7 +1743,7 @@ theorem alive_AndOrXor_1247_AB__AB__AB : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1247_AB__AB__AB 
 
 -- Name:AndOrXor:1253 A & (A^B) -> A & ~B
@@ -1792,7 +1792,7 @@ theorem alive_AndOrXor_1253_A__AB___A__B : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1253_A__AB___A__B 
 
 -- Name:AndOrXor:1280 (~A|B)&A -> A&B
@@ -1845,7 +1845,7 @@ theorem alive_AndOrXor_1280_ABA___AB : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1280_ABA___AB 
 
 -- Name:AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
@@ -1908,7 +1908,7 @@ theorem alive_AndOrXor_1288_A__B__B__C__A___A__B__C : forall (w : Nat) (A C B : 
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:1294 (A | B) & ((~A) ^ B) -> (A & B)
@@ -1967,7 +1967,7 @@ theorem alive_AndOrXor_1294_A__B__A__B___A__B : forall (w : Nat) (A B : Bitvec w
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1294_A__B__A__B___A__B 
 
 -- Name:AndOrXor:1683-1
@@ -2018,7 +2018,7 @@ theorem alive_AndOrXor_1683_1 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1683_1 
 
 -- Name:AndOrXor:1683-2
@@ -2063,13 +2063,13 @@ theorem alive_AndOrXor_1683_2 : forall (w : Nat) (a b : Bitvec w)
   %v4 := op:icmp uge  w %v3;
   %v5 := pair:%v1 %v2;
   %v6 := op:icmp ne  w %v5;
-  %v7 := op:const (Bitvec.ofBool true) %v0;
+  %v7 := op:const (↑true) %v0;
   %v8 := op:copy 1 %v7
   dsl_ret %v8
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1683_2 
 
 -- Name:AndOrXor:1704
@@ -2126,7 +2126,7 @@ theorem alive_AndOrXor_1704 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1704 
 
 -- Name:AndOrXor:1705
@@ -2183,7 +2183,7 @@ theorem alive_AndOrXor_1705 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1705 
 
 -- Name:AndOrXor:1733
@@ -2242,7 +2242,7 @@ theorem alive_AndOrXor_1733 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_1733 
 
 -- Name:AndOrXor:2063  (X ^ C1) | C2 --> (X | C2) ^ (C1 & ~C2)
@@ -2295,7 +2295,7 @@ theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 : forall (w : Nat) (x C1
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 
 
 -- Name:AndOrXor:2113   ((~A & B) | A) -> (A | B)
@@ -2348,7 +2348,7 @@ theorem alive_AndOrXor_2113___A__B__A___A__B : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2113___A__B__A___A__B 
 
 -- Name:AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
@@ -2401,7 +2401,7 @@ theorem alive_AndOrXor_2118___A__B__A___A__B : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2118___A__B__A___A__B 
 
 -- Name:AndOrXor:2123   (A & (~B)) | (A ^ B) -> (A ^ B)
@@ -2460,7 +2460,7 @@ theorem alive_AndOrXor_2123___A__B__A__B___A__B : forall (w : Nat) (A B : Bitvec
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2123___A__B__A__B___A__B 
 
 -- Name:AndOrXor:2188
@@ -2527,7 +2527,7 @@ theorem alive_AndOrXor_2188 : forall (w : Nat) (A D : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2188 
 
 -- Name:AndOrXor:2231  (A ^ B) | ((B ^ C) ^ A) -> (A ^ B) | C
@@ -2586,7 +2586,7 @@ theorem alive_AndOrXor_2231__A__B__B__C__A___A__B__C : forall (w : Nat) (A C B :
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C 
 
 -- Name:AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
@@ -2642,7 +2642,7 @@ theorem alive_AndOrXor_2243__B__C__A__B___B__A__C : forall (w : Nat) (A C B : Bi
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2243__B__C__A__B___B__A__C 
 
 -- Name:AndOrXor:2247  (~A | ~B) == (~(A & B))
@@ -2701,7 +2701,7 @@ theorem alive_AndOrXor_2247__A__B__A__B : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2247__A__B__A__B 
 
 -- Name:AndOrXor:2263
@@ -2746,7 +2746,7 @@ theorem alive_AndOrXor_2263 : forall (w : Nat) (B op0 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2263 
 
 -- Name:AndOrXor:2264
@@ -2803,7 +2803,7 @@ theorem alive_AndOrXor_2264 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2264 
 
 -- Name:AndOrXor:2265
@@ -2854,7 +2854,7 @@ theorem alive_AndOrXor_2265 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2265 
 
 -- Name:AndOrXor:2284
@@ -2911,7 +2911,7 @@ theorem alive_AndOrXor_2284 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2284 
 
 -- Name:AndOrXor:2285
@@ -2968,7 +2968,7 @@ theorem alive_AndOrXor_2285 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2285 
 
 -- Name:AndOrXor:2297
@@ -3027,7 +3027,7 @@ theorem alive_AndOrXor_2297 : forall (w : Nat) (A B : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2297 
 
 -- Name:AndOrXor:2367
@@ -3077,7 +3077,7 @@ theorem alive_AndOrXor_2367 : forall (w : Nat) (A C1 op1 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2367 
 
 -- Name:AndOrXor:2416
@@ -3135,7 +3135,7 @@ theorem alive_AndOrXor_2416 : forall (w : Nat) (nx y : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2416 
 
 -- Name:AndOrXor:2417
@@ -3193,7 +3193,7 @@ theorem alive_AndOrXor_2417 : forall (w : Nat) (nx y : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2417 
 
 -- Name:AndOrXor:2429
@@ -3247,7 +3247,7 @@ theorem alive_AndOrXor_2429 : forall (w : Nat) (y x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2429 
 
 -- Name:AndOrXor:2430
@@ -3301,7 +3301,7 @@ theorem alive_AndOrXor_2430 : forall (w : Nat) (y x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2430 
 
 -- Name:AndOrXor:2443
@@ -3355,7 +3355,7 @@ theorem alive_AndOrXor_2443 : forall (w : Nat) (y x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2443 
 
 -- Name:AndOrXor:2453
@@ -3401,7 +3401,7 @@ theorem alive_AndOrXor_2453 : forall (w : Nat) (y x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2453 
 
 -- Name:AndOrXor:2475
@@ -3450,7 +3450,7 @@ theorem alive_AndOrXor_2475 : forall (w : Nat) (x C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2475 
 
 -- Name:AndOrXor:2486
@@ -3499,7 +3499,7 @@ theorem alive_AndOrXor_2486 : forall (w : Nat) (x C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2486 
 
 -- Name:AndOrXor:2581  (B|A)^B -> A & ~B
@@ -3548,7 +3548,7 @@ theorem alive_AndOrXor_2581__BAB___A__B : forall (w : Nat) (a op1 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2581__BAB___A__B 
 
 -- Name:AndOrXor:2587  (B&A)^A -> ~B & A
@@ -3597,7 +3597,7 @@ theorem alive_AndOrXor_2587__BAA___B__A : forall (w : Nat) (a op1 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2587__BAA___B__A 
 
 -- Name:AndOrXor:2595
@@ -3648,7 +3648,7 @@ theorem alive_AndOrXor_2595 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2595 
 
 -- Name:AndOrXor:2607
@@ -3715,7 +3715,7 @@ theorem alive_AndOrXor_2607 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2607 
 
 -- Name:AndOrXor:2617
@@ -3782,7 +3782,7 @@ theorem alive_AndOrXor_2617 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2617 
 
 -- Name:AndOrXor:2627
@@ -3842,7 +3842,7 @@ theorem alive_AndOrXor_2627 : forall (w : Nat) (a c b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2627 
 
 -- Name:AndOrXor:2647
@@ -3893,7 +3893,7 @@ theorem alive_AndOrXor_2647 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2647 
 
 -- Name:AndOrXor:2658
@@ -3958,7 +3958,7 @@ theorem alive_AndOrXor_2658 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2658 
 
 -- Name:AndOrXor:2663
@@ -4009,7 +4009,7 @@ theorem alive_AndOrXor_2663 : forall (w : Nat) (a b : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_AndOrXor_2663 
 
 -- Name:152
@@ -4048,7 +4048,7 @@ theorem alive_152 : forall (w : Nat) (x : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_152 
 
 -- Name:160
@@ -4097,7 +4097,7 @@ theorem alive_160: forall (x C1 C2 : Bitvec 7)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_160
 
 -- Name:229
@@ -4150,7 +4150,7 @@ theorem alive_229 : forall (w : Nat) (X C1 Op1 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_229 
 
 -- Name:239
@@ -4205,7 +4205,7 @@ theorem alive_239 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_239 
 
 -- Name:265
@@ -4249,7 +4249,7 @@ theorem alive_265 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_265 
 
 -- Name:265-2
@@ -4293,7 +4293,7 @@ theorem alive_265_2 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_265_2 
 
 -- Name:266
@@ -4347,7 +4347,7 @@ theorem alive_266 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_266 
 
 -- Name:266-2
@@ -4401,7 +4401,7 @@ theorem alive_266_2 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_266_2 
 
 -- Name:275
@@ -4449,7 +4449,7 @@ theorem alive_275: forall (Y X : Bitvec 5)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_275
 
 -- Name:275-2
@@ -4497,7 +4497,7 @@ theorem alive_275_2: forall (Y X : Bitvec 5)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_275_2
 
 -- Name:276
@@ -4553,7 +4553,7 @@ theorem alive_276: forall (Y X : Bitvec 5)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_276
 
 -- Name:276-2
@@ -4609,7 +4609,7 @@ theorem alive_276_2: forall (Y X : Bitvec 5)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_276_2
 
 -- Name:283
@@ -4648,7 +4648,7 @@ theorem alive_283: forall (Y X : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_283
 
 -- Name:290 & 292
@@ -4695,7 +4695,7 @@ theorem alive_290__292 : forall (w : Nat) (Y Op1 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_290__292 
 
 -- Name:820
@@ -4746,7 +4746,7 @@ theorem alive_820: forall (X Op1 : Bitvec 9)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_820
 
 -- Name:820'
@@ -4797,7 +4797,7 @@ theorem alive_820': forall (X Op1 : Bitvec 9)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_820'
 
 -- Name:891
@@ -4844,7 +4844,7 @@ theorem alive_891: forall (x N : Bitvec 13)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_891
 
 -- Name:891-exact
@@ -4891,7 +4891,7 @@ theorem alive_891_exact: forall (x N : Bitvec 13)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_891_exact
 
 -- Name:1030
@@ -4930,7 +4930,7 @@ theorem alive_1030 : forall (w : Nat) (X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_1030 
 
 -- Name:1049
@@ -4978,7 +4978,7 @@ theorem alive_1049: forall (X C : Bitvec 11)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_1049
 
 -- Name:Select:846
@@ -4998,7 +4998,7 @@ theorem alive_Select_846: forall (C B : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
-  %v2 := op:const (Bitvec.ofBool true) %v0;
+  %v2 := op:const (↑true) %v0;
   %v3 := op:const (C) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select 1 %v4
@@ -5018,7 +5018,7 @@ theorem alive_Select_846: forall (C B : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_846
 
 -- Name:Select:850
@@ -5039,7 +5039,7 @@ theorem alive_Select_850: forall (C B : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
-  %v2 := op:const (Bitvec.ofBool false) %v0;
+  %v2 := op:const (↑false) %v0;
   %v3 := op:const (C) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select 1 %v4
@@ -5052,7 +5052,7 @@ theorem alive_Select_850: forall (C B : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
-  %v2 := op:const (Bitvec.ofBool true) %v0;
+  %v2 := op:const (↑true) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor 1 %v3;
   %v5 := op:const (C) %v0;
@@ -5062,7 +5062,7 @@ theorem alive_Select_850: forall (C B : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_850
 
 -- Name:Select:855
@@ -5083,7 +5083,7 @@ theorem alive_Select_855: forall (C B : Bitvec 1)
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
   %v2 := op:const (C) %v0;
-  %v3 := op:const (Bitvec.ofBool false) %v0;
+  %v3 := op:const (↑false) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select 1 %v4
   dsl_ret %v5
@@ -5102,7 +5102,7 @@ theorem alive_Select_855: forall (C B : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_855
 
 -- Name:Select:859
@@ -5124,7 +5124,7 @@ theorem alive_Select_859: forall (C B : Bitvec 1)
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
   %v2 := op:const (C) %v0;
-  %v3 := op:const (Bitvec.ofBool true) %v0;
+  %v3 := op:const (↑true) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select 1 %v4
   dsl_ret %v5
@@ -5136,7 +5136,7 @@ theorem alive_Select_859: forall (C B : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (B) %v0;
-  %v2 := op:const (Bitvec.ofBool true) %v0;
+  %v2 := op:const (↑true) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor 1 %v3;
   %v5 := op:const (C) %v0;
@@ -5146,7 +5146,7 @@ theorem alive_Select_859: forall (C B : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_859
 
 -- Name:Select:851
@@ -5185,7 +5185,7 @@ theorem alive_Select_851: forall (a b : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_851
 
 -- Name:Select:852
@@ -5224,7 +5224,7 @@ theorem alive_Select_852: forall (a b : Bitvec 1)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_852
 
 -- Name:Select:1100
@@ -5243,7 +5243,7 @@ theorem alive_Select_1100 : forall (w : Nat) (Y X : Bitvec w)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofBool true) %v0;
+  %v1 := op:const (↑true) %v0;
   %v2 := op:const (X) %v0;
   %v3 := op:const (Y) %v0;
   %v4 := triple:%v1 %v2 %v3;
@@ -5262,7 +5262,7 @@ theorem alive_Select_1100 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_1100 
 
 -- Name:Select:1105
@@ -5281,7 +5281,7 @@ theorem alive_Select_1105 : forall (w : Nat) (Y X : Bitvec w)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofBool false) %v0;
+  %v1 := op:const (↑false) %v0;
   %v2 := op:const (X) %v0;
   %v3 := op:const (Y) %v0;
   %v4 := triple:%v1 %v2 %v3;
@@ -5300,7 +5300,7 @@ theorem alive_Select_1105 : forall (w : Nat) (Y X : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_Select_1105 
 
 -- Name:InstCombineShift: 239
@@ -5348,7 +5348,7 @@ theorem alive_InstCombineShift__239 : forall (w : Nat) (X C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__239 
 
 -- Name:InstCombineShift: 279
@@ -5396,7 +5396,7 @@ theorem alive_InstCombineShift__279 : forall (w : Nat) (X C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__279 
 
 -- Name:InstCombineShift: 351
@@ -5445,7 +5445,7 @@ theorem alive_InstCombineShift__351: forall (X C1 C2 : Bitvec 7)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__351
 
 -- Name:InstCombineShift: 422-1
@@ -5507,7 +5507,7 @@ theorem alive_InstCombineShift__422_1: forall (Y X C : Bitvec 31)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__422_1
 
 -- Name:InstCombineShift: 422-2
@@ -5569,7 +5569,7 @@ theorem alive_InstCombineShift__422_2: forall (Y X C : Bitvec 31)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__422_2
 
 -- Name:InstCombineShift: 440
@@ -5638,7 +5638,7 @@ theorem alive_InstCombineShift__440 : forall (w : Nat) (Y X C C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__440 
 
 -- Name:InstCombineShift: 458
@@ -5700,7 +5700,7 @@ theorem alive_InstCombineShift__458: forall (Y X C : Bitvec 31)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__458
 
 -- Name:InstCombineShift: 476
@@ -5769,7 +5769,7 @@ theorem alive_InstCombineShift__476 : forall (w : Nat) (Y X C C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__476 
 
 -- Name:InstCombineShift: 497
@@ -5821,7 +5821,7 @@ theorem alive_InstCombineShift__497 : forall (w : Nat) (X C C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__497 
 
 -- Name:InstCombineShift: 497'''
@@ -5873,7 +5873,7 @@ theorem alive_InstCombineShift__497''' : forall (w : Nat) (X C C2 : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__497''' 
 
 -- Name:InstCombineShift: 582
@@ -5921,7 +5921,7 @@ theorem alive_InstCombineShift__582 : forall (w : Nat) (X C : Bitvec w)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__582 
 
 -- Name:InstCombineShift: 724
@@ -5970,5 +5970,5 @@ theorem alive_InstCombineShift__724: forall (A C2 C1 : Bitvec 31)
   ]
   := by
      simp_mlir
-     try simp_alive
+     simp_alive
      apply bitvec_InstCombineShift__724
