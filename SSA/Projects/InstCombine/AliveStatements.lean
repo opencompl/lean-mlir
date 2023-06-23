@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.InstCombineBase
+import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.Tactic
 
 theorem bitvec_AddSub_1043 :

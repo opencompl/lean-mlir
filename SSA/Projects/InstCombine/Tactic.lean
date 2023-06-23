@@ -1,5 +1,5 @@
 import SSA.Core.WellTypedFramework
-import SSA.Projects.InstCombine.InstCombineBase
+import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForMathlib
 
 open SSA 

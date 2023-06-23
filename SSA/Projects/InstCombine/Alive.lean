@@ -1,7 +1,7 @@
 import SSA.Core.WellTypedFramework
 import SSA.Core.Tactic
-import SSA.Projects.InstCombine.InstCombineBase
-import SSA.Projects.InstCombine.InstCombineAliveStatements
+import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Tactic
 
 open SSA InstCombine EDSL
