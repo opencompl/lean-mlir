@@ -5,7 +5,7 @@ theorem bitvec_AddSub_1043 :
 :=sorry
 
 theorem bitvec_AddSub_1152:
-  ∀ (y x : Bitvec 1), x + y = x ^^^ y
+ ∀ (y x : Bitvec 1), x + y = x ^^^ y
 :=sorry
 
 theorem bitvec_AddSub_1156 :
@@ -331,6 +331,10 @@ theorem bitvec_152 :
  ∀ (w : ℕ) (x : Bitvec w), x * Bitvec.ofInt w (-1) = Bitvec.ofInt w 0 - x
 :=sorry
 
+theorem bitvec_160:
+ ∀ (x C1 C2 : Bitvec 7), Bitvec.shl x (Bitvec.toNat C2) * C1 = x * Bitvec.shl C1 (Bitvec.toNat C2)
+:=sorry
+
 theorem bitvec_229 :
  ∀ (w : ℕ) (X C1 Op1 : Bitvec w), (X + C1) * Op1 = X * Op1 + C1 * Op1
 :=sorry
@@ -357,6 +361,28 @@ theorem bitvec_266_2 :
   (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (Bitvec.ofInt w 0 - Y))) ⊑ some (Bitvec.ofInt w 0 - X)
 :=sorry
 
+theorem bitvec_275:
+ ∀ (Y X : Bitvec 5),
+  (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * Y)) ⊑ Option.bind (Bitvec.urem? X Y) fun snd => some (X - snd)
+:=sorry
+
+theorem bitvec_275_2:
+ ∀ (Y X : Bitvec 5),
+  (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * Y)) ⊑ Option.bind (Bitvec.urem? X Y) fun snd => some (X - snd)
+:=sorry
+
+theorem bitvec_276:
+ ∀ (Y X : Bitvec 5),
+  (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (Bitvec.ofInt 5 0 - Y))) ⊑
+    Option.bind (Bitvec.urem? X Y) fun fst => some (fst - X)
+:=sorry
+
+theorem bitvec_276_2:
+ ∀ (Y X : Bitvec 5),
+  (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * (Bitvec.ofInt 5 0 - Y))) ⊑
+    Option.bind (Bitvec.urem? X Y) fun fst => some (fst - X)
+:=sorry
+
 theorem bitvec_283:
  ∀ (Y X : Bitvec 1), X * Y = X &&& Y
 :=sorry
@@ -365,8 +391,34 @@ theorem bitvec_290__292 :
  ∀ (w : ℕ) (Y Op1 : Bitvec w), Bitvec.shl (Bitvec.ofInt w 1) (Bitvec.toNat Y) * Op1 = Bitvec.shl Op1 (Bitvec.toNat Y)
 :=sorry
 
+theorem bitvec_820:
+ ∀ (X Op1 : Bitvec 9),
+  (Option.bind (Option.bind (Bitvec.urem? X Op1) fun snd => some (X - snd)) fun fst => Bitvec.sdiv? fst Op1) ⊑
+    Bitvec.sdiv? X Op1
+:=sorry
+
+theorem bitvec_820':
+ ∀ (X Op1 : Bitvec 9),
+  (Option.bind (Option.bind (Bitvec.urem? X Op1) fun snd => some (X - snd)) fun fst => Bitvec.udiv? fst Op1) ⊑
+    Bitvec.udiv? X Op1
+:=sorry
+
+theorem bitvec_891:
+ ∀ (x N : Bitvec 13),
+  Bitvec.udiv? x (Bitvec.shl (Bitvec.ofInt 13 1) (Bitvec.toNat N)) ⊑ some (Bitvec.ushr x (Bitvec.toNat N))
+:=sorry
+
+theorem bitvec_891_exact:
+ ∀ (x N : Bitvec 13),
+  Bitvec.udiv? x (Bitvec.shl (Bitvec.ofInt 13 1) (Bitvec.toNat N)) ⊑ some (Bitvec.ushr x (Bitvec.toNat N))
+:=sorry
+
 theorem bitvec_1030 :
  ∀ (w : ℕ) (X : Bitvec w), Bitvec.sdiv? X (Bitvec.ofInt w (-1)) ⊑ some (Bitvec.ofInt w 0 - X)
+:=sorry
+
+theorem bitvec_1049:
+ ∀ (X C : Bitvec 11), Bitvec.sdiv? (Bitvec.ofInt 11 0 - X) C ⊑ Bitvec.sdiv? X (-C)
 :=sorry
 
 theorem bitvec_Select_846:
@@ -412,6 +464,10 @@ theorem bitvec_InstCombineShift__239 :
 theorem bitvec_InstCombineShift__279 :
  ∀ (w : ℕ) (X C : Bitvec w),
   Bitvec.shl (Bitvec.ushr X (Bitvec.toNat C)) (Bitvec.toNat C) = X &&& Bitvec.shl (Bitvec.ofInt w (-1)) (Bitvec.toNat C)
+:=sorry
+
+theorem bitvec_InstCombineShift__351:
+ ∀ (X C1 C2 : Bitvec 7), Bitvec.shl (X * C1) (Bitvec.toNat C2) = X * Bitvec.shl C1 (Bitvec.toNat C2)
 :=sorry
 
 theorem bitvec_InstCombineShift__422_1:
