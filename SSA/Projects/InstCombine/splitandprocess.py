@@ -14,7 +14,7 @@ def getProofs(lines):
     return proofs[0], proofs[1:]
 
 def isWorkingProof(preamble, proof):
-    f = open("InstCombineAliveTest.lean", "w")
+    f = open("AliveTest.lean", "w")
 
     f.write("".join(preamble))
     rewritten = []
@@ -25,7 +25,7 @@ def isWorkingProof(preamble, proof):
     f.close()
     
     import subprocess
-    x = subprocess.run("(cd ../../../; lake build SSA.Projects.InstCombine.InstCombineAliveTest)", shell=True, capture_output=True)
+    x = subprocess.run("(cd ../../../; lake build SSA.Projects.InstCombine.AliveTest)", shell=True, capture_output=True)
     return (x.returncode == 0 or x.stderr.decode().find("no goals to be solved") != -1)
 
 def filterProofs(preamble, proofs):
@@ -47,9 +47,9 @@ def writeOutput(preamble, proofs, filename):
         for proof in proofs:
             f.write("".join(proof))
 
-f = open("InstCombineAliveAll.lean", "r")
+f = open("AliveAll.lean", "r")
 lines = f.readlines()
 preamble, proofs = getProofs(lines)
 working_proofs, broken_proofs = filterProofs(preamble, proofs)
-writeOutput(preamble, working_proofs, "InstCombineAlive.lean")
+writeOutput(preamble, working_proofs, "Alive.lean")
 writeOutput(preamble, broken_proofs, "Broken.lean")
