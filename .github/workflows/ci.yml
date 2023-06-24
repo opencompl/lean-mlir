@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: build and deploy documentation.
+    name: build and test code
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -36,12 +36,3 @@ jobs:
       - name: Run executable ⚙️
         run: |
           ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
-  
-      - name: Generate docs 📜
-        run: |
-          ./docgen.sh
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build/doc # The folder the action should deploy.
-
