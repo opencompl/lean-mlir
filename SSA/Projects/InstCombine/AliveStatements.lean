@@ -42,7 +42,7 @@ theorem bitvec_AddSub_1176 :
       try sorry
 
 theorem bitvec_AddSub_1202 :
- ∀ (w : ℕ) (x C : Bitvec w), (x ^^^ (-1)) + C = C - 1 - x
+ ∀ (w : ℕ) (x C : Bitvec w), (x ^^^ -1) + C = C - 1 - x
 := by alive_auto
       try sorry
 
@@ -87,12 +87,12 @@ theorem bitvec_AddSub_1556:
       try sorry
 
 theorem bitvec_AddSub_1560 :
- ∀ (w : ℕ) (a : Bitvec w), (-1) - a = a ^^^ (-1)
+ ∀ (w : ℕ) (a : Bitvec w), -1 - a = a ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AddSub_1564 :
- ∀ (w : ℕ) (x C : Bitvec w), C - (x ^^^ (-1)) = x + (C + 1)
+ ∀ (w : ℕ) (x C : Bitvec w), C - (x ^^^ -1) = x + (C + 1)
 := by alive_auto
       try sorry
 
@@ -128,8 +128,7 @@ theorem bitvec_AndOrXor_144 :
 
 theorem bitvec_AndOrXor_698 :
  ∀ (w : ℕ) (a b d : Bitvec w),
-  Bitvec.ofBool (a &&& b == 0) &&& Bitvec.ofBool (a &&& d == 0) =
-    Bitvec.ofBool (a &&& (b ||| d) == 0)
+  Bitvec.ofBool (a &&& b == 0) &&& Bitvec.ofBool (a &&& d == 0) = Bitvec.ofBool (a &&& (b ||| d) == 0)
 := by alive_auto
       try sorry
 
@@ -153,9 +152,7 @@ theorem bitvec_AndOrXor_794 :
       try sorry
 
 theorem bitvec_AndOrXor_827 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (a == 0) &&& Bitvec.ofBool (b == 0) =
-    Bitvec.ofBool (a ||| b == 0)
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.ofBool (a == 0) &&& Bitvec.ofBool (b == 0) = Bitvec.ofBool (a ||| b == 0)
 := by alive_auto
       try sorry
 
@@ -165,38 +162,37 @@ theorem bitvec_AndOrXor_887_2 :
       try sorry
 
 theorem bitvec_AndOrXor_1230__A__B___A__B :
- ∀ (w : ℕ) (notOp0 notOp1 : Bitvec w),
-  (notOp0 ^^^ (-1)) &&& (notOp1 ^^^ (-1)) = (notOp0 ||| notOp1) ^^^ (-1)
+ ∀ (w : ℕ) (notOp0 notOp1 : Bitvec w), (notOp0 ^^^ -1) &&& (notOp1 ^^^ -1) = (notOp0 ||| notOp1) ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
- ∀ (w : ℕ) (A B : Bitvec w), (A ||| B) &&& (A &&& B ^^^ (-1)) = A ^^^ B
+ ∀ (w : ℕ) (A B : Bitvec w), (A ||| B) &&& (A &&& B ^^^ -1) = A ^^^ B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1247_AB__AB__AB :
- ∀ (w : ℕ) (A B : Bitvec w), (A &&& B ^^^ (-1)) &&& (A ||| B) = A ^^^ B
+ ∀ (w : ℕ) (A B : Bitvec w), (A &&& B ^^^ -1) &&& (A ||| B) = A ^^^ B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1253_A__AB___A__B :
- ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ B) &&& A = A &&& (B ^^^ (-1))
+ ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ B) &&& A = A &&& (B ^^^ -1)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1280_ABA___AB :
- ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ (-1) ||| B) &&& A = A &&& B
+ ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ -1 ||| B) &&& A = A &&& B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
- ∀ (w : ℕ) (A C B : Bitvec w), (A ^^^ B) &&& (B ^^^ C ^^^ A) = (A ^^^ B) &&& (C ^^^ (-1))
+ ∀ (w : ℕ) (A C B : Bitvec w), (A ^^^ B) &&& (B ^^^ C ^^^ A) = (A ^^^ B) &&& (C ^^^ -1)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
- ∀ (w : ℕ) (A B : Bitvec w), (A ||| B) &&& (A ^^^ (-1) ^^^ B) = A &&& B
+ ∀ (w : ℕ) (A B : Bitvec w), (A ||| B) &&& (A ^^^ -1 ^^^ B) = A &&& B
 := by alive_auto
       try sorry
 
@@ -216,21 +212,19 @@ theorem bitvec_AndOrXor_1683_2 :
 theorem bitvec_AndOrXor_1704 :
  ∀ (w : ℕ) (A B : Bitvec w),
   Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat A < Bitvec.toNat B)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + (-1)) ≥ Bitvec.toNat A))
+    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1705 :
  ∀ (w : ℕ) (A B : Bitvec w),
   Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat B > Bitvec.toNat A)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + (-1)) ≥ Bitvec.toNat A))
+    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1733 :
- ∀ (w : ℕ) (A B : Bitvec w),
-  Bitvec.ofBool (A != 0) ||| Bitvec.ofBool (B != 0) =
-    Bitvec.ofBool (A ||| B != 0)
+ ∀ (w : ℕ) (A B : Bitvec w), Bitvec.ofBool (A != 0) ||| Bitvec.ofBool (B != 0) = Bitvec.ofBool (A ||| B != 0)
 := by alive_auto
       try sorry
 
@@ -240,22 +234,22 @@ theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
       try sorry
 
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
- ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ (-1)) &&& B ||| A = A ||| B
+ ∀ (w : ℕ) (A B : Bitvec w), (A ^^^ -1) &&& B ||| A = A ||| B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2118___A__B__A___A__B :
- ∀ (w : ℕ) (A B : Bitvec w), A &&& B ||| A ^^^ (-1) = A ^^^ (-1) ||| B
+ ∀ (w : ℕ) (A B : Bitvec w), A &&& B ||| A ^^^ -1 = A ^^^ -1 ||| B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2123___A__B__A__B___A__B :
- ∀ (w : ℕ) (A B : Bitvec w), A &&& (B ^^^ (-1)) ||| A ^^^ B = A ^^^ B
+ ∀ (w : ℕ) (A B : Bitvec w), A &&& (B ^^^ -1) ||| A ^^^ B = A ^^^ B
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2188 :
- ∀ (w : ℕ) (A D : Bitvec w), A &&& (D ^^^ (-1)) ||| (A ^^^ (-1)) &&& D = A ^^^ D
+ ∀ (w : ℕ) (A D : Bitvec w), A &&& (D ^^^ -1) ||| (A ^^^ -1) &&& D = A ^^^ D
 := by alive_auto
       try sorry
 
@@ -270,7 +264,7 @@ theorem bitvec_AndOrXor_2243__B__C__A__B___B__A__C :
       try sorry
 
 theorem bitvec_AndOrXor_2247__A__B__A__B :
- ∀ (w : ℕ) (A B : Bitvec w), A ^^^ (-1) ||| B ^^^ (-1) = A &&& B ^^^ (-1)
+ ∀ (w : ℕ) (A B : Bitvec w), A ^^^ -1 ||| B ^^^ -1 = A &&& B ^^^ -1
 := by alive_auto
       try sorry
 
@@ -280,7 +274,7 @@ theorem bitvec_AndOrXor_2263 :
       try sorry
 
 theorem bitvec_AndOrXor_2264 :
- ∀ (w : ℕ) (A B : Bitvec w), A ||| A ^^^ (-1) ^^^ B = A ||| B ^^^ (-1)
+ ∀ (w : ℕ) (A B : Bitvec w), A ||| A ^^^ -1 ^^^ B = A ||| B ^^^ -1
 := by alive_auto
       try sorry
 
@@ -290,17 +284,17 @@ theorem bitvec_AndOrXor_2265 :
       try sorry
 
 theorem bitvec_AndOrXor_2284 :
- ∀ (w : ℕ) (A B : Bitvec w), A ||| (A ||| B) ^^^ (-1) = A ||| B ^^^ (-1)
+ ∀ (w : ℕ) (A B : Bitvec w), A ||| (A ||| B) ^^^ -1 = A ||| B ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2285 :
- ∀ (w : ℕ) (A B : Bitvec w), A ||| A ^^^ B ^^^ (-1) = A ||| B ^^^ (-1)
+ ∀ (w : ℕ) (A B : Bitvec w), A ||| A ^^^ B ^^^ -1 = A ||| B ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2297 :
- ∀ (w : ℕ) (A B : Bitvec w), A &&& B ||| A ^^^ (-1) ^^^ B = A ^^^ (-1) ^^^ B
+ ∀ (w : ℕ) (A B : Bitvec w), A &&& B ||| A ^^^ -1 ^^^ B = A ^^^ -1 ^^^ B
 := by alive_auto
       try sorry
 
@@ -310,58 +304,54 @@ theorem bitvec_AndOrXor_2367 :
       try sorry
 
 theorem bitvec_AndOrXor_2416 :
- ∀ (w : ℕ) (nx y : Bitvec w),
-  (nx ^^^ (-1)) &&& y ^^^ (-1) = nx ||| y ^^^ (-1)
+ ∀ (w : ℕ) (nx y : Bitvec w), (nx ^^^ -1) &&& y ^^^ -1 = nx ||| y ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2417 :
- ∀ (w : ℕ) (nx y : Bitvec w),
-  (nx ^^^ (-1) ||| y) ^^^ (-1) = nx &&& (y ^^^ (-1))
+ ∀ (w : ℕ) (nx y : Bitvec w), (nx ^^^ -1 ||| y) ^^^ -1 = nx &&& (y ^^^ -1)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2429 :
- ∀ (w : ℕ) (y x : Bitvec w), x &&& y ^^^ (-1) = x ^^^ (-1) ||| y ^^^ (-1)
+ ∀ (w : ℕ) (y x : Bitvec w), x &&& y ^^^ -1 = x ^^^ -1 ||| y ^^^ -1
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2430 :
- ∀ (w : ℕ) (y x : Bitvec w),
-  (x ||| y) ^^^ (-1) = (x ^^^ (-1)) &&& (y ^^^ (-1))
+ ∀ (w : ℕ) (y x : Bitvec w), (x ||| y) ^^^ -1 = (x ^^^ -1) &&& (y ^^^ -1)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2443 :
- ∀ (w : ℕ) (y x : Bitvec w),
-  Bitvec.sshr (x ^^^ (-1)) (Bitvec.toNat y) ^^^ (-1) = Bitvec.sshr x (Bitvec.toNat y)
+ ∀ (w : ℕ) (y x : Bitvec w), Bitvec.sshr (x ^^^ -1) (Bitvec.toNat y) ^^^ -1 = Bitvec.sshr x (Bitvec.toNat y)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2453 :
  ∀ (w : ℕ) (y x : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toInt x < Bitvec.toInt y)) ^^^ (-1) =
+  Bitvec.ofBool (decide (Bitvec.toInt x < Bitvec.toInt y)) ^^^ -1 =
     Bitvec.ofBool (decide (Bitvec.toInt x ≥ Bitvec.toInt y))
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2475 :
- ∀ (w : ℕ) (x C : Bitvec w), C - x ^^^ (-1) = x + ((-1) - C)
+ ∀ (w : ℕ) (x C : Bitvec w), C - x ^^^ -1 = x + (-1 - C)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2486 :
- ∀ (w : ℕ) (x C : Bitvec w), x + C ^^^ (-1) = (-1) - C - x
+ ∀ (w : ℕ) (x C : Bitvec w), x + C ^^^ -1 = -1 - C - x
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2581__BAB___A__B :
- ∀ (w : ℕ) (a op1 : Bitvec w), (a ||| op1) ^^^ op1 = a &&& (op1 ^^^ (-1))
+ ∀ (w : ℕ) (a op1 : Bitvec w), (a ||| op1) ^^^ op1 = a &&& (op1 ^^^ -1)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2587__BAA___B__A :
- ∀ (w : ℕ) (a op1 : Bitvec w), a &&& op1 ^^^ op1 = (a ^^^ (-1)) &&& op1
+ ∀ (w : ℕ) (a op1 : Bitvec w), a &&& op1 ^^^ op1 = (a ^^^ -1) &&& op1
 := by alive_auto
       try sorry
 
@@ -371,17 +361,17 @@ theorem bitvec_AndOrXor_2595 :
       try sorry
 
 theorem bitvec_AndOrXor_2607 :
- ∀ (w : ℕ) (a b : Bitvec w), (a ||| b ^^^ (-1)) ^^^ (a ^^^ (-1) ||| b) = a ^^^ b
+ ∀ (w : ℕ) (a b : Bitvec w), (a ||| b ^^^ -1) ^^^ (a ^^^ -1 ||| b) = a ^^^ b
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2617 :
- ∀ (w : ℕ) (a b : Bitvec w), a &&& (b ^^^ (-1)) ^^^ (a ^^^ (-1)) &&& b = a ^^^ b
+ ∀ (w : ℕ) (a b : Bitvec w), a &&& (b ^^^ -1) ^^^ (a ^^^ -1) &&& b = a ^^^ b
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2627 :
- ∀ (w : ℕ) (a c b : Bitvec w), a ^^^ c ^^^ (a ||| b) = (a ^^^ (-1)) &&& b ^^^ c
+ ∀ (w : ℕ) (a c b : Bitvec w), a ^^^ c ^^^ (a ||| b) = (a ^^^ -1) &&& b ^^^ c
 := by alive_auto
       try sorry
 
@@ -391,8 +381,7 @@ theorem bitvec_AndOrXor_2647 :
       try sorry
 
 theorem bitvec_AndOrXor_2658 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  a &&& (b ^^^ (-1)) ^^^ (a ^^^ (-1)) = a &&& b ^^^ (-1)
+ ∀ (w : ℕ) (a b : Bitvec w), a &&& (b ^^^ -1) ^^^ (a ^^^ -1) = a &&& b ^^^ -1
 := by alive_auto
       try sorry
 
@@ -404,7 +393,7 @@ theorem bitvec_AndOrXor_2663 :
       try sorry
 
 theorem bitvec_152 :
- ∀ (w : ℕ) (x : Bitvec w), x * (-1) = 0 - x
+ ∀ (w : ℕ) (x : Bitvec w), x * -1 = 0 - x
 := by alive_auto
       try sorry
 
@@ -434,14 +423,12 @@ theorem bitvec_265_2 :
       try sorry
 
 theorem bitvec_266 :
- ∀ (w : ℕ) (Y X : Bitvec w),
-  (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
+ ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
 := by alive_auto
       try sorry
 
 theorem bitvec_266_2 :
- ∀ (w : ℕ) (Y X : Bitvec w),
-  (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
+ ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
 := by alive_auto
       try sorry
 
@@ -506,7 +493,7 @@ theorem bitvec_891_exact:
       try sorry
 
 theorem bitvec_1030 :
- ∀ (w : ℕ) (X : Bitvec w), Bitvec.sdiv? X ((-1)) ⊑ some (0 - X)
+ ∀ (w : ℕ) (X : Bitvec w), Bitvec.sdiv? X (-1) ⊑ some (0 - X)
 := by alive_auto
       try sorry
 

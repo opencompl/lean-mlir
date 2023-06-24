@@ -89,7 +89,7 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (Y X c : Bitvec 1)
   %v0 := unit: ;
   %v1 := op:const (c) %v0;
   %v2 := op:const (Y) %v0;
-  %v3 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v3 := op:const (0) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select w %v4;
   %v6 := op:const (X) %v0;
@@ -105,7 +105,7 @@ theorem alive_SimplifyDivRemOfSelect : forall (w : Nat) (Y X c : Bitvec 1)
   %v0 := unit: ;
   %v1 := op:const (c) %v0;
   %v2 := op:const (Y) %v0;
-  %v3 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v3 := op:const (0) %v0;
   %v4 := triple:%v1 %v2 %v3;
   %v5 := op:select 1 %v4;
   %v6 := op:const (X) %v0;
@@ -136,7 +136,7 @@ theorem alive_805 : forall (w : Nat) (X : Bitvec 1)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt w (1)) %v0;
+  %v1 := op:const (1) %v0;
   %v2 := op:const (X) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sdiv w %v3
@@ -149,13 +149,13 @@ theorem alive_805 : forall (w : Nat) (X : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (X) %v0;
-  %v2 := op:const (Bitvec.ofInt w (1)) %v0;
+  %v2 := op:const (1) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:add w %v3;
   %v5 := op:const (Bitvec.ofInt w (3)) %v0;
   %v6 := pair:%v4 %v5;
   %v7 := op:icmp ult  w %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v8 := op:const (0) %v0;
   %v9 := triple:%v7 %v1 %v8;
   %v10 := op:select w %v9
   dsl_ret %v10
@@ -514,18 +514,18 @@ theorem alive_Select_740 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp sgt  w %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v1 %v7;
   %v9 := op:select w %v8;
-  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v10 := op:const (-1) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp sgt  w %v11;
-  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub w %v14;
   %v16 := triple:%v12 %v9 %v15;
@@ -539,18 +539,18 @@ theorem alive_Select_740 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp sgt  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v1 %v7;
   %v9 := op:select 1 %v8;
-  %v10 := op:const (Bitvec.ofInt 1 (-1)) %v0;
+  %v10 := op:const (-1) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp sgt  1 %v11;
-  %v13 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub 1 %v14;
   %v16 := triple:%v4 %v1 %v7;
@@ -589,18 +589,18 @@ theorem alive_Select_741 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp sgt  w %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v7 %v1;
   %v9 := op:select w %v8;
-  %v10 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v10 := op:const (-1) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp sgt  w %v11;
-  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub w %v14;
   %v16 := triple:%v12 %v15 %v9;
@@ -614,18 +614,18 @@ theorem alive_Select_741 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp sgt  1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v7 %v1;
   %v9 := op:select 1 %v8;
-  %v10 := op:const (Bitvec.ofInt 1 (-1)) %v0;
+  %v10 := op:const (-1) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp sgt  1 %v11;
-  %v13 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub 1 %v14;
   %v16 := triple:%v4 %v7 %v1;
@@ -665,18 +665,18 @@ theorem alive_Select_746 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp slt  w %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v1 %v7;
   %v9 := op:select w %v8;
-  %v10 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v10 := op:const (0) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp sgt  w %v11;
-  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub w %v14;
   %v16 := triple:%v12 %v9 %v15;
@@ -689,22 +689,22 @@ theorem alive_Select_746 : forall (w : Nat) (A : Bitvec 1)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v1 := op:const (0) %v0;
   %v2 := op:const (A) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sub 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v2 %v5;
   %v7 := op:icmp sgt  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v8 := op:const (0) %v0;
   %v9 := pair:%v2 %v8;
   %v10 := op:icmp slt  1 %v9;
   %v11 := triple:%v10 %v2 %v4;
   %v12 := op:select 1 %v11;
-  %v13 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v12 %v13;
   %v15 := op:icmp sgt  1 %v14;
-  %v16 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v16 := op:const (0) %v0;
   %v17 := pair:%v16 %v12;
   %v18 := op:sub 1 %v17;
   %v19 := triple:%v7 %v2 %v4;
@@ -744,18 +744,18 @@ theorem alive_Select_747 : forall (w : Nat) (A : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (A) %v0;
-  %v2 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v2 := op:const (0) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp sgt  w %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v1;
   %v7 := op:sub 1 %v6;
   %v8 := triple:%v4 %v1 %v7;
   %v9 := op:select w %v8;
-  %v10 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v10 := op:const (0) %v0;
   %v11 := pair:%v9 %v10;
   %v12 := op:icmp slt  w %v11;
-  %v13 := op:const (Bitvec.ofInt w (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v13 %v9;
   %v15 := op:sub w %v14;
   %v16 := triple:%v12 %v9 %v15;
@@ -768,22 +768,22 @@ theorem alive_Select_747 : forall (w : Nat) (A : Bitvec 1)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v1 := op:const (0) %v0;
   %v2 := op:const (A) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sub 1 %v3;
-  %v5 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v2 %v5;
   %v7 := op:icmp slt  1 %v6;
-  %v8 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v8 := op:const (0) %v0;
   %v9 := pair:%v2 %v8;
   %v10 := op:icmp sgt  1 %v9;
   %v11 := triple:%v10 %v2 %v4;
   %v12 := op:select 1 %v11;
-  %v13 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v13 := op:const (0) %v0;
   %v14 := pair:%v12 %v13;
   %v15 := op:icmp slt  1 %v14;
-  %v16 := op:const (Bitvec.ofInt 1 (0)) %v0;
+  %v16 := op:const (0) %v0;
   %v17 := pair:%v16 %v12;
   %v18 := op:sub 1 %v17;
   %v19 := triple:%v7 %v2 %v4;
@@ -814,7 +814,7 @@ theorem alive_Select_858 : forall (w : Nat) (a b : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (a) %v0;
-  %v2 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v2 := op:const (-1) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor w %v3;
   %v5 := op:const (b) %v0;
@@ -829,7 +829,7 @@ theorem alive_Select_858 : forall (w : Nat) (a b : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (a) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (-1)) %v0;
+  %v2 := op:const (-1) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor 1 %v3;
   %v5 := op:const (b) %v0;
@@ -861,7 +861,7 @@ theorem alive_Select_859' : forall (w : Nat) (a b : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (a) %v0;
-  %v2 := op:const (Bitvec.ofInt w (-1)) %v0;
+  %v2 := op:const (-1) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor w %v3;
   %v5 := op:const (b) %v0;
@@ -876,7 +876,7 @@ theorem alive_Select_859' : forall (w : Nat) (a b : Bitvec 1)
   ^bb
   %v0 := unit: ;
   %v1 := op:const (a) %v0;
-  %v2 := op:const (Bitvec.ofInt 1 (-1)) %v0;
+  %v2 := op:const (-1) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:xor 1 %v3;
   %v5 := op:const (b) %v0;

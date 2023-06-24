@@ -3380,7 +3380,7 @@ theorem alive_AndOrXor_2453 : forall (w : Nat) (y x : Bitvec w)
   %v2 := op:const (y) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:icmp slt  w %v3;
-  %v5 := op:const ((-1)) %v0;
+  %v5 := op:const (-1) %v0;
   %v6 := pair:%v4 %v5;
   %v7 := op:xor 1 %v6
   dsl_ret %v7
@@ -4525,7 +4525,7 @@ theorem alive_276: forall (Y X : Bitvec 5)
   %v2 := op:const (Y) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sdiv 5 %v3;
-  %v5 := op:const ((0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v2;
   %v7 := op:sub 5 %v6;
   %v8 := pair:%v4 %v7;
@@ -4544,7 +4544,7 @@ theorem alive_276: forall (Y X : Bitvec 5)
   %v4 := op:srem 5 %v3;
   %v5 := pair:%v1 %v2;
   %v6 := op:sdiv 5 %v5;
-  %v7 := op:const ((0)) %v0;
+  %v7 := op:const (0) %v0;
   %v8 := pair:%v7 %v2;
   %v9 := op:sub 5 %v8;
   %v10 := pair:%v4 %v1;
@@ -4581,7 +4581,7 @@ theorem alive_276_2: forall (Y X : Bitvec 5)
   %v2 := op:const (Y) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:udiv 5 %v3;
-  %v5 := op:const ((0)) %v0;
+  %v5 := op:const (0) %v0;
   %v6 := pair:%v5 %v2;
   %v7 := op:sub 5 %v6;
   %v8 := pair:%v4 %v7;
@@ -4600,7 +4600,7 @@ theorem alive_276_2: forall (Y X : Bitvec 5)
   %v4 := op:urem 5 %v3;
   %v5 := pair:%v1 %v2;
   %v6 := op:udiv 5 %v5;
-  %v7 := op:const ((0)) %v0;
+  %v7 := op:const (0) %v0;
   %v8 := pair:%v7 %v2;
   %v9 := op:sub 5 %v8;
   %v10 := pair:%v4 %v1;
@@ -4818,7 +4818,7 @@ theorem alive_891: forall (x N : Bitvec 13)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((1)) %v0;
+  %v1 := op:const (1) %v0;
   %v2 := op:const (N) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:shl 13 %v3;
@@ -4833,7 +4833,7 @@ theorem alive_891: forall (x N : Bitvec 13)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((1)) %v0;
+  %v1 := op:const (1) %v0;
   %v2 := op:const (N) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:shl 13 %v3;
@@ -4865,7 +4865,7 @@ theorem alive_891_exact: forall (x N : Bitvec 13)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((1)) %v0;
+  %v1 := op:const (1) %v0;
   %v2 := op:const (N) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:shl 13 %v3;
@@ -4880,7 +4880,7 @@ theorem alive_891_exact: forall (x N : Bitvec 13)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((1)) %v0;
+  %v1 := op:const (1) %v0;
   %v2 := op:const (N) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:shl 13 %v3;
@@ -4951,7 +4951,7 @@ theorem alive_1049: forall (X C : Bitvec 11)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((0)) %v0;
+  %v1 := op:const (0) %v0;
   %v2 := op:const (X) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sub 11 %v3;
@@ -4966,7 +4966,7 @@ theorem alive_1049: forall (X C : Bitvec 11)
   [dsl_bb|
   ^bb
   %v0 := unit: ;
-  %v1 := op:const ((0)) %v0;
+  %v1 := op:const (0) %v0;
   %v2 := op:const (X) %v0;
   %v3 := pair:%v1 %v2;
   %v4 := op:sub 11 %v3;
@@ -5498,7 +5498,7 @@ theorem alive_InstCombineShift__422_1: forall (Y X C : Bitvec 31)
   %v9 := op:lshr 31 %v8;
   %v10 := pair:%v1 %v9;
   %v11 := op:add 31 %v10;
-  %v12 := op:const ((-1)) %v0;
+  %v12 := op:const (-1) %v0;
   %v13 := pair:%v12 %v2;
   %v14 := op:shl 31 %v13;
   %v15 := pair:%v7 %v14;
@@ -5560,7 +5560,7 @@ theorem alive_InstCombineShift__422_2: forall (Y X C : Bitvec 31)
   %v9 := op:ashr 31 %v8;
   %v10 := pair:%v1 %v9;
   %v11 := op:add 31 %v10;
-  %v12 := op:const ((-1)) %v0;
+  %v12 := op:const (-1) %v0;
   %v13 := pair:%v12 %v2;
   %v14 := op:shl 31 %v13;
   %v15 := pair:%v7 %v14;
@@ -5691,7 +5691,7 @@ theorem alive_InstCombineShift__458: forall (Y X C : Bitvec 31)
   %v9 := op:ashr 31 %v8;
   %v10 := pair:%v9 %v1;
   %v11 := op:sub 31 %v10;
-  %v12 := op:const ((-1)) %v0;
+  %v12 := op:const (-1) %v0;
   %v13 := pair:%v12 %v2;
   %v14 := op:shl 31 %v13;
   %v15 := pair:%v7 %v14;
