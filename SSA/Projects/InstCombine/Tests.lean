@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.InstCombineBase
+import SSA.Projects.InstCombine.Base
 
 namespace InstCombine
 open SSA EDSL in

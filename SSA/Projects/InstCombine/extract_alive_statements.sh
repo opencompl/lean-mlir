@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 
-ALIVE_FILE="InstCombineAlive.lean"
+ALIVE_FILE="Alive.lean"
 INST_COMBINE_PREFIX="SSA/Projects/InstCombine"
-OUTPUT_FILE="InstCombineAliveStatements.lean"
+OUTPUT_FILE="AliveStatements.lean"
 THEOREMS_TEMP_FILE="theorems_temp_file.tmp"
 LEAN_DEV_ROOT="../../../"
-PREAMBLE="import SSA.Projects.InstCombine.InstCombineBase\nimport SSA.Projects.InstCombine.Tactic"
+PREAMBLE="import SSA.Projects.InstCombine.Base\nimport SSA.Projects.InstCombine.Tactic"
 
 cd "$LEAN_DEV_ROOT" || exit
 echo "$PREAMBLE" > "$INST_COMBINE_PREFIX/$OUTPUT_FILE"
@@ -22,7 +22,7 @@ echo "\n:=sorry" >> "$INST_COMBINE_PREFIX/$OUTPUT_FILE"  #add last one
 gsed -i -e "s/theorem /     apply /" -e "s/://" "$THEOREMS_TEMP_FILE"
 gsed -i "/print_goal_as_error/R $THEOREMS_TEMP_FILE" "$INST_COMBINE_PREFIX/$ALIVE_FILE"
 gsed -i "/print_goal_as_error/d" "$INST_COMBINE_PREFIX/$ALIVE_FILE"
-gsed -i "/import SSA.Projects.InstCombine.InstCombineBase/a import SSA.Projects.InstCombine.${OUTPUT_FILE%.*}" "$INST_COMBINE_PREFIX/$ALIVE_FILE"
+gsed -i "/import SSA.Projects.InstCombine.Base/a import SSA.Projects.InstCombine.${OUTPUT_FILE%.*}" "$INST_COMBINE_PREFIX/$ALIVE_FILE"
 
 #cleanup
 rm $THEOREMS_TEMP_FILE
