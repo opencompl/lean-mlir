@@ -77,11 +77,13 @@ mk_ex 120
 inductive Expr : Type
   | var (v : Nat)
   | nat (n : Nat)
+  deriving Repr
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
   | ret (ty : Ty) (e : Expr) : Com
   | let (ty : Ty) (e : Expr) (body : Com) : Com
+  deriving Repr
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
