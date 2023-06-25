@@ -3,12 +3,13 @@
 /-- A very simple type universe. -/
 inductive Ty
   | nat
-  | bool
+--  | bool  TODO: Add support for more than one type to denote
   deriving DecidableEq, Repr
 
 def Ty.toType
   | nat => Nat
-  | bool => Bool
+--  | bool => Bool
+
 
 /-- A context is a list of types, growing to the left for simplicity. -/
 abbrev Ctxt := List Ty
@@ -34,7 +35,7 @@ set_option pp.proofs.withType false  -- hide `Fin` statements
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
 -- overall quadratic elaboration times.
-example : ICom [] .nat :=
+def ex: ICom [] .nat :=
   ICom.let (.nat 0) <|
   ICom.let (α := .nat) (.var ⟨0, by decide⟩) <|
   ICom.let (α := .nat) (.var ⟨1, by decide⟩) <|
@@ -43,6 +44,17 @@ example : ICom [] .nat :=
   ICom.let (α := .nat) (.var ⟨4, by decide⟩) <|
   ICom.let (α := .nat) (.var ⟨5, by decide⟩) <|
   ICom.ret (.var ⟨0, by decide⟩)
+
+def IExpr.denote : IExpr l ty → (ll : List Nat) → (l.length = ll.length) → Nat
+| .nat n, _, _ => n
+| .var v, ll, h => ll.get (Fin.mk v (by
+    rw[← h]
+    exact v.isLt
+))
+
+def ICom.denote : ICom l ty → (ll : List Nat) → (l.length = ll.length) →  Nat
+| .ret e, l, h => e.denote l h
+| .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
 -- let's automate
 macro "mk_lets" n:num init:term : term =>
@@ -95,6 +107,15 @@ def ex' : Com :=
   Com.let .nat (.var 5) <|
   Com.ret .nat (.var 0)
 
+def Expr.denote : Expr → List Nat → Nat
+| .nat n, l => n
+| .var v, l => l.get (Fin.mk v sorry)
+
+def Com.denote : Com → List Nat → Nat
+| .ret _ e, l => e.denote l
+| .let _ e body, l => denote body ((e.denote l) :: l)
+
+
 macro "mk_lets'" n:num init:term : term =>
   n.getNat.foldRevM (fun n stx => `(Com.let .nat (.var $(Lean.quote n)) $stx)) init
 
@@ -129,7 +150,7 @@ where
       return ⟨ty, .let e body⟩
   checkExpr (Γ : Ctxt) : (ty : Ty) → Expr → Except String (IExpr Γ ty)
     | .nat, .nat n => .ok (.nat n)
-    | .bool, .nat _ => .error "type error"
+ --   | .bool, .nat _ => .error "type error"
     | ty,   .var v =>
       if h : v < Γ.length then
         let v : Fin Γ.length := ⟨v, h⟩
