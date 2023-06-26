@@ -127,37 +127,32 @@ theorem bitvec_AndOrXor_144 :
       try sorry
 
 theorem bitvec_AndOrXor_698 :
- ∀ (w : ℕ) (a b d : Bitvec w),
-  Bitvec.ofBool (a &&& b == 0) &&& Bitvec.ofBool (a &&& d == 0) = Bitvec.ofBool (a &&& (b ||| d) == 0)
+ ∀ (w : ℕ) (a b d : Bitvec w), Bitvec.eq (a &&& b) 0 &&& Bitvec.eq (a &&& d) 0 = Bitvec.eq (a &&& (b ||| d)) 0
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_709 :
- ∀ (w : ℕ) (a b d : Bitvec w),
-  Bitvec.ofBool (a &&& b == b) &&& Bitvec.ofBool (a &&& d == d) = Bitvec.ofBool (a &&& (b ||| d) == b ||| d)
+ ∀ (w : ℕ) (a b d : Bitvec w), Bitvec.eq (a &&& b) b &&& Bitvec.eq (a &&& d) d = Bitvec.eq (a &&& (b ||| d)) (b ||| d)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_716 :
- ∀ (w : ℕ) (a b d : Bitvec w),
-  Bitvec.ofBool (a &&& b == a) &&& Bitvec.ofBool (a &&& d == a) = Bitvec.ofBool (a &&& (b &&& d) == a)
+ ∀ (w : ℕ) (a b d : Bitvec w), Bitvec.eq (a &&& b) a &&& Bitvec.eq (a &&& d) a = Bitvec.eq (a &&& (b &&& d)) a
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_794 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toInt a > Bitvec.toInt b)) &&& Bitvec.ofBool (a != b) =
-    Bitvec.ofBool (decide (Bitvec.toInt a > Bitvec.toInt b))
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.sgt a b &&& Bitvec.ne a b = Bitvec.sgt a b
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_827 :
- ∀ (w : ℕ) (a b : Bitvec w), Bitvec.ofBool (a == 0) &&& Bitvec.ofBool (b == 0) = Bitvec.ofBool (a ||| b == 0)
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.eq a 0 &&& Bitvec.eq b 0 = Bitvec.eq (a ||| b) 0
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_887_2 :
- ∀ (w : ℕ) (a C1 : Bitvec w), Bitvec.ofBool (a == C1) &&& Bitvec.ofBool (a != C1) = Bitvec.ofBool false
+ ∀ (w : ℕ) (a C1 : Bitvec w), Bitvec.eq a C1 &&& Bitvec.ne a C1 = Bitvec.ofBool false
 := by alive_auto
       try sorry
 
@@ -197,34 +192,27 @@ theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
       try sorry
 
 theorem bitvec_AndOrXor_1683_1 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a > Bitvec.toNat b)) ||| Bitvec.ofBool (a == b) =
-    Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b))
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.ugt a b ||| Bitvec.eq a b = Bitvec.uge a b
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1683_2 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b)) ||| Bitvec.ofBool (a != b) = Bitvec.ofBool true
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.uge a b ||| Bitvec.ne a b = Bitvec.ofBool true
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1704 :
- ∀ (w : ℕ) (A B : Bitvec w),
-  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat A < Bitvec.toNat B)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
+ ∀ (w : ℕ) (A B : Bitvec w), Bitvec.eq B 0 ||| Bitvec.ult A B = Bitvec.uge (B + -1) A
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1705 :
- ∀ (w : ℕ) (A B : Bitvec w),
-  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat B > Bitvec.toNat A)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
+ ∀ (w : ℕ) (A B : Bitvec w), Bitvec.eq B 0 ||| Bitvec.ugt B A = Bitvec.uge (B + -1) A
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1733 :
- ∀ (w : ℕ) (A B : Bitvec w), Bitvec.ofBool (A != 0) ||| Bitvec.ofBool (B != 0) = Bitvec.ofBool (A ||| B != 0)
+ ∀ (w : ℕ) (A B : Bitvec w), Bitvec.ne A 0 ||| Bitvec.ne B 0 = Bitvec.ne (A ||| B) 0
 := by alive_auto
       try sorry
 
@@ -329,9 +317,7 @@ theorem bitvec_AndOrXor_2443 :
       try sorry
 
 theorem bitvec_AndOrXor_2453 :
- ∀ (w : ℕ) (y x : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toInt x < Bitvec.toInt y)) ^^^ -1 =
-    Bitvec.ofBool (decide (Bitvec.toInt x ≥ Bitvec.toInt y))
+ ∀ (w : ℕ) (y x : Bitvec w), Bitvec.sle x y ^^^ -1 = Bitvec.sge x y
 := by alive_auto
       try sorry
 
@@ -386,9 +372,7 @@ theorem bitvec_AndOrXor_2658 :
       try sorry
 
 theorem bitvec_AndOrXor_2663 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a ≤ Bitvec.toNat b)) ^^^ Bitvec.ofBool (a != b) =
-    Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b))
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.ule a b ^^^ Bitvec.ne a b = Bitvec.uge a b
 := by alive_auto
       try sorry
 

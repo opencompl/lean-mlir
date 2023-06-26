@@ -557,11 +557,96 @@ def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
 
 def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 
-@[simp]
-def ofInt' {w} (i : Int) := Bitvec.ofInt w i
+def toBool : Bitvec 1 → Bool 
+  | b ::ᵥ Vector.nil => b
+
+theorem ofBool_toBool : ∀ b : Bool, toBool (ofBool b) = b := by simp only [ofBool, toBool]
+theorem toBool_ofBool : ∀ b : Bitvec 1, ofBool (toBool b) = b := by simp only [ofBool, toBool]
 
 instance : Coe Bool (Bitvec 1) := ⟨ofBool⟩
 
+
+instance : Coe (Bitvec 1) Bool := ⟨toBool⟩
+
+instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (Bitvec 1) where
+  coe := ofBool $ decide p
+
+
 infixl:75 ">>>ₛ" => fun x y => Bitvec.sshr x (Bitvec.toNat y)
 
+
+instance myinst : LT (Bitvec w) := inferInstance
+namespace Unsigned
+
+def lt (x y : Bitvec w) : Prop := x.toNat < y.toNat
+def le (x y : Bitvec w) : Prop := x.toNat ≤ y.toNat
+def gt (x y : Bitvec w) : Prop := x.toNat > y.toNat
+def ge (x y : Bitvec w) : Prop := x.toNat ≥ y.toNat
+
+scoped instance instLt {w : Nat} : LT (Bitvec w) := ⟨Bitvec.Unsigned.lt⟩
+scoped instance instLe {w : Nat} : LE (Bitvec w) := ⟨Bitvec.Unsigned.le⟩
+
+scoped instance {w : Nat} : Preorder (Bitvec w) := Preorder.lift Bitvec.toNat
+
+scoped instance instDecLt {w : Nat} (x y : Bitvec w) : Decidable (x < y) := by simp [LT.lt, Bitvec.Unsigned.lt]; apply Nat.decLe 
+scoped instance instDecLe {w : Nat} (x y : Bitvec w) : Decidable (x ≤ y) := by simp [LT.lt, Bitvec.Unsigned.le]; apply Nat.decLe 
+
+scoped instance {w : Nat} : Ord (Bitvec w) where
+  compare x y := compareOfLessAndEq x y
+
+
+end Unsigned
+
+namespace Signed
+
+def foo (x y : Bitvec w) := if x < y then 1 else 0 -- works...
+
+def lt (x y : Bitvec w) : Prop := x.toInt < y.toInt
+def le (x y : Bitvec w) : Prop := x.toInt ≤ y.toInt
+def gt (x y : Bitvec w) : Prop := x.toInt > y.toInt
+def ge (x y : Bitvec w) : Prop := x.toInt ≥ y.toInt
+
+
+scoped instance instLt {w : Nat} : LT (Bitvec w) := ⟨Bitvec.Signed.lt⟩
+scoped instance instLe {w : Nat} : LE (Bitvec w) := ⟨Bitvec.Signed.le⟩
+
+scoped instance {w : Nat} : Preorder (Bitvec w) := Preorder.lift Bitvec.toInt
+
+instance instDecLt {w : Nat} (x y : Bitvec w) : Decidable (x < y) := by simp [LT.lt, Bitvec.Signed.lt]; apply Int.decLt
+instance instDecLe {w : Nat} (x y : Bitvec w) : Decidable (x ≤ y) := by simp [LE.le, Bitvec.Signed.le]; apply Int.decLe 
+
+scoped instance {w : Nat} : Ord (Bitvec w) where
+  compare x y := compareOfLessAndEq x y
+
+
+end Signed
+
+ 
+infix:50 " ≤ᵤ "  => Bitvec.Unsigned.le
+infix:50 " <ᵤ "  => Bitvec.Unsigned.lt
+infix:50 " ≥ᵤ "  => Bitvec.Unsigned.ge
+infix:50 " >ᵤ "  => Bitvec.Unsigned.gt
+
+infix:50 " ≤ₛ "  => Bitvec.Signed.le
+infix:50 " <ₛ "  => Bitvec.Signed.lt
+infix:50 " ≥ₛ "  => Bitvec.Signed.ge
+infix:50 " >ₛ "  => Bitvec.Signed.gt
+
+instance {w} (x y : Bitvec w) : Decidable (x <ᵤ y) := Unsigned.instDecLt x y
+instance {w} (x y : Bitvec w) : Decidable (x ≤ᵤ y) := Unsigned.instDecLe x y
+instance {w} (x y : Bitvec w) : Decidable (x >ᵤ y) := Unsigned.instDecLt y x
+instance {w} (x y : Bitvec w) : Decidable (x ≥ᵤ y) := Unsigned.instDecLe y x
+
+instance {w} (x y : Bitvec w) : Decidable (x <ₛ y) := Signed.instDecLt x y
+instance {w} (x y : Bitvec w) : Decidable (x ≤ₛ y) := Signed.instDecLe x y
+instance {w} (x y : Bitvec w) : Decidable (x >ₛ y) := Signed.instDecLt y x
+instance {w} (x y : Bitvec w) : Decidable (x ≥ₛ y) := Signed.instDecLe y x
+
+--end Bitvec
+--
+--@[irreducible] def SignedBitvec (n : Nat) := Bitvec n
+--
+--namespace SignedBitvec
+
+--end SignedBitvec
 end Bitvec

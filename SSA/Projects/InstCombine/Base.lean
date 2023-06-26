@@ -2,6 +2,22 @@ import SSA.Core.WellTypedFramework
 import SSA.Core.Util
 import SSA.Projects.InstCombine.ForMathlib
 
+
+
+def Bitvec.eq (x y : Bitvec w) : Bitvec 1 := decide (x == y)
+def Bitvec.ne (x y : Bitvec w) : Bitvec 1 := decide (x != y)
+
+def Bitvec.ult (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Unsigned.instLt.lt x y) (Bitvec.Unsigned.instDecLt x y)
+def Bitvec.ule (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Unsigned.instLe.le x y) (Bitvec.Unsigned.instDecLe x y)
+def Bitvec.ugt (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Unsigned.instLt.lt y x) (Bitvec.Unsigned.instDecLt y x)
+def Bitvec.uge (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Unsigned.instLe.le y x) (Bitvec.Unsigned.instDecLe y x)
+
+def Bitvec.slt (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Signed.instLt.lt x y) (Bitvec.Signed.instDecLt x y)
+def Bitvec.sle (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Signed.instLe.le x y) (Bitvec.Signed.instDecLe x y)
+def Bitvec.sgt (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Signed.instLt.lt y x) (Bitvec.Signed.instDecLt y x)
+def Bitvec.sge (x y : Bitvec w) : Bitvec 1 := @decide (Bitvec.Signed.instLe.le y x) (Bitvec.Signed.instDecLe y x)
+
+
 namespace InstCombine
 
 inductive BaseType
@@ -126,17 +142,16 @@ def eval (o : Op)
     | Op.neg _ => Option.map (-.) arg
     | Op.select _ => tripleMapM Bitvec.select arg
     | Op.icmp c _ => match c with
-      | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
-      | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg
-      | Comparison.sgt => pairMapM (fun x y => ↑(decide $ x.toInt > y.toInt)) arg
-      | Comparison.sge => pairMapM (fun x y => ↑(decide $ x.toInt ≥ y.toInt)) arg
-      | Comparison.slt => pairMapM (fun x y => ↑(decide $ x.toInt < y.toInt)) arg
-      | Comparison.sle => pairMapM (fun x y => ↑(decide $ x.toInt ≤ y.toInt)) arg
-      | Comparison.ugt => pairMapM (fun x y => ↑(decide $ x.toNat > y.toNat)) arg
-      | Comparison.uge => pairMapM (fun x y => ↑(decide $ x.toNat ≥ y.toNat)) arg
-      | Comparison.ult => pairMapM (fun x y => ↑(decide $ x.toNat < y.toNat)) arg
-      | Comparison.ule => pairMapM (fun x y => ↑(decide $ x.toNat ≤ y.toNat)) arg
-
+      | Comparison.eq => pairMapM Bitvec.eq arg
+      | Comparison.ne => pairMapM Bitvec.ne arg
+      | Comparison.ugt => pairMapM Bitvec.ugt arg
+      | Comparison.uge => pairMapM Bitvec.uge arg
+      | Comparison.ult => pairMapM Bitvec.ult arg
+      | Comparison.ule => pairMapM Bitvec.ule arg
+      | Comparison.sgt => pairMapM Bitvec.sgt arg
+      | Comparison.sge => pairMapM Bitvec.sge arg
+      | Comparison.slt => pairMapM Bitvec.sle arg
+      | Comparison.sle => pairMapM Bitvec.sle arg
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
