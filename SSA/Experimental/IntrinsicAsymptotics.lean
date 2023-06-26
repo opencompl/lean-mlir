@@ -53,10 +53,7 @@ def ex: ICom [] .nat :=
 
 def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
-| .var v, ll, h => ll.get (Fin.mk v (by
-    rw[← h]
-    exact v.isLt
-))
+| .var v, ll, h => ll.get (Fin.mk v (h ▸ v.isLt))
 
 def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
 | .ret e, l, h => e.denote l h
