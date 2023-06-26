@@ -100,35 +100,55 @@ def ElabVar.quoteAsContextVar (var : ElabVar) : SSAElabM (TSyntax `term) := do
 A statement builder that can be filled with a statement.
 -/
 structure StmtBuilder (α : Type) where
-  hole : TSyntax `term → SSAElabM (TSyntax `term) -- hole that can be filled with a `stmt`.
+  -- continuation to fill the that can be filled with a `stmt` for the $next.
+  appendk : TSyntax `term → SSAElabM (TSyntax `term) 
   val : α
 deriving Inhabited
 
-def StmtBuilder.extendHole (e : StmtBuilder α)
-  (hole : TSyntax `term → SSAElabM (TSyntax `term))
-  : StmtBuilder α :=
-  { e with hole := fun x => do e.hole (← hole x) }
 
+/-- Chain two statement builders -/
+def StmtBuilder.prepend 
+  (right : StmtBuilder β) (left : StmtBuilder α) : StmtBuilder α where 
+  appendk := fun x => do left.appendk (← right.appendk x) -- really I want '>=>'
+  val := left.val
+
+/-- Append right to left -/
+def StmtBuilder.append 
+  (left : StmtBuilder α) (right : StmtBuilder β) : StmtBuilder β where 
+  appendk := fun x => do left.appendk (← right.appendk x) -- really I want '>=>'
+  val := right.val
+
+/-- extend the inside of 'e' with 'hole'. Prefer using `StmtBuilder.append`. -/
+def StmtBuilder.appendHole (e : StmtBuilder α)
+  (appendk : TSyntax `term → SSAElabM (TSyntax `term)) : StmtBuilder α :=
+  { e with appendk := fun x => do e.appendk (← appendk x) }
+
+/-- extend the left of the appendk with `leftHole` -/
+def StmtBuilder.prependHole (right : StmtBuilder α)
+  (leftHole : TSyntax `term → SSAElabM (TSyntax `term)) : StmtBuilder α :=
+  { right with appendk := fun x => do leftHole (← right.appendk x) }
+
+
+/-- Set the value stored in the StmtBuilder -/
 def StmtBuilder.setVal (e : StmtBuilder α) (val : β)
-  : StmtBuilder β :=
-  { e with val := val }
+  : StmtBuilder β := { e with val := val }
 
 instance [ToString α] : ToString (StmtBuilder α) where
-  toString elabv := s!"<hole> ⊢ '{elabv.val}'"
+  toString elabv := s!"<appendk> ⊢ '{elabv.val}'"
 
+/-- Builder a `StmtBuilder` from a raw value -/
 def StmtBuilder.ofVal (val : α) : StmtBuilder α where
-  hole := fun x => return x
+  appendk := fun x => return x
   val := val
 
 
--- ElabExpr should return a variable.
--- -- returns the syntax to access a variable.
-def StmtBuilder.toAssign (e : StmtBuilder (TSyntax `term))
+/-- Build an assignment to store `e`. -/
+def StmtBuilder.toAssign (builder : StmtBuilder (TSyntax `term))
   : SSAElabM (StmtBuilder ElabVar) := do
-  let v : ElabVar ← SSAElabContext.addFreshSyntheticVar
+  let synth : ElabVar ← SSAElabContext.addFreshSyntheticVar
   let assign : TSyntax `term → SSAElabM (TSyntax `term) := 
-    fun prev => `(SSA.TSSA.assign $(v.quoteAsNat) $(e.val) $prev)
-  return e.extendHole assign |>.setVal v
+    fun next => `(SSA.TSSA.assign $(synth.quoteAsNat) $(builder.val) $next)
+  return builder.appendHole assign |>.setVal synth
 
 mutual
 partial def elabRgn : TSyntax `dsl_region2 → SSAElabM (TSyntax `term)
@@ -140,62 +160,42 @@ partial def elabRgn : TSyntax `dsl_region2 → SSAElabM (TSyntax `term)
   `(SSA.TSSA.rgn $(var.quoteAsNat) $bb)
 | _ => Macro.throwUnsupported
 
--- partial def elabAssign : TSyntax ``dsl_assign2 → SSAElabM (StmtBuilder Unit)
--- | `(dsl_assign2| $v:dsl_var2 := $rhs:dsl_expr2) => do
---   let rhsElab : StmtBuilder (ElabVar) ← elabStxExpr rhs
---   let lhsElab ← dslVarToElabVar v
---   let assign : TSyntax `term → SSAElabM (TSyntax `term) := 
---     fun prev => do 
---       `(SSA.TSSA.assign $(lhsElab.quoteAsNat) $(← rhsElab.val.quoteAsContextVar) $prev)
---   SSAElabContext.addVar lhsElab -- add variable after elaborating the assignment.
---   return rhsElab.extendHole assign |>.setVal Unit.unit
--- | _ => Macro.throwUnsupported
-
-partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign2 → SSAElabM (TSyntax `term)
+/-- Given the rest of the statements that are to be built, build them -/
+partial def elabAssign (restBuilderM : SSAElabM (StmtBuilder ElabVar)): 
+  TSyntax `EDSL2.dsl_assign2 → SSAElabM (StmtBuilder ElabVar)
 | `(dsl_assign2| $v:dsl_var2 := $e:dsl_expr2) => do
-  let e ← elabStxExpr e
+  let eBuilder ← elabStxExpr e -- already has expression assigned to var 'vsynth'.
+  -- create a variable for 'v' and assign 'v' to 'vsynth'.
   SSAElabContext.addVar (← dslVarToElabVar v) -- add variable.
-  let velab := Lean.quote (← dslVarToElabVar v).toNat -- natural number.
-  let next ← mkNext
-  `(SSA.TSSA.assign $velab $e $next)
+  let vNat := Lean.quote (← dslVarToElabVar v).toNat -- natural number.
+  -- build a mapping from 'v' to 'e' to build assignments
+  let assignBuilder := 
+    eBuilder.appendHole 
+      (fun rest => do
+        `(SSA.TSSA.assign $(vNat) $(← eBuilder.val.quoteAsContextVar) $rest))
+  return (← restBuilderM).append assignBuilder
+
 | _ => Macro.throwUnsupported
 
 
 
-partial def elabStmt (ret : StmtBuilder ElabVar) : TSyntax `dsl_stmt2 → SSAElabM (TSyntax `term)
+partial def elabStmt (rest : StmtBuilder ElabVar) : TSyntax `dsl_stmt2 → 
+  SSAElabM (StmtBuilder ElabVar)
   | `(dsl_stmt2| $ss:dsl_assign2;*) => go ss.getElems.toList
   | _ => Macro.throwUnsupported
 where go
-  | [] => do
-    let v ← ret.val.quoteAsContextVar
-    ret.hole (← `(SSA.TSSA.ret $v))
-  | s::ss => do
-     let out ← elabAssign (go ss) s
-     _
-
-
-
--- TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop) <s1data>) <s2data>) <s3data>)
--- s1 : (fun prev1 => SSA.assign (<prev1>) <s1data>)
--- s2 : (fun prev2 => SSA.assign (<prev2>) <s2data>)
--- s3 : (fun prev3 => SSA.assign (<prev3>) <s3data>)
--- fun x => s3 ( s2 (s1 x) )
--- (s3 ∘ (s2 ∘ (s1 ∘ id)))
--- partial def elabStmts (ss : Array (TSyntax `EDSL2.dsl_assign2)) : SSAElabM (StmtBuilder Unit) := do
---   let mut fs : Array (TSyntax `term) := #[]
---   for s in ss do
---     let selab : StmtBuilder Unit ← elabAssign s
---     fs := fs ++ selab.temporaries
---   return .fromTemporaries fs
+  | [] => return rest
+  | s::ss => elabAssign (go ss) s
 
 partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
 | `(dsl_bb2| $[ $ss?:dsl_stmt2 ]? return $rete:dsl_expr2) => do
     let retElab : StmtBuilder ElabVar ← elabStxExpr rete
-    match ss? with 
-    | .some ss => elabStmt retElab ss
-    | .none => retElab.extendHole $(← retElab.val.quoteAsContextVar)
-    -- let selab : StmtBuilder Unit ← elabStmt retElab ss
-    -- `(SSA.TSSA.ret ($selabFinal SSA.TSSA.nop) $(← retElab.val.quoteAsContextVar))
+    let retElab ← match ss? with 
+      | .some ss => elabStmt retElab ss
+      | .none => pure retElab 
+    -- fill in the appendk with the 'ret' as expected.
+    let out ← retElab.appendk (← `(SSA.TSSA.ret $(← retElab.val.quoteAsContextVar)))
+    return out
 | _ => Macro.throwUnsupported
 
 /-- insert intermediate let bindings to produce -/
@@ -215,7 +215,7 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (StmtBuilder ElabVar)
     let belab ← elabStxExpr b
     let val ← `(SSA.TSSA.pair $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar))
     let exprElab : StmtBuilder (TSyntax `term) := 
-      aelab.extendHole belab.hole |>.setVal val
+      aelab.append belab |>.setVal val
     exprElab.toAssign
 | `(dsl_expr2| ($a, $b, $c)) => do
   let aelab ← elabStxExpr a
@@ -223,7 +223,7 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (StmtBuilder ElabVar)
   let celab ← elabStxExpr c
   let val ← `(SSA.TSSA.triple $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar) $(← celab.val.quoteAsContextVar))
   let exprElab : StmtBuilder (TSyntax `term) := 
-    aelab |>.extendHole belab.hole |>.extendHole celab.hole |>.setVal val
+    aelab |>.append belab |>.append celab |>.setVal val
   exprElab.toAssign
 | `(dsl_expr2| $v:dsl_var2) => do
     let var : ElabVar ← dslVarToElabVar v
