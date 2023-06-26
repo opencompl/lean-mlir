@@ -14,10 +14,12 @@ abbrev Ctxt := Array Ty
 inductive Expr : Type
   | var (v : Nat)
   | nat (n : Nat)
+  deriving Repr
 
 inductive Com : Type where
   | ret (ty : Ty) (e : Expr) : Com
   | let (ty : Ty) (e : Expr) (body : Com) : Com
+  deriving Repr
 
 inductive Expr.WF (Γ : Ctxt) : Ty → Expr → Prop
   | var (h : v < Γ.size) :  WF Γ (Γ.get ⟨v, h⟩) (.var v)

@@ -10,6 +10,13 @@ def Ty.toType
   | nat => Nat
   | bool => Bool
 
+inductive Value where
+  | nat : Nat → Value
+  | bool : Bool → Value
+  deriving Repr, Inhabited
+
+abbrev State := List Value
+
 /-- A context is a list of types, growing to the left for simplicity. -/
 abbrev Ctxt := List Ty
 
@@ -34,7 +41,7 @@ set_option pp.proofs.withType false  -- hide `Fin` statements
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
 -- overall quadratic elaboration times.
-example : ICom [] .nat :=
+def ex: ICom [] .nat :=
   ICom.let (.nat 0) <|
   ICom.let (α := .nat) (.var ⟨0, by decide⟩) <|
   ICom.let (α := .nat) (.var ⟨1, by decide⟩) <|
@@ -43,6 +50,14 @@ example : ICom [] .nat :=
   ICom.let (α := .nat) (.var ⟨4, by decide⟩) <|
   ICom.let (α := .nat) (.var ⟨5, by decide⟩) <|
   ICom.ret (.var ⟨0, by decide⟩)
+
+def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
+| .nat n, _, _ => .nat n
+| .var v, ll, h => ll.get (Fin.mk v (h ▸ v.isLt))
+
+def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
+| .ret e, l, h => e.denote l h
+| .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
 -- let's automate
 macro "mk_lets" n:num init:term : term =>
@@ -77,11 +92,13 @@ mk_ex 120
 inductive Expr : Type
   | var (v : Nat)
   | nat (n : Nat)
+  deriving Repr
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
   | ret (ty : Ty) (e : Expr) : Com
   | let (ty : Ty) (e : Expr) (body : Com) : Com
+  deriving Repr
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
@@ -92,6 +109,15 @@ def ex' : Com :=
   Com.let .nat (.var 4) <|
   Com.let .nat (.var 5) <|
   Com.ret .nat (.var 0)
+
+def Expr.denote : Expr → State → Value
+| .nat n, _ => .nat n
+| .var v, l => l.get! v
+
+def Com.denote : Com → State → Value
+| .ret _ e, l => e.denote l
+| .let _ e body, l => denote body ((e.denote l) :: l)
+
 
 macro "mk_lets'" n:num init:term : term =>
   n.getNat.foldRevM (fun n stx => `(Com.let .nat (.var $(Lean.quote n)) $stx)) init
