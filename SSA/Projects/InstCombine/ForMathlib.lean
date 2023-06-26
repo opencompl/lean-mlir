@@ -634,11 +634,4 @@ instance {w} (x y : Bitvec w) : Decidable (x ≤ₛ y) := Signed.instDecLe x y
 instance {w} (x y : Bitvec w) : Decidable (x >ₛ y) := Signed.instDecLt y x
 instance {w} (x y : Bitvec w) : Decidable (x ≥ₛ y) := Signed.instDecLe y x
 
---end Bitvec
---
---@[irreducible] def SignedBitvec (n : Nat) := Bitvec n
---
---namespace SignedBitvec
-
---end SignedBitvec
 end Bitvec
