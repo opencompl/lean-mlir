@@ -580,8 +580,6 @@ namespace Unsigned
 
 def lt (x y : Bitvec w) : Prop := x.toNat < y.toNat
 def le (x y : Bitvec w) : Prop := x.toNat ≤ y.toNat
-def gt (x y : Bitvec w) : Prop := x.toNat > y.toNat
-def ge (x y : Bitvec w) : Prop := x.toNat ≥ y.toNat
 
 scoped instance instLt {w : Nat} : LT (Bitvec w) := ⟨Bitvec.Unsigned.lt⟩
 scoped instance instLe {w : Nat} : LE (Bitvec w) := ⟨Bitvec.Unsigned.le⟩
@@ -599,13 +597,8 @@ end Unsigned
 
 namespace Signed
 
-def foo (x y : Bitvec w) := if x < y then 1 else 0 -- works...
-
 def lt (x y : Bitvec w) : Prop := x.toInt < y.toInt
 def le (x y : Bitvec w) : Prop := x.toInt ≤ y.toInt
-def gt (x y : Bitvec w) : Prop := x.toInt > y.toInt
-def ge (x y : Bitvec w) : Prop := x.toInt ≥ y.toInt
-
 
 scoped instance instLt {w : Nat} : LT (Bitvec w) := ⟨Bitvec.Signed.lt⟩
 scoped instance instLe {w : Nat} : LE (Bitvec w) := ⟨Bitvec.Signed.le⟩
@@ -620,17 +613,16 @@ scoped instance {w : Nat} : Ord (Bitvec w) where
 
 
 end Signed
-
  
-infix:50 " ≤ᵤ "  => Bitvec.Unsigned.le
-infix:50 " <ᵤ "  => Bitvec.Unsigned.lt
-infix:50 " ≥ᵤ "  => Bitvec.Unsigned.ge
-infix:50 " >ᵤ "  => Bitvec.Unsigned.gt
+infix:50 " ≤ᵤ "  => LE.le (self := Bitvec.Unsigned.instLe)
+infix:50 " <ᵤ "  => LT.lt (self := Bitvec.Unsigned.instLt)
+infix:50 " ≥ᵤ "  => @GE.ge _ Bitvec.Unsigned.instLe
+infix:50 " >ᵤ "  => @GT.gt _ Bitvec.Unsigned.instLt
 
-infix:50 " ≤ₛ "  => Bitvec.Signed.le
-infix:50 " <ₛ "  => Bitvec.Signed.lt
-infix:50 " ≥ₛ "  => Bitvec.Signed.ge
-infix:50 " >ₛ "  => Bitvec.Signed.gt
+infix:50 " ≤ₛ "  => LE.le (self := Bitvec.Signed.instLe)
+infix:50 " <ₛ "  => LT.lt (self := Bitvec.Signed.instLt)
+infix:50 " ≥ₛ "  => @GE.ge _ Bitvec.Signed.instLe
+infix:50 " >ₛ "  => @GT.gt _ Bitvec.Signed.instLt
 
 instance {w} (x y : Bitvec w) : Decidable (x <ᵤ y) := Unsigned.instDecLt x y
 instance {w} (x y : Bitvec w) : Decidable (x ≤ᵤ y) := Unsigned.instDecLe x y
