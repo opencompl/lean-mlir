@@ -108,8 +108,8 @@ def ex' : Com :=
   Com.ret .nat (.var 0)
 
 def Expr.denote : Expr → List Nat → Nat
-| .nat n, l => n
-| .var v, l => l.get (Fin.mk v sorry)
+| .nat n, _ => n
+| .var v, l => l.get! v
 
 def Com.denote : Com → List Nat → Nat
 | .ret _ e, l => e.denote l
