@@ -93,29 +93,103 @@ mk_ex 120
 -- verified transformations to larger programs parsed at run time.
 
 /-- An untyped expression as an intermediate step of input processing. -/
+
+abbrev Var := Nat
 inductive Expr : Type
-  | add (a : Nat) (b : Nat)
+  | add (a : Var) (b : Var)
   | nat (n : Nat)
-  deriving Repr
+  deriving Repr, Inhabited
+
+inductive ExprRec : Type
+  | add (a : ExprRec) (b : ExprRec)
+  | nat (n : Nat)
+  | var (idx : Nat)
+  deriving Repr, Inhabited
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
-  | ret (ty : Ty) (e : Expr) : Com
+  | ret (e : Var) : Com
   | let (ty : Ty) (e : Expr) (body : Com) : Com
   deriving Repr
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
   Com.let .nat (.add 0 0) <|
-  Com.let .nat (.add 1 1) <|
-  Com.let .nat (.add 2 2) <|
+  Com.let .nat (.add 0 0) <|
+  Com.let .nat (.add 0 0) <|
   Com.let .nat (.add 3 3) <|
   Com.let .nat (.add 4 4) <|
   Com.let .nat (.add 5 5) <|
-  Com.ret .nat (.add 0 0)
+  Com.ret 0
 
-def replace_pattern : Com → ... → Com 
-| 
+-- (.add (.add _ _ ) _) -> .sub (.sub _ _ ) _
+
+-- def replace_pattern : (progBefore : Com) → (rewrite: Com × Com) → Com ""
+
+abbrev Mapping := List (Var × Var)
+abbrev Lets := Array Expr
+
+def matchVar (lets : Lets) (varPos: Nat) (rewrite: ExprRec) (mapping: Mapping): Option Mapping := do
+  let var := lets[varPos]!
+  match var, rewrite with
+    | .add a b, .add a' b' => 
+        let left ← matchVar lets (varPos - a - 1) a' mapping
+        matchVar lets (varPos - b - 1) b' left
+    | .nat v, .nat v' =>
+      if v = v' then
+        return []
+      else
+        none
+    | _, .var x => 
+        (x, varPos)::mapping
+    | _, _ => none 
+
+def applyMapping  (pattern : ExprRec) (m : Mapping) (new : Lets): Lets := 
+match pattern with
+    | .var _ => new
+    | .add a b => 
+      let y := applyMapping a m new
+      let x := applyMapping b m y
+      x.push (Expr.add (y.size - new.size) (x.size - new.size))
+    | .nat n => new.push (Expr.nat n)
+
+def replaceUsesOfVar (inputProg : Com) (var_pos: Nat) (new : Var) : Com :=
+  inputProg
+
+def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
+  newProgram
+
+def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
+  let varPos := lets.size - 1 
+  let mapping ← matchVar lets varPos rewrite.1 []
+  dbg_trace "applyRewrite:mapping" 
+  dbg_trace repr lets
+  dbg_trace repr varPos
+  dbg_trace repr mapping
+
+  let newLets := applyMapping (rewrite.2) mapping #[]
+  dbg_trace repr newLets
+  let newProgram := replaceUsesOfVar inputProg var (mapping var)
+  some (addLetsToProgram newLets newProgram)
+
+def rewriteAt (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
+  match inputProg with
+    | .ret _ => none
+    | .let _ expr body =>
+        let lets := lets.push expr
+        if depth = 0 then
+           applyRewrite lets body rewrite
+        else
+           rewriteAt body (depth - 1) lets rewrite
+
+def rwPattern := (ExprRec.add (.var 0) (.add (.var 1) (.var 2)), ExprRec.add (.var 0) (.var 1))
+
+#eval rewriteAt ex' 3 #[] rwPattern 
+
+  
+  
+
+
 
 
 def Expr.denote : Expr → State → Value
