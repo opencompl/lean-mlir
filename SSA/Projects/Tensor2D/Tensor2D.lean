@@ -1,6 +1,8 @@
 import SSA.Core.WellTypedFramework
+import SSA.Core.EDSLNested
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
+import SSA.Core.Util
 import SSA.Core.Util
 
 

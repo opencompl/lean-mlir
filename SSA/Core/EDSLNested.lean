@@ -140,15 +140,24 @@ partial def elabRgn : TSyntax `dsl_region2 → SSAElabM (TSyntax `term)
   `(SSA.TSSA.rgn $(var.quoteAsNat) $bb)
 | _ => Macro.throwUnsupported
 
-partial def elabAssign : TSyntax ``dsl_assign2 → SSAElabM (StmtBuilder Unit)
-| `(dsl_assign2| $v:dsl_var2 := $rhs:dsl_expr2) => do
-  let rhsElab : StmtBuilder (ElabVar) ← elabStxExpr rhs
-  let lhsElab ← dslVarToElabVar v
-  let assign : TSyntax `term → SSAElabM (TSyntax `term) := 
-    fun prev => do 
-      `(SSA.TSSA.assign $(lhsElab.quoteAsNat) $(← rhsElab.val.quoteAsContextVar) $prev)
-  SSAElabContext.addVar lhsElab -- add variable after elaborating the assignment.
-  return rhsElab.extendHole assign |>.setVal Unit.unit
+-- partial def elabAssign : TSyntax ``dsl_assign2 → SSAElabM (StmtBuilder Unit)
+-- | `(dsl_assign2| $v:dsl_var2 := $rhs:dsl_expr2) => do
+--   let rhsElab : StmtBuilder (ElabVar) ← elabStxExpr rhs
+--   let lhsElab ← dslVarToElabVar v
+--   let assign : TSyntax `term → SSAElabM (TSyntax `term) := 
+--     fun prev => do 
+--       `(SSA.TSSA.assign $(lhsElab.quoteAsNat) $(← rhsElab.val.quoteAsContextVar) $prev)
+--   SSAElabContext.addVar lhsElab -- add variable after elaborating the assignment.
+--   return rhsElab.extendHole assign |>.setVal Unit.unit
+-- | _ => Macro.throwUnsupported
+
+partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign2 → SSAElabM (TSyntax `term)
+| `(dsl_assign2| $v:dsl_var2 := $e:dsl_expr2) => do
+  let e ← elabStxExpr e
+  SSAElabContext.addVar (← dslVarToElabVar v) -- add variable.
+  let velab := Lean.quote (← dslVarToElabVar v).toNat -- natural number.
+  let next ← mkNext
+  `(SSA.TSSA.assign $velab $e $next)
 | _ => Macro.throwUnsupported
 
 
@@ -158,10 +167,13 @@ partial def elabStmt (ret : StmtBuilder ElabVar) : TSyntax `dsl_stmt2 → SSAEla
   | _ => Macro.throwUnsupported
 where go
   | [] => do
-    -- let selabFinal ← composeStmts (selab.temporaries ++ retElab.temporaries)
-    ret.hole (← `(SSA.TSSA.ret $ret.val))
-  | s::ss =>
-    elabAssign (go ss) s
+    let v ← ret.val.quoteAsContextVar
+    ret.hole (← `(SSA.TSSA.ret $v))
+  | s::ss => do
+     let out ← elabAssign (go ss) s
+     _
+
+
 
 -- TSSA.assign (TSSA.assign (TSSA.assign (TSSA.assign TSSA.nop) <s1data>) <s2data>) <s3data>)
 -- s1 : (fun prev1 => SSA.assign (<prev1>) <s1data>)
@@ -177,10 +189,13 @@ where go
 --   return .fromTemporaries fs
 
 partial def elabBB : TSyntax `EDSL2.dsl_bb2 → SSAElabM (TSyntax `term)
-| `(dsl_bb2| $[ $ss:dsl_stmt2 ]? return $rete:dsl_expr2) => do
+| `(dsl_bb2| $[ $ss?:dsl_stmt2 ]? return $rete:dsl_expr2) => do
     let retElab : StmtBuilder ElabVar ← elabStxExpr rete
-    let selab : StmtBuilder Unit ← elabStmt retElab ss
-    `(SSA.TSSA.ret ($selabFinal SSA.TSSA.nop) $(← retElab.val.quoteAsContextVar))
+    match ss? with 
+    | .some ss => elabStmt retElab ss
+    | .none => retElab.extendHole $(← retElab.val.quoteAsContextVar)
+    -- let selab : StmtBuilder Unit ← elabStmt retElab ss
+    -- `(SSA.TSSA.ret ($selabFinal SSA.TSSA.nop) $(← retElab.val.quoteAsContextVar))
 | _ => Macro.throwUnsupported
 
 /-- insert intermediate let bindings to produce -/
@@ -198,21 +213,17 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (StmtBuilder ElabVar)
 | `(dsl_expr2| ($a, $b)) => do
     let aelab ← elabStxExpr a
     let belab ← elabStxExpr b
-    let exprElab : StmtBuilder (TSyntax `term) := {
-        temporaries := aelab.temporaries ++ belab.temporaries,
-        val := ← `(SSA.TSSA.pair $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar))
-      : StmtBuilder _
-    }
+    let val ← `(SSA.TSSA.pair $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar))
+    let exprElab : StmtBuilder (TSyntax `term) := 
+      aelab.extendHole belab.hole |>.setVal val
     exprElab.toAssign
 | `(dsl_expr2| ($a, $b, $c)) => do
   let aelab ← elabStxExpr a
   let belab ← elabStxExpr b
   let celab ← elabStxExpr c
-  let exprElab : StmtBuilder (TSyntax `term) := {
-      temporaries := aelab.temporaries ++ belab.temporaries ++ celab.temporaries,
-      val := ← `(SSA.TSSA.triple $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar) $(← celab.val.quoteAsContextVar))
-    : StmtBuilder _
-  }
+  let val ← `(SSA.TSSA.triple $(← aelab.val.quoteAsContextVar) $(← belab.val.quoteAsContextVar) $(← celab.val.quoteAsContextVar))
+  let exprElab : StmtBuilder (TSyntax `term) := 
+    aelab |>.extendHole belab.hole |>.extendHole celab.hole |>.setVal val
   exprElab.toAssign
 | `(dsl_expr2| $v:dsl_var2) => do
     let var : ElabVar ← dslVarToElabVar v
@@ -223,10 +234,7 @@ partial def elabStxExpr : TSyntax `dsl_expr2 → SSAElabM (StmtBuilder ElabVar)
     | none => `(SSA.TSSA.rgn0)
     | some r => elabRgn r -- TODO: can a region affect stuff outside?
   let op ← `(SSA.TSSA.op [dsl_op2| $o] $(← argelab.val.quoteAsContextVar) $rgn)
-  let exprElab : StmtBuilder (TSyntax `term) := {
-    temporaries := argelab.temporaries,
-    val := op
-  }
+  let exprElab : StmtBuilder (TSyntax `term) := argelab.setVal op
   exprElab.toAssign
 | _ => Macro.throwUnsupported
 end
