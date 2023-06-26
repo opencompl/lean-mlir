@@ -114,6 +114,9 @@ def ex' : Com :=
   Com.let .nat (.add 5 5) <|
   Com.ret .nat (.add 0 0)
 
+def replace_pattern : Com → ... → Com 
+| 
+
 
 def Expr.denote : Expr → State → Value
 | .nat n, _ => .nat n
@@ -161,10 +164,10 @@ where
   checkExpr (Γ : Ctxt) : (ty : Ty) → Expr → Except String (IExpr Γ ty)
     | .nat, .nat n => .ok (.nat n)
     | .bool, .nat _ => .error "type error"
-    | ty,   .var v =>
-      if h : v < Γ.length then
-        let v : Fin Γ.length := ⟨v, h⟩
-        if h : ty = Γ.get v then h ▸ .ok (.var v) else .error "type error"
+    | ty,   .add a b =>
+      if h : a < Γ.length && b < Γ.length then
+        let v_a : Fin Γ.length := ⟨v_a, h⟩
+        if h_a : ty = Γ.get v_a then h ▸ .ok (.add v_a v_b) else .error "type error"
       else .error "var error"
 
 set_option pp.proofs true in
