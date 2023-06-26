@@ -15,7 +15,7 @@ inductive Value where
   | bool : Bool → Value
   deriving Repr, Inhabited
 
-abbrev Env := List Value
+abbrev State := List Value
 
 /-- A context is a list of types, growing to the left for simplicity. -/
 abbrev Ctxt := List Ty
@@ -51,14 +51,14 @@ def ex: ICom [] .nat :=
   ICom.let (α := .nat) (.var ⟨5, by decide⟩) <|
   ICom.ret (.var ⟨0, by decide⟩)
 
-def IExpr.denote : IExpr l ty → (ll : Env) → (l.length = ll.length) → Value 
+def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
 | .var v, ll, h => ll.get (Fin.mk v (by
     rw[← h]
     exact v.isLt
 ))
 
-def ICom.denote : ICom l ty → (ll : Env) → (l.length = ll.length) →  Value
+def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
 | .ret e, l, h => e.denote l h
 | .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
@@ -113,11 +113,11 @@ def ex' : Com :=
   Com.let .nat (.var 5) <|
   Com.ret .nat (.var 0)
 
-def Expr.denote : Expr → Env → Value
+def Expr.denote : Expr → State → Value
 | .nat n, _ => .nat n
 | .var v, l => l.get! v
 
-def Com.denote : Com → Env → Value
+def Com.denote : Com → State → Value
 | .ret _ e, l => e.denote l
 | .let _ e body, l => denote body ((e.denote l) :: l)
 
