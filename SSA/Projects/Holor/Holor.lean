@@ -3,9 +3,7 @@ import SSA.Core.Util
 import Mathlib.Data.Holor
 import Mathlib.Algebra.Algebra.Basic
 
-#check Holor
-
-/- Holor is profunctorial, covariant in the first argument and contavariant in the second argument. -/
+/- Holor is profunctorial, covariant in the values and contavariant in the indexes. -/
 
 /-- Mapping is covariant in the value -/
 def Holor.map (f : α → β) (h : Holor α ds) : Holor β ds :=
@@ -32,31 +30,33 @@ instance  [Mul α] : Mul (Holor α ds) where
 
 theorem Holor.pointwise_mul_index [Mul α] (h₁ h₂ : Holor α ds) : 
   (h₁ * h₂) i = h₁ i * h₂ i := rfl
+
+
+/-- Holor inherits algebraic structures --/
+instance [Semiring α] : Semiring (Holor α ds) := 
+  by delta Holor; infer_instance
+
+instance [CommSemiring α] : CommSemiring (Holor α ds) := 
+  by delta Holor; infer_instance
+
+instance [Ring α] : Ring (Holor α ds) := 
+  by delta Holor; infer_instance
+
+instance [CommRing α] : CommRing (Holor α ds) := 
+  by delta Holor; infer_instance
+
+instance [SMul M A] : SMul M (Holor A ds) := by 
+  delta Holor; infer_instance
+
 /-- Fill a holor with a constant value 'a'. -/
 def Holor.fill (a : α) : Holor α ds := fun _ => a
 
-instance [Zero α] : Zero (Holor α ds) where 
-  zero := Holor.fill Zero.zero
-
-instance [M : MulZeroClass α] : MulZeroClass (Holor α ds) where
-  zero_mul := λ h => by
-    
-    simp only [Holor.pointwise_mul_index]
-    simp[MulZeroClass.zero_mul]
-
-  /-- Zero is a right absorbing element for multiplication -/
-  mul_zero : ∀ a : M₀, a * 0 = 0
-#align mul_zero_class MulZeroClass
-
--- /-- Holor is an associative algebra with 'pointwise_mul' -/
-#check MonoidWithZero
--- class Semiring (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZero α
-
--- instance [Semiring α] : MonoidWithZero (Holor α ds) where 
--- instance [Semiring α] : Semiring (Holor α ds) where 
--- instance [CommSemiring α] : Algebra α (Holor α ds) where 
-
-
+-- @chrishughes24:
+-- given the map ralg : R -> Z(A), 
+-- I want to declare the map (r : R) -> (fill (ralg R) : Holor A ds).
+-- This will be the map that turns (Holor A ds) into an R-algebra.
+-- I'm not sure how to define this.
+instance [CommSemiring R] [Semiring A] [Algebra R A] : Algebra R (Holor A ds) :=  sorry
 
 
 /-
