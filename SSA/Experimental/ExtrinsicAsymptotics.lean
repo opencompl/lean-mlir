@@ -14,6 +14,7 @@ abbrev Ctxt := List Ty
 inductive Expr : Type
   | var (v : Nat)
   | nat (n : Nat)
+  | add (v: Nat) (v: Nat)
   deriving Repr
 
 inductive Com : Type where

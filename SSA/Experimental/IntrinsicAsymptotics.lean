@@ -23,7 +23,7 @@ abbrev Ctxt := List Ty
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   /-- Variables are represented as indices into the context, i.e. `var 0` is the most recently introduced variable. -/
-  | var (v : Fin Γ.length) : IExpr Γ (Γ.get v)
+  | add (a : Fin Γ.length) (b : Fin Γ.length): IExpr Γ .nat
   /-- Nat literals. -/
   | nat (n : Nat) : IExpr Γ .nat
   deriving Repr
@@ -43,17 +43,21 @@ set_option pp.proofs.withType false  -- hide `Fin` statements
 -- overall quadratic elaboration times.
 def ex: ICom [] .nat :=
   ICom.let (.nat 0) <|
-  ICom.let (α := .nat) (.var ⟨0, by decide⟩) <|
-  ICom.let (α := .nat) (.var ⟨1, by decide⟩) <|
-  ICom.let (α := .nat) (.var ⟨2, by decide⟩) <|
-  ICom.let (α := .nat) (.var ⟨3, by decide⟩) <|
-  ICom.let (α := .nat) (.var ⟨4, by decide⟩) <|
-  ICom.let (α := .nat) (.var ⟨5, by decide⟩) <|
-  ICom.ret (.var ⟨0, by decide⟩)
+  ICom.let (α := .nat) (.add ⟨0, by decide⟩ ⟨0, by decide⟩) <|
+  ICom.let (α := .nat) (.add ⟨1, by decide⟩ ⟨1, by decide⟩) <|
+  ICom.let (α := .nat) (.add ⟨2, by decide⟩ ⟨2, by decide⟩) <|
+  ICom.let (α := .nat) (.add ⟨3, by decide⟩ ⟨3, by decide⟩) <|
+  ICom.let (α := .nat) (.add ⟨4, by decide⟩ ⟨4, by decide⟩) <|
+  ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
+  ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
+
+def get_nat : Value → Nat := sorry 
 
 def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
-| .var v, ll, h => ll.get (Fin.mk v (h ▸ v.isLt))
+| .add a b, ll, h => let a_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
+                     let b_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
+                     Value.nat (a_val + b_val)
 
 def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
 | .ret e, l, h => e.denote l h
@@ -90,7 +94,7 @@ mk_ex 120
 
 /-- An untyped expression as an intermediate step of input processing. -/
 inductive Expr : Type
-  | var (v : Nat)
+  | add (a : Nat) (b : Nat)
   | nat (n : Nat)
   deriving Repr
 
@@ -102,17 +106,20 @@ inductive Com : Type where
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
-  Com.let .nat (.var 0) <|
-  Com.let .nat (.var 1) <|
-  Com.let .nat (.var 2) <|
-  Com.let .nat (.var 3) <|
-  Com.let .nat (.var 4) <|
-  Com.let .nat (.var 5) <|
-  Com.ret .nat (.var 0)
+  Com.let .nat (.add 0 0) <|
+  Com.let .nat (.add 1 1) <|
+  Com.let .nat (.add 2 2) <|
+  Com.let .nat (.add 3 3) <|
+  Com.let .nat (.add 4 4) <|
+  Com.let .nat (.add 5 5) <|
+  Com.ret .nat (.add 0 0)
+
 
 def Expr.denote : Expr → State → Value
 | .nat n, _ => .nat n
-| .var v, l => l.get! v
+| .add a b, l => let a_val := get_nat (l.get! a)
+                 let b_val := get_nat (l.get! b)
+                 Value.nat (a_val + b_val)
 
 def Com.denote : Com → State → Value
 | .ret _ e, l => e.denote l
@@ -120,12 +127,12 @@ def Com.denote : Com → State → Value
 
 
 macro "mk_lets'" n:num init:term : term =>
-  n.getNat.foldRevM (fun n stx => `(Com.let .nat (.var $(Lean.quote n)) $stx)) init
+  n.getNat.foldRevM (fun n stx => `(Com.let .nat (.add $(Lean.quote n) $(Lean.quote n)) $stx)) init
 
 macro "mk_com'" n:num : term =>
 `(Com.let .nat (.nat 0) <|
   mk_lets' $n
-  Com.ret .nat (.var 0))
+  Com.ret .nat (.add 0 0))
 
 macro "mk_ex'" n:num : command =>
 `(theorem t : Com :=
