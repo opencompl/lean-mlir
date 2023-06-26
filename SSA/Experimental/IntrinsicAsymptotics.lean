@@ -3,13 +3,19 @@
 /-- A very simple type universe. -/
 inductive Ty
   | nat
---  | bool  TODO: Add support for more than one type to denote
+  | bool
   deriving DecidableEq, Repr
 
 def Ty.toType
   | nat => Nat
---  | bool => Bool
+  | bool => Bool
 
+inductive Value where
+  | nat : Nat → Value
+  | bool : Bool → Value
+  deriving Repr, Inhabited
+
+abbrev Env := List Value
 
 /-- A context is a list of types, growing to the left for simplicity. -/
 abbrev Ctxt := List Ty
@@ -45,14 +51,14 @@ def ex: ICom [] .nat :=
   ICom.let (α := .nat) (.var ⟨5, by decide⟩) <|
   ICom.ret (.var ⟨0, by decide⟩)
 
-def IExpr.denote : IExpr l ty → (ll : List Nat) → (l.length = ll.length) → Nat
-| .nat n, _, _ => n
+def IExpr.denote : IExpr l ty → (ll : Env) → (l.length = ll.length) → Value 
+| .nat n, _, _ => .nat n
 | .var v, ll, h => ll.get (Fin.mk v (by
     rw[← h]
     exact v.isLt
 ))
 
-def ICom.denote : ICom l ty → (ll : List Nat) → (l.length = ll.length) →  Nat
+def ICom.denote : ICom l ty → (ll : Env) → (l.length = ll.length) →  Value
 | .ret e, l, h => e.denote l h
 | .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
@@ -107,11 +113,11 @@ def ex' : Com :=
   Com.let .nat (.var 5) <|
   Com.ret .nat (.var 0)
 
-def Expr.denote : Expr → List Nat → Nat
-| .nat n, _ => n
+def Expr.denote : Expr → Env → Value
+| .nat n, _ => .nat n
 | .var v, l => l.get! v
 
-def Com.denote : Com → List Nat → Nat
+def Com.denote : Com → Env → Value
 | .ret _ e, l => e.denote l
 | .let _ e body, l => denote body ((e.denote l) :: l)
 
@@ -150,7 +156,7 @@ where
       return ⟨ty, .let e body⟩
   checkExpr (Γ : Ctxt) : (ty : Ty) → Expr → Except String (IExpr Γ ty)
     | .nat, .nat n => .ok (.nat n)
- --   | .bool, .nat _ => .error "type error"
+    | .bool, .nat _ => .error "type error"
     | ty,   .var v =>
       if h : v < Γ.length then
         let v : Fin Γ.length := ⟨v, h⟩
