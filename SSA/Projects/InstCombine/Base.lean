@@ -128,15 +128,14 @@ def eval (o : Op)
     | Op.icmp c _ => match c with
       | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
       | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg
-      | Comparison.sgt => pairMapM (fun x y => ↑(decide $ x.toInt > y.toInt)) arg
-      | Comparison.sge => pairMapM (fun x y => ↑(decide $ x.toInt ≥ y.toInt)) arg
-      | Comparison.slt => pairMapM (fun x y => ↑(decide $ x.toInt < y.toInt)) arg
-      | Comparison.sle => pairMapM (fun x y => ↑(decide $ x.toInt ≤ y.toInt)) arg
-      | Comparison.ugt => pairMapM (fun x y => ↑(decide $ x.toNat > y.toNat)) arg
-      | Comparison.uge => pairMapM (fun x y => ↑(decide $ x.toNat ≥ y.toNat)) arg
-      | Comparison.ult => pairMapM (fun x y => ↑(decide $ x.toNat < y.toNat)) arg
-      | Comparison.ule => pairMapM (fun x y => ↑(decide $ x.toNat ≤ y.toNat)) arg
-
+      | Comparison.sgt => pairMapM (. >ₛ .) arg
+      | Comparison.sge => pairMapM (. ≥ₛ .) arg
+      | Comparison.slt => pairMapM (. <ₛ .) arg
+      | Comparison.sle => pairMapM (. ≤ₛ .) arg
+      | Comparison.ugt => pairMapM (. >ᵤ .) arg
+      | Comparison.uge => pairMapM (. ≥ᵤ .) arg
+      | Comparison.ult => pairMapM (. <ᵤ .) arg
+      | Comparison.ule => pairMapM (. ≤ᵤ .) arg
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType
