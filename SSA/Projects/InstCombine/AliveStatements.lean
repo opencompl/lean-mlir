@@ -16,16 +16,6 @@ theorem bitvec_AddSub_1156 :
 := by alive_auto
       try sorry
 
-theorem bitvec_AddSub_1156_2 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< 1
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1156_3 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< 1
-:= by alive_auto
-      try sorry
-
 theorem bitvec_AddSub_1164 :
  ∀ (w : ℕ) (a b : Bitvec w), 0 - a + b = b - a
 := by alive_auto
@@ -56,16 +46,6 @@ theorem bitvec_AddSub_1309 :
 := by alive_auto
       try sorry
 
-theorem bitvec_AddSub_1309_2 :
- ∀ (w : ℕ) (a b : Bitvec w), (a &&& b) + (a ||| b) = a + b
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1309_3 :
- ∀ (w : ℕ) (a b : Bitvec w), (a &&& b) + (a ||| b) = a + b
-:= by alive_auto
-      try sorry
-
 theorem bitvec_AddSub_1539 :
  ∀ (w : ℕ) (a x : Bitvec w), x - (0 - a) = x + a
 := by alive_auto
@@ -73,11 +53,6 @@ theorem bitvec_AddSub_1539 :
 
 theorem bitvec_AddSub_1539_2 :
  ∀ (w : ℕ) (x C : Bitvec w), x - C = x + -C
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1546 :
- ∀ (w : ℕ) (a x : Bitvec w), x - (0 - a) = x + a
 := by alive_auto
       try sorry
 
@@ -412,26 +387,6 @@ theorem bitvec_239 :
 := by alive_auto
       try sorry
 
-theorem bitvec_265 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * Y)) ⊑ some X
-:= by alive_auto
-      try sorry
-
-theorem bitvec_265_2 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * Y)) ⊑ some X
-:= by alive_auto
-      try sorry
-
-theorem bitvec_266 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
-:= by alive_auto
-      try sorry
-
-theorem bitvec_266_2 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
-:= by alive_auto
-      try sorry
-
 theorem bitvec_275:
  ∀ (Y X : Bitvec 5),
   (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * Y)) ⊑ Option.bind (Bitvec.urem? X Y) fun snd => some (X - snd)
@@ -487,18 +442,8 @@ theorem bitvec_891:
 := by alive_auto
       try sorry
 
-theorem bitvec_891_exact:
- ∀ (x N : Bitvec 13), Bitvec.udiv? x (1 <<< N) ⊑ some (x >>> N)
-:= by alive_auto
-      try sorry
-
 theorem bitvec_1030 :
  ∀ (w : ℕ) (X : Bitvec w), Bitvec.sdiv? X (-1) ⊑ some (0 - X)
-:= by alive_auto
-      try sorry
-
-theorem bitvec_1049:
- ∀ (X C : Bitvec 11), Bitvec.sdiv? (0 - X) C ⊑ Bitvec.sdiv? X (-C)
 := by alive_auto
       try sorry
 
