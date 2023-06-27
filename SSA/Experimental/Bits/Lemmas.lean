@@ -424,7 +424,6 @@ lemma eval_compose [Fintype arity]
     p.eval (λ a => (q a).eval (fun i => x (vars _ i))) := by
   ext n; simp only [eval, compose, propagate_propagate]
 
-
 def and : PropagateStruc Bool :=
   { α := Empty,
     i := by infer_instance,
@@ -824,7 +823,6 @@ lemma propagateCarry_propagateCarry_add (x : β → ℕ → Bool) :
       propagateCarry_propagateCarry_add _ _ _ _ i]
     simp only [Nat.one_add, Nat.add_one, Nat.succ_add, Nat.add_succ,
       add_zero, propagateCarry2, zero_add]
-
 
 lemma exists_repeat : ∀ (seq : β → ℕ → Bool)
     (n : ℕ),
