@@ -16,16 +16,6 @@ theorem bitvec_AddSub_1156 :
 := by alive_auto
       try sorry
 
-theorem bitvec_AddSub_1156_2 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< 1
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1156_3 :
- ∀ (w : ℕ) (b : Bitvec w), b + b = b <<< 1
-:= by alive_auto
-      try sorry
-
 theorem bitvec_AddSub_1164 :
  ∀ (w : ℕ) (a b : Bitvec w), 0 - a + b = b - a
 := by alive_auto
@@ -56,16 +46,6 @@ theorem bitvec_AddSub_1309 :
 := by alive_auto
       try sorry
 
-theorem bitvec_AddSub_1309_2 :
- ∀ (w : ℕ) (a b : Bitvec w), (a &&& b) + (a ||| b) = a + b
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1309_3 :
- ∀ (w : ℕ) (a b : Bitvec w), (a &&& b) + (a ||| b) = a + b
-:= by alive_auto
-      try sorry
-
 theorem bitvec_AddSub_1539 :
  ∀ (w : ℕ) (a x : Bitvec w), x - (0 - a) = x + a
 := by alive_auto
@@ -73,11 +53,6 @@ theorem bitvec_AddSub_1539 :
 
 theorem bitvec_AddSub_1539_2 :
  ∀ (w : ℕ) (x C : Bitvec w), x - C = x + -C
-:= by alive_auto
-      try sorry
-
-theorem bitvec_AddSub_1546 :
- ∀ (w : ℕ) (a x : Bitvec w), x - (0 - a) = x + a
 := by alive_auto
       try sorry
 
@@ -146,8 +121,7 @@ theorem bitvec_AndOrXor_716 :
 
 theorem bitvec_AndOrXor_794 :
  ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toInt a > Bitvec.toInt b)) &&& Bitvec.ofBool (a != b) =
-    Bitvec.ofBool (decide (Bitvec.toInt a > Bitvec.toInt b))
+  Bitvec.ofBool (decide (Bitvec.sgt a b)) &&& Bitvec.ofBool (a != b) = Bitvec.ofBool (decide (Bitvec.sgt a b))
 := by alive_auto
       try sorry
 
@@ -198,28 +172,24 @@ theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
 
 theorem bitvec_AndOrXor_1683_1 :
  ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a > Bitvec.toNat b)) ||| Bitvec.ofBool (a == b) =
-    Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b))
+  Bitvec.ofBool (decide (Bitvec.ugt a b)) ||| Bitvec.ofBool (a == b) = Bitvec.ofBool (decide (Bitvec.uge a b))
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1683_2 :
- ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b)) ||| Bitvec.ofBool (a != b) = Bitvec.ofBool true
+ ∀ (w : ℕ) (a b : Bitvec w), Bitvec.ofBool (decide (Bitvec.uge a b)) ||| Bitvec.ofBool (a != b) = Bitvec.ofBool true
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1704 :
  ∀ (w : ℕ) (A B : Bitvec w),
-  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat A < Bitvec.toNat B)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
+  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.ule A B)) = Bitvec.ofBool (decide (Bitvec.uge (B + -1) A))
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1705 :
  ∀ (w : ℕ) (A B : Bitvec w),
-  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.toNat B > Bitvec.toNat A)) =
-    Bitvec.ofBool (decide (Bitvec.toNat (B + -1) ≥ Bitvec.toNat A))
+  Bitvec.ofBool (B == 0) ||| Bitvec.ofBool (decide (Bitvec.ugt B A)) = Bitvec.ofBool (decide (Bitvec.uge (B + -1) A))
 := by alive_auto
       try sorry
 
@@ -329,9 +299,7 @@ theorem bitvec_AndOrXor_2443 :
       try sorry
 
 theorem bitvec_AndOrXor_2453 :
- ∀ (w : ℕ) (y x : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toInt x < Bitvec.toInt y)) ^^^ -1 =
-    Bitvec.ofBool (decide (Bitvec.toInt x ≥ Bitvec.toInt y))
+ ∀ (w : ℕ) (y x : Bitvec w), Bitvec.ofBool (decide (Bitvec.sle x y)) ^^^ -1 = Bitvec.ofBool (decide (Bitvec.sge x y))
 := by alive_auto
       try sorry
 
@@ -387,8 +355,7 @@ theorem bitvec_AndOrXor_2658 :
 
 theorem bitvec_AndOrXor_2663 :
  ∀ (w : ℕ) (a b : Bitvec w),
-  Bitvec.ofBool (decide (Bitvec.toNat a ≤ Bitvec.toNat b)) ^^^ Bitvec.ofBool (a != b) =
-    Bitvec.ofBool (decide (Bitvec.toNat a ≥ Bitvec.toNat b))
+  Bitvec.ofBool (decide (Bitvec.ult a b)) ^^^ Bitvec.ofBool (a != b) = Bitvec.ofBool (decide (Bitvec.uge a b))
 := by alive_auto
       try sorry
 
@@ -409,26 +376,6 @@ theorem bitvec_229 :
 
 theorem bitvec_239 :
  ∀ (w : ℕ) (Y X : Bitvec w), (0 - X) * (0 - Y) = X * Y
-:= by alive_auto
-      try sorry
-
-theorem bitvec_265 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * Y)) ⊑ some X
-:= by alive_auto
-      try sorry
-
-theorem bitvec_265_2 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * Y)) ⊑ some X
-:= by alive_auto
-      try sorry
-
-theorem bitvec_266 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.udiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
-:= by alive_auto
-      try sorry
-
-theorem bitvec_266_2 :
- ∀ (w : ℕ) (Y X : Bitvec w), (Option.bind (Bitvec.sdiv? X Y) fun fst => some (fst * (0 - Y))) ⊑ some (0 - X)
 := by alive_auto
       try sorry
 
@@ -487,18 +434,8 @@ theorem bitvec_891:
 := by alive_auto
       try sorry
 
-theorem bitvec_891_exact:
- ∀ (x N : Bitvec 13), Bitvec.udiv? x (1 <<< N) ⊑ some (x >>> N)
-:= by alive_auto
-      try sorry
-
 theorem bitvec_1030 :
  ∀ (w : ℕ) (X : Bitvec w), Bitvec.sdiv? X (-1) ⊑ some (0 - X)
-:= by alive_auto
-      try sorry
-
-theorem bitvec_1049:
- ∀ (X C : Bitvec 11), Bitvec.sdiv? (0 - X) C ⊑ Bitvec.sdiv? X (-C)
 := by alive_auto
       try sorry
 
