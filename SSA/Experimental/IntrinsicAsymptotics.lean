@@ -100,77 +100,124 @@ inductive Expr : Type
   | nat (n : Nat)
   deriving Repr, Inhabited
 
+inductive LeafVar : Type
+  | a
+  | b
+  | c
+deriving Repr, Inhabited, DecidableEq
+
+
 inductive ExprRec : Type
   | add (a : ExprRec) (b : ExprRec)
   | nat (n : Nat)
-  | var (idx : Nat)
+  | var (idx : LeafVar)
   deriving Repr, Inhabited
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
-  | ret (e : Var) : Com
   | let (ty : Ty) (e : Expr) (body : Com) : Com
-  deriving Repr
+  | ret (e : Var) : Com
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
   Com.let .nat (.add 0 0) <|
-  Com.let .nat (.add 0 0) <|
-  Com.let .nat (.add 0 0) <|
+  Com.let .nat (.add 1 0) <|
+  Com.let .nat (.add 2 0) <|
   Com.let .nat (.add 3 3) <|
   Com.let .nat (.add 4 4) <|
   Com.let .nat (.add 5 5) <|
   Com.ret 0
 
--- (.add (.add _ _ ) _) -> .sub (.sub _ _ ) _
+open Lean in 
 
--- def replace_pattern : (progBefore : Com) → (rewrite: Com × Com) → Com ""
+def formatCom : Com → Nat → Std.Format
+  | .ret v, _=> "\n.ret " ++ (repr v)
+  | .let ty e body, n=> "\n.let " ++ (repr ty) ++ " " ++ (repr e) ++ (formatCom body n)
 
-abbrev Mapping := List (Var × Var)
+instance : Repr Com where
+  reprPrec :=  formatCom
+
+abbrev Mapping := List (LeafVar × Var)
 abbrev Lets := Array Expr
 
-def matchVar (lets : Lets) (varPos: Nat) (rewrite: ExprRec) (mapping: Mapping): Option Mapping := do
+def ex0 : Com :=
+  Com.let .nat (.nat 0) <|
+  Com.let .nat (.add 0 0) <|
+  Com.let .nat (.add 1 0) <|
+  Com.let .nat (.add 2 0) <|
+  Com.let .nat (.add 3 0) <|
+  Com.ret 0
+
+-- a + b => b + a
+def m := ExprRec.add (.var .a) (.var .b)
+def r := ExprRec.add (.var .b) (.var .a)
+def r2 := ExprRec.add (.var .b) (.add (.var .a) (.var .a))
+def r3 := ExprRec.add (.add (.var .a) (.var .a)) (.var .b)
+def r4 := ExprRec.add (.add (.var .b) (.var .b)) (.var .a)
+
+def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping := do
   let var := lets[varPos]!
-  match var, rewrite with
+  match var, matchExpr with
     | .add a b, .add a' b' => 
-        let left ← matchVar lets (varPos - a - 1) a' mapping
-        matchVar lets (varPos - b - 1) b' left
-    | .nat v, .nat v' =>
-      if v = v' then
-        return []
-      else
-        none
-    | _, .var x => 
-        (x, varPos)::mapping
+        let mapping ← match a' with
+          | .var x => (x, varPos - 1 - a)::mapping
+          | _=>  matchVar' lets (varPos - a - 1) a' mapping
+        match b' with
+          | .var x => (x, varPos - 1 - b)::mapping
+          | _=>  matchVar' lets (varPos - b - 1) a' mapping
     | _, _ => none 
 
-def applyMapping  (pattern : ExprRec) (m : Mapping) (new : Lets): Lets := 
+def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) : Option Mapping := 
+  matchVar' lets varPos matchExpr [] 
+  
+#eval ex0
+#eval matchVar (#[.nat 0, .add 0 0, .add 1 0, .add 2 0, .add 3 0]) 4 m
+
+def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
+ match m with
+ | x :: xs => if var = x.1 then
+                 x.2
+              else
+                 getVarAfterMapping var xs
+ | _ => panic! "var should be in mapping"
+
+def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): Lets := 
 match pattern with
-    | .var _ => new
+    | .var _ => lets
     | .add a b => 
-      let y := applyMapping a m new
-      let x := applyMapping b m y
-      x.push (Expr.add (y.size - new.size) (x.size - new.size))
-    | .nat n => new.push (Expr.nat n)
+      let lets := applyMapping a m lets
+      let lets := applyMapping b m lets
+      let l := match a with
+        | .var s => getVarAfterMapping s m 
+        | _ => lets.size
+      let l := lets.size - l - 1
+      let r := match b with
+        | .var s => getVarAfterMapping s m
+        | _ => lets.size
+      let r := lets.size - r - 1
+      lets.push (Expr.add l r)
+    | .nat n => lets.push (Expr.nat n)
 
 def replaceUsesOfVar (inputProg : Com) (var_pos: Nat) (new : Var) : Com :=
   inputProg
 
-def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
-  newProgram
+def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
+  match n with
+  | 0 => newProgram
+  | (x + 1) => if x < newLets.size then
+                 let added := Com.let .nat (newLets.get! x) newProgram
+                 addLetsToProgram newLets x (added)
+               else
+                 newProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.size - 1 
-  let mapping ← matchVar lets varPos rewrite.1 []
-  dbg_trace "applyRewrite:mapping" 
-  dbg_trace repr lets
-  dbg_trace repr varPos
-  dbg_trace repr mapping
+  let mapping ← matchVar lets varPos rewrite.1
+  let lets := applyMapping (rewrite.2) mapping lets
+  let newProgram := inputProg
+  let newProgram := addLetsToProgram lets (lets.size) newProgram
 
-  let newLets := applyMapping (rewrite.2) mapping #[]
-  dbg_trace repr newLets
-  let newProgram := replaceUsesOfVar inputProg var (mapping var)
-  some (addLetsToProgram newLets newProgram)
+  some newProgram
 
 def rewriteAt (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
   match inputProg with
@@ -182,9 +229,7 @@ def rewriteAt (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × 
         else
            rewriteAt body (depth - 1) lets rewrite
 
-def rwPattern := (ExprRec.add (.var 0) (.add (.var 1) (.var 2)), ExprRec.add (.var 0) (.var 1))
-
-#eval rewriteAt ex' 3 #[] rwPattern 
+#eval rewriteAt ex0 4 #[] (m, r4)
 
   
   
