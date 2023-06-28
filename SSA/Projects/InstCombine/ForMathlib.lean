@@ -366,7 +366,7 @@ def srem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
-protected def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
+def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
   cond c.head x y
 
 theorem bitwise_eq_eq {w : Nat} {x y : Bitvec w} :
@@ -544,7 +544,7 @@ theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (h
     (((x + 1).toNat < 3) ::ᵥ Vector.nil) x 0) := by
   have hw0 : w ≠ 0 := by rintro rfl; simp at hw  
   simp only [sdiv?, toInt_eq_zero, hx, ite_false, Option.map_some', 
-    Bitvec.select, Vector.head, toNat_add, toNat_one,
+    select, Vector.head, toNat_add, toNat_one,
     if_neg hw0, Bool.cond_decide, Option.some.injEq, toInt_one hw]
   admit
 

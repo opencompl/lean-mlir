@@ -429,42 +429,42 @@ theorem bitvec_1030 :
       try sorry
 
 theorem bitvec_Select_846:
- ∀ (C B : Bitvec 1), Bitvec.select B (ofBool true) C = B ||| C
+ ∀ (C B : Bitvec 1), select B (ofBool true) C = B ||| C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_850:
- ∀ (C B : Bitvec 1), Bitvec.select B (ofBool false) C = (B ^^^ ofBool true) &&& C
+ ∀ (C B : Bitvec 1), select B (ofBool false) C = (B ^^^ ofBool true) &&& C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_855:
- ∀ (C B : Bitvec 1), Bitvec.select B C (ofBool false) = B &&& C
+ ∀ (C B : Bitvec 1), select B C (ofBool false) = B &&& C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_859:
- ∀ (C B : Bitvec 1), Bitvec.select B C (ofBool true) = B ^^^ ofBool true ||| C
+ ∀ (C B : Bitvec 1), select B C (ofBool true) = B ^^^ ofBool true ||| C
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_851:
- ∀ (a b : Bitvec 1), Bitvec.select a b a = a &&& b
+ ∀ (a b : Bitvec 1), select a b a = a &&& b
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_852:
- ∀ (a b : Bitvec 1), Bitvec.select a a b = a ||| b
+ ∀ (a b : Bitvec 1), select a a b = a ||| b
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_1100 :
- ∀ (w : ℕ) (Y X : Bitvec w), Bitvec.select (ofBool true) X Y = X
+ ∀ (w : ℕ) (Y X : Bitvec w), select (ofBool true) X Y = X
 := by alive_auto
       try sorry
 
 theorem bitvec_Select_1105 :
- ∀ (w : ℕ) (Y X : Bitvec w), Bitvec.select (ofBool false) X Y = Y
+ ∀ (w : ℕ) (Y X : Bitvec w), select (ofBool false) X Y = Y
 := by alive_auto
       try sorry
 

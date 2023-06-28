@@ -145,34 +145,34 @@ instance TUS : SSA.TypedUserSemantics Op BaseType where
   eval := eval
 
 open EDSL
-syntax "add" term : dsl_op
-syntax "and" term : dsl_op
-syntax "const" term : dsl_op
-syntax "lshr" term : dsl_op
-syntax "ashr" term : dsl_op
-syntax "not" term : dsl_op
-syntax "or" term : dsl_op
-syntax "shl" term : dsl_op
-syntax "sub" term : dsl_op
-syntax "xor" term : dsl_op
-syntax "neg" term : dsl_op
-syntax "copy" term : dsl_op
-syntax "mul" term : dsl_op
-syntax "sdiv" term : dsl_op
-syntax "udiv" term : dsl_op
-syntax "urem" term : dsl_op
-syntax "srem" term : dsl_op
-syntax "select" term : dsl_op
-syntax "icmp eq" term : dsl_op
-syntax "icmp ne" term : dsl_op
-syntax "icmp ugt" term : dsl_op
-syntax "icmp uge" term : dsl_op
-syntax "icmp ult" term : dsl_op
-syntax "icmp ule" term : dsl_op
-syntax "icmp sgt" term : dsl_op
-syntax "icmp sge" term : dsl_op
-syntax "icmp slt" term : dsl_op
-syntax "icmp sle" term : dsl_op
+scoped syntax "add" term : dsl_op
+scoped syntax "and" term : dsl_op
+scoped syntax "const" term : dsl_op
+scoped syntax "lshr" term : dsl_op
+scoped syntax "ashr" term : dsl_op
+scoped syntax "not" term : dsl_op
+scoped syntax "or" term : dsl_op
+scoped syntax "shl" term : dsl_op
+scoped syntax "sub" term : dsl_op
+scoped syntax "xor" term : dsl_op
+scoped syntax "neg" term : dsl_op
+scoped syntax "copy" term : dsl_op
+scoped syntax "mul" term : dsl_op
+scoped syntax "sdiv" term : dsl_op
+scoped syntax "udiv" term : dsl_op
+scoped syntax "urem" term : dsl_op
+scoped syntax "srem" term : dsl_op
+scoped syntax "select" term : dsl_op
+scoped syntax "icmp eq" term : dsl_op
+scoped syntax "icmp ne" term : dsl_op
+scoped syntax "icmp ugt" term : dsl_op
+scoped syntax "icmp uge" term : dsl_op
+scoped syntax "icmp ult" term : dsl_op
+scoped syntax "icmp ule" term : dsl_op
+scoped syntax "icmp sgt" term : dsl_op
+scoped syntax "icmp sge" term : dsl_op
+scoped syntax "icmp slt" term : dsl_op
+scoped syntax "icmp sle" term : dsl_op
 
 macro_rules
   | `([dsl_op| add $w ]) => `(Op.add $w)
