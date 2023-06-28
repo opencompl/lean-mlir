@@ -269,11 +269,20 @@ def ExprRec.denote : ExprRec → State → Value
 | .var v, s => s.get! v
 
 theorem letsTheorem 
- (rwExpr : ExprRec × ExprRec) (lets : Lets)
- (h1: matchVar lets (lets.size-1) rwExpr.fst = some m):
+ (matchExpr : ExprRec) (lets : Lets)
+ (h1: matchVar lets (lets.size-1) matchExpr = some m):
    denote (addLetsToProgram (lets) (Com.ret 0)) =
-   denote (addLetsToProgram ((applyMapping rwExpr.1 m (lets).1) (Com.ret 0)) := by
-      induction ((lets.push e).size)
+   denote (addLetsToProgram ((applyMapping matchExpr m lets).1) (Com.ret 0)) := by
+      unfold addLetsToProgram
+      induction matchExpr
+      unfold applyMapping
+      simp
+      unfold matchVar at h1
+      simp [matchVar'] at h1
+      
+
+      
+
 
 theorem rewriteAtCorrect 
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
