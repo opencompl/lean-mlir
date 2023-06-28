@@ -1,6 +1,6 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
-import Mathlib
+import Std.Data.Option.Lemmas
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -149,17 +149,20 @@ def ex0 : Com :=
   Com.ret 0
 
 
-def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping := 
-  match lets[varPos]!, matchExpr with 
-    | .add a b, .add a' b' => do
-        let mapping ← match a' with 
-          | .var x => (x, varPos - 1 - a)::mapping
-          | _=>  matchVar' lets (varPos - a - 1) a' mapping
-        match b' with
-          | .var x => (x, varPos - 1 - b)::mapping
-          | _=>  matchVar' lets (varPos - b - 1) b' mapping
-    | _, _ => none 
-
+def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping :=
+  match matchExpr with 
+  | .var x => match mapping.lookup x with
+    | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
+    | none => (x, varPos)::mapping
+  | .cst n => match lets[varPos]! with
+    | .cst n' => if n = n' then some mapping else none
+    | _ => none
+  | .add a' b' =>
+    match lets[varPos]! with 
+    | .add a b => do
+        let mapping ← matchVar' lets (varPos - a - 1) a' mapping
+        matchVar' lets (varPos - b - 1) b' mapping
+    | _ => none 
 
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) : Option Mapping := 
   matchVar' lets varPos matchExpr [] 
@@ -226,7 +229,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.size - lets.size) 0
   let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) (newLets.size - newVar - 1)
-  let newProgram := addLetsToProgram newLets (newLets.size) newProgram
+  let newProgram := addLetsToProgram newLets newProgram
 
   some newProgram
 
@@ -271,7 +274,9 @@ def ExprRec.denote : ExprRec → State → Value
 
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
- (h1: matchVar lets (lets.size-1) matchExpr = some m):
+ (h1: matchVar' lets (lets.size-1) matchExpr m₀ = some m)
+ -- some assumption on m₀
+ :
    denote (addLetsToProgram (lets) (Com.ret 0)) =
    denote (addLetsToProgram ((applyMapping matchExpr m lets).1) (Com.ret 0)) := by
       unfold addLetsToProgram
@@ -279,20 +284,17 @@ theorem letsTheorem
       unfold applyMapping
       simp
       case cst =>
-        unfold matchVar at h1
         simp [matchVar'] at h1
+        split at h1
+        · split at h1 
+          simp_all
       
       case add a b a_ih b_ih =>
-        unfold matchVar at h1
         unfold matchVar' at h1
-       
-        simp [matchVar'] at a_ih
-        simp [a_ih]
-
-        sorry
+        split at h1
+        ·  erw [Option.bind_eq_some] at h1
 
       case var =>
-        unfold matchVar at h1
         simp [matchVar'] at h1
       
       
