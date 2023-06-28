@@ -148,17 +148,18 @@ def ex0 : Com :=
   Com.let .nat (.add 3 0) <|
   Com.ret 0
 
-def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping := do
-  let var := lets[varPos]!
-  match var, matchExpr with
-    | .add a b, .add a' b' => 
-        let mapping ← match a' with
+
+def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping := 
+  match lets[varPos]!, matchExpr with 
+    | .add a b, .add a' b' => do
+        let mapping ← match a' with 
           | .var x => (x, varPos - 1 - a)::mapping
           | _=>  matchVar' lets (varPos - a - 1) a' mapping
         match b' with
           | .var x => (x, varPos - 1 - b)::mapping
-          | _=>  matchVar' lets (varPos - b - 1) a' mapping
+          | _=>  matchVar' lets (varPos - b - 1) b' mapping
     | _, _ => none 
+
 
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) : Option Mapping := 
   matchVar' lets varPos matchExpr [] 
@@ -277,8 +278,23 @@ theorem letsTheorem
       induction matchExpr
       unfold applyMapping
       simp
-      unfold matchVar at h1
-      simp [matchVar'] at h1
+      case cst =>
+        unfold matchVar at h1
+        simp [matchVar'] at h1
+      
+      case add a b a_ih b_ih =>
+        unfold matchVar at h1
+        unfold matchVar' at h1
+       
+        simp [matchVar'] at a_ih
+        simp [a_ih]
+
+        sorry
+
+      case var =>
+        unfold matchVar at h1
+        simp [matchVar'] at h1
+      
       
 
       
