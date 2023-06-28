@@ -1,7 +1,6 @@
 -- Core
 -- ====
 
-import SSA.Core.Framework
 import SSA.Core.WellTypedFramework
 
 
