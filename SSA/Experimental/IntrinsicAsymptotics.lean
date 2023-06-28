@@ -188,7 +188,7 @@ match pattern with
       (lets.push (Expr.add l r), lets.size)
     | .cst n => (lets.push (.cst n), lets.size)
 
-def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat): Com := 
+def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
   let shift (v : Nat) :=
     if v >= pos then
       v + delta
@@ -214,7 +214,7 @@ def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
   | 0 => newProgram
   | (x + 1) => if x < newLets.size then
-                 let added := Com.let .nat (newLets.get! x) newProgram
+                 let added := Com.let .nat (newLets[x]!) newProgram
                  addLetsToProgram' newLets x (added)
                else
                  newProgram
@@ -227,7 +227,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let mapping ← matchVar lets varPos rewrite.1
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
-  let newProgram := shiftBy newProgram (newLets.size - lets.size) 0
+  let newProgram := shiftBy newProgram (newLets.size - lets.size)
   let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) (newLets.size - newVar - 1)
   let newProgram := addLetsToProgram newLets newProgram
 
@@ -272,11 +272,18 @@ def ExprRec.denote : ExprRec → State → Value
                  Value.nat (a_val + b_val)
 | .var v, s => s.get! v
 
+theorem shifting:
+denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
+
+
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar' lets (lets.size-1) matchExpr m₀ = some m)
+ (hlets: lets.size > 0)
  -- some assumption on m₀
- :
+ (hm₀: denote (addLetsToProgram (lets) (Com.ret 0)) =
+   denote (addLetsToProgram ((applyMapping matchExpr m₀ lets).1) (Com.ret 0))):
+
    denote (addLetsToProgram (lets) (Com.ret 0)) =
    denote (addLetsToProgram ((applyMapping matchExpr m lets).1) (Com.ret 0)) := by
       unfold addLetsToProgram
@@ -286,16 +293,45 @@ theorem letsTheorem
       case cst =>
         simp [matchVar'] at h1
         split at h1
+        rename_i x n heq
         · split at h1 
+          unfold addLetsToProgram'
+          split
+          rename_i heqp
           simp_all
+          rename_i heqp
+          simp
+          simp [Nat.lt_succ_self, heqp]
+          simp [heqp, Nat.succ_sub_succ] at heq
+          simp [heq]
+          rw [shifting (n:=0)]
+          
+          simp_all
+
+
+          induction lets.size
+          simp_all 
+
+          split
+          simp_all
+
+          unfold addLetsToProgram at hm₀
+          unfold applyMapping at hm₀
+          unfold applyMapping at hm₀
+
+        · contradiction
       
       case add a b a_ih b_ih =>
         unfold matchVar' at h1
         split at h1
-        ·  erw [Option.bind_eq_some] at h1
+        ·   erw [Option.bind_eq_some] at h1
+        
 
       case var =>
         simp [matchVar'] at h1
+        split at h1
+        ·   
+        
       
       
 
