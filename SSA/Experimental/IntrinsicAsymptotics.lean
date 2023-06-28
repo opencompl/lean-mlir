@@ -98,8 +98,8 @@ mk_ex 120
 
 abbrev Var := Nat
 inductive Expr : Type
+  | cst (n : Nat)
   | add (a : Var) (b : Var)
-  | nat (n : Nat)
   deriving Repr, Inhabited, DecidableEq
 
 inductive LeafVar : Type
@@ -110,8 +110,8 @@ deriving Repr, Inhabited, DecidableEq
 
 
 inductive ExprRec : Type
+  | cst (n : Nat)
   | add (a : ExprRec) (b : ExprRec)
-  | nat (n : Nat)
   | var (idx : LeafVar)
   deriving Repr, Inhabited
 
@@ -122,7 +122,7 @@ inductive Com : Type where
   deriving DecidableEq
 
 def ex' : Com :=
-  Com.let .nat (.nat 0) <|
+  Com.let .nat (.cst 0) <|
   Com.let .nat (.add 0 0) <|
   Com.let .nat (.add 1 0) <|
   Com.let .nat (.add 2 0) <|
@@ -144,7 +144,7 @@ abbrev Mapping := List (LeafVar × Var)
 abbrev Lets := Array Expr
 
 def ex0 : Com :=
-  Com.let .nat (.nat 0) <|
+  Com.let .nat (.cst 0) <|
   Com.let .nat (.add 0 0) <|
   Com.let .nat (.add 1 0) <|
   Com.let .nat (.add 2 0) <|
@@ -185,7 +185,7 @@ match pattern with
       let l := lets.size - v1 - 1
       let r := lets.size - v2 - 1
       (lets.push (Expr.add l r), lets.size)
-    | .nat n => (lets.push (Expr.nat n), lets.size)
+    | .cst n => (lets.push (.cst n), lets.size)
 
 def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
   match inputProg with
@@ -195,7 +195,7 @@ def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com :=
       let a := if a = old then new else a
       let b := if b = old then new else b
       .let ty (Expr.add a b) (replaceUsesOfVar body (old+1) (new+1))
-    | .nat x => .let ty (Expr.nat x) (replaceUsesOfVar body (old+1) (new+1))
+    | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old+1) (new+1))
 
 def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
@@ -229,7 +229,7 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Op
     rewriteAt' inputProg depth #[] rewrite 
 
 def Expr.denote : Expr → State → Value
-| .nat n, _ => .nat n
+| .cst n, _ => .nat n
 | .add a b, l => let a_val := get_nat (l.get! a)
                  let b_val := get_nat (l.get! b)
                  Value.nat (a_val + b_val)
@@ -242,12 +242,12 @@ def denote (p: Com) : Value :=
   p.denote []
 
 def ex1 : Com :=
-  Com.let .nat (.nat 1) <|
+  Com.let .nat (.cst 1) <|
   Com.let .nat (.add 0 0) <|
   Com.ret 0
 
 def ex2 : Com :=
-  Com.let .nat (.nat 1) <|
+  Com.let .nat (.cst 1) <|
   Com.let .nat (.add 0 0) <|
   Com.let .nat (.add 1 0) <|
   Com.let .nat (.add 1 1) <|
@@ -287,7 +287,7 @@ example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 4) := by rfl
 
 -- a + b => b + (0 + a)
-def r2 := ExprRec.add (.var .b) (.add (.nat 0) (.var .a))
+def r2 := ExprRec.add (.var .b) (.add (.cst 0) (.var .a))
 
 #eval testRewrite ex2 r2 1
 example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
@@ -302,7 +302,7 @@ example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
 
 -- a + b => (0 + a) + b
-def r3 := ExprRec.add (.add (.nat 0 ) (.var .a)) (.var .b)
+def r3 := ExprRec.add (.add (.cst 0 ) (.var .a)) (.var .b)
 
 #eval testRewrite ex2 r3 1
 example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
@@ -322,7 +322,7 @@ macro "mk_lets'" n:num init:term : term =>
   n.getNat.foldRevM (fun n stx => `(Com.let .nat (.add $(Lean.quote n) $(Lean.quote n)) $stx)) init
 
 macro "mk_com'" n:num : term =>
-`(Com.let .nat (.nat 0) <|
+`(Com.let .nat (.cst 0) <|
   mk_lets' $n
   Com.ret .nat (.add 0 0))
 
@@ -343,16 +343,16 @@ def parse : String → Except String Com := sorry
 def check : Com → Except String (Σ ty, ICom [] ty) := go []
 where
   go (Γ : Ctxt) : Com → Except String (Σ ty, ICom Γ ty)
-    | .ret ty e => do
-      let e ← checkExpr Γ ty e
+    | .ret e => do
+      let e ← checkExpr Γ e
       return ⟨ty, .ret e⟩
     | .let ty e body => do
       let e ← checkExpr Γ ty e
       let ⟨ty, body⟩ ← go (ty :: Γ) body
       return ⟨ty, .let e body⟩
   checkExpr (Γ : Ctxt) : (ty : Ty) → Expr → Except String (IExpr Γ ty)
-    | .nat, .nat n => .ok (.nat n)
-    | .bool, .nat _ => .error "type error"
+    | .nat, .cst n => .ok (.nat n)
+    | .bool, .cst _ => .error "type error"
     | ty,   .add a b =>
       if h : a < Γ.length && b < Γ.length then
         let v_a : Fin Γ.length := ⟨v_a, h⟩
