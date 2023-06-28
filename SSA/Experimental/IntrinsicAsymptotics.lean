@@ -53,7 +53,7 @@ def ex: ICom [] .nat :=
 
 def get_nat : Value → Nat
   | .nat x => x
-  | .bool y => panic! "boolean values not supported"
+  | .bool _ => panic! "boolean values not supported"
 
 def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
@@ -201,7 +201,7 @@ def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat): Com :=
 
 def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
   let replace (v : Nat) :=
-     v
+     if old = v then new else v
   match inputProg with
   | .ret x => .ret (replace x)
   | .let ty e body => match e with
@@ -224,7 +224,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.size - lets.size) 0
-  let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) 0
+  let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) (newLets.size - newVar - 1)
   let newProgram := addLetsToProgram newLets (newLets.size) newProgram
 
   some newProgram
@@ -242,6 +242,12 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
 def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Option Com :=
     rewriteAt' inputProg depth #[] rewrite 
 
+def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
+    let x := rewriteAt inputProg depth rewrite 
+    match x with
+      | none => inputProg
+      | some y => y
+
 def Expr.denote : Expr → State → Value
 | .cst n, _ => .nat n
 | .add a b, l => let a_val := get_nat (l.get! a)
@@ -254,6 +260,9 @@ def Com.denote : Com → State → Value
 
 def denote (p: Com) : Value :=
   p.denote []
+
+theorem preserves_semantics (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec):
+  denote (rewrite p pos rwExpr) = denote p := sorry
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
@@ -388,9 +397,6 @@ def transform : ICom [] ty → ICom [] ty := sorry
 def denote : ICom [] ty → ty.toType := sorry
 def print : ICom [] ty → String := sorry
 
--- The big theorem; `parse/check/print` are probably not interesting to verify,
--- except to show that `check` does not change the program.
-theorem td : denote (transform c) = denote c := sorry
 
 def main (args : List String) : IO Unit := do
   let p ← IO.FS.readFile args[0]!
