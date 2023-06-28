@@ -13,7 +13,7 @@ def Ty.toType
 inductive Value where
   | nat : Nat → Value
   | bool : Bool → Value
-  deriving Repr, Inhabited
+  deriving Repr, Inhabited, DecidableEq
 
 abbrev State := List Value
 
@@ -51,7 +51,9 @@ def ex: ICom [] .nat :=
   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
-def get_nat : Value → Nat := sorry 
+def get_nat : Value → Nat
+  | .nat x => x
+  | .bool y => panic! "boolean values not supported"
 
 def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
@@ -98,7 +100,7 @@ abbrev Var := Nat
 inductive Expr : Type
   | add (a : Var) (b : Var)
   | nat (n : Nat)
-  deriving Repr, Inhabited
+  deriving Repr, Inhabited, DecidableEq
 
 inductive LeafVar : Type
   | a
@@ -117,6 +119,7 @@ inductive ExprRec : Type
 inductive Com : Type where
   | let (ty : Ty) (e : Expr) (body : Com) : Com
   | ret (e : Var) : Com
+  deriving DecidableEq
 
 def ex' : Com :=
   Com.let .nat (.nat 0) <|
@@ -131,8 +134,8 @@ def ex' : Com :=
 open Lean in 
 
 def formatCom : Com → Nat → Std.Format
-  | .ret v, _=> "\n.ret " ++ (repr v)
-  | .let ty e body, n=> "\n.let " ++ (repr ty) ++ " " ++ (repr e) ++ (formatCom body n)
+  | .ret v, _=> "  .ret " ++ (repr v)
+  | .let ty e body, n=> "  .let " ++ (repr ty) ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
 
 instance : Repr Com where
   reprPrec :=  formatCom
@@ -147,13 +150,6 @@ def ex0 : Com :=
   Com.let .nat (.add 2 0) <|
   Com.let .nat (.add 3 0) <|
   Com.ret 0
-
--- a + b => b + a
-def m := ExprRec.add (.var .a) (.var .b)
-def r := ExprRec.add (.var .b) (.var .a)
-def r2 := ExprRec.add (.var .b) (.add (.var .a) (.var .a))
-def r3 := ExprRec.add (.add (.var .a) (.var .a)) (.var .b)
-def r4 := ExprRec.add (.add (.var .b) (.var .b)) (.var .a)
 
 def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping := do
   let var := lets[varPos]!
@@ -171,7 +167,6 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) : Option Mapping :
   matchVar' lets varPos matchExpr [] 
   
 #eval ex0
-#eval matchVar (#[.nat 0, .add 0 0, .add 1 0, .add 2 0, .add 3 0]) 4 m
 
 def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
  match m with
@@ -181,25 +176,26 @@ def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
                  getVarAfterMapping var xs
  | _ => panic! "var should be in mapping"
 
-def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): Lets := 
+def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat) := 
 match pattern with
-    | .var _ => lets
+    | .var v => (lets, getVarAfterMapping v m)
     | .add a b => 
-      let lets := applyMapping a m lets
-      let lets := applyMapping b m lets
-      let l := match a with
-        | .var s => getVarAfterMapping s m 
-        | _ => lets.size
-      let l := lets.size - l - 1
-      let r := match b with
-        | .var s => getVarAfterMapping s m
-        | _ => lets.size
-      let r := lets.size - r - 1
-      lets.push (Expr.add l r)
-    | .nat n => lets.push (Expr.nat n)
+      let (lets, v1) := applyMapping a m lets
+      let (lets, v2) := applyMapping b m lets
+      let l := lets.size - v1 - 1
+      let r := lets.size - v2 - 1
+      (lets.push (Expr.add l r), lets.size)
+    | .nat n => (lets.push (Expr.nat n), lets.size)
 
-def replaceUsesOfVar (inputProg : Com) (var_pos: Nat) (new : Var) : Com :=
-  inputProg
+def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
+  match inputProg with
+  | .ret x => if x = old then .ret new else .ret x
+  | .let ty e body => match e with
+    | .add a b => 
+      let a := if a = old then new else a
+      let b := if b = old then new else b
+      .let ty (Expr.add a b) (replaceUsesOfVar body (old+1) (new+1))
+    | .nat x => .let ty (Expr.nat x) (replaceUsesOfVar body (old+1) (new+1))
 
 def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
@@ -213,13 +209,13 @@ def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.size - 1 
   let mapping ← matchVar lets varPos rewrite.1
-  let lets := applyMapping (rewrite.2) mapping lets
-  let newProgram := inputProg
+  let (lets, newVar) := applyMapping (rewrite.2) mapping lets
+  let newProgram := replaceUsesOfVar inputProg 1 (newVar)
   let newProgram := addLetsToProgram lets (lets.size) newProgram
 
   some newProgram
 
-def rewriteAt (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
+def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
   match inputProg with
     | .ret _ => none
     | .let _ expr body =>
@@ -227,15 +223,10 @@ def rewriteAt (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × 
         if depth = 0 then
            applyRewrite lets body rewrite
         else
-           rewriteAt body (depth - 1) lets rewrite
+           rewriteAt' body (depth - 1) lets rewrite
 
-#eval rewriteAt ex0 4 #[] (m, r4)
-
-  
-  
-
-
-
+def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Option Com :=
+    rewriteAt' inputProg depth #[] rewrite 
 
 def Expr.denote : Expr → State → Value
 | .nat n, _ => .nat n
@@ -244,9 +235,88 @@ def Expr.denote : Expr → State → Value
                  Value.nat (a_val + b_val)
 
 def Com.denote : Com → State → Value
-| .ret _ e, l => e.denote l
+| .ret v, l => l.get! v
 | .let _ e body, l => denote body ((e.denote l) :: l)
 
+def denote (p: Com) : Value :=
+  p.denote []
+
+def ex1 : Com :=
+  Com.let .nat (.nat 1) <|
+  Com.let .nat (.add 0 0) <|
+  Com.ret 0
+
+def ex2 : Com :=
+  Com.let .nat (.nat 1) <|
+  Com.let .nat (.add 0 0) <|
+  Com.let .nat (.add 1 0) <|
+  Com.let .nat (.add 1 1) <|
+  Com.let .nat (.add 1 1) <|
+  Com.ret 0
+
+-- a + b => b + a
+def m := ExprRec.add (.var .a) (.var .b)
+def r := ExprRec.add (.var .b) (.var .a)
+
+def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
+  let new := rewriteAt p pos (m, r) 
+  dbg_trace "# Before"
+  dbg_trace repr p
+  match new with
+    | none => (Com.ret 0) -- Failure
+    | some y => 
+      dbg_trace ""
+      dbg_trace "# After"
+      dbg_trace repr y
+      dbg_trace ""
+      y
+
+#eval testRewrite ex1 r 1
+example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
+
+#eval testRewrite ex2 r 1
+example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
+
+#eval testRewrite ex2 r 2
+example : denote ex2 = denote (testRewrite ex2 r 2) := by rfl
+
+#eval testRewrite ex2 r 3
+example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
+
+#eval testRewrite ex2 r 4
+example : denote ex2 = denote (testRewrite ex2 r 4) := by rfl
+
+-- a + b => b + (0 + a)
+def r2 := ExprRec.add (.var .b) (.add (.nat 0) (.var .a))
+
+#eval testRewrite ex2 r2 1
+example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
+
+#eval testRewrite ex2 r2 2
+example : denote ex2 = denote (testRewrite ex2 r2 2) := by rfl
+
+#eval testRewrite ex2 r2 3
+example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
+
+#eval testRewrite ex2 r2 4
+example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
+
+-- a + b => (0 + a) + b
+def r3 := ExprRec.add (.add (.nat 0 ) (.var .a)) (.var .b)
+
+#eval testRewrite ex2 r3 1
+example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
+
+#eval testRewrite ex2 r3 2
+example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
+
+#eval testRewrite ex2 r3 3
+example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
+
+#eval testRewrite ex2 r3 4
+example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
+
+  
 
 macro "mk_lets'" n:num init:term : term =>
   n.getNat.foldRevM (fun n stx => `(Com.let .nat (.add $(Lean.quote n) $(Lean.quote n)) $stx)) init
