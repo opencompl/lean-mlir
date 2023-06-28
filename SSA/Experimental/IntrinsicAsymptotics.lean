@@ -1,5 +1,7 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
+import Mathlib
+
 /-- A very simple type universe. -/
 inductive Ty
   | nat
@@ -102,12 +104,7 @@ inductive Expr : Type
   | add (a : Var) (b : Var)
   deriving Repr, Inhabited, DecidableEq
 
-inductive LeafVar : Type
-  | a
-  | b
-  | c
-deriving Repr, Inhabited, DecidableEq
-
+abbrev LeafVar := Nat
 
 inductive ExprRec : Type
   | cst (n : Nat)
@@ -209,14 +206,17 @@ def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com :=
       .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old+1) (new+1))
     | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old+1) (new+1))
 
-def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
+def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
   | 0 => newProgram
   | (x + 1) => if x < newLets.size then
                  let added := Com.let .nat (newLets.get! x) newProgram
-                 addLetsToProgram newLets x (added)
+                 addLetsToProgram' newLets x (added)
                else
                  newProgram
+
+def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
+  addLetsToProgram' newLets newLets.size newProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.size - 1 
@@ -261,8 +261,52 @@ def Com.denote : Com → State → Value
 def denote (p: Com) : Value :=
   p.denote []
 
-theorem preserves_semantics (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec):
-  denote (rewrite p pos rwExpr) = denote p := sorry
+def ExprRec.denote : ExprRec → State → Value
+| .cst n, _ => .nat n
+| .add a b, s => let a_val := get_nat (a.denote s)
+                 let b_val := get_nat (b.denote s)
+                 Value.nat (a_val + b_val)
+| .var v, s => s.get! v
+
+theorem letsTheorem 
+ (rwExpr : ExprRec × ExprRec) (lets : Lets)
+ (h1: matchVar lets (lets.size-1) rwExpr.fst = some m):
+   denote (addLetsToProgram (lets) (Com.ret 0)) =
+   denote (addLetsToProgram ((applyMapping rwExpr.1 m (lets).1) (Com.ret 0)) := by
+      induction ((lets.push e).size)
+
+theorem rewriteAtCorrect 
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+  (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
+  (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
+  denote p' = denote (addLetsToProgram lets lets.size p) := by
+  induction p 
+  case «let» ty e body body_ih =>
+    unfold rewriteAt' at successful
+    split at successful
+    case inl hpos =>
+      unfold applyRewrite at successful
+      erw [Option.bind_eq_some] at successful
+      rcases successful with ⟨m, ⟨h1, h2⟩⟩
+
+
+
+  
+  
+
+
+theorem preservesSemantics
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+  (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s):
+  denote (rewrite p pos rwExpr) = denote p := by
+  unfold rewrite
+  unfold rewriteAt
+  simp
+  split
+  rfl
+  rw [rewriteAtCorrect (successful := by assumption)]
+  simp[addLetsToProgram]
+  exact rewriteCorrect
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
@@ -278,8 +322,8 @@ def ex2 : Com :=
   Com.ret 0
 
 -- a + b => b + a
-def m := ExprRec.add (.var .a) (.var .b)
-def r := ExprRec.add (.var .b) (.var .a)
+def m := ExprRec.add (.var 0) (.var 1)
+def r := ExprRec.add (.var 1) (.var 0)
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
@@ -310,7 +354,7 @@ example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 4) := by rfl
 
 -- a + b => b + (0 + a)
-def r2 := ExprRec.add (.var .b) (.add (.cst 0) (.var .a))
+def r2 := ExprRec.add (.var 1) (.add (.cst 0) (.var 0))
 
 #eval testRewrite ex2 r2 1
 example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
@@ -325,7 +369,7 @@ example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
 
 -- a + b => (0 + a) + b
-def r3 := ExprRec.add (.add (.cst 0 ) (.var .a)) (.var .b)
+def r3 := ExprRec.add (.add (.cst 0 ) (.var 0)) (.var 1)
 
 #eval testRewrite ex2 r3 1
 example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
