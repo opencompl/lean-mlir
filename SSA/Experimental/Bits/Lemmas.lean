@@ -179,58 +179,6 @@ lemma propagate_changeVars {β' : Type}
 
 open Term
 
-@[simp] def arity : Term → ℕ
-| (var n) => n+1
-| zero => 0
-| one => 0
-| negOne => 0
-| Term.and t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.or t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.xor t₁ t₂ => max (arity t₁) (arity t₂)
-| Term.not t => arity t
-| ls t => arity t
-| add t₁ t₂ => max (arity t₁) (arity t₂)
-| sub t₁ t₂ => max (arity t₁) (arity t₂)
-| neg t => arity t
-| incr t => arity t
-| decr t => arity t
-
-@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → ℕ → Bool), ℕ → Bool
-| var n, vars => vars (Fin.last n)
-| zero, _vars => zeroSeq
-| one, _vars => oneSeq
-| negOne, _vars => negOneSeq
-| Term.and t₁ t₂, vars =>
-  andSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-| Term.or t₁ t₂, vars =>
-  orSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-| Term.xor t₁ t₂, vars =>
-  xorSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-| not t, vars => notSeq (Term.evalFin t vars)
-| ls t, vars => lsSeq (Term.evalFin t vars)
-| add t₁ t₂, vars =>
-  addSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-| sub t₁ t₂, vars =>
-  subSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
-| neg t, vars => negSeq (Term.evalFin t vars)
-| incr t, vars => incrSeq (Term.evalFin t vars)
-| decr t, vars => decrSeq (Term.evalFin t vars)
-
 lemma evalFin_eq_eval (t : Term) (vars : ℕ → ℕ → Bool) :
     Term.evalFin t (fun i => vars i) = Term.eval t vars := by
   induction t <;>
@@ -273,8 +221,8 @@ lemma not_eq_propagate (x : ℕ → Bool) :
     notSeq x = propagate Empty.elim (λ _ (y : Unit → Bool) => (Empty.elim, !(y ()))) (λ _ => x) := by
   ext n; cases n <;> simp [propagate, propagateAux, notSeq]
 
-lemma ls_eq_propagate (x : ℕ → Bool) :
-    lsSeq x = propagate (λ _ : Unit => false)
+lemma ls_eq_propagate (b : Bool) (x : ℕ → Bool) :
+    lsSeq b x = propagate (λ _ : Unit => b)
       (λ (carry x : Unit → Bool) => (x, carry ())) (λ _ => x) := by
   ext n
   match n with
@@ -538,13 +486,13 @@ def negOne : PropagateStruc (Fin 0) :=
 @[simp] lemma eval_negOne (x : Fin 0 → ℕ → Bool) : negOne.eval x = negOneSeq := by
   ext n; cases n <;> simp [negOne, negOneSeq, eval, propagate_succ2]
 
-def ls : PropagateStruc Unit :=
+def ls (b : Bool) : PropagateStruc Unit :=
   { α := Unit,
     i := by infer_instance,
-    init_carry := λ _ => false,
+    init_carry := λ _ => b,
     next_bit := λ carry bits => (bits, carry ()) }
 
-@[simp] lemma eval_ls (x : Unit → ℕ → Bool) : ls.eval x = lsSeq (x ()) := by
+@[simp] lemma eval_ls (b : Bool) (x : Unit → ℕ → Bool) : (ls b).eval x = lsSeq b (x ()) := by
   ext n; cases n <;> simp [ls, lsSeq, eval, propagate_succ2]
 
 def var (n : ℕ) : PropagateStruc (Fin (n+1)) :=
@@ -678,9 +626,9 @@ def termEvalEqPropagate : ∀ (t : Term),
   let q₂ := termEvalEqPropagate t₂
   { toPropagateStruc := composeBinary PropagateStruc.xor q₁ q₂,
     good := by ext; simp }
-| ls t =>
+| ls b t =>
   let q := termEvalEqPropagate t
-  { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.ls q,
+  { toPropagateStruc := by dsimp [arity]; exact composeUnary (PropagateStruc.ls b) q,
     good := by ext; simp }
 | Term.not t =>
   let q := termEvalEqPropagate t

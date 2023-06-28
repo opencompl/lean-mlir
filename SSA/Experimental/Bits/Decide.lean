@@ -29,12 +29,17 @@ instance decidableEvalEq (t₁ t₂ : Term) :
     rw [PropagateStruc.eval, h]
     exact i.2 }
 
-
 def decide (t₁ t₂ : Term) : Bool :=
   t₁.eval = t₂.eval
 
 def x := Term.var 0
 def y := Term.var 1
+
+example : ((and x y) + (or x y)).eval = (x + y).eval := by
+  native_decide
+
+example : ((or x y) - (xor x y)).eval = (and x y).eval := by
+  native_decide
 
 -- Checking if the operations satisfy the defining identities
 -- #eval decide (x + -x) 0
@@ -53,7 +58,7 @@ def y := Term.var 1
 -- #eval decide (x + y) (x - not y).decr
 -- #eval decide (x + y) ((xor x y) + (and x y).ls)
 -- #eval decide (x + y) (or x y + and x y)
--- #eval decide (x + y) ((or x y).ls - (xor x y))
+-- #eval decide (x + y) ((or x y).ls false - (xor x y))
 -- #eval decide (x - y) (x + not y).incr
 -- #eval decide (x - y) (xor x y - (and (not x) y).ls)
 -- #eval decide (x - y) (and x (not y) - (and (not x) y))
