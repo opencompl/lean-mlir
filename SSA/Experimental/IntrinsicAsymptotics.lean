@@ -187,14 +187,26 @@ match pattern with
       (lets.push (Expr.add l r), lets.size)
     | .cst n => (lets.push (.cst n), lets.size)
 
-def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
+def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat): Com := 
+  let shift (v : Nat) :=
+    if v >= pos then
+      v + delta
+    else
+      v
   match inputProg with
-  | .ret x => if x = old then .ret new else .ret x
+  | .ret x => .ret (shift x)
+  | .let ty e body => match e with
+    | .add a b => .let ty (Expr.add (shift a) (shift b)) (shiftBy body delta (pos+1))
+    | .cst x => .let ty (.cst x) (shiftBy body delta (pos +1))
+
+def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
+  let replace (v : Nat) :=
+     v
+  match inputProg with
+  | .ret x => .ret (replace x)
   | .let ty e body => match e with
     | .add a b => 
-      let a := if a = old then new else a
-      let b := if b = old then new else b
-      .let ty (Expr.add a b) (replaceUsesOfVar body (old+1) (new+1))
+      .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old+1) (new+1))
     | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old+1) (new+1))
 
 def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
@@ -209,9 +221,11 @@ def addLetsToProgram (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.size - 1 
   let mapping ← matchVar lets varPos rewrite.1
-  let (lets, newVar) := applyMapping (rewrite.2) mapping lets
-  let newProgram := replaceUsesOfVar inputProg 1 (newVar)
-  let newProgram := addLetsToProgram lets (lets.size) newProgram
+  let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
+  let newProgram := inputProg
+  let newProgram := shiftBy newProgram (newLets.size - lets.size) 0
+  let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) 0
+  let newProgram := addLetsToProgram newLets (newLets.size) newProgram
 
   some newProgram
 
