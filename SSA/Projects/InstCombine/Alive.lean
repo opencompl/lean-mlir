@@ -4,7 +4,7 @@ import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Tactic
 
-open SSA InstCombine EDSL
+open SSA InstCombine EDSL Bitvec
 
 
 -- Name:AddSub:1043
