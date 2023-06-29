@@ -1,6 +1,8 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
 import Std.Data.Option.Lemmas
+import Std.Data.Array.Lemmas
+import Std.Data.Array.Init.Lemmas
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -149,7 +151,8 @@ def ex0 : Com :=
   Com.ret 0
 
 
-def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping): Option Mapping :=
+
+def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
   match matchExpr with 
   | .var x => match mapping.lookup x with
     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
@@ -160,12 +163,9 @@ def matchVar' (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping
   | .add a' b' =>
     match lets[varPos]! with 
     | .add a b => do
-        let mapping ← matchVar' lets (varPos - a - 1) a' mapping
-        matchVar' lets (varPos - b - 1) b' mapping
+        let mapping ← matchVar lets (varPos - a - 1) a' mapping
+        matchVar lets (varPos - b - 1) b' mapping
     | _ => none 
-
-def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) : Option Mapping := 
-  matchVar' lets varPos matchExpr [] 
   
 #eval ex0
 
@@ -278,71 +278,55 @@ denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
- (h1: matchVar' lets (lets.size-1) matchExpr m₀ = some m)
+ (h1: matchVar lets (lets.size-1) matchExpr m₀ = some m)
  (hlets: lets.size > 0)
- -- some assumption on m₀
- (hm₀: denote (addLetsToProgram (lets) (Com.ret 0)) =
-   denote (addLetsToProgram ((applyMapping matchExpr m₀ lets).1) (Com.ret 0))):
+ (hm₀: denote (addLetsToProgram lets (Com.ret 0)) =
+       denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1 (Com.ret 0))):
 
    denote (addLetsToProgram (lets) (Com.ret 0)) =
    denote (addLetsToProgram ((applyMapping matchExpr m lets).1) (Com.ret 0)) := by
-      unfold addLetsToProgram
       induction matchExpr
       unfold applyMapping
       simp
       case cst =>
-        simp [matchVar'] at h1
+        simp [matchVar] at h1
         split at h1
         rename_i x n heq
-        · split at h1 
-          unfold addLetsToProgram'
-          split
-          rename_i heqp
-          simp_all
-          rename_i heqp
-          simp
-          simp [Nat.lt_succ_self, heqp]
-          simp [heqp, Nat.succ_sub_succ] at heq
-          simp [heq]
-          rw [shifting (n:=0)]
-          
-          simp_all
-
-
-          induction lets.size
-          simp_all 
-
-          split
-          simp_all
-
-          unfold addLetsToProgram at hm₀
-          unfold applyMapping at hm₀
-          unfold applyMapping at hm₀
-
+        · rw [hm₀]
+          split at h1 <;> unfold applyMapping <;> simp
         · contradiction
       
       case add a b a_ih b_ih =>
-        unfold matchVar' at h1
-        split at h1
-        ·   erw [Option.bind_eq_some] at h1
+         
+        rw [hm₀]
+        induction lets.size
+        simp_all
+
+        unfold addLetsToProgram
+        unfold addLetsToProgram'
         
+
+        split at h1
+        rename_i x a' b' heq
+
+        · simp_all
+          
+
+          sorry         
+        . contradiction
 
       case var =>
-        simp [matchVar'] at h1
+        simp [matchVar] at h1
         split at h1
-        ·   
-        
-      
-      
-
-      
-
+        rename_i x n heq
+        · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
+        · erw [hm₀]
 
 theorem rewriteAtCorrect 
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
   (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
-  denote p' = denote (addLetsToProgram lets lets.size p) := by
+  denote p' = denote (addLetsToProgram lets p) := by
   induction p 
   case «let» ty e body body_ih =>
     unfold rewriteAt' at successful
@@ -351,7 +335,7 @@ theorem rewriteAtCorrect
       unfold applyRewrite at successful
       erw [Option.bind_eq_some] at successful
       rcases successful with ⟨m, ⟨h1, h2⟩⟩
-
+      
 
 
   
