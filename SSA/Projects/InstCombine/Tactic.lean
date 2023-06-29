@@ -1,6 +1,7 @@
 import SSA.Core.WellTypedFramework
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForMathlib
+import SSA.Projects.InstCombine.CommRing
 
 open SSA 
 
@@ -16,7 +17,8 @@ macro "simp_alive": tactic =>
 macro "alive_auto": tactic =>
   `(tactic|
       (
-        skip --placeholder, as `simp` will currently timeout sometimes
+        ring_nf 
+        try simp (config := {decide := false})--placeholder, as `simp` will currently timeout sometimes
       )
    )
 
