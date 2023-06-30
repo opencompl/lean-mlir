@@ -210,14 +210,17 @@ def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
                  getVarAfterMapping var xs
  | _ => panic! "var should be in mapping"
 
+def getRel (v : Nat) (array: Array Expr): Nat :=
+  array.size - v - 1
+
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat) := 
 match pattern with
     | .var v => (lets, getVarAfterMapping v m)
     | .add a b => 
       let res := applyMapping a m lets
       let res2 := applyMapping b m (res.1)
-      let l := lets.size - res.2 - 1
-      let r := lets.size - res2.2 - 1
+      let l := getRel res.2 res2.1
+      let r := getRel res2.2 res2.1
       ((res2.1).push (Expr.add l r), res2.1.size)
     | .cst n => (lets.push (.cst n), lets.size)
 
@@ -454,33 +457,43 @@ def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
 -/
 
 
+def lets := #[Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
 
 theorem mv0:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 0 m = none := rfl
+  matchVar lets 0 m = none := rfl
 
 theorem mv1:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 1 m = some [(1, 0), (0, 0)]:= rfl
+  matchVar lets 1 m = some [(1, 0), (0, 0)]:= rfl
 
 theorem mv2:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 2 m = some [(1, 1), (0, 0)]:= rfl
+  matchVar lets 2 m = some [(1, 1), (0, 0)]:= rfl
 
 theorem mv3:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m = some [(1, 2), (0, 0)]:= rfl
+  matchVar lets 3 m = some [(1, 2), (0, 0)]:= rfl
 
 theorem mv20:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 0 m2 = none := rfl
+  matchVar lets 0 m2 = none := rfl
 
 theorem mv21:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 1 m2 = none := rfl
+  matchVar lets 1 m2 = none := rfl
 
 theorem mv22:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 2 m2 =
+  matchVar lets 2 m2 =
   some [(2, 0), (1, 0), (0, 0)] := rfl
 
 theorem mv23:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m2 =
+  matchVar lets 3 m2 =
   some [(2, 1), (1, 0), (0, 0)]:= rfl
+
+
+theorem am22:
+  applyMapping m2 (matchVar lets 2 m2).get! lets =
+  (#[Expr.cst 1, Expr.add 0 0, Expr.add 1 0,
+     Expr.add 2 0, Expr.add 3 3, Expr.add 3 0], 5)
+
+  
+  
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
