@@ -525,3 +525,23 @@ def termEvalEqFSM : ∀ (t : Term), FSMSolution t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
 
+inductive Result : Type
+  | falseAfter (n : ℕ) : Result
+  | trueFor (n : ℕ) : Result
+  | trueForall : Result
+deriving Repr, DecidableEq
+
+def decideIfZerosAux (p : FSM arity) : ∀ (n : ℕ), Result × Circuit p.α 
+  | 0 => (Result.trueFor 0, _)
+  | (n+1) =>
+    match decide_if_zeros_aux n with
+    | (Result.true_for_n m, s) =>
+      let s' := fst (p.transition.preimage s) in
+      if p.init ∈ s.to_set then (Result.false_after (n+1), s')
+      else if s' ≤ s then (Result.true_forall, s)
+      else (Result.true_for_n (n+1), s.or s')
+    | x := x
+    end
+
+def decide_if_zeros [has_repr state.ι] (n : ℕ) : Result :=
+(decide_if_zeros_aux p n).1
