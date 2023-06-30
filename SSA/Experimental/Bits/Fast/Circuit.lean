@@ -397,11 +397,11 @@ def assignVars [DecidableEq α] :
       (λ c : Bool => if _root_.xor b c then fals else tru) 
       (f x (by simp [vars]))
   | and c₁ c₂, f => (assignVars c₁ (λ x hx => f x (by simp [hx, vars]))) &&&
-                        (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
+                    (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
   | or c₁ c₂, f =>  (assignVars c₁ (λ x hx => f x (by simp [hx, vars]))) |||
-                        (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
+                    (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
   | xor c₁ c₂, f => (assignVars c₁ (λ x hx => f x (by simp [hx, vars]))) ^^^
-                        (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
+                    (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
 
 theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α} 
     (hs : l₁ ⊆ l₂) (hnd : l₁.Nodup) : l₁.length ≤ l₂.length := by
