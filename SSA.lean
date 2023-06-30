@@ -3,6 +3,7 @@
 
 import SSA.Core.Framework
 import SSA.Core.WellTypedFramework
+import SSA.Core.EDSLNested
 
 
 -- Projects
