@@ -71,7 +71,7 @@ def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Val
 
 -- let's automate
 macro "mk_lets" n:num init:term : term =>
-  n.getNat.foldRevM (fun n stx => `(ICom.let (α := .nat) (.var ⟨$(Lean.quote n), by decide⟩) $stx)) init
+  n.getNat.foldRevM (fun n stx => `(ICom.let (α := .nat) (.nat ⟨$(Lean.quote n), by decide⟩) $stx)) init
 
 macro "mk_com" n:num : term =>
 `(show ICom [] .nat from
@@ -85,13 +85,13 @@ macro "mk_ex" n:num : command =>
 
 -- type checking took 146ms
 -- elaboration took 327ms
-mk_ex 50
+-- mk_ex 50
 -- type checking took 574ms
 -- elaboration took 1.41s
-mk_ex 100
+-- mk_ex 100
 -- type checking took 911ms
 -- elaboration took 2.26s
-mk_ex 120
+-- mk_ex 120
 
 -- Clearly not linear!
 
@@ -133,13 +133,17 @@ inductive ExprRec : Type
   | cst (n : Nat)
   | add (a : ExprRec) (b : ExprRec)
   | var (idx : LeafVar)
-  deriving Repr, Inhabited
+  deriving Repr, Inhabited, DecidableEq
+
+inductive RegTmp : Type
+  | concreteRegion (c : Com)
+  | regionVar (n : Nat)
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
-  | let (ty : Ty) (e : Expr) (body : Com) : Com
+  | let (ty : Ty) (e : Expr) (body : Com): Com
   | ret (e : Var) : Com
-  deriving DecidableEq
+  deriving Repr, Inhabited, DecidableEq
 
 def ex' : Com :=
   Com.let .nat (.cst 0) <|
@@ -171,6 +175,14 @@ def ex0 : Com :=
   Com.let .nat (.add 3 0) <|
   Com.ret 0
 
+/-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
+free variables to their absolute position in the lets array.
+
+Example:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m2 =
+  some [(2, 1), (1, 0), (0, 0)]:= rfl
+
+-/
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
   match matchExpr with 
   | .var x => match mapping.lookup x with
@@ -185,7 +197,11 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
         let mapping ← matchVar lets (varPos - a - 1) a' mapping
         matchVar lets (varPos - b - 1) b' mapping
     | _ => none 
-  
+
+example: matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 
+         (.add (.var 0) (.add (.var 1) (.var 2))) =
+  some [(2, 1), (1, 0), (0, 0)]:= rfl
+
 def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
  match m with
  | x :: xs => if var = x.1 then
@@ -368,7 +384,9 @@ theorem rewriteAtCorrect
       unfold applyRewrite at successful
       erw [Option.bind_eq_some] at successful
       rcases successful with ⟨m, ⟨h1, h2⟩⟩
-      
+      sorry
+    sorry
+  sorry
 
 
   
@@ -386,7 +404,9 @@ theorem preservesSemantics
   rfl
   rw [rewriteAtCorrect (successful := by assumption)]
   simp[addLetsToProgram]
-  exact rewriteCorrect
+  sorry -- exact rewriteCorrect
+  sorry
+
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
@@ -405,7 +425,62 @@ def ex2 : Com :=
 def m := ExprRec.add (.var 0) (.var 1)
 def r := ExprRec.add (.var 1) (.var 0)
 
-#eval repr ex2 ++ "\n\n" ++ repr (rewriteAt ex2 4 (m, m))
+/-
+def prog_map_before : Com :=
+  %0 := cst [0, 1, 2] : !list
+  %1 := map %0 ({
+    bb^(%l1)
+      %l2 = addi %l1, 1
+      yield %l2
+  })
+
+  %2 := map %1 ({
+    bb^(%l1)
+      %l2 = addi %l1, 1
+      yield %l2
+  })
+
+def prog_map_after : Com :=
+  %0 := cst [0, 1, 2] : !list
+  %2 := map %0 ({
+    bb^(%l1)
+      %l2 = addi %l1, 1
+      %l3 = addi %l2, 1
+      yield %l3
+  })
+
+def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
+
+-/
+
+
+def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
+
+theorem mv0:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 0 m = none := rfl
+
+theorem mv1:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 1 m = some [(1, 0), (0, 0)]:= rfl
+
+theorem mv2:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 2 m = some [(1, 1), (0, 0)]:= rfl
+
+theorem mv3:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m = some [(1, 2), (0, 0)]:= rfl
+
+theorem mv20:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 0 m2 = none := rfl
+
+theorem mv21:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 1 m2 = none := rfl
+
+theorem mv22:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 2 m2 =
+  some [(2, 0), (1, 0), (0, 0)] := rfl
+
+theorem mv23:
+  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m2 =
+  some [(2, 1), (1, 0), (0, 0)]:= rfl
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
@@ -504,23 +579,23 @@ where
     | .bool, .cst _ => .error "type error"
     | ty,   .add a b =>
       if h : a < Γ.length && b < Γ.length then
-        let v_a : Fin Γ.length := ⟨v_a, h⟩
-        if h_a : ty = Γ.get v_a then h ▸ .ok (.add v_a v_b) else .error "type error"
+        let v_a : Fin Γ.length := sorry -- ⟨v_a, h⟩
+        if h_a : ty = Γ.get v_a then sorry /-h ▸ .ok (.add v_a v_b)-/ else .error "type error"
       else .error "var error"
 
 set_option pp.proofs true in
 set_option profiler.threshold 10
 #reduce check ex'
+/-
 #eval check ex'
 
 -- run-time execution should still be quadratic because of `List.get`
 #eval check (mk_com' 100)
 #eval check (mk_com' 200)
 #eval check (mk_com' 300)
-#eval check (mk_com' 400)
+#eval check (mk_com' 400)-/
 
 def transform : ICom [] ty → ICom [] ty := sorry
-def denote : ICom [] ty → ty.toType := sorry
 def print : ICom [] ty → String := sorry
 
 
