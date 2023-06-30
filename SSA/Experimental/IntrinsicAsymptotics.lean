@@ -62,7 +62,7 @@ def get_nat : Value → Nat
 def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
 | .nat n, _, _ => .nat n
 | .add a b, ll, h => let a_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
-                     let b_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
+                     let b_val : Nat := get_nat (ll.get (Fin.mk b (h ▸ b.isLt)))
                      Value.nat (a_val + b_val)
 
 def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
@@ -167,8 +167,6 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
         matchVar lets (varPos - b - 1) b' mapping
     | _ => none 
   
-#eval ex0
-
 def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
  match m with
  | x :: xs => if var = x.1 then
@@ -181,11 +179,11 @@ def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat)
 match pattern with
     | .var v => (lets, getVarAfterMapping v m)
     | .add a b => 
-      let (lets, v1) := applyMapping a m lets
-      let (lets, v2) := applyMapping b m lets
-      let l := lets.size - v1 - 1
-      let r := lets.size - v2 - 1
-      (lets.push (Expr.add l r), lets.size)
+      let res := applyMapping a m lets
+      let res2 := applyMapping b m (res.1)
+      let l := lets.size - res.2 - 1
+      let r := lets.size - res2.2 - 1
+      ((res2.1).push (Expr.add l r), res2.1.size)
     | .cst n => (lets.push (.cst n), lets.size)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
@@ -212,12 +210,10 @@ def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com :=
 
 def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
+  -- Add fold?!
   | 0 => newProgram
-  | (x + 1) => if x < newLets.size then
-                 let added := Com.let .nat (newLets[x]!) newProgram
-                 addLetsToProgram' newLets x (added)
-               else
-                 newProgram
+  | (x + 1) => let added := Com.let .nat (newLets[x]!) newProgram
+               addLetsToProgram' newLets x (added)
 
 def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
   addLetsToProgram' newLets newLets.size newProgram
@@ -252,40 +248,43 @@ def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com 
       | none => inputProg
       | some y => y
 
-def Expr.denote : Expr → State → Value
-| .cst n, _ => .nat n
-| .add a b, l => let a_val := get_nat (l.get! a)
-                 let b_val := get_nat (l.get! b)
-                 Value.nat (a_val + b_val)
+def Expr.denote (e : Expr) (s : State) : Value :=
+  match e with
+    | .cst n => .nat n
+    | .add a b => let a_val := get_nat (s.get! a)
+                   let b_val := get_nat (s.get! b)
+                   Value.nat (a_val + b_val)
 
-def Com.denote : Com → State → Value
-| .ret v, l => l.get! v
-| .let _ e body, l => denote body ((e.denote l) :: l)
+def Com.denote (c : Com) (s : State) : Value :=
+  match c with
+    | .ret v => s.get! v
+    | .let _ e body => denote body ((e.denote s) :: s)
 
 def denote (p: Com) : Value :=
   p.denote []
 
-def ExprRec.denote : ExprRec → State → Value
-| .cst n, _ => .nat n
-| .add a b, s => let a_val := get_nat (a.denote s)
-                 let b_val := get_nat (b.denote s)
-                 Value.nat (a_val + b_val)
-| .var v, s => s.get! v
+def ExprRec.denote (e : ExprRec) (s : State) : Value :=
+  match e with
+    | .cst n => .nat n
+    | .add a b => let a_val := get_nat (a.denote s)
+                     let b_val := get_nat (b.denote s)
+                     Value.nat (a_val + b_val)
+    | .var v => s.get! v
 
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
-
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
- (h1: matchVar lets (lets.size-1) matchExpr m₀ = some m)
+ (h1: matchVar lets pos matchExpr m₀ = some m)
  (hlets: lets.size > 0)
- (hm₀: denote (addLetsToProgram lets (Com.ret 0)) =
-       denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1 (Com.ret 0))):
+ (hm₀: denote (addLetsToProgram lets (Com.ret (lets.size - pos - 1) )) =
+       denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
+              (Com.ret 0))):
 
-   denote (addLetsToProgram (lets) (Com.ret 0)) =
-   denote (addLetsToProgram ((applyMapping matchExpr m lets).1) (Com.ret 0)) := by
-      induction matchExpr
+   denote (addLetsToProgram (lets) (Com.ret (lets.size - pos - 1))) =
+   denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
+      induction matchExpr generalizing m₀ m pos
       unfold applyMapping
       simp
       case cst =>
@@ -297,30 +296,45 @@ theorem letsTheorem
         · contradiction
       
       case add a b a_ih b_ih =>
-         
-        rw [hm₀]
-        induction lets.size
-        simp_all
-
-        unfold addLetsToProgram
-        unfold addLetsToProgram'
-        
-
+        simp [matchVar] at h1
         split at h1
-        rename_i x a' b' heq
+        rename_i x avar bvar heq
+        · 
+          rw [hm₀]
+          clear hm₀
+          erw [Option.bind_eq_some] at h1; rcases h1 with ⟨m_intermediate, ⟨h1, h2⟩⟩
 
-        · simp_all
+          have a_fold := a_ih h1
+          have b_fold := b_ih h2
           
+/-
 
-          sorry         
-        . contradiction
+a_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - avar - 1) - 1))) =
+        denote (addLetsToProgram (applyMapping a m₀ lets).fst (Com.ret 0)) →
+
+        denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - avar - 1) - 1))) =
+        denote (addLetsToProgram (applyMapping a m_intermediate lets).fst (Com.ret 0))
+
+b_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 1) - 1))) =
+        denote (addLetsToProgram (applyMapping b m_intermediate lets).fst (Com.ret 0)) →
+
+        denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 1) - 1))) =
+        denote (addLetsToProgram (applyMapping b m lets).fst (Com.ret 0))
+-/
+          
+          unfold applyMapping
+          dsimp
+
+          sorry
+        
+        · contradiction
 
       case var =>
         simp [matchVar] at h1
         split at h1
         rename_i x n heq
         · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
-        · erw [hm₀]
+        · rw [hm₀]; unfold applyMapping; simp
 
 theorem rewriteAtCorrect 
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
@@ -371,6 +385,8 @@ def ex2 : Com :=
 -- a + b => b + a
 def m := ExprRec.add (.var 0) (.var 1)
 def r := ExprRec.add (.var 1) (.var 0)
+
+#eval repr ex2 ++ "\n\n" ++ repr (rewriteAt ex2 4 (m, m))
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
