@@ -100,6 +100,27 @@ mk_ex 120
 
 /-- An untyped expression as an intermediate step of input processing. -/
 
+structure Abs where
+
+  v : Nat
+  deriving Repr, Inhabited, DecidableEq
+
+def Abs.ofNat (n: Nat) : Abs :=
+  {v := n}
+
+instance : OfNat Abs n where
+  ofNat := Abs.ofNat n 
+
+structure Rel where
+  v : Nat
+  deriving Repr, Inhabited, DecidableEq
+
+def Rel.ofNat (n: Nat) : Rel :=
+  {v := n}
+
+instance : OfNat Rel n where
+  ofNat := Rel.ofNat n 
+
 abbrev Var := Nat
 inductive Expr : Type
   | cst (n : Nat)
@@ -149,8 +170,6 @@ def ex0 : Com :=
   Com.let .nat (.add 2 0) <|
   Com.let .nat (.add 3 0) <|
   Com.ret 0
-
-
 
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
   match matchExpr with 
