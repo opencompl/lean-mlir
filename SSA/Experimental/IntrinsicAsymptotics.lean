@@ -111,20 +111,19 @@ def Abs.ofNat (n: Nat) : Abs :=
 instance : OfNat Abs n where
   ofNat := Abs.ofNat n 
 
-structure Rel where
+structure VarRel where
   v : Nat
   deriving Repr, Inhabited, DecidableEq
 
-def Rel.ofNat (n: Nat) : Rel :=
+def VarRel.ofNat (n: Nat) : VarRel :=
   {v := n}
 
-instance : OfNat Rel n where
-  ofNat := Rel.ofNat n 
+instance : OfNat VarRel n where
+  ofNat := VarRel.ofNat n 
 
-abbrev Var := Nat
 inductive Expr : Type
   | cst (n : Nat)
-  | add (a : Var) (b : Var)
+  | add (a : VarRel) (b : VarRel)
   deriving Repr, Inhabited, DecidableEq
 
 abbrev LeafVar := Nat
@@ -142,7 +141,7 @@ inductive RegTmp : Type
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
   | let (ty : Ty) (e : Expr) (body : Com): Com
-  | ret (e : Var) : Com
+  | ret (e : VarRel) : Com
   deriving Repr, Inhabited, DecidableEq
 
 def ex' : Com :=
@@ -164,7 +163,7 @@ def formatCom : Com → Nat → Std.Format
 instance : Repr Com where
   reprPrec :=  formatCom
 
-abbrev Mapping := List (LeafVar × Var)
+abbrev Mapping := List (LeafVar × Nat)
 abbrev Lets := Array Expr
 
 def ex0 : Com :=
@@ -339,7 +338,6 @@ theorem letsTheorem
         rename_i x avar bvar heq
         · 
           rw [hm₀]
-          clear hm₀
           erw [Option.bind_eq_some] at h1; rcases h1 with ⟨m_intermediate, ⟨h1, h2⟩⟩
 
           have a_fold := a_ih h1
@@ -362,7 +360,10 @@ b_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 
           
           unfold applyMapping
           dsimp
+          unfold getRel
 
+
+          simp_all
           sorry
         
         · contradiction
