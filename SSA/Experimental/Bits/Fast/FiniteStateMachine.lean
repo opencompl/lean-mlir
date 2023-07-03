@@ -634,3 +634,4 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     intro x s h
     use x 
     exact h
+
