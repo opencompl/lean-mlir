@@ -429,8 +429,27 @@ theorem denoteAddLetsToProgram:
 
 theorem denoteAddLetsToProgramFold:
   denote (addLetsToProgramFold lets body) = denote (addLetsToProgramFold lets (Com.let ty e body)) := by
-  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
+  simp [denote, Com.denote, addLetsToProgramFold]
   unfold Com.denote
+  dsimp
+  simp [Array.foldr_eq_foldr_data] 
+  induction lets.data
+  simp
+  unfold Com.denote
+  unfold getVal
+  unfold get_nat
+  dsimp
+  · sorry
+  rename_i head tail ih
+  apply ih
+  
+
+
+
+
+  induction lets
+
+  simp [array foldr]
   unfold addLetsToProgram'
   dsimp
 
