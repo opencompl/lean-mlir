@@ -40,8 +40,8 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #eval decide (-x) (not x).incr
 #eval decide (-x) (not x.decr)
 #eval decide (not x) (-x).decr
-#eval decide (-not x) x.incr
-#eval decide (x + y) (x - not y).decr
+#eval decide (-not x) (x + 1)
+#eval decide (x + y) (x - not y - 1)
 #eval decide (x + y) ((xor x y) + (and x y).ls false)
 #eval decide (x + y) (or x y + and x y)
 #eval decide (x + y) ((or x y).ls false - (xor x y))
