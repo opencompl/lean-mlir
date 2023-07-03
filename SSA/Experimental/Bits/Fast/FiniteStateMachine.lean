@@ -37,6 +37,31 @@ def carry (x : arity → ℕ → Bool) : ℕ → p.α → Bool
 def eval (x : arity → ℕ → Bool) (n : ℕ) : Bool := 
   (p.nextBit (p.carry x n) (fun i => x i n)).2
 
+def changeInitCarry (p : FSM arity) (c : p.α → Bool) : FSM arity :=
+  { α := p.α,
+    i := p.i,
+    initCarry := c,
+    nextBitCirc := p.nextBitCirc } 
+
+theorem carry_changeInitCarry_succ
+    (p : FSM arity) (c : p.α → Bool) (x : arity → ℕ → Bool) : ∀ n,
+    (p.changeInitCarry c).carry x (n+1) = 
+      (p.changeInitCarry (p.nextBit c (fun a => x a 0)).1).carry 
+        (fun a i => x a (i+1)) n
+  | 0 => by simp [carry, changeInitCarry, nextBit]
+  | n+1 => by 
+    rw [carry, carry_changeInitCarry_succ p _ _ n]
+    simp [nextBit, carry, changeInitCarry]
+
+theorem eval_changeInitCarry_succ 
+    (p : FSM arity) (c : p.α → Bool) (x : arity → ℕ → Bool) (n : ℕ) : 
+    (p.changeInitCarry c).eval x (n+1) = 
+      (p.changeInitCarry (p.nextBit c (fun a => x a 0)).1).eval 
+        (fun a i => x a (i+1)) n := by
+  rw [eval, carry_changeInitCarry_succ]
+  simp [eval, changeInitCarry, nextBit]
+    
+
 theorem eval_eq_carry (x : arity → ℕ → Bool) (n : ℕ) : 
   p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 := by
   cases n <;> rfl
@@ -551,15 +576,21 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
       decideIfZerosAux p (c' ||| c)
   termination_by decideIfZerosAux p c => card_compl c
 
-theorem decideIfZeroAux_correct {arity : Type _} [DecidableEq arity]
+def decideIfZeros {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) : Bool :=
+  decideIfZerosAux p (p.nextBitCirc none).fst
+
+theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
-    (hc : ∀ n x, c.eval (p.carry x n) = true →  
-      ∃ m y, p.eval y m = true) :
+    (hc : ∀ s, c.eval s = true →  
+      ∃ m y, (p.changeInitCarry s).eval y m = true) 
+    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
+      (FSM.nextBit p s x).snd = true → Circuit.eval c s = true) :
     decideIfZerosAux p c = true ↔ ∀ n x, p.eval x n = false := by
   rw [decideIfZerosAux]
   split_ifs with h
   . simp
-    exact hc 0 (fun _ _ => false) h
+    exact hc p.initCarry h
   . dsimp
     split_ifs with h'
     . simp only [true_iff]
@@ -570,16 +601,36 @@ theorem decideIfZeroAux_correct {arity : Type _} [DecidableEq arity]
         simp [Circuit.eval_fst, FSM.nextBit]
         apply h'
       . assumption
-      . simp
-    . apply decideIfZeroAux_correct p 
+      . exact hc₂        
+    . let c' := (c.bind (p.nextBitCirc ∘ some)).fst
+      have _wf : card_compl (c' ||| c) < card_compl c := 
+        decideIfZeroAux_wf h'
+      apply decideIfZerosAux_correct p (c' ||| c)
       simp [Circuit.eval_fst, Circuit.eval_bind]
-      intro h
-      rcases h with ⟨g, hg⟩ | h
-      . simp [Circuit.le_def, Circuit.eval_fst, Circuit.eval_bind] at h'
-        
+      intro s hs
+      rcases hs with ⟨x, hx⟩ | h
+      . rcases hc _ hx with ⟨m, y, hmy⟩ 
+        use (m+1)
+        use fun a i => Nat.casesOn i x (fun i a => y a i) a
+        rw [FSM.eval_changeInitCarry_succ]
+        rw [← hmy]
+        simp only [FSM.nextBit, Nat.rec_zero, Nat.rec_add_one]
+      . exact hc _ h
+      . intro x s h 
+        have := hc₂ _ _ h
+        simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
+          Circuit.eval_or, this, or_true]
+  termination_by decideIfZerosAux_correct p c hc hc₂ => card_compl c
 
-
-
-
-
-      
+theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
+  apply decideIfZerosAux_correct
+  . simp only [Circuit.eval_fst, forall_exists_index]
+    intro s x h
+    use 0
+    use (fun a _ => x a)
+    simpa [FSM.eval, FSM.changeInitCarry, FSM.nextBit, FSM.carry]
+  . simp only [Circuit.eval_fst]
+    intro x s h
+    use x 
+    exact h
