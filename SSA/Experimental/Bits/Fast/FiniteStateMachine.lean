@@ -537,18 +537,10 @@ inductive Result : Type
 deriving Repr, DecidableEq
 
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : ∀ (_n : ℕ), Result × Circuit p.α 
-  | 0 => (Result.trueFor 0, (p.nextBitCirc none).fst)
-  | (n+1) =>
-    match decideIfZerosAux p n with
-    | (Result.trueFor m, s) =>
-      let s' := (s.bind (p.nextBitCirc ∘ some)).fst        
-      if s.eval p.initCarry 
-      then (Result.falseAfter (n+1), s')
-      else if s' ≤ s then (Result.trueForall, s)
-      else (Result.trueFor (n+1), s ||| s')
-    | x => x
-
-def decideIfZeros {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) (n : ℕ) : Result :=
-  (decideIfZerosAux p n).1
+    (p : FSM arity) (c : Circuit p.α) : Bool :=
+  if c.eval p.initCarry
+  then false
+  else 
+    let c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    decideIfZerosAux p c
+decreasing_by sorry
