@@ -1,6 +1,7 @@
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Data.Fintype.Sigma
+import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
@@ -536,11 +537,25 @@ inductive Result : Type
   | trueForall : Result
 deriving Repr, DecidableEq
 
+def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
+  Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
+
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α) : Bool :=
   if c.eval p.initCarry
   then false
   else 
-    let c' := (c.bind (p.nextBitCirc ∘ some)).fst
-    decideIfZerosAux p c
-decreasing_by sorry
+    have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+    if h : c' ≤ c then true
+    else
+      have _wf : card_compl (c' ||| c) < card_compl c := by
+          apply Finset.card_lt_card
+          simp [Finset.ssubset_iff, Finset.subset_iff]
+          simp only [Circuit.le_def, not_forall, Bool.not_eq_true] at h
+          push_neg at h
+          rcases h with ⟨x, hx, h⟩
+          use x
+          simp [hx, h]   
+      decideIfZerosAux p (c' ||| c)
+  termination_by decideIfZerosAux p c => card_compl c
+

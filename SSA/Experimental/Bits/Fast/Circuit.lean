@@ -26,6 +26,13 @@ def vars [DecidableEq α] : Circuit α → List α
 theorem nodup_vars [DecidableEq α] (c : Circuit α) : c.vars.Nodup := by
   cases c <;> simp [vars, List.nodup_dedup]
 
+def varsFinset [DecidableEq α] (c : Circuit α) : Finset α :=  
+  ⟨c.vars, nodup_vars c⟩ 
+
+lemma mem_varsFinset [DecidableEq α] {c : Circuit α} : 
+    ∀ {x : α}, x ∈ c.varsFinset ↔ x ∈ c.vars := by
+  simp [varsFinset]
+
 @[simp]
 def eval : Circuit α → (α → Bool) → Bool
   | tru, _ => true
@@ -98,9 +105,9 @@ instance : AndOp (Circuit α) := ⟨Circuit.simplifyAnd⟩
   intros c₁ c₂ f
   cases c₁ <;> cases c₂ <;> simp [eval, simplifyAnd]
 
-theorem vars_and [DecidableEq α] (c₁ c₂ : Circuit α) :
-    (vars (c₁ &&& c₂)) ⊆ (vars c₁ ++ vars c₂).dedup := by
-  cases c₁ <;> cases c₂ <;> simp [vars, simplifyAnd]
+theorem varsFinset_and [DecidableEq α] (c₁ c₂ : Circuit α) :
+    (varsFinset (c₁ &&& c₂)) ⊆ (varsFinset c₁ ∪ varsFinset c₂) := by
+  cases c₁ <;> cases c₂ <;> simp [vars, simplifyAnd, varsFinset, Finset.subset_iff]
 
 def simplifyOr : Circuit α → Circuit α → Circuit α
   | tru, _ => tru
@@ -119,6 +126,10 @@ instance : OrOp (Circuit α) := ⟨Circuit.simplifyOr⟩
 theorem vars_or [DecidableEq α] (c₁ c₂ : Circuit α) :
     (vars (c₁ ||| c₂)) ⊆ (vars c₁ ++ vars c₂).dedup := by
   cases c₁ <;> cases c₂ <;> simp [vars, simplifyOr]
+
+theorem varsFinset_or [DecidableEq α] (c₁ c₂ : Circuit α) :
+    (varsFinset (c₁ ||| c₂)) ⊆ (varsFinset c₁ ∪ varsFinset c₂) := by
+  cases c₁ <;> cases c₂ <;> simp [vars, simplifyOr, varsFinset, Finset.subset_iff]
 
 def simplifyNot : Circuit α → Circuit α
   | tru => fals
@@ -148,10 +159,10 @@ theorem simplifyNot_eq_complement (c : Circuit α) :
   | var true a, f => by simp [eval]
   | var false a, f => by simp [eval]
 
-theorem vars_complement [DecidableEq α] (c : Circuit α) :
-    (vars (~~~ c)) ⊆ vars c := by
+theorem varsFinset_complement [DecidableEq α] (c : Circuit α) :
+    (varsFinset (~~~ c)) ⊆ varsFinset c := by
   intro x
-  induction c <;> simp [simplifyNot, vars] <;> aesop
+  induction c <;> simp [simplifyNot, vars, mem_varsFinset] <;> aesop
 
 @[simp]
 def simplifyXor : Circuit α → Circuit α → Circuit α
@@ -181,9 +192,17 @@ theorem vars_simplifyXor [DecidableEq α] (c₁ c₂ : Circuit α) :
   induction c₁ <;> induction c₂ <;> simp only [simplifyXor, vars,
     ← simplifyNot_eq_complement] at * <;> aesop
 
-theorem vars_xor [DecidableEq α] (c₁ c₂ : Circuit α) :
-    (vars (c₁ ^^^ c₂)) ⊆ (vars c₁ ++ vars c₂).dedup :=
-  vars_simplifyXor c₁ c₂
+theorem varsFinset_simplifyXor [DecidableEq α] (c₁ c₂ : Circuit α) :
+    (varsFinset (simplifyXor c₁ c₂)) ⊆ (varsFinset c₁ ∪ varsFinset c₂) := by
+  have := vars_simplifyXor c₁ c₂
+  intro x
+  simpa only [Finset.subset_iff, List.subset_def, mem_varsFinset,
+    List.mem_dedup, List.subset_def, Finset.mem_union, List.mem_append] 
+      using this
+
+theorem varsFinset_xor [DecidableEq α] (c₁ c₂ : Circuit α) :
+    (varsFinset (c₁ ^^^ c₂)) ⊆ (varsFinset c₁ ∪ varsFinset c₂) :=
+  varsFinset_simplifyXor c₁ c₂
 
 def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | tru, _ => tru
@@ -413,21 +432,113 @@ theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α}
   intro x
   simpa using @hs x
 
--- lemma length_varsAssignVars [DecidableEq α] [DecidableEq β] :
---     ∀ (c : Circuit α) (f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool), 
---       (c.assignVars f).vars ⊆ 
---   | tru, _, _, h, _, _ => by simp [vars] at h     
---   | fals, _, _, h, _, _ => by simp [vars] at h
---   | var c v, f, a, ha, b, haa => by
---     simp only [vars, List.mem_singleton] at ha 
---     subst a
---     simp [vars, assignVars, haa, Xor']
---     split_ifs <;> simp [*, vars]
---   | and c₁ c₂, f, a, ha, b, haa => by
---     simp [assignVars, vars]
---     refine lt_of_le_of_lt (List.length_le_of_subset_of_nodup 
---       (vars_simplifyAnd _ _) (nodup_vars _)) ?_
+lemma varsFinset_assignVars [DecidableEq α] [DecidableEq β] :
+    ∀ (c : Circuit α) (f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool), 
+      (c.assignVars f).varsFinset ⊆ c.varsFinset.biUnion
+        (fun a => if ha : a ∈ c.vars 
+                  then 
+                    match f a ha with
+                    | Sum.inl b => {b}
+                    | Sum.inr _ => ∅ 
+                  else ∅)
+  | tru, _ => by simp [assignVars, varsFinset, vars]
+  | fals, _ => by simp [vars, assignVars, varsFinset]
+  | var c v, f => by
+    intro x
+    simp [assignVars, varsFinset, vars]
+    split <;>
+    simp [*, vars, Xor']
+    split_ifs <;> simp [vars]
+  | and c₁ c₂, f => by 
+    intro x
+    simp only [assignVars, Finset.mem_biUnion]
+    intro hx
+    replace hx := varsFinset_and _ _ hx
+    simp only [Finset.mem_union] at hx
+    cases hx with
+    | inl hx => 
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
+    | inr hx =>
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
+  | or c₁ c₂, f => by
+    intro x
+    simp only [assignVars, Finset.mem_biUnion]
+    intro hx
+    replace hx := varsFinset_or _ _ hx
+    simp only [Finset.mem_union] at hx
+    cases hx with
+    | inl hx => 
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
+    | inr hx =>
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
+  | xor c₁ c₂, f => by
+    intro x
+    simp only [assignVars, Finset.mem_biUnion]
+    intro hx
+    replace hx := varsFinset_xor _ _ hx
+    simp only [Finset.mem_union] at hx
+    cases hx with
+    | inl hx => 
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
+    | inr hx =>
+      have := varsFinset_assignVars _ _ hx
+      simp only [Finset.mem_biUnion] at this
+      rcases this with ⟨a, ha⟩
+      use a
+      simp only [mem_varsFinset] at ha
+      simpa [ha.1, mem_varsFinset, vars] using ha.2
     
+theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
+    (c : Circuit α) (f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool)
+      (a : α) (ha : a ∈ c.vars) (b : Bool) (hfa : f a ha = Sum.inr b) :
+      (c.assignVars f).varsFinset.card < c.varsFinset.card :=
+  calc (c.assignVars f).varsFinset.card
+     ≤ _ := Finset.card_le_of_subset (varsFinset_assignVars c f)
+   _ = _ := Eq.symm $ Finset.card_map ⟨(Sum.inl : β → β ⊕ Bool), Sum.inl_injective⟩  
+   _ < (c.varsFinset.image (fun a => if ha : a ∈ c.vars 
+                  then f a ha else Sum.inr false)).card := 
+      Finset.card_lt_card $ by
+        simp only [Finset.ssubset_iff, Finset.mem_map, Finset.mem_biUnion, Function.Embedding.coeFn_mk,
+          Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, forall_exists_index, and_imp,
+          Sum.forall, Sum.inl.injEq, IsEmpty.forall_iff, implies_true, Bool.forall_bool, and_true, not_exists, not_and,
+          exists_and_left, exists_prop, exists_exists_and_eq_and]
+        use a
+        use mem_varsFinset.2 ha
+        simp only [ha, hfa, dite_eq_ite, ite_true, not_false_eq_true, implies_true, true_and]
+        rintro b₁ b₂ a' ha' hb₂ rfl
+        simp only [mem_varsFinset.1 ha', dite_true] at hb₂ 
+        use a'
+        use ha'
+        simp only [mem_varsFinset.1 ha', dite_true, hb₂]
+        split at hb₂
+        . simpa [*, eq_comm] using hb₂
+        . simp at hb₂
+   _ ≤ _ := Finset.card_image_le
 
 lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
     {f : ∀ (a : α) (_ha : a ∈ c.vars), β ⊕ Bool} {g : β → Bool},
@@ -551,8 +662,8 @@ def single [DecidableEq α] {s : List α} (x : ∀ a ∈ s, Bool) : Circuit α :
     revert h
     cases x a ha <;> simp
 
-def nonempty_aux [DecidableEq α] :
-    ∀ (c : Circuit α) (l : List α) (hL : c.vars = l), 
+def nonemptyAux [DecidableEq α] :
+    ∀ (c : Circuit α) (l : List α) (_hL : c.vars = l), 
       { b : Bool // (∃ x, eval c x) = (b : Prop) }
   | tru, _, _ => ⟨true, by simp⟩
   | fals, _, _ => ⟨false, by simp⟩
@@ -580,8 +691,12 @@ def nonempty_aux [DecidableEq α] :
     | i::l, hv =>
       let c₁ := c.assignVars (λ j _ => if i = j then Sum.inr true else Sum.inl j)
       let c₂ := c.assignVars (λ j _ => if i = j then Sum.inr false else Sum.inl j)
-      let b₁ := nonempty_aux c₁ c₁.vars rfl
-      let b₂ := nonempty_aux c₂ c₂.vars rfl
+      have wf₁ : c₁.varsFinset.card < c.varsFinset.card := 
+        card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) true (by simp)
+      have wf₂ : c₂.varsFinset.card < c.varsFinset.card := 
+        card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) false (by simp)
+      let b₁ := nonemptyAux c₁ c₁.vars rfl
+      let b₂ := nonemptyAux c₂ c₂.vars rfl
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]
@@ -607,14 +722,14 @@ def nonempty_aux [DecidableEq α] :
           rcases h with ⟨x, hx⟩ | ⟨x, hx⟩
           . refine ⟨_, hx⟩
           . refine ⟨_, hx⟩⟩
-decreasing_by sorry
+termination_by nonemptyAux c l hL => c.varsFinset.card
 
 def nonempty [DecidableEq α] (c : Circuit α) : Bool :=
-  (nonempty_aux c c.vars rfl).1
+  (nonemptyAux c c.vars rfl).1
 
 lemma nonempty_iff [DecidableEq α] (c : Circuit α) :
     nonempty c ↔ ∃ x, eval c x :=
-  by rw [nonempty, ← (nonempty_aux c c.vars rfl).2]
+  by rw [nonempty, ← (nonemptyAux c c.vars rfl).2]
 
 lemma nonempty_eq_false_iff [DecidableEq α] (c : Circuit α) :
     nonempty c = false ↔ ∀ x, ¬ eval c x := by
