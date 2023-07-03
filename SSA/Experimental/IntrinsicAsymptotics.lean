@@ -113,10 +113,17 @@ instance : OfNat Abs n where
 
 structure VarRel where
   v : Nat
-  deriving Repr, Inhabited, DecidableEq
+  deriving Inhabited, DecidableEq
+
+def formatVarRel : VarRel → Nat → Std.Format
+  | x, _=> repr (x.v)
+
+instance : Repr VarRel where
+  reprPrec :=  formatVarRel
 
 def VarRel.ofNat (n: Nat) : VarRel :=
   {v := n}
+
 
 instance : OfNat VarRel n where
   ofNat := VarRel.ofNat n 
@@ -174,13 +181,15 @@ def ex0 : Com :=
   Com.let .nat (.add 3 0) <|
   Com.ret 0
 
+
+def getRel (v : Nat) (array: Array Expr): VarRel :=
+  { v := array.size - v - 1 }
+
+def getAbs (v : VarRel) (currentPos: Nat) : Nat :=
+  currentPos - v.v - 1
+
 /-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
 free variables to their absolute position in the lets array.
-
-Example:
-  matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 m2 =
-  some [(2, 1), (1, 0), (0, 0)]:= rfl
-
 -/
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
   match matchExpr with 
@@ -193,8 +202,8 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
   | .add a' b' =>
     match lets[varPos]! with 
     | .add a b => do
-        let mapping ← matchVar lets (varPos - a - 1) a' mapping
-        matchVar lets (varPos - b - 1) b' mapping
+        let mapping ← matchVar lets (getAbs a varPos) a' mapping
+        matchVar lets (getAbs b varPos) b' mapping
     | _ => none 
 
 example: matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 
@@ -209,9 +218,6 @@ def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
                  getVarAfterMapping var xs
  | _ => panic! "var should be in mapping"
 
-def getRel (v : Nat) (array: Array Expr): Nat :=
-  array.size - v - 1
-
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat) := 
 match pattern with
     | .var v => (lets, getVarAfterMapping v m)
@@ -224,26 +230,29 @@ match pattern with
     | .cst n => (lets.push (.cst n), lets.size)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
-  let shift (v : Nat) :=
-    if v >= pos then
-      v + delta
+  let shift (v : VarRel) : VarRel :=
+    if v.v >= pos then
+      { v := v.v + delta}
     else
-      v
+      { v:= v.v }
   match inputProg with
   | .ret x => .ret (shift x)
   | .let ty e body => match e with
     | .add a b => .let ty (Expr.add (shift a) (shift b)) (shiftBy body delta (pos+1))
     | .cst x => .let ty (.cst x) (shiftBy body delta (pos +1))
 
-def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Var) : Com := 
-  let replace (v : Nat) :=
+def VarRel.inc (v : VarRel) : VarRel := 
+  { v := v.v + 1}
+
+def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com := 
+  let replace (v : VarRel) : VarRel :=
      if old = v then new else v
   match inputProg with
   | .ret x => .ret (replace x)
   | .let ty e body => match e with
     | .add a b => 
-      .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old+1) (new+1))
-    | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old+1) (new+1))
+      .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old.inc) (new.inc))
+    | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
 
 def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
   match n with
@@ -261,7 +270,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.size - lets.size)
-  let newProgram := replaceUsesOfVar newProgram (newLets.size - lets.size) (newLets.size - newVar - 1)
+  let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.size - lets.size)) (VarRel.ofNat (newLets.size - newVar - 1))
   let newProgram := addLetsToProgram newLets newProgram
 
   some newProgram
@@ -285,17 +294,27 @@ def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com 
       | none => inputProg
       | some y => y
 
+def getVal (s : State) (v : VarRel) : Nat :=
+  get_nat (s.get! (s.length - v.v - 1))
+
 def Expr.denote (e : Expr) (s : State) : Value :=
   match e with
     | .cst n => .nat n
-    | .add a b => let a_val := get_nat (s.get! a)
-                   let b_val := get_nat (s.get! b)
-                   Value.nat (a_val + b_val)
+    | .add a b => .nat ((getVal s a) + (getVal s b))
 
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
-    | .ret v => s.get! v
+    | .ret v => .nat (getVal s v)
     | .let _ e body => denote body ((e.denote s) :: s)
+
+def denote (p: Com) : Value :=
+  p.denote []
+
+def denoteLets (lets : Array Lets) (s : State) : Value :=
+  match s with
+    | c :: cs  => denoteLets cs (denoteLets  s) :: s)
+    | _ => denoteLets  ((denoteLets  s) :: s)
+    | c :: cs  => .nat (getVal s v)
 
 def denote (p: Com) : Value :=
   p.denote []
@@ -311,15 +330,19 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
+theorem letslets:
+   (matchExpr : ExprRec) (lets : Lets)
+
+
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar lets pos matchExpr m₀ = some m)
  (hlets: lets.size > 0)
- (hm₀: denote (addLetsToProgram lets (Com.ret (lets.size - pos - 1) )) =
+ (hm₀: denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (lets.size - pos - 1) ))) =
        denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
               (Com.ret 0))):
 
-   denote (addLetsToProgram (lets) (Com.ret (lets.size - pos - 1))) =
+   denote (addLetsToProgram (lets) (Com.ret (VarRel.ofNat (lets.size - pos - 1)))) =
    denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
       induction matchExpr generalizing m₀ m pos
       unfold applyMapping
@@ -337,30 +360,40 @@ theorem letsTheorem
         split at h1
         rename_i x avar bvar heq
         · 
-          rw [hm₀]
           erw [Option.bind_eq_some] at h1; rcases h1 with ⟨m_intermediate, ⟨h1, h2⟩⟩
-
           have a_fold := a_ih h1
           have b_fold := b_ih h2
-          
-/-
-
-a_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - avar - 1) - 1))) =
-        denote (addLetsToProgram (applyMapping a m₀ lets).fst (Com.ret 0)) →
-
-        denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - avar - 1) - 1))) =
-        denote (addLetsToProgram (applyMapping a m_intermediate lets).fst (Com.ret 0))
-
-b_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 1) - 1))) =
-        denote (addLetsToProgram (applyMapping b m_intermediate lets).fst (Com.ret 0)) →
-
-        denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 1) - 1))) =
-        denote (addLetsToProgram (applyMapping b m lets).fst (Com.ret 0))
--/
-          
+          rw [hm₀]
           unfold applyMapping
           dsimp
+
+          sorry
+
+/--
+
+
+    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs avar pos - 1)))) =
+    denote (addLetsToProgram (applyMapping a m₀ lets).fst (Com.ret 0)) →
+    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs avar pos - 1)))) =
+    denote (addLetsToProgram (applyMapping a m_intermediate lets).fst (Com.ret 0))
+
+    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs bvar pos - 1)))) =
+    denote (addLetsToProgram (applyMapping b m_intermediate lets).fst (Com.ret 0)) →
+    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs bvar pos - 1)))) =
+    denote (addLetsToProgram (applyMapping b m lets).fst (Com.ret 0))
+
+
+    denote (addLetsToProgram (applyMapping (ExprRec.add a b) m₀ lets).fst (Com.ret 0)) =
+    denote (addLetsToProgram (applyMapping (ExprRec.add a b) m lets).fst (Com.ret 0))
+dd
+-/
+          
+          
           unfold getRel
+          unfold denote
+          unfold Com.denote
+          unfold Expr.denote
+
 
 
           simp_all
@@ -375,6 +408,12 @@ b_fold: denote (addLetsToProgram lets (Com.ret (Array.size lets - (pos - bvar - 
         · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
         · rw [hm₀]; unfold applyMapping; simp
 
+
+theorem denoteAddLetsToProgram:
+  d
+  denote p' = denote (addLetsToProgram lets (Com.let ty e body)) := sorry
+
+
 theorem rewriteAtCorrect 
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
@@ -385,9 +424,14 @@ theorem rewriteAtCorrect
     unfold rewriteAt' at successful
     split at successful
     case inl hpos =>
+      rw [denoteAddLetsToProgram]
+
+
+      
       unfold applyRewrite at successful
       erw [Option.bind_eq_some] at successful
       rcases successful with ⟨m, ⟨h1, h2⟩⟩
+
       sorry
     sorry
   sorry
@@ -487,15 +531,6 @@ theorem mv23:
   matchVar lets 3 m2 =
   some [(2, 1), (1, 0), (0, 0)]:= rfl
 
-
-theorem am22:
-  applyMapping m2 (matchVar lets 2 m2).get! lets =
-  (#[Expr.cst 1, Expr.add 0 0, Expr.add 1 0,
-     Expr.add 2 0, Expr.add 3 3, Expr.add 3 0], 5)
-
-  
-  
-
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
   dbg_trace "# Before"
@@ -509,7 +544,7 @@ def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
       dbg_trace ""
       y
 
-#eval testRewrite ex1 r 1
+#eval denote (testRewrite ex1 r 1)
 example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
 
 #eval testRewrite ex2 r 1
