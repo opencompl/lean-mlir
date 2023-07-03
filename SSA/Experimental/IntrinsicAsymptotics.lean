@@ -254,17 +254,7 @@ def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com :=
       .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old.inc) (new.inc))
     | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
 
-def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
-  match n with
-  -- Add fold?!
-  | 0 => newProgram
-  | (x + 1) => let added := Com.let .nat (newLets[x]!) newProgram
-               addLetsToProgram' newLets x (added)
-
-def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
-  addLetsToProgram' newLets newLets.size newProgram
-
-def addLetsToProgramFold (newLets : Lets) (oldProgram : Com) : Com :=
+def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldr (λ e acc => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
@@ -413,25 +403,20 @@ dd
 
 theorem addLetsToProgramBaseCase:
   denote (addLetsToProgram #[] p) = denote p := by
-  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
+  simp [denote, Com.denote, addLetsToProgram, Array.foldr_eq_foldr_data]
+  unfold Com.denote
+
+
+  
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
-  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
-  unfold Com.denote
-  unfold addLetsToProgram'
-  dsimp
-
-  induction lets.data
-  simp 
-  induction lets generalizing body
-  
-
-theorem denoteAddLetsToProgramFold:
-  denote (addLetsToProgramFold lets body) = denote (addLetsToProgramFold lets (Com.let ty e body)) := by
-  simp [denote, Com.denote, addLetsToProgramFold]
+  simp [denote, Com.denote, addLetsToProgram]
   unfold Com.denote
   dsimp
+
+  induction Array.foldr_induction
+
   simp [Array.foldr_eq_foldr_data] 
   induction lets.data
   simp
