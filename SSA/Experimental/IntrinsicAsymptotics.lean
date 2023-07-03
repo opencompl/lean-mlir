@@ -403,17 +403,14 @@ dd
         · rw [hm₀]; unfold applyMapping; simp
 
 theorem foldr_zero (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) (Array.size (#[]: Array α )) = base := by
-  exact rfl
+  rfl
 
 theorem foldr_zero' (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) 0 = base := by
-  exact rfl
+  rfl
 
 theorem addLetsToProgramBaseCase:
   denote (addLetsToProgram #[] p) = denote p := by
-  simp [denote, Com.denote, addLetsToProgram, Array.foldr_eq_foldr_data]
-  unfold Com.denote
-  simp [Array.foldr, Array.foldrM, Id.run]
-  rw [foldr_zero']
+  rfl
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
@@ -421,12 +418,37 @@ theorem denoteAddLetsToProgram:
   
   unfold Com.denote
   dsimp
-  induction lets.size, body using Array.foldr_induction
-
-  induction Array.foldr_induction
-
   simp [Array.foldr_eq_foldr_data] 
   induction lets.data
+  simp_all
+  cases body
+  · simp
+    unfold Expr.denote
+    simp
+
+    sorry
+  · simp
+    sorry 
+  simp
+  rename_i head tail tail_ih
+
+
+  induction body
+  simp_all
+  unfold Com.denote
+  simp_all
+  · simp_all
+    
+  · simp_all
+    rfl
+    sorry
+  · simp
+    rfl
+    sorry 
+  rw [foldr_zero']
+  rfl
+
+
   simp
   unfold Com.denote
   unfold getVal
