@@ -401,19 +401,21 @@ dd
         · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
         · rw [hm₀]; unfold applyMapping; simp
 
+theorem foldr_zero : Array.foldr f base #[] = base := by
+  simp [Id.run, Array.foldr, Array.foldrM]
+
 theorem addLetsToProgramBaseCase:
   denote (addLetsToProgram #[] p) = denote p := by
   simp [denote, Com.denote, addLetsToProgram, Array.foldr_eq_foldr_data]
   unfold Com.denote
-
-
-  
+  rw [foldr_zero]
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
   simp [denote, Com.denote, addLetsToProgram]
   unfold Com.denote
   dsimp
+  induction lets.size, body using Array.foldr_induction
 
   induction Array.foldr_induction
 
