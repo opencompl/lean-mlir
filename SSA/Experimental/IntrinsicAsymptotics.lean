@@ -3,6 +3,7 @@
 import Std.Data.Option.Lemmas
 import Std.Data.Array.Lemmas
 import Std.Data.Array.Init.Lemmas
+import Mathlib
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -401,18 +402,23 @@ dd
         · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
         · rw [hm₀]; unfold applyMapping; simp
 
-theorem foldr_zero : Array.foldr f base #[] = base := by
-  simp [Id.run, Array.foldr, Array.foldrM]
+theorem foldr_zero (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) (Array.size (#[]: Array α )) = base := by
+  exact rfl
+
+theorem foldr_zero' (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) 0 = base := by
+  exact rfl
 
 theorem addLetsToProgramBaseCase:
   denote (addLetsToProgram #[] p) = denote p := by
   simp [denote, Com.denote, addLetsToProgram, Array.foldr_eq_foldr_data]
   unfold Com.denote
-  rw [foldr_zero]
+  simp [Array.foldr, Array.foldrM, Id.run]
+  rw [foldr_zero']
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
   simp [denote, Com.denote, addLetsToProgram]
+  
   unfold Com.denote
   dsimp
   induction lets.size, body using Array.foldr_induction
