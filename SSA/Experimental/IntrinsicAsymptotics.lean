@@ -264,6 +264,9 @@ def addLetsToProgram' (newLets : Lets) (n : Nat) (newProgram : Com) : Com :=
 def addLetsToProgram (newLets : Lets) (newProgram : Com) : Com :=
   addLetsToProgram' newLets newLets.size newProgram
 
+def addLetsToProgramFold (newLets : Lets) (oldProgram : Com) : Com :=
+  newLets.foldr (λ e acc => Com.let .nat e acc) oldProgram
+
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.size - 1 
   let mapping ← matchVar lets varPos rewrite.1
@@ -408,10 +411,38 @@ dd
         · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
         · rw [hm₀]; unfold applyMapping; simp
 
+theorem addLetsToProgramBaseCase:
+  denote (addLetsToProgram #[] p) = denote p := by
+  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
 
 theorem denoteAddLetsToProgram:
-  d
-  denote p' = denote (addLetsToProgram lets (Com.let ty e body)) := sorry
+  denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
+  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
+  unfold Com.denote
+  unfold addLetsToProgram'
+  dsimp
+
+  induction lets.data
+  simp 
+  induction lets generalizing body
+  
+
+theorem denoteAddLetsToProgramFold:
+  denote (addLetsToProgramFold lets body) = denote (addLetsToProgramFold lets (Com.let ty e body)) := by
+  simp [denote, Com.denote, addLetsToProgram, addLetsToProgram']
+  unfold Com.denote
+  unfold addLetsToProgram'
+  dsimp
+
+  induction lets.data
+  simp 
+  induction lets generalizing body
+
+theorem rewriteAtApplyRewriteCorrect:
+  rewriteAt' body pos lets rwExpr = applyRewrite (Array.push lets e) body rwExpr := sorry
+
+theorem rewriteAtAppend:
+  rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (Array.push lets e) rwExpr := sorry
 
 
 theorem rewriteAtCorrect 
@@ -424,22 +455,21 @@ theorem rewriteAtCorrect
     unfold rewriteAt' at successful
     split at successful
     case inl hpos =>
-      rw [denoteAddLetsToProgram]
-
-
-      
-      unfold applyRewrite at successful
-      erw [Option.bind_eq_some] at successful
-      rcases successful with ⟨m, ⟨h1, h2⟩⟩
-
-      sorry
-    sorry
-  sorry
-
-
-  
-  
-
+      rw [body_ih]
+      · rw [denoteAddLetsToProgram]
+      · rw [←successful] 
+        dsimp
+        rw [rewriteAtApplyRewriteCorrect]
+    case inr hpos =>
+      dsimp
+      rw [body_ih]
+      · rw [denoteAddLetsToProgram]
+      · rw [←successful] 
+        dsimp
+        rw [rewriteAtAppend]
+  case ret v =>
+    unfold rewriteAt' at successful
+    contradiction
 
 theorem preservesSemantics
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
@@ -452,9 +482,8 @@ theorem preservesSemantics
   rfl
   rw [rewriteAtCorrect (successful := by assumption)]
   simp[addLetsToProgram]
-  sorry -- exact rewriteCorrect
-  sorry
-
+  apply addLetsToProgramBaseCase
+  apply rewriteCorrect
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
