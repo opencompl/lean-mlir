@@ -837,24 +837,3 @@ lemma propagate_eq_zero_iff (init_carry : α → Bool)
     rcases exists_repeat init_carry next_bit seq i with ⟨j, hj, seq2, hseq2⟩
     rw [← hseq2, h seq2 j hj, zeroSeq] }
 
-lemma eq_iff_xorSeq_eq_zero (seq₁ seq₂ : ℕ → Bool) :
-    (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, xorSeq seq₁ seq₂ i = zeroSeq i) := by
-  simp [Function.funext_iff, xorSeq, zeroSeq]
-  constructor
-  { intro i _; simp [*] }
-  { intro h a
-    specialize h a
-    revert h
-    cases (seq₁ a) <;> cases (seq₂ a) <;> simp [*] at * }
-
-lemma eval_eq_iff_xorSeq_eq_zero (t₁ t₂ : Term) :
-    t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = λ _ => zeroSeq := by
-  simp only [Function.funext_iff, Term.eval, Term.evalFin,
-    ← eq_iff_xorSeq_eq_zero, ← evalFin_eq_eval]
-  constructor
-  { intro h seq n
-    have := h (λ j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else λ _ => false) n
-    simp at this
-    convert this using 1 }
-  { intro h seq m
-    exact h (λ j => seq j) _ }
