@@ -12,8 +12,11 @@ instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
 
 open Term
 
-def decide (t₁ t₂ : Term) : Bool :=
-  t₁.eval = t₂.eval
+def run_decide (t₁ t₂ : Term) : IO Bool := do
+  pure (t₁.eval = t₂.eval)
+
+def decide (t₁ t₂ : Term) : IO Bool :=
+  timeit "" (run_decide t₁ t₂)
 
 def x := Term.var 0
 def y := Term.var 1
@@ -25,7 +28,7 @@ example : ((and x y) + (or x y)).eval = (x + y).eval := by
 example : ((or x y) - (xor x y)).eval = (and x y).eval := by
   native_decide
   
-set_option trace.profiler true
+--set_option trace.profiler true
 --Checking if the operations satisfy the defining identities
 #eval decide (x + -x) 0
 #eval decide (incr x) (x + 1)
@@ -33,7 +36,7 @@ set_option trace.profiler true
 #eval decide (x + - y) (x - y)
 #eval decide (x + 0) (var 0)
 #eval decide (x + y) (y + x)
-#eval decide (x + (y + z)) ( x + y + z)
+#eval decide (x + (y + z)) (x + y + z)
 #eval decide (x - x) 0
 #eval decide (x  + 0) x
 #eval decide (0 + x) x
