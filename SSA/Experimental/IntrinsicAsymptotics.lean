@@ -329,20 +329,40 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
+theorem array_size: Array.size as = as.data.length := by rfl
+
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
-  generalize hLets : flat.lets.data = lets_list
-  induction lets_list
+  unfold flatToTree
+  unfold ComFlat.denote
+  unfold denote
+  unfold Com.denote
+  unfold addLetsToProgram
+  unfold Lets.denote
+  rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data]
+  induction flat.lets.data
   case nil =>
-    unfold flatToTree
-    unfold ComFlat.denote
-    unfold denote
-    unfold Com.denote
-    unfold addLetsToProgram
-    unfold Lets.denote
-    rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data, hLets]
-    simp
-  case cons => 
-    sorry
+    rfl
+  case cons =>
+    simp_all
+    rename_i head tail tail_ih
+    split at tail_ih
+    case h_1 =>
+      rename_i inputProg'  x heq
+      simp [heq]
+      simp_all
+      rw [← tail_ih]
+      unfold Expr.denote
+      simp
+      unfold Com.denote
+      simp
+      sorry
+    case h_2 =>
+      rename_i inputProg ty e body heq
+      simp [heq]
+      simp_all
+
+      
+      sorry
 
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
@@ -590,6 +610,17 @@ def ex2 : Com :=
   Com.let .nat (.add 1 1) <|
   Com.let .nat (.add 1 1) <|
   Com.ret 0
+
+def ex22 : ComFlat :=
+  { lets := #[
+     (.cst 1),
+     (.add 0 0),
+     (.add 1 0),
+     (.add 1 1),
+     (.add 1 1)]
+   , ret := 0 }
+
+#eval ex22.denote = denote ex2
 
 -- a + b => b + a
 def m := ExprRec.add (.var 0) (.var 1)
