@@ -490,17 +490,29 @@ theorem rewriteAtCorrect
     split at successful
     case inl hpos =>
       rw [body_ih]
-      · rw [denoteAddLetsToProgram]
+      · rw [denoteAddLetsToProgram] --weak
       · rw [←successful] 
         dsimp
-        rw [rewriteAtApplyRewriteCorrect]
+        rw [rewriteAtApplyRewriteCorrect] -- weak
+
     case inr hpos =>
       dsimp
       rw [body_ih]
-      · rw [denoteAddLetsToProgram]
+      · rw [denoteAddLetsToProgram] -- weak
       · rw [←successful] 
         dsimp
-        rw [rewriteAtAppend]
+        simp at successful
+        simp at body_ih
+        simp_all
+        unfold rewriteAt'
+        simp
+        cases body
+        simp_all
+        · simp_all
+
+          
+        · simp_all
+          contradiction
   case ret v =>
     unfold rewriteAt' at successful
     contradiction
@@ -513,11 +525,11 @@ theorem preservesSemantics
   unfold rewriteAt
   simp
   split
-  rfl
-  rw [rewriteAtCorrect (successful := by assumption)]
-  simp[addLetsToProgram]
-  apply addLetsToProgramBaseCase
-  apply rewriteCorrect
+  · rfl
+  · rw [rewriteAtCorrect (successful := by assumption)]
+    simp [addLetsToProgram]
+    apply addLetsToProgramBaseCase
+    apply rewriteCorrect
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
