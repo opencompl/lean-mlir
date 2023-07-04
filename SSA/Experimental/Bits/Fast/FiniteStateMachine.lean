@@ -12,18 +12,19 @@ open Sum
 
 variable {α β α' β' : Type} {γ : β → Type}
 
-structure FSM (arity : Type) : Type 1 :=
+structure FSM (arity : Type) [DecidableEq arity] : Type 1 :=
   ( α  : Type )
-  [ i : Fintype α ]
-  [ dec_eq : DecidableEq α ]
+  [ i : Fintype α]
+  [ decEq : DecidableEq α ]
   ( initCarry : α → Bool )
   ( nextBitCirc : Option α → Circuit (α ⊕ arity) )
 
-attribute [instance] FSM.i FSM.dec_eq
+attribute [instance] FSM.i FSM.decEq
 
 namespace FSM
 
-variable {arity : Type} (p : FSM arity)
+variable {arity arity₁ arity₂ : Type} [DecidableEq arity]
+  [DecidableEq arity₁] [DecidableEq arity₂] (p : FSM arity)
 
 def nextBit : (p.α → Bool) → (arity → Bool) → (p.α → Bool) × Bool :=
   fun carry bits => (fun a => (p.nextBitCirc (some a)).eval 
@@ -66,57 +67,56 @@ theorem eval_eq_carry (x : arity → ℕ → Bool) (n : ℕ) :
   p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 := by
   cases n <;> rfl
 
-def changeVars {arity2 : Type} (changeVars : arity → arity2) :
-    FSM arity2 :=
-  { α := p.α,
-    i := p.i,
-    initCarry := p.initCarry,
-    nextBitCirc := fun a => (p.nextBitCirc a).map (Sum.map id changeVars) }
+-- def changeVars  (changeVars : arity → arity₂) :
+--     FSM arity₂ :=
+--   { α := p.α,
+--     i := p.i,
+--     initCarry := p.initCarry,
+--     nextBitCirc := fun a => (p.nextBitCirc a).map (Sum.map id changeVars) 
+--       _ }
 
-def compose [Fintype arity] [DecidableEq arity]
-  (new_arity : Type)
-    (q_arity : arity → Type)
-    (vars : ∀ (a : arity), q_arity a → new_arity)
+def compose [Fintype arity]
+    (q_arity : arity → Type) [∀ a, DecidableEq (q_arity a)] [∀ a, Fintype (q_arity a)]
+    (vars : ∀ (a : arity), q_arity a → arity₂)
     (q : ∀ (a : arity), FSM (q_arity a)) :
-    FSM new_arity :=
+    FSM arity₂ :=
   { α := p.α ⊕ (Σ a, (q a).α),
     i := by letI := p.i;  infer_instance,
-    dec_eq := by 
-      letI := p.dec_eq
-      letI := fun a => (q a).dec_eq
+    decEq := by 
+      letI := p.decEq
+      letI := fun a => (q a).decEq
       infer_instance,
     initCarry := Sum.elim p.initCarry (λ x => (q x.1).initCarry x.2),
     nextBitCirc := λ a => 
       match a with
       | none => (p.nextBitCirc none).bind 
         (Sum.elim 
-          (fun a => Circuit.var true (inl (inl a))) 
-          (fun a => ((q a).nextBitCirc none).map
-            (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q)))))
+          (fun a => Circuit.var (inl (inl a))) 
+          (fun a => ((q a).nextBitCirc none).mapNonInj
+            (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q))))) 
       | some (inl a) => 
         (p.nextBitCirc (some a)).bind 
           (Sum.elim 
-            (fun a => Circuit.var true (inl (inl a)))
-            (fun a => ((q a).nextBitCirc none).map
-            (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q)))))
+            (fun a => Circuit.var (inl (inl a)))
+            (fun a => ((q a).nextBitCirc none).mapNonInj
+              (Sum.elim (fun d => (inl (inr ⟨a, d⟩))) (fun q => inr (vars a q)))))
       | some (inr ⟨x, y⟩) => 
-          ((q x).nextBitCirc (some y)).map 
+          ((q x).nextBitCirc (some y)).mapNonInj
             (Sum.elim 
               (fun a => inl (inr ⟨_, a⟩)) 
               (fun a => inr (vars x a))) }
 
-lemma carry_compose [Fintype arity] [DecidableEq arity]
-    (new_arity : Type)
+lemma carry_compose [Fintype arity] 
     (q_arity : arity → Type)
-    (vars : ∀ (a : arity), q_arity a → new_arity)
+    (vars : ∀ (a : arity), q_arity a → arity₂) [∀ a, DecidableEq (q_arity a)] [∀ a, Fintype (q_arity a)]
     (q : ∀ (a : arity), FSM (q_arity a))
-    (x : new_arity → ℕ → Bool) : ∀ (n : ℕ),
-    (p.compose new_arity q_arity vars q).carry x n = 
+    (x : arity₂ → ℕ → Bool) : ∀ (n : ℕ),
+    (p.compose q_arity vars q).carry x n = 
       let z := p.carry (λ a => (q a).eval (fun i => x (vars _ i))) n
       Sum.elim z (fun a => (q a.1).carry (fun t => x (vars _ t)) n a.2)
   | 0 => by simp [carry, compose]     
   | n+1 => by
-      rw [carry, carry_compose _ _ _ _ _ n]
+      rw [carry, carry_compose _ _ _ _ n]
       ext y
       cases y
       . simp [carry, nextBit, compose, Circuit.eval_bind, eval]
@@ -137,13 +137,12 @@ lemma carry_compose [Fintype arity] [DecidableEq arity]
         . simp
         . simp
 
-lemma eval_compose [Fintype arity] [DecidableEq arity]
-    (new_arity : Type)
-    (q_arity : arity → Type)
-    (vars : ∀ (a : arity), q_arity a → new_arity)
+lemma eval_compose [Fintype arity]
+    (q_arity : arity → Type) [∀ a, DecidableEq (q_arity a)] [∀ a, Fintype (q_arity a)]
+    (vars : ∀ (a : arity), q_arity a → arity₂)
     (q : ∀ (a : arity), FSM (q_arity a))
-    (x : new_arity → ℕ → Bool) :
-    (p.compose new_arity q_arity vars q).eval x = 
+    (x : arity₂ → ℕ → Bool) :
+    (p.compose q_arity vars q).eval x = 
       p.eval (λ a => (q a).eval (fun i => x (vars _ i))) := by
   ext n
   rw [eval, carry_compose, eval]
@@ -164,9 +163,8 @@ def and : FSM Bool :=
     i := by infer_instance,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim 
-      (Circuit.and 
-        (Circuit.var true (inr true)) 
-        (Circuit.var true (inr false))) Empty.elim }
+      ( (Circuit.var (inr true)) &&&
+        (Circuit.var (inr false))) Empty.elim }
 
 @[simp] lemma eval_and (x : Bool → ℕ → Bool) : and.eval x = andSeq (x true) (x false) := by
   ext n; cases n <;> simp [and, andSeq, eval, nextBit]
@@ -176,24 +174,22 @@ def or : FSM Bool :=
     i := by infer_instance,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim 
-      (Circuit.or 
-        (Circuit.var true (inr true)) 
-        (Circuit.var true (inr false))) Empty.elim }
+      ( (Circuit.var (inr true)) |||
+        (Circuit.var (inr false))) Empty.elim }
 
 @[simp] lemma eval_or (x : Bool → ℕ → Bool) : or.eval x = orSeq (x true) (x false) := by
-  ext n; cases n <;> simp [and, orSeq, eval, nextBit]
+  ext n; cases n <;> simp [or, orSeq, eval, nextBit]
 
 def xor : FSM Bool :=
   { α := Empty,
     i := by infer_instance,
     initCarry := Empty.elim,
     nextBitCirc := fun a => a.elim 
-      (Circuit.xor 
-        (Circuit.var true (inr true)) 
-        (Circuit.var true (inr false))) Empty.elim }
+      ( (Circuit.var (inr true)) ^^^
+        (Circuit.var (inr false))) Empty.elim }
 
 @[simp] lemma eval_xor (x : Bool → ℕ → Bool) : xor.eval x = xorSeq (x true) (x false) := by
-  ext n; cases n <;> simp [and, xorSeq, eval, nextBit]
+  ext n; cases n <;> simp [xorSeq, eval, nextBit, xor]
 
 def add : FSM Bool :=
   { α := Unit,
@@ -202,12 +198,12 @@ def add : FSM Bool :=
     nextBitCirc := fun a =>
       match a with
       | some () => 
-             (Circuit.var true (inr true) &&& Circuit.var true (inr false)) |||
-             (Circuit.var true (inr false) &&& Circuit.var true (inl ())) |||
-             (Circuit.var true (inr true) &&& Circuit.var true (inl ()))
-      | none => Circuit.var true (inr true) ^^^ 
-                Circuit.var true (inr false) ^^^ 
-                Circuit.var true (inl ()) }
+             (Circuit.var (inr true) &&& Circuit.var (inr false)) |||
+             (Circuit.var (inr false) &&& Circuit.var (inl ())) |||
+             (Circuit.var (inr true) &&& Circuit.var (inl ()))
+      | none => Circuit.var (inr true) ^^^ 
+                Circuit.var (inr false) ^^^ 
+                Circuit.var (inl ()) }
 
 theorem carry_add (x : Bool → ℕ → Bool) : ∀ (n : ℕ), add.carry x (n+1) = 
     fun _ => (addSeqAux (x true) (x false) n).2
@@ -215,12 +211,13 @@ theorem carry_add (x : Bool → ℕ → Bool) : ∀ (n : ℕ), add.carry x (n+1)
     simp [carry, nextBit, Function.funext_iff, addSeqAux, add]
   | n+1 => by
     rw [carry, carry_add _ n]
-    simp [nextBit, Function.funext_iff, addSeqAux]
+    simp [nextBit, Function.funext_iff, addSeqAux, add]
 
 @[simp] lemma eval_add (x : Bool → ℕ → Bool) : add.eval x = addSeq (x true) (x false) := by
   ext n
   cases n
   . simp [eval, add, nextBit, addSeq, addSeqAux, carry]
+    
   . rw [eval, carry_add]
     simp [nextBit, eval, add, addSeq, addSeqAux]
 
@@ -231,12 +228,12 @@ def sub : FSM Bool :=
     nextBitCirc := fun a =>
       match a with
       | some () => 
-             (Circuit.var false (inr true) &&& Circuit.var true (inr false)) |||
-             ((Circuit.var false (inr true) ^^^ Circuit.var true (inr false)) &&&
-              (Circuit.var true (inl ())))
-      | none => Circuit.var true (inr true) ^^^ 
-                Circuit.var true (inr false) ^^^ 
-                Circuit.var true (inl ()) }
+             (~~~ Circuit.var (inr true) &&& Circuit.var (inr false)) |||
+             (~~~ (Circuit.var (inr true) ^^^ Circuit.var (inr false)) &&&
+              (Circuit.var (inl ())))
+      | none => Circuit.var (inr true) ^^^ 
+                Circuit.var (inr false) ^^^ 
+                Circuit.var (inl ()) }
 
 theorem carry_sub (x : Bool → ℕ → Bool) : ∀ (n : ℕ), sub.carry x (n+1) = 
     fun _ => (subSeqAux (x true) (x false) n).2
@@ -244,7 +241,7 @@ theorem carry_sub (x : Bool → ℕ → Bool) : ∀ (n : ℕ), sub.carry x (n+1)
     simp [carry, nextBit, Function.funext_iff, subSeqAux, sub]
   | n+1 => by
     rw [carry, carry_sub _ n]
-    simp [nextBit, eval, sub, subSeq, subSeqAux, Bool.xor_not_left']
+    simp [nextBit, eval, sub, subSeq, subSeqAux, Bool.xor_not_left', sub]
 
 @[simp]
 theorem eval_sub (x : Bool → ℕ → Bool) : sub.eval x = subSeq (x true) (x false) := by
@@ -260,8 +257,8 @@ def neg : FSM Unit :=
     initCarry := λ _ => true,
     nextBitCirc := fun a =>
       match a with
-      | some () => Circuit.var false (inr ()) &&& Circuit.var true (inl ())
-      | none => Circuit.var false (inr ()) ^^^ Circuit.var true (inl ())  }
+      | some () => ~~~Circuit.var (inr ()) &&& Circuit.var (inl ())
+      | none => ~~~Circuit.var (inr ()) ^^^ Circuit.var (inl ())  }
 
 theorem carry_neg (x : Unit → ℕ → Bool) : ∀ (n : ℕ), neg.carry x (n+1) = 
     fun _ => (negSeqAux (x ()) n).2
@@ -282,7 +279,7 @@ def not : FSM Unit :=
   { α := Empty,
     i := by infer_instance,
     initCarry := Empty.elim,
-    nextBitCirc := fun _ => Circuit.var false (inr ()) }
+    nextBitCirc := fun _ => ~~~ Circuit.var (inr ()) }
 
 @[simp] lemma eval_not (x : Unit → ℕ → Bool) : not.eval x = notSeq (x ()) := by
   ext n; cases n <;> simp [eval, carry, not, notSeq, nextBit]
@@ -303,7 +300,7 @@ def one : FSM (Fin 0) :=
     nextBitCirc := fun a => 
       match a with
       | some () => Circuit.fals
-      | none => Circuit.var true (inl ()) }
+      | none => Circuit.var (inl ()) }
 
 theorem carry_one (x : Fin 0 → ℕ → Bool) : ∀ (n : ℕ), one.carry x (n+1) = 
     fun _ => false
@@ -317,7 +314,7 @@ theorem carry_one (x : Fin 0 → ℕ → Bool) : ∀ (n : ℕ), one.carry x (n+1
   ext n
   cases n
   . rfl
-  . simp [eval, carry_one, oneSeq, nextBit]
+  . simp [eval, carry, one, oneSeq, nextBit]
 
 def negOne : FSM (Fin 0) :=
   { α := Empty,
@@ -334,8 +331,8 @@ def ls (b : Bool) : FSM Unit :=
     initCarry := λ _ => b,
     nextBitCirc := fun x => 
       match x with
-      | none => Circuit.var true (inl ())
-      | some () => Circuit.var true (inr ()) }
+      | none => Circuit.var (inl ())
+      | some () => Circuit.var (inr ()) }
 
 theorem carry_ls (b : Bool) (x : Unit → ℕ → Bool) : ∀ (n : ℕ), (ls b).carry x (n+1) = 
     fun _ => x () n
@@ -349,13 +346,13 @@ theorem carry_ls (b : Bool) (x : Unit → ℕ → Bool) : ∀ (n : ℕ), (ls b).
   ext n
   cases n
   . rfl
-  . simp [carry_ls, eval, nextBit, lsSeq]
+  . simp [carry_ls, eval, nextBit, lsSeq, ls, carry]
 
 def var (n : ℕ) : FSM (Fin (n+1)) :=
   { α := Empty,
     i := by infer_instance,
     initCarry := Empty.elim,
-    nextBitCirc := λ _ => Circuit.var true (inr (Fin.last _)) }
+    nextBitCirc := λ _ => Circuit.var (inr (Fin.last _)) }
 
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → ℕ → Bool) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
@@ -366,8 +363,8 @@ def incr : FSM Unit :=
     initCarry := λ _ => true,
     nextBitCirc := fun x => 
       match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ())) }
+      | none => (Circuit.var (inr ())) ^^^ (Circuit.var (inl ()))
+      | some _ => (Circuit.var (inr ())) &&& (Circuit.var (inl ())) }
 
 theorem carry_incr (x : Unit → ℕ → Bool) : ∀ (n : ℕ), incr.carry x (n+1) = 
     fun _ => (incrSeqAux (x ()) n).2
@@ -389,8 +386,8 @@ def decr : FSM Unit :=
     initCarry := λ _ => true,
     nextBitCirc := fun x => 
       match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var false (inr ())) &&& (Circuit.var true (inl ())) }
+      | none => (Circuit.var (inr ())) ^^^ (Circuit.var (inl ()))
+      | some _ => ~~~ (Circuit.var (inr ())) &&& (Circuit.var (inl ())) }
 
 theorem carry_decr (x : Unit → ℕ → Bool) : ∀ (n : ℕ), decr.carry x (n+1) = 
     fun _ => (decrSeqAux (x ()) n).2
@@ -406,7 +403,7 @@ theorem carry_decr (x : Unit → ℕ → Bool) : ∀ (n : ℕ), decr.carry x (n+
   . simp [eval, decr, nextBit, carry, decrSeq, decrSeqAux]
   . rw [eval, carry_decr]; rfl
 
-theorem evalAux_eq_zero_of_set {arity : Type _} (p : FSM arity) 
+theorem evalAux_eq_zero_of_set (p : FSM arity) 
     (R : Set (p.α → Bool)) (hR : ∀ x s, (p.nextBit s x).1 ∈ R → s ∈ R) 
     (hi : p.initCarry ∉ R) (hr1 : ∀ x s, (p.nextBit s x).2 = true → s ∈ R)
     (x : arity → ℕ → Bool) (n : ℕ) : p.eval x n = false ∧ p.carry x n ∉ R := by
@@ -420,7 +417,7 @@ theorem evalAux_eq_zero_of_set {arity : Type _} (p : FSM arity)
     simp only [eval, carry] at ih ⊢
     exact ⟨hr1 _ _ (hR _ _ ih.2), hR _ _ ih.2⟩ 
 
-theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity) 
+theorem eval_eq_zero_of_set (p : FSM arity) 
     (R : Set (p.α → Bool)) (hR : ∀ x s, (p.nextBit s x).1 ∈ R → s ∈ R) 
     (hi : p.initCarry ∉ R) (hr1 : ∀ x s, (p.nextBit s x).2 = true → s ∈ R) :
     p.eval = fun _ _ => false := by
@@ -439,7 +436,6 @@ def composeUnary
     (q : FSMSolution t) :
     FSM (Fin t.arity) :=
   p.compose
-    (Fin t.arity)
     _
     (λ _ => id)
     (λ _ => q.toFSM)
@@ -450,10 +446,13 @@ def composeBinary
     (q₁ : FSMSolution t₁)
     (q₂ : FSMSolution t₂) :
     FSM (Fin (max t₁.arity t₂.arity)) :=
-  p.compose (Fin (max t₁.arity t₂.arity))
+  p.compose (arity₂ := Fin (max t₁.arity t₂.arity))
     (λ b => Fin (cond b t₁.arity t₂.arity))
     (λ b i => Fin.castLE (by cases b <;> simp) i)
-    (λ b => match b with
+    (λ b => by
+      dsimp
+      exact
+      match b with
       | true => q₁.toFSM
       | false => q₂.toFSM)
 
