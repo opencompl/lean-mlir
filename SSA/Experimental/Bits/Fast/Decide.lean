@@ -24,7 +24,7 @@ example : ((and x y) + (or x y)).eval = (x + y).eval := by
 
 example : ((or x y) - (xor x y)).eval = (and x y).eval := by
   native_decide
-
+set_option profiler true
 --Checking if the operations satisfy the defining identities
 #eval decide (x + -x) 0
 #eval decide (incr x) (x + 1)
@@ -32,7 +32,7 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #eval decide (x + - y) (x - y)
 #eval decide (x + 0) (var 0)
 #eval decide (x + y) (y + x)
-#eval decide (x + (y + z)) (x + y + z)
+#eval decide (x + (y + z)) ( x + y + z)
 #eval decide (x - x) 0
 #eval decide (x  + 0) x
 #eval decide (0 + x) x
@@ -40,8 +40,8 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #eval decide (-x) (not x).incr
 #eval decide (-x) (not x.decr)
 #eval decide (not x) (-x).decr
-#eval decide (-not x) x.incr
-#eval decide (x + y) (x - not y).decr
+#eval decide (-not x) (x + 1)
+#eval decide (x + y) (x - not y - 1)
 #eval decide (x + y) ((xor x y) + (and x y).ls false)
 #eval decide (x + y) (or x y + and x y)
 #eval decide (x + y) ((or x y).ls false - (xor x y))
