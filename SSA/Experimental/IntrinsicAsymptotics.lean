@@ -304,13 +304,19 @@ def Com.denote (c : Com) (s : State) : Value :=
 def denote (p: Com) : Value :=
   p.denote []
 
-def foldFunc (s : State) (v: Expr) : State :=
-  match v with
-    | .cst n => .nat n :: s
-    | .add a b => .nat ((getVal s a) + (getVal s b)) :: s -- Maybe reverse it?
+def Lets.denote (lets : Lets) : State :=
+  Array.foldl (λ s v => (v.denote s) :: s) [] lets
 
-def denoteLets (lets : Lets) : State :=
-  Array.foldl foldFunc [] lets
+structure ComFlat where
+  lets : Lets
+  ret : VarRel
+
+def ComFlat.denote (prog: ComFlat) : Value :=
+  let s := prog.lets.denote
+  .nat (getVal s prog.ret)
+
+def flatToTree (prog: ComFlat) : Com :=
+  addLetsToProgram prog.lets (Com.ret prog.ret)
 
 def ExprRec.denote (e : ExprRec) (s : State) : Value :=
   match e with
@@ -323,9 +329,25 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
-theorem letslets:
-   (matchExpr : ExprRec) (lets : Lets)
+theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
+  unfold flatToTree
+  unfold ComFlat.denote
+  unfold denote
+  unfold Com.denote
+  unfold addLetsToProgram
+  unfold Lets.denote
+  -- HELP NEEDED: Why does the induction below not work?
+  induction flat.lets -- using Array.foldr_induction
+ 
+  -- I tried to move this to List, but then Array.size is not known to
+  -- be zero, in the zero case.
+  simp [Array.foldr_eq_foldr_data] 
 
+  · 
+    sorry
+
+  · 
+    sorry
 
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
@@ -480,6 +502,18 @@ sorry
 
 theorem rewriteAtAppend:
   rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (Array.push lets e) rwExpr := sorry
+
+/--
+ (matchExpr : ExprRec) (lets : Lets)
+ (h1: matchVar lets pos matchExpr m₀ = some m)
+ (hlets: lets.size > 0)
+ (hm₀: denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (lets.size - pos - 1) ))) =
+       denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
+              (Com.ret 0))):
+
+   denote (addLetsToProgram (lets) (Com.ret (VarRel.ofNat (lets.size - pos - 1)))) =
+   denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
+-/
 
 
 theorem rewriteAtCorrect'
