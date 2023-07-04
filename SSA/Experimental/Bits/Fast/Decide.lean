@@ -24,7 +24,8 @@ example : ((and x y) + (or x y)).eval = (x + y).eval := by
 
 example : ((or x y) - (xor x y)).eval = (and x y).eval := by
   native_decide
-set_option profiler true
+  
+set_option trace.profiler true
 --Checking if the operations satisfy the defining identities
 #eval decide (x + -x) 0
 #eval decide (incr x) (x + 1)
