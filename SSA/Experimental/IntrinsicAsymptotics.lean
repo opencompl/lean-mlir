@@ -304,14 +304,13 @@ def Com.denote (c : Com) (s : State) : Value :=
 def denote (p: Com) : Value :=
   p.denote []
 
-def denoteLets (lets : Array Lets) (s : State) : Value :=
-  match s with
-    | c :: cs  => denoteLets cs (denoteLets  s) :: s)
-    | _ => denoteLets  ((denoteLets  s) :: s)
-    | c :: cs  => .nat (getVal s v)
+def foldFunc (s : State) (v: Expr) : State :=
+  match v with
+    | .cst n => .nat n :: s
+    | .add a b => .nat ((getVal s a) + (getVal s b)) :: s -- Maybe reverse it?
 
-def denote (p: Com) : Value :=
-  p.denote []
+def denoteLets (lets : Lets) : State :=
+  Array.foldl foldFunc [] lets
 
 def ExprRec.denote (e : ExprRec) (s : State) : Value :=
   match e with
@@ -472,12 +471,31 @@ theorem denoteAddLetsToProgram:
   simp 
   induction lets generalizing body
 
-theorem rewriteAtApplyRewriteCorrect:
-  rewriteAt' body pos lets rwExpr = applyRewrite (Array.push lets e) body rwExpr := sorry
+theorem rewriteAtApplyRewriteCorrect
+ (hpos: pos = 0) : 
+ rewriteAt' body pos lets rwExpr = applyRewrite (Array.push lets e) body rwExpr := by
+unfold rewriteAt'
+simp_all
+sorry
 
 theorem rewriteAtAppend:
   rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (Array.push lets e) rwExpr := sorry
 
+
+theorem rewriteAtCorrect'
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+  (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
+  (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
+  denote p' = denote (addLetsToProgram lets p) := by
+  induction pos
+  case zero =>
+    unfold rewriteAt' at successful
+    split at successful
+    · contradiction
+    · simp at successful
+      rename_i inputProg ty e body
+
+  
 
 theorem rewriteAtCorrect 
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
