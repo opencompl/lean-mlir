@@ -330,23 +330,18 @@ theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
-  unfold flatToTree
-  unfold ComFlat.denote
-  unfold denote
-  unfold Com.denote
-  unfold addLetsToProgram
-  unfold Lets.denote
-  -- HELP NEEDED: Why does the induction below not work?
-  induction flat.lets -- using Array.foldr_induction
- 
-  -- I tried to move this to List, but then Array.size is not known to
-  -- be zero, in the zero case.
-  simp [Array.foldr_eq_foldr_data] 
-
-  · 
-    sorry
-
-  · 
+  generalize hLets : flat.lets.data = lets_list
+  induction lets_list
+  case nil =>
+    unfold flatToTree
+    unfold ComFlat.denote
+    unfold denote
+    unfold Com.denote
+    unfold addLetsToProgram
+    unfold Lets.denote
+    rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data, hLets]
+    simp
+  case cons => 
     sorry
 
 theorem letsTheorem 
