@@ -725,7 +725,7 @@ theorem letsComDenoteFour':
 theorem letsComDenoteFour'':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 2)).denote [] = Value.nat 1 := by
   sorry
-theorem letsComDenoteFour'':
+theorem letsComDenoteFour''':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 3)).denote [] = Value.nat 0 := by
   sorry
 
