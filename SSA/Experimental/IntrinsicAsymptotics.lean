@@ -563,10 +563,8 @@ theorem letsComDenoteZero: (addLetsToProgram [] (Com.ret 0)).denote [] = Value.n
 theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
 theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (Com.ret 0)).denote [] = Value.nat 0 := rfl
 
-#eval (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)).denote []
 theorem letsDenoteTwo:
   Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
-#eval addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)
 theorem letsComDenoteTwo:
   (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)).denote [] = Value.nat 2 := by
   rfl
