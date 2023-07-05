@@ -359,11 +359,7 @@ theorem letsTheorem
       unfold applyMapping
       case cst n =>
         simp [matchVar] at h1
-        split at h1
-        case h_1 x n' heq =>
-          rw [hm₀]; unfold applyMapping <;> simp
-        case h_2 =>
-          contradiction
+        rw [hm₀]; unfold applyMapping ; simp
       
       case add a b a_ih b_ih =>
         simp [matchVar] at h1
@@ -382,11 +378,7 @@ theorem letsTheorem
 
       case var idx =>
         simp [matchVar] at h1
-        split at h1
-        case h_1 x n' heq =>
-          rw [hm₀]; unfold applyMapping <;> simp
-        case h_2 x heq =>
-          rw [hm₀]; unfold applyMapping <;> simp
+        rw [hm₀] ; unfold applyMapping ; simp
           
 theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
 
