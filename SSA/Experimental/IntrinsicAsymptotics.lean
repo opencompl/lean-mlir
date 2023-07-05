@@ -733,6 +733,22 @@ def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
 -/
 
 
+theorem letsDenoteZero: Lets.denote [] = [] := rfl
+
+theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
+
+theorem letsDenoteTwo:
+  Lets.denote [Expr.cst 0, Expr.cst 1] [] = [Value.nat 1, Value.nat 0] := rfl
+
+theorem letsDenoteThree:
+  Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
+  [Value.nat 2, Value.nat 1, Value.nat 0] := rfl
+
+theorem letsDenoteFour:
+  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
+  [Value.nat 8, Value.nat 7, Value.nat 5, Value.nat 3] := rfl
+
+
 def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
 
