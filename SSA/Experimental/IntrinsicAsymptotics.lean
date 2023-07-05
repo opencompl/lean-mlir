@@ -370,34 +370,7 @@ theorem letsTheorem
           
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
-  simp [denote, Com.denote, addLetsToProgram]
-  
-  unfold Com.denote
-  dsimp
-  simp [Array.foldr_eq_foldr_data] 
-  induction lets
-  simp_all
-  cases body
-  · simp
-    unfold Expr.denote
-    simp
-
-    sorry
-  · simp
-    sorry 
-  simp
-  rename_i head tail tail_ih
-
-
-  induction body
-  simp_all
-  unfold Com.denote
-  simp_all
-  · simp_all
-    sorry
-    
-  · simp_all
-    sorry
+  sorry -- The statement is likely not complete enough to be proven.
   
 
 theorem rewriteAtApplyRewriteCorrect
