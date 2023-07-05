@@ -4,6 +4,8 @@ import Std.Data.Option.Lemmas
 import Std.Data.Array.Lemmas
 import Std.Data.Array.Init.Lemmas
 import Mathlib
+import Mathlib.Data.List.Indexes
+
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -101,16 +103,15 @@ macro "mk_ex" n:num : command =>
 
 /-- An untyped expression as an intermediate step of input processing. -/
 
-structure Abs where
-
+structure Absolute where
   v : Nat
   deriving Repr, Inhabited, DecidableEq
 
-def Abs.ofNat (n: Nat) : Abs :=
+def Absolute.ofNat (n: Nat) : Absolute :=
   {v := n}
 
-instance : OfNat Abs n where
-  ofNat := Abs.ofNat n 
+instance : OfNat Absolute n where
+  ofNat := Absolute.ofNat n 
 
 structure VarRel where
   v : Nat
@@ -172,7 +173,7 @@ instance : Repr Com where
   reprPrec :=  formatCom
 
 abbrev Mapping := List (LeafVar × Nat)
-abbrev Lets := Array Expr
+abbrev Lets := List Expr
 
 def ex0 : Com :=
   Com.let .nat (.cst 0) <|
@@ -183,8 +184,8 @@ def ex0 : Com :=
   Com.ret 0
 
 
-def getRel (v : Nat) (array: Array Expr): VarRel :=
-  { v := array.size - v - 1 }
+def getRel (v : Nat) (array: List Expr): VarRel :=
+  { v := array.length - v - 1 }
 
 def getAbs (v : VarRel) (currentPos: Nat) : Nat :=
   currentPos - v.v - 1
@@ -207,7 +208,7 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
         matchVar lets (getAbs b varPos) b' mapping
     | _ => none 
 
-example: matchVar #[.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 
+example: matchVar [.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 
          (.add (.var 0) (.add (.var 1) (.var 2))) =
   some [(2, 1), (1, 0), (0, 0)]:= rfl
 
@@ -219,6 +220,9 @@ def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
                  getVarAfterMapping var xs
  | _ => panic! "var should be in mapping"
 
+def _root_.List.push (x : α) (xs : List α) : List α :=
+  xs ++ [x]
+
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat) := 
 match pattern with
     | .var v => (lets, getVarAfterMapping v m)
@@ -227,8 +231,8 @@ match pattern with
       let res2 := applyMapping b m (res.1)
       let l := getRel res.2 res2.1
       let r := getRel res2.2 res2.1
-      ((res2.1).push (Expr.add l r), res2.1.size)
-    | .cst n => (lets.push (.cst n), lets.size)
+      ((res2.1).push (Expr.add l r), res2.1.length)
+    | .cst n => (lets.push (.cst n), lets.length)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
   let shift (v : VarRel) : VarRel :=
@@ -259,12 +263,12 @@ def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldr (λ e acc => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
-  let varPos := lets.size - 1 
+  let varPos := lets.length - 1 
   let mapping ← matchVar lets varPos rewrite.1
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
-  let newProgram := shiftBy newProgram (newLets.size - lets.size)
-  let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.size - lets.size)) (VarRel.ofNat (newLets.size - newVar - 1))
+  let newProgram := shiftBy newProgram (newLets.length - lets.length)
+  let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newLets.size - newVar - 1))
   let newProgram := addLetsToProgram newLets newProgram
 
   some newProgram
@@ -280,7 +284,7 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
            rewriteAt' body (depth - 1) lets rewrite
 
 def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Option Com :=
-    rewriteAt' inputProg depth #[] rewrite 
+    rewriteAt' inputProg depth [] rewrite 
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite 
@@ -299,17 +303,17 @@ def Expr.denote (e : Expr) (s : State) : Value :=
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
     | .ret v => .nat (getVal s v)
-    | .let _ e body => denote body ((e.denote s) :: s)
+    | .let _ e body => denote body ((e.denote s) :: s) -- introduce binder.
 
 def denote (p: Com) : Value :=
   p.denote []
 
-def Lets.denote (lets : Lets) : State :=
-  Array.foldl (λ s v => (v.denote s) :: s) [] lets
+def Lets.denote (lets : Lets) (env : State := []): State :=
+  List.foldl (λ s v => (v.denote s) :: s) env lets
 
 structure ComFlat where
-  lets : Lets
-  ret : VarRel
+  lets : Lets -- sequence of let bindings.
+  ret : VarRel -- return value.
 
 def ComFlat.denote (prog: ComFlat) : Value :=
   let s := prog.lets.denote
@@ -326,6 +330,60 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
                      Value.nat (a_val + b_val)
     | .var v => s.get! v
 
+
+#print List.rec
+
+theorem foldr_snoc 
+  (f: α → β → β)
+  (b: β)
+  (x: α)
+  (xs: List α) :
+  List.foldr f b (xs.push x) = (List.foldr f (f x b) xs) := by {
+    revert x b;
+    induction xs;
+    case nil => {
+      intros;
+      simp[List.foldr, List.push];
+    }
+    case cons hd tl IH => {
+      intros b x;
+      simp[List.foldr];
+    }
+}
+
+theorem key_lemma : 
+  (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by {
+    sorry 
+}
+
+
+
+-- consider using https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldr_hom%E2%82%82
+-- or https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldrRecOn
+theorem denoteFlatDenoteTree' : denote (flatToTree flat) = flat.denote := by {
+  unfold flatToTree;
+  unfold denote
+  unfold Com.denote
+  -- need to generalize on the argument to addLetstoProgram
+  unfold ComFlat.denote
+  unfold addLetsToProgram
+  -- use a different IH to reverse the order
+  induction flat.lets using List.list_reverse_induction
+  case base => {
+    simp[getVal];
+  }
+  case ind head tail IH => {
+    simp[foldr_snoc];
+    simp[IH];
+    split at IH
+    case h_1 => {
+
+      simp[getVal];
+    }
+    sorry
+  }
+} 
+
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
@@ -338,8 +396,9 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold Com.denote
   unfold addLetsToProgram
   unfold Lets.denote
-  rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data]
-  induction flat.lets.data
+  -- rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data]
+ 
+  induction flat.lets
   case nil =>
     rfl
   case cons =>
