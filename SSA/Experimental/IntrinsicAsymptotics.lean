@@ -700,6 +700,14 @@ theorem letsDenoteFour:
   Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
   [Value.nat 3, Value.nat 5, Value.nat 7, Value.nat 12] := rfl
 
+def xs1 := Com.ret 0
+def lets1 : Lets := [Expr.cst 1]
+theorem letsDenote1: (addLetsToProgram lets1 xs1).denote [] = xs1.denote (lets1.denote []) := rfl
+
+def xs2 := Com.ret 1
+def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
+theorem letsDenotei2: (addLetsToProgram lets2 xs2).denote [] = xs2.denote (lets2.denote []) → False := by
+  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
 def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
