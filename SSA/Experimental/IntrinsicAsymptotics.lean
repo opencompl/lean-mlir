@@ -22,6 +22,9 @@ inductive Value where
   | bool : Bool → Value
   deriving Repr, Inhabited, DecidableEq
 
+/-- The `State` is a map from variables to values that uses relative de Bruijn
+    indices. The most recently introduced variable is at the head of the list.
+-/
 abbrev State := List Value
 
 /-- A context is a list of types, growing to the left for simplicity. -/
@@ -254,7 +257,7 @@ def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com :=
     | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
 
 def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
-  newLets.foldr (λ e acc => Com.let .nat e acc) oldProgram
+  newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := lets.length - 1 
@@ -287,7 +290,7 @@ def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com 
       | some y => y
 
 def getVal (s : State) (v : VarRel) : Nat :=
-  get_nat (s.get! (s.length - v.v - 1))
+  get_nat (s.get! v.v)
 
 def Expr.denote (e : Expr) (s : State) : Value :=
   match e with
@@ -297,13 +300,13 @@ def Expr.denote (e : Expr) (s : State) : Value :=
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
     | .ret v => .nat (getVal s v)
-    | .let _ e body => denote body (s ++ [e.denote s]) -- introduce binder.
+    | .let _ e body => denote body (e.denote s :: s) -- introduce binder.
 
 def denote (p: Com) : Value :=
   p.denote []
 
 def Lets.denote (lets : Lets) (env : State := []): State :=
-  List.foldl (λ s v => s ++ [v.denote s]) env lets
+  List.foldr (λ v s => (v.denote s) :: s) env lets
 
 structure ComFlat where
   lets : Lets -- sequence of let bindings.
@@ -680,7 +683,10 @@ def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
 
 -/
 
-
+theorem addLets: addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0) = (
+  Com.let .nat (Expr.cst 1) <|
+  Com.let .nat (Expr.add 0 0) <|
+  Com.ret 0) := rfl
 
 theorem letsDenoteZero: Lets.denote [] = [] := rfl
 theorem letsComDenoteZero: (addLetsToProgram [] (Com.ret 0)).denote [] = Value.nat 0 := rfl
@@ -688,46 +694,44 @@ theorem letsComDenoteZero: (addLetsToProgram [] (Com.ret 0)).denote [] = Value.n
 theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
 theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (Com.ret 0)).denote [] = Value.nat 0 := rfl
 
-#eval (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 0)).denote []
+#eval (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)).denote []
 theorem letsDenoteTwo:
-  Lets.denote [Expr.cst 0, Expr.cst 1] [] = [Value.nat 0, Value.nat 1] := rfl
+  Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
+#eval addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)
 theorem letsComDenoteTwo:
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 0)).denote [] = Value.nat 1 := by
+  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)).denote [] = Value.nat 2 := by
   rfl
 theorem letsComDenoteTwo':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 1)).denote [] = Value.nat 0 := by
+  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 1)).denote [] = Value.nat 1 := by
   rfl
 
 theorem letsDenoteThree:
   Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
   [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
 theorem letsComDenoteThree:
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 0)).denote [] = Value.nat 2 := by
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 0)).denote [] = Value.nat 0 := by
   rfl
 theorem letsComDenoteThree':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 1)).denote [] = Value.nat 1 := by
   rfl
 theorem letsComDenoteThree'':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 2)).denote [] = Value.nat 0 := by
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 2)).denote [] = Value.nat 2 := by
   rfl
-
-#eval  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] []
-#eval (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote []
 
 theorem letsDenoteFour:
-  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
-  [Value.nat 3, Value.nat 5, Value.nat 7, Value.nat 12] := rfl
+  Lets.denote [Expr.add 0 1, Expr.cst 3, Expr.cst 5, Expr.cst 7] [] =
+  [Value.nat 8, Value.nat 3, Value.nat 5, Value.nat 7] := rfl
 theorem letsComDenoteFour:
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote [] = Value.nat 3 := by
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote [] = Value.nat 1 := by
   rfl
 theorem letsComDenoteFour':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 1)).denote [] = Value.nat 2 := by
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 1)).denote [] = Value.nat 0 := by
   rfl
 theorem letsComDenoteFour'':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 2)).denote [] = Value.nat 1 := by
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 2)).denote [] = Value.nat 1 := by
   rfl
 theorem letsComDenoteFour''':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 3)).denote [] = Value.nat 0 := by
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 3)).denote [] = Value.nat 2 := by
   rfl
 
 def lets1 : Lets := [Expr.cst 1]
@@ -746,20 +750,20 @@ def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
 theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
-def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
+def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
 
 theorem mv0:
-  matchVar lets 0 m = none := rfl
+  matchVar lets 3 m = none := rfl
 
 theorem mv1:
-  matchVar lets 1 m = some [(1, 0), (0, 0)]:= rfl
+  matchVar lets 2 m = some [(1, 0), (0, 0)]:= rfl
 
 theorem mv2:
-  matchVar lets 2 m = some [(1, 1), (0, 0)]:= rfl
+  matchVar lets 1 m = some [(1, 1), (0, 0)]:= rfl
 
 theorem mv3:
-  matchVar lets 3 m = some [(1, 2), (0, 0)]:= rfl
+  matchVar lets 0 m = some [(1, 2), (0, 0)]:= rfl
 
 theorem mv20:
   matchVar lets 0 m2 = none := rfl
@@ -789,7 +793,8 @@ def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
       y
 
 #eval denote (testRewrite ex1 r 1)
-example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
+example : denote ex1 = denote (testRewrite ex1 r 1) := by
+ rfl
 
 #eval testRewrite ex2 r 1
 example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
