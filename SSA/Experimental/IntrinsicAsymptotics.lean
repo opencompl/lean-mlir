@@ -358,6 +358,7 @@ theorem letsTheorem
           have b_fold := b_ih h2
           rw [hm₀]
           dsimp [VarRel.ofNat]
+
           unfold applyMapping
           sorry
 
@@ -367,8 +368,6 @@ theorem letsTheorem
       case var idx =>
         simp [applyMapping, hm₀]
           
-theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
-
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
   simp [denote, Com.denote, addLetsToProgram]
