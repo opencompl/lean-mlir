@@ -187,8 +187,8 @@ def ex0 : Com :=
 def getRel (v : Nat) (array: List Expr): VarRel :=
   { v := array.length - v - 1 }
 
-def getAbs (v : VarRel) (currentPos: Nat) : Nat :=
-  currentPos - v.v - 1
+def getPos (v : VarRel) (currentPos: Nat) : Nat :=
+  v.v + currentPos + 1
 
 /-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
 free variables to their absolute position in the lets array.
@@ -204,13 +204,14 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
   | .add a' b' =>
     match lets[varPos]! with 
     | .add a b => do
-        let mapping ← matchVar lets (getAbs a varPos) a' mapping
-        matchVar lets (getAbs b varPos) b' mapping
+        let mapping ← matchVar lets (getPos a varPos) a' mapping
+        matchVar lets (getPos b varPos) b' mapping
     | _ => none 
 
-example: matchVar [.cst 1, .add 0 0, .add 1 0, .add 2 0] 3 
+#eval matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0 (.add (.var 0) (.add (.var 1) (.var 2)))
+example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0 
          (.add (.var 0) (.add (.var 1) (.var 2))) =
-  some [(2, 1), (1, 0), (0, 0)]:= rfl
+  some [(2, 2), (1, 3), (0, 3)]:= rfl
 
 def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
  match m with
@@ -228,8 +229,8 @@ match pattern with
       let res2 := applyMapping b m (res.1)
       let l := getRel res.2 res2.1
       let r := getRel res2.2 res2.1
-      ((res2.1).concat (Expr.add l r), res2.1.length)
-    | .cst n => (lets.concat (.cst n), lets.length)
+      ((Expr.add l r) :: res2.1, res2.1.length)
+    | .cst n => ((.cst n) :: lets, lets.length)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
   let shift (v : VarRel) : VarRel :=
@@ -260,9 +261,13 @@ def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
-  let varPos := lets.length - 1 
+  dbg_trace "applyRewrite"
+  let varPos := 0 
+  dbg_trace repr lets
   let mapping ← matchVar lets varPos rewrite.1
+  dbg_trace repr lets
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
+  dbg_trace repr newLets
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newLets.length - newVar - 1))
@@ -274,7 +279,7 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
   match inputProg with
     | .ret _ => none
     | .let _ expr body =>
-        let lets := lets.concat expr
+        let lets := expr :: lets
         if depth = 0 then
            applyRewrite lets body rewrite
         else
@@ -632,9 +637,6 @@ def ex22 : ComFlat :=
 #eval ex22.denote = denote ex2
 -/
 
--- a + b => b + a
-def m := ExprRec.add (.var 0) (.var 1)
-def r := ExprRec.add (.var 1) (.var 0)
 
 /-
 def prog_map_before : Com :=
@@ -731,34 +733,38 @@ def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
 theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
+-- a + b => b + a
+def m := ExprRec.add (.var 0) (.var 1)
+def r := ExprRec.add (.var 1) (.var 0)
+
 def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
 
-theorem mv0:
+theorem mv3:
   matchVar lets 3 m = none := rfl
 
-theorem mv1:
-  matchVar lets 2 m = some [(1, 0), (0, 0)]:= rfl
-
 theorem mv2:
-  matchVar lets 1 m = some [(1, 1), (0, 0)]:= rfl
+  matchVar lets 2 m = some [(1, 3), (0, 3)]:= rfl
 
-theorem mv3:
-  matchVar lets 0 m = some [(1, 2), (0, 0)]:= rfl
+theorem mv1:
+  matchVar lets 1 m = some [(1, 2), (0, 3)]:= rfl
 
-theorem mv20:
-  matchVar lets 0 m2 = none := rfl
-
-theorem mv21:
-  matchVar lets 1 m2 = none := rfl
-
-theorem mv22:
-  matchVar lets 2 m2 =
-  some [(2, 0), (1, 0), (0, 0)] := rfl
+theorem mv0:
+  matchVar lets 0 m = some [(1, 1), (0, 3)]:= rfl
 
 theorem mv23:
-  matchVar lets 3 m2 =
-  some [(2, 1), (1, 0), (0, 0)]:= rfl
+  matchVar lets 3 m2 = none := rfl
+
+theorem mv22:
+  matchVar lets 2 m2 = none := rfl
+
+theorem mv21:
+  matchVar lets 1 m2 =
+  some [(2, 3), (1, 3), (0, 3)] := rfl
+
+theorem mv20:
+  matchVar lets 0 m2 =
+  some [(2, 2), (1, 3), (0, 3)]:= rfl
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
   let new := rewriteAt p pos (m, r) 
@@ -773,7 +779,7 @@ def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
       dbg_trace ""
       y
 
-#eval denote (testRewrite ex1 r 1)
+#eval denote (testRewrite ex1 r 0)
 example : denote ex1 = denote (testRewrite ex1 r 1) := by
  rfl
 
