@@ -401,9 +401,7 @@ theorem letsTheorem
 dd
 -/
           
-theorem addLetsToProgramBaseCase:
-  denote (addLetsToProgram [] p) = denote p := by
-  rfl
+theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
