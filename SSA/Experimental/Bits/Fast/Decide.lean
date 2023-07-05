@@ -38,9 +38,19 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #eval decide (x + y) (y + x)
 #eval decide (x + (y + z)) (x + y + z)
 #eval decide (x - x) 0
-#eval decide (x  + 0) x
+#eval decide (x + 0) x
 #eval decide (0 + x) x
 -- Equalities from Zulip
+
+
+#eval decide (or (xor (not x) y) z) (or (not (or x y)) z)
+#eval decide (x + y) (
+    (ls false (not ((or (xor (not x) y) ((not (and x y)).ls true)))))
+    + (xor (xor x y) ((and x y).ls false)))
+#eval decide (x + y) (
+   (((or ((or x y).ls false) (xor (not x) y)).ls true))  
+    -(xor (xor x y) ((not (or x y)).ls true)))
+
 #eval decide (-x) (not x).incr
 #eval decide (-x) (not x.decr)
 #eval decide (not x) (-x).decr
@@ -50,6 +60,7 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #eval decide (x + y) (or x y + and x y)
 #eval decide (x + y) ((or x y).ls false - (xor x y))
 #eval decide (x - y) (x + not y).incr
+#eval decide (x - y) (not y - not x)
 #eval decide (x - y) (xor x y - (and (not x) y).ls false)
 #eval decide (x - y) (and x (not y) - (and (not x) y))
 #eval decide (x - y) ((and x (not y)).ls false - (xor x y))
