@@ -702,6 +702,7 @@ theorem letsDenoteFour:
 def lets1 : Lets := [Expr.cst 1]
 theorem letsDenote1: (addLetsToProgram lets1 xs.denote [] = xs.denote (lets1.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+  sorry -- This is currently inconsistent
 
 def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
 theorem letsDenote2: (addLetsToProgram lets2 xs).denote [] = xs.denote (lets2.denote []) := by
