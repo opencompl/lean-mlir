@@ -601,9 +601,7 @@ theorem preservesSemantics
   · rfl
   · rw [rewriteAtCorrect (successful := by assumption)]
     simp [addLetsToProgram]
-    sorry
-    -- apply addLetsToProgramBaseCase
-    -- apply rewriteCorrect
+    apply rewriteCorrect
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
