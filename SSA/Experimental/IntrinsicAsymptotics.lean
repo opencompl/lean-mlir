@@ -324,9 +324,6 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
                      Value.nat (a_val + b_val)
     | .var v => s.get! v
 
-
-#print List.rec
-
 theorem List.foldr_concat
   (f: α → β → β) (b: β) (x: α) (xs: List α) :
   List.foldr f b (xs.concat x) = (List.foldr f (f x b) xs) := by {
@@ -338,8 +335,6 @@ theorem List.foldr_concat'
   List.foldr f b (xs ++ [x]) = (List.foldr f (f x b) xs) := by {
     simp only [List.foldr_append, List.foldr]
 }
-
-#print List.foldl_append
 
 theorem key_lemma : 
   (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by {
