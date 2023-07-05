@@ -265,7 +265,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.length - lets.length)
-  let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newLets.size - newVar - 1))
+  let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newLets.length - newVar - 1))
   let newProgram := addLetsToProgram newLets newProgram
 
   some newProgram
