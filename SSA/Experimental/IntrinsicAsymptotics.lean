@@ -401,14 +401,6 @@ theorem letsTheorem
 dd
 -/
           
-          
-
-theorem foldr_zero (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) (Array.size (#[]: Array α )) = base := by
-  rfl
-
-theorem foldr_zero' (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) 0 = base := by
-  rfl
-
 theorem addLetsToProgramBaseCase:
   denote (addLetsToProgram [] p) = denote p := by
   rfl
