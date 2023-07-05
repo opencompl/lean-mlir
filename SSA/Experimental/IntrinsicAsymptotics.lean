@@ -347,8 +347,7 @@ theorem letsTheorem
       induction matchExpr generalizing m₀ m pos
       unfold applyMapping
       case cst n =>
-        simp [matchVar] at h1
-        rw [hm₀]; unfold applyMapping ; simp
+        simp [applyMapping, hm₀]
       
       case add a b a_ih b_ih =>
         simp [matchVar] at h1
@@ -358,16 +357,15 @@ theorem letsTheorem
           have a_fold := a_ih h1
           have b_fold := b_ih h2
           rw [hm₀]
+          dsimp [VarRel.ofNat]
           unfold applyMapping
-          dsimp
           sorry
 
         case h_2 x x' =>
           sorry
 
       case var idx =>
-        simp [matchVar] at h1
-        rw [hm₀] ; unfold applyMapping ; simp
+        simp [applyMapping, hm₀]
           
 theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
 
