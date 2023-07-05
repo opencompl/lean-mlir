@@ -291,10 +291,8 @@ def getVal (s : State) (v : VarRel) : Nat :=
 
 def Expr.denote (e : Expr) (s : State) : Value :=
   match e with
-    | .cst n =>
-      .nat n
-    | .add a b =>
-      .nat ((getVal s a) + (getVal s b))
+    | .cst n => .nat n
+    | .add a b => .nat ((getVal s a) + (getVal s b))
 
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
@@ -353,10 +351,8 @@ theorem key_lemma :
       split at IH;
       case h_1 inputProg x heq => {
         simp_all
-
-
-
         simp [heq];
+        simp [IH]
         sorry 
       }
       case h_2 inputProg ty e body heq => {
