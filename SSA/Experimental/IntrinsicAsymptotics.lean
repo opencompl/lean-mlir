@@ -381,25 +381,6 @@ theorem letsTheorem
           sorry
         sorry
       sorry
-      
-/--
-
-
-    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs avar pos - 1)))) =
-    denote (addLetsToProgram (applyMapping a m₀ lets).fst (Com.ret 0)) →
-    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs avar pos - 1)))) =
-    denote (addLetsToProgram (applyMapping a m_intermediate lets).fst (Com.ret 0))
-
-    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs bvar pos - 1)))) =
-    denote (addLetsToProgram (applyMapping b m_intermediate lets).fst (Com.ret 0)) →
-    denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (Array.size lets - getAbs bvar pos - 1)))) =
-    denote (addLetsToProgram (applyMapping b m lets).fst (Com.ret 0))
-
-
-    denote (addLetsToProgram (applyMapping (ExprRec.add a b) m₀ lets).fst (Com.ret 0)) =
-    denote (addLetsToProgram (applyMapping (ExprRec.add a b) m lets).fst (Com.ret 0))
-dd
--/
           
 theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
 
