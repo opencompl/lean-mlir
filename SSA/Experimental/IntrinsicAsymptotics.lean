@@ -381,19 +381,6 @@ theorem rewriteAtApplyRewriteCorrect
 theorem rewriteAtAppend:
   rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (lets ++ [e]) rwExpr := sorry
 
-/--
- (matchExpr : ExprRec) (lets : Lets)
- (h1: matchVar lets pos matchExpr m₀ = some m)
- (hlets: lets.size > 0)
- (hm₀: denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (lets.size - pos - 1) ))) =
-       denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
-              (Com.ret 0))):
-
-   denote (addLetsToProgram (lets) (Com.ret (VarRel.ofNat (lets.size - pos - 1)))) =
-   denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
--/
-
-
 theorem rewriteAtCorrect'
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
