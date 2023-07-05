@@ -702,12 +702,32 @@ theorem letsComDenoteTwo':
 theorem letsDenoteThree:
   Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
   [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
-
+theorem letsComDenoteThree:
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 0)).denote [] = Value.nat 2 := by
+  sorry
+theorem letsComDenoteThree':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 1)).denote [] = Value.nat 1 := by
+  sorry
+theorem letsComDenoteThree'':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 2)).denote [] = Value.nat 0 := by
+  sorry
 
 #eval  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] []
 theorem letsDenoteFour:
   Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
   [Value.nat 3, Value.nat 5, Value.nat 7, Value.nat 12] := rfl
+theorem letsComDenoteFour:
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote [] = Value.nat 3 := by
+  sorry
+theorem letsComDenoteFour':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 1)).denote [] = Value.nat 2 := by
+  sorry
+theorem letsComDenoteFour'':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 2)).denote [] = Value.nat 1 := by
+  sorry
+theorem letsComDenoteFour'':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 3)).denote [] = Value.nat 0 := by
+  sorry
 
 def lets1 : Lets := [Expr.cst 1]
 theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.denote []) := by
