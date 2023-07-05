@@ -220,9 +220,6 @@ def getVarAfterMapping (var : LeafVar) (m : Mapping) : Nat :=
                  getVarAfterMapping var xs
  | _ => panic! "var should be in mapping"
 
-def _root_.List.push (x : α) (xs : List α) : List α :=
-  xs ++ [x]
-
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets): (Lets × Nat) := 
 match pattern with
     | .var v => (lets, getVarAfterMapping v m)
@@ -231,8 +228,8 @@ match pattern with
       let res2 := applyMapping b m (res.1)
       let l := getRel res.2 res2.1
       let r := getRel res2.2 res2.1
-      ((res2.1).push (Expr.add l r), res2.1.length)
-    | .cst n => (lets.push (.cst n), lets.length)
+      ((res2.1).concat (Expr.add l r), res2.1.length)
+    | .cst n => (lets.concat (.cst n), lets.length)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
   let shift (v : VarRel) : VarRel :=
@@ -277,7 +274,7 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
   match inputProg with
     | .ret _ => none
     | .let _ expr body =>
-        let lets := lets.push expr
+        let lets := lets.concat expr
         if depth = 0 then
            applyRewrite lets body rewrite
         else
@@ -333,27 +330,48 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
 
 #print List.rec
 
-theorem foldr_snoc 
-  (f: α → β → β)
-  (b: β)
-  (x: α)
-  (xs: List α) :
-  List.foldr f b (xs.push x) = (List.foldr f (f x b) xs) := by {
-    revert x b;
-    induction xs;
-    case nil => {
-      intros;
-      simp[List.foldr, List.push];
-    }
-    case cons hd tl IH => {
-      intros b x;
-      simp[List.foldr];
-    }
+theorem List.foldr_concat
+  (f: α → β → β) (b: β) (x: α) (xs: List α) :
+  List.foldr f b (xs.concat x) = (List.foldr f (f x b) xs) := by {
+    simp only [List.concat_eq_append, List.foldr_append, List.foldr]
 }
+
+theorem List.foldr_concat'
+  (f: α → β → β) (b: β) (x: α) (xs: List α) :
+  List.foldr f b (xs ++ [x]) = (List.foldr f (f x b) xs) := by {
+    simp only [List.foldr_append, List.foldr]
+}
+
+#print List.foldl_append
 
 theorem key_lemma : 
   (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by {
-    sorry 
+    unfold Lets.denote;
+    unfold addLetsToProgram
+    unfold Com.denote
+    simp
+    induction lets using List.list_reverse_induction
+    --induction lets
+
+    case base => {
+      simp;
+    }
+    case ind head tail IH => {
+      split at IH;
+      case h_1 inputProg x heq => {
+        simp_all
+        rw [← foldr_snoc]
+
+
+        simp [heq];
+        
+      }
+      case h_2 inputProg ty e body heq => {
+
+        simp[foldr_snoc];
+        simp[IH];
+      }
+    }
 }
 
 
@@ -377,8 +395,9 @@ theorem denoteFlatDenoteTree' : denote (flatToTree flat) = flat.denote := by {
     simp[IH];
     split at IH
     case h_1 => {
-
+      simp_all
       simp[getVal];
+
     }
     sorry
   }
