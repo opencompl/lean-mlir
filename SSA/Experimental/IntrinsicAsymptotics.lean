@@ -733,7 +733,7 @@ def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
 -/
 
 
-def lets := #[Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
+def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
 
 theorem mv0:
