@@ -341,35 +341,6 @@ theorem key_lemma :
 
 -- consider using https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldr_hom%E2%82%82
 -- or https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldrRecOn
-theorem denoteFlatDenoteTree' : denote (flatToTree flat) = flat.denote := by {
-  unfold flatToTree;
-  unfold denote
-  unfold Com.denote
-  -- need to generalize on the argument to addLetstoProgram
-  unfold ComFlat.denote
-  unfold addLetsToProgram
-  -- use a different IH to reverse the order
-  induction flat.lets using List.list_reverse_induction
-  case base => {
-    sorry
-  }
-  case ind head tail IH => {
-    simp[IH];
-    split at IH
-    case h_1 => {
-      simp_all
-      simp[getVal];
-      sorry
-    }
-    sorry
-  }
-} 
-
-theorem shifting:
-denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
-
-theorem array_size: Array.size as = as.data.length := by rfl
-
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold flatToTree
   unfold ComFlat.denote
@@ -377,7 +348,6 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold Com.denote
   unfold addLetsToProgram
   unfold Lets.denote
-  -- rw [Array.foldr_eq_foldr_data, Array.foldl_eq_foldl_data]
  
   induction flat.lets
   case nil =>
@@ -402,6 +372,9 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 
       
       sorry
+
+theorem shifting:
+denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
