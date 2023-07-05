@@ -363,7 +363,7 @@ theorem letsTheorem
           sorry
 
         case h_2 x x' =>
-          sorry
+          contradiction
 
       case var idx =>
         simp [applyMapping, hm₀]
