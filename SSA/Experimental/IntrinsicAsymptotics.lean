@@ -225,21 +225,12 @@ def getRel (v : Nat) (array: List Expr): VarRel :=
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) := 
 match pattern with
     | .var v => 
-      let xx := getVarAfterMapping v lets m inputLets
-      dbg_trace "getVarAfterMapping"
-      dbg_trace repr v
-      dbg_trace repr xx
-      (lets,  xx)
+      (lets, getVarAfterMapping v lets m inputLets)
     | .add a b => 
       let res := applyMapping a m lets inputLets
       let res2 := applyMapping b m (res.1) inputLets
-      dbg_trace "applyMapping"
-      dbg_trace repr res.2
-      dbg_trace repr res2.2
       let l := { v := res.2 + (res2.1.length - res.1.length)}
       let r := { v := res2.2 }
-      dbg_trace repr l
-      dbg_trace repr l
       ((Expr.add l r) :: res2.1, 0)
     | .cst n => ((.cst n) :: lets, 0)
 
