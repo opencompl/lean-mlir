@@ -291,13 +291,15 @@ def getVal (s : State) (v : VarRel) : Nat :=
 
 def Expr.denote (e : Expr) (s : State) : Value :=
   match e with
-    | .cst n => .nat n
-    | .add a b => .nat ((getVal s a) + (getVal s b))
+    | .cst n =>
+      .nat n
+    | .add a b =>
+      .nat ((getVal s a) + (getVal s b))
 
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
     | .ret v => .nat (getVal s v)
-    | .let _ e body => denote body ((e.denote s) :: s) -- introduce binder.
+    | .let _ e body => denote body (s ++ [e.denote s]) -- introduce binder.
 
 def denote (p: Com) : Value :=
   p.denote []
@@ -690,44 +692,47 @@ theorem letsComDenoteZero: (addLetsToProgram [] (Com.ret 0)).denote [] = Value.n
 theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
 theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (Com.ret 0)).denote [] = Value.nat 0 := rfl
 
+#eval (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 0)).denote []
 theorem letsDenoteTwo:
   Lets.denote [Expr.cst 0, Expr.cst 1] [] = [Value.nat 0, Value.nat 1] := rfl
 theorem letsComDenoteTwo:
   (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 0)).denote [] = Value.nat 1 := by
-  sorry
+  rfl
 theorem letsComDenoteTwo':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1] (Com.ret 1)).denote [] = Value.nat 0 := by
-  sorry
+  rfl
 
 theorem letsDenoteThree:
   Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
   [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
 theorem letsComDenoteThree:
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 0)).denote [] = Value.nat 2 := by
-  sorry
+  rfl
 theorem letsComDenoteThree':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 1)).denote [] = Value.nat 1 := by
-  sorry
+  rfl
 theorem letsComDenoteThree'':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (Com.ret 2)).denote [] = Value.nat 0 := by
-  sorry
+  rfl
 
 #eval  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] []
+#eval (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote []
+
 theorem letsDenoteFour:
   Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
   [Value.nat 3, Value.nat 5, Value.nat 7, Value.nat 12] := rfl
 theorem letsComDenoteFour:
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 0)).denote [] = Value.nat 3 := by
-  sorry
+  rfl
 theorem letsComDenoteFour':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 1)).denote [] = Value.nat 2 := by
-  sorry
+  rfl
 theorem letsComDenoteFour'':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 2)).denote [] = Value.nat 1 := by
-  sorry
+  rfl
 theorem letsComDenoteFour''':
   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (Com.ret 3)).denote [] = Value.nat 0 := by
-  sorry
+  rfl
 
 def lets1 : Lets := [Expr.cst 1]
 theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.denote []) := by
@@ -736,17 +741,14 @@ theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.de
 def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
 theorem letsDenote2: (addLetsToProgram lets2 xs).denote [] = xs.denote (lets2.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
-  sorry -- This is currently inconsistent
 
 def lets3 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3]
 theorem letsDenote3: (addLetsToProgram lets3 xs).denote [] = xs.denote (lets3.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
-  sorry -- This is currently inconsistent
 
 def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
 theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
-  sorry -- This is currently inconsistent
 
 def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
 def m2 := ExprRec.add (.var 0) (.add (.var 1) (.var 2))
