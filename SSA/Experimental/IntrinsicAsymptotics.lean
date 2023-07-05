@@ -665,7 +665,6 @@ def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
       dbg_trace ""
       y
 
-#eval testRewrite ex1 r 1
 example : rewriteAt ex1 1 (m, r) = (
   Com.let Ty.nat (Expr.cst 1)    <|
      .let Ty.nat (Expr.add 0 0)  <|
@@ -673,14 +672,11 @@ example : rewriteAt ex1 1 (m, r) = (
      .ret 0) := by rfl
 example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
 
-
 -- a + b => b + a
 
-#eval testRewrite ex2 r 0
 example : rewriteAt ex2 0 (m, r) = none := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
-#eval testRewrite ex2 r 1
 example : rewriteAt ex2 1 (m, r) = (
   Com.let Ty.nat (Expr.cst 1)   <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -691,7 +687,6 @@ example : rewriteAt ex2 1 (m, r) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
-#eval testRewrite ex2 r 2
 example : rewriteAt ex2 2 (m, r) = (
   Com.let Ty.nat (Expr.cst 1)   <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -702,7 +697,6 @@ example : rewriteAt ex2 2 (m, r) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 2) := by rfl
 
-#eval testRewrite ex2 r 3
 example : rewriteAt ex2 3 (m, r) = (
   Com.let Ty.nat (Expr.cst 1)   <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -713,7 +707,6 @@ example : rewriteAt ex2 3 (m, r) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
 
-#eval testRewrite ex2 r 4
 example : rewriteAt ex2 4 (m, r) = (
   Com.let Ty.nat (Expr.cst 1)   <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -735,7 +728,6 @@ def ex2' : Com :=
 -- a + b => b + (0 + a)
 def r2 := ExprRec.add (.var 1) (.add (.cst 0) (.var 0))
 
-#eval testRewrite ex2 r2 1
 example : rewriteAt ex2 1 (m, r2) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -748,7 +740,6 @@ example : rewriteAt ex2 1 (m, r2) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
 
-#eval testRewrite ex2 r2 2
 example : rewriteAt ex2 2 (m, r2) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -761,7 +752,6 @@ example : rewriteAt ex2 2 (m, r2) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 2) := by rfl
 
-#eval testRewrite ex2 r2 3
 example : rewriteAt ex2 3 (m, r2) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -774,7 +764,6 @@ example : rewriteAt ex2 3 (m, r2) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
 
-#eval testRewrite ex2 r2 4
 example : rewriteAt ex2 4 (m, r2) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -790,7 +779,6 @@ example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
 -- a + b => (0 + a) + b
 def r3 := ExprRec.add (.add (.cst 0 ) (.var 0)) (.var 1)
 
-#eval testRewrite ex2 r3 1
 example : rewriteAt ex2 1 (m, r3) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -803,7 +791,6 @@ example : rewriteAt ex2 1 (m, r3) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
 
-#eval testRewrite ex2 r3 2
 example : rewriteAt ex2 2 (m, r3) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -816,7 +803,6 @@ example : rewriteAt ex2 2 (m, r3) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
 
-#eval testRewrite ex2 r3 3
 example : rewriteAt ex2 3 (m, r3) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
@@ -829,7 +815,6 @@ example : rewriteAt ex2 3 (m, r3) = (
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
 
-#eval testRewrite ex2 r3 4
 example : rewriteAt ex2 4 (m, r3) = (
   Com.let Ty.nat (Expr.cst 1) <|
      .let Ty.nat (Expr.add 0 0) <|
