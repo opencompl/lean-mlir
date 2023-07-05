@@ -306,7 +306,7 @@ def denote (p: Com) : Value :=
   p.denote []
 
 def Lets.denote (lets : Lets) (env : State := []): State :=
-  List.foldl (λ s v => (v.denote s) :: s) env lets
+  List.foldl (λ s v => s ++ [v.denote s]) env lets
 
 structure ComFlat where
   lets : Lets -- sequence of let bindings.
@@ -738,15 +738,16 @@ theorem letsDenoteZero: Lets.denote [] = [] := rfl
 theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
 
 theorem letsDenoteTwo:
-  Lets.denote [Expr.cst 0, Expr.cst 1] [] = [Value.nat 1, Value.nat 0] := rfl
+  Lets.denote [Expr.cst 0, Expr.cst 1] [] = [Value.nat 0, Value.nat 1] := rfl
 
 theorem letsDenoteThree:
   Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
-  [Value.nat 2, Value.nat 1, Value.nat 0] := rfl
+  [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
 
+#eval  Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] []
 theorem letsDenoteFour:
   Lets.denote [Expr.cst 3, Expr.cst 5, Expr.cst 7, Expr.add 0 1] [] =
-  [Value.nat 8, Value.nat 7, Value.nat 5, Value.nat 3] := rfl
+  [Value.nat 3, Value.nat 5, Value.nat 7, Value.nat 12] := rfl
 
 
 def lets := [Expr.cst 1, .add 0 0, .add 1 0, .add 2 0]
