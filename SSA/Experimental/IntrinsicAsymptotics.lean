@@ -113,19 +113,16 @@ def Absolute.ofNat (n: Nat) : Absolute :=
 instance : OfNat Absolute n where
   ofNat := Absolute.ofNat n 
 
-structure VarRel where
-  v : Nat
-  deriving Inhabited, DecidableEq
+abbrev VarRel := Nat
 
 def formatVarRel : VarRel → Nat → Std.Format
-  | x, _=> repr (x.v)
+  | x, _ => repr x
 
 instance : Repr VarRel where
   reprPrec :=  formatVarRel
 
 def VarRel.ofNat (n: Nat) : VarRel :=
-  {v := n}
-
+  n
 
 instance : OfNat VarRel n where
   ofNat := VarRel.ofNat n 
@@ -184,7 +181,7 @@ def ex0 : Com :=
   Com.ret 0
 
 def getPos (v : VarRel) (currentPos: Nat) : Nat :=
-  v.v + currentPos + 1
+  v + currentPos + 1
 
 /-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
 free variables to their absolute position in the lets array.
@@ -217,7 +214,7 @@ def getVarAfterMapping (var : LeafVar) (lets : Lets) (m : Mapping) (inputLets : 
  | _ => panic! "var should be in mapping"
 
 def getRel (v : Nat) (array: List Expr): VarRel :=
-  { v := array.length - v - 1 }
+  VarRel.ofNat (array.length - v - 1)
 
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) := 
 match pattern with
@@ -226,17 +223,17 @@ match pattern with
     | .add a b => 
       let res := applyMapping a m lets inputLets
       let res2 := applyMapping b m (res.1) inputLets
-      let l := { v := res.2 + (res2.1.length - res.1.length)}
-      let r := { v := res2.2 }
+      let l := VarRel.ofNat (res.2 + (res2.1.length - res.1.length))
+      let r := VarRel.ofNat res2.2
       ((Expr.add l r) :: res2.1, 0)
     | .cst n => ((.cst n) :: lets, 0)
 
 def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
   let shift (v : VarRel) : VarRel :=
-    if v.v >= pos then
-      { v := v.v + delta}
+    if v >= pos then
+      VarRel.ofNat (v + delta)
     else
-      { v:= v.v }
+      v
   match inputProg with
   | .ret x => .ret (shift x)
   | .let ty e body => match e with
@@ -244,7 +241,7 @@ def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
     | .cst x => .let ty (.cst x) (shiftBy body delta (pos +1))
 
 def VarRel.inc (v : VarRel) : VarRel := 
-  { v := v.v + 1}
+  v + 1
 
 def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com := 
   let replace (v : VarRel) : VarRel :=
@@ -290,7 +287,7 @@ def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com 
       | some y => y
 
 def getVal (s : State) (v : VarRel) : Nat :=
-  get_nat (s.get! v.v)
+  get_nat (s.get! v)
 
 def Expr.denote (e : Expr) (s : State) : Value :=
   match e with
@@ -565,6 +562,7 @@ theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (Com.ret 0)).denote [] 
 
 theorem letsDenoteTwo:
   Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
+
 theorem letsComDenoteTwo:
   (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (Com.ret 0)).denote [] = Value.nat 2 := by
   rfl
