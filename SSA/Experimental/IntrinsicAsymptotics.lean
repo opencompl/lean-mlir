@@ -340,33 +340,15 @@ theorem List.foldr_concat'
 }
 
 theorem key_lemma : 
-  (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by {
-    unfold Lets.denote;
-    unfold addLetsToProgram
-    simp
-    unfold Com.denote
-    induction lets using List.list_reverse_induction
-
-    case base => {
-      simp;
-    }
-    case ind head tail IH => {
-      split at IH;
-      case h_1 inputProg x heq => {
-        simp_all
-        simp [heq];
-        simp [IH]
-        sorry 
-      }
-      case h_2 inputProg ty e body heq => {
-
-        simp[IH];
-        sorry
-      }
-    }
-}
-
-
+    (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by
+  induction lets using List.reverseRecOn generalizing env 
+  case H0 =>
+    simp [addLetsToProgram, Com.denote, Lets.denote]
+  case H1 new_let lets ih =>
+    rw [addLetsToProgram] at ih
+    rw [addLetsToProgram, List.foldl_append, List.foldl_cons,
+      List.foldl_nil, Com.denote, ih]
+    simp [Lets.denote]
 
 -- consider using https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldr_hom%E2%82%82
 -- or https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldrRecOn
