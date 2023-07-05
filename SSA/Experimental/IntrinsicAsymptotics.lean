@@ -332,27 +332,9 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
                      Value.nat (a_val + b_val)
     | .var v => s.get! v
 
-@[simp]
-theorem List.foldl_concat
-  (f: β → α → β) (b: β) (x: α) (xs: List α) :
-  List.foldl f b (xs ++ [x]) = f (List.foldl f b xs) x := by
-    simp only [List.foldl_append, List.foldl]
-
-@[simp]
-theorem List.foldr_concat
-  (f: α → β → β) (b: β) (x: α) (xs: List α) :
-  List.foldr f b (xs ++ [x]) = (List.foldr f (f x b) xs) := by
-    simp only [List.foldr_append, List.foldr]
-
 theorem key_lemma : 
     (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by
-  induction lets using List.reverseRecOn generalizing env 
-  case H0 =>
-    simp [addLetsToProgram, Com.denote, Lets.denote]
-  case H1 new_let lets ih =>
-    rw [addLetsToProgram] at ih
-    rw [addLetsToProgram, List.foldl_concat, Com.denote, ih]
-    simp [Lets.denote]
+  induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
 -- consider using https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldr_hom%E2%82%82
 -- or https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldrRecOn
