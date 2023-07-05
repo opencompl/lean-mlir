@@ -339,39 +339,8 @@ theorem key_lemma :
     (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by
   induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
--- consider using https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldr_hom%E2%82%82
--- or https://leanprover-community.github.io/mathlib4_docs/Mathlib/Data/List/Basic.html#List.foldrRecOn
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
-  unfold flatToTree
-  unfold ComFlat.denote
-  unfold denote
-  unfold Com.denote
-  unfold addLetsToProgram
-  unfold Lets.denote
- 
-  induction flat.lets
-  case nil =>
-    rfl
-  case cons =>
-    simp_all
-    rename_i head tail tail_ih
-    split at tail_ih
-    case h_1 =>
-      rename_i inputProg'  x heq
-      simp [heq]
-      simp_all
-      unfold Expr.denote
-      simp
-      unfold Com.denote
-      simp
-      sorry
-    case h_2 =>
-      rename_i inputProg ty e body heq
-      simp [heq]
-      simp_all
-
-      
-      sorry
+  unfold flatToTree denote; simp [key_lemma]; rfl
 
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
