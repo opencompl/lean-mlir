@@ -183,8 +183,6 @@ def ex0 : Com :=
   Com.let .nat (.add 3 0) <|
   Com.ret 0
 
-
-
 def getPos (v : VarRel) (currentPos: Nat) : Nat :=
   v.v + currentPos + 1
 
@@ -206,7 +204,6 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
         matchVar lets (getPos b varPos) b' mapping
     | _ => none 
 
-#eval matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0 (.add (.var 0) (.add (.var 1) (.var 2)))
 example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0 
          (.add (.var 0) (.add (.var 1) (.var 2))) =
   some [(2, 2), (1, 3), (0, 3)]:= rfl
@@ -263,14 +260,9 @@ def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
-  dbg_trace "applyRewrite"
   let varPos := 0 
-  dbg_trace repr lets
   let mapping ← matchVar lets varPos rewrite.1
-  dbg_trace repr lets
-  dbg_trace repr mapping
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
-  dbg_trace repr newLets
   let newProgram := inputProg
   let newProgram := shiftBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newVar))
