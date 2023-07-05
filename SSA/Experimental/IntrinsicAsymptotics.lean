@@ -357,30 +357,36 @@ theorem letsTheorem
    denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
       induction matchExpr generalizing m₀ m pos
       unfold applyMapping
-      simp
-      case cst =>
+      case cst n =>
         simp [matchVar] at h1
         split at h1
-        rename_i x n heq
-        · rw [hm₀]
-          split at h1 <;> unfold applyMapping <;> simp
-        · contradiction
+        case h_1 x n' heq =>
+          rw [hm₀]; unfold applyMapping <;> simp
+        case h_2 =>
+          contradiction
       
       case add a b a_ih b_ih =>
         simp [matchVar] at h1
         split at h1
-        rename_i x avar bvar heq
-        · 
+        case h_1 x avar bvar heq =>
           erw [Option.bind_eq_some] at h1; rcases h1 with ⟨m_intermediate, ⟨h1, h2⟩⟩
           have a_fold := a_ih h1
           have b_fold := b_ih h2
           rw [hm₀]
           unfold applyMapping
           dsimp
-
           sorry
-        sorry
-      sorry
+
+        case h_2 x x' =>
+          sorry
+
+      case var idx =>
+        simp [matchVar] at h1
+        split at h1
+        case h_1 x n' heq =>
+          rw [hm₀]; unfold applyMapping <;> simp
+        case h_2 x heq =>
+          rw [hm₀]; unfold applyMapping <;> simp
           
 theorem addLetsToProgramBaseCase: denote (addLetsToProgram [] p) = denote p := rfl
 
