@@ -41,9 +41,6 @@ inductive ICom : List Ty → Ty → Type where
   | let (e : IExpr Γ α) (body : ICom (α :: Γ) β) : ICom Γ β
   deriving Repr
 
-set_option profiler true
-set_option pp.proofs.withType false  -- hide `Fin` statements
-
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
