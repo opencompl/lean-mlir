@@ -62,7 +62,7 @@ def get_nat : Value → Nat
   | .nat x => x
   | .bool _ => panic! "boolean values not supported"
 
-def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value 
+def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value
 | .nat n, _, _ => .nat n
 | .add a b, ll, h => let a_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
                      let b_val : Nat := get_nat (ll.get (Fin.mk b (h ▸ b.isLt)))
@@ -111,7 +111,7 @@ def Absolute.ofNat (n: Nat) : Absolute :=
   {v := n}
 
 instance : OfNat Absolute n where
-  ofNat := Absolute.ofNat n 
+  ofNat := Absolute.ofNat n
 
 abbrev VarRel := Nat
 
@@ -125,7 +125,7 @@ def VarRel.ofNat (n: Nat) : VarRel :=
   n
 
 instance : OfNat VarRel n where
-  ofNat := VarRel.ofNat n 
+  ofNat := VarRel.ofNat n
 
 inductive Expr : Type
   | cst (n : Nat)
@@ -160,7 +160,7 @@ def ex' : Com :=
   Com.let .nat (.add 5 5) <|
   Com.ret 0
 
-open Lean in 
+open Lean in
 
 def formatCom : Com → Nat → Std.Format
   | .ret v, _=> "  .ret " ++ (repr v)
@@ -187,7 +187,7 @@ def getPos (v : VarRel) (currentPos: Nat) : Nat :=
 free variables to their absolute position in the lets array.
 -/
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
-  match matchExpr with 
+  match matchExpr with
   | .var x => match mapping.lookup x with
     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
     | none => (x, varPos)::mapping
@@ -195,13 +195,13 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
     | .cst n' => if n = n' then some mapping else none
     | _ => none
   | .add a' b' =>
-    match lets[varPos]! with 
+    match lets[varPos]! with
     | .add a b => do
         let mapping ← matchVar lets (getPos a varPos) a' mapping
         matchVar lets (getPos b varPos) b' mapping
-    | _ => none 
+    | _ => none
 
-example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0 
+example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0
          (.add (.var 0) (.add (.var 1) (.var 2))) =
   some [(2, 2), (1, 3), (0, 3)]:= rfl
 
@@ -216,11 +216,11 @@ def getVarAfterMapping (var : LeafVar) (lets : Lets) (m : Mapping) (inputLets : 
 def getRel (v : Nat) (array: List Expr): VarRel :=
   VarRel.ofNat (array.length - v - 1)
 
-def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) := 
+def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) :=
 match pattern with
-    | .var v => 
+    | .var v =>
       (lets, getVarAfterMapping v lets m inputLets)
-    | .add a b => 
+    | .add a b =>
       let res := applyMapping a m lets inputLets
       let res2 := applyMapping b m (res.1) inputLets
       let l := VarRel.ofNat (res.2 + (res2.1.length - res.1.length))
@@ -228,7 +228,7 @@ match pattern with
       ((Expr.add l r) :: res2.1, 0)
     | .cst n => ((.cst n) :: lets, 0)
 
-def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com := 
+def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
   let shift (v : VarRel) : VarRel :=
     if v >= pos then
       VarRel.ofNat (v + delta)
@@ -240,16 +240,16 @@ def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
     | .add a b => .let ty (Expr.add (shift a) (shift b)) (shiftBy body delta (pos+1))
     | .cst x => .let ty (.cst x) (shiftBy body delta (pos +1))
 
-def VarRel.inc (v : VarRel) : VarRel := 
+def VarRel.inc (v : VarRel) : VarRel :=
   v + 1
 
-def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com := 
+def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com :=
   let replace (v : VarRel) : VarRel :=
      if old = v then new else v
   match inputProg with
   | .ret x => .ret (replace x)
   | .let ty e body => match e with
-    | .add a b => 
+    | .add a b =>
       .let ty (Expr.add (replace a) (replace b)) (replaceUsesOfVar body (old.inc) (new.inc))
     | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
 
@@ -257,7 +257,7 @@ def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
-  let varPos := 0 
+  let varPos := 0
   let mapping ← matchVar lets varPos rewrite.1
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
@@ -278,10 +278,10 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
            rewriteAt' body (depth - 1) lets rewrite
 
 def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Option Com :=
-    rewriteAt' inputProg depth [] rewrite 
+    rewriteAt' inputProg depth [] rewrite
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
-    let x := rewriteAt inputProg depth rewrite 
+    let x := rewriteAt inputProg depth rewrite
     match x with
       | none => inputProg
       | some y => y
@@ -324,7 +324,7 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
                      Value.nat (a_val + b_val)
     | .var v => s.get! v
 
-theorem key_lemma : 
+theorem key_lemma :
     (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by
   induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
@@ -334,7 +334,7 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 theorem shifting:
 denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
 
-theorem letsTheorem 
+theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar lets pos matchExpr m₀ = some m)
  (hlets: lets.length > 0)
@@ -348,7 +348,7 @@ theorem letsTheorem
       unfold applyMapping
       case cst n =>
         simp [applyMapping, hm₀]
-      
+
       case add a b a_ih b_ih =>
         simp [matchVar] at h1
         split at h1
@@ -367,14 +367,41 @@ theorem letsTheorem
 
       case var idx =>
         simp [applyMapping, hm₀]
-          
+
+
+-- We probably need to know 'Com.denote body env' is well formed. We want to say that if
+-- body succeeds at env, then it succeeds in a larger env.
+-- Actually this is not even true, we need to shift body.
+-- @grosser: since this theorem cannot be true, we see that denoteAddLetsToProgram
+-- also cannot possibly be true.
+theorem Com_denote_invariant_under_extension_false_theorem :
+   Com.denote body env = Com.denote  body (v :: env) := by {
+   revert env
+   induction body;
+   case ret => {
+    intros env; simp[Com.denote];
+    simp[getVal];
+    sorry
+   }
+   case _ => sorry
+}
+
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
+  simp[denote]
+  simp[key_lemma (lets := lets) (xs := body)]
+  simp[key_lemma]
+  simp[Com.denote]
+  generalize H : (Lets.denote lets) = env'
+  -- we know that this theorem must be false, because it asserts that
+  -- ⊢ Com.denote body env' = Com.denote body (Expr.denote e env' :: env')
+  -- but this is absurd, because if body were a variable, we need to at least shift the
+  -- variables in the RHS.
   sorry -- The statement is likely not complete enough to be proven.
-  
+
 
 theorem rewriteAtApplyRewriteCorrect
- (hpos: pos = 0) : 
+ (hpos: pos = 0) :
  rewriteAt' body pos lets rwExpr = applyRewrite (lets ++ [e]) body rwExpr := by
   sorry
 
@@ -382,7 +409,7 @@ theorem rewriteAtAppend:
   rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (lets ++ [e]) rwExpr := sorry
 
 theorem rewriteAtCorrect'
-  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
   (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
   denote p' = denote (addLetsToProgram lets p) := by
@@ -396,21 +423,21 @@ theorem rewriteAtCorrect'
       sorry
   sorry
 
-  
 
-theorem rewriteAtCorrect 
-  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+
+theorem rewriteAtCorrect
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
   (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
   denote p' = denote (addLetsToProgram lets p) := by
-  induction p 
+  induction p
   case «let» ty e body body_ih =>
     unfold rewriteAt' at successful
     split at successful
     case inl hpos =>
       rw [body_ih]
       · rw [denoteAddLetsToProgram] --weak
-      · rw [←successful] 
+      · rw [←successful]
         dsimp
         sorry
         -- rw [rewriteAtApplyRewriteCorrect] -- weak
@@ -419,7 +446,7 @@ theorem rewriteAtCorrect
       dsimp
       rw [body_ih]
       · rw [denoteAddLetsToProgram] -- weak
-      · rw [←successful] 
+      · rw [←successful]
         dsimp
         simp at successful
         simp at body_ih
@@ -431,7 +458,7 @@ theorem rewriteAtCorrect
         · simp_all
           sorry
 
-          
+
         · simp_all
           contradiction
   case ret v =>
@@ -439,7 +466,7 @@ theorem rewriteAtCorrect
     contradiction
 
 theorem preservesSemantics
-  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec) 
+  (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s):
   denote (rewrite p pos rwExpr) = denote p := by
   unfold rewrite
@@ -606,12 +633,12 @@ theorem mv20:
   some [(2, 2), (1, 3), (0, 3)]:= rfl
 
 def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
-  let new := rewriteAt p pos (m, r) 
+  let new := rewriteAt p pos (m, r)
   dbg_trace "# Before"
   dbg_trace repr p
   match new with
     | none => (Com.ret 0) -- Failure
-    | some y => 
+    | some y =>
       dbg_trace ""
       dbg_trace "# After"
       dbg_trace repr y
