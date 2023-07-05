@@ -348,8 +348,8 @@ theorem key_lemma :
   (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by {
     unfold Lets.denote;
     unfold addLetsToProgram
-    unfold Com.denote
     simp
+    unfold Com.denote
     induction lets using List.list_reverse_induction
     --induction lets
 
@@ -360,16 +360,16 @@ theorem key_lemma :
       split at IH;
       case h_1 inputProg x heq => {
         simp_all
-        rw [← foldr_snoc]
+
 
 
         simp [heq];
-        
+        sorry 
       }
       case h_2 inputProg ty e body heq => {
 
-        simp[foldr_snoc];
         simp[IH];
+        sorry
       }
     }
 }
@@ -388,16 +388,15 @@ theorem denoteFlatDenoteTree' : denote (flatToTree flat) = flat.denote := by {
   -- use a different IH to reverse the order
   induction flat.lets using List.list_reverse_induction
   case base => {
-    simp[getVal];
+    sorry
   }
   case ind head tail IH => {
-    simp[foldr_snoc];
     simp[IH];
     split at IH
     case h_1 => {
       simp_all
       simp[getVal];
-
+      sorry
     }
     sorry
   }
@@ -428,7 +427,6 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
       rename_i inputProg'  x heq
       simp [heq]
       simp_all
-      rw [← tail_ih]
       unfold Expr.denote
       simp
       unfold Com.denote
@@ -445,12 +443,12 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 theorem letsTheorem 
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar lets pos matchExpr m₀ = some m)
- (hlets: lets.size > 0)
- (hm₀: denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (lets.size - pos - 1) ))) =
+ (hlets: lets.length > 0)
+ (hm₀: denote (addLetsToProgram lets (Com.ret (VarRel.ofNat (lets.length - pos - 1) ))) =
        denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
               (Com.ret 0))):
 
-   denote (addLetsToProgram (lets) (Com.ret (VarRel.ofNat (lets.size - pos - 1)))) =
+   denote (addLetsToProgram (lets) (Com.ret (VarRel.ofNat (lets.length - pos - 1)))) =
    denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
       induction matchExpr generalizing m₀ m pos
       unfold applyMapping
@@ -476,7 +474,9 @@ theorem letsTheorem
           dsimp
 
           sorry
-
+        sorry
+      sorry
+      
 /--
 
 
@@ -497,24 +497,6 @@ dd
 -/
           
           
-          unfold getRel
-          unfold denote
-          unfold Com.denote
-          unfold Expr.denote
-
-
-
-          simp_all
-          sorry
-        
-        · contradiction
-
-      case var =>
-        simp [matchVar] at h1
-        split at h1
-        rename_i x n heq
-        · split at h1 <;> rw [hm₀] <;> unfold applyMapping <;> simp
-        · rw [hm₀]; unfold applyMapping; simp
 
 theorem foldr_zero (α : Type) (f : α → β → β) : Array.foldr f base (#[]: Array α) (Array.size (#[]: Array α )) = base := by
   rfl
@@ -523,7 +505,7 @@ theorem foldr_zero' (α : Type) (f : α → β → β) : Array.foldr f base (#[]
   rfl
 
 theorem addLetsToProgramBaseCase:
-  denote (addLetsToProgram #[] p) = denote p := by
+  denote (addLetsToProgram [] p) = denote p := by
   rfl
 
 theorem denoteAddLetsToProgram:
@@ -533,7 +515,7 @@ theorem denoteAddLetsToProgram:
   unfold Com.denote
   dsimp
   simp [Array.foldr_eq_foldr_data] 
-  induction lets.data
+  induction lets
   simp_all
   cases body
   · simp
@@ -552,49 +534,19 @@ theorem denoteAddLetsToProgram:
   unfold Com.denote
   simp_all
   · simp_all
+    sorry
     
   · simp_all
-    rfl
     sorry
-  · simp
-    rfl
-    sorry 
-  rw [foldr_zero']
-  rfl
-
-
-  simp
-  unfold Com.denote
-  unfold getVal
-  unfold get_nat
-  dsimp
-  · sorry
-  rename_i head tail ih
-  apply ih
   
-
-
-
-
-  induction lets
-
-  simp [array foldr]
-  unfold addLetsToProgram'
-  dsimp
-
-  induction lets.data
-  simp 
-  induction lets generalizing body
 
 theorem rewriteAtApplyRewriteCorrect
  (hpos: pos = 0) : 
- rewriteAt' body pos lets rwExpr = applyRewrite (Array.push lets e) body rwExpr := by
-unfold rewriteAt'
-simp_all
-sorry
+ rewriteAt' body pos lets rwExpr = applyRewrite (lets ++ [e]) body rwExpr := by
+  sorry
 
 theorem rewriteAtAppend:
-  rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (Array.push lets e) rwExpr := sorry
+  rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (lets ++ [e]) rwExpr := sorry
 
 /--
  (matchExpr : ExprRec) (lets : Lets)
@@ -621,6 +573,8 @@ theorem rewriteAtCorrect'
     · contradiction
     · simp at successful
       rename_i inputProg ty e body
+      sorry
+  sorry
 
   
 
@@ -638,7 +592,8 @@ theorem rewriteAtCorrect
       · rw [denoteAddLetsToProgram] --weak
       · rw [←successful] 
         dsimp
-        rw [rewriteAtApplyRewriteCorrect] -- weak
+        sorry
+        -- rw [rewriteAtApplyRewriteCorrect] -- weak
 
     case inr hpos =>
       dsimp
@@ -654,6 +609,7 @@ theorem rewriteAtCorrect
         cases body
         simp_all
         · simp_all
+          sorry
 
           
         · simp_all
@@ -673,8 +629,9 @@ theorem preservesSemantics
   · rfl
   · rw [rewriteAtCorrect (successful := by assumption)]
     simp [addLetsToProgram]
-    apply addLetsToProgramBaseCase
-    apply rewriteCorrect
+    sorry
+    -- apply addLetsToProgramBaseCase
+    -- apply rewriteCorrect
 
 def ex1 : Com :=
   Com.let .nat (.cst 1) <|
@@ -689,6 +646,7 @@ def ex2 : Com :=
   Com.let .nat (.add 1 1) <|
   Com.ret 0
 
+/-
 def ex22 : ComFlat :=
   { lets := #[
      (.cst 1),
@@ -699,6 +657,7 @@ def ex22 : ComFlat :=
    , ret := 0 }
 
 #eval ex22.denote = denote ex2
+-/
 
 -- a + b => b + a
 def m := ExprRec.add (.var 0) (.var 1)
@@ -836,68 +795,3 @@ example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
 
 #eval testRewrite ex2 r3 4
 example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
-
-  
-
-macro "mk_lets'" n:num init:term : term =>
-  n.getNat.foldRevM (fun n stx => `(Com.let .nat (.add $(Lean.quote n) $(Lean.quote n)) $stx)) init
-
-macro "mk_com'" n:num : term =>
-`(Com.let .nat (.cst 0) <|
-  mk_lets' $n
-  Com.ret .nat (.add 0 0))
-
-macro "mk_ex'" n:num : command =>
-`(theorem t : Com :=
-  mk_com' $n)
-
--- just for comparison, creating untyped terms takes insignificant time
-mk_ex' 50
-mk_ex' 100
-set_option maxRecDepth 10000 in
-mk_ex' 1000
-
--- Stubs of the desired program pipeline
-
-def parse : String → Except String Com := sorry
-
-def check : Com → Except String (Σ ty, ICom [] ty) := go []
-where
-  go (Γ : Ctxt) : Com → Except String (Σ ty, ICom Γ ty)
-    | .ret e => do
-      let e ← checkExpr Γ e
-      return ⟨ty, .ret e⟩
-    | .let ty e body => do
-      let e ← checkExpr Γ ty e
-      let ⟨ty, body⟩ ← go (ty :: Γ) body
-      return ⟨ty, .let e body⟩
-  checkExpr (Γ : Ctxt) : (ty : Ty) → Expr → Except String (IExpr Γ ty)
-    | .nat, .cst n => .ok (.nat n)
-    | .bool, .cst _ => .error "type error"
-    | ty,   .add a b =>
-      if h : a < Γ.length && b < Γ.length then
-        let v_a : Fin Γ.length := sorry -- ⟨v_a, h⟩
-        if h_a : ty = Γ.get v_a then sorry /-h ▸ .ok (.add v_a v_b)-/ else .error "type error"
-      else .error "var error"
-
-set_option pp.proofs true in
-set_option profiler.threshold 10
-#reduce check ex'
-/-
-#eval check ex'
-
--- run-time execution should still be quadratic because of `List.get`
-#eval check (mk_com' 100)
-#eval check (mk_com' 200)
-#eval check (mk_com' 300)
-#eval check (mk_com' 400)-/
-
-def transform : ICom [] ty → ICom [] ty := sorry
-def print : ICom [] ty → String := sorry
-
-
-def main (args : List String) : IO Unit := do
-  let p ← IO.FS.readFile args[0]!
-  let p ← IO.ofExcept (parse p)
-  let ⟨_ty, p⟩ ← IO.ofExcept (check p)
-  IO.print (print (transform p))
