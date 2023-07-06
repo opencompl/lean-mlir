@@ -234,16 +234,14 @@ def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
 
 /-- unfolding lemma for `addLetsToProgram` -/
 theorem addLetsToProgram_cons (e : Expr) (ls : Lets) (c : Com) :
-  addLetsToProgram (e :: ls) c = addLetsToProgram ls (Com.let e c) := by {
-    simp[addLetsToProgram]
-}
+  addLetsToProgram (e :: ls) c = addLetsToProgram ls (Com.let e c) := by
+    simp [addLetsToProgram]
 
 /-- unfolding lemma for `addLetsToProgram` -/
 theorem addLetsToProgram_snoc (e : Expr) (ls : Lets) (c : Com) :
   addLetsToProgram (List.concat ls e) c =
-  Com.let e (addLetsToProgram ls c) := by {
-    simp[addLetsToProgram]
-}
+  Com.let e (addLetsToProgram ls c) := by
+    simp [addLetsToProgram]
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := 0
@@ -321,45 +319,38 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold flatToTree denote; simp [key_lemma]; rfl
 
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
-  simp[shiftVarBy]
+  simp [shiftVarBy]
   intros _H
-  simp[VarRel.ofNat]
+  simp [VarRel.ofNat]
 
-theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by  {
+theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by
   induction e
-  case cst => {
-    simp[Expr.denote, shiftExprBy]
-  }
-  case op => {
-    simp[Expr.denote, shiftExprBy, denoteVar_shift_zero]
-  }
-}
+  case cst =>
+    simp [Expr.denote, shiftExprBy]
+  case op =>
+    simp [Expr.denote, shiftExprBy, denoteVar_shift_zero]
 
-theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote com s := by {
+theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote com s := by
  revert pos s
- induction com;
- case ret => {
-   simp[Com.denote, denoteVar_shift_zero]
- }
- case _ e body IH => {
-   simp[Com.denote]
-   simp[IH]
-   simp[denoteExpr_shift_zero]
- }
-}
+ induction com
+ case ret =>
+   simp [Com.denote, denoteVar_shift_zero]
+
+ case _ e body IH =>
+   simp [Com.denote]
+   simp [IH]
+   simp [denoteExpr_shift_zero]
 
 /-
 theorem denoteCom_shift_snoc :
   Com.denote (addLetsToProgram (List.concat ls e) c) σ =
-  Com.denote (addLetsToProgram ls c) () := by {
-}
+  Com.denote (addLetsToProgram ls c) () := by
 -/
 
 /-
 theorem denoteCom_shift_cons :
   Com.denote (addLetsToProgram (List.concat ls e) c) σ =
-  Com.denote (addLetsToProgram ls c) () := by {
-}
+  Com.denote (addLetsToProgram ls c) () := by
 -/
 
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
@@ -367,22 +358,19 @@ Anyway, proof outline: prove a theorem that tells us how the index changes when 
 binding. Push the `denote` through and then rewrite across the single index change. -/
 theorem shifting:
   Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) s =
-  Com.denote p s := by {
+  Com.denote p s := by
   revert p s
   induction lets
-  case nil => {
-    simp[List.length]
-    simp[addLetsToProgram]
-    simp[denoteCom_shift_zero]
-  }
-  case cons x xs IH => {
-   simp[List.length]
-   simp[addLetsToProgram_cons]
-   simp[IH]
-   sorry
-  }
+  case nil =>
+    simp [List.length]
+    simp [addLetsToProgram]
+    simp [denoteCom_shift_zero]
 
-}
+  case cons x xs IH =>
+   simp [List.length]
+   simp [addLetsToProgram_cons]
+   simp [IH]
+   sorry
 
 theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
@@ -424,23 +412,22 @@ theorem letsTheorem
 -- @grosser: since this theorem cannot be true, we see that denoteAddLetsToProgram
 -- also cannot possibly be true.
 theorem Com_denote_invariant_under_extension_false_theorem :
-   Com.denote body s = Com.denote  body (v :: s) := by {
+   Com.denote body s = Com.denote  body (v :: s) := by
    revert s
-   induction body;
-   case ret => {
-    intros env; simp[Com.denote];
-    simp[getVal];
+   induction body
+   case ret =>
+    intros env; simp [Com.denote]
+    simp [getVal]
     sorry
-   }
+
    case _ => sorry
-}
 
 theorem denoteAddLetsToProgram:
   denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let e body)) := by
-  simp[denote]
-  simp[key_lemma (lets := lets) (xs := body)]
-  simp[key_lemma]
-  simp[Com.denote]
+  simp [denote]
+  simp [key_lemma (lets := lets) (xs := body)]
+  simp [key_lemma]
+  simp [Com.denote]
   generalize H : (Lets.denote lets) = env'
   -- we know that this theorem must be false, because it asserts that
   -- ⊢ Com.denote body env' = Com.denote body (Expr.denote e env' :: env')
