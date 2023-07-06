@@ -234,9 +234,9 @@ def shiftVarBy (v : VarRel) (delta : ℕ) (pos : ℕ) : VarRel :=
       VarRel.ofNat (v + delta)
     else
       v
-  
+
 /-- shift variables after `pos` by `delta` in expr -/
-def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr := 
+def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
  match e with
     | .add a b => .add (shiftVarBy a delta pos) (shiftVarBy b delta pos)
     | .cst x => (.cst x)
@@ -262,6 +262,19 @@ def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com :=
 
 def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
+
+/-- unfolding lemma for `addLetsToProgram` -/
+theorem addLetsToProgram_cons (e : Expr) (ls : Lets) (c : Com) :
+  addLetsToProgram (e :: ls) c = addLetsToProgram ls (Com.let .nat e c) := by {
+    simp[addLetsToProgram]
+}
+
+/-- unfolding lemma for `addLetsToProgram` -/
+theorem addLetsToProgram_snoc (e : Expr) (ls : Lets) (c : Com) :
+  addLetsToProgram (List.concat ls e) c =
+  Com.let .nat e (addLetsToProgram ls c) := by {
+    simp[addLetsToProgram]
+}
 
 def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) : Option Com := do
   let varPos := 0
@@ -340,14 +353,14 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 
 
 
-theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by 
+theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp[shiftVarBy]
-  intros _H 
+  intros _H
   simp[VarRel.ofNat]
 
 
 theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) st = Expr.denote e st := by  {
-  induction e 
+  induction e
   case cst => {
     simp[Expr.denote, shiftExprBy]
   }
@@ -355,7 +368,7 @@ theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) st = Expr.denot
     simp[Expr.denote, shiftExprBy, denoteVar_shift_zero]
   }
 }
-  
+
 theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) st = Com.denote com st := by {
  revert pos st
  induction com;
@@ -369,11 +382,26 @@ theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) st = Com.denote 
  }
 }
 
+/-
+theorem denoteCom_shift_snoc :
+  Com.denote (addLetsToProgram (List.concat ls e) c) σ =
+  Com.denote (addLetsToProgram ls c) () := by {
+}
+-/
+
+/-
+theorem denoteCom_shift_cons :
+  Com.denote (addLetsToProgram (List.concat ls e) c) σ =
+  Com.denote (addLetsToProgram ls c) () := by {
+}
+-/
+
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
-Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let 
+Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
 binding. Push the `denote` through and then rewrite across the single index change. -/
 theorem shifting:
-Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) env = Com.denote p env := by {
+  Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) env =
+  Com.denote p env := by {
   revert p env
   induction lets
   case nil => {
@@ -383,9 +411,11 @@ Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) env = Com.denote
   }
   case cons x xs IH => {
    simp[List.length]
-   sorry 
+   simp[addLetsToProgram_cons]
+   simp[IH]
+   sorry
   }
-  
+
 }
 
 theorem letsTheorem
