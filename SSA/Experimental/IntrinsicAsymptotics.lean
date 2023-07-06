@@ -320,13 +320,10 @@ theorem key_lemma :
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold flatToTree denote; simp [key_lemma]; rfl
 
-
-
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp[shiftVarBy]
   intros _H
   simp[VarRel.ofNat]
-
 
 theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by  {
   induction e
@@ -421,7 +418,6 @@ theorem letsTheorem
       case mvar idx =>
         simp [applyMapping, hm₀]
 
-
 -- We probably need to know 'Com.denote body env' is well formed. We want to say that if
 -- body succeeds at env, then it succeeds in a larger env.
 -- Actually this is not even true, we need to shift body.
@@ -452,7 +448,6 @@ theorem denoteAddLetsToProgram:
   -- variables in the RHS.
   sorry -- The statement is likely not complete enough to be proven.
 
-
 theorem rewriteAtApplyRewriteCorrect
  (hpos: pos = 0) :
  rewriteAt' body pos lets rwExpr = applyRewrite (lets ++ [e]) body rwExpr := by
@@ -475,8 +470,6 @@ theorem rewriteAtCorrect'
       rename_i inputProg e body
       sorry
   sorry
-
-
 
 theorem rewriteAtCorrect
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
