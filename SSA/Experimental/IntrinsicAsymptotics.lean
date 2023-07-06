@@ -524,48 +524,6 @@ def ex2 : Com :=
   Com.let (.op 1 1) <|
   Com.ret 0
 
-/-
-def ex22 : ComFlat :=
-  { lets := #[
-     (.cst 1),
-     (.op 0 0),
-     (.op 1 0),
-     (.op 1 1),
-     (.op 1 1)]
-   , ret := 0 }
-
-#eval ex22.denote = denote ex2
--/
-
-
-/-
-def prog_map_before : Com :=
-  %0 := cst [0, 1, 2] : !list
-  %1 := map %0 ({
-    bb^(%l1)
-      %l2 = addi %l1, 1
-      yield %l2
-  })
-
-  %2 := map %1 ({
-    bb^(%l1)
-      %l2 = addi %l1, 1
-      yield %l2
-  })
-
-def prog_map_after : Com :=
-  %0 := cst [0, 1, 2] : !list
-  %2 := map %0 ({
-    bb^(%l1)
-      %l2 = addi %l1, 1
-      %l3 = addi %l2, 1
-      yield %l3
-  })
-
-def match_strip_mining := ExprRec.map (.map (.mvar 0) (.rgn 0)) (.rgn 1))
-
--/
-
 theorem addLets: addLetsToProgram [Expr.op 0 0, Expr.cst 1] (Com.ret 0) = (
   Com.let (Expr.cst 1) <|
   Com.let (Expr.op 0 0) <|
