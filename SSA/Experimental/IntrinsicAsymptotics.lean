@@ -146,25 +146,25 @@ inductive RegTmp : Type
 
 /-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
-  | let (ty : Ty) (e : Expr) (body : Com): Com
+  | let (e : Expr) (body : Com): Com
   | ret (e : VarRel) : Com
   deriving Repr, Inhabited, DecidableEq
 
 def ex' : Com :=
-  Com.let .nat (.cst 0) <|
-  Com.let .nat (.op 0 0) <|
-  Com.let .nat (.op 1 0) <|
-  Com.let .nat (.op 2 0) <|
-  Com.let .nat (.op 3 3) <|
-  Com.let .nat (.op 4 4) <|
-  Com.let .nat (.op 5 5) <|
+  Com.let (.cst 0) <|
+  Com.let (.op 0 0) <|
+  Com.let (.op 1 0) <|
+  Com.let (.op 2 0) <|
+  Com.let (.op 3 3) <|
+  Com.let (.op 4 4) <|
+  Com.let (.op 5 5) <|
   Com.ret 0
 
 open Lean in
 
 def formatCom : Com → Nat → Std.Format
-  | .ret v, _=> "  .ret " ++ (repr v)
-  | .let ty e body, n=> "  .let " ++ (repr ty) ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
+  | .ret v, _ => "  .ret " ++ (repr v)
+  | .let e body, n => "  .let " ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
 
 instance : Repr Com where
   reprPrec :=  formatCom
@@ -173,12 +173,12 @@ abbrev Mapping := List (MVarId × Nat)
 abbrev Lets := List Expr
 
 def ex0 : Com :=
-  Com.let .nat (.cst 0) <|
-  Com.let .nat (.op 0 0) <|
-  Com.let .nat (.op 1 0) <|
-  Com.let .nat (.op 2 0) <|
-  Com.let .nat (.op 3 0) <|
-  Com.ret 0
+  Com.let (.cst 0) <|
+  Com.let (.op 0 0) <|
+  Com.let (.op 1 0) <|
+  Com.let (.op 2 0) <|
+  Com.let (.op 3 0) <|
+  Com.ret 0 
 
 def getPos (v : VarRel) (currentPos: Nat) : Nat :=
   v + currentPos + 1
@@ -188,7 +188,7 @@ free variables to their absolute position in the lets array.
 -/
 def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
   match matchExpr with
-  | .var x => match mapping.lookup x with
+  | .mvar x => match mapping.lookup x with
     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
     | none => (x, varPos)::mapping
   | .cst n => match lets[varPos]! with
@@ -202,7 +202,7 @@ def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping 
     | _ => none
 
 example: matchVar [.op 2 0, .op 1 0, .op 0 0, .cst 1] 0
-         (.op (.var 0) (.op (.var 1) (.var 2))) =
+         (.op (.mvar 0) (.op (.mvar 1) (.mvar 2))) =
   some [(2, 2), (1, 3), (0, 3)]:= rfl
 
 def getVarAfterMapping (var : MVarId) (lets : Lets) (m : Mapping) (inputLets : Nat) : Nat :=
@@ -218,7 +218,7 @@ def getRel (v : Nat) (array: List Expr): VarRel :=
 
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) :=
 match pattern with
-    | .var v =>
+    | .mvar v =>
       (lets, getVarAfterMapping v lets m inputLets)
     | .op a b =>
       let res := applyMapping a m lets inputLets
@@ -245,7 +245,7 @@ def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
 def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
   match inputProg with
   | .ret x => .ret (shiftVarBy x delta (pos+1))
-  | .let ty e body => .let ty (shiftExprBy e delta pos) (shiftComBy body delta (pos+1))
+  | .let e body => .let (shiftExprBy e delta pos) (shiftComBy body delta (pos+1))
 
 def VarRel.inc (v : VarRel) : VarRel :=
   v + 1
@@ -255,24 +255,24 @@ def replaceUsesOfVar (inputProg : Com) (old: VarRel) (new : VarRel) : Com :=
      if old = v then new else v
   match inputProg with
   | .ret x => .ret (replace x)
-  | .let ty e body => match e with
+  | .let e body => match e with
     | .op a b =>
-      .let ty (Expr.op (replace a) (replace b)) (replaceUsesOfVar body (old.inc) (new.inc))
-    | .cst x => .let ty (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
+      .let (Expr.op (replace a) (replace b)) (replaceUsesOfVar body (old.inc) (new.inc))
+    | .cst x => .let (.cst x) (replaceUsesOfVar body (old.inc) (new.inc))
 
 def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
-  newLets.foldl (λ acc e => Com.let .nat e acc) oldProgram
+  newLets.foldl (λ acc e => Com.let e acc) oldProgram
 
 /-- unfolding lemma for `addLetsToProgram` -/
 theorem addLetsToProgram_cons (e : Expr) (ls : Lets) (c : Com) :
-  addLetsToProgram (e :: ls) c = addLetsToProgram ls (Com.let .nat e c) := by {
+  addLetsToProgram (e :: ls) c = addLetsToProgram ls (Com.let e c) := by {
     simp[addLetsToProgram]
 }
 
 /-- unfolding lemma for `addLetsToProgram` -/
 theorem addLetsToProgram_snoc (e : Expr) (ls : Lets) (c : Com) :
   addLetsToProgram (List.concat ls e) c =
-  Com.let .nat e (addLetsToProgram ls c) := by {
+  Com.let e (addLetsToProgram ls c) := by {
     simp[addLetsToProgram]
 }
 
@@ -290,7 +290,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
 def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
   match inputProg with
     | .ret _ => none
-    | .let _ expr body =>
+    | .let expr body =>
         let lets := expr :: lets
         if depth = 0 then
            applyRewrite lets body rewrite
@@ -317,7 +317,7 @@ def Expr.denote (e : Expr) (s : State) : Value :=
 def Com.denote (c : Com) (s : State) : Value :=
   match c with
     | .ret v => .nat (getVal s v)
-    | .let _ e body => denote body (e.denote s :: s) -- introduce binder.
+    | .let e body => denote body (e.denote s :: s) -- introduce binder.
 
 def denote (p: Com) : Value :=
   p.denote []
@@ -342,7 +342,7 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
     | .op a b => let a_val := get_nat (a.denote s)
                      let b_val := get_nat (b.denote s)
                      Value.nat (a_val + b_val)
-    | .var v => s.get! v
+    | .mvar v => s.get! v
 
 theorem key_lemma :
     (addLetsToProgram lets xs).denote s = xs.denote (lets.denote s) := by
@@ -375,7 +375,7 @@ theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote c
  case ret => {
    simp[Com.denote, denoteVar_shift_zero]
  }
- case _ ty e body IH => {
+ case _ e body IH => {
    simp[Com.denote]
    simp[IH]
    simp[denoteExpr_shift_zero]
@@ -449,7 +449,7 @@ theorem letsTheorem
         case h_2 x x' =>
           contradiction
 
-      case var idx =>
+      case mvar idx =>
         simp [applyMapping, hm₀]
 
 
@@ -471,7 +471,7 @@ theorem Com_denote_invariant_under_extension_false_theorem :
 }
 
 theorem denoteAddLetsToProgram:
-  denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let ty e body)) := by
+  denote (addLetsToProgram lets body) = denote (addLetsToProgram lets (Com.let e body)) := by
   simp[denote]
   simp[key_lemma (lets := lets) (xs := body)]
   simp[key_lemma]
@@ -503,7 +503,7 @@ theorem rewriteAtCorrect'
     split at successful
     · contradiction
     · simp at successful
-      rename_i inputProg ty e body
+      rename_i inputProg e body
       sorry
   sorry
 
@@ -515,7 +515,7 @@ theorem rewriteAtCorrect
   (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
   denote p' = denote (addLetsToProgram lets p) := by
   induction p
-  case «let» ty e body body_ih =>
+  case «let» e body body_ih =>
     unfold rewriteAt' at successful
     split at successful
     case inl hpos =>
@@ -563,16 +563,16 @@ theorem preservesSemantics
     apply rewriteCorrect
 
 def ex1 : Com :=
-  Com.let .nat (.cst 1) <|
-  Com.let .nat (.op 0 0) <|
+  Com.let (.cst 1) <|
+  Com.let (.op 0 0) <|
   Com.ret 0
 
 def ex2 : Com :=
-  Com.let .nat (.cst 1) <|
-  Com.let .nat (.op 0 0) <|
-  Com.let .nat (.op 1 0) <|
-  Com.let .nat (.op 1 1) <|
-  Com.let .nat (.op 1 1) <|
+  Com.let (.cst 1) <|
+  Com.let (.op 0 0) <|
+  Com.let (.op 1 0) <|
+  Com.let (.op 1 1) <|
+  Com.let (.op 1 1) <|
   Com.ret 0
 
 /-
@@ -613,13 +613,13 @@ def prog_map_after : Com :=
       yield %l3
   })
 
-def match_strip_mining := ExprRec.map (.map (.var 0) (.rgn 0)) (.rgn 1))
+def match_strip_mining := ExprRec.map (.map (.mvar 0) (.rgn 0)) (.rgn 1))
 
 -/
 
 theorem addLets: addLetsToProgram [Expr.op 0 0, Expr.cst 1] (Com.ret 0) = (
-  Com.let .nat (Expr.cst 1) <|
-  Com.let .nat (Expr.op 0 0) <|
+  Com.let (Expr.cst 1) <|
+  Com.let (Expr.op 0 0) <|
   Com.ret 0) := rfl
 
 theorem letsDenoteZero: Lets.denote [] = [] := rfl
@@ -684,11 +684,11 @@ theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.de
   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
 -- a + b => b + a
-def m := ExprRec.op (.var 0) (.var 1)
-def r := ExprRec.op (.var 1) (.var 0)
+def m := ExprRec.op (.mvar 0) (.mvar 1)
+def r := ExprRec.op (.mvar 1) (.mvar 0)
 
 def lets := [Expr.op 2 0, .op 1 0 , .op 0 0, .cst 1]
-def m2 := ExprRec.op (.var 0) (.op (.var 1) (.var 2))
+def m2 := ExprRec.op (.mvar 0) (.op (.mvar 1) (.mvar 2))
 
 theorem mv3:
   matchVar lets 3 m = none := rfl
@@ -730,9 +730,9 @@ def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
       y
 
 example : rewriteAt ex1 1 (m, r) = (
-  Com.let Ty.nat (Expr.cst 1)    <|
-     .let Ty.nat (Expr.op 0 0)  <|
-     .let Ty.nat (Expr.op 1 1)  <|
+  Com.let (Expr.cst 1)    <|
+     .let (Expr.op 0 0)  <|
+     .let (Expr.op 1 1)  <|
      .ret 0) := by rfl
 example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
 
@@ -742,151 +742,151 @@ example : rewriteAt ex2 0 (m, r) = none := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
 example : rewriteAt ex2 1 (m, r) = (
-  Com.let Ty.nat (Expr.cst 1)   <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 2 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1)   <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 2 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
 example : rewriteAt ex2 2 (m, r) = (
-  Com.let Ty.nat (Expr.cst 1)   <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 2) <|
-     .let Ty.nat (Expr.op 2 2) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1)   <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 2) <|
+     .let (Expr.op 2 2) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 2) := by rfl
 
 example : rewriteAt ex2 3 (m, r) = (
-  Com.let Ty.nat (Expr.cst 1)   <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 2 2) <|
-     .let Ty.nat (Expr.op 2 2) <|
+  Com.let (Expr.cst 1)   <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 2 2) <|
+     .let (Expr.op 2 2) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
 
 example : rewriteAt ex2 4 (m, r) = (
-  Com.let Ty.nat (Expr.cst 1)   <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 2 2) <|
+  Com.let (Expr.cst 1)   <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 2 2) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r 4) := by rfl
 
 def ex2' : Com :=
-  Com.let .nat (.cst 1) <|
-  Com.let .nat (.op 0 0) <|
-  Com.let .nat (.op 1 0) <|
-  Com.let .nat (.op 1 1) <|
-  Com.let .nat (.op 1 1) <|
+  Com.let (.cst 1) <|
+  Com.let (.op 0 0) <|
+  Com.let (.op 1 0) <|
+  Com.let (.op 1 1) <|
+  Com.let (.op 1 1) <|
   Com.ret 0
 
 -- a + b => b + (0 + a)
-def r2 := ExprRec.op (.var 1) (.op (.cst 0) (.var 0))
+def r2 := ExprRec.op (.mvar 1) (.op (.cst 0) (.mvar 0))
 
 example : rewriteAt ex2 1 (m, r2) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 2) <|
-     .let Ty.nat (Expr.op 3 0) <|
-     .let Ty.nat (Expr.op 4 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 2) <|
+     .let (Expr.op 3 0) <|
+     .let (Expr.op 4 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
 
 example : rewriteAt ex2 2 (m, r2) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 3 0) <|
-     .let Ty.nat (Expr.op 4 4) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 3 0) <|
+     .let (Expr.op 4 4) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 2) := by rfl
 
 example : rewriteAt ex2 3 (m, r2) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 4 0) <|
-     .let Ty.nat (Expr.op 4 4) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 4 0) <|
+     .let (Expr.op 4 4) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
 
 example : rewriteAt ex2 4 (m, r2) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 4 0) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 4 0) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
 
 -- a + b => (0 + a) + b
-def r3 := ExprRec.op (.op (.cst 0 ) (.var 0)) (.var 1)
+def r3 := ExprRec.op (.op (.cst 0 ) (.mvar 0)) (.mvar 1)
 
 example : rewriteAt ex2 1 (m, r3) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 2) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 4 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 2) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 4 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
 
 example : rewriteAt ex2 2 (m, r3) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 4 4) <|
-     .let Ty.nat (Expr.op 1 1) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 4 4) <|
+     .let (Expr.op 1 1) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
 
 example : rewriteAt ex2 3 (m, r3) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 0 4) <|
-     .let Ty.nat (Expr.op 4 4) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 0 4) <|
+     .let (Expr.op 4 4) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
 
 example : rewriteAt ex2 4 (m, r3) = (
-  Com.let Ty.nat (Expr.cst 1) <|
-     .let Ty.nat (Expr.op 0 0) <|
-     .let Ty.nat (Expr.op 1 0) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.op 1 1) <|
-     .let Ty.nat (Expr.cst 0) <|
-     .let Ty.nat (Expr.op 0 3) <|
-     .let Ty.nat (Expr.op 0 4) <|
+  Com.let (Expr.cst 1) <|
+     .let (Expr.op 0 0) <|
+     .let (Expr.op 1 0) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.op 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.op 0 3) <|
+     .let (Expr.op 0 4) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
