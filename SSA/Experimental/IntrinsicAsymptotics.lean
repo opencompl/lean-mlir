@@ -72,16 +72,6 @@ def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Val
 | .ret e, l, h => e.denote l h
 | .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
-structure Absolute where
-  v : Nat
-  deriving Repr, Inhabited, DecidableEq
-
-def Absolute.ofNat (n: Nat) : Absolute :=
-  {v := n}
-
-instance : OfNat Absolute n where
-  ofNat := Absolute.ofNat n
-
 abbrev VarRel := Nat
 
 def formatVarRel : VarRel → Nat → Std.Format
