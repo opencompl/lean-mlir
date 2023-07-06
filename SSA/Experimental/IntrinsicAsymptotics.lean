@@ -72,37 +72,6 @@ def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Val
 | .ret e, l, h => e.denote l h
 | .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
--- let's automate
-macro "mk_lets" n:num init:term : term =>
-  n.getNat.foldRevM (fun n stx => `(ICom.let (α := .nat) (.nat ⟨$(Lean.quote n), by decide⟩) $stx)) init
-
-macro "mk_com" n:num : term =>
-`(show ICom [] .nat from
-  ICom.let (.nat 0) <|
-  mk_lets $n
-  ICom.ret (.var ⟨0, by decide⟩))
-
-macro "mk_ex" n:num : command =>
-`(theorem t : ICom [] .nat :=
-  mk_com $n)
-
--- type checking took 146ms
--- elaboration took 327ms
--- mk_ex 50
--- type checking took 574ms
--- elaboration took 1.41s
--- mk_ex 100
--- type checking took 911ms
--- elaboration took 2.26s
--- mk_ex 120
-
--- Clearly not linear!
-
--- Apart from proving transformations of specific (sub)programs, we are also interested in applying such
--- verified transformations to larger programs parsed at run time.
-
-/-- An untyped expression as an intermediate step of input processing. -/
-
 structure Absolute where
   v : Nat
   deriving Repr, Inhabited, DecidableEq
