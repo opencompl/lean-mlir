@@ -228,17 +228,24 @@ match pattern with
       ((Expr.add l r) :: res2.1, 0)
     | .cst n => ((.cst n) :: lets, 0)
 
-def shiftBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
-  let shift (v : VarRel) : VarRel :=
+/-- shift variables after `pos` by `delta` -/
+def shiftVarBy (v : VarRel) (delta : ℕ) (pos : ℕ) : VarRel :=
     if v >= pos then
       VarRel.ofNat (v + delta)
     else
       v
+  
+/-- shift variables after `pos` by `delta` in expr -/
+def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr := 
+ match e with
+    | .add a b => .add (shiftVarBy a delta pos) (shiftVarBy b delta pos)
+    | .cst x => (.cst x)
+
+/-- shift variables after `pos` by `delta` in com -/
+def shiftComBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
   match inputProg with
-  | .ret x => .ret (shift x)
-  | .let ty e body => match e with
-    | .add a b => .let ty (Expr.add (shift a) (shift b)) (shiftBy body delta (pos+1))
-    | .cst x => .let ty (.cst x) (shiftBy body delta (pos +1))
+  | .ret x => .ret (shiftVarBy x delta pos)
+  | .let ty e body => .let ty (shiftExprBy e delta pos) (shiftComBy body delta pos)
 
 def VarRel.inc (v : VarRel) : VarRel :=
   v + 1
@@ -261,7 +268,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let mapping ← matchVar lets varPos rewrite.1
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
-  let newProgram := shiftBy newProgram (newLets.length - lets.length)
+  let newProgram := shiftComBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram (VarRel.ofNat (newLets.length - lets.length)) (VarRel.ofNat (newVar))
   let newProgram := addLetsToProgram newLets newProgram
 
@@ -331,8 +338,55 @@ theorem key_lemma :
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
   unfold flatToTree denote; simp [key_lemma]; rfl
 
+
+
+theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by 
+  simp[shiftVarBy]
+  intros _H 
+  simp[VarRel.ofNat]
+
+
+theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) st = Expr.denote e st := by  {
+  induction e 
+  case cst => {
+    simp[Expr.denote, shiftExprBy]
+  }
+  case add => {
+    simp[Expr.denote, shiftExprBy, denoteVar_shift_zero]
+  }
+}
+  
+theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) st = Com.denote com st := by {
+ revert pos st
+ induction com;
+ case ret => {
+   simp[Com.denote, denoteVar_shift_zero]
+ }
+ case _ ty e body IH => {
+   simp[Com.denote]
+   simp[IH]
+   simp[denoteExpr_shift_zero]
+ }
+}
+
+/-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
+Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let 
+binding. Push the `denote` through and then rewrite across the single index change. -/
 theorem shifting:
-denote (addLetsToProgram lets (shiftBy p n)) = denote p := sorry
+Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) env = Com.denote p env := by {
+  revert p env
+  induction lets
+  case nil => {
+    simp[List.length]
+    simp[addLetsToProgram]
+    simp[denoteCom_shift_zero]
+  }
+  case cons x xs IH => {
+   simp[List.length]
+   sorry 
+  }
+  
+}
 
 theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
