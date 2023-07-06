@@ -5,7 +5,9 @@ import Std.Data.Array.Lemmas
 import Std.Data.Array.Init.Lemmas
 import Mathlib
 import Mathlib.Data.List.Indexes
+import Mathlib.Data.Fin.Basic
 
+noncomputable section
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -13,64 +15,288 @@ inductive Ty
   | bool
   deriving DecidableEq, Repr
 
+@[reducible]
 def Ty.toType
   | nat => Nat
   | bool => Bool
 
-inductive Value where
-  | nat : Nat → Value
-  | bool : Bool → Value
-  deriving Repr, Inhabited, DecidableEq
+-- inductive Value where
+--   | nat : Nat → Value
+--   | bool : Bool → Value
+--   deriving Repr, Inhabited, DecidableEq
 
-/-- The `State` is a map from variables to values that uses relative de Bruijn
-    indices. The most recently introduced variable is at the head of the list.
--/
-abbrev State := List Value
+-- /-- The `State` is a map from variables to values that uses relative de Bruijn
+--     indices. The most recently introduced variable is at the head of the list.
+-- -/
+-- abbrev State := List Value
 
 /-- A context is a list of types, growing to the left for simplicity. -/
-abbrev Ctxt := List Ty
+axiom Ctxt : Type
+
+axiom Ctxt.empty : Ctxt
+
+instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
+
+axiom Ctxt.snoc : Ctxt → Ty → Ctxt
+
+axiom Ctxt.Var (Γ : Ctxt) (t : Ty) : Type
+
+axiom Ctxt.Var.last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t
+
+axiom Ctxt.Var.emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α  
+
+@[coe]
+axiom Ctxt.Var.toSnoc {Γ : Ctxt} {t  : Ty} (t' : Ty) : Ctxt.Var Γ t → Ctxt.Var (Ctxt.snoc Γ t') t 
+
+axiom Ctxt.append : Ctxt → Ctxt → Ctxt
+
+axiom Ctxt.append_empty (Γ : Ctxt) : Ctxt.append Γ ∅ = Γ
+
+axiom Ctxt.append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
+  Ctxt.append Γ (Ctxt.snoc Γ' t) = (Γ.append Γ').snoc t
+
+axiom Ctxt.Var.inl {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ t) : 
+  Var (Ctxt.append Γ Γ') t
+
+axiom Ctxt.Var.inr {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ' t) :
+  Var (Ctxt.append Γ Γ') t
+
+@[elab_as_elim]
+axiom Ctxt.Var.casesOn 
+    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
+    (base : {t t' : Ty} → 
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+      motive Γ t t' v
+
+@[simp]
+axiom Ctxt.Var.casesOn_last
+    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt} {t : Ty}
+    (base : {t t' : Ty} → 
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+    Ctxt.Var.casesOn (motive := motive)
+        (Ctxt.Var.last Γ t) base last = last
+
+@[simp]
+axiom Ctxt.Var.casesOn_toSnoc 
+    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
+    (base : {t t' : Ty} → 
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc t' v) base last = base v
+
+axiom Ctxt.Var.appendCasesOn 
+    {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
+    {Γ Γ' : Ctxt} {t : Ty} (v : (Γ.append Γ').Var t)
+    (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
+    (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
+      motive Γ Γ' t v
+
+@[simp]
+axiom Ctxt.Var.appendCasesOn_inl
+    {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
+    {Γ Γ' : Ctxt} {t : Ty} (v : Γ.Var t)
+    (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
+    (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
+    Ctxt.Var.appendCasesOn (motive := motive)
+       (v.inl : (Γ.append Γ').Var t) inl inr = inl v
+
+@[simp]
+axiom Ctxt.Var.appendCasesOn_inr
+    {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
+    {Γ Γ' : Ctxt} {t : Ty} (v : Γ'.Var t)
+    (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
+    (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
+    Ctxt.Var.appendCasesOn (motive := motive)
+       (v.inr : (Γ.append Γ').Var t) inl inr = inr v
+
+instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc t'⟩
+
+def Ctxt.Sem (Γ : Ctxt) : Type :=
+  ⦃t : Ty⦄ → Γ.Var t → t.toType    
+
+instance : Inhabited (Ctxt.Sem ∅) := ⟨fun _ v => v.emptyElim⟩ 
+
+def Ctxt.Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
+    (Γ.snoc t).Sem := by
+  intro t' v
+  revert s x
+  refine Ctxt.Var.casesOn v ?_ ?_
+  . intro _ _ _ v s _; exact s v
+  . intro _ _ _ x; exact x
+
+@[simp]
+theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
+    (s.snoc x) (Ctxt.Var.last _ _) = x := by 
+  simp [Ctxt.Sem.snoc]
+
+@[simp]
+theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
+    (v : Γ.Var t') : (s.snoc x) (v.toSnoc t) = s v := by
+  simp [Ctxt.Sem.snoc]
+
+@[simp] 
+def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
+    (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
+  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc _) 
+    (fun _ => Ctxt.Var.last _ _) f
+
+inductive MVar (Γ : Ctxt) (t : Ty) : Type where
+  | mk : Nat → (f : Σ Γ' : Ctxt, ((t : Ty) → Γ'.Var t → Γ.Var t) 
+    := ⟨Γ, fun _  v => v⟩) → MVar Γ t
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   /-- Variables are represented as indices into the context, i.e. `var 0` is the most recently introduced variable. -/
-  | add (a : Fin Γ.length) (b : Fin Γ.length): IExpr Γ .nat
+  | add (a b : Γ.Var .nat) : IExpr Γ .nat
   /-- Nat literals. -/
   | nat (n : Nat) : IExpr Γ .nat
-  deriving Repr
+  | mvar {t : Ty} (m : MVar Γ t) : IExpr Γ t
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
-inductive ICom : List Ty → Ty → Type where
-  | ret (e : IExpr Γ α) : ICom Γ α
-  | let (e : IExpr Γ α) (body : ICom (α :: Γ) β) : ICom Γ β
-  deriving Repr
+inductive ICom : Ctxt →  Ty → Type where
+  | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
+  | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+
+def MVarSem : Type := 
+  ∀ (Γ : Ctxt) (s : Γ.Sem) (t : Ty) (_n : ℕ), t.toType 
+
+def MVarAssignment : Type := 
+  ∀ (Γ : Ctxt) (t : Ty) (_n : ℕ), IExpr Γ t 
+
+def MVar.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (m : MVar Γ t) → MVar Γ' t
+  | mk n ⟨Γ', f⟩ => mk n ⟨_, fun t => varsMap t ∘ f t⟩ 
+
+def MVar.denote {Γ : Ctxt} (s' : Γ.Sem) (s : MVarSem) : (m : MVar Γ t) → t.toType
+  | mk n ⟨Γ', f⟩ => s Γ' (fun t v => s' (f t v)) _ n
+
+@[simp]
+def MVar.baseCtxt {Γ : Ctxt} {t : Ty} : (m : MVar Γ t) → Ctxt
+  | mk _ x => x.1
+
+@[simp]
+def MVar.ctxtMap {Γ : Ctxt} {t : Ty} : (m : MVar Γ t) → (t : Ty) → 
+    (m.baseCtxt).Var t → Γ.Var t
+  | mk _ x => x.2
 
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
 -- overall quadratic elaboration times.
-def ex: ICom [] .nat :=
-  ICom.let (.nat 0) <|
-  ICom.let (α := .nat) (.add ⟨0, by decide⟩ ⟨0, by decide⟩) <|
-  ICom.let (α := .nat) (.add ⟨1, by decide⟩ ⟨1, by decide⟩) <|
-  ICom.let (α := .nat) (.add ⟨2, by decide⟩ ⟨2, by decide⟩) <|
-  ICom.let (α := .nat) (.add ⟨3, by decide⟩ ⟨3, by decide⟩) <|
-  ICom.let (α := .nat) (.add ⟨4, by decide⟩ ⟨4, by decide⟩) <|
-  ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
-  ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
+-- def ex : ICom Array.empty .nat :=
+--   ICom.let (.nat 0) <|
+--   ICom.let (α := .nat) (.add ⟨⟨0, by decide⟩, by decide⟩ ⟨⟨0, by decide⟩, by decide⟩) <|
+--   ICom.let (α := .nat) (.add ⟨1, by decide⟩ ⟨1, by decide⟩) <|
+--   ICom.let (α := .nat) (.add ⟨2, by decide⟩ ⟨2, by decide⟩) <|
+--   ICom.let (α := .nat) (.add ⟨3, by decide⟩ ⟨3, by decide⟩) <|
+--   ICom.let (α := .nat) (.add ⟨4, by decide⟩ ⟨4, by decide⟩) <|
+--   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
+--   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
-def get_nat : Value → Nat
-  | .nat x => x
-  | .bool _ => panic! "boolean values not supported"
 
-def IExpr.denote : IExpr l ty → (ll : State) → (l.length = ll.length) → Value
-| .nat n, _, _ => .nat n
-| .add a b, ll, h => let a_val : Nat := get_nat (ll.get (Fin.mk a (h ▸ a.isLt)))
-                     let b_val : Nat := get_nat (ll.get (Fin.mk b (h ▸ b.isLt)))
-                     Value.nat (a_val + b_val)
+def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → (m : MVarSem) → ty.toType
+| .nat n, _, _ => n
+| .add a b, ll, _ => ll a + ll b
+| .mvar v, s, m => v.denote s m
 
-def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Value
-| .ret e, l, h => e.denote l h
-| .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
+def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → MVarSem → ty.toType
+| .ret e, l, _ => l e
+| .lete e body, l, m => body.denote (l.snoc (e.denote l m)) m
+
+def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
+    (e : IExpr Γ ty) → IExpr Γ' ty
+  | .nat n => .nat n
+  | .add a b => .add (varsMap _ a) (varsMap _ b)
+  | .mvar m => .mvar (m.changeVars varsMap)
+
+def MVar.assign (s : MVarAssignment) : (m : MVar Γ t) → IExpr Γ t
+  | mk n ⟨Γ', f⟩ => (s _ _ n).changeVars f
+
+@[simp]
+theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
+    (m : MVarSem)
+    (e : IExpr Γ ty)
+    (ll : Γ'.Sem) : 
+    (e.changeVars varsMap).denote ll m = 
+    e.denote (fun t v => ll (varsMap t v)) m := by
+  induction e generalizing ll m <;> simp 
+    [IExpr.denote, IExpr.changeVars, *, MVar.denote, MVar.changeVars]
+
+def ICom.changeVars 
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
+    ICom Γ ty → ICom Γ' ty
+  | .ret e => .ret (varsMap _ e)
+  | .lete e body => .lete (e.changeVars varsMap) 
+      (body.changeVars (fun t v => v.snocMap varsMap))
+
+@[simp]
+theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
+    (ll : Γ'.Sem) (m : MVarSem) : 
+    (c.changeVars varsMap).denote ll m = 
+    c.denote (fun t v => ll (varsMap t v)) m := by
+  induction c generalizing ll m Γ' with
+  | ret x => simp [ICom.denote, ICom.changeVars, *]
+  | lete _ _ ih => 
+    rw [changeVars, denote, ih]
+    simp only [Ctxt.Sem.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . simp
+    . simp
+
+def IExpr.assignMVars (s : MVarAssignment) : IExpr Γ ty → IExpr Γ ty
+  | .mvar v  => v.assign s
+  | x => x
+
+@[simp]
+theorem MVar.denote_assign (s : MVarAssignment) (m : MVarSem) 
+    (v : MVar Γ t) (ll : Γ.Sem) :
+    (v.assign s).denote ll m = v.denote ll 
+      (fun _ _ t n => (s v.baseCtxt t n).denote 
+        (fun t v' => ll (v.ctxtMap _ v')) m) := by
+  rcases v with ⟨n, ⟨Γ', f⟩⟩ 
+  simp [MVar.assign, MVar.denote]
+
+@[simp]
+theorem IExpr.denote_assignMVars (s : MVarAssignment) 
+    (e : IExpr Γ ty) (ll : Γ.Sem) (m : MVarSem) :
+    (e.assignMVars s).denote ll m = e.denote ll 
+      (fun Γ' s' t n => (s Γ' t n).denote s' m) := by
+  induction e generalizing ll m with
+  | nat n => simp [IExpr.denote, IExpr.assignMVars, *]
+  | add a b => simp [IExpr.denote, IExpr.assignMVars, *]
+  | mvar v => 
+    simp only [assignMVars, MVar.denote_assign] 
+    rfl
+
+def ICom.assignMVars (s : MVarAssignment) : ICom Γ ty → ICom Γ ty
+  | .ret e => .ret e
+  | lete e body => .lete (e.assignMVars s) (body.assignMVars s)
+
+theorem ICom.denote_assignMVars (s : MVarAssignment) 
+    (c : ICom Γ ty) (ll : Γ.Sem) (m : MVarSem) :
+    (c.assignMVars s).denote ll m = c.denote ll 
+      (fun Γ' s' t n => (s Γ' t n).denote s' m) := by
+  induction c generalizing m with
+  | ret x => simp [ICom.denote, ICom.changeVars, *]
+  | lete _ _ ih =>
+    rw [assignMVars, denote, ih, IExpr.denote_assignMVars]
+    simp [denote]
+    
+def rewriteAt (lhs : IExpr Γ ty) (rhs : IExpr Γ ty) 
+  (ass : MVarAssignment)
+
+
+#exit
 
 -- let's automate
 macro "mk_lets" n:num init:term : term =>
@@ -85,6 +311,7 @@ macro "mk_com" n:num : term =>
 macro "mk_ex" n:num : command =>
 `(theorem t : ICom [] .nat :=
   mk_com $n)
+
 
 -- type checking took 146ms
 -- elaboration took 327ms
@@ -101,109 +328,109 @@ macro "mk_ex" n:num : command =>
 -- Apart from proving transformations of specific (sub)programs, we are also interested in applying such
 -- verified transformations to larger programs parsed at run time.
 
-/-- An untyped expression as an intermediate step of input processing. -/
+-- /-- An untyped expression as an intermediate step of input processing. -/
 
-structure Absolute where
-  v : Nat
-  deriving Repr, Inhabited, DecidableEq
+-- structure Absolute where
+--   v : Nat
+--   deriving Repr, Inhabited, DecidableEq
 
-def Absolute.ofNat (n: Nat) : Absolute :=
-  {v := n}
+-- def Absolute.ofNat (n: Nat) : Absolute :=
+--   {v := n}
 
-instance : OfNat Absolute n where
-  ofNat := Absolute.ofNat n
+-- instance : OfNat Absolute n where
+--   ofNat := Absolute.ofNat n
 
-abbrev VarRel := Nat
+-- abbrev VarRel := Nat
 
-def formatVarRel : VarRel → Nat → Std.Format
-  | x, _ => repr x
+-- def formatVarRel : VarRel → Nat → Std.Format
+--   | x, _ => repr x
 
-instance : Repr VarRel where
-  reprPrec :=  formatVarRel
+-- instance : Repr VarRel where
+--   reprPrec :=  formatVarRel
 
-def VarRel.ofNat (n: Nat) : VarRel :=
-  n
+-- def VarRel.ofNat (n: Nat) : VarRel :=
+--   n
 
-instance : OfNat VarRel n where
-  ofNat := VarRel.ofNat n
+-- instance : OfNat VarRel n where
+-- --   ofNat := VarRel.ofNat n
 
-inductive Expr : Type
-  | cst (n : Nat)
-  | add (a : VarRel) (b : VarRel)
-  deriving Repr, Inhabited, DecidableEq
+-- inductive Expr : Type
+--   | cst (n : Nat)
+--   | add (a : VarRel) (b : VarRel)
+--   deriving Repr, Inhabited, DecidableEq
 
-abbrev LeafVar := Nat
+-- abbrev LeafVar := Nat
 
-inductive ExprRec : Type
-  | cst (n : Nat)
-  | add (a : ExprRec) (b : ExprRec)
-  | var (idx : LeafVar)
-  deriving Repr, Inhabited, DecidableEq
+-- inductive ExprRec : Type
+--   | cst (n : Nat)
+--   | add (a : ExprRec) (b : ExprRec)
+--   | var (idx : LeafVar)
+--   deriving Repr, Inhabited, DecidableEq
 
-inductive RegTmp : Type
-  | concreteRegion (c : Com)
-  | regionVar (n : Nat)
+-- inductive RegTmp : Type
+--   | concreteRegion (c : Com)
+--   | regionVar (n : Nat)
 
-/-- An untyped command; types are always given as in MLIR. -/
-inductive Com : Type where
-  | let (ty : Ty) (e : Expr) (body : Com): Com
-  | ret (e : VarRel) : Com
-  deriving Repr, Inhabited, DecidableEq
+-- /-- An untyped command; types are always given as in MLIR. -/
+-- inductive Com : Type where
+--   | let (ty : Ty) (e : Expr) (body : Com): Com
+--   | ret (e : VarRel) : Com
+--   deriving Repr, Inhabited, DecidableEq
 
-def ex' : Com :=
-  Com.let .nat (.cst 0) <|
-  Com.let .nat (.add 0 0) <|
-  Com.let .nat (.add 1 0) <|
-  Com.let .nat (.add 2 0) <|
-  Com.let .nat (.add 3 3) <|
-  Com.let .nat (.add 4 4) <|
-  Com.let .nat (.add 5 5) <|
-  Com.ret 0
+-- def ex' : Com :=
+--   Com.let .nat (.cst 0) <|
+--   Com.let .nat (.add 0 0) <|
+--   Com.let .nat (.add 1 0) <|
+--   Com.let .nat (.add 2 0) <|
+--   Com.let .nat (.add 3 3) <|
+--   Com.let .nat (.add 4 4) <|
+--   Com.let .nat (.add 5 5) <|
+--   Com.ret 0
 
-open Lean in
+-- open Lean in
 
-def formatCom : Com → Nat → Std.Format
-  | .ret v, _=> "  .ret " ++ (repr v)
-  | .let ty e body, n=> "  .let " ++ (repr ty) ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
+-- def formatCom : Com → Nat → Std.Format
+--   | .ret v, _=> "  .ret " ++ (repr v)
+--   | .let ty e body, n=> "  .let " ++ (repr ty) ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
 
-instance : Repr Com where
-  reprPrec :=  formatCom
+-- instance : Repr Com where
+--   reprPrec :=  formatCom
 
-abbrev Mapping := List (LeafVar × Nat)
-abbrev Lets := List Expr
+-- abbrev Mapping := List (LeafVar × Nat)
+-- abbrev Lets := List Expr
 
-def ex0 : Com :=
-  Com.let .nat (.cst 0) <|
-  Com.let .nat (.add 0 0) <|
-  Com.let .nat (.add 1 0) <|
-  Com.let .nat (.add 2 0) <|
-  Com.let .nat (.add 3 0) <|
-  Com.ret 0
+-- def ex0 : Com :=
+--   Com.let .nat (.cst 0) <|
+--   Com.let .nat (.add 0 0) <|
+--   Com.let .nat (.add 1 0) <|
+--   Com.let .nat (.add 2 0) <|
+--   Com.let .nat (.add 3 0) <|
+--   Com.ret 0
 
-def getPos (v : VarRel) (currentPos: Nat) : Nat :=
-  v + currentPos + 1
+-- def getPos (v : VarRel) (currentPos: Nat) : Nat :=
+--   v + currentPos + 1
 
 /-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
 free variables to their absolute position in the lets array.
 -/
-def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
-  match matchExpr with
-  | .var x => match mapping.lookup x with
-    | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
-    | none => (x, varPos)::mapping
-  | .cst n => match lets[varPos]! with
-    | .cst n' => if n = n' then some mapping else none
-    | _ => none
-  | .add a' b' =>
-    match lets[varPos]! with
-    | .add a b => do
-        let mapping ← matchVar lets (getPos a varPos) a' mapping
-        matchVar lets (getPos b varPos) b' mapping
-    | _ => none
+-- def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
+--   match matchExpr with
+--   | .var x => match mapping.lookup x with
+--     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
+--     | none => (x, varPos)::mapping
+--   | .cst n => match lets[varPos]! with
+--     | .cst n' => if n = n' then some mapping else none
+--     | _ => none
+--   | .add a' b' =>
+--     match lets[varPos]! with
+--     | .add a b => do
+--         let mapping ← matchVar lets (getPos a varPos) a' mapping
+--         matchVar lets (getPos b varPos) b' mapping
+--     | _ => none
 
-example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0
-         (.add (.var 0) (.add (.var 1) (.var 2))) =
-  some [(2, 2), (1, 3), (0, 3)]:= rfl
+-- example: matchVar [.add 2 0, .add 1 0, .add 0 0, .cst 1] 0
+--          (.add (.var 0) (.add (.var 1) (.var 2))) =
+--   some [(2, 2), (1, 3), (0, 3)]:= rfl
 
 def getVarAfterMapping (var : LeafVar) (lets : Lets) (m : Mapping) (inputLets : Nat) : Nat :=
  match m with
@@ -235,11 +462,21 @@ def shiftVarBy (v : VarRel) (delta : ℕ) (pos : ℕ) : VarRel :=
     else
       v
 
+def Expr.changeVars (f : VarRel → VarRel) (e : Expr) : Expr :=
+  match e with
+  | .add a b => .add (f a) (f b)
+  | .cst x => (.cst x)
+
 /-- shift variables after `pos` by `delta` in expr -/
 def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
  match e with
     | .add a b => .add (shiftVarBy a delta pos) (shiftVarBy b delta pos)
     | .cst x => (.cst x)
+
+def Com.changeVars (f : VarRel → VarRel) (c : Com) : Com :=
+  match c with
+  | .ret x => .ret (f x)
+  | .let ty e body => .let ty (e.changeVars f) (body.changeVars f)
 
 /-- shift variables after `pos` by `delta` in com -/
 def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
@@ -399,24 +636,17 @@ theorem denoteCom_shift_cons :
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
 Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
 binding. Push the `denote` through and then rewrite across the single index change. -/
-theorem shifting:
-  Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) s =
-  Com.denote p s := by {
-  revert p s
-  induction lets
-  case nil => {
-    simp[List.length]
-    simp[addLetsToProgram]
-    simp[denoteCom_shift_zero]
-  }
-  case cons x xs IH => {
-   simp[List.length]
-   simp[addLetsToProgram_cons]
-   simp[IH]
-   sorry
-  }
+theorem shifting :
+    Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) s =
+      Com.denote p s := by
+  rw [addLetsToProgram]
+  induction lets using List.reverseRecOn
+  case H0 =>
+    cases p <;> simp [shiftComBy, shiftExprBy, Com.denote]
 
-}
+  
+      
+#exit
 
 theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
@@ -890,3 +1120,4 @@ example : rewriteAt ex2 4 (m, r3) = (
      .let Ty.nat (Expr.add 0 4) <|
      .ret 0) := by rfl
 example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
+ 
