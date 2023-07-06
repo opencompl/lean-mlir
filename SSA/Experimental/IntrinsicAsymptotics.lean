@@ -242,10 +242,10 @@ def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
     | .cst x => (.cst x)
 
 /-- shift variables after `pos` by `delta` in com -/
-def shiftComBy (inputProg : Com) (delta: Nat) (pos: Nat := 0): Com :=
+def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
   match inputProg with
-  | .ret x => .ret (shiftVarBy x delta pos)
-  | .let ty e body => .let ty (shiftExprBy e delta pos) (shiftComBy body delta pos)
+  | .ret x => .ret (shiftVarBy x delta (pos+1))
+  | .let ty e body => .let ty (shiftExprBy e delta pos) (shiftComBy body delta (pos+1))
 
 def VarRel.inc (v : VarRel) : VarRel :=
   v + 1
