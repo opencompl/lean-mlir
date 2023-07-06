@@ -322,8 +322,8 @@ def Com.denote (c : Com) (s : State) : Value :=
 def denote (p: Com) : Value :=
   p.denote []
 
-def Lets.denote (lets : Lets) (env : State := []): State :=
-  List.foldr (λ v s => (v.denote s) :: s) env lets
+def Lets.denote (lets : Lets) (s : State := []): State :=
+  List.foldr (λ v s => (v.denote s) :: s) s lets
 
 structure ComFlat where
   lets : Lets -- sequence of let bindings.
@@ -345,7 +345,7 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
     | .var v => s.get! v
 
 theorem key_lemma :
-    (addLetsToProgram lets xs).denote env = xs.denote (lets.denote env) := by
+    (addLetsToProgram lets xs).denote s = xs.denote (lets.denote s) := by
   induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
@@ -359,7 +359,7 @@ theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp[VarRel.ofNat]
 
 
-theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) st = Expr.denote e st := by  {
+theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by  {
   induction e
   case cst => {
     simp[Expr.denote, shiftExprBy]
@@ -369,8 +369,8 @@ theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) st = Expr.denot
   }
 }
 
-theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) st = Com.denote com st := by {
- revert pos st
+theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote com s := by {
+ revert pos s
  induction com;
  case ret => {
    simp[Com.denote, denoteVar_shift_zero]
@@ -400,9 +400,9 @@ theorem denoteCom_shift_cons :
 Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
 binding. Push the `denote` through and then rewrite across the single index change. -/
 theorem shifting:
-  Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) env =
-  Com.denote p env := by {
-  revert p env
+  Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) s =
+  Com.denote p s := by {
+  revert p s
   induction lets
   case nil => {
     simp[List.length]
@@ -459,8 +459,8 @@ theorem letsTheorem
 -- @grosser: since this theorem cannot be true, we see that denoteAddLetsToProgram
 -- also cannot possibly be true.
 theorem Com_denote_invariant_under_extension_false_theorem :
-   Com.denote body env = Com.denote  body (v :: env) := by {
-   revert env
+   Com.denote body s = Com.denote  body (v :: s) := by {
+   revert s
    induction body;
    case ret => {
     intros env; simp[Com.denote];
