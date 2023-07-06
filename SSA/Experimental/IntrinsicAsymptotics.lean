@@ -121,8 +121,9 @@ def ex' : Com :=
 open Lean in
 
 def formatCom : Com → Nat → Std.Format
-  | .ret v, _ => "  .ret " ++ (repr v)
-  | .let e body, n => "  .let " ++ " " ++ (repr e) ++ " <|\n" ++ (formatCom body n)
+  | .ret v, _ => "  Com.ret " ++ (repr v)
+  | .let e body, n => "  Com.let " ++ "(" ++ ((toString (repr e)).drop 4)
+                      ++ ") <|\n" ++ (formatCom body n)
 
 instance : Repr Com where
   reprPrec :=  formatCom
