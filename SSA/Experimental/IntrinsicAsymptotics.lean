@@ -103,7 +103,6 @@ inductive RegTmp : Type
   | concreteRegion (c : Com)
   | regionVar (n : Nat)
 
-/-- An untyped command; types are always given as in MLIR. -/
 inductive Com : Type where
   | let (e : Expr) (body : Com): Com
   | ret (e : VarRel) : Com
