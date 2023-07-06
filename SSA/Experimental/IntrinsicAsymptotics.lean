@@ -99,10 +99,6 @@ inductive ExprRec : Type
   | mvar (idx : MVarId)
   deriving Repr, Inhabited, DecidableEq
 
-inductive RegTmp : Type
-  | concreteRegion (c : Com)
-  | regionVar (n : Nat)
-
 inductive Com : Type where
   | let (e : Expr) (body : Com): Com
   | ret (e : VarRel) : Com
