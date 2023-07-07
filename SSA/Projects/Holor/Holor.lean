@@ -2,6 +2,7 @@ import SSA.Core.WellTypedFramework
 import SSA.Core.Util
 import Mathlib.Data.Holor
 import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.Algebra.Pi
 
 /- Holor is profunctorial, covariant in the values and contavariant in the indexes. -/
 
@@ -56,8 +57,7 @@ def Holor.fill (a : α) : Holor α ds := fun _ => a
 -- I want to declare the map (r : R) -> (fill (ralg R) : Holor A ds).
 -- This will be the map that turns (Holor A ds) into an R-algebra.
 -- I'm not sure how to define this.
-instance [CommSemiring R] [Semiring A] [Algebra R A] : Algebra R (Holor A ds) :=  sorry
-
+instance [CommSemiring R] [Semiring A] [Algebra R A] : Algebra R (Holor A ds) := Pi.algebra _ _
 
 /-
 inductive op
