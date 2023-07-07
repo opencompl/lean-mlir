@@ -16,9 +16,9 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "24d5cebeb3ed64640a233fed89a027a06765b0d4",
+    "rev": "19d8d7dca726bf6d374fcbb154f999dd4b282efc",
     "name": "mathlib",
-    "inputRev?": "24d5ceb"}},
+    "inputRev?": "bitvec-lemmas"}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,
