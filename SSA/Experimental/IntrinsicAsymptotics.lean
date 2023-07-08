@@ -267,9 +267,8 @@ def insertCst (inputProg : ComFlat) (depth : Nat) (ls: Lets := []) : ComFlat :=
     | i + 1 => 
       match inputProg.lets with
         | [] => inputProg
-        | cs :: cons => 
-        let ls := cs :: ls
-        addExprToProgramFlat cs (insertCst ⟨cons, inputProg.ret⟩ i ls
+        | _ :: cons => 
+        insertCst ⟨cons, inputProg.ret⟩ i ls
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
@@ -445,11 +444,55 @@ theorem shifting:
   simp [ComFlat.denote_addLetsToProgram]
   simp [ComFlat.denote_shiftComFlatBy]
 
-theorem denoteInsertCst : ComFlat.denote (insertCst prog 0) s = ComFlat.denote prog s := by
+theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
   unfold insertCst
-  unfold addCstToLets
-  apply shifting
+  split 
+  · unfold addCstToLets
+    apply shifting
+  case h_2 depth pos =>
+    simp_all
+    induction prog.lets generalizing s pos
+    case nil =>
+      simp [addLetsToProgramFlat]
+    case cons e ls IH =>
+      simp
+      split at IH
+      case h_1 fls =>
+        unfold insertCst
+        simp
+        split
+        · sorry
+        · sorry
+        
 
+
+        sorry
+
+      case h_2 fls =>
+        simp
+        unfold addExprToProgramFlat
+        simp
+
+        sorry
+
+
+
+     
+  unfold addCstToLets
+  induction pos
+  case zero =>
+    apply shifting
+  case succ pos IH =>
+    simp
+    induction prog.lets
+    case nil =>
+      simp [addLetsToProgramFlat]
+    case cons e ls IH' =>
+      split at IH'
+      · simp_all
+      · simp_all
+
+      
 theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar lets pos matchExpr m₀ = some m)
