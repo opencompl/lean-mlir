@@ -240,7 +240,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let newProgram := inputProg
   let newProgram := shiftComBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram ((newLets.length - lets.length)) ((newVar))
-  let newProgram := addLetsToProgram newLets newProgram
+  let newProgram := addLetsToProgram newLets newProgram@
 
   some newProgram
 
@@ -255,20 +255,28 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
            rewriteAt body (depth - 1) rewrite lets
 
 def addCstToLets (lets : Lets) (inputProg : ComFlat) : ComFlat :=
-  let newLets := (.cst 42) :: lets
+  let newLets := Expr.cst 42 :: lets
   let newProgram := inputProg
-  let newProgram := shiftComFlatBy newProgram (newLets.length - lets.length)
+  let newProgram := shiftComFlatBy newProgram (newLets.length)
   let newProgram := addLetsToProgramFlat newLets newProgram
   newProgram
 
-def insertCst (inputProg : ComFlat) (depth : Nat) (ls: Lets := []) : ComFlat :=
-  match depth with
-    | 0 => addCstToLets ls inputProg
-    | i + 1 => 
-      match inputProg.lets with
-        | [] => inputProg
-        | _ :: cons => 
-        insertCst ⟨cons, inputProg.ret⟩ i ls
+def splitProgram (inputProg : ComFlat) (depth : Nat) : Option (Lets × ComFlat) :=
+  if inputProg.lets.length < depth then
+    none
+  else
+    let split := inputProg.lets.splitAt depth
+    let newProg : ComFlat := ⟨split.2, inputProg.ret⟩
+    some (split.1, newProg)
+
+def insertCst (inputProg : ComFlat) (depth : Nat) : ComFlat :=
+  let split := splitProgram inputProg depth
+  match split with
+  | none => inputProg
+  | some split => 
+    let ⟨ls, prog⟩ := split
+    let newProg := addCstToLets ls prog
+    newProg
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
@@ -435,6 +443,10 @@ case H1 ls e IH =>
   simp [ComFlat.denote_shift_cancellation]
   simp [IH]
 
+theorem shifting:
+  ComFlat.denote (addLetsToProgramFlat ls (shiftComFlatBy p (ls.length))) s =
+  ComFlat.denote p s := by sorry
+
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
 Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
 binding. Push the `denote` through and then rewrite across the single index change. -/
@@ -446,51 +458,17 @@ theorem shifting:
 
 theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
   unfold insertCst
-  split 
-  · unfold addCstToLets
-    apply shifting
-  case h_2 depth pos =>
-    simp_all
-    induction prog.lets generalizing s pos
-    case nil =>
-      simp [addLetsToProgramFlat]
-    case cons e ls IH =>
-      simp
-      split at IH
-      case h_1 fls =>
-        unfold insertCst
-        simp
-        split
-        · sorry
-        · sorry
-        
-
-
-        sorry
-
-      case h_2 fls =>
-        simp
-        unfold addExprToProgramFlat
-        simp
-
-        sorry
-
-
-
-     
-  unfold addCstToLets
-  induction pos
-  case zero =>
-    apply shifting
-  case succ pos IH =>
+  simp
+  split
+  case h_1 =>
     simp
-    induction prog.lets
-    case nil =>
-      simp [addLetsToProgramFlat]
-    case cons e ls IH' =>
-      split at IH'
-      · simp_all
-      · simp_all
+  
+  case h_2 _ split heq =>
+    simp_all
+    unfold addCstToLets
+    rw [shifting]
+     
+
 
       
 theorem letsTheorem
