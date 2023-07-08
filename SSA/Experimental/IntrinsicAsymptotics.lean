@@ -240,7 +240,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
 
   some newProgram
 
-def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec × ExprRec) : Option Com :=
+def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (lets: Lets := []) : Option Com :=
   match inputProg with
     | .ret _ => none
     | .let expr body =>
@@ -248,10 +248,7 @@ def rewriteAt' (inputProg : Com) (depth : Nat) (lets: Lets) (rewrite: ExprRec ×
         if depth = 0 then
            applyRewrite lets body rewrite
         else
-           rewriteAt' body (depth - 1) lets rewrite
-
-def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Option Com :=
-    rewriteAt' inputProg depth [] rewrite
+           rewriteAt body (depth - 1) rewrite lets
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
@@ -446,20 +443,20 @@ theorem denoteAddLetsToProgram:
 
 theorem rewriteAtApplyRewriteCorrect
  (hpos: pos = 0) :
- rewriteAt' body pos lets rwExpr = applyRewrite (lets ++ [e]) body rwExpr := by
+ rewriteAt body pos rwExpr lets = applyRewrite (lets ++ [e]) body rwExpr := by
   sorry
 
 theorem rewriteAtAppend:
-  rewriteAt' body pos lets rwExpr = rewriteAt' body (pos - 1) (lets ++ [e]) rwExpr := sorry
+  rewriteAt body pos rwExpr lets = rewriteAt body (pos - 1) rwExpr (lets ++ [e]) := sorry
 
 theorem rewriteAtCorrect'
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
-  (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
+  (lets : Lets) (successful : rewriteAt p pos rwExpr lets = some p'):
   denote p' = denote (addLetsToProgram lets p) := by
   induction pos
   case zero =>
-    unfold rewriteAt' at successful
+    unfold rewriteAt at successful
     split at successful
     · contradiction
     · simp at successful
@@ -470,11 +467,11 @@ theorem rewriteAtCorrect'
 theorem rewriteAtCorrect
   (p : Com) (pos: Nat) (rwExpr : ExprRec × ExprRec)
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s)
-  (lets : Lets) (successful : rewriteAt' p pos lets rwExpr = some p'):
+  (lets : Lets) (successful : rewriteAt p pos rwExpr lets = some p'):
   denote p' = denote (addLetsToProgram lets p) := by
   induction p
   case «let» e body body_ih =>
-    unfold rewriteAt' at successful
+    unfold rewriteAt at successful
     split at successful
     case inl hpos =>
       rw [body_ih]
@@ -493,7 +490,7 @@ theorem rewriteAtCorrect
         simp at successful
         simp at body_ih
         simp_all
-        unfold rewriteAt'
+        unfold rewriteAt
         simp
         cases body
         simp_all
@@ -504,7 +501,7 @@ theorem rewriteAtCorrect
         · simp_all
           contradiction
   case ret v =>
-    unfold rewriteAt' at successful
+    unfold rewriteAt at successful
     contradiction
 
 theorem preservesSemantics
@@ -512,7 +509,6 @@ theorem preservesSemantics
   (rewriteCorrect : ∀ s : State, rwExpr.1.denote s = rwExpr.2.denote s):
   denote (rewrite p pos rwExpr) = denote p := by
   unfold rewrite
-  unfold rewriteAt
   simp
   split
   · rfl
