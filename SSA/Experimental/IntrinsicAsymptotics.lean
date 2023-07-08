@@ -72,18 +72,6 @@ def ICom.denote : ICom l ty → (ll : State) → (l.length = ll.length) →  Val
 | .ret e, l, h => e.denote l h
 | .let e body, l, h => body.denote ((e.denote l h) :: l) (by simp [h])
 
-def formatNat : Nat → Nat → Std.Format
-  | x, _ => repr x
-
-instance : Repr Nat where
-  reprPrec :=  formatNat
-
-def Nat.ofNat (n: Nat) : Nat :=
-  n
-
-instance : OfNat Nat n where
-  ofNat := Nat.ofNat n
-
 inductive Expr : Type
   | cst (n : Nat)
   | op (a : Nat) (b : Nat)
