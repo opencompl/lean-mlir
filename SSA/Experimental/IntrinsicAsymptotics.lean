@@ -442,6 +442,48 @@ theorem shiftExprBy_zero:
   shiftExprBy e 0 pos = e := by
   induction e generalizing pos <;> simp_all [shiftExprBy, shiftVarBy]  
 
+theorem Expr.denote_shift_one:
+  (shiftExprBy e 1 0).denote (x :: s) = e.denote s  := by
+  unfold denote
+  simp [shiftExprBy]
+  cases e
+  case cst =>
+    simp
+  case op a b =>
+    simp
+    unfold shiftVarBy
+    simp
+    unfold getVal
+    simp
+
+theorem Expr.denote_shift_ls:
+  (shiftExprBy e (x.length) 0).denote (x ++ s) = e.denote s  := by
+  induction x generalizing s
+  unfold denote
+  simp [shiftExprBy]
+  cases e
+  case cst =>
+    simp
+  case op a b =>
+    simp [shiftVarBy]
+  case cons e' ls IH =>
+    unfold denote
+    unfold shiftExprBy
+    unfold getVal
+    cases e
+    case cst =>
+      simp
+    case op a b =>
+      simp
+      unfold shiftVarBy
+      simp [List.get?_append_right]
+      unfold denote at IH
+      unfold shiftExprBy at IH
+      unfold shiftVarBy at IH
+      simp at IH
+      unfold getVal at IH
+      simp [IH]
+
 theorem shiftComFlatBy_zero:
   shiftComFlatBy p 0 = p := by
   simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
@@ -449,9 +491,11 @@ theorem shiftComFlatBy_zero:
 theorem FwdLets.denote_zero:
   FwdLets.denote [] s = s := by simp [FwdLets.denote]
 
+
 theorem denote_shiftComFlatBy_cons:
-  ComFlat.denote (shiftComFlatBy p 1) (FwdLets.denote [e] s) = ComFlat.denote (addLetsToProgramFlat [e] p) s := by
+  ComFlat.denote (shiftComFlatBy p 1) (FwdLets.denote [e_extra] s) = ComFlat.denote p s := by
   unfold ComFlat.denote
+  simp
   unfold shiftComFlatBy
   simp
   induction p.lets generalizing p s
@@ -461,8 +505,8 @@ theorem denote_shiftComFlatBy_cons:
   case cons e ls IH =>
     simp [FwdLets.denote_cons]
     simp [FwdLets.denote_zero]
-
-
+    unfold getVal
+    unfold FwdLets.denote at IH
 
     rw [IH]
 
