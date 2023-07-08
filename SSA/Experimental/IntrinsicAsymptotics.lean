@@ -424,11 +424,48 @@ theorem shiftComFlatBy_zero:
   shiftComFlatBy p 0 = p := by
   simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
 
+theorem FwdLets.denote_zero:
+  FwdLets.denote [] s = s := by simp [FwdLets.denote]
+
+theorem denote_shiftComFlatBy_cons:
+  ComFlat.denote (shiftComFlatBy p 1) (FwdLets.denote [e] s) = ComFlat.denote (addLetsToProgramFlat [e] p) s := by
+  unfold ComFlat.denote
+  unfold shiftComFlatBy
+  simp
+  induction p.lets generalizing p s
+  case nil =>
+    simp [FwdLets.denote, shiftVarBy]
+    simp [getVal]
+  case cons e ls IH =>
+    simp [FwdLets.denote_cons]
+    simp [FwdLets.denote_zero]
+
+
+
+    rw [IH]
+
+    
+    , shiftComFlatBy, shiftVarBy, shiftExprBy]
+
+
+
+  
+  
+
+
 theorem ComFlat.denote_shift_cancellation:
   ComFlat.denote (shiftComFlatBy p (k + 1)) (FwdLets.denote [e] s) =
   ComFlat.denote (shiftComFlatBy p k) s :=
   by
-    sorry
+    induction k generalizing p s
+    case zero =>
+      simp
+      simp [shiftComFlatBy_zero]
+
+    simp [ComFlat.denote]
+    simp [FwdLets.denote_cons]
+    simp [shiftComFlatBy]
+    simp [shiftExprBy_zero]
 
 theorem ComFlat.denote_shiftComFlatBy:
 ComFlat.denote (shiftComFlatBy p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
