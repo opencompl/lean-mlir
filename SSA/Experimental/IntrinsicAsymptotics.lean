@@ -250,6 +250,23 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
         else
            rewriteAt body (depth - 1) rewrite lets
 
+def addCstToLets (lets : Lets) (inputProg : Com) : Com :=
+  let newLets := (.cst 42) :: lets
+  let newProgram := inputProg
+  let newProgram := shiftComBy newProgram (newLets.length - lets.length)
+  let newProgram := addLetsToProgram newLets newProgram
+  newProgram
+
+def insertCst (inputProg : Com) (depth : Nat) (lets: Lets := []) : Com :=
+  match depth with
+    | 0 => addCstToLets lets inputProg
+    | i + 1 => 
+      match inputProg with
+        | .ret v => .ret v
+        | .let expr body =>
+          let lets := expr :: lets
+          insertCst body i lets
+
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
     match x with
@@ -346,6 +363,21 @@ theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
     unfold ComFlat.addLets
     simp [ Nat.succ_sub_one]
     apply h
+
+
+theorem denoteInsertCst : Com.denote (insertCst prog 0) s = Com.denote prog s := by
+  unfold insertCst
+  simp [VarRel, instOfNatVarRel]
+  cases
+
+
+  simp_all
+
+  unfold insertCst
+
+
+
+#exit
 
 /-
 theorem denoteCom_shift_snoc :
