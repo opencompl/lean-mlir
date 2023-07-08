@@ -155,7 +155,7 @@ def getVarAfterMapping (var : MVarId) (lets : Lets) (m : Mapping) (inputLets : N
  | _ => panic! "var should be in mapping"
 
 def getRel (v : Nat) (array: List Expr): Nat :=
-  Nat.ofNat (array.length - v - 1)
+  (array.length - v - 1)
 
 def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) :=
 match pattern with
@@ -164,15 +164,15 @@ match pattern with
     | .op a b =>
       let res := applyMapping a m lets inputLets
       let res2 := applyMapping b m (res.1) inputLets
-      let l := Nat.ofNat (res.2 + (res2.1.length - res.1.length))
-      let r := Nat.ofNat res2.2
+      let l := (res.2 + (res2.1.length - res.1.length))
+      let r := res2.2
       ((Expr.op l r) :: res2.1, 0)
     | .cst n => ((.cst n) :: lets, 0)
 
 /-- shift variables after `pos` by `delta` -/
 def shiftVarBy (v : Nat) (delta : ℕ) (pos : ℕ) : Nat :=
     if v >= pos then
-      Nat.ofNat (v + delta)
+      (v + delta)
     else
       v
 
@@ -221,7 +221,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let (newLets, newVar) := applyMapping (rewrite.2) mapping lets
   let newProgram := inputProg
   let newProgram := shiftComBy newProgram (newLets.length - lets.length)
-  let newProgram := replaceUsesOfVar newProgram (Nat.ofNat (newLets.length - lets.length)) (Nat.ofNat (newVar))
+  let newProgram := replaceUsesOfVar newProgram ((newLets.length - lets.length)) ((newVar))
   let newProgram := addLetsToProgram newLets newProgram
 
   some newProgram
@@ -307,8 +307,6 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp [shiftVarBy]
-  intros _H
-  simp [Nat.ofNat]
 
 theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by
   induction e
@@ -353,16 +351,7 @@ theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
 
 theorem denoteInsertCst : Com.denote (insertCst prog 0) s = Com.denote prog s := by
   unfold insertCst
-  simp [Nat, instOfNatNat]
-  cases
 
-  simp_all
-
-  unfold insertCst
-
-
-
-#exit
 
 /-
 theorem denoteCom_shift_snoc :
@@ -399,11 +388,11 @@ theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
  (h1: matchVar lets pos matchExpr m₀ = some m)
  (hlets: lets.length > 0)
- (hm₀: denote (addLetsToProgram lets (Com.ret (Nat.ofNat (lets.length - pos - 1) ))) =
+ (hm₀: denote (addLetsToProgram lets (Com.ret ((lets.length - pos - 1) ))) =
        denote (addLetsToProgram (applyMapping matchExpr m₀ lets).1
               (Com.ret 0))):
 
-   denote (addLetsToProgram (lets) (Com.ret (Nat.ofNat (lets.length - pos - 1)))) =
+   denote (addLetsToProgram (lets) (Com.ret ((lets.length - pos - 1)))) =
    denote (addLetsToProgram (applyMapping matchExpr m lets).1 (Com.ret 0)) := by
       induction matchExpr generalizing m₀ m pos
       unfold applyMapping
@@ -418,7 +407,6 @@ theorem letsTheorem
           have a_fold := a_ih h1
           have b_fold := b_ih h2
           rw [hm₀]
-          dsimp [Nat.ofNat]
 
           unfold applyMapping
           sorry
