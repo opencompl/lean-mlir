@@ -349,9 +349,6 @@ theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
     apply h
 
 
-theorem denoteInsertCst : Com.denote (insertCst prog 0) s = Com.denote prog s := by
-  unfold insertCst
-
 
 /-
 theorem denoteCom_shift_snoc :
@@ -383,6 +380,11 @@ theorem shifting:
    simp [addLetsToProgram_cons]
    simp [IH]
    sorry
+
+theorem denoteInsertCst : Com.denote (insertCst prog 0) s = Com.denote prog s := by
+  unfold insertCst
+  unfold addCstToLets
+  apply shifting
 
 theorem letsTheorem
  (matchExpr : ExprRec) (lets : Lets)
