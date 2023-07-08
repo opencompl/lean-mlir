@@ -3,9 +3,9 @@
 import Std.Data.Option.Lemmas
 import Std.Data.Array.Lemmas
 import Std.Data.Array.Init.Lemmas
+import Std.Data.List.Basic
 import Mathlib
 import Mathlib.Data.List.Indexes
-
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -281,6 +281,7 @@ def Lets.denote (lets : Lets) (s : State := []): State :=
 structure ComFlat where
   lets : Lets -- sequence of let bindings.
   ret : VarRel -- return value.
+  deriving Repr
 
 def ComFlat.denote (prog: ComFlat) : Value :=
   let s := prog.lets.denote
@@ -326,6 +327,28 @@ theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote c
    simp [Com.denote]
    simp [IH]
    simp [denoteExpr_shift_zero]
+
+def ComFlat.addLet (prog : ComFlat) : ComFlat :=
+  let newLet := Expr.cst 42
+  let newLets := newLet :: prog.lets
+  { lets := newLets, ret := (prog.ret + 1) }
+
+def ComFlat.addLets (prog : ComFlat) (n : Nat) : ComFlat :=
+  if n = 0 then prog else prog.addLets (n-1)
+
+def exFlat := ComFlat.mk [Expr.op 0 1, Expr.cst 3, Expr.cst 5] 0
+
+theorem denoteComFlat_addLet : (exFlat.addLet).denote = exFlat.denote := by
+  simp [ComFlat.addLet, ComFlat.denote]
+
+theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
+  induction n
+  case zero =>
+    simp [ComFlat.addLets, ComFlat.denote]
+  case succ n h =>
+    unfold ComFlat.addLets
+    simp [ Nat.succ_sub_one]
+    apply h
 
 /-
 theorem denoteCom_shift_snoc :
