@@ -112,6 +112,7 @@ instance : Repr Com where
 
 abbrev Mapping := List (MVarId × Nat)
 abbrev Lets := List Expr
+abbrev FwdLets := List Expr
 
 def ex0 : Com :=
   Com.let (.cst 0) <|
@@ -188,6 +189,15 @@ def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
   | .ret x => .ret (shiftVarBy x delta (pos+1))
   | .let e body => .let (shiftExprBy e delta pos) (shiftComBy body delta (pos+1))
 
+structure ComFlat where
+  lets : FwdLets -- sequence of let bindings.
+  ret : Nat -- return value.
+  deriving Repr
+
+def shiftComFlatBy (inputProg : ComFlat) (delta : ℕ) (pos : ℕ := 0): ComFlat where
+  lets := inputProg.lets.map fun e => shiftExprBy e delta pos
+  ret := shiftVarBy inputProg.ret delta pos
+
 def Nat.inc (v : Nat) : Nat :=
   v + 1
 
@@ -203,6 +213,14 @@ def replaceUsesOfVar (inputProg : Com) (old: Nat) (new : Nat) : Com :=
 
 def addLetsToProgram (newLets : Lets) (oldProgram : Com) : Com :=
   newLets.foldl (λ acc e => Com.let e acc) oldProgram
+
+def addExprToProgramFlat (e: Expr) (oldProgram : ComFlat) : ComFlat where
+  lets := e :: oldProgram.lets
+  ret := oldProgram.ret
+
+def addLetsToProgramFlat (lets : FwdLets) (oldProgram : ComFlat) : ComFlat where
+  lets := lets ++ oldProgram.lets
+  ret := oldProgram.ret
 
 /-- unfolding lemma for `addLetsToProgram` -/
 theorem addLetsToProgram_cons (e : Expr) (ls : Lets) (c : Com) :
@@ -236,22 +254,22 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
         else
            rewriteAt body (depth - 1) rewrite lets
 
-def addCstToLets (lets : Lets) (inputProg : Com) : Com :=
+def addCstToLets (lets : Lets) (inputProg : ComFlat) : ComFlat :=
   let newLets := (.cst 42) :: lets
   let newProgram := inputProg
-  let newProgram := shiftComBy newProgram (newLets.length - lets.length)
-  let newProgram := addLetsToProgram newLets newProgram
+  let newProgram := shiftComFlatBy newProgram (newLets.length - lets.length)
+  let newProgram := addLetsToProgramFlat newLets newProgram
   newProgram
 
-def insertCst (inputProg : Com) (depth : Nat) (lets: Lets := []) : Com :=
+def insertCst (inputProg : ComFlat) (depth : Nat) (ls: Lets := []) : ComFlat :=
   match depth with
-    | 0 => addCstToLets lets inputProg
+    | 0 => addCstToLets ls inputProg
     | i + 1 => 
-      match inputProg with
-        | .ret v => .ret v
-        | .let expr body =>
-          let lets := expr :: lets
-          insertCst body i lets
+      match inputProg.lets with
+        | [] => inputProg
+        | cs :: cons => 
+        let ls := cs :: ls
+        addExprToProgramFlat cs (insertCst ⟨cons, inputProg.ret⟩ i ls
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
@@ -278,13 +296,12 @@ def denote (p: Com) : Value :=
 def Lets.denote (lets : Lets) (s : State := []): State :=
   List.foldr (λ v s => (v.denote s) :: s) s lets
 
-structure ComFlat where
-  lets : Lets -- sequence of let bindings.
-  ret : Nat -- return value.
-  deriving Repr
+def FwdLets.denote (lets : FwdLets) (s : State := []): State :=
+  List.foldl (λ s v => (v.denote s) :: s) s lets
 
-def ComFlat.denote (prog: ComFlat) : Value :=
-  let s := prog.lets.denote
+
+def ComFlat.denote (prog: ComFlat) (s : State := []): Value :=
+  let s := prog.lets.denote s
   .nat (getVal s prog.ret)
 
 def flatToTree (prog: ComFlat) : Com :=
@@ -303,7 +320,7 @@ theorem key_lemma :
   induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
-  unfold flatToTree denote; simp [key_lemma]; rfl
+  unfold flatToTree denote; simp [key_lemma]; sorry
 
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp [shiftVarBy]
@@ -328,7 +345,7 @@ theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote c
 
 def ComFlat.addLet (prog : ComFlat) : ComFlat :=
   let newLet := Expr.cst 42
-  let newLets := newLet :: prog.lets
+  let newLets := prog.lets ++ [newLet]
   { lets := newLets, ret := (prog.ret + 1) }
 
 def ComFlat.addLets (prog : ComFlat) (n : Nat) : ComFlat :=
@@ -338,6 +355,7 @@ def exFlat := ComFlat.mk [Expr.op 0 1, Expr.cst 3, Expr.cst 5] 0
 
 theorem denoteComFlat_addLet : (exFlat.addLet).denote = exFlat.denote := by
   simp [ComFlat.addLet, ComFlat.denote]
+
 
 theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
   induction n
@@ -356,32 +374,78 @@ theorem denoteCom_shift_snoc :
   Com.denote (addLetsToProgram ls c) () := by
 -/
 
-/-
-theorem denoteCom_shift_cons :
-  Com.denote (addLetsToProgram (List.concat ls e) c) σ =
-  Com.denote (addLetsToProgram ls c) () := by
--/
+theorem FwdLets.denote_cons :
+  FwdLets.denote (e :: ls) s = FwdLets.denote ls (e.denote s :: s) := by
+  rfl
+
+theorem denoteFlat_addExpr :
+  ComFlat.denote (addExprToProgramFlat e c) s =
+  ComFlat.denote c (Expr.denote e s :: s) := by
+    simp [ComFlat.denote, addExprToProgramFlat]
+    simp [FwdLets.denote]
+
+theorem FwdLets.denote_append :
+  FwdLets.denote (l₁ ++ l₂) s = FwdLets.denote l₂ (FwdLets.denote l₁ s) := by
+  simp [FwdLets.denote]
+
+theorem unfortunate:
+  Expr.denote e (FwdLets.denote ls s) :: FwdLets.denote ls s = FwdLets.denote (ls ++ [e]) s := by
+    simp [FwdLets.denote]
+
+theorem denoteFlat_concatExpr:
+  ComFlat.denote (addLetsToProgramFlat (ls ++ [e]) c) s =
+  ComFlat.denote c (FwdLets.denote [e] (FwdLets.denote ls s)) := by
+    unfold addLetsToProgramFlat
+    unfold ComFlat.denote
+    simp [FwdLets.denote_append]
+    simp [FwdLets.denote_cons]
+    simp [FwdLets.denote]
+
+theorem ComFlat.denote_addLetsToProgram:
+  ComFlat.denote (addLetsToProgramFlat ls c) s = ComFlat.denote c (ls.denote s) := by 
+  induction ls using List.reverseRecOn
+  case H0 =>
+    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote]
+  case H1 ls e IH =>
+    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote, IH]
+
+theorem shiftExprBy_zero:
+  shiftExprBy e 0 pos = e := by
+  induction e generalizing pos <;> simp_all [shiftExprBy, shiftVarBy]  
+
+theorem shiftComFlatBy_zero:
+  shiftComFlatBy p 0 = p := by
+  simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
+
+theorem ComFlat.denote_shift_cancellation:
+  ComFlat.denote (shiftComFlatBy p (k + 1)) (FwdLets.denote [e] s) =
+  ComFlat.denote (shiftComFlatBy p k) s :=
+  by
+    sorry
+
+theorem ComFlat.denote_shiftComFlatBy:
+ComFlat.denote (shiftComFlatBy p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
+induction ls using List.reverseRecOn generalizing p s
+case H0 =>
+  simp [List.length]
+  simp [FwdLets.denote]
+  simp [shiftComFlatBy_zero]
+case H1 ls e IH =>
+  simp [List.length]
+  simp [FwdLets.denote_append]
+  simp [ComFlat.denote_shift_cancellation]
+  simp [IH]
 
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
 Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
 binding. Push the `denote` through and then rewrite across the single index change. -/
 theorem shifting:
-  Com.denote (addLetsToProgram lets (shiftComBy p (lets.length))) s =
-  Com.denote p s := by
-  revert p s
-  induction lets
-  case nil =>
-    simp [List.length]
-    simp [addLetsToProgram]
-    simp [denoteCom_shift_zero]
+  ComFlat.denote (addLetsToProgramFlat ls (shiftComFlatBy p (ls.length))) s =
+  ComFlat.denote p s := by
+  simp [ComFlat.denote_addLetsToProgram]
+  simp [ComFlat.denote_shiftComFlatBy]
 
-  case cons x xs IH =>
-   simp [List.length]
-   simp [addLetsToProgram_cons]
-   simp [IH]
-   sorry
-
-theorem denoteInsertCst : Com.denote (insertCst prog 0) s = Com.denote prog s := by
+theorem denoteInsertCst : ComFlat.denote (insertCst prog 0) s = ComFlat.denote prog s := by
   unfold insertCst
   unfold addCstToLets
   apply shifting
