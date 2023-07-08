@@ -240,8 +240,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let newProgram := inputProg
   let newProgram := shiftComBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram ((newLets.length - lets.length)) ((newVar))
-  let newProgram := addLetsToProgram newLets newProgram@
-
+  let newProgram := addLetsToProgram newLets newProgram
   some newProgram
 
 def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (lets: Lets := []) : Option Com :=
@@ -306,6 +305,20 @@ def Lets.denote (lets : Lets) (s : State := []): State :=
 def FwdLets.denote (lets : FwdLets) (s : State := []): State :=
   List.foldl (λ s v => (v.denote s) :: s) s lets
 
+def Lets.toFwdLets (lets : Lets) : FwdLets := lets.reverse
+
+def FwdLets.toLets (flets : FwdLets) : Lets := flets.reverse
+
+theorem lets_denote_eq_fwd_lets_denote (lets : Lets) (s : State) : lets.denote s = lets.toFwdLets.denote s := by
+  induction lets with
+  | nil => rfl
+  | cons e es ih => simp [Lets.toFwdLets, FwdLets.denote, Lets.denote, ih]
+
+theorem lets_eq_toFwdLets_toLets (lets : Lets) : lets.toFwdLets.toLets = lets := by
+  simp [Lets.toFwdLets, FwdLets.toLets, List.reverse_reverse]
+
+theorem flets_eq_toLets_toFwdLets (lets : FwdLets) : lets.toLets.toFwdLets = lets := by
+  simp [Lets.toFwdLets, FwdLets.toLets, List.reverse_reverse]
 
 def ComFlat.denote (prog: ComFlat) (s : State := []): Value :=
   let s := prog.lets.denote s
@@ -322,12 +335,21 @@ def ExprRec.denote (e : ExprRec) (s : State) : Value :=
                      Value.nat (a_val + b_val)
     | .mvar v => s.get! v
 
+theorem com_ret_denote_flat_denote_eq_denote_flat 
+(flat : ComFlat) : (Com.ret flat.ret).denote flat.lets.denote = flat.denote := by
+  simp [Com.denote, FwdLets.denote, ComFlat.denote]
+
 theorem key_lemma :
     (addLetsToProgram lets xs).denote s = xs.denote (lets.denote s) := by
   induction lets generalizing xs <;> simp_all [addLetsToProgram, Com.denote, Lets.denote]
 
 theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
-  unfold flatToTree denote; simp [key_lemma]; sorry
+  unfold flatToTree denote; simp [key_lemma]
+  sorry
+  --; sorry
+
+-- The theorem above is wrong. I presume it's because flatToTree uses Lets and not FwdLets
+example : False := by cases @denoteFlatDenoteTree [Expr.cst 1, Expr.cst 2, Expr.add 0 1]
 
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp [shiftVarBy]
