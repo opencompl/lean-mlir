@@ -241,6 +241,7 @@ def applyRewrite (lets : Lets) (inputProg : Com) (rewrite: ExprRec × ExprRec) :
   let newProgram := shiftComBy newProgram (newLets.length - lets.length)
   let newProgram := replaceUsesOfVar newProgram ((newLets.length - lets.length)) ((newVar))
   let newProgram := addLetsToProgram newLets newProgram
+
   some newProgram
 
 def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (lets: Lets := []) : Option Com :=
@@ -267,6 +268,14 @@ def splitProgram (inputProg : ComFlat) (depth : Nat) : Option (Lets × ComFlat) 
     let split := inputProg.lets.splitAt depth
     let newProg : ComFlat := ⟨split.2, inputProg.ret⟩
     some (split.1, newProg)
+
+def insertNothing (inputProg : ComFlat) (depth : Nat) : ComFlat :=
+  let split := splitProgram inputProg depth
+  match split with
+  | none => inputProg
+  | some split => 
+    let ⟨ls, prog⟩ := split
+    addLetsToProgramFlat ls prog
 
 def insertCst (inputProg : ComFlat) (depth : Nat) : ComFlat :=
   let split := splitProgram inputProg depth
@@ -547,18 +556,27 @@ theorem addLetsToProgram_append:
   addLetsToProgramFlat (ls₁ ++ ls₂) p = addLetsToProgramFlat ls₁ (addLetsToProgramFlat ls₂ p) := by
   induction ls₁ using List.reverseRecOn generalizing p <;>  simp [addLetsToProgramFlat]
 
-theorem splitAddLets (h: splitProgram p pos = some (ls, p')):
-   addLetsToProgramFlat ls p' = p := by
+theorem splitProgramAddLets
+   (h: splitProgram p pos = some split):
+   addLetsToProgramFlat split.fst split.snd = p := by
    unfold splitProgram at h
    split at h
    case inl =>
      contradiction
    case inr h' =>
      simp at h
-     simp [addLetsToProgramFlat]
-     sorry
+     unfold addLetsToProgramFlat
+     cases h
+     simp
 
-
+theorem denoteInsertNothing : ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
+  unfold insertNothing
+  simp
+  split
+  case h_1 =>
+    simp
+  case h_2 _ split heq =>
+    rw [splitProgramAddLets heq]
 
 theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
   unfold insertCst
@@ -571,7 +589,7 @@ theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote
     simp_all
     unfold addCstToLets
     rw [shifting]
-    sorry
+     
 
 
       
