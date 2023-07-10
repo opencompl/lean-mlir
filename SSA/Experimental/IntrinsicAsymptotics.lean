@@ -368,52 +368,16 @@ def ComFlat.addLets (prog : ComFlat) (n : Nat) : ComFlat :=
 
 def exFlat := ComFlat.mk [Expr.op 0 1, Expr.cst 3, Expr.cst 5] 0
 
-theorem denoteComFlat_addLet : (exFlat.addLet).denote = exFlat.denote := by
-  simp [ComFlat.addLet, ComFlat.denote]
-
-
-theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
-  induction n
-  case zero =>
-    simp [ComFlat.addLets, ComFlat.denote]
-  case succ n h =>
-    unfold ComFlat.addLets
-    simp [ Nat.succ_sub_one]
-    apply h
-
-theorem denoteFlat_addExpr :
-  ComFlat.denote (addExprToProgramFlat e c) s =
-  ComFlat.denote c (Expr.denote e s :: s) := by
-    simp [ComFlat.denote, addExprToProgramFlat]
-    simp [FwdLets.denote]
-
 theorem unfortunate:
   Expr.denote e (FwdLets.denote ls s) :: FwdLets.denote ls s = FwdLets.denote (ls ++ [e]) s := by
     simp [FwdLets.denote]
-
-theorem denoteFlat_concatExpr:
-  ComFlat.denote (addLetsToProgramFlat (ls ++ [e]) c) s =
-  ComFlat.denote c (FwdLets.denote [e] (FwdLets.denote ls s)) := by
-    unfold addLetsToProgramFlat
-    unfold ComFlat.denote
-    simp [FwdLets.denote_append]
-    simp [FwdLets.denote_cons]
-    simp [FwdLets.denote]
-
-theorem ComFlat.denote_addLetsToProgram:
-  ComFlat.denote (addLetsToProgramFlat ls c) s = ComFlat.denote c (ls.denote s) := by 
-  induction ls using List.reverseRecOn
-  case H0 =>
-    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote]
-  case H1 ls e IH =>
-    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote, IH]
 
 theorem shiftExprBy_zero:
   shiftExprBy e 0 pos = e := by
   induction e generalizing pos <;> simp_all [shiftExprBy, shiftVarBy]  
 
 theorem Expr.denote_shift_one:
-  (shiftExprBy e 1 0).denote (x :: s) = e.denote s  := by
+    Expr.denote (shiftExprBy e 1 0) (x :: s) = Expr.denote e s  := by
   unfold denote
   simp [shiftExprBy]
   cases e
@@ -427,7 +391,7 @@ theorem Expr.denote_shift_one:
     simp
 
 theorem Expr.denote_shift_ls:
-  (shiftExprBy e (x.length) 0).denote (x ++ s) = e.denote s  := by
+    Expr.denote (shiftExprBy e (x.length) 0) (x ++ s) = Expr.denote e s  := by
   induction x generalizing s
   unfold denote
   simp [shiftExprBy]
@@ -454,10 +418,6 @@ theorem Expr.denote_shift_ls:
       unfold getVal at IH
       simp [IH]
 
-theorem shiftComFlatBy_zero:
-  shiftComFlatBy p 0 = p := by
-  simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
-
 theorem FwdLets.denote_empty :
     FwdLets.denote [] s = s  := by
   simp [FwdLets.denote]
@@ -470,72 +430,60 @@ theorem FwdLets.denote_cons :
      FwdLets.denote (e :: ls) s = FwdLets.denote ls (e.denote s :: s) := by
   rfl
 
+theorem shiftComFlatBy_zero:
+  shiftComFlatBy p 0 = p := by
+  simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
 
-theorem xx:
+theorem ComFlat.denote_addLetsToProgram :
+    ComFlat.denote (addLetsToProgramFlat ls c) s = ComFlat.denote c (ls.denote s) := by 
+  induction ls using List.reverseRecOn
+  case H0 =>
+    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote]
+  case H1 ls e IH =>
+    simp [addLetsToProgramFlat, ComFlat.denote, FwdLets.denote, IH]
 
-Expr.denote (shiftExprBy e 1 0) (Expr.denote e_extra s :: s) :: Expr.denote e_extra s :: s = 
-(FwdLets.denote [e_extra] s) := by
-  simp [FwdLets.denote]
-  simp [shiftExprBy, Expr.denote]
-  cases e
-  case cst n =>
-    simp
-    split
-    simp
-    sorry
-    sorry 
-  sorry  
-
-
-theorem denote_shiftComFlatBy_cons:
-  ComFlat.denote (shiftComFlatBy p 1) (FwdLets.denote [e_extra] s) = ComFlat.denote p s := by
-  unfold ComFlat.denote
-  simp
-  unfold shiftComFlatBy
-  simp
-  induction p.lets generalizing p s
-  case nil =>
-    simp [FwdLets.denote, shiftVarBy]
-    simp [getVal]
-  case cons e ls IH =>
-    simp [Expr.denote_shift_ls]
-    simp [FwdLets.denote_cons]
-    simp [FwdLets.denote_empty]
-    simp [xx]
+theorem ComFlat.denote_shiftComFlatBy :
+    ComFlat.denote (shiftComFlatBy p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
+  induction ls using List.reverseRecOn generalizing p s
+  case H0 =>
+    simp [List.length]
+    simp [FwdLets.denote]
+    simp [shiftComFlatBy_zero]
+  case H1 ls e IH =>
+    simp [List.length]
+    simp [FwdLets.denote_append]
+    simp [ComFlat.denote_shift_cancellation]
     simp [IH]
-    simp [IH, shiftVarBy, FwdLets, Expr.denote, getVal]
-    sorry
 
-
-
-theorem ComFlat.denote_shift_cancellation:
-  ComFlat.denote (shiftComFlatBy p (k + 1)) (FwdLets.denote [e] s) =
-  ComFlat.denote (shiftComFlatBy p k) s :=
-  by
-    induction k generalizing p s
-    case zero =>
-      simp
-      simp [shiftComFlatBy_zero]
-      sorry
-
-    simp [ComFlat.denote]
-    simp [FwdLets.denote_cons]
-    simp [shiftComFlatBy]
-    simp [shiftExprBy_zero]
-    sorry
-
-theorem ComFlat.denote_shiftComFlatBy:
-ComFlat.denote (shiftComFlatBy p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
-induction ls using List.reverseRecOn generalizing p s
-case H0 =>
-  simp [List.length]
-  simp [FwdLets.denote]
-  simp [shiftComFlatBy_zero]
-case H1 ls e IH =>
-  simp [List.length]
+theorem ComFlat.denote_concatExpr:
+    ComFlat.denote (addLetsToProgramFlat (ls ++ [e]) c) s =
+    ComFlat.denote c (FwdLets.denote [e] (FwdLets.denote ls s)) := by
+  unfold addLetsToProgramFlat
+  unfold ComFlat.denote
   simp [FwdLets.denote_append]
-  simp [ComFlat.denote_shift_cancellation]
-  simp [IH]
+  simp [FwdLets.denote_cons]
+  simp [FwdLets.denote]
+
+theorem ComFlat.denote_addLet :
+    ComFlat.denote (exFlat.addLet) = ComFlat.denote exFlat := by
+  simp [ComFlat.addLet, ComFlat.denote]
+
+theorem ComFlat.denote_addLets :
+    (exFlat.addLets n).denote = exFlat.denote := by
+  induction n
+  case zero =>
+    simp [ComFlat.addLets, ComFlat.denote]
+  case succ n h =>
+    unfold ComFlat.addLets
+    simp [ Nat.succ_sub_one]
+    apply h
+
+theorem denoteFlat_addExpr :
+  ComFlat.denote (addExprToProgramFlat e c) s =
+  ComFlat.denote c (Expr.denote e s :: s) := by
+    simp [ComFlat.denote, addExprToProgramFlat]
+    simp [FwdLets.denote]
+
 
 /-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
 Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
@@ -578,9 +526,6 @@ theorem denoteInsertNothing :
 --  simp [FwdLets.denote_cons]
 --  simp [FwdLets.denote]
 
--- theorem Expr.denote_shift_ls:
--- (shiftExprBy e (x.length) 0).denote (x ++ s) = e.denote s  := by
-
 
 theorem hgh:
   ComFlat.denote (addExprToProgramFlat e (shiftComFlatBy prog 1)) s = ComFlat.denote prog (s) := by
@@ -614,7 +559,6 @@ theorem yyyy:
     unfold shiftComFlatBy
     simp
     simp [Expr.denote_shift_one]
-    simp [Expr.denote_shift_ls
 
 
   sorry
