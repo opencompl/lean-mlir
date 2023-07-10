@@ -31,7 +31,7 @@ abbrev State := List Value
 abbrev Ctxt := List Ty
 
 /-- A very simple intrinsically typed expression. -/
- IExpr : Ctxt → Ty → Type
+ inductive IExpr : Ctxt → Ty → Type
   /-- Nat literals. -/
   | cst (n : Nat) : IExpr Γ .nat
   /-- Variables are represented as indices into the context, i.e. `var 0` is the most recently introduced variable. -/
