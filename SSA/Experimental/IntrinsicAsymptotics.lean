@@ -428,20 +428,16 @@ theorem ComFlat.shift_zero:
   ComFlat.shift p 0 = p := by
   simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
 
-theorem ComFlat.denote_addLetsToProgram :
-    ComFlat.denote (ComFlat.addLets ls c) s = ComFlat.denote c (ls.denote s) := by 
-  induction ls using List.reverseRecOn
-  case H0 =>
-    simp [ComFlat.addLets, ComFlat.denote, FwdLets.denote]
-  case H1 ls e IH =>
-    simp [ComFlat.addLets, ComFlat.denote, FwdLets.denote, IH]
+theorem ComFlat.addLets_append : 
+    ComFlat.addLets (ls₁ ++ ls₂) p = ComFlat.addLets ls₁ (ComFlat.addLets ls₂ p) := by
+  induction ls₁ using List.reverseRecOn generalizing p <;>  simp [ComFlat.addLets]
 
 theorem ComFlat.denote_shift_cancellation:
     ComFlat.denote (ComFlat.shift p (k + 1)) (FwdLets.denote [e] s) =
     ComFlat.denote (ComFlat.shift p k) s := by
   sorry
 
-theorem ComFlat.denote_ComFlat.shift :
+theorem ComFlat.denote_shift :
     ComFlat.denote (ComFlat.shift p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
   induction ls using List.reverseRecOn generalizing p s
   case H0 =>
@@ -454,7 +450,21 @@ theorem ComFlat.denote_ComFlat.shift :
     simp [ComFlat.denote_shift_cancellation]
     simp [IH]
 
-theorem ComFlat.denote_concatExpr :
+theorem ComFlat.denote_addExpr :
+  ComFlat.denote (ComFlat.addExpr e c) s =
+  ComFlat.denote c (Expr.denote e s :: s) := by
+    simp [ComFlat.denote, ComFlat.addExpr]
+    simp [FwdLets.denote]
+
+theorem ComFlat.denote_addLets :
+    ComFlat.denote (ComFlat.addLets ls c) s = ComFlat.denote c (ls.denote s) := by 
+  induction ls using List.reverseRecOn
+  case H0 =>
+    simp [ComFlat.addLets, ComFlat.denote, FwdLets.denote]
+  case H1 ls e IH =>
+    simp [ComFlat.addLets, ComFlat.denote, FwdLets.denote, IH]
+
+theorem ComFlat.denote_addLets_concat :
     ComFlat.denote (ComFlat.addLets (ls ++ [e]) c) s =
     ComFlat.denote c (FwdLets.denote [e] (FwdLets.denote ls s)) := by
   unfold ComFlat.addLets
@@ -463,24 +473,11 @@ theorem ComFlat.denote_concatExpr :
   simp [FwdLets.denote_cons]
   simp [FwdLets.denote]
 
-theorem ComFlat.denote_addExpr :
-  ComFlat.denote (ComFlat.addExpr e c) s =
-  ComFlat.denote c (Expr.denote e s :: s) := by
-    simp [ComFlat.denote, ComFlat.addExpr]
-    simp [FwdLets.denote]
-
-/-- @sid: this theorem statement is wrong. I need to think properly about what shift is saying.
-Anyway, proof outline: prove a theorem that tells us how the index changes when we add a single let
-binding. Push the `denote` through and then rewrite across the single index change. -/
-theorem shifting:
-  ComFlat.denote (ComFlat.addLets ls (ComFlat.shift p (ls.length))) s =
-  ComFlat.denote p s := by
-  simp [ComFlat.denote_addLetsToProgram]
-  simp [ComFlat.denote_ComFlat.shift]
-
-theorem ComFlat.addLets_append: 
-  ComFlat.addLets (ls₁ ++ ls₂) p = ComFlat.addLets ls₁ (ComFlat.addLets ls₂ p) := by
-  induction ls₁ using List.reverseRecOn generalizing p <;>  simp [ComFlat.addLets]
+theorem ComFlat.denote_addLets_shift:
+    ComFlat.denote (ComFlat.addLets ls (ComFlat.shift p (ls.length))) s =
+    ComFlat.denote p s := by
+  simp [ComFlat.denote_addLets]
+  simp [ComFlat.denote_shift]
 
 theorem ComFlat.addLets_splitProgram
      (h: splitProgram p pos = some split) :
@@ -495,7 +492,7 @@ theorem ComFlat.addLets_splitProgram
      cases h
      simp
 
-theorem denoteInsertNothing :
+theorem ComFlat.denote_insertNothing :
     ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
   unfold insertNothing
   simp
@@ -514,7 +511,7 @@ theorem ComFlat.denote_add_lets_single:
     ComFlat.denote (ComFlat.addLets [] prog) s := by
   sorry
 
-theorem ComFlat.denote_addLets_concat:
+theorem ComFlat.denote_addLets_concat_shift:
     ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift prog 1)) s =
     ComFlat.denote (ComFlat.addLets ls prog) s := by
   sorry
