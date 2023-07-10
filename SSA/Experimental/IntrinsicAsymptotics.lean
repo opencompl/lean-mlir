@@ -189,14 +189,27 @@ def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
   | .ret x => .ret (shiftVarBy x delta (pos+1))
   | .let e body => .let (Expr.shift e delta pos) (shiftComBy body delta (pos+1))
 
+-- ## `ComFlat`: IR with a flat sequence of let bindings.
+
 structure ComFlat where
-  lets : FwdLets -- sequence of let bindings.
-  ret : Nat -- return value.
+  lets : FwdLets -- sequence of let bindings, where `lets[0]` is the 
+                 -- first let binding to be executed, and `lets[lets.len - 1]`
+                 -- is the last let binding to be executed.
+  ret : Nat -- return index.
+            -- Index of the let-binding `lets[lets.len - 1 - ret]` from which to return the value. 
   deriving Repr
 
-def ComFlat.shift (delta : ℕ) (pos : ℕ) (prog : ComFlat) : ComFlat where
-  lets := prog.lets.map fun e => Expr.shift e delta pos
-  ret := shiftVarBy prog.ret delta pos
+-- #eval List.range 5 10
+
+/-
+Move all indexing in `prog` by `delta`. If `pos` is nonzero, then only shift
+those let-bindings which occur after `lets[pos]`. This will shift in the half-open interval:
+  [let.pos,..lets.length) 
+-/
+def ComFlat.shift (delta : Nat) (pos : Nat) (prog : ComFlat) : ComFlat :=
+  let idxs := List.range prog.lets.length 
+  let lets := (List.zip idxs prog.lets).map (λ (idx, el) => Expr.shift el delta (idx + pos))
+  { lets := lets, ret := shiftVarBy prog.ret (delta := delta) (pos := (pos + prog.lets.length)) }
 
 def Nat.inc (v : Nat) : Nat :=
   v + 1
@@ -254,13 +267,6 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
         else
            rewriteAt body (depth - 1) rewrite lets
 
-def addCstToLets (lets : Lets) (inputProg : ComFlat) : ComFlat :=
-  let newLets := Expr.cst 42 :: lets
-  let newProgram := inputProg
-  let newProgram := ComFlat.shift 1 0 newProgram
-  let newProgram := ComFlat.addLets newLets newProgram
-  newProgram
-
 def splitProgram (inputProg : ComFlat) (depth : Nat) : Option (Lets × ComFlat) :=
   if inputProg.lets.length < depth then
     none
@@ -277,7 +283,15 @@ def insertNothing (inputProg : ComFlat) (depth : Nat) : ComFlat :=
     let ⟨ls, prog⟩ := split
     ComFlat.addLets ls prog
 
-def insertCst (inputProg : ComFlat) (depth : Nat) : ComFlat :=
+def ComFlat.addCstToLets (lets : FwdLets) (inputProg : ComFlat) : ComFlat :=
+  dbg_trace repr lets
+  let newLets : FwdLets := lets ++ [Expr.cst 42]
+  let newProgram := inputProg
+  let newProgram := ComFlat.shift 1 0 newProgram
+  let newProgram := ComFlat.addLets newLets newProgram
+  newProgram
+
+def ComFlat.insertCst (inputProg : ComFlat) (depth : Nat) : ComFlat :=
   let split := splitProgram inputProg depth
   match split with
   | none => inputProg
@@ -285,6 +299,19 @@ def insertCst (inputProg : ComFlat) (depth : Nat) : ComFlat :=
     let ⟨ls, prog⟩ := split
     let newProg := addCstToLets ls prog
     newProg
+
+/-
+ Expr.cst 1
+ ret 0
+
+ References that point outside, must be updated.
+
+-/
+def t0 := ComFlat.insertCst (ComFlat.mk [Expr.cst 1] 0) 0
+example : t0 = { lets := [Expr.cst 42, Expr.cst 1], ret := 0 } := rfl -- Correct
+
+def t1 := ComFlat.insertCst (ComFlat.mk [Expr.cst 1] 0) 1
+example : t1 = { lets := [Expr.cst 1, Expr.cst 42], ret := 1 } := rfl
 
 def rewrite (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) : Com :=
     let x := rewriteAt inputProg depth rewrite
@@ -315,6 +342,11 @@ def FwdLets.denote (lets : FwdLets) (s : State := []): State :=
   List.foldl (λ s v => (v.denote s) :: s) s lets
 
 
+/-- 
+Run the sequence of let bindings in `prog`, returning the value of
+the let binding computed at `prog.lets[prog.lets.len - 1 - prog.ret]`.
+Usually, `prog.ret = 0` and this models returning the final `let` binding.    
+-/
 def ComFlat.denote (prog: ComFlat) (s : State := []): Value :=
   let s := prog.lets.denote s
   .nat (getVal s prog.ret)
@@ -424,6 +456,10 @@ theorem FwdLets.denote_cons :
      FwdLets.denote (e :: ls) s = FwdLets.denote ls (e.denote s :: s) := by
   rfl
 
+theorem ComFlat.addExpr_factor_out (ret : Nat) :
+    ComFlat.mk (cs :: cons) ret = ComFlat.addExpr cs (ComFlat.mk cons ret) := by
+  simp [ComFlat.addExpr]
+
 theorem ComFlat.shift_zero:
   ComFlat.shift 0 0 p = p := by
   simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
@@ -496,16 +532,42 @@ theorem ComFlat.addLets_splitProgram
      cases h
      simp
 
+
+theorem ComFlat.addLets_emptyProg (lets : FwdLets) (ret : Nat) :
+    ((ComFlat.mk [] ret) |> (ComFlat.addLets ls)) = ComFlat.mk ls ret := by simp [ComFlat.addLets]
+
+theorem ComFlat.denote_addLets_concat_shift' (p : ComFlat) (ls : FwdLets) (ret : Nat) :
+    ComFlat.denote (ComFlat.mk [] ret |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
+    ComFlat.denote (ComFlat.mk [] ret) s := by
+  simp [ComFlat.denote, ComFlat.shift, ComFlat.addExpr, getVal, shiftVarBy, FwdLets.denote]
+
+theorem ComFlat.denote_addLets_concat_shift'' (p : ComFlat) (ls : FwdLets) (ret : Nat) :
+    ComFlat.denote (ComFlat.mk [Expr.op a b] ret |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
+    ComFlat.denote (ComFlat.mk [Expr.op a b] ret) s := by
+  unfold ComFlat.denote
+  simp [FwdLets.denote, Expr.denote]
+  simp [Expr.shift, shiftVarBy, getVal, ComFlat.shift, ComFlat.addExpr]
+
+
+  simp [ComFlat.denote, ComFlat.shift, ComFlat.addExpr, getVal, shiftVarBy, FwdLets.denote]
+
 theorem ComFlat.denote_addLets_concat_shift (p : ComFlat) (ls : FwdLets) :
-    ComFlat.denote (p |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e) |> (ComFlat.addLets ls)) s =
-    ComFlat.denote (ComFlat.addLets ls p) s := by
+    ComFlat.denote (p |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
+    ComFlat.denote p s := by
   cases p
   rename_i lets ret
   induction lets generalizing s
-  case mk.nil =>
+  case nil =>
     simp [ComFlat.addLets, ComFlat.denote, getVal, ComFlat.shift, FwdLets.denote, Expr.denote, Expr.shift, shiftVarBy]
-  
-  case mk.cons cs ls IH =>
+
+    
+  case mk.cons head tail IH =>
+    rw [ComFlat.addExpr_factor_out]
+
+    ComFlat.mk (cs :: cons) ret = ComFlat.addExpr cs (ComFlat.mk cons ret) := by
+  simp [ComFlat.addExpr]
+
+]
     simp [ComFlat.shift]
     sorry
 
@@ -563,7 +625,7 @@ theorem ComFlat.denote_insertNothing :
     rw [ComFlat.addLets_splitProgram heq]
 
 theorem ComFlat.denote_insertCst :
-    ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
+    ComFlat.denote (ComFlat.insertCst prog pos) s = ComFlat.denote prog s := by
   sorry
       
 theorem letsTheorem
