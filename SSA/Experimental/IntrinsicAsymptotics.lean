@@ -194,9 +194,9 @@ structure ComFlat where
   ret : Nat -- return value.
   deriving Repr
 
-def ComFlat.shift (inputProg : ComFlat) (delta : ℕ) (pos : ℕ := 0): ComFlat where
-  lets := inputProg.lets.map fun e => Expr.shift e delta pos
-  ret := shiftVarBy inputProg.ret delta pos
+def ComFlat.shift (delta : ℕ) (pos : ℕ) (prog : ComFlat) : ComFlat where
+  lets := prog.lets.map fun e => Expr.shift e delta pos
+  ret := shiftVarBy prog.ret delta pos
 
 def Nat.inc (v : Nat) : Nat :=
   v + 1
@@ -257,7 +257,7 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
 def addCstToLets (lets : Lets) (inputProg : ComFlat) : ComFlat :=
   let newLets := Expr.cst 42 :: lets
   let newProgram := inputProg
-  let newProgram := ComFlat.shift newProgram 1
+  let newProgram := ComFlat.shift 1 0 newProgram
   let newProgram := ComFlat.addLets newLets newProgram
   newProgram
 
@@ -425,7 +425,7 @@ theorem FwdLets.denote_cons :
   rfl
 
 theorem ComFlat.shift_zero:
-  ComFlat.shift p 0 = p := by
+  ComFlat.shift 0 0 p = p := by
   simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
 
 theorem ComFlat.addLets_concat :
@@ -437,12 +437,12 @@ theorem ComFlat.addLets_append :
   induction ls₁ using List.reverseRecOn generalizing p <;>  simp [ComFlat.addLets]
 
 theorem ComFlat.denote_shift_cancellation:
-    ComFlat.denote (ComFlat.shift p (k + 1)) (FwdLets.denote [e] s) =
-    ComFlat.denote (ComFlat.shift p k) s := by
+    ComFlat.denote (ComFlat.shift (k + 1) 0 p) (FwdLets.denote [e] s) =
+    ComFlat.denote (ComFlat.shift k 0 p) s := by
   sorry
 
 theorem ComFlat.denote_shift :
-    ComFlat.denote (ComFlat.shift p (List.length ls)) (FwdLets.denote ls s) = ComFlat.denote p s := by
+    ComFlat.denote (ComFlat.shift (List.length ls) 0 p) (FwdLets.denote ls s) = ComFlat.denote p s := by
   induction ls using List.reverseRecOn generalizing p s
   case H0 =>
     simp [List.length]
@@ -478,7 +478,7 @@ theorem ComFlat.denote_addLets_concat :
   simp [FwdLets.denote]
 
 theorem ComFlat.denote_addLets_shift:
-    ComFlat.denote (ComFlat.addLets ls (ComFlat.shift p (ls.length))) s =
+    ComFlat.denote (ComFlat.addLets ls (ComFlat.shift ls.length 0 p)) s =
     ComFlat.denote p s := by
   simp [ComFlat.denote_addLets]
   simp [ComFlat.denote_shift]
@@ -497,15 +497,21 @@ theorem ComFlat.addLets_splitProgram
      simp
 
 theorem ComFlat.denote_addLets_concat_shift :
-    ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift prog 1)) s =
-    ComFlat.denote (ComFlat.addLets ls prog) s := by
-  unfold ComFlat.addLets ComFlat.denote ComFlat.shift Expr.shift
-  simp
-  sorry
+    ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift 1 0 p)) s =
+    ComFlat.denote (ComFlat.addLets ls p) s := by
+  cases p
+  rename_i lets ret
+  induction lets generalizing s
+  case mk.nil =>
+    simp [ComFlat.addLets, ComFlat.denote, getVal, ComFlat.shift, FwdLets.denote, Expr.denote, Expr.shift, shiftVarBy]
+  
+  case mk.cons cs ls IH =>
+    simp [ComFlat.shift]
+    sorry
 
 theorem ComFlat.denote_addLets_after_split 
     (h: splitProgram prog pos = some split) :
-    ComFlat.denote (ComFlat.addLets (split.fst ++ [e]) (ComFlat.shift split.snd 1)) s =
+    ComFlat.denote (ComFlat.addLets (split.fst ++ [e]) (ComFlat.shift 1 0 split.snd)) s =
     ComFlat.denote prog s := by
   unfold splitProgram at h
   split at h
