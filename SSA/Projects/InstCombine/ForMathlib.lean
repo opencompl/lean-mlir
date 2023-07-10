@@ -19,8 +19,6 @@ end Vector
 
 namespace Bitvec
 
-def width : Bitvec n → Nat := fun _ => n
-
 -- Shouldn't this be inferred from the instance above? (as Bitvec is @[reducible])
 instance {n : Nat} : GetElem (Bitvec n) (Fin n) Bool (fun _ _ => True) where
   getElem := fun v i _ => v.1[i.val]
@@ -28,11 +26,6 @@ instance {n : Nat} : GetElem (Bitvec n) (Fin n) Bool (fun _ _ => True) where
 instance (n : Nat) : Inhabited (Bitvec n) :=
   ⟨List.replicate n true, by apply List.length_replicate⟩
 
-def Fun (width : Nat) := Fin width → Bool
-
-/-- convert `Bitvec n` to `Fin n → Bool` -/
-def ofFun {width : Nat} : Fun width → Bitvec width :=
-  Vector.ofFn
 
 /-- convert `Fin n → Bool` to `Bitvec n` -/
 def toFun {width : Nat} : Bitvec width → Fun width :=
@@ -41,7 +34,6 @@ def toFun {width : Nat} : Bitvec width → Fun width :=
 instance {width : Nat} : Coe (Fun width) (Bitvec width) := ⟨@ofFun width⟩
 instance {width : Nat} : Coe (Bitvec width) (Fun width) := ⟨@toFun width⟩
 
-def ofVector : Vector Bool n → Bitvec n := id
 
 -- inspired by: https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Defining.20my.20own.20numerals
 -- not ideal solution, as hard to type, but should be ok for now
@@ -81,58 +73,12 @@ theorem ofZMod_toZMod {n} (v : Bitvec n) : ofZMod (toZMod v) = v := by
   dsimp [ofZMod]
   rw [toZMod_val, ofNat_toNat]
 
-theorem foldl_addLsb_add : ∀ (n k : ℕ) (x : List Bool), 
-    x.foldl addLsb (n + k) = 2 ^ x.length * k + x.foldl addLsb n
-  | n, k, [] => by simp [addLsb, add_comm, add_assoc, add_left_comm]
-  | n, k, a::l => by
-    rw [List.foldl_cons, List.foldl_cons, addLsb, addLsb]
-    have : (n + k) + (n + k) + cond a 1 0 = (n + n + cond a 1 0) + (k + k) :=
-      by simp [add_assoc, add_comm, add_left_comm]
-    rw [this, foldl_addLsb_add _ (k + k) l]
-    simp [pow_succ, two_mul, mul_add, add_mul, add_assoc]
-
-theorem foldl_addLsb_eq_add_foldl_addLsb_zero (x : List Bool) (k : ℕ) :
-    x.foldl addLsb k = 2 ^ x.length * k + x.foldl addLsb 0 := by
-  rw [← foldl_addLsb_add, zero_add]
-
-theorem foldl_addLsb_cons_zero (a : Bool) (x : List Bool) :
-    (a::x).foldl addLsb 0 = 2^x.length * cond a 1 0 + x.foldl addLsb 0 :=
-  calc (a::x).foldl addLsb 0
-     = x.foldl addLsb (0 + 0 + cond a 1 0) := rfl
-   _ = _ := by rw [foldl_addLsb_add]
-
-theorem toNat_adc_aux : ∀ {x y: List Bool} (_h : List.length x = List.length y),
-    List.foldl addLsb (addLsb 0 (List.mapAccumr₂ (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).fst)
-      (List.mapAccumr₂ (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).snd =
-    List.foldl addLsb 0 x + List.foldl addLsb 0 y 
-| [], [], _ => rfl
-| a::x, b::y, h => by
-  simp only [List.length_cons, Nat.succ.injEq] at h
-  rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, add_add_add_comm, ← toNat_adc_aux h,
-    List.mapAccumr₂]
-  dsimp only [Bitvec.carry, Bitvec.xor3]
-  rw [foldl_addLsb_eq_add_foldl_addLsb_zero, foldl_addLsb_cons_zero,
-    foldl_addLsb_eq_add_foldl_addLsb_zero _ (addLsb _ _)]
-  cases a <;> cases b <;> 
-  simp only [Bool.xor_false_right, Bool.xor_assoc, Bool.true_xor, List.length_cons, List.length_mapAccumr₂,
-    h, min_self, pow_succ, two_mul, Bool.and_false, Bool.true_and, Bool.false_or, Bool.false_and, Bool.or_false,
-    addLsb, add_zero, zero_add, add_mul, Bool.cond_not, add_left_comm, add_assoc, cond_true, mul_one, cond_false,
-    mul_zero, add_comm, Bool.xor_false, Bool.false_xor, Bool.true_or, Bool.not_true] <;>
-  cases (List.mapAccumr₂ (fun x y c => (x && y || x && c || y && c, xor x (xor y c))) x y false).fst <;> simp [h]  
-
-theorem toNat_adc {n : Nat} {x y : Bitvec n} : (Bitvec.adc x y false).toNat = x.toNat + y.toNat := by
-  rcases x with ⟨x, hx⟩
-  rcases y with ⟨y, hy⟩
-  subst n
-  dsimp [Bitvec.toNat, bitsToNat]
-  exact toNat_adc_aux hy.symm
-
 theorem toNat_tail : ∀ {n : Nat} (x : Bitvec n), Bitvec.toNat x.tail = x.toNat % 2^(n-1)
   | 0, ⟨[], _⟩ => rfl
   | n+1, ⟨a::l, h⟩ => by
     conv_lhs => rw [← Nat.mod_eq_of_lt (Bitvec.toNat_lt (Vector.tail ⟨a::l, h⟩))]
     simp only [List.length_cons, Nat.succ.injEq] at h
-    simp only [Bitvec.toNat, bitsToNat, foldl_addLsb_cons_zero, Vector.toList, h]   
+    simp only [Bitvec.toNat, bitsToNat, foldl_addLsb_cons_zero, Vector.toList, h, Vector.foldl]   
     simp only [Vector.tail_val, List.tail_cons, ge_iff_le, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
       add_tsub_cancel_right]
     rw [mul_comm, Nat.mul_add_mod]
