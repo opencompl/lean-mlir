@@ -496,8 +496,8 @@ theorem ComFlat.addLets_splitProgram
      cases h
      simp
 
-theorem ComFlat.denote_addLets_concat_shift :
-    ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift 1 0 p)) s =
+theorem ComFlat.denote_addLets_concat_shift (p : ComFlat) (ls : FwdLets) :
+    ComFlat.denote (p |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e) |> (ComFlat.addLets ls)) s =
     ComFlat.denote (ComFlat.addLets ls p) s := by
   cases p
   rename_i lets ret
