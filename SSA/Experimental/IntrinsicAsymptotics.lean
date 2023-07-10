@@ -146,44 +146,17 @@ def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
   fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc _) 
     (fun _ => Ctxt.Var.last _ _) f
 
-inductive MVar (Γ : Ctxt) (t : Ty) : Type where
-  | mk : Nat → (f : Σ Γ' : Ctxt, ((t : Ty) → Γ'.Var t → Γ.Var t) 
-    := ⟨Γ, fun _  v => v⟩) → MVar Γ t
-
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   /-- Variables are represented as indices into the context, i.e. `var 0` is the most recently introduced variable. -/
   | add (a b : Γ.Var .nat) : IExpr Γ .nat
   /-- Nat literals. -/
   | nat (n : Nat) : IExpr Γ .nat
-  | mvar {t : Ty} (m : MVar Γ t) : IExpr Γ t
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
-
-def MVarSem : Type := 
-  ∀ (Γ : Ctxt) (s : Γ.Sem) (t : Ty) (_n : ℕ), t.toType 
-
-def MVarAssignment : Type := 
-  ∀ (Γ : Ctxt) (t : Ty) (_n : ℕ), IExpr Γ t 
-
-def MVar.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) :
-    (m : MVar Γ t) → MVar Γ' t
-  | mk n ⟨Γ', f⟩ => mk n ⟨_, fun t => varsMap t ∘ f t⟩ 
-
-def MVar.denote {Γ : Ctxt} (s' : Γ.Sem) (s : MVarSem) : (m : MVar Γ t) → t.toType
-  | mk n ⟨Γ', f⟩ => s Γ' (fun t v => s' (f t v)) _ n
-
-@[simp]
-def MVar.baseCtxt {Γ : Ctxt} {t : Ty} : (m : MVar Γ t) → Ctxt
-  | mk _ x => x.1
-
-@[simp]
-def MVar.ctxtMap {Γ : Ctxt} {t : Ty} : (m : MVar Γ t) → (t : Ty) → 
-    (m.baseCtxt).Var t → Γ.Var t
-  | mk _ x => x.2
 
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
@@ -200,34 +173,28 @@ def MVar.ctxtMap {Γ : Ctxt} {t : Ty} : (m : MVar Γ t) → (t : Ty) →
 --   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
 
-def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → (m : MVarSem) → ty.toType
-| .nat n, _, _ => n
-| .add a b, ll, _ => ll a + ll b
-| .mvar v, s, m => v.denote s m
+def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
+| .nat n, _ => n
+| .add a b, ll => ll a + ll b
 
-def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → MVarSem → ty.toType
-| .ret e, l, _ => l e
-| .lete e body, l, m => body.denote (l.snoc (e.denote l m)) m
+def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
+| .ret e, l => l e
+| .lete e body, l => body.denote (l.snoc (e.denote l))
 
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
     (e : IExpr Γ ty) → IExpr Γ' ty
   | .nat n => .nat n
   | .add a b => .add (varsMap _ a) (varsMap _ b)
-  | .mvar m => .mvar (m.changeVars varsMap)
-
-def MVar.assign (s : MVarAssignment) : (m : MVar Γ t) → IExpr Γ t
-  | mk n ⟨Γ', f⟩ => (s _ _ n).changeVars f
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
-    (m : MVarSem)
     (e : IExpr Γ ty)
     (ll : Γ'.Sem) : 
-    (e.changeVars varsMap).denote ll m = 
-    e.denote (fun t v => ll (varsMap t v)) m := by
-  induction e generalizing ll m <;> simp 
-    [IExpr.denote, IExpr.changeVars, *, MVar.denote, MVar.changeVars]
+    (e.changeVars varsMap).denote ll = 
+    e.denote (fun t v => ll (varsMap t v)) := by
+  induction e generalizing ll <;> simp 
+    [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
@@ -239,10 +206,10 @@ def ICom.changeVars
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
-    (ll : Γ'.Sem) (m : MVarSem) : 
-    (c.changeVars varsMap).denote ll m = 
-    c.denote (fun t v => ll (varsMap t v)) m := by
-  induction c generalizing ll m Γ' with
+    (ll : Γ'.Sem) : 
+    (c.changeVars varsMap).denote ll = 
+    c.denote (fun t v => ll (varsMap t v)) := by
+  induction c generalizing ll Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
     rw [changeVars, denote, ih]
@@ -252,46 +219,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     cases v using Ctxt.Var.casesOn
     . simp
     . simp
-
-def IExpr.assignMVars (s : MVarAssignment) : IExpr Γ ty → IExpr Γ ty
-  | .mvar v  => v.assign s
-  | x => x
-
-@[simp]
-theorem MVar.denote_assign (s : MVarAssignment) (m : MVarSem) 
-    (v : MVar Γ t) (ll : Γ.Sem) :
-    (v.assign s).denote ll m = v.denote ll 
-      (fun _ _ t n => (s v.baseCtxt t n).denote 
-        (fun t v' => ll (v.ctxtMap _ v')) m) := by
-  rcases v with ⟨n, ⟨Γ', f⟩⟩ 
-  simp [MVar.assign, MVar.denote]
-
-@[simp]
-theorem IExpr.denote_assignMVars (s : MVarAssignment) 
-    (e : IExpr Γ ty) (ll : Γ.Sem) (m : MVarSem) :
-    (e.assignMVars s).denote ll m = e.denote ll 
-      (fun Γ' s' t n => (s Γ' t n).denote s' m) := by
-  induction e generalizing ll m with
-  | nat n => simp [IExpr.denote, IExpr.assignMVars, *]
-  | add a b => simp [IExpr.denote, IExpr.assignMVars, *]
-  | mvar v => 
-    simp only [assignMVars, MVar.denote_assign] 
-    rfl
-
-def ICom.assignMVars (s : MVarAssignment) : ICom Γ ty → ICom Γ ty
-  | .ret e => .ret e
-  | lete e body => .lete (e.assignMVars s) (body.assignMVars s)
-
-theorem ICom.denote_assignMVars (s : MVarAssignment) 
-    (c : ICom Γ ty) (ll : Γ.Sem) (m : MVarSem) :
-    (c.assignMVars s).denote ll m = c.denote ll 
-      (fun Γ' s' t n => (s Γ' t n).denote s' m) := by
-  induction c generalizing m with
-  | ret x => simp [ICom.denote, ICom.changeVars, *]
-  | lete _ _ ih =>
-    rw [assignMVars, denote, ih, IExpr.denote_assignMVars]
-    simp [denote]
-    
+ 
 def rewriteAt (lhs : IExpr Γ ty) (rhs : IExpr Γ ty) 
   (ass : MVarAssignment)
 
