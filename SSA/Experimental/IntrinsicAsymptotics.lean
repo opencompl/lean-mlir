@@ -496,16 +496,6 @@ theorem ComFlat.addLets_splitProgram
      cases h
      simp
 
-theorem ComFlat.denote_insertNothing :
-    ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
-  unfold insertNothing
-  simp
-  split
-  case h_1 =>
-    simp
-  case h_2 _ split heq =>
-    rw [ComFlat.addLets_splitProgram heq]
-
 theorem ComFlat.denote_addLets_concat_shift :
     ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift prog 1)) s =
     ComFlat.denote (ComFlat.addLets ls prog) s := by
@@ -555,6 +545,16 @@ theorem ComFlat.denote_addLets_after_split
       unfold getVal
       simp [IH]
       sorry
+
+theorem ComFlat.denote_insertNothing :
+    ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
+  unfold insertNothing
+  simp
+  split
+  case h_1 =>
+    simp
+  case h_2 _ split heq =>
+    rw [ComFlat.addLets_splitProgram heq]
 
 theorem ComFlat.denote_insertCst :
     ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
