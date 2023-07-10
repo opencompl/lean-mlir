@@ -381,27 +381,11 @@ theorem denoteComFlat_addLets : (exFlat.addLets n).denote = exFlat.denote := by
     simp [ Nat.succ_sub_one]
     apply h
 
-
-
-/-
-theorem denoteCom_shift_snoc :
-  Com.denote (addLetsToProgram (List.concat ls e) c) σ =
-  Com.denote (addLetsToProgram ls c) () := by
--/
-
-theorem FwdLets.denote_cons :
-  FwdLets.denote (e :: ls) s = FwdLets.denote ls (e.denote s :: s) := by
-  rfl
-
 theorem denoteFlat_addExpr :
   ComFlat.denote (addExprToProgramFlat e c) s =
   ComFlat.denote c (Expr.denote e s :: s) := by
     simp [ComFlat.denote, addExprToProgramFlat]
     simp [FwdLets.denote]
-
-theorem FwdLets.denote_append :
-  FwdLets.denote (l₁ ++ l₂) s = FwdLets.denote l₂ (FwdLets.denote l₁ s) := by
-  simp [FwdLets.denote]
 
 theorem unfortunate:
   Expr.denote e (FwdLets.denote ls s) :: FwdLets.denote ls s = FwdLets.denote (ls ++ [e]) s := by
@@ -474,8 +458,18 @@ theorem shiftComFlatBy_zero:
   shiftComFlatBy p 0 = p := by
   simp [shiftExprBy_zero, shiftVarBy, shiftComFlatBy]
 
-theorem FwdLets.denote_zero:
-  FwdLets.denote [] s = s := by simp [FwdLets.denote]
+theorem FwdLets.denote_empty :
+    FwdLets.denote [] s = s  := by
+  simp [FwdLets.denote]
+
+theorem FwdLets.denote_append :
+    FwdLets.denote (l₁ ++ l₂) s = FwdLets.denote l₂ (FwdLets.denote l₁ s) := by
+  simp [FwdLets.denote]
+
+theorem FwdLets.denote_cons :
+     FwdLets.denote (e :: ls) s = FwdLets.denote ls (e.denote s :: s) := by
+  rfl
+
 
 theorem xx:
 
@@ -506,7 +500,7 @@ theorem denote_shiftComFlatBy_cons:
   case cons e ls IH =>
     simp [Expr.denote_shift_ls]
     simp [FwdLets.denote_cons]
-    simp [FwdLets.denote_zero]
+    simp [FwdLets.denote_empty]
     simp [xx]
     simp [IH]
     simp [IH, shiftVarBy, FwdLets, Expr.denote, getVal]
@@ -557,8 +551,8 @@ theorem addLetsToProgram_append:
   induction ls₁ using List.reverseRecOn generalizing p <;>  simp [addLetsToProgramFlat]
 
 theorem splitProgramAddLets
-   (h: splitProgram p pos = some split):
-   addLetsToProgramFlat split.fst split.snd = p := by
+     (h: splitProgram p pos = some split) :
+     addLetsToProgramFlat split.fst split.snd = p := by
    unfold splitProgram at h
    split at h
    case inl =>
@@ -570,7 +564,8 @@ theorem splitProgramAddLets
      simp
      
 
-theorem denoteInsertNothing : ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
+theorem denoteInsertNothing :
+    ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
   unfold insertNothing
   simp
   split
@@ -586,8 +581,6 @@ theorem denoteInsertNothing : ComFlat.denote (insertNothing prog pos) s = ComFla
 -- theorem Expr.denote_shift_ls:
 -- (shiftExprBy e (x.length) 0).denote (x ++ s) = e.denote s  := by
 
-
-theorem FwdLets.denote_empty: FwdLets.denote [] s = s  := by simp [FwdLets.denote]
 
 theorem hgh:
   ComFlat.denote (addExprToProgramFlat e (shiftComFlatBy prog 1)) s = ComFlat.denote prog (s) := by
