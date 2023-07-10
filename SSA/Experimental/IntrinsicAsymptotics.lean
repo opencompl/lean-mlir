@@ -462,7 +462,17 @@ theorem ComFlat.addExpr_factor_out (ret : Nat) :
 
 theorem ComFlat.shift_zero:
   ComFlat.shift 0 0 p = p := by
-  simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
+  simp [ComFlat.shift]
+  have SHIFT_ZERO : (fun (x : ℕ × Expr) => Expr.shift x.snd 0 x.fst) = Prod.snd := by {
+    simp[Expr.shift_zero] 
+  } 
+  simp[SHIFT_ZERO]
+  rw [List.map_snd_zip]
+  -- (shift by zero at pos (v) = (if v >= pos then v + 0 else v)) =?= id 
+  -- we need to show to lean that the two branches compute the same thing ('v')
+  rw [denoteVar_shift_zero]
+  -- zip [] [1, 2, 3] =?= [1, 2, 3] is *false*
+  simp[List.length_range]
 
 theorem ComFlat.addLets_concat :
     ComFlat.addLets (ls ++ [e]) p = ComFlat.addLets ls (ComFlat.addExpr e p) := by
@@ -489,7 +499,7 @@ theorem ComFlat.denote_shift :
     simp [FwdLets.denote_append]
     simp [ComFlat.denote_shift_cancellation]
     simp [IH]
-
+ 
 theorem ComFlat.denote_addExpr :
   ComFlat.denote (ComFlat.addExpr e c) s =
   ComFlat.denote c (Expr.denote e s :: s) := by
