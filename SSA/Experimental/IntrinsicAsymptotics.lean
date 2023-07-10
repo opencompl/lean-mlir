@@ -31,7 +31,7 @@ abbrev State := List Value
 abbrev Ctxt := List Ty
 
 /-- A very simple intrinsically typed expression. -/
-inductive IExpr : Ctxt → Ty → Type
+ IExpr : Ctxt → Ty → Type
   /-- Nat literals. -/
   | cst (n : Nat) : IExpr Γ .nat
   /-- Variables are represented as indices into the context, i.e. `var 0` is the most recently introduced variable. -/
@@ -671,14 +671,29 @@ theorem ComFlat.shift_addExpr :
   Counterexample 2:
     ??? 
 -/
-theorem xyz (X : x < ls.length):
+
+theorem fwdLets_shift_head_idx (delta pos : Nat) (head : Expr) (tail : FwdLets) :
+  FwdLets.shift delta pos (head :: tail) = Expr.shift head delta pos :: FwdLets.shift delta (pos + 1) tail := by
+  simp [FwdLets.shift]
+  rw [List.range_succ]
+  sorry -- not sure if this is the exact statement, but this needs a bunch of lemmas about range, map, zip, etc.
+
+theorem fwdLets_shift_one_denote_eq_denote
+  (ls : FwdLets) (x : Nat) (is_lt : x < List.length ls) :
     getVal (FwdLets.denote (e :: ls.shift 1 0) s) x =
     getVal (FwdLets.denote ls s) x := by
   induction ls
   case nil =>
-    simp [FwdLets.denote, Expr.denote]
-    simp
-  sorry
+    simp at is_lt
+  case cons head tail IH =>
+    --simp [FwdLets.denote]
+    have is_lt_tail : x < List.length tail := by
+      simp [List.length] at is_lt
+      sorry -- trivial...
+    specialize IH is_lt_tail
+    simp [fwdLets_shift_head_idx]
+    rw [IH]
+
 
 theorem ComFlat.denote_addLets_concat_shift6 (ls : FwdLets) (ret : Nat) 
  (h2 : ret = 0) :
