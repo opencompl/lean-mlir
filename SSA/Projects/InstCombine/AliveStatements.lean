@@ -45,7 +45,7 @@ theorem bitvec_AddSub_1202 :
 := by alive_auto
       try sorry
 
---ext-simp
+--bisim
 theorem bitvec_AddSub_1295 :
  ∀ (w : ℕ) (a b : Bitvec w), (a &&& b) + (a ^^^ b) = a ||| b
 := by alive_auto
@@ -105,7 +105,7 @@ theorem bitvec_AddSub_1619 :
 := by alive_auto
       try sorry
 
---ext-simp
+--bisim
 theorem bitvec_AddSub_1624 :
  ∀ (w : ℕ) (A B : Bitvec w), (A ||| B) - (A ^^^ B) = A &&& B
 := by alive_auto
@@ -123,19 +123,19 @@ theorem bitvec_AndOrXor_144 :
 := by alive_auto
       try sorry
 
---ext-simp
+--ext-simp-unsolved
 theorem bitvec_AndOrXor_698 :
  ∀ (w : ℕ) (a b d : Bitvec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
 := by alive_auto
       try sorry
 
---ext-simp
+--ext-simp-unsolved
 theorem bitvec_AndOrXor_709 :
  ∀ (w : ℕ) (a b d : Bitvec w), ofBool (a &&& b == b) &&& ofBool (a &&& d == d) = ofBool (a &&& (b ||| d) == b ||| d)
 := by alive_auto
       try sorry
 
---ext-simp
+--ext-simp-unsolved
 theorem bitvec_AndOrXor_716 :
  ∀ (w : ℕ) (a b d : Bitvec w), ofBool (a &&& b == a) &&& ofBool (a &&& d == a) = ofBool (a &&& (b &&& d) == a)
 := by alive_auto
@@ -147,7 +147,7 @@ theorem bitvec_AndOrXor_794 :
 := by alive_auto
       try sorry
 
---ext-simp
+--ext-simp-unsolved
 theorem bitvec_AndOrXor_827 :
  ∀ (w : ℕ) (a b : Bitvec w), ofBool (a == 0) &&& ofBool (b == 0) = ofBool (a ||| b == 0)
 := by alive_auto
