@@ -201,15 +201,17 @@ structure ComFlat where
 
 -- #eval List.range 5 10
 
+def FwdLets.shift (delta : Nat) (pos : Nat) (lets : FwdLets) : FwdLets :=
+  let idxs := List.range lets.length 
+  (List.zip idxs lets).map (λ (idx, el) => Expr.shift el delta (idx + pos))
 /-
 Move all indexing in `prog` by `delta`. If `pos` is nonzero, then only shift
 those let-bindings which occur after `lets[pos]`. This will shift in the half-open interval:
   [let.pos,..lets.length) 
 -/
 def ComFlat.shift (delta : Nat) (pos : Nat) (prog : ComFlat) : ComFlat :=
-  let idxs := List.range prog.lets.length 
-  let lets := (List.zip idxs prog.lets).map (λ (idx, el) => Expr.shift el delta (idx + pos))
-  { lets := lets, ret := shiftVarBy prog.ret (delta := delta) (pos := (pos + prog.lets.length)) }
+  let lets := prog.lets.shift delta pos
+  { lets := lets, ret := shiftVarBy prog.ret delta (pos + prog.lets.length) }
 
 def Nat.inc (v : Nat) : Nat :=
   v + 1
@@ -543,7 +545,7 @@ theorem ComFlat.addLets_splitProgram
      simp
 
 
-theorem ComFlat.addLets_emptyProg (lets : FwdLets) (ret : Nat) :
+theorem ComFlat.addLets_emptyProg (ret : Nat) :
     ((ComFlat.mk [] ret) |> (ComFlat.addLets ls)) = ComFlat.mk ls ret := by simp [ComFlat.addLets]
 
 theorem ComFlat.denote_addLets_concat_shift2 (ret : Nat) :
@@ -580,15 +582,123 @@ theorem ComFlat.denote_addLets_concat_shift5 (p : ComFlat) (ls : FwdLets) (ret :
   case op =>
     rw [ComFlat.denote_addLets_concat_shift3 (ret := 0) (h2 := rfl)]
 
+/-
+theorem List.range_unfold_once (H : n > 0): 
+  List.range n = 0 :: (List.List.range 
+-/
+
+-- theorem List.range_add(a : Nat) (b : Nat) :
+-- List.range (a + b) = List.range a ++ List.map (fun x => a + x) (List.range b)
+  
+  
+theorem  ComFlat.addLets_cons :
+    ComFlat.addLets (head :: tail) p = ComFlat.addExpr head (ComFlat.addLets tail p) := by
+    rfl
+
+}
+#print List.range 
+
+/-
+List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip (List.range (Nat.succ (List.length p.lets))) (e :: p.lets))
+
+=
+    Expr.shift e 1 0 ::
+      List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip (List.range (List.length p.lets)) p.lets)
+      
+
+LHS:
+=====
+List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip (List.range (Nat.succ (List.length [e']))) (e :: [e']))
+= List.map (fun x => Expr.shift x.snd 1 x.fst)  (List.zip [0, 1] [e, e'])
+= (Expt.shift e 1 0 :: Expr.shift e' 1 1)
+
+
+RHS:
+=====
+Expr.shift e 1 0 ::
+  List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip (List.range (List.length [e'])) [e'])
+
+
+= Expr.shift e 1 0 :: List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip (List.range (List.length [e'])) [e'])
+= Expr.shift e 1 0 :: List.map (fun x => Expr.shift x.snd 1 x.fst) (List.zip [0] [e'])
+= Expr.shift e 1 0 ::  Expr.shift e' 1 0
+
+p = [e']
+Expr.shift e 1 0 :: (Expr.shift e' 1 1)     
+      
+    ∧
+  shiftVarBy p.ret 1 (Nat.succ (List.length p.lets)) = shiftVarBy p.ret 1 (List.length p.lets)
+-/
+theorem ComFlat.shift_addExpr :
+    ComFlat.shift 1 x (ComFlat.addExpr e p) =
+    ComFlat.addExpr (Expr.shift e 1 x) (ComFlat.shift 1 (x+1) p) := by
+    rw[← addExpr_factor_out]
+    simp[addExpr]
+    simp[shift]
+    simp[List.range_zero]
+    sorry
+    -- zip (range ...) (e :: ... )
+    -- zip (0 :: ... ) (e :: ....)
+    -- ((0, e) :: zip ... ...)  
+    -- List.map (fun e => Expr.shift ...)) ((0, e) :: ...)
+    -- (Expr.shift 0 e ..) :: (List.map ... (List.zip ... ...))
+    -- @bollu does not disbelieve this theorem statement,
+    --    but the rewriting is too painful for now. 
+    
+ /-   
+    simp [ComFlat.shift, ComFlat.addExpr, shiftVarBy, getVal] 
+    induction p.lets
+    case nil =>
+      simp [Expr.shift]
+    case cons head tail IH =>
+      split
+      · split
+        · sorry
+        · 
+      · split
+         sorry
+
+-/
+
+/-
+  FwdLets. denote [l1, l2] s = (l2 val :: l1 val :: s)
+  Counterexample 1:
+    x = 0, ls = [], e = Expr.cst 42
+    getVal (fwdLets.denote (Expr.cst 42 :: [])) 0 =?= getVal [] 0
+    42 =?= (default :: 0) 
+      ⊢ false.
+
+  Counterexample 2:
+    ??? 
+-/
+theorem xyz (X : x < ls.length):
+    getVal (FwdLets.denote (e :: ls.shift 1 0) s) x =
+    getVal (FwdLets.denote ls s) x := by
+  induction ls
+  case nil =>
+    simp [FwdLets.denote, Expr.denote]
+    simp
+  sorry
+
 theorem ComFlat.denote_addLets_concat_shift6 (ls : FwdLets) (ret : Nat) 
  (h2 : ret = 0) :
     ComFlat.denote ((ComFlat.mk ls ret) |> (ComFlat.shift 1 0) |> (ComFlat.addExpr (e))) s =
     ComFlat.denote (ComFlat.mk ls ret) s := by
+    unfold ComFlat.denote
+    simp
     induction ls 
     case nil =>
-      simp [ComFlat.denote_addLets_concat_shift2 (ret := 0) (h2 := rfl)]
+      rw [ComFlat.denote_addLets_concat_shift2]
+
     case cons head tail IH =>
+      rw [← ComFlat.addLets_emptyProg] at IH ⊢
+      rw [ComFlat.addLets_cons] 
+      rw [ComFlat.shift_addExpr]
+      simp
       
+      
+            
+
 
 
 theorem ComFlat.denote_addLets_concat_shift (p : ComFlat) (ls : FwdLets) :
