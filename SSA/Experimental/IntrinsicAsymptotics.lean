@@ -368,7 +368,9 @@ def ComFlat.addLets (prog : ComFlat) (n : Nat) : ComFlat :=
 
 def exFlat := ComFlat.mk [Expr.op 0 1, Expr.cst 3, Expr.cst 5] 0
 
-theorem unfortunate:
+/-- Theorems -/
+
+theorem FwdLets.denote_snoc:
   Expr.denote e (FwdLets.denote ls s) :: FwdLets.denote ls s = FwdLets.denote (ls ++ [e]) s := by
     simp [FwdLets.denote]
 
@@ -478,7 +480,7 @@ theorem ComFlat.denote_addLets :
     simp [ Nat.succ_sub_one]
     apply h
 
-theorem denoteFlat_addExpr :
+theorem ComFlat.denote_addExprToProgram :
   ComFlat.denote (addExprToProgramFlat e c) s =
   ComFlat.denote c (Expr.denote e s :: s) := by
     simp [ComFlat.denote, addExprToProgramFlat]
@@ -521,10 +523,6 @@ theorem denoteInsertNothing :
     simp
   case h_2 _ split heq =>
     rw [splitProgramAddLets heq]
-
---  simp [FwdLets.denote_append]
---  simp [FwdLets.denote_cons]
---  simp [FwdLets.denote]
 
 
 theorem hgh:
