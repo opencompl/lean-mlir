@@ -257,7 +257,7 @@ def rewriteAt (inputProg : Com) (depth : Nat) (rewrite: ExprRec × ExprRec) (let
 def addCstToLets (lets : Lets) (inputProg : ComFlat) : ComFlat :=
   let newLets := Expr.cst 42 :: lets
   let newProgram := inputProg
-  let newProgram := shiftComFlatBy newProgram (newLets.length)
+  let newProgram := shiftComFlatBy newProgram 1
   let newProgram := addLetsToProgramFlat newLets newProgram
   newProgram
 
@@ -568,6 +568,7 @@ theorem splitProgramAddLets
      unfold addLetsToProgramFlat
      cases h
      simp
+     
 
 theorem denoteInsertNothing : ComFlat.denote (insertNothing prog pos) s = ComFlat.denote prog s := by
   unfold insertNothing
@@ -578,6 +579,126 @@ theorem denoteInsertNothing : ComFlat.denote (insertNothing prog pos) s = ComFla
   case h_2 _ split heq =>
     rw [splitProgramAddLets heq]
 
+--  simp [FwdLets.denote_append]
+--  simp [FwdLets.denote_cons]
+--  simp [FwdLets.denote]
+
+-- theorem Expr.denote_shift_ls:
+-- (shiftExprBy e (x.length) 0).denote (x ++ s) = e.denote s  := by
+
+
+theorem FwdLets.denote_empty: FwdLets.denote [] s = s  := by simp [FwdLets.denote]
+
+theorem hgh:
+  ComFlat.denote (addExprToProgramFlat e (shiftComFlatBy prog 1)) s = ComFlat.denote prog (s) := by
+
+
+theorem asd:
+  ComFlat.denote (addLetsToProgramFlat [e] (shiftComFlatBy prog 1)) s =
+  ComFlat.denote (addLetsToProgramFlat [] prog) s := by
+    simp [addLetsToProgramFlat]
+    simp [ComFlat.denote, addExprToProgramFlat]
+    simp [FwdLets.denote]
+    c
+
+theorem yyyy:
+  ComFlat.denote (addLetsToProgramFlat (ls ++ [e]) (shiftComFlatBy prog 1)) s =
+  ComFlat.denote (addLetsToProgramFlat ls prog) s := by
+  induction ls generalizing prog s
+  case nil =>
+    simp
+    
+
+    simp [FwdLets.denote_empty]
+    simp [ComFlat.denote_addLetsToProgram]
+    simp [ComFlat.denote_shiftComFlatBy]
+    unfold ComFlat.denote
+    simp
+    simp [FwdLets.denote_append]
+    -- [FwdLets.denote_cons]
+    simp [getVal, FwdLets.denote]
+    simp
+    unfold shiftComFlatBy
+    simp
+    simp [Expr.denote_shift_one]
+    simp [Expr.denote_shift_ls
+
+
+  sorry
+
+theorem xxx 
+  (h: splitProgram prog pos = some split):
+  ComFlat.denote
+    (addLetsToProgramFlat (split.fst ++ [e]) (shiftComFlatBy split.snd 1)) s =
+  ComFlat.denote prog s := by
+  unfold splitProgram at h
+  split at h
+
+  case inl =>
+    contradiction
+
+  case inr h' =>
+        
+    simp_all
+    unfold ComFlat.denote
+    simp_all
+    simp [FwdLets.denote_append]
+    simp [FwdLets.denote_cons]
+    unfold addLetsToProgramFlat
+    simp
+    unfold shiftComFlatBy
+    simp
+    simp[Expr.denote_shift_one]
+    cases h
+    induction prog.lets generalizing s
+
+    case nil =>
+      simp_all
+      simp [FwdLets.denote_append]
+      simp [FwdLets.denote_cons]
+      simp [FwdLets.denote_empty]
+      unfold shiftVarBy 
+      unfold getVal
+      simp
+
+    case refl.cons csl ls IH =>
+      simp_all
+      simp [FwdLets.denote_append]
+      simp [FwdLets.denote_cons]
+      simp [FwdLets.denote_empty]
+      unfold shiftVarBy 
+      unfold getVal
+      
+      simp [IH]
+
+      simp_all
+      
+      unfold ComFlat.denote
+      simp
+      unfold addLetsToProgramFlat
+      simp
+      simp [FwdLets.denote_append]
+      
+
+      
+
+    
+
+    simp
+    
+
+    simp at h
+    unfold shiftComFlatBy
+    cases
+
+    simp
+
+
+
+    cases h
+    simp
+
+
 theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote prog s := by
   unfold insertCst
   simp
@@ -586,9 +707,9 @@ theorem denoteInsertCst : ComFlat.denote (insertCst prog pos) s = ComFlat.denote
     simp
   
   case h_2 _ split heq =>
-    simp_all
     unfold addCstToLets
-    rw [shifting]
+    simp
+    rw [xxx heq]
      
 
 
@@ -632,9 +753,24 @@ theorem letsTheorem
 -- @grosser: since this theorem cannot be true, we see that denoteAddLetsToProgram
 -- also cannot possibly be true.
 theorem Com_denote_invariant_under_extension_false_theorem :
-   Com.denote body s = Com.denote  body (v :: s) := by
-   revert s
-   induction body
+   ComFlat.denote prog s = ComFlat.denote prog (s ++ [v]) := by
+   unfold ComFlat.denote
+   unfold FwdLets.denote
+   simp
+   induction prog.lets generalizing s
+   case nil =>
+    simp
+    simp [getVal]
+    unfold List.get!
+    simp
+
+
+
+
+    case ret =>
+      intros env; simp [Com.denote]
+      simp [getVal]
+      sorry
    case ret =>
     intros env; simp [Com.denote]
     simp [getVal]
