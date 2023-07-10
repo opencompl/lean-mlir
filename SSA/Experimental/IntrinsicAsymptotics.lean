@@ -546,20 +546,50 @@ theorem ComFlat.addLets_splitProgram
 theorem ComFlat.addLets_emptyProg (lets : FwdLets) (ret : Nat) :
     ((ComFlat.mk [] ret) |> (ComFlat.addLets ls)) = ComFlat.mk ls ret := by simp [ComFlat.addLets]
 
-theorem ComFlat.denote_addLets_concat_shift' (p : ComFlat) (ls : FwdLets) (ret : Nat) :
+theorem ComFlat.denote_addLets_concat_shift2 (ret : Nat) :
     ComFlat.denote (ComFlat.mk [] ret |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
     ComFlat.denote (ComFlat.mk [] ret) s := by
   simp [ComFlat.denote, ComFlat.shift, ComFlat.addExpr, getVal, shiftVarBy, FwdLets.denote]
-
-theorem ComFlat.denote_addLets_concat_shift'' (p : ComFlat) (ls : FwdLets) (ret : Nat) :
-    ComFlat.denote (ComFlat.mk [Expr.op a b] ret |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
+  
+theorem ComFlat.denote_addLets_concat_shift3 (ret : Nat) 
+ (h2 : ret = 0) :
+    ComFlat.denote ((ComFlat.mk [Expr.op a b] ret) |> (ComFlat.shift 1 0) |> (ComFlat.addExpr (e))) s =
     ComFlat.denote (ComFlat.mk [Expr.op a b] ret) s := by
+  simp [h2]
   unfold ComFlat.denote
   simp [FwdLets.denote, Expr.denote]
   simp [Expr.shift, shiftVarBy, getVal, ComFlat.shift, ComFlat.addExpr]
 
+theorem ComFlat.denote_addLets_concat_shift4 (ret : Nat) 
+ (h2 : ret = 0) :
+    ComFlat.denote ((ComFlat.mk [Expr.cst x] ret) |> (ComFlat.shift 1 0) |> (ComFlat.addExpr (e))) s =
+    ComFlat.denote (ComFlat.mk [Expr.cst x] ret) s := by
+  simp [h2]
+  unfold ComFlat.denote
+  simp [FwdLets.denote, Expr.denote]
+  simp [Expr.shift, shiftVarBy, getVal, ComFlat.shift, ComFlat.addExpr]
 
-  simp [ComFlat.denote, ComFlat.shift, ComFlat.addExpr, getVal, shiftVarBy, FwdLets.denote]
+theorem ComFlat.denote_addLets_concat_shift5 (p : ComFlat) (ls : FwdLets) (ret : Nat) 
+ (h2 : ret = 0) :
+    ComFlat.denote ((ComFlat.mk [op] ret) |> (ComFlat.shift 1 0) |> (ComFlat.addExpr (e))) s =
+    ComFlat.denote (ComFlat.mk [op] ret) s := by
+  simp [h2]
+  cases op
+  case cst =>
+    rw [ComFlat.denote_addLets_concat_shift4 (ret := 0) (h2 := rfl)]
+  case op =>
+    rw [ComFlat.denote_addLets_concat_shift3 (ret := 0) (h2 := rfl)]
+
+theorem ComFlat.denote_addLets_concat_shift6 (ls : FwdLets) (ret : Nat) 
+ (h2 : ret = 0) :
+    ComFlat.denote ((ComFlat.mk ls ret) |> (ComFlat.shift 1 0) |> (ComFlat.addExpr (e))) s =
+    ComFlat.denote (ComFlat.mk ls ret) s := by
+    induction ls 
+    case nil =>
+      simp [ComFlat.denote_addLets_concat_shift2 (ret := 0) (h2 := rfl)]
+    case cons head tail IH =>
+      
+
 
 theorem ComFlat.denote_addLets_concat_shift (p : ComFlat) (ls : FwdLets) :
     ComFlat.denote (p |> (ComFlat.shift 1 0) |> (ComFlat.addExpr e)) s =
