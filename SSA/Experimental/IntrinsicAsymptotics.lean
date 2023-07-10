@@ -428,6 +428,10 @@ theorem ComFlat.shift_zero:
   ComFlat.shift p 0 = p := by
   simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
 
+theorem ComFlat.addLets_concat :
+    ComFlat.addLets (ls ++ [e]) p = ComFlat.addLets ls (ComFlat.addExpr e p) := by
+  simp [ComFlat.addLets, ComFlat.addExpr]
+
 theorem ComFlat.addLets_append : 
     ComFlat.addLets (ls₁ ++ ls₂) p = ComFlat.addLets ls₁ (ComFlat.addLets ls₂ p) := by
   induction ls₁ using List.reverseRecOn generalizing p <;>  simp [ComFlat.addLets]
@@ -502,18 +506,11 @@ theorem ComFlat.denote_insertNothing :
   case h_2 _ split heq =>
     rw [ComFlat.addLets_splitProgram heq]
 
-theorem hgh :
-    ComFlat.denote (ComFlat.addExpr e (ComFlat.shift prog 1)) s = ComFlat.denote prog (s) := by
-  sorry
-
-theorem ComFlat.denote_add_lets_single:
-    ComFlat.denote (ComFlat.addLets [e] (ComFlat.shift prog 1)) s =
-    ComFlat.denote (ComFlat.addLets [] prog) s := by
-  sorry
-
-theorem ComFlat.denote_addLets_concat_shift:
+theorem ComFlat.denote_addLets_concat_shift :
     ComFlat.denote (ComFlat.addLets (ls ++ [e]) (ComFlat.shift prog 1)) s =
     ComFlat.denote (ComFlat.addLets ls prog) s := by
+  unfold ComFlat.addLets ComFlat.denote ComFlat.shift Expr.shift
+  simp
   sorry
 
 theorem ComFlat.denote_addLets_after_split 
