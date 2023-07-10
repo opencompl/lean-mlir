@@ -178,7 +178,7 @@ def shiftVarBy (v : Nat) (delta : ℕ) (pos : ℕ) : Nat :=
       v
 
 /-- shift variables after `pos` by `delta` in expr -/
-def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
+def Expr.shift (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
  match e with
     | .op a b => .op (shiftVarBy a delta pos) (shiftVarBy b delta pos)
     | .cst x => (.cst x)
@@ -187,7 +187,7 @@ def shiftExprBy (e : Expr) (delta : ℕ) (pos : ℕ) : Expr :=
 def shiftComBy (inputProg : Com) (delta : ℕ) (pos : ℕ := 0): Com :=
   match inputProg with
   | .ret x => .ret (shiftVarBy x delta (pos+1))
-  | .let e body => .let (shiftExprBy e delta pos) (shiftComBy body delta (pos+1))
+  | .let e body => .let (Expr.shift e delta pos) (shiftComBy body delta (pos+1))
 
 structure ComFlat where
   lets : FwdLets -- sequence of let bindings.
@@ -195,7 +195,7 @@ structure ComFlat where
   deriving Repr
 
 def ComFlat.shift (inputProg : ComFlat) (delta : ℕ) (pos : ℕ := 0): ComFlat where
-  lets := inputProg.lets.map fun e => shiftExprBy e delta pos
+  lets := inputProg.lets.map fun e => Expr.shift e delta pos
   ret := shiftVarBy inputProg.ret delta pos
 
 def Nat.inc (v : Nat) : Nat :=
@@ -340,12 +340,12 @@ theorem denoteFlatDenoteTree : denote (flatToTree flat) = flat.denote := by
 theorem denoteVar_shift_zero: (shiftVarBy v 0 pos) = v := by
   simp [shiftVarBy]
 
-theorem denoteExpr_shift_zero: Expr.denote (shiftExprBy e 0 pos) s = Expr.denote e s := by
+theorem denoteExpr_shift_zero: Expr.denote (Expr.shift e 0 pos) s = Expr.denote e s := by
   induction e
   case cst =>
-    simp [Expr.denote, shiftExprBy]
+    simp [Expr.denote, Expr.shift]
   case op =>
-    simp [Expr.denote, shiftExprBy, denoteVar_shift_zero]
+    simp [Expr.denote, Expr.shift, denoteVar_shift_zero]
 
 theorem denoteCom_shift_zero: Com.denote (shiftComBy com 0 pos) s = Com.denote com s := by
  revert pos s
@@ -366,14 +366,14 @@ theorem FwdLets.denote_snoc:
   Expr.denote e (FwdLets.denote ls s) :: FwdLets.denote ls s = FwdLets.denote (ls ++ [e]) s := by
     simp [FwdLets.denote]
 
-theorem shiftExprBy_zero:
-  shiftExprBy e 0 pos = e := by
-  induction e generalizing pos <;> simp_all [shiftExprBy, shiftVarBy]  
+theorem Expr.shift_zero:
+  Expr.shift e 0 pos = e := by
+  induction e generalizing pos <;> simp_all [Expr.shift, shiftVarBy]  
 
 theorem Expr.denote_shift_one:
-    Expr.denote (shiftExprBy e 1 0) (x :: s) = Expr.denote e s  := by
+    Expr.denote (Expr.shift e 1 0) (x :: s) = Expr.denote e s  := by
   unfold denote
-  simp [shiftExprBy]
+  simp [Expr.shift]
   cases e
   case cst =>
     simp
@@ -385,10 +385,10 @@ theorem Expr.denote_shift_one:
     simp
 
 theorem Expr.denote_shift_ls:
-    Expr.denote (shiftExprBy e (x.length) 0) (x ++ s) = Expr.denote e s  := by
+    Expr.denote (Expr.shift e (x.length) 0) (x ++ s) = Expr.denote e s  := by
   induction x generalizing s
   unfold denote
-  simp [shiftExprBy]
+  simp [Expr.shift]
   cases e
   case cst =>
     simp
@@ -396,7 +396,7 @@ theorem Expr.denote_shift_ls:
     simp [shiftVarBy]
   case cons e' ls IH =>
     unfold denote
-    unfold shiftExprBy
+    unfold Expr.shift
     unfold getVal
     cases e
     case cst =>
@@ -406,7 +406,7 @@ theorem Expr.denote_shift_ls:
       unfold shiftVarBy
       simp [List.get?_append_right]
       unfold denote at IH
-      unfold shiftExprBy at IH
+      unfold Expr.shift at IH
       unfold shiftVarBy at IH
       simp at IH
       unfold getVal at IH
@@ -426,7 +426,7 @@ theorem FwdLets.denote_cons :
 
 theorem ComFlat.shift_zero:
   ComFlat.shift p 0 = p := by
-  simp [shiftExprBy_zero, shiftVarBy, ComFlat.shift]
+  simp [Expr.shift_zero, shiftVarBy, ComFlat.shift]
 
 theorem ComFlat.denote_addLetsToProgram :
     ComFlat.denote (ComFlat.addLets ls c) s = ComFlat.denote c (ls.denote s) := by 
