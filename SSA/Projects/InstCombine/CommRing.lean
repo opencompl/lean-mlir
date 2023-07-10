@@ -86,8 +86,8 @@ theorem toNat_one : ∀ {n : Nat}, (1 : Bitvec n).toNat = if n = 0 then 0 else 1
 
 private theorem toNat_adc_aux : ∀ {x y: List Bool} (_h : List.length x = List.length y),
     List.foldl addLsb (addLsb 0 (List.mapAccumr₂
-        (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).fst)
-      (List.mapAccumr₂ (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).snd =
+        (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).fst)
+      (List.mapAccumr₂ (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).snd =
     List.foldl addLsb 0 x + List.foldl addLsb 0 y
 | [], [], _ => rfl
 | a::x, b::y, h => by sorry
@@ -156,9 +156,9 @@ theorem ofZMod_one : Bitvec.ofZMod (1 : ZMod (2^n)) = 1 := by
 
 private theorem toInt_sub_aux : ∀ {x y : List Bool} (_hx : List.length x = List.length y),
     (↑(((x.mapAccumr₂
-      (fun a b c => (Bitvec.carry (!a) b c, Bitvec.xor3 a b c)) y false).snd).foldl addLsb 0) : ℤ)
+      (fun a b c => (Bool.carry (!a) b c, Bool.xor3 a b c)) y false).snd).foldl addLsb 0) : ℤ)
     - 2 ^ x.length * cond (x.mapAccumr₂
-      (fun a b c => (Bitvec.carry (!a) b c, Bitvec.xor3 a b c)) y false).fst 1 0 =
+      (fun a b c => (Bool.carry (!a) b c, Bool.xor3 a b c)) y false).fst 1 0 =
     x.foldl addLsb 0 + -y.foldl addLsb 0
 | [], [], _ => rfl
 |  a::x, b::y, h => by
@@ -170,8 +170,8 @@ private theorem toInt_sub_aux : ∀ {x y : List Bool} (_hx : List.length x = Lis
     zero_add, Nat.cast_add, Nat.cast_mul, Nat.cast_pow, Nat.cast_ofNat]
   cases a <;>
   cases b <;>
-  cases (x.mapAccumr₂ (fun a b c => (Bitvec.carry (!a) b c, Bitvec.xor3 a b c)) y false).fst <;>
-  simp [Bitvec.carry, Bitvec.xor3] <;>
+  cases (x.mapAccumr₂ (fun a b c => (Bool.carry (!a) b c, Bool.xor3 a b c)) y false).fst <;>
+  simp [Bool.carry, Bool.xor3] <;>
   ring
 
 theorem toZMod_sbb {n : ℕ} (x y : Bitvec n) : (x.sbb y false).2.toZMod = x.toZMod - y.toZMod := by
