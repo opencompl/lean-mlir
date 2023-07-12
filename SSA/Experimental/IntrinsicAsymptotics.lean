@@ -186,9 +186,17 @@ inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
+/-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
+    context `Γ₁`-/
 inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
-  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets (Γ.snoc α) Γ₂
+  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets Γ Γ₂
+
+/-- A finger-tree representation of an instrinsically program -/
+structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
+  Δ : Ctxt
+  lets : Lets Γ Δ
+  com : ICom Δ ty
 
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
@@ -254,6 +262,28 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
  
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
+
+def Lets.snoc_let (e : IExpr Δ α) : Lets Γ Δ → Lets Γ (Δ.snoc α)
+  | .nil => .lete e .nil
+  | .lete e' body => .lete e' <| snoc_let e body
+
+/-- Move a single `let` from the program to the prefix list of lets -/
+def ILetsCom.peelLet : ILetsCom Γ ty → ILetsCom Γ ty
+  | ⟨Δ, lets, @ICom.lete _ α _ e com⟩ => {
+      Δ := Δ.snoc α
+      lets := lets.snoc_let e
+      com := com
+    }
+  | c@⟨_, _, .ret _⟩ => c
+
+-- /-- Move a single `let` from the prefix to the program -/
+-- def ILetsCom.unpeelLet : ILetsCom Γ ty → ILetsCom Γ ty
+--   | ⟨Δ, .lete e lets, com⟩ => {
+--       Δ := Δ
+--       lets := _
+--       com := _
+--     }
+--   | c@⟨_, .nil, _⟩ => c
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
