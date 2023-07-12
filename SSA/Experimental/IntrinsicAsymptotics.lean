@@ -45,6 +45,9 @@ axiom Ctxt.snoc : Ctxt → Ty → Ctxt
 /-- A `Γ.Var t` is a variable of Type `t` in a context `Γ`   -/
 axiom Ctxt.Var (Γ : Ctxt) (t : Ty) : Type
 
+@[instance]
+axiom Ctxt.Var.decidableEq {Γ : Ctxt} {t : Ty} : DecidableEq (Ctxt.Var Γ t)
+
 /-- The last variable in a context, i.e. the most recently added. -/
 axiom Ctxt.Var.last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t
 
@@ -54,7 +57,7 @@ axiom Ctxt.Var.emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α
 /-- Take a variable in a context `Γ` and get the corresponding variable
 in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
-axiom Ctxt.Var.toSnoc {Γ : Ctxt} {t  : Ty} (t' : Ty) : 
+axiom Ctxt.Var.toSnoc {Γ : Ctxt} {t t' : Ty} : 
     Ctxt.Var Γ t → Ctxt.Var (Ctxt.snoc Γ t') t 
 
 -- axiom Ctxt.append : Ctxt → Ctxt → Ctxt
@@ -77,7 +80,7 @@ axiom Ctxt.Var.casesOn
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
     (base : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       motive Γ t t' v
 
@@ -87,7 +90,7 @@ axiom Ctxt.Var.casesOn_last
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t : Ty}
     (base : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
     Ctxt.Var.casesOn (motive := motive)
         (Ctxt.Var.last Γ t) base last = last
@@ -99,9 +102,17 @@ axiom Ctxt.Var.casesOn_toSnoc
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
     (base : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' (v.toSnoc t'))
+        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc t' v) base last = base v
+      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v
+
+theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
+    Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
+  let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
+    fun v => Ctxt.Var.casesOn v some none
+  intro x y h
+  simpa using congr_arg ofSnoc h
+  
 
 -- axiom Ctxt.Var.appendCasesOn 
 --     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
@@ -128,7 +139,7 @@ axiom Ctxt.Var.casesOn_toSnoc
 --     Ctxt.Var.appendCasesOn (motive := motive)
 --        (v.inr : (Γ.append Γ').Var t) inl inr = inr v
 
-instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc t'⟩
+instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
 /-- A semantics for a context. Provide a way to evaluate every variable in a context. -/
 def Ctxt.Sem (Γ : Ctxt) : Type :=
@@ -152,7 +163,7 @@ theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) :
 
 @[simp]
 theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
-    (v : Γ.Var t') : (s.snoc x) (v.toSnoc t) = s v := by
+    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Sem.snoc]
 
 /-- Given a change of variables map from `Γ` to `Γ'`, extend it to 
@@ -161,7 +172,7 @@ a map `Γ.snoc t` to `Γ'.snoc t` -/
 def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
     (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
     (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
-  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc _) 
+  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
     (fun _ => Ctxt.Var.last _ _) f
 
 /-- A very simple intrinsically typed expression. -/
@@ -237,8 +248,63 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     . simp
     . simp
  
-def rewriteAt (lhs : IExpr Γ ty) (rhs : IExpr Γ ty) 
-  (ass : MVarAssignment)
+-- Find a let somewhere in the program. Replace that let with
+-- a sequence of lets each of which might refer to higher up variables.
+
+/-- Append two programs, while substituiting a free variable in the ssecond for 
+the output of the first -/
+def addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
+    (map : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
+  | .ret e, inputProg => inputProg.changeVars 
+      (fun t' v' => 
+        if h : ∃ h : t₁ = t', h ▸ v = v' 
+        then h.fst ▸ map _ e
+        else v')
+  | .lete e body, inputProg => 
+      let newBody := addLetsAtTop v.toSnoc
+        (fun _ v => Ctxt.Var.snocMap map _ v)
+        body 
+        -- This is the identity function if vars are debruijn indices
+        (inputProg.changeVars (fun _ v => v.toSnoc))
+      .lete (e.changeVars map) newBody
+      
+theorem denote_addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
+    (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :
+    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
+    (addLetsAtTop v map rhs inputProg).denote s =
+      inputProg.denote (fun t' v' => 
+        if h : ∃ h : t₁ = t', h ▸ v = v' 
+        then h.fst ▸ rhs.denote (fun t' v' => s (map _ v'))
+        else s v')
+  | .ret e, inputProg => by
+    simp only [addLetsAtTop, ICom.denote_changeVars, ICom.denote]
+    congr
+    funext t' v'
+    split_ifs with h
+    . rcases h with ⟨rfl, _⟩
+      simp
+    . rfl   
+  | .lete e body, inputProg => by
+    simp only [ICom.denote, IExpr.denote_changeVars]
+    rw [denote_addLetsAtTop _ _ _ body]
+    simp [ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
+    congr
+    funext t' v'
+    by_cases h : ∃ h : t₁ = t', h ▸ v = v'
+    . rcases h with ⟨rfl, h⟩
+      dsimp at h
+      simp [h]
+      congr
+      funext t'' v''
+      cases v'' using Ctxt.Var.casesOn
+      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
+      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
+    . rw [dif_neg h, dif_neg]
+      rintro ⟨rfl, h'⟩ 
+      simp only [toSnoc_injective.eq_iff] at h'
+      exact h ⟨rfl, h'⟩  
+
 
 
 #exit
