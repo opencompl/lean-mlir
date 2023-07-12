@@ -186,6 +186,10 @@ inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
+inductive Lets : Ctxt → Ctxt → Type where
+  | nil {Γ : Ctxt} : Lets Γ Γ
+  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets (Γ.snoc α) Γ₂
+
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
@@ -305,6 +309,12 @@ theorem denote_addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       simp only [toSnoc_injective.eq_iff] at h'
       exact h ⟨rfl, h'⟩  
 
+/-- Adds lets at a position, and at that position take the variable at that 
+position and replace references to it with the output of the inserted program -/
+theorem insertLetsAtPos {Γ Γ' : Ctxt}
+    (map : (t : Ty) → Γ.Var t → Γ'.Var t)
+    (rhs : ICom Γ t₁) : (inputProg : ICom Γ' t₂) → ℕ → ICom Γ' t₂
+  | 
 
 
 #exit
