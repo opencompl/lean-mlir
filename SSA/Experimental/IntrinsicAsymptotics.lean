@@ -353,15 +353,24 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     let p := addProgramInMiddle v map body rhs inputProg
     .lete e p
 
--- theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (s : Γ₁.Sem) (v : Γ₂.Var t₁)
---     (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) :
---     (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
---     (inputProg : ICom Γ₂ t₂) →
---     (addProgramInMiddle v map l rhs inputProg).denote s =
---       inputProg.denote (fun t' v' => 
---         _)
---   | Lets.nil, rhs, inputProg => by
---     simp [addProgramInMiddle, addProgramAtTop]
+theorem denote_addProgramInMiddle : {Γ₁ Γ₂ Γ₃ : Ctxt} → 
+    (v : Γ₂.Var t₁) → (s : Γ₁.Sem) →
+    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) → 
+    (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
+    (inputProg : ICom Γ₂ t₂) →
+    (addProgramInMiddle v map l rhs inputProg).denote s =
+      inputProg.denote (fun t' v' => 
+        let s' := l.denote s
+        if h : ∃ h : t₁ = t', h ▸ v = v' 
+        then h.fst ▸ rhs.denote (fun t' v' => s' (map _ v'))
+        else s' v')
+  | _, _, _, v, s, map, .nil, rhs, inputProg => by
+    rw [addProgramInMiddle, denote_addProgramAtTop]
+    rfl
+  | _, _, _, v, s, map, .lete e body, rhs, inputProg => by
+    dsimp only [addProgramInMiddle, ICom.denote]
+    rw [denote_addProgramInMiddle _ _ _ body]
+    rfl
     
 
 #exit
