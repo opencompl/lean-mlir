@@ -310,7 +310,7 @@ def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
 --       com := _
 --     }
 
-#exit
+
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
