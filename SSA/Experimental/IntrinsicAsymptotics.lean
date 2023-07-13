@@ -192,12 +192,6 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets Γ Γ₂
 
-/-- A finger-tree representation of an instrinsically program -/
-structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
-  Δ : Ctxt
-  lets : Lets Γ Δ
-  com : ICom Δ ty
-
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
@@ -266,50 +260,6 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
  
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
-
-def Lets.snocLet : Lets Γ Δ → IExpr Δ α → Lets Γ (Δ.snoc α)
-  | .nil, e => .lete e .nil
-  | .lete e' body, e => .lete e' <| snocLet body e
-
-#check Lets.recOn
-
-@[elab_as_elim]
-def Lets.revCasesOn {motive : (Γ Γ' : Ctxt) → Lets Γ Γ' → Sort u} 
-    {Γ Δ : Ctxt}
-    (l : Lets Γ Γ')
-    (nil : motive Γ Γ .nil)
-    (snocLet : 
-      (lets : Lets Γ Δ) → (e : IExpr Δ α) → motive _ _ (lets.snocLet e)
-    ) :
-    motive _ _ l :=
-  by sorry
-
-/-- Move a single `let` from the program to the prefix list of lets -/
-def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
-  match lc.com with
-    | @ICom.lete _ α _ e com => {
-        Δ := lc.Δ.snoc α
-        lets := lc.lets.snocLet e
-        com := com
-      }
-    | _ => lc
-
--- /-- Move a single `let` from the prefix to the program -/
--- def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
---   lc.lets.revCasesOn (motive := fun Γ _ _ => ILetsCom Γ ty) 
---     lc -- `nil` case
---     fun lets e => { -- `snocLet`
---       Δ := _
---       lets := lets
---       com := _  
---     }
-
---   | .lete e lets => {
---       Δ := _
---       lets := lets
---       com := _
---     }
-
 
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
