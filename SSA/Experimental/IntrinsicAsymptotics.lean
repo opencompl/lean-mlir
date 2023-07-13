@@ -206,11 +206,11 @@ inductive SnocLets : Ctxt → Ctxt → Type where
   | snocLet (e : IExpr Δ α) (body : SnocLets Γ Δ) : SnocLets Γ (Δ.snoc α)
 
 /-- 
-  `ILetsCom Γ ty` is a zipper representation of `ICom Γ ty`, consiting of a prefix list of let
+  `IZipperCom Γ ty` is a zipper representation of `ICom Γ ty`, consiting of a prefix list of let
   bindings, followed by a suffix program. `Δ` is the context at the current position, i.e., 
   after the prefix list, but before the suffix program
  -/
-structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
+structure IZipperCom (Γ : Ctxt) (ty : Ty) : Type where
   {Δ : Ctxt}
   lets : SnocLets Γ Δ
   com : ICom Δ ty
@@ -285,7 +285,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 -- a sequence of lets each of which might refer to higher up variables.
 
 /-- Move a single `let` from the program to the prefix list of lets -/
-def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
+def IZipperCom.peelLet (lc : IZipperCom Γ ty) : IZipperCom Γ ty :=
   match lc.com with
     | .lete e com => {
         lets := lc.lets.snocLet e
@@ -294,7 +294,7 @@ def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
     | _ => lc
 
 /-- Move a single `let` from the prefix to the program -/
-def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
+def IZipperCom.unpeelLet (lc : IZipperCom Γ ty) : IZipperCom Γ ty :=
   sorry
   -- match lc.Δ with
   --   | Ctxt.snoc _ _ => _
@@ -308,14 +308,8 @@ def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
 /--
   Append all of the prefix lets to the suffix program
 -/
-def ILetsCom.toCom : ILetsCom Γ ty → ICom Γ ty  :=
+def IZipperCom.toCom : IZipperCom Γ ty → ICom Γ ty  :=
   sorry -- repeatedly call unpeelLet, prove termination by the decreasing size of `lets`
-
-
-/--
-  Insert new let bindings at the current position, 
--/
-def ILetCom.insertLets : ILetsCom Γ ty
 
 #exit
 
