@@ -47,20 +47,6 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Ctxt.Var Γ t) : Ctxt.Var (Ctxt.snoc Γ t') t  :=
   ⟨var.1+1, by cases var; simp_all⟩
   
-
--- axiom Ctxt.append : Ctxt → Ctxt → Ctxt
-
--- axiom Ctxt.append_empty (Γ : Ctxt) : Ctxt.append Γ ∅ = Γ
-
--- axiom Ctxt.append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
---   Ctxt.append Γ (Ctxt.snoc Γ' t) = (Γ.append Γ').snoc t
-
--- axiom Ctxt.Var.inl {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ t) : 
---   Var (Ctxt.append Γ Γ') t
-
--- axiom Ctxt.Var.inr {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ' t) :
---   Var (Ctxt.append Γ Γ') t
-
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
 @[elab_as_elim]
@@ -102,5 +88,46 @@ def casesOn_toSnoc
   rfl
 
 end Var
+
+
+section Append
+
+def append : Ctxt → Ctxt → Ctxt :=
+  fun xs ys => List.append ys xs
+
+
+theorem append_empty (Γ : Ctxt) : append Γ ∅ = Γ := by
+  simp[append, EmptyCollection.emptyCollection, empty]
+  
+
+theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
+    append Γ (Ctxt.snoc Γ' t) = (append Γ Γ').snoc t := by
+  simp[append, snoc]
+
+@[simp]
+theorem _root_.List.get?_append_add :
+    List.get? (xs ++ ys) (i + xs.length) = List.get? ys i := by
+  induction xs
+  . rfl
+  . simp_all
+
+def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
+  | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
+
+def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
+  | ⟨v, h⟩ => ⟨v, by 
+      simp[append]
+      induction Γ' generalizing v
+      case nil =>
+        contradiction
+      case cons ih =>
+        cases v
+        case zero =>
+          rw[←h]; rfl
+        case succ v =>
+          apply ih v h
+    ⟩
+
+end Append
 
 end Ctxt
