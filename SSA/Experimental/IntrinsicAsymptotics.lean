@@ -35,11 +35,13 @@ implemented later -/
 axiom Ctxt : Type
 
 /-- The empty context -/
+@[match_pattern]
 axiom Ctxt.empty : Ctxt
 
 instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 
 /-- Add a `Ty` to a context -/
+@[match_pattern]
 axiom Ctxt.snoc : Ctxt → Ty → Ctxt
 
 /-- A `Γ.Var t` is a variable of Type `t` in a context `Γ`   -/
@@ -186,16 +188,31 @@ inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
-/-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
-    context `Γ₁`-/
+/-- 
+  `Lets Γ Δ` is a sequence of lets which are well-formed under context `Γ` and result in 
+  context `Δ` afterwards. This sequence grows upwards, so that each new let binds a variable that 
+  used to be free in the existing let-sequence, hence it shrinks the input context `Γ`
+  -/
 inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
-  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets Γ Γ₂
+  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Δ) : Lets Γ Δ
 
-/-- A finger-tree representation of an instrinsically program -/
+/-- 
+  `SnocLets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₁` and result in 
+  context `Γ₁`. In contrast with `Lets`, this sequence grows downwards, so that each new let may
+  refer to all existing lets (but not vice-versa), hence it grows the output context `Δ` -/
+inductive SnocLets : Ctxt → Ctxt → Type where
+  | nil {Γ : Ctxt} : SnocLets Γ Γ
+  | snocLet (e : IExpr Δ α) (body : SnocLets Γ Δ) : SnocLets Γ (Δ.snoc α)
+
+/-- 
+  `ILetsCom Γ ty` is a zipper representation of `ICom Γ ty`, consiting of a prefix list of let
+  bindings, followed by a suffix program. `Δ` is the context at the current position, i.e., 
+  after the prefix list, but before the suffix program
+ -/
 structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
-  Δ : Ctxt
-  lets : Lets Γ Δ
+  {Δ : Ctxt}
+  lets : SnocLets Γ Δ
   com : ICom Δ ty
 
 -- A simple first program
@@ -267,48 +284,38 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
 
-def Lets.snocLet : Lets Γ Δ → IExpr Δ α → Lets Γ (Δ.snoc α)
-  | .nil, e => .lete e .nil
-  | .lete e' body, e => .lete e' <| snocLet body e
-
-#check Lets.recOn
-
-@[elab_as_elim]
-def Lets.revCasesOn {motive : (Γ Γ' : Ctxt) → Lets Γ Γ' → Sort u} 
-    {Γ Δ : Ctxt}
-    (l : Lets Γ Γ')
-    (nil : motive Γ Γ .nil)
-    (snocLet : 
-      (lets : Lets Γ Δ) → (e : IExpr Δ α) → motive _ _ (lets.snocLet e)
-    ) :
-    motive _ _ l :=
-  by sorry
-
 /-- Move a single `let` from the program to the prefix list of lets -/
 def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
   match lc.com with
-    | @ICom.lete _ α _ e com => {
-        Δ := lc.Δ.snoc α
+    | .lete e com => {
         lets := lc.lets.snocLet e
         com := com
       }
     | _ => lc
 
--- /-- Move a single `let` from the prefix to the program -/
--- def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
---   lc.lets.revCasesOn (motive := fun Γ _ _ => ILetsCom Γ ty) 
---     lc -- `nil` case
---     fun lets e => { -- `snocLet`
---       Δ := _
---       lets := lets
---       com := _  
---     }
+/-- Move a single `let` from the prefix to the program -/
+def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
+  sorry
+  -- match lc.Δ with
+  --   | Ctxt.snoc _ _ => _
+  -- -- -- lc.Δ.casesOn
+  -- -- match lc.lets with
+  -- --   | .snocLet e lets => {
+  -- --       lets := lets
+  -- --       com := .lete e com
+  -- --     }
 
---   | .lete e lets => {
---       Δ := _
---       lets := lets
---       com := _
---     }
+/--
+  Append all of the prefix lets to the suffix program
+-/
+def ILetsCom.toCom : ILetsCom Γ ty → ICom Γ ty  :=
+  sorry -- repeatedly call unpeelLet, prove termination by the decreasing size of `lets`
+
+
+/--
+  Insert new let bindings at the current position, 
+-/
+def ILetCom.insertLets : ILetsCom Γ ty
 
 #exit
 
