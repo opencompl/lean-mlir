@@ -221,6 +221,10 @@ def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
 | .ret e, l => l e
 | .lete e body, l => body.denote (l.snoc (e.denote l))
 
+def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem 
+  | .nil => id
+  | .lete e body => fun ll => body.denote (ll.snoc (e.denote ll))
+
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
     (e : IExpr Γ ty) → IExpr Γ' ty
   | .nat n => .nat n
@@ -287,7 +291,7 @@ def ILetsCom.peelLet : ILetsCom Γ ty → ILetsCom Γ ty
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
-def addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
+def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     (map : (t : Ty) → Γ.Var t → Γ'.Var t) :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
   | .ret e, inputProg => inputProg.changeVars 
@@ -296,23 +300,23 @@ def addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
         then h.fst ▸ map _ e
         else v')
   | .lete e body, inputProg => 
-      let newBody := addLetsAtTop v.toSnoc
+      let newBody := addProgramAtTop v.toSnoc
         (fun _ v => Ctxt.Var.snocMap map _ v)
         body 
         -- This is the identity function if vars are debruijn indices
         (inputProg.changeVars (fun _ v => v.toSnoc))
       .lete (e.changeVars map) newBody
       
-theorem denote_addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
+theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
-    (addLetsAtTop v map rhs inputProg).denote s =
+    (addProgramAtTop v map rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
         if h : ∃ h : t₁ = t', h ▸ v = v' 
         then h.fst ▸ rhs.denote (fun t' v' => s (map _ v'))
         else s v')
   | .ret e, inputProg => by
-    simp only [addLetsAtTop, ICom.denote_changeVars, ICom.denote]
+    simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote]
     congr
     funext t' v'
     split_ifs with h
@@ -321,7 +325,7 @@ theorem denote_addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     . rfl   
   | .lete e body, inputProg => by
     simp only [ICom.denote, IExpr.denote_changeVars]
-    rw [denote_addLetsAtTop _ _ _ body]
+    rw [denote_addProgramAtTop _ _ _ body]
     simp [ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
     congr
     funext t' v'
@@ -339,13 +343,26 @@ theorem denote_addLetsAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       simp only [toSnoc_injective.eq_iff] at h'
       exact h ⟨rfl, h'⟩  
 
-/-- Adds lets at a position, and at that position take the variable at that 
-position and replace references to it with the output of the inserted program -/
-theorem insertLetsAtPos {Γ Γ' : Ctxt}
-    (map : (t : Ty) → Γ.Var t → Γ'.Var t)
-    (rhs : ICom Γ t₁) : (inputProg : ICom Γ' t₂) → ℕ → ICom Γ' t₂
-  | 
+def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
+    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) :
+    (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
+    (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
+  | Lets.nil, rhs, inputProg => 
+    addProgramAtTop v map rhs inputProg
+  | Lets.lete e body, rhs, inputProg => 
+    let p := addProgramInMiddle v map body rhs inputProg
+    .lete e p
 
+-- theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (s : Γ₁.Sem) (v : Γ₂.Var t₁)
+--     (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) :
+--     (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
+--     (inputProg : ICom Γ₂ t₂) →
+--     (addProgramInMiddle v map l rhs inputProg).denote s =
+--       inputProg.denote (fun t' v' => 
+--         _)
+--   | Lets.nil, rhs, inputProg => by
+--     simp [addProgramInMiddle, addProgramAtTop]
+    
 
 #exit
 
