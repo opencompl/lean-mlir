@@ -3,7 +3,7 @@
 import Std.Data.Option.Lemmas
 import Std.Data.Array.Lemmas
 import Std.Data.Array.Init.Lemmas
-import Mathlib
+-- import Mathlib
 import Mathlib.Data.List.Indexes
 import Mathlib.Data.Fin.Basic
 
@@ -263,27 +263,50 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
 
-def Lets.snoc_let (e : IExpr Δ α) : Lets Γ Δ → Lets Γ (Δ.snoc α)
-  | .nil => .lete e .nil
-  | .lete e' body => .lete e' <| snoc_let e body
+def Lets.snocLet : Lets Γ Δ → IExpr Δ α → Lets Γ (Δ.snoc α)
+  | .nil, e => .lete e .nil
+  | .lete e' body, e => .lete e' <| snocLet body e
+
+#check Lets.recOn
+
+@[elab_as_elim]
+def Lets.revCasesOn {motive : (Γ Γ' : Ctxt) → Lets Γ Γ' → Sort u} 
+    {Γ Δ : Ctxt}
+    (l : Lets Γ Γ')
+    (nil : motive Γ Γ .nil)
+    (snocLet : 
+      (lets : Lets Γ Δ) → (e : IExpr Δ α) → motive _ _ (lets.snocLet e)
+    ) :
+    motive _ _ l :=
+  by sorry
 
 /-- Move a single `let` from the program to the prefix list of lets -/
-def ILetsCom.peelLet : ILetsCom Γ ty → ILetsCom Γ ty
-  | ⟨Δ, lets, @ICom.lete _ α _ e com⟩ => {
-      Δ := Δ.snoc α
-      lets := lets.snoc_let e
-      com := com
-    }
-  | c@⟨_, _, .ret _⟩ => c
+def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
+  match lc.com with
+    | @ICom.lete _ α _ e com => {
+        Δ := lc.Δ.snoc α
+        lets := lc.lets.snocLet e
+        com := com
+      }
+    | _ => lc
 
 -- /-- Move a single `let` from the prefix to the program -/
--- def ILetsCom.unpeelLet : ILetsCom Γ ty → ILetsCom Γ ty
---   | ⟨Δ, .lete e lets, com⟩ => {
---       Δ := Δ
---       lets := _
+-- def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
+--   lc.lets.revCasesOn (motive := fun Γ _ _ => ILetsCom Γ ty) 
+--     lc -- `nil` case
+--     fun lets e => { -- `snocLet`
+--       Δ := _
+--       lets := lets
+--       com := _  
+--     }
+
+--   | .lete e lets => {
+--       Δ := _
+--       lets := lets
 --       com := _
 --     }
---   | c@⟨_, .nil, _⟩ => c
+
+#exit
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
