@@ -128,8 +128,8 @@ def getPos (v : Nat) (currentPos: Nat) : Nat :=
 /-- Apply `matchExpr` on a sequence of `lets` and return a `mapping` from
 free variables to their absolute position in the lets array.
 
-The `mapping` is a list of pairs `(x, pos)` where `x` is a free variable and
-`pos` is its position in the `lets` array. The `mapping` is updated when a free
+The `mapping` is a list of pairs `(x, pos)` where `x` is a meta variable and
+`pos` is its position in the `lets` array. The `mapping` is updated when a meta
 variable is found in `lets`.
 
 The sequence of lets remains unchanged throughout the recursive calls of this
