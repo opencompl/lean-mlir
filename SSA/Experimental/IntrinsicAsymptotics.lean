@@ -198,12 +198,6 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-/-- A finger-tree representation of an instrinsically program -/
-structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
-  Δ : Ctxt
-  lets : Lets Γ Δ
-  com : ICom Δ ty
-
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
 -- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
@@ -280,22 +274,9 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     cases v using Ctxt.Var.casesOn
     . simp
     . simp
-
--- /-- Move a single `let` from the prefix to the program -/
--- def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
---   lc.lets.revCasesOn (motive := fun Γ _ _ => ILetsCom Γ ty) 
---     lc -- `nil` case
---     fun lets e => { -- `snocLet`
---       Δ := _
---       lets := lets
---       com := _  
---     }
-
---   | .lete e lets => {
---       Δ := _
---       lets := lets
---       com := _
---     }
+ 
+-- Find a let somewhere in the program. Replace that let with
+-- a sequence of lets each of which might refer to higher up variables.
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
