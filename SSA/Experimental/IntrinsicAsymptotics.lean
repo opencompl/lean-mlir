@@ -338,35 +338,41 @@ def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
   | Lets.lete body e, inputProg => 
     addLetsAtTop body (.lete e inputProg)
 
-def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) :
-    (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
-    (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
-  | Lets.nil, rhs, inputProg => 
-    addProgramAtTop v map rhs inputProg
-  | Lets.lete body e, rhs, inputProg => 
-    let newInputProg := ICom.lete e inputProg
-    addProgramInMiddle _ _ body rhs newInputProg
-    
+theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
+    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) →
+    (addLetsAtTop lets inputProg).denote = 
+      inputProg.denote ∘ lets.denote
+  | Lets.nil, inputProg => rfl
+  | Lets.lete body e, inputProg => by
+    rw [addLetsAtTop, denote_addLetsAtTop body]
+    funext
+    simp [ICom.denote, Function.comp_apply, Lets.denote,
+      Ctxt.Sem.snoc]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . simp
+    . simp
 
-theorem denote_addProgramInMiddle : {Γ₁ Γ₂ Γ₃ : Ctxt} → 
-    (v : Γ₂.Var t₁) → (s : Γ₁.Sem) →
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) → 
-    (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
-    (inputProg : ICom Γ₂ t₂) →
+def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
+    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
+    (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
+    (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
+  addLetsAtTop l (addProgramAtTop v map rhs inputProg)
+
+theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
+    (v : Γ₂.Var t₁) (s : Γ₁.Sem)
+    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
+    (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
+    (inputProg : ICom Γ₂ t₂) :
     (addProgramInMiddle v map l rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
         let s' := l.denote s
         if h : ∃ h : t₁ = t', h ▸ v = v' 
         then h.fst ▸ rhs.denote (fun t' v' => s' (map _ v'))
-        else s' v')
-  | _, _, _, v, s, map, .nil, rhs, inputProg => by
-    rw [addProgramInMiddle, denote_addProgramAtTop]
-    rfl
-  | _, _, _, v, s, map, .lete e body, rhs, inputProg => by
-    dsimp only [addProgramInMiddle, ICom.denote]
-    rw [denote_addProgramInMiddle _ _ _ body]
-    rfl
+        else s' v') := by
+  rw [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, 
+    denote_addProgramAtTop]
 
 def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
