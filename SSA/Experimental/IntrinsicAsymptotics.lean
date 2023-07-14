@@ -186,11 +186,17 @@ inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
+inductive ExprRec (Γ : Ctxt) : Ty → Type where
+  | cst (n : Nat) : ExprRec Γ .nat
+  | add (a : ExprRec Γ .nat) (b : ExprRec Γ .nat) : ExprRec Γ .nat
+  | var (v : Γ.Var t) : ExprRec Γ t
+  deriving DecidableEq
+
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
     context `Γ₁`-/
 inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
-  | lete (e : IExpr Γ α) (body : Lets (Γ.snoc α) Γ₂) : Lets Γ Γ₂
+  | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
 /-- A finger-tree representation of an instrinsically program -/
 structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
@@ -212,18 +218,29 @@ structure ILetsCom (Γ : Ctxt) (ty : Ty) : Type where
 --   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
 --   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
-
 def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
-| .nat n, _ => n
-| .add a b, ll => ll a + ll b
+  | .nat n, _ => n
+  | .add a b, ll => ll a + ll b
 
 def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
-| .ret e, l => l e
-| .lete e body, l => body.denote (l.snoc (e.denote l))
+  | .ret e, l => l e
+  | .lete e body, l => body.denote (l.snoc (e.denote l))
+
+def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Sem) → ty.toType
+  | .cst n, _ => n
+  | .add a b, ll => a.denote ll + b.denote ll
+  | .var v, ll => ll v
 
 def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem 
   | .nil => id
-  | .lete e body => fun ll => body.denote (ll.snoc (e.denote ll))
+  | .lete e body => fun ll t v => by
+    cases v using Ctxt.Var.casesOn with
+    | last => 
+      apply body.denote
+      apply e.denote
+      exact ll
+    | base v =>
+      exact e.denote ll v
 
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
     (e : IExpr Γ ty) → IExpr Γ' ty
@@ -263,36 +280,6 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     cases v using Ctxt.Var.casesOn
     . simp
     . simp
- 
--- Find a let somewhere in the program. Replace that let with
--- a sequence of lets each of which might refer to higher up variables.
-
-def Lets.snocLet : Lets Γ Δ → IExpr Δ α → Lets Γ (Δ.snoc α)
-  | .nil, e => .lete e .nil
-  | .lete e' body, e => .lete e' <| snocLet body e
-
-#check Lets.recOn
-
-@[elab_as_elim]
-def Lets.revCasesOn {motive : (Γ Γ' : Ctxt) → Lets Γ Γ' → Sort u} 
-    {Γ Δ : Ctxt}
-    (l : Lets Γ Γ')
-    (nil : motive Γ Γ .nil)
-    (snocLet : 
-      (lets : Lets Γ Δ) → (e : IExpr Δ α) → motive _ _ (lets.snocLet e)
-    ) :
-    motive _ _ l :=
-  by sorry
-
-/-- Move a single `let` from the program to the prefix list of lets -/
-def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
-  match lc.com with
-    | @ICom.lete _ α _ e com => {
-        Δ := lc.Δ.snoc α
-        lets := lc.lets.snocLet e
-        com := com
-      }
-    | _ => lc
 
 -- /-- Move a single `let` from the prefix to the program -/
 -- def ILetsCom.unpeelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
@@ -309,8 +296,6 @@ def ILetsCom.peelLet (lc : ILetsCom Γ ty) : ILetsCom Γ ty :=
 --       lets := lets
 --       com := _
 --     }
-
-#exit
 
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
@@ -366,15 +351,22 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       simp only [toSnoc_injective.eq_iff] at h'
       exact h ⟨rfl, h'⟩  
 
+def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
+    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
+  | Lets.nil, inputProg => inputProg
+  | Lets.lete body e, inputProg => 
+    addLetsAtTop body (.lete e inputProg)
+
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) :
     (l : Lets Γ₁ Γ₂) → (rhs : ICom Γ₃ t₁) → 
     (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
   | Lets.nil, rhs, inputProg => 
     addProgramAtTop v map rhs inputProg
-  | Lets.lete e body, rhs, inputProg => 
-    let p := addProgramInMiddle v map body rhs inputProg
-    .lete e p
+  | Lets.lete body e, rhs, inputProg => 
+    let newInputProg := ICom.lete e inputProg
+    addProgramInMiddle _ _ body rhs newInputProg
+    
 
 theorem denote_addProgramInMiddle : {Γ₁ Γ₂ Γ₃ : Ctxt} → 
     (v : Γ₂.Var t₁) → (s : Γ₁.Sem) →
@@ -394,7 +386,88 @@ theorem denote_addProgramInMiddle : {Γ₁ Γ₂ Γ₃ : Ctxt} →
     dsimp only [addProgramInMiddle, ICom.denote]
     rw [denote_addProgramInMiddle _ _ _ body]
     rfl
-    
+
+def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
+    (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
+    (e : ExprRec Γ₁ t) → ExprRec Γ₂ t
+  | .var v => f _ v
+  | .cst n => .cst n
+  | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
+
+theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem) 
+    (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
+    (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
+      e.denote (fun t' v' => (f t' v').denote s)
+  | .var v => by simp [bind, denote]
+  | .cst n => by simp [bind, denote]
+  | .add e₁ e₂ => by
+    simp only [ExprRec.denote, bind]
+    rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
+
+def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
+  | _, _, .nat n => .cst n
+  | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
+
+def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
+  | _, _, .ret e => .var e
+  | _, _, .lete e body => 
+    let e' := e.toExprRec
+    body.toExprRec.bind 
+    (fun t v => by
+      cases v using Ctxt.Var.casesOn with
+      | base v => exact .var v
+      | last => exact e')
+
+theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
+    (s : Γ.Sem) → (e : IExpr Γ t) → 
+    e.toExprRec.denote s = e.denote s
+  | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+  | _, _, s, .add e₁ e₂ => by
+    simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+
+theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
+    (s : Γ.Sem) → (c : ICom Γ t) → 
+    c.toExprRec.denote s = c.denote s
+  | _, _, _, .ret e => by simp [ICom.toExprRec, ICom.denote, ExprRec.denote]
+  | _, _, s, .lete e body => by
+    simp only [ICom.toExprRec, ICom.denote, ExprRec.denote,
+      IExpr.denote_toExprRec, ExprRec.denote_bind]
+    rw [ICom.denote_toExprRec _ body]
+    congr
+    funext t' v'
+    cases v' using Ctxt.Var.casesOn
+    . simp [ExprRec.denote]
+    . simp [IExpr.denote_toExprRec]
+
+-- def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
+--   match matchExpr with
+--   | .var x => match mapping.lookup x with
+--     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
+--     | none => (x, varPos)::mapping
+--   | .cst n => match lets[varPos]! with
+--     | .cst n' => if n = n' then some mapping else none
+--     | _ => none
+--   | .add a' b' =>
+--     match lets[varPos]! with
+--     | .add a b => do
+--         let mapping ← matchVar lets (getPos a varPos) a' mapping
+--         matchVar lets (getPos b varPos) b' mapping
+--     | _ => none
+
+def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+    (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
+  | _, _, _, lets, .cst n => fun t v => none
+  | _, _, _, .lete (.add a1 b1) lets, .add a b => fun t v =>
+      let match1 := matchVar lets a t v
+      let match2 := matchVar lets b t v
+      match match1, match2 with
+      | some v₁, some v₂ => if v₁ = v₂ then some v₁ else none
+      | some v₁, none => some v₁
+      | none, some v₂ => some v₂
+      | none, none => none
+  | _, _, _, lets, .var n => sorry
+  
+     
 
 #exit
 
