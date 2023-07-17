@@ -1,179 +1,13 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
-import Std.Data.Option.Lemmas
-import Std.Data.Array.Lemmas
-import Std.Data.Array.Init.Lemmas
--- import Mathlib
-import Mathlib.Data.List.Indexes
-import Mathlib.Data.Fin.Basic
+import SSA.Experimental.IntrinsicAsymptotics.Ctxt
 
 noncomputable section
 
-/-- A very simple type universe. -/
-inductive Ty
-  | nat
-  | bool
-  deriving DecidableEq, Repr
+/-
+  ## Datastructures
+-/
 
-@[reducible]
-def Ty.toType
-  | nat => Nat
-  | bool => Bool
-
--- inductive Value where
---   | nat : Nat → Value
---   | bool : Bool → Value
---   deriving Repr, Inhabited, DecidableEq
-
--- /-- The `State` is a map from variables to values that uses relative de Bruijn
---     indices. The most recently introduced variable is at the head of the list.
--- -/
--- abbrev State := List Value
-
-/-- A context is basicallty a list of `Ty`, but we make it a constant here to be
-implemented later -/
-axiom Ctxt : Type
-
-/-- The empty context -/
-axiom Ctxt.empty : Ctxt
-
-instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
-
-/-- Add a `Ty` to a context -/
-axiom Ctxt.snoc : Ctxt → Ty → Ctxt
-
-/-- A `Γ.Var t` is a variable of Type `t` in a context `Γ`   -/
-axiom Ctxt.Var (Γ : Ctxt) (t : Ty) : Type
-
-@[instance]
-axiom Ctxt.Var.decidableEq {Γ : Ctxt} {t : Ty} : DecidableEq (Ctxt.Var Γ t)
-
-/-- The last variable in a context, i.e. the most recently added. -/
-axiom Ctxt.Var.last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t
-
-/-- The empty Context has no variables, so we can add this eliminator. -/
-axiom Ctxt.Var.emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α  
-
-/-- Take a variable in a context `Γ` and get the corresponding variable
-in context `Γ.snoc t`. This is marked as a coercion. -/
-@[coe]
-axiom Ctxt.Var.toSnoc {Γ : Ctxt} {t t' : Ty} : 
-    Ctxt.Var Γ t → Ctxt.Var (Ctxt.snoc Γ t') t 
-
--- axiom Ctxt.append : Ctxt → Ctxt → Ctxt
-
--- axiom Ctxt.append_empty (Γ : Ctxt) : Ctxt.append Γ ∅ = Γ
-
--- axiom Ctxt.append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
---   Ctxt.append Γ (Ctxt.snoc Γ' t) = (Γ.append Γ').snoc t
-
--- axiom Ctxt.Var.inl {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ t) : 
---   Var (Ctxt.append Γ Γ') t
-
--- axiom Ctxt.Var.inr {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ' t) :
---   Var (Ctxt.append Γ Γ') t
-
-/-- This is an induction principle that case splits on whether or not a variable 
-is the last variable in a context. -/
-@[elab_as_elim]
-axiom Ctxt.Var.casesOn 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      motive Γ t t' v
-
-/-- `Ctxt.Var.casesOn` behaves in the expected way when applied to the last variable -/
-@[simp]
-axiom Ctxt.Var.casesOn_last
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t : Ty}
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-    Ctxt.Var.casesOn (motive := motive)
-        (Ctxt.Var.last Γ t) toSnoc last = last
-
-/-- `Ctxt.Var.casesOn` behaves in the expected way when applied to a previous variable,
-that is not the last one. -/
-@[simp]
-axiom Ctxt.Var.casesOn_toSnoc 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) toSnoc last = toSnoc v
-
-theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
-    Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
-  let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
-    fun v => Ctxt.Var.casesOn v some none
-  intro x y h
-  simpa using congr_arg ofSnoc h
-  
-
--- axiom Ctxt.Var.appendCasesOn 
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : (Γ.append Γ').Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---       motive Γ Γ' t v
-
--- @[simp]
--- axiom Ctxt.Var.appendCasesOn_inl
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : Γ.Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---     Ctxt.Var.appendCasesOn (motive := motive)
---        (v.inl : (Γ.append Γ').Var t) inl inr = inl v
-
--- @[simp]
--- axiom Ctxt.Var.appendCasesOn_inr
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : Γ'.Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---     Ctxt.Var.appendCasesOn (motive := motive)
---        (v.inr : (Γ.append Γ').Var t) inl inr = inr v
-
-instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
-
-/-- A semantics for a context. Provide a way to evaluate every variable in a context. -/
-def Ctxt.Sem (Γ : Ctxt) : Type :=
-  ⦃t : Ty⦄ → Γ.Var t → t.toType    
-
-instance : Inhabited (Ctxt.Sem ∅) := ⟨fun _ v => v.emptyElim⟩ 
-
-/-- Make a semantics for `Γ.snoc t` from a semantics for `Γ` and an element of `t.toType`. -/
-def Ctxt.Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
-    (Γ.snoc t).Sem := by
-  intro t' v
-  revert s x
-  refine Ctxt.Var.casesOn v ?_ ?_
-  . intro _ _ _ v s _; exact s v
-  . intro _ _ _ x; exact x
-
-@[simp]
-theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
-    (s.snoc x) (Ctxt.Var.last _ _) = x := by 
-  simp [Ctxt.Sem.snoc]
-
-@[simp]
-theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
-    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
-  simp [Ctxt.Sem.snoc]
-
-/-- Given a change of variables map from `Γ` to `Γ'`, extend it to 
-a map `Γ.snoc t` to `Γ'.snoc t` -/
-@[simp] 
-def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
-    (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
-    (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
-  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
-    (fun _ => Ctxt.Var.last _ _) f
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
@@ -192,11 +26,65 @@ inductive ExprRec (Γ : Ctxt) : Ty → Type where
   | var (v : Γ.Var t) : ExprRec Γ t
   deriving DecidableEq
 
-/-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
-    context `Γ₁`-/
+/-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₁` and result in 
+    context `Γ₁`. The sequence grows downwards, so that each new let may refer to all existing lets
+    (but not vice-versa), hence it grows the output context `Γ₂` -/
 inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
+
+/-- A zipper representation of a program `ICom Γ t`-/
+structure LetZipper (Γ : Ctxt) (ty : Ty) where
+  {Δ : Ctxt}
+  lets : Lets Γ Δ 
+  com : ICom Δ ty
+
+
+
+/-
+  ## Definitions
+-/
+
+
+
+/-- Move a single let from `com` to `lets` -/
+def LetZipper.peelLet (z : LetZipper Γ ty) : LetZipper Γ ty :=
+  match z.com with
+    | .lete e com => {
+        lets := .lete z.lets e
+        com := com
+      }
+    | .ret .. => z
+
+def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
+    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
+  | Lets.nil, inputProg => inputProg
+  | Lets.lete body e, inputProg => 
+    addLetsAtTop body (.lete e inputProg)
+
+/-- Turn a `LetZipper` into the corresponding `ICom`  -/
+def LetZipper.zip : LetZipper Γ t → ICom Γ t := 
+  fun z => addLetsAtTop z.lets z.com
+
+
+
+def IExpr.incrementReferences : IExpr Γ t → IExpr (Γ.snoc t') t 
+  | .add x y => .add x.toSnoc y.toSnoc
+  | .nat n => .nat n
+
+def ICom.incrementReferences : {Γ : Ctxt} → {t t' : Ty} → ICom Γ t -> ICom (Γ.snoc t') t
+  | _, _, _, .ret i => .ret i.toSnoc
+  | _, _, _, .lete e body => .lete e.incrementReferences _
+
+/-- Add a single let-binding to the prefix list, while incrementing all variable references in the
+    suffix program, so that all references remain pointing to their previous values -/
+def LetZipper.insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : LetZipper Γ t := {
+    lets := .lete z.lets e
+    com := z.com.incrementReferences
+  }
+
+
+
 
 -- A simple first program
 -- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
@@ -212,44 +100,15 @@ inductive Lets : Ctxt → Ctxt → Type where
 --   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
 --   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
-def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
-  | .nat n, _ => n
-  | .add a b, ll => ll a + ll b
 
-def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
-  | .ret e, l => l e
-  | .lete e body, l => body.denote (l.snoc (e.denote l))
 
-def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Sem) → ty.toType
-  | .cst n, _ => n
-  | .add a b, ll => a.denote ll + b.denote ll
-  | .var v, ll => ll v
 
-def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem 
-  | .nil => id
-  | .lete e body => fun ll t v => by
-    cases v using Ctxt.Var.casesOn with
-    | last => 
-      apply body.denote
-      apply e.denote
-      exact ll
-    | toSnoc v =>
-      exact e.denote ll v
 
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
     (e : IExpr Γ ty) → IExpr Γ' ty
   | .nat n => .nat n
   | .add a b => .add (varsMap _ a) (varsMap _ b)
 
-@[simp]
-theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
-    (e : IExpr Γ ty)
-    (ll : Γ'.Sem) : 
-    (e.changeVars varsMap).denote ll = 
-    e.denote (fun t v => ll (varsMap t v)) := by
-  induction e generalizing ll <;> simp 
-    [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
@@ -258,22 +117,6 @@ def ICom.changeVars
   | .lete e body => .lete (e.changeVars varsMap) 
       (body.changeVars (fun t v => v.snocMap varsMap))
 
-@[simp]
-theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
-    (ll : Γ'.Sem) : 
-    (c.changeVars varsMap).denote ll = 
-    c.denote (fun t v => ll (varsMap t v)) := by
-  induction c generalizing ll Γ' with
-  | ret x => simp [ICom.denote, ICom.changeVars, *]
-  | lete _ _ ih => 
-    rw [changeVars, denote, ih]
-    simp only [Ctxt.Sem.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
-    congr
-    funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
  
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
@@ -296,63 +139,10 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
         (inputProg.changeVars (fun _ v => v.toSnoc))
       .lete (e.changeVars map) newBody
       
-theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :
-    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
-    (addProgramAtTop v map rhs inputProg).denote s =
-      inputProg.denote (fun t' v' => 
-        if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ rhs.denote (fun t' v' => s (map _ v'))
-        else s v')
-  | .ret e, inputProg => by
-    simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote]
-    congr
-    funext t' v'
-    split_ifs with h
-    . rcases h with ⟨rfl, _⟩
-      simp
-    . rfl   
-  | .lete e body, inputProg => by
-    simp only [ICom.denote, IExpr.denote_changeVars]
-    rw [denote_addProgramAtTop _ _ _ body]
-    simp [ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
-    congr
-    funext t' v'
-    by_cases h : ∃ h : t₁ = t', h ▸ v = v'
-    . rcases h with ⟨rfl, h⟩
-      dsimp at h
-      simp [h]
-      congr
-      funext t'' v''
-      cases v'' using Ctxt.Var.casesOn
-      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
-      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
-    . rw [dif_neg h, dif_neg]
-      rintro ⟨rfl, h'⟩ 
-      simp only [toSnoc_injective.eq_iff] at h'
-      exact h ⟨rfl, h'⟩  
 
-def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
-    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) → ICom Γ₁ t₂
-  | Lets.nil, inputProg => inputProg
-  | Lets.lete body e, inputProg => 
-    addLetsAtTop body (.lete e inputProg)
 
-theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
-    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) →
-    (addLetsAtTop lets inputProg).denote = 
-      inputProg.denote ∘ lets.denote
-  | Lets.nil, inputProg => rfl
-  | Lets.lete body e, inputProg => by
-    rw [addLetsAtTop, denote_addLetsAtTop body]
-    funext
-    simp [ICom.denote, Function.comp_apply, Lets.denote,
-      Ctxt.Sem.snoc]
-    congr
-    funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
+
+
 
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
@@ -360,19 +150,6 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
   addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
-theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
-    (v : Γ₂.Var t₁) (s : Γ₁.Sem)
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
-    (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
-    (inputProg : ICom Γ₂ t₂) :
-    (addProgramInMiddle v map l rhs inputProg).denote s =
-      inputProg.denote (fun t' v' => 
-        let s' := l.denote s
-        if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ rhs.denote (fun t' v' => s' (map _ v'))
-        else s' v') := by
-  rw [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, 
-    denote_addProgramAtTop]
 
 def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
@@ -381,15 +158,6 @@ def ExprRec.bind {Γ₁ Γ₂ : Ctxt}
   | .cst n => .cst n
   | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
 
-theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem) 
-    (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
-    (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
-      e.denote (fun t' v' => (f t' v').denote s)
-  | .var v => by simp [bind, denote]
-  | .cst n => by simp [bind, denote]
-  | .add e₁ e₂ => by
-    simp only [ExprRec.denote, bind]
-    rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
 
 def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
   | _, _, .nat n => .cst n
@@ -405,26 +173,6 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
       | toSnoc v => exact .var v
       | last => exact e')
 
-theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
-    (s : Γ.Sem) → (e : IExpr Γ t) → 
-    e.toExprRec.denote s = e.denote s
-  | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
-  | _, _, s, .add e₁ e₂ => by
-    simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
-
-theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
-    (s : Γ.Sem) → (c : ICom Γ t) → 
-    c.toExprRec.denote s = c.denote s
-  | _, _, _, .ret e => by simp [ICom.toExprRec, ICom.denote, ExprRec.denote]
-  | _, _, s, .lete e body => by
-    simp only [ICom.toExprRec, ICom.denote, ExprRec.denote,
-      IExpr.denote_toExprRec, ExprRec.denote_bind]
-    rw [ICom.denote_toExprRec _ body]
-    congr
-    funext t' v'
-    cases v' using Ctxt.Var.casesOn
-    . simp [ExprRec.denote]
-    . simp [IExpr.denote_toExprRec]
 
 -- def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
 --   match matchExpr with
