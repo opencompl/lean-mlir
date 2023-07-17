@@ -79,7 +79,7 @@ is the last variable in a context. -/
 axiom Ctxt.Var.casesOn 
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
-    (base : {t t' : Ty} → 
+    (toSnoc : {t t' : Ty} → 
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       motive Γ t t' v
@@ -89,11 +89,11 @@ axiom Ctxt.Var.casesOn
 axiom Ctxt.Var.casesOn_last
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t : Ty}
-    (base : {t t' : Ty} → 
+    (toSnoc : {t t' : Ty} → 
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
     Ctxt.Var.casesOn (motive := motive)
-        (Ctxt.Var.last Γ t) base last = last
+        (Ctxt.Var.last Γ t) toSnoc last = last
 
 /-- `Ctxt.Var.casesOn` behaves in the expected way when applied to a previous variable,
 that is not the last one. -/
@@ -101,10 +101,10 @@ that is not the last one. -/
 axiom Ctxt.Var.casesOn_toSnoc 
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
-    (base : {t t' : Ty} → 
+    (toSnoc : {t t' : Ty} → 
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v
+      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) toSnoc last = toSnoc v
 
 theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
     Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
@@ -233,7 +233,7 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem
       apply body.denote
       apply e.denote
       exact ll
-    | base v =>
+    | toSnoc v =>
       exact e.denote ll v
 
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
@@ -402,7 +402,7 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
     body.toExprRec.bind 
     (fun t v => by
       cases v using Ctxt.Var.casesOn with
-      | base v => exact .var v
+      | toSnoc v => exact .var v
       | last => exact e')
 
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
@@ -441,19 +441,20 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
 --         matchVar lets (getPos b varPos) b' mapping
 --     | _ => none
 
+def getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
+    (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t))
+  | _, _, .nil, _, _ => none
+  | _, _, lets@(.lete body _), _, v =>by
+    cases v using Ctxt.Var.casesOn with
+    | last => exact some ⟨_, lets⟩ 
+    | toSnoc v => exact getVar body v
+
 def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
     (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
   | _, _, _, lets, .cst n => fun t v => none
-  | _, _, _, .lete (.add a1 b1) lets, .add a b => fun t v =>
-      let match1 := matchVar lets a t v
-      let match2 := matchVar lets b t v
-      match match1, match2 with
-      | some v₁, some v₂ => if v₁ = v₂ then some v₁ else none
-      | some v₁, none => some v₁
-      | none, some v₂ => some v₂
-      | none, none => none
-  | _, _, _, lets, .var n => sorry
-  
+  | _, _, _, .lete lets (.add a1 b1), .add a b => fun t v => do
+    let g1 ← getVar lets a1
+    let g2 ← getVar lets b1  
      
 
 #exit
