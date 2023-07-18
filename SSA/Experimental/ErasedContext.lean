@@ -390,6 +390,9 @@ end Var
 
 section Append
 
+/-- A computable way to keep track of the length of an erased context -/
+def Length (Γ : Ctxt) : Type := { n // Γ.out.length = n}
+
 def append : Ctxt → Ctxt → Ctxt :=
   fun xs ys => do return List.append (← ys) (← xs)
 
@@ -415,22 +418,25 @@ theorem _root_.List.get?_append_add :
 
 
 
--- def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
---   | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
+def Var.inl {Γ Γ' : Ctxt} {t : Ty} (len : Γ'.Length) : Var Γ t → Var (Γ ++ Γ') t
+  | ⟨v, h⟩ => ⟨v + len.1, by 
+      rcases len with ⟨len, ⟨⟩⟩
+      simp[←h, (· ++ ·), Append.append, append, List.get?_append_add]
+    ⟩
 
--- def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (Γ ++ Γ') t
---   | ⟨v, h⟩ => ⟨v, by 
---       simp[append]
---       induction Γ' generalizing v
---       next =>
---         simp[empty] at h
---       next cons ih =>
---         cases v
---         case zero =>
---           rw[←h]; rfl
---         case succ v =>
---           apply ih v h
---     ⟩
+def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (Γ ++ Γ') t
+  | ⟨v, h⟩ => ⟨v, by 
+      simp[(· ++ ·), Append.append, append]
+      induction Γ' using Ctxt.inductionOn generalizing v 
+      next =>
+        simp[empty] at h
+      next cons ih =>
+        cases v
+        case zero =>
+          rw[←h]; simp
+        case succ v =>
+          simp_all
+    ⟩
 
 end Append
 
