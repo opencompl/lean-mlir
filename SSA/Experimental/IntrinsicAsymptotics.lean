@@ -20,20 +20,33 @@ inductive ICom : Ctxt →  Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
-inductive ExprRec (Γ : Ctxt) : Ty → Type where
-  | cst (n : Nat) : ExprRec Γ .nat
-  | add (a : ExprRec Γ .nat) (b : ExprRec Γ .nat) : ExprRec Γ .nat
-  | var (v : Γ.Var t) : ExprRec Γ t
+/-- A ExprRec is a (recursive) expression tree where the free variables are meta-variables -/
+inductive IExprRec (Γ : Ctxt) : Ty → Type where
+  | cst (n : Nat) : IExprRec Γ .nat
+  | add (a : IExprRec Γ .nat) (b : IExprRec Γ .nat) : IExprRec Γ .nat
+  | var (v : Γ.Var t) : IExprRec Γ t
   deriving DecidableEq
 
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₁` and result in 
-    context `Γ₁`. The sequence grows downwards, so that each new let may refer to all existing lets
+    context `Γ₂`. The sequence grows downwards, so that each new let may refer to all existing lets
     (but not vice-versa), hence it grows the output context `Γ₂` -/
 inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-/-- A zipper representation of a program `ICom Γ t`-/
+/-- `RevLets' Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₁` and result in 
+    context `Γ₁`. In contrast to `Lets`, this sequence grows upwards, so that each new let binds an
+    free variable of the existing lets, i.e., it shrinks the input context `Γ₁`.
+    Prefer `Lets` for APIs, `RevLets` may be used as an implementation detail.
+-/
+inductive RevLets : Ctxt → Ctxt → Type where
+  | nil {Γ : Ctxt} : RevLets Γ Γ
+  | lete (body : RevLets (Γ₁.snoc α) Γ₂) (e : IExpr Γ₁ t) : RevLets Γ₁ Γ₂
+
+/-- A zipper representation of a program `ICom Γ t`, in terms of a prefix list of lets, and a suffix
+    program. This represents a spefic position in the program, with `Δ` being the context at this
+    position.
+-/
 structure LetZipper (Γ : Ctxt) (ty : Ty) where
   {Δ : Ctxt}
   lets : Lets Γ Δ 
@@ -41,11 +54,28 @@ structure LetZipper (Γ : Ctxt) (ty : Ty) where
 
 
 
+/-!
+
+  An implementation sketch of `rewrite`
+
+  matching/rewriting is implemented on `LetZipper`, with ExprRecs being in the shape of trees (i.e., 
+  `ExprRec`).
+
+  Specifically, we call `peelLet` to move the cursor right, each time trying to match the ExprRec 
+  against the prefix list `lets`.
+
+  Now, because ExprRecs are tree-shaped, there are no free variables in the traditional sense, only
+  meta-variables. So, we don't differentiate between a normal context, and a meta-context, we just
+  parameterize the ExprRec by a `Ctxt` and `Ty`
+com := z.com.changeVars (fun _ => Ctxt.Var.toSnoc)d `IExprRec Δ ty`.
+
+  This concretized pattern can then be inserted into the zipper at the cursor position.
+  Finally, `zip` is called to stitch the zipper back into an `ICom`
+-/
+
 /-
   ## Definitions
 -/
-
-
 
 /-- Move a single let from `com` to `lets` -/
 def LetZipper.peelLet (z : LetZipper Γ ty) : LetZipper Γ ty :=
@@ -67,21 +97,6 @@ def LetZipper.zip : LetZipper Γ t → ICom Γ t :=
   fun z => addLetsAtTop z.lets z.com
 
 
-
-def IExpr.incrementReferences : IExpr Γ t → IExpr (Γ.snoc t') t 
-  | .add x y => .add x.toSnoc y.toSnoc
-  | .nat n => .nat n
-
-def ICom.incrementReferences : {Γ : Ctxt} → {t t' : Ty} → ICom Γ t -> ICom (Γ.snoc t') t
-  | _, _, _, .ret i => .ret i.toSnoc
-  | _, _, _, .lete e body => .lete e.incrementReferences _
-
-/-- Add a single let-binding to the prefix list, while incrementing all variable references in the
-    suffix program, so that all references remain pointing to their previous values -/
-def LetZipper.insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : LetZipper Γ t := {
-    lets := .lete z.lets e
-    com := z.com.incrementReferences
-  }
 
 
 
@@ -117,6 +132,29 @@ def ICom.changeVars
   | .lete e body => .lete (e.changeVars varsMap) 
       (body.changeVars (fun t v => v.snocMap varsMap))
 
+
+/-- Add a single let-binding to the prefix list, while incrementing all variable references in the
+    suffix program, so that all references remain pointing to their previous values.
+    Returns the new zipper, and a reference to the newly added variable -/
+def LetZipper.insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
+      (z' : LetZipper Γ t) × z'.Δ.Var t' := ⟨{
+    lets := .lete z.lets e
+    com := z.com.changeVars (fun _ => Ctxt.Var.toSnoc)
+  }, Ctxt.Var.last ..⟩
+
+
+-- def LetZipper.insertExprRecAux (z : LetZipper Γ t) : 
+--     IExprRec z.Δ t' → (z' : LetZipper Γ t) × z'.Δ.Var t'
+--   | .cst n => 
+--       z.insertLet (.nat n)
+--   | .var v => 
+--       ⟨z, v⟩
+--   | .add e₁ e₂ => 
+--       let ⟨z, v₁⟩ := z.insertExprRecAux e₁
+--       let ⟨z, v₂⟩ := z.insertExprRecAux e₂
+--       _
+
+
  
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
@@ -151,19 +189,19 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
   addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
 
-def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
-    (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
-    (e : ExprRec Γ₁ t) → ExprRec Γ₂ t
+def IExprRec.bind {Γ₁ Γ₂ : Ctxt} 
+    (f : (t : Ty) → Γ₁.Var t → IExprRec Γ₂ t) : 
+    (e : IExprRec Γ₁ t) → IExprRec Γ₂ t
   | .var v => f _ v
   | .cst n => .cst n
   | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
 
 
-def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
+def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → IExprRec Γ t
   | _, _, .nat n => .cst n
   | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
 
-def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
+def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
   | _, _, .ret e => .var e
   | _, _, .lete e body => 
     let e' := e.toExprRec
@@ -172,6 +210,146 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
       cases v using Ctxt.Var.casesOn with
       | toSnoc v => exact .var v
       | last => exact e')
+
+
+/-
+  ## Matching
+-/
+
+def Mapping.Pair (Γ Δ : Ctxt) := Σ t, Γ.Var t × Δ.Var t
+
+/--
+  `Γ` is a prefix of `Δ` if we can drop a number of types from `Δ` to obtain `α`.
+  This is encoded as a `Type`, so that we can compute with `n`
+-/
+abbrev Ctxt.IsPrefixOf (Γ Δ : Ctxt ) : Type :=
+  {n // Δ.drop n = Γ}
+
+-- def Ctxt.Var.embedIntoPrefix {Γ Δ : Ctxt} : Γ.IsPrefixOf Δ → Γ.Var t → Δ.Var t
+--   | ⟨0, _⟩ => id
+--   | ⟨n+1, _⟩ => _
+
+/--
+  `Mapping Γ Δ` is intended to incrementally build a mapping from variables in `Γ` to variables in 
+  `Δ`. In the process of building this map
+
+-/
+-- structure Mapping (Γ Δ : Ctxt) where
+--   /-- The mapping from variables in `Γ` to variables in `Δ` -/
+--   map : List (Mapping.Pair Γ Δ)
+--   /-- A list of variables from `Γ` that are already assigned to variables *not* in `Δ` -/
+--   reserved : List (Σ t, Γ.Var t)
+--   /-- For every `v : Γ.Var _`, there is at most one pair `(v, _) ∈ map` -/
+--   map_invariant : ∀ {t} v w w', ⟨t, v, w⟩ ∈ map → ⟨t, v, w'⟩ ∈ map → w = w'
+--   /-- For every `v ∈ reserverd`, there may be no pairs `(v, _) ∈ map` -/
+--   reserved_invariant : ∀ tv ∈ reserved, ∀ w, ⟨tv.1, tv.2, w⟩ ∉ map
+
+-- def Mapping.snocMap : Mapping Γ Δ → Mapping Γ (Δ.snoc t)
+--   | ⟨[], res, _, _⟩ => ⟨[], res, by simp, by simp⟩
+--   | ⟨⟨t, v, v'⟩ :: ms, res, m_inv, r_inv⟩ => 
+--       ⟨⟨t, v, v'⟩ :: snocMap ms, res, m_inv, r_inv⟩ 
+
+def Mapping (Γ Δ : Ctxt) := List (Mapping.Pair Γ Δ)
+
+/-- Grow the target context of a mapping -/
+def Mapping.snocMap : Mapping Γ Δ → Mapping Γ (Δ.snoc t)
+  | [] => []
+  | ⟨t, v, v'⟩ :: ms => ⟨t, v, v'⟩ :: snocMap ms
+
+/-- `map.insert v v'` asserts that `v` maps to `v'`
+    * if `v` is not present in the map yet, insert the pair `(v, v')` into the map
+    * otherwise, if there is a pair `(v, w)`, with `v` on the left hand side, then 
+        - return the map unchanged if `w = v'`, or
+        - return `none` otherwise
+-/
+def Mapping.insert (map : Mapping Γ Δ) (v₁ : Γ.Var t) (v₂ : Δ.Var t) : 
+    Option (Mapping Γ Δ) :=
+  match map with
+    | [] => some [⟨t, v₁, v₂⟩]
+    | origMap@(⟨t', w₁, w₂⟩ :: map) =>
+        let default := (insert map v₁ v₂).map (⟨t', w₁, w₂⟩ :: ·)
+        if heq : t = t' then
+          if w₁ = cast (by simp[heq]) v₁ then
+            if w₂ = cast (by simp[heq]) v₂ then
+              some origMap
+            else
+              none            
+          else
+            default
+        else
+          default
+
+def Mapping.insert' (map : Mapping Γ Δ) (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ Δ) :=
+  if h : t₁ = t₂ then
+    map.insert v₁ <| cast (by rw[h]) v₂
+  else
+    none
+
+
+def Mapping.shrink (map : Mapping Γ Δ) (h : Δ'.IsPrefixOf Δ) : Mapping Γ Δ'
+
+
+
+
+structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
+  {Δ : Ctxt}
+  lets : Lets Γ₁ (Δ.snoc t) 
+  is_prefix : Δ.IsPrefixOf Γ₂ 
+
+def GetVarResult.coe_snoc : GetVarResult Γ₁ Γ₂ t → GetVarResult Γ₁ (Γ₂.snoc t') t
+  | ⟨lets, is_prefix⟩ => ⟨lets, by
+        rcases is_prefix with ⟨n, drop_eq⟩
+        use n+1
+        simp[drop_eq]
+      ⟩
+
+/-- Drop bindings from `lets` until the binding corresponding to `v` is at the head.
+    This can fail, since `v` might be a free variable originating from `Γ₁`.
+    Returns the new `lets`, plus a proof that it's context is a prefix of the original context -/
+def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
+    (v : Γ₂.Var t) → Option (GetVarResult Γ₁ Γ₂ t)
+  | _, _, .nil, _, _ => none
+  | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
+    cases v using Ctxt.Var.casesOn with
+    | last => exact some ⟨lets, ⟨1, by simp⟩⟩ 
+    | toSnoc v => exact (getVar body v).map (·.coe_snoc)
+
+
+def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) 
+    (map : Mapping Γ' Δ := []) : Option (Mapping Γ' Δ) :=
+  match lets with
+    | .nil => none
+    | .lete lets e =>
+      match matchExpr, e with
+        | .var v, _ => 
+            map.insert' v (Ctxt.Var.last ..)
+        | .cst n, .nat m =>
+            if n = m then
+              map
+            else
+              none
+        | .add lhs rhs, .add v₁ v₂ => do
+            /-
+              Sketch: to match `e₁`, we want to drop just enough variables from `lets` so that 
+              the declaration corresponding to `v₁` is at the head. Then, we want to recursively 
+              call `matchAgainstLets` again.
+
+              Problem: we want to pass `map` to each recursive call, but `getVar` returns a new
+              context `Δ'`. We know that `Δ'` is a prefix of `Δ`.
+
+              Solution: we can drop 
+            -/
+            let ⟨lets₁, pre₁⟩ ← lets.getVar v₁
+            let map₁ ← lhs.matchAgainstLets lets₁
+
+            let ⟨lets₂, pre₂⟩ ← lets.getVar v₂
+            let map₂ ← lhs.matchAgainstLets lets₁
+            some _
+
+        | _, _ => none
+
+
+
 
 
 -- def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
@@ -189,20 +367,13 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
 --         matchVar lets (getPos b varPos) b' mapping
 --     | _ => none
 
-def getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t))
-  | _, _, .nil, _, _ => none
-  | _, _, lets@(.lete body _), _, v =>by
-    cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨_, lets⟩ 
-    | toSnoc v => exact getVar body v
 
-def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
-  | _, _, _, lets, .cst n => fun t v => none
-  | _, _, _, .lete lets (.add a1 b1), .add a b => fun t v => do
-    let g1 ← getVar lets a1
-    let g2 ← getVar lets b1  
+-- def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+--     (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
+--   | _, _, _, lets, .cst n => fun t v => none
+--   | _, _, _, .lete lets (.add a1 b1), .add a b => fun t v => do
+--     let g1 ← getVar lets a1
+--     let g2 ← getVar lets b1  
      
 
 #exit
@@ -352,8 +523,8 @@ def getVarAfterMapping (var : LeafVar) (lets : Lets) (m : Mapping) (inputLets : 
 def getRel (v : Nat) (array: List Expr): VarRel :=
   VarRel.ofNat (array.length - v - 1)
 
-def applyMapping  (pattern : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) :=
-match pattern with
+def applyMapping  (ExprRec : ExprRec) (m : Mapping) (lets : Lets) (inputLets : Nat := lets.length): (Lets × Nat) :=
+match ExprRec with
     | .var v =>
       (lets, getVarAfterMapping v lets m inputLets)
     | .add a b =>

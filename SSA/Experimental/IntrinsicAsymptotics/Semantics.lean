@@ -43,6 +43,10 @@ theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Sem.snoc]
 
+/-
+  ## Denotation functions
+-/
+
 
 def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
   | .nat n, _ => n
@@ -67,6 +71,41 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem
       exact ll
     | toSnoc v =>
       exact e.denote ll v
+
+def LetZipper.denote : LetZipper Γ ty → (ll : Γ.Sem) → ty.toType
+  := fun z => z.zip.denote
+
+
+/-
+  ## Denotation preservation proofs
+-/
+
+theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
+    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) →
+    (addLetsAtTop lets inputProg).denote = 
+      inputProg.denote ∘ lets.denote
+  | Lets.nil, inputProg => rfl
+  | Lets.lete body e, inputProg => by
+    rw [addLetsAtTop, denote_addLetsAtTop body]
+    funext
+    simp [ICom.denote, Function.comp_apply, Lets.denote,
+      Ctxt.Sem.snoc]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . simp
+    . simp
+
+@[simp]
+theorem LetZipper.denote_peelLet (z : LetZipper Γ t) :
+    z.peelLet.denote = z.denote := by
+  rcases z with ⟨lets, _|_⟩ <;> rfl
+
+@[simp]
+theorem LetZipper.nil_com_denote_zip (com : ICom Γ t) :
+    LetZipper.denote ⟨.nil, com⟩ = com.denote :=
+  rfl
+
 
 
 @[simp]
@@ -97,6 +136,13 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     cases v using Ctxt.Var.casesOn
     . simp
     . simp
+
+theorem LetZipper.denote_insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
+    (z.insertLet e).denote = z.denote := by
+  simp only [denote, zip, addLetsAtTop, insertLet, denote_addLetsAtTop, ICom.denote, 
+            ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
+
+
 
 
 
@@ -138,21 +184,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
 
 
 
-theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
-    (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) →
-    (addLetsAtTop lets inputProg).denote = 
-      inputProg.denote ∘ lets.denote
-  | Lets.nil, inputProg => rfl
-  | Lets.lete body e, inputProg => by
-    rw [addLetsAtTop, denote_addLetsAtTop body]
-    funext
-    simp [ICom.denote, Function.comp_apply, Lets.denote,
-      Ctxt.Sem.snoc]
-    congr
-    funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
+
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Sem)

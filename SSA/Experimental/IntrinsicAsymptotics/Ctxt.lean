@@ -145,4 +145,17 @@ def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
   fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
     (fun _ => Ctxt.Var.last _ _) f
 
+
+
+axiom Ctxt.drop : Nat → Ctxt → Ctxt
+
+@[simp]
+axiom Ctxt.drop_zero (Γ : Ctxt) : drop 0 Γ = Γ
+
+@[simp]
+axiom Ctxt.drop_succ_snoc (n : ℕ) (Γ : Ctxt) (t : Ty) : drop (n.succ) (snoc Γ t) = drop n Γ
+
+@[simp]
+axiom Ctxt.drop_succ_empty (n : ℕ) : drop n ∅ = ∅ 
+
 end
