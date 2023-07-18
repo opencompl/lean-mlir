@@ -279,8 +279,8 @@ def Mapping.insert (map : Mapping Γ Δ) (v₁ : Γ.Var t) (v₂ : Δ.Var t) :
           if w₁ = cast (by simp[heq]) v₁ then
             if w₂ = cast (by simp[heq]) v₂ then
               some origMap
-            else
-              none            
+        else
+          none
           else
             default
         else
@@ -312,67 +312,6 @@ def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ 
   else
     none
 
-
--- /--
---   Shrink a map's codomain `Δ` by dropping a single type
--- -/
--- def Mapping.shrinkAux (Δ' : Ctxt) (h : Δ.drop 1 = some Δ') : Mapping Γ Δ → Mapping Γ Δ'
---   | [] => []
---   | ⟨t, v₁, v₂⟩ :: map => 
---       let tail := shrinkAux _ h map
---       have h' : Δ.NonEmpty := by simp[Ctxt.NonEmpty, h]
---       have : Δ' = Δ.tail := by
---         cases Δ <;> simp at h
---         next => simp[←h, Ctxt.tail]
---       let v₂ : (Ctxt.snoc (Δ') (Δ.head h')).Var t
---         := cast (by simp[this]) v₂
---       -- v₂.casesOn (fun _ => _) (_)
---       _
-  
-
--- /--
---   Shrink a map's codomain `Δ` to a prefix `Δ'`, by dropping all variables not present in `Δ'`
--- -/
--- def Mapping.shrink (map : Mapping Γ Δ) : Δ'.IsPrefixOf Δ → Mapping Γ Δ'
---   | ⟨0, h⟩    => cast (by rw [Ctxt.drop_zero, Option.some_inj] at h; congr) map
---   | ⟨n+1, h⟩  => 
---       let Δpred := (Δ.drop 1).get <| by
---         simp[Option.isSome]
---         cases Δ using Ctxt.casesOn
---         next => simp at h
---         next => simp
---       let map := map.shrinkAux Δpred (by simp);
---       shrink map ⟨n, by 
---         rw [Ctxt.drop_drop Δ 1 (by simp)]
---         exact h
---       ⟩
-
-
-/--
-  Grow a map codomain by a single type.
-  This only changes the index of variables, it does not lose any assignments
--/
-def Mapping.growOne (Δ' : Ctxt) (h : Δ'.drop 1 = some Δ) : Mapping Γ Δ → Mapping Γ Δ'
-  | [] => []
-  | ⟨t, v, w⟩ :: map => 
-      let w := .ofTail <| cast (by cases Δ' <;> simp_all) w
-      ⟨t, v, w⟩ :: (growOne _ h map)
-
--- /--
---   Grow a map codomain `Δ` using the knowledge that `Δ` is a prefix `Δ'`.
---   The grown map will have the exact same number of variable assignments, but their index might have
---   changed.
--- -/
-def Mapping.grow (map : Mapping Γ Δ) : Δ.IsPrefixOf Δ' → Mapping Γ Δ'
-  | ⟨0, h⟩    => cast (by rw [Ctxt.drop_zero, Option.some_inj] at h; congr; exact h.symm) map
-  | ⟨n+1, h⟩  => sorry
---       let map := map.growOne Δ'pred Δ' (by simp);
---       grow map ⟨n, by 
---         rw [Ctxt.drop_drop Δ 1 (by simp)]
---         exact h
---       ⟩
-
-
 /-- Merge two mappings, checking that they are consistent -/
 def Mapping.merge : Mapping Γ Δ → Mapping Γ Δ → Option (Mapping Γ Δ)
   | _,    []                => some []
@@ -381,18 +320,19 @@ def Mapping.merge : Mapping Γ Δ → Mapping Γ Δ → Option (Mapping Γ Δ)
       merge map₁ map₂
 
 
+def Mapping.mapCodomain (changeVars : (t : Ty) → Δ.Var t → Δ'.Var t ) : 
+    Mapping Γ Δ → Mapping Γ Δ' :=
+  List.map fun ⟨_, v₁, v₂⟩ => ⟨_, v₁, changeVars _ v₂⟩
+
+
 
 structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
   {Δ : Ctxt}
   lets : Lets Γ₁ (Δ.snoc t) 
-  is_prefix : Δ.IsPrefixOf Γ₂ 
+  embedVars : (t : Ty) → Δ.Var t → Γ₂.Var t 
 
 def GetVarResult.coe_snoc : GetVarResult Γ₁ Γ₂ t → GetVarResult Γ₁ (Γ₂.snoc t') t
-  | ⟨lets, is_prefix⟩ => ⟨lets, by
-        rcases is_prefix with ⟨n, drop_eq⟩
-        use n+1
-        simp[drop_eq]
-      ⟩
+  | ⟨lets, embed⟩ => ⟨lets, fun t v => embed t v |>.toSnoc⟩
 
 /-- Drop bindings from `lets` until the binding corresponding to `v` is at the head.
     This can fail, since `v` might be a free variable originating from `Γ₁`.
@@ -402,10 +342,15 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   | _, _, .nil, _, _ => none
   | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
     cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨lets, ⟨1, by simp⟩⟩ 
+    | last => exact some ⟨lets, fun _ => Ctxt.Var.toSnoc⟩ 
     | base v => exact (getVar body v).map (·.coe_snoc)
 
 
+/--
+  Given a sequence of `Lets`, try to match a pattern against the bottom-most let
+  * If the match fails, return `none`
+  * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
+-/
 def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) : 
     Option (Mapping Γ' Δ) :=
   match lets with
@@ -416,7 +361,7 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
             Mapping.hNew v (Ctxt.Var.last ..)
         | .cst n, .nat m =>
             if n = m then
-              some .empty
+              some Mapping.empty
             else
               none
         | .add lhs rhs, .add v₁ v₂ => do
@@ -430,13 +375,15 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
 
               Solution: we can drop 
             -/
-            let ⟨lets₁, pre₁⟩ ← lets.getVar v₁
+            let ⟨lets₁, embed₁⟩ ← lets.getVar v₁
             let map₁ ← lhs.matchAgainstLets lets₁
 
-            let ⟨lets₂, pre₂⟩ ← lets.getVar v₂
-            let map₂ ← lhs.matchAgainstLets lets₁
+            let ⟨lets₂, embed₂⟩ ← lets.getVar v₂
+            let map₂ ← rhs.matchAgainstLets lets₂
 
-            Mapping.merge (.grow map₁ <| pre₁) (.grow map₂ _)
+            Mapping.merge 
+              (map₁.mapCodomain <| Ctxt.Var.snocMap embed₁) 
+              (map₂.mapCodomain <| Ctxt.Var.snocMap embed₂)
 
         | _, _ => none
 

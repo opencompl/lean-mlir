@@ -342,4 +342,33 @@ def Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
   fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
     (fun _ => Ctxt.Var.last _ _) f
 
+
+
+
+namespace Var
+
+protected def isHeq {Γ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Γ.Var t₂) : Bool :=
+  if h : t₂ = t₁ then
+    v₁ = cast (by congr) v₂
+  else
+    false
+
+-- theorem isHeq_lawful : Var.isHeq v₁ v₂ ↔ HEq v₁ v₂ := by
+--   simp[Var.isHeq]
+--   split_ifs
+--   next h =>
+--     cases h
+--     simp[cast_eq]
+--     constructor
+--     . exact of_decide_eq_true 
+--     . exact decide_eq_true
+--   . constructor
+--     . apply False.elim
+--     . intro h
+--       have type_eq := type_eq_of_heq h
+--       simp [Var] at type_eq
+      
+
+end Var
+
 end Ctxt
