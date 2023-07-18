@@ -155,51 +155,6 @@ theorem casesOn_snoc {motive : Ctxt → Sort u} (empty : motive .empty)
   
 
 
-  -- suffices ∀ Γ, (h : Γ = .empty) → casesOn Γ empty snoc = cast (by rw[←h]) empty
-  --   from this .empty rfl
-  -- intro Γ h
-  -- have : Γ.out = [] := by simp[h, Ctxt.empty]
-
-
-
--- def append : Ctxt → Ctxt → Ctxt :=
---   fun xs ys => do return List.append (← ys) (← xs)
-
-
--- theorem append_empty (Γ : Ctxt) : append Γ ∅ = Γ := by
---   simp[append, EmptyCollection.emptyCollection, empty]
-  
-
--- theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
---     append Γ (Ctxt.snoc Γ' t) = (append Γ Γ').snoc t := by
---   simp[append, snoc]
-
--- @[simp]
--- theorem _root_.List.get?_append_add :
---     List.get? (xs ++ ys) (i + xs.length) = List.get? ys i := by
---   induction xs
---   . rfl
---   . simp_all
-
--- def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
---   | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
-
--- def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
---   | ⟨v, h⟩ => ⟨v, by 
---       simp[append]
---       induction Γ' generalizing v
---       case nil =>
---         contradiction
---       case cons ih =>
---         cases v
---         case zero =>
---           rw[←h]; rfl
---         case succ v =>
---           apply ih v h
---     ⟩
-
--- end Append
-
 /-- Drop the last `n` types from a context `Γ`.
     The context must have at least `n` types, otherwise `none` is returned -/
 noncomputable def drop (n : Nat) (Γ : Ctxt) : Option Ctxt :=
@@ -370,5 +325,48 @@ protected def isHeq {Γ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Γ.Var t₂) : Bool
       
 
 end Var
+
+
+section Append
+
+def append : Ctxt → Ctxt → Ctxt :=
+  fun xs ys => do return List.append (← ys) (← xs)
+
+
+theorem append_empty (Γ : Ctxt) : append Γ ∅ = Γ := by
+  simp[append, EmptyCollection.emptyCollection, empty]
+  
+
+theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
+    append Γ (Ctxt.snoc Γ' t) = (append Γ Γ').snoc t := by
+  simp[append, snoc]
+
+@[simp]
+theorem _root_.List.get?_append_add :
+    List.get? (xs ++ ys) (i + xs.length) = List.get? ys i := by
+  induction xs
+  . rfl
+  . simp_all
+
+instance : Append Ctxt := ⟨append⟩
+
+-- def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
+--   | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
+
+-- def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
+--   | ⟨v, h⟩ => ⟨v, by 
+--       simp[append]
+--       induction Γ' generalizing v
+--       case nil =>
+--         contradiction
+--       case cons ih =>
+--         cases v
+--         case zero =>
+--           rw[←h]; rfl
+--         case succ v =>
+--           apply ih v h
+--     ⟩
+
+end Append
 
 end Ctxt
