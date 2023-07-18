@@ -265,7 +265,13 @@ noncomputable def tail (Γ : Ctxt) : Ctxt :=
 /--
   If the tail of a context is non-empty, the full-context is clearly also non-empty
 -/
-def NonEmpty.ofTail : NonEmpty (tail Γ) → NonEmpty Γ 
+def NonEmpty.ofTail : NonEmpty (tail Γ) → NonEmpty Γ := by
+  simp[NonEmpty, tail]
+  cases Γ <;> simp
+
+@[simp]
+theorem tail_snoc : tail (snoc Γ t) = Γ := by
+  simp[tail]
 
 @[simp]
 theorem snoc_tail_head (Γ : Ctxt) (h : NonEmpty Γ) :
@@ -297,9 +303,8 @@ def ofTail : Var (tail Γ) t → Var Γ t :=
         simp[tail] at v
         exact emptyElim v
       next =>
-        simp[tail]; 
-        rfl
-    ) <| v.toSnoc (t' := Γ.head (.ofVar v))
+        simp[tail, head]
+    ) <| v.toSnoc (t' := Γ.head (.ofTail <| .ofVar v))
 
 -- def casesOnNe 
 --     {motive : (Γ : Ctxt) → Ctxt.Var Γ t → NonEmpty Γ → Sort _}
@@ -309,16 +314,16 @@ def ofTail : Var (tail Γ) t → Var Γ t :=
 --     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t (Ctxt.Var.last _ _)) :
 --       motive Γ t t' v :=
 
-/--
-  If a variable `v` in context `Γ` is `last`, return `none`
-  Otherwise, returns `v` embedded in the context `Γ.tail`
--/
-def tryEmbedTail {Γ : Ctxt} (v : Var Γ t) : Option (Var Γ.tail t) := by
-  have ne : NonEmpty Γ := sorry -- NonEmpty.ofVar v
-  let v : Var (snoc (tail Γ) (head Γ ne)) t := cast (by simp) v
-  cases v using Var.casesOn
-  next => exact none
-  next => exact none
+-- /--
+--   If a variable `v` in context `Γ` is `last`, return `none`
+--   Otherwise, returns `v` embedded in the context `Γ.tail`
+-- -/
+-- def tryEmbedTail {Γ : Ctxt} (v : Var Γ t) : Option (Var Γ.tail t) := by
+--   have ne : NonEmpty Γ := sorry -- NonEmpty.ofVar v
+--   let v : Var (snoc (tail Γ) (head Γ ne)) t := cast (by simp) v
+--   cases v using Var.casesOn
+--   next => exact none
+--   next => exact none
 
 end Var
   
