@@ -332,6 +332,9 @@ def Mapping.mapCodomain (changeVars : (t : Ty) → Δ.Var t → Δ'.Var t ) :
     Mapping Γ Δ → Mapping Γ Δ' :=
   List.map fun ⟨_, v₁, v₂⟩ => ⟨_, v₁, changeVars _ v₂⟩
 
+def Mapping.growCodomain (l : Ctxt.Length Δ') : Mapping Γ Δ → Mapping Γ (Δ ++ Δ') :=
+  mapCodomain (fun _ v => v.inl l)
+
 
 
 structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
@@ -390,33 +393,60 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
 
         | _, _ => none
 
+structure InsertLetsResult (Γ Δ : Ctxt) (t : Ty) where
+  (Δ' : Ctxt)
+  (len : Δ'.Length)
+  (lets : Lets Γ (Δ ++ Δ'))
+  (var : Ctxt.Var (Δ ++ Δ') t)
 
 /--
   Given an assignment of meta-variables in `matchExpr`, insert new let-bindings into an existing
   sequence
 -/
 def IExprRec.insertLets (lets : Lets Γ Δ) (pattern : IExprRec Γ' t) (assignment : Mapping Γ' Δ) :
-    Option ((Δ' : Ctxt) × Lets Γ (Δ ++ Δ') × (Ctxt.Var (Δ ++ Δ') t)) :=
+    Option (InsertLetsResult Γ Δ t) :=
   match pattern with
-    | .cst n => some ⟨.snoc ∅ Ty.nat, 
+    | .cst n => some (
+        let Δ' := .snoc ∅ Ty.nat
         let lets := Lets.lete lets (.nat n)          
-        ⟨cast (by simp) lets, cast (by simp) <| Ctxt.Var.last Δ Ty.nat⟩
-      ⟩
+        ⟨Δ', ⟨1, by simp⟩, cast (by simp) lets, cast (by simp) <| Ctxt.Var.last Δ Ty.nat⟩
+      )
     | .var v => do
         let v ← assignment.lookup _ v
-        some ⟨∅, cast (by simp) lets, cast (by simp) v⟩
+        some ⟨∅, ⟨0, by simp⟩, cast (by simp) lets, cast (by simp) v⟩
     | .add lhs rhs => do
-        let ⟨Δ₁, lets₁, v₁⟩ ← insertLets lets lhs assignment
-        let ⟨Δ₂, lets₂, v₂⟩ ← insertLets lets₁ rhs sorry -- this should be `assignment`, but with a larger codomain
+        let ⟨Δ₁, length₁, lets₁, v₁⟩ ← insertLets lets lhs assignment
+        let ⟨Δ₂, length₂, lets₂, v₂⟩ ← insertLets lets₁ rhs (assignment.growCodomain length₁)
 
-        -- we have to lift `v₁` into the right context
-
-        let lets₃ := Lets.lete lets₂ (.add v₁ v₂)
+        let lets₃ := Lets.lete lets₂ (.add (.inl length₂ v₁) v₂)
         let Δ' := (Δ₁ ++ Δ₂)
-        some ⟨Δ'.snoc Ty.nat, 
-              cast (by sorry) lets₃, 
-              cast (by simp) <| Ctxt.Var.last (Δ ++ Δ') Ty.nat
-              ⟩
+        some ⟨
+          Δ'.snoc Ty.nat, 
+          ⟨length₁.val + length₂.val + 1, by 
+            rcases length₁ with ⟨_, ⟨⟩⟩
+            rcases length₂ with ⟨_, ⟨⟩⟩
+            simp[(· ++ ·), Append.append, Ctxt.append]
+            apply Nat.add_comm
+          ⟩,
+          cast (by simp[Ctxt.append_assoc]) lets₃, 
+          cast (by simp) <| Ctxt.Var.last (Δ ++ Δ') Ty.nat
+        ⟩
+
+
+structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
+  (lhs rhs : IExprRec Γ t)
+
+def LetZipper.tryRewriteAtCurrentPos {Γ Δ : Ctxt} (zip : LetZipper Γ t) (rw : Rewrite Δ t') : 
+    Option (LetZipper Γ t) := do
+  let map ← rw.lhs.matchAgainstLets zip.lets
+  let ⟨_, len, lets, newVar⟩ ← rw.rhs.insertLets zip.lets map
+
+  -- Shift all the variables in `com` so that they still refer to the same binding as before
+  let com := zip.com.changeVars fun _ v => v.inl len
+
+  -- Todo "unshift" the `newVar` so that the rewrite actually does something
+
+  return {lets, com}
 
 
 

@@ -29,11 +29,15 @@ def snoc : Ctxt → Ty → Ctxt :=
   fun tl hd => do return hd :: (← tl)
 
 @[simp]
-theorem empty_out : Erased.out empty = [] := by 
+theorem out_empty : Erased.out empty = [] := by 
   simp[empty]
 
 @[simp]
-theorem snoc_out : Erased.out (snoc Γ t) = t :: (Erased.out Γ) := by
+theorem out_empty' : Erased.out (∅ : Ctxt) = [] := by 
+  simp[EmptyCollection.emptyCollection]
+
+@[simp]
+theorem out_snoc : Erased.out (snoc Γ t) = t :: (Erased.out Γ) := by
   simp[snoc]
 
 
@@ -437,6 +441,16 @@ def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (Γ ++ Γ') t
         case succ v =>
           simp_all
     ⟩
+
+
+theorem append_assoc (Γ₁ Γ₂ Γ₃ : Ctxt) : Γ₁ ++ Γ₂ ++ Γ₃ = Γ₁ ++ (Γ₂ ++ Γ₃) := by
+  simp[HAppend.hAppend, Append.append, append]
+  congr 1
+  apply Eq.symm
+  apply List.append_assoc
+  
+
+#check List.append_assoc
 
 end Append
 
