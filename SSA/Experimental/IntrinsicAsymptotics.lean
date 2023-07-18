@@ -1,6 +1,7 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
-import SSA.Experimental.IntrinsicAsymptotics.Ctxt
+-- import SSA.Experimental.IntrinsicAsymptotics.Ctxt
+import SSA.Experimental.ErasedContext
 
 noncomputable section
 
@@ -208,7 +209,7 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
     body.toExprRec.bind 
     (fun t v => by
       cases v using Ctxt.Var.casesOn with
-      | toSnoc v => exact .var v
+      | base v => exact .var v
       | last => exact e')
 
 
@@ -254,7 +255,7 @@ def Mapping (Γ Δ : Ctxt) := List (Mapping.Pair Γ Δ)
 /-- Grow the target context of a mapping -/
 def Mapping.snocMap : Mapping Γ Δ → Mapping Γ (Δ.snoc t)
   | [] => []
-  | ⟨t, v, v'⟩ :: ms => ⟨t, v, v'⟩ :: snocMap ms
+  | ⟨t, v, v'⟩ :: ms => ⟨t, v, v'.toSnoc⟩ :: snocMap ms
 
 /-- `map.insert v v'` asserts that `v` maps to `v'`
     * if `v` is not present in the map yet, insert the pair `(v, v')` into the map
@@ -286,7 +287,36 @@ def Mapping.insert' (map : Mapping Γ Δ) (v₁ : Γ.Var t₁) (v₂ : Δ.Var t�
     none
 
 
-def Mapping.shrink (map : Mapping Γ Δ) (h : Δ'.IsPrefixOf Δ) : Mapping Γ Δ'
+def Mapping.shrinkAux (Δ' : Ctxt) (h : Δ.drop 1 = some Δ') : Mapping Γ Δ → Mapping Γ Δ'
+  | [] => []
+  | ⟨t, v₁, v₂⟩ :: map => 
+      let tail := shrinkAux _ h map
+      have h' : Δ.NonEmpty := by simp[Ctxt.NonEmpty, h]
+      have : Δ' = Δ.tail := by
+        cases Δ <;> simp at h
+        next => simp[←h, Ctxt.tail]
+      let v₂ : (Ctxt.snoc (Δ') (Δ.head h')).Var t
+        := cast (by simp[this]) v₂
+      v₂.casesOn (fun _ => _) (_)
+  
+
+/--
+  Shrink a map's codomain `Δ` to a prefix `Δ'`, by dropping all variables not present in `Δ'`
+-/
+def Mapping.shrink (map : Mapping Γ Δ) : Δ'.IsPrefixOf Δ → Mapping Γ Δ'
+  | ⟨0, h⟩    => cast (by rw [Ctxt.drop_zero, Option.some_inj] at h; congr) map
+  | ⟨n+1, h⟩  => 
+      let Δpred := (Δ.drop 1).get <| by
+        simp[Option.isSome]
+        cases Δ using Ctxt.casesOn
+        next => simp at h
+        next => simp
+      let map := map.shrinkAux Δpred (by simp);
+      shrink map ⟨n, by 
+        rw [Ctxt.drop_drop Δ 1 (by simp)]
+        exact h
+      ⟩
+
 
 
 
@@ -312,7 +342,7 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
     cases v using Ctxt.Var.casesOn with
     | last => exact some ⟨lets, ⟨1, by simp⟩⟩ 
-    | toSnoc v => exact (getVar body v).map (·.coe_snoc)
+    | base v => exact (getVar body v).map (·.coe_snoc)
 
 
 def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) 
