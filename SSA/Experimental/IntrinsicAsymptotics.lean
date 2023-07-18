@@ -319,6 +319,14 @@ def Mapping.merge : Mapping Γ Δ → Mapping Γ Δ → Option (Mapping Γ Δ)
       let map₁ ← map₁.insert v w
       merge map₁ map₂
 
+def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var t)
+  | [],             _, _  => none
+  | ⟨t, v, w⟩::map, t', v' =>
+      if h : t = t' && v.isHeq v' then
+        some <| cast (by congr; simp at h; exact h.1) w
+      else
+        lookup map t' v'
+
 
 def Mapping.mapCodomain (changeVars : (t : Ty) → Δ.Var t → Δ'.Var t ) : 
     Mapping Γ Δ → Mapping Γ Δ' :=
@@ -366,14 +374,9 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
               none
         | .add lhs rhs, .add v₁ v₂ => do
             /-
-              Sketch: to match `e₁`, we want to drop just enough variables from `lets` so that 
-              the declaration corresponding to `v₁` is at the head. Then, we want to recursively 
-              call `matchAgainstLets` again.
-
-              Problem: we want to pass `map` to each recursive call, but `getVar` returns a new
-              context `Δ'`. We know that `Δ'` is a prefix of `Δ`.
-
-              Solution: we can drop 
+              Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
+              declaration corresponding to `v₁` is at the head. Then, we recursively call 
+              `matchAgainstLets` again.
             -/
             let ⟨lets₁, embed₁⟩ ← lets.getVar v₁
             let map₁ ← lhs.matchAgainstLets lets₁
@@ -387,6 +390,33 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
 
         | _, _ => none
 
+
+/--
+  Given an assignment of meta-variables in `matchExpr`, insert new let-bindings into an existing
+  sequence
+-/
+def IExprRec.insertLets (lets : Lets Γ Δ) (pattern : IExprRec Γ' t) (assignment : Mapping Γ' Δ) :
+    Option ((Δ' : Ctxt) × Lets Γ (Δ ++ Δ') × (Ctxt.Var (Δ ++ Δ') t)) :=
+  match pattern with
+    | .cst n => some ⟨.snoc ∅ Ty.nat, 
+        let lets := Lets.lete lets (.nat n)          
+        ⟨cast (by simp) lets, cast (by simp) <| Ctxt.Var.last Δ Ty.nat⟩
+      ⟩
+    | .var v => do
+        let v ← assignment.lookup _ v
+        some ⟨∅, cast (by simp) lets, cast (by simp) v⟩
+    | .add lhs rhs => do
+        let ⟨Δ₁, lets₁, v₁⟩ ← insertLets lets lhs assignment
+        let ⟨Δ₂, lets₂, v₂⟩ ← insertLets lets₁ rhs sorry -- this should be `assignment`, but with a larger codomain
+
+        -- we have to lift `v₁` into the right context
+
+        let lets₃ := Lets.lete lets₂ (.add v₁ v₂)
+        let Δ' := (Δ₁ ++ Δ₂)
+        some ⟨Δ'.snoc Ty.nat, 
+              cast (by sorry) lets₃, 
+              cast (by simp) <| Ctxt.Var.last (Δ ++ Δ') Ty.nat
+              ⟩
 
 
 

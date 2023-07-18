@@ -28,6 +28,15 @@ instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 def snoc : Ctxt → Ty → Ctxt :=
   fun tl hd => do return hd :: (← tl)
 
+@[simp]
+theorem empty_out : Erased.out empty = [] := by 
+  simp[empty]
+
+@[simp]
+theorem snoc_out : Erased.out (snoc Γ t) = t :: (Erased.out Γ) := by
+  simp[snoc]
+
+
 def Var (Γ : Ctxt) (t : Ty) : Type :=
   { i : Nat // Γ.out.get? i = some t }
 
@@ -98,6 +107,53 @@ def casesOn_toSnoc
 
 end Var
 
+/-!
+## Induction / Case-analysis
+-/
+
+@[elab_as_elim]
+noncomputable def inductionOn {motive : Ctxt → Sort u}
+    (Γ : Ctxt)
+    (empty : motive .empty)
+    (snoc : (Γ : Ctxt) → (t : Ty) → motive Γ → motive (snoc Γ t)) :
+    motive Γ :=
+  cast (by simp) <|
+    List.recOn (motive := fun as => motive <| Erased.mk as)
+      Γ.out empty (fun t Γ ih => cast (by simp[Ctxt.snoc]) <| snoc (Erased.mk Γ) t ih)
+
+-- set_option pp.analyze true
+-- set_option pp.proofs true
+-- @[simp]
+-- theorem inductionOn_empty {motive : Ctxt → Sort u} (empty : motive .empty) 
+--     (snoc : (Γ : Ctxt) → (t : Ty) → motive Γ → motive (snoc Γ t)) : 
+--     inductionOn Ctxt.empty empty snoc = empty := by
+--   simp [inductionOn]
+--   have m_eq : motive (Erased.mk []) = motive (Erased.mk (Erased.out Ctxt.empty)) := by simp
+--   have : 
+--       cast (by simp) (List.rec (motive := fun x => motive <| Erased.mk x)
+--         empty (fun t Γ ih => cast (inductionOn.proof_2 t Γ) (snoc (Erased.mk Γ) t ih))
+--         (Erased.out Ctxt.empty))
+--       = (List.rec (motive := fun x => motive <| Erased.mk x)
+--           empty
+--           (fun t Γ ih => cast (inductionOn.proof_2 t Γ) (snoc (Erased.mk Γ) t ih))
+--           []) := by
+--     simp
+--     rw[empty_out]; rfl
+      
+  
+  
+--   have :
+--     (fun t Γ (h : Erased.out Ctxt.empty = t :: Γ) => 
+--       cast (inductionOn.proof_1 Ctxt.empty t Γ h) (snoc (Erased.mk Γ) t))
+--     = (fun _ _ _ => empty) := by 
+--       funext _ _ h
+--       simp[Ctxt.empty] at h
+--   simp only [this, cast_eq]
+--   simp only [Ctxt.empty]
+--   rw [Erased.out_mk]
+
+
+
 @[elab_as_elim, eliminator]
 noncomputable def casesOn {motive : Ctxt → Sort u}
     (Γ : Ctxt)
@@ -152,8 +208,13 @@ theorem casesOn_snoc {motive : Ctxt → Sort u} (empty : motive .empty)
   simp [Ctxt.snoc]
   rw [Erased.out_mk]
   
-  
 
+
+
+
+/-
+## Drop
+-/
 
 /-- Drop the last `n` types from a context `Γ`.
     The context must have at least `n` types, otherwise `none` is returned -/
@@ -332,13 +393,17 @@ section Append
 def append : Ctxt → Ctxt → Ctxt :=
   fun xs ys => do return List.append (← ys) (← xs)
 
+instance : Append Ctxt := ⟨append⟩
 
-theorem append_empty (Γ : Ctxt) : append Γ ∅ = Γ := by
+@[simp]
+theorem append_empty (Γ : Ctxt) : Γ ++ ∅ = Γ := by
+  simp only [(· ++ ·), Append.append]
   simp[append, EmptyCollection.emptyCollection, empty]
   
-
+@[simp]
 theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
-    append Γ (Ctxt.snoc Γ' t) = (append Γ Γ').snoc t := by
+    Γ ++ (snoc Γ' t) = snoc (Γ ++ Γ') t := by
+  simp only [(· ++ ·), Append.append]
   simp[append, snoc]
 
 @[simp]
@@ -348,18 +413,18 @@ theorem _root_.List.get?_append_add :
   . rfl
   . simp_all
 
-instance : Append Ctxt := ⟨append⟩
+
 
 -- def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
 --   | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
 
--- def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
+-- def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (Γ ++ Γ') t
 --   | ⟨v, h⟩ => ⟨v, by 
 --       simp[append]
 --       induction Γ' generalizing v
---       case nil =>
---         contradiction
---       case cons ih =>
+--       next =>
+--         simp[empty] at h
+--       next cons ih =>
 --         cases v
 --         case zero =>
 --           rw[←h]; rfl
