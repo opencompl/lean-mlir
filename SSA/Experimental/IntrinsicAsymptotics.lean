@@ -438,8 +438,8 @@ structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
 
 def LetZipper.tryRewriteAtCurrentPos {Γ Δ : Ctxt} (zip : LetZipper Γ t) (rw : Rewrite Δ t') : 
     Option (LetZipper Γ t) := do
-  let map ← rw.lhs.matchAgainstLets zip.lets
-  let ⟨_, len, lets, newVar⟩ ← rw.rhs.insertLets zip.lets map
+  let map ← rw.lhs.matchAgainstLets zip.lets -- match
+  let ⟨_, len, lets, newVar⟩ ← rw.rhs.insertLets zip.lets map -- rewrite
 
   -- Shift all the variables in `com` so that they still refer to the same binding as before
   let com := zip.com.changeVars fun _ v => v.inl len
