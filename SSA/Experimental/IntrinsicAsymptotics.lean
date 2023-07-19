@@ -442,19 +442,30 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
 --     | _ => none
 
 def getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t))
+    (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t) × 
+      ((t : Ty) → Γ₃.Var t → Γ₂.Var t))
   | _, _, .nil, _, _ => none
   | _, _, lets@(.lete body _), _, v =>by
     cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨_, lets⟩ 
-    | toSnoc v => exact getVar body v
+    | last => exact some ⟨_, lets, fun t v => v⟩ 
+    | toSnoc v => exact do
+      let g ← getVar body v
+      some ⟨g.1, g.2.1, fun t v => g.2.2 t v⟩  
+
+abbrev Mapping (Γ Δ : Ctxt) : Type :=
+  ((t : Ty) → Γ.Var t → Option (Δ.Var t))
+
+
 
 def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
-  | _, _, _, lets, .cst n => fun t v => none
-  | _, _, _, .lete lets (.add a1 b1), .add a b => fun t v => do
-    let g1 ← getVar lets a1
-    let g2 ← getVar lets b1  
+    (matchExpr : ExprRec Γ₃ t) → Option ((t : Ty) → Γ₃.Var t → Option (Γ₂.Var t))
+  | _, _, _, .nil, _ => none
+  | _, _, _, .lete body e, matchExpr => 
+    match matchExpr, e with
+    | .var v, _ => 
+      _
+    | _, _ => sorry
+
      
 
 #exit
