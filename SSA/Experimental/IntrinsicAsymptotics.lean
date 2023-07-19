@@ -441,7 +441,7 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
 --         matchVar lets (getPos b varPos) b' mapping
 --     | _ => none
 
-def getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
+def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
     (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t) × 
       ((t : Ty) → Γ₃.Var t → Γ₂.Var t))
   | _, _, .nil, _, _ => none
@@ -455,16 +455,44 @@ def getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   ((t : Ty) → Γ.Var t → Option (Δ.Var t))
 
+def Mapping.hNew {Γ Δ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : 
+    Option (Mapping Γ Δ) := 
+  if h₁ : t₁ = t₂
+  then some <| fun t v => 
+    if h₂ : ∃ h : t = t₁, h ▸ v₁ = v
+    then h₂.fst ▸ h₁ ▸ some v₂ 
+    else none
+  else none
 
+def Mapping.empty {Γ Δ : Ctxt} : Mapping Γ Δ := 
+  fun _ _ => none
 
 def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
     (matchExpr : ExprRec Γ₃ t) → Option ((t : Ty) → Γ₃.Var t → Option (Γ₂.Var t))
   | _, _, _, .nil, _ => none
-  | _, _, _, .lete body e, matchExpr => 
+  | _, _, _, .lete lets e, matchExpr => 
     match matchExpr, e with
     | .var v, _ => 
-      _
-    | _, _ => sorry
+        Mapping.hNew v (Ctxt.Var.last _ _)
+    | .cst n, .nat m =>
+        if n = m then some Mapping.empty
+        else none
+    | .add lhs rhs, .add v₁ v₂ => do
+            /-
+              Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
+              declaration corresponding to `v₁` is at the head. Then, we recursively call 
+              `matchAgainstLets` again.
+            -/
+        let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
+        let map₁ ← matchVar lets₁ lhs
+
+        let ⟨_, lets₂, embed₂⟩ ← lets.getVar v₂
+        let map₂ ← matchVar lets₂ lhs
+
+        Mapping.merge 
+          (map₁.mapCodomain <| Ctxt.Var.snocMap embed₁) 
+          (map₂.mapCodomain <| Ctxt.Var.snocMap embed₂)
+    | _, _ => none
 
      
 
