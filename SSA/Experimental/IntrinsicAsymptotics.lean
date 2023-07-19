@@ -259,13 +259,6 @@ def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ 
   else
     none
 
-/-- Merge two mappings, checking that they are consistent -/
-def Mapping.merge : Mapping Γ Δ → Mapping Γ Δ → Option (Mapping Γ Δ)
-  | map₁, []                => some map₁
-  | map₁, ⟨_, v, w⟩ :: map₂ => do
-      let map₁ ← map₁.insert v w
-      merge map₁ map₂
-
 def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var t)
   | [],             _, _  => none
   | ⟨t, v, w⟩::map, t', v' =>
@@ -274,13 +267,6 @@ def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var 
       else
         lookup map t' v'
 
-
-def Mapping.mapCodomain (changeVars : (t : Ty) → Δ.Var t → Δ'.Var t ) : 
-    Mapping Γ Δ → Mapping Γ Δ' :=
-  List.map fun ⟨_, v₁, v₂⟩ => ⟨_, v₁, changeVars _ v₂⟩
-
-def Mapping.growCodomain (l : Ctxt.Length Δ') : Mapping Γ Δ → Mapping Γ (Δ ++ Δ') :=
-  mapCodomain (fun _ v => v.inl l)
 
 
 
