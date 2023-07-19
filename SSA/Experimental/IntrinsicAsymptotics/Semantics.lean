@@ -1,4 +1,4 @@
-import SSA.Experimental.IntrinsicAsymptotics.Ctxt
+import SSA.Experimental.ErasedContext
 import SSA.Experimental.IntrinsicAsymptotics
 
 
@@ -56,7 +56,7 @@ def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
   | .ret e, l => l e
   | .lete e body, l => body.denote (l.snoc (e.denote l))
 
-def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Sem) → ty.toType
+def IExprRec.denote : IExprRec Γ ty → (ll : Γ.Sem) → ty.toType
   | .cst n, _ => n
   | .add a b, ll => a.denote ll + b.denote ll
   | .var v, ll => ll v
@@ -137,14 +137,10 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     . simp
     . simp
 
-theorem LetZipper.denote_insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
-    (z.insertLet e).denote = z.denote := by
-  simp only [denote, zip, addLetsAtTop, insertLet, denote_addLetsAtTop, ICom.denote, 
-            ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
-
-
-
-
+-- theorem LetZipper.denote_insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
+--     (z.insertLet e).denote = z.denote := by
+--   simp only [denote, zip, addLetsAtTop, insertLet, denote_addLetsAtTop, ICom.denote, 
+--             ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
 
 theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :
@@ -179,7 +175,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
-      simp only [toSnoc_injective.eq_iff] at h'
+      simp only [Ctxt.toSnoc_injective.eq_iff] at h'
       exact h ⟨rfl, h'⟩  
 
 
@@ -201,36 +197,36 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt}
     denote_addProgramAtTop]
 
 
-theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem) 
-    (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
-    (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
+theorem IExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem) 
+    (f : (t : Ty) → Γ₁.Var t → IExprRec Γ₂ t) :
+    (e : IExprRec Γ₁ t) → (e.bind f).denote s = 
       e.denote (fun t' v' => (f t' v').denote s)
   | .var v => by simp [bind, denote]
   | .cst n => by simp [bind, denote]
   | .add e₁ e₂ => by
-    simp only [ExprRec.denote, bind]
+    simp only [IExprRec.denote, bind]
     rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
 
 
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
     (s : Γ.Sem) → (e : IExpr Γ t) → 
     e.toExprRec.denote s = e.denote s
-  | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+  | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, IExprRec.denote]
   | _, _, s, .add e₁ e₂ => by
-    simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+    simp only [IExpr.toExprRec, IExpr.denote, IExprRec.denote]
 
 theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
     (s : Γ.Sem) → (c : ICom Γ t) → 
     c.toExprRec.denote s = c.denote s
-  | _, _, _, .ret e => by simp [ICom.toExprRec, ICom.denote, ExprRec.denote]
+  | _, _, _, .ret e => by simp [ICom.toExprRec, ICom.denote, IExprRec.denote]
   | _, _, s, .lete e body => by
-    simp only [ICom.toExprRec, ICom.denote, ExprRec.denote,
-      IExpr.denote_toExprRec, ExprRec.denote_bind]
+    simp only [ICom.toExprRec, ICom.denote, IExprRec.denote,
+      IExpr.denote_toExprRec, IExprRec.denote_bind]
     rw [ICom.denote_toExprRec _ body]
     congr
     funext t' v'
     cases v' using Ctxt.Var.casesOn
-    . simp [ExprRec.denote]
+    . simp [IExprRec.denote]
     . simp [IExpr.denote_toExprRec]
 
 end

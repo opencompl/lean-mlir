@@ -71,7 +71,7 @@ is the last variable in a context. -/
 def casesOn 
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
-    (base : {t t' : Ty} → 
+    (toSnoc : {t t' : Ty} → 
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       motive Γ t t' v :=
@@ -83,7 +83,7 @@ def casesOn
           simp [Ctxt.Var.last]
           ) <| @last Γ t
     | ⟨i+1, h⟩ =>
-        base ⟨i, by simpa [snoc] using h⟩
+        toSnoc ⟨i, by simpa [snoc] using h⟩
 
 /-- `Ctxt.Var.casesOn` behaves in the expected way when applied to the last variable -/
 @[simp]
@@ -212,7 +212,12 @@ theorem casesOn_snoc {motive : Ctxt → Sort u} (empty : motive .empty)
   simp [Ctxt.snoc]
   rw [Erased.out_mk]
   
-
+theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
+    Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
+  let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
+    fun v => Ctxt.Var.casesOn v some none
+  intro x y h
+  simpa using congr_arg ofSnoc h
 
 
 

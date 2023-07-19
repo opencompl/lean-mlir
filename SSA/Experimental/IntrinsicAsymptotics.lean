@@ -197,7 +197,6 @@ def IExprRec.bind {Γ₁ Γ₂ : Ctxt}
   | .cst n => .cst n
   | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
 
-
 def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → IExprRec Γ t
   | _, _, .nat n => .cst n
   | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
@@ -209,7 +208,7 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
     body.toExprRec.bind 
     (fun t v => by
       cases v using Ctxt.Var.casesOn with
-      | base v => exact .var v
+      | toSnoc v => exact .var v
       | last => exact e')
 
 
@@ -354,7 +353,7 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
     cases v using Ctxt.Var.casesOn with
     | last => exact some ⟨lets, fun _ => Ctxt.Var.toSnoc⟩ 
-    | base v => exact (getVar body v).map (·.coe_snoc)
+    | toSnoc v => exact (getVar body v).map (·.coe_snoc)
 
 
 /--
