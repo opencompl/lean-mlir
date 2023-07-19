@@ -6,6 +6,7 @@ import Std.Data.Array.Init.Lemmas
 -- import Mathlib
 import Mathlib.Data.List.Indexes
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.List.AList
 
 noncomputable section
 
@@ -453,45 +454,45 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
       some ⟨g.1, g.2.1, fun t v => g.2.2 t v⟩  
 
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
-  ((t : Ty) → Γ.Var t → Option (Δ.Var t))
+  @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
 def Mapping.hNew {Γ Δ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : 
     Option (Mapping Γ Δ) := 
   if h₁ : t₁ = t₂
-  then some <| fun t v => 
-    if h₂ : ∃ h : t = t₁, h ▸ v₁ = v
-    then h₂.fst ▸ h₁ ▸ some v₂ 
-    else none
+  then some <| AList.singleton ⟨_, h₁ ▸ v₁⟩ v₂   
   else none
 
-def Mapping.empty {Γ Δ : Ctxt} : Mapping Γ Δ := 
-  fun _ _ => none
+def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping Γ Δ) := 
+  m₁.foldl (fun m t v => do
+    let m ← m 
+    match m.lookup t with
+    | some v' => if v = v' then some m else none
+    | none => some <| m.insert t v
+    ) m₂
 
 def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    (matchExpr : ExprRec Γ₃ t) → Option ((t : Ty) → Γ₃.Var t → Option (Γ₂.Var t))
+    (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₂)
   | _, _, _, .nil, _ => none
   | _, _, _, .lete lets e, matchExpr => 
     match matchExpr, e with
     | .var v, _ => 
         Mapping.hNew v (Ctxt.Var.last _ _)
     | .cst n, .nat m =>
-        if n = m then some Mapping.empty
+        if n = m then some ∅ 
         else none
     | .add lhs rhs, .add v₁ v₂ => do
-            /-
-              Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
-              declaration corresponding to `v₁` is at the head. Then, we recursively call 
-              `matchAgainstLets` again.
-            -/
+        /-
+          Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
+          declaration corresponding to `v₁` is at the head. Then, we recursively call 
+          `matchAgainstLets` again.
+        -/
         let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
         let map₁ ← matchVar lets₁ lhs
 
         let ⟨_, lets₂, embed₂⟩ ← lets.getVar v₂
         let map₂ ← matchVar lets₂ lhs
 
-        Mapping.merge 
-          (map₁.mapCodomain <| Ctxt.Var.snocMap embed₁) 
-          (map₂.mapCodomain <| Ctxt.Var.snocMap embed₂)
+        return map₁.merge map₂
     | _, _ => none
 
      
