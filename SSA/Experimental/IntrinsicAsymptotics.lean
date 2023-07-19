@@ -312,34 +312,39 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
 -/
 def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) : 
     Option (Mapping Γ' Δ) :=
-  match lets with
-    | .nil => none
-    | .lete lets e =>
-      match matchExpr, e with
-        | .var v, _ => 
-            Mapping.hNew v (Ctxt.Var.last ..)
-        | .cst n, .nat m =>
-            if n = m then
-              some Mapping.empty
-            else
-              none
-        | .add lhs rhs, .add v₁ v₂ => do
-            /-
-              Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
-              declaration corresponding to `v₁` is at the head. Then, we recursively call 
-              `matchAgainstLets` again.
-            -/
-            let ⟨lets₁, embed₁⟩ ← lets.getVar v₁
-            let map₁ ← lhs.matchAgainstLets lets₁
+  go lets matchExpr [] (fun _ t => t)
+where
+  go {Γ Δ' t} (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t) 
+      (map : Mapping Γ' Δ) (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t) : 
+      Option (Mapping Γ' Δ) :=
+    match lets with
+      | .nil => none
+      | .lete lets e =>
+        match matchExpr, e with
+          | .var v, _ => 
+              map.hInsert v (embedVars _ <| Ctxt.Var.last ..)
+          | .cst n, .nat m =>
+              if n = m then
+                some map
+              else
+                none
+          | .add lhs rhs, .add v₁ v₂ => do
+              /-
+                Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
+                declaration corresponding to `v₁` is at the head. Then, we recursively call 
+                `matchAgainstLets` again.
+              -/
+              let ⟨lets₁, embed₁⟩ ← lets.getVar v₁
+              let map ← go lets₁ lhs map (fun t v => 
+                embedVars t <| (Ctxt.Var.snocMap embed₁) t v 
+              )
 
-            let ⟨lets₂, embed₂⟩ ← lets.getVar v₂
-            let map₂ ← rhs.matchAgainstLets lets₂
+              let ⟨lets₂, embed₂⟩ ← lets.getVar v₂
+              go lets₂ rhs map (fun t v => 
+                embedVars t <| (Ctxt.Var.snocMap embed₂) t v 
+              )
 
-            Mapping.merge 
-              (map₁.mapCodomain <| Ctxt.Var.snocMap embed₁) 
-              (map₂.mapCodomain <| Ctxt.Var.snocMap embed₂)
-
-        | _, _ => none
+          | _, _ => none
 
 
 --
