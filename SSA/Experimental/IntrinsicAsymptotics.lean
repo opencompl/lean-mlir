@@ -414,14 +414,15 @@ def ICom.size : ICom Γ t → Nat
   | .lete _ body => body.size + 1
 
 
-/-- Move the cursor to the indicated position of the suffix program,
-    moving let-bindings to the prefix -/
-def LetZipper.splitAt (zip : LetZipper Γ t) : Nat → LetZipper Γ t
+/-- Advance the cursor `n` times -/
+def LetZipper.advanceCursorN (zip : LetZipper Γ t) : Nat → LetZipper Γ t
   | 0   => zip
-  | n+1 => splitAt (zip.advanceCursor) n
+  | n+1 => advanceCursorN (zip.advanceCursor) n
 
-def ICom.splitAt (com : ICom Γ t) : Nat → LetZipper Γ t :=
-  LetZipper.splitAt (.ofICom com)
+/-- Return a cursor pointed directly *after* the `n`th let-binding -/
+def ICom.splitAt (com : ICom Γ t) (n : Nat) : LetZipper Γ t :=
+  LetZipper.ofICom com
+    |>.advanceCursorN (n+1)
 
 
 /-- Try to rewrite at the specified position.
