@@ -61,7 +61,7 @@ structure LetZipper (Γ : Ctxt) (ty : Ty) where
   matching/rewriting is implemented on `LetZipper`, with ExprRecs being in the shape of trees (i.e., 
   `ExprRec`).
 
-  Specifically, we call `peelLet` to move the cursor right, each time trying to match the ExprRec 
+  Specifically, we call `advanceCursor` to move the cursor right, each time trying to match the ExprRec 
   against the prefix list `lets`.
 
   Now, because ExprRecs are tree-shaped, there are no free variables in the traditional sense, only
@@ -77,8 +77,11 @@ com := z.com.changeVars (fun _ => Ctxt.Var.toSnoc)d `IExprRec Δ ty`.
   ## Definitions
 -/
 
+def LetZipper.ofICom (com : ICom Γ t) : LetZipper Γ t :=
+  ⟨.nil, com⟩
+
 /-- Move a single let from `com` to `lets` -/
-def LetZipper.peelLet (z : LetZipper Γ ty) : LetZipper Γ ty :=
+def LetZipper.advanceCursor (z : LetZipper Γ ty) : LetZipper Γ ty :=
   match z.com with
     | .lete e com => {
         lets := .lete z.lets e
@@ -386,8 +389,8 @@ where
 structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
   (lhs rhs : ICom Γ t)
 
-def tryRewriteAtCurrentPos {Γ Γ' Δ : Ctxt}
-    (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') (rw : Rewrite Γ' t) : 
+def tryRewriteAtCursor {Γ Γ' Δ : Ctxt}
+    (rw : Rewrite Γ' t) (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') : 
     Option (ICom Γ t') := do
   if h : u = t then
     let map ← rw.lhs.toExprRec.matchAgainstLets lets -- match
@@ -401,8 +404,37 @@ def tryRewriteRecursive (rw : Rewrite Γ' t') (lets : Lets Γ Δ) : ICom Δ t �
   | .ret _ => none
   | .lete e com =>
       let lets := Lets.lete lets e
-      (tryRewriteAtCurrentPos lets com rw).orElse fun _ =>
+      (tryRewriteAtCursor rw lets com).orElse fun _ =>
         tryRewriteRecursive rw lets com
+
+
+/-- The size of a program is the number of let-bindings -/
+def ICom.size : ICom Γ t → Nat
+  | .ret _ => 0
+  | .lete _ body => body.size + 1
+
+
+/-- Move the cursor to the indicated position of the suffix program,
+    moving let-bindings to the prefix -/
+def LetZipper.splitAt (zip : LetZipper Γ t) : Nat → LetZipper Γ t
+  | 0   => zip
+  | n+1 => splitAt (zip.advanceCursor) n
+
+def ICom.splitAt (com : ICom Γ t) : Nat → LetZipper Γ t :=
+  LetZipper.splitAt (.ofICom com)
+
+
+/-- Try to rewrite at the specified position.
+    If a match is found, return the rewritten program
+    Otherwise, return `none`
+-/
+def tryRewriteAtPos (rw : Rewrite Γ' t') (com : ICom Γ t) (pos : Nat) : Option (ICom Γ t) :=
+  let ⟨lets, com⟩ := com.splitAt pos
+  -- The following match seems superfluous, but it is needed because it asserts that the out context
+  -- of `lets` is non-empty, and changes the types accordingly.
+  match lets with
+    | .nil => none
+    | lets@(.lete _ _) => tryRewriteAtCursor rw lets com
 
      
 
