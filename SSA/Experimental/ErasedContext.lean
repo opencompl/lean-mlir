@@ -345,6 +345,25 @@ def ofTail : Var (tail Γ) t → Var Γ t :=
 --   next => exact none
 --   next => exact none
 
+
+/-- Given a partial change of variables map from `Γ` to `Γ'`, extend it to 
+a map `Γ.snoc t` to `Γ'.snoc t` -/
+@[simp] 
+def snocMap? {Γ Γ' : Ctxt} {t : Ty}
+    (f : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) :
+    (t' : Ty) → (Γ.snoc t).Var t' → Option ((Γ'.snoc t).Var t') :=
+  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).map Var.toSnoc) 
+    (fun _ => some <| Ctxt.Var.last _ _) f
+
+/-- Given a total change of variables map from `Γ` to `Γ'`, extend it to 
+a map `Γ.snoc t` to `Γ'.snoc t` -/
+@[simp] 
+def snocMap {Γ Γ' : Ctxt} {t : Ty}
+    (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
+  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
+    (fun _ => Ctxt.Var.last _ _) f
+
 end Var
   
 
@@ -353,14 +372,7 @@ end Var
 
 
 
-/-- Given a change of variables map from `Γ` to `Γ'`, extend it to 
-a map `Γ.snoc t` to `Γ'.snoc t` -/
-@[simp] 
-def Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
-    (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
-    (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
-  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
-    (fun _ => Ctxt.Var.last _ _) f
+
 
 
 
@@ -421,7 +433,11 @@ theorem _root_.List.get?_append_add :
   . simp_all
 
 
-
+/--
+  Embed a variable from context `Γ` into `Γ ++ Γ'`.
+  This means adding the length of `Γ'` to the variable index, but the context is erased, so the
+  caller has to keep track of this length
+-/
 def Var.inl {Γ Γ' : Ctxt} {t : Ty} (len : Γ'.Length) : Var Γ t → Var (Γ ++ Γ') t
   | ⟨v, h⟩ => ⟨v + len.1, by 
       rcases len with ⟨len, ⟨⟩⟩

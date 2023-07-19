@@ -9,7 +9,6 @@ noncomputable section
   ## Datastructures
 -/
 
-
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   | add (a b : Γ.Var .nat) : IExpr Γ .nat
@@ -17,7 +16,7 @@ inductive IExpr : Ctxt → Ty → Type
   | nat (n : Nat) : IExpr Γ .nat
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
-inductive ICom : Ctxt →  Ty → Type where
+inductive ICom : Ctxt → Ty → Type where
   | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
@@ -120,63 +119,53 @@ def LetZipper.zip : LetZipper Γ t → ICom Γ t :=
 
 
 
-def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
-    (e : IExpr Γ ty) → IExpr Γ' ty
-  | .nat n => .nat n
-  | .add a b => .add (varsMap _ a) (varsMap _ b)
+def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) : 
+    (e : IExpr Γ ty) → Option (IExpr Γ' ty)
+  | .nat n => some <| .nat n
+  | .add a b => do 
+      let a ← varsMap _ a
+      let b ← varsMap _ b
+      some <| .add a b
 
 
 def ICom.changeVars 
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
-    ICom Γ ty → ICom Γ' ty
-  | .ret e => .ret (varsMap _ e)
-  | .lete e body => .lete (e.changeVars varsMap) 
-      (body.changeVars (fun t v => v.snocMap varsMap))
+    (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) : 
+    ICom Γ ty → Option (ICom Γ' ty)
+  | .ret e => do some <| .ret (←varsMap _ e)
+  | .lete e body => do
+      let e ← e.changeVars varsMap
+      let body ← body.changeVars (fun t v => v.snocMap? varsMap)
+      some <| .lete e body
 
 
-/-- Add a single let-binding to the prefix list, while incrementing all variable references in the
-    suffix program, so that all references remain pointing to their previous values.
-    Returns the new zipper, and a reference to the newly added variable -/
-def LetZipper.insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
-      (z' : LetZipper Γ t) × z'.Δ.Var t' := ⟨{
-    lets := .lete z.lets e
-    com := z.com.changeVars (fun _ => Ctxt.Var.toSnoc)
-  }, Ctxt.Var.last ..⟩
-
-
--- def LetZipper.insertExprRecAux (z : LetZipper Γ t) : 
---     IExprRec z.Δ t' → (z' : LetZipper Γ t) × z'.Δ.Var t'
---   | .cst n => 
---       z.insertLet (.nat n)
---   | .var v => 
---       ⟨z, v⟩
---   | .add e₁ e₂ => 
---       let ⟨z, v₁⟩ := z.insertExprRecAux e₁
---       let ⟨z, v₂⟩ := z.insertExprRecAux e₂
---       _
-
-
- 
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
 
-/-- Append two programs, while substituiting a free variable in the ssecond for 
-the output of the first -/
+/-- 
+  Given a map from free variables of a program `rhs` to the free variables of another program 
+  `inputProg`, append these programs together, while substituting the free variable `v` in 
+  `inputProg` for the output of `rhs`.
+  This map is allowed to be partial, to account for variables in the context that are not used.
+  Returns `none` if any variable that is used is mapped to `none` -/
 def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : (t : Ty) → Γ.Var t → Γ'.Var t) :
-    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
-  | .ret e, inputProg => inputProg.changeVars 
-      (fun t' v' => 
-        if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ map _ e
-        else v')
-  | .lete e body, inputProg => 
-      let newBody := addProgramAtTop v.toSnoc
-        (fun _ v => Ctxt.Var.snocMap map _ v)
+    (map : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) :
+    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → Option (ICom Γ' t₂)
+  | .ret e, inputProg => do
+      let e ← map _ e
+      inputProg.changeVars 
+        (fun t' v' => 
+          if h : ∃ h : t₁ = t', h ▸ v = v' 
+          then h.fst ▸ e
+          else v')
+  | .lete e body, inputProg => do
+      let inputProg ← inputProg.changeVars (fun _ v => some <| v.toSnoc) -- TODO: this operation is actually infallible, since the map is total. Maybe we want to have a separate (total) changeVars and (partial) changeVars?
+      let newBody ← addProgramAtTop v.toSnoc
+        (fun _ v => Ctxt.Var.snocMap? map _ v)
         body 
-        -- This is the identity function if vars are debruijn indices
-        (inputProg.changeVars (fun _ v => v.toSnoc))
-      .lete (e.changeVars map) newBody
+        inputProg
+        
+      let newExpr ← e.changeVars map
+      some <| .lete newExpr newBody
       
 
 
@@ -184,10 +173,10 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
 
 
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
+    (map : (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t))
     (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
-    (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
-  addLetsAtTop l (addProgramAtTop v map rhs inputProg)
+    (inputProg : ICom Γ₂ t₂) : Option (ICom Γ₁ t₂) := do
+  addLetsAtTop l (←addProgramAtTop v map rhs inputProg)
 
 
 def IExprRec.bind {Γ₁ Γ₂ : Ctxt} 
@@ -219,49 +208,8 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
 
 def Mapping.Pair (Γ Δ : Ctxt) := Σ t, Γ.Var t × Δ.Var t
 
-/--
-  `Γ` is a prefix of `Δ` if we can drop a number of types from `Δ` to obtain `α`.
-  This is encoded as a `Type`, so that we can compute with `n`
--/
-abbrev Ctxt.IsPrefixOf (Γ Δ : Ctxt ) : Type :=
-  {n // Δ.drop n = Γ}
-
-
-@[coe]
-def Ctxt.IsPrefixOf.ofSnoc {Γ Δ : Ctxt} {t : Ty} : Γ.IsPrefixOf Δ → Γ.IsPrefixOf (Δ.snoc t)
-  | ⟨n, h⟩ => ⟨n+1, by simp_all⟩
-
-
--- def Ctxt.Var.embedIntoPrefix {Γ Δ : Ctxt} : Γ.IsPrefixOf Δ → Γ.Var t → Δ.Var t
---   | ⟨0, _⟩ => id
---   | ⟨n+1, _⟩ => _
-
-/--
-  `Mapping Γ Δ` is intended to incrementally build a mapping from variables in `Γ` to variables in 
-  `Δ`. In the process of building this map
-
--/
--- structure Mapping (Γ Δ : Ctxt) where
---   /-- The mapping from variables in `Γ` to variables in `Δ` -/
---   map : List (Mapping.Pair Γ Δ)
---   /-- A list of variables from `Γ` that are already assigned to variables *not* in `Δ` -/
---   reserved : List (Σ t, Γ.Var t)
---   /-- For every `v : Γ.Var _`, there is at most one pair `(v, _) ∈ map` -/
---   map_invariant : ∀ {t} v w w', ⟨t, v, w⟩ ∈ map → ⟨t, v, w'⟩ ∈ map → w = w'
---   /-- For every `v ∈ reserverd`, there may be no pairs `(v, _) ∈ map` -/
---   reserved_invariant : ∀ tv ∈ reserved, ∀ w, ⟨tv.1, tv.2, w⟩ ∉ map
-
--- def Mapping.snocMap : Mapping Γ Δ → Mapping Γ (Δ.snoc t)
---   | ⟨[], res, _, _⟩ => ⟨[], res, by simp, by simp⟩
---   | ⟨⟨t, v, v'⟩ :: ms, res, m_inv, r_inv⟩ => 
---       ⟨⟨t, v, v'⟩ :: snocMap ms, res, m_inv, r_inv⟩ 
-
+/-- `Mapping Γ Δ` is an incrementally built a mapping from variables in `Γ` to variables in `Δ` -/
 def Mapping (Γ Δ : Ctxt) := List (Mapping.Pair Γ Δ)
-
-/-- Grow the target context of a mapping -/
-def Mapping.snocMap : Mapping Γ Δ → Mapping Γ (Δ.snoc t)
-  | [] => []
-  | ⟨t, v, v'⟩ :: ms => ⟨t, v, v'.toSnoc⟩ :: snocMap ms
 
 /-- `map.insert v v'` asserts that `v` maps to `v'`
     * if `v` is not present in the map yet, insert the pair `(v, v')` into the map
@@ -314,7 +262,7 @@ def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ 
 
 /-- Merge two mappings, checking that they are consistent -/
 def Mapping.merge : Mapping Γ Δ → Mapping Γ Δ → Option (Mapping Γ Δ)
-  | _,    []                => some []
+  | map₁, []                => some map₁
   | map₁, ⟨_, v, w⟩ :: map₂ => do
       let map₁ ← map₁.insert v w
       merge map₁ map₂
@@ -357,6 +305,7 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
     | base v => exact (getVar body v).map (·.coe_snoc)
 
 
+
 /--
   Given a sequence of `Lets`, try to match a pattern against the bottom-most let
   * If the match fails, return `none`
@@ -393,86 +342,78 @@ def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IE
 
         | _, _ => none
 
-structure InsertLetsResult (Γ Δ : Ctxt) (t : Ty) where
-  (Δ' : Ctxt)
-  (len : Δ'.Length)
-  (lets : Lets Γ (Δ ++ Δ'))
-  (var : Ctxt.Var (Δ ++ Δ') t)
 
-/--
-  Given an assignment of meta-variables in `matchExpr`, insert new let-bindings into an existing
-  sequence
--/
-def IExprRec.insertLets (lets : Lets Γ Δ) (pattern : IExprRec Γ' t) (assignment : Mapping Γ' Δ) :
-    Option (InsertLetsResult Γ Δ t) :=
-  match pattern with
-    | .cst n => some (
-        let Δ' := .snoc ∅ Ty.nat
-        let lets := Lets.lete lets (.nat n)          
-        ⟨Δ', ⟨1, by simp⟩, cast (by simp) lets, cast (by simp) <| Ctxt.Var.last Δ Ty.nat⟩
-      )
-    | .var v => do
-        let v ← assignment.lookup _ v
-        some ⟨∅, ⟨0, by simp⟩, cast (by simp) lets, cast (by simp) v⟩
-    | .add lhs rhs => do
-        let ⟨Δ₁, length₁, lets₁, v₁⟩ ← insertLets lets lhs assignment
-        let ⟨Δ₂, length₂, lets₂, v₂⟩ ← insertLets lets₁ rhs (assignment.growCodomain length₁)
+--
+--  ## Alternative rewrite
+-- The following code implements rewrites by adding new let-bindings to the prefix `lets`
+-- This is considerably more copmlex, because we are adding an arbitrary number of types to the
+-- output context, hence, we have to reason about the noncomputable `append`.
 
-        let lets₃ := Lets.lete lets₂ (.add (.inl length₂ v₁) v₂)
-        let Δ' := (Δ₁ ++ Δ₂)
-        some ⟨
-          Δ'.snoc Ty.nat, 
-          ⟨length₁.val + length₂.val + 1, by 
-            rcases length₁ with ⟨_, ⟨⟩⟩
-            rcases length₂ with ⟨_, ⟨⟩⟩
-            simp[(· ++ ·), Append.append, Ctxt.append]
-            apply Nat.add_comm
-          ⟩,
-          cast (by simp[Ctxt.append_assoc]) lets₃, 
-          cast (by simp) <| Ctxt.Var.last (Δ ++ Δ') Ty.nat
-        ⟩
+-- However, it has the benefit that we can then update variable references in a single pass, where
+-- `addProgramAtTop` will do a pass over `inputProg` for every new let-binding, each time only
+-- incrementing each variable index by one.
+--
+-- structure InsertLetsResult (Γ Δ : Ctxt) (t : Ty) where
+--   (Δ' : Ctxt)
+--   (len : Δ'.Length)
+--   (lets : Lets Γ (Δ ++ Δ'))
+--   (var : Ctxt.Var (Δ ++ Δ') t)
+
+-- /--
+--   Given an assignment of meta-variables in `matchExpr`, insert new let-bindings into an existing
+--   sequence
+-- -/
+-- def IExprRec.insertLets (lets : Lets Γ Δ) (pattern : IExprRec Γ' t) (assignment : Mapping Γ' Δ) :
+--     Option (InsertLetsResult Γ Δ t) :=
+--   match pattern with
+--     | .cst n => some (
+--         let Δ' := .snoc ∅ Ty.nat
+--         let lets := Lets.lete lets (.nat n)          
+--         ⟨Δ', ⟨1, by simp⟩, cast (by simp) lets, cast (by simp) <| Ctxt.Var.last Δ Ty.nat⟩
+--       )
+--     | .var v => do
+--         let v ← assignment.lookup _ v
+--         some ⟨∅, ⟨0, by simp⟩, cast (by simp) lets, cast (by simp) v⟩
+--     | .add lhs rhs => do
+--         let ⟨Δ₁, length₁, lets₁, v₁⟩ ← insertLets lets lhs assignment
+--         let ⟨Δ₂, length₂, lets₂, v₂⟩ ← insertLets lets₁ rhs (assignment.growCodomain length₁)
+
+--         let lets₃ := Lets.lete lets₂ (.add (.inl length₂ v₁) v₂)
+--         let Δ' := (Δ₁ ++ Δ₂)
+--         some ⟨
+--           Δ'.snoc Ty.nat, 
+--           ⟨length₁.val + length₂.val + 1, by 
+--             rcases length₁ with ⟨_, ⟨⟩⟩
+--             rcases length₂ with ⟨_, ⟨⟩⟩
+--             simp[(· ++ ·), Append.append, Ctxt.append]
+--             apply Nat.add_comm
+--           ⟩,
+--           cast (by simp[Ctxt.append_assoc]) lets₃, 
+--           cast (by simp) <| Ctxt.Var.last (Δ ++ Δ') Ty.nat
+--         ⟩  
 
 
 structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
-  (lhs rhs : IExprRec Γ t)
+  (lhs rhs : ICom Γ t)
 
-def LetZipper.tryRewriteAtCurrentPos {Γ Δ : Ctxt} (zip : LetZipper Γ t) (rw : Rewrite Δ t') : 
-    Option (LetZipper Γ t) := do
-  let map ← rw.lhs.matchAgainstLets zip.lets -- match
-  let ⟨_, len, lets, newVar⟩ ← rw.rhs.insertLets zip.lets map -- rewrite
-
-  -- Shift all the variables in `com` so that they still refer to the same binding as before
-  let com := zip.com.changeVars fun _ v => v.inl len
-
-  -- Todo "unshift" the `newVar` so that the rewrite actually does something
-
-  return {lets, com}
+def tryRewriteAtCurrentPos {Γ Γ' Δ : Ctxt}
+    (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') (rw : Rewrite Γ' t) : 
+    Option (ICom Γ t') := do
+  if h : u = t then
+    let map ← rw.lhs.toExprRec.matchAgainstLets lets -- match
+    let rhs := cast (by rw[h]) rw.rhs
+    addProgramInMiddle (Ctxt.Var.last _ u) (map.lookup) lets rhs com
+  else
+    none
 
 
+def tryRewriteRecursive (rw : Rewrite Γ' t') (lets : Lets Γ Δ) : ICom Δ t → Option (ICom Γ t)
+  | .ret _ => none
+  | .lete e com =>
+      let lets := Lets.lete lets e
+      (tryRewriteAtCurrentPos lets com rw).orElse fun _ =>
+        tryRewriteRecursive rw lets com
 
-
--- def matchVar (lets : Lets) (varPos: Nat) (matchExpr: ExprRec) (mapping: Mapping := []): Option Mapping :=
---   match matchExpr with
---   | .var x => match mapping.lookup x with
---     | some varPos' => if varPos = varPos' then (x, varPos)::mapping else none
---     | none => (x, varPos)::mapping
---   | .cst n => match lets[varPos]! with
---     | .cst n' => if n = n' then some mapping else none
---     | _ => none
---   | .add a' b' =>
---     match lets[varPos]! with
---     | .add a b => do
---         let mapping ← matchVar lets (getPos a varPos) a' mapping
---         matchVar lets (getPos b varPos) b' mapping
---     | _ => none
-
-
--- def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
---     (matchExpr : ExprRec Γ₃ t) → (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t)
---   | _, _, _, lets, .cst n => fun t v => none
---   | _, _, _, .lete lets (.add a1 b1), .add a b => fun t v => do
---     let g1 ← getVar lets a1
---     let g2 ← getVar lets b1  
      
 
 #exit
