@@ -262,6 +262,8 @@ def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ 
   else
     none
 
+
+/-- Lookup the assignment for a specific variable -/
 def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var t)
   | [],             _, _  => none
   | ⟨t, v, w⟩::map, t', v' =>
@@ -270,6 +272,33 @@ def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var 
       else
         lookup map t' v'
 
+
+def Mapping.IsTotal (map : Mapping Γ Δ) : Prop :=
+  ∀ t v, map.lookup t v |>.isSome
+
+
+#check List.mergeSort
+
+/-- We order a pair of variables by the index of the first variable -/
+instance : Ord (Mapping.Pair Γ Δ) where
+  compare := fun ⟨_, v, _⟩ ⟨_, w, _⟩ => compare v.1 w.1
+
+/-- We order a pair of variables by the index of the first variable -/
+instance : LE (Mapping.Pair Γ Δ) := leOfOrd
+
+def Mapping.checkTotal {Γ Δ : Ctxt} (map : Mapping Γ Δ) (len : Γ.Size) : Bool :=
+  go len.val <| map.mergeSort (LE.le)
+where
+  go : Nat → Mapping Γ Δ → Bool
+    | 0, [] => true
+    | n+1, ⟨_, ⟨m, _⟩, _⟩ :: map => n = m && go n map
+    | _, _ => false
+  
+
+/-- Check whether each variable in the domain context has been assigned to an element of th
+    codomain, and if so, return a total lookup function -/
+def Mapping.totalLookup : Mapping Γ Δ → Option ((t : Ty) → Γ.Var t → Δ.Var t) :=
+  _
 
 
 
@@ -348,7 +377,7 @@ where
 --
 -- structure InsertLetsResult (Γ Δ : Ctxt) (t : Ty) where
 --   (Δ' : Ctxt)
---   (len : Δ'.Length)
+--   (len : Δ'.Size)
 --   (lets : Lets Γ (Δ ++ Δ'))
 --   (var : Ctxt.Var (Δ ++ Δ') t)
 

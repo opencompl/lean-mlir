@@ -280,10 +280,42 @@ protected def isHeq {Γ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Γ.Var t₂) : Bool
 end Var
 
 
-section Append
+/-
+## Sized context
+We introduce the `SizedCtxt` type to allow some limited computation, by bundling an erased context
+with a (non-erased) natural number storing the contexts length
+-/
 
-/-- A computable way to keep track of the length of an erased context -/
-def Length (Γ : Ctxt) : Type := { n // Γ.out.length = n}
+/-- A computable way to keep track of the size of an erased context -/
+def Size (Γ : Ctxt) : Type := { n // Γ.out.length = n}
+
+/-- An erased context, whose size is available for computation. -/
+structure SizedCtxt where
+  ctxt : Ctxt
+  size : ctxt.Size
+
+namespace SizedCtxt
+
+instance {Γ : Ctxt} : Nonempty Γ.Size := ⟨⟨Γ.out.length, rfl⟩⟩
+
+instance : Coe SizedCtxt Ctxt := ⟨SizedCtxt.ctxt⟩
+
+instance : CoeDep SizedCtxt Γ Γ.ctxt.Size := ⟨Γ.size⟩
+instance : CoeDep SizedCtxt Γ (Ctxt.Size Γ) := ⟨Γ.size⟩
+
+/-- The empty context, plus its size -/
+def empty : SizedCtxt := 
+  ⟨Ctxt.empty, 0, by simp⟩
+
+/-- Add a `Ty` to a context, incrementing the tracked size -/
+def snoc : SizedCtxt → Ty → SizedCtxt := 
+  fun ⟨Γ, ⟨n, h⟩⟩ t => ⟨Ctxt.snoc Γ t, n+1, by simp[h]⟩
+
+end SizedCtxt
+
+
+
+section Append
 
 def append : Ctxt → Ctxt → Ctxt :=
   fun xs ys => do return List.append (← ys) (← xs)
@@ -311,10 +343,10 @@ theorem _root_.List.get?_append_add :
 
 /--
   Embed a variable from context `Γ` into `Γ ++ Γ'`.
-  This means adding the length of `Γ'` to the variable index, but the context is erased, so the
-  caller has to keep track of this length
+  This means adding the Size of `Γ'` to the variable index, but the context is erased, so the
+  caller has to keep track of this Size
 -/
-def Var.inl {Γ Γ' : Ctxt} {t : Ty} (len : Γ'.Length) : Var Γ t → Var (Γ ++ Γ') t
+def Var.inl {Γ Γ' : Ctxt} {t : Ty} {len : Γ'.Size} : Var Γ t → Var (Γ ++ Γ') t
   | ⟨v, h⟩ => ⟨v + len.1, by 
       rcases len with ⟨len, ⟨⟩⟩
       simp[←h, (· ++ ·), Append.append, append, List.get?_append_add]
@@ -341,8 +373,6 @@ theorem append_assoc (Γ₁ Γ₂ Γ₃ : Ctxt) : Γ₁ ++ Γ₂ ++ Γ₃ = Γ�
   apply Eq.symm
   apply List.append_assoc
   
-
-#check List.append_assoc
 
 end Append
 
