@@ -444,9 +444,9 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
 
 def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
     (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t) × 
-      ((t : Ty) → Γ₃.Var t → Γ₂.Var t))
+      ((t' : Ty) → (Γ₃.snoc t).Var t' → Γ₂.Var t'))
   | _, _, .nil, _, _ => none
-  | _, _, lets@(.lete body _), _, v =>by
+  | _, _, lets@(.lete body _), _, v => by
     cases v using Ctxt.Var.casesOn with
     | last => exact some ⟨_, lets, fun t v => v⟩ 
     | toSnoc v => exact do
@@ -470,13 +470,14 @@ def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping �
     | none => some <| m.insert t v
     ) m₂
 
-def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₂)
-  | _, _, _, .nil, _ => none
-  | _, _, _, .lete lets e, matchExpr => 
+def matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+    (map : (t : Ty) → Γ₂.Var t → Γ₄.Var t) →
+    (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₄)
+  | _, _, _, _, .nil, _, _ => none
+  | Γ₁, _, Γ₃, Γ₄, .lete lets e, map, matchExpr => 
     match matchExpr, e with
     | .var v, _ => 
-        Mapping.hNew v (Ctxt.Var.last _ _)
+        Mapping.hNew v (map _ (Ctxt.Var.last _ _))
     | .cst n, .nat m =>
         if n = m then some ∅ 
         else none
@@ -487,15 +488,17 @@ def matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →
           `matchAgainstLets` again.
         -/
         let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
-        let map₁ ← matchVar lets₁ lhs
+        let map₁ ← matchVar' lets₁ (fun t v => map t (embed₁ t v)) lhs
 
         let ⟨_, lets₂, embed₂⟩ ← lets.getVar v₂
-        let map₂ ← matchVar lets₂ lhs
+        let map₂ ← matchVar' lets₂ (fun t v => map t (embed₂ t v)) rhs
 
-        return map₁.merge map₂
+        map₁.merge map₂
     | _, _ => none
 
-     
+def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
+    (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) :=
+  matchVar' lets (fun _ v => v) matchExpr
 
 #exit
 
