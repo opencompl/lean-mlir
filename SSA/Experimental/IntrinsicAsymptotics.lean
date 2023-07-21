@@ -204,6 +204,44 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
       | last => exact e')
 
 
+
+def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
+  | .var v, _, w   => v.1 = w.1
+  | .cst _, _, _   => False
+  | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
+
+/-- A set of variables of potentially different types -/
+abbrev Ctxt.VarSet (Γ : Ctxt) : Type :=
+  (t : Ty) → Set (Γ.Var t)
+
+namespace Ctxt.VarSet
+variable {Γ : Ctxt}
+
+instance : Union Γ.VarSet where
+  union V₁ V₂ := fun t => V₁ t ∪ V₂ t
+
+instance : EmptyCollection Γ.VarSet where
+  emptyCollection := fun _ => ∅
+
+instance : Singleton (Σt, Γ.Var t) Γ.VarSet where
+  singleton := fun v _ w => v.2.1 = w.1
+
+instance : CoeOut (Γ.Var t) (Σt, Γ.Var t) where
+  coe v := ⟨t, v⟩
+
+end Ctxt.VarSet
+
+
+def IExprRec.vars : IExprRec Γ t → Γ.VarSet :=
+  fun e t v => e.varsBool t v
+
+instance (e : IExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
+  inferInstanceAs <| Decidable (IExprRec.varsBool e _ v = true)
+
+
+  
+
+
 /-
   ## Matching
 -/
@@ -214,51 +252,41 @@ def Mapping.Pair (Γ Δ : Ctxt) := Σ t, Γ.Var t × Δ.Var t
 def Mapping (Γ Δ : Ctxt) := List (Mapping.Pair Γ Δ)
 
 /-- `map.insert v v'` asserts that `v` maps to `v'`
+    * if `v` and `w` have different types, return `none`
     * if `v` is not present in the map yet, insert the pair `(v, v')` into the map
     * otherwise, if there is a pair `(v, w)`, with `v` on the left hand side, then 
         - return the map unchanged if `w = v'`, or
         - return `none` otherwise
 -/
-def Mapping.insert (map : Mapping Γ Δ) (v₁ : Γ.Var t) (v₂ : Δ.Var t) : 
-    Option (Mapping Γ Δ) :=
+def Mapping.insert (map : Mapping Γ Δ) (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ Δ) :=
+  if h : t₁ = t₂ then
+    go map v₁ <| cast (by rw[h]) v₂
+  else
+    none
+where
+  go {t} (map : Mapping Γ Δ) (v₁ : Γ.Var t) (v₂ : Δ.Var t) : Option (Mapping Γ Δ) :=
   match map with
     | [] => some [⟨t, v₁, v₂⟩]
     | origMap@(⟨t', w₁, w₂⟩ :: map) =>
-        let default := (insert map v₁ v₂).map (⟨t', w₁, w₂⟩ :: ·)
-        if heq : t = t' then
-          if w₁ = cast (by simp[heq]) v₁ then
-            if w₂ = cast (by simp[heq]) v₂ then
-              some origMap
-        else
-          none
+        if w₁.1 = v₁.1 then
+          if w₂.1 = v₂.1 then
+            some origMap
           else
-            default
+            none          
         else
-          default
-
-def Mapping.hInsert (map : Mapping Γ Δ) (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ Δ) :=
-  if h : t₁ = t₂ then
-    map.insert v₁ <| cast (by rw[h]) v₂
-  else
-    none
+          (go map v₁ v₂).map (⟨t', w₁, w₂⟩ :: ·)
 
 /-- The empty mapping -/
 def Mapping.empty : Mapping Γ Δ := []
 
 /--
-  Create a new mapping, and immediately add an assignment.
-  This operation can not fail, since there no other assignments that it could conflict with yet
+  Create a new mapping, and add an assignment, after checking that the types match.
+  This operation can fail, since the types might be different
 -/
-def Mapping.new (v₁ : Γ.Var t) (v₂ : Δ.Var t) : Mapping Γ Δ :=
-  [⟨t, v₁, v₂⟩]
-
-/--
-  Create a new mapping, and add an assignment, after checking that the types match .
-  This operation *can* fail, since the types might be different
--/
-def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ Δ) :=
+def Mapping.new (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ Δ) :=
   if h : t₁ = t₂ then
-    some <| new v₁ (cast (by rw[h]) v₂)
+    let v₂ := cast (by rw[h]) v₂
+    some [⟨t₁, v₁, v₂⟩]
   else
     none
 
@@ -274,8 +302,83 @@ def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var 
         lookup map t' v'
 
 
-def Mapping.IsTotal (map : Mapping Γ Δ) : Prop :=
-  ∀ t v, map.lookup t v |>.isSome
+structure TotalMapping (Γ Δ : Ctxt) (V : Γ.VarSet) where
+  inner : Mapping Γ Δ
+  -- isTotal : ∀ t, ∀ v ∈ expr.vars, (inner.lookup t v).isSome
+  isTotal : ∀ t, ∀ v ∈ V t, (inner.lookup t v).isSome
+
+def TotalMapping.empty : TotalMapping Γ Δ ∅ :=
+  ⟨[], by intros; contradiction⟩
+
+/-- Every mapping is total for a constant, since a constant has no variables -/
+def TotalMapping.cst (map : TotalMapping Γ Δ V) : 
+    TotalMapping Γ Δ (V ∪ (IExprRec.cst n).vars) where
+  inner := map.inner
+  isTotal t v h := by 
+    apply map.isTotal
+    simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, Set.union] at h
+    apply h
+
+
+/-- After `insert`ing a variable mapping, `lookup` is guaranteed to return `some` -/
+theorem Mapping.lookup_insert (map mapInsert : Mapping Γ Δ) {v : Γ.Var t₁} (w : Δ.Var t₂)
+    (h : map.insert v w = some mapInsert) :
+    (mapInsert.lookup _ v).isSome := by
+  unfold insert at h
+  unfold Option.isSome
+  split_ifs at h
+  induction map generalizing mapInsert
+  next =>
+    simp only [insert.go, Option.some.injEq] at h 
+    simp [←h, Option.isSome, lookup]
+  next m map ih =>
+    simp only [insert.go, Prod.mk.eta, Sigma.eta] at h    
+    split_ifs at h <;> simp at h
+    . cases h
+      simp only [lookup]
+      split_ifs
+      rfl
+    . rcases h with ⟨tl, ⟨h₁, ⟨⟩⟩⟩
+      simp[lookup]
+      split_ifs
+      apply ih
+      apply h₁
+
+def TotalMapping.insert (map : TotalMapping Γ Δ V) (v : Γ.Var t₁) (w : Δ.Var t₂) : 
+    Option (TotalMapping Γ Δ (V ∪ {⟨_, v⟩})) := 
+  match hm : map.inner.insert v w with
+    | .some mapI => some {
+        inner := mapI
+        isTotal := by 
+          intro t' v' h
+          rcases map with ⟨map, isTotal⟩          
+          
+          dsimp[IExprRec.vars, IExprRec.varsBool, Membership.mem, Set.Mem, Union.union, Set.union, 
+                setOf] at h
+          cases h
+          next h => 
+            sorry
+          next h =>
+            apply Mapping.lookup_insert map mapI w
+            simp at h
+            cases (Ctxt.Var.type_eq_of_index_eq h)
+            rcases v with ⟨v, hv⟩
+            rcases v' with ⟨v', hv'⟩
+            cases h
+            apply hm
+      }
+    | .none => none
+      
+def TotalMapping.coerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} (h : V = V') : 
+    TotalMapping Γ Δ V → TotalMapping Γ Δ V' 
+  | ⟨inner, isTotal⟩ => ⟨inner, by simp_all⟩
+
+def TotalMapping.optCoerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} (h : V = V') : 
+    Option (TotalMapping Γ Δ V) → Option (TotalMapping Γ Δ V') :=
+  Option.map (coerceDomain h)
+
+
+  
 
 
 /-- We order a pair of variables by the index of the first variable -/
@@ -328,21 +431,29 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
 -/
 def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) : 
-    Option (Mapping Γ' Δ) :=
-  go lets matchExpr [] (fun _ t => t)
+    Option (TotalMapping Γ' Δ matchExpr.vars) :=
+  TotalMapping.optCoerceDomain (by 
+    simp[Union.union, Set.union, EmptyCollection.emptyCollection, Membership.mem, Set.Mem]
+    rfl
+  ) <| 
+    go lets matchExpr .empty (fun _ t => t)
 where
-  go {Γ Δ' t} (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t) 
-      (map : Mapping Γ' Δ) (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t) : 
-      Option (Mapping Γ' Δ) :=
+  go {Γ Δ' t} (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t) {V : (t : Ty) → Set (Γ'.Var t)}
+      (map : TotalMapping Γ' Δ V) (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t) : 
+      Option (TotalMapping Γ' Δ (fun t => V t ∪ (matchExpr.vars t))) :=
     match lets with
       | .nil => none
       | .lete lets e =>
         match matchExpr, e with
-          | .var v, _ => 
-              map.hInsert v (embedVars _ <| Ctxt.Var.last ..)
+          | .var v, _ => do
+              let map ← map.insert v (embedVars _ <| Ctxt.Var.last ..)
+              return map.coerceDomain (by simp[IExprRec.vars, IExprRec.varsBool]; rfl)
           | .cst n, .nat m =>
               if n = m then
-                some map
+                some <| map.coerceDomain (by
+                  simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, Set.union]
+                  rfl
+                )
               else
                 none
           | .add lhs rhs, .add v₁ v₂ => do
@@ -357,9 +468,17 @@ where
               )
 
               let ⟨lets₂, embed₂⟩ ← lets.getVar v₂
-              go lets₂ rhs map (fun t v => 
+              let map ← go lets₂ rhs map (fun t v => 
                 embedVars t <| (Ctxt.Var.snocMap embed₂) t v 
               )
+
+              return map.coerceDomain <| by
+                funext _ _
+                simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, Set.union, setOf]
+                constructor
+                . intro h; cases h
+                  next h => exact Or.inl h
+                  next h => exact Or.inr h
 
           | _, _ => none
 
