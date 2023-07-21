@@ -380,32 +380,8 @@ def TotalMapping.lookup (map : TotalMapping Γ Δ V) (t : Ty) (v : Γ.Var t) : v
   (map.inner.lookup t v).get ∘ map.isTotal t v
 
 
-
-
   
 
-
-/-- We order a pair of variables by the index of the first variable -/
-instance : Ord (Mapping.Pair Γ Δ) where
-  compare := fun ⟨_, v, _⟩ ⟨_, w, _⟩ => compare v.1 w.1
-
-/-- We order a pair of variables by the index of the first variable -/
-instance : LE (Mapping.Pair Γ Δ) := leOfOrd
-
-/--
-  Check whether a `Mapping` is total (i.e., assigns something to each variable of the domain) by
-  ordering the pairs by descending index of the first variable, and then checking that indeed each
-  index is present.
-  This requires the size of the domain to be known at runtime, hence we take a `SizedCtxt`.
--/
-def Mapping.checkTotal {Γ : SizedCtxt} {Δ : Ctxt} (map : Mapping Γ Δ) : Bool :=
-  let map := map.mergeSort GE.ge -- sort in descending order
-  go Γ.size map
-where
-  go : Nat → Mapping Γ Δ → Bool
-    | 0, [] => true
-    | n+1, ⟨_, ⟨m, _⟩, _⟩ :: map => n = m && go n map
-    | _, _ => false
    
 
 structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
