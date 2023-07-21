@@ -97,8 +97,8 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
     . simp
 
 @[simp]
-theorem LetZipper.denote_peelLet (z : LetZipper Γ t) :
-    z.peelLet.denote = z.denote := by
+theorem LetZipper.denote_advanceCursor (z : LetZipper Γ t) :
+    z.advanceCursor.denote = z.denote := by
   rcases z with ⟨lets, _|_⟩ <;> rfl
 
 @[simp]
@@ -108,17 +108,47 @@ theorem LetZipper.nil_com_denote_zip (com : ICom Γ t) :
 
 
 
+-- @[simp]
+-- theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
+--     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
+--     (e : IExpr Γ ty)
+--     (ll : Γ'.Sem) : 
+--     (e.changeVars varsMap).denote ll = 
+--     e.denote (fun t v => ll (varsMap t v)) := by
+--   induction e generalizing ll <;> simp 
+--     [IExpr.denote, IExpr.changeVars, *]
+
+-- @[simp]
+-- theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
+--     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
+--     (ll : Γ'.Sem) : 
+--     (c.changeVars varsMap).denote ll = 
+--     c.denote (fun t v => ll (varsMap t v)) := by
+--   induction c generalizing ll Γ' with
+--   | ret x => simp [ICom.denote, ICom.changeVars, *]
+--   | lete _ _ ih => 
+--     rw [changeVars, denote, ih]
+--     simp only [Ctxt.Sem.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
+--     congr
+--     funext t v
+--     cases v using Ctxt.Var.casesOn
+--     . simp
+--     . simp
+
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
+    (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t))
     (e : IExpr Γ ty)
-    (ll : Γ'.Sem) : 
-    (e.changeVars varsMap).denote ll = 
-    e.denote (fun t v => ll (varsMap t v)) := by
+    (ll : Γ'.Sem) 
+    (h : ∀ t v, (varsMap t v).isSome)
+    : 
+    (e.changeVars varsMap).map (·.denote ll) 
+    = some (e.denote (fun t v => ll <| (varsMap t v).get (h _ _))) := by
   induction e generalizing ll <;> simp 
-    [IExpr.denote, IExpr.changeVars, *]
-
-
+    [IExpr.denote, IExpr.changeVars, *, Bind.bind, Option.bind, Option.map]
+  next a b =>
+    -- cases (varsMap _ a)
+    skip
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
@@ -137,10 +167,8 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     . simp
     . simp
 
--- theorem LetZipper.denote_insertLet (z : LetZipper Γ t) (e : IExpr z.Δ t') : 
---     (z.insertLet e).denote = z.denote := by
---   simp only [denote, zip, addLetsAtTop, insertLet, denote_addLetsAtTop, ICom.denote, 
---             ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
+
+
 
 theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :

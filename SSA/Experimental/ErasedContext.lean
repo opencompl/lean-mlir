@@ -240,6 +240,25 @@ def snocMap {Γ Γ' : Ctxt} {t : Ty}
   fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
     (fun _ => Ctxt.Var.last _ _) f
 
+/-- If two variables have the same index, then their types are equal -/
+theorem type_eq_of_index_eq {Γ : Ctxt} {v : Γ.Var t} {w : Γ.Var u} (h : v.1 = w.1) : t = u := by
+  rcases v with ⟨v, h₁⟩
+  rcases w with ⟨w, h₂⟩
+  cases h
+  apply Option.some_inj.mp
+  rw[←h₁, ←h₂]
+
+/-- If two variables have the same index, then they are (heterogenously) equal -/
+theorem heq_of_index_eq {Γ : Ctxt} {v : Γ.Var t} {w : Γ.Var u} (h : v.1 = w.1) : HEq v w := by
+  rcases v with ⟨v, h₁⟩
+  rcases w with ⟨w, h₂⟩
+  cases (type_eq_of_index_eq h)
+  cases h
+  rfl
+  
+  
+  
+
 end Var
   
 
@@ -289,19 +308,22 @@ with a (non-erased) natural number storing the contexts length
 /-- A computable way to keep track of the size of an erased context -/
 def Size (Γ : Ctxt) : Type := { n // Γ.out.length = n}
 
+
 /-- An erased context, whose size is available for computation. -/
 structure SizedCtxt where
   ctxt : Ctxt
-  size : ctxt.Size
+  size' : ctxt.Size
 
 namespace SizedCtxt
+
+def size (Γ : SizedCtxt) : Nat :=
+  Γ.size'.val
 
 instance {Γ : Ctxt} : Nonempty Γ.Size := ⟨⟨Γ.out.length, rfl⟩⟩
 
 instance : Coe SizedCtxt Ctxt := ⟨SizedCtxt.ctxt⟩
 
-instance : CoeDep SizedCtxt Γ Γ.ctxt.Size := ⟨Γ.size⟩
-instance : CoeDep SizedCtxt Γ (Ctxt.Size Γ) := ⟨Γ.size⟩
+instance : CoeDep SizedCtxt Γ Γ.ctxt.Size := ⟨Γ.size'⟩
 
 /-- The empty context, plus its size -/
 def empty : SizedCtxt := 
@@ -377,3 +399,5 @@ theorem append_assoc (Γ₁ Γ₂ Γ₃ : Ctxt) : Γ₁ ++ Γ₂ ++ Γ₃ = Γ�
 end Append
 
 end Ctxt
+
+export Ctxt (SizedCtxt)

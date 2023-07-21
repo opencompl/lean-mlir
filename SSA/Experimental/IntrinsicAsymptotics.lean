@@ -267,8 +267,9 @@ def Mapping.hNew (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) : Option (Mapping Γ 
 def Mapping.lookup : Mapping Γ Δ → (t : Ty) → Γ.Var t → Option (Δ.Var t)
   | [],             _, _  => none
   | ⟨t, v, w⟩::map, t', v' =>
-      if h : t = t' && v.isHeq v' then
-        some <| cast (by congr; simp at h; exact h.1) w
+      if h : v.1 = v'.1 then
+        have t_eq_t' := Ctxt.Var.type_eq_of_index_eq h
+        some <| cast (by rw[t_eq_t']) w
       else
         lookup map t' v'
 
@@ -277,8 +278,6 @@ def Mapping.IsTotal (map : Mapping Γ Δ) : Prop :=
   ∀ t v, map.lookup t v |>.isSome
 
 
-#check List.mergeSort
-
 /-- We order a pair of variables by the index of the first variable -/
 instance : Ord (Mapping.Pair Γ Δ) where
   compare := fun ⟨_, v, _⟩ ⟨_, w, _⟩ => compare v.1 w.1
@@ -286,21 +285,21 @@ instance : Ord (Mapping.Pair Γ Δ) where
 /-- We order a pair of variables by the index of the first variable -/
 instance : LE (Mapping.Pair Γ Δ) := leOfOrd
 
-def Mapping.checkTotal {Γ Δ : Ctxt} (map : Mapping Γ Δ) (len : Γ.Size) : Bool :=
-  go len.val <| map.mergeSort (LE.le)
+/--
+  Check whether a `Mapping` is total (i.e., assigns something to each variable of the domain) by
+  ordering the pairs by descending index of the first variable, and then checking that indeed each
+  index is present.
+  This requires the size of the domain to be known at runtime, hence we take a `SizedCtxt`.
+-/
+def Mapping.checkTotal {Γ : SizedCtxt} {Δ : Ctxt} (map : Mapping Γ Δ) : Bool :=
+  let map := map.mergeSort GE.ge -- sort in descending order
+  go Γ.size map
 where
   go : Nat → Mapping Γ Δ → Bool
     | 0, [] => true
     | n+1, ⟨_, ⟨m, _⟩, _⟩ :: map => n = m && go n map
     | _, _ => false
-  
-
-/-- Check whether each variable in the domain context has been assigned to an element of th
-    codomain, and if so, return a total lookup function -/
-def Mapping.totalLookup : Mapping Γ Δ → Option ((t : Ty) → Γ.Var t → Δ.Var t) :=
-  _
-
-
+   
 
 structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
   {Δ : Ctxt}
