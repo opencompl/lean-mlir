@@ -570,10 +570,9 @@ theorem denote_matchVar' : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
         ) = 
       lets.denote s₁ v
   | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, matchExpr, h => by
-  cases h : 
-  match matchExpr, (← lets.getExpr v) with
-  | .var v', _ => Mapping.hNew v' v
-  | _, _ => sorry
+    cases hv : lets.getExpr v with
+    | none => simp [matchVar'] at h
+ 
 
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) :=
