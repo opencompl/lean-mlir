@@ -7,6 +7,7 @@ import Std.Data.Array.Init.Lemmas
 import Mathlib.Data.List.Indexes
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.List.AList
+import Mathlib.Data.Finset.Basic
 
 noncomputable section
 
@@ -534,6 +535,11 @@ def Mapping.changeVarsRight {Γ Δ₁ Δ₂ : Ctxt}
 --         map₁.merge map₂
 --     | _, _ => none
 
+def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
+  | .var v, t' => if ht : t = t' then ht ▸ {v} else ∅ 
+  | .cst n, _ => ∅ 
+  | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
+
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) := do
@@ -548,7 +554,6 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
         declaration corresponding to `v₁` is at the head. Then, we recursively call 
         `matchVar'` again.
       -/
-      --let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
       let map₁ ← matchVar lets v₁ lhs
       let map₂ ← matchVar lets v₂ rhs
 
