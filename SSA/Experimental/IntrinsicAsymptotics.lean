@@ -122,23 +122,22 @@ def LetZipper.zip : LetZipper Γ t → ICom Γ t :=
 
 
 
-def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) : 
-    (e : IExpr Γ ty) → Option (IExpr Γ' ty)
-  | .nat n => some <| .nat n
-  | .add a b => do 
-      let a ← varsMap _ a
-      let b ← varsMap _ b
-      some <| .add a b
+def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : (e : IExpr Γ ty) → IExpr Γ' ty
+  | .nat n => .nat n
+  | .add a b =>
+      let a := varsMap _ a
+      let b := varsMap _ b
+      .add a b
 
 
 def ICom.changeVars 
-    (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) : 
-    ICom Γ ty → Option (ICom Γ' ty)
-  | .ret e => do some <| .ret (←varsMap _ e)
-  | .lete e body => do
-      let e ← e.changeVars varsMap
-      let body ← body.changeVars (fun t v => v.snocMap? varsMap)
-      some <| .lete e body
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
+    ICom Γ ty → ICom Γ' ty
+  | .ret e => .ret (varsMap _ e)
+  | .lete e body =>
+      let e := e.changeVars varsMap
+      let body := body.changeVars (fun t v => v.snocMap varsMap)
+      .lete e body
 
 
 -- Find a let somewhere in the program. Replace that let with
@@ -151,24 +150,24 @@ def ICom.changeVars
   This map is allowed to be partial, to account for variables in the context that are not used.
   Returns `none` if any variable that is used is mapped to `none` -/
 def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : (t : Ty) → Γ.Var t → Option (Γ'.Var t)) :
-    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → Option (ICom Γ' t₂)
-  | .ret e, inputProg => do
-      let e ← map _ e
+    (map : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
+  | .ret e, inputProg =>
+      let e := map _ e
       inputProg.changeVars 
         (fun t' v' => 
           if h : ∃ h : t₁ = t', h ▸ v = v' 
           then h.fst ▸ e
           else v')
-  | .lete e body, inputProg => do
-      let inputProg ← inputProg.changeVars (fun _ v => some <| v.toSnoc) -- TODO: this operation is actually infallible, since the map is total. Maybe we want to have a separate (total) changeVars and (partial) changeVars?
-      let newBody ← addProgramAtTop v.toSnoc
-        (fun _ v => Ctxt.Var.snocMap? map _ v)
+  | .lete e body, inputProg => 
+      let inputProg := inputProg.changeVars (fun _ v => v.toSnoc)
+      let newBody := addProgramAtTop v.toSnoc
+        (fun _ v => Ctxt.Var.snocMap map _ v)
         body 
         inputProg
         
-      let newExpr ← e.changeVars map
-      some <| .lete newExpr newBody
+      let newExpr := e.changeVars map
+      .lete newExpr newBody
       
 
 
@@ -176,10 +175,10 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
 
 
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : (t : Ty) → Γ₃.Var t → Option (Γ₂.Var t))
+    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t)
     (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
-    (inputProg : ICom Γ₂ t₂) : Option (ICom Γ₁ t₂) := do
-  addLetsAtTop l (←addProgramAtTop v map rhs inputProg)
+    (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
+  addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
 
 def IExprRec.bind {Γ₁ Γ₂ : Ctxt} 
@@ -205,11 +204,6 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
 
 
 
-def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
-  | .var v, _, w   => v.1 = w.1
-  | .cst _, _, _   => False
-  | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
-
 -- TODO: is this erased at runtime? It probably should be!
 /-- A set of variables of potentially different types -/
 abbrev Ctxt.VarSet (Γ : Ctxt) : Type :=
@@ -227,17 +221,38 @@ instance : EmptyCollection Γ.VarSet where
 instance : Singleton (Σt, Γ.Var t) Γ.VarSet where
   singleton := fun v _ w => v.2.1 = w.1
 
+instance : HasSubset (Γ.VarSet) where
+  Subset V₁ V₂ := ∀ t, V₁ t ⊆ V₂ t
+
 instance : CoeOut (Γ.Var t) (Σt, Γ.Var t) where
   coe v := ⟨t, v⟩
 
+/-- A `VarSet` is complete if it contains all variables in the context -/
+def IsComplete (V : Γ.VarSet) : Prop :=
+  ∀ t v, v ∈ V t
+
 end Ctxt.VarSet
 
+/-- The free variables of an `IExprRec` -/
+def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
+  /- Since `IExprRec` does not have binders, this is a straightforward recursion -/
+  | .var v, _, w   => v.1 = w.1
+  | .cst _, _, _   => false
+  | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
 
+/-- The free variables of an `IExprRec`, as a `Set` -/
 def IExprRec.vars : IExprRec Γ t → Γ.VarSet :=
   fun e t v => e.varsBool t v
 
 instance (e : IExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
   inferInstanceAs <| Decidable (IExprRec.varsBool e _ v = true)
+
+
+def ICom.vars : ICom Γ t → Γ.VarSet :=
+  IExprRec.vars ∘ ICom.toExprRec
+
+instance (e : ICom Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
+  inferInstanceAs <| Decidable (v ∈ e.toExprRec.vars _)
 
 
   
@@ -377,8 +392,14 @@ def TotalMapping.coerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} (h : V = V') :
   | ⟨inner, isTotal⟩ => ⟨inner, by simp_all⟩
 
 /-- `lookup` a variable that is known to occur in a total map -/
-def TotalMapping.lookup (map : TotalMapping Γ Δ V) (t : Ty) (v : Γ.Var t) : v ∈ V t → Δ.Var t :=
+def TotalMapping.lookupMem (map : TotalMapping Γ Δ V) (t : Ty) (v : Γ.Var t) : v ∈ V t → Δ.Var t :=
   (map.inner.lookup t v).get ∘ map.isTotal t v
+
+/-- If the set of known-assigned variables is complete w.r.t. its context, then we can return a 
+    total change of variables function -/
+def TotalMapping.lookup (map : TotalMapping Γ Δ V) (h : V.IsComplete) (t : Ty) (v : Γ.Var t) :
+    Δ.Var t :=
+  map.lookupMem t v (h t v)
 
 
   
@@ -509,7 +530,17 @@ where
 
 
 structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
-  (lhs rhs : ICom Γ t)
+  /-- The left-hand-side of a rewrite is the pattern being matched against -/
+  lhs : ICom Γ t
+  /-- The right-hand-side of a rewrite describes what a matched program will be rewritten to -/
+  rhs : ICom Γ t
+  /-- 
+    We require that the left-hand-side of a rewrite uses all the variable in its context.
+    This ensures that all variables of the right-hand-side are assigned after a succesfull match.
+    Every well-behaved rewrite (i.e., rewrites where all variables of `rhs` also occur in `lhs`)
+    can be made to satisfy this property by picking an appropriate context.
+   -/
+  complete : lhs.vars.IsComplete
 
 def tryRewriteAtCursor {Γ Γ' Δ : Ctxt}
     (rw : Rewrite Γ' t) (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') : 
@@ -517,7 +548,7 @@ def tryRewriteAtCursor {Γ Γ' Δ : Ctxt}
   if h : u = t then
     let map ← rw.lhs.toExprRec.matchAgainstLets lets -- match
     let rhs := cast (by rw[h]) rw.rhs
-    addProgramInMiddle (Ctxt.Var.last _ u) (map.lookup) lets rhs com
+    addProgramInMiddle (Ctxt.Var.last _ u) (map.lookup rw.complete) lets rhs com
   else
     none
 
