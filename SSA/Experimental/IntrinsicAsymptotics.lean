@@ -611,7 +611,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
               have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs h₂
               rw [← ih₁, ← ih₂]
               congr
-              
+
  
 
 
