@@ -368,14 +368,18 @@ def TotalMapping.insert (map : TotalMapping Γ Δ V) (v : Γ.Var t₁) (w : Δ.V
             apply hm
       }
     | .none => none
-      
+
+
+/-- Change the set of variables that a total mapping is known to be defined on  -/
 def TotalMapping.coerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} (h : V = V') : 
     TotalMapping Γ Δ V → TotalMapping Γ Δ V' 
   | ⟨inner, isTotal⟩ => ⟨inner, by simp_all⟩
 
-def TotalMapping.optCoerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} (h : V = V') : 
-    Option (TotalMapping Γ Δ V) → Option (TotalMapping Γ Δ V') :=
-  Option.map (coerceDomain h)
+/-- `lookup` a variable that is known to occur in a total map -/
+def TotalMapping.lookup (map : TotalMapping Γ Δ V) (t : Ty) (v : Γ.Var t) : v ∈ V t → Δ.Var t :=
+  (map.inner.lookup t v).get ∘ map.isTotal t v
+
+
 
 
   
@@ -431,12 +435,11 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
 -/
 def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) : 
-    Option (TotalMapping Γ' Δ matchExpr.vars) :=
-  TotalMapping.optCoerceDomain (by 
+    Option (TotalMapping Γ' Δ matchExpr.vars) := do
+  let res ← go lets matchExpr .empty (fun _ t => t)
+  some <| res.coerceDomain <| by 
     simp[Union.union, Set.union, EmptyCollection.emptyCollection, Membership.mem, Set.Mem]
     rfl
-  ) <| 
-    go lets matchExpr .empty (fun _ t => t)
 where
   go {Γ Δ' t} (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t) {V : (t : Ty) → Set (Γ'.Var t)}
       (map : TotalMapping Γ' Δ V) (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t) : 
@@ -473,13 +476,8 @@ where
               )
 
               return map.coerceDomain <| by
-                funext _ _
-                simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, Set.union, setOf]
-                constructor
-                . intro h; cases h
-                  next h => exact Or.inl h
-                  next h => exact Or.inr h
-
+                simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union,
+                     Set.union, setOf, or_assoc]
           | _, _ => none
 
 
