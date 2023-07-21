@@ -534,49 +534,46 @@ def Mapping.changeVarsRight {Γ Δ₁ Δ₂ : Ctxt}
 --         map₁.merge map₂
 --     | _, _ => none
 
-def matchVar' : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    {t : Ty} → (v : Γ₂.Var t) →
-    (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₂)
-  | Γ₁, _, Γ₃, lets, t, v, matchExpr => do
-    match matchExpr, (← lets.getExpr v) with
-    | .var v', _ => Mapping.hNew v' v
-    | .cst n, .nat m =>
-        if n = m then some ∅ 
-        else none
-    | .add lhs rhs, .add v₁ v₂ => do
-        /-
-          Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
-          declaration corresponding to `v₁` is at the head. Then, we recursively call 
-          `matchVar'` again.
-        -/
-        --let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
-        let map₁ ← matchVar' lets v₁ lhs
-        let map₂ ← matchVar' lets v₂ rhs
+def matchVar' {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
+    {t : Ty} (v : Γ₂.Var t) 
+    (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) := do
+  match matchExpr, (← lets.getExpr v) with
+  | .var v', _ => Mapping.hNew v' v
+  | .cst n, .nat m =>
+      if n = m then some ∅ 
+      else none
+  | .add lhs rhs, .add v₁ v₂ => 
+      /-
+        Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
+        declaration corresponding to `v₁` is at the head. Then, we recursively call 
+        `matchVar'` again.
+      -/
+      --let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
+      let map₁ ← matchVar' lets v₁ lhs
+      let map₂ ← matchVar' lets v₂ rhs
 
-        map₁.merge map₂
-    | _, _ => none
+      map₁.merge map₂
+  | _, _ => none
 
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem denote_matchVar' : {Γ₁ Γ₂ Γ₂' Γ₃ Γ₄ : Ctxt} → 
-    {t : Ty} → (lets : Lets Γ₁ Γ₂') → (h₂ : Γ₂' = Γ₂.snoc t) → 
-    (map : (Γ₂.snoc t).hom Γ₄) →
+theorem denote_matchVar' : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+    {t : Ty} → (v : Γ₂.Var t) → 
+    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Sem) → 
     (matchExpr : ExprRec Γ₃ t) → 
-    (varMap : Mapping Γ₃ (Γ₂.snoc t)) → (s₁ : Γ₁.Sem) → 
-    (h : varMap.changeVarsRight map ∈ matchVar' lets map matchExpr) →
+    (h : varMap ∈ matchVar' lets v matchExpr) →
     matchExpr.denote (fun t' v' => by
-        subst h₂
         match varMap.lookup ⟨_, v'⟩  with
         | some v' => exact lets.denote s₁ v'
         | none => exact default 
         ) = 
-      lets.denote s₁ (h₂ ▸ Ctxt.Var.last _ _)
-  | _, _, _, _, _, _, .nil, h₂, _, _, _, _ => by 
-    subst h₂
-    simp [matchVar']
-  | _, _, _, _, _, _, .lete lets e, h₂, map, matchExpr, varMap, s₁, h => by
-    simp only [snoc]
+      lets.denote s₁ v
+  | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, matchExpr, h => by
+  cases h : 
+  match matchExpr, (← lets.getExpr v) with
+  | .var v', _ => Mapping.hNew v' v
+  | _, _ => sorry
 
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) :=
