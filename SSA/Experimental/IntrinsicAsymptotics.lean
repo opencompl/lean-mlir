@@ -176,6 +176,8 @@ def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
   fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
     (fun _ => Ctxt.Var.last _ _) f
 
+abbrev Ctxt.hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
+
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   | add (a b : Γ.Var .nat) : IExpr Γ .nat
@@ -244,27 +246,27 @@ def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) :
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
+    (varsMap : Γ.hom Γ')
     (e : IExpr Γ ty)
     (ll : Γ'.Sem) : 
     (e.changeVars varsMap).denote ll = 
-    e.denote (fun t v => ll (varsMap t v)) := by
+    e.denote (fun t v => ll (varsMap v)) := by
   induction e generalizing ll <;> simp 
     [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
+    (varsMap : Γ.hom Γ') : 
     ICom Γ ty → ICom Γ' ty
-  | .ret e => .ret (varsMap _ e)
+  | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap) 
       (body.changeVars (fun t v => v.snocMap varsMap))
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
+    (varsMap : Γ.hom Γ') (c : ICom Γ ty)
     (ll : Γ'.Sem) : 
     (c.changeVars varsMap).denote ll = 
-    c.denote (fun t v => ll (varsMap t v)) := by
+    c.denote (fun t v => ll (varsMap v)) := by
   induction c generalizing ll Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
@@ -282,12 +284,12 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 /-- Append two programs, while substituiting a free variable in the ssecond for 
 the output of the first -/
 def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : (t : Ty) → Γ.Var t → Γ'.Var t) :
+    (map : Γ.hom Γ') :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
   | .ret e, inputProg => inputProg.changeVars 
       (fun t' v' => 
         if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ map _ e
+        then h.fst ▸ map e
         else v')
   | .lete e body, inputProg => 
       let newBody := addProgramAtTop v.toSnoc
@@ -298,12 +300,12 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       .lete (e.changeVars map) newBody
       
 theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : (t : Ty) → Γ.Var t → Γ'.Var t) (s : Γ'.Sem) :
+    (map : Γ.hom Γ') (s : Γ'.Sem) :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
     (addProgramAtTop v map rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
         if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ rhs.denote (fun t' v' => s (map _ v'))
+        then h.fst ▸ rhs.denote (fun t' v' => s (map v'))
         else s v')
   | .ret e, inputProg => by
     simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote]
@@ -356,21 +358,21 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
     . simp
 
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
+    (map : Γ₃.hom Γ₂) 
     (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
   addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Sem)
-    (map : (t : Ty) → Γ₃.Var t → Γ₂.Var t) 
+    (map : Γ₃.hom Γ₂) 
     (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
     (inputProg : ICom Γ₂ t₂) :
     (addProgramInMiddle v map l rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
         let s' := l.denote s
         if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ rhs.denote (fun t' v' => s' (map _ v'))
+        then h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
         else s' v') := by
   rw [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, 
     denote_addProgramAtTop]
@@ -471,13 +473,13 @@ def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping �
     ) m₂
 
 def matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    (map : (t : Ty) → Γ₂.Var t → Γ₄.Var t) →
+    (map : Γ₂.hom Γ₄)  →
     (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₄)
   | _, _, _, _, .nil, _, _ => none
   | Γ₁, _, Γ₃, Γ₄, .lete lets e, map, matchExpr => 
     match matchExpr, e with
     | .var v, _ => 
-        Mapping.hNew v (map _ (Ctxt.Var.last _ _))
+        Mapping.hNew v (map (Ctxt.Var.last _ _))
     | .cst n, .nat m =>
         if n = m then some ∅ 
         else none
@@ -485,16 +487,29 @@ def matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → (lets : Lets Γ₁ Γ₂) �
         /-
           Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
           declaration corresponding to `v₁` is at the head. Then, we recursively call 
-          `matchAgainstLets` again.
+          `matchVar'` again.
         -/
         let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
-        let map₁ ← matchVar' lets₁ (fun t v => map t (embed₁ t v)) lhs
+        let map₁ ← matchVar' lets₁ (fun t v => map (embed₁ t v)) lhs
 
         let ⟨_, lets₂, embed₂⟩ ← lets.getVar v₂
-        let map₂ ← matchVar' lets₂ (fun t v => map t (embed₂ t v)) rhs
+        let map₂ ← matchVar' lets₂ (fun t v => map (embed₂ t v)) rhs
 
         map₁.merge map₂
     | _, _ => none
+
+theorem denote_matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → 
+    {t : Ty} → (lets : Lets Γ₁ (Γ₂.snoc t)) → 
+    (map : (Γ₂.snoc t).hom Γ₄) →
+    (matchExpr : ExprRec Γ₃ t) → 
+    (varMap : Mapping Γ₃ Γ₄) → (s₁ : Γ₁.Sem) → 
+    (h : varMap ∈ matchVar' lets map matchExpr) →
+    matchExpr.denote (fun t v => by
+        have := lets.denote s₁
+        
+        ) = 
+      lets.denote s₁ (Ctxt.Var.last _ _) := sorry
+     
 
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     (matchExpr : ExprRec Γ₃ t) : Option (Mapping Γ₃ Γ₂) :=
