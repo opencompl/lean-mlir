@@ -210,6 +210,7 @@ def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
   | .cst _, _, _   => False
   | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
 
+-- TODO: is this erased at runtime? It probably should be!
 /-- A set of variables of potentially different types -/
 abbrev Ctxt.VarSet (Γ : Ctxt) : Type :=
   (t : Ty) → Set (Γ.Var t)
