@@ -30,11 +30,19 @@ def Lets.getVar {Γ₁ Γ₂ : Ctxt} {t : Ty} :
 
 
 
-structure MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.Var t) where
+structure IExprRec.MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.Var t) where
   varsMap : (t : Ty) → Γ'.Var t → Δ.Var t
   -- TODO: prove that if matching succeeds the following holds
-  -- semantics : ∀ (ll : Γ.Sem), 
-  --   HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
+  semantics : ∀ (ll : Γ.Sem), 
+    HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
+
+
+structure IExprRec.MatchResultAux (Δ : Ctxt) (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t') (V : Γ'.VarSet)
+    (v : Δ'.Var t) where
+  map : TotalMapping Γ' Δ (V ∪ matchExpr.vars)
+  -- TODO: prove that if matching succeeds the following holds
+  semantics : ∀ (ll : Γ.Sem), 
+    HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
 
 
 /--
@@ -42,13 +50,14 @@ structure MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.
   * If the match fails, return `none`
   * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
 -/
-def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ (Δ.snoc t)) (matchExpr : IExprRec Γ' t') (is_complete : matchExpr.vars.IsComplete) : 
+def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ (Δ.snoc t)) (matchExpr : IExprRec Γ' t') 
+    (is_complete : matchExpr.vars.IsComplete) : 
     Option (MatchResult lets matchExpr (Ctxt.Var.last ..)) := do
-  let map ← go lets matchExpr .empty (fun _ t => t) (Ctxt.Var.last ..)
+  let ⟨map, _⟩ ← go lets matchExpr .empty (fun _ t => t) (Ctxt.Var.last ..)
   let map := map.coerceDomain <| by 
     simp[Union.union, Set.union, EmptyCollection.emptyCollection, Membership.mem, Set.Mem]
     rfl
-  return ⟨map.lookup is_complete⟩
+  return ⟨map.lookup is_complete, sorry⟩
 where  
   /--
     Match `matchExpr` against the let at position `v` in `lets`
@@ -60,8 +69,8 @@ where
       (map : TotalMapping Γ' Δ V) 
       (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t)
       (v : Δ'.Var t) : 
-      Option (TotalMapping Γ' Δ (fun t => V t ∪ (matchExpr.vars t))) := do
-    let ⟨lets, embed, _sem⟩ ← lets.getVar v
+      Option (MatchResultAux Δ lets matchExpr V v) := do
+    let ⟨lets, embed, semantics⟩ ← lets.getVar v
     let embedVars := fun t v => embedVars t <| embed t v
 
     match _h : lets with
@@ -70,9 +79,9 @@ where
         match matchExpr, e with
           | .var v, _ => do
               let map ← map.insert v (embedVars _ <| Ctxt.Var.last ..)
-              
               let map := map.coerceDomain (by simp[IExprRec.vars, IExprRec.varsBool]; rfl)
-              return map
+
+              return ⟨map, sorry⟩
           | .cst n, .nat m =>
               if n = m then
                 let map := map.coerceDomain (by
@@ -80,19 +89,19 @@ where
                       Set.union]
                   rfl
                 )
-                return map
+                return ⟨map, sorry⟩
               else
                 none
           | .add lhs rhs, .add v₁ v₂ => do
               let embedVars : (t : Ty) → Ctxt.Var Δ'' t → Ctxt.Var Δ t := 
                 fun u v => embedVars u <| cast (by simp_all) (v.toSnoc (t' := .nat))
-              let map ← go lets lhs map embedVars v₁
-              let map ← go lets rhs map embedVars v₂
+              let ⟨map, _⟩ ← go lets lhs map embedVars v₁
+              let ⟨map, _⟩ ← go lets rhs map embedVars v₂
 
               let map := map.coerceDomain <| by
                 simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union,
                      Set.union, setOf, or_assoc]
-              return map
+              return ⟨map, sorry⟩
           | _, _ => none
 
 
@@ -171,7 +180,7 @@ def tryRewriteAtCursor {Γ Γ' Δ : Ctxt}
     (rw : Rewrite Γ' t) (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') : 
     Option (ICom Γ t') := do
   if h : u = t then
-    let ⟨varsMap⟩ ← rw.lhs.toExprRec.matchAgainstLets lets rw.complete -- match
+    let ⟨varsMap, _⟩ ← rw.lhs.toExprRec.matchAgainstLets lets rw.complete -- match
     let rhs := cast (by rw[h]) rw.rhs
     addProgramInMiddle (Ctxt.Var.last _ u) varsMap lets rhs com
   else
@@ -221,33 +230,6 @@ def tryRewriteAtPos (rw : Rewrite Γ' t') (com : ICom Γ t) (pos : Nat) : Option
 /-
   ## Theorems
 -/
-
-/--
-  If matching succeed, then the last variable of `lets` is semantically equivalent to the pattern
-  (i.e., the `lhs` of the rewrite) we just matched against, modulo renaming of the variables 
-  according to the variable map that was constructed during matching
--/
-theorem matchAgainstLets_semantics_lhs {Γ Γ' Δ : Ctxt} {rw : Rewrite Γ' t'} 
-    {lets : Lets Γ (Δ.snoc u)} {varsMap}
-    (match_succeed : rw.lhs.toExprRec.matchAgainstLets lets rw.complete = some ⟨varsMap⟩)
-    (ll : Γ.Sem) :
-    HEq ((rw.lhs.toExprRec.changeVars varsMap).denote (lets.denote ll)) 
-        (lets.denote ll <| Ctxt.Var.last Δ _) := by
-  simp
-
-/--
-  A corrolary of `matchAgainstLets_semantics_lhs`, now showing that the target of the rewrite (its 
-  `rhs`), is also semantically equivalent to the last variable of `lets`.
--/
-theorem matchAgainstLets_semantics_rhs {Γ Γ' Δ : Ctxt} {rw : Rewrite Γ' t'}
-    {lets : Lets Γ (Δ.snoc u)} {varsMap}
-    (match_succeed : rw.lhs.toExprRec.matchAgainstLets lets rw.complete = some ⟨varsMap⟩)
-    (ll : Γ.Sem) :
-    HEq ((rw.rhs.changeVars varsMap).denote (lets.denote ll)) 
-        (lets.denote ll <| Ctxt.Var.last ..) := by
-  symm
-  apply HEq.trans (matchAgainstLets_semantics_lhs match_succeed ll).symm
-  simp [rw.preserves_semantics]
   
 
 theorem denote_tryRewriteAtCursor :
@@ -259,12 +241,9 @@ theorem denote_tryRewriteAtCursor :
     cases h_match : (IExprRec.matchAgainstLets lets (ICom.toExprRec rw.lhs) _)
     case none => simp
     case some res =>
-      rcases res with ⟨varsMap⟩
-      simp
+      rcases res with ⟨varsMap, sem⟩
+      simp at sem ⊢
       intro h; rw[←h]; clear h
-
-      have h_match_sem := matchAgainstLets_semantics_rhs h_match 
-      simp at h_match_sem
 
       funext ll
       simp[LetZipper.denote, LetZipper.zip, addProgramInMiddle, denote_addLetsAtTop, denote_addProgramAtTop]
@@ -274,8 +253,7 @@ theorem denote_tryRewriteAtCursor :
       next h =>
         rcases h with ⟨⟨⟩, v_eq⟩
         simp only at v_eq 
-        simp[←v_eq]
-        apply h_match_sem
+        simp[←v_eq, sem, rw.preserves_semantics]
       next =>
         rfl
   next =>
