@@ -336,8 +336,8 @@ def TotalMapping.cst (map : TotalMapping Γ Δ V) :
     apply h
 
 
-/-- After `insert`ing a variable mapping, `lookup` is guaranteed to return `some` -/
-theorem Mapping.lookup_insert (map mapInsert : Mapping Γ Δ) {v : Γ.Var t₁} (w : Δ.Var t₂)
+/-- After `insert`ing a variable mapping for `v`, `lookup` is guaranteed to be defined on `v` -/
+theorem Mapping.lookup_insert_same (map mapInsert : Mapping Γ Δ) {v : Γ.Var t₁} (w : Δ.Var t₂)
     (h : map.insert v w = some mapInsert) :
     (mapInsert.lookup _ v).isSome := by
   unfold insert at h
@@ -357,9 +357,35 @@ theorem Mapping.lookup_insert (map mapInsert : Mapping Γ Δ) {v : Γ.Var t₁} 
     . rcases h with ⟨tl, ⟨h₁, ⟨⟩⟩⟩
       simp[lookup]
       split_ifs
-      apply ih
-      apply h₁
+      apply ih _ h₁
 
+/-- If `insert` succeeds, it only add new mappings.
+    Thus if `lookup` is defined previous to an insert, then lookup will remain defined afterwards
+ -/
+theorem Mapping.lookup_insert_preserve (map mapInsert : Mapping Γ Δ) {v : Γ.Var t₁} (w : Δ.Var t₂)
+    {v' : Γ.Var t₃} (h : map.insert v w = some mapInsert) :
+    (map.lookup t₃ v').isSome → (mapInsert.lookup t₃ v').isSome := by
+  unfold insert at h
+  unfold Option.isSome
+  split_ifs at h
+  induction map generalizing mapInsert
+  next =>
+    simp only [insert.go, Option.some.injEq] at h 
+    simp [←h, Option.isSome, lookup]
+  next m map ih =>
+    simp only [insert.go, Prod.mk.eta, Sigma.eta] at h    
+    split_ifs at h <;> simp at h
+    . cases h
+      exact id
+    . rcases h with ⟨tl, ⟨h₁, ⟨⟩⟩⟩
+      simp[lookup]
+      split_ifs
+      . exact id
+      . apply ih _ h₁
+  
+/--
+  By inserting into a total mapping, we expand the set of variables that it is defined on
+-/
 def TotalMapping.insert (map : TotalMapping Γ Δ V) (v : Γ.Var t₁) (w : Δ.Var t₂) : 
     Option (TotalMapping Γ Δ (V ∪ {⟨_, v⟩})) := 
   match hm : map.inner.insert v w with
@@ -368,14 +394,14 @@ def TotalMapping.insert (map : TotalMapping Γ Δ V) (v : Γ.Var t₁) (w : Δ.V
         isTotal := by 
           intro t' v' h
           rcases map with ⟨map, isTotal⟩          
-          
           dsimp[IExprRec.vars, IExprRec.varsBool, Membership.mem, Set.Mem, Union.union, Set.union, 
                 setOf] at h
           cases h
           next h => 
-            sorry
+            apply Mapping.lookup_insert_preserve map mapI w hm
+            apply isTotal _ _ h
           next h =>
-            apply Mapping.lookup_insert map mapI w
+            apply Mapping.lookup_insert_same map mapI w
             simp at h
             cases (Ctxt.Var.type_eq_of_index_eq h)
             rcases v with ⟨v, hv⟩
