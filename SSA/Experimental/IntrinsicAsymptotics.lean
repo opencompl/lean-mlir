@@ -494,23 +494,23 @@ def Mapping.hNew {Γ Δ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) :
   if h₁ : t₁ = t₂
   then some <| AList.singleton ⟨_, h₁ ▸ v₁⟩ v₂   
   else none
-#print AList.insertRec
-def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping Γ Δ) := 
-  m₁.foldl (fun m t v => do
-    let m ← m 
-    match m.lookup t with
-    | some v' => if v = v' then some m else none
-    | none => some <| m.insert t v
-    ) m₂
+-- #print AList.insertRec
+-- def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping Γ Δ) := 
+--   m₁.foldl (fun m t v => do
+--     let m ← m 
+--     match m.lookup t with
+--     | some v' => if v = v' then some m else none
+--     | none => some <| m.insert t v
+--     ) m₂
 
-theorem Mapping.lookup_merge  {Γ Δ : Ctxt} (m₁ m₂ m : Mapping Γ Δ)
-    (h : m ∈ m₁.merge m₂) (t : Ty) (v : Γ.Var t) :
-    m.lookup ⟨t, v⟩ = (m₁.lookup ⟨t, v⟩ <|> m₂.lookup ⟨t, v⟩) := by
-  induction m₁ using AList.insertRec generalizing m₂ m with
-  | H0 => simp_all [merge, AList.foldl]
-  | IH a b m₁ ham ih => 
-    dsimp [HOrElse.hOrElse, OrElse.orElse]
-    rw [AList.lookup_insert]
+-- theorem Mapping.lookup_merge  {Γ Δ : Ctxt} (m₁ m₂ m : Mapping Γ Δ)
+--     (h : m ∈ m₁.merge m₂) (t : Ty) (v : Γ.Var t) :
+--     m.lookup ⟨t, v⟩ = (m₁.lookup ⟨t, v⟩ <|> m₂.lookup ⟨t, v⟩) := by
+--   induction m₁ using AList.insertRec generalizing m₂ m with
+--   | H0 => simp_all [merge, AList.foldl]
+--   | IH a b m₁ ham ih => 
+--     dsimp [HOrElse.hOrElse, OrElse.orElse]
+--     rw [AList.lookup_insert]
 
 -- def matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
 --     (map : Γ₂.hom Γ₄)  →
@@ -548,23 +548,26 @@ def Mapping.Total {Γ Δ : Ctxt} (m : Mapping Γ Δ) (e : ExprRec Γ t) : Prop :
 
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
-    (matchExpr : ExprRec Γ₃ t) : 
+    (matchExpr : ExprRec Γ₃ t) 
+    (ma : Mapping Γ₃ Γ₂ := ∅) : 
     Option (Mapping Γ₃ Γ₂) := do
   match matchExpr, lets.getExpr v with
-  | .var v', _ => Mapping.hNew v' v
+  | .var v', _ => 
+    match ma.lookup ⟨_, v'⟩ with
+    | some v₂ =>
+      by
+        dsimp at v₂
+        exact if v = v₂
+          then some ma
+          else none
+    | none => some (AList.insert ⟨_, v'⟩ v ma) 
   | .cst n, some (.nat m) =>
-      if n = m then some ∅ 
+      if n = m then some ma
       else none
-  | .add lhs rhs, some (.add v₁ v₂) => 
-      /-
-        Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
-        declaration corresponding to `v₁` is at the head. Then, we recursively call 
-        `matchVar'` again.
-      -/
-      let map₁ ← matchVar lets v₁ lhs
-      let map₂ ← matchVar lets v₂ rhs
-
-      map₁.merge map₂
+  | .add lhs rhs, some (.add v₁ v₂) => do
+    let map₁ ← matchVar lets v₁ lhs ma
+    let map₂ ← matchVar lets v₂ rhs map₁
+    return map₂
   | _, _ => none
 
 theorem mem_keys_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
