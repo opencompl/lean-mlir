@@ -233,6 +233,8 @@ def IsComplete (V : Γ.VarSet) : Prop :=
 
 end Ctxt.VarSet
 
+
+
 /-- The free variables of an `IExprRec` -/
 def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
   /- Since `IExprRec` does not have binders, this is a straightforward recursion -/
@@ -432,19 +434,21 @@ def TotalMapping.lookup (map : TotalMapping Γ Δ V) (h : V.IsComplete) (t : Ty)
 
    
 
-structure GetVarResult (Γ₁ Γ₂ : Ctxt) (t : Ty) where
+structure GetVarResult {Γ₁ Γ₂ : Ctxt} {t : Ty} (lets : Lets Γ₁ Γ₂) (v : Γ₂.Var t) where
   {Δ : Ctxt}
   lets : Lets Γ₁ (Δ.snoc t) 
   embedVars : (t : Ty) → Δ.Var t → Γ₂.Var t 
+  -- semantics : ∀ (ll : Γ.Sem)
 
-def GetVarResult.coe_snoc : GetVarResult Γ₁ Γ₂ t → GetVarResult Γ₁ (Γ₂.snoc t') t
+def GetVarResult.coe_snoc (lets : Lets Γ₁ Γ₂) (v : Γ₂.Var t) : 
+    GetVarResult lets v → GetVarResult (.lete lets e) v.toSnoc
   | ⟨lets, embed⟩ => ⟨lets, fun t v => embed t v |>.toSnoc⟩
 
 /-- Drop bindings from `lets` until the binding corresponding to `v` is at the head.
     This can fail, since `v` might be a free variable originating from `Γ₁`.
     Returns the new `lets`, plus a proof that it's context is a prefix of the original context -/
 def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option (GetVarResult Γ₁ Γ₂ t)
+    (v : Γ₂.Var t) → Option (GetVarResult lets v)
   | _, _, .nil, _, _ => none
   | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
     cases v using Ctxt.Var.casesOn with
