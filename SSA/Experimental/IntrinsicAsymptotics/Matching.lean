@@ -32,8 +32,9 @@ def Lets.getVar {Γ₁ Γ₂ : Ctxt} {t : Ty} :
 
 structure MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.Var t) where
   varsMap : (t : Ty) → Γ'.Var t → Δ.Var t
-  semantics : ∀ (ll : Γ.Sem), 
-    HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
+  -- TODO: prove that if matching succeeds the following holds
+  -- semantics : ∀ (ll : Γ.Sem), 
+  --   HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
 
 
 /--
@@ -41,13 +42,14 @@ structure MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.
   * If the match fails, return `none`
   * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
 -/
-def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ (Δ.snoc t)) (matchExpr : IExprRec Γ' t') : 
-    Option (TotalMapping Γ' (Δ.snoc t) matchExpr.vars) := do
+def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ (Δ.snoc t)) (matchExpr : IExprRec Γ' t') (is_complete : matchExpr.vars.IsComplete) : 
+    Option (MatchResult lets matchExpr (Ctxt.Var.last ..)) := do
   let map ← go lets matchExpr .empty (fun _ t => t) (Ctxt.Var.last ..)
-  some <| map.coerceDomain <| by 
+  let map := map.coerceDomain <| by 
     simp[Union.union, Set.union, EmptyCollection.emptyCollection, Membership.mem, Set.Mem]
     rfl
-where
+  return ⟨map.lookup is_complete⟩
+where  
   /--
     Match `matchExpr` against the let at position `v` in `lets`
   -/
@@ -156,14 +158,16 @@ structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
     can be made to satisfy this property by picking an appropriate context.
    -/
   complete : lhs.vars.IsComplete
+  /-- A rewrite should preserve semantics -/
+  preserves_semantics : lhs.denote = rhs.denote
 
 def tryRewriteAtCursor {Γ Γ' Δ : Ctxt}
     (rw : Rewrite Γ' t) (lets : Lets Γ (Δ.snoc u)) (com : ICom (Δ.snoc u) t') : 
     Option (ICom Γ t') := do
   if h : u = t then
-    let map ← rw.lhs.toExprRec.matchAgainstLets lets -- match
+    let ⟨varsMap⟩ ← rw.lhs.toExprRec.matchAgainstLets lets rw.complete -- match
     let rhs := cast (by rw[h]) rw.rhs
-    addProgramInMiddle (Ctxt.Var.last _ u) (map.lookup rw.complete) lets rhs com
+    addProgramInMiddle (Ctxt.Var.last _ u) varsMap lets rhs com
   else
     none
 
@@ -204,3 +208,9 @@ def tryRewriteAtPos (rw : Rewrite Γ' t') (com : ICom Γ t) (pos : Nat) : Option
   match lets with
     | .nil => none
     | lets@(.lete _ _) => tryRewriteAtCursor rw lets com
+
+
+
+
+
+
