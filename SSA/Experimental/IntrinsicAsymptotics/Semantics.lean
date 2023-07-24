@@ -1,5 +1,5 @@
-import SSA.Experimental.ErasedContext
-import SSA.Experimental.IntrinsicAsymptotics
+import SSA.Experimental.IntrinsicAsymptotics.Basic
+import SSA.Experimental.IntrinsicAsymptotics.Context
 
 
 /-!

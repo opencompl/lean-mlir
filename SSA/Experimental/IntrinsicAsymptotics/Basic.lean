@@ -1,7 +1,6 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
--- import SSA.Experimental.IntrinsicAsymptotics.Ctxt
-import SSA.Experimental.ErasedContext
+import SSA.Experimental.IntrinsicAsymptotics.Context
 import SSA.Experimental.IntrinsicAsymptotics.Mapping
 
 noncomputable section
