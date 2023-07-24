@@ -108,47 +108,15 @@ theorem LetZipper.nil_com_denote_zip (com : ICom Γ t) :
 
 
 
--- @[simp]
--- theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
---     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
---     (e : IExpr Γ ty)
---     (ll : Γ'.Sem) : 
---     (e.changeVars varsMap).denote ll = 
---     e.denote (fun t v => ll (varsMap t v)) := by
---   induction e generalizing ll <;> simp 
---     [IExpr.denote, IExpr.changeVars, *]
-
--- @[simp]
--- theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
---     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) (c : ICom Γ ty)
---     (ll : Γ'.Sem) : 
---     (c.changeVars varsMap).denote ll = 
---     c.denote (fun t v => ll (varsMap t v)) := by
---   induction c generalizing ll Γ' with
---   | ret x => simp [ICom.denote, ICom.changeVars, *]
---   | lete _ _ ih => 
---     rw [changeVars, denote, ih]
---     simp only [Ctxt.Sem.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
---     congr
---     funext t v
---     cases v using Ctxt.Var.casesOn
---     . simp
---     . simp
-
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : (t : Ty) → Γ.Var t → Option (Γ'.Var t))
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
     (e : IExpr Γ ty)
-    (ll : Γ'.Sem) 
-    (h : ∀ t v, (varsMap t v).isSome)
-    : 
-    (e.changeVars varsMap).map (·.denote ll) 
-    = some (e.denote (fun t v => ll <| (varsMap t v).get (h _ _))) := by
+    (ll : Γ'.Sem) : 
+    (e.changeVars varsMap).denote ll = 
+    e.denote (fun t v => ll (varsMap t v)) := by
   induction e generalizing ll <;> simp 
-    [IExpr.denote, IExpr.changeVars, *, Bind.bind, Option.bind, Option.map]
-  next a b =>
-    -- cases (varsMap _ a)
-    skip
+    [IExpr.denote, IExpr.changeVars, *]
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
