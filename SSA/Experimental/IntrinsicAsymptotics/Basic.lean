@@ -155,6 +155,16 @@ def IExprRec.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : IExprR
 -- Find a let somewhere in the program. Replace that let with
 -- a sequence of lets each of which might refer to higher up variables.
 
+/--
+  Relace all occurenes of a variable `v` in a program with another variable `w` of the same type,
+  from the same context
+-/
+def ICom.substituteVar (v w : Γ.Var t) : ICom Γ t' → ICom Γ t' := 
+  ICom.changeVars (fun t' v' => 
+    if h : ∃ h : t = t', h ▸ v = v' 
+    then h.fst ▸ w
+    else v')
+
 /-- 
   Given a map from free variables of a program `rhs` to the free variables of another program 
   `inputProg`, append these programs together, while substituting the free variable `v` in 
@@ -166,11 +176,7 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
   | .ret e, inputProg =>
       let e := map _ e
-      inputProg.changeVars 
-        (fun t' v' => 
-          if h : ∃ h : t₁ = t', h ▸ v = v' 
-          then h.fst ▸ e
-          else v')
+      inputProg.substituteVar v e
   | .lete e body, inputProg => 
       let inputProg := inputProg.changeVars (fun _ v => v.toSnoc)
       let newBody := addProgramAtTop v.toSnoc

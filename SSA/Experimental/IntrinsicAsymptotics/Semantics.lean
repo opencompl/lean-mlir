@@ -157,6 +157,16 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     . simp
     . simp
 
+@[simp]
+theorem IExprRec.denote_changeVars {Γ Γ' : Ctxt}
+    (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t)
+    (e : IExprRec Γ ty)
+    (ll : Γ'.Sem) : 
+    (e.changeVars varsMap).denote ll = 
+    e.denote (fun t v => ll (varsMap t v)) := by
+  induction e generalizing ll <;> simp 
+    [IExprRec.denote, *]
+
 
 
 
@@ -169,7 +179,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
         then h.fst ▸ rhs.denote (fun t' v' => s (map _ v'))
         else s v')
   | .ret e, inputProg => by
-    simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote]
+    simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote, ICom.substituteVar]
     congr
     funext t' v'
     split_ifs with h
@@ -226,6 +236,7 @@ theorem IExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem)
     rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
 
 
+@[simp]
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
     (s : Γ.Sem) → (e : IExpr Γ t) → 
     e.toExprRec.denote s = e.denote s
@@ -233,6 +244,7 @@ theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
   | _, _, s, .add e₁ e₂ => by
     simp only [IExpr.toExprRec, IExpr.denote, IExprRec.denote]
 
+@[simp]
 theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
     (s : Γ.Sem) → (c : ICom Γ t) → 
     c.toExprRec.denote s = c.denote s

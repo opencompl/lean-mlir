@@ -146,6 +146,12 @@ where
 --         ⟩  
 
 
+
+
+/-
+  ## Rewriting
+-/
+
 structure Rewrite (Γ : Ctxt) (t : Ty) : Type where
   /-- The left-hand-side of a rewrite is the pattern being matched against -/
   lhs : ICom Γ t
@@ -208,6 +214,75 @@ def tryRewriteAtPos (rw : Rewrite Γ' t') (com : ICom Γ t) (pos : Nat) : Option
   match lets with
     | .nil => none
     | lets@(.lete _ _) => tryRewriteAtCursor rw lets com
+
+
+
+
+/-
+  ## Theorems
+-/
+
+/--
+  If matching succeed, then the last variable of `lets` is semantically equivalent to the pattern
+  (i.e., the `lhs` of the rewrite) we just matched against, modulo renaming of the variables 
+  according to the variable map that was constructed during matching
+-/
+theorem matchAgainstLets_semantics_lhs {Γ Γ' Δ : Ctxt} {rw : Rewrite Γ' t'} 
+    {lets : Lets Γ (Δ.snoc u)} {varsMap}
+    (match_succeed : rw.lhs.toExprRec.matchAgainstLets lets rw.complete = some ⟨varsMap⟩)
+    (ll : Γ.Sem) :
+    HEq ((rw.lhs.toExprRec.changeVars varsMap).denote (lets.denote ll)) 
+        (lets.denote ll <| Ctxt.Var.last Δ _) := by
+  simp
+
+/--
+  A corrolary of `matchAgainstLets_semantics_lhs`, now showing that the target of the rewrite (its 
+  `rhs`), is also semantically equivalent to the last variable of `lets`.
+-/
+theorem matchAgainstLets_semantics_rhs {Γ Γ' Δ : Ctxt} {rw : Rewrite Γ' t'}
+    {lets : Lets Γ (Δ.snoc u)} {varsMap}
+    (match_succeed : rw.lhs.toExprRec.matchAgainstLets lets rw.complete = some ⟨varsMap⟩)
+    (ll : Γ.Sem) :
+    HEq ((rw.rhs.changeVars varsMap).denote (lets.denote ll)) 
+        (lets.denote ll <| Ctxt.Var.last ..) := by
+  symm
+  apply HEq.trans (matchAgainstLets_semantics_lhs match_succeed ll).symm
+  simp [rw.preserves_semantics]
+  
+
+theorem denote_tryRewriteAtCursor :
+    tryRewriteAtCursor rw lets com = some com' → com'.denote = LetZipper.denote ⟨lets, com⟩ := by
+  simp [tryRewriteAtCursor, Bind.bind, Option.bind]
+  split_ifs
+  next h =>
+    cases h
+    cases h_match : (IExprRec.matchAgainstLets lets (ICom.toExprRec rw.lhs) _)
+    case none => simp
+    case some res =>
+      rcases res with ⟨varsMap⟩
+      simp
+      intro h; rw[←h]; clear h
+
+      have h_match_sem := matchAgainstLets_semantics_rhs h_match 
+      simp at h_match_sem
+
+      funext ll
+      simp[LetZipper.denote, LetZipper.zip, addProgramInMiddle, denote_addLetsAtTop, denote_addProgramAtTop]
+      congr
+      funext t' v'
+      split_ifs
+      next h =>
+        rcases h with ⟨⟨⟩, v_eq⟩
+        simp only at v_eq 
+        simp[←v_eq]
+        apply h_match_sem
+      next =>
+        rfl
+  next =>
+    apply False.elim
+      
+
+
 
 
 
