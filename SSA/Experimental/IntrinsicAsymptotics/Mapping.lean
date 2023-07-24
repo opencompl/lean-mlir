@@ -1,4 +1,4 @@
-import SSA.Experimental.ErasedContext
+import SSA.Experimental.IntrinsicAsymptotics.Context
 
 
 def Mapping.Pair (Γ Δ : Ctxt) := Σ t, Γ.Var t × Δ.Var t
