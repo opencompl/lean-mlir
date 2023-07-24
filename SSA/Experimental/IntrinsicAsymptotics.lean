@@ -494,49 +494,6 @@ def Mapping.hNew {Γ Δ : Ctxt} (v₁ : Γ.Var t₁) (v₂ : Δ.Var t₂) :
   if h₁ : t₁ = t₂
   then some <| AList.singleton ⟨_, h₁ ▸ v₁⟩ v₂   
   else none
--- #print AList.insertRec
--- def Mapping.merge {Γ Δ : Ctxt} (m₁ m₂ : Mapping Γ Δ) : Option (Mapping Γ Δ) := 
---   m₁.foldl (fun m t v => do
---     let m ← m 
---     match m.lookup t with
---     | some v' => if v = v' then some m else none
---     | none => some <| m.insert t v
---     ) m₂
-
--- theorem Mapping.lookup_merge  {Γ Δ : Ctxt} (m₁ m₂ m : Mapping Γ Δ)
---     (h : m ∈ m₁.merge m₂) (t : Ty) (v : Γ.Var t) :
---     m.lookup ⟨t, v⟩ = (m₁.lookup ⟨t, v⟩ <|> m₂.lookup ⟨t, v⟩) := by
---   induction m₁ using AList.insertRec generalizing m₂ m with
---   | H0 => simp_all [merge, AList.foldl]
---   | IH a b m₁ ham ih => 
---     dsimp [HOrElse.hOrElse, OrElse.orElse]
---     rw [AList.lookup_insert]
-
--- def matchVar' : {Γ₁ Γ₂ Γ₃ Γ₄ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
---     (map : Γ₂.hom Γ₄)  →
---     (matchExpr : ExprRec Γ₃ t) → Option (Mapping Γ₃ Γ₄)
---   | _, _, _, _, .nil, _, _ => none
---   | Γ₁, _, Γ₃, Γ₄, .lete lets e, map, matchExpr => 
---     match matchExpr, e with
---     | .var v, _ => 
---         Mapping.hNew v (map (Ctxt.Var.last _ _))
---     | .cst n, .nat m =>
---         if n = m then some ∅ 
---         else none
---     | .add lhs rhs, .add v₁ v₂ => do
---         /-
---           Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
---           declaration corresponding to `v₁` is at the head. Then, we recursively call 
---           `matchVar'` again.
---         -/
---         let ⟨_, lets₁, embed₁⟩ ← lets.getVar v₁
---         let map₁ ← matchVar' lets₁ (fun t v => map (embed₁ t v)) lhs
-
---         let ⟨_, lets₂, embed₂⟩ ← lets.getVar v₂
---         let map₂ ← matchVar' lets₂ (fun t v => map (embed₂ t v)) rhs
-
---         map₁.merge map₂
---     | _, _ => none
 
 def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
   | .var v, t' => if ht : t = t' then ht ▸ {v} else ∅ 
@@ -556,7 +513,6 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
     match ma.lookup ⟨_, v'⟩ with
     | some v₂ =>
       by
-        dsimp at v₂
         exact if v = v₂
           then some ma
           else none
@@ -570,35 +526,117 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
     return map₂
   | _, _ => none
 
-theorem mem_keys_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
+theorem mem_matchVar_of_mem : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
     {t : Ty} → (v : Γ₂.Var t) → 
     (matchExpr : ExprRec Γ₃ t) → 
     (varMap : Mapping Γ₃ Γ₂) → 
-    (hvarMap : varMap ∈ matchVar lets v matchExpr) → 
-    ∀ t' v', v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap.keys 
-  | Γ₁, _, Γ₃, lets, t, v, matchExpr, varMap => by
-    cases matchExpr with
-    | var v' => 
-      simp [matchVar, Mapping.hNew, ExprRec.vars]
-      rintro rfl t' v₂
-      split_ifs
-      . subst t; simp 
+    (ma : Mapping Γ₃ Γ₂) → 
+    (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
+    ∀ t' v', ⟨t', v'⟩ ∈ ma → ⟨t', v'⟩ ∈ varMap 
+  | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
+    simp [matchVar, Mapping.hNew, ExprRec.vars]
+    intros h t' v₂
+    split at *
+    . split_ifs at h
+      . subst v
+        injection h with h
+        subst h
+        simp
+    . simp at h
+      subst h
+      simp_all
+  | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by
+    unfold matchVar
+    split
+    . simp_all
+    . split_ifs
       . simp
-    | cst n => simp [ExprRec.vars]
-    | add lhs rhs =>
-      unfold matchVar
-      split <;> 
-        simp (config := {contextual := true}) 
-          [Mapping.hNew, ExprRec.vars, bind] at *
-      intro m₁ hm₁ m₂ hm₂ hv t' v' hv'
-      rcases hv' with hv' | hv'
-      . have := mem_keys_matchVar lets _ _ m₁ hm₁ t' v' hv'
-        
-      . have := mem_keys_matchVar lets _ _ m₂ hm₂ t' v'
-      
+        rintro rfl
+        simp
+      . simp
+    . simp_all
+    . simp_all
+  | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
+    unfold matchVar
+    split
+    . simp_all
+    . simp_all
+    . simp [bind, pure, ExprRec.vars]
+      rintro m₁ hm₁ hm₂ t' v' hv'
+      --YUCK
+      have h : ExprRec.add lhs rhs = ExprRec.add _ _ :=
+        by assumption
+      injection h with h₁ h₂
+      subst h₁ h₂
+      have := mem_matchVar_of_mem _ _ lhs _ _ hm₁ _ _ hv'
+      exact mem_matchVar_of_mem _ _ rhs _ _ hm₂ _ _ this
+    . simp_all
 
+theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
+    {t : Ty} → (v : Γ₂.Var t) → 
+    (matchExpr : ExprRec Γ₃ t) → 
+    (varMap : Mapping Γ₃ Γ₂) → 
+    (ma : Mapping Γ₃ Γ₂) → 
+    (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
+    ∀ t' v', v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
+  | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
+    simp [matchVar, Mapping.hNew, ExprRec.vars]
+    intros h t' v₂
+    split at *
+    . split_ifs at h
+      . subst v
+        injection h with h
+        subst h
+        split_ifs
+        . subst t
+          simp
+          rintro rfl
+          rename_i _ _ h
+          rw [← AList.lookup_isSome, h]
+          simp
+        . simp
+    . split_ifs
+      . subst t
+        simp at h
+        subst h
+        simp
+        rintro rfl
+        simp
+      . simp
+  | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by simp [ExprRec.vars]
+  | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
+    unfold matchVar
+    split
+    . simp_all
+    . simp_all
+    . simp [bind, pure, ExprRec.vars]
+      rintro m₁ hm₁ hm₂ t' v' hv'
+      --YUCK
+      have h : ExprRec.add lhs rhs = ExprRec.add _ _ :=
+        by assumption
+      injection h with h₁ h₂
+      subst h₁ h₂
+      rcases hv' with hv' | hv'
+      . have := mem_matchVar _ _ _ _ _ hm₁ _ _ hv'
+        exact mem_matchVar_of_mem _ _ _ _ _ hm₂ _ _ this
+      . exact mem_matchVar _ _ _ _ _ hm₂ _ _ hv'
+    . simp_all
+      
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
+
+theorem denote_matchVar_aux : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+    {t : Ty} → (v : Γ₂.Var t) → 
+    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Sem) → 
+    (matchExpr : ExprRec Γ₃ t) → 
+    (ma : Mapping Γ₃ Γ₂) →
+    (h : varMap ∈ matchVar lets v matchExpr ma) →
+    matchExpr.denote (fun t' v' => by
+        match varMap.lookup ⟨_, v'⟩  with
+        | some v' => exact lets.denote s₁ v'
+        | none => exact default 
+        ) = 
+      lets.denote s₁ v
 
 theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
     {t : Ty} → (v : Γ₂.Var t) → 
@@ -646,7 +684,8 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
           | none => simp [h₁, bind] at h
           | some m₁ => 
             cases h₂ : matchVar lets v₂ rhs with
-            | none => simp [h₂, bind] at h
+            | none => 
+              
             | some m₂ => 
               simp [h₁, h₂, bind] at h
               have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs h₁
