@@ -18,14 +18,22 @@ import SSA.Experimental.IntrinsicAsymptotics
 
 noncomputable section
 
+/-!
+  ## Context semantics
+-/
+
 /-- A semantics for a context. Provide a way to evaluate every variable in a context. -/
 def Ctxt.Sem (Γ : Ctxt) : Type :=
   ⦃t : Ty⦄ → Γ.Var t → t.toType    
 
+
+namespace Ctxt.Sem
+variable {Γ : Ctxt}
+
 instance : Inhabited (Ctxt.Sem ∅) := ⟨fun _ v => v.emptyElim⟩ 
 
 /-- Make a semantics for `Γ.snoc t` from a semantics for `Γ` and an element of `t.toType`. -/
-def Ctxt.Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
+def snoc {t : Ty} (s : Γ.Sem) (x : t.toType) : 
     (Γ.snoc t).Sem := by
   intro t' v
   revert s x
@@ -34,29 +42,33 @@ def Ctxt.Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) :
   . intro _ _ _ x; exact x
 
 @[simp]
-theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
+theorem snoc_last {t : Ty} (s : Γ.Sem) (x : t.toType) : 
     (s.snoc x) (Ctxt.Var.last _ _) = x := by 
   simp [Ctxt.Sem.snoc]
 
 @[simp]
-theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
+theorem snoc_toSnoc {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Sem.snoc]
 
-/-
+
+end Ctxt.Sem
+
+
+
+/-!
   ## Denotation functions
 -/
 
-
-def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
+def IExpr.denote : IExpr Γ ty → Γ.Sem → ty.toType
   | .nat n, _ => n
   | .add a b, ll => ll a + ll b
 
-def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
-  | .ret e, l => l e
-  | .lete e body, l => body.denote (l.snoc (e.denote l))
+def ICom.denote : ICom Γ ty → Γ.Sem → ty.toType
+  | .ret e, ll => ll e
+  | .lete e body, ll => body.denote (ll.snoc (e.denote ll))
 
-def IExprRec.denote : IExprRec Γ ty → (ll : Γ.Sem) → ty.toType
+def IExprRec.denote : IExprRec Γ ty → Γ.Sem → ty.toType
   | .cst n, _ => n
   | .add a b, ll => a.denote ll + b.denote ll
   | .var v, ll => ll v
