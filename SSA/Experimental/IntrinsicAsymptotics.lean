@@ -525,7 +525,7 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
     let map₂ ← matchVar lets v₂ rhs map₁
     return map₂
   | _, _ => none
-
+#print List.kinsert
 theorem mem_matchVar_of_mem : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
     {t : Ty} → (v : Γ₂.Var t) → 
     (matchExpr : ExprRec Γ₃ t) → 
@@ -648,6 +648,9 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
         subst h
         simp_all
       . simp_all
+    . simp_all [ExprRec.denote]
+      subst h
+      simp
   | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
     rw [ExprRec.denote]
     unfold matchVar at h
@@ -692,24 +695,70 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             simp
             admit
 
+def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
+    {t : Ty} (v : Γ₂.Var t) 
+    (matchExpr : ExprRec Γ₃ t) 
+    (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t): 
+    Option (Γ₃.hom Γ₂) := do
+  match hm : matchVar lets v matchExpr with
+  | none => none
+  | some m => 
+    return fun t v' =>
+    match h : m.lookup ⟨t, v'⟩ with
+    | some v' => by exact v'
+    | none => by
+      have := AList.lookup_isSome.2 (mem_matchVar lets v matchExpr _ _ hm _ v' 
+        (hvars _ _))
+      simp_all
+
+theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
+    {t : Ty} (v : Γ₂.Var t) 
+    (matchExpr : ExprRec Γ₃ t) (s₁ : Γ₁.Sem)
+    (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) 
+    (map : Γ₃.hom Γ₂) 
+    (hmap : map ∈ matchVarMap lets v matchExpr hvars) :
+    matchExpr.denote (fun t' v' => lets.denote s₁ (map v')) = 
+      lets.denote s₁ v := by
+  rw [matchVarMap] at hmap
+  split at hmap
+  . simp_all
+  . rename_i hm
+    rw [← denote_matchVar lets v _ s₁ matchExpr ∅ hm]
+    simp [pure] at hmap 
+    subst hmap
+    congr
+    funext t' v;
+    split
+    . congr
+      simp_all
+      split <;> simp_all
+    . have := AList.lookup_isSome.2 (mem_matchVar lets _ matchExpr _ _ hm _ v 
+        (hvars _ _))
+      simp_all
+
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) → 
-    (prog : ICom Γ₂ t) →  
-    Option (Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t)
-  | 0, lets, prog => some ⟨_, lets, prog⟩ 
-  | _+1, _, .ret _ => none
+    (prog : ICom Γ₂ t) → 
+    Option (Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t')
+  | 0, lets, .lete e body => some ⟨_, .lete lets e, body, _, Ctxt.Var.last _ _⟩ 
+  | _, _, .ret _ => none
   | n+1, lets, .lete e body => 
     splitProgramAtAux n (lets.lete e) body
 
-theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) → 
-    (prog : ICom Γ₂ t) → 
-    (res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t)
-    → (hres : res ∈ splitProgramAtAux pos lets prog) →
+theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
+    (prog : ICom Γ₂ t) →
+    (res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t') →
+    (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Γ₁.Sem) → 
-    res.2.2.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
-  | 0, lets, prog, res, hres, s => by
+    res.2.2.1.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
+  | 0, lets, .lete e body, res, hres, s => by
     simp [splitProgramAtAux] at hres
     subst hres
-    rfl
+    simp [Lets.denote, ICom.denote]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . simp
+    . simp
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux] at hres
   | n+1, lets, .lete e body, res, hres, s => by
@@ -723,22 +772,63 @@ theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
     . simp
 
 def splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) :  
-    Option (Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t) :=
+    Option (Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t') :=
   splitProgramAtAux pos .nil prog
 
 theorem denote_splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) 
-    (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t)
+    (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t')
     (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Sem) : 
-    res.2.2.denote (res.2.1.denote s) = prog.denote s :=
+    res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
   denote_splitProgramAtAux pos _ _ _ hres s
 
-def rewriteAt (lhs rhs : ICom Γ₁ t₁) (pos : ℕ) (target : ICom Γ₂ t₂) :
+def rewriteAt (lhs rhs : ICom Γ₁ t₁) 
+    (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.toExprRec.vars t)
+    (pos : ℕ) (target : ICom Γ₂ t₂) :
     Option (ICom Γ₂ t₂) := do
-  let ⟨Γ₃, lets, rhs'⟩ ← splitProgramAt pos target
-  let m ← matchVar lets
-  return _
+  let ⟨Γ₃, lets, target', t', vm⟩ ← splitProgramAt pos target
+  if h : t₁ = t'
+  then 
+    let m ← matchVarMap lets vm (h ▸ lhs.toExprRec) 
+      (by subst h; exact hlhs)
+    return addProgramInMiddle vm m lets (h ▸ rhs) target'
+  else none
 
- 
+theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁) 
+    (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.toExprRec.vars t)
+    (pos : ℕ) (target : ICom Γ₂ t₂)
+    (hl : lhs.denote = rhs.denote) 
+    (rew : ICom Γ₂ t₂) 
+    (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
+    rew.denote = target.denote := by
+  ext s 
+  rw [rewriteAt] at hrew
+  simp only [bind, pure, Option.bind] at hrew
+  split at hrew
+  . simp at hrew
+  . rename_i hs
+    simp at hrew
+    split_ifs at hrew
+    subst t₁
+    simp at hrew
+    split at hrew
+    . simp at hrew
+    . simp at hrew
+      subst hrew
+      rw [denote_addProgramInMiddle]
+      simp
+      simp only [← hl]
+      have : matchVarMap _ _ _ _ = _ := by
+        assumption
+      have := denote_matchVarMap _ _ _ s _ _ this
+      simp only [ICom.denote_toExprRec] at this
+      simp only [this]
+      rw [← denote_splitProgramAt _ _ _ hs s]
+      congr
+      funext t' v'
+      simp
+      rintro rfl rfl
+      simp
+
 
 
 
