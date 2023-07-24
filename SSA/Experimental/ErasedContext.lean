@@ -398,6 +398,39 @@ theorem append_assoc (Γ₁ Γ₂ Γ₃ : Ctxt) : Γ₁ ++ Γ₂ ++ Γ₃ = Γ�
 
 end Append
 
+/-!
+  ## VarSet
+-/
+
+-- TODO: is this erased at runtime? It probably should be!
+/-- A set of variables of potentially different types -/
+abbrev VarSet (Γ : Ctxt) : Type :=
+  (t : Ty) → Set (Γ.Var t)
+
+namespace VarSet
+variable {Γ : Ctxt}
+
+instance : Union Γ.VarSet where
+  union V₁ V₂ := fun t => V₁ t ∪ V₂ t
+
+instance : EmptyCollection Γ.VarSet where
+  emptyCollection := fun _ => ∅
+
+instance : Singleton (Σt, Γ.Var t) Γ.VarSet where
+  singleton := fun v _ w => v.2.1 = w.1
+
+instance : HasSubset (Γ.VarSet) where
+  Subset V₁ V₂ := ∀ t, V₁ t ⊆ V₂ t
+
+instance : CoeOut (Γ.Var t) (Σt, Γ.Var t) where
+  coe v := ⟨t, v⟩
+
+/-- A `VarSet` is complete if it contains all variables in the context -/
+def IsComplete (V : Γ.VarSet) : Prop :=
+  ∀ t v, v ∈ V t
+
+end VarSet
+
 end Ctxt
 
 export Ctxt (SizedCtxt)
