@@ -625,11 +625,11 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) 
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem denote_matchVar_aux : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
+theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
     {t : Ty} → (v : Γ₂.Var t) → 
     (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Sem) → 
     (matchExpr : ExprRec Γ₃ t) → 
-    (ma : Mapping Γ₃ Γ₂) →
+    (ma : Mapping Γ₃ Γ₂ := ∅) →
     (h : varMap ∈ matchVar lets v matchExpr ma) →
     matchExpr.denote (fun t' v' => by
         match varMap.lookup ⟨_, v'⟩  with
@@ -637,61 +637,62 @@ theorem denote_matchVar_aux : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ 
         | none => exact default 
         ) = 
       lets.denote s₁ v
+  | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, .var v', ma, h => by
+    simp [matchVar] at h
+    split at h
+    . split_ifs at h
+      subst v
+      simp [ExprRec.denote]
+      split
+      . simp at h
+        subst h
+        simp_all
+      . simp_all
+  | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
+    rw [ExprRec.denote]
+    unfold matchVar at h
+    cases hl : Lets.getExpr lets v with
+    | none => simp [hl] at h
+    | some e => 
+      cases e with
+      | nat m => 
+        simp [hl] at h
+        rw [← Lets.denote_getExpr _ _ _ hl]
+        simp [IExpr.denote]
+        split_ifs at h <;> simp_all
+      | add v₁ v₂ => simp [hl] at h
+  | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .add lhs rhs, ma, h => by  
+    rw [ExprRec.denote]
+    unfold matchVar at h
+    cases hl : Lets.getExpr lets v with
+    | none => simp [hl] at h
+    | some e => 
+      cases e with
+      | nat m => simp [hl] at h
+      | add v₁ v₂ => 
+        simp [hl] at h
+        rw [← Lets.denote_getExpr _ _ _ hl]
+        simp [IExpr.denote]
+        cases h₁ : matchVar lets v₁ lhs ma with
+        | none =>  simp [h₁, bind] at h
+        | some m₁ => 
+          cases h₂ : matchVar lets v₂ rhs m₁ with
+          | none => 
+            simp [bind] at h
+            rcases h with ⟨a, _, _⟩
+            simp_all
+          | some m₂ => 
+            simp [h₁, h₂, bind] at h
+            subst h
+            have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
+            have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
+            rw [← ih₁, ← ih₂]
+            congr
+            funext
+            simp
+            admit
 
-theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    {t : Ty} → (v : Γ₂.Var t) → 
-    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Sem) → 
-    (matchExpr : ExprRec Γ₃ t) → 
-    (h : varMap ∈ matchVar lets v matchExpr) →
-    matchExpr.denote (fun t' v' => by
-        match varMap.lookup ⟨_, v'⟩  with
-        | some v' => exact lets.denote s₁ v'
-        | none => exact default 
-        ) = 
-      lets.denote s₁ v
-  | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, matchExpr, h => by
-    cases matchExpr with
-    | var v' => 
-      simp [matchVar, Mapping.hNew] at h
-      subst h
-      simp [ExprRec.denote, AList.lookup]
-    | cst n => 
-      rw [ExprRec.denote]
-      unfold matchVar at h
-      cases hl : Lets.getExpr lets v with
-      | none => simp [hl] at h
-      | some e => 
-        cases e with
-        | nat m => 
-          simp [hl] at h
-          rw [← Lets.denote_getExpr _ _ _ hl]
-          simp [IExpr.denote]
-          split_ifs at h <;> simp_all
-        | add v₁ v₂ => simp [hl] at h
-    | add lhs rhs =>
-      rw [ExprRec.denote]
-      unfold matchVar at h
-      cases hl : Lets.getExpr lets v with
-      | none => simp [hl] at h
-      | some e => 
-        cases e with
-        | nat m => simp [hl] at h
-        | add v₁ v₂ => 
-          simp [hl] at h
-          rw [← Lets.denote_getExpr _ _ _ hl]
-          simp [IExpr.denote]
-          cases h₁ : matchVar lets v₁ lhs with
-          | none => simp [h₁, bind] at h
-          | some m₁ => 
-            cases h₂ : matchVar lets v₂ rhs with
-            | none => 
-              
-            | some m₂ => 
-              simp [h₁, h₂, bind] at h
-              have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs h₁
-              have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs h₂
-              rw [← ih₁, ← ih₂]
-              congr
+def rewriteAt
 
  
 
