@@ -92,6 +92,17 @@ def LetZipper.denote : LetZipper Γ ty → (ll : Γ.Sem) → ty.toType
   ## Denotation preservation proofs
 -/
 
+namespace Lets
+
+@[simp]
+theorem lete_toSnoc (lets : Lets Γ Δ) (e : IExpr Δ t) (v : Δ.Var u) (ll : Γ.Sem) :
+    lets.denote ll v = (Lets.lete lets e).denote ll v.toSnoc := by
+  rfl
+
+end Lets
+
+
+
 theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
     (lets : Lets Γ₁ Γ₂) → (inputProg : ICom Γ₂ t₂) →
     (addLetsAtTop lets inputProg).denote = 
@@ -100,8 +111,7 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
   | Lets.lete body e, inputProg => by
     rw [addLetsAtTop, denote_addLetsAtTop body]
     funext
-    simp [ICom.denote, Function.comp_apply, Lets.denote,
-      Ctxt.Sem.snoc]
+    simp [ICom.denote, Function.comp_apply, Lets.denote, Ctxt.Sem.snoc]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn

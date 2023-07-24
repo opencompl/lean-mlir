@@ -126,7 +126,7 @@ def LetZipper.zip : LetZipper Γ t → ICom Γ t :=
 
 
 
-def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : (e : IExpr Γ ty) → IExpr Γ' ty
+def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : IExpr Γ ty → IExpr Γ' ty
   | .nat n => .nat n
   | .add a b =>
       let a := varsMap _ a
@@ -142,6 +142,14 @@ def ICom.changeVars
       let e := e.changeVars varsMap
       let body := body.changeVars (fun t v => v.snocMap varsMap)
       .lete e body
+
+def IExprRec.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : IExprRec Γ ty → IExprRec Γ' ty
+  | .cst n => .cst n
+  | .add a b =>
+      let a := changeVars varsMap a
+      let b := changeVars varsMap b
+      .add a b
+  | .var v => .var <| varsMap _ v
 
 
 -- Find a let somewhere in the program. Replace that let with

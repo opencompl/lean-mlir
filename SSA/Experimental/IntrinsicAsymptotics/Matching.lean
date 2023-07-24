@@ -6,27 +6,34 @@ import SSA.Experimental.IntrinsicAsymptotics.Semantics
   # Matching & Rewriting
 -/ 
 
-structure GetVarResult {Γ₁ Γ₂ : Ctxt} {t : Ty} (lets : Lets Γ₁ Γ₂) (v : Γ₂.Var t) where
+structure GetVarResult {Γ₁ Γ₂ : Ctxt} {t : Ty} (lets₀ : Lets Γ₁ Γ₂) (v : Γ₂.Var t) where
   {Δ : Ctxt}
   lets : Lets Γ₁ (Δ.snoc t) 
-  embedVars : (t : Ty) → Δ.Var t → Γ₂.Var t 
-  -- semantics : ∀ (ll : Γ.Sem)
+  embedVars : (t' : Ty) → (Δ.snoc t).Var t' → Γ₂.Var t' 
+  /-- The last variable of the returned `lets` is semantically equivalent to the requested var -/
+  semantics : ∀ (ll : Γ₁.Sem), lets₀.denote ll v = lets.denote ll (Ctxt.Var.last ..)
 
 def GetVarResult.coe_snoc (lets : Lets Γ₁ Γ₂) (v : Γ₂.Var t) : 
     GetVarResult lets v → GetVarResult (.lete lets e) v.toSnoc
-  | ⟨lets, embed⟩ => ⟨lets, fun t v => embed t v |>.toSnoc⟩
+  | ⟨lets, embed, sem⟩ => ⟨lets, fun t v => embed t v |>.toSnoc, sem⟩
 
 /-- Drop bindings from `lets` until the binding corresponding to `v` is at the head.
     This can fail, since `v` might be a free variable originating from `Γ₁`.
     Returns the new `lets`, plus a proof that it's context is a prefix of the original context -/
-def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option (GetVarResult lets v)
-  | _, _, .nil, _, _ => none
-  | Γ₁, _, lets@(@Lets.lete _ _ _ body _), _, v => by
+def Lets.getVar {Γ₁ Γ₂ : Ctxt} {t : Ty} : 
+    (lets : Lets Γ₁ Γ₂) → (v : Γ₂.Var t) → Option (GetVarResult lets v)
+  | .nil,  _ => none
+  | .lete body e,  v => by
     cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨lets, fun _ => Ctxt.Var.toSnoc⟩ 
+    | last => exact some ⟨.lete body e, fun _ v => v, fun _ => rfl⟩ 
     | toSnoc v => exact (getVar body v).map (·.coe_snoc)
 
+
+
+structure MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.Var t) where
+  varsMap : (t : Ty) → Γ'.Var t → Δ.Var t
+  semantics : ∀ (ll : Γ.Sem), 
+    HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
 
 
 /--
@@ -34,50 +41,56 @@ def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty
   * If the match fails, return `none`
   * Otherwise, return an assignment of meta-variables of `matchExpr` to variables in `Δ`
 -/
-def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t) : 
-    Option (TotalMapping Γ' Δ matchExpr.vars) := do
-  let res ← go lets matchExpr .empty (fun _ t => t)
-  some <| res.coerceDomain <| by 
+def IExprRec.matchAgainstLets {Γ Δ : Ctxt} (lets : Lets Γ (Δ.snoc t)) (matchExpr : IExprRec Γ' t') : 
+    Option (TotalMapping Γ' (Δ.snoc t) matchExpr.vars) := do
+  let map ← go lets matchExpr .empty (fun _ t => t) (Ctxt.Var.last ..)
+  some <| map.coerceDomain <| by 
     simp[Union.union, Set.union, EmptyCollection.emptyCollection, Membership.mem, Set.Mem]
     rfl
 where
-  go {Γ Δ' t} (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t) {V : (t : Ty) → Set (Γ'.Var t)}
-      (map : TotalMapping Γ' Δ V) (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t) : 
-      Option (TotalMapping Γ' Δ (fun t => V t ∪ (matchExpr.vars t))) :=
-    match lets with
+  /--
+    Match `matchExpr` against the let at position `v` in `lets`
+  -/
+  go {Γ Δ' Δ : Ctxt} {t t'} 
+      (lets : Lets Γ Δ')
+      (matchExpr : IExprRec Γ' t')
+      {V : (t : Ty) → Set (Γ'.Var t)}
+      (map : TotalMapping Γ' Δ V) 
+      (embedVars : (t : Ty) → Δ'.Var t → Δ.Var t)
+      (v : Δ'.Var t) : 
+      Option (TotalMapping Γ' Δ (fun t => V t ∪ (matchExpr.vars t))) := do
+    let ⟨lets, embed, _sem⟩ ← lets.getVar v
+    let embedVars := fun t v => embedVars t <| embed t v
+
+    match _h : lets with
       | .nil => none
-      | .lete lets e =>
+      | @Lets.lete _ Δ'' _ lets e =>
         match matchExpr, e with
           | .var v, _ => do
               let map ← map.insert v (embedVars _ <| Ctxt.Var.last ..)
-              return map.coerceDomain (by simp[IExprRec.vars, IExprRec.varsBool]; rfl)
+              
+              let map := map.coerceDomain (by simp[IExprRec.vars, IExprRec.varsBool]; rfl)
+              return map
           | .cst n, .nat m =>
               if n = m then
-                some <| map.coerceDomain (by
-                  simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, Set.union]
+                let map := map.coerceDomain (by
+                  simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, 
+                      Set.union]
                   rfl
                 )
+                return map
               else
                 none
           | .add lhs rhs, .add v₁ v₂ => do
-              /-
-                Sketch: to match `lhs`, we drop just enough variables from `lets` so that the 
-                declaration corresponding to `v₁` is at the head. Then, we recursively call 
-                `matchAgainstLets` again.
-              -/
-              let ⟨lets₁, embed₁⟩ ← lets.getVar v₁
-              let map ← go lets₁ lhs map (fun t v => 
-                embedVars t <| (Ctxt.Var.snocMap embed₁) t v 
-              )
+              let embedVars : (t : Ty) → Ctxt.Var Δ'' t → Ctxt.Var Δ t := 
+                fun u v => embedVars u <| cast (by simp_all) (v.toSnoc (t' := .nat))
+              let map ← go lets lhs map embedVars v₁
+              let map ← go lets rhs map embedVars v₂
 
-              let ⟨lets₂, embed₂⟩ ← lets.getVar v₂
-              let map ← go lets₂ rhs map (fun t v => 
-                embedVars t <| (Ctxt.Var.snocMap embed₂) t v 
-              )
-
-              return map.coerceDomain <| by
+              let map := map.coerceDomain <| by
                 simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union,
                      Set.union, setOf, or_assoc]
+              return map
           | _, _ => none
 
 
