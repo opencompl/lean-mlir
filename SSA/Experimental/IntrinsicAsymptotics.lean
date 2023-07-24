@@ -692,7 +692,51 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             simp
             admit
 
-def rewriteAt
+def splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) → 
+    (prog : ICom Γ₂ t) →  
+    Option (Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t)
+  | 0, lets, prog => some ⟨_, lets, prog⟩ 
+  | _+1, _, .ret _ => none
+  | n+1, lets, .lete e body => 
+    splitProgramAtAux n (lets.lete e) body
+
+theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) → 
+    (prog : ICom Γ₂ t) → 
+    (res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t)
+    → (hres : res ∈ splitProgramAtAux pos lets prog) →
+    (s : Γ₁.Sem) → 
+    res.2.2.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
+  | 0, lets, prog, res, hres, s => by
+    simp [splitProgramAtAux] at hres
+    subst hres
+    rfl
+  | _+1, _, .ret _, res, hres, s => by
+    simp [splitProgramAtAux] at hres
+  | n+1, lets, .lete e body, res, hres, s => by
+    rw [splitProgramAtAux] at hres
+    rw [ICom.denote, denote_splitProgramAtAux n _ _ _ hres s]
+    simp [Ctxt.Sem.snoc, Lets.denote]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . simp
+    . simp
+
+def splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) :  
+    Option (Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t) :=
+  splitProgramAtAux pos .nil prog
+
+theorem denote_splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) 
+    (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t)
+    (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Sem) : 
+    res.2.2.denote (res.2.1.denote s) = prog.denote s :=
+  denote_splitProgramAtAux pos _ _ _ hres s
+
+def rewriteAt (lhs rhs : ICom Γ₁ t₁) (pos : ℕ) (target : ICom Γ₂ t₂) :
+    Option (ICom Γ₂ t₂) := do
+  let ⟨Γ₃, lets, rhs'⟩ ← splitProgramAt pos target
+  let m ← matchVar lets
+  return _
 
  
 
