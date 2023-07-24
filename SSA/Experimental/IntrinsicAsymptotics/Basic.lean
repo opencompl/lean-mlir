@@ -122,17 +122,86 @@ def LetZipper.zip : LetZipper Γ t → ICom Γ t :=
 --   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
 --   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
 
+/-! ### Transformations -/
+def IExprRec.bind {Γ₁ Γ₂ : Ctxt} 
+    (f : (t : Ty) → Γ₁.Var t → IExprRec Γ₂ t) : 
+    (e : IExprRec Γ₁ t) → IExprRec Γ₂ t
+  | .var v => f _ v
+  | .cst n => .cst n
+  | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
+
+def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → IExprRec Γ t
+  | _, _, .nat n => .cst n
+  | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
+
+def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
+  | _, _, .ret e => .var e
+  | _, _, .lete e body => 
+    let e' := e.toExprRec
+    body.toExprRec.bind 
+    (fun t v => by
+      cases v using Ctxt.Var.casesOn with
+      | toSnoc v => exact .var v
+      | last => exact e')
 
 
 
+/-! ### Free vars -/
+/-- The free variables of an `IExprRec` -/
+def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
+  /- Since `IExprRec` does not have binders, this is a straightforward recursion -/
+  | .var v, _, w   => v.1 = w.1
+  | .cst _, _, _   => false
+  | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
 
+/-- The free variables of an `IExprRec`, as a `Set` -/
+def IExprRec.vars : IExprRec Γ t → Γ.VarSet :=
+  fun e t v => e.varsBool t v
+
+instance (e : IExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
+  inferInstanceAs <| Decidable (IExprRec.varsBool e _ v = true)
+
+
+def ICom.vars : ICom Γ t → Γ.VarSet :=
+  IExprRec.vars ∘ ICom.toExprRec
+
+instance (e : ICom Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
+  inferInstanceAs <| Decidable (v ∈ e.toExprRec.vars _)
+
+namespace IExprRec
+variable {Γ : Ctxt}
+
+@[simp]
+theorem vars_var (v : Γ.Var t) : v ∈ ((IExprRec.var v).vars t) := by
+  simp[vars, varsBool, Set.Mem, Membership.mem]
+
+@[simp]
+theorem vars_cst : (@IExprRec.cst Γ n).vars = ∅ := by
+  simp[vars, varsBool, Set.Mem, Membership.mem, EmptyCollection.emptyCollection]
+
+@[simp]
+theorem vars_add_inl {v : Γ.Var t} {x y : IExprRec Γ .nat} :
+    v ∈ (x.vars t) → v ∈ (IExprRec.add x y).vars t := by
+  simp[vars, varsBool, Membership.mem, Set.Mem]
+  exact Or.inl
+
+@[simp]
+theorem vars_add_inr {v : Γ.Var t} {x y : IExprRec Γ .nat} :
+    v ∈ (y.vars t) → v ∈ (IExprRec.add x y).vars t := by
+  simp[vars, varsBool, Membership.mem, Set.Mem]
+  exact Or.inr
+
+
+end IExprRec
+
+
+/-! ### Change vars-/
 def IExpr.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : IExpr Γ ty → IExpr Γ' ty
   | .nat n => .nat n
   | .add a b =>
       let a := varsMap _ a
       let b := varsMap _ b
       .add a b
-
 
 def ICom.changeVars 
     (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : 
@@ -150,6 +219,19 @@ def IExprRec.changeVars (varsMap : (t : Ty) → Γ.Var t → Γ'.Var t) : IExprR
       let b := changeVars varsMap b
       .add a b
   | .var v => .var <| varsMap _ v
+
+
+
+def IExprRec.changeVarsMem (orig : IExprRec Γ ty) 
+    (varsMap : (t : Ty) → (v : Γ.Var t) → (v ∈ orig.vars t) → Γ'.Var t) : IExprRec Γ' ty :=
+  match orig with
+    | .cst n => .cst n
+    | .add a b =>
+        let a := changeVarsMem a fun _ v h => varsMap _ v (IExprRec.vars_add_inl h)
+        let b := changeVarsMem b fun _ v h => varsMap _ v (IExprRec.vars_add_inr h)
+        .add a b
+    | .var v => .var <| 
+        varsMap _ v (by simp[vars, varsBool, Membership.mem, Set.Mem])
 
 
 -- Find a let somewhere in the program. Replace that let with
@@ -199,49 +281,6 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
   addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
 
-def IExprRec.bind {Γ₁ Γ₂ : Ctxt} 
-    (f : (t : Ty) → Γ₁.Var t → IExprRec Γ₂ t) : 
-    (e : IExprRec Γ₁ t) → IExprRec Γ₂ t
-  | .var v => f _ v
-  | .cst n => .cst n
-  | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
-
-def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → IExprRec Γ t
-  | _, _, .nat n => .cst n
-  | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
-
-def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → IExprRec Γ t
-  | _, _, .ret e => .var e
-  | _, _, .lete e body => 
-    let e' := e.toExprRec
-    body.toExprRec.bind 
-    (fun t v => by
-      cases v using Ctxt.Var.casesOn with
-      | toSnoc v => exact .var v
-      | last => exact e')
-
-
-
-/-- The free variables of an `IExprRec` -/
-def IExprRec.varsBool : IExprRec Γ t → (t : Ty) → Γ.Var t → Bool
-  /- Since `IExprRec` does not have binders, this is a straightforward recursion -/
-  | .var v, _, w   => v.1 = w.1
-  | .cst _, _, _   => false
-  | .add x y, _, w => x.varsBool _ w || y.varsBool _ w
-
-/-- The free variables of an `IExprRec`, as a `Set` -/
-def IExprRec.vars : IExprRec Γ t → Γ.VarSet :=
-  fun e t v => e.varsBool t v
-
-instance (e : IExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
-  inferInstanceAs <| Decidable (IExprRec.varsBool e _ v = true)
-
-
-def ICom.vars : ICom Γ t → Γ.VarSet :=
-  IExprRec.vars ∘ ICom.toExprRec
-
-instance (e : ICom Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) := 
-  inferInstanceAs <| Decidable (v ∈ e.toExprRec.vars _)
 
 
   

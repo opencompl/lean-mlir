@@ -429,6 +429,11 @@ instance : CoeOut (Γ.Var t) (Σt, Γ.Var t) where
 def IsComplete (V : Γ.VarSet) : Prop :=
   ∀ t v, v ∈ V t
 
+
+theorem mem_of_subset_mem {v : Γ.Var t} {V V' : Γ.VarSet} :
+    V ⊆ V' → v ∈ V t → v ∈ V' t := by
+  exact fun s m => s t m
+
 end VarSet
 
 end Ctxt

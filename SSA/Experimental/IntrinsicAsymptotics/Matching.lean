@@ -37,12 +37,14 @@ structure IExprRec.MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t')
     HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
 
 
-structure IExprRec.MatchResultAux (Δ : Ctxt) (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t') (V : Γ'.VarSet)
-    (v : Δ'.Var t) where
+structure IExprRec.MatchResultAux (Δ : Ctxt) (lets : Lets Γ Δ') (matchExpr : IExprRec Γ' t') 
+    (V : Γ'.VarSet) (v : Δ'.Var t) (c : matchExpr.vars.IsComplete) where
   map : TotalMapping Γ' Δ (V ∪ matchExpr.vars)
   -- TODO: prove that if matching succeeds the following holds
   semantics : ∀ (ll : Γ.Sem), 
-    HEq (lets.denote ll v) ((matchExpr.changeVars varsMap).denote (lets.denote ll))
+    HEq (lets.denote ll v) 
+        ((matchExpr.changeVarsMem fun t v h => map.lookupMem t v sorry)
+          |>.denote (lets.denote ll))
 
 
 /--
