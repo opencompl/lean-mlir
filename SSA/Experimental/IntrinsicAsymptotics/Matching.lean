@@ -30,6 +30,76 @@ def Lets.getVar {Γ₁ Γ₂ : Ctxt} {t : Ty} :
 
 
 
+def IMatchPattern (Γ : Ctxt) (t : Ty) : Type :=
+  {e : IExprRec Γ t // e.vars.IsComplete}
+
+namespace IMatchPattern
+
+structure MatchAtVarArgs where
+  {Γ₀ Δ₀ : Ctxt}    -- the top-level (in/out) contexts
+  {Γ₁ Δ₁ : Ctxt}    -- the (in/out) contexts of the current subprogram
+  {Γ' : Ctxt}       -- the context of the matchpattern
+  {t t' : Ty}
+  (lets : Lets Γ₁ Δ₁)                   -- the current subprogram
+  (pattern : IMatchPattern Γ' t')       -- the current match expression
+  {cs : List <| Γ'.VarSet × Δ₀.VarSet}
+  (map : TotalMapping Γ' Δ₀ cs)         -- the assingment so far
+  (embedVars : (t : Ty) → Δ₁.Var t → Δ₀.Var t)
+  (v : Δ₁.Var t)
+
+/-- The domain constraint of the mapping returned from matching with these arguments -/
+@[simp]
+protected abbrev MatchAtVarArgs.V (args : MatchAtVarArgs) : args.Γ'.VarSet := 
+  args.pattern.val.vars
+
+/-- The *co*domain constraint of the mapping returned from matching with these arguments -/
+@[simp]
+protected abbrev MatchAtVarArgs.W (args : MatchAtVarArgs) : args.Δ₀.VarSet :=
+  fun t => { w₀ : args.Δ₀.Var t | Nonempty {w₁ // args.embedVars _ w₁ = w₀}}
+
+
+protected noncomputable abbrev MatchAtVarArgs.patternAfterSubstition (args : MatchAtVarArgs) 
+    (map : TotalMapping args.Γ' args.Δ₀ ((args.V, args.W) :: args.cs)) : 
+    IExprRec args.Δ₁ args.t' :=
+  let varsMap := fun t v h => by
+    rcases map.lookupMem t v h with ⟨w₀, h⟩
+    simp only [MatchAtVarArgs.W, Set.mem_setOf_eq] at h 
+    rcases h with ⟨w₁, h⟩
+
+  args.pattern.val.changeVarsMem varsMap
+
+structure MatchAtVarResult (args : MatchAtVarArgs) where
+  map : TotalMapping args.Γ' args.Δ₀ ((args.V, args.W) :: args.cs)
+  -- TODO: prove that if matching succeeds the following holds
+  -- semantics : ∀ (ll : Γ.Sem), 
+  --   HEq (lets.denote ll v) 
+  --       ((matchExpr.val.changeVarsMem fun t v h => map.lookupMem t v sorry)
+  --         |>.denote (lets.denote ll))
+
+def matchAtVar (lets : Lets Γ₁ Δ₁) 
+    (pattern : IMatchPattern Γ₂ t₂)
+    (var : Δ₁.Var t) 
+    (map : TotalMapping Γ₀ Δ₀ V) 
+    {V : Γ₂.VarSet} : 
+    Option (MatchAtVarResult Δ₀ lets pattern V v) :=
+  sorry
+
+
+end IMatchPattern
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 structure IExprRec.MatchResult (lets : Lets Γ Δ) (matchExpr : IExprRec Γ' t') (v : Δ.Var t) where
   varsMap : (t : Ty) → Γ'.Var t → Δ.Var t
   -- TODO: prove that if matching succeeds the following holds
