@@ -55,17 +55,14 @@ protected abbrev MatchAtVarArgs.V (args : MatchAtVarArgs) : args.Γ'.VarSet :=
 /-- The *co*domain constraint of the mapping returned from matching with these arguments -/
 @[simp]
 protected abbrev MatchAtVarArgs.W (args : MatchAtVarArgs) : args.Δ₀.VarSet :=
-  fun t => { w₀ : args.Δ₀.Var t | Nonempty {w₁ // args.embedVars _ w₁ = w₀}}
+  fun t => { w₀ : args.Δ₀.Var t | ∃ w₁, args.embedVars _ w₁ = w₀}
 
 
 protected noncomputable abbrev MatchAtVarArgs.patternAfterSubstition (args : MatchAtVarArgs) 
     (map : TotalMapping args.Γ' args.Δ₀ ((args.V, args.W) :: args.cs)) : 
     IExprRec args.Δ₁ args.t' :=
-  let varsMap := fun t v h => by
-    rcases map.lookupMem t v h with ⟨w₀, h⟩
-    simp only [MatchAtVarArgs.W, Set.mem_setOf_eq] at h 
-    rcases h with ⟨w₁, h⟩
-
+  let varsMap := fun t v h => 
+    Subtype.val <| Ctxt.Var.extractWitnessOfExists h 
   args.pattern.val.changeVarsMem varsMap
 
 structure MatchAtVarResult (args : MatchAtVarArgs) where

@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Data.Erased
+import Mathlib.Data.FinEnum
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -435,6 +436,60 @@ theorem mem_of_subset_mem {v : Γ.Var t} {V V' : Γ.VarSet} :
   exact fun s m => s t m
 
 end VarSet
+
+
+
+
+/-!
+  ## Var Fintype
+-/
+namespace Var
+variable {Γ : Ctxt}
+
+noncomputable def varsEnum (Γ : Ctxt) (t : Ty) : List (Γ.Var t) :=
+  List.range Γ.out.length 
+    |>.filterMap fun i => 
+      if h : Γ.out.get? i = some t then
+        some ⟨i, h⟩
+      else 
+        none
+
+theorem _root_.List.le_length_of_get?_isSome : (List.get? as x).isSome → x < as.length := by
+  sorry
+    
+noncomputable instance finEnum {t} : FinEnum (Ctxt.Var Γ t) :=
+  .ofList (varsEnum Γ t) <| by
+    rintro ⟨x, h⟩
+    simp [varsEnum]
+    use x
+    constructor
+    . apply List.le_length_of_get?_isSome
+      rw[h]
+      rfl
+    . split_ifs
+      rfl
+      
+
+noncomputable def extractWitnessOfExists {Γ : Ctxt} {t : Ty} {p : Γ.Var t → Prop}
+    [DecidablePred p] :
+    (∃ v, p v) → {v // p v} :=
+  fun h =>
+    let enum : FinEnum {v // p v} := by infer_instance
+    have : 0 < enum.card := by
+      rcases enum with ⟨card, eqv, _⟩
+      cases card
+      case succ =>
+        simp
+      case zero =>
+        rcases h with ⟨v, h⟩
+        apply Fin.elim0
+        apply eqv.toFun
+        exact ⟨v, h⟩
+    enum.Equiv.invFun ⟨0, this⟩
+  
+
+
+end Var
 
 end Ctxt
 
