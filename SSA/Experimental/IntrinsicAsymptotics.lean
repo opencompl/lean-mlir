@@ -495,6 +495,20 @@ def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
   | .cst _, _ => ∅ 
   | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
 
+def ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Sem} → 
+    (h : ∀ t v, v ∈ e.vars t → s₁ v = s₂ v) → 
+    e.denote s₁ = e.denote s₂
+  | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
+  | .cst n, s₁, _, h => rfl
+  | .add e₁ e₂, s₁, s₂, h => by
+    simp only [ExprRec.denote, ExprRec.denote_eq_of_eq_on_vars]
+    congr 1
+    . exact ExprRec.denote_eq_of_eq_on_vars e₁ (fun t v hv => h t v 
+        (by simp [hv, ExprRec.vars]))
+    . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
+        (by simp [hv, ExprRec.vars]))
+
+
 def Mapping.Total {Γ Δ : Ctxt} (m : Mapping Γ Δ) (e : ExprRec Γ t) : Prop :=
   ∀ t' v, v ∈ e.vars t' → ∃ v', m.lookup ⟨t', v⟩ = some v'
 
@@ -582,8 +596,6 @@ theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} →
       have := subset_entries_matchVar hm₁ hx
       exact subset_entries_matchVar hm₂ this
     . simp_all
-
-
 
 theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
     {t : Ty} → (v : Γ₂.Var t) → 
@@ -704,9 +716,25 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
             have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
             rw [← ih₁, ← ih₂]
-            
-            
-
+            congr 1
+            apply ExprRec.denote_eq_of_eq_on_vars
+            intro t' v' hv'
+            have h₁ := mem_matchVar _ _ _ _ _ h₁ _ _ hv'
+            have h₃ := subset_entries_matchVar h₂  
+            have h₂ := keys_subset_keys_of_entries_subset_entries
+              h₃ h₁
+            simp only [← lookup_isSome, ← mem_keys] at h₁ h₂
+            simp only [List.subset_def, Sigma.forall, 
+              ← mem_lookup_iff, Option.mem_def] at h₃ 
+            split
+            . rename_i h1
+              split
+              . rename_i h2
+                have := h₃ _ _ _ h2
+                simp_all
+              . simp_all
+            . simp_all
+              
 def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
