@@ -631,7 +631,8 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) 
       subst h₁ h₂
       rcases hv' with hv' | hv'
       . have := mem_matchVar _ _ _ _ _ hm₁ _ _ hv'
-        have := subset_entries_matchVar hm₂ this
+        exact AList.keys_subset_keys_of_entries_subset_entries 
+          (subset_entries_matchVar hm₂) this
       . exact mem_matchVar _ _ _ _ _ hm₂ _ _ hv'
     . simp_all
       
@@ -703,10 +704,8 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
             have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
             rw [← ih₁, ← ih₂]
-            congr
-            funext
-            simp
-            admit
+            
+            
 
 def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
