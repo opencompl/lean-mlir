@@ -8,14 +8,15 @@ import SSA.Experimental.IntrinsicAsymptotics.Semantics
 
 structure GetVarResult {Γ₁ Γ₂ : Ctxt} {t : Ty} (lets₀ : Lets Γ₁ Γ₂) (v : Γ₂.Var t) where
   {Δ : Ctxt}
-  lets : Lets Γ₁ (Δ.snoc t) 
+  lets : Lets Γ₁ Δ
+  expr : IExpr Δ t
   embedVars : (t' : Ty) → (Δ.snoc t).Var t' → Γ₂.Var t' 
-  /-- The last variable of the returned `lets` is semantically equivalent to the requested var -/
-  semantics : ∀ (ll : Γ₁.Sem), lets₀.denote ll v = lets.denote ll (Ctxt.Var.last ..)
+  /-- The returned `expr` is semantically equivalent to the requested var -/
+  semantics : ∀ (ll : Γ₁.Sem), lets₀.denote ll v = expr.denote (lets.denote ll)
 
 def GetVarResult.coe_snoc (lets : Lets Γ₁ Γ₂) (v : Γ₂.Var t) : 
     GetVarResult lets v → GetVarResult (.lete lets e) v.toSnoc
-  | ⟨lets, embed, sem⟩ => ⟨lets, fun t v => embed t v |>.toSnoc, sem⟩
+  | ⟨lets, expr, embed, sem⟩ => ⟨lets, expr, fun t v => embed t v |>.toSnoc, sem⟩
 
 /-- Drop bindings from `lets` until the binding corresponding to `v` is at the head.
     This can fail, since `v` might be a free variable originating from `Γ₁`.
@@ -25,7 +26,7 @@ def Lets.getVar {Γ₁ Γ₂ : Ctxt} {t : Ty} :
   | .nil,  _ => none
   | .lete body e,  v => by
     cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨.lete body e, fun _ v => v, fun _ => rfl⟩ 
+    | last => exact some ⟨body, e, fun _ v => v, fun _ => rfl⟩ 
     | toSnoc v => exact (getVar body v).map (·.coe_snoc)
 
 
@@ -52,34 +53,67 @@ structure MatchAtVarArgs where
 protected abbrev MatchAtVarArgs.V (args : MatchAtVarArgs) : args.Γ'.VarSet := 
   args.pattern.val.vars
 
-/-- The *co*domain constraint of the mapping returned from matching with these arguments -/
+/-- 
+  The *co*domain constraint of the mapping returned from matching with these arguments,
+  which is that each target variable should be "in" `Δ₁`, where "in" means there is some variable
+  of `Δ₁` that `embedVars` maps to the target variable.
+-/
 @[simp]
 protected abbrev MatchAtVarArgs.W (args : MatchAtVarArgs) : args.Δ₀.VarSet :=
   fun t => { w₀ : args.Δ₀.Var t | ∃ w₁, args.embedVars _ w₁ = w₀}
 
 
+@[simp]
 protected noncomputable abbrev MatchAtVarArgs.patternAfterSubstition (args : MatchAtVarArgs) 
     (map : TotalMapping args.Γ' args.Δ₀ ((args.V, args.W) :: args.cs)) : 
     IExprRec args.Δ₁ args.t' :=
-  let varsMap := fun t v h => 
-    Subtype.val <| Ctxt.Var.extractWitnessOfExists h 
+  let varsMap : (t : Ty) → (v : args.Γ'.Var t) → v ∈ args.pattern.val.vars t → Ctxt.Var args.Δ₁ t := 
+    fun t v h => 
+      Subtype.val <| Ctxt.Var.extractWitnessOfExists <| by
+        rcases map.isTotal _ args.W (List.Mem.head _) t v h with ⟨w, ⟨⟨w', h'⟩, h⟩⟩
+        rw [←h'] at h
+        exact ⟨w', h⟩
+      
   args.pattern.val.changeVarsMem varsMap
 
 structure MatchAtVarResult (args : MatchAtVarArgs) where
   map : TotalMapping args.Γ' args.Δ₀ ((args.V, args.W) :: args.cs)
-  -- TODO: prove that if matching succeeds the following holds
-  -- semantics : ∀ (ll : Γ.Sem), 
-  --   HEq (lets.denote ll v) 
-  --       ((matchExpr.val.changeVarsMem fun t v h => map.lookupMem t v sorry)
-  --         |>.denote (lets.denote ll))
+  semantics : ∀ (ll : args.Γ₁.Sem), 
+    (args.lets.denote ll v) = ((args.patternAfterSubstition map).denote (args.lets.denote ll))
 
-def matchAtVar (lets : Lets Γ₁ Δ₁) 
-    (pattern : IMatchPattern Γ₂ t₂)
-    (var : Δ₁.Var t) 
-    (map : TotalMapping Γ₀ Δ₀ V) 
-    {V : Γ₂.VarSet} : 
-    Option (MatchAtVarResult Δ₀ lets pattern V v) :=
-  sorry
+def matchAtVar : (args : MatchAtVarArgs) → Option (MatchAtVarResult args) 
+  | ⟨lets, ⟨matchExpr, _⟩, map, embedVars, v⟩ => do
+    let ⟨lets, expr, embed, _sem⟩ ← lets.getVar v
+    let embedVars := fun t v => embedVars t <| embed t v
+    let map := map.newConstraint fun _ => { w₀ | ∃ w₁, embedVars _ w₁ = w₀}
+
+    match matchExpr, expr with
+    | .var v, _ => do
+        let map ← map.insert v (embedVars _ <| Ctxt.Var.last ..)
+        let map := map.coerceDomain (by simp[IExprRec.vars, IExprRec.varsBool]; rfl) rfl
+
+        return ⟨map, sorry⟩
+    | .cst n, .nat m =>
+        if n = m then
+          let map := map.coerceDomain (by
+            simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union, 
+                Set.union]
+            rfl
+          )
+          return ⟨map, sorry⟩
+        else
+          none
+    | .add lhs rhs, .add v₁ v₂ => do
+        let embedVars : (t : Ty) → Ctxt.Var Δ'' t → Ctxt.Var Δ t := 
+          fun u v => embedVars u <| cast (by simp_all) (v.toSnoc (t' := .nat))
+        let ⟨map, _⟩ ← go lets lhs map embedVars v₁
+        let ⟨map, _⟩ ← go lets rhs map embedVars v₂
+
+        let map := map.coerceDomain <| by
+          simp[Membership.mem, Set.Mem, IExprRec.vars, IExprRec.varsBool, Union.union,
+                Set.union, setOf, or_assoc]
+        return ⟨map, sorry⟩
+    | _, _ => none
 
 
 end IMatchPattern

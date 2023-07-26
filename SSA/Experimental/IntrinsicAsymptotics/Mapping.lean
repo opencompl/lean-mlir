@@ -186,7 +186,7 @@ theorem Mapping.lookup_insert_preserve (map mapInsert : Mapping Γ Δ) {v : Γ.V
   By inserting into a total mapping, we expand the set of variables that it is defined on
 -/
 def TotalMapping.insert (map : TotalMapping Γ Δ ((V,W) :: tl)) (v : Γ.Var t₁) (w : Δ.Var t₂) 
-    (h_w : w ∈ W _) : 
+    (h_w : w ∈ W _ := by simp) : 
     Option (TotalMapping Γ Δ ((V ∪ {⟨_, v⟩}, W) :: tl)) := 
   match h_insert : map.inner.insert v w with
     | .some mapI => some {
@@ -232,6 +232,12 @@ def TotalMapping.coerceConstraint {Γ : Ctxt} {V V' : Γ.VarSet} {W W' : Δ.VarS
     (hV : V = V') (hW : W = W') : 
     TotalMapping Γ Δ ((V, W) :: cs) → TotalMapping Γ Δ ((V', W') :: cs)
   | ⟨inner, isTotal⟩ => ⟨inner, by cases hV; cases hW; exact isTotal⟩
+
+/-- Change the set of variables that a total mapping is known to be defined on  -/
+def TotalMapping.coerceDomain {Γ : Ctxt} {V V' : Γ.VarSet} {W W' : Δ.VarSet} {cs} (hV : V = V') : 
+    TotalMapping Γ Δ ((V, W) :: cs) → TotalMapping Γ Δ ((V', W) :: cs) :=
+  coerceConstraint hV rfl
+  
 
 
 /-- A specialization of the `isTotal` property to just the constraint at the top of the stack -/
