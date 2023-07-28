@@ -1,4 +1,3 @@
-import Mathlib.Tactic
 import Mathlib.Data.Erased
 
 /-- A very simple type universe. -/
