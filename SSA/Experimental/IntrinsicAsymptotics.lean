@@ -1,183 +1,8 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
-import Std.Data.Option.Lemmas
-import Std.Data.Array.Lemmas
-import Std.Data.Array.Init.Lemmas
--- import Mathlib
-import Mathlib.Data.List.Indexes
-import Mathlib.Data.Fin.Basic
+import SSA.Experimental.ErasedContext
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
-
-noncomputable section
-
-/-- A very simple type universe. -/
-inductive Ty
-  | nat
-  | bool
-  deriving DecidableEq, Repr
-
-@[reducible]
-def Ty.toType
-  | nat => Nat
-  | bool => Bool
-
--- inductive Value where
---   | nat : Nat → Value
---   | bool : Bool → Value
---   deriving Repr, Inhabited, DecidableEq
-
--- /-- The `State` is a map from variables to values that uses relative de Bruijn
---     indices. The most recently introduced variable is at the head of the list.
--- -/
--- abbrev State := List Value
-
-/-- A context is basicallty a list of `Ty`, but we make it a constant here to be
-implemented later -/
-axiom Ctxt : Type
-
-/-- The empty context -/
-axiom Ctxt.empty : Ctxt
-
-instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
-
-/-- Add a `Ty` to a context -/
-axiom Ctxt.snoc : Ctxt → Ty → Ctxt
-
-/-- A `Γ.Var t` is a variable of Type `t` in a context `Γ`   -/
-axiom Ctxt.Var (Γ : Ctxt) (t : Ty) : Type
-
-@[instance]
-axiom Ctxt.Var.decidableEq {Γ : Ctxt} {t : Ty} : DecidableEq (Ctxt.Var Γ t)
-
-/-- The last variable in a context, i.e. the most recently added. -/
-axiom Ctxt.Var.last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t
-
-/-- The empty Context has no variables, so we can add this eliminator. -/
-axiom Ctxt.Var.emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α  
-
-/-- Take a variable in a context `Γ` and get the corresponding variable
-in context `Γ.snoc t`. This is marked as a coercion. -/
-@[coe]
-axiom Ctxt.Var.toSnoc {Γ : Ctxt} {t t' : Ty} : 
-    Ctxt.Var Γ t → Ctxt.Var (Ctxt.snoc Γ t') t 
-
--- axiom Ctxt.append : Ctxt → Ctxt → Ctxt
-
--- axiom Ctxt.append_empty (Γ : Ctxt) : Ctxt.append Γ ∅ = Γ
-
--- axiom Ctxt.append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
---   Ctxt.append Γ (Ctxt.snoc Γ' t) = (Γ.append Γ').snoc t
-
--- axiom Ctxt.Var.inl {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ t) : 
---   Var (Ctxt.append Γ Γ') t
-
--- axiom Ctxt.Var.inr {Γ Γ' : Ctxt} {t : Ty} (v : Var Γ' t) :
---   Var (Ctxt.append Γ Γ') t
-
-/-- This is an induction principle that case splits on whether or not a variable 
-is the last variable in a context. -/
-@[elab_as_elim]
-axiom Ctxt.Var.casesOn 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      motive Γ t t' v
-
-/-- `Ctxt.Var.casesOn` behaves in the expected way when applied to the last variable -/
-@[simp]
-axiom Ctxt.Var.casesOn_last
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t : Ty}
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-    Ctxt.Var.casesOn (motive := motive)
-        (Ctxt.Var.last Γ t) toSnoc last = last
-
-/-- `Ctxt.Var.casesOn` behaves in the expected way when applied to a previous variable,
-that is not the last one. -/
-@[simp]
-axiom Ctxt.Var.casesOn_toSnoc 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
-    (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
-      Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) toSnoc last = toSnoc v
-
-theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
-    Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
-  let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
-    fun v => Ctxt.Var.casesOn v some none
-  intro x y h
-  simpa using congr_arg ofSnoc h
-  
-
--- axiom Ctxt.Var.appendCasesOn 
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : (Γ.append Γ').Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---       motive Γ Γ' t v
-
--- @[simp]
--- axiom Ctxt.Var.appendCasesOn_inl
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : Γ.Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---     Ctxt.Var.appendCasesOn (motive := motive)
---        (v.inl : (Γ.append Γ').Var t) inl inr = inl v
-
--- @[simp]
--- axiom Ctxt.Var.appendCasesOn_inr
---     {motive : (Γ Γ' : Ctxt) → (t : Ty) → (Γ.append Γ').Var t → Sort _}
---     {Γ Γ' : Ctxt} {t : Ty} (v : Γ'.Var t)
---     (inl : {Γ Γ' : Ctxt} → (v : Γ.Var t) → motive Γ Γ' t v.inl)
---     (inr : {Γ Γ' : Ctxt} → (v : Γ'.Var t) → motive Γ Γ' t v.inr) :
---     Ctxt.Var.appendCasesOn (motive := motive)
---        (v.inr : (Γ.append Γ').Var t) inl inr = inr v
-
-instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
-
-/-- A semantics for a context. Provide a way to evaluate every variable in a context. -/
-def Ctxt.Sem (Γ : Ctxt) : Type :=
-  ⦃t : Ty⦄ → Γ.Var t → t.toType    
-
-instance : Inhabited (Ctxt.Sem ∅) := ⟨fun _ v => v.emptyElim⟩ 
-
-/-- Make a semantics for `Γ.snoc t` from a semantics for `Γ` and an element of `t.toType`. -/
-def Ctxt.Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
-    (Γ.snoc t).Sem := by
-  intro t' v
-  revert s x
-  refine Ctxt.Var.casesOn v ?_ ?_
-  . intro _ _ _ v s _; exact s v
-  . intro _ _ _ x; exact x
-
-@[simp]
-theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
-    (s.snoc x) (Ctxt.Var.last _ _) = x := by 
-  simp [Ctxt.Sem.snoc]
-
-@[simp]
-theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
-    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
-  simp [Ctxt.Sem.snoc]
-
-/-- Given a change of variables map from `Γ` to `Γ'`, extend it to 
-a map `Γ.snoc t` to `Γ'.snoc t` -/
-@[simp] 
-def Ctxt.Var.snocMap {Γ Γ' : Ctxt} {t : Ty}
-    (f : (t : Ty) → Γ.Var t → Γ'.Var t) :
-    (t' : Ty) → (Γ.snoc t).Var t' → (Γ'.snoc t).Var t' :=
-  fun _ v => Ctxt.Var.casesOn v (fun v f => (f _ v).toSnoc) 
-    (fun _ => Ctxt.Var.last _ _) f
-
-abbrev Ctxt.hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
@@ -186,8 +11,8 @@ inductive IExpr : Ctxt → Ty → Type
   | nat (n : Nat) : IExpr Γ .nat
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
-inductive ICom : Ctxt →  Ty → Type where
-  | ret {Γ : Ctxt} : Γ.Var t → ICom Γ t
+inductive ICom : Ctxt → Ty → Type where
+  | ret (v : Γ.Var t) : ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
 inductive ExprRec (Γ : Ctxt) : Ty → Type where
@@ -294,9 +119,8 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
         else v')
   | .lete e body, inputProg => 
       let newBody := addProgramAtTop v.toSnoc
-        (fun _ v => Ctxt.Var.snocMap map _ v)
+        (fun _ v => Ctxt.Var.snocMap map v)
         body 
-        -- This is the identity function if vars are debruijn indices
         (inputProg.changeVars (fun _ v => v.toSnoc))
       .lete (e.changeVars map) newBody
       
@@ -333,7 +157,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
-      simp only [toSnoc_injective.eq_iff] at h'
+      simp only [Ctxt.toSnoc_injective.eq_iff] at h'
       exact h ⟨rfl, h'⟩  
 
 /-- Add some `Lets` to the beginning of a program -/
@@ -446,16 +270,16 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
 --         matchVar lets (getPos b varPos) b' mapping
 --     | _ => none
 
-def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t) × 
-      (Γ₃.snoc t).hom Γ₂)
-  | _, _, .nil, _, _ => none
-  | _, _, lets@(.lete body _), _, v => by
-    cases v using Ctxt.Var.casesOn with
-    | last => exact some ⟨_, lets, fun t v => v⟩ 
-    | toSnoc v => exact do
-      let g ← getVar body v
-      some ⟨g.1, g.2.1, fun t v => g.2.2 v⟩
+-- def Lets.getVar : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
+--     (v : Γ₂.Var t) → Option ((Γ₃ : Ctxt) × Lets Γ₁ (Γ₃.snoc t) × 
+--       (Γ₃.snoc t).hom Γ₂)
+--   | _, _, .nil, _, _ => none
+--   | _, _, lets@(.lete body _), _, v => by
+--     cases v using Ctxt.Var.casesOn with
+--     | last => exact some ⟨_, lets, fun t v => v⟩ 
+--     | toSnoc v => exact do
+--       let g ← getVar body v
+--       some ⟨g.1, g.2.1, fun t v => g.2.2 v⟩
 
 def Lets.getExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
     (v : Γ₂.Var t) → Option (IExpr Γ₂ t) 
@@ -463,7 +287,7 @@ def Lets.getExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : T
   | _, _, .lete lets e, _, v => by
     cases v using Ctxt.Var.casesOn with
     | toSnoc v => 
-      exact (Lets.getExpr lets v).map 
+      exact (Lets.getExpr lets v).map
         (IExpr.changeVars (fun _ => Ctxt.Var.toSnoc))
     | last => exact some <| e.changeVars (fun _ => Ctxt.Var.toSnoc)
 
@@ -495,7 +319,7 @@ def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
   | .cst _, _ => ∅ 
   | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
 
-def ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Sem} → 
+theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Sem} → 
     (h : ∀ t v, v ∈ e.vars t → s₁ v = s₂ v) → 
     e.denote s₁ = e.denote s₂
   | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
@@ -507,10 +331,6 @@ def ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Sem
         (by simp [hv, ExprRec.vars]))
     . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
         (by simp [hv, ExprRec.vars]))
-
-
-def Mapping.Total {Γ Δ : Ctxt} (m : Mapping Γ Δ) (e : ExprRec Γ t) : Prop :=
-  ∀ t' v, v ∈ e.vars t' → ∃ v', m.lookup ⟨t', v⟩ = some v'
 
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
@@ -734,11 +554,11 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
                 simp_all
               . simp_all
             . simp_all
-              
+            
 def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
-    (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t): 
+    (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) : 
     Option (Γ₃.hom Γ₂) := do
   match hm : matchVar lets v matchExpr with
   | none => none
@@ -833,11 +653,11 @@ def rewriteAt (lhs rhs : ICom Γ₁ t₁)
     return addProgramInMiddle vm m lets (h ▸ rhs) target'
   else none
 
-theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁) 
+theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
     (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.toExprRec.vars t)
     (pos : ℕ) (target : ICom Γ₂ t₂)
-    (hl : lhs.denote = rhs.denote) 
-    (rew : ICom Γ₂ t₂) 
+    (hl : lhs.denote = rhs.denote)
+    (rew : ICom Γ₂ t₂)
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
   ext s 
