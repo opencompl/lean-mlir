@@ -19,7 +19,6 @@ inductive ExprRec (Γ : Ctxt) : Ty → Type where
   | cst (n : Nat) : ExprRec Γ .nat
   | add (a : ExprRec Γ .nat) (b : ExprRec Γ .nat) : ExprRec Γ .nat
   | var (v : Γ.Var t) : ExprRec Γ t
-  deriving DecidableEq
 
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
     context `Γ₁`-/
@@ -27,34 +26,20 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
--- A simple first program
--- Observation: without the type annotation, we accumulate an exponentially large tree of nested contexts and `List.get`s.
--- By repeatedly referring to the last variable in the context, we force proof (time)s to grow linearly, resulting in
--- overall quadratic elaboration times.
--- def ex : ICom Array.empty .nat :=
---   ICom.let (.nat 0) <|
---   ICom.let (α := .nat) (.add ⟨⟨0, by decide⟩, by decide⟩ ⟨⟨0, by decide⟩, by decide⟩) <|
---   ICom.let (α := .nat) (.add ⟨1, by decide⟩ ⟨1, by decide⟩) <|
---   ICom.let (α := .nat) (.add ⟨2, by decide⟩ ⟨2, by decide⟩) <|
---   ICom.let (α := .nat) (.add ⟨3, by decide⟩ ⟨3, by decide⟩) <|
---   ICom.let (α := .nat) (.add ⟨4, by decide⟩ ⟨4, by decide⟩) <|
---   ICom.let (α := .nat) (.add ⟨5, by decide⟩ ⟨5, by decide⟩) <|
---   ICom.ret (.add ⟨0, by decide⟩ ⟨0, by decide⟩)
-
-def IExpr.denote : IExpr Γ ty → (Γs : Γ.Sem) → ty.toType
+def IExpr.denote : IExpr Γ ty → (Γs : Γ.Valuation) → ty.toType
   | .nat n, _ => n
   | .add a b, ll => ll a + ll b
 
-def ICom.denote : ICom Γ ty → (ll : Γ.Sem) → ty.toType
+def ICom.denote : ICom Γ ty → (ll : Γ.Valuation) → ty.toType
   | .ret e, l => l e
   | .lete e body, l => body.denote (l.snoc (e.denote l))
 
-def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Sem) → ty.toType
+def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Valuation) → ty.toType
   | .cst n, _ => n
   | .add a b, ll => a.denote ll + b.denote ll
   | .var v, ll => ll v
 
-def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem 
+def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation 
   | .nil => id
   | .lete e body => fun ll t v => by
     cases v using Ctxt.Var.casesOn with
@@ -74,7 +59,7 @@ def IExpr.changeVars (varsMap : Γ.hom Γ') :
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : Γ.hom Γ')
     (e : IExpr Γ ty)
-    (ll : Γ'.Sem) : 
+    (ll : Γ'.Valuation) : 
     (e.changeVars varsMap).denote ll = 
     e.denote (fun t v => ll (varsMap v)) := by
   induction e generalizing ll <;> simp 
@@ -90,14 +75,14 @@ def ICom.changeVars
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : Γ.hom Γ') (c : ICom Γ ty)
-    (ll : Γ'.Sem) : 
+    (ll : Γ'.Valuation) : 
     (c.changeVars varsMap).denote ll = 
     c.denote (fun t v => ll (varsMap v)) := by
   induction c generalizing ll Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
     rw [changeVars, denote, ih]
-    simp only [Ctxt.Sem.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
+    simp only [Ctxt.Valuation.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn
@@ -125,7 +110,7 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       .lete (e.changeVars map) newBody
       
 theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : Γ.hom Γ') (s : Γ'.Sem) :
+    (map : Γ.hom Γ') (s : Γ'.Valuation) :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
     (addProgramAtTop v map rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
@@ -143,7 +128,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
   | .lete e body, inputProg => by
     simp only [ICom.denote, IExpr.denote_changeVars]
     rw [denote_addProgramAtTop _ _ _ body]
-    simp [ICom.denote_changeVars, Ctxt.Sem.snoc_toSnoc]
+    simp [ICom.denote_changeVars, Ctxt.Valuation.snoc_toSnoc]
     congr
     funext t' v'
     by_cases h : ∃ h : t₁ = t', h ▸ v = v'
@@ -153,8 +138,8 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       congr
       funext t'' v''
       cases v'' using Ctxt.Var.casesOn
-      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
-      . simp [Ctxt.Sem.snoc, Ctxt.Var.snocMap]
+      . simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
+      . simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
       simp only [Ctxt.toSnoc_injective.eq_iff] at h'
@@ -176,7 +161,7 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
     rw [addLetsAtTop, denote_addLetsAtTop body]
     funext
     simp [ICom.denote, Function.comp_apply, Lets.denote,
-      Ctxt.Sem.snoc]
+      Ctxt.Valuation.snoc]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn
@@ -190,7 +175,7 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
   addLetsAtTop l (addProgramAtTop v map rhs inputProg)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
-    (v : Γ₂.Var t₁) (s : Γ₁.Sem)
+    (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
     (map : Γ₃.hom Γ₂) 
     (l : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
     (inputProg : ICom Γ₂ t₂) :
@@ -210,7 +195,7 @@ def ExprRec.bind {Γ₁ Γ₂ : Ctxt}
   | .cst n => .cst n
   | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
 
-theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Sem) 
+theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Valuation) 
     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
     (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
       e.denote (fun t' v' => (f t' v').denote s)
@@ -235,14 +220,14 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
       | last => exact e')
 
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
-    (s : Γ.Sem) → (e : IExpr Γ t) → 
+    (s : Γ.Valuation) → (e : IExpr Γ t) → 
     e.toExprRec.denote s = e.denote s
   | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
   | _, _, s, .add e₁ e₂ => by
     simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
 
 theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
-    (s : Γ.Sem) → (c : ICom Γ t) → 
+    (s : Γ.Valuation) → (c : ICom Γ t) → 
     c.toExprRec.denote s = c.denote s
   | _, _, _, .ret e => by simp [ICom.toExprRec, ICom.denote, ExprRec.denote]
   | _, _, s, .lete e body => by
@@ -292,7 +277,7 @@ def Lets.getExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : T
     | last => exact some <| e.changeVars (fun _ => Ctxt.Var.toSnoc)
 
 theorem Lets.denote_getExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} → 
-    (v : Γ₂.Var t) → (e : IExpr Γ₂ t) → (he : e ∈ lets.getExpr v) → (s : Γ₁.Sem) →
+    (v : Γ₂.Var t) → (e : IExpr Γ₂ t) → (he : e ∈ lets.getExpr v) → (s : Γ₁.Valuation) →
     e.denote (lets.denote s) = (lets.denote s) v 
   | _, _, .nil, t, v, e, he, s => by simp [Lets.getExpr] at he
   | _, _, .lete lets e, _, v, e', he, s => by
@@ -319,7 +304,7 @@ def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
   | .cst _, _ => ∅ 
   | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
 
-theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Sem} → 
+theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Valuation} → 
     (h : ∀ t v, v ∈ e.vars t → s₁ v = s₂ v) → 
     e.denote s₁ = e.denote s₂
   | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
@@ -473,7 +458,7 @@ instance (t : Ty) : Inhabited t.toType := by
 
 theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
     {t : Ty} → (v : Γ₂.Var t) → 
-    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Sem) → 
+    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Valuation) → 
     (matchExpr : ExprRec Γ₃ t) → 
     (ma : Mapping Γ₃ Γ₂ := ∅) →
     (h : varMap ∈ matchVar lets v matchExpr ma) →
@@ -573,7 +558,7 @@ def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
 
 theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
-    (matchExpr : ExprRec Γ₃ t) (s₁ : Γ₁.Sem)
+    (matchExpr : ExprRec Γ₃ t) (s₁ : Γ₁.Valuation)
     (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) 
     (map : Γ₃.hom Γ₂) 
     (hmap : map ∈ matchVarMap lets v matchExpr hvars) :
@@ -608,7 +593,7 @@ theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
     (prog : ICom Γ₂ t) →
     (res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t') →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
-    (s : Γ₁.Sem) → 
+    (s : Γ₁.Valuation) → 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
   | 0, lets, .lete e body, res, hres, s => by
     simp [splitProgramAtAux] at hres
@@ -624,7 +609,7 @@ theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
   | n+1, lets, .lete e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     rw [ICom.denote, denote_splitProgramAtAux n _ _ _ hres s]
-    simp [Ctxt.Sem.snoc, Lets.denote]
+    simp [Ctxt.Valuation.snoc, Lets.denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn
@@ -637,7 +622,7 @@ def splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) :
 
 theorem denote_splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) 
     (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t')
-    (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Sem) : 
+    (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Valuation) : 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
   denote_splitProgramAtAux pos _ _ _ hres s
 

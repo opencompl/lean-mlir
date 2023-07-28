@@ -110,15 +110,15 @@ def Var.snocMap {Γ Γ' : Ctxt} (f : hom Γ Γ') {t : Ty} :
 
 instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
-/-- A semantics for a context. Provide a way to evaluate every variable in a context. -/
-def Sem (Γ : Ctxt) : Type :=
+/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
+def Valuation (Γ : Ctxt) : Type :=
   ⦃t : Ty⦄ → Γ.Var t → t.toType
 
-instance : Inhabited (Ctxt.Sem ∅) := ⟨fun _ v => v.emptyElim⟩ 
+instance : Inhabited (Ctxt.Valuation ∅) := ⟨fun _ v => v.emptyElim⟩ 
 
-/-- Make a semantics for `Γ.snoc t` from a semantics for `Γ` and an element of `t.toType`. -/
-def Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
-    (Γ.snoc t).Sem := by
+/-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
+def Valuation.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toType) : 
+    (Γ.snoc t).Valuation := by
   intro t' v
   revert s x
   refine Ctxt.Var.casesOn v ?_ ?_
@@ -126,13 +126,13 @@ def Sem.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) :
   . intro _ _ _ x; exact x
 
 @[simp]
-theorem Sem.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Sem) (x : t.toType) : 
+theorem Valuation.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toType) : 
     (s.snoc x) (Ctxt.Var.last _ _) = x := by 
-  simp [Ctxt.Sem.snoc]
+  simp [Ctxt.Valuation.snoc]
 
 @[simp]
-theorem Sem.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Sem) (x : t.toType) 
+theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.toType) 
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
-  simp [Ctxt.Sem.snoc]
+  simp [Ctxt.Valuation.snoc]
 
 end Ctxt
