@@ -950,3 +950,24 @@ example : rewriteAt m r3 sorry 4 ex2 = some (
      .lete (IExpr.add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 --example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
+
+def ex3 : ICom ∅ .nat :=
+  .lete (.cst 1) <|
+  .lete (.cst 0) <|
+  .lete (.cst 2) <|
+  .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .lete (.add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) <| --here
+  .lete (.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  .ret ⟨0, by simp⟩
+
+example : rewriteAt r3 m sorry 5 ex3 = some (
+  .lete (.cst 1) <|
+  .lete (.cst 0) <|
+  .lete (.cst 2) <|
+  .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .lete (.add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .lete (.add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .lete (.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  .ret ⟨0, by simp⟩) := rfl
