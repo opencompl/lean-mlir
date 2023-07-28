@@ -410,17 +410,16 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → {lets : Lets Γ₁ Γ₂} 
     split
     . simp_all
     . simp_all
-    . simp [bind, pure, ExprRec.vars]
+    . simp only [Option.bind_some, Option.mem_def, Option.bind_eq_some, 
+        ExprRec.vars, Finset.mem_union, forall_exists_index, and_imp,
+        pure, bind]
       rintro m₁ hm₁ hm₂ t' v' hv'
-      --YUCK
-      have h : ExprRec.add lhs rhs = ExprRec.add _ _ :=
-        by assumption
+      rename_i _ h _
       injection h with h₁ h₂
       subst h₁ h₂
       rcases hv' with hv' | hv'
-      . have := mem_matchVar hm₁ hv'
-        exact AList.keys_subset_keys_of_entries_subset_entries 
-          (subset_entries_matchVar hm₂) this
+      . exact AList.keys_subset_keys_of_entries_subset_entries 
+          (subset_entries_matchVar hm₂) (mem_matchVar hm₁ hv')
       . exact mem_matchVar hm₂ hv'
     . simp_all
       
@@ -440,19 +439,19 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
         ) = 
       lets.denote s₁ v
   | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, .var v', ma, h => by
-    simp [matchVar] at h
+    simp only [matchVar, Option.mem_def] at h 
     split at h
     . split_ifs at h
       subst v
-      simp [ExprRec.denote]
+      simp only [ExprRec.denote]
       split
-      . simp at h
+      . simp only [Option.some.injEq] at h 
         subst h
         simp_all
       . simp_all
-    . simp_all [ExprRec.denote]
+    . simp at h
       subst h
-      simp
+      simp_all [ExprRec.denote]
   | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
     rw [ExprRec.denote]
     unfold matchVar at h
@@ -463,7 +462,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
       | nat m => 
         simp [hl] at h
         rw [← Lets.denote_getIExpr hl]
-        simp [IExpr.denote]
+        simp only [IExpr.denote]
         split_ifs at h; simp_all
       | add v₁ v₂ => simp [hl] at h
   | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .add lhs rhs, ma, h => by  
@@ -475,9 +474,9 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
       cases e with
       | nat m => simp [hl] at h
       | add v₁ v₂ => 
-        simp [hl] at h
+        simp only [hl, bind_pure, Option.mem_def] at h 
         rw [← Lets.denote_getIExpr hl]
-        simp [IExpr.denote]
+        simp only [IExpr.denote]
         cases h₁ : matchVar lets v₁ lhs ma with
         | none =>  simp [h₁, bind] at h
         | some m₁ => 
@@ -487,7 +486,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             rcases h with ⟨a, _, _⟩
             simp_all
           | some m₂ => 
-            simp [h₁, h₂, bind] at h
+            simp only [h₁, Option.some_bind, h₂, Option.some.injEq, pure, bind] at h 
             subst h
             have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
             have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
@@ -528,12 +527,12 @@ def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
       have := AList.lookup_isSome.2 (mem_matchVar hm (hvars t v'))
       simp_all
 
-theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
-    {t : Ty} (v : Γ₂.Var t) 
-    (matchExpr : ExprRec Γ₃ t) (s₁ : Γ₁.Valuation)
-    (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) 
-    (map : Γ₃.hom Γ₂) 
-    (hmap : map ∈ matchVarMap lets v matchExpr hvars) :
+theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} {lets : Lets Γ₁ Γ₂}
+    {t : Ty} {v : Γ₂.Var t} 
+    {matchExpr : ExprRec Γ₃ t} 
+    {hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t} 
+    {map : Γ₃.hom Γ₂}
+    (hmap : map ∈ matchVarMap lets v matchExpr hvars) (s₁ : Γ₁.Valuation) :
     matchExpr.denote (fun t' v' => lets.denote s₁ (map v')) = 
       lets.denote s₁ v := by
   rw [matchVarMap] at hmap
@@ -595,8 +594,8 @@ def splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) :
     Option (Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t') :=
   splitProgramAtAux pos .nil prog
 
-theorem denote_splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) 
-    (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t')
+theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Γ₁ t} 
+    {res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t'}
     (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Valuation) : 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
   denote_splitProgramAtAux hres s
@@ -630,25 +629,20 @@ theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
   split at hrew
   . simp at hrew
   . rename_i hs
-    simp at hrew
+    simp only [Option.mem_def] at hrew 
     split_ifs at hrew
     subst t₁
-    simp at hrew
     split at hrew
     . simp at hrew
-    . simp at hrew
+    . simp only [Option.some.injEq] at hrew 
       subst hrew
-      rw [denote_addProgramInMiddle]
-      simp
-      simp only [← hl]
-      have : matchVarMap _ _ _ _ = _ := by
-        assumption
-      have := denote_matchVarMap _ _ _ s _ _ this
+      rw [denote_addProgramInMiddle, ← hl]
+      rename_i _ _ h
+      have := denote_matchVarMap h
       simp only [ICom.denote_toExprRec] at this
-      simp only [this]
-      rw [← denote_splitProgramAt _ _ _ hs s]
+      simp only [this, ← denote_splitProgramAt hs s]
       congr
       funext t' v'
-      simp
+      simp only [dite_eq_right_iff, forall_exists_index]
       rintro rfl rfl
       simp
