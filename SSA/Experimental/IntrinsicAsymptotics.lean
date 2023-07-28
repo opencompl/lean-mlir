@@ -927,7 +927,7 @@ example : rewriteAt m r3 sorry 2 ex2 = some (
      .ret ⟨0, by simp⟩  ) := by rfl
 --example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
 
-example : rewriteAt m r2 sorry 3 ex2 = some (
+example : rewriteAt m r3 sorry 3 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
