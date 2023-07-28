@@ -731,10 +731,10 @@ def ex2 : ICom ∅ .nat :=
 --   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
 -- a + b => b + a
-def m : ExprRec (Erased.mk [.nat, .nat]) .nat := 
-  ExprRec.add (.var ⟨0, by simp⟩) (.var ⟨1, by simp⟩)
-def r : ExprRec (Erased.mk [.nat, .nat]) .nat := 
-  ExprRec.add (.var ⟨1, by simp⟩) (.var ⟨0, by simp⟩)
+def m : ICom (Erased.mk [.nat, .nat]) .nat := 
+  .lete (.add ⟨0, by simp⟩ ⟨1, by simp⟩) (.ret ⟨0, by simp⟩)
+def r : ICom (Erased.mk [.nat, .nat]) .nat := 
+  .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
 
 -- def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
 -- def m2 := ExprRec.add (.mvar 0) (.add (.mvar 1) (.mvar 2))
@@ -778,11 +778,11 @@ def r : ExprRec (Erased.mk [.nat, .nat]) .nat :=
 --       dbg_trace ""
 --       y
 
-example : rewriteAt m r 1 ex1 = (
-  ICom.lete (Expr.cst 1)    <|
-     .let (Expr.add 0 0)  <|
-     .let (Expr.add 1 1)  <|
-     .ret 0) := by rfl
+example : rewriteAt m r sorry 1 ex1 = some (
+  ICom.lete (IExpr.cst 1)  <|
+     .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
+     .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
+     .ret ⟨0, by simp⟩) := by rfl
 example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
 
 -- a + b => b + a
