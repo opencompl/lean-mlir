@@ -8,7 +8,7 @@ import Mathlib.Data.Finset.Basic
 inductive IExpr : Ctxt → Ty → Type
   | add (a b : Γ.Var .nat) : IExpr Γ .nat
   /-- Nat literals. -/
-  | nat (n : Nat) : IExpr Γ .nat
+  | cst (n : Nat) : IExpr Γ .nat
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
@@ -27,7 +27,7 @@ inductive Lets : Ctxt → Ctxt → Type where
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
 def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .nat n, _ => n
+  | .cst n, _ => n
   | .add a b, Γv => Γv a + Γv b
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
@@ -52,7 +52,7 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 
 def IExpr.changeVars (varsMap : Γ.hom Γ') : 
     (e : IExpr Γ ty) → IExpr Γ' ty
-  | .nat n => .nat n
+  | .cst n => .cst n
   | .add a b => .add (varsMap a) (varsMap b)
 
 @[simp]
@@ -205,7 +205,7 @@ theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Valuation)
     rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
 
 def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
-  | _, _, .nat n => .cst n
+  | _, _, .cst n => .cst n
   | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
 
 def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
@@ -222,7 +222,7 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
     (s : Γ.Valuation) → (e : IExpr Γ t) → 
     e.toExprRec.denote s = e.denote s
-  | _, _, _, .nat n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+  | _, _, _, .cst n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
   | _, _, s, .add e₁ e₂ => by
     simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
 
@@ -311,7 +311,7 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
           then some ma
           else none
     | none => some (AList.insert ⟨_, v'⟩ v ma) 
-  | .cst n, some (.nat m) =>
+  | .cst n, some (.cst m) =>
       if n = m then some ma
       else none
   | .add lhs rhs, some (.add v₁ v₂) => do
@@ -459,7 +459,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
     | none => simp [hl] at h
     | some e => 
       cases e with
-      | nat m => 
+      | cst m => 
         simp [hl] at h
         rw [← Lets.denote_getIExpr hl]
         simp only [IExpr.denote]
@@ -472,7 +472,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
     | none => simp [hl] at h
     | some e => 
       cases e with
-      | nat m => simp [hl] at h
+      | cst m => simp [hl] at h
       | add v₁ v₂ => 
         simp only [hl, bind_pure, Option.mem_def] at h 
         rw [← Lets.denote_getIExpr hl]
@@ -647,136 +647,138 @@ theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
       rintro rfl rfl
       simp
 
-#exit
+attribute [local simp] Ctxt.snoc
 
 /- Below are lots of tests, that need to be adapted to the new implementations -/
 
-def ex1 : ICom (Erased.mk [.nat, .nat]) .nat :=
+def ex1 : ICom ∅ .nat :=
   ICom.lete (.cst 1) <|
-  ICom.lete (.add 0 0) <|
-  ICom.ret 0
+  ICom.lete (.add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <|
+  ICom.ret ⟨0, by simp [Ctxt.snoc]⟩ 
 
-def ex2 : Com :=
+def ex2 : ICom ∅ .nat :=
   ICom.lete (.cst 1) <|
-  ICom.lete (.add 0 0) <|
-  ICom.lete (.add 1 0) <|
-  ICom.lete (.add 1 1) <|
-  ICom.lete (.add 1 1) <|
-  ICom.ret 0
+  ICom.lete (.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  ICom.lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  ICom.lete (.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+  ICom.lete (.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+  ICom.ret ⟨0, by simp⟩
 
-theorem addLets: addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0) = (
-  ICom.lete (Expr.cst 1) <|
-  ICom.lete (Expr.add 0 0) <|
-  ICom.ret 0) := rfl
+-- theorem addLets: addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0) = (
+--   ICom.lete (Expr.cst 1) <|
+--   ICom.lete (Expr.add 0 0) <|
+--   ICom.ret 0) := rfl
 
-theorem letsDenoteZero: Lets.denote [] = [] := rfl
-theorem letsComDenoteZero: (addLetsToProgram [] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
+-- theorem letsDenoteZero: Lets.denote [] = [] := rfl
+-- theorem letsComDenoteZero: (addLetsToProgram [] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
 
-theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
-theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
+-- theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
+-- theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
 
-theorem letsDenoteTwo:
-  Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
+-- theorem letsDenoteTwo:
+--   Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
 
-theorem letsComDenoteTwo:
-  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0)).denote [] = Value.nat 2 := by
-  rfl
-theorem letsComDenoteTwo':
-  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 1)).denote [] = Value.nat 1 := by
-  rfl
+-- theorem letsComDenoteTwo:
+--   (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0)).denote [] = Value.nat 2 := by
+--   rfl
+-- theorem letsComDenoteTwo':
+--   (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 1)).denote [] = Value.nat 1 := by
+--   rfl
 
-theorem letsDenoteThree:
-  Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
-  [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
-theorem letsComDenoteThree:
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 0)).denote [] = Value.nat 0 := by
-  rfl
-theorem letsComDenoteThree':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 1)).denote [] = Value.nat 1 := by
-  rfl
-theorem letsComDenoteThree'':
-  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 2)).denote [] = Value.nat 2 := by
-  rfl
+-- theorem letsDenoteThree:
+--   Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
+--   [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
+-- theorem letsComDenoteThree:
+--   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 0)).denote [] = Value.nat 0 := by
+--   rfl
+-- theorem letsComDenoteThree':
+--   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 1)).denote [] = Value.nat 1 := by
+--   rfl
+-- theorem letsComDenoteThree'':
+--   (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 2)).denote [] = Value.nat 2 := by
+--   rfl
 
-theorem letsDenoteFour:
-  Lets.denote [Expr.add 0 1, Expr.cst 3, Expr.cst 5, Expr.cst 7] [] =
-  [Value.nat 8, Value.nat 3, Value.nat 5, Value.nat 7] := rfl
-theorem letsComDenoteFour:
-  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 0)).denote [] = Value.nat 1 := by
-  rfl
-theorem letsComDenoteFour':
-  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 1)).denote [] = Value.nat 0 := by
-  rfl
-theorem letsComDenoteFour'':
-  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 2)).denote [] = Value.nat 1 := by
-  rfl
-theorem letsComDenoteFour''':
-  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 3)).denote [] = Value.nat 2 := by
-  rfl
+-- theorem letsDenoteFour:
+--   Lets.denote [Expr.add 0 1, Expr.cst 3, Expr.cst 5, Expr.cst 7] [] =
+--   [Value.nat 8, Value.nat 3, Value.nat 5, Value.nat 7] := rfl
+-- theorem letsComDenoteFour:
+--   (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 0)).denote [] = Value.nat 1 := by
+--   rfl
+-- theorem letsComDenoteFour':
+--   (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 1)).denote [] = Value.nat 0 := by
+--   rfl
+-- theorem letsComDenoteFour'':
+--   (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 2)).denote [] = Value.nat 1 := by
+--   rfl
+-- theorem letsComDenoteFour''':
+--   (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 3)).denote [] = Value.nat 2 := by
+--   rfl
 
-def lets1 : Lets := [Expr.cst 1]
-theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.denote []) := by
-  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+-- def lets1 : Lets := [Expr.cst 1]
+-- theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.denote []) := by
+--   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
-def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
-theorem letsDenote2: (addLetsToProgram lets2 xs).denote [] = xs.denote (lets2.denote []) := by
-  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+-- def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
+-- theorem letsDenote2: (addLetsToProgram lets2 xs).denote [] = xs.denote (lets2.denote []) := by
+--   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
-def lets3 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3]
-theorem letsDenote3: (addLetsToProgram lets3 xs).denote [] = xs.denote (lets3.denote []) := by
-  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+-- def lets3 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3]
+-- theorem letsDenote3: (addLetsToProgram lets3 xs).denote [] = xs.denote (lets3.denote []) := by
+--   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
-def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
-theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
-  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+-- def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
+-- theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
+--   simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
 
 -- a + b => b + a
-def m := ExprRec.add (.mvar 0) (.mvar 1)
-def r := ExprRec.add (.mvar 1) (.mvar 0)
+def m : ExprRec (Erased.mk [.nat, .nat]) .nat := 
+  ExprRec.add (.var ⟨0, by simp⟩) (.var ⟨1, by simp⟩)
+def r : ExprRec (Erased.mk [.nat, .nat]) .nat := 
+  ExprRec.add (.var ⟨1, by simp⟩) (.var ⟨0, by simp⟩)
 
-def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
-def m2 := ExprRec.add (.mvar 0) (.add (.mvar 1) (.mvar 2))
+-- def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
+-- def m2 := ExprRec.add (.mvar 0) (.add (.mvar 1) (.mvar 2))
 
-theorem mv3:
-  matchVar lets 3 m = none := rfl
+-- theorem mv3:
+--   matchVar lets 3 m = none := rfl
 
-theorem mv2:
-  matchVar lets 2 m = some [(1, 3), (0, 3)]:= rfl
+-- theorem mv2:
+--   matchVar lets 2 m = some [(1, 3), (0, 3)]:= rfl
 
-theorem mv1:
-  matchVar lets 1 m = some [(1, 2), (0, 3)]:= rfl
+-- theorem mv1:
+--   matchVar lets 1 m = some [(1, 2), (0, 3)]:= rfl
 
-theorem mv0:
-  matchVar lets 0 m = some [(1, 1), (0, 3)]:= rfl
+-- theorem mv0:
+--   matchVar lets 0 m = some [(1, 1), (0, 3)]:= rfl
 
-theorem mv23:
-  matchVar lets 3 m2 = none := rfl
+-- theorem mv23:
+--   matchVar lets 3 m2 = none := rfl
 
-theorem mv22:
-  matchVar lets 2 m2 = none := rfl
+-- theorem mv22:
+--   matchVar lets 2 m2 = none := rfl
 
-theorem mv21:
-  matchVar lets 1 m2 =
-  some [(2, 3), (1, 3), (0, 3)] := rfl
+-- theorem mv21:
+--   matchVar lets 1 m2 =
+--   some [(2, 3), (1, 3), (0, 3)] := rfl
 
-theorem mv20:
-  matchVar lets 0 m2 =
-  some [(2, 2), (1, 3), (0, 3)]:= rfl
+-- theorem mv20:
+--   matchVar lets 0 m2 =
+--   some [(2, 2), (1, 3), (0, 3)]:= rfl
 
-def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
-  let new := rewriteAt p pos (m, r)
-  dbg_trace "# Before"
-  dbg_trace repr p
-  match new with
-    | none => (ICom.ret 0) -- Failure
-    | some y =>
-      dbg_trace ""
-      dbg_trace "# After"
-      dbg_trace repr y
-      dbg_trace ""
-      y
+-- def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
+--   let new := rewriteAt p pos (m, r)
+--   dbg_trace "# Before"
+--   dbg_trace repr p
+--   match new with
+--     | none => (ICom.ret 0) -- Failure
+--     | some y =>
+--       dbg_trace ""
+--       dbg_trace "# After"
+--       dbg_trace repr y
+--       dbg_trace ""
+--       y
 
-example : rewriteAt ex1 1 (m, r) = (
+example : rewriteAt m r 1 ex1 = (
   ICom.lete (Expr.cst 1)    <|
      .let (Expr.add 0 0)  <|
      .let (Expr.add 1 1)  <|
