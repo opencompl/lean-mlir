@@ -26,18 +26,18 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-def IExpr.denote : IExpr Γ ty → (Γs : Γ.Valuation) → ty.toType
+def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .nat n, _ => n
-  | .add a b, ll => ll a + ll b
+  | .add a b, Γv => Γv a + Γv b
 
-def ICom.denote : ICom Γ ty → (ll : Γ.Valuation) → ty.toType
-  | .ret e, l => l e
-  | .lete e body, l => body.denote (l.snoc (e.denote l))
+def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
+  | .ret e, Γv => Γv e
+  | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
-def ExprRec.denote : ExprRec Γ ty → (ll : Γ.Valuation) → ty.toType
+def ExprRec.denote : ExprRec Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .cst n, _ => n
-  | .add a b, ll => a.denote ll + b.denote ll
-  | .var v, ll => ll v
+  | .add a b, Γv => a.denote Γv + b.denote Γv
+  | .var v, Γv => Γv v
 
 def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation 
   | .nil => id
@@ -59,10 +59,10 @@ def IExpr.changeVars (varsMap : Γ.hom Γ') :
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : Γ.hom Γ')
     (e : IExpr Γ ty)
-    (ll : Γ'.Valuation) : 
-    (e.changeVars varsMap).denote ll = 
-    e.denote (fun t v => ll (varsMap v)) := by
-  induction e generalizing ll <;> simp 
+    (Γ'v : Γ'.Valuation) : 
+    (e.changeVars varsMap).denote Γ'v = 
+    e.denote (fun t v => Γ'v (varsMap v)) := by
+  induction e generalizing Γ'v <;> simp 
     [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
@@ -75,22 +75,17 @@ def ICom.changeVars
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : Γ.hom Γ') (c : ICom Γ ty)
-    (ll : Γ'.Valuation) : 
-    (c.changeVars varsMap).denote ll = 
-    c.denote (fun t v => ll (varsMap v)) := by
-  induction c generalizing ll Γ' with
+    (Γ'v : Γ'.Valuation) : 
+    (c.changeVars varsMap).denote Γ'v = 
+    c.denote (fun t v => Γ'v (varsMap v)) := by
+  induction c generalizing Γ'v Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
     rw [changeVars, denote, ih]
     simp only [Ctxt.Valuation.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
     congr
     funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
- 
--- Find a let somewhere in the program. Replace that let with
--- a sequence of lets each of which might refer to higher up variables.
+    cases v using Ctxt.Var.casesOn <;> simp
 
 /-- Append two programs, while substituting a free variable in the second for 
 the output of the first -/
@@ -128,18 +123,17 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
   | .lete e body, inputProg => by
     simp only [ICom.denote, IExpr.denote_changeVars]
     rw [denote_addProgramAtTop _ _ _ body]
-    simp [ICom.denote_changeVars, Ctxt.Valuation.snoc_toSnoc]
+    simp only [ICom.denote_changeVars, Ctxt.Valuation.snoc_toSnoc]
     congr
     funext t' v'
     by_cases h : ∃ h : t₁ = t', h ▸ v = v'
     . rcases h with ⟨rfl, h⟩
       dsimp at h
-      simp [h]
+      simp only [h, exists_prop, dite_eq_ite, ite_true]
       congr
       funext t'' v''
-      cases v'' using Ctxt.Var.casesOn
-      . simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
-      . simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
+      cases v'' using Ctxt.Var.casesOn <;>
+        simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
       simp only [Ctxt.toSnoc_injective.eq_iff] at h'
@@ -160,13 +154,11 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
   | Lets.lete body e, inputProg => by
     rw [addLetsAtTop, denote_addLetsAtTop body]
     funext
-    simp [ICom.denote, Function.comp_apply, Lets.denote,
-      Ctxt.Valuation.snoc]
+    simp only [ICom.denote, Ctxt.Valuation.snoc, Function.comp_apply, Lets.denote, 
+      eq_rec_constant]
     congr
     funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
+    cases v using Ctxt.Var.casesOn <;> simp
 
 /-- `addProgramInMiddle v map lets rhs inputProg` appends the programs
 `lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
@@ -245,9 +237,8 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
     rw [ICom.denote_toExprRec _ body]
     congr
     funext t' v'
-    cases v' using Ctxt.Var.casesOn
-    . simp [ExprRec.denote]
-    . simp [IExpr.denote_toExprRec]
+    cases v' using Ctxt.Var.casesOn <;>
+      simp [ExprRec.denote, IExpr.denote_toExprRec]
 
 /-- Get the `IExpr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
@@ -278,7 +269,8 @@ theorem Lets.denote_getIExpr : {Γ₁ Γ₂ : Ctxt} → {lets : Lets Γ₁ Γ₂
         Ctxt.Var.casesOn_toSnoc]
       rw [denote_getIExpr ha s]
     | last => 
-      simp [getIExpr] at he
+      simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_last, 
+        Option.mem_def, Option.some.injEq] at he 
       subst he
       simp [Lets.denote]
 
@@ -302,7 +294,8 @@ theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ
         (by simp [hv, ExprRec.vars]))
     . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
         (by simp [hv, ExprRec.vars]))
-
+ 
+/--  -/
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
