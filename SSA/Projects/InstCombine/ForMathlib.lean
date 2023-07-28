@@ -102,15 +102,15 @@ theorem foldl_addLsb_cons_zero (a : Bool) (x : List Bool) :
    _ = _ := by rw [foldl_addLsb_add]
 
 theorem toNat_adc_aux : ∀ {x y: List Bool} (_h : List.length x = List.length y),
-    List.foldl addLsb (addLsb 0 (List.mapAccumr₂ (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).fst)
-      (List.mapAccumr₂ (fun x y c => (Bitvec.carry x y c, Bitvec.xor3 x y c)) x y false).snd =
+    List.foldl addLsb (addLsb 0 (List.mapAccumr₂ (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).fst)
+      (List.mapAccumr₂ (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).snd =
     List.foldl addLsb 0 x + List.foldl addLsb 0 y 
 | [], [], _ => rfl
 | a::x, b::y, h => by
   simp only [List.length_cons, Nat.succ.injEq] at h
   rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, add_add_add_comm, ← toNat_adc_aux h,
     List.mapAccumr₂]
-  dsimp only [Bitvec.carry, Bitvec.xor3]
+  dsimp only [Bool.carry, Bool.xor3]
   rw [foldl_addLsb_eq_add_foldl_addLsb_zero, foldl_addLsb_cons_zero,
     foldl_addLsb_eq_add_foldl_addLsb_zero _ (addLsb _ _)]
   cases a <;> cases b <;> 
@@ -203,15 +203,15 @@ theorem toZMod_nsmul {n : ℕ} (x : Bitvec n) (y : ℕ) : (y • x).toZMod = y �
   | succ y ih => rw [nsmul_def, nsmulRec, toZMod_add, ← nsmul_def, ih]; simp [add_mul, add_comm]
 
 theorem toInt_sub_aux : ∀ {x y : List Bool} (_hx : List.length x = List.length y),
-    (↑(List.foldl addLsb 0 (List.mapAccumr₂ (fun x y c => (Bitvec.carry (!x) y c, Bitvec.xor3 x y c)) x y false).snd) : ℤ)
-    - 2 ^ x.length * cond (List.mapAccumr₂ (fun x y c => (Bitvec.carry (!x) y c, Bitvec.xor3 x y c)) x y false).fst 1 0 =
+    (↑(List.foldl addLsb 0 (List.mapAccumr₂ (fun x y c => (Bool.carry (!x) y c, Bool.xor3 x y c)) x y false).snd) : ℤ)
+    - 2 ^ x.length * cond (List.mapAccumr₂ (fun x y c => (Bool.carry (!x) y c, Bool.xor3 x y c)) x y false).fst 1 0 =
   ↑(List.foldl addLsb 0 x) + -↑(List.foldl addLsb 0 y) 
 | [], [], _ => rfl
 |  a::x, b::y, h => by
   simp only [List.length_cons, Nat.succ.injEq] at h
   rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, Nat.cast_add, 
     Nat.cast_add, neg_add, add_add_add_comm, ← toInt_sub_aux h, List.mapAccumr₂]
-  dsimp only [Bitvec.carry, Bitvec.xor3]
+  dsimp only [Bool.carry, Bool.xor3]
   rw [foldl_addLsb_eq_add_foldl_addLsb_zero, foldl_addLsb_cons_zero]
   cases a <;> cases b <;> 
   simp only [Bool.xor_false_right, Bool.xor_assoc, Bool.true_xor, List.length_cons, List.length_mapAccumr₂,
