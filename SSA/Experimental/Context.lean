@@ -45,7 +45,7 @@ def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
 in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
 def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Ctxt.Var Γ t) : Ctxt.Var (Ctxt.snoc Γ t') t  :=
-  ⟨var.1+1, by cases var; simp_all⟩
+  ⟨var.1+1, by cases var; simp_all [snoc]⟩
   
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
