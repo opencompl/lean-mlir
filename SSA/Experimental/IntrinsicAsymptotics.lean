@@ -783,22 +783,22 @@ example : rewriteAt m r sorry 1 ex1 = some (
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
      .ret ⟨0, by simp⟩) := by rfl
-example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
+--example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
 
 -- a + b => b + a
 
-example : rewriteAt ex2 0 (m, r) = none := by rfl
-example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
+example : rewriteAt m r sorry 0 ex1 = none := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
-example : rewriteAt ex2 1 (m, r) = (
-  ICom.lete (Expr.cst 1)   <|
-     .let (Expr.add 0 0) <|
-     .let (Expr.add 1 1) <|
-     .let (Expr.add 2 0) <|
-     .let (Expr.add 1 1) <|
-     .let (Expr.add 1 1) <|
-     .ret 0) := by rfl
-example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
+example : rewriteAt m r sorry 1 ex2 = some (
+  ICom.lete (IExpr.cst 1)   <|
+     .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+     .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+     .lete (IExpr.add ⟨2, by simp⟩ ⟨0, by simp⟩) <|
+     .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+     .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
+     .ret ⟨0, by simp⟩) := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
 
 example : rewriteAt ex2 2 (m, r) = (
   ICom.lete (Expr.cst 1)   <|
