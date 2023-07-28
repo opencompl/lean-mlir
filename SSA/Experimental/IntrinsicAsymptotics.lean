@@ -295,7 +295,8 @@ theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ
     . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
         (by simp [hv, ExprRec.vars]))
  
-/--  -/
+/-- `matchVar` attempts to assign variables in `matchExpr` to variables
+in `lets`, and extends the input mapping `ma`, which is by default `∅`.  -/
 def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
@@ -321,15 +322,18 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
 
 open AList
 
+/-- For mathlib -/
 theorem _root_.AList.keys_subset_keys_of_entries_subset_entries 
-    {α : Type _} {β : α → Type _} [DecidableEq α]
+    {α : Type _} {β : α → Type _} 
     {s₁ s₂ : AList β} (h : s₁.entries ⊆ s₂.entries) : s₁.keys ⊆ s₂.keys := by
   intro k hk
+  letI := Classical.decEq α 
   have := h (mem_lookup_iff.1 (Option.get_mem (lookup_isSome.2 hk)))
   rw [← mem_lookup_iff, Option.mem_def] at this
   rw [← mem_keys, ← lookup_isSome, this]
   exact Option.isSome_some
 
+/-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
 theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → 
     {lets : Lets Γ₁ Γ₂} →  
     {t : Ty} → {v : Γ₂.Var t} → 
@@ -339,15 +343,12 @@ theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} →
     (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
     ma.entries ⊆ varMap.entries 
   | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
-    simp [matchVar, ExprRec.vars]
+    simp only [matchVar, Option.mem_def]
     intros h x hx
-    split at *
+    split at h
     . split_ifs at h
-      . subst v
-        injection h with h
-        subst h
-        assumption
-    . simp at h
+      . simp_all
+    . simp only [Option.some.injEq] at h 
       subst h
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
@@ -359,9 +360,7 @@ theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} →
     split
     . simp_all
     . split_ifs
-      . simp
-        rintro rfl
-        simp
+      . simp (config := {contextual := true})
       . simp
     . simp_all
     . simp_all
@@ -372,13 +371,10 @@ theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} →
     . simp_all
     . simp [bind, pure, ExprRec.vars]
       rintro m₁ hm₁ hm₂ x hx
-      --YUCK
-      have h : ExprRec.add lhs rhs = ExprRec.add _ _ :=
-        by assumption
+      rename_i _ h _
       injection h with h₁ h₂
       subst h₁ h₂
-      have := subset_entries_matchVar hm₁ hx
-      exact subset_entries_matchVar hm₂ this
+      exact subset_entries_matchVar hm₂ (subset_entries_matchVar hm₁ hx)
     . simp_all
 
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
@@ -390,7 +386,7 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → {lets : Lets Γ₁ Γ₂} 
     (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
     ∀ {t' v'}, v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
   | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
-    simp [matchVar, ExprRec.vars]
+    simp only [matchVar, Option.mem_def, ExprRec.vars]
     intros h t' v₂
     split at *
     . split_ifs at h
@@ -399,19 +395,14 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → {lets : Lets Γ₁ Γ₂} 
         subst h
         split_ifs
         . subst t
-          simp
-          rintro rfl
-          rename_i _ _ h
-          rw [← AList.lookup_isSome, h]
-          simp
+          simp_all (config := {contextual := true}) 
+            [Finset.mem_singleton, ← AList.lookup_isSome] 
         . simp
     . split_ifs
       . subst t
-        simp at h
+        simp only [Option.some.injEq] at h 
         subst h
-        simp
-        rintro rfl
-        simp
+        simp (config := {contextual := true})
       . simp
   | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by simp [ExprRec.vars]
   | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
