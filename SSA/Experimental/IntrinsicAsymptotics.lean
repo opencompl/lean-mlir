@@ -388,13 +388,14 @@ theorem subset_entries_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} →
       exact subset_entries_matchVar hm₂ this
     . simp_all
 
-theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) →  
-    {t : Ty} → (v : Γ₂.Var t) → 
-    (matchExpr : ExprRec Γ₃ t) → 
-    (varMap : Mapping Γ₃ Γ₂) → 
-    (ma : Mapping Γ₃ Γ₂) → 
+/-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
+theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → {lets : Lets Γ₁ Γ₂} →  
+    {t : Ty} → {v : Γ₂.Var t} → 
+    {matchExpr : ExprRec Γ₃ t} → 
+    {varMap : Mapping Γ₃ Γ₂} → 
+    {ma : Mapping Γ₃ Γ₂} → 
     (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
-    ∀ t' v', v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
+    ∀ {t' v'}, v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
   | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
     simp [matchVar, ExprRec.vars]
     intros h t' v₂
@@ -433,10 +434,10 @@ theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) 
       injection h with h₁ h₂
       subst h₁ h₂
       rcases hv' with hv' | hv'
-      . have := mem_matchVar _ _ _ _ _ hm₁ _ _ hv'
+      . have := mem_matchVar hm₁ hv'
         exact AList.keys_subset_keys_of_entries_subset_entries 
           (subset_entries_matchVar hm₂) this
-      . exact mem_matchVar _ _ _ _ _ hm₂ _ _ hv'
+      . exact mem_matchVar hm₂ hv'
     . simp_all
       
 instance (t : Ty) : Inhabited t.toType := by
@@ -510,7 +511,7 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
             congr 1
             apply ExprRec.denote_eq_of_eq_on_vars
             intro t' v' hv'
-            have h₁ := mem_matchVar _ _ _ _ _ h₁ _ _ hv'
+            have h₁ := mem_matchVar h₁ hv'
             have h₃ := subset_entries_matchVar h₂  
             have h₂ := keys_subset_keys_of_entries_subset_entries
               h₃ h₁
@@ -540,8 +541,7 @@ def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
     match h : m.lookup ⟨t, v'⟩ with
     | some v' => by exact v'
     | none => by
-      have := AList.lookup_isSome.2 (mem_matchVar lets v matchExpr _ _ hm _ v' 
-        (hvars _ _))
+      have := AList.lookup_isSome.2 (mem_matchVar hm (hvars t v'))
       simp_all
 
 theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
@@ -557,16 +557,15 @@ theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
   . simp_all
   . rename_i hm
     rw [← denote_matchVar lets v _ s₁ matchExpr ∅ hm]
-    simp [pure] at hmap 
+    simp only [Option.mem_def, Option.some.injEq, pure] at hmap  
     subst hmap
     congr
     funext t' v;
     split
     . congr
-      simp_all
+      dsimp
       split <;> simp_all
-    . have := AList.lookup_isSome.2 (mem_matchVar lets _ matchExpr _ _ hm _ v 
-        (hvars _ _))
+    . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
   
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending 
@@ -588,25 +587,21 @@ theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Γ₁ Γ₂} →
     (s : Γ₁.Valuation) → 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
   | 0, lets, .lete e body, res, hres, s => by
-    simp [splitProgramAtAux] at hres
+    simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres 
     subst hres
-    simp [Lets.denote, ICom.denote]
+    simp only [Lets.denote, eq_rec_constant, ICom.denote]
     congr
     funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
+    cases v using Ctxt.Var.casesOn <;> simp
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux] at hres
   | n+1, lets, .lete e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     rw [ICom.denote, denote_splitProgramAtAux hres s]
-    simp [Ctxt.Valuation.snoc, Lets.denote]
+    simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
     congr
     funext t v
-    cases v using Ctxt.Var.casesOn
-    . simp
-    . simp
+    cases v using Ctxt.Var.casesOn <;> simp
 
 /-- `splitProgramAt pos prog`, will return a `Lets` ending 
 with the `pos`th variable in `prog`, and an `ICom` starting with the next variable.
