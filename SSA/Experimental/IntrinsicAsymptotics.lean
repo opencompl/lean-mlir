@@ -646,3 +646,294 @@ theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
       simp only [dite_eq_right_iff, forall_exists_index]
       rintro rfl rfl
       simp
+
+#exit
+
+/- Below are lots of tests, that need to be adapted to the new implementations -/
+
+def ex1 : ICom (Erased.mk [.nat, .nat]) .nat :=
+  ICom.lete (.cst 1) <|
+  ICom.lete (.add 0 0) <|
+  ICom.ret 0
+
+def ex2 : Com :=
+  ICom.lete (.cst 1) <|
+  ICom.lete (.add 0 0) <|
+  ICom.lete (.add 1 0) <|
+  ICom.lete (.add 1 1) <|
+  ICom.lete (.add 1 1) <|
+  ICom.ret 0
+
+theorem addLets: addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0) = (
+  ICom.lete (Expr.cst 1) <|
+  ICom.lete (Expr.add 0 0) <|
+  ICom.ret 0) := rfl
+
+theorem letsDenoteZero: Lets.denote [] = [] := rfl
+theorem letsComDenoteZero: (addLetsToProgram [] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
+
+theorem letsDenoteOne: Lets.denote [Expr.cst 0] [] = [Value.nat 0] := rfl
+theorem letsComDenoteOne: (addLetsToProgram [Expr.cst 0] (ICom.ret 0)).denote [] = Value.nat 0 := rfl
+
+theorem letsDenoteTwo:
+  Lets.denote [Expr.add 0 0, Expr.cst 1] [] = [Value.nat 2, Value.nat 1] := rfl
+
+theorem letsComDenoteTwo:
+  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 0)).denote [] = Value.nat 2 := by
+  rfl
+theorem letsComDenoteTwo':
+  (addLetsToProgram [Expr.add 0 0, Expr.cst 1] (ICom.ret 1)).denote [] = Value.nat 1 := by
+  rfl
+
+theorem letsDenoteThree:
+  Lets.denote [Expr.cst 0, Expr.cst 1, Expr.cst 2] [] =
+  [Value.nat 0, Value.nat 1, Value.nat 2] := rfl
+theorem letsComDenoteThree:
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 0)).denote [] = Value.nat 0 := by
+  rfl
+theorem letsComDenoteThree':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 1)).denote [] = Value.nat 1 := by
+  rfl
+theorem letsComDenoteThree'':
+  (addLetsToProgram [Expr.cst 0, Expr.cst 1, Expr.cst 2] (ICom.ret 2)).denote [] = Value.nat 2 := by
+  rfl
+
+theorem letsDenoteFour:
+  Lets.denote [Expr.add 0 1, Expr.cst 3, Expr.cst 5, Expr.cst 7] [] =
+  [Value.nat 8, Value.nat 3, Value.nat 5, Value.nat 7] := rfl
+theorem letsComDenoteFour:
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 0)).denote [] = Value.nat 1 := by
+  rfl
+theorem letsComDenoteFour':
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 1)).denote [] = Value.nat 0 := by
+  rfl
+theorem letsComDenoteFour'':
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 2)).denote [] = Value.nat 1 := by
+  rfl
+theorem letsComDenoteFour''':
+  (addLetsToProgram [Expr.add 0 1, Expr.cst 0, Expr.cst 1, Expr.cst 2, Expr.add 0 1] (ICom.ret 3)).denote [] = Value.nat 2 := by
+  rfl
+
+def lets1 : Lets := [Expr.cst 1]
+theorem letsDenote1: (addLetsToProgram lets1 xs).denote [] = xs.denote (lets1.denote []) := by
+  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+
+def lets2 : Lets := [Expr.cst 1, Expr.cst 2]
+theorem letsDenote2: (addLetsToProgram lets2 xs).denote [] = xs.denote (lets2.denote []) := by
+  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+
+def lets3 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3]
+theorem letsDenote3: (addLetsToProgram lets3 xs).denote [] = xs.denote (lets3.denote []) := by
+  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+
+def lets4 : Lets := [Expr.cst 1, Expr.cst 2, Expr.cst 3, Expr.add 0 1]
+theorem letsDenote4: (addLetsToProgram lets4 xs).denote [] = xs.denote (lets4.denote []) := by
+  simp [Com.denote, Lets.denote, addLetsToProgram, Expr.denote, Com.denote]
+
+-- a + b => b + a
+def m := ExprRec.add (.mvar 0) (.mvar 1)
+def r := ExprRec.add (.mvar 1) (.mvar 0)
+
+def lets := [Expr.add 2 0, .add 1 0 , .add 0 0, .cst 1]
+def m2 := ExprRec.add (.mvar 0) (.add (.mvar 1) (.mvar 2))
+
+theorem mv3:
+  matchVar lets 3 m = none := rfl
+
+theorem mv2:
+  matchVar lets 2 m = some [(1, 3), (0, 3)]:= rfl
+
+theorem mv1:
+  matchVar lets 1 m = some [(1, 2), (0, 3)]:= rfl
+
+theorem mv0:
+  matchVar lets 0 m = some [(1, 1), (0, 3)]:= rfl
+
+theorem mv23:
+  matchVar lets 3 m2 = none := rfl
+
+theorem mv22:
+  matchVar lets 2 m2 = none := rfl
+
+theorem mv21:
+  matchVar lets 1 m2 =
+  some [(2, 3), (1, 3), (0, 3)] := rfl
+
+theorem mv20:
+  matchVar lets 0 m2 =
+  some [(2, 2), (1, 3), (0, 3)]:= rfl
+
+def testRewrite (p : Com) (r : ExprRec) (pos : Nat) : Com :=
+  let new := rewriteAt p pos (m, r)
+  dbg_trace "# Before"
+  dbg_trace repr p
+  match new with
+    | none => (ICom.ret 0) -- Failure
+    | some y =>
+      dbg_trace ""
+      dbg_trace "# After"
+      dbg_trace repr y
+      dbg_trace ""
+      y
+
+example : rewriteAt ex1 1 (m, r) = (
+  ICom.lete (Expr.cst 1)    <|
+     .let (Expr.add 0 0)  <|
+     .let (Expr.add 1 1)  <|
+     .ret 0) := by rfl
+example : denote ex1 = denote (testRewrite ex1 r 1) := by rfl
+
+-- a + b => b + a
+
+example : rewriteAt ex2 0 (m, r) = none := by rfl
+example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
+
+example : rewriteAt ex2 1 (m, r) = (
+  ICom.lete (Expr.cst 1)   <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 2 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r 1) := by rfl
+
+example : rewriteAt ex2 2 (m, r) = (
+  ICom.lete (Expr.cst 1)   <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 2) <|
+     .let (Expr.add 2 2) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r 2) := by rfl
+
+example : rewriteAt ex2 3 (m, r) = (
+  ICom.lete (Expr.cst 1)   <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 2 2) <|
+     .let (Expr.add 2 2) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r 3) := by rfl
+
+example : rewriteAt ex2 4 (m, r) = (
+  ICom.lete (Expr.cst 1)   <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 2 2) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r 4) := by rfl
+
+def ex2' : Com :=
+  ICom.lete (.cst 1) <|
+  ICom.lete (.add 0 0) <|
+  ICom.lete (.add 1 0) <|
+  ICom.lete (.add 1 1) <|
+  ICom.lete (.add 1 1) <|
+  ICom.ret 0
+
+-- a + b => b + (0 + a)
+def r2 := ExprRec.add (.mvar 1) (.add (.cst 0) (.mvar 0))
+
+example : rewriteAt ex2 1 (m, r2) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 2) <|
+     .let (Expr.add 3 0) <|
+     .let (Expr.add 4 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r2 1) := by rfl
+
+example : rewriteAt ex2 2 (m, r2) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 3 0) <|
+     .let (Expr.add 4 4) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r2 2) := by rfl
+
+example : rewriteAt ex2 3 (m, r2) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 4 0) <|
+     .let (Expr.add 4 4) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r2 3) := by rfl
+
+example : rewriteAt ex2 4 (m, r2) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 4 0) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
+
+-- a + b => (0 + a) + b
+def r3 := ExprRec.add (.add (.cst 0 ) (.mvar 0)) (.mvar 1)
+
+example : rewriteAt ex2 1 (m, r3) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 2) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 4 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
+
+example : rewriteAt ex2 2 (m, r3) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 4 4) <|
+     .let (Expr.add 1 1) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
+
+example : rewriteAt ex2 3 (m, r3) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 0 4) <|
+     .let (Expr.add 4 4) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
+
+example : rewriteAt ex2 4 (m, r3) = (
+  ICom.lete (Expr.cst 1) <|
+     .let (Expr.add 0 0) <|
+     .let (Expr.add 1 0) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.add 1 1) <|
+     .let (Expr.cst 0) <|
+     .let (Expr.add 0 3) <|
+     .let (Expr.add 0 4) <|
+     .ret 0) := by rfl
+example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
