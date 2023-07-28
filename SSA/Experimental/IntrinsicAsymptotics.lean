@@ -896,9 +896,14 @@ example : rewriteAt m r2 sorry 4 ex2 = some (
 --example : denote ex2 = denote (testRewrite ex2 r2 4) := by rfl
 
 -- a + b => (0 + a) + b
-def r3 := ExprRec.add (.add (.cst 0 ) (.mvar 0)) (.mvar 1)
+def r3 : ICom (Erased.mk [.nat, .nat]) .nat := 
+  .lete (.cst 0) <|
+  .lete (.add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
+  .lete (.add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
+  .ret ⟨0, by simp⟩
+--ExprRec.add (.add (.cst 0 ) (.mvar 0)) (.mvar 1)
 
-example : rewriteAt ex2 1 (m, r3) = (
+example : rewriteAt m r3 sorry 1 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.cst  0) <|
@@ -908,9 +913,9 @@ example : rewriteAt ex2 1 (m, r3) = (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
-example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r3 1) := by rfl
 
-example : rewriteAt ex2 2 (m, r3) = (
+example : rewriteAt m r3 sorry 2 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -920,9 +925,9 @@ example : rewriteAt ex2 2 (m, r3) = (
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
-example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r3 2) := by rfl
 
-example : rewriteAt ex2 3 (m, r3) = (
+example : rewriteAt m r2 sorry 3 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -932,9 +937,9 @@ example : rewriteAt ex2 3 (m, r3) = (
      .lete (IExpr.add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
-example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r3 3) := by rfl
 
-example : rewriteAt ex2 4 (m, r3) = (
+example : rewriteAt m r3 sorry 4 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -944,4 +949,4 @@ example : rewriteAt ex2 4 (m, r3) = (
      .lete (IExpr.add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
-example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
+--example : denote ex2 = denote (testRewrite ex2 r3 4) := by rfl
