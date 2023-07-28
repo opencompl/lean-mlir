@@ -568,7 +568,11 @@ theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
     . have := AList.lookup_isSome.2 (mem_matchVar lets _ matchExpr _ _ hm _ v 
         (hvars _ _))
       simp_all
-
+  
+/-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending 
+with the `pos`th variable in `prog`, and an `ICom` starting with the next variable.
+It also returns, the type of this variable and the variable itself as an element
+of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) → 
     (prog : ICom Γ₂ t) → 
     Option (Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t')
@@ -577,9 +581,9 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
   | n+1, lets, .lete e body => 
     splitProgramAtAux n (lets.lete e) body
 
-theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
-    (prog : ICom Γ₂ t) →
-    (res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t') →
+theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Γ₁ Γ₂} →
+    {prog : ICom Γ₂ t} →
+    {res : Σ (Γ₃ : Ctxt), Lets Γ₁ Γ₃ × ICom Γ₃ t × (t' : Ty) × Γ₃.Var t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Γ₁.Valuation) → 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote (lets.denote s) 
@@ -596,7 +600,7 @@ theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
     simp [splitProgramAtAux] at hres
   | n+1, lets, .lete e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
-    rw [ICom.denote, denote_splitProgramAtAux n _ _ _ hres s]
+    rw [ICom.denote, denote_splitProgramAtAux hres s]
     simp [Ctxt.Valuation.snoc, Lets.denote]
     congr
     funext t v
@@ -604,6 +608,10 @@ theorem denote_splitProgramAtAux : (pos : ℕ) → (lets : Lets Γ₁ Γ₂) →
     . simp
     . simp
 
+/-- `splitProgramAt pos prog`, will return a `Lets` ending 
+with the `pos`th variable in `prog`, and an `ICom` starting with the next variable.
+It also returns, the type of this variable and the variable itself as an element
+of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t) :  
     Option (Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t') :=
   splitProgramAtAux pos .nil prog
@@ -612,8 +620,12 @@ theorem denote_splitProgramAt (pos : ℕ) (prog : ICom Γ₁ t)
     (res : Σ (Γ₂ : Ctxt), Lets Γ₁ Γ₂ × ICom Γ₂ t × (t' : Ty) × Γ₂.Var t')
     (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Valuation) : 
     res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
-  denote_splitProgramAtAux pos _ _ _ hres s
+  denote_splitProgramAtAux hres s
 
+/-- `rewriteAt lhs rhs hlhs pos target`, searches for `lhs` at position `pos` of
+`target`. If it can match the variables, it inserts `rhs` into the program
+with the correct assignment of variables, and then replaces occurences
+of the variable at position `pos` in `target` with the output of `rhs`.  -/
 def rewriteAt (lhs rhs : ICom Γ₁ t₁) 
     (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.toExprRec.vars t)
     (pos : ℕ) (target : ICom Γ₂ t₂) :
