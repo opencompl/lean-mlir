@@ -652,6 +652,15 @@ structure PeepholeRewrite (Γ : Ctxt) (t : Ty) where
   rhs : ICom Γ t
   correct : lhs.denote = rhs.denote
 
+instance (e : ExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) :=
+  inferInstanceAs <| Decidable (v ∈ ExprRec.vars e u)
+
+def ICom.vars : ICom Γ t → (t' : Ty) → Finset (Γ.Var t') :=
+  ExprRec.vars ∘ ICom.toExprRec
+
+instance (e : ICom Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) :=
+  inferInstanceAs <| Decidable (v ∈ ICom.vars e u)
+
 instance {Γ : Ctxt} {t' : Ty} {lhs : ICom Γ t'} :
  Decidable (∀ (t : Ty) (v : Ctxt.Var Γ t), v ∈ ExprRec.vars (ICom.toExprRec lhs) t)
   := sorry
