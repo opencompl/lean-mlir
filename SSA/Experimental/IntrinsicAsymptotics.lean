@@ -668,16 +668,19 @@ def m : ICom (Erased.mk [.nat, .nat]) .nat :=
 def r : ICom (Erased.mk [.nat, .nat]) .nat := 
   .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
 
-example : rewriteAt m r sorry 1 ex1 = some (
+def hlhs: ∀ t v,  v ∈ ExprRec.vars (ICom.toExprRec m) t := by
+  sorry
+
+example : rewriteAt m r hlhs 1 ex1 = some (
   ICom.lete (IExpr.cst 1)  <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
      .ret ⟨0, by simp⟩) := by rfl
 
 -- a + b => b + a
-example : rewriteAt m r sorry 0 ex1 = none := by rfl
+example : rewriteAt m r hlhs 0 ex1 = none := by rfl
 
-example : rewriteAt m r sorry 1 ex2 = some (
+example : rewriteAt m r hlhs 1 ex2 = some (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
@@ -686,7 +689,7 @@ example : rewriteAt m r sorry 1 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
      .ret ⟨0, by simp⟩) := by rfl
 
-example : rewriteAt m r sorry 2 ex2 = some (
+example : rewriteAt m r hlhs 2 ex2 = some (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
@@ -695,7 +698,7 @@ example : rewriteAt m r sorry 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
      .ret ⟨0, by simp⟩) := by rfl
 
-example : rewriteAt m r sorry 3 ex2 = some (
+example : rewriteAt m r hlhs 3 ex2 = some (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -704,7 +707,7 @@ example : rewriteAt m r sorry 3 ex2 = some (
      .lete (IExpr.add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r sorry 4 ex2 = some (
+example : rewriteAt m r hlhs 4 ex2 = some (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -728,7 +731,7 @@ def r2 : ICom (Erased.mk [.nat, .nat]) .nat :=
   .lete (.add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩ 
 
-example : rewriteAt m r2 sorry 1 ex2' = Option.some (
+example : rewriteAt m r2 hlhs 1 ex2' = Option.some (
      .lete (IExpr.cst 1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.cst 0) <|
@@ -739,7 +742,7 @@ example : rewriteAt m r2 sorry 1 ex2' = Option.some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 sorry 2 ex2 = some (
+example : rewriteAt m r2 hlhs 2 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -750,7 +753,7 @@ example : rewriteAt m r2 sorry 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 sorry 3 ex2 = some (
+example : rewriteAt m r2 hlhs 3 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -761,7 +764,7 @@ example : rewriteAt m r2 sorry 3 ex2 = some (
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 sorry 4 ex2 = some (
+example : rewriteAt m r2 hlhs 4 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -779,7 +782,7 @@ def r3 : ICom (Erased.mk [.nat, .nat]) .nat :=
   .lete (.add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
-example : rewriteAt m r3 sorry 1 ex2 = some (
+example : rewriteAt m r3 hlhs 1 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.cst  0) <|
@@ -790,7 +793,7 @@ example : rewriteAt m r3 sorry 1 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 sorry 2 ex2 = some (
+example : rewriteAt m r3 hlhs 2 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -801,7 +804,7 @@ example : rewriteAt m r3 sorry 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 sorry 3 ex2 = some (
+example : rewriteAt m r3 hlhs 3 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -812,7 +815,7 @@ example : rewriteAt m r3 sorry 3 ex2 = some (
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 sorry 4 ex2 = some (
+example : rewriteAt m r3 hlhs 4 ex2 = some (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
