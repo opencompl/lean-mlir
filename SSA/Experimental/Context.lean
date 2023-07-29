@@ -130,4 +130,7 @@ def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
 
 end Append
 
+instance {t : Ty} {Γ : Ctxt} (v : Γ.Var t) (vars : Finset (Γ.Var t)) :
+ Decidable (v ∈ vars) := sorry
+
 end Ctxt

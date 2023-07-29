@@ -647,6 +647,38 @@ theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
       rintro rfl rfl
       simp
 
+structure PeepholeRewrite (Γ : Ctxt) (t : Ty) where
+  lhs : ICom Γ t
+  rhs : ICom Γ t
+  correct : lhs.denote = rhs.denote
+
+instance {Γ : Ctxt} {t' : Ty} {lhs : ICom Γ t'} :
+ Decidable (∀ (t : Ty) (v : Ctxt.Var Γ t), v ∈ ExprRec.vars (ICom.toExprRec lhs) t)
+  := sorry
+
+def rewritePeepholeAt (pr : PeepholeRewrite Γ t) 
+    (pos : ℕ) (target : ICom Γ₂ t₂) :
+    (ICom Γ₂ t₂) := if hlhs : ∀ t (v : Γ.Var t), v ∈ pr.lhs.toExprRec.vars t then
+      match rewriteAt pr.lhs pr.rhs hlhs pos target
+      with 
+        | some res => res
+        | none => target
+      else target
+
+theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Γ t)
+    (pos : ℕ) (target : ICom Γ₂ t₂) :
+    (rewritePeepholeAt pr pos target).denote = target.denote := by
+    simp only [rewritePeepholeAt]
+    split_ifs
+    case pos h => 
+      generalize hrew : rewriteAt pr.lhs pr.rhs h pos target = rew
+      cases rew with
+        | some res => 
+          apply denote_rewriteAt pr.lhs pr.rhs h pos target pr.correct _ hrew
+        | none => simp
+    case neg h => simp
+
+
 attribute [local simp] Ctxt.snoc
 
 def ex1 : ICom ∅ .nat :=
