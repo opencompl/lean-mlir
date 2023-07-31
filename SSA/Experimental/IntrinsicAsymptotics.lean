@@ -701,6 +701,33 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Γ t)
         | none => simp
     case neg h => simp
 
+macro "simp_peephole": tactic =>
+  `(tactic|
+      (
+      funext;
+      rw [←ICom.denote_toExprRec];
+      rw [←ICom.denote_toExprRec];
+      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec];
+      funext;
+      rename_i ll;
+      generalize ll { val := 0, property := _ } = a;
+      generalize ll { val := 1, property := _ } = b;
+      generalize ll { val := 2, property := _ } = c;
+      generalize ll { val := 3, property := _ } = d;
+      generalize ll { val := 4, property := _ } = e;
+      generalize ll { val := 5, property := _ } = f;
+      unfold Ty.toType at a b c d e f;
+      simp at a b c d e f;
+      try clear f;
+      try clear e;
+      try clear d;
+      try clear c;
+      try clear b;
+      try clear a;
+      clear ll;
+      rename_i a b
+      )
+   )
 
 attribute [local simp] Ctxt.snoc
 
@@ -726,14 +753,7 @@ def r : ICom (Erased.mk [.nat, .nat]) .nat :=
 def p1 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
-      funext
-      rw [←ICom.denote_toExprRec]
-      rw [←ICom.denote_toExprRec]
-      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
-      funext
-      rename_i ll
-      generalize ll { val := 0, property := m.proof_1 } = a
-      generalize ll { val := 1, property := m.proof_2 } = b
+      simp_peephole
       rw [Nat.add_comm]
     }
 
@@ -800,14 +820,7 @@ def r2 : ICom (Erased.mk [.nat, .nat]) .nat :=
 def p2 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
-      funext
-      rw [←ICom.denote_toExprRec]
-      rw [←ICom.denote_toExprRec]
-      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
-      funext
-      rename_i ll
-      generalize ll { val := 0, property := m.proof_1 } = a
-      generalize ll { val := 1, property := m.proof_2 } = b
+      simp_peephole
       rw [Nat.zero_add]
       rw [Nat.add_comm]
     }
@@ -866,13 +879,7 @@ def r3 : ICom (Erased.mk [.nat, .nat]) .nat :=
 def p3 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
-      funext
-      rw [←ICom.denote_toExprRec]
-      rw [←ICom.denote_toExprRec]
-      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
-      rename_i ll
-      generalize ll { val := 0, property := m.proof_1 } = a
-      generalize ll { val := 1, property := m.proof_2 } = b
+      simp_peephole
       rw [Nat.zero_add]
     }
 
@@ -933,13 +940,7 @@ def ex3 : ICom ∅ .nat :=
 def p4 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
-      funext
-      rw [←ICom.denote_toExprRec]
-      rw [←ICom.denote_toExprRec]
-      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
-      rename_i ll
-      generalize ll { val := 0, property := m.proof_1 } = a
-      generalize ll { val := 1, property := m.proof_2 } = b
+      simp_peephole
       rw [Nat.zero_add]
     }
 
