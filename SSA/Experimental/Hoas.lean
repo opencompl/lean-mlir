@@ -22,14 +22,15 @@ class HasToSnoc (ε : Ctxt → Ty → Type) where
 class HOAS (expr stmt var : Ctxt → Ty → Type) where
   [toSnocExpr : HasToSnoc expr]
   [toSnocStmt : HasToSnoc stmt]
-  [toSnocVar : HasToSnoc var]  
+  [toSnocVar : HasToSnoc var]
   /-- let-binding -/
   assign {Γ : Ctxt} {T : Ty} (rhs : expr Γ T) 
       (rest : var (Γ.snoc T) T → stmt (Γ.snoc T) T')
       : stmt Γ T'
   /-- above; ret v -/
   ret (v : var Γ T) : stmt Γ T
-  add (a b : var Γ (.nat)) : expr Γ (.nat)
+  add (a b : var Γ .nat) : expr Γ .nat
+  nat (n : Nat) : expr Γ .nat 
 
 
 
@@ -67,11 +68,59 @@ instance : HOAS IExpr ICom Ctxt.Var where
   assign rhs rest := ICom.lete rhs (rest <| .last ..)
   ret := ICom.ret
   add := IExpr.add
+  nat := IExpr.nat
 
 
 
 def ICom.fromHOAS (com : HOASCom Γ t) : ICom Γ t :=
   com IExpr ICom Ctxt.Var
+
+def IExpr.fromHOAS (expr : HOASExpr Γ t) : IExpr Γ t :=
+  expr IExpr ICom Ctxt.Var
+
+def Var.fromHOAS (v : HOASVar Γ t) : Γ.Var t :=
+  v IExpr ICom Ctxt.Var
+
+
+abbrev HOASVar.Map (Γ : Ctxt) : Type 1 :=
+  ⦃t : Ty⦄ → Γ.Var t → HOASVar Γ t
+
+
+def IExpr.toHOASAux (expr stmt var) [HOAS expr stmt var] (map : ⦃t : Ty⦄ → Γ.Var t → var Γ t) : 
+    IExpr Γ t → expr Γ t
+  | .add a b => HOAS.add stmt (map a) (map b)
+  | .nat n => HOAS.nat stmt var n
+
+def ICom.toHOASAux (expr stmt var) [inst : HOAS expr stmt var] (map : ⦃t : Ty⦄ → Γ.Var t → var Γ t) : 
+    ICom Γ t → stmt Γ t
+  | .lete e body => HOAS.assign (var:=var)
+      (e.toHOASAux expr stmt var map) 
+      fun v => body.toHOASAux expr stmt var (fun _ w => by
+        cases w using Ctxt.Var.casesOn with
+        | last => exact v
+        | base w => exact inst.toSnocVar.toSnoc <| map w
+      )
+  | .ret v => HOAS.ret expr <| map v
+
+
+
+def IExpr.toHOAS (e : IExpr ∅ t) : HOASExpr ∅ t :=
+  fun expr stmt var _ => e.toHOASAux expr stmt var (fun _ v => v.emptyElim)
+
+def ICom.toHOAS (c : ICom ∅ t) : HOASCom ∅ t :=
+  fun expr stmt var _ => c.toHOASAux expr stmt var (fun _ v => v.emptyElim)
+
+
+
+
+
+
+
+
+
+
+
+  
 
 
 
