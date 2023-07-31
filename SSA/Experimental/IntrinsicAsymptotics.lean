@@ -725,7 +725,6 @@ macro "simp_peephole": tactic =>
       try clear b;
       try clear a;
       clear ll;
-      rename_i a b
       )
    )
 
