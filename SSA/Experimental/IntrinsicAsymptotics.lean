@@ -731,6 +731,9 @@ def p1 : PeepholeRewrite [.nat, .nat] .nat:=
       rw [←ICom.denote_toExprRec]
       simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
       funext
+      rename_i ll
+      generalize ll { val := 0, property := m.proof_1 } = a
+      generalize ll { val := 1, property := m.proof_2 } = b
       rw [Nat.add_comm]
     }
 
@@ -800,8 +803,12 @@ def p2 : PeepholeRewrite [.nat, .nat] .nat:=
       funext
       rw [←ICom.denote_toExprRec]
       rw [←ICom.denote_toExprRec]
-      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
       funext
+      rename_i ll
+      generalize ll { val := 0, property := m.proof_1 } = a
+      generalize ll { val := 1, property := m.proof_2 } = b
+      rw [Nat.zero_add]
       rw [Nat.add_comm]
     }
 
@@ -862,7 +869,11 @@ def p3 : PeepholeRewrite [.nat, .nat] .nat:=
       funext
       rw [←ICom.denote_toExprRec]
       rw [←ICom.denote_toExprRec]
-      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      rename_i ll
+      generalize ll { val := 0, property := m.proof_1 } = a
+      generalize ll { val := 1, property := m.proof_2 } = b
+      rw [Nat.zero_add]
     }
 
 example : rewritePeepholeAt p3 1 ex2 = (
@@ -925,7 +936,11 @@ def p4 : PeepholeRewrite [.nat, .nat] .nat:=
       funext
       rw [←ICom.denote_toExprRec]
       rw [←ICom.denote_toExprRec]
-      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      rename_i ll
+      generalize ll { val := 0, property := m.proof_1 } = a
+      generalize ll { val := 1, property := m.proof_2 } = b
+      rw [Nat.zero_add]
     }
 
 example : rewritePeepholeAt p4 5 ex3 = (
