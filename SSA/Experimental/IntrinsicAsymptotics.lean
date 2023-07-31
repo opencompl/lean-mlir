@@ -723,19 +723,27 @@ def m : ICom (Erased.mk [.nat, .nat]) .nat :=
 def r : ICom (Erased.mk [.nat, .nat]) .nat := 
   .lete (.add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
 
-def hlhs: ∀ t v,  v ∈ ExprRec.vars (ICom.toExprRec m) t := by
-  sorry
+def p1 : PeepholeRewrite [.nat, .nat] .nat:=
+  { lhs := m, rhs := r, correct :=
+    by
+      funext
+      rw [←ICom.denote_toExprRec]
+      rw [←ICom.denote_toExprRec]
+      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      funext
+      rw [Nat.add_comm]
+    }
 
-example : rewriteAt m r hlhs 1 ex1 = some (
+example : rewritePeepholeAt p1 1 ex1 = (
   ICom.lete (IExpr.cst 1)  <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
      .ret ⟨0, by simp⟩) := by rfl
 
 -- a + b => b + a
-example : rewriteAt m r hlhs 0 ex1 = none := by rfl
+example : rewritePeepholeAt p1 0 ex1 = ex1 := by rfl
 
-example : rewriteAt m r hlhs 1 ex2 = some (
+example : rewritePeepholeAt p1 1 ex2 = (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
@@ -744,7 +752,7 @@ example : rewriteAt m r hlhs 1 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
      .ret ⟨0, by simp⟩) := by rfl
 
-example : rewriteAt m r hlhs 2 ex2 = some (
+example : rewritePeepholeAt p1 2 ex2 = (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
@@ -753,7 +761,7 @@ example : rewriteAt m r hlhs 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
      .ret ⟨0, by simp⟩) := by rfl
 
-example : rewriteAt m r hlhs 3 ex2 = some (
+example : rewritePeepholeAt p1 3 ex2 = (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -762,7 +770,7 @@ example : rewriteAt m r hlhs 3 ex2 = some (
      .lete (IExpr.add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r hlhs 4 ex2 = some (
+example : rewritePeepholeAt p1 4 ex2 = (
   ICom.lete (IExpr.cst 1)   <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -786,7 +794,18 @@ def r2 : ICom (Erased.mk [.nat, .nat]) .nat :=
   .lete (.add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩ 
 
-example : rewriteAt m r2 hlhs 1 ex2' = Option.some (
+def p2 : PeepholeRewrite [.nat, .nat] .nat:=
+  { lhs := m, rhs := r2, correct :=
+    by
+      funext
+      rw [←ICom.denote_toExprRec]
+      rw [←ICom.denote_toExprRec]
+      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+      funext
+      rw [Nat.add_comm]
+    }
+
+example : rewritePeepholeAt p2 1 ex2' = (
      .lete (IExpr.cst 1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.cst 0) <|
@@ -797,7 +816,7 @@ example : rewriteAt m r2 hlhs 1 ex2' = Option.some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 hlhs 2 ex2 = some (
+example : rewritePeepholeAt p2 2 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -808,7 +827,7 @@ example : rewriteAt m r2 hlhs 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 hlhs 3 ex2 = some (
+example : rewritePeepholeAt p2 3 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -819,7 +838,7 @@ example : rewriteAt m r2 hlhs 3 ex2 = some (
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r2 hlhs 4 ex2 = some (
+example : rewritePeepholeAt p2 4 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -837,7 +856,16 @@ def r3 : ICom (Erased.mk [.nat, .nat]) .nat :=
   .lete (.add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
-example : rewriteAt m r3 hlhs 1 ex2 = some (
+def p3 : PeepholeRewrite [.nat, .nat] .nat:=
+  { lhs := m, rhs := r3, correct :=
+    by
+      funext
+      rw [←ICom.denote_toExprRec]
+      rw [←ICom.denote_toExprRec]
+      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+    }
+
+example : rewritePeepholeAt p3 1 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.cst  0) <|
@@ -848,7 +876,7 @@ example : rewriteAt m r3 hlhs 1 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 hlhs 2 ex2 = some (
+example : rewritePeepholeAt p3 2 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -859,7 +887,7 @@ example : rewriteAt m r3 hlhs 2 ex2 = some (
      .lete (IExpr.add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 hlhs 3 ex2 = some (
+example : rewritePeepholeAt p3 3 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -870,7 +898,7 @@ example : rewriteAt m r3 hlhs 3 ex2 = some (
      .lete (IExpr.add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
-example : rewriteAt m r3 hlhs 4 ex2 = some (
+example : rewritePeepholeAt p3 4 ex2 = (
   ICom.lete (IExpr.cst  1) <|
      .lete (IExpr.add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
      .lete (IExpr.add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
@@ -891,7 +919,16 @@ def ex3 : ICom ∅ .nat :=
   .lete (.add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
-example : rewriteAt r3 m sorry 5 ex3 = some (
+def p4 : PeepholeRewrite [.nat, .nat] .nat:=
+  { lhs := r3, rhs := m, correct :=
+    by
+      funext
+      rw [←ICom.denote_toExprRec]
+      rw [←ICom.denote_toExprRec]
+      simp [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec]
+    }
+
+example : rewritePeepholeAt p4 5 ex3 = (
   .lete (.cst 1) <|
   .lete (.cst 0) <|
   .lete (.cst 2) <|
