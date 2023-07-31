@@ -3,14 +3,6 @@ import SSA.Experimental.Context
 
 namespace SSA
 
-inductive Ty 
-  | nat
-  deriving DecidableEq, Repr
-
-def Ty.toType : Ty → Type
-  | .nat => Nat
-
-
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
   | add (a b : Γ.Var .nat) : IExpr Γ .nat
@@ -23,29 +15,63 @@ inductive ICom : Ctxt →  Ty → Type where
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
 
 
+class HasToSnoc (ε : Ctxt → Ty → Type) where
+  toSnoc {Γ : Ctxt} {t u : Ty} : ε Γ t → ε (Γ.snoc u) t 
 
 
-class HOAS (expr stmt var : Ty → Type) where
+class HOAS (expr stmt var : Ctxt → Ty → Type) where
+  [toSnocExpr : HasToSnoc expr]
+  [toSnocStmt : HasToSnoc stmt]
+  [toSnocVar : HasToSnoc var]  
   /-- let-binding -/
-  assign {T : Ty} (rhs : expr T) 
-      (rest : var T → stmt T')
-      : stmt T'
-  -- /-- above; ret v -/
-  ret (v : expr T) : stmt T
-  add (a b : var (.nat)) : expr (.nat)
-
-def HOASExpr : Type := ∀ (expr stmt var : Ty → Type) [HOAS expr stmt var], expr
-def HOASCom : Type := ∀ (expr stmt var : Ty → Type) [HOAS expr stmt var], stmt
-def HOASVar : Type := ∀ (expr stmt var : Ty → Type) [HOAS expr stmt var], var
+  assign {Γ : Ctxt} {T : Ty} (rhs : expr Γ T) 
+      (rest : var (Γ.snoc T) T → stmt (Γ.snoc T) T')
+      : stmt Γ T'
+  /-- above; ret v -/
+  ret (v : var Γ T) : stmt Γ T
+  add (a b : var Γ (.nat)) : expr Γ (.nat)
 
 
 
+def HOASExpr (Γ : Ctxt) (t : Ty) : Type 1 := 
+  ∀ expr stmt var, [HOAS expr stmt var] → expr Γ t
 
-def IExpr.fromHOAS : HOASExpr t → IExpr ∅ t := 
-  sorry
+def HOASCom (Γ : Ctxt) (t : Ty) : Type 1 := 
+  ∀ expr stmt var, [HOAS expr stmt var] → stmt Γ t
+
+def HOASVar (Γ : Ctxt) (t : Ty) : Type 1 := 
+  ∀ expr stmt var, [HOAS expr stmt var] → var Γ t
 
 
-def TSSA.fromHOAS : 
+
+
+instance : HasToSnoc (Ctxt.Var) where
+  toSnoc v := v.toSnoc
+
+def IExpr.changeVars (varsMap : Γ.hom Γ') : 
+    (e : IExpr Γ ty) → IExpr Γ' ty
+  | .nat n => .nat n
+  | .add a b => .add (varsMap a) (varsMap b)
+
+instance : HasToSnoc (IExpr) := ⟨IExpr.changeVars Ctxt.Var.toSnoc⟩
+
+def ICom.changeVars (varsMap : Γ.hom Γ') : ICom Γ ty → ICom Γ' ty
+  | .ret e => .ret (varsMap e)
+  | .lete e body => .lete (e.changeVars varsMap) 
+      (body.changeVars (fun t v => varsMap.toSnoc v))
+
+instance : HasToSnoc (ICom) := ⟨ICom.changeVars Ctxt.Var.toSnoc⟩
+
+
+instance : HOAS IExpr ICom Ctxt.Var where
+  assign rhs rest := ICom.lete rhs (rest <| .last ..)
+  ret := ICom.ret
+  add := IExpr.add
+
+
+
+def ICom.fromHOAS (com : HOASCom Γ t) : ICom Γ t :=
+  com IExpr ICom Ctxt.Var
 
 
 

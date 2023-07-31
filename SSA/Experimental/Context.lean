@@ -149,14 +149,6 @@ def Var.appendSplit {Γ₁} : Var (Γ₁ ++ Γ₂) t → (Var Γ₁ t) ⊕ (Var 
         | .inr v => .inr v.toSnoc
 
 
-def Ctxt.subset_diff {Γ₁ Γ₂ : Ctxt} (h : Γ₁ ⊆ Γ₂) : {Δ : Ctxt // Γ₂ = Γ₁ ++ Δ} :=
-  sorry
-
-def Var.weaken {Γ₁ Γ₂ : Ctxt} {t} (h : Γ₁ ⊆ Γ₂) (v : Γ₁.Var t) : Γ₂.Var t :=
-  let ⟨Δ, hΔ⟩ := Ctxt.subset_diff h
-  hΔ ▸ @Var.inl Γ₁ Δ _ v
-  
-
 def hom (Γ₁ Γ₂ : Ctxt) : Type :=
   ⦃t : Ty⦄ → Γ₁.Var t → Γ₂.Var t
 
@@ -170,7 +162,6 @@ def hom.toSnoc {Γ₁ Γ₂ : Ctxt} (f : Γ₁.hom Γ₂) : (Γ₁.snoc t).hom (
     cases v using Ctxt.Var.casesOn with
     | last => exact .last ..
     | base v => exact .toSnoc <| f v
-
 
 
 end Append
