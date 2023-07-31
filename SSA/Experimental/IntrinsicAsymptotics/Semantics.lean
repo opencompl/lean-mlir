@@ -1,6 +1,9 @@
 import SSA.Experimental.IntrinsicAsymptotics.Basic
 import SSA.Experimental.IntrinsicAsymptotics.Context
 
+import Lean
+import Qq
+
 
 /-!
   Defines the semantics (i.e., `denote` functions) of various structures
@@ -86,6 +89,81 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Sem → Γ₂.Sem
 
 def LetZipper.denote : LetZipper Γ ty → (ll : Γ.Sem) → ty.toType
   := fun z => z.zip.denote
+
+namespace Example
+open Lean Meta Elab Tactic Qq
+open PrettyPrinter (delab)
+
+
+def Γ' : Ctxt := (Ctxt.empty.snoc .nat).snoc .nat
+
+def lhs : ICom Γ' .nat := 
+  ICom.lete (.add (.toSnoc <| .last ..) (.last ..)) <|
+  ICom.ret (.last ..)
+
+def rhs : ICom Γ' .nat :=
+  ICom.lete (.add (.last ..) (.toSnoc <| .last ..)) <|
+  ICom.ret (.last ..)
+
+@[simp]
+theorem Ctxt.Sem.snoc_last {Γ : Ctxt} {t : Ty} (ll : Γ.Sem) (val : t.toType) :
+    (ll.snoc val) (.last Γ t) = val :=
+  rfl
+
+@[simp]
+theorem Ctxt.Sem.snoc_toSnoc {Γ : Ctxt} {t : Ty} (ll : Γ.Sem) (val : t.toType) (x : Γ.Var u) :
+    (ll.snoc v) (.toSnoc x) = ll x :=
+  rfl
+
+#check generalize
+
+elab "generalize_tssa_env" : tactic => withMainContext <| do  
+  let ctx ← getLCtx
+  for ldecl in ctx do
+    let Γ₀ : Q(Ctxt) ← mkFreshExprMVar (some (q(Ctxt)))
+    dbg_trace "\nChecking\n{ldecl.type}\n\t =\nCtxt.Sem {Γ₀}"
+    if ←isDefEq ldecl.type q(Ctxt.Sem $Γ₀) then
+      dbg_trace "Match!\n"
+      let ll : Q(Ctxt.Sem $Γ₀) := ldecl.toExpr
+      let mut Γ : Σ (Γ : Q(Ctxt)), (t : Q(Ty)) → Q(Ctxt.Var $Γ $t) → Q(Ty.toType $t) := 
+        ⟨Γ₀, fun _ v => q($ll $v)⟩
+      while true do
+        let Γ' : Q(Ctxt) ← mkFreshExprMVar (some q(Ctxt))
+        let u : Q(Ty) ← mkFreshExprMVar (some q(Ty))    
+        if ←isDefEq Γ.1 q(Ctxt.snoc $Γ' $u) then
+          let hom : (t : Q(Ty)) → Q(Ctxt.Var (Ctxt.snoc $Γ' $u) $t) → Q(Ctxt.Var $Γ₀ $t) := Γ.2        
+          -- update the subcontext to be considered in the next iteration
+          Γ := ⟨Γ', fun t v => 
+            hom t q(@Ctxt.Var.toSnoc _ $t $u $v)
+          ⟩
+          -- now, generalize a variable
+          let w : Q(Ctxt.Var $Γ₀ $u) := hom u q(Ctxt.Var.last $Γ' $u)
+          let _ ← (←getMainGoal).generalize #[{
+            expr := w
+          }]
+          
+        else 
+          if ←isDefEq Γ.1 q(Ctxt.empty) then
+            -- clear Γ₀
+          break
+
+  return ()
+
+
+theorem test : lhs.denote = rhs.denote := by
+  simp only [ICom.denote, IExpr.denote]
+  funext ll
+  simp[Γ'] at ll
+  generalize_tssa_env
+  generalize ll (.last ..) = x
+  generalize ll (.toSnoc <| .last ..) = y
+  dsimp only [Ctxt.Sem.snoc_last]
+  dsimp[Ty.toType] at x y
+  clear ll
+
+  exact Nat.add_comm y x
+
+end Example
 
 
 /-

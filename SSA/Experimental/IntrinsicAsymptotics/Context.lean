@@ -491,6 +491,14 @@ noncomputable def extractWitnessOfExists {Γ : Ctxt} {t : Ty} {p : Γ.Var t → 
 
 end Var
 
+
+/-!
+  ## Context Homomorphism
+-/
+
+/-- A homomorphism between contexts is a map between variables of these contexts -/
+abbrev hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
+
 end Ctxt
 
 export Ctxt (SizedCtxt)
