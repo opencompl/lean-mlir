@@ -724,6 +724,12 @@ macro "simp_peephole": tactic =>
       try clear c;
       try clear b;
       try clear a;
+      try revert f;
+      try revert e;
+      try revert d;
+      try revert c;
+      try revert b;
+      try revert a;
       clear ll;
       )
    )
@@ -753,7 +759,7 @@ def p1 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       simp_peephole
-      rename_i a b
+      intros a b
       rw [Nat.add_comm]
     }
 
@@ -821,7 +827,7 @@ def p2 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       simp_peephole
-      rename_i a b
+      intros a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
     }
@@ -881,7 +887,7 @@ def p3 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       simp_peephole
-      rename_i a b
+      intros a b
       rw [Nat.zero_add]
     }
 
@@ -943,7 +949,7 @@ def p4 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       simp_peephole
-      rename_i a b
+      intros a b
       rw [Nat.zero_add]
     }
 
