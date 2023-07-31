@@ -1,4 +1,5 @@
 import SSA.Core.WellTypedFramework
+import SSA.Projects.InstCombine.Base
 
 namespace SSA
 
@@ -92,6 +93,10 @@ def TSSAIndex.toHOASType (Γ : Context β) : TSSAIndex β → Type _
   | .EXPR t => HOASExpr Op Γ t
   | .REGION t₁ t₂ => HOASRegion Op Γ t₁ t₂
 
+section
+
+
+
 def TSSA.fromHOASExpr (expr : HOASExpr Op Γ t) : TSSA Op Γ (.EXPR t) :=
   expr ⟨TSSA.EXPR Op, TSSA.STMT Op, Context.Var, TSSA.REGION Op⟩
 
@@ -103,6 +108,9 @@ def TSSA.fromHOASRegion (stmt : HOASRegion Op Γ t₁ t₂) : TSSA Op Γ (.REGIO
 
 def Context.Var.fromHOAS (v : HOASVar Op Γ t) : Γ.Var t :=
   v ⟨TSSA.EXPR Op, TSSA.STMT Op, Context.Var, TSSA.REGION Op⟩
+
+
+end
 
 
 def HOASTypes.fromIndex (h : HOASTypes β) (Γ : Context β) : TSSAIndex β → Type 
@@ -140,17 +148,30 @@ where
 
 
 
-
-
-
-
-
-
-
-
-
-  
-
-
-
 end SSA
+
+namespace InstCombine
+
+open SSA
+
+/-
+  %v0 := unit: ;
+  %v1 := op:const (b) %v0;
+  %v2 := pair:%v1 %v1;
+  %v3 := op:add w %v2
+  dsl_ret %v3
+-/
+
+open SSA.HOAS in
+def HOASExample : HOASStmt Op ∅ (BaseType.bitvec b) := fun _ _ =>
+  assign Op 0 (unit Op) fun v0 =>
+  assign Op 1 (op (Op.const (0 : Bitvec b)) v0 (rgn0 Op)) fun v1 =>
+  assign Op 2 (pair Op v1 v1) fun v2 =>
+  assign Op 3 (op (Op.add b) v2 (rgn0 Op)) fun v3 =>
+  ret Op v3
+
+
+def TSSAExample : TSSA Op ∅ (.STMT <| BaseType.bitvec b) :=
+  TSSA.fromHOASStmt Op HOASExample
+
+end InstCombine
