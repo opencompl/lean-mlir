@@ -3,6 +3,7 @@
 import SSA.Experimental.ErasedContext
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Fintype.Basic
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
@@ -646,10 +647,10 @@ theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
       simp only [dite_eq_right_iff, forall_exists_index]
       rintro rfl rfl
       simp
-
-structure PeepholeRewrite (Γ : Ctxt) (t : Ty) where
-  lhs : ICom Γ t
-  rhs : ICom Γ t
+ 
+structure PeepholeRewrite (Γ : List Ty) (t : Ty) where
+  lhs : ICom (Erased.mk Γ) t
+  rhs : ICom (Erased.mk Γ) t
   correct : lhs.denote = rhs.denote
 
 instance (e : ExprRec Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) :=
@@ -661,13 +662,26 @@ def ICom.vars : ICom Γ t → (t' : Ty) → Finset (Γ.Var t') :=
 instance (e : ICom Γ t) (v : Γ.Var u) : Decidable (v ∈ e.vars _) :=
   inferInstanceAs <| Decidable (v ∈ ICom.vars e u)
 
-instance {Γ : Ctxt} {t' : Ty} {lhs : ICom Γ t'} :
- Decidable (∀ (t : Ty) (v : Ctxt.Var Γ t), v ∈ ExprRec.vars (ICom.toExprRec lhs) t)
-  := sorry
+instance {Γ : List Ty} {t' : Ty} {lhs : ICom (Erased.mk Γ) t'} :
+    Decidable (∀ (t : Ty) (v : Ctxt.Var (Erased.mk Γ) t), 
+     v ∈ ExprRec.vars (ICom.toExprRec lhs) t) := 
+  decidable_of_iff 
+    (∀ (i : Fin Γ.length), 
+      let v : Ctxt.Var (Erased.mk Γ) (Γ.get i) := ⟨i, by simp [List.get?_eq_get]⟩
+      v ∈ ExprRec.vars (ICom.toExprRec lhs) (Γ.get i)) <|  by
+  constructor
+  . intro h t v
+    rcases v with ⟨i, hi⟩
+    simp only [Erased.out_mk] at hi  
+    rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
+    simp at h'
+    convert h ⟨i, h'⟩
+  . intro h i
+    apply h
 
 def rewritePeepholeAt (pr : PeepholeRewrite Γ t) 
     (pos : ℕ) (target : ICom Γ₂ t₂) :
-    (ICom Γ₂ t₂) := if hlhs : ∀ t (v : Γ.Var t), v ∈ pr.lhs.toExprRec.vars t then
+    (ICom Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (Erased.mk Γ) t), v ∈ pr.lhs.toExprRec.vars t then
       match rewriteAt pr.lhs pr.rhs hlhs pos target
       with 
         | some res => res
