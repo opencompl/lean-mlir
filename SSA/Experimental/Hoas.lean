@@ -117,7 +117,20 @@ def ICom.toHOAS (c : ICom ∅ t) : HOASCom ∅ t :=
 
 
 
+namespace Eval
 
+def Eval : Ctxt → Ty → Type := fun _ => Ty.toType
+
+instance : HasToSnoc Eval where
+  toSnoc e := e
+
+instance : HOAS Eval Eval Eval where
+  assign e rest := rest e
+  ret v := v
+  add (a b : Nat) := a + b
+  nat n := n
+
+end Eval
 
 
   
