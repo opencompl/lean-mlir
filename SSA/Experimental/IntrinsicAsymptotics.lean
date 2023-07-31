@@ -753,6 +753,7 @@ def p1 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       simp_peephole
+      rename_i a b
       rw [Nat.add_comm]
     }
 
@@ -820,6 +821,7 @@ def p2 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       simp_peephole
+      rename_i a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
     }
@@ -879,6 +881,7 @@ def p3 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       simp_peephole
+      rename_i a b
       rw [Nat.zero_add]
     }
 
@@ -940,6 +943,7 @@ def p4 : PeepholeRewrite [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       simp_peephole
+      rename_i a b
       rw [Nat.zero_add]
     }
 
