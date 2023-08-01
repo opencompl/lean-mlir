@@ -38,9 +38,16 @@ class HOAS (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]  (h : HOAS
   rgnvar (v : h.var Γ (.region T₁ T₂)) : h.region Γ T₁ T₂
   /-- a variable. -/
   var (v : h.var Γ T) : h.expr Γ T
-  
 
-  
+
+
+variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β]
+
+instance (h) [HOAS Op h] : Coe (h.var Γ t) (h.var (Γ.snoc v u) t) where
+  coe := HOAS.varToSnoc
+
+
+
 section
 variable (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]
 
@@ -53,6 +60,7 @@ def HOASRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ h, [HOAS Op h] → h.
 end
 
 
+
 namespace TSSA
 variable (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]
 
@@ -63,7 +71,7 @@ def REGION  (t₁ t₂ : UserType β) : Type := TSSA Op Γ (.REGION t₁ t₂)
 
 end TSSA
 
-variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β]
+
 
 instance : HOAS (Op := Op) ⟨TSSA.EXPR Op, TSSA.STMT Op, Context.Var, TSSA.REGION Op⟩ where
   varToSnoc := Context.Var.prev
@@ -77,7 +85,7 @@ instance : HOAS (Op := Op) ⟨TSSA.EXPR Op, TSSA.STMT Op, Context.Var, TSSA.REGI
   rgn0 := TSSA.rgn0
   rgnvar := TSSA.rgnvar
   var := TSSA.var
-  
+
 
 
 def TSSAIndex.toHOASType (Γ : Context β) : TSSAIndex β → Type _
@@ -146,42 +154,6 @@ end SSA
 
 
 
-namespace InstCombine
-
-open SSA
-
-/-
-  %v0 := unit: ;
-  %v1 := op:const (b) %v0;
-  %v2 := pair:%v1 %v1;
-  %v3 := op:add w %v2
-  dsl_ret %v3
--/
-
-open SSA.HOAS in
-def HOASExample : HOASStmt Op ∅ (BaseType.bitvec b) := fun _ _ =>
-  assign 0 unit fun v0 =>
-  assign 1 (op (Op.const (0 : Bitvec b)) v0 rgn0) fun v1 =>
-  assign 2 (pair v1 v1) fun v2 =>
-  assign 3 (op (.add b) v2 rgn0) fun v3 =>
-  ret v3
-
-
-def TSSAExample : TSSA Op ∅ (.STMT <| BaseType.bitvec b) :=
-  TSSA.fromHOASStmt HOASExample
-
-end InstCombine
-
-
-
-
-
-
-
-
-
-
-
 
 
 namespace EDSLHoas
@@ -195,53 +167,46 @@ declare_syntax_cat dslh_expr
 declare_syntax_cat dslh_stmt
 declare_syntax_cat dslh_assign
 -- declare_syntax_cat dsl_terminator
+declare_syntax_cat dslh_var
 declare_syntax_cat dslh_val
 declare_syntax_cat dslh_rgnvar
 
 -- ops are defined by someone else
-scoped syntax "[dsl_op|" dslh_op "]" : term
+scoped syntax "[dsl_op|" dsl_op "]" : term
 
+-- DSL variables
+scoped syntax "%" ident : dslh_var
 
-scoped syntax "op:" dslh_op ident ("," dslh_region)? : dslh_expr
+scoped syntax "op:" dsl_op dslh_var ("," dslh_region)? : dslh_expr
 
 scoped syntax "unit:"  : dslh_expr
-scoped syntax "pair:"  ident ident : dslh_expr
-scoped syntax "triple:"  ident ident ident : dslh_expr
-scoped syntax ident : dsl_expr
-scoped syntax "let" ident " := " dslh_expr : dslh_assign
+scoped syntax "pair:"  dslh_var dslh_var : dslh_expr
+scoped syntax "triple:"  dslh_var dslh_var dslh_var : dslh_expr
+scoped syntax dslh_var : dslh_expr
+scoped syntax dslh_var " := " dslh_expr : dslh_assign
 scoped syntax sepBy(dslh_assign, ";") : dslh_stmt
 
 
-scoped syntax "rgn{" ident "=>" dsl_bb "}" : dslh_region
-scoped syntax "^bb"  (dslh_stmt)?  "dsl_ret " ident : dslh_bb
+scoped syntax "rgn{" dslh_var "=>" dslh_bb "}" : dslh_region
+scoped syntax "^bb"  (dslh_stmt)?  "dsl_ret " dslh_var : dslh_bb
 
 scoped syntax "rgn$(" term ")" : dslh_region
 
 open Lean Elab Macro in
 
-structure SSAElabContext where
-  h : Term
-  Op : Term
-
-abbrev SSAElabM (α : Type) := StateT SSAElabContext MacroM α
-
-
 
 mutual
-partial def elabRgn : TSyntax `dslh_region → SSAElabM (TSyntax `term)
+partial def elabRgn : TSyntax `dslh_region → MacroM Term
 | `(dslh_region| rgn$($v)) => return v
-| `(dslh_region| rgn{ $v:ident => $bb:dsl_bb }) => do
+| `(dslh_region| rgn{ %$v:ident => $bb:dslh_bb }) => do
   let bb ← elabBB bb
-  `(SSA.TSSA.rgn $velab $bb)
+  `(SSA.HOAS.rgn $v $bb)
 | _ => Macro.throwUnsupported
 
-partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign → SSAElabM (TSyntax `term)
-| `(dsl_assign| $v:dsl_var := $e:dsl_expr) => do
+partial def elabAssign (next : Term): TSyntax `dslh_assign → MacroM Term
+| `(dslh_assign| %$v:ident := $e:dslh_expr) => do
   let e ← elabStxExpr e
-  SSAElabContext.addVar (← dslVarToIx v) -- add variable.
-  let velab := Lean.quote (← dslVarToIx v) -- natural number.
-  let next ← mkNext
-  `(SSA.TSSA.assign $velab $e $next)
+  `(SSA.HOAS.assign 0 $e (fun $v => $next))
 | _ => Macro.throwUnsupported
 
 
@@ -251,65 +216,110 @@ partial def elabAssign (mkNext : SSAElabM (TSyntax `term)): TSyntax `dsl_assign 
 -- s3 : (fun prev3 => SSA.assign (<prev3>) <s3data>)
 -- fun x => s3 ( s2 (s1 x) )
 -- (s3 ∘ (s2 ∘ (s1 ∘ id)))
-partial def elabStmt (ret : TSyntax `dsl_var) : TSyntax `dsl_stmt → SSAElabM (TSyntax `term)
-  | `(dsl_stmt| $ss:dsl_assign;*) => go ss.getElems.toList
+partial def elabStmt (ret : Ident) : TSyntax `dslh_stmt → MacroM Term
+  | `(dslh_stmt| $ss:dslh_assign;*) => go ss.getElems.toList
   | _ => Macro.throwUnsupported
 where go
-  | [] => do
-    let retv ← elabStxVar ret
-    `(SSA.TSSA.ret $retv)
-  | s::ss =>
-    elabAssign (go ss) s
+  | [] => `(SSA.HOAS.ret $ret)
+  | s::ss => do 
+      elabAssign (←go ss) s
 
-partial def elabBB : TSyntax `dsl_bb → SSAElabM (TSyntax `term)
-| `(dsl_bb| ^bb $[ $s?:dsl_stmt ]? dsl_ret $retv:dsl_var) => do
+partial def elabBB : TSyntax `dslh_bb → MacroM Term
+| `(dslh_bb| ^bb $[ $s?:dslh_stmt ]? dsl_ret %$ret:ident) => do
     match s? with
-    | .none => do
-      let retv ← elabStxVar retv
-      `(SSA.TSSA.ret $retv)
-    | .some s => elabStmt retv s
+    | .none => `(SSA.HOAS.ret $ret)
+    | .some s => elabStmt ret s
 | _ => Macro.throwUnsupported
 
-partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
-| `(dsl_expr| unit:) => `(SSA.TSSA.unit)
-| `(dsl_expr| pair: $a $b) => do
-    let aelab ← elabStxVar a
-    let belab ← elabStxVar b
-    `(SSA.TSSA.pair $aelab $belab)
-| `(dsl_expr| triple: $a $b $c) => do
-  let aelab ← elabStxVar a
-  let belab ← elabStxVar b
-  let celab ← elabStxVar c
-  `(SSA.TSSA.triple $aelab $belab $celab)
-| `(dsl_expr| $v:dsl_var) => elabStxVar v
-| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[, $r? ]? ) => do
-  let arg ← elabStxVar arg
+partial def elabStxExpr : TSyntax `dslh_expr → MacroM Term
+| `(dslh_expr| unit:)                                   => `(SSA.HOAS.unit)
+| `(dslh_expr| pair: %$a:ident %$b:ident)               => `(SSA.HOAS.pair $a $b)
+| `(dslh_expr| triple: %$a:ident %$b:ident %$c:ident)   => `(SSA.HOAS.triple $a $b $c)
+| `(dslh_expr| %$v:ident) => `($v)
+| `(dslh_expr| op: $o:dsl_op %$arg:ident $[, $r? ]? ) => do
   let rgn ← match r? with
-    | none => `(SSA.TSSA.rgn0)
+    | none => `(SSA.HOAS.rgn0)
     | some r => elabRgn r -- TODO: can a region affect stuff outside?
-  `(SSA.TSSA.op [dsl_op| $o] $arg $rgn)
+  `(SSA.HOAS.op [dsl_op| $o] $arg $rgn)
 | _ => Macro.throwUnsupported
 end
 
-scoped syntax "[dsl_bb|" dsl_bb "]" : term
-macro_rules
-| `([dsl_bb| $bb:dsl_bb]) => do
-  let ctx : SSAElabContext := {  vars := #[] }
-  let (outTerm, _outCtx) ← (elabBB bb).run ctx
-  return outTerm
+scoped syntax "[dslh_bb" ("(" term ")")? "| " dslh_bb "]" : term 
 
-scoped syntax "[dsl_region|" dsl_region "]" : term
+macro_rules 
+| `([dslh_bb| $bb:dslh_bb]) => `([dslh_bb (_)| $bb:dslh_bb])
+| `([dslh_bb ($Op)| $bb:dslh_bb]) => do
+  let bb ← elabBB bb
+  `(fun h (_ : SSA.HOAS $Op h) => $bb)
+
+
+scoped syntax "[dslh_region|" dslh_region "]" : term
 macro_rules
-| `([dsl_region| $r:dsl_region]) => do
-  let ctx : SSAElabContext := {  vars := #[] }
-  let (outTerm, _outCtx) ← (elabRgn r).run ctx
-  return outTerm
+| `([dslh_region| $r:dslh_region]) => elabRgn r
 
 -- TODO: consider allowing users to build pieces of syntax.
--- scoped syntax "[dsl_expr|" dsl_expr "]" : term
--- scoped syntax "[dsl_stmt|" dsl_stmt "]" : term
+-- scoped syntax "[dslh_expr|" dslh_expr "]" : term
+-- scoped syntax "[dslh_stmt|" dslh_stmt "]" : term
 -- scoped syntax "[dsl_terminator|" dsl_terminator "]" : term
 -- scoped syntax "[dsl_val|" dsl_val "]" : term
 -- scoped syntax "[dsl_assign| " dsl_assign "]" : term
 
-end EDSL
+
+
+
+end EDSLHoas
+
+
+namespace InstCombine
+
+open SSA EDSLHoas
+
+/-
+  %v0 := unit: ;
+  %v1 := op:const (b) %v0;
+  %v2 := pair:%v1 %v1;
+  %v3 := op:add w %v2
+  dsl_ret %v3
+-/
+
+open SSA.HOAS in
+def HOASExample : HOASStmt Op ∅ (BaseType.bitvec b) := fun _h (_ : HOAS Op _h) =>
+  assign 0 unit fun v0 =>
+  assign 1 (op (Op.const (0 : Bitvec b)) v0 rgn0) fun v1 =>
+  assign 2 (pair v1 v1) fun v2 =>
+  assign 3 (op (.add b) v2 rgn0) fun v3 =>
+  ret v3
+
+
+def TSSAExample : TSSA Op ∅ (.STMT <| BaseType.bitvec b) :=
+  TSSA.fromHOASStmt HOASExample
+
+
+example : HOASStmt Op ∅ (.pair .unit .unit) := [dslh_bb (Op)|
+  ^bb
+  %v0 := unit: ;
+  %v1 := unit: ;
+  %v2 := unit: ;
+  %ret := pair: %v2 %v0
+  dsl_ret %ret
+]
+
+def EDSLHExample : HOASStmt Op ∅ (BaseType.bitvec b) := [dslh_bb|
+  ^bb
+  %v0 := unit: ;
+  %v1 := op:const (Z) %v0;
+  %v2 := op:const (C1) %v0;
+  %v3 := pair:%v1 %v2;
+  %v4 := op:and w %v3;
+  %v5 := pair:%v4 %v2;
+  %v6 := op:xor w %v5;
+  %v7 := op:const (1) %v0;
+  %v8 := pair:%v6 %v7;
+  %v9 := op:add w %v8;
+  %v10 := op:const (RHS) %v0;
+  %v11 := pair:%v9 %v10;
+  %v12 := op:add w %v11
+  dsl_ret %v12
+  ] 
+
+end InstCombine
