@@ -244,13 +244,14 @@ partial def elabStxExpr : TSyntax `dslh_expr → MacroM Term
 | _ => Macro.throwUnsupported
 end
 
+/-- `[dshlh_bb ($Op)| $bb]`, Op specifies the dialect -/
 scoped syntax "[dslh_bb" ("(" term ")")? "| " dslh_bb "]" : term 
 
 macro_rules 
 | `([dslh_bb| $bb:dslh_bb]) => `([dslh_bb (_)| $bb:dslh_bb])
 | `([dslh_bb ($Op)| $bb:dslh_bb]) => do
   let bb ← elabBB bb
-  `(fun h (_ : SSA.HOAS $Op h) => $bb)
+  `(fun h (_ : SSA.HOAS $Op h) => ($bb : h.stmt ∅ _))
 
 
 scoped syntax "[dslh_region|" dslh_region "]" : term
@@ -295,7 +296,7 @@ def TSSAExample : TSSA Op ∅ (.STMT <| BaseType.bitvec b) :=
   TSSA.fromHOASStmt HOASExample
 
 
-example : HOASStmt Op ∅ (.pair .unit .unit) := [dslh_bb (Op)|
+example := [dslh_bb (Op)|
   ^bb
   %v0 := unit: ;
   %v1 := unit: ;
@@ -304,7 +305,7 @@ example : HOASStmt Op ∅ (.pair .unit .unit) := [dslh_bb (Op)|
   dsl_ret %ret
 ]
 
-def EDSLHExample : HOASStmt Op ∅ (BaseType.bitvec b) := [dslh_bb|
+def EDSLHExample := [dslh_bb|
   ^bb
   %v0 := unit: ;
   %v1 := op:const (Z) %v0;
