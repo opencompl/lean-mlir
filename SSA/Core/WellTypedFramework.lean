@@ -135,12 +135,62 @@ class TypedUserSemantics (Op : Type) (β : outParam Type) [Goedel β] extends Op
 inductive Context (β : Type) : Type
   | empty : Context β
   | snoc : Context β → Var → (UserType β) → Context β
+  deriving DecidableEq
 
 inductive Context.Var {β : Type} : (Γ : Context β) → UserType β → Type
   | prev {Γ : Context β} :
       Context.Var Γ a → Context.Var (Context.snoc Γ v' a') a
   | last {Γ : Context β} {v : SSA.Var} {a : UserType β} :
       Context.Var (Context.snoc Γ v a) a
+
+
+namespace Context
+
+inductive Prefix : Context β → Context β → Prop
+  | rfl : Prefix Γ Γ
+  | snoc : Prefix Γ₁ Γ₂ → Prefix Γ₁ (Γ₂.snoc var ty)
+
+instance : HasSubset (Context β) where
+  Subset := Prefix
+
+instance Prefix.instDecidable [DecidableEq β] : DecidableRel (@Prefix β) := fun Γ₁ Γ₂ =>
+  if heq : Γ₁ = Γ₂ then
+    .isTrue <| by rw[heq]; exact .rfl 
+  else
+    match Γ₂ with 
+    | .empty => .isFalse <| by rintro ⟨⟩; contradiction
+    | .snoc Γ₂ .. => match instDecidable Γ₁ Γ₂ with
+      | .isTrue h => .isTrue <| .snoc h
+      | .isFalse h => .isFalse <| by rintro ⟨_|_⟩  <;> contradiction
+
+instance [DecidableEq β] (Γ₁ Γ₂ : Context β) : Decidable (Γ₁ ⊆ Γ₂) := Prefix.instDecidable Γ₁ Γ₂
+
+theorem snoc_prefix_of_neq {Γ₁ Γ₂ : Context β} (hpre : Γ₁ ⊆ Γ₂.snoc var ty) 
+    (hneq : Γ₁ ≠ Γ₂.snoc var ty) :
+    Γ₁ ⊆ Γ₂ := by
+  cases hpre
+  . contradiction
+  . assumption
+
+
+/-- Every variable in a context `Γ₁` can be re-interpreted as a variable in an extended context `Γ₂`
+    where `Γ₁` is a prefix of `Γ₂` -/
+def Var.coePrefix {Γ₁ Γ₂ : Context β} [DecidableEq β] (h : Γ₁ ⊆ Γ₂) (v : Γ₁.Var ty) : Γ₂.Var ty :=
+  if heq : Γ₁ = Γ₂ then
+    heq ▸ v
+  else
+    match Γ₂ with
+    | .empty => False.elim <| by cases h; contradiction
+    | .snoc Γ₂ .. =>
+      have h : Γ₁ ⊆ Γ₂ := snoc_prefix_of_neq h heq
+      .prev <| coePrefix h v
+  
+
+
+
+end Context
+
+
 
 instance {α : Type} : EmptyCollection (Context α) :=
   ⟨Context.empty⟩
