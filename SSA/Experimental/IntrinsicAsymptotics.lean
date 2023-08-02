@@ -11,35 +11,34 @@ inductive Op : List Ty → Ty → Type
   | cst : ℕ → Op [] .nat
   deriving DecidableEq
 
-def Op.toType : (l : List Ty) → Ty → Type
-  | [], t => t.toType
-  | t::l, t' => t.toType → Op.toType l t'
+inductive Tuple (A : Ty → Type) : List Ty → Type
+  | nil : Tuple A []
+  | cons {t : Ty} {l : List Ty} : A t → Tuple A l → Tuple A (t::l) 
 
 @[reducible]
-def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Op.toType l t
-  | _, _, .cst n => n
-  | _, _, .add => (. + .)
-  | _, _, .beq => Nat.beq
+def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Tuple Ty.toType l → t.toType
+  | _, _, .cst n, _ => n
+  | _, _, .add, .cons a (.cons b .nil) => a + b
+  | _, _, .beq, .cons a (.cons b .nil) => a == b
 
 /-- A very simple intrinsically typed expression. -/
-inductive IExpr : Ctxt → Ty → (l : List Ty := []) → Type
-  | op : Op l t → IExpr Γ t l
-  | app : IExpr Γ t' (t::l) → Γ.Var t → IExpr Γ t' l   
-  -- | add (a b : Γ.Var .nat) : IExpr Γ .nat
-  -- /-- Nat literals. -/
-  -- | cst (n : Nat) : IExpr Γ .nat
+structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
+  (sig : List Ty)
+  (op : Op args ty)
+  (args : Tuple (Ctxt.Var Γ) sig)
 
-instance : CoeFun (IExpr Γ t' (t::l)) (fun _ => Γ.Var t → IExpr Γ t' l) where
-  coe e v := IExpr.app e v
+def Tuple.map {A B : Ty → Type} (f : ∀ (t : Ty), A t → B t) : 
+    ∀ {l : List Ty}, Tuple A l → Tuple B l
+  | [], .nil => .nil
+  | t::_, .cons a as => .cons (f t a) (map f as) 
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
   | lete (e : IExpr Γ t) (body : ICom (Γ.snoc t) t') : ICom Γ t'
 
-inductive ExprRec (Γ : Ctxt) : Ty → (l : List Ty := []) → Type where
-  | op : Op l t → ExprRec Γ t l
-  | app : ExprRec Γ t' (t::l) → ExprRec Γ t → ExprRec Γ t' l
+inductive ExprRec (Γ : Ctxt) : Ty → Type where
+  | op : (sig : List Ty) → Op sig t → Tuple (ExprRec Γ) sig → ExprRec Γ t 
   | var (v : Γ.Var t) : ExprRec Γ t
 
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
@@ -48,16 +47,14 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-def IExpr.denote : {l : List Ty} → IExpr Γ ty l → (Γv : Γ.Valuation) → 
-    (Op.toType l ty)
-  | _, .op o, _ => o.denote
-  | _, .app f a, Γv => f.denote Γv (Γv a)
+def IExpr.denote (e : IExpr Γ ty) (Γv : Γ.Valuation) : ty.toType :=
+  e.op.denote (e.args.map Γv)
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
-def ExprRec.denote : ExprRec Γ ty l → (Γv : Γ.Valuation) → Op.toType l ty
+def ExprRec.denote : ExprRec Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .op o, _ => o.denote
   | .app f a, Γv => f.denote Γv (a.denote Γv)
   | .var v, Γv => Γv v
@@ -346,7 +343,7 @@ def matchVarIExpr {Γ₁ Γ₂ Γ₃ : Ctxt}
     if ht : t₁ = t₂
       then by
         subst ht
-        
+
     
  
 /-- `matchVar` attempts to assign variables in `matchExpr` to variables
