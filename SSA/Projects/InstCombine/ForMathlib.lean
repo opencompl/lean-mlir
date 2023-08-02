@@ -557,11 +557,51 @@ def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
 
 def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 
-@[simp]
-def ofInt' {w} (i : Int) := Bitvec.ofInt w i
+def toBool : Bitvec 1 → Bool 
+  | b ::ᵥ Vector.nil => b
+
+theorem ofBool_toBool : ∀ b : Bool, toBool (ofBool b) = b := by simp only [ofBool, toBool]
+theorem toBool_ofBool : ∀ b : Bitvec 1, ofBool (toBool b) = b := by simp only [ofBool, toBool]
 
 instance : Coe Bool (Bitvec 1) := ⟨ofBool⟩
 
+
+instance : Coe (Bitvec 1) Bool := ⟨toBool⟩
+
+instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (Bitvec 1) where
+  coe := ofBool $ decide p
+
+
 infixl:75 ">>>ₛ" => fun x y => Bitvec.sshr x (Bitvec.toNat y)
+
+def ult (x y : Bitvec w) : Prop := x.toNat < y.toNat
+def ule (x y : Bitvec w) : Prop := x.toNat ≤ y.toNat
+def ugt (x y : Bitvec w) : Prop := x.toNat > y.toNat
+def uge (x y : Bitvec w) : Prop := x.toNat ≥ y.toNat
+
+instance {w : Nat} (x y : Bitvec w) : Decidable (ult x y) := by apply Nat.decLt
+instance {w : Nat} (x y : Bitvec w) : Decidable (ule x y) := by apply Nat.decLe
+instance {w : Nat} (x y : Bitvec w) : Decidable (ugt x y) := by apply Nat.decLt
+instance {w : Nat} (x y : Bitvec w) : Decidable (uge x y) := by apply Nat.decLe
+
+def slt (x y : Bitvec w) : Prop := x.toInt < y.toInt
+def sle (x y : Bitvec w) : Prop := x.toInt ≤ y.toInt
+def sgt (x y : Bitvec w) : Prop := x.toInt > y.toInt
+def sge (x y : Bitvec w) : Prop := x.toInt ≥ y.toInt
+
+instance {w : Nat} (x y : Bitvec w) : Decidable (slt x y) := by apply Int.decLt
+instance {w : Nat} (x y : Bitvec w) : Decidable (sle x y) := by apply Int.decLe
+instance {w : Nat} (x y : Bitvec w) : Decidable (sgt x y) := by apply Int.decLt
+instance {w : Nat} (x y : Bitvec w) : Decidable (sge x y) := by apply Int.decLe
+
+notation:50 x " ≤ᵤ " y  => ofBool (decide (ult x y))
+notation:50 x " <ᵤ " y => ofBool  (decide (ule x y))
+notation:50 x " ≥ᵤ " y => ofBool  (decide (uge x y))
+notation:50 x " >ᵤ " y => ofBool  (decide (ugt x y))
+
+notation:50 x " ≤ₛ " y => ofBool  (decide (slt x y))
+notation:50 x " <ₛ " y => ofBool  (decide (sle x y))
+notation:50 x " ≥ₛ " y => ofBool  (decide (sge x y))
+notation:50 x " >ₛ " y => ofBool (decide ( sgt x y))
 
 end Bitvec

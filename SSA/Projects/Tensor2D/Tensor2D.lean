@@ -1,6 +1,8 @@
 import SSA.Core.WellTypedFramework
+import SSA.Core.EDSLNested
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
+import SSA.Core.Util
 import SSA.Core.Util
 
 
@@ -197,10 +199,6 @@ macro_rules
 --          correct type. Not sure how to achieve this, as doing this
 --          naively leads to errors about incorrect types:
 --          https://github.com/bollu/ssa/issues/28
-/-
-
-TODO: Siddharth can you fix this?
-
 open SSA EDSL2 in
 theorem map_fill_2d 
     (t : Tensor2d' Int)
@@ -224,4 +222,3 @@ theorem map_fill_2d
     simp[UserType.mkPair, TypedUserSemantics.eval, eval]
     simp[Tensor2d'.fill_extract]
   }
--/
