@@ -58,17 +58,6 @@ def HOASRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ h, [HOAS Op h] → h.
 
 end
 
-def Context.Hom (Γ₁ Γ₂ : Context β) : Type :=
-  ⦃t : UserType β⦄ → Γ₁.Var t → Γ₂.Var t
-
-def Context.Hom.snoc (hom : Hom Γ₁ Γ₂) : Hom (Γ₁.snoc var ty) (Γ₂.snoc var ty) :=
-  fun _ v => match v with
-    | .last => .last
-    | .prev v => .prev (hom v)
-
-def Context.Hom.snocRight (hom : Hom Γ₁ Γ₂) : Hom Γ₁ (Γ₂.snoc var ty) :=
-  fun _ v => .prev <| hom v
-
 def HOASTypes.ToTSSA : HOASTypes β Op where
   expr t        := ∀ Γ, Option <| TSSA Op Γ (.EXPR t)
   stmt t        := ∀ Γ, Option <| TSSA Op Γ (.STMT t)
