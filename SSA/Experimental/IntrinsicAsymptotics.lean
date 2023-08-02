@@ -9,6 +9,7 @@ inductive Op : List Ty → Ty → Type
   | add : Op [.nat, .nat] .nat
   | beq : Op [.nat, .nat] .bool
   | cst : ℕ → Op [] .nat
+  deriving DecidableEq
 
 def Op.toType : (l : List Ty) → Ty → Type
   | [], t => t.toType
@@ -320,6 +321,32 @@ theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t l) →
     refine congr_fun ?_ ?_
     exact ExprRec.denote_eq_of_eq_on_vars _
       (fun t v hv => h _ _ (by simp [ExprRec.vars, *]))
+
+mutual
+
+def matchVarIExpr {Γ₁ Γ₂ Γ₃ : Ctxt} 
+    {t : Ty} (iex : IExpr Γ₂ t l) 
+    (v : Γ₂.Var t) 
+    (matchExpr : ExprRec Γ₃ t l) 
+    (ma : Mapping Γ₃ Γ₂ := ∅) : 
+    Option (Mapping Γ₃ Γ₂) :=
+  match matchExpr, iex with
+  | .var v', _ =>
+    match ma.lookup ⟨_, v'⟩ with
+    | some v₂ =>
+      by
+        exact if v = v₂
+          then some ma
+          else none
+    | none => some (AList.insert ⟨_, v'⟩ v ma)
+  | .op o, .op o' =>
+      if o = o' then some ma
+      else none
+  | @ExprRec.app _ _ t₁ _ f x, @IExpr.app _ _ t₂ _ f' x' => 
+    if ht : t₁ = t₂
+      then by
+        subst ht
+        
     
  
 /-- `matchVar` attempts to assign variables in `matchExpr` to variables
@@ -338,14 +365,19 @@ def matchVar {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂)
           then some ma
           else none
     | none => some (AList.insert ⟨_, v'⟩ v ma) 
-  | .cst n, some (.cst m) =>
-      if n = m then some ma
+  | .op o, some (.op o') =>
+      if o = o' then some ma
       else none
-  | .add lhs rhs, some (.add v₁ v₂) => do
-    let map₁ ← matchVar lets v₁ lhs ma
-    let map₂ ← matchVar lets v₂ rhs map₁
-    return map₂
+  | .app f x, some (.app f' x') => do
+    let map₁ ← matchVar lets x' x ma
+    pure _
+  -- | .add lhs rhs, some (.add v₁ v₂) => do
+  --   let map₁ ← matchVar lets v₁ lhs ma
+  --   let map₂ ← matchVar lets v₂ rhs map₁
+  --   return map₂
   | _, _ => none
+
+end
 
 open AList
 
