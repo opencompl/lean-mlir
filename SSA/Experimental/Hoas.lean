@@ -23,6 +23,12 @@ class HOAS (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]  (h : HOAS
   pair (fst : h.var T₁) (snd : h.var T₂) : h.expr (.pair T₁ T₂)
   /-- (fst, snd, third) -/
   triple (fst : h.var T₁) (snd : h.var T₂) (third : h.var T₃) : h.expr (.triple T₁ T₂ T₃)
+
+  /-
+    TODO: the following is wrong! The `rgn` should not be able to refer to any variables of the
+    enclosing scope, so have to somehow universally quantify it over all possible implementors
+    of `HOAS`, but we are not able to recursively refer to `HOAS` from within its definition
+  -/
   /-- op (arg) { rgn } rgn is an argument to the operation -/
   op (o : Op) (arg : h.var (argUserType o)) (rgn : h.region (rgnDom o) (rgnCod o)) :
       h.expr (outUserType o)
