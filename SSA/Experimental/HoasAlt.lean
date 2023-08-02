@@ -42,6 +42,7 @@ inductive HoasTSSA : (UserType β → Type) → TSSAIndex β → Type 1 where
   | var {Var} (v : Var T) : HoasTSSA Var (.EXPR T)
 
 
+
 /-!
   By universally quantifying a `HoasTSSA` term over the `Var` type family, we ensure the represented
   term is closed.
@@ -51,26 +52,26 @@ inductive HoasTSSA : (UserType β → Type) → TSSAIndex β → Type 1 where
   ```
 -/
 
-/-- A closed TSSA expression in HOAS representation -/
-def HOASExpr    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.EXPR t)
+/-- A closed TSSA expression in Hoas representation -/
+def HoasExpr    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.EXPR t)
 
-/-- A closed TSSA statement in HOAS representation -/
-def HOASStmt    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.STMT t)
+/-- A closed TSSA statement in Hoas representation -/
+def HoasStmt    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.STMT t)
 
-/-- A closed TSSA region in HOAS representation -/
-def HOASRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ V, HoasTSSA Op V (.REGION t₁ t₂)
+/-- A closed TSSA region in Hoas representation -/
+def HoasRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ V, HoasTSSA Op V (.REGION t₁ t₂)
 
 end
 
 variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β] [DecidableEq β]
 
 
-@[simp]
-def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
-  | .assign _ rhs rest => rhs.sizeOf + (rest default).sizeOf + 1
-  | .op _ _ body => (body Var).sizeOf + 1
-  | .rgn _ body => (body default).sizeOf + 1
-  | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
+-- @[simp]
+-- def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
+--   | .assign _ rhs rest => rhs.sizeOf + (rest default).sizeOf + 1
+--   | .op _ _ body => (body Var).sizeOf + 1
+--   | .rgn _ body => (body default).sizeOf + 1
+--   | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
 
 
 protected abbrev HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)
@@ -146,167 +147,15 @@ where
 
 
   
+def TSSA.fromHoasExpr (expr : HoasExpr Op t) : Option <| TSSA Op ∅ (.EXPR t) :=
+  HoasTSSA.toTSSA? expr
 
+def TSSA.fromHoasStmt (stmt : HoasStmt Op t) : Option <| TSSA Op ∅ (.STMT t) :=
+  HoasTSSA.toTSSA? stmt
 
+def TSSA.fromHoasRegion (rgn : HoasRegion Op t₁ t₂) : Option <| TSSA Op ∅ (.REGION t₁ t₂) :=
+  HoasTSSA.toTSSA? rgn
 
-
-
-
-
-
-#exit
-
-structure HOASTypes (β : Type) (Op : Type) where
-  (expr stmt var : UserType β → Type)
-  (region : UserType β → UserType β → Type)
-
-
-open OperationTypes UserType in
-class HOAS (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]  (h : HOASTypes β Op) where
-  -- varToSnoc {Γ} {t u : UserType β} {v : Var} : h.var Γ t → h.var (Γ.snoc v u) t 
-  /-- let-binding -/
-  assign {T : UserType β} (lhs : Var) (rhs : h.expr T) (rest : h.var T → h.stmt T') : h.stmt T'
-  /-- above; ret v -/
-  ret (v : h.var T) : h.stmt T
-  /-- build a unit value -/
-  unit : h.expr .unit
-  /-- (fst, snd) -/
-  pair (fst : h.var T₁) (snd : h.var T₂) : h.expr (.pair T₁ T₂)
-  /-- (fst, snd, third) -/
-  triple (fst : h.var T₁) (snd : h.var T₂) (third : h.var T₃) : h.expr (.triple T₁ T₂ T₃)
-  /-- op (arg) { rgn } rgn is an argument to the operation -/
-  op (o : Op) (arg : h.var (argUserType o)) (rgn : h.region (rgnDom o) (rgnCod o)) :
-      h.expr (outUserType o)
-  /- fun arg => body -/
-  rgn (arg : Var) {dom cod : UserType β} 
-      (body : h.var dom → h.stmt cod) : h.region dom cod
-  /- no function / non-existence of region. -/
-  rgn0 : h.region .unit .unit
-  /- a region variable. --/
-  rgnvar (v : h.var (.region T₁ T₂)) : h.region T₁ T₂
-  /-- a variable. -/
-  var (v : h.var T) : h.expr T
-
-
-
-variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β]
-
-
-
-section
-variable (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]
-
-def HOASExpr    (t : UserType β)      : Type 1 := ∀ h, [HOAS Op h] → h.expr t
-def HOASStmt    (t : UserType β)      : Type 1 := ∀ h, [HOAS Op h] → h.stmt t
-def HOASVar     (t : UserType β)      : Type 1 := ∀ h, [HOAS Op h] → h.var t
-def HOASRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ h, [HOAS Op h] → h.region t₁ t₂
-
-end
-
-def HOASTypes.ToTSSA : HOASTypes β Op where
-  expr t        := ∀ Γ, Option <| TSSA Op Γ (.EXPR t)
-  stmt t        := ∀ Γ, Option <| TSSA Op Γ (.STMT t)
-  region t₁ t₂  := ∀ Γ, Option <| TSSA Op Γ (.REGION t₁ t₂)
-  var t         := ∀(Γ : Context β), Option <| Γ.Var t
-
--- example : Γ.Var T → TSSA Γ (.STMT t) HOASTypes.stmt (HOASTypes.ToTSSA Γ) T'
-
-
-instance TSSA.instHoas [DecidableEq β] : HOAS Op HOASTypes.ToTSSA where
-  -- varToSnoc := Context.Var.prev
-  assign := @fun _ T' lhs rhs rest Γ => do
-    let rhs ← rhs Γ
-    let Γt := Γ.snoc lhs T'
-    let rest ← rest (fun Γ' => 
-      if h : Γt ⊆ Γ' then
-        some <| .coePrefix h <| .last ..
-      else
-        none
-    ) Γt
-    return TSSA.assign lhs rhs rest
-  ret := fun v Γ => do
-    let v ← v Γ
-    return TSSA.ret v
-  unit _ := some <| TSSA.unit
-  pair a b _      := do return TSSA.pair (←a _) (←b _)
-  triple a b c _  := do return TSSA.triple (←a _) (←b _) (←c _)
-  op o arg rgn Γ := do
-    let arg ← arg Γ
-    let rgn ← rgn ∅
-    return TSSA.op o arg rgn
-  rgn arg ty₁ _ body Γ := do
-    let Γt := Γ.snoc arg ty₁
-    let body ← body (fun Γ' =>
-        if h : Γt ⊆ Γ' then
-          some <| .coePrefix h <| .last ..
-        else
-          none
-      ) Γt
-    return TSSA.rgn arg body
-  rgn0 _ := some TSSA.rgn0
-  rgnvar v _  := do return TSSA.rgnvar (←v _)
-  var v _     := do return TSSA.var (←v _)
-
-
-
-
-def TSSAIndex.toHOASType : TSSAIndex β → Type _
-  | .STMT t => HOASStmt Op t
-  | .EXPR t => HOASExpr Op t
-  | .REGION t₁ t₂ => HOASRegion Op t₁ t₂
-
-
-
-section
-variable [DecidableEq β]
-
-/-!
-  The `HOAS` representation does not carry any
--/
-
-def TSSA.fromHOASExpr (expr : HOASExpr Op t) : ∀ Γ, Option <| TSSA Op Γ (.EXPR t) :=
-  expr .ToTSSA
-
-def TSSA.fromHOASStmt (stmt : HOASStmt Op t) : ∀ Γ, Option <| TSSA Op Γ (.STMT t) :=
-  stmt .ToTSSA
-
-def TSSA.fromHOASRegion (stmt : HOASRegion Op t₁ t₂) : ∀ Γ, Option <| TSSA Op Γ (.REGION t₁ t₂) :=
-  stmt .ToTSSA
-
-def Context.Var.fromHOAS (v : HOASVar Op t) : ∀ (Γ : Context β), Option <| Γ.Var t :=
-  v .ToTSSA
-
-end
-
-
-
--- def HOASTypes.fromIndex (h : HOASTypes β Op) (Γ : Context β) : TSSAIndex β → Type 
---   | .STMT t => h.stmt Γ t
---   | .EXPR t => h.expr Γ t
---   | .REGION t₁ t₂ => h.region Γ t₁ t₂
-
--- open HOAS in
--- def TSSA.toHOASAux (h) [hoas : HOAS Op h] {Γ : Context β} {i : TSSAIndex β}
---     (map : ⦃t : UserType β⦄ → Γ.Var t → h.var Γ t) : 
---     TSSA Op Γ i → h.fromIndex Γ i
---   | .assign lhs rhs rest => HOAS.assign lhs (rhs.toHOASAux h map) 
---       (fun v => rest.toHOASAux h <| mapping_snoc map v)
---   | .ret v => HOAS.ret <| map v
---   | .unit => HOAS.unit
---   | .pair a b => HOAS.pair (map a) (map b)
---   | .triple a b c => HOAS.triple (map a) (map b) (map c)
---   | .op o arg region => HOAS.op o (map arg) (region.toHOASAux h fun _ v => v.emptyElim)
---   | .var v => HOAS.var (map v)
---   | .rgnvar v => HOAS.rgnvar (map v)
---   | .rgn0 => HOAS.rgn0
---   | .rgn arg body => HOAS.rgn arg (fun v => body.toHOASAux h <| mapping_snoc map v)
--- where
---   mapping_snoc {var} {u} (map : ⦃t : UserType β⦄ → Γ.Var t → h.var Γ t) 
---       (newVal : h.var (Γ.snoc var u) u) :
---       ⦃t : UserType β⦄ → (Γ.snoc var u).Var t → h.var (Γ.snoc var u) t :=
---     fun _ w => by cases w with
---       | last => exact newVal
---       | prev w => exact hoas.varToSnoc <| map w
 
 end SSA
 
@@ -368,13 +217,13 @@ partial def elabRgn : TSyntax `dslh_region → MacroM Term
 | `(dslh_region| rgn$($v)) => return v
 | `(dslh_region| rgn{ %$v:ident => $bb:dslh_bb }) => do
   let bb ← elabBB bb
-  `(SSA.HOAS.rgn $v $bb)
+  `(SSA.HoasTSSA.rgn $v $bb)
 | _ => Macro.throwUnsupported
 
 partial def elabAssign (next : Term): TSyntax `dslh_assign → MacroM Term
 | `(dslh_assign| %$v:ident := $e:dslh_expr) => do
   let e ← elabStxExpr e
-  `(SSA.HOAS.assign 0 $e (fun $v => $next))
+  `(SSA.HoasTSSA.assign 0 $e (fun $v => $next))
 | _ => Macro.throwUnsupported
 
 
@@ -388,27 +237,27 @@ partial def elabStmt (ret : Ident) : TSyntax `dslh_stmt → MacroM Term
   | `(dslh_stmt| $ss:dslh_assign;*) => go ss.getElems.toList
   | _ => Macro.throwUnsupported
 where go
-  | [] => `(SSA.HOAS.ret $ret)
+  | [] => `(SSA.HoasTSSA.ret $ret)
   | s::ss => do 
       elabAssign (←go ss) s
 
 partial def elabBB : TSyntax `dslh_bb → MacroM Term
 | `(dslh_bb| ^bb $[ $s?:dslh_stmt ]? dsl_ret %$ret:ident) => do
     match s? with
-    | .none => `(SSA.HOAS.ret $ret)
+    | .none => `(SSA.HoasTSSA.ret $ret)
     | .some s => elabStmt ret s
 | _ => Macro.throwUnsupported
 
 partial def elabStxExpr : TSyntax `dslh_expr → MacroM Term
-| `(dslh_expr| unit:)                                   => `(SSA.HOAS.unit)
-| `(dslh_expr| pair: %$a:ident %$b:ident)               => `(SSA.HOAS.pair $a $b)
-| `(dslh_expr| triple: %$a:ident %$b:ident %$c:ident)   => `(SSA.HOAS.triple $a $b $c)
+| `(dslh_expr| unit:)                                   => `(SSA.HoasTSSA.unit)
+| `(dslh_expr| pair: %$a:ident %$b:ident)               => `(SSA.HoasTSSA.pair $a $b)
+| `(dslh_expr| triple: %$a:ident %$b:ident %$c:ident)   => `(SSA.HoasTSSA.triple $a $b $c)
 | `(dslh_expr| %$v:ident) => `($v)
 | `(dslh_expr| op: $o:dsl_op : %$arg:ident $[, $r? ]? ) => do
   let rgn ← match r? with
-    | none => `(SSA.HOAS.rgn0)
+    | none => `(fun _ => SSA.HoasTSSA.rgn0)
     | some r => elabRgn r -- TODO: can a region affect stuff outside?
-  `(SSA.HOAS.op [dsl_op| $o] $arg $rgn)
+  `(SSA.HoasTSSA.op [dsl_op| $o] $arg $rgn)
 | _ => Macro.throwUnsupported
 end
 
@@ -419,7 +268,8 @@ macro_rules
 | `([dslh_bb| $bb:dslh_bb]) => `([dslh_bb (_)| $bb:dslh_bb])
 | `([dslh_bb ($Op)| $bb:dslh_bb]) => do
   let bb ← elabBB bb
-  `(fun h (_ : SSA.HOAS $Op h) => ($bb : h.stmt _))
+  -- `(Option.get! <| SSA.HoasTSSA.toTSSA? <| fun V => ($bb : SSA.HoasTSSA $Op V (.STMT _)))
+  `(fun V => ($bb : SSA.HoasTSSA $Op V (.STMT _)))
 
 
 scoped syntax "[dslh_region|" dslh_region "]" : term
@@ -442,26 +292,6 @@ end EDSLHoas
 namespace InstCombine
 
 open SSA EDSLHoas
-
-/-
-  %v0 := unit: ;
-  %v1 := op:const (b) %v0;
-  %v2 := pair:%v1 %v1;
-  %v3 := op:add w %v2
-  dsl_ret %v3
--/
-
-open SSA.HOAS in
-def HOASExample : HOASStmt Op (BaseType.bitvec b) := fun _h (_ : HOAS Op _h) =>
-  assign 0 unit fun v0 =>
-  assign 1 (op (Op.const (0 : Bitvec b)) v0 rgn0) fun v1 =>
-  assign 2 (pair v1 v1) fun v2 =>
-  assign 3 (op (.add b) v2 rgn0) fun v3 =>
-  ret v3
-
-
--- def TSSAExample : TSSA Op ∅ (.STMT <| BaseType.bitvec b) :=
---   TSSA.fromHOASStmt HOASExample
 
 
 example (Z : Bitvec 10) := [dslh_bb (Op)|
