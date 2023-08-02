@@ -36,9 +36,9 @@ inductive ICom : Ctxt → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
   | lete (e : IExpr Γ t) (body : ICom (Γ.snoc t) t') : ICom Γ t'
 
-inductive ExprRec (Γ : Ctxt) : Ty → Type where
-  | cst (n : Nat) : ExprRec Γ .nat
-  | add (a : ExprRec Γ .nat) (b : ExprRec Γ .nat) : ExprRec Γ .nat
+inductive ExprRec (Γ : Ctxt) : Ty → (l : List Ty := []) → Type where
+  | op : Op l t → ExprRec Γ t l
+  | app : ExprRec Γ t' (t::l) → ExprRec Γ t → ExprRec Γ t' l
   | var (v : Γ.Var t) : ExprRec Γ t
 
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
@@ -56,9 +56,9 @@ def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
-def ExprRec.denote : ExprRec Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .cst n, _ => n
-  | .add a b, Γv => a.denote Γv + b.denote Γv
+def ExprRec.denote : ExprRec Γ ty l → (Γv : Γ.Valuation) → Op.toType l ty
+  | .op o, _ => o.denote
+  | .app f a, Γv => f.denote Γv (a.denote Γv)
   | .var v, Γv => Γv v
 
 def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation 
@@ -72,15 +72,16 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
     | toSnoc v =>
       exact e.denote ll v
 
-def IExpr.changeVars (varsMap : Γ.hom Γ') : 
-    (e : IExpr Γ ty) → IExpr Γ' ty
-  | .cst n => .cst n
-  | .add a b => .add (varsMap a) (varsMap b)
+def IExpr.changeVars : {ty : Ty} → {l : List Ty} → 
+    (varsMap : Γ.hom Γ') →  
+    (e : IExpr Γ ty l) → IExpr Γ' ty l
+  | _, _, _, .op o => .op o
+  | _, _, varsMap, .app f a => .app (f.changeVars varsMap) (varsMap a)
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (varsMap : Γ.hom Γ')
-    (e : IExpr Γ ty)
+    (e : IExpr Γ ty l)
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
     e.denote (fun t v => Γ'v (varsMap v)) := by
@@ -210,25 +211,24 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt}
 in a different context. -/
 def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
-    (e : ExprRec Γ₁ t) → ExprRec Γ₂ t
-  | .var v => f _ v
-  | .cst n => .cst n
-  | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
+    (e : ExprRec Γ₁ t l) → ExprRec Γ₂ t l
+  | .op a => .op a
+  | .app g a => .app (g.bind f) (a.bind f)
+  | .var v => f _ v 
 
 @[simp]
 theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Valuation) 
     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
-    (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
+    (e : ExprRec Γ₁ t l) → (e.bind f).denote s = 
       e.denote (fun t' v' => (f t' v').denote s)
+  | .op a => by simp [bind, denote]
+  | .app g a => by simp [bind, denote, denote_bind s f g, denote_bind s f a]
   | .var v => by simp [bind, denote]
-  | .cst n => by simp [bind, denote]
-  | .add e₁ e₂ => by
-    simp only [ExprRec.denote, bind]
-    rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
+  
 
-def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
-  | _, _, .cst n => .cst n
-  | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
+def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t l → ExprRec Γ t l
+  | _, _, .op o => .op o
+  | _, _, .app f a => .app (f.toExprRec) (.var a)
 
 def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
   | _, _, .ret e => .var e
@@ -242,11 +242,12 @@ def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
 
 @[simp]
 theorem IExpr.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
-    (s : Γ.Valuation) → (e : IExpr Γ t) → 
+    (s : Γ.Valuation) → (e : IExpr Γ t l) → 
     e.toExprRec.denote s = e.denote s
-  | _, _, _, .cst n => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
-  | _, _, s, .add e₁ e₂ => by
-    simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+  | _, _, _, .op o => by simp [IExpr.toExprRec, IExpr.denote, ExprRec.denote]
+  | _, _, s, .app e₁ e₂ => by
+    simp only [IExpr.toExprRec, IExpr.denote, ExprRec.denote,
+      IExpr.denote_toExprRec]
 
 @[simp]
 theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} → 
@@ -299,23 +300,27 @@ theorem Lets.denote_getIExpr : {Γ₁ Γ₂ : Ctxt} → {lets : Lets Γ₁ Γ₂
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
-def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
+def ExprRec.vars : ExprRec Γ t l → (t' : Ty) → Finset (Γ.Var t')
   | .var v, t' => if ht : t = t' then ht ▸ {v} else ∅ 
-  | .cst _, _ => ∅ 
-  | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
+  | .app f a, _ => f.vars _ ∪ a.vars _
+  | .op _, _ => ∅
 
-theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Valuation} → 
+theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t l) → 
+    {s₁ s₂ : Γ.Valuation} → 
     (h : ∀ t v, v ∈ e.vars t → s₁ v = s₂ v) → 
     e.denote s₁ = e.denote s₂
   | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
-  | .cst n, s₁, _, h => rfl
-  | .add e₁ e₂, s₁, s₂, h => by
-    simp only [ExprRec.denote, ExprRec.denote_eq_of_eq_on_vars]
-    congr 1
-    . exact ExprRec.denote_eq_of_eq_on_vars e₁ (fun t v hv => h t v 
-        (by simp [hv, ExprRec.vars]))
-    . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
-        (by simp [hv, ExprRec.vars]))
+  | .op _, s₁, _, h => rfl
+  | .app e₁ e₂, s₁, s₂, h => by
+    simp only [ExprRec.denote]
+    have : denote e₂ s₁ = denote e₂ s₂ :=
+      ExprRec.denote_eq_of_eq_on_vars e₂ 
+        (fun t v hv => h _ _ (by simp [ExprRec.vars, *]))
+    rw [this]
+    refine congr_fun ?_ ?_
+    exact ExprRec.denote_eq_of_eq_on_vars _
+      (fun t v hv => h _ _ (by simp [ExprRec.vars, *]))
+    
  
 /-- `matchVar` attempts to assign variables in `matchExpr` to variables
 in `lets`, and extends the input mapping `ma`, which is by default `∅`.  -/
