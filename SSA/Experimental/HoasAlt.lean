@@ -75,7 +75,7 @@ def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
 
 protected abbrev HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)
 
-def HoasTSSA.toTSSA? {i : TSSAIndex β} (term : ∀ V, HoasTSSA Op V i) : Option (TSSA Op ∅ i) :=
+partial def HoasTSSA.toTSSA? {i : TSSAIndex β} (term : ∀ V, HoasTSSA Op V i) : Option (TSSA Op ∅ i) :=
   go (term _) ∅
 where 
   go {i} : HoasTSSA Op HoasTSSA.VarTy i → 
@@ -101,9 +101,10 @@ where
         Lean itself, so we cannot make this argument properly.
         Instead, we take the following as axiom.
       -/
-      have : sizeOf rest' = sizeOf (rest fun _ => default) := by admit
-      have : sizeOf rest' < sizeOf rhs + sizeOf (rest fun a => default) + 1 := by 
-        rw[this]; linarith
+      -- Axioms removed because def is marked partial
+      -- have : sizeOf rest' = sizeOf (rest fun _ => default) := by admit
+      -- have : sizeOf rest' < sizeOf rhs + sizeOf (rest fun a => default) + 1 := by 
+      --   rw[this]; linarith
 
       let rest ← go rest' _
       return TSSA.assign lhs rhs' rest
@@ -130,24 +131,20 @@ where
         The justification for the following axiom is the same as for the axiom in the `.assign`
         case above
       -/
-      have : sizeOf body' = sizeOf (body fun _ => default) := by admit
-      have : sizeOf body' < sizeOf (body fun a => default) + 1 := by 
-        rw[this]; apply Nat.lt.base
+      -- Axioms removed because def is marked partial
+      -- have : sizeOf body' = sizeOf (body fun _ => default) := by admit
+      -- have : sizeOf body' < sizeOf (body fun a => default) + 1 := by 
+      --   rw[this]; apply Nat.lt.base
 
       let body ← go body' Γt
       return TSSA.rgn arg body
     | .rgn0, _      => some TSSA.rgn0
     | .rgnvar v, _  => do return TSSA.rgnvar (←v _)
     | .var v, _     => do return TSSA.var (←v _)
-  termination_by go t _ => t.sizeOf
+  -- termination_by go t _ => t.sizeOf
   
 
 
-theorem HoasTSSA.toTSSA?_isSome (term : ∀ V, HoasTSSA Op V i) : (toTSSA? term).isSome := 
-  go <| term _
-where
-  go {i} : (term : HoasTSSA Op HoasTSSA.VarTy i) → (toTSSA?.go term).isSome
-    | .assign .. => _
   
 
 
