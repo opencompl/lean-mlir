@@ -38,7 +38,7 @@ inductive ICom : Ctxt → Ty → Type where
   | lete (e : IExpr Γ t) (body : ICom (Γ.snoc t) t') : ICom Γ t'
 
 inductive ExprRec (Γ : Ctxt) : Ty → Type where
-  | op : (sig : List Ty) → Op sig t → Tuple (ExprRec Γ) sig → ExprRec Γ t 
+  | op : {sig : List Ty} → Op sig t → Tuple (fun t => ExprRec Γ t) sig → ExprRec Γ t
   | var (v : Γ.Var t) : ExprRec Γ t
 
 /-- `Lets Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in 
@@ -54,10 +54,14 @@ def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
-def ExprRec.denote : ExprRec Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .op o, _ => o.denote
-  | .app f a, Γv => f.denote Γv (a.denote Γv)
-  | .var v, Γv => Γv v
+def ExprRec.denote (e : ExprRec Γ ty) (Γv : Γ.Valuation) : ty.toType :=
+  ExprRec.rec (motive_1 := fun t _ => t.toType)
+    (motive_2 := fun sig _ => Tuple Ty.toType sig) 
+    (fun o tup ih => o.denote ih) 
+    (fun v => Γv v) 
+    Tuple.nil
+    (fun e tup eih tupih => Tuple.cons eih tupih) 
+    e
 
 def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation 
   | .nil => id
