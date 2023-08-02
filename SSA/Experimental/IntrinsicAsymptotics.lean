@@ -5,16 +5,36 @@ import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
 
+inductive Op : List Ty → Ty → Type
+  | add : Op [.nat, .nat] .nat
+  | beq : Op [.nat, .nat] .bool
+  | cst : ℕ → Op [] .nat
+
+def Op.toType : (l : List Ty) → Ty → Type
+  | [], t => t.toType
+  | t::l, t' => t.toType → Op.toType l t'
+
+@[reducible]
+def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Op.toType l t
+  | _, _, .cst n => n
+  | _, _, .add => (. + .)
+  | _, _, .beq => Nat.beq
+
 /-- A very simple intrinsically typed expression. -/
-inductive IExpr : Ctxt → Ty → Type
-  | add (a b : Γ.Var .nat) : IExpr Γ .nat
-  /-- Nat literals. -/
-  | cst (n : Nat) : IExpr Γ .nat
+inductive IExpr : Ctxt → Ty → (l : List Ty := []) → Type
+  | op : Op l t → IExpr Γ t l
+  | app : IExpr Γ t' (t::l) → Γ.Var t → IExpr Γ t' l   
+  -- | add (a b : Γ.Var .nat) : IExpr Γ .nat
+  -- /-- Nat literals. -/
+  -- | cst (n : Nat) : IExpr Γ .nat
+
+instance : CoeFun (IExpr Γ t' (t::l)) (fun _ => Γ.Var t → IExpr Γ t' l) where
+  coe e v := IExpr.app e v
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
-  | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+  | lete (e : IExpr Γ t) (body : ICom (Γ.snoc t) t') : ICom Γ t'
 
 inductive ExprRec (Γ : Ctxt) : Ty → Type where
   | cst (n : Nat) : ExprRec Γ .nat
@@ -27,9 +47,10 @@ inductive Lets : Ctxt → Ctxt → Type where
   | nil {Γ : Ctxt} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .cst n, _ => n
-  | .add a b, Γv => Γv a + Γv b
+def IExpr.denote : {l : List Ty} → IExpr Γ ty l → (Γv : Γ.Valuation) → 
+    (Op.toType l ty)
+  | _, .op o, _ => o.denote
+  | _, .app f a, Γv => f.denote Γv (Γv a)
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
