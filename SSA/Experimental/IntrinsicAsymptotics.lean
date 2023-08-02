@@ -138,7 +138,53 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
       simp only [Ctxt.toSnoc_injective.eq_iff] at h'
-      exact h ⟨rfl, h'⟩  
+      exact h ⟨rfl, h'⟩
+
+
+open Ctxt (SizedCtxt)
+
+structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
+  {Γ_out_new : Ctxt}
+  lets : Lets Γ_in Γ_out_new
+  map : Γ_out.hom Γ_out_new
+  v : Γ_out_new.Var ty
+
+/--
+  Add a program to a list of `Lets`, returning
+  * the new lets
+  * a map from variables of the out context of the old lets to the out context of the new lets
+  * a variable in the new out context, which is semantically equivalent to the return variable of 
+    the added program
+-/
+def addProgramToLets (lets : Lets Γ_in Γ_out) (varsMap : Δ.hom Γ_out) : ICom Δ ty → 
+    addProgramToLets.Result Γ_in Γ_out ty
+  | .ret v => ⟨
+      lets,
+      fun _ v => v,
+      varsMap v
+    ⟩
+  | .lete (α:=α) e body => 
+      let lets := Lets.lete lets (e.changeVars varsMap)
+      let ⟨lets', map, v'⟩ := addProgramToLets lets (Ctxt.Var.snocMap varsMap) body
+      ⟨
+        lets',
+        fun _ v => map v.toSnoc,
+        v' 
+      ⟩
+
+-- set_option pp.proofs true in
+theorem denote_addProgramToLets_lets {lets : Lets Γ_in Γ_out} {map} {com : ICom Δ t} :
+    ∀ (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t), 
+      (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).map var) 
+      = lets.denote ll var := by
+  intro ll _ var
+  induction com generalizing lets
+  next =>
+    rfl
+  next ih =>
+    simp[addProgramToLets]
+    rw[ih]
+
 
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
