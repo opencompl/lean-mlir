@@ -317,50 +317,16 @@ def Lets.getIExpr {Γ₁ Γ₂ : Ctxt} (lets : Lets Γ₁ Γ₂) {t : Ty} (v : �
   | none => none
   | some r => r.snd.changeVars (getIExprAuxDiff h).toHom
 
-set_option pp.motives.all true in
 theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt} : {lets : Lets Γ₁ Γ₂} → {t : Ty} → 
     {v : Γ₂.Var t} → {e : IExpr Γ₂ t} → (he : lets.getIExpr v = some e) → (s : Γ₁.Valuation) →
     e.denote (lets.denote s) = (lets.denote s) v := by
   intros lets _ v e he s
   simp [getIExpr] at he  
-  cases h : getIExprAux lets v
-  next =>
-    sorry
-  next val =>
-    rcases val with ⟨Δ', e'⟩
-    have : e = (IExpr.changeVars (Ctxt.Diff.toHom (getIExprAuxDiff h)) e') := sorry
-    rw[←denote_getIExprAux h]
-    congr
-    
+  split at he
+  . contradiction
+  . rw[←Option.some_inj.mp he, denote_getIExprAux]
 
   
-  -- | .nil, t, v, e, he, s => by simp [getIExpr, getIExprAux] at he
-  -- | .lete lets e, t, v, e', he, s => by
-  --   cases v using Ctxt.Var.casesOn with
-  --   | toSnoc v => 
-  --     rw[denote_getIExprAux]
-  --     stop
-  --     simp only [getIExpr, getIExprAuxDiff, Membership.mem] at he
-  --     simp only [getIExpr, getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
-  --       Option.mem_def, Option.map_eq_some'] at he
-  --     -- cases hc : getIExprAux (lets.lete e) (@Ctxt.Var.toSnoc _ t _ v)
-  --     -- . rw[hc] at he
-  --     -- . sorry
-      
-  --     stop
-  --     simp only [getIExpr, getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
-  --       Option.mem_def, Option.map_eq_some'] at he
-  --     cases' he with a ha
-  --     cases' ha with ha ha'
-  --     subst ha'
-  --     simp only [denote, eq_rec_constant, IExpr.denote_changeVars, 
-  --       Ctxt.Var.casesOn_toSnoc]
-  --     rw [denote_getIExpr ha s]
-  --   | last => 
-  --     simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_last, 
-  --       Option.mem_def, Option.some.injEq] at he 
-  --     subst he
-  --     simp [Lets.denote]
 
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
