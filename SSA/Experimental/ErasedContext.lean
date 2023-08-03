@@ -152,4 +152,27 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
 
+
+
+
+/-
+## Context difference
+-/
+
+def Diff (Γ₁ Γ₂ : Ctxt) : Type :=
+  {d : Nat // ∀ {i t}, Γ₁.out.get? i = some t → Γ₂.out.get? (i+d) = t}
+
+def Diff.zero (Γ : Ctxt) : Diff Γ Γ :=
+  ⟨0, fun h => h⟩
+
+def Diff.toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
+  ⟨d.val + 1, by 
+    intro i _ h_get_snoc
+    rcases d with ⟨d, h_get_d⟩
+    simp[←h_get_d h_get_snoc, snoc, List.get?]
+  ⟩
+
+def Diff.toHom (d : Diff Γ₁ Γ₂) : hom Γ₁ Γ₂ :=
+  fun _ v => ⟨v.val + d.val, d.property v.property⟩
+
 end Ctxt
