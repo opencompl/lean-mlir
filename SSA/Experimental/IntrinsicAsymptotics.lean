@@ -51,14 +51,14 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
     | toSnoc v =>
       exact e.denote ll v
 
-def IExpr.changeVars (varsMap : Γ.hom Γ') : 
+def IExpr.changeVars (varsMap : Γ.Hom Γ') : 
     (e : IExpr Γ ty) → IExpr Γ' ty
   | .cst n => .cst n
   | .add a b => .add (varsMap a) (varsMap b)
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : Γ.hom Γ')
+    (varsMap : Γ.Hom Γ')
     (e : IExpr Γ ty)
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
@@ -67,7 +67,7 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
-    (varsMap : Γ.hom Γ') : 
+    (varsMap : Γ.Hom Γ') : 
     ICom Γ ty → ICom Γ' ty
   | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap) 
@@ -75,7 +75,7 @@ def ICom.changeVars
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : Γ.hom Γ') (c : ICom Γ ty)
+    (varsMap : Γ.Hom Γ') (c : ICom Γ ty)
     (Γ'v : Γ'.Valuation) : 
     (c.changeVars varsMap).denote Γ'v = 
     c.denote (fun t v => Γ'v (varsMap v)) := by
@@ -91,7 +91,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 /-- Append two programs, while substituting a free variable in the second for 
 the output of the first -/
 def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : Γ.hom Γ') :
+    (map : Γ.Hom Γ') :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
   | .ret e, inputProg => inputProg.changeVars 
       (fun t' v' => 
@@ -106,7 +106,7 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       .lete (e.changeVars map) newBody
       
 theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : Γ.hom Γ') (s : Γ'.Valuation) :
+    (map : Γ.Hom Γ') (s : Γ'.Valuation) :
     (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
     (addProgramAtTop v map rhs inputProg).denote s =
       inputProg.denote (fun t' v' => 
@@ -166,14 +166,14 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
 `inputProg`, to the output of `rhs`. It also assigns all free variables 
 in `rhs` to variables available at the end of `lets` using `map`. -/
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : Γ₃.hom Γ₂) 
+    (map : Γ₃.Hom Γ₂) 
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
   addLetsAtTop lets (addProgramAtTop v map rhs inputProg)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
-    (map : Γ₃.hom Γ₂) 
+    (map : Γ₃.Hom Γ₂) 
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
     (inputProg : ICom Γ₂ t₂) :
     (addProgramInMiddle v map lets rhs inputProg).denote s =
@@ -511,13 +511,13 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
               . simp_all
             . simp_all
 
-/-- A version of `matchVar` that returns a `hom` of `Ctxt`s instead of the `AList`,
+/-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
     (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) : 
-    Option (Γ₃.hom Γ₂) := do
+    Option (Γ₃.Hom Γ₂) := do
   match hm : matchVar lets v matchExpr with
   | none => none
   | some m => 
@@ -532,7 +532,7 @@ theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} {lets : Lets Γ₁ Γ₂}
     {t : Ty} {v : Γ₂.Var t} 
     {matchExpr : ExprRec Γ₃ t} 
     {hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t} 
-    {map : Γ₃.hom Γ₂}
+    {map : Γ₃.Hom Γ₂}
     (hmap : map ∈ matchVarMap lets v matchExpr hvars) (s₁ : Γ₁.Valuation) :
     matchExpr.denote (fun t' v' => lets.denote s₁ (map v')) = 
       lets.denote s₁ v := by
