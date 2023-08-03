@@ -124,8 +124,6 @@ def Var.snocMap {Γ Γ' : Ctxt} (f : hom Γ Γ') {t : Ty} :
   | toSnoc v => exact Ctxt.Var.toSnoc (f v)
   | last => exact Ctxt.Var.last _ _
 
-def hom.snocRight {Γ₁ Γ₂ : Ctxt} (f : Γ₁.hom Γ₂) : Γ₁.hom (Γ₂.snoc t) :=
-  fun _ v => (f v).toSnoc
 
 instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
