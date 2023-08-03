@@ -101,6 +101,22 @@ theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} :
 
 abbrev hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
+abbrev hom.id {Γ : Ctxt} : Γ.hom Γ :=
+  fun _ v => v
+
+/--
+  Adjust a single variable of a Context map, so that in the resulting map
+   * `v₁` now maps to `v₂`
+   * all other variables `v` still map to `f v` as in the original map
+-/
+def hom.with {Γ₁ Γ₂ : Ctxt} (f : Γ₁.hom Γ₂) {t : Ty} (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.hom Γ₂ :=
+  fun t' w =>
+    if h : ∃ h : t = t', h ▸ w = v₁ then 
+      h.fst ▸ v₂
+    else
+      f w
+
+
 def Var.snocMap {Γ Γ' : Ctxt} (f : hom Γ Γ') {t : Ty} : 
     (Γ.snoc t).hom (Γ'.snoc t) := by
   intro t' v

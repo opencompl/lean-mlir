@@ -88,66 +88,11 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     funext t v
     cases v using Ctxt.Var.casesOn <;> simp
 
-/-- Append two programs, while substituting a free variable in the second for 
-the output of the first -/
-def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : Γ.hom Γ') :
-    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → ICom Γ' t₂
-  | .ret e, inputProg => inputProg.changeVars 
-      (fun t' v' => 
-        if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ map e
-        else v')
-  | .lete e body, inputProg => 
-      let newBody := addProgramAtTop v.toSnoc
-        (fun _ v => Ctxt.Var.snocMap map v)
-        body 
-        (inputProg.changeVars (fun _ v => v.toSnoc))
-      .lete (e.changeVars map) newBody
-      
-theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
-    (map : Γ.hom Γ') (s : Γ'.Valuation) :
-    (rhs : ICom Γ t₁) → (inputProg : ICom Γ' t₂) → 
-    (addProgramAtTop v map rhs inputProg).denote s =
-      inputProg.denote (fun t' v' => 
-        if h : ∃ h : t₁ = t', h ▸ v = v' 
-        then h.fst ▸ rhs.denote (fun t' v' => s (map v'))
-        else s v')
-  | .ret e, inputProg => by
-    simp only [addProgramAtTop, ICom.denote_changeVars, ICom.denote]
-    congr
-    funext t' v'
-    split_ifs with h
-    . rcases h with ⟨rfl, _⟩
-      simp
-    . rfl   
-  | .lete e body, inputProg => by
-    simp only [ICom.denote, IExpr.denote_changeVars]
-    rw [denote_addProgramAtTop _ _ _ body]
-    simp only [ICom.denote_changeVars, Ctxt.Valuation.snoc_toSnoc]
-    congr
-    funext t' v'
-    by_cases h : ∃ h : t₁ = t', h ▸ v = v'
-    . rcases h with ⟨rfl, h⟩
-      dsimp at h
-      simp only [h, exists_prop, dite_eq_ite, ite_true]
-      congr
-      funext t'' v''
-      cases v'' using Ctxt.Var.casesOn <;>
-        simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
-    . rw [dif_neg h, dif_neg]
-      rintro ⟨rfl, h'⟩ 
-      simp only [Ctxt.toSnoc_injective.eq_iff] at h'
-      exact h ⟨rfl, h'⟩
-
-
-open Ctxt (SizedCtxt)
-
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
   {Γ_out_new : Ctxt}
   lets : Lets Γ_in Γ_out_new
   map : Γ_out.hom Γ_out_new
-  v : Γ_out_new.Var ty
+  var : Γ_out_new.Var ty
 
 /--
   Add a program to a list of `Lets`, returning
@@ -158,32 +103,38 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
 -/
 def addProgramToLets (lets : Lets Γ_in Γ_out) (varsMap : Δ.hom Γ_out) : ICom Δ ty → 
     addProgramToLets.Result Γ_in Γ_out ty
-  | .ret v => ⟨
-      lets,
-      fun _ v => v,
-      varsMap v
-    ⟩
+  | .ret v => ⟨lets, Ctxt.hom.id, varsMap v⟩
   | .lete (α:=α) e body => 
       let lets := Lets.lete lets (e.changeVars varsMap)
       let ⟨lets', map, v'⟩ := addProgramToLets lets (Ctxt.Var.snocMap varsMap) body
-      ⟨
-        lets',
-        fun _ v => map v.toSnoc,
-        v' 
-      ⟩
+      ⟨lets', fun _ v => map v.toSnoc, v' ⟩
 
--- set_option pp.proofs true in
-theorem denote_addProgramToLets_lets {lets : Lets Γ_in Γ_out} {map} {com : ICom Δ t} :
-    ∀ (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t), 
-      (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).map var) 
-      = lets.denote ll var := by
-  intro ll _ var
-  induction com generalizing lets
+theorem denote_addProgramToLets_lets (lets : Lets Γ_in Γ_out) {map} {com : ICom Δ t} 
+    (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
+    (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).map var)
+    = lets.denote ll var := by
+  induction com generalizing lets Γ_out
   next =>
     rfl
-  next ih =>
-    simp[addProgramToLets]
-    rw[ih]
+  next e body ih =>
+    simp[addProgramToLets, ih, Lets.denote]
+
+theorem denote_addProgramToLets_var {lets : Lets Γ_in Γ_out} {map} {com : ICom Δ t} :
+    ∀ (ll : Γ_in.Valuation), 
+      (addProgramToLets lets map com).lets.denote ll (addProgramToLets lets map com).var
+      = com.denote (fun _ v => lets.denote ll <| map v) := by
+  intro ll
+  induction com generalizing lets Γ_out
+  next =>
+    rfl
+  next e body ih =>
+    simp only [addProgramToLets, ih, ICom.denote]
+    congr
+    funext t v
+    cases v using Ctxt.Var.casesOn
+    . rfl
+    . simp [Lets.denote]; rfl
+    
 
 
 /-- Add some `Lets` to the beginning of a program -/
@@ -215,7 +166,8 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     (map : Γ₃.hom Γ₂) 
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
-  addLetsAtTop lets (addProgramAtTop v map rhs inputProg)
+  let r := addProgramToLets lets map rhs
+  addLetsAtTop r.lets <| inputProg.changeVars (r.map.with v r.var)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
@@ -228,8 +180,22 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt}
         if h : ∃ h : t₁ = t', h ▸ v = v' 
         then h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
         else s' v') := by
-  rw [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, 
-    denote_addProgramAtTop]
+  simp only [addProgramInMiddle, Ctxt.hom.with, denote_addLetsAtTop, Function.comp_apply, 
+              ICom.denote_changeVars]
+  congr
+  funext t' v'
+  split_ifs
+  next h =>
+    rcases h with ⟨⟨⟩, ⟨⟩⟩ 
+    simp [denote_addProgramToLets_var]
+  next h₁ h₂ => 
+    rcases h₁ with ⟨⟨⟩, ⟨⟩⟩ 
+    simp at h₂
+  next h₁ h₂ =>
+    rcases h₂ with ⟨⟨⟩, ⟨⟩⟩ 
+    simp at h₁
+  next =>
+    apply denote_addProgramToLets_lets
 
 /-- Substitute each free variable in an `ExprRec` for another `ExprRec` 
 in a different context. -/
