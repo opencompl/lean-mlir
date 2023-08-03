@@ -51,14 +51,14 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
     | toSnoc v =>
       exact e.denote ll v
 
-def IExpr.changeVars (varsMap : Γ.hom Γ') : 
+def IExpr.changeVars (varsMap : Γ.Hom Γ') : 
     (e : IExpr Γ ty) → IExpr Γ' ty
   | .cst n => .cst n
   | .add a b => .add (varsMap a) (varsMap b)
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : Γ.hom Γ')
+    (varsMap : Γ.Hom Γ')
     (e : IExpr Γ ty)
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
@@ -67,15 +67,15 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
-    (varsMap : Γ.hom Γ') : 
+    (varsMap : Γ.Hom Γ') : 
     ICom Γ ty → ICom Γ' ty
   | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap) 
-      (body.changeVars (fun t v => v.snocMap varsMap))
+      (body.changeVars (fun t v => varsMap.snocMap v))
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
-    (varsMap : Γ.hom Γ') (c : ICom Γ ty)
+    (varsMap : Γ.Hom Γ') (c : ICom Γ ty)
     (Γ'v : Γ'.Valuation) : 
     (c.changeVars varsMap).denote Γ'v = 
     c.denote (fun t v => Γ'v (varsMap v)) := by
@@ -83,7 +83,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
     rw [changeVars, denote, ih]
-    simp only [Ctxt.Valuation.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
+    simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, IExpr.denote_changeVars, denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn <;> simp
@@ -101,12 +101,12 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
   * a variable in the new out context, which is semantically equivalent to the return variable of 
     the added program
 -/
-def addProgramToLets (lets : Lets Γ_in Γ_out) (varsMap : Δ.hom Γ_out) : ICom Δ ty → 
+def addProgramToLets (lets : Lets Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : ICom Δ ty → 
     addProgramToLets.Result Γ_in Γ_out ty
   | .ret v => ⟨lets, .zero _, varsMap v⟩
   | .lete (α:=α) e body => 
       let lets := Lets.lete lets (e.changeVars varsMap)
-      let ⟨lets', diff, v'⟩ := addProgramToLets lets (Ctxt.Var.snocMap varsMap) body
+      let ⟨lets', diff, v'⟩ := addProgramToLets lets (varsMap.snocMap) body
       ⟨lets', diff.unSnoc, v'⟩
 
 theorem denote_addProgramToLets_lets (lets : Lets Γ_in Γ_out) {map} {com : ICom Δ t} 
@@ -163,7 +163,7 @@ theorem denote_addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
 `inputProg`, to the output of `rhs`. It also assigns all free variables 
 in `rhs` to variables available at the end of `lets` using `map`. -/
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
-    (map : Γ₃.hom Γ₂) 
+    (map : Γ₃.Hom Γ₂) 
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
   let r := addProgramToLets lets map rhs
@@ -171,7 +171,7 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
-    (map : Γ₃.hom Γ₂) 
+    (map : Γ₃.Hom Γ₂) 
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁)
     (inputProg : ICom Γ₂ t₂) :
     (addProgramInMiddle v map lets rhs inputProg).denote s =
@@ -180,7 +180,7 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt}
         if h : ∃ h : t₁ = t', h ▸ v = v' 
         then h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
         else s' v') := by
-  simp only [addProgramInMiddle, Ctxt.hom.with, denote_addLetsAtTop, Function.comp_apply, 
+  simp only [addProgramInMiddle, Ctxt.Hom.with, denote_addLetsAtTop, Function.comp_apply, 
               ICom.denote_changeVars]
   congr
   funext t' v'
@@ -523,13 +523,13 @@ theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ�
               . simp_all
             . simp_all
 
-/-- A version of `matchVar` that returns a `hom` of `Ctxt`s instead of the `AList`,
+/-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} (lets : Lets Γ₁ Γ₂) 
     {t : Ty} (v : Γ₂.Var t) 
     (matchExpr : ExprRec Γ₃ t) 
     (hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t) : 
-    Option (Γ₃.hom Γ₂) := do
+    Option (Γ₃.Hom Γ₂) := do
   match hm : matchVar lets v matchExpr with
   | none => none
   | some m => 
@@ -544,7 +544,7 @@ theorem denote_matchVarMap {Γ₁ Γ₂ Γ₃ : Ctxt} {lets : Lets Γ₁ Γ₂}
     {t : Ty} {v : Γ₂.Var t} 
     {matchExpr : ExprRec Γ₃ t} 
     {hvars : ∀ t (v : Γ₃.Var t), v ∈ matchExpr.vars t} 
-    {map : Γ₃.hom Γ₂}
+    {map : Γ₃.Hom Γ₂}
     (hmap : map ∈ matchVarMap lets v matchExpr hvars) (s₁ : Γ₁.Valuation) :
     matchExpr.denote (fun t' v' => lets.denote s₁ (map v')) = 
       lets.denote s₁ v := by
