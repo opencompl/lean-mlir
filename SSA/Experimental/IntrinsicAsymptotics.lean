@@ -71,7 +71,7 @@ def ICom.changeVars
     ICom Γ ty → ICom Γ' ty
   | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap) 
-      (body.changeVars (fun t v => v.snocMap varsMap))
+      (body.changeVars (fun t v => varsMap.snocMap v))
 
 @[simp]
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
@@ -83,7 +83,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih => 
     rw [changeVars, denote, ih]
-    simp only [Ctxt.Valuation.snoc, Ctxt.Var.snocMap, IExpr.denote_changeVars, denote]
+    simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, IExpr.denote_changeVars, denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn <;> simp
@@ -100,7 +100,7 @@ def addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
         else v')
   | .lete e body, inputProg => 
       let newBody := addProgramAtTop v.toSnoc
-        (fun _ v => Ctxt.Var.snocMap map v)
+        (fun _ v => Ctxt.Hom.snocMap map v)
         body 
         (inputProg.changeVars (fun _ v => v.toSnoc))
       .lete (e.changeVars map) newBody
@@ -134,7 +134,7 @@ theorem denote_addProgramAtTop {Γ Γ' : Ctxt} (v : Γ'.Var t₁)
       congr
       funext t'' v''
       cases v'' using Ctxt.Var.casesOn <;>
-        simp [Ctxt.Valuation.snoc, Ctxt.Var.snocMap]
+        simp [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap]
     . rw [dif_neg h, dif_neg]
       rintro ⟨rfl, h'⟩ 
       simp only [Ctxt.toSnoc_injective.eq_iff] at h'

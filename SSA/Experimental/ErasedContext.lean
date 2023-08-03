@@ -101,7 +101,7 @@ theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} :
 
 abbrev Hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
-def Var.snocMap {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} : 
+def Hom.snocMap {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} : 
     (Γ.snoc t).Hom (Γ'.snoc t) := by
   intro t' v
   cases v using Ctxt.Var.casesOn with
