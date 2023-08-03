@@ -162,17 +162,41 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.
 def Diff (Γ₁ Γ₂ : Ctxt) : Type :=
   {d : Nat // ∀ {i t}, Γ₁.out.get? i = some t → Γ₂.out.get? (i+d) = t}
 
-def Diff.zero (Γ : Ctxt) : Diff Γ Γ :=
+namespace Diff
+
+/-- The difference between any context and itself is 0 -/
+def zero (Γ : Ctxt) : Diff Γ Γ :=
   ⟨0, fun h => h⟩
 
-def Diff.toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
+/-- Adding a new type to the right context corresponds to incrementing the difference by 1 -/
+def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by 
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
     simp[←h_get_d h_get_snoc, snoc, List.get?]
   ⟩
 
-def Diff.toHom (d : Diff Γ₁ Γ₂) : hom Γ₁ Γ₂ :=
+/-- Removing a type from the left context corresponds to incrementing the difference by 1 -/
+def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
+  ⟨d.val + 1, by
+    intro i t h_get
+    rcases d with ⟨d, h_get_d⟩
+    specialize @h_get_d (i+1) t
+    simp [snoc, List.get?] at h_get_d
+    rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1]
+  ⟩
+
+/-- Adding the difference of two contexts to variable indices is a context mapping -/
+def toHom (d : Diff Γ₁ Γ₂) : hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
+
+@[simp]
+theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt} (d : Diff (Γ₁.snoc t) Γ₂) : 
+    toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
+  simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
+
+
+end Diff
+
 
 end Ctxt

@@ -91,7 +91,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
   {Γ_out_new : Ctxt}
   lets : Lets Γ_in Γ_out_new
-  map : Γ_out.hom Γ_out_new
+  diff : Ctxt.Diff Γ_out Γ_out_new
   var : Γ_out_new.Var ty
 
 /--
@@ -103,15 +103,15 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
 -/
 def addProgramToLets (lets : Lets Γ_in Γ_out) (varsMap : Δ.hom Γ_out) : ICom Δ ty → 
     addProgramToLets.Result Γ_in Γ_out ty
-  | .ret v => ⟨lets, Ctxt.hom.id, varsMap v⟩
+  | .ret v => ⟨lets, .zero _, varsMap v⟩
   | .lete (α:=α) e body => 
       let lets := Lets.lete lets (e.changeVars varsMap)
-      let ⟨lets', map, v'⟩ := addProgramToLets lets (Ctxt.Var.snocMap varsMap) body
-      ⟨lets', fun _ v => map v.toSnoc, v' ⟩
+      let ⟨lets', diff, v'⟩ := addProgramToLets lets (Ctxt.Var.snocMap varsMap) body
+      ⟨lets', diff.unSnoc, v'⟩
 
 theorem denote_addProgramToLets_lets (lets : Lets Γ_in Γ_out) {map} {com : ICom Δ t} 
     (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
-    (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).map var)
+    (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).diff.toHom var)
     = lets.denote ll var := by
   induction com generalizing lets Γ_out
   next =>
@@ -167,7 +167,7 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} (v : Γ₂.Var t₁)
     (lets : Lets Γ₁ Γ₂) (rhs : ICom Γ₃ t₁) 
     (inputProg : ICom Γ₂ t₂) : ICom Γ₁ t₂ :=
   let r := addProgramToLets lets map rhs
-  addLetsAtTop r.lets <| inputProg.changeVars (r.map.with v r.var)
+  addLetsAtTop r.lets <| inputProg.changeVars (r.diff.toHom.with v r.var)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt} 
     (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
