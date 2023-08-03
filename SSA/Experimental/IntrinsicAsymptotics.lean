@@ -4,6 +4,7 @@ import SSA.Experimental.ErasedContext
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.Ring
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
@@ -253,39 +254,113 @@ theorem ICom.denote_toExprRec : {Γ : Ctxt} → {t : Ty} →
     cases v' using Ctxt.Var.casesOn <;>
       simp [ExprRec.denote, IExpr.denote_toExprRec]
 
+/-- Get the `IExpr` that a var `v` is assigned to in a sequence of `Lets`, 
+    without adjusting variables
+-/
+def Lets.getIExprAux {Γ₁ Γ₂ : Ctxt} {t : Ty} : Lets Γ₁ Γ₂ → Γ₂.Var t → 
+    Option ((Δ : Ctxt) × IExpr Δ t)
+  | .nil, _ => none
+  | .lete lets e, v => by
+    cases v using Ctxt.Var.casesOn with
+      | toSnoc v => exact (Lets.getIExprAux lets v)
+      | last => exact some ⟨_, e⟩
+
+/-- If `getIExprAux` succeeds, 
+    then the orignal context `Γ₁` is a prefix of the local context `Δ`, and 
+    their difference is exactly the value of the requested variable index plus 1
+-/
+def Lets.getIExprAuxDiff {lets : Lets Γ₁ Γ₂} {v : Γ₂.Var t} 
+    (h : getIExprAux lets v = some ⟨Δ, e⟩) :
+    Δ.Diff Γ₂ :=
+  ⟨v.val + 1, by
+    intro i t
+    induction lets
+    next =>
+      simp only [getIExprAux] at h 
+    next lets e ih => 
+      simp only [getIExprAux, eq_rec_constant] at h  
+      cases v using Ctxt.Var.casesOn <;> simp at h
+      . intro h'
+        simp[←ih h h', Ctxt.snoc, Ctxt.Var.toSnoc, List.get?]
+      . rcases h with ⟨⟨⟩, ⟨⟩⟩
+        simp[Ctxt.snoc, List.get?, Ctxt.Var.last]
+  ⟩
+
+theorem Lets.denote_getIExprAux {Γ₁ Γ₂ Δ : Ctxt} {t : Ty}
+    {lets : Lets Γ₁ Γ₂} {v : Γ₂.Var t} {e : IExpr Δ t}
+    (he : lets.getIExprAux v = some ⟨Δ, e⟩)
+    (s : Γ₁.Valuation) :
+    (e.changeVars (getIExprAuxDiff he).toHom).denote (lets.denote s) = (lets.denote s) v := by  
+  rw [getIExprAuxDiff]
+  induction lets
+  next => simp [getIExprAux] at he
+  next ih =>
+    simp [Ctxt.Diff.toHom_succ <| getIExprAuxDiff.proof_1 he]
+    cases v using Ctxt.Var.casesOn with
+    | toSnoc v => 
+      simp only [getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, Option.mem_def, 
+        Option.map_eq_some'] at he
+      simp [denote, ←ih he]
+    | last =>
+      simp only [getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_last, 
+        Option.mem_def, Option.some.injEq] at he 
+      rcases he with ⟨⟨⟩, ⟨⟩⟩
+      simp [denote]
+      
+
 /-- Get the `IExpr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
-def Lets.getIExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : Ty} →
-    (v : Γ₂.Var t) → Option (IExpr Γ₂ t) 
-  | _, _, .nil, _, _ => none
-  | _, _, .lete lets e, _, v => by
-    cases v using Ctxt.Var.casesOn with
-    | toSnoc v => 
-      exact (Lets.getIExpr lets v).map
-        (IExpr.changeVars (fun _ => Ctxt.Var.toSnoc))
-    | last => exact some <| e.changeVars (fun _ => Ctxt.Var.toSnoc)
+def Lets.getIExpr {Γ₁ Γ₂ : Ctxt} (lets : Lets Γ₁ Γ₂) {t : Ty} (v : Γ₂.Var t) : 
+    Option (IExpr Γ₂ t) :=
+  match h : getIExprAux lets v with
+  | none => none
+  | some r => r.snd.changeVars (getIExprAuxDiff h).toHom
 
-theorem Lets.denote_getIExpr : {Γ₁ Γ₂ : Ctxt} → {lets : Lets Γ₁ Γ₂} → {t : Ty} → 
-    {v : Γ₂.Var t} → {e : IExpr Γ₂ t} → (he : e ∈ lets.getIExpr v) → (s : Γ₁.Valuation) →
-    e.denote (lets.denote s) = (lets.denote s) v 
-  | _, _, .nil, t, v, e, he, s => by simp [Lets.getIExpr] at he
-  | _, _, .lete lets e, _, v, e', he, s => by
-    cases v using Ctxt.Var.casesOn with
-    | toSnoc v => 
-      simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
-        Option.mem_def, Option.map_eq_some'] at he
-      cases' he with a ha
-      cases' ha with ha ha'
-      subst ha'
-      simp only [denote, eq_rec_constant, IExpr.denote_changeVars, 
-        Ctxt.Var.casesOn_toSnoc]
-      rw [denote_getIExpr ha s]
-    | last => 
-      simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_last, 
-        Option.mem_def, Option.some.injEq] at he 
-      subst he
-      simp [Lets.denote]
+set_option pp.motives.all true in
+theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt} : {lets : Lets Γ₁ Γ₂} → {t : Ty} → 
+    {v : Γ₂.Var t} → {e : IExpr Γ₂ t} → (he : lets.getIExpr v = some e) → (s : Γ₁.Valuation) →
+    e.denote (lets.denote s) = (lets.denote s) v := by
+  intros lets _ v e he s
+  simp [getIExpr] at he  
+  cases h : getIExprAux lets v
+  next =>
+    sorry
+  next val =>
+    rcases val with ⟨Δ', e'⟩
+    have : e = (IExpr.changeVars (Ctxt.Diff.toHom (getIExprAuxDiff h)) e') := sorry
+    rw[←denote_getIExprAux h]
+    congr
+    
+
+  
+  -- | .nil, t, v, e, he, s => by simp [getIExpr, getIExprAux] at he
+  -- | .lete lets e, t, v, e', he, s => by
+  --   cases v using Ctxt.Var.casesOn with
+  --   | toSnoc v => 
+  --     rw[denote_getIExprAux]
+  --     stop
+  --     simp only [getIExpr, getIExprAuxDiff, Membership.mem] at he
+  --     simp only [getIExpr, getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
+  --       Option.mem_def, Option.map_eq_some'] at he
+  --     -- cases hc : getIExprAux (lets.lete e) (@Ctxt.Var.toSnoc _ t _ v)
+  --     -- . rw[hc] at he
+  --     -- . sorry
+      
+  --     stop
+  --     simp only [getIExpr, getIExprAux, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
+  --       Option.mem_def, Option.map_eq_some'] at he
+  --     cases' he with a ha
+  --     cases' ha with ha ha'
+  --     subst ha'
+  --     simp only [denote, eq_rec_constant, IExpr.denote_changeVars, 
+  --       Ctxt.Var.casesOn_toSnoc]
+  --     rw [denote_getIExpr ha s]
+  --   | last => 
+  --     simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_last, 
+  --       Option.mem_def, Option.some.injEq] at he 
+  --     subst he
+  --     simp [Lets.denote]
 
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)

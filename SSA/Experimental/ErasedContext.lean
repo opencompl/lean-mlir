@@ -101,6 +101,7 @@ theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} :
 
 abbrev Hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
+@[simp]
 abbrev Hom.id {Γ : Ctxt} : Γ.Hom Γ :=
   fun _ v => v
 
@@ -123,6 +124,10 @@ def Hom.snocMap {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} :
   cases v using Ctxt.Var.casesOn with
   | toSnoc v => exact Ctxt.Var.toSnoc (f v)
   | last => exact Ctxt.Var.last _ _
+
+@[simp]
+abbrev Hom.snocRight {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
+  fun _ v => (f v).toSnoc
 
 
 instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
@@ -155,12 +160,34 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.
 
 
 
+
+
+namespace Var
+
+@[simp] 
+theorem val_last {Γ : Ctxt} {t : Ty} : (last Γ t).val = 0 := 
+  rfl
+
+@[simp] 
+theorem val_toSnoc {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ t' v).val = v.val + 1 :=
+  rfl
+
+end Var
+
 /-
 ## Context difference
 -/
 
+@[simp]
+abbrev Diff.Valid (Γ₁ Γ₂ : Ctxt) (d : Nat) : Prop :=
+  ∀ {i t}, Γ₁.out.get? i = some t → Γ₂.out.get? (i+d) = some t
+
+/--
+  If `Γ₁` is a prefix of `Γ₂`, 
+  then `d : Γ₁.Diff Γ₂` represents the number of elements that `Γ₂` has more than `Γ₁`
+-/
 def Diff (Γ₁ Γ₂ : Ctxt) : Type :=
-  {d : Nat // ∀ {i t}, Γ₁.out.get? i = some t → Γ₂.out.get? (i+d) = t}
+  {d : Nat // Diff.Valid Γ₁ Γ₂ d}
 
 namespace Diff
 
@@ -189,6 +216,20 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
+
+theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+    Valid Γ₁ Γ₂ d := by
+  intro i t h_get
+  simp[←h_valid h_get, snoc, List.get?]
+
+theorem toHom_succ {Γ₁ Γ₂ : Ctxt} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+    toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
+  rfl
+
+@[simp]
+theorem toHom_zero {Γ : Ctxt} {h : Valid Γ Γ 0} :
+    toHom ⟨0, h⟩ = Hom.id := by
+  rfl
 
 @[simp]
 theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt} (d : Diff (Γ₁.snoc t) Γ₂) : 
