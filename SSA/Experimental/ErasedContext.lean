@@ -105,9 +105,9 @@ abbrev hom.id {Γ : Ctxt} : Γ.hom Γ :=
   fun _ v => v
 
 /--
-  Adjust a single variable of a Context map, so that in the resulting map
+  `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
    * `v₁` now maps to `v₂`
-   * all other variables `v` still map to `f v` as in the original map
+   * all other variables `v` still map to `map v` as in the original map
 -/
 def hom.with {Γ₁ Γ₂ : Ctxt} (f : Γ₁.hom Γ₂) {t : Ty} (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.hom Γ₂ :=
   fun t' w =>
