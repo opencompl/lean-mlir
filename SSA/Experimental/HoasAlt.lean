@@ -65,13 +65,23 @@ end
 
 variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β] [DecidableEq β]
 
+/-!
 
--- @[simp]
--- def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
---   | .assign _ rhs rest => rhs.sizeOf + (rest default).sizeOf + 1
---   | .op _ _ body => (body Var).sizeOf + 1
---   | .rgn _ body => (body default).sizeOf + 1
---   | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
+## Idea
+Make `Var` a finite (enumerable) type, then we can have `SizeOf (fun (v : Var) => _)` be the sum
+of the size of all possible values of `Var`. 
+Hopefully, this is enough to prove termination
+
+-/
+
+#check Fintype
+
+@[simp]
+def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
+  | .assign _ rhs rest => rhs.sizeOf + (rest default).sizeOf + 1
+  | .op _ _ body => (body Var).sizeOf + 1
+  | .rgn _ body => (body default).sizeOf + 1
+  | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
 
 
 protected abbrev HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)
@@ -146,14 +156,17 @@ where
   
 
 
+def HoasTSSA.eval (term : ∀ V, HoasTSSA Op V (.STMT ty)) : ty.toType 
+
+
   
-def TSSA.fromHoasExpr (expr : HoasExpr Op t) : Option <| TSSA Op ∅ (.EXPR t) :=
+def TSSA.fromHoasExpr? (expr : HoasExpr Op t) : Option <| TSSA Op ∅ (.EXPR t) :=
   HoasTSSA.toTSSA? expr
 
-def TSSA.fromHoasStmt (stmt : HoasStmt Op t) : Option <| TSSA Op ∅ (.STMT t) :=
+def TSSA.fromHoasStmt? (stmt : HoasStmt Op t) : Option <| TSSA Op ∅ (.STMT t) :=
   HoasTSSA.toTSSA? stmt
 
-def TSSA.fromHoasRegion (rgn : HoasRegion Op t₁ t₂) : Option <| TSSA Op ∅ (.REGION t₁ t₂) :=
+def TSSA.fromHoasRegion? (rgn : HoasRegion Op t₁ t₂) : Option <| TSSA Op ∅ (.REGION t₁ t₂) :=
   HoasTSSA.toTSSA? rgn
 
 
