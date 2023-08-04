@@ -12,34 +12,35 @@ section
 variable (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β]
 
 open OperationTypes in
-inductive HoasTSSA : (UserType β → Type) → TSSAIndex β → Type 1 where
+inductive HoasTSSA : (Context β → UserType β → Type) → Context β → TSSAIndex β → Type 1 where
   /-- lhs := rhs; rest of the program -/
   | assign {Var} {T : UserType β}
-      (lhs : VarName) (rhs : HoasTSSA Var (.EXPR T))
-      (rest : Var T → HoasTSSA Var (.STMT T'))
-      : HoasTSSA Var (.STMT T')
+      (lhs : VarName) (rhs : HoasTSSA Var Γ (.EXPR T))
+      (rest : Var (Γ.snoc lhs T) T → HoasTSSA Var (Γ.snoc lhs T) (.STMT T'))
+      : HoasTSSA Var Γ (.STMT T')
   /-- build a unit value -/
-  | unit {Var} : HoasTSSA Var (.EXPR .unit)
+  | unit {Var} : HoasTSSA Var Γ (.EXPR .unit)
   /-- above; ret v -/
-  | ret {Var} (v : Var T) : HoasTSSA Var (.STMT T)
+  | ret {Var} (v : Var Γ T) : HoasTSSA Var Γ (.STMT T)
   /-- (fst, snd) -/
-  | pair {Var} (fst : Var T₁) (snd : Var T₂) : HoasTSSA Var (.EXPR (.pair T₁ T₂))
+  | pair {Var} (fst : Var Γ T₁) (snd : Var Γ T₂) : HoasTSSA Var Γ (.EXPR (.pair T₁ T₂))
   /-- (fst, snd, third) -/
-  | triple {Var} (fst : Var T₁) (snd : Var T₂) (third : Var T₃) : 
-      HoasTSSA Var (.EXPR (.triple T₁ T₂ T₃))
+  | triple {Var} (fst : Var Γ T₁) (snd : Var Γ T₂) (third : Var Γ T₃) : 
+      HoasTSSA Var Γ (.EXPR (.triple T₁ T₂ T₃))
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op {Var} (o : Op) (arg : Var (argUserType o)) 
-      (rgn : ∀ Var', HoasTSSA Var' (.REGION (rgnDom o) (rgnCod o))) :
-      HoasTSSA Var (.EXPR (outUserType o))
+  | op {Var} (o : Op) (arg : Var Γ (argUserType o)) 
+      (rgn : ∀ Var', HoasTSSA Var' .empty (.REGION (rgnDom o) (rgnCod o))) :
+      HoasTSSA Var Γ (.EXPR (outUserType o))
   /- fun arg => body -/
-  | rgn {Var} (arg : VarName) {dom cod : UserType β} (body : Var dom → HoasTSSA Var (.STMT cod)) :
-      HoasTSSA Var (.REGION dom cod)
+  | rgn {Var} (arg : VarName) {dom cod : UserType β} 
+      (body : Var (Γ.snoc arg dom) dom → HoasTSSA Var (Γ.snoc arg dom) (.STMT cod)) :
+      HoasTSSA Var Γ (.REGION dom cod)
   /- no function / non-existence of region. -/
-  | rgn0 {Var} : HoasTSSA Var (.REGION .unit .unit)
+  | rgn0 {Var} : HoasTSSA Var Γ (.REGION .unit .unit)
   /- a region variable. --/
-  | rgnvar {Var} (v : Var (.region T₁ T₂)) : HoasTSSA Var (.REGION T₁ T₂)
+  | rgnvar {Var} (v : Var Γ (.region T₁ T₂)) : HoasTSSA Var Γ (.REGION T₁ T₂)
   /-- a variable. -/
-  | var {Var} (v : Var T) : HoasTSSA Var (.EXPR T)
+  | var {Var} (v : Var Γ T) : HoasTSSA Var Γ (.EXPR T)
 
 
 
@@ -52,14 +53,17 @@ inductive HoasTSSA : (UserType β → Type) → TSSAIndex β → Type 1 where
   ```
 -/
 
+/-- A closed Hoas term  -/
+def HoasTerm (i : TSSAIndex β) : Type 1 := ∀ V, HoasTSSA Op V ∅ i
+
 /-- A closed TSSA expression in Hoas representation -/
-def HoasExpr    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.EXPR t)
+def HoasExpr    (t : UserType β)      : Type 1 := HoasTerm Op (.EXPR t)
 
 /-- A closed TSSA statement in Hoas representation -/
-def HoasStmt    (t : UserType β)      : Type 1 := ∀ V, HoasTSSA Op V (.STMT t)
+def HoasStmt    (t : UserType β)      : Type 1 := HoasTerm Op (.STMT t)
 
 /-- A closed TSSA region in Hoas representation -/
-def HoasRegion  (t₁ t₂ : UserType β)  : Type 1 := ∀ V, HoasTSSA Op V (.REGION t₁ t₂)
+def HoasRegion  (t₁ t₂ : UserType β)  : Type 1 := HoasTerm Op (.REGION t₁ t₂)
 
 end
 
@@ -76,85 +80,37 @@ Nope, `HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)` i
 type, so this won't work
 -/
 
-def HoasTSSA.sizeOf (term : ∀ V, HoasTSSA Op V i) : Nat :=
+def HoasTSSA.sizeOf (term : ∀ V, HoasTSSA Op V Γ i) : Nat :=
   go (term _)
 where
-  go {i} : HoasTSSA Op (fun _ => Unit) i → Nat 
-    | .assign _ rhs rest => go rhs + go (rest ⟨⟩) + 1
-    | .op _ _ body => go (body _) + 1
-    | .rgn _ body => go (body default) + 1
-    | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
+  go {Γ i} : HoasTSSA Op (fun _ _ => Unit) Γ i → TSSA Op Γ i
 
 
-protected abbrev HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)
+protected abbrev HoasTSSA.VarTy (Γ : Context β) (t : UserType β) : Type :=
+  Γ.Var t
 
-partial def HoasTSSA.toTSSA? {i : TSSAIndex β} (term : ∀ V, HoasTSSA Op V i) : Option (TSSA Op ∅ i) :=
-  go (term _) ∅
+partial def HoasTSSA.toTSSA? {i : TSSAIndex β} (term : ∀ V, HoasTSSA Op V ∅ i) : TSSA Op ∅ i :=
+  go (term _)
 where 
-  go {i} : HoasTSSA Op HoasTSSA.VarTy i → 
-      (Γ : Context β) → Option (TSSA Op Γ i)
-    | .assign (T:=T) lhs rhs rest, Γ => do
-      let rhs' ← go rhs Γ
-      let Γt := Γ.snoc lhs T
-      let rest' := rest (fun Γ' => 
-        if h : Γt ⊆ Γ' then
-          some <| .coePrefix h <| .last
-        else
-          none
-      )
-
-      /-        
-        Because the original term is parametric over all possible variable types `V`, we know that
-        so-called exotic terms are ruled out. In particular, we know that the function `rest` 
-        is unable to inspect the argument. Furthermore, from the implementation of `sizeOf` we can
-        see that the variable is also never inspected there.
-        From this, it follows that the size of `rest v` must be the same for every choice of `v`.
-        In particular, then, `rest'` must have the same size as `rest default`.
-        However, it is impossible to reason about the parametricity of Lean definitions from within
-        Lean itself, so we cannot make this argument properly.
-        Instead, we take the following as axiom.
-      -/
-      -- Axioms removed because def is marked partial
-      -- have : sizeOf rest' = sizeOf (rest fun _ => default) := by admit
-      -- have : sizeOf rest' < sizeOf rhs + sizeOf (rest fun a => default) + 1 := by 
-      --   rw[this]; linarith
-
-      let rest ← go rest' _
-      return TSSA.assign lhs rhs' rest
-    | .ret v, Γ => do
-      let v ← v Γ
-      return TSSA.ret v
-    | .unit, _ => some <| TSSA.unit
-    | .pair a b, _      => do return TSSA.pair (←a _) (←b _)
-    | .triple a b c, _  => do return TSSA.triple (←a _) (←b _) (←c _)
-    | .op o arg body, Γ => do
-      let arg ← arg Γ
-      let body ← go (body _) _
-      return TSSA.op o arg body
-    | .rgn arg body, Γ => do
-      let Γt := Γ.snoc arg _
-      let body' := body (fun Γ' =>
-          if h : Γt ⊆ Γ' then
-            some <| .coePrefix h <| .last
-          else
-            none
-        )
-
-      /-
-        The justification for the following axiom is the same as for the axiom in the `.assign`
-        case above
-      -/
-      -- Axioms removed because def is marked partial
-      -- have : sizeOf body' = sizeOf (body fun _ => default) := by admit
-      -- have : sizeOf body' < sizeOf (body fun a => default) + 1 := by 
-      --   rw[this]; apply Nat.lt.base
-
-      let body ← go body' Γt
-      return TSSA.rgn arg body
-    | .rgn0, _      => some TSSA.rgn0
-    | .rgnvar v, _  => do return TSSA.rgnvar (←v _)
-    | .var v, _     => do return TSSA.var (←v _)
-  -- termination_by go t _ => t.sizeOf
+  go {Γ i} : HoasTSSA Op (HoasTSSA.VarTy) Γ i → TSSA Op Γ i
+    | .assign (T:=T) lhs rhs rest =>
+      let rhs := go rhs
+      let rest := go <| rest .last
+      TSSA.assign lhs rhs rest
+    | .ret v => TSSA.ret v
+    | .unit => TSSA.unit
+    | .pair a b     => TSSA.pair a b
+    | .triple a b c => TSSA.triple a b c
+    | .op o arg body => 
+      let body := go (body _)
+      TSSA.op o arg body
+    | .rgn arg body => 
+      let body := go <| body .last
+      TSSA.rgn arg body
+    | .rgn0      => TSSA.rgn0
+    | .rgnvar v  => TSSA.rgnvar v
+    | .var v     => TSSA.var v
+  -- -- termination_by go t _ => t.sizeOf
   
 
 
