@@ -68,20 +68,13 @@ variable {Op : Type} {β : Type} [Goedel β] [OperationTypes Op β] [DecidableEq
 /-!
 
 ## Idea
-Make `Var` a finite (enumerable) type, then we can have `SizeOf (fun (v : Var) => _)` be the sum
+~~~Make `Var` a finite (enumerable) type, then we can have `SizeOf (fun (v : Var) => _)` be the sum
 of the size of all possible values of `Var`. 
-Hopefully, this is enough to prove termination
+Hopefully, this is enough to prove termination~~~
 
+Nope, `HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)` is not actually a finite
+type, so this won't work
 -/
-
-#check Fintype
-
-@[simp]
-def HoasTSSA.sizeOf {Var} [∀ t, Inhabited (Var t)] : HoasTSSA Op Var i → Nat
-  | .assign _ rhs rest => rhs.sizeOf + (rest default).sizeOf + 1
-  | .op _ _ body => (body Var).sizeOf + 1
-  | .rgn _ body => (body default).sizeOf + 1
-  | .ret _ | unit | pair .. | triple .. | .rgn0 | .rgnvar .. | .var .. => 0
 
 
 protected abbrev HoasTSSA.VarTy := (fun t => ∀ (Γ : Context β), Option <| Γ.Var t)
@@ -156,7 +149,7 @@ where
   
 
 
-def HoasTSSA.eval (term : ∀ V, HoasTSSA Op V (.STMT ty)) : ty.toType 
+-- def HoasTSSA.eval (term : ∀ V, HoasTSSA Op V (.STMT ty)) : ty.toType 
 
 
   
