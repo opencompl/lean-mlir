@@ -32,6 +32,7 @@ instance : DecidableEq (Var Γ t) := by
   delta Var
   infer_instance
 
+@[match_pattern]
 def last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
   ⟨0, by simp [snoc, List.get?]⟩
 
