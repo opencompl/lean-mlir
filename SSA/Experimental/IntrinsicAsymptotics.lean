@@ -343,6 +343,30 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
 #check Lets.brecOn
 #print matchVar
 
+example {Δ : Ctxt } 
+  {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {w : Δ.Var t}
+  {ma : Mapping Δ Γ_out} : 
+  matchVar lets v Lets.nil w ma = 
+    match ma.lookup ⟨_, w⟩ with
+      | some v₂ =>
+        by
+          exact if v = v₂
+            then some ma
+            else none
+      | none => some (AList.insert ⟨_, w⟩ v ma)  
+    := by
+  rfl
+
+example {Δ : Ctxt } 
+  {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
+  {matchLets : Lets Δ_in Δ_out} {matchE : IExpr Δ_out d}
+  {ma : Mapping Δ_in Γ_out} : 
+  matchVar lets v (Lets.lete matchLets matchE) ⟨w+1, h⟩ ma = 
+    let w := ⟨w, by simp_all[Ctxt.snoc]⟩
+    matchVar lets v matchLets w ma
+    := by
+  rfl
+
 open AList
 
 /-- For mathlib -/
@@ -365,8 +389,8 @@ theorem subset_entries_matchVar :
     {w : Δ_out.Var t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) → 
     ma.entries ⊆ varMap.entries 
-  | Γ₁, _, Γ₃, t, varMap, ma, lets, v, .nil, v' => by
-    simp only [matchVar, Option.mem_def]
+  | Γ₁, _, Γ₃, t, varMap, ma, lets, v, .nil, w => by
+    unfold matchVar
     intros h x hx
     split at h
     . split_ifs at h
