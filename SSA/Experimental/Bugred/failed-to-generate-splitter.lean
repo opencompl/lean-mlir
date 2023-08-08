@@ -5,28 +5,21 @@
 -/
 
 
-
 inductive Ty
   | nat
 
 def Ctxt : Type :=
   List Ty
-
-def Ctxt.Var.IsValid (Γ : Ctxt) (t : Ty) (i : Nat) : Prop :=
-  Γ.get? i = some t
+  
 
 def Ctxt.Var (Γ : Ctxt) (t : Ty) : Type :=
-  { i : Nat // Var.IsValid Γ t i }  
-
-def Ctxt.Var.IsValid.ofSucc :
-    IsValid (u :: Γ) t (i+1) → IsValid Γ t i := by
-  simp[IsValid, List.get?]
-  exact id
+  { i : Nat // Γ.get? i = some t }  
 
 
 def matchVar {t : Ty} : {Δ : Ctxt} → Δ.Var t → Option Bool 
-  | _::_, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
-      matchVar ⟨w, .ofSucc h⟩
+  | _::Δ, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
+      let w : Ctxt.Var Δ t := ⟨w, by simp_all[List.get?]⟩
+      matchVar w
   | _, _ =>
       none
 
