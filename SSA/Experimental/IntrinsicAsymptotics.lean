@@ -89,10 +89,18 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
     funext t v
     cases v using Ctxt.Var.casesOn <;> simp
 
+
+/--
+  The result returned by `addProgramToLets`
+-/
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
   {Γ_out_new : Ctxt}
+  /-- The new `lets`, with the program added to it -/
   lets : Lets Γ_in Γ_out_new
+  /-- The difference between the old out context and the new out context
+      This induces a context mapping from `Γ_out` to `Γ_out_new` -/
   diff : Ctxt.Diff Γ_out Γ_out_new
+  /-- The variable in the new `lets` that represent the return value of the added program -/
   var : Γ_out_new.Var ty
 
 /--

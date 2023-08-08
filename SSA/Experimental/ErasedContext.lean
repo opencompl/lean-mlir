@@ -112,7 +112,7 @@ abbrev Hom.id {Γ : Ctxt} : Γ.Hom Γ :=
 -/
 def Hom.with {Γ₁ Γ₂ : Ctxt} (f : Γ₁.Hom Γ₂) {t : Ty} (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
   fun t' w =>
-    if h : ∃ h : t = t', h ▸ w = v₁ then 
+    if h : ∃ ty_eq : t = t', ty_eq ▸ w = v₁ then 
       h.fst ▸ v₂
     else
       f w
