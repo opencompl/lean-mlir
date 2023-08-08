@@ -5,34 +5,34 @@
 -/
 
 
+
 inductive Ty
   | nat
 
 def Ctxt : Type :=
   List Ty
 
+def Ctxt.Var.IsValid (Γ : Ctxt) (t : Ty) (i : Nat) : Prop :=
+  Γ.get? i = some t
+
 def Ctxt.Var (Γ : Ctxt) (t : Ty) : Type :=
-  { i : Nat // Γ.get? i = some t }  
+  { i : Nat // Var.IsValid Γ t i }  
+
+def Ctxt.Var.IsValid.ofSucc :
+    IsValid (u :: Γ) t (i+1) → IsValid Γ t i := by
+  simp[IsValid, List.get?]
+  exact id
 
 
-inductive Lets : Ctxt → Ctxt → Type where
-  | nil : Lets Γ Γ
-  | lete (body : Lets Γ₁ Γ₂) (t : Ty)  : Lets Γ₁ (t :: Γ₂)
+def matchVar {t : Ty} : {Δ : Ctxt} → Δ.Var t → Option Bool 
+  | _::_, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
+      matchVar ⟨w, .ofSucc h⟩
+  | _, _ =>
+      none
 
 
-def matchVar (t : Ty) (matchLets : Lets Δ_in Δ_out) (w : Δ_out.Var t)  : 
-    Option Bool := 
-  match matchLets, w with
-    | .lete matchLets _, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
-        let w := ⟨w, by simp_all[List.get?]⟩
-        matchVar t matchLets w
-    | _, _ => do
-        none
-
-
-example {Δ : Ctxt } 
-  {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {w : Δ.Var t} : 
-  matchVar t .nil w = none
+example {Δ : Ctxt } {w : Δ.Var t} : 
+  matchVar w = none
     := by
         -- uncommenting the `unfold` triggers an infinite loop of sorts, 
         -- consuming 100% CPU without being caught by `maxHeartbeats` timeout
