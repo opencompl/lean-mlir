@@ -12,19 +12,24 @@ def Ty.toType
   | bool => Bool
 
 def Ctxt : Type :=
-  Erased <| List Ty
+  -- Erased <| List Ty
+  List Ty
 
 namespace Ctxt
 
-def empty : Ctxt := Erased.mk []
+-- def empty : Ctxt := Erased.mk []
+def empty : Ctxt := []
 
 instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 
 def snoc : Ctxt → Ty → Ctxt :=
-  fun tl hd => do return hd :: (← tl)
+  -- fun tl hd => do return hd :: (← tl)
+  fun tl hd => hd :: tl
+  
 
 def Var (Γ : Ctxt) (t : Ty) : Type :=
-  { i : Nat // Γ.out.get? i = some t }
+  -- { i : Nat // Γ.out.get? i = some t }
+  { i : Nat // Γ.get? i = some t }
 
 namespace Var
 
