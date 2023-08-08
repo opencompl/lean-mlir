@@ -94,6 +94,7 @@ theorem ICom.denote_changeVars {Γ Γ' : Ctxt}
   The result returned by `addProgramToLets`
 -/
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt) (ty : Ty) where
+  /-- The new out context -/
   {Γ_out_new : Ctxt}
   /-- The new `lets`, with the program added to it -/
   lets : Lets Γ_in Γ_out_new
