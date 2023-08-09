@@ -1,4 +1,5 @@
 import Mathlib.Data.Erased
+import Mathlib.Data.Finset.Basic
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -26,6 +27,12 @@ instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 def snoc : Ctxt → Ty → Ctxt :=
   -- fun tl hd => do return hd :: (← tl)
   fun tl hd => hd :: tl
+
+/-- Turn a list of types into a context -/
+@[coe, simp]
+def ofList : List Ty → Ctxt :=
+  -- Erased.mk
+  fun Γ => Γ 
   
 
 def Var (Γ : Ctxt) (t : Ty) : Type :=
@@ -148,5 +155,29 @@ theorem Valuation.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toTyp
 theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.toType) 
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
+
+
+
+/- ## VarSet -/
+
+/-- A `Ty`-indexed family of sets of variables in context `Γ` -/
+def VarSet (Γ : Ctxt) : Type := 
+  (t' : Ty) → Finset (Γ.Var t')
+
+namespace VarSet
+
+/-- A `VarSet` with exactly one variable `v` -/
+@[simp]
+def ofVar {Γ : Ctxt} (v : Γ.Var t) : VarSet Γ :=
+  fun t' => if ty_eq : t = t' then {ty_eq ▸ v} else {}
+
+@[simp]
+instance : EmptyCollection (VarSet Γ) := ⟨fun _ => ∅⟩
+
+@[simp]
+instance : Union (VarSet Γ) := ⟨fun S₁ S₂ t => S₁ t ∪ S₂ t⟩
+
+end VarSet
+
 
 end Ctxt
