@@ -183,40 +183,6 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt}
   rw [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, 
     denote_addProgramAtTop]
 
--- /-- Substitute each free variable in an `ExprRec` for another `ExprRec` 
--- in a different context. -/
--- def ExprRec.bind {Γ₁ Γ₂ : Ctxt} 
---     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) : 
---     (e : ExprRec Γ₁ t) → ExprRec Γ₂ t
---   | .var v => f _ v
---   | .cst n => .cst n
---   | .add e₁ e₂ => .add (bind f e₁) (bind f e₂)
-
--- @[simp]
--- theorem ExprRec.denote_bind {Γ₁ Γ₂ : Ctxt} (s : Γ₂.Valuation) 
---     (f : (t : Ty) → Γ₁.Var t → ExprRec Γ₂ t) :
---     (e : ExprRec Γ₁ t) → (e.bind f).denote s = 
---       e.denote (fun t' v' => (f t' v').denote s)
---   | .var v => by simp [bind, denote]
---   | .cst n => by simp [bind, denote]
---   | .add e₁ e₂ => by
---     simp only [ExprRec.denote, bind]
---     rw [denote_bind _ _ e₁, denote_bind _ _ e₂]
-
--- def IExpr.toExprRec : {Γ : Ctxt} → {t : Ty} → IExpr Γ t → ExprRec Γ t
---   | _, _, .cst n => .cst n
---   | _, _, .add e₁ e₂ => .add (.var e₁) (.var e₂)
-
--- def ICom.toExprRec : {Γ : Ctxt} → {t : Ty} → ICom Γ t → ExprRec Γ t
---   | _, _, .ret e => .var e
---   | _, _, .lete e body => 
---     let e' := e.toExprRec
---     body.toExprRec.bind 
---     (fun t v => by
---       cases v using Ctxt.Var.casesOn with
---       | toSnoc v => exact .var v
---       | last => exact e')
-
 structure FlatICom (Γ : Ctxt) (t : Ty) where
   {Γ_out : Ctxt}
   /-- The let bindings of the original program -/
