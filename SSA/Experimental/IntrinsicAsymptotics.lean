@@ -777,12 +777,9 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Γ t)
 macro "simp_peephole": tactic =>
   `(tactic|
       (
-      funext;
-      -- rw [←ICom.denote_toExprRec];
-      -- rw [←ICom.denote_toExprRec];
-      simp only [ExprRec.bind, IExpr.toExprRec, ExprRec.denote, ICom.toExprRec];
-      funext;
-      rename_i ll;
+      funext ll
+      simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;

@@ -65,6 +65,11 @@ theorem zero_eq_last {Γ : Ctxt} {t : Ty} (h) :
     ⟨0, h⟩ = last Γ t :=
   rfl
 
+@[simp]
+theorem succ_eq_toSnoc {Γ : Ctxt} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
+    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
+  rfl
+
 
   
 /-- This is an induction principle that case splits on whether or not a variable 
