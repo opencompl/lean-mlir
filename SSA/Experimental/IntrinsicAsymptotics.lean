@@ -260,6 +260,7 @@ def Lets.getIExprAuxDiff {lets : Lets Γ₁ Γ₂} {v : Γ₂.Var t}
       simp only [getIExprAux, eq_rec_constant] at h  
       cases v using Ctxt.Var.casesOn <;> simp at h
       . intro h'
+        simp [Ctxt.get?]
         simp[←ih h h', Ctxt.snoc, Ctxt.Var.toSnoc, List.get?]
       . rcases h with ⟨⟨⟩, ⟨⟩⟩
         simp[Ctxt.snoc, List.get?, Ctxt.Var.last]
@@ -320,30 +321,30 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
         | .cst _    => ∅ 
         | .add x y  => lets.vars x ∪ lets.vars y
 
-theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
-    {s₁ s₂ : Γ_in.Valuation} 
-    (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
-    lets.denote s₁ v = lets.denote s₂ v := by
-  induction lets
-  next => 
-    simp [vars] at h
-    simp [denote, h _ v]
-  next lets e ih =>
-    cases v using Ctxt.Var.casesOn
-    . simp [vars] at h
-      simp[denote]
-      apply ih _ h
-    . simp [denote, IExpr.denote]
-      cases e
-      . simp [vars] at h
-        simp
-        congr 1
-        <;> apply ih
-        <;> intro _ _ hw
-        <;> apply h
-        . apply Or.inl hw
-        . apply Or.inr hw
-      . simp
+-- theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
+--     {s₁ s₂ : Γ_in.Valuation} 
+--     (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
+--     lets.denote s₁ v = lets.denote s₂ v := by
+--   induction lets
+--   next => 
+--     simp [vars] at h
+--     simp [denote, h _ v]
+--   next lets e ih =>
+--     cases v using Ctxt.Var.casesOn
+--     . simp [vars] at h
+--       simp[denote]
+--       apply ih _ h
+--     . simp [denote, IExpr.denote]
+--       cases e
+--       . simp [vars] at h
+--         simp
+--         congr 1
+--         <;> apply ih
+--         <;> intro _ _ hw
+--         <;> apply h
+--         . apply Or.inl hw
+--         . apply Or.inr hw
+--       . simp
 
 def ICom.vars : ICom Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
@@ -524,7 +525,7 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
     split at h_mv <;> try contradiction
     next e h_getIExpr =>
       simp only [h_getIExpr, bind_pure, Option.mem_def] at h_mv
-      rw [Lets.denote_getIExpr h_getIExpr]
+      rw [←Lets.denote_getIExpr h_getIExpr]
       simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]
       split at h_mv <;> try contradiction
       next =>
