@@ -1,9 +1,12 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
 import SSA.Experimental.ErasedContext
+import Std.Data.List.Lemmas
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Finset.Fold
 import Mathlib.Data.Fintype.Basic
+import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
 
@@ -13,11 +16,33 @@ open Ctxt (Var VarSet)
   # Datastructures 
 -/
 
+/-- A simple enumeration of operations -/
+inductive Op
+  | add
+  | cst (n : Nat)
+  deriving DecidableEq
+
+/-- Each operation has an associated list of operand type, so that the `i`-th operand to operation
+    `op` is required to be of type `op.operandTypes[i]` -/
+def Op.operandTypes : Op → List Ty
+  | .add => [.nat, .nat]
+  | .cst _ => []
+
+/-- The number of arguments that `op` takes -/
+abbrev Op.arity (op : Op) : Nat :=
+  op.operandTypes.length
+
+/-- The return type of a fully applied operation -/
+def Op.returnType : Op → Ty
+  | .add => .nat
+  | .cst _ => .nat
+
+def Op.Semantics (o : Op) : Type :=
+  (args : (i : Fin o.arity) → o.operandTypes[i].toType) → o.returnType.toType
+
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
-  | add (a b : Γ.Var .nat) : IExpr Γ .nat
-  /-- Nat literals. -/
-  | cst (n : Nat) : IExpr Γ .nat
+  | mk (o : Op) (args : (i : Fin o.arity) → Γ.Var o.operandTypes[i]) : IExpr Γ o.returnType
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
@@ -36,9 +61,21 @@ inductive Lets : Ctxt → Ctxt → Type where
   # Definitions
 -/
 
+def IExpr.op : IExpr Γ t → Op
+  | ⟨op, _⟩ => op
+
+def IExpr.args : (e : IExpr Γ t) → (i : Fin e.op.arity) → Γ.Var (e.op.operandTypes[i])
+  | ⟨_, args⟩ => args
+
+def Op.denote : (o : Op) → o.Semantics
+  | .add => fun args => 
+      let x : Nat := args ⟨0, by simp⟩
+      let y : Nat := args ⟨1, by simp⟩
+      x + y
+  | .cst n => fun _ => n
+
 def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .cst n, _ => n
-  | .add a b, Γv => Γv a + Γv b
+  | ⟨op, args⟩, Γv => op.denote (fun i => Γv <| args i)
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
@@ -57,8 +94,7 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 
 def IExpr.changeVars (varsMap : Γ.Hom Γ') : 
     (e : IExpr Γ ty) → IExpr Γ' ty
-  | .cst n => .cst n
-  | .add a b => .add (varsMap a) (varsMap b)
+  | ⟨op, args⟩ => ⟨op, fun i => varsMap <| args i⟩
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
@@ -67,8 +103,8 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
     e.denote (fun t v => Γ'v (varsMap v)) := by
-  induction e generalizing Γ'v <;> simp 
-    [IExpr.denote, IExpr.changeVars, *]
+  cases e
+  simp [IExpr.denote, IExpr.changeVars, *]
 
 def ICom.changeVars 
     (varsMap : Γ.Hom Γ') : 
@@ -325,33 +361,34 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
       cases v using Ctxt.Var.casesOn with
       | toSnoc v => exact lets.vars v
       | last => exact match e with 
-        | .cst _    => ∅ 
-        | .add x y  => lets.vars x ∪ lets.vars y
+        | ⟨op, args⟩ => 
+          (List.finRange op.arity).foldl (fun V i => V ∪ lets.vars (args i)) ∅
 
-theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
-    {s₁ s₂ : Γ_in.Valuation} 
-    (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
-    lets.denote s₁ v = lets.denote s₂ v := by
-  induction lets
-  next => 
-    simp [vars] at h
-    simp [denote, h _ v]
-  next lets e ih =>
-    cases v using Ctxt.Var.casesOn
-    . simp [vars] at h
-      simp[denote]
-      apply ih _ h
-    . simp [denote, IExpr.denote]
-      cases e
-      . simp [vars] at h
-        simp
-        congr 1
-        <;> apply ih
-        <;> intro _ _ hw
-        <;> apply h
-        . apply Or.inl hw
-        . apply Or.inr hw
-      . simp
+-- theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
+--     {s₁ s₂ : Γ_in.Valuation} 
+--     (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
+--     lets.denote s₁ v = lets.denote s₂ v := by
+--   induction lets generalizing t
+--   next => 
+--     simp [vars] at h
+--     simp [denote, h _ v]
+--   next lets e ih =>
+--     cases v using Ctxt.Var.casesOn
+--     . simp [vars] at h
+--       simp[denote]
+--       apply ih _ h
+--     . simp [denote, IExpr.denote]
+--       rcases e with ⟨op, args⟩
+--       simp
+--       congr 1
+--       funext i
+--       apply ih
+--       intro t w hw
+--       apply h t w
+--       simp [vars]
+--       clear *-hw
+--       induction op.arity
+--       . simp [List.foldl]
 
 def ICom.vars : ICom Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
@@ -372,17 +409,29 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
         let w := ⟨w, by simp_all[Ctxt.snoc]⟩
         matchVar lets v matchLets w ma
     | .lete matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
-        let e ← lets.getIExpr v
-        match matchExpr, e with 
-          | .cst n, .cst m =>
-              if n = m then some ma
-              else none
-          | .add lhs rhs, .add v₁ v₂ => do
-              let map₁ ← matchVar lets v₁ matchLets lhs ma
-              let map₂ ← matchVar lets v₂ matchLets rhs map₁
-              return map₂
-          | _, _ =>
-              none
+        let e ← lets.getIExpr v      
+        if e_eq : matchExpr.op = e.op then
+          -- have : 
+          List.finRange e.op.arity
+            |>.foldlM (fun ma i =>
+                let v : Var _ e.op.operandTypes[i] := e.args i
+                let i' := e_eq ▸ i
+                have : matchExpr.op.operandTypes.get (e_eq ▸ i) = e.op.operandTypes.get i := by 
+                  simp
+                let w : Var _ (Op.operandTypes (IExpr.op e))[i] := matchExpr.args i'
+                matchVar lets v matchLets (w) ma
+              ) ma
+        else
+          none
+          -- | .cst n, .cst m =>
+          --     if n = m then some ma
+          --     else none
+          -- | .add lhs rhs, .add v₁ v₂ => do
+          --     let map₁ ← matchVar lets v₁ matchLets lhs ma
+          --     let map₂ ← matchVar lets v₂ matchLets rhs map₁
+          --     return map₂
+          -- | _, _ =>
+          --     none
     | .nil, w => -- The match expression is just a free (meta) variable
         match ma.lookup ⟨_, w⟩ with
         | some v₂ =>
