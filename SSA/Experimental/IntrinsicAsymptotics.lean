@@ -9,6 +9,9 @@ import Mathlib.Tactic.Ring
 
 open Ctxt (Var VarSet)
 
+/- 
+  # Datastructures 
+-/
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
@@ -29,7 +32,9 @@ inductive Lets : Ctxt → Ctxt → Type where
 
 
 
-
+/- 
+  # Definitions
+-/
 
 def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .cst n, _ => n
@@ -140,8 +145,6 @@ theorem denote_addProgramToLets_var {lets : Lets Γ_in Γ_out} {map} {com : ICom
     cases v using Ctxt.Var.casesOn
     . rfl
     . simp [Lets.denote]; rfl
-    
-
 
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop {Γ₁ Γ₂ : Ctxt} :
@@ -306,7 +309,11 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt} : {lets : Lets Γ₁ Γ₂} �
   . contradiction
   . rw[←Option.some_inj.mp he, denote_getIExprAux]
 
-  
+
+
+/-
+  ## Matching
+-/  
 
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
@@ -321,35 +328,33 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
         | .cst _    => ∅ 
         | .add x y  => lets.vars x ∪ lets.vars y
 
--- theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
---     {s₁ s₂ : Γ_in.Valuation} 
---     (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
---     lets.denote s₁ v = lets.denote s₂ v := by
---   induction lets
---   next => 
---     simp [vars] at h
---     simp [denote, h _ v]
---   next lets e ih =>
---     cases v using Ctxt.Var.casesOn
---     . simp [vars] at h
---       simp[denote]
---       apply ih _ h
---     . simp [denote, IExpr.denote]
---       cases e
---       . simp [vars] at h
---         simp
---         congr 1
---         <;> apply ih
---         <;> intro _ _ hw
---         <;> apply h
---         . apply Or.inl hw
---         . apply Or.inr hw
---       . simp
+theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
+    {s₁ s₂ : Γ_in.Valuation} 
+    (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
+    lets.denote s₁ v = lets.denote s₂ v := by
+  induction lets
+  next => 
+    simp [vars] at h
+    simp [denote, h _ v]
+  next lets e ih =>
+    cases v using Ctxt.Var.casesOn
+    . simp [vars] at h
+      simp[denote]
+      apply ih _ h
+    . simp [denote, IExpr.denote]
+      cases e
+      . simp [vars] at h
+        simp
+        congr 1
+        <;> apply ih
+        <;> intro _ _ hw
+        <;> apply h
+        . apply Or.inl hw
+        . apply Or.inr hw
+      . simp
 
 def ICom.vars : ICom Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
-
-
 
 /-- 
   Given two sequences of lets, `lets` and `matchExpr`, 
@@ -710,6 +715,12 @@ theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Γ₁ t}
     res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
   denote_splitProgramAtAux hres s
 
+
+
+/-
+  ## Rewriting
+-/
+
 /-- `rewriteAt lhs rhs hlhs pos target`, searches for `lhs` at position `pos` of
 `target`. If it can match the variables, it inserts `rhs` into the program
 with the correct assignment of variables, and then replaces occurences
@@ -806,6 +817,12 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Γ t)
           apply denote_rewriteAt pr.lhs pr.rhs h pos target pr.correct _ hrew
         | none => simp
     case neg h => simp
+
+
+
+/-
+  ## Examples
+-/
 
 macro "simp_peephole": tactic =>
   `(tactic|
