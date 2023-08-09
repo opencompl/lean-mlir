@@ -259,26 +259,20 @@ def Lets.getIExpr : {Γ₁ Γ₂ : Ctxt} → (lets : Lets Γ₁ Γ₂) → {t : 
         (IExpr.changeVars (fun _ => Ctxt.Var.toSnoc))
     | last => exact some <| e.changeVars (fun _ => Ctxt.Var.toSnoc)
 
-theorem Lets.denote_getIExpr : {Γ₁ Γ₂ : Ctxt} → {lets : Lets Γ₁ Γ₂} → {t : Ty} → 
-    {v : Γ₂.Var t} → {e : IExpr Γ₂ t} → (he : e ∈ lets.getIExpr v) → (s : Γ₁.Valuation) →
-    e.denote (lets.denote s) = (lets.denote s) v 
-  | _, _, .nil, t, v, e, he, s => by simp [Lets.getIExpr] at he
-  | _, _, .lete lets e, _, v, e', he, s => by
-    cases v using Ctxt.Var.casesOn with
-    | toSnoc v => 
-      simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_toSnoc, 
-        Option.mem_def, Option.map_eq_some'] at he
-      cases' he with a ha
-      cases' ha with ha ha'
-      subst ha'
-      simp only [denote, eq_rec_constant, IExpr.denote_changeVars, 
-        Ctxt.Var.casesOn_toSnoc]
-      rw [denote_getIExpr ha s]
-    | last => 
-      simp only [getIExpr, eq_rec_constant, Ctxt.Var.casesOn_last, 
-        Option.mem_def, Option.some.injEq] at he 
-      subst he
-      simp [Lets.denote]
+theorem Lets.denote_getIExpr {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {e : IExpr Γ_out t}
+    {env : Γ_in.Valuation}
+    (h : lets.getIExpr v = some e) :
+    lets.denote env v = e.denote (lets.denote env) := by
+  induction lets
+  next =>
+    contradiction
+  next ih =>
+    cases v using Ctxt.Var.casesOn
+    . simp [getIExpr] at h
+      rcases h with ⟨e', h_e', h_change⟩
+      simp [denote, ih h_e', ←h_change]
+    . simp [getIExpr] at h
+      simp [denote, ←h]
 
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
@@ -515,153 +509,86 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem Lets.denote_of_getIExpr_eq {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {e : IExpr Γ_out t}
-    {env : Γ_in.Valuation}
-    (h : lets.getIExpr v = some e) :
-    lets.denote env v = e.denote (lets.denote env) := by
-  induction lets
-  next =>
-    contradiction
-  next ih =>
-    _
-  
-
-#print "FOO"
-
 theorem denote_matchVar : 
     {Γ_in Γ_out Δ_in Δ_out : Ctxt} →
     {lets : Lets Γ_in Γ_out} → 
     {v : Γ_out.Var t} → 
-    {varMap : Mapping Δ_in Γ_out} → 
-    (s₁ : Γ_in.Valuation) → 
-    (ma : Mapping Δ_in Γ_out) → 
+    {varMap₁ varMap₂ : Mapping Δ_in Γ_out} → 
+    {s₁ : Γ_in.Valuation} → 
+    {ma : Mapping Δ_in Γ_out} → 
     {matchLets : Lets Δ_in Δ_out} → 
     {w : Δ_out.Var t} → 
-    (h : varMap ∈ matchVar lets v matchLets w ma) → 
+    (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries)  → 
     matchLets.denote (fun t' v' => by
-        match varMap.lookup ⟨_, v'⟩  with
+        match varMap₂.lookup ⟨_, v'⟩  with
         | some v' => exact lets.denote s₁ v'
         | none => exact default 
         ) w = 
       lets.denote s₁ v
-  | _,_,_,_, lets, v, varMap, s₁, ma, .nil, w => by
+  | _,_,_,_, lets, v, _, _, s₁, ma, .nil, w => by
     simp[Lets.denote, matchVar]
-    split
+    intro h_mv h_sub
+    split at h_mv
     next x v₂ heq =>
-      split_ifs
+      split_ifs at h_mv
       next v_eq_v₂ =>
         subst v_eq_v₂
-        intro ma_eq_varMap
-        injection ma_eq_varMap with ma_eq_varMap
-        subst ma_eq_varMap
-        rw[heq]
-      next =>
-        exact False.elim
-    next x heq =>
-      intro h
-      simp [←Option.some.inj h]
+        injection h_mv with h_mv
+        subst h_mv
+        rw[mem_lookup_iff.mpr ?_]
+        apply h_sub
+        apply mem_lookup_iff.mp
+        apply heq
+    next =>
+      rw [mem_lookup_iff.mpr]
+      apply h_sub
+      injection h_mv with h_mv
+      rw[←h_mv]
+      simp only [insert_entries, List.find?, List.mem_cons, true_or]
 
-  | _,_,_,_, lets, v, varMap, s₁, ma, .lete matchLets _, ⟨w+1, h⟩ => by
+  | _,_,_,_, lets, v, _, _, s₁, ma, .lete matchLets _, ⟨w+1, h⟩ => by
     simp [matchVar]
     apply denote_matchVar
 
-  | _,_,_,_, lets, v, varMap, s₁, ma, .lete matchLets matchExpr, ⟨0, _⟩ => by
+  | _,_,_,_, lets, v, _, _, s₁, ma, .lete matchLets matchExpr, ⟨0, h_w⟩ => by
+    rename_i t'
+    have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
+    subst this
     simp [matchVar, Bind.bind, Option.bind]
-    split
-    next =>
-      intro; contradiction
+    intro h_mv h_sub
+    split at h_mv
+    next => contradiction
     next e h_getIExpr =>
-      simp
-      split
+      simp only [h_getIExpr, bind_pure, Option.mem_def] at h_mv
+      rw [Lets.denote_getIExpr h_getIExpr]
+      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]
+      split at h_mv
       next =>
-        split_ifs
-        next n_eq_m =>
-          intro h
-          injection h with h
-          subst n_eq_m
-          subst h
-          simp[Lets.denote, Ctxt.Var.casesOn]
-          sorry
-        next n_neq_m =>
-          sorry
+        split_ifs at h_mv
+        injection h_mv with h_mv
       next =>
-        sorry
+        split at h_mv
+        next => contradiction
+        next map₁ h_matchVar₁ =>
+          simp at h_mv
+          split at h_mv
+          next => contradiction
+          next map₂ h_matchVar₂ =>
+            simp at h_mv
+            injection h_mv with h_mv
+            subst h_mv
+            simp [Lets.denote, Ctxt.Var.casesOn, IExpr.denote]
+            rw [denote_matchVar h_matchVar₂ h_sub, denote_matchVar h_matchVar₁]
+            . intro x hx
+              apply h_sub
+              apply subset_entries_matchVar h_matchVar₂
+              apply hx
+            
       next =>
-        intro; contradiction
+        contradiction
       
-
-
-  -- | .var v', ma, h => by
-  --   simp only [matchVar, Option.mem_def] at h 
-  --   split at h
-  --   . split_ifs at h
-  --     subst v
-  --     simp only [ExprRec.denote]
-  --     split
-  --     . simp only [Option.some.injEq] at h 
-  --       subst h
-  --       simp_all
-  --     . simp_all
-  --   . simp at h
-  --     subst h
-  --     simp_all [ExprRec.denote]
-  -- | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
-  --   rw [ExprRec.denote]
-  --   unfold matchVar at h
-  --   cases hl : Lets.getIExpr lets v with
-  --   | none => simp [hl] at h
-  --   | some e => 
-  --     cases e with
-  --     | cst m => 
-  --       simp [hl] at h
-  --       rw [← Lets.denote_getIExpr hl]
-  --       simp only [IExpr.denote]
-  --       split_ifs at h; simp_all
-  --     | add v₁ v₂ => simp [hl] at h
-  -- | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .add lhs rhs, ma, h => by  
-  --   rw [ExprRec.denote]
-  --   unfold matchVar at h
-  --   cases hl : Lets.getIExpr lets v with
-  --   | none => simp [hl] at h
-  --   | some e => 
-  --     cases e with
-  --     | cst m => simp [hl] at h
-  --     | add v₁ v₂ => 
-  --       simp only [hl, bind_pure, Option.mem_def] at h 
-  --       rw [← Lets.denote_getIExpr hl]
-  --       simp only [IExpr.denote]
-  --       cases h₁ : matchVar lets v₁ lhs ma with
-  --       | none =>  simp [h₁, bind] at h
-  --       | some m₁ => 
-  --         cases h₂ : matchVar lets v₂ rhs m₁ with
-  --         | none => 
-  --           simp [bind] at h
-  --           rcases h with ⟨a, _, _⟩
-  --           simp_all
-  --         | some m₂ => 
-  --           simp only [h₁, Option.some_bind, h₂, Option.some.injEq, pure, bind] at h 
-  --           subst h
-  --           have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
-  --           have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
-  --           rw [← ih₁, ← ih₂]
-  --           congr 1
-  --           apply ExprRec.denote_eq_of_eq_on_vars
-  --           intro t' v' hv'
-  --           have h₁ := mem_matchVar h₁ hv'
-  --           have h₃ := subset_entries_matchVar h₂  
-  --           have h₂ := keys_subset_keys_of_entries_subset_entries
-  --             h₃ h₁
-  --           simp only [← lookup_isSome, ← mem_keys] at h₁ h₂
-  --           simp only [List.subset_def, Sigma.forall, 
-  --             ← mem_lookup_iff, Option.mem_def] at h₃ 
-  --           split
-  --           . rename_i h1
-  --             split
-  --             . rename_i h2
-  --               have := h₃ _ _ _ h2
-  --               simp_all
-  --             . simp_all
-  --           . simp_all
+      
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/

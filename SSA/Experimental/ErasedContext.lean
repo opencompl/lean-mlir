@@ -22,6 +22,7 @@ def empty : Ctxt := []
 
 instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 
+@[match_pattern]
 def snoc : Ctxt → Ty → Ctxt :=
   -- fun tl hd => do return hd :: (← tl)
   fun tl hd => hd :: tl
@@ -51,6 +52,13 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
 def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
   ⟨var.1+1, by cases var; simp_all [snoc]⟩
+
+@[simp]
+theorem zero_eq_last {Γ : Ctxt} {t : Ty} (h) :
+    ⟨0, h⟩ = last Γ t :=
+  rfl
+
+
   
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
