@@ -283,23 +283,89 @@ theorem Lets.denote_getIExpr : {Γ₁ Γ₂ : Ctxt} → {lets : Lets Γ₁ Γ₂
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
-def ExprRec.vars : ExprRec Γ t → (t' : Ty) → Finset (Γ.Var t')
-  | .var v, t' => if ht : t = t' then ht ▸ {v} else ∅ 
-  | .cst _, _ => ∅ 
-  | .add e₁ e₂, t' => e₁.vars t' ∪ e₂.vars t'
+/--
+  Checks wheter a variable `v : Γ_out.Var t` is a free variable, i.e., corresponds to a variable in
+  `Γ_in`
+-/
+def Lets.isFreeVar : Lets Γ_in Γ_out → Γ_out.Var t → Option (Γ_in.Var t)
+  | .nil, v => some v
+  | .lete lets _, v =>
+    by cases v using Ctxt.Var.casesOn with
+      | last => exact none
+      | toSnoc v => exact isFreeVar lets v
 
-theorem ExprRec.denote_eq_of_eq_on_vars : (e : ExprRec Γ t) → {s₁ s₂ : Γ.Valuation} → 
-    (h : ∀ t v, v ∈ e.vars t → s₁ v = s₂ v) → 
-    e.denote s₁ = e.denote s₂
-  | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
-  | .cst n, s₁, _, h => rfl
-  | .add e₁ e₂, s₁, s₂, h => by
-    simp only [ExprRec.denote, ExprRec.denote_eq_of_eq_on_vars]
-    congr 1
-    . exact ExprRec.denote_eq_of_eq_on_vars e₁ (fun t v hv => h t v 
-        (by simp [hv, ExprRec.vars]))
-    . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
-        (by simp [hv, ExprRec.vars]))
+/-- The free variables of `lets` always come from its input context -/
+def Lets.freeVars : Lets Γ_in Γ_out → (t' : Ty) → Finset (Γ_in.Var t')
+  | .nil, _ =>  ∅ 
+  | .lete lets e, t' =>
+      let r := lets.freeVars t'
+      match e with 
+        | .cst _ => r
+        | .add x y => 
+          if ty_eq : t' = .nat then
+            let varSet := fun (x : Ctxt.Var _ .nat) => match lets.isFreeVar x with
+              | some x => {ty_eq ▸ x}
+              | none => {}
+            r ∪ varSet x ∪ varSet y
+          else
+            r
+
+/-- The variables, both free and bound -/
+def Lets.vars : Lets Γ_in Γ_out → (t' : Ty) → Finset (Γ_in.Var t')
+  | .nil, _ =>  ∅ 
+  | .lete lets e, t' =>
+      let r := lets.vars t'
+      match e with 
+        | .cst _ => r
+        | .add x y => 
+          if ty_eq : t' = .nat then
+            let varSet := fun (x : Ctxt.Var _ .nat) => match lets.isFreeVar x with
+              | some x => {ty_eq ▸ x}
+              | none => {}
+            r ∪ varSet x ∪ varSet y
+          else
+            r
+
+theorem Lets.vars_lete {lets : Lets Γ_in Γ_out} {e : IExpr Γ_out t'} (t : Ty) :
+    lets.vars t ⊆ (lets.lete e).vars t := by
+  simp[vars]
+  cases e
+  . split_ifs
+    . intro x h
+      apply Finset.mem_union.mpr
+      apply Or.inl h
+    . rfl
+  . rfl
+
+-- theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out)
+--     {s₁ s₂ : Γ_in.Valuation} 
+--     (h : ∀ t v, v ∈ lets.vars t → s₁ v = s₂ v) 
+--     (v : Γ_out.Var t) 
+--     (hv : lets.isFreeVar v = none ∨ v ∈ lets.vars _):
+--     lets.denote s₁ v = lets.denote s₂ v := by
+--   induction lets
+--   next => contradiction
+--   next lets e ih =>
+--     cases v using Ctxt.Var.casesOn
+--     . simp[isFreeVar] at hv
+--       simp[denote]
+--       apply ih _ _ hv
+--       intro t' v'
+--       intro hv'
+--       apply h
+--       apply vars_lete _ hv'
+--     . simp[denote]
+--       cases e
+
+  -- | .var v, _, _, h => h _ _ (by simp [ExprRec.vars])
+  -- | .cst n, s₁, _, h => rfl
+  -- | .add e₁ e₂, s₁, s₂, h => by
+  --   simp only [ExprRec.denote, ExprRec.denote_eq_of_eq_on_vars]
+  --   congr 1
+  --   . exact ExprRec.denote_eq_of_eq_on_vars e₁ (fun t v hv => h t v 
+  --       (by simp [hv, ExprRec.vars]))
+  --   . exact ExprRec.denote_eq_of_eq_on_vars e₂ (fun t v hv => h t v 
+  --       (by simp [hv, ExprRec.vars]))
 
 
 
@@ -339,34 +405,6 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
               else none
         | none => some (AList.insert ⟨_, w⟩ v ma) 
 
-
-#check Lets.brecOn
-#print matchVar
-
-example {Δ : Ctxt } 
-  {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {w : Δ.Var t}
-  {ma : Mapping Δ Γ_out} : 
-  matchVar lets v Lets.nil w ma = 
-    match ma.lookup ⟨_, w⟩ with
-      | some v₂ =>
-        by
-          exact if v = v₂
-            then some ma
-            else none
-      | none => some (AList.insert ⟨_, w⟩ v ma)  
-    := by
-  rfl
-
-example {Δ : Ctxt } 
-  {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
-  {matchLets : Lets Δ_in Δ_out} {matchE : IExpr Δ_out d}
-  {ma : Mapping Δ_in Γ_out} : 
-  matchVar lets v (Lets.lete matchLets matchE) ⟨w+1, h⟩ ma = 
-    let w := ⟨w, by simp_all[Ctxt.snoc]⟩
-    matchVar lets v matchLets w ma
-    := by
-  rfl
-
 open AList
 
 /-- For mathlib -/
@@ -381,16 +419,13 @@ theorem _root_.AList.keys_subset_keys_of_entries_subset_entries
   exact Option.isSome_some
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
-theorem subset_entries_matchVar : 
-    {Γ₁ Γ₂ Γ₃ : Ctxt} → {t : Ty} → {varMap : Mapping Δ_in Γ_out} → {ma : Mapping Δ_in Γ_out} → 
-    {lets : Lets Γ_in Γ_out} →  
-    {v : Γ_out.Var t} → 
-    {matchLets : Lets Δ_in Δ_out} → 
-    {w : Δ_out.Var t} →
+theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
+    {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} :
+    {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) → 
     ma.entries ⊆ varMap.entries 
-  | Γ₁, _, Γ₃, t, varMap, ma, lets, v, .nil, w => by
-    unfold matchVar
+  | .nil, w => by
+    simp [matchVar]
     intros h x hx
     split at h
     . split_ifs at h
@@ -399,164 +434,234 @@ theorem subset_entries_matchVar :
       subst h
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
-      by_cases hx : x = ⟨t, v'⟩
+      by_cases hx : x = ⟨t, w⟩
       . subst x; simp_all
       . rwa [AList.lookup_insert_ne hx]
-  | _, _, _, _, _, _, _, _, _, _ => sorry
-  -- | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by
-  --   unfold matchVar
-  --   split
-  --   . simp_all
-  --   . split_ifs
-  --     . simp (config := {contextual := true})
-  --     . simp
-  --   . simp_all
-  --   . simp_all
-  -- | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
-  --   unfold matchVar
-  --   split
-  --   . simp_all
-  --   . simp_all
-  --   . simp [bind, pure, ExprRec.vars]
-  --     rintro m₁ hm₁ hm₂ x hx
-  --     rename_i _ h _
-  --     injection h with h₁ h₂
-  --     subst h₁ h₂
-  --     exact subset_entries_matchVar hm₂ (subset_entries_matchVar hm₁ hx)
-  --   . simp_all
 
-/-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
-theorem mem_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → {lets : Lets Γ₁ Γ₂} →  
-    {t : Ty} → {v : Γ₂.Var t} → 
-    {matchExpr : ExprRec Γ₃ t} → 
-    {varMap : Mapping Γ₃ Γ₂} → 
-    {ma : Mapping Γ₃ Γ₂} → 
-    (hvarMap : varMap ∈ matchVar lets v matchExpr ma) → 
-    ∀ {t' v'}, v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
-  | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
-    simp only [matchVar, Option.mem_def, ExprRec.vars]
-    intros h t' v₂
-    split at *
-    . split_ifs at h
-      . subst v
-        injection h with h
-        subst h
-        split_ifs
-        . subst t
-          simp_all (config := {contextual := true}) 
-            [Finset.mem_singleton, ← AList.lookup_isSome] 
-        . simp
-    . split_ifs
-      . subst t
-        simp only [Option.some.injEq] at h 
-        subst h
-        simp (config := {contextual := true})
-      . simp
-  | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by simp [ExprRec.vars]
-  | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
-    unfold matchVar
-    split
-    . simp_all
-    . simp_all
-    . simp only [Option.bind_some, Option.mem_def, Option.bind_eq_some, 
-        ExprRec.vars, Finset.mem_union, forall_exists_index, and_imp,
-        pure, bind]
-      rintro m₁ hm₁ hm₂ t' v' hv'
-      rename_i _ h _
-      injection h with h₁ h₂
-      subst h₁ h₂
-      rcases hv' with hv' | hv'
-      . exact AList.keys_subset_keys_of_entries_subset_entries 
-          (subset_entries_matchVar hm₂) (mem_matchVar hm₁ hv')
-      . exact mem_matchVar hm₂ hv'
-    . simp_all
+  | .lete matchLets _, ⟨w+1, h⟩ => by
+    simp [matchVar]
+    apply subset_entries_matchVar
+
+  | .lete matchLets matchExpr, ⟨0, _⟩ => by
+    simp [matchVar, Bind.bind, Option.bind]
+    intro h
+    split at h
+    . contradiction
+    . simp at h
+      split at h
+      . split_ifs at h
+        rw[Option.some_inj.mp h]
+        intro x hx
+        apply hx
+      . split at h
+        . contradiction
+        next map₂ h_map₂ =>
+          simp at h
+          split at h
+          . contradiction
+          next map₁ h_map₁ =>
+            simp [Pure.pure] at h
+            subst h
+            intro x hx
+            apply subset_entries_matchVar h_map₁
+            apply subset_entries_matchVar h_map₂
+            apply hx
+      . contradiction
+
+-- /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
+-- theorem mem_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
+--     {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} :
+--     {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t} →
+--     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) → 
+--     ∀ {t' v'}, v' ∈ matchExpr.vars t' → ⟨t', v'⟩ ∈ varMap
+--   | Γ₁, _, Γ₃, lets, t, v, .var v', varMap, ma => by
+--     simp only [matchVar, Option.mem_def, ExprRec.vars]
+--     intros h t' v₂
+--     split at *
+--     . split_ifs at h
+--       . subst v
+--         injection h with h
+--         subst h
+--         split_ifs
+--         . subst t
+--           simp_all (config := {contextual := true}) 
+--             [Finset.mem_singleton, ← AList.lookup_isSome] 
+--         . simp
+--     . split_ifs
+--       . subst t
+--         simp only [Option.some.injEq] at h 
+--         subst h
+--         simp (config := {contextual := true})
+--       . simp
+--   | Γ₁, _, Γ₃, lets, _, v, .cst n, varMap, ma => by simp [ExprRec.vars]
+--   | Γ₁, _, Γ₃, lets, _, v, .add lhs rhs, varMap, ma => by
+--     unfold matchVar
+--     split
+--     . simp_all
+--     . simp_all
+--     . simp only [Option.bind_some, Option.mem_def, Option.bind_eq_some, 
+--         ExprRec.vars, Finset.mem_union, forall_exists_index, and_imp,
+--         pure, bind]
+--       rintro m₁ hm₁ hm₂ t' v' hv'
+--       rename_i _ h _
+--       injection h with h₁ h₂
+--       subst h₁ h₂
+--       rcases hv' with hv' | hv'
+--       . exact AList.keys_subset_keys_of_entries_subset_entries 
+--           (subset_entries_matchVar hm₂) (mem_matchVar hm₁ hv')
+--       . exact mem_matchVar hm₂ hv'
+--     . simp_all
       
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem denote_matchVar : {Γ₁ Γ₂ Γ₃ : Ctxt} → (lets : Lets Γ₁ Γ₂) → 
-    {t : Ty} → (v : Γ₂.Var t) → 
-    (varMap : Mapping Γ₃ Γ₂) → (s₁ : Γ₁.Valuation) → 
-    (matchExpr : ExprRec Γ₃ t) → 
-    (ma : Mapping Γ₃ Γ₂ := ∅) →
-    (h : varMap ∈ matchVar lets v matchExpr ma) →
-    matchExpr.denote (fun t' v' => by
+theorem Lets.denote_of_getIExpr_eq {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {e : IExpr Γ_out t}
+    {env : Γ_in.Valuation}
+    (h : lets.getIExpr v = some e) :
+    lets.denote env v = e.denote (lets.denote env) := by
+  induction lets
+  next =>
+    contradiction
+  next ih =>
+    _
+  
+
+#print "FOO"
+
+theorem denote_matchVar : 
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt} →
+    {lets : Lets Γ_in Γ_out} → 
+    {v : Γ_out.Var t} → 
+    {varMap : Mapping Δ_in Γ_out} → 
+    (s₁ : Γ_in.Valuation) → 
+    (ma : Mapping Δ_in Γ_out) → 
+    {matchLets : Lets Δ_in Δ_out} → 
+    {w : Δ_out.Var t} → 
+    (h : varMap ∈ matchVar lets v matchLets w ma) → 
+    matchLets.denote (fun t' v' => by
         match varMap.lookup ⟨_, v'⟩  with
         | some v' => exact lets.denote s₁ v'
         | none => exact default 
-        ) = 
+        ) w = 
       lets.denote s₁ v
-  | Γ₁, _, Γ₃, lets, t, v, varMap, s₁, .var v', ma, h => by
-    simp only [matchVar, Option.mem_def] at h 
-    split at h
-    . split_ifs at h
-      subst v
-      simp only [ExprRec.denote]
+  | _,_,_,_, lets, v, varMap, s₁, ma, .nil, w => by
+    simp[Lets.denote, matchVar]
+    split
+    next x v₂ heq =>
+      split_ifs
+      next v_eq_v₂ =>
+        subst v_eq_v₂
+        intro ma_eq_varMap
+        injection ma_eq_varMap with ma_eq_varMap
+        subst ma_eq_varMap
+        rw[heq]
+      next =>
+        exact False.elim
+    next x heq =>
+      intro h
+      simp [←Option.some.inj h]
+
+  | _,_,_,_, lets, v, varMap, s₁, ma, .lete matchLets _, ⟨w+1, h⟩ => by
+    simp [matchVar]
+    apply denote_matchVar
+
+  | _,_,_,_, lets, v, varMap, s₁, ma, .lete matchLets matchExpr, ⟨0, _⟩ => by
+    simp [matchVar, Bind.bind, Option.bind]
+    split
+    next =>
+      intro; contradiction
+    next e h_getIExpr =>
+      simp
       split
-      . simp only [Option.some.injEq] at h 
-        subst h
-        simp_all
-      . simp_all
-    . simp at h
-      subst h
-      simp_all [ExprRec.denote]
-  | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
-    rw [ExprRec.denote]
-    unfold matchVar at h
-    cases hl : Lets.getIExpr lets v with
-    | none => simp [hl] at h
-    | some e => 
-      cases e with
-      | cst m => 
-        simp [hl] at h
-        rw [← Lets.denote_getIExpr hl]
-        simp only [IExpr.denote]
-        split_ifs at h; simp_all
-      | add v₁ v₂ => simp [hl] at h
-  | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .add lhs rhs, ma, h => by  
-    rw [ExprRec.denote]
-    unfold matchVar at h
-    cases hl : Lets.getIExpr lets v with
-    | none => simp [hl] at h
-    | some e => 
-      cases e with
-      | cst m => simp [hl] at h
-      | add v₁ v₂ => 
-        simp only [hl, bind_pure, Option.mem_def] at h 
-        rw [← Lets.denote_getIExpr hl]
-        simp only [IExpr.denote]
-        cases h₁ : matchVar lets v₁ lhs ma with
-        | none =>  simp [h₁, bind] at h
-        | some m₁ => 
-          cases h₂ : matchVar lets v₂ rhs m₁ with
-          | none => 
-            simp [bind] at h
-            rcases h with ⟨a, _, _⟩
-            simp_all
-          | some m₂ => 
-            simp only [h₁, Option.some_bind, h₂, Option.some.injEq, pure, bind] at h 
-            subst h
-            have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
-            have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
-            rw [← ih₁, ← ih₂]
-            congr 1
-            apply ExprRec.denote_eq_of_eq_on_vars
-            intro t' v' hv'
-            have h₁ := mem_matchVar h₁ hv'
-            have h₃ := subset_entries_matchVar h₂  
-            have h₂ := keys_subset_keys_of_entries_subset_entries
-              h₃ h₁
-            simp only [← lookup_isSome, ← mem_keys] at h₁ h₂
-            simp only [List.subset_def, Sigma.forall, 
-              ← mem_lookup_iff, Option.mem_def] at h₃ 
-            split
-            . rename_i h1
-              split
-              . rename_i h2
-                have := h₃ _ _ _ h2
-                simp_all
-              . simp_all
-            . simp_all
+      next =>
+        split_ifs
+        next n_eq_m =>
+          intro h
+          injection h with h
+          subst n_eq_m
+          subst h
+          simp[Lets.denote, Ctxt.Var.casesOn]
+          sorry
+        next n_neq_m =>
+          sorry
+      next =>
+        sorry
+      next =>
+        intro; contradiction
+      
+
+
+  -- | .var v', ma, h => by
+  --   simp only [matchVar, Option.mem_def] at h 
+  --   split at h
+  --   . split_ifs at h
+  --     subst v
+  --     simp only [ExprRec.denote]
+  --     split
+  --     . simp only [Option.some.injEq] at h 
+  --       subst h
+  --       simp_all
+  --     . simp_all
+  --   . simp at h
+  --     subst h
+  --     simp_all [ExprRec.denote]
+  -- | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .cst n, ma, h => by  
+  --   rw [ExprRec.denote]
+  --   unfold matchVar at h
+  --   cases hl : Lets.getIExpr lets v with
+  --   | none => simp [hl] at h
+  --   | some e => 
+  --     cases e with
+  --     | cst m => 
+  --       simp [hl] at h
+  --       rw [← Lets.denote_getIExpr hl]
+  --       simp only [IExpr.denote]
+  --       split_ifs at h; simp_all
+  --     | add v₁ v₂ => simp [hl] at h
+  -- | Γ₁, _, Γ₃, lets, _, v, varMap, s₁, .add lhs rhs, ma, h => by  
+  --   rw [ExprRec.denote]
+  --   unfold matchVar at h
+  --   cases hl : Lets.getIExpr lets v with
+  --   | none => simp [hl] at h
+  --   | some e => 
+  --     cases e with
+  --     | cst m => simp [hl] at h
+  --     | add v₁ v₂ => 
+  --       simp only [hl, bind_pure, Option.mem_def] at h 
+  --       rw [← Lets.denote_getIExpr hl]
+  --       simp only [IExpr.denote]
+  --       cases h₁ : matchVar lets v₁ lhs ma with
+  --       | none =>  simp [h₁, bind] at h
+  --       | some m₁ => 
+  --         cases h₂ : matchVar lets v₂ rhs m₁ with
+  --         | none => 
+  --           simp [bind] at h
+  --           rcases h with ⟨a, _, _⟩
+  --           simp_all
+  --         | some m₂ => 
+  --           simp only [h₁, Option.some_bind, h₂, Option.some.injEq, pure, bind] at h 
+  --           subst h
+  --           have ih₁ := denote_matchVar lets v₁ m₁ s₁ lhs ma h₁ 
+  --           have ih₂ := denote_matchVar lets v₂ m₂ s₁ rhs m₁ h₂
+  --           rw [← ih₁, ← ih₂]
+  --           congr 1
+  --           apply ExprRec.denote_eq_of_eq_on_vars
+  --           intro t' v' hv'
+  --           have h₁ := mem_matchVar h₁ hv'
+  --           have h₃ := subset_entries_matchVar h₂  
+  --           have h₂ := keys_subset_keys_of_entries_subset_entries
+  --             h₃ h₁
+  --           simp only [← lookup_isSome, ← mem_keys] at h₁ h₂
+  --           simp only [List.subset_def, Sigma.forall, 
+  --             ← mem_lookup_iff, Option.mem_def] at h₃ 
+  --           split
+  --           . rename_i h1
+  --             split
+  --             . rename_i h2
+  --               have := h₃ _ _ _ h2
+  --               simp_all
+  --             . simp_all
+  --           . simp_all
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
