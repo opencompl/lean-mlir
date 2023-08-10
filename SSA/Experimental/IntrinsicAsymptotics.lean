@@ -9,6 +9,7 @@ import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
+import Mathlib.Data.Matrix.Notation
 
 open Ctxt (Var VarSet)
 
@@ -16,33 +17,49 @@ open Ctxt (Var VarSet)
   # Datastructures 
 -/
 
-/-- A simple enumeration of operations -/
-inductive Op
-  | add
-  | cst (n : Nat)
+/-- A simple enumeration of operations, indexed by their return type -/
+inductive Op : (arity : Nat) → (Fin arity → Ty) → Ty → Type
+  | add : Op 2 ![.nat, .nat] .nat
+  | cst (n : Nat) : Op 0 ![] .nat
   deriving DecidableEq
 
-/-- Each operation has an associated list of operand type, so that the `i`-th operand to operation
-    `op` is required to be of type `op.operandTypes[i]` -/
-def Op.operandTypes : Op → List Ty
-  | .add => [.nat, .nat]
-  | .cst _ => []
+-- /-- Each operation has an associated list of operand type, so that the `i`-th operand to operation
+--     `op` is required to be of type `op.operandTypes[i]` -/
+-- def Op.operandTypes : Op t → List Ty
+--   | .add => [.nat, .nat]
+--   | .cst _ => []
 
 /-- The number of arguments that `op` takes -/
-abbrev Op.arity (op : Op) : Nat :=
-  op.operandTypes.length
+@[simp]
+abbrev Op.arity (_op : Op ar argTys t) : Nat :=
+  ar
 
-/-- The return type of a fully applied operation -/
-def Op.returnType : Op → Ty
-  | .add => .nat
-  | .cst _ => .nat
+def Op.decide_heq (op₁ : Op a₁ tys₁ t₁) (_op₂ : Op a₂ tys₂ t₂) : Bool :=
+  if ha : a₁ = a₂ then
+    tys₁ = ha ▸ tys₂ ∧ t₁ = t₂
+  else
+    false
 
-def Op.Semantics (o : Op) : Type :=
-  (args : (i : Fin o.arity) → o.operandTypes[i].toType) → o.returnType.toType
+  -- decidable_of_bool (Op.decide_heq op₁ op₂) <| by
+  --   simp [Op.decide_heq]
+  --   split_ifs
+  --   . simp
+  --   . simp
+  --     intro contra
+  --     have := type_eq_of_heq contra
+  --     injection this
+
+-- /-- The return type of a fully applied operation -/
+-- def Op.returnType : Op → Ty
+--   | .add => .nat
+--   | .cst _ => .nat
+
+-- def Op.Semantics (o : Op t) : Type :=
+--   (args : (i : Fin o.arity) → o.operandTypes[i].toType) → t.toType
 
 /-- A very simple intrinsically typed expression. -/
 inductive IExpr : Ctxt → Ty → Type
-  | mk (o : Op) (args : (i : Fin o.arity) → Γ.Var o.operandTypes[i]) : IExpr Γ o.returnType
+  | mk (o : Op arity argTys t) (args : (i : Fin arity) → Γ.Var (argTys i)) : IExpr Γ t
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
@@ -61,23 +78,24 @@ inductive Lets : Ctxt → Ctxt → Type where
   # Definitions
 -/
 
-def IExpr.op : IExpr Γ t → Op
-  | ⟨op, _⟩ => op
+def IExpr.op : IExpr Γ t → Σ ar argTys, Op ar argTys t
+  | ⟨op, _⟩ => ⟨_, _, op⟩
 
-def IExpr.args : (e : IExpr Γ t) → (i : Fin e.op.arity) → Γ.Var (e.op.operandTypes[i])
-  | ⟨_, args⟩ => args
+def IExpr.args : (e : IExpr Γ t) → 
+    Σ (arity : Nat) (argTys : Fin arity → Ty), (i : Fin arity) → Γ.Var (argTys i)
+  | ⟨_, args⟩ => ⟨_, _, args⟩
 
 @[simp]
-theorem IExpr.op_mk {Γ : Ctxt} (o : Op) (args : (i : Fin o.arity) → Γ.Var (o.operandTypes[i])) : 
-    IExpr.op (IExpr.mk o args) = o := by
+theorem IExpr.op_mk {Γ : Ctxt} (o : Op ar argTys t) (args : (i : Fin ar) → Γ.Var (argTys i)) : 
+    IExpr.op (IExpr.mk o args) = ⟨ar, argTys, o⟩ := by
   rfl
 
 @[simp]
-theorem IExpr.args_mk {Γ : Ctxt} (o : Op) (args : (i : Fin o.arity) → Γ.Var (o.operandTypes[i])) : 
-    IExpr.args (IExpr.mk o args) = args := by
+theorem IExpr.args_mk {Γ : Ctxt} (o : Op ar argTys t) (args : (i : Fin ar) → Γ.Var (argTys i)) : 
+    IExpr.args (IExpr.mk o args) = ⟨ar, argTys, args⟩ := by
   rfl
 
-def Op.denote : (o : Op) → o.Semantics
+def Op.denote : Op ar argTys t → ((i : Fin ar) → (argTys i).toType) → t.toType
   | .add => fun args => 
       let x : Nat := args ⟨0, by simp⟩
       let y : Nat := args ⟨1, by simp⟩
@@ -430,36 +448,40 @@ theorem _root_.HEq.funext' {α₁ α₂ : Sort u} {β₁ : α₁ → Sort v} {β
   funext x
   apply type_eq_β
 
+#check List.finRange_succ_eq_map
 
-open List in
-theorem _root_.List.finRange_succ_eq_map :
-    finRange (n+1) = ⟨0, by simp⟩ :: (finRange n |>.map Fin.succ) := by
-  simp [finRange, range_succ_eq_map, pmap_map, map_pmap]
-  congr
-  . simp only [Nat.succ_lt_succ_iff]
-  . apply HEq.funext
-    { simp [Nat.succ_lt_succ_iff] }
-    intro x
-    apply HEq.funext' 
-    <;> simp [Nat.succ_lt_succ_iff]     
-  . simp [Nat.succ_lt_succ_iff]  
+-- open List in
+-- theorem _root_.List.finRange_succ_eq_map :
+--     finRange (n+1) = ⟨0, by simp⟩ :: (finRange n |>.map Fin.succ) := by
+--   simp [finRange, range_succ_eq_map, pmap_map, map_pmap]
+--   congr
+--   . simp only [Nat.succ_lt_succ_iff]
+--   . apply HEq.funext
+--     { simp [Nat.succ_lt_succ_iff] }
+--     intro x
+--     apply HEq.funext' 
+--     <;> simp [Nat.succ_lt_succ_iff]     
+--   . simp [Nat.succ_lt_succ_iff]  
 
 
 /-- An induction principle -/
 theorem _root_.Fin.foldrMInd_induction {m} [Monad m] [LawfulMonad m] {n : Nat} {f : Fin n → α → m α} {init : α} 
-    (motive : m α → Sort u) 
-    (zero : motive <| pure init) 
-    (succ : ∀ ma i, motive ma → motive (ma >>= f i)) : 
-    motive (Fin.foldrMInd n f init) := by
+    (motive : m α → Nat → Sort u) 
+    (zero : motive (pure init) 0) 
+    (succ : ∀ ma i k, motive ma k → motive (ma >>= f i) (k+1)) : 
+    motive (Fin.foldrMInd n f init) n := by
   suffices ∀ n' m (h : n' + m = n),
-        motive (List.foldrM f init (List.map (fun (i : Fin n') => (i.addNat m).cast h) (List.finRange n')))
+      motive 
+        (List.foldrM f init (List.map (fun (i : Fin n') => (i.addNat m).cast h) (List.finRange n')))
+        n'
     by
       specialize this n 0 rfl
       simp [Fin.addNat, Fin.cast] at this
       exact this
   intro n' m h
   induction n' generalizing m
-  next => exact zero
+  next => 
+    exact zero
   next n' ih =>
     simp [List.finRange_succ_eq_map, Function.comp]
     apply succ
@@ -471,10 +493,10 @@ theorem _root_.Fin.foldrMInd_induction {m} [Monad m] [LawfulMonad m] {n : Nat} {
     apply ih
 
 theorem _root_.Fin.foldrInd_induction {n : Nat} {f : Fin n → α → α} {init : α} 
-    (motive : α → Sort u) 
-    (zero : motive init) 
-    (succ : ∀ a i, motive a → motive (f i a)) : 
-    motive (List.finRange n |>.foldr f init) := by
+    (motive : α → Nat → Sort u) 
+    (zero : motive init 0) 
+    (succ : ∀ a i k, motive a k → motive (f i a) (k+1)) : 
+    motive (List.finRange n |>.foldr f init) n := by
   rw [List.foldr_eq_foldrM]
   apply Fin.foldrMInd_induction _ zero succ
 
@@ -494,16 +516,15 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
     | .lete matchLets _, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
         let w := ⟨w, by simp_all[Ctxt.snoc]⟩
         matchVar lets v matchLets w ma
-    | .lete matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
-        let e ← lets.getIExpr v      
-        if e_eq : matchExpr.op = e.op then
+    | .lete (t:=t') matchLets ⟨op₁, args₁⟩, ⟨0, hw⟩ => do -- w† = Var.last
+        have t_eq : t' = t := by simp[Ctxt.snoc] at hw; exact hw
+        let ⟨op₂, args₂⟩ ← lets.getIExpr v
+        if e_eq : matchExpr.op = t_eq ▸ e.op then
           let f := (fun (i : Fin (e.op.arity)) ma =>
             let v : Var _ e.op.operandTypes[i] := e.args i
-            let i' : Fin matchExpr.op.arity := e_eq ▸ i
+            let i' : Fin matchExpr.op.arity := cast (by subst t_eq; simp_all) i
             have : matchExpr.op.operandTypes[i'] = e.op.operandTypes[i] := by 
-              simp
-              congr
-              apply eqRec_heq (φ:=fun x => Fin (List.length (Op.operandTypes x))) e_eq.symm i
+              subst t_eq; simp; congr; apply cast_heq
             let w : Var _ (Op.operandTypes (IExpr.op e))[i] := this ▸ matchExpr.args i'
             matchVar lets v matchLets w ma
           )
@@ -517,7 +538,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
             exact if v = v₂
               then some ma
               else none
-        | none => some (AList.insert ⟨_, w⟩ v ma) 
+        | none => some (AList.insert ⟨_, w⟩ v ma)
 
 open AList
 
@@ -590,14 +611,14 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
     . simp at h
       split_ifs at h
       revert varMap
-      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) => 
+      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) _ => 
         ∀ varMap, optMap = some varMap → ma.entries ⊆ varMap.entries
       )
       . intro _ h x hx
         injection h with h
         subst h
         exact hx
-      . intro opt i h_sub varMap h x hx
+      . intro opt i _ h_sub varMap h x hx
         simp only [Bind.bind, Option.bind] at h 
         split at h <;> try contradiction
         next map₀ =>
@@ -646,7 +667,7 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
     simp [matchVar]
     apply denote_matchVar_sub
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
-    rename_i t'
+    rename_i Δ_out' t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
     subst this
     simp [matchVar, Bind.bind, Option.bind]
@@ -654,24 +675,42 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
     split at h_mv <;> try contradiction
     next e h_getIExpr =>
       rcases e with ⟨op₁, args₁⟩      
-      simp only [h_getIExpr, bind_pure, Option.mem_def] at h_mv
+      rcases matchExpr with ⟨op₂, args₂⟩
+      simp only [h_getIExpr, bind_pure, Option.mem_def, IExpr.op_mk, IExpr.args_mk] at h_mv
       simp at h_mv
-      rw [←Lets.denote_getIExpr h_getIExpr]
-      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]      
+      rw [←Lets.denote_getIExpr h_getIExpr]      
+      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]
       split_ifs at h_mv with e_eq
-      revert varMap₁
-      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) => 
-        ∀ {varMap₁ : Mapping Δ_in Γ_out}, 
-            varMap₁.entries ⊆ varMap₂.entries → optMap = some varMap₁ →
-            (match t, matchExpr,
-                Lets.denote matchLets fun t' v' =>
-                  match lookup { fst := t', snd := v' } varMap₂ with
-                  | some v' => Lets.denote lets s₁ v'
-                  | none => default with
-              | .(Op.returnType op), IExpr.mk op args, Γv => Op.denote op fun i => Γv (args i)) =
-              match t, e, Lets.denote lets s₁ with
-              | .(Op.returnType op), IExpr.mk op args, Γv => Op.denote op fun i => Γv (args i)
+      cases e_eq
+      congr
+      funext i
+      
+      skip
+
+      stop
+      revert i varMap₁ args₁ args₂
+      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) k => 
+        {varMap₁ : Mapping Δ_in Γ_out} →
+        varMap₁.entries ⊆ varMap₂.entries → 
+        (args₁ : (i : Fin k) → Var Γ_out (Op.operandTypes op₁)[i]) →
+        Lets.getIExpr lets v = some (IExpr.mk op₁ args₁) →
+        (args₂ : (i : Fin k) → Var Δ_out' (Op.operandTypes op₁)[i]) →
+        optMap = some varMap₁ →
+        (i : Fin k) → 
+          Lets.denote matchLets
+            (fun t' v' =>
+              match lookup { fst := t', snd := v' } varMap₂ with
+              | some v' => Lets.denote lets s₁ (cast (by simp) v')
+              | none => default)
+            (args₂ i) =
+          Lets.denote lets s₁ (args₁ i)
       )
+      . intro varMap₁ h_sub h_eq
+        injection h_eq with h_eq
+        subst h_eq
+        rfl
+        
+        
 
       stop
       next =>
