@@ -67,6 +67,16 @@ def IExpr.op : IExpr Γ t → Op
 def IExpr.args : (e : IExpr Γ t) → (i : Fin e.op.arity) → Γ.Var (e.op.operandTypes[i])
   | ⟨_, args⟩ => args
 
+@[simp]
+theorem IExpr.op_mk {Γ : Ctxt} (o : Op) (args : (i : Fin o.arity) → Γ.Var (o.operandTypes[i])) : 
+    IExpr.op (IExpr.mk o args) = o := by
+  rfl
+
+@[simp]
+theorem IExpr.args_mk {Γ : Ctxt} (o : Op) (args : (i : Fin o.arity) → Γ.Var (o.operandTypes[i])) : 
+    IExpr.args (IExpr.mk o args) = args := by
+  rfl
+
 def Op.denote : (o : Op) → o.Semantics
   | .add => fun args => 
       let x : Nat := args ⟨0, by simp⟩
