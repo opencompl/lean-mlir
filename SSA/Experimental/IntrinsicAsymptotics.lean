@@ -393,6 +393,82 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
 def ICom.vars : ICom Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
+
+/-- Fold a monadic function `f` over the sequence `n-1`, `n-2`,..., `0` as terms of `Fin n` -/
+def _root_.Fin.foldrMInd {m} [Monad m] (n : Nat) (f : Fin n → α → m α) (init : α) : m α :=
+  List.finRange n |>.foldrM f init
+
+
+/-- `funext` for heterogenous equality of functions with defeq argument types -/
+theorem _root_.HEq.funext {α : Sort u} {β₁ β₂ : α → Sort v} {f₁ : (x : α) → β₁ x} {f₂ : (x : α) → β₂ x}
+    (type_eq : β₁ = β₂) :
+    (∀ x, HEq (f₁ x) (f₂ x)) → HEq f₁ f₂ := by
+  cases type_eq
+  intro h
+  apply heq_of_eq
+  funext x
+  apply eq_of_heq <| h x
+
+/-- `funext` for heterogenous equality of functions with propositionally equal argument types -/
+theorem _root_.HEq.funext' {α₁ α₂ : Sort u} {β₁ : α₁ → Sort v} {β₂ : α₂ → Sort v} 
+    {f₁ : (x : α₁) → β₁ x} {f₂ : (x : α₂) → β₂ x}
+    (type_eq_α : α₁ = α₂)
+    (type_eq_β : ∀ x, β₁ x = (β₂ <| type_eq_α ▸ x)) :
+    (∀ x, HEq (f₁ x) (f₂ <| type_eq_α ▸ x)) → HEq f₁ f₂ := by
+  cases type_eq_α
+  apply HEq.funext
+  funext x
+  apply type_eq_β
+
+
+open List in
+theorem _root_.List.finRange_succ_eq_map :
+    finRange (n+1) = ⟨0, by simp⟩ :: (finRange n |>.map Fin.succ) := by
+  simp [finRange, range_succ_eq_map, pmap_map, map_pmap]
+  congr
+  . simp only [Nat.succ_lt_succ_iff]
+  . apply HEq.funext
+    { simp [Nat.succ_lt_succ_iff] }
+    intro x
+    apply HEq.funext' 
+    <;> simp [Nat.succ_lt_succ_iff]     
+  . simp [Nat.succ_lt_succ_iff]  
+
+
+/-- An induction principle -/
+theorem _root_.Fin.foldrMInd_induction {m} [Monad m] [LawfulMonad m] {n : Nat} {f : Fin n → α → m α} {init : α} 
+    (motive : m α → Sort u) 
+    (zero : motive <| pure init) 
+    (succ : ∀ ma i, motive ma → motive (ma >>= f i)) : 
+    motive (Fin.foldrMInd n f init) := by
+  suffices ∀ n' m (h : n' + m = n),
+        motive (List.foldrM f init (List.map (fun (i : Fin n') => (i.addNat m).cast h) (List.finRange n')))
+    by
+      specialize this n 0 rfl
+      simp [Fin.addNat, Fin.cast] at this
+      exact this
+  intro n' m h
+  induction n' generalizing m
+  next => exact zero
+  next n' ih =>
+    simp [List.finRange_succ_eq_map, Function.comp]
+    apply succ
+    have : (fun (i : Fin n') => i.succ.addNat m |>.cast h) = (fun (i : Fin n') => 
+        i.addNat (m+1) |>.cast (by rw[←h, Nat.add_comm m 1, ←Nat.add_assoc])) := by
+      funext i
+      simp[Fin.cast, Nat.add_comm m 1, ←Nat.add_assoc]
+    rw[this]
+    apply ih
+
+theorem _root_.Fin.foldrInd_induction {n : Nat} {f : Fin n → α → α} {init : α} 
+    (motive : α → Sort u) 
+    (zero : motive init) 
+    (succ : ∀ a i, motive a → motive (f i a)) : 
+    motive (List.finRange n |>.foldr f init) := by
+  rw [List.foldr_eq_foldrM]
+  apply Fin.foldrMInd_induction _ zero succ
+
+
 /-- 
   Given two sequences of lets, `lets` and `matchExpr`, 
   and variables that indicate an expression, of the same type, in each sequence, 
@@ -411,27 +487,19 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
     | .lete matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
         let e ← lets.getIExpr v      
         if e_eq : matchExpr.op = e.op then
-          -- have : 
-          List.finRange e.op.arity
-            |>.foldlM (fun ma i =>
-                let v : Var _ e.op.operandTypes[i] := e.args i
-                let i' := e_eq ▸ i
-                have : matchExpr.op.operandTypes.get (e_eq ▸ i) = e.op.operandTypes.get i := by 
-                  simp
-                let w : Var _ (Op.operandTypes (IExpr.op e))[i] := matchExpr.args i'
-                matchVar lets v matchLets (w) ma
-              ) ma
+          let f := (fun (i : Fin (e.op.arity)) ma =>
+            let v : Var _ e.op.operandTypes[i] := e.args i
+            let i' : Fin matchExpr.op.arity := e_eq ▸ i
+            have : matchExpr.op.operandTypes[i'] = e.op.operandTypes[i] := by 
+              simp
+              congr
+              apply eqRec_heq (φ:=fun x => Fin (List.length (Op.operandTypes x))) e_eq.symm i
+            let w : Var _ (Op.operandTypes (IExpr.op e))[i] := this ▸ matchExpr.args i'
+            matchVar lets v matchLets w ma
+          )
+          Fin.foldrMInd e.op.arity f ma
         else
           none
-          -- | .cst n, .cst m =>
-          --     if n = m then some ma
-          --     else none
-          -- | .add lhs rhs, .add v₁ v₂ => do
-          --     let map₁ ← matchVar lets v₁ matchLets lhs ma
-          --     let map₂ ← matchVar lets v₂ matchLets rhs map₁
-          --     return map₂
-          -- | _, _ =>
-          --     none
     | .nil, w => -- The match expression is just a free (meta) variable
         match ma.lookup ⟨_, w⟩ with
         | some v₂ =>
@@ -510,26 +578,23 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
     split at h
     . contradiction
     . simp at h
-      split at h
-      . split_ifs at h
-        rw[Option.some_inj.mp h]
-        intro x hx
-        apply hx
-      . split at h
-        . contradiction
-        next map₂ h_map₂ =>
-          simp at h
-          split at h
-          . contradiction
-          next map₁ h_map₁ =>
-            simp [Pure.pure] at h
-            subst h
-            intro x hx
-            apply subset_entries_matchVar h_map₁
-            apply subset_entries_matchVar h_map₂
-            apply hx
-      . contradiction
-
+      split_ifs at h
+      revert varMap
+      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) => 
+        ∀ varMap, optMap = some varMap → ma.entries ⊆ varMap.entries
+      )
+      . intro _ h x hx
+        injection h with h
+        subst h
+        exact hx
+      . intro opt i h_sub varMap h x hx
+        simp only [Bind.bind, Option.bind] at h 
+        split at h <;> try contradiction
+        next map₀ =>
+          simp only at h
+          apply subset_entries_matchVar h
+          apply h_sub map₀ rfl
+          apply hx
 
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
@@ -578,10 +643,27 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
     intro h_mv h_sub
     split at h_mv <;> try contradiction
     next e h_getIExpr =>
+      rcases e with ⟨op₁, args₁⟩      
       simp only [h_getIExpr, bind_pure, Option.mem_def] at h_mv
+      simp at h_mv
       rw [←Lets.denote_getIExpr h_getIExpr]
-      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]
-      split at h_mv <;> try contradiction
+      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]      
+      split_ifs at h_mv with e_eq
+      revert varMap₁
+      apply Fin.foldrMInd_induction (motive := fun (optMap : Option (Mapping _ _)) => 
+        ∀ {varMap₁ : Mapping Δ_in Γ_out}, 
+            varMap₁.entries ⊆ varMap₂.entries → optMap = some varMap₁ →
+            (match t, matchExpr,
+                Lets.denote matchLets fun t' v' =>
+                  match lookup { fst := t', snd := v' } varMap₂ with
+                  | some v' => Lets.denote lets s₁ v'
+                  | none => default with
+              | .(Op.returnType op), IExpr.mk op args, Γv => Op.denote op fun i => Γv (args i)) =
+              match t, e, Lets.denote lets s₁ with
+              | .(Op.returnType op), IExpr.mk op args, Γv => Op.denote op fun i => Γv (args i)
+      )
+
+      stop
       next =>
         split_ifs at h_mv
         injection h_mv with h_mv
