@@ -1,4 +1,5 @@
 import Mathlib.Data.Erased
+import Mathlib.Data.Finset.Basic
 
 /-- A very simple type universe. -/
 inductive Ty
@@ -12,19 +13,34 @@ def Ty.toType
   | bool => Bool
 
 def Ctxt : Type :=
-  Erased <| List Ty
+  -- Erased <| List Ty
+  List Ty
 
 namespace Ctxt
 
-def empty : Ctxt := Erased.mk []
+-- def empty : Ctxt := Erased.mk []
+def empty : Ctxt := []
 
 instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
 
+@[match_pattern]
 def snoc : Ctxt → Ty → Ctxt :=
-  fun tl hd => do return hd :: (← tl)
+  -- fun tl hd => do return hd :: (← tl)
+  fun tl hd => hd :: tl
+
+/-- Turn a list of types into a context -/
+@[coe, simp]
+def ofList : List Ty → Ctxt :=
+  -- Erased.mk
+  fun Γ => Γ 
+
+@[simp]
+noncomputable def get? : Ctxt → Nat → Option (Ty) :=
+  List.get?
+  
 
 def Var (Γ : Ctxt) (t : Ty) : Type :=
-  { i : Nat // Γ.out.get? i = some t }
+  { i : Nat // Γ.get? i = some t }
 
 namespace Var
 
@@ -32,6 +48,7 @@ instance : DecidableEq (Var Γ t) := by
   delta Var
   infer_instance
 
+@[match_pattern]
 def last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
   ⟨0, by simp [snoc, List.get?]⟩
 
@@ -44,7 +61,19 @@ def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
 in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
 def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
-  ⟨var.1+1, by cases var; simp_all [snoc]⟩
+  ⟨var.1+1, var.2⟩
+
+@[simp]
+theorem zero_eq_last {Γ : Ctxt} {t : Ty} (h) :
+    ⟨0, h⟩ = last Γ t :=
+  rfl
+
+@[simp]
+theorem succ_eq_toSnoc {Γ : Ctxt} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
+    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
+  rfl
+
+
   
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
@@ -159,6 +188,26 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.
 
 
 
+/- ## VarSet -/
+
+/-- A `Ty`-indexed family of sets of variables in context `Γ` -/
+def VarSet (Γ : Ctxt) : Type := 
+  (t' : Ty) → Finset (Γ.Var t')
+
+namespace VarSet
+
+/-- A `VarSet` with exactly one variable `v` -/
+@[simp]
+def ofVar {Γ : Ctxt} (v : Γ.Var t) : VarSet Γ :=
+  fun t' => if ty_eq : t = t' then {ty_eq ▸ v} else {}
+
+@[simp]
+instance : EmptyCollection (VarSet Γ) := ⟨fun _ => ∅⟩
+
+@[simp]
+instance : Union (VarSet Γ) := ⟨fun S₁ S₂ t => S₁ t ∪ S₂ t⟩
+
+end VarSet
 
 
 
@@ -180,7 +229,7 @@ end Var
 
 @[simp]
 abbrev Diff.Valid (Γ₁ Γ₂ : Ctxt) (d : Nat) : Prop :=
-  ∀ {i t}, Γ₁.out.get? i = some t → Γ₂.out.get? (i+d) = some t
+  ∀ {i t}, Γ₁.get? i = some t → Γ₂.get? (i+d) = some t
 
 /--
   If `Γ₁` is a prefix of `Γ₂`, 
@@ -210,7 +259,7 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
     simp [snoc, List.get?] at h_get_d
-    rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1]
+    rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
