@@ -400,8 +400,8 @@ theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : 
     ⟨k, v⟩ ∈ s.entries → k ∈ s := by
   intro h
   rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys] at h |-
-  clear nd;
+  simp [(· ∈ ·), keys] at h ⊢ 
+  clear nd
   induction h
   next    => apply List.Mem.head
   next ih => apply List.Mem.tail _ ih
@@ -410,7 +410,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
     k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
   intro h
   rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys, List.keys] at h |-
+  simp [(· ∈ ·), keys, List.keys] at h ⊢ 
   clear nd;
   induction entries
   next    => contradiction
@@ -422,13 +422,6 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
     next h =>
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
-
-theorem _root_.AList.keys_subset_keys_of_entries_subset_entries 
-    {α : Type _} {β : α → Type _} 
-    {s₁ s₂ : AList β} (h : s₁.entries ⊆ s₂.entries) : s₁.keys ⊆ s₂.keys := by
-  intro k hk
-  rcases mem_entries_of_mem hk with ⟨v, he⟩
-  apply mem_of_mem_entries <| h he
 
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
@@ -485,7 +478,8 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
+theorem denote_matchVar_of_subset 
+    {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation} 
     {ma : Mapping Δ_in Γ_out} :
@@ -520,7 +514,7 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
       simp only [insert_entries, List.find?, List.mem_cons, true_or]
   | .lete matchLets _, ⟨w+1, h⟩ => by
     simp [matchVar]
-    apply denote_matchVar_sub
+    apply denote_matchVar_of_subset
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
@@ -548,7 +542,8 @@ theorem denote_matchVar_sub {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t}
             injection h_mv with h_mv
             subst h_mv
             simp [Lets.denote, Ctxt.Var.casesOn, IExpr.denote]
-            rw [denote_matchVar_sub h_matchVar₂ h_sub, denote_matchVar_sub h_matchVar₁]
+            rw [denote_matchVar_of_subset h_matchVar₂ h_sub, 
+                denote_matchVar_of_subset h_matchVar₁]
             . intro x hx
               apply h_sub
               apply subset_entries_matchVar h_matchVar₂
@@ -566,7 +561,7 @@ theorem denote_matchVar {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {varMap : 
         | none => exact default 
         ) w = 
       lets.denote s₁ v :=
-  fun h => denote_matchVar_sub h (fun _ => id)
+  fun h => denote_matchVar_of_subset h (fun _ => id)
 
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar 
