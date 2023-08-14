@@ -390,8 +390,8 @@ theorem get?_shl (x : Bitvec n) (i j : ℕ) :
       else none := by
   unfold shl
   rcases x with ⟨x, rfl⟩
-  simp only [toList_cong, Vector.toList_append, Vector.toList_drop, Vector.toList_mk, Bool.forall_bool,
-    add_eq_zero, and_imp, Vector.replicate]
+  simp only [Vector.shiftLeftFill, Vector.congr, Vector.append, Vector.drop, 
+    Vector.replicate, ge_iff_le, Vector.toList_mk]
   split_ifs with h₁ h₂
   { rw [List.get?_append, List.get?_drop]
     . rw [List.length_drop]
@@ -411,8 +411,8 @@ theorem get?_ushr (x : Bitvec n) (i j : ℕ) :
       else none := by
   unfold ushr
   rcases x with ⟨x, rfl⟩
-  simp only [fillShr, Vector.replicate, ge_iff_le, toList_cong, Vector.toList_append, 
-    Vector.toList_mk, Vector.toList_take, Bool.forall_bool, tsub_eq_zero_iff_le]
+  simp only [Vector.shiftRightFill, Vector.congr, Vector.append, 
+    Vector.replicate, ge_iff_le, Vector.take, Vector.toList_mk]
   split_ifs with h₁ h₂
   { rw [List.get?_append, List.get?_eq_get, List.get_replicate]
     . simp [*] at *
