@@ -191,25 +191,17 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.
 /- ## VarSet -/
 
 /-- A `Ty`-indexed family of sets of variables in context `Γ` -/
-def VarSet (Γ : Ctxt) : Type := 
-  (t' : Ty) → Finset (Γ.Var t')
+abbrev VarSet (Γ : Ctxt) : Type := 
+  Finset (Σ t, Γ.Var t)
 
 namespace VarSet
 
 /-- A `VarSet` with exactly one variable `v` -/
 @[simp]
 def ofVar {Γ : Ctxt} (v : Γ.Var t) : VarSet Γ :=
-  fun t' => if ty_eq : t = t' then {ty_eq ▸ v} else {}
-
-@[simp]
-instance : EmptyCollection (VarSet Γ) := ⟨fun _ => ∅⟩
-
-@[simp]
-instance : Union (VarSet Γ) := ⟨fun S₁ S₂ t => S₁ t ∪ S₂ t⟩
+  {⟨_, v⟩} 
 
 end VarSet
-
-
 
 namespace Var
 
