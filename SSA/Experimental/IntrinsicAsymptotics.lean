@@ -21,7 +21,7 @@ inductive Op : List Ty → Ty → Type
 
 inductive Tuple (A : Ty → Type*) : List Ty → Type _
   | nil : Tuple A []
-  | cons {t : Ty} {l : List Ty} : A t → Tuple A l → Tuple A (t::l) 
+  | cons {t : Ty} {l : List Ty} : A t → Tuple A l → Tuple A (t::l)
 
 /-- A very simple intrinsically typed expression. -/
 structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
@@ -29,10 +29,7 @@ structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
   (op : Op args ty)
   (args : Tuple (Ctxt.Var Γ) sig)
 
-def Tuple.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) : 
-    ∀ {l : List Ty}, Tuple A l → Tuple B l
-  | [], .nil => .nil
-  | t::_, .cons a as => .cons (f t a) (map f as) 
+
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
@@ -51,6 +48,15 @@ inductive Lets : Ctxt → Ctxt → Type where
   # Definitions
 -/
 
+def Tuple.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) : 
+    ∀ {l : List Ty}, Tuple A l → Tuple B l
+  | [], .nil => .nil
+  | t::_, .cons a as => .cons (f t a) (map f as) 
+
+def Tuple.foldl {A : Ty → Type*} {B : Type*} (f : ∀ (t : Ty), B → A t → B) : 
+    ∀ {l : List Ty}, B → Tuple A l → B
+  | [], b, .nil => b
+  | t::_, b, .cons a as => foldl f (f t b a) as
 
 @[reducible]
 def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Tuple Ty.toType l → t.toType
@@ -345,41 +351,60 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt} : {lets : Lets Γ₁ Γ₂} �
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
+def Tuple.toVarSet : {l : List Ty} → (T : Tuple (Ctxt.Var Γ) l) → Γ.VarSet 
+  | [], .nil => fun _ => ∅
+  | t::_, .cons v vs => fun t' => 
+    if h : t' = t 
+    then h ▸ insert v (vs.toVarSet t)
+    else (vs.toVarSet t')
+
+def Tuple.toFinset {A B : Ty → Type*} [∀ t, DecidableEq (B t)]
+    (T : Tuple A l) (f : ∀ (t : Ty), A t → Finset (B t)) : 
+    ∀ (t : Ty), Finset (B t) :=
+  T.foldl (fun t s a t' => if h : t = t' then (s t') ∪ h ▸ f _ a
+    else s t') (fun _ => ∅)
+
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
 def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
   | .nil, v => VarSet.ofVar v
   | .lete lets e, v => by
       cases v using Ctxt.Var.casesOn with
       | toSnoc v => exact lets.vars v
-      | last => exact match e with 
-        | .cst _    => ∅ 
-        | .add x y  => lets.vars x ∪ lets.vars y
+      | last => exact e.args.toFinset (fun _ v => lets.vars v _)
 
-theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t)
+-- theorem Op.denote_eq_of_eq_on_vars {l : List Ty} {t : Ty} 
+--     (op : Op l t) (s₁ s₂ : Tuple Ty.toType l) 
+--     (h : ∀ t v, v ∈ v.toVarSet t → s₁ v = s₂ v) :
+--     op.denote v = op.denote v := by
+
+  
+theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) 
+    (v : Γ_out.Var t)
     {s₁ s₂ : Γ_in.Valuation} 
     (h : ∀ t w, w ∈ lets.vars v t → s₁ w = s₂ w) :
     lets.denote s₁ v = lets.denote s₂ v := by
-  induction lets
+  induction lets generalizing t
   next => 
     simp [vars] at h
     simp [denote, h _ v]
   next lets e ih =>
     cases v using Ctxt.Var.casesOn
-    . simp [vars] at h
-      simp[denote]
+    . simp only [vars, eq_rec_constant, VarSet.instEmptyCollectionVarSet, 
+        Var.casesOn_toSnoc] at h 
+      simp [denote]
       apply ih _ h
     . simp [denote, IExpr.denote]
-      cases e
-      . simp [vars] at h
-        simp
-        congr 1
-        <;> apply ih
-        <;> intro _ _ hw
-        <;> apply h
-        . apply Or.inl hw
-        . apply Or.inr hw
-      . simp
+      congr
+      ext t v
+      apply ih
+      intro t' v' hv'
+      simp [vars] at h
+      
+      
+      
 
+          
+           
 def ICom.vars : ICom Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
