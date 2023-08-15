@@ -13,11 +13,26 @@ open Ctxt (Var VarSet)
   # Datastructures 
 -/
 
+inductive Op : List Ty → Ty → Type
+  | add : Op [.nat, .nat] .nat
+  | beq : Op [.nat, .nat] .bool
+  | cst : ℕ → Op [] .nat
+  deriving DecidableEq
+
+inductive Tuple (A : Ty → Type*) : List Ty → Type _
+  | nil : Tuple A []
+  | cons {t : Ty} {l : List Ty} : A t → Tuple A l → Tuple A (t::l) 
+
 /-- A very simple intrinsically typed expression. -/
-inductive IExpr : Ctxt → Ty → Type
-  | add (a b : Γ.Var .nat) : IExpr Γ .nat
-  /-- Nat literals. -/
-  | cst (n : Nat) : IExpr Γ .nat
+structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
+  (sig : List Ty)
+  (op : Op args ty)
+  (args : Tuple (Ctxt.Var Γ) sig)
+
+def Tuple.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) : 
+    ∀ {l : List Ty}, Tuple A l → Tuple B l
+  | [], .nil => .nil
+  | t::_, .cons a as => .cons (f t a) (map f as) 
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt → Ty → Type where
@@ -36,9 +51,15 @@ inductive Lets : Ctxt → Ctxt → Type where
   # Definitions
 -/
 
-def IExpr.denote : IExpr Γ ty → (Γv : Γ.Valuation) → ty.toType
-  | .cst n, _ => n
-  | .add a b, Γv => Γv a + Γv b
+
+@[reducible]
+def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Tuple Ty.toType l → t.toType
+  | _, _, .cst n, _ => n
+  | _, _, .add, .cons a (.cons b .nil) => a + b
+  | _, _, .beq, .cons a (.cons b .nil) => a == b
+
+def IExpr.denote (e : IExpr Γ ty) (Γv : Γ.Valuation) : ty.toType :=
+  e.op.denote <| e.args.map (fun _ v => Γv v)
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
@@ -55,10 +76,16 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
     | toSnoc v =>
       exact e.denote ll v
 
-def IExpr.changeVars (varsMap : Γ.Hom Γ') : 
-    (e : IExpr Γ ty) → IExpr Γ' ty
-  | .cst n => .cst n
-  | .add a b => .add (varsMap a) (varsMap b)
+def IExpr.changeVars (varsMap : Γ.Hom Γ') 
+    (e : IExpr Γ ty) : IExpr Γ' ty :=
+  { sig := e.sig
+    op := e.op
+    args := e.args.map (fun t v => varsMap v) }
+
+theorem Tuple.map_map {A B C : Ty → Type*} {l : List Ty} (t : Tuple A l)
+    (f : ∀ (t : Ty), A t → B t) (g : ∀ (t : Ty), B t → C t) :
+    (t.map f).map g = t.map (fun t v => g t (f t v)) := by
+  induction t <;> simp_all [Tuple.map]
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
@@ -67,8 +94,8 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
     e.denote (fun t v => Γ'v (varsMap v)) := by
-  induction e generalizing Γ'v <;> simp 
-    [IExpr.denote, IExpr.changeVars, *]
+  cases e 
+  simp [IExpr.denote, IExpr.changeVars, Tuple.map_map]
 
 def ICom.changeVars 
     (varsMap : Γ.Hom Γ') : 
