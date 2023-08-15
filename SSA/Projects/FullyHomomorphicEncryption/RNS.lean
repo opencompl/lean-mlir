@@ -63,4 +63,4 @@ abbrev RNSMod {m : Nat} (Q : RNS m) := HList (fun i : Fin m => ZMod (Q.get i)) (
 theorem RNS.natMod_bijective {m : Nat} (Q : RNS m)
   : Function.Bijective (fun (x : Fin Q.toModulus) => x.val % Q) := sorry
 
-theorem RNS.chineseRemainder {m : Nat} (Q : RNS m) (h : Q.pairwiseCoprime) : RNSMod Q ≃+* ZMod Q.toModulus := sorry -- use
+--theorem RNS.chineseRemainder {m : Nat} (Q : RNS m) (h : Q.pairwiseCoprime) : RNSMod Q ≃+* ZMod Q.toModulus := sorry -- use

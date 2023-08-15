@@ -1,6 +1,6 @@
 import Mathlib.RingTheory.Polynomial.Quotient
-import Mathlib.Data.Zmod.Basic
 import SSA.Core.WellTypedFramework
+import SSA.Projects.FullyHomomorphicEncryption.RNS
 
 open Polynomial -- for R[X] notation
 
@@ -37,63 +37,28 @@ def add (ct1 ct2 : R q n) : R q n := sorry -- ([ct1 [0] + ct2 [0]]q , [ct1 [1] +
 end SH
 end FV
 
-inductive BaseType
-  | nat : BaseType
-  | poly (q : Nat) (n : Nat) : BaseType
-  deriving DecidableEq
+namespace NTT
 
-instance : Inhabited BaseType := ⟨BaseType.nat⟩
-instance : Goedel BaseType where
-toType := fun
-  | .nat => Nat
-  | .poly q n => (R q n)
+-- should we use this instead?
+-- https://github.com/madvorak/lean-fft/blob/main/NumberTheoreticTransform.lean
 
-abbrev UserType := SSA.UserType BaseType
+def baseFun {l : Nat} (T : Nat → Nat → Nat → Nat × Nat) (input : RNS (2^l)) : RNS (2^l) := Id.run do
+  let w := 1
+  let mut x := input
+  for i in List.range l do
+    let ζ := w^(2^i)
+    let t := 2^(l-i-1)
+    for j in List.range (2^i) do
+      let n := 2*j*t
+      for k in List.range t do
+        let u := x.get (n + k)
+        let v := x.get (n + k + t)
+        let (u', v') := T u v ζ^k
+        x := x.set (n + k) u'
+        x := x.set (n + k + t) v'
+  return x
 
--- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
-inductive Op
-| add : Op
-| add_poly (q : Nat) (n : Nat) : Op
-| const : Nat → Op 
-| const_poly : R q n → Op
-| encrypt : Op
-| decrypt : Op
---deriving Repr, DecidableEq
+def forward {l : Nat} : RNS (2^l) → RNS (2^l) := baseFun (fun x y u => (x + u*y, x - u*y))
+def backward {l : Nat} : RNS (2^l) → RNS (2^l) := baseFun (fun x y u => (x + y, u*(x - y)))
 
-@[simp, reducible]
-def argUserType : Op q n  → UserType
-| Op.add => .pair (.base BaseType.nat) (.base BaseType.nat)
-| Op.add_poly q n => .pair (.base $ BaseType.poly q n) (.base $ BaseType.poly q n)
-| Op.const _ => .unit
-| Op.const_poly _ => .unit
-| Op.encrypt => .base $ BaseType.nat
-| Op.decrypt => .base $ BaseType.poly q n 
-
-@[simp, reducible]
-def outUserType : Op q n → UserType
-| Op.add => .base BaseType.nat
-| Op.add_poly q n => .base $ BaseType.poly q n
-| Op.const _ => .base BaseType.nat
-| Op.const_poly _ => .base $ BaseType.poly q n
-| Op.encrypt => .base $ BaseType.poly q n
-| Op.decrypt => .base BaseType.nat
-
-@[simp]
-def rgnDom : Op q n → UserType := fun _ => .unit
-@[simp]
-def rgnCod : Op q n → UserType := fun _ => .unit
-
-variable (a b : R q n)
-
-@[simp]
-noncomputable def eval (o : Op q n)
-  (arg: Goedel.toType (argUserType q n o))
-  (_rgn : (Goedel.toType (rgnDom q n o) → Goedel.toType (rgnCod q n o))) :
-  Goedel.toType (outUserType q n o) :=
-    match o with
-    | Op.add => (fun args : Nat × Nat => args.1 + args.2) arg
-    | Op.add_poly q n => (fun args : (R q n) × (R q n) => args.1 + args.2) arg
-    | Op.const n => n
-    | Op.const_poly a => a
-    | Op.encrypt => sorry
-    | Op.decrypt => sorry
+end NTT
