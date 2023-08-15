@@ -13,11 +13,21 @@ open Ctxt (Var VarSet)
   # Datastructures 
 -/
 
-inductive Op : List Ty → Ty → Type
-  | add : Op [.nat, .nat] .nat
-  | beq : Op [.nat, .nat] .bool
-  | cst : ℕ → Op [] .nat
+inductive Op :  Type
+  | add : Op
+  | beq : Op 
+  | cst : ℕ → Op
   deriving DecidableEq
+
+def Op.sig : Op → List Ty
+  | .add => [.nat, .nat]
+  | .beq => [.nat, .nat]
+  | .cst _ => []
+
+def Op.outTy : Op → Ty
+  | .add => .nat
+  | .beq => .bool
+  | .cst _ => .nat
 
 inductive Tuple (A : Ty → Type*) : List Ty → Type _
   | nil : Tuple A []
@@ -25,10 +35,9 @@ inductive Tuple (A : Ty → Type*) : List Ty → Type _
 
 /-- A very simple intrinsically typed expression. -/
 structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
-  (sig : List Ty)
-  (op : Op args ty)
-  (args : Tuple (Ctxt.Var Γ) sig)
-
+  (op : Op)
+  (ty_eq : ty = op.outTy)
+  (args : Tuple (Ctxt.Var Γ) op.sig)
 
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
@@ -59,13 +68,14 @@ def Tuple.foldl {A : Ty → Type*} {B : Type*} (f : ∀ (t : Ty), B → A t → 
   | t::_, b, .cons a as => foldl f (f t b a) as
 
 @[reducible]
-def Op.denote : (l : List Ty) → (t : Ty) → Op l t → Tuple Ty.toType l → t.toType
-  | _, _, .cst n, _ => n
-  | _, _, .add, .cons a (.cons b .nil) => a + b
-  | _, _, .beq, .cons a (.cons b .nil) => a == b
+def Op.denote : (op : Op) → 
+    Tuple Ty.toType op.sig → op.outTy.toType
+  | .cst n, _ => n
+  | .add, .cons a (.cons b .nil) => a + b
+  | .beq, .cons a (.cons b .nil) => a == b
 
-def IExpr.denote (e : IExpr Γ ty) (Γv : Γ.Valuation) : ty.toType :=
-  e.op.denote <| e.args.map (fun _ v => Γv v)
+def IExpr.denote : {ty : Ty} → (e : IExpr Γ ty) → (Γv : Γ.Valuation) → ty.toType 
+  | _, ⟨op, Eq.refl _, args⟩, Γv => op.denote <| args.map (fun _ v => Γv v)
 
 def ICom.denote : ICom Γ ty → (Γv : Γ.Valuation) → ty.toType
   | .ret e, Γv => Γv e
@@ -82,11 +92,9 @@ def Lets.denote : Lets Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
     | toSnoc v =>
       exact e.denote ll v
 
-def IExpr.changeVars (varsMap : Γ.Hom Γ') 
-    (e : IExpr Γ ty) : IExpr Γ' ty :=
-  { sig := e.sig
-    op := e.op
-    args := e.args.map (fun t v => varsMap v) }
+def IExpr.changeVars (varsMap : Γ.Hom Γ') :
+    {ty : Ty} → (e : IExpr Γ ty) → IExpr Γ' ty 
+  | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩ 
 
 theorem Tuple.map_map {A B C : Ty → Type*} {l : List Ty} (t : Tuple A l)
     (f : ∀ (t : Ty), A t → B t) (g : ∀ (t : Ty), B t → C t) :
@@ -100,7 +108,7 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (Γ'v : Γ'.Valuation) : 
     (e.changeVars varsMap).denote Γ'v = 
     e.denote (fun t v => Γ'v (varsMap v)) := by
-  cases e 
+  rcases e with ⟨_, rfl, _⟩
   simp [IExpr.denote, IExpr.changeVars, Tuple.map_map]
 
 def ICom.changeVars 
@@ -421,7 +429,8 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out)
       simp [denote]
       apply ih
       simpa
-    . simp [denote, IExpr.denote]
+    . rcases e with ⟨op, rfl, args⟩
+      simp [denote, IExpr.denote]
       congr 1
       apply Tuple.map_eq_of_eq_on_vars 
       intro v h'
@@ -443,25 +452,31 @@ def ICom.vars : ICom Γ t → Γ.VarSet :=
   If this succeeds, return the mapping. 
 -/
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty} 
-    (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t) (matchLets : Lets Δ_in Δ_out) (w : Δ_out.Var t) 
+    (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t) (matchLets : Lets Δ_in Δ_out) 
+    (w : Δ_out.Var t) 
     (ma : Mapping Δ_in Γ_out := ∅) : 
     Option (Mapping Δ_in Γ_out) := 
   match matchLets, w with
     | .lete matchLets _, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
         let w := ⟨w, by simp_all[Ctxt.snoc]⟩
         matchVar lets v matchLets w ma
-    | .lete matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
-        let e ← lets.getIExpr v
-        match matchExpr, e with 
-          | .cst n, .cst m =>
-              if n = m then some ma
-              else none
-          | .add lhs rhs, .add v₁ v₂ => do
-              let map₁ ← matchVar lets v₁ matchLets lhs ma
-              let map₂ ← matchVar lets v₂ matchLets rhs map₁
-              return map₂
-          | _, _ =>
-              none
+    | @Lets.lete _ Γ₂ _ matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
+        let ⟨op, _, args⟩ ← lets.getIExpr v
+        let ⟨op', _, args'⟩ := matchExpr 
+        if hs : op = op'
+        then
+          -- hack to make a termination proof work
+          let matchVar' := fun t vₗ vᵣ ma => 
+              matchVar (t := t) lets vₗ matchLets vᵣ ma
+          let rec matchArg : ∀ {l : List Ty} 
+              (_Tₗ : Tuple (Var Γ_out) l) (_Tᵣ :  Tuple (Var Γ₂) l), 
+              Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
+            | _, .nil, .nil, ma => some ma
+            | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
+                let ma ← matchVar' _ vₗ vᵣ ma
+                matchArg vsₗ vsᵣ ma
+          matchArg args (hs ▸ args') ma
+        else none
     | .nil, w => -- The match expression is just a free (meta) variable
         match ma.lookup ⟨_, w⟩ with
         | some v₂ =>
