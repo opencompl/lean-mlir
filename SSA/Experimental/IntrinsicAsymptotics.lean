@@ -358,11 +358,52 @@ def Tuple.toVarSet : {l : List Ty} → (T : Tuple (Ctxt.Var Γ) l) → Γ.VarSet
     then h ▸ insert v (vs.toVarSet t)
     else (vs.toVarSet t')
 
-def Tuple.toFinset {A B : Ty → Type*} [∀ t, DecidableEq (B t)]
-    (T : Tuple A l) (f : ∀ (t : Ty), A t → Finset (B t)) : 
-    ∀ (t : Ty), Finset (B t) :=
-  T.foldl (fun t s a t' => if h : t = t' then (s t') ∪ h ▸ f _ a
+def Tuple.vars 
+    (T : Tuple (Ctxt.Var Γ) l) : ∀ (t : Ty), Finset (Ctxt.Var Γ t) :=
+  T.foldl (fun t s a t' => if h : t = t' then (s t') ∪ h ▸ {a}
     else s t') (fun _ => ∅)
+
+@[simp]
+theorem Tuple.vars_nil (t : Ty) : 
+    (Tuple.nil : Tuple (Ctxt.Var Γ) []).vars t = ∅ := by
+  simp [Tuple.vars, Tuple.foldl]
+
+@[simp]
+theorem Tuple.vars_cons {t t' : Ty} {l : List Ty} 
+    (v : Ctxt.Var Γ t) (T : Tuple (Ctxt.Var Γ) l) :
+    (Tuple.cons v T).vars t' = 
+      if h : t = t' then (h ▸ {v}) ∪ (T.vars t') else T.vars t' := by
+  rw [Tuple.vars, Tuple.vars]
+  generalize hs : (fun x => (∅ : Finset (Γ.Var x))) = s
+  clear hs
+  induction T generalizing s t v with
+  | nil =>
+    simp [foldl]
+    split_ifs
+    · subst t; simp [foldl, Finset.union_comm]
+    · rfl
+  | cons v' T ih => 
+    rename_i t2 _
+    conv_rhs => rw [foldl]
+    rw [← ih]
+    rw [foldl,foldl, foldl]
+    have : (fun t' : Ty =>
+      if h : t2 = t' then 
+        (if h : t = t' then s t' ∪ h ▸ {v} else s t') ∪ h ▸ {v'}
+      else if h : t = t' then s t' ∪ h ▸ {v} else s t') =
+      (fun t' =>
+        if h : t = t' then 
+          (if h : t2 = t' then s t' ∪ h ▸ {v'} else s t') ∪ h ▸ {v}
+        else if h : t2 = t' then s t' ∪ h ▸ {v'} else s t') := by
+      funext t'
+      split_ifs
+      · subst t t2 ; simp_all [Finset.union_assoc, Finset.union_comm,
+          Finset.union_left_comm]
+      · subst t2 ; simp_all [Finset.union_assoc, Finset.union_comm,
+          Finset.union_left_comm]
+      · subst t ; simp
+      · rfl
+    rw [this] 
 
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
 def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
@@ -370,13 +411,26 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
   | .lete lets e, v => by
       cases v using Ctxt.Var.casesOn with
       | toSnoc v => exact lets.vars v
-      | last => exact e.args.toFinset (fun _ v => lets.vars v _)
+      -- this is wrong
+      | last => exact fun t => (e.args.vars t).biUnion (fun v => lets.vars v t)
 
--- theorem Op.denote_eq_of_eq_on_vars {l : List Ty} {t : Ty} 
---     (op : Op l t) (s₁ s₂ : Tuple Ty.toType l) 
---     (h : ∀ t v, v ∈ v.toVarSet t → s₁ v = s₂ v) :
---     op.denote v = op.denote v := by
-
+theorem Tuple.map_eq_of_eq_on_vars {A : Ty → Type*}
+    {T : Tuple (Ctxt.Var Γ) l}
+    {s₁ s₂ : ∀ (t), Γ.Var t → A t}
+    (h : ∀ t v, v ∈ T.vars t → s₁ _ v = s₂ _ v) :
+    T.map s₁ = T.map s₂ := by
+  induction T with
+  | nil => simp [Tuple.map]
+  | cons v T ih => 
+    rw [Tuple.map, Tuple.map, ih, h]
+    · simp [Tuple.vars_cons]
+    · intros
+      apply h 
+      rw [Tuple.vars_cons]
+      split_ifs with h
+      · subst h
+        simp_all
+      · simp_all 
   
 theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out) 
     (v : Γ_out.Var t)
@@ -394,12 +448,16 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out)
       simp [denote]
       apply ih _ h
     . simp [denote, IExpr.denote]
-      congr
-      ext t v
+      congr 1
+      apply Tuple.map_eq_of_eq_on_vars 
+      intro t v h'
       apply ih
       intro t' v' hv'
-      simp [vars] at h
-      
+      apply h
+      rw [vars, Var.casesOn_last]
+      simp
+        
+        
       
       
 
