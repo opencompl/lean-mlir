@@ -580,10 +580,26 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
         exact subset_entries_matchVar_matchArg 
           (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
 
-
-
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
+
+theorem denote_matchVar_matchArg_of_subset
+    {Γ_out Δ_in : Ctxt} {Γ₂ : Ctxt}
+    {matchVar' : (t : Ty) → Var Γ_out t → Var Γ₂ t → 
+      Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
+    {l : List Ty} →
+    {args₁ : Tuple (Var Γ_out) l} → 
+    {args₂ : Tuple (Var Γ₂) l} → 
+    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} → 
+    (hmatchVar_sub : ∀ vMap (t : Ty) (vₗ vᵣ) ma, 
+        vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
+    (f₁ : (t : Ty) → Var Γ_out t → Ty.toType t) → 
+    (f₂ : (t : Ty) → Var Γ₂ t → Ty.toType  t) → 
+    (hvarMap : varMap₁ ∈ matchVar.matchArg Γ₂ matchVar' args₁ args₂ ma) → 
+    Tuple.map f₂ args₂ = Tuple.map (B := Ty.toType) f₁ args₁
+  | _, .nil, .nil => by simp [Tuple.map]
+  | _, .cons v₁ T₁, .cons v₂ T₂ => _
 
 theorem denote_matchVar_of_subset 
     {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
@@ -592,7 +608,7 @@ theorem denote_matchVar_of_subset
     {ma : Mapping Δ_in Γ_out} :
     {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t} → 
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
-    (h_sub : varMap₁.entries ⊆ varMap₂.entries)  → 
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     matchLets.denote (fun t' v' => by
         match varMap₂.lookup ⟨_, v'⟩  with
         | some v' => exact lets.denote s₁ v'
@@ -628,33 +644,27 @@ theorem denote_matchVar_of_subset
     subst this
     simp [matchVar, Bind.bind, Option.bind]
     intro h_mv h_sub
-    split at h_mv <;> try contradiction
-    next e h_getIExpr =>
-      simp only [h_getIExpr, bind_pure, Option.mem_def] at h_mv
-      rw [←Lets.denote_getIExpr h_getIExpr]
-      simp only [IExpr.denote, Lets.denote, Ctxt.Var.casesOn_last, eq_rec_constant]
-      split at h_mv <;> try contradiction
-      next =>
-        split_ifs at h_mv
-        injection h_mv with h_mv
-      next =>
-        split at h_mv
-        next => contradiction
-        next map₁ h_matchVar₁ =>
-          simp at h_mv
-          split at h_mv
-          next => contradiction
-          next map₂ h_matchVar₂ =>
-            simp at h_mv
-            injection h_mv with h_mv
-            subst h_mv
-            simp [Lets.denote, Ctxt.Var.casesOn, IExpr.denote]
-            rw [denote_matchVar_of_subset h_matchVar₂ h_sub, 
-                denote_matchVar_of_subset h_matchVar₁]
-            . intro x hx
-              apply h_sub
-              apply subset_entries_matchVar h_matchVar₂
-              apply hx
+    split at h_mv
+    · simp_all
+    · rename_i e he
+      rcases e with ⟨op₁, rfl, args₁⟩
+      rcases matchExpr with ⟨op₂, h, args₂⟩
+      dsimp at h_mv
+      split_ifs at h_mv
+      · subst op₁
+        simp [Lets.denote, IExpr.denote]
+        rw [← Lets.denote_getIExpr he]
+        clear he
+        dsimp [IExpr.denote]
+        congr 1
+        
+        
+      
+        
+        
+        
+      
+
 
 theorem denote_matchVar {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation} 
