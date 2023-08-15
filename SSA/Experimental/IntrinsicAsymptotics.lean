@@ -597,9 +597,25 @@ theorem denote_matchVar_matchArg_of_subset
     (f₁ : (t : Ty) → Var Γ_out t → Ty.toType t) → 
     (f₂ : (t : Ty) → Var Γ₂ t → Ty.toType  t) → 
     (hvarMap : varMap₁ ∈ matchVar.matchArg Γ₂ matchVar' args₁ args₂ ma) → 
-    Tuple.map f₂ args₂ = Tuple.map (B := Ty.toType) f₁ args₁
-  | _, .nil, .nil => by simp [Tuple.map]
-  | _, .cons v₁ T₁, .cons v₂ T₂ => _
+     Tuple.map f₁ args₁ = Tuple.map f₂ args₂
+  | _, .nil, .nil, _, _, _ => by simp [Tuple.map]
+  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁, varMap₂ => by
+    intro h h_sub f₁ f₂ hvarMap
+    simp [Tuple.map]
+    simp [matchVar.matchArg, pure, bind] at hvarMap
+    rcases hvarMap with ⟨ma', h₁, h₂⟩
+    have h3 := h _ _ _ _ _ h₁
+    have h4 := subset_entries_matchVar_matchArg h h₂
+    refine ⟨sorry, ?_⟩
+    apply denote_matchVar_matchArg_of_subset (hvarMap := h₂)
+      (h_sub := h_sub)
+    intro vMap t vₗ vᵣ ma2 hvMap
+    exact h _ _ _ _ _ hvMap
+
+      
+      
+
+
 
 theorem denote_matchVar_of_subset 
     {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
