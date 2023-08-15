@@ -451,40 +451,43 @@ def ICom.vars : ICom Γ t → Γ.VarSet :=
   the original two variables are semantically equivalent.
   If this succeeds, return the mapping. 
 -/
+
+--{lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} :
+--    {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t}
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty} 
-    (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t) (matchLets : Lets Δ_in Δ_out) 
-    (w : Δ_out.Var t) 
-    (ma : Mapping Δ_in Γ_out := ∅) : 
-    Option (Mapping Δ_in Γ_out) := 
-  match matchLets, w with
-    | .lete matchLets _, ⟨w+1, h⟩ => -- w† = Var.toSnoc w
-        let w := ⟨w, by simp_all[Ctxt.snoc]⟩
-        matchVar lets v matchLets w ma
-    | @Lets.lete _ Γ₂ _ matchLets matchExpr, ⟨0, _⟩ => do -- w† = Var.last
-        let ⟨op, _, args⟩ ← lets.getIExpr v
-        let ⟨op', _, args'⟩ := matchExpr 
-        if hs : op = op'
-        then
-          -- hack to make a termination proof work
-          let matchVar' := fun t vₗ vᵣ ma => 
-              matchVar (t := t) lets vₗ matchLets vᵣ ma
-          let rec matchArg : ∀ {l : List Ty} 
-              (_Tₗ : Tuple (Var Γ_out) l) (_Tᵣ :  Tuple (Var Γ₂) l), 
-              Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
-            | _, .nil, .nil, ma => some ma
-            | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
-                let ma ← matchVar' _ vₗ vᵣ ma
-                matchArg vsₗ vsᵣ ma
-          matchArg args (hs ▸ args') ma
-        else none
-    | .nil, w => -- The match expression is just a free (meta) variable
-        match ma.lookup ⟨_, w⟩ with
-        | some v₂ =>
-          by
-            exact if v = v₂
-              then some ma
-              else none
-        | none => some (AList.insert ⟨_, w⟩ v ma) 
+    (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t) :
+    (matchLets : Lets Δ_in Δ_out) → 
+    (w : Δ_out.Var t) → 
+    (ma : Mapping Δ_in Γ_out := ∅) →  
+    Option (Mapping Δ_in Γ_out)
+  | .lete matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
+      let w := ⟨w, by simp_all[Ctxt.snoc]⟩
+      matchVar lets v matchLets w ma
+  | @Lets.lete _ Γ₂ _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
+      let ⟨op, _, args⟩ ← lets.getIExpr v
+      let ⟨op', _, args'⟩ := matchExpr 
+      if hs : op = op'
+      then
+        -- hack to make a termination proof work
+        let matchVar' := fun t vₗ vᵣ ma => 
+            matchVar (t := t) lets vₗ matchLets vᵣ ma
+        let rec matchArg : ∀ {l : List Ty} 
+            (_Tₗ : Tuple (Var Γ_out) l) (_Tᵣ :  Tuple (Var Γ₂) l), 
+            Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
+          | _, .nil, .nil, ma => some ma
+          | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
+              let ma ← matchVar' _ vₗ vᵣ ma
+              matchArg vsₗ vsᵣ ma
+        matchArg args (hs ▸ args') ma
+      else none
+  | .nil, w, ma => -- The match expression is just a free (meta) variable
+      match ma.lookup ⟨_, w⟩ with
+      | some v₂ =>
+        by
+          exact if v = v₂
+            then some ma
+            else none
+      | none => some (AList.insert ⟨_, w⟩ v ma) 
 
 open AList
 
@@ -517,6 +520,27 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
+theorem subset_entries_matchVar_matchArg 
+    {Γ_out Δ_in : Ctxt} {Γ₂ : Ctxt}
+    {matchVar' : (t : Ty) → Var Γ_out t → Var Γ₂ t → 
+      Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
+    {l : List Ty} → {argsₗ : Tuple (Var Γ_out) l} → 
+    {argsᵣ : Tuple (Var Γ₂) l} → {ma : Mapping Δ_in Γ_out} → 
+    {varMap : Mapping Δ_in Γ_out} → 
+    (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma, 
+        vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
+    (hvarMap : varMap ∈ matchVar.matchArg Γ₂ matchVar' argsₗ argsᵣ ma) → 
+    ma.entries ⊆ varMap.entries 
+  | _, .nil, .nil, ma, varMap, _, h => by
+    simp only [matchVar.matchArg, Option.mem_def, Option.some.injEq] at h 
+    subst h
+    exact Set.Subset.refl _
+  | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, hmatchVar, h => by
+    simp [matchVar.matchArg, bind, pure] at h
+    rcases h with ⟨ma', h₁, h₂⟩
+    refine List.Subset.trans ?_
+      (subset_entries_matchVar_matchArg hmatchVar h₂)
+    exact hmatchVar _ _ _ _ _ h₁
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
 theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
@@ -546,27 +570,16 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
     simp [matchVar, Bind.bind, Option.bind]
     intro h
     split at h
-    . contradiction
-    . simp at h
-      split at h
-      . split_ifs at h
-        rw[Option.some_inj.mp h]
-        intro x hx
-        apply hx
-      . split at h
-        . contradiction
-        next map₂ h_map₂ =>
-          simp at h
-          split at h
-          . contradiction
-          next map₁ h_map₁ =>
-            simp [Pure.pure] at h
-            subst h
-            intro x hx
-            apply subset_entries_matchVar h_map₁
-            apply subset_entries_matchVar h_map₂
-            apply hx
-      . contradiction
+    · simp at h
+    · rename_i e he
+      rcases e with ⟨op, rfl, args⟩
+      dsimp at h
+      split_ifs at h with hop
+      · subst op
+        dsimp at h
+        exact subset_entries_matchVar_matchArg 
+          (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
+
 
 
 instance (t : Ty) : Inhabited t.toType := by
