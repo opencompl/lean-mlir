@@ -705,6 +705,42 @@ theorem denote_matchVar {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} {varMap : 
       lets.denote s₁ v :=
   denote_matchVar_of_subset (List.Subset.refl _)
 
+theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
+  simp (config := { arith := true }); exact Nat.zero_le _
+
+@[simp]
+theorem zero_eq_zero : (Zero.zero : ℕ) = 0 := rfl
+
+attribute [simp] lt_one_add_add
+
+macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith := true}))
+
+mutual
+
+theorem mem_matchVar_matchArg 
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt} {lets : Lets Γ_in Γ_out}
+    {matchLets : Lets Δ_in Δ_out} :
+    {l : List Ty} → {argsₗ : Tuple (Var Γ_out) l} → 
+    {argsᵣ : Tuple (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} → 
+    {varMap : Mapping Δ_in Γ_out} →
+    (hvarMap : varMap ∈ matchVar.matchArg Δ_out
+        (fun t vₗ vᵣ ma => 
+            matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →  
+    ∀ {t' v'}, ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) → 
+      ⟨t', v'⟩ ∈ varMap
+  | _, .nil, .nil, ma, varMap, h => by simp
+  | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, h => by
+    simp [matchVar.matchArg, bind, pure] at h
+    rcases h with ⟨ma', h₁, h₂⟩
+    simp only [Tuple.vars_cons, Finset.biUnion_insert, Finset.mem_union, 
+      Finset.mem_biUnion, Sigma.exists]
+    rintro (h | ⟨a, b, hab⟩)
+    · exact AList.keys_subset_keys_of_entries_subset_entries 
+        (subset_entries_matchVar_matchArg h₂)
+        (mem_matchVar h₁ h)
+    · exact mem_matchVar_matchArg h₂ 
+        (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)  
+
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar 
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
@@ -735,32 +771,31 @@ theorem mem_matchVar
       apply mem_matchVar h
     next =>
       simp [Lets.vars]
-      intro _ _ _ h_v'
-      split at h <;> try contradiction
-      simp [Finset.mem_union.mp] at h_v'
-      simp [matchVar, Bind.bind, Option.bind] at h
-      split at h <;> try contradiction
-      next e' h_getIExpr =>
-        simp at h
-        repeat
-          split at h <;> try contradiction
-          simp at h
-        rename_i h_IExpr_eq _ _ map₁ h_map₁ _ _ map₂ h_map₂
-        injection h with h
-        injection h_IExpr_eq with h₁ h₂
-        subst h h₁ h₂
-        rcases h_v' with hv' | hv'
-        . exact AList.keys_subset_keys_of_entries_subset_entries 
-            (subset_entries_matchVar h_map₂) (mem_matchVar h_map₁ hv')
-        . exact mem_matchVar h_map₂ hv'
-        
-      
+      intro _ _ hl h_v'
+      simp [matchVar, pure, bind] at h
+      rcases h with ⟨⟨ope, h, args⟩, he₁, he₂⟩
+      subst t
+      split_ifs at he₂ with h 
+      · dsimp at h
+        dsimp
+        apply @mem_matchVar_matchArg (hvarMap := he₂)
+        simp
+        refine ⟨_, _, ?_, h_v'⟩
+        rcases matchE  with ⟨_, _, _⟩
+        dsimp at h
+        subst h
+        exact hl
 
+end
+termination_by 
+  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
+  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
+      
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty} 
     (lets : Lets Γ_in Γ_out) (v : Γ_out.Var t) (matchLets : Lets Δ_in Δ_out) (w : Δ_out.Var t)
-    (hvars : ∀ t (v : Δ_in.Var t), v ∈ matchLets.vars w t) : 
+    (hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w) : 
     Option (Δ_in.Hom Γ_out) := do
   match hm : matchVar lets v matchLets w with
   | none => none
@@ -777,7 +812,7 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt}
     {t : Ty} {v : Γ_out.Var t} 
     {matchLets : Lets Δ_in Δ_out} 
     {w : Δ_out.Var t}
-    {hvars : ∀ t (v : Δ_in.Var t), v ∈ matchLets.vars w t} 
+    {hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w} 
     {map : Δ_in.Hom Γ_out}
     (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Γ_in.Valuation) :
     matchLets.denote (fun t' v' => lets.denote s₁ (map v')) w = 
@@ -858,7 +893,7 @@ theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Γ₁ t}
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
 def rewriteAt (lhs rhs : ICom Γ₁ t₁) 
-    (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.vars t)
+    (hlhs : ∀ t (v : Γ₁.Var t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : ICom Γ₂ t₂) :
     Option (ICom Γ₂ t₂) := do
   let ⟨Γ₃, lets, target', t', vm⟩ ← splitProgramAt pos target
@@ -871,7 +906,7 @@ def rewriteAt (lhs rhs : ICom Γ₁ t₁)
   else none
 
 theorem denote_rewriteAt (lhs rhs : ICom Γ₁ t₁)
-    (hlhs : ∀ t (v : Γ₁.Var t), v ∈ lhs.vars t)
+    (hlhs : ∀ t (v : Γ₁.Var t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : ICom Γ₂ t₂)
     (hl : lhs.denote = rhs.denote)
     (rew : ICom Γ₂ t₂)
@@ -910,14 +945,14 @@ structure PeepholeRewrite (Γ : List Ty) (t : Ty) where
   rhs : ICom (.ofList Γ) t
   correct : lhs.denote = rhs.denote
 
-#synth Decidable (?v ∈ ICom.vars ?com ?t)
+#synth Decidable (?v ∈ ICom.vars ?com)
 
 instance {Γ : List Ty} {t' : Ty} {lhs : ICom (.ofList Γ) t'} :
-    Decidable (∀ (t : Ty) (v : Ctxt.Var (.ofList Γ) t), v ∈ lhs.vars t) :=   
+    Decidable (∀ (t : Ty) (v : Ctxt.Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=   
   decidable_of_iff 
     (∀ (i : Fin Γ.length), 
       let v : Ctxt.Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.get?_eq_get, Ctxt.ofList]⟩
-      v ∈ lhs.vars (Γ.get i)) <|  by
+      ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
   . intro h t v
     rcases v with ⟨i, hi⟩
@@ -930,7 +965,7 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom (.ofList Γ) t'} :
 
 def rewritePeepholeAt (pr : PeepholeRewrite Γ t) 
     (pos : ℕ) (target : ICom Γ₂ t₂) :
-    (ICom Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), v ∈ pr.lhs.vars t then
+    (ICom Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
       match rewriteAt pr.lhs pr.rhs hlhs pos target
       with 
         | some res => res
