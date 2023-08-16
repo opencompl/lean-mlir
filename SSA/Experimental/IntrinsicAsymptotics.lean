@@ -583,49 +583,47 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
 instance (t : Ty) : Inhabited t.toType := by
   cases t <;> dsimp [Ty.toType] <;> infer_instance
 
-theorem denote_matchVar_matchArg_of_subset
+theorem denote_matchVar_matchArg
     {Γ_out Δ_in : Ctxt} {Γ₂ : Ctxt}
-    {matchVar' : (t : Ty) → Var Γ_out t → Var Γ₂ t → 
+    {matchVar' : (t : Ty) → Var Γ_out t → Var Γ₂ t →
       Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
     {l : List Ty} →
-    {args₁ : Tuple (Var Γ_out) l} → 
-    {args₂ : Tuple (Var Γ₂) l} → 
-    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} → 
-    (hmatchVar_sub : ∀ vMap (t : Ty) (vₗ vᵣ) ma, 
-        vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
+    {args₁ : Tuple (Var Γ_out) l} →
+    {args₂ : Tuple (Var Γ₂) l} →
+    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    (f₁ : (t : Ty) → Var Γ_out t → Ty.toType t) → 
-    (f₂ : (t : Ty) → Var Γ₂ t → Ty.toType  t) → 
-    (hvarMap : varMap₁ ∈ matchVar.matchArg Γ₂ matchVar' args₁ args₂ ma) → 
-     Tuple.map f₁ args₁ = Tuple.map f₂ args₂
-  | _, .nil, .nil, _, _, _ => by simp [Tuple.map]
-  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁, varMap₂ => by
-    intro h h_sub f₁ f₂ hvarMap
+    (f₁ : (t : Ty) → Var Γ_out t → Ty.toType t) →
+    (f₂ : (t : Ty) → Var Γ₂ t → Ty.toType t) →
+    (hf : ∀ t v₁ v₂ (ma : Mapping Δ_in Γ_out) (ma'),
+      (ma ∈ matchVar' t v₁ v₂ ma') →  
+      ma.entries ⊆ varMap₂.entries → f₂ t v₂ = f₁ t v₁) → 
+    (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma, 
+        vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
+    (hvarMap : varMap₁ ∈ matchVar.matchArg Γ₂ matchVar' args₁ args₂ ma) →
+      Tuple.map f₂ args₂ = Tuple.map f₁ args₁
+  | _, .nil, .nil, _, _ => by simp [Tuple.map]
+  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
+    intro h_sub f₁ f₂ hf hmatchVar hvarMap
     simp [Tuple.map]
     simp [matchVar.matchArg, pure, bind] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
-    have h3 := h _ _ _ _ _ h₁
-    have h4 := subset_entries_matchVar_matchArg h h₂
-    refine ⟨sorry, ?_⟩
-    apply denote_matchVar_matchArg_of_subset (hvarMap := h₂)
-      (h_sub := h_sub)
-    intro vMap t vₗ vᵣ ma2 hvMap
-    exact h _ _ _ _ _ hvMap
-
-      
-      
-
-
+    refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
+    · refine List.Subset.trans ?_
+        (subset_entries_matchVar_matchArg hmatchVar h₂)
+      · exact Set.Subset.refl _
+    apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
+    · exact h_sub
+    · exact hmatchVar 
 
 theorem denote_matchVar_of_subset 
     {lets : Lets Γ_in Γ_out} {v : Γ_out.Var t} 
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation} 
     {ma : Mapping Δ_in Γ_out} :
-    {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t} → 
+    {matchLets : Lets Δ_in Δ_out} → {w : Δ_out.Var t} →
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries) → 
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
-    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    matchLets.denote (fun t' v' => by
+      matchLets.denote (fun t' v' => by
         match varMap₂.lookup ⟨_, v'⟩  with
         | some v' => exact lets.denote s₁ v'
         | none => exact default 
@@ -633,7 +631,7 @@ theorem denote_matchVar_of_subset
       lets.denote s₁ v
   | .nil, w => by
     simp[Lets.denote, matchVar]
-    intro h_mv h_sub
+    intro h_sub h_mv 
     split at h_mv
     next x v₂ heq =>
       split_ifs at h_mv
@@ -644,13 +642,13 @@ theorem denote_matchVar_of_subset
         rw[mem_lookup_iff.mpr ?_]
         apply h_sub
         apply mem_lookup_iff.mp
-        apply heq
+        exact heq
     next =>
       rw [mem_lookup_iff.mpr]
-      apply h_sub
       injection h_mv with h_mv
-      rw[←h_mv]
-      simp only [insert_entries, List.find?, List.mem_cons, true_or]
+      apply h_sub 
+      subst h_mv 
+      simp
   | .lete matchLets _, ⟨w+1, h⟩ => by
     simp [matchVar]
     apply denote_matchVar_of_subset
@@ -659,7 +657,7 @@ theorem denote_matchVar_of_subset
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
     subst this
     simp [matchVar, Bind.bind, Option.bind]
-    intro h_mv h_sub
+    intro h_sub h_mv
     split at h_mv
     · simp_all
     · rename_i e he
@@ -673,6 +671,21 @@ theorem denote_matchVar_of_subset
         clear he
         dsimp [IExpr.denote]
         congr 1
+        apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub 
+        · intro t v₁ v₂ ma ma' hmem hma
+          apply denote_matchVar_of_subset hma
+          apply hmem
+        · exact (fun _ _ _ _ _ h => subset_entries_matchVar h) 
+
+          
+          
+            
+          
+          
+          
+            
+            
+          
         
         
       
