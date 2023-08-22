@@ -38,9 +38,19 @@ axiom R.representative {q n} : R q n → (ZMod q)[X]
 --axiom R.canonicalRep_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (R.representative a)) = a
 
 
-noncomputable def R.coeff (a : R q n) (i : Nat) : Nat := 
-  let zmodCoef := Polynomial.coeff a.representative i 
-  zmodCoef.val
+noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q := 
+  Polynomial.coeff a.representative i 
+
+noncomputable def R.monomial {q n : Nat} (i : Nat) (c : ZMod q) : R q n :=
+  R.fromPoly (Polynomial.monomial i c)
+
+set_option maxHeartbeats 10000000 in
+noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q n :=
+  let coeffIdxs := List.range (endIdx - startIdx)
+  let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
+  let accum : R q n → (ZMod q × Nat) → R q n := fun poly (c,i) => poly + R.monomial i c
+  -- coeffIdxs |>.foldl accum R.zero
+  default
 
 inductive BaseType
   | nat : BaseType
@@ -90,7 +100,6 @@ def rgnDom : Op → UserType := fun _ => .unit
 def rgnCod : Op → UserType := fun _ => .unit
 
 variable (a b : R q n)
-
 @[simp]
 noncomputable def eval (o : Op)
   (arg: Goedel.toType (argUserType o))
@@ -101,13 +110,11 @@ noncomputable def eval (o : Op)
     | Op.sub q n => (fun args : R q n × R q n => args.1 - args.2) arg
     | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg
     | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg
-    | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2) arg
+    | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2) arg |>.val
     -- sum of get_coeff i * X^i
     | Op.extract_slice q n => (fun args : R q n × Nat × Nat => 
-      -- let (a, i, j) := args
-      -- let coeffIdxs := List.range (j - i + 1)
-      -- let coeffs := coeffIdxs.map (fun k => a.coeff (i + k))
-      -- coeffs.zip coeffIdxs
-      --  |>.foldl (fun acc (c,i) => acc + (R.fromPoly (monomial i ↑c))) R.zero) arg
-      sorry
-
+        let (a, startIdx, endIdx) := args
+        let coeffIdxs := List.range (endIdx - startIdx)
+        let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
+        coeffs.zip coeffIdxs
+         |>.foldl (init := R.zero) (fun poly (c,i) => poly + (R.fromPoly (monomial i c))) ) arg
