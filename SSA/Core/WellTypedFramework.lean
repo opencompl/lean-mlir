@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import SSA.Experimental.HList
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.AList
 
@@ -123,13 +124,13 @@ end UserType
       every operation `o : Op` of type `toType (argUserType o) → (toType (rgnDom o) → toType (rgnCod o)) → toType (outUserType o)`.
 -/
 class OperationTypes (Op : Type) (β : outParam Type) where
-  argUserType : Op → UserType β
+  argUserType : Op → List (UserType β)
   rgnDom : Op → UserType β
   rgnCod : Op → UserType β
   outUserType : Op → UserType β
 
 class TypedUserSemantics (Op : Type) (β : outParam Type) [Goedel β] extends OperationTypes Op β where
-  eval : ∀ (o : Op), toType (argUserType o) → (toType (rgnDom o) →
+  eval : ∀ (o : Op), HList toType (argUserType o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outUserType o)
 
 inductive Context (β : Type) : Type
@@ -190,7 +191,8 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   /-- (fst, snd, third) -/
   | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple T₁ T₂ T₃))
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op (o : Op) (arg : Γ.Var (argUserType o)) (rgn : TSSA Op Context.empty (.REGION (rgnDom o) (rgnCod o))) :
+  | op (o : Op) (arg : HList Γ.Var (argUserType o)) 
+      (rgn : TSSA Op Context.empty (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
   | rgn (arg : Var) {dom cod : UserType β} (body : TSSA Op (Γ.snoc arg dom) (.STMT cod)) :
@@ -205,7 +207,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
 @[simp]
 def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
   {Γ : Context β} → {i : TSSAIndex β} → TSSA Op Γ i → (e : EnvC Γ) → i.eval
-| Γ, _, .assign lhs rhs rest, e =>
+| _, _, .assign _ rhs rest, e =>
     rest.eval (fun
       | _, Context.Var.prev v => e v
       | _, Context.Var.last => rhs.eval e)
@@ -214,21 +216,21 @@ def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
 | _, _, .triple fst snd third, e => mkTriple (e fst) (e snd) (e third)
 | _, _, TSSA.op o arg rg, e =>
   -- | TODO: (e arg) seems to get reduced?
-  TypedUserSemantics.eval o (e arg) (rg.eval EnvC.empty)
+  TypedUserSemantics.eval o (arg.map e) (rg.eval EnvC.empty)
 | _, _, .rgn _arg body, e => fun arg =>
     body.eval (fun _ v =>
       match v with
       | Context.Var.prev v' => e v'
       | Context.Var.last => arg)
-| _, _, .rgn0, e => id
+| _, _, .rgn0, _ => id
 | _, _, .rgnvar v, e => e v
 | _, _, .var v, e => e v
-| _, _, .unit, e => ()
+| _, _, .unit, _ => ()
 
 -- TODO: understand synthesization order.
 class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type → Type)) [Goedel β] extends OperationTypes Op β where
   evalM (o : Op)
-    (arg: UserType.toType (argUserType o))
+    (arg: HList UserType.toType (argUserType o))
     (rgn : UserType.toType (rgnDom o) → M (UserType.toType (rgnCod o))) : M (UserType.toType (outUserType o))
 
 @[simp]
@@ -256,7 +258,7 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
     return mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e => do
     let rgv := rg.evalM EnvC.empty
-    TypedUserSemanticsM.evalM o (e arg) rgv
+    TypedUserSemanticsM.evalM o (HList.map e arg) rgv
   | _, _, .rgn _arg body => fun e arg => do
       body.evalM (fun _ v =>
         match v with
