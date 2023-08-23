@@ -29,19 +29,14 @@ theorem alive_AddSub_1043 : forall (w : Nat) (C1 Z RHS : Bitvec w)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Z) %v0;
-  %v2 := op:const (C1) %v0;
-  %v3 := pair:%v1 %v2;
-  %v4 := op:and w %v3;
-  %v5 := pair:%v4 %v2;
-  %v6 := op:xor w %v5;
-  %v7 := op:const (1) %v0;
-  %v8 := pair:%v6 %v7;
-  %v9 := op:add w %v8;
-  %v10 := op:const (RHS) %v0;
-  %v11 := pair:%v9 %v10;
-  %v12 := op:add w %v11
+  %v1 := op:const (Z);
+  %v2 := op:const (C1);
+  %v4 := op:and w %v1 %v2;
+  %v6 := op:xor w %v4 %v2;
+  %v7 := op:const (1);
+  %v9 := op:add w %v6 %v7;
+  %v10 := op:const (RHS);
+  %v12 := op:add w %v9 %v10
   dsl_ret %v12
   ]  ⊑
   TSSA.eval
@@ -49,22 +44,16 @@ theorem alive_AddSub_1043 : forall (w : Nat) (C1 Z RHS : Bitvec w)
   (i := TSSAIndex.STMT (UserType.base (BaseType.bitvec w)))
   [dsl_bb|
   ^bb
-  %v0 := unit: ;
-  %v1 := op:const (Z) %v0;
-  %v2 := op:const (C1) %v0;
+  %v1 := op:const (Z);
+  %v2 := op:const (C1);
   %v3 := op:not w %v2;
-  %v4 := pair:%v1 %v3;
-  %v5 := op:or w %v4;
-  %v6 := pair:%v1 %v2;
-  %v7 := op:and w %v6;
-  %v8 := pair:%v7 %v2;
-  %v9 := op:xor w %v8;
-  %v10 := op:const (1) %v0;
-  %v11 := pair:%v9 %v10;
-  %v12 := op:add w %v11;
-  %v13 := op:const (RHS) %v0;
-  %v14 := pair:%v13 %v5;
-  %v15 := op:sub w %v14
+  %v5 := op:or w %v1 %v3;
+  %v7 := op:and w %v1 %v2;
+  %v9 := op:xor w %v7 %v2;
+  %v10 := op:const (1);
+  %v12 := op:add w %v9 %v10;
+  %v13 := op:const (RHS);
+  %v15 := op:sub w %v13 %v5
   dsl_ret %v15
   ]
   := by
