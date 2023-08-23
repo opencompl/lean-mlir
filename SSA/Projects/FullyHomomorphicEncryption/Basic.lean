@@ -30,6 +30,8 @@ abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] → R q n := Ideal.Quotient.mk (Idea
 
 noncomputable abbrev R.zero {q n : Nat} : R q n := R.fromPoly 0
 noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
+-- need this so that accum is computable for some reason
+noncomputable abbrev R.add {q n : Nat} : R q n → R q n → R q n := (· + ·)
 
 noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
 noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
@@ -44,13 +46,13 @@ noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q :=
 noncomputable def R.monomial {q n : Nat} (i : Nat) (c : ZMod q) : R q n :=
   R.fromPoly (Polynomial.monomial i c)
 
-set_option maxHeartbeats 10000000 in
+-- sum of get_coeff i * X^i
 noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q n :=
   let coeffIdxs := List.range (endIdx - startIdx)
   let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
-  let accum : R q n → (ZMod q × Nat) → R q n := fun poly (c,i) => poly + R.monomial i c
-  -- coeffIdxs |>.foldl accum R.zero
-  default
+  let accum : R q n → (ZMod q × Nat) → R q n :=
+    fun poly (c,i) => R.add poly $ R.monomial i c -- if I replace this with `+` it times out on defeq
+  coeffs.zip coeffIdxs |>.foldl accum R.zero
 
 inductive BaseType
   | nat : BaseType
@@ -111,10 +113,4 @@ noncomputable def eval (o : Op)
     | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg
     | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg
     | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2) arg |>.val
-    -- sum of get_coeff i * X^i
-    | Op.extract_slice q n => (fun args : R q n × Nat × Nat => 
-        let (a, startIdx, endIdx) := args
-        let coeffIdxs := List.range (endIdx - startIdx)
-        let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
-        coeffs.zip coeffIdxs
-         |>.foldl (init := R.zero) (fun poly (c,i) => poly + (R.fromPoly (monomial i c))) ) arg
+    | Op.extract_slice _ _ => (fun (a,i,c) => R.slice a i c) arg
