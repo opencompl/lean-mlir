@@ -35,7 +35,7 @@ noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
 noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
 
 axiom R.representative {q n} : R q n → (ZMod q)[X]
---axiom R.canonicalRep_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (R.representative a)) = a
+axiom R.rep_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (n:=n) (R.representative a)) = a
 
 
 noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q := 
@@ -77,21 +77,21 @@ inductive Op
 
 @[simp, reducible]
 def argUserType : Op  → UserType
-| Op.add q n => .pair (.base $ BaseType.poly q n) (.base $ BaseType.poly q n)
-| Op.sub q n => .pair (.base $ BaseType.poly q n) (.base $ BaseType.poly q n)
-| Op.mul q n => .pair (.base $ BaseType.poly q n) (.base $ BaseType.poly q n)
-| Op.mul_constant q n _ => (.base $ BaseType.poly q n)
-| Op.get_coeff q n => .pair (.base $ BaseType.poly q n) (.base  .nat)
-| Op.extract_slice q n => .pair (.base $ BaseType.poly q n) (.pair (.base  .nat) (.base  .nat))
+| Op.add q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
+| Op.sub q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
+| Op.mul q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
+| Op.mul_constant q n _ => (.base <| BaseType.poly q n)
+| Op.get_coeff q n => .pair (.base <| BaseType.poly q n) (.base  .nat)
+| Op.extract_slice q n => .pair (.base <| BaseType.poly q n) (.pair (.base  .nat) (.base  .nat))
 
 @[simp, reducible]
 def outUserType : Op → UserType
-| Op.add q n => .base $ BaseType.poly q n
-| Op.sub q n => .base $ BaseType.poly q n
-| Op.mul q n => .base $ BaseType.poly q n
-| Op.mul_constant q n _ => .base $ BaseType.poly q n
+| Op.add q n => .base <| BaseType.poly q n
+| Op.sub q n => .base <| BaseType.poly q n
+| Op.mul q n => .base <| BaseType.poly q n
+| Op.mul_constant q n _ => .base <| BaseType.poly q n
 | Op.get_coeff _ _ => .base  .nat
-| Op.extract_slice q n => .base $ BaseType.poly q n
+| Op.extract_slice q n => .base <| BaseType.poly q n
 
 
 @[simp]
