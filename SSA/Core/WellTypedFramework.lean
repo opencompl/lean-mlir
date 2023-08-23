@@ -346,7 +346,7 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 | stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
 def arrayToHList {m} [Monad m] [MonadQuotation m] (elems : Array Term) : m Term := do
-  elems.foldlM (fun list elem => `(
+  elems.foldrM (fun elem list => `(
     HList.cons $elem $list
   )) (←`(HList.nil))
 
