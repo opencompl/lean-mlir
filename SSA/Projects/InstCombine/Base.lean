@@ -76,14 +76,18 @@ inductive Op
 deriving Repr, DecidableEq
 
 @[simp, reducible]
-def argUserType : Op → UserType
+def argUserType : Op → List UserType
 | Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
 | Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w 
 | Op.srem w | Op.urem w | Op.icmp _ w =>
-  .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.not w | Op.neg w | Op.copy w => .base (BaseType.bitvec w)
-| Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.const _ => .unit
+  [.base (BaseType.bitvec w), .base (BaseType.bitvec w)]
+| Op.not w | Op.neg w | Op.copy w => [.base (BaseType.bitvec w)]
+| Op.select w => [
+    .base (BaseType.bitvec 1),
+    .base (BaseType.bitvec w),
+    .base (BaseType.bitvec w)
+  ]
+| Op.const _ => []
 
 @[simp, reducible]
 def outUserType : Op → UserType
@@ -103,39 +107,39 @@ def rgnCod : Op → UserType := fun _ => .unit
 -- TODO: compare with LLVM semantics
 @[simp]
 def eval (o : Op)
-  (arg: Goedel.toType (argUserType o))
+  (arg: HList Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
   Goedel.toType (outUserType o) :=
     match o with
-    | Op.and _ => pairMapM (.&&&.) arg
-    | Op.or _ => pairMapM (.|||.) arg
-    | Op.xor _ => pairMapM (.^^^.) arg
-    | Op.shl _ => pairMapM (. <<< .) arg
-    | Op.lshr _ => pairMapM (. >>> .) arg
-    | Op.ashr _ => pairMapM (. >>>ₛ .) arg
+    | Op.and _ => pairMapM (·&&&·) arg.toPair
+    | Op.or _ => pairMapM (.|||.) arg.toPair
+    | Op.xor _ => pairMapM (.^^^.) arg.toPair
+    | Op.shl _ => pairMapM (. <<< .) arg.toPair
+    | Op.lshr _ => pairMapM (. >>> .) arg.toPair
+    | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
     | Op.const c => Option.some c
-    | Op.sub _ => pairMapM (.-.) arg
-    | Op.add _ => pairMapM (.+.) arg
-    | Op.mul _ => pairMapM (.*.) arg
-    | Op.sdiv _ => pairBind Bitvec.sdiv? arg
-    | Op.udiv _ => pairBind Bitvec.udiv? arg
-    | Op.urem _ => pairBind Bitvec.urem? arg
-    | Op.srem _ => pairBind Bitvec.srem? arg
-    | Op.not _ => Option.map (~~~.) arg
-    | Op.copy _ => arg
-    | Op.neg _ => Option.map (-.) arg
-    | Op.select _ => tripleMapM Bitvec.select arg
+    | Op.sub _ => pairMapM (.-.) arg.toPair
+    | Op.add _ => pairMapM (.+.) arg.toPair
+    | Op.mul _ => pairMapM (.*.) arg.toPair
+    | Op.sdiv _ => pairBind Bitvec.sdiv? arg.toPair
+    | Op.udiv _ => pairBind Bitvec.udiv? arg.toPair
+    | Op.urem _ => pairBind Bitvec.urem? arg.toPair
+    | Op.srem _ => pairBind Bitvec.srem? arg.toPair
+    | Op.not _ => Option.map (~~~.) (arg.get (0 : Fin 1))
+    | Op.copy _ => arg.toSingle
+    | Op.neg _ => Option.map (-.) arg.toSingle
+    | Op.select _ => tripleMapM Bitvec.select arg.toTriple
     | Op.icmp c _ => match c with
-      | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
-      | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg
-      | Comparison.sgt => pairMapM (. >ₛ .) arg
-      | Comparison.sge => pairMapM (. ≥ₛ .) arg
-      | Comparison.slt => pairMapM (. <ₛ .) arg
-      | Comparison.sle => pairMapM (. ≤ₛ .) arg
-      | Comparison.ugt => pairMapM (. >ᵤ .) arg
-      | Comparison.uge => pairMapM (. ≥ᵤ .) arg
-      | Comparison.ult => pairMapM (. <ᵤ .) arg
-      | Comparison.ule => pairMapM (. ≤ᵤ .) arg
+      | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
+      | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
+      | Comparison.sgt => pairMapM (. >ₛ .) arg.toPair
+      | Comparison.sge => pairMapM (. ≥ₛ .) arg.toPair
+      | Comparison.slt => pairMapM (. <ₛ .) arg.toPair
+      | Comparison.sle => pairMapM (. ≤ₛ .) arg.toPair
+      | Comparison.ugt => pairMapM (. >ᵤ .) arg.toPair
+      | Comparison.uge => pairMapM (. ≥ᵤ .) arg.toPair
+      | Comparison.ult => pairMapM (. <ᵤ .) arg.toPair
+      | Comparison.ule => pairMapM (. ≤ᵤ .) arg.toPair
 
 instance TUS : SSA.TypedUserSemantics Op BaseType where
   argUserType := argUserType

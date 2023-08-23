@@ -294,7 +294,7 @@ scoped syntax "[dsl_op|" dsl_op "]" : term
 scoped syntax "%v" num : dsl_var
 
 
-scoped syntax "op:" dsl_op dsl_var ("," dsl_region)? : dsl_expr
+scoped syntax "op:" dsl_op dsl_var* ("," dsl_region)? : dsl_expr
 scoped syntax "unit:"  : dsl_expr
 scoped syntax "pair:"  dsl_var dsl_var : dsl_expr
 scoped syntax "triple:"  dsl_var dsl_var dsl_var : dsl_expr
@@ -345,6 +345,10 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 | `(dsl_var| $$($x)) => return x
 | stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
+def arrayToHList {m} [Monad m] [MonadQuotation m] (elems : Array Term) : m Term := do
+  elems.foldlM (fun list elem => `(
+    HList.cons $elem $list
+  )) (←`(HList.nil))
 
 mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
@@ -403,8 +407,9 @@ partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
   let celab ← elabStxVar c
   `(SSA.TSSA.triple $aelab $belab $celab)
 | `(dsl_expr| $v:dsl_var) => elabStxVar v
-| `(dsl_expr| op: $o:dsl_op $arg:dsl_var $[, $r? ]? ) => do
-  let arg ← elabStxVar arg
+| `(dsl_expr| op: $o:dsl_op $arg:dsl_var* $[, $r? ]? ) => do
+  let arg ← arg.mapM elabStxVar 
+  let arg ← arrayToHList arg
   let rgn ← match r? with
     | none => `(SSA.TSSA.rgn0)
     | some r => elabRgn r -- TODO: can a region affect stuff outside?
