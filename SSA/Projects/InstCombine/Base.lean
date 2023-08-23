@@ -107,7 +107,7 @@ def rgnCod : Op → UserType := fun _ => .unit
 -- TODO: compare with LLVM semantics
 @[simp]
 def eval (o : Op)
-  (arg: HList Goedel.toType (argUserType o))
+  (arg: HVector Goedel.toType (argUserType o))
   (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
   Goedel.toType (outUserType o) :=
     match o with

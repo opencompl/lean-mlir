@@ -10,7 +10,8 @@ macro "simp_alive": tactic =>
         simp (config := {decide := false}) only [InstCombine.eval, pairMapM,
           tripleMapM, pairMapM, pairBind, bind_assoc, pure, Option.map, Option.bind_eq_some',
           Option.some_bind', Option.bind_eq_bind, Bitvec.Refinement.some_some,
-          HList.toPair, HList.toSingle, HList.toTriple, HList.get]
+          HVector.toTuple,
+          HVector.toPair, HVector.toSingle, HVector.toTriple, HVector.get]
       )
    )
 

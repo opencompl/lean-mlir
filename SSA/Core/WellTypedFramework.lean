@@ -1,5 +1,5 @@
 import SSA.Core.Framework
-import SSA.Experimental.HList
+import SSA.Experimental.HVector
 import Mathlib.Data.Option.Basic
 import Mathlib.Data.List.AList
 
@@ -130,7 +130,7 @@ class OperationTypes (Op : Type) (β : outParam Type) where
   outUserType : Op → UserType β
 
 class TypedUserSemantics (Op : Type) (β : outParam Type) [Goedel β] extends OperationTypes Op β where
-  eval : ∀ (o : Op), HList toType (argUserType o) → (toType (rgnDom o) →
+  eval : ∀ (o : Op), HVector toType (argUserType o) → (toType (rgnDom o) →
     toType (rgnCod o)) → toType (outUserType o)
 
 inductive Context (β : Type) : Type
@@ -191,7 +191,7 @@ inductive TSSA (Op : Type) {β : Type} [Goedel β] [OperationTypes Op β] :
   /-- (fst, snd, third) -/
   | triple (fst : Γ.Var T₁) (snd : Γ.Var T₂) (third : Γ.Var T₃) : TSSA Op Γ (.EXPR (.triple T₁ T₂ T₃))
   /-- op (arg) { rgn } rgn is an argument to the operation -/
-  | op (o : Op) (arg : HList Γ.Var (argUserType o)) 
+  | op (o : Op) (arg : HVector Γ.Var (argUserType o)) 
       (rgn : TSSA Op Context.empty (.REGION (rgnDom o) (rgnCod o))) :
       TSSA Op Γ (.EXPR (outUserType o))
   /- fun arg => body -/
@@ -230,7 +230,7 @@ def TSSA.eval {Op β : Type} [Goedel β] [TypedUserSemantics Op β] :
 -- TODO: understand synthesization order.
 class TypedUserSemanticsM (Op : Type) (β : outParam Type) (M : outParam (Type → Type)) [Goedel β] extends OperationTypes Op β where
   evalM (o : Op)
-    (arg: HList UserType.toType (argUserType o))
+    (arg: HVector UserType.toType (argUserType o))
     (rgn : UserType.toType (rgnDom o) → M (UserType.toType (rgnCod o))) : M (UserType.toType (outUserType o))
 
 @[simp]
@@ -258,7 +258,7 @@ def TSSA.evalM {Op β : Type} {M : Type → Type} [Goedel β] [TUSM : TypedUserS
     return mkTriple (e fst) (e snd) (e third)
   | _, _, TSSA.op o arg rg => fun e => do
     let rgv := rg.evalM EnvC.empty
-    TypedUserSemanticsM.evalM o (HList.map e arg) rgv
+    TypedUserSemanticsM.evalM o (HVector.map e arg) rgv
   | _, _, .rgn _arg body => fun e arg => do
       body.evalM (fun _ v =>
         match v with
@@ -345,10 +345,10 @@ def elabStxVar : TSyntax `dsl_var → SSAElabM (TSyntax `term)
 | `(dsl_var| $$($x)) => return x
 | stx => Macro.throwErrorAt stx s!"expected variable, found {stx}"
 
-def arrayToHList {m} [Monad m] [MonadQuotation m] (elems : Array Term) : m Term := do
+def arrayToHVector {m} [Monad m] [MonadQuotation m] (elems : Array Term) : m Term := do
   elems.foldrM (fun elem list => `(
-    HList.cons $elem $list
-  )) (←`(HList.nil))
+    HVector.cons $elem $list
+  )) (←`(HVector.nil))
 
 mutual
 partial def elabRgn : TSyntax `dsl_region → SSAElabM (TSyntax `term)
@@ -409,7 +409,7 @@ partial def elabStxExpr : TSyntax `dsl_expr → SSAElabM (TSyntax `term)
 | `(dsl_expr| $v:dsl_var) => elabStxVar v
 | `(dsl_expr| op: $o:dsl_op $arg:dsl_var* $[, $r? ]? ) => do
   let arg ← arg.mapM elabStxVar 
-  let arg ← arrayToHList arg
+  let arg ← arrayToHVector arg
   let rgn ← match r? with
     | none => `(SSA.TSSA.rgn0)
     | some r => elabRgn r -- TODO: can a region affect stuff outside?
