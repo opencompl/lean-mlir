@@ -8,16 +8,24 @@ inductive HList {α : Type*} (f : α → Type*) : List α → Type _
 
 namespace HList
 
+variable {A B : α → Type*} {as : List α}
+
 /-
   # Definitions
 -/
 
-def map {A B : α → Type*} (f : ∀ (a : α), A a → B a) :
+def head : HList A (a :: as) → A a
+  | .cons x _ => x
+
+def tail : HList A (a :: as) → HList A as
+  | .cons _ xs => xs
+
+def map (f : ∀ (a : α), A a → B a) :
     ∀ {l : List α}, HList A l → HList B l
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map f as)
 
-def foldl {A : α → Type*} {B : Type*} (f : ∀ (a : α), B → A a → B) :
+def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HList A l → B
   | [],   b, .nil       => b
   | t::_, b, .cons a as => foldl f (f t b a) as
@@ -27,17 +35,23 @@ def get {as} : HList A as → (i : Fin as.length) → A (as.get i)
   | .cons x  _, ⟨0,   _⟩  => x
   | .cons _ xs, ⟨i+1, h⟩  => get xs ⟨i, Nat.succ_lt_succ_iff.mp h⟩
 
-@[coe]
-def toSingle {A : α → Type*} (xs : HList A [a₁]) : A a₁ :=
-  xs.get (0 : Fin 1)
 
-@[coe]
-def toPair {A : α → Type*} (xs : HList A [a₁, a₂]) : A a₁ × A a₂ :=
-  (xs.get (0 : Fin 2), xs.get (1 : Fin 2))
+def ToTupleType (A : α → Type*) : List α → Type _
+  | [] => PUnit
+  | [a] => A a
+  | a :: as => A a × (ToTupleType A as)
 
-@[coe]
-def toTriple {A : α → Type*} (xs : HList A [a₁, a₂, a₃]) : A a₁ × A a₂ × A a₃ :=
-  (xs.get (0 : Fin 3), xs.get (1 : Fin 3), xs.get (2 : Fin 3))
+/-- 
+  Turns a `HList A [a₁, a₂, ..., aₙ]` into a tuple `(A a₁) × (A a₂) × ... × (A aₙ)`
+-/
+def toTuple {as} : HList A as → ToTupleType A as
+  | .nil => ⟨⟩
+  | .cons x .nil => x
+  | .cons x₁ <| .cons x₂ xs => (x₁, (cons x₂ xs).toTuple)
+
+abbrev toSingle : HList A [a₁] → A a₁ := toTuple
+abbrev toPair   : HList A [a₁, a₂] → A a₁ × A a₂ := toTuple
+abbrev toTriple : HList A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
 /-
   # Theorems
