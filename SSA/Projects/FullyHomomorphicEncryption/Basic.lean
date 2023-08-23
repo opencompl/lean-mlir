@@ -30,8 +30,6 @@ abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] → R q n := Ideal.Quotient.mk (Idea
 
 noncomputable abbrev R.zero {q n : Nat} : R q n := R.fromPoly 0
 noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
--- need this so that accum is computable for some reason
-noncomputable abbrev R.add {q n : Nat} : R q n → R q n → R q n := (· + ·)
 
 noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
 noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
@@ -51,7 +49,7 @@ noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q 
   let coeffIdxs := List.range (endIdx - startIdx)
   let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
   let accum : R q n → (ZMod q × Nat) → R q n :=
-    fun poly (c,i) => R.add poly $ R.monomial i c -- if I replace this with `+` it times out on defeq
+    fun poly (c,i) => poly + R.monomial (n:=n) i c
   coeffs.zip coeffIdxs |>.foldl accum R.zero
 
 inductive BaseType
