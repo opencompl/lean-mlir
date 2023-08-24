@@ -6,7 +6,14 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
+    color: var(--text-color);
+    background: var(--body-bg);
 }
+
+a {
+   color: var(--link-color);
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Merriweather', serif;
 }
@@ -16,10 +23,128 @@ nav { line-height: normal; }
 
 :root {
     --header-height: 3em;
+    --fragment-offset: calc(var(--header-height) + 1em);
+    --content-width: 55vw;
+
     --header-bg: #f8f8f8;
+    --body-bg: white;
+    --code-bg: #f3f3f3;
+    --text-color: black;
+    --link-color: hsl(210, 100%, 30%);
+
+    --implicit-arg-text-color: var(--text-color);
+
+    --def-color: #92dce5;
+    --def-color-hsl-angle: 187;
+    --theorem-color: #8fe388;
+    --theorem-color-hsl-angle: 115;
+    --axiom-and-constant-color: #f44708;
+    --axiom-and-constant-color-hsl-angle: 16;
+    --structure-and-inductive-color: #f0a202;
+    --structure-and-inductive-color-hsl-angle: 40;
+    --starting-percentage: 100;
+
+    --hamburger-bg-color: #eee;
+    --hamburger-active-color: white;
+    --hamburger-border-color: #ccc;
+
+    --tags-border-color: #555;
+
     --fragment-offset: calc(var(--header-height) + 1em);
     --content-width: 55vw;
 }
+/* automatic dark theme if no javascript */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --header-bg: #111010;
+        --body-bg: #171717;
+        --code-bg: #363333;
+        --text-color: #eee;
+        --link-color: #58a6ff;
+
+        --implicit-arg-text-color: var(--text-color);
+
+        --def-color: #1F497F;
+        --def-color-hsl-angle: 214;
+        --theorem-color: #134E2D;
+        --theorem-color-hsl-angle: 146;
+        --axiom-and-constant-color: #6B1B1A;
+        --axiom-and-constant-color-hsl-angle: 1;
+        --structure-and-inductive-color: #73461C;
+        --structure-and-inductive-color-hsl-angle: 29;
+        --starting-percentage: 30;
+
+        --hamburger-bg-color: #2d2c2c;
+        --hamburger-active-color: black;
+        --hamburger-border-color: #717171;
+
+        --tags-border-color: #AAA;
+    }
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+
+    --header-height: 3em;
+    --fragment-offset: calc(var(--header-height) + 1em);
+    --content-width: 55vw;
+
+    --header-bg: #f8f8f8;
+    --body-bg: white;
+    --code-bg: #f3f3f3;
+    --text-color: black;
+    --link-color: hsl(210, 100%, 30%);
+
+    --implicit-arg-text-color: var(--text-color);
+
+    --def-color: #92dce5;
+    --def-color-hsl-angle: 187;
+    --theorem-color: #8fe388;
+    --theorem-color-hsl-angle: 115;
+    --axiom-and-constant-color: #f44708;
+    --axiom-and-constant-color-hsl-angle: 16;
+    --structure-and-inductive-color: #f0a202;
+    --structure-and-inductive-color-hsl-angle: 40;
+    --starting-percentage: 100;
+
+    --hamburger-bg-color: #eee;
+    --hamburger-active-color: white;
+    --hamburger-border-color: #ccc;
+
+    --tags-border-color: #555;
+
+    --fragment-offset: calc(var(--header-height) + 1em);
+    --content-width: 55vw;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --header-bg: #111010;
+    --body-bg: #171717;
+    --code-bg: #363333;
+    --text-color: #eee;
+    --link-color: #58a6ff;
+
+    --implicit-arg-text-color: var(--text-color);
+
+    --def-color: #1F497F;
+    --def-color-hsl-angle: 214;
+    --theorem-color: #134E2D;
+    --theorem-color-hsl-angle: 146;
+    --axiom-and-constant-color: #6B1B1A;
+    --axiom-and-constant-color-hsl-angle: 1;
+    --structure-and-inductive-color: #73461C;
+    --structure-and-inductive-color-hsl-angle: 29;
+    --starting-percentage: 30;
+
+    --hamburger-bg-color: #2d2c2c;
+    --hamburger-active-color: black;
+    --hamburger-border-color: #717171;
+
+    --tags-border-color: #AAA;
+}
+
 @supports (width: min(10px, 5vw)) {
     :root {
         --content-width: clamp(20em, 55vw, 60em);
@@ -94,13 +219,13 @@ header {
     label[for="nav_toggle"] {
         display: inline-block;
         margin-right: 1em;
-        border: 1px solid #ccc;
+        border: 1px solid var(--hamburger-border-color);
         padding: 0.5ex 1ex;
         cursor: pointer;
-        background: #eee;
+        background: var(--hamburger-bg-color);
     }
     #nav_toggle:checked ~ * label[for="nav_toggle"] {
-        background: white;
+        background: var(--hamburger-active-color);
     }
 
     body header h1 {
@@ -199,8 +324,8 @@ header header_filename {
 }
 
 #autocomplete_results .selected .result_link a {
-    background: white;
-    border-color: #f0a202;
+    background: var(--body-bg);
+    border-color: var(--structure-and-inductive-color);
 }
 
 
@@ -349,6 +474,44 @@ nav {
     --header-height: 0;
 }
 
+#settings {
+    margin-top: 5em;
+}
+#settings h3 {
+    font-size: inherit;
+}
+
+#color-theme-switcher {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2ex;
+    flex-flow: row wrap;
+}
+
+/* custom radio buttons for dark/light switch */
+#color-theme-switcher input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    box-sizing: content-box;
+    height: 1em;
+    width: 1em;
+    background-clip: content-box;
+    padding: 2px;
+    border: 2px solid transparent;
+    margin-bottom: -4px;
+    border-radius: 50%;
+}
+#color-theme-dark { background-color: #444; }
+#color-theme-light { background-color: #ccc; }
+#color-theme-system {
+    background-image: linear-gradient(60deg, #444, #444 50%, #CCC 50%, #CCC);
+}
+#color-theme-switcher input:checked {
+    border-color: var(--text-color);
+}
+
 .decl > div, .mod_doc {
     padding-left: 8px;
     padding-right: 8px;
@@ -413,23 +576,23 @@ main h2, main h3, main h4, main h5, main h6 {
 }
 
 .def, .instance {
-    border-left: 10px solid #92dce5;
-    border-top: 2px solid #92dce5;
+    border-left: 10px solid var(--text-color);
+    border-top: 2px solid var(--text-color);
 }
 
 .theorem {
-    border-left: 10px solid #8fe388;
-    border-top: 2px solid #8fe388;
+    border-left: 10px solid var(--theorem-color);
+    border-top: 2px solid var(--theorem-color);
 }
 
 .axiom, .opaque {
-    border-left: 10px solid #f44708;
-    border-top: 2px solid #f44708;
+    border-left: 10px solid var(--axiom-and-constant-color);
+    border-top: 2px solid var(--axiom-and-constant-color);
 }
 
 .structure, .inductive, .class {
-    border-left: 10px solid #f0a202;
-    border-top: 2px solid #f0a202;
+    border-left: 10px solid var(--structure-and-inductive-color);
+    border-top: 2px solid var(--structure-and-inductive-color);
 }
 
 .fn {
@@ -454,23 +617,23 @@ main h2, main h3, main h4, main h5, main h6 {
 }
 
 .def .fn:hover, .instance .fn:hover {
-    background-color: hsla(187, 61%, calc(100% - 5%*var(--fn)));
-    box-shadow: 0 0 0 1px hsla(187, 61%, calc(100% - 5%*(var(--fn) + 1)));
+    background-color: hsla(var(--def-color-hsl-angle), 61%, calc(var(--starting-percentage) - 5%*var(--fn)));
+    box-shadow: 0 0 0 1px hsla(var(--def-color-hsl-angle), 61%, calc(var(--starting-percentage) - 5%*(var(--fn) + 1)));
     border-radius: 5px;
 }
 .theorem .fn:hover {
-    background-color: hsla(115, 62%, calc(100% - 5%*var(--fn)));
-    box-shadow: 0 0 0 1px hsla(115, 62%, calc(100% - 5%*(var(--fn) + 1)));
+    background-color: hsla(var(--theorem-color-hsl-angle), 62%, calc(var(--starting-percentage) - 5%*var(--fn)));
+    box-shadow: 0 0 0 1px hsla(var(--theorem-color-hsl-angle), 62%, calc(var(--starting-percentage) - 5%*(var(--fn) + 1)));
     border-radius: 5px;
 }
 .axiom .fn:hover, .opaque .fn:hover {
-    background-color: hsla(16, 94%, calc(100% - 5%*var(--fn)));
-    box-shadow: 0 0 0 1px hsla(16, 94%, calc(100% - 5%*(var(--fn) + 1)));
+    background-color: hsla(var(--axiom-and-constant-color-hsl-angle), 94%, calc(var(--starting-percentage) - 5%*var(--fn)));
+    box-shadow: 0 0 0 1px hsla(var(--axiom-and-constant-color-hsl-angle), 94%, calc(var(--starting-percentage) - 5%*(var(--fn) + 1)));
     border-radius: 5px;
 }
 .structure .fn:hover, .inductive .fn:hover, .class .fn:hover {
-    background-color: hsla(40, 98%, calc(100% - 5%*var(--fn)));
-    box-shadow: 0 0 0 1px hsla(40, 98%, calc(100% - 5%*(var(--fn) + 1)));
+    background-color: hsla(var(--structure-and-inductive-color-hsl-angle), 98%, calc(var(--starting-percentage) - 5%*var(--fn)));
+    box-shadow: 0 0 0 1px hsla(var(--structure-and-inductive-color-hsl-angle), 98%, calc(var(--starting-percentage) - 5%*(var(--fn) + 1)));
     border-radius: 5px;
 }
 
@@ -479,7 +642,7 @@ main h2, main h3, main h4, main h5, main h6 {
 }
 
 .implicits, .impl_arg {
-    color: black;
+    color: var(--text-color);
     white-space: normal;
 }
 
@@ -515,7 +678,7 @@ pre {
     white-space: break-spaces;
 }
 
-code, pre { background: #f3f3f3; }
+code, pre { background: var(--code-bg); }
 code, pre { border-radius: 5px; }
 code { padding: 1px 3px; }
 pre { padding: 1ex; }
@@ -538,13 +701,11 @@ pre code { padding: 0 0; }
 
 .inductive_ctor_doc  {
     text-indent: 2ex;
-    padding-top: 1ex;
     font-family: 'Open Sans', sans-serif;
 }
 
 .structure_field_doc {
     text-indent: 0;
-    padding-top: 1ex;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -574,7 +735,7 @@ pre code { padding: 0 0; }
 
 /** Don't show underline on types, to prevent the ≤ vs < confusion. **/
 a:link, a:visited, a:active {
-    color:hsl(210, 100%, 30%);
+    color:var(--link-color);
     text-decoration: none;
 }
 
@@ -610,7 +771,7 @@ a:hover {
 }
 
 .docfile h2 a {
-    color: black;
+    color: var(--text-color);
 }
 
 .tags {
@@ -623,7 +784,7 @@ a:hover {
 }
 
 .tags li {
-    border: 1px solid #555;
+    border: 1px solid var(--tags-border-color);
     border-radius: 4px;
     list-style-type: none;
     padding: 1px 3px;

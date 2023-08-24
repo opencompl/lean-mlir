@@ -147,7 +147,8 @@ DeclarationDataCenter.init()
         checkbox.addEventListener("input", ev => SEARCH_PAGE_INPUT.dispatchEvent(new Event("input")))
       );
       SEARCH_PAGE_INPUT.dispatchEvent(new Event("input"))
-    }
+    };
+    SEARCH_INPUT.dispatchEvent(new Event("input"))
   })
   .catch(e => {
     SEARCH_INPUT.addEventListener("input", ev => handleSearch(null, e, ev, ac_results, AC_MAX_RESULTS,true ));
