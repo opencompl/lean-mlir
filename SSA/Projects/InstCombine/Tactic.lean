@@ -17,7 +17,7 @@ macro "alive_auto": tactic =>
   `(tactic|
       (
         skip; --placeholder, as `simp` will currently timeout sometimes
-        simp (config := {decide := false})
+        try simp (config := {decide := false})
       )
    )
 
