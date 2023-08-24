@@ -2,11 +2,29 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
+   {"url": "https://github.com/xubaiw/CMark.lean",
+    "subDir?": null,
+    "rev": "0077cbbaa92abf855fc1c0413e158ffd8195ec77",
+    "name": "CMark",
+    "inputRev?": "main"}},
+  {"git":
    {"url": "https://github.com/EdAyers/ProofWidgets4",
     "subDir?": null,
     "rev": "a0c2cd0ac3245a0dade4f925bcfa97e06dd84229",
     "name": "proofwidgets",
     "inputRev?": "v0.0.13"}},
+  {"git":
+   {"url": "https://github.com/leanprover/doc-gen4",
+    "subDir?": null,
+    "rev": "a9da3c9e486f44f3645451b372b78312d8e4a049",
+    "name": "doc-gen4",
+    "inputRev?": "a9da3c9e486f44f3645451b"}},
+  {"git":
+   {"url": "https://github.com/fgdorais/lean4-unicode-basic",
+    "subDir?": null,
+    "rev": "2491e781ae478b6e6f1d86a7157f1c58fc50f895",
+    "name": "lean4-unicode-basic",
+    "inputRev?": "main"}},
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
     "subDir?": null,
@@ -31,6 +49,12 @@
     "rev": "d13a9666e6f430b940ef8d092f1219e964b52a09",
     "name": "aesop",
     "inputRev?": "master"}},
+  {"git":
+   {"url": "https://github.com/hargonix/LeanInk",
+    "subDir?": null,
+    "rev": "2447df5cc6e48eb965c3c3fba87e46d353b5e9f1",
+    "name": "leanInk",
+    "inputRev?": "doc-gen"}},
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,

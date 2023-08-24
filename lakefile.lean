@@ -42,5 +42,5 @@ require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "d
 require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 
 meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
-  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "e888e9c"
+  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "a9da3c9e486f44f3645451b"
 
