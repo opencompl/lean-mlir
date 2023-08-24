@@ -40,7 +40,7 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
     spec := by {
       intros ix IX;
       by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
-      simp[A] at right
+      try simp[A] at right
       -- TODO: how to substitute?
       have LEN : len < t.size := by linarith
       sorry
@@ -156,7 +156,7 @@ theorem extractslice_insertslice [Inhabited α]
               simp[spec _ E]
             }
             case pos => {
-              simp
+              try simp
               norm_num
               by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
               case pos => {
