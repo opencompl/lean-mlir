@@ -29,15 +29,15 @@ def Op.outTy : Op → Ty
   | .beq => .bool
   | .cst _ => .nat
 
-inductive Tuple (A : Ty → Type*) : List Ty → Type _
-  | nil : Tuple A []
-  | cons {t : Ty} {l : List Ty} : A t → Tuple A l → Tuple A (t::l)
+inductive HVector (A : Ty → Type*) : List Ty → Type _
+  | nil : HVector A []
+  | cons {t : Ty} {l : List Ty} : A t → HVector A l → HVector A (t::l)
 
 /-- A very simple intrinsically typed expression. -/
 structure IExpr (Γ : Ctxt) (ty : Ty) : Type :=
   (op : Op)
   (ty_eq : ty = op.outTy)
-  (args : Tuple (Ctxt.Var Γ) op.sig)
+  (args : HVector (Ctxt.Var Γ) op.sig)
 
 def IExpr.cst {Γ : Ctxt} (n : ℕ) : IExpr Γ .nat  :=
   { op := Op.cst n
@@ -66,19 +66,19 @@ inductive Lets : Ctxt → Ctxt → Type where
   # Definitions
 -/
 
-def Tuple.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) :
-    ∀ {l : List Ty}, Tuple A l → Tuple B l
+def HVector.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) :
+    ∀ {l : List Ty}, HVector A l → HVector B l
   | [], .nil => .nil
   | t::_, .cons a as => .cons (f t a) (map f as)
 
-def Tuple.foldl {A : Ty → Type*} {B : Type*} (f : ∀ (t : Ty), B → A t → B) :
-    ∀ {l : List Ty}, B → Tuple A l → B
+def HVector.foldl {A : Ty → Type*} {B : Type*} (f : ∀ (t : Ty), B → A t → B) :
+    ∀ {l : List Ty}, B → HVector A l → B
   | [], b, .nil => b
   | t::_, b, .cons a as => foldl f (f t b a) as
 
 @[reducible]
 def Op.denote : (op : Op) →
-    Tuple Ty.toType op.sig → op.outTy.toType
+    HVector Ty.toType op.sig → op.outTy.toType
   | .cst n, _ => n
   | .add, .cons a (.cons b .nil) => a + b
   | .beq, .cons a (.cons b .nil) => a == b
@@ -105,10 +105,10 @@ def IExpr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : IExpr Γ ty) → IExpr Γ' ty
   | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩
 
-theorem Tuple.map_map {A B C : Ty → Type*} {l : List Ty} (t : Tuple A l)
+theorem HVector.map_map {A B C : Ty → Type*} {l : List Ty} (t : HVector A l)
     (f : ∀ (t : Ty), A t → B t) (g : ∀ (t : Ty), B t → C t) :
     (t.map f).map g = t.map (fun t v => g t (f t v)) := by
-  induction t <;> simp_all [Tuple.map]
+  induction t <;> simp_all [HVector.map]
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
@@ -118,7 +118,7 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt}
     (e.changeVars varsMap).denote Γ'v =
     e.denote (fun t v => Γ'v (varsMap v)) := by
   rcases e with ⟨_, rfl, _⟩
-  simp [IExpr.denote, IExpr.changeVars, Tuple.map_map]
+  simp [IExpr.denote, IExpr.changeVars, HVector.map_map]
 
 def ICom.changeVars
     (varsMap : Γ.Hom Γ') :
@@ -368,24 +368,24 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt} : {lets : Lets Γ₁ Γ₂} �
 abbrev Mapping (Γ Δ : Ctxt) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
-def Tuple.toVarSet : {l : List Ty} → (T : Tuple (Ctxt.Var Γ) l) → Γ.VarSet
+def HVector.toVarSet : {l : List Ty} → (T : HVector (Ctxt.Var Γ) l) → Γ.VarSet
   | [], .nil => ∅
   | _::_, .cons v vs => insert ⟨_, v⟩ vs.toVarSet
 
-def Tuple.vars
-    (T : Tuple (Ctxt.Var Γ) l) : VarSet Γ :=
+def HVector.vars
+    (T : HVector (Ctxt.Var Γ) l) : VarSet Γ :=
   T.foldl (fun _ s a => insert ⟨_, a⟩ s) ∅
 
 @[simp]
-theorem Tuple.vars_nil :
-    (Tuple.nil : Tuple (Ctxt.Var Γ) []).vars = ∅ := by
-  simp [Tuple.vars, Tuple.foldl]
+theorem HVector.vars_nil :
+    (HVector.nil : HVector (Ctxt.Var Γ) []).vars = ∅ := by
+  simp [HVector.vars, HVector.foldl]
 
 @[simp]
-theorem Tuple.vars_cons {t  : Ty} {l : List Ty}
-    (v : Ctxt.Var Γ t) (T : Tuple (Ctxt.Var Γ) l) :
-    (Tuple.cons v T).vars = insert ⟨_, v⟩ T.vars := by
-  rw [Tuple.vars, Tuple.vars]
+theorem HVector.vars_cons {t  : Ty} {l : List Ty}
+    (v : Ctxt.Var Γ t) (T : HVector (Ctxt.Var Γ) l) :
+    (HVector.cons v T).vars = insert ⟨_, v⟩ T.vars := by
+  rw [HVector.vars, HVector.vars]
   generalize hs : (∅ : VarSet Γ) = s
   clear hs
   induction T generalizing s t v with
@@ -407,15 +407,15 @@ def Lets.vars : Lets Γ_in Γ_out → Γ_out.Var t → Γ_in.VarSet
       -- this is wrong
       | last => exact (e.args.vars).biUnion (fun v => lets.vars v.2)
 
-theorem Tuple.map_eq_of_eq_on_vars {A : Ty → Type*}
-    {T : Tuple (Ctxt.Var Γ) l}
+theorem HVector.map_eq_of_eq_on_vars {A : Ty → Type*}
+    {T : HVector (Ctxt.Var Γ) l}
     {s₁ s₂ : ∀ (t), Γ.Var t → A t}
     (h : ∀ v, v ∈ T.vars → s₁ _ v.2 = s₂ _ v.2) :
     T.map s₁ = T.map s₂ := by
   induction T with
-  | nil => simp [Tuple.map]
+  | nil => simp [HVector.map]
   | cons v T ih =>
-    rw [Tuple.map, Tuple.map, ih]
+    rw [HVector.map, HVector.map, ih]
     · congr
       apply h ⟨_, v⟩
       simp
@@ -441,7 +441,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Γ_in Γ_out)
     . rcases e with ⟨op, rfl, args⟩
       simp [denote, IExpr.denote]
       congr 1
-      apply Tuple.map_eq_of_eq_on_vars
+      apply HVector.map_eq_of_eq_on_vars
       intro v h'
       apply ih
       intro v' hv'
@@ -481,7 +481,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt} {t : Ty}
         let matchVar' := fun t vₗ vᵣ ma =>
             matchVar (t := t) lets vₗ matchLets vᵣ ma
         let rec matchArg : ∀ {l : List Ty}
-            (_Tₗ : Tuple (Var Γ_out) l) (_Tᵣ :  Tuple (Var Δ_out) l),
+            (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
             Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
           | _, .nil, .nil, ma => some ma
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
@@ -533,8 +533,8 @@ theorem subset_entries_matchVar_matchArg_aux
     {Γ_out Δ_in Δ_out  : Ctxt}
     {matchVar' : (t : Ty) → Var Γ_out t → Var Δ_out t →
       Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
-    {l : List Ty} → {argsₗ : Tuple (Var Γ_out) l} →
-    {argsᵣ : Tuple (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
+    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
+    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
     {varMap : Mapping Δ_in Γ_out} →
     (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
         vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
@@ -592,8 +592,8 @@ theorem subset_entries_matchVar {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ
 theorem subset_entries_matchVar_matchArg
     {Γ_in Γ_out Δ_in Δ_out : Ctxt} {lets : Lets Γ_in Γ_out}
     {matchLets : Lets Δ_in Δ_out} :
-    {l : List Ty} → {argsₗ : Tuple (Var Γ_out) l} →
-    {argsᵣ : Tuple (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
+    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
+    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
     {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : varMap ∈ matchVar.matchArg Δ_out
         (fun t vₗ vᵣ ma =>
@@ -608,8 +608,8 @@ theorem denote_matchVar_matchArg
     {Γ_out Δ_in Δ_out : Ctxt} {lets : Lets Γ_in Γ_out}
     {matchLets : Lets Δ_in Δ_out} :
     {l : List Ty} →
-    {args₁ : Tuple (Var Γ_out) l} →
-    {args₂ : Tuple (Var Δ_out) l} →
+    {args₁ : HVector (Var Γ_out) l} →
+    {args₂ : HVector (Var Δ_out) l} →
     {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (f₁ : (t : Ty) → Var Γ_out t → Ty.toType t) →
@@ -623,11 +623,11 @@ theorem denote_matchVar_matchArg
     (hvarMap : varMap₁ ∈ matchVar.matchArg Δ_out
       (fun t vₗ vᵣ ma =>
         matchVar (t := t) lets vₗ matchLets vᵣ ma) args₁ args₂ ma) →
-      Tuple.map f₂ args₂ = Tuple.map f₁ args₁
-  | _, .nil, .nil, _, _ => by simp [Tuple.map]
+      HVector.map f₂ args₂ = HVector.map f₁ args₁
+  | _, .nil, .nil, _, _ => by simp [HVector.map]
   | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
     intro h_sub f₁ f₂ hf hmatchVar hvarMap
-    simp [Tuple.map]
+    simp [HVector.map]
     simp [matchVar.matchArg, pure, bind] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
@@ -729,8 +729,8 @@ mutual
 theorem mem_matchVar_matchArg
     {Γ_in Γ_out Δ_in Δ_out : Ctxt} {lets : Lets Γ_in Γ_out}
     {matchLets : Lets Δ_in Δ_out} :
-    {l : List Ty} → {argsₗ : Tuple (Var Γ_out) l} →
-    {argsᵣ : Tuple (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
+    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
+    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
     {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : varMap ∈ matchVar.matchArg Δ_out
         (fun t vₗ vᵣ ma =>
@@ -741,7 +741,7 @@ theorem mem_matchVar_matchArg
   | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, h => by
     simp [matchVar.matchArg, bind, pure] at h
     rcases h with ⟨ma', h₁, h₂⟩
-    simp only [Tuple.vars_cons, Finset.biUnion_insert, Finset.mem_union,
+    simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
     rintro (h | ⟨a, b, hab⟩)
     · exact AList.keys_subset_keys_of_entries_subset_entries
@@ -1004,7 +1004,7 @@ macro "simp_peephole": tactic =>
       funext ll
       simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, IExpr.add,
-        IExpr.cst, Tuple.map, Op.denote]
+        IExpr.cst, HVector.map, Op.denote]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;
