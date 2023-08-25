@@ -1,17 +1,6 @@
 import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
 
--- /-- A very simple type universe. -/
--- inductive Ty
---   | nat
---   | bool
---   deriving DecidableEq, Repr
-
--- @[reducible]
--- def Ty.toType
---   | nat => Nat
---   | bool => Bool
-
 /-- 
   Typeclass for a `baseType` which is a Gödel code of Lean types.
 
