@@ -28,18 +28,39 @@ class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   # Datastructures
 -/
 
+inductive TSSAIndex (β : Type) : Type
+/-- Ways of making an RHS -/
+| EXPR : β → TSSAIndex β
+/-- A statement eventually returning a value of type `β` -/
+| STMT : β → TSSAIndex β
+-- /-- a lambda -/
+-- | REGION : List β → β → TSSAIndex β
+
+@[simp]
+def TSSAIndex.eval [Goedel β] : TSSAIndex β → Type
+  | .STMT T => toType T
+  | .EXPR T => toType T
+  -- | .REGION [] cod => toType cod
+  -- | .REGION (a::as) cod => toType a → (eval <| .REGION as cod)
+
 variable (Op : Type) {Ty : Type} [OpSignature Op Ty]
 
-/-- A very simple intrinsically typed expression. -/
-structure IExpr (Γ : Ctxt Ty) (ty : Ty) : Type :=
-  (op : Op)
-  (ty_eq : ty = OpSignature.outTy op)
-  (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+inductive TSSA : (Γ : Ctxt Ty) → TSSAIndex Ty → Type where
+  | op 
+    (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op) : TSSA Γ (.EXPR ty)
+  | ret (v : Γ.Var t) : TSSA Γ (.STMT t)
+  | lete (e : TSSA Γ (.EXPR α)) (body : TSSA (Γ.snoc α) (.STMT β)) : TSSA Γ (.STMT β)
 
-/-- A very simple intrinsically typed program: a sequence of let bindings. -/
-inductive ICom : Ctxt Ty → Ty → Type where
-  | ret (v : Γ.Var t) : ICom Γ t
-  | lete (e : IExpr Op Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+-- /-- A very simple intrinsically typed expression. -/
+-- structure IExpr (Γ : Ctxt Ty) (ty : Ty) : Type :=
+--   (op : Op)
+--   (ty_eq : ty = OpSignature.outTy op)
+--   (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+
+abbrev IExpr (Γ : Ctxt Ty) (t : Ty) : Type := TSSA Op Γ (.EXPR t)
+abbrev ICom (Γ : Ctxt Ty) (t : Ty) : Type := TSSA Op Γ (.STMT t)
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
@@ -59,8 +80,42 @@ variable {Op Ty : Type} [OpSignature Op Ty]
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
+/- ## Pseudo constructors and recursors -/
+
+@[match_pattern]
+abbrev IExpr.mk : (op : Op) → (ty = OpSignature.outTy op) → 
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op) → IExpr Op Γ ty :=
+  TSSA.op
+
+abbrev ICom.ret : Γ.Var t → ICom Op Γ t :=
+  TSSA.ret
+
+abbrev ICom.lete : IExpr Op Γ α → ICom Op (Γ.snoc α) β → ICom Op Γ β :=
+  TSSA.lete
+
 def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
-  | _, ⟨op, Eq.refl _, args⟩, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
+  | _, .mk op (Eq.refl _) args, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
+
+@[elab_as_elim]
+def ICom.recOn {motive : ∀{Γ t}, ICom Op Γ t → Sort u} 
+    (ret  : ∀ {Γ t}, (v : Var Γ t) → motive (.ret v))
+    (lete : ∀ {Γ α β}, (e : IExpr Op Γ α) → (body : ICom Op (Γ.snoc α) β) → motive body → motive (.lete e body)) 
+    {Γ t} :
+    (x : ICom Op Γ t) → motive x
+  | .ret v => ret v
+  | .lete e body => lete e body (recOn ret lete body)
+
+@[elab_as_elim]
+def ICom.casesOn {motive : ∀{Γ t}, ICom Op Γ t → Sort u} 
+    (ret  : ∀ {Γ t}, (v : Var Γ t) → motive (.ret v))
+    (lete : ∀ {Γ α β}, (e : IExpr Op Γ α) → (body : ICom Op (Γ.snoc α) β) → motive (.lete e body)) 
+    {Γ t} :
+    (x : ICom Op Γ t) → motive x
+  | .ret v => ret v
+  | .lete e body => lete e body
+
+
+/- ## Denote -/
 
 def ICom.denote : ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
   | .ret e, Γv => Γv e
@@ -79,7 +134,7 @@ def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 
 def IExpr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : IExpr Op Γ ty) → IExpr Op Γ' ty
-  | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩
+  | _, .mk op (Eq.refl _) args => .mk op rfl (args.map varsMap)
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
@@ -104,7 +159,7 @@ theorem ICom.denote_changeVars
     (Γ'v : Γ'.Valuation) :
     (c.changeVars varsMap).denote Γ'v =
     c.denote (fun t v => Γ'v (varsMap v)) := by
-  induction c generalizing Γ'v Γ' with
+  induction c using ICom.recOn generalizing Γ'v Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih =>
     rw [changeVars, denote, ih]
@@ -146,18 +201,18 @@ theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : 
     (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
     (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).diff.toHom var)
     = lets.denote ll var := by
-  induction com generalizing lets Γ_out
-  next =>
+  induction com using ICom.recOn generalizing lets Γ_out
+  next => 
     rfl
   next e body ih =>
-    simp[addProgramToLets, ih, Lets.denote]
+    simp[ICom.lete, addProgramToLets, ih, Lets.denote]
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : ICom Op Δ t} :
     ∀ (ll : Γ_in.Valuation),
       (addProgramToLets lets map com).lets.denote ll (addProgramToLets lets map com).var
       = com.denote (fun _ v => lets.denote ll <| map v) := by
   intro ll
-  induction com generalizing lets Γ_out
+  induction com using ICom.recOn generalizing lets Γ_out
   next =>
     rfl
   next e body ih =>
