@@ -53,12 +53,6 @@ inductive TSSA : (Γ : Ctxt Ty) → TSSAIndex Ty → Type where
   | ret (v : Γ.Var t) : TSSA Γ (.STMT t)
   | lete (e : TSSA Γ (.EXPR α)) (body : TSSA (Γ.snoc α) (.STMT β)) : TSSA Γ (.STMT β)
 
--- /-- A very simple intrinsically typed expression. -/
--- structure IExpr (Γ : Ctxt Ty) (ty : Ty) : Type :=
---   (op : Op)
---   (ty_eq : ty = OpSignature.outTy op)
---   (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
-
 abbrev IExpr (Γ : Ctxt Ty) (t : Ty) : Type := TSSA Op Γ (.EXPR t)
 abbrev ICom (Γ : Ctxt Ty) (t : Ty) : Type := TSSA Op Γ (.STMT t)
 
@@ -80,21 +74,27 @@ variable {Op Ty : Type} [OpSignature Op Ty]
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
-/- ## Pseudo constructors and recursors -/
+/- ## Pseudo constructors, projections and recursors -/
 
 @[match_pattern]
 abbrev IExpr.mk : (op : Op) → (ty = OpSignature.outTy op) → 
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op) → IExpr Op Γ ty :=
   TSSA.op
 
+@[match_pattern]
 abbrev ICom.ret : Γ.Var t → ICom Op Γ t :=
   TSSA.ret
 
+@[match_pattern]
 abbrev ICom.lete : IExpr Op Γ α → ICom Op (Γ.snoc α) β → ICom Op Γ β :=
   TSSA.lete
 
-def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
-  | _, .mk op (Eq.refl _) args, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
+def IExpr.op : IExpr Op Γ t → Op
+  | .mk op .. => op
+
+def IExpr.args : (e : IExpr Op Γ t) → (HVector (Ctxt.Var Γ) <| OpSignature.sig <| e.op)
+  | .mk _ _ args => args
+
 
 @[elab_as_elim]
 def ICom.recOn {motive : ∀{Γ t}, ICom Op Γ t → Sort u} 
@@ -116,6 +116,9 @@ def ICom.casesOn {motive : ∀{Γ t}, ICom Op Γ t → Sort u}
 
 
 /- ## Denote -/
+
+def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
+  | _, .mk op (Eq.refl _) args, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
 
 def ICom.denote : ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
   | .ret e, Γv => Γv e
@@ -192,10 +195,23 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt Ty) (ty : Ty) where
 def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : ICom Op Δ ty →
     addProgramToLets.Result Op Γ_in Γ_out ty
   | .ret v => ⟨lets, .zero _, varsMap v⟩
-  | .lete (α:=α) e body =>
+  | .lete e body =>
       let lets := Lets.lete lets (e.changeVars varsMap)
-      let ⟨lets', diff, v'⟩ := addProgramToLets lets (varsMap.snocMap) body
-      ⟨lets', diff.unSnoc, v'⟩
+      let r := addProgramToLets lets (varsMap.snocMap) body
+      ⟨r.lets, r.diff.unSnoc, r.var⟩
+
+@[simp]
+theorem addProgramToLets_ret :
+    addProgramToLets lets varsMap (.ret v) 
+    = (⟨lets, .zero _, varsMap v⟩ : addProgramToLets.Result Op ..) :=
+  rfl
+
+@[simp]
+theorem addProgramToLets_lete :
+    addProgramToLets lets varsMap (.lete e body) 
+    = let r := addProgramToLets (Lets.lete lets (e.changeVars varsMap)) (varsMap.snocMap) body
+      (⟨r.lets, r.diff.unSnoc, r.var⟩ : addProgramToLets.Result Op ..) := by
+  simp[addProgramToLets]
 
 theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : ICom Op Δ t}
     (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
@@ -205,7 +221,8 @@ theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : 
   next => 
     rfl
   next e body ih =>
-    simp[ICom.lete, addProgramToLets, ih, Lets.denote]
+    rw [addProgramToLets_lete]
+    simp[ih, Lets.denote]
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : ICom Op Δ t} :
     ∀ (ll : Γ_in.Valuation),
@@ -216,7 +233,8 @@ theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : I
   next =>
     rfl
   next e body ih =>
-    simp only [addProgramToLets, ih, ICom.denote]
+    rw [addProgramToLets_lete]
+    simp only [ih, ICom.denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn
@@ -299,10 +317,11 @@ where
 @[simp]
 theorem ICom.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : ICom Op Γ_out t) (s : Γ_in.Valuation) :
     (toLets.go lets com).lets.denote s (toLets.go lets com).ret = com.denote (lets.denote s) := by
-  induction com
+  induction com using ICom.recOn
   . rfl
   next ih =>
-    simp [toLets.go, denote, ih]
+    rw[toLets.go]
+    simp [denote, ih]
     congr
     funext _ v
     cases v using Ctxt.Var.casesOn <;> simp[Lets.denote]
@@ -475,6 +494,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       rw [vars, Var.casesOn_last]
       simp
       use v.1, v.2
+      apply And.intro h' hv'
 
 def ICom.vars : ICom Op Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
@@ -497,8 +517,8 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
       matchVar lets v matchLets w ma
   | @Lets.lete _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
-      let ⟨op, _, args⟩ ← lets.getIExpr v
-      let ⟨op', _, args'⟩ := matchExpr
+      let .mk op _ args ← lets.getIExpr v
+      let .mk op' _ args' := matchExpr
       if hs : op = op'
       then
         -- hack to make a termination proof work
@@ -608,6 +628,7 @@ theorem subset_entries_matchVar [DecidableEq Op]
     · rename_i e he
       rcases e with ⟨op, rfl, args⟩
       dsimp at h
+      split at h
       split_ifs at h with hop
       · subst op
         dsimp at h
@@ -809,13 +830,14 @@ theorem mem_matchVar
       simp [matchVar, pure, bind] at h
       rcases h with ⟨⟨ope, h, args⟩, he₁, he₂⟩
       subst t
+      split at he₂
+      split at he₂
       split_ifs at he₂ with h
       · dsimp at h
         dsimp
         apply @mem_matchVar_matchArg (hvarMap := he₂)
         simp
         refine ⟨_, _, ?_, h_v'⟩
-        rcases matchE  with ⟨_, _, _⟩
         dsimp at h
         subst h
         exact hl
