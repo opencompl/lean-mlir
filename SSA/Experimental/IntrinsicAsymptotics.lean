@@ -1083,15 +1083,11 @@ instance : OpDenote ExOp ExTy where
     | .add, .cons (a : Nat) (.cons b .nil) => a + b
     | .beq, .cons (a : Nat) (.cons b .nil) => a == b
 
-def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
-  { op := .cst n
-    ty_eq := rfl
-    args := .nil }
+def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  := 
+  .mk (.cst n) rfl .nil
 
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
-  { op := .add
-    ty_eq := rfl
-    args := .cons e₁ <| .cons e₂ .nil }
+  .mk .add rfl (.cons e₁ <| .cons e₂ .nil)
 
 macro "simp_peephole": tactic =>
   `(tactic|
@@ -1099,7 +1095,7 @@ macro "simp_peephole": tactic =>
       funext ll
       simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        cst, HVector.map, OpDenote.denote]
+        cst, IExpr.mk, HVector.map, OpDenote.denote]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;
@@ -1147,6 +1143,7 @@ def r : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
+      simp only [m, r]
       simp_peephole
       intros a b
       rw [Nat.add_comm]
@@ -1215,6 +1212,7 @@ def r2 : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
+      simp only [m, r2]
       simp_peephole
       intros a b
       rw [Nat.zero_add]
@@ -1275,6 +1273,7 @@ def r3 : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
+      simp only [m, r3]
       simp_peephole
       intros a b
       rw [Nat.zero_add]
@@ -1337,6 +1336,7 @@ def ex3 : ICom ExOp ∅ .nat :=
 def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
+      simp only [m, r3]
       simp_peephole
       intros a b
       rw [Nat.zero_add]
