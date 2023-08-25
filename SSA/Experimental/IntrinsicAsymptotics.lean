@@ -55,16 +55,6 @@ inductive Lets : Ctxt Ty → Ctxt Ty → Type where
 
 variable {Op Ty : Type} [OpSignature Op Ty]
 
--- def HVector.map {A B : Ty → Type*} (f : ∀ (t : Ty), A t → B t) :
---     ∀ {l : List Ty}, HVector A l → HVector B l
---   | [], .nil => .nil
---   | t::_, .cons a as => .cons (f t a) (map f as)
-
--- def HVector.foldl {A : Ty → Type*} {B : Type*} (f : ∀ (t : Ty), B → A t → B) :
---     ∀ {l : List Ty}, B → HVector A l → B
---   | [], b, .nil => b
---   | t::_, b, .cons a as => foldl f (f t b a) as
-
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
@@ -90,11 +80,6 @@ def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 def IExpr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : IExpr Op Γ ty) → IExpr Op Γ' ty
   | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩
-
--- theorem HVector.map_map {A B C : Ty → Type*} {l : List Ty} (t : HVector A l)
---     (f : ∀ (t : Ty), A t → B t) (g : ∀ (t : Ty), B t → C t) :
---     (t.map f).map g = t.map (fun t v => g t (f t v)) := by
---   induction t <;> simp_all [HVector.map]
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
@@ -447,8 +432,6 @@ def ICom.vars : ICom Op Γ t → Γ.VarSet :=
   If this succeeds, return the mapping.
 -/
 
---{lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t} :
---    {matchLets : Lets Op Δ_in Δ_out} → {w : Δ_out.Var t}
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (lets : Lets Op Γ_in Γ_out) (v : Γ_out.Var t) :
     (matchLets : Lets Op Δ_in Δ_out) →
@@ -1046,8 +1029,7 @@ macro "simp_peephole": tactic =>
       generalize ll { val := 3, property := _ } = d;
       generalize ll { val := 4, property := _ } = e;
       generalize ll { val := 5, property := _ } = f;
-      -- unfold Goedel.toType at a b c d e f;
-      simp at a b c d e f;
+      simp [Goedel.toType] at a b c d e f;
       try clear f;
       try clear e;
       try clear d;
