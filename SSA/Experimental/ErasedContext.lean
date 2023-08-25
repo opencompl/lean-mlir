@@ -1,45 +1,61 @@
 import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
 
-/-- A very simple type universe. -/
-inductive Ty
-  | nat
-  | bool
-  deriving DecidableEq, Repr
+-- /-- A very simple type universe. -/
+-- inductive Ty
+--   | nat
+--   | bool
+--   deriving DecidableEq, Repr
 
-@[reducible]
-def Ty.toType
-  | nat => Nat
-  | bool => Bool
+-- @[reducible]
+-- def Ty.toType
+--   | nat => Nat
+--   | bool => Bool
 
-def Ctxt : Type :=
+/-- 
+  Typeclass for a `baseType` which is a Gödel code of Lean types.
+
+  Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
+  avoids a universe bump
+-/
+class Goedel (β : Type) : Type 1 where
+  toType : β → Type
+open Goedel (toType) /- make toType publically visible in module. -/
+
+notation "⟦" x "⟧" => Goedel.toType x
+
+instance : Goedel Unit where toType := fun _ => Unit
+
+def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
   List Ty
 
 namespace Ctxt
 
--- def empty : Ctxt := Erased.mk []
-def empty : Ctxt := []
+variable {Ty : Type}
 
-instance : EmptyCollection Ctxt := ⟨Ctxt.empty⟩
+-- def empty : Ctxt := Erased.mk []
+def empty : Ctxt Ty := []
+
+instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 
 @[match_pattern]
-def snoc : Ctxt → Ty → Ctxt :=
+def snoc : Ctxt Ty → Ty → Ctxt Ty :=
   -- fun tl hd => do return hd :: (← tl)
   fun tl hd => hd :: tl
 
 /-- Turn a list of types into a context -/
 @[coe, simp]
-def ofList : List Ty → Ctxt :=
+def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ 
 
 @[simp]
-noncomputable def get? : Ctxt → Nat → Option (Ty) :=
+noncomputable def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
   
 
-def Var (Γ : Ctxt) (t : Ty) : Type :=
+def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
 namespace Var
@@ -49,7 +65,7 @@ instance : DecidableEq (Var Γ t) := by
   infer_instance
 
 @[match_pattern]
-def last (Γ : Ctxt) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
+def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
   ⟨0, by simp [snoc, List.get?]⟩
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
@@ -60,16 +76,16 @@ def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
 /-- Take a variable in a context `Γ` and get the corresponding variable
 in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
-def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
+def toSnoc {Γ : Ctxt Ty} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
   ⟨var.1+1, var.2⟩
 
 @[simp]
-theorem zero_eq_last {Γ : Ctxt} {t : Ty} (h) :
+theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
     ⟨0, h⟩ = last Γ t :=
   rfl
 
 @[simp]
-theorem succ_eq_toSnoc {Γ : Ctxt} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
+theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
@@ -79,11 +95,11 @@ theorem succ_eq_toSnoc {Γ : Ctxt} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = so
 is the last variable in a context. -/
 @[elab_as_elim]
 def casesOn 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
+    {motive : (Γ : Ctxt Ty) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt Ty} {t t' : Ty} (v : (Γ.snoc t').Var t)
     (toSnoc : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+        {Γ : Ctxt Ty} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
+    (last : {Γ : Ctxt Ty} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       motive Γ t t' v :=
   match v with
     | ⟨0, h⟩ => 
@@ -98,11 +114,11 @@ def casesOn
 /-- `Ctxt.Var.casesOn` behaves in the expected way when applied to the last variable -/
 @[simp]
 def casesOn_last
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t : Ty}
+    {motive : (Γ : Ctxt Ty) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt Ty} {t : Ty}
     (base : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+        {Γ : Ctxt Ty} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
+    (last : {Γ : Ctxt Ty} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
     Ctxt.Var.casesOn (motive := motive)
         (Ctxt.Var.last Γ t) base last = last :=
   rfl
@@ -111,27 +127,27 @@ def casesOn_last
 that is not the last one. -/
 @[simp]
 def casesOn_toSnoc 
-    {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
-    {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
+    {motive : (Γ : Ctxt Ty) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
+    {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t)
     (base : {t t' : Ty} → 
-        {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
-    (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
+        {Γ : Ctxt Ty} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
+    (last : {Γ : Ctxt Ty} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
   rfl
 
 end Var
   
-theorem toSnoc_injective {Γ : Ctxt} {t t' : Ty} : 
-    Function.Injective (@Ctxt.Var.toSnoc Γ t t') := by
+theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} : 
+    Function.Injective (@Ctxt.Var.toSnoc Ty Γ t t') := by
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
     fun v => Ctxt.Var.casesOn v some none
   intro x y h
   simpa using congr_arg ofSnoc h
 
-abbrev Hom (Γ Γ' : Ctxt) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
+abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
 @[simp]
-abbrev Hom.id {Γ : Ctxt} : Γ.Hom Γ :=
+abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
 /--
@@ -139,7 +155,8 @@ abbrev Hom.id {Γ : Ctxt} : Γ.Hom Γ :=
    * `v₁` now maps to `v₂`
    * all other variables `v` still map to `map v` as in the original map
 -/
-def Hom.with {Γ₁ Γ₂ : Ctxt} (f : Γ₁.Hom Γ₂) {t : Ty} (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
+def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {t : Ty} 
+    (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
   fun t' w =>
     if h : ∃ ty_eq : t = t', ty_eq ▸ w = v₁ then 
       h.fst ▸ v₂
@@ -147,7 +164,7 @@ def Hom.with {Γ₁ Γ₂ : Ctxt} (f : Γ₁.Hom Γ₂) {t : Ty} (v₁ : Γ₁.V
       f w
 
 
-def Hom.snocMap {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} : 
+def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : 
     (Γ.snoc t).Hom (Γ'.snoc t) := by
   intro t' v
   cases v using Ctxt.Var.casesOn with
@@ -155,20 +172,24 @@ def Hom.snocMap {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} :
   | last => exact Ctxt.Var.last _ _
 
 @[simp]
-abbrev Hom.snocRight {Γ Γ' : Ctxt} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
+abbrev Hom.snocRight {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
   fun _ v => (f v).toSnoc
 
 
-instance {Γ : Ctxt} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
+instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
+
+section Valuation
+
+variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
-def Valuation (Γ : Ctxt) : Type :=
-  ⦃t : Ty⦄ → Γ.Var t → t.toType
+def Valuation (Γ : Ctxt Ty) : Type :=
+  ⦃t : Ty⦄ → Γ.Var t → (toType t)
 
-instance : Inhabited (Ctxt.Valuation ∅) := ⟨fun _ v => v.emptyElim⟩ 
+instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩ 
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
-def Valuation.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toType) : 
+def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) : 
     (Γ.snoc t).Valuation := by
   intro t' v
   revert s x
@@ -177,28 +198,29 @@ def Valuation.snoc {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toType) :
   . intro _ _ _ x; exact x
 
 @[simp]
-theorem Valuation.snoc_last {Γ : Ctxt} {t : Ty} (s : Γ.Valuation) (x : t.toType) : 
+theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) (Ctxt.Var.last _ _) = x := by 
   simp [Ctxt.Valuation.snoc]
 
 @[simp]
-theorem Valuation.snoc_toSnoc {Γ : Ctxt} {t t' : Ty} (s : Γ.Valuation) (x : t.toType) 
+theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
 
+end Valuation
 
 
 /- ## VarSet -/
 
 /-- A `Ty`-indexed family of sets of variables in context `Γ` -/
-abbrev VarSet (Γ : Ctxt) : Type := 
+abbrev VarSet (Γ : Ctxt Ty) : Type := 
   Finset (Σ t, Γ.Var t)
 
 namespace VarSet
 
 /-- A `VarSet` with exactly one variable `v` -/
 @[simp]
-def ofVar {Γ : Ctxt} (v : Γ.Var t) : VarSet Γ :=
+def ofVar {Γ : Ctxt Ty} (v : Γ.Var t) : VarSet Γ :=
   {⟨_, v⟩} 
 
 end VarSet
@@ -206,11 +228,11 @@ end VarSet
 namespace Var
 
 @[simp] 
-theorem val_last {Γ : Ctxt} {t : Ty} : (last Γ t).val = 0 := 
+theorem val_last {Γ : Ctxt Ty} {t : Ty} : (last Γ t).val = 0 := 
   rfl
 
 @[simp] 
-theorem val_toSnoc {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ t' v).val = v.val + 1 :=
+theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t' v).val = v.val + 1 :=
   rfl
 
 end Var
@@ -220,20 +242,20 @@ end Var
 -/
 
 @[simp]
-abbrev Diff.Valid (Γ₁ Γ₂ : Ctxt) (d : Nat) : Prop :=
+abbrev Diff.Valid (Γ₁ Γ₂ : Ctxt Ty) (d : Nat) : Prop :=
   ∀ {i t}, Γ₁.get? i = some t → Γ₂.get? (i+d) = some t
 
 /--
   If `Γ₁` is a prefix of `Γ₂`, 
   then `d : Γ₁.Diff Γ₂` represents the number of elements that `Γ₂` has more than `Γ₁`
 -/
-def Diff (Γ₁ Γ₂ : Ctxt) : Type :=
+def Diff (Γ₁ Γ₂ : Ctxt Ty) : Type :=
   {d : Nat // Diff.Valid Γ₁ Γ₂ d}
 
 namespace Diff
 
 /-- The difference between any context and itself is 0 -/
-def zero (Γ : Ctxt) : Diff Γ Γ :=
+def zero (Γ : Ctxt Ty) : Diff Γ Γ :=
   ⟨0, fun h => h⟩
 
 /-- Adding a new type to the right context corresponds to incrementing the difference by 1 -/
@@ -258,22 +280,22 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
 
-theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     Valid Γ₁ Γ₂ d := by
   intro i t h_get
   simp[←h_valid h_get, snoc, List.get?]
 
-theorem toHom_succ {Γ₁ Γ₂ : Ctxt} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+theorem toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
   rfl
 
 @[simp]
-theorem toHom_zero {Γ : Ctxt} {h : Valid Γ Γ 0} :
+theorem toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
     toHom ⟨0, h⟩ = Hom.id := by
   rfl
 
 @[simp]
-theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt} (d : Diff (Γ₁.snoc t) Γ₂) : 
+theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) : 
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
 
