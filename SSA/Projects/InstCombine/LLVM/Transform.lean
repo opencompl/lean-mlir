@@ -1,24 +1,9 @@
 -- should replace with Lean import once Pure is upstream
 import SSA.Projects.InstCombine.LLVM.Pure
 import SSA.Projects.InstCombine.Base
+import SSA.Experimental.IntrinsicAsymptotics
 
 namespace Lean.IR.LLVM.Pure
-
---def Reg.toAddress : Reg → Nat
-
-/-- Pretty useless function, we should just use IntPredicate in `Op` -/
-def IntPredicate.toComparison : IntPredicate → InstCombine.Comparison
-| .eq => InstCombine.Comparison.eq
-| .ne => InstCombine.Comparison.ne
-| .ugt => InstCombine.Comparison.ugt
-| .uge => InstCombine.Comparison.uge
-| .ult => InstCombine.Comparison.ult
-| .ule => InstCombine.Comparison.ule
-| .sgt => InstCombine.Comparison.sgt
-| .sge => InstCombine.Comparison.sge
-| .slt => InstCombine.Comparison.slt
-| .sle => InstCombine.Comparison.sle
-
 
 def Instruction.toOp : Nat → Instruction → Option InstCombine.Op
 | _, .alloca _ _ => none
@@ -35,10 +20,13 @@ def Instruction.toOp : Nat → Instruction → Option InstCombine.Op
 | w, .add  _ _ _ => some (InstCombine.Op.add w)
 | w, .sub  _ _ _ => some (InstCombine.Op.sub w)
 | w, .not _ _ => some (InstCombine.Op.not w)
-| w, .icmp pred _ _ _ => some (InstCombine.Op.icmp pred.toComparison w)
+| w, .icmp pred _ _ _ => some (InstCombine.Op.icmp pred w)
 
-open SSA
-def Instruction.toStatement : Nat → Context InstCombine.BaseType → Instruction → Option (TSSA InstCombine.Op)
+abbrev Context := Ctxt InstCombine.Ty
+abbrev Expr (Γ : Context) (ty : InstCombine.Ty) := IExpr InstCombine.Op Γ ty
+abbrev Bitvec (w : Nat) := InstCombine.Ty.bitvec w
+
+def Instruction.toIExpr : (w : Nat) → (Γ : Context) → Instruction → Option (Expr Γ (Bitvec w))
 | _, _, .alloca _ _ => none
 | _, _, .load2 _ _ _ => none
 | _, _, .store _ _ => none
@@ -49,21 +37,18 @@ def Instruction.toStatement : Nat → Context InstCombine.BaseType → Instructi
 | _, _, .sext_or_trunc _ _ => none
 | _, _, .ptrtoint _ _ => none
 | _, _, .phi _ _ => none
-| w, Γ, .mul lhs rhs name => some <|
-| w, Γ, .add  _ _ _ => some (InstCombine.Op.add w)
-| w, Γ, .sub  _ _ _ => some (InstCombine.Op.sub w)
-| w, Γ, .not _ _ => some (InstCombine.Op.not w)
-| w, Γ, .icmp pred _ _ _ => some (InstCombine.Op.icmp pred.toComparison w)
+--| w, Γ, .mul lhs rhs name => some <|
+| _, _, _ => none
 
-
-/-- Takes a basic block and converts into TSSA.
-The `name` is ignored, `instrs` become `TSSA.STMT`s,
-and the `terminator` becomes a `TSSA.TERMINATOR`.
+/-- Takes a basic block and converts into ICom.
+The `name` is ignored, `instrs` become `lete`s,
+and the `terminator` becomes a `ret`.
 -/
-def BasicBlock.toTSSA : BasicBlock → SSA.Context InstCombine.BaseType → SSA.TSSA InstCombine.Op :=
-fun bb Γ =>
-let stmts := bb.instrs.map (Instruction.toOp Γ.wordSize);
+def BasicBlock.retTy : BasicBlock → Option InstCombine.Ty
+  | _ => none
+
+def BasicBlock.toICom (bb : BasicBlock) (Γ : Context) : Option <| ICom InstCombine.Op Γ (bb.retTy.get!) :=
+  none
 
 
 
-end Lean.IR.LLVM.Pure

@@ -59,7 +59,7 @@ inductive IntPredicate where
 | sge
 | slt
 | sle
-deriving Inhabited, BEq
+deriving Inhabited, DecidableEq, Repr
 
 inductive Instruction where
 | alloca (ty : Ty) (name : String)
