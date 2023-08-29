@@ -192,7 +192,7 @@ theorem denote_addLetsAtTop :
 `lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
 `inputProg`, to the output of `rhs`. It also assigns all free variables
 in `rhs` to variables available at the end of `lets` using `map`. -/
-def addProgramInMiddle [DecidableEq Ty] {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Γ₂.Var t₁)
+def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Γ₂.Var t₁)
     (map : Γ₃.Hom Γ₂)
     (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op Γ₃ t₁)
     (inputProg : ICom Op Γ₂ t₂) : ICom Op Γ₁ t₂ :=
