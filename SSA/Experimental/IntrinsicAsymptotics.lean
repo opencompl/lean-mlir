@@ -934,7 +934,6 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op (.ofList Γ) t'} :
   constructor
   . intro h t v
     rcases v with ⟨i, hi⟩
-    simp only [Erased.out_mk] at hi
     rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩
