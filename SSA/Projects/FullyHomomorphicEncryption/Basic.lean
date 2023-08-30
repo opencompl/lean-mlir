@@ -32,6 +32,22 @@ variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
+theorem f_deg_eq : (f q n).degree = 2^n := by
+  simp [f]
+  rw [Polynomial.degree_add_eq_left_of_degree_lt]
+  <;> rw [Polynomial.degree_X_pow]
+  simp
+  simp [Polynomial.degree_one]
+  have h : 0 < 2^n := by
+    apply Nat.one_le_two_pow
+  try apply h -- TODO: lift to preorder
+  sorry
+
+theorem f_monic : Monic (f q n) := by 
+  simp [Monic]; unfold leadingCoeff; unfold natDegree; rw [f_deg_eq]
+  simp [coeff_add, f]
+  sorry
+
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
 the ring `ℤ/qℤ[X]/(X^(2^n) + 1)`.
@@ -41,7 +57,7 @@ abbrev R := (ZMod q)[X] ⧸ (Ideal.span {f q n})
 -- TODO: get this from mathlib
 
 /-- Canonical epimorphism `ZMod q[X] ->*+ R q n` -/
-abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] → R q n := Ideal.Quotient.mk (Ideal.span {f q n})
+abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] →+* R q n := Ideal.Quotient.mk (Ideal.span {f q n})
 
 noncomputable abbrev R.zero {q n : Nat} : R q n := R.fromPoly 0
 noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
@@ -57,25 +73,41 @@ The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of 
 -/
 noncomputable def R.representative {q n} : R q n → (ZMod q)[X] := fun x => R.representative' x %ₘ (f q n)
 
-theorem R.rep'_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (n:=n) (R.representative' a)) = a := by
- apply Function.surjInv_eq
-
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
-theorem R.rep_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (n:=n) (R.representative a)) = a := by
- sorry
+theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representative a)) = a := by
+ intro a 
+ simp [R.representative]
+ rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
+ rw [RingHom.map_sub (R.fromPoly (n:=n)) _ _]
+ have hker : forall x, fromPoly (f q n * x) = 0 := by
+   intro x
+   unfold fromPoly
+   apply Ideal.Quotient.eq_zero_iff_mem.2
+   rw [Ideal.mem_span_singleton]
+   simp [Dvd.dvd]
+   use x
+ rw [hker _]
+ simp
+ apply Function.surjInv_eq
 
-
-theorem R.fromPoly_rep_eq {q n} : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
+theorem R.fromPoly_rep_eq : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
 simp [R.representative]
+-- by definition of representative, there exists an i ∈ (Ideal.span {f q n}) such that
+-- a = (R.representative' (R.fromPoly a)) + i
 sorry --rw  [R.rep'_fromPoly_eq]
+
 
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
 -/
-theorem R.rep_degree_lt_n {q n} : forall a : R q n, (R.representative a).degree < 2^n := by
- sorry
+theorem R.rep_degree_lt_n : forall a : R q n, (R.representative a).degree < 2^n := by
+  intro a
+  simp [R.representative]
+  rw [← f_deg_eq q n]
+  apply Polynomial.degree_modByMonic_lt
+  exact f_monic q n
 
 /--
 This function gets the `i`th coefficient of the polynomial representative 
