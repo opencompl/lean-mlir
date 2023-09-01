@@ -55,7 +55,18 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
 theorem f_monic : Monic (f q n) := by 
   simp [Monic]; unfold leadingCoeff; unfold natDegree; rw [f_deg_eq]
   simp [coeff_add, f]
-  sorry
+  have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
+    simp [OfNat.ofNat]
+  have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
+    simp [h2, HPow.hPow]
+  rw [h2n]
+  rw [WithBot.unbot'_coe]
+  simp
+  have h2nne0 : 2^n ≠ 0 := by 
+    apply Nat.pos_iff_ne_zero.1
+    apply Nat.one_le_two_pow
+  rw [← Polynomial.C_1, Polynomial.coeff_C]
+  simp [h2nne0]
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
