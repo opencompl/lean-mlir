@@ -13,6 +13,7 @@ https://eprint.iacr.org/2012/144
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
 import Mathlib.Data.Zmod.Basic
+import Mathlib.Data.Nat.Cast.WithTop
 import SSA.Experimental.IntrinsicAsymptotics
 
 open Polynomial -- for R[X] notation
@@ -40,8 +41,16 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   simp [Polynomial.degree_one]
   have h : 0 < 2^n := by
     apply Nat.one_le_two_pow
-  try apply h -- TODO: lift to preorder
-  sorry
+  have h' := WithBot.coe_lt_coe.2 h
+  simp [Preorder.toLT, WithBot.preorder]
+  have h0 : @OfNat.ofNat (WithBot ℕ) 0 Zero.toOfNat0  = @WithBot.some ℕ 0 := by
+    simp [OfNat.ofNat]
+  have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
+    simp [OfNat.ofNat]
+  have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
+    simp [h2, HPow.hPow]
+  rw [h0, h2n]
+  exact h'
 
 theorem f_monic : Monic (f q n) := by 
   simp [Monic]; unfold leadingCoeff; unfold natDegree; rw [f_deg_eq]
