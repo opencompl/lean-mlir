@@ -31,6 +31,21 @@ variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 -- Question: Can we make something like d := 2^n work as a macro?
 --
 
+theorem WithBot.coe_mul_coe {a b : α} [DecidableEq α] [MulZeroClass α] : ↑a * ↑b = (↑(a * b) : WithBot α)  := by
+  simp [WithBot.mul_def]
+
+theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
+  --rw [← WithBot.some_eq_coe, WithBot.some]
+  induction n with
+    | zero => simp
+    | succ n ih =>  
+        rw [pow_succ'', ih, WithBot.coe_mul_coe]
+        rw [← WithBot.some_eq_coe, WithBot.some]
+        apply Option.some_inj.2
+        rw [Nat.pow_succ]
+        ring
+  done
+
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
 theorem f_deg_eq : (f q n).degree = 2^n := by
@@ -48,9 +63,10 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
     simp [OfNat.ofNat]
   have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
-    simp [h2, HPow.hPow]
+    rw [h2, WithBot.npow_coe_eq_npow]
   rw [h0, h2n]
   exact h'
+  done
 
 theorem f_monic : Monic (f q n) := by 
   simp [Monic]; unfold leadingCoeff; unfold natDegree; rw [f_deg_eq]
@@ -58,7 +74,7 @@ theorem f_monic : Monic (f q n) := by
   have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
     simp [OfNat.ofNat]
   have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
-    simp [h2, HPow.hPow]
+    simp [h2, WithBot.npow_coe_eq_npow]
   rw [h2n]
   rw [WithBot.unbot'_coe]
   simp
