@@ -12,8 +12,8 @@ https://eprint.iacr.org/2012/144
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
+import Mathlib.RingTheory.Ideal.QuotientOperations
 import Mathlib.Data.Zmod.Basic
-import Mathlib.Data.Nat.Cast.WithTop
 import SSA.Experimental.IntrinsicAsymptotics
 
 open Polynomial -- for R[X] notation
@@ -101,22 +101,21 @@ noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
 noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
 noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
 
-private noncomputable def R.representative' {q n} : R q n → (ZMod q)[X] := Function.surjInv Ideal.Quotient.mk_surjective
-
+private noncomputable def R.representative' : R q n → (ZMod q)[X] := Function.surjInv Ideal.Quotient.mk_surjective
 /--
 The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of degree `< 2^n`
  such that `R.fromPoly p = a`.
 -/
-noncomputable def R.representative {q n} : R q n → (ZMod q)[X] := fun x => R.representative' x %ₘ (f q n)
+noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.representative' q n x %ₘ (f q n)
 
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
-theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representative a)) = a := by
+theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
  intro a 
  simp [R.representative]
  rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
- rw [RingHom.map_sub (R.fromPoly (n:=n)) _ _]
+ rw [RingHom.map_sub (R.fromPoly (q := q) (n:=n)) _ _]
  have hker : forall x, fromPoly (f q n * x) = 0 := by
    intro x
    unfold fromPoly
@@ -128,9 +127,14 @@ theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representati
  simp
  apply Function.surjInv_eq
 
+/--
+Characterization theorem for the representative.
+Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is 
+the same as taking the remainder of `a` modulo `f q n`.
+-/
 theorem R.fromPoly_rep_eq : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
 simp [R.representative]
--- by definition of representative, there exists an i ∈ (Ideal.span {f q n}) such that
+-- by definition of representative (and some isomorphism theorem), there exists an i ∈ (Ideal.span {f q n}) such that
 -- a = (R.representative' (R.fromPoly a)) + i
 sorry --rw  [R.rep'_fromPoly_eq]
 
@@ -138,7 +142,7 @@ sorry --rw  [R.rep'_fromPoly_eq]
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
 -/
-theorem R.rep_degree_lt_n : forall a : R q n, (R.representative a).degree < 2^n := by
+theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 2^n := by
   intro a
   simp [R.representative]
   rw [← f_deg_eq q n]
