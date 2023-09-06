@@ -17,10 +17,13 @@ open Goedel (toType)
 
 class OpSignature (Op : Type) (Ty : outParam (Type)) where
   sig : Op → List Ty
+  regSig : Op → List (Ctxt Ty × Ty)
   outTy : Op → Ty
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
-  denote : (op : Op) → HVector toType (OpSignature.sig op) → (toType <| OpSignature.outTy op)
+  denote : (op : Op) → HVector toType (OpSignature.sig op) →
+    HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
+    (toType <| OpSignature.outTy op)
 
 
 
@@ -36,7 +39,9 @@ mutual
 inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op) : IExpr Γ ty
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
+      (OpSignature.regSig op)) : IExpr Γ ty
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
@@ -72,36 +77,52 @@ def ICom.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → ICom Op a a_1 → Sort 
   | hret, hlete, _, _, ICom.lete e body => hlete e body (ICom.rec' hret hlete body)
 
 def IExpr.op {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) : Op :=
-  IExpr.casesOn e (fun op _ _ => op)
+  IExpr.casesOn e (fun op _ _ _ => op)
 
 theorem IExpr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
     ty = OpSignature.outTy e.op :=
-  IExpr.casesOn e (fun _ ty_eq _ => ty_eq)
+  IExpr.casesOn e (fun _ ty_eq _ _ => ty_eq)
 
 def IExpr.args {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
     HVector (Var Γ) (OpSignature.sig e.op) :=
-  IExpr.casesOn e (fun _ _ args => args)
+  IExpr.casesOn e (fun _ _ args _ => args)
+
+def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+    HVector (fun t : Ctxt Ty × Ty => ICom Op t.1 t.2) (OpSignature.regSig e.op) :=
+  IExpr.casesOn e (fun _ _ _ regArgs => regArgs)
 
 @[simp]
 theorem IExpr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) :
-    (IExpr.mk op ty_eq args).op = op := rfl
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
+    (IExpr.mk op ty_eq args regArgs).op = op := rfl
 
 @[simp]
 theorem IExpr.args_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) :
-    (IExpr.mk op ty_eq args).args = args := rfl
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+    (IExpr.mk op ty_eq args regArgs).args = args := rfl
+
+@[simp]
+theorem IExpr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+    (IExpr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
+mutual
+
 def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
-  | _, ⟨op, Eq.refl _, args⟩, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
+  | _, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
+    OpDenote.denote op (args.map (fun _ v => Γv v))
+      (regArgs.map (fun t e => ICom.denote e))
 
 def ICom.denote : ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
+
+end
+decreasing_by IExpr.denote => sorry
 
 def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
   | .nil => id
@@ -116,7 +137,7 @@ def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 
 def IExpr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : IExpr Op Γ ty) → IExpr Op Γ' ty
-  | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩
+  | _, ⟨op, Eq.refl _, args, regArgs⟩ => ⟨op, rfl, args.map varsMap, regArgs⟩
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
@@ -696,21 +717,22 @@ theorem denote_matchVar_of_subset
     split at h_mv
     · simp_all
     · rename_i e he
-      rcases e with ⟨op₁, rfl, args₁⟩
-      rcases matchExpr with ⟨op₂, h, args₂⟩
+      rcases e with ⟨op₁, rfl, args₁, regArgs₁⟩
+      rcases matchExpr with ⟨op₂, h, args₂, regArgs₂⟩
       dsimp at h_mv
       split_ifs at h_mv
       · subst op₁
         simp [Lets.denote, IExpr.denote]
         rw [← Lets.denote_getIExpr he]
         clear he
-        dsimp [IExpr.denote]
+        simp only [IExpr.denote]
         congr 1
-        apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub
-        · intro t v₁ v₂ ma ma' hmem hma
-          apply denote_matchVar_of_subset hma
-          apply hmem
-        · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
+        · apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub
+          · intro t v₁ v₂ ma ma' hmem hma
+            apply denote_matchVar_of_subset hma
+            apply hmem
+          · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
+        ·
 
 theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation}
@@ -1039,25 +1061,28 @@ instance : OpSignature ExOp ExTy where
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
+  regSig := fun _ => []
 
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
-    | .cst n, _ => n
-    | .add, .cons (a : Nat) (.cons b .nil) => a + b
-    | .beq, .cons (a : Nat) (.cons b .nil) => a == b
+    | .cst n, _, _ => n
+    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
+    | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
   IExpr.mk
     (op := .cst n)
     (ty_eq := rfl)
     (args := .nil)
+    (regArgs := .nil)
 
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
   IExpr.mk
     (op := .add)
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
 
 macro "simp_peephole": tactic =>
   `(tactic|
