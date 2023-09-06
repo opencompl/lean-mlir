@@ -30,16 +30,11 @@ variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 
 -- Question: Can we make something like d := 2^n work as a macro?
 --
-
-theorem WithBot.coe_mul_coe {a b : α} [DecidableEq α] [MulZeroClass α] : ↑a * ↑b = (↑(a * b) : WithBot α)  := by
-  simp [WithBot.mul_def]
-
 theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
-  --rw [← WithBot.some_eq_coe, WithBot.some]
   induction n with
     | zero => simp
     | succ n ih =>  
-        rw [pow_succ'', ih, WithBot.coe_mul_coe]
+        rw [pow_succ'', ih, ← WithBot.coe_mul]
         rw [← WithBot.some_eq_coe, WithBot.some]
         apply Option.some_inj.2
         rw [Nat.pow_succ]
@@ -127,17 +122,35 @@ theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representati
  simp
  apply Function.surjInv_eq
 
+
+/--
+Characterization theorem for any potential representative.
+For an  `a : (ZMod q)[X]`, the representative of its equivalence class
+is just `a + i` for some `i ∈ (Ideal.span {f q n})`.
+-/
+theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
+  intro a
+  exists (R.fromPoly (n:=n) a).representative' - a 
+  constructor
+  · apply Ideal.Quotient.eq.1
+    simp [R.representative', Function.surjInv_eq]
+  · ring
+  done
+
 /--
 Characterization theorem for the representative.
 Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is 
 the same as taking the remainder of `a` modulo `f q n`.
 -/
 theorem R.fromPoly_rep_eq : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
-simp [R.representative]
--- by definition of representative (and some isomorphism theorem), there exists an i ∈ (Ideal.span {f q n}) such that
--- a = (R.representative' (R.fromPoly a)) + i
-sorry --rw  [R.rep'_fromPoly_eq]
-
+  intro a
+  simp [R.representative]
+  have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq q n a
+  rw [hi_eq]
+  apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
+  ring_nf
+  apply Ideal.mem_span_singleton.1 hiI
+  done
 
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
