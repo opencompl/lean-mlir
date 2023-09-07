@@ -42,7 +42,7 @@ theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot
   done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
-/-! Charaterizing `f`: `f` is monic of degree `2^n` -/
+/-- Charaterizing `f`: `f` is monic of degree `2^n` -/
 theorem f_deg_eq : (f q n).degree = 2^n := by
   simp [f]
   rw [Polynomial.degree_add_eq_left_of_degree_lt]
