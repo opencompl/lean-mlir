@@ -91,6 +91,7 @@ def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
     HVector (fun t : Ctxt Ty × Ty => ICom Op t.1 t.2) (OpSignature.regSig e.op) :=
   IExpr.casesOn e (fun _ _ _ regArgs => regArgs)
 
+/-! Projection equations for `IExpr` -/
 @[simp]
 theorem IExpr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
@@ -507,7 +508,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       matchVar lets v matchLets w ma
   | @Lets.lete _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
       let ie ← lets.getIExpr v
-      if hs : ie.op = matchExpr.op
+      if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
       then
         -- hack to make a termination proof work
         let matchVar' := fun t vₗ vᵣ ma =>
@@ -519,7 +520,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
               let ma ← matchVar' _ vₗ vᵣ ma
               matchArg vsₗ vsᵣ ma
-        matchArg ie.args (hs ▸ matchExpr.args) ma
+        matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
   | .nil, w, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
@@ -617,7 +618,7 @@ theorem subset_entries_matchVar [DecidableEq Op]
       rcases e with ⟨op, rfl, args⟩
       dsimp at h
       split_ifs at h with hop
-      · subst op
+      · rcases hop with ⟨rfl, hop⟩
         dsimp at h
         exact subset_entries_matchVar_matchArg_aux
           (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
@@ -670,7 +671,7 @@ theorem denote_matchVar_matchArg [DecidableEq Op]
     apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
     · exact h_sub
     · exact hmatchVar
-
+#print HVector
 theorem denote_matchVar_of_subset
     {lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
@@ -720,8 +721,8 @@ theorem denote_matchVar_of_subset
       rcases e with ⟨op₁, rfl, args₁, regArgs₁⟩
       rcases matchExpr with ⟨op₂, h, args₂, regArgs₂⟩
       dsimp at h_mv
-      split_ifs at h_mv
-      · subst op₁
+      split_ifs at h_mv with hop
+      · rcases hop with ⟨rfl, hop⟩
         simp [Lets.denote, IExpr.denote]
         rw [← Lets.denote_getIExpr he]
         clear he
@@ -732,7 +733,8 @@ theorem denote_matchVar_of_subset
             apply denote_matchVar_of_subset hma
             apply hmem
           · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
-        ·
+        · exact HVector.eq_of_type_eq_nil
+            (List.isEmpty_iff_eq_nil.1 hop)
 
 theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation}
@@ -826,7 +828,7 @@ theorem mem_matchVar
         refine ⟨_, _, ?_, h_v'⟩
         rcases matchE  with ⟨_, _, _⟩
         dsimp at h
-        subst h
+        rcases h with ⟨rfl, _⟩
         exact hl
 
 end
