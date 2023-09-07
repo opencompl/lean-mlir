@@ -142,7 +142,7 @@ Characterization theorem for the representative.
 Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is 
 the same as taking the remainder of `a` modulo `f q n`.
 -/
-theorem R.fromPoly_rep_eq : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
+theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
   intro a
   simp [R.representative]
   have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq q n a
