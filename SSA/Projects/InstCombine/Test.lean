@@ -1,30 +1,62 @@
-import SSA.Projects.InstCombine.Base
-import SSA.Experimental.IntrinsicAsymptotics
+import SSA.Projects.InstCombine.Syntax
 
-open InstCombine
-
--- Examples
-abbrev cst {w : Nat} (x : Bitvec w) (Γ : Ctxt Ty := ∅) : IExpr Op Γ (Ty.bitvec w) := 
-  {op := @Op.const w x,
-         ty_eq := by simp [OpSignature.outTy],
-         args := HVector.nil}
-
-abbrev sub {w : Nat} (Γ : Ctxt Ty) (x y : Γ.Var (Ty.bitvec w)) : IExpr Op Γ (Ty.bitvec w) :=
-  {op := @Op.sub w,
-         ty_eq := by simp [OpSignature.outTy],
-         args := HVector.cons x (HVector.cons y HVector.nil) }
-
-def progZero (w : Nat) (Γ : Ctxt Ty): ICom Op Γ (Ty.bitvec w) :=
-  .lete (cst 0 (w:=w) Γ) <|
-  .ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def progXMinusX (w : Nat) (x : Bitvec w) (Γ : Ctxt Ty): ICom Op Γ (Ty.bitvec w) :=
-  .lete (cst x (w:=w) Γ) <|
-  .lete (sub (w:=w) (x:=⟨0, by simp [Ctxt.snoc]⟩) (y:=⟨0, by simp [Ctxt.snoc]⟩)) <|
-  .ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def xMinusX (w : Nat) (x : Bitvec w) (Γ : Ctxt Ty): PeepholeRewrite Op [Ty.bitvec w] (Ty.bitvec w) :=
-  { lhs := progZero w _,
-    rhs := progXMinusX w x _,
-    correct := by simp_peephole; simp [Op.denote, HVector.toPair, HVector.toTuple, pure, pure, Option.map, Option.bind_eq_some',bind_assoc, bind] }
-
+def add_mask := [mlir_op| 
+module  {
+  llvm.func @add_mask_sign_i32(%arg0: i32) -> i32 {
+    --%0 = llvm.mlir.constant(8 : i32) : i32
+    --%1 = llvm.mlir.constant(31 : i32) : i32
+    %2 = "llvm.ashr"( %arg0, %1)  : i32
+    %3 = llvm.and %2, %0  : i32
+    %4 = llvm.add %3, %2  : i32
+    llvm.return %4 : i32
+  }
+  llvm.func @add_mask_sign_commute_i32(%arg0: i32) -> i32 {
+    %0 = llvm.mlir.constant(8 : i32) : i32
+    %1 = llvm.mlir.constant(31 : i32) : i32
+    %2 = llvm.ashr %arg0, %1  : i32
+    %3 = llvm.and %2, %0  : i32
+    %4 = llvm.add %2, %3  : i32
+    llvm.return %4 : i32
+  }
+  llvm.func @add_mask_sign_v2i32(%arg0: vector<2xi32>) -> vector<2xi32> {
+    %0 = llvm.mlir.constant(dense<8> : vector<2xi32>) : vector<2xi32>
+    %1 = llvm.mlir.constant(dense<31> : vector<2xi32>) : vector<2xi32>
+    %2 = llvm.ashr %arg0, %1  : vector<2xi32>
+    %3 = llvm.and %2, %0  : vector<2xi32>
+    %4 = llvm.add %3, %2  : vector<2xi32>
+    llvm.return %4 : vector<2xi32>
+  }
+  llvm.func @add_mask_sign_v2i32_nonuniform(%arg0: vector<2xi32>) -> vector<2xi32> {
+    %0 = llvm.mlir.constant(dense<[8, 16]> : vector<2xi32>) : vector<2xi32>
+    %1 = llvm.mlir.constant(dense<[30, 31]> : vector<2xi32>) : vector<2xi32>
+    %2 = llvm.ashr %arg0, %1  : vector<2xi32>
+    %3 = llvm.and %2, %0  : vector<2xi32>
+    %4 = llvm.add %3, %2  : vector<2xi32>
+    llvm.return %4 : vector<2xi32>
+  }
+  llvm.func @add_mask_ashr28_i32(%arg0: i32) -> i32 {
+    %0 = llvm.mlir.constant(8 : i32) : i32
+    %1 = llvm.mlir.constant(28 : i32) : i32
+    %2 = llvm.ashr %arg0, %1  : i32
+    %3 = llvm.and %2, %0  : i32
+    %4 = llvm.add %3, %2  : i32
+    llvm.return %4 : i32
+  }
+  llvm.func @add_mask_ashr28_non_pow2_i32(%arg0: i32) -> i32 {
+    %0 = llvm.mlir.constant(9 : i32) : i32
+    %1 = llvm.mlir.constant(28 : i32) : i32
+    %2 = llvm.ashr %arg0, %1  : i32
+    %3 = llvm.and %2, %0  : i32
+    %4 = llvm.add %3, %2  : i32
+    llvm.return %4 : i32
+  }
+  llvm.func @add_mask_ashr27_i32(%arg0: i32) -> i32 {
+    %0 = llvm.mlir.constant(8 : i32) : i32
+    %1 = llvm.mlir.constant(27 : i32) : i32
+    %2 = llvm.ashr %arg0, %1  : i32
+    %3 = llvm.and %2, %0  : i32
+    %4 = llvm.add %3, %2  : i32
+    llvm.return %4 : i32
+  }
+}
+]

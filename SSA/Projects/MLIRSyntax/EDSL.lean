@@ -885,7 +885,7 @@ def nestedAttrDict0 : AttrDict Dialect.empty := [mlir_attr_dict| {foo = {bar = "
 -- Op with potential result
 syntax
   (mlir_op_operand "=")?
-  strLit "(" mlir_op_operand,* ")"
+  str "(" mlir_op_operand,* ")"
          ( "(" mlir_region,* ")" )?
          (mlir_attr_dict)?
   ":" "(" mlir_type,* ")" "->" "("mlir_type,*")" : mlir_op
