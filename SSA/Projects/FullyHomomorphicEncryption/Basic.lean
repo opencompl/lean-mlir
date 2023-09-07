@@ -106,7 +106,8 @@ noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.represe
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
-theorem R.rep_fromPoly_eq : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
+@[simp]
+theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
  intro a 
  simp [R.representative]
  rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
