@@ -42,7 +42,8 @@ theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot
   done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
-/-- Charaterizing `f`: `f` is monic of degree `2^n` -/
+
+/-- Charaterizing `f`: `f` has degree `2^n` -/
 theorem f_deg_eq : (f q n).degree = 2^n := by
   simp [f]
   rw [Polynomial.degree_add_eq_left_of_degree_lt]
@@ -63,21 +64,14 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   exact h'
   done
 
+/-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by 
-  simp [Monic]; unfold leadingCoeff; unfold natDegree; rw [f_deg_eq]
-  simp [coeff_add, f]
-  have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
-    simp [OfNat.ofNat]
-  have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
-    simp [h2, WithBot.npow_coe_eq_npow]
-  rw [h2n]
-  rw [WithBot.unbot'_coe]
-  simp
-  have h2nne0 : 2^n ≠ 0 := by 
-    apply Nat.pos_iff_ne_zero.1
-    apply Nat.one_le_two_pow
-  rw [← Polynomial.C_1, Polynomial.coeff_C]
-  simp [h2nne0]
+  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
+  have hn_minus_1 : degree 1 ≤ ↑(2^n - 1) := by
+    rw [Polynomial.degree_one (R := (ZMod q))]; simp
+  rw [f, hn]
+  apply Polynomial.monic_X_pow_add hn_minus_1
+  done
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
