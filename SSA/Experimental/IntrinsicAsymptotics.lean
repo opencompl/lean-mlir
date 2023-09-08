@@ -113,17 +113,24 @@ variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
 mutual
 
+def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => ICom Op t.1 t.2) l) →
+    HVector (fun t => t.1.Valuation → toType t.2) l
+  | _, .nil => HVector.nil
+  | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
+
 def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
   | _, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
-    OpDenote.denote op (args.map (fun _ v => Γv v))
-      (regArgs.map (fun t e => ICom.denote e))
+    OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def ICom.denote : ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
 end
-decreasing_by IExpr.denote => sorry
+termination_by
+  IExpr.denote _ _ e _ => sizeOf e
+  ICom.denote _ _ e _ => sizeOf e
+  HVector.denote _ _ e => sizeOf e
 
 def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
   | .nil => id
@@ -671,7 +678,7 @@ theorem denote_matchVar_matchArg [DecidableEq Op]
     apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
     · exact h_sub
     · exact hmatchVar
-#print HVector
+
 theorem denote_matchVar_of_subset
     {lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
