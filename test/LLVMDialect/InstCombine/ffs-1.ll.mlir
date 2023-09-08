@@ -1,77 +1,84 @@
-module  {
-  llvm.func @ffs(i32) -> i32
-  llvm.func @ffsl(i32) -> i32
-  llvm.func @ffsll(i64) -> i32
-  llvm.func @test_simplify1() -> i32 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.call @ffs(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify2() -> i32 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.call @ffsl(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify3() -> i32 {
-    %0 = llvm.mlir.constant(0 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify4() -> i32 {
-    %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.call @ffs(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify5() -> i32 {
-    %0 = llvm.mlir.constant(2048 : i32) : i32
-    %1 = llvm.call @ffs(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify6() -> i32 {
-    %0 = llvm.mlir.constant(65536 : i32) : i32
-    %1 = llvm.call @ffs(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify7() -> i32 {
-    %0 = llvm.mlir.constant(65536 : i32) : i32
-    %1 = llvm.call @ffsl(%0) : (i32) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify8() -> i32 {
-    %0 = llvm.mlir.constant(1024 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify9() -> i32 {
-    %0 = llvm.mlir.constant(65536 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify10() -> i32 {
-    %0 = llvm.mlir.constant(17179869184 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify11() -> i32 {
-    %0 = llvm.mlir.constant(281474976710656 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify12() -> i32 {
-    %0 = llvm.mlir.constant(1152921504606846976 : i64) : i64
-    %1 = llvm.call @ffsll(%0) : (i64) -> i32
-    llvm.return %1 : i32
-  }
-  llvm.func @test_simplify13(%arg0: i32) -> i32 {
-    %0 = llvm.call @ffs(%arg0) : (i32) -> i32
-    llvm.return %0 : i32
-  }
-  llvm.func @test_simplify14(%arg0: i32) -> i32 {
-    %0 = llvm.call @ffsl(%arg0) : (i32) -> i32
-    llvm.return %0 : i32
-  }
-  llvm.func @test_simplify15(%arg0: i64) -> i32 {
-    %0 = llvm.call @ffsll(%arg0) : (i64) -> i32
-    llvm.return %0 : i32
-  }
-}
+"module"() ( {
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "ffs", type = !llvm.func<i32 (i32)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "ffsl", type = !llvm.func<i32 (i32)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "ffsll", type = !llvm.func<i32 (i64)>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify1", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffsl, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify2", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify3", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify4", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 2048 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify5", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 65536 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify6", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 65536 : i32} : () -> i32
+    %1 = "llvm.call"(%0) {callee = @ffsl, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify7", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 1024 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify8", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 65536 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify9", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 17179869184 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify10", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 281474976710656 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify11", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+    %0 = "llvm.mlir.constant"() {value = 1152921504606846976 : i64} : () -> i64
+    %1 = "llvm.call"(%0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%1) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify12", type = !llvm.func<i32 ()>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i32):  // no predecessors
+    %0 = "llvm.call"(%arg0) {callee = @ffs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%0) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify13", type = !llvm.func<i32 (i32)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i32):  // no predecessors
+    %0 = "llvm.call"(%arg0) {callee = @ffsl, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
+    "llvm.return"(%0) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify14", type = !llvm.func<i32 (i32)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i64):  // no predecessors
+    %0 = "llvm.call"(%arg0) {callee = @ffsll, fastmathFlags = #llvm.fastmath<>} : (i64) -> i32
+    "llvm.return"(%0) : (i32) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_simplify15", type = !llvm.func<i32 (i64)>} : () -> ()
+  "module_terminator"() : () -> ()
+}) : () -> ()

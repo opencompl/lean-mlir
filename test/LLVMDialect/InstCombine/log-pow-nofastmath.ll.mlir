@@ -1,15 +1,21 @@
-module  {
-  llvm.func @mylog(%arg0: f64, %arg1: f64) -> f64 {
-    %0 = llvm.call @llvm.pow.f64(%arg0, %arg1) : (f64, f64) -> f64
-    %1 = llvm.call @log(%0) : (f64) -> f64
-    llvm.return %1 : f64
-  }
-  llvm.func @test3(%arg0: f64) -> f64 {
-    %0 = llvm.call @exp2(%arg0) : (f64) -> f64
-    %1 = llvm.call @log(%0) : (f64) -> f64
-    llvm.return %1 : f64
-  }
-  llvm.func @log(f64) -> f64
-  llvm.func @exp2(f64) -> f64
-  llvm.func @llvm.pow.f64(f64, f64) -> f64
-}
+"module"() ( {
+  "llvm.func"() ( {
+  ^bb0(%arg0: f64, %arg1: f64):  // no predecessors
+    %0 = "llvm.call"(%arg0, %arg1) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
+    %1 = "llvm.call"(%0) {callee = @log, fastmathFlags = #llvm.fastmath<>} : (f64) -> f64
+    "llvm.return"(%1) : (f64) -> ()
+  }) {linkage = 10 : i64, sym_name = "mylog", type = !llvm.func<f64 (f64, f64)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: f64):  // no predecessors
+    %0 = "llvm.call"(%arg0) {callee = @exp2, fastmathFlags = #llvm.fastmath<>} : (f64) -> f64
+    %1 = "llvm.call"(%0) {callee = @log, fastmathFlags = #llvm.fastmath<>} : (f64) -> f64
+    "llvm.return"(%1) : (f64) -> ()
+  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<f64 (f64)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "log", type = !llvm.func<f64 (f64)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "exp2", type = !llvm.func<f64 (f64)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "llvm.pow.f64", type = !llvm.func<f64 (f64, f64)>} : () -> ()
+  "module_terminator"() : () -> ()
+}) : () -> ()

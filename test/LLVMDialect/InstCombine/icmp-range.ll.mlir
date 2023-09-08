@@ -1,296 +1,346 @@
-module  {
-  llvm.func @use(i8)
-  llvm.func @use_vec(vector<2xi8>)
-  llvm.func @test_nonzero(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_nonzero2(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "eq" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_nonzero3(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_nonzero4(%arg0: !llvm.ptr<i8>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 : !llvm.ptr<i8>
-    %2 = llvm.icmp "ne" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @test_nonzero5(%arg0: !llvm.ptr<i8>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 : !llvm.ptr<i8>
-    %2 = llvm.icmp "ugt" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @test_nonzero6(%arg0: !llvm.ptr<i8>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 : !llvm.ptr<i8>
-    %2 = llvm.icmp "sgt" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @test_not_in_range(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(6 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_in_range(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(3 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_range_sgt_constant(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "sgt" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_range_slt_constant(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(6 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "sgt" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_multi_range1(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_multi_range2(%arg0: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.mlir.constant(7 : i32) : i32
-    %1 = llvm.load %arg0 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ne" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_two_ranges(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.load %arg0 : !llvm.ptr<i32>
-    %1 = llvm.load %arg1 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ult" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_two_ranges2(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.load %arg0 : !llvm.ptr<i32>
-    %1 = llvm.load %arg1 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ult" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @test_two_ranges3(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>) -> i1 {
-    %0 = llvm.load %arg0 : !llvm.ptr<i32>
-    %1 = llvm.load %arg1 : !llvm.ptr<i32>
-    %2 = llvm.icmp "ugt" %1, %0 : i32
-    llvm.return %2 : i1
-  }
-  llvm.func @ugt_zext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    %1 = llvm.icmp "ugt" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ult_zext(%arg0: vector<2xi1>, %arg1: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.mul %arg1, %arg1  : vector<2xi8>
-    %1 = llvm.zext %arg0 : vector<2xi1> to vector<2xi8>
-    %2 = llvm.icmp "ult" %0, %1 : vector<2xi8>
-    llvm.return %2 : i1
-  }
-  llvm.func @uge_zext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    %1 = llvm.icmp "uge" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ule_zext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.mul %arg1, %arg1  : i8
-    %1 = llvm.zext %arg0 : i1 to i8
-    %2 = llvm.icmp "ule" %0, %1 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @ugt_zext_use(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.icmp "ugt" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ult_zext_not_i1(%arg0: i2, %arg1: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i2 to i8
-    %1 = llvm.icmp "ult" %arg1, %0 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @sub_ult_zext(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ult" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @zext_ult_zext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.mul %arg1, %arg1  : i8
-    %1 = llvm.zext %arg0 : i1 to i16
-    %2 = llvm.zext %0 : i8 to i16
-    %3 = llvm.icmp "ult" %2, %1 : i16
-    llvm.return %3 : i1
-  }
-  llvm.func @zext_ugt_zext(%arg0: i1, %arg1: i4) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    %1 = llvm.zext %arg1 : i4 to i8
-    llvm.call @use(%1) : (i8) -> ()
-    %2 = llvm.icmp "ugt" %0, %1 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ult_zext_not_i1(%arg0: i2, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i2 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ult" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ult_zext_use1(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ult" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @zext_ugt_sub_use2(%arg0: vector<2xi1>, %arg1: vector<2xi8>, %arg2: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.zext %arg0 : vector<2xi1> to vector<2xi8>
-    %1 = llvm.sub %arg1, %arg2  : vector<2xi8>
-    llvm.call @use_vec(%1) : (vector<2xi8>) -> ()
-    %2 = llvm.icmp "ugt" %0, %1 : vector<2xi8>
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ult_zext_use3(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.sub %arg1, %arg2  : i8
-    llvm.call @use(%1) : (i8) -> ()
-    %2 = llvm.icmp "ult" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ule_zext(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.zext %arg0 : i1 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ule" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ult_and(%arg0: vector<2xi8>, %arg1: vector<2xi8>, %arg2: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.mlir.constant(dense<1> : vector<2xi8>) : vector<2xi8>
-    %1 = llvm.and %arg0, %0  : vector<2xi8>
-    %2 = llvm.sub %arg1, %arg2  : vector<2xi8>
-    %3 = llvm.icmp "ult" %2, %1 : vector<2xi8>
-    llvm.return %3 : i1
-  }
-  llvm.func @and_ugt_sub(%arg0: i8, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.mlir.constant(1 : i8) : i8
-    %1 = llvm.and %arg0, %0  : i8
-    %2 = llvm.sub %arg1, %arg2  : i8
-    %3 = llvm.icmp "ugt" %1, %2 : i8
-    llvm.return %3 : i1
-  }
-  llvm.func @uge_sext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    %1 = llvm.icmp "uge" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ule_sext(%arg0: vector<2xi1>, %arg1: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.mul %arg1, %arg1  : vector<2xi8>
-    %1 = llvm.sext %arg0 : vector<2xi1> to vector<2xi8>
-    %2 = llvm.icmp "ule" %0, %1 : vector<2xi8>
-    llvm.return %2 : i1
-  }
-  llvm.func @ugt_sext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    %1 = llvm.icmp "ugt" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ult_sext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.mul %arg1, %arg1  : i8
-    %1 = llvm.sext %arg0 : i1 to i8
-    %2 = llvm.icmp "ult" %0, %1 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @uge_sext_use(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.icmp "uge" %0, %arg1 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @ule_sext_not_i1(%arg0: i2, %arg1: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i2 to i8
-    %1 = llvm.icmp "ule" %arg1, %0 : i8
-    llvm.return %1 : i1
-  }
-  llvm.func @sub_ule_sext(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ule" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sext_ule_sext(%arg0: i1, %arg1: i8) -> i1 {
-    %0 = llvm.mul %arg1, %arg1  : i8
-    %1 = llvm.sext %arg0 : i1 to i16
-    %2 = llvm.sext %0 : i8 to i16
-    %3 = llvm.icmp "ule" %2, %1 : i16
-    llvm.return %3 : i1
-  }
-  llvm.func @sext_uge_sext(%arg0: i1, %arg1: i4) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    %1 = llvm.sext %arg1 : i4 to i8
-    llvm.call @use(%1) : (i8) -> ()
-    %2 = llvm.icmp "uge" %0, %1 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ule_sext_not_i1(%arg0: i2, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i2 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ule" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ule_sext_use1(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ule" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sext_uge_sub_use2(%arg0: vector<2xi1>, %arg1: vector<2xi8>, %arg2: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.sext %arg0 : vector<2xi1> to vector<2xi8>
-    %1 = llvm.sub %arg1, %arg2  : vector<2xi8>
-    llvm.call @use_vec(%1) : (vector<2xi8>) -> ()
-    %2 = llvm.icmp "uge" %0, %1 : vector<2xi8>
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ule_sext_use3(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    llvm.call @use(%0) : (i8) -> ()
-    %1 = llvm.sub %arg1, %arg2  : i8
-    llvm.call @use(%1) : (i8) -> ()
-    %2 = llvm.icmp "ule" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ult_sext(%arg0: i1, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.sext %arg0 : i1 to i8
-    %1 = llvm.sub %arg1, %arg2  : i8
-    %2 = llvm.icmp "ult" %1, %0 : i8
-    llvm.return %2 : i1
-  }
-  llvm.func @sub_ule_ashr(%arg0: vector<2xi8>, %arg1: vector<2xi8>, %arg2: vector<2xi8>) -> vector<2xi1> {
-    %0 = llvm.mlir.constant(dense<7> : vector<2xi8>) : vector<2xi8>
-    %1 = llvm.ashr %arg0, %0  : vector<2xi8>
-    %2 = llvm.sub %arg1, %arg2  : vector<2xi8>
-    %3 = llvm.icmp "ule" %2, %1 : vector<2xi8>
-    llvm.return %3 : i1
-  }
-  llvm.func @ashr_uge_sub(%arg0: i8, %arg1: i8, %arg2: i8) -> i1 {
-    %0 = llvm.mlir.constant(7 : i8) : i8
-    %1 = llvm.ashr %arg0, %0  : i8
-    %2 = llvm.sub %arg1, %arg2  : i8
-    %3 = llvm.icmp "uge" %1, %2 : i8
-    llvm.return %3 : i1
-  }
-}
+"module"() ( {
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "use", type = !llvm.func<void (i8)>} : () -> ()
+  "llvm.func"() ( {
+  }) {linkage = 10 : i64, sym_name = "use_vec", type = !llvm.func<void (vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 0 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero2", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero3", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i8>) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero4", type = !llvm.func<i1 (ptr<i8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i8>) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero5", type = !llvm.func<i1 (ptr<i8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i8>) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 4 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_nonzero6", type = !llvm.func<i1 (ptr<i8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 6 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_not_in_range", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 3 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_in_range", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 4 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_range_sgt_constant", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 6 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 4 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_range_slt_constant", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_multi_range1", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 7 : i32} : () -> i32
+    %1 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_multi_range2", type = !llvm.func<i1 (ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %1 = "llvm.load"(%arg1) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_two_ranges", type = !llvm.func<i1 (ptr<i32>, ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %1 = "llvm.load"(%arg1) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_two_ranges2", type = !llvm.func<i1 (ptr<i32>, ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: !llvm.ptr<i32>, %arg1: !llvm.ptr<i32>):  // no predecessors
+    %0 = "llvm.load"(%arg0) : (!llvm.ptr<i32>) -> i32
+    %1 = "llvm.load"(%arg1) : (!llvm.ptr<i32>) -> i32
+    %2 = "llvm.icmp"(%1, %0) {predicate = 8 : i64} : (i32, i32) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "test_two_ranges3", type = !llvm.func<i1 (ptr<i32>, ptr<i32>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ugt_zext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi1>, %arg1: vector<2xi8>):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %1 = "llvm.zext"(%arg0) : (vector<2xi1>) -> vector<2xi8>
+    %2 = "llvm.icmp"(%0, %1) {predicate = 6 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ult_zext", type = !llvm.func<vector<2xi1> (vector<2xi1>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 9 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "uge_zext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (i8, i8) -> i8
+    %1 = "llvm.zext"(%arg0) : (i1) -> i8
+    %2 = "llvm.icmp"(%0, %1) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ule_zext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ugt_zext_use", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i2, %arg1: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i2) -> i8
+    %1 = "llvm.icmp"(%arg1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ult_zext_not_i1", type = !llvm.func<i1 (i2, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_zext", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (i8, i8) -> i8
+    %1 = "llvm.zext"(%arg0) : (i1) -> i16
+    %2 = "llvm.zext"(%0) : (i8) -> i16
+    %3 = "llvm.icmp"(%2, %1) {predicate = 6 : i64} : (i16, i16) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "zext_ult_zext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i4):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    %1 = "llvm.zext"(%arg1) : (i4) -> i8
+    "llvm.call"(%1) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %2 = "llvm.icmp"(%0, %1) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "zext_ugt_zext", type = !llvm.func<i1 (i1, i4)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i2, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i2) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_zext_not_i1", type = !llvm.func<i1 (i2, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_zext_use1", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi1>, %arg1: vector<2xi8>, %arg2: vector<2xi8>):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (vector<2xi1>) -> vector<2xi8>
+    %1 = "llvm.sub"(%arg1, %arg2) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    "llvm.call"(%1) {callee = @use_vec, fastmathFlags = #llvm.fastmath<>} : (vector<2xi8>) -> ()
+    %2 = "llvm.icmp"(%0, %1) {predicate = 8 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "zext_ugt_sub_use2", type = !llvm.func<vector<2xi1> (vector<2xi1>, vector<2xi8>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    "llvm.call"(%1) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_zext_use3", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.zext"(%arg0) : (i1) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_zext", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi8>, %arg1: vector<2xi8>, %arg2: vector<2xi8>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = dense<1> : vector<2xi8>} : () -> vector<2xi8>
+    %1 = "llvm.and"(%arg0, %0) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %2 = "llvm.sub"(%arg1, %arg2) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %3 = "llvm.icmp"(%2, %1) {predicate = 6 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_and", type = !llvm.func<vector<2xi1> (vector<2xi8>, vector<2xi8>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i8, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 1 : i8} : () -> i8
+    %1 = "llvm.and"(%arg0, %0) : (i8, i8) -> i8
+    %2 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %3 = "llvm.icmp"(%1, %2) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "and_ugt_sub", type = !llvm.func<i1 (i8, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 9 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "uge_sext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi1>, %arg1: vector<2xi8>):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %1 = "llvm.sext"(%arg0) : (vector<2xi1>) -> vector<2xi8>
+    %2 = "llvm.icmp"(%0, %1) {predicate = 7 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ule_sext", type = !llvm.func<vector<2xi1> (vector<2xi1>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 8 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ugt_sext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (i8, i8) -> i8
+    %1 = "llvm.sext"(%arg0) : (i1) -> i8
+    %2 = "llvm.icmp"(%0, %1) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ult_sext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.icmp"(%0, %arg1) {predicate = 9 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "uge_sext_use", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i2, %arg1: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i2) -> i8
+    %1 = "llvm.icmp"(%arg1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%1) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ule_sext_not_i1", type = !llvm.func<i1 (i2, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_sext", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8):  // no predecessors
+    %0 = "llvm.mul"(%arg1, %arg1) : (i8, i8) -> i8
+    %1 = "llvm.sext"(%arg0) : (i1) -> i16
+    %2 = "llvm.sext"(%0) : (i8) -> i16
+    %3 = "llvm.icmp"(%2, %1) {predicate = 7 : i64} : (i16, i16) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sext_ule_sext", type = !llvm.func<i1 (i1, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i4):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    %1 = "llvm.sext"(%arg1) : (i4) -> i8
+    "llvm.call"(%1) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %2 = "llvm.icmp"(%0, %1) {predicate = 9 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sext_uge_sext", type = !llvm.func<i1 (i1, i4)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i2, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i2) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_sext_not_i1", type = !llvm.func<i1 (i2, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_sext_use1", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi1>, %arg1: vector<2xi8>, %arg2: vector<2xi8>):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (vector<2xi1>) -> vector<2xi8>
+    %1 = "llvm.sub"(%arg1, %arg2) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    "llvm.call"(%1) {callee = @use_vec, fastmathFlags = #llvm.fastmath<>} : (vector<2xi8>) -> ()
+    %2 = "llvm.icmp"(%0, %1) {predicate = 9 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sext_uge_sub_use2", type = !llvm.func<vector<2xi1> (vector<2xi1>, vector<2xi8>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    "llvm.call"(%1) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i8) -> ()
+    %2 = "llvm.icmp"(%1, %0) {predicate = 7 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_sext_use3", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i1, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.sext"(%arg0) : (i1) -> i8
+    %1 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %2 = "llvm.icmp"(%1, %0) {predicate = 6 : i64} : (i8, i8) -> i1
+    "llvm.return"(%2) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ult_sext", type = !llvm.func<i1 (i1, i8, i8)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: vector<2xi8>, %arg1: vector<2xi8>, %arg2: vector<2xi8>):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = dense<7> : vector<2xi8>} : () -> vector<2xi8>
+    %1 = "llvm.ashr"(%arg0, %0) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %2 = "llvm.sub"(%arg1, %arg2) : (vector<2xi8>, vector<2xi8>) -> vector<2xi8>
+    %3 = "llvm.icmp"(%2, %1) {predicate = 7 : i64} : (vector<2xi8>, vector<2xi8>) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "sub_ule_ashr", type = !llvm.func<vector<2xi1> (vector<2xi8>, vector<2xi8>, vector<2xi8>)>} : () -> ()
+  "llvm.func"() ( {
+  ^bb0(%arg0: i8, %arg1: i8, %arg2: i8):  // no predecessors
+    %0 = "llvm.mlir.constant"() {value = 7 : i8} : () -> i8
+    %1 = "llvm.ashr"(%arg0, %0) : (i8, i8) -> i8
+    %2 = "llvm.sub"(%arg1, %arg2) : (i8, i8) -> i8
+    %3 = "llvm.icmp"(%1, %2) {predicate = 9 : i64} : (i8, i8) -> i1
+    "llvm.return"(%3) : (i1) -> ()
+  }) {linkage = 10 : i64, sym_name = "ashr_uge_sub", type = !llvm.func<i1 (i8, i8, i8)>} : () -> ()
+  "module_terminator"() : () -> ()
+}) : () -> ()
