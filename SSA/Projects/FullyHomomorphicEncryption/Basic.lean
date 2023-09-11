@@ -12,8 +12,9 @@ https://eprint.iacr.org/2012/144
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
+import Mathlib.RingTheory.Ideal.QuotientOperations
 import Mathlib.Data.Zmod.Basic
-import SSA.Core.WellTypedFramework
+import SSA.Experimental.IntrinsicAsymptotics
 
 open Polynomial -- for R[X] notation
 
@@ -29,8 +30,48 @@ variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 
 -- Question: Can we make something like d := 2^n work as a macro?
 --
+theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
+  induction n with
+    | zero => simp
+    | succ n ih =>  
+        rw [pow_succ'', ih, ← WithBot.coe_mul]
+        rw [← WithBot.some_eq_coe, WithBot.some]
+        apply Option.some_inj.2
+        rw [Nat.pow_succ]
+        ring
+  done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
+
+/-- Charaterizing `f`: `f` has degree `2^n` -/
+theorem f_deg_eq : (f q n).degree = 2^n := by
+  simp [f]
+  rw [Polynomial.degree_add_eq_left_of_degree_lt]
+  <;> rw [Polynomial.degree_X_pow]
+  simp
+  simp [Polynomial.degree_one]
+  have h : 0 < 2^n := by
+    apply Nat.one_le_two_pow
+  have h' := WithBot.coe_lt_coe.2 h
+  simp [Preorder.toLT, WithBot.preorder]
+  have h0 : @OfNat.ofNat (WithBot ℕ) 0 Zero.toOfNat0  = @WithBot.some ℕ 0 := by
+    simp [OfNat.ofNat]
+  have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
+    simp [OfNat.ofNat]
+  have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
+    rw [h2, WithBot.npow_coe_eq_npow]
+  rw [h0, h2n]
+  exact h'
+  done
+
+/-- Charaterizing `f`: `f` is monic -/
+theorem f_monic : Monic (f q n) := by 
+  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
+  have hn_minus_1 : degree 1 ≤ ↑(2^n - 1) := by
+    rw [Polynomial.degree_one (R := (ZMod q))]; simp
+  rw [f, hn]
+  apply Polynomial.monic_X_pow_add hn_minus_1
+  done
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
@@ -41,7 +82,7 @@ abbrev R := (ZMod q)[X] ⧸ (Ideal.span {f q n})
 -- TODO: get this from mathlib
 
 /-- Canonical epimorphism `ZMod q[X] ->*+ R q n` -/
-abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] → R q n := Ideal.Quotient.mk (Ideal.span {f q n})
+abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] →+* R q n := Ideal.Quotient.mk (Ideal.span {f q n})
 
 noncomputable abbrev R.zero {q n : Nat} : R q n := R.fromPoly 0
 noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
@@ -49,21 +90,72 @@ noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
 noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
 noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
 
+private noncomputable def R.representative' : R q n → (ZMod q)[X] := Function.surjInv Ideal.Quotient.mk_surjective
 /--
 The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of degree `< 2^n`
  such that `R.fromPoly p = a`.
- TODO: replace these axioms with the proper definition and prove the two characterizations.
 -/
-axiom R.representative {q n} : R q n → (ZMod q)[X]
+noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.representative' q n x %ₘ (f q n)
 
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
-axiom R.rep_fromPoly_eq {q n} : forall a : R q n, (R.fromPoly (n:=n) (R.representative a)) = a
+@[simp]
+theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
+ intro a 
+ simp [R.representative]
+ rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
+ rw [RingHom.map_sub (R.fromPoly (q := q) (n:=n)) _ _]
+ have hker : forall x, fromPoly (f q n * x) = 0 := by
+   intro x
+   unfold fromPoly
+   apply Ideal.Quotient.eq_zero_iff_mem.2
+   rw [Ideal.mem_span_singleton]
+   simp [Dvd.dvd]
+   use x
+ rw [hker _]
+ simp
+ apply Function.surjInv_eq
+
+
+/--
+Characterization theorem for any potential representative.
+For an  `a : (ZMod q)[X]`, the representative of its equivalence class
+is just `a + i` for some `i ∈ (Ideal.span {f q n})`.
+-/
+theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
+  intro a
+  exists (R.fromPoly (n:=n) a).representative' - a 
+  constructor
+  · apply Ideal.Quotient.eq.1
+    simp [R.representative', Function.surjInv_eq]
+  · ring
+  done
+
+/--
+Characterization theorem for the representative.
+Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is 
+the same as taking the remainder of `a` modulo `f q n`.
+-/
+theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
+  intro a
+  simp [R.representative]
+  have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq q n a
+  rw [hi_eq]
+  apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
+  ring_nf
+  apply Ideal.mem_span_singleton.1 hiI
+  done
+
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
 -/
-axiom R.rep_degree_lt_n {q n} : forall a : R q n, (R.representative a).degree < 2^n
+theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 2^n := by
+  intro a
+  simp [R.representative]
+  rw [← f_deg_eq q n]
+  apply Polynomial.degree_modByMonic_lt
+  exact f_monic q n
 
 /--
 This function gets the `i`th coefficient of the polynomial representative 
@@ -98,18 +190,16 @@ We define the base type of the representation, which encodes both natural number
 and elements in the ring `R q n` (which in FHE are sometimes called 'polynomials'
  in allusion to `R.representative`).
 -/
-inductive BaseType
-  | nat : BaseType
-  | poly (q : Nat) (n : Nat) : BaseType
+inductive Ty
+  | nat : Ty
+  | poly (q : Nat) (n : Nat) : Ty
   deriving DecidableEq
 
-instance : Inhabited BaseType := ⟨BaseType.nat⟩
-instance : Goedel BaseType where
+instance : Inhabited Ty := ⟨Ty.nat⟩
+instance : Goedel Ty where
 toType := fun
   | .nat => Nat
   | .poly q n => (R q n)
-
-abbrev UserType := SSA.UserType BaseType
 
 /--
 The operation type of the `Poly` dialect. Operations are parametrized by the 
@@ -124,39 +214,38 @@ inductive Op
 | extract_slice (q : Nat) (n : Nat) : Op
 --deriving DecidableEq --, Repr
 
-@[simp, reducible]
-def argUserType : Op  → UserType
-| Op.add q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
-| Op.sub q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
-| Op.mul q n => .pair (.base <| BaseType.poly q n) (.base <| BaseType.poly q n)
-| Op.mul_constant q n _ => (.base <| BaseType.poly q n)
-| Op.get_coeff q n => .pair (.base <| BaseType.poly q n) (.base  .nat)
-| Op.extract_slice q n => .pair (.base <| BaseType.poly q n) (.pair (.base  .nat) (.base  .nat))
+open Goedel (toType)
+
 
 @[simp, reducible]
-def outUserType : Op → UserType
-| Op.add q n => .base <| BaseType.poly q n
-| Op.sub q n => .base <| BaseType.poly q n
-| Op.mul q n => .base <| BaseType.poly q n
-| Op.mul_constant q n _ => .base <| BaseType.poly q n
-| Op.get_coeff _ _ => .base  .nat
-| Op.extract_slice q n => .base <| BaseType.poly q n
+def Op.sig : Op  → List Ty
+| Op.add q n => [Ty.poly q n, Ty.poly q n]
+| Op.sub q n => [Ty.poly q n, Ty.poly q n]
+| Op.mul q n => [Ty.poly q n, Ty.poly q n]
+| Op.mul_constant q n _ => [Ty.poly q n]
+| Op.get_coeff q n => [Ty.poly q n, Ty.nat]
+| Op.extract_slice q n => [Ty.poly q n, Ty.nat, Ty.nat]
 
-@[simp]
-def rgnDom : Op → UserType := fun _ => .unit
-@[simp]
-def rgnCod : Op → UserType := fun _ => .unit
+@[simp, reducible]
+def Op.outTy : Op → Ty
+| Op.add q n => Ty.poly q n
+| Op.sub q n => Ty.poly q n
+| Op.mul q n => Ty.poly q n
+| Op.mul_constant q n _ => Ty.poly q n
+| Op.get_coeff _ _ => Ty.nat
+| Op.extract_slice q n => Ty.poly q n
+
+instance : OpSignature Op Ty := ⟨Op.sig, Op.outTy⟩
 
 variable (a b : R q n)
 @[simp]
-noncomputable def eval (o : Op)
-  (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
-  Goedel.toType (outUserType o) :=
+noncomputable def Op.denote (o : Op)
+   (arg : HVector toType (OpSignature.sig o))
+   : (toType <| OpSignature.outTy o) :=
     match o with
-    | Op.add q n => (fun args : R q n × R q n => args.1 + args.2) arg
-    | Op.sub q n => (fun args : R q n × R q n => args.1 - args.2) arg
-    | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg
-    | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg
-    | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2) arg |>.val
-    | Op.extract_slice _ _ => (fun (a,i,c) => R.slice a i c) arg
+    | Op.add q n => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
+    | Op.sub q n => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
+    | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
+    | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg.toSingle
+    | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2 |>.val) arg.toPair
+    | Op.extract_slice _ _ => (fun (a,i,c) => R.slice a i c) arg.toTriple
