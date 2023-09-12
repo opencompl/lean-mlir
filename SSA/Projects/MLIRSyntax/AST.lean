@@ -137,6 +137,12 @@ inductive AttrDict :=
 
 end
 
+def AttrEntry.destructure : AttrEntry → String × AttrValue
+  | .mk name value => (name,value)
+
+def AttrDict.getAttr : AttrDict → String →  Option AttrValue
+  | .mk attrs, name => attrs.map AttrEntry.destructure |>.lookup name
+
 -- We define "AttrVal" to be just the basic attributes outside of any dialect
 abbrev AttrVal := AttrValue
 
@@ -196,7 +202,6 @@ def Op.regions: Op -> List Region
 
 def Op.attrs: Op -> AttrDict
 | Op.mk _ _ _ _ attrs => attrs
-
 
 instance: Coe String SSAVal where
   coe (s: String) := SSAVal.SSAVal s
@@ -273,6 +278,9 @@ instance : Coe (List AttrEntry) (AttrDict) where
 def Region.name (region: Region): BBName :=
   match region with
   | Region.mk name _ _ => BBName.mk name
+
+def Region.args : Region → List TypedSSAVal
+  | .mk _ args _ => args
 
 def Region.ops (region: Region): List (Op) :=
   match region with

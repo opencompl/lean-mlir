@@ -22,8 +22,6 @@ class OpSignature (Op : Type) (Ty : outParam (Type)) where
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) → (toType <| OpSignature.outTy op)
 
-
-
 /-
   # Datastructures
 -/

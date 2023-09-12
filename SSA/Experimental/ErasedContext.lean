@@ -39,10 +39,10 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ 
 
+-- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
-noncomputable def get? : Ctxt Ty → Nat → Option Ty :=
+def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
-  
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }

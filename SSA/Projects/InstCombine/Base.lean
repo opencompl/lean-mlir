@@ -2,10 +2,22 @@
 import SSA.Experimental.IntrinsicAsymptotics
 import SSA.Core.Util
 import SSA.Projects.InstCombine.ForMathlib
-import SSA.Projects.InstCombine.LLVM.Pure
 
 
 namespace InstCombine
+
+inductive IntPredicate where
+| eq
+| ne
+| ugt
+| uge
+| ult
+| ule
+| sgt
+| sge
+| slt
+| sle
+deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
   | bitvec (w : Nat) : Ty
@@ -16,6 +28,13 @@ instance : Repr Ty where
     | .bitvec w, _ => "i" ++ repr w
 
 instance {w : Nat} : Inhabited Ty := ⟨Ty.bitvec w⟩
+
+def Ty.width : Ty → Nat
+  | .bitvec w => w
+
+@[simp]
+theorem Ty.width_eq (ty : Ty) :  Ty.bitvec (ty.width) = ty :=
+ by simp [width]
 
 @[simp]
 def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
@@ -47,7 +66,7 @@ inductive Op
 | copy (w: Nat) : Op
 | sdiv (w : Nat) : Op
 | udiv (w : Nat) : Op
-| icmp (c : Lean.IR.LLVM.Pure.IntPredicate) (w : Nat) : Op
+| icmp (c : IntPredicate) (w : Nat) : Op
 | const {w : Nat} (val : Bitvec w) : Op
 deriving Repr, DecidableEq
 
