@@ -38,8 +38,43 @@ def bb0 := [mlir_region|
 #print bb0
 
     
-def op := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
-#print op
+open InstCombine
+def Γn (n : Nat) :Context := 
+  List.range n |>.foldl 
+    (fun c _ => Ctxt.snoc c (Ty.bitvec 32))
+    Ctxt.empty
 
-def com (Γ : Context) := mkCom Γ bb0.{0,0,0,0,0,0,0}
+def op0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
+def op1 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
+def op2 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
+def op3 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
+def op4 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
+#eval mkExpr (Γn 2) op1   |>.isSome
+#eval mkExpr (Γn 3) op2   |>.isSome
+#eval mkExpr (Γn 4) op3  |>.isSome
+#eval mkExpr (Γn 5) op4  |>.isSome
+def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
+#eval mkReturn (Γn 6) opRet |>.isSome
+
+def ops := [mlir_ops| 
+    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
+    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
+    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
+    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
+    %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
+    "llvm.return"(%4) : (i32) -> ()
+]
+def ops' := [op0, op1, op2, op3, op4]
+def com (Γ : Context) := mkCom Γ bb0
+
 #eval com Ctxt.empty |>.isSome
+#eval mkExpr  (Γn 1) (ops.get! 0) |>.isSome
+#eval mkExpr  (Γn 2) (ops.get! 1) |>.isSome
+#eval mkExpr  (Γn 3) (ops.get! 2) |>.isSome
+#eval mkExpr  (Γn 4) (ops.get! 3) |>.isSome
+#eval mkExpr  (Γn 5) (ops.get! 4) |>.isSome
+#eval mkReturn (Γn 6) (ops.get! 5) |>.isSome
+
+
+#eval mkComHelper (Γn 1) ops |>.isSome
+#eval mkComHelper (Γn 1) ops' |>.isSome

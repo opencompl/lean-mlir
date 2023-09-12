@@ -10,8 +10,20 @@ abbrev Com (Γ : Context) (ty : InstCombine.Ty) := ICom InstCombine.Op Γ ty
 
 namespace MLIR.AST
 
+abbrev NameMapping := List String
+
+def NameMapping.lookup (nm : NameMapping) (name : String) : Option Nat :=
+  nm.indexOf? name
+
+def NameMapping.addGet (nm : NameMapping) (name : String) : NameMapping × Nat := 
+  match nm.lookup name with
+    | none => (name::nm, nm.length)
+    | some n => (nm, n)
+
+abbrev BuilderM := StateT (NameMapping × Context) Option
+
 def mkUnaryOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
- (e : Ctxt.Var Γ ty) : Option <| IExpr InstCombine.Op Γ ty :=
+ (e : Ctxt.Var Γ ty) : BuilderM <| IExpr InstCombine.Op Γ ty :=
  match ty with
  | .bitvec w =>
    match op with
@@ -34,7 +46,7 @@ def mkUnaryOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
     | _ => none
 
 def mkBinOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
- (e₁ e₂ : Ctxt.Var Γ ty) : Option <| IExpr InstCombine.Op Γ ty :=
+ (e₁ e₂ : Ctxt.Var Γ ty) : BuilderM <| IExpr InstCombine.Op Γ ty :=
  match ty with
  | .bitvec w =>
    match op with
@@ -107,7 +119,7 @@ def mkBinOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
     | _ => none
 
 def mkIcmp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
- (e₁ e₂ : Ctxt.Var Γ ty) : Option <| IExpr InstCombine.Op Γ (.bitvec 1) :=
+ (e₁ e₂ : Ctxt.Var Γ ty) : BuilderM <| IExpr InstCombine.Op Γ (.bitvec 1) :=
  match ty with
  | .bitvec w =>
    match op with
@@ -119,7 +131,7 @@ def mkIcmp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
       | _ => none
 
 def mkSelect {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
- (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) : Option <| IExpr InstCombine.Op Γ ty :=
+ (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) : BuilderM <| IExpr InstCombine.Op Γ ty :=
  match ty with
  | .bitvec w =>
    match op with
@@ -132,7 +144,7 @@ def mkSelect {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
 
 def mkOpExpr {Γ : Ctxt _} (op : InstCombine.Op)
 (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) : 
-Option <| IExpr InstCombine.Op Γ (OpSignature.outTy op) :=
+BuilderM <| IExpr InstCombine.Op Γ (OpSignature.outTy op) :=
 match op with
 | .and _ | .or _ | .xor _ | .shl _ | .lshr _ | .ashr _
 | .add _ | .mul _ | .sub _ | .udiv _ | .sdiv _ 
@@ -149,11 +161,11 @@ match op with
   mkSelect op c e₁ e₂
 | .const _ => none
 
-def MLIRType.mkTy : MLIRType → Option InstCombine.Ty
+def MLIRType.mkTy : MLIRType → BuilderM InstCombine.Ty
   | MLIRType.int Signedness.Signless w => some <| InstCombine.Ty.bitvec w
   | _ => none
 
-def TypedSSAVal.mkTy : TypedSSAVal → Option InstCombine.Ty
+def TypedSSAVal.mkTy : TypedSSAVal → BuilderM InstCombine.Ty
   | (.SSAVal _, ty) => ty.mkTy
 
 def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
@@ -161,7 +173,8 @@ def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
 
 -- [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
 --                    (SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
-def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → Option (Σ ty : InstCombine.Ty, Ctxt.Var Γ ty)
+
+def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → BuilderM (Σ ty : InstCombine.Ty, Ctxt.Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let valNat ← String.toNat? valStx
@@ -169,7 +182,7 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → Option (Σ ty : InstCombi
       then return Sigma.mk ty { val := valNat, property := h}
       else none
 
-def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ ty) := do
+def mkExpr (Γ : Context) (opStx : Op) : BuilderM (Σ ty : InstCombine.Ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
     let Sigma.mk ty₁ v₁ ← v₁Stx.mkVal Γ
@@ -192,7 +205,7 @@ def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ
         | "llvm.udiv" => some <| InstCombine.Op.udiv ty₁.width
         | _ => panic! "Unsuported operation or invalid arguments"
       let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-      Sigma.mk ty₁ binOp
+      return Sigma.mk ty₁ binOp
     else none
          --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
   | vStx::[] =>
@@ -222,7 +235,7 @@ def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ
     else none
   | _ => none
 
-def mkReturn (Γ : Context) (opStx : Op) : Option (Σ ty : InstCombine.Ty, Com Γ ty) := 
+def mkReturn (Γ : Context) (opStx : Op) : BuilderM (Σ ty : InstCombine.Ty, Com Γ ty) := 
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
@@ -231,13 +244,14 @@ def mkReturn (Γ : Context) (opStx : Op) : Option (Σ ty : InstCombine.Ty, Com �
   | _ => none 
   else none
 
-private def mkComHelper (Γ : Context) : List Op → Option (Σ ty : InstCombine.Ty, Com Γ ty)
-  | [] => none
+--private
+def mkComHelper (Γ : Context) : List Op → BuilderM (Σ ty : InstCombine.Ty, Com Γ ty)
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
-    let Sigma.mk ty₁ e ← mkExpr lete Γ
+    let Sigma.mk ty₁ e ← mkExpr Γ lete
     let Sigma.mk ty₂ r ← mkComHelper (Γ.snoc ty₁) rest
     return Sigma.mk ty₂ <| ICom.lete e r
+  | _ => none
 
 private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × Ctxt.Var Γ ty) → Context
   | [] => Γ
@@ -245,7 +259,7 @@ private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × C
     let restChanged := rest.map fun (Sigma.mk ty' v') => Sigma.mk ty' (Ctxt.Var.toSnoc v' (t' := ty))
     argsToCtxt (Γ.snoc ty) restChanged
 
-def mkCom (Γ : Context) (reg : Region) : Option (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
+def mkCom (Γ : Context) (reg : Region) : BuilderM (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
   match reg.ops with
   | [] => none
   | coms => do
@@ -254,4 +268,4 @@ def mkCom (Γ : Context) (reg : Region) : Option (Σ (Γ' : Context)(ty : InstCo
     let icom ← mkComHelper Γ' coms
     return Sigma.mk Γ' icom
 
-  
+end MLIR.AST

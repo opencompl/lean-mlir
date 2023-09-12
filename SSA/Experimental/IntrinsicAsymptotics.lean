@@ -45,8 +45,6 @@ inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   | nil {Γ : Ctxt Ty} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Op Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
 
-
-
 /-
   # Definitions
 -/
