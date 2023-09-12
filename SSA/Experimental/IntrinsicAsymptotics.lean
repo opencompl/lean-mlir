@@ -123,38 +123,38 @@ def MVarDenote (Ty : Type) [Goedel Ty] : Type :=
 mutual
 
 def Reg.denote : {Γ : Ctxt Ty} → {ty : Ty} →
-    (mv : MVarDenote Ty) →
-    (r : Reg Op Γ ty) → (Γ.Valuation → toType ty)
-  | _, _, mv, Reg.icom com => com.denote mv
-  | _, _, mv, Reg.mvar i => mv _ _ i
+    (r : Reg Op Γ ty) → (mv : MVarDenote Ty) →(Γ.Valuation → toType ty)
+  | _, _, Reg.icom com, mv => com.denote mv
+  | _, _, Reg.mvar i, mv => mv _ _ i
 
 def HVector.denote : {l : List (Ctxt Ty × Ty)} →
-    (mv : MVarDenote Ty) →
     (T : HVector (fun t => Reg Op t.1 t.2) l) →
+    (mv : MVarDenote Ty) →
     HVector (fun t => t.1.Valuation → toType t.2) l
-  | _, _, .nil => HVector.nil
-  | _, mv, .cons v vs => HVector.cons (v.denote mv) (HVector.denote mv vs)
+  | _, .nil, _ => HVector.nil
+  | _, .cons v vs, mv => HVector.cons (v.denote mv) (HVector.denote vs mv)
 
-def IExpr.denote : {ty : Ty} → (mv : MVarDenote Ty) →
-    (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → toType ty
-  | _, mv, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
+def IExpr.denote : {ty : Ty} →
+    (e : IExpr Op Γ ty) → (mv : MVarDenote Ty) →
+    (Γv : Γ.Valuation) → toType ty
+  | _, ⟨op, Eq.refl _, args, regArgs⟩, mv, Γv =>
     OpDenote.denote op (args.map (fun _ v => Γv v)) <| regArgs.denote mv
 
-def ICom.denote : (mv : MVarDenote Ty) →
-    ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
-  | _, .ret e, Γv => Γv e
-  | mv, .lete e body, Γv => body.denote mv (Γv.snoc (e.denote mv Γv))
+def ICom.denote : ICom Op Γ ty → (mv : MVarDenote Ty) →
+    (Γv : Γ.Valuation) → (toType ty)
+  | .ret e, _, Γv => Γv e
+  | .lete e body, mv, Γv => body.denote mv (Γv.snoc (e.denote mv Γv))
 
 end
 termination_by
-  IExpr.denote _ _ e _ => sizeOf e
-  ICom.denote _ _ e _ => sizeOf e
-  HVector.denote _ _ e => sizeOf e
-  Reg.denote _ _ _ _ r => sizeOf r
+  Reg.denote _ _ _ r _ => sizeOf r
+  HVector.denote _  e _ => sizeOf e
+  IExpr.denote _ e _ _ => sizeOf e
+  ICom.denote _ e _ _ => sizeOf e
 
-def Lets.denote (mv : MVarDenote Ty) : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
-  | .nil => id
-  | .lete e body => fun ll t v => by
+def Lets.denote : Lets Op Γ₁ Γ₂ → MVarDenote Ty → Γ₁.Valuation → Γ₂.Valuation
+  | .nil => fun _ => id
+  | .lete e body => fun mv ll t v => by
     cases v using Ctxt.Var.casesOn with
     | last =>
       apply body.denote mv
@@ -169,17 +169,16 @@ def IExpr.changeVars (varsMap : Γ.Hom Γ') :
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
-    (mv : MVarDenote Ty)
     (varsMap : Γ.Hom Γ')
     (e : IExpr Op Γ ty)
+    (mv : MVarDenote Ty)
     (Γ'v : Γ'.Valuation) :
     (e.changeVars varsMap).denote mv Γ'v =
     e.denote mv (fun t v => Γ'v (varsMap v)) := by
   rcases e with ⟨_, rfl, _⟩
   simp [IExpr.denote, IExpr.changeVars, HVector.map_map]
 
-def ICom.changeVars
-    (varsMap : Γ.Hom Γ') :
+def ICom.changeVars (varsMap : Γ.Hom Γ') :
     ICom Op Γ ty → ICom Op Γ' ty
   | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap)
@@ -187,8 +186,8 @@ def ICom.changeVars
 
 @[simp]
 theorem ICom.denote_changeVars
-    (mv : MVarDenote Ty)
     (varsMap : Γ.Hom Γ') (c : ICom Op Γ ty)
+    (mv : MVarDenote Ty)
     (Γ'v : Γ'.Valuation) :
     (c.changeVars varsMap).denote mv Γ'v =
     c.denote mv (fun t v => Γ'v (varsMap v)) := by
@@ -893,6 +892,7 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {w : Δ_out.Var t}
     {hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
+    (mv : MVarDenote Ty)
     (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Γ_in.Valuation) :
     matchLets.denote mv (fun t' v' => lets.denote mv s₁ (map v')) w =
       lets.denote mv s₁ v := by
@@ -987,11 +987,11 @@ def rewriteAt (lhs rhs : ICom Op Γ₁ t₁)
 theorem denote_rewriteAt (lhs rhs : ICom Op Γ₁ t₁)
     (hlhs : ∀ t (v : Γ₁.Var t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : ICom Op Γ₂ t₂)
-    (hl : lhs.denote mv = rhs.denote mv)
+    (hl : lhs.denote = rhs.denote)
     (rew : ICom Op Γ₂ t₂)
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
-    rew.denote mv = target.denote mv := by
-  ext s
+    rew.denote = target.denote := by
+  ext mv s
   rw [rewriteAt] at hrew
   simp only [bind, pure, Option.bind] at hrew
   split at hrew
@@ -1058,7 +1058,7 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
       generalize hrew : rewriteAt pr.lhs pr.rhs h pos target = rew
       cases rew with
         | some res =>
-          apply denote_rewriteAt pr.lhs pr.rhs h pos target pr.correct _ hrew
+          exact denote_rewriteAt pr.lhs pr.rhs h pos target pr.correct _ hrew
         | none => simp
     case neg h => simp
 
@@ -1123,8 +1123,9 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
 macro "simp_peephole": tactic =>
   `(tactic|
       (
-      funext ll
-      simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+      funext mv ll
+      simp only [ICom.denote, IExpr.denote, Reg.denote,
+        Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
         cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
       generalize ll { val := 0, property := _ } = a;
