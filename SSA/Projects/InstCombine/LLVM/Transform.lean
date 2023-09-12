@@ -4,6 +4,8 @@ import SSA.Projects.InstCombine.Base
 import SSA.Experimental.IntrinsicAsymptotics
 
 abbrev Context := Ctxt InstCombine.Ty
+/-- A non-erased context, i.e., the types are available at runtime  -/
+abbrev CompContext := CompCtxt InstCombine.Ty
 abbrev Expr (Γ : Context) (ty : InstCombine.Ty) := IExpr InstCombine.Op Γ ty
 abbrev Com (Γ : Context) (ty : InstCombine.Ty) := ICom InstCombine.Op Γ ty
 --abbrev Bitvec (w : Nat) := InstCombine.Ty.bitvec w
@@ -161,7 +163,7 @@ def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
 
 -- [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
 --                    (SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
-def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → Option (Σ ty : InstCombine.Ty, Ctxt.Var Γ ty)
+def TypedSSAVal.mkVal (Γ : CompContext) : TypedSSAVal → Option (Σ ty : InstCombine.Ty, Ctxt.Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let valNat ← String.toNat? valStx
@@ -169,7 +171,7 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → Option (Σ ty : InstCombi
       then return Sigma.mk ty { val := valNat, property := h}
       else none
 
-def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ ty) := do
+def mkExpr (opStx : Op) (Γ : CompContext) : Option (Σ ty : InstCombine.Ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
     let Sigma.mk ty₁ v₁ ← v₁Stx.mkVal Γ
@@ -222,7 +224,7 @@ def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ
     else none
   | _ => none
 
-def mkReturn (Γ : Context) (opStx : Op) : Option (Σ ty : InstCombine.Ty, Com Γ ty) := 
+def mkReturn (Γ : CompContext) (opStx : Op) : Option (Σ ty : InstCombine.Ty, Com Γ ty) := 
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
@@ -231,7 +233,7 @@ def mkReturn (Γ : Context) (opStx : Op) : Option (Σ ty : InstCombine.Ty, Com �
   | _ => none 
   else none
 
-private def mkComHelper (Γ : Context) : List Op → Option (Σ ty : InstCombine.Ty, Com Γ ty)
+private def mkComHelper (Γ : CompContext) : List Op → Option (Σ ty : InstCombine.Ty, Com Γ ty)
   | [] => none
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
@@ -245,7 +247,7 @@ private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × C
     let restChanged := rest.map fun (Sigma.mk ty' v') => Sigma.mk ty' (Ctxt.Var.toSnoc v' (t' := ty))
     argsToCtxt (Γ.snoc ty) restChanged
 
-def mkCom (Γ : Context) (reg : Region) : Option (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
+def mkCom (Γ : CompContext) (reg : Region) : Option (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
   match reg.ops with
   | [] => none
   | coms => do

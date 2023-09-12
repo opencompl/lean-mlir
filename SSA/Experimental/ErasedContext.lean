@@ -15,17 +15,15 @@ notation "⟦" x "⟧" => Goedel.toType x
 
 instance : Goedel Unit where toType := fun _ => Unit
 
+/-- A non-erased context, i.e., the types are available at runtime -/
+def CompCtxt (Ty : Type) : Type :=
+  List Ty
+
 def Ctxt (Ty : Type) : Type :=
-  Erased <| List Ty
+  Erased <| CompCtxt Ty
   -- List Ty
 
-/-- A non-erased context, i.e., the types are available at runtime -/
-def CompCtxt (Ty : Type) : Type :=
-  List Ty
 
-/-- A non-erased context, i.e., the types are available at runtime -/
-def CompCtxt (Ty : Type) : Type :=
-  List Ty
 
 namespace Ctxt
 
@@ -317,7 +315,7 @@ variable {Ty : Type}
 abbrev erase : CompCtxt Ty → Ctxt Ty :=
   .ofList
 
-def snoc : CompCtxt Ty → Ty → Ctxt Ty :=
+def snoc : CompCtxt Ty → Ty → CompCtxt Ty :=
   fun tl hd => (hd :: tl)
 
 end CompCtxt
