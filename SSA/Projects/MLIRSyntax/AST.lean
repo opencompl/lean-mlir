@@ -89,7 +89,6 @@ inductive MLIRType :=
 | tensor4d: MLIRType -- tensor of int values. 
 | index:  MLIRType
 | undefined: String → MLIRType
-| extended: σ → MLIRType
 | erased: MLIRType -- A type that is erased by dialect retraction.
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
@@ -424,7 +423,6 @@ partial def docMLIRType: MLIRType → Doc
   | .index => [doc| "index"]
   | .undefined name => [doc| "!" name]
   | .erased => [doc| "erased"]
-  | .extended sig => [doc| "interface unimplemented"] --DialectTypeIntf.typeStr ε sig
 
 partial def docAttrVal: AttrValue → Doc
   | .symbol s => "@" ++ doc_surround_dbl_quot s
@@ -443,7 +441,6 @@ partial def docAttrVal: AttrValue → Doc
   | .opaque_ dialect val => [doc| "#" (dialect) "<"  (val) ">"]
   | .opaqueElements dialect val ty => [doc| "#opaque<" (dialect) ","  (val) ">" ":" (docMLIRType ty)]
   | .unit => "()"
---  | .extended a => "!Atributes unimplemented" --DialectAttrIntf.str a
   | .erased => "<erased>"
 
 partial def docAttrEntry: AttrEntry → Doc
