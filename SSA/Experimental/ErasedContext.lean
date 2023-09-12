@@ -27,6 +27,7 @@ variable {Ty : Type}
 def empty : Ctxt Ty := []
 
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
+instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=

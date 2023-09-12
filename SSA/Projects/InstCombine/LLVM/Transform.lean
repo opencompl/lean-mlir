@@ -143,7 +143,7 @@ match op with
   let (e₁, e₂) := arg.toTuple
   mkIcmp op e₁ e₂
 | .not _ | .neg _ | .copy _ => 
-  mkUnuaryOp op arg.head
+  mkUnaryOp op arg.head
 | .select _ => 
   let (c, e₁, e₂) := arg.toTuple
   mkSelect op c e₁ e₂
@@ -168,13 +168,6 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → Option (Σ ty : InstCombi
     if h : Γ.get? valNat = some ty 
       then return Sigma.mk ty { val := valNat, property := h}
       else none
-
--- def mkTyHVec : List TypedSSAVal → Option (Σ sig : List InstCombine.Ty, HVector toType sig)
---   | ty::ts => do
---      let (Sigma.mk ts rest) ← mkTyHVec ts
---      let t ← ty.mkTy 
---      return Sigma.mk (t::ts) (HVector.cons _ rest)
---   | [] => some <| Sigma.mk [] HVector.nil
 
 def mkExpr (opStx : Op) (Γ : Context) : Option (Σ ty : InstCombine.Ty, Expr Γ ty) := do
   match opStx.args with
@@ -246,16 +239,19 @@ private def mkComHelper (Γ : Context) : List Op → Option (Σ ty : InstCombine
     let Sigma.mk ty₂ r ← mkComHelper (Γ.snoc ty₁) rest
     return Sigma.mk ty₂ <| ICom.lete e r
 
--- TODO: finish (WIP)
-private def argsToLets (Γ : Context) : List ((ty : InstCombine.Ty) × Ctxt.Var Γ ty) → Σ Γ' : Context, Lets InstCombine.Op Γ' Γ
-  | [] => Sigma.mk Γ .nil
-  | (Sigma.mk ty v)::rest => 
+private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × Ctxt.Var Γ ty) → Context
+  | [] => Γ
+  | (Sigma.mk ty _)::rest => 
     let restChanged := rest.map fun (Sigma.mk ty' v') => Sigma.mk ty' (Ctxt.Var.toSnoc v' (t' := ty))
-    let restLets := argsToLets (Γ.snoc ty) restChanged
-    Sigma.mk (Γ.snoc ty) (Lets.lete restLets _)
+    argsToCtxt (Γ.snoc ty) restChanged
 
--- TODO: finish (WIP)
-def mkCom (Γ : Context) (reg : Region) : Option (Σ ty : InstCombine.Ty, Com Γ ty) := do
-  let valList ← reg.args.mapM <| TypedSSAVal.mkVal Γ
-  let c
-  none
+def mkCom (Γ : Context) (reg : Region) : Option (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
+  match reg.ops with
+  | [] => none
+  | coms => do
+    let valList ← reg.args.mapM <| TypedSSAVal.mkVal Γ
+    let Γ' := argsToCtxt Γ valList
+    let icom ← mkComHelper Γ' coms
+    return Sigma.mk Γ' icom
+
+  

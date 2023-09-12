@@ -68,7 +68,7 @@ inductive Op
 | udiv (w : Nat) : Op
 | icmp (c : IntPredicate) (w : Nat) : Op
 | const {w : Nat} (val : Bitvec w) : Op
-deriving Repr, DecidableEq
+deriving Repr, DecidableEq, Inhabited
 
 @[simp, reducible]
 def Op.sig : Op → List Ty
