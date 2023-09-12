@@ -16,7 +16,11 @@ notation "⟦" x "⟧" => Goedel.toType x
 instance : Goedel Unit where toType := fun _ => Unit
 
 def Ctxt (Ty : Type) : Type :=
-  -- Erased <| List Ty
+  Erased <| List Ty
+  -- List Ty
+
+/-- A non-erased context, i.e., the types are available at runtime -/
+def CompCtxt (Ty : Type) : Type :=
   List Ty
 
 /-- A non-erased context, i.e., the types are available at runtime -/
@@ -27,27 +31,33 @@ namespace Ctxt
 
 variable {Ty : Type}
 
--- def empty : Ctxt := Erased.mk []
-def empty : Ctxt Ty := []
+def empty : Ctxt Ty := Erased.mk []
+-- def empty : Ctxt Ty := []
 
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
-  -- fun tl hd => do return hd :: (← tl)
-  fun tl hd => hd :: tl
+  fun tl hd => Erased.map (hd :: ·) tl
+  -- fun tl hd => hd :: tl
 
 /-- Turn a list of types into a context -/
 @[coe, simp]
 def ofList : List Ty → Ctxt Ty :=
-  -- Erased.mk
-  fun Γ => Γ 
+  Erased.mk
+  -- fun Γ => Γ 
 
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
 noncomputable def get? : Ctxt Ty → Nat → Option Ty :=
-  List.get?
+  fun Γ => Γ.out.get? 
+  -- List.get?
+
+@[simp]
+theorem get?_snoc_succ {Γ : Ctxt Ty} {t : Ty} {n : Nat} :
+    (Γ.snoc t).get? (n + 1) = Γ.get? n := by
+  simp [snoc]
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
@@ -71,7 +81,7 @@ def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
 in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
 def toSnoc {Γ : Ctxt Ty} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
-  ⟨var.1+1, var.2⟩
+  ⟨var.1+1, get?_snoc_succ.symm ▸ var.2⟩
 
 @[simp]
 theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
@@ -80,7 +90,7 @@ theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
 
 @[simp]
 theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
-    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
+    ⟨w+1, h⟩ = toSnoc ⟨w, get?_snoc_succ.symm ▸ h⟩ :=
   rfl
 
 

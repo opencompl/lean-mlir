@@ -42,7 +42,7 @@ def ToTupleType (A : α → Type*) : List α → Type _
   | [a] => A a
   | a :: as => A a × (ToTupleType A as)
 
-/-- 
+/--
   Turns a `HVector A [a₁, a₂, ..., aₙ]` into a tuple `(A a₁) × (A a₂) × ... × (A aₙ)`
 -/
 def toTuple {as} : HVector A as → ToTupleType A as
@@ -62,5 +62,9 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     (f : ∀ a, A a → B a) (g : ∀ a, B a → C a) :
     (t.map f).map g = t.map (fun a v => g a (f a v)) := by
   induction t <;> simp_all [map]
+
+theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
+    {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by
+  cases h; cases t₁; cases t₂; rfl
 
 end HVector
