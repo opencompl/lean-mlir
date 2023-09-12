@@ -19,6 +19,10 @@ def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
   List Ty
 
+/-- A non-erased context, i.e., the types are available at runtime -/
+def CompCtxt (Ty : Type) : Type :=
+  List Ty
+
 namespace Ctxt
 
 variable {Ty : Type}
@@ -42,7 +46,7 @@ def ofList : List Ty → Ctxt Ty :=
 
 -- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
-def get? : Ctxt Ty → Nat → Option Ty :=
+noncomputable def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
@@ -294,3 +298,16 @@ end Diff
 
 
 end Ctxt
+
+namespace CompCtxt
+
+variable {Ty : Type}
+
+@[coe]
+abbrev erase : CompCtxt Ty → Ctxt Ty :=
+  .ofList
+
+def snoc : CompCtxt Ty → Ty → Ctxt Ty :=
+  fun tl hd => (hd :: tl)
+
+end CompCtxt
