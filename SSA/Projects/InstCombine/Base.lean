@@ -21,7 +21,10 @@ deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
   | bitvec (w : Nat) : Ty
-  deriving DecidableEq, Inhabited
+  deriving DecidableEq, Inhabited, Repr
+
+instance : ToString Ty where
+  toString t := repr t |>.pretty
 
 instance : Repr Ty where 
   reprPrec 
@@ -69,6 +72,9 @@ inductive Op
 | icmp (c : IntPredicate) (w : Nat) : Op
 | const {w : Nat} (val : Bitvec w) : Op
 deriving Repr, DecidableEq, Inhabited
+
+instance : ToString Op where
+  toString o := repr o |>.pretty
 
 @[simp, reducible]
 def Op.sig : Op → List Ty

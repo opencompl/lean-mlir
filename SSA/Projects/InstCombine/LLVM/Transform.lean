@@ -20,23 +20,36 @@ def NameMapping.addGet (nm : NameMapping) (name : String) : NameMapping × Nat :
     | none => (name::nm, nm.length)
     | some n => (nm, n)
 
-abbrev BuilderM := StateT (NameMapping × Context) <| Except String
+abbrev BuilderM := StateT NameMapping <| Except String
+
+def addGetCtxt (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
+  BuilderM ((Γ.Var ty) ⊕ (Γ.snoc ty |>.Var ty)) := do
+  let nm ← get
+  let (nm',n) := nm.addGet name
+  if h : Γ.get? n = ty then
+    return .inl { val := n, property := h}
+  else if Γ.get? n = none then
+     let Γ' := Γ.snoc ty  
+     if h : Γ'.get? n = some ty then
+       let _ ← set nm'
+       return .inr { val := n, property := h }
+     else throw s!"Failed to add variable to context (size mismatch {n} ≠ {Γ'.length})"
+  else throw s!"Failed to add variable to context (type mismatch {Γ.get! n} ≠ {ty})"
 
 def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool := 
-  match x.run ([], Ctxt.empty) with
+  match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
 def BuilderM.isErr {α : Type} (x : BuilderM α) : Bool := 
-  match x.run ([], Ctxt.empty) with
+  match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
 def BuilderM.printErr {α : Type} (x : BuilderM α) : String := 
-  match x.run ([], Ctxt.empty) with
+  match x.run [] with
   | Except.ok _ => "okay"
   | Except.error s => s
-
 
 def mkUnaryOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
  (e : Ctxt.Var Γ ty) : BuilderM <| IExpr InstCombine.Op Γ ty :=
@@ -187,22 +200,23 @@ def TypedSSAVal.mkTy : TypedSSAVal → BuilderM InstCombine.Ty
 def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
   | val => Bitvec.ofInt ty.width val
 
--- TODO: refactor this to use state
-def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → BuilderM (Σ ty : InstCombine.Ty, Ctxt.Var Γ ty)
+
+def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → BuilderM 
+  ((Σ (ty : InstCombine.Ty), Ctxt.Var Γ ty) ⊕ 
+   (Σ (ty : InstCombine.Ty), Ctxt.Var (Γ.snoc ty) ty)) 
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
-    let some valNat := String.toNat? valStx
-      | throw "Unsupported SSA value"
-    if h : Γ.get? valNat = some ty 
-      then return Sigma.mk ty { val := valNat, property := h}
-      else throw "Invalid SSA value in context"
+    let eitherV ← addGetCtxt Γ valStx ty
+    match eitherV with
+      | .inl v => return .inl <| Sigma.mk ty v
+      | .inr v => return .inr <| Sigma.mk ty v
 
-def mkExpr (Γ : Context) (opStx : Op) : BuilderM (Σ ty : InstCombine.Ty, Expr Γ ty) := do
+def mkExpr (opStx : Op) : BuilderM (Σ ty : InstCombine.Ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
-    let Sigma.mk ty₁ v₁ ← v₁Stx.mkVal Γ
-    let Sigma.mk ty₂ v₂ ← v₂Stx.mkVal Γ
-    if hty : ty₁ = ty₂ then 
+    let v₁Sum ← v₁Stx.mkVal Γ
+    match v₁Sum with
+    | .inl (Sigma.mk ty₁ v₁) =>
       let op ← match opStx.name with
         | "llvm.and" => pure <| InstCombine.Op.and ty₁.width
         | "llvm.or" => pure <| InstCombine.Op.or ty₁.width
@@ -218,11 +232,50 @@ def mkExpr (Γ : Context) (opStx : Op) : BuilderM (Σ ty : InstCombine.Ty, Expr 
         | "llvm.sub" => pure <| InstCombine.Op.sub ty₁.width
         | "llvm.sdiv" => pure <| InstCombine.Op.sdiv ty₁.width
         | "llvm.udiv" => pure <| InstCombine.Op.udiv ty₁.width
-        | _ => throw "Unsuported operation or invalid arguments"
-      let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-      return Sigma.mk ty₁ binOp
-    else throw s!"Unknown (binary) operation syntax {opStx.name}"
          --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
+        | _ => throw "Unsuported operation or invalid arguments"
+      let v₂Sum ← v₂Stx.mkVal Γ
+      match v₂Sum with
+      | .inl (Sigma.mk ty₂ v₂) =>
+         if hty : ty₁ = ty₂ then 
+           let binOp ← mkBinOp op v₁ (hty ▸ v₂)
+           return Sigma.mk ty₁ binOp
+         else throw s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+      | .inr (Sigma.mk ty₂ v₂) =>
+         if hty : ty₁ = ty₂ then 
+           let binOp ← mkBinOp op v₁ (hty ▸ v₂)
+           return Sigma.mk ty₁ binOp
+         else throw s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    | .inr (Sigma.mk ty₁ v₁) =>
+      let op ← match opStx.name with
+        | "llvm.and" => pure <| InstCombine.Op.and ty₁.width
+        | "llvm.or" => pure <| InstCombine.Op.or ty₁.width
+        | "llvm.xor" => pure <| InstCombine.Op.xor ty₁.width
+        | "llvm.shl" => pure <| InstCombine.Op.shl ty₁.width
+        | "llvm.lshr" => pure <| InstCombine.Op.lshr ty₁.width
+        | "llvm.ashr" => pure <| InstCombine.Op.ashr ty₁.width
+        | "llvm.urem" => pure <| InstCombine.Op.urem ty₁.width
+        | "llvm.srem" => pure <| InstCombine.Op.srem ty₁.width
+        | "llvm.select" => pure <| InstCombine.Op.select ty₁.width
+        | "llvm.add" => pure <| InstCombine.Op.add ty₁.width
+        | "llvm.mul" => pure <| InstCombine.Op.mul ty₁.width
+        | "llvm.sub" => pure <| InstCombine.Op.sub ty₁.width
+        | "llvm.sdiv" => pure <| InstCombine.Op.sdiv ty₁.width
+        | "llvm.udiv" => pure <| InstCombine.Op.udiv ty₁.width
+         --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
+        | _ => throw "Unsuported operation or invalid arguments"
+      let v₂Sum ← v₂Stx.mkVal (Γ.snoc ty₁)
+      match v₂Sum with
+      | .inl (Sigma.mk ty₂ v₂) =>
+         if hty : ty₁ = ty₂ then 
+           let binOp ← mkBinOp op v₁ (hty ▸ v₂)
+           return Sigma.mk ty₁ binOp
+         else throw s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+      | .inr (Sigma.mk ty₂ v₂) =>
+         if hty : ty₁ = ty₂ then 
+           let binOp ← mkBinOp op v₁ (hty ▸ v₂)
+           return Sigma.mk ty₁ binOp
+         else throw s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
   | vStx::[] =>
     let Sigma.mk ty v ← vStx.mkVal Γ
     match opStx.name with
