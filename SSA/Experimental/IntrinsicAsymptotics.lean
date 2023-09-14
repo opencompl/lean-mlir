@@ -46,8 +46,11 @@ inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
-    (regArgs : HVector (fun t : Ctxt Ty × Ty => Reg t.1 t.2)
-      (OpSignature.regSig op)) : IExpr Γ ty
+    -- bollu: this is wrong, the user never invokes the region, it's
+    -- only the `op.denote` that can choose to invoke regions.
+    -- (regArgs : HVector (fun t : Ctxt Ty × Ty => Reg t.1 t.2)
+    --   (OpSignature.regSig op))
+    : IExpr Γ ty
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
@@ -83,35 +86,26 @@ def ICom.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → ICom Op a a_1 → Sort 
   | hret, hlete, _, _, ICom.lete e body => hlete e body (ICom.rec' hret hlete body)
 
 def IExpr.op {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) : Op :=
-  IExpr.casesOn e (fun op _ _ _ => op)
+  IExpr.casesOn e (fun op _ _ => op)
 
 theorem IExpr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
     ty = OpSignature.outTy e.op :=
-  IExpr.casesOn e (fun _ ty_eq _ _ => ty_eq)
+  IExpr.casesOn e (fun _ ty_eq _ => ty_eq)
 
 def IExpr.args {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
     HVector (Var Γ) (OpSignature.sig e.op) :=
-  IExpr.casesOn e (fun _ _ args _ => args)
-
-def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
-    HVector (fun t : Ctxt Ty × Ty => Reg Op t.1 t.2) (OpSignature.regSig e.op) :=
-  IExpr.casesOn e (fun _ _ _ regArgs => regArgs)
+  IExpr.casesOn e (fun _ _ args => args)
 
 /-! Projection equations for `IExpr` -/
 @[simp]
 theorem IExpr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
-    (IExpr.mk op ty_eq args regArgs).op = op := rfl
+    (args : HVector (Var Γ) (OpSignature.sig op)) :
+    (IExpr.mk op ty_eq args).op = op := rfl
 
 @[simp]
 theorem IExpr.args_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (IExpr.mk op ty_eq args regArgs).args = args := rfl
-
-@[simp]
-theorem IExpr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (IExpr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
+    (args : HVector (Var Γ) (OpSignature.sig op)) :
+    (IExpr.mk op ty_eq args).args = args := rfl
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
@@ -137,7 +131,7 @@ def HVector.denote : {l : List (Ctxt Ty × Ty)} →
 def IExpr.denote : {ty : Ty} →
     (e : IExpr Op Γ ty) → (mv : MVarDenote Ty) →
     (Γv : Γ.Valuation) → toType ty
-  | _, ⟨op, Eq.refl _, args, regArgs⟩, mv, Γv =>
+  | _, ⟨op, Eq.refl _, args⟩, mv, Γv =>
     OpDenote.denote op (args.map (fun _ v => Γv v)) <| regArgs.denote mv
 
 def ICom.denote : ICom Op Γ ty → (mv : MVarDenote Ty) →
@@ -1085,6 +1079,7 @@ instance : Goedel ExTy where
 inductive ExOp :  Type
   | add : ExOp
   | beq : ExOp
+  | runK : ℕ → ExOp -- run the region K times.
   | cst : ℕ → ExOp
   deriving DecidableEq
 
@@ -1093,32 +1088,74 @@ instance : OpSignature ExOp ExTy where
     | .add => .nat
     | .beq => .bool
     | .cst _ => .nat
+    | .runK _ => .nat
   sig
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
-  regSig := fun _ => []
+    | .runK _ => [.nat]
+  regSig 
+    | .runK _ => [([.nat], .nat)]
+    | _ => []
+  
+-- Disgusting, @chris, there's gotta be a sensible application
+-- operation for our contexts?
+/-- Coerce a very typed function `f`
+    into the expected type (ℕ → ℕ) -/
+def coe_ctxt_nat2nat_to_fun
+  (f : Ctxt.Valuation [ExTy.nat] → ⟦ExTy.nat⟧) (x :  ℕ) : ℕ := by 
+  simp[Ctxt.Valuation, Var] at f;
+  simp[Goedel.toType] at f;
+  apply f;
+  intros ty var;
+  cases var;
+  case mk var_val var_property =>  {
+    have H : var_val = 0 := by {
+      cases var_val <;> simp at var_property ⊢;
+    };
+    subst H;
+    simp at var_property;
+    subst var_property;
+    simp;
+    exact x; -- apply x
+  }
+  
+/-- Compose `f` with itself `n` times -/
+def loopN (f : α → α) (n : ℕ) (x: α) : α := 
+  match n with
+  | 0 => x
+  | n' + 1 => loopN f n' (f x)
 
+
+-- (bollu:) unknown free variable: _kernel_fresh.104
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
+    | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn nil) => 
+       loopN (coe_ctxt_nat2nat_to_fun rgn) k v
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
   IExpr.mk
     (op := .cst n)
     (ty_eq := rfl)
     (args := .nil)
-    (regArgs := .nil)
+    -- (regArgs := .nil)
 
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
   IExpr.mk
     (op := .add)
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := .nil)
+    -- (regArgs := .nil)
+    
+def runK {Γ : Ctxt _} (k : ℕ) (e : Var Γ .nat) : IExpr ExOp Γ .nat :=
+  IExpr.mk
+    (op := .runK k)
+    (ty_eq := rfl)
+    (args := .cons e <| .nil)
 
 macro "simp_peephole": tactic =>
   `(tactic|
@@ -1385,4 +1422,54 @@ example : rewritePeepholeAt p4 5 ex3 = (
   .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩) := rfl
 
+
+
+def ex5 : ICom ExOp ∅ .nat :=
+  ICom.lete (cst 1) <|
+  ICom.lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+  ICom.lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+  ICom.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  ICom.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  ICom.ret ⟨0, by simp⟩
+
+-- a + b => b + (0 + a)
+def r5 : ICom ExOp (.ofList [.nat, .nat]) .nat :=
+  .lete (cst 0) <|
+  .lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
+  .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
+  .ret ⟨0, by simp⟩
+
+def p5 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
+  { lhs := m, rhs := r2, correct :=
+    by
+      rw [m, r2]
+      simp_peephole
+      intros a b
+      rw [Nat.zero_add]
+      rw [Nat.add_comm]
+    }
+
+example : rewritePeepholeAt p2 1 ex2' = (
+     .lete (cst 1) <|
+     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (cst 0) <|
+     .lete (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
+     .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .ret ⟨0, by simp⟩  ) := by rfl
+
+example : rewritePeepholeAt p2 2 ex2 = (
+  ICom.lete (cst  1) <|
+     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (cst  0) <|
+     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
+     .lete (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
+     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .ret ⟨0, by simp⟩  ) := by rfl
+
 end Examples
+
