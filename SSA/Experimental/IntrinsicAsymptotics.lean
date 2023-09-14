@@ -1059,6 +1059,7 @@ inductive ExOp :  Type
   | add : ExOp
   | beq : ExOp
   | cst : ℕ → ExOp
+  | runK (k : ℕ) : ExOp
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
@@ -1066,18 +1067,64 @@ instance : OpSignature ExOp ExTy where
     | .add => .nat
     | .beq => .bool
     | .cst _ => .nat
+    | .runK _ => .nat
   sig
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
-  regSig := fun _ => []
+    | .runK _ => [.nat]
+  regSig 
+   | .runK _ => [([.nat], .nat)]
+   | _ => []
 
+-- Disgusting, @chris, there's gotta be a sensible application
+-- operation for our contexts?
+/-- Coerce a very typed function `f`
+    into the expected type (ℕ → ℕ) -/
+def coe_ctxt_nat2nat_to_fun
+  (f : Ctxt.Valuation [ExTy.nat] → ⟦ExTy.nat⟧) (x :  ℕ) : ℕ := sorry
+/-
+  f (fun t i => 
+     match H : t with 
+     | .nat => x
+     | _ => sorry)
+ -/
+ /-
+  by 
+    simp[Ctxt.Valuation, Var] at f;
+    simp[Goedel.toType] at f;
+    apply f;
+    intros ty var;
+    cases var;
+    case mk var_val var_property =>  {
+      have H : var_val = 0 := by {
+        cases var_val <;> simp at var_property ⊢;
+      };
+      subst H;
+      simp at var_property;
+      subst var_property;
+      simp;
+      exact x; -- apply x
+    }
+-/
+  
+/-- Compose `f` with itself `n` times -/
+def loopN (f : α → α) (n : ℕ) (x: α) : α := 
+  match n with
+  | 0 => x
+  | n' + 1 => loopN f n' (f x)
+
+
+-- (bollu:) unknown free variable: _kernel_fresh.104
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
+    | .runK (k : Nat), _, _ => (0 : Nat)
+--  | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn nil) => 
+--       loopN (coe_ctxt_nat2nat_to_fun rgn) k v 
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
   IExpr.mk
