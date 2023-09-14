@@ -1107,7 +1107,7 @@ macro "simp_peephole": tactic =>
       (
       funext ll
       simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
+        Ctxt.snoc, Ctxt.ofList, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
         cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
@@ -1157,17 +1157,7 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      -- simp_peephole
-      funext ll
-      simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
-      generalize ll { val := 0, property := _ } = a;
-      generalize ll { val := 1, property := _ } = b;
-      simp [Goedel.toType] at a b;
-      -- rw [Ctxt.Valuation.snoc_last]
-      rw [@Ctxt.Valuation.snoc_last _ _ (Erased.mk [ExTy.nat, ExTy.nat])]
-      rw [@Ctxt.Valuation.snoc_last _ _ (Erased.mk [ExTy.nat, ExTy.nat])]
+      simp_peephole
       intros a b
       rw [Nat.add_comm]
     }
