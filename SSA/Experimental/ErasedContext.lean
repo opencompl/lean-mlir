@@ -49,6 +49,11 @@ theorem get?_snoc_succ {Γ : Ctxt Ty} {t : Ty} {n : Nat} :
     (Γ.snoc t).get? (n + 1) = Γ.get? n := by
   simp [snoc]
 
+@[simp]
+theorem get?_snoc_zero {Γ : Ctxt Ty} {t : Ty} :
+    (Γ.snoc t).get? 0 = t := by
+  simp [snoc]
+
   
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=

@@ -12,7 +12,7 @@
   {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
     "subDir?": null,
-    "rev": "5a858c32963b6b19be0d477a30a1f4b6c120be7e",
+    "rev": "21dac2e9cc7e3cf7da5800814787b833e680b2fd",
     "opts": {},
     "name": "Cli",
     "inputRev?": "nightly",
@@ -20,15 +20,15 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "891adb329938ca3cd49a1d1208f691a98fb0896f",
+    "rev": "bd93b8ebdaea3189c903b6b2af47645a952ea5e5",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "891adb3",
+    "inputRev?": "bd93b8e",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,
-    "rev": "81cc13c524a68d0072561dbac276cd61b65872a6",
+    "rev": "e75daed95ad1c92af4e577fea95e234d7a8401c1",
     "opts": {},
     "name": "Qq",
     "inputRev?": "master",
@@ -36,7 +36,7 @@
   {"git":
    {"url": "https://github.com/JLimperg/aesop",
     "subDir?": null,
-    "rev": "086c98bb129ca856381d4414dc0afd6e3e4ae2ef",
+    "rev": "1a0cded2be292b5496e659b730d2accc742de098",
     "opts": {},
     "name": "aesop",
     "inputRev?": "master",
@@ -44,7 +44,7 @@
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "b5f7bd40d2162fe148e585543f284a5d8cc0ef26",
+    "rev": "ba5e5e3af519b4fc5221ad0fa4b2c87276f1d323",
     "opts": {},
     "name": "std",
     "inputRev?": "main",

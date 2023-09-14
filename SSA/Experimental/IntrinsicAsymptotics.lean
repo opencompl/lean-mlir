@@ -591,6 +591,11 @@ theorem subset_entries_matchVar_matchArg_aux
       (subset_entries_matchVar_matchArg_aux hmatchVar h₂)
     exact hmatchVar _ _ _ _ _ h₁
 
+
+@[injection]
+theorem Ctxt.snoc_inj (h : Ctxt.snoc Γ₁ t₁ = Ctxt.snoc Γ₂ t₂ ) : Γ₁ = Γ₂ ∧ t₁ = t₂ := by
+  sorry
+
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
 theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
@@ -718,7 +723,10 @@ theorem denote_matchVar_of_subset
     apply denote_matchVar_of_subset
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
-    have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
+    have : t = t' := by 
+      simp only [Ctxt.get?_snoc_zero] at h_w; 
+      injection h_w with h_w
+      apply h_w.symm
     subst this
     simp [matchVar, Bind.bind, Option.bind]
     intro h_sub h_mv
@@ -1010,6 +1018,7 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op (.ofList Γ) t'} :
     rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩
+    simp only [Ctxt.ofList, Erased.out_mk]
   . intro h i
     apply h
 
