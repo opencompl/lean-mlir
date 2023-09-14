@@ -266,6 +266,17 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
+theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :
+  Diff.Valid Γ₁ Γ₂ d₁ →  Diff.Valid Γ₂ Γ₃ d₂ → Diff.Valid Γ₁ Γ₃ (d₁ + d₂) := by
+  intros h₁ h₂ i t hi
+  specialize @h₁ i t hi
+  specialize @h₂ (i + d₁) t h₁
+  rw [← h₂, Nat.add_assoc]
+
+/-- Addition of the differences of two contexts -/
+def append (d₁ : Diff Γ₁ Γ₂) (d₂ : Diff Γ₂ Γ₃) : Diff Γ₁ Γ₃ :=
+  {val := d₁.val + d₂.val,  property := append_valid d₁.property d₂.property}
+
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩

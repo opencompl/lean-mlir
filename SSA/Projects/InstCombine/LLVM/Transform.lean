@@ -10,6 +10,10 @@ abbrev Com (Γ : Context) (ty : InstCombine.Ty) := ICom InstCombine.Op Γ ty
 
 namespace MLIR.AST
 
+/--
+Store the names of the raw SSA variables (as strings).
+The order in the list should match the order in which they appear in the code.
+-/
 abbrev NameMapping := List String
 
 def NameMapping.lookup (nm : NameMapping) (name : String) : Option Nat :=
@@ -24,17 +28,18 @@ abbrev BuilderM := StateT NameMapping <| Except String
 
 def addGetCtxt (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
   BuilderM ((Γ.Var ty) ⊕ (Γ.snoc ty |>.Var ty)) := do
+  let N := Γ.length
   let nm ← get
   let (nm',n) := nm.addGet name
-  if h : Γ.get? n = ty then
-    return .inl { val := n, property := h}
+  if h : Γ.get? (N - n) = ty then
+    return .inl { val := (N - n), property := h}
   else if Γ.get? n = none then
      let Γ' := Γ.snoc ty  
-     if h : Γ'.get? n = some ty then
+     if h : Γ'.get? 0 = some ty then
        let _ ← set nm'
-       return .inr { val := n, property := h }
+       return .inr { val := 0, property := h }
      else throw s!"Failed to add variable to context (size mismatch {n} ≠ {Γ'.length})"
-  else throw s!"Failed to add variable to context (type mismatch {Γ.get! n} ≠ {ty})"
+  else throw s!"Failed to add variable to context (type mismatch {Γ.get! <| N - n} ≠ {ty})"
 
 def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool := 
   match x.run [] with
@@ -201,48 +206,22 @@ def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
   | val => Bitvec.ofInt ty.width val
 
 def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → BuilderM 
-  (Σ (ty : InstCombine.Ty), (Γ.Var ty) ⊕ (Γ.snoc ty).Var ty)
+  (Σ (Γ' : Context) (ty : InstCombine.Ty), (Γ'.Var ty × Ctxt.Diff Γ Γ')) 
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let eitherV ← addGetCtxt Γ valStx ty
     match eitherV with
-      | .inl v => return Sigma.mk ty <| .inl v
-      | .inr v => return Sigma.mk ty <| .inr v
+      | .inl v => return Sigma.mk Γ <| Sigma.mk ty <| (v, Ctxt.Diff.zero Γ)
+      | .inr v => 
+        let d := Ctxt.Diff.zero Γ |>.toSnoc (t := ty)
+        return Sigma.mk (Γ.snoc ty) <| Sigma.mk ty <| (v, d)
 
-def TypedSSAVal.mkValPair (Γ : Context) : TypedSSAVal →TypedSSAVal → BuilderM 
-  (Σ (ty₁ ty₂ : InstCombine.Ty),
-    ((Ctxt.Var Γ ty₁ × Ctxt.Var Γ ty₂) ⊕ 
-     (Ctxt.Var (Γ.snoc ty₂) ty₁ × Ctxt.Var (Γ.snoc ty₂) ty₂)) ⊕
-    ((Ctxt.Var (Γ.snoc ty₁) ty₁ × Ctxt.Var (Γ.snoc ty₁) ty₂) ⊕ 
-     (Ctxt.Var (Γ.snoc ty₁ |>.snoc ty₂) ty₁ × Ctxt.Var (Γ.snoc ty₁ |>.snoc ty₂) ty₂))
-  ) 
-| (.SSAVal valStx₁, tyStx₁), (.SSAVal valStx₂, tyStx₂) => do
-    let ty₁ ← tyStx₁.mkTy
-    let ty₂ ← tyStx₂.mkTy
-    let eitherV₁ ← addGetCtxt Γ valStx₁ ty₁
-    let res  ← match eitherV₁ with
-      | .inl v₁ => do
-        let eitherV₂ ← addGetCtxt Γ valStx₂ ty₂
-        match eitherV₂ with
-          | .inl v₂ => 
-            pure <| Sum.inl <| Sum.inl (v₁, v₂)
-          | .inr v₂ =>  
-            let v₁' := Ctxt.Var.toSnoc v₁ (t' := ty₂)
-            pure <| Sum.inl <| Sum.inr (v₁', v₂)
-      | .inr v₁ => do
-        let eitherV₂ ← addGetCtxt (Γ.snoc ty₁) valStx₂ ty₂
-        match eitherV₂ with
-          | .inl v₂ =>
-            pure <| Sum.inr <| Sum.inl (v₁, v₂)
-          | .inr v₂ =>  
-            let v₁' := Ctxt.Var.toSnoc v₁ (t' := ty₂)
-            pure <| Sum.inr <| Sum.inr (v₁', v₂)
-    return Sigma.mk ty₁ <| Sigma.mk ty₂ res
-
-def mkExpr (opStx : Op) (Γ : Context) : BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), Expr Γ' ty) := do
+def mkExpr (opStx : Op) (Γ : Context) : BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), (Expr Γ' ty × Ctxt.Diff Γ Γ')) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
-    let Sigma.mk ty₁ (Sigma.mk ty₂ vSum) ← TypedSSAVal.mkValPair Γ v₁Stx v₂Stx
+    let Sigma.mk Γ' (Sigma.mk ty₁ (v₁,diff₁)) ← TypedSSAVal.mkVal Γ v₁Stx
+    let Sigma.mk Γ'' (Sigma.mk ty₂ (v₂,diff₂)) ← TypedSSAVal.mkVal Γ' v₂Stx
+    let diff := diff₁ |>.append diff₂
     let op ← match opStx.name with
       | "llvm.and" => pure <| InstCombine.Op.and ty₁.width
       | "llvm.or" => pure <| InstCombine.Op.or ty₁.width
@@ -261,34 +240,19 @@ def mkExpr (opStx : Op) (Γ : Context) : BuilderM (Σ (Γ' : Context) (ty : Inst
        --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
       | _ => throw "Unsuported operation or invalid arguments"
       if hty : ty₁ = ty₂ then 
-        match vSum with
-        | Sum.inl (Sum.inl (v₁, v₂)) =>
-            let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-            return Sigma.mk Γ <| Sigma.mk ty₁ binOp
-        | Sum.inl (Sum.inr (v₁, v₂)) =>
-            let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-            return Sigma.mk (Γ.snoc ty₂) <| Sigma.mk ty₁ binOp
-        | Sum.inr (Sum.inl (v₁, v₂)) =>
-            let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-            return Sigma.mk (Γ.snoc ty₁) <| Sigma.mk ty₁ binOp
-        | Sum.inr (Sum.inr (v₁, v₂)) =>
-            let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-            return Sigma.mk (Γ.snoc ty₁ |>.snoc ty₂) <| Sigma.mk ty₁ binOp
+            let v₁' := diff₂.toHom v₁
+            let binOp ← mkBinOp op v₁' (hty ▸ v₂)
+            return Sigma.mk Γ'' <| Sigma.mk ty₁ (binOp, diff)
       else throw s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
   | vStx::[] =>
-    let Sigma.mk ty vSum ← vStx.mkVal Γ
+    let Sigma.mk Γ' (Sigma.mk ty (v,diff)) ← TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
         | "llvm.not" =>
           pure <| InstCombine.Op.not ty.width
         | "llvm.neg" => do
           pure <| InstCombine.Op.neg ty.width
         | _ => throw s!"Unknown (unary) operation syntax {opStx.name}"
-     match vSum with
-       | Sum.inl v => 
-         let unOp ← mkUnaryOp op v
-         return Sigma.mk Γ <| Sigma.mk ty (← mkUnaryOp op v)
-       | Sum.inr v => 
-         return Sigma.mk (Γ.snoc ty) <| Sigma.mk ty (← mkUnaryOp op v)
+     return Sigma.mk Γ' <| Sigma.mk ty (← mkUnaryOp op v, diff)
   | [] => 
     if opStx.name ==  "llvm.mlir.constant" 
     then do
@@ -298,32 +262,33 @@ def mkExpr (opStx : Op) (Γ : Context) : BuilderM (Σ (Γ' : Context) (ty : Inst
         | .int val ty => 
             let opTy ← ty.mkTy
               return Sigma.mk Γ <| Sigma.mk opTy <|
-                {
+                ({
                 op := InstCombine.Op.const <| mkVal opTy val
                 args := HVector.nil
                 ty_eq := by simp [OpSignature.outTy]
-                }
+                }, Ctxt.Diff.zero Γ)
         | _ => throw "invalid constant attribute"
     else throw s!"invalid (0-ary) expression {opStx.name}"
   | _ => throw s!"unsupported expression (with unsupported arity) {opStx.name}"
 
-def mkReturn (Γ : Context) (opStx : Op) : BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), Com Γ' ty) := 
+def mkReturn (Γ : Context) (opStx : Op) : BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), (Com Γ' ty × Ctxt.Diff Γ Γ')) := 
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
-    let Sigma.mk ty vSum ← vStx.mkVal Γ
-    match vSum with
-      | Sum.inl v => return Sigma.mk Γ <| Sigma.mk ty (ICom.ret v)
-      | Sum.inr v => return Sigma.mk (Γ.snoc ty) <| Sigma.mk ty (ICom.ret v)
+    let Sigma.mk Γ' (Sigma.mk ty (v,diff)) ← vStx.mkVal Γ
+    return Sigma.mk Γ' <| Sigma.mk ty (ICom.ret v, diff)
   | _ => throw s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})" 
   else throw s!"Tried to build return out of non-return statement {opStx.name}"
 
-private def mkComHelper (Γ : Context) : List Op → BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), Com Γ' ty)
+def IExpr.changeContext (h : Ctxt.Hom Γ Γ') : Expr Γ ty  → Expr Γ' ty := sorry
+
+private def mkComHelper (Γ : Context) : List Op → BuilderM (Σ (Γ' : Context) (ty : InstCombine.Ty), (Com Γ' ty) × Ctxt.Diff Γ Γ')
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
-    let Sigma.mk Γ' (Sigma.mk ty₁ e) ← mkExpr lete Γ
-    let Sigma.mk Γ'' (Sigma.mk ty₂ r) ← mkComHelper Γ' rest
-    return Sigma.mk Γ'' <| Sigma.mk ty₂ <| ICom.lete e r
+    let Sigma.mk Γ' (Sigma.mk ty₁ (v₁,diff₁)) ← mkExpr lete Γ
+    let Sigma.mk Γ'' (Sigma.mk ty₂ (v₂,diff₂)) ← mkComHelper Γ' rest
+    let v₁' := IExpr.changeContext diff₂.toHom v₁
+    return Sigma.mk Γ'' <| Sigma.mk ty₂ <| (ICom.lete v₁' v₂, diff₁ |>.append diff₂)
   | [] => throw "Ill-formed (empty) block"
 
 private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × Ctxt.Var Γ ty) → Context
