@@ -1128,7 +1128,7 @@ macro "simp_peephole": tactic =>
       try revert c;
       try revert b;
       try revert a;
-      try clear ll;
+      clear ll;
       )
    )
 
