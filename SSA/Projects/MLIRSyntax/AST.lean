@@ -57,6 +57,7 @@ inductive Dimension
 deriving instance DecidableEq for Dimension
 
 
+/-- An ssa value is a variable name -/
 inductive SSAVal : Type where
   | SSAVal : String -> SSAVal
 deriving DecidableEq
@@ -97,7 +98,7 @@ abbrev MLIRTy := MLIRType
 abbrev MLIRType.i1: MLIRType := MLIRType.int .Signless 1
 abbrev MLIRType.i32: MLIRType := MLIRType.int .Signless 32
 
--- An SSA value with a type
+/-- An ssa value (variable name) with a type -/
 abbrev TypedSSAVal := SSAVal × MLIRType
 
 mutual

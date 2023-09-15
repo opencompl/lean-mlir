@@ -79,7 +79,8 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
-
+def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
+  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
   
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
@@ -93,7 +94,7 @@ def casesOn
       motive Γ t t' v :=
   match v with
     | ⟨0, h⟩ => 
-        cast (by 
+        _root_.cast (by 
           simp [snoc] at h
           subst h
           simp [Ctxt.Var.last]
@@ -300,6 +301,13 @@ theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
 
+def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
+  | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by
+      rw [←Nat.add_assoc]
+      apply h₂ <| h₁ h
+    ⟩
+
+instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
 end Diff
 
