@@ -221,8 +221,6 @@ declare_syntax_cat mlir_op_operand
 declare_syntax_cat mlir_ops
 declare_syntax_cat mlir_type
 
--- syntax strLit mlir_op_args ":" mlir_op_type : mlir_op -- no region
---
 
 
 -- EDSL OPERANDS
@@ -322,8 +320,12 @@ macro_rules
 macro_rules
 | `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
 
+-- add type ascription when elaborating. This allows users to write
+-- kawaii syntax such as (%x : $(.i 32)) where the `.i` refers to
+-- `MLIRTy.i`, which is resolved by Lean's (type directed)
+-- implicit member reference.
 macro_rules
-  | `([mlir_type| $$($q)]) => `($q)
+  | `([mlir_type| $$($q)]) => `((let x : MLIRTy := $q; x))
 
 def tyIndex : MLIRTy := [mlir_type| index]
 #eval tyIndex

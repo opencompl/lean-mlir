@@ -94,9 +94,13 @@ inductive MLIRType :=
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
 abbrev MLIRTy := MLIRType
+
+/-- Shorthand to build <iN> -/
+def MLIRTy.i (width : Nat) : MLIRTy := MLIRType.int Signedness.Signless width
 -- Other useful abbreviations
 abbrev MLIRType.i1: MLIRType := MLIRType.int .Signless 1
 abbrev MLIRType.i32: MLIRType := MLIRType.int .Signless 32
+def MLIRType.i (width : Nat) : MLIRTy := MLIRType.int Signedness.Signless width
 
 /-- An ssa value (variable name) with a type -/
 abbrev TypedSSAVal := SSAVal × MLIRType
