@@ -39,7 +39,7 @@ def bb0 := [mlir_region|
 
     
 open InstCombine
-def Γn (n : Nat) :Context := 
+def Γn (n : Nat) : Context := 
   List.range n |>.foldl 
     (fun c _ => Ctxt.snoc c (Ty.bitvec 32))
     Ctxt.empty

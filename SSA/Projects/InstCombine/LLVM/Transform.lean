@@ -283,6 +283,13 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → ReaderM (Σ ty, Ctxt.Var 
     let var ← getValFromContext Γ valStx ty
     return ⟨ty, var⟩
 
+/-- Declare a new variable -/
+def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal → BuilderM (Σ ty, Ctxt.Var (ty::Γ) ty)
+| (.SSAVal valStx, tyStx) => do
+    let ty ← tyStx.mkTy
+    let var ← getValFromContext Γ valStx ty
+    return ⟨ty, var⟩
+
 def mkExpr (opStx : Op) (Γ : Context) : ReaderM (Σ ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
@@ -355,7 +362,7 @@ def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) :=
   In particular, `mkComHelper` has to modify the name-mapping for recursive calls, but it should 
   probably not return a modified context.
   I.e., we might not want to have a state monad at all, only `ReaderM`, where `addValToMapping`
-  shuold instead be some `withValMapping` combinator
+  should instead be some `withValMapping` combinator
 -/
 
 
@@ -374,7 +381,7 @@ private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × C
   | [] => Γ
   | (Sigma.mk ty _)::rest => 
     let restChanged := rest.map fun (Sigma.mk ty' v') => Sigma.mk ty' (Ctxt.Var.toSnoc v' (t' := ty))
-    argsToCtxt (ty :: Γ ) restChanged
+    argsToCtxt (ty :: Γ) restChanged
 
 def mkCom (Γ : Context) (reg : Region) : BuilderM (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
   match reg.ops with
