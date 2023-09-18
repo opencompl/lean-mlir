@@ -283,7 +283,7 @@ def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal →
     let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
     return ⟨Γ, ty, var⟩
 
-def mkExpr (opStx : Op) (Γ : Context) : ReaderM (Σ ty, Expr Γ ty) := do
+def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
     let ⟨ty₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
@@ -363,7 +363,7 @@ private def mkComHelper (Γ : Context) :
     List Op → BuilderM (Σ (ty : _), Com Γ ty)
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
-    let ⟨ty₁, expr⟩ ← mkExpr lete Γ
+    let ⟨ty₁, expr⟩ ← mkExpr Γ lete
     let _ ← addValToMapping Γ lete.name ty₁
     let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
     return ⟨ty₂, Com.lete expr body⟩
