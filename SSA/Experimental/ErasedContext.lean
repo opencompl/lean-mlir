@@ -226,6 +226,9 @@ theorem val_last {Γ : Ctxt Ty} {t : Ty} : (last Γ t).val = 0 :=
 theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t' v).val = v.val + 1 :=
   rfl
 
+instance : Repr (Var Γ t) where
+  reprPrec v _ := f!"%{v.val}"
+
 end Var
 
 /-

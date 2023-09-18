@@ -54,6 +54,18 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+section Repr
+open Std (Format format)
+
+private def reprInner [∀ a, Repr (f a)] (prec : Nat) : ∀ {as}, HVector f as → List Format
+  | _, .nil => []
+  | _, .cons x xs => (reprPrec x prec) :: (reprInner prec xs)
+
+instance [∀ a, Repr (f a)] : Repr (HVector f as) where
+  reprPrec xs prec := f!"[{(xs.reprInner prec).intersperse f!","}]"
+
+end Repr
+
 /-
   # Theorems
 -/

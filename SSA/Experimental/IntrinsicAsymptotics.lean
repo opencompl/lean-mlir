@@ -33,17 +33,20 @@ structure IExpr (Γ : Ctxt Ty) (ty : Ty) : Type :=
   (op : Op)
   (ty_eq : ty = OpSignature.outTy op)
   (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+  deriving Repr
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
   | lete (e : IExpr Op Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+  deriving Repr
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
 inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   | nil {Γ : Ctxt Ty} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Op Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
+  deriving Repr
 
 /-
   # Definitions
