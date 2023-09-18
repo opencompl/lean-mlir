@@ -49,12 +49,19 @@ def op1 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
 def op2 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
 def op3 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
 def op4 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
-#eval mkExpr (Γn 2) op1 |>.printErr
-#eval mkExpr (Γn 3) op2 |>.printErr
-#eval mkExpr (Γn 4) op3  |>.printErr
-#eval mkExpr (Γn 5) op4  |>.printErr
 def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
-#eval mkReturn (Γn 6) opRet |>.printErr
+
+/-
+  TODO: these tests were broken.
+  I've changed them to be consistent with how the current code works,
+  please check that the tested behaviour is actually the desired behaviour
+-/
+#eval mkExpr    (Γn 1) op0    ["arg0"]
+#eval mkExpr    (Γn 2) op1    ["0", "arg0"]
+#eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
+#eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
+#eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
+#eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
 def ops := [mlir_ops| 
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
@@ -65,16 +72,12 @@ def ops := [mlir_ops|
     "llvm.return"(%4) : (i32) -> ()
 ]
 def ops' := [op0, op1, op2, op3, op4]
-def com (Γ : Context) := mkCom Γ bb0
 
-#eval com Ctxt.empty |>.printErr
-#eval mkExpr  (Γn 1) (ops.get! 0) |>.printErr
-#eval mkExpr  (Γn 2) (ops.get! 1) |>.printErr
-#eval mkExpr  (Γn 3) (ops.get! 2) |>.printErr
-#eval mkExpr  (Γn 4) (ops.get! 3) |>.printErr
-#eval mkExpr  (Γn 5) (ops.get! 4) |>.printErr
-#eval mkReturn (Γn 6) (ops.get! 5) |>.printErr
+#eval mkExpr    (Γn 1)  (ops.get! 0) ["arg0"]
+#eval mkExpr    (Γn 2)  (ops.get! 1) ["0", "arg0"]
+#eval mkExpr    (Γn 3)  (ops.get! 2) ["1", "0", "arg0"]
+#eval mkExpr    (Γn 4)  (ops.get! 3) ["2", "1", "0", "arg0"]
+#eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
+#eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
 
-
-#eval mkComHelper (Γn 1) ops |>.printErr
-#eval mkComHelper (Γn 1) ops' |>.printErr
+#eval (mkCom Ctxt.empty bb0).run []
