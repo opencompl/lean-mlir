@@ -1073,33 +1073,6 @@ instance : OpSignature ExOp ExTy where
   regSig
    | _ => []
 
-/-- Compose `f` with itself `n` times -/
-def loopN (f : α → α) (n : ℕ) (x: α) : α :=
-  match n with
-  | 0 => x
-  | n' + 1 => loopN f n' (f x)
-
-theorem loopN_zero_id : loopN f 0 x = x := by simp[loopN]
-
-theorem loopN_succ_unfold_right: loopN f (m + 1) x = loopN f m (f x) := rfl
-
-theorem loopN_succ_unfold_left: loopN f (m + 1) x = f (loopN f m x) := by {
-  revert x;
-  induction m;
-  case zero => simp[loopN];
-  case succ m' IH => {
-    intros x;
-    simp[loopN];
-    have K := IH (x := f x);
-    rw[← K];
-    simp[loopN];
-  }
-}
-
-
-theorem loopN_monoid_hom: loopN f m (loopN f n x) = loopN f (m + n) x := by
-  sorry
-
 -- (bollu:) unknown free variable: _kernel_fresh.104
 @[reducible]
 instance : OpDenote ExOp ExTy where
@@ -1107,8 +1080,6 @@ instance : OpDenote ExOp ExTy where
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
---  | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn nil) =>
---       loopN (coe_ctxt_nat2nat_to_fun rgn) k v
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
   IExpr.mk
@@ -1404,24 +1375,23 @@ instance : Goedel ExTy where
 
 inductive ExOp :  Type
   | add : ExOp
-  -- | cst : ℕ → ExOp
   | runK : ℕ → ExOp
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
   outTy
     | .add => .nat
-    -- | .cst _ => .nat
     | .runK _ => .nat
   sig
     | .add => [.nat, .nat]
-    -- | .cst _ => []
     | .runK _ => [.nat]
   regSig
    | .runK _ => [([.nat], .nat)]
    | _ => []
 
-/-- Compose `f` with itself `n` times -/
+/-- Compose `f` with itself `n` times.
+  @chris: What's the mathlib correct version of this?
+ -/
 def loopN (f : α → α) (n : ℕ) (x: α) : α :=
   match n with
   | 0 => x
@@ -1441,6 +1411,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
+
 @[simp]
 def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat :=
   IExpr.mk
@@ -1455,7 +1426,7 @@ macro "simp_peephole": tactic =>
       funext ll
       simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
+        rgn, loopN,HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;
@@ -1499,7 +1470,7 @@ def p1 : PeepholeRewrite ExOp [.nat] .nat:=
       funext ll
       simp [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        rgn, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, HVector.denote];
+        rgn, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, HVector.denote]
       simp[loopN]
     }
 
@@ -1523,8 +1494,8 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
       funext ll
       simp [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        rgn, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, HVector.denote];
-      simp[loopN];
+        rgn, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, HVector.denote]
+      simp[loopN]
     }
 
 end RegionExamples
