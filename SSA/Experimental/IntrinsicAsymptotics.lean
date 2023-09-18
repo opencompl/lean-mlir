@@ -1070,18 +1070,18 @@ instance : OpSignature ExOp ExTy where
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
-  regSig 
+  regSig
    | _ => []
-  
+
 /-- Compose `f` with itself `n` times -/
-def loopN (f : α → α) (n : ℕ) (x: α) : α := 
+def loopN (f : α → α) (n : ℕ) (x: α) : α :=
   match n with
   | 0 => x
   | n' + 1 => loopN f n' (f x)
 
 theorem loopN_zero_id : loopN f 0 x = x := by simp[loopN]
 
-theorem loopN_succ_unfold_right: loopN f (m + 1) x = loopN f m (f x) := rfl 
+theorem loopN_succ_unfold_right: loopN f (m + 1) x = loopN f m (f x) := rfl
 
 theorem loopN_succ_unfold_left: loopN f (m + 1) x = f (loopN f m x) := by {
   revert x;
@@ -1097,8 +1097,8 @@ theorem loopN_succ_unfold_left: loopN f (m + 1) x = f (loopN f m x) := by {
 }
 
 
-theorem loopN_monoid_hom: loopN f m (loopN f n x) = loopN f (m + n) x := by 
-  sorry 
+theorem loopN_monoid_hom: loopN f m (loopN f n x) = loopN f (m + n) x := by
+  sorry
 
 -- (bollu:) unknown free variable: _kernel_fresh.104
 @[reducible]
@@ -1107,8 +1107,8 @@ instance : OpDenote ExOp ExTy where
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
---  | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn nil) => 
---       loopN (coe_ctxt_nat2nat_to_fun rgn) k v 
+--  | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn nil) =>
+--       loopN (coe_ctxt_nat2nat_to_fun rgn) k v
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
   IExpr.mk
@@ -1390,7 +1390,7 @@ example : rewritePeepholeAt p4 5 ex3 = (
 
 end Examples
 
-namespace RegionExamples 
+namespace RegionExamples
 
 /-- A very simple type universe. -/
 inductive ExTy
@@ -1418,11 +1418,11 @@ instance : OpSignature ExOp ExTy where
     -- | .cst _ => []
     | .runK _ => [.nat]
   regSig
-   | .runK _ => [([.nat], .nat)] 
+   | .runK _ => [([.nat], .nat)]
    | _ => []
 
 /-- Compose `f` with itself `n` times -/
-def loopN (f : α → α) (n : ℕ) (x: α) : α := 
+def loopN (f : α → α) (n : ℕ) (x: α) : α :=
   match n with
   | 0 => x
   | n' + 1 => loopN f n' (f x)
@@ -1431,8 +1431,8 @@ def loopN (f : α → α) (n : ℕ) (x: α) : α :=
 instance : OpDenote ExOp ExTy where
   denote
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
-    | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) => 
-      loopN (n := k) (fun val => rgn (fun _ty _var => val)) v 
+    | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) =>
+      loopN (n := k) (fun val => rgn (fun _ty _var => val)) v
 
 @[simp]
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
@@ -1442,7 +1442,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 @[simp]
-def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat := 
+def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat :=
   IExpr.mk
     (op := .runK k)
     (ty_eq := rfl)
@@ -1481,11 +1481,11 @@ macro "simp_peephole": tactic =>
 
 attribute [local simp] Ctxt.snoc
 
--- running `f(x) = x + x` 0 times is the identity.
+/-- running `f(x) = x + x` 0 times is the identity. -/
 def ex1_lhs : ICom ExOp [.nat] .nat :=
   ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x) 
-      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩ 
+      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
@@ -1504,18 +1504,17 @@ def p1 : PeepholeRewrite ExOp [.nat] .nat:=
     }
 
 
-
--- running `f(x) = x + x` 1 times does return `x + x`.
+/-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : ICom ExOp [.nat] .nat :=
-  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x) 
-      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩ 
+  ICom.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
+      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def ex2_rhs : ICom ExOp [.nat] .nat :=
-    ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x) 
-    <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩ 
+    ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+    <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex2_lhs, rhs := ex2_rhs, correct :=
@@ -1525,7 +1524,7 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
       simp [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
         rgn, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, HVector.denote];
-      sorry -- what did I get wrong?
+      simp[loopN];
     }
 
-end RegionExamples 
+end RegionExamples
