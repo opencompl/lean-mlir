@@ -6,6 +6,7 @@ import SSA.Experimental.IntrinsicAsymptotics
 abbrev Context := List InstCombine.Ty
 abbrev Expr (Γ : Context) (ty : InstCombine.Ty) := IExpr InstCombine.Op Γ ty
 abbrev Com (Γ : Context) (ty : InstCombine.Ty) := ICom InstCombine.Op Γ ty
+abbrev Var (Γ : Context) (ty : InstCombine.Ty) := Ctxt.Var Γ ty
 --abbrev Bitvec (w : Nat) := InstCombine.Ty.bitvec w
 
 abbrev Com.lete (body : Expr Γ ty₁) (rest : Com (ty₁::Γ) ty₂) := 
@@ -40,6 +41,9 @@ structure DerivedContext (Γ : Context) where
 
 namespace DerivedContext
 
+/-- Every context is trivially derived from itself -/
+abbrev ofContext (Γ : Context) : DerivedContext Γ := ⟨Γ, .zero _⟩
+
 /-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
 def snoc : DerivedContext Γ → InstCombine.Ty → DerivedContext Γ 
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
@@ -56,6 +60,9 @@ instance {Γ' : DerivedContext Γ} : CoeHead (DerivedContext Γ') (DerivedContex
 instance {Γ' : DerivedContext Γ} : Coe (Expr Γ t) (Expr Γ' t) where
   coe e := e.changeVars Γ'.diff.toHom
 
+instance {Γ' : DerivedContext Γ} : Coe (Var Γ t) (Var Γ' t) where
+  coe v := Γ'.diff.toHom v
+
 end DerivedContext
 
 /--
@@ -65,12 +72,12 @@ end DerivedContext
   shadowing
 -/
 def addValToMapping (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
-    BuilderM (DerivedContext Γ) := do
+    BuilderM (Σ (Γ' : DerivedContext Γ), Var Γ' ty) := do
   let nm ← get
   match nm.lookup name with
     | none => 
       set (name :: nm)
-      return ⟨ty::Γ, Ctxt.Diff.zero Γ |>.toSnoc⟩
+      return ⟨DerivedContext.ofContext Γ |>.snoc ty, Ctxt.Var.last ..⟩
     | some _ => throw s!"Already declared {name}, shadowing is not allowed"
 
 /--
@@ -94,22 +101,6 @@ def getValFromContext (Γ : Context) (name : String) (expectedType : InstCombine
       return ⟨index, by simp[←h, ←List.get?_eq_get]⟩
     else
       throw s!"Type mismatch: expected '{expectedType}', but 'name' has type {t}"
-
-
--- def addGetCtxt (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
---   BuilderM ((Γ.Var ty) ⊕ (Γ.snoc ty |>.Var ty)) := do
---   let N := Γ.length
---   let nm ← get
---   let (nm',n) := nm.addGet name
---   if h : Γ.get? (N - n) = ty then
---     return .inl { val := (N - n), property := h}
---   else if Γ.get? n = none then
---      let Γ' := Γ.snoc ty  
---      if h : Γ'.get? 0 = some ty then
---        let _ ← set nm'
---        return .inr { val := 0, property := h }
---      else throw s!"Failed to add variable to context (size mismatch {n} ≠ {Γ'.length})"
---   else throw s!"Failed to add variable to context (type mismatch {Γ.get! <| N - n} ≠ {ty})"
 
 def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool := 
   match x.run [] with
@@ -283,12 +274,14 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → ReaderM (Σ ty, Ctxt.Var 
     let var ← getValFromContext Γ valStx ty
     return ⟨ty, var⟩
 
-/-- Declare a new variable -/
-def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal → BuilderM (Σ ty, Ctxt.Var (ty::Γ) ty)
+/-- Declare a new variable, 
+    by adding the passed name to the name mapping stored in the monad state -/
+def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal → 
+    BuilderM (Σ (Γ' : DerivedContext Γ) (ty : _), Var Γ' ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
-    let var ← getValFromContext Γ valStx ty
-    return ⟨ty, var⟩
+    let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
+    return ⟨Γ, ty, var⟩
 
 def mkExpr (opStx : Op) (Γ : Context) : ReaderM (Σ ty, Expr Γ ty) := do
   match opStx.args with
@@ -377,19 +370,17 @@ private def mkComHelper (Γ : Context) :
     -- return Sigma.mk Γ'' <| Sigma.mk ty₂ <| (ICom.lete v₁' v₂, diff₁ |>.append diff₂)
   | [] => throw "Ill-formed (empty) block"
 
-private partial def argsToCtxt (Γ : Context) : List ((ty : InstCombine.Ty) × Ctxt.Var Γ ty) → Context
-  | [] => Γ
-  | (Sigma.mk ty _)::rest => 
-    let restChanged := rest.map fun (Sigma.mk ty' v') => Sigma.mk ty' (Ctxt.Var.toSnoc v' (t' := ty))
-    argsToCtxt (ty :: Γ) restChanged
-
 def mkCom (Γ : Context) (reg : Region) : BuilderM (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
   match reg.ops with
   | [] => throw "Ill-formed region (empty)"
   | coms => do
-    let valList ← (reg.args.mapM <| TypedSSAVal.mkVal Γ : ReaderM _)
-    let Γ' := argsToCtxt Γ valList
+    let Γ' ← reg.args.foldlM declareRegArgs (.ofContext Γ)
     let icom ← mkComHelper Γ' coms
     return Sigma.mk Γ' icom
+  where
+    declareRegArgs {Γ : Context} : DerivedContext Γ → TypedSSAVal → BuilderM (DerivedContext Γ)
+      | Γ', ssaVal => do
+        let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ' ssaVal
+        return Γ''
 
 end MLIR.AST
