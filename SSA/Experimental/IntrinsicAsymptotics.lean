@@ -1070,10 +1070,8 @@ instance : OpSignature ExOp ExTy where
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
-  regSig
-   | _ => []
+  regSig := fun _ => []
 
--- (bollu:) unknown free variable: _kernel_fresh.104
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
