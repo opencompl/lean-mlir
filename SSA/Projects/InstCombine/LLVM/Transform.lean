@@ -349,7 +349,7 @@ def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) :=
 -- def IExpr.changeContext (h : Ctxt.Hom Γ Γ') : Expr Γ ty  → Expr Γ' ty := sorry
 
 /-
-  Should the name mapping be a ever growing list?
+  Should the name mapping be an ever growing list?
   Probably not, it might have to be more like a stack, where variables are added while they are
   in scope, and removed after.
   In particular, `mkComHelper` has to modify the name-mapping for recursive calls, but it should 
@@ -358,29 +358,34 @@ def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) :=
   should instead be some `withValMapping` combinator
 -/
 
+/-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the 
+    given name and type -/
+private def declareBindings (Γ : Context) (vals : List TypedSSAVal) : 
+    BuilderM (DerivedContext Γ) := do
+  vals.foldlM (fun Γ' ssaVal => do
+    let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ' ssaVal
+    return Γ''
+  ) (.ofContext Γ)
 
 private def mkComHelper (Γ : Context) : 
     List Op → BuilderM (Σ (ty : _), Com Γ ty)
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
     let ⟨ty₁, expr⟩ ← mkExpr Γ lete
-    let _ ← addValToMapping Γ lete.name ty₁
-    let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
-    return ⟨ty₂, Com.lete expr body⟩
-    -- return Sigma.mk Γ'' <| Sigma.mk ty₂ <| (ICom.lete v₁' v₂, diff₁ |>.append diff₂)
+    if h : lete.res.length != 1 then
+      throw s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{lete}`"
+    else
+      let _ ← addValToMapping Γ (lete.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
+      let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
+      return ⟨ty₂, Com.lete expr body⟩
   | [] => throw "Ill-formed (empty) block"
 
 def mkCom (Γ : Context) (reg : Region) : BuilderM (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
   match reg.ops with
   | [] => throw "Ill-formed region (empty)"
   | coms => do
-    let Γ' ← reg.args.foldlM declareRegArgs (.ofContext Γ)
-    let icom ← mkComHelper Γ' coms
-    return Sigma.mk Γ' icom
-  where
-    declareRegArgs {Γ : Context} : DerivedContext Γ → TypedSSAVal → BuilderM (DerivedContext Γ)
-      | Γ', ssaVal => do
-        let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ' ssaVal
-        return Γ''
+    let Γ ← declareBindings Γ reg.args
+    let icom ← mkComHelper Γ coms
+    return ⟨Γ, icom⟩
 
 end MLIR.AST
