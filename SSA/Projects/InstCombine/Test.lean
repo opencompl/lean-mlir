@@ -36,13 +36,12 @@ def bb0 := [mlir_region|
     "llvm.return"(%4) : (i32) -> ()
   }] 
 #print bb0
+#eval bb0
 
     
 open InstCombine
 def Γn (n : Nat) : Context := 
-  List.range n |>.foldl 
-    (fun c _ => Ctxt.snoc c (Ty.bitvec 32))
-    Ctxt.empty
+  Ctxt.ofList <| .replicate n (Ty.bitvec 32)
 
 def op0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
 def op1 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
@@ -80,4 +79,41 @@ def ops' := [op0, op1, op2, op3, op4]
 #eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
 #eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
 
-#eval (mkCom Ctxt.empty bb0).run []
+#eval (mkCom bb0).toOption
+
+
+#check ExceptT.run
+
+def com := mkCom bb0 |>.toOption |>.get (by rfl)
+
+#eval com
+
+theorem com_Γ : com.1 = (Γn 1) := by rfl
+theorem com_ty : com.2.1 = Ty.bitvec 32 := by rfl
+
+def comDen : (Option $ Bitvec 32) → (Option $ Bitvec 32) := 
+    match h : com with 
+    | ⟨Γ, ty, com⟩ =>
+      fun arg => cast (by
+        suffices ty = Ty.bitvec 32 by rw[this]; rfl
+        have com_ty := com_ty
+        revert h com_ty
+        rcases _root_.com with ⟨_, _, _⟩
+        rintro ⟨⟩ ⟨⟩
+        rfl
+      ) <| com.denote (fun t v => 
+        cast (by
+          by_cases ht : t = Ty.bitvec 32
+          . rw [ht]; rfl
+          . exfalso
+            sorry
+            -- rw [h₁] at v
+            -- rcases v with ⟨i, hv⟩
+            -- rw [Ctxt.get?, Γn, Ctxt.ofList, List.get?_eq_get, List.get_replicate] at hv 
+            -- . rcases hv
+            --   rfl
+            -- . exact (List.get?_eq_some.mp hv).1
+        ) arg
+      )
+
+#eval comDen (some <| Bitvec.ofInt 32 (-1))

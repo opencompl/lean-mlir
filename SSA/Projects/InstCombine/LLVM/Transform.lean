@@ -35,6 +35,9 @@ abbrev ReaderM := ReaderT NameMapping ExceptM
 instance : MonadLift ReaderM BuilderM where
   monadLift x := do (ReaderT.run x (←get) : ExceptM _)
 
+def BuilderM.runWithNewMapping (k : BuilderM α) : ExceptM α :=
+  Prod.fst <$> StateT.run k []
+
 structure DerivedContext (Γ : Context) where
   ctxt : Context
   diff : Ctxt.Diff Γ ctxt
@@ -380,11 +383,11 @@ private def mkComHelper (Γ : Context) :
       return ⟨ty₂, Com.lete expr body⟩
   | [] => throw "Ill-formed (empty) block"
 
-def mkCom (Γ : Context) (reg : Region) : BuilderM (Σ (Γ' : Context)(ty : InstCombine.Ty) , Com Γ' ty) := 
+def mkCom (reg : Region) : ExceptM (Σ (Γ' : Context) (ty : InstCombine.Ty), Com Γ' ty) := 
   match reg.ops with
   | [] => throw "Ill-formed region (empty)"
-  | coms => do
-    let Γ ← declareBindings Γ reg.args
+  | coms => BuilderM.runWithNewMapping <| do
+    let Γ ← declareBindings ∅ reg.args
     let icom ← mkComHelper Γ coms
     return ⟨Γ, icom⟩
 
