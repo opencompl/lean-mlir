@@ -127,19 +127,28 @@ def mkUnaryOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
    match op with
    -- Can't use a single arm, Lean won't write the rhs accordingly
     | .neg w' => if h : w = w' 
-      then return { op := .neg w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e) .nil }
+      then return ⟨
+        .neg w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e) .nil,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .not w' => if h : w = w' 
-      then return { op := .not w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e) .nil }
+      then return ⟨
+        .not w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e) .nil,
+        .nil
+      ⟩ 
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .copy w' => if h : w = w' 
-      then return { op := .copy w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e) .nil }
+      then return ⟨
+        .copy w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e) .nil,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | _ => throw "Unsuported unuary operation"
 
@@ -150,69 +159,108 @@ def mkBinOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
    match op with
    -- Can't use a single arm, Lean won't write the rhs accordingly
     | .add w' => if h : w = w' 
-      then return { op := .add w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .add w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .and w' => if h : w = w' 
-      then return { op := .and w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .and w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .or w' => if h : w = w' 
-      then return { op := .or w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .or w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .xor w' => if h : w = w' 
-      then return { op := .xor w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .xor w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .shl w' => if h : w = w' 
-      then return { op := .shl w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .shl w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .lshr w' => if h : w = w' 
-      then return { op := .lshr w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .lshr w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | .ashr w' => if h : w = w' 
-      then return { op := .ashr w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .ashr w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
      | .urem w' => if h : w = w' 
-      then return { op := .urem w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .urem w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
      | .srem w' => if h : w = w' 
-      then return { op := .srem w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .srem w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
      | .mul w' => if h : w = w' 
-      then return { op := .mul w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .mul w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
       | .sub w' => if h : w = w'
-      then return { op := .sub w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .sub w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
       | .sdiv w' => if h : w = w'
-      then return { op := .sdiv w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .sdiv w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
       | .udiv w' => if  h : w = w'
-      then return { op := .udiv w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .udiv w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+      ⟩
       else throw s!"Type mismatch {w} ≠ {w'}"
     | _ => throw "Unsuported binary operation"
 
@@ -222,9 +270,12 @@ def mkIcmp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
   | .bitvec w =>
     match op with
       | .icmp p w' => if  h : w = w'
-      then return { op := .icmp p w'
-                    ty_eq := by simp [OpSignature.outTy, h]
-                    args := .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+      then return ⟨
+        .icmp p w',
+        by simp [OpSignature.outTy, h],
+        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+        .nil
+⟩
       else throw "Type mismatch {w} ≠ {w'}"
       | _ => throw "Unsupported icmp operation"
 
@@ -234,9 +285,12 @@ def mkSelect {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
   | .bitvec w =>
     match op with
         | .select w' => if  h : w = w'
-        then return { op := .select w'
-                      ty_eq := by simp [OpSignature.outTy, h]
-                      args := .cons c <|.cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil }
+        then return ⟨
+          .select w',
+          by simp [OpSignature.outTy, h],
+          .cons c <|.cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
+          .nil
+        ⟩
         else throw "Type mismatch {w} ≠ {w'}"
         | _ => throw "Unsupported select operation"
 
@@ -330,11 +384,12 @@ def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
     match att with
       | .int val ty => 
           let opTy ← ty.mkTy
-          return ⟨opTy, {
-            op := InstCombine.Op.const <| mkVal opTy val
-            args := HVector.nil
-            ty_eq := by simp [OpSignature.outTy]
-          }⟩ 
+          return ⟨opTy, ⟨ 
+            InstCombine.Op.const <| mkVal opTy val,
+            by simp [OpSignature.outTy],
+            HVector.nil,
+            HVector.nil
+          ⟩⟩
       | _ => throw "invalid constant attribute"
     else 
       throw s!"invalid (0-ary) expression {opStx.name}"
