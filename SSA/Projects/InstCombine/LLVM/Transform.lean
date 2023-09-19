@@ -23,10 +23,14 @@ abbrev NameMapping := List String
 def NameMapping.lookup (nm : NameMapping) (name : String) : Option Nat :=
   nm.indexOf? name
 
-def NameMapping.addGet (nm : NameMapping) (name : String) : NameMapping × Nat := 
+/--
+  Add a new name to the mapping, assuming the name is not present in the list yet.
+  If the name is already present, return `none`
+-/
+def NameMapping.add (nm : NameMapping) (name : String) : Option NameMapping := 
   match nm.lookup name with
-    | none => (name::nm, nm.length)
-    | some n => (nm, n)
+    | none => some <| name::nm
+    | some _ => none
 
 abbrev ExceptM := Except String
 abbrev BuilderM := StateT NameMapping ExceptM
@@ -76,12 +80,10 @@ end DerivedContext
 -/
 def addValToMapping (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
     BuilderM (Σ (Γ' : DerivedContext Γ), Var Γ' ty) := do
-  let nm ← get
-  match nm.lookup name with
-    | none => 
-      set (name :: nm)
-      return ⟨DerivedContext.ofContext Γ |>.snoc ty, Ctxt.Var.last ..⟩
-    | some _ => throw s!"Already declared {name}, shadowing is not allowed"
+  let some nm := (←get).add name
+    | throw s!"Already declared {name}, shadowing is not allowed"
+  set nm
+  return ⟨DerivedContext.ofContext Γ |>.snoc ty, Ctxt.Var.last ..⟩
 
 /--
   Look up a name from the name mapping, and return the corresponding variable in the given context.
@@ -403,18 +405,6 @@ def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) :=
     return ⟨ty, ICom.ret v⟩
   | _ => throw s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})" 
   else throw s!"Tried to build return out of non-return statement {opStx.name}"
-
--- def IExpr.changeContext (h : Ctxt.Hom Γ Γ') : Expr Γ ty  → Expr Γ' ty := sorry
-
-/-
-  Should the name mapping be an ever growing list?
-  Probably not, it might have to be more like a stack, where variables are added while they are
-  in scope, and removed after.
-  In particular, `mkComHelper` has to modify the name-mapping for recursive calls, but it should 
-  probably not return a modified context.
-  I.e., we might not want to have a state monad at all, only `ReaderM`, where `addValToMapping`
-  should instead be some `withValMapping` combinator
--/
 
 /-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the 
     given name and type -/
