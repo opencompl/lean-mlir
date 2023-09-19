@@ -96,44 +96,47 @@ def Op.outTy : Op → Ty
 | Op.icmp _ _ => Ty.bitvec 1
 | @Op.const width _ => Ty.bitvec width
 
-instance : OpSignature Op Ty := ⟨Op.sig, Op.outTy⟩
+instance : OpSignature Op Ty where 
+  sig := Op.sig
+  outTy := Op.outTy
+  regSig _ := []
 
 @[simp]
-def Op.denote 
-   (o : Op)
-   (arg : HVector Goedel.toType (OpSignature.sig o)) :
-   (Goedel.toType <| OpSignature.outTy o) :=
-    match o with
-    | Op.const c => Option.some c
-    | Op.and _ => pairMapM (.&&&.) arg.toPair
-    | Op.or _ => pairMapM (.|||.) arg.toPair
-    | Op.xor _ => pairMapM (.^^^.) arg.toPair
-    | Op.shl _ => pairMapM (. <<< .) arg.toPair
-    | Op.lshr _ => pairMapM (. >>> .) arg.toPair
-    | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
-    | Op.sub _ => pairMapM (.-.) arg.toPair
-    | Op.add _ => pairMapM (.+.) arg.toPair
-    | Op.mul _ => pairMapM (.*.) arg.toPair
-    | Op.sdiv _ => pairBind Bitvec.sdiv? arg.toPair
-    | Op.udiv _ => pairBind Bitvec.udiv? arg.toPair
-    | Op.urem _ => pairBind Bitvec.urem? arg.toPair
-    | Op.srem _ => pairBind Bitvec.srem? arg.toPair
-    | Op.not _ => Option.map (~~~.) arg.toSingle
-    | Op.copy _ => arg.toSingle
-    | Op.neg _ => Option.map (-.) arg.toSingle
-    | Op.select _ => tripleMapM Bitvec.select arg.toTriple
-    | Op.icmp c _ => match c with
-      | .eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
-      | .ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
-      | .sgt => pairMapM (. >ₛ .) arg.toPair
-      | .sge => pairMapM (. ≥ₛ .) arg.toPair
-      | .slt => pairMapM (. <ₛ .) arg.toPair
-      | .sle => pairMapM (. ≤ₛ .) arg.toPair
-      | .ugt => pairMapM (. >ᵤ .) arg.toPair
-      | .uge => pairMapM (. ≥ᵤ .) arg.toPair
-      | .ult => pairMapM (. <ᵤ .) arg.toPair
-      | .ule => pairMapM (. ≤ᵤ .) arg.toPair
+def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
+    (Goedel.toType <| OpSignature.outTy o) :=
+  match o with
+  | Op.const c => Option.some c
+  | Op.and _ => pairMapM (.&&&.) arg.toPair
+  | Op.or _ => pairMapM (.|||.) arg.toPair
+  | Op.xor _ => pairMapM (.^^^.) arg.toPair
+  | Op.shl _ => pairMapM (. <<< .) arg.toPair
+  | Op.lshr _ => pairMapM (. >>> .) arg.toPair
+  | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
+  | Op.sub _ => pairMapM (.-.) arg.toPair
+  | Op.add _ => pairMapM (.+.) arg.toPair
+  | Op.mul _ => pairMapM (.*.) arg.toPair
+  | Op.sdiv _ => pairBind Bitvec.sdiv? arg.toPair
+  | Op.udiv _ => pairBind Bitvec.udiv? arg.toPair
+  | Op.urem _ => pairBind Bitvec.urem? arg.toPair
+  | Op.srem _ => pairBind Bitvec.srem? arg.toPair
+  | Op.not _ => Option.map (~~~.) arg.toSingle
+  | Op.copy _ => arg.toSingle
+  | Op.neg _ => Option.map (-.) arg.toSingle
+  | Op.select _ => tripleMapM Bitvec.select arg.toTriple
+  | Op.icmp c _ => match c with
+    | .eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
+    | .ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
+    | .sgt => pairMapM (. >ₛ .) arg.toPair
+    | .sge => pairMapM (. ≥ₛ .) arg.toPair
+    | .slt => pairMapM (. <ₛ .) arg.toPair
+    | .sle => pairMapM (. ≤ₛ .) arg.toPair
+    | .ugt => pairMapM (. >ᵤ .) arg.toPair
+    | .uge => pairMapM (. ≥ᵤ .) arg.toPair
+    | .ult => pairMapM (. <ᵤ .) arg.toPair
+    | .ule => pairMapM (. ≤ᵤ .) arg.toPair
 
-instance : OpDenote Op Ty := ⟨Op.denote⟩
+instance : OpDenote Op Ty := ⟨
+  fun o args _ => Op.denote o args
+⟩
 
 end InstCombine
