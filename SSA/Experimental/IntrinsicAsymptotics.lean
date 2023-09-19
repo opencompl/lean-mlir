@@ -21,7 +21,9 @@ class OpSignature (Op : Type) (Ty : outParam (Type)) where
   outTy : Op → Ty
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
-  denote : (op : Op) → HVector toType (OpSignature.sig op) → (toType <| OpSignature.outTy op)
+  denote : (op : Op) → HVector toType (OpSignature.sig op) →
+    HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
+    (toType <| OpSignature.outTy op)
 
 /-
   # Datastructures
@@ -38,15 +40,33 @@ inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
       (OpSignature.regSig op)) : IExpr Γ ty
-  deriving Repr
-
+  
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
   | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
-  deriving Repr
 
 end
+
+section
+open Std (Format)
+variable {Op Ty : Type} [OpSignature Op Ty] [Repr Op] [Repr Ty]
+
+mutual 
+  def IExpr.repr (prec : Nat) : IExpr Op Γ t → Format
+    | ⟨op, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
+
+  def ICom.repr (prec : Nat) : ICom Op Γ t → Format
+    | .ret v => .align false ++ f!"return {reprPrec v prec}"
+    | .lete e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
+end
+
+instance : Repr (IExpr Op Γ t) := ⟨flip IExpr.repr⟩
+instance : Repr (ICom Op Γ t) := ⟨flip ICom.repr⟩
+
+end
+
+
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
