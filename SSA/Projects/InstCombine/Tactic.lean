@@ -1,8 +1,8 @@
-import SSA.Core.WellTypedFramework
+-- import SSA.Core.WellTypedFramework
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForMathlib
 
-open SSA 
+-- open SSA 
 
 macro "simp_alive": tactic =>
   `(tactic|
