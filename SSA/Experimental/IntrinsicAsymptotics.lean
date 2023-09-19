@@ -17,6 +17,7 @@ open Goedel (toType)
 
 class OpSignature (Op : Type) (Ty : outParam (Type)) where
   sig : Op → List Ty
+  regSig : Op → List (Ctxt Ty × Ty)
   outTy : Op → Ty
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
@@ -28,18 +29,24 @@ class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
 
 variable (Op : Type) {Ty : Type} [OpSignature Op Ty]
 
+mutual
+
 /-- A very simple intrinsically typed expression. -/
-structure IExpr (Γ : Ctxt Ty) (ty : Ty) : Type :=
-  (op : Op)
-  (ty_eq : ty = OpSignature.outTy op)
-  (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
+  | mk {Γ} {ty} (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
+      (OpSignature.regSig op)) : IExpr Γ ty
   deriving Repr
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
-  | lete (e : IExpr Op Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+  | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
   deriving Repr
+
+end
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
@@ -54,16 +61,73 @@ inductive Lets : Ctxt Ty → Ctxt Ty → Type where
 
 variable {Op Ty : Type} [OpSignature Op Ty]
 
+@[elab_as_elim]
+def ICom.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → ICom Op a a_1 → Sort u} :
+    (ret : {Γ : Ctxt Ty} → {t : Ty} → (v : Var Γ t) → motive Γ t (ICom.ret v)) →
+    (lete : {Γ : Ctxt Ty} →
+        {α β : Ty} →
+          (e : IExpr Op Γ α) →
+            (body : ICom Op (Ctxt.snoc Γ α) β) →
+              motive (Ctxt.snoc Γ α) β body → motive Γ β (ICom.lete e body)) →
+      {a : Ctxt Ty} → {a_1 : Ty} → (t : ICom Op a a_1) → motive a a_1 t
+  | hret, _, _, _, ICom.ret v => hret v
+  | hret, hlete, _, _, ICom.lete e body => hlete e body (ICom.rec' hret hlete body)
+
+def IExpr.op {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) : Op :=
+  IExpr.casesOn e (fun op _ _ _ => op)
+
+theorem IExpr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+    ty = OpSignature.outTy e.op :=
+  IExpr.casesOn e (fun _ ty_eq _ _ => ty_eq)
+
+def IExpr.args {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+    HVector (Var Γ) (OpSignature.sig e.op) :=
+  IExpr.casesOn e (fun _ _ args _ => args)
+
+def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+    HVector (fun t : Ctxt Ty × Ty => ICom Op t.1 t.2) (OpSignature.regSig e.op) :=
+  IExpr.casesOn e (fun _ _ _ regArgs => regArgs)
+
+/-! Projection equations for `IExpr` -/
+@[simp]
+theorem IExpr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
+    (IExpr.mk op ty_eq args regArgs).op = op := rfl
+
+@[simp]
+theorem IExpr.args_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+    (IExpr.mk op ty_eq args regArgs).args = args := rfl
+
+@[simp]
+theorem IExpr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+    (IExpr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
+
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
+mutual
+
+def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => ICom Op t.1 t.2) l) →
+    HVector (fun t => t.1.Valuation → toType t.2) l
+  | _, .nil => HVector.nil
+  | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
+
 def IExpr.denote : {ty : Ty} → (e : IExpr Op Γ ty) → (Γv : Γ.Valuation) → (toType ty)
-  | _, ⟨op, Eq.refl _, args⟩, Γv => OpDenote.denote op <| args.map (fun _ v => Γv v)
+  | _, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
+    OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def ICom.denote : ICom Op Γ ty → (Γv : Γ.Valuation) → (toType ty)
   | .ret e, Γv => Γv e
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
+
+end
+termination_by
+  IExpr.denote _ _ e _ => sizeOf e
+  ICom.denote _ _ e _ => sizeOf e
+  HVector.denote _ _ e => sizeOf e
 
 def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
   | .nil => id
@@ -78,7 +142,7 @@ def Lets.denote : Lets Op Γ₁ Γ₂ → Γ₁.Valuation → Γ₂.Valuation
 
 def IExpr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : IExpr Op Γ ty) → IExpr Op Γ' ty
-  | _, ⟨op, Eq.refl _, args⟩ => ⟨op, rfl, args.map varsMap⟩
+  | _, ⟨op, Eq.refl _, args, regArgs⟩ => ⟨op, rfl, args.map varsMap, regArgs⟩
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
@@ -103,7 +167,7 @@ theorem ICom.denote_changeVars
     (Γ'v : Γ'.Valuation) :
     (c.changeVars varsMap).denote Γ'v =
     c.denote (fun t v => Γ'v (varsMap v)) := by
-  induction c generalizing Γ'v Γ' with
+  induction c using ICom.rec' generalizing Γ'v Γ' with
   | ret x => simp [ICom.denote, ICom.changeVars, *]
   | lete _ _ ih =>
     rw [changeVars, denote, ih]
@@ -145,22 +209,26 @@ theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : 
     (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
     (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).diff.toHom var)
     = lets.denote ll var := by
-  induction com generalizing lets Γ_out
+  induction com using ICom.rec' generalizing lets Γ_out
   next =>
     rfl
   next e body ih =>
-    simp[addProgramToLets, ih, Lets.denote]
+    -- Was just `simp [addProgramToLets, ih, Lets.denote]
+    rw [addProgramToLets]
+    simp [ih, Lets.denote]
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : ICom Op Δ t} :
     ∀ (ll : Γ_in.Valuation),
       (addProgramToLets lets map com).lets.denote ll (addProgramToLets lets map com).var
       = com.denote (fun _ v => lets.denote ll <| map v) := by
   intro ll
-  induction com generalizing lets Γ_out
+  induction com using ICom.rec' generalizing lets Γ_out
   next =>
     rfl
   next e body ih =>
-    simp only [addProgramToLets, ih, ICom.denote]
+    -- Was just `simp only [addProgramToLets, ih, ICom.denote]`
+    rw [addProgramToLets]
+    simp only [ih, ICom.denote]
     congr
     funext t v
     cases v using Ctxt.Var.casesOn
@@ -243,10 +311,12 @@ where
 @[simp]
 theorem ICom.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : ICom Op Γ_out t) (s : Γ_in.Valuation) :
     (toLets.go lets com).lets.denote s (toLets.go lets com).ret = com.denote (lets.denote s) := by
-  induction com
+  induction com using ICom.rec'
   . rfl
   next ih =>
-    simp [toLets.go, denote, ih]
+    -- Was just `simp [toLets.go, denote, ih]`
+    rw [toLets.go]
+    simp [denote, ih]
     congr
     funext _ v
     cases v using Ctxt.Var.casesOn <;> simp[Lets.denote]
@@ -441,9 +511,8 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
       matchVar lets v matchLets w ma
   | @Lets.lete _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
-      let ⟨op, _, args⟩ ← lets.getIExpr v
-      let ⟨op', _, args'⟩ := matchExpr
-      if hs : op = op'
+      let ie ← lets.getIExpr v
+      if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
       then
         -- hack to make a termination proof work
         let matchVar' := fun t vₗ vᵣ ma =>
@@ -455,7 +524,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
               let ma ← matchVar' _ vₗ vᵣ ma
               matchArg vsₗ vsᵣ ma
-        matchArg args (hs ▸ args') ma
+        matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
   | .nil, w, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
@@ -553,7 +622,7 @@ theorem subset_entries_matchVar [DecidableEq Op]
       rcases e with ⟨op, rfl, args⟩
       dsimp at h
       split_ifs at h with hop
-      · subst op
+      · rcases hop with ⟨rfl, hop⟩
         dsimp at h
         exact subset_entries_matchVar_matchArg_aux
           (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
@@ -653,21 +722,23 @@ theorem denote_matchVar_of_subset
     split at h_mv
     · simp_all
     · rename_i e he
-      rcases e with ⟨op₁, rfl, args₁⟩
-      rcases matchExpr with ⟨op₂, h, args₂⟩
+      rcases e with ⟨op₁, rfl, args₁, regArgs₁⟩
+      rcases matchExpr with ⟨op₂, h, args₂, regArgs₂⟩
       dsimp at h_mv
-      split_ifs at h_mv
-      · subst op₁
+      split_ifs at h_mv with hop
+      · rcases hop with ⟨rfl, hop⟩
         simp [Lets.denote, IExpr.denote]
         rw [← Lets.denote_getIExpr he]
         clear he
-        dsimp [IExpr.denote]
+        simp only [IExpr.denote]
         congr 1
-        apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub
-        · intro t v₁ v₂ ma ma' hmem hma
-          apply denote_matchVar_of_subset hma
-          apply hmem
-        · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
+        · apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub
+          · intro t v₁ v₂ ma ma' hmem hma
+            apply denote_matchVar_of_subset hma
+            apply hmem
+          · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
+        · exact HVector.eq_of_type_eq_nil
+            (List.isEmpty_iff_eq_nil.1 hop)
 
 theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Γ_in.Valuation}
@@ -761,7 +832,7 @@ theorem mem_matchVar
         refine ⟨_, _, ?_, h_v'⟩
         rcases matchE  with ⟨_, _, _⟩
         dsimp at h
-        subst h
+        rcases h with ⟨rfl, _⟩
         exact hl
 
 end
@@ -997,23 +1068,28 @@ instance : OpSignature ExOp ExTy where
     | .add => [.nat, .nat]
     | .beq => [.nat, .nat]
     | .cst _ => []
+  regSig := fun _ => []
 
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
-    | .cst n, _ => n
-    | .add, .cons (a : Nat) (.cons b .nil) => a + b
-    | .beq, .cons (a : Nat) (.cons b .nil) => a == b
+    | .cst n, _, _ => n
+    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
+    | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
 
 def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
-  { op := .cst n
-    ty_eq := rfl
-    args := .nil }
+  IExpr.mk
+    (op := .cst n)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
 
 def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
-  { op := .add
-    ty_eq := rfl
-    args := .cons e₁ <| .cons e₂ .nil }
+  IExpr.mk
+    (op := .add)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
 
 macro "simp_peephole": tactic =>
   `(tactic|
@@ -1021,7 +1097,7 @@ macro "simp_peephole": tactic =>
       funext ll
       simp only [ICom.denote, IExpr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        cst, HVector.map, OpDenote.denote]
+        cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;
@@ -1069,6 +1145,7 @@ def r : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
+      rw [m, r]
       simp_peephole
       intros a b
       rw [Nat.add_comm]
@@ -1137,6 +1214,7 @@ def r2 : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
+      rw [m, r2]
       simp_peephole
       intros a b
       rw [Nat.zero_add]
@@ -1197,6 +1275,7 @@ def r3 : ICom ExOp (.ofList [.nat, .nat]) .nat :=
 def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
+      rw [m, r3]
       simp_peephole
       intros a b
       rw [Nat.zero_add]
@@ -1259,6 +1338,7 @@ def ex3 : ICom ExOp ∅ .nat :=
 def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
+      rw [m, r3]
       simp_peephole
       intros a b
       rw [Nat.zero_add]

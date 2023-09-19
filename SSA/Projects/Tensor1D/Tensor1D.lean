@@ -136,7 +136,7 @@ theorem extractslice_insertslice [Inhabited α]
   (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
   : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
     simp[Tensor1d.insertslice, Tensor1d.extract]
-    cases slice <;> simp;
+    cases slice ; simp;
     case mk slicesize sliceval spec => {
       by_cases A:(t.size < sliceix) <;> simp[A]
       case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
@@ -460,7 +460,6 @@ theorem extract_map (r0 : TSSA Op Context.empty _) :
     simp[eval];
     funext arg;
     simp[UserType.mkTriple]
-    generalize R : TSSA.eval r0 EnvC.empty = rval 
     simp[Tensor1d.extract_map]
   }
 
