@@ -134,21 +134,17 @@ def bb0IcomConcrete := [mlir_icom|
     "llvm.return"(%4) : (i32) -> ()
   }]
 
-#print bb0IcomConcrete
-
-set_option pp.rawOnError true in
-def bb0Icom (n w : Nat) := [mlir_icom| 
+/-! anti-quotations with let-bindings seem to work for arbitrary values `w < 100`. 
+    If we set `w := 100` or above, we get `maximum recursion depth has been reached`-/
+def bb0IcomLet := let w := 99; [mlir_icom| 
 {
-  ^bb0(%arg0: $(.i w)): 
-    %0 = "llvm.mlir.constant"() {value = $(.int 1 (.i w))} : () -> $(.i w)
-    %1 = "llvm.mlir.constant"() {value = 31 : $(.i w)} : () -> $(.i w)
-    %2 = "llvm.ashr"(%arg0, %1) : ($(.i w), $(.i w)) -> $(.i w)
-    %3 = "llvm.and"(%2, %0) : ($(.i w), $(.i w)) -> $(.i w)
-    %4 = "llvm.add"(%3, %2) : ($(.i w), $(.i w)) -> $(.i w)
-    "llvm.return"(%4) : ($(.i w)) -> ()
+  ^bb0():
+    %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
+    "llvm.return"(%0) : ($(.i w)) -> ()
   }]
 
-#print bb0Icom
-#reduce bb0Icom
+#print bb0IcomLet
 
-example : bb0Icom = com := by rfl
+-- `bb0IcomLet` should already be in normal form. Yet, reducing it again seems to not work
+#reduce bb0IcomLet -- error: maximum recursion depth has been reached
+
