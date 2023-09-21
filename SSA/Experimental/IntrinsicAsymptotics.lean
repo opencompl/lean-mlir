@@ -56,6 +56,8 @@ inductive ICom : Ctxt Ty → Ty → Type where
 
 end
 
+@[instance] axiom ICom.decidableEq {Γ t} : DecidableEq (ICom Op Γ t)
+
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
 inductive Lets : Ctxt Ty → Ctxt Ty → Type where
