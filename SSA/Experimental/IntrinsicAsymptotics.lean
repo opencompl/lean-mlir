@@ -1185,7 +1185,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
       funext mv ll
       simp only [ICom.denote, IExpr.denote, Reg.denote, HVector.denote,
         Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
+        Ctxt.snoc, Ctxt.ofList,
+        Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
         HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
@@ -1528,9 +1529,7 @@ def p1' : PeepholeRewrite ExOp [.nat] .nat:=
       rw [ex1'_lhs, ex1'_rhs]
       simp_peephole [add, rgn]
       intros a
-    -- | @chris: what's the correct lemma we need
-    -- to automate this proof?
-      simp[Ctxt.Valuation.snoc]
+      simp only[Function.iterate_zero, id_eq]
       done
   }
 
