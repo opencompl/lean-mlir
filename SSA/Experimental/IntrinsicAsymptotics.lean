@@ -1183,7 +1183,7 @@ macro "simp_peephole": tactic =>
       (
       funext mv ll
       simp only [ICom.denote, IExpr.denote, Reg.denote,
-        Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Var.zero_eq_last, Var.succ_eq_toSnoc, HVector.denote,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
         cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
       generalize ll { val := 0, property := _ } = a;
@@ -1205,7 +1205,7 @@ macro "simp_peephole": tactic =>
       try revert c;
       try revert b;
       try revert a;
-      clear ll;
+      try clear ll;
       )
    )
 
@@ -1234,9 +1234,8 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole [add, cst]
-      intros a b
-      rw [Nat.add_comm]
+      simp_peephole
+      simp [add_comm]
     }
 
 example : rewritePeepholeAt p1 1 ex1 = (
@@ -1303,7 +1302,7 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
-      simp_peephole [add, cst]
+      simp_peephole
       intros a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
@@ -1364,7 +1363,7 @@ def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      simp_peephole
       intros a b
       rw [Nat.zero_add]
     }
@@ -1427,7 +1426,7 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      simp_peephole
       intros a b
       rw [Nat.zero_add]
     }
@@ -1493,7 +1492,7 @@ def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.na
     (op := .runK k)
     (ty_eq := rfl)
     (args := .cons input .nil)
-    (regArgs := HVector.cons body HVector.nil)
+    (regArgs := HVector.cons (Reg.icom body) HVector.nil)
 
 attribute [local simp] Ctxt.snoc
 
@@ -1510,10 +1509,9 @@ def ex1_rhs : ICom ExOp [.nat] .nat :=
 
 def p1 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
-      rw [ex1_lhs, ex1_rhs]
-      simp_peephole [add, rgn]
+      rw [ex1_lhs, ex1_rhs, rgn]
+      simp_peephole
       simp
-      done
   }
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
@@ -1530,10 +1528,9 @@ def ex2_rhs : ICom ExOp [.nat] .nat :=
 
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
-      rw [ex2_lhs, ex2_rhs]
-      simp_peephole[add, rgn]
+      rw [ex2_lhs, ex2_rhs, rgn, add]
+      simp_peephole
       simp
-      done
   }
 
 end RegionExamples
