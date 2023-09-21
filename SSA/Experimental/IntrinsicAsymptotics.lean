@@ -1183,7 +1183,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       funext mv ll
-      simp only [ICom.denote, IExpr.denote, Reg.denote, HVector.denote
+      simp only [ICom.denote, IExpr.denote, Reg.denote, HVector.denote,
         Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
         HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
@@ -1237,8 +1237,7 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      -- @chris: simp_peephole causes type error??
-      simp_peephole [add, rgn]
+      simp_peephole [add]
       apply Nat.add_comm
       done
     }
@@ -1307,11 +1306,11 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
-      -- @chris: simp_peephole causes type error??
       simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
-      rw [Nat.add_comm]
+      apply Nat.add_comm
+      done
     }
 
 example : rewritePeepholeAt p2 1 ex2' = (
@@ -1435,6 +1434,7 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
       simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
+      done
     }
 
 example : rewritePeepholeAt p4 5 ex3 = (
@@ -1527,7 +1527,11 @@ def p1' : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex1'_lhs, rhs := ex1'_rhs, correct := by
       rw [ex1'_lhs, ex1'_rhs]
       simp_peephole [add, rgn]
-      sorry -- @chris: this is a proof TODO.
+      intros a
+    -- | @chris: what's the correct lemma we need
+    -- to automate this proof?
+      simp[Ctxt.Valuation.snoc]
+      done
   }
 
 
@@ -1548,7 +1552,7 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
       rw [ex2_lhs, ex2_rhs]
       simp_peephole [add, rgn]
       simp
-      sorry --@chris: proof sorry
+      done
   }
 
 
