@@ -1496,7 +1496,7 @@ def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : Reg ExOp [ExTy.nat
     (op := .runK k)
     (ty_eq := rfl)
     (args := .cons input .nil)
-    (regArgs := HVector.cons body HVector.nil)
+    (regArgs := HVector.cons (Reg.icom body) HVector.nil)
 
 attribute [local simp] Ctxt.snoc
 
@@ -1544,7 +1544,7 @@ def ex2_rhs : ICom ExOp [.nat] .nat :=
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
       rw [ex2_lhs, ex2_rhs]
-      simp_peephole[add, rgn]
+      simp_peephole [add, rgn]
       simp
       sorry --@chris: proof sorry
   }
