@@ -1533,6 +1533,14 @@ def p1' : PeepholeRewrite ExOp [.nat] .nat:=
       done
   }
 
+/--
+The rewrite that should succeed on `rewritePeepholeAt`
+supports region metavars. 
+-/
+example : rewritePeepholeAt p1' 1 ex1_lhs = ex1_rhs := by {
+  try rfl; sorry 
+}
+
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : ICom ExOp [.nat] .nat :=
@@ -1553,6 +1561,8 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
       simp
       done
   }
+
+
 
 
 end RegionExamples
