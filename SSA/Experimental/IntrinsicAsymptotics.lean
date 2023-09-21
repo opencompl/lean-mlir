@@ -1183,7 +1183,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       funext mv ll
-      simp only [ICom.denote, IExpr.denote, Reg.denote,
+      simp only [ICom.denote, IExpr.denote, Reg.denote, HVector.denote
         Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
         HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
@@ -1237,7 +1237,8 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole []
+      -- @chris: simp_peephole causes type error??
+      simp_peephole [add, rgn]
       apply Nat.add_comm
       done
     }
@@ -1306,6 +1307,7 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
+      -- @chris: simp_peephole causes type error??
       simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
@@ -1496,7 +1498,7 @@ def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : Reg ExOp [ExTy.nat
     (op := .runK k)
     (ty_eq := rfl)
     (args := .cons input .nil)
-    (regArgs := HVector.cons (Reg.icom body) HVector.nil)
+    (regArgs := HVector.cons body HVector.nil)
 
 attribute [local simp] Ctxt.snoc
 
