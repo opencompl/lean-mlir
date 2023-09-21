@@ -152,6 +152,23 @@ termination_by
   IExpr.denote _ e _ _ => sizeOf e
   ICom.denote _ e _ _ => sizeOf e
 
+/-
+https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
+Recall that `simp` lazily generates equation lemmas.
+Moreover, recall that `simp only` **does not** generate equation lemmas.
+*but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
+
+Hence, we build the equation lemmas by invoking the correct Lean meta magic,
+so that `simp only` (which we use in `simp_peephole` can find them!)
+
+This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
+args, since there now are equation lemmas for it.
+-/
+#eval Lean.Meta.getEqnsFor? ``HVector.denote
+#eval Lean.Meta.getEqnsFor? ``IExpr.denote
+#eval Lean.Meta.getEqnsFor? ``ICom.denote
+
+
 def Lets.denote : Lets Op Γ₁ Γ₂ → MVarDenote Ty → Γ₁.Valuation → Γ₂.Valuation
   | .nil => fun _ => id
   | .lete e body => fun mv ll t v => by
@@ -1062,6 +1079,47 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
         | none => simp
     case neg h => simp
 
+section SimpPeephole
+
+
+/--
+Simplify evaluation junk, leaving behind Lean level proposition to be proven.
+-/
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
+  `(tactic|
+      (
+      funext ll
+      simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
+      generalize ll { val := 0, property := _ } = a;
+      generalize ll { val := 1, property := _ } = b;
+      generalize ll { val := 2, property := _ } = c;
+      generalize ll { val := 3, property := _ } = d;
+      generalize ll { val := 4, property := _ } = e;
+      generalize ll { val := 5, property := _ } = f;
+      simp [Goedel.toType] at a b c d e f;
+      try clear f;
+      try clear e;
+      try clear d;
+      try clear c;
+      try clear b;
+      try clear a;
+      try revert f;
+      try revert e;
+      try revert d;
+      try revert c;
+      try revert b;
+      try revert a;
+      try clear ll;
+      )
+   )
+
+/-- `simp_peephole` with no extra user defined theorems. -/
+macro "simp_peephole" : tactic => `(tactic| simp_peephole [])
+
+
+end SimpPeephole
 
 
 /-
@@ -1176,7 +1234,7 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole
+      simp_peephole [add, cst]
       intros a b
       rw [Nat.add_comm]
     }
@@ -1245,7 +1303,7 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
-      simp_peephole
+      simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
@@ -1306,7 +1364,7 @@ def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       rw [m, r3]
-      simp_peephole
+      simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
     }
@@ -1369,7 +1427,7 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       rw [m, r3]
-      simp_peephole
+      simp_peephole [add, cst]
       intros a b
       rw [Nat.zero_add]
     }
@@ -1386,3 +1444,96 @@ example : rewritePeepholeAt p4 5 ex3 = (
   .ret ⟨0, by simp⟩) := rfl
 
 end Examples
+
+namespace RegionExamples
+
+/-- A very simple type universe. -/
+inductive ExTy
+  | nat
+  deriving DecidableEq, Repr
+
+@[reducible]
+instance : Goedel ExTy where
+  toType
+    | .nat => Nat
+
+inductive ExOp :  Type
+  | add : ExOp
+  | runK : ℕ → ExOp
+  deriving DecidableEq
+
+instance : OpSignature ExOp ExTy where
+  outTy
+    | .add => .nat
+    | .runK _ => .nat
+  sig
+    | .add => [.nat, .nat]
+    | .runK _ => [.nat]
+  regSig
+    | .runK _ => [([.nat], .nat)]
+    | _ => []
+
+
+@[reducible]
+instance : OpDenote ExOp ExTy where
+  denote
+    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
+    | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) =>
+      k.iterate (fun val => rgn (fun _ty _var => val)) v
+
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
+  IExpr.mk
+    (op := .add)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
+
+def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat :=
+  IExpr.mk
+    (op := .runK k)
+    (ty_eq := rfl)
+    (args := .cons input .nil)
+    (regArgs := HVector.cons body HVector.nil)
+
+attribute [local simp] Ctxt.snoc
+
+/-- running `f(x) = x + x` 0 times is the identity. -/
+def ex1_lhs : ICom ExOp [.nat] .nat :=
+  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+  )) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def ex1_rhs : ICom ExOp [.nat] .nat :=
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def p1 : PeepholeRewrite ExOp [.nat] .nat:=
+  { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
+      rw [ex1_lhs, ex1_rhs]
+      simp_peephole [add, rgn]
+      simp
+      done
+  }
+
+/-- running `f(x) = x + x` 1 times does return `x + x`. -/
+def ex2_lhs : ICom ExOp [.nat] .nat :=
+  ICom.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
+      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+  )) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def ex2_rhs : ICom ExOp [.nat] .nat :=
+    ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+    <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def p2 : PeepholeRewrite ExOp [.nat] .nat:=
+  { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
+      rw [ex2_lhs, ex2_rhs]
+      simp_peephole[add, rgn]
+      simp
+      done
+  }
+
+end RegionExamples
