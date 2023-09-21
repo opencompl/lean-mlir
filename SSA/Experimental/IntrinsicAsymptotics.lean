@@ -1178,14 +1178,15 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-macro "simp_peephole": tactic =>
+section SimpPeephole 
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       funext mv ll
       simp only [ICom.denote, IExpr.denote, Reg.denote,
         Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, add,
-        cst, HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk]
+        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
+        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
       generalize ll { val := 2, property := _ } = c;
@@ -1205,11 +1206,13 @@ macro "simp_peephole": tactic =>
       try revert c;
       try revert b;
       try revert a;
-      clear ll;
+      try clear ll;
       )
    )
 
 attribute [local simp] Ctxt.snoc
+
+namespace Examples
 
 def ex1 : ICom ExOp ∅ .nat :=
   ICom.lete (cst 1) <|
@@ -1234,9 +1237,9 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole [add, cst]
-      intros a b
-      rw [Nat.add_comm]
+      simp_peephole []
+      apply Nat.add_comm
+      done
     }
 
 example : rewritePeepholeAt p1 1 ex1 = (
@@ -1488,7 +1491,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : ICom ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat :=
+def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : Reg ExOp [ExTy.nat] ExTy.nat) : IExpr ExOp Γ .nat :=
   IExpr.mk
     (op := .runK k)
     (ty_eq := rfl)
@@ -1499,7 +1502,7 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def ex1_lhs : ICom ExOp [.nat] .nat :=
-  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
       ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
@@ -1508,17 +1511,27 @@ def ex1_lhs : ICom ExOp [.nat] .nat :=
 def ex1_rhs : ICom ExOp [.nat] .nat :=
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def p1 : PeepholeRewrite ExOp [.nat] .nat:=
-  { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
-      rw [ex1_lhs, ex1_rhs]
+/-- running `f(x) = <whatever>` 0 times is the identity. -/
+def ex1'_lhs : ICom ExOp [.nat] .nat :=
+  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+      Reg.mvar 0)
+  ) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def ex1'_rhs : ICom ExOp [.nat] .nat :=
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def p1' : PeepholeRewrite ExOp [.nat] .nat:=
+  { lhs := ex1'_lhs, rhs := ex1'_rhs, correct := by
+      rw [ex1'_lhs, ex1'_rhs]
       simp_peephole [add, rgn]
-      simp
-      done
+      sorry -- @chris: this is a proof TODO.
   }
+
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : ICom ExOp [.nat] .nat :=
-  ICom.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
+  ICom.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
       ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
@@ -1533,7 +1546,8 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
       rw [ex2_lhs, ex2_rhs]
       simp_peephole[add, rgn]
       simp
-      done
+      sorry --@chris: proof sorry
   }
+
 
 end RegionExamples
