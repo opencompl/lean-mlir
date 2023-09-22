@@ -92,37 +92,6 @@ def com := mkCom bb0 |>.toOption |>.get (by rfl)
 theorem com_Γ : com.1 = (Γn 1) := by rfl
 theorem com_ty : com.2.1 = Ty.bitvec 32 := by rfl
 
-def comDen : (Option $ Bitvec 32) → (Option $ Bitvec 32) := 
-    match h : com with 
-    | ⟨Γ, ty, com⟩ =>
-      fun arg => cast (by
-        suffices ty = Ty.bitvec 32 by rw[this]; rfl
-        have com_ty := com_ty
-        revert h com_ty
-        rcases _root_.com with ⟨_, _, _⟩
-        rintro ⟨⟩ ⟨⟩
-        rfl
-      ) <| com.denote (fun t v => 
-        cast (by
-          by_cases ht : t = Ty.bitvec 32
-          . rw [ht]; rfl
-          . exfalso
-            sorry
-            -- rw [h₁] at v
-            -- rcases v with ⟨i, hv⟩
-            -- rw [Ctxt.get?, Γn, Ctxt.ofList, List.get?_eq_get, List.get_replicate] at hv 
-            -- . rcases hv
-            --   rfl
-            -- . exact (List.get?_eq_some.mp hv).1
-        ) arg
-      )
-
-#eval comDen (some <| Bitvec.ofInt 32 (-1))
-
-#check MLIR.AST.AttrValue
-
--- set_option maxHeartbeats 2000000 in
--- set_option pp.raw true in
 def bb0IcomConcrete := [mlir_icom| 
 {
   ^bb0(%arg0: i32): 

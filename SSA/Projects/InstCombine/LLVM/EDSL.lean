@@ -20,7 +20,4 @@ elab "[mlir_icom| " reg:mlir_region "]" : term => do
     | ~q(Except.error $err) => do
         let err ← unsafe evalExpr TransformError q(TransformError) err
         throwError "Translation failed with error:\n\t{repr err}"
-        -- catch evalErr =>
-        --   let evalErr := evalErr.toMessageData
-        --   throwError "Translation failed. Additionaly, evaluating the translation error failed:\n\t{evalErr}"
     | e => throwError "Translation failed to reduce, possibly too generic syntax\n\t{e}"
