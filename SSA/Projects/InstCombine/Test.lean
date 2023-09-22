@@ -148,3 +148,14 @@ def bb0IcomLet := let w := 99; [mlir_icom|
 -- `bb0IcomLet` should already be in normal form. Yet, reducing it again seems to not work
 #reduce bb0IcomLet -- error: maximum recursion depth has been reached
 
+/-!
+  Similarly, syntax that is fully generic over bit-width (by taking `w` as argument) 
+  seems to fail to reduce at all
+-/
+
+def bb0IcomGeneric (w : Nat) := [mlir_icom| 
+{
+  ^bb0():
+    %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
+    "llvm.return"(%0) : ($(.i w)) -> ()
+  }]
