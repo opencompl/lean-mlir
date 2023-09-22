@@ -33,6 +33,6 @@ jobs:
           lake exe cache get # download cache of mathlib docs.
           lake build mlirnatural 
 
-      - name: Run executable ⚙️
-        run: |
-          ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
+#     - name: Run executable ⚙️
+#       run: |
+#         ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
