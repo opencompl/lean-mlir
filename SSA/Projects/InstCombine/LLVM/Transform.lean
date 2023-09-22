@@ -451,7 +451,7 @@ private def mkComHelper (Γ : Context) :
   | lete::rest => do
     let ⟨ty₁, expr⟩ ← mkExpr Γ lete
     if h : lete.res.length != 1 then
-      throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{lete}`"
+      throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr lete}`"
     else
       let _ ← addValToMapping Γ (lete.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
       let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest

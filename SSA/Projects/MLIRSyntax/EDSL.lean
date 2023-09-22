@@ -155,13 +155,6 @@ def IntToString (i: Int): String := i.repr
 
 instance : Quote Int := ⟨fun n => Syntax.mkNumLit <| n.repr⟩
 
-def quoteMDimension (d: Dimension): MacroM Syntax :=
-  match d with
-  | Dimension.Known n => do
-    `(Dimension.Known $(quote n))
-  | Dimension.Unknown => `(Dimension.Unknown)
-
-
 def quoteMList (k: List (TSyntax `term)) (ty: TSyntax `term): MacroM (TSyntax `term) :=
   match k with
   | [] => `(@List.nil $ty)
@@ -355,73 +348,6 @@ macro_rules
 -- More tricky: pushes coercion into the whole construction
 
 
-
-
-declare_syntax_cat mlir_dimension
-
-syntax "?" : mlir_dimension
-syntax num : mlir_dimension
-
-syntax "[mlir_dimension|" mlir_dimension "]" : term
-macro_rules
-| `([mlir_dimension| ?]) => `(Dimension.Unknown)
-macro_rules
-| `([mlir_dimension| $x:num ]) =>
-    `(Dimension.Known $x)
-
-def dim0 := [mlir_dimension| 30]
-#print dim0
-
-def dim1 := [mlir_dimension| ?]
-#print dim1
-
-
--- | 1 x 2 x 3 x ..
-declare_syntax_cat mlir_dimension_list
-syntax (mlir_dimension "×")* mlir_type : mlir_dimension_list
-
-def string_to_dimension (s: String): MacroM Dimension := do
-  if s == "?"
-  then return Dimension.Unknown
-  else if s.isNat
-  then return Dimension.Known s.toNat!
-  else Macro.throwError ("unknown dimension: | " ++ s ++ "  |")
-
-
--- (MLIR.EDSL.«mlir_dimension_list_×_»
---  [
---    [(MLIR.EDSL.mlir_dimension_ (numLit "3")) "×"]
---    [(MLIR.EDSL.mlir_dimension_ (numLit "3")) "×"]]
- -- (MLIR.EDSL.mlir_type__ `i32))| )
-
--- | TODO: assert that the string we get is of the form x3x4x?x2...
--- that is, interleaved x and other stuff.
-def parseTensorDimensionList (k: Syntax) : MacroM (TSyntax `term × TSyntax `term) := do
-
-  let ty <- `([mlir_type|  $(⟨k.getArgs.back⟩)])
-  let dimensions := (k.getArg 0)
-  let dimensions <- dimensions.getArgs.toList.mapM (fun x =>
-    `([mlir_dimension| $(⟨x.getArg 0⟩)]))
-  let dimensions <- quoteMList dimensions (<- `(MLIR.AST.Dimension))
-  -- Macro.throwError $ ("unknown dimension list:\n|" ++ (toString k.getArgs) ++ "|" ++ "\nDIMS: " ++ (toString dimensions) ++ " |\nTYPE: " ++ (toString ty)++ "")
-  return (dimensions, ty)
-
-
-  --       let xstr := dims.getId.toString
-  --       let xparts := (xstr.splitOn "x").tail!
-  --       let ty := xparts.getLast!
-  --       let xparts := xparts.dropLast
-  --       let xparts := [] ++ xparts -- TODO: add k into this list.
-  --       -- Macro.throwError $ ("unknown dimension list: |" ++ (toString xparts) ++ "| )")
-
-  --       let tyIdent := Lean.mkIdent ty
-  --       -- let tyStx <- `([mlir_type|  $(quote tyIdent)])
-  --       let tyStx <-  `([mlir_type|  i32])
-  --       let dims <- xparts.mapM string_to_dimension
-  --       let dimsStx <- quoteMList ([k] ++ (<- dims.mapM quoteMDimension))
-  --       return (dimsStx, tyStx)
-  -- -- | err => Macro.throwError $  ("unknown dimension list: |" ++ err.reprint.getD "???" ++ "| )")
-
 -- === VECTOR TYPE ===
 -- TODO: where is vector type syntax defined?
 -- | TODO: fix bug that does not allow a trailing times.
@@ -479,57 +405,6 @@ def staticDimList1 : List Nat := [static_dim_list| 1 × 2]
 -- | `([mlir_type|  < $dims:mlir_dimension_list  >]) => do
 --     let (dims, ty) <- parseTensorDimensionList dims
 --     `(MLIRType.vector $dims $ty)
-
-
--- | TODO: fix bug that does not allow a trailing times.
-
-syntax "tensor" "<"  mlir_dimension_list  ">"  : mlir_type
-macro_rules
-| `([mlir_type| tensor < $dims:mlir_dimension_list  >]) => do
-    let (dims, ty) <- parseTensorDimensionList dims
-    `(builtin.tensor $dims $ty)
-
--- | TODO: this is a huge hack.
--- | TODO: I should be able to use the lower level parser to parse this cleanly?
-syntax "tensor" "<"  "*" "×" mlir_type ">"  : mlir_type
-syntax "tensor" "<*" "×" mlir_type ">"  : mlir_type
-syntax "tensor" "<*×" mlir_type ">"  : mlir_type
-
-macro_rules
-| `([mlir_type| tensor < *× $ty:mlir_type >]) => do
-    `(builtin.tensor_unranked [mlir_type| $ty])
-
-macro_rules
-| `([mlir_type| tensor < * × $ty:mlir_type >]) => do
-    `(builtin.tensor_unranked [mlir_type| $ty])
-
-macro_rules
-| `([mlir_type| tensor <* × $ty:mlir_type >]) => do
-    `(builtin.tensor_unranked [mlir_type| $ty])
-
-macro_rules
-| `([mlir_type| tensor <*×$ty:mlir_type >]) => do
-    `(builtin.tensor_unranked [mlir_type| $ty])
-
--- Automatically inferred as MLIRType builtin
---def tensorTy0 := [mlir_type| tensor<3×3×i32>]
---#print tensorTy0
---
---def tensorTy1 := [mlir_type| tensor< * × i32>]
---#print tensorTy1
---
---def tensorTy2 := [mlir_type| tensor< * × f32>]
---#print tensorTy2
---
---def tensorTy3 := [mlir_type| tensor<*× f32>]
---#print tensorTy3
---
---def tensorTy4 := [mlir_type| tensor<* × f32>]
---#print tensorTy4
---
----- Basic coercion builtin → builtin + empty
---example : MLIRType (builtin + Dialect.empty) := [mlir_type| tensor<* × f32>]
---
 
 syntax "tensor1d" : mlir_type
 macro_rules
@@ -606,46 +481,6 @@ macro_rules
 macro_rules
 | `([mlir_region| $$($q) ]) => return q
 
-
--- TENSOR LITERAL
--- ==============
-
-declare_syntax_cat mlir_tensor
-syntax numLit : mlir_tensor
-syntax scientificLit : mlir_tensor
-
-syntax "[" sepBy(mlir_tensor, ",") "]" : mlir_tensor
-
-syntax ident: mlir_tensor
-syntax "[mlir_tensor|" mlir_tensor "]" : term
-
-macro_rules
-| `([mlir_tensor| $x:num ]) => `(TensorElem.int $x)
-
-macro_rules
-| `([mlir_tensor| $x:scientific ]) => `(TensorElem.float $(⟨x⟩))
-
-macro_rules
-| `([mlir_tensor| $x:ident ]) => do
-      let xstr := x.getId.toString
-      if xstr == "true"
-      then `(TensorElem.bool true)
-      else if xstr == "false"
-      then `(TensorElem.bool false)
-      else Macro.throwError ("unknown tensor value: |" ++ xstr ++ "|")
-
-macro_rules
-| `([mlir_tensor| [ $xs,* ] ]) => do
-    let initList <- `([])
-    let vals <- xs.getElems.foldlM (init := initList) fun xs x => `($xs ++ [[mlir_tensor| $x]])
-    `(TensorElem.nested $vals)
-
-
-def tensorValNum := [mlir_tensor| 42]
-def tensorValFloat := [mlir_tensor| 0.000000]
-def tensorValTrue := [mlir_tensor| true]
-def tensorValFalse := [mlir_tensor| false]
-
 -- MLIR ATTRIBUTE VALUE
 -- ====================
 
@@ -709,17 +544,6 @@ macro_rules
         `(AttrValue.list $vals)
   | `([mlir_attr_val| $i:ident]) => `(AttrValue.type [mlir_type| $i:ident])
   | `([mlir_attr_val| $ty:mlir_type]) => `(AttrValue.type [mlir_type| $ty])
-
-
-syntax "dense<" mlir_tensor  ">" ":" mlir_type : mlir_attr_val
-macro_rules
-| `([mlir_attr_val| dense< $v:mlir_tensor > : $t:mlir_type]) =>
-    `(builtin.denseWithType [mlir_tensor| $v] [mlir_type| $t])
-
-syntax "dense<" ">" ":" mlir_type: mlir_attr_val
-macro_rules
-| `([mlir_attr_val| dense< > : $t:mlir_type]) =>
-    `(builtin.denseWithType TensorElem.empty [mlir_type| $t])
 
 macro_rules
   | `([mlir_attr_val| $a:affine_map]) =>
@@ -1111,93 +935,5 @@ def mod1 : Op := [mlir_op| module { }]
 
 def mod2 : Op := [mlir_op| module { "dummy.dummy"(): () -> () }]
 #print mod2
-
---- MEMREF+TENSOR
---- =============
--- dimension-list ::= dimension-list-ranked | (`*` `x`)
--- dimension-list-ranked ::= (dimension `x`)*
--- dimension ::= `?` | decimal-literal
--- tensor-type ::= `tensor` `<` dimension-list tensor-memref-element-type `>`
--- tensor-memref-element-type ::= vector-element-type | vector-type | complex-type
-
-
--- https://mlir.llvm.org/docs/Dialects/Builtin/#memreftype
--- memref-type ::= ranked-memref-type | unranked-memref-type
--- ranked-memref-type ::= `memref` `<` dimension-list-ranked type
---                        (`,` layout-specification)? (`,` memory-space)? `>`
--- unranked-memref-type ::= `memref` `<*x` type (`,` memory-space)? `>`
--- stride-list ::= `[` (dimension (`,` dimension)*)? `]`
--- strided-layout ::= `offset:` dimension `,` `strides: ` stride-list
--- layout-specification ::= semi-affine-map | strided-layout | attribute-value
--- memory-space ::= attribute-value
--- | good example for paper.
-declare_syntax_cat memref_type_stride_list
-syntax "[" (mlir_dimension,*) "]" : memref_type_stride_list
-
-declare_syntax_cat memref_type_strided_layout
-syntax "offset:" mlir_dimension "," "strides:" memref_type_stride_list : memref_type_strided_layout
-
-declare_syntax_cat memref_type_layout_specification
-syntax memref_type_strided_layout : memref_type_layout_specification
-syntax mlir_attr_val : memref_type_layout_specification
-syntax "[memref_type_layout_specification|" memref_type_layout_specification "]" : term
-
-
-macro_rules
-| `([memref_type_layout_specification| $v:mlir_attr_val]) =>
-    `(MemrefLayoutSpec.attr [mlir_attr_val| $v])
-| `([memref_type_layout_specification| offset: $o:mlir_dimension , strides: [ $[ $ds:mlir_dimension ],* ]]) =>  do
-    let ds <- ds.mapM (fun d => `([mlir_dimension| $d]))
-    let ds <- quoteMList ds.toList (<- `(MLIR.AST.Dimension))
-    `(MemrefLayoutSpec.stride [mlir_dimension| $o] $ds)
-
--- | ranked memref
-syntax "memref" "<"  mlir_dimension_list ("," memref_type_layout_specification)? ("," mlir_attr_val)?  ">"  : mlir_type
-macro_rules
-| `([mlir_type| memref  < $dims:mlir_dimension_list $[, $layout ]? $[, $memspace]? >]) => do
-    let (dims, ty) <- parseTensorDimensionList dims
-    let memspace <- match memspace with
-                    | some s => `(some [mlir_attr_val| $s])
-                    | none => `(none)
-
-    let layout <- match layout with
-                  | some stx => `(some [memref_type_layout_specification| $stx])
-                  | none => `(none)
-    `(builtin.memref $dims $ty $layout $memspace)
-
--- def memrefTy0 := [mlir_type| memref<3×3×i32>]
--- #print memrefTy0
--- 
--- def memrefTy1 := [mlir_type| memref<i32>]
--- #print memrefTy1
--- 
--- def memrefTy2 := [mlir_type| memref<2 × 4 × i8, #map1>]
--- #print memrefTy2
--- 
--- def memrefTy3 := [mlir_type| memref<2 × 4 × i8, #map1, 1>]
--- #print memrefTy3
-
-
--- | unranked memref
--- unranked-memref-type ::= `memref` `<*x` type (`,` memory-space)? `>`
--- | TODO: Do I need two different parsers for these cases?
-syntax "memref" "<"  "*" "×" mlir_type ("," mlir_attr_val)?  ">"  : mlir_type
-syntax "memref" "<*" "×" mlir_type ("," mlir_attr_val)?  ">"  : mlir_type
-macro_rules
-| `([mlir_type| memref < * × $ty  $[, $memspace]? >]) => do
-    let memspace <- match memspace with
-                    | some s => `(some [mlir_attr_val| $s])
-                    | none => `(none)
-    `(builtin.memref_unranked [mlir_type| $ty] $memspace)
-
-macro_rules
-| `([mlir_type| memref <* × $ty  $[, $memspace]? >]) => do
-    let memspace <- match memspace with
-                    | some s => `(some [mlir_attr_val| $s])
-                    | none => `(none)
-    `(builtin.memref_unranked [mlir_type| $ty] $memspace)
-
--- def memrefTy4 := [mlir_type| memref<* × f32>]
--- #print memrefTy4
 
 end MLIR.EDSL
