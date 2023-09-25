@@ -31,36 +31,38 @@ class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   # Datastructures
 -/
 
+abbrev RegMVars (Ty : Type) : Type := Ctxt (Ctxt Ty × Ty)
+
 variable (Op : Type) {Ty : Type} [OpSignature Op Ty]
 
 mutual
 
-/-- In `Reg Op Γ ty`, `Γ` is the context of bound variables in the region.
+/-- In `Reg Op rg Γ ty`, `Γ` is the context of bound variables in the region.
 For now we ban free variables in regions -/
-inductive Reg : (Γ : Ctxt Ty) → (ty : Ty) → Type
-  | icom : ICom Γ ty → Reg Γ ty
-  | mvar : ℕ → Reg Γ ty
+inductive Reg (rg : RegMVars Ty) : (Γ : Ctxt Ty) → (ty : Ty) → Type
+  | icom : ICom rg Γ ty → Reg rg Γ ty
+  | mvar : Ctxt.Var rg (Γ, ty) → Reg rg Γ ty
 
 /-- A very simple intrinsically typed expression. -/
-inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
+inductive IExpr (rg : RegMVars Ty) : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
-    (regArgs : HVector (fun t : Ctxt Ty × Ty => Reg t.1 t.2)
-      (OpSignature.regSig op)) : IExpr Γ ty
+    (regArgs : HVector (fun t : Ctxt Ty × Ty => Reg rg t.1 t.2)
+      (OpSignature.regSig op)) : IExpr rg Γ ty
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
-inductive ICom : Ctxt Ty → Ty → Type where
-  | ret (v : Γ.Var t) : ICom Γ t
-  | lete (e : IExpr Γ α) (body : ICom (Γ.snoc α) β) : ICom Γ β
+inductive ICom (rg : RegMVars Ty) : Ctxt Ty → Ty → Type where
+  | ret (v : Γ.Var t) : ICom rg Γ t
+  | lete (e : IExpr rg Γ α) (body : ICom rg (Γ.snoc α) β) : ICom rg Γ β
 
 end
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
-inductive Lets : Ctxt Ty → Ctxt Ty → Type where
-  | nil {Γ : Ctxt Ty} : Lets Γ Γ
-  | lete (body : Lets Γ₁ Γ₂) (e : IExpr Op Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
+inductive Lets (rg : RegMVars Ty) : Ctxt Ty → Ctxt Ty → Type where
+  | nil {Γ : Ctxt Ty} : Lets rg Γ Γ
+  | lete (body : Lets rg Γ₁ Γ₂) (e : IExpr Op rg Γ₂ t) : Lets rg Γ₁ (Γ₂.snoc t)
 
 
 
@@ -68,50 +70,50 @@ inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   # Definitions
 -/
 
-variable {Op Ty : Type} [OpSignature Op Ty]
+variable {Op Ty : Type} [OpSignature Op Ty] {rg : RegMVars Ty}
 
 @[elab_as_elim]
-def ICom.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → ICom Op a a_1 → Sort u} :
+def ICom.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → ICom Op rg a a_1 → Sort u} :
     (ret : {Γ : Ctxt Ty} → {t : Ty} → (v : Var Γ t) → motive Γ t (ICom.ret v)) →
     (lete : {Γ : Ctxt Ty} →
         {α β : Ty} →
-          (e : IExpr Op Γ α) →
-            (body : ICom Op (Ctxt.snoc Γ α) β) →
+          (e : IExpr Op rg Γ α) →
+            (body : ICom Op rg (Ctxt.snoc Γ α) β) →
               motive (Ctxt.snoc Γ α) β body → motive Γ β (ICom.lete e body)) →
-      {a : Ctxt Ty} → {a_1 : Ty} → (t : ICom Op a a_1) → motive a a_1 t
+      {a : Ctxt Ty} → {a_1 : Ty} → (t : ICom Op rg a a_1) → motive a a_1 t
   | hret, _, _, _, ICom.ret v => hret v
   | hret, hlete, _, _, ICom.lete e body => hlete e body (ICom.rec' hret hlete body)
 
-def IExpr.op {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) : Op :=
+def IExpr.op {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op rg Γ ty) : Op :=
   IExpr.casesOn e (fun op _ _ _ => op)
 
-theorem IExpr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+theorem IExpr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op rg Γ ty) :
     ty = OpSignature.outTy e.op :=
   IExpr.casesOn e (fun _ ty_eq _ _ => ty_eq)
 
-def IExpr.args {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
+def IExpr.args {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op rg Γ ty) :
     HVector (Var Γ) (OpSignature.sig e.op) :=
   IExpr.casesOn e (fun _ _ args _ => args)
 
-def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op Γ ty) :
-    HVector (fun t : Ctxt Ty × Ty => Reg Op t.1 t.2) (OpSignature.regSig e.op) :=
+def IExpr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : IExpr Op rg Γ ty) :
+    HVector (fun t : Ctxt Ty × Ty => Reg Op rg t.1 t.2) (OpSignature.regSig e.op) :=
   IExpr.casesOn e (fun _ _ _ regArgs => regArgs)
 
 /-! Projection equations for `IExpr` -/
 @[simp]
 theorem IExpr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
-    (IExpr.mk op ty_eq args regArgs).op = op := rfl
+    (IExpr.mk (rg := rg) op ty_eq args regArgs).op = op := rfl
 
 @[simp]
 theorem IExpr.args_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (IExpr.mk op ty_eq args regArgs).args = args := rfl
+    (IExpr.mk (rg := rg) op ty_eq args regArgs).args = args := rfl
 
 @[simp]
 theorem IExpr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (IExpr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
+    (IExpr.mk (rg := rg) op ty_eq args regArgs).regArgs = regArgs := rfl
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
@@ -123,24 +125,24 @@ def MVarDenote (Ty : Type) [Goedel Ty] : Type :=
 mutual
 
 def Reg.denote : {Γ : Ctxt Ty} → {ty : Ty} →
-    (r : Reg Op Γ ty) → (mv : MVarDenote Ty) →(Γ.Valuation → toType ty)
+    (r : Reg Op rg Γ ty) → (mv : rg.Valuation) →(Γ.Valuation → toType ty)
   | _, _, Reg.icom com, mv => com.denote mv
   | _, _, Reg.mvar i, mv => mv _ _ i
 
 def HVector.denote : {l : List (Ctxt Ty × Ty)} →
-    (T : HVector (fun t => Reg Op t.1 t.2) l) →
+    (T : HVector (fun t => Reg Op rg t.1 t.2) l) →
     (mv : MVarDenote Ty) →
     HVector (fun t => t.1.Valuation → toType t.2) l
   | _, .nil, _ => HVector.nil
   | _, .cons v vs, mv => HVector.cons (v.denote mv) (HVector.denote vs mv)
 
 def IExpr.denote : {ty : Ty} →
-    (e : IExpr Op Γ ty) → (mv : MVarDenote Ty) →
+    (e : IExpr Op rg Γ ty) → (mv : MVarDenote Ty) →
     (Γv : Γ.Valuation) → toType ty
   | _, ⟨op, Eq.refl _, args, regArgs⟩, mv, Γv =>
     OpDenote.denote op (args.map (fun _ v => Γv v)) <| regArgs.denote mv
 
-def ICom.denote : ICom Op Γ ty → (mv : MVarDenote Ty) →
+def ICom.denote : ICom Op rg Γ ty → (mv : MVarDenote Ty) →
     (Γv : Γ.Valuation) → (toType ty)
   | .ret e, _, Γv => Γv e
   | .lete e body, mv, Γv => body.denote mv (Γv.snoc (e.denote mv Γv))
@@ -181,13 +183,13 @@ def Lets.denote : Lets Op Γ₁ Γ₂ → MVarDenote Ty → Γ₁.Valuation → 
       exact e.denote mv ll v
 
 def IExpr.changeVars (varsMap : Γ.Hom Γ') :
-    {ty : Ty} → (e : IExpr Op Γ ty) → IExpr Op Γ' ty
+    {ty : Ty} → (e : IExpr Op rg Γ ty) → IExpr Op rg Γ' ty
   | _, ⟨op, Eq.refl _, args, regArgs⟩ => ⟨op, rfl, args.map varsMap, regArgs⟩
 
 @[simp]
 theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
     (varsMap : Γ.Hom Γ')
-    (e : IExpr Op Γ ty)
+    (e : IExpr Op rg Γ ty)
     (mv : MVarDenote Ty)
     (Γ'v : Γ'.Valuation) :
     (e.changeVars varsMap).denote mv Γ'v =
@@ -196,14 +198,14 @@ theorem IExpr.denote_changeVars {Γ Γ' : Ctxt Ty}
   simp [IExpr.denote, IExpr.changeVars, HVector.map_map]
 
 def ICom.changeVars (varsMap : Γ.Hom Γ') :
-    ICom Op Γ ty → ICom Op Γ' ty
+    ICom Op rg Γ ty → ICom Op rg Γ' ty
   | .ret e => .ret (varsMap e)
   | .lete e body => .lete (e.changeVars varsMap)
       (body.changeVars (fun t v => varsMap.snocMap v))
 
 @[simp]
 theorem ICom.denote_changeVars
-    (varsMap : Γ.Hom Γ') (c : ICom Op Γ ty)
+    (varsMap : Γ.Hom Γ') (c : ICom Op rg Γ ty)
     (mv : MVarDenote Ty)
     (Γ'v : Γ'.Valuation) :
     (c.changeVars varsMap).denote mv Γ'v =
@@ -238,7 +240,7 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt Ty) (ty : Ty) where
   * a variable in the new out context, which is semantically equivalent to the return variable of
     the added program
 -/
-def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : ICom Op Δ ty →
+def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : ICom Op rg Δ ty →
     addProgramToLets.Result Op Γ_in Γ_out ty
   | .ret v => ⟨lets, .zero _, varsMap v⟩
   | .lete (α:=α) e body =>
@@ -247,7 +249,7 @@ def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : I
       ⟨lets', diff.unSnoc, v'⟩
 
 theorem denote_addProgramToLets_lets (mv : MVarDenote Ty)
-    (lets : Lets Op Γ_in Γ_out) {map} {com : ICom Op Δ t}
+    (lets : Lets Op Γ_in Γ_out) {map} {com : ICom Op rg Δ t}
     (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
     (addProgramToLets lets map com).lets.denote mv ll ((addProgramToLets lets map com).diff.toHom var)
     = lets.denote mv ll var := by
@@ -259,7 +261,7 @@ theorem denote_addProgramToLets_lets (mv : MVarDenote Ty)
     rw [addProgramToLets]
     simp [ih, Lets.denote]
 
-theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : ICom Op Δ t} :
+theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : ICom Op rg Δ t} :
     ∀ (ll : Γ_in.Valuation),
       (addProgramToLets lets map com).lets.denote mv ll (addProgramToLets lets map com).var
       = com.denote mv (fun _ v => lets.denote mv ll <| map v) := by
@@ -278,13 +280,13 @@ theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : I
     . simp [Lets.denote]; rfl
 
 /-- Add some `Lets` to the beginning of a program -/
-def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : ICom Op Γ₂ t₂) → ICom Op Γ₁ t₂
+def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : ICom Op rg Γ₂ t₂) → ICom Op rg Γ₁ t₂
   | Lets.nil, inputProg => inputProg
   | Lets.lete body e, inputProg =>
     addLetsAtTop body (.lete e inputProg)
 
 theorem denote_addLetsAtTop (mv : MVarDenote Ty) :
-    (lets : Lets Op Γ₁ Γ₂) → (inputProg : ICom Op Γ₂ t₂) →
+    (lets : Lets Op Γ₁ Γ₂) → (inputProg : ICom Op rg Γ₂ t₂) →
     (addLetsAtTop lets inputProg).denote mv =
       inputProg.denote mv ∘ lets.denote mv
   | Lets.nil, inputProg => rfl
@@ -303,16 +305,16 @@ theorem denote_addLetsAtTop (mv : MVarDenote Ty) :
 in `rhs` to variables available at the end of `lets` using `map`. -/
 def addProgramInMiddle [DecidableEq Ty] {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Γ₂.Var t₁)
     (map : Γ₃.Hom Γ₂)
-    (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op Γ₃ t₁)
-    (inputProg : ICom Op Γ₂ t₂) : ICom Op Γ₁ t₂ :=
+    (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op rg Γ₃ t₁)
+    (inputProg : ICom Op rg Γ₂ t₂) : ICom Op rg Γ₁ t₂ :=
   let r := addProgramToLets lets map rhs
   addLetsAtTop r.lets <| inputProg.changeVars (r.diff.toHom.with v r.var)
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (mv : MVarDenote Ty)
     (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
     (map : Γ₃.Hom Γ₂)
-    (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op Γ₃ t₁)
-    (inputProg : ICom Op Γ₂ t₂) :
+    (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op rg Γ₃ t₁)
+    (inputProg : ICom Op rg Γ₂ t₂) :
     (addProgramInMiddle v map lets rhs inputProg).denote mv s =
       inputProg.denote mv (fun t' v' =>
         let s' := lets.denote mv s
@@ -343,16 +345,16 @@ structure FlatICom (Op : _) {Ty : _} [OpSignature Op Ty] (Γ : Ctxt Ty) (t : Ty)
   /-- The return variable -/
   ret : Γ_out.Var t
 
-def ICom.toLets {t : Ty} : ICom Op Γ t → FlatICom Op Γ t :=
+def ICom.toLets {t : Ty} : ICom Op rg Γ t → FlatICom Op rg Γ t :=
   go .nil
 where
-  go {Γ_out} (lets : Lets Op Γ Γ_out) : ICom Op Γ_out t → FlatICom Op Γ t
+  go {Γ_out} (lets : Lets Op Γ Γ_out) : ICom Op rg Γ_out t → FlatICom Op rg Γ t
     | .ret v => ⟨lets, v⟩
     | .lete e body => go (lets.lete e) body
 
 @[simp]
 theorem ICom.denote_toLets_go (mv : MVarDenote Ty)
-    (lets : Lets Op Γ_in Γ_out) (com : ICom Op Γ_out t) (s : Γ_in.Valuation) :
+    (lets : Lets Op Γ_in Γ_out) (com : ICom Op rg Γ_out t) (s : Γ_in.Valuation) :
     (toLets.go lets com).lets.denote mv s (toLets.go lets com).ret =
       com.denote mv (lets.denote mv s) := by
   induction com using ICom.rec'
@@ -366,7 +368,7 @@ theorem ICom.denote_toLets_go (mv : MVarDenote Ty)
     cases v using Ctxt.Var.casesOn <;> simp[Lets.denote]
 
 @[simp]
-theorem ICom.denote_toLets (mv : MVarDenote Ty) (com : ICom Op Γ t) (s : Γ.Valuation) :
+theorem ICom.denote_toLets (mv : MVarDenote Ty) (com : ICom Op rg Γ t) (s : Γ.Valuation) :
     com.toLets.lets.denote mv s com.toLets.ret = com.denote mv s :=
   denote_toLets_go ..
 
@@ -374,7 +376,7 @@ theorem ICom.denote_toLets (mv : MVarDenote Ty) (com : ICom Op Γ t) (s : Γ.Val
     without adjusting variables
 -/
 def Lets.getIExprAux {Γ₁ Γ₂ : Ctxt Ty} {t : Ty} : Lets Op Γ₁ Γ₂ → Γ₂.Var t →
-    Option ((Δ : Ctxt Ty) × IExpr Op Δ t)
+    Option ((Δ : Ctxt Ty) × IExpr Op rg Δ t)
   | .nil, _ => none
   | .lete lets e, v => by
     cases v using Ctxt.Var.casesOn with
@@ -404,7 +406,7 @@ def Lets.getIExprAuxDiff {lets : Lets Op Γ₁ Γ₂} {v : Γ₂.Var t}
   ⟩
 
 theorem Lets.denote_getIExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
-    {lets : Lets Op Γ₁ Γ₂} {v : Γ₂.Var t} {e : IExpr Op Δ t}
+    {lets : Lets Op Γ₁ Γ₂} {v : Γ₂.Var t} {e : IExpr Op rg Δ t}
     (he : lets.getIExprAux v = some ⟨Δ, e⟩)
     (s : Γ₁.Valuation) :
     (e.changeVars (getIExprAuxDiff he).toHom).denote mv
@@ -430,14 +432,14 @@ theorem Lets.denote_getIExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
 def Lets.getIExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ Γ₂) {t : Ty} (v : Γ₂.Var t) :
-    Option (IExpr Op Γ₂ t) :=
+    Option (IExpr Op rg Γ₂ t) :=
   match h : getIExprAux lets v with
   | none => none
   | some r => r.snd.changeVars (getIExprAuxDiff h).toHom
 
 theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt Ty} (mv : MVarDenote Ty) :
     {lets : Lets Op Γ₁ Γ₂} → {t : Ty} →
-    {v : Γ₂.Var t} → {e : IExpr Op Γ₂ t} → (he : lets.getIExpr v = some e) → (s : Γ₁.Valuation) →
+    {v : Γ₂.Var t} → {e : IExpr Op rg Γ₂ t} → (he : lets.getIExpr v = some e) → (s : Γ₁.Valuation) →
     e.denote mv (lets.denote mv s) = (lets.denote mv s) v := by
   intros lets _ v e he s
   simp [getIExpr] at he
@@ -536,7 +538,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       simp
       use v.1, v.2
 
-def ICom.vars : ICom Op Γ t → Γ.VarSet :=
+def ICom.vars : ICom Op rg Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
 /--
@@ -934,16 +936,16 @@ with the `pos`th variable in `prog`, and an `ICom` starting with the next variab
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ Γ₂) →
-    (prog : ICom Op Γ₂ t) →
-    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × ICom Op Γ₃ t × (t' : Ty) × Γ₃.Var t')
+    (prog : ICom Op rg Γ₂ t) →
+    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × ICom Op rg Γ₃ t × (t' : Ty) × Γ₃.Var t')
   | 0, lets, .lete e body => some ⟨_, .lete lets e, body, _, Ctxt.Var.last _ _⟩
   | _, _, .ret _ => none
   | n+1, lets, .lete e body =>
     splitProgramAtAux n (lets.lete e) body
 
 theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} →
-    {prog : ICom Op Γ₂ t} →
-    {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × ICom Op Γ₃ t × (t' : Ty) × Γ₃.Var t'} →
+    {prog : ICom Op rg Γ₂ t} →
+    {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × ICom Op rg Γ₃ t × (t' : Ty) × Γ₃.Var t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Γ₁.Valuation) →
     res.2.2.1.denote mv (res.2.1.denote mv s) = prog.denote mv (lets.denote mv s)
@@ -968,12 +970,12 @@ theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} 
 with the `pos`th variable in `prog`, and an `ICom` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
-def splitProgramAt (pos : ℕ) (prog : ICom Op Γ₁ t) :
-    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × ICom Op Γ₂ t × (t' : Ty) × Γ₂.Var t') :=
+def splitProgramAt (pos : ℕ) (prog : ICom Op rg Γ₁ t) :
+    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × ICom Op rg Γ₂ t × (t' : Ty) × Γ₂.Var t') :=
   splitProgramAtAux pos .nil prog
 
-theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Op Γ₁ t}
-    {res : Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × ICom Op Γ₂ t × (t' : Ty) × Γ₂.Var t'}
+theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Op rg Γ₁ t}
+    {res : Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × ICom Op rg Γ₂ t × (t' : Ty) × Γ₂.Var t'}
     (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Valuation) :
     res.2.2.1.denote mv (res.2.1.denote mv s) = prog.denote mv s :=
   denote_splitProgramAtAux hres s
@@ -988,10 +990,10 @@ theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Op Γ₁ t}
 `target`. If it can match the variables, it inserts `rhs` into the program
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
-def rewriteAt (lhs rhs : ICom Op Γ₁ t₁)
+def rewriteAt (lhs rhs : ICom Op rg Γ₁ t₁)
     (hlhs : ∀ t (v : Γ₁.Var t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : ICom Op Γ₂ t₂) :
-    Option (ICom Op Γ₂ t₂) := do
+    (pos : ℕ) (target : ICom Op rg Γ₂ t₂) :
+    Option (ICom Op rg Γ₂ t₂) := do
   let ⟨Γ₃, lets, target', t', vm⟩ ← splitProgramAt pos target
   if h : t₁ = t'
   then
@@ -1001,11 +1003,11 @@ def rewriteAt (lhs rhs : ICom Op Γ₁ t₁)
     return addProgramInMiddle vm m lets (h ▸ rhs) target'
   else none
 
-theorem denote_rewriteAt (lhs rhs : ICom Op Γ₁ t₁)
+theorem denote_rewriteAt (lhs rhs : ICom Op rg Γ₁ t₁)
     (hlhs : ∀ t (v : Γ₁.Var t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : ICom Op Γ₂ t₂)
+    (pos : ℕ) (target : ICom Op rg Γ₂ t₂)
     (hl : lhs.denote = rhs.denote)
-    (rew : ICom Op Γ₂ t₂)
+    (rew : ICom Op rg Γ₂ t₂)
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
   ext mv s
@@ -1038,11 +1040,11 @@ variable (Op : _) {Ty : _} [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] in
   the required variable checks become decidable
 -/
 structure PeepholeRewrite (Γ : List Ty) (t : Ty) where
-  lhs : ICom Op (.ofList Γ) t
-  rhs : ICom Op (.ofList Γ) t
+  lhs : ICom Op rg (.ofList Γ) t
+  rhs : ICom Op rg (.ofList Γ) t
   correct : lhs.denote = rhs.denote
 
-instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op (.ofList Γ) t'} :
+instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op rg (.ofList Γ) t'} :
     Decidable (∀ (t : Ty) (v : Ctxt.Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
@@ -1058,8 +1060,8 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op (.ofList Γ) t'} :
     apply h
 
 def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
-    (pos : ℕ) (target : ICom Op Γ₂ t₂) :
-    (ICom Op Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
+    (pos : ℕ) (target : ICom Op rg Γ₂ t₂) :
+    (ICom Op rg Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
       match rewriteAt pr.lhs pr.rhs hlhs pos target
       with
         | some res => res
@@ -1067,7 +1069,7 @@ def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
       else target
 
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
-    (pos : ℕ) (target : ICom Op Γ₂ t₂) :
+    (pos : ℕ) (target : ICom Op rg Γ₂ t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
     simp only [rewritePeepholeAt]
     split_ifs
@@ -1178,7 +1180,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp Γ .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-section SimpPeephole 
+section SimpPeephole
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
@@ -1186,7 +1188,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
       simp only [ICom.denote, IExpr.denote, Reg.denote, HVector.denote,
         Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.ofList,
-        Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc, 
+        Ctxt.Valuation.snoc_last, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
       generalize ll { val := 0, property := _ } = a;
       generalize ll { val := 1, property := _ } = b;
@@ -1535,10 +1537,10 @@ def p1' : PeepholeRewrite ExOp [.nat] .nat:=
 
 /--
 The rewrite that should succeed on `rewritePeepholeAt`
-supports region metavars. 
+supports region metavars.
 -/
 example : rewritePeepholeAt p1' 1 ex1_lhs = ex1_rhs := by {
-  try rfl; sorry 
+  try rfl; sorry
 }
 
 
