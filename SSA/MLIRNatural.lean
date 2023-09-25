@@ -1,4 +1,4 @@
-import SSA.Core.WellTypedFramework
+-- import SSA.Core.WellTypedFramework
 import SSA.Projects.InstCombine.Tests
 import Cli
 

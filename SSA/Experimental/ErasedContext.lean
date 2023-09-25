@@ -27,6 +27,7 @@ variable {Ty : Type}
 def empty : Ctxt Ty := []
 
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
+instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
@@ -39,10 +40,10 @@ def ofList : List Ty → Ctxt Ty :=
   -- Erased.mk
   fun Γ => Γ 
 
+-- Why was this noncomutable? (removed it to make transformation computable)
 @[simp]
-noncomputable def get? : Ctxt Ty → Nat → Option Ty :=
+def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
-  
 
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
@@ -78,7 +79,8 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
-
+def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
+  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
   
 /-- This is an induction principle that case splits on whether or not a variable 
 is the last variable in a context. -/
@@ -92,7 +94,7 @@ def casesOn
       motive Γ t t' v :=
   match v with
     | ⟨0, h⟩ => 
-        cast (by 
+        _root_.cast (by 
           simp [snoc] at h
           subst h
           simp [Ctxt.Var.last]
@@ -224,6 +226,9 @@ theorem val_last {Γ : Ctxt Ty} {t : Ty} : (last Γ t).val = 0 :=
 theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t' v).val = v.val + 1 :=
   rfl
 
+instance : Repr (Var Γ t) where
+  reprPrec v _ := f!"%{v.val}"
+
 end Var
 
 /-
@@ -265,6 +270,17 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
+theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :
+  Diff.Valid Γ₁ Γ₂ d₁ →  Diff.Valid Γ₂ Γ₃ d₂ → Diff.Valid Γ₁ Γ₃ (d₁ + d₂) := by
+  intros h₁ h₂ i t hi
+  specialize @h₁ i t hi
+  specialize @h₂ (i + d₁) t h₁
+  rw [← h₂, Nat.add_assoc]
+
+/-- Addition of the differences of two contexts -/
+def append (d₁ : Diff Γ₁ Γ₂) (d₂ : Diff Γ₂ Γ₃) : Diff Γ₁ Γ₃ :=
+  {val := d₁.val + d₂.val,  property := append_valid d₁.property d₂.property}
+
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
@@ -288,6 +304,13 @@ theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
 
+def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
+  | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by
+      rw [←Nat.add_assoc]
+      apply h₂ <| h₁ h
+    ⟩
+
+instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
 end Diff
 

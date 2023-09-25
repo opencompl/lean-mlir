@@ -25,8 +25,6 @@ class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
     HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
     (toType <| OpSignature.outTy op)
 
-
-
 /-
   # Datastructures
 -/
@@ -42,7 +40,7 @@ inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
       (OpSignature.regSig op)) : IExpr Γ ty
-
+  
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
@@ -50,13 +48,32 @@ inductive ICom : Ctxt Ty → Ty → Type where
 
 end
 
+section
+open Std (Format)
+variable {Op Ty : Type} [OpSignature Op Ty] [Repr Op] [Repr Ty]
+
+mutual 
+  def IExpr.repr (prec : Nat) : IExpr Op Γ t → Format
+    | ⟨op, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
+
+  def ICom.repr (prec : Nat) : ICom Op Γ t → Format
+    | .ret v => .align false ++ f!"return {reprPrec v prec}"
+    | .lete e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
+end
+
+instance : Repr (IExpr Op Γ t) := ⟨flip IExpr.repr⟩
+instance : Repr (ICom Op Γ t) := ⟨flip ICom.repr⟩
+
+end
+
+
+
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
 inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   | nil {Γ : Ctxt Ty} : Lets Γ Γ
   | lete (body : Lets Γ₁ Γ₂) (e : IExpr Op Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
-
-
+  deriving Repr
 
 /-
   # Definitions
@@ -279,7 +296,7 @@ theorem denote_addLetsAtTop :
 `lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
 `inputProg`, to the output of `rhs`. It also assigns all free variables
 in `rhs` to variables available at the end of `lets` using `map`. -/
-def addProgramInMiddle [DecidableEq Ty] {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Γ₂.Var t₁)
+def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Γ₂.Var t₁)
     (map : Γ₃.Hom Γ₂)
     (lets : Lets Op Γ₁ Γ₂) (rhs : ICom Op Γ₃ t₁)
     (inputProg : ICom Op Γ₂ t₂) : ICom Op Γ₁ t₂ :=
@@ -1024,6 +1041,7 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op (.ofList Γ) t'} :
   constructor
   . intro h t v
     rcases v with ⟨i, hi⟩
+    try simp only [Erased.out_mk] at hi
     rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩

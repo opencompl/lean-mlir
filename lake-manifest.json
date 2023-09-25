@@ -2,6 +2,14 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
+   {"url": "https://github.com/tydeu/lean4-partax",
+    "subDir?": null,
+    "rev": "4d4362678c7e836f02ca8c975da04183bfab0bea",
+    "opts": {},
+    "name": "partax",
+    "inputRev?": "master",
+    "inherited": false}},
+  {"git":
    {"url": "https://github.com/EdAyers/ProofWidgets4",
     "subDir?": null,
     "rev": "a0c2cd0ac3245a0dade4f925bcfa97e06dd84229",
