@@ -175,6 +175,9 @@ variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` cor
 instance : Goedel (Ctxt Ty) :=
   ⟨fun Γ => ⦃t : Ty⦄ → Γ.Var t → (toType t)⟩
 
+instance : Goedel (List Ty) :=
+  ⟨fun Γ => Goedel.toType (show Ctxt Ty from Γ)⟩
+
 instance : Inhabited (toType (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
