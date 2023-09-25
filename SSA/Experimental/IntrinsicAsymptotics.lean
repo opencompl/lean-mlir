@@ -220,7 +220,7 @@ theorem ICom.denote_changeVars
     cases v using Ctxt.Var.casesOn <;> simp
 
 
-variable (Op : _) {Ty : _} [OpSignature Op Ty] (rg : Ctxt (RegT Ty)) in
+variable (Op : _) {Ty : _} [OpSignature Op Ty] (rg : RegMVars Ty) in
 /-- The result returned by `addProgramToLets` -/
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt Ty) (ty : Ty) where
   /-- The new out context -/
@@ -338,7 +338,7 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (mv : toType rg)
   next =>
     apply denote_addProgramToLets_lets
 
-structure FlatICom (Op : _) {Ty : _} [OpSignature Op Ty] (rg : Ctxt (RegT Ty))
+structure FlatICom (Op : _) {Ty : _} [OpSignature Op Ty] (rg : RegMVars Ty)
     (Γ : Ctxt Ty) (t : Ty) where
   {Γ_out : Ctxt Ty}
   /-- The let bindings of the original program -/
@@ -457,6 +457,12 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt Ty} (mv : toType rg) :
 abbrev Mapping (Γ Δ : Ctxt Ty) : Type :=
   @AList (Σ t, Γ.Var t) (fun x => Δ.Var x.1)
 
+
+variable (Op : _) {Ty : _} [OpSignature Op Ty] (rg : RegMVars Ty) in
+abbrev RegMapping : Type :=
+  @AList (Σ t, Ctxt.Var (show Ctxt (RegT Ty) from rg) t)
+    (fun t => ICom Op [] t.1.1 t.1.2)
+
 def HVector.toVarSet : {l : List Ty} → (T : HVector (Ctxt.Var Γ) l) → Γ.VarSet
   | [], .nil => ∅
   | _::_, .cons v vs => insert ⟨_, v⟩ vs.toVarSet
@@ -554,28 +560,29 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (lets : Lets Op rg Γ_in Γ_out) (v : Γ_out.Var t) :
     (matchLets : Lets Op rg Δ_in Δ_out) →
     (w : Δ_out.Var t) →
+    (rma : RegMapping Op rg) →
     (ma : Mapping Δ_in Γ_out := ∅) →
     Option (Mapping Δ_in Γ_out)
-  | .lete matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
+  | .lete matchLets _, ⟨w+1, h⟩, rma, ma => -- w† = Var.toSnoc w
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
-      matchVar lets v matchLets w ma
-  | @Lets.lete _ _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
+      matchVar lets v matchLets w rma ma
+  | @Lets.lete _ _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, rma, ma => do -- w† = Var.last
       let ie ← lets.getIExpr v
       if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
       then
         -- hack to make a termination proof work
-        let matchVar' := fun t vₗ vᵣ ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ ma
+        let matchVar' := fun t vₗ vᵣ rma ma =>
+            matchVar (t := t) lets vₗ matchLets vᵣ rma ma
         let rec matchArg : ∀ {l : List Ty}
             (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
             Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
           | _, .nil, .nil, ma => some ma
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
-              let ma ← matchVar' _ vₗ vᵣ ma
+              let ma ← matchVar' _ vₗ vᵣ rma ma
               matchArg vsₗ vsᵣ ma
         matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
-  | .nil, w, ma => -- The match expression is just a free (meta) variable
+  | .nil, w, _, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
       | some v₂ =>
         by
@@ -1062,7 +1069,8 @@ instance {Γ : List Ty} {t' : Ty} {lhs : ICom Op rg (.ofList Γ) t'} :
 
 def rewritePeepholeAt (pr : PeepholeRewrite Op rg Γ t)
     (pos : ℕ) (target : ICom Op [] Γ₂ t₂) :
-    (ICom Op [] Γ₂ t₂) := if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
+    (ICom Op [] Γ₂ t₂) :=
+    if hlhs : ∀ t (v : Ctxt.Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
       match rewriteAt pr.lhs pr.rhs hlhs pos target
       with
         | some res => res
