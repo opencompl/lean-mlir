@@ -14,7 +14,7 @@ elab "[mlir_icom| " reg:mlir_region "]" : term => do
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
       withTransparency (mode := TransparencyMode.all) <| 
         reduce com
-  trace[Meta] com
+  --trace[Meta] com
   match com with
     | ~q(Except.ok $com)    => return com
     | ~q(Except.error $err) => do

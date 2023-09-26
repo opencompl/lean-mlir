@@ -5,6 +5,12 @@ open MLIR AST
 open MLIR AST
 
 
+/- Notes on generation:
+  - MLIR generic syntax for llvm constants is `llvm.mlir.constant`, 
+    not `llvm.constant`.
+ - Return statement arity seems to be wrong
+ -/
+
 -- Name:AddSub:1043
 -- precondition: true
 /-
@@ -21,34 +27,44 @@ open MLIR AST
   %r = sub %RHS, %or
 
 -/
-def AddSub_1043_src :=
+def AddSub_1043_src (w : Nat) :=
 [mlir_region| {
 ^bb0(%C1 : i32, %Z : i32, %RHS : i32):
   %v1 = "llvm.and" (%Z,%C1) : (i32, i32) -> (i32)
   %v2 = "llvm.xor" (%v1,%C1) : (i32, i32) -> (i32)
-  %v3 = "llvm.constant" () { value = $(.int 1 (.i w)) }:() -> (i32)
+  %v3 = "llvm.mlir.constant" () { value = $(.int 1 (.i w)) }:() -> (i32)
   %v4 = "llvm.add" (%v2,%v3) : (i32, i32) -> (i32)
   %v5 = "llvm.add" (%v4,%RHS) : (i32, i32) -> (i32)
-  "llvm.return" (%v5) : () -> (i32)
+  "llvm.return" (%v5) : (i32) -> (i32)
 }]
 
-/- It does not like the generic `w`. -/
-def com := 
-  mkCom (AddSub_1043_src) |>.toOption |>.get (by rfl)
+def AddSub_1043 (w : Nat ):= 
+  mkCom (AddSub_1043_src w) |>.toOption |>.get 
+    (by unfold AddSub_1043_src 
+        simp [mkCom, Region.ops, BuilderM.runWithNewMapping, Except.toOption, 
+              Option.isSome, StateT.run] 
+        rfl)
+-- Not sure how rfl sholud work here, it needs to execute the whole thing.
 
 
+def AddSub_1043' (w : Nat ) := 
+  mkCom (AddSub_1043_src w)
 
-set_option maxHeartbeats 99999999999 in
+#eval AddSub_1043' 32 
+
+-- set_option maxHeartbeats 99999999999 in
+-- set_option maxHeartbeats 900000 in
 def AddSub_1043_tgt (w : Nat):=
 [mlir_icom| {
 ^bb0(%C1 : i32, %Z : i32, %RHS : i32):
-  %v1 = "llvm.not" (%C1) : (i32) -> (i32)
-  %v2 = "llvm.or" (%Z,%v1) : (i32, i32) -> (i32)
-  %v3 = "llvm.and" (%Z,%C1) : (i32, i32) -> (i32)
-  %v4 = "llvm.xor" (%v3,%C1) : (i32, i32) -> (i32)
-  %v5 = "llvm.mlir.constant" () { value = $(.int 1 (.i w)) }:() -> (i32)
-  %v6 = "llvm.add" (%v4,%v5) : (i32, i32) -> (i32)
-  %v7 = "llvm.sub" (%RHS,%v2) : (i32, i32) -> (i32)
-  "llvm.return" (%v7) : () -> (i32)
+  %v1 = "llvm.and" (%Z,%C1) : (i32, i32) -> (i32)
+  %v2 = "llvm.xor" (%v1,%C1) : (i32, i32) -> (i32)
+  %v3 = "llvm.mlir.constant" () { value = $(.int 1 (.i w)) }:() -> (i32)
+  %v4 = "llvm.add" (%v2,%v3) : (i32, i32) -> (i32)
+  %v5 = "llvm.add" (%v4,%RHS) : (i32, i32) -> (i32)
+  "llvm.return" (%v5) : (i32) -> (i32)
 }]
+-- maximum recursion depth has been reached (use `set_option maxRecDepth <num>` to increase limit)
 
+-- 
+-- 
