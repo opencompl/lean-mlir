@@ -1,4 +1,4 @@
-import SSA.Core.WellTypedFramework
+import SSA.Core.Framework
 import SSA.Core.Util
 
 /-
@@ -294,141 +294,73 @@ theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f 
     sorry
 }
 
-
-
-
-
-
-
 namespace ArithScfLinalg
 
-open Val
 
-inductive Op
+
+inductive ExOp
 | add
 | const (v: Nat)
 | sub
--- | mul
--- | run
--- | for_
--- | if_
--- | fold1d -- fold
 | map1d
 | extract1d
--- | fill
--- | transpose
+deriving DecidableEq
 
-inductive BaseType
-| int : BaseType
-| nat : BaseType
-| tensor1d  : BaseType
-| tensor2d : BaseType
+inductive ExTy
+| int : ExTy
+| nat : ExTy
+| tensor1d  : ExTy
 deriving DecidableEq, Inhabited
 
-instance : Goedel BaseType where
+instance : Goedel ExTy where
   toType
   | .int => Int
   | .nat => Nat
   | .tensor1d => Tensor1d Int
-  | .tensor2d => Tensor2d Int
 
+instance : OpSignature ExOp ExTy where
+  outTy : ExOp → ExTy
+  | .add => .int
+  | .sub => .int
+  | .const _ => .nat
+  | .map1d =>  .tensor1d
+  | .extract1d =>  .tensor1d
+  sig  : ExOp → List ExTy
+  | .add => [.int, .int]
+  | .sub => [.int, .int]
+  | .map1d => [.tensor1d]
+  | .extract1d => [.tensor1d, .nat, .nat]
+  | .const _ => []
+  
+  regSig
+  | .map1d => [([.int], .int)]
+  | _ => []
 
-abbrev UserType := SSA.UserType BaseType
-
--- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
-@[simp]
-def argUserType : Op → UserType
-| Op.add => .pair (.base BaseType.int) (.base BaseType.int)
-| Op.sub => .pair (.base BaseType.int) (.base BaseType.int)
-| Op.map1d => .base BaseType.tensor1d
-| Op.extract1d => .triple (.base BaseType.tensor1d) (.base BaseType.nat) (.base BaseType.nat)
-| Op.const _ => .unit
-
-@[simp]
-def outUserType : Op → UserType
-| Op.add => .base (BaseType.int)
-| Op.sub => .base (BaseType.int)
-| Op.const _ => .base (BaseType.nat)
-| Op.map1d =>  .base BaseType.tensor1d
-| Op.extract1d =>  .base BaseType.tensor1d
-
-@[simp]
-def rgnDom : Op → UserType
-| Op.add => .unit
-| Op.sub => .unit
-| Op.const _ => .unit
-| Op.map1d => .base BaseType.int
-| Op.extract1d => .unit
-
-@[simp]
-def rgnCod : Op → UserType
-| Op.add => .unit
-| Op.sub => .unit
-| Op.const _ => .unit
-| Op.map1d => .base BaseType.int
-| Op.extract1d => .unit
-
-def eval (o : Op)
-  (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → (Goedel.toType (rgnCod o)))) :
-  (Goedel.toType (outUserType o)) :=
-  match o with
-  | .const v => v
-  | .add =>
-    let (x, y) := arg;
-    let x : Int := x;
-    let y : Int := y;
-    x + y
-  | .sub =>
-    let (x, y) := arg;
+/-
+-- Error: unknown free variable: _kernel_fresh.459
+@[reducible]
+instance : OpDenote ExOp ExTy where
+  denote
+  | .const v, _, _ => v
+  | .add, (.cons x (.cons y nil)), _ =>
+      let x : Int := x;
+      let y : Int := y
+      x + y
+  | .sub, (.cons x (.cons y nil)), _ =>
     let x : Int := x;
     let y : Int := y;
     x - y
-  -- | .run, v, r => r v
-  -- | .if_, (.bool cond), r => if cond then r (.inl .unit) else r (.inr .unit)
-  -- | .for_, (.pair (.nat n) (.int seed)), r =>
-      -- .int <| scf.for n (fun ix acc => (r (.pair (.int ix) (.int acc))).int!) seed
-  | .map1d =>
-    let t : Tensor1d Int := arg;
-    let r : Int → Int := _rgn;
+  | .map1d, (.cons t .nil), (.cons r .nil) =>
+    let t : Tensor1d Int := t;
+    -- Is there a cleaner way to build the data below?
+    let r : Int → Int := fun v =>  r (Ctxt.Valuation.ofList <| (.cons v .nil))
     let t' := t.map r
     t'
-  | .extract1d =>
-    let (t, l, len) := arg;
+  | .extract1d, (.cons t (.cons l (.cons len .nil))), _ =>
     let t : Tensor1d Int := t;
     let l : Nat := l;
     let len : Nat := len;
     t.extract l len
-
-
-instance TUS : SSA.TypedUserSemantics Op BaseType where
-  argUserType := argUserType
-  rgnDom := rgnDom
-  rgnCod := rgnCod
-  outUserType := outUserType
-  eval := eval
-
-syntax "map1d" : dsl_op
-syntax "extract1d" : dsl_op
-syntax "const" "(" term ")" : dsl_op
-
-open EDSL in
-macro_rules
-| `([dsl_op| map1d]) => `(Op.map1d)
-| `([dsl_op| extract1d]) => `(Op.extract1d)
-| `([dsl_op| const ($x)]) => `(Op.const $x) -- note that we use the syntax extension to enrich the base DSL
-
--- Why do these not get set?
-register_simp_attr SSA.teval
-register_simp_attr EnvU.set
--- register_simp_attr Op.const
-register_simp_attr argUserType
-register_simp_attr eval
-register_simp_attr outUserType
--- register_simp_attr BitVector.width
-register_simp_attr uncurry
-
--- theorem Option.some_eq_pure {α : Type u} : @some α = @pure _ _ _ := rfl
 
 open SSA EDSL in
 theorem extract_map (r0 : TSSA Op Context.empty _) :
@@ -462,5 +394,5 @@ theorem extract_map (r0 : TSSA Op Context.empty _) :
     simp[UserType.mkTriple]
     simp[Tensor1d.extract_map]
   }
-
+-/
 end ArithScfLinalg

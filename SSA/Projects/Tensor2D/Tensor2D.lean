@@ -1,5 +1,4 @@
-import SSA.Core.WellTypedFramework
-import SSA.Core.EDSLNested
+import SSA.Core.Framework
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
@@ -81,7 +80,7 @@ theorem Tensor2d'.fill_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α
 }
 
 
-inductive Op
+inductive ExOp
 | add
 -- TODO: generalize 'const'
 | constIx (v: Nat) | constTensor (t : Tensor2d' Int) | constInt (v : Int)
@@ -90,106 +89,70 @@ inductive Op
 | fill2d
 | extract2d 
 
-inductive BaseType
-| int : BaseType
-| ix : BaseType
-| tensor2d : BaseType
+inductive ExTy
+| int : ExTy
+| ix : ExTy
+| tensor2d : ExTy
 deriving DecidableEq, Inhabited
 
-def BaseType.toType : BaseType → Type
+def ExTy.toType : ExTy → Type
 | .int => Int
 | .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
-instance : Goedel BaseType where toType := BaseType.toType
+instance : Goedel ExTy where toType := ExTy.toType
 
-abbrev UserType := SSA.UserType BaseType
+@[reducible]
+instance : OpSignature ExOp ExTy where
+  outTy : ExOp → ExTy
+  | .add => .int
+  | .sub => .int
+  | .constIx _ => .ix 
+  | .constTensor _ => .tensor2d
+  | .constInt _ => .int
+  | .map2d | .fill2d => .tensor2d
+  | .extract2d => .tensor2d
 
--- Can we get rid of the code repetition here? (not that copilot has any trouble completing this)
-@[simp]
-def argUserType : Op → UserType
-| Op.add => ↑(BaseType.int, BaseType.int)
-| Op.sub => ↑(BaseType.int, BaseType.int)
-| Op.constIx _  => ()
-| Op.constTensor _  => ()
-| Op.constInt _  => ()
-| Op.map2d => BaseType.tensor2d
-| Op.fill2d => (BaseType.int, BaseType.tensor2d)
-| Op.extract2d => (((BaseType.ix, BaseType.ix), (BaseType.ix, BaseType.ix)), BaseType.tensor2d)
+  sig  : ExOp → List ExTy
+  | .add => [.int, .int]
+  | .sub => [.int, .int]
+  | .constIx _  => []
+  | .constTensor _  => []
+  | .constInt _  => []
+  | .map2d => [.tensor2d]
+  | .fill2d => [.int, .tensor2d]
+  | .extract2d => [.ix, .ix, .ix, .ix, .tensor2d]
+  
+  regSig
+  | .map2d => [([.int], .int)]
+  | _ => []
 
-@[simp]
-def outUserType : Op → UserType
-| Op.add => BaseType.int
-| Op.sub => BaseType.int
-| Op.constIx _ => BaseType.ix 
-| Op.constTensor _ => BaseType.tensor2d
-| Op.constInt _ => BaseType.int
-| Op.map2d | Op.fill2d => BaseType.tensor2d
-| Op.extract2d => BaseType.tensor2d
-
-@[simp]
-def rgnDom : Op → UserType
-| Op.add | Op.sub | Op.fill2d | Op.extract2d  => .unit
-| Op.constIx _ | Op.constTensor _ | Op.constInt _ => .unit
-| Op.map2d => BaseType.int
-
-@[simp]
-def rgnCod : Op → UserType
-| Op.add | Op.sub | Op.fill2d  | Op.extract2d => .unit
-| Op.constIx _ | Op.constTensor _ | Op.constInt _ => .unit
-| Op.map2d => BaseType.int
-
-def eval (o : Op)
-  (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → (Goedel.toType (rgnCod o)))) :
-  (Goedel.toType (outUserType o)) :=
-  match o with
-  | .constIx v => v
-  | .constTensor v => v
-  | .constInt v => v
-  | .add => 
-    let (x, y) := arg;
+/-
+-- error: unknown free variable: _kernel_fresh.97
+@[reducible]
+instance : OpDenote ExOp ExTy where
+  denote
+  | .constIx v, _, _ => v
+  | .constTensor v, _, _ => v
+  | .constInt v, _, _ => v
+  | .add, (.cons x (.cons y nil)), _ => 
     let x : Int := x;
     let y : Int := y;
     x + y
-  | .sub =>
-    let (x, y) := arg;
+  | .sub, (.cons x (.cons y nil)), _ =>
     let x : Int := x;
     let y : Int := y;
-    x - y
-  | .map2d => 
-    let t : Tensor2d' Int := arg
-    let f : Int → Int := _rgn
+    let out : Int := x - y
+    out
+  | .map2d, (.cons t .nil), (.cons r .nil) => 
+    let t : Tensor2d' Int := t
+    -- Is there a cleaner way to build the data below?
+    let f : Int → Int := fun v =>  r (Ctxt.Valuation.ofList <| (.cons v .nil))
     t.map f
-  | .fill2d => 
-    let (v, t) : Int × Tensor2d' Int  := arg
+  | .fill2d, (.cons v (.cons t nil)), _ => 
     t.fill v
-  | .extract2d => 
-    let ((δ, sz), t) := arg
-    t.extract δ.fst δ.snd sz.fst sz.snd
-    
-instance TUS : SSA.TypedUserSemantics Op BaseType where
-  argUserType := argUserType
-  rgnDom := rgnDom
-  rgnCod := rgnCod
-  outUserType := outUserType
-  eval := eval
-
-syntax "map2d" : dsl_op2
-syntax "fill2d" : dsl_op2
-syntax "extract2d" : dsl_op2
-syntax "constIx" "(" term ")" : dsl_op2
-syntax "constTensor" "(" term ")" : dsl_op2
-syntax "constInt" "(" term ")" : dsl_op2
-
-open EDSL2 in
-macro_rules
-| `([dsl_op2| map2d]) => `(Op.map2d)
-| `([dsl_op2| fill2d]) => `(Op.fill2d)
-| `([dsl_op2| extract2d]) => `(Op.extract2d)
-| `([dsl_op2| constIx($t)]) => `(Op.constIx $t)
-| `([dsl_op2| constTensor($t)]) => `(Op.constTensor $t)
-| `([dsl_op2| constInt($t)]) => `(Op.constInt $t)
+  | .extract2d, (.cons δ₁ (.cons δ₂ (.cons sz₁ (.cons sz₂ (.cons t .nil))))), _ => 
+    t.extract δ₁ δ₂ sz₁ sz₂
 
 -- NOTE: there is no way in MLIR to talk about composition of functions, so `map . map` is out
 --       as a peephole rewrite
@@ -205,14 +168,14 @@ theorem map_fill_2d
     (sz₀ sz₁ ix₀ ix₁: Index) 
     (i : Int):
   TSSA.eval
-  (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
+  (e := e) (Op := Op) (β := ) [dsl_bb2|
     return op:fill2d (op:constInt(i) (), 
       op:extract2d (
           ((op:constIx(sz₀) () , op:constIx(sz₁) ()),
            (op:constIx(ix₀) (), op:constIx(ix₁) ())),
            op:constTensor(t) ()))
   ] =
-  TSSA.eval (e := e) (Op := Op) (β := BaseType) [dsl_bb2|
+  TSSA.eval (e := e) (Op := Op) (β := ) [dsl_bb2|
     return op:extract2d 
       (((op:constIx(sz₀) (), op:constIx(sz₁) ()),
         (op:constIx(ix₀) (), op:constIx(ix₁) ())),
@@ -222,3 +185,4 @@ theorem map_fill_2d
     simp[UserType.mkPair, TypedUserSemantics.eval, eval]
     simp[Tensor2d'.fill_extract]
   }
+-/

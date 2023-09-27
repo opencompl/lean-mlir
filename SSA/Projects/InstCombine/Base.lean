@@ -1,5 +1,5 @@
 --import SSA.Core.WellTypedFramework
-import SSA.Core.Framework
+import SSA.Experimental.IntrinsicAsymptotics
 import SSA.Core.Util
 import SSA.Projects.InstCombine.ForMathlib
 
