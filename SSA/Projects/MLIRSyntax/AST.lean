@@ -1,4 +1,4 @@
-import SSA.Experimental.IntrinsicAsymptotics
+import SSA.Core.Framework
 open Lean PrettyPrinter
 
 namespace MLIR.AST

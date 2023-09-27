@@ -14,7 +14,7 @@ import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
 import Mathlib.RingTheory.Ideal.QuotientOperations
 import Mathlib.Data.Zmod.Basic
-import SSA.Experimental.IntrinsicAsymptotics
+import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
 
