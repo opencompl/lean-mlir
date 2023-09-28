@@ -3,6 +3,8 @@ open Lean PrettyPrinter
 
 namespace MLIR.AST
 
+-- variable (MCtxt : Type*)
+
 -- Affine expressions [TODO: find some way to separate this out]
 -- ==================
 inductive AffineExpr
@@ -43,38 +45,53 @@ inductive Signedness :=
   | Signed   -- si*
 deriving DecidableEq, Repr
 
-inductive MLIRType :=
-  | int: Signedness -> Nat -> MLIRType
-  | float: Nat -> MLIRType
-  | tensor1d: MLIRType -- tensor of int values. 
-  | tensor2d: MLIRType -- tensor of int values. 
-  | tensor4d: MLIRType -- tensor of int values. 
-  | index:  MLIRType
-  | undefined: String → MLIRType
-deriving DecidableEq, Repr
+inductive MLIRType : (Γ : Type*) → Type _ :=
+  | int: Signedness -> Nat -> MLIRType Γ
+  | float: Nat -> MLIRType Γ
+  | tensor1d: MLIRType Γ -- tensor of int values. 
+  | tensor2d: MLIRType Γ -- tensor of int values. 
+  | tensor4d: MLIRType Γ -- tensor of int values. 
+  | index:  MLIRType Γ
+  | undefined: String → MLIRType Γ
+  | mvar [Inhabited Γ] : (Γ → MLIRType Γ) → MLIRType Γ
+
+instance : DecidableEq (MLIRType PEmpty) := by
+  intro t u
+  cases t <;> cases u 
+  <;> try simp
+  <;> infer_instance
+  rcases ‹Inhabited PEmpty› with ⟨⟨⟩⟩
+
+instance : Repr (MLIRType Γ) where
+  reprPrec t n := match t with
+    -- | .int s w => --f!"int {s} {w}"
+    | _ => sorry
+
+
+variable (Γ : Type*)  
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
-abbrev MLIRTy := MLIRType
+abbrev MLIRTy := MLIRType Γ
 
 /-- Shorthand to build <iN> -/
-def MLIRTy.i (width : Nat) : MLIRTy := MLIRType.int Signedness.Signless width
+def MLIRTy.i (width : Nat) : MLIRTy Γ := MLIRType.int Signedness.Signless width
 -- Other useful abbreviations
-abbrev MLIRType.i1: MLIRType := MLIRType.int .Signless 1
-abbrev MLIRType.i32: MLIRType := MLIRType.int .Signless 32
-def MLIRType.i (width : Nat) : MLIRTy := MLIRType.int Signedness.Signless width
+abbrev MLIRType.i1: MLIRType Γ := MLIRType.int .Signless 1
+abbrev MLIRType.i32: MLIRType Γ := MLIRType.int .Signless 32
+def MLIRType.i (width : Nat) : MLIRTy Γ := MLIRType.int Signedness.Signless width
 
 /-- An ssa value (variable name) with a type -/
-abbrev TypedSSAVal := SSAVal × MLIRType
+abbrev TypedSSAVal := SSAVal × MLIRType Γ
 
 mutual
 inductive AttrValue :=
   | symbol: String -> AttrValue -- symbol ref attr
   | str : String -> AttrValue
-  | int : Int -> MLIRType -> AttrValue
+  | int : Int -> MLIRType Γ -> AttrValue
   | nat: Nat -> AttrValue
   | bool : Bool -> AttrValue
-  | float : Float -> MLIRType -> AttrValue
-  | type : MLIRType -> AttrValue
+  | float : Float -> MLIRType Γ -> AttrValue
+  | type : MLIRType Γ -> AttrValue
   | affine: AffineMap -> AttrValue
   | permutation: List Nat -> AttrValue -- a permutation
   | list: List AttrValue -> AttrValue
@@ -82,7 +99,7 @@ inductive AttrValue :=
   | alias: String -> AttrValue
   | dict: AttrDict -> AttrValue
   | opaque_: (dialect: String) -> (value: String) -> AttrValue
-  | opaqueElements: (dialect: String) -> (value: String) -> (type: MLIRType) -> AttrValue
+  | opaqueElements: (dialect: String) -> (value: String) -> (type: MLIRType Γ) -> AttrValue
   | unit: AttrValue
 
 -- https://mlir.llvm.org/docs/LangRef/#attributes
@@ -97,10 +114,10 @@ inductive AttrDict :=
 
 end
 
-def AttrEntry.destructure : AttrEntry → String × AttrValue
+def AttrEntry.destructure {Γ} : AttrEntry Γ → String × AttrValue Γ
   | .mk name value => (name,value)
 
-def AttrDict.getAttr : AttrDict → String →  Option AttrValue
+def AttrDict.getAttr {Γ} : AttrDict Γ → String →  Option (AttrValue Γ)
   | .mk attrs, name => attrs.map AttrEntry.destructure |>.lookup name
 
 -- We define "AttrVal" to be just the basic attributes outside of any dialect
@@ -112,100 +129,99 @@ mutual
 -- | TODO: make these arguments optional?
 inductive Op where
   | mk: (name: String)
-        -> (res: List TypedSSAVal)
-        -> (args: List TypedSSAVal)
+        -> (res: List <| TypedSSAVal Γ)
+        -> (args: List <| TypedSSAVal Γ)
         -> (regions: List Region)
-        -> (attrs: AttrDict)
+        -> (attrs: AttrDict Γ)
         -> Op
 
 inductive Region where
   | mk: (name: String)
-        -> (args: List TypedSSAVal)
+        -> (args: List <| TypedSSAVal Γ)
         -> (ops: List Op) -> Region
 
 end
 
 -- Attribute definition on the form #<name> = <val>
 inductive AttrDefn where
-  | mk: (name: String) -> (val: AttrValue) -> AttrDefn
+  | mk: (name: String) -> (val: AttrValue Γ) -> AttrDefn
 
 inductive Module where
-  | mk: (functions: List Op)
-        -> (attrs: List (AttrDefn))
+  | mk: (functions: List <| Op Γ)
+        -> (attrs: List <| AttrDefn Γ)
         ->  Module
 
-def Op.name : Op -> String
+def Op.name {Γ} : Op Γ -> String
   | Op.mk name .. => name
 
-def Op.res : Op -> List TypedSSAVal
+def Op.res {Γ} : Op Γ -> List (TypedSSAVal Γ)
   | Op.mk _ res .. => res
 
-def Op.resNames : Op → List SSAVal
+def Op.resNames {Γ} : Op Γ → List SSAVal
   | Op.mk _ res .. => res.map Prod.fst
 
-def Op.resTypes : Op → List MLIRType
+def Op.resTypes {Γ} : Op Γ → List (MLIRType Γ)
   | Op.mk _ res .. => res.map Prod.snd
 
-def Op.args : Op -> List TypedSSAVal
+def Op.args {Γ} : Op Γ -> List (TypedSSAVal Γ)
   | Op.mk _ _ args .. => args
 
-def Op.argNames : Op → List SSAVal
+def Op.argNames {Γ} : Op Γ → List SSAVal
   | Op.mk _ _ args .. => args.map Prod.fst
 
-def Op.argTypes : Op → List MLIRType
+def Op.argTypes {Γ} : Op Γ → List (MLIRType Γ)
   | Op.mk _ _ args .. => args.map Prod.snd
 
-def Op.regions : Op -> List Region
+def Op.regions {Γ} : Op Γ  -> List (Region Γ)
   | Op.mk _ _ _ regions _ => regions
 
-def Op.attrs : Op -> AttrDict
+def Op.attrs {Γ} : Op Γ  -> (AttrDict Γ)
 | Op.mk _ _ _ _ attrs => attrs
 
 instance : Coe String SSAVal where
   coe (s: String) := SSAVal.SSAVal s
 
-instance : Coe String AttrValue where
+instance : Coe String (AttrValue Γ) where
   coe (s: String) := AttrValue.str s
 
-instance : Coe Int AttrValue where
+instance : Coe Int (AttrValue Γ) where
   coe (i: Int) := AttrValue.int i (MLIRType.int .Signless 64)
 
-instance : Coe MLIRType AttrValue where
-  coe (t: MLIRType) := AttrValue.type t
+instance : Coe (MLIRType Γ) (AttrValue Γ) where
+  coe := AttrValue.type
 
-instance : Coe (String × AttrValue) AttrEntry where
-  coe (v: String × AttrValue) := AttrEntry.mk v.fst v.snd
+instance : Coe (String × AttrValue Γ) (AttrEntry Γ) where
+  coe v := AttrEntry.mk v.fst v.snd
 
-instance : Coe (String × MLIRType) AttrEntry where
-  coe (v: String × MLIRType) := AttrEntry.mk v.fst (AttrValue.type v.snd)
+instance : Coe (String × MLIRType Γ) (AttrEntry Γ) where
+  coe v := AttrEntry.mk v.fst (AttrValue.type v.snd)
 
-instance : Coe  AttrEntry (String × AttrValue) where
+instance : Coe (AttrEntry Γ) (String × AttrValue Γ) where
   coe 
   | AttrEntry.mk key val => (key, val)
 
-instance : Coe (List AttrEntry) (AttrDict) where
+instance : Coe (List (AttrEntry Γ)) (AttrDict Γ) where
   coe
   | v => AttrDict.mk v
 
- instance : Coe AttrDict (List AttrEntry) where
+ instance : Coe (AttrDict Γ) (List (AttrEntry Γ)) where
   coe 
   | AttrDict.mk as => as
 
-def Region.name (region: Region) : BBName :=
+def Region.name (region : Region Γ) : BBName :=
   match region with
   | Region.mk name _ _ => BBName.mk name
 
-def Region.args : Region → List TypedSSAVal
+def Region.args : Region Γ → List (TypedSSAVal Γ)
   | .mk _ args _ => args
 
-def Region.ops (region: Region) : List (Op) :=
+def Region.ops (region: Region Γ) : List (Op Γ) :=
   match region with
   | Region.mk _ _ ops => ops
 
-#check Format
 
 mutual
-partial def docAttrVal : AttrValue → Format
+partial def docAttrVal {Γ} : AttrValue Γ → Format
   | .symbol s => f!"@\"{s}\""
   | .permutation ps => f!"[permutation {ps}]"
   | .nestedsymbol s t => (docAttrVal s) ++ "::" ++ (docAttrVal t)
@@ -222,26 +238,26 @@ partial def docAttrVal : AttrValue → Format
   | .opaqueElements dialect val ty => f!"#opaque< {dialect}, #{val}> : #{repr ty}"
   | .unit => "()"
 
-partial def docAttrEntry : AttrEntry → Format
+partial def docAttrEntry {Γ} : AttrEntry Γ → Format
   | .mk k v => f!"{k} = " ++ (docAttrVal v)
 
-partial def docAttrDict : AttrDict → Format
+partial def docAttrDict {Γ} : AttrDict Γ → Format
   | .mk attrs =>
       if List.isEmpty attrs
       then f!""
       else f!"\{" ++ (Format.join ((attrs.map docAttrEntry).intersperse ", ")) ++ f!"}"
 end
 
-instance : Repr AttrValue where
+instance : Repr (AttrValue Γ) where
   reprPrec x _ := docAttrVal x
 
-instance : Repr AttrEntry where
+instance : Repr (AttrEntry Γ) where
   reprPrec x _ := docAttrEntry x
 
-instance : Repr AttrDict where
+instance : Repr (AttrDict Γ) where
   reprPrec x _ := docAttrDict x
 
-instance : Repr AttrDefn where
+instance : Repr (AttrDefn Γ) where
   reprPrec x _ := match x with
     | AttrDefn.mk name val => f!"#{name} := {repr val}"
 
@@ -253,7 +269,7 @@ instance : ToFormat SSAVal where
   format := repr
 
 mutual
-partial def op_to_format : Op →  Format
+partial def op_to_format {Γ} : Op Γ →  Format
   | Op.mk name res args rgns attrs =>
       let doc_name := f!"\"{name}\""
       let doc_rgns := if rgns.isEmpty
@@ -264,7 +280,7 @@ partial def op_to_format : Op →  Format
 
       doc_res ++ " := " ++ doc_name ++ doc_args ++ doc_rgns ++ repr attrs
 
-partial def rgn_to_format : Region → Format
+partial def rgn_to_format {Γ} : Region Γ → Format
   | Region.mk name args ops => 
       let doc_args := if args.isEmpty then
           f!""
@@ -275,119 +291,118 @@ partial def rgn_to_format : Region → Format
       f!"^{name}{doc_args} : " ++ doc_ops
 end
 
-instance : Repr Op := ⟨fun x _ => op_to_format x⟩
-instance : Repr Region := ⟨fun x _ => rgn_to_format x⟩
+instance : Repr (Op Γ) := ⟨fun x _ => op_to_format x⟩
+instance : Repr (Region Γ) := ⟨fun x _ => rgn_to_format x⟩
 
-def AttrEntry.key : AttrEntry → String
+def AttrEntry.key {Γ} : AttrEntry Γ → String
   | AttrEntry.mk k _ => k
 
-def AttrEntry.value : AttrEntry → AttrValue
+def AttrEntry.value {Γ} : AttrEntry Γ → AttrValue Γ
   | AttrEntry.mk _ v => v
 
 
-def AttrDict.empty : AttrDict := AttrDict.mk []
+def AttrDict.empty {Γ} : AttrDict Γ := AttrDict.mk []
 
-def Op.empty (name : String) : Op := Op.mk name [] [] [] AttrDict.empty
+def Op.empty {Γ} (name : String) : Op Γ := Op.mk name [] [] [] AttrDict.empty
 
-def Op.addArg (o : Op) (arg: TypedSSAVal) : Op :=
+def Op.addArg {Γ} (o : Op Γ) (arg : TypedSSAVal Γ) : Op Γ :=
   match o with
   | Op.mk name res args regions attrs =>
     Op.mk name res (args ++ [arg])  regions attrs
 
-def Op.addResult (o : Op) (new_res: TypedSSAVal) : Op :=
+def Op.addResult {Γ} (o : Op Γ) (new_res : TypedSSAVal Γ) : Op Γ :=
  match o with
  | Op.mk name res args  regions attrs =>
     Op.mk name (res ++ [new_res]) args  regions attrs
 
-def Op.appendRegion (o : Op) (r: Region) : Op :=
+def Op.appendRegion {Γ} (o : Op Γ) (r : Region Γ) : Op Γ :=
   match o with
   | Op.mk name res args regions attrs =>
       Op.mk name res args (regions ++ [r]) attrs
 
 
 -- | Note: AttrEntry can be given as String × AttrValue
-def AttrDict.add (attrs : AttrDict) (entry : AttrEntry) : AttrDict :=
+def AttrDict.add {Γ} (attrs : AttrDict Γ) (entry : AttrEntry Γ) : AttrDict Γ :=
     Coe.coe <| entry :: Coe.coe attrs
 
-def AttrDict.find (attrs : AttrDict) (name : String) : Option AttrValue :=
+def AttrDict.find {Γ} (attrs : AttrDict Γ) (name : String) : Option (AttrValue Γ) :=
   match attrs with
   | AttrDict.mk entries =>
       match entries.find? (fun entry => entry.key == name) with
       | some v => v.value
       | none => none
 
-def AttrDict.find_nat (attrs : AttrDict) (name : String) : Option Nat := 
+def AttrDict.find_nat {Γ} (attrs : AttrDict Γ) (name : String) : Option Nat := 
   match attrs.find name with
   | .some (AttrValue.nat i) =>  .some i
   | _ => .none
 
-def AttrDict.find_int (attrs : AttrDict) 
-  (name : String): Option (Int × MLIRType) :=
+def AttrDict.find_int {Γ} (attrs : AttrDict Γ) 
+  (name : String): Option (Int × MLIRType Γ) :=
   match attrs.find name with
   | .some (AttrValue.int i ty) =>  .some (i, ty)
   | _ => .none
 
-def AttrDict.find_int' (attrs : AttrDict) (name : String): Option Int :=
+def AttrDict.find_int' {Γ} (attrs : AttrDict Γ) (name : String): Option Int :=
   match attrs.find name with
   | .some (AttrValue.int i _) =>  .some i
   | _ => .none
 
 @[simp] theorem AttrDict.find_none:
-    AttrDict.find (AttrDict.mk []) n' = none := by
+    AttrDict.find (Γ := Γ) (AttrDict.mk []) n' = none := by
   simp [AttrDict.find, List.find?]
 
-@[simp] theorem AttrDict.find_next (v: AttrValue)
-  (l: List AttrEntry):
+@[simp] theorem AttrDict.find_next (v : AttrValue Γ)
+  (l : List (AttrEntry Γ)):
     AttrDict.find (AttrDict.mk (AttrEntry.mk n v :: l)) n' =
     if n == n' then some v else AttrDict.find (AttrDict.mk l) n' := by
   cases H: n == n' <;>
   simp [AttrDict.find, List.find?, AttrEntry.key, AttrEntry.value, H]
 
-def AttrDict.addString (attrs: AttrDict) (k: String) (v: String): AttrDict :=
-    AttrEntry.mk k (v: AttrValue) :: attrs
+def AttrDict.addString (attrs: AttrDict Γ) (k: String) (v: String): AttrDict Γ :=
+    AttrEntry.mk k (v : AttrValue Γ) :: attrs
 
-def AttrDict.addType (attrs: AttrDict) (k: String) (v: MLIRType): AttrDict :=
-    AttrEntry.mk k (v: AttrValue) :: attrs
+def AttrDict.addType (attrs: AttrDict Γ) (k: String) (v: MLIRType Γ): AttrDict Γ :=
+    AttrEntry.mk k (v : AttrValue Γ) :: attrs
 
 
-def Op.addAttr (o: Op) (k: String) (v: AttrValue): Op :=
+def Op.addAttr (o: Op Γ) (k: String) (v: AttrValue Γ): Op Γ :=
  match o with
  | Op.mk name res args regions attrs =>
     Op.mk name res args regions (attrs.add (k, v))
 
-def Region.empty (name: String): Region := Region.mk name [] []
-def Region.appendOp (bb: Region) (op: Op): Region :=
+def Region.empty {Γ} (name: String): Region Γ := Region.mk name [] []
+def Region.appendOp (bb: Region Γ) (op: Op Γ): Region Γ :=
   match bb with
   | Region.mk name args bbs => Region.mk name args (bbs ++ [op])
 
-def Region.appendOps (bb: Region) (ops: List Op): Region :=
+def Region.appendOps (bb: Region Γ) (ops: List (Op Γ)): Region Γ :=
   match bb with
   | Region.mk name args bbs => Region.mk name args (bbs ++ ops)
 
 
-instance : Inhabited MLIRType where
+instance : Inhabited (MLIRType Γ) where
   default := MLIRType.undefined "INHABITANT"
 
-instance : Inhabited AttrValue where
+instance : Inhabited (AttrValue Γ) where
   default := AttrValue.str "INHABITANT"
 
-instance : Inhabited Op where
+instance : Inhabited (Op Γ) where
   default := Op.empty "INHABITANT"
 
-instance : Inhabited Region where
+instance : Inhabited (Region Γ) where
   default := Region.empty "INHABITANT"
 
-instance : Repr Module where
+instance : Repr (Module Γ) where
   reprPrec
   | Module.mk fs attrs, _ =>
       attrs.map repr ++ fs.map repr |>.map (Format.align true ++ ·) |> Format.join
 
-def Region.fromOps (os: List (Op)) (name: String := "entry"): Region :=
+def Region.fromOps (os: List (Op Γ)) (name: String := "entry") : Region Γ :=
   Region.mk name [] os
 
-def Region.setArgs (bb: Region) (args: List (SSAVal × MLIRType)) : Region :=
+def Region.setArgs (bb: Region Γ) (args: List (SSAVal × MLIRType Γ)) : Region Γ :=
   match bb with
     | (Region.mk name _ ops) => (Region.mk name args ops)
-
 
 end MLIR.AST
