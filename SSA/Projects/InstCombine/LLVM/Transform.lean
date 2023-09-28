@@ -64,14 +64,19 @@ def NameMapping.add (nm : NameMapping) (name : String) : Option NameMapping :=
     | none => some <| name::nm
     | some _ => none
 
-abbrev ExceptM (Γmeta : Type) := ExceptT TransformError <| ReaderM Γmeta
-abbrev BuilderM (Γmeta : Type) := StateT NameMapping (ExceptM Γmeta)
-abbrev ReaderM (Γmeta : Type) := ReaderT NameMapping (ExceptM Γmeta)
+example : (ExceptT ε <| ReaderM ρ) = (ReaderT ρ <| Except ε) := rfl
 
-instance : MonadLift (ReaderM Γmeta) (BuilderM Γmeta) where
+abbrev ExceptM := Except TransformError
+abbrev BuilderM := StateT NameMapping ExceptM
+abbrev ReaderM := ReaderT NameMapping ExceptM
+
+instance : MonadLift ReaderM BuilderM where
   monadLift x := do (ReaderT.run x (←get) : ExceptM ..)
 
-def BuilderM.runWithNewMapping (k : BuilderM Γmeta α) : ExceptM Γmeta α :=
+instance : MonadLift ExceptM ReaderM where
+  monadLift x := do return ←x
+
+def BuilderM.runWithNewMapping (k : BuilderM α) : ExceptM α :=
   Prod.fst <$> StateT.run k []
 
 structure DerivedContext (Γ : Context) where
@@ -111,7 +116,7 @@ end DerivedContext
   shadowing
 -/
 def addValToMapping (Γ : Context) (name : String) (ty : InstCombine.Ty) : 
-    BuilderM Γmeta (Σ (Γ' : DerivedContext Γ), Var Γ' ty) := do
+    BuilderM (Σ (Γ' : DerivedContext Γ), Var Γ' ty) := do
   let some nm := (←get).add name
     | throw <| .nameAlreadyDeclared name
   set nm
@@ -124,7 +129,7 @@ def addValToMapping (Γ : Context) (name : String) (ty : InstCombine.Ty) :
   or if the type of the variable in the context is different from `expectedType`
 -/
 def getValFromContext (Γ : Context) (name : String) (expectedType : InstCombine.Ty) : 
-    ReaderM Γmeta (Ctxt.Var Γ expectedType) := do
+    ReaderM (Ctxt.Var Γ expectedType) := do
   let index := (←read).lookup name
   let some index := index | throw <| .undeclaredName name
   let n := Γ.length
@@ -139,18 +144,18 @@ def getValFromContext (Γ : Context) (name : String) (expectedType : InstCombine
     else
       throw <| .typeError expectedType t
 
-def BuilderM.isOk {α : Type} (x : BuilderM Γmeta α) : Γmeta → Bool := 
-  fun mvals => match x.run [] mvals with
+def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool := 
+  match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
-def BuilderM.isErr {α : Type} (x : BuilderM Γmeta α) : Γmeta → Bool := 
-  fun mvals => match x.run [] mvals with
+def BuilderM.isErr {α : Type} (x : BuilderM α) : Bool := 
+  match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
-def mkUnaryOp {Γ : Ctxt _} {ty : Γmeta → InstCombine.Ty} (op : InstCombine.Op)
-  (e : Ctxt.Var Γ ty) : ExceptM <| (mvals : Γmeta) → IExpr InstCombine.Op Γ (ty mvals) :=
+def mkUnaryOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
+  (e : Ctxt.Var Γ ty) : ExceptM <| IExpr InstCombine.Op Γ ty :=
  match ty with
  | .bitvec w =>
    match op with
@@ -182,7 +187,7 @@ def mkUnaryOp {Γ : Ctxt _} {ty : Γmeta → InstCombine.Ty} (op : InstCombine.O
     | _ => throw <| .unsupportedUnaryOp
 
 def mkBinOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
- (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM Γmeta <| IExpr InstCombine.Op Γ ty :=
+    (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| IExpr InstCombine.Op Γ ty :=
  match ty with
  | .bitvec w =>
    match op with
@@ -294,7 +299,7 @@ def mkBinOp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
     | _ => throw <| .unsupportedBinaryOp
 
 def mkIcmp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
-    (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM Γmeta <| IExpr InstCombine.Op Γ (.bitvec 1) :=
+    (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| IExpr InstCombine.Op Γ (.bitvec 1) :=
   match ty with
   | .bitvec w =>
     match op with
@@ -309,7 +314,8 @@ def mkIcmp {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
       | _ => throw .unsupportedOp -- unsupported icmp operation
 
 def mkSelect {Γ : Ctxt _} {ty : InstCombine.Ty} (op : InstCombine.Op)
-    (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| IExpr InstCombine.Op Γ ty :=
+    (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) :
+    ExceptM <| IExpr InstCombine.Op Γ ty :=
   match ty with
   | .bitvec w =>
     match op with
@@ -342,11 +348,14 @@ def mkOpExpr {Γ : Ctxt _} (op : InstCombine.Op)
     mkSelect op c e₁ e₂
   | .const _ => throw .unsupportedOp -- "Tried to build Op expression from constant"
 
-def MLIRType.mkTy : MLIRType Γmeta → ExceptM Γmeta InstCombine.Ty
-  | MLIRType.int Signedness.Signless w => do return InstCombine.Ty.bitvec w
+def MLIRType.mkTy : MLIRType Γmeta → ExceptM (Γmeta → InstCombine.Ty)
+  | MLIRType.int Signedness.Signless w => do return fun _ => InstCombine.Ty.bitvec w
+  | MLIRType.mvar f => do 
+      let v : MLIRType Γmeta := f (← read : Γmeta)
+      MLIRType.mkTy v
   | _ => throw .unsupportedType -- "Unsupported type"
 
-def TypedSSAVal.mkTy : TypedSSAVal Γmeta → ExceptM (Γmeta → InstCombine.Ty)
+def TypedSSAVal.mkTy : TypedSSAVal Γmeta → ExceptM InstCombine.Ty
   | (.SSAVal _, ty) => ty.mkTy
 
 def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
@@ -354,7 +363,7 @@ def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
-def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → ReaderM (Σ ty, Ctxt.Var Γ ty)
+def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal Γmeta → ReaderM (Σ ty, Ctxt.Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let var ← getValFromContext Γ valStx ty
@@ -362,14 +371,14 @@ def TypedSSAVal.mkVal (Γ : Context) : TypedSSAVal → ReaderM (Σ ty, Ctxt.Var 
 
 /-- Declare a new variable, 
     by adding the passed name to the name mapping stored in the monad state -/
-def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal → 
+def TypedSSAVal.newVal (Γ : Context) : TypedSSAVal Γmeta → 
     BuilderM (Σ (Γ' : DerivedContext Γ) (ty : _), Var Γ' ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
     return ⟨Γ, ty, var⟩
 
-def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
+def mkExpr (Γ : Context) (opStx : Op Γmeta) : ReaderM (Σ ty, Expr Γ ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::[] =>
     let ⟨ty₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
@@ -392,7 +401,7 @@ def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
        --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
       | _ => throw .unsupportedOp -- "Unsuported operation or invalid arguments"
       if hty : ty₁ = ty₂ then 
-        let binOp ← mkBinOp op v₁ (hty ▸ v₂)
+        let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
         return ⟨ty₁, binOp⟩
       else 
         throw <| .typeError ty₁ ty₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
@@ -404,7 +413,7 @@ def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
         | "llvm.neg" => do
           pure <| InstCombine.Op.neg ty.width
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
-     return ⟨ty, ← mkUnaryOp op v⟩
+     return ⟨ty, ← (mkUnaryOp op v : ExceptM _)⟩
   | [] => 
     if opStx.name ==  "llvm.mlir.constant" 
     then do
@@ -424,7 +433,7 @@ def mkExpr (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Expr Γ ty) := do
       throw <| .generic s!"invalid (0-ary) expression {opStx.name}"
   | _ => throw <| .generic s!"unsupported expression (with unsupported arity) {opStx.name}"
 
-def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) := 
+def mkReturn (Γ : Context) (opStx : Op Γmeta) : ReaderM (Σ ty, Com Γ ty) := 
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
@@ -435,7 +444,7 @@ def mkReturn (Γ : Context) (opStx : Op) : ReaderM (Σ ty, Com Γ ty) :=
 
 /-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the 
     given name and type -/
-private def declareBindings (Γ : Context) (vals : List TypedSSAVal) : 
+private def declareBindings (Γ : Context) (vals : List (TypedSSAVal Γmeta)) : 
     BuilderM (DerivedContext Γ) := do
   vals.foldlM (fun Γ' ssaVal => do
     let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ' ssaVal
@@ -443,7 +452,7 @@ private def declareBindings (Γ : Context) (vals : List TypedSSAVal) :
   ) (.ofContext Γ)
 
 private def mkComHelper (Γ : Context) : 
-    List (Op Γmeta) → BuilderM (Γmeta → Σ (ty : _), Com Γ ty)
+    List (Op Γmeta) → BuilderM (Σ (ty : _), Com Γ ty)
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
     let ⟨ty₁, expr⟩ ← mkExpr Γ lete
@@ -455,12 +464,15 @@ private def mkComHelper (Γ : Context) :
       return ⟨ty₂, Com.lete expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
-def mkCom (reg : Region Γmeta) : ExceptM (Γmeta → Σ (Γ' : Context) (ty : InstCombine.Ty), Com Γ' ty) := 
+def mkCom (reg : Region Γmeta) : ExceptM (Σ (Γ' : Context) (ty : InstCombine.Ty), Com Γ' ty) := 
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithNewMapping <| do
     let Γ ← declareBindings ∅ reg.args
     let icom ← mkComHelper Γ coms
     return ⟨Γ, icom⟩
+
+variable {Γm}
+#check (mkCom : Region Γm → Γm → Except ..)
 
 end MLIR.AST
