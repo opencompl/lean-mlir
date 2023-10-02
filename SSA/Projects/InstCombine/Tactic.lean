@@ -1,4 +1,3 @@
--- import SSA.Core.WellTypedFramework
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForMathlib
 
