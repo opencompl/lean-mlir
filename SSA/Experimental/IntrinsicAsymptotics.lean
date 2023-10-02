@@ -1207,15 +1207,10 @@ inductive ExOp :  Type
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
-  outTy
-    | .add => .nat
-    | .beq => .bool
-    | .cst _ => .nat
-  sig
-    | .add => [.nat, .nat]
-    | .beq => [.nat, .nat]
-    | .cst _ => []
-  regSig := fun _ => []
+  signature
+    | .add    => ⟨[.nat, .nat], [], .nat⟩
+    | .beq    => ⟨[.nat, .nat], [], .bool⟩
+    | .cst _  => ⟨[], [], .nat⟩
 
 @[reducible]
 instance : OpDenote ExOp ExTy where
@@ -1492,16 +1487,9 @@ inductive ExOp :  Type
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
-  outTy
-    | .add => .nat
-    | .runK _ => .nat
-  sig
-    | .add => [.nat, .nat]
-    | .runK _ => [.nat]
-  regSig
-    | .runK _ => [([.nat], .nat)]
-    | _ => []
-
+  signature
+    | .add    => ⟨[.nat, .nat], [], .nat⟩
+    | .runK _ => ⟨[.nat], [([.nat], .nat)], .nat⟩
 
 @[reducible]
 instance : OpDenote ExOp ExTy where
