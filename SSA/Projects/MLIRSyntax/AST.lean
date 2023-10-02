@@ -60,7 +60,7 @@ inductive Width (φ : Nat)
   deriving Repr, DecidableEq
 
 inductive MLIRType (φ : Nat) : Type _ :=
-  | int: Signedness -> Nat -> MLIRType φ
+  | int: Signedness -> Width φ -> MLIRType φ
   | float: Nat -> MLIRType φ
   | tensor1d: MLIRType φ -- tensor of int values. 
   | tensor2d: MLIRType φ -- tensor of int values. 
@@ -70,6 +70,12 @@ inductive MLIRType (φ : Nat) : Type _ :=
   deriving Repr, DecidableEq
 
 variable (φ : Nat)
+
+instance : ToFormat (Width φ) := ⟨repr⟩
+instance : ToFormat (MLIRType φ) := ⟨repr⟩
+
+instance : Coe (Nat) (Width φ) := ⟨.concrete⟩
+instance : OfNat (Width φ) n := ⟨.concrete n⟩
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
 abbrev MLIRTy := MLIRType φ
