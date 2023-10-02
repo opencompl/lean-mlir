@@ -65,3 +65,4 @@ def mainCmd := `[Cli|
 
 def main (args : List String): IO UInt32 :=
   mainCmd.validate args
+
