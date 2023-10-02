@@ -1,7 +1,7 @@
 -- should replace with Lean import once Pure is upstream
 import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.InstCombine.Base
-import SSA.Experimental.IntrinsicAsymptotics
+import SSA.Core.Framework
 
 inductive TransformError
   | nameAlreadyDeclared (var : String)
