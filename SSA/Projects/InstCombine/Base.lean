@@ -97,9 +97,7 @@ def Op.outTy : Op → Ty
 | @Op.const width _ => Ty.bitvec width
 
 instance : OpSignature Op Ty where 
-  sig := Op.sig
-  outTy := Op.outTy
-  regSig _ := []
+  signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
 def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
