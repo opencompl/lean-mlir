@@ -1,5 +1,6 @@
 -- Core
 -- ====
+import SSA.Core.Framework
 
 
 -- Projects
