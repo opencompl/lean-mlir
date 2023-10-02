@@ -1,7 +1,7 @@
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
-import SSA.Experimental.ErasedContext
-import SSA.Experimental.HVector
+import SSA.Core.ErasedContext
+import SSA.Core.HVector
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
