@@ -310,7 +310,7 @@ We make the following simplifying assumptions in the IR:
 This matches the MLIR model, which has a separate `index` type for indexing
 and `iXX/f32/f64` types for values held in tensors.
 -/
-inductive ExOp
+inductive Op
 | /-- add two integers -/ add_int
 | /-- create a constant index -/ const_ix (v: Index)
 | /-- subtract two integers -/ sub_int
@@ -318,26 +318,26 @@ inductive ExOp
 | /-- extract a value at an index of a tensor -/ extract1d
 deriving DecidableEq
 
-inductive ExTy
-| /-- values held in tensors -/ int : ExTy 
-| /-- shapes and indexes of tensors -/ ix : ExTy
-| /-- tensor type -/ tensor1d  : ExTy
+inductive Ty
+| /-- values held in tensors -/ int : Ty 
+| /-- shapes and indexes of tensors -/ ix : Ty
+| /-- tensor type -/ tensor1d  : Ty
 deriving DecidableEq, Inhabited
 
-instance : Goedel ExTy where
+instance : Goedel Ty where
   toType
   | .int => Int
   | .ix => Index
   | .tensor1d => Tensor1d Int
 
-instance : OpSignature ExOp ExTy where
-  outTy : ExOp → ExTy
+instance : OpSignature Op Ty where
+  outTy : Op → Ty
   | .add_int => .int
   | .sub_int => .int
   | .const_ix _ => .ix
   | .map1d =>  .tensor1d
   | .extract1d =>  .tensor1d
-  sig  : ExOp → List ExTy
+  sig  : Op → List Ty
   | .add_int => [.int, .int]
   | .sub_int => [.int, .int]
   | .map1d => [.tensor1d]
@@ -351,7 +351,7 @@ instance : OpSignature ExOp ExTy where
 /-
 -- Error: unknown free variable: _kernel_fresh.459
 @[reducible]
-instance : OpDenote ExOp ExTy where
+instance : OpDenote Op Ty where
   denote
   | .const_ix v, _, _ => v
   | .add_int, (.cons x (.cons y nil)), _ =>

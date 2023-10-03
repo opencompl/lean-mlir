@@ -80,7 +80,7 @@ theorem Tensor2d'.fill_extract (δ₀ δ₁ sz₀ sz₁ : ℕ) (t : Tensor2d' α
 }
 
 
-inductive ExOp
+inductive Op
 | add
 -- TODO: generalize 'const'
 | constIx (v: Nat) | constTensor (t : Tensor2d' Int) | constInt (v : Int)
@@ -89,22 +89,22 @@ inductive ExOp
 | fill2d
 | extract2d 
 
-inductive ExTy
-| int : ExTy
-| ix : ExTy
-| tensor2d : ExTy
+inductive Ty
+| int : Ty
+| ix : Ty
+| tensor2d : Ty
 deriving DecidableEq, Inhabited
 
-def ExTy.toType : ExTy → Type
+def Ty.toType : Ty → Type
 | .int => Int
 | .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
-instance : Goedel ExTy where toType := ExTy.toType
+instance : Goedel Ty where toType := Ty.toType
 
 @[reducible]
-instance : OpSignature ExOp ExTy where
-  outTy : ExOp → ExTy
+instance : OpSignature Op Ty where
+  outTy : Op → Ty
   | .add => .int
   | .sub => .int
   | .constIx _ => .ix 
@@ -113,7 +113,7 @@ instance : OpSignature ExOp ExTy where
   | .map2d | .fill2d => .tensor2d
   | .extract2d => .tensor2d
 
-  sig  : ExOp → List ExTy
+  sig  : Op → List Ty
   | .add => [.int, .int]
   | .sub => [.int, .int]
   | .constIx _  => []
@@ -130,7 +130,7 @@ instance : OpSignature ExOp ExTy where
 /-
 -- error: unknown free variable: _kernel_fresh.97
 @[reducible]
-instance : OpDenote ExOp ExTy where
+instance : OpDenote Op Ty where
   denote
   | .constIx v, _, _ => v
   | .constTensor v, _, _ => v
