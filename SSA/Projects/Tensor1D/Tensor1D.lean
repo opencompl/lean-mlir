@@ -12,8 +12,6 @@ simple examples of 1D tensors, as per MLIR.
 -/
 abbrev Index := ℕ
 
-
-namespace Val
 -- pure simply typed lambda calculus
 structure Tensor1d (α : Type) [Inhabited α] where
   size : Index
@@ -302,8 +300,6 @@ theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f 
     sorry
 }
 
-namespace ArithScfLinalg
-
 /--
 We make the following simplifying assumptions in the IR:
 - Currently, there is no way to *build* a tensor, we only have operations on them.
@@ -413,5 +409,4 @@ theorem extract_map (r0 : TSSA Op Context.empty _) :
     simp[Tensor1d.extract_map]
   }
 -/
-end ArithScfLinalg
 end Tensor1D
