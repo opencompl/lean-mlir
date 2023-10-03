@@ -463,13 +463,13 @@ instance : Functor Signature where
 /-- A dialect morphism consists of a map between operations and a map between types, 
   such that the signature of operations is respected
 -/
-structure DialectMorphism (Op Op' Ty Ty' : Type) [OpSignature Op Ty] [OpSignature Op' Ty'] where
+structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
   mapOp : Op → Op'
   mapTy : Ty → Ty'
   preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
 
 variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] 
-  (f : DialectMorphism Op Op' Ty Ty')
+  (f : DialectMorphism Op Op')
 
 def DialectMorphism.preserves_sig (op : Op) : 
     OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by

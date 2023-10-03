@@ -572,5 +572,20 @@ def mkCom (reg : Region φ) : ExceptM (Σ (Γ : Context φ) (ty : MTy φ), Com �
     let icom ← mkComHelper Γ coms
     return ⟨Γ, icom⟩
 
+def MOp.instantiateCom (vals : MVarVals φ) : DialectMorphism (MOp φ) (InstCombine.Op) where
+  mapOp := MOp.instantiate vals
+  mapTy := MTy.instantiate vals
+  preserves_signature op := by
+    simp only [MTy.instantiate, MOp.instantiate, Width.instantiate, (· <$> ·), signature, InstCombine.Op.sig, 
+      InstCombine.Op.outTy]
+    cases op <;> simp only [List.map]
+    
+
+open InstCombine (Op Ty) in
+def mkComInstantiate (reg : Region φ) : 
+    ExceptM (MVarVals φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
+  let ⟨Γ, ty, icom⟩ ← mkCom reg
+  return fun vals =>
+    ⟨Γ.instantiate vals, ty.instantiate vals, icom.map (MOp.instantiateCom vals)⟩
 
 end MLIR.AST
