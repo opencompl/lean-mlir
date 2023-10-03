@@ -115,7 +115,7 @@ def GenericWidth (w : Nat) := [mlir_icom (w)|
     "llvm.return"(%0) : (_) -> ()
   }]
 
-def bb0IcomGeneric (w) := [mlir_icom (w)| 
+def bb0IcomGeneric (w : Nat) := [mlir_icom (w)| 
 {
   ^bb0(%arg0: _): 
     %0 = "llvm.mlir.constant"() {value = 1 : _} : () -> _
@@ -125,3 +125,15 @@ def bb0IcomGeneric (w) := [mlir_icom (w)|
     %4 = "llvm.add"(%3, %2) : (_, _) -> _
     "llvm.return"(%4) : (_) -> ()
   }]
+
+/-- Indeed, the concrete program is an instantiation of the generic program -/
+example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
+
+/-- Sanity check: supplying a width different from 32 indeed yields a different program -/
+example : bb0IcomGeneric 64 ≠ bb0IcomConcrete := by 
+  simp [bb0IcomGeneric, bb0IcomConcrete]
+  intro h
+  exfalso
+  injection h
+  contradiction
+  
