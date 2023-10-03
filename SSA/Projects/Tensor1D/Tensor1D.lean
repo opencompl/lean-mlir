@@ -1,16 +1,24 @@
 import SSA.Core.Framework
 import SSA.Core.Util
 
+namespace Tensor1D
 /-
-simple examples of 1D and 2D tensor transformations, as per MLIR tensors.
+simple examples of 1D tensors, as per MLIR.
 -/
+
+/-- Type of tensor dimensions and indexes into tensor dimensions.
+  NOTE: see interaction with `linarith` where we need to unfold `Index` into `ℕ`
+  https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Ergonomics.3A.20linarith.20does.20not.20work.20on.20Nat.20alias/near/365631549
+-/
+abbrev Index := ℕ
+
 
 namespace Val
 -- pure simply typed lambda calculus
 structure Tensor1d (α : Type) [Inhabited α] where
-  size : Nat
-  val :  Nat → α
-  spec : ∀ (ix: Nat), ix >= size -> val ix = default
+  size : Index
+  val :  Index → α
+  spec : ∀ (ix: Index), ix >= size -> val ix = default
 
 -- TODO: create equivalence relation for tensors
 -- that says tensors are equivalent if they have the same size and
@@ -29,7 +37,7 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
 -- if the (left + len) is larger than size, then we don't have a valid extract,
 -- so we return a size zero tensor.
 def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
-  (left: Nat) (len: Nat) : Tensor1d α :=
+  (left: Index) (len: Index) : Tensor1d α :=
   let right := if (left + len) < t.size then left + len else 0
   let size := right - left
   { size := size,
@@ -42,7 +50,7 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
       by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
       try simp[A] at right
       -- TODO: how to substitute?
-      have LEN : len < t.size := by linarith
+      have LEN : len < t.size := by simp[Index] at *; linarith
       sorry
     }
   }
@@ -53,7 +61,7 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
     intros ix IX;
     simp;
     intros H
-    have CONTRA : False := by linarith
+    have CONTRA : False := by simp[Index] at *; linarith
     simp at CONTRA
   }
 
@@ -61,13 +69,13 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
 -- when we are out of bounds, because the side that is (map extract) will have
 -- (f default), while (extract map) will be (default)
 -- theorem 1: extract (map) = map extract
-theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Nat) :
+theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Index) :
   (t.extract left len).map f = (t.map f).extract left len := by {
     simp[Tensor1d.extract, Tensor1d.map]
     funext ix;
     by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
     by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
-    have IX_INBOUNDS : ix + left < t.size := by linarith
+    have IX_INBOUNDS : ix + left < t.size := by simp[Index] at *; linarith
     simp[IX_INBOUNDS]
 }
 
@@ -78,7 +86,7 @@ def Tensor1d.fill [Inhabited α] (t: Tensor1d α) (v: α) : Tensor1d α where
     intros ix IX;
     simp;
     intros H
-    have CONTRA : False := by linarith
+    have CONTRA : False := by simp[Index] at *; linarith
     simp at CONTRA
   }
 
@@ -90,7 +98,7 @@ theorem Tensor1d.extract_fill [Inhabited α] (t: Tensor1d α):
     funext ix;
     by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
     by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
-    have IX_INBOUNDS : ix + left < t.size := by linarith
+    have IX_INBOUNDS : ix + left < t.size := by simp[Index] at *; linarith
     simp[IX_INBOUNDS]
 }
 
@@ -116,7 +124,7 @@ def Tensor1d.insertslice  [Inhabited α] (t: Tensor1d α)
     by_cases A:(sliceix > t.size) <;> simp[A]
     simp[A] at H
     by_cases B:(ix < t.size + slice.size) <;> simp[B]
-    have CONTRA : False := by linarith
+    have CONTRA : False := by simp[Index] at *; linarith
     simp at CONTRA
   }
 
@@ -152,7 +160,7 @@ theorem extractslice_insertslice [Inhabited α]
               -- here we fail, because we do not know that 'slice' behaves like a
               -- real tensor that returns 'default' outside of its range.
               -- This is something we need to add into the spec of a Tensor.
-              have E : ix >= slicesize := by linarith
+              have E : ix >= slicesize := by simp[Index] at *; linarith
               simp[spec _ E]
             }
             case pos => {
@@ -160,12 +168,12 @@ theorem extractslice_insertslice [Inhabited α]
               norm_num
               by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
               case pos => {
-                have CONTRA : False := by linarith;
+                have CONTRA : False := by simp[Index] at *; linarith;
                 simp at CONTRA;
               }
               case neg => {
                 intros K
-                have CONTRA : False := by linarith
+                have CONTRA : False := by simp[Index] at *; linarith
                 simp at CONTRA
               }
             }
@@ -296,40 +304,48 @@ theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f 
 
 namespace ArithScfLinalg
 
+/--
+We make the following simplifying assumptions in the IR:
+- Currently, there is no way to *build* a tensor, we only have operations on them.
+- Constants are only natural numbers, which represent indexing into tensors.
+- 1D tensors are functions from indexes (natural) to tensor values (integers).
 
 
+This matches the MLIR model, which has a separate `index` type for indexing
+and `iXX/f32/f64` types for values held in tensors.
+-/
 inductive ExOp
 | add
-| const (v: Nat)
+| const (v: Index)
 | sub
 | map1d
 | extract1d
 deriving DecidableEq
 
 inductive ExTy
-| int : ExTy
-| nat : ExTy
-| tensor1d  : ExTy
+| int : ExTy -- values held in tensors
+| ix : ExTy -- indexing into tensors.
+| tensor1d  : ExTy -- tensor type.
 deriving DecidableEq, Inhabited
 
 instance : Goedel ExTy where
   toType
   | .int => Int
-  | .nat => Nat
+  | .ix => Index
   | .tensor1d => Tensor1d Int
 
 instance : OpSignature ExOp ExTy where
   outTy : ExOp → ExTy
   | .add => .int
   | .sub => .int
-  | .const _ => .nat
+  | .const _ => .ix
   | .map1d =>  .tensor1d
   | .extract1d =>  .tensor1d
   sig  : ExOp → List ExTy
   | .add => [.int, .int]
   | .sub => [.int, .int]
   | .map1d => [.tensor1d]
-  | .extract1d => [.tensor1d, .nat, .nat]
+  | .extract1d => [.tensor1d, .ix, .ix]
   | .const _ => []
   
   regSig
@@ -358,10 +374,12 @@ instance : OpDenote ExOp ExTy where
     t'
   | .extract1d, (.cons t (.cons l (.cons len .nil))), _ =>
     let t : Tensor1d Int := t;
-    let l : Nat := l;
-    let len : Nat := len;
+    let l : Index := l;
+    let len : Index := len;
     t.extract l len
+-/
 
+/-
 open SSA EDSL in
 theorem extract_map (r0 : TSSA Op Context.empty _) :
   TSSA.eval (e := e) [dsl_region| rgn{ %v0 =>
@@ -396,3 +414,4 @@ theorem extract_map (r0 : TSSA Op Context.empty _) :
   }
 -/
 end ArithScfLinalg
+end Tensor1D

@@ -4,10 +4,10 @@ import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
 import SSA.Core.Util
 
-
+namespace Tensor2D
 /-- Type of tensor dimensions and indexes into tensor dimensions.
   NOTE: see interaction with `linarith` where we need to unfold `Index` into `ℕ`
-    https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Ergonomics.3A.20linarith.20does.20not.20work.20on.20Nat.20alias/near/365631549
+  https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Ergonomics.3A.20linarith.20does.20not.20work.20on.20Nat.20alias/near/365631549
 -/
 abbrev Index := ℕ
 
@@ -186,3 +186,4 @@ theorem map_fill_2d
     simp[Tensor2d'.fill_extract]
   }
 -/
+end Tensor2D
