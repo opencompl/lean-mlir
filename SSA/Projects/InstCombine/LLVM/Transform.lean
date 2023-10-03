@@ -7,76 +7,7 @@ universe u
 
 namespace MLIR.AST
 
-
-/-- The type needed to provide values for meta-variables in a `Region φ` -/
-abbrev MVarVals (φ : Nat) : Type :=
-  match φ with
-  | 0 => Unit
-  | 1 => Nat
-  | φ => Vector Nat φ 
-
-def MVarVals.get (vals : MVarVals φ) (i : Fin φ) :=
-  match φ with
-  | 0 => i.elim0
-  | 1 => vals
-  | _+2 => Vector.get vals i
-
-def Width.instantiate (vals : MVarVals φ) : Width φ → Nat
-  | .concrete w => w
-  | .mvar i => vals.get i
-
-/-- An `InstCombine.Ty` with potential meta-variables -/
-inductive MTy (φ : Nat)
-  | bitvec (w : Width φ)
-  deriving DecidableEq, Repr
-
-/-- An `InstCombine.Op` with potential meta-variables -/
-inductive MOp (φ : Nat) : Type
-  | and (w : Width φ) : MOp φ
-  | or (w : Width φ) : MOp φ
-  | not (w : Width φ) : MOp φ
-  | xor (w : Width φ) : MOp φ
-  | shl (w : Width φ) : MOp φ
-  | lshr (w : Width φ) : MOp φ
-  | ashr (w : Width φ) : MOp φ
-  | urem (w : Width φ) : MOp φ
-  | srem (w : Width φ) : MOp φ
-  | select (w : Width φ) : MOp φ
-  | add (w : Width φ) : MOp φ
-  | mul (w : Width φ) : MOp φ
-  | sub (w : Width φ) : MOp φ
-  | neg (w : Width φ) : MOp φ
-  | copy (w : Width φ) : MOp φ
-  | sdiv (w : Width φ) : MOp φ
-  | udiv (w : Width φ) : MOp φ
-  | icmp (c : InstCombine.IntPredicate) (w : Width φ) : MOp φ
-  /-- Since the width of the const might not be known, we just store the value as an `Int` -/
-  | const (w : Width φ) (val : ℤ) : MOp φ
-deriving Repr, DecidableEq
-
-def MTy.instantiate (vals : MVarVals φ) : MTy φ → InstCombine.Ty
-  | .bitvec w => .bitvec <| w.instantiate vals
-
-def MOp.instantiate (vals : MVarVals φ) : MOp φ → InstCombine.Op
-  | .and w => .and (w.instantiate vals)
-  | .or w => .or (w.instantiate vals)
-  | .not w => .not (w.instantiate vals)
-  | .xor w => .xor (w.instantiate vals)
-  | .shl w => .shl (w.instantiate vals)
-  | .lshr w => .lshr (w.instantiate vals)
-  | .ashr w => .ashr (w.instantiate vals)
-  | .urem w => .urem (w.instantiate vals)
-  | .srem w => .srem (w.instantiate vals)
-  | .select w => .select (w.instantiate vals)
-  | .add w => .add (w.instantiate vals)
-  | .mul w => .mul (w.instantiate vals)
-  | .sub w => .sub (w.instantiate vals)
-  | .neg w => .neg (w.instantiate vals)
-  | .copy w => .copy (w.instantiate vals)
-  | .sdiv w => .sdiv (w.instantiate vals)
-  | .udiv w => .udiv (w.instantiate vals)
-  | .icmp c w => .icmp c (w.instantiate vals)
-  | .const w val => .const <| Bitvec.ofInt (w.instantiate vals) val
+open InstCombine (MOp MTy Width)
 
 @[simp, reducible]
 def MOp.sig : MOp φ → List (MTy φ)
@@ -102,9 +33,6 @@ instance : OpSignature (MOp φ) (MTy φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
 
 abbrev Context (φ) := List (MTy φ)
-
-def Context.instantiate (vals : MVarVals φ) (Γ : Context φ) : Ctxt InstCombine.Ty :=
-  Γ.map (MTy.instantiate vals)
 
 abbrev Expr (Γ : Context φ) (ty : MTy φ)  := IExpr (MOp φ) Γ ty
 abbrev Com (Γ : Context φ) (ty : MTy φ)   := ICom (MOp φ) Γ ty
@@ -572,18 +500,51 @@ def mkCom (reg : Region φ) : ExceptM (Σ (Γ : Context φ) (ty : MTy φ), Com �
     let icom ← mkComHelper Γ coms
     return ⟨Γ, icom⟩
 
-def MOp.instantiateCom (vals : MVarVals φ) : DialectMorphism (MOp φ) (InstCombine.Op) where
+/-!
+  ## Instantiation
+  Finally, we show how to instantiate a family of programs to a concrete program
+-/
+
+def _root_.InstCombine.MTy.instantiate (vals : Vector Nat φ) : MTy φ → InstCombine.Ty
+  | .bitvec w => .bitvec <| .concrete <| w.instantiate vals
+
+def _root_.InstCombine.MOp.instantiate (vals : Vector Nat φ) : MOp φ → InstCombine.Op
+  | .and w => .and (w.instantiate vals)
+  | .or w => .or (w.instantiate vals)
+  | .not w => .not (w.instantiate vals)
+  | .xor w => .xor (w.instantiate vals)
+  | .shl w => .shl (w.instantiate vals)
+  | .lshr w => .lshr (w.instantiate vals)
+  | .ashr w => .ashr (w.instantiate vals)
+  | .urem w => .urem (w.instantiate vals)
+  | .srem w => .srem (w.instantiate vals)
+  | .select w => .select (w.instantiate vals)
+  | .add w => .add (w.instantiate vals)
+  | .mul w => .mul (w.instantiate vals)
+  | .sub w => .sub (w.instantiate vals)
+  | .neg w => .neg (w.instantiate vals)
+  | .copy w => .copy (w.instantiate vals)
+  | .sdiv w => .sdiv (w.instantiate vals)
+  | .udiv w => .udiv (w.instantiate vals)
+  | .icmp c w => .icmp c (w.instantiate vals)
+  | .const w val => .const (w.instantiate vals) val
+
+def Context.instantiate (vals : Vector Nat φ) (Γ : Context φ) : Ctxt InstCombine.Ty :=
+  Γ.map (MTy.instantiate vals)
+
+def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCombine.Op) where
   mapOp := MOp.instantiate vals
   mapTy := MTy.instantiate vals
   preserves_signature op := by
-    simp only [MTy.instantiate, MOp.instantiate, Width.instantiate, (· <$> ·), signature, InstCombine.Op.sig, 
-      InstCombine.Op.outTy]
-    cases op <;> simp only [List.map]
+    simp only [MTy.instantiate, MOp.instantiate, ConcreteOrMVar.instantiate, (· <$> ·), signature, 
+      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq, 
+      true_and]
+    cases op <;> simp only [List.map, and_self, List.cons.injEq]
     
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : Region φ) : 
-    ExceptM (MVarVals φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
+    ExceptM (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
   let ⟨Γ, ty, icom⟩ ← mkCom reg
   return fun vals =>
     ⟨Γ.instantiate vals, ty.instantiate vals, icom.map (MOp.instantiateCom vals)⟩

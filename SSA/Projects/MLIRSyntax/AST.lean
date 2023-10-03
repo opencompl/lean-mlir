@@ -1,14 +1,6 @@
+import SSA.Core.Util.ConcreteOrMVar
 import SSA.Experimental.IntrinsicAsymptotics
 open Lean PrettyPrinter
-
-
-inductive A {Γ : Type*} 
-| mk : (Γ → A) → A
-| mk2 : A
-
-inductive B {Γ : Type*} {Δ : Type*}
-| mk : (Γ → Δ) → B
-| mk2 : B
 
 namespace MLIR.AST
 
@@ -54,10 +46,7 @@ inductive Signedness :=
   | Signed   -- si*
 deriving DecidableEq, Repr
 
-inductive Width (φ : Nat) 
-  | concrete (w : Nat)
-  | mvar (x : Fin φ)
-  deriving Repr, DecidableEq
+abbrev Width φ := ConcreteOrMVar Nat φ
 
 inductive MLIRType (φ : Nat) : Type _ :=
   | int: Signedness -> Width φ -> MLIRType φ
@@ -73,9 +62,6 @@ variable (φ : Nat)
 
 instance : ToFormat (Width φ) := ⟨repr⟩
 instance : ToFormat (MLIRType φ) := ⟨repr⟩
-
-instance : Coe (Nat) (Width φ) := ⟨.concrete⟩
-instance : OfNat (Width φ) n := ⟨.concrete n⟩
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
 abbrev MLIRTy := MLIRType φ
