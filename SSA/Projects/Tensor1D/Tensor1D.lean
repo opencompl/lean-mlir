@@ -311,9 +311,9 @@ This matches the MLIR model, which has a separate `index` type for indexing
 and `iXX/f32/f64` types for values held in tensors.
 -/
 inductive ExOp
-| /-- add two integers -/ add
-| /-- create a constant index -/ const (v: Index)
-| /-- subtract two integers -/ sub
+| /-- add two integers -/ add_int
+| /-- create a constant index -/ const_ix (v: Index)
+| /-- subtract two integers -/ sub_int
 | /-- map a function onto a tensor -/ map1d
 | /-- extract a value at an index of a tensor -/ extract1d
 deriving DecidableEq
@@ -332,17 +332,17 @@ instance : Goedel ExTy where
 
 instance : OpSignature ExOp ExTy where
   outTy : ExOp → ExTy
-  | .add => .int
-  | .sub => .int
-  | .const _ => .ix
+  | .add_int => .int
+  | .sub_int => .int
+  | .const_ix _ => .ix
   | .map1d =>  .tensor1d
   | .extract1d =>  .tensor1d
   sig  : ExOp → List ExTy
-  | .add => [.int, .int]
-  | .sub => [.int, .int]
+  | .add_int => [.int, .int]
+  | .sub_int => [.int, .int]
   | .map1d => [.tensor1d]
   | .extract1d => [.tensor1d, .ix, .ix]
-  | .const _ => []
+  | .const_ix _ => []
 
   regSig
   | .map1d => [([.int], .int)]
@@ -353,12 +353,12 @@ instance : OpSignature ExOp ExTy where
 @[reducible]
 instance : OpDenote ExOp ExTy where
   denote
-  | .const v, _, _ => v
-  | .add, (.cons x (.cons y nil)), _ =>
+  | .const_ix v, _, _ => v
+  | .add_int, (.cons x (.cons y nil)), _ =>
       let x : Int := x;
       let y : Int := y
       x + y
-  | .sub, (.cons x (.cons y nil)), _ =>
+  | .sub_int, (.cons x (.cons y nil)), _ =>
     let x : Int := x;
     let y : Int := y;
     x - y
@@ -374,7 +374,6 @@ instance : OpDenote ExOp ExTy where
     let len : Index := len;
     t.extract l len
 -/
-
 /-
 open SSA EDSL in
 theorem extract_map (r0 : TSSA Op Context.empty _) :
