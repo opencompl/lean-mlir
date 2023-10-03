@@ -315,17 +315,17 @@ This matches the MLIR model, which has a separate `index` type for indexing
 and `iXX/f32/f64` types for values held in tensors.
 -/
 inductive ExOp
-| add
-| const (v: Index)
-| sub
-| map1d
-| extract1d
+| /-- add two integers -/ add
+| /-- create a constant index -/ const (v: Index)
+| /-- subtract two integers -/ sub
+| /-- map a function onto a tensor -/ map1d
+| /-- extract a value at an index of a tensor -/ extract1d
 deriving DecidableEq
 
 inductive ExTy
-| int : ExTy -- values held in tensors
-| ix : ExTy -- indexing into tensors.
-| tensor1d  : ExTy -- tensor type.
+| /-- values held in tensors -/ int : ExTy 
+| /-- shapes and indexes of tensors -/ ix : ExTy
+| /-- tensor type -/ tensor1d  : ExTy
 deriving DecidableEq, Inhabited
 
 instance : Goedel ExTy where
@@ -347,7 +347,7 @@ instance : OpSignature ExOp ExTy where
   | .map1d => [.tensor1d]
   | .extract1d => [.tensor1d, .ix, .ix]
   | .const _ => []
-  
+
   regSig
   | .map1d => [([.int], .int)]
   | _ => []
