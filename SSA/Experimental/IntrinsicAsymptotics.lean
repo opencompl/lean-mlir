@@ -1505,7 +1505,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : IExpr ExOp ∅ Γ .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def rgn {Γ : Ctxt _} (k : Nat) {rg : RegMVars ExTy} (input : Var Γ .nat)
+def runK {Γ : Ctxt _} (k : Nat) {rg : RegMVars ExTy} (input : Var Γ .nat)
     (body : Reg ExOp rg [ExTy.nat] ExTy.nat) :
     IExpr ExOp rg Γ .nat :=
   IExpr.mk
@@ -1516,65 +1516,127 @@ def rgn {Γ : Ctxt _} (k : Nat) {rg : RegMVars ExTy} (input : Var Γ .nat)
 
 attribute [local simp] Ctxt.snoc
 
+namespace Example1
+
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def ex1_lhs : ICom ExOp ∅ [.nat] .nat :=
-  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
-      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
-  )) <|
-  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def ex1_rhs : ICom ExOp ∅ [.nat] .nat :=
-  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-/-- running `f(x) = <whatever>` 0 times is the identity. -/
-def ex1'_lhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
-  ICom.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+-- | pattern only has 'Reg.mvar', no concrete regions.
+def peephole_lhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
+  ICom.lete (runK (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
       Reg.mvar ⟨0, by simp⟩)
   ) <|
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def ex1'_rhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
+def peephole_rhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def p1' : PeepholeRewrite ExOp [([.nat], .nat)] [.nat] .nat:=
-  { lhs := ex1'_lhs, rhs := ex1'_rhs, correct := by
-      rw [ex1'_lhs, ex1'_rhs]
-      simp_peephole [add, rgn]
-      intros a
-      sorry -- Don't know why simp makes no progress
+/--
+%out = runK (?mvar)
+  ({ ?rgn_mvar : (i32) -> (i32) })
+  { k = 0 } : (i32) -> (i32)
+==>
+%out = ?mvar
+-/
+def peephole : PeepholeRewrite ExOp [([.nat], .nat)] [.nat] .nat:=
+  { lhs := peephole_lhs, rhs := peephole_rhs, correct := by
+      sorry
   }
 
 /--
-The rewrite that should succeed on `rewritePeepholeAt`
-supports region metavars.
--/
-example : rewritePeepholeAt p1' 1 ex1_lhs = ex1_rhs := by {
-  try rfl; sorry
+def concrete_prog1_lhs(%x : i32) {
+  %out = runK (%x) ({
+    ^entry(%arg0 : i32):
+      return %arg0
+  }) { k = 0 } : (i32, i32) -> i32
+  return %out
 }
-
-
-/-- running `f(x) = x + x` 1 times does return `x + x`. -/
-def ex2_lhs : ICom ExOp [.nat] .nat :=
-  ICom.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
-      ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+-/
+def concrete_prog1_lhs : ICom ExOp ∅ [.nat] .nat :=
+  -- | The instance of the pattern occurs at the top-level ICom
+  ICom.lete (runK (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
+    ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def ex2_rhs : ICom ExOp [.nat] .nat :=
-    ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-    <| ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+/--
+def concrete_prog1_rhs(%x : i32) {
+  return %x : i32
+}
+-/
+def concrete_prog1_rhs : ICom ExOp ∅ [.nat] .nat :=
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def p2 : PeepholeRewrite ExOp [.nat] .nat:=
-  { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
-      rw [ex2_lhs, ex2_rhs]
-      simp_peephole [add, rgn]
-      simp
-      done
+
+example : rewritePeepholeAt peephole 1 concrete_prog1_lhs =
+  concrete_prog_rhs := sorry
+
+end Example1
+
+namespace Example2
+
+
+-- | pattern only has 'Reg.mvar', no concrete regions.
+def peephole_lhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
+  ICom.lete (runK (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+      Reg.mvar ⟨0, by simp⟩)
+  ) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def peephole_rhs : ICom ExOp [([.nat], .nat)] [.nat] .nat :=
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+/--
+%out = runK (?mvar)
+  ({ ?rgn_mvar : (i32) -> (i32) })
+  { k = 0 } : (i32) -> (i32)
+==>
+%out = ?mvar
+-/
+def peephole : PeepholeRewrite ExOp [([.nat], .nat)] [.nat] .nat:=
+  { lhs := peephole_lhs, rhs := peephole_rhs, correct := by
+      sorry
   }
 
+/--
+def concrete_prog2_lhs(%x : i32) {
+  %out = runK (%x) ({
+    ^entry(%arg0 : i32):
+      %out2 = runK (%arg0) ({
+        ^entry(%nested_arg0 : i32)
+          return %nested_arg0
+      }) { k = 0 } : (i32, i32) -> i32
+    })
+  }) { k = 0 } : (i32, i32) -> i32
+  return %out
+}
+-/
+def concrete_prog2_lhs : ICom ExOp ∅ [.nat] .nat :=
+  ICom.lete (runK (k := 3) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
+      ICom.lete (runK (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
+        -- | The instance of the pattern occurs in a nested ICom(!)
+        ICom.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) <|
+        ICom.ret ⟨0, by simp[Ctxt.snoc]⟩)) <|
+      ICom.ret ⟨0, by simp[Ctxt.snoc]⟩)
+  ) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
+/--
+def concrete_prog2_lhs(%x : i32) {
+  %out = runK (%x) ({
+    ^entry(%arg0 : i32):
+      return %arg0
+    })
+  }) { k = 0 } : (i32, i32) -> i32
+  return %out
+}
+-/
+def concrete_prog2_rhs : ICom ExOp ∅ [.nat] .nat :=
+  ICom.lete (runK (k := 3) ⟨0, by simp[Ctxt.snoc]⟩ (Reg.icom <|
+      ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
+  )) <|
+  ICom.ret ⟨0, by simp[Ctxt.snoc]⟩
 
+example : rewritePeepholeAt peephole 1 concrete_prog_lhs = concrete_prog_rhs := sorry
+
+end Example2
 
 end RegionExamples
