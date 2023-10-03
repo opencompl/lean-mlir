@@ -64,7 +64,7 @@ instance : ToFormat (Width φ) := ⟨repr⟩
 instance : ToFormat (MLIRType φ) := ⟨repr⟩
 
 -- We define "MLIRTy" to be just the basic types outside of any dialect
-abbrev MLIRTy := MLIRType φ
+abbrev MLIRTy (φ := 0) := MLIRType φ
 
 /-- Shorthand to build <iN> -/
 def MLIRTy.i (width : Nat) : MLIRTy φ := MLIRType.int Signedness.Signless width
@@ -114,7 +114,7 @@ def AttrDict.getAttr {φ} : AttrDict φ → String →  Option (AttrValue φ)
   | .mk attrs, name => attrs.map AttrEntry.destructure |>.lookup name
 
 -- We define "AttrVal" to be just the basic attributes outside of any dialect
-abbrev AttrVal := AttrValue
+abbrev AttrVal (φ := 0) := AttrValue φ
 
 
 mutual
@@ -391,10 +391,10 @@ instance : Repr (Module φ) where
   | Module.mk fs attrs, _ =>
       attrs.map repr ++ fs.map repr |>.map (Format.align true ++ ·) |> Format.join
 
-def Region.fromOps (os: List (Op φ)) (name: String := "entry") : Region φ :=
+def Region.fromOps {φ} (os: List (Op φ)) (name: String := "entry") : Region φ :=
   Region.mk name [] os
 
-def Region.setArgs (bb: Region φ) (args: List (SSAVal × MLIRType φ)) : Region φ :=
+def Region.setArgs {φ} (bb: Region φ) (args: List (SSAVal × MLIRType φ)) : Region φ :=
   match bb with
     | (Region.mk name _ ops) => (Region.mk name args ops)
 
