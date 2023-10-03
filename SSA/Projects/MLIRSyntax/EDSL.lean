@@ -265,26 +265,10 @@ def succ0 :  BBName := ([mlir_op_successor_arg| ^bb])
 
 syntax "[mlir_type|" mlir_type "]" : term
 
--- TODO: Tuple and function types don't really exists (hardcoded Op notation)
-/-
- syntax "(" mlir_type,* ")" : mlir_type
-macro_rules
-| `([mlir_type| ( $xs,* )]) => do
-      let xs <- xs.getElems.mapM (fun x => `([mlir_type| $x]))
-      let x <- quoteMList xs.toList (<- `(MLIRType _))
-      `(MLIRType.tuple $x)
-
--- syntax "(" mlir_type ")" : mlir_type
--- syntax "(" mlir_type "," mlir_type ")" : mlir_type
--- | HACK: just switch to real parsing of lists
--- syntax "(" mlir_type "," mlir_type "," mlir_type ")" : mlir_type
-syntax mlir_type "->" mlir_type : mlir_type
--/
-
-syntax "{{" term "}}" : mlir_type
 syntax "!" str : mlir_type
 syntax "!" ident : mlir_type
 syntax ident: mlir_type
+syntax "_" : mlir_type
 
 
 set_option hygiene false in -- allow i to expand
@@ -306,19 +290,10 @@ macro_rules
           | none =>
               Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr
         else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr
-
-macro_rules
-| `([mlir_type| ! $x:str ]) => `(MLIRType.undefined $x)
-
-macro_rules
-| `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
-
--- add type ascription when elaborating. This allows users to write
--- kawaii syntax such as (%x : $(.i 32)) where the `.i` refers to
--- `MLIRTy.i`, which is resolved by Lean's (type directed)
--- implicit member reference.
-macro_rules
-  | `([mlir_type| $$($q)]) => `((let x : MLIRTy := $q; x))
+  | `([mlir_type| ! $x:str ]) => `(MLIRType.undefined $x)
+  | `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
+  -- Hardcoded meta-variable
+  | `([mlir_type| _ ]) => `(MLIRType.int (φ := 1) Signedness.Signless (Width.mvar ⟨0, by simp⟩))
 
 def tyIndex : MLIRTy := [mlir_type| index]
 #eval tyIndex
@@ -334,11 +309,6 @@ def tyi32NoGap : MLIRTy := [mlir_type| i32]
 #eval tyi32NoGap
 def tyf32NoGap : MLIRTy := [mlir_type| f32]
 #eval tyf32NoGap
-
-macro_rules
-| `([mlir_type| {{ $t }} ]) => return t -- antiquot type
-
--- #print tyi32'
 
 -- Uses dialect coercion empty → builtin
 --example : MLIRType builtin := [mlir_type| i32]

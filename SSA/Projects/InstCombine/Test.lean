@@ -107,29 +107,21 @@ def bb0IcomConcrete := [mlir_icom|
     "llvm.return"(%4) : (i32) -> ()
   }]
 
-/-! anti-quotations with let-bindings seem to work for arbitrary values `w < 100`. 
-    If we set `w := 100` or above, we get `maximum recursion depth has been reached`-/
-def bb0IcomLet := let w := 99; [mlir_icom| 
+/-- A simple example of a family of programs, generic over some bitwidth `w` -/
+def GenericWidth (w : Nat) := [mlir_icom (w)| 
 {
   ^bb0():
-    %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
-    "llvm.return"(%0) : ($(.i w)) -> ()
+    %0 = "llvm.mlir.constant"() {value = 0 : _} : () -> _
+    "llvm.return"(%0) : (_) -> ()
   }]
 
-#print bb0IcomLet
-
--- `bb0IcomLet` should already be in normal form. Yet, reducing it again seems to not work
--- #reduce bb0IcomLet -- error: maximum recursion depth has been reached
-
-/-!
-  Similarly, syntax that is fully generic over bit-width (by taking `w` as argument) 
-  seems to fail to reduce at all
--/
-
--- error: Translation failed to reduce, possibly too generic syntax
--- def bb0IcomGeneric (w : Nat) := [mlir_icom| 
--- {
---   ^bb0():
---     %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
---     "llvm.return"(%0) : ($(.i w)) -> ()
---   }]
+def bb0IcomGeneric (w) := [mlir_icom (w)| 
+{
+  ^bb0(%arg0: _): 
+    %0 = "llvm.mlir.constant"() {value = 1 : _} : () -> _
+    %1 = "llvm.mlir.constant"() {value = 31 : _} : () -> _
+    %2 = "llvm.ashr"(%arg0, %1) : (_, _) -> _
+    %3 = "llvm.and"(%2, %0) : (_, _) -> _
+    %4 = "llvm.add"(%3, %2) : (_, _) -> _
+    "llvm.return"(%4) : (_) -> ()
+  }]

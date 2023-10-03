@@ -47,6 +47,8 @@ inductive Signedness :=
 deriving DecidableEq, Repr
 
 abbrev Width φ := ConcreteOrMVar Nat φ
+abbrev Width.concrete : Nat → Width φ := ConcreteOrMVar.concrete
+abbrev Width.mvar : Fin φ → Width φ := ConcreteOrMVar.mvar
 
 inductive MLIRType (φ : Nat) : Type _ :=
   | int: Signedness -> Width φ -> MLIRType φ
