@@ -89,7 +89,7 @@ partial def balancedBracketsFnAux (startPos: String.Pos)
   (input: String)
   (bs: List Bracket) (ctx: ParserContext) (s: ParserState): ParserState :=
   if input.atEnd i
-  then s.mkError "fonud EOF"
+  then s.mkError "found EOF"
   else
   match input.get i with
   -- opening parens
