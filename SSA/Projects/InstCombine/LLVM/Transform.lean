@@ -41,7 +41,7 @@ abbrev Var (Γ : Context φ) (ty : MTy φ)   := Ctxt.Var Γ ty
 abbrev Com.lete (body : Expr Γ ty₁) (rest : Com (ty₁::Γ) ty₂) : Com Γ ty₂ := 
   ICom.lete body rest
 
-inductive TransformError : Type u
+inductive TransformError
   | nameAlreadyDeclared (var : String)
   | undeclaredName (var : String)
   | indexOutOfBounds (name : String) (index len : Nat)

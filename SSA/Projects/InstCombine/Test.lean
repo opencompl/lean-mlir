@@ -3,7 +3,11 @@ import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.LLVM.EDSL
 open MLIR AST
 
-def add_mask := [mlir_op| 
+/-
+  TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
+  in the following
+-/
+def add_mask : Op 0 := [mlir_op| 
   "module"() ( {
   "llvm.func"() ( {
   ^bb0(%arg0: i32): 
@@ -26,7 +30,7 @@ def add_mask := [mlir_op|
 }) : () -> ()
 ]
 
-def bb0 := [mlir_region| 
+def bb0 : Region 0 := [mlir_region| 
 {
   ^bb0(%arg0: i32): 
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
@@ -41,15 +45,15 @@ def bb0 := [mlir_region|
 
     
 open InstCombine
-def Γn (n : Nat) : Context := 
-  Ctxt.ofList <| .replicate n (Ty.bitvec 32)
+def Γn (n : Nat) : Context φ := 
+  Ctxt.ofList <| .replicate n (.bitvec 32)
 
-def op0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
-def op1 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
-def op2 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
-def op3 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
-def op4 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
-def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
+def op0 : Op 0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
+def op1 : Op 0 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
+def op2 : Op 0 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
+def op3 : Op 0 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
+def op4 : Op 0 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
+def opRet : Op 0 := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
 
 /-
   TODO: these tests were broken.
@@ -63,7 +67,7 @@ def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
 #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
-def ops := [mlir_ops| 
+def ops : List (Op 0) := [mlir_ops| 
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
     %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
     %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
@@ -90,12 +94,12 @@ def com := mkCom bb0 |>.toOption |>.get (by rfl)
 #eval com
 
 theorem com_Γ : com.1 = (Γn 1) := by rfl
-theorem com_ty : com.2.1 = Ty.bitvec 32 := by rfl
+theorem com_ty : com.2.1 = .bitvec 32 := by rfl
 
 def bb0IcomConcrete := [mlir_icom| 
 {
   ^bb0(%arg0: i32): 
-    %0 = "llvm.mlir.constant"() {value = $(.int 1 (.i 32))} : () -> i32
+    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
     %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
     %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
     %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
