@@ -147,7 +147,7 @@ instance : OpDenote Op Ty where
   | .map2d, (.cons t .nil), (.cons r .nil) => 
     let t : Tensor2d' Int := t
     -- Is there a cleaner way to build the data below?
-    let f : Int → Int := fun v =>  r (Ctxt.Valuation.ofList <| (.cons v .nil))
+    let f : Int → Int := fun v =>  r (Ctxt.Valuation.ofHVector <| (.cons v .nil))
     t.map f
   | .fill2d, (.cons v (.cons t nil)), _ => 
     t.fill v

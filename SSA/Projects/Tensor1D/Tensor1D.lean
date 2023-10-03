@@ -365,7 +365,7 @@ instance : OpDenote Op Ty where
   | .map1d, (.cons t .nil), (.cons r .nil) =>
     let t : Tensor1d Int := t;
     -- Is there a cleaner way to build the data below?
-    let r : Int → Int := fun v =>  r (Ctxt.Valuation.ofList <| (.cons v .nil))
+    let r : Int → Int := fun v =>  r (Ctxt.Valuation.ofHVector <| (.cons v .nil))
     let t' := t.map r
     t'
   | .extract1d, (.cons t (.cons l (.cons len .nil))), _ =>

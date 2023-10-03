@@ -199,10 +199,10 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
 
-/-- Build valuation from a list of values of types `types`. -/
-def Valuation.ofList {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
+/-- Build valuation from a vector of values of types `types`. -/
+def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
   | .nil => (default : Ctxt.Valuation (∅ : Ctxt Ty))
-  | .cons x xs => (Valuation.ofList xs).snoc x
+  | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 end Valuation
 
