@@ -175,7 +175,7 @@ theorem map_fill_2d
            (op:constIx(ix₀) (), op:constIx(ix₁) ())),
            op:constTensor(t) ()))
   ] =
-  TSSA.eval (e := e) (Op := Op) (β := ) [dsl_bb2|
+  TSSA.eval (e := e) (Op := Op) [dsl_bb2|
     return op:extract2d 
       (((op:constIx(sz₀) (), op:constIx(sz₁) ()),
         (op:constIx(ix₀) (), op:constIx(ix₁) ())),
