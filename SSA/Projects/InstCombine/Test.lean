@@ -129,10 +129,13 @@ def bb0IcomGeneric (w : Nat) := [mlir_icom (w)|
 /-- Indeed, the concrete program is an instantiation of the generic program -/
 example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 
-/-- Sanity check: supplying a width different from 32 indeed yields a different program -/
-example : bb0IcomGeneric 64 ≠ bb0IcomConcrete := by 
-  simp [bb0IcomGeneric, bb0IcomConcrete]
-  intro h
-  exfalso
-  injection h
-  contradiction
+/-- 
+  Simple example of the denotation of `GenericWidth`.
+  Note that we only have semantics (in the sense of "an implementation of `OpSemantics`") 
+  for concrete programs. We thus need to instantiate `GenericWidth` with some width `w` before we 
+  can use `denote`. In this way, we indirectly give semantics to the family of programs that 
+  `GenericWidth` represents.
+-/
+example (w Γv) : (GenericWidth w).denote Γv = some (Bitvec.ofNat w 0) := by
+  rfl
+  
