@@ -384,11 +384,9 @@ def TypedSSAVal.newVal (Γ : Context φ) : TypedSSAVal φ →
     return ⟨Γ, ty, var⟩
 
 def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
-  match opStx.args with
-  | v₁Stx::v₂Stx::[] =>
-    let ⟨.bitvec w₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
-    let ⟨.bitvec w₂, v₂⟩ ← TypedSSAVal.mkVal Γ v₂Stx
-    -- let ty₁ := ty₁.instantiave 
+  let args ← opStx.args.mapM (TypedSSAVal.mkVal Γ)
+  match args with
+  | [⟨.bitvec w₁, v₁⟩, ⟨.bitvec w₂, v₂⟩] =>
     let op ← match opStx.name with
       | "llvm.and"    => pure (MOp.and w₁)
       | "llvm.or"     => pure (MOp.or w₁)
@@ -411,8 +409,7 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       return ⟨.bitvec w₁, binOp⟩
     else 
       throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
-  | vStx::[] =>
-    let ⟨.bitvec w, v⟩ ← TypedSSAVal.mkVal Γ vStx
+  | [⟨.bitvec w, v⟩] =>
     let op ← match opStx.name with
         | "llvm.not" => pure <| MOp.not w
         | "llvm.neg" => pure <| MOp.neg w
