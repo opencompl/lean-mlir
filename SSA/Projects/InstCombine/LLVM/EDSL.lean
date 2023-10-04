@@ -19,7 +19,7 @@ elab "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
         return ←reduce com
   trace[Meta] com
   match com with
-    | ~q(Except.ok $comOk)    => return comOk
+    | ~q(Except.ok $comOk)  => return comOk
     | ~q(Except.error $err) => do
         let err ← unsafe evalExpr TransformError q(TransformError) err
         throwError "Translation failed with error:\n\t{repr err}"

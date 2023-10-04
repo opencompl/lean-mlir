@@ -136,4 +136,3 @@ example : bb0IcomGeneric 64 ≠ bb0IcomConcrete := by
   exfalso
   injection h
   contradiction
-  
