@@ -15,9 +15,11 @@ open Goedel (toType)
   # Classes
 -/
 
+abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
+
 structure Signature (Ty : Type) where
   sig     : List Ty
-  regSig  : List (Ctxt Ty × Ty)
+  regSig  : RegionSignature Ty
   outTy   : Ty
 
 class OpSignature (Op : Type) (Ty : outParam (Type)) where
@@ -458,9 +460,12 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ Γ�
 
 section Map
 
+instance : Functor RegionSignature where
+  map f := List.map fun (tys, ty) => (f <$> tys, f ty)
+
 instance : Functor Signature where
   map := fun f ⟨sig, regSig, outTy⟩ => 
-    ⟨f <$> sig, regSig.map (fun ⟨a, b⟩ => ⟨f <$> a, f b⟩), f outTy⟩
+    ⟨f <$> sig, f <$> regSig, f outTy⟩
 
 /-- A dialect morphism consists of a map between operations and a map between types, 
   such that the signature of operations is respected
@@ -498,14 +503,20 @@ mutual
         (f.preserves_outTy _).symm,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
         f.preserves_regSig _ ▸ 
-          regs.map' (fun (t₁, t₂) => (f.mapTy <$> t₁, f.mapTy t₂)) (fun _ => ICom.map)
+          HVector.mapDialectMorphism regs
       ⟩
+
+  /-- Inline of `HVector.map'` for the termination checker -/
+  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty}, 
+      HVector (fun t => ICom Op t.fst t.snd) regSig
+      → HVector (fun t => ICom Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
+    | _, .nil        => .nil
+    | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end
 termination_by
   IExpr.map e => sizeOf e
   ICom.map e => sizeOf e
-  -- HVector.denote _ _ e => sizeOf e
-decreasing_by sorry
+  HVector.mapDialectMorphism e => sizeOf e
 
 end Map
 
