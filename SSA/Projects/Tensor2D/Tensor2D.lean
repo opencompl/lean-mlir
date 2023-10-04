@@ -168,7 +168,7 @@ theorem map_fill_2d
     (sz₀ sz₁ ix₀ ix₁: Index) 
     (i : Int):
   TSSA.eval
-  (e := e) (Op := Op) (β := ) [dsl_bb2|
+  (e := e) (Op := Op) [dsl_bb2|
     return op:fill2d (op:constInt(i) (), 
       op:extract2d (
           ((op:constIx(sz₀) () , op:constIx(sz₁) ()),
