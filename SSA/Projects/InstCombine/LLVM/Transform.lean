@@ -9,29 +9,6 @@ namespace MLIR.AST
 
 open InstCombine (MOp MTy Width)
 
-@[simp, reducible]
-def MOp.sig : MOp φ → List (MTy φ)
-| .and w | .or w | .xor w | .shl w | .lshr w | .ashr w
-| .add w | .mul w | .sub w | .udiv w | .sdiv w 
-| .srem w | .urem w | .icmp _ w =>
-  [.bitvec w, .bitvec w]
-| .not w | .neg w | .copy w => [.bitvec w]
-| .select w => [.bitvec 1, .bitvec w, .bitvec w]
-| .const _ _ => []
-
-@[simp, reducible]
-def MOp.outTy : MOp φ → MTy φ
-| .and w | .or w | .not w | .xor w | .shl w | .lshr w | .ashr w
-| .sub w |  .select w | .neg w | .copy w =>
-  .bitvec w
-| .add w | .mul w |  .sdiv w | .udiv w | .srem w | .urem w =>
-  .bitvec w
-| .icmp _ _ => .bitvec 1
-| .const width _ => .bitvec width
-
-instance : OpSignature (MOp φ) (MTy φ) where 
-  signature op := ⟨op.sig, [], op.outTy⟩
-
 abbrev Context (φ) := List (MTy φ)
 
 abbrev Expr (Γ : Context φ) (ty : MTy φ)  := IExpr (MOp φ) Γ ty
