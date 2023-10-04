@@ -5,7 +5,7 @@ import SSA.Projects.InstCombine.LLVM.Transform
 open Qq Lean Meta Elab.Term
 
 open MLIR.AST InstCombine in
-elab "[mlir_icom (" mvars:ident,* ")| " reg:mlir_region "]" : term => do
+elab "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let ast_stx ← `([mlir_region| $reg])
   let φ : Nat := mvars.getElems.size
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
