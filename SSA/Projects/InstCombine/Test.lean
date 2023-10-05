@@ -3,7 +3,11 @@ import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.LLVM.EDSL
 open MLIR AST
 
-def add_mask := [mlir_op| 
+/-
+  TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
+  in the following
+-/
+def add_mask : Op 0 := [mlir_op| 
   "module"() ( {
   "llvm.func"() ( {
   ^bb0(%arg0: i32): 
@@ -26,7 +30,7 @@ def add_mask := [mlir_op|
 }) : () -> ()
 ]
 
-def bb0 := [mlir_region| 
+def bb0 : Region 0 := [mlir_region| 
 {
   ^bb0(%arg0: i32): 
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
@@ -41,15 +45,15 @@ def bb0 := [mlir_region|
 
     
 open InstCombine
-def Γn (n : Nat) : Context := 
-  Ctxt.ofList <| .replicate n (Ty.bitvec 32)
+def Γn (n : Nat) : Context φ := 
+  Ctxt.ofList <| .replicate n (.bitvec 32)
 
-def op0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
-def op1 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
-def op2 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
-def op3 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
-def op4 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
-def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
+def op0 : Op 0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
+def op1 : Op 0 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
+def op2 : Op 0 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
+def op3 : Op 0 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
+def op4 : Op 0 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
+def opRet : Op 0 := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
 
 /-
   TODO: these tests were broken.
@@ -63,7 +67,7 @@ def opRet := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
 #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
-def ops := [mlir_ops| 
+def ops : List (Op 0) := [mlir_ops| 
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
     %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
     %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
@@ -90,12 +94,12 @@ def com := mkCom bb0 |>.toOption |>.get (by rfl)
 #eval com
 
 theorem com_Γ : com.1 = (Γn 1) := by rfl
-theorem com_ty : com.2.1 = Ty.bitvec 32 := by rfl
+theorem com_ty : com.2.1 = .bitvec 32 := by rfl
 
 def bb0IcomConcrete := [mlir_icom| 
 {
   ^bb0(%arg0: i32): 
-    %0 = "llvm.mlir.constant"() {value = $(.int 1 (.i 32))} : () -> i32
+    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
     %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
     %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
     %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
@@ -103,29 +107,35 @@ def bb0IcomConcrete := [mlir_icom|
     "llvm.return"(%4) : (i32) -> ()
   }]
 
-/-! anti-quotations with let-bindings seem to work for arbitrary values `w < 100`. 
-    If we set `w := 100` or above, we get `maximum recursion depth has been reached`-/
-def bb0IcomLet := let w := 99; [mlir_icom| 
+/-- A simple example of a family of programs, generic over some bitwidth `w` -/
+def GenericWidth (w : Nat) := [mlir_icom (w)| 
 {
   ^bb0():
-    %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
-    "llvm.return"(%0) : ($(.i w)) -> ()
+    %0 = "llvm.mlir.constant"() {value = 0 : _} : () -> _
+    "llvm.return"(%0) : (_) -> ()
   }]
 
-#print bb0IcomLet
+def bb0IcomGeneric (w : Nat) := [mlir_icom (w)| 
+{
+  ^bb0(%arg0: _): 
+    %0 = "llvm.mlir.constant"() {value = 1 : _} : () -> _
+    %1 = "llvm.mlir.constant"() {value = 31 : _} : () -> _
+    %2 = "llvm.ashr"(%arg0, %1) : (_, _) -> _
+    %3 = "llvm.and"(%2, %0) : (_, _) -> _
+    %4 = "llvm.add"(%3, %2) : (_, _) -> _
+    "llvm.return"(%4) : (_) -> ()
+  }]
 
--- `bb0IcomLet` should already be in normal form. Yet, reducing it again seems to not work
--- #reduce bb0IcomLet -- error: maximum recursion depth has been reached
+/-- Indeed, the concrete program is an instantiation of the generic program -/
+example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 
-/-!
-  Similarly, syntax that is fully generic over bit-width (by taking `w` as argument) 
-  seems to fail to reduce at all
+/-- 
+  Simple example of the denotation of `GenericWidth`.
+  Note that we only have semantics (in the sense of "an implementation of `OpSemantics`") 
+  for concrete programs. We thus need to instantiate `GenericWidth` with some width `w` before we 
+  can use `denote`. In this way, we indirectly give semantics to the family of programs that 
+  `GenericWidth` represents.
 -/
-
--- error: Translation failed to reduce, possibly too generic syntax
--- def bb0IcomGeneric (w : Nat) := [mlir_icom| 
--- {
---   ^bb0():
---     %0 = "llvm.mlir.constant"() {value = 0 : $(.i w)} : () -> $(.i w)
---     "llvm.return"(%0) : ($(.i w)) -> ()
---   }]
+example (w Γv) : (GenericWidth w).denote Γv = some (Bitvec.ofNat w 0) := by
+  rfl
+  

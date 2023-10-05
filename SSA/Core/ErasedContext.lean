@@ -46,6 +46,18 @@ def ofList : List Ty → Ctxt Ty :=
 def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
 
+/-- Map a function from one type universe to another over a context -/
+def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
+  List.map f
+
+instance : Functor Ctxt where
+  map := map
+
+instance : LawfulFunctor Ctxt where
+  comp_map  := by simp only [List.map_eq_map, List.map_map, forall_const, implies_true]
+  id_map    := by simp only [List.map_eq_map, List.map_id, forall_const]
+  map_const := by simp only [Functor.mapConst, Functor.map, Function.const, forall_const]
+
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
@@ -79,6 +91,14 @@ theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
 theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
+
+/-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
+@[coe]
+def toMap : Var Γ t → Var (Γ.map f) (f t)
+  | ⟨i, h⟩ => ⟨i, by 
+      simp only [get?, map, List.get?_map, Option.map_eq_some']
+      exact ⟨t, h, rfl⟩
+    ⟩
 
 def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
   | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
@@ -274,6 +294,16 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     specialize @h_get_d (i+1) t
     simp [snoc, List.get?] at h_get_d
     rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
+  ⟩
+
+/-- Mapping over contexts does not change their difference -/
+@[coe]
+def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
+  ⟨d.val, by
+    rcases d with ⟨d, h_get_d⟩
+    simp only [Valid, get?, map, List.get?_map, Option.map_eq_some', forall_exists_index, and_imp,
+      forall_apply_eq_imp_iff₂] at h_get_d ⊢
+    exact fun t h => ⟨t, h_get_d h, rfl⟩
   ⟩
 
 theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :

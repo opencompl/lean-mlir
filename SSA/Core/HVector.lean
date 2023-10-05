@@ -26,6 +26,12 @@ def map (f : ∀ (a : α), A a → B a) :
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map f as)
 
+/-- An alternative to `map` which also maps a function over the index list -/
+def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α), A a → B (f' a)) :
+    ∀ {l : List α}, HVector A l → HVector B (l.map f')
+  | [],   .nil        => .nil
+  | t::_, .cons a as  => .cons (f t a) (map' f' f as)
+
 def foldl {B : Type*} (f : ∀ (a : α), B → A a → B) :
     ∀ {l : List α}, B → HVector A l → B
   | [],   b, .nil       => b

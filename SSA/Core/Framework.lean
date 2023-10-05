@@ -15,10 +15,26 @@ open Goedel (toType)
   # Classes
 -/
 
+abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
+
+structure Signature (Ty : Type) where
+  sig     : List Ty
+  regSig  : RegionSignature Ty
+  outTy   : Ty
+
 class OpSignature (Op : Type) (Ty : outParam (Type)) where
-  sig : Op → List Ty
-  regSig : Op → List (Ctxt Ty × Ty)
-  outTy : Op → Ty
+  signature : Op → Signature Ty
+export OpSignature (signature)
+
+section
+variable {Op Ty} [s : OpSignature Op Ty]
+
+def OpSignature.sig     := Signature.sig ∘ s.signature
+def OpSignature.regSig  := Signature.regSig ∘ s.signature
+def OpSignature.outTy   := Signature.outTy ∘ s.signature
+
+end
+
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
@@ -437,6 +453,72 @@ theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ Γ�
   . rw[←Option.some_inj.mp he, denote_getIExprAux]
 
 
+/-
+  ## Mapping
+  We can map between different dialects
+-/
+
+section Map
+
+instance : Functor RegionSignature where
+  map f := List.map fun (tys, ty) => (f <$> tys, f ty)
+
+instance : Functor Signature where
+  map := fun f ⟨sig, regSig, outTy⟩ => 
+    ⟨f <$> sig, f <$> regSig, f outTy⟩
+
+/-- A dialect morphism consists of a map between operations and a map between types, 
+  such that the signature of operations is respected
+-/
+structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
+  mapOp : Op → Op'
+  mapTy : Ty → Ty'
+  preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
+
+variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] 
+  (f : DialectMorphism Op Op')
+
+def DialectMorphism.preserves_sig (op : Op) : 
+    OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
+  simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+
+def DialectMorphism.preserves_regSig (op : Op) : 
+    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
+      fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
+    ) := by
+  simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+
+def DialectMorphism.preserves_outTy (op : Op) : 
+    OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
+  simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
+
+mutual
+  def ICom.map : ICom Op Γ ty → ICom Op' (f.mapTy <$> Γ) (f.mapTy ty)
+    | .ret v          => .ret v.toMap
+    | .lete body rest => .lete body.map rest.map
+
+  def IExpr.map : IExpr Op (Ty:=Ty) Γ ty → IExpr Op' (Ty:=Ty') (Γ.map f.mapTy) (f.mapTy ty)
+    | ⟨op, Eq.refl _, args, regs⟩ => ⟨
+        f.mapOp op,
+        (f.preserves_outTy _).symm,
+        f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
+        f.preserves_regSig _ ▸ 
+          HVector.mapDialectMorphism regs
+      ⟩
+
+  /-- Inline of `HVector.map'` for the termination checker -/
+  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty}, 
+      HVector (fun t => ICom Op t.fst t.snd) regSig
+      → HVector (fun t => ICom Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
+    | _, .nil        => .nil
+    | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
+end
+termination_by
+  IExpr.map e => sizeOf e
+  ICom.map e => sizeOf e
+  HVector.mapDialectMorphism e => sizeOf e
+
+end Map
 
 /-
   ## Matching
@@ -1138,15 +1220,10 @@ inductive ExOp :  Type
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
-  outTy
-    | .add => .nat
-    | .beq => .bool
-    | .cst _ => .nat
-  sig
-    | .add => [.nat, .nat]
-    | .beq => [.nat, .nat]
-    | .cst _ => []
-  regSig := fun _ => []
+  signature
+    | .add    => ⟨[.nat, .nat], [], .nat⟩
+    | .beq    => ⟨[.nat, .nat], [], .bool⟩
+    | .cst _  => ⟨[], [], .nat⟩
 
 @[reducible]
 instance : OpDenote ExOp ExTy where
@@ -1423,15 +1500,9 @@ inductive ExOp :  Type
   deriving DecidableEq
 
 instance : OpSignature ExOp ExTy where
-  outTy
-    | .add => .nat
-    | .runK _ => .nat
-  sig
-    | .add => [.nat, .nat]
-    | .runK _ => [.nat]
-  regSig
-    | .runK _ => [([.nat], .nat)]
-    | _ => []
+  signature
+  | .add    => ⟨[.nat, .nat], [], .nat⟩
+  | .runK _ => ⟨[.nat], [([.nat], .nat)], .nat⟩
 
 
 @[reducible]
