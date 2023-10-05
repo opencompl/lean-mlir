@@ -102,9 +102,8 @@ def Ty.toType : Ty → Type
 
 instance : Goedel Ty where toType := Ty.toType
 
-@[reducible]
-instance : OpSignature Op Ty where
-  outTy : Op → Ty
+@[reducible, simp]
+def Op.outTy : Op → Ty
   | .add => .int
   | .sub => .int
   | .constIx _ => .ix 
@@ -113,7 +112,8 @@ instance : OpSignature Op Ty where
   | .map2d | .fill2d => .tensor2d
   | .extract2d => .tensor2d
 
-  sig  : Op → List Ty
+@[reducible, simp]
+def Op.sig : Op → List Ty
   | .add => [.int, .int]
   | .sub => [.int, .int]
   | .constIx _  => []
@@ -122,10 +122,16 @@ instance : OpSignature Op Ty where
   | .map2d => [.tensor2d]
   | .fill2d => [.int, .tensor2d]
   | .extract2d => [.ix, .ix, .ix, .ix, .tensor2d]
-  
-  regSig
+
+@[reducible, simp]
+def Op.regSig : Op → RegionSignature Ty
   | .map2d => [([.int], .int)]
   | _ => []
+
+@[reducible]
+instance : OpSignature Op Ty where
+  signature op := ⟨op.sig, op.regSig, op.outTy⟩ 
+  
 
 /-
 -- error: unknown free variable: _kernel_fresh.97

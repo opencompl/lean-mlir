@@ -330,23 +330,30 @@ instance : Goedel Ty where
   | .ix => Index
   | .tensor1d => Tensor1d Int
 
-instance : OpSignature Op Ty where
-  outTy : Op → Ty
+@[reducible, simp]
+def Op.outTy : Op → Ty
   | .add_int => .int
   | .sub_int => .int
   | .const_ix _ => .ix
   | .map1d =>  .tensor1d
   | .extract1d =>  .tensor1d
-  sig  : Op → List Ty
+
+@[reducible, simp]
+def Op.sig : Op → List Ty
   | .add_int => [.int, .int]
   | .sub_int => [.int, .int]
   | .map1d => [.tensor1d]
   | .extract1d => [.tensor1d, .ix, .ix]
   | .const_ix _ => []
 
-  regSig
+@[reducible, simp]
+def Op.regSig : Op → RegionSignature Ty
   | .map1d => [([.int], .int)]
   | _ => []
+
+
+instance : OpSignature Op Ty where
+  signature op := ⟨op.sig, op.regSig, op.outTy⟩
 
 /-
 -- Error: unknown free variable: _kernel_fresh.459
