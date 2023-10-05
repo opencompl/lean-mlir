@@ -1,5 +1,6 @@
 import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
+import SSA.Core.HVector
 
 /-- 
   Typeclass for a `baseType` which is a Gödel code of Lean types.
@@ -197,6 +198,11 @@ theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toTy
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
+
+/-- Build valuation from a vector of values of types `types`. -/
+def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
+  | .nil => (default : Ctxt.Valuation (∅ : Ctxt Ty))
+  | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 end Valuation
 
