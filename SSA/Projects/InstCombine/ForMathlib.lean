@@ -500,7 +500,7 @@ instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
 
 end Refinement
 
-infix:50 " ⊑ " => Refinement
+infix:50 (priority:=low) " ⊑ " => Refinement
 
 instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
 
