@@ -13,8 +13,8 @@ https://eprint.iacr.org/2012/144
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
 import Mathlib.RingTheory.Ideal.QuotientOperations
-import Mathlib.Data.Zmod.Basic
-import SSA.Experimental.IntrinsicAsymptotics
+import Mathlib.Data.ZMod.Defs
+import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
 
@@ -22,7 +22,7 @@ open Polynomial -- for R[X] notation
 We assume tat `q > 1` is a natural number (not necessarily a prime) and `n` is a natural number.
 We will use these to build `ℤ/qℤ[X]/(X^(2^n) + 1)`
 -/
-variable (q t : Nat) [Fact (q > 1)] (n : Nat)
+variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 
 -- Can we make this computable?
 -- see: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Way.20to.20recover.20computability.3F/near/322382109
@@ -34,7 +34,7 @@ theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot
   induction n with
     | zero => simp
     | succ n ih =>  
-        rw [pow_succ'', ih, ← WithBot.coe_mul]
+        rw [pow_succ, ih, ← WithBot.coe_mul]
         rw [← WithBot.some_eq_coe, WithBot.some]
         apply Option.some_inj.2
         rw [Nat.pow_succ]
@@ -42,6 +42,26 @@ theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot
   done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
+
+theorem zmodq_eq_finq : ZMod q = Fin q := by
+  have h : q > 1 := hqgt1.elim 
+  unfold ZMod
+  cases q
+  · exfalso
+    apply Nat.not_lt_zero 1
+    exact h 
+  · simp [Fin]
+  done 
+
+theorem nontrivial_finq : ∃ (x y : Fin q), x ≠ y  := by
+  have h : q > 1 := hqgt1.elim 
+  exists ⟨0, Nat.lt_of_succ_lt h⟩, ⟨1, h⟩
+  intro contra
+  exact Nat.noConfusion (Fin.veq_of_eq contra)
+  done
+  
+instance : Nontrivial (ZMod q) where
+  exists_pair_ne := zmodq_eq_finq q ▸ nontrivial_finq q
 
 /-- Charaterizing `f`: `f` has degree `2^n` -/
 theorem f_deg_eq : (f q n).degree = 2^n := by
@@ -210,7 +230,7 @@ inductive Op
 | sub (q : Nat) (n : Nat) : Op
 | mul (q : Nat) (n : Nat) : Op
 | mul_constant (q : Nat) (n : Nat) (c : R q n) : Op
-| get_coeff (q : Nat) (n : Nat) : Op
+| get_coeff (q : Nat) (n : Nat) [Fact (q > 1)]: Op
 | extract_slice (q : Nat) (n : Nat) : Op
 --deriving DecidableEq --, Repr
 
@@ -235,9 +255,12 @@ def Op.outTy : Op → Ty
 | Op.get_coeff _ _ => Ty.nat
 | Op.extract_slice q n => Ty.poly q n
 
-instance : OpSignature Op Ty := ⟨Op.sig, Op.outTy⟩
+@[simp, reducible]
+def Op.signature : Op → Signature Ty :=
+  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
-variable (a b : R q n)
+instance : OpSignature Op Ty := ⟨Op.signature⟩
+
 @[simp]
 noncomputable def Op.denote (o : Op)
    (arg : HVector toType (OpSignature.sig o))
@@ -247,5 +270,5 @@ noncomputable def Op.denote (o : Op)
     | Op.sub q n => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
     | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
     | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg.toSingle
-    | Op.get_coeff q n => (fun args : R q n × Nat => args.1.coeff args.2 |>.val) arg.toPair
+    | Op.get_coeff q n => (fun args : R q n × Nat => zmodq_eq_finq q ▸ args.1.coeff args.2 |>.val) arg.toPair
     | Op.extract_slice _ _ => (fun (a,i,c) => R.slice a i c) arg.toTriple
