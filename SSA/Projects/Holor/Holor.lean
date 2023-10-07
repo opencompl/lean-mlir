@@ -1,4 +1,4 @@
-import SSA.Core.WellTypedFramework
+import SSA.Core.Framework
 import SSA.Core.Util
 import Mathlib.Data.Holor
 import Mathlib.Algebra.Algebra.Basic
