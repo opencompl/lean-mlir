@@ -182,13 +182,13 @@ This function gets the `i`th coefficient of the polynomial representative
 (with degree `< 2^n`) of an element `a : R q n`. Note that this is not 
 invariant under the choice of representative.
 -/
-noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q := 
+noncomputable def R.coeff {q n} (a : R q n) (i : Nat) : ZMod q := 
   Polynomial.coeff a.representative i 
 
 /--
 `R.monomial i c` is the equivalence class of the monomial `c * X^i` in `R q n`.
 -/
-noncomputable def R.monomial {q n : Nat} (i : Nat) (c : ZMod q) : R q n :=
+noncomputable def R.monomial {q n : Nat}  (c : ZMod q) (i : Nat): R q n :=
   R.fromPoly (Polynomial.monomial i c)
 
 /--
@@ -202,73 +202,109 @@ noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q 
   let coeffIdxs := List.range (endIdx - startIdx)
   let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
   let accum : R q n → (ZMod q × Nat) → R q n :=
-    fun poly (c,i) => poly + R.monomial (n:=n) i c
+    fun poly (c,i) => poly + R.monomial (n:=n) c i
   coeffs.zip coeffIdxs |>.foldl accum R.zero
+
+noncomputable def R.leadingTerm {q n} (a : R q n) : R q n :=
+  let deg? := Polynomial.degree a.representative
+  match deg? with
+    | .none => 0 
+    | .some deg =>  R.monomial (a.coeff deg) deg
+
+noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n := Id.run do
+  let mut res : R q n := 0
+  for (i,c) in coeffs.enum do
+    res := res + R.monomial ↑c i
+  res
+    
+noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int := 
+  let deg? := Polynomial.degree a.representative
+  match deg? with
+    | .none => []
+    | .some deg => List.range deg |>.map fun i => 
+        let fin : Fin q := zmodq_eq_finq q ▸ a.coeff i
+        fin.val
 
 /--
 We define the base type of the representation, which encodes both natural numbers 
 and elements in the ring `R q n` (which in FHE are sometimes called 'polynomials'
  in allusion to `R.representative`).
+
+ In this context, `Tensor is a 1-D tensor, which we model here as a list of integers.
 -/
-inductive Ty
-  | nat : Ty
-  | poly (q : Nat) (n : Nat) : Ty
+inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
+  | index : Ty q n
+  | integer : Ty q n
+  | tensor : Ty q n
+  | polynomialLike : Ty q n
   deriving DecidableEq
 
-instance : Inhabited Ty := ⟨Ty.nat⟩
-instance : Goedel Ty where
+instance: Inhabited (Ty q n) := ⟨Ty.index⟩
+instance : Goedel (Ty q n) where
 toType := fun
-  | .nat => Nat
-  | .poly q n => (R q n)
+  | .index => Nat
+  | .integer => Int
+  | .tensor => List Int
+  | .polynomialLike => (R q n)
+
 
 /--
 The operation type of the `Poly` dialect. Operations are parametrized by the 
 two parameters `p` and `n` that characterize the ring `R q n`.
+We parametrize the entire type by these since it makes no sense to mix operations in different rings.
 -/
-inductive Op
-| add (q : Nat) (n : Nat) : Op
-| sub (q : Nat) (n : Nat) : Op
-| mul (q : Nat) (n : Nat) : Op
-| mul_constant (q : Nat) (n : Nat) (c : R q n) : Op
-| get_coeff (q : Nat) (n : Nat) [Fact (q > 1)]: Op
-| extract_slice (q : Nat) (n : Nat) : Op
---deriving DecidableEq --, Repr
+inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
+  | add : Op q n-- Addition in `R q n`
+  | sub : Op q n-- Substraction in `R q n`
+  | mul : Op q n-- Multiplication in `R q n`
+  | mul_constant : Op q n-- Multiplication by a constant of the base ring (we assume this to be a `.integer` and take its representative)
+  | leading_term : Op q n-- Leading term of representative 
+  | monomial : Op q n-- create a monomial
+  | monomial_mul : Op q n-- multiply by(monic) monomial
+  | from_tensor : Op q n-- interpret values as coefficients of a representative
+  | to_tensor : Op q n-- give back coefficients from `R.representative`
+  | const (c : R q n) : Op q n
 
 open Goedel (toType)
 
 
 @[simp, reducible]
-def Op.sig : Op  → List Ty
-| Op.add q n => [Ty.poly q n, Ty.poly q n]
-| Op.sub q n => [Ty.poly q n, Ty.poly q n]
-| Op.mul q n => [Ty.poly q n, Ty.poly q n]
-| Op.mul_constant q n _ => [Ty.poly q n]
-| Op.get_coeff q n => [Ty.poly q n, Ty.nat]
-| Op.extract_slice q n => [Ty.poly q n, Ty.nat, Ty.nat]
+def Op.sig : Op  q n → List (Ty q n)
+| Op.add => [Ty.polynomialLike, Ty.polynomialLike]
+| Op.sub => [Ty.polynomialLike, Ty.polynomialLike]
+| Op.mul => [Ty.polynomialLike, Ty.polynomialLike]
+| Op.mul_constant => [Ty.polynomialLike, Ty.integer]
+| Op.leading_term => [Ty.polynomialLike]
+| Op.monomial => [Ty.integer, Ty.index]
+| Op.monomial_mul => [Ty.polynomialLike, Ty.index]
+| Op.from_tensor => [Ty.tensor]
+| Op.to_tensor => [Ty.polynomialLike]
+| Op.const _ => []
 
 @[simp, reducible]
-def Op.outTy : Op → Ty
-| Op.add q n => Ty.poly q n
-| Op.sub q n => Ty.poly q n
-| Op.mul q n => Ty.poly q n
-| Op.mul_constant q n _ => Ty.poly q n
-| Op.get_coeff _ _ => Ty.nat
-| Op.extract_slice q n => Ty.poly q n
+def Op.outTy : Op q n → Ty q n
+| Op.add | Op.sub | Op.mul | Op.mul_constant | Op.leading_term | Op.monomial 
+| Op.monomial_mul | Op.from_tensor | Op.const _  => Ty.polynomialLike
+| Op.to_tensor => Ty.tensor
 
 @[simp, reducible]
-def Op.signature : Op → Signature Ty :=
-  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
+def Op.signature : Op q n → Signature (Ty q n) :=
+  fun o => {sig := Op.sig q n o, outTy := Op.outTy q n o, regSig := []}
 
-instance : OpSignature Op Ty := ⟨Op.signature⟩
+instance : OpSignature (Op q n) (Ty q n) := ⟨Op.signature q n⟩
 
 @[simp]
-noncomputable def Op.denote (o : Op)
+noncomputable def Op.denote (o : Op q n)
    (arg : HVector toType (OpSignature.sig o))
    : (toType <| OpSignature.outTy o) :=
     match o with
-    | Op.add q n => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
-    | Op.sub q n => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
-    | Op.mul q n => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
-    | Op.mul_constant q n c => (fun arg : R q n => arg * c) arg.toSingle
-    | Op.get_coeff q n => (fun args : R q n × Nat => zmodq_eq_finq q ▸ args.1.coeff args.2 |>.val) arg.toPair
-    | Op.extract_slice _ _ => (fun (a,i,c) => R.slice a i c) arg.toTriple
+    | Op.add => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
+    | Op.sub => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
+    | Op.mul => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
+    | Op.mul_constant => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
+    | Op.leading_term => R.leadingTerm arg.toSingle
+    | Op.monomial => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
+    | Op.monomial_mul => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
+    | Op.from_tensor => R.fromTensor arg.toSingle
+    | Op.to_tensor => R.toTensor arg.toSingle
+    | Op.const c => c
