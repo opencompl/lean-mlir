@@ -40,6 +40,13 @@ theorem from_poly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := 
 
 theorem rep_zero : R.representative q n 0 = 0 := by
   rw [← from_poly_zero, R.representative_fromPoly]; simp
+
+
+open Polynomial in
+theorem monomial_mul_mul (x y : Nat) : (R.monomial 1 y) * (R.monomial 1 x) = R.monomial 1 (x + y) (q := q) (n := n) := by
+  unfold R.monomial
+  rw [← map_mul, monomial_mul_monomial, Nat.add_comm]
+  simp
  
 theorem poly_fromTensortoTensor : R.fromTensor a.toTensor = a := by
   simp [R.fromTensor, R.toTensor, Id.run]
