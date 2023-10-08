@@ -53,6 +53,14 @@ theorem zmodq_eq_finq : ZMod q = Fin q := by
   · simp [Fin]
   done 
 
+def ZMod.toInt (x  : ZMod q) : Int :=
+  let ⟨val,_⟩ : Fin q := zmodq_eq_finq q ▸ x 
+  val
+
+def ZMod.toInt_zero : ↑(↑(zmodq_eq_finq q ▸ 0) : Fin q) = (0 : Int) := by 
+  simp [ZMod.toInt]
+  sorry
+
 theorem nontrivial_finq : ∃ (x y : Fin q), x ≠ y  := by
   have h : q > 1 := hqgt1.elim 
   exists ⟨0, Nat.lt_of_succ_lt h⟩, ⟨1, h⟩
@@ -103,12 +111,6 @@ abbrev R := (ZMod q)[X] ⧸ (Ideal.span {f q n})
 
 /-- Canonical epimorphism `ZMod q[X] ->*+ R q n` -/
 abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] →+* R q n := Ideal.Quotient.mk (Ideal.span {f q n})
-
-noncomputable abbrev R.zero {q n : Nat} : R q n := R.fromPoly 0
-noncomputable abbrev R.one {q n : Nat} : R q n := R.fromPoly 1
-
-noncomputable instance {q n : Nat} : Zero (R q n) := ⟨R.zero⟩
-noncomputable instance {q n : Nat} : One (R q n) := ⟨R.one⟩
 
 private noncomputable def R.representative' : R q n → (ZMod q)[X] := Function.surjInv Ideal.Quotient.mk_surjective
 /--
@@ -178,6 +180,11 @@ theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 
   apply Polynomial.degree_modByMonic_lt
   exact f_monic q n
 
+noncomputable def R.rep_length {q n} (a : R q n) : Nat := match
+  Polynomial.degree a.representative with
+    | none => 0
+    | some d => d + 1
+
 /--
 This function gets the `i`th coefficient of the polynomial representative 
 (with degree `< 2^n`) of an element `a : R q n`. Note that this is not 
@@ -204,7 +211,7 @@ noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q 
   let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
   let accum : R q n → (ZMod q × Nat) → R q n :=
     fun poly (c,i) => poly + R.monomial (n:=n) c i
-  coeffs.zip coeffIdxs |>.foldl accum R.zero
+  coeffs.zip coeffIdxs |>.foldl accum (0 : R q n)
 
 noncomputable def R.leadingTerm {q n} (a : R q n) : R q n :=
   let deg? := Polynomial.degree a.representative
@@ -212,19 +219,16 @@ noncomputable def R.leadingTerm {q n} (a : R q n) : R q n :=
     | .none => 0 
     | .some deg =>  R.monomial (a.coeff deg) deg
 
-noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n := Id.run do
-  let mut res : R q n := 0
-  for (i,c) in coeffs.enum do
-    res := res + R.monomial ↑c i
-  res
+noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n := 
+  coeffs.enum.foldl (init := 0) fun res (i,c) =>
+    res + R.monomial ↑c i
     
 noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int := 
-  let deg? := Polynomial.degree a.representative
-  match deg? with
-    | .none => []
-    | .some deg => List.range deg |>.map fun i => 
-        let fin : Fin q := zmodq_eq_finq q ▸ a.coeff i
-        fin.val
+  List.range a.rep_length |>.map fun i => 
+        a.coeff i |>.toInt
+
+def trimTensor (tensor : List Int) : List Int
+  := tensor.reverse.dropWhile (· = 0) |>.reverse 
 
 /--
 We define the base type of the representation, which encodes both natural numbers 
