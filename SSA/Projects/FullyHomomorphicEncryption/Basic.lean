@@ -117,6 +117,14 @@ The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of 
 -/
 noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.representative' q n x %ₘ (f q n)
 
+@[simp]
+theorem R.from_poly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n * x) = 0 := by
+   unfold fromPoly
+   apply Ideal.Quotient.eq_zero_iff_mem.2
+   rw [Ideal.mem_span_singleton]
+   simp [Dvd.dvd]
+   use x
+
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
@@ -126,14 +134,7 @@ theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.repr
  simp [R.representative]
  rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
  rw [RingHom.map_sub (R.fromPoly (q := q) (n:=n)) _ _]
- have hker : forall x, fromPoly (f q n * x) = 0 := by
-   intro x
-   unfold fromPoly
-   apply Ideal.Quotient.eq_zero_iff_mem.2
-   rw [Ideal.mem_span_singleton]
-   simp [Dvd.dvd]
-   use x
- rw [hker _]
+ rw [R.from_poly_kernel_eq_zero]
  simp
  apply Function.surjInv_eq
 
