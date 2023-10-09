@@ -57,9 +57,19 @@ def ZMod.toInt (x  : ZMod q) : Int :=
   let ⟨val,_⟩ : Fin q := zmodq_eq_finq q ▸ x 
   val
 
-def ZMod.toInt_zero : ↑(↑(zmodq_eq_finq q ▸ 0) : Fin q) = (0 : Int) := by 
-  simp [ZMod.toInt]
+theorem ZMod.toInt_coe_eq (x : ZMod q) : ↑(x.toInt) = x := by
+  unfold toInt
+  simp
   sorry
+
+theorem ZMod.eq_from_toInt_eq (x y : ZMod q) : x.toInt = y.toInt → x = y := by
+  intro h
+  simp [toInt] at h
+  sorry
+
+def ZMod.toInt_zero : ↑(↑(zmodq_eq_finq q ▸ 0) : Fin q) = (0 : Int) := by 
+  sorry
+
 
 theorem nontrivial_finq : ∃ (x y : Fin q), x ≠ y  := by
   have h : q > 1 := hqgt1.elim 
