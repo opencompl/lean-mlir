@@ -116,6 +116,11 @@ theorem R.trimTensor_append_zeroes_eq (tensor : List Int) (n : Nat) :  trimTenso
   | succ n ih =>
      rw [List.replicate_succ', ← List.append_assoc, R.trimTensor_append_zero_eq,ih]
 
+theorem R.trimTensor_append_not_zero (tensor : List Int) (x : Int) (hX : x ≠ 0) :
+  trimTensor (tensor ++ [x]) = tensor ++ [x] := by
+  simp [trimTensor]; rw [List.dropWhile]
+  simp [hX]
+
 theorem R.trimTensor_eq_append_zeros (tensor : List Int) : ∃ (n : Nat), 
 tensor = trimTensor tensor ++ List.replicate n 0 := by
 induction tensor using List.reverseRecOn with
@@ -128,20 +133,17 @@ induction tensor using List.reverseRecOn with
        simp
        rw [← List.replicate_succ, List.replicate_succ', ← List.append_assoc, ← hxs]
      · exists 0
-       simp [trimTensor]
-       rw [List.dropWhile]
-       simp [h]
+       rw [R.trimTensor_append_not_zero _ _ h] ; simp
 
 theorem R.trimTensor_trimTensor (tensor : List Int) : 
   trimTensor (trimTensor tensor) = trimTensor tensor := by
-  have ⟨n,hTrim⟩ := trimTensor_eq_append_zeros tensor
-  rw [hTrim]
-  sorry
+  induction tensor using List.reverseRecOn with
+    | H0 => simp
+    | H1 xs x ih => 
+       by_cases (x = 0)
+       · rw [h, R.trimTensor_append_zero_eq,ih]
+       · rw [trimTensor_append_not_zero _ _ h, trimTensor_append_not_zero _ _ h]
   
-theorem R.fromTensor_eq_fromTensor_trimTensor (tensor : List Int) :
-   R.fromTensor (q := q) (n := n) (trimTensor tensor) = R.fromTensor (q := q) (n := n) tensor := by
-  sorry
-
 theorem List.getD_eq_concat (t₁ t₂ : List Int) : (∀ i, t₁.getD i 0 = t₂.getD i 0) → 
   ∃ (n m : Nat), t₁ ++ List.replicate n 0 = t₂ ++ List.replicate m 0 := by
   -- TODO: this would be a nice exercise in WLOG
@@ -151,6 +153,16 @@ theorem R.fromTensor_getD_eq (t₁ t₂ : List Int) : (∀ i, t₁.getD i 0 = t�
   R.fromTensor (q := q) (n := n) t₁ = R.fromTensor (q := q) (n := n) t₂ := by
   intro hi
   have hConcat := List.getD_eq_concat _ _ hi
+  sorry
+
+theorem R.fromTensor_eq_fromTensor_trimTensor (tensor : List Int) :
+   R.fromTensor (q := q) (n := n) (trimTensor tensor) = R.fromTensor (q := q) (n := n) tensor := by
+  apply R.fromTensor_getD_eq _ _ 
+  intro i
+  have ⟨n,hn⟩ := R.trimTensor_eq_append_zeros tensor
+  rw [hn] 
+  -- cases wether i < length
+  sorry
 
 theorem poly_eq_iff_coeff_eq : a = b ↔ Polynomial.coeff a.representative = Polynomial.coeff b.representative := by
   constructor
@@ -160,10 +172,32 @@ theorem poly_eq_iff_coeff_eq : a = b ↔ Polynomial.coeff a.representative = Pol
      apply Polynomial.coeff_inj.1
      exact h
 
+theorem toTensor_length_eq_rep_length : 
+  a.toTensor.length = a.rep_length := by
+  simp [R.rep_length, R.toTensor]
+    
+theorem toTensor_trimTensor_eq_toTensor : 
+  trimTensor a.toTensor = a.toTensor := by
+  unfold R.toTensor
+  cases h : Polynomial.degree a.representative with
+  | none => simp [h, R.rep_length]
+  | some n  => 
+    simp [R.rep_length, h]
+    rw [List.range_succ, List.map_append]
+    simp
+    have hNe := Polynomial.coeff_ne_zero_of_eq_degree h
+    simp [R.coeff, hNe]
+    have hNe': ZMod.toInt q (Polynomial.coeff (a.representative) n) ≠ 0 := by
+      intro contra
+      have contra' := (ZMod.toInt_zero_iff_zero _ _).2 contra
+      contradiction
+    apply R.trimTensor_append_not_zero  _ _ hNe' 
+
 theorem poly_toTensor_fromTensor (tensor : List Int) (i : Nat): 
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = tensor.getD i 0 := by
-  simp [R.fromTensor, R.toTensor]
-  sorry
+  by_cases (i < (trimTensor tensor).length)
+  · sorry
+  · sorry
 
 theorem poly_toTensor_fromTensor_trimmTensor (tensor : List Int) {l : Nat}: 
   Polynomial.degree a.representative = .some l → tensor.length < l → 

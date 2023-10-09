@@ -70,6 +70,15 @@ theorem ZMod.eq_from_toInt_eq (x y : ZMod q) : x.toInt = y.toInt → x = y := by
 def ZMod.toInt_zero : ↑(↑(zmodq_eq_finq q ▸ 0) : Fin q) = (0 : Int) := by 
   sorry
 
+def ZMod.toInt_zero_iff_zero (x : ZMod q) : x = 0 ↔ x.toInt = 0 := by 
+  constructor
+  · intro h
+    rw [h]
+    simp [toInt]
+    sorry
+  · intro h
+    simp [toInt] at h
+    sorry
 
 theorem nontrivial_finq : ∃ (x y : Fin q), x ≠ y  := by
   have h : q > 1 := hqgt1.elim 
