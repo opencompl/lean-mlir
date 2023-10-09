@@ -475,16 +475,16 @@ theorem Refinement.some_some {α : Type u} {x y : α} :
 
 namespace Refinement
 
-theorem Refinement.refl {α: Type u} : ∀ x : Option α, Refinement x x := by 
+theorem refl {α: Type u} : ∀ x : Option α, Refinement x x := by
   intro x ; cases x
   apply Refinement.noneAny
   apply Refinement.bothSome; rfl
 
-theorem Refinement.trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
+theorem trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
   intro x y z h₁ h₂
   cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
   rename_i x y hxy y h 
-  rw [hxy, h]; apply Refinement.refl
+  rw [hxy, h]; apply refl
 
 instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
   intro x y

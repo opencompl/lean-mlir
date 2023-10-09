@@ -7,6 +7,61 @@ abbrev ICom.Refinement (src tgt : Com (φ:=0) Γ t) (h : Goedel.toType t = Optio
 
 infixr:90 " ⊑ "  => ICom.Refinement
 
+namespace OnlyReturn
+def lhs (w : Nat) :=
+[mlir_icom (w)| {
+^bb0(%C1 : _):
+  "llvm.return" (%C1) : (_) -> ()
+}]
+
+def rhs (w : Nat):=
+[mlir_icom (w)| {
+^bb0(%C1 : _):
+  "llvm.return" (%C1) : (_) -> ()
+}]
+
+open Ctxt (Var) in
+theorem refinement (w : Nat) : lhs w ⊑ rhs w := by
+  unfold lhs rhs
+  intro (Γv : ([.bitvec w] : List InstCombine.Ty) |> Ctxt.Valuation)
+  simp [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, ICom.Refinement,
+        Bind.bind, DialectMorphism.mapTy, MOp.instantiateCom,
+        InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate, Vector.get, List.get]
+  generalize Γv (Var.last [] (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w))) = x
+  -- simp_alive
+  apply Bitvec.Refinement.refl
+end OnlyReturn
+
+
+namespace AddCommutative
+def lhs (w : Nat) :=
+[mlir_icom (w)| {
+^bb0(%X : _, %Y: _):
+  %Z = "llvm.add" (%X, %Y) : (_, _) -> (_)
+  "llvm.return" (%Z) : (_) -> ()
+}]
+
+def rhs (w : Nat):=
+[mlir_icom (w)| {
+^bb0(%X : _, %Y: _):
+  %Z = "llvm.add" (%Y, %X) : (_, _) -> (_)
+  "llvm.return" (%Z) : (_) -> ()
+}]
+
+open Ctxt (Var) in
+theorem refinement (w : Nat) : lhs w ⊑ rhs w := by
+  unfold lhs rhs
+  intro (Γv : ([.bitvec w, .bitvec w] : List InstCombine.Ty) |> Ctxt.Valuation)
+  simp [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, ICom.Refinement,
+        Bind.bind, DialectMorphism.mapTy, MOp.instantiateCom,
+        InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate, Vector.get, List.get]
+  sorry
+end AddCommutative
+
 
 -- Name:AddSub:1043
 -- precondition: true
