@@ -37,7 +37,7 @@ theorem eq_iff_rep_eq :a.representative = b.representative ↔ a = b := by
   · intro h; rw [h]
 
 open Polynomial in
-theorem from_poly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := by
+theorem fromPoly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := by
   have hzero : f q n * 0 = 0 := by simp
   rw [← hzero]
   apply R.from_poly_kernel_eq_zero
@@ -199,7 +199,7 @@ theorem poly_toTensor_fromTensor (tensor : List Int) (i : Nat):
   · sorry
   · sorry
 
-theorem poly_toTensor_fromTensor_trimmTensor (tensor : List Int) {l : Nat}: 
+theorem poly_toTensor_fromTensor_trimTensor (tensor : List Int) {l : Nat}: 
   Polynomial.degree a.representative = .some l → tensor.length < l → 
   (R.fromTensor (trimTensor tensor) (q:=q) (n :=n)).toTensor = trimTensor tensor := by
   intros hDeg hLen

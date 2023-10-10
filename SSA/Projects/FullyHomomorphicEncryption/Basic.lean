@@ -139,7 +139,7 @@ The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of 
 noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.representative' q n x %ₘ (f q n)
 
 @[simp]
-theorem R.from_poly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n * x) = 0 := by
+theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n * x) = 0 := by
    unfold fromPoly
    apply Ideal.Quotient.eq_zero_iff_mem.2
    rw [Ideal.mem_span_singleton]
@@ -215,7 +215,7 @@ noncomputable def R.coeff {q n} (a : R q n) (i : Nat) : ZMod q :=
 /--
 `R.monomial i c` is the equivalence class of the monomial `c * X^i` in `R q n`.
 -/
-noncomputable def R.monomial {q n : Nat}  (c : ZMod q) (i : Nat): R q n :=
+noncomputable def R.monomial {q n : Nat} (c : ZMod q) (i : Nat): R q n :=
   R.fromPoly (Polynomial.monomial i c)
 
 /--
@@ -263,7 +263,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   | polynomialLike : Ty q n
   deriving DecidableEq
 
-instance: Inhabited (Ty q n) := ⟨Ty.index⟩
+instance : Inhabited (Ty q n) := ⟨Ty.index⟩
 instance : Goedel (Ty q n) where
 toType := fun
   | .index => Nat
