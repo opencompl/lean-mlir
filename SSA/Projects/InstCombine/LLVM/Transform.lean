@@ -193,6 +193,8 @@ private def mkComHelper (Γ : Context Ty) :
       return ⟨ty₂, Com.lete expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
+variable (Op)
+
 def mkCom (reg : Region φ) : ExceptM Op (Σ (Γ : Context Ty) (ty : Ty), Com Op Γ ty) := 
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
@@ -201,53 +203,6 @@ def mkCom (reg : Region φ) : ExceptM Op (Σ (Γ : Context Ty) (ty : Ty), Com Op
     let icom ← mkComHelper Γ coms
     return ⟨Γ, icom⟩
 
-/-!
-  ## Instantiation
-  Finally, we show how to instantiate a family of programs to a concrete program
--/
 
--- def _root_.InstCombine.MTy.instantiate (vals : Vector Nat φ) : Ty → InstCombine.Ty
---   | .bitvec w => .bitvec <| .concrete <| w.instantiate vals
-
--- def _root_.InstCombine.MOp.instantiate (vals : Vector Nat φ) : MOp φ → InstCombine.Op
---   | .and w => .and (w.instantiate vals)
---   | .or w => .or (w.instantiate vals)
---   | .not w => .not (w.instantiate vals)
---   | .xor w => .xor (w.instantiate vals)
---   | .shl w => .shl (w.instantiate vals)
---   | .lshr w => .lshr (w.instantiate vals)
---   | .ashr w => .ashr (w.instantiate vals)
---   | .urem w => .urem (w.instantiate vals)
---   | .srem w => .srem (w.instantiate vals)
---   | .select w => .select (w.instantiate vals)
---   | .add w => .add (w.instantiate vals)
---   | .mul w => .mul (w.instantiate vals)
---   | .sub w => .sub (w.instantiate vals)
---   | .neg w => .neg (w.instantiate vals)
---   | .copy w => .copy (w.instantiate vals)
---   | .sdiv w => .sdiv (w.instantiate vals)
---   | .udiv w => .udiv (w.instantiate vals)
---   | .icmp c w => .icmp c (w.instantiate vals)
---   | .const w val => .const (w.instantiate vals) val
-
--- def Context.instantiate (vals : Vector Nat φ) (Γ : Context Ty) : Ctxt InstCombine.Ty :=
---   Γ.map (MTy.instantiate vals)
-
--- def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCombine.Op) where
---   mapOp := MOp.instantiate vals
---   mapTy := MTy.instantiate vals
---   preserves_signature op := by
---     simp only [MTy.instantiate, MOp.instantiate, ConcreteOrMVar.instantiate, (· <$> ·), signature, 
---       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq, 
---       true_and]
---     cases op <;> simp only [List.map, and_self, List.cons.injEq]
-    
-
--- open InstCombine (Op Ty) in
--- def mkComInstantiate (reg : Region φ) : 
---     ExceptM (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
---   let ⟨Γ, ty, icom⟩ ← mkCom reg
---   return fun vals =>
---     ⟨Γ.instantiate vals, ty.instantiate vals, icom.map (MOp.instantiateCom vals)⟩
 
 end MLIR.AST

@@ -2,6 +2,8 @@ import Qq
 import SSA.Projects.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.LLVM.Transform
 
+import SSA.Projects.InstCombine.LLVM.Transform.Dialects.InstCombine
+
 open Qq Lean Meta Elab.Term
 
 open MLIR.AST InstCombine in
