@@ -1,4 +1,5 @@
 import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Projects.InstCombine.LLVM.Transform.Instantiate
 
 namespace InstCombine
 
@@ -275,9 +276,48 @@ def mkReturn (Γ : Context φ) (opStx : AST.Op φ) (args : List (Σ (ty : MTy φ
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {args.length})" 
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
+/-! ## Instantiation -/
 
+
+def MTy.instantiate (vals : Vector Nat φ) : (MTy φ) → Ty
+  | .bitvec w => .bitvec <| .concrete <| w.instantiate vals
+
+def MOp.instantiate (vals : Vector Nat φ) : MOp φ → Op
+  | .and w => .and (w.instantiate vals)
+  | .or w => .or (w.instantiate vals)
+  | .not w => .not (w.instantiate vals)
+  | .xor w => .xor (w.instantiate vals)
+  | .shl w => .shl (w.instantiate vals)
+  | .lshr w => .lshr (w.instantiate vals)
+  | .ashr w => .ashr (w.instantiate vals)
+  | .urem w => .urem (w.instantiate vals)
+  | .srem w => .srem (w.instantiate vals)
+  | .select w => .select (w.instantiate vals)
+  | .add w => .add (w.instantiate vals)
+  | .mul w => .mul (w.instantiate vals)
+  | .sub w => .sub (w.instantiate vals)
+  | .neg w => .neg (w.instantiate vals)
+  | .copy w => .copy (w.instantiate vals)
+  | .sdiv w => .sdiv (w.instantiate vals)
+  | .udiv w => .udiv (w.instantiate vals)
+  | .icmp c w => .icmp c (w.instantiate vals)
+  | .const w val => .const (w.instantiate vals) val
+
+/-! ## Instances -/
 
 instance : AST.TransformDialect (MOp φ) (MTy φ) φ where
   mkType    := mkType
   mkReturn  := mkReturn
   mkExpr    := mkExpr
+
+instance : TransformDialectInstantiate Op φ Ty (MOp φ) (MTy φ) where
+  morphism vals := {
+    mapOp := MOp.instantiate vals,
+    mapTy := MTy.instantiate vals,
+    preserves_signature := by
+      intro op
+      simp only [MTy.instantiate, MOp.instantiate, ConcreteOrMVar.instantiate, (· <$> ·), signature, 
+        InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq, 
+        true_and]
+      cases op <;> simp only [List.map, and_self, List.cons.injEq]
+  }
