@@ -295,4 +295,36 @@ theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
 end Diff
 
 
+section Append
+
+def append : Ctxt Ty → Ctxt Ty → Ctxt Ty :=
+  fun xs ys => List.append ys xs
+
+@[simp]
+theorem _root_.List.get?_append_add :
+    List.get? (xs ++ ys) (i + xs.length) = List.get? ys i := by
+  induction xs with
+  | nil => rfl
+  | cons _ _ ih =>
+    simp [List.get?_eq_get, Nat.add_succ, ih]
+
+def Var.inl {Γ Γ' : Ctxt Ty} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
+  | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
+
+def Var.inr {Γ Γ' : Ctxt Ty} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
+  | ⟨v, h⟩ => ⟨v, by
+      simp[append]
+      induction Γ' generalizing v
+      case nil =>
+        contradiction
+      case cons ih =>
+        cases v
+        case zero =>
+          rw[←h]; rfl
+        case succ v =>
+          apply ih v h
+    ⟩
+
+end Append
+
 end Ctxt
