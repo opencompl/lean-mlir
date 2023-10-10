@@ -17,14 +17,14 @@ set_option linter.unusedVariables false -- linter gives a false positive for `φ
 
 variable (Op) (φ) {Ty} {MOp MTy} [OpSignature Op Ty]
   [AST.TransformDialect MOp MTy φ]
-  [inst : TransformDialectInstantiate Op φ Ty MOp MTy] 
+  [instInst : TransformDialectInstantiate Op φ Ty MOp MTy] 
   [DecidableEq MTy]
 
 def AST.mkComInstantiate (reg : AST.Region φ) : 
     AST.ExceptM MOp (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom Op Γ ty) := do
   let ⟨Γ, ty, icom⟩ ← AST.mkCom MOp reg  
   return fun vals =>
-    let f := inst.morphism vals
+    let f := instInst.morphism vals
     ⟨Γ.map f.mapTy, f.mapTy ty, icom.map f⟩
 
 end MLIR
