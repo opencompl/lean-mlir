@@ -61,6 +61,8 @@ inductive ICom (rg : RegMVars Ty) : Ctxt Ty → Ty → Type where
 
 end
 
+instance ICom.decidableEq {rg Γ t} : DecidableEq (ICom Op rg Γ t) := sorry
+
 /-- `Lets Op rg Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
 inductive Lets (rg : RegMVars Ty) : Ctxt Ty → Ctxt Ty → Type where
@@ -548,6 +550,12 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op rg Γ_in Γ_out)
 def ICom.vars : ICom Op rg Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
+/-
+We need to generalize this. Sometimes we need to unify a region with
+
+-/
+
+
 /--
   Given two sequences of lets, `lets` and `matchLets`,
   and variables that indicate an expression, of the same type, in each sequence,
@@ -556,7 +564,8 @@ def ICom.vars : ICom Op rg Γ t → Γ.VarSet :=
   If this succeeds, return the mapping.
 -/
 
-def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
+def matchVar {rg : RegMVars Ty}
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (lets : Lets Op [] Γ_in Γ_out) (v : Γ_out.Var t) :
     (matchLets : Lets Op rg Δ_in Δ_out) →
     (w : Δ_out.Var t) →
@@ -586,9 +595,19 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
             (_Tᵣ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l),
             RegMapping Op rg → Mapping Δ_in Γ_out →
             Option (RegMapping Op rg × Mapping Δ_in Γ_out)
-          | _, .nil, .nil, rms, ma => some (rma, ma)
-          | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rms, ma => do
-
+          | _, .nil, .nil, rma, ma => some (rma, ma)
+          | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rma, ma => do
+            match rₗ, rᵣ with
+            | Reg.mvar i, Reg.icom comᵣ =>
+              match rma.lookup ⟨t, i⟩ with
+              | none => matchReg rsₗ rsᵣ (AList.insert ⟨_, i⟩ comᵣ rma) ma
+              | some comₗ =>
+                by exact if comₗ = comᵣ then some (rma, ma) else none
+            | Reg.icom comₗ, Reg.icom comᵣ => do
+              let ⟨letsₗ, vₗ⟩ := comₗ.toLets
+              let ⟨letsᵣ, vᵣ⟩ := comᵣ.toLets
+              let x ← matchVar letsᵣ vᵣ letsₗ vₗ rma ∅
+              return (x.1, ma)
         matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
