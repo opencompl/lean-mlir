@@ -549,21 +549,22 @@ def ICom.vars : ICom Op rg Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
 /--
-  Given two sequences of lets, `lets` and `matchExpr`,
+  Given two sequences of lets, `lets` and `matchLets`,
   and variables that indicate an expression, of the same type, in each sequence,
-  attempt to assign free variables in `matchExpr` to variables (free or bound) in `lets`, such that
+  attempt to assign free variables in `matchLets` to variables (free or bound) in `lets`, such that
   the original two variables are semantically equivalent.
   If this succeeds, return the mapping.
 -/
 
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
-    (lets : Lets Op rg Γ_in Γ_out) (v : Γ_out.Var t) :
+    (lets : Lets Op [] Γ_in Γ_out) (v : Γ_out.Var t) :
     (matchLets : Lets Op rg Δ_in Δ_out) →
     (w : Δ_out.Var t) →
     (rma : RegMapping Op rg) →
     (ma : Mapping Δ_in Γ_out := ∅) →
-    Option (Mapping Δ_in Γ_out)
+    Option (RegMapping Op rg × Mapping Δ_in Γ_out)
   | .lete matchLets _, ⟨w+1, h⟩, rma, ma => -- w† = Var.toSnoc w
+      -- Correct for Regions
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
       matchVar lets v matchLets w rma ma
   | @Lets.lete _ _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, rma, ma => do -- w† = Var.last
@@ -575,21 +576,30 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
             matchVar (t := t) lets vₗ matchLets vᵣ rma ma
         let rec matchArg : ∀ {l : List Ty}
             (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
-            Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
-          | _, .nil, .nil, ma => some ma
+            Mapping Δ_in Γ_out → Option (RegMapping Op rg × Mapping Δ_in Γ_out)
+          | _, .nil, .nil, ma => some (rma, ma)
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
               let ma ← matchVar' _ vₗ vᵣ rma ma
-              matchArg vsₗ vsᵣ ma
+              matchArg vsₗ vsᵣ ma.2
+        let rec matchReg : ∀ {l : List (Ctxt Ty × Ty)}
+            (_Tₗ : HVector (fun t : Ctxt Ty × Ty => Reg Op rg t.1 t.2) l)
+            (_Tᵣ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l),
+            RegMapping Op rg → Mapping Δ_in Γ_out →
+            Option (RegMapping Op rg × Mapping Δ_in Γ_out)
+          | _, .nil, .nil, rms, ma => some (rma, ma)
+          | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rms, ma => do
+
         matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
-  | .nil, w, _, ma => -- The match expression is just a free (meta) variable
+  | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
+      -- Correct for Regions
       match ma.lookup ⟨_, w⟩ with
       | some v₂ =>
         by
           exact if v = v₂
-            then some ma
+            then some (rma, ma)
             else none
-      | none => some (AList.insert ⟨_, w⟩ v ma)
+      | none => some (rma, AList.insert ⟨_, w⟩ v ma)
 
 open AList
 
