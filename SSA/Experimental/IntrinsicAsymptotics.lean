@@ -602,12 +602,14 @@ def matchVar {rg : RegMVars Ty}
               match rma.lookup ⟨t, i⟩ with
               | none => matchReg rsₗ rsᵣ (AList.insert ⟨_, i⟩ comᵣ rma) ma
               | some comₗ =>
-                by exact if comₗ = comᵣ then some (rma, ma) else none
+                by exact if comₗ = comᵣ
+                then matchReg rsₗ rsᵣ rma ma
+                else none
             | Reg.icom comₗ, Reg.icom comᵣ => do
               let ⟨letsₗ, vₗ⟩ := comₗ.toLets
               let ⟨letsᵣ, vᵣ⟩ := comᵣ.toLets
               let x ← matchVar letsᵣ vᵣ letsₗ vₗ rma ∅
-              return (x.1, ma)
+              matchReg rsₗ rsᵣ x.1 ma
         matchArg ie.args (hs.1 ▸ matchExpr.args) ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
