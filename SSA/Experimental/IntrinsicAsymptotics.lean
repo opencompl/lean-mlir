@@ -622,7 +622,7 @@ def matchVar {rg : RegMVars Ty}
             then some (rma, ma)
             else none
       | none => some (rma, AList.insert ⟨_, w⟩ v ma)
-  decreasing_by sorry
+  decreasing_by matchVar => sorry
 
 open AList
 
