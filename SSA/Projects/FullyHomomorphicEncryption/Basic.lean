@@ -160,9 +160,6 @@ theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.repr
  apply Function.surjInv_eq
 
 
-@[simp]
-theorem R.representative_fromPoly (x : (ZMod q)[X]) (DEGREE: x.degree < (f q n).degree) :
-   R.representative q n (R.fromPoly (n:=n) x) = x := sorry
 
 /--
 Characterization theorem for any potential representative.
@@ -192,6 +189,14 @@ theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a
   ring_nf
   apply Ideal.mem_span_singleton.1 hiI
   done
+
+/-- Another characterization of the representative: if the degree of x is less than that of (f q n),
+then we recover the same polynomial. -/
+@[simp]
+theorem R.representative_fromPoly_eq (x : (ZMod q)[X]) (DEGREE: x.degree < (f q n).degree) :
+   R.representative q n (R.fromPoly (n:=n) x) = x := by
+   simp[R.representative_fromPoly]
+   rw[modByMonic_eq_self_iff] <;> simp[DEGREE, f_monic]
 
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
