@@ -42,7 +42,7 @@ open Polynomial in
 theorem from_poly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := by
   have hzero : f q n * 0 = 0 := by simp
   rw [← hzero]
-  apply R.from_poly_kernel_eq_zero
+  apply R.fromPoly_kernel_eq_zero
 
 theorem rep_zero : R.representative q n 0 = 0 := by
   rw [← from_poly_zero, R.representative_fromPoly]; simp

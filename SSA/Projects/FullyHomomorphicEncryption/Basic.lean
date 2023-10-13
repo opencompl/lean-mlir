@@ -155,7 +155,7 @@ theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.repr
  simp [R.representative]
  rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
  rw [RingHom.map_sub (R.fromPoly (q := q) (n:=n)) _ _]
- rw [R.from_poly_kernel_eq_zero]
+ rw [R.fromPoly_kernel_eq_zero]
  simp
  apply Function.surjInv_eq
 
