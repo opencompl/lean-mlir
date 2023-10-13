@@ -96,16 +96,18 @@ theorem R.fromTensor_eq_concat_zero (tensor : List Int) :
   rw [List.enum_append, List.enumFrom_singleton, List.foldl_concat]
   simp [R.monomial_zero_c_eq_zero]
 
+
 theorem R.fromTensor_eq_concat_zeroes (tensor : List Int) (k : Nat) :
    R.fromTensor (q := q) (n := n) (tensor ++ List.replicate k 0) = R.fromTensor (q := q) (n := n) tensor := by
-  induction k with
+  induction k generalizing tensor with
    | zero => simp
    | succ k ih => 
        simp [ih]
-       unfold R.fromTensor
-       simp
-       sorry
-       --rw [List.enum_append, List.enumFrom_append, List.foldl_concat]
+       have H : tensor ++ (0 :: List.replicate k 0) = (tensor ++ [0]) ++ List.replicate k 0 := 
+        List.append_cons ..
+       rw[H]
+       rw [ih (tensor ++ [0])]
+       rw[← R.fromTensor_eq_concat_zero]
 
 @[simp]
 theorem R.trimTensor_append_zero_eq (tensor : List Int) :  trimTensor (tensor ++ [0]) = trimTensor tensor := by
@@ -139,6 +141,19 @@ induction tensor using List.reverseRecOn with
      · exists 0
        rw [R.trimTensor_append_not_zero _ _ h] ; simp
 
+theorem R.trimTensor_getD_0 (tensor: List Int) : 
+  tensor.getD i 0 = (trimTensor tensor).getD i 0 := by
+  have ⟨n, H⟩ := trimTensor_eq_append_zeros tensor 
+  conv =>
+    lhs 
+    rw[H]
+  by_cases INBOUNDS:(i < List.length (trimTensor tensor))
+  . rw[List.getD_append (h := INBOUNDS)]
+  . have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
+    rw[List.getD_eq_default (hn := OUT_OF_BOUNDS)]
+    rw[List.getD_append_right (h := OUT_OF_BOUNDS)]
+    rw[List.getD_replicate_default_eq]
+
 theorem R.trimTensor_trimTensor (tensor : List Int) : 
   trimTensor (trimTensor tensor) = trimTensor tensor := by
   induction tensor using List.reverseRecOn with
@@ -147,26 +162,14 @@ theorem R.trimTensor_trimTensor (tensor : List Int) :
        by_cases (x = 0)
        · rw [h, R.trimTensor_append_zero_eq,ih]
        · rw [trimTensor_append_not_zero _ _ h, trimTensor_append_not_zero _ _ h]
-  
-theorem List.getD_eq_concat (t₁ t₂ : List Int) : (∀ i, t₁.getD i 0 = t₂.getD i 0) → 
-  ∃ (n m : Nat), t₁ ++ List.replicate n 0 = t₂ ++ List.replicate m 0 := by
-  -- TODO: this would be a nice exercise in WLOG
-  sorry
-
-theorem R.fromTensor_getD_eq (t₁ t₂ : List Int) : (∀ i, t₁.getD i 0 = t₂.getD i 0) → 
-  R.fromTensor (q := q) (n := n) t₁ = R.fromTensor (q := q) (n := n) t₂ := by
-  intro hi
-  have hConcat := List.getD_eq_concat _ _ hi
-  sorry
 
 theorem R.fromTensor_eq_fromTensor_trimTensor (tensor : List Int) :
    R.fromTensor (q := q) (n := n) (trimTensor tensor) = R.fromTensor (q := q) (n := n) tensor := by
-  apply R.fromTensor_getD_eq _ _ 
-  intro i
   have ⟨n,hn⟩ := R.trimTensor_eq_append_zeros tensor
-  rw [hn] 
-  -- cases wether i < length
-  sorry
+  conv => 
+    rhs 
+    rw [hn]
+  simp[R.fromTensor_eq_concat_zeroes]
 
 namespace Poly
 
