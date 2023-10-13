@@ -286,7 +286,7 @@ theorem R.fromTensor_eq_fromTensor'_toPoly {q n} : R.fromTensor (q := q) (n := n
       apply fromTensor_eq_fromTensor'_toPoly_aux
       simp[monomial]
 
-theorem R.representative_fromTensor : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
+theorem R.representative_fromTensor (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
   rw[fromTensor_eq_fromTensor'_toPoly];
 
