@@ -160,6 +160,10 @@ theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.repr
  apply Function.surjInv_eq
 
 
+@[simp]
+theorem R.representative_fromPoly (x : (ZMod q)[X]) (DEGREE: x.degree < (f q n).degree) :
+   R.representative q n (R.fromPoly (n:=n) x) = x := sorry
+
 /--
 Characterization theorem for any potential representative.
 For an  `a : (ZMod q)[X]`, the representative of its equivalence class
