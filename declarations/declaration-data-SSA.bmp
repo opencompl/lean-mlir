@@ -1,1 +1,1 @@
-{"name":"SSA","instances":[],"imports":["Init","SSA.Core.Framework","SSA.Projects.InstCombine.Alive","SSA.Projects.Tensor1D.Tensor1D","SSA.Projects.Tensor2D.Tensor2D"],"declarations":[]}
+{"name":"SSA","instances":[],"imports":["Init","SSA.Core.Framework","SSA.Projects.InstCombine.Alive","SSA.Projects.Tensor1D.Tensor1D","SSA.Projects.Tensor2D.Tensor2D","SSA.Projects.Holor.Holor"],"declarations":[]}
