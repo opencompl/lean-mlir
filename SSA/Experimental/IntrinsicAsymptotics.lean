@@ -591,14 +591,14 @@ def matchVar {rg : RegMVars Ty}
               let ma ← matchVar' _ vₗ vᵣ rma ma
               matchArg vsₗ vsᵣ ma.2
         let rec matchReg : ∀ {l : List (Ctxt Ty × Ty)}
-            (_Tₗ : HVector (fun t : Ctxt Ty × Ty => Reg Op rg t.1 t.2) l)
-            (_Tᵣ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l),
+            (_Tₗ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l)
+            (_Tᵣ : HVector (fun t : Ctxt Ty × Ty => Reg Op rg t.1 t.2) l),
             RegMapping Op rg → Mapping Δ_in Γ_out →
             Option (RegMapping Op rg × Mapping Δ_in Γ_out)
           | _, .nil, .nil, rma, ma => some (rma, ma)
           | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rma, ma => do
             match rₗ, rᵣ with
-            | Reg.mvar i, Reg.icom comᵣ =>
+            | Reg.icom comᵣ, Reg.mvar i =>
               match rma.lookup ⟨t, i⟩ with
               | none => matchReg rsₗ rsᵣ (AList.insert ⟨_, i⟩ comᵣ rma) ma
               | some comₗ =>
@@ -608,9 +608,10 @@ def matchVar {rg : RegMVars Ty}
             | Reg.icom comₗ, Reg.icom comᵣ => do
               let ⟨letsₗ, vₗ⟩ := comₗ.toLets
               let ⟨letsᵣ, vᵣ⟩ := comᵣ.toLets
-              let x ← matchVar letsᵣ vᵣ letsₗ vₗ rma ∅
+              let x ← matchVar letsₗ vₗ letsᵣ vᵣ rma ∅
               matchReg rsₗ rsᵣ x.1 ma
-        matchArg ie.args (hs.1 ▸ matchExpr.args) ma
+        let ⟨rma, ma⟩ ← matchArg ie.args (hs.1 ▸ matchExpr.args) ma
+        matchReg ie.regArgs (hs.1 ▸ matchExpr.regArgs) rma ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
       -- Correct for Regions
@@ -621,6 +622,7 @@ def matchVar {rg : RegMVars Ty}
             then some (rma, ma)
             else none
       | none => some (rma, AList.insert ⟨_, w⟩ v ma)
+  decreasing_by sorry
 
 open AList
 
