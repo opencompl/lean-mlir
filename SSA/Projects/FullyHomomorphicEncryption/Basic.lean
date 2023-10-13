@@ -213,6 +213,22 @@ noncomputable def R.rep_length {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
+theorem R.length_lt_n_plus_1 : forall a : R q n, a.rep_length < 2^n + 1 := by
+  intro a
+  simp [R.rep_length, representative]
+  have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
+    rw [← f_deg_eq q n]
+    apply (Polynomial.degree_modByMonic_lt)
+    apply f_monic
+  simp[LT.lt] at this
+  let ⟨val, VAL, VAL_EQN⟩ := this
+  rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp[this]
+  case some val' =>
+    specialize (VAL_EQN _ H)
+    norm_cast at VAL
+    cases VAL
+    norm_cast at VAL_EQN
+
 /--
 This function gets the `i`th coefficient of the polynomial representative
 (with degree `< 2^n`) of an element `a : R q n`. Note that this is not
