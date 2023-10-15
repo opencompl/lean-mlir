@@ -198,6 +198,10 @@ variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` cor
 def Valuation (Γ : Ctxt Ty) : Type :=
   ⦃t : Ty⦄ → Γ.Var t → (toType t)
 
+/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
+def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
+    VAL v
+
 instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩ 
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
@@ -223,6 +227,14 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
   | .nil => (default : Ctxt.Valuation (∅ : Ctxt Ty))
   | .cons x xs => (Valuation.ofHVector xs).snoc x
+
+/-- transport/pullback a valuation along a context homomorphism. -/
+def Valuation.hom {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
+  fun _to vo =>  Γiv (hom vo)
+  
+/-- abbreviation for Valuation.hom -/
+abbrev Valuation.pulback {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation := 
+  Valuation.hom Γiv hom
 
 end Valuation
 
