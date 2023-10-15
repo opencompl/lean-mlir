@@ -8,6 +8,7 @@ def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
 def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop := 
   Γ' = Γ.delete v
 
+
 theorem List.removeNth_zero : List.removeNth (List.cons x xs) 0 = xs := rfl 
 
 theorem List.removeNth_succ : List.removeNth (List.cons x xs) (.succ n) = x :: List.removeNth xs n := rfl
@@ -165,6 +166,14 @@ def Deleted.pushforward_Valuation [Goedel Ty] {α: Ty}  {Γ Γ' : Ctxt Ty} {delv
   (vΓ : Γ.Valuation) : Γ'.Valuation := 
   fun _t' v' => vΓ (DEL.pullback_var v')
 
+-- evaluating a pushforward valuation at a pullback variable returns the same result.
+theorem Deleted.pushforward_Valuation_denote [Goedel Ty] {α : Ty} {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
+  (DEL : Deleted Γ delv Γ')
+  (vΓ : Γ.Valuation)
+  (v' : Γ'.Var α) :
+  vΓ (DEL.pullback_var v') = (DEL.pushforward_Valuation vΓ) v' := by
+    simp[pullback_var, pushforward_Valuation]
+    
 
 /-- Given  `Γ' := Γ /delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
 def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
@@ -259,25 +268,105 @@ variable [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] [DecidableEq Ty]
   Fails otherwise. -/
 def arglistDeleteVar? {Γ: Ctxt Ty} {delv : Γ.Var α} {Γ' : Ctxt Ty} {ts : List Ty}
   (DEL : Deleted Γ delv Γ')
-  (args : HVector (Ctxt.Var Γ) <| ts) : 
-  Option (HVector (Ctxt.Var Γ') <| ts) :=
-  match args with
-  | .nil => .some .nil
-  | .cons argv args' => 
-    match arglistDeleteVar? DEL args' with
+  (as : HVector (Ctxt.Var Γ) <| ts) : 
+  Option 
+    { as' : HVector (Ctxt.Var Γ') <| ts // ∀ (V : Γ.Valuation), as.map V.eval = as'.map (DEL.pushforward_Valuation V).eval  } :=
+  match as with
+  | .nil => .some ⟨.nil, by
+      simp[HVector.map]
+    ⟩
+  | .cons a as => 
+    match Var.tryDelete? DEL a with
     | .none => .none
-    | .some args' => 
-        if ARGV_DEL : argv.val = delv.val 
-        then .none
-        else .some <| .cons (DEL.pushforward_var ARGV_DEL) args'
+    | .some ⟨a', ha'⟩ =>
+      match arglistDeleteVar? DEL as with
+      | .none => .none
+      | .some ⟨as', has'⟩ =>
+        .some ⟨.cons a' as', by
+          intros V
+          simp[HVector.map]
+          constructor
+          apply ha'
+          apply has'
+        ⟩  
 
--- def IExpr.deleteVar? (DEL : Deleted Γ delv Γ') (expr: IExpr Op Γ α) : Option (IExpr Op Γ' α) := 
---   match expr with
---   | .mk op ty_eq args regArgs =>
---     match arglistDeleteVar? DEL args with
---     | .some args' => 
---       .some (.mk op ty_eq args' regArgs)
---     | .none => .none
+def IExpr.deleteVar? (DEL : Deleted Γ delv Γ') (e: IExpr Op Γ t) : 
+  Option { e' : IExpr Op Γ' t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } := 
+  match e with
+  | .mk op ty_eq args regArgs => 
+    match arglistDeleteVar? DEL args with
+    | .none => .none
+    | .some args' =>
+      .some ⟨.mk op ty_eq args' regArgs, by
+        intros V
+        rw[IExpr.denote_unfold]
+        rw[IExpr.denote_unfold]
+        simp
+        congr 1
+        apply args'.property
+      ⟩
+
+/-- snoc an `ω` to both the input and output contexts of `Deleted Γ v Γ'` -/
+def Deleted.snoc {α : Ty} {Γ: Ctxt Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ') : Deleted (Γ.snoc ω) v.toSnoc (Γ'.snoc ω) := by
+  simp [Deleted, Ctxt.delete] at DEL ⊢
+  subst DEL
+  rfl
+
+
+/-- pushforward (V :: newv) (pushforward V) :: newv -/
+theorem Deleted.pushforward_Valuation_snoc  {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
+  (DEL : Deleted Γ delv Γ')
+  (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
+  (V : Γ.Valuation) {newv : Goedel.toType ω} :
+  DELω.pushforward_Valuation (V.snoc newv) = 
+  (DEL.pushforward_Valuation V).snoc newv := by 
+    simp[Deleted.pushforward_Valuation]
+    simp[Ctxt.Valuation.snoc]
+    simp[Deleted.pullback_var]
+    funext t var
+    split_ifs
+    case pos => 
+      
+
+    case neg => sorry
+
+
+    
+
+/-- This is true, because both DEL and DELω delete 'delv', so they leave the 'newv' unedited. -/
+theorem pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
+  (DEL : Deleted Γ delv Γ')
+  (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
+  (V : Γ.Valuation) {newv : Goedel.toType ω} :
+  DELω.pushforward_Valuation (V.snoc newv) = (DEL.pushforward_Valuation V).snoc newv := sorry
+    
+
+
+
+def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) : 
+  Option { com' : ICom Op Γ' t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
+  match com with
+  | .ret v =>
+    match Var.tryDelete? DEL v with
+    | .none => .none
+    | .some ⟨v, hv⟩ => 
+      .some ⟨.ret v, hv⟩
+  | .lete (α := ω) e body =>
+    match ICom.deleteVar? (Deleted.snoc DEL) body with
+    | .none => .none
+    | .some ⟨body', hbody'⟩ =>
+      match IExpr.deleteVar? DEL e with
+        | .none => .none
+        | .some ⟨e', he'⟩ =>
+          .some ⟨.lete  e' body', by
+            intros V
+            simp[ICom.denote]
+            rw[← he']
+            rw[hbody']
+            congr
+            apply pushforward_Valuation_snoc
+            ⟩ 
+
 
 -- #check Membership
 
