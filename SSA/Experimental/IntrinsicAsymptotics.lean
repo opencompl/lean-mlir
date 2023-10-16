@@ -64,6 +64,8 @@ inductive ICom (rg : RegMVars Ty) : Ctxt Ty → Ty → Type where
 
 end
 
+instance (rg : RegMVars Ty) (Γ : Ctxt Ty) (t : Ty) : DecidableEq (ICom Op rg Γ t) := sorry
+
 /-- `Lets Op rg Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
 inductive Lets (rg : RegMVars Ty) (Γ₁ : Ctxt Ty) : Ctxt Ty → Type where
@@ -561,6 +563,8 @@ theorem Lets.denote_eq_of_eq_on_vars
 def ICom.vars {Γ : Ctxt Ty} {t : Ty} : ICom Op rg Γ t → Γ.VarSet :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
+variable [DecidableEq Op]
+
 /-
 We need to generalize this. Sometimes we need to unify a region with
 
@@ -576,7 +580,7 @@ We need to generalize this. Sometimes we need to unify a region with
 -/
 
 def matchVar {rg : RegMVars Ty}
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
     (lets : Lets Op [] Γ_in Γ_out) (v : Γ_out.Var t) :
     (matchLets : Lets Op rg Δ_in Δ_out) →
     (w : Δ_out.Var t) →
@@ -592,14 +596,12 @@ def matchVar {rg : RegMVars Ty}
       if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
       then
         -- hack to make a termination proof work
-        let matchVar' := fun t vₗ vᵣ rma ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ rma ma
         let rec matchArg : ∀ {l : List Ty}
             (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
             Mapping Δ_in Γ_out → Option (RegMapping Op rg × Mapping Δ_in Γ_out)
           | _, .nil, .nil, ma => some (rma, ma)
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
-              let ma ← matchVar' _ vₗ vᵣ rma ma
+              let ma ← matchVar lets vₗ matchLets vᵣ rma ma
               matchArg vsₗ vsᵣ ma.2
         let rec matchReg : ∀ {l : List (Ctxt Ty × Ty)}
             (_Tₗ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l)
@@ -666,56 +668,34 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
--- theorem subset_entries_matchVar_matchArg_aux
---     {Γ_out Δ_in Δ_out  : Ctxt Ty}
---     {matchVar' : (t : Ty) → Var Γ_out t → Var Δ_out t →
---       Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
---     {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
---     {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
---     {varMap : Mapping Δ_in Γ_out} →
---     (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
---         vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
---     (hvarMap : varMap ∈ matchVar.matchArg Δ_out matchVar' argsₗ argsᵣ ma) →
---     ma.entries ⊆ varMap.entries
---   | _, .nil, .nil, ma, varMap, _, h => by
---     simp only [matchVar.matchArg, Option.mem_def, Option.some.injEq] at h
---     subst h
---     exact Set.Subset.refl _
---   | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, hmatchVar, h => by
---     simp [matchVar.matchArg, bind, pure] at h
---     rcases h with ⟨ma', h₁, h₂⟩
---     refine List.Subset.trans ?_
---       (subset_entries_matchVar_matchArg_aux hmatchVar h₂)
---     exact hmatchVar _ _ _ _ _ h₁
-
 mutual
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
-theorem subset_entries_matchVar [DecidableEq Op]
-    {rVarMap : RegMapping Op rg} {varMap : Mapping Δ_in Γ_out}
+theorem subset_entries_matchVar {rg : RegMVars Ty}
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
     {rma : RegMapping Op rg} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op [] Γ_in Γ_out} {v : Γ_out.Var t} :
     {matchLets : Lets Op rg Δ_in Δ_out} → {w : Δ_out.Var t} →
-    (hvarMap : (rvarMap, varMap) ∈ matchVar lets v matchLets w rma ma) →
-    ma.entries ⊆ varMap.entries
+    {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
+    (hvarMap : (rVarMap, varMap) ∈ matchVar lets v matchLets w rma ma) →
+    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries
   | .nil, w => by
     simp [matchVar]
-    intros h x hx
+    intros h
     split at h
     . split_ifs at h
       . simp_all
     . simp only [Option.some.injEq, Prod.mk.injEq] at h
       rcases h with ⟨rfl, rfl⟩
-      rcases x with ⟨x, y⟩
-      simp only [← AList.mem_lookup_iff] at *
+      refine ⟨List.Subset.refl _, ?_⟩
+      rintro ⟨x, y⟩ hxy
+      simp only [List.subset_def, ← AList.mem_lookup_iff] at *
       by_cases hx : x = ⟨t, w⟩
       . subst x; simp_all
       . rwa [AList.lookup_insert_ne hx]
-
   | .lete matchLets _, ⟨w+1, h⟩ => by
     simp [matchVar]
     apply subset_entries_matchVar
-
   | .lete matchLets matchExpr, ⟨0, _⟩ => by
     simp [matchVar, Bind.bind, Option.bind]
     intro h
@@ -727,20 +707,36 @@ theorem subset_entries_matchVar [DecidableEq Op]
       split_ifs at h with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at h
-        exact subset_entries_matchVar_matchArg
-          (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
+        split at h
+        · simp at h
+        · rename_i _ ma₁ hma₁
+          dsimp at h
+          have h₁ := subset_entries_matchVar_matchArg hma₁
+          have h₂ := subset_entries_matchVar_matchReg h
+          exact ⟨_root_.trans h₁.1 h₂.1, _root_.trans h₁.2 h₂.2⟩
 
-theorem subset_entries_matchVar_matchArg [DecidableEq Op]
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op rg Γ_in Γ_out}
-    {matchLets : Lets Op rg Δ_in Δ_out} :
-    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
-    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
-    {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : varMap ∈ matchVar.matchArg Δ_out
-        (fun t vₗ vᵣ ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →
-    ma.entries ⊆ varMap.entries :=
-  subset_entries_matchVar_matchArg_aux (fun _ _ _ _ _ => subset_entries_matchVar)
+theorem subset_entries_matchVar_matchArg
+    {rg : RegMVars Ty} {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
+    {lets : Lets Op [] Γ_in Γ_out}
+    {matchLets : Lets Op rg Δ_in Δ_out}
+    {rma : RegMapping Op rg} :
+    {l : List Ty} →
+    {Tₗ : HVector (Var Γ_out) l} →
+    {Tᵣ : HVector (Var Δ_out) l} →
+    {ma : Mapping Δ_in Γ_out} →
+    {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
+    (hvarMap : (rVarMap, varMap) ∈ matchVar.matchArg lets Δ_out matchLets rma Tₗ Tᵣ ma) →
+    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries := sorry
+
+theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
+    {Γ_out Δ_in : Ctxt Ty} {l : List (Ctxt Ty × Ty)}
+    {Tₗ : HVector (fun t => Reg Op [] t.fst t.snd) l}
+    {Tᵣ : HVector (fun t => Reg Op rg t.fst t.snd) l}
+    {rma : RegMapping Op rg}
+    {ma : Mapping Δ_in Γ_out}
+    {rVarMap : RegMapping Op rg} {varMap : Mapping Δ_in Γ_out}
+    (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) :
+    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries := sorry
 
 end
 
