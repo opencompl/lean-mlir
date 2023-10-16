@@ -726,7 +726,20 @@ theorem subset_entries_matchVar_matchArg
     {ma : Mapping Δ_in Γ_out} →
     {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : (rVarMap, varMap) ∈ matchVar.matchArg lets Δ_out matchLets rma Tₗ Tᵣ ma) →
-    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries := sorry
+    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries
+  | _, .nil, .nil, ma => by
+    simp (config := { contextual := true }) [matchVar.matchArg]
+  | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => by
+    intro h
+    simp [matchVar.matchArg, Bind.bind, Option.bind] at h
+    split at h
+    · simp at h
+    · rename_i _ ma₁ hma₁
+      dsimp at h
+      have h₁ := subset_entries_matchVar hma₁
+      have h₂ := subset_entries_matchVar_matchArg h
+      exact ⟨h₂.1, _root_.trans h₁.2 h₂.2⟩
+
 
 theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
     {Γ_out Δ_in : Ctxt Ty} {l : List (Ctxt Ty × Ty)}
