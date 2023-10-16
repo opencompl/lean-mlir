@@ -740,16 +740,22 @@ theorem subset_entries_matchVar_matchArg
       have h₂ := subset_entries_matchVar_matchArg h
       exact ⟨h₂.1, _root_.trans h₁.2 h₂.2⟩
 
-
 theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
-    {Γ_out Δ_in : Ctxt Ty} {l : List (Ctxt Ty × Ty)}
-    {Tₗ : HVector (fun t => Reg Op [] t.fst t.snd) l}
-    {Tᵣ : HVector (fun t => Reg Op rg t.fst t.snd) l}
-    {rma : RegMapping Op rg}
-    {ma : Mapping Δ_in Γ_out}
-    {rVarMap : RegMapping Op rg} {varMap : Mapping Δ_in Γ_out}
-    (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) :
-    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries := sorry
+    {Γ_out Δ_in : Ctxt Ty} : {l : List (Ctxt Ty × Ty)} →
+    {Tₗ : HVector (fun t => Reg Op [] t.fst t.snd) l} →
+    {Tᵣ : HVector (fun t => Reg Op rg t.fst t.snd) l} →
+    {rma : RegMapping Op rg} →
+    {ma : Mapping Δ_in Γ_out} →
+    {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
+    (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) →
+    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries
+  | [], .nil, .nil, rma, ma => by
+    simp (config := { contextual := true }) [matchVar.matchReg]
+  | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rma, ma => by
+    intro h
+    simp at h
+    rw [matchVar.matchReg] at h
+
 
 end
 
