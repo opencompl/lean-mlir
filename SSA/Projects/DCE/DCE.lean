@@ -314,34 +314,53 @@ def Deleted.snoc {α : Ty} {Γ: Ctxt Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ'
 
 
 /-- pushforward (V :: newv) (pushforward V) :: newv -/
-theorem Deleted.pushforward_Valuation_snoc  {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
+theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
   (V : Γ.Valuation) {newv : Goedel.toType ω} :
   DELω.pushforward_Valuation (V.snoc newv) = 
   (DEL.pushforward_Valuation V).snoc newv := by 
     simp[Deleted.pushforward_Valuation]
-    simp[Ctxt.Valuation.snoc]
+    repeat rw[Ctxt.Valuation.snoc_eq_snoc']
+    simp[Ctxt.Valuation.snoc']
     simp[Deleted.pullback_var]
     funext t var
     split_ifs
     case pos => 
-      
-
-    case neg => sorry
-
-
-    
-
-/-- This is true, because both DEL and DELω delete 'delv', so they leave the 'newv' unedited. -/
-theorem pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
-  (DEL : Deleted Γ delv Γ')
-  (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
-  (V : Γ.Valuation) {newv : Goedel.toType ω} :
-  DELω.pushforward_Valuation (V.snoc newv) = (DEL.pushforward_Valuation V).snoc newv := sorry
-    
-
-
+      simp[Ctxt.Var.casesOn]
+      cases var
+      case mk i hvar EQN =>
+        simp
+        simp at EQN
+        cases i
+        case zero => 
+          simp
+        case succ i' =>
+          simp
+          split_ifs
+          case pos => 
+            rfl
+          case neg =>
+            exfalso
+            linarith
+    case neg =>
+      cases var
+      case mk i hvar EQN =>
+        simp at EQN ⊢
+        simp only[Ctxt.Var.toSnoc]
+        cases i
+        case zero => 
+          simp
+          exfalso
+          linarith
+        case succ i' =>
+          simp at i' ⊢
+          split_ifs
+          case pos => 
+            exfalso
+            linarith
+          case neg =>
+            rfl
 
 def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) : 
   Option { com' : ICom Op Γ' t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
@@ -364,11 +383,9 @@ def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) :
             rw[← he']
             rw[hbody']
             congr
-            apply pushforward_Valuation_snoc
+            apply Deleted.pushforward_Valuation_snoc
             ⟩ 
 
-
--- #check Membership
 
 /-- inject a context `Γ` into the context `(Γ.snoc α)` -/
 def Ctxt.Hom.toSnoc {Γ : Ctxt Ty} : Ctxt.Hom Γ (Γ.snoc α) := 
