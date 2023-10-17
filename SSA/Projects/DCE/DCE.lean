@@ -8,6 +8,8 @@ def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
 def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop := 
   Γ' = Γ.delete v
 
+/-- build a `Deleted` for a `(Γ.snoc α) → Γ`-/
+def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var.last Γ α) Γ := rfl
 
 theorem List.removeNth_zero : List.removeNth (List.cons x xs) 0 = xs := rfl 
 
@@ -386,151 +388,36 @@ def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) :
             apply Deleted.pushforward_Valuation_snoc
             ⟩ 
 
-
-/-- inject a context `Γ` into the context `(Γ.snoc α)` -/
-def Ctxt.Hom.toSnoc {Γ : Ctxt Ty} : Ctxt.Hom Γ (Γ.snoc α) := 
-  fun _t v => v.toSnoc
-
-/-- swap (Γ.snoc α).snoc ω → (Γ.snoc ω).snoc α -/
-def Ctxt.Hom.swapSnocSnoc {Γ : Ctxt Ty} : Ctxt.Hom ((Γ.snoc α).snoc ω) ((Γ.snoc ω).snoc α) := 
-  fun _t ⟨v, vh⟩ => 
-      if V0 : v = 0 then
-      ⟨1, by 
-        subst V0
-        simp[List.get?] at vh ⊢
-        exact vh
-      ⟩
-      else if V1: v = 1 then ⟨0, by
-        subst V1
-        simp[List.get?] at vh ⊢
-        exact vh
-      ⟩
-      else ⟨v, by
-        simp[List.get?] at vh ⊢
-        cases v <;> try contradiction
-        case succ v' =>
-        cases v' <;> try contradiction
-        simp[List.get?] at vh ⊢
-        exact vh      
-      ⟩
-
--- inductive DCEResult [OpSignature Op Ty] [OpDenote Op Ty] {Γ : Ctxt Ty} {α : Ty} {t : Ty} (com : ICom Op (Γ.snoc α) t) where
--- | failure  (com' : ICom Op (Γ.snoc α) t) 
--- | success
---   (com' : ICom Op Γ t)
---   (denote_eq : ∀ (Γαv : (Γ.snoc α).Valuation), com.denote Γαv = com'.denote (Γαv.hom Ctxt.Hom.toSnoc)  )
-
-lemma List.get?_snoc (H : List.get? (x :: xs) (ix + 1) = some v) :
-  List.get? xs ix = some v := by simp at H; assumption 
-
-/-- try to unSnoc a `Var`, creating a var that has the same value on being evaluated. -/
-def Var.tryUnsnoc {Γ : Ctxt Ty} {α β : Ty} (v : (Γ.snoc α).Var β) :
-  Option { v' : Γ.Var β //   ∀ (V : (Γ.snoc α).Valuation), V.eval v = (V.hom Ctxt.Hom.toSnoc).eval v' } := 
-if H : v.val > 0 
-then .some ⟨⟨v.val - 1, by
-  have V := v.property
-  cases VVAL : v.val
-  case zero => 
-    rw[VVAL] at H
-    contradiction
-  case succ v' =>
-    simp
-    rw[VVAL] at V
-    exact List.get?_snoc V
-  ⟩, by
-    intros V
-    simp only[Ctxt.Valuation.hom, Ctxt.Valuation.eval, Ctxt.Hom.toSnoc, Ctxt.Var.toSnoc]
-    congr
-    induction v
-    case e_a.mk val property =>
-      simp at H
-      simp
-      congr
-      simp
-      rw[Nat.sub_add_cancel]
-      linarith
-  ⟩
-else .none
-
-/-- try to unSnoc a vector of `Var` s by unSnocing each `Var`. -/
-def VarVector.tryUnsnoc {Γ : Ctxt Ty} {α : Ty} {ts : List Ty}
-  (vec : HVector ((Γ.snoc α).Var) <| ts) :
-  Option 
-  { vec' : HVector (Γ.Var) <| ts // ∀ (V : (Γ.snoc α).Valuation), vec.map V.eval = vec'.map (V.hom Ctxt.Hom.toSnoc).eval } :=
-  match vec with
-  | .nil => 
-    .some ⟨.nil, by
-      intros V
-      simp[HVector.map]
-      ⟩
-  | .cons x xs => 
-    match Var.tryUnsnoc x with
-    | .none => .none
-    | .some ⟨v', hv⟩ => 
-      match VarVector.tryUnsnoc xs with
-      | .none => .none
-      | .some ⟨vec', hvec⟩ => 
-        .some ⟨.cons v' vec', by 
-          intros V
-          simp[HVector.map]
-          constructor
-          apply hv
-          apply hvec
-        ⟩ 
-
-/-- try to unSnoc an IExpr by unSnocing all the argument `Var`s.
-  Note that since our regions are `isolatedFromAbove`, that is, they create a new context for themselves,
-  we can leave the regions unchanged. -/
-def IExpr.tryUnsnoc [OpSignature Op Ty] [OpDenote Op Ty] (e : IExpr Op (Γ.snoc α) t) :
-  Option { e' : IExpr Op Γ t // ∀ (V : (Γ.snoc α).Valuation), e.denote V = e'.denote (V.hom Ctxt.Hom.toSnoc) } := 
-  match e with
-  | .mk op ty_eq args regArgs => 
-    match VarVector.tryUnsnoc args with
-    | .none => .none
-    | .some args' =>
-      .some ⟨.mk op ty_eq args' regArgs, by
-        intros V
-        rw[IExpr.denote_unfold]
-        rw[IExpr.denote_unfold]
-        simp
-        congr 1
-        apply args'.property
-      ⟩
-
-
-partial def ICom.tryUnsnoc [OpSignature Op Ty] [OpDenote Op Ty] (com : ICom Op (Γ.snoc α) t) : 
-  Option { com' : ICom Op Γ t // ∀ (V : (Γ.snoc α).Valuation), com.denote V = com'.denote (V.hom Ctxt.Hom.toSnoc) } :=
-  match com with
-  | .ret v =>
-    match Var.tryUnsnoc v with
-    | .none => .none
-    | .some ⟨v, hv⟩ => 
-      .some ⟨.ret v, hv⟩
-  | .lete (α := ω) e body => -- variable added here is a `ω`; `body: ICom Op (Ctxt.snoc (Ctxt.snoc Γ α) ω) t`
-    -- TOTHINK:
-    -- this is annoying, I need to shuffle the `Ctxt` into a 
-    -- (Ctxt.snoc (Ctxt.snoc Γ ω) α) to be able to expose the `α`
-    let body_α_outmost := body.changeVars Ctxt.Hom.swapSnocSnoc
-    let SIZE : sizeOf (ICom.changeVars Ctxt.Hom.swapSnocSnoc body) ≤ sizeOf e + sizeOf body := by sorry      
-    match ICom.tryUnsnoc body_α_outmost with
-    | .none => .none
-    | .some ⟨body', hbody'⟩ =>
-      match IExpr.tryUnsnoc e with
-        | .none => .none
-        | .some ⟨e', he'⟩ =>
-          .some ⟨.lete  e' body', sorry⟩ 
-
-def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : 
+unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : 
   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
-    match com with
+    match HCOM: com with
     | .ret v => 
       ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by 
         intros V
         simp[Ctxt.Valuation.hom]
         ⟩⟩
     | .lete (α := α) e body => 
-      let ⟨Γ2, hom12, com2⟩ := dce body
-      sorry 
-
+      let DEL := Deleted.deleteSnoc Γ α
+      let ⟨Γ', hom', ⟨com', hcom'⟩⟩
+        : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
+        match ICom.deleteVar? DEL body with
+        | .none => 
+            ⟨Γ, Ctxt.Hom.id, ⟨.lete (α := α) e body, by intros V; simp[HCOM, Ctxt.Valuation.hom]⟩⟩
+        | .some ⟨body', hbody⟩ => 
+          ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
+            simp[HCOM]
+            intros V
+            simp[ICom.denote]
+            apply hbody
+          ⟩⟩ 
+      let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
+        :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} := 
+        dce com'
+      ⟨Γ'', hom''.composeRange hom', com'', by 
+        intros V
+        rw[← HCOM]
+        rw[hcom']
+        rw[hcom'']
+        rfl⟩      
 end DCE
