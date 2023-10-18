@@ -14,6 +14,9 @@ import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
 import Mathlib.RingTheory.Ideal.QuotientOperations
 import Mathlib.Data.ZMod.Defs
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.MonoidAlgebra.Basic
+import Mathlib.Data.Finset.Sort
 import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
@@ -43,52 +46,61 @@ theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
-theorem zmodq_eq_finq : ZMod q = Fin q := by
-  have h : q > 1 := hqgt1.elim
-  unfold ZMod
-  cases q
-  · exfalso
-    apply Nat.not_lt_zero 1
-    exact h
-  · simp [Fin]
-  done
+-- theorem zmodq_eq_finq : ZMod q = Fin q := by
+--   have h : q > 1 := hqgt1.elim
+--   unfold ZMod
+--   cases q
+--   · exfalso
+--     apply Nat.not_lt_zero 1
+--     exact h
+--   · simp [Fin]
+--   done
 
-def ZMod.toInt (x  : ZMod q) : Int :=
-  let ⟨val,_⟩ : Fin q := zmodq_eq_finq q ▸ x
-  val
+def ZMod.toInt (x : ZMod q) : Int := ZMod.cast x
+def ZMod.toFin (x : ZMod q) : Fin q := ZMod.cast x
 
 theorem ZMod.toInt_coe_eq (x : ZMod q) : ↑(x.toInt) = x := by
   unfold toInt
   simp
-  sorry
 
-theorem ZMod.eq_from_toInt_eq (x y : ZMod q) : x.toInt = y.toInt → x = y := by
-  intro h
+theorem ZMod.cast_eq_val' [Fact (q > 1)](x : ZMod q) : @cast ℤ Ring.toAddGroupWithOne q x = (val x : ℕ) := by
+  rw[ZMod.cast_eq_val]
+
+theorem ZMod.eq_from_toInt_eq (x y : ZMod q) (h : x.toInt = y.toInt) : x = y := by
   simp [toInt] at h
-  sorry
+  apply ZMod.val_injective
+  rw[ZMod.cast_eq_val'] at h
+  rw[ZMod.cast_eq_val'] at h
+  norm_cast at h
 
-def ZMod.toInt_zero : ↑(↑(zmodq_eq_finq q ▸ 0) : Fin q) = (0 : Int) := by
-  sorry
-
+/-- Surely this cannot take these many lines of code? -/
 def ZMod.toInt_zero_iff_zero (x : ZMod q) : x = 0 ↔ x.toInt = 0 := by
   constructor
   · intro h
     rw [h]
     simp [toInt]
-    sorry
   · intro h
-    simp [toInt] at h
-    sorry
-
-theorem nontrivial_finq : ∃ (x y : Fin q), x ≠ y  := by
-  have h : q > 1 := hqgt1.elim
-  exists ⟨0, Nat.lt_of_succ_lt h⟩, ⟨1, h⟩
-  intro contra
-  exact Nat.noConfusion (Fin.veq_of_eq contra)
-  done
+    simp[toInt] at h
+    rw[ZMod.cast_eq_val] at h
+    simp[ZMod] at x
+    cases q <;> try simp at hqgt1;
+    case mpr.zero =>
+      exfalso
+      apply (Fact.elim hqgt1)
+    case mpr.succ q' =>
+      simp at x
+      norm_num at h
+      obtain ⟨val, isLt⟩ := x
+      simp only [cast, ZMod.val] at h
+      norm_cast at h
+      subst h
+      rfl
 
 instance : Nontrivial (ZMod q) where
-  exists_pair_ne := zmodq_eq_finq q ▸ nontrivial_finq q
+  exists_pair_ne := by
+    exists 0
+    exists 1
+    norm_num
 
 /-- Charaterizing `f`: `f` has degree `2^n` -/
 theorem f_deg_eq : (f q n).degree = 2^n := by
@@ -213,7 +225,7 @@ noncomputable def R.rep_length {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
-theorem R.length_lt_n_plus_1 : forall a : R q n, a.rep_length < 2^n + 1 := by
+theorem R.rep_length_lt_n_plus_1 : forall a : R q n, a.rep_length < 2^n + 1 := by
   intro a
   simp [R.rep_length, representative]
   have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
