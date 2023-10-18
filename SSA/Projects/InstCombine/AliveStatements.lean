@@ -4,8 +4,14 @@ import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
 
 open Std
+open Std.BitVec
 
-#check ofBool
+def a : BitVec 2 := 0
+def c : Nat := 2
+#check a <<< c
+#eval a <<< c
+#check a >>> c
+#eval a >>> c
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
@@ -293,7 +299,7 @@ theorem bitvec_AndOrXor_2430 :
       try sorry
 
 theorem bitvec_AndOrXor_2443 :
- ∀ (w : Nat) (y x : BitVec w), sshr (x ^^^ -1) (BitVec.toNat y) ^^^ -1 = sshr x (BitVec.toNat y)
+ ∀ (w : Nat) (y x : BitVec w), sshiftRight (x ^^^ -1) (BitVec.toNat y) ^^^ -1 = sshiftRight x (BitVec.toNat y)
 := by alive_auto
       try sorry
 
@@ -474,7 +480,7 @@ theorem bitvec_Select_1105 :
       try sorry
 
 theorem bitvec_InstCombineShift__239 :
- ∀ (w : Nat) (X C : BitVec w), X <<< C >>> C = X &&& (-1) >>> C
+ ∀ (w : Nat) (X C : BitVec w), (X <<< C) >>> C = X &&& (-1) >>> C
 := by alive_auto
       try sorry
 
@@ -494,7 +500,7 @@ theorem bitvec_InstCombineShift__422_1:
       try sorry
 
 theorem bitvec_InstCombineShift__422_2:
- ∀ (Y X C : BitVec 31), (Y + sshr X (BitVec.toNat C)) <<< C = Y <<< C + X &&& (-1) <<< C
+ ∀ (Y X C : BitVec 31), (Y + sshiftRight X (BitVec.toNat C)) <<< C = Y <<< C + X &&& (-1) <<< C
 := by alive_auto
       try sorry
 
@@ -504,7 +510,7 @@ theorem bitvec_InstCombineShift__440 :
       try sorry
 
 theorem bitvec_InstCombineShift__458:
- ∀ (Y X C : BitVec 31), (sshr X (BitVec.toNat C) - Y) <<< C = X - Y <<< C &&& (-1) <<< C
+ ∀ (Y X C : BitVec 31), (sshiftRight X (BitVec.toNat C) - Y) <<< C = X - Y <<< C &&& (-1) <<< C
 := by alive_auto
       try sorry
 
