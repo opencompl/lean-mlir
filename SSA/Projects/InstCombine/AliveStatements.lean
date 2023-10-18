@@ -6,14 +6,6 @@ import SSA.Projects.InstCombine.ForStd
 open Std
 open Std.BitVec
 
-def a : BitVec 2 := 0
-def c : Nat := 2
-def b : Bool := a ≤ a
-
-#check ofBool (a ≤ a)
-#eval a <<< c
-#check a >>> c
-#eval a >>> c
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
@@ -131,7 +123,7 @@ theorem bitvec_AndOrXor_716 :
       try sorry
 
 theorem bitvec_AndOrXor_794 :
- ∀ (w : Nat) (a b : BitVec w), ofBool (a >ₛ b) &&& ofBool (a != b) = (a >ₛ b)
+ ∀ (w : Nat) (a b : BitVec w), ofBool (a >ₛ b) &&& ofBool (a != b) = ofBool (a >ₛ b)
 := by alive_auto
       try sorry
 

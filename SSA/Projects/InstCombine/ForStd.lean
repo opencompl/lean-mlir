@@ -5,15 +5,15 @@ open Std
 def ofBool : (Bool) -> Std.BitVec 1
  | c => if c then 1 else 0
 
-notation:50 x " ≤ᵤ " y => x ≤ y
-notation:50 x " <ᵤ " y => x < y
-notation:50 x " ≥ᵤ " y => x ≥ y 
-notation:50 x " >ᵤ " y => x > y
+notation:50 x " ≤ᵤ " y => BitVec.ule x y
+notation:50 x " <ᵤ " y => BitVec.ult x y
+notation:50 x " ≥ᵤ " y => BitVec.ult y x 
+notation:50 x " >ᵤ " y => BitVec.ule y x
 
-notation:50 x " ≤ₛ " y => x ≤ y 
-notation:50 x " <ₛ " y => x < y
-notation:50 x " ≥ₛ " y => x ≥ y 
-notation:50 x " >ₛ " y => x > y
+notation:50 x " ≤ₛ " y => BitVec.sle x y
+notation:50 x " <ₛ " y => BitVec.slt x y
+notation:50 x " ≥ₛ " y => BitVec.slt y x
+notation:50 x " >ₛ " y => BitVec.sle y x
 
 instance {n} : ShiftLeft (BitVec n) := ⟨fun x y => x <<< y.toNat⟩
 
@@ -102,21 +102,3 @@ instance : Coe Bool (BitVec 1) := ⟨ofBool⟩
 
 instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
   coe := ofBool $ decide p
-
-instance {n} {x y : BitVec n} : Decidable (BitVec.ult x y) :=
-  decEq _ _
-
-instance {n} {x y : BitVec n} : Decidable (BitVec.ule x y) :=
-  decEq _ _
-
-instance {n} {x y : BitVec n} : Decidable (x < y) := by
-  sorry
-
-instance {n} {x y : BitVec n} : Decidable (x ≤ y) :=
-  sorry
-
-instance {n} {x y : BitVec n} : Decidable (x > y) :=
-  sorry
-
-instance {n} {x y : BitVec n} : Decidable (x ≥ y) :=
-  sorry
