@@ -1,4 +1,3 @@
-import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.Tactic
 open Bitvec
 
