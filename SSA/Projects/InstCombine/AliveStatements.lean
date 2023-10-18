@@ -5,6 +5,8 @@ import SSA.Projects.InstCombine.ForStd
 
 open Std
 
+#check ofBool
+
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
 := by alive_auto
