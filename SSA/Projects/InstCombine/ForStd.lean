@@ -7,7 +7,7 @@ def ofBool : (Bool) -> Std.BitVec 1
 
 notation:50 x " ≤ᵤ " y => BitVec.ule x y
 notation:50 x " <ᵤ " y => BitVec.ult x y
-notation:50 x " ≥ᵤ " y => BitVec.ult y x 
+notation:50 x " ≥ᵤ " y => BitVec.ult y x
 notation:50 x " >ᵤ " y => BitVec.ule y x
 
 notation:50 x " ≤ₛ " y => BitVec.sle x y
@@ -44,7 +44,7 @@ theorem refl {α: Type u} : ∀ x : Option α, Refinement x x := by
 theorem trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
   intro x y z h₁ h₂
   cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
-  rename_i x y hxy y h 
+  rename_i x y hxy y h
   rw [hxy, h]; apply refl
 
 instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
@@ -55,7 +55,7 @@ instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
   { apply isFalse; intro h; cases h }
   { rename_i val val'
     cases (decEq val val')
-    { apply isFalse; intro h; cases h; contradiction } 
+    { apply isFalse; intro h; cases h; contradiction }
     { apply isTrue; apply Refinement.bothSome; assumption }
   }
 
@@ -79,10 +79,10 @@ Note that signed integer division and unsigned integer division are distinct ope
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
-def sdiv? {w : Nat} (x y : BitVec w) : Option $ BitVec w := 
-  if y.toInt = 0 
+def sdiv? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
+  if y.toInt = 0
   then none
-  else 
+  else
     let div := (x.toInt / y.toInt)
     if div < Int.ofNat (2^w)
       then some $ BitVec.ofInt w div
@@ -91,10 +91,10 @@ def sdiv? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
 Note that unsigned integer remainder and signed integer remainder are distinct operations; for signed integer remainder, use ‘srem’.
-Taking the remainder of a division by zero is undefined behavior. 
+Taking the remainder of a division by zero is undefined behavior.
 -/
 def urem? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
-  if y.toNat = 0 
+  if y.toNat = 0
   then none
   else some $ BitVec.ofNat w (x.toNat % y.toNat)
 
