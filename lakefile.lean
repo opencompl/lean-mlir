@@ -37,7 +37,7 @@ lean_exe mlirnatural {
 
 -- NOTE: this must be 'm'mathlib, as indicated from:
 --  https://github.com/leanprover-community/mathlib4#using-mathlib4-as-a-dependency
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "9c2f17f68a9bd84e93f2a7a0fc8b8921c88c033e"
+require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "7891de94e3557cd04aebddf2315592c1034a2b22"
 
 require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 
