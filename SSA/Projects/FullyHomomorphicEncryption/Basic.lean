@@ -318,9 +318,23 @@ theorem R.representative_fromTensor (tensor : List ℤ) : R.representative q n (
   simp [R.representative]
   rw[fromTensor_eq_fromTensor'_toPoly];
 
+/--
+Converts an element of `R` into a tensor (modeled as a `List Int`)
+with the representatives of the coefficients of the representative.
+The length of the list is the degree of the representative + 1.
+-/
 noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
   List.range a.rep_length |>.map fun i =>
         a.coeff i |>.toInt
+
+/--
+Converts an element of `R` into a tensor (modeled as a `List Int`)
+with the representatives of the coefficients of the representative.
+The length of the list is the degree of the generator polynomial `f` + 1.
+-/
+noncomputable def R.toTensor' {q n} [Fact (q > 1)] (a : R q n) : List Int :=
+  let t := a.toTensor
+  t ++ List.replicate (2^n - t.length + 1) 0
 
 def trimTensor (tensor : List Int) : List Int
   := tensor.reverse.dropWhile (· = 0) |>.reverse
@@ -406,5 +420,5 @@ noncomputable def Op.denote (o : Op q n)
     | Op.monomial => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
     | Op.monomial_mul => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
     | Op.from_tensor => R.fromTensor arg.toSingle
-    | Op.to_tensor => R.toTensor arg.toSingle
+    | Op.to_tensor => R.toTensor' arg.toSingle
     | Op.const c => c
