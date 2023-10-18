@@ -754,7 +754,6 @@ theorem subset_entries_matchVar_matchArg
       have h₂ := subset_entries_matchVar_matchArg h
       exact ⟨h₂.1, _root_.trans h₁.2 h₂.2⟩
 
-
 theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
     {Γ_out Δ_in : Ctxt Ty} : {l : List (Ctxt Ty × Ty)} →
     {Tₗ : HVector (fun t => Reg Op [] t.fst t.snd) l} →
@@ -796,54 +795,25 @@ decreasing_by subset_entries_matchVar => sorry
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)]
 
-theorem denote_matchVar_matchArg
-    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op rg Γ_in Γ_out}
-    {matchLets : Lets Op rg Δ_in Δ_out} :
-    {l : List Ty} →
-    {args₁ : HVector (Var Γ_out) l} →
-    {args₂ : HVector (Var Δ_out) l} →
-    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
-    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    (f₁ : (t : Ty) → Var Γ_out t → toType t) →
-    (f₂ : (t : Ty) → Var Δ_out t → toType t) →
-    (hf : ∀ t v₁ v₂ (ma : Mapping Δ_in Γ_out) (ma'),
-      (ma ∈ matchVar lets v₁ matchLets v₂ ma') →
-      ma.entries ⊆ varMap₂.entries → f₂ t v₂ = f₁ t v₁) →
-    (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
-      vMap ∈ matchVar (t := t) lets vₗ matchLets vᵣ ma →
-      ma.entries ⊆ vMap.entries) →
-    (hvarMap : varMap₁ ∈ matchVar.matchArg Δ_out
-      (fun t vₗ vᵣ ma =>
-        matchVar (t := t) lets vₗ matchLets vᵣ ma) args₁ args₂ ma) →
-      HVector.map f₂ args₂ = HVector.map f₁ args₁
-  | _, .nil, .nil, _, _ => by simp [HVector.map]
-  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
-    intro h_sub f₁ f₂ hf hmatchVar hvarMap
-    simp [HVector.map]
-    simp [matchVar.matchArg, pure, bind] at hvarMap
-    rcases hvarMap with ⟨ma', h₁, h₂⟩
-    refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
-    · refine List.Subset.trans ?_
-        (subset_entries_matchVar_matchArg h₂)
-      · exact Set.Subset.refl _
-    apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
-    · exact h_sub
-    · exact hmatchVar
+mutual
 
-theorem denote_matchVar_of_subset
-    {lets : Lets Op rg Γ_in Γ_out} {v : Γ_out.Var t}
-    {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
-    {s₁ : toType Γ_in}
-    {ma : Mapping Δ_in Γ_out} :
+theorem denote_matchVar_of_subset {rg : RegMVars Ty}
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
+    {rma : RegMapping Op rg} {ma : Mapping Δ_in Γ_out}
+    {lets : Lets Op [] Γ_in Γ_out} {v : Γ_out.Var t} :
     {matchLets : Lets Op rg Δ_in Δ_out} → {w : Δ_out.Var t} →
+    {rVarMap₁ rVarMap₂ : RegMapping Op rg} → {varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
+    (hvarMap : (rVarMap₁, varMap₁) ∈ matchVar lets v matchLets w rma ma) →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
+    (h_sub_r : rVarMap₁.entries ⊆ rVarMap₂.entries) →
+    {mv : toType rg} →
       matchLets.denote mv (fun t' v' => by
-        match varMap₂.lookup ⟨_, v'⟩  with
-        | some v' => exact lets.denote mv s₁ v'
+        match varMap₂.lookup ⟨_, v'⟩ with
+        | some v' => exact lets.denote
+            (fun _ => Ctxt.Var.emptyElim) v'
         | none => exact default
         ) w =
-      lets.denote mv s₁ v
+      lets.denote _ _ _
   | .nil, w => by
     simp[Lets.denote, matchVar]
     intro h_sub h_mv
@@ -893,6 +863,42 @@ theorem denote_matchVar_of_subset
           · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
         · exact HVector.eq_of_type_eq_nil
             (List.isEmpty_iff_eq_nil.1 hop)
+
+theorem denote_matchVar_matchArg
+    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op rg Γ_in Γ_out}
+    {matchLets : Lets Op rg Δ_in Δ_out} :
+    {l : List Ty} →
+    {args₁ : HVector (Var Γ_out) l} →
+    {args₂ : HVector (Var Δ_out) l} →
+    {ma varMap₁ varMap₂ : Mapping Δ_in Γ_out} →
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
+    (f₁ : (t : Ty) → Var Γ_out t → toType t) →
+    (f₂ : (t : Ty) → Var Δ_out t → toType t) →
+    (hf : ∀ t v₁ v₂ (ma : Mapping Δ_in Γ_out) (ma'),
+      (ma ∈ matchVar lets v₁ matchLets v₂ ma') →
+      ma.entries ⊆ varMap₂.entries → f₂ t v₂ = f₁ t v₁) →
+    (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
+      vMap ∈ matchVar (t := t) lets vₗ matchLets vᵣ ma →
+      ma.entries ⊆ vMap.entries) →
+    (hvarMap : varMap₁ ∈ matchVar.matchArg Δ_out
+      (fun t vₗ vᵣ ma =>
+        matchVar (t := t) lets vₗ matchLets vᵣ ma) args₁ args₂ ma) →
+      HVector.map f₂ args₂ = HVector.map f₁ args₁
+  | _, .nil, .nil, _, _ => by simp [HVector.map]
+  | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
+    intro h_sub f₁ f₂ hf hmatchVar hvarMap
+    simp [HVector.map]
+    simp [matchVar.matchArg, pure, bind] at hvarMap
+    rcases hvarMap with ⟨ma', h₁, h₂⟩
+    refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
+    · refine List.Subset.trans ?_
+        (subset_entries_matchVar_matchArg h₂)
+      · exact Set.Subset.refl _
+    apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
+    · exact h_sub
+    · exact hmatchVar
+
+end
 
 theorem denote_matchVar {lets : Lets Op rg Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : toType Γ_in}
