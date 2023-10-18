@@ -416,4 +416,77 @@ def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICo
     { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} :=
   dce_ com
 
+/-- A version of DCE that returns an output program with the same context. It uses the context
+   morphism of `dce` to adapt the result of DCE to work with the original context -/
+def dce' [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) :
+    { com' : ICom Op Γ t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
+  let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
+  ⟨com'.changeVars hom, by
+    intros V
+    rw[hcom']
+    simp[Ctxt.Valuation.hom]⟩
+
+namespace Examples
+
+/-- A very simple type universe. -/
+inductive ExTy
+  | nat
+  | bool
+  deriving DecidableEq, Repr
+
+@[reducible]
+instance : Goedel ExTy where
+  toType
+    | .nat => Nat
+    | .bool => Bool
+
+inductive ExOp :  Type
+  | add : ExOp
+  | beq : ExOp
+  | cst : ℕ → ExOp
+  deriving DecidableEq
+
+instance : OpSignature ExOp ExTy where
+  signature
+    | .add    => ⟨[.nat, .nat], [], .nat⟩
+    | .beq    => ⟨[.nat, .nat], [], .bool⟩
+    | .cst _  => ⟨[], [], .nat⟩
+
+@[reducible]
+instance : OpDenote ExOp ExTy where
+  denote
+    | .cst n, _, _ => n
+    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
+    | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
+
+def cst {Γ : Ctxt _} (n : ℕ) : IExpr ExOp Γ .nat  :=
+  IExpr.mk
+    (op := .cst n)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : IExpr ExOp Γ .nat :=
+  IExpr.mk
+    (op := .add)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
+
+attribute [local simp] Ctxt.snoc
+
+def ex1_pre_dce : ICom ExOp ∅ .nat :=
+  ICom.lete (cst 1) <|
+  ICom.lete (cst 2) <|
+  ICom.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+/-- TODO: how do we evaluate 'ex1_post_dce' within Lean? :D -/
+def ex1_post_dce : ICom ExOp ∅ .nat := (dce' ex1_pre_dce).val
+
+def ex1_post_dce_expected : ICom ExOp ∅ .nat :=
+  ICom.lete (cst 1) <|
+  ICom.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+
+end Examples
 end DCE
