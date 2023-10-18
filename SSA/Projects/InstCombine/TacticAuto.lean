@@ -1,5 +1,3 @@
-import Mathlib.Tactic.Ring
-
 macro "alive_auto": tactic =>
   `(tactic|
       (
