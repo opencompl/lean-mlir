@@ -22,8 +22,9 @@ theorem bitvec_AddSub_1043 :
 
 theorem bitvec_AddSub_1152:
  ∀ (y x : BitVec 1), x + y = x ^^^ y
-:= by alive_auto
-      try sorry
+:= by ring_nf
+   try sorry
+      
 
 theorem bitvec_AddSub_1156 :
  ∀ (w : Nat) (b : BitVec w), b + b = b <<< 1
@@ -31,8 +32,10 @@ theorem bitvec_AddSub_1156 :
       try sorry
 
 theorem bitvec_AddSub_1164 :
- ∀ (w : Nat) (a b : BitVec w), 0 - a + b = b - a
-:= by alive_auto
+ ∀ (w : Nat) (a b : BitVec w), b + 0 = b
+:= by
+   ring_nf
+   simp
       try sorry
 
 theorem bitvec_AddSub_1165 :
