@@ -1,11 +1,6 @@
 import Std.Data.BitVec
 
-def x : Int := 10
-
-#eval 2^x
-
 open Std
-
 
 def ofBool : (Bool) -> Std.BitVec 1
  | c => if c then 1 else 0
@@ -89,7 +84,7 @@ def sdiv? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
   then none
   else 
     let div := (x.toInt / y.toInt)
-    if div < Int.ofNat (2^w)
+    if div < 1 --2^w 
       then some $ BitVec.ofInt w div
       else none
 
@@ -114,7 +109,7 @@ instance {n} {x y : BitVec n} : Decidable (BitVec.ult x y) :=
 instance {n} {x y : BitVec n} : Decidable (BitVec.ule x y) :=
   decEq _ _
 
-instance {n} {x y : BitVec n} : Decidable (x < y) := 
+instance {n} {x y : BitVec n} : Decidable (x < y) := by
   sorry
 
 instance {n} {x y : BitVec n} : Decidable (x ≤ y) :=
