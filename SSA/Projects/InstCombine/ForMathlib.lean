@@ -17,20 +17,6 @@ theorem getElem_eq_get {α : Type u} {n : Nat} (v : Vector α n) (i : Fin n) : v
 
 end Vector
 
-
-
-def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
-
-def a : Bitvec 2 := 0
-
-def b : Prop := a ≤ a
-def bb : Bool := a ≤ a 
-
-#check b
-def c : Nat := 2
-#check ofBool (a ≤ a)
-
-
 namespace Bitvec
 
 def width : Bitvec n → Nat := fun _ => n
@@ -568,6 +554,8 @@ theorem one_sdiv_ref_add_cmp_select :
   sorry
 
 def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
+
+def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 
 def toBool : Bitvec 1 → Bool 
   | b ::ᵥ Vector.nil => b

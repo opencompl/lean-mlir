@@ -102,3 +102,5 @@ instance : Coe Bool (BitVec 1) := ⟨ofBool⟩
 
 instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
   coe := ofBool $ decide p
+
+def sshr (a : BitVec n) (s : Nat) := BitVec.sshiftRight a s
