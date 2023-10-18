@@ -90,7 +90,7 @@ theorem List.get_removeNth_geq_n {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k
         apply IHxs
         linarith
 
-/-- linarith fails to find a contradiction -/
+/-- Lean bug: linarith fails to find a contradiction -/
 theorem linarith_failure (x y : Nat) (H1 : ¬ (x = y)) (H2 : ¬ (x < y)) : x > y :=
   by
     try linarith
@@ -133,7 +133,7 @@ theorem Deleted.pushforward_Valuation_denote [Goedel Ty] {α : Ty} {Γ Γ' : Ctx
     simp[pullback_var, pushforward_Valuation]
 
 
-/-- Given  `Γ' := Γ /delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
+/-- Given  `Γ' := Γ/delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
 def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
     Option { v' : Γ'.Var β //  ∀ (V : Γ.Valuation), V.eval v = (DEL.pushforward_Valuation V).eval v' } :=
@@ -248,6 +248,7 @@ def arglistDeleteVar? {Γ: Ctxt Ty} {delv : Γ.Var α} {Γ' : Ctxt Ty} {ts : Lis
           apply has'
         ⟩
 
+/- Try to delete a variable from an IExpr -/
 def IExpr.deleteVar? (DEL : Deleted Γ delv Γ') (e: IExpr Op Γ t) :
   Option { e' : IExpr Op Γ' t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
   match e with
@@ -270,8 +271,7 @@ def Deleted.snoc {α : Ty} {Γ: Ctxt Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ'
   subst DEL
   rfl
 
-
-/-- pushforward (V :: newv) (pushforward V) :: newv -/
+/-- pushforward (V :: newv) = (pushforward V) :: newv -/
 theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
@@ -320,6 +320,7 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : 
           case neg =>
             rfl
 
+/-- Delete a variable from an ICom. -/
 def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) :
   Option { com' : ICom Op Γ' t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
   match com with
@@ -352,21 +353,27 @@ def DCEType [OpSignature Op Ty] [OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : 
   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)}
 
+/-- Show that DCEType in inhabited. -/
 instance [SIG : OpSignature Op Ty] [DENOTE : OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : Inhabited (DCEType com) where
   default :=
     ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩
 
+/-- walk the list of bindings, and for each `let`, try to delete the variable defined by the `let` in the body/
+Note that this is `O(n^2)`, for an easy proofs, as it is written as a forward pass.
+The fast `O(n)` version is a backward pass. 
+-/
 partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : DCEType com :=
     match HCOM: com with
-    | .ret v =>
+    | .ret v => -- If we have a `ret`, return it.
       ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by
         intros V
         simp[Ctxt.Valuation.hom]
         ⟩⟩
     | .lete (α := α) e body =>
       let DEL := Deleted.deleteSnoc Γ α
+        -- Try to delete the variable α in the body.
         match ICom.deleteVar? DEL body with
-        | .none =>
+        | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
           let ⟨Γ', hom', ⟨body', hbody'⟩⟩
             :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : ICom Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.hom hom)} :=
             (dce_ body)
@@ -388,13 +395,14 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
             ⟩⟩
           let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
             :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} :=
-            dce_ com'
+            dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
           ⟨Γ'', hom''.composeRange hom', com'', by
             intros V
             rw[← HCOM]
             rw[hcom']
             rw[hcom'']
-            rfl⟩/-
+            rfl⟩
+/-
 decreasing_by {
   simp[invImage, InvImage, WellFoundedRelation.rel, Nat.lt_wfRel]
   sorry -- Lean bug: *no goals to be solved*?!
