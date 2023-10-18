@@ -8,9 +8,6 @@ lean_lib SSA {
   roots := #[`SSA]
 }
 
-lean_exe mlirnatural {
-  root := `SSA.MLIRNatural
-}
 -- -- PROJECTS
 -- -- ========
 --
