@@ -399,25 +399,37 @@ unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (co
         ⟩⟩
     | .lete (α := α) e body => 
       let DEL := Deleted.deleteSnoc Γ α
-      let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-        : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
         match ICom.deleteVar? DEL body with
         | .none => 
+          let ⟨Γ', hom', ⟨com', hcom'⟩⟩
+          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
             ⟨Γ, Ctxt.Hom.id, ⟨.lete (α := α) e body, by intros V; simp[HCOM, Ctxt.Valuation.hom]⟩⟩
-        | .some ⟨body', hbody⟩ => 
-          ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-            simp[HCOM]
+          let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
+            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} := 
+            dce com'
+          ⟨Γ'', hom''.composeRange hom', com'', by 
             intros V
-            simp[ICom.denote]
-            apply hbody
-          ⟩⟩ 
-      let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
-        :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} := 
-        dce com'
-      ⟨Γ'', hom''.composeRange hom', com'', by 
-        intros V
-        rw[← HCOM]
-        rw[hcom']
-        rw[hcom'']
-        rfl⟩      
+            rw[← HCOM]
+            rw[hcom']
+            rw[hcom'']
+            rfl⟩      
+
+        | .some ⟨body', hbody⟩ => 
+          let ⟨Γ', hom', ⟨com', hcom'⟩⟩
+          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
+            ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
+              simp[HCOM]
+              intros V
+              simp[ICom.denote]
+              apply hbody
+            ⟩⟩ 
+          let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
+            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} := 
+            dce com'
+          ⟨Γ'', hom''.composeRange hom', com'', by 
+            intros V
+            rw[← HCOM]
+            rw[hcom']
+            rw[hcom'']
+            rfl⟩      
 end DCE
