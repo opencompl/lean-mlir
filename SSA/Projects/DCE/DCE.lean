@@ -388,10 +388,19 @@ def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) :
             apply Deleted.pushforward_Valuation_snoc
             ⟩ 
 
-mutual
-unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : 
+/-- Declare the type of DCE up-front, so we can declare an `Inhabited` instance.
+   This is necessary so that we can mark the DCE implementation as a `partial def` and ensure that Lean
+   does not freak out on us, since it's indeed unclear to Lean that the output type of `dce` is always inhabited.
+-/
+def DCEType [OpSignature Op Ty] [OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : Type :=  
   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
-    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
+    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)}
+
+instance [SIG : OpSignature Op Ty] [DENOTE : OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : Inhabited (DCEType com) where
+  default := 
+    ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩  
+
+partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : DCEType com := 
     match HCOM: com with
     | .ret v => 
       ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by 
@@ -404,7 +413,7 @@ unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (co
         | .none => 
           let ⟨Γ', hom', ⟨body', hbody'⟩⟩ 
             :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : ICom Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.hom hom)} := 
-            (dce body)
+            (dce_ body)
           let com' := ICom.lete (α := α) e (body'.changeVars hom')
           ⟨Γ, Ctxt.Hom.id, com', by 
             intros V
@@ -423,12 +432,24 @@ unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (co
             ⟩⟩ 
           let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
             :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} := 
-            dce com'
+            dce_ com'
           ⟨Γ'', hom''.composeRange hom', com'', by 
             intros V
             rw[← HCOM]
             rw[hcom']
             rw[hcom'']
-            rfl⟩
-end -- mutual block
+            rfl⟩/-
+decreasing_by {
+  simp[invImage, InvImage, WellFoundedRelation.rel, Nat.lt_wfRel]
+  sorry -- Lean bug: *no goals to be solved*?!
+}
+-/
+
+/-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where we play the `DCEType` trick
+to convince Lean that the output type is in fact inhabited. -/
+def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : 
+  Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
+    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
+  dce_ com
+
 end DCE
