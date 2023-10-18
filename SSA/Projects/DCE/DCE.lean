@@ -96,50 +96,6 @@ theorem linarith_failure (x y : Nat) (H1 : ¬ (x = y)) (H2 : ¬ (x < y)) : x > y
     try linarith
     sorry
 
--- /-- Given  `Γ' := Γ /delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
--- def Deleted.pushforward_var {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
---   (DEL : Deleted Γ delv Γ') ⦃v : Γ.Var β⦄
---   (NEQ: v.val ≠ delv.val) : Γ'.Var β :=
---   if VEQ : v.val = delv.val
---   then by contradiction
---   else 
---   if VLT : v.val < delv.val
---   then ⟨v.val, by {
---     simp[Deleted] at DEL
---     subst DEL
---     have ⟨vix, vproof⟩ := v
---     simp[Ctxt.delete] at *
---     have H := List.get_removeNth_lt_n (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
---     rw[H]
---     exact vproof
---   }⟩
---   else ⟨v.val - 1, by {
---     have : v.val > delv.val := by {
---       -- No way I need this to prove this?
---       have H := Nat.lt_trichotomy v.val delv.val
---       cases H;
---       . contradiction
---       . case inr H => 
---         cases H;
---         . contradiction
---         . linarith
---     }
---     simp[Deleted] at DEL
---     subst DEL
---     have ⟨vix, vproof⟩ := v
---     simp[Ctxt.delete] at *
---     have : vix > 0 := by linarith
---     cases VIX:vix
---     case zero => subst VIX; contradiction
---     case succ vix' =>
---       have H := List.get_removeNth_geq_n (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
---       simp
---       rw[H]
---       subst VIX
---       assumption
---   }⟩
-
-
 /-- Given  `Γ' := Γ /delv`, transport a variable from `Γ'` to `Γ`. -/
 def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var β :=
   if DELV:v.val < delv.val
