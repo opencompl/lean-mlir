@@ -123,7 +123,7 @@ theorem bitvec_AndOrXor_716 :
       try sorry
 
 theorem bitvec_AndOrXor_794 :
- ∀ (w : Nat) (a b : BitVec w), ofBool (a >ₛ b) &&& ofBool (a != b) = ofBool (a >ₛ b)
+ ∀ (w : Nat) (a b : BitVec w), (a >ₛ b) &&& ofBool (a != b) = (a >ₛ b)
 := by alive_auto
       try sorry
 
@@ -173,22 +173,22 @@ theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
       try sorry
 
 theorem bitvec_AndOrXor_1683_1 :
- ∀ (w : Nat) (a b : BitVec w), ofBool (a >ᵤ b) ||| ofBool (a == b) = (a ≥ᵤ b)
+ ∀ (w : Nat) (a b : BitVec w), (a >ᵤ b) ||| ofBool (a == b) = (a ≥ᵤ b)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1683_2 :
- ∀ (w : Nat) (a b : BitVec w), ofBool (a ≥ᵤ b) ||| ofBool (a != b) = ofBool true
+ ∀ (w : Nat) (a b : BitVec w), (a ≥ᵤ b) ||| ofBool (a != b) = ofBool true
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1704 :
- ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| ofBool (A <ᵤ B) = (B + -1 ≥ᵤ A)
+ ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| (A <ᵤ B) = (B + -1 ≥ᵤ A)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1705 :
- ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| ofBool (B >ᵤ A) = (B + -1 ≥ᵤ A)
+ ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| (B >ᵤ A) = (B + -1 ≥ᵤ A)
 := by alive_auto
       try sorry
 
@@ -293,12 +293,12 @@ theorem bitvec_AndOrXor_2430 :
       try sorry
 
 theorem bitvec_AndOrXor_2443 :
- ∀ (w : Nat) (y x : BitVec w), sshiftRight (x ^^^ -1) (BitVec.toNat y) ^^^ -1 = sshiftRight x (BitVec.toNat y)
+ ∀ (w : Nat) (y x : BitVec w), sshr (x ^^^ -1) (BitVec.toNat y) ^^^ -1 = sshr x (BitVec.toNat y)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_2453 :
- ∀ (w : Nat) (y x : BitVec w), (ofBool (x <ₛ y)) ^^^ -1 = ofBool (x ≥ₛ y)
+ ∀ (w : Nat) (y x : BitVec w), (x <ₛ y) ^^^ -1 = ofBool (x ≥ₛ y)
 := by alive_auto
       try sorry
 
@@ -353,7 +353,7 @@ theorem bitvec_AndOrXor_2658 :
       try sorry
 
 theorem bitvec_AndOrXor_2663 :
- ∀ (w : Nat) (a b : BitVec w), ofBool (a ≤ᵤ b) ^^^ ofBool (a != b) = (a ≥ᵤ b)
+ ∀ (w : Nat) (a b : BitVec w), (a ≤ᵤ b) ^^^ ofBool (a != b) = (a ≥ᵤ b)
 := by alive_auto
       try sorry
 
@@ -474,7 +474,7 @@ theorem bitvec_Select_1105 :
       try sorry
 
 theorem bitvec_InstCombineShift__239 :
- ∀ (w : Nat) (X C : BitVec w), (X <<< C) >>> C = X &&& (-1) >>> C
+ ∀ (w : Nat) (X C : BitVec w), X <<< C >>> C = X &&& (-1) >>> C
 := by alive_auto
       try sorry
 
@@ -494,7 +494,7 @@ theorem bitvec_InstCombineShift__422_1:
       try sorry
 
 theorem bitvec_InstCombineShift__422_2:
- ∀ (Y X C : BitVec 31), (Y + sshiftRight X (BitVec.toNat C)) <<< C = Y <<< C + X &&& (-1) <<< C
+ ∀ (Y X C : BitVec 31), (Y + sshr X (BitVec.toNat C)) <<< C = Y <<< C + X &&& (-1) <<< C
 := by alive_auto
       try sorry
 
@@ -504,7 +504,7 @@ theorem bitvec_InstCombineShift__440 :
       try sorry
 
 theorem bitvec_InstCombineShift__458:
- ∀ (Y X C : BitVec 31), (sshiftRight X (BitVec.toNat C) - Y) <<< C = X - Y <<< C &&& (-1) <<< C
+ ∀ (Y X C : BitVec 31), (sshr X (BitVec.toNat C) - Y) <<< C = X - Y <<< C &&& (-1) <<< C
 := by alive_auto
       try sorry
 
