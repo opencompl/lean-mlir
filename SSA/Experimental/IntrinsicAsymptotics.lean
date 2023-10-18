@@ -609,19 +609,16 @@ def matchVar {rg : RegMVars Ty}
             RegMapping Op rg → Mapping Δ_in Γ_out →
             Option (RegMapping Op rg × Mapping Δ_in Γ_out)
           | _, .nil, .nil, rma, ma => some (rma, ma)
-          | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rma, ma => do
-            match rₗ, rᵣ with
-            | Reg.icom comᵣ, Reg.mvar i =>
-              match rma.lookup ⟨t, i⟩ with
-              | none => matchReg rsₗ rsᵣ (AList.insert ⟨_, i⟩ comᵣ rma) ma
-              | some comₗ =>
-                by exact if comₗ = comᵣ
-                then matchReg rsₗ rsᵣ rma ma
-                else none
-            | Reg.icom comₗ, Reg.icom comᵣ => do
-              let ⟨letsₗ, vₗ⟩ := comₗ.toLets
-              let ⟨letsᵣ, vᵣ⟩ := comᵣ.toLets
-              let x ← matchVar letsₗ vₗ letsᵣ vᵣ rma ∅
+          | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.mvar i) rsᵣ, rma, ma =>
+            match rma.lookup ⟨t, i⟩ with
+            | none => matchReg rsₗ rsᵣ (AList.insert ⟨_, i⟩ comₗ rma) ma
+            | some comᵣ =>
+              by exact if comₗ = comᵣ
+              then matchReg rsₗ rsᵣ rma ma
+              else none
+          | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.icom comᵣ) rsᵣ, rma, ma => do
+              let x ← matchVar comₗ.toLets.2 comₗ.toLets.3
+                               comᵣ.toLets.2 comᵣ.toLets.3 rma ∅
               matchReg rsₗ rsᵣ x.1 ma
         let ⟨rma, ma⟩ ← matchArg ie.args (hs.1 ▸ matchExpr.args) ma
         matchReg ie.regArgs (hs.1 ▸ matchExpr.regArgs) rma ma
@@ -668,6 +665,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
+#print AList.insert
 mutual
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
@@ -751,14 +749,30 @@ theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
     rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries
   | [], .nil, .nil, rma, ma => by
     simp (config := { contextual := true }) [matchVar.matchReg]
-  | t::l, .cons rₗ rsₗ, .cons rᵣ rsᵣ, rma, ma => by
+  | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.mvar i) rsᵣ, rma, ma => by
     intro h
-    simp at h
-    rw [matchVar.matchReg] at h
+    simp [matchVar.matchReg] at h
+    split at h
+    · rename_i hnone
+      have h' := subset_entries_matchVar_matchReg h
+      refine ⟨_root_.trans ?_ h'.1, h'.2⟩
+      rintro ⟨x, y⟩ hxy
+      simp only [List.subset_def, ← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, i⟩
+      . subst x; simp_all
+      . erw [AList.lookup_insert_ne hx]
+        assumption
+    · split_ifs at h with hc
+      · exact subset_entries_matchVar_matchReg h
+  | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.icom comᵣ) rsᵣ, rma, ma => by
+    intro h
+    simp [matchVar.matchReg] at h
+    -- does not unfold
+    sorry
 
 
 end
-
+#exit
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
 
