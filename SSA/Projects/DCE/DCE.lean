@@ -402,13 +402,16 @@ unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (co
       let DEL := Deleted.deleteSnoc Γ α
         match ICom.deleteVar? DEL body with
         | .none => 
-          let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩ 
-            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ), { com'' : ICom Op Γ'' t //  ∀ (V : Γ.Valuation), com.denote V = com''.denote (V.hom hom)} := 
-            dce com
-          ⟨Γ'', hom'', com'', by 
+          let ⟨Γ', hom', ⟨body', hbody'⟩⟩ 
+            :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : ICom Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.hom hom)} := 
+            (dce body)
+          let com' := ICom.lete (α := α) e (body'.changeVars hom')
+          ⟨Γ, Ctxt.Hom.id, com', by 
             intros V
-            rw[← HCOM]
-            rw[hcom'']⟩      
+            simp[ICom.denote]
+            rw[hbody']
+            rfl
+          ⟩
         | .some ⟨body', hbody⟩ => 
           let ⟨Γ', hom', ⟨com', hcom'⟩⟩
           : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} := 
@@ -426,6 +429,6 @@ unsafe def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (co
             rw[← HCOM]
             rw[hcom']
             rw[hcom'']
-            rfl⟩      
+            rfl⟩
 end -- mutual block
 end DCE
