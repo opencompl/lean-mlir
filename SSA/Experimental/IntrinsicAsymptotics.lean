@@ -634,6 +634,22 @@ def matchVar {rg : RegMVars Ty}
       | none => some (rma, AList.insert ⟨_, w⟩ v ma)
   decreasing_by matchVar => sorry
 
+--Yucky. Lean bug won't let me unfold `matchReg`
+theorem unfold_matchVar_matchReg {rg : RegMVars Ty}
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} : ∀ {t : Ctxt Ty × Ty}
+    {l : List (Ctxt Ty × Ty)}
+    {comₗ : ICom Op [] t.1 t.2}
+    {rsₗ : HVector (fun t : Ctxt Ty × Ty => Reg Op [] t.1 t.2) l}
+    {comᵣ : ICom Op rg t.1 t.2}
+    {rsᵣ : HVector (fun t : Ctxt Ty × Ty => Reg Op rg t.1 t.2) l}
+    {rma : RegMapping Op rg}
+    {ma : Mapping Δ_in Γ_out},
+    matchVar.matchReg (l := t::l) (.cons (Reg.icom comₗ) rsₗ) (.cons (Reg.icom comᵣ) rsᵣ) rma ma =
+      (do let x ← matchVar comₗ.toLets.2 comₗ.toLets.3
+                          comᵣ.toLets.2 comᵣ.toLets.3 rma ∅
+          matchVar.matchReg rsₗ rsᵣ x.1 ma) := by
+  simp [matchVar.matchReg]
+
 open AList
 
 /-- For mathlib -/
@@ -665,7 +681,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
-#print AList.insert
+set_option maxHeartbeats 1000000 in
 mutual
 
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
@@ -738,6 +754,7 @@ theorem subset_entries_matchVar_matchArg
       have h₂ := subset_entries_matchVar_matchArg h
       exact ⟨h₂.1, _root_.trans h₁.2 h₂.2⟩
 
+
 theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
     {Γ_out Δ_in : Ctxt Ty} : {l : List (Ctxt Ty × Ty)} →
     {Tₗ : HVector (fun t => Reg Op [] t.fst t.snd) l} →
@@ -766,17 +783,20 @@ theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
       · exact subset_entries_matchVar_matchReg h
   | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.icom comᵣ) rsᵣ, rma, ma => by
     intro h
-    simp [matchVar.matchReg] at h
-    -- does not unfold
-    sorry
-
+    simp only [matchVar.matchReg, bind, Option.mem_def, Option.bind_eq_some, Prod.exists] at h
+    rcases h with ⟨x, y, h, h'⟩
+    have h₁ := subset_entries_matchVar h
+    have h₂ := subset_entries_matchVar_matchReg h'
+    exact ⟨_root_.trans h₁.1 h₂.1, h₂.2⟩
 
 end
-#exit
--- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
-variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
+decreasing_by subset_entries_matchVar => sorry
 
-theorem denote_matchVar_matchArg [DecidableEq Op]
+
+-- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
+variable [∀ (t : Ty), Inhabited (toType t)]
+
+theorem denote_matchVar_matchArg
     {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op rg Γ_in Γ_out}
     {matchLets : Lets Op rg Δ_in Δ_out} :
     {l : List Ty} →
