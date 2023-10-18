@@ -24,7 +24,7 @@ def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 def a : Bitvec 2 := 0
 
 def b : Prop := a ≤ a
-def bb : Bool := b
+def bb : Bool := a ≤ a 
 
 #check b
 def c : Nat := 2

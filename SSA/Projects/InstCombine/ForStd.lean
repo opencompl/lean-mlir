@@ -109,7 +109,7 @@ instance {n} {x y : BitVec n} : Decidable (BitVec.ult x y) :=
 instance {n} {x y : BitVec n} : Decidable (BitVec.ule x y) :=
   decEq _ _
 
-instance {n} {x y : BitVec n} : Decidable (x < y) :=
+instance {n} {x y : BitVec n} : Decidable (x < y) := by
   sorry
 
 instance {n} {x y : BitVec n} : Decidable (x ≤ y) :=
