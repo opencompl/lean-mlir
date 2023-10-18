@@ -8,7 +8,9 @@ open Std.BitVec
 
 def a : BitVec 2 := 0
 def c : Nat := 2
-#check a <<< c
+def b : Bool := a ≤ a
+
+#check ofBool (a ≤ a)
 #eval a <<< c
 #check a >>> c
 #eval a >>> c
@@ -129,7 +131,7 @@ theorem bitvec_AndOrXor_716 :
       try sorry
 
 theorem bitvec_AndOrXor_794 :
- ∀ (w : Nat) (a b : BitVec w), (a >ₛ b) &&& ofBool (a != b) = (a >ₛ b)
+ ∀ (w : Nat) (a b : BitVec w), ofBool (a >ₛ b) &&& ofBool (a != b) = (a >ₛ b)
 := by alive_auto
       try sorry
 
@@ -179,22 +181,22 @@ theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
       try sorry
 
 theorem bitvec_AndOrXor_1683_1 :
- ∀ (w : Nat) (a b : BitVec w), (a >ᵤ b) ||| ofBool (a == b) = (a ≥ᵤ b)
+ ∀ (w : Nat) (a b : BitVec w), ofBool (a >ᵤ b) ||| ofBool (a == b) = (a ≥ᵤ b)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1683_2 :
- ∀ (w : Nat) (a b : BitVec w), (a ≥ᵤ b) ||| ofBool (a != b) = ofBool true
+ ∀ (w : Nat) (a b : BitVec w), ofBool (a ≥ᵤ b) ||| ofBool (a != b) = ofBool true
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1704 :
- ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| (A <ᵤ B) = (B + -1 ≥ᵤ A)
+ ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| ofBool (A <ᵤ B) = (B + -1 ≥ᵤ A)
 := by alive_auto
       try sorry
 
 theorem bitvec_AndOrXor_1705 :
- ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| (B >ᵤ A) = (B + -1 ≥ᵤ A)
+ ∀ (w : Nat) (A B : BitVec w), ofBool (B == 0) ||| ofBool (B >ᵤ A) = (B + -1 ≥ᵤ A)
 := by alive_auto
       try sorry
 
@@ -304,7 +306,7 @@ theorem bitvec_AndOrXor_2443 :
       try sorry
 
 theorem bitvec_AndOrXor_2453 :
- ∀ (w : Nat) (y x : BitVec w), (x <ₛ y) ^^^ -1 = (x ≥ₛ y)
+ ∀ (w : Nat) (y x : BitVec w), (ofBool (x <ₛ y)) ^^^ -1 = ofBool (x ≥ₛ y)
 := by alive_auto
       try sorry
 
@@ -359,7 +361,7 @@ theorem bitvec_AndOrXor_2658 :
       try sorry
 
 theorem bitvec_AndOrXor_2663 :
- ∀ (w : Nat) (a b : BitVec w), (a ≤ᵤ b) ^^^ ofBool (a != b) = (a ≥ᵤ b)
+ ∀ (w : Nat) (a b : BitVec w), ofBool (a ≤ᵤ b) ^^^ ofBool (a != b) = (a ≥ᵤ b)
 := by alive_auto
       try sorry
 
