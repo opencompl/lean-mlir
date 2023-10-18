@@ -67,23 +67,22 @@ theorem R.toTensor_getD (i : Nat) : a.toTensor.getD i 0 = (a.coeff i).toInt := b
   have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.rep_length a))).length = rep_length a := by
     simp
   by_cases (i < R.rep_length a)
-  · rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
-  · rw [Nat.not_lt] at h
+  case pos =>
+    rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
+    done
+  case neg => 
+    rw [Nat.not_lt] at h
     rw [List.getD_eq_default _, Polynomial.coeff_eq_zero_of_degree_lt]
-    sorry
-    sorry
-    sorry
-/-
-    simp [ZMod.toInt]; rw [ZMod.toInt_zero (q := q)]
+    simp[ZMod.toInt]
     unfold R.rep_length at h
     cases hDeg : Polynomial.degree (R.representative q n a)
     · apply WithBot.bot_lt_coe
-    · simp [hDeg] at h
+    . simp[hDeg] at h
       apply WithBot.some_lt_some.2
-      apply h
-    · rw [← hLength] at h
-      apply h
--/
+      linarith
+    . rw[← hLength] at h
+      linarith
+
 theorem R.toTensor_getD' (i : Nat) : ↑(a.toTensor.getD i 0) = a.coeff i := by
   rw [R.toTensor_getD]
   rw [ZMod.toInt_coe_eq]
