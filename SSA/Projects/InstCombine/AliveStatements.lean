@@ -1,4 +1,6 @@
-import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.InstCombine.TacticAuto
+import Mathlib.Data.Bitvec.Defs
+
 open Bitvec
 
 theorem bitvec_AddSub_1043 :
