@@ -99,3 +99,24 @@ def urem? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
   else some $ BitVec.ofNat w (x.toNat % y.toNat)
 
 instance : Coe Bool (BitVec 1) := ⟨ofBool⟩
+
+instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
+  coe := ofBool $ decide p
+
+instance {n} {x y : BitVec n} : Decidable (BitVec.ult x y) :=
+  decEq _ _
+
+instance {n} {x y : BitVec n} : Decidable (BitVec.ule x y) :=
+  decEq _ _
+
+instance {n} {x y : BitVec n} : Decidable (x < y) :=
+  sorry
+
+instance {n} {x y : BitVec n} : Decidable (x ≤ y) :=
+  sorry
+
+instance {n} {x y : BitVec n} : Decidable (x > y) :=
+  sorry
+
+instance {n} {x y : BitVec n} : Decidable (x ≥ y) :=
+  sorry
