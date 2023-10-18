@@ -84,7 +84,7 @@ def sdiv? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
   then none
   else 
     let div := (x.toInt / y.toInt)
-    if div < 1 --2^w 
+    if div < Int.ofNat (2^w)
       then some $ BitVec.ofInt w div
       else none
 
