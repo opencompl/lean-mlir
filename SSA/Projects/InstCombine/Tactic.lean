@@ -1,8 +1,6 @@
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForMathlib
 
--- open SSA 
-
 macro "simp_alive": tactic =>
   `(tactic|
       (
@@ -11,12 +9,3 @@ macro "simp_alive": tactic =>
           Option.some_bind', Option.bind_eq_bind, Bitvec.Refinement.some_some]
       )
    )
-
-macro "alive_auto": tactic =>
-  `(tactic|
-      (
-        skip; --placeholder, as `simp` will currently timeout sometimes
-        try simp (config := {decide := false})
-      )
-   )
-
