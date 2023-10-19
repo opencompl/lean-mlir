@@ -499,8 +499,61 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n :=
       simp[monomial]
 
 
-set_option pp.coercions true in
-set_option pp.analyze true in
+/-- an equivalent implementation of `fromTensor` that uses `Finsupp` to enable reasoning about values using mathlib's notions of
+  support, coefficients, etc. -/
+noncomputable def R.fromTensorFinsupp (coeffs : List ℤ) : (ZMod q)[X] :=
+  Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
+
+/-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
+theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
+    (R.fromTensorFinsupp (q := q) (cs ++ [c])) = (R.fromTensorFinsupp (q := q) cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
+    simp only[fromTensorFinsupp]
+    simp only[← Polynomial.ofFinsupp_add]
+    simp only[List.map_append, List.map]
+    simp only[List.toFinsupp_concat_eq_toFinsupp_add_single]
+    simp only[List.length_map]
+  
+/-- concatenating into a `fromTensorFinsupp` is the same as adding a monomial. -/
+theorem R.fromTensorFinsupp_concat_monomial {q : ℕ} (c : ℤ) (cs : List ℤ) :
+    (R.fromTensorFinsupp (q := q) (cs ++ [c])) = (R.fromTensorFinsupp (q := q) cs) + (Polynomial.monomial cs.length (Int.cast c : (ZMod q))) := by
+    simp[fromTensorFinsupp]
+    rw[← Polynomial.ofFinsupp_single]
+    simp only[List.toFinsupp_concat_eq_toFinsupp_add_single]
+    simp only[← Polynomial.ofFinsupp_add]
+    rw[List.length_map]
+
+/-- show that `fromTensor` is the same as `fromPoly ∘ fromTensorFinsupp`. -/
+theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q) (n := n) coeffs =
+  R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
+    simp[fromTensor, fromTensor']
+    induction coeffs  using List.reverseRecOn
+    case H0 => simp[List.enum, fromTensorFinsupp]
+    case H1 c cs hcs =>
+      simp[List.enum_append]
+      simp[R.fromTensorFinsupp_concat_monomial]
+      rw[hcs]
+      congr
+
+/-- `coeff (p % f) = coeff p` if the degree of `p` is less than the degree of `f`. -/
+theorem coeff_modByMonic_degree_lt_f {q n i : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) (DEGREE : p.degree < (f q n).degree) : 
+  (p %ₘ f q n).coeff i = p.coeff i := by
+  have H := (modByMonic_eq_self_iff (hq := f_monic q n) (p := p)).mpr DEGREE
+  simp[H]
+
+/-- The coefficient of `fromPoly p` is the coefficient of `p` modulo `f q n`. -/
+@[simp]
+theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
+  simp[R.coeff]
+  simp[FunLike.coe]
+  have H := R.representative_fromPoly_toFun (a := p) (n := n)
+  norm_cast at H ⊢
+
+
+/-- since `0` is the additive identity, getting from `(x :: xs)` at index `i` with -/
+theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) : 
+  (xs ++ [x]).getD i 0 = (xs.getD i 0) + (if i == xs.length then x else 0) := by sorry
+
+/-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
 theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int): (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
   induction tensor using List.reverseRecOn
   case H0 =>
