@@ -394,6 +394,18 @@ noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
   coeffs.enum.foldl (init := 0) fun res (i,c) =>
     res + R.monomial ↑c i
 
+/- `fromTensor (cs ++ [c])` equals `(fromTensor xs) + c X^n` -/
+theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
+  = (R.fromTensor (q := q) (n := n) cs) + R.monomial c cs.length := by
+    induction cs using List.reverseRecOn generalizing c
+    case H0 =>
+      simp[fromTensor]
+    case H1 xs x _hxs =>
+      simp[fromTensor]
+      repeat rw[List.enum_append]
+      repeat rw[List.foldl_append]
+      simp[List.enumFrom]
+
 /-- A definition of fromTensor that operates on Z/qZ[X], to provide a relationship between
     R and Z/qZ[X] as the polynomial in R is built.
 -/
