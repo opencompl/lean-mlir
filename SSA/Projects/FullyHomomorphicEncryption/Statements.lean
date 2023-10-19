@@ -246,8 +246,9 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
     simp[IntCast.intCast]
     norm_cast
     ring_nf
-    -- ↑↑(List.getD tensor i 0) = List.getD tensor i 0 % ↑(1 + q') : casst hell
-    sorry
+    rw[ZMod.cast_eq_val]
+    rw[ZMod.val_int_cast]
+    ring_nf
 
 theorem toTensor_fromTensor_trimTensor_eq_trimTensor [hqgt1 : Fact (q > 1)] (a : R q n) (tensor : List Int) {l : Nat}:
   Polynomial.degree a.representative = .some l → tensor.length < l →
