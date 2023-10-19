@@ -71,7 +71,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
   case pos =>
     rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
     done
-  case neg => 
+  case neg =>
     rw [Nat.not_lt] at h
     rw [List.getD_eq_default _, Polynomial.coeff_eq_zero_of_degree_lt]
     simp[ZMod.toInt]
@@ -198,11 +198,11 @@ theorem toTensor_length_eq_f_deg_plus_1 [hqgt1 : Fact (q > 1)] (a : R q n) :
   a.toTensor'.length = 2^n + 1 := by
   rw [R.toTensor', List.length_append, toTensor_length_eq_rep_length, List.length_replicate]
   have h : R.rep_length a ≤ 2^n  := Nat.le_of_lt_succ (R.rep_length_lt_n_plus_1 q n a)
-  calc 
+  calc
        R.rep_length a + (2 ^ n - R.rep_length a + 1)
      = R.rep_length a + (Nat.succ (2 ^ n) - R.rep_length a) := by rw [Nat.add_comm _ 1, ← Nat.add_sub_assoc h, Nat.add_comm 1 (2^n)]
    _ = 2^n + 1 := by rw [Nat.add_sub_cancel' (Nat.le_succ_of_le h)]
-  
+
 
 theorem toTensor_trimTensor_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor = a.toTensor := by
@@ -229,13 +229,13 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
 theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat):
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
   simp[R.toTensor_getD]
-  
+
   simp[ZMod.toInt];
   simp[R.coeff_fromTensor]
   norm_cast
   simp[Int.cast, ZMod.cast]
   cases q;
-  case zero => 
+  case zero =>
     exfalso
     simp at hqgt1
     exact (Fact.elim hqgt1)
@@ -247,8 +247,8 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
     norm_cast
     ring_nf
     -- ↑↑(List.getD tensor i 0) = List.getD tensor i 0 % ↑(1 + q') : casst hell
-    sorry 
-  
+    sorry
+
 theorem toTensor_fromTensor_trimTensor_eq_trimTensor [hqgt1 : Fact (q > 1)] (a : R q n) (tensor : List Int) {l : Nat}:
   Polynomial.degree a.representative = .some l → tensor.length < l →
   (R.fromTensor (trimTensor tensor) (q:=q) (n :=n)).toTensor = trimTensor tensor := by
@@ -286,6 +286,6 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.
 
 theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.toTensor' = a := by
   rw [← R.fromTensor_eq_fromTensor_trimTensor, R.trim_toTensor'_eq_toTensor]
-  apply fromTensor_toTensor 
+  apply fromTensor_toTensor
 
 end Poly
