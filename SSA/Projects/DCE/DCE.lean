@@ -70,7 +70,7 @@ theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) 
 
 
 /-- Removing index `n` shifts entires of `k ≥ n` by 1. -/
-theorem List.get_removeNth_geq_n {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
+theorem List.get?_removeNth_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
   (xs.removeNth n).get? k = xs.get? (k + 1) := by
   induction xs generalizing n k
   case nil => simp[removeNth, List.get]
