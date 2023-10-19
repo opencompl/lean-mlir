@@ -32,7 +32,7 @@ theorem List.removeNth_eq_len_snoc (hn : n = xs.length) : List.removeNth (xs ++ 
       exact hn
 
 /-- removing at any index `≥ xs.length` does not change the list. -/
-theorem List.removeNth_gt_len (hn : xs.length ≤ n) : List.removeNth xs n = xs := by
+theorem List.removeNth_of_length_le (hn : xs.length ≤ n) : List.removeNth xs n = xs := by
   induction n generalizing xs
   case zero =>
     induction xs
