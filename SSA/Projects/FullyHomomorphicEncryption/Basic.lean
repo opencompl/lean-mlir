@@ -17,6 +17,7 @@ import Mathlib.Data.ZMod.Defs
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
+import Mathlib.Data.List.ToFinsupp
 import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
@@ -140,10 +141,29 @@ abbrev R := (ZMod q)[X] ⧸ (Ideal.span {f q n})
 -- Coefficients of `a : R' q n` are `a\_i : Zmod q`.
 -- TODO: get this from mathlib
 
-/-- Canonical epimorphism `ZMod q[X] ->*+ R q n` -/
+/-- Canonical epimorphism / quotient map: `ZMod q[X] ->*+ R q n` -/
 abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] →+* R q n := Ideal.Quotient.mk (Ideal.span {f q n})
 
-private noncomputable def R.representative' : R q n → (ZMod q)[X] := Function.surjInv Ideal.Quotient.mk_surjective
+/-- fromPoly, the canonical epi from `ZMod q[X] →*+ R q n` is surjective -/
+theorem R.surjective_fromPoly (q n : ℕ) : Function.Surjective (R.fromPoly (q := q) (n := n)) := by
+  simp[R.fromPoly]
+  apply Ideal.Quotient.mk_surjective
+
+private noncomputable def R.representative' : R q n → (ZMod q)[X] := Function.surjInv (R.surjective_fromPoly q n)
+
+theorem R.injective_representative' (q n : ℕ) : Function.Injective (R.representative' (q := q) (n := n)) := by
+  simp[R.representative']
+  apply Function.injective_surjInv
+
+/-- A concrete version that shows that mapping into the ideal back from the representative produces the representative'
+  NOTE: Lean times out if I use the abbreviation `R.fromPoly` for unclear reasons! -/
+theorem R.fromPoly_representatitive' (a : R q n) : R.fromPoly (R.representative' q n a) = ↑ a := by
+  simp[R.fromPoly, R.representative']
+  apply Function.surjInv_eq
+
+theorem R.fromPoly_representatitive'_toFun (a : R q n) : (R.fromPoly (q := q) (n := n)).toFun (R.representative' q n a) = ↑a := by
+  apply Function.surjInv_eq
+
 /--
 The representative of `a : R q n` is the (unique) polynomial `p : ZMod q[X]` of degree `< 2^n`
  such that `R.fromPoly p = a`.
@@ -159,7 +179,7 @@ theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n
    use x
 
 /--
-`R.representative` is in fact a representative of the equivalence class.
+`R.'representative'` is in fact a representative of the equivalence class.
 -/
 @[simp]
 theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
@@ -172,13 +192,12 @@ theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.repr
  apply Function.surjInv_eq
 
 
-
 /--
-Characterization theorem for any potential representative.
+Characterization theorem for any potential representative (in terms of ideals).
 For an  `a : (ZMod q)[X]`, the representative of its equivalence class
 is just `a + i` for some `i ∈ (Ideal.span {f q n})`.
 -/
-theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
+theorem R.fromPoly_rep'_eq_ideal : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
   intro a
   exists (R.fromPoly (n:=n) a).representative' - a
   constructor
@@ -186,6 +205,63 @@ theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n
     simp [R.representative', Function.surjInv_eq]
   · ring
   done
+/--
+Characterization theorem for any potential representative (in terms of elements).
+For an  `a : (ZMod q)[X]`, the representative of its equivalence class
+is a concrete element of the form `a + k * (f q n)` for some `k ∈ (ZMod q)[X]`.
+-/
+theorem R.fromPoly_rep'_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by
+  have H : ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by 
+    apply R.fromPoly_rep'_eq_ideal
+  obtain ⟨i, iInIdeal, ih⟩ := H
+  have fqn_div_i : (f q n) ∣ i  := by
+    rw[← Ideal.mem_span_singleton]
+    assumption
+  have i_multiple_fqn : ∃ (k : (ZMod q)[X]), i = k * (f q n) := by
+    apply dvd_iff_exists_eq_mul_left.mp
+    assumption
+  obtain ⟨k, hk⟩ := i_multiple_fqn
+  exists k
+  subst hk
+  rw[ih]
+  ring_nf
+
+/-- A theorem similar to `R.fromPoly_rep'_eq_element` but uses `fromPoly.toFun` to be more deterministic,
+  as the `toFun` sometimes sneaks in due to coercions. -/
+theorem R.representatitive'_toFun_fromPoly_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), 
+  R.representative' q n ((R.fromPoly (q := q) (n := n)).toFun a) = a + k * (f q n) := by
+  have H : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by apply
+    R.fromPoly_rep'_eq_element;
+  obtain ⟨k, hk⟩ := H
+  exists k
+  ring_nf at hk ⊢
+  rw[← hk]
+  norm_cast
+
+/-- The representative of 0 wil live in the ideal of {f q n}. To show that such an element is a multiple of {f q n}, use `Ideal.mem_span_singleton'`-/
+theorem R.representative'_zero_ideal : R.representative' q n 0 ∈ Ideal.span {f q n} := by
+  have H : ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) 0).representative' = 0 + i := by apply R.fromPoly_rep'_eq_ideal (a := 0)
+  obtain ⟨i, hi, hi'⟩ := H
+  simp[fromPoly] at hi'
+  rw[hi']
+  assumption
+
+/-- The representatiatve of 0 is a multiple of `f q n`. -/
+theorem R.representative'_zero_elem : ∃ (k : (ZMod q)[X]), R.representative' q n 0 = k * (f q n) := by
+  have H : ∃ k : (ZMod q)[X], (R.fromPoly (n:=n) 0).representative' = k * (f q n) + 0 := by apply R.fromPoly_rep'_eq_element (a := 0)
+  obtain ⟨k, hk⟩ := H
+  simp[fromPoly] at hk
+  rw[hk]
+  exists k
+
+/-- Representative of (0 : R) is (0 : Z/qZ[X]) -/
+theorem R.representative_zero : R.representative q n 0 = 0 := by
+  simp[R.representative]
+  obtain ⟨k, hk⟩ := R.representative'_zero_elem q n
+  rw[hk]
+  rw[dvd_iff_modByMonic_eq_zero]
+  simp
+  exact (f_monic q n)
 
 /--
 Characterization theorem for the representative.
@@ -195,12 +271,19 @@ the same as taking the remainder of `a` modulo `f q n`.
 theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
   intro a
   simp [R.representative]
-  have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq q n a
+  have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq_ideal q n a
   rw [hi_eq]
   apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
   ring_nf
   apply Ideal.mem_span_singleton.1 hiI
   done
+
+/- characterize representative', very precisely, in terms of elements -/
+/-
+theorem R.representative'_iff (r : R q n) (p : (ZMod q)[X]) : 
+  (∃ (k : (ZMod q)[X]), (R.representative' q n r) = (k * (f q n) + p)) ↔ (fromPoly (n := n) (q := q) p = r) := by
+  constructor
+-/
 
 /-- Another characterization of the representative: if the degree of x is less than that of (f q n),
 then we recover the same polynomial. -/
@@ -286,7 +369,7 @@ noncomputable def R.fromTensor' (coeffs : List Int) : (ZMod q)[X] :=
   coeffs.enum.foldl (init := 0) fun res (i,c) =>
     res + (Polynomial.monomial i ↑c)
 
-theorem R.fromTensor_eq_fromTensor'_toPoly_aux (coeffs : List Int) (rp : R q n) (p : (ZMod q)[X])
+theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n) (p : (ZMod q)[X])
   (H : R.fromPoly (q := q) (n := n) p = rp) :
   ((List.enumFrom k coeffs).foldl (init := rp) fun res (i,c) =>
     res + R.monomial ↑c i) =
@@ -305,18 +388,45 @@ theorem R.fromTensor_eq_fromTensor'_toPoly_aux (coeffs : List Int) (rp : R q n) 
 /-- fromTensor = R.fromPoly ∘ fromTensor'.
 This permits reasoning about fromTensor directly on the polynomial ring.
 -/
-theorem R.fromTensor_eq_fromTensor'_toPoly {q n} : R.fromTensor (q := q) (n := n) coeffs =
+theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensor' q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs
     . simp[List.enum]
     . simp[List.enum_cons]
-      apply fromTensor_eq_fromTensor'_toPoly_aux
+      apply fromTensor_eq_fromTensor'_fromPoly_aux
       simp[monomial]
 
-theorem R.representative_fromTensor (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
+/-- A definition of fromTensor that uses `mathlib`'s higher level constructions
+  for polynomial building to convert a list into a Finsupp to build the coefficient list.
+-/
+noncomputable def R.fromTensorFinsupp (coeffs : List Int) : R q n :=
+  (R.fromPoly (q := q) (n := n)).toFun (Polynomial.ofFinsupp (List.toFinsupp (List.map Int.cast coeffs))) 
+
+theorem R.fromTensor_eq_fromTensorFinsupp : R.fromTensor (q := q) (n := n) = R.fromTensorFinsupp (q := q) (n := n) := sorry
+
+set_option pp.coercions true in 
+set_option pp.analyze true in
+theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int): (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
+  have H := R.representatitive'_toFun_fromPoly_eq_element q n  ({ toFinsupp := List.toFinsupp (List.map Int.cast tensor) })
+  obtain ⟨a, ha⟩ := H
+  rw[R.fromTensor_eq_fromTensorFinsupp]
+  simp[R.fromTensorFinsupp]
+  simp[R.coeff]
+  simp[R.representative]
+  conv =>
+    lhs
+    pattern (R.representative' _ _ _)
+    exact ha
+  rw[Polynomial.coeff_ofFinsupp]
+  ring_nf
+  sorry -- we need to move gnarly mathlib objects here.
+  
+
+
+theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
-  rw[fromTensor_eq_fromTensor'_toPoly];
+  rw[fromTensor_eq_fromTensor'_fromPoly];
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)
