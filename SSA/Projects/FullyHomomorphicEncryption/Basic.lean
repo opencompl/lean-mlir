@@ -441,32 +441,41 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n :=
       apply fromTensor_eq_fromTensor'_fromPoly_aux
       simp[monomial]
 
-/-- A definition of fromTensor that uses `mathlib`'s higher level constructions
-  for polynomial building to convert a list into a Finsupp to build the coefficient list.
--/
-noncomputable def R.fromTensorFinsupp (coeffs : List Int) : R q n :=
-  (R.fromPoly (q := q) (n := n)).toFun (Polynomial.ofFinsupp (List.toFinsupp (List.map Int.cast coeffs))) 
 
-theorem R.fromTensor_eq_fromTensorFinsupp : R.fromTensor (q := q) (n := n) = R.fromTensorFinsupp (q := q) (n := n) := sorry
-
-set_option pp.coercions true in 
+set_option pp.coercions true in
 set_option pp.analyze true in
 theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int): (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
-  have H := R.representatitive'_toFun_fromPoly_eq_element q n  ({ toFinsupp := List.toFinsupp (List.map Int.cast tensor) })
-  obtain ⟨a, ha⟩ := H
-  rw[R.fromTensor_eq_fromTensorFinsupp]
-  simp[R.fromTensorFinsupp]
-  simp[R.coeff]
-  simp[R.representative]
-  conv =>
-    lhs
-    pattern (R.representative' _ _ _)
-    exact ha
-  rw[Polynomial.coeff_ofFinsupp]
-  ring_nf
-  sorry -- we need to move gnarly mathlib objects here.
-  
-
+  induction tensor using List.reverseRecOn
+  case H0 =>
+    simp[fromTensor, coeff, representative_zero]
+  case H1 cs c hcs =>
+    simp[fromTensor_snoc]
+    rw[fromTensor_eq_fromTensor'_fromPoly]
+    by_cases (i < cs.length)
+    case pos =>
+      rw[List.getD_eq_get (hn := by simp[List.append]; linarith)]
+      simp[fromTensor_eq_fromTensor'_fromPoly]
+      simp[coeff]
+      ring_nf
+      simp only[FunLike.coe]
+      rw[representative_fromPoly_toFun (n := n) (a := fromTensor' q cs)]
+      sorry
+    case neg =>
+      by_cases (i = cs.length)
+      case pos =>
+        subst h
+        sorry
+      case neg =>
+        have hi : i > cs.length := by
+          obtain H := Nat.lt_trichotomy i cs.length
+          cases H
+          . linarith
+          . case inr H =>
+              cases H
+              . contradiction
+              . linarith
+        rw[List.getD_eq_default (hn := by simp[List.length_append]; linarith)]
+        sorry
 
 theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
