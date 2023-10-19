@@ -654,8 +654,7 @@ open AList
 
 /-- For mathlib -/
 theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
-    {k : α} {v : β k} :
-    ⟨k, v⟩ ∈ s.entries → k ∈ s := by
+    {k : α} {v : β k} : ⟨k, v⟩ ∈ s.entries → k ∈ s := by
   intro h
   rcases s with ⟨entries, nd⟩
   simp [(· ∈ ·), keys] at h ⊢
