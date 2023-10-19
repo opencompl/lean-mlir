@@ -304,6 +304,62 @@ theorem R.representative_add [Fact (q > 1)](a b : R q n) : (a + b).representativ
   repeat rw[R.representative_fromPoly]
   rw[Polynomial.add_modByMonic]
 
+/-- pushing and pulling negation through mod -/
+theorem neg_modByMonic (p mod : (ZMod q)[X]) : (-p) %ₘ mod = - (p %ₘ mod) := by
+    have H : -p = (-1 : ZMod q) • p := by norm_num
+    have H' : - (p %ₘ mod) = (-1 : ZMod q) • (p %ₘ mod) := by norm_num
+    rw[H, H']
+    apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
+
+/-- %ₘ is a subtraction homomorphism (obviously)-/
+@[simp]
+theorem sub_modByMonic (a b mod : (ZMod q)[X]) : (a - b) %ₘ mod = a %ₘ mod - b %ₘ mod := by
+  ring_nf
+  repeat rw[sub_eq_add_neg]
+  simp[Polynomial.add_modByMonic]
+  rw[neg_modByMonic]
+
+/-- Representative is an multiplicative homomorphism upto modulo -/
+@[simp]
+theorem R.representative_mul [Fact (q > 1)] (a b : R q n) : (a * b).representative = (a.representative * b.representative) %ₘ (f q n) := by
+  have ⟨a', ha'⟩ := R.surjective_fromPoly q n a
+  have ⟨b', hb'⟩ := R.surjective_fromPoly q n b
+  have ⟨ab', hab'⟩ := R.surjective_fromPoly q n (a * b)
+  rw[← hab']
+  subst ha'
+  subst hb'
+  rw[← map_mul] at hab'
+  rw[hab']
+  repeat rw[R.representative_fromPoly]
+  -- rw[modByMonic_eq_sub_mul_div (p := a' * b') (_hq := f_monic q n)]
+  rw[modByMonic_eq_sub_mul_div (p := a') (_hq := f_monic q n)]
+  rw[modByMonic_eq_sub_mul_div (p := b') (_hq := f_monic q n)]
+  ring_nf
+  repeat rw[Polynomial.add_modByMonic]
+  ring_nf
+  repeat rw[sub_modByMonic]
+
+  have H1 : (-(a' * f q n * (b' /ₘ f q n))) %ₘ f q n = 0 := by
+    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    rw[dvd_neg]
+    apply dvd_mul_of_dvd_left
+    apply dvd_mul_of_dvd_right
+    apply dvd_rfl
+  rw[H1]
+  have H2 : b' * f q n * (a' /ₘ f q n) %ₘ f q n = 0 := by
+    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    apply dvd_mul_of_dvd_left
+    apply dvd_mul_of_dvd_right
+    apply dvd_rfl
+  rw[H2]
+  have H3 : f q n ^ 2 * (b' /ₘ f q n) * (a' /ₘ f q n) %ₘ f q n = 0 := by
+    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    apply dvd_mul_of_dvd_left
+    apply dvd_mul_of_dvd_left
+    apply dvd_pow_self
+    simp
+  rw[H3]
+  ring
 
 /- characterize representative', very precisely, in terms of elements -/
 /-
