@@ -212,7 +212,7 @@ For an  `a : (ZMod q)[X]`, the representative of its equivalence class
 is a concrete element of the form `a + k * (f q n)` for some `k ∈ (ZMod q)[X]`.
 -/
 theorem R.fromPoly_rep'_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by
-  have H : ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by 
+  have H : ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
     apply R.fromPoly_rep'_eq_ideal
   obtain ⟨i, iInIdeal, ih⟩ := H
   have fqn_div_i : (f q n) ∣ i  := by
@@ -229,7 +229,7 @@ theorem R.fromPoly_rep'_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R
 
 /-- A theorem similar to `R.fromPoly_rep'_eq_element` but uses `fromPoly.toFun` to be more deterministic,
   as the `toFun` sometimes sneaks in due to coercions. -/
-theorem R.representatitive'_toFun_fromPoly_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), 
+theorem R.representatitive'_toFun_fromPoly_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]),
   R.representative' q n ((R.fromPoly (q := q) (n := n)).toFun a) = a + k * (f q n) := by
   have H : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by apply
     R.fromPoly_rep'_eq_element;
@@ -304,9 +304,10 @@ theorem R.representative_add [Fact (q > 1)](a b : R q n) : (a + b).representativ
   repeat rw[R.representative_fromPoly]
   rw[Polynomial.add_modByMonic]
 
+
 /- characterize representative', very precisely, in terms of elements -/
 /-
-theorem R.representative'_iff (r : R q n) (p : (ZMod q)[X]) : 
+theorem R.representative'_iff (r : R q n) (p : (ZMod q)[X]) :
   (∃ (k : (ZMod q)[X]), (R.representative' q n r) = (k * (f q n) + p)) ↔ (fromPoly (n := n) (q := q) p = r) := by
   constructor
 -/
