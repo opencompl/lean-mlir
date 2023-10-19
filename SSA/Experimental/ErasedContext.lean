@@ -68,12 +68,12 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 def toSnoc {Γ : Ctxt Ty} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
   ⟨var.1+1, var.2⟩
 
-@[simp]
+--@[simp]
 theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
     ⟨0, h⟩ = last Γ t :=
   rfl
 
-@[simp]
+--@[simp]
 theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) = some t') :
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
