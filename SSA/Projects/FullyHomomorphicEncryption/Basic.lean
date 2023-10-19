@@ -18,6 +18,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
+import Mathlib.Data.Polynomial.RingDivision
 import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
@@ -268,6 +269,17 @@ Characterization theorem for the representative.
 Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is
 the same as taking the remainder of `a` modulo `f q n`.
 -/
+theorem R.representative_fromPoly_toFun : forall a : (ZMod q)[X], ((R.fromPoly (n:=n) (q := q)).toFun a).representative = a %ₘ (f q n) := by
+  intro a
+  simp [R.representative]
+  have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq_ideal q n a
+  simp[FunLike.coe] at hi_eq
+  rw [hi_eq]
+  apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
+  ring_nf
+  apply Ideal.mem_span_singleton.1 hiI
+  done
+
 theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
   intro a
   simp [R.representative]
@@ -277,6 +289,20 @@ theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a
   ring_nf
   apply Ideal.mem_span_singleton.1 hiI
   done
+
+/-- Representative is an additive homomorphism -/
+@[simp]
+theorem R.representative_add [Fact (q > 1)](a b : R q n) : (a + b).representative = a.representative + b.representative := by
+  have ⟨a', ha'⟩ := R.surjective_fromPoly q n a
+  have ⟨b', hb'⟩ := R.surjective_fromPoly q n b
+  have ⟨ab', hab'⟩ := R.surjective_fromPoly q n (a + b)
+  rw[← hab']
+  subst ha'
+  subst hb'
+  rw[← map_add] at hab'
+  rw[hab']
+  repeat rw[R.representative_fromPoly]
+  rw[Polynomial.add_modByMonic]
 
 /- characterize representative', very precisely, in terms of elements -/
 /-
@@ -302,6 +328,12 @@ theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 
   rw [← f_deg_eq q n]
   apply Polynomial.degree_modByMonic_lt
   exact f_monic q n
+
+/-- The representative `a : R q n` is the (unique) representative with degree less than degree of `f`. -/
+theorem R.rep_degree_lt_f_degree {q n : ℕ} [Fact (q > 1)] : forall a : R q n, (R.representative q n a).degree < (f q n).degree := by
+  rw[f_deg_eq (q := q)]
+  intros a
+  apply R.rep_degree_lt_n
 
 noncomputable def R.rep_length {q n} (a : R q n) : Nat := match
   Polynomial.degree a.representative with
