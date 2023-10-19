@@ -48,7 +48,7 @@ theorem List.removeNth_gt_len (hn : xs.length ≤ n) : List.removeNth xs n = xs 
       linarith
 
 /- removing at index `n` does not change indices `k < n` -/
-theorem List.get_removeNth_lt_n (hk: k < n) : List.get? (List.removeNth xs n) k = List.get? xs k := by
+theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) k = List.get? xs k := by
   by_cases N_LEN:(xs.length ≤ n)
   case pos => simp[removeNth_gt_len N_LEN]
   case neg =>
