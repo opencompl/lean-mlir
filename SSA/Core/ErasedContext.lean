@@ -230,21 +230,21 @@ def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
 
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
 theorem Valuation.snoc_eq_snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) 
-  : (s.snoc x) = (s.snoc' x):= by
-    simp[snoc, snoc']
-    funext t' v
-    cases V:v
-    case mk i hi => 
+    : (s.snoc x) = (s.snoc' x) := by
+  simp[snoc, snoc']
+  funext t' v
+  cases V:v
+  case mk i hi => 
+    simp
+    simp[Var.casesOn]
+    cases i
+    case zero => 
       simp
-      simp[Var.casesOn]
-      cases i
-      case zero => 
-        simp
-        simp[Ctxt.snoc] at hi
-        subst hi
-        simp
-      case succ i' => 
-        simp
+      simp[Ctxt.snoc] at hi
+      subst hi
+      simp
+    case succ i' => 
+      simp
 
 @[simp]
 theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
