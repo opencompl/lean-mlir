@@ -219,7 +219,7 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
 
 def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) : 
     (Γ.snoc t).Valuation := 
-    fun t' var =>
+  fun t' var =>
     match var with
     | ⟨i, hvar⟩ =>  
       match i with
