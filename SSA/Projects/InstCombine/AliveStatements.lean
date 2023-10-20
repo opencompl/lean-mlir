@@ -1,4 +1,5 @@
 import Std.Data.BitVec
+import Mathlib.Data.Bitvec.Lemmas
 
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
