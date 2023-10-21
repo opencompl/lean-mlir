@@ -50,7 +50,7 @@ theorem List.removeNth_of_length_le (hn : xs.length ≤ n) : List.removeNth xs n
 /- removing at index `n` does not change indices `k < n` -/
 theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) k = List.get? xs k := by
   by_cases N_LEN:(xs.length ≤ n)
-  case pos => simp[removeNth_gt_len N_LEN]
+  case pos => simp[removeNth_of_length_le N_LEN]
   case neg =>
     simp at N_LEN
     induction xs generalizing n k
@@ -104,7 +104,7 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at vproof
-    have H := List.get_removeNth_lt_n (xs := Γ) (n := delv.val) (k := vix) (hk := DELV)
+    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := DELV)
     rw[H] at vproof
     exact vproof
   }⟩
@@ -113,7 +113,7 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at vproof
-    have H := List.get_removeNth_geq_n (xs := Γ) (n := delv.val) (k := vix) (hk := by linarith)
+    have H := List.get?_removeNth_of_le (xs := Γ) (n := delv.val) (k := vix) (hk := by linarith)
     rw[H] at vproof
     exact vproof
   }⟩
@@ -146,7 +146,7 @@ def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at *
-    have H := List.get_removeNth_lt_n (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
+    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
     rw[H]
     exact vproof
   }⟩, by
@@ -155,7 +155,7 @@ def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     intros V
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at *
-    have H := List.get_removeNth_lt_n (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
+    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
     simp[Ctxt.Valuation.eval]
     simp[Deleted.pushforward_Valuation]
     simp[Deleted.pullback_var]
@@ -184,7 +184,7 @@ def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     cases VIX:vix
     case zero => subst VIX; contradiction
     case succ vix' =>
-      have H := List.get_removeNth_geq_n (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
+      have H := List.get?_removeNth_of_le (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
       simp
       rw[H]
       subst VIX
