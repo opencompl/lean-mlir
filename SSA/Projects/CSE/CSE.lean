@@ -7,7 +7,7 @@ This file implements common subexpression elimination for our SSA based IR.
 import Mathlib.Data.HashMap
 
 /- Decidable Equality for IComs. -/
-namespace DecEqICom
+section DecEqICom
 variable [DecidableEq Ty]
 variable [OP_DECEQ : DecidableEq Op]
 variable [OpSignature Op Ty]
@@ -99,18 +99,63 @@ def State.empty [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : State Op Γ w
   var2var := fun v => ⟨v, by intros V; rfl⟩
   expr2cache := fun α e => .none
 
+def State.snocExpr2Cache
+ [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+ {Γ : Ctxt Ty} {α : Ty}
+ (s : State Op Γ) (e : IExpr Op Γ α) : State Op (Γ.snoc α) := {
+  var2var := fun v => by /- TODO: refactor to use term mode. -/      
+    refine Ctxt.Var.casesOn v ?_ ?_
+    . intros t t' Δ v 
+      constructor
+      intros V
+      rfl
+    . intros Δ t
+      constructor
+      intros V
+      rfl
+  expr2cache := fun β eneedle => 
+    /-
+    Since `eneedle` lives in `(Γ.snoc β)`, we need to try to corce it into `Γ`. To do this,
+    we use the tools built in DCE to try to delete the variable in `eneedle`.
+    -/
+    let eneedleΓ? := DCE.IExpr.deleteVar? (DEL := Deleted.deleteSnoc Γ α) (eneedle)
+    match eneedleΓ? with
+    | .none => .none -- this expression actually uses β in some nontrivial way, we're fucked,
+    | .some ⟨eneedleΓ, heneedleΓ⟩ =>
+        match s.expr2cache _ eneedleΓ with /- find in cache -/
+        | .some ⟨v', hv'⟩ =>
+          .some ⟨v', by {
+            intros V
+            rw[heneedleΓ]
+            rw[← hv']
+            congr
+            done
+          }⟩
+        | .none => /- not in cache, check if new expr. -/
+          match decEq α β with
+          | .isFalse _neq => .none
+          | .isTrue hβ => 
+            match IExpr.decEq (hβ ▸  eneedleΓ) e with
+            | .isTrue exprEq => /- same expression, return the variable. -/
+                .some ⟨hβ ▸ Ctxt.Var.last Γ α, by {
+                  intros V; subst hβ; simp at exprEq; subst exprEq; simp[cast_eq]; 
+                  _}⟩
+            | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/  
+ }
+
 /-- assign an expression to a snoc'd variable with a given expression into the CSE map -/
 def State.addExpr2Cache
- [Goedel Ty] [DecidableEq Ty] [OpSignature Op Ty] [OpDenote Op Ty]
+ [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
  {Γ : Ctxt Ty} {α : Ty}
  (s : State Op Γ) (v : Γ.Var α) (e : { e : IExpr Op Γ α // ∀ (V : Γ.Valuation), e.denote V = V v }) : State Op Γ := {
   s with
   expr2cache := fun β eneedle => 
     if hβ : α = β
     then
-      if he : (hβ ▸  eneedle) = e.val
-      then sorry
-      else s.expr2cache eneedle  
+      match he : IExpr.decEq (hβ ▸  eneedle) e.val with
+      | .isTrue exprEq => /- same expression, return the variable. -/
+          .some ⟨hβ ▸ v, by subst hβ; simp at exprEq; subst exprEq; simp at he; simp[e.property]⟩
+      | .isFalse _neq => s.expr2cache β eneedle /- different expression, query cache. -/  
     else s.expr2cache β eneedle
  }
 
@@ -167,13 +212,26 @@ instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
 instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
   (s : State Op Γ) → (com: ICom Op Γ α) →  CSERet com) where
   default := fun _s com => CSERet.mk Γ Ctxt.Hom.id com (by intros V; rfl) 
+instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
+ (s : State Op Γ) →
+ (e : IExpr Op Γ α) → {e' : IExpr Op Γ α // e'.denote = e.denote } × Option ({ v' : Γ.Var α // ∀ (V : Γ.Valuation), V v' = e.denote V })) where
+ default := fun _s e => (⟨e, rfl⟩, .none) 
+
+
+/- replace the snoc'd variable of an ICom with a different variable of the same denotation-/
+def ICom.substSnocVar [DecidableEq Ty] [DecidableEq Op] [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
+  {Γ : Ctxt Ty} 
+  (body : ICom Op (Γ.snoc α) β) (v : Γ.Var α) : 
+  { body' : ICom Op Γ β // 
+    ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (Deleted.pushforward_Valuation (.deleteSnoc Γ α) V) } := sorry 
+
 
 /- CSE for HVector / ICom / IExpr. -/
 mutual 
+variable [DecidableEq Ty] [DecidableEq Op] [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
 
 /-- Replace the regions in `rs` with new regions that have the same valuation -/
 partial def State.cseRegionArgList
- [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γ : Ctxt Ty} (s : State Op Γ)
   {ts : List (Ctxt Ty × Ty)}
   (rs : HVector ((fun t : Ctxt Ty × Ty => ICom Op t.1 t.2)) <| ts) :
@@ -200,7 +258,6 @@ partial def State.cseRegionArgList
 /-- lookup an expression in the state and return a corresponding CSE'd variable for it, along with the CSE'd expression
   that was looked up in the map for the variable.  -/
 partial def State.cseExpr
- [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
  {Γ : Ctxt Ty} (s : State Op Γ)
  (e : IExpr Op Γ α) : {e' : IExpr Op Γ α // e'.denote = e.denote } × Option ({ v' : Γ.Var α // ∀ (V : Γ.Valuation), V v' = e.denote V }) := 
   match E : e with
@@ -219,7 +276,7 @@ partial def State.cseExpr
         rw[hregArgs']
         done
       }⟩,
-        match s.expr2cache e with
+        match s.expr2cache _ e with
         | .some ⟨v', hv'⟩ =>
           .some ⟨v', by
             intros V
@@ -229,7 +286,7 @@ partial def State.cseExpr
         | .none => .none
       ⟩
 
-partial def State.cseICom [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] {α : Ty}  (s : State Op Γ) (com: ICom Op Γ α) : 
+partial def State.cseICom {α : Ty}  (s : State Op Γ) (com: ICom Op Γ α) : 
   CSERet com := 
   match com with
   | .ret v => {
@@ -243,22 +300,39 @@ partial def State.cseICom [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] {α :
       simp[ICom.denote, hv']
   }
   | .lete (α := α) e body =>
-      let ⟨e', v'?⟩ := s.cseExpr e 
+      let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e 
       match v'? with
-      | .none => 
-        let s' := s.assignSnocVar e'
-        let ret' := s'.cseICom body
+      | .none => /- no variable to replace. -/
+        let s' := s.snocExpr2Cache (e := e') /- add this expression into the cache for the latest variable. -/
+        let ⟨body', hbody'⟩ := s'.cseICom' body
         {
           Δ := Γ
           hom := Ctxt.Hom.id
-          com' := .lete e' sorry -- need to pullback `body` along the morphism. 
-          hcom' := sorry
+          com' := .lete e' body' -- need to pullback `body` along the morphism. 
+          hcom' := by {
+            intros VΓ
+            simp[ICom.denote]
+            rw[he']
+            rw[hbody']
+          }
         } 
-      | .some ⟨v', hv'⟩ => sorry 
+      | .some ⟨v', hv'⟩ => 
+        let body' := ICom.substSnocVar body v'
+        {
+          Δ := Γ
+          hom := Ctxt.Hom.id
+          com' := body'
+          hcom' := by {
+            intros V
+            simp[ICom.denote]
+            rw[body'.property]
+            congr
+          }
+        } 
 
 /-- A variant of cseICom that exposes the same context `Γ`, instead of witnessing the change in context. This
   uses the context morphism in `CSERet` to adapt the original context `Γ` to the new context `Δ`. -/
-partial def State.cseICom' [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] {α : Ty}  (s : State Op Γ) (com: ICom Op Γ α) : 
+partial def State.cseICom' {α : Ty}  (s : State Op Γ) (com: ICom Op Γ α) : 
   { com' : ICom Op Γ α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=  
   let ⟨Δ, hom, com', hcom'⟩ := s.cseICom com
   ⟨com'.changeVars hom, by

@@ -249,7 +249,7 @@ def arglistDeleteVar? {Γ: Ctxt Ty} {delv : Γ.Var α} {Γ' : Ctxt Ty} {ts : Lis
         ⟩
 
 /- Try to delete a variable from an IExpr -/
-def IExpr.deleteVar? (DEL : Deleted Γ delv Γ') (e: IExpr Op Γ t) :
+def IExpr.deleteVar? {delv : Ctxt.Var Γ δ}  (DEL : Deleted Γ delv Γ') (e: IExpr Op Γ t) :
   Option { e' : IExpr Op Γ' t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
   match e with
   | .mk op ty_eq args regArgs =>
