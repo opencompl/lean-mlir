@@ -593,7 +593,7 @@ def matchVar {rg : RegMVars Ty}
       matchVar lets v matchLets w rma ma
   | @Lets.lete _ _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, rma, ma => do -- w† = Var.last
       let ie ← lets.getIExpr v
-      if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
+      if hs : ie.op = matchExpr.op
       then
         -- hack to make a termination proof work
         let rec matchArg : ∀ {l : List Ty}
@@ -620,8 +620,8 @@ def matchVar {rg : RegMVars Ty}
               let x ← matchVar comₗ.toLets.2 comₗ.toLets.3
                                comᵣ.toLets.2 comᵣ.toLets.3 rma ∅
               matchReg rsₗ rsᵣ x.1 ma
-        let ⟨rma, ma⟩ ← matchArg ie.args (hs.1 ▸ matchExpr.args) ma
-        matchReg ie.regArgs (hs.1 ▸ matchExpr.regArgs) rma ma
+        let ⟨rma, ma⟩ ← matchArg ie.args (hs ▸ matchExpr.args) ma
+        matchReg ie.regArgs (hs ▸ matchExpr.regArgs) rma ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
       -- Correct for Regions
@@ -890,10 +890,10 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
     {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) →
     {mv : toType rg} →
-    (hmv : ∀ (Γ : Ctxt Ty × Ty) (v : Ctxt.Var rg Γ) (i : ICom Op [] Γ.1 Γ.2)
-      x rma' ma',
-      (h : x.2.entries ⊆ varMap.entries) →
-      (x ∈ matchVar lets v₁ matchLets v₂ rma' ma') →
+    (hmv : ∀ (Γ : Ctxt Ty × Ty) (v : Ctxt.Var rg Γ) (i : ICom Op [] Γ.1 Γ.2),
+      --x rma' ma',
+      --(h : x.2.entries ⊆ varMap.entries) →
+      --(x ∈ matchVar lets v₁ matchLets v₂ rma' ma') →
       True) →
     HVector.denoteReg Tᵣ mv = HVector.denoteReg Tₗ (fun _ => Var.emptyElim)
   | [], .nil, .nil, rma, ma, rVarMap, varMap, hvarMap, mv, hmv => by
