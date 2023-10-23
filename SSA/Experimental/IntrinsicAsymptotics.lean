@@ -588,14 +588,12 @@ def matchVar {rg : RegMVars Ty}
     (ma : Mapping Δ_in Γ_out := ∅) →
     Option (RegMapping Op rg × Mapping Δ_in Γ_out)
   | .lete matchLets _, ⟨w+1, h⟩, rma, ma => -- w† = Var.toSnoc w
-      -- Correct for Regions
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
       matchVar lets v matchLets w rma ma
   | @Lets.lete _ _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, rma, ma => do -- w† = Var.last
       let ie ← lets.getIExpr v
       if hs : ie.op = matchExpr.op
       then
-        -- hack to make a termination proof work
         let rec matchArg : ∀ {l : List Ty}
             (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
             Mapping Δ_in Γ_out → Option (RegMapping Op rg × Mapping Δ_in Γ_out)
@@ -624,7 +622,6 @@ def matchVar {rg : RegMVars Ty}
         matchReg ie.regArgs (hs ▸ matchExpr.regArgs) rma ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
-      -- Correct for Regions
       match ma.lookup ⟨_, w⟩ with
       | some v₂ =>
         by
@@ -901,6 +898,14 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
   | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.mvar i) rsᵣ, rma, ma, rVarMap,
       varMap, hvarMap, mv, hmv => by
     rw [HVector.denoteReg, HVector.denoteReg, Reg.denote]
+    simp [matchVar.matchReg] at hvarMap
+    split at hvarMap
+    · rw [denote_matchVar_matchReg hvarMap]
+      admit; admit
+    · split_ifs at hvarMap with h
+      · subst h
+        rw [denote_matchVar_matchReg hvarMap]
+        admit; admit
 
 end
 #exit
