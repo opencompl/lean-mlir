@@ -140,8 +140,10 @@ set_option pp.proofs.withType false in
 -- set_option maxHeartbeats 900000 in
 open Ctxt (Var) in
 theorem AddSub_1043_refinement (w : Nat) : AddSub_1043_src w ⊑ AddSub_1043_tgt w := by
-  /- source simplification -/
+  /- unfolding -/
   unfold AddSub_1043_src
+  unfold AddSub_1043_tgt
+  /- simplification -/
   dsimp only[]
   unfold ICom.Refinement
   intros Γv
@@ -150,17 +152,7 @@ theorem AddSub_1043_refinement (w : Nat) : AddSub_1043_src w ⊑ AddSub_1043_tgt
   simp[bind, Option.bind, pure]
   simp[DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc] -- cannot rewrite with simp theorem 'motive is not type correct'
   simp[MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
-      Vector.get]
-  simp[List.nthLe]
-  /- target simplification -/
-  unfold AddSub_1043_tgt
-  dsimp only[]
-  simp only[ICom.denote, IExpr.denote, HVector.denote, OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM,
-    HVector.toTuple, HVector.toSingle]
-  simp[bind, Option.bind, pure]
-  simp[DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc] -- cannot rewrite with simp theorem 'motive is not type correct'
-  simp[MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
-      Vector.get]
+      Vector.get, HVector.toSingle, HVector.toTuple]
   simp[List.nthLe]
 
   generalize V0 : Γv (Var.last _ _) = v0
@@ -174,7 +166,6 @@ theorem AddSub_1043_refinement (w : Nat) : AddSub_1043_src w ⊑ AddSub_1043_tgt
   cases v2 <;> simp
   /- rename inaccessibles. -/
   rename_i a b c
-
 
 
 
