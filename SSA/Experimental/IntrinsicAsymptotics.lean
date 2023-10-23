@@ -877,9 +877,7 @@ theorem denote_matchVar_matchArg
     simp only [HVector.map]
     simp only [matchVar.matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨⟨rVarMap', varMap'⟩, hvarMap', hvarMap''⟩
-    have h₁ := subset_entries_matchVar hvarMap'
-    have h₂ := subset_entries_matchVar_matchArg hvarMap''
-    rw [hs _ _ _ _ _ _ h₂.2 hvarMap']
+    rw [hs _ _ _ _ _ _ (subset_entries_matchVar_matchArg hvarMap'').2 hvarMap']
     congr 1
     exact denote_matchVar_matchArg hvarMap'' hs
 
@@ -892,7 +890,17 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
     {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) →
     {mv : toType rg} →
-    HVector.denoteReg Tᵣ mv = HVector.denoteReg Tₗ (fun _ => Var.emptyElim) := sorry
+    (hmv : ∀ (Γ : Ctxt Ty × Ty) (v : Ctxt.Var rg Γ) (i : ICom Op [] Γ.1 Γ.2)
+      x rma' ma',
+      (h : x.2.entries ⊆ varMap.entries) →
+      (x ∈ matchVar lets v₁ matchLets v₂ rma' ma') →
+      True) →
+    HVector.denoteReg Tᵣ mv = HVector.denoteReg Tₗ (fun _ => Var.emptyElim)
+  | [], .nil, .nil, rma, ma, rVarMap, varMap, hvarMap, mv, hmv => by
+    rw [HVector.denoteReg, HVector.denoteReg]
+  | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.mvar i) rsᵣ, rma, ma, rVarMap,
+      varMap, hvarMap, mv, hmv => by
+    rw [HVector.denoteReg, HVector.denoteReg, Reg.denote]
 
 end
 #exit
