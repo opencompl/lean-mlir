@@ -18,7 +18,7 @@ infixr:90 (priority:=high) " ⊑ "  => ICom.Refinement
 - We simplify the translation overhead.
 - Then we introduce variables, `cases` on the variables to eliminate the `none` cases.
 - We cannot leave it at this state, since then the variables will be inaccessible.
-- So, we revert the variables for the user to re-introduce them as they see fit.  
+- So, we revert the variables for the user to re-introduce them as they see fit.
 -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
@@ -49,8 +49,8 @@ macro "simp_alive_peephole" : tactic =>
       try revert v4
       try revert v3
       try revert v2
-      try revert v1      
-      try revert v0      
+      try revert v1
+      try revert v0
       )
    )
 
