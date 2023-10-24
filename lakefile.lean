@@ -44,4 +44,4 @@ require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 require partax from git "https://github.com/tydeu/lean4-partax" @ "master"
 
 meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
-  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "0f1b99c"
+  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "8bccb92b531248af1b6692d65486e8640c8bcd10"
