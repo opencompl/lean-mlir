@@ -920,14 +920,31 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
     simp only [matchVar.matchReg] at hvarMap
     congr 1
     · split
-      ·
-
+      · split at hvarMap
+        · sorry --I know how to do this
+        · split_ifs at hvarMap
+          · subst comₗ
+            sorry -- I know how to do this
+          · simp_all
+      · sorry -- I know how to do this
     · split at hvarMap
       · exact denote_matchVar_matchReg hvarMap h_sub_r
       · split_ifs at hvarMap
         · subst comₗ
           exact denote_matchVar_matchReg hvarMap h_sub_r
         · simp_all
+  | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.icom comᵣ) rsᵣ, rma, ma, rVarMap₁,
+      rVarMap₂, varMap, hvarMap, h_sub_r => by
+    rw [HVector.denoteReg, HVector.denoteReg, Reg.denote, Reg.denote]
+    simp only [matchVar.matchReg, Bind.bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+    rcases hvarMap with ⟨⟨rVarMap', varMap'⟩, hvarMap', hvarMap''⟩
+    rw [denote_matchVar_matchReg hvarMap'' h_sub_r]
+    congr 1
+    funext s
+    simp only [← ICom.denote_toLets]
+    rw [← denote_matchVar_of_subset hvarMap' _
+      (List.Subset.refl _)]
+    exact (denote_matchVar_of_subset _ _ _).symm
 
 
 end
