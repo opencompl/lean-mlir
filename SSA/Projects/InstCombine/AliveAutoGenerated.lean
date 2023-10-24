@@ -170,8 +170,7 @@ theorem AddSub_1043_refinement (w : Nat) : AddSub_1043_src w ⊑ AddSub_1043_tgt
   intros Γv
   rw[AddSub_1043_src, AddSub_1043_tgt]
   simp_peephole at Γv
-  try simp only[OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM,
-    HVector.toTuple, BitVec.Refinement]
+  try simp only[OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM, BitVec.Refinement]
   try simp[bind, Option.bind, pure]
   try simp[DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc] -- cannot rewrite with simp theorem 'motive is not type correct'
   try simp[MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
