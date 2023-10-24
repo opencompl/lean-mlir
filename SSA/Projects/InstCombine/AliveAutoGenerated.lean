@@ -12,21 +12,6 @@ abbrev ICom.Refinement (src tgt : Com (φ:=0) Γ t) (h : Goedel.toType t = Optio
 
 infixr:90 (priority:=high) " ⊑ "  => ICom.Refinement
 
-/- TODO: is this theorem true? -/
-@[simp]
-theorem BitVec.ofNat_zero : BitVec.ofNat w 0 = 0 :=
-  rfl
-
-@[simp]
-theorem one_by_two_is_zero : 1 / 2 = (0 : Nat) := rfl
-
-@[simp]
-theorem BitVec.ofNat_one : BitVec.ofNat w 1 = 1 :=
-  rfl
-
-#check HVector.toPair
-#check pairMapM
-
 /--
 - We first simplify `ICom.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
