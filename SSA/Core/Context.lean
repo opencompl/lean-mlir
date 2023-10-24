@@ -30,7 +30,7 @@ def Var (Γ : Ctxt) (t : Ty) : Type :=
 
 namespace Var
 
-instance : DecidableEq (Var Γ t) := 
+instance : DecidableEq (Var Γ t) :=
   fun ⟨i, ih⟩ ⟨j, jh⟩ => match inferInstanceAs (Decidable (i = j)) with
     | .isTrue h => .isTrue <| by simp_all
     | .isFalse h => .isFalse <| by intro hc; apply h; apply Subtype.mk.inj hc
@@ -46,19 +46,19 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 @[coe]
 def toSnoc {Γ : Ctxt} {t t' : Ty} (var : Ctxt.Var Γ t) : Ctxt.Var (Ctxt.snoc Γ t') t  :=
   ⟨var.1+1, by cases var; simp_all [snoc]⟩
-  
-/-- This is an induction principle that case splits on whether or not a variable 
+
+/-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
 @[elab_as_elim]
-def casesOn 
+def casesOn
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : (Γ.snoc t').Var t)
-    (base : {t t' : Ty} → 
+    (base : {t t' : Ty} →
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       motive Γ t t' v :=
   match v with
-    | ⟨0, h⟩ => 
+    | ⟨0, h⟩ =>
         cast (by cases h; simp only [Var.last]) <| @last Γ t
     | ⟨i+1, h⟩ =>
         base ⟨i, h⟩
@@ -68,7 +68,7 @@ def casesOn
 def casesOn_last
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t : Ty}
-    (base : {t t' : Ty} → 
+    (base : {t t' : Ty} →
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
     Ctxt.Var.casesOn (motive := motive)
@@ -78,10 +78,10 @@ def casesOn_last
 /-- `Ctxt.Var.casesOn` behaves in the expected way when applied to a previous variable,
 that is not the last one. -/
 @[simp]
-def casesOn_toSnoc 
+def casesOn_toSnoc
     {motive : (Γ : Ctxt) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt} {t t' : Ty} (v : Γ.Var t)
-    (base : {t t' : Ty} → 
+    (base : {t t' : Ty} →
         {Γ : Ctxt} → (v : Γ.Var t) → motive Γ t t' v.toSnoc)
     (last : {Γ : Ctxt} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
@@ -98,9 +98,9 @@ def append : Ctxt → Ctxt → Ctxt :=
 
 theorem append_empty (Γ : Ctxt) : append Γ ∅ = Γ := by
   simp[append, EmptyCollection.emptyCollection, empty]
-  
 
-theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) : 
+
+theorem append_snoc (Γ Γ' : Ctxt) (t : Ty) :
     append Γ (Ctxt.snoc Γ' t) = (append Γ Γ').snoc t := by
   simp[append, snoc]
 
@@ -115,7 +115,7 @@ def Var.inl {Γ Γ' : Ctxt} {t : Ty} : Var Γ t → Var (Ctxt.append Γ Γ') t
   | ⟨v, h⟩ => ⟨v + Γ'.length, by simp[←h, append, List.get?_append_add]⟩
 
 def Var.inr {Γ Γ' : Ctxt} {t : Ty} : Var Γ' t → Var (append Γ Γ') t
-  | ⟨v, h⟩ => ⟨v, by 
+  | ⟨v, h⟩ => ⟨v, by
       simp[append]
       induction Γ' generalizing v
       case nil =>

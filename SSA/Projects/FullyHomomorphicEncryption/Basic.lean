@@ -33,7 +33,7 @@ variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
   induction n with
     | zero => simp
-    | succ n ih =>  
+    | succ n ih =>
         rw [pow_succ'', ih, ← WithBot.coe_mul]
         rw [← WithBot.some_eq_coe, WithBot.some]
         apply Option.some_inj.2
@@ -65,7 +65,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   done
 
 /-- Charaterizing `f`: `f` is monic -/
-theorem f_monic : Monic (f q n) := by 
+theorem f_monic : Monic (f q n) := by
   have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
   have hn_minus_1 : degree 1 ≤ ↑(2^n - 1) := by
     rw [Polynomial.degree_one (R := (ZMod q))]; simp
@@ -102,7 +102,7 @@ noncomputable def R.representative : R q n → (ZMod q)[X] := fun x => R.represe
 -/
 @[simp]
 theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
- intro a 
+ intro a
  simp [R.representative]
  rw [Polynomial.modByMonic_eq_sub_mul_div _ (f_monic q n)]
  rw [RingHom.map_sub (R.fromPoly (q := q) (n:=n)) _ _]
@@ -125,7 +125,7 @@ is just `a + i` for some `i ∈ (Ideal.span {f q n})`.
 -/
 theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
   intro a
-  exists (R.fromPoly (n:=n) a).representative' - a 
+  exists (R.fromPoly (n:=n) a).representative' - a
   constructor
   · apply Ideal.Quotient.eq.1
     simp [R.representative', Function.surjInv_eq]
@@ -134,7 +134,7 @@ theorem R.fromPoly_rep'_eq : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span {f q n
 
 /--
 Characterization theorem for the representative.
-Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is 
+Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is
 the same as taking the remainder of `a` modulo `f q n`.
 -/
 theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
@@ -158,12 +158,12 @@ theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 
   exact f_monic q n
 
 /--
-This function gets the `i`th coefficient of the polynomial representative 
-(with degree `< 2^n`) of an element `a : R q n`. Note that this is not 
+This function gets the `i`th coefficient of the polynomial representative
+(with degree `< 2^n`) of an element `a : R q n`. Note that this is not
 invariant under the choice of representative.
 -/
-noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q := 
-  Polynomial.coeff a.representative i 
+noncomputable def R.coeff (a : R q n) (i : Nat) : ZMod q :=
+  Polynomial.coeff a.representative i
 
 /--
 `R.monomial i c` is the equivalence class of the monomial `c * X^i` in `R q n`.
@@ -172,9 +172,9 @@ noncomputable def R.monomial {q n : Nat} (i : Nat) (c : ZMod q) : R q n :=
   R.fromPoly (Polynomial.monomial i c)
 
 /--
-Given an equivalence class of polynomials `a : R q n` with representative 
+Given an equivalence class of polynomials `a : R q n` with representative
 `p = p_0 + p_1 X + ... + p_{2^n - 1} X^{2^n - 1}`, `R.slice a startIdx endIdx` yields
-the equivalence class of the polynomial 
+the equivalence class of the polynomial
 `p_{startIdx}*X^{startIdx} + p_{startIdx + 1} X^{startIdx + 1} + ... + p_{endIdx - 1} X^{endIdx - 1}`
  Note that this is not invariant under the choice of representative.
 -/
@@ -186,7 +186,7 @@ noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q 
   coeffs.zip coeffIdxs |>.foldl accum R.zero
 
 /--
-We define the base type of the representation, which encodes both natural numbers 
+We define the base type of the representation, which encodes both natural numbers
 and elements in the ring `R q n` (which in FHE are sometimes called 'polynomials'
  in allusion to `R.representative`).
 -/
@@ -202,7 +202,7 @@ toType := fun
   | .poly q n => (R q n)
 
 /--
-The operation type of the `Poly` dialect. Operations are parametrized by the 
+The operation type of the `Poly` dialect. Operations are parametrized by the
 two parameters `p` and `n` that characterize the ring `R q n`.
 -/
 inductive Op

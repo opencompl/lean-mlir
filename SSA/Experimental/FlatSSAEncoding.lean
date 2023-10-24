@@ -32,7 +32,7 @@ def test : Op :=
   .Add c1 c2
 
   -- I want to replace 'c2' in test with '(.Add (.Constant 1) (.Constant 1))'
-  -- However, to lean / as far as we can tell by inspecting 'test', 
+  -- However, to lean / as far as we can tell by inspecting 'test',
   --   test = Op.Add (Op.Constant 1) (Op.Constant 2)
   --
   -- The names 'c1'/'c2' have vanished, since they are not part
@@ -41,7 +41,7 @@ def test : Op :=
   -- We are unable to study the notion of a "name", and all that comes
   -- with it (rewriting at names, dominance of names, etc.)
 #reduce test
-  
+
 
 open Op
 
@@ -53,7 +53,7 @@ def sem : Op → Nat
 
 /---
 #define double(x) = x + x
-int foo = double(printf("10")); 
+int foo = double(printf("10"));
 -/
 
 /-
@@ -77,16 +77,16 @@ inductive OffsetOp : Nat -> Type
 
 
 -- (v : OffsetOp 2)
--- induction on (OffsetOp 2), you need to 'deduce' that Const can never happen, 
+-- induction on (OffsetOp 2), you need to 'deduce' that Const can never happen,
 -- v = Add
 
-abbrev FinVec (n: Nat) (α : Type) := Fin n → α  
+abbrev FinVec (n: Nat) (α : Type) := Fin n → α
 
 structure BasicBlock where
   len : Nat
   -- | TODO: generalize index to k-tuples for nesting.
   insts : (ix: Fin len) -> Σ (noperands : Nat), OffsetOp noperands × FinVec noperands (Fin ix)
-  
+
 def emptyBB : BasicBlock := {
    len := 0,
    insts := fun ix => Fin.elim0 ix
@@ -99,35 +99,35 @@ def appendBB (bb: BasicBlock) (inst: OffsetOp noperands)
     insts := fun ix =>
       if H : ix < bb.len
       then bb.insts ⟨ix.val, H⟩
-      else 
-        have H : Fin bb.len = Fin ix := by 
+      else
+        have H : Fin bb.len = Fin ix := by
           have : ix = bb.len := by linarith[ix.isLt]
           simp [this]
-        ⟨noperands, inst, H ▸ v⟩  
+        ⟨noperands, inst, H ▸ v⟩
   }
 
 -- 0 -> Const 2
 -- 1 +1 / 2
 -- (let x = v in e) <-> (fun x => e)  v
-open Lean in 
+open Lean in
 
 instance : Pure OpM where
  pure a := .Return_ a
-  
+
 def OpM.bind (ma: OpM a) (a2mb: a -> OpM b): OpM b :=
   match ma with
   | .Return_ a => a2mb a
   | .Random_ ka => .Random_ (fun r => bind (ka r) a2mb)
   | .Print_ v opa => .Print_ v (bind opa a2mb)
 
-def OpM.map (f: a -> b) (ma: OpM a) : OpM b := 
+def OpM.map (f: a -> b) (ma: OpM a) : OpM b :=
   match ma with
   | .Return_ a => .Return_ (f a)
   | .Random_ ka => .Random_ (fun r => OpM.map f (ka r))
   | .Print_ v ma => .Print_ v (OpM.map f ma)
 
 instance : Seq OpM where
-  seq m_a2b unit2ma := 
+  seq m_a2b unit2ma :=
     let ma := unit2ma (); OpM.bind m_a2b (fun a2b => OpM.map a2b ma)
 
   -- seqLeft : {α β : Type u} → f α → (Unit → f β) → f α
@@ -139,11 +139,11 @@ instance : SeqLeft OpM where
 instance : SeqRight OpM where
   seqRight ma unit2mb := OpM.bind ma (fun _ => unit2mb () )
 instance : Functor OpM where
-  map := OpM.map 
+  map := OpM.map
 
-instance : Bind OpM where 
+instance : Bind OpM where
   bind := OpM.bind
-  
+
 instance : Applicative OpM := ⟨⟩
 instance : Monad OpM := ⟨⟩
 
@@ -185,7 +185,7 @@ def testRandom2 : OpM Unit := do
   print r
   print s
   return ()
-  
+
 #reduce testRandom2
 
 -- OpM.Random_ fun r => OpM.Random_ fun s => OpM.Print_ r (OpM.Print_ s (OpM.Return_ PUnit.unit))
@@ -195,15 +195,15 @@ def testRandom3 : OpM Unit := do
   print r
   print r
   return ()
-  
+
 #reduce testRandom3
 
-def testPerverse : OpM Unit := 
+def testPerverse : OpM Unit :=
  OpM.Random_ fun r => (if r == 10 then print 42 else print 100)
- 
+
 #reduce testPerverse
 /-
-def program : Foo Op := 
+def program : Foo Op :=
   let c1 ← .Constant 1
   return .Add c1 c1 -- /=  .Add (.Constant 1) (.Constant 1)
 -/
@@ -212,15 +212,15 @@ def program : Foo Op :=
 -- bit pattern leads to the ALU failing.
 def semBadALU : Op → Option Nat
 | .Constant c => if c == 42 then .none else .some c
-| .Add a b => do 
+| .Add a b => do
     let va ← semBadALU a
     let vb ← semBadALU b
     return va + vb
-| .Mul a b => do 
+| .Mul a b => do
     let vb ← semBadALU b
     let va ← semBadALU a
     return va * vb
-    
+
 #reduce semBadALU
 
 -- Follows trivially from commutativity of addition.

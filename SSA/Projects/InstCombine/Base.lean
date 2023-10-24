@@ -15,7 +15,7 @@ import SSA.Projects.InstCombine.ForMathlib
   or `1`, indicating there is exactly one distinct width meta-variable.
 
   In particular, we only define a denotational semantics for concrete programs (i.e., where `φ = 0`)
-  
+
 
   see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 -/
@@ -43,8 +43,8 @@ inductive MTy (φ : Nat)
 
 abbrev Ty := MTy 0
 
-instance : Repr (MTy φ) where 
-  reprPrec 
+instance : Repr (MTy φ) where
+  reprPrec
     | .bitvec (.concrete w), _ => "i" ++ repr w
     | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
 
@@ -55,7 +55,7 @@ def Ty.width : Ty → Nat
   | .bitvec (.concrete w) => w
 
 @[simp]
-theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by 
+theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
   rcases ty with ⟨w|i⟩
   · rfl
   · exact i.elim0
@@ -128,7 +128,7 @@ instance : ToString Op where
 @[simp, reducible]
 def MOp.sig : MOp φ → List (MTy φ)
 | .and w | .or w | .xor w | .shl w | .lshr w | .ashr w
-| .add w | .mul w | .sub w | .udiv w | .sdiv w 
+| .add w | .mul w | .sub w | .udiv w | .sdiv w
 | .srem w | .urem w | .icmp _ w =>
   [.bitvec w, .bitvec w]
 | .not w | .neg w | .copy w => [.bitvec w]
@@ -145,7 +145,7 @@ def MOp.outTy : MOp φ → MTy φ
 | .icmp _ _ => .bitvec 1
 | .const width _ => .bitvec width
 
-instance : OpSignature (MOp φ) (MTy φ) where 
+instance : OpSignature (MOp φ) (MTy φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
