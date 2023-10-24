@@ -13,9 +13,9 @@ elab "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
   let com := q(mkComInstantiate $ast |>.map (· $mvalues))
   synthesizeSyntheticMVarsNoPostponing
-  let com : Q(ExceptM (Σ (Γ' : Ctxt Ty) (ty : InstCombine.Ty), Com Γ' ty)) ← 
+  let com : Q(ExceptM (Σ (Γ' : Ctxt Ty) (ty : InstCombine.Ty), Com Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <| 
+      withTransparency (mode := TransparencyMode.all) <|
         return ←reduce com
   trace[Meta] com
   match com with

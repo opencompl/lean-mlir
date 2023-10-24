@@ -56,7 +56,7 @@ inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
       (OpSignature.regSig op)) : IExpr Γ ty
-  
+
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
@@ -68,7 +68,7 @@ section
 open Std (Format)
 variable {Op Ty : Type} [OpSignature Op Ty] [Repr Op] [Repr Ty]
 
-mutual 
+mutual
   def IExpr.repr (prec : Nat) : IExpr Op Γ t → Format
     | ⟨op, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
@@ -464,10 +464,10 @@ instance : Functor RegionSignature where
   map f := List.map fun (tys, ty) => (f <$> tys, f ty)
 
 instance : Functor Signature where
-  map := fun f ⟨sig, regSig, outTy⟩ => 
+  map := fun f ⟨sig, regSig, outTy⟩ =>
     ⟨f <$> sig, f <$> regSig, f outTy⟩
 
-/-- A dialect morphism consists of a map between operations and a map between types, 
+/-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
 -/
 structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
@@ -475,20 +475,20 @@ structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [O
   mapTy : Ty → Ty'
   preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
 
-variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] 
+variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
 
-def DialectMorphism.preserves_sig (op : Op) : 
+def DialectMorphism.preserves_sig (op : Op) :
     OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
   simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
-def DialectMorphism.preserves_regSig (op : Op) : 
+def DialectMorphism.preserves_regSig (op : Op) :
     OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
       fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
     ) := by
   simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
-def DialectMorphism.preserves_outTy (op : Op) : 
+def DialectMorphism.preserves_outTy (op : Op) :
     OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
@@ -502,12 +502,12 @@ mutual
         f.mapOp op,
         (f.preserves_outTy _).symm,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
-        f.preserves_regSig _ ▸ 
+        f.preserves_regSig _ ▸
           HVector.mapDialectMorphism regs
       ⟩
 
   /-- Inline of `HVector.map'` for the termination checker -/
-  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty}, 
+  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
       HVector (fun t => ICom Op t.fst t.snd) regSig
       → HVector (fun t => ICom Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
     | _, .nil        => .nil

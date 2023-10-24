@@ -15,7 +15,7 @@ abbrev Expr (Γ : Context φ) (ty : MTy φ)  := IExpr (MOp φ) Γ ty
 abbrev Com (Γ : Context φ) (ty : MTy φ)   := ICom (MOp φ) Γ ty
 abbrev Var (Γ : Context φ) (ty : MTy φ)   := Ctxt.Var Γ ty
 
-abbrev Com.lete (body : Expr Γ ty₁) (rest : Com (ty₁::Γ) ty₂) : Com Γ ty₂ := 
+abbrev Com.lete (body : Expr Γ ty₁) (rest : Com (ty₁::Γ) ty₂) : Com Γ ty₂ :=
   ICom.lete body rest
 
 inductive TransformError
@@ -39,7 +39,7 @@ instance : Repr TransformError where
   reprPrec err _ := match err with
     | nameAlreadyDeclared var => f!"Already declared {var}, shadowing is not allowed"
     | undeclaredName name => f!"Undeclared name '{name}'"
-    | indexOutOfBounds name index len => 
+    | indexOutOfBounds name index len =>
         f!"Index of '{name}' out of bounds of the given context (index was {index}, but context has length {len})"
     | typeError expected got => f!"Type mismatch: expected '{expected}', but 'name' has type '{got}'"
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
@@ -64,7 +64,7 @@ def NameMapping.lookup (nm : NameMapping) (name : String) : Option Nat :=
   Add a new name to the mapping, assuming the name is not present in the list yet.
   If the name is already present, return `none`
 -/
-def NameMapping.add (nm : NameMapping) (name : String) : Option NameMapping := 
+def NameMapping.add (nm : NameMapping) (name : String) : Option NameMapping :=
   match nm.lookup name with
     | none => some <| name::nm
     | some _ => none
@@ -94,7 +94,7 @@ namespace DerivedContext
 abbrev ofContext (Γ : Context φ) : DerivedContext Γ := ⟨Γ, .zero _⟩
 
 /-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
-def snoc {Γ : Context φ} : DerivedContext Γ → MTy φ → DerivedContext Γ 
+def snoc {Γ : Context φ} : DerivedContext Γ → MTy φ → DerivedContext Γ
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
 
 instance {Γ : Context φ} : CoeHead (DerivedContext Γ) (Context φ) where
@@ -103,7 +103,7 @@ instance {Γ : Context φ} : CoeHead (DerivedContext Γ) (Context φ) where
 instance {Γ : Context φ} : CoeDep (Context φ) Γ (DerivedContext Γ) where
   coe := ⟨Γ, .zero _⟩
 
-instance {Γ : Context φ} {Γ' : DerivedContext Γ} : 
+instance {Γ : Context φ} {Γ' : DerivedContext Γ} :
     CoeHead (DerivedContext (Γ' : Context φ)) (DerivedContext Γ) where
   coe := fun ⟨Γ'', diff⟩ => ⟨Γ'', Γ'.diff + diff⟩
 
@@ -121,7 +121,7 @@ end DerivedContext
   Throws an error if the variable name already exists in the mapping, essentially disallowing
   shadowing
 -/
-def addValToMapping (Γ : Context φ) (name : String) (ty : MTy φ) : 
+def addValToMapping (Γ : Context φ) (name : String) (ty : MTy φ) :
     BuilderM (Σ (Γ' : DerivedContext Γ), Var Γ' ty) := do
   let some nm := (←get).add name
     | throw <| .nameAlreadyDeclared name
@@ -134,13 +134,13 @@ def addValToMapping (Γ : Context φ) (name : String) (ty : MTy φ) :
   Throws an error if the name is not present in the mapping (this indicates the name may be free),
   or if the type of the variable in the context is different from `expectedType`
 -/
-def getValFromContext (Γ : Context φ) (name : String) (expectedType : MTy φ) : 
+def getValFromContext (Γ : Context φ) (name : String) (expectedType : MTy φ) :
     ReaderM (Ctxt.Var Γ expectedType) := do
   let index := (←read).lookup name
   let some index := index | throw <| .undeclaredName name
   let n := Γ.length
   if h : index >= n then
-    /-  This should not happen, it indicates the passed context `Γ` is out of sync with the 
+    /-  This should not happen, it indicates the passed context `Γ` is out of sync with the
         namemapping stored in the monad -/
     throw <| .indexOutOfBounds name index n
   else
@@ -150,12 +150,12 @@ def getValFromContext (Γ : Context φ) (name : String) (expectedType : MTy φ) 
     else
       throw <| .typeError expectedType t
 
-def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool := 
+def BuilderM.isOk {α : Type} (x : BuilderM α) : Bool :=
   match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
-def BuilderM.isErr {α : Type} (x : BuilderM α) : Bool := 
+def BuilderM.isErr {α : Type} (x : BuilderM α) : Bool :=
   match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
@@ -166,7 +166,7 @@ def mkUnaryOp {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
  | .bitvec w =>
    match op with
    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .neg w' => if h : w = w' 
+    | .neg w' => if h : w = w'
       then return ⟨
         .neg w',
         by simp [OpSignature.outTy, signature, h],
@@ -174,15 +174,15 @@ def mkUnaryOp {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .not w' => if h : w = w' 
+    | .not w' => if h : w = w'
       then return ⟨
         .not w',
         by simp [OpSignature.outTy, signature, h],
         .cons (h ▸ e) .nil,
         .nil
-      ⟩ 
+      ⟩
       else throw <| .widthError w w'
-    | .copy w' => if h : w = w' 
+    | .copy w' => if h : w = w'
       then return ⟨
         .copy w',
         by simp [OpSignature.outTy, signature, h],
@@ -198,7 +198,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
  | .bitvec w =>
    match op with
    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .add w' => if h : w = w' 
+    | .add w' => if h : w = w'
       then return ⟨
         .add w',
         by simp [OpSignature.outTy, signature, h],
@@ -206,7 +206,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .and w' => if h : w = w' 
+    | .and w' => if h : w = w'
       then return ⟨
         .and w',
         by simp [OpSignature.outTy, signature, h],
@@ -214,7 +214,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .or w' => if h : w = w' 
+    | .or w' => if h : w = w'
       then return ⟨
         .or w',
         by simp [OpSignature.outTy, signature, h],
@@ -222,7 +222,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .xor w' => if h : w = w' 
+    | .xor w' => if h : w = w'
       then return ⟨
         .xor w',
         by simp [OpSignature.outTy, signature, h],
@@ -230,7 +230,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .shl w' => if h : w = w' 
+    | .shl w' => if h : w = w'
       then return ⟨
         .shl w',
         by simp [OpSignature.outTy, signature, h],
@@ -238,7 +238,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .lshr w' => if h : w = w' 
+    | .lshr w' => if h : w = w'
       then return ⟨
         .lshr w',
         by simp [OpSignature.outTy, signature, h],
@@ -246,7 +246,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .ashr w' => if h : w = w' 
+    | .ashr w' => if h : w = w'
       then return ⟨
         .ashr w',
         by simp [OpSignature.outTy, signature, h],
@@ -254,7 +254,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-     | .urem w' => if h : w = w' 
+     | .urem w' => if h : w = w'
       then return ⟨
         .urem w',
         by simp [OpSignature.outTy, signature, h],
@@ -262,7 +262,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-     | .srem w' => if h : w = w' 
+     | .srem w' => if h : w = w'
       then return ⟨
         .srem w',
         by simp [OpSignature.outTy, signature, h],
@@ -270,7 +270,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-     | .mul w' => if h : w = w' 
+     | .mul w' => if h : w = w'
       then return ⟨
         .mul w',
         by simp [OpSignature.outTy, signature, h],
@@ -335,27 +335,27 @@ def mkSelect {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
         else throw <| .widthError w w'
         | _ => throw .unsupportedOp -- "Unsupported select operation"
 
-def mkOpExpr {Γ : Context φ} (op : MOp φ) 
-    (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) : 
+def mkOpExpr {Γ : Context φ} (op : MOp φ)
+    (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) :
     ExceptM <| Expr Γ (OpSignature.outTy op) :=
   match op with
   | .and _ | .or _ | .xor _ | .shl _ | .lshr _ | .ashr _
-  | .add _ | .mul _ | .sub _ | .udiv _ | .sdiv _ 
-  | .srem _ | .urem _  => 
+  | .add _ | .mul _ | .sub _ | .udiv _ | .sdiv _
+  | .srem _ | .urem _  =>
     let (e₁, e₂) := arg.toTuple
     mkBinOp op e₁ e₂
-  | .icmp _ _ => 
+  | .icmp _ _ =>
     let (e₁, e₂) := arg.toTuple
     mkIcmp op e₁ e₂
-  | .not _ | .neg _ | .copy _ => 
+  | .not _ | .neg _ | .copy _ =>
     mkUnaryOp op arg.head
-  | .select _ => 
+  | .select _ =>
     let (c, e₁, e₂) := arg.toTuple
     mkSelect op c e₁ e₂
   | .const .. => throw .unsupportedOp -- "Tried to build Op expression from constant"
 
 def MLIRType.mkTy : MLIRType φ → ExceptM (MTy φ)
-  | MLIRType.int Signedness.Signless w => do 
+  | MLIRType.int Signedness.Signless w => do
     return .bitvec w
   | _ => throw .unsupportedType -- "Unsupported type"
 
@@ -367,16 +367,16 @@ def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
-def TypedSSAVal.mkVal (Γ : Context φ) : TypedSSAVal φ → 
+def TypedSSAVal.mkVal (Γ : Context φ) : TypedSSAVal φ →
     ReaderM (Σ (ty : MTy φ), Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
     let var ← getValFromContext Γ valStx ty
     return ⟨ty, var⟩
 
-/-- Declare a new variable, 
+/-- Declare a new variable,
     by adding the passed name to the name mapping stored in the monad state -/
-def TypedSSAVal.newVal (Γ : Context φ) : TypedSSAVal φ → 
+def TypedSSAVal.newVal (Γ : Context φ) : TypedSSAVal φ →
     BuilderM (Σ (Γ' : DerivedContext Γ) (ty : MTy φ), Var Γ' ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← tyStx.mkTy
@@ -388,7 +388,7 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
   | v₁Stx::v₂Stx::[] =>
     let ⟨.bitvec w₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
     let ⟨.bitvec w₂, v₂⟩ ← TypedSSAVal.mkVal Γ v₂Stx
-    -- let ty₁ := ty₁.instantiave 
+    -- let ty₁ := ty₁.instantiave
     let op ← match opStx.name with
       | "llvm.and"    => pure (MOp.and w₁)
       | "llvm.or"     => pure (MOp.or w₁)
@@ -406,10 +406,10 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.udiv"   => pure (MOp.udiv w₁)
        --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
       | _ => throw .unsupportedOp -- "Unsuported operation or invalid arguments"
-    if hty : w₁ = w₂ then 
+    if hty : w₁ = w₂ then
       let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
       return ⟨.bitvec w₁, binOp⟩
-    else 
+    else
       throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← TypedSSAVal.mkVal Γ vStx
@@ -419,8 +419,8 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     let op ← mkUnaryOp op v
     return ⟨.bitvec w, op⟩
-  | [] => 
-    if opStx.name ==  "llvm.mlir.constant" 
+  | [] =>
+    if opStx.name ==  "llvm.mlir.constant"
     then do
     let some att := opStx.attrs.getAttr "value"
       | throw <| .generic "tried to resolve constant without 'value' attribute"
@@ -428,35 +428,35 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | .int val ty =>
           let opTy@(MTy.bitvec w) ← ty.mkTy
           return ⟨opTy, ⟨
-            MOp.const w val, 
+            MOp.const w val,
             by simp [OpSignature.outTy, signature, *],
             HVector.nil,
             HVector.nil
           ⟩⟩
       | _ => throw <| .generic "invalid constant attribute"
-    else 
+    else
       throw <| .generic s!"invalid (0-ary) expression {opStx.name}"
   | _ => throw <| .generic s!"unsupported expression (with unsupported arity) {opStx.name}"
 
-def mkReturn (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Com Γ ty) := 
+def mkReturn (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Com Γ ty) :=
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← vStx.mkVal Γ
     return ⟨ty, ICom.ret v⟩
-  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})" 
+  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
-/-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the 
+/-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the
     given name and type -/
-private def declareBindings (Γ : Context φ) (vals : List (TypedSSAVal φ)) : 
+private def declareBindings (Γ : Context φ) (vals : List (TypedSSAVal φ)) :
     BuilderM (DerivedContext Γ) := do
   vals.foldlM (fun Γ' ssaVal => do
     let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ' ssaVal
     return Γ''
   ) (.ofContext Γ)
 
-private def mkComHelper (Γ : Context φ) : 
+private def mkComHelper (Γ : Context φ) :
     List (Op φ) → BuilderM (Σ (ty : _), Com Γ ty)
   | [retStx] => mkReturn Γ retStx
   | lete::rest => do
@@ -469,7 +469,7 @@ private def mkComHelper (Γ : Context φ) :
       return ⟨ty₂, Com.lete expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
-def mkCom (reg : Region φ) : ExceptM (Σ (Γ : Context φ) (ty : MTy φ), Com Γ ty) := 
+def mkCom (reg : Region φ) : ExceptM (Σ (Γ : Context φ) (ty : MTy φ), Com Γ ty) :=
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithNewMapping <| do
@@ -513,14 +513,14 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
   mapOp := MOp.instantiate vals
   mapTy := MTy.instantiate vals
   preserves_signature op := by
-    simp only [MTy.instantiate, MOp.instantiate, ConcreteOrMVar.instantiate, (· <$> ·), signature, 
-      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq, 
+    simp only [MTy.instantiate, MOp.instantiate, ConcreteOrMVar.instantiate, (· <$> ·), signature,
+      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       true_and]
     cases op <;> simp only [List.map, and_self, List.cons.injEq]
-    
+
 
 open InstCombine (Op Ty) in
-def mkComInstantiate (reg : Region φ) : 
+def mkComInstantiate (reg : Region φ) :
     ExceptM (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
   let ⟨Γ, ty, icom⟩ ← mkCom reg
   return fun vals =>
