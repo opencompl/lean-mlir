@@ -3,11 +3,14 @@ import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.InstCombine.Base
 import SSA.Core.Framework
 
+import Std.Data.BitVec
+
 universe u
 
 namespace MLIR.AST
 
 open InstCombine (MOp MTy Width)
+open Std (BitVec)
 
 abbrev Context (φ) := List (MTy φ)
 
@@ -362,8 +365,8 @@ def MLIRType.mkTy : MLIRType φ → ExceptM (MTy φ)
 def TypedSSAVal.mkTy : TypedSSAVal φ → ExceptM (MTy φ)
   | (.SSAVal _, ty) => ty.mkTy
 
-def mkVal (ty : InstCombine.Ty) : Int → Bitvec ty.width
-  | val => Bitvec.ofInt ty.width val
+def mkVal (ty : InstCombine.Ty) : Int → BitVec ty.width
+  | val => BitVec.ofInt ty.width val
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/

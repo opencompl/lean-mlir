@@ -7,6 +7,8 @@ import Mathlib.Data.Int.Cast.Lemmas
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Order.Basic
 
+import SSA.Projects.InstCombine.ForStd
+
 namespace Vector
 
 instance {α : Type u} {n : Nat} : GetElem (Vector α n) (Fin n) α (fun _ _ => True) where
@@ -334,12 +336,12 @@ def urem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
   then none
   else some $ Bitvec.ofNat w (x.toNat % y.toNat)
 
-def _root_.Int.rem (x y : Int) : Int :=
-  if x ≥ 0 then (x % y) else ((x % y) - |y|)
+-- def _root_.Int.rem (x y : Int) : Int :=
+--   if x ≥ 0 then (x % y) else ((x % y) - |y|)
 
--- TODO: prove this to make sure it's the right implementation!
-theorem _root_.Int.rem_sign_dividend :
-  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
+-- -- TODO: prove this to make sure it's the right implementation!
+-- theorem _root_.Int.rem_sign_dividend :
+--   ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
 
 /--
 This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),
@@ -505,7 +507,7 @@ instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
 
 end Refinement
 
-infix:50 (priority:=low) " ⊑ " => Refinement
+infix:50 (priority:=0) " ⊑ " => Refinement
 
 instance {w : Nat} : DecidableEq (Bitvec w) := inferInstance
 
@@ -577,8 +579,6 @@ instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (Bitvec 1) wh
   coe := ofBool $ decide p
 
 
-infixl:75 ">>>ₛ" => fun x y => Bitvec.sshr x (Bitvec.toNat y)
-
 def ult (x y : Bitvec w) : Prop := x.toNat < y.toNat
 def ule (x y : Bitvec w) : Prop := x.toNat ≤ y.toNat
 def ugt (x y : Bitvec w) : Prop := x.toNat > y.toNat
@@ -598,15 +598,5 @@ instance {w : Nat} (x y : Bitvec w) : Decidable (slt x y) := by apply Int.decLt
 instance {w : Nat} (x y : Bitvec w) : Decidable (sle x y) := by apply Int.decLe
 instance {w : Nat} (x y : Bitvec w) : Decidable (sgt x y) := by apply Int.decLt
 instance {w : Nat} (x y : Bitvec w) : Decidable (sge x y) := by apply Int.decLe
-
-notation:50 x " ≤ᵤ " y  => ofBool (decide (ult x y))
-notation:50 x " <ᵤ " y => ofBool  (decide (ule x y))
-notation:50 x " ≥ᵤ " y => ofBool  (decide (uge x y))
-notation:50 x " >ᵤ " y => ofBool  (decide (ugt x y))
-
-notation:50 x " ≤ₛ " y => ofBool  (decide (slt x y))
-notation:50 x " <ₛ " y => ofBool  (decide (sle x y))
-notation:50 x " ≥ₛ " y => ofBool  (decide (sge x y))
-notation:50 x " >ₛ " y => ofBool (decide ( sgt x y))
 
 end Bitvec

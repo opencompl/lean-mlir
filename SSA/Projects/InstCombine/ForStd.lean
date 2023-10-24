@@ -2,22 +2,27 @@ import Std.Data.BitVec
 
 open Std
 
-def ofBool : (Bool) -> Std.BitVec 1
- | c => if c then 1 else 0
+namespace Std.BitVec
+
+def ofBool : Bool -> Std.BitVec 1
+ | true   => 1
+ | false  => 0
 
 notation:50 x " ≤ᵤ " y => BitVec.ule x y
 notation:50 x " <ᵤ " y => BitVec.ult x y
-notation:50 x " ≥ᵤ " y => BitVec.ult y x
-notation:50 x " >ᵤ " y => BitVec.ule y x
+notation:50 x " ≥ᵤ " y => BitVec.ule y x
+notation:50 x " >ᵤ " y => BitVec.ult y x
 
 notation:50 x " ≤ₛ " y => BitVec.sle x y
 notation:50 x " <ₛ " y => BitVec.slt x y
-notation:50 x " ≥ₛ " y => BitVec.slt y x
-notation:50 x " >ₛ " y => BitVec.sle y x
+notation:50 x " ≥ₛ " y => BitVec.sle y x
+notation:50 x " >ₛ " y => BitVec.slt y x
 
 instance {n} : ShiftLeft (BitVec n) := ⟨fun x y => x <<< y.toNat⟩
 
 instance {n} : ShiftRight (BitVec n) := ⟨fun x y => x >>> y.toNat⟩
+
+infixl:75 ">>>ₛ" => fun x y => BitVec.sshiftRight x (BitVec.toNat y)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
@@ -30,12 +35,18 @@ inductive Refinement {α : Type u} : Option α → Option α → Prop
   | bothSome {x y : α } : x = y → Refinement (some x) (some y)
   | noneAny {x? : Option α} : Refinement none x?
 
+@[simp]
 theorem Refinement.some_some {α : Type u} {x y : α} :
   Refinement (some x) (some y) ↔ x = y :=
   ⟨by intro h; cases h; assumption, Refinement.bothSome⟩
 
+@[simp]
+theorem Refinement.none_left :
+  Refinement none x? := .noneAny
+
 namespace Refinement
 
+@[simp]
 theorem refl {α: Type u} : ∀ x : Option α, Refinement x x := by
   intro x ; cases x
   apply Refinement.noneAny
@@ -97,6 +108,35 @@ def urem? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
   if y.toNat = 0
   then none
   else some $ BitVec.ofNat w (x.toNat % y.toNat)
+
+def _root_.Int.rem (x y : Int) : Int :=
+  if x ≥ 0 then (x % y) else ((x % y) - y.natAbs)
+
+-- TODO: prove this to make sure it's the right implementation!
+theorem _root_.Int.rem_sign_dividend :
+  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
+
+/--
+This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),
+not the modulo operator (where the result is either zero or has the same sign as the divisor, op2) of a value.
+For more information about the difference, see The Math Forum.
+For a table of how this is implemented in various languages, please see Wikipedia: modulo operation.
+Note that signed integer remainder and unsigned integer remainder are distinct operations; for unsigned integer remainder, use ‘urem’.
+Taking the remainder of a division by zero is undefined behavior.
+For vectors, if any element of the divisor is zero, the operation has undefined behavior.
+Overflow also leads to undefined behavior; this is a rare case, but can occur, for example,
+by taking the remainder of a 32-bit division of -2147483648 by -1.
+(The remainder doesn’t actually overflow, but this rule lets srem be implemented using instructions that return both the result
+of the division and the remainder.)
+-/
+def srem? {w : Nat} (x y : BitVec w) : Option $ BitVec w :=
+  if y.toInt = 0
+  then none
+  else
+    let div := (x.toInt / y.toInt)
+    if div < Int.ofNat (2^w)
+      then some $ BitVec.ofInt w (x.toInt.rem y.toInt)
+      else none
 
 instance : Coe Bool (BitVec 1) := ⟨ofBool⟩
 
