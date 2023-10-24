@@ -345,7 +345,7 @@ def ICom.deleteVar? (DEL : Deleted Γ delv Γ') (com : ICom Op Γ t) :
 -/
 def DCEType [OpSignature Op Ty] [OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : Type :=
   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
-    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)}
+    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)}
 
 /-- Show that DCEType in inhabited. -/
 instance [SIG : OpSignature Op Ty] [DENOTE : OpDenote Op Ty] {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) : Inhabited (DCEType com) where
@@ -361,7 +361,7 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
     | .ret v => -- If we have a `ret`, return it.
       ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by
         intros V
-        simp[Ctxt.Valuation.hom]
+        simp[Ctxt.Valuation.comap]
         ⟩⟩
     | .lete (α := α) e body =>
       let DEL := Deleted.deleteSnoc Γ α
@@ -369,7 +369,7 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
         match ICom.deleteVar? DEL body with
         | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
           let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-            :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : ICom Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.hom hom)} :=
+            :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : ICom Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
             (dce_ body)
           let com' := ICom.lete (α := α) e (body'.changeVars hom')
           ⟨Γ, Ctxt.Hom.id, com', by
@@ -380,7 +380,7 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
           ⟩
         | .some ⟨body', hbody⟩ =>
           let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} :=
+          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
             ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
               simp[HCOM]
               intros V
@@ -388,7 +388,7 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
               apply hbody
             ⟩⟩
           let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
-            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} :=
+            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
             dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
           ⟨Γ'', hom''.comp hom', com'', by
             intros V
@@ -407,7 +407,7 @@ decreasing_by {
 to convince Lean that the output type is in fact inhabited. -/
 def dce [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : ICom Op Γ t) :
   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ),
-    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.hom hom)} :=
+    { com' : ICom Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
   dce_ com
 
 /-- A version of DCE that returns an output program with the same context. It uses the context
@@ -418,7 +418,7 @@ def dce' [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : IC
   ⟨com'.changeVars hom, by
     intros V
     rw[hcom']
-    simp[Ctxt.Valuation.hom]⟩
+    simp[Ctxt.Valuation.comap]⟩
 
 namespace Examples
 

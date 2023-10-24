@@ -262,12 +262,8 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- transport/pullback a valuation along a context homomorphism. -/
-def Valuation.hom {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
+def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
   fun _to vo =>  Γiv (hom vo)
-  
-/-- abbreviation for Valuation.hom -/
-abbrev Valuation.pulback {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation := 
-  Valuation.hom Γiv hom
 
 end Valuation
 
