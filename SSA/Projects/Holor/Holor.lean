@@ -29,31 +29,31 @@ def Holor.pointwise_mul [Mul α] (h₁ h₂ : Holor α ds) : Holor α ds := fun 
 instance  [Mul α] : Mul (Holor α ds) where
   mul := Holor.pointwise_mul
 
-theorem Holor.pointwise_mul_index [Mul α] (h₁ h₂ : Holor α ds) : 
+theorem Holor.pointwise_mul_index [Mul α] (h₁ h₂ : Holor α ds) :
   (h₁ * h₂) i = h₁ i * h₂ i := rfl
 
 
 /-- Holor inherits algebraic structures --/
-instance [Semiring α] : Semiring (Holor α ds) := 
+instance [Semiring α] : Semiring (Holor α ds) :=
   by delta Holor; infer_instance
 
-instance [CommSemiring α] : CommSemiring (Holor α ds) := 
+instance [CommSemiring α] : CommSemiring (Holor α ds) :=
   by delta Holor; infer_instance
 
-instance [Ring α] : Ring (Holor α ds) := 
+instance [Ring α] : Ring (Holor α ds) :=
   by delta Holor; infer_instance
 
-instance [CommRing α] : CommRing (Holor α ds) := 
+instance [CommRing α] : CommRing (Holor α ds) :=
   by delta Holor; infer_instance
 
-instance [SMul M A] : SMul M (Holor A ds) := by 
+instance [SMul M A] : SMul M (Holor A ds) := by
   delta Holor; infer_instance
 
 /-- Fill a holor with a constant value 'a'. -/
 def Holor.fill (a : α) : Holor α ds := fun _ => a
 
 -- @chrishughes24:
--- given the map ralg : R -> Z(A), 
+-- given the map ralg : R -> Z(A),
 -- I want to declare the map (r : R) -> (fill (ralg R) : Holor A ds).
 -- This will be the map that turns (Holor A ds) into an R-algebra.
 -- I'm not sure how to define this.

@@ -87,7 +87,7 @@ inductive Op
 | sub
 | map2d
 | fill2d
-| extract2d 
+| extract2d
 
 inductive Ty
 | int : Ty
@@ -106,7 +106,7 @@ instance : Goedel Ty where toType := Ty.toType
 def Op.outTy : Op → Ty
   | .add => .int
   | .sub => .int
-  | .constIx _ => .ix 
+  | .constIx _ => .ix
   | .constTensor _ => .tensor2d
   | .constInt _ => .int
   | .map2d | .fill2d => .tensor2d
@@ -130,8 +130,8 @@ def Op.regSig : Op → RegionSignature Ty
 
 @[reducible]
 instance : OpSignature Op Ty where
-  signature op := ⟨op.sig, op.regSig, op.outTy⟩ 
-  
+  signature op := ⟨op.sig, op.regSig, op.outTy⟩
+
 
 /-
 -- error: unknown free variable: _kernel_fresh.97
@@ -141,7 +141,7 @@ instance : OpDenote Op Ty where
   | .constIx v, _, _ => v
   | .constTensor v, _, _ => v
   | .constInt v, _, _ => v
-  | .add, (.cons x (.cons y nil)), _ => 
+  | .add, (.cons x (.cons y nil)), _ =>
     let x : Int := x;
     let y : Int := y;
     x + y
@@ -150,14 +150,14 @@ instance : OpDenote Op Ty where
     let y : Int := y;
     let out : Int := x - y
     out
-  | .map2d, (.cons t .nil), (.cons r .nil) => 
+  | .map2d, (.cons t .nil), (.cons r .nil) =>
     let t : Tensor2d' Int := t
     -- Is there a cleaner way to build the data below?
     let f : Int → Int := fun v =>  r (Ctxt.Valuation.ofHVector <| (.cons v .nil))
     t.map f
-  | .fill2d, (.cons v (.cons t nil)), _ => 
+  | .fill2d, (.cons v (.cons t nil)), _ =>
     t.fill v
-  | .extract2d, (.cons δ₁ (.cons δ₂ (.cons sz₁ (.cons sz₂ (.cons t .nil))))), _ => 
+  | .extract2d, (.cons δ₁ (.cons δ₂ (.cons sz₁ (.cons sz₂ (.cons t .nil))))), _ =>
     t.extract δ₁ δ₂ sz₁ sz₂
 
 -- NOTE: there is no way in MLIR to talk about composition of functions, so `map . map` is out
@@ -169,20 +169,20 @@ instance : OpDenote Op Ty where
 --          naively leads to errors about incorrect types:
 --          https://github.com/bollu/ssa/issues/28
 open SSA EDSL2 in
-theorem map_fill_2d 
+theorem map_fill_2d
     (t : Tensor2d' Int)
-    (sz₀ sz₁ ix₀ ix₁: Index) 
+    (sz₀ sz₁ ix₀ ix₁: Index)
     (i : Int):
   TSSA.eval
   (e := e) (Op := Op) [dsl_bb2|
-    return op:fill2d (op:constInt(i) (), 
+    return op:fill2d (op:constInt(i) (),
       op:extract2d (
           ((op:constIx(sz₀) () , op:constIx(sz₁) ()),
            (op:constIx(ix₀) (), op:constIx(ix₁) ())),
            op:constTensor(t) ()))
   ] =
   TSSA.eval (e := e) (Op := Op) [dsl_bb2|
-    return op:extract2d 
+    return op:extract2d
       (((op:constIx(sz₀) (), op:constIx(sz₁) ()),
         (op:constIx(ix₀) (), op:constIx(ix₁) ())),
         op:fill2d (op:constInt(i) (), op:constTensor(t) ()))

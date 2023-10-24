@@ -736,7 +736,7 @@ syntax mlir_op_operand "="
 macro_rules
   | `([mlir_op|
         $resName:mlir_op_operand = $name:str ( $operandsNames,* ) $[ ( $rgns,* ) ]? $[ $attrDict ]?
-        : ( $operandsTypes,* ) -> $resType:mlir_type  
+        : ( $operandsTypes,* ) -> $resType:mlir_type
       ]) => do
         let results ← `([([mlir_op_operand| $resName], [mlir_type| $resType])])
         -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
