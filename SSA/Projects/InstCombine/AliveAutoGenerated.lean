@@ -28,72 +28,44 @@ theorem BitVec.ofNat_one : BitVec.ofNat w 1 = 1 :=
 #check pairMapM
 
 /--
-- We first generalize `v0...vn`, which gives us names for the accessors of the context.
-- Then we `cases` on these, to clear away the case where the variables could be `none`, leaving us with the
-  interesting case where the variable is a `some value`.
-- At this point, the proof state is what we want. However, the names `x0..xn` are *inaccessible* to the
-  user since the names were generated from within the macro.
-- So, we choose to revert the variables `x0...xn` so that the user can introduce them as she likes.
-- If we directly revert `x0...xn`, we wind up getting a proof state of the form
-    `∀ x0 V0 ... xn Vn`, where the `{ Vi }` is pure noise.
-- So we first clear the `V0...Vn` equations, and then revert `x0...xn`.
-- This gives us a statement of the form `∀ x0... xn, GOAL`
+- We first simplify `ICom.refinement` to see the context `Γv`.
+- We `simp_peephole Γv` to simplify context accesses by variables.
+- We simplify the translation overhead.
+- Then we introduce variables, `cases` on the variables to eliminate the `none` cases.
+- We cannot leave it at this state, since then the variables will be inaccessible.
+- So, we revert the variables for the user to re-introduce them as they see fit.  
 -/
-macro "simp_mlir" Γv:ident : tactic =>
+macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
-      dsimp only[]
-      unfold ICom.Refinement
-      simp_peephole at $Γv
-      try simp only[ICom.denote, IExpr.denote, HVector.denote, OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM,
-        HVector.toTuple, BitVec.Refinement]
-      try simp[bind, Option.bind, pure]
-      try simp[DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc] -- cannot rewrite with simp theorem 'motive is not type correct'
-      try simp[MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
-          Vector.get, HVector.toSingle, HVector.toTuple]
-      try simp[List.nthLe]
-
-      try generalize V0 : Γv (Ctxt.Var.last _ _) = v0
-      try generalize V1 : Γv (Ctxt.Var.last _ _).toSnoc = v1
-      try generalize V2 : Γv (Ctxt.Var.last _ _).toSnoc.toSnoc = v2
-      try generalize V3 : Γv (Ctxt.Var.last _ _).toSnoc.toSnoc.toSnoc = v3
-      try generalize V4 : Γv (Ctxt.Var.last _ _).toSnoc.toSnoc.toSnoc.toSnoc = v4
-      try generalize V5 : Γv (Ctxt.Var.last _ _).toSnoc.toSnoc.toSnoc.toSnoc.toSnoc = v5
-
-      try simp[Goedel.toType] at v0
-      try simp[Goedel.toType] at v1
-      try simp[Goedel.toType] at v2
-      try simp[Goedel.toType] at v3
-      try simp[Goedel.toType] at v4
-      try simp[Goedel.toType] at v5
-      
-      -- /- cases on variables, eliminating trivial `none` cases. -/
-      -- try cases' v0 with x0 <;> simp
-      -- <;> try cases' v1 with x1 <;> simp
-      -- <;> try cases' v2 with x2 <;> simp
-      -- <;> try cases' v3 with x3 <;> simp
-      -- <;> try cases' v4 with x4 <;> simp
-      -- <;> try cases' v5 with x5 <;> simp
-      try clear V0
-      try clear V1
-      try clear V2
-      try clear V3
-      try clear V4
-      try clear V5
-
+      dsimp only[ICom.Refinement]
+      intros Γv
+      simp_peephole at Γv
+      /- note that we need the `HVector.toPair`, `HVector.toSingle` lemmas since it's used in `InstCombine.Op.denote`
+        We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+      try simp only[OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM, BitVec.Refinement,
+        bind, Option.bind, pure,
+        DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc,
+        MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
+        Vector.get, HVector.toSingle, HVector.toTuple, List.nthLe]
+      try intros v0
+      try intros v1
+      try intros v2
+      try intros v3
+      try intros v4
+      try intros v5
+      try cases' v0 with x0 <;> simp
+        <;> try cases' v1 with x1 <;> simp
+        <;> try cases' v2 with x2 <;> simp
+        <;> try cases' v3 with x3 <;> simp
+        <;> try cases' v4 with x4 <;> simp
+        <;> try cases' v5 with x5 <;> simp
       try revert v5
       try revert v4
       try revert v3
       try revert v2
-      try revert v1
-      try revert v0
-
-      -- try revert x5
-      -- try revert x4
-      -- try revert x3
-      -- try revert x2
-      -- try revert x1
-      -- try revert x0
+      try revert v1      
+      try revert v0      
       )
    )
 
@@ -112,12 +84,8 @@ def rhs (w : Nat):=
 
 open Ctxt (Var) in
 theorem refinement (w : Nat) : lhs w ⊑ rhs w := by
-  dsimp only[ICom.Refinement]
-  intros Γv
-  simp_peephole [lhs, rhs] at Γv
-  intros a
-  simp[Std.BitVec.Refinement.refl]
-  done
+  rw[lhs,rhs]
+  simp_alive_peephole
 
 end OnlyReturn
 
@@ -166,29 +134,8 @@ set_option pp.proofs false in
 set_option pp.proofs.withType false in
 open Ctxt (Var) in
 theorem AddSub_1043_refinement (w : Nat) : AddSub_1043_src w ⊑ AddSub_1043_tgt w := by
-  dsimp only[ICom.Refinement]
-  intros Γv
-  rw[AddSub_1043_src, AddSub_1043_tgt]
-  simp_peephole at Γv
-  /- note that we need the HVector.toPair lemma since it's used in 'InstCombine.Op.denote'-/
-  try simp only[OpDenote.denote, InstCombine.Op.denote, HVector.toPair, pairMapM, BitVec.Refinement,
-    bind, Option.bind, pure,
-    DerivedContext.ofContext, DerivedContext.snoc, Ctxt.snoc,
-    MOp.instantiateCom, InstCombine.MTy.instantiate, ConcreteOrMVar.instantiate,
-    Vector.get, HVector.toSingle, HVector.toTuple]
-  try simp[List.nthLe]
-  try intros v0
-  try intros v1
-  try intros v2
-  try intros v3
-  try intros v4
-  try intros v5
-  try cases' v0 with x0 <;> simp
-    <;> try cases' v1 with x1 <;> simp
-    <;> try cases' v2 with x2 <;> simp
-    <;> try cases' v3 with x3 <;> simp
-    <;> try cases' v4 with x4 <;> simp
-    <;> try cases' v5 with x5 <;> simp
+  unfold AddSub_1043_src AddSub_1043_tgt
+  simp_alive_peephole
   apply bitvec_AddSub_1043
   done
 
