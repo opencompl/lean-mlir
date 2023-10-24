@@ -1162,7 +1162,6 @@ leaving behind a bare Lean level proposition to be proven.
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      -- try (funext ll)
       try simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
