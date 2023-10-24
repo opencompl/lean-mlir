@@ -90,12 +90,6 @@ theorem List.get?_removeNth_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ 
         apply IHxs
         linarith
 
-/-- Lean bug: linarith fails to find a contradiction -/
-theorem linarith_failure (x y : Nat) (H1 : ¬ (x = y)) (H2 : ¬ (x < y)) : x > y :=
-  by
-    try linarith
-    sorry
-
 /-- Given  `Γ' := Γ /delv`, transport a variable from `Γ'` to `Γ`. -/
 def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var β :=
   if DELV:v.val < delv.val
