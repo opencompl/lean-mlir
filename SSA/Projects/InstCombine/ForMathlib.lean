@@ -59,18 +59,18 @@ notation:max "𝟷"   => ofVector (Vector.cons true (@Vector.nil Bool))
 -- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) false
 -- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) true |>.toNat
 -- #eval Bitvec.adc (𝟷𝟶𝟷𝟷) (𝟶𝟷𝟷𝟷) false |>.toNat
--- 
+--
 -- #eval Bitvec.adc (𝟶) (𝟶) true
 -- #eval Bitvec.adc (𝟶) (𝟶) false
 
-def toZMod {n : Nat} (x : Bitvec n) : ZMod (2 ^ n) := 
+def toZMod {n : Nat} (x : Bitvec n) : ZMod (2 ^ n) :=
   x.toNat
 
 theorem toZMod_val {n : ℕ} (v : Bitvec n) : (toZMod v).val = v.toNat := by
   rw [toZMod, ZMod.val_nat_cast, Nat.mod_eq_of_lt]
   apply toNat_lt
 
-def ofZMod {n : ℕ} (x : ZMod (2 ^ n)) : Bitvec n := 
+def ofZMod {n : ℕ} (x : ZMod (2 ^ n)) : Bitvec n :=
   Bitvec.ofNat _ x.val
 
 theorem toZMod_ofZMod {n} (i : ZMod <| 2 ^ n) : (ofZMod i).toZMod = i :=
@@ -81,7 +81,7 @@ theorem ofZMod_toZMod {n} (v : Bitvec n) : ofZMod (toZMod v) = v := by
   dsimp [ofZMod]
   rw [toZMod_val, ofNat_toNat]
 
-theorem foldl_addLsb_add : ∀ (n k : ℕ) (x : List Bool), 
+theorem foldl_addLsb_add : ∀ (n k : ℕ) (x : List Bool),
     x.foldl addLsb (n + k) = 2 ^ x.length * k + x.foldl addLsb n
   | n, k, [] => by simp [addLsb, add_comm, add_assoc, add_left_comm]
   | n, k, a::l => by
@@ -104,7 +104,7 @@ theorem foldl_addLsb_cons_zero (a : Bool) (x : List Bool) :
 theorem toNat_adc_aux : ∀ {x y: List Bool} (_h : List.length x = List.length y),
     List.foldl addLsb (addLsb 0 (List.mapAccumr₂ (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).fst)
       (List.mapAccumr₂ (fun x y c => (Bool.carry x y c, Bool.xor3 x y c)) x y false).snd =
-    List.foldl addLsb 0 x + List.foldl addLsb 0 y 
+    List.foldl addLsb 0 x + List.foldl addLsb 0 y
 | [], [], _ => rfl
 | a::x, b::y, h => by
   simp only [List.length_cons, Nat.succ.injEq] at h
@@ -113,12 +113,12 @@ theorem toNat_adc_aux : ∀ {x y: List Bool} (_h : List.length x = List.length y
   dsimp only [Bool.carry, Bool.xor3]
   rw [foldl_addLsb_eq_add_foldl_addLsb_zero, foldl_addLsb_cons_zero,
     foldl_addLsb_eq_add_foldl_addLsb_zero _ (addLsb _ _)]
-  cases a <;> cases b <;> 
+  cases a <;> cases b <;>
   simp only [Bool.xor_false_right, Bool.xor_assoc, Bool.true_xor, List.length_cons, List.length_mapAccumr₂,
     h, min_self, pow_succ, two_mul, Bool.and_false, Bool.true_and, Bool.false_or, Bool.false_and, Bool.or_false,
     addLsb, add_zero, zero_add, add_mul, Bool.cond_not, add_left_comm, add_assoc, cond_true, mul_one, cond_false,
     mul_zero, add_comm, Bool.xor_false, Bool.false_xor, Bool.true_or, Bool.not_true] <;>
-  cases (List.mapAccumr₂ (fun x y c => (x && y || x && c || y && c, xor x (xor y c))) x y false).fst <;> simp [h]  
+  cases (List.mapAccumr₂ (fun x y c => (x && y || x && c || y && c, xor x (xor y c))) x y false).fst <;> simp [h]
 
 theorem toNat_adc {n : Nat} {x y : Bitvec n} : (Bitvec.adc x y false).toNat = x.toNat + y.toNat := by
   rcases x with ⟨x, hx⟩
@@ -132,7 +132,7 @@ theorem toNat_tail : ∀ {n : Nat} (x : Bitvec n), Bitvec.toNat x.tail = x.toNat
   | n+1, ⟨a::l, h⟩ => by
     conv_lhs => rw [← Nat.mod_eq_of_lt (Bitvec.toNat_lt (Vector.tail ⟨a::l, h⟩))]
     simp only [List.length_cons, Nat.succ.injEq] at h
-    simp only [Bitvec.toNat, bitsToNat, foldl_addLsb_cons_zero, Vector.toList, h]   
+    simp only [Bitvec.toNat, bitsToNat, foldl_addLsb_cons_zero, Vector.toList, h]
     simp only [Vector.tail_val, List.tail_cons, ge_iff_le, add_le_iff_nonpos_left, nonpos_iff_eq_zero,
       add_tsub_cancel_right]
     rw [mul_comm, Nat.mul_add_mod]
@@ -147,8 +147,8 @@ theorem toZMod_add {n : ℕ} (x y : Bitvec n) : (x + y).toZMod = (x.toZMod + y.t
   apply ZMod.val_injective
   rw [toZMod_val, ZMod.val_add, toNat_add, toZMod_val, toZMod_val]
 
-theorem ofZMod_add {n : ℕ} (x y : ZMod (2 ^n)) : 
-    Bitvec.ofZMod (x + y) = Bitvec.ofZMod x + Bitvec.ofZMod y := by 
+theorem ofZMod_add {n : ℕ} (x y : ZMod (2 ^n)) :
+    Bitvec.ofZMod (x + y) = Bitvec.ofZMod x + Bitvec.ofZMod y := by
   rw [← toZMod_ofZMod x, ← toZMod_ofZMod y, ← toZMod_add, toZMod_ofZMod, toZMod_ofZMod, ofZMod_toZMod]
 
 theorem zero_def : (0 : Bitvec n) = ⟨List.replicate n false, (0 : Bitvec n).2⟩  := rfl
@@ -164,21 +164,21 @@ theorem ofNat_zero : Bitvec.ofNat w 0 = 0 := by
   rw [← toNat_zero, ofNat_toNat]
 
 @[simp]
-theorem toZMod_zero : ∀ {n : Nat}, (0 : Bitvec n).toZMod = 0 := 
+theorem toZMod_zero : ∀ {n : Nat}, (0 : Bitvec n).toZMod = 0 :=
   by simp [toZMod]
 
 @[simp]
 theorem ofZMod_zero : Bitvec.ofZMod (0 : ZMod (2^n)) = 0 := by
   rw [← toZMod_zero, ofZMod_toZMod]
 
-theorem toList_one {n : ℕ} : (1 : Bitvec (n + 1)).toList = List.replicate n false ++ [true] := rfl 
+theorem toList_one {n : ℕ} : (1 : Bitvec (n + 1)).toList = List.replicate n false ++ [true] := rfl
 
 theorem toNat_one : ∀ {n : Nat}, (1 : Bitvec n).toNat = if n = 0 then 0 else 1
   | 0 => rfl
   | 1 => rfl
   | n+2 => by
     have := @toNat_one (n+1)
-    simp only [Bitvec.toNat, bitsToNat, List.foldl, Nat.add_eq, add_zero, List.append_eq, 
+    simp only [Bitvec.toNat, bitsToNat, List.foldl, Nat.add_eq, add_zero, List.append_eq,
       List.foldl_append, add_eq_zero, and_false, ite_false, toList_one] at *
     simp only [addLsb, cond_true, add_left_eq_self, add_eq_zero, and_self] at this
     rw [foldl_addLsb_eq_add_foldl_addLsb_zero, this]
@@ -205,22 +205,22 @@ theorem toZMod_nsmul {n : ℕ} (x : Bitvec n) (y : ℕ) : (y • x).toZMod = y �
 theorem toInt_sub_aux : ∀ {x y : List Bool} (_hx : List.length x = List.length y),
     (↑(List.foldl addLsb 0 (List.mapAccumr₂ (fun x y c => (Bool.carry (!x) y c, Bool.xor3 x y c)) x y false).snd) : ℤ)
     - 2 ^ x.length * cond (List.mapAccumr₂ (fun x y c => (Bool.carry (!x) y c, Bool.xor3 x y c)) x y false).fst 1 0 =
-  ↑(List.foldl addLsb 0 x) + -↑(List.foldl addLsb 0 y) 
+  ↑(List.foldl addLsb 0 x) + -↑(List.foldl addLsb 0 y)
 | [], [], _ => rfl
 |  a::x, b::y, h => by
   simp only [List.length_cons, Nat.succ.injEq] at h
-  rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, Nat.cast_add, 
+  rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, Nat.cast_add,
     Nat.cast_add, neg_add, add_add_add_comm, ← toInt_sub_aux h, List.mapAccumr₂]
   dsimp only [Bool.carry, Bool.xor3]
   rw [foldl_addLsb_eq_add_foldl_addLsb_zero, foldl_addLsb_cons_zero]
-  cases a <;> cases b <;> 
+  cases a <;> cases b <;>
   simp only [Bool.xor_false_right, Bool.xor_assoc, Bool.true_xor, List.length_cons, List.length_mapAccumr₂,
     h, min_self, pow_succ, two_mul, Bool.and_false, Bool.true_and, Bool.false_or, Bool.false_and, Bool.or_false,
     addLsb, add_zero, zero_add, add_mul, Bool.cond_not, add_left_comm, add_assoc, cond_true, mul_one, cond_false,
     mul_zero, add_comm, Bool.xor_false, Bool.false_xor, Bool.true_or, Bool.not_true, Bool.not_false,
     Nat.cast_mul, Nat.cast_pow, Nat.cast_add, Nat.cast_zero, neg_zero, sub_eq_add_neg, two_mul] <;>
   ring_nf <;>
-  cases (List.mapAccumr₂ (fun x y c => (!x && y || !x && c || y && c, xor x (xor y c))) x y false).fst 
+  cases (List.mapAccumr₂ (fun x y c => (!x && y || !x && c || y && c, xor x (xor y c))) x y false).fst
     <;> simp <;> ring
 
 instance (n : ℕ) : NeZero (2 ^ n) := ⟨Nat.pos_iff_ne_zero.1 <| pow_pos (by norm_num) _⟩
@@ -229,7 +229,7 @@ theorem toZMod_sbb {n : ℕ} (x y : Bitvec n) : (x.sbb y false).2.toZMod = x.toZ
   rcases x with ⟨x, hx⟩
   rcases y with ⟨y, hy⟩
   simp [Bitvec.toNat, toZMod, bitsToNat, Vector.toList, sbb, Vector.mapAccumr₂]
-  have h2n : (2 ^ n : ZMod (2 ^ n)) = 0 := by 
+  have h2n : (2 ^ n : ZMod (2 ^ n)) = 0 := by
     rw [← Nat.cast_two (R := ZMod (2 ^ n)), ← Nat.cast_pow, ZMod.nat_cast_self]
   have := congr_arg ((↑) : ℤ → ZMod (2^n)) (toInt_sub_aux (hx.trans hy.symm))
   simpa [hx, h2n, sub_eq_add_neg] using this
@@ -238,25 +238,25 @@ theorem toZMod_sub {n : ℕ} (x y : Bitvec n) : (x - y).toZMod = x.toZMod - y.to
   toZMod_sbb x y
 
 theorem toInt_neg_aux : ∀ (x : List Bool),
-    ((List.foldl addLsb (0 : ℕ) (List.mapAccumr (fun y c => (y || c, xor y c)) x false).snd : ℕ) 
-      - 2 ^ x.length * cond (List.mapAccumr (fun y c => (y || c, xor y c)) x false).fst 1 0 : ℤ) = 
+    ((List.foldl addLsb (0 : ℕ) (List.mapAccumr (fun y c => (y || c, xor y c)) x false).snd : ℕ)
+      - 2 ^ x.length * cond (List.mapAccumr (fun y c => (y || c, xor y c)) x false).fst 1 0 : ℤ) =
       -(List.foldl addLsb 0 x)
   | [] => rfl
-  | a::x => by 
+  | a::x => by
     dsimp only [List.mapAccumr]
     rw [foldl_addLsb_cons_zero, foldl_addLsb_cons_zero, Nat.cast_add,
       Nat.cast_add, neg_add, ← toInt_neg_aux x]
     simp
     cases a <;> cases (List.mapAccumr (fun y c => (y || c, xor y c)) x false).fst <;>
     simp [pow_succ, two_mul, sub_eq_add_neg] <;> ring
-    
+
 theorem toZMod_neg {n : ℕ} (x : Bitvec n) : (-x).toZMod = -x.toZMod := by
   show x.neg.toZMod = -x.toZMod
   rcases x with ⟨x, hx⟩
   simp [Bitvec.neg, Bitvec.toNat, bitsToNat, Vector.toList, Vector.mapAccumr, toZMod]
-  have h2n : (2 ^ n : ZMod (2 ^ n)) = 0 := by 
+  have h2n : (2 ^ n : ZMod (2 ^ n)) = 0 := by
     rw [← Nat.cast_two (R := ZMod (2 ^ n)), ← Nat.cast_pow, ZMod.nat_cast_self]
-  have := congr_arg ((↑) : ℤ → ZMod (2^n)) (toInt_neg_aux x) 
+  have := congr_arg ((↑) : ℤ → ZMod (2^n)) (toInt_neg_aux x)
   subst n
   simpa [h2n, sub_eq_add_neg] using this
 
@@ -270,9 +270,9 @@ theorem toZMod_zsmul {n : ℕ} (x : Bitvec n) (y : ℤ) : (y • x).toZMod = y �
   | ofNat y => simp [zsmul_def, zsmulRec, ← nsmul_def]
   | negSucc y => simp [zsmul_def, zsmulRec, ← nsmul_def, toZMod_neg, add_mul]
 
-instance : AddCommGroup (Bitvec n) := 
-  Function.Injective.addCommGroup toZMod 
-    (Function.injective_iff_hasLeftInverse.2 ⟨_, ofZMod_toZMod⟩) 
+instance : AddCommGroup (Bitvec n) :=
+  Function.Injective.addCommGroup toZMod
+    (Function.injective_iff_hasLeftInverse.2 ⟨_, ofZMod_toZMod⟩)
     toZMod_zero toZMod_add toZMod_neg toZMod_sub toZMod_nsmul toZMod_zsmul
 
 -- see https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Pattern.20matching.20subtypes
@@ -287,8 +287,8 @@ theorem some_add?_eq_add {n : Nat} {x y z : Bitvec n} : add? x y = some z → x 
 #eval  Bitvec.mul (𝟷𝟶𝟷𝟷) (𝟷𝟶𝟷𝟷) |>.toNat
 -/
 protected def mul? {n : Nat} (x y : Bitvec n) : Option (Bitvec n) := do
-  let f r b := do 
-    let op₁ ← Bitvec.add? r r 
+  let f r b := do
+    let op₁ ← Bitvec.add? r r
     let op₂ ← Bitvec.add? op₁ y
     return cond b op₂ op₁
   (x.toList).foldlM f 0
@@ -315,22 +315,22 @@ Note that signed integer division and unsigned integer division are distinct ope
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
-def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w := 
-  if y.toInt = 0 
+def sdiv? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
+  if y.toInt = 0
   then none
-  else 
+  else
     let div := (x.toInt / y.toInt)
-    if div < 2^w 
+    if div < 2^w
       then some $ Bitvec.ofInt w div
       else none
 
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
 Note that unsigned integer remainder and signed integer remainder are distinct operations; for signed integer remainder, use ‘srem’.
-Taking the remainder of a division by zero is undefined behavior. 
+Taking the remainder of a division by zero is undefined behavior.
 -/
 def urem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
-  if y.toNat = 0 
+  if y.toNat = 0
   then none
   else some $ Bitvec.ofNat w (x.toNat % y.toNat)
 
@@ -338,11 +338,11 @@ def _root_.Int.rem (x y : Int) : Int :=
   if x ≥ 0 then (x % y) else ((x % y) - |y|)
 
 -- TODO: prove this to make sure it's the right implementation!
-theorem _root_.Int.rem_sign_dividend : 
+theorem _root_.Int.rem_sign_dividend :
   ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
 
 /--
-This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1), 
+This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),
 not the modulo operator (where the result is either zero or has the same sign as the divisor, op2) of a value.
 For more information about the difference, see The Math Forum.
 For a table of how this is implemented in various languages, please see Wikipedia: modulo operation.
@@ -355,11 +355,11 @@ by taking the remainder of a 32-bit division of -2147483648 by -1.
 of the division and the remainder.)
 -/
 def srem? {w : Nat} (x y : Bitvec w) : Option $ Bitvec w :=
-  if y.toInt = 0 
+  if y.toInt = 0
   then none
   else
     let div := (x.toInt / y.toInt)
-    if div < 2^w 
+    if div < 2^w
       then some $ Bitvec.ofInt w (x.toInt.rem y.toInt)
       else none
 
@@ -371,7 +371,7 @@ def select {w : Nat} (c : Bitvec 1) (x y : Bitvec w) : Bitvec w :=
 
 theorem bitwise_eq_eq {w : Nat} {x y : Bitvec w} :
     (forall i : Fin w, x[i] = y[i]) ↔ x = y :=
-  ⟨Vector.ext, fun h _ => h ▸ rfl⟩ 
+  ⟨Vector.ext, fun h _ => h ▸ rfl⟩
 
 theorem ext_get? {w : Nat} {x y : Bitvec w} (h : ∀ i, x.toList.get? i = y.toList.get? i) : x = y := by
   rcases x with ⟨x, rfl⟩
@@ -379,18 +379,18 @@ theorem ext_get? {w : Nat} {x y : Bitvec w} (h : ∀ i, x.toList.get? i = y.toLi
   exact Vector.toList_injective $ List.ext h
 
 @[simp]
-theorem toList_cong {w₁ w₂ : Nat} (h : w₁ = w₂) (b : Bitvec w₁) : (Bitvec.cong h b).toList = b.toList := 
+theorem toList_cong {w₁ w₂ : Nat} (h : w₁ = w₂) (b : Bitvec w₁) : (Bitvec.cong h b).toList = b.toList :=
   by subst h; rfl
 
-theorem get?_shl (x : Bitvec n) (i j : ℕ) : 
-    (x.shl i).toList.get? j = 
-      if i + j < n 
-      then x.toList.get? (i + j) 
+theorem get?_shl (x : Bitvec n) (i j : ℕ) :
+    (x.shl i).toList.get? j =
+      if i + j < n
+      then x.toList.get? (i + j)
       else if j < n then false
       else none := by
   unfold shl
   rcases x with ⟨x, rfl⟩
-  simp only [Vector.shiftLeftFill, Vector.congr, Vector.append, Vector.drop, 
+  simp only [Vector.shiftLeftFill, Vector.congr, Vector.append, Vector.drop,
     Vector.replicate, ge_iff_le, Vector.toList_mk]
   split_ifs with h₁ h₂
   { rw [List.get?_append, List.get?_drop]
@@ -401,9 +401,9 @@ theorem get?_shl (x : Bitvec n) (i j : ℕ) :
     . simpa [add_comm] using h₁ }
   { rw [List.get?_eq_none]
     simpa using h₂ }
-  
-theorem get?_ushr (x : Bitvec n) (i j : ℕ) : 
-    (x.ushr i).toList.get? j = 
+
+theorem get?_ushr (x : Bitvec n) (i j : ℕ) :
+    (x.ushr i).toList.get? j =
       if j < x.length
       then if j < i
         then some false
@@ -411,7 +411,7 @@ theorem get?_ushr (x : Bitvec n) (i j : ℕ) :
       else none := by
   unfold ushr
   rcases x with ⟨x, rfl⟩
-  simp only [Vector.shiftRightFill, Vector.congr, Vector.append, 
+  simp only [Vector.shiftRightFill, Vector.congr, Vector.append,
     Vector.replicate, ge_iff_le, Vector.take, Vector.toList_mk]
   split_ifs with h₁ h₂
   { rw [List.get?_append, List.get?_eq_get, List.get_replicate]
@@ -420,7 +420,7 @@ theorem get?_ushr (x : Bitvec n) (i j : ℕ) :
   { have : i < x.length := lt_of_le_of_lt (le_of_not_lt h₂) h₁
     rw [min_eq_right (le_of_lt this), List.get?_append_right, List.get?_take]
     simp
-    . exact Nat.sub_lt_left_of_lt_add (by simpa using h₂) 
+    . exact Nat.sub_lt_left_of_lt_add (by simpa using h₂)
         (by simpa [Nat.add_sub_cancel' (le_of_lt this)] using h₁)
     . simpa using h₂ }
   { rw [List.get?_eq_none]
@@ -429,7 +429,7 @@ theorem get?_ushr (x : Bitvec n) (i j : ℕ) :
       { simpa [Nat.sub_eq_zero_of_le h] using h₁ }
       { simpa [Nat.add_sub_cancel' (le_of_not_le h)] using h₁  } }
 
-theorem get?_and (x y : Bitvec n) (i : ℕ) : 
+theorem get?_and (x y : Bitvec n) (i : ℕ) :
     (x.and y).toList.get? i = do return (← x.toList.get? i) && (← y.toList.get? i) := by
   rcases x with ⟨x, rfl⟩
   rcases y with ⟨y, hy⟩
@@ -442,7 +442,7 @@ theorem match_does_not_fold_away : List.get ((Bitvec.ofInt w (-1)).toList) i = t
   rw [List.get?_eq_get, List.get_replicate]
   simpa using i.2
 
-theorem get?_ofInt_neg_one : (Bitvec.ofInt w (-1)).toList.get? i = 
+theorem get?_ofInt_neg_one : (Bitvec.ofInt w (-1)).toList.get? i =
     if i < w then some true else none := by
   --simp only [Vector.cons, Bitvec.not, Vector.map, ofNat_zero, zero_def, List.map_replicate, Bool.not_false,
   --  Vector.toList_mk, List.cons.injEq, and_imp, forall_apply_eq_imp_iff', forall_eq']
@@ -483,7 +483,7 @@ theorem refl {α: Type u} : ∀ x : Option α, Refinement x x := by
 theorem trans {α : Type u} : ∀ x y z : Option α, Refinement x y → Refinement y z → Refinement x z := by
   intro x y z h₁ h₂
   cases h₁ <;> cases h₂ <;> try { apply Refinement.noneAny } ; try {apply Refinement.bothSome; assumption}
-  rename_i x y hxy y h 
+  rename_i x y hxy y h
   rw [hxy, h]; apply refl
 
 instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
@@ -494,7 +494,7 @@ instance {α : Type u} [DecidableEq α] : DecidableRel (@Refinement α) := by
   { apply isFalse; intro h; cases h }
   { rename_i val val'
     cases (decEq val val')
-    { apply isFalse; intro h; cases h; contradiction } 
+    { apply isFalse; intro h; cases h; contradiction }
     { apply isTrue; apply Refinement.bothSome; assumption }
   }
 
@@ -532,24 +532,24 @@ theorem toInt_zero {w : Nat} : (0 : Bitvec w).toInt = 0 := by
 theorem toInt_eq_zero {w : Nat} (b : Bitvec w) : b.toInt = 0 ↔ b = 0 := by
   rw [← toInt_injective.eq_iff, toInt_zero]
 
-theorem toInt_one : ∀ {w : ℕ} (_hw : 1 < w), Bitvec.toInt (1 : Bitvec w) = 1 
-  | w+2, _ => by 
+theorem toInt_one : ∀ {w : ℕ} (_hw : 1 < w), Bitvec.toInt (1 : Bitvec w) = 1
+  | w+2, _ => by
     have : Vector.head (1 : Bitvec (w+2)) = false := rfl
     have : Vector.tail (1 : Bitvec (w+2)) = 1 := rfl
     simp [*, Bitvec.toInt, Bitvec.toNat_one]
 
 -- from InstCombine/:805
 theorem one_sdiv_eq_add_cmp_select_some {w : Nat} {x : Bitvec w} (hw : w > 1) (hx : x ≠ 0) :
-  Bitvec.sdiv? 1 x = Option.some (Bitvec.select 
+  Bitvec.sdiv? 1 x = Option.some (Bitvec.select
     (((x + 1).toNat < 3) ::ᵥ Vector.nil) x 0) := by
-  have hw0 : w ≠ 0 := by rintro rfl; simp at hw  
-  simp only [sdiv?, toInt_eq_zero, hx, ite_false, Option.map_some', 
+  have hw0 : w ≠ 0 := by rintro rfl; simp at hw
+  simp only [sdiv?, toInt_eq_zero, hx, ite_false, Option.map_some',
     select, Vector.head, toNat_add, toNat_one,
     if_neg hw0, Bool.cond_decide, Option.some.injEq, toInt_one hw]
   admit
 
 theorem one_sdiv_ref_add_cmp_select :
-  (Bitvec.sdiv? (Bitvec.ofInt w 1) x) ⊑ 
+  (Bitvec.sdiv? (Bitvec.ofInt w 1) x) ⊑
   Option.some (Bitvec.select ((Nat.blt (Bitvec.add x (Bitvec.ofNat w 1)).toNat (Bitvec.ofNat w 3).toNat) ::ᵥ Vector.nil)  x (Bitvec.ofNat w 0)) :=
   sorry
 
@@ -557,7 +557,7 @@ def beq {w : Nat} (x y : Bitvec w) : Bool := x = y
 
 def ofBool : Bool → Bitvec 1 := fun b => b ::ᵥ Vector.nil
 
-def toBool : Bitvec 1 → Bool 
+def toBool : Bitvec 1 → Bool
   | b ::ᵥ Vector.nil => b
 
 theorem ofBool_toBool : ∀ b : Bool, toBool (ofBool b) = b := by simp only [ofBool, toBool]
