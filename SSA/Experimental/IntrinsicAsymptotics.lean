@@ -787,12 +787,18 @@ theorem denote_matchVar_of_subset {rg : RegMVars Ty}
     (hvarMap : (rVarMap₁, varMap₁) ∈ matchVar lets v matchLets w rma ma) →
     (h_sub_r : rVarMap₁.entries ⊆ rVarMap₂.entries) →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    {mv : toType rg} → {s : toType Γ_in} →
-      matchLets.denote mv (fun t' v' => by
-        match varMap₂.lookup ⟨_, v'⟩ with
-        | some v' =>
-          exact lets.denote (fun _ => Ctxt.Var.emptyElim) s v'
-        | none => exact default
+    {s : toType Γ_in} →
+      matchLets.denote
+        (fun t' v' => by
+          match rVarMap₂.lookup ⟨_, v'⟩ with
+          | some i =>
+            exact i.denote (fun _ => Ctxt.Var.emptyElim)
+          | none => exact fun _ => default)
+        (fun t' v' => by
+          match varMap₂.lookup ⟨_, v'⟩ with
+          | some v' =>
+            exact lets.denote (fun _ => Ctxt.Var.emptyElim) s v'
+          | none => exact default
         ) w =
       lets.denote (fun _ => Ctxt.Var.emptyElim) s v
   | .nil, w => by
@@ -887,25 +893,26 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
     {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
     (hvarMap : (rVarMap, varMap) ∈ matchVar.matchReg Tₗ Tᵣ rma ma) →
     {mv : toType rg} →
-    (hmv : ∀ (Γ : Ctxt Ty × Ty) (v : Ctxt.Var rg Γ) (i : ICom Op [] Γ.1 Γ.2),
-      --x rma' ma',
-      --(h : x.2.entries ⊆ varMap.entries) →
-      --(x ∈ matchVar lets v₁ matchLets v₂ rma' ma') →
-      True) →
+    (hmv : ∀ (Γ : Ctxt Ty × Ty) (v : Ctxt.Var rg Γ) (i : ICom Op [] Γ.1 Γ.2)
+      x (rma' : RegMapping Op rg) (ma' : Mapping Δ_in Γ_out),
+      (h : x.1.entries ⊆ rVarMap.entries) →
+      (x ∈ matchVar.matchReg Tₗ Tᵣ rma' ma') →
+      mv v = i.denote (fun _ => Ctxt.Var.emptyElim)) →
     HVector.denoteReg Tᵣ mv = HVector.denoteReg Tₗ (fun _ => Var.emptyElim)
   | [], .nil, .nil, rma, ma, rVarMap, varMap, hvarMap, mv, hmv => by
     rw [HVector.denoteReg, HVector.denoteReg]
   | t::l, .cons (Reg.icom comₗ) rsₗ, .cons (Reg.mvar i) rsᵣ, rma, ma, rVarMap,
       varMap, hvarMap, mv, hmv => by
-    rw [HVector.denoteReg, HVector.denoteReg, Reg.denote]
-    simp [matchVar.matchReg] at hvarMap
+    rw [HVector.denoteReg, HVector.denoteReg, Reg.denote, Reg.denote]
+    rw [hmv _ _ comₗ _ _ _ _ hvarMap]
+    simp only [matchVar.matchReg] at hvarMap
     split at hvarMap
-    · rw [denote_matchVar_matchReg hvarMap]
-      admit; admit
-    · split_ifs at hvarMap with h
-      · subst h
-        rw [denote_matchVar_matchReg hvarMap]
-        admit; admit
+    -- · rw [denote_matchVar_matchReg hvarMap]
+    --   admit; admit
+    -- · split_ifs at hvarMap with h
+    --   · subst h
+    --     rw [denote_matchVar_matchReg hvarMap]
+    --     admit; admit
 
 end
 #exit
