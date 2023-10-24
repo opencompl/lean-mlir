@@ -162,8 +162,8 @@ abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
-/-- `f.composeRange g := g(f(x))` -/
-def Hom.composeRange {Γ Γ' Γ'' : Ctxt Ty} (self : Hom Γ Γ') (rangeMap : Hom Γ' Γ'') : Hom Γ Γ'' :=
+/-- `f.comp g := g(f(x))` -/
+def Hom.comp {Γ Γ' Γ'' : Ctxt Ty} (self : Hom Γ Γ') (rangeMap : Hom Γ' Γ'') : Hom Γ Γ'' :=
   fun _t v => rangeMap (self v)
 
 /--

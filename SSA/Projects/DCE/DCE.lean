@@ -390,7 +390,7 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
           let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
             :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : ICom Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.hom hom)} :=
             dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
-          ⟨Γ'', hom''.composeRange hom', com'', by
+          ⟨Γ'', hom''.comp hom', com'', by
             intros V
             rw[← HCOM]
             rw[hcom']
