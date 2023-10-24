@@ -16,20 +16,12 @@ theorem List.removeNth_zero : List.removeNth (List.cons x xs) 0 = xs := rfl
 theorem List.removeNth_succ : List.removeNth (List.cons x xs) (.succ n) = x :: List.removeNth xs n := rfl
 
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
-theorem List.removeNth_eq_len_snoc (hn : n = xs.length) : List.removeNth (xs ++ [x]) n = xs := by
-  induction n generalizing xs x
-  case zero =>
-    induction xs
-    case nil => simp
-    case cons x xs' IH => simp at hn
-  case succ n' IH' =>
-    induction xs
-    case nil => simp at hn
-    case cons x xs' IH =>
-      simp[removeNth_succ]
-      apply IH'
-      simp at hn
-      exact hn
+theorem List.removeNth_eq_len_concat : List.removeNth (xs ++ [x]) xs.length = xs := by
+  induction xs
+  case nil => simp
+  case cons x xs' IH =>
+    simp[removeNth_succ]
+    apply IH
 
 /-- removing at any index `≥ xs.length` does not change the list. -/
 theorem List.removeNth_of_length_le (hn : xs.length ≤ n) : List.removeNth xs n = xs := by
