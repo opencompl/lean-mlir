@@ -596,8 +596,8 @@ def matchVar {rg : RegMVars Ty}
       then
         let rec matchArg : ∀ {l : List Ty}
             (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
-            Mapping Δ_in Γ_out → Option (RegMapping Op rg × Mapping Δ_in Γ_out)
-          | _, .nil, .nil, ma => some (rma, ma)
+            Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
+          | _, .nil, .nil, ma => some ma
           | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
               let ma ← matchVar lets vₗ matchLets vᵣ rma ma
               matchArg vsₗ vsᵣ ma.2
@@ -618,7 +618,7 @@ def matchVar {rg : RegMVars Ty}
               let x ← matchVar comₗ.toLets.2 comₗ.toLets.3
                                comᵣ.toLets.2 comᵣ.toLets.3 rma ∅
               matchReg rsₗ rsᵣ x.1 ma
-        let ⟨rma, ma⟩ ← matchArg ie.args (hs ▸ matchExpr.args) ma
+        let ma ← matchArg ie.args (hs ▸ matchExpr.args) ma
         matchReg ie.regArgs (hs ▸ matchExpr.regArgs) rma ma
       else none
   | .nil, w, rma, ma => -- The match expression is just a free (meta) variable
@@ -707,7 +707,7 @@ theorem subset_entries_matchVar {rg : RegMVars Ty}
           dsimp at h
           have h₁ := subset_entries_matchVar_matchArg hma₁
           have h₂ := subset_entries_matchVar_matchReg h
-          exact ⟨_root_.trans h₁.1 h₂.1, _root_.trans h₁.2 h₂.2⟩
+          exact ⟨h₂.1, _root_.trans h₁ h₂.2⟩
 
 theorem subset_entries_matchVar_matchArg
     {rg : RegMVars Ty} {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
@@ -718,9 +718,9 @@ theorem subset_entries_matchVar_matchArg
     {Tₗ : HVector (Var Γ_out) l} →
     {Tᵣ : HVector (Var Δ_out) l} →
     {ma : Mapping Δ_in Γ_out} →
-    {rVarMap : RegMapping Op rg} → {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : (rVarMap, varMap) ∈ matchVar.matchArg lets Δ_out matchLets rma Tₗ Tᵣ ma) →
-    rma.entries ⊆ rVarMap.entries ∧ ma.entries ⊆ varMap.entries
+    {varMap : Mapping Δ_in Γ_out} →
+    (hvarMap : varMap ∈ matchVar.matchArg lets Δ_out matchLets rma Tₗ Tᵣ ma) →
+    ma.entries ⊆ varMap.entries
   | _, .nil, .nil, ma => by
     simp (config := { contextual := true }) [matchVar.matchArg]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => by
@@ -732,7 +732,7 @@ theorem subset_entries_matchVar_matchArg
       dsimp at h
       have h₁ := subset_entries_matchVar hma₁
       have h₂ := subset_entries_matchVar_matchArg h
-      exact ⟨h₂.1, _root_.trans h₁.2 h₂.2⟩
+      exact _root_.trans h₁.2 h₂
 
 theorem subset_entries_matchVar_matchReg {rg : RegMVars Ty}
     {Γ_out Δ_in : Ctxt Ty} : {l : List (Ctxt Ty × Ty)} →
@@ -802,7 +802,7 @@ theorem denote_matchVar_of_subset {rg : RegMVars Ty}
         ) w =
       lets.denote (fun _ => Ctxt.Var.emptyElim) s v
   | .nil, w => by
-    intros hvarMap h_sub_r h_sub mv s
+    intros hvarMap h_sub_r h_sub s
     simp [Lets.denote, matchVar] at *
     split at hvarMap
     next x v₂ heq =>
@@ -821,14 +821,14 @@ theorem denote_matchVar_of_subset {rg : RegMVars Ty}
       simp
   | .lete matchLets _, ⟨w+1, h⟩ => by
     simp only [matchVar]
-    intros hvarMap h_sub h_sub_r mv s
+    intros hvarMap h_sub h_sub_r s
     apply denote_matchVar_of_subset (matchLets := matchLets) hvarMap h_sub h_sub_r
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
     subst this
     simp only [matchVar, bind, Option.bind, Option.mem_def]
-    intros hvarMap h_sub_r h_sub mv s
+    intros hvarMap h_sub_r h_sub s
     split at hvarMap
     · simp_all
     · rename_i e he
@@ -851,9 +851,11 @@ theorem denote_matchVar_of_subset {rg : RegMVars Ty}
             dsimp at hvarMap'
             refine denote_matchVar_matchArg hvarMap' ?_
             rintro t' v₁' v₂' ⟨x, y⟩ ma' rma' h_sub' hvarMap''
-            rw [denote_matchVar_of_subset hvarMap'' (List.Subset.refl _)]
-            refine h_sub'.trans ?_
-            exact (subset_entries_matchVar_matchReg hvarMap).2.trans h_sub
+            rw [denote_matchVar_of_subset hvarMap'']
+            · skip
+
+            · refine h_sub'.trans ?_
+              exact (subset_entries_matchVar_matchReg hvarMap).2.trans h_sub
           · rename_i x hvarMap'
             rcases x with ⟨x, y⟩
             apply denote_matchVar_matchReg (hvarMap := hvarMap)
@@ -871,7 +873,8 @@ theorem denote_matchVar_matchArg
     (hvarMap : (rVarMap, varMap) ∈ matchVar.matchArg lets _ matchLets rma Tₗ Tᵣ ma) →
     {sₗ : toType Γ_out} → {sᵣ : toType Δ_out} →
     (hs : ∀ (t : Ty) (v₁ : Ctxt.Var Γ_out t) v₂ x rma' ma',
-      (h : x.2.entries ⊆ varMap.entries) →
+      (h₁ : x.1.entries ⊆ rVarMap.entries) →
+      (h₂ : x.2.entries ⊆ varMap.entries) →
       (x ∈ matchVar lets v₁ matchLets v₂ rma' ma') →
       sᵣ v₂ = sₗ v₁) →
     HVector.map sᵣ Tᵣ = HVector.map sₗ Tₗ
@@ -880,7 +883,8 @@ theorem denote_matchVar_matchArg
     simp only [HVector.map]
     simp only [matchVar.matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨⟨rVarMap', varMap'⟩, hvarMap', hvarMap''⟩
-    rw [hs _ _ _ _ _ _ (subset_entries_matchVar_matchArg hvarMap'').2 hvarMap']
+    rw [hs _ _ _ _ _ _ _
+      (subset_entries_matchVar_matchArg hvarMap'').2 hvarMap']
     congr 1
     exact denote_matchVar_matchArg hvarMap'' hs
 
