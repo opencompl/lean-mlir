@@ -1156,21 +1156,22 @@ section SimpPeephole
 
 
 /--
-Simplify evaluation junk, leaving behind Lean level proposition to be proven.
+`simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
+leaving behind a bare Lean level proposition to be proven.
 -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      try (funext ll)
-      simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+      -- try (funext ll)
+      try simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
-      generalize ll { val := 0, property := _ } = a;
-      generalize ll { val := 1, property := _ } = b;
-      generalize ll { val := 2, property := _ } = c;
-      generalize ll { val := 3, property := _ } = d;
-      generalize ll { val := 4, property := _ } = e;
-      generalize ll { val := 5, property := _ } = f;
+        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
+      generalize $ll { val := 0, property := _ } = a;
+      generalize $ll { val := 1, property := _ } = b;
+      generalize $ll { val := 2, property := _ } = c;
+      generalize $ll { val := 3, property := _ } = d;
+      generalize $ll { val := 4, property := _ } = e;
+      generalize $ll { val := 5, property := _ } = f;
       simp [Goedel.toType] at a b c d e f;
       try clear f;
       try clear e;
@@ -1184,12 +1185,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
       try revert c;
       try revert b;
       try revert a;
-      try clear ll;
+      try clear $ll;
       )
    )
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" : tactic => `(tactic| simp_peephole [])
+macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
 
 
 end SimpPeephole
@@ -1271,7 +1272,8 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.add_comm]
     }
@@ -1340,7 +1342,8 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
@@ -1401,7 +1404,8 @@ def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
     }
@@ -1464,7 +1468,8 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
     }
@@ -1542,7 +1547,8 @@ def ex1_rhs : ICom ExOp [.nat] .nat :=
 def p1 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
       rw [ex1_lhs, ex1_rhs]
-      simp_peephole [add, rgn]
+      funext Γv
+      simp_peephole [add, rgn] at Γv
       simp
       done
   }
@@ -1562,7 +1568,8 @@ def ex2_rhs : ICom ExOp [.nat] .nat :=
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
       rw [ex2_lhs, ex2_rhs]
-      simp_peephole[add, rgn]
+      funext Γv
+      simp_peephole [add, rgn] at Γv
       simp
       done
   }
