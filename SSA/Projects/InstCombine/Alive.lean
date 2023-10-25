@@ -9,4 +9,3 @@ import SSA.Projects.InstCombine.Base
 
 -- An tactic for automatically proofing the alive math statements
 import SSA.Projects.InstCombine.TacticAuto
-
