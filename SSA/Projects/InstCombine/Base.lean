@@ -2,7 +2,7 @@
 import SSA.Core.Framework
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
-import SSA.Projects.InstCombine.ForMathlib
+import SSA.Projects.InstCombine.ForStd
 
 /-!
   # InstCombine Dialect
@@ -21,6 +21,8 @@ import SSA.Projects.InstCombine.ForMathlib
 -/
 
 namespace InstCombine
+
+open Std (BitVec)
 
 abbrev Width φ := ConcreteOrMVar Nat φ
 
@@ -61,15 +63,15 @@ theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
   · exact i.elim0
 
 @[simp]
-def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
+def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : Goedel Ty where
 toType := fun
-  | .bitvec (.concrete w) => Option $ Bitvec w
+  | .bitvec (.concrete w) => Option $ BitVec w
 
-instance : Repr (Bitvec n) where
+instance : Repr (BitVec n) where
   reprPrec
-    | v, n => reprPrec (Bitvec.toInt v) n
+    | v, n => reprPrec (BitVec.toInt v) n
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
@@ -152,7 +154,7 @@ instance : OpSignature (MOp φ) (MTy φ) where
 def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
     (Goedel.toType <| OpSignature.outTy o) :=
   match o with
-  | Op.const w val => Option.some (Bitvec.ofInt w val)
+  | Op.const w val => Option.some (BitVec.ofInt w val)
   | Op.and _ => pairMapM (.&&&.) arg.toPair
   | Op.or _ => pairMapM (.|||.) arg.toPair
   | Op.xor _ => pairMapM (.^^^.) arg.toPair
@@ -162,14 +164,14 @@ def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
   | Op.sub _ => pairMapM (.-.) arg.toPair
   | Op.add _ => pairMapM (.+.) arg.toPair
   | Op.mul _ => pairMapM (.*.) arg.toPair
-  | Op.sdiv _ => pairBind Bitvec.sdiv? arg.toPair
-  | Op.udiv _ => pairBind Bitvec.udiv? arg.toPair
-  | Op.urem _ => pairBind Bitvec.urem? arg.toPair
-  | Op.srem _ => pairBind Bitvec.srem? arg.toPair
+  | Op.sdiv _ => pairBind BitVec.sdiv? arg.toPair
+  | Op.udiv _ => pairBind BitVec.udiv? arg.toPair
+  | Op.urem _ => pairBind BitVec.urem? arg.toPair
+  | Op.srem _ => pairBind BitVec.srem? arg.toPair
   | Op.not _ => Option.map (~~~.) arg.toSingle
   | Op.copy _ => arg.toSingle
   | Op.neg _ => Option.map (-.) arg.toSingle
-  | Op.select _ => tripleMapM Bitvec.select arg.toTriple
+  | Op.select _ => tripleMapM BitVec.select arg.toTriple
   | Op.icmp c _ => match c with
     | .eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
     | .ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
