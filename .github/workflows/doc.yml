@@ -25,8 +25,14 @@ jobs:
       - name: Generate docs 📜
         run: |
           ./docgen.sh
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+
+# stolen from mathlib: https://github.com/leanprover-community/mathlib4_docs/blob/1f4ea7657bc377b4298fd400e567471d3a248b2d/.github/workflows/docs.yaml#L79-L86
+      - name: Upload artifact 📁
+        uses: actions/upload-pages-artifact@v1
         with:
-          folder: build/doc # The folder the action should deploy.
+          path: 'build/doc'
+
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v1
 
