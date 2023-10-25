@@ -1568,3 +1568,35 @@ def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   }
 
 end RegionExamples
+
+section Unfoldings
+
+/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+  of the coercion `ty_eq` and the mutual definition. -/
+theorem IExpr.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op Ty]
+    (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => ICom Op t.1 t.2)
+      (OP_SIG.regSig op))
+  : ∀(Γv : Γ.Valuation), 
+    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+      subst ty_eq
+      simp[denote]
+
+/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+  of the coercion `ty_eq` and the mutual definition. -/
+theorem ICom.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op Ty]
+    (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => ICom Op t.1 t.2)
+      (OP_SIG.regSig op))
+  : ∀(Γv : Γ.Valuation), 
+    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+      subst ty_eq
+      simp[denote]
+      simp[IExpr.denote]
+      
+
+end Unfoldings

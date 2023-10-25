@@ -162,6 +162,10 @@ abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
+/-- `f.comp g := g(f(x))` -/
+def Hom.comp {Γ Γ' Γ'' : Ctxt Ty} (self : Hom Γ Γ') (rangeMap : Hom Γ' Γ'') : Hom Γ Γ'' :=
+  fun _t v => rangeMap (self v)
+
 /--
   `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
    * `v₁` now maps to `v₂`
@@ -198,7 +202,11 @@ variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` cor
 def Valuation (Γ : Ctxt Ty) : Type :=
   ⦃t : Ty⦄ → Γ.Var t → (toType t)
 
-instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩
+/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
+def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
+    VAL v
+
+instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩ 
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
 def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -208,6 +216,35 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   refine Ctxt.Var.casesOn v ?_ ?_
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
+
+def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) : 
+    (Γ.snoc t).Valuation := 
+  fun t' var =>
+    match var with
+    | ⟨i, hvar⟩ =>  
+      match i with
+      | 0 => by
+        simp[Ctxt.snoc] at hvar
+        exact (hvar ▸ x)
+      | .succ i' => s ⟨i', hvar⟩
+
+/-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
+theorem Valuation.snoc_eq_snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) 
+    : (s.snoc x) = (s.snoc' x) := by
+  simp[snoc, snoc']
+  funext t' v
+  cases V:v
+  case mk i hi => 
+    simp
+    simp[Var.casesOn]
+    cases i
+    case zero => 
+      simp
+      simp[Ctxt.snoc] at hi
+      subst hi
+      simp
+    case succ i' => 
+      simp
 
 @[simp]
 theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -223,6 +260,10 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
   | .nil => (default : Ctxt.Valuation (∅ : Ctxt Ty))
   | .cons x xs => (Valuation.ofHVector xs).snoc x
+
+/-- transport/pullback a valuation along a context homomorphism. -/
+def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
+  fun _to vo =>  Γiv (hom vo)
 
 end Valuation
 
