@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
     name: build and deploy documentation.
-    runs-on: ubuntu-latest
+    runs-on: doc-gen
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
