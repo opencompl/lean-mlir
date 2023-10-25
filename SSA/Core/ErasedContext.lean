@@ -206,7 +206,10 @@ def Valuation (Γ : Ctxt Ty) : Type :=
 def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
     VAL v
 
-instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨fun _ v => v.emptyElim⟩ 
+/-- Make a valuation for the empty context. -/
+def Valuation.nil : Ctxt.Valuation (∅ : Ctxt Ty) := fun _ v => v.emptyElim
+
+instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨Valuation.nil⟩
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
 def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
