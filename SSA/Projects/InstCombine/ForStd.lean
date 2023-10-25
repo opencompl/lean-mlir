@@ -2,8 +2,11 @@ import Std.Data.BitVec
 
 open Std
 
+namespace Std.BitVec
+
 def ofBool : (Bool) -> Std.BitVec 1
- | c => if c then 1 else 0
+ | true   => 1
+ | false  => 0
 
 notation:50 x " ≤ᵤ " y => BitVec.ule x y
 notation:50 x " <ᵤ " y => BitVec.ult x y
