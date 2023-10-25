@@ -4,7 +4,7 @@ open Std
 
 namespace Std.BitVec
 
-def ofBool : Bool -> Std.BitVec 1
+def ofBool : (Bool) -> Std.BitVec 1
  | true   => 1
  | false  => 0
 
