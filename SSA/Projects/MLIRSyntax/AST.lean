@@ -53,9 +53,9 @@ abbrev Width.mvar : Fin φ → Width φ := ConcreteOrMVar.mvar
 inductive MLIRType (φ : Nat) : Type _ :=
   | int: Signedness -> Width φ -> MLIRType φ
   | float: Nat -> MLIRType φ
-  | tensor1d: MLIRType φ -- tensor of int values. 
-  | tensor2d: MLIRType φ -- tensor of int values. 
-  | tensor4d: MLIRType φ -- tensor of int values. 
+  | tensor1d: MLIRType φ -- tensor of int values.
+  | tensor2d: MLIRType φ -- tensor of int values.
+  | tensor4d: MLIRType φ -- tensor of int values.
   | index:  MLIRType φ
   | undefined: String → MLIRType φ
   deriving Repr, DecidableEq
@@ -192,7 +192,7 @@ instance : Coe (String × MLIRType φ) (AttrEntry φ) where
   coe v := AttrEntry.mk v.fst (AttrValue.type v.snd)
 
 instance : Coe (AttrEntry φ) (String × AttrValue φ) where
-  coe 
+  coe
   | AttrEntry.mk key val => (key, val)
 
 instance : Coe (List (AttrEntry φ)) (AttrDict φ) where
@@ -200,7 +200,7 @@ instance : Coe (List (AttrEntry φ)) (AttrDict φ) where
   | v => AttrDict.mk v
 
  instance : Coe (AttrDict φ) (List (AttrEntry φ)) where
-  coe 
+  coe
   | AttrDict.mk as => as
 
 def Region.name (region : Region φ) : BBName :=
@@ -276,12 +276,12 @@ partial def op_to_format {φ} : Op φ →  Format
       doc_res ++ " := " ++ doc_name ++ doc_args ++ doc_rgns ++ repr attrs
 
 partial def rgn_to_format {φ} : Region φ → Format
-  | Region.mk name args ops => 
+  | Region.mk name args ops =>
       let doc_args := if args.isEmpty then
           f!""
         else
           f!"({args.map (fun (v, t) => f!"{repr v} : {repr t}") |>.intersperse "," |> Format.join})"
-      let doc_ops := 
+      let doc_ops :=
         ops.map (Format.align true ++ op_to_format ·) |> Format.join
       f!"^{name}{doc_args} : " ++ doc_ops
 end
@@ -327,12 +327,12 @@ def AttrDict.find {φ} (attrs : AttrDict φ) (name : String) : Option (AttrValue
       | some v => v.value
       | none => none
 
-def AttrDict.find_nat {φ} (attrs : AttrDict φ) (name : String) : Option Nat := 
+def AttrDict.find_nat {φ} (attrs : AttrDict φ) (name : String) : Option Nat :=
   match attrs.find name with
   | .some (AttrValue.nat i) =>  .some i
   | _ => .none
 
-def AttrDict.find_int {φ} (attrs : AttrDict φ) 
+def AttrDict.find_int {φ} (attrs : AttrDict φ)
   (name : String): Option (Int × MLIRType φ) :=
   match attrs.find name with
   | .some (AttrValue.int i ty) =>  .some (i, ty)

@@ -56,7 +56,7 @@ inductive IExpr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
     (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => ICom t.1 t.2)
       (OpSignature.regSig op)) : IExpr Γ ty
-  
+
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive ICom : Ctxt Ty → Ty → Type where
   | ret (v : Γ.Var t) : ICom Γ t
@@ -68,7 +68,7 @@ section
 open Std (Format)
 variable {Op Ty : Type} [OpSignature Op Ty] [Repr Op] [Repr Ty]
 
-mutual 
+mutual
   def IExpr.repr (prec : Nat) : IExpr Op Γ t → Format
     | ⟨op, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
@@ -464,10 +464,10 @@ instance : Functor RegionSignature where
   map f := List.map fun (tys, ty) => (f <$> tys, f ty)
 
 instance : Functor Signature where
-  map := fun f ⟨sig, regSig, outTy⟩ => 
+  map := fun f ⟨sig, regSig, outTy⟩ =>
     ⟨f <$> sig, f <$> regSig, f outTy⟩
 
-/-- A dialect morphism consists of a map between operations and a map between types, 
+/-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
 -/
 structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
@@ -475,20 +475,20 @@ structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [O
   mapTy : Ty → Ty'
   preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
 
-variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] 
+variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
 
-def DialectMorphism.preserves_sig (op : Op) : 
+def DialectMorphism.preserves_sig (op : Op) :
     OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
   simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
-def DialectMorphism.preserves_regSig (op : Op) : 
+def DialectMorphism.preserves_regSig (op : Op) :
     OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
       fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
     ) := by
   simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
-def DialectMorphism.preserves_outTy (op : Op) : 
+def DialectMorphism.preserves_outTy (op : Op) :
     OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
@@ -502,12 +502,12 @@ mutual
         f.mapOp op,
         (f.preserves_outTy _).symm,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
-        f.preserves_regSig _ ▸ 
+        f.preserves_regSig _ ▸
           HVector.mapDialectMorphism regs
       ⟩
 
   /-- Inline of `HVector.map'` for the termination checker -/
-  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty}, 
+  def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
       HVector (fun t => ICom Op t.fst t.snd) regSig
       → HVector (fun t => ICom Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
     | _, .nil        => .nil
@@ -1156,21 +1156,21 @@ section SimpPeephole
 
 
 /--
-Simplify evaluation junk, leaving behind Lean level proposition to be proven.
+`simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
+leaving behind a bare Lean level proposition to be proven.
 -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      try (funext ll)
-      simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+      try simp only [ICom.denote, IExpr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
-      generalize ll { val := 0, property := _ } = a;
-      generalize ll { val := 1, property := _ } = b;
-      generalize ll { val := 2, property := _ } = c;
-      generalize ll { val := 3, property := _ } = d;
-      generalize ll { val := 4, property := _ } = e;
-      generalize ll { val := 5, property := _ } = f;
+        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, IExpr.op_mk, IExpr.args_mk, $ts,*]
+      generalize $ll { val := 0, property := _ } = a;
+      generalize $ll { val := 1, property := _ } = b;
+      generalize $ll { val := 2, property := _ } = c;
+      generalize $ll { val := 3, property := _ } = d;
+      generalize $ll { val := 4, property := _ } = e;
+      generalize $ll { val := 5, property := _ } = f;
       simp [Goedel.toType] at a b c d e f;
       try clear f;
       try clear e;
@@ -1184,12 +1184,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
       try revert c;
       try revert b;
       try revert a;
-      try clear ll;
+      try clear $ll;
       )
    )
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" : tactic => `(tactic| simp_peephole [])
+macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
 
 
 end SimpPeephole
@@ -1271,7 +1271,8 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r, correct :=
     by
       rw [m, r]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.add_comm]
     }
@@ -1340,7 +1341,8 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r2, correct :=
     by
       rw [m, r2]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
       rw [Nat.add_comm]
@@ -1401,7 +1403,8 @@ def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := m, rhs := r3, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
     }
@@ -1464,7 +1467,8 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
   { lhs := r3, rhs := m, correct :=
     by
       rw [m, r3]
-      simp_peephole [add, cst]
+      funext Γv
+      simp_peephole [add, cst] at Γv
       intros a b
       rw [Nat.zero_add]
     }
@@ -1542,7 +1546,8 @@ def ex1_rhs : ICom ExOp [.nat] .nat :=
 def p1 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
       rw [ex1_lhs, ex1_rhs]
-      simp_peephole [add, rgn]
+      funext Γv
+      simp_peephole [add, rgn] at Γv
       simp
       done
   }
@@ -1562,9 +1567,42 @@ def ex2_rhs : ICom ExOp [.nat] .nat :=
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=
   { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
       rw [ex2_lhs, ex2_rhs]
-      simp_peephole[add, rgn]
+      funext Γv
+      simp_peephole [add, rgn] at Γv
       simp
       done
   }
 
 end RegionExamples
+
+section Unfoldings
+
+/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+  of the coercion `ty_eq` and the mutual definition. -/
+theorem IExpr.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op Ty]
+    (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => ICom Op t.1 t.2)
+      (OP_SIG.regSig op))
+  : ∀(Γv : Γ.Valuation), 
+    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+      subst ty_eq
+      simp[denote]
+
+/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+  of the coercion `ty_eq` and the mutual definition. -/
+theorem ICom.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op Ty]
+    (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Ctxt.Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => ICom Op t.1 t.2)
+      (OP_SIG.regSig op))
+  : ∀(Γv : Γ.Valuation), 
+    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+      subst ty_eq
+      simp[denote]
+      simp[IExpr.denote]
+      
+
+end Unfoldings

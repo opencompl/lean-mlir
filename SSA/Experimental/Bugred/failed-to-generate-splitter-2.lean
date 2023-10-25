@@ -5,12 +5,12 @@ inductive Ty
 
 def Ctxt : Type :=
   Erased <| List Ty
-  
+
 noncomputable def Ctxt.snoc (Γ : Ctxt) (t : Ty) : Ctxt :=
   Erased.mk <| t :: Γ.out
 
 def Ctxt.Var (Γ : Ctxt) (t : Ty) : Type :=
-  { i : Nat // Γ.out.get? i = some t }  
+  { i : Nat // Γ.out.get? i = some t }
 
 inductive CtxtProp : Ctxt → Type
   | nil : CtxtProp (Erased.mk [])
@@ -26,7 +26,7 @@ noncomputable def matchVar {t : Ty} {Δ : Ctxt} : CtxtProp Δ → Δ.Var t → O
   -- | _, _ => none
 
 
-example {Δ : Ctxt} (d : CtxtProp Δ) {w : Δ.Var t} : 
+example {Δ : Ctxt} (d : CtxtProp Δ) {w : Δ.Var t} :
   matchVar d w = none
     := by
         unfold matchVar /- throws error:
