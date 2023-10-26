@@ -5,7 +5,7 @@ import SSA.Projects.InstCombine.LLVM.Transform
 open Qq Lean Meta Elab.Term
 
 open MLIR.AST InstCombine in
-elab "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
+elab "[mlir_Com (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let ast_stx ← `([mlir_region| $reg])
   let φ : Nat := mvars.getElems.size
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
@@ -25,4 +25,4 @@ elab "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
         throwError "Translation failed with error:\n\t{repr err}"
     | e => throwError "Translation failed to reduce, possibly too generic syntax\n\t{e}"
 
-macro "[mlir_icom| " reg:mlir_region "]" : term => `([mlir_icom ()| $reg])
+macro "[mlir_Com| " reg:mlir_region "]" : term => `([mlir_Com ()| $reg])

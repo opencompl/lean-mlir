@@ -14,12 +14,12 @@ open Std (BitVec)
 
 abbrev Context (φ) := List (MTy φ)
 
-abbrev Expr (Γ : Context φ) (ty : MTy φ)  := IExpr (MOp φ) Γ ty
-abbrev Com (Γ : Context φ) (ty : MTy φ)   := ICom (MOp φ) Γ ty
+abbrev Expr (Γ : Context φ) (ty : MTy φ)  := Expr (MOp φ) Γ ty
+abbrev Com (Γ : Context φ) (ty : MTy φ)   := Com (MOp φ) Γ ty
 abbrev Var (Γ : Context φ) (ty : MTy φ)   := Ctxt.Var Γ ty
 
 abbrev Com.lete (body : Expr Γ ty₁) (rest : Com (ty₁::Γ) ty₂) : Com Γ ty₂ :=
-  ICom.lete body rest
+  Com.lete body rest
 
 inductive TransformError
   | nameAlreadyDeclared (var : String)
@@ -446,7 +446,7 @@ def mkReturn (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Com Γ ty) :=
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← vStx.mkVal Γ
-    return ⟨ty, ICom.ret v⟩
+    return ⟨ty, Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
@@ -477,8 +477,8 @@ def mkCom (reg : Region φ) : ExceptM (Σ (Γ : Context φ) (ty : MTy φ), Com �
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithNewMapping <| do
     let Γ ← declareBindings ∅ reg.args
-    let icom ← mkComHelper Γ coms
-    return ⟨Γ, icom⟩
+    let Com ← mkComHelper Γ coms
+    return ⟨Γ, Com⟩
 
 /-!
   ## Instantiation
@@ -524,9 +524,9 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : Region φ) :
-    ExceptM (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), ICom InstCombine.Op Γ ty) := do
-  let ⟨Γ, ty, icom⟩ ← mkCom reg
+    ExceptM (Vector Nat φ → Σ (Γ : Ctxt Ty) (ty : Ty), Com InstCombine.Op Γ ty) := do
+  let ⟨Γ, ty, Com⟩ ← mkCom reg
   return fun vals =>
-    ⟨Γ.instantiate vals, ty.instantiate vals, icom.map (MOp.instantiateCom vals)⟩
+    ⟨Γ.instantiate vals, ty.instantiate vals, Com.map (MOp.instantiateCom vals)⟩
 
 end MLIR.AST
