@@ -6,7 +6,7 @@ open MLIR AST
 open Std (BitVec)
 
 /--
-- We first simplify `ICom.refinement` to see the context `Γv`.
+- We first simplify `Com.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
 - We simplify the translation overhead.
 - Then we introduce variables, `cases` on the variables to eliminate the `none` cases.
@@ -16,7 +16,7 @@ open Std (BitVec)
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
-        dsimp only [ICom.Refinement]
+        dsimp only [Com.Refinement]
         intros Γv
         simp_peephole at Γv
         /- note that we need the `HVector.toPair`, `HVector.toSingle` lemmas since it's used in `InstCombine.Op.denote`
