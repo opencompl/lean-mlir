@@ -220,11 +220,11 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
 
-def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) : 
-    (Γ.snoc t).Valuation := 
+def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
+    (Γ.snoc t).Valuation :=
   fun t' var =>
     match var with
-    | ⟨i, hvar⟩ =>  
+    | ⟨i, hvar⟩ =>
       match i with
       | 0 => by
         simp[Ctxt.snoc] at hvar
@@ -232,22 +232,18 @@ def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
       | .succ i' => s ⟨i', hvar⟩
 
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
-theorem Valuation.snoc_eq_snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) 
-    : (s.snoc x) = (s.snoc' x) := by
-  simp[snoc, snoc']
+theorem Valuation.snoc_eq_snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
+    (s.snoc x) = fun t var => match var with
+      | ⟨0, hvar⟩ => by
+          simp[Ctxt.snoc] at hvar
+          exact (hvar ▸ x)
+      | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
   funext t' v
-  cases V:v
-  case mk i hi => 
-    simp
-    simp[Var.casesOn]
-    cases i
-    case zero => 
-      simp
-      simp[Ctxt.snoc] at hi
-      subst hi
-      simp
-    case succ i' => 
-      simp
+  rcases v with ⟨⟨⟩|i, hi⟩
+  · injection hi with hi
+    subst hi
+    rfl
+  · rfl
 
 @[simp]
 theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
