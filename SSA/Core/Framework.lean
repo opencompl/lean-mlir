@@ -1162,8 +1162,8 @@ leaving behind a bare Lean level proposition to be proven.
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      try simp only [Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.snoc, Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+      try simp (config := {decide := false}) only [Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.empty, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc', Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk, $ts,*]
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
@@ -1171,7 +1171,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       generalize $ll { val := 3, property := _ } = d;
       generalize $ll { val := 4, property := _ } = e;
       generalize $ll { val := 5, property := _ } = f;
-      simp [Goedel.toType] at a b c d e f;
+      try simp (config := {decide := false}) [Goedel.toType] at a b c d e f;
       try clear f;
       try clear e;
       try clear d;
@@ -1217,7 +1217,7 @@ inductive ExOp :  Type
   | add : ExOp
   | beq : ExOp
   | cst : ℕ → ExOp
-  deriving DecidableEq
+  deriving DecidableEq, Repr
 
 instance : OpSignature ExOp ExTy where
   signature
