@@ -68,7 +68,8 @@ theorem ZMod.toInt_coe_eq (x : ZMod q) : ↑(x.toInt) = x := by
 theorem ZMod.cast_eq_val' [Fact (q > 1)](x : ZMod q) : @cast ℤ Ring.toAddGroupWithOne q x = (val x : ℕ) := by
   rw[ZMod.cast_eq_val]
 
-theorem ZMod.eq_from_toInt_eq (x y : ZMod q) (h : x.toInt = y.toInt) : x = y := by
+@[simp]
+theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt \iff x = y := by
   simp [toInt] at h
   apply ZMod.val_injective
   rw[ZMod.cast_eq_val'] at h
@@ -180,7 +181,7 @@ theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n
    use x
 
 /--
-`R.'representative'` is in fact a representative of the equivalence class.
+`R.representative` is in fact a representative of the equivalence class.
 -/
 @[simp]
 theorem R.fromPoly_representative : forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
