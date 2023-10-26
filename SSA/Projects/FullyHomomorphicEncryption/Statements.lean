@@ -86,7 +86,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
 
 theorem R.toTensor_getD' [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : ↑(a.toTensor.getD i 0) = a.coeff i := by
   rw [R.toTensor_getD]
-  rw [ZMod.toInt_coe_eq]
+  simp [ZMod.toInt]
 
 theorem R.monomial_zero_c_eq_zero : R.monomial (q := q) (n := n) 0 c = 0 := by
   unfold R.monomial

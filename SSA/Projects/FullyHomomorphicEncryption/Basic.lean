@@ -61,43 +61,28 @@ noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 def ZMod.toInt (x : ZMod q) : Int := ZMod.cast x
 def ZMod.toFin (x : ZMod q) : Fin q := ZMod.cast x
 
-theorem ZMod.toInt_coe_eq (x : ZMod q) : ↑(x.toInt) = x := by
-  unfold toInt
-  simp
-
-theorem ZMod.cast_eq_val' [Fact (q > 1)](x : ZMod q) : @cast ℤ Ring.toAddGroupWithOne q x = (val x : ℕ) := by
-  rw[ZMod.cast_eq_val]
-
 @[simp]
-theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt \iff x = y := by
-  simp [toInt] at h
-  apply ZMod.val_injective
-  rw[ZMod.cast_eq_val'] at h
-  rw[ZMod.cast_eq_val'] at h
-  norm_cast at h
+theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt ↔ x = y := by
+  constructor
+  · intro h
+    simp [toInt] at h
+    apply ZMod.val_injective
+    rw[ZMod.cast_eq_val] at h
+    rw[ZMod.cast_eq_val] at h
+    norm_cast at h
+  · intro h
+    rw [h]
 
-/-- Surely this cannot take these many lines of code? -/
 def ZMod.toInt_zero_iff_zero (x : ZMod q) : x = 0 ↔ x.toInt = 0 := by
   constructor
   · intro h
     rw [h]
     simp [toInt]
   · intro h
-    simp[toInt] at h
-    rw[ZMod.cast_eq_val] at h
-    simp[ZMod] at x
-    cases q <;> try simp at hqgt1;
-    case mpr.zero =>
-      exfalso
-      apply (Fact.elim hqgt1)
-    case mpr.succ q' =>
-      simp at x
-      norm_num at h
-      obtain ⟨val, isLt⟩ := x
-      simp only [cast, ZMod.val] at h
-      norm_cast at h
-      subst h
-      rfl
+    have h0 : ZMod.toInt q 0 = (0 : Int) := by simp [ZMod.toInt]
+    rw [← h0] at h
+    apply (ZMod.toInt_inj q).1
+    assumption
 
 instance : Nontrivial (ZMod q) where
   exists_pair_ne := by
@@ -212,7 +197,7 @@ Characterization theorem for any potential representative (in terms of elements)
 For an  `a : (ZMod q)[X]`, the representative of its equivalence class
 is a concrete element of the form `a + k * (f q n)` for some `k ∈ (ZMod q)[X]`.
 -/
-theorem R.fromPoly_rep'_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by
+theorem R.exists_representative_fromPoly_eq_mul_add (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by
   have H : ∃ i ∈ Ideal.span {f q n}, (R.fromPoly (n:=n) a).representative' = a + i := by
     apply R.fromPoly_rep'_eq_ideal
   obtain ⟨i, iInIdeal, ih⟩ := H
@@ -233,7 +218,7 @@ theorem R.fromPoly_rep'_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]), (R
 theorem R.representatitive'_toFun_fromPoly_eq_element (a : (ZMod q)[X]) : ∃ (k : (ZMod q)[X]),
   R.representative' q n ((R.fromPoly (q := q) (n := n)).toFun a) = a + k * (f q n) := by
   have H : ∃ (k : (ZMod q)[X]), (R.fromPoly (n:=n) a).representative' = k * (f q n) + a := by apply
-    R.fromPoly_rep'_eq_element;
+    R.exists_representative_fromPoly_eq_mul_add;
   obtain ⟨k, hk⟩ := H
   exists k
   ring_nf at hk ⊢
@@ -250,7 +235,7 @@ theorem R.representative'_zero_ideal : R.representative' q n 0 ∈ Ideal.span {f
 
 /-- The representatiatve of 0 is a multiple of `f q n`. -/
 theorem R.representative'_zero_elem : ∃ (k : (ZMod q)[X]), R.representative' q n 0 = k * (f q n) := by
-  have H : ∃ k : (ZMod q)[X], (R.fromPoly (n:=n) 0).representative' = k * (f q n) + 0 := by apply R.fromPoly_rep'_eq_element (a := 0)
+  have H : ∃ k : (ZMod q)[X], (R.fromPoly (n:=n) 0).representative' = k * (f q n) + 0 := by apply R.exists_representative_fromPoly_eq_mul_add (a := 0)
   obtain ⟨k, hk⟩ := H
   simp[fromPoly] at hk
   rw[hk]
@@ -513,7 +498,7 @@ theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
     simp only[List.map_append, List.map]
     simp only[List.toFinsupp_concat_eq_toFinsupp_add_single]
     simp only[List.length_map]
-  
+
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a monomial. -/
 theorem R.fromTensorFinsupp_concat_monomial {q : ℕ} (c : ℤ) (cs : List ℤ) :
     (R.fromTensorFinsupp (q := q) (cs ++ [c])) = (R.fromTensorFinsupp (q := q) cs) + (Polynomial.monomial cs.length (Int.cast c : (ZMod q))) := by
@@ -536,7 +521,7 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q)
       congr
 
 /-- `coeff (p % f) = coeff p` if the degree of `p` is less than the degree of `f`. -/
-theorem coeff_modByMonic_degree_lt_f {q n i : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) (DEGREE : p.degree < (f q n).degree) : 
+theorem coeff_modByMonic_degree_lt_f {q n i : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) (DEGREE : p.degree < (f q n).degree) :
   (p %ₘ f q n).coeff i = p.coeff i := by
   have H := (modByMonic_eq_self_iff (hq := f_monic q n) (p := p)).mpr DEGREE
   simp[H]
@@ -551,7 +536,7 @@ theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff 
 
 
 /-- since `0` is the additive identity, getting from `(x :: xs)` at index `i` with -/
-theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) : 
+theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) :
   (xs ++ [x]).getD i 0 = (xs.getD i 0) + (if i == xs.length then x else 0) := by sorry
 
 /-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
