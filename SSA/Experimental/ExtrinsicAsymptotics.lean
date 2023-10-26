@@ -106,10 +106,10 @@ example : (mk_com' 1000).WF [] .nat := check_ok (by native_decide)
 -- This would be more problematic in the intrinsic type as we would have to make sure the incremental
 -- array values in it do not actually exist at run time (see `Erased`).
 
-def ICom (Γ : Ctxt) (ty : Ty) := { c : Com // c.WF Γ ty }
-def transform : ICom [] ty → ICom [] ty := sorry
-def denote : ICom [] ty → ty.toType := sorry
-def print : ICom [] ty → String := sorry
+def Com (Γ : Ctxt) (ty : Ty) := { c : Com // c.WF Γ ty }
+def transform : Com [] ty → Com [] ty := sorry
+def denote : Com [] ty → ty.toType := sorry
+def print : Com [] ty → String := sorry
 
 theorem td : denote (transform c) = denote c := sorry
 
