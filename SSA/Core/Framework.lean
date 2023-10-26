@@ -55,7 +55,7 @@ inductive Expr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
     (ty_eq : ty = OpSignature.outTy op)
     (args : HVector (Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => Com t.1 t.2)
-      (OpSignature.regSig op)) : IExpr Γ ty
+      (OpSignature.regSig op)) : Expr Γ ty
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive Com : Ctxt Ty → Ty → Type where
@@ -1586,7 +1586,7 @@ theorem Expr.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op
     (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 t.2)
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
-    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+    Expr.denote (Expr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
       subst ty_eq
       simp[denote]
 
@@ -1599,10 +1599,10 @@ theorem Com.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op 
     (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 t.2)
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
-    IExpr.denote (IExpr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
+    Expr.denote (Expr.mk op ty_eq args regArgs) Γv =  ty_eq ▸ OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote := by
       subst ty_eq
       simp[denote]
-      simp[IExpr.denote]
+      simp[Expr.denote]
 
 
 end Unfoldings
