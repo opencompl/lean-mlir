@@ -1162,9 +1162,12 @@ leaving behind a bare Lean level proposition to be proven.
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      try simp (config := {decide := false}) only [Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.empty, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc', Ctxt.Valuation.snoc_last, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk, $ts,*]
+      try simp (config := {decide := false}) only [
+        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+        Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        $ts,*]
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
       generalize $ll { val := 2, property := _ } = c;
