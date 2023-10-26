@@ -53,7 +53,7 @@ mutual
 inductive Expr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (CVar Γ) <| OpSignature.sig op)
+    (args : HVector (Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => Com t.1 t.2)
       (OpSignature.regSig op)) : IExpr Γ ty
 
