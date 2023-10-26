@@ -525,9 +525,9 @@ end Map
 -/
 
 abbrev Mapping (Γ Δ : Ctxt Ty) : Type :=
-  @AList (Σ t, Var Γ t) (fun x => Δ.Var x.1)
+  @AList (Σ t, Var Γ t) (fun x => Var Δ x.1)
 
-def HVector.toVarSet : {l : List Ty} → (T : HVector (Var Γ) l) → Γ.VarSet
+def HVector.toVarSet : {l : List Ty} → (T : HVector (Var Γ) l) → VarSet Γ
   | [], .nil => ∅
   | _::_, .cons v vs => insert ⟨_, v⟩ vs.toVarSet
 
@@ -558,7 +558,7 @@ theorem HVector.vars_cons {t  : Ty} {l : List Ty}
     simp [Finset.ext_iff, or_comm, or_assoc]
 
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
-def Lets.vars : Lets Op Γ_in Γ_out → Var Γ_out t → Γ_in.VarSet
+def Lets.vars : Lets Op Γ_in Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
   | .lete lets e, v => by
       cases v using Var.casesOn with
@@ -609,7 +609,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       simp
       use v.1, v.2
 
-def Com.vars : Com Op Γ t → Γ.VarSet :=
+def Com.vars : Com Op Γ t → VarSet Γ :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
 /--
@@ -623,7 +623,7 @@ def Com.vars : Com Op Γ t → Γ.VarSet :=
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (lets : Lets Op Γ_in Γ_out) (v : Var Γ_out t) :
     (matchLets : Lets Op Δ_in Δ_out) →
-    (w : Δ_out.Var t) →
+    (w : Var Δ_out t) →
     (ma : Mapping Δ_in Γ_out := ∅) →
     Option (Mapping Δ_in Γ_out)
   | .lete matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
@@ -711,7 +711,7 @@ theorem subset_entries_matchVar_matchArg_aux
 theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Δ_out.Var t} →
+    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ma.entries ⊆ varMap.entries
   | .nil, w => by
@@ -800,7 +800,7 @@ theorem denote_matchVar_of_subset
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Δ_out.Var t} →
+    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
       matchLets.denote (fun t' v' => by
@@ -863,7 +863,7 @@ theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} {varMap
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
     {matchLets : Lets Op Δ_in Δ_out}
-    {w : Δ_out.Var t} :
+    {w : Var Δ_out t} :
     varMap ∈ matchVar lets v matchLets w ma →
     matchLets.denote (fun t' v' => by
         match varMap.lookup ⟨_, v'⟩  with
@@ -913,7 +913,7 @@ theorem mem_matchVar_matchArg
 theorem mem_matchVar
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Δ_out.Var t} →
+    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ matchLets.vars w → ⟨t', v'⟩ ∈ varMap
   | .nil, w, h, t', v' => by
@@ -962,8 +962,8 @@ termination_by
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
-    (lets : Lets Op Γ_in Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in Δ_out) (w : Δ_out.Var t)
-    (hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w) :
+    (lets : Lets Op Γ_in Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in Δ_out) (w : Var Δ_out t)
+    (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w) :
     Option (Δ_in.Hom Γ_out) := do
   match hm : matchVar lets v matchLets w with
   | none => none
@@ -979,8 +979,8 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in Γ_out}
     {t : Ty} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in Δ_out}
-    {w : Δ_out.Var t}
-    {hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w}
+    {w : Var Δ_out t}
+    {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
     (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Valuation Γ_in) :
     matchLets.denote (fun t' v' => lets.denote s₁ (map v')) w =
