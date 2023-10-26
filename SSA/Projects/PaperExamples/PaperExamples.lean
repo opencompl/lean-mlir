@@ -127,7 +127,7 @@ instance : OpDenote Op Ty where
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
     | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
-      let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc' v)
+      let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
       -- let f_k := Nat.iterate f' k
       -- f_k x
@@ -168,9 +168,6 @@ def rhs : Com Op [.int] .int :=
 
 attribute [local simp] Ctxt.snoc
 
-@[simp]
-theorem Ctxt.Valuation.snoc_last [Goedel Ty] {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : Goedel.toType ty):
-  (Ctxt.Valuation.snoc V v) (Ctxt.Var.last _ _) = v := rfl
 set_option pp.proofs false in
 set_option pp.proofs.withType false in
 def p1 : PeepholeRewrite Op [.int] .int:=

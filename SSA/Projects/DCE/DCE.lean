@@ -264,47 +264,23 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : 
   (V : Γ.Valuation) {newv : Goedel.toType ω} :
   DELω.pushforward_Valuation (V.snoc newv) =
   (DEL.pushforward_Valuation V).snoc newv := by
-    simp[Deleted.pushforward_Valuation]
-    repeat rw[Ctxt.Valuation.snoc_eq_snoc']
-    simp[Ctxt.Valuation.snoc']
-    simp[Deleted.pullback_var]
+    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?, Ctxt.Var.val_toSnoc,
+      Ctxt.Var.succ_eq_toSnoc, Ctxt.Valuation.snoc_eq]
     funext t var
-    split_ifs
-    case pos =>
-      simp[Ctxt.Var.casesOn]
-      cases var
-      case mk i hvar EQN =>
-        simp
-        simp at EQN
-        cases i
-        case zero =>
-          simp
-        case succ i' =>
-          simp
-          split_ifs
-          case pos =>
-            rfl
-          case neg =>
-            exfalso
-            linarith
-    case neg =>
-      cases var
-      case mk i hvar EQN =>
-        simp at EQN ⊢
-        simp only[Ctxt.Var.toSnoc]
-        cases i
-        case zero =>
-          simp
-          exfalso
-          linarith
-        case succ i' =>
-          simp at i' ⊢
-          split_ifs
-          case pos =>
-            exfalso
-            linarith
-          case neg =>
-            rfl
+    rcases var with ⟨i, hvar⟩
+    split_ifs with EQN <;> (
+      simp only [Ctxt.get?, Ctxt.Var.toSnoc]
+      simp at EQN
+      cases i <;> simp only
+    )
+    case neg.zero =>
+      exfalso
+      linarith
+    all_goals
+      split_ifs <;>
+        solve
+        | rfl
+        | exfalso; linarith
 
 /-- Delete a variable from an Com. -/
 def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com Op Γ t) :
@@ -346,7 +322,7 @@ instance [SIG : OpSignature Op Ty] [DENOTE : OpDenote Op Ty] {Γ : Ctxt Ty} {t :
 
 /-- walk the list of bindings, and for each `let`, try to delete the variable defined by the `let` in the body/
 Note that this is `O(n^2)`, for an easy proofs, as it is written as a forward pass.
-The fast `O(n)` version is a backward pass. 
+The fast `O(n)` version is a backward pass.
 -/
 partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (com : Com Op Γ t) : DCEType com :=
     match HCOM: com with

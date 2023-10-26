@@ -30,6 +30,8 @@ def empty : Ctxt Ty := []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
+@[simp] lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
+
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
   -- fun tl hd => do return hd :: (← tl)
@@ -71,9 +73,9 @@ instance : DecidableEq (Var Γ t) := by
 def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
   ⟨0, by simp [snoc, List.get?]⟩
 
-def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
+def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
   fun ⟨_, h⟩ => by
-    simp [EmptyCollection.emptyCollection, empty] at h
+    simp only [get?, EmptyCollection.emptyCollection, empty, List.get?_nil] at h
 
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
@@ -207,9 +209,9 @@ def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var 
     VAL v
 
 /-- Make a valuation for the empty context. -/
-def Valuation.nil : Ctxt.Valuation (∅ : Ctxt Ty) := fun _ v => v.emptyElim
+def Valuation.nil : Ctxt.Valuation ([] : Ctxt Ty) := fun _ v => v.emptyElim
 
-instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨Valuation.nil⟩
+instance : Inhabited (Ctxt.Valuation ([] : Ctxt Ty)) := ⟨Valuation.nil⟩
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
 def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -220,19 +222,8 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
 
-def Valuation.snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (Γ.snoc t).Valuation :=
-  fun t' var =>
-    match var with
-    | ⟨i, hvar⟩ =>
-      match i with
-      | 0 => by
-        simp[Ctxt.snoc] at hvar
-        exact (hvar ▸ x)
-      | .succ i' => s ⟨i', hvar⟩
-
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
-theorem Valuation.snoc_eq_snoc' {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
+theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
       | ⟨0, hvar⟩ => by
           simp[Ctxt.snoc] at hvar
@@ -257,7 +248,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 
 /-- Build valuation from a vector of values of types `types`. -/
 def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (Ctxt.ofList types)
-  | .nil => (default : Ctxt.Valuation (∅ : Ctxt Ty))
+  | .nil => (default : Ctxt.Valuation ([] : Ctxt Ty))
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- transport/pullback a valuation along a context homomorphism. -/
