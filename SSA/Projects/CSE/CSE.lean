@@ -164,22 +164,81 @@ def _root_.Ctxt.Hom.remapLast [Goedel Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Va
     case toSnoc var' => exact var'
     case last => exact var
 
+@[simp]
+theorem _root_.Ctxt.Valuation.hom_at_var [Goedel Ty]  {α : Ty} (Γ Γ' : Ctxt Ty) (hom : Ctxt.Hom Γ Γ')
+  (V : Ctxt.Valuation Γ') (var : Γ.Var α) :
+  (V.hom hom) var = V (hom var) := rfl
 
 section RemapVar
-  variable [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
-  variable  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
-  variable (lets : Lets Op Γstart Γ)
-  variable (hom : Ctxt.Hom Γ' Γ)
-  variable (vold : Γ.Var α) (vnew : Γ'.Var α)
-  variable (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).hom hom) vnew)
+  def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
+  (lets : Lets Op Γstart Γ)
+  (hom : Ctxt.Hom Γ' Γ)
+  (vold : Γ.Var α) (vnew : Γ'.Var α)
+  (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).hom hom) vnew)
+  (w' : Γ'.Var β) :
+  { w : Γ.Var β //
+    ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) w = ((lets.denote Vstart).hom hom) w' } :=
+    if TY : β = α
+    then
+      if H : TY ▸ w' = vnew
+      then ⟨TY ▸ vold, by
+        subst TY
+        simp at H ⊢
+        subst H
+        intros Vstart
+        rw[VNEW Vstart]
+        simp[_root_.Ctxt.Valuation.hom_at_var]
+        done⟩
+      else ⟨hom w', by simp⟩
+    else ⟨hom w', by simp⟩
 
+def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
+  (lets : Lets Op Γstart Γ)
+  (hom : Ctxt.Hom Γ' Γ)
+  (vold : Γ.Var α) (vnew : Γ'.Var α)
+  (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).hom hom) vnew)
+  {ts : List Ty} (as' : HVector (Ctxt.Var Γ') <| ts) :
+    { as : HVector (Ctxt.Var Γ) <| ts //
+      ∀ (Vstart : Γstart.Valuation), as.map (fun t v => (lets.denote Vstart) v) = as'.map (fun t v' => ((lets.denote Vstart).hom hom) v') } :=
+  match as' with
+  | .nil => ⟨.nil, by simp[HVector.map]⟩
+  | .cons a' as' =>
+    let ⟨a, ha⟩ := VarRemapVar lets hom vold vnew VNEW a'
+    let ⟨as, has⟩ := arglistRemapVar lets hom vold vnew VNEW as'
+    ⟨.cons a as, by
+      intros Vstart
+      simp[HVector.map]
+      rw[ha Vstart]
+      rw[has Vstart]
+      constructor
+      simp[ha]
+      congr
+      done
+    ⟩
 
-  def VarRemapVar (w' : Γ'.Var β) :
-  { w : Γ.Var β // ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) w =
-    ((lets.denote Vstart).hom hom) w' } := sorry
-  def VarRemapIExpr (e' : IExpr Op Γ' β) :
+  def VarRemapIExpr [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
+  (lets : Lets Op Γstart Γ)
+  (hom : Ctxt.Hom Γ' Γ)
+  (vold : Γ.Var α) (vnew : Γ'.Var α)
+  (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).hom hom) vnew)
+  (e' : IExpr Op Γ' β) :
   { e : IExpr Op Γ β  // ∀ (Vstart : Ctxt.Valuation Γstart),
-    e.denote (lets.denote Vstart) =  e'.denote ((lets.denote Vstart).hom hom) } := sorry
+    e.denote (lets.denote Vstart) = e'.denote ((lets.denote Vstart).hom hom) } :=
+    match e' with
+    | .mk op ty_eq args regArgs =>
+      let ⟨args', hargs'⟩ := arglistRemapVar lets hom vold vnew VNEW args
+      ⟨.mk op ty_eq args' regArgs, by
+        intros Vstart
+        subst ty_eq
+        simp[IExpr.denote]
+        rw[hargs']
+        congr
+        done
+      ⟩
+    -- TODO: extend to ICom.
 end RemapVar
 
 
@@ -380,6 +439,7 @@ unsafe def State.cseICom {α : Ty}
         let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw[he'] })
           (v := v') (hv := by {intros V; rw[hv'] }) -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseICom body
+        -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
         ⟨.lete e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
