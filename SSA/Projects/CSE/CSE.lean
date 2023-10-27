@@ -218,7 +218,7 @@ def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature O
       done
     ⟩
 
-  def VarRemapIExpr [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+  def IExprRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -275,7 +275,12 @@ def State.snocOldExpr2Cache
         rw[henew]
     expr2cache := fun β eneedle =>
       let homRemap := Ctxt.Hom.remapLast Γ v
-      let ⟨eneedle', heneedle'⟩ := VarRemapIExpr (lets) homRemap eneedle
+      let lastVar := (Ctxt.Var.last Γ α)
+      let ⟨eneedle', heneedle'⟩ := IExprRemapVar lets homRemap v lastVar (by {
+        intros Vstart
+        simp[Ctxt.Hom.remapLast]
+        done
+      })  eneedle
       match s.expr2cache β eneedle' with
       | .none => .none
       | .some ⟨e', he'⟩ =>
