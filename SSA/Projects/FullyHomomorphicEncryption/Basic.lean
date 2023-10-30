@@ -24,7 +24,7 @@ import SSA.Core.Framework
 open Polynomial -- for R[X] notation
 
 /-
-We assume tat `q > 1` is a natural number (not necessarily a prime) and `n` is a natural number.
+We assume that `q > 1` is a natural number (not necessarily a prime) and `n` is a natural number.
 We will use these to build `ℤ/qℤ[X]/(X^(2^n) + 1)`
 -/
 variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
@@ -35,7 +35,7 @@ variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 
 -- Question: Can we make something like d := 2^n work as a macro?
 --
-theorem WithBot.npow_coe_eq_npow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
+theorem WithBot.coe_pow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
   induction n with
     | zero => simp
     | succ n ih =>
@@ -106,7 +106,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
     simp [OfNat.ofNat]
   have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
-    rw [h2, WithBot.npow_coe_eq_npow]
+    rw [h2, WithBot.coe_pow]
   rw [h0, h2n]
   exact h'
   done
@@ -383,9 +383,9 @@ noncomputable def R.repLength {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
-theorem R.rep_length_lt_n_plus_1 : forall a : R q n, a.rep_length < 2^n + 1 := by
+theorem R.rep_length_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
-  simp [R.rep_length, representative]
+  simp [R.repLength, representative]
   have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
     rw [← f_deg_eq q n]
     apply (Polynomial.degree_modByMonic_lt)
