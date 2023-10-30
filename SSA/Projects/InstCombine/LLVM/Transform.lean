@@ -407,7 +407,12 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.sub"    => pure (MOp.sub w₁)
       | "llvm.sdiv"   => pure (MOp.sdiv w₁)
       | "llvm.udiv"   => pure (MOp.udiv w₁)
-       --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
+      | "llvm.icmp" =>
+        match opStx.attrs.find_str "type" with
+        | .some "eq" =>
+          pure <| MOp.icmp InstCombine.IntPredicate.eq w₁
+        | .none =>
+          throw <| .unsupportedOp s!"expected attribute 'type' on operation 'icmp: '{opStx.name}'"
       | opstr => throw <| .unsupportedOp s!"Unsuported operation or invalid arguments '{opstr}'"
     if hty : w₁ = w₂ then
       let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
