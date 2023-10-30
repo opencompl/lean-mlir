@@ -82,7 +82,47 @@ instance : Repr (Com Op Γ t) := ⟨flip Com.repr⟩
 
 end
 
+--TODO: this should be derived later on when a derive handler is implemented
+mutual
 
+protected instance HVector.decidableEqReg [DecidableEq Op] [DecidableEq Ty] :
+    ∀ {l : List (Ctxt Ty × Ty)}, DecidableEq (HVector (fun t => Com Op t.1 t.2) l)
+  | _, .nil, .nil => isTrue rfl
+  | _, .cons x₁ v₁, .cons x₂ v₂ =>
+    letI := HVector.decidableEqReg v₁ v₂
+    letI := Com.decidableEq x₁ x₂
+    decidable_of_iff (x₁ = x₂ ∧ v₁ = v₂) (by simp)
+
+protected instance Expr.decidableEq [DecidableEq Op] [DecidableEq Ty] :
+    {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Expr Op Γ ty)
+  | _, _, .mk op₁ rfl arg₁ regArgs₁, .mk op₂ eq arg₂ regArgs₂ =>
+    if ho : op₁ = op₂
+    then by
+      subst ho
+      letI := HVector.decidableEq arg₁ arg₂
+      letI := HVector.decidableEqReg regArgs₁ regArgs₂
+      exact decidable_of_iff (arg₁ = arg₂ ∧ regArgs₁ = regArgs₂) (by simp)
+    else isFalse (by simp_all)
+
+protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] :
+    {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Com Op Γ ty)
+  | _, _, .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
+  | _, _, .lete (α := α₁) e₁ body₁, .lete (α := α₂) e₂ body₂ =>
+    if hα : α₁ = α₂
+    then by
+      subst hα
+      letI := Expr.decidableEq e₁ e₂
+      letI := Com.decidableEq body₁ body₂
+      exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
+    else isFalse (by simp_all)
+  | _, _, .ret _, .lete _ _ => isFalse (fun h => Com.noConfusion h)
+  | _, _, .lete _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
+
+end
+termination_by
+  Expr.decidableEq _ _ e₁ e₂ => sizeOf e₁
+  Com.decidableEq _ _ e₁ e₂ => sizeOf e₁
+  HVector.decidableEqReg _ _ e₁ e₂ => sizeOf e₁
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
