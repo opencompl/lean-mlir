@@ -16,7 +16,7 @@ variable {A B : α → Type*} {as : List α}
 -/
 
 --TODO: this should be derived when this becomes possible
-protected instance decidableEq [DecidableEq α] [∀ a, DecidableEq (A a)] :
+protected instance decidableEq [∀ a, DecidableEq (A a)] :
     ∀ {l : List α}, DecidableEq (HVector A l)
   | _, .nil, .nil => isTrue rfl
   | _, .cons x₁ v₁, .cons x₂ v₂ =>
