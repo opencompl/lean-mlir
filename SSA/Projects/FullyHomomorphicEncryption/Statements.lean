@@ -58,7 +58,7 @@ theorem monomial_mul_mul (x y : Nat) : (R.monomial 1 y) * (R.monomial 1 x) = R.m
 
 end Poly
 
-theorem R.toTensor_length [hqgt1 : Fact (q > 1)] (a : R q n) : a.toTensor.length = a.rep_length := by
+theorem R.toTensor_length [hqgt1 : Fact (q > 1)] (a : R q n) : a.toTensor.length = a.repLength := by
   unfold R.toTensor
   unfold R.repLength
   cases Polynomial.degree a.representative <;> simp
@@ -66,7 +66,7 @@ theorem R.toTensor_length [hqgt1 : Fact (q > 1)] (a : R q n) : a.toTensor.length
 
 theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTensor.getD i 0 = (a.coeff i).toInt := by
   simp [R.toTensor, R.coeff]
-  have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.rep_length a))).length = rep_length a := by
+  have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.repLength a))).length = repLength a := by
     simp
   by_cases (i < R.repLength a)
   case pos =>
