@@ -373,12 +373,12 @@ theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 
   exact f_monic q n
 
 /-- The representative `a : R q n` is the (unique) representative with degree less than degree of `f`. -/
-theorem R.rep_degree_lt_f_degree {q n : ℕ} [Fact (q > 1)] : forall a : R q n, (R.representative q n a).degree < (f q n).degree := by
+theorem R.representative_degree_lt_f_degree {q n : ℕ} [Fact (q > 1)] : forall a : R q n, (R.representative q n a).degree < (f q n).degree := by
   rw[f_deg_eq (q := q)]
   intros a
   apply R.rep_degree_lt_n
 
-noncomputable def R.rep_length {q n} (a : R q n) : Nat := match
+noncomputable def R.repLength {q n} (a : R q n) : Nat := match
   Polynomial.degree a.representative with
     | none => 0
     | some d => d + 1

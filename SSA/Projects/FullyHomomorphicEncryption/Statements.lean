@@ -13,6 +13,7 @@ theorem mul_comm (a b : R q n) : a * b = b * a := by
 theorem add_comm (a b : R q n) : a + b = b + a := by
   ring
 
+@[simp]
 theorem f_eq_zero : (f q n) = (0 : R q n) := by
   apply Ideal.Quotient.eq_zero_iff_mem.2
   rw [Ideal.mem_span_singleton]
