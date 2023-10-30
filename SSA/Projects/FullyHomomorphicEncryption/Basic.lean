@@ -383,7 +383,7 @@ noncomputable def R.repLength {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
-theorem R.rep_length_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
+theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
   simp [R.repLength, representative]
   have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
@@ -583,7 +583,7 @@ with the representatives of the coefficients of the representative.
 The length of the list is the degree of the representative + 1.
 -/
 noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
-  List.range a.rep_length |>.map fun i =>
+  List.range a.repLength |>.map fun i =>
         a.coeff i |>.toInt
 
 /--

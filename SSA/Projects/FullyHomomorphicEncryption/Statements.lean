@@ -60,7 +60,7 @@ end Poly
 
 theorem R.toTensor_length [hqgt1 : Fact (q > 1)] (a : R q n) : a.toTensor.length = a.rep_length := by
   unfold R.toTensor
-  unfold R.rep_length
+  unfold R.repLength
   cases Polynomial.degree a.representative <;> simp
 
 
@@ -68,7 +68,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
   simp [R.toTensor, R.coeff]
   have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.rep_length a))).length = rep_length a := by
     simp
-  by_cases (i < R.rep_length a)
+  by_cases (i < R.repLength a)
   case pos =>
     rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
     done
@@ -76,7 +76,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
     rw [Nat.not_lt] at h
     rw [List.getD_eq_default _, Polynomial.coeff_eq_zero_of_degree_lt]
     simp[ZMod.toInt]
-    unfold R.rep_length at h
+    unfold R.repLength at h
     cases hDeg : Polynomial.degree (R.representative q n a)
     · apply WithBot.bot_lt_coe
     . simp[hDeg] at h
@@ -191,17 +191,17 @@ theorem eq_iff_coeff_eq [hqgt1 : Fact (q > 1)] (a b : R q n) : a = b ↔ Polynom
      exact h
 
 theorem toTensor_length_eq_rep_length [hqgt1 : Fact (q > 1)] (a : R q n) :
-  a.toTensor.length = a.rep_length := by
-  simp [R.rep_length, R.toTensor]
+  a.toTensor.length = a.repLength := by
+  simp [R.repLength, R.toTensor]
 
 -- Surely this doesn't need to be this annoying
 theorem toTensor_length_eq_f_deg_plus_1 [hqgt1 : Fact (q > 1)] (a : R q n) :
   a.toTensor'.length = 2^n + 1 := by
   rw [R.toTensor', List.length_append, toTensor_length_eq_rep_length, List.length_replicate]
-  have h : R.rep_length a ≤ 2^n  := Nat.le_of_lt_succ (R.rep_length_lt_n_plus_1 q n a)
+  have h : R.repLength a ≤ 2^n  := Nat.le_of_lt_succ (R.repLength_lt_n_plus_1 q n a)
   calc
-       R.rep_length a + (2 ^ n - R.rep_length a + 1)
-     = R.rep_length a + (Nat.succ (2 ^ n) - R.rep_length a) := by rw [Nat.add_comm _ 1, ← Nat.add_sub_assoc h, Nat.add_comm 1 (2^n)]
+       R.repLength a + (2 ^ n - R.repLength a + 1)
+     = R.repLength a + (Nat.succ (2 ^ n) - R.repLength a) := by rw [Nat.add_comm _ 1, ← Nat.add_sub_assoc h, Nat.add_comm 1 (2^n)]
    _ = 2^n + 1 := by rw [Nat.add_sub_cancel' (Nat.le_succ_of_le h)]
 
 
@@ -209,9 +209,9 @@ theorem toTensor_trimTensor_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor = a.toTensor := by
   unfold R.toTensor
   cases h : Polynomial.degree a.representative with
-  | none => simp [h, R.rep_length]
+  | none => simp [h, R.repLength]
   | some n  =>
-    simp [R.rep_length, h]
+    simp [R.repLength, h]
     rw [List.range_succ, List.map_append]
     simp
     have hNe := Polynomial.coeff_ne_zero_of_eq_degree h
@@ -273,7 +273,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.
         have h' :=  Polynomial.degree_eq_bot.1 h
         rw [← rep_zero] at h'
         have h'':= (eq_iff_rep_eq _ _).1 h'
-        simp [R.fromTensor, R.toTensor, R.rep_length]; rw [h, h'']
+        simp [R.fromTensor, R.toTensor, R.repLength]; rw [h, h'']
         simp
     | some deg =>
         apply (eq_iff_coeff_eq _ _).2
