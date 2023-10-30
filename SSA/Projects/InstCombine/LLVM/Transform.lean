@@ -29,7 +29,7 @@ inductive TransformError
   | widthError {φ} (expected got : Width φ)
   | unsupportedUnaryOp
   | unsupportedBinaryOp
-  | unsupportedOp
+  | unsupportedOp (error : String)
   | unsupportedType
   | generic (error : String)
 
@@ -48,7 +48,7 @@ instance : Repr TransformError where
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
     | unsupportedUnaryOp => f!"Unsuported unary operation"
     | unsupportedBinaryOp => f!"Unsuported binary operation"
-    | unsupportedOp => f!"Unsuported operation"
+    | unsupportedOp err =>  f!"Unsuported operation '{err}'"
     | unsupportedType => f!"Unsuported type"
     | generic err => err
 
@@ -320,7 +320,7 @@ def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
 ⟩
       else throw <| .widthError w w'
-      | _ => throw .unsupportedOp -- unsupported icmp operation
+      | _ => throw <| .unsupportedOp "unsupported icmp operation"
 
 def mkSelect {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
     (c : Var Γ (.bitvec 1)) (e₁ e₂ : Var Γ ty) :
@@ -336,7 +336,7 @@ def mkSelect {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
           .nil
         ⟩
         else throw <| .widthError w w'
-        | _ => throw .unsupportedOp -- "Unsupported select operation"
+        | _ => throw <| .unsupportedOp "Unsupported select operation"
 
 def mkOpExpr {Γ : Context φ} (op : MOp φ)
     (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) :
@@ -355,7 +355,7 @@ def mkOpExpr {Γ : Context φ} (op : MOp φ)
   | .select _ =>
     let (c, e₁, e₂) := arg.toTuple
     mkSelect op c e₁ e₂
-  | .const .. => throw .unsupportedOp -- "Tried to build Op expression from constant"
+  | .const .. => throw <| .unsupportedOp  "Tried to build Op expression from constant"
 
 def MLIRType.mkTy : MLIRType φ → ExceptM (MTy φ)
   | MLIRType.int Signedness.Signless w => do
@@ -408,7 +408,7 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.sdiv"   => pure (MOp.sdiv w₁)
       | "llvm.udiv"   => pure (MOp.udiv w₁)
        --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
-      | _ => throw .unsupportedOp -- "Unsuported operation or invalid arguments"
+      | opstr => throw <| .unsupportedOp s!"Unsuported operation or invalid arguments '{opstr}'"
     if hty : w₁ = w₂ then
       let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
       return ⟨.bitvec w₁, binOp⟩
