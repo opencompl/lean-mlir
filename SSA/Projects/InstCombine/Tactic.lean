@@ -1,9 +1,20 @@
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
+import Mathlib.Tactic
 
 open MLIR AST
 open Std (BitVec)
+
+theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
+  simp[BitVec.ofInt, BitVec.ofNat,Neg.neg,
+    BitVec.neg, BitVec.sub, BitVec.toFin, Fin.ofNat', HSub.hSub, Sub.sub, Fin.sub]
+  simp
+  sorry
+
+
+
+
 
 /--
 - We first simplify `Com.refinement` to see the context `Γv`.
@@ -26,7 +37,7 @@ macro "simp_alive_peephole" : tactic =>
           bind, Option.bind, pure, DerivedContext.ofContext, DerivedContext.snoc,
           Ctxt.snoc, MOp.instantiateCom, InstCombine.MTy.instantiate,
           ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
-          HVector.toTuple, List.nthLe]
+          HVector.toTuple, List.nthLe, bitvec_minus_one]
         try intros v0
         try intros v1
         try intros v2
