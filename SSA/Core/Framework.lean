@@ -671,7 +671,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       matchVar lets v matchLets w ma
   | @Lets.lete _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
       let ie ← lets.getExpr v
-      if hs : ie.op = matchExpr.op ∧ (OpSignature.regSig ie.op).isEmpty
+      if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
       then
         -- hack to make a termination proof work
         let matchVar' := fun t vₗ vᵣ ma =>
@@ -896,8 +896,9 @@ theorem denote_matchVar_of_subset
             apply denote_matchVar_of_subset hma
             apply hmem
           · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
-        · exact HVector.eq_of_type_eq_nil
-            (List.isEmpty_iff_eq_nil.1 hop)
+        · dsimp at hop
+          subst hop
+          rfl
 
 theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
