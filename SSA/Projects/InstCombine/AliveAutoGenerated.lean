@@ -722,9 +722,9 @@ def alive_AndOrXor_698_src (w : Nat) :=
   %v1 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v2 = "llvm.and" (%a,%d) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp eq " (%v1,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%v1,%v3) : (_, _) -> (_)
   %v5 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v6 = "llvm.icmp eq " (%v2,%v5) : (_, _) -> (_)
+  %v6 = "llvm.icmp.eq" (%v2,%v5) : (_, _) -> (_)
   %v7 = "llvm.and" (%v4,%v6) : (_, _) -> (i1)
   "llvm.return" (%v7) : (i1) -> ()
 }]
@@ -737,11 +737,11 @@ def alive_AndOrXor_698_tgt (w : Nat):=
   %v3 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v4 = "llvm.and" (%a,%d) : (_, _) -> (_)
   %v5 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v6 = "llvm.icmp eq " (%v3,%v5) : (_, _) -> (_)
+  %v6 = "llvm.icmp.eq" (%v3,%v5) : (_, _) -> (_)
   %v7 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v8 = "llvm.icmp eq " (%v4,%v7) : (_, _) -> (_)
+  %v8 = "llvm.icmp.eq" (%v4,%v7) : (_, _) -> (_)
   %v9 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v10 = "llvm.icmp eq " (%v2,%v9) : (_, _) -> (_)
+  %v10 = "llvm.icmp.eq" (%v2,%v9) : (_, _) -> (_)
   "llvm.return" (%v10) : (i1) -> ()
 }]
 theorem alive_AndOrXor_698 : alive_AndOrXor_698_src ⊑ alive_AndOrXor_698_tgt := by
@@ -774,8 +774,8 @@ def alive_AndOrXor_709_src (w : Nat) :=
 ^bb0(%a : _, %b : _, %d : _):
   %v1 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v2 = "llvm.and" (%a,%d) : (_, _) -> (_)
-  %v3 = "llvm.icmp"  (%v1,%b) { type = "eq" } : (_, _) -> (_)
-  %v4 = "llvm.icmp" (%v2,%d) { type = "eq" } : (_, _) -> (_)
+  %v3 = "llvm.icmp.eq" (%v1,%b) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%v2,%d) : (_, _) -> (_)
   %v5 = "llvm.and" (%v3,%v4) : (_, _) -> (i1)
   "llvm.return" (%v5) : (i1) -> ()
 }]
@@ -787,9 +787,9 @@ def alive_AndOrXor_709_tgt (w : Nat):=
   %v2 = "llvm.and" (%a,%v1) : (_, _) -> (_)
   %v3 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v4 = "llvm.and" (%a,%d) : (_, _) -> (_)
-  %v5 = "llvm.icmp eq " (%v3,%b) : (_, _) -> (_)
-  %v6 = "llvm.icmp eq " (%v4,%d) : (_, _) -> (_)
-  %v7 = "llvm.icmp eq " (%v2,%v1) : (_, _) -> (_)
+  %v5 = "llvm.icmp.eq" (%v3,%b) : (_, _) -> (_)
+  %v6 = "llvm.icmp.eq" (%v4,%d) : (_, _) -> (_)
+  %v7 = "llvm.icmp.eq" (%v2,%v1) : (_, _) -> (_)
   "llvm.return" (%v7) : (i1) -> ()
 }]
 theorem alive_AndOrXor_709 : alive_AndOrXor_709_src ⊑ alive_AndOrXor_709_tgt := by
@@ -822,8 +822,8 @@ def alive_AndOrXor_716_src (w : Nat) :=
 ^bb0(%a : _, %b : _, %d : _):
   %v1 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v2 = "llvm.and" (%a,%d) : (_, _) -> (_)
-  %v3 = "llvm.icmp eq " (%v1,%a) : (_, _) -> (_)
-  %v4 = "llvm.icmp eq " (%v2,%a) : (_, _) -> (_)
+  %v3 = "llvm.icmp.eq" (%v1,%a) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%v2,%a) : (_, _) -> (_)
   %v5 = "llvm.and" (%v3,%v4) : (_, _) -> (i1)
   "llvm.return" (%v5) : (i1) -> ()
 }]
@@ -835,9 +835,9 @@ def alive_AndOrXor_716_tgt (w : Nat):=
   %v2 = "llvm.and" (%a,%v1) : (_, _) -> (_)
   %v3 = "llvm.and" (%a,%b) : (_, _) -> (_)
   %v4 = "llvm.and" (%a,%d) : (_, _) -> (_)
-  %v5 = "llvm.icmp eq " (%v3,%a) : (_, _) -> (_)
-  %v6 = "llvm.icmp eq " (%v4,%a) : (_, _) -> (_)
-  %v7 = "llvm.icmp eq " (%v2,%a) : (_, _) -> (_)
+  %v5 = "llvm.icmp.eq" (%v3,%a) : (_, _) -> (_)
+  %v6 = "llvm.icmp.eq" (%v4,%a) : (_, _) -> (_)
+  %v7 = "llvm.icmp.eq" (%v2,%a) : (_, _) -> (_)
   "llvm.return" (%v7) : (i1) -> ()
 }]
 theorem alive_AndOrXor_716 : alive_AndOrXor_716_src ⊑ alive_AndOrXor_716_tgt := by
@@ -862,8 +862,8 @@ theorem alive_AndOrXor_716 : alive_AndOrXor_716_src ⊑ alive_AndOrXor_716_tgt :
 def alive_AndOrXor_794_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp sgt " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
   %v3 = "llvm.and" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
 }]
@@ -871,9 +871,9 @@ def alive_AndOrXor_794_src (w : Nat) :=
 def alive_AndOrXor_794_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp sgt " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
-  %v3 = "llvm.icmp sgt " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
+  %v3 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (_)
   "llvm.return" (%v3) : (i1) -> ()
 }]
 theorem alive_AndOrXor_794 : alive_AndOrXor_794_src ⊑ alive_AndOrXor_794_tgt := by
@@ -900,9 +900,9 @@ def alive_AndOrXor_827_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp eq " (%a,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.eq" (%a,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp eq " (%b,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%b,%v3) : (_, _) -> (_)
   %v5 = "llvm.and" (%v2,%v4) : (_, _) -> (i1)
   "llvm.return" (%v5) : (i1) -> ()
 }]
@@ -912,11 +912,11 @@ def alive_AndOrXor_827_tgt (w : Nat):=
 ^bb0(%a : _, %b : _):
   %v1 = "llvm.or" (%a,%b) : (_, _) -> (_)
   %v2 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v3 = "llvm.icmp eq " (%a,%v2) : (_, _) -> (_)
+  %v3 = "llvm.icmp.eq" (%a,%v2) : (_, _) -> (_)
   %v4 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v5 = "llvm.icmp eq " (%b,%v4) : (_, _) -> (_)
+  %v5 = "llvm.icmp.eq" (%b,%v4) : (_, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v7 = "llvm.icmp eq " (%v1,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.eq" (%v1,%v6) : (_, _) -> (_)
   "llvm.return" (%v7) : (i1) -> ()
 }]
 theorem alive_AndOrXor_827 : alive_AndOrXor_827_src ⊑ alive_AndOrXor_827_tgt := by
@@ -941,8 +941,8 @@ theorem alive_AndOrXor_827 : alive_AndOrXor_827_src ⊑ alive_AndOrXor_827_tgt :
 def alive_AndOrXor_887_2_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %C1 : _):
-  %v1 = "llvm.icmp eq " (%a,%C1) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%C1) : (_, _) -> (_)
+  %v1 = "llvm.icmp.eq" (%a,%C1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%C1) : (_, _) -> (_)
   %v3 = "llvm.and" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
 }]
@@ -950,8 +950,8 @@ def alive_AndOrXor_887_2_src (w : Nat) :=
 def alive_AndOrXor_887_2_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%a : _, %C1 : _):
-  %v1 = "llvm.icmp eq " (%a,%C1) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%C1) : (_, _) -> (_)
+  %v1 = "llvm.icmp.eq" (%a,%C1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%C1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : 1 } :() -> (i1)
   %v4 = "llvm.copy" (%v3) : (i1) -> (i1)
   "llvm.return" (%v4) : (i1) -> ()
@@ -1263,8 +1263,8 @@ theorem alive_AndOrXor_1294_A__B__A__B___A__B (w : Nat)  : alive_AndOrXor_1294_A
 def alive_AndOrXor_1683_1_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp ugt " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp eq " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ugt" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.eq" (%a,%b) : (_, _) -> (_)
   %v3 = "llvm.or" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
 }]
@@ -1272,9 +1272,9 @@ def alive_AndOrXor_1683_1_src (w : Nat) :=
 def alive_AndOrXor_1683_1_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp ugt " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp eq " (%a,%b) : (_, _) -> (_)
-  %v3 = "llvm.icmp uge " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ugt" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.eq" (%a,%b) : (_, _) -> (_)
+  %v3 = "llvm.icmp.uge" (%a,%b) : (_, _) -> (_)
   "llvm.return" (%v3) : (i1) -> ()
 }]
 theorem alive_AndOrXor_1683_1 : alive_AndOrXor_1683_1_src ⊑ alive_AndOrXor_1683_1_tgt := by
@@ -1299,8 +1299,8 @@ theorem alive_AndOrXor_1683_1 : alive_AndOrXor_1683_1_src ⊑ alive_AndOrXor_168
 def alive_AndOrXor_1683_2_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp uge " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.uge" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
   %v3 = "llvm.or" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
 }]
@@ -1308,8 +1308,8 @@ def alive_AndOrXor_1683_2_src (w : Nat) :=
 def alive_AndOrXor_1683_2_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp uge " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.uge" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 1 : 1 } :() -> (i1)
   %v4 = "llvm.copy" (%v3) : (i1) -> (i1)
   "llvm.return" (%v4) : (i1) -> ()
@@ -1338,8 +1338,8 @@ def alive_AndOrXor_1704_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp eq " (%B,%v1) : (_, _) -> (_)
-  %v3 = "llvm.icmp ult " (%A,%B) : (_, _) -> (_)
+  %v2 = "llvm.icmp.eq" (%B,%v1) : (_, _) -> (_)
+  %v3 = "llvm.icmp.ult" (%A,%B) : (_, _) -> (_)
   %v4 = "llvm.or" (%v2,%v3) : (_, _) -> (i1)
   "llvm.return" (%v4) : (i1) -> ()
 }]
@@ -1350,9 +1350,9 @@ def alive_AndOrXor_1704_tgt (w : Nat):=
   %v1 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
   %v2 = "llvm.add" (%B,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp eq " (%B,%v3) : (_, _) -> (_)
-  %v5 = "llvm.icmp ult " (%A,%B) : (_, _) -> (_)
-  %v6 = "llvm.icmp uge " (%v2,%A) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%B,%v3) : (_, _) -> (_)
+  %v5 = "llvm.icmp.ult" (%A,%B) : (_, _) -> (_)
+  %v6 = "llvm.icmp.uge" (%v2,%A) : (_, _) -> (_)
   "llvm.return" (%v6) : (i1) -> ()
 }]
 theorem alive_AndOrXor_1704 : alive_AndOrXor_1704_src ⊑ alive_AndOrXor_1704_tgt := by
@@ -1379,8 +1379,8 @@ def alive_AndOrXor_1705_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp eq " (%B,%v1) : (_, _) -> (_)
-  %v3 = "llvm.icmp ugt " (%B,%A) : (_, _) -> (_)
+  %v2 = "llvm.icmp.eq" (%B,%v1) : (_, _) -> (_)
+  %v3 = "llvm.icmp.ugt" (%B,%A) : (_, _) -> (_)
   %v4 = "llvm.or" (%v2,%v3) : (_, _) -> (i1)
   "llvm.return" (%v4) : (i1) -> ()
 }]
@@ -1391,9 +1391,9 @@ def alive_AndOrXor_1705_tgt (w : Nat):=
   %v1 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
   %v2 = "llvm.add" (%B,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp eq " (%B,%v3) : (_, _) -> (_)
-  %v5 = "llvm.icmp ugt " (%B,%A) : (_, _) -> (_)
-  %v6 = "llvm.icmp uge " (%v2,%A) : (_, _) -> (_)
+  %v4 = "llvm.icmp.eq" (%B,%v3) : (_, _) -> (_)
+  %v5 = "llvm.icmp.ugt" (%B,%A) : (_, _) -> (_)
+  %v6 = "llvm.icmp.uge" (%v2,%A) : (_, _) -> (_)
   "llvm.return" (%v6) : (i1) -> ()
 }]
 theorem alive_AndOrXor_1705 : alive_AndOrXor_1705_src ⊑ alive_AndOrXor_1705_tgt := by
@@ -1420,9 +1420,9 @@ def alive_AndOrXor_1733_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp ne " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp ne " (%B,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.ne" (%B,%v3) : (_, _) -> (_)
   %v5 = "llvm.or" (%v2,%v4) : (_, _) -> (i1)
   "llvm.return" (%v5) : (i1) -> ()
 }]
@@ -1432,11 +1432,11 @@ def alive_AndOrXor_1733_tgt (w : Nat):=
 ^bb0(%A : _, %B : _):
   %v1 = "llvm.or" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v3 = "llvm.icmp ne " (%A,%v2) : (_, _) -> (_)
+  %v3 = "llvm.icmp.ne" (%A,%v2) : (_, _) -> (_)
   %v4 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v5 = "llvm.icmp ne " (%B,%v4) : (_, _) -> (_)
+  %v5 = "llvm.icmp.ne" (%B,%v4) : (_, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v7 = "llvm.icmp ne " (%v1,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.ne" (%v1,%v6) : (_, _) -> (_)
   "llvm.return" (%v7) : (i1) -> ()
 }]
 theorem alive_AndOrXor_1733 : alive_AndOrXor_1733_src ⊑ alive_AndOrXor_1733_tgt := by
@@ -2250,7 +2250,7 @@ theorem alive_AndOrXor_2443 (w : Nat)  : alive_AndOrXor_2443_src w  ⊑ alive_An
 def alive_AndOrXor_2453_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%y : _, %x : _):
-  %v1 = "llvm.icmp slt " (%x,%y) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%x,%y) : (_, _) -> (_)
   %v2 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
   %v3 = "llvm.xor" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
@@ -2259,8 +2259,8 @@ def alive_AndOrXor_2453_src (w : Nat) :=
 def alive_AndOrXor_2453_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%y : _, %x : _):
-  %v1 = "llvm.icmp slt " (%x,%y) : (_, _) -> (_)
-  %v2 = "llvm.icmp sge " (%x,%y) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%x,%y) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sge" (%x,%y) : (_, _) -> (_)
   "llvm.return" (%v2) : (i1) -> ()
 }]
 theorem alive_AndOrXor_2453 : alive_AndOrXor_2453_src ⊑ alive_AndOrXor_2453_tgt := by
@@ -2681,8 +2681,8 @@ theorem alive_AndOrXor_2658 (w : Nat)  : alive_AndOrXor_2658_src w  ⊑ alive_An
 def alive_AndOrXor_2663_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp ule " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ule" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
   %v3 = "llvm.xor" (%v1,%v2) : (_, _) -> (i1)
   "llvm.return" (%v3) : (i1) -> ()
 }]
@@ -2690,9 +2690,9 @@ def alive_AndOrXor_2663_src (w : Nat) :=
 def alive_AndOrXor_2663_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%a : _, %b : _):
-  %v1 = "llvm.icmp ule " (%a,%b) : (_, _) -> (_)
-  %v2 = "llvm.icmp ne " (%a,%b) : (_, _) -> (_)
-  %v3 = "llvm.icmp uge " (%a,%b) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ule" (%a,%b) : (_, _) -> (_)
+  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (_)
+  %v3 = "llvm.icmp.uge" (%a,%b) : (_, _) -> (_)
   "llvm.return" (%v3) : (i1) -> ()
 }]
 theorem alive_AndOrXor_2663 : alive_AndOrXor_2663_src ⊑ alive_AndOrXor_2663_tgt := by
@@ -3042,7 +3042,7 @@ def alive_805_tgt (w : Nat):=
   %v1 = "llvm.mlir.constant" () { value = 1 : _ } :() -> (_)
   %v2 = "llvm.add" (%X,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 3 : _ } :() -> (_)
-  %v4 = "llvm.icmp ult " (%v2,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.ult" (%v2,%v3) : (_, _) -> (_)
   %v5 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v6 = "llvm.select" (%v4,%X,%v5) : (_, _, _) -> (_)
   "llvm.return" (%v6) : (_) -> ()
@@ -3169,7 +3169,7 @@ theorem alive_1030 (w : Nat)  : alive_1030_src w  ⊑ alive_1030_tgt w  := by
 def alive_Select_637_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%Y : _, %X : _, %C : _):
-  %v1 = "llvm.icmp eq " (%X,%C) : (_, _) -> (_)
+  %v1 = "llvm.icmp.eq" (%X,%C) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%X,%Y) : (_, _, _) -> (_)
   "llvm.return" (%v2) : (_) -> ()
 }]
@@ -3177,7 +3177,7 @@ def alive_Select_637_src (w : Nat) :=
 def alive_Select_637_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%Y : _, %X : _, %C : _):
-  %v1 = "llvm.icmp eq " (%X,%C) : (_, _) -> (_)
+  %v1 = "llvm.icmp.eq" (%X,%C) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%C,%Y) : (_, _, _) -> (_)
   "llvm.return" (%v2) : (_) -> ()
 }]
@@ -3201,7 +3201,7 @@ theorem alive_Select_637 (w : Nat)  : alive_Select_637_src w  ⊑ alive_Select_6
 def alive_Select_641_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%Y : _, %X : _, %C : _):
-  %v1 = "llvm.icmp ne " (%X,%C) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ne" (%X,%C) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%Y,%X) : (_, _, _) -> (_)
   "llvm.return" (%v2) : (_) -> ()
 }]
@@ -3209,7 +3209,7 @@ def alive_Select_641_src (w : Nat) :=
 def alive_Select_641_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%Y : _, %X : _, %C : _):
-  %v1 = "llvm.icmp ne " (%X,%C) : (_, _) -> (_)
+  %v1 = "llvm.icmp.ne" (%X,%C) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%Y,%C) : (_, _, _) -> (_)
   "llvm.return" (%v2) : (_) -> ()
 }]
@@ -3237,9 +3237,9 @@ theorem alive_Select_641 (w : Nat)  : alive_Select_641_src w  ⊑ alive_Select_6
 def alive_Select_699_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp uge " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.uge" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp uge " (%v2,%B) : (_, _) -> (_)
+  %v3 = "llvm.icmp.uge" (%v2,%B) : (_, _) -> (_)
   %v4 = "llvm.select" (%v3,%v2,%B) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3247,9 +3247,9 @@ def alive_Select_699_src (w : Nat) :=
 def alive_Select_699_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp uge " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.uge" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp uge " (%v2,%B) : (_, _) -> (_)
+  %v3 = "llvm.icmp.uge" (%v2,%B) : (_, _) -> (_)
   %v4 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3277,9 +3277,9 @@ theorem alive_Select_699 (w : Nat)  : alive_Select_699_src w  ⊑ alive_Select_6
 def alive_Select_700_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp slt " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp slt " (%v2,%B) : (_, _) -> (_)
+  %v3 = "llvm.icmp.slt" (%v2,%B) : (_, _) -> (_)
   %v4 = "llvm.select" (%v3,%v2,%B) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3287,9 +3287,9 @@ def alive_Select_700_src (w : Nat) :=
 def alive_Select_700_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp slt " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp slt " (%v2,%B) : (_, _) -> (_)
+  %v3 = "llvm.icmp.slt" (%v2,%B) : (_, _) -> (_)
   %v4 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3317,9 +3317,9 @@ theorem alive_Select_700 (w : Nat)  : alive_Select_700_src w  ⊑ alive_Select_7
 def alive_Select_704_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp slt " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp sge " (%v2,%A) : (_, _) -> (_)
+  %v3 = "llvm.icmp.sge" (%v2,%A) : (_, _) -> (_)
   %v4 = "llvm.select" (%v3,%v2,%A) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3327,9 +3327,9 @@ def alive_Select_704_src (w : Nat) :=
 def alive_Select_704_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp slt " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.slt" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp sge " (%v2,%A) : (_, _) -> (_)
+  %v3 = "llvm.icmp.sge" (%v2,%A) : (_, _) -> (_)
   %v4 = "llvm.copy" (%A) : (_) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3357,9 +3357,9 @@ theorem alive_Select_704 (w : Nat)  : alive_Select_704_src w  ⊑ alive_Select_7
 def alive_Select_705_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp sge " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.sge" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp slt " (%v2,%A) : (_, _) -> (_)
+  %v3 = "llvm.icmp.slt" (%v2,%A) : (_, _) -> (_)
   %v4 = "llvm.select" (%v3,%v2,%A) : (_, _, _) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3367,9 +3367,9 @@ def alive_Select_705_src (w : Nat) :=
 def alive_Select_705_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _, %B : _):
-  %v1 = "llvm.icmp sge " (%A,%B) : (_, _) -> (_)
+  %v1 = "llvm.icmp.sge" (%A,%B) : (_, _) -> (_)
   %v2 = "llvm.select" (%v1,%A,%B) : (_, _, _) -> (_)
-  %v3 = "llvm.icmp slt " (%v2,%A) : (_, _) -> (_)
+  %v3 = "llvm.icmp.slt" (%v2,%A) : (_, _) -> (_)
   %v4 = "llvm.copy" (%A) : (_) -> (_)
   "llvm.return" (%v4) : (_) -> ()
 }]
@@ -3402,12 +3402,12 @@ def alive_Select_740_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp sgt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sgt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (_)
   %v5 = "llvm.select" (%v2,%A,%v4) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v7 = "llvm.icmp sgt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.sgt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v7,%v5,%v9) : (_, _, _) -> (_)
@@ -3418,12 +3418,12 @@ def alive_Select_740_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp sgt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sgt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (_)
   %v5 = "llvm.select" (%v2,%A,%v4) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v7 = "llvm.icmp sgt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.sgt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v2,%A,%v4) : (_, _, _) -> (_)
@@ -3458,12 +3458,12 @@ def alive_Select_741_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp sgt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sgt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (i1)
   %v5 = "llvm.select" (%v2,%v4,%A) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v7 = "llvm.icmp sgt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.sgt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v7,%v9,%v5) : (_, _, _) -> (_)
@@ -3474,12 +3474,12 @@ def alive_Select_741_tgt (w : Nat):=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp sgt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sgt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (i1)
   %v5 = "llvm.select" (%v2,%v4,%A) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v7 = "llvm.icmp sgt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.sgt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v2,%v4,%A) : (_, _, _) -> (i1)
@@ -3515,12 +3515,12 @@ def alive_Select_746_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp slt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.slt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (_)
   %v5 = "llvm.select" (%v2,%A,%v4) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v7 = "llvm.icmp sgt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.sgt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v7,%v5,%v9) : (_, _, _) -> (_)
@@ -3533,12 +3533,12 @@ def alive_Select_746_tgt (w : Nat):=
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v2 = "llvm.sub" (%v1,%A) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp sgt " (%A,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.sgt" (%A,%v3) : (_, _) -> (_)
   %v5 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v6 = "llvm.icmp slt " (%A,%v5) : (_, _) -> (_)
+  %v6 = "llvm.icmp.slt" (%A,%v5) : (_, _) -> (_)
   %v7 = "llvm.select" (%v6,%A,%v2) : (_, _, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v9 = "llvm.icmp sgt " (%v7,%v8) : (_, _) -> (_)
+  %v9 = "llvm.icmp.sgt" (%v7,%v8) : (_, _) -> (_)
   %v10 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v11 = "llvm.sub" (%v10,%v7) : (_, _) -> (_)
   %v12 = "llvm.select" (%v4,%A,%v2) : (_, _, _) -> (_)
@@ -3574,12 +3574,12 @@ def alive_Select_747_src (w : Nat) :=
 [mlir_icom (w)| {
 ^bb0(%A : _):
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v2 = "llvm.icmp sgt " (%A,%v1) : (_, _) -> (_)
+  %v2 = "llvm.icmp.sgt" (%A,%v1) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v4 = "llvm.sub" (%v3,%A) : (_, _) -> (_)
   %v5 = "llvm.select" (%v2,%A,%v4) : (_, _, _) -> (_)
   %v6 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v7 = "llvm.icmp slt " (%v5,%v6) : (_, _) -> (_)
+  %v7 = "llvm.icmp.slt" (%v5,%v6) : (_, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v9 = "llvm.sub" (%v8,%v5) : (_, _) -> (_)
   %v10 = "llvm.select" (%v7,%v5,%v9) : (_, _, _) -> (_)
@@ -3592,12 +3592,12 @@ def alive_Select_747_tgt (w : Nat):=
   %v1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v2 = "llvm.sub" (%v1,%A) : (_, _) -> (_)
   %v3 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v4 = "llvm.icmp slt " (%A,%v3) : (_, _) -> (_)
+  %v4 = "llvm.icmp.slt" (%A,%v3) : (_, _) -> (_)
   %v5 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v6 = "llvm.icmp sgt " (%A,%v5) : (_, _) -> (_)
+  %v6 = "llvm.icmp.sgt" (%A,%v5) : (_, _) -> (_)
   %v7 = "llvm.select" (%v6,%A,%v2) : (_, _, _) -> (_)
   %v8 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %v9 = "llvm.icmp slt " (%v7,%v8) : (_, _) -> (_)
+  %v9 = "llvm.icmp.slt" (%v7,%v8) : (_, _) -> (_)
   %v10 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %v11 = "llvm.sub" (%v10,%v7) : (_, _) -> (_)
   %v12 = "llvm.select" (%v4,%A,%v2) : (_, _, _) -> (_)

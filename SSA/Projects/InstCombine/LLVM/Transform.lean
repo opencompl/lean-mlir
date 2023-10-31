@@ -28,7 +28,7 @@ inductive TransformError
   | typeError {φ} (expected got : MTy φ)
   | widthError {φ} (expected got : Width φ)
   | unsupportedUnaryOp
-  | unsupportedBinaryOp
+  | unsupportedBinaryOp (name : String)
   | unsupportedOp (error : String)
   | unsupportedType
   | generic (error : String)
@@ -47,7 +47,7 @@ instance : Repr TransformError where
     | typeError expected got => f!"Type mismatch: expected '{expected}', but 'name' has type '{got}'"
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
     | unsupportedUnaryOp => f!"Unsuported unary operation"
-    | unsupportedBinaryOp => f!"Unsuported binary operation"
+    | unsupportedBinaryOp name => f!"Unsuported binary operation {name}"
     | unsupportedOp err =>  f!"Unsuported operation '{err}'"
     | unsupportedType => f!"Unsuported type"
     | generic err => err
@@ -305,7 +305,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | _ => throw <| .unsupportedBinaryOp
+    | op => throw <| .unsupportedBinaryOp s!"{repr op}"
 
 def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
     (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| Expr Γ (.bitvec 1) :=
@@ -407,12 +407,16 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.sub"    => pure (MOp.sub w₁)
       | "llvm.sdiv"   => pure (MOp.sdiv w₁)
       | "llvm.udiv"   => pure (MOp.udiv w₁)
-      | "llvm.icmp" =>
-        match opStx.attrs.find_str "type" with
-        | .some "eq" =>
-          pure <| MOp.icmp InstCombine.IntPredicate.eq w₁
-        | .none =>
-          throw <| .unsupportedOp s!"expected attribute 'type' on operation 'icmp: '{opStx.name}'"
+      | "llvm.icmp.eq" => pure (MOp.icmp InstCombine.IntPredicate.eq w₁)
+      | "llvm.icmp.ne" => pure (MOp.icmp InstCombine.IntPredicate.ne w₁)
+      | "llvm.icmp.ugt" => pure (MOp.icmp InstCombine.IntPredicate.ugt w₁)
+      | "llvm.icmp.uge" => pure (MOp.icmp InstCombine.IntPredicate.uge w₁)
+      | "llvm.icmp.ult" => pure (MOp.icmp InstCombine.IntPredicate.ult w₁)
+      | "llvm.icmp.ule" => pure (MOp.icmp InstCombine.IntPredicate.ule w₁)
+      | "llvm.icmp.sgt" => pure (MOp.icmp InstCombine.IntPredicate.sgt w₁)
+      | "llvm.icmp.sge" => pure (MOp.icmp InstCombine.IntPredicate.sge w₁)
+      | "llvm.icmp.slt" => pure (MOp.icmp InstCombine.IntPredicate.slt w₁)
+      | "llvm.icmp.sle" => pure (MOp.icmp InstCombine.IntPredicate.sle w₁)
       | opstr => throw <| .unsupportedOp s!"Unsuported operation or invalid arguments '{opstr}'"
     if hty : w₁ = w₂ then
       let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
