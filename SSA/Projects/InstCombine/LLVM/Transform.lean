@@ -305,7 +305,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | op => throw <| .unsupportedBinaryOp s!"{repr op}"
+    | op => throw <| .unsupportedBinaryOp s!"unsupported binary operation {op}"
 
 def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
     (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| Expr Γ (.bitvec 1) :=
@@ -318,7 +318,7 @@ def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         by simp [OpSignature.outTy, signature, h],
         .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
         .nil
-⟩
+      ⟩
       else throw <| .widthError w w'
       | _ => throw <| .unsupportedOp "unsupported icmp operation"
 
@@ -418,11 +418,19 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.icmp.slt" => pure (MOp.icmp InstCombine.IntPredicate.slt w₁)
       | "llvm.icmp.sle" => pure (MOp.icmp InstCombine.IntPredicate.sle w₁)
       | opstr => throw <| .unsupportedOp s!"Unsuported operation or invalid arguments '{opstr}'"
-    if hty : w₁ = w₂ then
-      let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
-      return ⟨.bitvec w₁, binOp⟩
-    else
-      throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    match op with
+    | .icmp .. =>
+      if hty : w₁ = w₂ then
+        let icmpOp ← (mkIcmp op v₁ (hty ▸ v₂) : ExceptM _)
+        return ⟨.bitvec 1, icmpOp⟩
+      else
+        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    | _ =>
+      if hty : w₁ = w₂ then
+        let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
+        return ⟨.bitvec w₁, binOp⟩
+      else
+        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
