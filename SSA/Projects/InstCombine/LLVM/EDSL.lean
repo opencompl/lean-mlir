@@ -9,7 +9,7 @@ open Qq Lean Meta Elab.Term Elab Command
 
 open MLIR
 
--- def elabToMlirICom (Op : Q(Type)) (mvars : Syntax.TSepArray `term ",") (reg : TSyntax `mlir_region) : 
+-- def elabToMlirICom (Op : Q(Type)) (mvars : Syntax.TSepArray `term ",") (reg : TSyntax `mlir_region) :
 --     TermElabM Unit := do
 --   let φ : Nat := mvars.getElems.size
 --   let Ty  ← mkFreshExprMVarQ q(Type)
@@ -27,9 +27,9 @@ open MLIR
 
 --   let com := q(AST.mkComInstantiate (instInst:=$instInst) $ast)
 --   synthesizeSyntheticMVarsNoPostponing
---   -- let com : Q(ExceptM (Σ (Γ' : Ctxt Ty) (ty : InstCombine.Ty), Com Γ' ty)) ← 
+--   -- let com : Q(ExceptM (Σ (Γ' : Ctxt Ty) (ty : InstCombine.Ty), Com Γ' ty)) ←
 --   --   withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
---   --     withTransparency (mode := TransparencyMode.all) <| 
+--   --     withTransparency (mode := TransparencyMode.all) <|
 --   --       return ←reduce com
 --   -- trace[Meta] com
 --   -- match com with
@@ -50,9 +50,9 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
   let com := q(mkComInstantiate Op $φ $ast |>.map (· $mvalues))
   synthesizeSyntheticMVarsNoPostponing
-  let com : Q(ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), ICom Op Γ' ty)) ← 
+  let com : Q(ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <| 
+      withTransparency (mode := TransparencyMode.all) <|
         return ←reduce com
   trace[Meta] com
   match com with

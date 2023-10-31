@@ -3,7 +3,7 @@ import Mathlib.Data.Vector.Basic
 -- import Mathlib.Tactic
 
 
-/-- 
+/--
   A general type that is either a concrete known value of type `α`, or one of `φ` metavariables
  -/
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
@@ -17,22 +17,22 @@ instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 /- In the specific case of `α := Nat`, we'd like to be able to use nat literals -/
 instance : OfNat (ConcreteOrMVar Nat φ) n := ⟨.concrete n⟩
 
-namespace ConcreteOrMVar 
+namespace ConcreteOrMVar
 
 /-- If there are no meta-variables, `ConcreteOrMVar` is just the concrete type `α` -/
-def toConcrete : ConcreteOrMVar α 0 → α 
+def toConcrete : ConcreteOrMVar α 0 → α
   | .concrete a => a
 
 @[simp]
 theorem toConcrete_concrete : toConcrete (.concrete a) = a := rfl
 
-/-- 
+/--
   Provide a value for one of the metavariables.
   Specifically, the metavariable with the maximal index `φ` out of `φ+1` total metavariables.
   All other metavariables indices' are left as-is, but cast to `Fin φ` -/
 def instantiateOne (a : α) : ConcreteOrMVar α (φ+1) → ConcreteOrMVar α φ
   | .concrete w => .concrete w
-  | .mvar i => i.lastCases 
+  | .mvar i => i.lastCases
       (.concrete a)       -- `i = Fin.last`
       (fun j => .mvar j)  -- `i = Fin.castSucc j`
 

@@ -319,7 +319,7 @@ inductive Op
 deriving DecidableEq
 
 inductive Ty
-| /-- values held in tensors -/ int : Ty 
+| /-- values held in tensors -/ int : Ty
 | /-- shapes and indexes of tensors -/ ix : Ty
 | /-- tensor type -/ tensor1d  : Ty
 deriving DecidableEq, Inhabited
