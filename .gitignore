@@ -34,3 +34,4 @@ temp.mlir
 tags
 test-semantics/*.mlir
 test-semantics/*.llvm
+*.olean
