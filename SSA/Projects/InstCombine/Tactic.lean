@@ -47,12 +47,13 @@ macro "simp_alive_peephole" : tactic =>
         try intros v3
         try intros v4
         try intros v5
-        try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v3 with x3 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v4 with x4 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind] <;> dsimp[Option.bind, bind, Monad.toBind]
+        try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> try cases' v3 with x3 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> try cases' v4 with x4 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind]
+          <;> dsimp[Option.bind, bind, Monad.toBind]
         try revert v5
         try revert v4
         try revert v3
