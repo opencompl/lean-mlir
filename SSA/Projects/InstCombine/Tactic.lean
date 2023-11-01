@@ -10,11 +10,14 @@ theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := b
   simp[BitVec.ofInt, BitVec.ofNat,Neg.neg,
     BitVec.neg, BitVec.sub, BitVec.toFin, Fin.ofNat', HSub.hSub, Sub.sub, Fin.sub]
   simp
-  sorry
-
-
-
-
+  cases w
+  case zero => norm_num
+  case succ w' =>
+    norm_num
+    have ONE : 1 % 2^ Nat.succ w' = 1 := by
+      apply Nat.mod_eq_of_lt
+      simp
+    rw[ONE]
 
 /--
 - We first simplify `Com.refinement` to see the context `Γv`.
