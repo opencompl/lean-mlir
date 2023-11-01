@@ -11,6 +11,10 @@ inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | mvar (i : Fin φ)
   deriving DecidableEq, Repr, Inhabited
 
+instance [ToString α] : ToString (ConcreteOrMVar α n) where
+  toString
+  | .concrete a => s!"wconcrete({a})"
+  | .mvar i => s!"wmvar({i})"
 /-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
 instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 
