@@ -333,7 +333,7 @@ def AttrDict.find_nat {φ} (attrs : AttrDict φ) (name : String) : Option Nat :=
   | _ => .none
 
 def AttrDict.find_int {φ} (attrs : AttrDict φ)
-  (name : String) : Option (Int × MLIRType φ) :=
+  (name : String): Option (Int × MLIRType φ) :=
   match attrs.find name with
   | .some (AttrValue.int i ty) =>  .some (i, ty)
   | _ => .none

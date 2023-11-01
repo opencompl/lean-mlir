@@ -13,8 +13,8 @@ inductive ConcreteOrMVar (α : Type u) (φ : Nat)
 
 instance [ToString α] : ToString (ConcreteOrMVar α n) where
   toString
-  | .concrete a => s!"wconcrete({a})"
-  | .mvar i => s!"wmvar({i})"
+  | .concrete a => s!"concrete({a})"
+  | .mvar i => s!"mvar({i})"
 /-- A coercion from the concrete type `α` to the `ConcreteOrMVar` -/
 instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 
