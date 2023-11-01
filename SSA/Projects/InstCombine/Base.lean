@@ -39,6 +39,19 @@ inductive IntPredicate where
   | sle
 deriving Inhabited, DecidableEq, Repr
 
+instance : ToString IntPredicate where
+  toString
+  | .eq => "eq"
+  | .ne => "ne"
+  | .ugt => "ugt"
+  | .uge => "uge"
+  | .ult => "ult"
+  | .ule => "ule"
+  | .sgt => "sgt"
+  | .sge => "sge"
+  | .slt => "slt"
+  | .sle => "sle"
+
 inductive MTy (φ : Nat)
   | bitvec (w : Width φ) : MTy φ
   deriving DecidableEq, Inhabited
@@ -96,6 +109,28 @@ inductive MOp (φ : Nat) : Type
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited
+
+instance : ToString (MOp φ) where
+  toString
+  | .and w => "and"
+  | .or w => "or"
+  | .not w => "not"
+  | .xor w => "xor"
+  | .shl w => "shl"
+  | .lshr w => "lshr"
+  | .ashr w => "ashr"
+  | .urem w => "urem"
+  | .srem w => "srem"
+  | .select w => "select"
+  | .add w => "add"
+  | .mul w => "mul"
+  | .sub w => "sub"
+  | .neg w => "neg"
+  | .copy w => "copy"
+  | .sdiv w => "sdiv"
+  | .udiv w => "udiv"
+  | .icmp ty w => s!"icmp {ty}"
+  | .const w v => s!"const {v}"
 
 abbrev Op := MOp 0
 

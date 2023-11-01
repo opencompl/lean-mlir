@@ -28,8 +28,8 @@ inductive TransformError
   | typeError {φ} (expected got : MTy φ)
   | widthError {φ} (expected got : Width φ)
   | unsupportedUnaryOp
-  | unsupportedBinaryOp
-  | unsupportedOp
+  | unsupportedBinaryOp (name : String)
+  | unsupportedOp (error : String)
   | unsupportedType
   | generic (error : String)
 
@@ -47,8 +47,8 @@ instance : Repr TransformError where
     | typeError expected got => f!"Type mismatch: expected '{expected}', but 'name' has type '{got}'"
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
     | unsupportedUnaryOp => f!"Unsuported unary operation"
-    | unsupportedBinaryOp => f!"Unsuported binary operation"
-    | unsupportedOp => f!"Unsuported operation"
+    | unsupportedBinaryOp name => f!"Unsuported binary operation {name}"
+    | unsupportedOp err =>  f!"Unsuported operation '{err}'"
     | unsupportedType => f!"Unsuported type"
     | generic err => err
 
@@ -305,7 +305,7 @@ def mkBinOp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         .nil
       ⟩
       else throw <| .widthError w w'
-    | _ => throw <| .unsupportedBinaryOp
+    | op => throw <| .unsupportedBinaryOp s!"unsupported binary operation {op}"
 
 def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
     (e₁ e₂ : Ctxt.Var Γ ty) : ExceptM <| Expr Γ (.bitvec 1) :=
@@ -318,9 +318,9 @@ def mkIcmp {Γ : Ctxt _} {ty : MTy φ} (op : MOp φ)
         by simp [OpSignature.outTy, signature, h],
         .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
         .nil
-⟩
+      ⟩
       else throw <| .widthError w w'
-      | _ => throw .unsupportedOp -- unsupported icmp operation
+      | _ => throw <| .unsupportedOp "unsupported icmp operation"
 
 def mkSelect {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
     (c : Var Γ (.bitvec 1)) (e₁ e₂ : Var Γ ty) :
@@ -336,7 +336,7 @@ def mkSelect {Γ : Context φ} {ty : MTy φ} (op : MOp φ)
           .nil
         ⟩
         else throw <| .widthError w w'
-        | _ => throw .unsupportedOp -- "Unsupported select operation"
+        | _ => throw <| .unsupportedOp "Unsupported select operation"
 
 def mkOpExpr {Γ : Context φ} (op : MOp φ)
     (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) :
@@ -355,7 +355,7 @@ def mkOpExpr {Γ : Context φ} (op : MOp φ)
   | .select _ =>
     let (c, e₁, e₂) := arg.toTuple
     mkSelect op c e₁ e₂
-  | .const .. => throw .unsupportedOp -- "Tried to build Op expression from constant"
+  | .const .. => throw <| .unsupportedOp  "Tried to build Op expression from constant"
 
 def MLIRType.mkTy : MLIRType φ → ExceptM (MTy φ)
   | MLIRType.int Signedness.Signless w => do
@@ -388,6 +388,20 @@ def TypedSSAVal.newVal (Γ : Context φ) : TypedSSAVal φ →
 
 def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
   match opStx.args with
+  | v₁Stx::v₂Stx::v₃Stx::[] =>
+      let ⟨.bitvec w₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨.bitvec w₂, v₂⟩ ← TypedSSAVal.mkVal Γ v₂Stx
+      let ⟨.bitvec w₃, v₃⟩ ← TypedSSAVal.mkVal Γ v₃Stx
+      match opStx.name with
+      | "llvm.select" =>
+        if hw1 : w₁ = 1 then
+          if hw23 : w₂  = w₃ then
+            let selectOp ← mkSelect (MOp.select w₂) (hw1 ▸ v₁) v₂ (hw23 ▸ v₃)
+            return ⟨.bitvec w₂, selectOp⟩
+          else
+            throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+        else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
+      | op => throw <| .unsupportedOp s!"Unsuported ternary operation or invalid arguments '{op}'"
   | v₁Stx::v₂Stx::[] =>
     let ⟨.bitvec w₁, v₁⟩ ← TypedSSAVal.mkVal Γ v₁Stx
     let ⟨.bitvec w₂, v₂⟩ ← TypedSSAVal.mkVal Γ v₂Stx
@@ -401,24 +415,41 @@ def mkExpr (Γ : Context φ) (opStx : Op φ) : ReaderM (Σ ty, Expr Γ ty) := do
       | "llvm.ashr"   => pure (MOp.ashr w₁)
       | "llvm.urem"   => pure (MOp.urem w₁)
       | "llvm.srem"   => pure (MOp.srem w₁)
-      | "llvm.select" => pure (MOp.select w₁)
       | "llvm.add"    => pure (MOp.add w₁)
       | "llvm.mul"    => pure (MOp.mul w₁)
       | "llvm.sub"    => pure (MOp.sub w₁)
       | "llvm.sdiv"   => pure (MOp.sdiv w₁)
       | "llvm.udiv"   => pure (MOp.udiv w₁)
-       --| "llvm.icmp" => return InstCombine.Op.icmp v₁.width
-      | _ => throw .unsupportedOp -- "Unsuported operation or invalid arguments"
-    if hty : w₁ = w₂ then
-      let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
-      return ⟨.bitvec w₁, binOp⟩
-    else
-      throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+      | "llvm.icmp.eq" => pure (MOp.icmp InstCombine.IntPredicate.eq w₁)
+      | "llvm.icmp.ne" => pure (MOp.icmp InstCombine.IntPredicate.ne w₁)
+      | "llvm.icmp.ugt" => pure (MOp.icmp InstCombine.IntPredicate.ugt w₁)
+      | "llvm.icmp.uge" => pure (MOp.icmp InstCombine.IntPredicate.uge w₁)
+      | "llvm.icmp.ult" => pure (MOp.icmp InstCombine.IntPredicate.ult w₁)
+      | "llvm.icmp.ule" => pure (MOp.icmp InstCombine.IntPredicate.ule w₁)
+      | "llvm.icmp.sgt" => pure (MOp.icmp InstCombine.IntPredicate.sgt w₁)
+      | "llvm.icmp.sge" => pure (MOp.icmp InstCombine.IntPredicate.sge w₁)
+      | "llvm.icmp.slt" => pure (MOp.icmp InstCombine.IntPredicate.slt w₁)
+      | "llvm.icmp.sle" => pure (MOp.icmp InstCombine.IntPredicate.sle w₁)
+      | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
+    match op with
+    | .icmp .. =>
+      if hty : w₁ = w₂ then
+        let icmpOp ← (mkIcmp op v₁ (hty ▸ v₂) : ExceptM _)
+        return ⟨.bitvec 1, icmpOp⟩
+      else
+        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    | _ =>
+      if hty : w₁ = w₂ then
+        let binOp ← (mkBinOp op v₁ (hty ▸ v₂) : ExceptM _)
+        return ⟨.bitvec w₁, binOp⟩
+      else
+        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
         | "llvm.not" => pure <| MOp.not w
         | "llvm.neg" => pure <| MOp.neg w
+        | "llvm.copy" => pure <| MOp.copy w
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
     let op ← mkUnaryOp op v
     return ⟨.bitvec w, op⟩

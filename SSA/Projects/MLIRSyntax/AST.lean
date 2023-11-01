@@ -338,6 +338,11 @@ def AttrDict.find_int {φ} (attrs : AttrDict φ)
   | .some (AttrValue.int i ty) =>  .some (i, ty)
   | _ => .none
 
+def AttrDict.find_str {φ} (attrs : AttrDict φ) (name : String) : Option String :=
+  match attrs.find name with
+  | .some (AttrValue.str s) =>  .some s
+  | _ => .none
+
 def AttrDict.find_int' {φ} (attrs : AttrDict φ) (name : String): Option Int :=
   match attrs.find name with
   | .some (AttrValue.int i _) =>  .some i
