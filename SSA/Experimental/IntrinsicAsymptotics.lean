@@ -128,7 +128,7 @@ variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 mutual
 
 def Reg.denote : {Γ : Ctxt Ty} → {ty : Ty} →
-    (r : Reg Op rg Γ ty) → (mv : toType rg) → (toType Γ → toType ty)
+    (r : Reg Op rg Γ ty) → (mv : toType rg) → (Γ.Valuation → toType ty)
   | _, _, Reg.icom com, mv => com.denote mv
   | _, _, Reg.mvar i, mv => mv i
 
@@ -140,12 +140,12 @@ def HVector.denoteReg : {l : List (RegT Ty)} →
 
 def IExpr.denote {Γ : Ctxt Ty} : {ty : Ty} →
     (e : IExpr Op rg Γ ty) → (mv : toType rg) →
-    (Γv : toType Γ) → toType ty
+    (Γv : Γ.Valuation) → toType ty
   | _, ⟨op, Eq.refl _, args, regArgs⟩, mv, Γv =>
     OpDenote.denote op (args.map (fun _ v => Γv v)) <| regArgs.denoteReg mv
 
 def ICom.denote {Γ : Ctxt Ty} {ty : Ty} : ICom Op rg Γ ty → (mv : toType rg) →
-    (Γv : toType Γ) → (toType ty)
+    (Γv : Γ.Valuation) → (toType ty)
   | .ret e, _, Γv => Γv e
   | .lete e body, mv, Γv => body.denote mv (Γv.snoc (e.denote mv Γv))
 
@@ -174,7 +174,7 @@ args, since there now are equation lemmas for it.
 #eval Lean.Meta.getEqnsFor? ``ICom.denote
 
 
-def Lets.denote {Γ₁ Γ₂ : Ctxt Ty} : Lets Op rg Γ₁ Γ₂ → toType rg → toType Γ₁ → toType Γ₂
+def Lets.denote {Γ₁ Γ₂ : Ctxt Ty} : Lets Op rg Γ₁ Γ₂ → toType rg → Γ₁.Valuation → Γ₂.Valuation
   | .nil => fun _ => id
   | .lete e body => fun mv ll t v => by
     cases v using Ctxt.Var.casesOn with
@@ -194,7 +194,7 @@ theorem IExpr.denote_changeVars {ty : Ty} {Γ Γ' : Ctxt Ty}
     (varsMap : Γ.Hom Γ')
     (e : IExpr Op rg Γ ty)
     (mv : toType rg)
-    (Γ'v : toType Γ') :
+    (Γ'v : Γ'.Valuation) :
     (e.changeVars varsMap).denote mv Γ'v =
     e.denote mv (fun t v => Γ'v (varsMap v)) := by
   rcases e with ⟨_, rfl, _⟩
@@ -210,7 +210,7 @@ def ICom.changeVars {Γ Γ' : Ctxt Ty} {ty : Ty} (varsMap : Γ.Hom Γ') :
 theorem ICom.denote_changeVars {Γ Γ' : Ctxt Ty} {ty : Ty}
     (varsMap : Γ.Hom Γ') (c : ICom Op rg Γ ty)
     (mv : toType rg)
-    (Γ'v : toType Γ') :
+    (Γ'v : Γ'.Valuation) :
     (c.changeVars varsMap).denote mv Γ'v =
     c.denote mv (fun t v => Γ'v (varsMap v)) := by
   induction c using ICom.rec' generalizing Γ'v Γ' with
@@ -254,7 +254,7 @@ def addProgramToLets {Γ_in Γ_out Δ : Ctxt Ty} {ty : Ty}
 
 theorem denote_addProgramToLets_lets {Γ_in Γ_out Δ : Ctxt Ty} {ty : Ty} (mv : toType rg)
     (lets : Lets Op rg Γ_in Γ_out) {map} {com : ICom Op rg Δ ty}
-    (ll : toType Γ_in) ⦃t⦄ (var : Γ_out.Var t) :
+    (ll : Γ_in.Valuation) ⦃t⦄ (var : Γ_out.Var t) :
     (addProgramToLets lets map com).lets.denote mv ll ((addProgramToLets lets map com).diff.toHom var)
     = lets.denote mv ll var := by
   induction com using ICom.rec' generalizing lets Γ_out
@@ -268,7 +268,7 @@ theorem denote_addProgramToLets_lets {Γ_in Γ_out Δ : Ctxt Ty} {ty : Ty} (mv :
 theorem denote_addProgramToLets_var
     {Γ_in Γ_out Δ : Ctxt Ty} {t : Ty} {mv : toType rg}
     {lets : Lets Op rg Γ_in Γ_out} {map} {com : ICom Op rg Δ t} :
-    ∀ (ll : toType Γ_in),
+    ∀ (ll : Γ_in.Valuation),
       (addProgramToLets lets map com).lets.denote mv ll (addProgramToLets lets map com).var
       = com.denote mv (fun _ v => lets.denote mv ll <| map v) := by
   intro ll
@@ -320,7 +320,7 @@ def addProgramInMiddle [DecidableEq Ty] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
 
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (mv : toType rg)
     {t₁ t₂ : Ty}
-    (v : Γ₂.Var t₁) (s : toType Γ₁)
+    (v : Γ₂.Var t₁) (s : Γ₁.Valuation)
     (map : Γ₃.Hom Γ₂)
     (lets : Lets Op rg Γ₁ Γ₂) (rhs : ICom Op rg Γ₃ t₁)
     (inputProg : ICom Op rg Γ₂ t₂) :
@@ -364,7 +364,7 @@ where
 
 @[simp]
 theorem ICom.denote_toLets_go {Γ_in Γ_out : Ctxt Ty} {t : Ty} (mv : toType rg)
-    (lets : Lets Op rg Γ_in Γ_out) (com : ICom Op rg Γ_out t) (s : toType Γ_in) :
+    (lets : Lets Op rg Γ_in Γ_out) (com : ICom Op rg Γ_out t) (s : Γ_in.Valuation) :
     (toLets.go lets com).lets.denote mv s (toLets.go lets com).ret =
       com.denote mv (lets.denote mv s) := by
   induction com using ICom.rec'
@@ -379,7 +379,7 @@ theorem ICom.denote_toLets_go {Γ_in Γ_out : Ctxt Ty} {t : Ty} (mv : toType rg)
 
 @[simp]
 theorem ICom.denote_toLets {Γ : Ctxt Ty} {t : Ty}
-    (mv : toType rg) (com : ICom Op rg Γ t) (s : toType Γ) :
+    (mv : toType rg) (com : ICom Op rg Γ t) (s : Γ.Valuation) :
     com.toLets.lets.denote mv s com.toLets.ret = com.denote mv s :=
   denote_toLets_go ..
 
@@ -420,7 +420,7 @@ def Lets.getIExprAuxDiff {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
 theorem Lets.denote_getIExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty} {mv : toType rg}
     {lets : Lets Op rg Γ₁ Γ₂} {v : Γ₂.Var t} {e : IExpr Op rg Δ t}
     (he : lets.getIExprAux v = some ⟨Δ, e⟩)
-    (s : toType Γ₁) :
+    (s : Γ₁.Valuation) :
     (e.changeVars (getIExprAuxDiff he).toHom).denote mv
       (lets.denote mv s) = (lets.denote mv s) v := by
   rw [getIExprAuxDiff]
@@ -451,7 +451,7 @@ def Lets.getIExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op rg Γ₁ Γ₂) {t : T
 
 theorem Lets.denote_getIExpr {Γ₁ Γ₂ : Ctxt Ty} (mv : toType rg) :
     {lets : Lets Op rg Γ₁ Γ₂} → {t : Ty} →
-    {v : Γ₂.Var t} → {e : IExpr Op rg Γ₂ t} → (he : lets.getIExpr v = some e) → (s : toType Γ₁) →
+    {v : Γ₂.Var t} → {e : IExpr Op rg Γ₂ t} → (he : lets.getIExpr v = some e) → (s : Γ₁.Valuation) →
     e.denote mv (lets.denote mv s) = (lets.denote mv s) v := by
   intros lets _ v e he s
   simp [getIExpr] at he
@@ -535,7 +535,7 @@ theorem Lets.denote_eq_of_eq_on_vars
     {Γ_in Γ_out : Ctxt Ty} {t : Ty} {mv : toType rg}
     (lets : Lets Op rg Γ_in Γ_out)
     (v : Γ_out.Var t)
-    {s₁ s₂ : toType Γ_in}
+    {s₁ s₂ : Γ_in.Valuation}
     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
     lets.denote mv s₁ v = lets.denote mv s₂ v := by
   induction lets generalizing t
@@ -790,7 +790,7 @@ theorem denote_matchVar_of_subset {rg : RegMVars Ty}
     (hvarMap : (rVarMap₁, varMap₁) ∈ matchVar lets v matchLets w rma ma) →
     (h_sub_r : rVarMap₁.entries ⊆ rVarMap₂.entries) →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    {s : toType Γ_in} →
+    {s : Γ_in.Valuation} →
       matchLets.denote
         (fun t' v' => by
           match rVarMap₂.lookup ⟨_, v'⟩ with
@@ -872,7 +872,7 @@ theorem denote_matchVar_matchArg
     (hvarMap : (rVarMap₁, varMap₁) ∈ matchVar.matchArg lets _ matchLets Tₗ Tᵣ rma ma) →
     (h_sub_r : rVarMap₁.entries ⊆ rVarMap₂.entries) →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    {s : toType Γ_in} →
+    {s : Γ_in.Valuation} →
     HVector.map (matchLets.denote
         (fun t' v' => by
           match rVarMap₂.lookup ⟨_, v'⟩ with
@@ -950,7 +950,7 @@ theorem denote_matchVar_matchReg {rg : RegMVars Ty}
 end
 #exit
 theorem denote_matchVar {lets : Lets Op rg Γ_in Γ_out} {v : Γ_out.Var t} {varMap : Mapping Δ_in Γ_out}
-    {s₁ : toType Γ_in}
+    {s₁ : Γ_in.Valuation}
     {ma : Mapping Δ_in Γ_out}
     {matchLets : Lets Op rg Δ_in Δ_out}
     {w : Δ_out.Var t} :
@@ -1073,7 +1073,7 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {hvars : ∀ t (v : Δ_in.Var t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
     (mv : toType rg)
-    (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : toType Γ_in) :
+    (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Γ_in.Valuation) :
     matchLets.denote mv (fun t' v' => lets.denote mv s₁ (map v')) w =
       lets.denote mv s₁ v := by
   rw [matchVarMap] at hmap
@@ -1108,7 +1108,7 @@ theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op rg Γ₁ Γ�
     {prog : ICom Op rg Γ₂ t} →
     {res : Σ (Γ₃ : Ctxt Ty), Lets Op rg Γ₁ Γ₃ × ICom Op rg Γ₃ t × (t' : Ty) × Γ₃.Var t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
-    (s : toType Γ₁) →
+    (s : Γ₁.Valuation) →
     res.2.2.1.denote mv (res.2.1.denote mv s) = prog.denote mv (lets.denote mv s)
   | 0, lets, .lete e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
@@ -1137,7 +1137,7 @@ def splitProgramAt (pos : ℕ) (prog : ICom Op rg Γ₁ t) :
 
 theorem denote_splitProgramAt {pos : ℕ} {prog : ICom Op rg Γ₁ t}
     {res : Σ (Γ₂ : Ctxt Ty), Lets Op rg Γ₁ Γ₂ × ICom Op rg Γ₂ t × (t' : Ty) × Γ₂.Var t'}
-    (hres : res ∈ splitProgramAt pos prog) (s : toType Γ₁) :
+    (hres : res ∈ splitProgramAt pos prog) (s : Γ₁.Valuation) :
     res.2.2.1.denote mv (res.2.1.denote mv s) = prog.denote mv s :=
   denote_splitProgramAtAux hres s
 
