@@ -3,6 +3,7 @@ import SSA.Core.Framework
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.Semantics
 
 /-!
   # InstCombine Dialect
