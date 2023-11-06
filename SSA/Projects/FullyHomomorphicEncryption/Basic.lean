@@ -485,10 +485,31 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n :=
       simp[monomial]
 
 
-/-- an equivalent implementation of `fromTensor` that uses `Finsupp` to enable reasoning about values using mathlib's notions of
+/-- an equivalent implementation of `fromTensor` that uses `Finsupp`
+  to enable reasoning about values using mathlib's notions of
   support, coefficients, etc. -/
 noncomputable def R.fromTensorFinsupp (coeffs : List ℤ) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
+
+/-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
+theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
+  (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
+  rw [fromTensorFinsupp]
+  rw [degree]
+  simp [Polynomial.eta]
+  rw [List.toFinsupp_support]
+  rw [Finset.max]
+
+
+
+/-- the ith coefficient of fromTensorFinsupp is a coercion of the 'coeffs' into the right list. -/
+theorem R.fromTensorFinsupp_coeffs (coeffs : List ℤ) :
+  Polynomial.coeff (fromTensorFinsupp q coeffs) i = ↑(List.getD coeffs i 0) := by
+  rw [fromTensorFinsupp]
+  rw [coeff_ofFinsupp]
+  rw [List.toFinsupp_apply]
+  have hzero : (0 : ZMod q) = Int.cast (0 : ℤ) := by norm_num
+  rw [hzero, List.getD_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
 theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
@@ -539,39 +560,32 @@ theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff 
 theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) :
   (xs ++ [x]).getD i 0 = (xs.getD i 0) + (if i == xs.length then x else 0) := by sorry
 
+
+/- 1. given a list of coefficients, building the ring element and then picking the repr from
+   the equiv class, is the same as taking modulo (`representative_fromPoly_toFun`)
+   2. if the length is less than 2^n, then the modulo by`f` equals the element itself
+    (`representative_fromPoly_eq`).
+  3.
+-/
 /-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
-theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int): (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
-  induction tensor using List.reverseRecOn
-  case H0 =>
-    simp[fromTensor, coeff, representative_zero]
-  case H1 cs c hcs =>
-    simp[fromTensor_snoc]
-    rw[fromTensor_eq_fromTensor'_fromPoly]
-    by_cases (i < cs.length)
-    case pos =>
-      rw[List.getD_eq_get (hn := by simp[List.append]; linarith)]
-      simp[fromTensor_eq_fromTensor'_fromPoly]
-      simp[coeff]
-      ring_nf
-      simp only[FunLike.coe]
-      rw[representative_fromPoly_toFun (n := n) (a := fromTensor' q cs)]
-      sorry
-    case neg =>
-      by_cases (i = cs.length)
-      case pos =>
-        subst h
-        sorry
-      case neg =>
-        have hi : i > cs.length := by
-          obtain H := Nat.lt_trichotomy i cs.length
-          cases H
-          . linarith
-          . case inr H =>
-              cases H
-              . contradiction
-              . linarith
-        rw[List.getD_eq_default (hn := by simp[List.length_append]; linarith)]
-        sorry
+theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
+(htensorlen : tensor.length < 2^n)
+: (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
+  rw[fromTensor_eq_fromTensorFinsupp_fromPoly]
+  have hfromTensorFinsuppDegree := fromTensorFinsupp_degree q tensor
+  rw[coeff]
+  rw[representative_fromPoly_eq]
+  apply fromTensorFinsupp_coeffs
+  case DEGREE =>
+    /- chain
+        htensorlen: List.length tensor < 2 ^ n
+      with
+       hfromTensorFinsuppDegree: degree (fromTensorFinsupp q tensor) ≤ ↑(List.length tensor)
+      to show
+        degree (fromTensorFinsupp q tensor) < degree (f q n)
+    -/
+    sorry
+
 
 theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
