@@ -69,7 +69,7 @@ end Refinement
 infix:50 (priority:=low) " ⊑ " => Refinement
 instance : Coe Bool (BitVec 1) := ⟨ofBool⟩
 
-def BitVec.coeWidth {m n : Nat} : BitVec m → BitVec n
+def coeWidth {m n : Nat} : BitVec m → BitVec n
   | x => BitVec.ofNat n x.toNat
 
 -- not sure what the right `Coe`is for this case

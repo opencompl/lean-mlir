@@ -4,7 +4,7 @@ import SSA.Projects.InstCombine.ForStd
 
 open Std
 
-namespace Std.BitVec
+namespace LLVM
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
@@ -145,7 +145,7 @@ this instruction returns a poison value.
 
 Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
-def lhr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def lshr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
   else .some <| BitVec.coeWidth (op1 >>> op2)
@@ -257,7 +257,7 @@ The possible condition codes are:
 
 The remaining two arguments must be integer. They must also be identical types.
 -/
-def icmp? {w : Nat} {c : IntPredicate} (x y : BitVec w) : Option (BitVec 1) :=
+def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : Option (BitVec 1) :=
   Option.some ↑(icmp c x y)
 
 /--
@@ -279,3 +279,5 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 -/
 def const? (i : Int): Option (BitVec w) :=
   BitVec.ofInt w i
+
+end LLVM
