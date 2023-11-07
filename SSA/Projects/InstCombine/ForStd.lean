@@ -24,12 +24,6 @@ instance {n} : ShiftRight (BitVec n) := ⟨fun x y => x >>> y.toNat⟩
 
 infixl:75 ">>>ₛ" => fun x y => BitVec.sshiftRight x (BitVec.toNat y)
 
-/--
- If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
--/
-def select {w : Nat} (c : BitVec 1) (x y : BitVec w) : BitVec w :=
-  cond (c.toNat != 0) x y
-
 -- A lot of this should probably go to a differet file here and not Mathlib
 inductive Refinement {α : Type u} : Option α → Option α → Prop
   | bothSome {x y : α } : x = y → Refinement (some x) (some y)

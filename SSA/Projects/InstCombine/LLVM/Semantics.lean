@@ -135,19 +135,147 @@ def shl? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
   if bits >= n then .none
   else .some <| BitVec.coeWidth (op1 <<< op2)
 
+/--
+This instruction always performs a logical shift right operation.
+The most significant bits of the result will be filled with zero bits after
+the shift.
 
+If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
+this instruction returns a poison value.
 
-/-
-TODO:
-  | Op.const w val => Option.some (BitVec.ofInt w val)
-  | Op.lshr _ => pairMapM (. >>> .) arg.toPair
-  | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
-  | Op.select _ => tripleMapM BitVec.select arg.toTriple
-  | Op.icmp c _ => match c with
-
-
-These don't seem to exist in LLVM
-  | Op.not _ => Option.map (~~~.) arg.toSingle
-  | Op.copy _ => arg.toSingle
-  | Op.neg _ => Option.map (-.) arg.toSingle
+Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
+def lhr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+  let bits := op2.toNat -- should this be toInt?
+  if bits >= n then .none
+  else .some <| BitVec.coeWidth (op1 >>> op2)
+
+
+/--
+This instruction always performs an arithmetic shift right operation,
+The most significant bits of the result will be filled with the sign bit of op1.
+
+If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
+this instruction returns a poison value.
+
+Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
+-/
+def ashr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+  let bits := op2.toNat -- should this be toInt?
+  if bits >= n then .none
+  else .some <| BitVec.coeWidth (op1 >>>ₛ op2)
+
+/--
+ If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
+-/
+def select {w : Nat} (c : BitVec 1) (x y : BitVec w) : BitVec w :=
+  cond (c.toNat != 0) x y
+
+/--
+ Wrapper around `select` (this cannot become `none` on its own)
+ If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
+-/
+def select? {w : Nat} (c : BitVec 1) (x y : BitVec w) : Option (BitVec w) :=
+  Option.some <| select c x y
+
+inductive IntPredicate where
+  | eq
+  | ne
+  | ugt
+  | uge
+  | ult
+  | ule
+  | sgt
+  | sge
+  | slt
+  | sle
+deriving Inhabited, DecidableEq, Repr
+
+instance : ToString IntPredicate where
+  toString
+  | .eq => "eq"
+  | .ne => "ne"
+  | .ugt => "ugt"
+  | .uge => "uge"
+  | .ult => "ult"
+  | .ule => "ule"
+  | .sgt => "sgt"
+  | .sge => "sge"
+  | .slt => "slt"
+  | .sle => "sle"
+
+
+/--
+The ‘icmp’ instruction takes three operands.
+The first operand is the condition code indicating the kind of comparison to perform. It is not a value, just a keyword.
+The possible condition codes are:
+
+  - eq: equal
+  - ne: not equal
+  - ugt: unsigned greater than
+  - uge: unsigned greater or equal
+  - ult: unsigned less than
+  - ule: unsigned less or equal
+  - sgt: signed greater than
+  - sge: signed greater or equal
+  - slt: signed less than
+  - sle: signed less or equal
+
+The remaining two arguments must be integer. They must also be identical types.
+-/
+def icmp {w : Nat} (c : IntPredicate) (x y : BitVec w) : Bool :=
+  match c with
+    | .eq => (x == y)
+    | .ne => (x != y)
+    | .sgt => (x >ₛ y)
+    | .sge => (x ≥ₛ y)
+    | .slt => (x <ₛ y)
+    | .sle => (x ≤ₛ y)
+    | .ugt => (x >ᵤ y)
+    | .uge => (x ≥ᵤ y)
+    | .ult => (x <ᵤ y)
+    | .ule => (x ≤ᵤ y)
+
+
+/--
+Wrapper around `icmp` (this cannot become `none` on its own).
+
+The ‘icmp’ instruction takes three operands.
+The first operand is the condition code indicating the kind of comparison to perform. It is not a value, just a keyword.
+The possible condition codes are:
+
+  - eq: equal
+  - ne: not equal
+  - ugt: unsigned greater than
+  - uge: unsigned greater or equal
+  - ult: unsigned less than
+  - ule: unsigned less or equal
+  - sgt: signed greater than
+  - sge: signed greater or equal
+  - slt: signed less than
+  - sle: signed less or equal
+
+The remaining two arguments must be integer. They must also be identical types.
+-/
+def icmp? {w : Nat} {c : IntPredicate} (x y : BitVec w) : Option (BitVec 1) :=
+  Option.some ↑(icmp c x y)
+
+/--
+Unlike LLVM IR, MLIR does not have first-class constant values.
+Therefore, all constants must be created as SSA values before being used in other
+operations. llvm.mlir.constant creates such values for scalars and vectors.
+It has a mandatory value attribute, which must be an integer
+(currently the only supported type in these semantics).
+
+The type of the attribute is one of the corresponding MLIR builtin types.
+The operation produces a new SSA value of the specified LLVM IR dialect type.
+The type of that value must correspond to the attribute type converted to LLVM IR.
+
+This interprets the value as a signed bitvector.
+If the bitwidth is not enough it will be reduced, returning
+the value `(2^w + (i mod 2^w)) mod 2^w`.
+
+TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
+-/
+def const? (i : Int): Option (BitVec w) :=
+  BitVec.ofInt w i
