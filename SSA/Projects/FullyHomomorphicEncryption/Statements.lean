@@ -227,12 +227,11 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   rw [R.trimTensor_toTensor'_eq_trimTensor_toTensor, toTensor_trimTensor_eq_toTensor]
 
 
-theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat):
+theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat) (htensorlen : List.length tensor < 2 ^ n):
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
   simp[R.toTensor_getD]
-
   simp[ZMod.toInt];
-  simp[R.coeff_fromTensor]
+  rw[R.coeff_fromTensor (hqgt1 := hqgt1) (htensorlen := htensorlen)]
   norm_cast
   simp[Int.cast, ZMod.cast]
   cases q;
