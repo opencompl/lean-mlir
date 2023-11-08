@@ -499,6 +499,7 @@ theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
   simp [Polynomial.eta]
   rw [List.toFinsupp_support]
   rw [Finset.max]
+  sorry
 
 
 
@@ -555,12 +556,6 @@ theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff 
   have H := R.representative_fromPoly_toFun (a := p) (n := n)
   norm_cast at H ⊢
 
-
-/-- since `0` is the additive identity, getting from `(x :: xs)` at index `i` with -/
-theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) :
-  (xs ++ [x]).getD i 0 = (xs.getD i 0) + (if i == xs.length then x else 0) := by sorry
-
-
 /- 1. given a list of coefficients, building the ring element and then picking the repr from
    the equiv class, is the same as taking modulo (`representative_fromPoly_toFun`)
    2. if the length is less than 2^n, then the modulo by`f` equals the element itself
@@ -577,15 +572,21 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
   rw[representative_fromPoly_eq]
   apply fromTensorFinsupp_coeffs
   case DEGREE =>
-    /- chain
-        htensorlen: List.length tensor < 2 ^ n
-      with
-       hfromTensorFinsuppDegree: degree (fromTensorFinsupp q tensor) ≤ ↑(List.length tensor)
-      to show
-        degree (fromTensorFinsupp q tensor) < degree (f q n)
-    -/
-    sorry
-
+    generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
+    rw[f_deg_eq]
+    cases tensor_degree
+    case none => norm_cast; apply WithBot.none_lt_some
+    case some tensor_degree =>
+      /- I hate this coercion stuff -/
+      norm_cast
+      apply WithBot.coe_strictMono
+      norm_cast
+      have htrans : tensor_degree  ≤ List.length tensor := by
+        rw[htensor_degree] at hfromTensorFinsuppDegree
+        rw[WithBot.some_eq_coe] at hfromTensorFinsuppDegree
+        rw[← WithBot.coe_le_coe]
+        assumption
+      apply Nat.lt_of_le_of_lt htrans htensorlen
 
 theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
