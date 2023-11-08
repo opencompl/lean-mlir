@@ -384,6 +384,15 @@ noncomputable def R.repLength {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
+/- the repLength of any value is ≤ 1 + its natDegree. -/
+theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
+  a.repLength ≤ (R.representative q n a).natDegree + 1 := by
+  simp[repLength]
+  generalize hdegree : degree (representative q n a) = d
+  cases' d with d <;> simp[natDegree, hdegree, WithBot.unbot', WithBot.recBotCoe]
+
+
+
 theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
   simp [R.repLength, representative]
@@ -625,6 +634,10 @@ The length of the list is the degree of the representative + 1.
 noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
   List.range a.repLength |>.map fun i =>
         a.coeff i |>.toInt
+
+/-- The length of the tensor `R.toTensor a` equals `a.repLength` -/
+theorem R.toTensor_length {q n} [Fact (q > 1)] (a : R q n) : (R.toTensor a).length = a.repLength := by
+  simp[R.toTensor, List.length_range]
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)
