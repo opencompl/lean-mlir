@@ -18,6 +18,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
+import Mathlib.Data.List.Basic
 import Mathlib.Data.Polynomial.RingDivision
 import SSA.Core.Framework
 
@@ -491,17 +492,41 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n :=
 noncomputable def R.fromTensorFinsupp (coeffs : List ℤ) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
 
+theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
+  (xs : List M) :
+  degree { toFinsupp := List.toFinsupp (l := xs) } ≤ List.length xs := by
+    cases xs
+    case nil =>
+      simp[degree]
+    case cons x xs =>
+      simp[degree]
+      simp[List.toFinsupp]
+      simp[Finset.range_succ]
+      apply Finset.max_le
+      intros a ha
+      obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
+      have ha₃ := Finset.mem_insert.mp ha₁
+      cases' ha₃ with ha₄ ha₅
+      . subst ha₄
+        norm_cast
+        apply WithBot.coe_le_coe.mpr
+        simp[Nat.cast]
+      . have ha₆ := Finset.mem_range.mp ha₅
+        norm_cast
+        apply WithBot.coe_le_coe.mpr
+        norm_cast
+        simp at ha₆ ⊢
+        simp[Nat.le_add_one_iff, ha₆]
+        left
+        apply Nat.le_of_lt ha₆
+
 /-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
 theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
   (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
   rw [fromTensorFinsupp]
-  rw [degree]
-  simp [Polynomial.eta]
-  rw [List.toFinsupp_support]
-  rw [Finset.max]
-  sorry
-
-
+  have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
+  simp[List.length_map] at hdeg
+  assumption
 
 /-- the ith coefficient of fromTensorFinsupp is a coercion of the 'coeffs' into the right list. -/
 theorem R.fromTensorFinsupp_coeffs (coeffs : List ℤ) :
