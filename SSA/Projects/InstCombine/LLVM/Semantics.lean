@@ -66,7 +66,7 @@ Division by zero is undefined behavior.
 def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   match y.toNat with
     | 0 => none
-    | _ => some $ BitVec.ofNat w (x.toNat / y.toNat)
+    | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
@@ -75,13 +75,39 @@ Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 -/
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y.toInt = 0
+  if y = 0
   then none
   else
     let div := (x.toInt / y.toInt)
     if div < Int.ofNat (2^w)
       then some $ BitVec.ofInt w div
       else none
+
+def intMin (w : Nat) : BitVec w :=
+  BitVec.ofInt w <| 1 - ↑(2^(w-1))
+
+def intMax (w : Nat) : BitVec w :=
+  BitVec.ofInt w ↑(2^(w-1))
+
+theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w :=
+ --by simp [intMin, BitVec.toInt]
+ sorry
+
+
+-- Probably not a Mathlib worthy name,
+-- not sure how you'd mathlibify the precondition
+theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
+  sdiv? x y =
+  if (y = 0) ∨ (x = -1 ∧ y = intMin w)
+    then none
+  else some <| BitVec.ofInt w (x.toInt / y.toInt)
+  := by
+  simp [sdiv?]
+  by_cases (y = 0)
+  · case pos h =>
+    simp [h]
+  · case neg h =>
+    sorry -- TODO: this is the interesting case
 
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
@@ -126,7 +152,7 @@ def sshr (a : BitVec n) (s : Nat) := BitVec.sshiftRight a s
 
 /--
 Shift left instruction.
-The value produced is op1 * 2op2 mod 2n, where n is the width of the result.
+The value produced is op1 * 2^op2 mod 2n, where n is the width of the result.
 If op2 is (statically or dynamically) equal to or larger than the number of
 bits in op1, this instruction returns a poison value.
 -/
