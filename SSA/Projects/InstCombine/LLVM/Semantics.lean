@@ -140,7 +140,7 @@ of the division and the remainder.)
 -/
 def srem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   if y.toInt = 0
-  then none
+  then none -- Taking the remainder of a division by zero is undefined behavior.
   else
     let div := (x.toInt / y.toInt)
     if div < Int.ofNat (2^w)
