@@ -13,21 +13,28 @@ set_option pp.proofs false
 set_option pp.proofs.withType false
 
 
+/-
+Name: SimplifyDivRemOfSelect
 
+%sel = select %c, %Y, 0
+%r = udiv %X, %sel
+  =>
+%r = udiv %X, %Y
 
-def simplifyDivRemOfSelect (w : Nat) :
+-/
+
+def alive_simplifyDivRemOfSelect (w : Nat) :
 [mlir_icom ( w )| {
-^bb0(%X : _, %C : _):
-  %v1 = "llvm.shl" (%X,%C) : (_, _) -> (_)
-  %v2 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v3 = "llvm.lshr" (%v2,%C) : (_, _) -> (_)
-  %v4 = "llvm.and" (%X,%v3) : (_, _) -> (_)
-  "llvm.return" (%v4) : (_) -> ()
+^bb0(%c : i1, %X : _, %Y : _):
+  %v0  = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
+  %sel = "llvm.select" (%c,%Y,%v0) : (i1, _, _) -> (_)
+  %r   = "llvm.udiv" (%X,%sel) : (_, _) -> (_)
+  "llvm.return" (%r) : (_) -> ()
 }] ⊑ [mlir_icom ( w )| {
-^bb0(%X : _, %C : _):
-  %v1 = "llvm.shl" (%X,%C) : (_, _) -> (_)
-  %v2 = "llvm.mlir.constant" () { value = -1 : _ } :() -> (_)
-  %v3 = "llvm.lshr" (%v2,%C) : (_, _) -> (_)
-  %v4 = "llvm.and" (%X,%v3) : (_, _) -> (_)
-  "llvm.return" (%v4) : (_) -> ()
-}] := by simp_alive_peephole
+^bb0(%c : i1, %X : _, %Y : _):
+  %r = "llvm.udiv" (%X,%Y) : (_, _) -> (_)
+  "llvm.return" (%r) : (_) -> ()
+}] := by
+  simp_alive_peephole
+  -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
+  sorry
