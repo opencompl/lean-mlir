@@ -40,6 +40,10 @@ macro "simp_alive_peephole" : tactic =>
           bind, Option.bind, pure, DerivedContext.ofContext, DerivedContext.snoc,
           Ctxt.snoc, MOp.instantiateCom, InstCombine.MTy.instantiate,
           ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
+          LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
+          LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
+          LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
+          LLVM.const?, LLVM.icmp?,
           HVector.toTuple, List.nthLe, bitvec_minus_one]
         try intros v0
         try intros v1

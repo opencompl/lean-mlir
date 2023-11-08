@@ -10,15 +10,14 @@ namespace LLVM
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 def and? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x ||| y
-
+ .some <| x &&& y
 
 /--
 The ‘or’ instruction returns the bitwise logical inclusive or of its two
 operands.
 -/
 def or? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x &&& y
+ .some <| x ||| y
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
