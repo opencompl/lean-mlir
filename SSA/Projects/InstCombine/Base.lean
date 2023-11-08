@@ -1,207 +1,226 @@
-import SSA.Core.WellTypedFramework
+--import SSA.Core.WellTypedFramework
+import SSA.Core.Framework
 import SSA.Core.Util
-import SSA.Projects.InstCombine.ForMathlib
+import SSA.Core.Util.ConcreteOrMVar
+import SSA.Projects.InstCombine.ForStd
+
+/-!
+  # InstCombine Dialect
+
+  This file defines a dialect of basic arithmetic and bitwise operations on bitvectors.
+
+  The dialect supports types of arbitrary-width bitvectors.
+  Thus, some definitions wil be parameterized by `φ`, the number of width meta-variables there are.
+  This parameter will usually be either `0`, indicating that all widths are known, concrete values,
+  or `1`, indicating there is exactly one distinct width meta-variable.
+
+  In particular, we only define a denotational semantics for concrete programs (i.e., where `φ = 0`)
+
+
+  see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
+-/
 
 namespace InstCombine
 
-inductive BaseType
-  | bitvec (w : Nat) : BaseType
-  deriving DecidableEq
+open Std (BitVec)
 
-instance : Repr BaseType where 
-  reprPrec 
-    | .bitvec w, _ => "i" ++ repr w
+abbrev Width φ := ConcreteOrMVar Nat φ
 
-instance {w : Nat} : Inhabited BaseType := ⟨BaseType.bitvec w⟩
+inductive IntPredicate where
+  | eq
+  | ne
+  | ugt
+  | uge
+  | ult
+  | ule
+  | sgt
+  | sge
+  | slt
+  | sle
+deriving Inhabited, DecidableEq, Repr
+
+instance : ToString IntPredicate where
+  toString
+  | .eq => "eq"
+  | .ne => "ne"
+  | .ugt => "ugt"
+  | .uge => "uge"
+  | .ult => "ult"
+  | .ule => "ule"
+  | .sgt => "sgt"
+  | .sge => "sge"
+  | .slt => "slt"
+  | .sle => "sle"
+
+inductive MTy (φ : Nat)
+  | bitvec (w : Width φ) : MTy φ
+  deriving DecidableEq, Inhabited
+
+abbrev Ty := MTy 0
+
+instance : Repr (MTy φ) where
+  reprPrec
+    | .bitvec (.concrete w), _ => "i" ++ repr w
+    | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
+
+instance : ToString (MTy φ) where
+  toString t := repr t |>.pretty
+
+def Ty.width : Ty → Nat
+  | .bitvec (.concrete w) => w
 
 @[simp]
-def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
+theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
+  rcases ty with ⟨w|i⟩
+  · rfl
+  · exact i.elim0
 
-instance : Goedel BaseType where
+@[simp]
+def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
+
+instance : Goedel Ty where
 toType := fun
-  | .bitvec w => Option $ Bitvec w
+  | .bitvec (.concrete w) => Option $ BitVec w
 
-instance : Repr (Bitvec n) where
+instance : Repr (BitVec n) where
   reprPrec
-    | v, n => reprPrec (Bitvec.toInt v) n
-
-abbrev UserType := SSA.UserType BaseType
-
-/--
-    eq: yields true if the operands are equal, false otherwise. No sign interpretation is necessary or performed.
-    ne: yields true if the operands are unequal, false otherwise. No sign interpretation is necessary or performed.
-    ugt: interprets the operands as unsigned values and yields true if op1 is greater than op2.
-    uge: interprets the operands as unsigned values and yields true if op1 is greater than or equal to op2.
-    ult: interprets the operands as unsigned values and yields true if op1 is less than op2.
-    ule: interprets the operands as unsigned values and yields true if op1 is less than or equal to op2.
-    sgt: interprets the operands as signed values and yields true if op1 is greater than op2.
-    sge: interprets the operands as signed values and yields true if op1 is greater than or equal to op2.
-    slt: interprets the operands as signed values and yields true if op1 is less than op2.
-    sle: interprets the operands as signed values and yields true if op1 is less than or equal to op2.
--/
-inductive Comparison
-    | eq -- equal
-    | ne -- not equal
-    | ugt -- unsigned greater than
-    | uge --  unsigned greater or equal
-    | ult -- unsigned less than
-    | ule -- unsigned less or equal
-    | sgt -- signed greater than
-    | sge -- signed greater or equal
-    | slt -- signed less than
-    | sle -- signed less or equal
-  deriving Repr, DecidableEq
+    | v, n => reprPrec (BitVec.toInt v) n
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
-inductive Op
-| and (w : Nat) : Op
-| or (w : Nat) : Op
-| not (w : Nat) : Op
-| xor (w : Nat) : Op
-| shl (w : Nat) : Op
-| lshr (w : Nat) : Op
-| ashr (w : Nat) : Op
-| urem (w : Nat) : Op
-| srem (w : Nat) : Op
-| select (w : Nat) : Op
-| add (w : Nat) : Op
-| mul (w : Nat) : Op
-| sub (w : Nat) : Op
-| neg (w: Nat) : Op
-| copy (w: Nat) : Op
-| sdiv (w : Nat) : Op
-| udiv (w : Nat) : Op
-| icmp (c : Comparison) (w : Nat) : Op
-| const {w : Nat} (val : Bitvec w) : Op
-deriving Repr, DecidableEq
+inductive MOp (φ : Nat) : Type
+  | and     (w : Width φ) : MOp φ
+  | or      (w : Width φ) : MOp φ
+  | not     (w : Width φ) : MOp φ
+  | xor     (w : Width φ) : MOp φ
+  | shl     (w : Width φ) : MOp φ
+  | lshr    (w : Width φ) : MOp φ
+  | ashr    (w : Width φ) : MOp φ
+  | urem    (w : Width φ) : MOp φ
+  | srem    (w : Width φ) : MOp φ
+  | select  (w : Width φ) : MOp φ
+  | add     (w : Width φ) : MOp φ
+  | mul     (w : Width φ) : MOp φ
+  | sub     (w : Width φ) : MOp φ
+  | neg     (w : Width φ) : MOp φ
+  | copy    (w : Width φ) : MOp φ
+  | sdiv    (w : Width φ) : MOp φ
+  | udiv    (w : Width φ) : MOp φ
+  | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
+  /-- Since the width of the const might not be known, we just store the value as an `Int` -/
+  | const (w : Width φ) (val : ℤ) : MOp φ
+deriving Repr, DecidableEq, Inhabited
+
+instance : ToString (MOp φ) where
+  toString
+  | .and w => "and"
+  | .or w => "or"
+  | .not w => "not"
+  | .xor w => "xor"
+  | .shl w => "shl"
+  | .lshr w => "lshr"
+  | .ashr w => "ashr"
+  | .urem w => "urem"
+  | .srem w => "srem"
+  | .select w => "select"
+  | .add w => "add"
+  | .mul w => "mul"
+  | .sub w => "sub"
+  | .neg w => "neg"
+  | .copy w => "copy"
+  | .sdiv w => "sdiv"
+  | .udiv w => "udiv"
+  | .icmp ty w => s!"icmp {ty}"
+  | .const w v => s!"const {v}"
+
+abbrev Op := MOp 0
+
+namespace Op
+
+@[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
+@[match_pattern] abbrev or     : Nat → Op := MOp.or     ∘ .concrete
+@[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
+@[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
+@[match_pattern] abbrev shl    : Nat → Op := MOp.shl    ∘ .concrete
+@[match_pattern] abbrev lshr   : Nat → Op := MOp.lshr   ∘ .concrete
+@[match_pattern] abbrev ashr   : Nat → Op := MOp.ashr   ∘ .concrete
+@[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
+@[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
+@[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
+@[match_pattern] abbrev add    : Nat → Op := MOp.add    ∘ .concrete
+@[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
+@[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
+@[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
+@[match_pattern] abbrev copy   : Nat → Op := MOp.copy   ∘ .concrete
+@[match_pattern] abbrev sdiv   : Nat → Op := MOp.sdiv   ∘ .concrete
+@[match_pattern] abbrev udiv   : Nat → Op := MOp.udiv   ∘ .concrete
+
+@[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
+@[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
+
+end Op
+
+instance : ToString Op where
+  toString o := repr o |>.pretty
 
 @[simp, reducible]
-def argUserType : Op → UserType
-| Op.and w | Op.or w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.add w | Op.mul w | Op.sub w | Op.udiv w | Op.sdiv w 
-| Op.srem w | Op.urem w | Op.icmp _ w =>
-  .pair (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.not w | Op.neg w | Op.copy w => .base (BaseType.bitvec w)
-| Op.select w => .triple (.base (BaseType.bitvec 1)) (.base (BaseType.bitvec w)) (.base (BaseType.bitvec w))
-| Op.const _ => .unit
+def MOp.sig : MOp φ → List (MTy φ)
+| .and w | .or w | .xor w | .shl w | .lshr w | .ashr w
+| .add w | .mul w | .sub w | .udiv w | .sdiv w
+| .srem w | .urem w | .icmp _ w =>
+  [.bitvec w, .bitvec w]
+| .not w | .neg w | .copy w => [.bitvec w]
+| .select w => [.bitvec 1, .bitvec w, .bitvec w]
+| .const _ _ => []
 
 @[simp, reducible]
-def outUserType : Op → UserType
-| Op.and w | Op.or w | Op.not w | Op.xor w | Op.shl w | Op.lshr w | Op.ashr w
-| Op.sub w |  Op.select w | Op.neg w | Op.copy w =>
-  .base (BaseType.bitvec w)
-| Op.add w | Op.mul w |  Op.sdiv w | Op.udiv w | Op.srem w | Op.urem w =>
-  .base (BaseType.bitvec w)
-| Op.icmp _ _ => .base (BaseType.bitvec 1)
-| @Op.const width _ => .base (BaseType.bitvec width)
+def MOp.outTy : MOp φ → MTy φ
+| .and w | .or w | .not w | .xor w | .shl w | .lshr w | .ashr w
+| .sub w |  .select w | .neg w | .copy w =>
+  .bitvec w
+| .add w | .mul w |  .sdiv w | .udiv w | .srem w | .urem w =>
+  .bitvec w
+| .icmp _ _ => .bitvec 1
+| .const width _ => .bitvec width
+
+instance : OpSignature (MOp φ) (MTy φ) where
+  signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
-def rgnDom : Op → UserType := fun _ => .unit
-@[simp]
-def rgnCod : Op → UserType := fun _ => .unit
+def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
+    (Goedel.toType <| OpSignature.outTy o) :=
+  match o with
+  | Op.const w val => Option.some (BitVec.ofInt w val)
+  | Op.and _ => pairMapM (.&&&.) arg.toPair
+  | Op.or _ => pairMapM (.|||.) arg.toPair
+  | Op.xor _ => pairMapM (.^^^.) arg.toPair
+  | Op.shl _ => pairMapM (. <<< .) arg.toPair
+  | Op.lshr _ => pairMapM (. >>> .) arg.toPair
+  | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
+  | Op.sub _ => pairMapM (.-.) arg.toPair
+  | Op.add _ => pairMapM (.+.) arg.toPair
+  | Op.mul _ => pairMapM (.*.) arg.toPair
+  | Op.sdiv _ => pairBind BitVec.sdiv? arg.toPair
+  | Op.udiv _ => pairBind BitVec.udiv? arg.toPair
+  | Op.urem _ => pairBind BitVec.urem? arg.toPair
+  | Op.srem _ => pairBind BitVec.srem? arg.toPair
+  | Op.not _ => Option.map (~~~.) arg.toSingle
+  | Op.copy _ => arg.toSingle
+  | Op.neg _ => Option.map (-.) arg.toSingle
+  | Op.select _ => tripleMapM BitVec.select arg.toTriple
+  | Op.icmp c _ => match c with
+    | .eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
+    | .ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
+    | .sgt => pairMapM (. >ₛ .) arg.toPair
+    | .sge => pairMapM (. ≥ₛ .) arg.toPair
+    | .slt => pairMapM (. <ₛ .) arg.toPair
+    | .sle => pairMapM (. ≤ₛ .) arg.toPair
+    | .ugt => pairMapM (. >ᵤ .) arg.toPair
+    | .uge => pairMapM (. ≥ᵤ .) arg.toPair
+    | .ult => pairMapM (. <ᵤ .) arg.toPair
+    | .ule => pairMapM (. ≤ᵤ .) arg.toPair
 
--- TODO: compare with LLVM semantics
-@[simp]
-def eval (o : Op)
-  (arg: Goedel.toType (argUserType o))
-  (_rgn : (Goedel.toType (rgnDom o) → Goedel.toType (rgnCod o))) :
-  Goedel.toType (outUserType o) :=
-    match o with
-    | Op.and _ => pairMapM (.&&&.) arg
-    | Op.or _ => pairMapM (.|||.) arg
-    | Op.xor _ => pairMapM (.^^^.) arg
-    | Op.shl _ => pairMapM (. <<< .) arg
-    | Op.lshr _ => pairMapM (. >>> .) arg
-    | Op.ashr _ => pairMapM (. >>>ₛ .) arg
-    | Op.const c => Option.some c
-    | Op.sub _ => pairMapM (.-.) arg
-    | Op.add _ => pairMapM (.+.) arg
-    | Op.mul _ => pairMapM (.*.) arg
-    | Op.sdiv _ => pairBind Bitvec.sdiv? arg
-    | Op.udiv _ => pairBind Bitvec.udiv? arg
-    | Op.urem _ => pairBind Bitvec.urem? arg
-    | Op.srem _ => pairBind Bitvec.srem? arg
-    | Op.not _ => Option.map (~~~.) arg
-    | Op.copy _ => arg
-    | Op.neg _ => Option.map (-.) arg
-    | Op.select _ => tripleMapM Bitvec.select arg
-    | Op.icmp c _ => match c with
-      | Comparison.eq => pairMapM (fun x y => ↑(x == y)) arg
-      | Comparison.ne => pairMapM (fun x y => ↑(x != y)) arg
-      | Comparison.sgt => pairMapM (. >ₛ .) arg
-      | Comparison.sge => pairMapM (. ≥ₛ .) arg
-      | Comparison.slt => pairMapM (. <ₛ .) arg
-      | Comparison.sle => pairMapM (. ≤ₛ .) arg
-      | Comparison.ugt => pairMapM (. >ᵤ .) arg
-      | Comparison.uge => pairMapM (. ≥ᵤ .) arg
-      | Comparison.ult => pairMapM (. <ᵤ .) arg
-      | Comparison.ule => pairMapM (. ≤ᵤ .) arg
-
-instance TUS : SSA.TypedUserSemantics Op BaseType where
-  argUserType := argUserType
-  rgnDom := rgnDom
-  rgnCod := rgnCod
-  outUserType := outUserType
-  eval := eval
-
-open EDSL
-scoped syntax "add" term : dsl_op
-scoped syntax "and" term : dsl_op
-scoped syntax "const" term : dsl_op
-scoped syntax "lshr" term : dsl_op
-scoped syntax "ashr" term : dsl_op
-scoped syntax "not" term : dsl_op
-scoped syntax "or" term : dsl_op
-scoped syntax "shl" term : dsl_op
-scoped syntax "sub" term : dsl_op
-scoped syntax "xor" term : dsl_op
-scoped syntax "neg" term : dsl_op
-scoped syntax "copy" term : dsl_op
-scoped syntax "mul" term : dsl_op
-scoped syntax "sdiv" term : dsl_op
-scoped syntax "udiv" term : dsl_op
-scoped syntax "urem" term : dsl_op
-scoped syntax "srem" term : dsl_op
-scoped syntax "select" term : dsl_op
-scoped syntax "icmp eq" term : dsl_op
-scoped syntax "icmp ne" term : dsl_op
-scoped syntax "icmp ugt" term : dsl_op
-scoped syntax "icmp uge" term : dsl_op
-scoped syntax "icmp ult" term : dsl_op
-scoped syntax "icmp ule" term : dsl_op
-scoped syntax "icmp sgt" term : dsl_op
-scoped syntax "icmp sge" term : dsl_op
-scoped syntax "icmp slt" term : dsl_op
-scoped syntax "icmp sle" term : dsl_op
-
-macro_rules
-  | `([dsl_op| add $w ]) => `(Op.add $w)
-  | `([dsl_op| and $w ]) => `(Op.and $w)
-  | `([dsl_op| const $w ]) => `(Op.const $w)
-  | `([dsl_op| lshr $w ]) => `(Op.lshr $w)
-  | `([dsl_op| ashr $w ]) => `(Op.ashr $w)
-  | `([dsl_op| not $w ]) => `(Op.not $w)
-  | `([dsl_op| or $w ]) => `(Op.or $w)
-  | `([dsl_op| shl $w ]) => `(Op.shl $w)
-  | `([dsl_op| sub $w ]) => `(Op.sub $w)
-  | `([dsl_op| xor $w ]) => `(Op.xor $w)
-  | `([dsl_op| neg $w ]) => `(Op.neg $w)
-  | `([dsl_op| copy $w ]) => `(Op.copy $w)
-  | `([dsl_op| sdiv $w ]) => `(Op.sdiv $w)
-  | `([dsl_op| udiv $w ]) => `(Op.udiv $w)
-  | `([dsl_op| urem $w ]) => `(Op.urem $w)
-  | `([dsl_op| srem $w ]) => `(Op.urem $w)
-  | `([dsl_op| mul $w ]) => `(Op.mul $w)
-  | `([dsl_op| select $w ]) => `(Op.select $w)
-  | `([dsl_op| icmp eq $w ]) => `(Op.icmp Comparison.eq $w)
-  | `([dsl_op| icmp ne $w ]) => `(Op.icmp Comparison.ne $w)
-  | `([dsl_op| icmp ugt $w ]) => `(Op.icmp Comparison.ugt $w)
-  | `([dsl_op| icmp uge $w ]) => `(Op.icmp Comparison.uge $w)
-  | `([dsl_op| icmp ult $w ]) => `(Op.icmp Comparison.ult $w)
-  | `([dsl_op| icmp ule $w ]) => `(Op.icmp Comparison.ule $w)
-  | `([dsl_op| icmp sgt $w ]) => `(Op.icmp Comparison.sgt $w)
-  | `([dsl_op| icmp sge $w ]) => `(Op.icmp Comparison.sge $w)
-  | `([dsl_op| icmp slt $w ]) => `(Op.icmp Comparison.slt $w)
-  | `([dsl_op| icmp sle $w ]) => `(Op.icmp Comparison.sle $w)
+instance : OpDenote Op Ty := ⟨
+  fun o args _ => Op.denote o args
+⟩
 
 end InstCombine
