@@ -71,7 +71,7 @@ def intMin (w : Nat) : BitVec w :=
   BitVec.ofInt w <| 1 - ↑(2^(w-1))
 
 def intMax (w : Nat) : BitVec w :=
-  BitVec.ofInt w ↑(2^(w-1))
+  BitVec.ofInt w ↑(2^(w-1) - 1)
 
 def ofIntInbounds (w : Nat) (v : Int) : Prop := v >= (intMin w).toInt && v < (intMax w).toInt
 
