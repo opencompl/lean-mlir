@@ -67,6 +67,16 @@ def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
     | 0 => none
     | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
 
+def intMin (w : Nat) : BitVec w :=
+  BitVec.ofInt w <| 1 - ↑(2^(w-1))
+
+def intMax (w : Nat) : BitVec w :=
+  BitVec.ofInt w ↑(2^(w-1))
+
+def ofIntInbounds (w : Nat) (v : Int) : Prop := v >= (intMin w).toInt && v < (intMax w).toInt
+
+instance : Decidable (ofIntInbounds w v) := inferInstanceAs (Decidable (v >= (intMin w).toInt && v < (intMax w).toInt))
+
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
 Note that signed integer division and unsigned integer division are distinct operations; for unsigned integer division, use ‘udiv’.
@@ -78,15 +88,10 @@ def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   then none
   else
     let div := (x.toInt / y.toInt)
-    if div < Int.ofNat (2^w)
-      then some $ BitVec.ofInt w div
+    if ofIntInbounds w div
+      then some <| BitVec.ofInt w div
       else none
 
-def intMin (w : Nat) : BitVec w :=
-  BitVec.ofInt w <| 1 - ↑(2^(w-1))
-
-def intMax (w : Nat) : BitVec w :=
-  BitVec.ofInt w ↑(2^(w-1))
 
 theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w :=
  --by simp [intMin, BitVec.toInt]
@@ -116,7 +121,7 @@ Taking the remainder of a division by zero is undefined behavior.
 def urem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   if y.toNat = 0
   then none
-  else some $ BitVec.ofNat w (x.toNat % y.toNat)
+  else some <| BitVec.ofNat w (x.toNat % y.toNat)
 
 def _root_.Int.rem (x y : Int) : Int :=
   if x ≥ 0 then (x % y) else ((x % y) - y.natAbs)
@@ -143,8 +148,8 @@ def srem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   then none -- Taking the remainder of a division by zero is undefined behavior.
   else
     let div := (x.toInt / y.toInt)
-    if div < Int.ofNat (2^w)
-      then some $ BitVec.ofInt w (x.toInt.rem y.toInt)
+    if ofIntInbounds w div
+      then some <| BitVec.ofInt w (x.toInt.rem y.toInt)
       else none
 
 def sshr (a : BitVec n) (s : Nat) := BitVec.sshiftRight a s
