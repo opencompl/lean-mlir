@@ -18,6 +18,7 @@ import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
+import Mathlib.Data.List.Basic
 import Mathlib.Data.Polynomial.RingDivision
 import SSA.Core.Framework
 
@@ -383,6 +384,15 @@ noncomputable def R.repLength {q n} (a : R q n) : Nat := match
     | none => 0
     | some d => d + 1
 
+/- the repLength of any value is ≤ 1 + its natDegree. -/
+theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
+  a.repLength ≤ (R.representative q n a).natDegree + 1 := by
+  simp [repLength]
+  generalize hdegree : degree (representative q n a) = d
+  cases' d with d <;> simp[natDegree, hdegree, WithBot.unbot', WithBot.recBotCoe]
+
+
+
 theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
   simp [R.repLength, representative]
@@ -485,10 +495,55 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n :=
       simp[monomial]
 
 
-/-- an equivalent implementation of `fromTensor` that uses `Finsupp` to enable reasoning about values using mathlib's notions of
+/-- an equivalent implementation of `fromTensor` that uses `Finsupp`
+  to enable reasoning about values using mathlib's notions of
   support, coefficients, etc. -/
 noncomputable def R.fromTensorFinsupp (coeffs : List ℤ) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
+
+theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
+  (xs : List M) :
+  degree { toFinsupp := List.toFinsupp (l := xs) } ≤ List.length xs := by
+    cases xs
+    case nil => simp [degree]
+    case cons x xs =>
+      simp [degree]
+      simp [List.toFinsupp]
+      simp [Finset.range_succ]
+      apply Finset.max_le
+      intros a ha
+      obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
+      have ha₃ := Finset.mem_insert.mp ha₁
+      cases' ha₃ with ha₄ ha₅
+      . subst ha₄
+        norm_cast
+        apply WithBot.coe_le_coe.mpr
+        simp [Nat.cast]
+      . have ha₆ := Finset.mem_range.mp ha₅
+        norm_cast
+        apply WithBot.coe_le_coe.mpr
+        norm_cast
+        simp at ha₆ ⊢
+        simp [Nat.le_add_one_iff, ha₆]
+        left
+        apply Nat.le_of_lt ha₆
+
+/-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
+theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
+  (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
+  rw [fromTensorFinsupp]
+  have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
+  simp[List.length_map] at hdeg
+  assumption
+
+/-- the ith coefficient of fromTensorFinsupp is a coercion of the 'coeffs' into the right list. -/
+theorem R.fromTensorFinsupp_coeffs (coeffs : List ℤ) :
+  Polynomial.coeff (fromTensorFinsupp q coeffs) i = ↑(List.getD coeffs i 0) := by
+  rw [fromTensorFinsupp]
+  rw [coeff_ofFinsupp]
+  rw [List.toFinsupp_apply]
+  have hzero : (0 : ZMod q) = Int.cast (0 : ℤ) := by norm_num
+  rw [hzero, List.getD_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
 theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
@@ -534,44 +589,36 @@ theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff 
   have H := R.representative_fromPoly_toFun (a := p) (n := n)
   norm_cast at H ⊢
 
-
-/-- since `0` is the additive identity, getting from `(x :: xs)` at index `i` with -/
-theorem List.getD_snoc_zero (x : ℤ) (xs : List ℤ) :
-  (xs ++ [x]).getD i 0 = (xs.getD i 0) + (if i == xs.length then x else 0) := by sorry
-
+/- 1. given a list of coefficients, building the ring element and then picking the repr from
+   the equiv class, is the same as taking modulo (`representative_fromPoly_toFun`)
+   2. if the length is less than 2^n, then the modulo by`f` equals the element itself
+    (`representative_fromPoly_eq`).
+  3.
+-/
 /-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
-theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int): (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
-  induction tensor using List.reverseRecOn
-  case H0 =>
-    simp[fromTensor, coeff, representative_zero]
-  case H1 cs c hcs =>
-    simp[fromTensor_snoc]
-    rw[fromTensor_eq_fromTensor'_fromPoly]
-    by_cases (i < cs.length)
-    case pos =>
-      rw[List.getD_eq_get (hn := by simp[List.append]; linarith)]
-      simp[fromTensor_eq_fromTensor'_fromPoly]
-      simp[coeff]
-      ring_nf
-      simp only[FunLike.coe]
-      rw[representative_fromPoly_toFun (n := n) (a := fromTensor' q cs)]
-      sorry
-    case neg =>
-      by_cases (i = cs.length)
-      case pos =>
-        subst h
-        sorry
-      case neg =>
-        have hi : i > cs.length := by
-          obtain H := Nat.lt_trichotomy i cs.length
-          cases H
-          . linarith
-          . case inr H =>
-              cases H
-              . contradiction
-              . linarith
-        rw[List.getD_eq_default (hn := by simp[List.length_append]; linarith)]
-        sorry
+theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (htensorlen : tensor.length < 2^n)
+: (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
+  rw[fromTensor_eq_fromTensorFinsupp_fromPoly]
+  have hfromTensorFinsuppDegree := fromTensorFinsupp_degree q tensor
+  rw [coeff]
+  rw [representative_fromPoly_eq]
+  apply fromTensorFinsupp_coeffs
+  case DEGREE =>
+    generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
+    rw [f_deg_eq]
+    cases tensor_degree
+    case none => norm_cast; apply WithBot.none_lt_some
+    case some tensor_degree =>
+      /- I hate this coercion stuff -/
+      norm_cast
+      apply WithBot.coe_strictMono
+      norm_cast
+      have htrans : tensor_degree  ≤ List.length tensor := by
+        rw [htensor_degree] at hfromTensorFinsuppDegree
+        rw [WithBot.some_eq_coe] at hfromTensorFinsuppDegree
+        rw [← WithBot.coe_le_coe]
+        assumption
+      apply Nat.lt_of_le_of_lt htrans htensorlen
 
 theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
@@ -585,6 +632,10 @@ The length of the list is the degree of the representative + 1.
 noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
   List.range a.repLength |>.map fun i =>
         a.coeff i |>.toInt
+
+/-- The length of the tensor `R.toTensor a` equals `a.repLength` -/
+theorem R.toTensor_length {q n} [Fact (q > 1)] (a : R q n) : (R.toTensor a).length = a.repLength := by
+  simp [R.toTensor, List.length_range]
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)

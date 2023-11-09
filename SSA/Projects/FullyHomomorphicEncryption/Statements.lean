@@ -58,12 +58,6 @@ theorem monomial_mul_mul (x y : Nat) : (R.monomial 1 y) * (R.monomial 1 x) = R.m
 
 end Poly
 
-theorem R.toTensor_length [hqgt1 : Fact (q > 1)] (a : R q n) : a.toTensor.length = a.repLength := by
-  unfold R.toTensor
-  unfold R.repLength
-  cases Polynomial.degree a.representative <;> simp
-
-
 theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTensor.getD i 0 = (a.coeff i).toInt := by
   simp [R.toTensor, R.coeff]
   have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.repLength a))).length = repLength a := by
@@ -227,52 +221,35 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   rw [R.trimTensor_toTensor'_eq_trimTensor_toTensor, toTensor_trimTensor_eq_toTensor]
 
 
-theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat):
+theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat) (htensorlen : List.length tensor < 2 ^ n):
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
-  simp[R.toTensor_getD]
-
-  simp[ZMod.toInt];
-  simp[R.coeff_fromTensor]
+  simp [R.toTensor_getD]
+  simp [ZMod.toInt]
+  rw [R.coeff_fromTensor (hqgt1 := hqgt1) (htensorlen := htensorlen)]
   norm_cast
-  simp[Int.cast, ZMod.cast]
+  simp [Int.cast, ZMod.cast]
   cases q;
   case zero =>
     exfalso
     simp at hqgt1
     exact (Fact.elim hqgt1)
   case succ q' =>
-    simp
-    simp[ZMod.cast]
+    simp [ZMod.cast]
     norm_cast
-    simp[IntCast.intCast]
+    simp [IntCast.intCast]
     norm_cast
     ring_nf
-    rw[ZMod.cast_eq_val]
-    rw[ZMod.val_int_cast]
+    rw [ZMod.cast_eq_val]
+    rw [ZMod.val_int_cast]
     ring_nf
 
-theorem toTensor_fromTensor_trimTensor_eq_trimTensor [hqgt1 : Fact (q > 1)] (a : R q n) (tensor : List Int) {l : Nat}:
-  Polynomial.degree a.representative = .some l → tensor.length < l →
-  (R.fromTensor (trimTensor tensor) (q:=q) (n :=n)).toTensor = trimTensor tensor := by
-  intros hDeg hLen
-  simp [R.fromTensor, R.toTensor]
-  sorry
-
-theorem toTensor_fromTensor_eq_trimTensor [hqgt1 : Fact (q > 1)] (a : R q n) (tensor : List Int) {l : Nat}:
-  Polynomial.degree a.representative = .some l → tensor.length < l →
-  (R.fromTensor tensor (q:=q) (n :=n)).toTensor = trimTensor tensor := by
-  intros hDeg hLen
-  --simp [R.fromTensor, R.toTensor]
-  have ⟨n,hTrim⟩ := R.trimTensor_eq_append_zeros tensor
-  rw [hTrim,R.trimTensor_append_zeroes_eq, R.fromTensor_eq_concat_zeroes, R.trimTensor_trimTensor]
-  apply toTensor_fromTensor_trimTensor_eq_trimTensor _ _ hDeg hLen
-
-theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.toTensor = a := by
+/- TODO: this should be a theorem that we prove, that the length of anything that comes from `R.toTensor` will be < 2^n -/
+theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor = a := by
   cases h : Polynomial.degree (R.representative q n a) with
     | none =>
         have h' :=  Polynomial.degree_eq_bot.1 h
         rw [← rep_zero] at h'
-        have h'':= (eq_iff_rep_eq _ _).1 h'
+        have h'' := (eq_iff_rep_eq _ _).1 h'
         simp [R.fromTensor, R.toTensor, R.repLength]; rw [h, h'']
         simp
     | some deg =>
@@ -283,11 +260,13 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.
         intro i
         rw [← hCoeff, ← hCoeff]
         rw [toTensor_fromTensor]
-        rw[← ZMod.coe_int_cast]
+        rw [← ZMod.coe_int_cast]
         norm_cast
+        . simp [R.toTensor_length]
+          have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
+          linarith
 
-theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n) : R.fromTensor a.toTensor' = a := by
+theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor' = a := by
   rw [← R.fromTensor_eq_fromTensor_trimTensor, R.trim_toTensor'_eq_toTensor]
-  apply fromTensor_toTensor
-
+  apply fromTensor_toTensor a adeg
 end Poly
