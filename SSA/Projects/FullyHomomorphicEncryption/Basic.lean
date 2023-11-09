@@ -387,7 +387,7 @@ noncomputable def R.repLength {q n} (a : R q n) : Nat := match
 /- the repLength of any value is ≤ 1 + its natDegree. -/
 theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
   a.repLength ≤ (R.representative q n a).natDegree + 1 := by
-  simp[repLength]
+  simp [repLength]
   generalize hdegree : degree (representative q n a) = d
   cases' d with d <;> simp[natDegree, hdegree, WithBot.unbot', WithBot.recBotCoe]
 
@@ -505,12 +505,11 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
   (xs : List M) :
   degree { toFinsupp := List.toFinsupp (l := xs) } ≤ List.length xs := by
     cases xs
-    case nil =>
-      simp[degree]
+    case nil => simp [degree]
     case cons x xs =>
-      simp[degree]
-      simp[List.toFinsupp]
-      simp[Finset.range_succ]
+      simp [degree]
+      simp [List.toFinsupp]
+      simp [Finset.range_succ]
       apply Finset.max_le
       intros a ha
       obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
@@ -519,13 +518,13 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
       . subst ha₄
         norm_cast
         apply WithBot.coe_le_coe.mpr
-        simp[Nat.cast]
+        simp [Nat.cast]
       . have ha₆ := Finset.mem_range.mp ha₅
         norm_cast
         apply WithBot.coe_le_coe.mpr
         norm_cast
         simp at ha₆ ⊢
-        simp[Nat.le_add_one_iff, ha₆]
+        simp [Nat.le_add_one_iff, ha₆]
         left
         apply Nat.le_of_lt ha₆
 
@@ -597,17 +596,16 @@ theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff 
   3.
 -/
 /-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
-theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
-(htensorlen : tensor.length < 2^n)
+theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (htensorlen : tensor.length < 2^n)
 : (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
   rw[fromTensor_eq_fromTensorFinsupp_fromPoly]
   have hfromTensorFinsuppDegree := fromTensorFinsupp_degree q tensor
-  rw[coeff]
-  rw[representative_fromPoly_eq]
+  rw [coeff]
+  rw [representative_fromPoly_eq]
   apply fromTensorFinsupp_coeffs
   case DEGREE =>
     generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
-    rw[f_deg_eq]
+    rw [f_deg_eq]
     cases tensor_degree
     case none => norm_cast; apply WithBot.none_lt_some
     case some tensor_degree =>
@@ -616,9 +614,9 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
       apply WithBot.coe_strictMono
       norm_cast
       have htrans : tensor_degree  ≤ List.length tensor := by
-        rw[htensor_degree] at hfromTensorFinsuppDegree
-        rw[WithBot.some_eq_coe] at hfromTensorFinsuppDegree
-        rw[← WithBot.coe_le_coe]
+        rw [htensor_degree] at hfromTensorFinsuppDegree
+        rw [WithBot.some_eq_coe] at hfromTensorFinsuppDegree
+        rw [← WithBot.coe_le_coe]
         assumption
       apply Nat.lt_of_le_of_lt htrans htensorlen
 
@@ -637,7 +635,7 @@ noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
 
 /-- The length of the tensor `R.toTensor a` equals `a.repLength` -/
 theorem R.toTensor_length {q n} [Fact (q > 1)] (a : R q n) : (R.toTensor a).length = a.repLength := by
-  simp[R.toTensor, List.length_range]
+  simp [R.toTensor, List.length_range]
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)
