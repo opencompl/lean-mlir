@@ -11,6 +11,12 @@ def pairBind [Monad m] (f : α → β → m γ) (pair : (m α × m β)) : m γ :
   f fst snd
 
 @[simp]
+def tripleBind [Monad m] (f : α → β → γ → m δ) (triple : (m α × m β × m γ)) : m δ := do
+  let (fstM,sndM,trdM) := triple
+  let (fst,snd,trd) := (← fstM,← sndM,← trdM)
+  f fst snd trd
+
+@[simp]
 def pairMapM [Monad m] (f : α → β → γ) (pair : (m α × m β)) : m γ := do
   let fst ← pair.fst
   let snd ← pair.snd

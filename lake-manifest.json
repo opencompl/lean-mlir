@@ -20,7 +20,7 @@
   {"git":
    {"url": "https://github.com/tydeu/lean4-partax",
     "subDir?": null,
-    "rev": "573a45378782b9b32af8ecbe965052b46bfccd08",
+    "rev": "9dfc1672e14210ff61174d21f97c2f28cb904346",
     "opts": {},
     "name": "partax",
     "inputRev?": "master",
