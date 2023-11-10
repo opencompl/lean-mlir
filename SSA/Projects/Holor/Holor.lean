@@ -1,8 +1,123 @@
 import SSA.Core.Framework
 import SSA.Core.Util
-import Mathlib.Data.Holor
+-- import Mathlib.Data.Holor
 import Mathlib.Algebra.Algebra.Basic
+import Mathlib.Algebra.BigOperators.Basic
 import Mathlib.Algebra.Algebra.Pi
+import Mathlib.Data.Matrix.Basic
+
+abbrev DimSize := Additive ℕ
+abbrev DimSize.ofNat (n : Nat) : DimSize := n
+
+/-- Actually, I nee the ℕ to be ℕ*. -/
+abbrev Shape := Finsupp ℕ (DimSize) -- finitely supported function with values in ℕ.
+
+def HolorIndex (shape : Shape) : Type :=
+  (dim : ℕ) → (Fin (shape dim))
+
+
+/-- given a shape like [1xax1xb], a shift by `2` will make it [1x1x(1xax1xb)]. -/
+noncomputable def Shape.shiftTowardsInfty (shape : Shape) (delta : ℕ) : Shape :=
+  shape.comapDomain (fun i => i + delta) (by simp[Set.InjOn])
+
+/-- given a shape like `[0xa]`, the rank is `2`. -/
+def Shape.rank (shape : Shape) : ℕ := (Finset.max shape.support).unbot' 0
+
+/-- contracting across indeces `ix1`, `ix2` makes both of the supports equal to 1. -/
+noncomputable def Shape.append (s1 : Shape) (s2 : Shape) : Shape :=
+  s1 + s2.shiftTowardsInfty s1.rank
+
+def HolorIndex.drop (s1 s2 : Shape) (ix : HolorIndex (s1.append s2)) : HolorIndex s2 :=
+  fun dim => sorry
+
+def HolorIndex.take (s1 s2 : Shape) (ix : HolorIndex (s1.append s2)) : HolorIndex s1 :=
+  fun dim => sorry
+
+/-- contracting indeces ix1, ix2 erases both of the indices from the support. -/
+noncomputable def Shape.contract (s : Shape) (ix1 ix2 : ℕ) :=
+  (s.erase ix1).erase ix2
+
+/-- insert `v` into the indeces `ix1, ix2`.. -/
+noncomputable def Shape.expand (s : Shape) (ix1 ix2 : ℕ) (v : ℕ) :=
+  (s.update ix1 v).update ix2 v
+
+def HolorIndex.expand (h : HolorIndex (s.contract ix1 ix2)) (v : Fin (min (s ix1) (s ix2))) : HolorIndex s :=
+  sorry
+/-
+  fun dim =>
+    if dim₁ : dim = ix1
+    then v
+    else if dim₂ : dim = ix2
+    then v
+    else
+      _
+-/
+
+/-
+theorem Shape.append_apply_nat_plus (s1 s2 : Shape) (dim : ℕ) :
+  (s1.append s2) dim = s2 (s1.rank + dim) := by
+    simp[append, Finsupp.add_apply]
+    simp[FunLike.coe]
+-/
+
+/-- Holor (indexed collections of tensor coefficients) -/
+def Holor (α : Type) (shape : Shape) :=
+  HolorIndex shape → α
+
+/- create a 1D `Shape`-/
+noncomputable def Shape.oned (n : DimSize) : Shape :=
+  Finsupp.single 0 n
+
+@[simp]
+theorem Shape.oned_apply_zero (n : Nat) : (Shape.oned n) 0 = n := by
+  simp[oned]
+
+/- createa a 2D `Shape` -/
+noncomputable def Shape.twod (n m : DimSize) : Shape :=
+  let f₀ := (Finsupp.single 0 n)
+  let f₁ := f₀.update 1 m
+  f₁
+
+@[simp]
+theorem Shape.twod_apply_zero (m : Nat) {n : Nat}: (Shape.twod m n) 0 = m := by
+  simp[twod]
+
+@[simp]
+theorem Shape.twod_apply_one {m : Nat} (n : Nat) : (Shape.twod m n) 1 = n := by
+  simp[twod]
+
+/-- create a 1D holor from a (Fin n → alpha). -/
+def Holor.ofFn (f : Fin n → R) : Holor R (Shape.oned n) :=
+  fun ixs =>
+    let ix₀:= Shape.oned_apply_zero n ▸ ixs 0
+    f (ix₀)
+
+/-- create a 1D holor from a (Fin m → Fin n → alpha). -/
+def Holor.ofMatrix (f : Fin m → Fin n → R) : Holor R (Shape.twod m n) :=
+  fun ixs =>
+    let ix₀:= Shape.twod_apply_zero m ▸ ixs 0
+    let ix₁ := Shape.twod_apply_one n ▸ ixs 1
+    f ix₀ ix₁
+
+/-- Fill a holor with a constant value 'a'. -/
+def Holor.fill (a : α) : Holor α ds := fun _ => a
+
+/-- I'm sure this is right. -/
+def Holor.tensorProduct {rank rank' : ℕ} (R : Type) [CommRing R]
+  (h1 : Holor R s1) (h2 : Holor R s2) (f : R → R → R := Mul.mul):
+  Holor R (s1.append s2) :=
+    fun ix =>
+      f (h1 ix.take) (h2 ix.drop)
+
+-- A[i, j, k] : K x L x M
+-- B[k] = A[i, i, k]
+-- B[k] = ∑_i A[i, i, k]
+-- I am confused?
+#check Finset.range
+def Holor.contract [CommRing R] (h : Holor R shape) (ix1 ix2 : ℕ) (f : R → R → R):
+  Holor R (shape.contract ix1 ix2) :=
+    let limit := min (shape ix1)  (shape ix2)
+    fun ix => sorry
 
 /- Holor is profunctorial, covariant in the values and contavariant in the indexes. -/
 
@@ -49,15 +164,49 @@ instance [CommRing α] : CommRing (Holor α ds) :=
 instance [SMul M A] : SMul M (Holor A ds) := by
   delta Holor; infer_instance
 
-/-- Fill a holor with a constant value 'a'. -/
-def Holor.fill (a : α) : Holor α ds := fun _ => a
+instance [CommSemiring R] [Semiring A] [Algebra R A] : Algebra R (Holor A ds) :=
+  Pi.algebra _ _
 
--- @chrishughes24:
--- given the map ralg : R -> Z(A),
--- I want to declare the map (r : R) -> (fill (ralg R) : Holor A ds).
--- This will be the map that turns (Holor A ds) into an R-algebra.
--- I'm not sure how to define this.
-instance [CommSemiring R] [Semiring A] [Algebra R A] : Algebra R (Holor A ds) := Pi.algebra _ _
+/- A generalization of 'Linalg.generic'. -/
+namespace genericBinop
+
+open BigOperators
+
+inductive LoopKind : (depth : ℕ) → (outRank : ℕ)  → Type
+| parallel (loop : LoopKind d r) : LoopKind (.succ d) (.succ r)
+| reduction (loop : LoopKind d r) : LoopKind (.succ d) r
+| done : LoopKind 0 0
+
+/-- data specifying a Linalg.Generic operation -/
+structure LinalgGenericData (R : Type)
+  (aRank : ℕ) (bRank : ℕ) (loopKind : LoopKind depth outRank) [CommRing R] where
+  aindex : Fin aRank → Fin depth -- (m, n)
+  bindex : Fin bRank → Fin depth  -- (n, k)
+  outindex : Fin outRank → Fin depth -- (m, n) [can access 3 values]
+  computation : R → R → R
+
+#check Finsupp
+-- def LinalgGenericData.aShape [CommRing R]
+--   (loopKind : LoopKind d r)
+--   (data : LinalgGenericData R aRank bRank loopKind)
+--   (oshape : Shape r) : Shape aRank :=
+--     fun adim => oshape <| data.aindex adim
+
+-- full: (aspace ++ bspace)
+-- [out] =
+noncomputable def Holor.linalgGenericBinop [CommRing R]
+  (loopKind : LoopKind depth outRank)
+  (data : LinalgGenericData R aRank bRank loopKind)
+  (ha : Holor R aspace) (hb : Holor R bspace) : Holor R ospace :=
+  fun oix =>
+    match loopKind with
+    | .done => sorry
+    | .parallel kind' => sorry
+    | .reduction kind' => sorry
+
+
+end genericBinop
+
 
 /-
 inductive op
@@ -71,7 +220,7 @@ inductive op
 | sqrt --Pointwise Square Root : Tensor k → Tensor k
 | sum -- Add 'em up : Tensor k → Tensor (identity of tensor product)
 | mean -- Average 'em out : Tensor k → Tensor (identity of tensor product)
-| repeat_ -- Complicated
+| repeat_ --  icated
 | abs -- Pointwise
 | sgn -- Pointwise
 | neg -- Pointwise
