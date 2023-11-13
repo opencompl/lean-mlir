@@ -255,6 +255,17 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .nil => (default : Ctxt.Valuation ([] : Ctxt Ty))
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
+/-- Build valuation from a vector of values of types `types`. -/
+def Valuation.ofPair [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
+  Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
+
+@[simp]
+theorem Valuation.ofPair_fst [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+  (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by simp⟩ = v₁ := rfl
+@[simp]
+theorem Valuation.ofPair_snd [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+  (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by simp⟩ = v₂ := rfl
+
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
   fun _to vo =>  Γiv (hom vo)

@@ -42,12 +42,34 @@ instance : OpSignature Op Ty where
     | .run t => ⟨[t], [([t], t)], t⟩
     | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
 
+#check uncurry
 
 /-- Convert a function `f` which is a single loop iteration into a function
   that iterates and updates the loop counter. -/
-def to_loop_iterate (f : ℕ → α → α) : ℕ × α → ℕ × α :=
+def loop_counter_decorator (f : ℕ → α → α) : ℕ × α → ℕ × α :=
   fun (i, v) => (i + 1, f i v)
 
+/-- loop_counter_decorator on a constant function -/
+@[simp]
+theorem loop_counter_decorator_constant (count : ℕ) (vstart : α) :
+  (loop_counter_decorator fun _i v => v) (count, vstart) = (count + 1, vstart) := rfl
+
+/-- iterate the loop_counter_decorator of a constant function. -/
+theorem loop_counter_decorator_constant_iterate {α : Type} (k : ℕ) :
+  ((loop_counter_decorator (fun (i : ℕ) (v : α) => v))^[k]) = fun args => (args.fst + k, args.snd) := by {
+    funext ⟨i, v⟩
+    induction k generalizing i v
+    case h.zero =>
+      simp
+    case h.succ n ihn =>
+      simp[ihn]
+      linarith
+  }
+
+def to_loop_run (f : ℕ → α → α) (niters : ℕ) (val : α) : α :=
+  (loop_counter_decorator f (niters,val)).2
+
+#check Prod.mk
 @[reducible]
 noncomputable instance : OpDenote Op Ty where
   denote
@@ -58,16 +80,10 @@ noncomputable instance : OpDenote Op Ty where
       body (Ctxt.Valuation.nil.snoc v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
         f (Ctxt.Valuation.nil.snoc v)
-    | .for _t, (.cons (niter : Nat) (.cons vstart .nil)), (.cons (f : _  → _) .nil) =>
-        let f' (i : ℕ) (v : Goedel.toType _t) : Goedel.toType _t := f <| by {
-            dsimp
-            apply Ctxt.Valuation.snoc
-            apply Ctxt.Valuation.snoc
-            apply Ctxt.Valuation.nil
-            exact v
-            exact i
-          }
-        let to_iterate := to_loop_iterate (α := ⟦_t⟧) f'
+    | .for ty, (.cons niter (.cons vstart .nil)), (.cons (f : _  → _) .nil) =>
+        let f' (i : ℕ) (v : ⟦ty⟧) : ⟦ty⟧ :=
+          f ∘  (Function.uncurry Ctxt.Valuation.ofPair) <| (i, v)
+        let to_iterate := loop_counter_decorator (α := ⟦ty⟧) f'
         let loop_fn := niter.iterate (op := to_iterate)
         (loop_fn (0, vstart)).2
 
@@ -134,6 +150,26 @@ theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : 
     simp[Expr.denote, if_, run]
     simp_peephole[hcond] at Γv
     simp[ite_true]
+
+
+/-- a region that returns the value immediately -/
+abbrev RegionRet [Goedel Ty] (t : Ty) {Γ : Ctxt Ty} (v : Var Γ t) : Com Op Γ t := .ret v
+
+/-- a for loop whose body immediately returns the loop variable is the same as
+  just fetching the loop variable. -/
+theorem for_return {t : Ty} (niters : Var Γ .nat) (v : Var Γ t) :
+  Expr.denote (ScfRegion.for_ (t := t) niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
+    simp[Expr.denote, run, for_]
+    simp_peephole at Γv
+    simp[Com.denote]
+    rw[loop_counter_decorator_constant_iterate]
+
+/-- Two adjacent for loops with the same loop body can be fused into a single for loop. -/
+theorem for_fuse {t : Ty} (niters : Var Γ .nat) (v : Var Γ t) :
+  Expr.denote (ScfRegion.for_ (t := t) niters v rgn) Γv = Γv v := by
+    simp[Expr.denote, run, for_]
+    simp_peephole at Γv
+    sorry
 
 attribute [local simp] Ctxt.snoc
 
