@@ -378,7 +378,7 @@ theorem bitvec_229 :
 theorem bitvec_239 :
  ∀ (w : Nat) (Y X : BitVec w), (0 - X) * (0 - Y) = X * Y
 := by alive_auto
-      try sorry
+      done
 
 theorem bitvec_275:
  ∀ (Y X : BitVec 5),
