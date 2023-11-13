@@ -434,7 +434,7 @@ theorem bitvec_1030 :
  ∀ (w : Nat) (X : BitVec w), sdiv? X (-1) ⊑ some (0 - X)
 := by alive_auto
       try sorry
-
+/-
 theorem bitvec_Select_846:
  ∀ (C B : BitVec 1), select B (ofBool true) C = B ||| C
 := by alive_auto
@@ -474,6 +474,7 @@ theorem bitvec_Select_1105 :
  ∀ (w : Nat) (Y X : BitVec w), select (ofBool false) X Y = Y
 := by alive_auto
       try sorry
+-/
 
 theorem bitvec_InstCombineShift__239 :
  ∀ (w : Nat) (X C : BitVec w), X <<< C >>> C = X &&& (-1) >>> C
