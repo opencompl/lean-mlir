@@ -15,6 +15,14 @@ variable {A B : α → Type*} {as : List α}
   # Definitions
 -/
 
+--TODO: this should be derived when this becomes possible
+protected instance decidableEq [∀ a, DecidableEq (A a)] :
+    ∀ {l : List α}, DecidableEq (HVector A l)
+  | _, .nil, .nil => isTrue rfl
+  | _, .cons x₁ v₁, .cons x₂ v₂ =>
+    letI d := HVector.decidableEq v₁ v₂
+    decidable_of_iff (x₁ = x₂ ∧ v₁ = v₂) (by simp)
+
 def head : HVector A (a :: as) → A a
   | .cons x _ => x
 
