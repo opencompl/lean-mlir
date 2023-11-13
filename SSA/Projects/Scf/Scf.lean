@@ -19,26 +19,30 @@ inductive Ty
 @[reducible]
 instance : Goedel Ty where
   toType
-    | .int => BitVec 32
+    | .int => ℤ
     | .bool => Bool
     | .nat => Nat
 
 inductive Op :  Type
   | add : Op
+  | add_nat : Op
+  | axpy : Op
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
   | run (ty : Ty) : Op
-  | if (ty : Ty) : Op
+  | if (t t' : Ty) : Op
   | for (ty : Ty) : Op
   deriving DecidableEq, Repr
 
 @[reducible]
 instance : OpSignature Op Ty where
   signature
+    | .axpy => ⟨[.int, .nat, .int], [], .int⟩
     | .const _ => ⟨[], [], .int⟩
-    | .if t => ⟨[.bool, t], [([t], t), ([t], t)], t⟩
-    | .for t => ⟨[.nat, t], [([.nat, t], t)], t⟩
+    | .if t t' => ⟨[.bool, t], [([t], t'), ([t], t')], t'⟩
+    | .for t => ⟨[/-start-/.int, /-step-/.int, /-niters-/.nat, t], [([.int, t], t)], t⟩
     | .add   => ⟨[.int, .int], [], .int⟩
+    | .add_nat   => ⟨[.nat, .nat], [], .nat⟩
     | .run t => ⟨[t], [([t], t)], t⟩
     | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
 
@@ -46,17 +50,17 @@ instance : OpSignature Op Ty where
 
 /-- Convert a function `f` which is a single loop iteration into a function
   that iterates and updates the loop counter. -/
-def loop_counter_decorator (f : ℕ → α → α) : ℕ × α → ℕ × α :=
-  fun (i, v) => (i + 1, f i v)
+def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int × α :=
+  fun (i, v) => (i + δ, f i v)
 
 /-- loop_counter_decorator on a constant function -/
 @[simp]
-theorem loop_counter_decorator_constant (count : ℕ) (vstart : α) :
-  (loop_counter_decorator fun _i v => v) (count, vstart) = (count + 1, vstart) := rfl
+theorem loop_counter_decorator_constant (δ : Int) (i : Int) (vstart : α) :
+  (loop_counter_decorator δ fun _i v => v) (i, vstart) = (i + δ, vstart) := rfl
 
 /-- iterate the loop_counter_decorator of a constant function. -/
-theorem loop_counter_decorator_constant_iterate {α : Type} (k : ℕ) :
-  ((loop_counter_decorator (fun (i : ℕ) (v : α) => v))^[k]) = fun args => (args.fst + k, args.snd) := by {
+theorem loop_counter_decorator_constant_iterate {α : Type} (k : ℕ) (δ : Int):
+  ((loop_counter_decorator δ (fun (i : Int) (v : α) => v))^[k]) = fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by {
     funext ⟨i, v⟩
     induction k generalizing i v
     case h.zero =>
@@ -66,29 +70,31 @@ theorem loop_counter_decorator_constant_iterate {α : Type} (k : ℕ) :
       linarith
   }
 
-def to_loop_run (f : ℕ → α → α) (niters : ℕ) (val : α) : α :=
-  (loop_counter_decorator f (niters,val)).2
+def to_loop_run (δ : Int) (f : Int → α → α) (niters : ℕ) (val : α) : α :=
+  (loop_counter_decorator δ f (niters,val)).2
 
 #check Prod.mk
 @[reducible]
 noncomputable instance : OpDenote Op Ty where
   denote
-    | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
-    | .if _t, (.cons (cond : Bool) (.cons v .nil)), (.cons (f : _ → _) (.cons (g : _ → _) .nil)) =>
+    | .const n, _, _ => n
+    | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => a * (x : ℤ) + b
+    | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => a + b
+    | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
+    | .if t t', (.cons (cond : Bool) (.cons v .nil)), (.cons (f : Ctxt.Valuation [t] → ⟦t'⟧) (.cons (g : _ → _) .nil)) =>
       let body := if cond then f else g
       body (Ctxt.Valuation.nil.snoc v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
         f (Ctxt.Valuation.nil.snoc v)
-    | .for ty, (.cons niter (.cons vstart .nil)), (.cons (f : _  → _) .nil) =>
-        let f' (i : ℕ) (v : ⟦ty⟧) : ⟦ty⟧ :=
+    | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))), (.cons (f : _  → _) .nil) =>
+        let f' (i : ℤ) (v : ⟦ty⟧) : ⟦ty⟧ :=
           f ∘  (Function.uncurry Ctxt.Valuation.ofPair) <| (i, v)
-        let to_iterate := loop_counter_decorator (α := ⟦ty⟧) f'
+        let to_iterate := loop_counter_decorator (α := ⟦ty⟧) (δ := istep) (f := f')
         let loop_fn := niter.iterate (op := to_iterate)
-        (loop_fn (0, vstart)).2
+        (loop_fn (istart, vstart)).2
 
-    | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
-      let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
+    | .iterate k, (.cons (x : ℤ) .nil), (.cons (f : _ → ℤ) .nil) =>
+      let f' (v :  ℤ) : ℤ := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
       -- let f_k := Nat.iterate f' k
       -- f_k x
@@ -107,6 +113,20 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .int :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
+def add_nat {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : Expr Op Γ .nat :=
+  Expr.mk
+    (op := .add_nat)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
+
+def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) : Expr Op Γ .int :=
+  Expr.mk
+    (op := .axpy)
+    (ty_eq := rfl)
+    (args := .cons a <| .cons x <| .cons b .nil)
+    (regArgs := .nil)
+
 def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .int :=
   Expr.mk
     (op := .iterate k)
@@ -114,9 +134,9 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
-def if_ {Γ : Ctxt _} {t : Ty} (cond : Var Γ .bool) (v : Var Γ t) (then_ else_ : Com Op [t] t) : Expr Op Γ t :=
+def if_ {Γ : Ctxt _} {t t': Ty} (cond : Var Γ .bool) (v : Var Γ t) (then_ else_ : Com Op [t] t') : Expr Op Γ t' :=
   Expr.mk
-    (op := .if t)
+    (op := .if t t')
     (ty_eq := rfl)
     (args := .cons cond <| .cons v .nil)
     (regArgs := HVector.cons then_ <| HVector.cons else_ <| HVector.nil)
@@ -128,11 +148,11 @@ def run {Γ : Ctxt _} {t : Ty} (v : Var Γ t) (body : Com Op [t] t) : Expr Op Γ
     (args := .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
 
-def for_ {Γ : Ctxt _} {t : Ty} (niter : Var Γ .nat) (v : Var Γ t) (body : Com Op [.nat, t] t) : Expr Op Γ t :=
+def for_ {Γ : Ctxt _} {t : Ty} (start step : Var Γ .int) (niter : Var Γ .nat) (v : Var Γ t) (body : Com Op [.int, t] t) : Expr Op Γ t :=
   Expr.mk
     (op := .for t)
     (ty_eq := rfl)
-    (args := .cons niter <| .cons v .nil)
+    (args := .cons start <| .cons step <| .cons niter <| .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
 
 /-- 'if' condition of a true variable evaluates to the then region body. -/
@@ -157,20 +177,116 @@ abbrev RegionRet [Goedel Ty] (t : Ty) {Γ : Ctxt Ty} (v : Var Γ t) : Com Op Γ 
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/
-theorem for_return {t : Ty} (niters : Var Γ .nat) (v : Var Γ t) :
-  Expr.denote (ScfRegion.for_ (t := t) niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
+theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (v : Var Γ t) :
+  Expr.denote (ScfRegion.for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp[Expr.denote, run, for_]
     simp_peephole at Γv
     simp[Com.denote]
     rw[loop_counter_decorator_constant_iterate]
 
+namespace ForReversal
+
+variable {t : Ty}
+variable (rgn : Com Op [Ty.int, t] t)
+/- region semantics does not depend on trip count -/
+variable (hrgn : ∀ (v : ⟦t⟧) (n m : Int),
+  Com.denote rgn (Ctxt.Valuation.ofPair n v) =
+  Com.denote rgn (Ctxt.Valuation.ofPair m v))
+
+def lhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- val -/ t] t :=
+  /- v-/
+  /- v1 = -/ Com.lete (for_ (t := t)
+                        ⟨/- start -/ 0, by simp[Ctxt.snoc]⟩
+                        ⟨/- delta -/1, by simp[Ctxt.snoc]⟩
+                        ⟨/- steps -/ 2, by simp[Ctxt.snoc]⟩
+                        ⟨/- v0 -/ 3, by simp[Ctxt.snoc]⟩  rgn) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
+  /- delta * steps + start-/
+  Com.lete (axpy ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) <|
+  Com.lete (for_ (t := t)
+                        ⟨/- start -/ 1, by simp[Ctxt.snoc]⟩
+                        ⟨/- delta -/ 2, by simp[Ctxt.snoc]⟩
+                        ⟨/- steps -/ 3, by simp[Ctxt.snoc]⟩
+                        ⟨/- v0 -/ 4, by simp[Ctxt.snoc]⟩  rgn) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+set_option pp.proofs false in
+set_option pp.proofs.withType false in
+
+#check Ctxt.Var.mk
+
+/-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
+  this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
+theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
+  {v: ℕ}
+  {hvproof : Ctxt.get? Γ v = some ty}
+  {var : Γ.Var ty}
+  (hvar : var = ⟨v, hvproof⟩) :
+  V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp[Ctxt.snoc] at hvproof; simp[Ctxt.snoc, hvproof]⟩ := by
+    simp[Ctxt.Valuation.snoc, hvar]
+
+/-- Reverse a loop. -/
+theorem for_fuse (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) :
+  Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
+    simp[lhs, rhs, for_, axpy]
+    try simp (config := {decide := false}) only [
+    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
+    generalize A:Γv { val := 0, property := _ } = a;
+    generalize B:Γv { val := 1, property := _ } = b;
+    generalize C:Γv { val := 2, property := _ } = c;
+    generalize D:Γv { val := 3, property := _ } = d;
+    generalize C':Γv { val := 2, property := _ } = c';
+    /- we still have things like
+    Ctxt.Valuation.snoc Γv (b * ↑c + a) { val := 2, property := rhs.proof_1 }
+    in the proof state, because it's not sure how to simplify stuff with `snoc`? -/
+    simp[Goedel.toType] at a b c d
+    have h1 : Ctxt.Valuation.snoc (t := .int) Γv (b * (c : ℤ) + a) { val := 2, property := rhs.proof_1 } = b := by
+      conv => rhs; rw[← B]
+    simp[h1]
+    have h2 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 3, property := rhs.proof_2 } = c := by
+      conv => rhs; rw[← C]
+    simp[h2]
+    have h3 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 1, property := rhs.proof_1  } = a := by
+      conv => rhs; rw[← A]
+    simp[h3]
+    have h4 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 4, property := rhs.proof_3 } = d := by
+      conv => rhs; rw[← D]
+    simp[h4]
+    done
+
+#print axioms for_fuse -- [propext, Classical.choice, Quot.sound]
+end ForReversal
+
+/-
+namespace ForFusion
+def lhs {t : Ty} (rgn : Com Op [.nat, t] t) : Com Op [/- k -/ .nat, /- l -/ .nat, /- v0 -/ t] t :=
+  /- v1 = -/ Com.lete (for_ (t := t) ⟨/- k -/ 0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ rgn) <|
+  /- [k, l, v0, v1] -/
+  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn)
+   <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+
+def rhs {t : Ty} (rgn : Com Op [.nat, t] t) : Com Op [/- k -/ .nat, /- l -/ .nat, /- v0 -/ t] t :=
+  /- v1 = -/ Com.lete (add_nat ⟨/- k -/ 0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <|
+  /- [k, l, v0, v1 = k + l] -/
+  Com.lete (for_ (t := t) ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn)
+   <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
 /-- Two adjacent for loops with the same loop body can be fused into a single for loop. -/
-theorem for_fuse {t : Ty} (niters : Var Γ .nat) (v : Var Γ t) :
-  Expr.denote (ScfRegion.for_ (t := t) niters v rgn) Γv = Γv v := by
+theorem for_fuse {t : Ty} (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) (rgn : Com Op [.nat, t] t):
+  Expr.denote (ScfRegion.for_ (t := t) niters₁ v rgn) Γv = Γv v := by
     simp[Expr.denote, run, for_]
     simp_peephole at Γv
     sorry
+end ForFusion
+-/
 
+namespace IterateIdentity
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
@@ -203,9 +319,9 @@ noncomputable def p1 : PeepholeRewrite Op [.int] .int:=
       Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv
       -/
       simp_peephole [add, iterate] at Γv
-      /-  ∀ (a : BitVec 32), (fun v => v + v)^[0] a = a -/
+      /-  ∀ (a : ℤ), (fun v => v + v)^[0] a = a -/
       simp [Function.iterate_zero]
       done
   }
 
-end ScfRegion
+end IterateIdentity

@@ -63,6 +63,10 @@ instance : LawfulFunctor Ctxt where
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
+/-- constructor for Var. -/
+def Var.mk (Γ : Ctxt Ty) (t : Ty) (i : Nat) (hi : Γ.get? i = some t) : Γ.Var t :=
+  ⟨i, hi⟩
+
 namespace Var
 
 instance : DecidableEq (Var Γ t) := by
