@@ -127,7 +127,7 @@ theorem if_true {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = true) (v : Va
     simp_peephole[hcond] at Γv
     simp[ite_true]
 
-/-- 'if' condition of a true variable evaluates to the true region body. -/
+/-- 'if' condition of a false variable evaluates to the else region body. -/
 theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
   Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
   Expr.denote (ScfRegion.run (t := t) v else_) Γv := by
