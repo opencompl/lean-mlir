@@ -27,6 +27,7 @@ inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
+  | run (ty : Ty) : Op
   | if (ty : Ty) : Op
   | for (ty : Ty) : Op
   deriving DecidableEq, Repr
@@ -38,7 +39,9 @@ instance : OpSignature Op Ty where
     | .if t => ⟨[.bool, t], [([t], t), ([t], t)], t⟩
     | .for t => ⟨[.nat, t], [([.nat, t], t)], t⟩
     | .add   => ⟨[.int, .int], [], .int⟩
+    | .run t => ⟨[t], [([t], t)], t⟩
     | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
+
 
 /-- Convert a function `f` which is a single loop iteration into a function
   that iterates and updates the loop counter. -/
@@ -53,6 +56,8 @@ noncomputable instance : OpDenote Op Ty where
     | .if _t, (.cons (cond : Bool) (.cons v .nil)), (.cons (f : _ → _) (.cons (g : _ → _) .nil)) =>
       let body := if cond then f else g
       body (Ctxt.Valuation.nil.snoc v)
+    | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
+        f (Ctxt.Valuation.nil.snoc v)
     | .for _t, (.cons (niter : Nat) (.cons vstart .nil)), (.cons (f : _  → _) .nil) =>
         let f' (i : ℕ) (v : Goedel.toType _t) : Goedel.toType _t := f <| by {
             dsimp
@@ -100,12 +105,35 @@ def if_ {Γ : Ctxt _} {t : Ty} (cond : Var Γ .bool) (v : Var Γ t) (then_ else_
     (args := .cons cond <| .cons v .nil)
     (regArgs := HVector.cons then_ <| HVector.cons else_ <| HVector.nil)
 
+def run {Γ : Ctxt _} {t : Ty} (v : Var Γ t) (body : Com Op [t] t) : Expr Op Γ t :=
+  Expr.mk
+    (op := .run t)
+    (ty_eq := rfl)
+    (args := .cons v .nil)
+    (regArgs := HVector.cons body <| HVector.nil)
+
 def for_ {Γ : Ctxt _} {t : Ty} (niter : Var Γ .nat) (v : Var Γ t) (body : Com Op [.nat, t] t) : Expr Op Γ t :=
   Expr.mk
     (op := .for t)
     (ty_eq := rfl)
     (args := .cons niter <| .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
+
+/-- 'if' condition of a true variable evaluates to the true region body. -/
+theorem if_true {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = true) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
+  Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
+  Expr.denote (ScfRegion.run (t := t) v then_) Γv := by
+    simp[Expr.denote, if_, run]
+    simp_peephole[hcond] at Γv
+    simp[ite_true]
+
+/-- 'if' condition of a true variable evaluates to the true region body. -/
+theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
+  Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
+  Expr.denote (ScfRegion.run (t := t) v else_) Γv := by
+    simp[Expr.denote, if_, run]
+    simp_peephole[hcond] at Γv
+    simp[ite_true]
 
 attribute [local simp] Ctxt.snoc
 
