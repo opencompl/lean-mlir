@@ -93,6 +93,20 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
+def if_ {Γ : Ctxt _} {t : Ty} (cond : Var Γ .bool) (v : Var Γ t) (then_ else_ : Com Op [t] t) : Expr Op Γ t :=
+  Expr.mk
+    (op := .if t)
+    (ty_eq := rfl)
+    (args := .cons cond <| .cons v .nil)
+    (regArgs := HVector.cons then_ <| HVector.cons else_ <| HVector.nil)
+
+def for_ {Γ : Ctxt _} {t : Ty} (niter : Var Γ .nat) (v : Var Γ t) (body : Com Op [.nat, t] t) : Expr Op Γ t :=
+  Expr.mk
+    (op := .for t)
+    (ty_eq := rfl)
+    (args := .cons niter <| .cons v .nil)
+    (regArgs := HVector.cons body <| HVector.nil)
+
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
