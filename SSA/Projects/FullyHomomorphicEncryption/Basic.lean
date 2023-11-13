@@ -304,7 +304,7 @@ theorem sub_modByMonic (a b mod : (ZMod q)[X]) : (a - b) %ₘ mod = a %ₘ mod -
   ring_nf
   repeat rw[sub_eq_add_neg]
   simp[Polynomial.add_modByMonic]
-  rw[neg_modByMonic]
+  rw[Polynomial.neg_modByMonic]
 
 /-- Representative is an multiplicative homomorphism upto modulo -/
 @[simp]
@@ -325,6 +325,7 @@ theorem R.representative_mul [Fact (q > 1)] (a b : R q n) : (a * b).representati
   repeat rw[Polynomial.add_modByMonic]
   ring_nf
   repeat rw[sub_modByMonic]
+  simp
 
   have H1 : (-(a' * f q n * (b' /ₘ f q n))) %ₘ f q n = 0 := by
     rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
