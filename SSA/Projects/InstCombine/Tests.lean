@@ -3,9 +3,9 @@ import SSA.Projects.InstCombine.Base
 -- TODO: move this to new EDSL, once generic bitwidth syntax works
 
 namespace InstCombine
-def test1 (_params : Nat × Nat × Nat) : IO Bool := do 
+def test1 (_params : Nat × Nat × Nat) : IO Bool := do
   -- let (w, A, B) := params
-  -- let E : EnvC ∅ := EnvC.empty 
+  -- let E : EnvC ∅ := EnvC.empty
   -- let out : Option (Bitvec w) := TSSA.eval
   --   [dsl_bb|
   --   ^bb
@@ -20,7 +20,7 @@ def test1 (_params : Nat × Nat × Nat) : IO Bool := do
   --   %v8 := pair:%v1 %v7;
   --   %v9 := op:or w %v8
   --   dsl_ret %v9
-  --   ] E 
+  --   ] E
   -- IO.println (repr out)
   -- return true
   throw <| .userError "test1 not implemented yet!"

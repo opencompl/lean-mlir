@@ -2,7 +2,8 @@
 import SSA.Core.Framework
 import SSA.Core.Util
 import SSA.Core.Util.ConcreteOrMVar
-import SSA.Projects.InstCombine.ForMathlib
+import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.Semantics
 
 /-!
   # InstCombine Dialect
@@ -15,27 +16,18 @@ import SSA.Projects.InstCombine.ForMathlib
   or `1`, indicating there is exactly one distinct width meta-variable.
 
   In particular, we only define a denotational semantics for concrete programs (i.e., where `φ = 0`)
-  
+
 
   see https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 -/
 
 namespace InstCombine
 
-abbrev Width φ := ConcreteOrMVar Nat φ
+open Std (BitVec)
 
-inductive IntPredicate where
-  | eq
-  | ne
-  | ugt
-  | uge
-  | ult
-  | ule
-  | sgt
-  | sge
-  | slt
-  | sle
-deriving Inhabited, DecidableEq, Repr
+open LLVM
+
+abbrev Width φ := ConcreteOrMVar Nat φ
 
 inductive MTy (φ : Nat)
   | bitvec (w : Width φ) : MTy φ
@@ -43,8 +35,8 @@ inductive MTy (φ : Nat)
 
 abbrev Ty := MTy 0
 
-instance : Repr (MTy φ) where 
-  reprPrec 
+instance : Repr (MTy φ) where
+  reprPrec
     | .bitvec (.concrete w), _ => "i" ++ repr w
     | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
 
@@ -55,21 +47,21 @@ def Ty.width : Ty → Nat
   | .bitvec (.concrete w) => w
 
 @[simp]
-theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by 
+theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
   rcases ty with ⟨w|i⟩
   · rfl
   · exact i.elim0
 
 @[simp]
-def Bitvec.width {n : Nat} (_ : Bitvec n) : Nat := n
+def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : Goedel Ty where
 toType := fun
-  | .bitvec (.concrete w) => Option $ Bitvec w
+  | .bitvec (.concrete w) => Option $ BitVec w
 
-instance : Repr (Bitvec n) where
+instance : Repr (BitVec n) where
   reprPrec
-    | v, n => reprPrec (Bitvec.toInt v) n
+    | v, n => reprPrec (BitVec.toInt v) n
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
@@ -94,6 +86,28 @@ inductive MOp (φ : Nat) : Type
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited
+
+instance : ToString (MOp φ) where
+  toString
+  | .and _ => "and"
+  | .or _ => "or"
+  | .not _ => "not"
+  | .xor _ => "xor"
+  | .shl _ => "shl"
+  | .lshr _ => "lshr"
+  | .ashr _ => "ashr"
+  | .urem _ => "urem"
+  | .srem _ => "srem"
+  | .select _ => "select"
+  | .add _ => "add"
+  | .mul _ => "mul"
+  | .sub _ => "sub"
+  | .neg _ => "neg"
+  | .copy _ => "copy"
+  | .sdiv _ => "sdiv"
+  | .udiv _ => "udiv"
+  | .icmp ty _ => s!"icmp {ty}"
+  | .const _ v => s!"const {v}"
 
 abbrev Op := MOp 0
 
@@ -128,7 +142,7 @@ instance : ToString Op where
 @[simp, reducible]
 def MOp.sig : MOp φ → List (MTy φ)
 | .and w | .or w | .xor w | .shl w | .lshr w | .ashr w
-| .add w | .mul w | .sub w | .udiv w | .sdiv w 
+| .add w | .mul w | .sub w | .udiv w | .sdiv w
 | .srem w | .urem w | .icmp _ w =>
   [.bitvec w, .bitvec w]
 | .not w | .neg w | .copy w => [.bitvec w]
@@ -145,42 +159,32 @@ def MOp.outTy : MOp φ → MTy φ
 | .icmp _ _ => .bitvec 1
 | .const width _ => .bitvec width
 
-instance : OpSignature (MOp φ) (MTy φ) where 
+instance : OpSignature (MOp φ) (MTy φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
 def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
     (Goedel.toType <| OpSignature.outTy o) :=
   match o with
-  | Op.const w val => Option.some (Bitvec.ofInt w val)
-  | Op.and _ => pairMapM (.&&&.) arg.toPair
-  | Op.or _ => pairMapM (.|||.) arg.toPair
-  | Op.xor _ => pairMapM (.^^^.) arg.toPair
-  | Op.shl _ => pairMapM (. <<< .) arg.toPair
-  | Op.lshr _ => pairMapM (. >>> .) arg.toPair
-  | Op.ashr _ => pairMapM (. >>>ₛ .) arg.toPair
-  | Op.sub _ => pairMapM (.-.) arg.toPair
-  | Op.add _ => pairMapM (.+.) arg.toPair
-  | Op.mul _ => pairMapM (.*.) arg.toPair
-  | Op.sdiv _ => pairBind Bitvec.sdiv? arg.toPair
-  | Op.udiv _ => pairBind Bitvec.udiv? arg.toPair
-  | Op.urem _ => pairBind Bitvec.urem? arg.toPair
-  | Op.srem _ => pairBind Bitvec.srem? arg.toPair
+  | Op.const _ val => const? val
+  | Op.and _ => pairBind and? arg.toPair
+  | Op.or _ => pairBind or? arg.toPair
+  | Op.xor _ => pairBind xor? arg.toPair
+  | Op.shl _ => pairBind shl? arg.toPair
+  | Op.lshr _ => pairBind lshr? arg.toPair
+  | Op.ashr _ => pairBind ashr? arg.toPair
+  | Op.sub _ => pairBind sub?  arg.toPair
+  | Op.add _ => pairBind add? arg.toPair
+  | Op.mul _ => pairBind mul? arg.toPair
+  | Op.sdiv _ => pairBind sdiv? arg.toPair
+  | Op.udiv _ => pairBind udiv? arg.toPair
+  | Op.urem _ => pairBind urem? arg.toPair
+  | Op.srem _ => pairBind srem? arg.toPair
   | Op.not _ => Option.map (~~~.) arg.toSingle
   | Op.copy _ => arg.toSingle
   | Op.neg _ => Option.map (-.) arg.toSingle
-  | Op.select _ => tripleMapM Bitvec.select arg.toTriple
-  | Op.icmp c _ => match c with
-    | .eq => pairMapM (fun x y => ↑(x == y)) arg.toPair
-    | .ne => pairMapM (fun x y => ↑(x != y)) arg.toPair
-    | .sgt => pairMapM (. >ₛ .) arg.toPair
-    | .sge => pairMapM (. ≥ₛ .) arg.toPair
-    | .slt => pairMapM (. <ₛ .) arg.toPair
-    | .sle => pairMapM (. ≤ₛ .) arg.toPair
-    | .ugt => pairMapM (. >ᵤ .) arg.toPair
-    | .uge => pairMapM (. ≥ᵤ .) arg.toPair
-    | .ult => pairMapM (. <ᵤ .) arg.toPair
-    | .ule => pairMapM (. ≤ᵤ .) arg.toPair
+  | Op.select _ => tripleBind select? arg.toTriple
+  | Op.icmp c _ => pairBind (icmp? c) arg.toPair
 
 instance : OpDenote Op Ty := ⟨
   fun o args _ => Op.denote o args

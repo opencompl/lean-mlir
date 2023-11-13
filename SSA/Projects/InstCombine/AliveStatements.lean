@@ -3,9 +3,11 @@ import Mathlib.Data.Bitvec.Lemmas
 
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.LLVM.Semantics
 
 open Std
 open Std.BitVec
+open LLVM
 
 
 theorem bitvec_AddSub_1043 :
