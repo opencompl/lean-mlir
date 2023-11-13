@@ -13,6 +13,7 @@ import SSA.Projects.Tensor2D.Tensor2D
 import SSA.Projects.Holor.Holor
 import SSA.Projects.DCE.DCE
 import SSA.Projects.PaperExamples.PaperExamples
+import SSA.Projects.Scf.Scf
 
 
 -- EXPERIMENTAL
