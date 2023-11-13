@@ -119,7 +119,7 @@ def for_ {Γ : Ctxt _} {t : Ty} (niter : Var Γ .nat) (v : Var Γ t) (body : Com
     (args := .cons niter <| .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
 
-/-- 'if' condition of a true variable evaluates to the true region body. -/
+/-- 'if' condition of a true variable evaluates to the then region body. -/
 theorem if_true {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = true) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
   Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
   Expr.denote (ScfRegion.run (t := t) v then_) Γv := by
