@@ -12,30 +12,41 @@ namespace ScfRegion
 
 inductive Ty
   | int
+  | bool
+  | nat
   deriving DecidableEq, Repr
 
 @[reducible]
 instance : Goedel Ty where
   toType
     | .int => BitVec 32
+    | .bool => Bool
+    | .nat => Nat
 
 inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
+  | if_ (ty : Ty) : Op
+  -- | for_ (ty : Ty) : Op
   deriving DecidableEq, Repr
 
 instance : OpSignature Op Ty where
   signature
     | .const _ => ⟨[], [], .int⟩
+    | .if_ t => ⟨[.bool, t], [([t], t), ([t], t)], t⟩
+    -- | .for_ t => ⟨[.nat, t], [([.nat, t], t)], t⟩
     | .add   => ⟨[.int, .int], [], .int⟩
     | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
 
 @[reducible]
-instance : OpDenote Op Ty where
+noncomputable instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
+    | .if_ _t, (.cons (cond : Bool) (.cons v .nil)), (.cons (f : _ → _) (.cons (g : _ → _) .nil)) =>
+      let body := if cond then f else g
+      body (Ctxt.Valuation.nil.snoc v)
     | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
       let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
@@ -80,7 +91,7 @@ attribute [local simp] Ctxt.snoc
 
 set_option pp.proofs false in
 set_option pp.proofs.withType false in
-def p1 : PeepholeRewrite Op [.int] .int:=
+noncomputable def p1 : PeepholeRewrite Op [.int] .int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
       funext Γv
@@ -99,18 +110,5 @@ def p1 : PeepholeRewrite Op [.int] .int:=
       simp [Function.iterate_zero]
       done
   }
-
-/-
-def ex1' : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
-
-theorem EX1' : ex1' = (
-  -- %c0 = 0
-  Com.lete (cst 0) <|
-  -- %out_dead = %x + %c0
-  Com.lete (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
-  -- ret %c0
-  Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by rfl
--/
 
 end ScfRegion
