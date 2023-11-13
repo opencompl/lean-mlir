@@ -27,26 +27,45 @@ inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
-  | if_ (ty : Ty) : Op
-  -- | for_ (ty : Ty) : Op
+  | if (ty : Ty) : Op
+  | for (ty : Ty) : Op
   deriving DecidableEq, Repr
 
+@[reducible]
 instance : OpSignature Op Ty where
   signature
     | .const _ => ⟨[], [], .int⟩
-    | .if_ t => ⟨[.bool, t], [([t], t), ([t], t)], t⟩
-    -- | .for_ t => ⟨[.nat, t], [([.nat, t], t)], t⟩
+    | .if t => ⟨[.bool, t], [([t], t), ([t], t)], t⟩
+    | .for t => ⟨[.nat, t], [([.nat, t], t)], t⟩
     | .add   => ⟨[.int, .int], [], .int⟩
     | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
+
+/-- Convert a function `f` which is a single loop iteration into a function
+  that iterates and updates the loop counter. -/
+def to_loop_iterate (f : ℕ → α → α) : ℕ × α → ℕ × α :=
+  fun (i, v) => (i + 1, f i v)
 
 @[reducible]
 noncomputable instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
-    | .if_ _t, (.cons (cond : Bool) (.cons v .nil)), (.cons (f : _ → _) (.cons (g : _ → _) .nil)) =>
+    | .if _t, (.cons (cond : Bool) (.cons v .nil)), (.cons (f : _ → _) (.cons (g : _ → _) .nil)) =>
       let body := if cond then f else g
       body (Ctxt.Valuation.nil.snoc v)
+    | .for _t, (.cons (niter : Nat) (.cons vstart .nil)), (.cons (f : _  → _) .nil) =>
+        let f' (i : ℕ) (v : Goedel.toType _t) : Goedel.toType _t := f <| by {
+            dsimp
+            apply Ctxt.Valuation.snoc
+            apply Ctxt.Valuation.snoc
+            apply Ctxt.Valuation.nil
+            exact v
+            exact i
+          }
+        let to_iterate := to_loop_iterate (α := ⟦_t⟧) f'
+        let loop_fn := niter.iterate (op := to_iterate)
+        (loop_fn (0, vstart)).2
+
     | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
       let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
