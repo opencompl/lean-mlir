@@ -28,17 +28,17 @@ theorem bitvec_AddSub_1156 :
 theorem bitvec_AddSub_1164 :
  ∀ (w : Nat) (a b : BitVec w), 0 - a + b = b - a
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1165 :
  ∀ (w : Nat) (a b : BitVec w), 0 - a + (0 - b) = 0 - (a + b)
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1176 :
  ∀ (w : Nat) (a b : BitVec w), a + (0 - b) = a - b
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1202 :
  ∀ (w : Nat) (x C : BitVec w), (x ^^^ -1) + C = C - 1 - x
@@ -58,12 +58,12 @@ theorem bitvec_AddSub_1309 :
 theorem bitvec_AddSub_1539 :
  ∀ (w : Nat) (a x : BitVec w), x - (0 - a) = x + a
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1539_2 :
  ∀ (w : Nat) (x C : BitVec w), x - C = x + -C
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1556:
  ∀ (y x : BitVec 1), x - y = x ^^^ y
@@ -83,17 +83,17 @@ theorem bitvec_AddSub_1564 :
 theorem bitvec_AddSub_1574 :
  ∀ (w : Nat) (X C C2 : BitVec w), C - (X + C2) = C - C2 - X
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1614 :
  ∀ (w : Nat) (Y X : BitVec w), X - (X + Y) = 0 - Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1619 :
  ∀ (w : Nat) (Y X : BitVec w), X - Y - X = 0 - Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1624 :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) - (A ^^^ B) = A &&& B
@@ -460,7 +460,7 @@ theorem bitvec_AndOrXor_2663 :
 theorem bitvec_152 :
  ∀ (w : Nat) (x : BitVec w), x * -1 = 0 - x
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_160:
  ∀ (x C1 C2 : BitVec 7), x <<< C2 * C1 = x * C1 <<< C2
@@ -470,12 +470,12 @@ theorem bitvec_160:
 theorem bitvec_229 :
  ∀ (w : Nat) (X C1 Op1 : BitVec w), (X + C1) * Op1 = X * Op1 + C1 * Op1
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_239 :
  ∀ (w : Nat) (Y X : BitVec w), (0 - X) * (0 - Y) = X * Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_275:
  ∀ (Y X : BitVec 5),
