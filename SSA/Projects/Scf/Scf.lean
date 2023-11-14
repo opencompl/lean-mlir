@@ -24,13 +24,14 @@ instance : Goedel Ty where
     | .nat => Nat
 
 inductive Op :  Type
-  | add : Op
-  | add_nat : Op
-  | axpy : Op
+  | add : Op /-- a + b-/
+  | add_nat : Op /- a + b on nats-/
+  | axpy : Op /- a * x + y -/
+  | neg : Op /- -a -/
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
-  | run (ty : Ty) : Op
-  | if (t t' : Ty) : Op
+  | run (ty : Ty) : Op -- f^k
+  | if (t t' : Ty) : Op -- if cond then true_body else false_body
   | for (ty : Ty) : Op
   deriving DecidableEq, Repr
 
@@ -38,6 +39,7 @@ inductive Op :  Type
 instance : OpSignature Op Ty where
   signature
     | .axpy => ⟨[.int, .nat, .int], [], .int⟩
+    | .neg => ⟨[.int], [], .int⟩
     | .const _ => ⟨[], [], .int⟩
     | .if t t' => ⟨[.bool, t], [([t], t'), ([t], t')], t'⟩
     | .for t => ⟨[/-start-/.int, /-step-/.int, /-niters-/.nat, t], [([.int, t], t)], t⟩
@@ -78,6 +80,7 @@ def to_loop_run (δ : Int) (f : Int → α → α) (niters : ℕ) (val : α) : �
 noncomputable instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => n
+    | .neg, .cons (a : ℤ ) .nil, _ => -a
     | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => a * (x : ℤ) + b
     | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => a + b
     | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
@@ -125,6 +128,13 @@ def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) : Ex
     (op := .axpy)
     (ty_eq := rfl)
     (args := .cons a <| .cons x <| .cons b .nil)
+    (regArgs := .nil)
+
+def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr Op Γ .int :=
+  Expr.mk
+    (op := .neg)
+    (ty_eq := rfl)
+    (args := .cons a <| .nil)
     (regArgs := .nil)
 
 def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .int :=
@@ -205,9 +215,11 @@ def lhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- val -/ 
 def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
   /- delta * steps + start-/
   Com.lete (axpy ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) <|
+  /- -delta -/
+  Com.lete (neg ⟨2, by simp[Ctxt.snoc]⟩) <|
   Com.lete (for_ (t := t)
-                        ⟨/- start -/ 1, by simp[Ctxt.snoc]⟩
-                        ⟨/- delta -/ 2, by simp[Ctxt.snoc]⟩
+                        ⟨/- end -/ 1, by simp[Ctxt.snoc]⟩
+                        ⟨/- -delta -/ 2, by simp[Ctxt.snoc]⟩
                         ⟨/- steps -/ 3, by simp[Ctxt.snoc]⟩
                         ⟨/- v0 -/ 4, by simp[Ctxt.snoc]⟩  rgn) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
@@ -240,7 +252,6 @@ theorem for_fuse (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) :
     generalize B:Γv { val := 1, property := _ } = b;
     generalize C:Γv { val := 2, property := _ } = c;
     generalize D:Γv { val := 3, property := _ } = d;
-    generalize C':Γv { val := 2, property := _ } = c';
     /- we still have things like
     Ctxt.Valuation.snoc Γv (b * ↑c + a) { val := 2, property := rhs.proof_1 }
     in the proof state, because it's not sure how to simplify stuff with `snoc`? -/
