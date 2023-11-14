@@ -20,7 +20,7 @@
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "bf4d7966900598aff60944a6efc52f7539e66f9c",
+    "rev": "e7c01ac0049e33a4d6f7e98f9ebea8222bf52311",
     "opts": {},
     "name": "mathlib",
     "inputRev?": "bitvec-ring-and-ext",
