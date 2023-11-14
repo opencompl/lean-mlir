@@ -203,6 +203,7 @@ theorem if_true {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = true) (v : Va
     simp[Expr.denote, if_, run]
     simp_peephole[hcond] at Γv
     simp[ite_true]
+-- TODO: make a `PeepholeRewrite` for `if_true`.
 
 /-- 'if' condition of a false variable evaluates to the else region body. -/
 theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
@@ -211,6 +212,8 @@ theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : 
     simp[Expr.denote, if_, run]
     simp_peephole[hcond] at Γv
     simp[ite_true]
+
+-- TODO: make a `PeepholeRewrite` for `if_false`.
 
 
 /-- a region that returns the value immediately -/
@@ -224,6 +227,7 @@ theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (
     simp_peephole at Γv
     simp[Com.denote]
     rw[loop_counter_decorator_constant_iterate]
+-- TODO: make a `PeepholeRewrite` for `for_return`.
 
 
 set_option pp.proofs false
@@ -234,6 +238,8 @@ set_option pp.proofs.withType false
 We keep the increment outside the loop so that we don't need to deal with creating and deleting tuples for the "for" region body,
 since our regions are isolatedFromAbove.
 If we want to deal with creating and removing tuples, we can.
+
+**TODO:** create a tuple for passing the increment variable into the loop
 
 lhs
 ----
@@ -294,6 +300,8 @@ theorem correct :
       apply add_iterate
     done
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
+
+-- TODO: add a PeepholeRewrite for this theorem.
 
 end ForAddToMul
 
@@ -359,7 +367,7 @@ theorem correct :
     simp[h1]
     have h2 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 3, property := rhs.proof_2 } = c := by
       conv => rhs; rw[← C]
-    sorry
+    sorry -- TODO: finish proof
     /-
     simp[h2]
     have h3 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 1, property := rhs.proof_1  } = a := by
@@ -370,6 +378,9 @@ theorem correct :
     simp[h4]
     done
   -/
+
+-- TODO: add a PeepholeRewrite for this theorem.
+
 end ForReversal
 
 /-## two adjacent loops with the same region body and correct trip counts can be fused together.
@@ -407,7 +418,11 @@ def rhs : Com Op [/- v0 -/ t] t :=
 #check rhs
 
 theorem correct :
-  Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by sorry
+  Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by
+    sorry -- TODO: finish proof
+
+-- TODO: add a PeepholeRewrite for this theorem.
+
 end ForFusion
 
 namespace IterateIdentity
