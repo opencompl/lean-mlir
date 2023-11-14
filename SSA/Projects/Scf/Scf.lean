@@ -57,14 +57,14 @@ def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int
   fun (i, v) => (i + δ, f i v)
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
-theorem loop_conter_decorator_const_index_fn_eval
+theorem loop_counter_decorator_const_index_fn_eval
   (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) :
   (loop_counter_decorator δ f) (i, vstart) = (i + δ, f' vstart) := by
   simp[loop_counter_decorator, hf]
 
 
 /-- iterating a function that does not access the index (const_index_fn) -/
-theorem loop_conter_decoraor_const_index_fn_iterate
+theorem loop_counter_decorator_const_index_fn_iterate
   (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
   (loop_counter_decorator δ f)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
   induction k generalizing i vstart
@@ -288,7 +288,7 @@ theorem correct :
     Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry, add]
     generalize A:Γv { val := 0, property := _ } = a;
     generalize B:Γv { val := 1, property := _ } = b;
-    rw[loop_conter_decoraor_const_index_fn_iterate]
+    rw[loop_counter_decorator_const_index_fn_iterate]
     case hf => rfl
     . simp
       apply add_iterate
