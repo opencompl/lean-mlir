@@ -105,15 +105,10 @@ theorem bitvec_AndOrXor_135 :
 := by alive_auto
       ext
       simp
-      try cases getLsb _ _
-      try simp
-      try cases getLsb _ _
-      try simp
-      try cases getLsb _ _
-      try simp
-      try simp
-      try simp
-      try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
       done
 
 theorem bitvec_AndOrXor_144 :
@@ -121,15 +116,10 @@ theorem bitvec_AndOrXor_144 :
 := by alive_auto
       ext
       simp
-      try cases getLsb _ _
-      try simp
-      try cases getLsb _ _
-      try simp
-      try cases getLsb _ _
-      try simp
-      try simp
-      try simp
-      try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
       done
 
 theorem bitvec_AndOrXor_698 :
@@ -293,12 +283,24 @@ theorem bitvec_AndOrXor_2188 :
 theorem bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C :
  ∀ (w : Nat) (A C B : BitVec w), A ^^^ B ||| B ^^^ C ^^^ A = A ^^^ B ||| C
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2243__B__C__A__B___B__A__C :
  ∀ (w : Nat) (A C B : BitVec w), (B ||| C) &&& A ||| B = B ||| A &&& C
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2247__A__B__A__B :
  ∀ (w : Nat) (A B : BitVec w), A ^^^ -1 ||| B ^^^ -1 = A &&& B ^^^ -1
@@ -308,7 +310,13 @@ theorem bitvec_AndOrXor_2247__A__B__A__B :
 theorem bitvec_AndOrXor_2263 :
  ∀ (w : Nat) (B op0 : BitVec w), op0 ||| op0 ^^^ B = op0 ||| B
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2264 :
  ∀ (w : Nat) (A B : BitVec w), A ||| A ^^^ -1 ^^^ B = A ||| B ^^^ -1
@@ -318,7 +326,13 @@ theorem bitvec_AndOrXor_2264 :
 theorem bitvec_AndOrXor_2265 :
  ∀ (w : Nat) (A B : BitVec w), A &&& B ||| A ^^^ B = A ||| B
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2284 :
  ∀ (w : Nat) (A B : BitVec w), A ||| (A ||| B) ^^^ -1 = A ||| B ^^^ -1
@@ -338,7 +352,13 @@ theorem bitvec_AndOrXor_2297 :
 theorem bitvec_AndOrXor_2367 :
  ∀ (w : Nat) (A C1 op1 : BitVec w), A ||| C1 ||| op1 = A ||| op1 ||| C1
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2416 :
  ∀ (w : Nat) (nx y : BitVec w), (nx ^^^ -1) &&& y ^^^ -1 = nx ||| y ^^^ -1
@@ -393,7 +413,13 @@ theorem bitvec_AndOrXor_2587__BAA___B__A :
 theorem bitvec_AndOrXor_2595 :
  ∀ (w : Nat) (a b : BitVec w), a &&& b ^^^ (a ||| b) = a ^^^ b
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2607 :
  ∀ (w : Nat) (a b : BitVec w), (a ||| b ^^^ -1) ^^^ (a ^^^ -1 ||| b) = a ^^^ b
@@ -413,7 +439,13 @@ theorem bitvec_AndOrXor_2627 :
 theorem bitvec_AndOrXor_2647 :
  ∀ (w : Nat) (a b : BitVec w), a &&& b ^^^ (a ^^^ b) = a ||| b
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      try cases getLsb _ _ <;> try simp
+      done
 
 theorem bitvec_AndOrXor_2658 :
  ∀ (w : Nat) (a b : BitVec w), a &&& (b ^^^ -1) ^^^ (a ^^^ -1) = a &&& b ^^^ -1
