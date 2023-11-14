@@ -103,12 +103,34 @@ theorem bitvec_AddSub_1624 :
 theorem bitvec_AndOrXor_135 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ^^^ C1) &&& C2 = X &&& C2 ^^^ C1 &&& C2
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try simp
+      try simp
+      try simp
+      done
 
 theorem bitvec_AndOrXor_144 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ||| C1) &&& C2 = (X ||| C1 &&& C2) &&& C2
 := by alive_auto
-      try sorry
+      ext
+      simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try simp
+      try simp
+      try simp
+      done
 
 theorem bitvec_AndOrXor_698 :
  ∀ (w : Nat) (a b d : BitVec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
@@ -144,6 +166,7 @@ theorem bitvec_AndOrXor_1230__A__B___A__B :
  ∀ (w : Nat) (notOp0 notOp1 : BitVec w), (notOp0 ^^^ -1) &&& (notOp1 ^^^ -1) = (notOp0 ||| notOp1) ^^^ -1
 := by alive_auto
       try sorry
+      try sorry
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) &&& (A &&& B ^^^ -1) = A ^^^ B
@@ -155,14 +178,56 @@ theorem bitvec_AndOrXor_1247_AB__AB__AB :
 := by alive_auto
       try sorry
 
+@[simp]
+theorem getLsb_neg_one_eq_true: getLsb (-(1#w)) i = True := by
+  unfold getLsb
+  simp
+  induction w
+  simp
+  -- I seem to be able to prove False here?
+  sorry
+
 theorem bitvec_AndOrXor_1253_A__AB___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ B) &&& A = A &&& (B ^^^ -1)
 := by alive_auto
+      ext
+      simp
+      rename_i w A B i
+      simp [getLsb_neg_one_eq_true] -- This does not go through?
+      try cases getLsb _ _
+      try cases getLsb _ _
+      try cases getLsb _ _
+      try simp
+      try simp
+      try simp
+      unfold getLsb
+      try simp
+      try simp
+      try simp
+      try simp
+      try simp
+      try simp
+      simp
       try sorry
 
 theorem bitvec_AndOrXor_1280_ABA___AB :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ -1 ||| B) &&& A = A &&& B
 := by alive_auto
+      ext
+      simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try cases getLsb _ _
+      try simp
+      try simp
+      try simp
+      try simp
+      try simp
+      try simp
+      try simp
+      simp
       try sorry
 
 theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
