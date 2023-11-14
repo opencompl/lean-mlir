@@ -1,7 +1,11 @@
 import Mathlib.Logic.Function.Iterate
+import Mathlib.Algebra.Hom.Iterate
+/-
+theorem nsmul_iterate {G : Type u_3} [AddMonoid G] (n : ℕ) (j : ℕ) :
+(fun x => n • x)^[j] = fun x => n ^ j • x
+-/
 import SSA.Core.Framework
 import SSA.Core.Util
-
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
@@ -56,6 +60,28 @@ instance : OpSignature Op Ty where
   that iterates and updates the loop counter. -/
 def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int × α :=
   fun (i, v) => (i + δ, f i v)
+
+/-- evaluating a function that does not access the index (const_index_fn) -/
+theorem loop_conter_decorator_const_index_fn_eval
+  (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) :
+  (loop_counter_decorator δ f) (i, vstart) = (i + δ, f' vstart) := by
+  simp[loop_counter_decorator, hf]
+
+
+/-- iterating a function that does not access the index (const_index_fn) -/
+theorem loop_conter_decoraor_const_index_fn_iterate
+  (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
+  (loop_counter_decorator δ f)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
+  induction k generalizing i vstart
+  case zero =>
+    simp
+  case succ n ihn =>
+    simp
+    simp[loop_counter_decorator] at ihn ⊢
+    simp[ihn]
+    simp[hf]
+    linarith
+
 
 /-- loop_counter_decorator on a constant function -/
 @[simp]
@@ -237,7 +263,7 @@ def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int 
                         ⟨/- nsteps -/ 2, by simp[Ctxt.snoc]⟩
                         ⟨/- vstart -/ 3, by simp[Ctxt.snoc]⟩ (
       Com.lete (cst vincrement) <|
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun v => (v + increment)
+      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩) -- fun v => (v + increment)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩)) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
@@ -246,18 +272,33 @@ def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int 
   Com.lete (axpy ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
+/-- iterated addition-/
+theorem add_iterate (v0 : Int) (b : Int) (a : ℕ):
+  (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
+  induction a generalizing b v0
+  case zero => simp
+  case succ a' ah =>
+    simp[ah]
+    linarith
+
 /-- Reverse a loop. -/
 theorem correct :
-  Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
+  Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
     simp[lhs, rhs, for_, axpy, cst]
     try simp (config := {decide := false}) only [
     Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
     Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+    Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry, add]
     generalize A:Γv { val := 0, property := _ } = a;
     generalize B:Γv { val := 1, property := _ } = b;
-    sorry /- prove this. -/
+    rw[loop_conter_decoraor_const_index_fn_iterate]
+    case hf => rfl
+    . simp
+      apply add_iterate
+    done
+#print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 end ForAddToMul
 
