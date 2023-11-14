@@ -29,6 +29,7 @@ inductive Op :  Type
   | axpy : Op /- a * x + y -/
   | neg : Op /- -a -/
   | const : (val : ℤ) → Op
+  | const_nat : (val : ℕ) → Op
   | iterate (k : ℕ) : Op
   | run (ty : Ty) : Op -- f^k
   | if (t t' : Ty) : Op -- if cond then true_body else false_body
@@ -41,6 +42,7 @@ instance : OpSignature Op Ty where
     | .axpy => ⟨[.int, .nat, .int], [], .int⟩
     | .neg => ⟨[.int], [], .int⟩
     | .const _ => ⟨[], [], .int⟩
+    | .const_nat _ => ⟨[], [], .nat⟩
     | .if t t' => ⟨[.bool, t], [([t], t'), ([t], t')], t'⟩
     | .for t => ⟨[/-start-/.int, /-step-/.int, /-niters-/.nat, t], [([.int, t], t)], t⟩
     | .add   => ⟨[.int, .int], [], .int⟩
@@ -80,6 +82,7 @@ def to_loop_run (δ : Int) (f : Int → α → α) (niters : ℕ) (val : α) : �
 noncomputable instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => n
+    | .const_nat n, _, _ => n
     | .neg, .cons (a : ℤ ) .nil, _ => -a
     | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => a * (x : ℤ) + b
     | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => a + b
@@ -105,6 +108,13 @@ noncomputable instance : OpDenote Op Ty where
 def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
   Expr.mk
     (op := .const n)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+def cst_nat {Γ : Ctxt _} (n : ℕ) : Expr Op Γ .nat  :=
+  Expr.mk
+    (op := .const_nat n)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
@@ -194,8 +204,65 @@ theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (
     simp[Com.denote]
     rw[loop_counter_decorator_constant_iterate]
 
-namespace ForReversal
 
+set_option pp.proofs false
+set_option pp.proofs.withType false
+
+/-# Repeatedly adding a constant in a loop is replaced with a multiplication.
+
+We keep the increment outside the loop so that we don't need to deal with creating and deleting tuples for the "for" region body,
+since our regions are isolatedFromAbove.
+If we want to deal with creating and removing tuples, we can.
+
+lhs
+----
+  out = for i in range(0, nsteps, δ=1) with k0 {
+    ^entry(k):
+      yield k + incremenet
+  }
+  return out
+
+rhs
+----
+  out = k0 + increment * nsteps
+-/
+namespace ForAddToMul
+
+def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
+  /- c0 = -/ Com.lete (cst 0) <|
+  /- loop_step = -/ Com.lete  (cst 1) <|
+  /- v1 = -/ Com.lete (for_ (t := .int)
+                        ⟨/- c0 -/ 1, by simp[Ctxt.snoc]⟩
+                        ⟨/- loop_step -/ 0, by simp[Ctxt.snoc]⟩
+                        ⟨/- nsteps -/ 2, by simp[Ctxt.snoc]⟩
+                        ⟨/- vstart -/ 3, by simp[Ctxt.snoc]⟩ (
+      Com.lete (cst vincrement) <|
+      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun v => (v + increment)
+      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩)) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
+  Com.lete (cst vincrement) <|
+  Com.lete (axpy ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+/-- Reverse a loop. -/
+theorem correct :
+  Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
+    simp[lhs, rhs, for_, axpy, cst]
+    try simp (config := {decide := false}) only [
+    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
+    generalize A:Γv { val := 0, property := _ } = a;
+    generalize B:Γv { val := 1, property := _ } = b;
+    sorry /- prove this. -/
+
+end ForAddToMul
+
+/- ## Reverse a loop, if the loop body does not depend on the loop. -/
+namespace ForReversal
 variable {t : Ty}
 variable (rgn : Com Op [Ty.int, t] t)
 /- region semantics does not depend on trip count -/
@@ -218,16 +285,12 @@ def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t
   /- -delta -/
   Com.lete (neg ⟨2, by simp[Ctxt.snoc]⟩) <|
   Com.lete (for_ (t := t)
-                        ⟨/- end -/ 1, by simp[Ctxt.snoc]⟩
-                        ⟨/- -delta -/ 2, by simp[Ctxt.snoc]⟩
-                        ⟨/- steps -/ 3, by simp[Ctxt.snoc]⟩
-                        ⟨/- v0 -/ 4, by simp[Ctxt.snoc]⟩  rgn) <|
+                        ⟨/- end -/ 2, by simp[Ctxt.snoc]⟩
+                        ⟨/- -delta -/ 3, by simp[Ctxt.snoc]⟩
+                        ⟨/- steps -/ 4, by simp[Ctxt.snoc]⟩
+                        ⟨/- v0 -/ 5, by simp[Ctxt.snoc]⟩  rgn) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-set_option pp.proofs false in
-set_option pp.proofs.withType false in
-
-#check Ctxt.Var.mk
 
 /-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
   this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
@@ -239,8 +302,7 @@ theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ)
   V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp[Ctxt.snoc] at hvproof; simp[Ctxt.snoc, hvproof]⟩ := by
     simp[Ctxt.Valuation.snoc, hvar]
 
-/-- Reverse a loop. -/
-theorem for_fuse (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) :
+theorem correct :
   Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
     simp[lhs, rhs, for_, axpy]
     try simp (config := {decide := false}) only [
@@ -261,6 +323,8 @@ theorem for_fuse (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) :
     simp[h1]
     have h2 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 3, property := rhs.proof_2 } = c := by
       conv => rhs; rw[← C]
+    sorry
+    /-
     simp[h2]
     have h3 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 1, property := rhs.proof_1  } = a := by
       conv => rhs; rw[← A]
@@ -269,33 +333,46 @@ theorem for_fuse (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) :
       conv => rhs; rw[← D]
     simp[h4]
     done
-
-#print axioms for_fuse -- [propext, Classical.choice, Quot.sound]
+  -/
 end ForReversal
 
-/-
-namespace ForFusion
-def lhs {t : Ty} (rgn : Com Op [.nat, t] t) : Com Op [/- k -/ .nat, /- l -/ .nat, /- v0 -/ t] t :=
-  /- v1 = -/ Com.lete (for_ (t := t) ⟨/- k -/ 0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ rgn) <|
-  /- [k, l, v0, v1] -/
-  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn)
-   <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+/-## two adjacent loops with the same region body and correct trip counts can be fused together.
 
+-- step 1: define with all variables as lean metavars, not rewriter metavars.
+-- step 2: generalize to case with variables are rewriter metavars.
 
-def rhs {t : Ty} (rgn : Com Op [.nat, t] t) : Com Op [/- k -/ .nat, /- l -/ .nat, /- v0 -/ t] t :=
-  /- v1 = -/ Com.lete (add_nat ⟨/- k -/ 0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <|
-  /- [k, l, v0, v1 = k + l] -/
-  Com.lete (for_ (t := t) ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn)
-   <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-/-- Two adjacent for loops with the same loop body can be fused into a single for loop. -/
-theorem for_fuse {t : Ty} (niters₁ niters₂  : Var Γ .nat) (v : Var Γ t) (rgn : Com Op [.nat, t] t):
-  Expr.denote (ScfRegion.for_ (t := t) niters₁ v rgn) Γv = Γv v := by
-    simp[Expr.denote, run, for_]
-    simp_peephole at Γv
-    sorry
-end ForFusion
 -/
+namespace ForFusion
+
+
+variable (rgn : Com Op [.int, t] t)
+variable (niters1 niters2 : ℕ)
+variable (start1 : ℤ)
+
+def lhs : Com Op [/- v0 -/ t] t :=
+  /- niters1 = -/ Com.lete (cst_nat niters1) <|
+  /- start1 = -/ Com.lete (cst start1) <|
+  /- c1 = -/ Com.lete (cst 1) <|
+  -- start step niter v
+  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
+  /- niters2 = -/ Com.lete (cst_nat niters2) <|
+  /- start2 = -/ Com.lete (cst <| niters1 + start1) <|
+  /- c1 = -/ Com.lete (cst 1) <|
+  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def rhs : Com Op [/- v0 -/ t] t :=
+  /- niters1 + niters2 = -/ Com.lete (cst_nat <| niters1 + niters2) <|
+  /- start1 = -/ Com.lete (cst start1) <|
+  /- c1 = -/ Com.lete (cst 1) <|
+  -- start step niter v
+  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+#check rhs
+
+theorem correct :
+  Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by sorry
+end ForFusion
 
 namespace IterateIdentity
 attribute [local simp] Ctxt.snoc
