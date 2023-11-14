@@ -244,7 +244,7 @@ lhs
 ----
   out = for i in range(0, nsteps, δ=1) with k0 {
     ^entry(k):
-      yield k + incremenet
+      yield k + increment
   }
   return out
 
