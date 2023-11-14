@@ -148,14 +148,16 @@ theorem bitvec_AndOrXor_887_2 :
 := by alive_auto
       try sorry
 
-theorem bitvec_AndOrXor_1230__A__B___A__B :
- ∀ (w : Nat) (notOp0 notOp1 : BitVec w), (notOp0 ^^^ -1) &&& (notOp1 ^^^ -1) = (notOp0 ||| notOp1) ^^^ -1
-:= by alive_auto
-      try sorry
-
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
     getLsb (-1#w) ↑i :=
   BitVec.getLsb_negOne ..
+
+theorem bitvec_AndOrXor_1230__A__B___A__B :
+ ∀ (w : Nat) (notOp0 notOp1 : BitVec w), (notOp0 ^^^ -1) &&& (notOp1 ^^^ -1) = (notOp0 ||| notOp1) ^^^ -1
+:= by alive_auto
+      ext
+      simp
+      done --ext
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) &&& (A &&& B ^^^ -1) = A ^^^ B
