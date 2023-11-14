@@ -2,14 +2,6 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
-   {"url": "https://github.com/leanprover-community/mathlib4",
-    "subDir?": null,
-    "rev": "3b5350301929a51585dedea497e172a23e4a4485",
-    "opts": {},
-    "name": "mathlib",
-    "inputRev?": "bitvec-ring",
-    "inherited": false}},
-  {"git":
    {"url": "https://github.com/mhuisi/lean4-cli.git",
     "subDir?": null,
     "rev": "39229f3630d734af7d9cfb5937ddc6b41d3aa6aa",
@@ -32,6 +24,14 @@
     "opts": {},
     "name": "«doc-gen4»",
     "inputRev?": "8bccb92b531248af1b6692d65486e8640c8bcd10",
+    "inherited": false}},
+  {"git":
+   {"url": "https://github.com/leanprover-community/mathlib4",
+    "subDir?": null,
+    "rev": "e7c01ac0049e33a4d6f7e98f9ebea8222bf52311",
+    "opts": {},
+    "name": "mathlib",
+    "inputRev?": "bitvec-ring-and-ext",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/leanprover/std4",
@@ -64,29 +64,5 @@
     "opts": {},
     "name": "proofwidgets",
     "inputRev?": "v0.0.21",
-    "inherited": true}},
-  {"git":
-   {"url": "https://github.com/xubaiw/CMark.lean",
-    "subDir?": null,
-    "rev": "0077cbbaa92abf855fc1c0413e158ffd8195ec77",
-    "opts": {},
-    "name": "CMark",
-    "inputRev?": "main",
-    "inherited": true}},
-  {"git":
-   {"url": "https://github.com/fgdorais/lean4-unicode-basic",
-    "subDir?": null,
-    "rev": "f09250282cea3ed8c010f430264d9e8e50d7bc32",
-    "opts": {},
-    "name": "«lean4-unicode-basic»",
-    "inputRev?": "main",
-    "inherited": true}},
-  {"git":
-   {"url": "https://github.com/hargonix/LeanInk",
-    "subDir?": null,
-    "rev": "2447df5cc6e48eb965c3c3fba87e46d353b5e9f1",
-    "opts": {},
-    "name": "leanInk",
-    "inputRev?": "doc-gen",
     "inherited": true}}],
  "name": "SSA"}
