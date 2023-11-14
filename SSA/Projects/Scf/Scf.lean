@@ -1,9 +1,4 @@
 import Mathlib.Logic.Function.Iterate
-import Mathlib.Algebra.Hom.Iterate
-/-
-theorem nsmul_iterate {G : Type u_3} [AddMonoid G] (n : ℕ) (j : ℕ) :
-(fun x => n • x)^[j] = fun x => n ^ j • x
--/
 import SSA.Core.Framework
 import SSA.Core.Util
 set_option pp.proofs false
