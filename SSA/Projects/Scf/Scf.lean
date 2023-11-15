@@ -56,6 +56,67 @@ instance : OpSignature Op Ty where
 def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int × α :=
   fun (i, v) => (i + δ, f i v)
 
+
+/-# define what it means for a loop body (a function of type `(i : Int) × (v : t) → t` to be index invariant -/
+section LoopIndexInvariant
+
+/-- A function is loop index invariant if it does not depend on the index. -/
+def LoopIndexInvariant (f : Int → t → t) : Prop :=
+  ∀ (i j : Int) (v : t), f i v = f j v
+
+/-- Evaluating a loop index invariant function is the same as evaluating it at 0 -/
+theorem LoopIndexInvariant_eval (f : Int → t → t) (hf : LoopIndexInvariant f) (i : Int) (v : t) :
+  f i v = f 0 v := by unfold LoopIndexInvariant at hf; rw[hf]
+
+/-- Loop invariant functions can be simulated by a simpler function -/
+def LoopInvariantVersion (f : Int → t → t) : t → t := fun v => f 0 v
+
+/-- If there exists a function `g : t → t` which agrees with `f`, then `f` is loop index invariant. -/
+theorem LoopIndexInvariant_eq_other_function_LoopIndexInvariant
+    (f : Int → t → t) (g : t → t) (hf : ∀ (i : Int) (v : t), f i v = g v) :
+    LoopIndexInvariant f /\ LoopInvariantVersion f = g:= by
+      apply And.intro
+      case left =>
+        intros i j v
+        rw[hf i v, hf j v]
+      case right =>
+        simp[LoopInvariantVersion]
+        funext v
+        rw[hf 0 v]
+
+/-- Evaluating a loop index invariant function is the same as evaluating it at LoopInvariantVersion -/
+@[simp]
+theorem LoopIndexInvariant_eval' {f : Int → t → t} (hf : LoopIndexInvariant f) (i : Int) (v : t) :
+  f i v = LoopInvariantVersion f v := by unfold LoopIndexInvariant at hf; rw[LoopInvariantVersion, hf]
+
+/-- iterating a loop invariant function gives a well understood answer: the iterates of the function. -/
+@[simp]
+theorem LoopIndexInvariant_iterate {f : Int → t → t} (hf : LoopIndexInvariant f) (δ : Int)  (i₀ : Int) (v₀ : t) (k : ℕ) :
+  (loop_counter_decorator δ f)^[k] (i₀, v₀) = (i₀ + δ * k, (LoopInvariantVersion f)^[k] v₀) := by
+    induction k generalizing i₀ v₀
+    case zero => simp
+    case succ i hi =>
+      simp
+      rw[hi]
+      simp[loop_counter_decorator]
+      simp[LoopIndexInvariant_eval' hf]
+      linarith
+
+/-- the first component of iterating a loop invariant function -/
+@[simp]
+theorem LoopIndexInvariant_iterate_fst {f : Int → t → t} (δ : Int) (hf : LoopIndexInvariant f) (i₀ : Int) (v₀ : t) (k : ℕ) :
+  ((loop_counter_decorator δ f)^[k] (i₀, v₀)).1 = i₀ + δ * k := by
+    simp[LoopIndexInvariant_iterate hf]
+
+/-- the second component of iterating a loop invariant function -/
+@[simp]
+theorem LoopIndexInvariant_iterate_snd {f : Int → t → t} (δ : Int) (hf : LoopIndexInvariant f) (i₀ : Int) (v₀ : t) (k : ℕ) :
+  ((loop_counter_decorator δ f)^[k] (i₀, v₀)).2 = (LoopInvariantVersion f)^[k] v₀ := by
+    simp[LoopIndexInvariant_iterate hf]
+
+end LoopIndexInvariant
+
+
 /-- iterated value of the fst of the tuple of loop_counter_decorator (ie, the loop counter) -/
 @[simp]
 theorem loop_counter_decorator_iterate_fst_val (δ: Int) (f : Int → α → α) (i₀ : Int) (v₀ : α) (k : ℕ) :
@@ -79,16 +140,11 @@ theorem loop_counter_decorator_const_index_fn_eval
 theorem loop_counter_decorator_const_index_fn_iterate
   (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
   (loop_counter_decorator δ f)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
-  induction k generalizing i vstart
-  case zero =>
-    simp
-  case succ n ihn =>
-    simp
-    simp[loop_counter_decorator] at ihn ⊢
-    simp[ihn]
-    simp[hf]
-    linarith
-
+  obtain ⟨hf, hf'⟩ := LoopIndexInvariant_eq_other_function_LoopIndexInvariant f f' (by intros i v; rw[hf])
+  rw[LoopIndexInvariant_iterate hf]; simp
+  apply And.intro
+  . linarith
+  . rw[hf']
 
 /-- loop_counter_decorator on a constant function -/
 @[simp]
@@ -245,6 +301,58 @@ theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
+/-# Helpers for simplifying context manipulation with toSnoc and variable access -/
+section ValuationVariableAccess
+
+/-- (ctx.snoc v₁) ⟨1, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_one {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 1 = some var_val) :
+  (V.snoc v) ⟨1, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (ctx.snoc v₁) ⟨2, _⟩ = ctx ⟨1, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_two {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 2 = some var_val) :
+  (V.snoc v) ⟨2, hvar⟩ = V ⟨1, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (ctx.snoc v₁) ⟨3, _⟩ = ctx ⟨2, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_three {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 3 = some var_val) :
+  (V.snoc v) ⟨3, hvar⟩ = V ⟨2, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (ctx.snoc v₁) ⟨4, _⟩ = ctx ⟨3, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_four {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 4 = some var_val) :
+  (V.snoc v) ⟨4, hvar⟩ = V ⟨3, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (ctx.snoc v₁) ⟨5, _⟩ = ctx ⟨4, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_five {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 5 = some var_val) :
+  (V.snoc v) ⟨5, hvar⟩ = V ⟨4, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (ctx.snoc v₁) ⟨6, _⟩ = ctx ⟨5, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_six {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 6 = some var_val) :
+  (V.snoc v) ⟨6, hvar⟩ = V ⟨5, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- ((ctx.snoc v₁).snoc v₂) ⟨2, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_snoc_eval_two {ty₁ ty₂: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧)
+  (hvar : Ctxt.get? ((Ctxt.snoc Γ ty₁).snoc ty₂) 2 = some var_val) :
+  ((V.snoc v₁).snoc v₂) ⟨2, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (((ctx.snoc v₁).snoc v₂).snoc v₃) ⟨3, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_snoc_snoc_eval_three {ty₁ ty₂ ty₃: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation)
+  (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧) (v₃ : ⟦ty₃⟧)
+  (hvar : Ctxt.get? (((Ctxt.snoc Γ ty₁).snoc ty₂).snoc ty₃) 3 = some var_val) :
+  (((V.snoc v₁).snoc v₂).snoc v₃) ⟨3, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+end ValuationVariableAccess
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
 We keep the increment outside the loop so that we don't need to deal with creating and deleting tuples for the "for" region body,
@@ -321,10 +429,9 @@ end ForAddToMul
 namespace ForReversal
 variable {t : Ty}
 variable (rgn : Com Op [Ty.int, t] t)
-/- region semantics does not depend on trip count -/
-variable (hrgn : ∀ (v : ⟦t⟧) (n m : Int),
-  Com.denote rgn (Ctxt.Valuation.ofPair n v) =
-  Com.denote rgn (Ctxt.Valuation.ofPair m v))
+/- region semantics does not depend on trip count. That is, the region is trip count invariant.
+  In such cases, a region can be reversed. -/
+variable (hrgn : LoopIndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
 
 def lhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- val -/ t] t :=
   /- v-/
@@ -358,6 +465,7 @@ theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ)
   V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp[Ctxt.snoc] at hvproof; simp[Ctxt.snoc, hvproof]⟩ := by
     simp[Ctxt.Valuation.snoc, hvar]
 
+/-- TODO: this should not complete, it should need more theorems! -/
 theorem correct :
   Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
     simp[lhs, rhs, for_, axpy]
@@ -365,32 +473,19 @@ theorem correct :
     Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
     Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
-    generalize A:Γv { val := 0, property := _ } = a;
-    generalize B:Γv { val := 1, property := _ } = b;
-    generalize C:Γv { val := 2, property := _ } = c;
-    generalize D:Γv { val := 3, property := _ } = d;
-    /- we still have things like
-    Ctxt.Valuation.snoc Γv (b * ↑c + a) { val := 2, property := rhs.proof_1 }
-    in the proof state, because it's not sure how to simplify stuff with `snoc`? -/
-    simp[Goedel.toType] at a b c d
-    have h1 : Ctxt.Valuation.snoc (t := .int) Γv (b * (c : ℤ) + a) { val := 2, property := rhs.proof_1 } = b := by
-      conv => rhs; rw[← B]
-    simp[h1]
-    have h2 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 3, property := rhs.proof_2 } = c := by
-      conv => rhs; rw[← C]
-    sorry -- TODO: finish proof
-    /-
-    simp[h2]
-    have h3 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 1, property := rhs.proof_1  } = a := by
-      conv => rhs; rw[← A]
-    simp[h3]
-    have h4 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 4, property := rhs.proof_3 } = d := by
-      conv => rhs; rw[← D]
-    simp[h4]
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+    neg,
+    Ctxt.Valuation.snoc_eval_one,
+    Ctxt.Valuation.snoc_eval_two,
+    Ctxt.Valuation.snoc_eval_three,
+    Ctxt.Valuation.snoc_eval_four,
+    Ctxt.Valuation.snoc_eval_five,
+    Ctxt.Valuation.snoc_eval_six,
+    Ctxt.Valuation.snoc_snoc_eval_two, Ctxt.Valuation.snoc_snoc_snoc_eval_three]
     done
-  -/
 
+set_option pp.proofs true in
+#print correct
 -- TODO: add a PeepholeRewrite for this theorem.
 
 end ForReversal
@@ -427,26 +522,7 @@ def rhs : Com Op [/- v0 -/ t] t :=
   -- start step niter v
   Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-#check rhs
 
-/-- (ctx.snoc v₁) ⟨1, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_one {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 1 = some var_val) :
-  (V.snoc v) ⟨1, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
-
-/-- ((ctx.snoc v₁).snoc v₂) ⟨2, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_snoc_eval_two {ty₁ ty₂: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧)
-  (hvar : Ctxt.get? ((Ctxt.snoc Γ ty₁).snoc ty₂) 2 = some var_val) :
-  ((V.snoc v₁).snoc v₂) ⟨2, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
-
-/-- (((ctx.snoc v₁).snoc v₂).snoc v₃) ⟨3, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_snoc_snoc_eval_three {ty₁ ty₂ ty₃: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation)
-  (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧) (v₃ : ⟦ty₃⟧)
-  (hvar : Ctxt.get? (((Ctxt.snoc Γ ty₁).snoc ty₂).snoc ty₃) 3 = some var_val) :
-  (((V.snoc v₁).snoc v₂).snoc v₃) ⟨3, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
 
 theorem correct :
   Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
