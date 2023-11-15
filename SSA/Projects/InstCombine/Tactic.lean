@@ -32,20 +32,29 @@ macro "simp_alive_peephole" : tactic =>
       (
         dsimp only [Com.Refinement]
         intros Γv
+        simp [InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+          ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+          List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, DerivedCtxt.snoc,
+          DerivedCtxt.ofCtxt, List.map_eq_map, List.map] at Γv
         simp_peephole at Γv
         /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
           We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
         try simp (config := {decide := false}) only [OpDenote.denote,
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
-          bind, Option.bind, pure, DerivedContext.ofContext, DerivedContext.snoc,
-          Ctxt.snoc, MOp.instantiateCom, InstCombine.MTy.instantiate,
+          bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
+          Ctxt.snoc,
           ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
           LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
           LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
           LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
           LLVM.const?, LLVM.icmp?,
           HVector.toTuple, List.nthLe, bitvec_minus_one,
-          InstcombineTransformDialect.MOp.instantiateCom]
+          DialectMorphism.mapTy,
+          InstcombineTransformDialect.instantiateMTy,
+          InstcombineTransformDialect.instantiateMOp,
+          InstcombineTransformDialect.MOp.instantiateCom,
+          InstcombineTransformDialect.instantiateCtxt,
+          ConcreteOrMVar.instantiate, Com.Refinement]
         try intros v0
         try intros v1
         try intros v2
