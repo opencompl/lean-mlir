@@ -33,7 +33,7 @@ instance : OpSignature Op Ty where
 instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
+    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
 
 def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
   Expr.mk
@@ -125,8 +125,8 @@ instance : OpSignature Op Ty where
 instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
-    | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
+    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b
+    | .iterate k, [(x : BitVec 32)]ₕ, [(f : _ → BitVec 32)]ₕ =>
       let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
       -- let f_k := Nat.iterate f' k
