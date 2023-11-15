@@ -255,7 +255,7 @@ def State.snocOldExpr2Cache
  {lets : Lets Op Γstart Γ}
  (s : State Op lets) (enew : Expr Op Γ α) (eold : Expr Op Γ α) (henew :
     ∀ (V : Γstart.Valuation), enew.denote (lets.denote V) = eold.denote (lets.denote V))
-  (v : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V v) : State Op (Lets.lete lets enew) := {
+  (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V vold) : State Op (Lets.lete lets enew) := {
     var2var := fun v => by
       cases v using Ctxt.Var.casesOn
       case toSnoc v => -- old variable, look up 'var2var'
@@ -266,15 +266,15 @@ def State.snocOldExpr2Cache
         rw[hv']
 
       case last => -- new variable, return the CSE'd variable.
-        apply (Subtype.mk v.toSnoc)
+        apply (Subtype.mk vold.toSnoc)
         intros V
         simp[Lets.denote_lete]
         rw[← hv]
         rw[henew]
     expr2cache := fun β eneedle =>
-      let homRemap := Ctxt.Hom.remapLast Γ v
+      let homRemap := Ctxt.Hom.remapLast Γ vold
       let lastVar := (Ctxt.Var.last Γ α)
-      let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap v lastVar (by {
+      let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by {
         intros Vstart
         simp[Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
         done
@@ -434,7 +434,7 @@ unsafe def State.cseCom {α : Ty}
             done⟩
       | .some ⟨v', hv'⟩ =>
         let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw[he'] })
-          (v := v') (hv := by {intros V; rw[hv'] }) -- add this expression into the cache for the latest variable.
+          (vold := v') (hv := by {intros V; rw[hv'] }) -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
         -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
         ⟨.lete e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
@@ -450,4 +450,71 @@ unsafe def State.cseCom {α : Ty}
         ⟩
 
 end -- mutual.
+
+namespace Examples
+/-- A very simple type universe. -/
+inductive ExTy
+  | nat
+  | bool
+  deriving DecidableEq, Repr
+
+@[reducible]
+instance : Goedel ExTy where
+  toType
+    | .nat => Nat
+    | .bool => Bool
+
+inductive ExOp :  Type
+  | add : ExOp
+  | beq : ExOp
+  | cst : ℕ → ExOp
+  deriving DecidableEq, Repr
+
+instance : OpSignature ExOp ExTy where
+  signature
+    | .add    => ⟨[.nat, .nat], [], .nat⟩
+    | .beq    => ⟨[.nat, .nat], [], .bool⟩
+    | .cst _  => ⟨[], [], .nat⟩
+
+@[reducible]
+instance : OpDenote ExOp ExTy where
+  denote
+    | .cst n, _, _ => n
+    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
+    | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
+
+def cst {Γ : Ctxt _} (n : ℕ) : Expr ExOp Γ .nat  :=
+  Expr.mk
+    (op := .cst n)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr ExOp Γ .nat :=
+  Expr.mk
+    (op := .add)
+    (ty_eq := rfl)
+    (args := .cons e₁ <| .cons e₂ .nil)
+    (regArgs := .nil)
+
+attribute [local simp] Ctxt.snoc
+
+def ex1_pre_cse : Com ExOp ∅ .nat :=
+  Com.lete (cst 1) <|
+  Com.lete (cst 1) <|
+  Com.lete (cst 1) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+#eval ex1_pre_cse
+
+unsafe def ex1_post_cse : Com ExOp ∅ .nat := (State.cseCom (State.empty Lets.nil) ex1_pre_cse).val
+#eval ex1_post_cse
+/-
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.cst 1[[]]
+return %2 -- points to the oldest variable!
+-/
+
+end Examples
+
 end CSE
