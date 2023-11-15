@@ -59,6 +59,12 @@ theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddS
   apply bitvec_AddSub_1043
 
 
+/-# Early Exit
+delete this to check the rest of the file. The `#exit`
+  is an early exit to allow our `lake` builds to complete in sensible amounts of time.
+-/
+#exit
+
 -- Name:AddSub:1152
 -- precondition: true
 /-
