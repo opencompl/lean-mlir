@@ -44,7 +44,8 @@ macro "simp_alive_peephole" : tactic =>
           LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
           LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
           LLVM.const?, LLVM.icmp?,
-          HVector.toTuple, List.nthLe, bitvec_minus_one]
+          HVector.toTuple, List.nthLe, bitvec_minus_one,
+          InstcombineTransformDialect.MOp.instantiateCom]
         try intros v0
         try intros v1
         try intros v2
