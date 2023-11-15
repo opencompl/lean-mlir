@@ -240,7 +240,8 @@ def State.snocOldExpr2Cache
  {lets : Lets Op Γstart Γ}
  (s : State Op lets) (enew : Expr Op Γ α) (eold : Expr Op Γ α) (henew :
     ∀ (V : Γstart.Valuation), enew.denote (lets.denote V) = eold.denote (lets.denote V))
-  (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V vold) : State Op (Lets.lete lets enew) := {
+  (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V vold) :
+  State Op (Lets.lete lets enew) := {
     var2var := fun v => by
       cases v using Ctxt.Var.casesOn
       case toSnoc v => -- old variable, look up 'var2var'
