@@ -147,7 +147,7 @@ theorem Lets.denote_lete [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   cases v using Ctxt.Var.casesOn <;> simp
   done
 
-/- Remap the last variable in a context, to get a new context without the last variable -/
+/-- Remap the last variable in a context, to get a new context without the last variable -/
 def _root_.Ctxt.Hom.remapLast [Goedel Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Var α) :
   Ctxt.Hom (Γ.snoc α) Γ := fun ty' var' => by
     cases var' using Ctxt.Var.casesOn
@@ -155,7 +155,7 @@ def _root_.Ctxt.Hom.remapLast [Goedel Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Va
     case last => exact var
 
 section RemapVar
-  def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -202,7 +202,7 @@ def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature O
       done
     ⟩
 
-  def ExprRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+def ExprRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
