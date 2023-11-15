@@ -417,8 +417,43 @@ def rhs : Com Op [/- v0 -/ t] t :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 #check rhs
 
+/-- (ctx.snoc v₁) ⟨1, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_eval_one {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+  (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 1 = some var_val) :
+  (V.snoc v) ⟨1, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- ((ctx.snoc v₁).snoc v₂) ⟨2, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_snoc_eval_two {ty₁ ty₂: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧)
+  (hvar : Ctxt.get? ((Ctxt.snoc Γ ty₁).snoc ty₂) 2 = some var_val) :
+  ((V.snoc v₁).snoc v₂) ⟨2, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
+/-- (((ctx.snoc v₁).snoc v₂).snoc v₃) ⟨3, _⟩ = ctx ⟨0, _⟩ -/
+@[simp]
+theorem Ctxt.Valuation.snoc_snoc_snoc_eval_three {ty₁ ty₂ ty₃: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation)
+  (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧) (v₃ : ⟦ty₃⟧)
+  (hvar : Ctxt.get? (((Ctxt.snoc Γ ty₁).snoc ty₂).snoc ty₃) 3 = some var_val) :
+  (((V.snoc v₁).snoc v₂).snoc v₃) ⟨3, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
+
 theorem correct :
   Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by
+    simp[lhs, rhs, for_, axpy, cst]
+    try simp (config := {decide := false}) only [
+    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+    Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
+    add, cst_nat,
+    Ctxt.Valuation.snoc_eval_one, Ctxt.Valuation.snoc_snoc_eval_two, Ctxt.Valuation.snoc_snoc_snoc_eval_three]
+    have swap_niters := add_comm (a := niters1) (b := niters2)
+
+    simp[Function.iterate_add_apply]
+
+    generalize A:Γv { val := 0, property := _ } = a;
+    generalize B:Γv { val := 1, property := _ } = b;
+
     sorry -- TODO: finish proof
 
 -- TODO: add a PeepholeRewrite for this theorem.
