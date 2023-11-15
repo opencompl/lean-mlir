@@ -1204,7 +1204,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       try simp (config := {decide := false})  only [
-          MLIR.AST.DerivedCtxt.ofCtxt_empty, MLIR.AST.DerivedCtxt.ofCtxt, MLIR.AST.DerivedCtxt.snoc
+        DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
+        DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
       ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       try simp (config := {decide := false}) only [
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
@@ -1213,7 +1214,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         $ts,*]
       try simp (config := {decide := false})  only [
-          MLIR.AST.DerivedCtxt.ofCtxt_empty, MLIR.AST.DerivedCtxt.ofCtxt, MLIR.AST.DerivedCtxt.snoc
+        DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
+        DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
       ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;

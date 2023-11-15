@@ -147,6 +147,7 @@ def rhs : Com Op (Ctxt.ofList [.int]) .int :=
       "return" (%x) : (i32) -> (i32)
   }]
 
+open MLIR AST MLIR2Simple in
 def p1 : PeepholeRewrite Op [.int] .int :=
   { lhs := lhs, rhs := rhs, correct :=
     by
@@ -162,7 +163,6 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
-      simp[MLIR.AST.DerivedCtxt.snoc, MLIR.AST.DerivedCtxt.ofCtxt]
       ring
       /- goals accomplished 🎉 -/
       sorry -- TODO: import ring instance from other file.
