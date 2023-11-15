@@ -451,6 +451,18 @@ unsafe def State.cseCom {α : Ty}
 
 end -- mutual.
 
+/-- common subexpression elimination entry point. -/
+unsafe def cse' [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty]
+  {α : Ty} {Γ : Ctxt Ty} (com: Com Op Γ α) :
+  { com' : Com Op Γ α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
+    let ⟨com', hcom'⟩ := State.cseCom (State.empty Lets.nil) com
+    ⟨com', by {
+      intros V
+      specialize (hcom' V)
+      simp[Lets.denote] at hcom'
+      assumption
+    }⟩
+
 namespace Examples
 /-- A very simple type universe. -/
 inductive ExTy
@@ -502,19 +514,26 @@ attribute [local simp] Ctxt.snoc
 def ex1_pre_cse : Com ExOp ∅ .nat :=
   Com.lete (cst 1) <|
   Com.lete (cst 1) <|
-  Com.lete (cst 1) <|
+  Com.lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 #eval ex1_pre_cse
 
-unsafe def ex1_post_cse : Com ExOp ∅ .nat := (State.cseCom (State.empty Lets.nil) ex1_pre_cse).val
+unsafe def ex1_post_cse : Com ExOp ∅ .nat := (cse' ex1_pre_cse).val
 #eval ex1_post_cse
 /-
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.cst 1[[]]
-return %2 -- points to the oldest variable!
+CSE.Examples.ExOp.cst 1[[]] -- %1
+CSE.Examples.ExOp.cst 1[[]] -- %0
+CSE.Examples.ExOp.add[[%1, ,, %1]] -- see that the more recent use is dead.
+return %0
 -/
 
+unsafe def ex1_post_cse_post_dce : Com ExOp ∅ .nat := (DCE.dce' ex1_post_cse).val
+#eval ex1_post_cse_post_dce
+/-
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.add[[%0, ,, %0]] -- see that the dead use has been killed.
+return %0
+-/
 end Examples
 
 end CSE
