@@ -56,6 +56,18 @@ instance : OpSignature Op Ty where
 def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int × α :=
   fun (i, v) => (i + δ, f i v)
 
+/-- iterated value of the fst of the tuple of loop_counter_decorator (ie, the loop counter) -/
+@[simp]
+theorem loop_counter_decorator_iterate_fst_val (δ: Int) (f : Int → α → α) (i₀ : Int) (v₀ : α) (k : ℕ) :
+  ((loop_counter_decorator δ f)^[k] (i₀, v₀)).1 = i₀ + k * δ := by
+    induction k generalizing i₀ v₀
+    case zero => simp
+    case succ i hi =>
+      simp
+      rw[hi]
+      simp[loop_counter_decorator]
+      linarith
+
 /-- evaluating a function that does not access the index (const_index_fn) -/
 theorem loop_counter_decorator_const_index_fn_eval
   (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) :
@@ -437,7 +449,7 @@ theorem Ctxt.Valuation.snoc_snoc_snoc_eval_three {ty₁ ty₂ ty₃: Ty} (Γ : C
   (((V.snoc v₁).snoc v₂).snoc v₃) ⟨3, hvar⟩ = V ⟨0, by simp[Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ := rfl
 
 theorem correct :
-  Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by
+  Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
     simp[lhs, rhs, for_, axpy, cst]
     try simp (config := {decide := false}) only [
     Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
@@ -448,13 +460,18 @@ theorem correct :
     add, cst_nat,
     Ctxt.Valuation.snoc_eval_one, Ctxt.Valuation.snoc_snoc_eval_two, Ctxt.Valuation.snoc_snoc_snoc_eval_three]
     have swap_niters := add_comm (a := niters1) (b := niters2)
-
+    have H : (loop_counter_decorator 1 fun i v =>
+          Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
+      (start1, Γv (Var.last [] t)) = (loop_counter_decorator 1 fun i v =>
+          Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
+      (start1, Γv (Var.last [] t)) := by
+        congr
+    simp[H]
     simp[Function.iterate_add_apply]
-
-    generalize A:Γv { val := 0, property := _ } = a;
-    generalize B:Γv { val := 1, property := _ } = b;
-
-    sorry -- TODO: finish proof
+    congr
+    rw[loop_counter_decorator_iterate_fst_val]
+    linarith
+    done
 
 -- TODO: add a PeepholeRewrite for this theorem.
 
