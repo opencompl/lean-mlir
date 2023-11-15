@@ -23,7 +23,7 @@ def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) :=
       | .isTrue heq =>
         match argVector.decEq as' bs' with
         | .isFalse hneq => .isFalse (fun CONTRA => by obtain ⟨ha, has⟩ := CONTRA; contradiction)
-        | .isTrue heq' => .isTrue (by simp[heq', heq])
+        | .isTrue heq' => .isTrue (by simp [heq', heq])
       | .isFalse hneq => .isFalse (fun CONTRA => by obtain ⟨ha, has⟩ := CONTRA; contradiction)
 
 mutual
@@ -61,7 +61,7 @@ def Com.decEq (c c' : Com Op Γ α) : Decidable (c = c') :=
   | .ret v, .ret v' =>
     have VAR_DECEQ : DecidableEq (Ctxt.Var Γ α) := inferInstance
     match VAR_DECEQ v v' with
-    | .isTrue heq => .isTrue (by simp[heq])
+    | .isTrue heq => .isTrue (by simp [heq])
     | .isFalse f => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
   | .lete (α := α) e body, .lete (α := β) e' body' =>
     match decEq α β with
@@ -126,9 +126,9 @@ def State.snocNewExpr2Cache
         | .some ⟨v', hv'⟩ =>
           .some ⟨v', by {
             intros V
-            rw[heneedleΓ]
-            simp[Lets.denote]
-            rw[hv' V]
+            rw [heneedleΓ]
+            simp [Lets.denote]
+            rw [hv' V]
             congr
             done
           }⟩
@@ -139,8 +139,8 @@ def State.snocNewExpr2Cache
             match Expr.decEq (hβ ▸  eneedleΓ) e with
             | .isTrue exprEq => /- same expression, return the variable. -/
                 .some ⟨hβ ▸ Ctxt.Var.last Γ α, by {
-                  intros V; subst hβ; simp at exprEq; subst exprEq; simp[cast_eq];
-                  rw[heneedleΓ]; congr; done}⟩
+                  intros V; subst hβ; simp at exprEq; subst exprEq; simp [cast_eq];
+                  rw [heneedleΓ]; congr; done}⟩
             | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
  }
 
@@ -152,7 +152,7 @@ theorem Lets.denote_lete [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   (e : Expr Op Γ α)
   (V : Ctxt.Valuation Γstart) :
   Lets.denote (Lets.lete lets e) V = (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
-  simp[Lets.denote, eq_rec_constant]
+  simp [Lets.denote, eq_rec_constant]
   funext t v
   cases v using Ctxt.Var.casesOn <;> simp
   done
@@ -187,10 +187,10 @@ section RemapVar
         simp at H ⊢
         subst H
         intros Vstart
-        rw[VNEW Vstart]
+        rw [VNEW Vstart]
         done⟩
-      else ⟨hom w', by simp[Ctxt.Valuation.comap]⟩
-    else ⟨hom w', by simp[Ctxt.Valuation.comap]⟩
+      else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
+    else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
 
 def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
@@ -202,17 +202,17 @@ def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature O
     { as : HVector (Ctxt.Var Γ) <| ts //
       ∀ (Vstart : Γstart.Valuation), as.map (fun t v => (lets.denote Vstart) v) = as'.map (fun t v' => ((lets.denote Vstart).comap hom) v') } :=
   match as' with
-  | .nil => ⟨.nil, by simp[HVector.map]⟩
+  | .nil => ⟨.nil, by simp [HVector.map]⟩
   | .cons a' as' =>
     let ⟨a, ha⟩ := VarRemapVar lets hom vold vnew VNEW a'
     let ⟨as, has⟩ := arglistRemapVar lets hom vold vnew VNEW as'
     ⟨.cons a as, by
       intros Vstart
-      simp[HVector.map]
-      rw[ha Vstart]
-      rw[has Vstart]
+      simp [HVector.map]
+      rw [ha Vstart]
+      rw [has Vstart]
       constructor
-      simp[ha]
+      simp [ha]
       congr
       done
     ⟩
@@ -232,8 +232,8 @@ def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature O
       ⟨.mk op ty_eq args' regArgs, by
         intros Vstart
         subst ty_eq
-        simp[Expr.denote]
-        rw[hargs']
+        simp [Expr.denote]
+        rw [hargs']
         done
       ⟩
     -- TODO: extend to Com.
@@ -262,21 +262,21 @@ def State.snocOldExpr2Cache
         let ⟨v', hv'⟩ := s.var2var v
         apply (Subtype.mk v'.toSnoc)
         intros V
-        simp[Lets.denote_lete]
-        rw[hv']
+        simp [Lets.denote_lete]
+        rw [hv']
 
       case last => -- new variable, return the CSE'd variable.
         apply (Subtype.mk vold.toSnoc)
         intros V
-        simp[Lets.denote_lete]
-        rw[← hv]
-        rw[henew]
+        simp [Lets.denote_lete]
+        rw [← hv]
+        rw [henew]
     expr2cache := fun β eneedle =>
       let homRemap := Ctxt.Hom.remapLast Γ vold
       let lastVar := (Ctxt.Var.last Γ α)
       let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by {
         intros Vstart
-        simp[Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
+        simp [Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
         done
       })  eneedle
       match s.expr2cache β eneedle' with
@@ -285,18 +285,18 @@ def State.snocOldExpr2Cache
         .some ⟨e', by {
           intros V
           simp
-          rw[he']
-          rw[heneedle']
+          rw [he']
+          rw [heneedle']
           congr
           funext ty var
           cases var using Ctxt.Var.casesOn
           case e_Γv.h.h.toSnoc v =>
-            simp[Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
+            simp [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
             done
           case e_Γv.h.h.last =>
-            simp[Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
-            rw[henew]
-            rw[hv]
+            simp [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
+            rw [henew]
+            rw [hv]
             done
         }⟩
 }
@@ -310,14 +310,14 @@ def State.cseArgList
   { as' : HVector (Ctxt.Var Γ) <| ts // ∀ (V : Γstart.Valuation), as.map (lets.denote V).eval = as'.map (lets.denote V).eval  } :=
   match as with
   | .nil => ⟨.nil, by
-      simp[HVector.map]
+      simp [HVector.map]
     ⟩
   | .cons a as =>
     let ⟨a', ha'⟩ :=  s.var2var a
     let ⟨as', has'⟩ := s.cseArgList as
     ⟨.cons a' as', by
           intros V
-          simp[HVector.map]
+          simp [HVector.map]
           constructor
           apply ha'
           apply has'
@@ -357,7 +357,7 @@ unsafe def State.cseRegionArgList
   let H := HVector.map (fun _Γα com => Com.denote com) rs
   match rs with
   | .nil => ⟨.nil, by
-      simp[HVector.map]
+      simp [HVector.map]
     ⟩
   | .cons r rs =>
     -- Need to create a fresh state to CSE the region.
@@ -365,7 +365,7 @@ unsafe def State.cseRegionArgList
     let ⟨r', hr'⟩ :=  s'.cseCom r
     let ⟨rs', hrs'⟩ := s.cseRegionArgList rs
     ⟨.cons r' rs', by
-          simp[HVector.denote]
+          simp [HVector.denote]
           constructor
           funext V
           apply hr'
@@ -389,19 +389,19 @@ unsafe def State.cseExpr
       let e' : Expr Op Γ α  := .mk op ty_eq args' regArgs'
       ⟨⟨e', by {
         intros V
-        simp[E, hargs', Expr.denote_unfold]
+        simp [E, hargs', Expr.denote_unfold]
         congr 1
-        simp[Ctxt.Valuation.eval] at hargs'
-        rw[hargs']
-        rw[hregArgs']
+        simp [Ctxt.Valuation.eval] at hargs'
+        rw [hargs']
+        rw [hregArgs']
         done
       }⟩,
         match s.expr2cache _ e with
         | .some ⟨v', hv'⟩ =>
           .some ⟨v', by
             intros V
-            simp[hv']
-            simp[E]
+            simp [hv']
+            simp [E]
           ⟩
         | .none => .none
       ⟩
@@ -418,7 +418,7 @@ unsafe def State.cseCom {α : Ty}
       let ⟨v', hv'⟩ := s.var2var v
       intros VΓ
       simp
-      simp[Com.denote, hv']⟩
+      simp [Com.denote, hv']⟩
   | .lete (α := α) e body =>
       let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e
       match v'? with
@@ -427,24 +427,24 @@ unsafe def State.cseCom {α : Ty}
         let ⟨body', hbody'⟩ := s'.cseCom body
         ⟨.lete e' body',  by
             intros VΓ
-            simp[Com.denote]
-            simp[Lets.denote_lete] at hbody' ⊢
-            rw[← hbody']
-            rw[he']
+            simp [Com.denote]
+            simp [Lets.denote_lete] at hbody' ⊢
+            rw [← hbody']
+            rw [he']
             done⟩
       | .some ⟨v', hv'⟩ =>
-        let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw[he'] })
-          (vold := v') (hv := by {intros V; rw[hv'] }) -- add this expression into the cache for the latest variable.
+        let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw [he'] })
+          (vold := v') (hv := by {intros V; rw [hv'] }) -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
         -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
         ⟨.lete e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
-            simp[Com.denote]
-            simp[Lets.denote_lete] at hbody' ⊢
+            simp [Com.denote]
+            simp [Lets.denote_lete] at hbody' ⊢
             specialize (hbody' V)
             specialize (he' V)
-            rw[he'] at hbody'
+            rw [he'] at hbody'
             apply hbody'
             done
         ⟩
@@ -459,7 +459,7 @@ unsafe def cse' [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [Goedel Ty
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp[Lets.denote] at hcom'
+      simp [Lets.denote] at hcom'
       assumption
     }⟩
 
