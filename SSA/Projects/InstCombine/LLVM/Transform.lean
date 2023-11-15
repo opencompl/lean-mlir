@@ -1,9 +1,9 @@
 -- should replace with Lean import once Pure is upstream
 import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.LLVM.Transform.NameMapping
 import SSA.Projects.InstCombine.LLVM.Transform.TransformError
 import SSA.Core.Framework
+import SSA.Core.ErasedContext
 
 import Std.Data.BitVec
 
@@ -11,11 +11,12 @@ universe u
 
 namespace MLIR.AST
 
-open InstCombine (MOp MTy Width)
 open Std (BitVec)
+open Ctxt
 
-instance : Lean.ToFormat (MTy φ) where
-  format := repr
+instance {Op Ty : Type} [OpSignature Op Ty] {t : Ty} {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr Op Γ t) (Expr Op Γ'.ctxt t) where
+  coe e := e.changeVars Γ'.diff.toHom
+
 
 section Monads
 
@@ -60,45 +61,6 @@ class TransformReturn (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
 variable {Op Ty φ} [OpSignature Op Ty] [DecidableEq Ty] [DecidableEq Op]
-
-structure DerivedCtxt (Γ : Ctxt Ty) where
-  ctxt : Ctxt Ty
-  diff : Ctxt.Diff Γ ctxt
-
-namespace DerivedCtxt
-
-/-- Every context is trivially derived from itself -/
-@[simp]
-abbrev ofCtxt (Γ : Ctxt Ty) : DerivedCtxt Γ := ⟨Γ, .zero _⟩
-
-/-- value of a dervied context from an empty context,
-     is the empty context with a zero diff. -/
-@[simp]
-theorem ofCtxt_empty : MLIR.AST.DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := rfl
-
-/-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
-@[simp]
-def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
-  | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
-
-@[simp]
-instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where
-  coe := fun ⟨Γ', _⟩ => Γ'
-
-instance {Γ : Ctxt Ty} : CoeDep (Ctxt Ty) Γ (DerivedCtxt Γ) where
-  coe := ⟨Γ, .zero _⟩
-
-instance {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} :
-    CoeHead (DerivedCtxt (Γ' : Ctxt Ty)) (DerivedCtxt Γ) where
-  coe := fun ⟨Γ'', diff⟩ => ⟨Γ'', Γ'.diff + diff⟩
-
-instance {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr Op Γ t) (Expr Op Γ'.ctxt t) where
-  coe e := e.changeVars Γ'.diff.toHom
-
-instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) t) where
-  coe v := Γ'.diff.toHom v
-
-end DerivedCtxt
 
 /--
   Add a new variable to the context, and record it's (absolute) index in the name mapping
@@ -349,10 +311,10 @@ def MLIRType.mkTy : MLIRType φ → ExceptM Op Ty
 
 def TypedSSAVal.mkTy [TransformTy Op Ty φ] : TypedSSAVal φ → ExceptM Op Ty
   | (.SSAVal _, ty) => TransformTy.mkTy ty
-
+/-
 def mkVal (ty : InstCombine.Ty) : Int → BitVec ty.width
   | val => BitVec.ofInt ty.width val
-
+-/
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
 def TypedSSAVal.mkVal [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) : TypedSSAVal φ →

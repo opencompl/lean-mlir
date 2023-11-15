@@ -7,6 +7,8 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
+import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
+import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
 open Ctxt (Var VarSet Valuation)
 open Goedel (toType)
@@ -1204,18 +1206,20 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       try simp (config := {decide := false})  only [
-        DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
-        DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
+        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+        Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
+        DialectMorphism.mapOp, DialectMorphism.mapTy
       ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       try simp (config := {decide := false}) only [
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
         Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectMorphism.mapOp, DialectMorphism.mapTy,
         $ts,*]
       try simp (config := {decide := false})  only [
-        DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
-        DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
+        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+        Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
       ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
@@ -1240,8 +1244,22 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       )
    )
 
+open MLIR AST in
+macro "simp_peephole_mlir" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
+  `(tactic|
+      (
+      simp_peephole [$ts,*] at $ll
+      try simp (config := {decide := false})  only [
+        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+        Ctxt.snoc, Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last, List.map,
+        DialectMorphism.mapOp, DialectMorphism.mapTy
+      ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
+      )
+   )
+
 /-- `simp_peephole` with no extra user defined theorems. -/
 macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
+macro "simp_peephole_mlir" "at" ll:ident : tactic => `(tactic| simp_peephole_mlir [] at $ll)
 
 
 end SimpPeephole

@@ -32,13 +32,15 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 inductive MTy (φ : Nat)
   | bitvec (w : Width φ) : MTy φ
   deriving DecidableEq, Inhabited
-
 abbrev Ty := MTy 0
 
 instance : Repr (MTy φ) where
   reprPrec
     | .bitvec (.concrete w), _ => "i" ++ repr w
     | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
+
+instance : Lean.ToFormat (MTy φ) where
+  format := repr
 
 instance : ToString (MTy φ) where
   toString t := repr t |>.pretty

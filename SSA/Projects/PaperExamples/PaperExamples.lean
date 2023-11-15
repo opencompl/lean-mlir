@@ -96,7 +96,7 @@ def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty
 instance : MLIR.AST.TransformReturn Op Ty 0 where
   mkReturn := mkReturn
 
-open InstCombine (Op Ty) in
+-- open InstCombine (Op Ty) in
 
 def mlir2simple (reg : MLIR.AST.Region 0) :
     MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ ty) := MLIR.AST.mkCom reg
@@ -152,7 +152,7 @@ def p1 : PeepholeRewrite Op [.int] .int :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
-      /-
+      /-:
       Com.denote
         (Com.lete (cst 0)
         (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
@@ -160,7 +160,7 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       Com.denote (Com.ret { val := 0, property := _ })
       -/
       funext Γv
-      simp_peephole [add, cst] at Γv
+      simp_peephole_mlir [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
       ring

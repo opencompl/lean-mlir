@@ -1,5 +1,5 @@
 import SSA.Core.Util.ConcreteOrMVar
-import SSA.Core.Framework
+-- import SSA.Core.Framework
 open Lean PrettyPrinter
 
 namespace MLIR.AST

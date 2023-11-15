@@ -39,6 +39,7 @@ def eg2  (w : Nat)   :=
   "llvm.return" (%C0) : (_) -> ()
 }]
 
+
 def eg3  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C0 : _):
@@ -47,10 +48,12 @@ def eg3  (w : Nat)   :=
   "llvm.return" (%C0) : (_) -> ()
 }]
 
+open MLIR AST in
 theorem eg2_eq_eg3 : eg2 w ⊑ eg3 w := by
   unfold eg2
   unfold eg3
-  sorry /- We should get this example simplifying first. -/
+  simp_alive_peephole
+  simp
 
 -- Name:AddSub:1043
 -- precondition: true
@@ -93,8 +96,12 @@ def alive_AddSub_1043_tgt  (w : Nat)  :=
 }]
 theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddSub_1043_tgt w  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
-  dsimp only [Com.Refinement]
-  intros Γv
+  simp_alive_peephole
+  -- simp[pairBind, Var.last, bind, Option.bind, Var.toSnoc, Var.last]
+  sorry
+
+#exit
+
   sorry
   /-
   simp[OpDenote.denote,

@@ -381,5 +381,42 @@ instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨a
 
 end Diff
 
+/-## Derived Contexts: Contexts that grow a base context-/
+structure DerivedCtxt (Γ : Ctxt Ty) where
+  ctxt : Ctxt Ty
+  diff : Ctxt.Diff Γ ctxt
+
+namespace DerivedCtxt
+
+/-- Every context is trivially derived from itself -/
+@[simp]
+abbrev ofCtxt (Γ : Ctxt Ty) : DerivedCtxt Γ := ⟨Γ, .zero _⟩
+
+/-- value of a dervied context from an empty context,
+     is the empty context with a zero diff. -/
+@[simp]
+theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := rfl
+
+/-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
+@[simp]
+def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
+  | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+
+@[simp]
+instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where
+  coe := fun ⟨Γ', _⟩ => Γ'
+
+instance {Γ : Ctxt Ty} : CoeDep (Ctxt Ty) Γ (DerivedCtxt Γ) where
+  coe := ⟨Γ, .zero _⟩
+
+instance {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} :
+    CoeHead (DerivedCtxt (Γ' : Ctxt Ty)) (DerivedCtxt Γ) where
+  coe := fun ⟨Γ'', diff⟩ => ⟨Γ'', Γ'.diff + diff⟩
+
+instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) t) where
+  coe v := Γ'.diff.toHom v
+
+end DerivedCtxt
+
 
 end Ctxt
