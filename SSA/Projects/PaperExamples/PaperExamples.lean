@@ -129,18 +129,9 @@ elab "[toy_icom| " reg:mlir_region "]" : term => do
 
 end MLIR2Simple
 
+open MLIR AST MLIR2Simple in
 /-- x + 0 -/
 def lhs : Com Op (Ctxt.ofList [.int]) .int :=
-   -- %c0 = 0
-  Com.lete (cst 0) <|
-   -- %out = %x + %c0
-  Com.lete (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <|
-  -- return %out
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-open MLIR AST MLIR2Simple in
-/-- Same code, written in MLIR syntax. -/
-def lhs_stx : Com Op (Ctxt.ofList [.int]) .int :=
   [toy_icom| {
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
@@ -148,13 +139,13 @@ def lhs_stx : Com Op (Ctxt.ofList [.int]) .int :=
       "return" (%out) : (i32) -> (i32)
   }]
 
-/-- Our MLIR syntax elaboration produces what we expect. -/
-theorem hlhs_stx : lhs = lhs_stx := rfl
-
-
+open MLIR AST MLIR2Simple in
 /-- x -/
 def rhs : Com Op (Ctxt.ofList [.int]) .int :=
-  Com.ret ⟨0, by simp⟩
+  [toy_icom| {
+    ^bb0(%x : i32):
+      "return" (%x) : (i32) -> (i32)
+  }]
 
 def p1 : PeepholeRewrite Op [.int] .int :=
   { lhs := lhs, rhs := rhs, correct :=
@@ -171,9 +162,10 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
+      simp[MLIR.AST.DerivedCtxt.snoc, MLIR.AST.DerivedCtxt.ofCtxt]
       ring
       /- goals accomplished 🎉 -/
-      sorry
+      sorry -- TODO: import ring instance from other file.
     }
 
 def ex1' : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs

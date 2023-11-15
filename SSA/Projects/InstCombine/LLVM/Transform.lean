@@ -68,12 +68,20 @@ structure DerivedCtxt (Γ : Ctxt Ty) where
 namespace DerivedCtxt
 
 /-- Every context is trivially derived from itself -/
+@[simp]
 abbrev ofCtxt (Γ : Ctxt Ty) : DerivedCtxt Γ := ⟨Γ, .zero _⟩
 
+/-- value of a dervied context from an empty context,
+     is the empty context with a zero diff. -/
+@[simp]
+theorem ofCtxt_empty : MLIR.AST.DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := rfl
+
 /-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
+@[simp]
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
 
+@[simp]
 instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where
   coe := fun ⟨Γ', _⟩ => Γ'
 

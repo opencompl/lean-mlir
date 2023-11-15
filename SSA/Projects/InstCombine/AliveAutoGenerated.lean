@@ -95,6 +95,8 @@ theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddS
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
   dsimp only [Com.Refinement]
   intros Γv
+  sorry
+  /-
   simp[OpDenote.denote,
     InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
     bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
@@ -138,9 +140,9 @@ theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddS
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
     HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
   -- simp only [Var.last, Var.toSnoc]
-  sorry
-
   -- apply bitvec_AddSub_1043
+  sorry
+  -/
 
 #exit
 
