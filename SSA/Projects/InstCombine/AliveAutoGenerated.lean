@@ -50,7 +50,7 @@ def eg3  (w : Nat)   :=
 theorem eg2_eq_eg3 : eg2 w ⊑ eg3 w := by
   unfold eg2
   unfold eg3
-  simp_alive_peephole
+  sorry /- We should get this example simplifying first. -/
 
 -- Name:AddSub:1043
 -- precondition: true
@@ -138,6 +138,7 @@ theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddS
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
     HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
   -- simp only [Var.last, Var.toSnoc]
+  sorry
 
   -- apply bitvec_AddSub_1043
 
