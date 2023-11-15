@@ -64,9 +64,9 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let com := q(mkComInstantiate (φ := $φ) $ast |>.map (· $mvalues))
   synthesizeSyntheticMVarsNoPostponing
   let com : Q(MLIR.AST.ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding true }) do
+    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
       withTransparency (mode := TransparencyMode.all) <|
-        return ←reduceAll com
+        return ←reduce com
   let comExpr : Expr := com
   trace[Meta] com
   trace[Meta] comExpr
