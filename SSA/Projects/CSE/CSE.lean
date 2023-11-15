@@ -1,9 +1,8 @@
-import SSA.Core.Framework
-import SSA.Projects.DCE.DCE
-
 /-
 This file implements common subexpression elimination for our SSA based IR.
 -/
+import SSA.Core.Framework
+import SSA.Projects.DCE.DCE
 import Mathlib.Data.HashMap
 
 /- Decidable Equality for Coms. -/
@@ -84,15 +83,6 @@ regionVector.decEq as bs => sizeOf as
 
 end DecEqCom
 
-
-namespace HomSemanticPreserving
-  variable [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
-  variable { Γstart Γ Γ' : Ctxt Ty} (lets : Lets Op Γstart Γ)
-  -- Not sure this is the right theorem.
-
-
-end HomSemanticPreserving
-
 namespace CSE
 
 /-- State stored by CSE pass. -/
@@ -163,11 +153,6 @@ def _root_.Ctxt.Hom.remapLast [Goedel Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Va
     cases var' using Ctxt.Var.casesOn
     case toSnoc var' => exact var'
     case last => exact var
-
--- @[simp]
--- theorem _root_.Ctxt.Valuation.comap_at_var [Goedel Ty]  {α : Ty} (Γ Γ' : Ctxt Ty) (hom : Ctxt.Hom Γ Γ')
---   (V : Ctxt.Valuation Γ') (var : Γ.Var α) :
---   (V.comap hom) var = V (hom var) := rfl
 
 section RemapVar
   def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
@@ -405,8 +390,6 @@ unsafe def State.cseExpr
           ⟩
         | .none => .none
       ⟩
-
-
 
 unsafe def State.cseCom {α : Ty}
   {lets : Lets Op Γstart Γ}
