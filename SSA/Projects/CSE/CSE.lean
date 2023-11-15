@@ -134,7 +134,7 @@ def State.snocNewExpr2Cache
             | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
  }
 
-/- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
+/-- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
 @[simp]
 theorem Lets.denote_lete [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ : Ctxt Ty}
