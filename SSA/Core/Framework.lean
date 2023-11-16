@@ -1197,6 +1197,8 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
 
 section SimpPeephole
 
+#check denote_rewritePeepholeAt
+#print axioms denote_rewritePeepholeAt -- [propext, Classical.choice, Quot.sound]
 
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
@@ -1571,7 +1573,7 @@ instance : Goedel ExTy where
 inductive ExOp :  Type
   | add : ExOp
   | runK : ℕ → ExOp
-  deriving DecidableEq
+  deriving DecidableEq, Repr
 
 instance : OpSignature ExOp ExTy where
   signature
@@ -1621,6 +1623,15 @@ def p1 : PeepholeRewrite ExOp [.nat] .nat:=
       simp
       done
   }
+
+def p1_run : Com ExOp [.nat] .nat :=
+  rewritePeepholeAt p1 0 ex1_lhs
+
+/-
+RegionExamples.ExOp.runK 0[[%0]]
+return %1
+-/
+#eval p1_run
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : Com ExOp [.nat] .nat :=
