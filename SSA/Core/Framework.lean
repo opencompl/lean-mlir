@@ -1180,6 +1180,7 @@ def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
         | none => target
       else target
 
+
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
     (pos : ℕ) (target : Com Op Γ₂ t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
@@ -1195,6 +1196,23 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
 
 section SimpPeephole
 
+
+/- repeatedly apply peephole on program. -/
+section SimpPeepholeApplier
+
+/-- rewrite with `pr` to `target` program, at location `ix` and later, running at most `fuel` steps. -/
+def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (ix : ℕ) (target : Com Op Γ₂ t₂) :
+    (Com Op Γ₂ t₂) := 
+  match fuel with
+  | 0 => target
+  | fuel' + 1 => 
+     let target' := rewritePeepholeAt pr ix target
+     rewritePeephole_go fuel' pr (ix + 1) target'
+
+/-- rewrite with `pr` to `target` program, running at most `fuel` steps. -/
+def rewritePeephole (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
+    (Com Op Γ₂ t₂) := rewritePeephole_go fuel pr 0 target
+end SimpPeepholeApplier
 
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,

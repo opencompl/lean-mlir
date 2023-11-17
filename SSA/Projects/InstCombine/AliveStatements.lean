@@ -9,6 +9,9 @@ open Std
 open Std.BitVec
 open LLVM
 
+@[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
+    getLsb (-1#w) ↑i :=
+  BitVec.getLsb_negOne ..
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
@@ -28,17 +31,17 @@ theorem bitvec_AddSub_1156 :
 theorem bitvec_AddSub_1164 :
  ∀ (w : Nat) (a b : BitVec w), 0 - a + b = b - a
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1165 :
  ∀ (w : Nat) (a b : BitVec w), 0 - a + (0 - b) = 0 - (a + b)
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1176 :
  ∀ (w : Nat) (a b : BitVec w), a + (0 - b) = a - b
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1202 :
  ∀ (w : Nat) (x C : BitVec w), (x ^^^ -1) + C = C - 1 - x
@@ -58,12 +61,12 @@ theorem bitvec_AddSub_1309 :
 theorem bitvec_AddSub_1539 :
  ∀ (w : Nat) (a x : BitVec w), x - (0 - a) = x + a
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1539_2 :
  ∀ (w : Nat) (x C : BitVec w), x - C = x + -C
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1556:
  ∀ (y x : BitVec 1), x - y = x ^^^ y
@@ -83,17 +86,17 @@ theorem bitvec_AddSub_1564 :
 theorem bitvec_AddSub_1574 :
  ∀ (w : Nat) (X C C2 : BitVec w), C - (X + C2) = C - C2 - X
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1614 :
  ∀ (w : Nat) (Y X : BitVec w), X - (X + Y) = 0 - Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1619 :
  ∀ (w : Nat) (Y X : BitVec w), X - Y - X = 0 - Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_AddSub_1624 :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) - (A ^^^ B) = A &&& B
@@ -103,12 +106,12 @@ theorem bitvec_AddSub_1624 :
 theorem bitvec_AndOrXor_135 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ^^^ C1) &&& C2 = X &&& C2 ^^^ C1 &&& C2
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_144 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ||| C1) &&& C2 = (X ||| C1 &&& C2) &&& C2
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_698 :
  ∀ (w : Nat) (a b d : BitVec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
@@ -143,37 +146,37 @@ theorem bitvec_AndOrXor_887_2 :
 theorem bitvec_AndOrXor_1230__A__B___A__B :
  ∀ (w : Nat) (notOp0 notOp1 : BitVec w), (notOp0 ^^^ -1) &&& (notOp1 ^^^ -1) = (notOp0 ||| notOp1) ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) &&& (A &&& B ^^^ -1) = A ^^^ B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1247_AB__AB__AB :
  ∀ (w : Nat) (A B : BitVec w), (A &&& B ^^^ -1) &&& (A ||| B) = A ^^^ B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1253_A__AB___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ B) &&& A = A &&& (B ^^^ -1)
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1280_ABA___AB :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ -1 ||| B) &&& A = A &&& B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
  ∀ (w : Nat) (A C B : BitVec w), (A ^^^ B) &&& (B ^^^ C ^^^ A) = (A ^^^ B) &&& (C ^^^ -1)
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ||| B) &&& (A ^^^ -1 ^^^ B) = A &&& B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_1683_1 :
  ∀ (w : Nat) (a b : BitVec w), (a >ᵤ b) ||| ofBool (a == b) = (a ≥ᵤ b)
@@ -208,92 +211,92 @@ theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ -1) &&& B ||| A = A ||| B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2118___A__B__A___A__B :
  ∀ (w : Nat) (A B : BitVec w), A &&& B ||| A ^^^ -1 = A ^^^ -1 ||| B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2123___A__B__A__B___A__B :
  ∀ (w : Nat) (A B : BitVec w), A &&& (B ^^^ -1) ||| A ^^^ B = A ^^^ B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2188 :
  ∀ (w : Nat) (A D : BitVec w), A &&& (D ^^^ -1) ||| (A ^^^ -1) &&& D = A ^^^ D
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C :
  ∀ (w : Nat) (A C B : BitVec w), A ^^^ B ||| B ^^^ C ^^^ A = A ^^^ B ||| C
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2243__B__C__A__B___B__A__C :
  ∀ (w : Nat) (A C B : BitVec w), (B ||| C) &&& A ||| B = B ||| A &&& C
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2247__A__B__A__B :
  ∀ (w : Nat) (A B : BitVec w), A ^^^ -1 ||| B ^^^ -1 = A &&& B ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2263 :
  ∀ (w : Nat) (B op0 : BitVec w), op0 ||| op0 ^^^ B = op0 ||| B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2264 :
  ∀ (w : Nat) (A B : BitVec w), A ||| A ^^^ -1 ^^^ B = A ||| B ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2265 :
  ∀ (w : Nat) (A B : BitVec w), A &&& B ||| A ^^^ B = A ||| B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2284 :
  ∀ (w : Nat) (A B : BitVec w), A ||| (A ||| B) ^^^ -1 = A ||| B ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2285 :
  ∀ (w : Nat) (A B : BitVec w), A ||| A ^^^ B ^^^ -1 = A ||| B ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2297 :
  ∀ (w : Nat) (A B : BitVec w), A &&& B ||| A ^^^ -1 ^^^ B = A ^^^ -1 ^^^ B
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2367 :
  ∀ (w : Nat) (A C1 op1 : BitVec w), A ||| C1 ||| op1 = A ||| op1 ||| C1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2416 :
  ∀ (w : Nat) (nx y : BitVec w), (nx ^^^ -1) &&& y ^^^ -1 = nx ||| y ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2417 :
  ∀ (w : Nat) (nx y : BitVec w), (nx ^^^ -1 ||| y) ^^^ -1 = nx &&& (y ^^^ -1)
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2429 :
  ∀ (w : Nat) (y x : BitVec w), x &&& y ^^^ -1 = x ^^^ -1 ||| y ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2430 :
  ∀ (w : Nat) (y x : BitVec w), (x ||| y) ^^^ -1 = (x ^^^ -1) &&& (y ^^^ -1)
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2443 :
  ∀ (w : Nat) (y x : BitVec w), sshr (x ^^^ -1) (BitVec.toNat y) ^^^ -1 = sshr x (BitVec.toNat y)
@@ -318,42 +321,42 @@ theorem bitvec_AndOrXor_2486 :
 theorem bitvec_AndOrXor_2581__BAB___A__B :
  ∀ (w : Nat) (a op1 : BitVec w), (a ||| op1) ^^^ op1 = a &&& (op1 ^^^ -1)
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2587__BAA___B__A :
  ∀ (w : Nat) (a op1 : BitVec w), a &&& op1 ^^^ op1 = (a ^^^ -1) &&& op1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2595 :
  ∀ (w : Nat) (a b : BitVec w), a &&& b ^^^ (a ||| b) = a ^^^ b
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2607 :
  ∀ (w : Nat) (a b : BitVec w), (a ||| b ^^^ -1) ^^^ (a ^^^ -1 ||| b) = a ^^^ b
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2617 :
  ∀ (w : Nat) (a b : BitVec w), a &&& (b ^^^ -1) ^^^ (a ^^^ -1) &&& b = a ^^^ b
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2627 :
  ∀ (w : Nat) (a c b : BitVec w), a ^^^ c ^^^ (a ||| b) = (a ^^^ -1) &&& b ^^^ c
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2647 :
  ∀ (w : Nat) (a b : BitVec w), a &&& b ^^^ (a ^^^ b) = a ||| b
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2658 :
  ∀ (w : Nat) (a b : BitVec w), a &&& (b ^^^ -1) ^^^ (a ^^^ -1) = a &&& b ^^^ -1
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2663 :
  ∀ (w : Nat) (a b : BitVec w), (a ≤ᵤ b) ^^^ ofBool (a != b) = (a ≥ᵤ b)
@@ -363,7 +366,7 @@ theorem bitvec_AndOrXor_2663 :
 theorem bitvec_152 :
  ∀ (w : Nat) (x : BitVec w), x * -1 = 0 - x
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_160:
  ∀ (x C1 C2 : BitVec 7), x <<< C2 * C1 = x * C1 <<< C2
@@ -373,12 +376,12 @@ theorem bitvec_160:
 theorem bitvec_229 :
  ∀ (w : Nat) (X C1 Op1 : BitVec w), (X + C1) * Op1 = X * Op1 + C1 * Op1
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_239 :
  ∀ (w : Nat) (Y X : BitVec w), (0 - X) * (0 - Y) = X * Y
 := by alive_auto
-      done
+      done --ring
 
 theorem bitvec_275:
  ∀ (Y X : BitVec 5),

@@ -18,12 +18,20 @@
     "inputRev?": "master",
     "inherited": false}},
   {"git":
+   {"url": "https://github.com/leanprover/doc-gen4",
+    "subDir?": null,
+    "rev": "8bccb92b531248af1b6692d65486e8640c8bcd10",
+    "opts": {},
+    "name": "«doc-gen4»",
+    "inputRev?": "8bccb92b531248af1b6692d65486e8640c8bcd10",
+    "inherited": false}},
+  {"git":
    {"url": "https://github.com/leanprover-community/mathlib4",
     "subDir?": null,
-    "rev": "3b5350301929a51585dedea497e172a23e4a4485",
+    "rev": "e7c01ac0049e33a4d6f7e98f9ebea8222bf52311",
     "opts": {},
     "name": "mathlib",
-    "inputRev?": "bitvec-ring",
+    "inputRev?": "bitvec-ring-and-ext",
     "inherited": false}},
   {"git":
    {"url": "https://github.com/leanprover/std4",
