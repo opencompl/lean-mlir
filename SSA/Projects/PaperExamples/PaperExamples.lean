@@ -1,12 +1,18 @@
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
 import SSA.Core.Util
+import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
 open Std (BitVec)
 open Ctxt(Var)
+
+@[simp]
+theorem BitVec.ofInt_zero (w : ℕ) :
+    BitVec.ofInt w 0 = 0 :=
+  rfl
 
 namespace ToyNoRegion
 
@@ -79,9 +85,10 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
-      ring
+      rw [BitVec.ofInt_zero]
+      ring_nf
       /- goals accomplished 🎉 -/
-      sorry
+      done
     }
 
 def ex1' : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
