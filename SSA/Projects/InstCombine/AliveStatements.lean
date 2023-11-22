@@ -13,6 +13,38 @@ open LLVM
     getLsb (-1#w) ↑i :=
   BitVec.getLsb_negOne ..
 
+instance : Pow (BitVec w) (BitVec w) where
+  pow x y := BitVec.ofNat w (x.toNat ^ y.toNat)
+
+@[simp] lemma BitVec.shiftLeft_eq_mul (x y : BitVec w) :
+    x <<< y = x * 2^y := by
+  rcases x with ⟨⟨x, hx⟩⟩
+  rcases y with ⟨⟨y, hy⟩⟩
+  apply BitVec.toNat_inj.mp
+  simp only [HShiftLeft.hShiftLeft, BitVec.shiftLeft, ShiftLeft.shiftLeft, Nat.shiftLeft_eq',
+    ofNat_eq_mod_two_pow, HMul.hMul, Mul.mul, BitVec.mul, Fin.mul, ofNat_eq_ofNat,
+    Nat.mul_eq, toNat_ofFin, Fin.ofNat']
+  rw [Nat.shiftLeft_eq]
+  rcases w with _|_|⟨w⟩ <;> (try simp at hx hy)
+  · subst hx hy; rfl
+  · cases y
+    · rfl
+    · simp [Nat.lt_one_iff.mp (Nat.succ_lt_succ_iff.mp hy)]
+  · have h₁ : 2 < 2 ^ (w+2) := by
+      rw [Nat.pow_succ, mul_two]
+      conv_lhs => rw[show 2 = 1 + 1 from rfl]
+      apply Nat.add_lt_add (a := 1) (c := 1) <;> (
+        exact Nat.one_lt_two_pow' w
+      )
+    rw [Nat.mod_eq_of_lt h₁]
+    conv_rhs => rw [←Nat.mod_eq_of_lt hx, ←Nat.mul_mod]
+
+@[simp] lemma BitVec.pow_one (x : BitVec w) : x ^ 1 = x := by
+  cases w
+  · rw [BitVec.eq_nil]
+  apply BitVec.toNat_inj.mp
+  simp [HPow.hPow, Pow.pow]
+
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
 := by alive_auto
