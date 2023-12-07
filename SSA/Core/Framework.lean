@@ -1182,7 +1182,6 @@ def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
         | none => target
       else target
 
-
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
     (pos : ℕ) (target : Com Op Γ₂ t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
