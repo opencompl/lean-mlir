@@ -324,61 +324,14 @@ section ValuationVariableAccess
 
 /-- (ctx.snoc v₁) ⟨1, _⟩ = ctx ⟨0, _⟩ -/
 @[simp]
-theorem Ctxt.Valuation.snoc_eval_one {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 1 = some var_val) :
-    (V.snoc v) ⟨1, hvar⟩ = V ⟨0, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
+theorem Ctxt.Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
   rfl
 
-/-- (ctx.snoc v₁) ⟨2, _⟩ = ctx ⟨1, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_two {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 2 = some var_val) :
-    (V.snoc v) ⟨2, hvar⟩ = V ⟨1, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
 
-/-- (ctx.snoc v₁) ⟨3, _⟩ = ctx ⟨2, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_three {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 3 = some var_val) :
-    (V.snoc v) ⟨3, hvar⟩ = V ⟨2, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-/-- (ctx.snoc v₁) ⟨4, _⟩ = ctx ⟨3, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_four {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 4 = some var_val) :
-    (V.snoc v) ⟨4, hvar⟩ = V ⟨3, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-/-- (ctx.snoc v₁) ⟨5, _⟩ = ctx ⟨4, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_five {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 5 = some var_val) :
-    (V.snoc v) ⟨5, hvar⟩ = V ⟨4, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-/-- (ctx.snoc v₁) ⟨6, _⟩ = ctx ⟨5, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval_six {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) 6 = some var_val) :
-    (V.snoc v) ⟨6, hvar⟩ = V ⟨5, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-/-- ((ctx.snoc v₁).snoc v₂) ⟨2, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_snoc_eval_two {ty₁ ty₂: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧)
-    (hvar : Ctxt.get? ((Ctxt.snoc Γ ty₁).snoc ty₂) 2 = some var_val) :
-    ((V.snoc v₁).snoc v₂) ⟨2, hvar⟩ = V ⟨0, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-/-- (((ctx.snoc v₁).snoc v₂).snoc v₃) ⟨3, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_snoc_snoc_eval_three {ty₁ ty₂ ty₃: Ty} (Γ : Ctxt Ty) (V : Γ.Valuation)
-    (v₁ : ⟦ty₁⟧) (v₂ : ⟦ty₂⟧) (v₃ : ⟦ty₃⟧)
-    (hvar : Ctxt.get? (((Ctxt.snoc Γ ty₁).snoc ty₂).snoc ty₃) 3 = some var_val) :
-    (((V.snoc v₁).snoc v₂).snoc v₃) ⟨3, hvar⟩ = V ⟨0, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
 end ValuationVariableAccess
+
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
 We keep the increment outside the loop so that we don't need to deal with creating and deleting tuples for the "for" region body,
@@ -501,13 +454,7 @@ theorem correct :
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
     HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
     neg,
-    Ctxt.Valuation.snoc_eval_one,
-    Ctxt.Valuation.snoc_eval_two,
-    Ctxt.Valuation.snoc_eval_three,
-    Ctxt.Valuation.snoc_eval_four,
-    Ctxt.Valuation.snoc_eval_five,
-    Ctxt.Valuation.snoc_eval_six,
-    Ctxt.Valuation.snoc_snoc_eval_two, Ctxt.Valuation.snoc_snoc_snoc_eval_three]
+    Ctxt.Valuation.snoc_eval]
     done
 
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
@@ -560,7 +507,7 @@ theorem correct :
     HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
     Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
     add, cst_nat,
-    Ctxt.Valuation.snoc_eval_one, Ctxt.Valuation.snoc_snoc_eval_two, Ctxt.Valuation.snoc_snoc_snoc_eval_three]
+    Ctxt.Valuation.snoc_eval]
     have swap_niters := add_comm (a := niters1) (b := niters2)
     have H : (LoopBody.CounterDecorator 1 fun i v =>
           Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
