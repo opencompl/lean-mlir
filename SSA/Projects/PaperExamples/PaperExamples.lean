@@ -173,7 +173,7 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       Com.denote (Com.ret { val := 0, property := _ })
       -/
       funext Γv
-      simp_peephole_mlir [add, cst] at Γv
+      simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
       ring
