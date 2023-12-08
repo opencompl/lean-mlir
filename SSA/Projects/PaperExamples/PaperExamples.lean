@@ -96,8 +96,6 @@ def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty
 instance : MLIR.AST.TransformReturn Op Ty 0 where
   mkReturn := mkReturn
 
--- open InstCombine (Op Ty) in
-
 def mlir2simple (reg : MLIR.AST.Region 0) :
     MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ ty) := MLIR.AST.mkCom reg
 
