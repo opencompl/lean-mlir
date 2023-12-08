@@ -1212,19 +1212,6 @@ def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (ix : ℕ) (t
 /-- rewrite with `pr` to `target` program, running at most `fuel` steps. -/
 def rewritePeephole (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
     (Com Op Γ₂ t₂) := rewritePeephole_go fuel pr 0 target
-end SimpPeepholeApplier
-
-/- repeatedly apply peephole on program. -/
-section SimpPeepholeApplier
-
-/-- rewrite with `pr` to `target` program, at location `ix` and later, running at most `fuel` steps. -/
-def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (ix : ℕ) (target : Com Op Γ₂ t₂) :
-    (Com Op Γ₂ t₂) := 
-  match fuel with
-  | 0 => target
-  | fuel' + 1 => 
-     let target' := rewritePeepholeAt pr ix target
-     rewritePeephole_go fuel' pr (ix + 1) target'
 
 /-- `rewritePeephole_go` preserve semantics -/
 theorem denote_rewritePeephole_go (pr : PeepholeRewrite Op Γ t)
@@ -1234,11 +1221,6 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite Op Γ t)
       case zero => simp[rewritePeephole_go, denote_rewritePeepholeAt]
       case succ fuel' hfuel => 
         simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
-
-/-- rewrite with `pr` to `target` program, running at most `fuel` steps. -/
-def rewritePeephole (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
-    (Com Op Γ₂ t₂) := rewritePeephole_go fuel pr 0 target
-
 
 /-- `rewritePeephole` preserves semantics. -/
 theorem denote_rewritePeephole (fuel : ℕ)
