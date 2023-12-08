@@ -517,7 +517,6 @@ structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [O
   mapTy : Ty → Ty'
   preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
 
-
 variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
 
@@ -1233,7 +1232,6 @@ theorem denote_rewritePeephole (fuel : ℕ)
         simp[rewritePeephole, denote_rewritePeephole_go]
 end SimpPeepholeApplier
 
-#check DialectMorphism
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
 leaving behind a bare Lean level proposition to be proven.
@@ -1241,11 +1239,6 @@ leaving behind a bare Lean level proposition to be proven.
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
-      -- try simp (config := {decide := false})  only [
-      --   Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
-      --   Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
-      --   DialectMorphism.mapOp, DialectMorphism.mapTy, List.map
-      -- ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       try simp (config := {decide := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
         Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
@@ -1259,10 +1252,6 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         Ctxt.snoc, Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last, List.map,
         DialectMorphism.mapOp, DialectMorphism.mapTy,
         $ts,*]
-      -- try simp (config := {decide := false})  only [
-      --   Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
-      --   Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last
-      -- ] -- separate `simp` block so it does not fail if MLIR.AST is not open.
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
       generalize $ll { val := 2, property := _ } = c;
@@ -1286,7 +1275,6 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       )
    )
 
-open MLIR AST in
 /-- `simp_peephole` with no extra user defined theorems. -/
 macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
 
