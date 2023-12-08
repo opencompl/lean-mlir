@@ -1198,8 +1198,7 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
 
 section SimpPeephole
 
-#check denote_rewritePeepholeAt
-#print axioms denote_rewritePeepholeAt -- [propext, Classical.choice, Quot.sound]
+-- #print axioms denote_rewritePeepholeAt -- [propext, Classical.choice, Quot.sound]
 
 /- repeatedly apply peephole on program. -/
 section SimpPeepholeApplier
