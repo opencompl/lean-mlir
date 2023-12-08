@@ -32,6 +32,7 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 inductive MTy (φ : Nat)
   | bitvec (w : Width φ) : MTy φ
   deriving DecidableEq, Inhabited
+
 abbrev Ty := MTy 0
 
 instance : Repr (MTy φ) where

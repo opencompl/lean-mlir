@@ -1658,7 +1658,7 @@ def p1_run : Com ExOp [.nat] .nat :=
 RegionExamples.ExOp.runK 0[[%0]]
 return %1
 -/
-#eval p1_run
+-- #eval p1_run
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : Com ExOp [.nat] .nat :=

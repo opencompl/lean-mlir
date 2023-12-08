@@ -97,61 +97,7 @@ def alive_AddSub_1043_tgt  (w : Nat)  :=
 theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddSub_1043_tgt w  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
   simp_alive_peephole
-  -- simp[pairBind, Var.last, bind, Option.bind, Var.toSnoc, Var.last]
   sorry
-
-#exit
-
-  sorry
-  /-
-  simp[OpDenote.denote,
-    InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
-    bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
-    Ctxt.snoc, ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
-    LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
-    LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
-    LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-    LLVM.const?, LLVM.icmp?,
-    DerivedCtxt.ofCtxt, InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMTy,
-    List.map,
-    HVector.toTuple, List.nthLe, bitvec_minus_one,
-    DialectMorphism.mapTy,
-    InstcombineTransformDialect.instantiateMTy,
-    InstcombineTransformDialect.instantiateMOp,
-    InstcombineTransformDialect.MOp.instantiateCom,
-    InstcombineTransformDialect.instantiateCtxt,
-    ConcreteOrMVar.instantiate, Com.Refinement,
-    InstCombine.MOp.add,
-    InstCombine.MOp.const,
-    InstCombine.MOp.xor,
-    InstCombine.MOp.and] at Γv
-  try simp [OpDenote.denote,
-    InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
-    bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
-    Ctxt.snoc,
-    ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
-    LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
-    LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
-    LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-    LLVM.const?, LLVM.icmp?,
-    HVector.toTuple, List.nthLe, bitvec_minus_one,
-    DialectMorphism.mapTy,
-    InstcombineTransformDialect.instantiateMTy,
-    InstcombineTransformDialect.instantiateMOp,
-    InstcombineTransformDialect.MOp.instantiateCom,
-    InstcombineTransformDialect.instantiateCtxt,
-    ConcreteOrMVar.instantiate, Com.Refinement,
-    Com.denote, Expr.denote,
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
-  -- simp only [Var.last, Var.toSnoc]
-  -- apply bitvec_AddSub_1043
-  sorry
-  -/
-
-#exit
 
 /-# Early Exit
 delete this to check the rest of the file. The `#exit`
