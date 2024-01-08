@@ -92,5 +92,19 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
 theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
     {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by
   cases h; cases t₁; cases t₂; rfl
+syntax "[" withoutPosition(term,*) "]ₕ"  : term
+
+-- Copied from core for List
+macro_rules
+  | `([ $elems,* ]ₕ) => do
+    let rec expandListLit (i : Nat) (skip : Bool) (result : Lean.TSyntax `term) : Lean.MacroM Lean.Syntax := do
+      match i, skip with
+      | 0,   _     => pure result
+      | i+1, true  => expandListLit i false result
+      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps.get! i⟩) $result))
+    if elems.elemsAndSeps.size < 64 then
+      expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
+    else
+      `(%[ $elems,* | List.nil ])
 
 end HVector

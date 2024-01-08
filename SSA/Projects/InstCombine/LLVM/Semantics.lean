@@ -197,16 +197,14 @@ def ashr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
--/
-def select {w : Nat} (c : BitVec 1) (x y : BitVec w) : BitVec w :=
-  cond (c.toNat != 0) x y
 
-/--
- Wrapper around `select` (this cannot become `none` on its own)
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
-def select? {w : Nat} (c : BitVec 1) (x y : BitVec w) : Option (BitVec w) :=
-  Option.some <| select c x y
+def select? {w : Nat} (c? : Option (BitVec 1)) (x? y? : Option (BitVec w)) : Option (BitVec w) :=
+  match c? with
+  | .none => .none
+  | .some true => x?
+  | .some false => y?
 
 inductive IntPredicate where
   | eq

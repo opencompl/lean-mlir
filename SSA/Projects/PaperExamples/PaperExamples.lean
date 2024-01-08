@@ -6,12 +6,18 @@ import SSA.Core.Util
 import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.MLIRSyntax.EDSL
+import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
 open Std (BitVec)
 open Ctxt(Var)
+
+@[simp]
+theorem BitVec.ofInt_zero (w : ℕ) :
+    BitVec.ofInt w 0 = 0 :=
+  rfl
 
 namespace ToyNoRegion
 
@@ -38,7 +44,7 @@ instance : OpSignature Op Ty where
 instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
+    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
 
 def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
   Expr.mk
@@ -174,9 +180,10 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
-      ring
+      rw [BitVec.ofInt_zero]
+      ring_nf
       /- goals accomplished 🎉 -/
-      sorry -- TODO: import ring instance from other file.
+      done
     }
 
 def ex1_rewritePeepholeAt : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
@@ -231,8 +238,8 @@ instance : OpSignature Op Ty where
 instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
-    | .add, .cons (a : BitVec 32) (.cons (b : BitVec 32) .nil), _ => a + b
-    | .iterate k, (.cons (x : BitVec 32) .nil), (.cons (f : _ → BitVec 32) .nil) =>
+    | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b
+    | .iterate k, [(x : BitVec 32)]ₕ, [(f : _ → BitVec 32)]ₕ =>
       let f' (v :  BitVec 32) : BitVec 32 := f  (Ctxt.Valuation.nil.snoc v)
       k.iterate f' x
       -- let f_k := Nat.iterate f' k

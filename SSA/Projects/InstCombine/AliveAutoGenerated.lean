@@ -105,6 +105,12 @@ delete this to check the rest of the file. The `#exit`
 -/
 #exit
 
+/-# Early Exit
+delete this to check the rest of the file. The `#exit`
+  is an early exit to allow our `lake` builds to complete in sensible amounts of time.
+-/
+#exit
+
 -- Name:AddSub:1152
 -- precondition: true
 /-
