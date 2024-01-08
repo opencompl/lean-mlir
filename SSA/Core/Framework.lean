@@ -1204,8 +1204,8 @@ section SimpPeephole
 section SimpPeepholeApplier
 
 /-- rewrite with `pr` to `target` program, at location `ix` and later, running at most `fuel` steps. -/
-def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (ix : ℕ) (target : Com Op Γ₂ t₂) :
-    (Com Op Γ₂ t₂) :=
+def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t)
+    (ix : ℕ) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) :=
   match fuel with
   | 0 => target
   | fuel' + 1 =>
@@ -1213,23 +1213,25 @@ def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (ix : ℕ) (t
      rewritePeephole_go fuel' pr (ix + 1) target'
 
 /-- rewrite with `pr` to `target` program, running at most `fuel` steps. -/
-def rewritePeephole (fuel : ℕ) (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
-    (Com Op Γ₂ t₂) := rewritePeephole_go fuel pr 0 target
+def rewritePeephole (fuel : ℕ)
+    (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) :=
+  rewritePeephole_go fuel pr 0 target
 
 /-- `rewritePeephole_go` preserve semantics -/
 theorem denote_rewritePeephole_go (pr : PeepholeRewrite Op Γ t)
     (pos : ℕ) (target : Com Op Γ₂ t₂) :
     (rewritePeephole_go fuel pr pos target).denote = target.denote := by
-      induction fuel generalizing pr pos target
-      case zero => simp[rewritePeephole_go, denote_rewritePeepholeAt]
-      case succ fuel' hfuel =>
-        simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
+  induction fuel generalizing pr pos target
+  case zero =>
+    simp[rewritePeephole_go, denote_rewritePeepholeAt]
+  case succ fuel' hfuel =>
+    simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
 
 /-- `rewritePeephole` preserves semantics. -/
 theorem denote_rewritePeephole (fuel : ℕ)
-  (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
+    (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) :
     (rewritePeephole fuel pr target).denote = target.denote := by
-        simp[rewritePeephole, denote_rewritePeephole_go]
+  simp[rewritePeephole, denote_rewritePeephole_go]
 end SimpPeepholeApplier
 
 /--
