@@ -1242,15 +1242,11 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       try simp (config := {decide := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
         Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
-        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
         Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map,
-        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
-        Ctxt.snoc, Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last, List.map,
-        DialectMorphism.mapOp, DialectMorphism.mapTy,
+        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         $ts,*]
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
