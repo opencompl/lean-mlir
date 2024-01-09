@@ -15,10 +15,10 @@ namespace InstcombineTransformDialect
 
 def mkUnaryOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
   (e : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
- match ty with
- | .bitvec w =>
-   match op with
-   -- Can't use a single arm, Lean won't write the rhs accordingly
+  match ty with
+  | .bitvec w =>
+    match op with
+    -- Can't use a single arm, Lean won't write the rhs accordingly
     | .neg w' => if h : w = w'
       then return ⟨
         .neg w',
@@ -47,10 +47,10 @@ def mkUnaryOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
 
 def mkBinOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
     (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
- match ty with
- | .bitvec w =>
-   match op with
-   -- Can't use a single arm, Lean won't write the rhs accordingly
+  match ty with
+  | .bitvec w =>
+    match op with
+    -- Can't use a single arm, Lean won't write the rhs accordingly
     | .add w' => if h : w = w'
       then return ⟨
         .add w',
