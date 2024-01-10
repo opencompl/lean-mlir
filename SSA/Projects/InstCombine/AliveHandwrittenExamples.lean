@@ -13,6 +13,7 @@ set_option pp.proofs false
 set_option pp.proofs.withType false
 
 
+
 /-
 Name: SimplifyDivRemOfSelect
 
@@ -38,3 +39,19 @@ def alive_simplifyDivRemOfSelect (w : Nat) :
   simp_alive_peephole
   -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
   sorry
+
+def alive_unsound :
+[mlir_icom ( )| {
+^bb0():
+  %v0  = "llvm.mlir.constant" () { value = 9 : i8 } :() -> (i8)
+  %v1  = "llvm.mlir.constant" () { value = 1 : i8 } :() -> (i8)
+  %undef  = "llvm.shl" (%v1,%v0) : (i8, i8) -> (i8)
+  %r = "llvm.or" (%v1,%undef) : (i8, i8) -> (i8)
+  "llvm.return" (%r) : (i8) -> ()
+}] ⊑ [mlir_icom ( )| {
+^bb0():
+  %v0  = "llvm.mlir.constant" () { value = 2 : i8 } :() -> (i8)
+  "llvm.return" (%v0) : (i8) -> ()
+}] := by
+  simp_alive_peephole
+  simp [BitVec.toNat, BitVec.ofInt, BitVec.toFin, Fin.val]
