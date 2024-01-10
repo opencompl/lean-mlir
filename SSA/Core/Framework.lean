@@ -7,6 +7,8 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Ring
+import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
+import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
 open Ctxt (Var VarSet Valuation)
 open Goedel (toType)
@@ -1196,22 +1198,21 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
 
 section SimpPeephole
 
-
 /- repeatedly apply peephole on program. -/
 section SimpPeepholeApplier
 
 /-- rewrite with `pr` to `target` program, at location `ix` and later, running at most `fuel` steps. -/
 def rewritePeephole_go (fuel : ℕ) (pr : PeepholeRewrite Op Γ t)
-    (ix : ℕ) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) := 
+    (ix : ℕ) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) :=
   match fuel with
   | 0 => target
-  | fuel' + 1 => 
+  | fuel' + 1 =>
      let target' := rewritePeepholeAt pr ix target
      rewritePeephole_go fuel' pr (ix + 1) target'
 
 /-- rewrite with `pr` to `target` program, running at most `fuel` steps. -/
 def rewritePeephole (fuel : ℕ)
-    (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) := 
+    (pr : PeepholeRewrite Op Γ t) (target : Com Op Γ₂ t₂) : (Com Op Γ₂ t₂) :=
   rewritePeephole_go fuel pr 0 target
 
 /-- `rewritePeephole_go` preserve semantics -/
@@ -1219,9 +1220,9 @@ theorem denote_rewritePeephole_go (pr : PeepholeRewrite Op Γ t)
     (pos : ℕ) (target : Com Op Γ₂ t₂) :
     (rewritePeephole_go fuel pr pos target).denote = target.denote := by
   induction fuel generalizing pr pos target
-  case zero => 
+  case zero =>
     simp[rewritePeephole_go, denote_rewritePeepholeAt]
-  case succ fuel' hfuel => 
+  case succ fuel' hfuel =>
     simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
 
 /-- `rewritePeephole` preserves semantics. -/
@@ -1239,10 +1240,13 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       try simp (config := {decide := false}) only [
+        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+        Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
         Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         $ts,*]
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
@@ -1269,7 +1273,6 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
 
 /-- `simp_peephole` with no extra user defined theorems. -/
 macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
-
 
 end SimpPeephole
 
@@ -1580,7 +1583,7 @@ instance : Goedel ExTy where
 inductive ExOp :  Type
   | add : ExOp
   | runK : ℕ → ExOp
-  deriving DecidableEq
+  deriving DecidableEq, Repr
 
 instance : OpSignature ExOp ExTy where
   signature
@@ -1630,6 +1633,15 @@ def p1 : PeepholeRewrite ExOp [.nat] .nat:=
       simp
       done
   }
+
+def p1_run : Com ExOp [.nat] .nat :=
+  rewritePeepholeAt p1 0 ex1_lhs
+
+/-
+RegionExamples.ExOp.runK 0[[%0]]
+return %1
+-/
+-- #eval p1_run
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : Com ExOp [.nat] .nat :=

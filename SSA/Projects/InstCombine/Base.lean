@@ -40,6 +40,9 @@ instance : Repr (MTy φ) where
     | .bitvec (.concrete w), _ => "i" ++ repr w
     | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
 
+instance : Lean.ToFormat (MTy φ) where
+  format := repr
+
 instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 
