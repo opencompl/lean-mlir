@@ -400,7 +400,11 @@ instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨a
 
 end Diff
 
-/-## Derived Contexts: Contexts that grow a base context-/
+/-## Derived Contexts
+Contexts that grow a base context-/
+
+/-- `Δ : DerivedCtxt Γ` means that `Δ` is a context obtained by adding elements to context `Γ`.
+That is, there exists a context difference `diff : Γ.Diff Δ`. -/
 structure DerivedCtxt (Γ : Ctxt Ty) where
   ctxt : Ctxt Ty
   diff : Ctxt.Diff Γ ctxt
