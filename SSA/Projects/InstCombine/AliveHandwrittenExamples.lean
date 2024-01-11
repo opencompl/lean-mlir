@@ -3,8 +3,6 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
-import Lean
-import Qq
 
 open MLIR AST
 open Std (BitVec)
@@ -34,94 +32,7 @@ def alive_simplifyDivRemOfSelect_lhs (w : Nat) :=
   %sel = "llvm.select" (%c,%Y,%v0) : (i1, _, _) -> (_)
   %r   = "llvm.udiv" (%X,%sel) : (_, _) -> (_)
   "llvm.return" (%r) : (_) -> ()
-}] 
-#check AST.Com
-#check AST.Com
-#check alive_simplifyDivRemOfSelect_lhs
-
-
-open Qq Lean Elab Command Meta Elab Term
-#check ConstantInfo
-#check CommandElabM
-#check Lean.Expr
--- #check CommandElabM
-set_option pp.universes true in
-#check alive_simplifyDivRemOfSelect_lhs
-
-#check ConcreteOrMVar
-#check InstCombine.MTy
-inductive CliType
-| varw -- variable width 
-| width (n : Nat) -- concrete width given by n
-
-instance : ToString CliType where
- toString 
- | .varw => "w"
- | .width (n : Nat) => s!"{n}"
-
-
-
-opaque k : Nat
-opaque m : Nat
-opaque e : Expr
-
-
--- pattern match on an `e` to get a list of lean expressions
-def ExprToList (e : Expr) : MetaM (List Lean.Expr) := sorry
-
-def ExprToCliType (e : Expr) : MetaM CliType := do
- match e with
- | com@(.app x e) => 
-    logInfo m!"toCliType App {x} {e}"
-    return CliType.varw
-  | _ => pure CliType.varw
-/-
-  match (e : Q(InstCombine.MTy 0)) with 
-  | ~q(InstCombine.MTy.bitvec (ConcreteOrMVar.concrete $cw)) => sorry
-  | ~q(InstCombine.MTy.bitvec (ConcreteOrMVar.concrete $cw)) => sorry
--/
-
-elab "foo" : command => liftTermElabM do
-  let e : Environment ← getEnv
-  let defn := 
-    Option.get! <| Environment.find? e ``alive_simplifyDivRemOfSelect_lhs 
-  let value := defn.value!
-  let ty0 ← reduceAll (← inferType defn.value!)
-  -- let ty' : Q(Type) := ty
-  -- let (ctx, typ) ← 
-  --   match ty with 
-  --   | ~q(Com $phi $ctx $typ) => ($ctx, $typ)
-  logInfo m!"isLam: {Lean.Expr.isForall ty0} | ty0: {ty0}"
-  logInfo m!"isLam: {Lean.Expr.isForall ty0} | ty0: {ty0}"
-  -- | forallE (binderName : Name) (binderType : Expr) (body : Expr) (binderInfo : BinderInfo)
-  match ty0 with 
-  | .forallE x t ty1 ty1i => 
-     logInfo m!"x: {x} | t: {t}"
-     -- TODO: verify you `t : Nat`
-     match ty1 with
-     | .forallE x t ty2 ty2i =>
-        logInfo m!"forall"
-     | com@(.app x e) => 
-       -- TODO: verify that 'x' is `Com`
-       let args := (Expr.getAppArgs com)
-       let llvmArgTys := args[3]! 
-       let llvmRetTy := args[4]! 
-       logInfo m!"argTys: {llvmArgTys}"
-       logInfo m!"retTy: {llvmRetTy}"
-       let llvmArgTys : List CliType ← liftM <| (← ExprToList llvmArgTys).mapM ExprToCliType
-       logInfo m!"argTys (as Cli type): {llvmArgTys}"
-       let llvmRetTy ← ExprToCliType llvmRetTy
-       logInfo m!"retTy (as Cli type): {llvmRetTy}"
-     | _ => pure ()
-     pure ()
-  | _ => pure ()
-  return ()
-
-foo
-
--- Q (α : type witness) =defeq= Expr
-
-#exit
+}]
 
 def alive_simplifyDivRemOfSelect (w : Nat) :
 [mlir_icom ( w )| {
@@ -137,7 +48,8 @@ def alive_simplifyDivRemOfSelect (w : Nat) :
 }] := by
   simp_alive_peephole
   -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
-  sorry
+  <;> sorry
+
 
 def alive_unsound :
 [mlir_icom ( )| {
