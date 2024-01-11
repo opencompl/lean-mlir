@@ -66,29 +66,103 @@ instance : Repr (BitVec n) where
   reprPrec
     | v, n => reprPrec (BitVec.toInt v) n
 
+/-- Homogeneous, unary operations -/
+inductive MOp.UnaryOp : Type
+  | neg
+  | not
+  | copy
+deriving Repr, DecidableEq, Inhabited
+
+/-- Homogeneous, binary operations -/
+inductive MOp.BinaryOp : Type
+  | and
+  | or
+  | xor
+  | shl
+  | lshr
+  | ashr
+  | urem
+  | srem
+  | add
+  | mul
+  | sub
+  | sdiv
+  | udiv
+deriving Repr, DecidableEq, Inhabited
+
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
-  | and     (w : Width φ) : MOp φ
-  | or      (w : Width φ) : MOp φ
-  | not     (w : Width φ) : MOp φ
-  | xor     (w : Width φ) : MOp φ
-  | shl     (w : Width φ) : MOp φ
-  | lshr    (w : Width φ) : MOp φ
-  | ashr    (w : Width φ) : MOp φ
-  | urem    (w : Width φ) : MOp φ
-  | srem    (w : Width φ) : MOp φ
+  | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
+  | binary  (w : Width φ) (op : MOp.BinaryOp) :  MOp φ
   | select  (w : Width φ) : MOp φ
-  | add     (w : Width φ) : MOp φ
-  | mul     (w : Width φ) : MOp φ
-  | sub     (w : Width φ) : MOp φ
-  | neg     (w : Width φ) : MOp φ
-  | copy    (w : Width φ) : MOp φ
-  | sdiv    (w : Width φ) : MOp φ
-  | udiv    (w : Width φ) : MOp φ
   | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
 deriving Repr, DecidableEq, Inhabited
+
+namespace MOp
+
+@[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
+@[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
+@[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
+
+@[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
+@[match_pattern] def or     (w : Width φ) : MOp φ := .binary w .or
+@[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
+@[match_pattern] def shl    (w : Width φ) : MOp φ := .binary w .shl
+@[match_pattern] def lshr   (w : Width φ) : MOp φ := .binary w .lshr
+@[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
+@[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
+@[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
+@[match_pattern] def add    (w : Width φ) : MOp φ := .binary w .add
+@[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
+@[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
+@[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
+@[match_pattern] def udiv   (w : Width φ) : MOp φ := .binary w .udiv
+
+/-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
+def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
+    (neg  : ∀ {φ} {w : Width φ}, motive (neg  w))
+    (not  : ∀ {φ} {w : Width φ}, motive (not  w))
+    (copy : ∀ {φ} {w : Width φ}, motive (copy w))
+    (and  : ∀ {φ} {w : Width φ}, motive (and  w))
+    (or   : ∀ {φ} {w : Width φ}, motive (or   w))
+    (xor  : ∀ {φ} {w : Width φ}, motive (xor  w))
+    (shl  : ∀ {φ} {w : Width φ}, motive (shl  w))
+    (lshr : ∀ {φ} {w : Width φ}, motive (lshr w))
+    (ashr : ∀ {φ} {w : Width φ}, motive (ashr w))
+    (urem : ∀ {φ} {w : Width φ}, motive (urem w))
+    (srem : ∀ {φ} {w : Width φ}, motive (srem w))
+    (add  : ∀ {φ} {w : Width φ}, motive (add  w))
+    (mul  : ∀ {φ} {w : Width φ}, motive (mul  w))
+    (sub  : ∀ {φ} {w : Width φ}, motive (sub  w))
+    (sdiv : ∀ {φ} {w : Width φ}, motive (sdiv w))
+    (udiv : ∀ {φ} {w : Width φ}, motive (udiv w))
+    (select : ∀ {φ} {w : Width φ}, motive (select w))
+    (icmp   : ∀ {φ c} {w : Width φ}, motive (icmp c w))
+    (const  : ∀ {φ v} {w : Width φ}, motive (const w v)) :
+    ∀ {φ} (op : MOp φ), motive op
+  | _, .neg _   => neg
+  | _, .not _   => not
+  | _, .copy _  => copy
+  | _, .and _   => and
+  | _, .or _    => or
+  | _, .xor _   => xor
+  | _, .shl _   => shl
+  | _, .lshr _  => lshr
+  | _, .ashr _  => ashr
+  | _, .urem _  => urem
+  | _, .srem _  => srem
+  | _, .add  _  => add
+  | _, .mul  _  => mul
+  | _, .sub  _  => sub
+  | _, .sdiv _  => sdiv
+  | _, .udiv _  => udiv
+  | _, .select _  => select
+  | _, .icmp ..   => icmp
+  | _, .const ..  => const
+
+end MOp
 
 instance : ToString (MOp φ) where
   toString
@@ -115,6 +189,9 @@ instance : ToString (MOp φ) where
 abbrev Op := MOp 0
 
 namespace Op
+
+@[match_pattern] abbrev unary   (w : Nat) (op : MOp.UnaryOp)  : Op := MOp.unary (.concrete w) op
+@[match_pattern] abbrev binary  (w : Nat) (op : MOp.BinaryOp) : Op := MOp.binary (.concrete w) op
 
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev or     : Nat → Op := MOp.or     ∘ .concrete
@@ -144,23 +221,17 @@ instance : ToString Op where
 
 @[simp, reducible]
 def MOp.sig : MOp φ → List (MTy φ)
-| .and w | .or w | .xor w | .shl w | .lshr w | .ashr w
-| .add w | .mul w | .sub w | .udiv w | .sdiv w
-| .srem w | .urem w | .icmp _ w =>
+| .binary w _ | .icmp _ w =>
   [.bitvec w, .bitvec w]
-| .not w | .neg w | .copy w => [.bitvec w]
+| .unary w _ => [.bitvec w]
 | .select w => [.bitvec 1, .bitvec w, .bitvec w]
 | .const _ _ => []
 
 @[simp, reducible]
 def MOp.outTy : MOp φ → MTy φ
-| .and w | .or w | .not w | .xor w | .shl w | .lshr w | .ashr w
-| .sub w |  .select w | .neg w | .copy w =>
-  .bitvec w
-| .add w | .mul w |  .sdiv w | .udiv w | .srem w | .urem w =>
+| .binary w _ | .unary w _ | .select w | .const w _ =>
   .bitvec w
 | .icmp _ _ => .bitvec 1
-| .const width _ => .bitvec width
 
 instance : OpSignature (MOp φ) (MTy φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
@@ -186,7 +257,7 @@ def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
   | Op.not _ => Option.map (~~~.) arg.toSingle
   | Op.copy _ => arg.toSingle
   | Op.neg _ => Option.map (-.) arg.toSingle
-  | Op.select _ => 
+  | Op.select _ =>
     let (ocond, otrue, ofalse) := arg.toTriple
     select? ocond otrue ofalse
   | Op.icmp c _ => pairBind (icmp? c) arg.toPair

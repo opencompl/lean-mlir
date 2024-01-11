@@ -13,164 +13,34 @@ open MLIR
 
 namespace InstcombineTransformDialect
 
-def mkUnaryOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
-  (e : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
-  match ty with
-  | .bitvec w =>
-    match op with
-    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .neg w' => if h : w = w'
-      then return ⟨
-        .neg w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .not w' => if h : w = w'
-      then return ⟨
-        .not w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .copy w' => if h : w = w'
-      then return ⟨
-        .copy w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | _ => throw <| .unsupportedUnaryOp
+def mkUnaryOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.UnaryOp)
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+  ⟨
+    .unary w op,
+    rfl,
+    .cons e .nil,
+    .nil
+  ⟩
 
-def mkBinOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
-    (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
-  match ty with
-  | .bitvec w =>
-    match op with
-    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .add w' => if h : w = w'
-      then return ⟨
-        .add w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .and w' => if h : w = w'
-      then return ⟨
-        .and w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .or w' => if h : w = w'
-      then return ⟨
-        .or w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .xor w' => if h : w = w'
-      then return ⟨
-        .xor w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .shl w' => if h : w = w'
-      then return ⟨
-        .shl w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .lshr w' => if h : w = w'
-      then return ⟨
-        .lshr w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .ashr w' => if h : w = w'
-      then return ⟨
-        .ashr w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .urem w' => if h : w = w'
-      then return ⟨
-        .urem w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .srem w' => if h : w = w'
-      then return ⟨
-        .srem w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .mul w' => if h : w = w'
-      then return ⟨
-        .mul w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .sub w' => if h : w = w'
-      then return ⟨
-        .sub w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .sdiv w' => if h : w = w'
-      then return ⟨
-        .sdiv w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .udiv w' => if  h : w = w'
-      then return ⟨
-        .udiv w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | op => throw <| .unsupportedBinaryOp s!"unsupported binary operation {op}"
 
-def mkIcmp {Γ : Ctxt _} {ty : (MTy φ)} (op : MOp φ)
-    (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ (.bitvec 1) :=
-  match ty with
-  | .bitvec w =>
-    match op with
-      | .icmp p w' => if  h : w = w'
-      then return ⟨
-        .icmp p w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | _ => throw <| .unsupportedOp "unsupported icmp operation"
+def mkBinOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.BinaryOp)
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+  ⟨
+    .binary w op,
+    rfl,
+    .cons e₁ <| .cons e₂ .nil ,
+    .nil
+  ⟩
+
+def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec 1) :=
+  ⟨
+    .icmp p w,
+    rfl,
+    .cons e₁ <| .cons e₂ .nil,
+    .nil
+  ⟩
+
 
 def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
     (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) :
@@ -187,25 +57,6 @@ def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
         ⟩
         else throw <| .widthError w w'
         | _ => throw <| .unsupportedOp "Unsupported select operation"
-
-def mkOpExpr {Γ : Ctxt (MTy φ)} (op : MOp φ)
-    (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) :
-    MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ (OpSignature.outTy op) :=
-  match op with
-  | .and _ | .or _ | .xor _ | .shl _ | .lshr _ | .ashr _
-  | .add _ | .mul _ | .sub _ | .udiv _ | .sdiv _
-  | .srem _ | .urem _  =>
-    let (e₁, e₂) := arg.toTuple
-    mkBinOp op e₁ e₂
-  | .icmp _ _ =>
-    let (e₁, e₂) := arg.toTuple
-    mkIcmp op e₁ e₂
-  | .not _ | .neg _ | .copy _ =>
-    mkUnaryOp op arg.head
-  | .select _ =>
-    let (c, e₁, e₂) := arg.toTuple
-    mkSelect op c e₁ e₂
-  | .const .. => throw <| .unsupportedOp  "Tried to build (MOp φ) expression from constant"
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MOp φ) (MTy φ)
   | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless w => do
@@ -232,56 +83,50 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
         else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
       | op => throw <| .unsupportedOp s!"Unsuported ternary operation or invalid arguments '{op}'"
   | v₁Stx::v₂Stx::[] =>
-    let ⟨.bitvec w₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-    let ⟨.bitvec w₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-    -- let ty₁ := ty₁.instantiave
-    let op ← match opStx.name with
-      | "llvm.and"    => pure (MOp.and w₁)
-      | "llvm.or"     => pure (MOp.or w₁)
-      | "llvm.xor"    => pure (MOp.xor w₁)
-      | "llvm.shl"    => pure (MOp.shl w₁)
-      | "llvm.lshr"   => pure (MOp.lshr w₁)
-      | "llvm.ashr"   => pure (MOp.ashr w₁)
-      | "llvm.urem"   => pure (MOp.urem w₁)
-      | "llvm.srem"   => pure (MOp.srem w₁)
-      | "llvm.add"    => pure (MOp.add w₁)
-      | "llvm.mul"    => pure (MOp.mul w₁)
-      | "llvm.sub"    => pure (MOp.sub w₁)
-      | "llvm.sdiv"   => pure (MOp.sdiv w₁)
-      | "llvm.udiv"   => pure (MOp.udiv w₁)
-      | "llvm.icmp.eq" => pure (MOp.icmp LLVM.IntPredicate.eq w₁)
-      | "llvm.icmp.ne" => pure (MOp.icmp LLVM.IntPredicate.ne w₁)
-      | "llvm.icmp.ugt" => pure (MOp.icmp LLVM.IntPredicate.ugt w₁)
-      | "llvm.icmp.uge" => pure (MOp.icmp LLVM.IntPredicate.uge w₁)
-      | "llvm.icmp.ult" => pure (MOp.icmp LLVM.IntPredicate.ult w₁)
-      | "llvm.icmp.ule" => pure (MOp.icmp LLVM.IntPredicate.ule w₁)
-      | "llvm.icmp.sgt" => pure (MOp.icmp LLVM.IntPredicate.sgt w₁)
-      | "llvm.icmp.sge" => pure (MOp.icmp LLVM.IntPredicate.sge w₁)
-      | "llvm.icmp.slt" => pure (MOp.icmp LLVM.IntPredicate.slt w₁)
-      | "llvm.icmp.sle" => pure (MOp.icmp LLVM.IntPredicate.sle w₁)
-      | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
-    match op with
-    | .icmp .. =>
-      if hty : w₁ = w₂ then
-        let icmpOp ← mkIcmp op v₁ (hty ▸ v₂)
-        return ⟨.bitvec 1, icmpOp⟩
-      else
-        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
-    | _ =>
-      if hty : w₁ = w₂ then
-        let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-        return ⟨.bitvec w₁, binOp⟩
-      else
-        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    let ⟨.bitvec w,  v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+    let ⟨.bitvec w', v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+
+    if hty : w ≠ w' then
+      throw <| .widthError w w' -- the arguments don't have the same width!
+    else
+      let v₂ : Γ.Var (.bitvec w) := (by simpa using hty) ▸ v₂
+
+      let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
+        | "llvm.and"    => pure <| Sum.inl .and
+        | "llvm.or"     => pure <| Sum.inl .or
+        | "llvm.xor"    => pure <| Sum.inl .xor
+        | "llvm.shl"    => pure <| Sum.inl .shl
+        | "llvm.lshr"   => pure <| Sum.inl .lshr
+        | "llvm.ashr"   => pure <| Sum.inl .ashr
+        | "llvm.urem"   => pure <| Sum.inl .urem
+        | "llvm.srem"   => pure <| Sum.inl .srem
+        | "llvm.add"    => pure <| Sum.inl .add
+        | "llvm.mul"    => pure <| Sum.inl .mul
+        | "llvm.sub"    => pure <| Sum.inl .sub
+        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
+        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
+        | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
+        | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt
+        | "llvm.icmp.uge" => pure <| Sum.inr LLVM.IntPredicate.uge
+        | "llvm.icmp.ult" => pure <| Sum.inr LLVM.IntPredicate.ult
+        | "llvm.icmp.ule" => pure <| Sum.inr LLVM.IntPredicate.ule
+        | "llvm.icmp.sgt" => pure <| Sum.inr LLVM.IntPredicate.sgt
+        | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
+        | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
+        | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
+        | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
+      return match op with
+        | .inl binOp  => ⟨.bitvec w, mkBinOp binOp v₁ v₂⟩
+        | .inr pred   => ⟨.bitvec 1, mkIcmp pred v₁ v₂⟩
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
-        | "llvm.not" => pure <| MOp.not w
-        | "llvm.neg" => pure <| MOp.neg w
-        | "llvm.copy" => pure <| MOp.copy w
+        | "llvm.not"  => pure .not
+        | "llvm.neg"  => pure .neg
+        | "llvm.copy" => pure .copy
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
-    let op ← mkUnaryOp op v
-    return ⟨.bitvec w, op⟩
+    return ⟨.bitvec w, mkUnaryOp op v⟩
   | [] =>
     if opStx.name ==  "llvm.mlir.constant"
     then do
@@ -326,23 +171,9 @@ def instantiateMTy (vals : Vector Nat φ) : (MTy φ) → InstCombine.Ty
   | .bitvec w => .bitvec <| .concrete <| w.instantiate vals
 
 def instantiateMOp (vals : Vector Nat φ) : MOp φ → InstCombine.Op
-  | .and w => .and (w.instantiate vals)
-  | .or w => .or (w.instantiate vals)
-  | .not w => .not (w.instantiate vals)
-  | .xor w => .xor (w.instantiate vals)
-  | .shl w => .shl (w.instantiate vals)
-  | .lshr w => .lshr (w.instantiate vals)
-  | .ashr w => .ashr (w.instantiate vals)
-  | .urem w => .urem (w.instantiate vals)
-  | .srem w => .srem (w.instantiate vals)
+  | .binary w binOp => .binary (w.instantiate vals) binOp
+  | .unary w unOp => .unary (w.instantiate vals) unOp
   | .select w => .select (w.instantiate vals)
-  | .add w => .add (w.instantiate vals)
-  | .mul w => .mul (w.instantiate vals)
-  | .sub w => .sub (w.instantiate vals)
-  | .neg w => .neg (w.instantiate vals)
-  | .copy w => .copy (w.instantiate vals)
-  | .sdiv w => .sdiv (w.instantiate vals)
-  | .udiv w => .udiv (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
 
@@ -357,7 +188,6 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       true_and]
     cases op <;> simp only [List.map, and_self, List.cons.injEq]
-
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
