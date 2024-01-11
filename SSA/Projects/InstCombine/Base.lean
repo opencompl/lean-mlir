@@ -190,6 +190,9 @@ abbrev Op := MOp 0
 
 namespace Op
 
+@[match_pattern] abbrev unary   (w : Nat) (op : MOp.UnaryOp)  : Op := MOp.unary (.concrete w) op
+@[match_pattern] abbrev binary  (w : Nat) (op : MOp.BinaryOp) : Op := MOp.binary (.concrete w) op
+
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
 @[match_pattern] abbrev or     : Nat → Op := MOp.or     ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete

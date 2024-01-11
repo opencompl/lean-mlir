@@ -171,23 +171,9 @@ def instantiateMTy (vals : Vector Nat φ) : (MTy φ) → InstCombine.Ty
   | .bitvec w => .bitvec <| .concrete <| w.instantiate vals
 
 def instantiateMOp (vals : Vector Nat φ) : MOp φ → InstCombine.Op
-  | .and w => .and (w.instantiate vals)
-  | .or w => .or (w.instantiate vals)
-  | .not w => .not (w.instantiate vals)
-  | .xor w => .xor (w.instantiate vals)
-  | .shl w => .shl (w.instantiate vals)
-  | .lshr w => .lshr (w.instantiate vals)
-  | .ashr w => .ashr (w.instantiate vals)
-  | .urem w => .urem (w.instantiate vals)
-  | .srem w => .srem (w.instantiate vals)
+  | .binary w binOp => .binary (w.instantiate vals) binOp
+  | .unary w unOp => .unary (w.instantiate vals) unOp
   | .select w => .select (w.instantiate vals)
-  | .add w => .add (w.instantiate vals)
-  | .mul w => .mul (w.instantiate vals)
-  | .sub w => .sub (w.instantiate vals)
-  | .neg w => .neg (w.instantiate vals)
-  | .copy w => .copy (w.instantiate vals)
-  | .sdiv w => .sdiv (w.instantiate vals)
-  | .udiv w => .udiv (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
 
@@ -201,8 +187,7 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
     simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       true_and]
-    cases op using MOp.deepCasesOn <;> simp only [List.map, and_self, List.cons.injEq]
-
+    cases op <;> simp only [List.map, and_self, List.cons.injEq]
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
