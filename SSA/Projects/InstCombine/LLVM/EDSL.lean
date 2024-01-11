@@ -13,50 +13,34 @@ open MLIR
 
 namespace InstcombineTransformDialect
 
-def mkUnaryOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
-  (e : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
-  match ty with
-  | .bitvec w =>
-    match op with
-    | .unary w' op => if h : w = w'
-      then return ⟨
-        .unary w' op,
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | _ => throw .unsupportedUnaryOp
+def mkUnaryOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.UnaryOp)
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+  ⟨
+    .unary w op,
+    rfl,
+    .cons e .nil,
+    .nil
+  ⟩
 
-def mkBinOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
-    (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
-  match ty with
-  | .bitvec w =>
-    match op with
-    | .binary w' op => if h : w = w'
-      then return ⟨
-        .binary w' op,
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | op => throw <| .unsupportedBinaryOp s!"unsupported binary operation {op}"
 
-def mkIcmp {Γ : Ctxt _} {ty : (MTy φ)} (op : MOp φ)
-    (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ (.bitvec 1) :=
-  match ty with
-  | .bitvec w =>
-    match op with
-      | .icmp p w' => if  h : w = w'
-      then return ⟨
-        .icmp p w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | _ => throw <| .unsupportedOp "unsupported icmp operation"
+def mkBinOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.BinaryOp)
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+  ⟨
+    .binary w op,
+    rfl,
+    .cons e₁ <| .cons e₂ .nil ,
+    .nil
+  ⟩
+
+def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec 1) :=
+  ⟨
+    .icmp p w,
+    rfl,
+    .cons e₁ <| .cons e₂ .nil,
+    .nil
+  ⟩
+
 
 def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
     (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) :
@@ -99,56 +83,50 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
         else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
       | op => throw <| .unsupportedOp s!"Unsuported ternary operation or invalid arguments '{op}'"
   | v₁Stx::v₂Stx::[] =>
-    let ⟨.bitvec w₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-    let ⟨.bitvec w₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-    -- let ty₁ := ty₁.instantiave
-    let op ← match opStx.name with
-      | "llvm.and"    => pure (MOp.and w₁)
-      | "llvm.or"     => pure (MOp.or w₁)
-      | "llvm.xor"    => pure (MOp.xor w₁)
-      | "llvm.shl"    => pure (MOp.shl w₁)
-      | "llvm.lshr"   => pure (MOp.lshr w₁)
-      | "llvm.ashr"   => pure (MOp.ashr w₁)
-      | "llvm.urem"   => pure (MOp.urem w₁)
-      | "llvm.srem"   => pure (MOp.srem w₁)
-      | "llvm.add"    => pure (MOp.add w₁)
-      | "llvm.mul"    => pure (MOp.mul w₁)
-      | "llvm.sub"    => pure (MOp.sub w₁)
-      | "llvm.sdiv"   => pure (MOp.sdiv w₁)
-      | "llvm.udiv"   => pure (MOp.udiv w₁)
-      | "llvm.icmp.eq" => pure (MOp.icmp LLVM.IntPredicate.eq w₁)
-      | "llvm.icmp.ne" => pure (MOp.icmp LLVM.IntPredicate.ne w₁)
-      | "llvm.icmp.ugt" => pure (MOp.icmp LLVM.IntPredicate.ugt w₁)
-      | "llvm.icmp.uge" => pure (MOp.icmp LLVM.IntPredicate.uge w₁)
-      | "llvm.icmp.ult" => pure (MOp.icmp LLVM.IntPredicate.ult w₁)
-      | "llvm.icmp.ule" => pure (MOp.icmp LLVM.IntPredicate.ule w₁)
-      | "llvm.icmp.sgt" => pure (MOp.icmp LLVM.IntPredicate.sgt w₁)
-      | "llvm.icmp.sge" => pure (MOp.icmp LLVM.IntPredicate.sge w₁)
-      | "llvm.icmp.slt" => pure (MOp.icmp LLVM.IntPredicate.slt w₁)
-      | "llvm.icmp.sle" => pure (MOp.icmp LLVM.IntPredicate.sle w₁)
-      | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
-    match op with
-    | .icmp .. =>
-      if hty : w₁ = w₂ then
-        let icmpOp ← mkIcmp op v₁ (hty ▸ v₂)
-        return ⟨.bitvec 1, icmpOp⟩
-      else
-        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
-    | _ =>
-      if hty : w₁ = w₂ then
-        let binOp ← mkBinOp op v₁ (hty ▸ v₂)
-        return ⟨.bitvec w₁, binOp⟩
-      else
-        throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
+    let ⟨.bitvec w,  v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+    let ⟨.bitvec w', v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+
+    if hty : w ≠ w' then
+      throw <| .widthError w w' -- the arguments don't have the same width!
+    else
+      let v₂ : Γ.Var (.bitvec w) := (by simpa using hty) ▸ v₂
+
+      let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
+        | "llvm.and"    => pure <| Sum.inl .and
+        | "llvm.or"     => pure <| Sum.inl .or
+        | "llvm.xor"    => pure <| Sum.inl .xor
+        | "llvm.shl"    => pure <| Sum.inl .shl
+        | "llvm.lshr"   => pure <| Sum.inl .lshr
+        | "llvm.ashr"   => pure <| Sum.inl .ashr
+        | "llvm.urem"   => pure <| Sum.inl .urem
+        | "llvm.srem"   => pure <| Sum.inl .srem
+        | "llvm.add"    => pure <| Sum.inl .add
+        | "llvm.mul"    => pure <| Sum.inl .mul
+        | "llvm.sub"    => pure <| Sum.inl .sub
+        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
+        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
+        | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
+        | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt
+        | "llvm.icmp.uge" => pure <| Sum.inr LLVM.IntPredicate.uge
+        | "llvm.icmp.ult" => pure <| Sum.inr LLVM.IntPredicate.ult
+        | "llvm.icmp.ule" => pure <| Sum.inr LLVM.IntPredicate.ule
+        | "llvm.icmp.sgt" => pure <| Sum.inr LLVM.IntPredicate.sgt
+        | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
+        | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
+        | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
+        | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
+      return match op with
+        | .inl binOp  => ⟨.bitvec w, mkBinOp binOp v₁ v₂⟩
+        | .inr pred   => ⟨.bitvec 1, mkIcmp pred v₁ v₂⟩
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
-        | "llvm.not" => pure <| MOp.not w
-        | "llvm.neg" => pure <| MOp.neg w
-        | "llvm.copy" => pure <| MOp.copy w
+        | "llvm.not"  => pure .not
+        | "llvm.neg"  => pure .neg
+        | "llvm.copy" => pure .copy
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
-    let op ← mkUnaryOp op v
-    return ⟨.bitvec w, op⟩
+    return ⟨.bitvec w, mkUnaryOp op v⟩
   | [] =>
     if opStx.name ==  "llvm.mlir.constant"
     then do
