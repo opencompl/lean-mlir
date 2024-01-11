@@ -18,138 +18,24 @@ def mkUnaryOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
   match ty with
   | .bitvec w =>
     match op with
-    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .neg w' => if h : w = w'
+    | .unary w' op => if h : w = w'
       then return ⟨
-        .neg w',
+        .unary w' op,
         by simp [OpSignature.outTy, signature, h],
         .cons (h ▸ e) .nil,
         .nil
       ⟩
       else throw <| .widthError w w'
-    | .not w' => if h : w = w'
-      then return ⟨
-        .not w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .copy w' => if h : w = w'
-      then return ⟨
-        .copy w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e) .nil,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | _ => throw <| .unsupportedUnaryOp
+      | _ => throw .unsupportedUnaryOp
 
 def mkBinOp {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
     (e₁ e₂ : Ctxt.Var Γ ty) : MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
   match ty with
   | .bitvec w =>
     match op with
-    -- Can't use a single arm, Lean won't write the rhs accordingly
-    | .add w' => if h : w = w'
+    | .binary w' op => if h : w = w'
       then return ⟨
-        .add w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .and w' => if h : w = w'
-      then return ⟨
-        .and w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .or w' => if h : w = w'
-      then return ⟨
-        .or w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .xor w' => if h : w = w'
-      then return ⟨
-        .xor w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .shl w' => if h : w = w'
-      then return ⟨
-        .shl w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .lshr w' => if h : w = w'
-      then return ⟨
-        .lshr w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-    | .ashr w' => if h : w = w'
-      then return ⟨
-        .ashr w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .urem w' => if h : w = w'
-      then return ⟨
-        .urem w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .srem w' => if h : w = w'
-      then return ⟨
-        .srem w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-     | .mul w' => if h : w = w'
-      then return ⟨
-        .mul w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .sub w' => if h : w = w'
-      then return ⟨
-        .sub w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .sdiv w' => if h : w = w'
-      then return ⟨
-        .sdiv w',
-        by simp [OpSignature.outTy, signature, h],
-        .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
-        .nil
-      ⟩
-      else throw <| .widthError w w'
-      | .udiv w' => if  h : w = w'
-      then return ⟨
-        .udiv w',
+        .binary w' op,
         by simp [OpSignature.outTy, signature, h],
         .cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
         .nil
@@ -356,7 +242,7 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
     simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       true_and]
-    cases op <;> simp only [List.map, and_self, List.cons.injEq]
+    cases op using MOp.deepCasesOn <;> simp only [List.map, and_self, List.cons.injEq]
 
 
 open InstCombine (Op Ty) in
