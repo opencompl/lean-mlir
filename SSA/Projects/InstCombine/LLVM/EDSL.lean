@@ -74,25 +74,6 @@ def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
         else throw <| .widthError w w'
         | _ => throw <| .unsupportedOp "Unsupported select operation"
 
-def mkOpExpr {Γ : Ctxt (MTy φ)} (op : MOp φ)
-    (arg : HVector (fun t => Ctxt.Var Γ t) (OpSignature.sig op)) :
-    MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ (OpSignature.outTy op) :=
-  match op with
-  | .and _ | .or _ | .xor _ | .shl _ | .lshr _ | .ashr _
-  | .add _ | .mul _ | .sub _ | .udiv _ | .sdiv _
-  | .srem _ | .urem _  =>
-    let (e₁, e₂) := arg.toTuple
-    mkBinOp op e₁ e₂
-  | .icmp _ _ =>
-    let (e₁, e₂) := arg.toTuple
-    mkIcmp op e₁ e₂
-  | .not _ | .neg _ | .copy _ =>
-    mkUnaryOp op arg.head
-  | .select _ =>
-    let (c, e₁, e₂) := arg.toTuple
-    mkSelect op c e₁ e₂
-  | .const .. => throw <| .unsupportedOp  "Tried to build (MOp φ) expression from constant"
-
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MOp φ) (MTy φ)
   | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless w => do
     return .bitvec w
