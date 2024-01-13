@@ -34,18 +34,16 @@ def alive_simplifyDivRemOfSelect_lhs (w : Nat) :=
   "llvm.return" (%r) : (_) -> ()
 }]
 
-def alive_simplifyDivRemOfSelect (w : Nat) :
+def alive_simplifyDivRemOfSelect_rhs (w : Nat) :=
 [mlir_icom ( w )| {
-^bb0(%c : i1, %X : _, %Y : _):
-  %v0  = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %sel = "llvm.select" (%c,%Y,%v0) : (i1, _, _) -> (_)
-  %r   = "llvm.udiv" (%X,%sel) : (_, _) -> (_)
-  "llvm.return" (%r) : (_) -> ()
-}] ⊑ [mlir_icom ( w )| {
 ^bb0(%c : i1, %X : _, %Y : _):
   %r = "llvm.udiv" (%X,%Y) : (_, _) -> (_)
   "llvm.return" (%r) : (_) -> ()
-}] := by
+}]
+
+def alive_simplifyDivRemOfSelect (w : Nat) :
+  alive_simplifyDivRemOfSelect_lhs w ⊑  alive_simplifyDivRemOfSelect_rhs w := by
+  unfold alive_simplifyDivRemOfSelect_lhs alive_simplifyDivRemOfSelect_rhs
   simp_alive_peephole
   -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
   <;> sorry

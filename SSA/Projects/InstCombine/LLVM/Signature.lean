@@ -20,6 +20,10 @@ structure CliSignature where
  returnTy  : CliType
  deriving Inhabited, Repr
 
+instance : ToString CliSignature where
+ toString
+ | sig => toString sig.args ++ " → " ++ toString sig.returnTy
+
 opaque k : Nat
 opaque m : Nat
 opaque e : Expr
@@ -137,15 +141,17 @@ def getSignature (ty0 : Expr) : MetaM CliSignature := do
      | _ => throw <| Exception.error default "unable to convert signature"
   | _ => throw <| Exception.error default "unable to convert signature"
 
-elab "#printSignature" : command => liftTermElabM do
+elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
   let e : Environment ← getEnv
-  let defn :=
-    Option.get! <| Environment.find? e ``alive_simplifyDivRemOfSelect_lhs
-  let ty0 ← reduceAll (← inferType defn.value!)
-  let sig ← getSignature ty0
-  logInfo m!"signature: {repr sig}"
+  let names ← resolveGlobalConstWithInfos ssaTerm
+  for name in names do
+    let defn :=
+      Option.get! <| Environment.find? e name
+    let ty0 ← reduceAll (← inferType defn.value!)
+    let sig ← getSignature ty0
+    logInfo m!"signature {name}: {toString sig}"
   return ()
 
-#printSignature
+#printSignature alive_simplifyDivRemOfSelect_rhs
 
 -- Q (α : type witness) =defeq= Expr
