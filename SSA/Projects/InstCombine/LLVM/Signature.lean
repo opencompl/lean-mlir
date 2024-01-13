@@ -8,11 +8,17 @@ open Qq Lean Elab Command Meta Elab Term
 inductive CliType
 | varw -- variable width
 | width (n : Nat) -- concrete width given by n
+deriving Inhabited, Repr
 
 instance : ToString CliType where
  toString
  | .varw => "w"
  | .width (n : Nat) => s!"{n}"
+
+structure CliSignature where
+ args : List CliType
+ returnTy  : CliType
+ deriving Inhabited, Repr
 
 opaque k : Nat
 opaque m : Nat
@@ -42,8 +48,6 @@ def concrete? (e : Expr) : Option (Nat → ConcreteOrMVar ℕ 0) := do
   else
     none
 
-def concrete!  (e : Expr) : Nat → ConcreteOrMVar ℕ 0 := concrete? e |>.get!
-
 def mty? (e : Expr) : Option (Nat → InstCombine.MTy 0) := do
   guard <| e.isAppOfArity ``InstCombine.MTy.bitvec 2
   -- It should be possible to ensure the array accesses from the guard above
@@ -59,40 +63,55 @@ def mty? (e : Expr) : Option (Nat → InstCombine.MTy 0) := do
   let width ← concrete? widthExpr
   pure <| fun w => .bitvec <| width w
 
+def Lean.Expr.isListLit (e : Expr) : Bool :=
+  e.isAppOf ``List.nil || e.isAppOf ``List.cons
+
+def concreteToCliType? (e : Expr) : Option CliType := do
+  guard <| e.isAppOfArity ``ConcreteOrMVar.concrete 3
+  -- It should be possible to ensure the array accesses from the guard above
+  let args := e.getAppArgs
+
+  -- first argument sholud be Nat
+  let mvarsExpr ← args[0]?
+  guard (mvarsExpr.isConstOf `Nat)
+
+  -- second argument sholud be 0
+  let mvarsExpr ← args[1]?
+  guard (mvarsExpr.isNatLit)
+  guard (mvarsExpr.natLit! = 0)
+
+  -- third argument is value, either literal or bound variable
+  let widthExpr ← args[2]?
+  if widthExpr.isBVar then
+    some <| .varw
+  else if widthExpr.isNatLit then
+    some <| .width (widthExpr.natLit!)
+  else
+    none
+
+def mtyToCliType? (e : Expr) : Option CliType := do
+  guard <| e.isAppOfArity ``InstCombine.MTy.bitvec 2
+  -- It should be possible to ensure the array accesses from the guard above
+  let args := e.getAppArgs
+
+  -- first argument sholud be 0, otherwise it still has metavars
+  let mvarsExpr ← args[0]?
+  guard (mvarsExpr.isNatLit)
+  guard (mvarsExpr.natLit! = 0)
+
+  -- second argument should be a concrete value, extract it
+  let widthExpr ← args[1]?
+  concreteToCliType? widthExpr
+
+
+-- panic versions
+def concrete!  (e : Expr) : Nat → ConcreteOrMVar ℕ 0 := concrete? e |>.get!
 def mty! (e : Expr) : Nat → InstCombine.MTy 0 := mty? e |>.get!
-
-/-
-
-
-def concreteOrMVarToCliType (e : Expr) : MetaM CliType := do
-  match e with
-  | .app (.const ``ConcreteOrMVar.concrete _) kexp => do
-    match kexp : Q(Nat) with
-      | ~q($k) => pure <| CliType.width k
-      | _ => throw <| Exception.error default "Unexpected expression (ill-formed signature): {e}"
-    pure <| CliType.width 42
-  | _ => throw <| Exception.error default "Unexpected expression (ill-formed signature): {e}"
--/
-
--- pattern match on an `e` to get a list of lean expressions
-def exprToList (e : Expr) : MetaM (List Lean.Expr) := do --sorry
- logInfo m!"exprToList {e}"
- return []
+def concreteToCliType!  (e : Expr) : CliType := concreteToCliType? e |>.get!
+def mtyToCliType! (e : Expr) : CliType := mtyToCliType? e |>.get!
 
 
-def ExprToCliType (e : Expr) : MetaM CliType := do
- match e with
- | com@(.app x e) =>
-    logInfo m!"toCliType App {x} {e}"
-    return CliType.varw
-  | _ => pure CliType.varw
-/-
-  match (e : Q(InstCombine.MTy 0)) with
-  | ~q(InstCombine.MTy.bitvec (ConcreteOrMVar.concrete $cw)) => sorry
-  | ~q(InstCombine.MTy.bitvec (ConcreteOrMVar.concrete $cw)) => sorry
--/
-
-def printSignature (ty0 : Expr) := do
+def getSignature (ty0 : Expr) : MetaM CliSignature := do
   match ty0 with
   | .forallE x t ty1 ty1i =>
      logInfo m!"x: {x} | t: {t}"
@@ -100,38 +119,33 @@ def printSignature (ty0 : Expr) := do
      match ty1 with
      | .forallE x t ty2 ty2i =>
         logInfo m!"forall"
+        return default
      | com@(.app x e) =>
        -- TODO: verify that 'x' is `Com`
        let args := (Expr.getAppArgs com)
        let llvmArgTys := args[3]!
        let llvmRetTy := args[4]!
-       logInfo m!"argTys: {llvmArgTys}"
-       let (_,llvmArgs) := llvmArgTys.listLit?.get!
-       logInfo m!"argTys: {llvmArgs.map mty! |>.map (fun f : Nat → InstCombine.MTy 0 => f 42)}"
-       logInfo m!"retTy.mty!: {mty! llvmRetTy 42}"
-       let llvmArgTys : List CliType ← liftM <| (← exprToList llvmArgTys).mapM ExprToCliType
-       logInfo m!"argTys (as Cli type): {llvmArgTys}"
-       let llvmRetTy ← ExprToCliType llvmRetTy
-       logInfo m!"retTy (as Cli type): {llvmRetTy}"
-     | _ => pure ()
-  | _ => pure ()
+       guard llvmArgTys.isListLit
+       let (_,llvmArgsExprs) := llvmArgTys.listLit?.get!
+       let llvmArgs? := llvmArgsExprs.mapM mtyToCliType?
+       logInfo m!"argTys (as Cli type): {llvmArgs?.get!}"
+       let llvmRetTy? := mtyToCliType? llvmRetTy
+       logInfo m!"retTy (as Cli type): {llvmRetTy?.get!}"
+       match llvmArgs?, llvmRetTy? with
+         | .some args, some returnTy => return { args := args, returnTy := returnTy }
+         | _, _ => throw <| Exception.error default "unable to convert signature"
+     | _ => throw <| Exception.error default "unable to convert signature"
+  | _ => throw <| Exception.error default "unable to convert signature"
 
-elab "foo" : command => liftTermElabM do
+elab "#printSignature" : command => liftTermElabM do
   let e : Environment ← getEnv
   let defn :=
     Option.get! <| Environment.find? e ``alive_simplifyDivRemOfSelect_lhs
-  let value := defn.value!
   let ty0 ← reduceAll (← inferType defn.value!)
-  -- let ty' : Q(Type) := ty
-  -- let (ctx, typ) ←
-  --   match ty with
-  --   | ~q(Com $phi $ctx $typ) => ($ctx, $typ)
-  logInfo m!"isLam: {Lean.Expr.isForall ty0} | ty0: {ty0}"
-  logInfo m!"isLam: {Lean.Expr.isForall ty0} | ty0: {ty0}"
-  -- | forallE (binderName : Name) (binderType : Expr) (body : Expr) (binderInfo : BinderInfo)
-  let _ ← printSignature ty0
+  let sig ← getSignature ty0
+  logInfo m!"signature: {repr sig}"
   return ()
 
-foo
+#printSignature
 
 -- Q (α : type witness) =defeq= Expr
