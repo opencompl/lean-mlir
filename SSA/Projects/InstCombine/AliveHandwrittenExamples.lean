@@ -41,6 +41,13 @@ def alive_simplifyDivRemOfSelect_rhs (w : Nat) :=
   "llvm.return" (%r) : (_) -> ()
 }]
 
+def alive_simplifyDivRemOfSelect_rhs_constbw :=
+[mlir_icom ( )| {
+^bb0(%c : i1, %X : i8, %Y : i8):
+  %r = "llvm.udiv" (%X,%Y) : (i8, i8) -> (i8)
+  "llvm.return" (%r) : (i8) -> ()
+}]
+
 def alive_simplifyDivRemOfSelect (w : Nat) :
   alive_simplifyDivRemOfSelect_lhs w ⊑  alive_simplifyDivRemOfSelect_rhs w := by
   unfold alive_simplifyDivRemOfSelect_lhs alive_simplifyDivRemOfSelect_rhs

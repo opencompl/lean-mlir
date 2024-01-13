@@ -107,39 +107,34 @@ def mtyToCliType? (e : Expr) : Option CliType := do
   let widthExpr ← args[1]?
   concreteToCliType? widthExpr
 
-
 -- panic versions
 def concrete!  (e : Expr) : Nat → ConcreteOrMVar ℕ 0 := concrete? e |>.get!
 def mty! (e : Expr) : Nat → InstCombine.MTy 0 := mty? e |>.get!
 def concreteToCliType!  (e : Expr) : CliType := concreteToCliType? e |>.get!
 def mtyToCliType! (e : Expr) : CliType := mtyToCliType? e |>.get!
 
+def comToCliSignature (e : Expr) : MetaM CliSignature := do
+  guard <| e.isAppOfArity ``Com 5
+  let args := (Expr.getAppArgs e)
+  let llvmArgTys := args[3]!
+  let llvmRetTy := args[4]!
+  guard llvmArgTys.isListLit
+  let (_,llvmArgsExprs) := llvmArgTys.listLit?.get!
+  let llvmArgs? := llvmArgsExprs.mapM mtyToCliType?
+  let llvmRetTy? := mtyToCliType? llvmRetTy
+  match llvmArgs?, llvmRetTy? with
+    | .some args, some returnTy => return { args := args, returnTy := returnTy }
+    | _, _ => throw <| Exception.error default "unable to convert signature"
 
 def getSignature (ty0 : Expr) : MetaM CliSignature := do
   match ty0 with
-  | .forallE x t ty1 ty1i =>
-     logInfo m!"x: {x} | t: {t}"
-     -- TODO: verify you `t : Nat`
-     match ty1 with
-     | .forallE x t ty2 ty2i =>
-        logInfo m!"forall"
-        return default
-     | com@(.app x e) =>
-       -- TODO: verify that 'x' is `Com`
-       let args := (Expr.getAppArgs com)
-       let llvmArgTys := args[3]!
-       let llvmRetTy := args[4]!
-       guard llvmArgTys.isListLit
-       let (_,llvmArgsExprs) := llvmArgTys.listLit?.get!
-       let llvmArgs? := llvmArgsExprs.mapM mtyToCliType?
-       logInfo m!"argTys (as Cli type): {llvmArgs?.get!}"
-       let llvmRetTy? := mtyToCliType? llvmRetTy
-       logInfo m!"retTy (as Cli type): {llvmRetTy?.get!}"
-       match llvmArgs?, llvmRetTy? with
-         | .some args, some returnTy => return { args := args, returnTy := returnTy }
-         | _, _ => throw <| Exception.error default "unable to convert signature"
-     | _ => throw <| Exception.error default "unable to convert signature"
-  | _ => throw <| Exception.error default "unable to convert signature"
+  | .forallE _ t ty1 _ =>
+    -- Ensure it is the correct type of Expr
+    guard <| t.isConstOf `Nat
+    comToCliSignature ty1
+  | (.app _ _) =>
+    comToCliSignature ty0
+  |_ => throw <| Exception.error default "unable to convert signature (unsupported term pattern)"
 
 elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
   let e : Environment ← getEnv
@@ -153,5 +148,6 @@ elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
   return ()
 
 #printSignature alive_simplifyDivRemOfSelect_rhs
+#printSignature alive_simplifyDivRemOfSelect_rhs_constbw
 
 -- Q (α : type witness) =defeq= Expr
