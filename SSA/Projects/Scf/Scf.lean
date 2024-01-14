@@ -129,12 +129,12 @@ theorem iterate {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (δ : Int)  (i
 /-- the first component of iterating a loop invariant function -/
 @[simp]
 theorem iterate_fst {f : LoopBody t} (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
-  ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + δ * k := by simp[hf];
+  ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + δ * k := by simp [hf];
 
 /-- the second component of iterating a loop invariant function -/
 @[simp]
 theorem iterate_snd {f : LoopBody t} (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
-  ((f.CounterDecorator δ)^[k] (i₀, v₀)).2 = (f.atZero)^[k] v₀ := by simp[hf]
+  ((f.CounterDecorator δ)^[k] (i₀, v₀)).2 = (f.atZero)^[k] v₀ := by simp [hf]
 
 end LoopBody.IndexInvariant
 
@@ -317,7 +317,6 @@ theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (
   Expr.denote (ScfRegion.for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp [Expr.denote, run, for_]
     simp_peephole at Γv
-    simp [Com.denote]
     rw [LoopBody.CounterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
@@ -373,19 +372,11 @@ theorem add_iterate (v0 : Int) (b : Int) (a : ℕ):
 theorem correct :
   Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
     simp [lhs, rhs, for_, axpy, cst]
-    try simp (config := {decide := false}) only [
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-    Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry, add]
-    generalize A:Γv { val := 0, property := _ } = a;
-    generalize B:Γv { val := 1, property := _ } = b;
+    try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+    intros A B
     rw [LoopBody.CounterDecorator.const_index_fn_iterate]
     case hf => rfl
-    . simp
-      apply add_iterate
-    done
+    simp; apply add_iterate
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 -- TODO: add a PeepholeRewrite for this theorem.
@@ -432,18 +423,10 @@ theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ)
   V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
     simp [Ctxt.Valuation.snoc, hvar]
 
-/-- TODO: this should not complete, it should need more theorems! -/
 theorem correct :
   Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
     simp [lhs, rhs, for_, axpy]
-    try simp (config := {decide := false}) only [
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-    neg,
-    Ctxt.Valuation.snoc_eval]
-    done
+    simp_peephole at Γv
 
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
@@ -488,14 +471,7 @@ def rhs : Com Op [/- v0 -/ t] t :=
 theorem correct :
   Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
     simp [lhs, rhs, for_, axpy, cst]
-    try simp_peephole [add, iterate, for_, axpy, cst,
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-    Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
-    add, cst_nat,
-    Ctxt.Valuation.snoc_eval] at Γv
+    try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
     intros a
     have swap_niters := add_comm (a := niters1) (b := niters2)
     set arg := ((LoopBody.CounterDecorator 1 fun i v =>
@@ -507,8 +483,7 @@ theorem correct :
           Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
       (start1, a) := by
         congr
-    rw [H]
-    repeat rw [Function.iterate_add_apply]
+    rw [H, Function.iterate_add_apply]
     congr
     rw [LoopBody.CounterDecorator.iterate_fst_val]
     linarith

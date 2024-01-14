@@ -1244,16 +1244,17 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-        Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
+        Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
         $ts,*]
-      generalize $ll { val := 0, property := _ } = a;
-      generalize $ll { val := 1, property := _ } = b;
-      generalize $ll { val := 2, property := _ } = c;
-      generalize $ll { val := 3, property := _ } = d;
-      generalize $ll { val := 4, property := _ } = e;
-      generalize $ll { val := 5, property := _ } = f;
+      try generalize $ll { val := 0, property := _ } = a;
+      try generalize $ll { val := 1, property := _ } = b;
+      try generalize $ll { val := 2, property := _ } = c;
+      try generalize $ll { val := 3, property := _ } = d;
+      try generalize $ll { val := 4, property := _ } = e;
+      try generalize $ll { val := 5, property := _ } = f;
       try simp (config := {decide := false}) [Goedel.toType] at a b c d e f;
       try clear f;
       try clear e;
