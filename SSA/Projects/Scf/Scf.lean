@@ -500,29 +500,30 @@ def rhs : Com Op [/- v0 -/ t] t :=
 theorem correct :
   Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
     simp [lhs, rhs, for_, axpy, cst]
-    try simp (config := {decide := false}) only [
+    try simp_peephole [add, iterate, for_, axpy, cst,
     Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
     Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
     Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
     HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
     Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
     add, cst_nat,
-    Ctxt.Valuation.snoc_eval]
+    Ctxt.Valuation.snoc_eval] at Γv
+    intros a
     have swap_niters := add_comm (a := niters1) (b := niters2)
+    set arg := ((LoopBody.CounterDecorator 1 fun i v =>
+                  Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1]
+              (start1, a)).2
     have H : (LoopBody.CounterDecorator 1 fun i v =>
           Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
-      (start1, Γv (Var.last [] t)) = (LoopBody.CounterDecorator 1 fun i v =>
+      (start1, a) = (LoopBody.CounterDecorator 1 fun i v =>
           Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
-      (start1, Γv (Var.last [] t)) := by
+      (start1, a) := by
         congr
-    simp [H]
-    simp [Function.iterate_add_apply]
+    rw [H]
+    repeat rw [Function.iterate_add_apply]
     congr
     rw [LoopBody.CounterDecorator.iterate_fst_val]
     linarith
-    done
-
--- TODO: add a PeepholeRewrite for this theorem.
 
 end ForFusion
 
