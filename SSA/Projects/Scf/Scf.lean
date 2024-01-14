@@ -1,11 +1,17 @@
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
+import SSA.Core.ErasedContext
 import SSA.Core.Util
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
 open Std (BitVec)
 open Ctxt(Var)
+
+/- disable proofs and types of proofs from showing to make proof states legible -/
+set_option pp.proofs false
+set_option pp.proofs.withType false
+
 
 namespace ScfRegion
 
@@ -313,24 +319,6 @@ theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (
     simp_peephole at Γv
     simp [Com.denote]
     rw [LoopBody.CounterDecorator.constant_iterate]
-
-set_option pp.proofs false
-set_option pp.proofs.withType false
-
-/-!
-# Helpers for simplifying context manipulation with toSnoc and variable access
--/
-section ValuationVariableAccess
-
-/-- (ctx.snoc v₁) ⟨1, _⟩ = ctx ⟨0, _⟩ -/
-@[simp]
-theorem Ctxt.Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
-    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
-    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
-  rfl
-
-
-end ValuationVariableAccess
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
