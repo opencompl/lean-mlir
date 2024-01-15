@@ -111,7 +111,8 @@ namespace LoopBody.IndexInvariant
 /-- Evaluating a loop index invariant function is the same as evaluating it at `atZero` -/
 @[simp]
 theorem eval' {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (i : Int) (v : t) :
-  f i v = f.atZero v := by unfold LoopBody.IndexInvariant at hf; rw [LoopBody.atZero, hf]
+    f i v = f.atZero v := by 
+  unfold LoopBody.IndexInvariant at hf; rw [LoopBody.atZero, hf]
 
 /-- iterating a loop invariant function gives a well understood answer: the iterates of the function. -/
 @[simp]
