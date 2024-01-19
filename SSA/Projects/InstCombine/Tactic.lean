@@ -36,14 +36,12 @@ macro "simp_alive_peephole" : tactic =>
       (
         dsimp only [Com.Refinement]
         intros Γv
-        simp [InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+        try simp [InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
           ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
           List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
-          Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy] at Γv
-        simp_peephole at Γv
-        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
-          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
-        simp (config := {decide := false}) only [OpDenote.denote,
+          Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get
+          ] at Γv ⊢
+        simp_peephole [OpDenote.denote,
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
           bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
           Ctxt.snoc,
@@ -59,7 +57,32 @@ macro "simp_alive_peephole" : tactic =>
           InstcombineTransformDialect.MOp.instantiateCom,
           InstcombineTransformDialect.instantiateCtxt,
           ConcreteOrMVar.instantiate, Com.Refinement,
-          DialectMorphism.mapTy]
+          DialectMorphism.mapTy,
+          List.get, InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+          ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+          List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+          Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get]
+          at Γv
+        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
+          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+        try simp (config := {decide := false}) only [OpDenote.denote,
+          InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
+          bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
+          Ctxt.snoc,
+          ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
+          LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
+          LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
+          LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
+          LLVM.const?, LLVM.icmp?,
+          HVector.toTuple, List.nthLe, bitvec_minus_one,
+          DialectMorphism.mapTy,
+          InstcombineTransformDialect.instantiateMTy,
+          InstcombineTransformDialect.instantiateMOp,
+          InstcombineTransformDialect.MOp.instantiateCom,
+          InstcombineTransformDialect.instantiateCtxt,
+          ConcreteOrMVar.instantiate, Com.Refinement,
+          DialectMorphism.mapTy,
+          List.get]
         try intros v0
         try intros v1
         try intros v2

@@ -2,6 +2,16 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
+import SSA.Core.ErasedContext
+import SSA.Core.HVector
+import Mathlib.Data.List.AList
+import Mathlib.Data.Finset.Basic
+import Mathlib.Data.Fintype.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
+import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
+import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
+
 
 open MLIR AST
 open Std (BitVec)
@@ -130,5 +140,50 @@ def alive_simplifyMulDivRem290 (w : Nat) :
       %r = "llvm.mul" (%Op1, %Y) : (_, _) -> (_)
       "llvm.return" (%r) : (_) -> ()
     }] := by
-  simp_alive_peephole
+  dsimp only [Com.Refinement]
+  intros Γv
+  simp [InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get] at Γv
+
+  generalize Γv { val := 0, property := _ } = a;
+
+  -- generalize Γv { val := 1, property := _ } = b;
+  -- simp_alive_peephole
   sorry
+
+def alive_AddSub_1152_src   :=
+[alive_icom| {
+^bb0(%y : i1, %x : i1):
+  %v1 = "llvm.add" (%x,%y) : (i1, i1) -> (i1)
+  "llvm.return" (%v1) : (i1) -> ()
+}]
+
+def alive_AddSub_1152_tgt  :=
+[alive_icom ()| {
+^bb0(%y : i1, %x : i1):
+  %v1 = "llvm.xor" (%x,%y) : (i1, i1) -> (i1)
+  "llvm.return" (%v1) : (i1) -> ()
+}]
+theorem alive_AddSub_1152   : alive_AddSub_1152_src ⊑ alive_AddSub_1152_tgt := by
+  unfold alive_AddSub_1152_src alive_AddSub_1152_tgt
+  dsimp only [Com.Refinement]
+  intros Γv
+  simp [InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get] at Γv
+  simp (config := {decide := false}) only [
+        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+        Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
+        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+        Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map]
+  -- simp_peephole at Γv
+  generalize Γv { val := 0, property := _ } = a;
+  -- simp (config := {decide := false}) [Goedel.toType] at a;
+  -- revert a
+  -- clear a

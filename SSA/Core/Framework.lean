@@ -1247,7 +1247,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
-        $ts,*]
+        $ts,*] -- this sucks, because we need to give enough simp lemmas so that when we next generalize, we get a variable of the right type!
       generalize $ll { val := 0, property := _ } = a;
       generalize $ll { val := 1, property := _ } = b;
       generalize $ll { val := 2, property := _ } = c;
