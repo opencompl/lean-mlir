@@ -56,23 +56,23 @@ Proof:
     - 1/ -1 = -1
     - 1/x where x <= -2: 0
   Values of RHS:
-    RHS: (x + 2) <u 3 ? x : 0
-    - x >= 2: (x + 1) <u 3 ? x : 0
+    RHS: (x + 2) <_u 3 ? x : 0
+    - x >= 2: (x + 1) <_u 3 ? x : 0
               =  false ? x : 0 = false
-    - x = 1: (1 + 1) <u 3 ? x : 0
-              = 2 <u 3 ? x : 0
+    - x = 1: (1 + 1) <_u 3 ? x : 0
+              = 2 <_u 3 ? x : 0
               = true ? x : 0
               = x = 1
-    - x = 0: (0 + 1) <u 3 ? x : 0
-              = 1 <u 3 ? 0 : 0
+    - x = 0: (0 + 1) <_u 3 ? x : 0
+              = 1 <_u 3 ? 0 : 0
               = true ? 0 : 0
               = 0
-    - x = -1: (-1 + 1) <u 3 ? x : 0
-              = 0 <u 3 ? x : 0
+    - x = -1: (-1 + 1) <_u 3 ? x : 0
+              = 0 <_u 3 ? x : 0
               = true ? x : 0
               = x = -1
-    - x <= -2 : (-2 + 1) <u 3 ? x : 0
-              = -1 <u 3 ? x : 0
+    - x <= -2 : (-2 + 1) <_u 3 ? x : 0
+              = -1 <_u 3 ? x : 0
               = INT_MAX < 3 ? x : 0
               = false ? x : 0
               = 0
@@ -132,4 +132,3 @@ def alive_simplifyMulDivRem290 (w : Nat) :
     }] := by
   simp_alive_peephole
   sorry
-
