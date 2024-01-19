@@ -17,37 +17,10 @@ open MLIR AST
 open Std (BitVec)
 open Ctxt (Var)
 
--- set_option pp.proofs false
--- set_option pp.proofs.withType false
+set_option pp.proofs false
+set_option pp.proofs.withType false
 
 
-/-
-Name: SimplifyDivRemOfSelect
-
-%sel = select %c, %Y, 0
-%r = udiv %X, %sel
-  =>
-%r = udiv %X, %Y
-
--/
-
-/-
-def alive_simplifyDivRemOfSelect (w : Nat) :
-[mlir_icom( w )| {
-^bb0(%c : i1, %X : _, %Y : _):
-  %v0  = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-  %sel = "llvm.select" (%c,%Y,%v0) : (i1, _, _) -> (_)
-  %r   = "llvm.udiv" (%X,%sel) : (_, _) -> (_)
-  "llvm.return" (%r) : (_) -> ()
-}] ⊑ [mlir_icom ( w )| {
-^bb0(%c : i1, %X : _, %Y : _):
-  %r = "llvm.udiv" (%X,%Y) : (_, _) -> (_)
-  "llvm.return" (%r) : (_) -> ()
-}] := by
-  simp_alive_peephole
-  -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
-  sorry
--/
 
 /-
 Name: MulDivRem:805
@@ -104,8 +77,96 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       %r = "llvm.select" (%c, %X, %v0) : (i1, _, _) -> (_)
       "llvm.return" (%r) : (_) -> ()
     }] := by
-  simp_alive_peephole
+  intros Γv
+  dsimp only [Com.Refinement]
+  try simp (config := {decide := false}) only [
+    InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Var.toSnoc, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get,
+    Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+    Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
+    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+    DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
+    -- extra lemmas
+    OpDenote.denote,
+    InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
+    bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
+    Ctxt.snoc,
+    ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
+    LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
+    LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
+    LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
+    LLVM.const?, LLVM.icmp?,
+    HVector.toTuple, List.nthLe, bitvec_minus_one,
+    DialectMorphism.mapTy,
+    InstcombineTransformDialect.instantiateMTy,
+    InstcombineTransformDialect.instantiateMOp,
+    InstcombineTransformDialect.MOp.instantiateCom,
+    InstcombineTransformDialect.instantiateCtxt,
+    ConcreteOrMVar.instantiate, Com.Refinement,
+    DialectMorphism.mapTy,
+    List.get, InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get]
+  try simp (config := {decide := false}) only [
+    InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Var.toSnoc, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get,
+    Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+    Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
+    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+    DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
+    -- extra lemmas
+    OpDenote.denote,
+    InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
+    bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
+    Ctxt.snoc,
+    ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
+    LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
+    LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
+    LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
+    LLVM.const?, LLVM.icmp?,
+    HVector.toTuple, List.nthLe, bitvec_minus_one,
+    DialectMorphism.mapTy,
+    InstcombineTransformDialect.instantiateMTy,
+    InstcombineTransformDialect.instantiateMOp,
+    InstcombineTransformDialect.MOp.instantiateCom,
+    InstcombineTransformDialect.instantiateCtxt,
+    ConcreteOrMVar.instantiate, Com.Refinement,
+    DialectMorphism.mapTy,
+    List.get, InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
+    ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
+    List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get] at Γv
+  -- see that this creates  'Γv✝' inaccessible :(
+  -- This means that even after generalization, we still have references to the inaccessible,
+  -- which makes our rewrite pointless :/
+  generalize Γv { val := 0, property := _ } = a;
   sorry
+
+
+#exit
+
+  -- try simp (config := {decide := false}) only [
+  --   Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
+  --   Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
+  --   Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+  --   Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+  --   Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+  --   HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+  --   DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map]
+  -- at Γv ⊢
+
+
 
 /-
 Name: MulDivRem:290
