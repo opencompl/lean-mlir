@@ -94,15 +94,15 @@ def atZero (f : LoopBody t) : t → t := fun v => f 0 v
 /-- If there exists a function `g : t → t` which agrees with `f`, then `f` is loop index invariant. -/
 theorem eq_invariant_fn
     (f : LoopBody t) (g : t → t) (hf : ∀ (i : Int) (v : t), f i v = g v) :
-    LoopBody.IndexInvariant f /\ atZero f = g:= by
-      apply And.intro
-      case left =>
-        intros i j v
-        rw [hf i v, hf j v]
-      case right =>
-        simp [atZero]
-        funext v
-        rw [hf 0 v]
+    LoopBody.IndexInvariant f ∧ atZero f = g:= by
+  apply And.intro
+  case left =>
+    intros i j v
+    rw [hf i v, hf j v]
+  case right =>
+    simp [atZero]
+    funext v
+    rw [hf 0 v]
 
 end LoopBody
 
@@ -116,26 +116,34 @@ theorem eval' {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (i : Int) (v : t
 
 /-- iterating a loop invariant function gives a well understood answer: the iterates of the function. -/
 @[simp]
-theorem iterate {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (δ : Int)  (i₀ : Int) (v₀ : t) (k : ℕ) :
-  (f.CounterDecorator δ)^[k] (i₀, v₀) = (i₀ + δ * k, (f.atZero)^[k] v₀) := by
-    induction k generalizing i₀ v₀
-    case zero => simp
-    case succ i hi =>
-      simp
-      rw [hi]
-      simp [LoopBody.CounterDecorator]
-      simp [eval' hf]
-      linarith
+theorem iterate {f : LoopBody t}
+    (hf : LoopBody.IndexInvariant f)
+    (δ : Int)
+    (i₀ : Int)
+    (v₀ : t) (k : ℕ) :
+    (f.CounterDecorator δ)^[k] (i₀, v₀) = (i₀ + δ * k, (f.atZero)^[k] v₀) := by
+  induction k generalizing i₀ v₀
+  case zero => simp
+  case succ i hi =>
+    simp
+    rw [hi]
+    simp [LoopBody.CounterDecorator]
+    simp [eval' hf]
+    linarith
 
 /-- the first component of iterating a loop invariant function -/
 @[simp]
-theorem iterate_fst {f : LoopBody t} (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
-  ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + δ * k := by simp [hf];
+theorem iterate_fst {f : LoopBody t}
+    (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + δ * k := by
+  simp [hf];
 
 /-- the second component of iterating a loop invariant function -/
 @[simp]
-theorem iterate_snd {f : LoopBody t} (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
-  ((f.CounterDecorator δ)^[k] (i₀, v₀)).2 = (f.atZero)^[k] v₀ := by simp [hf]
+theorem iterate_snd {f : LoopBody t}
+    (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).2 = (f.atZero)^[k] v₀ := by
+  simp [hf]
 
 end LoopBody.IndexInvariant
 
@@ -143,26 +151,26 @@ namespace LoopBody.CounterDecorator
 /-- iterated value of the fst of the tuple of CounterDecorator (ie, the loop counter) -/
 @[simp]
 theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k : ℕ) :
-  ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + k * δ := by
-    induction k generalizing i₀ v₀
-    case zero => simp
-    case succ i hi =>
-      simp
-      rw [hi]
-      simp [LoopBody.CounterDecorator]
-      linarith
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + k * δ := by
+  induction k generalizing i₀ v₀
+  case zero => simp
+  case succ i hi =>
+    simp
+    rw [hi]
+    simp [LoopBody.CounterDecorator]
+    linarith
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
 theorem const_index_fn_eval
-  (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) :
-  (f.CounterDecorator δ) (i, vstart) = (i + δ, f' vstart) := by
+    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) :
+    (f.CounterDecorator δ) (i, vstart) = (i + δ, f' vstart) := by
   simp [LoopBody.CounterDecorator, hf]
 
 
 /-- iterating a function that does not access the index (const_index_fn) -/
-theorem const_index_fn_iterate
-  (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
-  (f.CounterDecorator δ)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
+theorem const_index_fn_iterate (δ : Int)
+    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
+    (f.CounterDecorator δ)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
   obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
   rw [IndexInvariant.iterate hf]; simp
   apply And.intro
@@ -172,26 +180,25 @@ theorem const_index_fn_iterate
 /-- CounterDecorator on a constant function -/
 @[simp]
 theorem constant (δ : Int) (i : Int) (vstart : α) :
-  (LoopBody.CounterDecorator δ fun _i v => v) (i, vstart) = (i + δ, vstart) := rfl
+    (LoopBody.CounterDecorator δ fun _i v => v) (i, vstart) = (i + δ, vstart) := rfl
 
 /-- iterate the CounterDecorator of a constant function. -/
-theorem constant_iterate {α : Type} (k : ℕ) (δ : Int):
-  ((LoopBody.CounterDecorator δ (fun (i : Int) (v : α) => v))^[k]) = fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by {
-    funext ⟨i, v⟩
-    induction k generalizing i v
-    case h.zero =>
-      simp
-    case h.succ n ihn =>
-      simp [ihn]
-      linarith
-  }
+theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
+    ((LoopBody.CounterDecorator δ (fun (i : Int) (v : α) => v))^[k]) = 
+    fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by 
+  funext ⟨i, v⟩
+  induction k generalizing i v
+  case h.zero =>
+    simp
+  case h.succ n ihn =>
+    simp [ihn]
+    linarith
 
 def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
   (LoopBody.CounterDecorator δ f (niters,val)).2
 
 end LoopBody.CounterDecorator
 
-#check Prod.mk
 @[reducible]
 noncomputable instance : OpDenote Op Ty where
   denote
@@ -361,8 +368,8 @@ def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int 
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 /-- iterated addition-/
-theorem add_iterate (v0 : Int) (b : Int) (a : ℕ):
-  (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
+theorem add_iterate (v0 : Int) (b : Int) (a : ℕ) :
+    (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
   induction a generalizing b v0
   case zero => simp
   case succ a' ah =>
@@ -371,13 +378,13 @@ theorem add_iterate (v0 : Int) (b : Int) (a : ℕ):
 
 /-- Reverse a loop. -/
 theorem correct :
-  Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
-    simp [lhs, rhs, for_, axpy, cst]
-    try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
-    intros A B
-    rw [LoopBody.CounterDecorator.const_index_fn_iterate]
-    case hf => rfl
-    simp; apply add_iterate
+    Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
+  simp [lhs, rhs, for_, axpy, cst]
+  try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  intros A B
+  rw [LoopBody.CounterDecorator.const_index_fn_iterate]
+  case hf => rfl
+  simp; apply add_iterate
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 -- TODO: add a PeepholeRewrite for this theorem.
@@ -417,17 +424,16 @@ def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t
 /-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
   this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
 theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
-  {v: ℕ}
-  {hvproof : Ctxt.get? Γ v = some ty}
-  {var : Γ.Var ty}
-  (hvar : var = ⟨v, hvproof⟩) :
-  V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
-    simp [Ctxt.Valuation.snoc, hvar]
+    {v: ℕ}
+    {hvproof : Ctxt.get? Γ v = some ty}
+    {var : Γ.Var ty}
+    (hvar : var = ⟨v, hvproof⟩) :
+    V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
+  simp [Ctxt.Valuation.snoc, hvar]
 
-theorem correct :
-  Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
-    simp [lhs, rhs, for_, axpy]
-    simp_peephole at Γv
+theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
+  simp [lhs, rhs, for_, axpy]
+  simp_peephole at Γv
 
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
@@ -470,24 +476,24 @@ def rhs : Com Op [/- v0 -/ t] t :=
 
 
 theorem correct :
-  Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
-    simp [lhs, rhs, for_, axpy, cst]
-    try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
-    intros a
-    have swap_niters := add_comm (a := niters1) (b := niters2)
-    set arg := ((LoopBody.CounterDecorator 1 fun i v =>
-                  Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1]
-              (start1, a)).2
-    have H : (LoopBody.CounterDecorator 1 fun i v =>
-          Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
-      (start1, a) = (LoopBody.CounterDecorator 1 fun i v =>
-          Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
-      (start1, a) := by
-        congr
-    rw [H, Function.iterate_add_apply]
-    congr
-    rw [LoopBody.CounterDecorator.iterate_fst_val]
-    linarith
+    Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
+  simp [lhs, rhs, for_, axpy, cst]
+  try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  intros a
+  have swap_niters := add_comm (a := niters1) (b := niters2)
+  set arg := ((LoopBody.CounterDecorator 1 fun i v =>
+                Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1]
+            (start1, a)).2
+  have H : (LoopBody.CounterDecorator 1 fun i v =>
+        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
+    (start1, a) = (LoopBody.CounterDecorator 1 fun i v =>
+        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
+    (start1, a) := by
+      congr
+  rw [H, Function.iterate_add_apply]
+  congr
+  rw [LoopBody.CounterDecorator.iterate_fst_val]
+  linarith
 
 end ForFusion
 
