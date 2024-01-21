@@ -3,6 +3,11 @@
 -- Include these, as they are reasonably fast to typecheck.
 import SSA.Projects.InstCombine.AliveStatements
 
+-- Handwritten Alive examples.
+-- This has those examples from alive that failed to be
+-- translated correctly due to bugs in the translator.
+import SSA.Projects.InstCombine.AliveHandwrittenExamples
+
 -- The semantics for the MLIR base dialect
 import SSA.Projects.InstCombine.Base
 
