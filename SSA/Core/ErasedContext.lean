@@ -250,6 +250,16 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
 
+/-!
+# Helper to simplify context manipulation with toSnoc and variable access.
+-/
+/--  (ctx.snoc v₁) ⟨n+1, _⟩ = ctx ⟨n, _⟩ -/
+@[simp]
+theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
+  rfl
+
 /-- Make a a valuation for a singleton value -/
 def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation [t] :=
   Ctxt.Valuation.nil.snoc v
