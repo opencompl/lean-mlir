@@ -115,8 +115,8 @@ def alive_simplifyMulDivRem805 (w : Nat) :
     List.get, InstcombineTransformDialect.MOp.instantiateCom, InstcombineTransformDialect.instantiateMOp,
     ConcreteOrMVar.instantiate, Vector.get, List.nthLe, List.length_singleton, Fin.coe_fin_one, Fin.zero_eta,
     List.get_cons_zero, Function.comp_apply, InstcombineTransformDialect.instantiateMTy, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
-    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get,
-    pairBind, Nat.cast_one, Ctxt.get?, List.length_singleton, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
+    Ctxt.DerivedCtxt.ofCtxt, List.map_eq_map, List.map, DialectMorphism.mapTy, List.get]
+  simp [pairBind, Nat.cast_one, Ctxt.get?, List.length_singleton, Ctxt.empty_eq, Ctxt.DerivedCtxt.snoc,
     Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.ofCtxt_empty, Fin.zero_eta, List.map_cons, List.map_nil, zero_add,
     Var.succ_eq_toSnoc, Var.zero_eq_last, Ctxt.Valuation.snoc_toSnoc, BitVec.ofNat_eq_ofNat, Nat.cast_ofNat]
   generalize Γv { val := 0, property := _ } = a;
