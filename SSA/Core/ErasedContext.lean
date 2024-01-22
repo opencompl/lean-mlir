@@ -250,6 +250,16 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
 
+/-!
+# Helper to simplify context manipulation with toSnoc and variable access.
+-/
+/--  (ctx.snoc v₁) ⟨n+1, _⟩ = ctx ⟨n, _⟩ -/
+@[simp]
+theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
+  rfl
+
 /-- Make a a valuation for a singleton value -/
 def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation [t] :=
   Ctxt.Valuation.nil.snoc v
@@ -399,6 +409,47 @@ def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
 instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
 end Diff
+
+/-## Derived Contexts
+Contexts that grow a base context-/
+
+/-- `Δ : DerivedCtxt Γ` means that `Δ` is a context obtained by adding elements to context `Γ`.
+That is, there exists a context difference `diff : Γ.Diff Δ`. -/
+structure DerivedCtxt (Γ : Ctxt Ty) where
+  ctxt : Ctxt Ty
+  diff : Ctxt.Diff Γ ctxt
+
+namespace DerivedCtxt
+
+/-- Every context is trivially derived from itself -/
+@[simp]
+abbrev ofCtxt (Γ : Ctxt Ty) : DerivedCtxt Γ := ⟨Γ, .zero _⟩
+
+/-- value of a dervied context from an empty context,
+     is the empty context with a zero diff. -/
+@[simp]
+theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := rfl
+
+/-- `snoc` of a derived context applies `snoc` to the underlying context, and updates the diff -/
+@[simp]
+def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
+  | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+
+@[simp]
+instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where
+  coe := fun ⟨Γ', _⟩ => Γ'
+
+instance {Γ : Ctxt Ty} : CoeDep (Ctxt Ty) Γ (DerivedCtxt Γ) where
+  coe := ⟨Γ, .zero _⟩
+
+instance {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} :
+    CoeHead (DerivedCtxt (Γ' : Ctxt Ty)) (DerivedCtxt Γ) where
+  coe := fun ⟨Γ'', diff⟩ => ⟨Γ'', Γ'.diff + diff⟩
+
+instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) t) where
+  coe v := Γ'.diff.toHom v
+
+end DerivedCtxt
 
 
 end Ctxt
