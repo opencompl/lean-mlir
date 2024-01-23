@@ -1,5 +1,5 @@
 import SSA.Core.Framework
--- import SSA.Core.Tactic
+import SSA.Core.Tactic
 
 /-
 # Examples
