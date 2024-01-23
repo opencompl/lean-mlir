@@ -45,11 +45,10 @@ elab "[mlir_icom_test" test_name:ident "(" mvars:term,* ")| " reg:mlir_region "]
     | e => throwError "Translation failed to reduce, possibly too generic syntax\n\t{e}"
 
 
-macro "deftest" name:ident " := " test:term : command => do
-  `(@[llvmTest $name] def $name := $test)
-
 macro "[mlir_icom_test" test_name:ident " | " reg:mlir_region "]" : term => `([mlir_icom_test $test_name ()| $reg])
 
+macro "[mlir_icom" "(" mvars:term,* ")| " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous ($[$mvars],* )| $reg ])
+macro "[mlir_icom" " | " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous | $reg ])
 
-
---macro "[mlir_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
+macro "deftest" name:ident " := " test_reg:mlir_region : command => do
+  `(@[llvmTest $name] def $name := fun w => [mlir_icom_test $name (w)| $test_reg ])

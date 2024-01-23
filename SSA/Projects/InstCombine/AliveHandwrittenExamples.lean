@@ -1,4 +1,3 @@
-
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
@@ -15,6 +14,8 @@ set_option pp.proofs false
 set_option pp.proofs.withType false
 open Qq Lean
 
+variable (w : Nat)
+
 
 /-
 Name: SimplifyDivRemOfSelect
@@ -27,56 +28,65 @@ Name: SimplifyDivRemOfSelect
 -/
 
 deftest alive_simplifyDivRemOfSelect_lhs :=
-fun w : Nat =>
-[mlir_icom_test ( w )| {
+{
 ^bb0(%c : i1, %X : _, %Y : _):
   %v0  = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
   %sel = "llvm.select" (%c,%Y,%v0) : (i1, _, _) -> (_)
   %r   = "llvm.udiv" (%X,%sel) : (_, _) -> (_)
   "llvm.return" (%r) : (_) -> ()
-}]
+}
 
 deftest alive_simplifyDivRemOfSelect_rhs  :=
-fun (w : Nat) =>
-[mlir_icom_test ( w )| {
+{
 ^bb0(%c : i1, %X : _, %Y : _):
   %r = "llvm.udiv" (%X,%Y) : (_, _) -> (_)
   "llvm.return" (%r) : (_) -> ()
-}]
+}
 
-#reduce alive_simplifyDivRemOfSelect_rhs 0
 
-/-
 deftest alive_simplifyDivRemOfSelect_rhs_constbw :=
-[mlir_icom_test ( )| {
+{
 ^bb0(%c : i1, %X : i8, %Y : i8):
   %r = "llvm.udiv" (%X,%Y) : (i8, i8) -> (i8)
   "llvm.return" (%r) : (i8) -> ()
-}]
+}
 
-def alive_simplifyDivRemOfSelect  :=
-fun (w : Nat) =>
-  alive_simplifyDivRemOfSelect_lhs w ⊑  alive_simplifyDivRemOfSelect_rhs w := by
+/-
+ This is not so nice, having to have the `|>.code`
+ snippet to extract the actual code. Maybe the macro
+ should instantiate the name directly with the code
+ and generate a second name `_test` with the full test?
+-/
+theorem alive_simplifyDivRemOfSelect  :
+  (alive_simplifyDivRemOfSelect_lhs w |>.code) ⊑
+  (alive_simplifyDivRemOfSelect_rhs w |>.code) := by
   unfold alive_simplifyDivRemOfSelect_lhs alive_simplifyDivRemOfSelect_rhs
   simp_alive_peephole
   -- goal: ⊢ BitVec.udiv? x1✝ (BitVec.select x2✝ x0✝ (BitVec.ofInt w 0)) ⊑ BitVec.udiv? x1✝ x0✝
   <;> sorry
 
-def alive_unsound :
-[mlir_icom ( )| {
+deftest alive_unsound_lhs :=
+{
 ^bb0():
   %v0  = "llvm.mlir.constant" () { value = 9 : i8 } :() -> (i8)
   %v1  = "llvm.mlir.constant" () { value = 1 : i8 } :() -> (i8)
   %undef  = "llvm.shl" (%v1,%v0) : (i8, i8) -> (i8)
   %r = "llvm.or" (%v1,%undef) : (i8, i8) -> (i8)
   "llvm.return" (%r) : (i8) -> ()
-}] ⊑ [mlir_icom ( )| {
+}
+
+deftest alive_unsound_rhs :=
+{
 ^bb0():
   %v0  = "llvm.mlir.constant" () { value = 2 : i8 } :() -> (i8)
   "llvm.return" (%v0) : (i8) -> ()
-}] := by
+}
+
+theorem alive_unsound :
+ (alive_unsound_lhs w |>.code) ⊑
+ (alive_unsound_lhs w |>.code) := by
   simp_alive_peephole
   simp [BitVec.toNat, BitVec.ofInt, BitVec.toFin, Fin.val]
--/
 
 def allTests := llvmTests!
+#reduce allTests
