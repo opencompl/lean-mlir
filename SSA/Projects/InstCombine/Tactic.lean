@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import Mathlib.Tactic
 import SSA.Core.ErasedContext
+import SSA.Core.Tactic
 
 open MLIR AST
 open Std (BitVec)
