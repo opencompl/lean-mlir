@@ -1,8 +1,24 @@
 import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.LLVM.Signature
 import Lean.Environment
+import Cli
 
 open Lean
+
+/-- Parse a triple -/
+instance [A : Cli.ParseableType α] [B : Cli.ParseableType β] [C : Cli.ParseableType γ] :
+  Cli.ParseableType (α × β × γ) where
+    name :=  s!"({A.name} × {B.name} × {C.name})"
+    parse? str := do
+      let str := str.trim.splitOn ","
+      match str with
+      | [a, b, c] => do
+        let a ← A.parse? a.trim
+        let b ← B.parse? b.trim
+        let c ← C.parse? c.trim
+        return (a, b, c)
+      | _ => .none
+
 
 structure CliTest where
   name : Name
@@ -11,6 +27,20 @@ structure CliTest where
   ty : InstCombine.MTy mvars
   code : MLIR.AST.Com context ty
   signature : CliSignature
+
+/-- unify this with CliTest -/
+structure Test where
+  name : String
+  params : Type
+  paramsParseable : Cli.ParseableType params
+  testFn : params → IO Bool
+
+def Test.ofFn (name : String) ⦃params : Type⦄ [Cli.ParseableType params]
+  (testFn : params → IO Bool) : Test where
+  name := name
+  params := _
+  paramsParseable := inferInstance
+  testFn := testFn
 
 
 -- Define an attribute to add up all LLVM tests

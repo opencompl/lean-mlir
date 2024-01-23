@@ -1,42 +1,10 @@
-import SSA.Projects.InstCombine.Tests
+import SSA.Projects.InstCombine.AliveHandwrittenExamples
+import SSA.Projects.InstCombine.LLVM.CLITests
 import Cli
 
 open Lean
 
-
-/-- Parse a triple -/
-instance [A : Cli.ParseableType α] [B : Cli.ParseableType β] [C : Cli.ParseableType γ] :
-  Cli.ParseableType (α × β × γ) where
-    name :=  s!"({A.name} × {B.name} × {C.name})"
-    parse? str := do
-      let str := str.trim.splitOn ","
-      match str with
-      | [a, b, c] => do
-        let a ← A.parse? a.trim
-        let b ← B.parse? b.trim
-        let c ← C.parse? c.trim
-        return (a, b, c)
-      | _ => .none
-
-
-/-- test to be run. -/
-structure Test where
-  name : String
-  params : Type
-  paramsParseable : Cli.ParseableType params
-  testFn : params → IO Bool
-
-def Test.ofFn (name : String) ⦃params : Type⦄ [Cli.ParseableType params]
-  (testFn : params → IO Bool) : Test where
-  name := name
-  params := _
-  paramsParseable := inferInstance
-  testFn := testFn
-
-
-def tests : List Test := [
-  Test.ofFn "instcombine-test1" InstCombine.test1
-]
+def tests : List CliTest := llvmTests!
 
 def runTest (name : String) (arg : String) : IO Bool := do
   match tests.find? (·.name == name) with
