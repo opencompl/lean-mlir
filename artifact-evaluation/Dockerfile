@@ -1,3 +1,16 @@
+# First image to generate Alive test cases
+FROM python:2.7
+RUN apt-get update -y \
+ && DEBIAN_FRONTEND="noninteractive" apt-get install --yes git
+# TODO: fix the exact commit with a tag or something
+RUN git clone https://github.com/opencompl/alive --branch=new-icom-translation /code/alive
+WORKDIR /code/alive
+RUN pip install -r requirements.txt
+RUN python ./1-tolean.py
+
+
+
+# Main Lean image
 FROM ubuntu:24.04
 WORKDIR /code
 
