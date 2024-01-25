@@ -53,7 +53,6 @@ theorem eg2_eq_eg3 : eg2 w ⊑ eg3 w := by
   unfold eg2
   unfold eg3
   simp_alive_peephole
-  simp
 
 -- Name:AddSub:1043
 -- precondition: true
