@@ -1,14 +1,14 @@
 # First image to generate Alive test cases
-FROM python:2.7
+FROM python:2.7 as alivePy
 RUN apt-get update -y \
  && DEBIAN_FRONTEND="noninteractive" apt-get install --yes git
+RUN pip install stopit z3-solver==4.8.17
+RUN mkdir -p /code/ssa/SSA/Projects/InstCombine
 RUN git clone https://github.com/opencompl/alive /code/ssa/related-work/alive/alive \
  && cd /code/ssa/related-work/alive/alive \
- && git checkout 1eb91
+ && git checkout c4c0
 
-RUN mkdir -p /code/ssa/SSA/Projects/InstCombine
 WORKDIR /code/ssa/related-work/alive/alive
-RUN pip install stopit z3-solver==4.8.17
 RUN python ./1-tolean.py
 
 
