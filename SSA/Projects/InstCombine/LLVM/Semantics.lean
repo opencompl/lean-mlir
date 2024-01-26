@@ -94,8 +94,8 @@ def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
 
 
 theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w :=
- --by simp [intMin, BitVec.toInt]
- sorry
+  --by simp [intMin, BitVec.toInt]
+  sorry
 
 
 -- Probably not a Mathlib worthy name,
@@ -160,10 +160,10 @@ The value produced is op1 * 2^op2 mod 2n, where n is the width of the result.
 If op2 is (statically or dynamically) equal to or larger than the number of
 bits in op1, this instruction returns a poison value.
 -/
-def shl? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def shl? {n} (op1 op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
-  if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 <<< op2)
+  if bits >= n then none
+  else some (op1 <<< op2)
 
 /--
 This instruction always performs a logical shift right operation.
@@ -175,10 +175,10 @@ this instruction returns a poison value.
 
 Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
-def lshr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def lshr? {n} (op1 op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 >>> op2)
+  else some (op1 >>> op2)
 
 
 /--
@@ -190,10 +190,10 @@ this instruction returns a poison value.
 
 Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 -/
-def ashr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def ashr? {n} (op1 op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 >>>ₛ op2)
+  else some (op1 >>>ₛ op2)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
@@ -286,7 +286,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : Option (BitVec 1) :=
-  Option.some ↑(icmp c x y)
+  some ↑(icmp c x y)
 
 /--
 Unlike LLVM IR, MLIR does not have first-class constant values.
@@ -306,6 +306,8 @@ the value `(2^w + (i mod 2^w)) mod 2^w`.
 TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
 -/
 def const? (i : Int): Option (BitVec w) :=
-  BitVec.ofInt w i
+  some (BitVec.ofInt w i)
+
+
 
 end LLVM
