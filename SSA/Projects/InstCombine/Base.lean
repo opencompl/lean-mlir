@@ -35,6 +35,8 @@ inductive MTy (φ : Nat)
 
 abbrev Ty := MTy 0
 
+@[match_pattern] abbrev Ty.bitvec (w : Nat) : Ty := MTy.bitvec (.concrete w)
+
 instance : Repr (MTy φ) where
   reprPrec
     | .bitvec (.concrete w), _ => "i" ++ repr w
@@ -47,7 +49,7 @@ instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 
 def Ty.width : Ty → Nat
-  | .bitvec (.concrete w) => w
+  | .bitvec w => w
 
 @[simp]
 theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
@@ -60,7 +62,7 @@ def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : Goedel Ty where
 toType := fun
-  | .bitvec (.concrete w) => Option $ BitVec w
+  | .bitvec w => Option $ BitVec w
 
 instance : Repr (BitVec n) where
   reprPrec
