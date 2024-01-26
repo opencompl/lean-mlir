@@ -43,7 +43,6 @@ deftest alive_simplifyDivRemOfSelect_rhs  :=
   "llvm.return" (%r) : (_) -> ()
 }
 
-
 deftest alive_simplifyDivRemOfSelect_rhs_constbw :=
 {
 ^bb0(%c : i1, %X : i8, %Y : i8):

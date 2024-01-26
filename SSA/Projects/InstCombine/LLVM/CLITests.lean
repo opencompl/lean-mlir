@@ -1,5 +1,6 @@
 import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.LLVM.Signature
+import Std
 import Lean.Environment
 import Cli
 
@@ -57,6 +58,40 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
       hn1eq ▸ instTup.parse? str
 
 instance {n : Nat} : Cli.ParseableType (natParams n) := instParseableNatParams
+
+
+/- These will parse the types/signature themselves -/
+instance : Cli.ParseableType CliType where
+  name := "CliType"
+  parse? str := do
+    let n ← Cli.instParseableTypeNat.parse? str
+    return CliType.width n
+
+instance : Cli.ParseableType CliSignature where
+  name := "Signature"
+  parse? str := do
+    let str := str.trim.splitOn "->"
+    match str with
+      | [inpStr, retStr] => do
+        let inpArr : Array CliType ← Cli.ParseableType.parse? inpStr
+        let retTy : CliType ← Cli.ParseableType.parse? retStr
+        return { args := inpArr.toList, returnTy := retTy}
+      | _ => none
+
+instance : Goedel CliType where toType
+  | .width n => Std.BitVec n
+  | .varw => Unit -- not sure how to deal with this right now
+
+private def toTypeList : List CliType → Type
+  | [] => Unit
+  | [ty] => Goedel.toType ty
+  | ty::tys => (Goedel.toType ty) × (toTypeList tys)
+
+instance : Goedel (List CliType) := ⟨toTypeList⟩
+
+instance : Goedel CliSignature where
+  toType sig :=
+    (Goedel.toType sig.args → Goedel.toType sig.returnTy)
 
 def CliTest.params : CliTest → Type
 | test => natParams test.mvars

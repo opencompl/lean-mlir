@@ -4,6 +4,7 @@ import Cli
 
 open Lean
 
+def tests' := llvmTests!
 def tests : List CliTest := llvmTests!
 
 def runTest (name : String) (arg : String) : IO Bool := do
@@ -33,4 +34,3 @@ def mainCmd := `[Cli|
 
 def main (args : List String): IO UInt32 :=
   mainCmd.validate args
-
