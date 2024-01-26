@@ -114,7 +114,7 @@ def alive_AddSub_1156_tgt  (w : Nat)  :=
 theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddSub_1156_tgt w  := by
   unfold alive_AddSub_1156_src alive_AddSub_1156_tgt
   simp_alive_peephole
-  apply bitvec_AddSub_1156
+  sorry --apply bitvec_AddSub_1156
 
 
 -- Name:AddSub:1164
@@ -556,7 +556,7 @@ def alive_AddSub_1614_tgt  (w : Nat)  :=
 theorem alive_AddSub_1614  (w : Nat)   : alive_AddSub_1614_src w  ⊑ alive_AddSub_1614_tgt w  := by
   unfold alive_AddSub_1614_src alive_AddSub_1614_tgt
   simp_alive_peephole
-  apply bitvec_AddSub_1614
+  sorry --apply bitvec_AddSub_1614
 
 
 -- Name:AddSub:1619
@@ -589,7 +589,7 @@ def alive_AddSub_1619_tgt  (w : Nat)  :=
 theorem alive_AddSub_1619  (w : Nat)   : alive_AddSub_1619_src w  ⊑ alive_AddSub_1619_tgt w  := by
   unfold alive_AddSub_1619_src alive_AddSub_1619_tgt
   simp_alive_peephole
-  apply bitvec_AddSub_1619
+  sorry --apply bitvec_AddSub_1619
 
 
 -- Name:AddSub:1624
@@ -2240,7 +2240,7 @@ def alive_AndOrXor_2443_tgt  (w : Nat)  :=
 theorem alive_AndOrXor_2443  (w : Nat)   : alive_AndOrXor_2443_src w  ⊑ alive_AndOrXor_2443_tgt w  := by
   unfold alive_AndOrXor_2443_src alive_AndOrXor_2443_tgt
   simp_alive_peephole
-  apply bitvec_AndOrXor_2443
+  sorry --apply bitvec_AndOrXor_2443
 
 
 -- Name:AndOrXor:2453
@@ -2736,7 +2736,7 @@ def alive_152_tgt  (w : Nat)  :=
 theorem alive_152  (w : Nat)   : alive_152_src w  ⊑ alive_152_tgt w  := by
   unfold alive_152_src alive_152_tgt
   simp_alive_peephole
-  apply bitvec_152
+  sorry --apply bitvec_152
 
 
 -- Name:229
@@ -2880,7 +2880,7 @@ def alive_275_2_tgt  :=
 theorem alive_275_2   : alive_275_2_src ⊑ alive_275_2_tgt := by
   unfold alive_275_2_src alive_275_2_tgt
   simp_alive_peephole
-  apply bitvec_275_2
+  sorry --apply bitvec_275_2
 
 
 -- Name:276
@@ -2921,7 +2921,7 @@ def alive_276_tgt  (w : Nat)  :=
 theorem alive_276  (w : Nat)   : alive_276_src w  ⊑ alive_276_tgt w  := by
   unfold alive_276_src alive_276_tgt
   simp_alive_peephole
-  apply bitvec_276
+  sorry --apply bitvec_276
 
 
 -- Name:276-2
@@ -3024,7 +3024,7 @@ def alive_290__292_tgt  (w : Nat)  :=
 theorem alive_290__292  (w : Nat)   : alive_290__292_src w  ⊑ alive_290__292_tgt w  := by
   unfold alive_290__292_src alive_290__292_tgt
   simp_alive_peephole
-  apply bitvec_290__292
+  all_goals sorry --apply bitvec_290__292
 
 
 -- Name:820
@@ -3060,7 +3060,7 @@ def alive_820_tgt  :=
 theorem alive_820   : alive_820_src ⊑ alive_820_tgt := by
   unfold alive_820_src alive_820_tgt
   simp_alive_peephole
-  apply bitvec_820
+  sorry --apply bitvec_820
 
 
 -- Name:820'
@@ -3161,7 +3161,7 @@ def alive_Select_858_tgt  (w : Nat)  :=
 theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
   unfold alive_Select_858_src alive_Select_858_tgt
   simp_alive_peephole
-  <;> sorry --apply bitvec_Select_858
+  all_goals sorry --apply bitvec_Select_858
 
 
 -- Name:Select:859'
@@ -3196,7 +3196,7 @@ def alive_Select_859'_tgt  (w : Nat)  :=
 theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w  ⊑ alive_Select_859'_tgt 1  := by
   unfold alive_Select_859'_src alive_Select_859'_tgt
   simp_alive_peephole
-  sorry --apply bitvec_Select_859'
+  all_goals sorry --apply bitvec_Select_859'
 
 
 -- Name:Select:1100
@@ -3225,7 +3225,7 @@ def alive_Select_1100_tgt  (w : Nat)  :=
 theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Select_1100_tgt w  := by
   unfold alive_Select_1100_src alive_Select_1100_tgt
   simp_alive_peephole
-  apply bitvec_Select_1100
+  all_goals sorry --apply bitvec_Select_1100
 
 
 -- Name:Select:1105
@@ -3254,7 +3254,7 @@ def alive_Select_1105_tgt  (w : Nat)  :=
 theorem alive_Select_1105  (w : Nat)   : alive_Select_1105_src w  ⊑ alive_Select_1105_tgt w  := by
   unfold alive_Select_1105_src alive_Select_1105_tgt
   simp_alive_peephole
-  apply bitvec_Select_1105
+  all_goals sorry --apply bitvec_Select_1105
 
 
 -- Name:InstCombineShift: 239
@@ -3288,7 +3288,7 @@ def alive_InstCombineShift__239_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__239  (w : Nat)   : alive_InstCombineShift__239_src w  ⊑ alive_InstCombineShift__239_tgt w  := by
   unfold alive_InstCombineShift__239_src alive_InstCombineShift__239_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__239
+  sorry --apply bitvec_InstCombineShift__239
 
 
 -- Name:InstCombineShift: 279
@@ -3322,7 +3322,7 @@ def alive_InstCombineShift__279_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__279  (w : Nat)   : alive_InstCombineShift__279_src w  ⊑ alive_InstCombineShift__279_tgt w  := by
   unfold alive_InstCombineShift__279_src alive_InstCombineShift__279_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__279
+  sorry --apply bitvec_InstCombineShift__279
 
 
 -- Name:InstCombineShift: 440
@@ -3367,7 +3367,7 @@ def alive_InstCombineShift__440_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_src w  ⊑ alive_InstCombineShift__440_tgt w  := by
   unfold alive_InstCombineShift__440_src alive_InstCombineShift__440_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__440
+  all_goals sorry --apply bitvec_InstCombineShift__440
 
 
 -- Name:InstCombineShift: 476
@@ -3412,7 +3412,7 @@ def alive_InstCombineShift__476_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__476  (w : Nat)   : alive_InstCombineShift__476_src w  ⊑ alive_InstCombineShift__476_tgt w  := by
   unfold alive_InstCombineShift__476_src alive_InstCombineShift__476_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__476
+  all_goals sorry --apply bitvec_InstCombineShift__476
 
 
 -- Name:InstCombineShift: 497
@@ -3447,7 +3447,7 @@ def alive_InstCombineShift__497_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__497  (w : Nat)   : alive_InstCombineShift__497_src w  ⊑ alive_InstCombineShift__497_tgt w  := by
   unfold alive_InstCombineShift__497_src alive_InstCombineShift__497_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__497
+  sorry --apply bitvec_InstCombineShift__497
 
 
 -- Name:InstCombineShift: 497'''
@@ -3482,7 +3482,7 @@ def alive_InstCombineShift__497'''_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__497'''  (w : Nat)   : alive_InstCombineShift__497'''_src w  ⊑ alive_InstCombineShift__497'''_tgt w  := by
   unfold alive_InstCombineShift__497'''_src alive_InstCombineShift__497'''_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__497'''
+  sorry --apply bitvec_InstCombineShift__497'''
 
 
 -- Name:InstCombineShift: 582
@@ -3516,4 +3516,4 @@ def alive_InstCombineShift__582_tgt  (w : Nat)  :=
 theorem alive_InstCombineShift__582  (w : Nat)   : alive_InstCombineShift__582_src w  ⊑ alive_InstCombineShift__582_tgt w  := by
   unfold alive_InstCombineShift__582_src alive_InstCombineShift__582_tgt
   simp_alive_peephole
-  apply bitvec_InstCombineShift__582
+  sorry --apply bitvec_InstCombineShift__582
