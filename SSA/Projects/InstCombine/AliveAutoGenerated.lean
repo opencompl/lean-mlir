@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.BitVec.Lemmas
 
 open MLIR AST
 open Std (BitVec)
@@ -98,14 +99,14 @@ theorem alive_AddSub_1152   : alive_AddSub_1152_src ⊑ alive_AddSub_1152_tgt :=
 
 -/
 def alive_AddSub_1156_src  (w : Nat)   :=
-[alive_icom ( w )| {
+[alive_icom ( w+2 )| {
 ^bb0(%b : _):
   %v1 = "llvm.add" (%b,%b) : (_, _) -> (_)
   "llvm.return" (%v1) : (_) -> ()
 }]
 
 def alive_AddSub_1156_tgt  (w : Nat)  :=
-[alive_icom ( w )| {
+[alive_icom ( w+2 )| {
 ^bb0(%b : _):
   %v1 = "llvm.mlir.constant" () { value = 1 : _ } :() -> (_)
   %v2 = "llvm.shl" (%b,%v1) : (_, _) -> (_)
@@ -114,7 +115,10 @@ def alive_AddSub_1156_tgt  (w : Nat)  :=
 theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddSub_1156_tgt w  := by
   unfold alive_AddSub_1156_src alive_AddSub_1156_tgt
   simp_alive_peephole
-  apply bitvec_AddSub_1156
+  rw [BitVec.ofInt_ofNat]; simp [pow_succ, one_mod];
+  split_ifs
+  · sorry
+  · simp; apply bitvec_AddSub_1156
 
 
 -- Name:AddSub:1164
