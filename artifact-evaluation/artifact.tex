@@ -43,7 +43,7 @@
 
 {\small
 \begin{itemize}
-  \item {\bf Program: } The code repsitory for our framework along with the test suite.
+  \item {\bf Program: } The code repository for our framework along with the test suite.
   \item {\bf Compilation: } Python for running the plotting scripts and the Lean4 toolchain, downloaded via \texttt{elan}
   \item {\bf Run-time environment: } Any operating system that supports Docker.
   \item {\bf Hardware: } Any x86-64 machine.
@@ -66,7 +66,7 @@ None.
 
 \subsubsection{Software dependencies}
 
-Docker is necessary to run our artifact. the Docker image has dependences needed to compile our framework with Lean4.
+Docker is necessary to run our artifact. The Docker image has all dependencies needed to compile our framework with Lean4.
 
 
 %COMMENT% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,7 +85,7 @@ $ docker load -i opencompl-ssa.docker
 $ docker run -it siddudruid/opencompl-ssa
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
-# v and builds our framework.
+# | and builds our framework.
 $ cd /code/ssa && lake clean && lake exe cache get && lake build
 \end{minted}
 
