@@ -31,14 +31,14 @@ def rowHeader : Row := {
 
 def MAXW : Nat := 3
 
-#check Range
-def addRows : Array Row := Id.run do
+open Std in
+def binopRows (opName : String) (f : {w : Nat} → BitVec w → BitVec w → Option (BitVec w)) : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
     for i in [0:Nat.pow 2 w] do
       for j in [0:Nat.pow 2 w] do
         let retv :=
-          match LLVM.add? (BitVec.ofNat w i) (BitVec.ofNat w j) with
+          match f (w := w) (BitVec.ofNat w i) (BitVec.ofNat w j) with
           | .none => "poison"
           | .some bv =>
             let iv := BitVec.toInt bv
@@ -49,7 +49,7 @@ def addRows : Array Row := Id.run do
               else "<unk_i1>"
             else toString iv
         let row : Row := {
-          opName := "add"
+          opName := opName,
           bitwidth := toString w,
           v1 := toString i,
           v2 := toString j,
@@ -58,7 +58,6 @@ def addRows : Array Row := Id.run do
         rows := rows.push row
   rows
 
-
 #check System.FilePath
 
 def main : IO Unit := do
@@ -66,6 +65,18 @@ def main : IO Unit := do
   let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
   let stream : Stream := IO.FS.Stream.ofHandle handle
   let allRows := #[rowHeader]
-  let allRows := allRows.append addRows
+  let allRows := allRows.append (binopRows "and" LLVM.and?)
+  let allRows := allRows.append (binopRows "or" LLVM.or?)
+  let allRows := allRows.append (binopRows "xor" LLVM.xor?)
+  let allRows := allRows.append (binopRows "add" LLVM.add?)
+  let allRows := allRows.append (binopRows "sub" LLVM.sub?)
+  let allRows := allRows.append (binopRows "mul" LLVM.mul?)
+  let allRows := allRows.append (binopRows "udiv" LLVM.udiv?)
+  let allRows := allRows.append (binopRows "sdiv" LLVM.sdiv?)
+  let allRows := allRows.append (binopRows "urem" LLVM.urem?)
+  let allRows := allRows.append (binopRows "srem" LLVM.srem?)
+  let allRows := allRows.append (binopRows "shl" LLVM.shl?)
+  let allRows := allRows.append (binopRows "lshr" LLVM.lshr?)
+  let allRows := allRows.append (binopRows "ashr" LLVM.ashr?)
   allRows.toList |>.map toString |> "\n".intercalate |> stream.putStr
   return ()

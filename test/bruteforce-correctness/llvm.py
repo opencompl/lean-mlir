@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 # Generate the file for LLVM
 import itertools
-from tqdm import tqdm
 from typing import *
 import subprocess
 import re
-
 
 MAX_OP_ARITY = 3
 
@@ -80,7 +78,9 @@ def parse_generated_llvm_file(lines):
 
       if match: # we have matched the regular expression.
         op_name = match.group(1)
-        if op_name == "add":
+        KNOWN_BINOPS  = ["and", "or", "xor", "add", "sub",
+                          "mul", "udiv", "sdiv", "urem", "srem", "shl", "lshr", "ashr"]
+        if op_name in KNOWN_BINOPS:
           # binary operation
           re_def_line = r"define i\d+ @test_[a-z]+_width_(\d+)__val_(\d+)__val_(\d+)"
           match = re.search(re_def_line, def_line)
@@ -90,7 +90,7 @@ def parse_generated_llvm_file(lines):
           raise RuntimeError("unknown operation '{op_name}'")
         assert vals
         ret_line = lines[i]; i += 1
-        re_ret = r"ret i(\d+) ([+-]?\d+|false|true)"
+        re_ret = r"ret i(\d+) ([+-]?\d+|false|true|poison)"
         ret_match = re.search(re_ret, ret_line)
         if not ret_match:
           print(f"unable to find pattern '{re_ret}' in '{ret_line}'")
@@ -104,10 +104,27 @@ def parse_generated_llvm_file(lines):
     i += 1; # skip }
 
 
-LLVM_ARITH_BINOPS = [LLVMArithBinopInfo("add", 2)]
+LLVM_OPS = [
+  LLVMArithBinopInfo("and", 2),
+  LLVMArithBinopInfo("or", 2),
+  LLVMArithBinopInfo("xor", 2),
+  LLVMArithBinopInfo("add", 2),
+  LLVMArithBinopInfo("sub", 2),
+  LLVMArithBinopInfo("mul", 2),
+  LLVMArithBinopInfo("udiv", 2),
+  LLVMArithBinopInfo("sdiv", 2),
+  LLVMArithBinopInfo("urem", 2),
+  LLVMArithBinopInfo("srem", 2),
+  LLVMArithBinopInfo("shl", 2),
+  LLVMArithBinopInfo("lshr", 2),
+  LLVMArithBinopInfo("ashr", 2),
+  # select
+  # icmp
+]
+
 if __name__ == "__main__":
   with open("generated-llvm.ll", "w") as f:
-    for (w, info) in tqdm(itertools.product(range(1, 4), LLVM_ARITH_BINOPS)):
+    for (info, w) in itertools.product(LLVM_OPS, range(1, 4)):
         f.write(info.to_str(w))
 
   sh("opt-15", "-S", "generated-llvm.ll", "-instcombine", "-o", "generated-llvm-optimized.ll")
