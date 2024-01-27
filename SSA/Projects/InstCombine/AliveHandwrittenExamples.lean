@@ -89,3 +89,12 @@ theorem alive_unsound :
 
 def allTests := llvmTests!
 #reduce allTests
+
+def myTest := alive_simplifyDivRemOfSelect_rhs 42 |>.code
+#printSignature myTest
+#reduce #getSignature myTest
+
+def myTestSignature := #getSignature myTest
+def test2 := {alive_simplifyDivRemOfSelect_rhs 42 with signature := #getSignature myTest}
+
+#reduce test2

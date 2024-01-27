@@ -135,6 +135,46 @@ def getSignature (ty0 : Expr) : MetaM CliSignature := do
     comToCliSignature ty0
   |_ => throw <| Exception.error default "unable to convert signature (unsupported term pattern)"
 
+instance : Quote CliType where
+  quote ty := match ty with
+    | .width n => Syntax.mkCApp ``CliType.width #[(quote n)]
+    | .varw => mkCIdent ``CliType.varw
+
+instance : Quote CliSignature where
+  quote sig :=
+    let args : Term := quote sig.args
+    Syntax.mkCApp ``CliSignature.mk #[args, (quote sig.returnTy)]
+
+#check @List.nil
+#check @List.cons
+
+-- There should be a typeclass or something for this, but I don't know
+-- which one it is.
+def CliType.reflect : CliType → Lean.Expr
+  | .width n => .app (Lean.mkConst `CliType.width) (mkLit <| .natVal n)
+  | .varw => Lean.mkConst `CliType.varw
+def CliType.listReflect : List CliType → Lean.Expr
+  | [] => .app (.const `List.nil [levelZero]) (Lean.mkConst `CliType)
+  | ty::tys => mkApp3 (.const `List.cons [levelZero]) (Lean.mkConst `CliType)
+      ty.reflect (listReflect tys)
+
+def CliSignature.reflect : CliSignature → Lean.Expr
+  | sig =>
+    let args := CliType.listReflect sig.args
+    mkApp2 (Lean.mkConst `CliSignature.mk) args sig.returnTy.reflect
+
+elab "#getSignature" ssaTerm:ident : term => do
+  let e : Environment ← getEnv
+  let names ← resolveGlobalConstWithInfos ssaTerm
+  match names[0]? with
+    | some name =>
+      let defn :=
+        Option.get! <| Environment.find? e name
+      let ty0 ← reduceAll (← inferType defn.value!)
+      let sig ← getSignature ty0
+      return sig.reflect
+    | none => panic! s!"cannot find term {names}"
+
 elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
   let e : Environment ← getEnv
   let names ← resolveGlobalConstWithInfos ssaTerm

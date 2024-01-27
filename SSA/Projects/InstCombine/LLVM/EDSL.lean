@@ -25,7 +25,7 @@ elab "[mlir_icom_test" test_name:ident "(" mvars:term,* ")| " reg:mlir_region "]
       let Γ : Q(Ctxt Ty) := q(($comOk).fst)
       let ty : Q(Ty) := q($(comOk).snd.fst)
       let nm : Name := test_name.getId
-      --let signature : CliSignature ← getSignature code
+      --let signature : Q(CliSignature) ← getSignature q($comOk).snd.snd
       -- let hty :  Q(Ty) = MTy 0 := by
       --  sorry
       -- let hctxt :  Q(Ctxt Ty) = MLIR.AST.Context 0 := by
