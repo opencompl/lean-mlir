@@ -117,6 +117,6 @@ if __name__ == "__main__":
     rows = parse_generated_llvm_file(f.readlines())
 
   with open("generated-llvm-optimized-data.csv", "w") as f:
-    f.write(Row.to_header())
+    f.write(Row.to_header() + "\n")
     for row in tqdm(rows):
       f.write(row.to_csv() + "\n")
