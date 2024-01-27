@@ -163,18 +163,6 @@ def CliSignature.reflect : CliSignature → Lean.Expr
     let args := CliType.listReflect sig.args
     mkApp2 (Lean.mkConst `CliSignature.mk) args sig.returnTy.reflect
 
-elab "#getSignature" ssaTerm:ident : term => do
-  let e : Environment ← getEnv
-  let names ← resolveGlobalConstWithInfos ssaTerm
-  match names[0]? with
-    | some name =>
-      let defn :=
-        Option.get! <| Environment.find? e name
-      let ty0 ← reduceAll (← inferType defn.value!)
-      let sig ← getSignature ty0
-      return sig.reflect
-    | none => panic! s!"cannot find term {names}"
-
 elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
   let e : Environment ← getEnv
   let names ← resolveGlobalConstWithInfos ssaTerm
@@ -185,3 +173,9 @@ elab "#printSignature" ssaTerm:ident : command => liftTermElabM do
     let sig ← getSignature ty0
     logInfo m!"signature {name}: {toString sig}"
   return ()
+
+elab "getSignature!" ssaTerm:term : term => do
+  let e ← Term.elabTerm ssaTerm none
+  let ty0 ← reduceAll (← inferType e)
+  let sig ← getSignature ty0
+  return sig.reflect

@@ -92,9 +92,10 @@ def allTests := llvmTests!
 
 def myTest := alive_simplifyDivRemOfSelect_rhs 42 |>.code
 #printSignature myTest
-#reduce #getSignature myTest
+#reduce getSignature! (alive_simplifyDivRemOfSelect_rhs 42).code
 
-def myTestSignature := #getSignature myTest
-def test2 := {alive_simplifyDivRemOfSelect_rhs 42 with signature := #getSignature myTest}
+def myTestSignature := getSignature! myTest
+def test2 := {alive_simplifyDivRemOfSelect_rhs 42 with signature := getSignature! myTest}
 
 #reduce test2
+#reduce alive_simplifyDivRemOfSelect_rhs_constbw

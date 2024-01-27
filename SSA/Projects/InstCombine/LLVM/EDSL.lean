@@ -50,5 +50,8 @@ macro "[mlir_icom_test" test_name:ident " | " reg:mlir_region "]" : term => `([m
 macro "[mlir_icom" "(" mvars:term,* ")| " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous ($[$mvars],* )| $reg ])
 macro "[mlir_icom" " | " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous | $reg ])
 
+-- | ident  (info : SourceInfo) (rawVal : Substring) (val : Name) (preresolved : List Syntax.Preresolved) : Syntax
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
-  `(@[llvmTest $name] def $name := fun w => [mlir_icom_test $name (w)| $test_reg ])
+  let tmp_name : Ident := { raw := Syntax.ident default default (Name.append name.getId (Name.mkStr1 "_test")) []}
+  `(def $(tmp_name) := fun w => [mlir_icom_test $name (w)| $test_reg ]
+   @[llvmTest $name] def $name := fun w => {$tmp_name w with signature := getSignature! ($(tmp_name) w).code : CliTest})
