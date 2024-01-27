@@ -53,9 +53,8 @@ class Row:
     self.ret_val = ret_val
 
   @staticmethod
-  def to_header():
-    vs = ",".join([f"in{i}" for i in range(MAX_OP_ARITY)]) # which input
-    return f"op, width, {vs}, ret_val"
+  def header_row():
+    return Row("op", "width", ["in0", "in1", "in2"], "retval")
 
   def to_csv(self):
     assert len(self.vs) >= 1
@@ -113,10 +112,9 @@ if __name__ == "__main__":
 
   sh("opt-15", "-S", "generated-llvm.ll", "-instcombine", "-o", "generated-llvm-optimized.ll")
 
+  rows = [Row.header_row()]
   with open("generated-llvm-optimized.ll", "r") as f:
-    rows = parse_generated_llvm_file(f.readlines())
+    rows.extend(parse_generated_llvm_file(f.readlines()))
 
   with open("generated-llvm-optimized-data.csv", "w") as f:
-    f.write(Row.to_header() + "\n")
-    for row in tqdm(rows):
-      f.write(row.to_csv() + "\n")
+      f.write("\n".join([r.to_csv() for r in rows]))

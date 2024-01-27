@@ -20,13 +20,23 @@ instance : ToString Row where
   toString r :=
     s!"{r.opName}, {r.bitwidth}, {r.v1}, {r.v2}, {r.v3}, {r.retval}"
 
-def MAXW : Nat := 4
+def rowHeader : Row := {
+ opName := "op",
+ bitwidth := "width",
+ v1 := "in0",
+ v2 := "in1",
+ v3 := "in2",
+ retval := "retval"
+}
 
+def MAXW : Nat := 3
+
+#check Range
 def addRows : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
-    for i in [0:Nat.pow 2 MAXW] do
-      for j in [0:Nat.pow 2 MAXW] do
+    for i in [0:Nat.pow 2 w] do
+      for j in [0:Nat.pow 2 w] do
         let retv :=
           match LLVM.add? (BitVec.ofNat w i) (BitVec.ofNat w j) with
           | .none => "poison"
@@ -55,5 +65,7 @@ def main : IO Unit := do
   let filename := "generated-ssa-llvm-semantics.csv"
   let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
   let stream : Stream := IO.FS.Stream.ofHandle handle
-  addRows.toList |>.map toString |> "\n".intercalate |> stream.putStr
+  let allRows := #[rowHeader]
+  let allRows := allRows.append addRows
+  allRows.toList |>.map toString |> "\n".intercalate |> stream.putStr
   return ()
