@@ -30,7 +30,7 @@ def rowHeader : Row := {
  retval := "retval"
 }
 
-def MAXW : Nat := 3
+def MAXW : Nat := 4
 
 
 def BitVecInputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
@@ -45,7 +45,7 @@ def BitVecInputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv => s!"{bv.toNat}"
 
-def BitVecOutputToString : Option (BitVec w) → String 
+def BitVecOutputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv =>
     let iv := BitVec.toInt bv

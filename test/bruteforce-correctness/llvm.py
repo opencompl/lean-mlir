@@ -203,9 +203,10 @@ LLVM_OPS = [
   LLVMArithBinopInfo("ashr", 2),
 ]
 
+MAX_WIDTH = 4
 if __name__ == "__main__":
   with open("generated-llvm.ll", "w") as f:
-    for (info, w) in itertools.product(LLVM_OPS, range(1, 4)):
+    for (info, w) in itertools.product(LLVM_OPS, range(1, MAX_WIDTH+1)):
         f.write(info.to_str(w))
 
   sh("opt-15", "-S", "generated-llvm.ll", "-instcombine", "-o", "generated-llvm-optimized.ll")
