@@ -7,6 +7,11 @@ import re
 
 MAX_OP_ARITY = 3
 
+
+def llvm_inputs(width : int):
+  yield "poison"
+  for i in range(0, 2 ** w): yield i
+
 class LLVMArithBinopInfo:
   arity : int
   name : str
@@ -18,7 +23,7 @@ class LLVMArithBinopInfo:
   def to_str(self, w : int) -> str:
     out = ""
     assert self.arity <= MAX_OP_ARITY
-    for vs in itertools.product(*[range(0, 2 ** w) for ix in range(self.arity)]):
+    for vs in itertools.product(*[llvm_inputs(w) for ix in range(self.arity)]):
       vs_underscore = "__".join([f"val_{v}" for v in vs])
       vs_comma = ",".join([str(v) for v in vs])
       out += f"define i{w} @test_{self.name}_width_{w}__{vs_underscore}() {{\n"
@@ -82,8 +87,10 @@ def parse_generated_llvm_file(lines):
                           "mul", "udiv", "sdiv", "urem", "srem", "shl", "lshr", "ashr"]
         if op_name in KNOWN_BINOPS:
           # binary operation
-          re_def_line = r"define i\d+ @test_[a-z]+_width_(\d+)__val_(\d+)__val_(\d+)"
+          re_def_line = r"define i\d+ @test_[a-z]+_width_(\d+)__val_(\d+|poison)__val_(\d+|poison)"
           match = re.search(re_def_line, def_line)
+          if not match:
+            print (f"ERR: unable to match definition '{def_line}' with pattern '{re_def_line}'")
           assert match
           vals = [match.group(2 + i) for i in range(0, 2)]
         else:
@@ -93,7 +100,7 @@ def parse_generated_llvm_file(lines):
         re_ret = r"ret i(\d+) ([+-]?\d+|false|true|poison)"
         ret_match = re.search(re_ret, ret_line)
         if not ret_match:
-          print(f"unable to find pattern '{re_ret}' in '{ret_line}'")
+          print(f"ERR: unable to find pattern '{re_ret}' in '{ret_line}'")
         assert ret_match
         width = ret_match.group(1)
         ret_val = ret_match.group(2)
