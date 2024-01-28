@@ -40,7 +40,7 @@ jobs:
       - name: LLVM Exhaustive Enumeration
         run: |
           sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
-          cd test/bruteforce-correctness/run.sh
+          cd test/bruteforce-correctness && ./run.sh
 
 #     - name: Run executable ⚙️
 #       run: |

@@ -24,10 +24,44 @@ class LLVMSelectOpInfo:
     for vs in itertools.product(llvm_inputs(1), llvm_inputs(w), llvm_inputs(w)):
       vs_underscore = "__".join([f"val_{v}" for v in vs])
       # vs_comma = ",".join([str(v) for v in vs])
-      out += f"define i{w} @test_{self.name}_width_{w}__{vs_underscore}() {{\n"
-      if isinstance(vs[0], int) and vs[0] > 1: import pudb; pudb.set_trace()
+      out += f"define i{w} @test_{self.name}__width_{w}__{vs_underscore}() {{\n"
       out += f"  %out = select i1 {vs[0]}, i{w} {vs[1]}, i{w} {vs[2]}\n"
       out += f"  ret i{w} %out\n"
+      out += "}\n"
+      out += "\n"
+    return out
+
+
+# eq: equal
+# ne: not equal
+# --
+# ugt: unsigned greater than
+# uge: unsigned greater or equal
+# --
+# ult: unsigned less than
+# ule: unsigned less or equal
+# --
+# sgt: signed greater than
+# sge: signed greater or equal
+# --
+# slt: signed less than
+# sle: signed less or equal
+class LLVMIcmpOfInfo:
+  def __init__(self, cond):
+    self.arity = 2
+    self.name = "icmp"
+    self.cond = cond
+    pass
+
+  def to_str(self, w : int) -> str:
+    out = ""
+    assert self.arity <= MAX_OP_ARITY
+    for vs in itertools.product(llvm_inputs(w), llvm_inputs(w)):
+      vs_underscore = "__".join([f"val_{v}" for v in vs])
+      # vs_comma = ",".join([str(v) for v in vs])
+      out += f"define i1 @test_{self.name}.{self.cond}__width_{w}__{vs_underscore}() {{\n"
+      out += f"  %out = icmp {self.cond} i{w} {vs[0]}, {vs[1]}\n"
+      out += f"  ret i1 %out\n"
       out += "}\n"
       out += "\n"
     return out
@@ -46,7 +80,7 @@ class LLVMArithBinopInfo:
     for vs in itertools.product(*[llvm_inputs(w) for ix in range(self.arity)]):
       vs_underscore = "__".join([f"val_{v}" for v in vs])
       vs_comma = ",".join([str(v) for v in vs])
-      out += f"define i{w} @test_{self.name}_width_{w}__{vs_underscore}() {{\n"
+      out += f"define i{w} @test_{self.name}__width_{w}__{vs_underscore}() {{\n"
       out += f"  %out = {self.name} i{w} {vs_comma}\n"
       out += f"  ret i{w} %out\n"
       out += "}\n"
@@ -88,7 +122,6 @@ class Row:
 
 def parse_generated_llvm_file(lines):
   i = 0
-  out = []
   # define i3 @test_add_width_3__val_7__val_6() {
   #   ret i3 -3
   # }
@@ -97,61 +130,77 @@ def parse_generated_llvm_file(lines):
     if lines[i].startswith("define"):
       def_line = lines[i]; i += 1
 
-      re_def_line = r"define i\d+ @test_([a-z]+)"
+      re_def_line = r"define i\d+ @test_([a-z.]+)__width"
       match = re.search(re_def_line, def_line)
       vals = None
 
       if match: # we have matched the regular expression.
         op_name = match.group(1)
         KNOWN_BINOPS  = ["and", "or", "xor", "add", "sub",
-                          "mul", "udiv", "sdiv", "urem", "srem", "shl", "lshr", "ashr"]
+                          "mul", "udiv", "sdiv", "urem", "srem", "shl", "lshr", "ashr",
+                          "icmp.eq", "icmp.ne", "icmp.ugt", "icmp.uge", "icmp.ult", "icmp.ule", "icmp.sgt", "icmp.sge", "icmp.slt", "icmp.sle"]
         if op_name in KNOWN_BINOPS:
           # binary operation
-          re_def_line = r"define i\d+ @test_[a-z]+_width_(\d+)__val_(\d+|poison)__val_(\d+|poison)"
+          re_def_line = r"define i\d+ @test_[a-z\.]+__width_(\d+)__val_(\d+|poison)__val_(\d+|poison)"
           match = re.search(re_def_line, def_line)
           if not match: print (f"ERR: unable to match definition '{def_line}' with pattern '{re_def_line}'")
           assert match
           width = match.group(1)
           vals = [match.group(2 + i) for i in range(0, 2)]
         elif op_name == "select":
-          re_def_line = r"define i\d+ @test_[a-z]+_width_(\d+)__val_(\d+|poison)__val_(\d+|poison)__val_(\d+|poison)"
+          re_def_line = r"define i\d+ @test_[a-z\.]+__width_(\d+)__val_(\d+|poison)__val_(\d+|poison)__val_(\d+|poison)"
           match = re.search(re_def_line, def_line)
           if not match: print (f"ERR: unable to match definition '{def_line}' with pattern '{re_def_line}'")
           assert match
           width = match.group(1)
           vals = [match.group(2 + i) for i in range(0, 3)]
         else:
-          raise RuntimeError("unknown operation '{op_name}'")
+          raise RuntimeError(f"unknown operation '{op_name}'")
         assert vals
+        assert width
         ret_line = lines[i]; i += 1
         re_ret = r"ret i\d+ ([+-]?\d+|false|true|poison)"
-        ret_match = re.search(re_ret, ret_line)
-        if not ret_match:
-          print(f"ERR: unable to find pattern '{re_ret}' in '{ret_line}'")
-        assert ret_match
-        ret_val = ret_match.group(1)
+        match = re.search(re_ret, ret_line)
+        if not match: print(f"ERR: unable to find pattern '{re_ret}' in '{ret_line}'")
+        assert match
+        ret_val = match.group(1)
         yield Row(op=op_name, width=width, vs=vals, ret_val=ret_val)
       else:
        i += 1
-
     i += 1; # skip }
+
+
 
 
 LLVM_OPS = [
   LLVMSelectOpInfo(),
-  # LLVMArithBinopInfo("and", 2),
-  # LLVMArithBinopInfo("or", 2),
-  # LLVMArithBinopInfo("xor", 2),
-  # LLVMArithBinopInfo("add", 2),
-  # LLVMArithBinopInfo("sub", 2),
-  # LLVMArithBinopInfo("mul", 2),
-  # # LLVMArithBinopInfo("udiv", 2),
-  # # LLVMArithBinopInfo("sdiv", 2),
-  # # LLVMArithBinopInfo("urem", 2),
-  # # LLVMArithBinopInfo("srem", 2),
-  # LLVMArithBinopInfo("shl", 2),
-  # LLVMArithBinopInfo("lshr", 2),
-  # LLVMArithBinopInfo("ashr", 2),
+  LLVMIcmpOfInfo("eq"),
+  LLVMIcmpOfInfo("ne"),
+  # --
+  LLVMIcmpOfInfo("ugt"),
+  LLVMIcmpOfInfo("uge"),
+  # --
+  LLVMIcmpOfInfo("ult"),
+  LLVMIcmpOfInfo("ule"),
+  # --
+  LLVMIcmpOfInfo("sgt"),
+  LLVMIcmpOfInfo("sge"),
+  # --
+  LLVMIcmpOfInfo("slt"),
+  LLVMIcmpOfInfo("sle"),
+  LLVMArithBinopInfo("and", 2),
+  LLVMArithBinopInfo("or", 2),
+  LLVMArithBinopInfo("xor", 2),
+  LLVMArithBinopInfo("add", 2),
+  LLVMArithBinopInfo("sub", 2),
+  LLVMArithBinopInfo("mul", 2),
+  # LLVMArithBinopInfo("udiv", 2),
+  # LLVMArithBinopInfo("sdiv", 2),
+  # LLVMArithBinopInfo("urem", 2),
+  # LLVMArithBinopInfo("srem", 2),
+  LLVMArithBinopInfo("shl", 2),
+  LLVMArithBinopInfo("lshr", 2),
+  LLVMArithBinopInfo("ashr", 2),
 ]
 
 if __name__ == "__main__":
@@ -163,7 +212,7 @@ if __name__ == "__main__":
 
   rows = [Row.header_row()]
   with open("generated-llvm-optimized.ll", "r") as f:
-    rows.extend(parse_generated_llvm_file(f.readlines()))
+    rows.extend(list(parse_generated_llvm_file(f.readlines())))
 
   with open("generated-llvm-optimized-data.csv", "w") as f:
       f.write("\n".join([r.to_csv() for r in rows]))
