@@ -76,28 +76,28 @@ def binopRows (opName : String)
   rows
 
 
-def selectRows : Array Row := Id.run do
-  sorry
+-- def selectRows : Array Row := Id.run do
+--   sorry
 #check System.FilePath
 
 def main : IO Unit := do
   let filename := "generated-ssa-llvm-semantics.csv"
   let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
   let stream : Stream := IO.FS.Stream.ofHandle handle
-  let allRows := #[rowHeader]
-  let allRows := allRows.append (selectRows)
-  let allRows := allRows.append (binopRows "and" (fun w a b => InstCombine.Op.denote (InstCombine.Op.and w) (.cons a (.cons b .nil))))
-  -- let allRows := allRows.append (binopRows "or" LLVM.or?)
-  -- let allRows := allRows.append (binopRows "xor" LLVM.xor?)
-  -- let allRows := allRows.append (binopRows "add" LLVM.add?)
-  -- let allRows := allRows.append (binopRows "sub" LLVM.sub?)
-  -- let allRows := allRows.append (binopRows "mul" LLVM.mul?)
-  -- let allRows := allRows.append (binopRows "udiv" LLVM.udiv?)
-  -- let allRows := allRows.append (binopRows "sdiv" LLVM.sdiv?)
-  -- let allRows := allRows.append (binopRows "urem" LLVM.urem?)
-  -- let allRows := allRows.append (binopRows "srem" LLVM.srem?)
-  -- let allRows := allRows.append (binopRows "shl" LLVM.shl?)
-  -- let allRows := allRows.append (binopRows "lshr" LLVM.lshr?)
-  -- let allRows := allRows.append (binopRows "ashr" LLVM.ashr?)
-  allRows.toList |>.map toString |> "\n".intercalate |> stream.putStr
+  let rows := #[rowHeader]
+  -- let rows := rows.append (selectRows)
+  let rows := rows.append (binopRows "and" (fun w a b => InstCombine.Op.denote (.and w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "or" (fun w a b => InstCombine.Op.denote (.or w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "xor" (fun w a b => InstCombine.Op.denote (.xor w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "add" (fun w a b => InstCombine.Op.denote (.add w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "sub" (fun w a b => InstCombine.Op.denote (.sub w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "mul" (fun w a b => InstCombine.Op.denote (.mul w) (.cons a (.cons b .nil))))
+  -- let rows := rows.append (binopRows "udiv" (fun w a b => InstCombine.Op.denote (.udiv w) (.cons a (.cons b .nil))))
+  -- let rows := rows.append (binopRows "sdiv" (fun w a b => InstCombine.Op.denote (.sdiv w) (.cons a (.cons b .nil))))
+  -- let rows := rows.append (binopRows "urem" (fun w a b => InstCombine.Op.denote (.urem w) (.cons a (.cons b .nil))))
+  -- let rows := rows.append (binopRows "srem" (fun w a b => InstCombine.Op.denote (.srem w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "shl" (fun w a b => InstCombine.Op.denote (.shl w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "lshr" (fun w a b => InstCombine.Op.denote (.lshr w) (.cons a (.cons b .nil))))
+  let rows := rows.append (binopRows "ashr" (fun w a b => InstCombine.Op.denote (.ashr w) (.cons a (.cons b .nil))))
+  rows.toList |>.map toString |> "\n".intercalate |> stream.putStr
   return ()
