@@ -1,5 +1,8 @@
 import Std.Data.BitVec
 import SSA.Projects.InstCombine.ForStd
+import Mathlib.Tactic.Cases
+import Mathlib.Tactic.SplitIfs
+import Mathlib.Tactic.Tauto
 
 
 open Std
@@ -70,18 +73,9 @@ def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
 def intMin (w : Nat) : BitVec w :=
   BitVec.ofInt w <| - Int.ofNat 2^(w - 1)
 
-def intMax (w : Nat) : BitVec w :=
-  BitVec.ofInt w <| Int.ofNat <| 2^(w - 1) - 1
+def intMax (w : Nat) : BitVec w := intMin w - 1
 
-def ofIntInbounds (w : Nat) (v : Int) : Prop := v >= (intMin w).toInt && v <= (intMax w).toInt
-
-instance : Decidable (ofIntInbounds w v) := inferInstanceAs (Decidable (v >= (intMin w).toInt && v <= (intMax w).toInt))
-
-def isPositive (i : Int) : Bool := i > 0
-
-def abs : Int → Nat
-| .ofNat n => n
-| .negSucc n' =>  n' + 1 -- - (n + 1)
+theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w := rfl
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
@@ -89,54 +83,33 @@ Note that signed integer division and unsigned integer division are distinct ope
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
 
-Note a subtlety:
+Notes
+-----
+
+The rounding is round to zero, not round to -infty.
 at width 1, -1 / -1 is considered -1
 at width 2, -4 / -1 is considered overflow!
-I do not know why the semantics is like this.
 
-
-Consider the following example
-sdiv w=3 4 3.
-sdiv w=3 100 011
-
-
-If we treat numerator and denominator as signed and perform the division: we get (-4 / 3) = -2.
-If we treat numerator and denominator as unsigned and perform the division, adding signs later:
-  we get -1 * (4/3) = -1 * 1 = -1
 -/
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
   if y == 0
-  then .none 
+  then .none
   else
     -- only way overflow can happen is (INT_MIN / -1).
-    if w != 1 && x == (intMin w) && y == -1 
-    then .none 
+    -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
+    -- is no magniture to overflow.
+    if w != 1 && x == (intMin w) && y == -1
+    then .none
     else BitVec.sdiv x y
-  -- let vx := abs <| x.toInt
-  -- let vy := abs <| y.toInt
-  -- if vy == 0
-  -- then .none
-  -- else
-  --   let div := vx / vy
-  --   let sign : Int := (if isPositive x.toInt != isPositive y.toInt then -1 else 1)
-  --   let sign := if w == 1 then -1 else sign
-  --   if ofIntInbounds w (sign * div)
-  --   then .some <| BitVec.ofInt w (sign * div)
-  --   else none
 
-theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w := by
-   sorry
-
-
--- Probably not a Mathlib worthy name,
--- not sure how you'd mathlibify the precondition
+-- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
-  sdiv? x y =
-  if (y = 0) ∨ (x = -1 ∧ y = intMin w)
-    then none
-  else some <| BitVec.ofInt w (x.toInt / y.toInt)
-  := by sorry
-
+    sdiv? x y =
+    if (y = 0) ∨ ((w ≠ 1) ∧ (x = intMin w) ∧ (y = -1))
+      then none
+    else some <| BitVec.sdiv x y
+    := by
+  simp [sdiv?]; split_ifs <;> try tauto
 
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
@@ -168,25 +141,12 @@ by taking the remainder of a 32-bit division of -2147483648 by -1.
 (The remainder doesn’t actually overflow, but this rule lets srem be implemented using instructions that return both the result
 of the division and the remainder.)
 
--- x = (x/y) * y + x%y
--- x%y = x - (x/y)
+The fundamental equation of div/rem is: x = (x/y) * y + x%y
+=> x%y = x - (x/y)
+We use this equation to define srem.
 -/
 def srem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  match sdiv? x y with
-  | .none => .none
-  | .some div => x - div * y
-  -- let vx := abs <| x.toInt
-  -- let vy := abs <| y.toInt
-  -- if vy == 0
-  -- then .none
-  -- else
-  --   let div := vx / vy
-  --   let rem := vx % vy
-  --   let sign : Int := (if isPositive x.toInt != isPositive y.toInt then -1 else 1)
-  --   let sign := if w == 1 then -1 else sign
-  --   if ofIntInbounds w (sign * div)
-  --   then .some <| BitVec.ofInt w (sign * rem)
-  --   else none
+  (sdiv? x y).map (fun div => x - div * y)
 
 def sshr (a : BitVec n) (s : Nat) := BitVec.sshiftRight a s
 
