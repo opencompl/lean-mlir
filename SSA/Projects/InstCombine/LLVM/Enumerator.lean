@@ -35,7 +35,7 @@ def rowHeader : Row := {
 def MAXW : Nat := 4
 
 /-- List of bitvector inputs for a given bitwidth. Produces 'poison' and `[0..2^w)`. -/
-def BitVecInputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
+def BitVec.inputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
  let mut out := #[Option.none]
  for i  in [0:Nat.pow 2 w] do
    out := out.push (.some <| BitVec.ofNat w i)
