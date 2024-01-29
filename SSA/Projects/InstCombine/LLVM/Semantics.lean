@@ -71,7 +71,7 @@ def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
     | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
 
 def intMin (w : Nat) : BitVec w :=
-  -BitVec.ofNat w <| 2^(w - 1)
+  - BitVec.ofNat w (2^(w - 1))
 
 def intMax (w : Nat) : BitVec w := intMin w - 1
 
@@ -91,16 +91,13 @@ at width 1, -1 / -1 is considered -1
 at width 2, -4 / -1 is considered overflow!
 
 -/
+-- only way overflow can happen is (INT_MIN / -1).
+-- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
+-- is no magniture to overflow.
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y == 0
+  if y == 0 || (w != 1 && x == (intMin w) && y == -1) 
   then .none
-  else
-    -- only way overflow can happen is (INT_MIN / -1).
-    -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
-    -- is no magniture to overflow.
-    if w != 1 && x == (intMin w) && y == -1
-    then .none
-    else BitVec.sdiv x y
+  else BitVec.sdiv x y
 
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :

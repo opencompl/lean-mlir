@@ -41,14 +41,13 @@ def BitVec.inputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
    out := out.push (.some <| BitVec.ofNat w i)
  out
 
-
 /-- Render the inputs as a string. These are guaranteed to always be natural numbers. -/
-def BitVecInputToString : Option (BitVec w) → String
+def BitVec.inputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv => s!"{bv.toNat}"
 
 /-- Render the output as a string. These are more complex, as i1 are printed as true/false, and outputs are printed as integers. -/
-def BitVecOutputToString : Option (BitVec w) → String
+def BitVec.outputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv =>
     let iv := BitVec.toInt bv
@@ -64,36 +63,35 @@ def binopRows (opName : String)
   (f : (w : Nat) → Option (BitVec w) → Option (BitVec w) → Option (BitVec w)) : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
-    for i in BitVecInputsForWidth w do
-      for j in BitVecInputsForWidth w do
+    for i in BitVec.inputsForWidth w do
+      for j in BitVec.inputsForWidth w do
         let retv := f (w := w) i j
-        let retv := BitVecOutputToString retv
+        let retv := BitVec.outputToString retv
         let row : Row := {
           opName := opName,
           bitwidth := toString w,
-          v1 := BitVecInputToString i,
-          v2 := BitVecInputToString j,
+          v1 := BitVec.inputToString i,
+          v2 := BitVec.inputToString j,
           retval := retv
         }
         rows := rows.push row
   rows
 
-
 /-- Produce CSV rows for 'llvm.select' -/
 def selectRows : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
-    for i in BitVecInputsForWidth 1 do
-      for j in BitVecInputsForWidth w do
-        for k in BitVecInputsForWidth w do
+    for i in BitVec.inputsForWidth 1 do
+      for j in BitVec.inputsForWidth w do
+        for k in BitVec.inputsForWidth w do
             let retv := InstCombine.Op.denote (.select w) (.cons i <| .cons j <| .cons k .nil)
-            let retv := BitVecOutputToString retv
+            let retv := BitVec.outputToString retv
             let row : Row := {
               opName := "select",
               bitwidth := toString w,
-              v1 := BitVecInputToString i,
-              v2 := BitVecInputToString j,
-              v3 := BitVecInputToString k,
+              v1 := BitVec.inputToString i,
+              v2 := BitVec.inputToString j,
+              v3 := BitVec.inputToString k,
               retval := retv
             }
             rows := rows.push row
@@ -103,15 +101,15 @@ def selectRows : Array Row := Id.run do
 def icmpRows (pred : LLVM.IntPredicate) : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
-    for i in BitVecInputsForWidth w do
-      for j in BitVecInputsForWidth w do
+    for i in BitVec.inputsForWidth w do
+      for j in BitVec.inputsForWidth w do
         let retv := InstCombine.Op.denote (.icmp pred w) (.cons i <| .cons j <| .nil)
-        let retv := BitVecOutputToString retv
+        let retv := BitVec.outputToString retv
         let row : Row := {
           opName := s!"icmp.{pred}",
           bitwidth := toString w,
-          v1 := BitVecInputToString i,
-          v2 := BitVecInputToString j,
+          v1 := BitVec.inputToString i,
+          v2 := BitVec.inputToString j,
           retval := retv
         }
         rows := rows.push row
