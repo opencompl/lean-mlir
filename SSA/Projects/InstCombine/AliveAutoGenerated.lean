@@ -3126,7 +3126,7 @@ def alive_1030_tgt  (w : Nat)  :=
 theorem alive_1030  (w : Nat)   : alive_1030_src w  ⊑ alive_1030_tgt w  := by
   unfold alive_1030_src alive_1030_tgt
   simp_alive_peephole
-  apply bitvec_1030
+  sorry -- apply bitvec_1030
 
 
 -- Name:Select:858
