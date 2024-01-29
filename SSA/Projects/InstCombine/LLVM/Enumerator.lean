@@ -1,7 +1,6 @@
 -- Script that exhaustive enumerates the our LLVM semantics.
 import Std.Data.BitVec
 import Init.System.IO
--- import Mathlib.Data.BitVec
 import SSA.Projects.InstCombine.LLVM.Semantics
 import SSA.Projects.InstCombine.Base
 
@@ -9,6 +8,7 @@ open Std
 open System
 open IO FS
 
+/-- A row of CSV data. -/
 structure Row where
   opName : String
   bitwidth : String
@@ -21,6 +21,7 @@ instance : ToString Row where
   toString r :=
     s!"{r.opName}, {r.bitwidth}, {r.v1}, {r.v2}, {r.v3}, {r.retval}"
 
+/-- CSV header row. -/
 def rowHeader : Row := {
  opName := "op",
  bitwidth := "width",
@@ -30,9 +31,10 @@ def rowHeader : Row := {
  retval := "retval"
 }
 
+/-- Maximum width we bruteforce (inclusive). -/
 def MAXW : Nat := 4
 
-
+/-- List of bitvector inputs for a given bitwidth. Produces 'poison' and `[0..2^w)`. -/
 def BitVecInputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
  let mut out := #[Option.none]
  for i  in [0:Nat.pow 2 w] do
@@ -40,11 +42,12 @@ def BitVecInputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
  out
 
 
-
+/-- Render the inputs as a string. These are guaranteed to always be natural numbers. -/
 def BitVecInputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv => s!"{bv.toNat}"
 
+/-- Render the output as a string. These are more complex, as i1 are printed as true/false, and outputs are printed as integers. -/
 def BitVecOutputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv =>
@@ -56,7 +59,7 @@ def BitVecOutputToString : Option (BitVec w) → String
       else "<unk_i1>"
     else toString iv
 
-
+/-- Produce CSV rows for a binary operation given by 'f' -/
 def binopRows (opName : String)
   (f : (w : Nat) → Option (BitVec w) → Option (BitVec w) → Option (BitVec w)) : Array Row := Id.run do
   let mut rows := #[]
@@ -76,6 +79,7 @@ def binopRows (opName : String)
   rows
 
 
+/-- Produce CSV rows for 'llvm.select' -/
 def selectRows : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
@@ -95,6 +99,7 @@ def selectRows : Array Row := Id.run do
             rows := rows.push row
   rows
 
+/-- Produce CSV rows for 'llvm.icmp <pred> -/
 def icmpRows (pred : LLVM.IntPredicate) : Array Row := Id.run do
   let mut rows := #[]
   for w in [1:MAXW+1] do
