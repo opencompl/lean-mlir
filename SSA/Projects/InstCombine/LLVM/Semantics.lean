@@ -105,17 +105,24 @@ If we treat numerator and denominator as unsigned and perform the division, addi
   we get -1 * (4/3) = -1 * 1 = -1
 -/
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  let vx := abs <| x.toInt
-  let vy := abs <| y.toInt
-  if vy == 0
-  then .none
+  if y == 0
+  then .none 
   else
-    let div := vx / vy
-    let sign : Int := (if isPositive x.toInt != isPositive y.toInt then -1 else 1)
-    let sign := if w == 1 then -1 else sign
-    if ofIntInbounds w (sign * div)
-    then .some <| BitVec.ofInt w (sign * div)
-    else none
+    -- only way overflow can happen is (INT_MIN / -1).
+    if w != 1 && x == (intMin w) && y == -1 
+    then .none 
+    else BitVec.sdiv x y
+  -- let vx := abs <| x.toInt
+  -- let vy := abs <| y.toInt
+  -- if vy == 0
+  -- then .none
+  -- else
+  --   let div := vx / vy
+  --   let sign : Int := (if isPositive x.toInt != isPositive y.toInt then -1 else 1)
+  --   let sign := if w == 1 then -1 else sign
+  --   if ofIntInbounds w (sign * div)
+  --   then .some <| BitVec.ofInt w (sign * div)
+  --   else none
 
 theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w := by
    sorry
