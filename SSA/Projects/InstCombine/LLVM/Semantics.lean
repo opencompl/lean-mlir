@@ -71,7 +71,7 @@ def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
     | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
 
 def intMin (w : Nat) : BitVec w :=
-  BitVec.ofInt w <| - Int.ofNat 2^(w - 1)
+  -BitVec.ofNat w <| 2^(w - 1)
 
 def intMax (w : Nat) : BitVec w := intMin w - 1
 
