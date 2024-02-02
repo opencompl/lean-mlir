@@ -3,14 +3,16 @@ import Std.Data.BitVec
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
+import Std.Data.BitVec
+import Mathlib.Data.BitVec.Lemmas
 
 open Std
 open Std.BitVec
 open LLVM
 
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
-    getLsb (-1#w) ↑i :=
-  BitVec.getLsb_negOne ..
+    getLsb (-1#w) ↑i := by 
+  simp only [getLsb_val_eq_getLsb', getLsb'_neg_ofNat_one]
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
