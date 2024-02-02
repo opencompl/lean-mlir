@@ -25,6 +25,7 @@ elab "[mlir_icom_test" test_name:ident "(" mvars:term,* ")| " reg:mlir_region "]
       let Γ : Q(Ctxt Ty) := q(($comOk).fst)
       let ty : Q(Ty) := q($(comOk).snd.fst)
       let nm : Name := test_name.getId
+      -- TODO: (@bollu) can we get this to work directly with QQ?
       --let signature : Q(CliSignature) ← getSignature q($comOk).snd.snd
       -- let hty :  Q(Ty) = MTy 0 := by
       --  sorry
@@ -47,11 +48,11 @@ elab "[mlir_icom_test" test_name:ident "(" mvars:term,* ")| " reg:mlir_region "]
 
 macro "[mlir_icom_test" test_name:ident " | " reg:mlir_region "]" : term => `([mlir_icom_test $test_name ()| $reg])
 
-macro "[mlir_icom" "(" mvars:term,* ")| " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous ($[$mvars],* )| $reg ])
-macro "[mlir_icom" " | " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous | $reg ])
+macro "[mlir_icom" "(" mvars:term,* ")| " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous ($[$mvars],* )| $reg ].code)
+macro "[mlir_icom" " | " reg:mlir_region "]" : term => `([mlir_icom_test Anonymous | $reg ].code)
 
 -- | ident  (info : SourceInfo) (rawVal : Substring) (val : Name) (preresolved : List Syntax.Preresolved) : Syntax
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   let tmp_name : Ident := { raw := Syntax.ident default default (Name.append name.getId (Name.mkStr1 "_test")) []}
-  `(def $(tmp_name) := fun w => [mlir_icom_test $name (w)| $test_reg ]
-   @[llvmTest $name] def $name := fun w => {$tmp_name w with signature := getSignature! ($(tmp_name) w).code : CliTest})
+  `(@[reducible] def $(tmp_name) := fun w => [mlir_icom_test $name (w)| $test_reg ]
+   @[reducible, llvmTest $name] def $name := fun w => {$tmp_name w with signature := getSignature! ($(tmp_name) w).code : CliTest})

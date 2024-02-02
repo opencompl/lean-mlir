@@ -6,6 +6,9 @@ open MLIR AST
 open Std (BitVec)
 open Ctxt (Var)
 
+-- Hardcoding the i4 for now, should change to w once I get
+-- the signature working with that
+
 deftest test_and :=
 {
 ^bb0(%X : i4, %Y : i4):
@@ -196,5 +199,3 @@ deftest test_icmp_sge :=
   %r = "llvm.icmp.sge" (%X,%Y) : (i4, i4) -> (i1)
   "llvm.return" (%r) : (i1) -> ()
 }
-def allTests := llvmTests!
-#reduce allTests

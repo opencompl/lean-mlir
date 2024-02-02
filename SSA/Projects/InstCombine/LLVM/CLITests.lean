@@ -4,7 +4,7 @@ import Std
 import Lean.Environment
 import Cli
 
-open Lean
+open Lean Goedel
 
 /-- Parse a tuple -/
 instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β] :
@@ -80,18 +80,42 @@ instance : Cli.ParseableType CliSignature where
 
 instance : Goedel CliType where toType
   | .width n => Std.BitVec n
-  | .varw => Unit -- not sure how to deal with this right now
+  | .varw => (n : Nat) → Std.BitVec n
 
 private def toTypeList : List CliType → Type
   | [] => Unit
-  | [ty] => Goedel.toType ty
-  | ty::tys => (Goedel.toType ty) × (toTypeList tys)
+  | [ty] => toType ty
+  | ty::tys => (toType ty) × (toTypeList tys)
 
 instance : Goedel (List CliType) := ⟨toTypeList⟩
 
 instance : Goedel CliSignature where
   toType sig :=
-    (Goedel.toType sig.args → Goedel.toType sig.returnTy)
+    (toType sig.args → toType sig.returnTy)
+
+open InstCombine in
+def CliType.toTy : CliType → (Σ n : Nat, MTy n)
+  | .width n => Sigma.mk 0 (MTy.bitvec (ConcreteOrMVar.concrete n))
+  | .varw => Sigma.mk 1 (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, by aesop⟩))
+
+inductive CliType.isConcrete (cty : CliType) : Prop
+  | width : (n : Nat) → cty = .width n → CliType.isConcrete cty
+
+open InstCombine in
+def CliType.toTy' (cty : CliType) (hConcrete : cty.isConcrete) : MTy 0 :=
+  match cty with
+  | .width n => (MTy.bitvec (ConcreteOrMVar.concrete n))
+  | cty@varw => by
+    exfalso
+    cases hConcrete
+    contradiction
+    -- not sure how to make this using toTy
+
+private def List.toHVector : List CliType → Σ ns : List Nat, HVector (fun n : Nat => InstCombine.MTy n) ns
+  | [] => Sigma.mk [] []ₕ
+  | cty::ctys => match cty.toTy, toHVector ctys with
+    | Sigma.mk n mty, Sigma.mk ns mtys =>
+      Sigma.mk (n :: ns) (mty ::ₕ mtys)
 
 def CliTest.params : CliTest → Type
 | test => natParams test.mvars
@@ -99,9 +123,58 @@ def CliTest.params : CliTest → Type
 def CliTest.paramsParseable (test : CliTest) : Cli.ParseableType (test.params) :=
   instParseableNatParams
 
-def CliTest.testFn (test : CliTest) : test.params → IO Bool :=
-  fun _ => pure true -- placeholder
+instance {n : Nat} : Cli.ParseableType (Std.BitVec n) where
+  name := s!"BitVec {n}"
+  parse? str := do
+   let intVal ← Cli.instParseableTypeInt.parse? str
+   return Std.BitVec.ofInt n intVal
 
+private def List.allZeroes : List Nat → Prop
+  | [] => True
+  | 0::ns => ns.allZeroes
+  | _::_ => False
+
+def CliTest.concreteSignature (test : CliTest) : Prop :=
+   match test.signature.args.toHVector with
+  | Sigma.mk ns _ => match test.signature.returnTy.toTy with
+    | Sigma.mk 0 _ => ns.allZeroes
+    | _ => False
+
+/-- There is no reason why the `CliTest.signature` of a test has
+    to agree with its context (even if that's how we build them in principle)<
+    because they're not dependedently typed here.
+
+    This proposition ensures this consistency via a confluence property:
+    both should evaluate to the same type.
+-/
+--def CliTest.consistentSignature (test : CliTest) : Prop :=
+--   match test.signature.args.toHVector with
+--  | Sigma.mk _ ms => match test.signature.returnTy.toTy with
+--    | Sigma.mk 0 _ =>
+
+--def CliTest.buildCtxtValuation
+--  (test : CliTest) (vals : HVector toType test.signature.args)
+--  (hMvars : test.mvars = 0 := by rfl)
+--  (hConcrete : test. .map CliType.isConcrete)
+--  (hVals : test.signature.args.map CliType.toTy = test.context := by rfl) :
+--  test.context.Valuation :=
+--  sorry
+
+/-
+
+  sorry
+
+
+
+  (hRet : toType test.signature.returnTy = toType test.ty := by rfl) :
+  toType test.ty :=
+  test.code
+
+def CliTest.testFn (test : CliTest) :  ⟦test.signature.args⟧ → IO ⟦test.signature.returnTy⟧ :=
+
+
+ sorry
+-/
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121
 abbrev NameExt := SimplePersistentEnvExtension (Name × Name) (NameMap Name)

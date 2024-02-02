@@ -183,7 +183,7 @@ def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
   | Op.not _ => Option.map (~~~.) arg.toSingle
   | Op.copy _ => arg.toSingle
   | Op.neg _ => Option.map (-.) arg.toSingle
-  | Op.select _ => 
+  | Op.select _ =>
     let (ocond, otrue, ofalse) := arg.toTriple
     select? ocond otrue ofalse
   | Op.icmp c _ => pairBind (icmp? c) arg.toPair

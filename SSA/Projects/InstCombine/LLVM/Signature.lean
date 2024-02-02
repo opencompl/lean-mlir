@@ -145,9 +145,6 @@ instance : Quote CliSignature where
     let args : Term := quote sig.args
     Syntax.mkCApp ``CliSignature.mk #[args, (quote sig.returnTy)]
 
-#check @List.nil
-#check @List.cons
-
 -- There should be a typeclass or something for this, but I don't know
 -- which one it is.
 def CliType.reflect : CliType → Lean.Expr
