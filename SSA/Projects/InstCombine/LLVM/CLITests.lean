@@ -111,83 +111,86 @@ Option <| MLIR.AST.Context 0 :=
    else
      none
 
-mutual
-def Com.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
-   (code : MLIR.AST.Com ctxt ty) (hMvars : mvars = 0) :
-    Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Com new.1 new.2 :=
-   match code with
-   | .ret v =>
-       let f := fun t => InstCombine.MTy.cast_concrete mvars t hMvars
-       let ty' := f ty
-       let ctxt' := (ctxt.map f)
-       let v' : Ctxt.Var ctxt' ty' := v.toMap
-       Sigma.mk (ctxt', ty') (Com.ret v')
-    | .lete (ty₁  := t) e b =>
-       let Sigma.mk (ctxt', ty') e' := Expr.cast_concrete mvars ctxt t e hMvars
-       let Sigma.mk (ctxt'', ty'') b' := Com.cast_concrete mvars (t::ctxt) ty b hMvars
-       by
-        simp at e'
-        simp at b'
-        have hTy' : ty'' = ty' := by sorry
-        have hCtxt' : ty' :: (ctxt', ty'').1 = ctxt'' := by sorry
-        --rw [hCtxt']
-        exact Sigma.mk (ctxt', ty') <| .lete e' (hTy' ▸ hCtxt' ▸ b')
 
-def Expr.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
-   (code : MLIR.AST.Expr ctxt ty) (hMvars : mvars = 0) :
-    Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Expr new.1 new.2 := sorry
+ mutual
+ def Com.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
+    (code : MLIR.AST.Com ctxt ty) (hMvars : mvars = 0) :
+     Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Com new.1 new.2 :=
+    match code with
+    | .ret v =>
+        let f := fun t => InstCombine.MTy.cast_concrete mvars t hMvars
+        let ty' := f ty
+        let ctxt' := (ctxt.map f)
+        let v' : Ctxt.Var ctxt' ty' := v.toMap
+        Sigma.mk (ctxt', ty') (Com.ret v')
+     | .lete (ty₁  := t) e b =>
+        let Sigma.mk (ctxt', ty') e' := Expr.cast_concrete mvars ctxt t e hMvars
+        let Sigma.mk (ctxt'', ty'') b' := Com.cast_concrete mvars (t::ctxt) ty b hMvars
+        by
+         simp at e'
+         simp at b'
+         have hTy' : ty'' = ty' := by sorry
+         have hCtxt' : ty' :: (ctxt', ty'').1 = ctxt'' := by sorry
+         --exact Sigma.mk (ctxt', ty') <| .lete e' (hTy' ▸ hCtxt' ▸ b')
+         sorry
 
-end
+ def Expr.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
+    (code : MLIR.AST.Expr ctxt ty) (hMvars : mvars = 0) :
+     Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Expr new.1 new.2 := sorry
 
-def Code.cast_concrete? (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars) (code : MLIR.AST.Com ctxt ty)  :
-    Option <| Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Com new.1 new.2 :=
-    if h : mvars = 0 then
-      some <| Code.cast_concrete mvars ctxt ty code h
-    else
-      none
+ end
 
-/--
-TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
--/
-def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
-  if h : test.concrete then
-    let context : MLIR.AST.Context 0 := h ▸ test.context
-    let ty : InstCombine.MTy 0 := h ▸ test.ty
-    let test' : CliTest := { name := test.name, mvars := 0, context := context, ty := ty, code := test.code}
-    -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
-    let hContext : HEq context test.context := by sorry --rfl
-    let ty : InstCombine.MTy 0 := h ▸ test.ty
-    let hTy : HEq ty test.ty := by sorry --rfl
-    let code : MLIR.AST.Com context ty := HEq.rec hContext <| HEq.rec hTy test.code
-   { name := test.name, context := context, ty := ty, code := code}
+def CliTest.cast_concrete (test : CliTest) (hMvars : test.mvars = 0) : ConcreteCliTest :=
+  let Sigma.mk (ctxt', ty') code' := test.code.cast_concrete hMvars
+  { name := test.name, context := ctxt', ty := ty', code := code'}
+
+def CliTest.cast_concrete? (test : CliTest)  : Option ConcreteCliTest :=
+  if h : test.mvars = 0 then
+    some <| test.cast_concrete h
   else
-  sorry
-
-#check Ctxt.Valuation
-def CliTest.buildCtxtValuation :
---def CliTest.buildCtxtValuation
---  (test : CliTest) (vals : HVector toType test.signature.args)
---  (hMvars : test.mvars = 0 := by rfl)
---  (hConcrete : test. .map CliType.isConcrete)
---  (hVals : test.signature.args.map CliType.toTy = test.context := by rfl) :
---  test.context.Valuation :=
---  sorry
-
-/-
-
-  sorry
+    none
 
 
+-- /--
+-- TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
+-- -/
+-- def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
+--   if h : test.concrete then
+--     let context : MLIR.AST.Context 0 := h ▸ test.context
+--     let ty : InstCombine.MTy 0 := h ▸ test.ty
+--     let test' : CliTest := { name := test.name, mvars := 0, context := context, ty := ty, code := test.code}
+--     -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
+--     let hContext : HEq context test.context := by sorry --rfl
+--     let ty : InstCombine.MTy 0 := h ▸ test.ty
+--     let hTy : HEq ty test.ty := by sorry --rfl
+--     let code : MLIR.AST.Com context ty := HEq.rec hContext <| HEq.rec hTy test.code
+--    { name := test.name, context := context, ty := ty, code := code}
+--   else
+--   sorry
 
-  (hRet : toType test.signature.returnTy = toType test.ty := by rfl) :
-  toType test.ty :=
-  test.code
+def InstCombine.mkValuation (ctxt : MLIR.AST.Context 0) (values : Vector Int ctxt.length): Ctxt.Valuation ctxt :=
+match ctxt, values with
+  | [], ⟨[],_⟩ => Ctxt.Valuation.nil
+  | ty::tys, ⟨val::vals,hlen⟩ =>
+    let valsVec : Vector ℤ tys.length := ⟨vals,by aesop⟩
+    let valuation' := mkValuation tys valsVec
+    let newTy : toType ty := ↑(val)
+    Ctxt.Valuation.snoc valuation' newTy
 
-def CliTest.testFn (test : CliTest) :  ⟦test.signature.args⟧ → IO ⟦test.signature.returnTy⟧ :=
+def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector ℤ test.context.length) :
+ IO ⟦test.ty⟧ := do
+  let valuation := InstCombine.mkValuation test.context values
+  return test.code.denote valuation
 
+theorem cast_concrete_len_eq (test : CliTest) (hMvars : test.mvars = 0) : (test.cast_concrete hMvars).context.length = test.context.length := by sorry
 
- sorry
--/
+def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMvars : test.mvars = 0 := by rfl) :
+ IO ⟦(test.cast_concrete hMvars).ty⟧ := do
+   let concrete_test := test.cast_concrete hMvars
+   let h := cast_concrete_len_eq test hMvars
+   let values' := h ▸ values
+   concrete_test.eval values'
+
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121
 abbrev NameExt := SimplePersistentEnvExtension (Name × Name) (NameMap Name)
