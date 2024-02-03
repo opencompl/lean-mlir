@@ -1,5 +1,4 @@
 import SSA.Projects.InstCombine.LLVM.Transform
-import SSA.Projects.InstCombine.LLVM.Signature
 import Std
 import Lean.Environment
 import Cli
@@ -25,7 +24,16 @@ structure CliTest where
   context : MLIR.AST.Context mvars
   ty : InstCombine.MTy mvars
   code : MLIR.AST.Com context ty
-  signature : CliSignature
+
+structure ConcreteCliTest where
+  name : Name
+  context : MLIR.AST.Context 0
+  ty : InstCombine.MTy 0
+  code : MLIR.AST.Com context ty
+
+def CliTest.signature (test : CliTest) :
+  List (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
+  (test.context, test.ty)
 
 -- We add a special case for 1 because Nat × Unit ≠ Nat
 private def natParams : Nat → Type
@@ -59,64 +67,6 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
 
 instance {n : Nat} : Cli.ParseableType (natParams n) := instParseableNatParams
 
-
-/- These will parse the types/signature themselves -/
-instance : Cli.ParseableType CliType where
-  name := "CliType"
-  parse? str := do
-    let n ← Cli.instParseableTypeNat.parse? str
-    return CliType.width n
-
-instance : Cli.ParseableType CliSignature where
-  name := "Signature"
-  parse? str := do
-    let str := str.trim.splitOn "->"
-    match str with
-      | [inpStr, retStr] => do
-        let inpArr : Array CliType ← Cli.ParseableType.parse? inpStr
-        let retTy : CliType ← Cli.ParseableType.parse? retStr
-        return { args := inpArr.toList, returnTy := retTy}
-      | _ => none
-
-instance : Goedel CliType where toType
-  | .width n => Std.BitVec n
-  | .varw => (n : Nat) → Std.BitVec n
-
-private def toTypeList : List CliType → Type
-  | [] => Unit
-  | [ty] => toType ty
-  | ty::tys => (toType ty) × (toTypeList tys)
-
-instance : Goedel (List CliType) := ⟨toTypeList⟩
-
-instance : Goedel CliSignature where
-  toType sig :=
-    (toType sig.args → toType sig.returnTy)
-
-open InstCombine in
-def CliType.toTy : CliType → (Σ n : Nat, MTy n)
-  | .width n => Sigma.mk 0 (MTy.bitvec (ConcreteOrMVar.concrete n))
-  | .varw => Sigma.mk 1 (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, by aesop⟩))
-
-inductive CliType.isConcrete (cty : CliType) : Prop
-  | width : (n : Nat) → cty = .width n → CliType.isConcrete cty
-
-open InstCombine in
-def CliType.toTy' (cty : CliType) (hConcrete : cty.isConcrete) : MTy 0 :=
-  match cty with
-  | .width n => (MTy.bitvec (ConcreteOrMVar.concrete n))
-  | cty@varw => by
-    exfalso
-    cases hConcrete
-    contradiction
-    -- not sure how to make this using toTy
-
-private def List.toHVector : List CliType → Σ ns : List Nat, HVector (fun n : Nat => InstCombine.MTy n) ns
-  | [] => Sigma.mk [] []ₕ
-  | cty::ctys => match cty.toTy, toHVector ctys with
-    | Sigma.mk n mty, Sigma.mk ns mtys =>
-      Sigma.mk (n :: ns) (mty ::ₕ mtys)
-
 def CliTest.params : CliTest → Type
 | test => natParams test.mvars
 
@@ -129,29 +79,35 @@ instance {n : Nat} : Cli.ParseableType (Std.BitVec n) where
    let intVal ← Cli.instParseableTypeInt.parse? str
    return Std.BitVec.ofInt n intVal
 
-private def List.allZeroes : List Nat → Prop
-  | [] => True
-  | 0::ns => ns.allZeroes
-  | _::_ => False
 
-def CliTest.concreteSignature (test : CliTest) : Prop :=
-   match test.signature.args.toHVector with
-  | Sigma.mk ns _ => match test.signature.returnTy.toTy with
-    | Sigma.mk 0 _ => ns.allZeroes
-    | _ => False
-
-/-- There is no reason why the `CliTest.signature` of a test has
-    to agree with its context (even if that's how we build them in principle)<
-    because they're not dependedently typed here.
-
-    This proposition ensures this consistency via a confluence property:
-    both should evaluate to the same type.
+/--
+We can only execute tests that are concrete.
+This property ensures that they are concrete, i.e. have no metavariables
+(`mvars = 0`)
 -/
---def CliTest.consistentSignature (test : CliTest) : Prop :=
---   match test.signature.args.toHVector with
---  | Sigma.mk _ ms => match test.signature.returnTy.toTy with
---    | Sigma.mk 0 _ =>
+def CliTest.concrete : CliTest → Prop := fun test => test.mvars = 0
 
+instance {test : CliTest} : Decidable test.concrete :=
+ inferInstanceAs (DecidableEq Nat) test.mvars 0
+
+#check HEq.rec
+/--
+TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
+-/
+def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
+  if h : test.concrete then
+    let context : MLIR.AST.Context 0 := h ▸ test.context
+    -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
+    let hContext : HEq context test.context := by sorry --rfl
+    let ty : InstCombine.MTy 0 := h ▸ test.ty
+    let hTy : HEq ty test.ty := by sorry --rfl
+    let code : MLIR.AST.Com context ty := HEq.rec hContext <| HEq.rec hTy test.code
+   { name := test.name, context := context, ty := ty, code := code}
+  else
+  sorry
+
+#check Ctxt.Valuation
+def CliTest.buildCtxtValuation :
 --def CliTest.buildCtxtValuation
 --  (test : CliTest) (vals : HVector toType test.signature.args)
 --  (hMvars : test.mvars = 0 := by rfl)
