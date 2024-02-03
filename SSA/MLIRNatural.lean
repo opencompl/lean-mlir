@@ -5,28 +5,7 @@ import Cli
 open Lean
 
 @[reducible]
-def tests : List CliTest := List.map (fun x => x 4) llvmTests!
-
-@[reducible]
-def myTest := test_udiv 4
-
-
-
-#reduce Goedel.toType tests[0].signature.args
-#reduce Goedel.toType tests[0].signature.returnTy
-#synth Goedel <| InstCombine.MTy 0
-#reduce myTest.mvars
-#synth Goedel <| InstCombine.MTy myTest.mvars
-#reduce myTest.mvars
-#reduce myTest.ty
-#check myTest.code.denote
-#reduce Ctxt.Valuation myTest.context
-
-#check myTest.context
-#check myTest.context
-
-def ex1 := tests[0].code
-#printSignature ex1
+def tests : List ConcreteCliTest := List.map (fun x => x 4) llvmTests!
 
 def runTest (name : String) (arg : String) : IO Bool := do
   match tests.find? (·.name.toString == name) with

@@ -1,7 +1,6 @@
 import Qq
 import SSA.Projects.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.LLVM.Transform
-import SSA.Projects.InstCombine.LLVM.Signature
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term
@@ -31,14 +30,12 @@ elab "[mlir_icom_test" test_name:ident "(" mvars:term,* ")| " reg:mlir_region "]
       --  sorry
       -- let hctxt :  Q(Ctxt Ty) = MLIR.AST.Context 0 := by
       --  sorry
-      let test : Q(CliTest) := q({
+      let test : Q(ConcreteCliTest) := q({
          name := $nm,
-         mvars := 0,
          context := ($comOk).fst,
          ty := $(comOk).snd.fst,
          code := ($comOk).snd.snd,
-         signature := default
-      } : CliTest)
+      } : ConcreteCliTest)
       return test
     | ~q(Except.error $err) => do
         let err ← unsafe evalExpr TransformError q(TransformError) err
@@ -53,6 +50,4 @@ macro "[mlir_icom" " | " reg:mlir_region "]" : term => `([mlir_icom_test Anonymo
 
 -- | ident  (info : SourceInfo) (rawVal : Substring) (val : Name) (preresolved : List Syntax.Preresolved) : Syntax
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
-  let tmp_name : Ident := { raw := Syntax.ident default default (Name.append name.getId (Name.mkStr1 "_test")) []}
-  `(@[reducible] def $(tmp_name) := fun w => [mlir_icom_test $name (w)| $test_reg ]
-   @[reducible, llvmTest $name] def $name := fun w => {$tmp_name w with signature := getSignature! ($(tmp_name) w).code : CliTest})
+  `(@[reducible, llvmTest $name] def $(name) := fun w => [mlir_icom_test $name (w)| $test_reg ])

@@ -1,5 +1,4 @@
 import SSA.Projects.InstCombine.LLVM.EDSL
-import SSA.Projects.InstCombine.LLVM.Signature
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open MLIR AST
