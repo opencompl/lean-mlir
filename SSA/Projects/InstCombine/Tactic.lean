@@ -33,7 +33,7 @@ macro "simp_alive_peephole" : tactic =>
         simp_peephole at Γv
         /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
           We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
-        simp (config := {decide := false}) only [OpDenote.denote,
+        simp (config := {unfoldPartialApp := true}) only [OpDenote.denote,
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
           bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
           Ctxt.snoc,
