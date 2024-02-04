@@ -13,7 +13,6 @@ open LLVM
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
     getLsb (-1#w) ↑i := by 
   simp only [getLsb_val_eq_getLsb', getLsb'_neg_ofNat_one]
-  -- BitVec.getLsb_negOne ..
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
@@ -109,12 +108,10 @@ theorem bitvec_AndOrXor_135 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ^^^ C1) &&& C2 = X &&& C2 ^^^ C1 &&& C2
 := by alive_auto
       
-
 theorem bitvec_AndOrXor_144 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ||| C1) &&& C2 = (X ||| C1 &&& C2) &&& C2
 := by alive_auto
      
-
 theorem bitvec_AndOrXor_698 :
  ∀ (w : Nat) (a b d : BitVec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
 := by alive_auto
