@@ -171,7 +171,7 @@ Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| (op1 >>> op2)
+  else some (op1 >>> op2)
 
 
 /--
