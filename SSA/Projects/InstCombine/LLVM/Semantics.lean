@@ -156,7 +156,7 @@ bits in op1, this instruction returns a poison value.
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| (op1 <<< op2)
+  else some (op1 <<< op2)
 
 /--
 This instruction always performs a logical shift right operation.
