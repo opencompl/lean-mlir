@@ -42,8 +42,9 @@ def alive_DivRemOfSelect_tgt (w : Nat) :=
 
 @[simp]
 theorem BitVec.ofNat_toNat_zero :
-BitVec.toNat (BitVec.ofInt w 0) = 0 :=
-  by simp[BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
+BitVec.toNat (BitVec.ofInt w 0) = 0 := by 
+  simp[BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
+  norm_cast
 
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
@@ -57,7 +58,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
     LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
     LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
     LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-    LLVM.const?, LLVM.icmp?,
+    LLVM.const?, LLVM.icmp?, LLVM.udiv?,
     HVector.toTuple, List.nthLe, bitvec_minus_one]
   intro y x c
   simp only [List.length_singleton, Fin.zero_eta, List.get_cons_zero, List.map_eq_map, List.map_cons,
@@ -77,6 +78,6 @@ theorem alive_DivRemOfSelect (w : Nat) :
        simp
      . subst h; simp
        cases' x with vx <;>
-       cases' y with vy <;> simp
+       cases' y with vy <;> simp [LLVM.udiv?]
 
 end AliveHandwritten
