@@ -186,7 +186,7 @@ Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| (op1 >>>ₛ op2)
+  else some (op1 >>>ₛ op2)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
