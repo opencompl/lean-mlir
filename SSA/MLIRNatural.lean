@@ -4,16 +4,19 @@ import Cli
 
 open Lean
 
+-- Note that this application of 4 here doesn't really do anything, parameters not supported for now
 @[reducible]
 def tests : List ConcreteCliTest := List.map (fun x => x 4) llvmTests!
+--#reduce tests.map (fun t => t.name.toString)
 
 def runTest (name : String) (arg : String) : IO Bool := do
   match tests.find? (·.name.toString == name) with
   | .some t => do
-    let .some p := t.paramsParseable.parse? arg
+    let .some p := t.parseableInputs.parse? arg
       | IO.println s!"Could not parse argument {arg} for test {name}";
-        return False
-    t.testFn p
+        return false
+    IO.println s!"{← t.eval p}"
+    return true
   | .none =>
     IO.println s!"Test {name} not found"; return false
 

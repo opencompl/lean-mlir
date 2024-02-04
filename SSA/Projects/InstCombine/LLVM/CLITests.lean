@@ -1,4 +1,5 @@
 import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.Util
 import Std
 import Lean.Environment
 import Cli
@@ -73,7 +74,6 @@ instance {n : Nat} : Cli.ParseableType (Std.BitVec n) where
    let intVal ← Cli.instParseableTypeInt.parse? str
    return Std.BitVec.ofInt n intVal
 
-
 /--
 We can only execute tests that are concrete.
 This property ensures that they are concrete, i.e. have no metavariables
@@ -90,7 +90,6 @@ structure ConcreteCliTest where
   context : MLIR.AST.Context 0
   ty : InstCombine.MTy 0
   code : MLIR.AST.Com context ty
-
 
 def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars) (hMvars : mvars = 0) : InstCombine.MTy 0 :=
     hMvars ▸ ty
@@ -150,7 +149,6 @@ def CliTest.cast_concrete? (test : CliTest)  : Option ConcreteCliTest :=
   else
     none
 
-
 -- /--
 -- TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
 -- -/
@@ -191,6 +189,13 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMv
    let values' := h ▸ values
    concrete_test.eval values'
 
+def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType (Vector ℤ test.context.length)
+  := inferInstance
+
+instance {test : ConcreteCliTest} : ToString (toType test.ty) where
+ toString := match test.ty with
+   | .bitvec (.concrete w) => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
+
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121
 abbrev NameExt := SimplePersistentEnvExtension (Name × Name) (NameMap Name)
@@ -214,7 +219,6 @@ private def mkExt (name attr : Name) (descr : String) : IO NameExt := do
         ext.addEntry env (n, declName)
   }
   pure ext
-
 
 private def mkElab (ext : NameExt) (ty : Lean.Expr) : Elab.Term.TermElabM Lean.Expr := do
   let mut stx := #[]
