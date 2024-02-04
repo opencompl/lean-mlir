@@ -192,6 +192,12 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMv
 def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType (Vector ℤ test.context.length)
   := inferInstance
 
+def CocreteCliTest.signature (test : ConcreteCliTest) :
+  List (InstCombine.MTy 0) × (InstCombine.MTy 0) := (test.context, test.ty)
+
+def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
+  s!"{test.context} → {test.ty}"
+
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
  toString := match test.ty with
    | .bitvec (.concrete w) => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
