@@ -96,9 +96,7 @@ elab "print_goal_as_error " : tactic => do
 
 -- TODO: should these go into Std?
 def Vector.ofList {α : Type u} (l : List α) : Vector α l.length :=
-match l with
-  | List.nil => Vector.nil
-  | List.cons l ls => Vector.cons l (Vector.ofList ls)
+⟨l, rfl⟩
 
 def Vector.ofArray {α : Type u} (a : Array α) : Vector α a.size :=
  Vector.ofList a.data
