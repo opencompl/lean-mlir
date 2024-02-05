@@ -209,7 +209,7 @@ if __name__ == "__main__":
     for (info, w) in itertools.product(LLVM_OPS, range(1, MAX_WIDTH+1)):
         f.write(info.to_str(w))
 
-  sh("opt-15", "-S", "generated-llvm.ll", "-instcombine", "-o", "generated-llvm-optimized.ll")
+  sh("opt", "-S", "generated-llvm.ll", "-passes=instcombine", "-o", "generated-llvm-optimized.ll")
 
   rows = [Row.header_row()]
   with open("generated-llvm-optimized.ll", "r") as f:

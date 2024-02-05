@@ -2,6 +2,8 @@
 import Std.Data.BitVec
 import Init.System.IO
 import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Projects.InstCombine.TestLLVMOps
+import SSA.Projects.InstCombine.LLVM.CLITests
 import SSA.Projects.InstCombine.Base
 
 open Std
@@ -115,7 +117,7 @@ def icmpRows (pred : LLVM.IntPredicate) : Array Row := Id.run do
         rows := rows.push row
   rows
 
-def main : IO Unit := do
+def generateRawSemantics : IO Unit := do
   let filename := "generated-ssa-llvm-semantics.csv"
   let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
   let stream : Stream := IO.FS.Stream.ofHandle handle
@@ -152,3 +154,6 @@ def main : IO Unit := do
   let rows := rows.append (binopRows "ashr" (fun w a b => InstCombine.Op.denote (.ashr w) (.cons a (.cons b .nil))))
   rows.toList |>.map toString |> "\n".intercalate |> stream.putStr
   return ()
+
+def main : IO Unit := do
+  generateRawSemantics
