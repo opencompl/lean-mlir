@@ -64,6 +64,14 @@ instance : Goedel Ty where
 toType := fun
   | .bitvec w => Option $ BitVec w
 
+instance (ty : Ty) : Coe ℤ (Goedel.toType ty) where
+  coe z := match ty with
+    | .bitvec w => some <| BitVec.ofInt w z
+
+instance (ty : Ty) : Inhabited (Goedel.toType ty) where
+  default := match ty with
+    | .bitvec _ => default
+
 instance : Repr (BitVec n) where
   reprPrec
     | v, n => reprPrec (BitVec.toInt v) n

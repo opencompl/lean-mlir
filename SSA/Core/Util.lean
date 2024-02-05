@@ -1,4 +1,6 @@
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Vector
+import Cli
 import Lean
 
 @[simp]
@@ -91,3 +93,19 @@ elab "print_goal_as_error " : tactic => do
   let target ← Lean.Elab.Tactic.getMainTarget
   throwError target
   pure ()
+
+-- TODO: should these go into Std?
+def Vector.ofList {α : Type u} (l : List α) : Vector α l.length :=
+⟨l, rfl⟩
+
+def Vector.ofArray {α : Type u} (a : Array α) : Vector α a.size :=
+ Vector.ofList a.data
+
+instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ n) where
+  name := s!"Vector ({inst.name}) {n}"
+  parse? str := do
+    let arr : Array τ ← Cli.ParseableType.parse? str
+    if h : arr.size = n then
+      return h ▸ Vector.ofArray arr
+    else
+      none

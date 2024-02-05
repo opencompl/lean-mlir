@@ -8,6 +8,7 @@ import SSA.Core.HVector
   Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
   avoids a universe bump
 -/
+@[reducible]
 class Goedel (β : Type) : Type 1 where
   toType : β → Type
 open Goedel (toType) /- make toType publically visible in module. -/

@@ -107,4 +107,5 @@ macro_rules
     else
       `(%[ $elems,* | List.nil ])
 
+infixl:50 "::ₕ" => HVector.cons
 end HVector

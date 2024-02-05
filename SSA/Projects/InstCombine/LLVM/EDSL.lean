@@ -4,7 +4,7 @@ import Std.Data.BitVec
 import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.LLVM.Transform
--- import SSA.Projects.InstCombine.LLVM.Transform.Dialects.InstCombine
+import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
 open InstCombine (MOp MTy Width)
@@ -185,7 +185,7 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
   mapTy := instantiateMTy vals
   preserves_signature op := by
     have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
-    cases op <;> 
+    cases op <;>
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
@@ -199,7 +199,6 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
     ⟨instantiateCtxt vals Γ, instantiateMTy vals ty, com.map (MOp.instantiateCom vals)⟩
 
 end InstcombineTransformDialect
-
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20Find.20.60Real.2Eadd.60/near/402089561
@@ -234,4 +233,10 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
         | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
       | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
   | .none => throwError "Expected `Except.ok`, found {comExpr}"
+
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
+
+macro "deftest" name:ident " := " test_reg:mlir_region : command => do
+  `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
+       let code := [alive_icom ()| $test_reg]
+       { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
