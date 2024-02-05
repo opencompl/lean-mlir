@@ -6,7 +6,7 @@ open Lean
 
 -- Note that this application of 4 here doesn't really do anything, parameters not supported for now
 @[reducible]
-def tests : List ConcreteCliTest := List.map (fun x => x 4) llvmTests!
+def tests : List ConcreteCliTest := llvmTests!
 
 def runTest (test : ConcreteCliTest) (arg : String) : IO Bool := do
     let .some p := test.parseableInputs.parse? arg
@@ -15,8 +15,8 @@ def runTest (test : ConcreteCliTest) (arg : String) : IO Bool := do
     let res ← test.eval p
     -- Add the first match to help lean reduce the Goedel instance
     match test.ty, res with
-      | .bitvec (.concrete _), .some val => IO.println s!"result: {val}"
-      | .bitvec (.concrete _), .none => IO.println s!"no result (undefined behavior)"
+      | .bitvec _, .some val => IO.println s!"result: {val}"
+      | .bitvec _, .none => IO.println s!"no result (undefined behavior)"
     return true
 
 def listAllTests : IO Unit := do

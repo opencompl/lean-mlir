@@ -1,10 +1,11 @@
-import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Core.Util
 import Std
 import Lean.Environment
 import Cli
+import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Projects.InstCombine.Base
 
-open Lean Goedel
+open Lean Goedel InstCombine
 
 /-- Parse a tuple -/
 instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β] :
@@ -19,12 +20,19 @@ instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β
         return (a, b)
       | _ => .none
 
+abbrev MContext φ := Ctxt <| MTy φ
+abbrev Context := MContext 0
+abbrev MCom φ := Com (MOp φ)
+abbrev MExpr φ := Expr (MOp φ)
+
+instance : ToString Context := inferInstanceAs (ToString (List <| MTy 0))
+
 structure CliTest where
   name : Name
   mvars : Nat
-  context : MLIR.AST.Context mvars
-  ty : InstCombine.MTy mvars
-  code : MLIR.AST.Com context ty
+  context : MContext mvars
+  ty : MTy mvars
+  code : MCom mvars context ty
 
 def CliTest.signature (test : CliTest) :
   List (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
@@ -56,7 +64,8 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
       let instn : Cli.ParseableType (natParams (n + 1)) := @instParseableNatParams (n + 1)
       let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) := @instParseableTuple Nat (natParams (n + 1)) inst1 instn
       let hn1gt0 : (n + 1) > 0 := by
-        simp_all only [gt_iff_lt, add_pos_iff, or_true] -- aesop?
+        rename_i n_1 -- aesop?
+        simp_all only [gt_iff_lt, add_pos_iff, zero_lt_one, or_true]
       let hn1eq := natParamsTup (n + 1) hn1gt0
       hn1eq ▸ instTup.parse? str
 
@@ -87,9 +96,9 @@ instance {test : CliTest} : Decidable test.concrete :=
 
 structure ConcreteCliTest where
   name : Name
-  context : MLIR.AST.Context 0
-  ty : InstCombine.MTy 0
-  code : MLIR.AST.Com context ty
+  context : Context
+  ty : Ty
+  code : MCom 0 context ty
 
 def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars) (hMvars : mvars = 0) : InstCombine.MTy 0 :=
     hMvars ▸ ty
@@ -100,21 +109,20 @@ def InstCombine.MTy.cast_concrete? (mvars : Nat) (ty : InstCombine.MTy mvars) : 
    else
      none
 
-def MLIR.AST.Context.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars)
-  (hMVars : mvars = 0) : MLIR.AST.Context 0 := hMVars ▸ ctxt
+def MLIR.AST.Context.cast_concrete (mvars : Nat) (ctxt : MContext mvars)
+  (hMVars : mvars = 0) : MContext 0 := hMVars ▸ ctxt
 
-def MLIR.AST.Context.cast_concrete? (mvars : Nat) (ctxt : MLIR.AST.Context mvars) :
-Option <| MLIR.AST.Context 0 :=
+def MLIR.AST.Context.cast_concrete? (mvars : Nat) (ctxt : MContext mvars) :
+Option <| MContext 0 :=
   if h : mvars = 0 then
     some <| cast_concrete mvars ctxt h
    else
      none
 
-
  mutual
- def Com.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
-    (code : MLIR.AST.Com ctxt ty) (hMvars : mvars = 0) :
-     Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Com new.1 new.2 :=
+ def Com.cast_concrete (mvars : Nat) (ctxt : MContext mvars) (ty : InstCombine.MTy mvars)
+    (code : MCom mvars ctxt ty) (hMvars : mvars = 0) :
+     Σ new : MContext 0 × InstCombine.MTy 0, MCom 0 new.1 new.2 :=
     match code with
     | .ret v =>
         let f := fun t => InstCombine.MTy.cast_concrete mvars t hMvars
@@ -122,7 +130,7 @@ Option <| MLIR.AST.Context 0 :=
         let ctxt' := (ctxt.map f)
         let v' : Ctxt.Var ctxt' ty' := v.toMap
         Sigma.mk (ctxt', ty') (Com.ret v')
-     | .lete (ty₁  := t) e b =>
+     | .lete (α := t) e b =>
         let Sigma.mk (ctxt', ty') e' := Expr.cast_concrete mvars ctxt t e hMvars
         let Sigma.mk (ctxt'', ty'') b' := Com.cast_concrete mvars (t::ctxt) ty b hMvars
         by
@@ -133,9 +141,9 @@ Option <| MLIR.AST.Context 0 :=
          --exact Sigma.mk (ctxt', ty') <| .lete e' (hTy' ▸ hCtxt' ▸ b')
          sorry
 
- def Expr.cast_concrete (mvars : Nat) (ctxt : MLIR.AST.Context mvars) (ty : InstCombine.MTy mvars)
-    (code : MLIR.AST.Expr ctxt ty) (hMvars : mvars = 0) :
-     Σ new : MLIR.AST.Context 0 × InstCombine.MTy 0, MLIR.AST.Expr new.1 new.2 := sorry
+ def Expr.cast_concrete (mvars : Nat) (ctxt : MContext mvars) (ty : MTy mvars)
+    (code : MExpr mvars ctxt ty) (hMvars : mvars = 0) :
+     Σ new : MContext 0 × InstCombine.MTy 0, MExpr 0 new.1 new.2 := sorry
 
  end
 
@@ -166,7 +174,7 @@ def CliTest.cast_concrete? (test : CliTest)  : Option ConcreteCliTest :=
 --   else
 --   sorry
 
-def InstCombine.mkValuation (ctxt : MLIR.AST.Context 0) (values : Vector Int ctxt.length): Ctxt.Valuation ctxt :=
+def InstCombine.mkValuation (ctxt : MContext 0) (values : Vector Int ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
@@ -200,7 +208,7 @@ def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
 
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
  toString := match test.ty with
-   | .bitvec (.concrete w) => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
+   | .bitvec w => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
 
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121

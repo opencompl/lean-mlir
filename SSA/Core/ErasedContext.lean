@@ -61,6 +61,15 @@ instance : LawfulFunctor Ctxt where
   id_map    := by simp only [List.map_eq_map, List.map_id, forall_const]
   map_const := by simp only [Functor.mapConst, Functor.map, Function.const, forall_const]
 
+/-- Recursion principle for contexts in terms of `Ctxt.nil` and `Ctxt.snoc` -/
+@[eliminator, elab_as_elim]
+def recOn {motive : Ctxt Ty → Sort*}
+    (nil  : motive empty)
+    (snoc : (Γ : Ctxt Ty) → (t : Ty) → motive Γ → motive (Γ.snoc t)) :
+    ∀ Γ, motive Γ
+  | []        => nil
+  | ty :: tys  => snoc tys ty (recOn nil snoc tys)
+
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ.get? i = some t }
 
@@ -247,9 +256,35 @@ theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toTy
   simp [Ctxt.Valuation.snoc]
 
 @[simp]
+theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
+    (h : get? (Ctxt.snoc Γ ty) 0 = some ty) :
+    (s.snoc x) ⟨0, h⟩ = x := by
+  simp [Ctxt.Valuation.snoc]
+
+@[simp]
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   simp [Ctxt.Valuation.snoc]
+
+/-!
+# Helper to simplify context manipulation with toSnoc and variable access.
+-/
+/--  (ctx.snoc v₁) ⟨n+1, _⟩ = ctx ⟨n, _⟩ -/
+@[simp]
+theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
+    (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
+  rfl
+
+/-- There is only one distinct valuation for the empty context -/
+theorem Valuation.eq_nil (V : Valuation (empty : Ctxt Ty)) : V = Valuation.nil := by
+  funext _ ⟨_, h⟩; contradiction
+
+@[simp]
+theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.snoc t)) :
+    snoc (fun t v' => V v'.toSnoc) (V <|.last ..) = V := by
+  funext _ v
+  cases v using Var.casesOn <;> rfl
 
 /-- Make a a valuation for a singleton value -/
 def Valuation.singleton {t : Ty} (v : toType t) : Ctxt.Valuation [t] :=
@@ -274,6 +309,17 @@ theorem Valuation.ofPair_snd [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v�
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
   fun _to vo =>  Γiv (hom vo)
+
+/-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
+@[eliminator, elab_as_elim]
+def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
+    (nil  : motive (Valuation.nil))
+    (snoc : ∀ {Γ t} (V : Valuation Γ) (v : ⟦t⟧), motive V → motive (Valuation.snoc V v)) :
+    ∀ {Γ} (V : Valuation Γ), motive V := by
+  intro Γ V
+  induction' Γ with Γ t ih
+  · exact (eq_nil V).symm ▸ nil
+  · exact snoc_toSnoc_last V ▸ (snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) (ih _))
 
 end Valuation
 
@@ -389,7 +435,11 @@ theorem toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
 @[simp]
 theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
-  simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
+  unfold unSnoc Var.toSnoc toHom
+  simp
+  funext x v
+  congr 1
+  rw [Nat.add_assoc, Nat.add_comm 1]
 
 def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
   | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by

@@ -1,11 +1,18 @@
 import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
+import SSA.Core.Tactic
+import SSA.Core.ErasedContext
 import SSA.Core.Util
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
 open Std (BitVec)
 open Ctxt(Var)
+
+/- disable proofs and types of proofs from showing to make proof states legible -/
+set_option pp.proofs false
+set_option pp.proofs.withType false
+
 
 namespace ScfRegion
 
@@ -51,54 +58,148 @@ instance : OpSignature Op Ty where
 
 #check uncurry
 
+
+/-# define what it means for a loop body (a function of type `(i : Int) × (v : t) → t` to be index invariant -/
+
+/-- A loop body receives the current value of the loop induction variable, and the current loop carried value.
+The loop body produces the value of this loop iteration.
+
+Consider the loop: `for(int i = 0; i >= -10; i -= 2)`. In this case, the value `i` will be the sequence
+of values `[0, -2, -4, -6, -8, -10]`. The value `i` is the loop induction variable.
+
+This value is distinct from the *trip count*, which is the number of times the loop body has been executed so far, which is `[0, 1, 2, 3, 4]`.
+
+The `LoopBody` does *not* provide access to the trip count, only to the loop induction variable.
+-/
+abbrev LoopBody (t : Type) : Type := Int → t → t
+
+namespace LoopBody
+
 /-- Convert a function `f` which is a single loop iteration into a function
   that iterates and updates the loop counter. -/
-def loop_counter_decorator (δ: Int) (f : Int → α → α) : Int × α → Int × α :=
+def CounterDecorator (δ: Int) (f : LoopBody α) : Int × α → Int × α :=
   fun (i, v) => (i + δ, f i v)
 
+
+/-- A loop body is invariant if it does not depend on the index. -/
+def IndexInvariant (f : LoopBody t) : Prop :=
+  ∀ (i j : Int) (v : t), f i v = f j v
+
+/-- Evaluating a loop index invariant function is the same as evaluating it at 0 -/
+theorem eval (f : LoopBody t) (hf : LoopBody.IndexInvariant f) (i : Int) (v : t) :
+  f i v = f 0 v := by unfold LoopBody.IndexInvariant at hf; rw [hf]
+
+/-- Loop invariant functions can be simulated by a simpler function -/
+def atZero (f : LoopBody t) : t → t := fun v => f 0 v
+
+/-- If there exists a function `g : t → t` which agrees with `f`, then `f` is loop index invariant. -/
+theorem eq_invariant_fn
+    (f : LoopBody t) (g : t → t) (hf : ∀ (i : Int) (v : t), f i v = g v) :
+    LoopBody.IndexInvariant f ∧ atZero f = g:= by
+  apply And.intro
+  case left =>
+    intros i j v
+    rw [hf i v, hf j v]
+  case right =>
+    unfold atZero
+    funext v
+    rw [hf 0 v]
+
+end LoopBody
+
+namespace LoopBody.IndexInvariant
+
+/-- Evaluating a loop index invariant function is the same as evaluating it at `atZero` -/
+@[simp]
+theorem eval' {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (i : Int) (v : t) :
+    f i v = f.atZero v := by
+  unfold LoopBody.IndexInvariant at hf; rw [LoopBody.atZero, hf]
+
+/-- iterating a loop invariant function gives a well understood answer: the iterates of the function. -/
+@[simp]
+theorem iterate {f : LoopBody t}
+    (hf : LoopBody.IndexInvariant f)
+    (δ : Int)
+    (i₀ : Int)
+    (v₀ : t) (k : ℕ) :
+    (f.CounterDecorator δ)^[k] (i₀, v₀) = (i₀ + δ * k, (f.atZero)^[k] v₀) := by
+  induction k generalizing i₀ v₀
+  case zero => simp
+  case succ i hi =>
+    simp
+    rw [hi]
+    simp [LoopBody.CounterDecorator]
+    simp [eval' hf]
+    linarith
+
+/-- the first component of iterating a loop invariant function -/
+@[simp]
+theorem iterate_fst {f : LoopBody t}
+    (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + δ * k := by
+  simp [hf];
+
+/-- the second component of iterating a loop invariant function -/
+@[simp]
+theorem iterate_snd {f : LoopBody t}
+    (δ : Int) (hf : f.IndexInvariant) (i₀ : Int) (v₀ : t) (k : ℕ) :
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).2 = (f.atZero)^[k] v₀ := by
+  simp [hf]
+
+end LoopBody.IndexInvariant
+
+namespace LoopBody.CounterDecorator
+/-- iterated value of the fst of the tuple of CounterDecorator (ie, the loop counter) -/
+@[simp]
+theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k : ℕ) :
+    ((f.CounterDecorator δ)^[k] (i₀, v₀)).1 = i₀ + k * δ := by
+  induction k generalizing i₀ v₀
+  case zero => simp
+  case succ i hi =>
+    simp
+    rw [hi]
+    simp [LoopBody.CounterDecorator]
+    linarith
+
 /-- evaluating a function that does not access the index (const_index_fn) -/
-theorem loop_counter_decorator_const_index_fn_eval
-  (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) :
-  (loop_counter_decorator δ f) (i, vstart) = (i + δ, f' vstart) := by
-  simp[loop_counter_decorator, hf]
+theorem const_index_fn_eval
+    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) :
+    (f.CounterDecorator δ) (i, vstart) = (i + δ, f' vstart) := by
+  simp [LoopBody.CounterDecorator, hf]
 
 
 /-- iterating a function that does not access the index (const_index_fn) -/
-theorem loop_counter_decorator_const_index_fn_iterate
-  (δ : Int) (i : Int) (vstart : α) (f : Int → α → α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
-  (loop_counter_decorator δ f)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
-  induction k generalizing i vstart
-  case zero =>
+theorem const_index_fn_iterate (δ : Int)
+    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
+    (f.CounterDecorator δ)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
+  obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
+  rw [IndexInvariant.iterate hf]; simp
+  apply And.intro
+  . linarith
+  . rw [hf']
+
+/-- CounterDecorator on a constant function -/
+@[simp]
+theorem constant (δ : Int) (i : Int) (vstart : α) :
+    (LoopBody.CounterDecorator δ fun _i v => v) (i, vstart) = (i + δ, vstart) := rfl
+
+/-- iterate the CounterDecorator of a constant function. -/
+theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
+    ((LoopBody.CounterDecorator δ (fun (i : Int) (v : α) => v))^[k]) =
+    fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by
+  funext ⟨i, v⟩
+  induction k generalizing i v
+  case h.zero =>
     simp
-  case succ n ihn =>
-    simp
-    simp[loop_counter_decorator] at ihn ⊢
-    simp[ihn]
-    simp[hf]
+  case h.succ n ihn =>
+    simp [ihn]
     linarith
 
+def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
+  (LoopBody.CounterDecorator δ f (niters,val)).2
 
-/-- loop_counter_decorator on a constant function -/
-@[simp]
-theorem loop_counter_decorator_constant (δ : Int) (i : Int) (vstart : α) :
-  (loop_counter_decorator δ fun _i v => v) (i, vstart) = (i + δ, vstart) := rfl
+end LoopBody.CounterDecorator
 
-/-- iterate the loop_counter_decorator of a constant function. -/
-theorem loop_counter_decorator_constant_iterate {α : Type} (k : ℕ) (δ : Int):
-  ((loop_counter_decorator δ (fun (i : Int) (v : α) => v))^[k]) = fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by {
-    funext ⟨i, v⟩
-    induction k generalizing i v
-    case h.zero =>
-      simp
-    case h.succ n ihn =>
-      simp[ihn]
-      linarith
-  }
-
-def to_loop_run (δ : Int) (f : Int → α → α) (niters : ℕ) (val : α) : α :=
-  (loop_counter_decorator δ f (niters,val)).2
-
-#check Prod.mk
 @[reducible]
 noncomputable instance : OpDenote Op Ty where
   denote
@@ -116,7 +217,7 @@ noncomputable instance : OpDenote Op Ty where
     | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))), (.cons (f : _  → _) .nil) =>
         let f' (i : ℤ) (v : ⟦ty⟧) : ⟦ty⟧ :=
           f ∘  (Function.uncurry Ctxt.Valuation.ofPair) <| (i, v)
-        let to_iterate := loop_counter_decorator (α := ⟦ty⟧) (δ := istep) (f := f')
+        let to_iterate := LoopBody.CounterDecorator (α := ⟦ty⟧) (δ := istep) (f := f')
         let loop_fn := niter.iterate (op := to_iterate)
         (loop_fn (istart, vstart)).2
 
@@ -200,18 +301,18 @@ def for_ {Γ : Ctxt _} {t : Ty} (start step : Var Γ .int) (niter : Var Γ .nat)
 theorem if_true {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = true) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
   Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
   Expr.denote (ScfRegion.run (t := t) v then_) Γv := by
-    simp[Expr.denote, if_, run]
-    simp_peephole[hcond] at Γv
-    simp[ite_true]
+    simp [Expr.denote, if_, run]
+    simp_peephole [hcond] at Γv
+    simp [ite_true]
 -- TODO: make a `PeepholeRewrite` for `if_true`.
 
 /-- 'if' condition of a false variable evaluates to the else region body. -/
 theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com Op [t] t) :
   Expr.denote (ScfRegion.if_ (t := t) cond v then_ else_) Γv =
   Expr.denote (ScfRegion.run (t := t) v else_) Γv := by
-    simp[Expr.denote, if_, run]
-    simp_peephole[hcond] at Γv
-    simp[ite_true]
+    simp [Expr.denote, if_, run]
+    simp_peephole [hcond] at Γv
+    simp [ite_true]
 
 -- TODO: make a `PeepholeRewrite` for `if_false`.
 
@@ -223,15 +324,9 @@ abbrev RegionRet [Goedel Ty] (t : Ty) {Γ : Ctxt Ty} (v : Var Γ t) : Com Op Γ 
   just fetching the loop variable. -/
 theorem for_return {t : Ty} (istart istep: Var Γ .int) (niters : Var Γ .nat) (v : Var Γ t) :
   Expr.denote (ScfRegion.for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
-    simp[Expr.denote, run, for_]
+    simp [Expr.denote, run, for_]
     simp_peephole at Γv
-    simp[Com.denote]
-    rw[loop_counter_decorator_constant_iterate]
--- TODO: make a `PeepholeRewrite` for `for_return`.
-
-
-set_option pp.proofs false
-set_option pp.proofs.withType false
+    rw [LoopBody.CounterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
@@ -259,46 +354,37 @@ def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int 
   /- c0 = -/ Com.lete (cst 0) <|
   /- loop_step = -/ Com.lete  (cst 1) <|
   /- v1 = -/ Com.lete (for_ (t := .int)
-                        ⟨/- c0 -/ 1, by simp[Ctxt.snoc]⟩
-                        ⟨/- loop_step -/ 0, by simp[Ctxt.snoc]⟩
-                        ⟨/- nsteps -/ 2, by simp[Ctxt.snoc]⟩
-                        ⟨/- vstart -/ 3, by simp[Ctxt.snoc]⟩ (
+                        ⟨/- c0 -/ 1, by simp [Ctxt.snoc]⟩
+                        ⟨/- loop_step -/ 0, by simp [Ctxt.snoc]⟩
+                        ⟨/- nsteps -/ 2, by simp [Ctxt.snoc]⟩
+                        ⟨/- vstart -/ 3, by simp [Ctxt.snoc]⟩ (
       Com.lete (cst vincrement) <|
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩) -- fun v => (v + increment)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩)) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+      Com.lete (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) -- fun v => (v + increment)
+      <| Com.ret ⟨0, by simp [Ctxt.snoc]⟩)) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
   Com.lete (cst vincrement) <|
-  Com.lete (axpy ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 /-- iterated addition-/
-theorem add_iterate (v0 : Int) (b : Int) (a : ℕ):
-  (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
+theorem add_iterate (v0 : Int) (b : Int) (a : ℕ) :
+    (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
   induction a generalizing b v0
   case zero => simp
   case succ a' ah =>
-    simp[ah]
+    simp [ah]
     linarith
 
-/-- Reverse a loop. -/
 theorem correct :
-  Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
-    simp[lhs, rhs, for_, axpy, cst]
-    try simp (config := {decide := false}) only [
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-    Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry, add]
-    generalize A:Γv { val := 0, property := _ } = a;
-    generalize B:Γv { val := 1, property := _ } = b;
-    rw[loop_counter_decorator_const_index_fn_iterate]
-    case hf => rfl
-    . simp
-      apply add_iterate
-    done
+    Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
+  simp [lhs, rhs, for_, axpy, cst]
+  try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  intros A B
+  rw [LoopBody.CounterDecorator.const_index_fn_iterate]
+  case hf => rfl
+  simp; apply add_iterate
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 -- TODO: add a PeepholeRewrite for this theorem.
@@ -309,75 +395,47 @@ end ForAddToMul
 namespace ForReversal
 variable {t : Ty}
 variable (rgn : Com Op [Ty.int, t] t)
-/- region semantics does not depend on trip count -/
-variable (hrgn : ∀ (v : ⟦t⟧) (n m : Int),
-  Com.denote rgn (Ctxt.Valuation.ofPair n v) =
-  Com.denote rgn (Ctxt.Valuation.ofPair m v))
+/- region semantics does not depend on trip count. That is, the region is trip count invariant.
+  In such cases, a region can be reversed. -/
+variable (hrgn : LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
 
 def lhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- val -/ t] t :=
   /- v-/
   /- v1 = -/ Com.lete (for_ (t := t)
-                        ⟨/- start -/ 0, by simp[Ctxt.snoc]⟩
-                        ⟨/- delta -/1, by simp[Ctxt.snoc]⟩
-                        ⟨/- steps -/ 2, by simp[Ctxt.snoc]⟩
-                        ⟨/- v0 -/ 3, by simp[Ctxt.snoc]⟩  rgn) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+                        ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
+                        ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
+                        ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
+                        ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
   /- delta * steps + start-/
-  Com.lete (axpy ⟨1, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) <|
+  Com.lete (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
   /- -delta -/
-  Com.lete (neg ⟨2, by simp[Ctxt.snoc]⟩) <|
+  Com.lete (neg ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.lete (for_ (t := t)
-                        ⟨/- end -/ 2, by simp[Ctxt.snoc]⟩
-                        ⟨/- -delta -/ 3, by simp[Ctxt.snoc]⟩
-                        ⟨/- steps -/ 4, by simp[Ctxt.snoc]⟩
-                        ⟨/- v0 -/ 5, by simp[Ctxt.snoc]⟩  rgn) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+                        ⟨/- end -/ 2, by simp [Ctxt.snoc]⟩
+                        ⟨/- -delta -/ 3, by simp [Ctxt.snoc]⟩
+                        ⟨/- steps -/ 4, by simp [Ctxt.snoc]⟩
+                        ⟨/- v0 -/ 5, by simp [Ctxt.snoc]⟩  rgn) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 
 /-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
   this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
 theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
-  {v: ℕ}
-  {hvproof : Ctxt.get? Γ v = some ty}
-  {var : Γ.Var ty}
-  (hvar : var = ⟨v, hvproof⟩) :
-  V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp[Ctxt.snoc] at hvproof; simp[Ctxt.snoc, hvproof]⟩ := by
-    simp[Ctxt.Valuation.snoc, hvar]
+    {v: ℕ}
+    {hvproof : Ctxt.get? Γ v = some ty}
+    {var : Γ.Var ty}
+    (hvar : var = ⟨v, hvproof⟩) :
+    V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
+  simp [Ctxt.Valuation.snoc, hvar]
 
-theorem correct :
-  Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
-    simp[lhs, rhs, for_, axpy]
-    try simp (config := {decide := false}) only [
-    Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-    Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-    Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-    HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk]
-    generalize A:Γv { val := 0, property := _ } = a;
-    generalize B:Γv { val := 1, property := _ } = b;
-    generalize C:Γv { val := 2, property := _ } = c;
-    generalize D:Γv { val := 3, property := _ } = d;
-    /- we still have things like
-    Ctxt.Valuation.snoc Γv (b * ↑c + a) { val := 2, property := rhs.proof_1 }
-    in the proof state, because it's not sure how to simplify stuff with `snoc`? -/
-    simp[Goedel.toType] at a b c d
-    have h1 : Ctxt.Valuation.snoc (t := .int) Γv (b * (c : ℤ) + a) { val := 2, property := rhs.proof_1 } = b := by
-      conv => rhs; rw[← B]
-    simp[h1]
-    have h2 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 3, property := rhs.proof_2 } = c := by
-      conv => rhs; rw[← C]
-    sorry -- TODO: finish proof
-    /-
-    simp[h2]
-    have h3 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 1, property := rhs.proof_1  } = a := by
-      conv => rhs; rw[← A]
-    simp[h3]
-    have h4 : Ctxt.Valuation.snoc Γv (t := .int) (b * ↑c + a) { val := 4, property := rhs.proof_3 } = d := by
-      conv => rhs; rw[← D]
-    simp[h4]
-    done
-  -/
+theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
+  simp [lhs, rhs, for_, axpy]
+  simp_peephole at Γv
+
+#print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 -- TODO: add a PeepholeRewrite for this theorem.
 
@@ -401,27 +459,41 @@ def lhs : Com Op [/- v0 -/ t] t :=
   /- start1 = -/ Com.lete (cst start1) <|
   /- c1 = -/ Com.lete (cst 1) <|
   -- start step niter v
-  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
+  Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
   /- niters2 = -/ Com.lete (cst_nat niters2) <|
   /- start2 = -/ Com.lete (cst <| niters1 + start1) <|
   /- c1 = -/ Com.lete (cst 1) <|
-  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com Op [/- v0 -/ t] t :=
   /- niters1 + niters2 = -/ Com.lete (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.lete (cst start1) <|
   /- c1 = -/ Com.lete (cst 1) <|
   -- start step niter v
-  Com.lete (for_ (t := t) ⟨1, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩ ⟨2, by simp[Ctxt.snoc]⟩ ⟨3, by simp[Ctxt.snoc]⟩ rgn) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-#check rhs
+  Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
 
 theorem correct :
-  Com.denote (lhs rgn niters1 ninters2 start1) Γv = Com.denote (rhs rgn niters1 ninters2 start1) Γv := by
-    sorry -- TODO: finish proof
-
--- TODO: add a PeepholeRewrite for this theorem.
+    Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
+  simp [lhs, rhs, for_, axpy, cst]
+  try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  intros a
+  have swap_niters := add_comm (a := niters1) (b := niters2)
+  set arg := ((LoopBody.CounterDecorator 1 fun i v =>
+                Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1]
+            (start1, a)).2
+  have H : (LoopBody.CounterDecorator 1 fun i v =>
+        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
+    (start1, a) = (LoopBody.CounterDecorator 1 fun i v =>
+        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
+    (start1, a) := by
+      congr
+  rw [H, Function.iterate_add_apply]
+  congr
+  rw [LoopBody.CounterDecorator.iterate_fst_val]
+  linarith
 
 end ForFusion
 
@@ -430,14 +502,14 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com Op [.int] .int :=
-  Com.lete (iterate (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.lete (iterate (k := 0) ⟨0, by simp [Ctxt.snoc]⟩ (
+      Com.lete (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| Com.ret ⟨0, by simp [Ctxt.snoc]⟩
   )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com Op [.int] .int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 attribute [local simp] Ctxt.snoc
 
