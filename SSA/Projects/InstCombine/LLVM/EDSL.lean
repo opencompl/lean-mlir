@@ -238,51 +238,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
--- We only support tests without parameters for now. Should remove Qq and this restriction together,
--- unifying this with the above. Right now it just doubles a lot of the code.
-open MLIR.AST InstCombine in
-elab "[alive_icom_test" test_name:ident "| " reg:mlir_region "]" : term => do
-  let nm : Name := test_name.getId
-  let ast_stx ← `([mlir_region| $reg])
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)
-  let com := q(InstcombineTransformDialect.mkComInstantiate (φ := 0) $ast |>.map (· Vector.nil))
-  synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM (MOp 0) (Σ (Γ' : Ctxt (MTy 0)) (ty : (MTy 0)), Com (MOp 0) Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <|
-        return ←reduce com
-  let comExpr : Expr := com
-  trace[Meta] com
-  trace[Meta] comExpr
-  match comExpr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, aexpr) =>
-      match aexpr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, ctxtexpr, sndexpr) =>
-        match sndexpr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, tyexpr, comexpr) =>
-            let ty : Q(MTy 0) ←
-              withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-                withTransparency (mode := TransparencyMode.all) <|
-                  return ←reduce tyexpr
-            let ctxt : Q(Ctxt <| MTy 0) ←
-              withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-                withTransparency (mode := TransparencyMode.all) <|
-                  return ←reduce ctxtexpr
-            let com : Q(MCom 0 $(ctxt) $(ty)) ←
-              withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-                withTransparency (mode := TransparencyMode.all) <|
-                  return ←reduce comexpr
-            let test : Q(ConcreteCliTest) := q({
-               name := $nm,
-               ty := $(ty),
-               context := $(ctxt),
-               code := ($com),
-            } : ConcreteCliTest)
-            return test
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _)):\n {comExpr}"
-      | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _)):\n {comExpr}"
-  | .none => throwError "Expected `Except.ok`, found {comExpr}"
-
--- | ident  (info : SourceInfo) (rawVal : Substring) (val : Name) (preresolved : List Syntax.Preresolved) : Syntax
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
-  `(@[reducible, llvmTest $name] def $(name) := [alive_icom_test $name | $test_reg ])
+  `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
+       let code := [alive_icom ()| $test_reg]
+       { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
