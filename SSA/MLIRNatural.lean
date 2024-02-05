@@ -55,7 +55,7 @@ def mainCmd := `[Cli|
     mlirnatural VIA runMainCmd;
     "MLIR♮: Reference Semantics"
     FLAGS:
-       s, signature;      "Print the signature of the test"
+       s, signature;     "Print the signature of the test"
        t, test: String;  "Name of test"
        a, args: String;  "Test argument to be parsed by lean"
        l, list_tests;    "List all available tests"
