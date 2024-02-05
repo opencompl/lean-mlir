@@ -119,6 +119,10 @@ Option <| MContext 0 :=
    else
      none
 
+-- TODO: The commented code below is an attempt at generalizing this to
+-- parametrized code, i.e. with mvars. This should be addressed later.
+-- (see https://github.com/opencompl/ssa/issues/174)
+/-
  mutual
  def Com.cast_concrete (mvars : Nat) (ctxt : MContext mvars) (ty : InstCombine.MTy mvars)
     (code : MCom mvars ctxt ty) (hMvars : mvars = 0) :
@@ -146,7 +150,6 @@ Option <| MContext 0 :=
      Σ new : MContext 0 × InstCombine.MTy 0, MExpr 0 new.1 new.2 := sorry
 
  end
-
 def CliTest.cast_concrete (test : CliTest) (hMvars : test.mvars = 0) : ConcreteCliTest :=
   let Sigma.mk (ctxt', ty') code' := test.code.cast_concrete hMvars
   { name := test.name, context := ctxt', ty := ty', code := code'}
@@ -157,22 +160,32 @@ def CliTest.cast_concrete? (test : CliTest)  : Option ConcreteCliTest :=
   else
     none
 
--- /--
+
 -- TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
--- -/
--- def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
---   if h : test.concrete then
---     let context : MLIR.AST.Context 0 := h ▸ test.context
---     let ty : InstCombine.MTy 0 := h ▸ test.ty
---     let test' : CliTest := { name := test.name, mvars := 0, context := context, ty := ty, code := test.code}
---     -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
---     let hContext : HEq context test.context := by sorry --rfl
---     let ty : InstCombine.MTy 0 := h ▸ test.ty
---     let hTy : HEq ty test.ty := by sorry --rfl
---     let code : MLIR.AST.Com context ty := HEq.rec hContext <| HEq.rec hTy test.code
---    { name := test.name, context := context, ty := ty, code := code}
---   else
---   sorry
+def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
+  if h : test.concrete then
+    let context : MLIR.AST.Context 0 := h ▸ test.context
+    let ty : InstCombine.MTy 0 := h ▸ test.ty
+    let test' : CliTest := { name := test.name, mvars := 0, context := context, ty := ty, code := test.code}
+    -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
+    let hContext : HEq context test.context := by sorry --rfl
+    let ty : InstCombine.MTy 0 := h ▸ test.ty
+    let hTy : HEq ty test.ty := by sorry --rfl
+    let code : MLIR.AST.Com context ty := HEq.rec hContext <| HEq.rec hTy test.code
+   { name := test.name, context := context, ty := ty, code := code}
+  else
+  sorry
+
+
+theorem cast_concrete_len_eq (test : CliTest) (hMvars : test.mvars = 0) : (test.cast_concrete hMvars).context.length = test.context.length := by sorry
+
+def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMvars : test.mvars = 0 := by rfl) :
+ IO ⟦(test.cast_concrete hMvars).ty⟧ := do
+   let concrete_test := test.cast_concrete hMvars
+   let h := cast_concrete_len_eq test hMvars
+   let values' := h ▸ values
+   concrete_test.eval values'
+-/
 
 def InstCombine.mkValuation (ctxt : MContext 0) (values : Vector Int ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
@@ -183,19 +196,11 @@ match ctxt, values with
     let newTy : toType ty := ↑(val)
     Ctxt.Valuation.snoc valuation' newTy
 
+
 def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector ℤ test.context.length) :
  IO ⟦test.ty⟧ := do
   let valuation := InstCombine.mkValuation test.context values
   return test.code.denote valuation
-
-theorem cast_concrete_len_eq (test : CliTest) (hMvars : test.mvars = 0) : (test.cast_concrete hMvars).context.length = test.context.length := by sorry
-
-def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMvars : test.mvars = 0 := by rfl) :
- IO ⟦(test.cast_concrete hMvars).ty⟧ := do
-   let concrete_test := test.cast_concrete hMvars
-   let h := cast_concrete_len_eq test hMvars
-   let values' := h ▸ values
-   concrete_test.eval values'
 
 def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType (Vector ℤ test.context.length)
   := inferInstance
