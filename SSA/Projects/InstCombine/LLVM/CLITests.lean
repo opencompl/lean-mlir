@@ -187,20 +187,29 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMv
    concrete_test.eval values'
 -/
 
-def InstCombine.mkValuation (ctxt : MContext 0) (values : Vector Int ctxt.length): Ctxt.Valuation ctxt :=
+def InstCombine.mkValuation (ctxt : MContext 0) (values : Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
-    let valsVec : Vector ℤ tys.length := ⟨vals,by aesop⟩
+    let valsVec : Vector (Option ℤ) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
-    let newTy : toType ty := ↑(val)
-    Ctxt.Valuation.snoc valuation' newTy
+    match ty with
+      | .bitvec (.concrete w) =>
+         let newTy : toType (.bitvec (.concrete w)) := Option.map (Std.BitVec.ofInt w) val
+         Ctxt.Valuation.snoc valuation' newTy
 
-
-def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector ℤ test.context.length) :
+def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector (Option ℤ) test.context.length) :
  IO ⟦test.ty⟧ := do
   let valuation := InstCombine.mkValuation test.context values
   return test.code.denote valuation
+
+def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option ℤ)) :
+ IO (Except String ⟦test.ty⟧) := do
+   if h : values.size = test.context.length then
+     let valuesVec : Vector (Option ℤ) test.context.length := h ▸ (Vector.ofArray values)
+     return Except.ok <| (← test.eval valuesVec)
+   else
+     return Except.error s!"Invalid input length: {values} has length {values.size}, required {test.context.length}"
 
 def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType (Vector ℤ test.context.length)
   := inferInstance

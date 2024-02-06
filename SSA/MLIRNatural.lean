@@ -8,11 +8,12 @@ open Lean
 @[reducible]
 def tests : List ConcreteCliTest := llvmTests!
 
+-- TODO: make poison parseable too
 def runTest (test : ConcreteCliTest) (arg : String) : IO Bool := do
     let .some p := test.parseableInputs.parse? arg
       | IO.println s!"Could not parse argument {arg} for test {test.name} : {test.printSignature}";
         return false
-    let res ← test.eval p
+    let res ← test.eval (p.map Option.some)
     -- Add the first match to help lean reduce the Goedel instance
     match test.ty, res with
       | .bitvec _, .some val => IO.println s!"result: {val}"

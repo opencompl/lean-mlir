@@ -110,6 +110,9 @@ instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ 
     else
       none
 
+
+def Std.BitVec.width : Std.BitVec w → Nat := fun _ => w
+
 -- From Haskell:
 def List.toTiers : List α  → List (List α) := (List.groupBy (fun _ _ => false))
 
@@ -140,3 +143,11 @@ def List.products : List (List (List α)) → List (List (List α)) := List.fold
 
 def productsList : List (List α) -> List (List α) :=
   List.join ∘ List.products ∘ List.map List.toTiers
+
+/-- Builds the cartesian product of all arrays in the input.
+    Pretty inefficient right now, as it converts back and forth to lists... -/
+def productsArr : Array (Array α) -> Array (Array α) :=
+  fun arr =>
+     let ls : List (List α) := Array.map Array.toList arr |>.toList
+     let prods := productsList ls
+     List.map List.toArray prods |>.toArray
