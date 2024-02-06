@@ -109,3 +109,34 @@ instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ 
       return h ▸ Vector.ofArray arr
     else
       none
+
+-- From Haskell:
+def List.toTiers : List α  → List (List α) := (List.groupBy (fun _ _ => false))
+
+def appendTiers : List (List α) → List (List α) → List (List α)
+  | xss, []  =>  xss
+  | [] ,  yss  => yss
+  | (xs::xss), (ys::yss) =>  (xs ++ ys) :: (appendTiers xss yss)
+
+--notation "\\/" => appendTiers
+
+-- fugly; sorry, Lean doesn't have that neat list comprehension
+/-- In Haskell this was defined inline as `**` -/
+def prodWith : (α → β → γ) → List α → List β → List γ
+  | f, as, bs => Id.run do
+      let mut res := []
+      for a in as do
+        for b in bs do
+         res := res ++ [ f a b]
+      res
+
+def productWith : (α -> β -> γ) → List (List α) → List (List β) → List (List γ)
+  | _, _, []  =>  []
+  | _, [], _  =>  []
+  | f, (xs::xss), yss =>
+    appendTiers (List.map (prodWith f xs ·) yss) (productWith f xss yss)
+
+def List.products : List (List (List α)) → List (List (List α)) := List.foldr (productWith List.cons) [[[]]]
+
+def productsList : List (List α) -> List (List α) :=
+  List.join ∘ List.products ∘ List.map List.toTiers
