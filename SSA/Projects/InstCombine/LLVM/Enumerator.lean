@@ -28,9 +28,9 @@ instance : ToString Row where
 def rowHeader : Row := {
  opName := "op",
  bitwidth := "width",
- v1 := "in0",
- v2 := "in1",
- v3 := "in2",
+ v1 := "in1",
+ v2 := "in2",
+ v3 := "in3",
  retval := "retval"
 }
 
@@ -127,6 +127,13 @@ def icmpRows (pred : LLVM.IntPredicate) : Array Row := Id.run do
         rows := rows.push row
   rows
 
+
+def testNameToRowName : String → String
+  | testName => match testName.splitOn "_" with
+    | [_,name] => name
+    | [_,name, op] => s!"{name}.{op}"
+    | _ => "Error"
+
 /-- Produce rows for a `ConcreteCliTest` -/
 def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
   let mut rows := #[]
@@ -150,7 +157,7 @@ def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
               let retv' : Option (Std.BitVec w) := h ▸ retv
               let retv := BitVec.outputToString retv'
               let row : Row := {
-                opName := s!"{test.name}",
+                opName := s!"{testNameToRowName test.name.toString}",
                 bitwidth := toString w,
                 v1 := test.inputToString 0 arg,
                 v2 := test.inputToString 1 arg,
@@ -160,7 +167,6 @@ def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
               rows := rows.push row
       | Except.error e => IO.println e
   return rows
-
 
 def icmpPredicates := [ LLVM.IntPredicate.eq, LLVM.IntPredicate.ne, LLVM.IntPredicate.ugt,
   LLVM.IntPredicate.uge, LLVM.IntPredicate.ult, LLVM.IntPredicate.ule, LLVM.IntPredicate.sgt,
