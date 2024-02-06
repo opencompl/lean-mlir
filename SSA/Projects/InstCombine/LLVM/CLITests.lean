@@ -200,7 +200,8 @@ match ctxt, values with
 
 def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector (Option ℤ) test.context.length) :
  IO ⟦test.ty⟧ := do
-  let valuation := InstCombine.mkValuation test.context values
+  let valuesStack := values.reverse -- we reverse values since context is a stack
+  let valuation := InstCombine.mkValuation test.context valuesStack
   return test.code.denote valuation
 
 def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option ℤ)) :
