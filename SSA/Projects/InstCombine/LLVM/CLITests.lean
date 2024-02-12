@@ -216,14 +216,15 @@ def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType
   := inferInstance
 
 def CocreteCliTest.signature (test : ConcreteCliTest) :
-  List (InstCombine.MTy 0) × (InstCombine.MTy 0) := (test.context, test.ty)
+  List (InstCombine.MTy 0) × (InstCombine.MTy 0) := (test.context.reverse, test.ty)
 
 def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
-  s!"{test.context} → {test.ty}"
+  s!"{test.context.reverse} → {test.ty}"
 
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
  toString := match test.ty with
    | .bitvec w => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
+
 
 -- Define an attribute to add up all LLVM tests
 -- https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/.E2.9C.94.20Stateful.2FAggregating.20Macros.3F/near/301067121

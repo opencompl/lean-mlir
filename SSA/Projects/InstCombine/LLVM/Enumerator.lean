@@ -52,7 +52,7 @@ def BitVec.inputToString : Option (BitVec w) → String
 /-- Render optional inputs in a test as strings. -/
 def ConcreteCliTest.inputToString (test : ConcreteCliTest) : Nat → Array (Option ℤ) → String
   | i, arr =>
-    let tys : List (InstCombine.MTy 0) := test.context
+    let tys : List (InstCombine.MTy 0) := test.context.reverse -- reverse because context is a stack
     match tys[i]? with
     | .none => "<none>"
     | .some (.bitvec (.concrete w)) =>
@@ -137,7 +137,7 @@ def testNameToRowName : String → String
 /-- Produce rows for a `ConcreteCliTest` -/
 def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
   let mut rows := #[]
-  let argTys : List test.code.getTy := test.context
+  let argTys : List test.code.getTy := test.context.reverse -- reverse because context is stack
   let mut args : Array (Array (Option ℤ)) := #[]
   for ty in argTys do
     match ty with
