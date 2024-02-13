@@ -148,12 +148,9 @@ def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
     match evalRes with
       | Except.ok retv =>
         let ty : InstCombine.MTy 0 := test.ty
-        match ty with
+        match hty : ty with
           | .bitvec (.concrete w) =>
-              let h : Goedel.toType test.ty = Option (Std.BitVec w) := by
-                cases test.ty <;> simp [Goedel.toType]
-                rename_i w
-                cases w <;> sorry -- I can't get the pattern matcher to play along
+              let h : Goedel.toType ty = Option (Std.BitVec w) := by simp [hty, Goedel.toType]
               let retv' : Option (Std.BitVec w) := h ▸ retv
               let retv := BitVec.outputToString retv'
               let row : Row := {
