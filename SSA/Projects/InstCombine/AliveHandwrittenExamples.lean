@@ -42,8 +42,8 @@ def alive_DivRemOfSelect_tgt (w : Nat) :=
 
 @[simp]
 theorem BitVec.ofNat_toNat_zero :
-BitVec.toNat (BitVec.ofInt w 0) = 0 := by 
-  simp[BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
+BitVec.toNat (BitVec.ofInt w 0) = 0 := by
+  simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
   norm_cast
 
 theorem alive_DivRemOfSelect (w : Nat) :

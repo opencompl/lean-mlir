@@ -14,7 +14,9 @@ open Ctxt
 theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
   change (BitVec.ofInt w (-1) = (-1 : BitVec w))
   ext i
-  simp [BitVec.ofInt, Neg.neg, Int.neg, Int.negOfNat]
+  simp_all only [BitVec.ofInt, Neg.neg, Int.neg, Int.negOfNat]
+  simp_all only [BitVec.getLsb'_not, BitVec.getLsb'_ofNat_zero, Bool.not_false, BitVec.ofNat_eq_ofNat, BitVec.neg_eq,
+    BitVec.getLsb'_neg_ofNat_one]
 
 open MLIR AST in
 /--

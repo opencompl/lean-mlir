@@ -76,10 +76,6 @@ def Com.decEq (c c' : Com Op Γ α) : Decidable (c = c') :=
   | .ret .., .lete .. => .isFalse Com.noConfusion
   | .lete .., .ret .. => .isFalse Com.noConfusion
 end
-termination_by
-Com.decEq c c' =>  sizeOf c
-Expr.decEq e e' => sizeOf e
-regionVector.decEq as bs => sizeOf as
 
 end DecEqCom
 

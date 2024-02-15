@@ -225,18 +225,18 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
 
 theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat) (htensorlen : List.length tensor < 2 ^ n):
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
-  simp [R.toTensor_getD]
-  simp [ZMod.toInt]
+  simp only [R.toTensor_getD]
+  simp only [ZMod.toInt]
   rw [R.coeff_fromTensor (hqgt1 := hqgt1) (htensorlen := htensorlen)]
   norm_cast
-  simp [Int.cast, ZMod.cast]
+  simp only [Int.cast, ZMod.cast]
   cases q;
   case zero =>
     exfalso
     simp at hqgt1
     exact (Fact.elim hqgt1)
   case succ q' =>
-    simp [ZMod.cast]
+    simp only [ZMod.cast]
     norm_cast
     simp [IntCast.intCast]
     norm_cast
@@ -264,7 +264,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.repres
         rw [toTensor_fromTensor]
         rw [← ZMod.coe_int_cast]
         norm_cast
-        . simp [R.toTensor_length]
+        . simp only [R.toTensor_length]
           have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
           linarith
 
