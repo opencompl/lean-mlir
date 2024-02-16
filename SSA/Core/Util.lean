@@ -122,8 +122,6 @@ def appendTiers : List (List α) → List (List α) → List (List α)
   | [] ,  yss  => yss
   | (xs::xss), (ys::yss) =>  (xs ++ ys) :: (appendTiers xss yss)
 
---notation "\\/" => appendTiers
-
 -- fugly; sorry, Lean doesn't have that neat list comprehension
 /-- In Haskell this was defined inline as `**` -/
 def prodWith (f : α → β → γ) (as : List α) (bs : List β) : List γ :=
@@ -132,13 +130,11 @@ def prodWith (f : α → β → γ) (as : List α) (bs : List β) : List γ :=
 example : prodWith (String.append) ["a", "b"] ["c", "d"] =
   ["ac", "ad", "bc", "bd"] := by decide
 
-def productWith : (α -> β -> γ) → List (List α) → List (List β) → List (List γ)
-  | _, _, []  =>  []
-  | _, [], _  =>  []
-  | f, (xs::xss), yss =>
-    appendTiers (List.map (prodWith f xs ·) yss) (productWith f xss yss)
+def productWith (f : α → β → γ) (xss : List (List α)) (yss : List (List β)) : List (List γ) :=
+  prodWith (prodWith f) xss yss
 
-def List.products : List (List (List α)) → List (List (List α)) := List.foldr (productWith List.cons) [[[]]]
+def List.products : List (List (List α)) → List (List (List α)) :=
+  List.foldr (productWith List.cons) [[[]]]
 
 def productsList : List (List α) -> List (List α) :=
   List.join ∘ List.products ∘ List.map List.toTiers
