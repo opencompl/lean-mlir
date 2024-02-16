@@ -125,13 +125,11 @@ def appendTiers : List (List α) → List (List α) → List (List α)
 
 -- fugly; sorry, Lean doesn't have that neat list comprehension
 /-- In Haskell this was defined inline as `**` -/
-def prodWith : (α → β → γ) → List α → List β → List γ
-  | f, as, bs => Id.run do
-      let mut res := []
-      for a in as do
-        for b in bs do
-         res := res ++ [ f a b]
-      res
+def prodWith (f : α → β → γ) (as : List α) (bs : List β) : List γ :=
+  as.bind fun a => bs.map fun b => f a b
+
+example : prodWith (String.append) ["a", "b"] ["c", "d"] =
+  ["ac", "ad", "bc", "bd"] := by decide
 
 def productWith : (α -> β -> γ) → List (List α) → List (List β) → List (List γ)
   | _, _, []  =>  []
