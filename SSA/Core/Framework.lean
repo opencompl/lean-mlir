@@ -121,10 +121,6 @@ protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] :
   | _, _, .lete _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
 
 end
-termination_by
-  Expr.decidableEq _ _ e₁ e₂ => sizeOf e₁
-  Com.decidableEq _ _ e₁ e₂ => sizeOf e₁
-  HVector.decidableEqReg _ _ e₁ e₂ => sizeOf e₁
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
@@ -202,10 +198,6 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → (toType ty)
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
 end
-termination_by
-  Expr.denote _ _ e _ => sizeOf e
-  Com.denote _ _ e _ => sizeOf e
-  HVector.denote _ _ e => sizeOf e
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -450,7 +442,9 @@ def Lets.getExprAuxDiff {lets : Lets Op Γ₁ Γ₂} {v : Var Γ₂ t}
         simp [Ctxt.get?]
         simp[←ih h h', Ctxt.snoc, Var.toSnoc, List.get?]
       . rcases h with ⟨⟨⟩, ⟨⟩⟩
-        simp[Ctxt.snoc, List.get?, Var.last]
+        intro a
+        simp_all only [Ctxt.get?, Var.val_last, zero_add, forall_true_left, implies_true]
+        exact a
   ⟩
 
 theorem Lets.denote_getExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
@@ -554,10 +548,6 @@ mutual
     | _, .nil        => .nil
     | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end
-termination_by
-  Expr.map e => sizeOf e
-  Com.map e => sizeOf e
-  HVector.mapDialectMorphism e => sizeOf e
 
 end Map
 
@@ -916,7 +906,7 @@ theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} {varMap
   denote_matchVar_of_subset (List.Subset.refl _)
 
 theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
-  simp (config := { arith := true }); exact Nat.zero_le _
+  simp (config := { arith := true })
 
 @[simp]
 theorem zero_eq_zero : (Zero.zero : ℕ) = 0 := rfl
@@ -997,9 +987,9 @@ theorem mem_matchVar
         exact hl
 
 end
-termination_by
-  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
-  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
+--termination_by
+--  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
+--  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/

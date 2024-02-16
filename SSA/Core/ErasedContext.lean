@@ -134,7 +134,7 @@ def casesOn
         _root_.cast (by
           simp [snoc] at h
           subst h
-          simp [Ctxt.Var.last]
+          simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
     | ⟨i+1, h⟩ =>
         toSnoc ⟨i, by simpa [snoc] using h⟩
