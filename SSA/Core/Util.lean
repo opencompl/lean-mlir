@@ -113,8 +113,9 @@ instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ 
 
 def Std.BitVec.width : Std.BitVec w → Nat := fun _ => w
 
--- From Haskell:
+-- Takes a list of values xs and transform it into tiers on which each tier is occupied by a single element from xs.
 def List.toTiers : List α  → List (List α) := (List.groupBy (fun _ _ => false))
+example : [1, 2, 3].toTiers = [[1], [2], [3]] := rfl
 
 def appendTiers : List (List α) → List (List α) → List (List α)
   | xss, []  =>  xss
