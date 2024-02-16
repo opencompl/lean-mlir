@@ -113,36 +113,26 @@ instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ 
 
 @[simp] abbrev Std.BitVec.width : Std.BitVec w → Nat := fun _ => w
 
--- Takes a list of values xs and transform it into tiers on which each tier is occupied by a single element from xs.
-def List.toTiers : List α  → List (List α) := (List.groupBy (fun _ _ => false))
-example : [1, 2, 3].toTiers = [[1], [2], [3]] := rfl
-
-def appendTiers : List (List α) → List (List α) → List (List α)
-  | xss, []  =>  xss
-  | [] ,  yss  => yss
-  | (xs::xss), (ys::yss) =>  (xs ++ ys) :: (appendTiers xss yss)
-
--- fugly; sorry, Lean doesn't have that neat list comprehension
-/-- In Haskell this was defined inline as `**` -/
-def prodWith (f : α → β → γ) (as : List α) (bs : List β) : List γ :=
-  as.bind fun a => bs.map fun b => f a b
-
-example : prodWith (String.append) ["a", "b"] ["c", "d"] =
-  ["ac", "ad", "bc", "bd"] := by decide
-
-def productWith (f : α → β → γ) (xss : List (List α)) (yss : List (List β)) : List (List γ) :=
-  prodWith (prodWith f) xss yss
-
-def List.products : List (List (List α)) → List (List (List α)) :=
-  List.foldr (productWith List.cons) [[[]]]
-
-def productsList : List (List α) -> List (List α) :=
-  List.join ∘ List.products ∘ List.map List.toTiers
+/-- productsList [xs, ys] = [(x, y) for x in xs for y in ys],
+extended to arbitary number of arrays. -/
+def productsList : List (List α) -> List (List α)
+| [] => [[]] -- empty product returns empty tuple.
+| (xs::xss) => Id.run do 
+  let mut out := []
+  let xss' := productsList xss -- make tuples of the other columns.
+  for x in xs do  -- for every element in this column, take product with all other tuples.
+    out := out.append (xss'.map (fun xs => x :: xs))
+  return out
+    
+example : productsList [["a"], ["x", "y", "z"]] = [["a", "x"], ["a", "y"], ["a", "z"]] := rfl
+example : productsList [["a"], ["p", "q"], ["x", "y", "z"]] = 
+  [["a", "p", "x"], ["a", "p", "y"], ["a", "p", "z"],
+   ["a", "q", "x"], ["a", "q", "y"], ["a", "q", "z"]] := rfl
 
 /-- Builds the cartesian product of all arrays in the input.
     Pretty inefficient right now, as it converts back and forth to lists... -/
 def productsArr : Array (Array α) -> Array (Array α) :=
   fun arr =>
-     let ls : List (List α) := Array.map Array.toList arr |>.toList
+     let ls : List (List α) := List.map Array.toList ∘ Array.toList <| arr
      let prods := productsList ls
      List.map List.toArray prods |>.toArray
