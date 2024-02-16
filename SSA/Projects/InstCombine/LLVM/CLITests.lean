@@ -191,7 +191,7 @@ def InstCombine.mkValuation (ctxt : MContext 0) (values : Vector (Option Int) ct
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
-    let valsVec : Vector (Option ℤ) tys.length := ⟨vals,by aesop⟩
+    let valsVec : Vector (Option Int) tys.length := ⟨vals,by aesop⟩
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
