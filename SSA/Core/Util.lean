@@ -111,7 +111,7 @@ instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ 
       none
 
 
-def Std.BitVec.width : Std.BitVec w → Nat := fun _ => w
+@[simp] abbrev Std.BitVec.width : Std.BitVec w → Nat := fun _ => w
 
 -- Takes a list of values xs and transform it into tiers on which each tier is occupied by a single element from xs.
 def List.toTiers : List α  → List (List α) := (List.groupBy (fun _ _ => false))
