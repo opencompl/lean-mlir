@@ -163,14 +163,14 @@ theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k 
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
 theorem const_index_fn_eval
-    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) :
+    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun _ a => f' a) :
     (f.CounterDecorator δ) (i, vstart) = (i + δ, f' vstart) := by
   simp [LoopBody.CounterDecorator, hf]
 
 
 /-- iterating a function that does not access the index (const_index_fn) -/
 theorem const_index_fn_iterate (δ : Int)
-    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
+    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun _ a => f' a) (k : ℕ) :
     (f.CounterDecorator δ)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
   obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
   rw [IndexInvariant.iterate hf]; simp
@@ -185,7 +185,7 @@ theorem constant (δ : Int) (i : Int) (vstart : α) :
 
 /-- iterate the CounterDecorator of a constant function. -/
 theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
-    ((LoopBody.CounterDecorator δ (fun (i : Int) (v : α) => v))^[k]) =
+    ((LoopBody.CounterDecorator δ (fun (_ : Int) (v : α) => v))^[k]) =
     fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by
   funext ⟨i, v⟩
   induction k generalizing i v
