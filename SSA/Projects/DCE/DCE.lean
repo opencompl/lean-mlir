@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import Mathlib.Tactic.Linarith
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
