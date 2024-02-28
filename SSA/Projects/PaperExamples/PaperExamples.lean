@@ -9,6 +9,7 @@ import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.MLIRSyntax.EDSL
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
+import Mathlib.Tactic.Ring
 -- import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false

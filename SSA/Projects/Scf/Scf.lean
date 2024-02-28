@@ -3,6 +3,7 @@ import SSA.Core.Framework
 import SSA.Core.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Util
+import Mathlib.Tactic.Linarith
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
