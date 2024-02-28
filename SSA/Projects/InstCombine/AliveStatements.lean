@@ -6,7 +6,6 @@ import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
-import Mathlib.Data.BitVec.Lemmas
 
 open Std
 open Std.BitVec
