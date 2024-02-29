@@ -108,12 +108,12 @@ theorem bitvec_AddSub_1624 :
 theorem bitvec_AndOrXor_135 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ^^^ C1) &&& C2 = X &&& C2 ^^^ C1 &&& C2
 := by alive_auto
-      try sorry -- worked before
+      done --ext
 
 theorem bitvec_AndOrXor_144 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ||| C1) &&& C2 = (X ||| C1 &&& C2) &&& C2
 := by alive_auto
-      try sorry -- worked before
+      done --ext
 
 theorem bitvec_AndOrXor_698 :
  ∀ (w : Nat) (a b d : BitVec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
@@ -208,7 +208,7 @@ theorem bitvec_AndOrXor_1733 :
 theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
  ∀ (w : Nat) (x C1 C : BitVec w), x ^^^ C1 ||| C = (x ||| C) ^^^ C1 &&& ~~~C
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ -1) &&& B ||| A = A ||| B
