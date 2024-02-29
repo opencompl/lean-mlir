@@ -75,7 +75,6 @@ def coeWidth {m n : Nat} : BitVec m → BitVec n
 instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
   coe := ofBool $ decide p
 
-
 theorem toNat_neg_ofNat_one : (-1#w).toNat = 2^w - 1 := by
   simp only [ofNat_eq_ofNat, toNat_neg, toNat_ofNat]
   cases w
@@ -90,7 +89,7 @@ theorem getLsb'_neg_ofNat_one : (getLsb (-1#w) i) = (i < w) := by
   rw [getLsb_allOnes]
   simp only [decide_eq_true_eq]
 
-@[simp] theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
+theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
    rw [getLsb'_neg_ofNat_one]
    simp
 
