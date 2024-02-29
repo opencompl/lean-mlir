@@ -74,3 +74,31 @@ def coeWidth {m n : Nat} : BitVec m → BitVec n
 
 instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
   coe := ofBool $ decide p
+
+
+theorem toNat_neg_ofNat_one : (-1#w).toNat = 2^w - 1 := by
+  simp only [ofNat_eq_ofNat, toNat_neg, toNat_ofNat]
+  cases w
+  · rfl
+  · rw [Nat.mod_eq_of_lt (a:=1) (by simp), Nat.mod_eq_of_lt (Nat.sub_lt (Nat.two_pow_pos _) Nat.one_pos)]
+
+theorem getLsb_ofNat_zero : getLsb 0#w i = false := by
+  simp only [getLsb, toNat_ofNat, Nat.zero_mod, Nat.zero_testBit]
+
+theorem getLsb'_neg_ofNat_one : (getLsb (-1#w) i) = (i < w) := by
+  rw [negOne_eq_allOnes]
+  rw [getLsb_allOnes]
+  simp only [decide_eq_true_eq]
+
+theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
+   rw [getLsb'_neg_ofNat_one]
+   simp
+
+theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
+  change (BitVec.ofInt w (-1) = (-1 : BitVec w))
+  ext i
+  simp_all only [BitVec.ofInt, Neg.neg, Int.neg, Int.negOfNat]
+  simp_all only [BitVec.getLsb_not, getLsb_ofNat_zero, Bool.not_false, BitVec.ofNat_eq_ofNat,
+    BitVec.neg_eq, Fin.is_lt]
+  simp only [Bool.and_true, decide_True]
+  rw [aaa]
