@@ -11,9 +11,9 @@ open Std
 open Std.BitVec
 open LLVM
 
-@[simp] theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
-   rw [getLsb'_neg_ofNat_one]
-   simp
+@[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
+    getLsb (-1#w) i := by
+  simp [getLsb'_neg_ofNat_one]
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
