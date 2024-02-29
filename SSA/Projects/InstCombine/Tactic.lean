@@ -1,6 +1,7 @@
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
+import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
@@ -10,16 +11,6 @@ import Mathlib.Data.BitVec.Lemmas
 open MLIR AST
 open Std (BitVec)
 open Ctxt
-
-theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
-  sorry
-  /-
-  change (BitVec.ofInt w (-1) = (-1 : BitVec w))
-  ext i
-  simp_all only [BitVec.ofInt, Neg.neg, Int.neg, Int.negOfNat]
-  simp_all only [BitVec.getLsb_not, BitVec.getLsb_ofNat_zero, Bool.not_false, BitVec.ofNat_eq_ofNat, BitVec.neg_eq,
-    BitVec.getLsb'_neg_ofNat_one]
-  -/
 
 open MLIR AST in
 /--
