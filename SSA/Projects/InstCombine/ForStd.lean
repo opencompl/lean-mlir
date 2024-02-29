@@ -90,7 +90,7 @@ theorem getLsb'_neg_ofNat_one : (getLsb (-1#w) i) = (i < w) := by
   rw [getLsb_allOnes]
   simp only [decide_eq_true_eq]
 
-theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
+@[simp] theorem aaa (i : Fin w): getLsb (-1#w) i.val = true := by
    rw [getLsb'_neg_ofNat_one]
    simp
 
