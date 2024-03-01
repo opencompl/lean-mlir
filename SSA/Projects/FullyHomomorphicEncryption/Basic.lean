@@ -34,6 +34,8 @@ variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 -- see: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Way.20to.20recover.20computability.3F/near/322382109
 -- and :https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Groebner.20bases
 
+-- Question: Can we make something like d := 2^n work as a macro?
+
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
 -- theorem zmodq_eq_finq : ZMod q = Fin q := by
