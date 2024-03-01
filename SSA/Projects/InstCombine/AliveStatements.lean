@@ -11,6 +11,9 @@ open LLVM
 
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
     getLsb (-1#w) i := by
+  -- Why is BitVec.negOne_eq_allOnes not a standard simp lemma?
+  -- Or rather, why do we rewrite -1 to allOnes. That seems to be
+  -- an unnecessary complication, no?
   simp [BitVec.negOne_eq_allOnes]
 
 theorem bitvec_AddSub_1043 :
