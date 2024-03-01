@@ -11,7 +11,7 @@ open LLVM
 
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
     getLsb (-1#w) i := by
-  simp only [getLsb'_neg_ofNat_one, Fin.is_lt]
+  simp [BitVec.negOne_eq_allOnes]
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
