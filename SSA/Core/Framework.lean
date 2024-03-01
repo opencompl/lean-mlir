@@ -24,10 +24,28 @@ abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
 inductive EffectKind
 | pure -- pure effects.
 | impure -- impure, lives in IO.
+deriving Repr, DecidableEq
 
+def EffectKind.union : EffectKind → EffectKind → EffectKind
+| .pure, .pure => .pure
+| _, _ => .impure
+
+@[simp] def EffectKind.pure_union_pure_eq : EffectKind.union .pure .pure = .pure := rfl
+@[simp] def EffectKind.impure_union_eq : EffectKind.union .impure e = .impure := rfl
+@[simp] def EffectKind.union_impure_eq : EffectKind.union e .impure = .impure := by cases e <;> rfl
+
+@[reducible]
 def EffectKind.toType2 : EffectKind → Type → Type
 | pure => Id
 | impure => IO
+
+instance : Functor (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : SeqLeft (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : SeqRight (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : Seq (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : Applicative (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : Bind (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : Monad (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 
 structure Signature (Ty : Type) where
   mkEffectful ::
@@ -65,18 +83,19 @@ variable (Op : Type) {Ty : Type} [OpSignature Op Ty]
 mutual
 
 /-- A very simple intrinsically typed expression. -/
-inductive Expr : (Γ : Ctxt Ty) → (ty : Ty) → Type :=
+inductive Expr : (Γ : Ctxt Ty) → (eff : EffectKind) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
+    (eff_eq : eff = OpSignature.effectKind op)
     (args : HVector (Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => Com t.1 t.2)
-      (OpSignature.regSig op)) : Expr Γ ty
+      (OpSignature.regSig op)) : Expr Γ eff ty
 
+-- TODO: add an effectkind parameter to Com
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive Com : Ctxt Ty → Ty → Type where
   | ret (v : Var Γ t) : Com Γ t
-  | lete (e : Expr Γ α) (body : Com (Γ.snoc α) β) : Com Γ β
-
+  | lete (e : Expr Γ eff α) (body : Com (Γ.snoc α) β) : Com Γ β
 end
 
 section
@@ -84,15 +103,15 @@ open Std (Format)
 variable {Op Ty : Type} [OpSignature Op Ty] [Repr Op] [Repr Ty]
 
 mutual
-  def Expr.repr (prec : Nat) : Expr Op Γ t → Format
-    | ⟨op, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
+  def Expr.repr (prec : Nat) : Expr Op Γ eff t → Format
+    | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
   def Com.repr (prec : Nat) : Com Op Γ t → Format
     | .ret v => .align false ++ f!"return {reprPrec v prec}"
     | .lete e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
 end
 
-instance : Repr (Expr Op Γ t) := ⟨flip Expr.repr⟩
+instance : Repr (Expr Op Γ eff t) := ⟨flip Expr.repr⟩
 instance : Repr (Com Op Γ t) := ⟨flip Com.repr⟩
 
 end
@@ -109,8 +128,8 @@ protected instance HVector.decidableEqReg [DecidableEq Op] [DecidableEq Ty] :
     decidable_of_iff (x₁ = x₂ ∧ v₁ = v₂) (by simp)
 
 protected instance Expr.decidableEq [DecidableEq Op] [DecidableEq Ty] :
-    {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Expr Op Γ ty)
-  | _, _, .mk op₁ rfl arg₁ regArgs₁, .mk op₂ eq arg₂ regArgs₂ =>
+    {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Expr Op Γ eff ty)
+  | _, _, .mk op₁ rfl rfl arg₁ regArgs₁, .mk op₂ eq eq' arg₂ regArgs₂ =>
     if ho : op₁ = op₂
     then by
       subst ho
@@ -122,13 +141,17 @@ protected instance Expr.decidableEq [DecidableEq Op] [DecidableEq Ty] :
 protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] :
     {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Com Op Γ ty)
   | _, _, .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
-  | _, _, .lete (α := α₁) e₁ body₁, .lete (α := α₂) e₂ body₂ =>
-    if hα : α₁ = α₂
-    then by
-      subst hα
-      letI := Expr.decidableEq e₁ e₂
-      letI := Com.decidableEq body₁ body₂
-      exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
+  | _, _, .lete (eff := eff₁) (α := α₁) e₁ body₁, .lete (eff := eff₂) (α := α₂) e₂ body₂ =>
+    if heff : eff₁ = eff₂
+    then
+      if hα : α₁ = α₂
+      then by
+        subst heff
+        subst hα
+        letI := Expr.decidableEq e₁ e₂
+        letI := Com.decidableEq body₁ body₂
+        exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
+      else isFalse (by simp_all)
     else isFalse (by simp_all)
   | _, _, .ret _, .lete _ _ => isFalse (fun h => Com.noConfusion h)
   | _, _, .lete _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
@@ -139,7 +162,7 @@ end
     context `Γ₁`-/
 inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   | nil {Γ : Ctxt Ty} : Lets Γ Γ
-  | lete (body : Lets Γ₁ Γ₂) (e : Expr Op Γ₂ t) : Lets Γ₁ (Γ₂.snoc t)
+  | lete (body : Lets Γ₁ Γ₂) (e : Expr Op Γ₂ eff t) : Lets Γ₁ (Γ₂.snoc t)
   deriving Repr
 
 /-
@@ -152,44 +175,54 @@ variable {Op Ty : Type} [OpSignature Op Ty]
 def Com.rec' {motive : (a : Ctxt Ty) → (a_1 : Ty) → Com Op a a_1 → Sort u} :
     (ret : {Γ : Ctxt Ty} → {t : Ty} → (v : Var Γ t) → motive Γ t (Com.ret v)) →
     (lete : {Γ : Ctxt Ty} →
-        {α β : Ty} →
-          (e : Expr Op Γ α) →
+        {α β : Ty} → {eff : EffectKind} →
+          (e : Expr Op Γ eff α) →
             (body : Com Op (Ctxt.snoc Γ α) β) →
               motive (Ctxt.snoc Γ α) β body → motive Γ β (Com.lete e body)) →
       {a : Ctxt Ty} → {a_1 : Ty} → (t : Com Op a a_1) → motive a a_1 t
   | hret, _, _, _, Com.ret v => hret v
   | hret, hlete, _, _, Com.lete e body => hlete e body (Com.rec' hret hlete body)
 
-def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ ty) : Op :=
-  Expr.casesOn e (fun op _ _ _ => op)
+def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) : Op :=
+  Expr.casesOn e (fun op _ _ _ _ => op)
 
-theorem Expr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ ty) :
+theorem Expr.eff_eq {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
+    eff = OpSignature.effectKind e.op :=
+  Expr.casesOn e (fun _ _ eff_eq _ _ => eff_eq)
+
+theorem Expr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
     ty = OpSignature.outTy e.op :=
-  Expr.casesOn e (fun _ ty_eq _ _ => ty_eq)
+  Expr.casesOn e (fun _ ty_eq _ _ _ => ty_eq)
 
-def Expr.args {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ ty) :
+def Expr.args {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
     HVector (Var Γ) (OpSignature.sig e.op) :=
-  Expr.casesOn e (fun _ _ args _ => args)
+  Expr.casesOn e (fun _ _ _ args _ => args)
 
-def Expr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ ty) :
+def Expr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
     HVector (fun t : Ctxt Ty × Ty => Com Op t.1 t.2) (OpSignature.regSig e.op) :=
-  Expr.casesOn e (fun _ _ _ regArgs => regArgs)
+  Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
 /-! Projection equations for `Expr` -/
 @[simp]
-theorem Expr.op_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+theorem Expr.op_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (eff_eq : eff = OpSignature.effectKind op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
-    (Expr.mk op ty_eq args regArgs).op = op := rfl
+    (Expr.mk op ty_eq eff_eq args regArgs).op = op := rfl
 
 @[simp]
-theorem Expr.args_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+theorem Expr.args_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (eff_eq : eff = OpSignature.effectKind op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (Expr.mk op ty_eq args regArgs).args = args := rfl
+    (Expr.mk op ty_eq eff_eq args regArgs).args = args := rfl
 
 @[simp]
-theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSignature.outTy op)
+theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (eff_eq : eff = OpSignature.effectKind op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
-    (Expr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
+    (Expr.mk op ty_eq eff_eq args regArgs).regArgs = regArgs := rfl
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
@@ -198,16 +231,16 @@ variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
 mutual
 
 def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com Op t.1 t.2) l) →
-    HVector (fun t => t.1.Valuation → toType t.2) l
+    HVector (fun t => t.1.Valuation → EffectKind.impure.toType2 (toType t.2)) l
   | _, .nil => HVector.nil
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
-def Expr.denote : {ty : Ty} → (e : Expr Op Γ ty) → (Γv : Valuation Γ) → (toType ty)
-  | _, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
+def Expr.denote : {ty : Ty} → (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toType2 (toType ty)
+  | _, ⟨op, Eq.refl _, Eq.refl _, args, regArgs⟩, Γv =>
     OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
-def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → (toType ty)
-  | .ret e, Γv => Γv e
+def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → EffectKind.impure.toType2 (toType ty)
+  | .ret e, Γv => pure (Γv e)
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
 end
@@ -1232,8 +1265,6 @@ theorem denote_rewritePeephole (fuel : ℕ)
   simp[rewritePeephole, denote_rewritePeephole_go]
 end SimpPeepholeApplier
 
-<<<<<<< Updated upstream
-=======
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
 leaving behind a bare Lean level proposition to be proven.
