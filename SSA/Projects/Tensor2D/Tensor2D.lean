@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
 import SSA.Core.Util
+import Mathlib.Tactic.Linarith
 
 namespace Tensor2D
 /-- Type of tensor dimensions and indexes into tensor dimensions.
