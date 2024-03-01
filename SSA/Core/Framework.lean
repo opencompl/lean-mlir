@@ -13,26 +13,11 @@ import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 open Ctxt (Var VarSet Valuation)
 open Goedel (toType)
 
-/-- Type with no inhabitant -/
-inductive Void where
-def Void.elim (v : Void) : α := nomatch v
-
-/- # Classes -/
-
-abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
-
+/- Kinds of effects, either pure or impure -/
 inductive EffectKind
 | pure -- pure effects.
 | impure -- impure, lives in IO.
 deriving Repr, DecidableEq
-
-def EffectKind.union : EffectKind → EffectKind → EffectKind
-| .pure, .pure => .pure
-| _, _ => .impure
-
-@[simp] def EffectKind.pure_union_pure_eq : EffectKind.union .pure .pure = .pure := rfl
-@[simp] def EffectKind.impure_union_eq : EffectKind.union .impure e = .impure := rfl
-@[simp] def EffectKind.union_impure_eq : EffectKind.union e .impure = .impure := by cases e <;> rfl
 
 @[reducible]
 def EffectKind.toType2 : EffectKind → Type → Type
@@ -46,6 +31,113 @@ instance : Seq (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Applicative (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Bind (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Monad (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+
+@[simp]
+def EffectKind.le : EffectKind → EffectKind → Prop
+| .pure, _ => True
+| .impure, .impure => True
+| _, _ => False
+
+@[simp]
+def EffectKind.decLe (e e' : EffectKind) : Decidable (EffectKind.le e e') :=
+  match e with
+  | .pure => match e' with
+    | .pure => isTrue (by simp)
+    | .impure => isTrue (by simp)
+  | .impure => match e' with
+    | .pure => isFalse (by simp)
+    | .impure => isTrue (by simp)
+
+
+instance : LE EffectKind where le := EffectKind.le
+instance : DecidableRel (LE.le (α := EffectKind)) := EffectKind.decLe
+
+@[simp]
+theorem EffectKind.eff_eq_of_le_pure {e : EffectKind}
+    (he : e ≤ EffectKind.pure) : e = EffectKind.pure := by
+  cases e <;> simp_all [LE.le]
+
+
+@[simp] def EffectKind.elim_impure_le_pure (he : EffectKind.impure ≤ EffectKind.pure) : False := by simp[LE.le] at he
+@[simp] def EffectKind.pure_le_pure : EffectKind.pure ≤ EffectKind.pure := by simp[LE.le]
+@[simp] def EffectKind.pure_le_impure : EffectKind.pure ≤ EffectKind.impure := by simp[LE.le]
+@[simp] def EffectKind.impure_le_impure : EffectKind.impure ≤ EffectKind.impure := by simp[LE.le]
+
+@[simp]
+theorem EffectKind.le_refl (e : EffectKind) : e ≤ e := by cases e <;> simp [LE.le]
+
+@[simp]
+theorem EffectKind.le_trans {e1 e2 e3 : EffectKind} (h12: e1 ≤ e2) (h23: e2 ≤ e3) : e1 ≤ e3 := by
+  cases e1 <;> cases e2 <;> cases e3 <;> simp_all
+
+@[simp]
+theorem EffectKind.le_antisym {e1 e2 : EffectKind} (h12: e1 ≤ e2) (h21: e2 ≤ e1) : e1 ≤ e2 := by
+  cases e1 <;> cases e2 <;> simp_all
+
+def EffectKind.union : EffectKind → EffectKind → EffectKind
+| .pure, .pure => .pure
+| _, _ => .impure
+
+@[simp] def EffectKind.pure_union_pure_eq : EffectKind.union .pure .pure = .pure := rfl
+@[simp] def EffectKind.impure_union_eq : EffectKind.union .impure e = .impure := rfl
+@[simp] def EffectKind.union_impure_eq : EffectKind.union e .impure = .impure := by cases e <;> rfl
+
+
+/-- Given (e1 ≤ e2), we can get a morphism from e1.toType2 x → e2.toType2 x.
+Said diffeently, this is a functor from the skeletal category of EffectKind to Lean. -/
+def EffectKind.toType2_hom {e1 e2 : EffectKind} {α : Type}
+  (_hleq : e1 ≤ e2) (v1 : e1.toType2 α) : e2.toType2 α :=
+match e2 with
+| .pure =>
+  match e1 with
+  | .pure => v1
+  | .impure => by contradiction
+| .impure =>
+  match e1 with
+    | .pure => return v1
+    | .impure => v1
+
+@[simp]
+theorem EffectKind.toType2_hom_pure_pure_eq_id (hleq : EffectKind.pure ≤ EffectKind.pure) :
+    EffectKind.toType2_hom hleq (α := α) = id := by
+  funext x
+  simp [EffectKind.toType2_hom]
+
+@[simp]
+theorem EffectKind.toType2_hom_pure_impure_eq_Pure (hleq : EffectKind.pure ≤ EffectKind.impure) :
+    EffectKind.toType2_hom hleq (α := α) = Pure.pure  := by
+  funext x
+  simp [EffectKind.toType2_hom]
+
+@[simp]
+theorem EffectKind.toType2_hom_impure_impure_eq_id (hleq : EffectKind.impure ≤ EffectKind.impure) :
+    EffectKind.toType2_hom hleq (α := α) = id  := by
+  funext x
+  simp [EffectKind.toType2_hom]
+
+/-- toType2 is functorial: it preserves identity. -/
+@[simp]
+theorem EffectKind.toType2_hom_eq_id (hleq : eff ≤ eff) :
+    EffectKind.toType2_hom hleq (α := α) = id  := by
+  funext x
+  cases eff <;> simp
+
+/-- toType2 is functorial: it preserves composition. -/
+def EffectKind.toType2_hom_compose {e1 e2 e3 : EffectKind} {α : Type}
+    (h12 : e1 ≤ e2)
+    (h23: e2 ≤ e3)
+    (h13: e1 ≤ e3 := EffectKind.le_trans h12 h23) :
+    ((EffectKind.toType2_hom (α := α) h23) ∘ (EffectKind.toType2_hom h12)) = EffectKind.toType2_hom h13 := by
+  funext x
+  cases e1 <;> cases e2 <;> cases e3 <;> try simp_all [Function.comp] <;> contradiction
+
+/-- Type with no inhabitant -/
+inductive Void where
+def Void.elim (v : Void) : α := nomatch v
+
+/- # Classes -/
+
+abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
 
 structure Signature (Ty : Type) where
   mkEffectful ::
@@ -69,7 +161,6 @@ def OpSignature.regSig     := Signature.regSig ∘ s.signature
 def OpSignature.outTy      := Signature.outTy ∘ s.signature
 def OpSignature.effectKind   := Signature.effectKind ∘ s.signature
 
-end
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
@@ -83,17 +174,20 @@ variable (Op : Type) {Ty : Type} [OpSignature Op Ty]
 
 mutual
 
-/-- A very simple intrinsically typed expression. -/
+/- An intrinsically typed expression whose effect is *at most* EffectKind -/
 inductive Expr : (Γ : Ctxt Ty) → (eff : EffectKind) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (eff_eq : eff = OpSignature.effectKind op)
+    (eff_le : OpSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) <| OpSignature.sig op)
     (regArgs : HVector (fun t : Ctxt Ty × Ty => Com t.1 t.2)
       (OpSignature.regSig op)) : Expr Γ eff ty
 
--- TODO: add an effectkind parameter to Com
-/-- A very simple intrinsically typed program: a sequence of let bindings. -/
+
+/-- A very simple intrinsically typed program: a sequence of let bindings.
+Note that the `EffectKind` is uniform: if a `Com` is `pure`, then the expression and its body are pure,
+and if a `Com` is `impure`, then both the expression and the body are impure!
+-/
 inductive Com : Ctxt Ty → Ty → Type where
   | ret (v : Var Γ t) : Com Γ t
   | lete (e : Expr Γ eff α) (body : Com (Γ.snoc α) β) : Com Γ β
@@ -109,6 +203,7 @@ mutual
 
   def Com.repr (prec : Nat) : Com Op Γ t → Format
     | .ret v => .align false ++ f!"return {reprPrec v prec}"
+
     | .lete e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
 end
 
@@ -130,7 +225,7 @@ protected instance HVector.decidableEqReg [DecidableEq Op] [DecidableEq Ty] :
 
 protected instance Expr.decidableEq [DecidableEq Op] [DecidableEq Ty] :
     {Γ : Ctxt Ty} → {ty : Ty} → DecidableEq (Expr Op Γ eff ty)
-  | _, _, .mk op₁ rfl rfl arg₁ regArgs₁, .mk op₂ eq eq' arg₂ regArgs₂ =>
+  | _, _, .mk op₁ rfl heff arg₁ regArgs₁, .mk op₂ eq heff' arg₂ regArgs₂ =>
     if ho : op₁ = op₂
     then by
       subst ho
@@ -188,7 +283,7 @@ def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) : Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
 
 theorem Expr.eff_eq {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
-    eff = OpSignature.effectKind e.op :=
+  OpSignature.effectKind e.op ≤ eff :=
   Expr.casesOn e (fun _ _ eff_eq _ _ => eff_eq)
 
 theorem Expr.ty_eq {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
@@ -207,21 +302,21 @@ def Expr.regArgs {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) :
 @[simp]
 theorem Expr.op_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (eff_eq : eff = OpSignature.effectKind op)
+    (eff_eq : OpSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
     (Expr.mk op ty_eq eff_eq args regArgs).op = op := rfl
 
 @[simp]
 theorem Expr.args_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (eff_eq : eff = OpSignature.effectKind op)
+    (eff_eq : OpSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
     (Expr.mk op ty_eq eff_eq args regArgs).args = args := rfl
 
 @[simp]
 theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
-    (eff_eq : eff = OpSignature.effectKind op)
+    (eff_eq : OpSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
     (Expr.mk op ty_eq eff_eq args regArgs).regArgs = regArgs := rfl
 
@@ -237,8 +332,8 @@ def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com O
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
 def Expr.denote : {ty : Ty} → (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toType2 (toType ty)
-  | _, ⟨op, Eq.refl _, Eq.refl _, args, regArgs⟩, Γv =>
-    OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
+  | _, ⟨op, Eq.refl _, heff, args, regArgs⟩, Γv =>
+    EffectKind.toType2_hom heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → EffectKind.impure.toType2 (toType ty)
   | .ret e, Γv => pure (Γv e)
