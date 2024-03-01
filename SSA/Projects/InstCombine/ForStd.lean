@@ -75,6 +75,8 @@ def coeWidth {m n : Nat} : BitVec m → BitVec n
 instance decPropToBitvec1 (p : Prop) [Decidable p] : CoeDep Prop p (BitVec 1) where
   coe := ofBool $ decide p
 
+-- This should become a lot simpler, if not obsolete after:
+-- https://github.com/leanprover/lean4/pull/3474
 theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
   change (BitVec.ofInt w (-1) = (-1 : BitVec w))
   ext i
