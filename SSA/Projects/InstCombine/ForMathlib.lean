@@ -6,8 +6,6 @@ import Mathlib.Data.BitVec.Defs
 namespace Std.BitVec
 open Nat
 
-lemma natCast_eq (x w : Nat) : Nat.cast x = x#w       := rfl
-
 theorem ofFin_intCast (z : ℤ) : ofFin (z : Fin (2^w)) = Int.cast z := by
   cases w
   case zero =>
@@ -19,7 +17,7 @@ theorem ofFin_intCast (z : ℤ) : ofFin (z : Fin (2^w)) = Int.cast z := by
     · rfl
     · simp only [cast_add, cast_one, neg_add_rev]
       rw [← add_ofFin, ofFin_neg, ofFin_ofNat, ofNat_eq_ofNat, ofFin_neg, ofFin_natCast,
-        natCast_eq, negOne_eq_allOnes, ← sub_toAdd, allOnes_sub_eq_not]
+        natCast_eq_ofNat, negOne_eq_allOnes, ← sub_toAdd, allOnes_sub_eq_not]
 
 theorem toFin_intCast (z : ℤ) : toFin (z : BitVec w) = z := by
   apply toFin_inj.mpr <| (ofFin_intCast z).symm
