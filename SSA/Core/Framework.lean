@@ -73,7 +73,8 @@ end
 
 class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
-    HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
+    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → EffectKind.impure.toType2 (toType t.2))
+            (OpSignature.regSig op)) →
     ((OpSignature.effectKind op).toType2 (toType <| OpSignature.outTy op))
 
 /- # Datastructures -/
@@ -241,8 +242,12 @@ def Expr.denote : {ty : Ty} → (e : Expr Op Γ eff ty) → (Γv : Valuation Γ)
 
 def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → EffectKind.impure.toType2 (toType ty)
   | .ret e, Γv => pure (Γv e)
-  | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
-
+  | .lete (eff := eff) e body, Γv => do
+     match eff with
+     | .pure => body.denote (Γv.snoc (e.denote Γv))
+     | .impure => do
+       let x ← e.denote Γv
+       body.denote (Γv.snoc x)
 end
 
 /-
