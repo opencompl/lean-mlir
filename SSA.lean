@@ -7,6 +7,7 @@ import SSA.Core.Framework
 -- ========
 
 -- Eventually, all projects must be imported.
+/-
 import SSA.Projects.InstCombine.Alive
 import SSA.Projects.FullyHomomorphicEncryption
 import SSA.Projects.Tensor1D.Tensor1D
@@ -16,6 +17,7 @@ import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 import SSA.Projects.PaperExamples.PaperExamples
 import SSA.Projects.Scf.Scf
+-/
 
 
 -- EXPERIMENTAL
