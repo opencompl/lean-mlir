@@ -73,6 +73,8 @@ theorem EffectKind.eff_eq_of_le_pure {e : EffectKind}
 @[simp] def EffectKind.pure_le_pure : EffectKind.pure ≤ EffectKind.pure := by simp[LE.le]
 @[simp] def EffectKind.pure_le_impure : EffectKind.pure ≤ EffectKind.impure := by simp[LE.le]
 @[simp] def EffectKind.impure_le_impure : EffectKind.impure ≤ EffectKind.impure := by simp[LE.le]
+@[simp] def EffectKind.pure_le (e : EffectKind) : EffectKind.pure ≤ e := by cases e <;> simp
+@[simp] def EffectKind.le_impure (e : EffectKind) : e ≤ EffectKind.impure := by cases e <;> simp
 
 @[simp]
 theorem EffectKind.le_refl (e : EffectKind) : e ≤ e := by cases e <;> simp [LE.le]
@@ -269,7 +271,7 @@ end
     context `Γ₁`-/
 inductive Lets : Ctxt Ty → Ctxt Ty → Type where
   | nil {Γ : Ctxt Ty} : Lets Γ Γ
-  | lete (body : Lets Γ₁ Γ₂) (e : Expr Op Γ₂ .pure t) : Lets Γ₁ (Γ₂.snoc t)
+  | lete (eff : EffectKind) (body : Lets Γ₁ Γ₂) (e : Expr Op Γ₂ eff t) : Lets Γ₁ (Γ₂.snoc t)
   deriving Repr
 
 /-
@@ -356,6 +358,18 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → EffectKind.impure.toT
        body.denote (Γv.snoc x)
 end
 
+/-- Denote an 'Expr' in an unconditionally impure fashion -/
+@[simp]
+def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toType2 (toType ty) :=
+  eff.toType2_hom (eff.le_impure) (e.denote Γv)
+
+/-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
+theorem Com.denote_lete_eq_of_denoteImpure_expr {e : Expr Op Γ eff α} {Γv: Valuation Γ} {v : toType α} :
+    (Com.lete eff e body).denote Γv = (e.denoteImpure Γv).bind (fun v => body.denote (Γv.snoc v)) := by
+  funext state
+  cases eff <;> simp_all [denote, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
+
+
 /-- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
 theorem Com.denote_lete_eq_of_denote_expr_eq {e : Expr Op Γ eff α} {Γv: Valuation Γ} {v : toType α}
   (hv : e.denote Γv = eff.return v) : (Com.lete eff e body).denote Γv = body.denote (Γv.snoc v) := by
@@ -380,16 +394,13 @@ args, since there now are equation lemmas for it.
 #eval Lean.Meta.getEqnsFor? ``Expr.denote
 #eval Lean.Meta.getEqnsFor? ``Com.denote
 
-def Lets.denote : Lets Op Γ₁ Γ₂ → Valuation Γ₁ → Valuation Γ₂
-  | .nil => id
-  | .lete e body => fun ll t v => by
-    cases v using Var.casesOn with
-    | last =>
-      apply body.denote
-      apply e.denote
-      exact ll
-    | toSnoc v =>
-      exact e.denote ll v
+def Lets.denote (lets : Lets Op Γ₁ Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toType2 <| Valuation Γ₂) :=
+  match lets with
+  | .nil => EffectKind.impure.return Γ₁'v
+  | .lete _ lets' e => do
+      let Γ₂'v ← lets'.denote Γ₁'v
+      let v ← e.denoteImpure Γ₂'v
+      return (Γ₂'v.snoc v)
 
 def Expr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : Expr Op Γ eff ty) → Expr Op Γ' eff ty
@@ -457,7 +468,8 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt Ty) (ty : Ty) where
   var : Var Γ_out_new ty
 
 /--
-  Add a program to a list of `Lets`, returning
+  Add a program to the end of a list of `Lets`,
+    given a mapping from variables at the end of `lets`(`Γ_out`) to variables used by the `Com` (`Δ`) returning
   * the new lets
   * a map from variables of the out context of the old lets to the out context of the new lets
   * a variable in the new out context, which is semantically equivalent to the return variable of
@@ -465,34 +477,37 @@ structure addProgramToLets.Result (Γ_in Γ_out : Ctxt Ty) (ty : Ty) where
 -/
 def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : Com Op Δ ty →
     addProgramToLets.Result Op Γ_in Γ_out ty
-  | .ret v => ⟨lets, .zero _, varsMap v⟩
-  | .lete (α:=α) e body =>
-      let lets := Lets.lete lets (e.changeVars varsMap)
+  | Com.ret v => ⟨lets, .zero _, varsMap v⟩
+  | Com.lete eff e body =>
+      let lets := Lets.lete eff lets (e.changeVars varsMap)
       let ⟨lets', diff, v'⟩ := addProgramToLets lets (varsMap.snocMap) body
       ⟨lets', diff.unSnoc, v'⟩
 
 theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
     (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
-    (addProgramToLets lets map com).lets.denote ll ((addProgramToLets lets map com).diff.toHom var)
-    = lets.denote ll var := by
+    ((addProgramToLets lets map com).lets.denote ll).map (fun Γ_out'v => Γ_out'v ((addProgramToLets lets map com).diff.toHom var))
+    = (lets.denote ll).map (fun Γ_out'v => Γ_out'v var) := by
   induction com using Com.rec' generalizing lets Γ_out
   next =>
     rfl
   next e body ih =>
-    -- Was just `simp [addProgramToLets, ih, Lets.denote]
     rw [addProgramToLets]
-    simp [ih, Lets.denote]
+    simp [ih]
+    rw [Lets.denote]
+    sorry
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
     ∀ (ll : Valuation Γ_in),
-      (addProgramToLets lets map com).lets.denote ll (addProgramToLets lets map com).var
-      = com.denote (fun _ v => lets.denote ll <| map v) := by
+      ((addProgramToLets lets map com).lets.denote ll).map (fun Γ_out'v => Γ_out'v <| (addProgramToLets lets map com).var)
+      = (lets.denote ll) >>= (fun Γ_out'v => com.denote (Γ_out'v.comap map)) := by
   intro ll
   induction com using Com.rec' generalizing lets Γ_out
   next =>
     rfl
   next e body ih =>
+    sorry
     -- Was just `simp only [addProgramToLets, ih, Com.denote]`
+    /-
     rw [addProgramToLets]
     simp only [ih, Com.denote]
     congr
@@ -500,26 +515,30 @@ theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : C
     cases v using Var.casesOn
     . rfl
     . simp [Lets.denote]; rfl
+    -/
 
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ t₂) → Com Op Γ₁ t₂
   | Lets.nil, inputProg => inputProg
-  | Lets.lete body e, inputProg =>
-    addLetsAtTop body (.lete e inputProg)
+  | Lets.lete eff body e, inputProg =>
+    addLetsAtTop body (.lete eff e inputProg)
 
 theorem denote_addLetsAtTop :
     (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ t₂) →
     (addLetsAtTop lets inputProg).denote =
-      inputProg.denote ∘ lets.denote
+      inputProg.denote <=< lets.denote
   | Lets.nil, inputProg => rfl
-  | Lets.lete body e, inputProg => by
+  | Lets.lete eff body e, inputProg => by
     rw [addLetsAtTop, denote_addLetsAtTop body]
     funext
     simp only [Com.denote, Ctxt.Valuation.snoc, Function.comp_apply, Lets.denote,
       eq_rec_constant]
     congr
-    funext t v
-    cases v using Var.casesOn <;> simp
+    sorry 
+    /-
+      funext t v
+      cases v using Var.casesOn <;> simp
+    -/
 
 /-- `addProgramInMiddle v map lets rhs inputProg` appends the programs
 `lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
@@ -532,17 +551,24 @@ def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁)
   let r := addProgramToLets lets map rhs
   addLetsAtTop r.lets <| inputProg.changeVars (r.diff.toHom.with v r.var)
 
+/-
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (s : Valuation Γ₁)
     (map : Γ₃.Hom Γ₂)
     (lets : Lets Op Γ₁ Γ₂) (rhs : Com Op Γ₃ t₁)
     (inputProg : Com Op Γ₂ t₂) :
-    (addProgramInMiddle v map lets rhs inputProg).denote s =
-      inputProg.denote (fun t' v' =>
-        let s' := lets.denote s
-        if h : ∃ h : t₁ = t', h ▸ v = v'
-        then h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
-        else s' v') := by
+    (addProgramInMiddle v map lets rhs inputProg).denote s = (do
+      let s12 ← lets.denote s
+      let s2 ← inputProg.denote s12
+      let s3 ← rhs.denote 
+
+      if h : ∃ h : t₁ = t', h ▸ v = v'
+      then do
+        let s'' ← rhs.denote (fun t' v' => s' (map v'))
+        sorry -- h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
+      else return (s' v')) := by sorry
+-/
+/-
   simp only [addProgramInMiddle, Ctxt.Hom.with, denote_addLetsAtTop, Function.comp_apply,
               Com.denote_changeVars]
   congr
@@ -559,6 +585,7 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     simp at h₁
   next =>
     apply denote_addProgramToLets_lets
+-/
 
 structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty] (Γ : Ctxt Ty) (t : Ty) where
   {Γ_out : Ctxt Ty}
@@ -572,11 +599,12 @@ def Com.toLets {t : Ty} : Com Op Γ t → FlatCom Op Γ t :=
 where
   go {Γ_out} (lets : Lets Op Γ Γ_out) : Com Op Γ_out t → FlatCom Op Γ t
     | .ret v => ⟨lets, v⟩
-    | .lete e body => go (lets.lete e) body
+    | .lete eff e body => go (lets.lete eff e) body
 
 @[simp]
 theorem Com.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : Com Op Γ_out t) (s : Valuation Γ_in) :
-    (toLets.go lets com).lets.denote s (toLets.go lets com).ret = com.denote (lets.denote s) := by
+    ((toLets.go lets com).lets.denote s).map (fun Γ_out'v => Γ_out'v <| (toLets.go lets com).ret) = com.denote =<< (lets.denote s) := sorry
+/-
   induction com using Com.rec'
   . rfl
   next ih =>
@@ -586,22 +614,23 @@ theorem Com.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : Com Op Γ_out 
     congr
     funext _ v
     cases v using Var.casesOn <;> simp[Lets.denote]
+-/
 
 @[simp]
 theorem Com.denote_toLets (com : Com Op Γ t) (s : Valuation Γ) :
-    com.toLets.lets.denote s com.toLets.ret = com.denote s :=
+    (com.toLets.lets.denote s).map (fun Γv => Γv com.toLets.ret) = com.denote s :=
   denote_toLets_go ..
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
     without adjusting variables
 -/
 def Lets.getExprAux {Γ₁ Γ₂ : Ctxt Ty} {t : Ty} : Lets Op Γ₁ Γ₂ → Var Γ₂ t →
-    Option ((Δ : Ctxt Ty) × Expr Op Δ t)
+    Option ((Δ : Ctxt Ty) × (eff : EffectKind) × Expr Op Δ eff t)
   | .nil, _ => none
-  | .lete lets e, v => by
+  | .lete eff lets e, v => by
     cases v using Var.casesOn with
       | toSnoc v => exact (Lets.getExprAux lets v)
-      | last => exact some ⟨_, e⟩
+      | last => exact some ⟨_, eff, e⟩
 
 /-- If `getExprAux` succeeds,
     then the orignal context `Γ₁` is a prefix of the local context `Δ`, and
@@ -628,10 +657,11 @@ def Lets.getExprAuxDiff {lets : Lets Op Γ₁ Γ₂} {v : Var Γ₂ t}
   ⟩
 
 theorem Lets.denote_getExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
-    {lets : Lets Op Γ₁ Γ₂} {v : Var Γ₂ t} {e : Expr Op Δ t}
-    (he : lets.getExprAux v = some ⟨Δ, e⟩)
+    {lets : Lets Op Γ₁ Γ₂} {v : Var Γ₂ t} {e : Expr Op Δ eff t}
+    (he : lets.getExprAux v = some ⟨Δ, eff, e⟩)
     (s : Valuation Γ₁) :
-    (e.changeVars (getExprAuxDiff he).toHom).denote (lets.denote s) = (lets.denote s) v := by
+    (lets.denote s) >>= (e.changeVars (getExprAuxDiff he).toHom).denoteImpure = (lets.denote s).map (fun Γ₂v => Γ₂v v) := by sorry
+/-
   rw [getExprAuxDiff]
   induction lets
   next => simp [getExprAux] at he
@@ -647,25 +677,30 @@ theorem Lets.denote_getExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
         Option.mem_def, Option.some.injEq] at he
       rcases he with ⟨⟨⟩, ⟨⟩⟩
       simp [denote]
-
+-/
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
-def Lets.getExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ Γ₂) {t : Ty} (v : Var Γ₂ t) :
-    Option (Expr Op Γ₂ t) :=
+def Lets.getExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ Γ₂) {t : Ty} (v : Var Γ₂ t) (eff : EffectKind) :
+    Option (Expr Op Γ₂ eff t) :=
   match h : getExprAux lets v with
   | none => none
-  | some r => r.snd.changeVars (getExprAuxDiff h).toHom
+  | some ⟨_, eff', e⟩ =>
+    if heff : eff = eff'
+    then heff ▸ e.changeVars (getExprAuxDiff h).toHom
+    else .none
 
 theorem Lets.denote_getExpr {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ Γ₂} → {t : Ty} →
-    {v : Var Γ₂ t} → {e : Expr Op Γ₂ t} → (he : lets.getExpr v = some e) → (s : Valuation Γ₁) →
-    e.denote (lets.denote s) = (lets.denote s) v := by
+    {v : Var Γ₂ t} → {e : Expr Op Γ₂ eff t} → (he : lets.getExpr v eff = some e) → (s : Valuation Γ₁) →
+    (lets.denote s) >>= e.denoteImpure = (lets.denote s).map (fun Γ₂'v => Γ₂'v v) := sorry
+/-
   intros lets _ v e he s
   simp [getExpr] at he
   split at he
   . contradiction
   . rw[←Option.some_inj.mp he, denote_getExprAux]
+-/
 
 
 /-
@@ -679,8 +714,8 @@ instance : Functor RegionSignature where
   map f := List.map fun (tys, ty) => (f <$> tys, f ty)
 
 instance : Functor Signature where
-  map := fun f ⟨sig, regSig, outTy⟩ =>
-    ⟨f <$> sig, f <$> regSig, f outTy⟩
+  map := fun f ⟨sig, regSig, outTy, effKind⟩ =>
+    ⟨f <$> sig, f <$> regSig, f outTy, effKind⟩
 
 /-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
@@ -712,8 +747,8 @@ mutual
     | .ret v          => .ret v.toMap
     | .lete eff body rest => .lete eff body.map rest.map
 
-  def Expr.map : Expr Op (Ty:=Ty) Γ ty → Expr Op' (Ty:=Ty') (Γ.map f.mapTy) (f.mapTy ty)
-    | ⟨op, Eq.refl _, args, regs⟩ => ⟨
+  def Expr.map : Expr Op (Ty:=Ty) Γ eff ty → Expr Op' (Ty:=Ty') (Γ.map f.mapTy) eff (f.mapTy ty)
+    | ⟨op, Eq.refl _, effLe, args, regs⟩ => ⟨
         f.mapOp op,
         (f.preserves_outTy _).symm,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
@@ -771,7 +806,7 @@ theorem HVector.vars_cons {t  : Ty} {l : List Ty}
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
 def Lets.vars : Lets Op Γ_in Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
-  | .lete lets e, v => by
+  | .lete eff lets e, v => by
       cases v using Var.casesOn with
       | toSnoc v => exact lets.vars v
       -- this is wrong
@@ -797,7 +832,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
     (v : Var Γ_out t)
     {s₁ s₂ : Valuation Γ_in}
     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
-    lets.denote s₁ v = lets.denote s₂ v := by
+    (lets.denote s₁).map (Valuation.eval · v) = (lets.denote s₂).map (Valuation.eval · v) := by
   induction lets generalizing t
   next =>
     simp [vars] at h
