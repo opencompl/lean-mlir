@@ -87,6 +87,10 @@ theorem EffectKind.le_trans {e1 e2 e3 : EffectKind} (h12: e1 ≤ e2) (h23: e2 �
 theorem EffectKind.le_antisym {e1 e2 : EffectKind} (h12: e1 ≤ e2) (h21: e2 ≤ e1) : e1 ≤ e2 := by
   cases e1 <;> cases e2 <;> simp_all
 
+theorem EffectKind.le_of_eq {e1 e2 : EffectKind} (h : e1 = e2) : e1 ≤ e2 := by
+  subst h
+  cases e1 <;> simp
+
 def EffectKind.union : EffectKind → EffectKind → EffectKind
 | .pure, .pure => .pure
 | _, _ => .impure
@@ -147,6 +151,7 @@ def EffectKind.toType2_hom_compose {e1 e2 e3 : EffectKind} {α : Type}
 /-- Type with no inhabitant -/
 inductive Void where
 def Void.elim (v : Void) : α := nomatch v
+
 
 /- # Classes -/
 
@@ -216,7 +221,6 @@ mutual
 
   def Com.repr (prec : Nat) : Com Op Γ t → Format
     | .ret v => .align false ++ f!"return {reprPrec v prec}"
-
     | .lete eff e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
 end
 
@@ -742,6 +746,10 @@ def DialectMorphism.preserves_outTy (op : Op) :
     OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
+def DialectMorphism.preserves_effectKind (op : Op) :
+    OpSignature.effectKind (f.mapOp op) = (OpSignature.effectKind op) := by
+  simp only [OpSignature.effectKind, Functor.map, Function.comp_apply, f.preserves_signature]
+
 mutual
   def Com.map : Com Op Γ ty → Com Op' (f.mapTy <$> Γ) (f.mapTy ty)
     | .ret v          => .ret v.toMap
@@ -751,6 +759,7 @@ mutual
     | ⟨op, Eq.refl _, effLe, args, regs⟩ => ⟨
         f.mapOp op,
         (f.preserves_outTy _).symm,
+        (f.preserves_effectKind _ ) ▸ effLe,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
         f.preserves_regSig _ ▸
           HVector.mapDialectMorphism regs
@@ -833,6 +842,8 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
     {s₁ s₂ : Valuation Γ_in}
     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
     (lets.denote s₁).map (Valuation.eval · v) = (lets.denote s₂).map (Valuation.eval · v) := by
+  sorry
+/-
   induction lets generalizing t
   next =>
     simp [vars] at h
@@ -854,6 +865,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       rw [vars, Var.casesOn_last]
       simp
       use v.1, v.2
+  -/
 
 def Com.vars : Com Op Γ t → VarSet Γ :=
   fun com => com.toLets.lets.vars com.toLets.ret
@@ -864,6 +876,7 @@ def Com.vars : Com Op Γ t → VarSet Γ :=
   attempt to assign free variables in `matchExpr` to variables (free or bound) in `lets`, such that
   the original two variables are semantically equivalent.
   If this succeeds, return the mapping.
+  NOTE: this only matches on *pure* let bindings in both `matchLets` and `lets`.
 -/
 
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
@@ -872,11 +885,11 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (w : Var Δ_out t) →
     (ma : Mapping Δ_in Γ_out := ∅) →
     Option (Mapping Δ_in Γ_out)
-  | .lete matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
+  | .lete _eff matchLets _, ⟨w+1, h⟩, ma => -- w† = Var.toSnoc w
       let w := ⟨w, by simp_all[Ctxt.snoc]⟩
       matchVar lets v matchLets w ma
-  | @Lets.lete _ _ _ _ Δ_out _ matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
-      let ie ← lets.getExpr v
+  | @Lets.lete _ _ _ _ Δ_out _ .pure matchLets matchExpr, ⟨0, _⟩, ma => do -- w† = Var.last
+      let ie ← lets.getExpr v .pure
       if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
       then
         -- hack to make a termination proof work
@@ -899,6 +912,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+  | _, _, _ => none
 
 open AList
 

@@ -223,6 +223,10 @@ def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var 
     VAL v
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
+def Var.denote {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
+    VAL v
+
+/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Ctxt.Var.lookupValuation {Γ : Ctxt Ty} ⦃t : Ty⦄ (v : Γ.Var t) (VAL : Valuation Γ)  : toType t :=
     VAL v
 
