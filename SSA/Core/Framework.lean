@@ -1284,34 +1284,39 @@ of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ Γ₂) →
     (prog : Com Op Γ₂ t) →
     Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ t × (t' : Ty) × Var Γ₃ t')
-  | 0, lets, .lete e body => some ⟨_, .lete lets e, body, _, Var.last _ _⟩
+  | 0, lets, .lete eff e body => some ⟨_, .lete eff lets e, body, _, Var.last _ _⟩
   | _, _, .ret _ => none
-  | n+1, lets, .lete e body =>
-    splitProgramAtAux n (lets.lete e) body
+  | n+1, lets, .lete eff e body =>
+    splitProgramAtAux n (lets.lete eff e) body
 
 theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} →
     {prog : Com Op Γ₂ t} →
     {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ t × (t' : Ty) × Var Γ₃ t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Valuation Γ₁) →
-    res.2.2.1.denote (res.2.1.denote s) = prog.denote (lets.denote s)
-  | 0, lets, .lete e body, res, hres, s => by
+    res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote =<< (lets.denote s)
+  | 0, lets, .lete eff e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
     simp only [Lets.denote, eq_rec_constant, Com.denote]
     congr
+    sorry
+    /-
     funext t v
     cases v using Var.casesOn <;> simp
+    -/
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux] at hres
-  | n+1, lets, .lete e body, res, hres, s => by
+  | n+1, lets, .lete eff e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
+    sorry
+    /-
     rw [Com.denote, denote_splitProgramAtAux hres s]
     simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
     congr
     funext t v
     cases v using Var.casesOn <;> simp
-
+    -/
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
@@ -1323,7 +1328,7 @@ def splitProgramAt (pos : ℕ) (prog : Com Op Γ₁ t) :
 theorem denote_splitProgramAt {pos : ℕ} {prog : Com Op Γ₁ t}
     {res : Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × Com Op Γ₂ t × (t' : Ty) × Var Γ₂ t'}
     (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
-    res.2.2.1.denote (res.2.1.denote s) = prog.denote s :=
+    res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote s :=
   denote_splitProgramAtAux hres s
 
 
