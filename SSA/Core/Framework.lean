@@ -99,16 +99,10 @@ def EffectKind.union : EffectKind → EffectKind → EffectKind
 /-- Given (e1 ≤ e2), we can get a morphism from e1.toType2 x → e2.toType2 x.
 Said diffeently, this is a functor from the skeletal category of EffectKind to Lean. -/
 def EffectKind.toType2_hom {e1 e2 : EffectKind} {α : Type}
-  (_hle : e1 ≤ e2) (v1 : e1.toType2 α) : e2.toType2 α :=
-match e2 with
-| .pure =>
-  match e1 with
-  | .pure => v1
-  | .impure => by contradiction
-| .impure =>
-  match e1 with
-    | .pure => return v1
-    | .impure => v1
+    (hle : e1 ≤ e2) (v1 : e1.toType2 α) : e2.toType2 α :=
+  match e1, e2, hle with
+    | .pure, .pure, _ | .impure, .impure, _ => v1
+    | .pure, .impure, _ => return v1
 
 @[simp]
 theorem EffectKind.toType2_hom_pure_pure_eq_id (hle : EffectKind.pure ≤ EffectKind.pure) :
