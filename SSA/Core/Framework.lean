@@ -522,8 +522,9 @@ theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : 
     rw [addProgramToLets]
     simp [ih]
     rw [Lets.denote]
-    simp [EStateM.map, Bind.bind, EStateM.bind]
-    sorry
+    simp [map_bind]
+    simp [Bind.bind]
+    simp [map_bind]
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
     ∀ (ll : Valuation Γ_in),
