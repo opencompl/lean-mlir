@@ -742,6 +742,10 @@ def DialectMorphism.preserves_outTy (op : Op) :
     OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
+theorem DialectMorphism.preserves_effectKind (op : Op) :
+    OpSignature.effectKind (f.mapOp op) = OpSignature.effectKind op := by
+  simp only [OpSignature.effectKind, Function.comp_apply, f.preserves_signature]; rfl
+
 mutual
   def Com.map : Com Op Γ ty → Com Op' (f.mapTy <$> Γ) (f.mapTy ty)
     | .ret v          => .ret v.toMap
@@ -751,6 +755,7 @@ mutual
     | ⟨op, Eq.refl _, effLe, args, regs⟩ => ⟨
         f.mapOp op,
         (f.preserves_outTy _).symm,
+        f.preserves_effectKind _ ▸ effLe,
         f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
         f.preserves_regSig _ ▸
           HVector.mapDialectMorphism regs
