@@ -25,12 +25,17 @@ def EffectKind.toType2 : EffectKind → Type → Type
 | impure => IO
 
 instance : Functor (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : LawfulFunctor (EffectKind.toType2 e) := by cases e <;> exact (sorry)
 instance : SeqLeft (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : SeqRight (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Seq (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Applicative (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : LawfulApplicative (EffectKind.toType2 e) := by cases e <;> exact (sorry)
 instance : Bind (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
 instance : Monad (EffectKind.toType2 e) := by cases e <;> exact (inferInstance)
+instance : LawfulMonad (EffectKind.toType2 e) := by cases e <;> exact (sorry)
+instance : LawfulMonad (EffectKind.toType2 .impure) := by sorry
+instance : LawfulMonad (EffectKind.toType2 .pure) := by sorry
 
 def EffectKind.return (e : EffectKind) (a : α) : e.toType2 α := return a
 
@@ -358,15 +363,21 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → EffectKind.impure.toT
 end
 
 /-- Denote an 'Expr' in an unconditionally impure fashion -/
-@[simp]
 def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toType2 (toType ty) :=
   eff.toType2_hom (eff.le_impure) (e.denote Γv)
 
 /-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
-theorem Com.denote_lete_eq_of_denoteImpure_expr {e : Expr Op Γ eff α} {Γv: Valuation Γ} {v : toType α} :
+theorem Com.denote_lete_eq_of_denoteImpure_expr {e : Expr Op Γ eff α} {Γv: Valuation Γ} :
     (Com.lete eff e body).denote Γv = (e.denoteImpure Γv).bind (fun v => body.denote (Γv.snoc v)) := by
   funext state
+  simp [Expr.denoteImpure]
   cases eff <;> simp_all [denote, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
+
+@[simp]
+theorem Com.denote_lete_eq_of_denoteImpure_expr' {e : Expr Op Γ eff α} :
+    (Com.lete eff e body).denote = fun Γv => (e.denoteImpure Γv).bind (fun v => body.denote (Γv.snoc v)) := by
+ funext Γv
+ apply Com.denote_lete_eq_of_denoteImpure_expr
 
 
 /-- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
@@ -376,6 +387,17 @@ theorem Com.denote_lete_eq_of_denote_expr_eq {e : Expr Op Γ eff α} {Γv: Valua
   · simp [denote, hv, EffectKind.return]
   · funext state
     simp_all [denote, hv, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
+
+/- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
+/-
+theorem Com.denote_lete_eq_of_denote_expr_eq' {e : Expr Op Γ eff α} {v : toType α}
+  (hv : e.denote = fun x => eff.return v) : (Com.lete eff e body).denote = fun Γv => body.denote (Γv.snoc v) := by
+  funext Γv
+  apply Com.denote_lete_eq_of_denote_expr_eq
+  rw [EffectKind.return_eq]
+  rw [hv]
+  simp
+-/
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -393,6 +415,7 @@ args, since there now are equation lemmas for it.
 #eval Lean.Meta.getEqnsFor? ``Expr.denote
 #eval Lean.Meta.getEqnsFor? ``Com.denote
 
+-- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
 def Lets.denote (lets : Lets Op Γ₁ Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toType2 <| Valuation Γ₂) :=
   match lets with
   | .nil => EffectKind.impure.return Γ₁'v
@@ -405,6 +428,12 @@ def Expr.changeVars (varsMap : Γ.Hom Γ') :
     {ty : Ty} → (e : Expr Op Γ eff ty) → Expr Op Γ' eff ty
   | _, ⟨op, sig_eq, eff_leq, args, regArgs⟩ =>
      ⟨op, sig_eq, eff_leq, args.map varsMap, regArgs⟩
+
+@[simp]
+theorem Lets.denote_nil [OpSignature Op Ty] [Goedel Op] [OpDenote Op Ty] {Γ1 : Ctxt Ty}:
+    ((@Lets.nil Op Ty _ Γ1).denote) = EffectKind.impure.return := by
+  funext Γ1'v
+  simp [denote, EffectKind.return]
 
 @[simp]
 theorem Expr.denote_changeVars {Γ Γ' : Ctxt Ty}
@@ -484,15 +513,16 @@ def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : C
 
 theorem denote_addProgramToLets_lets (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
     (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
-    ((addProgramToLets lets map com).lets.denote ll).map (fun Γ_out'v => Γ_out'v ((addProgramToLets lets map com).diff.toHom var))
-    = (lets.denote ll).map (fun Γ_out'v => Γ_out'v var) := by
-  induction com using Com.rec' generalizing lets Γ_out
+    ((addProgramToLets lets map com).lets.denote ll).map ((addProgramToLets lets map com).diff.toHom var).denote
+    = (lets.denote ll).map var.denote := by
+  induction com using Com.rec' generalizing lets Γ_in Γ_out ll var
   next =>
     rfl
   next e body ih =>
     rw [addProgramToLets]
     simp [ih]
     rw [Lets.denote]
+    simp [EStateM.map, Bind.bind, EStateM.bind]
     sorry
 
 theorem denote_addProgramToLets_var {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
@@ -529,15 +559,13 @@ theorem denote_addLetsAtTop :
   | Lets.nil, inputProg => rfl
   | Lets.lete eff body e, inputProg => by
     rw [addLetsAtTop, denote_addLetsAtTop body]
-    funext
-    simp only [Com.denote, Ctxt.Valuation.snoc, Function.comp_apply, Lets.denote,
-      eq_rec_constant]
-    congr
-    sorry
-    /-
-      funext t v
-      cases v using Var.casesOn <;> simp
-    -/
+    funext Γ1'v
+    simp [Bind.kleisliLeft, Lets.denote, addLetsAtTop]
+    apply congrArg
+    funext Γv
+    apply congrArg
+    funext v
+    rfl
 
 /-- `addProgramInMiddle v map lets rhs inputProg` appends the programs
 `lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
