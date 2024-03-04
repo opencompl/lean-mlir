@@ -1833,6 +1833,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : Expr ExOp Γ .nat :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
+    (eff_le := by { simp [OpSignature.effectKind, signature]; })
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
@@ -1840,6 +1841,7 @@ def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : Com ExOp [ExTy.nat
   Expr.mk
     (op := .runK k)
     (ty_eq := rfl)
+    (eff_le := by { simp [OpSignature.effectKind, signature]; })
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
@@ -1847,8 +1849,8 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def ex1_lhs : Com ExOp [.nat] .nat :=
-  Com.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+  Com.lete .pure (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+      Com.lete .pure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
