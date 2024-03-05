@@ -125,7 +125,7 @@ def EffectKind.union : EffectKind → EffectKind → EffectKind
 
 
 /-- Given (e1 ≤ e2), we can get a morphism from e1.toType2 x → e2.toType2 x.
-Said diffeently, this is a functor from the skeletal category of EffectKind to Lean. -/
+Said differently, this is a functor from the skeletal category of EffectKind to Lean. -/
 @[simp]
 def EffectKind.toType2_hom [Monad m] {e1 e2 : EffectKind} {α : Type}
     (hle : e1 ≤ e2) (v1 : e1.toType2 m α) : e2.toType2 m α :=
@@ -133,30 +133,39 @@ def EffectKind.toType2_hom [Monad m] {e1 e2 : EffectKind} {α : Type}
     | .pure, .pure, _ | .impure, .impure, _ => v1
     | .pure, .impure, _ => return v1
 
-@[simp]
-theorem EffectKind.toType2_hom_pure_pure_eq_id [Monad m] (hle : EffectKind.pure ≤ EffectKind.pure) :
-    EffectKind.toType2_hom hle (α := α) (m := m) = id := by
-  funext x
-  simp [EffectKind.toType2_hom]
+-- /-- Any value `v : e.toType2 ..` with effect `e` can be transformed to have the `impure` effect -/
+-- def EffectKind.promoteToImpure [Monad m] {α : Type} :
+--     (e : EffectKind) → e.toType2 m α → EffectKind.impure.toType2 m α
+--   | .pure, v => return v
+--   | .impure, v => v
 
 @[simp]
-theorem EffectKind.toType2_hom_pure_impure_eq_Pure [Monad m] (hle : EffectKind.pure ≤ EffectKind.impure) :
-    EffectKind.toType2_hom hle (α := α) (m := m) = Pure.pure  := by
-  funext x
-  simp [EffectKind.toType2_hom]
+theorem EffectKind.toType2_hom_pure_pure [Monad m] (hle : EffectKind.pure ≤ EffectKind.pure) :
+    EffectKind.toType2_hom hle (α := α) (m := m) = id :=
+  rfl
 
 @[simp]
-theorem EffectKind.toType2_hom_impure_impure_eq_id [Monad m] (hle : EffectKind.impure ≤ EffectKind.impure) :
-    EffectKind.toType2_hom hle (α := α) (m := m) = id  := by
-  funext x
-  simp [EffectKind.toType2_hom]
+theorem EffectKind.toType2_hom_pure_impure [Monad m] (hle : EffectKind.pure ≤ EffectKind.impure) :
+    EffectKind.toType2_hom hle (α := α) (m := m) = Pure.pure :=
+  rfl
+
+@[simp]
+theorem EffectKind.toType2_hom_impure_impure [Monad m] (hle : EffectKind.impure ≤ EffectKind.impure) :
+    EffectKind.toType2_hom hle (α := α) (m := m) = id :=
+  rfl
+
+@[simp]
+theorem Effectkind.toType2_hom_impure [Monad m] {e} (hle : e ≤ EffectKind.impure) :
+    EffectKind.toType2_hom hle (α := α) (m := m) = match e with
+      | .pure => fun v => return v
+      | .impure => id := by
+  cases e <;> rfl
 
 /-- toType2 is functorial: it preserves identity. -/
 @[simp]
 theorem EffectKind.toType2_hom_eq_id (hle : eff ≤ eff) [Monad m] :
     EffectKind.toType2_hom hle (α := α) (m := m) = id  := by
-  funext x
-  cases eff <;> simp
+  cases eff <;> rfl
 
 /-- toType2 is functorial: it preserves composition. -/
 def EffectKind.toType2_hom_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
@@ -164,8 +173,7 @@ def EffectKind.toType2_hom_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
     (h23: e2 ≤ e3)
     (h13: e1 ≤ e3 := EffectKind.le_trans h12 h23) :
     ((EffectKind.toType2_hom (α := α) h23) ∘ (EffectKind.toType2_hom h12)) = EffectKind.toType2_hom (m := m) h13 := by
-  funext x
-  cases e1 <;> cases e2 <;> cases e3 <;> try simp_all [Function.comp] <;> contradiction
+  cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
 
 /-- Type with no inhabitant -/
 inductive Void where
@@ -529,16 +537,87 @@ def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : C
 theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
     (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
   ((addProgramToLets lets map com).diff.toHom var).denote <$> ((addProgramToLets lets map com).lets.denote ll)
-    = var.denote <$> (lets.denote ll):= by
+    = var.denote <$> (lets.denote ll) := by
   induction com using Com.rec' generalizing lets Γ_in Γ_out ll var
   next =>
     rfl
   next e body ih =>
     rw [addProgramToLets]
-    simp [ih]
+    simp only [Ctxt.Diff.toHom_unSnoc, ih]
     rw [Lets.denote]
-    simp [map_bind]
+    simp [map_bind, Var.denote]
+    simp [bind_pure_comp]
+    /-
+    The goal state is as follows, I'm not convinced this goal is true
+
+    ⊢ (do
+        let a ← Lets.denote lets ll
+        (fun a_1 => a var) <$> Expr.denoteImpure (Expr.changeVars map e) a)
+      = (fun VAL => VAL var) <$> Lets.denote lets ll
+    -/
+    -- simp [bind_pure, pure_bind]
     sorry
+
+namespace CounterExample
+
+inductive COp
+  | unit
+  | fail
+
+@[simp]
+instance : OpSignature COp Unit Option where
+  signature := fun
+    | .unit => ⟨[], [], (), .pure⟩
+    | .fail => ⟨[], [], (), .impure⟩
+
+@[simp]
+instance : OpDenote COp Unit Option where
+  denote := fun
+    | .unit, _, _ => ()
+    | .fail, _, _ => none
+
+example
+  : ¬ ∀{Γ_in Γ_out} (lets: Lets COp Γ_in Γ_out) (ll : Γ_in.Valuation)
+        {Γ'} {eff'} (e: Expr COp Γ' eff' α')
+        (map: Ctxt.Hom Γ' Γ_out) {t} (var : Γ_out.Var t),
+      (do
+        let a ← Lets.denote lets ll
+        (fun _ => a var) <$> Expr.denoteImpure (Expr.changeVars map e) a)
+      = (fun (VAL : Valuation Γ_out) => VAL var) <$> Lets.denote lets ll := by
+  intro h
+  specialize @h [] _ (Lets.nil.lete .pure ⟨.unit, rfl, by decide, .nil, .nil⟩)
+    Valuation.nil [] .impure
+    ⟨.fail, rfl, EffectKind.le_impure _, .nil, .nil⟩
+    (fun () v => v) () (Var.last ..)
+  simp [Expr.denoteImpure, Expr.denote, OpSignature.effectKind, Lets.denote] at h
+  revert h
+  conv =>
+    arg 1; lhs; reduce
+  conv =>
+    arg 1; rhs; reduce
+  simp
+
+example :
+    ¬ ∀ {Γ_in Γ_out} (lets : Lets COp Γ_in Γ_out) {Δ t} {map : Ctxt.Hom Δ Γ_out} {com : Com COp Δ t}
+      (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t),
+      ((addProgramToLets lets map com).diff.toHom var).denote
+        <$> ((addProgramToLets lets map com).lets.denote ll)
+      = var.denote <$> (lets.denote ll)
+    := by
+  intro h
+  specialize @h [] _ (Lets.nil.lete .pure ⟨.unit, rfl, by decide, .nil, .nil⟩)
+    [] () (fun _ v => v)
+    (Com.lete .impure ⟨.fail, rfl, EffectKind.le_impure _, .nil, .nil⟩ (Com.ret <| Var.last ..))
+    Valuation.nil () (Var.last ..)
+  revert h
+  conv =>
+    arg 1; lhs; reduce
+  conv =>
+    arg 1; rhs; reduce
+  simp
+
+end CounterExample
+
 theorem denote_addProgramToLets_var [LawfulMonad m] {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
     ∀ (ll : Valuation Γ_in),
       (fun Γ_out'v => Γ_out'v <| (addProgramToLets lets map com).var) <$>
