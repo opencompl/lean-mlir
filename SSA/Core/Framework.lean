@@ -536,27 +536,24 @@ def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : C
 
 theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
     (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
-  ((addProgramToLets lets map com).diff.toHom var).denote <$> ((addProgramToLets lets map com).lets.denote ll)
-    = var.denote <$> (lets.denote ll) := by
+  let newLets := addProgramToLets lets map com
+  (newLets.diff.toHom var).denote <$> (newLets.lets.denote ll)
+    = (do
+        let ll ← lets.denote ll;
+        let _ ← com.denote (ll.comap map)
+        return ll var
+      ) := by
+  simp only
   induction com using Com.rec' generalizing lets Γ_in Γ_out ll var
   next =>
-    rfl
+    simp [bind_pure_comp]; rfl
   next e body ih =>
     rw [addProgramToLets]
     simp only [Ctxt.Diff.toHom_unSnoc, ih]
     rw [Lets.denote]
     simp [map_bind, Var.denote]
     simp [bind_pure_comp]
-    /-
-    The goal state is as follows, I'm not convinced this goal is true
 
-    ⊢ (do
-        let a ← Lets.denote lets ll
-        (fun a_1 => a var) <$> Expr.denoteImpure (Expr.changeVars map e) a)
-      = (fun VAL => VAL var) <$> Lets.denote lets ll
-    -/
-    -- simp [bind_pure, pure_bind]
-    sorry
 
 namespace CounterExample
 
