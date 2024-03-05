@@ -28,39 +28,25 @@ def EffectKind.toType2 (e : EffectKind) (m : Type → Type) : Type → Type :=
 section
 variable {e : EffectKind} {m : Type → Type}
 
-instance [Functor m] : Functor (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+instance [Functor m] : Functor (e.toType2 m) := by cases e <;> infer_instance
+instance [Functor m] [LawfulFunctor m] : LawfulFunctor (e.toType2 m) := by
+  cases e <;> infer_instance
 
-instance [Functor m] [LawfulFunctor m] : LawfulFunctor (EffectKind.toType2 e m) := by
-   cases e <;> simp [EffectKind.toType2] <;> infer_instance
+instance [SeqLeft m]  : SeqLeft (e.toType2 m)  := by cases e <;> infer_instance
+instance [SeqRight m] : SeqRight (e.toType2 m) := by cases e <;> infer_instance
+instance [Seq m]      : Seq (e.toType2 m)      := by cases e <;> infer_instance
 
-instance [SeqLeft m] : SeqLeft (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+instance [Applicative m] : Applicative (e.toType2 m) := by cases e <;> infer_instance
+instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (e.toType2 m) := by
+  cases e <;> infer_instance
 
-instance [SeqRight m] : SeqRight (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
-
-instance [Seq m] : Seq (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
-
-instance [Applicative m] : Applicative (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
-
-instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
-
-instance [Bind m] : Bind (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
-
-instance [Monad m] : Monad (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+instance [Bind m] : Bind (e.toType2 m)   := by cases e <;> infer_instance
+instance [Monad m] : Monad (e.toType2 m) := by cases e <;> infer_instance
+instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toType2 m) := by cases e <;> infer_instance
 
 -- Why do we need the specializations, if we already have the instance for generic `e` above
 instance [Monad m] : Monad (EffectKind.toType2 .pure m)   := inferInstance
 instance [Monad m] : Monad (EffectKind.toType2 .impure m) := inferInstance
-
-instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> infer_instance
 
 -- Why do we need the specializations, if we already have the instance for generic `e` above
 instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 .impure m) := inferInstance
