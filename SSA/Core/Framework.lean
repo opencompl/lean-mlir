@@ -25,34 +25,48 @@ def EffectKind.toType2 (e : EffectKind) (m : Type → Type) : Type → Type :=
   | pure => Id
   | impure => m
 
-instance [Functor m] {e : EffectKind} : Functor (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Functor m] [LawfulFunctor m] {e : EffectKind} : LawfulFunctor (EffectKind.toType2 e m) := by
-   cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [SeqLeft m] {e : EffectKind} : SeqLeft (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [SeqRight m] {e : EffectKind} : SeqRight (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Seq m] {e : EffectKind} : Seq (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Applicative m] {e : EffectKind} : Applicative (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Applicative m] [LawfulApplicative m] {e : EffectKind} : LawfulApplicative (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Bind m] {e : EffectKind} : Bind (EffectKind.toType2 e m) := by
-  cases e <;>[] [EffectKind.toType2] <;> exact inferInstance
-instance [Monad m] {e : EffectKind} : Monad (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Monad m] : Monad (EffectKind.toType2 .pure m) := by
-  simp [EffectKind.toType2] ; exact inferInstance
-instance [Monad m] : Monad (EffectKind.toType2 .impure m) := by
-  simp [EffectKind.toType2] ; exact inferInstance
-instance [Monad m] [LawfulMonad m] {e : EffectKind} : LawfulMonad (EffectKind.toType2 e m) := by
-  cases e <;> simp [EffectKind.toType2] <;> exact inferInstance
-instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 .impure m) := by
-  simp [EffectKind.toType2] ; exact inferInstance
-instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 .pure m) := by
-  simp [EffectKind.toType2] ; exact inferInstance
+section
+variable {e : EffectKind} {m : Type → Type}
+
+instance [Functor m] : Functor (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Functor m] [LawfulFunctor m] : LawfulFunctor (EffectKind.toType2 e m) := by
+   cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [SeqLeft m] : SeqLeft (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [SeqRight m] : SeqRight (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Seq m] : Seq (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Applicative m] : Applicative (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Bind m] : Bind (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+instance [Monad m] : Monad (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+-- Why do we need the specializations, if we already have the instance for generic `e` above
+instance [Monad m] : Monad (EffectKind.toType2 .pure m)   := inferInstance
+instance [Monad m] : Monad (EffectKind.toType2 .impure m) := inferInstance
+
+instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 e m) := by
+  cases e <;> simp [EffectKind.toType2] <;> infer_instance
+
+-- Why do we need the specializations, if we already have the instance for generic `e` above
+instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 .impure m) := inferInstance
+instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toType2 .pure m) := inferInstance
+
+end
 
 def EffectKind.return [Monad m] (e : EffectKind) (a : α) : e.toType2 m α := return a
 
