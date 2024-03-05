@@ -91,12 +91,14 @@ theorem EffectKind.eff_eq_of_le_pure {e : EffectKind}
   cases e <;> simp_all [LE.le]
 
 
-@[simp] def EffectKind.elim_impure_le_pure (he : EffectKind.impure ≤ EffectKind.pure) : False := by simp[LE.le] at he
-@[simp] def EffectKind.pure_le_pure : EffectKind.pure ≤ EffectKind.pure := by simp[LE.le]
-@[simp] def EffectKind.pure_le_impure : EffectKind.pure ≤ EffectKind.impure := by simp[LE.le]
-@[simp] def EffectKind.impure_le_impure : EffectKind.impure ≤ EffectKind.impure := by simp[LE.le]
-@[simp] def EffectKind.pure_le (e : EffectKind) : EffectKind.pure ≤ e := by cases e <;> simp
-@[simp] def EffectKind.le_impure (e : EffectKind) : e ≤ EffectKind.impure := by cases e <;> simp
+@[simp] theorem EffectKind.not_impure_le_pure : ¬(EffectKind.impure ≤ EffectKind.pure) := by rintro ⟨⟩
+-- @[simp] theorem EffectKind.pure_le_pure : EffectKind.pure ≤ EffectKind.pure := by simp[LE.le]
+-- @[simp] theorem EffectKind.pure_le_impure : EffectKind.pure ≤ EffectKind.impure := by simp[LE.le]
+-- @[simp] theorem EffectKind.impure_le_impure : EffectKind.impure ≤ EffectKind.impure := by simp[LE.le]
+@[simp] theorem EffectKind.pure_le (e : EffectKind) : EffectKind.pure ≤ e := by
+  cases e <;> constructor
+@[simp] theorem EffectKind.le_impure (e : EffectKind) : e ≤ EffectKind.impure := by
+  cases e <;> constructor
 
 @[simp]
 theorem EffectKind.le_refl (e : EffectKind) : e ≤ e := by cases e <;> simp [LE.le]
