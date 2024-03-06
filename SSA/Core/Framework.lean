@@ -370,21 +370,23 @@ theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
     (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
     (Expr.mk op ty_eq eff_le args regArgs).regArgs = regArgs := rfl
 
--- /-- The `outContext` of a program is a context which includes variables for all let-bindings
--- of the program. That is, it is the context under which the return value is typed -/
--- def Com.outContext : {Γ : Ctxt Ty} → Com Op Γ t → Ctxt Ty
---   | Γ, .ret _         => Γ
---   | _, .lete _ _ body => body.outContext
+/-- The `outContext` of a program is a context which includes variables for all let-bindings
+of the program. That is, it is the context under which the return value is typed.
+`outContextAux` is a computable version of `outContext`, albeit without the desired def-eqs -/
+private def Com.outContextAux : {Γ : Ctxt Ty} → Com Op Γ t → Ctxt Ty
+  | Γ, .ret _         => Γ
+  | _, .lete _ _ body => body.outContextAux
 
 /-- The `outContext` of a program is a context which includes variables for all let-bindings
 of the program. That is, it is the context under which the return value is typed -/
-noncomputable def Com.outContext {Γ} : Com Op Γ t → Ctxt Ty :=
+@[implemented_by Com.outContextAux]
+-- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
+--      See `Com.outContextAux_eq_outContext` for a theorem that states these definitions are equal
+def Com.outContext {Γ} : Com Op Γ t → Ctxt Ty :=
   /-
     HACK: the obvious definition of `outContext` using the match compiler does not have the
     def-eqs we expect (`outContext_ret` and `outContext_lete` were not provable `by rfl`).
     Thus, we directly use the recursion principle.
-    This makes us lose computability of the definition, but since we only use it for type indices,
-    this is not a problem.
   -/
   Com.rec (motive_1 := fun _ _ _ _ => Unit) (motive_2 := fun _ _ _ => Ctxt Ty)
     (motive_3 := fun _ _ => Unit) (fun _ _ _ _ _ _ => ()) -- `Expr.mk` case
@@ -392,13 +394,19 @@ noncomputable def Com.outContext {Γ} : Com Op Γ t → Ctxt Ty :=
     (fun _ _ _ _ r => r) -- `Com.lete` case
     () (fun _ _ _ _ => ())
 
-theorem Com.outContext_ret (v : Var Γ t) :
+@[simp] theorem Com.outContext_ret (v : Var Γ t) :
     (Com.ret (Op:=Op) v).outContext = Γ := by
   rfl
 
-theorem Com.outContext_lete {eff} (e : Expr Op Γ eff t) (body : Com Op (Γ.snoc t) u) :
+@[simp] theorem Com.outContext_lete {eff} (e : Expr Op Γ eff t) (body : Com Op (Γ.snoc t) u) :
     (Com.lete _ e body).outContext = body.outContext := by
   rfl
+
+theorem Com.outContextAux_eq_outContext (com : Com Op Γ t) :
+    com.outContextAux = com.outContext := by
+  induction com using Com.rec'
+  next => rfl
+  next ih => simp [outContextAux, ih]
 
 /-- The difference between the context `Γ` under which `com` is typed, and the output context of
 that same `com` -/
