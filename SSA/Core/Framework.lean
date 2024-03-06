@@ -396,13 +396,13 @@ end
 
 /-- Denote an 'Expr' in an unconditionally impure fashion -/
 def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toType2 m (toType ty) :=
-  eff.toType2_hom (eff.le_impure) (e.denote Γv)
+  liftM <| e.denote Γv
 
 /-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
 theorem Com.denote_lete_eq_of_denoteImpure_expr [LawfulMonad m] {e : Expr Op Γ eff α} {Γv: Valuation Γ} :
     (Com.lete eff e body).denote Γv = (e.denoteImpure (m := m) Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
   simp [Expr.denoteImpure]
-  cases eff <;> simp_all [denote, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
+  cases eff <;> simp [liftM, monadLift, denote]
 
 @[simp]
 theorem Com.denote_lete_eq_of_denoteImpure_expr' [LawfulMonad m] {e : Expr Op Γ eff α} :
@@ -551,14 +551,16 @@ theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_ou
   simp only
   induction com using Com.rec' generalizing lets Γ_in Γ_out ll var
   next =>
-    simp [bind_pure_comp]; rfl
+    simp [bind_pure_comp, Com.denote]; rfl
   next e body ih =>
     rw [addProgramToLets]
-    simp only [Ctxt.Diff.toHom_unSnoc, ih]
-    rw [Lets.denote]
-    simp [map_bind, Var.denote]
-    simp [bind_pure_comp]
-
+    have {Γ Γ_out : Ctxt Ty} (V : Γ_out.Valuation) {t} (x : ⟦t⟧) (map : Γ.Hom Γ_out) :
+        Valuation.comap (Valuation.snoc V x) (Ctxt.Hom.snocMap map)
+        = Valuation.snoc (Valuation.comap V map) x := by
+      funext t' v
+      cases v using Var.casesOn <;> rfl
+    simp [Ctxt.Diff.toHom_unSnoc, ih, Lets.denote, Expr.denoteImpure, this]
+    rfl
 
 namespace CounterExample
 

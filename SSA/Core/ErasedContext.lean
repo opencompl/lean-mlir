@@ -316,7 +316,7 @@ theorem Valuation.ofPair_snd [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v�
 
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=
-  fun _to vo =>  Γiv (hom vo)
+  fun _to vo => Γiv (hom vo)
 
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
 @[eliminator, elab_as_elim]
