@@ -464,6 +464,9 @@ def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
 
 instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
+def cast (h₁ : Γ = Γ') (h₂ : Δ = Δ') : Diff Γ Δ → Diff Γ' Δ'
+  | ⟨n, h⟩ => ⟨n, by subst h₁ h₂; exact h⟩
+
 end Diff
 
 /-## Derived Contexts
