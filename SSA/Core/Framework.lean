@@ -562,66 +562,6 @@ theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_ou
     simp [Ctxt.Diff.toHom_unSnoc, ih, Lets.denote, Expr.denoteImpure, this]
     rfl
 
-namespace CounterExample
-
-inductive COp
-  | unit
-  | fail
-
-@[simp]
-instance : OpSignature COp Unit Option where
-  signature := fun
-    | .unit => ⟨[], [], (), .pure⟩
-    | .fail => ⟨[], [], (), .impure⟩
-
-@[simp]
-instance : OpDenote COp Unit Option where
-  denote := fun
-    | .unit, _, _ => ()
-    | .fail, _, _ => none
-
-example
-  : ¬ ∀{Γ_in Γ_out} (lets: Lets COp Γ_in Γ_out) (ll : Γ_in.Valuation)
-        {Γ'} {eff'} (e: Expr COp Γ' eff' α')
-        (map: Ctxt.Hom Γ' Γ_out) {t} (var : Γ_out.Var t),
-      (do
-        let a ← Lets.denote lets ll
-        (fun _ => a var) <$> Expr.denoteImpure (Expr.changeVars map e) a)
-      = (fun (VAL : Valuation Γ_out) => VAL var) <$> Lets.denote lets ll := by
-  intro h
-  specialize @h [] _ (Lets.nil.lete .pure ⟨.unit, rfl, by decide, .nil, .nil⟩)
-    Valuation.nil [] .impure
-    ⟨.fail, rfl, EffectKind.le_impure _, .nil, .nil⟩
-    (fun () v => v) () (Var.last ..)
-  simp [Expr.denoteImpure, Expr.denote, OpSignature.effectKind, Lets.denote] at h
-  revert h
-  conv =>
-    arg 1; lhs; reduce
-  conv =>
-    arg 1; rhs; reduce
-  simp
-
-example :
-    ¬ ∀ {Γ_in Γ_out} (lets : Lets COp Γ_in Γ_out) {Δ t} {map : Ctxt.Hom Δ Γ_out} {com : Com COp Δ t}
-      (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t),
-      ((addProgramToLets lets map com).diff.toHom var).denote
-        <$> ((addProgramToLets lets map com).lets.denote ll)
-      = var.denote <$> (lets.denote ll)
-    := by
-  intro h
-  specialize @h [] _ (Lets.nil.lete .pure ⟨.unit, rfl, by decide, .nil, .nil⟩)
-    [] () (fun _ v => v)
-    (Com.lete .impure ⟨.fail, rfl, EffectKind.le_impure _, .nil, .nil⟩ (Com.ret <| Var.last ..))
-    Valuation.nil () (Var.last ..)
-  revert h
-  conv =>
-    arg 1; lhs; reduce
-  conv =>
-    arg 1; rhs; reduce
-  simp
-
-end CounterExample
-
 theorem denote_addProgramToLets_var [LawfulMonad m] {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
     ∀ (ll : Valuation Γ_in),
       (fun Γ_out'v => Γ_out'v <| (addProgramToLets lets map com).var) <$>
