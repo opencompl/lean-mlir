@@ -565,19 +565,11 @@ theorem denote_addProgramToLets_var [LawfulMonad m] {lets : Lets Op Γ_in Γ_out
   intro ll
   induction com using Com.rec' generalizing lets Γ_out
   next =>
-    sorry
+    simp [Com.denote, bind_pure_comp]; rfl
   next e body ih =>
-    sorry
-    -- Was just `simp only [addProgramToLets, ih, Com.denote]`
-    /-
     rw [addProgramToLets]
-    simp only [ih, Com.denote]
-    congr
-    funext t v
-    cases v using Var.casesOn
-    . rfl
-    . simp [Lets.denote]; rfl
-    -/
+    simp [Lets.denote, ih, Com.denote, Expr.denoteImpure]
+    rfl
 
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ t₂) → Com Op Γ₁ t₂
