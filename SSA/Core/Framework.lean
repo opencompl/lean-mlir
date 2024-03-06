@@ -541,16 +541,16 @@ def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) : C
       ⟨lets', diff.unSnoc, v'⟩
 
 theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
-    (ll : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
-  let newLets := addProgramToLets lets map com
-  (newLets.diff.toHom var).denote <$> (newLets.lets.denote ll)
+    (V : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
+  ((addProgramToLets lets map com).diff.toHom var).denote
+  <$> ((addProgramToLets lets map com).lets.denote V)
     = (do
-        let ll ← lets.denote ll;
-        let _ ← com.denote (ll.comap map)
-        return ll var
+        let Vlets ← lets.denote V;
+        let _ ← com.denote (Vlets.comap map)
+        return Vlets var
       ) := by
   simp only
-  induction com using Com.rec' generalizing lets Γ_in Γ_out ll var
+  induction com using Com.rec' generalizing lets Γ_in Γ_out V var
   next =>
     simp [bind_pure_comp, Com.denote]; rfl
   next e body ih =>
