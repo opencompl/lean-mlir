@@ -589,18 +589,17 @@ theorem denote_addLetsAtTop [LawfulMonad m]:
     funext Γ1'v
     simp [Bind.kleisliLeft, Lets.denote, addLetsAtTop]
 
-/-- `addProgramInMiddle v map lets rhs inputProg` appends the programs
-`lets`, `rhs` and `inputProg`, while reassigning `v`, a free variable in
-`inputProg`, to the output of `rhs`. It also assigns all free variables
-in `rhs` to variables available at the end of `lets` using `map`. -/
+/-- `addProgramInMiddle v map top mid bot` appends the programs
+`top`, `mid` and `bot`, in that order, while reassigning `v`, a free variable in
+`bot`, to the output of `mid`. It also assigns all free variables
+in `mid` to variables available at the end of `top` using `map`. -/
 def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁)
     (map : Γ₃.Hom Γ₂)
-    (lets : Lets Op Γ₁ Γ₂) (rhs : Com Op Γ₃ t₁)
-    (inputProg : Com Op Γ₂ t₂) : Com Op Γ₁ t₂ :=
-  let r := addProgramToLets lets map rhs
-  addLetsAtTop r.lets <| inputProg.changeVars (r.diff.toHom.with v r.var)
+    (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁)
+    (bot : Com Op Γ₂ t₂) : Com Op Γ₁ t₂ :=
+  let r := addProgramToLets top map mid
+  addLetsAtTop r.lets <| bot.changeVars (r.diff.toHom.with v r.var)
 
-/-
 theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (s : Valuation Γ₁)
     (map : Γ₃.Hom Γ₂)
@@ -616,7 +615,6 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
         let s'' ← rhs.denote (fun t' v' => s' (map v'))
         sorry -- h.fst ▸ rhs.denote (fun t' v' => s' (map v'))
       else return (s' v')) := by sorry
--/
 /-
   simp only [addProgramInMiddle, Ctxt.Hom.with, denote_addLetsAtTop, Function.comp_apply,
               Com.denote_changeVars]
