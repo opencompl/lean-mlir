@@ -119,6 +119,9 @@ def toMap : Var Γ t → Var (Γ.map f) (f t)
 def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
   | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
 
+def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
+  | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
+
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
 @[elab_as_elim]
@@ -335,6 +338,11 @@ def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
   induction' Γ with Γ t ih
   · exact (eq_nil V).symm ▸ nil
   · exact snoc_toSnoc_last V ▸ (snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) (ih _))
+
+def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuation Δ :=
+  fun _ v => V <| v.castCtxt h.symm
+
+@[simp] lemma Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
 
 end Valuation
 
