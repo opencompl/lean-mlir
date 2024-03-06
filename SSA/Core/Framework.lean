@@ -175,6 +175,11 @@ def EffectKind.toType2_hom_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
     ((EffectKind.toType2_hom (α := α) h23) ∘ (EffectKind.toType2_hom h12)) = EffectKind.toType2_hom (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
 
+instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toType2 m) m where
+  monadLift x := match eff with
+    | .pure   => return x
+    | .impure => x
+
 /-- Type with no inhabitant -/
 inductive Void where
 def Void.elim (v : Void) : α := nomatch v
