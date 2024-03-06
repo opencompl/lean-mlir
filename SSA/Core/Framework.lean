@@ -554,12 +554,7 @@ theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_ou
     simp [bind_pure_comp, Com.denote]; rfl
   next e body ih =>
     rw [addProgramToLets]
-    have {Γ Γ_out : Ctxt Ty} (V : Γ_out.Valuation) {t} (x : ⟦t⟧) (map : Γ.Hom Γ_out) :
-        Valuation.comap (Valuation.snoc V x) (Ctxt.Hom.snocMap map)
-        = Valuation.snoc (Valuation.comap V map) x := by
-      funext t' v
-      cases v using Var.casesOn <;> rfl
-    simp [Ctxt.Diff.toHom_unSnoc, ih, Lets.denote, Expr.denoteImpure, this]
+    simp [Ctxt.Diff.toHom_unSnoc, ih, Lets.denote, Expr.denoteImpure]
     rfl
 
 theorem denote_addProgramToLets_var [LawfulMonad m] {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
