@@ -204,7 +204,7 @@ class OpSignature (Op : Type) (Ty : outParam (Type)) (m : outParam (Type → Typ
 export OpSignature (signature)
 
 section
-variable {Op Ty} [s : OpSignature Op Ty m]
+variable {Op Ty} {m} [s : OpSignature Op Ty m] [Monad m] [LawfulMonad m]
 
 def OpSignature.sig        := Signature.sig ∘ s.signature
 def OpSignature.regSig     := Signature.regSig ∘ s.signature
@@ -485,10 +485,11 @@ private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b'
 
 @[simp]
 theorem Com.denote_changeVars
-    (varsMap : Γ.Hom Γ') (c : Com Op Γ ty)
-    (Γ'v : Valuation Γ') :
-    (c.changeVars varsMap).denote Γ'v =
-    c.denote (fun t v => Γ'v (varsMap v)) := by
+    (varsMap : Γ.Hom Γ') (c : Com Op Γ ty) :
+    (c.changeVars varsMap).denote =
+    c.denote ∘ (fun V t v => V <| varsMap v) := by
+  funext Γ'v
+  simp only [Function.comp_apply]
   induction c using Com.rec' generalizing Γ'v Γ' with
   | ret x => simp [Com.denote, Com.changeVars, *]
   | lete _ _ ih =>
