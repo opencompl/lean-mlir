@@ -321,16 +321,48 @@ inductive Lets : Ctxt Ty → Ctxt Ty → Type where
 variable {Op Ty : Type} [OpSignature Op Ty m]
 
 @[elab_as_elim]
-def Com.rec' {motive : (a : Ctxt Ty) → (eff : EffectKind) → (a_1 : Ty) →  Com Op a eff a_1 → Sort u} :
-    (ret : {Γ : Ctxt Ty} → {t : Ty} → (v : Var Γ t) → motive Γ .pure t (Com.ret v)) →
-    (lete : {Γ : Ctxt Ty} →
-        {α β : Ty} → {eff : EffectKind} →
-          (e : Expr Op Γ eff α) →
-            (body : Com Op (Ctxt.snoc Γ α) eff β) →
-              motive (Ctxt.snoc Γ α) eff β body → motive Γ eff β (Com.lete e body)) →
-      {a : Ctxt Ty} → {eff : EffectKind} → {a_1 : Ty} → (t : Com Op a eff a_1) → motive a eff a_1 t
-  | hret, _, _, _, _, Com.ret v => hret v
-  | hret, hlete, _, _, _, Com.lete e body => hlete e body (Com.rec' hret hlete body)
+def Com.recAux' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
+    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
+    (lete : ∀ {Γ} {t u : Ty} {eff},
+      (e : Expr Op Γ eff t) → (body : Com Op (Ctxt.snoc Γ t) eff u) →
+        motive body → motive (Com.lete e body)) :
+    ∀ {Γ eff t}, (com : Com Op Γ eff t) → motive com
+  | _, _, _, Com.ret v => ret v
+  | _, _, _, Com.lete e body => lete e body (Com.recAux' ret lete body)
+
+@[implemented_by Com.recAux', elab_as_elim, eliminator]
+-- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
+--      See `Com.recAux'_eq` for a theorem that states these definitions are equal
+def Com.rec' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
+    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
+    (lete : ∀ {Γ} {t u : Ty} {eff},
+      (e : Expr Op Γ eff t) → (body : Com Op (Ctxt.snoc Γ t) eff u) →
+        motive body → motive (Com.lete e body)) :
+    ∀ {Γ eff t}, (com : Com Op Γ eff t) → motive com :=
+  /- HACK: the obvious definition of `rec'` using the match compiler does not have the
+     def-eqs we expect. Thus, we directly use the recursion principle. -/
+  Com.rec (motive_1 := fun _ _ _ _ => PUnit) (motive_2 := fun _ _ _ c => motive c)
+    (motive_3 := fun _ _ => PUnit) (fun _ _ _ _ _ _ => ⟨⟩) -- `Expr.mk` case
+    (ret) -- `Com.ret` case
+    (fun e body _ r => lete e body r) -- `Com.lete` case
+    ⟨⟩ (fun _ _ _ _ => ⟨⟩)
+
+@[simp] lemma Com.rec'_ret (v : Var Γ t) {motive} {ret lete} :
+    (Com.ret (Op:=Op) v).rec' (motive:=motive) ret lete = ret v :=
+  rfl
+
+@[simp] lemma Com.rec'_lete (e : Expr Op Γ eff t) (body : Com Op _ _ u)
+    {motive} {ret lete} :
+    (Com.lete e body).rec' (motive:=motive) ret lete
+    = lete e body (body.rec' ret lete) :=
+  rfl
+
+theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u} :
+    Com.recAux' (motive:=motive) = Com.rec' (motive:=motive) := by
+  funext ret lete Γ eff t com
+  induction com
+  next => rfl
+  next ih => simp [recAux', ih]
 
 def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) : Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
@@ -374,42 +406,19 @@ theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
     (Expr.mk op ty_eq eff_le args regArgs).regArgs = regArgs := rfl
 
 /-- The `outContext` of a program is a context which includes variables for all let-bindings
-of the program. That is, it is the context under which the return value is typed.
-`outContextAux` is a computable version of `outContext`, albeit without the desired def-eqs -/
-private def Com.outContextAux : {Γ : Ctxt Ty} → Com Op Γ eff t → Ctxt Ty
-  | Γ, .ret _         => Γ
-  | _, .lete _ body => body.outContextAux
-
-/-- The `outContext` of a program is a context which includes variables for all let-bindings
 of the program. That is, it is the context under which the return value is typed -/
-@[implemented_by Com.outContextAux]
--- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
---      See `Com.outContextAux_eq_outContext` for a theorem that states these definitions are equal
 def Com.outContext {Γ} : Com Op Γ eff t → Ctxt Ty :=
-  /-
-    HACK: the obvious definition of `outContext` using the match compiler does not have the
-    def-eqs we expect (`outContext_ret` and `outContext_lete` were not provable `by rfl`).
-    Thus, we directly use the recursion principle.
-  -/
-  Com.rec (motive_1 := fun _ _ _ _ => Unit) (motive_2 := fun _ _ _ _ => Ctxt Ty)
-    (motive_3 := fun _ _ => Unit) (fun _ _ _ _ _ _ => ()) -- `Expr.mk` case
+  Com.rec' (motive := fun _ => Ctxt Ty)
     (@fun Γ _ _ => Γ) -- `Com.ret` case
-    (fun _ _ _ r => r) -- `Com.lete` case
-    () (fun _ _ _ _ => ())
+    (fun _ _ r => r) -- `Com.lete` case
 
 @[simp] theorem Com.outContext_ret (v : Var Γ t) :
-    (Com.ret (Op:=Op) v).outContext = Γ := by
+    (Com.ret (Op:=Op) v).outContext = Γ :=
   rfl
 
 @[simp] theorem Com.outContext_lete {eff} (e : Expr Op Γ eff t) (body : Com Op (Γ.snoc t) eff u) :
-    (Com.lete e body).outContext = body.outContext := by
+    (Com.lete e body).outContext = body.outContext :=
   rfl
-
-theorem Com.outContextAux_eq_outContext (com : Com Op Γ eff t) :
-    com.outContextAux = com.outContext := by
-  induction com using Com.rec'
-  next => rfl
-  next ih => simp [outContextAux, ih]
 
 /-- The difference between the context `Γ` under which `com` is typed, and the output context of
 that same `com` -/
