@@ -418,9 +418,9 @@ def Com.outContextDiff : ∀ (com : Com Op Γ eff t), Γ.Diff com.outContext
   | .lete _ body => body.outContextDiff.unSnoc
 
 /-- The return varible of a program -/
-def Com.returnVar : (com : Com Op Γ t) → Var com.outContext t
+def Com.returnVar : (com : Com Op Γ eff t) → Var com.outContext t
   | .ret v => v
-  | .lete _ _ body => body.returnVar
+  | .lete _ body => body.returnVar
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
