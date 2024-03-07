@@ -558,9 +558,9 @@ def Com.changeVars
     (Com.ret (Op:=Op) v).changeVars map = Com.ret (map v) :=
   rfl
 
-@[simp] lemma Com.changeVars_lete (e : Expr Op Γ eff t) (body : Com Op _ u) :
-    (Com.lete eff e body).changeVars map
-    = Com.lete eff (e.changeVars map) (body.changeVars map.snocMap) := by
+@[simp] lemma Com.changeVars_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) :
+    (Com.lete e body).changeVars map
+    = Com.lete (e.changeVars map) (body.changeVars map.snocMap) := by
   simp [changeVars]
 
 private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
@@ -594,7 +594,8 @@ theorem Com.denote_changeVars
       simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, Expr.denote_changeVars, denote]
       cases v using Var.casesOn <;> simp [ih]
 
-@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ ty) (V : Valuation _) :
+@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty)
+    (V : Valuation _) :
     (c.changeVars varsMap).denote V = c.denote (V.comap varsMap) := by
   simp; rfl
 
