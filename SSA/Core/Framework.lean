@@ -414,6 +414,11 @@ def Com.outContextDiff : ∀ (com : Com Op Γ t), Γ.Diff com.outContext
   | .ret _         => Ctxt.Diff.zero _
   | .lete _ _ body => body.outContextDiff.unSnoc
 
+/-- The return varible of a program -/
+def Com.returnVar : (com : Com Op Γ t) → Var com.outContext t
+  | .ret v => v
+  | .lete _ _ body => body.returnVar
+
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m]
@@ -543,6 +548,11 @@ def Com.changeVars
     (Com.ret (Op:=Op) v).changeVars map = Com.ret (map v) :=
   rfl
 
+@[simp] lemma Com.changeVars_lete (e : Expr Op Γ eff t) (body : Com Op _ u) :
+    (Com.lete eff e body).changeVars map
+    = Com.lete eff (e.changeVars map) (body.changeVars map.snocMap) := by
+  simp [changeVars]
+
 private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
   f a b = f a b' := congrArg _ hb
 
@@ -573,6 +583,10 @@ theorem Com.denote_changeVars
       funext t v
       simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, Expr.denote_changeVars, denote]
       cases v using Var.casesOn <;> simp [ih]
+
+@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ ty) (V : Valuation _) :
+    (c.changeVars varsMap).denote V = c.denote (V.comap varsMap) := by
+  simp; rfl
 
 variable (Op : _) {Ty : _} [OpSignature Op Ty m] in
 /-- The result returned by `addProgramToLets` -/
@@ -742,9 +756,11 @@ theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
         then h.fst ▸ Vmid
         else Vtop v'
     ) := by
-  simp only [addProgramInMiddle, Ctxt.Hom.with, denote_addLetsAtTop, Function.comp_apply,
-    Com.denote_changeVars, Bind.kleisliLeft]
-  rw [← seq_bind_eq]
+  simp only [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
+    Bind.kleisliLeft, denote_addProgramToLets]
+  -- simp [Function.comp]
+  simp
+  congr; funext Vtop
   sorry
   -- congr
   -- funext t' v'
