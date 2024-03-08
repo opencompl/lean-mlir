@@ -14,6 +14,11 @@ import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 open Ctxt (Var VarSet Valuation)
 open Goedel (toType)
 
+/-- Lemma that is useful for simplifying states with '(>>=) x f = (>>=) x g' -/
+private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
+  f a b = f a b' := congrArg _ hb
+
+
 /- Kinds of effects, either pure or impure -/
 inductive EffectKind
 | pure -- pure effects.
@@ -243,7 +248,7 @@ Note that the `EffectKind` is uniform: if a `Com` is `pure`, then the expression
 and if a `Com` is `impure`, then both the expression and the body are impure!
 -/
 inductive Com : Ctxt Ty → EffectKind → Ty → Type where
-  | ret (v : Var Γ t) : Com Γ .pure t
+  | ret {eff : EffectKind} (v : Var Γ t) : Com Γ eff t
   | lete (e : Expr Γ eff α) (body : Com (Γ.snoc α) eff β) : Com Γ eff β
 end
 
@@ -289,7 +294,7 @@ protected instance Expr.decidableEq [DecidableEq Op] [DecidableEq Ty] :
 
 protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] :
     {Γ : Ctxt Ty} → {ty : Ty} → {eff : EffectKind} → DecidableEq (Com Op Γ eff ty)
-  | _, _, .pure, .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
+  | _, _, eff, .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
   | _, _, eff, .lete (α := α₁) e₁ body₁, .lete (α := α₂) e₂ body₂ =>
     if heff : True
     then
@@ -322,7 +327,7 @@ variable {Op Ty : Type} [OpSignature Op Ty m]
 
 @[elab_as_elim]
 def Com.recAux' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
-    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
+    (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
     (lete : ∀ {Γ} {t u : Ty} {eff},
       (e : Expr Op Γ eff t) → (body : Com Op (Ctxt.snoc Γ t) eff u) →
         motive body → motive (Com.lete e body)) :
@@ -334,7 +339,7 @@ def Com.recAux' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
 -- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
 --      See `Com.recAux'_eq` for a theorem that states these definitions are equal
 def Com.rec' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
-    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
+    (ret : ∀ {Γ t} {eff : EffectKind}, (v : Var Γ t) → motive (eff := eff) (Com.ret v))
     (lete : ∀ {Γ} {t u : Ty} {eff},
       (e : Expr Op Γ eff t) → (body : Com Op (Ctxt.snoc Γ t) eff u) →
         motive body → motive (Com.lete e body)) :
@@ -347,8 +352,8 @@ def Com.rec' {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u}
     (fun e body _ r => lete e body r) -- `Com.lete` case
     ⟨⟩ (fun _ _ _ _ => ⟨⟩)
 
-@[simp] lemma Com.rec'_ret (v : Var Γ t) {motive} {ret lete} :
-    (Com.ret (Op:=Op) v).rec' (motive:=motive) ret lete = ret v :=
+@[simp] lemma Com.rec'_ret (v : Var Γ t) {motive eff} {ret lete} :
+    (Com.ret (Op:=Op) (eff := eff) v).rec' (motive:=motive) ret lete = ret v :=
   rfl
 
 @[simp] lemma Com.rec'_lete (e : Expr Op Γ eff t) (body : Com Op _ _ u)
@@ -361,7 +366,7 @@ theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u} :
     Com.recAux' (motive:=motive) = Com.rec' (motive:=motive) := by
   funext ret lete Γ eff t com
   induction com
-  next => rfl
+  next => simp[recAux']
   next ih => simp [recAux', ih]
 
 def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) : Op :=
@@ -409,12 +414,12 @@ theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} {eff : EffectKind} (op : Op)
 of the program. That is, it is the context under which the return value is typed -/
 def Com.outContext {Γ} : Com Op Γ eff t → Ctxt Ty :=
   Com.rec' (motive := fun _ => Ctxt Ty)
-    (@fun Γ _ _ => Γ) -- `Com.ret` case
+    (@fun Γ _ _ _ => Γ) -- `Com.ret` case
     (fun _ _ r => r) -- `Com.lete` case
 
 @[simp] theorem Com.outContext_ret (v : Var Γ t) :
-    (Com.ret (Op:=Op) v).outContext = Γ :=
-  rfl
+    (Com.ret (Op:=Op) (eff := eff) v).outContext = Γ := by
+  simp [outContext]
 
 @[simp] theorem Com.outContext_lete {eff} (e : Expr Op Γ eff t) (body : Com Op (Γ.snoc t) eff u) :
     (Com.lete e body).outContext = body.outContext :=
@@ -448,46 +453,68 @@ def Expr.denote : {ty : Ty} → (e : Expr Op Γ eff ty) → (Γv : Valuation Γ)
 
 def Com.denote : Com Op Γ eff ty → (Γv : Valuation Γ) → eff.toType2 m (toType ty)
   | .ret e, Γv => pure (Γv e)
-  | .lete e body, Γv => do
+  | .lete e body, Γv =>
      match eff with
      | .pure => body.denote (Γv.snoc (e.denote Γv))
      | .impure => e.denote Γv >>= fun x => body.denote (Γv.snoc x)
 end
 
+/-#
+NOTE: Monadic Code Needs Pointfree Theorems
+-------------------------------------------
+
+It is always best to write theorems in *unapplied* fashion, since a monadic function
+is often used in chains of binds.
+
+A theorem of the form 'f1 x = f2 x'cannot be used in a context 'f1 >>= g', but a
+pointfree theorem of the form 'f = g'permits rewriting everywhere, even in 'f1 >>= g'.
+
+This is not a problem in pure code, since we rarely use poinfree style with (f ∘ g),
+but this is much more pervasive in monadic code, where 'f >>= g' is common.
+
+Thus, the rule is that ALL rewrite rules are written pointfree in the last argument.
+-/
+
+@[simp]
+theorem Com.denote_ret {eff : EffectKind} (Γ : Ctxt Ty) (x : Γ.Var t) [Monad m] :
+    (Com.ret x : Com Op Γ eff t).denote = fun Γv => return (Γv x) := by
+  funext Γv
+  simp [denote]
+
 def Com.denoteLets : (com : Com Op Γ eff ty) → (Γv : Valuation Γ) →
-    EffectKind.impure.toType2 m (com.outContext.Valuation)
+    eff.toType2 m (com.outContext.Valuation)
   | .ret _, V => pure V
-  | .lete e body, V => do
-      let Ve ← e.denote V
-      let V ← body.denoteLets (V.snoc Ve)
+  | .lete e body, V =>
+      e.denote V >>= fun Ve =>
+      body.denoteLets (V.snoc Ve) >>= fun V =>
       return V.cast (by simp [Com.outContext])
 
 @[simp] theorem Com.denoteLets_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) [LawfulMonad m] :
-    (Com.lete e body).denoteLets = fun V => (do
-        let Ve ← e.denote V
-        body.denoteLets (V.snoc Ve)
-      ) := by
-  funext V; simp [denoteLets, bind_pure]
+    (Com.lete e body).denoteLets =
+        (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
+  funext V
+  cases eff <;> simp [denoteLets, bind_pure]
 
 /-- Denote an 'Expr' in an unconditionally impure fashion -/
 def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toType2 m (toType ty) :=
   liftM <| e.denote Γv
 
 /-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
-theorem Com.denote_lete_eq_of_denoteImpure_expr [LawfulMonad m] {e : Expr Op Γ eff α} {Γv: Valuation Γ} :
-    (Com.lete e body).denote Γv = (liftM <| e.denote (m := m) Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
+theorem Com.denote_lete_eq_of_denoteImpure_expr [LawfulMonad m] {e : Expr Op Γ eff α} :
+    (Com.lete e body).denote =
+    fun Γv => (liftM <| e.denote (m := m) Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
+  funext Γv
   cases eff <;> simp [liftM, monadLift, denote]
 
 @[simp]
 theorem Com.denote_lete_eq_of_denoteImpure_expr' [LawfulMonad m] {e : Expr Op Γ eff α} :
     (Com.lete e body).denote = fun Γv => (liftM <| e.denote Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
- funext Γv
  apply Com.denote_lete_eq_of_denoteImpure_expr
 
 
 /-- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
 theorem Com.denote_lete_eq_of_denote_expr_eq [LawfulMonad m] {e : Expr Op Γ eff α} {Γv: Valuation Γ} {v : toType α}
-  (hv : e.denote Γv = eff.return v) : (Com.lete e body).denote Γv = body.denote (Γv.snoc v) := by
+    (hv : e.denote Γv = eff.return v) : (Com.lete e body).denote Γv = body.denote (Γv.snoc v) := by
   cases eff
   · simp [denote, hv, EffectKind.return, Applicative.toPure, Pure.pure, pure]
   · simp_all [denote, hv, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
@@ -497,13 +524,14 @@ def Com.denoteImpure : Com Op Γ eff ty → (Γv : Valuation Γ) → EffectKind.
   | .lete e body, Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x)
 
 @[simp]
-def Com.denoteImpure_ret [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (Γv : Valuation Γ) (x : Γ.Var t) :
-  (Com.ret (Op := Op) x).denoteImpure Γv = return (Γv x) := rfl
+def Com.denoteImpure_ret [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (x : Γ.Var t) :
+  (Com.ret (Op := Op) (eff := eff) x).denoteImpure = fun Γv => return (Γv x) := rfl
 
 @[simp]
-def Com.denoteImpure_body [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (Γv : Valuation Γ)
+def Com.denoteImpure_body [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty}
     (e : Expr Op Γ eff te) (body : Com Op (Γ.snoc te) eff tbody) :
-  (Com.lete e body).denoteImpure Γv = e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x) := rfl
+  (Com.lete e body).denoteImpure =
+  fun Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x) := rfl
 
 /- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
 /-
@@ -534,12 +562,23 @@ args, since there now are equation lemmas for it.
 
 -- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
 def Lets.denote [OpSignature Op Ty m] [OpDenote Op Ty m]
-    (lets : Lets Op Γ₁ Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toType2 m <| Valuation Γ₂) :=
+    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toType2 m <| Valuation Γ₂) :=
+  match lets with
+  | .nil => return Γ₁'v
+  | .lete lets' e =>
+      lets'.denote Γ₁'v >>= fun Γ₂'v =>
+      e.denote Γ₂'v >>= fun v =>
+      return (Γ₂'v.snoc v)
+
+
+-- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
+def Lets.denoteImpure [OpSignature Op Ty m] [OpDenote Op Ty m]
+    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toType2 m <| Valuation Γ₂) :=
   match lets with
   | .nil => EffectKind.impure.return Γ₁'v
-  | .lete _ lets' e => do
-      let Γ₂'v ← lets'.denote Γ₁'v
-      let v ← e.denote Γ₂'v
+  | .lete lets' e =>
+      lets'.denote Γ₁'v  >>= fun Γ₂'v =>
+      e.denote Γ₂'v >>= fun v =>
       return (Γ₂'v.snoc v)
 
 def Expr.changeVars (varsMap : Γ.Hom Γ') :
@@ -553,10 +592,10 @@ def Expr.changeVars (varsMap : Γ.Hom Γ') :
 @[simp]
 theorem Expr.denote_changeVars {Γ Γ' : Ctxt Ty}
     (varsMap : Γ.Hom Γ')
-    (e : Expr Op Γ eff ty)
-    (Γ'v : Valuation Γ') :
-    (e.changeVars varsMap).denote Γ'v =
-    e.denote (fun t v => Γ'v (varsMap v)) := by
+    (e : Expr Op Γ eff ty) :
+    (e.changeVars varsMap).denote =
+    fun Γ'v => e.denote (fun t v => Γ'v (varsMap v)) := by
+  funext Γ'v
   rcases e with ⟨_, rfl, _⟩
   simp [Expr.denote, Expr.changeVars, HVector.map_map]
 
@@ -567,17 +606,15 @@ def Com.changeVars
   | .lete e body => .lete (e.changeVars varsMap)
       (body.changeVars (fun t v => varsMap.snocMap v))
 
-@[simp] lemma Com.changeVars_ret (v : Var Γ t) (map : Γ.Hom Δ) :
-    (Com.ret (Op:=Op) v).changeVars map = Com.ret (map v) :=
-  rfl
-
-@[simp] lemma Com.changeVars_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) :
-    (Com.lete e body).changeVars map
-    = Com.lete (e.changeVars map) (body.changeVars map.snocMap) := by
+@[simp] lemma Com.changeVars_ret (v : Var Γ t) :
+    (Com.ret (Op:=Op) (eff := eff) v).changeVars = fun (map : Γ.Hom Δ) => Com.ret (map v) := by
+  funext map
   simp [changeVars]
 
-private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
-  f a b = f a b' := congrArg _ hb
+@[simp] lemma Com.changeVars_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) :
+    (Com.lete e body).changeVars
+    = fun (map : Γ.Hom Δ) => Com.lete (e.changeVars map) (body.changeVars map.snocMap) := by
+  simp [changeVars]
 
 @[simp]
 theorem Com.denote_changeVars
@@ -607,9 +644,8 @@ theorem Com.denote_changeVars
       simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, Expr.denote_changeVars, denote]
       cases v using Var.casesOn <;> simp [ih]
 
-@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty)
-    (V : Valuation _) :
-    (c.changeVars varsMap).denote V = c.denote (V.comap varsMap) := by
+@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty) :
+    (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp; rfl
 
 variable (Op : _) {Ty : _} [OpSignature Op Ty m] in
@@ -1493,17 +1529,17 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
-def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ Γ₂) →
-    (prog : Com Op Γ₂ eff₂ t) →
-    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ eff₂ t × (t' : Ty) × Var Γ₃ t')
-  | 0, lets, .lete e body => some ⟨_, .lete eff₂ lets e, body, _, Var.last _ _⟩
+def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ eff Γ₂) →
+    (prog : Com Op Γ₂ eff t) →
+    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ eff Γ₃ × Com Op Γ₃ eff t × (t' : Ty) × Var Γ₃ t')
+  | 0, lets, .lete e body => some ⟨_, .lete lets e, body, _, Var.last _ _⟩
   | _, _, .ret _ => none
   | n+1, lets, .lete e body =>
-    splitProgramAtAux n (lets.lete eff₂ e) body
+    splitProgramAtAux n (lets.lete e) body
 
-theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} →
-    {prog : Com Op Γ₂ eff₂ t} →
-    {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ t × (t' : Ty) × Var Γ₃ t'} →
+theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ eff Γ₂} →
+    {prog : Com Op Γ₂ eff t} →
+    {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ eff Γ₃ × Com Op Γ₃ eff t × (t' : Ty) × Var Γ₃ t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Valuation Γ₁) →
     res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote =<< (lets.denote s)
@@ -1534,7 +1570,7 @@ with the `pos`th variable in `prog`, and an `Com` starting with the next variabl
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAt (pos : ℕ) (prog : Com Op Γ₁ eff t) :
-    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × Com Op Γ₂ eff t × (t' : Ty) × Var Γ₂ t') :=
+    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ eff Γ₂ × Com Op Γ₂ eff t × (t' : Ty) × Var Γ₂ t') :=
   splitProgramAtAux pos .nil prog
 
 theorem denote_splitProgramAt {pos : ℕ} {prog : Com Op Γ₁ t}
