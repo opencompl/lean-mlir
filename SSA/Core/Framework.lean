@@ -492,6 +492,19 @@ theorem Com.denote_lete_eq_of_denote_expr_eq [LawfulMonad m] {e : Expr Op Γ eff
   · simp [denote, hv, EffectKind.return, Applicative.toPure, Pure.pure, pure]
   · simp_all [denote, hv, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
 
+def Com.denoteImpure : Com Op Γ eff ty → (Γv : Valuation Γ) → EffectKind.impure.toType2 m (toType ty)
+  | .ret e, Γv => pure (Γv e)
+  | .lete e body, Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x)
+
+@[simp]
+def Com.denoteImpure_ret [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (Γv : Valuation Γ) (x : Γ.Var t) :
+  (Com.ret (Op := Op) x).denoteImpure Γv = return (Γv x) := rfl
+
+@[simp]
+def Com.denoteImpure_body [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (Γv : Valuation Γ)
+    (e : Expr Op Γ eff te) (body : Com Op (Γ.snoc te) eff tbody) :
+  (Com.lete e body).denoteImpure Γv = e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x) := rfl
+
 /- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
 /-
 theorem Com.denote_lete_eq_of_denote_expr_eq' {e : Expr Op Γ eff α} {v : toType α}
@@ -714,9 +727,9 @@ def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ ef
     addLetsAtTop body (.lete e inputProg)
 
 theorem denote_addLetsAtTop [LawfulMonad m]:
-    (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ t₂) →
+    (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ eff t₂) →
     (addLetsAtTop lets inputProg).denote =
-      inputProg.denote <=< lets.denote
+      inputProg.denoteImpure <=< lets.denote
   | Lets.nil, inputProg => by
      funext Γv
      simp [addLetsAtTop, Lets.denote, Bind.kleisliLeft]
@@ -725,11 +738,11 @@ theorem denote_addLetsAtTop [LawfulMonad m]:
     funext Γ1'v
     simp [Bind.kleisliLeft, Lets.denote, addLetsAtTop]
 
-/-- `addProgramInMiddle v map top mid bot` appends the programs
+/-- `addPureProgramInMiddle v map top mid bot` appends the programs
 `top`, `mid` and `bot`, in that order, while reassigning `v`, a free variable in
 `bot`, to the output of `mid`. It also assigns all free variables
 in `mid` to variables available at the end of `top` using `map`. -/
-def addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
+def addPureProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
     Com Op Γ₁ t₂ :=
   let r := addProgramToLets top map mid
@@ -741,7 +754,7 @@ theorem denote_addProgramInMiddle_stateM
     {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (V : Valuation Γ₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
-    (addProgramInMiddle v map top mid bot).denote V = (do
+    (addPureProgramInMiddle v map top mid bot).denote V = (do
       let Vtop ← top.denote V
       let Vmid ← mid.denote (Vtop.comap map)
       bot.denote <| fun t' v' =>
@@ -749,7 +762,7 @@ theorem denote_addProgramInMiddle_stateM
         then h.fst ▸ Vmid
         else Vtop v'
     ) := by
-  simp only [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Bind.kleisliLeft,
+  simp only [addPureProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Bind.kleisliLeft,
     Com.denote_changeVars, ← seq_bind_eq]
   rw [← seq_bind_eq, map_eq_bind_pure_comp]
   simp
@@ -759,7 +772,7 @@ theorem denote_addProgramInMiddle_stateM
 theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (V : Valuation Γ₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
-    (addProgramInMiddle v map top mid bot).denote V = (do
+    (addPureProgramInMiddle v map top mid bot).denote V = (do
       let Vtop ← top.denote V
       let Vmid ← mid.denote (Vtop.comap map)
       bot.denote <| fun t' v' =>
@@ -767,7 +780,7 @@ theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
         then h.fst ▸ Vmid
         else Vtop v'
     ) := by
-  simp only [addProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
+  simp only [addPureProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
     Bind.kleisliLeft, denote_addProgramToLets]
   -- simp [Function.comp]
   simp
@@ -949,9 +962,9 @@ theorem DialectMorphism.preserves_effectKind (op : Op) :
   simp only [OpSignature.effectKind, Function.comp_apply, f.preserves_signature]; rfl
 
 mutual
-  def Com.map : Com Op Γ ty → Com Op' (f.mapTy <$> Γ) (f.mapTy ty)
+  def Com.map : Com Op Γ eff ty → Com Op' (f.mapTy <$> Γ) eff (f.mapTy ty)
     | .ret v          => .ret v.toMap
-    | .lete eff body rest => .lete eff body.map rest.map
+    | .lete body rest => .lete body.map rest.map
 
   def Expr.map : Expr Op (Ty:=Ty) Γ eff ty → Expr Op' (Ty:=Ty') (Γ.map f.mapTy) eff (f.mapTy ty)
     | ⟨op, Eq.refl _, effLe, args, regs⟩ => ⟨
@@ -965,8 +978,8 @@ mutual
 
   /-- Inline of `HVector.map'` for the termination checker -/
   def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
-      HVector (fun t => Com Op t.fst t.snd) regSig
-      → HVector (fun t => Com Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
+      HVector (fun t => Com Op t.fst eff t.snd) regSig
+      → HVector (fun t => Com Op' t.fst eff t.snd) (f.mapTy <$> regSig : RegionSignature _)
     | _, .nil        => .nil
     | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end
@@ -1065,7 +1078,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       use v.1, v.2
   -/
 
-def Com.vars : Com Op Γ t → VarSet Γ :=
+def Com.vars : Com Op Γ eff t → VarSet Γ :=
   fun com => com.toLets.lets.vars com.toLets.ret
 
 /--
@@ -1481,20 +1494,20 @@ with the `pos`th variable in `prog`, and an `Com` starting with the next variabl
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
 def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ Γ₂) →
-    (prog : Com Op Γ₂ t) →
-    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ t × (t' : Ty) × Var Γ₃ t')
-  | 0, lets, .lete eff e body => some ⟨_, .lete eff lets e, body, _, Var.last _ _⟩
+    (prog : Com Op Γ₂ eff₂ t) →
+    Option (Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ eff₂ t × (t' : Ty) × Var Γ₃ t')
+  | 0, lets, .lete e body => some ⟨_, .lete eff₂ lets e, body, _, Var.last _ _⟩
   | _, _, .ret _ => none
-  | n+1, lets, .lete eff e body =>
-    splitProgramAtAux n (lets.lete eff e) body
+  | n+1, lets, .lete e body =>
+    splitProgramAtAux n (lets.lete eff₂ e) body
 
 theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} →
-    {prog : Com Op Γ₂ t} →
+    {prog : Com Op Γ₂ eff₂ t} →
     {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ Γ₃ × Com Op Γ₃ t × (t' : Ty) × Var Γ₃ t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Valuation Γ₁) →
     res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote =<< (lets.denote s)
-  | 0, lets, .lete eff e body, res, hres, s => by
+  | 0, lets, .lete e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
     simp only [Lets.denote, eq_rec_constant, Com.denote]
@@ -1520,8 +1533,8 @@ theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ Γ₂} 
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
 of the output `Ctxt` of the returned `Lets`.  -/
-def splitProgramAt (pos : ℕ) (prog : Com Op Γ₁ t) :
-    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × Com Op Γ₂ t × (t' : Ty) × Var Γ₂ t') :=
+def splitProgramAt (pos : ℕ) (prog : Com Op Γ₁ eff t) :
+    Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × Com Op Γ₂ eff t × (t' : Ty) × Var Γ₂ t') :=
   splitProgramAtAux pos .nil prog
 
 theorem denote_splitProgramAt {pos : ℕ} {prog : Com Op Γ₁ t}
@@ -1540,17 +1553,17 @@ theorem denote_splitProgramAt {pos : ℕ} {prog : Com Op Γ₁ t}
 `target`. If it can match the variables, it inserts `rhs` into the program
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
-def rewriteAt (lhs rhs : Com Op Γ₁ t₁)
+def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : Com Op Γ₂ t₂) :
-    Option (Com Op Γ₂ t₂) := do
+    (pos : ℕ) (target : Com Op Γ₂ eff₂ t₂) :
+    Option (Com Op Γ₂ eff₂ t₂) := do
   let ⟨Γ₃, lets, target', t', vm⟩ ← splitProgramAt pos target
   if h : t₁ = t'
   then
     let flatLhs := lhs.toLets
     let m ← matchVarMap lets vm flatLhs.lets (h ▸ flatLhs.ret)
       (by subst h; exact hlhs)
-    return addProgramInMiddle vm m lets (h ▸ rhs) target'
+    return addPureProgramInMiddle vm m lets (h ▸ rhs) target'
   else none
 
 theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ t₁)
