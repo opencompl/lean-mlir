@@ -669,24 +669,24 @@ structure addProgramToLets.Result (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_out_n
   * a variable in the new out context, which is semantically equivalent to the return variable of
     the added program
 -/
-def addProgramToLets (lets : Lets Op Γ_in Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ eff ty) :
-    addProgramToLets.Result Op Γ_in (com.changeVars varsMap).outContext ty :=
+def addProgramToLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ eff ty) :
+    addProgramToLets.Result Op Γ_in eff (com.changeVars varsMap).outContext ty :=
   go lets (com.changeVars varsMap)
   where
-    go {Γ_out} {eff} (lets : Lets Op Γ_in Γ_out) :
-      (com : Com Op Γ_out eff ty) → addProgramToLets.Result Op Γ_in com.outContext ty
+    go {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
+      (com : Com Op Γ_out eff ty) → addProgramToLets.Result Op Γ_in eff com.outContext ty
     | Com.ret v => ⟨lets, v⟩
-    | Com.lete e body => go (Lets.lete eff lets e) body
+    | Com.lete e body => go (Lets.lete lets e) body
 
-@[simp] lemma addProgramToLets_ret {lets : Lets Op Γ_in Γ_out} {map : Δ.Hom Γ_out} {v : Var Δ t} :
+@[simp] lemma addProgramToLets_ret {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {v : Var Δ t} :
     addProgramToLets lets map (Com.ret v) = ⟨lets, map v⟩ :=
   rfl
 
-@[simp] lemma addProgramToLets.go_ret {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} :
+@[simp] lemma addProgramToLets.go_ret {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
     addProgramToLets.go lets (Com.ret v) = ⟨lets, v⟩ :=
   rfl
 
-@[simp] lemma addProgramToLets.go_lete {lets : Lets Op Γ_in Γ_out}
+@[simp] lemma addProgramToLets.go_lete {lets : Lets Op Γ_in eff Γ_out}
     {e : Expr Op Γ_out eff t} (body : Com Op (Γ_out.snoc t) eff u) :
     addProgramToLets.go lets (Com.lete e body)
     = addProgramToLets.go (Lets.lete eff lets e) body := by
@@ -837,23 +837,44 @@ theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
   -- next =>
   --   apply denote_addProgramToLets_lets
 
-structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty m] (Γ : Ctxt Ty) (t : Ty) where
+structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty m] (Γ : Ctxt Ty) (eff : EffectKind) (t : Ty) where
   {Γ_out : Ctxt Ty}
   /-- The let bindings of the original program -/
-  lets : Lets Op Γ Γ_out
+  lets : Lets Op Γ eff Γ_out
   /-- The return variable -/
   ret : Var Γ_out t
 
-def Com.toLets {t : Ty} : Com Op Γ t → FlatCom Op Γ t :=
-  go .nil
-where
-  go {Γ_out} (lets : Lets Op Γ Γ_out) : Com Op Γ_out t → FlatCom Op Γ t
+/-- Denote the Lets of the FlatICom -/
+def FlatCom.denoteLets (flatCom : FlatCom Op Γ eff t) (Γv : Γ.Valuation) :
+    eff.toType2 m <| flatCom.Γ_out.Valuation :=
+  flatCom.lets.denote Γv
+
+
+/-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
+def FlatCom.denoteLetsRet [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) (Γv : Γ.Valuation) :
+    eff.toType2 m (toType t) :=
+  flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
+
+
+abbrev FlatCom.denote [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) :=
+  FlatCom.denoteLetsRet flatCom
+
+def Com.toLetsAux {Γ_out} (lets : Lets Op Γ eff Γ_out) (com : Com Op Γ_out eff t) : FlatCom Op Γ eff t
     | .ret v => ⟨lets, v⟩
-    | .lete eff e body => go (lets.lete eff e) body
+    | .lete e body => toLetsAux (lets.lete e) body
+
+theorem Com.toLetsAux_nil_com_denote_eq (com : Com Op Γ_out eff t) :
+    (Com.toLetsAux .nil com).denote = com.denote := by
+  induction com using Com.rec'
+  · funext Γv
+    simp[toLetsAux, FlatCom.denote, FlatCom.denoteLetsRet, toLetsAux]
+
+
+def Com.toLets {t : Ty} : Com Op Γ eff t → FlatCom Op Γ eff t := toLetsAux Lets.nil
 
 @[simp]
-theorem Com.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : Com Op Γ_out t) (s : Valuation Γ_in) :
-  (fun Γ_out'v => Γ_out'v <| (toLets.go lets com).ret) <$> ((toLets.go lets com).lets.denote s) =
+theorem Com.denote_toLets_go (lets : Lets Op Γ_in eff Γ_out) (com : Com Op Γ_out eff t) (s : Valuation Γ_in) :
+  (fun Γ_out'v => Γ_out'v <| (toLetsAux lets com).ret) <$> ((toLetsAux lets com).lets.denote s) =
     com.denote =<< (lets.denote s) := sorry
 /-
   induction com using Com.rec'
@@ -868,8 +889,8 @@ theorem Com.denote_toLets_go (lets : Lets Op Γ_in Γ_out) (com : Com Op Γ_out 
 -/
 
 @[simp]
-theorem Com.denote_toLets (com : Com Op Γ t) (s : Valuation Γ) :
-    (fun Γv => Γv com.toLets.ret) <$> (com.toLets.lets.denote s) = com.denote s := by
+theorem Com.denote_toLets (com : Com Op Γ eff t) :
+    (fun Γv => com.toLets.lets.denote Γv >>= fun Γ_outv => return Γ_outv com.toLets.ret) = com.denote := by
   sorry
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
