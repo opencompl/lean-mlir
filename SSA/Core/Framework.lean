@@ -650,11 +650,11 @@ theorem Com.denote_changeVars
 
 variable (Op : _) {Ty : _} [OpSignature Op Ty m] in
 /-- The result returned by `addProgramToLets` -/
-structure addProgramToLets.Result (Γ_in Γ_out_new : Ctxt Ty) (ty : Ty) where
+structure addProgramToLets.Result (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_out_new : Ctxt Ty) (ty : Ty) where
   -- /-- The new out context -/
   -- {Γ_out_new : Ctxt Ty}
   /-- The new `lets`, with the program added to it -/
-  lets : Lets Op Γ_in Γ_out_new
+  lets : Lets Op Γ_in eff Γ_out_new
   -- /-- The difference between the old out context and the new out context
   --     This induces a context mapping from `Γ_out` to `Γ_out_new` -/
   -- diff : Ctxt.Diff Γ_out Γ_out_new
