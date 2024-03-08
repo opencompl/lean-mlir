@@ -490,6 +490,22 @@ def Com.denoteLets : (com : Com Op Γ eff ty) → (Γv : Valuation Γ) →
       body.denoteLets (V.snoc Ve) >>= fun V =>
       return V.cast (by simp [Com.outContext])
 
+def Com.denoteLetsPure : (com : Com Op Γ .pure ty) → (Γv : Valuation Γ) → (com.outContext.Valuation)
+  | .ret _, V => V
+  | .lete e body, V =>
+      let Ve := e.denote V
+      let ebody := body.denoteLets (V.snoc Ve)
+      ebody
+
+@[simp]
+theorem Com.denoteLets_eq_denoteLetsPure (com : Com Op Γ .pure ty) :
+    com.denoteLets = com.denoteLetsPure :=
+  match com with
+  | .ret _ => rfl
+  | .lete e body => by
+    funext Γv
+    simp [Com.denoteLets, Com.denoteLetsPure]
+
 @[simp] theorem Com.denoteLets_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) [LawfulMonad m] :
     (Com.lete e body).denoteLets =
         (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
@@ -656,9 +672,9 @@ theorem Com.denote_changeVars
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp; rfl
 
-variable (Op : _) {Ty : _} [OpSignature Op Ty m] in
-/-- The result returned by `addProgramToEndOfLets` -/
-structure addProgramToEndOfLets.Result (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_out_new : Ctxt Ty) (ty : Ty) where
+/-- The result returned by `addPureComToEndOfLets`
+-- TODO: this is now the same as a FlatCom? -/
+structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty m]  (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_out_new : Ctxt Ty) (ty : Ty) where
   -- /-- The new out context -/
   -- {Γ_out_new : Ctxt Ty}
   /-- The new `lets`, with the program added to it -/
@@ -667,7 +683,46 @@ structure addProgramToEndOfLets.Result (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_
   --     This induces a context mapping from `Γ_out` to `Γ_out_new` -/
   -- diff : Ctxt.Diff Γ_out Γ_out_new
   /-- The variable in the new `lets` that represent the return value of the added program -/
-  var : Var Γ_out_new ty
+  ret : Var Γ_out_new ty
+
+
+/-- Denote the Lets of the FlatICom -/
+def FlatCom.denoteLets (flatCom : FlatCom Op Γ eff Γ_out t) (Γv : Γ.Valuation) :
+    eff.toType2 m <| Γ_out.Valuation :=
+  flatCom.lets.denote Γv
+
+theorem FlatCom.denoteLets_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) :
+    flatCom.denoteLets = fun Γv => flatCom.lets.denote Γv := by
+  funext Γv
+  simp [denoteLets]
+
+/-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
+def FlatCom.denoteLetsRet [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) (Γv : Γ.Valuation) :
+    eff.toType2 m (toType t) :=
+  flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
+
+theorem FlatCom.denoteLetsRet_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) :
+    flatCom.denoteLetsRet = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
+  funext Γv
+  simp [denoteLetsRet]
+
+@[simp]
+abbrev FlatCom.denote [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) :=
+  FlatCom.denoteLetsRet flatCom
+
+/-- cast a pure Expr into a pure or impure expression -/
+def Expr.castPureToEff (eff : EffectKind) : (Expr Op Γ .pure t) → Expr Op Γ eff t
+| Expr.mk op ty_eq eff_le args regArgs =>
+  have heff : OpSignature.effectKind op ≤ eff := by
+    apply EffectKind.le_trans eff_le (EffectKind.pure_le eff)
+  Expr.mk op ty_eq heff args regArgs
+
+/-- Add a pure Com to the end of a sequence of lets -/
+def addPureComToEndOfLetsAux {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
+      (com : Com Op Γ_out .pure ty) → FlatCom Op Γ_in eff com.outContext ty
+  | Com.ret v => ⟨lets, v⟩
+  | Com.lete e body => addPureComToEndOfLetsAux
+     (Lets.lete lets (e.castPureToEff eff)) body
 
 /--
   Add a program to the end of a list of `Lets`,
@@ -677,35 +732,62 @@ structure addProgramToEndOfLets.Result (Γ_in : Ctxt Ty) (eff : EffectKind) (Γ_
   * a variable in the new out context, which is semantically equivalent to the return variable of
     the added program
 -/
-def addProgramToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ eff ty) :
-    addProgramToEndOfLets.Result Op Γ_in eff (com.changeVars varsMap).outContext ty :=
-  go lets (com.changeVars varsMap)
-  where
-    go {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
-      (com : Com Op Γ_out eff ty) → addProgramToEndOfLets.Result Op Γ_in eff com.outContext ty
-    | Com.ret v => ⟨lets, v⟩
-    | Com.lete e body => go (Lets.lete lets e) body
+def addPureComToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ .pure ty) :
+    FlatCom Op Γ_in eff (com.changeVars varsMap).outContext ty :=
+  addPureComToEndOfLetsAux lets (com.changeVars varsMap)
 
--- @[simp] lemma addProgramToEndOfLets.go_ret {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
---     addProgramToEndOfLets.go lets (Com.ret v) = ⟨lets, v⟩ :=
---   rfl
+@[simp] lemma addPureComToEndOfLetsAux_lete {lets : Lets Op Γ_in eff Γ_out}
+    {e : Expr Op Γ_out .pure t} (body : Com Op (Γ_out.snoc t) .pure u) :
+    addPureComToEndOfLetsAux lets (Com.lete e body)
+    = addPureComToEndOfLetsAux (Lets.lete lets (e.castPureToEff eff)) body := by
+  simp [addPureComToEndOfLetsAux]
 
-@[simp] lemma addProgramToEndOfLets.go_lete {lets : Lets Op Γ_in eff Γ_out}
-    {e : Expr Op Γ_out eff t} (body : Com Op (Γ_out.snoc t) eff u) :
-    addProgramToEndOfLets.go lets (Com.lete e body)
-    = addProgramToEndOfLets.go (Lets.lete lets e) body := by
-  simp [go]
+/- TODO: this is the exact same as Lets.addProgramAtTop!  -/
+def Com.toFlatCom {t : Ty} (com : Com Op Γ .pure t) : FlatCom Op Γ .pure (com.outContext) t :=
+  addPureComToEndOfLetsAux  Lets.nil  com
 
-@[simp] lemma addProgramToLets_lete {lets : Lets Op Γ_in eff Γ_out} {map : Ctxt.Hom Δ Γ_out}
-    {e : Expr Op Δ eff t} {body : Com Op (Δ.snoc t) eff t'} :
-    addProgramToEndOfLets lets map (Com.lete e body)
-    = addProgramToEndOfLets (Lets.lete lets (e.changeVars map)) map.snocMap body :=
+/-
+@[simp]
+theorem Com.denote_toLets_go (lets : Lets Op Γ_in eff Γ_out) (com : Com Op Γ_out eff t) (s : Valuation Γ_in) :
+  (fun Γ_out'v => Γ_out'v <| (toLetsAux lets com).ret) <$> ((toLetsAux lets com).lets.denote s) =
+    com.denote =<< (lets.denote s) := sorry
+-/
+/-
+  induction com using Com.rec'
+  . rfl
+  next ih =>
+    -- Was just `simp [toFlatCom.go, denote, ih]`
+    rw [toFlatCom.go]
+    simp [denote, ih]
+    congr
+    funext _ v
+    cases v using Var.casesOn <;> simp[Lets.denote]
+-/
+
+/-
+@[simp]
+theorem Com.denote_eq_denoteLetsRet_toFlatCom_aux (eff : EffectKind) (heff : eff = .pure) (com : Com Op Γ eff t) :
+    com.toFlatCom.denoteLetsRet = com.denote := by
+ sorry
+
+@[simp]
+theorem Com.denote_eq_denoteLetsRet_toFlatCom (com : Com Op Γ .pure t) :
+    com.toFlatCom.denoteLetsRet = com.denote := by
+ sorry
+ -/
+
+/-
+@[simp] lemma addPureComToEndOfLets_lete {lets : Lets Op Γ_in eff Γ_out} {map : Ctxt.Hom Δ Γ_out}
+    {e : Expr Op Δ .pure t} {body : Com Op (Δ.snoc t) .pure t'} :
+    addPureComToEndOfLets lets map (Com.lete e body)
+    = addPureComToEndOfLets (Lets.lete lets ((e.castPureToEff eff).changeVars map)) map.snocMap body :=
   rfl
+-/
 
 -- theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
 --     (V : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
 --   ((com.changeVars varsMap).outContextDiff.toHom var).denote
---   <$> ((addProgramToEndOfLets lets map com).lets.denote V)
+--   <$> ((addPureComToEndOfLets lets map com).lets.denote V)
 --     = (do
 --         let Vlets ← lets.denote V;
 --         let _ ← com.denote (Vlets.comap map)
@@ -716,50 +798,78 @@ def addProgramToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ
 --   next =>
 --     simp [bind_pure_comp, Com.denote]; rfl
 --   next e body ih =>
---     rw [addProgramToEndOfLets]
+--     rw [addPureComToEndOfLets]
 --     simp [Ctxt.Diff.toHom_unSnoc, ih, Lets.denote, Expr.denoteImpure]
 --     rfl
 
 -- theorem denote_addProgramToLets_var [LawfulMonad m] {lets : Lets Op Γ_in Γ_out} {map} {com : Com Op Δ t} :
 --     ∀ (ll : Valuation Γ_in),
---       (fun Γ_out'v => Γ_out'v <| (addProgramToEndOfLets lets map com).var) <$>
---         ((addProgramToEndOfLets lets map com).lets.denote ll)
+--       (fun Γ_out'v => Γ_out'v <| (addPureComToEndOfLets lets map com).var) <$>
+--         ((addPureComToEndOfLets lets map com).lets.denote ll)
 --       = (lets.denote ll) >>= (fun Γ_out'v => com.denote (Γ_out'v.comap map)) := by
 --   intro ll
 --   induction com using Com.rec' generalizing lets Γ_out
 --   next =>
 --     simp [Com.denote, bind_pure_comp]; rfl
 --   next e body ih =>
---     unfold addProgramToEndOfLets addProgramToEndOfLets.go
+--     unfold addPureComToEndOfLets addProgramToEndOfLets.go
 --     simp [Lets.denote, ih, Com.denote, Expr.denoteImpure]
 --     rfl
 
--- @[simp] lemma addProgramToLets_lete {lets : Lets Op Γ_in Γ_out} {map : Δ.Hom Γ_out}
+-- @[simp] lemma addPureComToEndOfLets_lete {lets : Lets Op Γ_in Γ_out} {map : Δ.Hom Γ_out}
 --     {eff} {e : Expr Op Δ eff t} {body : Com Op _ t'} :
---     addProgramToEndOfLets lets map (Com.lete eff e body)
+--     addPureComToEndOfLets lets map (Com.lete eff e body)
 --     = let lets := Lets.lete eff lets (e.changeVars varsMap)
---       let l := addProgramToEndOfLets lets (varsMap.snocMap) body
+--       let l := addPureComToEndOfLets lets (varsMap.snocMap) body
 --       ⟨l.lets, l.diff.unSnoc, l.var⟩ := by
---   simp [addProgramToEndOfLets]
+--   simp [addPureComToEndOfLets]
 --   refine ⟨rfl, ?_⟩
 
+/-- eta contraction for pure -/
+@[simp]
+theorem pure_applied_eq_pure [LawfulMonad m] : (fun (x : a) => (pure x : m a)) = Pure.pure := rfl
 
-theorem denote_addProgramToLets [LawfulMonad m]
-    {lets : Lets Op Γ_in Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ eff t} {V : Γ_in.Valuation} :
-    Lets.denote (addProgramToEndOfLets lets map com).lets V
+/-- combination of bind_pure and eta contraction for pure -/
+@[simp]
+theorem bind_pure_applied_eq [LawfulMonad m] (ma : m a) : ma >>= (fun (x : a) => (pure x : m a)) = ma := by
+  simp
+
+/-- eta contraction for return -/
+@[simp]
+theorem return_applied_eq_return [LawfulMonad m] : (fun (x : a) => (return x : m a)) = Pure.pure := rfl
+
+/-- combination of bind_return and eta contraction for return -/
+@[simp]
+theorem bind_return_applied [LawfulMonad m] (ma : m a) : ma >>= (fun (x : a) => (return x : m a)) = ma := by
+  simp
+
+set_option pp.notation false in
+theorem denote_addPureComToEndOfLets
+    {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ .pure t} {V : Γ_in.Valuation} :
+    Lets.denote (addPureComToEndOfLets lets map com).lets V
     = (do
         let Vlets ← lets.denote V
-        (com.changeVars map).denoteLets Vlets
+        let Vbody := (com.changeVars map).denoteLetsPure Vlets
+        return Vbody
       )
-      := by
-  unfold addProgramToEndOfLets
-  induction com using Com.rec' generalizing lets Γ_out
-  next =>
-    simp [Com.denoteLets, Com.changeVars]
-  next ih =>
-    rw [Com.changeVars, addProgramToEndOfLets.go_lete, ih, Lets.denote]
-    simp
+      :=
+  match com with
+  | .ret v =>  by
+    simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
+    rw [Com.changeVars_ret]
+    simp [addPureComToEndOfLetsAux, Com.denoteLetsPure]
+    symm
+    apply bind_pure_applied_eq (Lets.denote lets V)
+  | .lete e body => sorry
 
+  /-
+  unfold addPureComToEndOfLets
+  cases com using Com.rec'
+  case ret => simp [Com.denoteLets, Com.changeVars]
+  next ih =>
+    rw [Com.changeVars, addPureComToEndOfLets.go_lete, ih, Lets.denote]
+    simp
+  -/
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop : (lets : Lets Op Γ₁ Γ₂) → (inputProg : Com Op Γ₂ eff₂ t₂) → Com Op Γ₁ eff₂ t₂
   | Lets.nil, inputProg => inputProg
@@ -778,14 +888,14 @@ theorem denote_addLetsAtTop [LawfulMonad m]:
     funext Γ1'v
     simp [Bind.kleisliLeft, Lets.denote, addLetsAtTop]
 
-/-- `addPureProgramInMiddle v map top mid bot` appends the programs
+/-- `addPureComInMiddleOfLetCom v map top mid bot` appends the programs
 `top`, `mid` and `bot`, in that order, while reassigning `v`, a free variable in
 `bot`, to the output of `mid`. It also assigns all free variables
 in `mid` to variables available at the end of `top` using `map`. -/
-def addPureProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
-    (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
-    Com Op Γ₁ t₂ :=
-  let r := addProgramToEndOfLets top map mid
+def addPureComInMiddleOfLetCom {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
+    (top : Lets Op Γ₁ eff Γ₂) (mid : Com Op Γ₃ .pure t₁) (bot : Com Op Γ₂ eff t₂) :
+    Com Op Γ₁ eff t₂ :=
+  let r := addPureComToEndOfLets top map mid
   addLetsAtTop r.lets <| bot.changeVars <|
     (mid.changeVars map).outContextDiff.toHom.with v r.var
 
@@ -794,7 +904,7 @@ theorem denote_addProgramInMiddle_stateM
     {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (V : Valuation Γ₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
-    (addPureProgramInMiddle v map top mid bot).denote V = (do
+    (addPureComInMiddleOfLetCom v map top mid bot).denote V = (do
       let Vtop ← top.denote V
       let Vmid ← mid.denote (Vtop.comap map)
       bot.denote <| fun t' v' =>
@@ -802,7 +912,7 @@ theorem denote_addProgramInMiddle_stateM
         then h.fst ▸ Vmid
         else Vtop v'
     ) := by
-  simp only [addPureProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Bind.kleisliLeft,
+  simp only [addPureComInMiddleOfLetCom, denote_addLetsAtTop, Function.comp_apply, Bind.kleisliLeft,
     Com.denote_changeVars, ← seq_bind_eq]
   rw [← seq_bind_eq, map_eq_bind_pure_comp]
   simp
@@ -812,7 +922,7 @@ theorem denote_addProgramInMiddle_stateM
 theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (V : Valuation Γ₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ Γ₂) (mid : Com Op Γ₃ t₁) (bot : Com Op Γ₂ t₂) :
-    (addPureProgramInMiddle v map top mid bot).denote V = (do
+    (addPureComInMiddleOfLetCom v map top mid bot).denote V = (do
       let Vtop ← top.denote V
       let Vmid ← mid.denote (Vtop.comap map)
       bot.denote <| fun t' v' =>
@@ -820,8 +930,8 @@ theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
         then h.fst ▸ Vmid
         else Vtop v'
     ) := by
-  simp only [addPureProgramInMiddle, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
-    Bind.kleisliLeft, denote_addProgramToLets]
+  simp only [addPureComInMiddleOfLetCom, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
+    Bind.kleisliLeft, denote_addPureComToEndOfLets]
   -- simp [Function.comp]
   simp
   congr; funext Vtop
@@ -841,62 +951,6 @@ theorem denote_addProgramInMiddle [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
   -- next =>
   --   apply denote_addProgramToLets_lets
 
-structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty m] (Γ : Ctxt Ty) (eff : EffectKind) (t : Ty) where
-  {Γ_out : Ctxt Ty}
-  /-- The let bindings of the original program -/
-  lets : Lets Op Γ eff Γ_out
-  /-- The return variable -/
-  ret : Var Γ_out t
-
-/-- Denote the Lets of the FlatICom -/
-def FlatCom.denoteLets (flatCom : FlatCom Op Γ eff t) (Γv : Γ.Valuation) :
-    eff.toType2 m <| flatCom.Γ_out.Valuation :=
-  flatCom.lets.denote Γv
-
-
-/-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
-def FlatCom.denoteLetsRet [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) (Γv : Γ.Valuation) :
-    eff.toType2 m (toType t) :=
-  flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
-
-
-abbrev FlatCom.denote [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) :=
-  FlatCom.denoteLetsRet flatCom
-
-/-- @alexkeizer: We should try to switch the representation here -/
-def Com.toLetsAux {Γ_out} (lets : Lets Op Γ eff Γ_out) (com : Com Op Γ_out eff t) : FlatCom Op Γ eff t
-    | .ret v => ⟨lets, v⟩
-    | .lete e body => toLetsAux (lets.lete e) body
-
-theorem Com.toLetsAux_nil_com_denote_eq (com : Com Op Γ_out eff t) :
-    (Com.toLetsAux .nil com).denote = com.denote := by
-  induction com using Com.rec'
-  · funext Γv
-    simp[toLetsAux, FlatCom.denote, FlatCom.denoteLetsRet, toLetsAux]
-
-
-def Com.toLets {t : Ty} : Com Op Γ eff t → FlatCom Op Γ eff t := toLetsAux Lets.nil
-
-@[simp]
-theorem Com.denote_toLets_go (lets : Lets Op Γ_in eff Γ_out) (com : Com Op Γ_out eff t) (s : Valuation Γ_in) :
-  (fun Γ_out'v => Γ_out'v <| (toLetsAux lets com).ret) <$> ((toLetsAux lets com).lets.denote s) =
-    com.denote =<< (lets.denote s) := sorry
-/-
-  induction com using Com.rec'
-  . rfl
-  next ih =>
-    -- Was just `simp [toLets.go, denote, ih]`
-    rw [toLets.go]
-    simp [denote, ih]
-    congr
-    funext _ v
-    cases v using Var.casesOn <;> simp[Lets.denote]
--/
-
-@[simp]
-theorem Com.denote_toLets (com : Com Op Γ eff t) :
-    (fun Γv => com.toLets.lets.denote Γv >>= fun Γ_outv => return Γ_outv com.toLets.ret) = com.denote := by
-  sorry
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
     without adjusting variables
@@ -1086,9 +1140,9 @@ theorem HVector.vars_cons {t  : Ty} {l : List Ty}
     simp [Finset.ext_iff, or_comm, or_assoc]
 
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
-def Lets.vars : Lets Op Γ_in Γ_out → Var Γ_out t → VarSet Γ_in
+def Lets.vars : Lets Op Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
-  | .lete eff lets e, v => by
+  | .lete lets e, v => by
       cases v using Var.casesOn with
       | toSnoc v => exact lets.vars v
       -- this is wrong
@@ -1141,7 +1195,7 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
   -/
 
 def Com.vars : Com Op Γ eff t → VarSet Γ :=
-  fun com => com.toLets.lets.vars com.toLets.ret
+  fun com => com.toFlatCom.lets.vars com.toLets.ret
 
 /--
   Given two sequences of lets, `lets` and `matchExpr`,
@@ -1512,7 +1566,7 @@ end
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
-    (lets : Lets Op Γ_in Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in Δ_out) (w : Var Δ_out t)
+    (lets : Lets Op Γ_in eff Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in .pure Δ_out) (w : Var Δ_out t)
     (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w) :
     Option (Δ_in.Hom Γ_out) := do
   match hm : matchVar lets v matchLets w with
@@ -1619,20 +1673,20 @@ def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com Op Γ₂ eff₂ t₂) :
     Option (Com Op Γ₂ eff₂ t₂) := do
-  let ⟨Γ₃, lets, target', t', vm⟩ ← splitProgramAt pos target
+  let ⟨Γ₃, targetLets, target', t', vm⟩ ← splitProgramAt pos target
   if h : t₁ = t'
   then
-    let flatLhs := lhs.toLets
-    let m ← matchVarMap lets vm flatLhs.lets (h ▸ flatLhs.ret)
+    let flatLhs := lhs.toFlatCom
+    let m ← matchVarMap targetLets vm flatLhs.lets (h ▸ flatLhs.ret)
       (by subst h; exact hlhs)
-    return addPureProgramInMiddle vm m lets (h ▸ rhs) target'
+    return addPureComInMiddleOfLetCom vm m targetLets (h ▸ rhs) target'
   else none
 
-theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ t₁)
+theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : Com Op Γ₂ t₂)
+    (pos : ℕ) (target : Com Op Γ₂ eff t₂)
     (hl : lhs.denote = rhs.denote)
-    (rew : Com Op Γ₂ t₂)
+    (rew : Com Op Γ₂ eff t₂)
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
   ext s
@@ -1651,7 +1705,7 @@ theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ t₁)
       rw [denote_addProgramInMiddle, ← hl]
       rename_i _ _ h
       have := denote_matchVarMap h
-      simp only [Com.denote_toLets] at this
+      simp only [Com.denote_eq_denoteLetsRet_toFlatCom] at this
       simp only [this, ← denote_splitProgramAt hs s]
       congr
       funext t' v'
@@ -1665,11 +1719,11 @@ variable (Op : _) {Ty : _} [OpSignature Op Ty m] [Goedel Ty] [OpDenote Op Ty m] 
   the required variable checks become decidable
 -/
 structure PeepholeRewrite (Γ : List Ty) (t : Ty) where
-  lhs : Com Op (.ofList Γ) t
-  rhs : Com Op (.ofList Γ) t
+  lhs : Com Op (.ofList Γ) .pure t
+  rhs : Com Op (.ofList Γ) .pure t
   correct : lhs.denote = rhs.denote
 
-instance {Γ : List Ty} {t' : Ty} {lhs : Com Op (.ofList Γ) t'} :
+instance {Γ : List Ty} {t' : Ty} {lhs : Com Op (.ofList Γ) .pure t'} :
     Decidable (∀ (t : Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
@@ -1686,8 +1740,8 @@ instance {Γ : List Ty} {t' : Ty} {lhs : Com Op (.ofList Γ) t'} :
     apply h
 
 def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
-    (pos : ℕ) (target : Com Op Γ₂ t₂) :
-    (Com Op Γ₂ t₂) := if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
+    (pos : ℕ) (target : Com Op Γ₂ eff t₂) :
+    (Com Op Γ₂ eff t₂) := if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
       match rewriteAt pr.lhs pr.rhs hlhs pos target
       with
         | some res => res
@@ -1696,7 +1750,7 @@ def rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
 
 
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite Op Γ t)
-    (pos : ℕ) (target : Com Op Γ₂ t₂) :
+    (pos : ℕ) (target : Com Op Γ₂  eff t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
     simp only [rewritePeepholeAt]
     split_ifs
