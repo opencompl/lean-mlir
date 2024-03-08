@@ -586,9 +586,10 @@ def Expr.changeVars (varsMap : Γ.Hom Γ') :
   | _, ⟨op, sig_eq, eff_leq, args, regArgs⟩ =>
      ⟨op, sig_eq, eff_leq, args.map varsMap, regArgs⟩
 
--- @[simp]
--- theorem Lets.denote_nil [OpSignature Op Ty m] [Goedel Op] [D : OpDenote Op Ty m] {Γ1 : Ctxt Ty}:
---     ((Lets.nil (Op := Op)).denote) = EffectKind.impure.return (m := m) := sorry
+@[simp] theorem Lets.denote_nil {Γ : Ctxt Ty} :
+    (Lets.nil (Op:=Op) (eff:=eff) (Γ:=Γ)).denote = (return ·) := by
+  funext; simp [denote]
+
 @[simp]
 theorem Expr.denote_changeVars {Γ Γ' : Ctxt Ty}
     (varsMap : Γ.Hom Γ')
