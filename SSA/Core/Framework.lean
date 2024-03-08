@@ -425,6 +425,7 @@ def Com.outContext {Γ} : Com Op Γ eff t → Ctxt Ty :=
     (Com.lete e body).outContext = body.outContext :=
   rfl
 
+
 /-- The difference between the context `Γ` under which `com` is typed, and the output context of
 that same `com` -/
 def Com.outContextDiff : ∀ (com : Com Op Γ eff t), Γ.Diff com.outContext
@@ -599,12 +600,14 @@ theorem Expr.denote_changeVars {Γ Γ' : Ctxt Ty}
   rcases e with ⟨_, rfl, _⟩
   simp [Expr.denote, Expr.changeVars, HVector.map_map]
 
-def Com.changeVars
-    (varsMap : Γ.Hom Γ') :
-    Com Op Γ eff ty → Com Op Γ' eff ty
-  | .ret e => .ret (varsMap e)
-  | .lete e body => .lete (e.changeVars varsMap)
+/-- We need this to generate properly -/
+def Com.changeVars : Com Op Γ eff ty →
+    (varsMap : Γ.Hom Γ') →
+    Com Op Γ' eff ty
+  |  .ret e => fun varsMap => .ret (varsMap e)
+  |  .lete e body => fun varsMap => .lete (e.changeVars varsMap)
       (body.changeVars (fun t v => varsMap.snocMap v))
+
 
 @[simp] lemma Com.changeVars_ret (v : Var Γ t) :
     (Com.ret (Op:=Op) (eff := eff) v).changeVars = fun (map : Γ.Hom Δ) => Com.ret (map v) := by
@@ -615,6 +618,10 @@ def Com.changeVars
     (Com.lete e body).changeVars
     = fun (map : Γ.Hom Δ) => Com.lete (e.changeVars map) (body.changeVars map.snocMap) := by
   simp [changeVars]
+
+
+@[simp] theorem Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty) :
+  ((Com.ret (Op:=Op) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 
 @[simp]
 theorem Com.denote_changeVars
@@ -678,25 +685,21 @@ def addProgramToLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out)
     | Com.ret v => ⟨lets, v⟩
     | Com.lete e body => go (Lets.lete lets e) body
 
-@[simp] lemma addProgramToLets_ret {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {v : Var Δ t} :
-    addProgramToLets lets map (Com.ret v) = ⟨lets, map v⟩ :=
-  rfl
-
-@[simp] lemma addProgramToLets.go_ret {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
-    addProgramToLets.go lets (Com.ret v) = ⟨lets, v⟩ :=
-  rfl
+-- @[simp] lemma addProgramToLets.go_ret {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
+--     addProgramToLets.go lets (Com.ret v) = ⟨lets, v⟩ :=
+--   rfl
 
 @[simp] lemma addProgramToLets.go_lete {lets : Lets Op Γ_in eff Γ_out}
     {e : Expr Op Γ_out eff t} (body : Com Op (Γ_out.snoc t) eff u) :
     addProgramToLets.go lets (Com.lete e body)
-    = addProgramToLets.go (Lets.lete eff lets e) body := by
+    = addProgramToLets.go (Lets.lete lets e) body := by
   simp [go]
 
--- @[simp] lemma addProgramToLets_lete {lets : Lets Op Γ_in Γ_out} {map : Δ.Hom Γ_out}
---     {e : Expr Op Δ eff t} {body : Com Op _ _} :
---     addProgramToLets lets map (Com.lete eff e body)
---     = addProgramToLets (Lets.lete _ lets (e.changeVars map)) map.snocMap body :=
---   rfl
+@[simp] lemma addProgramToLets_lete {lets : Lets Op Γ_in eff Γ_out} {map : Ctxt.Hom Δ Γ_out}
+    {e : Expr Op Δ eff t} {body : Com Op (Δ.snoc t) eff t'} :
+    addProgramToLets lets map (Com.lete e body)
+    = addProgramToLets (Lets.lete _ lets (e.changeVars map)) map.snocMap body :=
+  rfl
 
 -- theorem denote_addProgramToLets_lets [LawfulMonad m] (lets : Lets Op Γ_in Γ_out) {map} {com : Com Op Δ t}
 --     (V : Valuation Γ_in) ⦃t⦄ (var : Var Γ_out t) :
