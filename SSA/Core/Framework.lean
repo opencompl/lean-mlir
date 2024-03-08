@@ -859,6 +859,7 @@ def FlatCom.denoteLetsRet [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) (Γ
 abbrev FlatCom.denote [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff t) :=
   FlatCom.denoteLetsRet flatCom
 
+/-- @alexkeizer: We should try to switch the representation here -/
 def Com.toLetsAux {Γ_out} (lets : Lets Op Γ eff Γ_out) (com : Com Op Γ_out eff t) : FlatCom Op Γ eff t
     | .ret v => ⟨lets, v⟩
     | .lete e body => toLetsAux (lets.lete e) body
