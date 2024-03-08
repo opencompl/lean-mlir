@@ -309,9 +309,9 @@ end
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
-inductive Lets : Ctxt Ty → Ctxt Ty → Type where
-  | nil {Γ : Ctxt Ty} : Lets Γ Γ
-  | lete (eff : EffectKind) (body : Lets Γ₁ Γ₂) (e : Expr Op Γ₂ eff t) : Lets Γ₁ (Γ₂.snoc t)
+inductive Lets : Ctxt Ty → EffectKind → Ctxt Ty → Type where
+  | nil {eff : EffectKind} {Γ : Ctxt Ty} : Lets Γ eff Γ
+  | lete (body : Lets Γ₁ eff Γ₂) (e : Expr Op Γ₂ eff t) : Lets Γ₁ eff (Γ₂.snoc t)
   deriving Repr
 
 /-
