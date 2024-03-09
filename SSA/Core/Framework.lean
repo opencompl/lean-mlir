@@ -38,6 +38,10 @@ instance [Functor m] : Functor (e.toType2 m) := by cases e <;> infer_instance
 instance [Functor m] [LawfulFunctor m] : LawfulFunctor (e.toType2 m) := by
   cases e <;> infer_instance
 
+-- Why do we need the specializations, if we already have the instance for generic `e` above
+instance [Functor m] [LawfulFunctor m] : LawfulFunctor (EffectKind.toType2 .impure m) := inferInstance
+instance [Functor m] [LawfulFunctor m] : LawfulFunctor (EffectKind.toType2 .pure m) := inferInstance
+
 instance [SeqLeft m]  : SeqLeft (e.toType2 m)  := by cases e <;> infer_instance
 instance [SeqRight m] : SeqRight (e.toType2 m) := by cases e <;> infer_instance
 instance [Seq m]      : Seq (e.toType2 m)      := by cases e <;> infer_instance
@@ -45,6 +49,10 @@ instance [Seq m]      : Seq (e.toType2 m)      := by cases e <;> infer_instance
 instance [Applicative m] : Applicative (e.toType2 m) := by cases e <;> infer_instance
 instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (e.toType2 m) := by
   cases e <;> infer_instance
+
+-- Why do we need the specializations, if we already have the instance for generic `e` above
+instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (EffectKind.toType2 .impure m) := inferInstance
+instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (EffectKind.toType2 .pure m) := inferInstance
 
 instance [Bind m] : Bind (e.toType2 m)   := by cases e <;> infer_instance
 instance [Monad m] : Monad (e.toType2 m) := by cases e <;> infer_instance
@@ -737,7 +745,7 @@ def Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .pure 
 
 /-- casting an expr to an impure expr and running it equals running it purely and returning the value -/
 @[simp]
-def Expr.denote_castPureToEff_impure_eq (e : Expr Op Γ .pure t) :
+def Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pure t) :
     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
   rename_i opsig _goedel _denote _deceq _monad
   unfold Expr.denote
@@ -795,11 +803,7 @@ theorem denote_addPureComToEndOfLetsAux [LawfulMonad m]
     conv =>
       rhs
       simp only [Com.denoteLetsPure]
-    cases eff
-    case pure =>
-      simp
-    case impure =>
-      simp
+    cases eff <;> simp
 
 /--
   Add a program to the end of a list of `Lets`,
@@ -1229,7 +1233,10 @@ theorem HVector.vars_cons {t  : Ty} {l : List Ty}
     congr 1
     simp [Finset.ext_iff, or_comm, or_assoc]
 
-/-- The free variables of `lets` that are (transitively) referred to by some variable `v` -/
+/-- The free variables of `lets` that are (transitively) referred to by some variable `v`.
+  Also known as the uses of var.
+  TODO: rename to uses.
+-/
 def Lets.vars : Lets Op Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
   | .lete lets e, v => by
@@ -1254,24 +1261,49 @@ theorem HVector.map_eq_of_eq_on_vars {A : Ty → Type*}
       apply h
       simp_all
 
-theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
+/--
+  Fix a variable v.
+  If the two value1, s2, agree on all of values v uses in v's def-use chain,
+  then the value of v after denoting the program is also equal.
+
+  This means that we never need to look at the whole context, but only the fragment
+  of the context that contains the expression tree of v.
+  TODO: unused theorem?
+  -/
+theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad m] (lets : Lets Op Γ_in eff Γ_out)
     (v : Var Γ_out t)
     {s₁ s₂ : Valuation Γ_in}
     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
-    v.denote <$> (lets.denote s₁)  = v.denote <$> (lets.denote s₂) := by
-  sorry
-/-
+    (lets.denote s₁) >>= (fun Γv => return v.denote Γv) =
+    (lets.denote s₂) >>= (fun Γv => return v.denote Γv) := by
   induction lets generalizing t
-  next =>
+  case nil =>
     simp [vars] at h
     simp [denote, h]
-  next lets e ih =>
+    -- | TODO: why does this go out of scope? @alexkeizer
+    rename_i _ _ _ _ eff _
+    cases eff <;> simp [map_pure, Var.denote, h]
+  case lete lets e body ih =>
+    rename_i _ _ _ _ effbody _
     cases v using Var.casesOn
     . simp [vars] at h
       simp [denote]
-      apply ih
-      simpa
+      cases effbody
+      case pure =>
+        simp_all
+        apply ih
+        simpa
+      case impure =>
+        simp_all [map_pure]
+        sorry
+        -- This needs some thought about side effects. Pretty sure it's true still, but it needs thinking.
+        /-
+        apply ih
+        simpa
+        -/
     . rcases e with ⟨op, rfl, args⟩
+      sorry
+      /-
       simp [denote, Expr.denote]
       congr 1
       apply HVector.map_eq_of_eq_on_vars
@@ -1282,10 +1314,11 @@ theorem Lets.denote_eq_of_eq_on_vars (lets : Lets Op Γ_in Γ_out)
       rw [vars, Var.casesOn_last]
       simp
       use v.1, v.2
-  -/
+      -/
 
-def Com.vars : Com Op Γ eff t → VarSet Γ :=
-  fun com => com.toFlatCom.lets.vars com.toLets.ret
+/-- This gives all the variables the last expression uses -/
+def Com.vars : Com Op Γ .pure t → VarSet Γ :=
+  fun com => com.toFlatCom.lets.vars com.toFlatCom.ret
 
 /--
   Given two sequences of lets, `lets` and `matchExpr`,
@@ -1669,9 +1702,9 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
       simp_all
 
 theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
-    {lets : Lets Op Γ_in Γ_out}
+    {lets : Lets Op Γ_in eff Γ_out}
     {t : Ty} {v : Var Γ_out t}
-    {matchLets : Lets Op Δ_in Δ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
     {w : Var Δ_out t}
     {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
