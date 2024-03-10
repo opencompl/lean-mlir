@@ -1303,6 +1303,7 @@ theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad m] (lets : Lets Op Γ_in eff �
         -/
     . rcases e with ⟨op, rfl, args⟩
       sorry
+      sorry
       /-
       simp [denote, Expr.denote]
       congr 1
@@ -1319,6 +1320,19 @@ theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad m] (lets : Lets Op Γ_in eff �
 /-- This gives all the variables the last expression uses -/
 def Com.vars : Com Op Γ .pure t → VarSet Γ :=
   fun com => com.toFlatCom.lets.vars com.toFlatCom.ret
+
+mutual
+
+def matchArg [DecidableEq Op]
+    (lets : Lets Op Γ_in eff Γ_out)
+    (matchLets : Lets Op Δ_in .pure Δ_out)
+  : ∀ {l : List Ty}
+    (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
+    Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
+  | _, .nil, .nil, ma => some ma
+  | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
+      let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
+      matchArg lets matchLets vsₗ vsᵣ ma
 
 /--
   Given two sequences of lets, `lets` and `matchExpr`,
@@ -1342,17 +1356,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       let ie ← lets.getPureExpr v
       if hs : ∃ h : ie.op = matchExpr.op, ie.regArgs = (h ▸ matchExpr.regArgs)
       then
-        -- hack to make a termination proof work
-        let matchVar' := fun t vₗ vᵣ ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ ma
-        let rec matchArg : ∀ {l : List Ty}
-            (_Tₗ : HVector (Var Γ_out) l) (_Tᵣ :  HVector (Var Δ_out) l),
-            Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
-          | _, .nil, .nil, ma => some ma
-          | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
-              let ma ← matchVar' _ vₗ vᵣ ma
-              matchArg vsₗ vsᵣ ma
-        matchArg ie.args (hs.1 ▸ matchExpr.args) ma
+        matchArg lets matchLets ie.args (hs.1 ▸ matchExpr.args) ma
       else none
   | .nil, w, ma => -- The match expression is just a free (meta) variable
       match ma.lookup ⟨_, w⟩ with
@@ -1362,6 +1366,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+end
 
 open AList
 
