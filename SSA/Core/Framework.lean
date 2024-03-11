@@ -1324,11 +1324,9 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
-#check HEq
+set_option maxHeartbeats 99999999 in
 mutual
-variable [DecidableEq Op]
-
-theorem subset_entries_matchArg_aux
+theorem subset_entries_matchArg_aux [DecidableEq Op]
     {Γ_out Δ_in Δ_out  : Ctxt Ty}
     {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
@@ -1371,7 +1369,7 @@ theorem subset_entries_matchArg_aux
 
 /- TODO: Lean hangs on this proof! -/
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
-theorem subset_entries_matchVar
+theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
@@ -1424,12 +1422,12 @@ theorem subset_entries_matchVar
 end
 
 theorem subset_entries_matchVar_matchArg [DecidableEq Op]
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in Γ_out}
-    {matchLets : Lets Op Δ_in Δ_out} :
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in eff Γ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out} :
     {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
     {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
     {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : varMap ∈ matchVar.matchArg Δ_out
+    (hvarMap : varMap ∈ matchArg lets matchLets Δ_out
         (fun t vₗ vᵣ ma =>
             matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →
     ma.entries ⊆ varMap.entries :=
