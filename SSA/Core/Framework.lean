@@ -194,11 +194,6 @@ instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toType2 m) m where
     | .pure   => return x
     | .impure => x
 
-/-- Type with no inhabitant -/
-inductive Void where
-def Void.elim (v : Void) : α := nomatch v
-
-
 /- # Classes -/
 
 abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
