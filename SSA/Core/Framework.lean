@@ -951,12 +951,17 @@ theorem Expr.denote_toPure? {e : Expr Op Γ eff ty} {e': Expr Op Γ .pure ty}
     | .impure => pure ∘ e'.denote := by
   funext Γv
   cases e
-  case h.mk a b c d e f g  h=>
+  case h.mk a b c d e f g  h =>
+    rw [Expr.denote_mk_of_pure]
+    simp [denote]
     subst h
     unfold OpSignature.effectKind at g
     simp[Function.comp] at g
-    simp [denote]
     sorry
+    -- cases eff
+
+    -- simp [denote]
+    -- sorry
 
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
@@ -1389,12 +1394,16 @@ theorem subset_entries_matchVar [DecidableEq Op]
       . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
   | .lete matchLets _, ⟨w+1, h⟩ => by
-    sorry
-  /-
-    simp [matchVar]
+    simp [matchVar] at *
+    unfold matchVar at hvarMap
     apply subset_entries_matchVar
-  -/
-
+      (varMap := varMap)
+      (ma := ma)
+      (lets := lets)
+      (v := v)
+      (matchLets := _)
+      (w := _)
+      (hvarMap := by simp; exact hvarMap)
   | .lete matchLets matchExpr, ⟨0, _⟩ => by
     sorry
   /-
