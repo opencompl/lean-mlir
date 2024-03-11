@@ -5,9 +5,8 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
-open Std
-open Std.BitVec
 open LLVM
+open BitVec
 
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
     getLsb (-1#w) i := by

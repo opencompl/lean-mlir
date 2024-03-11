@@ -15,7 +15,7 @@ import Mathlib.Tactic.Ring
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
-open Std (BitVec)
+open BitVec
 open Ctxt(Var)
 
 @[simp]
