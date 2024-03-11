@@ -79,21 +79,19 @@ def EffectKind.return_pure_toType2_eq (a : α) : (return a : EffectKind.pure.toT
 @[simp]
 def EffectKind.return_impure_toType2_eq [Monad m] (a : α) : (return a : EffectKind.impure.toType2 m α) = (return a : m α) := rfl
 
-@[simp]
-def EffectKind.le : EffectKind → EffectKind → Prop
-| .pure, _ => True
-| .impure, .impure => True
-| _, _ => False
+inductive EffectKind.le : EffectKind → EffectKind → Prop
+  | pure_le (e) : le .pure e
+  | le_impure (e) : le e .impure
 
 @[simp]
 def EffectKind.decLe (e e' : EffectKind) : Decidable (EffectKind.le e e') :=
   match e with
   | .pure => match e' with
-    | .pure => isTrue (by simp)
-    | .impure => isTrue (by simp)
+    | .pure => isTrue (by constructor)
+    | .impure => isTrue (by constructor)
   | .impure => match e' with
-    | .pure => isFalse (by simp)
-    | .impure => isTrue (by simp)
+    | .pure => isFalse (fun.)
+    | .impure => isTrue (by constructor)
 
 
 instance : LE EffectKind where le := EffectKind.le
@@ -102,20 +100,16 @@ instance : DecidableRel (LE.le (α := EffectKind)) := EffectKind.decLe
 @[simp]
 theorem EffectKind.eq_of_le_pure {e : EffectKind}
     (he : e ≤ EffectKind.pure) : e = EffectKind.pure := by
-  cases e <;> simp_all [LE.le]
+  cases he; rfl
 
 
-@[simp] theorem EffectKind.not_impure_le_pure : ¬(EffectKind.impure ≤ EffectKind.pure) := by rintro ⟨⟩
--- @[simp] theorem EffectKind.pure_le_pure : EffectKind.pure ≤ EffectKind.pure := by simp[LE.le]
--- @[simp] theorem EffectKind.pure_le_impure : EffectKind.pure ≤ EffectKind.impure := by simp[LE.le]
--- @[simp] theorem EffectKind.impure_le_impure : EffectKind.impure ≤ EffectKind.impure := by simp[LE.le]
-@[simp] theorem EffectKind.pure_le (e : EffectKind) : EffectKind.pure ≤ e := by
-  cases e <;> constructor
-@[simp] theorem EffectKind.le_impure (e : EffectKind) : e ≤ EffectKind.impure := by
-  cases e <;> constructor
+@[simp] theorem EffectKind.not_impure_le_pure : ¬(EffectKind.impure ≤ EffectKind.pure) := by
+  rintro ⟨⟩
 
-@[simp]
-theorem EffectKind.le_refl (e : EffectKind) : e ≤ e := by cases e <;> simp [LE.le]
+@[simp] theorem EffectKind.pure_le (e : EffectKind) : EffectKind.pure ≤ e := le.pure_le e
+@[simp] theorem EffectKind.le_impure (e : EffectKind) : e ≤ EffectKind.impure := le.le_impure e
+
+@[simp] theorem EffectKind.le_refl (e : EffectKind) : e ≤ e := by cases e <;> constructor
 
 @[simp]
 theorem EffectKind.le_trans {e1 e2 e3 : EffectKind} (h12: e1 ≤ e2) (h23: e2 ≤ e3) : e1 ≤ e3 := by
@@ -152,24 +146,23 @@ def EffectKind.toType2_hom [Monad m] {e1 e2 : EffectKind} {α : Type}
 --   | .pure, v => return v
 --   | .impure, v => v
 
-@[simp]
-theorem EffectKind.toType2_hom_pure_pure [Monad m] (hle : EffectKind.pure ≤ EffectKind.pure) :
+@[simp] theorem EffectKind.toType2_hom_pure_pure [Monad m] (hle : pure ≤ pure) :
     EffectKind.toType2_hom hle (α := α) (m := m) = id :=
   rfl
 
-
-@[simp]
-theorem EffectKind.toType2_hom_pure_impure [Monad m] (hle : EffectKind.pure ≤ EffectKind.impure) :
+@[simp] theorem EffectKind.toType2_hom_pure_impure [Monad m] (hle : pure ≤ impure) :
     EffectKind.toType2_hom hle (α := α) (m := m) = Pure.pure :=
   rfl
 
-@[simp]
-theorem EffectKind.toType2_hom_impure_impure [Monad m] (hle : EffectKind.impure ≤ EffectKind.impure) :
+@[simp] theorem EffectKind.toType2_hom_impure_impure [Monad m] (hle : impure ≤ impure) :
     EffectKind.toType2_hom hle (α := α) (m := m) = id :=
   rfl
 
-@[simp]
-theorem Effectkind.toType2_hom_impure [Monad m] {e} (hle : e ≤ EffectKind.impure) :
+@[simp] theorem EffectKind.toType2_hom_pure [Monad m] {e} (hle : e ≤ EffectKind.pure) :
+    EffectKind.toType2_hom hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
+  cases hle; rfl
+
+@[simp] theorem Effectkind.toType2_hom_impure [Monad m] {e} (hle : e ≤ EffectKind.impure) :
     EffectKind.toType2_hom hle (α := α) (m := m) = match e with
       | .pure => fun v => return v
       | .impure => id := by
@@ -489,7 +482,7 @@ def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com O
   | _, .nil => HVector.nil
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
-def Expr.denote {ty : Ty} :  (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toType2 m (toType ty)
+def Expr.denote {ty : Ty} : (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toType2 m (toType ty)
   | ⟨op, Eq.refl _, heff, args, regArgs⟩, Γv =>
     EffectKind.toType2_hom heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
@@ -778,25 +771,44 @@ def Expr.castPureToEff (eff : EffectKind) : (Expr Op Γ .pure t) → Expr Op Γ 
   Expr.mk op ty_eq heff args regArgs
 
 @[simp]
-def Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .pure = e := by
-  cases e; simp[castPureToEff]
+theorem Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .pure = e := by
+  cases e; simp [castPureToEff]
+
+-- lemma Expr.denote_impure_of_effectKind_eq_pure {op : Op}
+--     (heff : OpSignature.effectKind op ≤ .pure) (heff_impure : OpSignature.effectKind op ≤ .impure)
+--     {ty} {ty_eq : ty = _} {args} {regArgs} :
+--     denote ⟨op, ty_eq, heff_impure, args, regArgs⟩
+--     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
+--   sorry
+
+-- lemma Expr.denote_impure_of_effectKind_eq_pure (e : Expr Op Γ .pure t)
+--     {ty} {ty_eq : ty = _} {args} {regArgs} :
+--     denote ⟨op, ty_eq, heff_impure, args, regArgs⟩
+--     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
+--   sorry
+
+-- lemma EffectKind.toType2_hom_pure (h : eff ≤ EffectKind.pure) :
+--     EffectKind.toType2_hom h (m:=m) f = fun x => f (cast _ x) := by
+--   sorry
+
+theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
+    (pure (cast h b) : f α) = cast (by rw[h]) (pure b : f β) := by
+  apply eq_of_heq;
+  apply HEq.trans (b:=pure b) ?_ (cast_heq _ _).symm
+  congr
+  · symm; assumption
+  · exact cast_heq ..
 
 /-- casting an expr to an impure expr and running it equals running it purely and returning the value -/
 @[simp]
-def Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pure t) :
+theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pure t) :
     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
-  rename_i opsig _goedel _denote _deceq _monad
-  unfold Expr.denote
-  unfold castPureToEff
-  cases opsig
-  case mk sig =>
-    simp[OpSignature.effectKind, OpSignature.outTy, OpSignature.regSig] at *
-    cases e
-    case mk op regArgs args eff_le ty_eq => -- ty_eq eff_le args regArgs =>
-      subst ty_eq
-      funext Γv
-      simp [castPureToEff]
-      sorry
+  rcases e with ⟨op, rfl, (eff_le : EffectKind.le ..), args, regArgs⟩
+  funext Γv
+  simp [castPureToEff]
+  conv_rhs => simp [denote, Pure.pure_cast]
+  -- split
+  sorry
 
 
 /-- Add a pure Com to the end of a sequence of lets -/
