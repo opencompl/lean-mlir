@@ -220,6 +220,49 @@ class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty
             (OpSignature.regSig op)) →
     ((OpSignature.effectKind op).toType2 m (toType <| OpSignature.outTy op))
 
+/-
+Some considerations about purity:
+
+We want pure operations to be able to be run in an impure context (but not vice versa, of course).
+
+However, the current definition of `OpDenote` forces an expressions regions to be of the same purity
+as the operation.
+In particular, a pure operation which has regions requires those regions to be available as pure
+functions `args → result` to be able call `OpDenote.denote`, whereas an instance of this operation
+with impure regions would have them be `args → m result`.
+
+Thus, a change to `OpDenote.denote` is necessary (eventually), but the main question there is:
+how can we incorporate effect polymorphism without exposing the possibility that a user might
+define semantics for an operation that behave differently when running purely vs when running
+impurely.
+
+One option is to generalize `OpDenote` to take an effect, like so
+```lean
+class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty m] where
+  denote (op : Op) {eff : EffectKind} (heff : OpSignature.effectKind op ≤ eff)  :
+    HVector toType (OpSignature.sig op) →
+    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → eff.toType2 m (toType t.2))
+            (OpSignature.regSig op)) →
+    (eff.toType2 m (toType <| OpSignature.outTy op))
+```
+
+But, then we'd have to enforce that the semantics don't change when a pure operation is being run
+impurely.
+```lean
+class LawfulOpDenote (Op Ty : Type) (m : Type → Type)
+    [Goedel Ty] [OpSignature Op Ty m] [OpDenote Op Ty m] [Monad m] where
+  pure_denote (op : Op) (heff : OpSignature.effectKind op = .pure) (args) (regions) :
+      pure (OpDenote.denote op (eff:=.pure) (by simp [heff]) args regions)
+      = OpDenote.denote op (eff:=.impure) (by simp) args (regions.map fun _ r V => return r V)
+```
+
+Another option, which would be more complicated, but correct by construction, is to have the
+`denote` function be run within a specific `OpDenoteM` monad, whose monadic actions are
+"eval region $x". Assuming the `op` is pure, `OpDenoteM α` could then be evaluated both purely or
+impurely.
+-/
+
+
 /- # Datastructures -/
 
 
