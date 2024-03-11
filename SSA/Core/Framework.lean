@@ -1326,7 +1326,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
 
 set_option maxHeartbeats 99999999 in
 mutual
-theorem subset_entries_matchArg_aux [DecidableEq Op]
+theorem subset_entries_matchArg [DecidableEq Op]
     {Γ_out Δ_in Δ_out  : Ctxt Ty}
     {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
@@ -1345,7 +1345,7 @@ theorem subset_entries_matchArg_aux [DecidableEq Op]
   | .cons t ts, .cons vl argsl', .cons vr argsr' => by
     simp [matchArg, bind, pure] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
-    have hind := subset_entries_matchArg_aux
+    have hind := subset_entries_matchArg
       (Γ_out := Γ_out)
       (Δ_in := Δ_in)
       (Δ_out := Δ_out)
@@ -1414,32 +1414,20 @@ theorem subset_entries_matchVar [DecidableEq Op]
       split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
-        apply subset_entries_matchArg_aux (lets := lets) (v := v)
+        apply subset_entries_matchArg (lets := lets) (v := v)
           (matchLets := matchLets)
           (argsl := args')
           (argsr := (Expr.args matchExpr))
           (hvarMap := by simp; rw [← hvarMap])
 end
 
-theorem subset_entries_matchVar_matchArg [DecidableEq Op]
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in eff Γ_out}
-    {matchLets : Lets Op Δ_in .pure Δ_out} :
-    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
-    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
-    {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : varMap ∈ matchArg lets matchLets Δ_out
-        (fun t vₗ vᵣ ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →
-    ma.entries ⊆ varMap.entries :=
-  subset_entries_matchArg_aux (fun _ _ _ _ _ => subset_entries_matchVar)
-
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
 
 theorem denote_matchVar_matchArg [DecidableEq Op]
-    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in Γ_out}
-    {matchLets : Lets Op Δ_in Δ_out} :
+    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .eff Γ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out} :
     {l : List Ty} →
     {args₁ : HVector (Var Γ_out) l} →
     {args₂ : HVector (Var Δ_out) l} →
@@ -1473,11 +1461,11 @@ theorem denote_matchVar_matchArg [DecidableEq Op]
 
 /- NOTE: Lean hangs on this proof! -/
 theorem denote_matchVar_of_subset
-    {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t}
+    {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
+    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
     True := by sorry
@@ -1542,10 +1530,10 @@ theorem denote_matchVar_of_subset
           rfl
 -/
 
-theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} {varMap : Mapping Δ_in Γ_out}
+theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
-    {matchLets : Lets Op Δ_in Δ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
     {w : Var Δ_out t} :
     varMap ∈ matchVar lets v matchLets w ma →
     matchLets.denote (fun t' v' => by
@@ -1569,14 +1557,12 @@ macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith 
 mutual
 /-- NOTE: Lean hands on this proof -/
 theorem mem_matchVar_matchArg
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in Γ_out}
-    {matchLets : Lets Op Δ_in Δ_out} :
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .impure Γ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out} :
     {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
     {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
     {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : varMap ∈ matchVar.matchArg Δ_out
-        (fun t vₗ vᵣ ma =>
-            matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →
+    (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) →
       ⟨t', v'⟩ ∈ varMap
   | _, _, _, _, _, _ => sorry
@@ -1599,8 +1585,8 @@ theorem mem_matchVar_matchArg
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
-    {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
+    {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} :
+    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ matchLets.vars w → ⟨t', v'⟩ ∈ varMap
   | _, _, _, _, _ => sorry
@@ -1720,7 +1706,7 @@ theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ eff Γ�
     -/
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux] at hres
-  | n+1, lets, .lete eff e body, res, hres, s => by
+  | n+1, lets, .lete e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     sorry
     /-
@@ -1738,12 +1724,13 @@ def splitProgramAt (pos : ℕ) (prog : Com Op Γ₁ eff t) :
     Option (Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ eff Γ₂ × Com Op Γ₂ eff t × (t' : Ty) × Var Γ₂ t') :=
   splitProgramAtAux pos .nil prog
 
-theorem denote_splitProgramAt {pos : ℕ} {prog : Com Op Γ₁ t}
-    {res : Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ Γ₂ × Com Op Γ₂ t × (t' : Ty) × Var Γ₂ t'}
+theorem denote_splitProgramAt [LawfulMonad m] {pos : ℕ} {prog : Com Op Γ₁ eff t}
+    {res : Σ (Γ₂ : Ctxt Ty), Lets Op Γ₁ eff Γ₂ × Com Op Γ₂ eff t × (t' : Ty) × Var Γ₂ t'}
     (hres : res ∈ splitProgramAt pos prog) (s : Valuation Γ₁) :
-    res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote s :=
-  denote_splitProgramAtAux hres s
-
+    res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote s := by
+  -- simp [Lets.denote_nil]
+  rw [denote_splitProgramAtAux hres s]
+  cases eff <;> simp [Bind.bindLeft, pure_bind]
 
 
 /-
@@ -1767,7 +1754,7 @@ def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     return addPureComInMiddleOfLetCom vm m targetLets (h ▸ rhs) target'
   else none
 
-theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
+theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com Op Γ₂ eff t₂)
     (hl : lhs.denote = rhs.denote)
