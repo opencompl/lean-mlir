@@ -133,6 +133,13 @@ def EffectKind.toType2_hom [Monad m] {e1 e2 : EffectKind} {α : Type}
     EffectKind.toType2_hom hle (α := α) (m := m) = Pure.pure :=
   rfl
 
+/-- Forded version of `toType2_hom_pure_impure` -/
+theorem EffectKind.toType2_hom_eq_pure_cast {m : Type → Type} [Monad m]
+    {eff : EffectKind} (eff_eq : eff = .pure) (eff_le : eff ≤ .impure) :
+    EffectKind.toType2_hom eff_le = fun (x : eff.toType2 m α) =>
+      Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
+  subst eff_eq; rfl
+
 @[simp] theorem EffectKind.toType2_hom_impure_impure [Monad m] (hle : impure ≤ impure) :
     EffectKind.toType2_hom hle (α := α) (m := m) = id :=
   rfl
