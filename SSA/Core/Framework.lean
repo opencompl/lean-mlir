@@ -44,9 +44,9 @@ def OpSignature.effectKind [s: OpSignature Op Ty m]    := Signature.effectKind �
 
 class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty m] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
-    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → EffectKind.impure.toType2 m (toType t.2))
+    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → EffectKind.impure.toMonad m (toType t.2))
             (OpSignature.regSig op)) →
-    ((OpSignature.effectKind op).toType2 m (toType <| OpSignature.outTy op))
+    ((OpSignature.effectKind op).toMonad m (toType <| OpSignature.outTy op))
 
 /-
 Some considerations about purity:
@@ -69,9 +69,9 @@ One option is to generalize `OpDenote` to take an effect, like so
 class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty m] where
   denote (op : Op) {eff : EffectKind} (heff : OpSignature.effectKind op ≤ eff)  :
     HVector toType (OpSignature.sig op) →
-    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → eff.toType2 m (toType t.2))
+    (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → eff.toMonad m (toType t.2))
             (OpSignature.regSig op)) →
-    (eff.toType2 m (toType <| OpSignature.outTy op))
+    (eff.toMonad m (toType <| OpSignature.outTy op))
 ```
 
 But, then we'd have to enforce that the semantics don't change when a pure operation is being run
@@ -310,15 +310,15 @@ variable [Goedel Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m]
 mutual
 
 def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com Op t.1 .impure t.2) l) →
-    HVector (fun t => t.1.Valuation → EffectKind.impure.toType2 m (toType t.2)) l
+    HVector (fun t => t.1.Valuation → EffectKind.impure.toMonad m (toType t.2)) l
   | _, .nil => HVector.nil
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
-def Expr.denote {ty : Ty} : (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toType2 m (toType ty)
+def Expr.denote {ty : Ty} : (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
   | ⟨op, Eq.refl _, heff, args, regArgs⟩, Γv =>
-    EffectKind.toType2_hom heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
+    EffectKind.toMonad_hom heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
-def Com.denote : Com Op Γ eff ty → (Γv : Valuation Γ) → eff.toType2 m (toType ty)
+def Com.denote : Com Op Γ eff ty → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
   | .ret e, Γv => pure (Γv e)
   | .lete e body, Γv =>
      match eff with
@@ -339,7 +339,7 @@ theorem Expr.denote_unfold  [OP_SIG : OpSignature Op Ty m] [OP_DENOTE: OpDenote 
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
     Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv =
-    ty_eq ▸ (EffectKind.toType2_hom eff_le  <| OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
+    ty_eq ▸ (EffectKind.toMonad_hom eff_le  <| OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
       subst ty_eq
       simp[denote]
 
@@ -368,7 +368,7 @@ theorem Com.denote_ret {eff : EffectKind} (Γ : Ctxt Ty) (x : Γ.Var t) [Monad m
   simp [denote]
 
 def Com.denoteLets : (com : Com Op Γ eff ty) → (Γv : Valuation Γ) →
-    eff.toType2 m (com.outContext.Valuation)
+    eff.toMonad m (com.outContext.Valuation)
   | .ret _, V => pure V
   | .lete e body, V =>
       e.denote V >>= fun Ve =>
@@ -398,7 +398,7 @@ theorem Com.denoteLets_eq_denoteLetsPure (com : Com Op Γ .pure ty) :
   cases eff <;> simp [denoteLets, bind_pure]
 
 /-- Denote an 'Expr' in an unconditionally impure fashion -/
-def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toType2 m (toType ty) :=
+def Expr.denoteImpure (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : EffectKind.impure.toMonad m (toType ty) :=
   liftM <| e.denote Γv
 
 /-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
@@ -421,7 +421,7 @@ theorem Com.denote_lete_eq_of_denote_expr_eq [LawfulMonad m] {e : Expr Op Γ eff
   · simp [denote, hv, EffectKind.return, Applicative.toPure, Pure.pure, pure]
   · simp_all [denote, hv, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
 
-def Com.denoteImpure : Com Op Γ eff ty → (Γv : Valuation Γ) → EffectKind.impure.toType2 m (toType ty)
+def Com.denoteImpure : Com Op Γ eff ty → (Γv : Valuation Γ) → EffectKind.impure.toMonad m (toType ty)
   | .ret e, Γv => pure (Γv e)
   | .lete e body, Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x)
 
@@ -464,7 +464,7 @@ args, since there now are equation lemmas for it.
 
 -- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
 def Lets.denote [OpSignature Op Ty m] [OpDenote Op Ty m]
-    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toType2 m <| Valuation Γ₂) :=
+    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toMonad m <| Valuation Γ₂) :=
   match lets with
   | .nil => return Γ₁'v
   | .lete lets' e =>
@@ -475,7 +475,7 @@ def Lets.denote [OpSignature Op Ty m] [OpDenote Op Ty m]
 
 -- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
 def Lets.denoteImpure [OpSignature Op Ty m] [OpDenote Op Ty m]
-    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toType2 m <| Valuation Γ₂) :=
+    (lets : Lets Op Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toMonad m <| Valuation Γ₂) :=
   match lets with
   | .nil => EffectKind.impure.return Γ₁'v
   | .lete lets' e =>
@@ -573,7 +573,7 @@ structure FlatCom (Op : _) {Ty : _} [OpSignature Op Ty m]  (Γ_in : Ctxt Ty) (ef
 
 /-- Denote the Lets of the FlatICom -/
 def FlatCom.denoteLets (flatCom : FlatCom Op Γ eff Γ_out t) (Γv : Γ.Valuation) :
-    eff.toType2 m <| Γ_out.Valuation :=
+    eff.toMonad m <| Γ_out.Valuation :=
   flatCom.lets.denote Γv
 
 theorem FlatCom.denoteLets_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) :
@@ -583,7 +583,7 @@ theorem FlatCom.denoteLets_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ
 
 /-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
 def FlatCom.denoteLetsRet [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) (Γv : Γ.Valuation) :
-    eff.toType2 m (toType t) :=
+    eff.toMonad m (toType t) :=
   flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
 
 theorem FlatCom.denoteLetsRet_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) :
@@ -619,8 +619,8 @@ theorem Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .p
 --     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
 --   sorry
 
--- lemma EffectKind.toType2_hom_pure (h : eff ≤ EffectKind.pure) :
---     EffectKind.toType2_hom h (m:=m) f = fun x => f (cast _ x) := by
+-- lemma EffectKind.toMonad_hom_pure (h : eff ≤ EffectKind.pure) :
+--     EffectKind.toMonad_hom h (m:=m) f = fun x => f (cast _ x) := by
 --   sorry
 
 theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
@@ -638,7 +638,7 @@ theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .
     (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 EffectKind.impure t.2)
       (OpSignature.regSig op)) :
     Expr.denote (mk op ty_eq eff_le args regArgs) = (fun (Γv : Valuation Γ) =>
-      let d : EffectKind.toType2 .pure m ⟦ty⟧ :=
+      let d : EffectKind.toMonad .pure m ⟦ty⟧ :=
         cast (by rw [eff_eq, ty_eq]) <|
           OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
       match eff₂ with
@@ -646,15 +646,15 @@ theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .
       | .impure => return d
     ) := by
   funext Γv
-  simp only [denote_unfold, cast_cast, EffectKind.return_impure_toType2_eq]
+  simp only [denote_unfold, cast_cast, EffectKind.return_impure_toMonad_eq]
   cases eff₂
-  · simp only [EffectKind.toType2_hom_pure]
+  · simp only [EffectKind.toMonad_hom_pure]
     apply eq_of_heq
     trans OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)
     · simp
     · symm; simp
-  · rw [EffectKind.toType2_hom_eq_pure_cast eff_eq]
-    simp only [EffectKind.return_impure_toType2_eq, Pure.pure_cast]
+  · rw [EffectKind.toMonad_hom_eq_pure_cast eff_eq]
+    simp only [EffectKind.return_impure_toMonad_eq, Pure.pure_cast]
     apply eq_of_heq
     trans (pure (OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)) : m _)
     · simp
@@ -662,7 +662,7 @@ theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .
 
 theorem Expr.denote_of_pure {e : Expr Op Γ eff ty} (eff_eq : OpSignature.effectKind e.op = .pure) :
     e.denote = (fun (Γv : Valuation Γ) =>
-      let d : EffectKind.toType2 .pure m ⟦ty⟧ :=
+      let d : EffectKind.toMonad .pure m ⟦ty⟧ :=
         cast (by rw [eff_eq, ← e.ty_eq]) <|
           OpDenote.denote e.op (e.args.map (fun _ v => Γv v)) e.regArgs.denote
       match eff with
