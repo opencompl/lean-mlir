@@ -378,7 +378,8 @@ instance : Repr (Var Γ t) where
 end Var
 
 /-
-## Context difference
+## Context difference, notes that Γ1[i] = Γ2[i + d].
+   This means that Γ2 has a new prefix of 'd' elements before getting to Γ1
 -/
 
 @[simp]
