@@ -631,17 +631,70 @@ theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
   · symm; assumption
   · exact cast_heq ..
 
+/-- Forded version of `Expr.mk` (w.r.t. the effect) -/
+def Expr.mk' {eff₁ eff₂ : EffectKind} {Γ : Ctxt Ty} {ty : Ty}
+    (op : Op) (ty_eq : ty = OpSignature.outTy op) (eff_eq : eff₁ = OpSignature.effectKind op)
+    (eff_le : eff₁ ≤ eff₂) (args : HVector (Var Γ) (OpSignature.sig op))
+    (regArgs : HVector (fun t => Com Op t.1 EffectKind.impure t.2) (OpSignature.regSig op)) :
+    Expr Op Γ eff₂ ty :=
+  mk op ty_eq (eff_eq ▸ eff_le) args regArgs
+
+/-- TODO: explain why this is needed -/
+theorem Expr.mk'_eq_mk {op : Op} (eff_eq : eff₁ = OpSignature.effectKind op)
+    (eff_le : eff₁ ≤ eff₂)
+    (ty_eq : ty = OpSignature.outTy op)
+    (args : HVector (Var Γ) (OpSignature.sig op))
+    (regArgs : HVector (fun t => Com Op t.1 EffectKind.impure t.2) (OpSignature.regSig op)) :
+    mk' op ty_eq eff_eq eff_le args regArgs = mk op ty_eq (eff_eq ▸ eff_le) args regArgs :=
+  rfl
+
+theorem EffectKind.toType2_hom_eq_pure_cast {eff : EffectKind}
+    (eff_eq : eff = .pure) (eff_le : eff ≤ .impure) :
+    EffectKind.toType2_hom eff_le
+    = fun (x : eff.toType2 m α) => Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
+  subst eff_eq; rfl
+
+theorem Expr.denote_mk'_pure (op : Op) (ty_eq : ty = _) (eff_eq : .pure = OpSignature.effectKind op)
+    (eff_le : EffectKind.pure ≤ eff₂)
+    (args : HVector (Var Γ) (OpSignature.sig op))
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 EffectKind.impure t.2) (OpSignature.regSig op)) :
+    Expr.denote (mk' op ty_eq eff_eq eff_le args regArgs)
+      = (fun (Γv : Valuation Γ) =>
+          let d : EffectKind.toType2 .pure m ⟦OpSignature.outTy op⟧ :=
+            cast (by rw [eff_eq]) <|
+              OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
+          let d : EffectKind.toType2 .pure m ⟦ty⟧ := cast (by rw[ty_eq]) d
+          match eff₂ with
+          | .pure => d
+          | .impure => return d
+       ) := by
+  funext Γv
+  simp [mk', denote_unfold]
+  split
+  · simp [mk', denote_unfold];
+    apply eq_of_heq;
+    trans OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)
+    · simp
+    · symm; simp
+  · rw [EffectKind.toType2_hom_eq_pure_cast eff_eq.symm]
+    simp [Eq.rec_eq_cast, Pure.pure_cast]
+    apply eq_of_heq
+    trans (pure (OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)) : m _)
+    · simp
+    · symm; simp
+
+
 /-- casting an expr to an impure expr and running it equals running it purely and returning the value -/
 @[simp]
 theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pure t) :
     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
-  rcases e with ⟨op, rfl, (eff_le : EffectKind.le ..), args, regArgs⟩
-  funext Γv
+  rcases e with ⟨op, ty_eq, (eff_le : EffectKind.le ..), args, regArgs⟩
+  have eff_eq_pure : .pure = OpSignature.effectKind op :=
+    (EffectKind.eq_of_le_pure eff_le).symm
   simp [castPureToEff]
-  conv_rhs => simp [denote, Pure.pure_cast]
-  -- split
-  sorry
-
+  rw [← Expr.mk'_eq_mk eff_eq_pure (.pure_le _)]
+  rw [← Expr.mk'_eq_mk eff_eq_pure (.pure_le _)]
+  simp [denote_mk'_pure]
 
 /-- Add a pure Com to the end of a sequence of lets -/
 def addPureComToEndOfLetsAux {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
