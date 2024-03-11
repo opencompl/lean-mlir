@@ -1367,31 +1367,37 @@ theorem subset_entries_matchArg_aux
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
 theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
-    {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
-    (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
-    ma.entries ⊆ varMap.entries
-  | _, _ => sorry
-/-
+    {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
+    {w : Var Δ_out t}
+    (hvarMap : varMap ∈ matchVar lets v matchLets w ma) :
+    ma.entries ⊆ varMap.entries :=
+  match matchLets, w with
   | .nil, w => by
-    simp [matchVar]
-    intros h x hx
-    split at h
-    . split_ifs at h
+    simp [matchVar] at *
+    intros x hx
+    split at hvarMap
+    case h_1 p q r s =>
+      split_ifs at hvarMap
       . simp_all
-    . simp only [Option.some.injEq] at h
-      subst h
+    case h_2 a b c d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
       by_cases hx : x = ⟨t, w⟩
-      . subst x; simp_all
+      . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
-
   | .lete matchLets _, ⟨w+1, h⟩ => by
+    sorry
+  /-
     simp [matchVar]
     apply subset_entries_matchVar
+  -/
 
   | .lete matchLets matchExpr, ⟨0, _⟩ => by
+    sorry
+  /-
     simp [matchVar, Bind.bind, Option.bind]
     intro h
     split at h
