@@ -668,7 +668,7 @@ theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pur
   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
   have eff_eq_pure : .pure = OpSignature.effectKind op :=
     (EffectKind.eq_of_le_pure eff_le).symm
-  simp [castPureToEff, denote_pure_op, eff_eq_pure]
+  simp only [castPureToEff, denote_pure_op, eff_eq_pure]
 
 /-- Add a pure Com to the end of a sequence of lets -/
 def addPureComToEndOfLetsAux {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
