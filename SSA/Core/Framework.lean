@@ -1324,6 +1324,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
+#check HEq
 mutual
 variable [DecidableEq Op]
 
@@ -1370,7 +1371,7 @@ theorem subset_entries_matchArg_aux
 
 /- TODO: Lean hangs on this proof! -/
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
-theorem subset_entries_matchVar [DecidableEq Op]
+theorem subset_entries_matchVar
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
@@ -1405,22 +1406,21 @@ theorem subset_entries_matchVar [DecidableEq Op]
       (w := _)
       (hvarMap := by simp; exact hvarMap)
   | .lete matchLets matchExpr, ⟨0, _⟩ => by
-    sorry
-  /-
-    simp [matchVar, Bind.bind, Option.bind]
-    intro h
-    split at h
-    · simp at h
+    simp [matchVar, Bind.bind, Option.bind] at *
+    -- unfold hvarMap
+    split at hvarMap
+    · simp at hvarMap
     · rename_i e he
-      rcases e with ⟨op, rfl, args⟩
-      dsimp at h
-      split_ifs at h with hop
+      rcases e with ⟨op, rfl, effLe, args'⟩
+      dsimp at hvarMap
+      split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
-        dsimp at h
-        exact subset_entries_matchArg_aux
-          (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
--/
-
+        dsimp at hvarMap
+        apply subset_entries_matchArg_aux (lets := lets) (v := v)
+          (matchLets := matchLets)
+          (argsl := args')
+          (argsr := (Expr.args matchExpr))
+          (hvarMap := by simp; rw [← hvarMap])
 end
 
 theorem subset_entries_matchVar_matchArg [DecidableEq Op]
