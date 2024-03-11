@@ -168,7 +168,7 @@ theorem liftEffect_eq_id (hle : eff ≤ eff) [Monad m] :
 /-- toMonad is functorial: it preserves composition. -/
 def liftEffect_compose {e1 e2 e3 : EffectKind} {α : Type} [Monad m]
     (h12 : e1 ≤ e2)
-    (h23: e2 ≤ e3)
-    (h13: e1 ≤ e3 := le_trans h12 h23) :
+    (h23 : e2 ≤ e3)
+    (h13 : e1 ≤ e3 := le_trans h12 h23) :
     ((liftEffect (α := α) h23) ∘ (liftEffect h12)) = liftEffect (m := m) h13 := by
   cases e1 <;> cases e2 <;> cases e3 <;> (solve | rfl | contradiction)
