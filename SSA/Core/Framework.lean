@@ -1319,34 +1319,56 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
-theorem subset_entries_matchVar_matchArg_aux
+mutual
+variable [DecidableEq Op]
+
+theorem subset_entries_matchArg_aux
     {Γ_out Δ_in Δ_out  : Ctxt Ty}
-    {matchVar' : (t : Ty) → Var Γ_out t → Var Δ_out t →
-      Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)} :
-    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
-    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
-    {varMap : Mapping Δ_in Γ_out} →
-    (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
-        vMap ∈ matchVar' t vₗ vᵣ ma → ma.entries ⊆ vMap.entries) →
-    (hvarMap : varMap ∈ matchVar.matchArg Δ_out matchVar' argsₗ argsᵣ ma) →
-    ma.entries ⊆ varMap.entries
-  | _, .nil, .nil, ma, varMap, _, h => by
-    simp only [matchVar.matchArg, Option.mem_def, Option.some.injEq] at h
-    subst h
+    {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
+    {l : List Ty}
+    {argsl : HVector (Var Γ_out) l}
+    {argsr : HVector (Var Δ_out) l}
+    {ma : Mapping Δ_in Γ_out}
+    {varMap : Mapping Δ_in Γ_out}
+    (hvarMap : varMap ∈ matchArg lets matchLets argsl argsr ma) :
+    ma.entries ⊆ varMap.entries :=
+  match l, argsl, argsr with
+  | [], .nil, .nil =>  by
+    simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
+    subst hvarMap
     exact Set.Subset.refl _
-  | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, hmatchVar, h => by
-    simp [matchVar.matchArg, bind, pure] at h
-    rcases h with ⟨ma', h₁, h₂⟩
-    refine List.Subset.trans ?_
-      (subset_entries_matchVar_matchArg_aux hmatchVar h₂)
-    exact hmatchVar _ _ _ _ _ h₁
+  | .cons t ts, .cons vl argsl', .cons vr argsr' => by
+    simp [matchArg, bind, pure] at hvarMap
+    rcases hvarMap with ⟨ma', h1, h2⟩
+    have hind := subset_entries_matchArg_aux
+      (Γ_out := Γ_out)
+      (Δ_in := Δ_in)
+      (Δ_out := Δ_out)
+      (lets := lets)
+      (v := v)
+      (matchLets := matchLets)
+      (l := ts)
+      -- (l := l)
+      (argsl := argsl')
+      (argsr := argsr')
+      (ma := ma')
+      (varMap := varMap)
+      (hvarMap := by simp; exact h2)
+    have hmut := subset_entries_matchVar
+      (varMap := ma')
+      (ma := ma)
+      (lets := lets)
+      (v := vl)
+      (hvarMap := by simp; exact h1)
+    apply List.Subset.trans hmut hind
 
 /- TODO: Lean hangs on this proof! -/
 /-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
 theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
-    {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in Δ_out} → {w : Var Δ_out t} →
+    {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t} :
+    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ma.entries ⊆ varMap.entries
   | _, _ => sorry
@@ -1380,9 +1402,11 @@ theorem subset_entries_matchVar [DecidableEq Op]
       split_ifs at h with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at h
-        exact subset_entries_matchVar_matchArg_aux
+        exact subset_entries_matchArg_aux
           (fun vMap t vₗ vᵣ ma hvMap => subset_entries_matchVar hvMap) h
 -/
+
+end
 
 theorem subset_entries_matchVar_matchArg [DecidableEq Op]
     {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in Γ_out}
@@ -1394,7 +1418,8 @@ theorem subset_entries_matchVar_matchArg [DecidableEq Op]
         (fun t vₗ vᵣ ma =>
             matchVar (t := t) lets vₗ matchLets vᵣ ma) argsₗ argsᵣ ma) →
     ma.entries ⊆ varMap.entries :=
-  subset_entries_matchVar_matchArg_aux (fun _ _ _ _ _ => subset_entries_matchVar)
+  subset_entries_matchArg_aux (fun _ _ _ _ _ => subset_entries_matchVar)
+
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
