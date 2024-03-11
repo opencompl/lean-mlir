@@ -316,7 +316,7 @@ def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com O
 
 def Expr.denote {ty : Ty} : (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
   | ⟨op, Eq.refl _, heff, args, regArgs⟩, Γv =>
-    EffectKind.toMonad_hom heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
+    EffectKind.liftEffect heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def Com.denote : Com Op Γ eff ty → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
   | .ret e, Γv => pure (Γv e)
@@ -339,7 +339,7 @@ theorem Expr.denote_unfold  [OP_SIG : OpSignature Op Ty m] [OP_DENOTE: OpDenote 
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
     Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv =
-    ty_eq ▸ (EffectKind.toMonad_hom eff_le  <| OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
+    ty_eq ▸ (EffectKind.liftEffect eff_le  <| OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
       subst ty_eq
       simp[denote]
 
@@ -619,8 +619,8 @@ theorem Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .p
 --     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
 --   sorry
 
--- lemma EffectKind.toMonad_hom_pure (h : eff ≤ EffectKind.pure) :
---     EffectKind.toMonad_hom h (m:=m) f = fun x => f (cast _ x) := by
+-- lemma EffectKind.liftEffect_pure (h : eff ≤ EffectKind.pure) :
+--     EffectKind.liftEffect h (m:=m) f = fun x => f (cast _ x) := by
 --   sorry
 
 theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
@@ -648,12 +648,12 @@ theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .
   funext Γv
   simp only [denote_unfold, cast_cast, EffectKind.return_impure_toMonad_eq]
   cases eff₂
-  · simp only [EffectKind.toMonad_hom_pure]
+  · simp only [EffectKind.liftEffect_pure]
     apply eq_of_heq
     trans OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)
     · simp
     · symm; simp
-  · rw [EffectKind.toMonad_hom_eq_pure_cast eff_eq]
+  · rw [EffectKind.liftEffect_eq_pure_cast eff_eq]
     simp only [EffectKind.return_impure_toMonad_eq, Pure.pure_cast]
     apply eq_of_heq
     trans (pure (OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs)) : m _)
