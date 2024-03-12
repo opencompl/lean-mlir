@@ -481,29 +481,22 @@ end ForAddToMul
 
 /- ## Reverse a loop, if the loop body does not depend on the loop. -/
 namespace ForReversal
-open ScfRegion
 variable {t : Arith.Ty}
-variable (rgn : Com Arith.Op [Arith.Ty.int, t] t)
+variable (rgn : Com Op [Arith.Ty.int, t] t)
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
-variable (hrgn : LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
+variable (hrgn : ScfRegion.LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
 
-open Arith in
-def lhs : Com Arith.Op [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t] t :=
-  -- not sure why this goes wrong.
-  Com.lete (add_nat ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp⟩ ) <|
-  Com.ret ⟨4, by simp[Ctxt.snoc]⟩
+def lhs : Com Op [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t] t :=
+   /- v-/
+   /- v1 = -/ Com.lete (for_ (t := t)
+                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
+                         ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
+                         ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
+                         ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
+   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
---
---   /- v-/
---   /- v1 = -/ Com.lete (for_ (t := t)
---                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
---                         ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
---                         ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
---                         ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
---   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def rhs : Com Arith.Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
+def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
   /- delta * steps + start-/
   Com.lete (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
   /- -delta -/
@@ -518,7 +511,7 @@ def rhs : Com Arith.Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v
 
 /-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
   this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
-theorem Ctxt.Var.toSnoc (ty snocty : Ty) (Γ : Ctxt Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
+theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
     {v: ℕ}
     {hvproof : Ctxt.get? Γ v = some ty}
     {var : Γ.Var ty}
