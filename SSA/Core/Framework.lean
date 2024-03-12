@@ -1679,8 +1679,11 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
     (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Valuation Γ_in) :
-    matchLets.denote (fun t' v' => lets.denote s₁ (map v')) w =
-      lets.denote s₁ v := by
+    (lets.denote s₁ >>= (fun Γ_out_v =>
+      let Δ_in_v : Valuation Δ_in := fun t v =>
+        Γ_out_v (map v)
+      return Δ_in_v) >>= (fun Δ_in_v => return (matchLets.denote Δ_in_v  w))) =
+    (lets.denote s₁ >>= (fun Γ_out_v => return (Γ_out_v v))) := by
   rw [matchVarMap] at hmap
   split at hmap
   next => simp_all
