@@ -19,33 +19,21 @@ instance [Functor m] : Functor (e.toMonad m) := by cases e <;> infer_instance
 instance [Functor m] [LawfulFunctor m] : LawfulFunctor (e.toMonad m) := by
   cases e <;> infer_instance
 
--- Why do we need the specializations, if we already have the instance for generic `e` above
-instance [Functor m] [LawfulFunctor m] : LawfulFunctor (toMonad .impure m) := inferInstance
-instance [Functor m] [LawfulFunctor m] : LawfulFunctor (toMonad .pure m) := inferInstance
-
 instance [SeqLeft m]  : SeqLeft (e.toMonad m)  := by cases e <;> infer_instance
 instance [SeqRight m] : SeqRight (e.toMonad m) := by cases e <;> infer_instance
 instance [Seq m]      : Seq (e.toMonad m)      := by cases e <;> infer_instance
 
-instance [Applicative m] : Applicative (e.toMonad m) := by cases e <;> infer_instance
-instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (e.toMonad m) := by
-  cases e <;> infer_instance
+-- @[instance low] -- there is a diamond
+-- instance [Applicative m] : Applicative (e.toMonad m) := by cases e <;> infer_instance
 
--- Why do we need the specializations, if we already have the instance for generic `e` above
-instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (toMonad .impure m) := inferInstance
-instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (toMonad .pure m) := inferInstance
+-- @[instance low] -- there is a diamond
+-- instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (e.toMonad m) := by
+--   cases e <;> infer_instance
 
-instance [Bind m] : Bind (e.toMonad m)   := by cases e <;> infer_instance
+-- @[instance low] -- there is a diamond
+-- instance [Bind m] : Bind (e.toMonad m)   := by cases e <;> infer_instance
 instance [Monad m] : Monad (e.toMonad m) := by cases e <;> infer_instance
 instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by cases e <;> infer_instance
-
--- Why do we need the specializations, if we already have the instance for generic `e` above
-instance [Monad m] : Monad (toMonad .pure m)   := inferInstance
-instance [Monad m] : Monad (toMonad .impure m) := inferInstance
-
--- Why do we need the specializations, if we already have the instance for generic `e` above
-instance [Monad m] [LawfulMonad m] : LawfulMonad (toMonad .impure m) := inferInstance
-instance [Monad m] [LawfulMonad m] : LawfulMonad (EffectKind.toMonad .pure m) := inferInstance
 
 end Instances
 

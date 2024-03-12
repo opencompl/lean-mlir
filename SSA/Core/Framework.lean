@@ -715,7 +715,6 @@ theorem denote_addPureComToEndOfLetsAux [LawfulMonad m]
   match com with
   | .ret v =>  by
     simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars, addPureComToEndOfLetsAux, Com.denoteLetsPure]
-    cases eff <;> simp
   | .lete e body => by
     simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars]
     rw [denote_addPureComToEndOfLetsAux]
@@ -862,20 +861,19 @@ def addLetsAtTop : (lets : Lets Op Γ₁ eff Γ₂) → (inputProg : Com Op Γ�
   | Lets.lete body e, inputProg =>
     addLetsAtTop body (.lete e inputProg)
 
-@[simp]
-theorem denote_addLetsAtTop [LawfulMonad m] :
-    (lets : Lets Op Γ₁ eff Γ₂) → (inputProg : Com Op Γ₂ eff t₂) →
+section
+variable (eff : EffectKind) (m) [Monad m] [LawfulMonad m]
+
+#synth Monad (eff.toMonad m)
+#synth LawfulMonad (eff.toMonad m)
+
+end
+
+@[simp] theorem denote_addLetsAtTop [LawfulMonad m]
+    (lets : Lets Op Γ₁ eff Γ₂) (inputProg : Com Op Γ₂ eff t₂) :
     (addLetsAtTop lets inputProg).denote =
-      lets.denote >=> inputProg.denote
-  | Lets.nil, inputProg => by
-     funext Γv
-     simp [addLetsAtTop, Lets.denote, Bind.kleisliRight]
-     cases eff <;> simp
-  | Lets.lete body e, inputProg => by
-    rw [addLetsAtTop, denote_addLetsAtTop body]
-    funext Γ1'v
-    simp [Bind.kleisliRight, Lets.denote, addLetsAtTop]
-    cases eff <;> simp
+      lets.denote >=> inputProg.denote := by
+  funext Γv; induction lets <;> simp [Bind.kleisliRight, Lets.denote, addLetsAtTop, *]
 
 /-- `addPureComInMiddleOfLetCom v map top mid bot` appends the programs
 `top`, `mid` and `bot`, in that order, while reassigning `v`, a free variable in
@@ -906,7 +904,8 @@ theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : C
   funext V
   simp [addPureComInMiddleOfLetCom, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
     Bind.kleisliLeft, denote_addPureComToEndOfLets, Bind.kleisliRight, Function.comp, bind_assoc]
-  cases eff <;> simp
+  stop
+  cases eff
   case h.pure =>
     congr
     /- TODO: find the right theorem here -/
