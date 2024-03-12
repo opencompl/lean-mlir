@@ -1,4 +1,5 @@
 import Mathlib.Logic.Function.Iterate
+import Mathlib.Tactic.Linarith
 import SSA.Core.Framework
 import SSA.Core.Tactic
 import SSA.Core.ErasedContext
@@ -9,44 +10,26 @@ set_option pp.proofs.withType false
 open Std (BitVec)
 open Ctxt(Var)
 
+namespace ScfFunctor
 /- disable proofs and types of proofs from showing to make proof states legible -/
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
-
-namespace ScfRegion
 open Goedel
 
-
-def Bool' (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type :=
-  { ty : Ty' // toType ty = Bool }
-
-instance [Repr Ty'] [Goedel Ty'] [OpSignature Op' Ty'] : Repr (Bool' Op') where
-  reprPrec := fun v n => reprPrec v.val n
-
-instance [Goedel Ty'] [OpSignature Op' Ty'] [DecidableEq Ty']  : (DecidableEq (Bool' Op')) :=
-  fun a b => by
-    rcases a with ⟨va, ha⟩
-    rcases b with ⟨vb, hb⟩
-    exact (if h: (va = vb)
-        then isTrue (by simp [h])
-        else isFalse (fun hcontra => by cases hcontra; contradiction))
-
+/-- Describes that the dialect Op' has a type whose denotation is 'DenotedTy -/
 class HasTy (Op' : Type) (DenotedTy : Type) [Goedel Ty'] [OpSignature Op' Ty'] where
     ty : Ty'
     denote_eq : toType ty = DenotedTy := by rfl
 
 abbrev HasBool (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Bool
-/-
-class HasBool (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] where
-    bool : Ty'
-    bool_denote_eq : toType bool = Bool
--/
-
 abbrev HasInt (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Int
 abbrev HasNat (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Nat
 
--- (t : Ty') -> (realt: Type) ->  Option (t -> realt)
+
+namespace ScfRegion
+
+/-- only flow operations, parametric over arithmetic from another dialect Op'  -/
 inductive Op (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] : Type _
   | coe (o : Op')
   | iterate (k : ℕ) -- fˆk
@@ -68,10 +51,6 @@ instance [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
     | .run t => ⟨[t], [([t], t)], t⟩
     | .iterate _k => ⟨[I.ty], [([I.ty], I.ty)], I.ty⟩
 
-#check uncurry
-
-
-/-# define what it means for a loop body (a function of type `(i : Int) × (v : t) → t` to be index invariant -/
 
 /-- A loop body receives the current value of the loop induction variable, and the current loop carried value.
 The loop body produces the value of this loop iteration.
@@ -218,17 +197,10 @@ variable [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
 @[reducible]
 instance : OpDenote (Op Op') Ty' where
   denote
-    -- | .const n, _, _ => n
-    -- | .const_nat n, _, _ => n
-    -- | .neg, .cons (a : ℤ ) .nil, _ => -a
-    -- | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => a * (x : ℤ) + b
-    -- | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => a + b
-    -- | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
     | .coe o', args', regArgs' =>
         let denote' := OpDenote.denote o'
         by
          exact denote' args' regArgs'
-         -- simp [OpSignature.sig] at *
     | .if t t', (.cons (cond ) (.cons v .nil)),
          (.cons (f : Ctxt.Valuation [t] → ⟦t'⟧) (.cons (g : _ → _) .nil)) =>
          let body := if B.denote_eq ▸ cond then f else g
@@ -296,14 +268,13 @@ instance : OpDenote Op Ty where
     | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
 
 
-instance : ScfRegion.HasBool Op where ty := .bool
-
-instance : ScfRegion.HasNat Op where ty := .nat
-
-instance : ScfRegion.HasInt Op where ty := .int
+instance : HasBool Op where ty := .bool
+instance : HasNat Op where ty := .nat
+instance : HasInt Op where ty := .int
 
 end Arith
 
+/-- Compose Scf on top of Arith -/
 abbrev Op := ScfRegion.Op Arith.Op
 
 def cst (n : ℤ) : Expr Op Γ .int  :=
