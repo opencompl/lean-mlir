@@ -202,7 +202,7 @@ def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
 end LoopBody.CounterDecorator
 
 @[reducible]
-noncomputable instance : OpDenote Op Ty where
+instance : OpDenote Op Ty where
   denote
     | .const n, _, _ => n
     | .const_nat n, _, _ => n
@@ -516,7 +516,7 @@ attribute [local simp] Ctxt.snoc
 
 set_option pp.proofs false in
 set_option pp.proofs.withType false in
-noncomputable def p1 : PeepholeRewrite Op [.int] .int:=
+def p1 : PeepholeRewrite Op [.int] .int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
       funext Γv
