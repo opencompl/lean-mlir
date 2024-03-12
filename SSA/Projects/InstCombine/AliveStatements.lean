@@ -1,7 +1,6 @@
-import Std.Data.BitVec
---  import Mathlib.Data.StdBitVec.Lemmas
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
+import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
@@ -11,8 +10,11 @@ open Std.BitVec
 open LLVM
 
 @[simp] lemma getLsb_negOne' (w : ℕ) (i : Fin w) :
-    getLsb (-1#w) ↑i := by 
-  simp only [getLsb_val_eq_getLsb', getLsb'_neg_ofNat_one]
+    getLsb (-1#w) i := by
+  -- Why is BitVec.negOne_eq_allOnes not a standard simp lemma?
+  -- Or rather, why do we rewrite -1 to allOnes. That seems to be
+  -- an unnecessary complication, no?
+  simp [BitVec.negOne_eq_allOnes]
 
 theorem bitvec_AddSub_1043 :
  ∀ (w : Nat) (C1 Z RHS : BitVec w), (Z &&& C1 ^^^ C1) + 1 + RHS = RHS - (Z ||| ~~~C1)
@@ -107,11 +109,13 @@ theorem bitvec_AddSub_1624 :
 theorem bitvec_AndOrXor_135 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ^^^ C1) &&& C2 = X &&& C2 ^^^ C1 &&& C2
 := by alive_auto
-      
+      done --ext
+
 theorem bitvec_AndOrXor_144 :
  ∀ (w : Nat) (X C1 C2 : BitVec w), (X ||| C1) &&& C2 = (X ||| C1 &&& C2) &&& C2
 := by alive_auto
-     
+      done --ext
+
 theorem bitvec_AndOrXor_698 :
  ∀ (w : Nat) (a b d : BitVec w), ofBool (a &&& b == 0) &&& ofBool (a &&& d == 0) = ofBool (a &&& (b ||| d) == 0)
 := by alive_auto
@@ -205,7 +209,7 @@ theorem bitvec_AndOrXor_1733 :
 theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
  ∀ (w : Nat) (x C1 C : BitVec w), x ^^^ C1 ||| C = (x ||| C) ^^^ C1 &&& ~~~C
 := by alive_auto
-      try sorry
+      done --ext
 
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
  ∀ (w : Nat) (A B : BitVec w), (A ^^^ -1) &&& B ||| A = A ||| B

@@ -35,17 +35,6 @@ variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 -- and :https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Groebner.20bases
 
 -- Question: Can we make something like d := 2^n work as a macro?
---
-theorem WithBot.coe_pow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
-  induction n with
-    | zero => simp
-    | succ n ih =>
-        rw [pow_succ, ih, ← WithBot.coe_mul]
-        rw [← WithBot.some_eq_coe, WithBot.some]
-        apply Option.some_inj.2
-        rw [Nat.pow_succ]
-        ring
-  done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
@@ -105,7 +94,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
 
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
-  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
+  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (@Nat.one_le_two_pow n)]
   rw [f, hn]
   apply Polynomial.monic_X_pow_add
   simp

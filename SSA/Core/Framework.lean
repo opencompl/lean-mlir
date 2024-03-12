@@ -3,10 +3,6 @@
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import Mathlib.Data.List.AList
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
@@ -686,35 +682,6 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       | none => some (AList.insert ⟨_, w⟩ v ma)
 
 open AList
-
-/-- For mathlib -/
-theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
-    {k : α} {v : β k} :
-    ⟨k, v⟩ ∈ s.entries → k ∈ s := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys] at h ⊢
-  clear nd
-  induction h
-  next    => apply List.Mem.head
-  next ih => apply List.Mem.tail _ ih
-
-theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : AList β} {k : α} :
-    k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys, List.keys] at h ⊢
-  clear nd;
-  induction entries
-  next    => contradiction
-  next hd tl ih =>
-    cases h
-    next =>
-      use hd.snd
-      apply List.Mem.head
-    next h =>
-      rcases ih h with ⟨v, ih⟩
-      exact ⟨v, .tail _ ih⟩
 
 theorem subset_entries_matchVar_matchArg_aux
     {Γ_out Δ_in Δ_out  : Ctxt Ty}

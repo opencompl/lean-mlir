@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.ForStd
 import SSA.Core.ErasedContext
 
 open MLIR AST
@@ -59,7 +60,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
     LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
     LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
     LLVM.const?, LLVM.icmp?, LLVM.udiv?,
-    HVector.toTuple, List.nthLe, bitvec_minus_one]
+    HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one]
   intro y x c
   simp only [List.length_singleton, Fin.zero_eta, List.get_cons_zero, List.map_eq_map, List.map_cons,
     List.map_nil, CharP.cast_eq_zero, Ctxt.Valuation.snoc_last, pairBind, bind, Option.bind, Int.ofNat_eq_coe]
