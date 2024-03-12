@@ -1722,34 +1722,32 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets Op Γ₁ eff Γ₂) →
   | n+1, lets, .lete e body =>
     splitProgramAtAux n (lets.lete e) body
 
-theorem denote_splitProgramAtAux : {pos : ℕ} → {lets : Lets Op Γ₁ eff Γ₂} →
+theorem denote_splitProgramAtAux [LawfulMonad m] : {pos : ℕ} → {lets : Lets Op Γ₁ eff Γ₂} →
     {prog : Com Op Γ₂ eff t} →
     {res : Σ (Γ₃ : Ctxt Ty), Lets Op Γ₁ eff Γ₃ × Com Op Γ₃ eff t × (t' : Ty) × Var Γ₃ t'} →
     (hres : res ∈ splitProgramAtAux pos lets prog) →
     (s : Valuation Γ₁) →
-    res.2.2.1.denote =<< (res.2.1.denote s) = prog.denote =<< (lets.denote s)
+    (res.2.1.denote s) >>= res.2.2.1.denote  = (lets.denote s) >>= prog.denote
   | 0, lets, .lete e body, res, hres, s => by
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
     simp only [Lets.denote, eq_rec_constant, Com.denote]
-    congr
-    sorry
-    /-
-    funext t v
-    cases v using Var.casesOn <;> simp
-    -/
+    simp
+    cases eff <;> simp
   | _+1, _, .ret _, res, hres, s => by
     simp [splitProgramAtAux] at hres
   | n+1, lets, .lete e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
-    sorry
-    /-
-    rw [Com.denote, denote_splitProgramAtAux hres s]
-    simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
-    congr
-    funext t v
-    cases v using Var.casesOn <;> simp
-    -/
+    cases eff
+    case pure =>
+      rw [denote_splitProgramAtAux hres s]
+      simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      simp
+    case impure =>
+      rw [denote_splitProgramAtAux hres s]
+      simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
+      simp
+
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
