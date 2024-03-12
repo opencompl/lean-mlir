@@ -302,13 +302,11 @@ def Com.outContextDiff : ∀ (com : Com Op Γ eff t), Γ.Diff com.outContext
   | .ret _         => Ctxt.Diff.zero _
   | .lete _ body => body.outContextDiff.unSnoc
 
-/-- The return varible of a program -/
+/-- The return variable of a program -/
 def Com.returnVar : (com : Com Op Γ eff t) → Var com.outContext t
   | .ret v => v
   | .lete _ body => body.returnVar
 
--- TODO: the following `variable` probably means we include these assumptions also in definitions
--- that might not strictly need them, we can look into making this more fine-grained
 variable [Goedel Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m]
 
 mutual
@@ -395,22 +393,6 @@ def Com.denoteLets : (com : Com Op Γ eff ty) → (Γv : Valuation Γ) →
       e.denote V >>= fun Ve =>
       body.denoteLets (V.snoc Ve) >>= fun V =>
       return V.cast (by simp [Com.outContext])
-
-def Com.denoteLetsPure : (com : Com Op Γ .pure ty) → (Γv : Valuation Γ) → (com.outContext.Valuation)
-  | .ret _, V => V
-  | .lete e body, V =>
-      let Ve := e.denote V
-      let ebody := body.denoteLets (V.snoc Ve)
-      ebody
-
-@[simp]
-theorem Com.denoteLets_eq_denoteLetsPure (com : Com Op Γ .pure ty) :
-    com.denoteLets = com.denoteLetsPure :=
-  match com with
-  | .ret _ => rfl
-  | .lete e body => by
-    funext Γv
-    simp [Com.denoteLets, Com.denoteLetsPure]
 
 @[simp] theorem Com.denoteLets_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) [LawfulMonad m] :
     (Com.lete e body).denoteLets =
@@ -772,20 +754,20 @@ theorem denote_addPureComToEndOfLetsAux [LawfulMonad m]
     Lets.denote (addPureComToEndOfLetsAux lets com).lets V
     = (do
         let Vlets ← lets.denote V
-        let Vbody := com.denoteLetsPure Vlets
+        let Vbody := com.denoteLets Vlets
         return Vbody
       )
       :=
   match com with
   | .ret v =>  by
-    simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars, addPureComToEndOfLetsAux, Com.denoteLetsPure]
+    simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars, addPureComToEndOfLetsAux, Com.denoteLets]
   | .lete e body => by
     simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars]
     rw [denote_addPureComToEndOfLetsAux]
     rw [Lets.denote]
     conv =>
       rhs
-      simp only [Com.denoteLetsPure]
+      simp only [Com.denoteLets]
     cases eff <;> simp
 
 /--
@@ -908,43 +890,20 @@ theorem denote_addPureComToEndOfLets_lets [LawfulMonad m]
     Lets.denote (addPureComToEndOfLets lets map com).lets V
     = (do
         let Vlets ← lets.denote V
-        let Vbody := (com.changeVars map).denoteLetsPure Vlets
-        return Vbody
-      )
-      :=
-  match com with
-  | .ret v =>  by
-    simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
-  | .lete e body => by
-     -- have hbody := denote_addPureComToEndOfLets_lets (lets := lets) (com := body)
-    simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
+        let Vbody : Valuation _ := (com.changeVars map).denoteLets Vlets
+        return Vbody) := by
+  simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
 
-@[simp]
-theorem denote_addPureComToEndOfLets_ret [LawfulMonad m]
-    {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ .pure t} {Γ_in_V : Γ_in.Valuation} :
-    (Lets.denote (addPureComToEndOfLets lets map com).lets Γ_in_V >>=
-      (fun Γ_out => return Γ_out (addPureComToEndOfLets lets map com).ret)) =
-    (lets.denote Γ_in_V >>= (fun Γ_out_V =>
-       let Δ_v : Valuation Δ := fun t' v' => Γ_out_V (map v')
-       return (com.denote Δ_v))) :=
-  match com with
-  | .ret v =>  by
-    cases eff
-    case pure =>
-      simp
-      unfold Com.denoteLetsPure
-      simp
-      /-
-      rw [Com.changeVars]
-      simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
-      simp [Com.changeVars]
-      -/
-      sorry
-    case impure => sorry
-  | .lete e body => by
-    -- have hbody := denote_addPureComToEndOfLets_lets (lets := lets) (com := body)
-    -- simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
-    sorry
+-- TODO: this is not used, but it is a property that might be useful to have any way?
+-- @[simp]
+-- theorem denote_addPureComToEndOfLets_ret [LawfulMonad m]
+--     {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ .pure t} {Γ_in_V : Γ_in.Valuation} :
+--     ((addPureComToEndOfLets lets map com).lets.denote Γ_in_V >>=
+--       (fun Γ_out => return Γ_out com.returnVar))
+--     = (lets.denote Γ_in_V >>= (fun Γ_out_V => return (com.denote <| Γ_out_V.comap map))) := by
+--   simp;
+--   congr; funext V; congr;
+
 
 /-- Add some `Lets` to the beginning of a program -/
 def addLetsAtTop : (lets : Lets Op Γ₁ eff Γ₂) → (inputProg : Com Op Γ₂ eff t₂) → Com Op Γ₁ eff t₂
@@ -1336,61 +1295,78 @@ theorem HVector.map_eq_of_eq_on_vars {A : Ty → Type*}
       apply h
       simp_all
 
-/--
-  Fix a variable v.
-  If the two value1, s2, agree on all of values v uses in v's def-use chain,
-  then the value of v after denoting the program is also equal.
+-- theorem Lets.denote_eq_of_eq_on_vars_aux [LawfulMonad m] (lets : Lets Op Γ_in eff Γ_out)
+--     (v : Var Γ_out t)
+--     {s₁ s₂ : Valuation Γ_in}
+--     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2)
+--     {α} (k : Valuation Γ_out → eff.toMonad m α) :
+--     --   ^ represents arbitrary side effecting kontinuation that may happen in between
+--     (do
+--       let Γv ← lets.denote s₁
+--       let _x ← k Γv
+--       return Γv v)
+--     = (do
+--       let Γv ← lets.denote s₂
+--       let _x ← k Γv
+--       return Γv v) := by
+--   induction lets generalizing t
+--   case nil =>
+--     simp [vars] at h
+--     simp [denote, h, map_pure, Var.denote]
+--   case lete Γ_in eff Γ_out lets e body ih =>
+--     cases v using Var.casesOn
+--     . simp [vars] at h
+--       simp [denote]
+--       cases eff
+--       case pure =>
+--         simp_all
+--         apply ih
+--         simpa
+--       case impure =>
+--         simp_all [map_pure]
+--         sorry
+--         -- This needs some thought about side effects. Pretty sure it's true still, but it needs thinking.
+--         /-
+--         apply ih
+--         simpa
+--         -/
+--     . rcases e with ⟨op, rfl, args⟩
+--       sorry
+--       sorry
+--       /-
+--       simp [denote, Expr.denote]
+--       congr 1
+--       apply HVector.map_eq_of_eq_on_vars
+--       intro v h'
+--       apply ih
+--       intro v' hv'
+--       apply h
+--       rw [vars, Var.casesOn_last]
+--       simp
+--       use v.1, v.2
+--       -/
 
-  This means that we never need to look at the whole context, but only the fragment
-  of the context that contains the expression tree of v.
-  TODO: unused theorem?
-  -/
-theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad m] (lets : Lets Op Γ_in eff Γ_out)
-    (v : Var Γ_out t)
-    {s₁ s₂ : Valuation Γ_in}
-    (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
-    (lets.denote s₁) >>= (fun Γv => return v.denote Γv) =
-    (lets.denote s₂) >>= (fun Γv => return v.denote Γv) := by
-  induction lets generalizing t
-  case nil =>
-    simp [vars] at h
-    simp [denote, h]
-    -- | TODO: why does this go out of scope? @alexkeizer
-    rename_i _ _ _ _ eff _
-    cases eff <;> simp [map_pure, Var.denote, h]
-  case lete lets e body ih =>
-    rename_i _ _ _ _ effbody _
-    cases v using Var.casesOn
-    . simp [vars] at h
-      simp [denote]
-      cases effbody
-      case pure =>
-        simp_all
-        apply ih
-        simpa
-      case impure =>
-        simp_all [map_pure]
-        sorry
-        -- This needs some thought about side effects. Pretty sure it's true still, but it needs thinking.
-        /-
-        apply ih
-        simpa
-        -/
-    . rcases e with ⟨op, rfl, args⟩
-      sorry
-      sorry
-      /-
-      simp [denote, Expr.denote]
-      congr 1
-      apply HVector.map_eq_of_eq_on_vars
-      intro v h'
-      apply ih
-      intro v' hv'
-      apply h
-      rw [vars, Var.casesOn_last]
-      simp
-      use v.1, v.2
-      -/
+-- /--
+--   Fix a variable v.
+--   If the two value1, s2, agree on all of values v uses in v's def-use chain,
+--   then the value of v after denoting the program is also equal.
+
+--   This means that we never need to look at the whole context, but only the fragment
+--   of the context that contains the expression tree of v.
+--   TODO: unused theorem?
+--   TODO: this theorem is not true in the impure case: the side-effects that occur outside of the
+--     def-use chain for variable `v` might depend on some variable of the valuations that is not part
+--     of `lets.vars v`, and might thus differ between these valuations.
+--     We could fix it by saying the valuations need to agree on all variables that are used in `lets`,
+--     but maybe it's not worth it, given that the theorem is unused
+--   -/
+-- theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad m] (lets : Lets Op Γ_in eff Γ_out)
+--     (v : Var Γ_out t)
+--     {s₁ s₂ : Valuation Γ_in}
+--     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
+--     (lets.denote s₁) >>= (fun Γv => return v.denote Γv) =
+--     (lets.denote s₂) >>= (fun Γv => return v.denote Γv) := by
+--   simpa using denote_eq_of_eq_on_vars_aux lets v h pure
 
 /-- This gives all the variables the last expression uses -/
 def Com.vars : Com Op Γ .pure t → VarSet Γ :=
@@ -1445,7 +1421,7 @@ end
 
 open AList
 
-/-- For mathlib -/
+/-- For mathlib -/ --TODO: upstream this
 theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
     {k : α} {v : β k} :
     ⟨k, v⟩ ∈ s.entries → k ∈ s := by
@@ -1474,11 +1450,16 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
       rcases ih h with ⟨v, ih⟩
       exact ⟨v, .tail _ ih⟩
 
+/-
+  The termination proof of the mutual block takes a long time.
+  This now works, with the obscene heartbeat count, but it is not ideal.
+  TODO: figure out why this is so slow
+-/
 set_option maxHeartbeats 99999999 in
 mutual
 theorem subset_entries_matchArg [DecidableEq Op]
-    {Γ_out Δ_in Δ_out  : Ctxt Ty}
-    {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
+    {Γ_out Δ_in Δ_out : Ctxt Ty}
+    {lets : Lets Op Γ_in eff Γ_out}
     {matchLets : Lets Op Δ_in .pure Δ_out}
     {l : List Ty}
     {argsl : HVector (Var Γ_out) l}
@@ -1500,7 +1481,6 @@ theorem subset_entries_matchArg [DecidableEq Op]
       (Δ_in := Δ_in)
       (Δ_out := Δ_out)
       (lets := lets)
-      (v := v)
       (matchLets := matchLets)
       (l := ts)
       -- (l := l)
@@ -1564,7 +1544,7 @@ theorem subset_entries_matchVar [DecidableEq Op]
       split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
-        apply subset_entries_matchArg (lets := lets) (v := v)
+        apply subset_entries_matchArg (lets := lets)
           (matchLets := matchLets)
           (argsl := args')
           (argsr := (Expr.args matchExpr))
@@ -1600,7 +1580,7 @@ theorem denote_matchVar_matchArg
     simp [matchArg, pure, bind] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
-    · apply subset_entries_matchArg (Op := Op) (v := v₁)
+    · apply subset_entries_matchArg (Op := Op)
       assumption
     apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
     · exact h_sub
@@ -1705,7 +1685,8 @@ macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith 
 mutual
 /-- NOTE: Lean hands on this proof -/
 theorem mem_matchVar_matchArg
-    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .impure Γ_out}
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
+    {lets : Lets Op Γ_in .impure Γ_out}
     {matchLets : Lets Op Δ_in .pure Δ_out} :
     {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
     {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
@@ -1713,21 +1694,18 @@ theorem mem_matchVar_matchArg
     (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) →
       ⟨t', v'⟩ ∈ varMap
-  | _, _, _, _, _, _ => sorry -- BIG SORRY 2
-/-
   | _, .nil, .nil, _, varMap, _ => by simp
   | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, h => by
-    simp [matchVar.matchArg, bind, pure] at h
+    simp [matchArg, bind, pure] at h
     rcases h with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
     rintro (h | ⟨a, b, hab⟩)
     · exact AList.keys_subset_keys_of_entries_subset_entries
-        (subset_entries_matchVar_matchArg h₂)
+        (subset_entries_matchArg h₂)
         (mem_matchVar h₁ h)
     · exact mem_matchVar_matchArg h₂
         (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
--/
 
 /- NOTE: Lean hangs on this proof -/
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
