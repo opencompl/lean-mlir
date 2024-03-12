@@ -1652,7 +1652,7 @@ end
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
 def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
-    (lets : Lets Op Γ_in eff Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in .pure Δ_out) (w : Var Δ_out t)
+    (lets : Lets Op Γ_in .impure Γ_out) (v : Var Γ_out t) (matchLets : Lets Op Δ_in .pure Δ_out) (w : Var Δ_out t)
     (hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w) :
     Option (Δ_in.Hom Γ_out) := do
   match hm : matchVar lets v matchLets w with
@@ -1662,7 +1662,13 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
     match h : m.lookup ⟨t, v'⟩ with
     | some v' => by exact v'
     | none => by
-      have := AList.lookup_isSome.2 (mem_matchVar hm (hvars t v'))
+      have := AList.lookup_isSome.2
+        (mem_matchVar
+            (lets := lets)
+            (v := v)
+            (w := w)
+            (matchLets := matchLets)
+            (hvarMap := by simp; apply hm) (hvars t v'))
       simp_all
 
 theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
