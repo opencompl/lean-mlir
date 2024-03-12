@@ -1533,12 +1533,14 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
     {w : Var Δ_out t} :
     varMap ∈ matchVar lets v matchLets w ma →
-    matchLets.denote (fun t' v' => by
-        match varMap.lookup ⟨_, v'⟩  with
-        | some v' => exact lets.denote s₁ v'
-        | none => exact default
-        ) w =
-      lets.denote s₁ v :=
+    lets.denote s₁ >>= (fun Γvlets =>
+         let newValuation : Valuation Δ_in :=
+           fun t' v' =>
+             match varMap.lookup ⟨t', v'⟩ with
+             | .some mappedVar => by exact (Γvlets mappedVar)
+             | .none => default
+         return newValuation) >>= (fun Δ_in_v => return (matchLets.denote Δ_in_v)) >>= (fun Γv => return (Γv w)) =
+      lets.denote s₁ >>= (fun Γv => return (Γv v)) :=
   denote_matchVar_of_subset (List.Subset.refl _)
 
 theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
