@@ -649,6 +649,7 @@ abbrev FlatCom.denote [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff Γ_out t) 
   FlatCom.denoteLetsRet flatCom
 
 /-- cast a pure Expr into a pure or impure expression -/
+-- TODO: generalize/rename to `castLe`
 def Expr.castPureToEff (eff : EffectKind) : (Expr Op Γ .pure t) → Expr Op Γ eff t
 | Expr.mk op ty_eq eff_le args regArgs =>
   have heff : OpSignature.effectKind op ≤ eff := by
@@ -684,6 +685,16 @@ theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
   · symm; assumption
   · exact cast_heq ..
 
+/-- Whether the operation of an expression is pure (which might be evaluated impurely) -/
+def Expr.HasPureOp (e : Expr Op Γ eff ty) : Prop :=
+  OpSignature.effectKind e.op = .pure
+
+instance (e : Expr Op Γ eff t) : Decidable (e.HasPureOp) := inferInstanceAs (Decidable <| _ = _)
+
+/-- The operation of a pure expression is necessarily pure -/
+theorem Expr.HasPureOp_of_pure : (e : Expr Op Γ .pure t) → e.HasPureOp
+  | ⟨_, _, eff_le, _, _⟩ => EffectKind.eq_of_le_pure eff_le
+
 /-- Rewrite theorem for an expression with a pure operation (which might be evaluated impurely) -/
 theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .pure)
     (ty_eq : ty = _) (eff_le : OpSignature.effectKind op ≤ eff₂)
@@ -713,7 +724,7 @@ theorem Expr.denote_mk_of_pure {op : Op} (eff_eq : OpSignature.effectKind op = .
     · simp
     · symm; simp
 
-theorem Expr.denote_of_pure {e : Expr Op Γ eff ty} (eff_eq : OpSignature.effectKind e.op = .pure) :
+theorem Expr.denote_of_pure {e : Expr Op Γ eff ty} (eff_eq : e.HasPureOp) :
     e.denote = (fun (Γv : Valuation Γ) =>
       let d : EffectKind.toMonad .pure m ⟦ty⟧ :=
         cast (by rw [eff_eq, ← e.ty_eq]) <|
@@ -754,12 +765,6 @@ theorem bind_bind_eq [Monad m] [LawfulMonad m] (ma : m a) (f : a → m b) (g : b
     (bind (bind ma f) g) = bind ma (f >=> g) := by
   unfold Bind.kleisliRight
   rw [bind_assoc]
-
-section
-variable [LawfulMonad m] (eff : EffectKind)
-#synth LawfulMonad (eff.toMonad m)
-
-end
 
 @[simp]
 theorem denote_addPureComToEndOfLetsAux [LawfulMonad m]
@@ -1044,7 +1049,6 @@ theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : C
   --   apply denote_addProgramToLets_lets
 -/
 
-
 def Expr.toPure? (e : Expr Op Γ eff ty) : Option (Expr Op Γ .pure ty) :=
   match e with
   | Expr.mk op ty_eq _ args regArgs =>
@@ -1052,25 +1056,42 @@ def Expr.toPure? (e : Expr Op Γ eff ty) : Option (Expr Op Γ .pure ty) :=
      | .pure => .some <| Expr.mk op ty_eq (by simp [h]) args regArgs
      | .impure => .none
 
-/-- The denotatio of toPure? -/
+theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr Op Γ eff ty} (h : e.toPure?.isSome) :
+    e.HasPureOp := by
+  rcases e with ⟨op, _, _, _, _⟩
+  simp [Expr.toPure?, Option.isSome] at h
+  simp [HasPureOp]
+  cases hop : OpSignature.effectKind op
+  · rfl
+  · split at h
+    next h heq =>
+      split at heq
+      simp_all; contradiction
+    next => contradiction
+
+/-- The denotation of toPure? -/
 theorem Expr.denote_toPure? {e : Expr Op Γ eff ty} {e': Expr Op Γ .pure ty}
     (he : Expr.toPure? e = some e') : e.denote =
     match eff with
     | .pure => e'.denote
     | .impure => pure ∘ e'.denote := by
   funext Γv
-  cases e
-  case h.mk a b c d e f g  h =>
-    rw [Expr.denote_mk_of_pure]
-    simp [denote]
-    subst h
-    unfold OpSignature.effectKind at g
-    simp[Function.comp] at g
-    sorry
-    -- cases eff
-
-    -- simp [denote]
-    -- sorry
+  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  have hasPureOp : OpSignature.effectKind op = EffectKind.pure := by
+    simpa [HasPureOp] using Expr.hasPureOp_of_toPure?_isSome (Option.isSome_iff_exists.mpr ⟨_, he⟩)
+  rw [Expr.denote_mk_of_pure hasPureOp]
+  have (h) :
+      cast h (OpDenote.denote op (HVector.map (fun x v => Γv v) args) (HVector.denote regArgs))
+      = denote e' Γv := by
+    unfold denote
+    split
+    simp only [toPure?] at he
+    split at he
+    · obtain ⟨rfl, h⟩ := by simpa using he
+      obtain ⟨rfl, rfl⟩ := by simpa using h
+      simp
+    · contradiction
+  cases eff <;> simp [this]
 
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
