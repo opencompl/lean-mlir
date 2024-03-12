@@ -1195,12 +1195,13 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ eff Γ₂) {t
 
 theorem Lets.denote_getExpr [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ eff Γ₂} → {t : Ty} →
     {v : Var Γ₂ t} → {e : Expr Op Γ₂ .pure t} → (he : lets.getPureExpr v = some e) → (s : Valuation Γ₁) →
-    (lets.denote s) >>= (fun Γv => return e.denote Γv) = v.denote <$> (lets.denote s) := by
+    (lets.denote s) >>= (fun Γv => return e.denote Γv)
+    = (lets.denote s) >>= (fun Γv => return Γv v) := by
   intros lets _ v e he s
   simp [getPureExpr] at he
   split at he
   . contradiction
-  . rw[←Option.some_inj.mp he, denote_getExprAux]
+  . rw [←Option.some_inj.mp he, denote_getExprAux]
 
 /-
   ## Mapping
