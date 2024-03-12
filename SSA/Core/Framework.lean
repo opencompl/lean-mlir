@@ -361,6 +361,23 @@ but this is much more pervasive in monadic code, where 'f >>= g' is common.
 Thus, the rule is that ALL rewrite rules are written pointfree in the last argument.
 -/
 
+
+/-#
+NOTE: Normal form for monadic code
+----------------------------------
+
+We never use functor and applicative instances. Rather, we *always* write definitions
+in terms of monadic code, using 'non-canonical' haskell code such as
+    mv >>= (fun v => return (g v))
+rather than writing the more natural
+    g <$> mv
+since it is much easier to design simp sets and tactics that consistenty simplify
+monadic bind, instead of a combination of: <$>, <*>, return, pure, >>=.
+
+Furthermore, consistent use of >>= simplifes reasoning about information flow,
+where left-to-right order clearly implies the direction of information flow.
+-/
+
 @[simp]
 theorem Com.denote_ret {eff : EffectKind} (Γ : Ctxt Ty) (x : Γ.Var t) [Monad m] :
     (Com.ret x : Com Op Γ eff t).denote = fun Γv => return (Γv x) := by
