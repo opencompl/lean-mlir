@@ -1,7 +1,10 @@
 -- Script that exhaustive enumerates the our LLVM semantics.
 import Std.Data.BitVec
 import Init.System.IO
+import SSA.Core.Util
 import SSA.Projects.InstCombine.LLVM.Semantics
+import SSA.Projects.InstCombine.TestLLVMOps
+import SSA.Projects.InstCombine.LLVM.CLITests
 import SSA.Projects.InstCombine.Base
 
 open Std
@@ -25,9 +28,9 @@ instance : ToString Row where
 def rowHeader : Row := {
  opName := "op",
  bitwidth := "width",
- v1 := "in0",
- v2 := "in1",
- v3 := "in2",
+ v1 := "in1",
+ v2 := "in2",
+ v3 := "in3",
  retval := "retval"
 }
 
@@ -45,6 +48,15 @@ def BitVec.inputsForWidth (w : Nat) : Array (Option (BitVec w)) := Id.run do
 def BitVec.inputToString : Option (BitVec w) → String
 | .none => "poison"
 | .some bv => s!"{bv.toNat}"
+
+/-- Render optional inputs in a test as strings. -/
+def ConcreteCliTest.inputToString (test : ConcreteCliTest) : Nat → Array (Option ℤ) → String
+  | i, arr =>
+    let tys : List (InstCombine.MTy 0) := test.context.reverse -- reverse because context is a stack
+    match tys[i]? with
+    | .none => "<none>"
+    | .some (.bitvec (.concrete w)) =>
+        BitVec.inputToString <| Option.map (BitVec.ofInt w) arr[i]!
 
 /-- Render the output as a string. These are more complex, as i1 are printed as true/false, and outputs are printed as integers. -/
 def BitVec.outputToString : Option (BitVec w) → String
@@ -115,40 +127,84 @@ def icmpRows (pred : LLVM.IntPredicate) : Array Row := Id.run do
         rows := rows.push row
   rows
 
-def main : IO Unit := do
+
+def testNameToRowName : String → String
+  | testName => match testName.splitOn "_" with
+    | [_,name] => name
+    | [_,name, op] => s!"{name}.{op}"
+    | _ => "Error"
+
+/-- Produce rows for a `ConcreteCliTest` -/
+def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
+  let mut rows := #[]
+  let argTys : List test.code.getTy := test.context.reverse -- reverse because context is stack
+  let mut args : Array (Array (Option ℤ)) := #[]
+  for ty in argTys do
+    match ty with
+      | .bitvec (.concrete w) => args := args.push <| (BitVec.inputsForWidth w).map (Option.map BitVec.toInt)
+  let argvecs := productsArr args
+  for arg in argvecs do
+    let evalRes ← test.eval? arg
+    match evalRes with
+      | Except.ok retv =>
+        let ty : InstCombine.MTy 0 := test.ty
+        match hty : ty with
+          | .bitvec (.concrete w) =>
+              let h : Goedel.toType ty = Option (Std.BitVec w) := by simp [hty, Goedel.toType]
+              let retv' : Option (Std.BitVec w) := h ▸ retv
+              let retv := BitVec.outputToString retv'
+              let row : Row := {
+                opName := s!"{testNameToRowName test.name.toString}",
+                bitwidth := "4", -- right now only hard-coded
+                v1 := test.inputToString 0 arg,
+                v2 := test.inputToString 1 arg,
+                v3 := test.inputToString 2 arg,
+                retval := retv
+              }
+              rows := rows.push row
+      | Except.error e => IO.println e
+  return rows
+
+def icmpPredicates := [ LLVM.IntPredicate.eq, LLVM.IntPredicate.ne, LLVM.IntPredicate.ugt,
+  LLVM.IntPredicate.uge, LLVM.IntPredicate.ult, LLVM.IntPredicate.ule, LLVM.IntPredicate.sgt,
+  LLVM.IntPredicate.sge, LLVM.IntPredicate.slt, LLVM.IntPredicate.sle]
+
+def generateRawSemantics : IO Unit := do
   let filename := "generated-ssa-llvm-semantics.csv"
   let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
   let stream : Stream := IO.FS.Stream.ofHandle handle
-  let rows := #[rowHeader]
-  let rows := rows.append (selectRows)
+  let mut rows := #[rowHeader]
+  rows := rows.append (selectRows)
   --
-  let rows := rows.append (icmpRows LLVM.IntPredicate.eq)
-  let rows := rows.append (icmpRows LLVM.IntPredicate.ne)
+  for pred in icmpPredicates do
+    rows := rows.append (icmpRows pred)
   --
-  let rows := rows.append (icmpRows LLVM.IntPredicate.ugt)
-  let rows := rows.append (icmpRows LLVM.IntPredicate.uge)
-  --
-  let rows := rows.append (icmpRows LLVM.IntPredicate.ult)
-  let rows := rows.append (icmpRows LLVM.IntPredicate.ule)
-  --
-  let rows := rows.append (icmpRows LLVM.IntPredicate.sgt)
-  let rows := rows.append (icmpRows LLVM.IntPredicate.sge)
-  --
-  let rows := rows.append (icmpRows LLVM.IntPredicate.slt)
-  let rows := rows.append (icmpRows LLVM.IntPredicate.sle)
-  --
-  let rows := rows.append (binopRows "and" (fun w a b => InstCombine.Op.denote (.and w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "or" (fun w a b => InstCombine.Op.denote (.or w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "xor" (fun w a b => InstCombine.Op.denote (.xor w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "add" (fun w a b => InstCombine.Op.denote (.add w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "sub" (fun w a b => InstCombine.Op.denote (.sub w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "mul" (fun w a b => InstCombine.Op.denote (.mul w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "udiv" (fun w a b => InstCombine.Op.denote (.udiv w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "sdiv" (fun w a b => InstCombine.Op.denote (.sdiv w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "urem" (fun w a b => InstCombine.Op.denote (.urem w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "srem" (fun w a b => InstCombine.Op.denote (.srem w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "shl" (fun w a b => InstCombine.Op.denote (.shl w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "lshr" (fun w a b => InstCombine.Op.denote (.lshr w) (.cons a (.cons b .nil))))
-  let rows := rows.append (binopRows "ashr" (fun w a b => InstCombine.Op.denote (.ashr w) (.cons a (.cons b .nil))))
+  rows := rows.append (binopRows "and"  (fun w a b => InstCombine.Op.denote (.and w)  [a,b]ₕ))
+  rows := rows.append (binopRows "or"   (fun w a b => InstCombine.Op.denote (.or w)   [a,b]ₕ))
+  rows := rows.append (binopRows "xor"  (fun w a b => InstCombine.Op.denote (.xor w)  [a,b]ₕ))
+  rows := rows.append (binopRows "add"  (fun w a b => InstCombine.Op.denote (.add w)  [a,b]ₕ))
+  rows := rows.append (binopRows "sub"  (fun w a b => InstCombine.Op.denote (.sub w)  [a,b]ₕ))
+  rows := rows.append (binopRows "mul"  (fun w a b => InstCombine.Op.denote (.mul w)  [a,b]ₕ))
+  rows := rows.append (binopRows "udiv" (fun w a b => InstCombine.Op.denote (.udiv w) [a,b]ₕ))
+  rows := rows.append (binopRows "sdiv" (fun w a b => InstCombine.Op.denote (.sdiv w) [a,b]ₕ))
+  rows := rows.append (binopRows "urem" (fun w a b => InstCombine.Op.denote (.urem w) [a,b]ₕ))
+  rows := rows.append (binopRows "srem" (fun w a b => InstCombine.Op.denote (.srem w) [a,b]ₕ))
+  rows := rows.append (binopRows "shl"  (fun w a b => InstCombine.Op.denote (.shl w)  [a,b]ₕ))
+  rows := rows.append (binopRows "lshr" (fun w a b => InstCombine.Op.denote (.lshr w) [a,b]ₕ))
+  rows := rows.append (binopRows "ashr" (fun w a b => InstCombine.Op.denote (.ashr w) [a,b]ₕ))
   rows.toList |>.map toString |> "\n".intercalate |> stream.putStr
   return ()
+
+def generateTestSemantics : IO Unit := do
+  let filename := "generated-ssa-llvm-syntax-and-semantics.csv"
+  let handle : Handle ← IO.FS.Handle.mk filename IO.FS.Mode.write
+  let stream : Stream := IO.FS.Stream.ofHandle handle
+  let mut rows := #[rowHeader]
+  for test in llvmTests! do
+    rows := rows.append (← concreteCliTestRows test)
+  rows.toList |>.map toString |> "\n".intercalate |> stream.putStr
+  return ()
+
+def main : IO Unit := do
+  generateRawSemantics
+  generateTestSemantics

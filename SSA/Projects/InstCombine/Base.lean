@@ -62,7 +62,7 @@ def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : Goedel Ty where
 toType := fun
-  | .bitvec w => Option $ BitVec w
+  | .bitvec w => Option <| BitVec w
 
 instance (ty : Ty) : Coe ℤ (Goedel.toType ty) where
   coe z := match ty with
