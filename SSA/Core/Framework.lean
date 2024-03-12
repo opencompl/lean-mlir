@@ -1425,8 +1425,8 @@ end
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
 
-theorem denote_matchVar_matchArg [DecidableEq Op]
-    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .eff Γ_out}
+theorem denote_matchVar_matchArg
+    {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .impure Γ_out}
     {matchLets : Lets Op Δ_in .pure Δ_out} :
     {l : List Ty} →
     {args₁ : HVector (Var Γ_out) l} →
@@ -1441,20 +1441,17 @@ theorem denote_matchVar_matchArg [DecidableEq Op]
     (hmatchVar : ∀ vMap (t : Ty) (vₗ vᵣ) ma,
       vMap ∈ matchVar (t := t) lets vₗ matchLets vᵣ ma →
       ma.entries ⊆ vMap.entries) →
-    (hvarMap : varMap₁ ∈ matchVar.matchArg Δ_out
-      (fun t vₗ vᵣ ma =>
-        matchVar (t := t) lets vₗ matchLets vᵣ ma) args₁ args₂ ma) →
+    (hvarMap : varMap₁ ∈ matchArg lets matchLets args₁ args₂ ma) →
       HVector.map f₂ args₂ = HVector.map f₁ args₁
   | _, .nil, .nil, _, _ => by simp [HVector.map]
   | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
     intro h_sub f₁ f₂ hf hmatchVar hvarMap
     simp [HVector.map]
-    simp [matchVar.matchArg, pure, bind] at hvarMap
+    simp [matchArg, pure, bind] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
-    · refine List.Subset.trans ?_
-        (subset_entries_matchVar_matchArg h₂)
-      · exact Set.Subset.refl _
+    · apply subset_entries_matchArg (Op := Op) (v := v₁)
+      assumption
     apply denote_matchVar_matchArg (hvarMap := h₂) (hf := hf)
     · exact h_sub
     · exact hmatchVar
