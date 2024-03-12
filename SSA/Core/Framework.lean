@@ -15,6 +15,10 @@ import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 open Ctxt (Var VarSet Valuation)
 open Goedel (toType)
 
+/-- Lemma that is useful for simplifying states with pure a = pure a' -/
+private lemma congrArg1 (f : α → β) {a : α} (ha : a = a') :
+  f a = f a  := by simp[ha]
+
 /-- Lemma that is useful for simplifying states with '(>>=) x f = (>>=) x g' -/
 private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
   f a b = f a b' := congrArg _ hb
@@ -1489,7 +1493,7 @@ theorem denote_matchVar_of_subset
              | .some mappedVar => by exact (Γ_out_lets mappedVar)
              | .none => by exact default
       return Γ_in_matchLets) >>= (fun Γ_in_matchLets => return (matchLets.denote Γ_in_matchLets) w)) =
-     (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v))) := sorry
+     (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v))) := sorry -- BIG SORRY 1
 /-
   | .nil, w => by
     simp[Lets.denote, matchVar]
@@ -1580,7 +1584,7 @@ theorem mem_matchVar_matchArg
     (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) →
       ⟨t', v'⟩ ∈ varMap
-  | _, _, _, _, _, _ => sorry
+  | _, _, _, _, _, _ => sorry -- BIG SORRY 2
 /-
   | _, .nil, .nil, _, varMap, _ => by simp
   | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, h => by
@@ -1604,7 +1608,7 @@ theorem mem_matchVar
     {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ matchLets.vars w → ⟨t', v'⟩ ∈ varMap
-  | _, _, _, _, _ => sorry
+  | _, _, _, _, _ => sorry -- BIG SORRY 3
 /-
   | .nil, w, h, t', v' => by
     simp [Lets.vars]
@@ -1671,7 +1675,7 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
             (hvarMap := by simp; apply hm) (hvars t v'))
       simp_all
 
-theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
+theorem denote_matchVarMap [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in .impure Γ_out}
     {t : Ty} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
@@ -1691,7 +1695,11 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     rw [← denote_matchVar hm]
     simp only [Option.mem_def, Option.some.injEq, pure] at hmap
     subst hmap
-    congr
+    simp
+    apply congrArg2
+    funext Γ_out_v
+    rw [← congrArg1 (f := pure)]
+    rw [← congrArg2 (f := Lets.denote)  (a := matchLets)]
     funext t' v;
     split
     . congr
@@ -1699,6 +1707,8 @@ theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
       split <;> simp_all
     . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
+    · rfl
+
 
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
