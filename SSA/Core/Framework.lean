@@ -1483,7 +1483,11 @@ theorem denote_matchVar_of_subset
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
     ((lets.denote s1 >>= (fun Γ_out_lets =>
-      let Γ_in_matchLets : Valuation Δ_in := sorry
+      let Γ_in_matchLets : Valuation Δ_in :=
+          fun t' v' =>
+             match varMap₂.lookup ⟨t', v'⟩ with
+             | .some mappedVar => by exact (Γ_out_lets mappedVar)
+             | .none => by exact default
       return Γ_in_matchLets) >>= (fun Γ_in_matchLets => return (matchLets.denote Γ_in_matchLets) w)) =
      (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v))) := sorry
 /-
@@ -1552,8 +1556,8 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
              | .some mappedVar => by exact (Γvlets mappedVar)
              | .none => default
          return newValuation) >>= (fun Δ_in_v => return (matchLets.denote Δ_in_v w)) =
-      lets.denote s₁ >>= (fun Γv => return (Γv v)) :=
-  denote_matchVar_of_subset (List.Subset.refl _)
+      lets.denote s₁ >>= (fun Γv => return (Γv v)) := by
+    apply denote_matchVar_of_subset (s₁ := s₁) (List.Subset.refl _)
 
 theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
   simp (config := { arith := true })
