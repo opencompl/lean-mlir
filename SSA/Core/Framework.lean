@@ -1139,31 +1139,50 @@ def Lets.getExprAuxDiff {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t}
   ⟩
 
 theorem Lets.denote_getExprAux [LawfulMonad m] {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
-    {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {e : Expr Op Δ .pure t}
-    (he : lets.getPureExprAux v = some ⟨Δ,  e⟩)
+    {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr Op Δ .pure t}
+    (he : lets.getPureExprAux v = some ⟨Δ,  ePure⟩)
     (s : Valuation Γ₁) :
-    (lets.denote s) >>=
-    (fun Γv => return (e.changeVars (getExprAuxDiff he).toHom).denote Γv) = v.denote <$> (lets.denote s) := by
+    (lets.denote s) >>= (fun Γv => return (ePure.changeVars (getExprAuxDiff he).toHom).denote Γv)
+    = lets.denote s >>= (fun Γv => return Γv v) := by
+  suffices ∀ {α} (f : Valuation _ → eff.toMonad m α),
+    (do
+      let Γv ← denote lets s
+      let _x ← f Γv
+      pure (Expr.denote (Expr.changeVars (Ctxt.Diff.toHom (getExprAuxDiff he)) ePure) Γv))
+    = (do
+      let Γv ← denote lets s
+      let _x ← f Γv
+      pure (Γv v)
+    )
+  by simpa using this pure
+  intro α f
   rw [getExprAuxDiff]
   induction lets
   case nil => simp [getPureExprAux] at he
-  case lete e body ih =>
+  case lete Γ_in eff Γ_out ty body e ih =>
     simp [Ctxt.Diff.toHom_succ <| getExprAuxDiff.proof_1 he]
+    -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
     cases v using Var.casesOn with
     | toSnoc v =>
+      simp [denote]
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_toSnoc, Option.mem_def,
         Option.map_eq_some'] at he
-      simp [denote, ←ih he]
-      sorry
+      let f' : Valuation Γ_out → eff.toMonad m α := fun Γv => do
+        let Ve ← e.denote Γv
+        f (Γv.snoc Ve)
+      replace ih (s) := ih he s f'
+      simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
+        EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
+      rw [←ih]
     | last =>
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
         Option.mem_def, Option.some.injEq] at he
-      sorry
-      -- This needs to perform a case distinction on the result of toPure?
-      /-
-      rcases he with ⟨⟨⟩, ⟨⟩⟩
-      simp [denote]
-      -/
+      split at he
+      next => contradiction
+      next e' he' =>
+        obtain ⟨rfl, h⟩ := by simpa using he
+        obtain rfl := eq_of_heq h
+        cases eff <;> simp [denote, Expr.denote_toPure? he']
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
