@@ -15,23 +15,13 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
 section Instances
 variable {e : EffectKind} {m : Type → Type}
 
-instance [Functor m] : Functor (e.toMonad m) := by cases e <;> infer_instance
-instance [Functor m] [LawfulFunctor m] : LawfulFunctor (e.toMonad m) := by
-  cases e <;> infer_instance
+/-!
+NOTE: The `Monad` instance below also implies `Functor`, `Applicative`, etc.
+If `m` is a `Functor`, but not a full `Monad`, then `e.toMonad m` should still be a functor too.
+However, actually having these instances causes diamond problems with the aforementioned instances
+implied by `Monad`. Thus, we just assume `m` is always a monad.
+-/
 
-instance [SeqLeft m]  : SeqLeft (e.toMonad m)  := by cases e <;> infer_instance
-instance [SeqRight m] : SeqRight (e.toMonad m) := by cases e <;> infer_instance
-instance [Seq m]      : Seq (e.toMonad m)      := by cases e <;> infer_instance
-
--- @[instance low] -- there is a diamond
--- instance [Applicative m] : Applicative (e.toMonad m) := by cases e <;> infer_instance
-
--- @[instance low] -- there is a diamond
--- instance [Applicative m] [LawfulApplicative m] : LawfulApplicative (e.toMonad m) := by
---   cases e <;> infer_instance
-
--- @[instance low] -- there is a diamond
--- instance [Bind m] : Bind (e.toMonad m)   := by cases e <;> infer_instance
 instance [Monad m] : Monad (e.toMonad m) := by cases e <;> infer_instance
 instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by cases e <;> infer_instance
 
