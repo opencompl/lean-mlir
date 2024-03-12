@@ -899,8 +899,8 @@ theorem denote_addLetsAtTop [LawfulMonad m] :
 `bot`, to the output of `mid`. It also assigns all free variables
 in `mid` to variables available at the end of `top` using `map`. -/
 def addPureComInMiddleOfLetCom {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
-    (top : Lets Op Γ₁ eff Γ₂) (mid : Com Op Γ₃ .pure t₁) (bot : Com Op Γ₂ eff t₂) :
-    Com Op Γ₁ eff t₂ :=
+    (top : Lets Op Γ₁ .impure Γ₂) (mid : Com Op Γ₃ .pure t₁) (bot : Com Op Γ₂ .impure t₂) :
+    Com Op Γ₁ .impure t₂ :=
   let topMid := addPureComToEndOfLets top map mid
   addLetsAtTop topMid.lets <| bot.changeVars <|
     (mid.changeVars map).outContextDiff.toHom.with v topMid.ret
@@ -1672,7 +1672,7 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
       simp_all
 
 theorem denote_matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
-    {lets : Lets Op Γ_in eff Γ_out}
+    {lets : Lets Op Γ_in .impure Γ_out}
     {t : Ty} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
     {w : Var Δ_out t}
@@ -1764,7 +1764,7 @@ with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
 def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
-    (pos : ℕ) (target : Com Op Γ₂ eff₂ t₂) :
+    (pos : ℕ) (target : Com Op Γ₂ .impure t₂) :
     Option (Com Op Γ₂ eff₂ t₂) := do
   let ⟨Γ₃, targetLets, target', t', vm⟩ ← splitProgramAt pos target
   if h : t₁ = t'
