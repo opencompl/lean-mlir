@@ -13,22 +13,22 @@ namespace ScfFunctor
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
-open Goedel
+open TyDenote
 
 /-- Describes that the dialect Op' has a type whose denotation is 'DenotedTy -/
-class HasTy (Op' : Type) (DenotedTy : Type) [Goedel Ty'] [OpSignature Op' Ty'] where
+class HasTy (Op' : Type) (DenotedTy : Type) [TyDenote Ty'] [OpSignature Op' Ty'] where
     ty : Ty'
     denote_eq : toType ty = DenotedTy := by rfl
 
-abbrev HasBool (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Bool
-abbrev HasInt (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Int
-abbrev HasNat (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Nat
+abbrev HasBool (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Bool
+abbrev HasInt (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Int
+abbrev HasNat (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty'] : Type := HasTy Op' Nat
 
 
 namespace ScfRegion
 
 /-- only flow operations, parametric over arithmetic from another dialect Op'  -/
-inductive Op (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] : Type _
+inductive Op (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] : Type _
   | coe (o : Op')
   | iterate (k : ℕ) -- fˆk
   | run (inputty : Ty')  -- f^k
@@ -36,11 +36,11 @@ inductive Op (Op' : Type) [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] 
   | for (ty : Ty')
   deriving DecidableEq, Repr
 
-instance [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] : Coe Op' (Op Op') where
+instance [TyDenote Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty'] : Coe Op' (Op Op') where
   coe o := .coe o
 
 @[reducible]
-instance [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
+instance [TyDenote Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
     [B : HasBool Op'] [N : HasNat Op'] [I : HasInt Op'] : OpSignature (Op Op') Ty' where
   signature
    | .coe o => signature o
@@ -189,7 +189,7 @@ def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
 
 end LoopBody.CounterDecorator
 
-variable [Goedel Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
+variable [TyDenote Ty'] [OpSignature Op' Ty'] [OpDenote Op' Ty']
   [B : HasBool Op'] [N : HasNat Op'] [Z : HasInt Op']
 
 @[reducible]
@@ -230,7 +230,7 @@ inductive Ty
 | nat
  deriving DecidableEq, Repr
 
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => ℤ
     | .bool => Bool
@@ -441,7 +441,7 @@ theorem correct :
   simp  [Ctxt.Valuation.snoc, Var.casesOn]
   rw [ScfRegion.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)]
   case hf =>
-    funext _ b; simp [Goedel.toType, instGoedelTy, HasTy.denote_eq] at *;
+    funext _ b; simp [TyDenote.toType, instTyDenoteTy, HasTy.denote_eq] at *;
   simp
   apply add_iterate
 

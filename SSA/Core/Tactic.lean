@@ -21,7 +21,7 @@ elab "change_mlir_context " V:ident : tactic => do
     -- Assert that the type of `V` is `Ctxt.Valuation ?Γ`
     let Ty ← mkFreshExprMVarQ q(Type)
     let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
-    let G  ← mkFreshExprMVarQ q(Goedel $Ty)
+    let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
     let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
 
     -- Reduce the context `Γ`
@@ -58,7 +58,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       try generalize $ll { val := 3, property := _ } = d;
       try generalize $ll { val := 4, property := _ } = e;
       try generalize $ll { val := 5, property := _ } = f;
-      try simp (config := {decide := false}) [Goedel.toType] at a b c d e f;
+      try simp (config := {decide := false}) [TyDenote.toType] at a b c d e f;
       try clear f;
       try clear e;
       try clear d;

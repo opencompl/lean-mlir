@@ -24,7 +24,7 @@ inductive Ty
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => ℤ
     | .bool => Bool
@@ -319,7 +319,7 @@ theorem if_false {t : Ty} (cond : Var Γ .bool) (hcond : Γv cond = false) (v : 
 
 
 /-- a region that returns the value immediately -/
-abbrev RegionRet [Goedel Ty] (t : Ty) {Γ : Ctxt Ty} (v : Var Γ t) : Com Op Γ t := .ret v
+abbrev RegionRet [TyDenote Ty] (t : Ty) {Γ : Ctxt Ty} (v : Var Γ t) : Com Op Γ t := .ret v
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/

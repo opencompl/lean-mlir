@@ -325,7 +325,7 @@ inductive Ty
 | /-- tensor type -/ tensor1d  : Ty
 deriving DecidableEq, Inhabited
 
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
   | .int => Int
   | .ix => Index
