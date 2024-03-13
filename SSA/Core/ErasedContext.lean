@@ -122,6 +122,8 @@ def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
 def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
   | ⟨i, h⟩ => ⟨i, h_eq ▸ h⟩
 
+@[simp] lemma cast_rfl (v : Var Γ t) (h : t = t) : v.cast h = v := rfl
+
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
 @[elab_as_elim]
