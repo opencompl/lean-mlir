@@ -592,10 +592,15 @@ theorem Com.denote_changeVars
     c.denoteLets Γv c.returnVar = c.denote Γv := by
   induction c using Com.recPure <;> simp_all [denoteLets, denote]
 
-@[simp] theorem Com.comap_denoteLets_pure (map : Γ.Hom Δ) (c : Com Op Γ .pure ty) (Δv : Valuation Δ) :
+@[simp] theorem Com.comap_denoteLets_pure [LawfulMonad m]
+    (map : Γ.Hom Δ) (c : Com Op Γ .pure ty) (Δv : Valuation Δ) :
     Valuation.comap ((c.changeVars map).denoteLets Δv)
       (c.changeVars map).outContextDiff.toHom = Δv := by
-  sorry
+  funext t' v'
+  simp only [Valuation.comap]
+  induction c using Com.recPure generalizing Δ Δv
+  case ret => rfl
+  case lete ih => rw [changeVars_lete]; simp [outContextDiff, ih]
 
 /-- The result returned by `addPureComToEndOfLets`
 -- TODO: this is now the same as a FlatCom? -/
