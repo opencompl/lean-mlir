@@ -1498,7 +1498,7 @@ theorem denote_matchVar_matchArg
     · exact hmatchVar
 
 /- NOTE: Lean hangs on this proof! -/
-theorem denote_matchVar_of_subset
+theorem denote_matchVar_of_subset [LawfulMonad m]
     {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
@@ -1513,8 +1513,7 @@ theorem denote_matchVar_of_subset
              | .some mappedVar => by exact (Γ_out_lets mappedVar)
              | .none => by exact default
       return Γ_in_matchLets) >>= (fun Γ_in_matchLets => return (matchLets.denote Γ_in_matchLets) w)) =
-     (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v))) := sorry -- BIG SORRY 1
-/-
+     (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v)))
   | .nil, w => by
     simp[Lets.denote, matchVar]
     intro h_sub h_mv
@@ -1537,13 +1536,16 @@ theorem denote_matchVar_of_subset
       simp
   | .lete matchLets _, ⟨w+1, h⟩ => by
     simp [matchVar]
-    apply denote_matchVar_of_subset
+    -- apply denote_matchVar_of_subset
+    sorry
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
     subst this
     simp [matchVar, Bind.bind, Option.bind]
     intro h_sub h_mv
+    sorry
+/-
     split at h_mv
     · simp_all
     · rename_i e he
