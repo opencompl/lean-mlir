@@ -1201,6 +1201,45 @@ abbrev Mapping (Γ Δ : Ctxt Ty) : Type :=
 --^^^^^^ Morally this is `{t : _} → Γ.Var t → Option (Δ.Var t)`
 --       We write it as an `AList` for performance reasons
 
+open AList
+section AListTheorems
+
+/--
+if (k, v) is in s.entries then k is in s.
+
+For mathlib -/ --TODO: upstream this
+theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
+    {k : α} {v : β k} :
+    ⟨k, v⟩ ∈ s.entries → k ∈ s := by
+  intro h
+  rcases s with ⟨entries, nd⟩
+  simp [(· ∈ ·), keys] at h ⊢
+  clear nd
+  induction h
+  next    => apply List.Mem.head
+  next ih => apply List.Mem.tail _ ih
+
+/--
+if k is in s, then there is v such that (k, v) is in s.entries.
+-/
+theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : AList β} {k : α} :
+    k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
+  intro h
+  rcases s with ⟨entries, nd⟩
+  simp [(· ∈ ·), keys, List.keys] at h ⊢
+  clear nd;
+  induction entries
+  next    => contradiction
+  next hd tl ih =>
+    cases h
+    next =>
+      use hd.snd
+      apply List.Mem.head
+    next h =>
+      rcases ih h with ⟨v, ih⟩
+      exact ⟨v, .tail _ ih⟩
+end AListTheorems
+
 /-!
 ## Free Variables
 -/
@@ -1249,6 +1288,10 @@ def Com.vars : Com Op Γ .pure t → VarSet Γ :=
     congr 1
     simp [Finset.ext_iff, or_comm, or_assoc]
 
+/-- For a vector of variables T,
+  let s₁ and s₂ be two maps from variables to A t.
+  If s₁ and s₂ agree on all variables in T (which is a VarSet),
+  then T.map s₁ = T.map s₂ -/
 theorem HVector.map_eq_of_eq_on_vars {A : Ty → Type*}
     {T : HVector (Var Γ) l}
     {s₁ s₂ : ∀ (t), Var Γ t → A t}
@@ -1557,36 +1600,6 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       | none => some (AList.insert ⟨_, w⟩ v ma)
 end
 
-open AList
-
-/-- For mathlib -/ --TODO: upstream this
-theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
-    {k : α} {v : β k} :
-    ⟨k, v⟩ ∈ s.entries → k ∈ s := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys] at h ⊢
-  clear nd
-  induction h
-  next    => apply List.Mem.head
-  next ih => apply List.Mem.tail _ ih
-
-theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : AList β} {k : α} :
-    k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys, List.keys] at h ⊢
-  clear nd;
-  induction entries
-  next    => contradiction
-  next hd tl ih =>
-    cases h
-    next =>
-      use hd.snd
-      apply List.Mem.head
-    next h =>
-      rcases ih h with ⟨v, ih⟩
-      exact ⟨v, .tail _ ih⟩
 
 /-
   The termination proof of the mutual block takes a long time.
@@ -1595,6 +1608,8 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
 -/
 set_option maxHeartbeats 99999999 in
 mutual
+/-
+-/
 theorem subset_entries_matchArg [DecidableEq Op]
     {Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in eff Γ_out}
@@ -1636,7 +1651,12 @@ theorem subset_entries_matchArg [DecidableEq Op]
     apply List.Subset.trans hmut hind
 
 /- TODO: Lean hangs on this proof! -/
-/-- The output mapping of `matchVar` extends the input mapping when it succeeds. -/
+/--
+matchVar only adds new entries:
+  if matchVar lets v matchLets w ma = .some varMap,
+  then ma is a subset of varMap.
+Said differently, The output mapping of `matchVar` extends the input mapping when it succeeds.
+-/
 theorem subset_entries_matchVar [DecidableEq Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets Op Γ_in eff Γ_out} {v : Var Γ_out t}
@@ -1693,6 +1713,7 @@ end
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : Ty), Inhabited (toType t)] [DecidableEq Op]
 
+-- TODO: No idea what this does.
 theorem denote_matchVar_matchArg
     {Γ_out Δ_in Δ_out : Ctxt Ty} {lets : Lets Op Γ_in .impure Γ_out}
     {matchLets : Lets Op Δ_in .pure Δ_out} :
@@ -1726,6 +1747,7 @@ theorem denote_matchVar_matchArg
 
 variable [LawfulMonad m]
 
+-- TODO: No idea what this does.
 /- NOTE: Lean hangs on this proof! -/
 theorem denote_matchVar_of_subset
     {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
@@ -1799,6 +1821,13 @@ theorem denote_matchVar_of_subset
           rfl
 -/
 
+/--
+if matchVar lets v matchLets w ma = .some varMap,
+then informally:
+
+   Γ_in --⟦lets⟧--> Γ_out --comap ma--> Δ_in --⟦matchLets⟧ --> Δ_out --w--> t =
+     Γ_in ⟦lets⟧ --> Γ_out --v--> t
+-/
 theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} {varMap : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
@@ -1806,7 +1835,7 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {w : Var Δ_out t} {f : _ → m α} :
     varMap ∈ matchVar lets v matchLets w ma →
     lets.denote s₁ >>= (fun Γvlets =>
-         let newValuation : Valuation Δ_in :=
+         let newValuation : Valuation Δ_in := -- TODO: this is just comap?
            fun t' v' =>
              match varMap.lookup ⟨t', v'⟩ with
              | .some mappedVar => by exact (Γvlets mappedVar)
