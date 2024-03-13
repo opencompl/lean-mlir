@@ -14,7 +14,7 @@ def runTest (test : ConcreteCliTest) (arg : String) : IO Bool := do
       | IO.println s!"Could not parse argument {arg} for test {test.name} : {test.printSignature}";
         return false
     let res ← test.eval (p.map Option.some)
-    -- Add the first match to help lean reduce the Goedel instance
+    -- Add the first match to help lean reduce the TyDenote instance
     match test.ty, res with
       | .bitvec _, .some val => IO.println s!"result: {val}"
       | .bitvec _, .none => IO.println s!"no result (undefined behavior)"

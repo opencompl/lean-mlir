@@ -7,7 +7,7 @@ This file contains a few very simple example dialects and rewrites, to showcase 
 -/
 
 open Ctxt (Var VarSet Valuation)
-open Goedel (toType)
+open TyDenote (toType)
 
 namespace Examples
 
@@ -18,7 +18,7 @@ inductive ExTy
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel ExTy where
+instance : TyDenote ExTy where
   toType
     | .nat => Nat
     | .bool => Bool
@@ -304,7 +304,7 @@ inductive ExTy
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel ExTy where
+instance : TyDenote ExTy where
   toType
     | .nat => Nat
 

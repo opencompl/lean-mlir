@@ -106,7 +106,7 @@ def Ty.toType : Ty → Type
 | .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
-instance : Goedel Ty where toType := Ty.toType
+instance : TyDenote Ty where toType := Ty.toType
 
 @[reducible, simp]
 def Op.outTy : Op → Ty

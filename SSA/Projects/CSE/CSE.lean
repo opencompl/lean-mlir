@@ -82,19 +82,19 @@ end DecEqCom
 namespace CSE
 
 /-- State stored by CSE pass. -/
-structure State (Op : Type) [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] (lets : Lets Op Γstart Γ) where
+structure State (Op : Type) [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] (lets : Lets Op Γstart Γ) where
   /-- map variable to its canonical value -/
   var2var : (v : Γ.Var α) → { v' : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v = (lets.denote V) v' }
   /-- map an Expr to its canonical variable -/
   expr2cache : (α : Ty) → (e : Expr Op Γ α) → Option ({ v : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v = e.denote (lets.denote V) })
 
 /-- The empty CSEing state. -/
-def State.empty [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] (lets : Lets Op Γstart Γ) : State Op lets where
+def State.empty [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] (lets : Lets Op Γstart Γ) : State Op lets where
   var2var := fun v => ⟨v, by intros V; rfl⟩
   expr2cache := fun α e => .none
 
 def State.snocNewExpr2Cache
- [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+ [TyDenote Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
  {Γ : Ctxt Ty} {α : Ty}
  {lets : Lets Op Γstart Γ}
  (s : State Op lets) (e : Expr Op Γ α) : State Op (Lets.lete lets e) :=
@@ -132,7 +132,7 @@ def State.snocNewExpr2Cache
 
 /-- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
 @[simp]
-theorem Lets.denote_lete [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
+theorem Lets.denote_lete [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ : Ctxt Ty}
   {lets : Lets Op Γstart Γ}
   (e : Expr Op Γ α)
@@ -144,14 +144,14 @@ theorem Lets.denote_lete [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   done
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
-def _root_.Ctxt.Hom.remapLast [Goedel Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Var α) :
+def _root_.Ctxt.Hom.remapLast [TyDenote Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Var α) :
   Ctxt.Hom (Γ.snoc α) Γ := fun ty' var' => by
     cases var' using Ctxt.Var.casesOn
     case toSnoc var' => exact var'
     case last => exact var
 
 section RemapVar
-def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+def VarRemapVar [TyDenote Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -173,7 +173,7 @@ def VarRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty
       else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
     else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
 
-def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+def arglistRemapVar [TyDenote Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -198,7 +198,7 @@ def arglistRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature O
       done
     ⟩
 
-def ExprRemapVar [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+def ExprRemapVar [TyDenote Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
   (lets : Lets Op Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -231,7 +231,7 @@ s': State Op (Lets.lete lets e') := snocNewExpr2Cache s e'
 -/
 
 def State.snocOldExpr2Cache
- [Goedel Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
+ [TyDenote Ty] [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [OpDenote Op Ty]
  {Γ : Ctxt Ty} {α : Ty}
  {lets : Lets Op Γstart Γ}
  (s : State Op lets) (enew : Expr Op Γ α) (eold : Expr Op Γ α) (henew :
@@ -285,7 +285,7 @@ def State.snocOldExpr2Cache
 
 /-- Replace the variables in `as` with new variables that have the same valuation -/
 def State.cseArgList
- [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
+ [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty]
   {Γstart Γ : Ctxt Ty} {lets : Lets Op Γstart Γ} (s : State Op lets)
   {ts : List Ty}
   (as : HVector (Ctxt.Var Γ) <| ts) :
@@ -306,7 +306,7 @@ def State.cseArgList
     ⟩
 
 /-- Default instance for `partial def` to compile. -/
-instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
+instance [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
           {lets : Lets Op Γstart Γ} →
           State Op lets →
           {ts : List (Ctxt Ty × Ty)} →
@@ -315,7 +315,7 @@ instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
   default := fun _s _ts rs => ⟨rs, rfl⟩
 
 /-- Default instance for `partial def` to compile. -/
-instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
+instance [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
   {lets : Lets Op Γstart Γ} →
   State Op lets →
   (com: Com Op Γ α) →
@@ -325,7 +325,7 @@ instance [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] : Inhabited (
 
 /- CSE for HVector / Com / Expr. -/
 mutual
-variable [DecidableEq Ty] [DecidableEq Op] [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty]
+variable [DecidableEq Ty] [DecidableEq Op] [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty]
 
 /-- Replace the regions in `rs` with new regions that have the same valuation -/
 unsafe def State.cseRegionArgList
@@ -432,7 +432,7 @@ unsafe def State.cseCom {α : Ty}
 end -- mutual.
 
 /-- common subexpression elimination entry point. -/
-unsafe def cse' [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty]
+unsafe def cse' [DecidableEq Ty] [DecidableEq Op] [OpSignature Op Ty] [TyDenote Ty] [OpDenote Op Ty]
   {α : Ty} {Γ : Ctxt Ty} (com: Com Op Γ α) :
   { com' : Com Op Γ α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
     let ⟨com', hcom'⟩ := State.cseCom (State.empty Lets.nil) com
@@ -451,7 +451,7 @@ inductive ExTy
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel ExTy where
+instance : TyDenote ExTy where
   toType
     | .nat => Nat
     | .bool => Bool

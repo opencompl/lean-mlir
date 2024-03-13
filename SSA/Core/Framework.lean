@@ -7,7 +7,7 @@ import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
 open Ctxt (Var VarSet Valuation)
-open Goedel (toType)
+open TyDenote (toType)
 
 /-
   # Classes
@@ -34,7 +34,7 @@ def OpSignature.outTy   := Signature.outTy ∘ s.signature
 end
 
 
-class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
+class OpDenote (Op Ty : Type) [TyDenote Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
     HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
     (toType <| OpSignature.outTy op)
@@ -176,7 +176,7 @@ theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSigna
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
-variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
+variable [TyDenote Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
 mutual
 
@@ -1103,7 +1103,7 @@ theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ t₁)
       rintro rfl rfl
       simp
 
-variable (Op : _) {Ty : _} [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] in
+variable (Op : _) {Ty : _} [OpSignature Op Ty] [TyDenote Ty] [OpDenote Op Ty] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable

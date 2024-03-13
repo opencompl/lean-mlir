@@ -644,7 +644,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   deriving DecidableEq
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
-instance : Goedel (Ty q n) where
+instance : TyDenote (Ty q n) where
 toType := fun
   | .index => Nat
   | .integer => Int
@@ -669,7 +669,7 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | to_tensor : Op q n-- give back coefficients from `R.representative`
   | const (c : R q n) : Op q n
 
-open Goedel (toType)
+open TyDenote (toType)
 
 
 @[simp, reducible]

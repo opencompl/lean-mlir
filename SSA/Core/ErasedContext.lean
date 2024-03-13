@@ -9,13 +9,13 @@ import SSA.Core.HVector
   avoids a universe bump
 -/
 @[reducible]
-class Goedel (β : Type) : Type 1 where
+class TyDenote (β : Type) : Type 1 where
   toType : β → Type
-open Goedel (toType) /- make toType publically visible in module. -/
+open TyDenote (toType) /- make toType publically visible in module. -/
 
-notation "⟦" x "⟧" => Goedel.toType x
+notation "⟦" x "⟧" => TyDenote.toType x
 
-instance : Goedel Unit where toType := fun _ => Unit
+instance : TyDenote Unit where toType := fun _ => Unit
 
 def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
@@ -212,7 +212,7 @@ instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toS
 
 section Valuation
 
-variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
+variable [TyDenote Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation (Γ : Ctxt Ty) : Type :=
@@ -296,14 +296,14 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
-def Valuation.ofPair [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
+def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
   Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
 
 @[simp]
-theorem Valuation.ofPair_fst [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_fst [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by simp⟩ = v₁ := rfl
 @[simp]
-theorem Valuation.ofPair_snd [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_snd [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by simp⟩ = v₂ := rfl
 
 /-- transport/pullback a valuation along a context homomorphism. -/

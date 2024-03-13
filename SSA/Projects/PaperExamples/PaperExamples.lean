@@ -30,7 +30,7 @@ inductive Ty
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 
@@ -222,7 +222,7 @@ inductive Ty
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 

@@ -5,7 +5,7 @@ import Cli
 import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.Base
 
-open Lean Goedel InstCombine
+open Lean TyDenote InstCombine
 
 /-- Parse a tuple -/
 instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β] :
