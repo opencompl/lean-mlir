@@ -1183,6 +1183,10 @@ def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
 
 end
 
+def Lets.map : Lets Op Γ_in eff Γ_out → Lets Op' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
+  | nil => nil
+  | lete body e => lete (map body) (e.map f)
+
 end Map
 
 /-!
@@ -1335,6 +1339,140 @@ theorem HVector.map_eq_of_eq_on_vars {A : Ty → Type*}
 --   simpa using denote_eq_of_eq_on_vars_aux lets v h pure
 
 /-!
+## Expression Trees
+Morally, a pure `Com` can be represented as just a tree of expressions.
+We use this intuition to explain what `matchVar` does, but first we give a semi-formal definition
+of `ExprTree` and its operations.
+-/
+
+#check Expr
+
+mutual
+variable (Op)
+
+/-- A tree of pure expressions -/
+inductive ExprTree (Γ : Ctxt Ty) : (ty : Ty) → Type
+  | mk (op : Op)
+    (ty_eq : ty = OpSignature.outTy op)
+    (eff_eq : OpSignature.effectKind op = .pure)
+    (args : ExprTreeBranches Γ <| OpSignature.sig op)
+    --TODO: we should tree-ify the regions as well to make the term model work
+    -- /- We don't consider regions to be part of the expression tree, so we keep them as `Com` -/
+    -- (regArgs : HVector (fun t : Ctxt Ty × Ty => Com Op t.1 .impure t.2)
+    --   (OpSignature.regSig op))
+    : ExprTree Γ ty
+  | fvar : Var Γ ty → ExprTree Γ ty
+
+inductive ExprTreeBranches (Γ : Ctxt Ty) : List Ty → Type
+  | nil : ExprTreeBranches Γ []
+  | cons : ExprTree Γ t → ExprTreeBranches Γ ts → ExprTreeBranches Γ (t::ts)
+
+end
+
+@[coe]
+def ExprTreeBranches.ofHVector : HVector (ExprTree Op Γ) ts → ExprTreeBranches Op Γ ts
+  | .nil        => .nil
+  | .cons v vs  => .cons v (ofHVector vs)
+
+mutual
+
+/-- `lets.exprTreeAt v` follows the def-use chain of `v` in `lets` to produce an `ExprTree` whose
+free variables are only the free variables of `lets` as a whole -/
+def Lets.exprTreeAt : (lets : Lets Op Γ_in .pure Γ_out) → (v : Var Γ_out ty) → ExprTree Op Γ_in ty
+  | .nil, v                       => .fvar v
+  | .lete body e, ⟨0, Eq.refl _⟩  => e.toExprTree body
+  | .lete body _, ⟨v+1, h⟩        => body.exprTreeAt ⟨v, h⟩
+
+/-- `e.toExprTree lets` converts a single expression `e` into an expression tree by looking up the
+arguments to `e` in `lets` -/
+def Expr.toExprTree (lets : Lets Op Γ_in .pure Γ_out) (e : Expr Op Γ_out .pure ty) :
+    ExprTree Op Γ_in ty :=
+  .mk e.op e.ty_eq (EffectKind.eq_of_le_pure e.eff_le) (argsToBranches e.args)
+  where argsToBranches {ts} : HVector (Var Γ_out) ts → ExprTreeBranches Op Γ_in ts
+    | .nil => .nil
+    | .cons v vs => .cons (lets.exprTreeAt v) (argsToBranches vs)
+
+end
+
+/-!
+## TermModel
+We can syntactically give semantics to any dialect by denoting it with `ExprTrees`
+-/
+
+section TermModel
+
+structure TermModel (Op : Type) (Γ : Ctxt Ty) where
+  (op : Op)
+
+structure TermModelTy (Op : Type) {Ty m} (Γ : Ctxt Ty) [OpSignature Op Ty m] where
+  (ty : Ty)
+
+class PureDialect (Op : Type) {Ty m} [OpSignature Op Ty m] where
+  allPure : ∀ (op : Op), OpSignature.effectKind op = .pure
+
+instance : OpSignature (TermModel Op Γ) (TermModelTy Op Γ) m where
+  signature := fun ⟨op⟩ => TermModelTy.mk <$> signature op
+
+instance : Goedel (TermModelTy Op Γ) where
+  toType := fun ⟨ty⟩ => ExprTree Op Γ ty
+
+instance [p : PureDialect Op] : OpDenote (TermModel Op Γ) (TermModelTy Op Γ) m where
+  denote := fun ⟨op⟩ args _regArgs =>
+    return .mk op rfl (p.allPure _) (argsToBranches args)
+  where
+    argsToBranches : {ts : List Ty} → HVector _ (TermModelTy.mk <$> ts) → ExprTreeBranches Op Γ ts
+      | [], .nil          => .nil
+      | _::_, .cons a as  => .cons a (argsToBranches as)
+
+#check ExprTree
+
+variable (Op) in
+/-- A substitution in context `Γ` maps variables of `Γ` to expression trees in `Δ`,
+in a type-preserving manner -/
+def Ctxt.Substitution (Γ Δ : Ctxt Ty) : Type :=
+  {ty : Ty} → Γ.Var ty → (ExprTree Op Δ ty)
+
+/-- A valuation of the term model w.r.t context `Δ` is exactly a substitution -/
+@[coe] def Ctxt.Substitution.ofValuation (V : Valuation (TermModelTy.mk (Op:=Op) (Γ:=Δ) <$> Γ)) :
+    Γ.Substitution Op Δ := fun ⟨v, h⟩ =>
+  V ⟨v, by simpa using h⟩
+
+/-- A context homomorphism trivially induces a substitution  -/
+@[coe] def Ctxt.Substitution.ofHom {Γ Δ : Ctxt Ty} (f : Γ.Hom Δ) : Γ.Substitution Op Δ :=
+  fun v => .fvar <| f v
+
+def TermModel.morphism : DialectMorphism Op (TermModel Op Γ) (Ty' := TermModelTy Op Γ) where
+  mapOp := TermModel.mk
+  mapTy := TermModelTy.mk
+  preserves_signature := by intros; rfl
+
+variable [PureDialect Op]
+
+/-- `lets.toSubstitution` gives a substiution from each variable in the output context to an
+expression tree with variables in the input context by following the def-use chain -/
+def Lets.toSubstitution (lets : Lets Op Γ_in .pure Γ_out) : Γ_out.Substitution Op Γ_in :=
+  Ctxt.Substitution.ofValuation <|
+    (lets.map TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
+      ExprTree.fvar ⟨v, by simpa [TermModel.morphism] using h⟩
+
+mutual
+
+/-- `e.applySubstitution σ` replaces occurences of `v` in `e` with `σ v` -/
+def ExprTree.applySubstitution (σ : Γ.Substitution Op Δ) : ExprTree Op Γ ty → ExprTree Op Δ ty
+  | .fvar v => σ v
+  | .mk op (Eq.refl _) eff_eq args => .mk op rfl eff_eq (args.applySubstitution σ)
+
+/-- `es.applySubstitution σ` maps `ExprTree.applySubstution` over `es` -/
+def ExprTreeBranches.applySubstitution (σ : Γ.Substitution Op Δ) :
+    ExprTreeBranches Op Γ ty → ExprTreeBranches Op Δ ty
+  | .nil => .nil
+  | .cons a as => .cons (a.applySubstitution σ) (as.applySubstitution σ)
+
+end
+
+end TermModel
+
+/-!
 ## Matching
 
 -/
@@ -1353,6 +1491,8 @@ def matchArg [DecidableEq Op]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
       let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
       matchArg lets matchLets vsₗ vsᵣ ma
+
+
 
 /-- `matchVar lets v matchLets w map` tries to extend the partial substition `map`, such that the
 transitive expression trees represented by variables `v` and `w` become syntactically equal,
@@ -1377,15 +1517,21 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (ma : Mapping Δ_in Γ_out := ∅) →
 --   ^^ TODO: find better name for `ma`
     Option (Mapping Δ_in Γ_out)
-  /- `matchVar` simultaneously recurses on both `lets` and `w`:
-    * If the `lets` are just `nil`, then the variable `w` is a free variable.
+  /- `matchVar` simultaneously recurses on both `matchLets` and `w`:
+    * If the `matchLets` are just `nil`, then the variable `w` is a free variable.
       We update the map with `map[v := w]`, by following the equation:
 
-      (matchLets.exprTreeAt w).changeVars map := lets.exprTreeAt v
-      (matchLets.exprTreeAt w).changeVars map := nil.exprTreeAt v [lets is nil]
-      (matchLets.exprTreeAt w).changeVars map := v [v ∈ Γ_out = Γ_in is a free variable]
-      (w).changeVars map = v [w ∈ Δ_in is a free variable]
+      (matchLets.exprTreeAt w).changeVars map = lets.exprTreeAt v
+      (nil.exprTreeAt w).changeVars map       = lets.exprTreeAt v [matchLets is nil]
+      (nil.exprTreeAt w).changeVars map       = lets.exprTreeAt v [w ∈ Δ_out = Δ_in is a free var]
+      (w).changeVars map                      = lets.exprTreeAt v [w ∈ Δ_in is a free variable]
       map[w] := v [w ∈ Δ_in is a free variable]
+
+      map : Δ → Γ_out
+
+      (w) : ExprTree Δ
+      (w).changeVars (map.toExprTreeMapUsing lets) = lets.exprTreeAt (map w) : ExprTree Γ_in
+      lets.exprTreeAt v : ExprTree Γ_in t
 
     * If `matchLets = .lete matchLets' e`, and `w` is `Var.last` (which is to say, `0`), then we
       attempt to unify `e` with `lets.getPureExpr v`.
