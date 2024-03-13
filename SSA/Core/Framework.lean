@@ -780,21 +780,15 @@ theorem denote_addPureComToEndOfLetsAux [LawfulMonad m]
       simp only [Com.denoteLets]
     cases eff <;> simp
 
-/--
-  Add a program to the end of a list of `Lets`,
-    given a mapping from variables at the end of `lets`(`Γ_out`) to variables used by the `Com` (`Δ`) returning
-  * the new lets
-  * a map from variables of the out context of the old lets to the out context of the new lets
-  * a variable in the new out context, which is semantically equivalent to the return variable of
-    the added program
--/
+/-- Add a program to the end of a list of `Lets`, given a mapping from variables at the end of
+`lets`(`Γ_out`) to variables used by the `Com` (`Δ`) -/
 def addPureComToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ .pure ty) :
     FlatCom Op Γ_in eff (com.changeVars varsMap).outContext ty :=
   addPureComToEndOfLetsAux lets (com.changeVars varsMap)
 
 
 /- TODO: this is the exact same as Lets.addProgramAtTop!  -/
-def Com.toFlatCom {t : Ty} (com : Com Op Γ .pure t) : FlatCom Op Γ .pure (com.outContext) t :=
+def Com.toFlatCom {t : Ty} (com : Com Op Γ .pure t) : FlatCom Op Γ .pure com.outContext t :=
   addPureComToEndOfLetsAux  Lets.nil  com
 
 /-
@@ -1422,10 +1416,10 @@ theorem subset_entries_matchVar [DecidableEq Op]
     simp [matchVar] at *
     intros x hx
     split at hvarMap
-    case h_1 p q r s =>
+    case h_1 p q r _s =>
       split_ifs at hvarMap
       . simp_all
-    case h_2 a b c d e f =>
+    case h_2 a _b c d e f =>
       simp only [Option.some.injEq] at hvarMap
       subst hvarMap
       rcases x with ⟨x, y⟩
