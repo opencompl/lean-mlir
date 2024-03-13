@@ -532,10 +532,10 @@ theorem Expr.denote_changeVars {Γ Γ' : Ctxt Ty}
     (varsMap : Γ.Hom Γ')
     (e : Expr Op Γ eff ty) :
     (e.changeVars varsMap).denote =
-    fun Γ'v => e.denote (fun t v => Γ'v (varsMap v)) := by
+    fun Γ'v => e.denote (Γ'v.comap varsMap) := by
   funext Γ'v
   rcases e with ⟨_, rfl, _⟩
-  simp [Expr.denote, Expr.changeVars, HVector.map_map]
+  simp [Expr.denote, Expr.changeVars, HVector.map_map, Valuation.comap]
 
 /-- @alexkeizer: We need this to generate defeqs properly -/
 def Com.changeVars : Com Op Γ eff ty →
@@ -564,29 +564,15 @@ def Com.changeVars : Com Op Γ eff ty →
 theorem Com.denote_changeVars
     (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty) :
     (c.changeVars varsMap).denote =
-    c.denote ∘ (fun V t v => V <| varsMap v) := by
+    c.denote ∘ (fun V => V.comap varsMap) := by
   funext Γ'v
   simp only [Function.comp_apply]
   induction c using Com.rec' generalizing Γ'v Γ' with
-  | ret x => simp [Com.denote, Com.changeVars, *]
+  | ret x => simp [Com.denote, Com.changeVars, Valuation.comap, *]
   | lete _ _ ih =>
-    rename_i eff _ _ -- get effect
-    cases eff
-    · rw [changeVars, denote, ih]
-      simp [denote]
-      apply congrArg2
-      funext t v
-      simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, Expr.denote_changeVars, denote]
-      cases v using Var.casesOn <;> simp [ih]
-    · rw [changeVars, denote]
-      simp [Bind.bind, denote]
-      apply congrArg2
-      funext x
-      rw [ih]
-      apply congrArg2
-      funext t v
-      simp only [Ctxt.Valuation.snoc, Ctxt.Hom.snocMap, Expr.denote_changeVars, denote]
-      cases v using Var.casesOn <;> simp [ih]
+    unfold denote
+    simp only [changeVars_lete]
+    split <;> simp_all
 
 @[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty) :
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
@@ -911,14 +897,6 @@ def addLetsAtTop : (lets : Lets Op Γ₁ eff Γ₂) → (inputProg : Com Op Γ�
   | Lets.lete body e, inputProg =>
     addLetsAtTop body (.lete e inputProg)
 
-section
-variable (eff : EffectKind) (m) [Monad m] [LawfulMonad m]
-
-#synth Monad (eff.toMonad m)
-#synth LawfulMonad (eff.toMonad m)
-
-end
-
 @[simp] theorem denote_addLetsAtTop [LawfulMonad m]
     (lets : Lets Op Γ₁ eff Γ₂) (inputProg : Com Op Γ₂ eff t₂) :
     (addLetsAtTop lets inputProg).denote =
@@ -1052,62 +1030,29 @@ theorem Expr.denote_toPure? {e : Expr Op Γ eff ty} {e': Expr Op Γ .pure ty}
     · contradiction
   cases eff <;> simp [this]
 
-
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`,
-    without adjusting variables
--/
-def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt Ty} {t : Ty} : Lets Op Γ₁ eff Γ₂ → Var Γ₂ t →
-    Option ((Δ : Ctxt Ty) × Expr Op Δ .pure t)
+without adjusting variables, assuming that this expression has a pure operation.
+If the expression has an impure operation, or there is no binding corresponding to `v`
+(i.e., `v` comes from `Γ_in`), return `none` -/
+def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt Ty} {t : Ty} : Lets Op Γ₁ eff Γ₂ → (v : Var Γ₂ t) →
+    Option (Expr Op (Γ₂.dropUntil v) .pure t)
   | .nil, _ => none
   | .lete lets e, v => by
     cases v using Var.casesOn with
       | toSnoc v => exact (Lets.getPureExprAux lets v)
-      | last => exact (
-          match e.toPure? with
-          | .none => .none
-          | .some e => some ⟨_, e⟩)
+      | last => exact e.toPure?
 
-/-- If `getPureExprAux` succeeds,
-    then the orignal context `Γ₁` is a prefix of the local context `Δ`, and
-    their difference is exactly the value of the requested variable index plus 1
--/
-def Lets.getExprAuxDiff {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t}
-    (h : getPureExprAux lets v = some ⟨Δ, e⟩) :
-    Δ.Diff Γ₂ :=
-  ⟨v.val + 1, by
-    intro i t
-    induction lets
-    next =>
-      simp only [getPureExprAux] at h
-    next lets e ih =>
-      simp only [getPureExprAux, eq_rec_constant] at h
-      cases v using Var.casesOn <;> simp at h
-      . intro h'
-        simp [Ctxt.get?]
-        simp[←ih h h', Ctxt.snoc, Var.toSnoc, List.get?]
-      . generalize he: Expr.toPure? e = epure
-        simp
-        rw [he] at h
-        cases epure
-        case last.none => contradiction
-        case last.some =>
-          rcases h with ⟨⟨⟩, ⟨⟩⟩
-          intro a
-          simp_all only [Ctxt.get?, Var.val_last, zero_add, forall_true_left, implies_true]
-          exact a
-  ⟩
-
-theorem Lets.denote_getExprAux [LawfulMonad m] {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
-    {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr Op Δ .pure t}
-    (he : lets.getPureExprAux v = some ⟨Δ,  ePure⟩)
+theorem Lets.denote_getPureExprAux [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} {t : Ty}
+    {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr Op _ .pure t}
+    (he : lets.getPureExprAux v = some ePure)
     (s : Valuation Γ₁) :
-    (lets.denote s) >>= (fun Γv => return (ePure.changeVars (getExprAuxDiff he).toHom).denote Γv)
+    (lets.denote s) >>= (fun Γv => return (ePure.changeVars Ctxt.dropUntilHom).denote Γv)
     = lets.denote s >>= (fun Γv => return Γv v) := by
   suffices ∀ {α} (f : Valuation _ → eff.toMonad m α),
     (do
       let Γv ← denote lets s
       let _x ← f Γv
-      pure (Expr.denote (Expr.changeVars (Ctxt.Diff.toHom (getExprAuxDiff he)) ePure) Γv))
+      pure (Expr.denote (Expr.changeVars Ctxt.dropUntilHom ePure) Γv))
     = (do
       let Γv ← denote lets s
       let _x ← f Γv
@@ -1115,42 +1060,37 @@ theorem Lets.denote_getExprAux [LawfulMonad m] {Γ₁ Γ₂ Δ : Ctxt Ty} {t : T
     )
   by simpa using this pure
   intro α f
-  rw [getExprAuxDiff]
   induction lets
   case nil => simp [getPureExprAux] at he
   case lete Γ_in eff Γ_out ty body e ih =>
-    simp [Ctxt.Diff.toHom_succ <| getExprAuxDiff.proof_1 he]
+    -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
+    simp only [Expr.denote_changeVars, EffectKind.return_impure_toMonad_eq]
     -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
     cases v using Var.casesOn with
     | toSnoc v =>
-      simp [denote]
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_toSnoc, Option.mem_def,
-        Option.map_eq_some'] at he
+        Option.map_eq_some', Option.bind, Bind.bind] at he
       let f' : Valuation Γ_out → eff.toMonad m α := fun Γv => do
         let Ve ← e.denote Γv
         f (Γv.snoc Ve)
       replace ih (s) := ih he s f'
       simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
         EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
-      rw [←ih]
+      simp [denote, ← ih]
     | last =>
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
         Option.mem_def, Option.some.injEq] at he
-      split at he
-      next => contradiction
-      next e' he' =>
-        obtain ⟨rfl, h⟩ := by simpa using he
-        obtain rfl := eq_of_heq h
-        cases eff <;> simp [denote, Expr.denote_toPure? he']
+      simp [denote, Expr.denote_toPure? he]
+      cases eff <;> simp
 
 /-- Get the `Expr` that a var `v` is assigned to in a sequence of `Lets`.
 The variables are adjusted so that they are variables in the output context of a lets,
 not the local context where the variable appears. -/
 def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ eff Γ₂) {t : Ty} (v : Var Γ₂ t) :
     Option (Expr Op Γ₂ .pure t) :=
-  match h : getPureExprAux lets v with
+  match getPureExprAux lets v with
   | none => none
-  | some ⟨_,  e⟩ => e.changeVars (getExprAuxDiff h).toHom
+  | some e => e.changeVars Ctxt.dropUntilHom
 
 theorem Lets.denote_getExpr [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ eff Γ₂} → {t : Ty} →
     {v : Var Γ₂ t} → {e : Expr Op Γ₂ .pure t} → (he : lets.getPureExpr v = some e) → (s : Valuation Γ₁) →
@@ -1160,7 +1100,7 @@ theorem Lets.denote_getExpr [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} : {lets : Le
   simp [getPureExpr] at he
   split at he
   . contradiction
-  . rw [←Option.some_inj.mp he, denote_getExprAux]
+  . rw [←Option.some_inj.mp he, denote_getPureExprAux]; assumption
 
 /-
   ## Mapping
@@ -1393,7 +1333,6 @@ def matchArg [DecidableEq Op]
   If this succeeds, return the mapping.
   NOTE: this only matches on *pure* let bindings in both `matchLets` and `lets`.
 -/
-
 def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
     (lets : Lets Op Γ_in eff Γ_out) (v : Var Γ_out t) :
     (matchLets : Lets Op Δ_in .pure Δ_out) →
@@ -1706,6 +1645,9 @@ theorem mem_matchVar_matchArg
         (mem_matchVar h₁ h)
     · exact mem_matchVar_matchArg h₂
         (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
+termination_by
+  mem_matchVar_matchArg _ args => (sizeOf matchLets, sizeOf args)
+decreasing_by repeat sorry
 
 /- NOTE: Lean hangs on this proof -/
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
@@ -1715,14 +1657,10 @@ theorem mem_matchVar
     {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
     ∀ {t' v'}, ⟨t', v'⟩ ∈ matchLets.vars w → ⟨t', v'⟩ ∈ varMap
-  | _, _, _, _, _ => sorry -- BIG SORRY 3
-/-
   | .nil, w, h, t', v' => by
     simp [Lets.vars]
+    rintro ⟨⟩ ⟨⟩
     simp [matchVar] at h
-    intro h_mem
-    subst h_mem
-    intro h; cases h
     split at h
     · split_ifs at h
       · simp at h
@@ -1741,8 +1679,9 @@ theorem mem_matchVar
     next =>
       simp [Lets.vars]
       intro _ _ hl h_v'
-      simp [matchVar, pure, bind] at h
-      rcases h with ⟨⟨ope, h, args⟩, he₁, he₂⟩
+      obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
+        unfold matchVar at h
+        simpa [pure, bind] using h
       subst t
       split_ifs at he₂ with h
       · dsimp at h
@@ -1754,11 +1693,14 @@ theorem mem_matchVar
         dsimp at h
         rcases h with ⟨rfl, _⟩
         exact hl
--/
+termination_by
+  mem_matchVar matchLets => (sizeOf matchLets, 0)
+decreasing_by repeat sorry
 end
---termination_by
---  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
---  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
+-- decreasing_by => sorry
+-- termination_by
+--   mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
+--   mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/

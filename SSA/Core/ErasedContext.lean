@@ -328,6 +328,11 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
   funext t' v
   cases v using Var.casesOn <;> rfl
 
+@[simp] lemma Valuation.comap_id {Γ : Ctxt Ty} (Γv : Valuation Γ) : comap Γv Hom.id = Γv := rfl
+@[simp] lemma Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
+    comap (Γv.snoc x) (f.snocRight) = comap Γv f :=
+  rfl
+
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
 @[eliminator, elab_as_elim]
 def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
@@ -518,6 +523,38 @@ instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) 
   coe v := Γ'.diff.toHom v
 
 end DerivedCtxt
+
+/-! ## `dropUntil` -/
+
+/-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v` -/
+def dropUntil (Γ : Ctxt Ty) (v : Var Γ ty) : Ctxt Ty :=
+  List.drop (v.val + 1) Γ
+
+@[simp] lemma dropUntil_last   : dropUntil (snoc Γ ty) (Var.last Γ ty) = Γ := rfl
+@[simp] lemma dropUntil_toSnoc : dropUntil (snoc Γ ty) (Var.toSnoc v) = dropUntil Γ v := rfl
+
+/-- The difference between `Γ.dropUntil v` and `Γ` is exactly `v.val + 1` -/
+def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
+  ⟨v.val+1, by
+    intro i _ h
+    induction Γ
+    case nil => exact v.emptyElim
+    case snoc Γ _ ih =>
+      cases v using Var.casesOn
+      · simp at h ⊢
+        apply ih h
+      · simpa using h
+  ⟩
+
+/-- Context homomorphism from `(Γ.dropUntil v)` to `Γ`, see also `dropUntilDiff` -/
+abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
+
+@[simp] lemma dropUntilHom_last : dropUntilHom (v := Var.last Γ ty) = Hom.id.snocRight := rfl
+@[simp] lemma dropUntilHom_toSnoc {v : Var Γ t} :
+  dropUntilHom (v := v.toSnoc (t' := t')) = (dropUntilHom (v:=v)).snocRight := rfl
+
+instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
+  coe v := dropUntilDiff.toHom v
 
 
 end Ctxt
