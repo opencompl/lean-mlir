@@ -152,14 +152,14 @@ theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k 
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
 theorem const_index_fn_eval
-    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) :
+    (δ : Int) (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun _ a => f' a) :
     (f.CounterDecorator δ) (i, vstart) = (i + δ, f' vstart) := by
   simp [LoopBody.CounterDecorator, hf]
 
 
 /-- iterating a function that does not access the index (const_index_fn) -/
 theorem const_index_fn_iterate (δ : Int)
-    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun i a => f' a) (k : ℕ) :
+    (i : Int) (vstart : α) (f : LoopBody α) (f' : α → α) (hf : f = fun _ a => f' a) (k : ℕ) :
     (f.CounterDecorator δ)^[k] (i, vstart) = (i + k * δ, f'^[k] vstart) := by
   obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
   rw [IndexInvariant.iterate hf]; simp
@@ -429,6 +429,8 @@ theorem add_iterate (v0 : Int) (b : Int) (a : ℕ) :
     simp [ah]
     linarith
 
+abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAddInt
+
 open ScfRegion in
 open Arith in
 theorem correct :
@@ -436,12 +438,13 @@ theorem correct :
   simp [lhs, rhs, for_, axpy, cst]
   try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
   intros A B
-  rw [ScfRegion.LoopBody.CounterDecorator.const_index_fn_iterate]
+  simp  [Ctxt.Valuation.snoc, Var.casesOn]
+  rw [ScfRegion.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)]
   case hf =>
-    funext a b; simp [Goedel.toType, instGoedelTy, HasTy.denote_eq] at *;
-    -- rfl
-    sorry
-  simp; apply add_iterate
+    funext _ b; simp [Goedel.toType, instGoedelTy, HasTy.denote_eq] at *;
+  simp
+  apply add_iterate
+
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 
 -- TODO: add a PeepholeRewrite for this theorem.
