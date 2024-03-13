@@ -1500,14 +1500,15 @@ theorem denote_matchVar_of_subset
     {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
+    (f : _ → m α) →
     ((lets.denote s1 >>= (fun Γ_out_lets =>
       let Γ_in_matchLets : Valuation Δ_in :=
           fun t' v' =>
              match varMap₂.lookup ⟨t', v'⟩ with
              | .some mappedVar => by exact (Γ_out_lets mappedVar)
              | .none => by exact default
-      return Γ_in_matchLets) >>= (fun Γ_in_matchLets => return (matchLets.denote Γ_in_matchLets) w)) =
-     (lets.denote s1 >>= fun Γ_out_lets => return (Γ_out_lets v))) := sorry -- BIG SORRY 1
+      return Γ_in_matchLets) >>= (fun Γ_in_matchLets => f <| (matchLets.denote Γ_in_matchLets) w)) =
+     (lets.denote s1 >>= fun Γ_out_lets => f (Γ_out_lets v))) := sorry -- BIG SORRY 1
 /-
   | .nil, w => by
     simp[Lets.denote, matchVar]
@@ -1565,7 +1566,7 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
     {matchLets : Lets Op Δ_in .pure Δ_out}
-    {w : Var Δ_out t} :
+    {w : Var Δ_out t} {f : _ → m α} :
     varMap ∈ matchVar lets v matchLets w ma →
     lets.denote s₁ >>= (fun Γvlets =>
          let newValuation : Valuation Δ_in :=
@@ -1573,9 +1574,9 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
              match varMap.lookup ⟨t', v'⟩ with
              | .some mappedVar => by exact (Γvlets mappedVar)
              | .none => default
-         return newValuation) >>= (fun Δ_in_v => return (matchLets.denote Δ_in_v w)) =
-      lets.denote s₁ >>= (fun Γv => return (Γv v)) := by
-    apply denote_matchVar_of_subset (s₁ := s₁) (List.Subset.refl _)
+         return newValuation) >>= (fun Δ_in_v => f (matchLets.denote Δ_in_v w)) =
+      lets.denote s₁ >>= (fun Γv => f (Γv v)) := by
+    apply denote_matchVar_of_subset (s₁ := s₁) (f := f) (List.Subset.refl _)
 
 --TODO: these simp lemmas should probably be `local`
 @[simp] theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
@@ -1689,15 +1690,15 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
 
 theorem denote_matchVarMap [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in .impure Γ_out}
-    {t : Ty} {vvvv : Var Γ_out t}
+    {t : Ty} {v : Var Γ_out t}
     {matchLets : Lets Op Δ_in .pure Δ_out}
-    {wwww : Var Δ_out t}
-    {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars wwww}
+    {w : Var Δ_out t}
+    {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
     {map : Δ_in.Hom Γ_out}
-    (hmap : map ∈ matchVarMap lets vvvv matchLets wwww hvars) (s₁ : Valuation Γ_in) :
-    (lets.denote s₁ >>= (fun Γ_out_v =>
-      return (matchLets.denote (Valuation.comap Γ_out_v map)  <| wwww))) =
-    (lets.denote s₁ >>= (fun Γ_out_v => return (Γ_out_v vvvv))) := by
+    (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Valuation Γ_in)
+    (f : ⟦t⟧ → EffectKind.impure.toMonad m α) :
+    (lets.denote s₁ >>= (fun Γ_out_v => f <| matchLets.denote (Valuation.comap Γ_out_v map) w))
+    = (lets.denote s₁ >>= (fun Γ_out_v => f <| Γ_out_v v)) := by
   rw [matchVarMap] at hmap
   split at hmap
   next => simp_all
@@ -1788,7 +1789,7 @@ def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
   if h : t₁ = t'
   then
     let flatLhs := lhs.toFlatCom
-    let m ← matchVarMap targetLets vm flatLhs.lets (h ▸ flatLhs.ret)
+    let m ← matchVarMap targetLets vm flatLhs.lets (flatLhs.ret.cast h)
       (by subst h; exact hlhs)
     return addPureComInMiddleOfLetCom vm m targetLets (h ▸ rhs) target'
   else none
@@ -1813,12 +1814,12 @@ theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
     (rew : Com Op Γ₂ .impure t₂)
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
-  ext s
+  funext Γ₂v
   rw [rewriteAt] at hrew
   simp only [bind, pure, Option.bind] at hrew
   split at hrew
-  . simp at hrew
-  . rename_i hs
+  next => simp at hrew
+  next a b c hs =>
     simp only [Option.mem_def] at hrew
     split_ifs at hrew
     subst t₁
@@ -1826,13 +1827,17 @@ theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
     . simp at hrew
     . simp only [Option.some.injEq] at hrew
       subst hrew
-      rw [denote_addPureComInMiddleOfLetCom]
-      rw [← hl]
       rename_i _ _ h
-      have := denote_matchVarMap h
+      simp only [denote_addPureComInMiddleOfLetCom, ← hl]
+      have := denote_matchVarMap h (f)
+      rw []
+      -- have := denote_matchVarMap h
       -- rw [this] -- TODO: yet to use this!
-      simp only [← denote_splitProgramAt hs s]
+      -- repeat (rw [Var.cast_rfl] at this)
       simp at this
+
+
+      simp only [← denote_splitProgramAt hs Γ₂v]
       -- unfold Valuation.reassignVar Valuation.comap
       apply congrArg2
       funext V
