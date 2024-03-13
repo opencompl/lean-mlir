@@ -1851,67 +1851,74 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
 
 macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith := true}))
 
+
 mutual
+
+
 /-- NOTE: Lean hands on this proof -/
 theorem mem_matchVar_matchArg
     {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in .impure Γ_out}
-    {matchLets : Lets Op Δ_in .pure Δ_out} :
-    {l : List Ty} → {argsₗ : HVector (Var Γ_out) l} →
-    {argsᵣ : HVector (Var Δ_out) l} → {ma : Mapping Δ_in Γ_out} →
-    {varMap : Mapping Δ_in Γ_out} →
-    (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma) →
-    ∀ {t' v'}, ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) →
-      ⟨t', v'⟩ ∈ varMap
-  | _, .nil, .nil, _, varMap, _ => by simp
-  | _, .cons vₗ argsₗ, .cons vᵣ argsᵣ, ma, varMap, h => by
-    simp [matchArg, bind, pure] at h
-    rcases h with ⟨ma', h₁, h₂⟩
+    {matchLets : Lets Op Δ_in .pure Δ_out}
+    {l : List Ty} {argsₗ : HVector (Var Γ_out) l}
+    {argsᵣ : HVector (Var Δ_out) l} {ma : Mapping Δ_in Γ_out}
+    {varMap : Mapping Δ_in Γ_out}
+    (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma)
+    {t' v'} : ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) → ⟨t', v'⟩ ∈ varMap :=
+  match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
+  | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
+  | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
+    simp [matchArg, bind, pure] at hvarMap
+    rcases hvarMap with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
     rintro (h | ⟨a, b, hab⟩)
     · exact AList.keys_subset_keys_of_entries_subset_entries
         (subset_entries_matchArg h₂)
-        (mem_matchVar h₁ h)
+        (mem_matchVar (matchLets := matchLets) h₁ h)
     · exact mem_matchVar_matchArg h₂
         (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
-termination_by
-  mem_matchVar_matchArg _ args => (sizeOf matchLets, sizeOf args)
-decreasing_by repeat sorry
+termination_by (sizeOf matchLets, sizeOf l)
+-- decreasing_by repeat sorry
 
 /- NOTE: Lean hangs on this proof -/
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
-    {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} :
-    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
-    (hvarMap : varMap ∈ matchVar lets v matchLets w ma) →
-    ∀ {t' v'}, ⟨t', v'⟩ ∈ matchLets.vars w → ⟨t', v'⟩ ∈ varMap
-  | .nil, w, h, t', v' => by
+    {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} /- : -/
+    {matchLets : Lets Op Δ_in .pure Δ_out}  {w : Var Δ_out t}
+    (hvarMap : varMap ∈ matchVar lets v matchLets w ma)
+    {t': _ } {v' : _}
+    (hMatchLets : ⟨t', v'⟩ ∈ matchLets.vars w) :
+  ⟨t', v'⟩ ∈ varMap :=
+  match matchLets, w /- , hvarMap, t', v' -/ with
+  | .nil, w /-, h, t', v' -/ => by
+    revert hMatchLets
     simp [Lets.vars]
     rintro ⟨⟩ ⟨⟩
-    simp [matchVar] at h
-    split at h
-    · split_ifs at h
-      · simp at h
-        subst h
+    simp [matchVar] at hvarMap
+    split at hvarMap
+    · split_ifs at hvarMap
+      · simp at hvarMap
+        subst hvarMap
         subst v
         exact AList.lookup_isSome.1 (by simp_all)
-    · simp at h
-      subst h
+    · simp at hvarMap
+      subst hvarMap
       simp
 
-  | .lete matchLets matchE, w, h, t', v' => by
+  | .lete matchLets matchE, w /-, h, t', v' -/ => by
+    revert hMatchLets
     cases w using Var.casesOn
     next w =>
-      simp [matchVar] at h
-      apply mem_matchVar h
+      simp [matchVar] at hvarMap
+      apply mem_matchVar hvarMap
     next =>
       simp [Lets.vars]
       intro _ _ hl h_v'
       obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
-        unfold matchVar at h
-        simpa [pure, bind] using h
+        unfold matchVar at hvarMap
+        simpa [pure, bind] using hvarMap
       subst t
       split_ifs at he₂ with h
       · dsimp at h
@@ -1923,9 +1930,9 @@ theorem mem_matchVar
         dsimp at h
         rcases h with ⟨rfl, _⟩
         exact hl
-termination_by
-  mem_matchVar matchLets => (sizeOf matchLets, 0)
-decreasing_by repeat sorry
+termination_by (sizeOf matchLets, 0)
+--   mem_matchVar matchLets => (sizeOf matchLets, 0)
+-- decreasing_by repeat sorry
 end
 -- decreasing_by => sorry
 -- termination_by
