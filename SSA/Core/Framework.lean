@@ -239,6 +239,27 @@ theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com Op Γ eff t → Sort u} :
   next => simp[recAux']
   next ih => simp [recAux', ih]
 
+/-- Alternative recursion principle for known-pure `Com`s -/
+@[elab_as_elim]
+def Com.recPure {motive : ∀ {Γ t}, Com Op Γ .pure t → Sort u}
+    (ret : ∀ {Γ t}, (v : Var Γ t) → motive (Com.ret v))
+    (lete : ∀ {Γ} {t u : Ty},
+      (e : Expr Op Γ .pure t) → (body : Com Op (Ctxt.snoc Γ t) .pure u) →
+        motive body → motive (Com.lete e body))
+    {Γ t} (com : Com Op Γ .pure t) : motive com :=
+  let motive {_Γ eff _t} (com) := match eff with
+    | EffectKind.pure => motive com
+    | EffectKind.impure => PUnit
+  let ret {Γ eff t} (v : Var Γ t) : @motive Γ eff t (Com.ret v) := match eff with
+    | .pure => ret v
+    | .impure => ⟨⟩
+  let lete {Γ t u} {eff} (e : Expr Op Γ eff t) (body : Com Op (Γ.snoc t) eff u) :
+      motive body → motive (body.lete e) :=
+    fun r => match eff with
+      | .pure => lete _ _ r
+      | .impure => ⟨⟩
+  com.rec' (motive := @motive) ret lete
+
 def Expr.op {Γ : Ctxt Ty} {ty : Ty} (e : Expr Op Γ eff ty) : Op :=
   Expr.casesOn e (fun op _ _ _ _ => op)
 
@@ -306,6 +327,11 @@ def Com.outContextDiff : ∀ (com : Com Op Γ eff t), Γ.Diff com.outContext
 def Com.returnVar : (com : Com Op Γ eff t) → Var com.outContext t
   | .ret v => v
   | .lete _ body => body.returnVar
+
+@[simp] lemma Com.returnVar_ret : returnVar (ret (Op:=Op) (eff:=eff) v) = v := by simp [returnVar]
+@[simp] lemma Com.returnVar_lete :
+    returnVar (lete (Op:=Op) (eff:=eff) e body) = body.returnVar := by
+  simp [returnVar]
 
 variable [Goedel Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m]
 
@@ -555,6 +581,21 @@ theorem Com.denote_changeVars
 @[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com Op Γ eff ty) :
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp; rfl
+
+@[simp] lemma Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
+    {c : Com Op Γ eff ty} → Ctxt.Hom (outContext (changeVars c map)) (outContext c)
+  | .ret _        => cast (by simp) map_inv
+  | .lete _ body  => cast (by simp) <|
+      Com.outContext_changeVars_hom (map := map.snocMap) map_inv.snocMap (c := body)
+
+@[simp] theorem Com.denoteLets_returnVar_pure (c : Com Op Γ .pure ty) (Γv : Valuation Γ) :
+    c.denoteLets Γv c.returnVar = c.denote Γv := by
+  induction c using Com.recPure <;> simp_all [denoteLets, denote]
+
+@[simp] theorem Com.comap_denoteLets_pure (map : Γ.Hom Δ) (c : Com Op Γ .pure ty) (Δv : Valuation Δ) :
+    Valuation.comap ((c.changeVars map).denoteLets Δv)
+      (c.changeVars map).outContextDiff.toHom = Δv := by
+  sorry
 
 /-- The result returned by `addPureComToEndOfLets`
 -- TODO: this is now the same as a FlatCom? -/
@@ -892,13 +933,13 @@ def addPureComInMiddleOfLetCom {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁
   addLetsAtTop topMid.lets <| bot.changeVars <|
     (mid.changeVars map).outContextDiff.toHom.with v topMid.ret
 
-/-- Reassion the variable var to value val in context ctxt -/
-def Ctxt.Valuation.reassignVar {t : Ty} {Γ : Ctxt Ty}
-    (V: Γ.Valuation) (var : Var Γ t) (val: toType t) : Γ.Valuation :=
-  fun tneedle vneedle =>
-    if h : ∃ h : t = tneedle, h ▸ var = var
-    then h.fst ▸ val
-    else V vneedle
+@[simp] lemma addPureComToEndOfLets_ret {top : Lets Op Γ_in eff Γ_out} :
+    (addPureComToEndOfLets top map mid).ret = (mid.changeVars _).returnVar := by
+  unfold addPureComToEndOfLets
+  induction mid using Com.recPure generalizing top Γ_out
+  case ret      => rfl
+  case lete ih  => rw [Com.changeVars_lete]; simp [ih]
+  --                   ^^^^^^^^^^^^ TODO: this is a simp lemma, why does just `simp [ih]` not work?
 
 theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
@@ -907,62 +948,10 @@ theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : C
       let Vtop ← top.denote V
       let Vmid := mid.denote (Vtop.comap map)
       bot.denote <| Vtop.reassignVar v Vmid) := by
-  funext V
+  funext Γv
   simp [addPureComInMiddleOfLetCom, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
-    Bind.kleisliLeft, denote_addPureComToEndOfLets_lets, Bind.kleisliRight, Function.comp, bind_assoc]
-  apply congrArg2
-  funext Γ2_v
-  apply congrArg2
-  funext t' v'
-  -- denote_addPureComToEndOfLetsAux
-  sorry
-/-
-  rw [denote_addPureComToEndOfLetsAux]
-
-  rw [denote_addProgramToLets_lets]
-  split_ifs
-  next h =>
-    rcases h with ⟨⟨⟩, ⟨⟩⟩
-    simp [denote_addProgramToLets_var]
-  next h₁ h₂ =>
-    rcases h₁ with ⟨⟨⟩, ⟨⟩⟩
-    simp at h₂
-  next h₁ h₂ =>
-    rcases h₂ with ⟨⟨⟩, ⟨⟩⟩
-    simp at h₁
-  next =>
-    apply denote_addProgramToLets_lets
--/
-/-
-  cases eff <;> simp
-  case h.pure =>
-    congr
-    /- TODO: find the right theorem here -/
-    unfold Valuation.reassignVar
-    funext tneedle vneedle
-    split_ifs
-    case pos hfound =>
-     -- found the needle, exploit equalities
-     rcases hfound with ⟨⟨⟩, ⟨⟩⟩
-     sorry
-    sorry
-  case h.impure =>
-    sorry
-  -- congr
-  -- funext t' v'
-  -- split_ifs
-  -- next h =>
-  --   rcases h with ⟨⟨⟩, ⟨⟩⟩
-  --   simp [denote_addProgramToLets_var]
-  -- next h₁ h₂ =>
-  --   rcases h₁ with ⟨⟨⟩, ⟨⟩⟩
-  --   simp at h₂
-  -- next h₁ h₂ =>
-  --   rcases h₂ with ⟨⟨⟩, ⟨⟩⟩
-  --   simp at h₁
-  -- next =>
-  --   apply denote_addProgramToLets_lets
--/
+    Bind.kleisliLeft, denote_addPureComToEndOfLets_lets, Bind.kleisliRight, Function.comp, bind_assoc,
+    Valuation.comap_with]
 
 def Expr.toPure? (e : Expr Op Γ eff ty) : Option (Expr Op Γ .pure ty) :=
   match e with

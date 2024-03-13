@@ -194,7 +194,7 @@ def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {t :
     (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
   fun t' w =>
     if h : ∃ ty_eq : t = t', ty_eq ▸ w = v₁ then
-      h.fst ▸ v₂
+      v₂.cast h.fst
     else
       f w
 
@@ -332,6 +332,21 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
 @[simp] lemma Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
     comap (Γv.snoc x) (f.snocRight) = comap Γv f :=
   rfl
+
+/-- Reassign the variable var to value val in context ctxt -/
+def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
+    (V : Γ.Valuation) (var : Var Γ t) (val : toType t) : Γ.Valuation :=
+  fun tneedle vneedle =>
+    if h : ∃ h : t = tneedle, h ▸ vneedle = var
+    then h.fst ▸ val
+    else V vneedle
+
+lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
+    {Γv : Valuation Γ} {map : Δ.Hom Γ} {v : Var Δ ty} {w : Var Γ ty} :
+    Γv.comap (map.with v w) = (Γv.comap map).reassignVar v (Γv w) := by
+  funext t' v'
+  simp only [comap, Hom.with, reassignVar]
+  split_ifs <;> aesop
 
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
 @[eliminator, elab_as_elim]
