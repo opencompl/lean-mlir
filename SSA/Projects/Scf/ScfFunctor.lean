@@ -4,8 +4,6 @@ import SSA.Core.Framework
 import SSA.Core.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Util
-set_option pp.proofs false
-set_option pp.proofs.withType false
 
 open Std (BitVec)
 open Ctxt(Var)
@@ -573,8 +571,6 @@ def rhs : Com Op [.int] .int :=
 
 attribute [local simp] Ctxt.snoc
 
-set_option pp.proofs false in
-set_option pp.proofs.withType false in
 noncomputable def p1 : PeepholeRewrite Op [.int] .int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
