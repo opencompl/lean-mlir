@@ -1954,6 +1954,10 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty}
             (hvarMap := by simp; apply hm) (hvars t v'))
       simp_all
 
+/-
+if matchVarMap lets v matchLets w hvars = .some map,
+then ⟦lets; matchLets⟧ = ⟦lets⟧(v)
+-/
 theorem denote_matchVarMap [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     {lets : Lets Op Γ_in .impure Γ_out}
     {t : Ty} {v : Var Γ_out t}
