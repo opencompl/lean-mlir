@@ -371,7 +371,7 @@ end Valuation
 
 /- ## VarSet -/
 
-/-- A `Ty`-indexed family of sets of variables in context `Γ` -/
+/-- `VarSet Γ` is the type of sets of variables from context `Γ` -/
 abbrev VarSet (Γ : Ctxt Ty) : Type :=
   Finset (Σ t, Γ.Var t)
 
