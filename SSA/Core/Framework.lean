@@ -475,38 +475,16 @@ def Lets.denote [OpSignature Op Ty m] [OpDenote Op Ty m]
       e.denote Γ₂'v >>= fun v =>
       return (Γ₂'v.snoc v)
 
-/-
--- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
-def Lets.denotePure [OpSignature Op Ty m] [OpDenote Op Ty m]
-    (lets : Lets Op Γ₁ .pure Γ₂) (Γ₁'v : Valuation Γ₁) : Valuation Γ₂ :=
-  match lets with
-  | .nil => Γ₁'v
-  | .lete lets' e =>
-      let Γ₂'v := lets'.denote Γ₁'v
-      let v := e.denote Γ₂'v
-      (Γ₂'v.snoc v)
+/-- `denotePure` is a specialization of `denote` for pure `Lets`.
+Theorems and definitions should always be phrased in terms of the latter.
 
-
-  -- pure (Lets.denotePure (Com.toFlatCom lhs).lets (Valuation.comap Γ_out_v a✝) (Com.toFlatCom lhs).ret)) =
-  theorem Lets.denotePure_Com.toFlatCom [LawfulMonad m] [OpSignature Op Ty m] [OpDenote Op Ty m]
-      (com : Com Op Γ₁ .pure t) (Γ₁_v : Valuation Γ₁):
-    Lets.denotePure (com.toFlatCom com).lets Γ₁_v (com.toFlatCom com).ret = Com.denote com ret)
+However, `denotePure` behaves slighly better when it comes to congruences, since `congr` does not
+realize that `pure.toMonad m (Valuation _)` is just `Valuation _`, and thus a function.
+Therefore, if a goalstate is `⊢ lets.denote ... = lets.denote ...`, and `lets` is pure, then to use
+the congruence, you can do: `rw [← Lets.denotePure]; congr`
 -/
-
-/-
-theorem Lets.denote_eq_denotePure [LawfulMonad m] [OpSignature Op Ty m] [OpDenote Op Ty m]
-    (lets : Lets Op Γ₁ .pure Γ₂) (Γ₁'v : Valuation Γ₁) :
-     lets.denote = lets.denotePure :=  by
-  match lets with
-  | .nil => rfl
-  | .lete lets e =>
-    sorry
--/
-
-
-
-
-
+@[simp] abbrev Lets.denotePure [OpSignature Op Ty m] [OpDenote Op Ty m] :
+    Lets Op Γ₁ .pure Γ₂ → Valuation Γ₁ → Valuation Γ₂ := Lets.denote
 
 -- TODO: really, this can be normalized in the free theory of arrows, but who wants that?
 def Lets.denoteImpure [OpSignature Op Ty m] [OpDenote Op Ty m]
@@ -1611,13 +1589,10 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
       lets.denote s₁ >>= (fun Γv => return (Γv v)) := by
     apply denote_matchVar_of_subset (s₁ := s₁) (List.Subset.refl _)
 
-theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
+--TODO: these simp lemmas should probably be `local`
+@[simp] theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
   simp (config := { arith := true })
-
-@[simp]
-theorem zero_eq_zero : (Zero.zero : ℕ) = 0 := rfl
-
-attribute [simp] lt_one_add_add
+@[simp] theorem zero_eq_zero : (Zero.zero : ℕ) = 0 := rfl
 
 macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith := true}))
 
@@ -1743,10 +1718,9 @@ theorem denote_matchVarMap [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     simp only [Option.mem_def, Option.some.injEq, pure] at hmap
     subst hmap
     simp
-    apply congrArg2
+    congr
     funext Γ_out_v
-    rw [← congrArg1 (f := pure)]
-    rw [Lets.denote_eq_denotePure]
+    rw [← Lets.denotePure]
     congr
     funext t v
     simp [Valuation.comap]
