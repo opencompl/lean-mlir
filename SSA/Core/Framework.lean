@@ -1793,6 +1793,19 @@ def rewriteAt (lhs rhs : Com Op Γ₁ .pure t₁)
     return addPureComInMiddleOfLetCom vm m targetLets (h ▸ rhs) target'
   else none
 
+@[simp] lemma Com.denote_toFlatCom_lets [LawfulMonad m] (com : Com Op Γ .pure t) :
+    com.toFlatCom.lets.denote = com.denoteLets := by
+  funext Γv; simp [toFlatCom]
+
+@[simp] lemma addPureComToEndOfLetsAux_ret (lets : Lets Op Γ_in eff Γ_out)
+    (com : Com Op Γ_out .pure t) :
+    (addPureComToEndOfLetsAux lets com).ret = com.returnVar := by
+  induction com using Com.recPure <;> simp_all [addPureComToEndOfLetsAux]
+
+@[simp] lemma Com.toFlatCom_ret [LawfulMonad m] (com : Com Op Γ .pure t) :
+    com.toFlatCom.ret = com.returnVar := by
+  simp [toFlatCom]
+
 theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com Op Γ₂ .impure t₂)
