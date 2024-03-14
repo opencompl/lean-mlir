@@ -342,7 +342,6 @@ def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
     if h : ∃ h : t = tneedle, h ▸ vneedle = var
     then h.fst ▸ val
     else V vneedle
-
 lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
     {Γv : Valuation Γ} {map : Δ.Hom Γ} {v : Var Δ ty} {w : Var Γ ty} :
     Γv.comap (map.with v w) = (Γv.comap map).reassignVar v (Γv w) := by
@@ -365,6 +364,18 @@ def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuatio
   fun _ v => V <| v.castCtxt h.symm
 
 @[simp] lemma Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
+
+/-- reassigning a variable to the same value that has been looked up is identity. -/
+theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
+    {Γ : Ctxt Ty} {V : Γ.Valuation} {var : Var Γ t} :
+    (V.reassignVar var (V var)) = V := by
+  funext t' v
+  simp [reassignVar]
+  intros h x
+  subst h
+  subst x
+  rfl
+
 
 end Valuation
 

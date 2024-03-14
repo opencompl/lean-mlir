@@ -1870,6 +1870,26 @@ theorem denote_matchVar {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
       lets.denote s₁ >>= (fun Γv => f (Γv v)) := by
     apply denote_matchVar_of_subset (s₁ := s₁) (f := f) (List.Subset.refl _)
 
+
+theorem denote_matchVar2 {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t} {varMap : Mapping Δ_in Γ_out}
+    {s₁ : Valuation Γ_in}
+    {ma : Mapping Δ_in Γ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
+    {w : Var Δ_out t} {f : Γ_out.Valuation → _ → m α} :
+    varMap ∈ matchVar lets v matchLets w ma →
+    lets.denote s₁ >>= (fun Γvlets =>
+         let newValuation : Valuation Δ_in := -- TODO: this is just comap?
+           fun t' v' =>
+             match varMap.lookup ⟨t', v'⟩ with
+             | .some mappedVar => by exact (Γvlets mappedVar)
+             | .none => default
+         return (Γvlets, newValuation)) >>= (fun (Γvlets, Δ_in_v) =>
+          f Γvlets (matchLets.denote Δ_in_v w)) =
+      lets.denote s₁ >>= (fun Γv => f Γv (Γv v)) := by sorry
+/-
+    apply denote_matchVar2_of_subset (s₁ := s₁) (f := f) (List.Subset.refl _)
+-/
+
 --TODO: these simp lemmas should probably be `local`
 @[simp] theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
   simp (config := { arith := true })
@@ -2038,6 +2058,38 @@ theorem denote_matchVarMap [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
     . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
 
+theorem denote_matchVarMap2 [LawfulMonad m] {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty}
+    {lets : Lets Op Γ_in .impure Γ_out}
+    {t : Ty} {v : Var Γ_out t}
+    {matchLets : Lets Op Δ_in .pure Δ_out}
+    {w : Var Δ_out t}
+    {hvars : ∀ t (v : Var Δ_in t), ⟨t, v⟩ ∈ matchLets.vars w}
+    {map : Δ_in.Hom Γ_out}
+    (hmap : map ∈ matchVarMap lets v matchLets w hvars) (s₁ : Valuation Γ_in)
+    (f : Valuation Γ_out → ⟦t⟧ → EffectKind.impure.toMonad m α) :
+    (lets.denote s₁ >>= (fun Γ_out_v => f Γ_out_v <| matchLets.denote (Valuation.comap Γ_out_v map) w))
+    = (lets.denote s₁ >>= (fun Γ_out_v => f Γ_out_v <| Γ_out_v v)) := by
+  rw [matchVarMap] at hmap
+  split at hmap
+  next => simp_all
+  next hm =>
+    rw [← denote_matchVar2 hm]
+    simp only [Option.mem_def, Option.some.injEq, pure] at hmap
+    subst hmap
+    simp
+    congr
+    funext Γ_out_v
+    rw [← Lets.denotePure]
+    congr
+    funext t v
+    simp [Valuation.comap]
+    split
+    . congr
+      dsimp
+      split <;> simp_all
+    . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
+      simp_all
+
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
 It also returns, the type of this variable and the variable itself as an element
@@ -2147,30 +2199,43 @@ theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
       subst hrew
       rename_i _ _ h
       simp only [denote_addPureComInMiddleOfLetCom, ← hl]
-      have := denote_matchVarMap h
-      rw []
       -- have := denote_matchVarMap h
+      -- rw []
       -- rw [this] -- TODO: yet to use this!
       -- repeat (rw [Var.cast_rfl] at this)
-      simp at this
+      -- simp at this
 
-
+      rename_i a
       simp only [← denote_splitProgramAt hs Γ₂v]
-      -- unfold Valuation.reassignVar Valuation.comap
+      -- apply congrArg2
+      -- funext Vtop
+      -- have mVtop := Lets.denote c.2.1 Γ₂v
+      have this1 := denote_matchVarMap2 (hmap := h) (s₁ := Γ₂v)
+        (f := fun Vtop x =>
+            Com.denote c.2.2.1 (Valuation.reassignVar Vtop c.2.2.2.snd x)) -- x : ⟦t'⟧
+      simp at this1
+      have this2 := denote_matchVarMap2 (hmap := h) (s₁ := Γ₂v)
+        (f := fun Vtop x => return x) -- x : ⟦t'⟧
+      simp at this2
+
+      rw [this1]
       apply congrArg2
-      funext V
+      funext Γ_out_v
       apply congrArg2
-      funext t' v'
-      simp [Valuation.reassignVar]
-      rintro rfl
-      intros k
-      simp [k]
-      unfold Valuation.comap
-      stop
-      split_ifs <;> simp
-      simp only [dite_eq_right_iff, forall_exists_index]
-      rintro rfl rfl
-      simp
+      apply Valuation.reassignVar_eq_of_lookup
+      done
+
+      -- funext t' v'
+      -- simp [Valuation.reassignVar]
+      -- rintro rfl
+      -- intros k
+      -- simp [k]
+      -- unfold Valuation.comap
+      -- stop
+      -- split_ifs <;> simp
+      -- simp only [dite_eq_right_iff, forall_exists_index]
+      -- rintro rfl rfl
+      -- simp
 
 variable (Op : _) {Ty : _} [OpSignature Op Ty m] [Goedel Ty] [OpDenote Op Ty m] in
 /--
