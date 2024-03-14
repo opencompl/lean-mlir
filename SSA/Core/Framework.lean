@@ -1610,10 +1610,6 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       | none => some (AList.insert ⟨_, w⟩ v ma)
 end
 
-
-def guard_recompile : Int := 42
-
-
 /-- how matchVar behaves on `lete` -/
 theorem matchVar_lete_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t te : Ty} [DecidableEq Op]
     (lets : Lets Op Γ_in eff Γ_out) (v : Var Γ_out t)
@@ -1951,20 +1947,13 @@ theorem mem_matchVar
       (ma := ma)
       (v := v)
       (hMatchLets := by
-        have hyy :=
+        have hmatchLets' :=
           Lets.vars_lete_eq (lets := matchLets)
             (e := matchE) (w := w) (wh := hw') ▸ hMatchLets
-        rw [Lets.vars_lete_eq]
-        _
+        apply hmatchLets'
       )
-    simp
-    simp at hMatchLets
-    simp at hvar'
-    simp at hvarMap
-    have hxx := hvar'▸ hvarMap
-    -- apply eq_of_heq
-    -- rw [matchVar_lete_succ_eq]
-    apply hxx
+    have hvarMap' := hvar' ▸ hvarMap
+    apply hvarMap'
   | .lete matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
     simp [Ctxt.snoc] at hw
@@ -1985,34 +1974,6 @@ theorem mem_matchVar
       dsimp at h
       rcases h with ⟨rfl, _⟩
       exact hl
--- termination_by (sizeOf matchLets, 0)
-
-  -- | .lete matchLets matchE, w /-, h, t', v' -/ => by
-    -- revert hMatchLets
-    -- cases w using Var.casesOn
-    -- next w => -- toSnoc
-    --   simp [matchVar] at hvarMap
-    --   apply mem_matchVar hvarMap
-    -- next => -- last
-    --   simp [Lets.vars]
-    --   intro _ _ hl h_v'
-    --   obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
-    --     unfold matchVar at hvarMap
-    --     simpa [pure, bind] using hvarMap
-    --   subst t
-    --   split_ifs at he₂ with h
-    --   · dsimp at h
-    --     dsimp
-    --     apply @mem_matchVar_matchArg (hvarMap := he₂)
-    --     simp
-    --     refine ⟨_, _, ?_, h_v'⟩
-    --     rcases matchE  with ⟨_, _, _⟩
-    --     dsimp at h
-    --     rcases h with ⟨rfl, _⟩
-    --     exact hl
--- termination_by (sizeOf matchLets, 0)
---   mem_matchVar matchLets => (sizeOf matchLets, 0)
--- decreasing_by repeat sorry
 end
 -- decreasing_by => sorry
 -- termination_by
