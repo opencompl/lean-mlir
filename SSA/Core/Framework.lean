@@ -1263,10 +1263,18 @@ def Lets.vars : Lets Op Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
       | toSnoc v => exact lets.vars v
       | last => exact (e.args.vars).biUnion (fun v => lets.vars v.2)
 
+
 /-- `com.vars` is the set of free variables from `Γ` that are (transitively) used by the return
 variable of `com` -/
 def Com.vars : Com Op Γ .pure t → VarSet Γ :=
   fun com => com.toFlatCom.lets.vars com.toFlatCom.ret
+
+theorem Lets.vars_lete_eq {lets : Lets Op Γ_in eff Γ_out}
+  {t: Ty} {e : Expr Op Γ_out eff t}
+  {w : ℕ} {tw : Ty} {wh : Ctxt.get? Γ_out w = some tw} :
+  Lets.vars (Lets.lete lets e) ⟨w + 1, by simpa [Ctxt.snoc] using wh⟩ =
+  Lets.vars lets ⟨w, wh⟩ := by simp [Lets.vars]
+
 
 @[simp] lemma HVector.vars_nil :
     (HVector.nil : HVector (Var Γ) ([] : List Ty)).vars = ∅ := by
@@ -1521,6 +1529,8 @@ end TermModel
 -/
 
 
+
+
 mutual
 
 /-- `matchArg lets matchLets args matchArgs map` tries to extends the partial substition `map` by
@@ -1599,6 +1609,26 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
 end
+
+
+def guard_recompile : Int := 42
+
+
+/-- how matchVar behaves on `lete` -/
+theorem matchVar_lete_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t te : Ty} [DecidableEq Op]
+    (lets : Lets Op Γ_in eff Γ_out) (v : Var Γ_out t)
+    (matchLets : Lets Op Δ_in .pure Δ_out)
+    (matchE : Expr Op Δ_out .pure te)
+    (w : ℕ)
+    (hw : Ctxt.get? Δ_out w = .some t)
+    (ma : Mapping Δ_in Γ_out) :
+  matchVar lets v (matchLets := .lete matchLets matchE) ⟨w + 1, by simp[Ctxt.snoc]; apply hw⟩ ma =
+  matchVar lets v matchLets ⟨w, hw⟩ ma := by
+    conv =>
+      lhs
+      unfold matchVar
+
+def guard_recompile_2: Int := 42
 
 
 /-
@@ -1876,9 +1906,9 @@ theorem mem_matchVar_matchArg
     · exact AList.keys_subset_keys_of_entries_subset_entries
         (subset_entries_matchArg h₂)
         (mem_matchVar (matchLets := matchLets) h₁ h)
-    · exact mem_matchVar_matchArg h₂
+    · exact mem_matchVar_matchArg (l := ts) h₂
         (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
-termination_by (sizeOf matchLets, sizeOf l)
+-- termination_by (sizeOf matchLets, sizeOf l)
 -- decreasing_by repeat sorry
 
 /- NOTE: Lean hangs on this proof -/
@@ -1906,31 +1936,81 @@ theorem mem_matchVar
     · simp at hvarMap
       subst hvarMap
       simp
+-- hl: { fst := x✝¹, snd := x✝ } ∈ HVector.vars (Expr.args matchE)
+-- h_v': { fst := t', snd := v' } ∈ Lets.vars matchLets x✝
 
-  | .lete matchLets matchE, w /-, h, t', v' -/ => by
+  | .lete matchLets matchE, ⟨w+1, hw'⟩ /-, h, t', v' -/ => by
+    have hvar' := matchVar_lete_succ_eq
+      (lets := lets) (v := v) (matchLets := matchLets) (w := w) (hw := hw')
+      (matchE := matchE)
+      (ma := ma)
+    apply mem_matchVar
+      (lets := lets)
+      (matchLets := matchLets)
+      (w := ⟨w, by simpa[Ctxt.snoc] using hw'⟩)
+      (ma := ma)
+      (v := v)
+      (hMatchLets := by
+        have hyy :=
+          Lets.vars_lete_eq (lets := matchLets)
+            (e := matchE) (w := w) (wh := hw') ▸ hMatchLets
+        rw [Lets.vars_lete_eq]
+        _
+      )
+    simp
+    simp at hMatchLets
+    simp at hvar'
+    simp at hvarMap
+    have hxx := hvar'▸ hvarMap
+    -- apply eq_of_heq
+    -- rw [matchVar_lete_succ_eq]
+    apply hxx
+  | .lete matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
-    cases w using Var.casesOn
-    next w =>
-      simp [matchVar] at hvarMap
-      apply mem_matchVar hvarMap
-    next =>
-      simp [Lets.vars]
-      intro _ _ hl h_v'
-      obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
-        unfold matchVar at hvarMap
-        simpa [pure, bind] using hvarMap
-      subst t
-      split_ifs at he₂ with h
-      · dsimp at h
-        dsimp
-        apply @mem_matchVar_matchArg (hvarMap := he₂)
-        simp
-        refine ⟨_, _, ?_, h_v'⟩
-        rcases matchE  with ⟨_, _, _⟩
-        dsimp at h
-        rcases h with ⟨rfl, _⟩
-        exact hl
-termination_by (sizeOf matchLets, 0)
+    simp [Ctxt.snoc] at hw
+    subst hw
+    simp [Lets.vars]
+    intro _ _ hl h_v'
+    obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
+      unfold matchVar at hvarMap
+      simpa [pure, bind] using hvarMap
+    subst h
+    split_ifs at he₂ with h
+    · dsimp at h
+      dsimp
+      apply @mem_matchVar_matchArg (matchLets := matchLets) (hvarMap := he₂)
+      simp
+      refine ⟨_, _, ?_, h_v'⟩
+      rcases matchE  with ⟨_, _, _⟩
+      dsimp at h
+      rcases h with ⟨rfl, _⟩
+      exact hl
+-- termination_by (sizeOf matchLets, 0)
+
+  -- | .lete matchLets matchE, w /-, h, t', v' -/ => by
+    -- revert hMatchLets
+    -- cases w using Var.casesOn
+    -- next w => -- toSnoc
+    --   simp [matchVar] at hvarMap
+    --   apply mem_matchVar hvarMap
+    -- next => -- last
+    --   simp [Lets.vars]
+    --   intro _ _ hl h_v'
+    --   obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
+    --     unfold matchVar at hvarMap
+    --     simpa [pure, bind] using hvarMap
+    --   subst t
+    --   split_ifs at he₂ with h
+    --   · dsimp at h
+    --     dsimp
+    --     apply @mem_matchVar_matchArg (hvarMap := he₂)
+    --     simp
+    --     refine ⟨_, _, ?_, h_v'⟩
+    --     rcases matchE  with ⟨_, _, _⟩
+    --     dsimp at h
+    --     rcases h with ⟨rfl, _⟩
+    --     exact hl
+-- termination_by (sizeOf matchLets, 0)
 --   mem_matchVar matchLets => (sizeOf matchLets, 0)
 -- decreasing_by repeat sorry
 end
