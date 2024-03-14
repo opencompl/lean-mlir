@@ -1866,15 +1866,11 @@ theorem denote_matchVar2_of_subset
     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
     (f : Γ_out.Valuation → _ → m α) →
-    ((lets.denote s1 >>= (fun Γ_out_lets =>
-      let Γ_in_matchLets : Valuation Δ_in :=
-          fun t' v' =>
-             match varMap₂.lookup ⟨t', v'⟩ with
-             | .some mappedVar => by exact (Γ_out_lets mappedVar)
-             | .none => by exact default
-      return (Γ_out_lets, Γ_in_matchLets)) >>=
-      (fun (Γ_out_lets, Γ_in_matchLets) => f Γ_out_lets <| (matchLets.denote Γ_in_matchLets) w)) =
-     (lets.denote s1 >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v)))
+    (lets.denote s₁ >>= (fun Γ_out_lets =>f Γ_out_lets <| (matchLets.denote (fun t' v' =>
+        match varMap₂.lookup ⟨t', v'⟩ with
+        | .some mappedVar => by exact (Γ_out_lets mappedVar)
+        | .none => by exact default)) w))
+    = (lets.denote s₁ >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v))
   | .nil, w => by
     simp [Lets.denote, matchVar]
     intro h_sub h_mv f
@@ -1901,22 +1897,17 @@ theorem denote_matchVar2_of_subset
     -- apply denote_matchVar2_of_subset
     -- exact s₁
     intros h_sub h_mv f
-    have h :
-      ((lets.denote s1 >>= (fun Γ_out_lets =>
-        let Γ_in_matchLets : Valuation Δ_in :=
-            fun t' v' =>
-              match varMap₂.lookup ⟨t', v'⟩ with
-              | .some mappedVar => by exact (Γ_out_lets mappedVar)
-              | .none => by exact default
-        return (Γ_out_lets, Γ_in_matchLets)) >>=
-        (fun (Γ_out_lets, Γ_in_matchLets) => f Γ_out_lets <| (matchLets.denote Γ_in_matchLets) w)) =
-      (lets.denote s1 >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v))) :=
+    have h :=
         denote_matchVar2_of_subset (α := α)
           (v := v) (w := ⟨w, by simpa using h⟩)
           (s₁ := s₁)
           (lets := lets)
           (matchLets := matchLets)
-          (ma := ma) h_sub (by simp; rw [Var.toSnoc] at h_mv; rw [matchVar_lete_succ_eq] at h_mv; apply h_mv)
+          (ma := ma)
+          h_sub
+          (by simp; rw [Var.toSnoc] at h_mv; rw [matchVar_lete_succ_eq] at h_mv; apply h_mv)
+          (f := f)
+    simpa using h
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
@@ -1925,25 +1916,54 @@ theorem denote_matchVar2_of_subset
     intro h_sub h_mv
     rw [matchVar_lete_last_eq] at h_mv
     simp at h_mv
-    have ⟨h_mv_1, h_mv_2, h_mv_3⟩ := h_mv
+    obtain ⟨⟨op', _ty_eq', eff_le', args', regArgs'⟩, h_getPureExpr_eq, h_mv_3⟩ := h_mv
+    simp only [Expr.op_mk, Expr.regArgs_mk, Expr.args_mk] at h_mv_3
     split at h_mv_3
     case inl _ _ _ _ _ _ _ _ Γ_something h_expr_eq =>
+      rcases matchExpr with ⟨op, rfl, eff_le, args, regArgs⟩
+      simp at h_expr_eq
+      rcases h_expr_eq with ⟨rfl, h_reg_eq⟩
+      simp at h_reg_eq
+      subst h_reg_eq
+
+      intro f
+      rw [← Lets.denote_getExpr h_getPureExpr_eq]
       simp [Lets.denote, Expr.denote]
-      have ⟨h_expr_eq, h_reg_eq⟩ := h_expr_eq
-      rcases matchExpr with ⟨op, ty_eq, eff_le, args, regArgs⟩
-      simp_all
-      subst ty_eq
-      simp at h_expr_eq h_reg_eq
-      intros f
-      rw [← Lets.denote_getExpr h_mv_2]
+
+      -- have (Γ_out_lets : Valuation Γ_out) : (HVector.map
+      --         (fun x v =>
+      --           Lets.denote matchLets
+      --             (fun t' v' =>
+      --               match lookup { fst := t', snd := v' } varMap₂ with
+      --               | some mappedVar => Γ_out_lets (cast (by rfl) mappedVar)
+      --               | none => default)
+      --             v)
+      --         args) = _  := by
+      --   apply denote_matchVar_matchArg (hvarMap := h_mv_3) h_sub
+      --   · intro t v₁ v₂ ma ma' hmem h_ma_sub
+      --     have := denote_matchVar2_of_subset (s₁ := s₁) (f := fun x y => do
+      --       let x' := x
+      --       let y' := y
+      --       return y') h_ma_sub hmem
+      --     simp at this
+      --     simp
+      --     sorry
+      --   · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
 
       apply congrArg2
       funext Γ_out_v
       congr 1
       simp [Lets.denote, Expr.denote]
-      rcases h_mv_1 with ⟨op', ty_eq', eff_le', args', regArgs'⟩
-      simp [Expr.denote_unfold]
-      sorry
+      congr 1
+      apply denote_matchVar_matchArg (hvarMap := h_mv_3) h_sub
+      · intro t v₁ v₂ ma ma' hmem h_ma_sub
+        have := denote_matchVar2_of_subset (s₁ := s₁) (f := fun x y => do
+          let x' := x
+          let y' := y
+          return y') h_ma_sub hmem
+        simp at this
+
+      · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
     case inr =>
       simp_all
 /--
@@ -1960,15 +1980,12 @@ theorem denote_matchVar2 {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t
     {w : Var Δ_out t} {f : Γ_out.Valuation → _ → m α} :
     varMap ∈ matchVar lets v matchLets w ma →
     lets.denote s₁ >>= (fun Γvlets =>
-         let newValuation : Valuation Δ_in := -- TODO: this is just comap?
-           fun t' v' =>
+          f Γvlets (matchLets.denote (fun t' v' =>
              match varMap.lookup ⟨t', v'⟩ with
              | .some mappedVar => by exact (Γvlets mappedVar)
-             | .none => default
-         return (Γvlets, newValuation)) >>= (fun (Γvlets, Δ_in_v) =>
-          f Γvlets (matchLets.denote Δ_in_v w)) =
-      lets.denote s₁ >>= (fun Γv => f Γv (Γv v)) := by
-    apply denote_matchVar2_of_subset (s₁ := s₁) (f := f) (List.Subset.refl _)
+             | .none => default) w))
+    = lets.denote s₁ >>= (fun Γv => f Γv (Γv v)) := by
+  apply denote_matchVar2_of_subset (s₁ := s₁) (f := f) (List.Subset.refl _)
 
 --TODO: these simp lemmas should probably be `local`
 @[simp] theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
