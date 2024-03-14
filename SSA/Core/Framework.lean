@@ -1896,13 +1896,27 @@ theorem denote_matchVar2_of_subset
       subst h_mv
       simp
   | .lete matchLets _, ⟨w+1, h⟩ => by
-    -- apply denote_matchVar2_of_subset (α := α)
-    --   (v := v) (w := ⟨w, by simpa using h⟩)
-    --   (s₁ := s₁)
-    --   (lets := lets)
-    --   (matchLets := matchLets)
-    --   (ma := ma)
-    sorry
+    simp[Lets.denote, matchVar_lete_succ_eq]
+    -- rw [Lets.denote]
+    -- apply denote_matchVar2_of_subset
+    -- exact s₁
+    intros h_sub h_mv f
+    have h :
+      ((lets.denote s1 >>= (fun Γ_out_lets =>
+        let Γ_in_matchLets : Valuation Δ_in :=
+            fun t' v' =>
+              match varMap₂.lookup ⟨t', v'⟩ with
+              | .some mappedVar => by exact (Γ_out_lets mappedVar)
+              | .none => by exact default
+        return (Γ_out_lets, Γ_in_matchLets)) >>=
+        (fun (Γ_out_lets, Γ_in_matchLets) => f Γ_out_lets <| (matchLets.denote Γ_in_matchLets) w)) =
+      (lets.denote s1 >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v))) :=
+        denote_matchVar2_of_subset (α := α)
+          (v := v) (w := ⟨w, by simpa using h⟩)
+          (s₁ := s₁)
+          (lets := lets)
+          (matchLets := matchLets)
+          (ma := ma) h_sub (by simp; rw [Var.toSnoc] at h_mv; rw [matchVar_lete_succ_eq] at h_mv; apply h_mv)
   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
     rename_i t'
     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
