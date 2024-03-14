@@ -1962,6 +1962,7 @@ theorem denote_matchVar2_of_subset
           let y' := y
           return y') h_ma_sub hmem
         simp at this
+        sorry
 
       · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
     case inr =>
