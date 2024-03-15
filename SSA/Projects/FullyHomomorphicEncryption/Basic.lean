@@ -697,18 +697,15 @@ def Op.signature : Op q n → Signature (Ty q n) :=
 
 instance : OpSignature (Op q n) (Ty q n) := ⟨Op.signature q n⟩
 
-@[simp]
-noncomputable def Op.denote (o : Op q n)
-   (arg : HVector toType (OpSignature.sig o))
-   : (toType <| OpSignature.outTy o) :=
-    match o with
-    | Op.add => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
-    | Op.sub => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
-    | Op.mul => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
-    | Op.mul_constant => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
-    | Op.leading_term => R.leadingTerm arg.toSingle
-    | Op.monomial => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
-    | Op.monomial_mul => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
-    | Op.from_tensor => R.fromTensor arg.toSingle
-    | Op.to_tensor => R.toTensor' arg.toSingle
-    | Op.const c => c
+noncomputable instance : OpDenote (Op q n) (Ty q n) where
+ denote
+    | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
+    | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
+    | Op.mul, arg, _ => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
+    | Op.mul_constant, arg, _ => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
+    | Op.leading_term, arg, _ => R.leadingTerm arg.toSingle
+    | Op.monomial, arg, _ => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
+    | Op.monomial_mul, arg, _ => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
+    | Op.from_tensor, arg, _ => R.fromTensor arg.toSingle
+    | Op.to_tensor, arg, _ => R.toTensor' arg.toSingle
+    | Op.const c, _, _ => c

@@ -16,12 +16,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
 instance instTransformTy : MLIR.AST.TransformTy (Op q n) (Ty q n) 0 where
   mkTy := mkTy
 
-def cstZ {Γ : Ctxt _} (z : ℤ) : Expr (Op q n) Γ .integer  :=
-  Expr.mk
-    (op := .constZ z)
-    (ty_eq := rfl)
-    (args := .nil)
-    (regArgs := .nil)
 
 -- A lot of this boilerplate should be automatable
 def cst {Γ : Ctxt _} (r : R q n) : Expr (Op q n) Γ .polynomialLike  :=
@@ -83,7 +77,7 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     | .some (v, _ty) =>
       return ⟨.polynomialLike, cst (R.ofZComputable v)⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
-  | "add" =>
+  | "poly.add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -94,7 +88,7 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
-noncomputable instance : MLIR.AST.TransformExpr (Op q n) (Ty q n) 0 where
+instance : MLIR.AST.TransformExpr (Op q n) (Ty q n) 0 where
   mkExpr := mkExpr
 
 def mkReturn (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Op q n) (Σ ty, Com (Op q n) Γ ty) :=
@@ -109,7 +103,7 @@ def mkReturn (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Op
 instance : MLIR.AST.TransformReturn (Op q n) (Ty q n) 0 where
   mkReturn := mkReturn
 
-noncomputable def mlir2fhe (reg : MLIR.AST.Region 0) :
+def mlir2fhe (reg : MLIR.AST.Region 0) :
     MLIR.AST.ExceptM (Op q n) (Σ (Γ : Ctxt (Ty q n)) (ty : (Ty q n)), Com (Op q n) Γ ty) := MLIR.AST.mkCom reg
 
 open Qq MLIR AST Lean Elab Term Meta in

@@ -1,43 +1,48 @@
+import SSA.Projects.MLIRSyntax.EDSL
+import SSA.Core.Tactic
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 import SSA.Projects.FullyHomomorphicEncryption.Statements
-import SSA.Projects.MLIRSyntax.EDSL
+import SSA.Projects.FullyHomomorphicEncryption.Syntax
 
-theorem dialect_mul_comm :
-[mlir_icom| {
-^bb0(%A : P, %B : P):
-  %v1 = "poly.mul" (%A,%B) : (P, P) -> (P)
-  "poly.return" (%v1) : (P) -> ()
-}] = 
-[mlir_icom| {
-^bb0(%A : P, %B : P):
-  %v1 = "poly.mul" (%A,%B) : (P, P) -> (P)
-  "poly.return" (%v1) : (P) -> ()
-}]=  := by
-  simp_mlir
-  apply poly_mul_comm
+open MLIR AST -- need this to support the unhygenic macros in the EDSL
 
-theorem dialect_add_comm : a + b = b + a := by
-  ring
+variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
-theorem dialect_f_eq_zero : (f q n) = (0 : R q n) := by
-  apply Ideal.Quotient.eq_zero_iff_mem.2
-  rw [Ideal.mem_span_singleton]
+section ExampleComm
 
-theorem dialect_mul_f_eq_zero : a * (f q n) = 0 := by
-  rw [dialect_f_eq_zero]; ring
+def lhs :=
+[fhe_com| {
+^bb0(%A : ! R, %B : ! R):
+  %v1 = "poly.add" (%A,%B) : (! R, ! R) -> (! R)
+  "return" (%v1) : (! R) -> ()
+}]
 
-theorem dialect_mul_one_eq : 1 * a = a := by
-  ring
+def rhs :=
+[fhe_com| {
+^bb0(%A : ! R, %B : ! R):
+  %v1 = "poly.add" (%B,%A) : (! R, ! R) -> (! R)
+  "return" (%v1) : (! R) -> ()
+}]
 
-theorem dialect_add_f_eq : a + (f q n) = a := by
-  rw [← dialect_mul_one_eq q n (f q n), dialect_mul_f_eq_zero _ _ 1]; ring
+open MLIR AST in
+noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLike] .polynomialLike :=
+  { lhs := lhs, rhs := rhs, correct :=
+    by
+      rw [lhs, rhs]
+      /-:
+      Com.denote
+        (Com.lete (cst 0)
+        (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
+        (Com.ret { val := 0, property := ex1.proof_3 }))) =
+      Com.denote (Com.ret { val := 0, property := _ })
+      -/
+      funext Γv
+      simp_peephole [add, cst] at Γv
+      /- ⊢ ∀ (a b : R 2 3), b + a = a + b -/
+      intros a b
+      rw [add_comm]
+      /- No goals-/
+      done
+    }
 
-theorem dialect_add_zero_eq : a + 0 = a := by
-  ring
-
-
-
-
-
-
-
+end ExampleComm
