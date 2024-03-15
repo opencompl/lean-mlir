@@ -18,24 +18,37 @@ theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := b
   simp_all only [BitVec.getLsb'_not, BitVec.getLsb'_ofNat_zero, Bool.not_false, BitVec.ofNat_eq_ofNat, BitVec.neg_eq,
     BitVec.getLsb'_neg_ofNat_one]
 
+
+-- TODO: Do we call this dialect the "Alive" dialect (as hinted by the `simp_alive_peephole` name),
+--       or the "InstCombine" dialect (as hinted by the `InstCombine` namespace that everything
+--       lives in)?
+
 open MLIR AST in
 /--
-- We first simplify `Com.refinement` to see the context `Γv`.
-- We `simp_peephole Γv` to simplify context accesses by variables.
-- We simplify the translation overhead.
-- Then we introduce variables, `cases` on the variables to eliminate the `none` cases.
-- We cannot leave it at this state, since then the variables will be inaccessible.
-- So, we revert the variables for the user to re-introduce them as they see fit.
--/
+`simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `InstCombine`
+programs into statements about just bitvectors.
+
+To wit, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
+That is, goals of
+of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `, where
+`com₁` and `com₂` are programs in the `InstCombine` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
+        /- Unfold the meaning of refinement, to access the valuation -/
         dsimp only [Com.Refinement]
         intros Γv
+
+        /- Simplify away the core framework -/
         simp_peephole at Γv
-        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
-          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+
+        /- Simplify away the `InstCombine` specific semantics. -/
         simp (config := {unfoldPartialApp := true}) only [OpDenote.denote,
+          /- Note that we need `HVector.toPair`, `HVector.toSingle` and `HVector.toTriple`,
+              since they're used in `InstCombine.Op.denote`,
+              and we need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+          -- TODO: if `HVector.toTuple` is used in the core framework's AST translation, it should
+          --       probably be part of the core `simp_peephole` simp-set
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
           bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
           Ctxt.snoc,
@@ -52,6 +65,18 @@ macro "simp_alive_peephole" : tactic =>
           InstcombineTransformDialect.instantiateCtxt,
           ConcreteOrMVar.instantiate, Com.Refinement,
           DialectMorphism.mapTy]
+
+        /-  At this point, we have should a goal of the form:
+              `∀ (x₁ : Option (BitVec _)) ... (xₙ : Option (BitVec _)), ...`
+            For some unknown number of variables `n` (but assumed to be `n ≤ 5`,
+            as per the hack in `simp_peephole`).
+
+            However, the `none` (i.e., poison) cases are generally trivial.
+            Thus we attempt to introduce some variables (using `try` because the intro might fail
+            if we have less universal quantifiers than `intro`s), case split on them, and simp
+            through the monadic bind on `Option` (in the generally true assumption that the `none`
+            case becomes trivial and is closed by `simp`).
+        -/
         try intros v0
         try intros v1
         try intros v2
@@ -65,6 +90,15 @@ macro "simp_alive_peephole" : tactic =>
           <;> try cases' v4 with x4 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind]
           <;> dsimp[Option.bind, bind, Monad.toBind]
+
+        /--
+        CAVEAT: This does nothing, the variables `v$i` have been cases on, and the newly introduced
+        variables (in the `some` cases) are called `x$i` instead, i'll document the intended behaviour.
+        TODO: fix this
+
+        Finally, revert the variables introduced in the `some` cases, so that we are left with a
+        universally quantified goal of the form:
+          `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...` -/
         try revert v5
         try revert v4
         try revert v3

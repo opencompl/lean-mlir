@@ -36,8 +36,8 @@ elab "change_mlir_context " Γv:ident : tactic => do
 end
 
 /--
-`simp_peephole at ΓV` simplifies the denotation of expressions/programs that are evaluated with
-the valuation `ΓV`.
+`simp_peephole at ΓV` simplifies away the framework overhead of denotating expressions/programs,
+that are evaluated with the valuation `ΓV`.
 
 In it's bare form, it only simplifies away the core framework definitions (e.g., `Expr.denote`), but
 we can also pass it dialect-specific definitions to unfold, as in:
@@ -95,6 +95,10 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
 
       /- Now, revert each variable, so that the variable from the local context is turned into a
       universal quantifier (`∀ _, ...`) in the goal statement.
+      We do this primarly because the introduces variables `a`, `b`, etc. are made inaccesible by
+      macro hygiene, and we find a universally quantified goal more aesthetic than one with
+      inaccessible names.
+
       Note, this will fail if the variable was removed in the previous step, hence we use `try` -/
       try revert f;
       try revert e;
