@@ -668,6 +668,9 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | from_tensor : Op q n-- interpret values as coefficients of a representative
   | to_tensor : Op q n-- give back coefficients from `R.representative`
   | const (c : R q n) : Op q n
+  | const_int (c : Int) : Op q n
+  | const_idx (i : Nat) : Op q n
+
 
 open TyDenote (toType)
 
@@ -684,12 +687,16 @@ def Op.sig : Op  q n → List (Ty q n)
 | Op.from_tensor => [Ty.tensor]
 | Op.to_tensor => [Ty.polynomialLike]
 | Op.const _ => []
+| Op.const_int _ => []
+| Op.const_idx _ => []
 
 @[simp, reducible]
 def Op.outTy : Op q n → Ty q n
 | Op.add | Op.sub | Op.mul | Op.mul_constant | Op.leading_term | Op.monomial
 | Op.monomial_mul | Op.from_tensor | Op.const _  => Ty.polynomialLike
 | Op.to_tensor => Ty.tensor
+| Op.const_int _ => Ty.integer
+| Op.const_idx _ => Ty.index
 
 @[simp, reducible]
 def Op.signature : Op q n → Signature (Ty q n) :=
@@ -709,3 +716,5 @@ noncomputable instance : OpDenote (Op q n) (Ty q n) where
     | Op.from_tensor, arg, _ => R.fromTensor arg.toSingle
     | Op.to_tensor, arg, _ => R.toTensor' arg.toSingle
     | Op.const c, _, _ => c
+    | Op.const_int c, _, _ => c
+    | Op.const_idx c, _, _ => c

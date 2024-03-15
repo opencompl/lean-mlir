@@ -6,9 +6,8 @@ import SSA.Projects.FullyHomomorphicEncryption.Syntax
 
 open MLIR AST -- need this to support the unhygenic macros in the EDSL
 
-variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
-section ExampleComm
+namespace ExampleComm
 
 def lhs :=
 [fhe_com| {
@@ -46,3 +45,48 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLik
     }
 
 end ExampleComm
+
+namespace ExampleModulo
+
+-- 2^n
+
+def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
+[fhe_com| {
+^bb0(%A : ! R):
+  %oneint = "arith.const" () {value = 1}: () -> (i16)
+  %oneidx = "arith.const" () {value = 1}: () -> (index)
+  %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
+  %oner = "poly.const" () {value = 1}: () -> (! R)
+  %p = "poly.add" (%x2n, %one) : (! R, ! R) -> (! R)
+  %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
+  "return" (%v1) : (! R) -> ()
+}]
+
+def rhs :=
+[fhe_com| {
+^bb0(%A : ! R):
+  "return" (%A) : (! R) -> ()
+}]
+
+open MLIR AST in
+noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLike] .polynomialLike :=
+  { lhs := lhs, rhs := rhs, correct :=
+    by
+      rw [lhs, rhs]
+      /-:
+      Com.denote
+        (Com.lete (cst 0)
+        (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
+        (Com.ret { val := 0, property := ex1.proof_3 }))) =
+      Com.denote (Com.ret { val := 0, property := _ })
+      -/
+      funext Γv
+      simp_peephole [add, cst] at Γv
+      /- ⊢ ∀ (a b : R 2 3), b + a = a + b -/
+      intros a b
+      rw [add_comm]
+      /- No goals-/
+      done
+    }
+
+end ExampleModulo

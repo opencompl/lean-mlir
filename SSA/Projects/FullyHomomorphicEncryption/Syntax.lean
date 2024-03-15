@@ -25,6 +25,19 @@ def cst {Γ : Ctxt _} (r : R q n) : Expr (Op q n) Γ .polynomialLike  :=
     (args := .nil)
     (regArgs := .nil)
 
+def cstInt {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .integer :=
+  Expr.mk
+    (op := .const_int z)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (Op q n) Γ .index :=
+  Expr.mk
+    (op := .const_idx i)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
 
 def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
@@ -72,11 +85,27 @@ def R.ofZComputable (z : ℤ) : R q n :=
 def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
   match opStx.name with
-  | "const" =>
+  | "poly.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, _ty) =>
       return ⟨.polynomialLike, cst (R.ofZComputable v)⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
+  | "arith.const" =>
+    match opStx.attrs.find_int "value" with
+    | .some (v, vty) => match vty with
+        | .int _ _ => return ⟨.integer, cstInt v⟩
+        | .index => return ⟨.index, cstIdx v.toNat⟩
+        | _ => throw <| .generic s!"unsupported constant type {repr vty} for arith.const"
+    | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
+  | "poly.monomial" =>
+    match opStx.args with
+    | v₁Stx::v₂Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      match ty₁, ty₂ with
+        | .polynomialLike, .polynomialLike => return ⟨.polynomialLike, add v₁ v₂⟩
+        | _, _ => throw <| .generic s!"expected both operands to be of type 'polynomialLike'"
+    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | "poly.add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
