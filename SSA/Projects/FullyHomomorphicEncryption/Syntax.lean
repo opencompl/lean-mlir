@@ -4,6 +4,7 @@ import SSA.Projects.MLIRSyntax.EDSL
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 
 open MLIR AST Ctxt
+open Polynomial -- for R[X] notation
 
 variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
@@ -14,6 +15,13 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
 
 instance instTransformTy : MLIR.AST.TransformTy (Op q n) (Ty q n) 0 where
   mkTy := mkTy
+
+def cstZ {Γ : Ctxt _} (z : ℤ) : Expr (Op q n) Γ .integer  :=
+  Expr.mk
+    (op := .constZ z)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
 
 -- A lot of this boilerplate should be automatable
 def cst {Γ : Ctxt _} (r : R q n) : Expr (Op q n) Γ .polynomialLike  :=
@@ -38,12 +46,37 @@ def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (Op q n
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
+def R.ofZComputable (z : ℤ) : R q n :=
+  let zq : ZMod q := z
+  let p : (ZMod q)[X] := {
+      toFinsupp := Finsupp.mk
+        (support := List.toFinset (if zq = 0 then  [] else [0]))
+        (toFun := fun i => if i = 0 then z else 0)
+        (mem_support_toFun := by
+          intros a
+          constructor
+          · intros ha
+            simp at ha
+            split at ha
+            case mp.inl hz =>
+              simp at ha
+            case mp.inr hz =>
+              simp at ha
+              subst ha
+              simp [hz]
+        )
+      : (ZMod q)[X]
+  }
+  fromPoly p
+
 -- Will for now not support poly constants, just integers
-noncomputable def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
+def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
-    | .some (v, _ty) => return ⟨.polynomialLike, cst (IntCast.intCast v)⟩
+    | .some (v, _ty) =>
+      return ⟨.polynomialLike, cst (R.ofZComputable v)⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "add" =>
     match opStx.args with
