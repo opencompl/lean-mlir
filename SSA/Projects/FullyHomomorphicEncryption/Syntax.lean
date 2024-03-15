@@ -64,6 +64,11 @@ def R.ofZComputable (z : ℤ) : R q n :=
               simp at ha
               subst ha
               simp [hz]
+          · intros hb
+            simp at hb
+            obtain ⟨ha, hz⟩ := hb
+            subst ha
+            simp [hz]
         )
       : (ZMod q)[X]
   }
