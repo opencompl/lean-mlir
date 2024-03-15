@@ -3,6 +3,7 @@
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import SSA.Core.EffectKind
+import SSA.Core.MonadLiftp
 import Mathlib.Control.Monad.Basic
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Basic
@@ -1856,6 +1857,27 @@ variable [LawfulMonad m]
 --           subst hop
 --           rfl
 -- -/
+
+
+
+def Ctxt.Valuation.IsDenotationForLets (V_Γ_out : Valuation Γ_out) (lets : Lets Op Γ_in eff Γ_out)
+    (V_Γ_in : Valuation Γ_in) : Prop :=
+  V_Γ_out ∈ Functor.supp (lets.denote V_Γ_in)
+
+
+example (lets : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out eff ty)
+    (V : Valuation Γ_out) (Ve : ⟦ty⟧) (V_in : Valuation Γ_in) :
+    (V.snoc Ve).IsDenotationForLets (lets.lete e) V_in
+    → V.IsDenotationForLets lets V_in := by
+  simp [Valuation.IsDenotationForLets, Lets.denote]
+
+-- theorem Lets.denote_bind_eq_iff {lets : Lets Op Γ_in eff Γ_out} {V_Γ_in : Valuation Γ_in}
+--     {f g : Valuation Γ_out → eff.toMonad m α}
+--     (h : ∀ V_out, V_out.IsDenotationForLets lets V_Γ_in → f V_out = g V_out) :
+--     (lets.denote V_Γ_in >>= f) = (lets.denote V_Γ_out >>= g) := by
+--   sorry
+
+
 
 theorem denote_matchVar2_of_subset
     {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
