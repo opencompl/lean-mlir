@@ -1110,6 +1110,22 @@ theorem Lets.denote_getExpr [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} : {lets : Le
     apply denote_getPureExprAux
     assumption
 
+/-
+
+  f : State s α  = s -> (α , s)
+  supp f = {a : α | ∃ s, (f s).1 = a}
+
+  (lets.denote s) >>= (fun Γv => return (e.denote Γv))
+    = (lets.denote s) >>= (fun Γv => return (Γv v))
+
+  (fun Γv => (e.denote Γv)) <$> (lets.denote s)
+    = (fun Γv => return (Γv v)) <$> (lets.denote s)
+
+  (Γv ∈ supp (lets.denote s)) -> e.denote Γv = Γv v
+
+  (∀ x ∈ supp mx, f x = f' x ) -> mx >>= f = mx >>= f'
+-/
+
 /-!
 ## Mapping
 We can map between different dialects

@@ -26,6 +26,9 @@ noncomputable def Subtype.joinLiftp :
 
 -- TODO:  I strongly suspect these theorems are already implied by `LawfulFunctor`, but have not
 --        succeeded in proving so
+--        At the very least, they should hold for polynomial functors (i.e.,
+--        functors that are equivalent to a `PFunctor`).
+--        Restricting to polynomials seems sensible enough
 class LawfulLiftp (F : Type u → Type u) [Functor F] where
   /-- Every value contained in `x` is an element of its support -/
   liftp_mem_supp : ∀ {α} (x : F α), Liftp (· ∈ supp x) x
@@ -33,9 +36,17 @@ class LawfulLiftp (F : Type u → Type u) [Functor F] where
   the set image of `f` over the support of `x` -/
   supp_map {α} (f : α → β) (x : F α) : supp (f <$> x) = f '' (supp x)
 
-export LawfulLiftp (liftp_mem_supp)
+  -- Actually, this theorem won't be true for `Set`, so my earlier comment about this being
+  -- implied by lawfulfunctor is false
+  /--  -/
+  eq_of_map_eq_of_supp {α β : Type u} (x : F α) (f g : α → β) :
+    f <$> x = g <$> x → ∀ x' ∈ supp x, f x' = g x'
 
-/-! Various instances of `LawfilLiftP`-/
+export LawfulLiftp (liftp_mem_supp supp_map)
+attribute [simp] supp_map
+
+
+/-! We show that `Option` and `StateT σ` obey `LawfulLiftp` -/
 section Instances
 
 namespace Option
@@ -67,23 +78,62 @@ instance : LawfulLiftp (Option) where
     cases x <;> simp
   supp_map f x := by
     cases x <;> simp
+  -- map_eq_iff_supp_eq x := by
+  --   cases x <;> simp
+  eq_of_map_eq_of_supp x := by
+    cases x <;> simp
 
 end Option
 
 namespace StateM
 
-theorem supp_eq (x : StateM σ α) : supp x = {x.snd} := rfl
+@[simp] theorem liftp_iff (x : StateM σ α) : Liftp P x ↔ ∀ s, P (x s).1 := by
+  simp [Liftp]
+  constructor
+  · rintro ⟨u, rfl⟩ s
+    simp [(· <$> ·), StateT.map]
+    exact (u s).1.property
+  · intro h
+    use (fun s => (⟨_, h s⟩, (x s).2))
+    simp (config := {unfoldPartialApp := true}) [(· <$> ·), StateT.map]
+
+-- `σ → m (α × σ)`
+@[simp] theorem supp_eq (x : StateM σ α) : supp x = {y | ∃ s : σ, (x s).fst = y} := by
+  ext y
+  simp only [supp, liftp_iff]
+  constructor
+  · intro h; apply h (by simp)
+  · rintro ⟨s, rfl⟩ p h; apply h
 
 instance (σ) : LawfulLiftp (StateM σ) where
-  liftp_mem_supp x := _
-  supp_map := _
+  liftp_mem_supp := by simp
+  supp_map := by simp [(· <$> ·), StateT.map, Set.image]
+  -- map_eq_iff_supp_eq x f g := by
+  --   simp (config := {unfoldPartialApp := true}) [(· <$> ·), StateT.map, Set.image]
+  --   constructor
+  --   · intro h
+  --     ext y
+  --     have : (∃ s, f (x s).1 = y) = (∃ s, ((fun s => (f (x s).1, (x s).2)) s).1 = y) := rfl
+  --     rw [Set.mem_setOf_eq, Set.mem_setOf_eq, this, h]
+  --   · intro h
+  --     funext s
+  --     congr
+  --     simp at h
+  --     sorry
+  eq_of_map_eq_of_supp x f g := by
+    simp (config := {unfoldPartialApp := true}) [(· <$> ·), StateT.map, Set.image]
+    intro h s
+    have : f (x s).1 = ((fun s => (f (x s).1, (x s).2)) s).1 := rfl
+    rw [this, h]
+
 
 end StateM
 
 end Instances
 
--- depends on `Functor.liftp_mem_supp`
-theorem Functor.liftp_iff_supp (x : F α) [LawfulLiftp F] :
+variable [LawfulLiftp F]
+
+theorem Functor.liftp_iff_supp (x : F α) :
     Liftp P x ↔ ∀ x' ∈ supp x, P x' := by
   constructor <;> intro h
   · intro x' h_mem
@@ -94,23 +144,27 @@ theorem Functor.liftp_iff_supp (x : F α) [LawfulLiftp F] :
     use f <$> u
     simp [← comp_map, val_f]
 
--- #check Functor.fold
--- #check Foldable
+-- theorem Functor.liftr_iff_supp (x y : Option α) {R : α → α → Prop} :
+--     Liftr R x y ↔ ((
+--       ∀ x' ∈ supp x, ∃ y' ∈ supp y, R x' y')
+--       ∧ (∀ y' ∈ supp y, ∃ x' ∈ supp x, R x' y')) := by
+--   cases' x with x
+--   <;> cases' y with y
+--   <;> simp [Liftr]
+--   use some ⟨(x, y), by simp⟩
 
--- lemma Functor.map_supp_aux {x : F α} {f : α → β} :
---     supp (f <$> x) = ⋃₀ ((supp ∘ f) <$> x) := by
---   sorry
 
--- theorem Functor.map_supp (x : F α) (f : α → β) : supp (f <$> x) = f <$> supp x := by
---   ext y
---   simp [Set.mem_image, (· <$> ·)]
---   constructor
---   · intro h
---     simp
---   · rintro ⟨x', hx₁, rfl⟩ hy h
---     simp [liftp_iff_supp] at h
---     apply h
---     apply (liftp_iff_supp _).mp
+-- /-- If we map two functions over the same monadic value `x`, the result will always have the same
+-- monadic action, the only difference is in the contained values, i.e., `supp (_ <$> x)` -/
+-- theorem Functor.map_eq_iff_supp_eq {x : F α} {f g : α → β} :
+--     f <$> x = g <$> x ↔ supp (f <$> x) = supp (g <$> x) := by
+--   exact LawfulLiftp.map_eq_iff_supp_eq
+
+theorem Functor.eq_of_map_eq {fx : F α} {f g : α → β}
+    (h_fg : f <$> fx = g <$> fx) {x : α} (h_x : x ∈ supp fx) :
+    f x = g x := by
+  simp
+
 
 end Functor
 
@@ -152,6 +206,12 @@ theorem Monad.bind_congr_of_liftp {x : m α} {f g : α → m β}
   apply bind_congr
   intro ⟨a, ha⟩
   apply h_fg a ha
+
+theorem Monad.bind_congr_of_supp {x : m α} {f g : α → m β} [LawfulLiftp m]
+    (h_fg : ∀ a ∈ supp x, f a = g a) :
+    (x >>= f) = (x >>= g) := by
+  apply bind_congr_of_liftp (liftp_mem_supp _) h_fg
+
 
 /-- The support of `pure x` contains at most `x`.
 Note that the support may be empty, for certain degenerate (but lawful!) monads -/
