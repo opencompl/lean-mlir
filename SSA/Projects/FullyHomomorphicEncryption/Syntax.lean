@@ -11,6 +11,10 @@ variable {q : Nat} {n : Nat} [Fact (q > 1)]
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
   | MLIR.AST.MLIRType.undefined "R" => do
     return .polynomialLike
+  | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _ => do
+    return .integer
+  | MLIR.AST.MLIRType.index  => do
+    return .index
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (Op q n) (Ty q n) 0 where

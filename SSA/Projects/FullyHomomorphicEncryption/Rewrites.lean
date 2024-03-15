@@ -57,7 +57,7 @@ def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete
   %oneidx = "arith.const" () {value = 1}: () -> (index)
   %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
-  %p = "poly.add" (%x2n, %one) : (! R, ! R) -> (! R)
+  %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
   %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
 }]
