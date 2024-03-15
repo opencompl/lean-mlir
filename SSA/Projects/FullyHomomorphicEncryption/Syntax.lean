@@ -57,6 +57,13 @@ def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (Op q n
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
+def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (Op q n) Γ .polynomialLike :=
+  Expr.mk
+    (op := .monomial)
+    (ty_eq := rfl)
+    (args := .cons a <| .cons i .nil)
+    (regArgs := .nil)
+
 def R.ofZComputable (z : ℤ) : R q n :=
   let zq : ZMod q := z
   let p : (ZMod q)[X] := {
@@ -107,9 +114,9 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂ with
-        | .polynomialLike, .polynomialLike => return ⟨.polynomialLike, add v₁ v₂⟩
+        | .integer, .index => return ⟨.polynomialLike, mon v₁ v₂⟩
         | _, _ => throw <| .generic s!"expected both operands to be of type 'polynomialLike'"
-    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | "poly.add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
