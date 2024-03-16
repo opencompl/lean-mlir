@@ -50,15 +50,16 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLik
 end ExampleComm
 
 
+section ExampleModulo
 -- 2^n
 
 -- code generator does not support recursor 'Decidable.rec' yet, consider using 'match ... with' and/or structural recursion
 noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
 [fhe_com| {
 ^bb0(%A : ! R):
-  %oneint = "arith.const" () {value = 1}: () -> (i16)
-  %oneidx = "arith.const" () {value = 1}: () -> (index)
-  %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
+  -- %oneint = "arith.const" () {value = 1}: () -> (i16)
+  -- %oneidx = "arith.const" () {value = 1}: () -> (index)
+  -- %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
   -- %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
   -- %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
@@ -90,7 +91,9 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
       rw [lhs]
       change_mlir_context Γv
       simp_peephole [] at Γv
+      rw [R.ofZComputable_eq_coe]
       intros a
+      simp
       try rw [Poly.add_f_eq]
       sorry
     }

@@ -6,6 +6,34 @@ import SSA.Projects.FullyHomomorphicEncryption.Basic
 open MLIR AST Ctxt
 open Polynomial -- for R[X] notation
 
+irreducible_def ROfZComputable (z : ℤ) : R q n :=
+  let zq : ZMod q := z
+  let p : (ZMod q)[X] := {
+      toFinsupp := Finsupp.mk
+        (support := List.toFinset (if zq = 0 then  [] else [0]))
+        (toFun := fun i => if i = 0 then z else 0)
+        (mem_support_toFun := by
+          intros a
+          constructor
+          · intros ha
+            simp at ha
+            split at ha
+            case mp.inl hz =>
+              simp at ha
+            case mp.inr hz =>
+              simp at ha
+              subst ha
+              simp [hz]
+          · intros hb
+            simp at hb
+            obtain ⟨ha, hz⟩ := hb
+            subst ha
+            simp [hz]
+        )
+      : (ZMod q)[X]
+  }
+  R.fromPoly p
+
 variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
@@ -58,56 +86,40 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
     (args := .cons a <| .cons i .nil)
     (regArgs := .nil)
 
-private def R.ofZComputable (z : ℤ) : R q n :=
-  let zq : ZMod q := z
-  let p : (ZMod q)[X] := {
-      toFinsupp := Finsupp.mk
-        (support := List.toFinset (if zq = 0 then  [] else [0]))
-        (toFun := fun i => if i = 0 then z else 0)
-        (mem_support_toFun := by
-          intros a
-          constructor
-          · intros ha
-            simp at ha
-            split at ha
-            case mp.inl hz =>
-              simp at ha
-            case mp.inr hz =>
-              simp at ha
-              subst ha
-              simp [hz]
-          · intros hb
-            simp at hb
-            obtain ⟨ha, hz⟩ := hb
-            subst ha
-            simp [hz]
-        )
-      : (ZMod q)[X]
-  }
-  fromPoly p
 
 
 
 def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
-    (op := .const (R.ofZComputable z))
+    (op := Op.const (ROfZComputable z))
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
 
--- A lot of this boilerplate should be automatable
-@[implemented_by cstComputable]
-def cstUncomputable {Γ : Ctxt _} (r : Int) : Expr (Op q n) Γ .polynomialLike  :=
-  Expr.mk
-    (op := .const r)
-    (ty_eq := rfl)
-    (args := .nil)
-    (regArgs := .nil)
 
-theorem cst_computable_eq_cst_uncomputable [Fact (q > 1)] {Γ : Ctxt (Ty q n)}  (r : Int) :
-    cstComputable r = cstUncomputable (Γ := Γ) r := by
-  simp [cstComputable, cstUncomputable]
-  sorry
+
+-- /-- Introduce an irreducible def that turns an Int into an R.
+-- For some reason, Lean is *incredibly* agressive at unfolding this particular
+-- definition, and gives a crazy soup when trying to inspect what the integer
+-- gets coerced to. We disable this by writing a custom definition.
+-- -/
+-- noncomputable irreducible_def R.ofInt (z : Int) [inst : Fact (q > 1)]  : R q n := z
+
+-- -- A lot of this boilerplate should be automatable
+-- @[implemented_by cstComputable]
+-- def cstUncomputable {Γ : Ctxt _} (r : Int) : Expr (Op q n) Γ .polynomialLike  :=
+--   Expr.mk
+--     (op := .const (R.ofInt r))
+--     (ty_eq := rfl)
+--     (args := .nil)
+--     (regArgs := .nil)
+
+/-- We show that the uncomputable definition in terms of R.ofInt is equal t the
+  definition we give by building the term directly. -/
+-- theorem cst_computable_eq_cst_uncomputable [Fact (q > 1)] {Γ : Ctxt (Ty q n)}  (r : Int) :
+--     cstComputable r = cstUncomputable (Γ := Γ) r := by
+--   simp [cstComputable, cstUncomputable, R.ofZComputable]
+--   sorry
 
 
 -- Will for now not support poly constants, just integers
@@ -117,7 +129,8 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
   | "poly.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, _ty) =>
-      return ⟨.polynomialLike, cstUncomputable v⟩
+      -- throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
+      return ⟨.polynomialLike, cstComputable v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "arith.const" =>
     match opStx.attrs.find_int "value" with
