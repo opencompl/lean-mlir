@@ -21,20 +21,14 @@ instance instTransformTy : MLIR.AST.TransformTy (Op q n) (Ty q n) 0 where
   mkTy := mkTy
 
 
--- A lot of this boilerplate should be automatable
-def cst {Γ : Ctxt _} (r : R q n) : Expr (Op q n) Γ .polynomialLike  :=
-  Expr.mk
-    (op := .const r)
-    (ty_eq := rfl)
-    (args := .nil)
-    (regArgs := .nil)
 
-def cstInt {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .integer :=
+def cstInt {Γ : Ctxt _} (z :Int) : Expr (Op q n) Γ .integer  :=
   Expr.mk
     (op := .const_int z)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
+
 
 def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (Op q n) Γ .index :=
   Expr.mk
@@ -64,7 +58,7 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
     (args := .cons a <| .cons i .nil)
     (regArgs := .nil)
 
-def R.ofZComputable (z : ℤ) : R q n :=
+private def R.ofZComputable (z : ℤ) : R q n :=
   let zq : ZMod q := z
   let p : (ZMod q)[X] := {
       toFinsupp := Finsupp.mk
@@ -91,6 +85,31 @@ def R.ofZComputable (z : ℤ) : R q n :=
       : (ZMod q)[X]
   }
   fromPoly p
+
+
+
+def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
+  Expr.mk
+    (op := .const (R.ofZComputable z))
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+-- A lot of this boilerplate should be automatable
+@[implemented_by cstComputable]
+def cstUncomputable {Γ : Ctxt _} (r : Int) : Expr (Op q n) Γ .polynomialLike  :=
+  Expr.mk
+    (op := .const r)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+theorem cst_computable_eq_cst_uncomputable [Fact (q > 1)] {Γ : Ctxt (Ty q n)}  (r : Int) :
+    cstComputable r = cstUncomputable (Γ := Γ) r := by
+  simp [cstComputable, cstUncomputable]
+  sorry
+
+
 -- Will for now not support poly constants, just integers
 def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
@@ -98,7 +117,7 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
   | "poly.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, _ty) =>
-      return ⟨.polynomialLike, cst (R.ofZComputable v)⟩
+      return ⟨.polynomialLike, cstUncomputable v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "arith.const" =>
     match opStx.attrs.find_int "value" with
