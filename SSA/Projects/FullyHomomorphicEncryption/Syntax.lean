@@ -91,7 +91,6 @@ def R.ofZComputable (z : ℤ) : R q n :=
       : (ZMod q)[X]
   }
   fromPoly p
-
 -- Will for now not support poly constants, just integers
 def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
@@ -104,8 +103,10 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
   | "arith.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, vty) => match vty with
-        | .int _ _ => return ⟨.integer, cstInt v⟩
-        | .index => return ⟨.index, cstIdx v.toNat⟩
+        | .int _ _ => match opStx.res with
+          | [(_,MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _)] => return ⟨.integer, cstInt v⟩
+          | [(_,MLIR.AST.MLIRType.index)] => return ⟨.index, cstIdx v.toNat⟩
+          | _ => throw <| .generic s!"unsupported result type {repr opStx.res} for arith.const"
         | _ => throw <| .generic s!"unsupported constant type {repr vty} for arith.const"
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "poly.monomial" =>
@@ -115,7 +116,7 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂ with
         | .integer, .index => return ⟨.polynomialLike, mon v₁ v₂⟩
-        | _, _ => throw <| .generic s!"expected both operands to be of type 'polynomialLike'"
+        | _, _ => throw <| .generic s!"expected operands to be of types `integer` and `index` for `monomial`. Got: {repr ty₁}, {repr ty₂}"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | "poly.add" =>
     match opStx.args with

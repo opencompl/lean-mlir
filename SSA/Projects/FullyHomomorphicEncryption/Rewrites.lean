@@ -50,7 +50,8 @@ namespace ExampleModulo
 
 -- 2^n
 
-def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
+-- code generator does not support recursor 'Decidable.rec' yet, consider using 'match ... with' and/or structural recursion
+noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
 [fhe_com| {
 ^bb0(%A : ! R):
   %oneint = "arith.const" () {value = 1}: () -> (i16)
@@ -69,10 +70,16 @@ def rhs :=
 }]
 
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLike] .polynomialLike :=
-  { lhs := lhs, rhs := rhs, correct :=
+noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
+  { lhs := lhs,
+    -- Inlining rhs because of some `rw` bug. Maybe it's https://github.com/leanprover/lean4/commit/504b6dc93f46785ccddb8c5ff4a8df5be513d887
+     rhs := [fhe_com| {
+^bb0(%A : ! R):
+  "return" (%A) : (! R) -> ()
+}]
+  , correct :=
     by
-      rw [lhs, rhs]
+      rw [lhs]
       /-:
       Com.denote
         (Com.lete (cst 0)
@@ -81,12 +88,9 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLik
       Com.denote (Com.ret { val := 0, property := _ })
       -/
       funext Γv
-      simp_peephole [add, cst] at Γv
-      /- ⊢ ∀ (a b : R 2 3), b + a = a + b -/
-      intros a b
-      rw [add_comm]
-      /- No goals-/
-      done
+      simp_peephole [add, cst, mon, cstInt, cstIdx] at Γv
+      try rw [Poly.add_f_eq]
+      sorry
     }
 
 end ExampleModulo
