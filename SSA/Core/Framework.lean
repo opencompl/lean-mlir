@@ -1066,6 +1066,61 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ eff Γ₂) {t
   | none => none
   | some e => e.changeVars Ctxt.dropUntilHom
 
+def Goedel.toType.IsDenotationForExpr (Ve : ⟦t⟧) (expr : Expr Op Γ eff t) (V : Valuation Γ) :
+    Prop :=
+  Ve ∈ Functor.supp (expr.denote V)
+
+/-- `Vout.IsDenotationForLets lets Vin` holds if `Vout` is one of the denotations obtained by
+`lets.denote Vin`. We say "one of", because a dialect might have non-determinism as a side effect -/
+def Ctxt.Valuation.IsDenotationForLets (Vout : Valuation Γout) (lets : Lets Op Γin eff Γout)
+    (Vin : Valuation Γin) : Prop :=
+  Vout ∈ Functor.supp (lets.denote Vin)
+
+theorem Ctxt.Valuation.isDenotationForLets_of_lete {Vout : Valuation _} {lets : Lets Op Γin eff Γout}
+    {e : Expr Op Γout eff ty} {Vin : Valuation _} :
+    (Vout.IsDenotationForLets (lets.lete e) Vin) → (Vout.comap ) := by
+  simp [IsDenotationForLets]
+  sorry
+
+
+-- example (lets : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out eff ty)
+--     (V : Valuation Γ_out) (Ve : ⟦ty⟧) (V_in : Valuation Γ_in) :
+--     (V.snoc Ve).IsDenotationForLets (lets.lete e) V_in
+--     → V.IsDenotationForLets lets V_in := by
+--   simp [Valuation.IsDenotationForLets, Lets.denote]
+
+@[simp] lemma Lets.getPureExprAux_lete_toSnoc {body : Lets Op Γin eff Γout} {e : Expr Op Γout eff ty'}
+    {v : Var Γout ty} :
+    getPureExprAux (lete body e) (v.toSnoc) =  getPureExprAux body v := by
+  simp only [getPureExprAux, Var.casesOn_toSnoc]
+
+theorem Lets.denote_getPureExprAux_of_supp [LawfulMonad m] {Γin Γout : Ctxt Ty} {t : Ty}
+    {lets : Lets Op Γin eff Γout} {v : Var Γout t} {ePure : Expr Op _ .pure t}
+    (he : lets.getPureExprAux v = some ePure)
+    {Vin : Valuation Γin} {Vout : Valuation Γout}
+    (h_supp : Vout.IsDenotationForLets lets Vin ) :
+    ((ePure.changeVars Ctxt.dropUntilHom).denote Vout) = Vout v := by
+  induction lets
+  case nil => simp [getPureExprAux] at he
+  case lete Γ_in eff Γ_out ty body e ih =>
+    -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
+    simp only [Expr.denote_changeVars, EffectKind.return_impure_toMonad_eq]
+    -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
+    cases v using Var.casesOn with
+    | toSnoc v =>
+      simp only [getPureExprAux_lete_toSnoc] at he
+      specialize @ih _ _ he Vin (Vout.comap Ctxt.Hom.id.snocRight)
+      simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
+        EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
+      apply ih
+      simp
+
+    | last =>
+      simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
+        Option.mem_def, Option.some.injEq] at he
+      simp [denote, Expr.denote_toPure? he]
+      cases eff <;> simp
+
 theorem Lets.denote_getPureExprAux [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} {t : Ty}
     {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr Op _ .pure t}
     (he : lets.getPureExprAux v = some ePure)
@@ -1873,27 +1928,6 @@ variable [LawfulMonad m]
 --           subst hop
 --           rfl
 -- -/
-
-
-
-def Ctxt.Valuation.IsDenotationForLets (V_Γ_out : Valuation Γ_out) (lets : Lets Op Γ_in eff Γ_out)
-    (V_Γ_in : Valuation Γ_in) : Prop :=
-  V_Γ_out ∈ Functor.supp (lets.denote V_Γ_in)
-
-
-example (lets : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out eff ty)
-    (V : Valuation Γ_out) (Ve : ⟦ty⟧) (V_in : Valuation Γ_in) :
-    (V.snoc Ve).IsDenotationForLets (lets.lete e) V_in
-    → V.IsDenotationForLets lets V_in := by
-  simp [Valuation.IsDenotationForLets, Lets.denote]
-
--- theorem Lets.denote_bind_eq_iff {lets : Lets Op Γ_in eff Γ_out} {V_Γ_in : Valuation Γ_in}
---     {f g : Valuation Γ_out → eff.toMonad m α}
---     (h : ∀ V_out, V_out.IsDenotationForLets lets V_Γ_in → f V_out = g V_out) :
---     (lets.denote V_Γ_in >>= f) = (lets.denote V_Γ_out >>= g) := by
---   sorry
-
-
 
 theorem denote_matchVar2_of_subset
     {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}

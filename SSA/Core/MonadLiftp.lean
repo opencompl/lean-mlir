@@ -160,10 +160,10 @@ theorem Functor.liftp_iff_supp (x : F α) :
 --     f <$> x = g <$> x ↔ supp (f <$> x) = supp (g <$> x) := by
 --   exact LawfulLiftp.map_eq_iff_supp_eq
 
-theorem Functor.eq_of_map_eq {fx : F α} {f g : α → β}
-    (h_fg : f <$> fx = g <$> fx) {x : α} (h_x : x ∈ supp fx) :
-    f x = g x := by
-  simp
+-- theorem Functor.eq_of_map_eq {fx : F α} {f g : α → β}
+--     (h_fg : f <$> fx = g <$> fx) {x : α} (h_x : x ∈ supp fx) :
+--     f x = g x := by
+--   simp
 
 
 end Functor
@@ -218,50 +218,33 @@ Note that the support may be empty, for certain degenerate (but lawful!) monads 
 theorem Monad.supp_pure : y ∈ (supp (pure x : m α)) → y = x :=
   (· ⟨pure ⟨x, rfl⟩, by simp⟩ |>.symm)
 
-theorem Monad.supp_bind {mx : m α} {f : α → m β} :
-    supp (mx >>= f) = {y | ∃ x ∈ supp mx, y ∈ supp (f x)} := by
-  ext y
-  simp [supp]
-  constructor
-  · intro h_mx
-    obtain ⟨x, hx⟩ : ∃ x, y ∈ supp (f x) := by
-      apply h_mx
-      -- simp [supp]
-      sorry
-    use x
+-- theorem Monad.supp_bind {mx : m α} {f : α → m β} :
+--     supp (mx >>= f) = {y | ∃ x ∈ supp mx, y ∈ supp (f x)} := by
+--   ext y
+--   simp [supp]
+--   constructor
+--   · intro h_mx
+--     obtain ⟨x, hx⟩ : ∃ x, y ∈ supp (f x) := by
+--       apply h_mx
+--       -- simp [supp]
+--       sorry
+--     use x
+--   · sorry
 
-    simp
-  · sorry
+-- /-- Corollary of `supp_bind` -/
+-- example (h : supp (pure x : m α) = ∅) : ∀ y, supp (pure y : m α) = ∅ := by
+--   intro y
+--   have : (pure y : m _) = (pure x) >>= (fun _ => pure y) := by simp
+--   rw [this, supp_bind, h]
+--   simp
 
-/-- Corollary of `supp_bind` -/
-example (h : supp (pure x : m α) = ∅) : ∀ y, supp (pure y : m α) = ∅ := by
-  intro y
-  have : (pure y : m _) = (pure x) >>= (fun _ => pure y) := by simp
-  rw [this, supp_bind, h]
-  simp
-
-theorem Monad.pure_eq_of_supp_eq (h : supp (pure x : m α) = supp (pure y : m α)) :
-    (pure x : m α) = (pure y : m α) := by
-  simp [supp] at h
-  replace h (y) : y ∈ {y | ∀ ⦃p : α → Prop⦄, Liftp p (pure x) → p y} ↔ y ∈ _ := by
-    rw [h]
-  simp at h
-  have hx := h x
-  sorry
-
-theorem Monad.supp_map' {mx : m α} (f : α → β) : f x ∈ supp (f <$> mx) → x ∈ supp mx := by
-  simp [supp]
-  intro h_map p h_mx
-  specialize @h_map (fun b => _)
-  sorry
-
-theorem Monad.eq_of_map_eq_of_supp {mx : m α} {f : α → β}
-    (h_bind : (f <$> mx) = (g <$> mx)) (h_supp : x ∈ supp mx) :
-    f x = g x := by
-  sorry
-  -- have h_supp' : f x ∈ supp (f <$> mx) := supp_map f h_supp
-  -- -- replace h_supp' :
-  -- have := @h_supp' (∃ a, · = f a)
-  -- simp [supp] at h_supp'
+-- theorem Monad.pure_eq_of_supp_eq (h : supp (pure x : m α) = supp (pure y : m α)) :
+--     (pure x : m α) = (pure y : m α) := by
+--   simp [supp] at h
+--   replace h (y) : y ∈ {y | ∀ ⦃p : α → Prop⦄, Liftp p (pure x) → p y} ↔ y ∈ _ := by
+--     rw [h]
+--   simp at h
+--   have hx := h x
+--   sorry
 
 end Monad

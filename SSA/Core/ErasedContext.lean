@@ -212,8 +212,10 @@ def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
 abbrev Hom.snocRight {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
   fun _ v => (f v).toSnoc
 
-
 instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
+
+@[simp] lemma Hom.comp_id (f : Hom Γ Δ) : f.comp id = f := rfl
+@[simp] lemma Hom.id_comp (f : Hom Γ Δ) : id.comp f = f := rfl
 
 section Valuation
 
@@ -333,6 +335,11 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
 @[simp] lemma Valuation.comap_id {Γ : Ctxt Ty} (Γv : Valuation Γ) : comap Γv Hom.id = Γv := rfl
 @[simp] lemma Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
     comap (Γv.snoc x) (f.snocRight) = comap Γv f :=
+  rfl
+
+@[simp] lemma Valuation.comap_comap {Γ Δ Ξ : Ctxt Ty} (Γv : Valuation Γ)
+    (f : Δ.Hom Γ) (g : Ξ.Hom Δ) :
+    comap (comap Γv f) g = comap Γv (g.comp f) :=
   rfl
 
 /-- Reassign the variable var to value val in context ctxt -/
@@ -580,6 +587,8 @@ abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 @[simp] lemma dropUntilHom_last : dropUntilHom (v := Var.last Γ ty) = Hom.id.snocRight := rfl
 @[simp] lemma dropUntilHom_toSnoc {v : Var Γ t} :
   dropUntilHom (v := v.toSnoc (t' := t')) = (dropUntilHom (v:=v)).snocRight := rfl
+
+-- @[simp] lemma dropUntilHom_comp_snocMap :
 
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
