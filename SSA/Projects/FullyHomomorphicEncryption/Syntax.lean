@@ -36,7 +36,26 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
 
 theorem ROfZComputable_eq (q n : Nat) (z : ℤ):
     ROfZComputable_impl z = (↑z : R q n) := by
-  sorry
+  simp (config := { decide := true}) [ROfZComputable_impl] -- , Int.cast, Ring.toIntCast, IntCast.intCast]
+  by_cases (z = 0)
+  case pos h =>
+    simp (config := { decide := true, eta := true}) [h, EmptyCollection.emptyCollection]
+    have heta : forall a: Nat, ((fun (i : Nat) =>
+                      @OfNat.ofNat.{0} (ZMod q) 0
+                        (@Zero.toOfNat0.{0} (ZMod q)
+                          (@NegZeroClass.toZero.{0} (ZMod q)
+                            (@SubNegZeroMonoid.toNegZeroClass.{0} (ZMod q)
+                              (@SubtractionMonoid.toSubNegZeroMonoid.{0} (ZMod q)
+                                (@AddGroup.toSubtractionMonoid.{0} (ZMod q)
+                                  (@AddGroupWithOne.toAddGroup.{0} (ZMod q)
+                                    (@Ring.toAddGroupWithOne.{0} (ZMod q)
+                                      (@CommRing.toRing.{0} (ZMod q) (ZMod.commRing q))))))))))
+                    a)  = (0 : ZMod q) := by simp
+    set_option pp.all true in
+    try rw [heta] -- literally copy-pasted!
+    sorry
+  case neg h =>
+    sorry
 
 /-- This definition is subtle.
 
