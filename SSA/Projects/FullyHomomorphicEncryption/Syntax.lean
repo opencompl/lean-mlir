@@ -257,7 +257,7 @@ elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term
   synthesizeSyntheticMVarsNoPostponing
   let com : Q(MLIR.AST.ExceptM (Op 2 3) (Σ (Γ' : Ctxt (Ty 2 3)) (ty : Ty 2 3), Com (Op 2 3) Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <|
+      withTransparency (mode := TransparencyMode.default) <|
         return ←reduce com
   let comExpr : Expr := com
   trace[Meta] com

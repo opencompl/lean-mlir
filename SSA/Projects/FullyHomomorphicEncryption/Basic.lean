@@ -99,6 +99,8 @@ theorem f_monic : Monic (f q n) := by
   apply Polynomial.monic_X_pow_add
   simp
 
+notation "(" v ")_" I => Ideal.span I v
+notation r "∔" I => (Ideal.Quotient.mk I) r
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
 the ring `ℤ/qℤ[X]/(X^(2^n) + 1)`.

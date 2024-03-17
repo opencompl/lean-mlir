@@ -347,6 +347,11 @@ def AttrDict.find_int' {φ} (attrs : AttrDict φ) (name : String): Option Int :=
   | .some (AttrValue.int i _) =>  .some i
   | _ => .none
 
+def AttrDict.find_symbol {φ} (attrs : AttrDict φ) (name : String) : Option String :=
+  match attrs.find name with
+  | .some (AttrValue.symbol s) =>  .some s
+  | _ => .none
+
 @[simp] theorem AttrDict.find_none :
     AttrDict.find (@AttrDict.mk φ []) n' = none := by
   simp [AttrDict.find, List.find?]
