@@ -6,7 +6,7 @@ import SSA.Projects.FullyHomomorphicEncryption.Basic
 open MLIR AST Ctxt
 open Polynomial -- for R[X] notation
 
-irreducible_def ROfZComputable (z : ℤ) : R q n :=
+def ROfZComputable_impl (z : ℤ) : R q n :=
   let zq : ZMod q := z
   let p : (ZMod q)[X] := {
       toFinsupp := Finsupp.mk
@@ -33,6 +33,30 @@ irreducible_def ROfZComputable (z : ℤ) : R q n :=
       : (ZMod q)[X]
   }
   R.fromPoly p
+
+theorem ROfZComputable_eq (q n : Nat) (z : ℤ):
+    ROfZComputable_impl z = (↑z : R q n) := by
+  sorry
+
+/-- This definition is subtle.
+
+1.  We make this an axiom so we can strongly normalize terms without lean
+  unfolding the definition
+2. We give it an implemented_by so we can use it in computable code that is used
+   to create the expression in Meta code
+3. We give it an equation lemma to make it what we *really* want in proof mode, which is the coe.
+
+This ensures three properties simultaneously:
+1. We can run it at meta time giving us the `ìmplemented_by` value
+2. It unfolds completely creating stuck term (ROfZComputable)
+3. We can then `simp`it to become the value we really want.
+4. The `theorem ROfZComputable_eq` tells us that this is safe to do.
+-/
+@[implemented_by ROfZComputable_impl]
+axiom ROfZComputable (q n : Nat) (z : ℤ) : R q n
+
+@[simp]
+axiom ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable  q n z = (↑ z : R q n)
 
 variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
@@ -91,7 +115,7 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
 
 def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
-    (op := Op.const (ROfZComputable z))
+    (op := Op.const (ROfZComputable q n z))
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)

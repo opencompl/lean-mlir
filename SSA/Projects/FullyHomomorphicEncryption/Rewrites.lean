@@ -91,7 +91,6 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
       rw [lhs]
       change_mlir_context Γv
       simp_peephole [] at Γv
-      rw [R.ofZComputable_eq_coe]
       intros a
       simp
       try rw [Poly.add_f_eq]
