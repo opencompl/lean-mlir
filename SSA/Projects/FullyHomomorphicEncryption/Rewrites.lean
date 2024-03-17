@@ -72,6 +72,8 @@ def rhs :=
   "return" (%A) : (! R) -> ()
 }]
 
+#print axioms lhs
+
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
   { lhs := lhs,
@@ -104,14 +106,15 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
       simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def, R.monomial, R.fromPoly] at Γv
       /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial 2 3 1 1 + 1) = a -/
       intros a
-      have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
-      have identity := Poly.add_f_eq (q:=2) (n:=3)
-      set_option pp.all true in
+      --have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
+      have hgenerator : f 2 3 - 1 = (Polynomial.monomial 8 1)  := by simp [f, Polynomial.X_pow_eq_monomial]
+      --set_option pp.all true in
       -- `rw` bug? or because of the workaround?
       -- tactic 'rewrite' failed, motive is not type correct
-      rw [hgenerator] at identity
-      rw [Poly.add_f_eq (q:=2) (n:=3)]
+      rw [← hgenerator]
+      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f 2 3 - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f 2 3 )) := by simp
+      rw [add_congr_quotient]
+      apply Poly.add_f_eq
+      done
     }
 end ExampleModulo
-
-#check Polynomial.X_pow_eq_monomial
