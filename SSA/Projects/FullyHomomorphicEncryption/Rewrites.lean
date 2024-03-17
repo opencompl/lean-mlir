@@ -66,8 +66,8 @@ noncomputable def lhs :=
 [fhe_com q, n, hq| {
 ^bb0(%a : ! R):
   %one_int = "arith.const" () {value = 1}: () -> (i16)
-  %q_to_the_n = "arith.const" () {value = $((q**n : Nat))}: () -> (index)
-  %x2n = "poly.monomial" (%one_int,%q_to_the_n) : (i16, index) -> (! R)
+  %two_to_the_n = "arith.const" () {value = $((2**n : Nat))}: () -> (index)
+  %x2n = "poly.monomial" (%one_int,%two_to_the_n) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
   %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
   %v1 = "poly.add" (%a, %p) : (! R, ! R) -> (! R)
@@ -112,18 +112,18 @@ noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLik
          Com.denote (Com.ret { val := 0, property := rhs.proof_2 }) Γv
        -/
       simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def] at Γv
-      /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial q n 1 (q**n) + 1) = a -/
+      /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial q n 1 (2**n) + 1) = a -/
       simp [R.fromPoly, R.monomial]
-      /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial (q**n)) 1) + 1) = a -/
+      /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial (2**n)) 1) + 1) = a -/
       intros a
       unfold irreduciblePow
       --have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
-      have hgenerator : f q n - (1 : Polynomial _) = (Polynomial.monomial q n)  := by simp  [f, Polynomial.X_pow_eq_monomial]
+      have hgenerator : f q n - (1 : Polynomial (ZMod q)) = (Polynomial.monomial (R := ZMod q) (2^n : Nat) 1)  := by simp  [f, Polynomial.X_pow_eq_monomial]
       --set_option pp.all true in
       -- `rw` bug? or because of the workaround?
       -- tactic 'rewrite' failed, motive is not type correct
       rw [← hgenerator]
-      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
+      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
       rw [add_congr_quotient]
       apply Poly.add_f_eq
       done
