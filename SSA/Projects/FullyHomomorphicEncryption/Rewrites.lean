@@ -39,7 +39,7 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLik
       Com.denote (Com.ret { val := 0, property := _ })
       -/
       funext Γv
-      simp_peephole [add] at Γv
+      simp_peephole [] at Γv
       /- ⊢ ∀ (a b : R 2 3), b + a = a + b -/
       intros a b
       rw [add_comm]
@@ -87,35 +87,16 @@ def rhs :=
 #check Lean.Meta.Simp.Config
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
-  { lhs := lhs2,
+  { lhs := lhs,
     -- Inlining rhs because of some `rw` bug. Maybe it's https://github.com/leanprover/lean4/commit/504b6dc93f46785ccddb8c5ff4a8df5be513d887
      rhs := rhs
   , correct :=
     by
-      /-:
-      Com.denote
-        (Com.lete (cst 0)
-        (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
-        (Com.ret { val := 0, property := ex1.proof_3 }))) =
-      Com.denote (Com.ret { val := 0, property := _ })
-      -/
       funext Γv
-      unfold lhs2
-      rw [Com.denote_lete]
+      unfold lhs rhs
+      simp_peephole [] at Γv
+      intros a
       simp
-      rw [Expr.denote]
-      simp
-      rw [OpDenote.denote, FHEOpDenote]
-      rw [Int.ofNat_eq_coe,
-        Expr.denote, HVector.denote,
-        HVector.map, HVector.toPair,  OpDenote.denote,
-        Ctxt.Valuation.snoc, Ctxt.Var.casesOn]
-      simp
-      -- simp_peephole [R.monomial_stuck_term_eq, FHEOpDenote, Com.denote_lete, Com.denote_ret] at Γv
-
-      -- intros a
-      -- simp
-      -- try rw [Poly.add_f_eq]
       sorry
     }
 
