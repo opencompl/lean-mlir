@@ -80,6 +80,7 @@ axiom ROfZComputable_stuck_term (q n : Nat) (z : ℤ) : R q n
 axiom ROfZComputable_def (q n :Nat) (z : ℤ) :
     ROfZComputable_stuck_term  q n z = (↑ z : R q n)
 
+section MkFuns
 variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
@@ -225,6 +226,8 @@ instance : MLIR.AST.TransformReturn (Op q n) (Ty q n) 0 where
 def mlir2fhe (reg : MLIR.AST.Region 0) :
     MLIR.AST.ExceptM (Op q n) (Σ (Γ : Ctxt (Ty q n)) (ty : (Ty q n)), Com (Op q n) Γ ty) := MLIR.AST.mkCom reg
 
+end MkFuns -- we don't want q and i here anymore
+
 open Qq MLIR AST Lean Elab Term Meta in
 /--
 NOTE: Wanting Stuck Terms During Strong Normalization of Com
@@ -242,13 +245,15 @@ which we can them simp during proof time.
 The correct solution is a `match goal` like tactic to match on the proof state
 and run the correct equation.
 -/
-elab "[fhe_com| " reg:mlir_region "]" : term => do
+elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
   let ast_stx ← `([mlir_region| $reg])
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)
-  let mvalues ← `(⟨[], by rfl⟩)
-  -- let mvalues : Q(Vector Nat 0) ← elabTermEnsuringType mvalues q(Vector Nat 0)
-  -- Defining hardcoded numbers for q and n for now...
-  let com := q(mlir2fhe (q := 2) (n := 3) $ast)
+  let qval : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
+  let nval : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
+  -- We need this for building `R  later
+  -- I would like to synthesize this at elaboration time, not sure how
+  let factval ← elabTermEnsuringTypeQ hq q(Fact ($qval > 1))
+  let com := q(mlir2fhe (q := $qval) (n := $nval) $ast)
   synthesizeSyntheticMVarsNoPostponing
   let com : Q(MLIR.AST.ExceptM (Op 2 3) (Σ (Γ' : Ctxt (Ty 2 3)) (ty : Ty 2 3), Com (Op 2 3) Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do

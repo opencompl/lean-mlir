@@ -11,23 +11,24 @@ open MLIR AST -- need this to support the unhygenic macros in the EDSL
 
 namespace ExampleComm
 
+variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
+
 def lhs :=
-[fhe_com| {
+[fhe_com q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%A,%B) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
 }]
 
 def rhs :=
-[fhe_com| {
+[fhe_com q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%B,%A) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
 }]
 
-#check Lean.Meta.Simp.Config
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike, .polynomialLike] .polynomialLike :=
+noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike, .polynomialLike] .polynomialLike :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
@@ -53,9 +54,12 @@ end ExampleComm
 section ExampleModulo
 -- 2^n
 
+
+variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
+
 -- code generator does not support recursor 'Decidable.rec' yet, consider using 'match ... with' and/or structural recursion
 noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
-[fhe_com| {
+[fhe_com q, n, hq| {
 ^bb0(%A : ! R):
   %oneint = "arith.const" () {value = 1}: () -> (i16)
   %oneidx = "arith.const" () {value = 8}: () -> (index)
@@ -67,7 +71,7 @@ noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we 
 }]
 
 def rhs :=
-[fhe_com| {
+[fhe_com q, n, hq | {
 ^bb0(%A : ! R):
   "return" (%A) : (! R) -> ()
 }]
@@ -75,7 +79,7 @@ def rhs :=
 #print axioms lhs
 
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
+noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLike :=
   { lhs := lhs,
      rhs := rhs
   , correct :=
@@ -107,12 +111,12 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
       /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial 2 3 1 1 + 1) = a -/
       intros a
       --have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
-      have hgenerator : f 2 3 - 1 = (Polynomial.monomial 8 1)  := by simp [f, Polynomial.X_pow_eq_monomial]
+      have hgenerator : f q n - 1 = (Polynomial.monomial q n)  := by simp [f, Polynomial.X_pow_eq_monomial]
       --set_option pp.all true in
       -- `rw` bug? or because of the workaround?
       -- tactic 'rewrite' failed, motive is not type correct
       rw [← hgenerator]
-      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f 2 3 - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f 2 3 )) := by simp
+      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f 2 3})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
       rw [add_congr_quotient]
       apply Poly.add_f_eq
       done
