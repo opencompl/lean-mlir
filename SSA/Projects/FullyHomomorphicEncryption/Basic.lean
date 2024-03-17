@@ -400,8 +400,15 @@ noncomputable def R.coeff {q n} (a : R q n) (i : Nat) : ZMod q :=
 /--
 `R.monomial i c` is the equivalence class of the monomial `c * X^i` in `R q n`.
 -/
-noncomputable def R.monomial {q n : Nat} (c : ZMod q) (i : Nat): R q n :=
+noncomputable def R.monomial (q n : Nat) (c : ZMod q) (i : Nat): R q n :=
   R.fromPoly (Polynomial.monomial i c)
+
+/-- See [[NOTE: Wanting Stuck Terms During Strong Normalization of Com]] -/
+axiom R.monomial_stuck_term (q n : Nat) (c : ZMod q) (i : Nat) : R q n
+
+@[simp]
+axiom R.monomial_stuck_term_eq :
+  R.monomial_stuck_term  = R.monomial
 
 /--
 Given an equivalence class of polynomials `a : R q n` with representative
@@ -414,22 +421,22 @@ noncomputable def R.slice {q n : Nat} (a : R q n) (startIdx endIdx : Nat) : R q 
   let coeffIdxs := List.range (endIdx - startIdx)
   let coeffs := coeffIdxs.map (fun i => a.coeff (startIdx + i))
   let accum : R q n → (ZMod q × Nat) → R q n :=
-    fun poly (c,i) => poly + R.monomial (n:=n) c i
+    fun poly (c,i) => poly + R.monomial q n  c i
   coeffs.zip coeffIdxs |>.foldl accum (0 : R q n)
 
 noncomputable def R.leadingTerm {q n} (a : R q n) : R q n :=
   let deg? := Polynomial.degree a.representative
   match deg? with
     | .none => 0
-    | .some deg =>  R.monomial (a.coeff deg) deg
+    | .some deg =>  R.monomial q n (a.coeff deg) deg
 
 noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
   coeffs.enum.foldl (init := 0) fun res (i,c) =>
-    res + R.monomial ↑c i
+    res + R.monomial q n ↑c i
 
 /- `fromTensor (cs ++ [c])` equals `(fromTensor xs) + c X^n` -/
 theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
-  = (R.fromTensor (q := q) (n := n) cs) + R.monomial c cs.length := by
+  = (R.fromTensor (q := q) (n := n) cs) + R.monomial q n c cs.length := by
     induction cs using List.reverseRecOn generalizing c
     case H0 =>
       simp[fromTensor]
@@ -449,7 +456,7 @@ noncomputable def R.fromTensor' (coeffs : List Int) : (ZMod q)[X] :=
 theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n) (p : (ZMod q)[X])
   (H : R.fromPoly (q := q) (n := n) p = rp) :
   ((List.enumFrom k coeffs).foldl (init := rp) fun res (i,c) =>
-    res + R.monomial ↑c i) =
+    res + R.monomial q n ↑c i) =
   R.fromPoly (q := q) (n := n)
     ((List.enumFrom k coeffs).foldl (init := p) fun res (i,c) =>
       res + (Polynomial.monomial i ↑c)) := by
@@ -458,7 +465,7 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n
         simp[List.enum, H]
       case cons head tail tail_ih =>
         simp[List.enum_cons]
-        specialize tail_ih (k := k + 1) (rp := (rp + monomial (↑head) k)) (p := (p + ↑(Polynomial.monomial k ↑head)))
+        specialize tail_ih (k := k + 1) (rp := (rp + monomial q n (↑head) k)) (p := (p + ↑(Polynomial.monomial k ↑head)))
         apply tail_ih
         simp[monomial, H]
 
@@ -704,15 +711,15 @@ def Op.signature : Op q n → Signature (Ty q n) :=
 
 instance : OpSignature (Op q n) (Ty q n) := ⟨Op.signature q n⟩
 
-noncomputable instance : OpDenote (Op q n) (Ty q n) where
+noncomputable instance  FHEOpDenote : OpDenote (Op q n) (Ty q n) where
  denote
     | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
     | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
     | Op.mul, arg, _ => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
     | Op.mul_constant, arg, _ => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
     | Op.leading_term, arg, _ => R.leadingTerm arg.toSingle
-    | Op.monomial, arg, _ => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
-    | Op.monomial_mul, arg, _ => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
+    | Op.monomial, arg, _ => (fun args => R.monomial_stuck_term q n (args.1 : ZMod q) args.2) arg.toPair
+    | Op.monomial_mul, arg, _ => (fun args : R q n × Nat => args.1 * R.monomial q n 1 args.2) arg.toPair
     | Op.from_tensor, arg, _ => R.fromTensor arg.toSingle
     | Op.to_tensor, arg, _ => R.toTensor' arg.toSingle
     | Op.const c, _, _ => c

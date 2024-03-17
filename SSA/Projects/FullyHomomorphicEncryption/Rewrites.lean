@@ -57,13 +57,24 @@ section ExampleModulo
 noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
 [fhe_com| {
 ^bb0(%A : ! R):
-  -- %oneint = "arith.const" () {value = 1}: () -> (i16)
-  -- %oneidx = "arith.const" () {value = 1}: () -> (index)
-  -- %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
+  %oneint = "arith.const" () {value = 1}: () -> (i16)
+  %oneidx = "arith.const" () {value = 1}: () -> (index)
+  %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
-  -- %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
+  %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
+  %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
+  "return" (%v1) : (! R) -> ()
+}]
+
+noncomputable def lhs2 := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
+[fhe_com| {
+^bb0(%A : ! R):
+  %oneint = "arith.const" () {value = 1}: () -> (i16)
+  %oneidx = "arith.const" () {value = 1}: () -> (index)
+  %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
+  %oner = "poly.const" () {value = 1}: () -> (! R)
+  -- %p = "poly.add" (%A, %oner) : (! R, ! R) -> (! R)
   -- %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
-  -- "return" (%v1) : (! R) -> ()
   "return" (%oner) : (! R) -> ()
 }]
 
@@ -73,9 +84,10 @@ def rhs :=
   "return" (%A) : (! R) -> ()
 }]
 
+#check Lean.Meta.Simp.Config
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
-  { lhs := lhs,
+  { lhs := lhs2,
     -- Inlining rhs because of some `rw` bug. Maybe it's https://github.com/leanprover/lean4/commit/504b6dc93f46785ccddb8c5ff4a8df5be513d887
      rhs := rhs
   , correct :=
@@ -88,12 +100,22 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
       Com.denote (Com.ret { val := 0, property := _ })
       -/
       funext Γv
-      rw [lhs]
-      change_mlir_context Γv
-      simp_peephole [] at Γv
-      intros a
+      unfold lhs2
+      rw [Com.denote_lete]
       simp
-      try rw [Poly.add_f_eq]
+      rw [Expr.denote]
+      simp
+      rw [OpDenote.denote, FHEOpDenote]
+      rw [Int.ofNat_eq_coe,
+        Expr.denote, HVector.denote,
+        HVector.map, HVector.toPair,  OpDenote.denote,
+        Ctxt.Valuation.snoc, Ctxt.Var.casesOn]
+      simp
+      -- simp_peephole [R.monomial_stuck_term_eq, FHEOpDenote, Com.denote_lete, Com.denote_ret] at Γv
+
+      -- intros a
+      -- simp
+      -- try rw [Poly.add_f_eq]
       sorry
     }
 

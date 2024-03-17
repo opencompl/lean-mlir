@@ -48,15 +48,18 @@ theorem ROfZComputable_eq (q n : Nat) (z : ℤ):
 
 This ensures three properties simultaneously:
 1. We can run it at meta time giving us the `ìmplemented_by` value
-2. It unfolds completely creating stuck term (ROfZComputable)
-3. We can then `simp`it to become the value we really want.
+2. It strongly normalizes creating stuck term (`ROfZComputable`)
+3. We can then `simp`it to become the value we really want (`coe z`).
 4. The `theorem ROfZComputable_eq` tells us that this is safe to do.
+
+See also [[NOTE: Wanting Stuck Terms During Strong Normalization of Com]]
 -/
 @[implemented_by ROfZComputable_impl]
-axiom ROfZComputable (q n : Nat) (z : ℤ) : R q n
+axiom ROfZComputable_stuck_term (q n : Nat) (z : ℤ) : R q n
 
 @[simp]
-axiom ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable  q n z = (↑ z : R q n)
+axiom ROfZComputable_def (q n :Nat) (z : ℤ) :
+    ROfZComputable_stuck_term  q n z = (↑ z : R q n)
 
 variable {q : Nat} {n : Nat} [Fact (q > 1)]
 
@@ -115,7 +118,7 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
 
 def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
-    (op := Op.const (ROfZComputable q n z))
+    (op := Op.const (ROfZComputable_stuck_term q n z))
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
@@ -204,6 +207,22 @@ def mlir2fhe (reg : MLIR.AST.Region 0) :
     MLIR.AST.ExceptM (Op q n) (Σ (Γ : Ctxt (Ty q n)) (ty : (Ty q n)), Com (Op q n) Γ ty) := MLIR.AST.mkCom reg
 
 open Qq MLIR AST Lean Elab Term Meta in
+/--
+NOTE: Wanting Stuck Terms During Strong Normalization of Com
+
+See that we unfold with `TransparencyMode.all`. We do this so we can expose Com.denote
+fully. This is a crazy hack, and interacts extremely poorly with complex definitions found in FHE.
+
+We currently work around Lean unfolding *everything* by making definitions that tend to explode
+(e.g. R.monomial, R.ofZComputable) into *axioms*, to which we add another axiom
+that is a rewrite equation.
+
+We do this so that the strong normalizer can get stuck on the axiom,
+which we can them simp during proof time.
+
+The correct solution is a `match goal` like tactic to match on the proof state
+and run the correct equation.
+-/
 elab "[fhe_com| " reg:mlir_region "]" : term => do
   let ast_stx ← `([mlir_region| $reg])
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)

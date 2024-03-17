@@ -42,8 +42,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       change_mlir_context $ll
-      simp (config := {unfoldPartialApp := true, failIfUnchanged := false, ground := true}) only [
-        Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
+      simp (config := {unfoldPartialApp := true, failIfUnchanged := false, ground := true})  [
+        Com.denote_lete, Com.denote_ret, Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Valuation.nil, Valuation.snoc_last,
