@@ -58,24 +58,12 @@ noncomputable def lhs := -- We can't have symbolic constants in the EDSL, so we 
 [fhe_com| {
 ^bb0(%A : ! R):
   %oneint = "arith.const" () {value = 1}: () -> (i16)
-  %oneidx = "arith.const" () {value = 1}: () -> (index)
+  %oneidx = "arith.const" () {value = 8}: () -> (index)
   %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
   %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
   %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
-}]
-
-noncomputable def lhs2 := -- We can't have symbolic constants in the EDSL, so we use a concrete value here
-[fhe_com| {
-^bb0(%A : ! R):
-  %oneint = "arith.const" () {value = 1}: () -> (i16)
-  %oneidx = "arith.const" () {value = 1}: () -> (index)
-  %x2n = "poly.monomial" (%oneint,%oneidx) : (i16, index) -> (! R)
-  %oner = "poly.const" () {value = 1}: () -> (! R)
-  -- %p = "poly.add" (%A, %oner) : (! R, ! R) -> (! R)
-  -- %v1 = "poly.add" (%A, %p) : (! R, ! R) -> (! R)
-  "return" (%oner) : (! R) -> ()
 }]
 
 def rhs :=
@@ -84,11 +72,9 @@ def rhs :=
   "return" (%A) : (! R) -> ()
 }]
 
-#check Lean.Meta.Simp.Config
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLike :=
   { lhs := lhs,
-    -- Inlining rhs because of some `rw` bug. Maybe it's https://github.com/leanprover/lean4/commit/504b6dc93f46785ccddb8c5ff4a8df5be513d887
      rhs := rhs
   , correct :=
     by
@@ -115,10 +101,17 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
            Γv =
          Com.denote (Com.ret { val := 0, property := rhs.proof_2 }) Γv
        -/
-      simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def] at Γv
+      simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def, R.monomial, R.fromPoly] at Γv
       /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial 2 3 1 1 + 1) = a -/
       intros a
-      sorry
+      have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
+      have identity := Poly.add_f_eq (q:=2) (n:=3)
+      set_option pp.all true in
+      -- `rw` bug? or because of the workaround?
+      -- tactic 'rewrite' failed, motive is not type correct
+      rw [hgenerator] at identity
+      rw [Poly.add_f_eq (q:=2) (n:=3)]
     }
-
 end ExampleModulo
+
+#check Polynomial.X_pow_eq_monomial
