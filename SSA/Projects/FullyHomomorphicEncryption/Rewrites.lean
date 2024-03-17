@@ -94,9 +94,30 @@ noncomputable def p1 : PeepholeRewrite (Op 2 3) [.polynomialLike] .polynomialLik
     by
       funext Γv
       unfold lhs rhs
-      simp_peephole [] at Γv
+       /-
+       Com.denote
+           (Com.lete (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
+             (Com.lete (Expr.mk (Op.const_idx 1) lhs.proof_3 HVector.nil HVector.nil)
+               (Com.lete
+                 (Expr.mk Op.monomial lhs.proof_4
+                   ({ val := 1, property := lhs.proof_5 }::ₕ({ val := 0, property := lhs.proof_6 }::ₕHVector.nil)) HVector.nil)
+                 (Com.lete
+                   (Expr.mk (Op.const (ROfZComputable_stuck_term 2 3 (Int.ofNat 1))) lhs.proof_7 HVector.nil HVector.nil)
+                   (Com.lete
+                     (Expr.mk Op.add lhs.proof_8
+                       ({ val := 1, property := lhs.proof_9 }::ₕ({ val := 0, property := lhs.proof_10 }::ₕHVector.nil))
+                       HVector.nil)
+                     (Com.lete
+                       (Expr.mk Op.add lhs.proof_8
+                         ({ val := 5, property := lhs.proof_11 }::ₕ({ val := 0, property := lhs.proof_12 }::ₕHVector.nil))
+                         HVector.nil)
+                       (Com.ret { val := 0, property := lhs.proof_13 })))))))
+           Γv =
+         Com.denote (Com.ret { val := 0, property := rhs.proof_2 }) Γv
+       -/
+      simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def] at Γv
+      /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial 2 3 1 1 + 1) = a -/
       intros a
-      simp
       sorry
     }
 
