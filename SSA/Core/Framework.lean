@@ -227,11 +227,12 @@ protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] [OpSignatur
 
 end -- decEq
 
-/-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
-    context `Γ₁`-/
-inductive Lets (Op : Type) [OpSignature Op Ty m] : Ctxt Ty → EffectKind → Ctxt Ty → Type where
-  | nil {eff : EffectKind} {Γ : Ctxt Ty} : Lets Op Γ eff Γ
-  | lete (body : Lets Op Γ₁ eff Γ₂) (e : Expr Op Γ₂ eff t) : Lets Op Γ₁ eff (Γ₂.snoc t)
+/-- `Lets Op Γ_in Γ_out` is a sequence of lets which are well-formed under context `Γ_out` and result in
+    context `Γ_in`-/
+inductive Lets (Op : Type) [OpSignature Op Ty m] (Γ_in : Ctxt Ty) (eff : EffectKind) :
+    (Γ_out : Ctxt Ty) → Type where
+  | nil : Lets Op Γ_in eff Γ_in
+  | lete (body : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out eff t) : Lets Op Γ_in eff (Γ_out.snoc t)
   deriving Repr
 
 /-
@@ -393,8 +394,9 @@ def HVector.denote : {l : List (Ctxt Ty × Ty)} → (T : HVector (fun t => Com O
   | _, .nil => HVector.nil
   | _, .cons v vs => HVector.cons (v.denote) (HVector.denote vs)
 
-def Expr.denote {ty : Ty} : (e : Expr Op Γ eff ty) → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
-  | ⟨op, Eq.refl _, heff, args, regArgs⟩, Γv =>
+def Expr.denote {ty : Ty} (e : Expr Op Γ eff ty) (Γv : Valuation Γ) : eff.toMonad m (toType ty) :=
+  match e with
+  | ⟨op, Eq.refl _, heff, args, regArgs⟩ =>
     EffectKind.liftEffect heff <| OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def Com.denote : Com Op Γ eff ty → (Γv : Valuation Γ) → eff.toMonad m (toType ty)
@@ -545,7 +547,7 @@ theorem Com.denote_lete_eq_of_denote_expr_eq' {e : Expr Op Γ eff α} {v : toTyp
 -/
 
 @[simp] lemma Lets.denote_nil {Γ : Ctxt Ty} :
-    (Lets.nil (Op:=Op) (eff:=eff) (Γ:=Γ)).denote = (return ·) := by
+    (Lets.nil : Lets Op Γ eff Γ).denote = (return ·) := by
   funext; simp [denote]
 
 /-!
@@ -629,6 +631,12 @@ def Com.changeVars : Com Op Γ eff ty →
   induction c using Com.recPure generalizing Δ Δv
   case ret => rfl
   case lete ih => rw [changeVars_lete]; simp [outContextDiff, ih]
+
+@[simp] lemma Expr.changeVars_changeVars (e : Expr Op Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
+    (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
+  rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
+  simp [changeVars, HVector.map_map]
+  rfl
 
 /-!
 ## FlatCom
@@ -1061,9 +1069,25 @@ The variables are adjusted so that they are variables in the output context of a
 not the local context where the variable appears. -/
 def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt Ty} (lets : Lets Op Γ₁ eff Γ₂) {t : Ty} (v : Var Γ₂ t) :
     Option (Expr Op Γ₂ .pure t) :=
-  match getPureExprAux lets v with
-  | none => none
-  | some e => e.changeVars Ctxt.dropUntilHom
+  Expr.changeVars Ctxt.dropUntilHom <$> getPureExprAux lets v
+
+@[simp] lemma Lets.getPureExpr_nil : getPureExpr (.nil : Lets Op Γ eff Γ) v = none := rfl
+
+@[simp] lemma Lets.getPureExpr_lete_last (lets : Lets Op Γ_in eff Γ_out)
+    (e : Expr Op Γ_out eff ty) :
+    getPureExpr (lets.lete e) (Var.last ..)
+    = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> e.toPure? := by
+  rfl
+@[simp] lemma Lets.getPureExprAux_lete_toSnoc (lets : Lets Op Γ_in eff Γ_out)
+    (e : Expr Op Γ_out eff ty₁) (v : Var Γ_out ty₂) :
+    getPureExprAux (lets.lete e) (v.toSnoc) = getPureExprAux lets v :=
+  rfl
+
+@[simp] lemma Lets.getPureExpr_lete_toSnoc (lets : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out _ ty₁)
+    (v : Var Γ_out ty₂):
+    getPureExpr (lets.lete e) (v.toSnoc)
+    = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
+  simp [getPureExpr, Function.comp]; rfl
 
 theorem Lets.denote_getPureExprAux [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} {t : Ty}
     {lets : Lets Op Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr Op _ .pure t}
@@ -1074,7 +1098,7 @@ theorem Lets.denote_getPureExprAux [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} {t : 
     = lets.denote s >>= (fun Γv => f Γv (Γv v)) := by
   induction lets
   case nil => simp [getPureExprAux] at he
-  case lete Γ_in eff Γ_out ty body e ih =>
+  case lete Γ_out ty body e ih =>
     -- rw [Ctxt.dropUntilHom, Ctxt.Diff.toHom_succ]
     simp only [Expr.denote_changeVars, EffectKind.return_impure_toMonad_eq]
     -- TODO: this seems like there might be a need for a higher level theorem, instead of the cases
@@ -1086,7 +1110,7 @@ theorem Lets.denote_getPureExprAux [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} {t : 
         let Ve ← e.denote Γv
         let Γv':= (Γv.snoc Ve)
         f Γv' val
-      replace ih (s) := ih he s f'
+      specialize ih he f'
       simp only [Ctxt.Diff.Valid, Ctxt.get?, Expr.denote_changeVars,
         EffectKind.return_impure_toMonad_eq, bind_assoc] at ih
       simp [denote, ← ih]
@@ -1102,12 +1126,10 @@ theorem Lets.denote_getExpr [LawfulMonad m] {Γ₁ Γ₂ : Ctxt Ty} : {lets : Le
     (lets.denote s) >>= (fun Γv => f Γv (e.denote Γv))
     = (lets.denote s) >>= (fun Γv => f Γv (Γv v)) := by
   intros lets _ v e he s
-  simp [getPureExpr] at he
-  split at he
-  . contradiction
-  . rw [←Option.some_inj.mp he]
-    apply denote_getPureExprAux
-    assumption
+  simp only [getPureExpr, Option.map_eq_map, Option.map_eq_some'] at he
+  rcases he with ⟨e', he, rfl⟩
+  apply denote_getPureExprAux
+  assumption
 
 /-!
 ## Mapping
@@ -1857,116 +1879,164 @@ variable [LawfulMonad m]
 --           rfl
 -- -/
 
+section DenoteIntoSubtype
+
+/- TODO: we might not need `denoteIntoSubtype`, if we can proof that `V ∈ supp (lets.denote _)`
+implies `lets.getPureExpr v = some e → e.denote V = V v` -/
+
+/-- `e.IsDenotationForPureE Γv x` holds if `x` is the pure value obtained from `e` under valuation
+`Γv`, assuming that `e` has a pure operation.
+If `e` has an impure operation, the property holds vacuously. -/
+abbrev Expr.IsDenotationForPureE (e : Expr Op Γ eff ty) (Γv : Valuation Γ) (x : ⟦ty⟧) : Prop :=
+  ∀ (ePure : Expr Op Γ .pure ty), e.toPure? = some ePure → ePure.denote Γv = x
+
+def Expr.denoteIntoSubtype (e : Expr Op Γ_in eff ty) (Γv : Valuation Γ_in) :
+    eff.toMonad m {x : ⟦ty⟧ // e.IsDenotationForPureE Γv x} :=
+  match h_pure : e.toPure? with
+    | some ePure => pure ⟨ePure.denote Γv, by simp [IsDenotationForPureE, h_pure]⟩
+    | none => (Subtype.mk · (by simp [IsDenotationForPureE, h_pure])) <$> (e.denote Γv)
+
+/-- An alternative version of `Lets.denote`, whose returned type carries a proof that the valuation
+agrees with the denotation of every pure expression in `lets`.
+
+Strongly prefer using `Lets.denote` in definitions, but you can use `denoteIntoSubtype` in proofs.
+The subtype allows us to carry the property with us when doing congruence proofs inside a bind. -/
+def Lets.denoteIntoSubtype (lets : Lets Op Γ_in eff Γ_out) (Γv : Valuation Γ_in) :
+    eff.toMonad m {
+      V : Valuation Γ_out // ∀ {t} (v : Var _ t) e, lets.getPureExpr v = some e → e.denote V = V v
+    } :=
+  match lets with
+    | .nil => return ⟨Γv, by simp⟩
+    | @Lets.lete _ _ _ _ _ _ Γ_out eTy body e => do
+        let ⟨Vout, h⟩ ← body.denoteIntoSubtype Γv
+        let v ← e.denoteIntoSubtype Vout
+        return ⟨Vout.snoc v.val, by
+          intro t' v'; cases v' using Var.casesOn
+          · simpa using h _
+          · simpa using v.prop
+          ⟩
+
+theorem Expr.denote_eq_denoteIntoSubtype (e : Expr Op Γ eff ty) (Γv : Valuation Γ) :
+    e.denote Γv = Subtype.val <$> e.denoteIntoSubtype Γv := by
+  simp [denoteIntoSubtype]
+  split
+  next h_pure =>
+    simp only [denote_toPure? h_pure, map_pure, EffectKind.return_impure_toMonad_eq]
+    split <;> rfl
+  next => simp [map_eq_pure_bind]
+
+theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets Op Γ_in eff Γ_out) (Γv : Valuation Γ_in) :
+    lets.denote Γv = Subtype.val <$> (lets.denoteIntoSubtype Γv) := by
+  induction lets
+  case nil => simp [denoteIntoSubtype]
+  case lete body e ih =>
+    simp [denote, denoteIntoSubtype, map_eq_pure_bind, ih, Expr.denote_eq_denoteIntoSubtype]
+
+
+end DenoteIntoSubtype
+
+-- def Lets.rec' {Γ_in : Ctxt Ty} {eff : EffectKind}
+--     {motive : {Γ_out : Ctxt Ty} → Lets Op Γ_in eff Γ_out → Sort u}
+
+--  :
+
+theorem matchVar_nil {lets : Lets Op Γ_in eff Γ_out} :
+    matchVar lets v (.nil : Lets Op Δ .pure Δ) w ma = some ma' →
+    ma'.lookup ⟨_, w⟩ = some v := by
+  unfold matchVar
+  split
+  next h_lookup =>
+    split_ifs with v_eq
+    · intro h
+      injection h with h
+      subst v_eq h
+      exact h_lookup
+    · exact False.elim
+  next =>
+    intro h
+    injection h with h
+    simp [← h]
+
+theorem matchVar_lete_last {lets : Lets Op Γ_in eff Γ_out} {matchLets : Lets Op Δ_in .pure Δ_out}
+    {matchExpr : Expr Op Δ_out .pure ty} :
+    matchVar lets v (.lete matchLets matchExpr) (Var.last ..) ma = some ma' →
+    ∃ args,
+      lets.getPureExpr v
+        = some ⟨matchExpr.op, matchExpr.ty_eq, matchExpr.eff_le, args, matchExpr.regArgs⟩
+      ∧ matchArg lets matchLets args matchExpr.args ma = some ma' := by
+  unfold matchVar
+  simp
+  rintro ⟨op', ty_eq', eff_le', args', regArgs'⟩ h_pure h
+  rw [h_pure]
+  split_ifs at h with regArgs_eq
+  simp at regArgs_eq
+  rcases regArgs_eq with ⟨rfl, regArgs_eq⟩
+  simp at regArgs_eq
+  subst regArgs_eq
+  simpa using h
+
+@[simp] lemma Lets.denote_lete_last_pure (lets : Lets Op Γ_in .pure Γ_out)
+    (e : Expr Op Γ_out .pure ty) (V_in : Valuation Γ_in) :
+    Lets.denote (lete lets e) V_in (Var.last ..) = e.denote (lets.denote V_in) := by
+  simp [Lets.denote]
+
+@[simp] lemma Expr.denote_eq_denote_of {e₁ : Expr Op Γ eff ty} {e₂ : Expr Op Δ eff ty}
+    {Γv : Valuation Γ} {Δv : Valuation Δ}
+    (op_eq : e₁.op = e₂.op)
+    (h_regArgs : HEq e₁.regArgs e₂.regArgs)
+    (h_args : HVector.map (fun x v => Γv v) (op_eq ▸ e₁.args)
+              = HVector.map (fun x v => Δv v) e₂.args) :
+    e₁.denote Γv = e₂.denote Δv := by
+  rcases e₁ with ⟨op₁, ty_eq, _, args₁, regArgs₁⟩
+  rcases e₂ with ⟨_, _, _, args₂, _⟩
+  cases op_eq
+  simp_all only [op_mk, regArgs_mk, heq_eq_eq, args_mk]
+  subst ty_eq h_regArgs
+  rw [denote, denote, h_args]
+
 theorem denote_matchVar2_of_subset
     {lets : Lets Op Γ_in .impure Γ_out} {v : Var Γ_out t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
-    {ma : Mapping Δ_in Γ_out} :
-    {matchLets : Lets Op Δ_in .pure Δ_out} → {w : Var Δ_out t} →
-    (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
-    (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
-    (f : Γ_out.Valuation → _ → m α) →
+    {ma : Mapping Δ_in Γ_out}
+    {matchLets : Lets Op Δ_in .pure Δ_out} {w : Var Δ_out t}
+    (h_sub : varMap₁.entries ⊆ varMap₂.entries)
+    (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma)
+    (f : Γ_out.Valuation → _ → m α) :
     (lets.denote s₁ >>= (fun Γ_out_lets =>f Γ_out_lets <| (matchLets.denote (fun t' v' =>
         match varMap₂.lookup ⟨t', v'⟩ with
         | .some mappedVar => by exact (Γ_out_lets mappedVar)
         | .none => by exact default)) w))
-    = (lets.denote s₁ >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v))
-  | .nil, w => by
-    simp [Lets.denote, matchVar]
-    intro h_sub h_mv f
-    split at h_mv
-    next x v₂ heq =>
-      split_ifs at h_mv
-      next v_eq_v₂ =>
-        subst v_eq_v₂
-        injection h_mv with h_mv
-        subst h_mv
-        rw [mem_lookup_iff.mpr ?_]
-        apply h_sub
-        apply mem_lookup_iff.mp
-        exact heq
-    next =>
-      rw [mem_lookup_iff.mpr]
-      injection h_mv with h_mv
-      apply h_sub
-      subst h_mv
-      simp
-  | .lete matchLets _, ⟨w+1, h⟩ => by
-    simp[Lets.denote, matchVar_lete_succ_eq]
-    -- rw [Lets.denote]
-    -- apply denote_matchVar2_of_subset
-    -- exact s₁
-    intros h_sub h_mv f
-    have h :=
-        denote_matchVar2_of_subset (α := α)
-          (v := v) (w := ⟨w, by simpa using h⟩)
-          (s₁ := s₁)
-          (lets := lets)
-          (matchLets := matchLets)
-          (ma := ma)
-          h_sub
-          (by simp; rw [Var.toSnoc] at h_mv; rw [matchVar_lete_succ_eq] at h_mv; apply h_mv)
-          (f := f)
-    simpa using h
-  | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
-    rename_i t'
-    have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
-    subst this
-    simp [matchVar, Bind.bind, Option.bind]
-    intro h_sub h_mv
-    rw [matchVar_lete_last_eq] at h_mv
-    simp at h_mv
-    obtain ⟨⟨op', _ty_eq', eff_le', args', regArgs'⟩, h_getPureExpr_eq, h_mv_3⟩ := h_mv
-    simp only [Expr.op_mk, Expr.regArgs_mk, Expr.args_mk] at h_mv_3
-    split at h_mv_3
-    case inl _ _ _ _ _ _ _ _ Γ_something h_expr_eq =>
-      rcases matchExpr with ⟨op, rfl, eff_le, args, regArgs⟩
-      simp at h_expr_eq
-      rcases h_expr_eq with ⟨rfl, h_reg_eq⟩
-      simp at h_reg_eq
-      subst h_reg_eq
+    = (lets.denote s₁ >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v)) := by
+  simp [lets.denote_eq_denoteIntoSubtype, map_eq_pure_bind]
+  congr; funext Vout; congr; next => -- `next` is needed to consume the tags generated by `congr`
+  clear s₁ f
 
-      intro f
-      rw [← Lets.denote_getExpr h_getPureExpr_eq]
-      simp [Lets.denote, Expr.denote]
 
-      -- have (Γ_out_lets : Valuation Γ_out) : (HVector.map
-      --         (fun x v =>
-      --           Lets.denote matchLets
-      --             (fun t' v' =>
-      --               match lookup { fst := t', snd := v' } varMap₂ with
-      --               | some mappedVar => Γ_out_lets (cast (by rfl) mappedVar)
-      --               | none => default)
-      --             v)
-      --         args) = _  := by
-      --   apply denote_matchVar_matchArg (hvarMap := h_mv_3) h_sub
-      --   · intro t v₁ v₂ ma ma' hmem h_ma_sub
-      --     have := denote_matchVar2_of_subset (s₁ := s₁) (f := fun x y => do
-      --       let x' := x
-      --       let y' := y
-      --       return y') h_ma_sub hmem
-      --     simp at this
-      --     simp
-      --     sorry
-      --   · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
+  induction matchLets generalizing v ma varMap₁ varMap₂ t
+  case nil =>
+    simp only [Lets.denote, Id.pure_eq]
+    rw [mem_lookup_iff.mpr ?_]
+    apply h_sub <| mem_lookup_iff.mp <| matchVar_nil h_matchVar
+  case lete matchLets matchExpr ih =>
+    match w with
+    | ⟨w+1, h⟩ =>
+      simp [Lets.denote, matchVar_lete_succ_eq] at *
+      rw [Var.toSnoc, matchVar_lete_succ_eq] at h_matchVar
+      apply ih h_sub h_matchVar
 
-      apply congrArg2
-      funext Γ_out_v
-      congr 1
-      simp [Lets.denote, Expr.denote]
-      congr 1
-      apply denote_matchVar_matchArg (hvarMap := h_mv_3) h_sub
+    | ⟨0, h_w⟩ =>
+      obtain rfl : t = _ := by simp[List.get?] at h_w; apply h_w.symm
+      have ⟨args, h_pure, h_matchArgs⟩ := matchVar_lete_last h_matchVar
+      rw [← Vout.property v _ h_pure]
+      simp only [Ctxt.get?, Var.zero_eq_last, Lets.denote_lete_last_pure]
+      apply Expr.denote_eq_denote_of <;> (try rfl)
+      simp only [Expr.op_mk, Expr.args_mk]
+
+      apply denote_matchVar_matchArg (hvarMap := h_matchArgs) h_sub
       · intro t v₁ v₂ ma ma' hmem h_ma_sub
-        have := denote_matchVar2_of_subset (s₁ := s₁) (f := fun x y => do
-          let x' := x
-          let y' := y
-          return y') h_ma_sub hmem
-        simp at this
-        sorry
-
+        apply ih h_ma_sub hmem
       · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
-    case inr =>
-      simp_all
 /--
 if matchVar lets v matchLets w ma = .some varMap,
 then informally:
