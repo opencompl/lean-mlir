@@ -141,10 +141,11 @@ impurely.
 
 
 /- # Datastructures -/
+section DataStructures
 
+variable (Op : Type) {Ty : Type} {m : Type → Type} [OpSignature Op Ty m]
 
 mutual
-variable (Op : Type) {Ty : Type} {m : Type → Type} [OpSignature Op Ty m]
 /- An intrinsically typed expression whose effect is *at most* EffectKind -/
 inductive Expr : (Γ : Ctxt Ty) → (eff : EffectKind) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
@@ -167,6 +168,27 @@ inductive Com : Ctxt Ty → EffectKind → Ty → Type where
   | lete (e : Expr Γ eff α) (body : Com (Γ.snoc α) eff β) : Com Γ eff β
 end
 
+/-- `Lets Op Γ_in Γ_out` is a sequence of lets which are well-formed under context `Γ_out` and result in
+    context `Γ_in`-/
+inductive Lets (Γ_in : Ctxt Ty) (eff : EffectKind) :
+    (Γ_out : Ctxt Ty) → Type where
+  | nil : Lets Γ_in eff Γ_in
+  | lete (body : Lets Γ_in eff Γ_out) (e : Expr Op Γ_out eff t) : Lets Γ_in eff (Γ_out.snoc t)
+
+/-- `Zipper Op Γstart eff Γmid ty` represents a particular position in a program, by storing the
+`Lets` that come before this position separately from the `Com` that represents the rest.
+Thus, `Γstart` is the context of the program as a whole, while `Γmid` is the context at the
+current position.
+
+While technically the position is in between two let-bindings, by convention we say that the first
+binding of `top : Lets ..` is the current binding of a particular zipper.
+ -/
+structure Zipper (Γstart Γmid : Ctxt Ty) (eff : EffectKind) (ty : Ty) where
+  top : Lets Op Γstart eff Γmid
+  bot : Com Op Γmid eff ty
+
+
+
 section Repr
 open Std (Format)
 variable {Op Ty : Type} [OpSignature Op Ty m] [Repr Op] [Repr Ty]
@@ -182,6 +204,9 @@ end
 
 instance : Repr (Expr Op Γ eff t) := ⟨flip Expr.repr⟩
 instance : Repr (Com Op Γ eff t) := ⟨flip Com.repr⟩
+
+deriving instance Repr for Lets
+deriving instance Repr for Zipper
 
 end Repr
 
@@ -227,13 +252,7 @@ protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] [OpSignatur
 
 end -- decEq
 
-/-- `Lets Op Γ_in Γ_out` is a sequence of lets which are well-formed under context `Γ_out` and result in
-    context `Γ_in`-/
-inductive Lets (Op : Type) [OpSignature Op Ty m] (Γ_in : Ctxt Ty) (eff : EffectKind) :
-    (Γ_out : Ctxt Ty) → Type where
-  | nil : Lets Op Γ_in eff Γ_in
-  | lete (body : Lets Op Γ_in eff Γ_out) (e : Expr Op Γ_out eff t) : Lets Op Γ_in eff (Γ_out.snoc t)
-  deriving Repr
+end DataStructures
 
 /-
   # Definitions
