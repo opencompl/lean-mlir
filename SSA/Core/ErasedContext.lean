@@ -342,7 +342,8 @@ def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
     if h : ∃ h : t = tneedle, h ▸ vneedle = var
     then h.fst ▸ val
     else V vneedle
-lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
+
+@[simp] lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
     {Γv : Valuation Γ} {map : Δ.Hom Γ} {v : Var Δ ty} {w : Var Γ ty} :
     Γv.comap (map.with v w) = (Γv.comap map).reassignVar v (Γv w) := by
   funext t' v'
