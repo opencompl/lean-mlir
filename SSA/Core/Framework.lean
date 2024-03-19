@@ -846,23 +846,22 @@ Various machinery to combine `Lets` and `Com`s in various ways.
 
 /-- Add a pure Com to the end of a sequence of (possibly impure) lets.
 This is the main mechanism to add new (pure) bindings into a possibly impure program -/
-def addPureComToEndOfLetsAux {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
+def Lets.addPureComToEnd {Γ_out} {eff} (lets : Lets Op Γ_in eff Γ_out) :
       (com : Com Op Γ_out .pure ty) → FlatCom Op Γ_in eff com.outContext ty
-  | Com.ret v => ⟨lets, v⟩
-  | Com.lete e body => addPureComToEndOfLetsAux
-     (Lets.lete lets (e.castPureToEff eff)) body
+  | Com.ret v       => ⟨lets, v⟩
+  | Com.lete e body => addPureComToEnd (Lets.lete lets (e.castPureToEff eff)) body
 
--- TODO: do we really need `addPureComToEndOfLets`, or can we have the callsite perform `changeVars`
-/-- Add a program to the end of a list of `Lets`, given a mapping from variables at the end of
-`lets`(`Γ_out`) to variables used by the `Com` (`Δ`) -/
-def addPureComToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ .pure ty) :
-    FlatCom Op Γ_in eff (com.changeVars varsMap).outContext ty :=
-  addPureComToEndOfLetsAux lets (com.changeVars varsMap)
+-- -- TODO: do we really need `addPureComToEndOfLets`, or can we have the callsite perform `changeVars`
+-- /-- Add a program to the end of a list of `Lets`, given a mapping from variables at the end of
+-- `lets`(`Γ_out`) to variables used by the `Com` (`Δ`) -/
+-- def addPureComToEndOfLets (lets : Lets Op Γ_in eff Γ_out) (varsMap : Δ.Hom Γ_out) (com : Com Op Δ .pure ty) :
+--     FlatCom Op Γ_in eff (com.changeVars varsMap).outContext ty :=
+--   addPureComToEndOfLetsAux lets (com.changeVars varsMap)
 
 -- TODO: this doesn't morally fit here, but we can't yoink it up, figure out what to do
 /-- Convert a `Com` into a `FlatCom` -/
 def Com.toFlatCom {t : Ty} (com : Com Op Γ .pure t) : FlatCom Op Γ .pure com.outContext t :=
-  addPureComToEndOfLetsAux Lets.nil com
+  Lets.nil.addPureComToEnd com
 
 /-- Add some `Lets` to the beginning of a program.
 This is recombines a zipper `⟨lets, inputProg⟩` into a single program -/
@@ -879,18 +878,18 @@ in `mid` to variables available at the end of `top` using `map`. -/
 def addPureComInMiddleOfLetCom {Γ₁ Γ₂ Γ₃ : Ctxt Ty} (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
     (top : Lets Op Γ₁ .impure Γ₂) (mid : Com Op Γ₃ .pure t₁) (bot : Com Op Γ₂ .impure t₂) :
     Com Op Γ₁ .impure t₂ :=
-  let topMid := addPureComToEndOfLets top map mid
+  let topMid := top.addPureComToEnd (mid.changeVars map)
   addLetsAtTop topMid.lets <| bot.changeVars <|
     (mid.changeVars map).outContextDiff.toHom.with v topMid.ret
 
 /-! simp-lemmas -/
 
-/-- Equation lemma for addPureComToEndOfLetsAux -/
-@[simp] lemma addPureComToEndOfLetsAux_lete {lets : Lets Op Γ_in eff Γ_out}
+/-- Equation lemma for addPureComToEnd -/
+@[simp] lemma Lets.addPureComToEnd_lete {lets : Lets Op Γ_in eff Γ_out}
     {e : Expr Op Γ_out .pure t} (body : Com Op (Γ_out.snoc t) .pure u) :
-    addPureComToEndOfLetsAux lets (Com.lete e body)
-    = addPureComToEndOfLetsAux (Lets.lete lets (e.castPureToEff eff)) body := by
-  simp [addPureComToEndOfLetsAux]
+    Lets.addPureComToEnd lets (Com.lete e body)
+    = Lets.addPureComToEnd (Lets.lete lets (e.castPureToEff eff)) body := by
+  simp [Lets.addPureComToEnd]
 
 -- TODO: we probably don't need this
 set_option pp.notation false in
@@ -900,9 +899,9 @@ theorem bind_bind_eq [Monad m] [LawfulMonad m] (ma : m a) (f : a → m b) (g : b
   unfold Bind.kleisliRight
   rw [bind_assoc]
 
-@[simp] lemma denote_addPureComToEndOfLetsAux [LawfulMonad m]
+@[simp] lemma Lets.denote_addPureComToEnd [LawfulMonad m]
     {lets : Lets Op Γ_in eff Γ_out} {com : Com Op Γ_out .pure t} {V : Γ_in.Valuation} :
-    Lets.denote (addPureComToEndOfLetsAux lets com).lets V
+    Lets.denote (lets.addPureComToEnd com).lets V
     = (do
         let Vlets ← lets.denote V
         let Vbody := com.denoteLets Vlets
@@ -911,10 +910,10 @@ theorem bind_bind_eq [Monad m] [LawfulMonad m] (ma : m a) (f : a → m b) (g : b
       :=
   match com with
   | .ret v =>  by
-    simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars, addPureComToEndOfLetsAux, Com.denoteLets]
+    simp [Lets.denote, Lets.addPureComToEnd, Com.changeVars, Lets.addPureComToEnd, Com.denoteLets]
   | .lete e body => by
-    simp [Lets.denote, addPureComToEndOfLetsAux, Com.changeVars]
-    rw [denote_addPureComToEndOfLetsAux]
+    simp [Lets.denote, addPureComToEnd, Com.changeVars]
+    rw [denote_addPureComToEnd]
     rw [Lets.denote]
     conv =>
       rhs
@@ -1019,25 +1018,13 @@ theorem return_applied_eq_return [LawfulMonad m] : (fun (x : a) => (return x : m
 theorem bind_return_applied [LawfulMonad m] (ma : m a) : ma >>= (fun (x : a) => (return x : m a)) = ma := by
   simp
 
-@[simp]
-theorem denote_addPureComToEndOfLets_lets [LawfulMonad m]
-    {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ .pure t} {V : Γ_in.Valuation} :
-    Lets.denote (addPureComToEndOfLets lets map com).lets V
-    = (do
-        let Vlets ← lets.denote V
-        let Vbody : Valuation _ := (com.changeVars map).denoteLets Vlets
-        return Vbody) := by
-  simp [Lets.denote, addPureComToEndOfLets, addPureComToEndOfLetsAux, Com.changeVars]
-
--- TODO: this is not used, but it is a property that might be useful to have any way?
--- @[simp]
--- theorem denote_addPureComToEndOfLets_ret [LawfulMonad m]
---     {lets : Lets Op Γ_in eff Γ_out} {map : Δ.Hom Γ_out} {com : Com Op Δ .pure t} {Γ_in_V : Γ_in.Valuation} :
---     ((addPureComToEndOfLets lets map com).lets.denote Γ_in_V >>=
---       (fun Γ_out => return Γ_out com.returnVar))
---     = (lets.denote Γ_in_V >>= (fun Γ_out_V => return (com.denote <| Γ_out_V.comap map))) := by
---   simp;
---   congr; funext V; congr;
+@[simp] theorem Lets.denote_addPureComToEnd_lets [LawfulMonad m]
+    {lets : Lets Op Γ_in eff Γ_out} {com : Com Op Γ_out .pure t} {V : Γ_in.Valuation} :
+    (lets.addPureComToEnd com).lets.denote V = (do
+      let Vlets ← lets.denote V
+      let Vbody : Valuation _ := com.denoteLets Vlets
+      return Vbody) := by
+  simp [Lets.denote, addPureComToEnd, Com.changeVars]
 
 @[simp] theorem denote_addLetsAtTop [LawfulMonad m]
     (lets : Lets Op Γ₁ eff Γ₂) (inputProg : Com Op Γ₂ eff t₂) :
@@ -1045,13 +1032,11 @@ theorem denote_addPureComToEndOfLets_lets [LawfulMonad m]
       lets.denote >=> inputProg.denote := by
   funext Γv; induction lets <;> simp [Bind.kleisliRight, Lets.denote, addLetsAtTop, *]
 
-@[simp] lemma addPureComToEndOfLets_ret {top : Lets Op Γ_in eff Γ_out} :
-    (addPureComToEndOfLets top map mid).ret = (mid.changeVars _).returnVar := by
-  unfold addPureComToEndOfLets
-  induction mid using Com.recPure generalizing top Γ_out
+@[simp] lemma Lets.denote_addPureComToEnd_ret {top : Lets Op Γ_in eff Γ_out} :
+    (top.addPureComToEnd mid).ret = mid.returnVar := by
+  induction mid using Com.recPure
   case ret      => rfl
-  case lete ih  => rw [Com.changeVars_lete]; simp [ih]
-  --                   ^^^^^^^^^^^^ TODO: this is a simp lemma, why does just `simp [ih]` not work?
+  case lete ih  => simp [ih]
 
 theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : Ctxt Ty}
     (v : Var Γ₂ t₁) (map : Γ₃.Hom Γ₂)
@@ -1062,7 +1047,7 @@ theorem denote_addPureComInMiddleOfLetCom [LawfulMonad m] {Γ₁ Γ₂ Γ₃ : C
       bot.denote <| Vtop.reassignVar v Vmid) := by
   funext Γv
   simp [addPureComInMiddleOfLetCom, denote_addLetsAtTop, Function.comp_apply, Com.denote_changeVars,
-    Bind.kleisliLeft, denote_addPureComToEndOfLets_lets, Bind.kleisliRight, Function.comp, bind_assoc,
+    Bind.kleisliLeft, Lets.denote_addPureComToEnd_lets, Bind.kleisliRight, Function.comp, bind_assoc,
     Valuation.comap_with]
 
 /-!
