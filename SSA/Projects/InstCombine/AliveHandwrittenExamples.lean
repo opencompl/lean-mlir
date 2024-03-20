@@ -52,7 +52,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
   intros Γv
   simp_peephole at Γv
-  simp (config := {decide := false}) only [OpDenote.denote,
+  simp (config := {decide := false, zetaDelta := true}) only [OpDenote.denote,
     InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
     bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
     Ctxt.snoc, ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,

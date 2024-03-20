@@ -337,37 +337,37 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
         ⟩⟩
     | .lete (α := α) e body =>
       let DEL := Deleted.deleteSnoc Γ α
-        -- Try to delete the variable α in the body.
-        match Com.deleteVar? DEL body with
-        | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
-          let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-            :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
-            (dce_ body)
-          let com' := Com.lete (α := α) e (body'.changeVars hom')
-          ⟨Γ, Ctxt.Hom.id, com', by
+      -- Try to delete the variable α in the body.
+      match Com.deleteVar? DEL body with
+      | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
+        let ⟨Γ', hom', ⟨body', hbody'⟩⟩
+          :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
+          (dce_ body)
+        let com' := Com.lete (α := α) e (body'.changeVars hom')
+        ⟨Γ, Ctxt.Hom.id, com', by
+          intros V
+          simp (config := {zetaDelta := true}) [Com.denote]
+          rw[hbody']
+          rfl
+        ⟩
+      | .some ⟨body', hbody⟩ =>
+        let ⟨Γ', hom', ⟨com', hcom'⟩⟩
+        : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
+          ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
+            simp[HCOM]
             intros V
             simp[Com.denote]
-            rw[hbody']
-            rfl
-          ⟩
-        | .some ⟨body', hbody⟩ =>
-          let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
-            ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-              simp[HCOM]
-              intros V
-              simp[Com.denote]
-              apply hbody
-            ⟩⟩
-          let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
-            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : Com Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
-            dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
-          ⟨Γ'', hom''.comp hom', com'', by
-            intros V
-            rw[← HCOM]
-            rw[hcom']
-            rw[hcom'']
-            rfl⟩
+            apply hbody
+          ⟩⟩
+        let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
+          :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : Com Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
+          dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
+        ⟨Γ'', hom''.comp hom', com'', by
+          intros V
+          rw[← HCOM]
+          rw[hcom']
+          rw[hcom'']
+          rfl⟩
 /-
 decreasing_by {
   simp[invImage, InvImage, WellFoundedRelation.rel, Nat.lt_wfRel]

@@ -7,7 +7,6 @@ import SSA.Projects.InstCombine.TestLLVMOps
 import SSA.Projects.InstCombine.LLVM.CLITests
 import SSA.Projects.InstCombine.Base
 
-open Std
 open System
 open IO FS
 

@@ -170,7 +170,7 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
     fun v => Ctxt.Var.casesOn v some none
   intro x y h
-  simpa using congr_arg ofSnoc h
+  simpa (config := {zetaDelta := true}) using congr_arg ofSnoc h
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 

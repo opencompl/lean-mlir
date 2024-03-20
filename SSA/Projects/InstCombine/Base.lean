@@ -23,7 +23,7 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 
 namespace InstCombine
 
-open Std (BitVec)
+open BitVec
 
 open LLVM
 

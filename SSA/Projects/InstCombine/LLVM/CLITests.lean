@@ -77,11 +77,11 @@ def CliTest.params : CliTest → Type
 def CliTest.paramsParseable (test : CliTest) : Cli.ParseableType (test.params) :=
   instParseableNatParams
 
-instance {n : Nat} : Cli.ParseableType (Std.BitVec n) where
+instance {n : Nat} : Cli.ParseableType (BitVec n) where
   name := s!"BitVec {n}"
   parse? str := do
    let intVal ← Cli.instParseableTypeInt.parse? str
-   return Std.BitVec.ofInt n intVal
+   return BitVec.ofInt n intVal
 
 /--
 We can only execute tests that are concrete.
@@ -195,7 +195,7 @@ match ctxt, values with
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
-         let newTy : toType (.bitvec (.concrete w)) := Option.map (Std.BitVec.ofInt w) val
+         let newTy : toType (.bitvec (.concrete w)) := Option.map (BitVec.ofInt w) val
          Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector (Option Int) test.context.length) :
@@ -223,7 +223,7 @@ def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
 
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where
  toString := match test.ty with
-   | .bitvec w => inferInstanceAs (ToString (Option <| Std.BitVec w)) |>.toString
+   | .bitvec w => inferInstanceAs (ToString (Option <| BitVec w)) |>.toString
 
 
 -- Define an attribute to add up all LLVM tests

@@ -258,7 +258,7 @@ def State.snocOldExpr2Cache
       let lastVar := (Ctxt.Var.last Γ α)
       let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by {
         intros Vstart
-        simp [Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
+        simp (config := {zetaDelta := true}) [Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
         done
       })  eneedle
       match s.expr2cache β eneedle' with
@@ -273,10 +273,10 @@ def State.snocOldExpr2Cache
           funext ty var
           cases var using Ctxt.Var.casesOn
           case e_Γv.h.h.toSnoc v =>
-            simp [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
+            simp (config := {zetaDelta := true}) [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
             done
           case e_Γv.h.h.last =>
-            simp [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
+            simp (config := {zetaDelta := true}) [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
             rw [henew]
             rw [hv]
             done
@@ -371,7 +371,7 @@ unsafe def State.cseExpr
       let e' : Expr Op Γ α  := .mk op ty_eq args' regArgs'
       ⟨⟨e', by {
         intros V
-        simp [E, hargs', Expr.denote_unfold]
+        simp (config := { zetaDelta := true}) [E, hargs', Expr.denote_unfold]
         congr 1
         unfold Ctxt.Valuation.eval at hargs'
         rw [hargs']
