@@ -48,16 +48,6 @@ Furthermore, consistent use of >>= simplifes reasoning about information flow,
 where left-to-right order clearly implies the direction of information flow.
 -/
 
-/-- Lemma that is useful for simplifying states with pure a = pure a' -/
-private lemma congrArg1 (f : α → β) {a : α} (ha : a = a') :
-  f a = f a  := by simp[ha]
-
---TODO: is this just `congrArg`. Since `a` is fixed on both sides of the equality, this is just
---      congruence of the function `f a` with arguments `b` and `b'`
-/-- Lemma that is useful for simplifying states with '(>>=) x f = (>>=) x g' -/
-private lemma congrArg2 (f : α → β → γ) {a : α} {b b' : β} (hb : b = b') :
-  f a b = f a b' := congrArg _ hb
-
 --TODO: upstream this?
 theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
     (pure (cast h b) : f α) = cast (by rw[h]) (pure b : f β) := by
