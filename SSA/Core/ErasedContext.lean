@@ -124,6 +124,10 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 
 @[simp] lemma cast_rfl (v : Var Γ t) (h : t = t) : v.cast h = v := rfl
 
+@[simp] lemma castCtxt_rfl (v : Var Γ t) (h : Γ = Γ) : v.castCtxt h = v := rfl
+@[simp] lemma castCtxt_castCtxt (v : Var Γ t) (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
+    (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
+
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
 @[elab_as_elim]
@@ -211,6 +215,13 @@ def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
 @[simp]
 abbrev Hom.snocRight {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.snoc t) :=
   fun _ v => (f v).toSnoc
+
+/-- Remove a type from the domain (left) context -/
+def Hom.unSnoc (f : Hom (Γ.snoc t) Δ) : Hom Γ Δ :=
+  fun _ v => f v.toSnoc
+
+@[simp] lemma Hom.unSnoc_apply {Γ : Ctxt Ty} (f : Hom (Γ.snoc t) Δ) (v : Var Γ u) :
+    f.unSnoc v = f v.toSnoc := rfl
 
 
 instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
@@ -451,6 +462,10 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
+/-!
+### `toMap`
+-/
+
 /-- Mapping over contexts does not change their difference -/
 @[coe]
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
@@ -460,6 +475,10 @@ def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
       forall_apply_eq_imp_iff₂] at h_get_d ⊢
     exact fun t h => ⟨t, h_get_d h, rfl⟩
   ⟩
+
+/-!
+### `append`
+-/
 
 theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :
   Diff.Valid Γ₁ Γ₂ d₁ →  Diff.Valid Γ₂ Γ₃ d₂ → Diff.Valid Γ₁ Γ₃ (d₁ + d₂) := by
@@ -472,6 +491,10 @@ theorem append_valid {Γ₁ Γ₂ Γ₃  : Ctxt Ty} {d₁ d₂ : Nat} :
 def append (d₁ : Diff Γ₁ Γ₂) (d₂ : Diff Γ₂ Γ₃) : Diff Γ₁ Γ₃ :=
   {val := d₁.val + d₂.val,  property := append_valid d₁.property d₂.property}
 
+/-!
+### `toHom`
+-/
+
 /-- Adding the difference of two contexts to variable indices is a context mapping -/
 def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
   fun _ v => ⟨v.val + d.val, d.property v.property⟩
@@ -479,25 +502,28 @@ def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     Valid Γ₁ Γ₂ d := by
   intro i t h_get
-  simp[←h_valid h_get, snoc, List.get?]
+  simp [←h_valid h_get, snoc, List.get?]
 
-theorem toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+
+lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
   rfl
 
-@[simp]
-theorem toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
+@[simp] lemma toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
     toHom ⟨0, h⟩ = Hom.id := by
   rfl
 
-@[simp]
-theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
+@[simp] lemma toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   unfold unSnoc Var.toSnoc toHom
   simp
   funext x v
   congr 1
   rw [Nat.add_assoc, Nat.add_comm 1]
+
+/-!
+### add
+-/
 
 def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
   | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by
