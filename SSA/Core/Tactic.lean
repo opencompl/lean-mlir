@@ -49,7 +49,7 @@ new universally quantified (Lean) variable to the goal for every (object) variab
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
   `(tactic|
       (
-      /-- First, massage the type of `Γv`.
+      /- First, massage the type of `Γv`.
       Generally, `simp_peephole` is expected to be run with the type of `Γv` a
       (not necessarily reduced) ground-term.
       After `change_mlir_context`, type of `Γv` should then be `[t₁, t₂, ..., tₙ]`, for some
@@ -57,15 +57,21 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       change_mlir_context $Γv
 
       /- unfold the definition of the denotation of a program -/
-      try simp (config := {unfoldPartialApp := true}) only [
+      simp (config := {unfoldPartialApp := true, failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
-        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Valuation.nil, Valuation.snoc_last,
         Valuation.snoc_eval, Ctxt.ofList, Valuation.snoc_toSnoc,
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
+        /- Unfold denotation -/
+        Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
+        /- Effect massaging -/
+        EffectKind.toMonad_pure, EffectKind.toMonad_impure,
+        EffectKind.liftEffect_rfl,
+        Id.pure_eq, Id.bind_eq, id_eq,
         $ts,*]
 
       /- Attempt to replace all occurence of a variable accesses `Γ ⟨i, _⟩` with a new (Lean)
@@ -77,7 +83,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       try generalize $Γv { val := 3, property := _ } = d;
       try generalize $Γv { val := 4, property := _ } = e;
       try generalize $Γv { val := 5, property := _ } = f;
-      try simp (config := {decide := false}) [Goedel.toType] at a b c d e f;
+      simp (config := {decide := false, failIfUnchanged := false}) [Goedel.toType] at a b c d e f;
 
       /- The previous step will introduce all variables, even if there is no occurence of, say,
       `Γv ⟨5, _⟩`. Thus, we try to clear each of the newly introduced variables.

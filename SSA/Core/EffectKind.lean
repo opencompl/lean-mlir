@@ -12,6 +12,13 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
   | pure => Id
   | impure => m
 
+section Lemmas
+
+@[simp] theorem toMonad_pure    : pure.toMonad m = Id := rfl
+@[simp] theorem toMonad_impure  : impure.toMonad m = m := rfl
+
+end Lemmas
+
 section Instances
 variable {e : EffectKind} {m : Type → Type}
 
@@ -27,6 +34,7 @@ instance [Monad m] [LawfulMonad m] : LawfulMonad (e.toMonad m) := by cases e <;>
 
 end Instances
 
+--TODO: rename `return` to `pure`
 def «return» [Monad m] (e : EffectKind) (a : α) : e.toMonad m α := return a
 
 @[simp] -- return is normal form.
@@ -86,10 +94,13 @@ def union : EffectKind → EffectKind → EffectKind
 | .pure, .pure => .pure
 | _, _ => .impure
 
-@[simp] def pure_union_pure_eq : union .pure .pure = .pure := rfl
-@[simp] def impure_union_eq : union .impure e = .impure := rfl
-@[simp] def union_impure_eq : union e .impure = .impure := by cases e <;> rfl
+@[simp] theorem pure_union_pure_eq : union .pure .pure = .pure := rfl
+@[simp] theorem impure_union_eq : union .impure e = .impure := rfl
+@[simp] theorem union_impure_eq : union e .impure = .impure := by cases e <;> rfl
 
+/-!
+## `liftEffect`
+-/
 
 /-- Lift a value wrapped in effect `e1` into effect `e2`, given that `e1 ≤ e2`.
 
@@ -108,7 +119,11 @@ instance instMonadLiftOfLe {e1 e2 : EffectKind} (h : e1 ≤ e2) [Monad m] :
 instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toMonad m) m :=
   instMonadLiftOfLe (le_impure eff)
 
-@[simp] theorem liftEffect_pure_pure [Monad m] (hle : pure ≤ pure) :
+@[simp] theorem liftEffect_rfl [Monad m] (hle : eff ≤ eff) :
+    liftEffect hle (α := α) (m := m) = id := by cases eff <;> rfl
+
+@[deprecated liftEffect_rfl]
+theorem liftEffect_pure_pure [Monad m] (hle : pure ≤ pure) :
     liftEffect hle (α := α) (m := m) = id :=
   rfl
 
@@ -123,7 +138,8 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Monad m]
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
 
-@[simp] theorem liftEffect_impure_impure [Monad m] (hle : impure ≤ impure) :
+@[deprecated liftEffect_rfl]
+theorem liftEffect_impure_impure [Monad m] (hle : impure ≤ impure) :
     liftEffect hle (α := α) (m := m) = id :=
   rfl
 

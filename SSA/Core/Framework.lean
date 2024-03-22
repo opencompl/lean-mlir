@@ -72,14 +72,15 @@ structure Signature (Ty : Type) where
 abbrev Signature.mk (sig : List Ty) (regSig : RegionSignature Ty) (outTy : Ty) : Signature Ty :=
  { sig := sig, regSig := regSig, outTy := outTy }
 
+--TODO: introduce a `Dialect` structure to bundle `Op`, `Ty` and `m`
 class OpSignature (Op : Type) (Ty : outParam (Type)) (m : outParam (Type → Type)) where
   signature : Op → Signature Ty
 export OpSignature (signature)
 
 def OpSignature.sig [s: OpSignature Op Ty m]        := Signature.sig ∘ s.signature
-def OpSignature.regSig [s: OpSignature Op Ty m]      := Signature.regSig ∘ s.signature
-def OpSignature.outTy [s: OpSignature Op Ty m]       := Signature.outTy ∘ s.signature
-def OpSignature.effectKind [s: OpSignature Op Ty m]    := Signature.effectKind ∘ s.signature
+def OpSignature.regSig [s: OpSignature Op Ty m]     := Signature.regSig ∘ s.signature
+def OpSignature.outTy [s: OpSignature Op Ty m]      := Signature.outTy ∘ s.signature
+def OpSignature.effectKind [s: OpSignature Op Ty m] := Signature.effectKind ∘ s.signature
 
 class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty m] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
@@ -544,20 +545,34 @@ def Zipper.denote (zip : Zipper Op Γ_in eff Γ_out ty) (V_in : Valuation Γ_in)
 
 section Unfoldings
 
+open EffectKind (liftEffect)
+
 /- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
   of the coercion `ty_eq` and the mutual definition. -/
-theorem Expr.denote_unfold  [OP_SIG : OpSignature Op Ty m] [OP_DENOTE: OpDenote Op Ty m]
+theorem Expr.denote_unfold
     (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
     (eff_le : OpSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) <| OpSignature.sig op)
-    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 .impure t.2)
-      (OP_SIG.regSig op))
-  : ∀(Γv : Γ.Valuation),
-    Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv =
-    ty_eq ▸ (EffectKind.liftEffect eff_le  <| OP_DENOTE.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 .impure t.2) (OpSignature.regSig op))
+    (Γv : Γ.Valuation) :
+    Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv
+    = ty_eq ▸ (EffectKind.liftEffect eff_le <|
+        OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
       subst ty_eq
-      simp[denote]
+      simp [denote]
+
+/-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
+  of the coercion `ty_eq` and the mutual definition. -/
+theorem Com.denote_unfold (op : Op) (ty_eq : ty = OpSignature.outTy op)
+    (eff_le : OpSignature.effectKind op ≤ eff) (args : HVector (Var Γ) <| OpSignature.sig op)
+    (regArgs : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 .impure t.2) (OpSignature.regSig op))
+    (Γv : Γ.Valuation) :
+    Expr.denote (Expr.mk op ty_eq eff_le args regArgs) Γv
+    = ty_eq ▸ (liftEffect eff_le <|
+        OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote) := by
+      subst ty_eq
+      simp [denote, Expr.denote]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -585,29 +600,17 @@ section Lemmas
   funext Γv
   simp [denote]
 
+@[simp] lemma Com.denote_lete [LawfulMonad m] {e : Expr Op Γ eff α} :
+    (Com.lete e body).denote =
+    fun Γv => (e.denote (m := m) Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
+  funext Γv
+  cases eff <;> simp [denote]
+
 @[simp] lemma Com.denoteLets_lete (e : Expr Op Γ eff t) (body : Com Op _ eff u) [LawfulMonad m] :
     (Com.lete e body).denoteLets =
         (fun V => e.denote V >>= fun Ve => body.denoteLets (V.snoc Ve)) := by
   funext V
   cases eff <;> simp [denoteLets, bind_pure]
-
-/-- Show that 'Com.denote lete e body' can be seen as denoting the `e` impurely, and then denoting `body`. -/
-theorem Com.denote_lete_eq_of_denoteImpure_expr [LawfulMonad m] {e : Expr Op Γ eff α} :
-    (Com.lete e body).denote =
-    fun Γv => (liftM <| e.denote (m := m) Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
-  funext Γv
-  cases eff <;> simp [liftM, monadLift, denote]
-
-@[simp] lemma Com.denote_lete_eq_of_denoteImpure_expr' [LawfulMonad m] {e : Expr Op Γ eff α} :
-    (Com.lete e body).denote = fun Γv => (liftM <| e.denote Γv) >>= (fun v => body.denote (Γv.snoc v)) := by
- apply Com.denote_lete_eq_of_denoteImpure_expr
-
-/-- rewrite `(lete eff e body).denote` in terms of `e.denote` -/
-theorem Com.denote_lete_eq_of_denote_expr_eq [LawfulMonad m] {e : Expr Op Γ eff α} {Γv: Valuation Γ} {v : toType α}
-    (hv : e.denote Γv = eff.return v) : (Com.lete e body).denote Γv = body.denote (Γv.snoc v) := by
-  cases eff
-  · simp [denote, hv, EffectKind.return, Applicative.toPure, Pure.pure, pure]
-  · simp_all [denote, hv, EffectKind.return, EStateM.bind, Pure.pure, EStateM.pure, Bind.bind]
 
 @[simp] lemma Com.denoteImpure_ret [Monad m] [OpDenote Op Ty m] {Γ : Ctxt Ty} (x : Γ.Var t) :
   (Com.ret (Op := Op) (eff := eff) x).denoteImpure = fun Γv => return (Γv x) := rfl
@@ -2560,451 +2563,15 @@ theorem denote_rewritePeephole (fuel : ℕ)
   simp[rewritePeephole, denote_rewritePeephole_go]
 end SimpPeepholeApplier
 
-/--
-`simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
-leaving behind a bare Lean level proposition to be proven.
--/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
-  `(tactic|
-      (
-      try simp (config := {decide := false}) only [
-        Int.ofNat_eq_coe, Nat.cast_zero, Ctxt.DerivedCtxt.snoc, Ctxt.DerivedCtxt.ofCtxt,
-        Ctxt.DerivedCtxt.ofCtxt_empty, Ctxt.Valuation.snoc_last,
-        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
-        Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
-        DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
-        Function.comp, Ctxt.Valuation.ofPair, Ctxt.Valuation.ofHVector, Function.uncurry,
-        $ts,*]
-      try generalize $ll { val := 0, property := _ } = a;
-      try generalize $ll { val := 1, property := _ } = b;
-      try generalize $ll { val := 2, property := _ } = c;
-      try generalize $ll { val := 3, property := _ } = d;
-      try generalize $ll { val := 4, property := _ } = e;
-      try generalize $ll { val := 5, property := _ } = f;
-      try simp (config := {decide := false}) [Goedel.toType] at a b c d e f;
-      try clear f;
-      try clear e;
-      try clear d;
-      try clear c;
-      try clear b;
-      try clear a;
-      try revert f;
-      try revert e;
-      try revert d;
-      try revert c;
-      try revert b;
-      try revert a;
-      try clear $ll;
-      )
-   )
-
-/-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
-
-end SimpPeephole
-
-
-/-
-  ## Examples
--/
-
-namespace Examples
-
-/-- A very simple type universe. -/
-inductive ExTy
-  | nat
-  | bool
-  deriving DecidableEq, Repr
-
-@[reducible]
-instance : Goedel ExTy where
-  toType
-    | .nat => Nat
-    | .bool => Bool
-
-inductive ExOp :  Type
-  | add : ExOp
-  | beq : ExOp
-  | cst : ℕ → ExOp
-  deriving DecidableEq, Repr
-
-instance : OpSignature ExOp ExTy where
-  signature
-    | .add    => Signature.mk [.nat, .nat] [] .nat
-    | .beq    => Signature.mk [.nat, .nat] [] .bool
-    | .cst _  => Signature.mk [] [] .nat
-
-@[reducible]
-instance : OpDenote ExOp ExTy where
-  denote
-    | .cst n, _, _ => n
-    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
-    | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
-
-def cst {Γ : Ctxt _} (n : ℕ) : Expr ExOp Γ .pure .nat  :=
-  Expr.mk
-    (op := .cst n)
-    (ty_eq := rfl)
-    (eff_le := by { simp [OpSignature.effectKind, signature]; })
-    (args := .nil)
-    (regArgs := .nil)
-
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : Expr ExOp Γ .pure .nat :=
-  Expr.mk
-    (op := .add)
-    (ty_eq := rfl)
-    (eff_le := by { simp [OpSignature.effectKind, signature]; })
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := .nil)
-
-attribute [local simp] Ctxt.snoc
-
-def ex1 : Com ExOp ∅ .nat :=
-  Com.lete .pure (cst 1) <|
-  Com.lete .pure (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def ex2 : Com ExOp ∅ .nat :=
-  Com.lete .pure (cst 1) <|
-  Com.lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-  Com.ret ⟨0, by simp⟩
-
--- a + b => b + a
-def m : Com ExOp (.ofList [.nat, .nat]) .nat :=
-  .lete .pure (add ⟨0, by simp⟩ ⟨1, by simp⟩) (.ret ⟨0, by simp⟩)
-def r : Com ExOp (.ofList [.nat, .nat]) .nat :=
-  .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
-
-def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
-  { lhs := m, rhs := r, correct :=
-    by
-      rw [m, r]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-    }
-
-example : rewritePeepholeAt p1 1 ex1 = (
-  Com.lete .pure (cst 1)  <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
-     .ret ⟨0, by simp⟩) := by rfl
-
--- a + b => b + a
-example : rewritePeepholeAt p1 0 ex1 = ex1 := by rfl
-
-example : rewritePeepholeAt p1 1 ex2 = (
-  Com.lete .pure (cst 1)   <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-     .lete .pure (add ⟨2, by simp⟩ ⟨0, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
-     .ret ⟨0, by simp⟩) := by rfl
-
-example : rewritePeepholeAt p1 2 ex2 = (
-  Com.lete .pure (cst 1)   <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨2, by simp⟩) <|
-     .lete .pure (add ⟨2, by simp⟩ ⟨2, by simp⟩) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-     .ret ⟨0, by simp⟩) := by rfl
-
-example : rewritePeepholeAt p1 3 ex2 = (
-  Com.lete .pure (cst 1)   <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete .pure (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p1 4 ex2 = (
-  Com.lete .pure (cst 1)   <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-def ex2' : Com ExOp ∅ .nat :=
-  Com.lete .pure (cst 1) <|
-  Com.lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-  Com.lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-  Com.ret ⟨0, by simp⟩
-
--- a + b => b + (0 + a)
-def r2 : Com ExOp (.ofList [.nat, .nat]) .nat :=
-  .lete .pure (cst 0) <|
-  .lete .pure (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
-  .lete .pure (add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
-  .ret ⟨0, by simp⟩
-
-def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
-  { lhs := m, rhs := r2, correct :=
-    by
-      rw [m, r2]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-      intros a b
-      rw [Nat.zero_add]
-      rw [Nat.add_comm]
-    }
-
-example : rewritePeepholeAt p2 1 ex2' = (
-     .lete .pure (cst 1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (cst 0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete .pure (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p2 2 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p2 3 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p2 4 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
--- a + b => (0 + a) + b
-def r3 : Com ExOp (.ofList [.nat, .nat]) .nat :=
-  .lete .pure (cst 0) <|
-  .lete .pure (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
-  .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
-  .ret ⟨0, by simp⟩
-
-def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
-  { lhs := m, rhs := r3, correct :=
-    by
-      rw [m, r3]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-      intros a b
-      rw [Nat.zero_add]
-    }
-
-example : rewritePeepholeAt p3 1 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p3 2 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p3 3 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete .pure (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-example : rewritePeepholeAt p3 4 ex2 = (
-  Com.lete .pure (cst  1) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete .pure (cst  0) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete .pure (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
-     .ret ⟨0, by simp⟩  ) := by rfl
-
-def ex3 : Com ExOp ∅ .nat :=
-  .lete .pure (cst 1) <|
-  .lete .pure (cst 0) <|
-  .lete .pure (cst 2) <|
-  .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete .pure (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <| --here
-  .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-  .ret ⟨0, by simp⟩
-
-def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
-  { lhs := r3, rhs := m, correct :=
-    by
-      rw [m, r3]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-      intros a b
-      rw [Nat.zero_add]
-    }
-
-example : rewritePeepholeAt p4 5 ex3 = (
-  .lete .pure (cst 1) <|
-  .lete .pure (cst 0) <|
-  .lete .pure (cst 2) <|
-  .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete .pure (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete .pure (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete .pure (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete .pure (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-  .ret ⟨0, by simp⟩) := rfl
-
-end Examples
-
-namespace RegionExamples
-
-/-- A very simple type universe. -/
-inductive ExTy
-  | nat
-  deriving DecidableEq, Repr
-
-@[reducible]
-instance : Goedel ExTy where
-  toType
-    | .nat => Nat
-
-inductive ExOp :  Type
-  | add : ExOp
-  | runK : ℕ → ExOp
-  deriving DecidableEq, Repr
-
-instance : OpSignature ExOp ExTy where
-  signature
-  | .add    => Signature.mk [.nat, .nat] [] .nat
-  | .runK _ => Signature.mk [.nat] [([.nat], .nat)] .nat
-
-
-@[reducible]
-instance : OpDenote ExOp ExTy where
-  denote
-    | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
-    | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) =>
-      k.iterate (fun val => rgn (fun _ty _var => val)) v
-
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : Expr ExOp Γ .nat :=
-  Expr.mk
-    (op := .add)
-    (ty_eq := rfl)
-    (eff_le := by { simp [OpSignature.effectKind, signature]; })
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := .nil)
-
-def rgn {Γ : Ctxt _} (k : Nat) (input : Var Γ .nat) (body : Com ExOp [ExTy.nat] ExTy.nat) : Expr ExOp Γ .nat :=
-  Expr.mk
-    (op := .runK k)
-    (ty_eq := rfl)
-    (eff_le := by { simp [OpSignature.effectKind, signature]; })
-    (args := .cons input .nil)
-    (regArgs := HVector.cons body HVector.nil)
-
-attribute [local simp] Ctxt.snoc
-
-/-- running `f(x) = x + x` 0 times is the identity. -/
-def ex1_lhs : Com ExOp [.nat] .nat :=
-  Com.lete .pure (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete .pure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-  )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def ex1_rhs : Com ExOp [.nat] .nat :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def p1 : PeepholeRewrite ExOp [.nat] .nat:=
-  { lhs := ex1_lhs, rhs := ex1_rhs, correct := by
-      rw [ex1_lhs, ex1_rhs]
-      funext Γv
-      simp_peephole [add, rgn] at Γv
-      simp
-      done
-  }
-
-def p1_run : Com ExOp [.nat] .nat :=
-  rewritePeepholeAt p1 0 ex1_lhs
-
-/-
-RegionExamples.ExOp.runK 0[[%0]]
-return %1
--/
--- #eval p1_run
-
-/-- running `f(x) = x + x` 1 times does return `x + x`. -/
-def ex2_lhs : Com ExOp [.nat] .nat :=
-  Com.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-  )) <|
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def ex2_rhs : Com ExOp [.nat] .nat :=
-    Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-    <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def p2 : PeepholeRewrite ExOp [.nat] .nat:=
-  { lhs := ex2_lhs, rhs := ex2_rhs, correct := by
-      rw [ex2_lhs, ex2_rhs]
-      funext Γv
-      simp_peephole [add, rgn] at Γv
-      done
-  }
-
-end RegionExamples
-
-
 section TypeProjections
+variable {Op Ty : Type} [OpSignature Op Ty m] {Γ : Ctxt Ty} {eff : EffectKind} {t : Ty}
 
-def Com.getTy {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Type := fun _ => Ty
-def Com.ty {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Ty := fun _ => t
-def Com.ctxt {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Ctxt Ty := fun _ => Γ
+def Com.getTy : Com Op Γ eff t → Type := fun _ => Ty
+def Com.ty : Com Op Γ eff t → Ty := fun _ => t
+def Com.ctxt : Com Op Γ eff t → Ctxt Ty := fun _ => Γ
 
-def Expr.getTy {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Type := fun _ => Ty
-def Expr.ty {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Ty := fun _ => t
-def Expr.ctxt {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Ctxt Ty := fun _ => Γ
+def Expr.getTy : Expr Op Γ eff t → Type := fun _ => Ty
+def Expr.ty : Expr Op Γ eff t → Ty := fun _ => t
+def Expr.ctxt : Expr Op Γ eff t → Ctxt Ty := fun _ => Γ
 
 end TypeProjections
