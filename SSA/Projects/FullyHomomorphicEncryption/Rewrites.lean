@@ -66,7 +66,7 @@ noncomputable def lhs :=
 [fhe_com q, n, hq| {
 ^bb0(%a : ! R):
   %one_int = "arith.const" () {value = 1}: () -> (i16)
-  %two_to_the_n = "arith.const" () {value = $((2**n : Nat))}: () -> (index)
+  %two_to_the_n = "arith.const" () {value = $((2**n : Int))}: () -> (index)
   %x2n = "poly.monomial" (%one_int,%two_to_the_n) : (i16, index) -> (! R)
   %oner = "poly.const" () {value = 1}: () -> (! R)
   %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)

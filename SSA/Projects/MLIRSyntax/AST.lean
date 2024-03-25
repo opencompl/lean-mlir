@@ -181,6 +181,9 @@ instance : Coe String (AttrValue φ) where
 instance : Coe Int (AttrValue φ) where
   coe (i: Int) := AttrValue.int i (MLIRType.int .Signless 64)
 
+instance : Coe Nat (AttrValue φ) where
+  coe (n: Nat) := AttrValue.nat n
+
 instance : Coe (MLIRType φ) (AttrValue φ) where
   coe := AttrValue.type
 
