@@ -52,7 +52,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
   intros Γv
   simp_peephole at Γv
-  simp (config := {decide := false}) only [OpDenote.denote,
+  simp (config := {decide := false, zetaDelta := true}) only [OpDenote.denote,
     InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
     bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
     Ctxt.snoc, ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
@@ -60,7 +60,9 @@ theorem alive_DivRemOfSelect (w : Nat) :
     LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
     LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
     LLVM.const?, LLVM.icmp?, LLVM.udiv?,
-    HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one]
+    HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one,
+    Ctxt.Var.zero_eq_last, Ctxt.Var.succ_eq_toSnoc
+    ]
   intro y x c
   simp only [List.length_singleton, Fin.zero_eta, List.get_cons_zero, List.map_eq_map, List.map_cons,
     List.map_nil, CharP.cast_eq_zero, Ctxt.Valuation.snoc_last, pairBind, bind, Option.bind, Int.ofNat_eq_coe]

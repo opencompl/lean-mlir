@@ -26,15 +26,19 @@ macro "simp_alive_peephole" : tactic =>
       (
         dsimp only [Com.Refinement]
         intros Γv
-        simp_peephole [InstCombine.Op.denote] at Γv
-
-        -- Then, try to simplify away the LLVM wrappers into a pure "math" statement
-        simp (config := {decide := false}) only [BitVec.Refinement, bind, Option.bind, pure,
+        simp_peephole at Γv
+        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
+          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+        simp (config := {unfoldPartialApp := true, zetaDelta := true}) only [OpDenote.denote,
+          InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
+          bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
+          Ctxt.snoc,
+          ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
           LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
           LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
           LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
           LLVM.const?, LLVM.icmp?,
-          HVector.toTuple, List.nthLe, Std.BitVec.bitvec_minus_one,
+          HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one,
           DialectMorphism.mapTy,
           InstcombineTransformDialect.instantiateMTy,
           InstcombineTransformDialect.instantiateMOp,

@@ -5,8 +5,6 @@ import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
 
 
-open Std
-
 namespace LLVM
 
 /--
@@ -95,7 +93,7 @@ at width 2, -4 / -1 is considered overflow!
 -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
 -- is no magniture to overflow.
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y == 0 || (w != 1 && x == (intMin w) && y == -1) 
+  if y == 0 || (w != 1 && x == (intMin w) && y == -1)
   then .none
   else BitVec.sdiv x y
 

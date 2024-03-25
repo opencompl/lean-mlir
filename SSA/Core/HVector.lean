@@ -1,5 +1,4 @@
 import Mathlib.Tactic.Basic
-import Mathlib.Tactic.LibrarySearch
 
 
 /-- An heterogeneous vector -/

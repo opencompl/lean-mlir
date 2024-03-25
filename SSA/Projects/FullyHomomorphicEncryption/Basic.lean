@@ -240,7 +240,6 @@ theorem R.representative_fromPoly_toFun : forall a : (ZMod q)[X], ((R.fromPoly (
   intro a
   simp [R.representative]
   have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq_ideal q n a
-  simp [MonoidHomClass.toMonoidHom]
   apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
   ring_nf
   apply Ideal.mem_span_singleton.1
@@ -433,9 +432,9 @@ noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
 theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
   = (R.fromTensor (q := q) (n := n) cs) + R.monomial q n c cs.length := by
     induction cs using List.reverseRecOn generalizing c
-    case H0 =>
+    case nil =>
       simp[fromTensor]
-    case H1 xs x _hxs =>
+    case append_singleton xs x _hxs =>
       simp[fromTensor]
       repeat rw[List.enum_append]
       repeat rw[List.foldl_append]
@@ -550,8 +549,8 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q)
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs  using List.reverseRecOn
-    case H0 => simp[List.enum, fromTensorFinsupp]
-    case H1 c cs hcs =>
+    case nil => simp[List.enum, fromTensorFinsupp]
+    case append_singleton c cs hcs =>
       simp[List.enum_append]
       simp[R.fromTensorFinsupp_concat_monomial]
       rw[hcs]
