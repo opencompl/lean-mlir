@@ -42,7 +42,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       change_mlir_context $ll
-      try simp (config := {unfoldPartialApp := true, zetaDelta := true}) only [
+      simp (config := {failIfUnchanged := false, decide := false, unfoldPartialApp := true, zetaDelta := true}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
@@ -53,14 +53,14 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
         $ts,*]
 
-      try simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+      try simp (config := {failIfUnchanged := false, decide := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
       try generalize $ll { val := 0, property := _ } = a;
       try generalize $ll { val := 1, property := _ } = b;
       try generalize $ll { val := 2, property := _ } = c;
       try generalize $ll { val := 3, property := _ } = d;
       try generalize $ll { val := 4, property := _ } = e;
       try generalize $ll { val := 5, property := _ } = f;
-      try simp (config := {decide := false, zetaDelta := true}) [TyDenote.toType] at a b c d e f;
+      try simp (config := {failIfUnchanged := false, decide := false, zetaDelta := true}) [TyDenote.toType] at a b c d e f;
       try clear f;
       try clear e;
       try clear d;
