@@ -36,6 +36,7 @@ theorem some_some {α : Type u} {x y : α} :
 theorem none_left :
   Refinement none x? := .noneAny
 
+@[simp]
 theorem none_right {x? : Option α} :
     x? ⊑ none ↔ x? = none := by
   cases x?
@@ -43,8 +44,9 @@ theorem none_right {x? : Option α} :
   · simp only [iff_false]
     rintro ⟨⟩
 
+@[simp]
 theorem some_left {x : α} {y? : Option α} :
-    some x ⊑ y? ↔ y? = some x := by
+    some x ⊑ y? ↔ some x = y?  := by
   cases y? <;> simp [eq_comm, none_right]
 
 @[simp]
