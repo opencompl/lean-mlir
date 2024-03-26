@@ -11,14 +11,14 @@ namespace LLVM
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 def and? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x &&& y
+  some <| x &&& y
 
 /--
 The ‘or’ instruction returns the bitwise logical inclusive or of its two
 operands.
 -/
 def or? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x ||| y
+  some <| x ||| y
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
@@ -26,7 +26,7 @@ operands.  The xor is used to implement the “one’s complement” operation, 
 is the “~” operator in C.
 -/
 def xor? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x ^^^ y
+  some <| x ^^^ y
 
 /--
 The value produced is the integer sum of the two operands.
@@ -34,7 +34,7 @@ If the sum has unsigned overflow, the result returned is the mathematical result
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 def add? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x + y
+  some <| x + y
 
 /--
 The value produced is the integer difference of the two operands.
@@ -42,7 +42,7 @@ If the difference has unsigned overflow, the result returned is the mathematical
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 def sub? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x - y
+  some <| x - y
 
 /--
 The value produced is the integer product of the two operands.
@@ -56,7 +56,7 @@ If a full product (e.g. i32 * i32 -> i64) is needed, the operands should be
 sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 def mul? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- some <| x * y
+  some <| x * y
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
