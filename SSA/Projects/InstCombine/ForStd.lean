@@ -23,16 +23,29 @@ inductive Refinement {α : Type u} : Option α → Option α → Prop
   | bothSome {x y : α } : x = y → Refinement (some x) (some y)
   | noneAny {x? : Option α} : Refinement none x?
 
+namespace Refinement
+
+infix:50 (priority:=low) " ⊑ " => Refinement
+
 @[simp]
-theorem Refinement.some_some {α : Type u} {x y : α} :
-  Refinement (some x) (some y) ↔ x = y :=
+theorem some_some {α : Type u} {x y : α} :
+  (some x) ⊑ (some y) ↔ x = y :=
   ⟨by intro h; cases h; assumption, Refinement.bothSome⟩
 
 @[simp]
-theorem Refinement.none_left :
+theorem none_left :
   Refinement none x? := .noneAny
 
-namespace Refinement
+theorem none_right {x? : Option α} :
+    x? ⊑ none ↔ x? = none := by
+  cases x?
+  · simp only [none_left]
+  · simp only [iff_false]
+    rintro ⟨⟩
+
+theorem some_left {x : α} {y? : Option α} :
+    some x ⊑ y? ↔ y? = some x := by
+  cases y? <;> simp [eq_comm, none_right]
 
 @[simp]
 theorem refl {α: Type u} : ∀ x : Option α, Refinement x x := by
@@ -60,7 +73,6 @@ instance {α : Type u} [DEQ : DecidableEq α] : DecidableRel (@Refinement α) :=
 
 end Refinement
 
-infix:50 (priority:=low) " ⊑ " => Refinement
 instance : Coe Bool (BitVec 1) := ⟨BitVec.ofBool⟩
 
 def coeWidth {m n : Nat} : BitVec m → BitVec n
