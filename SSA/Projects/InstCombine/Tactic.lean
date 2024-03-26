@@ -29,7 +29,7 @@ macro "simp_alive_peephole" : tactic =>
         simp_peephole at Γv
         /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
           We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
-        simp (config := {unfoldPartialApp := true, zetaDelta := true}) only [OpDenote.denote,
+        simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [OpDenote.denote,
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
           bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
           Ctxt.snoc, Valuation.snoc,
@@ -52,7 +52,7 @@ macro "simp_alive_peephole" : tactic =>
         try intros v3
         try intros v4
         try intros v5
-        simp only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
+        simp (config := {failIfUnchanged := false}) only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
         try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]

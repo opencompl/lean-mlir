@@ -356,7 +356,6 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
           ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
             simp[HCOM]
             intros V
-            simp[Com.denote]
             apply hbody
           ⟩⟩
         let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩

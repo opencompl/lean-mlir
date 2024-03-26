@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import SSA.Core.Util
 import Qq
 
 namespace SSA
@@ -34,6 +35,20 @@ elab "change_mlir_context " V:ident : tactic => do
 
 end
 
+@[simp]
+private theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
+    (∀ V, f V) ↔ (∀ (a : ⟦t⟧) (V : Γ.Valuation), f (V.snoc a)) := by
+  constructor
+  · intro h a V; apply h
+  · intro h V; cases V; apply h
+
+@[simp]
+private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
+    (∀ V, f V) ↔ (f Ctxt.Valuation.nil) := by
+  constructor
+  · intro h; apply h
+  · intro h V; rw [Ctxt.Valuation.eq_nil V]; exact h
+
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
 leaving behind a bare Lean level proposition to be proven.
@@ -51,6 +66,9 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
+        Ctxt.destruct_cons, Ctxt.destruct_nil,
+        List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
+        bind_assoc, pairBind,
         $ts,*]
 
       try simp (config := {failIfUnchanged := false, decide := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
