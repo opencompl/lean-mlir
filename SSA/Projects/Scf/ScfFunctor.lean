@@ -436,12 +436,10 @@ open Arith in
 theorem correct :
     Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp [lhs, rhs, for_, axpy, cst]
-  try simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
+  simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
   intros A B
   simp  [Ctxt.Valuation.snoc, Var.casesOn]
-  rw [ScfRegion.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)]
-  case hf =>
-    funext _ b; simp [TyDenote.toType, instTyDenoteTy, HasTy.denote_eq] at *;
+  rw [ScfRegion.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp
   apply add_iterate
 
