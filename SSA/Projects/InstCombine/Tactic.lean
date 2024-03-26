@@ -32,7 +32,7 @@ macro "simp_alive_peephole" : tactic =>
         simp (config := {unfoldPartialApp := true, zetaDelta := true}) only [OpDenote.denote,
           InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
           bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
-          Ctxt.snoc,
+          Ctxt.snoc, Valuation.snoc,
           ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
           LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
           LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
@@ -52,6 +52,7 @@ macro "simp_alive_peephole" : tactic =>
         try intros v3
         try intros v4
         try intros v5
+        simp only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
         try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]
