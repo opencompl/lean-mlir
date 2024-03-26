@@ -195,6 +195,16 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → (toType ty)
 
 end
 
+@[simp]
+theorem Com.denote_lete (e : Expr Op Γ α) (body : Com Op (Γ.snoc α) β) :
+  Com.denote (Com.lete e body) = fun Γv => body.denote (Γv.snoc (e.denote Γv)) := by
+    funext Γv; simp[Com.denote]
+
+@[simp]
+theorem Com.denote_ret (v : Var Γ α)  :
+  Com.denote (Op := Op) (Com.ret v) = fun Γv => Γv v := by
+    funext Γv; simp[Com.denote]
+
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
 Recall that `simp` lazily generates equation lemmas.

@@ -66,7 +66,6 @@ theorem alive_DivRemOfSelect (w : Nat) :
   intro y x c
   simp only [List.length_singleton, Fin.zero_eta, List.get_cons_zero, List.map_eq_map, List.map_cons,
     List.map_nil, CharP.cast_eq_zero, Ctxt.Valuation.snoc_last, pairBind, bind, Option.bind, Int.ofNat_eq_coe]
-  clear Γv
   cases c
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
   case none => cases x <;> cases y <;> simp
