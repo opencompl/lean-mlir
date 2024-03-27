@@ -44,7 +44,7 @@ theorem none_right {x? : Option α} :
     rintro ⟨⟩
 
 theorem some_left {x : α} {y? : Option α} :
-    some x ⊑ y? ↔ y? = some x := by
+    some x ⊑ y? ↔ some x = y? := by
   cases y? <;> simp [eq_comm, none_right]
 
 @[simp]
