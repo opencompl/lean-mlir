@@ -1,8 +1,9 @@
 import Std.Data.BitVec
 import SSA.Projects.InstCombine.ForStd
+import Mathlib.Tactic.Cases
+import Mathlib.Tactic.SplitIfs
+import Mathlib.Tactic.Tauto
 
-
-open Std
 
 namespace LLVM
 
@@ -68,50 +69,42 @@ def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
     | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
 
 def intMin (w : Nat) : BitVec w :=
-  BitVec.ofInt w <| 1 - ↑(2^(w-1))
+  - BitVec.ofNat w (2^(w - 1))
 
-def intMax (w : Nat) : BitVec w :=
-  BitVec.ofInt w ↑(2^(w-1) - 1)
+def intMax (w : Nat) : BitVec w := intMin w - 1
 
-def ofIntInbounds (w : Nat) (v : Int) : Prop := v >= (intMin w).toInt && v < (intMax w).toInt
-
-instance : Decidable (ofIntInbounds w v) := inferInstanceAs (Decidable (v >= (intMin w).toInt && v < (intMax w).toInt))
+theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w := rfl
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
 Note that signed integer division and unsigned integer division are distinct operations; for unsigned integer division, use ‘udiv’.
 Division by zero is undefined behavior.
 Overflow also leads to undefined behavior; this is a rare case, but can occur, for example, by doing a 32-bit division of -2147483648 by -1.
+
+Notes
+-----
+
+The rounding is round to zero, not round to -infty.
+at width 1, -1 / -1 is considered -1
+at width 2, -4 / -1 is considered overflow!
+
 -/
+-- only way overflow can happen is (INT_MIN / -1).
+-- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
+-- is no magniture to overflow.
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y = 0
-  then none
-  else
-    let div := (x.toInt / y.toInt)
-    if ofIntInbounds w div
-      then some <| BitVec.ofInt w div
-      else none
+  if y == 0 || (w != 1 && x == (intMin w) && y == -1)
+  then .none
+  else BitVec.sdiv x y
 
-
-theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w :=
- --by simp [intMin, BitVec.toInt]
- sorry
-
-
--- Probably not a Mathlib worthy name,
--- not sure how you'd mathlibify the precondition
+-- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
-  sdiv? x y =
-  if (y = 0) ∨ (x = -1 ∧ y = intMin w)
-    then none
-  else some <| BitVec.ofInt w (x.toInt / y.toInt)
-  := by
-  simp [sdiv?]
-  by_cases (y = 0)
-  · case pos h =>
-    simp [h]
-  · case neg h =>
-    sorry -- TODO: this is the interesting case
+    sdiv? x y =
+    if (y = 0) ∨ ((w ≠ 1) ∧ (x = intMin w) ∧ (y = -1))
+      then none
+    else some <| BitVec.sdiv x y
+    := by
+  simp [sdiv?]; split_ifs <;> try tauto
 
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
@@ -142,15 +135,13 @@ Overflow also leads to undefined behavior; this is a rare case, but can occur, f
 by taking the remainder of a 32-bit division of -2147483648 by -1.
 (The remainder doesn’t actually overflow, but this rule lets srem be implemented using instructions that return both the result
 of the division and the remainder.)
+
+The fundamental equation of div/rem is: x = (x/y) * y + x%y
+=> x%y = x - (x/y)
+We use this equation to define srem.
 -/
 def srem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y.toInt = 0
-  then none -- Taking the remainder of a division by zero is undefined behavior.
-  else
-    let div := (x.toInt / y.toInt)
-    if ofIntInbounds w div
-      then some <| BitVec.ofInt w (x.toInt.rem y.toInt)
-      else none
+  (sdiv? x y).map (fun div => x - div * y)
 
 def sshr (a : BitVec n) (s : Nat) := BitVec.sshiftRight a s
 
@@ -160,10 +151,10 @@ The value produced is op1 * 2^op2 mod 2n, where n is the width of the result.
 If op2 is (statically or dynamically) equal to or larger than the number of
 bits in op1, this instruction returns a poison value.
 -/
-def shl? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 <<< op2)
+  else some (op1 <<< op2)
 
 /--
 This instruction always performs a logical shift right operation.
@@ -175,10 +166,10 @@ this instruction returns a poison value.
 
 Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
-def lshr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 >>> op2)
+  else some (op1 >>> op2)
 
 
 /--
@@ -190,10 +181,10 @@ this instruction returns a poison value.
 
 Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 -/
-def ashr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
+def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else .some <| BitVec.coeWidth (op1 >>>ₛ op2)
+  else some (op1 >>>ₛ op2)
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
@@ -201,10 +192,10 @@ def ashr? {m n k} (op1 : BitVec n) (op2 : BitVec m) : Option (BitVec k) :=
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 def select? {w : Nat} (c? : Option (BitVec 1)) (x? y? : Option (BitVec w)) : Option (BitVec w) :=
-  c? >>= (fun
-    | true => x?
-    | false => y?
-  )
+  match c? with
+  | none => none
+  | some true => x?
+  | some false => y?
 
 inductive IntPredicate where
   | eq

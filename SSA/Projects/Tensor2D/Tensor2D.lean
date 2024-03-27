@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
 import SSA.Core.Util
+import Mathlib.Tactic.Linarith
 
 namespace Tensor2D
 /-- Type of tensor dimensions and indexes into tensor dimensions.
@@ -37,7 +38,12 @@ def Tensor2d'.map (f : α → β) (t : Tensor2d' α) : Tensor2d' β where
 theorem Tensor2d'.map_functorial (g : β → γ) (f : α → β) (t : Tensor2d' α) : t.map (g ∘ f) = (t.map f).map g := rfl
 
 theorem Tensor2d'.map_error (f : α → β) : (Tensor2d'.error α).map f = Tensor2d'.error β := by {
-  simp[map, error]
+  simp [error, map]
+  unfold Matrix.map
+  simp [Matrix.of]
+  funext i j
+  obtain ⟨i, hi⟩ := i
+  contradiction
 }
 /-- K combinator / constant function. -/
 def const (a : α) (_b : β) : α := a
@@ -100,7 +106,7 @@ def Ty.toType : Ty → Type
 | .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
-instance : Goedel Ty where toType := Ty.toType
+instance : TyDenote Ty where toType := Ty.toType
 
 @[reducible, simp]
 def Op.outTy : Op → Ty

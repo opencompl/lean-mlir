@@ -8,13 +8,14 @@ import SSA.Core.HVector
   Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
   avoids a universe bump
 -/
-class Goedel (β : Type) : Type 1 where
+@[reducible]
+class TyDenote (β : Type) : Type 1 where
   toType : β → Type
-open Goedel (toType) /- make toType publically visible in module. -/
+open TyDenote (toType) /- make toType publically visible in module. -/
 
-notation "⟦" x "⟧" => Goedel.toType x
+notation "⟦" x "⟧" => TyDenote.toType x
 
-instance : Goedel Unit where toType := fun _ => Unit
+instance : TyDenote Unit where toType := fun _ => Unit
 
 def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
@@ -133,7 +134,7 @@ def casesOn
         _root_.cast (by
           simp [snoc] at h
           subst h
-          simp [Ctxt.Var.last]
+          simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
     | ⟨i+1, h⟩ =>
         toSnoc ⟨i, by simpa [snoc] using h⟩
@@ -169,7 +170,7 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
     fun v => Ctxt.Var.casesOn v some none
   intro x y h
-  simpa using congr_arg ofSnoc h
+  simpa (config := {zetaDelta := true}) using congr_arg ofSnoc h
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
@@ -211,7 +212,7 @@ instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toS
 
 section Valuation
 
-variable [Goedel Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
+variable [TyDenote Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation (Γ : Ctxt Ty) : Type :=
@@ -295,14 +296,14 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
-def Valuation.ofPair [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
+def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
   Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
 
 @[simp]
-theorem Valuation.ofPair_fst [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_fst [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by simp⟩ = v₁ := rfl
 @[simp]
-theorem Valuation.ofPair_snd [Goedel Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_snd [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by simp⟩ = v₂ := rfl
 
 /-- transport/pullback a valuation along a context homomorphism. -/
@@ -434,7 +435,11 @@ theorem toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
 @[simp]
 theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
-  simp only [unSnoc, toHom, Var.toSnoc, Nat.add_assoc, Nat.add_comm 1]
+  unfold unSnoc Var.toSnoc toHom
+  simp
+  funext x v
+  congr 1
+  rw [Nat.add_assoc, Nat.add_comm 1]
 
 def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
   | ⟨d₁, h₁⟩, ⟨d₂, h₂⟩ => ⟨d₁ + d₂, fun h => by

@@ -63,10 +63,10 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
   have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.repLength a))).length = repLength a := by
     simp
   by_cases (i < R.repLength a)
-  case pos =>
+  case pos h =>
     rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
     done
-  case neg =>
+  case neg h =>
     rw [Nat.not_lt] at h
     rw [List.getD_eq_default _, Polynomial.coeff_eq_zero_of_degree_lt]
     simp[ZMod.toInt]
@@ -129,15 +129,17 @@ theorem R.trimTensor_append_not_zero (tensor : List Int) (x : Int) (hX : x ≠ 0
 theorem R.trimTensor_eq_append_zeros (tensor : List Int) : ∃ (n : Nat),
 tensor = trimTensor tensor ++ List.replicate n 0 := by
 induction tensor using List.reverseRecOn with
-   | H0 => exists 0
-   | H1 xs x ih =>
+   | nil => exists 0
+   | append_singleton xs x ih =>
      have ⟨n,hxs⟩ := ih
      by_cases (x = 0)
-     · exists (n + 1)
+     case pos h =>
+       exists (n + 1)
        rw [h]
        simp
        rw [← List.replicate_succ, List.replicate_succ', ← List.append_assoc, ← hxs]
-     · exists 0
+     case neg h =>
+       exists 0
        rw [R.trimTensor_append_not_zero _ _ h] ; simp
 
 theorem R.trimTensor_getD_0 (tensor: List Int) :
@@ -156,11 +158,11 @@ theorem R.trimTensor_getD_0 (tensor: List Int) :
 theorem R.trimTensor_trimTensor (tensor : List Int) :
   trimTensor (trimTensor tensor) = trimTensor tensor := by
   induction tensor using List.reverseRecOn with
-    | H0 => simp
-    | H1 xs x ih =>
+    | nil => simp [trimTensor]
+    | append_singleton xs x ih =>
        by_cases (x = 0)
-       · rw [h, R.trimTensor_append_zero_eq,ih]
-       · rw [trimTensor_append_not_zero _ _ h, trimTensor_append_not_zero _ _ h]
+       case pos h => rw [h, R.trimTensor_append_zero_eq,ih]
+       case neg h => rw [trimTensor_append_not_zero _ _ h, trimTensor_append_not_zero _ _ h]
 
 theorem R.fromTensor_eq_fromTensor_trimTensor (tensor : List Int) :
    R.fromTensor (q := q) (n := n) (trimTensor tensor) = R.fromTensor (q := q) (n := n) tensor := by
@@ -203,7 +205,7 @@ theorem toTensor_trimTensor_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor = a.toTensor := by
   unfold R.toTensor
   cases h : Polynomial.degree a.representative with
-  | none => simp [h, R.repLength]
+  | none => simp [trimTensor, h, R.repLength]
   | some n  =>
     simp [R.repLength, h]
     rw [List.range_succ, List.map_append]
@@ -223,18 +225,18 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
 
 theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat) (htensorlen : List.length tensor < 2 ^ n):
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
-  simp [R.toTensor_getD]
-  simp [ZMod.toInt]
+  simp only [R.toTensor_getD]
+  simp only [ZMod.toInt]
   rw [R.coeff_fromTensor (hqgt1 := hqgt1) (htensorlen := htensorlen)]
   norm_cast
-  simp [Int.cast, ZMod.cast]
+  simp only [Int.cast, ZMod.cast]
   cases q;
   case zero =>
     exfalso
     simp at hqgt1
     exact (Fact.elim hqgt1)
   case succ q' =>
-    simp [ZMod.cast]
+    simp only [ZMod.cast]
     norm_cast
     simp [IntCast.intCast]
     norm_cast
@@ -262,7 +264,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.repres
         rw [toTensor_fromTensor]
         rw [← ZMod.coe_int_cast]
         norm_cast
-        . simp [R.toTensor_length]
+        . simp only [R.toTensor_length]
           have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
           linarith
 

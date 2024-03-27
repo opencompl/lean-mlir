@@ -35,17 +35,6 @@ variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 -- and :https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Groebner.20bases
 
 -- Question: Can we make something like d := 2^n work as a macro?
---
-theorem WithBot.coe_pow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
-  induction n with
-    | zero => simp
-    | succ n ih =>
-        rw [pow_succ, ih, ← WithBot.coe_mul]
-        rw [← WithBot.some_eq_coe, WithBot.some]
-        apply Option.some_inj.2
-        rw [Nat.pow_succ]
-        ring
-  done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
@@ -98,28 +87,17 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   <;> rw [Polynomial.degree_X_pow]
   simp
   simp [Polynomial.degree_one]
-  have h : 0 < 2^n := by
-    apply Nat.one_le_two_pow
-  have h' := WithBot.coe_lt_coe.2 h
-  simp [Preorder.toLT, WithBot.preorder]
-  have h0 : @OfNat.ofNat (WithBot ℕ) 0 Zero.toOfNat0  = @WithBot.some ℕ 0 := by
-    simp [OfNat.ofNat]
-  have h2 : @OfNat.ofNat (WithBot ℕ) 2 instOfNat = @WithBot.some ℕ 2 := by
-    simp [OfNat.ofNat]
-  have h2n : @HPow.hPow (WithBot ℕ) ℕ (WithBot ℕ) instHPow 2 n = @WithBot.some ℕ (@HPow.hPow ℕ ℕ ℕ instHPow 2 n) := by
-    rw [h2, WithBot.coe_pow]
-  rw [h0, h2n]
-  exact h'
-  done
+  simp [Preorder.toLT, WithBot.preorder, OfNat.ofNat]
+  simp [Zero.zero, WithTop.coe_zero, WithTop.coe_one, One.one]
+  norm_cast
+  exact Fin.size_pos'
 
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
-  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
-  have hn_minus_1 : degree 1 ≤ ↑(2^n - 1) := by
-    rw [Polynomial.degree_one (R := (ZMod q))]; simp
+  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (@Nat.one_le_two_pow n)]
   rw [f, hn]
-  apply Polynomial.monic_X_pow_add hn_minus_1
-  done
+  apply Polynomial.monic_X_pow_add
+  simp
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
@@ -260,12 +238,12 @@ theorem R.representative_fromPoly_toFun : forall a : (ZMod q)[X], ((R.fromPoly (
   intro a
   simp [R.representative]
   have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq_ideal q n a
-  simp[FunLike.coe] at hi_eq
-  rw [hi_eq]
   apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
   ring_nf
-  apply Ideal.mem_span_singleton.1 hiI
-  done
+  apply Ideal.mem_span_singleton.1
+  rw [hi_eq]
+  ring_nf
+  assumption
 
 theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
   intro a
@@ -396,12 +374,12 @@ theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
 
 theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
-  simp [R.repLength, representative]
+  simp only [R.repLength, representative]
   have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
     rw [← f_deg_eq q n]
     apply (Polynomial.degree_modByMonic_lt)
     apply f_monic
-  simp[LT.lt] at this
+  simp only [LT.lt] at this
   let ⟨val, VAL, VAL_EQN⟩ := this
   rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp[this]
   case some val' =>
@@ -452,9 +430,9 @@ noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
 theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
   = (R.fromTensor (q := q) (n := n) cs) + R.monomial c cs.length := by
     induction cs using List.reverseRecOn generalizing c
-    case H0 =>
+    case nil =>
       simp[fromTensor]
-    case H1 xs x _hxs =>
+    case append_singleton xs x _hxs =>
       simp[fromTensor]
       repeat rw[List.enum_append]
       repeat rw[List.foldl_append]
@@ -569,8 +547,8 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q)
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs  using List.reverseRecOn
-    case H0 => simp[List.enum, fromTensorFinsupp]
-    case H1 c cs hcs =>
+    case nil => simp[List.enum, fromTensorFinsupp]
+    case append_singleton c cs hcs =>
       simp[List.enum_append]
       simp[R.fromTensorFinsupp_concat_monomial]
       rw[hcs]
@@ -585,8 +563,8 @@ theorem coeff_modByMonic_degree_lt_f {q n i : ℕ} [Fact (q > 1)] (p : (ZMod q)[
 /-- The coefficient of `fromPoly p` is the coefficient of `p` modulo `f q n`. -/
 @[simp]
 theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
-  simp[R.coeff]
-  simp[FunLike.coe]
+  unfold R.coeff
+  simp [R.coeff]
   have H := R.representative_fromPoly_toFun (a := p) (n := n)
   norm_cast at H ⊢
 
@@ -665,7 +643,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   deriving DecidableEq
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
-instance : Goedel (Ty q n) where
+instance : TyDenote (Ty q n) where
 toType := fun
   | .index => Nat
   | .integer => Int
@@ -690,7 +668,7 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | to_tensor : Op q n-- give back coefficients from `R.representative`
   | const (c : R q n) : Op q n
 
-open Goedel (toType)
+open TyDenote (toType)
 
 
 @[simp, reducible]

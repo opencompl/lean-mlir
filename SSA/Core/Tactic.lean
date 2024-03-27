@@ -22,7 +22,7 @@ elab "change_mlir_context " V:ident : tactic => do
     -- Assert that the type of `V` is `Ctxt.Valuation ?Γ`
     let Ty ← mkFreshExprMVarQ q(Type)
     let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
-    let G  ← mkFreshExprMVarQ q(Goedel $Ty)
+    let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
     let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
 
     -- Reduce the context `Γ`
@@ -36,14 +36,14 @@ elab "change_mlir_context " V:ident : tactic => do
 end
 
 @[simp]
-private theorem Ctxt.destruct_cons {Ty} [Goedel Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
+private theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
     (∀ V, f V) ↔ (∀ (a : ⟦t⟧) (V : Γ.Valuation), f (V.snoc a)) := by
   constructor
   · intro h a V; apply h
   · intro h V; cases V; apply h
 
 @[simp]
-private theorem Ctxt.destruct_nil {Ty} [Goedel Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
+private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
     (∀ V, f V) ↔ (f Ctxt.Valuation.nil) := by
   constructor
   · intro h; apply h

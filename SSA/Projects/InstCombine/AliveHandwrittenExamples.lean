@@ -3,6 +3,7 @@ import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.ForStd
 import SSA.Core.ErasedContext
 
 open MLIR AST
@@ -42,27 +43,29 @@ def alive_DivRemOfSelect_tgt (w : Nat) :=
 
 @[simp]
 theorem BitVec.ofNat_toNat_zero :
-BitVec.toNat (BitVec.ofInt w 0) = 0 :=
-  by simp[BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
+BitVec.toNat (BitVec.ofInt w 0) = 0 := by
+  simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
+  norm_cast
 
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
   intros Γv
   simp_peephole at Γv
-  simp (config := {decide := false}) only [OpDenote.denote,
+  simp (config := {decide := false, zetaDelta := true}) only [OpDenote.denote,
     InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
     bind, Option.bind, pure, DerivedCtxt.ofCtxt, DerivedCtxt.snoc,
     Ctxt.snoc, ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
     LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
     LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
     LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-    LLVM.const?, LLVM.icmp?,
-    HVector.toTuple, List.nthLe, bitvec_minus_one]
+    LLVM.const?, LLVM.icmp?, LLVM.udiv?,
+    HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one,
+    Ctxt.Var.zero_eq_last, Ctxt.Var.succ_eq_toSnoc
+    ]
   intro y x c
   simp only [List.length_singleton, Fin.zero_eta, List.get_cons_zero, List.map_eq_map, List.map_cons,
     List.map_nil, CharP.cast_eq_zero, Ctxt.Valuation.snoc_last, pairBind, bind, Option.bind, Int.ofNat_eq_coe]
-  clear Γv
   cases c
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
   case none => cases x <;> cases y <;> simp
@@ -77,6 +80,6 @@ theorem alive_DivRemOfSelect (w : Nat) :
        simp
      . subst h; simp
        cases' x with vx <;>
-       cases' y with vy <;> simp
+       cases' y with vy <;> simp [LLVM.udiv?]
 
 end AliveHandwritten

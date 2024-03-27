@@ -282,7 +282,7 @@ macro_rules
         then do
           let xstr' := xstr.drop 1
           match xstr'.toInt? with
-          | some i =>
+          | some _ =>
             let lit := Lean.Syntax.mkNumLit xstr'
             if xstr.front == 'i'
             then `(MLIRType.int .Signless $lit)

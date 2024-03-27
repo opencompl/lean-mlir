@@ -16,6 +16,7 @@ import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 import SSA.Projects.PaperExamples.PaperExamples
 import SSA.Projects.Scf.Scf
+import SSA.Projects.Scf.ScfFunctor
 
 
 -- EXPERIMENTAL

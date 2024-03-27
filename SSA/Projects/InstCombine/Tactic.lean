@@ -1,27 +1,16 @@
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
+import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
+import Std.Data.BitVec
+import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
 open Std (BitVec)
 open Ctxt
-
-theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
-  simp[BitVec.ofInt, BitVec.ofNat,Neg.neg,
-    BitVec.neg, BitVec.sub, BitVec.toFin, Fin.ofNat', HSub.hSub, Sub.sub, Fin.sub]
-  simp
-  cases w
-  case zero => norm_num
-  case succ w' =>
-    norm_num
-    have ONE : 1 % 2^ Nat.succ w' = 1 := by
-      apply Nat.mod_eq_of_lt
-      simp
-    rw[ONE]
-
 
 open MLIR AST in
 /--
@@ -53,6 +42,7 @@ macro "simp_alive_peephole" : tactic =>
         try intros v3
         try intros v4
         try intros v5
+        simp (config := {failIfUnchanged := false}) only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
         try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]

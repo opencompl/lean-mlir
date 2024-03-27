@@ -1,5 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.Util
+import Mathlib.Tactic.Linarith
 
 namespace Tensor1D
 /-
@@ -324,7 +325,7 @@ inductive Ty
 | /-- tensor type -/ tensor1d  : Ty
 deriving DecidableEq, Inhabited
 
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
   | .int => Int
   | .ix => Index

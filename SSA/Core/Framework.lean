@@ -3,15 +3,11 @@
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import Mathlib.Data.List.AList
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
 open Ctxt (Var VarSet Valuation)
-open Goedel (toType)
+open TyDenote (toType)
 
 /-
   # Classes
@@ -38,7 +34,7 @@ def OpSignature.outTy   := Signature.outTy ∘ s.signature
 end
 
 
-class OpDenote (Op Ty : Type) [Goedel Ty] [OpSignature Op Ty] where
+class OpDenote (Op Ty : Type) [TyDenote Ty] [OpSignature Op Ty] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
     HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
     (toType <| OpSignature.outTy op)
@@ -121,10 +117,6 @@ protected instance Com.decidableEq [DecidableEq Op] [DecidableEq Ty] :
   | _, _, .lete _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
 
 end
-termination_by
-  Expr.decidableEq _ _ e₁ e₂ => sizeOf e₁
-  Com.decidableEq _ _ e₁ e₂ => sizeOf e₁
-  HVector.decidableEqReg _ _ e₁ e₂ => sizeOf e₁
 
 /-- `Lets Op Γ₁ Γ₂` is a sequence of lets which are well-formed under context `Γ₂` and result in
     context `Γ₁`-/
@@ -184,7 +176,7 @@ theorem Expr.regArgs_mk {Γ : Ctxt Ty} {ty : Ty} (op : Op) (ty_eq : ty = OpSigna
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
-variable [Goedel Ty] [OpDenote Op Ty] [DecidableEq Ty]
+variable [TyDenote Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
 mutual
 
@@ -202,10 +194,16 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → (toType ty)
   | .lete e body, Γv => body.denote (Γv.snoc (e.denote Γv))
 
 end
-termination_by
-  Expr.denote _ _ e _ => sizeOf e
-  Com.denote _ _ e _ => sizeOf e
-  HVector.denote _ _ e => sizeOf e
+
+@[simp]
+theorem Com.denote_lete (e : Expr Op Γ α) (body : Com Op (Γ.snoc α) β) :
+  Com.denote (Com.lete e body) = fun Γv => body.denote (Γv.snoc (e.denote Γv)) := by
+    funext Γv; simp[Com.denote]
+
+@[simp]
+theorem Com.denote_ret (v : Var Γ α)  :
+  Com.denote (Op := Op) (Com.ret v) = fun Γv => Γv v := by
+    funext Γv; simp[Com.denote]
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
@@ -222,7 +220,6 @@ args, since there now are equation lemmas for it.
 #eval Lean.Meta.getEqnsFor? ``HVector.denote
 #eval Lean.Meta.getEqnsFor? ``Expr.denote
 #eval Lean.Meta.getEqnsFor? ``Com.denote
-
 
 def Lets.denote : Lets Op Γ₁ Γ₂ → Valuation Γ₁ → Valuation Γ₂
   | .nil => id
@@ -451,7 +448,9 @@ def Lets.getExprAuxDiff {lets : Lets Op Γ₁ Γ₂} {v : Var Γ₂ t}
         simp [Ctxt.get?]
         simp[←ih h h', Ctxt.snoc, Var.toSnoc, List.get?]
       . rcases h with ⟨⟨⟩, ⟨⟩⟩
-        simp[Ctxt.snoc, List.get?, Var.last]
+        intro a
+        simp_all only [Ctxt.get?, Var.val_last, zero_add, forall_true_left, implies_true]
+        exact a
   ⟩
 
 theorem Lets.denote_getExprAux {Γ₁ Γ₂ Δ : Ctxt Ty} {t : Ty}
@@ -555,10 +554,6 @@ mutual
     | _, .nil        => .nil
     | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end
-termination_by
-  Expr.map e => sizeOf e
-  Com.map e => sizeOf e
-  HVector.mapDialectMorphism e => sizeOf e
 
 end Map
 
@@ -697,35 +692,6 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt Ty} {t : Ty} [DecidableEq Op]
       | none => some (AList.insert ⟨_, w⟩ v ma)
 
 open AList
-
-/-- For mathlib -/
-theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : AList β}
-    {k : α} {v : β k} :
-    ⟨k, v⟩ ∈ s.entries → k ∈ s := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys] at h ⊢
-  clear nd
-  induction h
-  next    => apply List.Mem.head
-  next ih => apply List.Mem.tail _ ih
-
-theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : AList β} {k : α} :
-    k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
-  intro h
-  rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys, List.keys] at h ⊢
-  clear nd;
-  induction entries
-  next    => contradiction
-  next hd tl ih =>
-    cases h
-    next =>
-      use hd.snd
-      apply List.Mem.head
-    next h =>
-      rcases ih h with ⟨v, ih⟩
-      exact ⟨v, .tail _ ih⟩
 
 theorem subset_entries_matchVar_matchArg_aux
     {Γ_out Δ_in Δ_out  : Ctxt Ty}
@@ -917,7 +883,7 @@ theorem denote_matchVar {lets : Lets Op Γ_in Γ_out} {v : Var Γ_out t} {varMap
   denote_matchVar_of_subset (List.Subset.refl _)
 
 theorem lt_one_add_add (a b : ℕ) : b < 1 + a + b := by
-  simp (config := { arith := true }); exact Nat.zero_le _
+  simp (config := { arith := true })
 
 @[simp]
 theorem zero_eq_zero : (Zero.zero : ℕ) = 0 := rfl
@@ -998,9 +964,9 @@ theorem mem_matchVar
         exact hl
 
 end
-termination_by
-  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
-  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
+--termination_by
+--  mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
+--  mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
@@ -1147,7 +1113,7 @@ theorem denote_rewriteAt (lhs rhs : Com Op Γ₁ t₁)
       rintro rfl rfl
       simp
 
-variable (Op : _) {Ty : _} [OpSignature Op Ty] [Goedel Ty] [OpDenote Op Ty] in
+variable (Op : _) {Ty : _} [OpSignature Op Ty] [TyDenote Ty] [OpDenote Op Ty] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
@@ -1261,3 +1227,15 @@ theorem Com.denote_unfold  [OP_SIG : OpSignature Op Ty] [OP_DENOTE: OpDenote Op 
 
 
 end Unfoldings
+
+section TypeProjections
+
+def Com.getTy {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Type := fun _ => Ty
+def Com.ty {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Ty := fun _ => t
+def Com.ctxt {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Com Op Γ t → Ctxt Ty := fun _ => Γ
+
+def Expr.getTy {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Type := fun _ => Ty
+def Expr.ty {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Ty := fun _ => t
+def Expr.ctxt {Op Ty : Type} [OpSignature Op Ty] {Γ : Ctxt Ty} {t : Ty} : Expr Op Γ t → Ctxt Ty := fun _ => Γ
+
+end TypeProjections
