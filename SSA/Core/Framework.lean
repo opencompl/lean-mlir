@@ -74,7 +74,7 @@ class OpSignature (Op : Type) (Ty : outParam (Type)) (m : outParam (Type → Typ
 export OpSignature (signature)
 
 section
-variable {Op Ty} [s : OpSignature Op Ty]
+variable {Op Ty} [s : OpSignature Op Ty m]
 
 def OpSignature.sig         := Signature.sig ∘ s.signature
 def OpSignature.regSig      := Signature.regSig ∘ s.signature
@@ -1610,7 +1610,7 @@ class PureDialect (Op : Type) {Ty m} [OpSignature Op Ty m] where
 instance : OpSignature (TermModel Op Γ) (TermModelTy Op Γ) m where
   signature := fun ⟨op⟩ => TermModelTy.mk <$> signature op
 
-instance : Goedel (TermModelTy Op Γ) where
+instance : TyDenote (TermModelTy Op Γ) where
   toType := fun ⟨ty⟩ => ExprTree Op Γ ty
 
 instance [p : PureDialect Op] : OpDenote (TermModel Op Γ) (TermModelTy Op Γ) m where
