@@ -5,22 +5,20 @@ import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
 
 
-open Std
-
 namespace LLVM
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 def and? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x &&& y
+  some <| x &&& y
 
 /--
 The ‘or’ instruction returns the bitwise logical inclusive or of its two
 operands.
 -/
 def or? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x ||| y
+  some <| x ||| y
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
@@ -28,7 +26,7 @@ operands.  The xor is used to implement the “one’s complement” operation, 
 is the “~” operator in C.
 -/
 def xor? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x ^^^ y
+  some <| x ^^^ y
 
 /--
 The value produced is the integer sum of the two operands.
@@ -36,7 +34,7 @@ If the sum has unsigned overflow, the result returned is the mathematical result
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 def add? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x + y
+  some <| x + y
 
 /--
 The value produced is the integer difference of the two operands.
@@ -44,7 +42,7 @@ If the difference has unsigned overflow, the result returned is the mathematical
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 def sub? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x - y
+  some <| x - y
 
 /--
 The value produced is the integer product of the two operands.
@@ -58,7 +56,7 @@ If a full product (e.g. i32 * i32 -> i64) is needed, the operands should be
 sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 def mul? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
- .some <| x * y
+  some <| x * y
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
@@ -95,7 +93,7 @@ at width 2, -4 / -1 is considered overflow!
 -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
 -- is no magniture to overflow.
 def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
-  if y == 0 || (w != 1 && x == (intMin w) && y == -1) 
+  if y == 0 || (w != 1 && x == (intMin w) && y == -1)
   then .none
   else BitVec.sdiv x y
 
@@ -195,9 +193,9 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
 -/
 def select? {w : Nat} (c? : Option (BitVec 1)) (x? y? : Option (BitVec w)) : Option (BitVec w) :=
   match c? with
-  | .none => .none
-  | .some true => x?
-  | .some false => y?
+  | none => none
+  | some true => x?
+  | some false => y?
 
 inductive IntPredicate where
   | eq
@@ -279,7 +277,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : Option (BitVec 1) :=
-  Option.some ↑(icmp c x y)
+  some ↑(icmp c x y)
 
 /--
 Unlike LLVM IR, MLIR does not have first-class constant values.
@@ -299,6 +297,6 @@ the value `(2^w + (i mod 2^w)) mod 2^w`.
 TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
 -/
 def const? (i : Int): Option (BitVec w) :=
-  BitVec.ofInt w i
+  some <| BitVec.ofInt w i
 
 end LLVM

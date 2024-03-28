@@ -9,12 +9,13 @@ import SSA.Projects.MLIRSyntax.AST
 import SSA.Projects.MLIRSyntax.EDSL
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
+import Mathlib.Tactic.Ring
 -- import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
-open Std (BitVec)
+open BitVec
 open Ctxt(Var)
 
 @[simp]
@@ -29,7 +30,7 @@ inductive Ty
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 
@@ -68,7 +69,7 @@ attribute [local simp] Ctxt.snoc
 namespace MLIR2Simple
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Op Ty
-  | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless w => do
+  | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _ => do
     return .int
   | _ => throw .unsupportedType
 
@@ -221,7 +222,7 @@ inductive Ty
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel Ty where
+instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 

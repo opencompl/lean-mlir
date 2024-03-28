@@ -94,7 +94,7 @@ def getValFromCtxt (Γ : Ctxt Ty) (name : String) (expectedType : Ty) :
   else
     let t := List.get Γ ⟨index, Nat.lt_of_not_le h⟩
     if h : t = expectedType then
-      return ⟨index, by simp[←h, ←List.get?_eq_get]⟩
+      return ⟨index, by simp[←h]; rw [←List.get?_eq_get]⟩
     else
       throw <| .typeError expectedType t
 

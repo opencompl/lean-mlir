@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import Mathlib.Tactic.Linarith
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
@@ -105,13 +106,13 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
   }⟩
 
 -- pushforward a valuation.
-def Deleted.pushforward_Valuation [Goedel Ty] {α: Ty}  {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
+def Deleted.pushforward_Valuation [TyDenote Ty] {α: Ty}  {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (vΓ : Γ.Valuation) : Γ'.Valuation :=
   fun _t' v' => vΓ (DEL.pullback_var v')
 
 -- evaluating a pushforward valuation at a pullback variable returns the same result.
-theorem Deleted.pushforward_Valuation_denote [Goedel Ty] {α : Ty} {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
+theorem Deleted.pushforward_Valuation_denote [TyDenote Ty] {α : Ty} {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (vΓ : Γ.Valuation)
   (v' : Γ'.Var α) :
@@ -120,7 +121,7 @@ theorem Deleted.pushforward_Valuation_denote [Goedel Ty] {α : Ty} {Γ Γ' : Ctx
 
 
 /-- Given  `Γ' := Γ/delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
-def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
+def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
     Option { v' : Γ'.Var β //  ∀ (V : Γ.Valuation), V.eval v = (DEL.pushforward_Valuation V).eval v' } :=
   if VEQ : v.val = delv.val
@@ -205,7 +206,7 @@ def Var.tryDelete? [Goedel Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     ⟩
 
 namespace DCE
-variable [Goedel Ty] [OpSignature Op Ty] [OpDenote Op Ty] [DecidableEq Ty]
+variable [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] [DecidableEq Ty]
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
@@ -261,7 +262,7 @@ def Deleted.snoc {α : Ty} {Γ: Ctxt Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ'
 theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt Ty} {ω : Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
-  (V : Γ.Valuation) {newv : Goedel.toType ω} :
+  (V : Γ.Valuation) {newv : TyDenote.toType ω} :
   DELω.pushforward_Valuation (V.snoc newv) =
   (DEL.pushforward_Valuation V).snoc newv := by
     simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?, Ctxt.Var.val_toSnoc,
@@ -336,37 +337,36 @@ partial def dce_ [OpSignature Op Ty] [OpDenote Op Ty]  {Γ : Ctxt Ty} {t : Ty} (
         ⟩⟩
     | .lete (α := α) e body =>
       let DEL := Deleted.deleteSnoc Γ α
-        -- Try to delete the variable α in the body.
-        match Com.deleteVar? DEL body with
-        | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
-          let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-            :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
-            (dce_ body)
-          let com' := Com.lete (α := α) e (body'.changeVars hom')
-          ⟨Γ, Ctxt.Hom.id, com', by
+      -- Try to delete the variable α in the body.
+      match Com.deleteVar? DEL body with
+      | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
+        let ⟨Γ', hom', ⟨body', hbody'⟩⟩
+          :   Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com Op Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
+          (dce_ body)
+        let com' := Com.lete (α := α) e (body'.changeVars hom')
+        ⟨Γ, Ctxt.Hom.id, com', by
+          intros V
+          simp (config := {zetaDelta := true}) [Com.denote]
+          rw[hbody']
+          rfl
+        ⟩
+      | .some ⟨body', hbody⟩ =>
+        let ⟨Γ', hom', ⟨com', hcom'⟩⟩
+        : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
+          ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
+            simp[HCOM]
             intros V
-            simp[Com.denote]
-            rw[hbody']
-            rfl
-          ⟩
-        | .some ⟨body', hbody⟩ =>
-          let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-          : Σ (Γ' : Ctxt Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com Op Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
-            ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-              simp[HCOM]
-              intros V
-              simp[Com.denote]
-              apply hbody
-            ⟩⟩
-          let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
-            :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : Com Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
-            dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
-          ⟨Γ'', hom''.comp hom', com'', by
-            intros V
-            rw[← HCOM]
-            rw[hcom']
-            rw[hcom'']
-            rfl⟩
+            apply hbody
+          ⟩⟩
+        let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
+          :   Σ (Γ'' : Ctxt Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : Com Op Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
+          dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
+        ⟨Γ'', hom''.comp hom', com'', by
+          intros V
+          rw[← HCOM]
+          rw[hcom']
+          rw[hcom'']
+          rfl⟩
 /-
 decreasing_by {
   simp[invImage, InvImage, WellFoundedRelation.rel, Nat.lt_wfRel]
@@ -401,7 +401,7 @@ inductive ExTy
   deriving DecidableEq, Repr
 
 @[reducible]
-instance : Goedel ExTy where
+instance : TyDenote ExTy where
   toType
     | .nat => Nat
     | .bool => Bool

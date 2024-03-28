@@ -129,8 +129,8 @@ theorem R.trimTensor_append_not_zero (tensor : List Int) (x : Int) (hX : x ≠ 0
 theorem R.trimTensor_eq_append_zeros (tensor : List Int) : ∃ (n : Nat),
 tensor = trimTensor tensor ++ List.replicate n 0 := by
 induction tensor using List.reverseRecOn with
-   | H0 => exists 0
-   | H1 xs x ih =>
+   | nil => exists 0
+   | append_singleton xs x ih =>
      have ⟨n,hxs⟩ := ih
      by_cases (x = 0)
      case pos h =>
@@ -158,8 +158,8 @@ theorem R.trimTensor_getD_0 (tensor: List Int) :
 theorem R.trimTensor_trimTensor (tensor : List Int) :
   trimTensor (trimTensor tensor) = trimTensor tensor := by
   induction tensor using List.reverseRecOn with
-    | H0 => simp [trimTensor]
-    | H1 xs x ih =>
+    | nil => simp [trimTensor]
+    | append_singleton xs x ih =>
        by_cases (x = 0)
        case pos h => rw [h, R.trimTensor_append_zero_eq,ih]
        case neg h => rw [trimTensor_append_not_zero _ _ h, trimTensor_append_not_zero _ _ h]

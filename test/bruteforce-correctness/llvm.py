@@ -111,7 +111,7 @@ class Row:
 
   @staticmethod
   def header_row():
-    return Row("op", "width", ["in0", "in1", "in2"], "retval")
+    return Row("op", "width", ["in1", "in2", "in3"], "retval")
 
   def to_csv(self):
     assert len(self.vs) >= 1

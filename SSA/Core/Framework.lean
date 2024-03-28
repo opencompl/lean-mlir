@@ -5,15 +5,11 @@ import SSA.Core.HVector
 import SSA.Core.EffectKind
 import Mathlib.Control.Monad.Basic
 import Mathlib.Data.List.AList
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
 open Ctxt (Var VarSet Valuation)
-open Goedel (toType)
+open TyDenote (toType)
 
 /-!
 NOTE: Monadic Code Needs Pointfree Theorems
@@ -77,12 +73,17 @@ class OpSignature (Op : Type) (Ty : outParam (Type)) (m : outParam (Type → Typ
   signature : Op → Signature Ty
 export OpSignature (signature)
 
-def OpSignature.sig [s: OpSignature Op Ty m]        := Signature.sig ∘ s.signature
-def OpSignature.regSig [s: OpSignature Op Ty m]     := Signature.regSig ∘ s.signature
-def OpSignature.outTy [s: OpSignature Op Ty m]      := Signature.outTy ∘ s.signature
-def OpSignature.effectKind [s: OpSignature Op Ty m] := Signature.effectKind ∘ s.signature
+section
+variable {Op Ty} [s : OpSignature Op Ty]
 
-class OpDenote (Op Ty : Type) (m : Type → Type) [Goedel Ty] [OpSignature Op Ty m] where
+def OpSignature.sig         := Signature.sig ∘ s.signature
+def OpSignature.regSig      := Signature.regSig ∘ s.signature
+def OpSignature.outTy       := Signature.outTy ∘ s.signature
+def OpSignature.effectKind  := Signature.effectKind ∘ s.signature
+
+end
+
+class OpDenote (Op Ty : Type) (m : Type → Type) [TyDenote Ty] [OpSignature Op Ty m] where
   denote : (op : Op) → HVector toType (OpSignature.sig op) →
     (HVector (fun t : Ctxt Ty × Ty => t.1.Valuation → EffectKind.impure.toMonad m (toType t.2))
             (OpSignature.regSig op)) →
@@ -461,7 +462,7 @@ end Lemmas
 ## `denote`
 Denote expressions, programs, and sequences of lets
 -/
-variable [Goedel Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m] [LawfulMonad m]
+variable [TyDenote Ty] [OpDenote Op Ty m] [DecidableEq Ty] [Monad m] [LawfulMonad m]
 
 mutual
 
@@ -2480,7 +2481,7 @@ theorem denote_rewriteAt [LawfulMonad m] (lhs rhs : Com Op Γ₁ .pure t₁)
       apply Valuation.reassignVar_eq_of_lookup
       done
 
-variable (Op : _) {Ty : _} [OpSignature Op Ty m] [Goedel Ty] [OpDenote Op Ty m] in
+variable (Op : _) {Ty : _} [OpSignature Op Ty m] [TyDenote Ty] [OpDenote Op Ty m] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable

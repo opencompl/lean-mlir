@@ -1,4 +1,5 @@
 import SSA.Core.Framework
+import SSA.Core.Util
 import Qq
 
 namespace SSA
@@ -22,7 +23,7 @@ elab "change_mlir_context " Γv:ident : tactic => do
     -- Assert that the type of `Γv` is `Ctxt.Valuation ?Γ`
     let Ty ← mkFreshExprMVarQ q(Type)
     let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
-    let G  ← mkFreshExprMVarQ q(Goedel $Ty)
+    let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
     let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
 
     -- Reduce the context `Γ`
@@ -34,6 +35,20 @@ elab "change_mlir_context " Γv:ident : tactic => do
     replaceMainGoal [newGoal]
 
 end
+
+@[simp]
+private theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
+    (∀ V, f V) ↔ (∀ (a : ⟦t⟧) (V : Γ.Valuation), f (V.snoc a)) := by
+  constructor
+  · intro h a V; apply h
+  · intro h V; cases V; apply h
+
+@[simp]
+private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
+    (∀ V, f V) ↔ (f Ctxt.Valuation.nil) := by
+  constructor
+  · intro h; apply h
+  · intro h V; rw [Ctxt.Valuation.eq_nil V]; exact h
 
 /--
 `simp_peephole at ΓV` simplifies away the framework overhead of denotating expressions/programs,
@@ -83,7 +98,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       try generalize $Γv { val := 3, property := _ } = d;
       try generalize $Γv { val := 4, property := _ } = e;
       try generalize $Γv { val := 5, property := _ } = f;
-      simp (config := {decide := false, failIfUnchanged := false}) [Goedel.toType] at a b c d e f;
+      try simp (config := {failIfUnchanged := false, decide := false, zetaDelta := true}) [TyDenote.toType]
+        at a b c d e f
 
       /- The previous step will introduce all variables, even if there is no occurence of, say,
       `Γv ⟨5, _⟩`. Thus, we try to clear each of the newly introduced variables.

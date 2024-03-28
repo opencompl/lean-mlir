@@ -35,17 +35,6 @@ variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 -- and :https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Groebner.20bases
 
 -- Question: Can we make something like d := 2^n work as a macro?
---
-theorem WithBot.coe_pow (n : Nat) (x : ℕ) : (WithBot.some x : WithBot ℕ) ^ n = WithBot.some (x ^ n) := by
-  induction n with
-    | zero => simp
-    | succ n ih =>
-        rw [pow_succ, ih, ← WithBot.coe_mul]
-        rw [← WithBot.some_eq_coe, WithBot.some]
-        apply Option.some_inj.2
-        rw [Nat.pow_succ]
-        ring
-  done
 
 noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 
@@ -105,7 +94,7 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
 
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
-  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (Nat.one_le_two_pow n)]
+  have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (@Nat.one_le_two_pow n)]
   rw [f, hn]
   apply Polynomial.monic_X_pow_add
   simp
@@ -249,7 +238,6 @@ theorem R.representative_fromPoly_toFun : forall a : (ZMod q)[X], ((R.fromPoly (
   intro a
   simp [R.representative]
   have ⟨i,⟨hiI,hi_eq⟩⟩ := R.fromPoly_rep'_eq_ideal q n a
-  simp [MonoidHomClass.toMonoidHom]
   apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
   ring_nf
   apply Ideal.mem_span_singleton.1
@@ -442,9 +430,9 @@ noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
 theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
   = (R.fromTensor (q := q) (n := n) cs) + R.monomial c cs.length := by
     induction cs using List.reverseRecOn generalizing c
-    case H0 =>
+    case nil =>
       simp[fromTensor]
-    case H1 xs x _hxs =>
+    case append_singleton xs x _hxs =>
       simp[fromTensor]
       repeat rw[List.enum_append]
       repeat rw[List.foldl_append]
@@ -559,8 +547,8 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q)
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs  using List.reverseRecOn
-    case H0 => simp[List.enum, fromTensorFinsupp]
-    case H1 c cs hcs =>
+    case nil => simp[List.enum, fromTensorFinsupp]
+    case append_singleton c cs hcs =>
       simp[List.enum_append]
       simp[R.fromTensorFinsupp_concat_monomial]
       rw[hcs]
@@ -655,7 +643,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   deriving DecidableEq
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
-instance : Goedel (Ty q n) where
+instance : TyDenote (Ty q n) where
 toType := fun
   | .index => Nat
   | .integer => Int
@@ -680,7 +668,7 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | to_tensor : Op q n-- give back coefficients from `R.representative`
   | const (c : R q n) : Op q n
 
-open Goedel (toType)
+open TyDenote (toType)
 
 
 @[simp, reducible]

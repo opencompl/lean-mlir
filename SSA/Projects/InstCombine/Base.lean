@@ -23,7 +23,7 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 
 namespace InstCombine
 
-open Std (BitVec)
+open BitVec
 
 open LLVM
 
@@ -60,15 +60,15 @@ theorem Ty.width_eq (ty : Ty) : .bitvec (ty.width) = ty := by
 @[simp]
 def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
-instance : Goedel Ty where
+instance : TyDenote Ty where
 toType := fun
-  | .bitvec w => Option $ BitVec w
+  | .bitvec w => Option <| BitVec w
 
-instance (ty : Ty) : Coe ℤ (Goedel.toType ty) where
+instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
     | .bitvec w => some <| BitVec.ofInt w z
 
-instance (ty : Ty) : Inhabited (Goedel.toType ty) where
+instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
     | .bitvec _ => default
 
@@ -247,8 +247,8 @@ instance : OpSignature (MOp φ) (MTy φ) Id where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
 
 @[simp]
-def Op.denote (o : Op) (arg : HVector Goedel.toType (OpSignature.sig o)) :
-    (Goedel.toType <| OpSignature.outTy o) :=
+def Op.denote (o : Op) (arg : HVector TyDenote.toType (OpSignature.sig o)) :
+    (TyDenote.toType <| OpSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
   | Op.and _ => pairBind and? arg.toPair

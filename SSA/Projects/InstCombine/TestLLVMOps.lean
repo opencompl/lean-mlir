@@ -22,12 +22,13 @@ deftest test_or :=
   "llvm.return" (%r) : (i4) -> ()
 }
 
-deftest test_not :=
-{
-^bb0(%X : i4):
-  %r = "llvm.not" (%X) : (i4) -> (i4)
-  "llvm.return" (%r) : (i4) -> ()
-}
+-- don't use this one since not in LLVM
+--deftest test_not :=
+--{
+--^bb0(%X : i4):
+--  %r = "llvm.not" (%X) : (i4) -> (i4)
+--  "llvm.return" (%r) : (i4) -> ()
+--}
 
 deftest test_xor :=
 {
@@ -99,19 +100,21 @@ deftest test_mul :=
   "llvm.return" (%r) : (i4) -> ()
 }
 
-deftest test_neg :=
-{
-^bb0(%X : i4):
-  %r = "llvm.neg" (%X) : (i4) -> (i4)
-  "llvm.return" (%r) : (i4) -> ()
-}
+-- don't use this one since not in LLVM
+-- deftest test_neg :=
+-- {
+-- ^bb0(%X : i4):
+--   %r = "llvm.neg" (%X) : (i4) -> (i4)
+--   "llvm.return" (%r) : (i4) -> ()
+-- }
 
-deftest test_copy :=
-{
-^bb0(%X : i4):
-  %r = "llvm.copy" (%X) : (i4) -> (i4)
-  "llvm.return" (%r) : (i4) -> ()
-}
+-- don't use this one since not in LLVM
+-- deftest test_copy :=
+-- {
+-- ^bb0(%X : i4):
+--   %r = "llvm.copy" (%X) : (i4) -> (i4)
+--   "llvm.return" (%r) : (i4) -> ()
+-- }
 
 deftest test_udiv :=
 {

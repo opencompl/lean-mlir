@@ -1,6 +1,7 @@
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
+import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
@@ -83,6 +84,7 @@ macro "simp_alive_peephole" : tactic =>
         try intros v3
         try intros v4
         try intros v5
+        simp (config := {failIfUnchanged := false}) only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
         try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
           <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]

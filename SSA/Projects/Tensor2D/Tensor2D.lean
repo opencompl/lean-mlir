@@ -3,6 +3,7 @@ import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Basic
 import SSA.Core.Util
 import SSA.Core.Util
+import Mathlib.Tactic.Linarith
 
 namespace Tensor2D
 /-- Type of tensor dimensions and indexes into tensor dimensions.
@@ -105,7 +106,7 @@ def Ty.toType : Ty → Type
 | .ix => Index
 | .tensor2d => Tensor2d' Int -- TODO: eventually generalize to arbitrary type.
 
-instance : Goedel Ty where toType := Ty.toType
+instance : TyDenote Ty where toType := Ty.toType
 
 @[reducible, simp]
 def Op.outTy : Op → Ty
