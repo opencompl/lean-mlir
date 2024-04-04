@@ -812,6 +812,13 @@ def Lets.castPureToEff (eff : EffectKind) : Lets Op Γ_in .pure Γ_out → Lets 
   | .nil => .nil
   | .lete body e => .lete (body.castPureToEff eff) (e.castPureToEff eff)
 
+#check Com.lete
+
+/-- A wrapper around `Com.lete` that allows for a pure expression to be added to an otherwise
+impure program, using `Expr.castPureToEff` -/
+def Com.letPure (e : Expr Op Γ .pure t) (body : Com Op (Γ.snoc t) eff u) : Com Op Γ eff u :=
+  body.lete (e.castPureToEff eff)
+
 section Lemmas
 
 @[simp] lemma Com.castPureToEff_ret : (ret v : Com Op Γ .pure ty).castPureToEff eff = ret v := rfl

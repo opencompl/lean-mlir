@@ -81,6 +81,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
+        /- `castPureToEff` -/
+        Com.letPure, Expr.denote_castPureToEff,
         /- Unfold denotation -/
         Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
         /- Effect massaging -/
@@ -92,6 +94,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       /- Attempt to replace all occurence of a variable accesses `Γ ⟨i, _⟩` with a new (Lean)
       variable in the local context
       HACK: for now, we assume no program contains a variable with `i > 5` -/
+      try simp (config := {failIfUnchanged := false, decide := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
       try generalize $Γv { val := 0, property := _ } = a;
       try generalize $Γv { val := 1, property := _ } = b;
       try generalize $Γv { val := 2, property := _ } = c;
@@ -100,6 +103,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       try generalize $Γv { val := 5, property := _ } = f;
       try simp (config := {failIfUnchanged := false, decide := false, zetaDelta := true}) [TyDenote.toType]
         at a b c d e f
+      -- ^^^^^^ TODO: This really should be a `simp only`
 
       /- The previous step will introduce all variables, even if there is no occurence of, say,
       `Γv ⟨5, _⟩`. Thus, we try to clear each of the newly introduced variables.
