@@ -8,11 +8,14 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 
 namespace LLVM
 
+
+abbrev IntN w := Option <| BitVec w
+
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 @[simp_llvm]
-def and? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def and? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x &&& y
 
 /--
@@ -20,7 +23,7 @@ The ‘or’ instruction returns the bitwise logical inclusive or of its two
 operands.
 -/
 @[simp_llvm]
-def or? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def or? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x ||| y
 
 /--
@@ -29,7 +32,7 @@ operands.  The xor is used to implement the “one’s complement” operation, 
 is the “~” operator in C.
 -/
 @[simp_llvm]
-def xor? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def xor? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x ^^^ y
 
 /--
@@ -38,7 +41,7 @@ If the sum has unsigned overflow, the result returned is the mathematical result
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 @[simp_llvm]
-def add? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def add? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x + y
 
 /--
@@ -47,7 +50,7 @@ If the difference has unsigned overflow, the result returned is the mathematical
 Because LLVM integers use a two’s complement representation, this instruction is appropriate for both signed and unsigned integers.
 -/
 @[simp_llvm]
-def sub? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def sub? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x - y
 
 /--
@@ -62,7 +65,7 @@ If a full product (e.g. i32 * i32 -> i64) is needed, the operands should be
 sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 @[simp_llvm]
-def mul? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def mul? {w : Nat} (x y : BitVec w) : IntN w :=
   some <| x * y
 
 /--
@@ -71,7 +74,7 @@ Note that unsigned integer division and signed integer division are distinct ope
 Division by zero is undefined behavior.
 -/
 @[simp_llvm]
-def udiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def udiv? {w : Nat} (x y : BitVec w) : IntN w :=
   match y.toNat with
     | 0 => none
     | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
@@ -101,7 +104,7 @@ at width 2, -4 / -1 is considered overflow!
 -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
 -- is no magniture to overflow.
 @[simp_llvm]
-def sdiv? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def sdiv? {w : Nat} (x y : BitVec w) : IntN w :=
   if y == 0 || (w != 1 && x == (intMin w) && y == -1)
   then .none
   else BitVec.sdiv x y
@@ -122,7 +125,7 @@ Note that unsigned integer remainder and signed integer remainder are distinct o
 Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
-def urem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def urem? {w : Nat} (x y : BitVec w) : IntN w :=
   if y.toNat = 0
   then none
   else some <| BitVec.ofNat w (x.toNat % y.toNat)
@@ -153,7 +156,7 @@ The fundamental equation of div/rem is: x = (x/y) * y + x%y
 We use this equation to define srem.
 -/
 @[simp_llvm]
-def srem? {w : Nat} (x y : BitVec w) : Option <| BitVec w :=
+def srem? {w : Nat} (x y : BitVec w) : IntN w :=
   (sdiv? x y).map (fun div => x - div * y)
 
 @[simp_llvm]
@@ -166,7 +169,7 @@ If op2 is (statically or dynamically) equal to or larger than the number of
 bits in op1, this instruction returns a poison value.
 -/
 @[simp_llvm]
-def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
+def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntN n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
   else some (op1 <<< op2)
@@ -182,7 +185,7 @@ this instruction returns a poison value.
 Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
 -/
 @[simp_llvm]
-def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
+def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntN n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
   else some (op1 >>> op2)
@@ -198,7 +201,7 @@ this instruction returns a poison value.
 Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
 -/
 @[simp_llvm]
-def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
+def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntN n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
   else some (op1 >>>ₛ op2)
@@ -209,7 +212,7 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : Option (BitVec n) :=
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
 -/
 @[simp_llvm]
-def select? {w : Nat} (c? : Option (BitVec 1)) (x? y? : Option (BitVec w)) : Option (BitVec w) :=
+def select? {w : Nat} (c? : IntN 1) (x? y? : IntN w ) : IntN w :=
   match c? with
   | none => none
   | some true => x?
@@ -296,7 +299,7 @@ The possible condition codes are:
 The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
-def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : Option (BitVec 1) :=
+def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntN 1 :=
   some ↑(icmp c x y)
 
 /--
@@ -317,7 +320,7 @@ the value `(2^w + (i mod 2^w)) mod 2^w`.
 TODO: double-check that truncating works the same as MLIR (signedness, overflow, etc)
 -/
 @[simp_llvm]
-def const? (i : Int): Option (BitVec w) :=
+def const? (i : Int): IntN w :=
   some <| BitVec.ofInt w i
 
 end LLVM
