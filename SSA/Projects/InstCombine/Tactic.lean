@@ -34,7 +34,7 @@ macro "simp_alive_peephole" : tactic =>
           BitVec.Refinement, bind, Option.bind, pure,
           HVector.toSingle,
           simp_llvm,
-          HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one
+          HVector.toTuple, BitVec.bitvec_minus_one
           ]
         try intros v0
         try intros v1
