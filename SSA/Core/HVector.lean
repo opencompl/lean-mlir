@@ -67,6 +67,9 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+abbrev fst : HVector A [a₁, a₂] → A a₁ := fun x => (toTuple x).fst
+abbrev snd : HVector A [a₁, a₂] → A a₂ := fun x => (toTuple x).snd
+
 section Repr
 open Std (Format format)
 

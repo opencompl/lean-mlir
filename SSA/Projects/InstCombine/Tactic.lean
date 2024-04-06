@@ -28,6 +28,12 @@ macro "simp_alive_peephole" : tactic =>
         intros Γv
         simp_peephole [InstCombine.Op.denote] at Γv
         simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [
+            HVector.fst, HVector.snd, HVector.toTuple
+          ]
+        simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [
+            simp_llvm_option,
+          ]
+        simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [
             BitVec.Refinement, bind, Option.bind, pure,
             simp_llvm,
             BitVec.bitvec_minus_one

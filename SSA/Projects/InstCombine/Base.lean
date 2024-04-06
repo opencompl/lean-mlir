@@ -251,26 +251,26 @@ def Op.denote (o : Op) (arg : HVector TyDenote.toType (OpSignature.sig o)) :
     (TyDenote.toType <| OpSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
-  | Op.and _ => pairBind and? arg.toPair
-  | Op.or _ => pairBind or? arg.toPair
-  | Op.xor _ => pairBind xor? arg.toPair
-  | Op.shl _ => pairBind shl? arg.toPair
-  | Op.lshr _ => pairBind lshr? arg.toPair
-  | Op.ashr _ => pairBind ashr? arg.toPair
-  | Op.sub _ => pairBind sub?  arg.toPair
-  | Op.add _ => pairBind add? arg.toPair
-  | Op.mul _ => pairBind mul? arg.toPair
-  | Op.sdiv _ => pairBind sdiv? arg.toPair
-  | Op.udiv _ => pairBind udiv? arg.toPair
-  | Op.urem _ => pairBind urem? arg.toPair
-  | Op.srem _ => pairBind srem? arg.toPair
-  | Op.not _ => Option.map (~~~.) arg.toSingle
+  | Op.and _ => LLVM.and arg.fst arg.snd
+  | Op.or _ => LLVM.or arg.fst arg.snd
+  | Op.xor _ => LLVM.xor arg.fst arg.snd
+  | Op.shl _ => LLVM.shl arg.fst arg.snd
+  | Op.lshr _ => LLVM.lshr arg.fst arg.snd
+  | Op.ashr _ => LLVM.ashr arg.fst arg.snd
+  | Op.sub _ => LLVM.sub arg.fst arg.snd
+  | Op.add _ => LLVM.add arg.fst arg.snd
+  | Op.mul _ => LLVM.mul arg.fst arg.snd
+  | Op.sdiv _ => LLVM.sdiv arg.fst arg.snd
+  | Op.udiv _ => LLVM.udiv arg.fst arg.snd
+  | Op.urem _ => LLVM.urem arg.fst arg.snd
+  | Op.srem _ => LLVM.srem arg.fst arg.snd
+  | Op.not _ => LLVM.not arg.toSingle
   | Op.copy _ => arg.toSingle
-  | Op.neg _ => Option.map (-.) arg.toSingle
+  | Op.neg _ => LLVM.neg arg.toSingle
   | Op.select _ =>
     let (ocond, otrue, ofalse) := arg.toTriple
     select? ocond otrue ofalse
-  | Op.icmp c _ => pairBind (icmp? c) arg.toPair
+  | Op.icmp c _ => LLVM.icmp c arg.fst arg.snd
 
 instance : OpDenote Op Ty := ⟨
   fun o args _ => Op.denote o args
