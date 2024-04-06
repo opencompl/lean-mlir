@@ -26,15 +26,11 @@ macro "simp_alive_peephole" : tactic =>
       (
         dsimp only [Com.Refinement]
         intros Γv
-        simp_peephole at Γv
-        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
-          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
+        simp_peephole [InstCombine.Op.denote] at Γv
         simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [
-          InstCombine.Op.denote, HVector.toPair,
-          BitVec.Refinement, bind, Option.bind, pure,
-          HVector.toSingle,
-          simp_llvm,
-          HVector.toTuple, BitVec.bitvec_minus_one
+            BitVec.Refinement, bind, Option.bind, pure,
+            simp_llvm,
+            BitVec.bitvec_minus_one
           ]
         try intros v0
         try intros v1
