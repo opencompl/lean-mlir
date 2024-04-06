@@ -33,10 +33,7 @@ macro "simp_alive_peephole" : tactic =>
           InstCombine.Op.denote, HVector.toPair,
           BitVec.Refinement, bind, Option.bind, pure,
           HVector.toSingle,
-          LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
-          LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
-          LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-          LLVM.const?, LLVM.icmp?,
+          simp_llvm,
           HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one
           ]
         try intros v0
