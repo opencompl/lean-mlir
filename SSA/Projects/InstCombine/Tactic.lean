@@ -27,7 +27,7 @@ macro "simp_alive_peephole" : tactic =>
         dsimp only [Com.Refinement]
         intros Γv
         simp_peephole [InstCombine.Op.denote] at Γv
-        simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [
+        simp (config := {failIfUnchanged := false}) only [
             BitVec.Refinement, bind, Option.bind, pure,
             simp_llvm,
             BitVec.bitvec_minus_one
