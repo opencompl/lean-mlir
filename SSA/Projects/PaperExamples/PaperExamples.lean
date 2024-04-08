@@ -94,7 +94,7 @@ def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, 
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr Op Ty 0 where
-  mkExpr := mkExpr
+  mkExpr Γ opStx := do return ⟨_, ← mkExpr Γ opStx⟩
 
 def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Com Op Γ .pure ty) :=
   if opStx.name == "return"
@@ -106,10 +106,11 @@ def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : MLIR.AST.TransformReturn Op Ty 0 where
-  mkReturn := mkReturn
+  mkReturn Γ opStx := do return ⟨_, ← mkReturn Γ opStx⟩
 
 def mlir2simple (reg : MLIR.AST.Region 0) :
-    MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ .pure ty) := MLIR.AST.mkCom reg
+    MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (eff : EffectKind) (ty : Ty), Com Op Γ eff ty) :=
+  MLIR.AST.mkCom reg
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[simple_com| " reg:mlir_region "]" : term => do
@@ -119,7 +120,7 @@ elab "[simple_com| " reg:mlir_region "]" : term => do
   -- let mvalues : Q(Vector Nat 0) ← elabTermEnsuringType mvalues q(Vector Nat 0)
   let com := q(ToyNoRegion.MLIR2Simple.mlir2simple $ast)
   synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ←
+  let com : Q(MLIR.AST.ExceptM Op (Σ (Γ' : Ctxt Ty) (eff : _) (ty : Ty), Com Op Γ' eff ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
       withTransparency (mode := TransparencyMode.all) <|
         return ←reduce com
@@ -132,15 +133,18 @@ elab "[simple_com| " reg:mlir_region "]" : term => do
       | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
         match sndexpr.app4? ``Sigma.mk with
         | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-            return sndexpr
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
+          match sndexpr.app4? ``Sigma.mk with
+          | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
+              return sndexpr
+          | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
+        | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
       | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
   | .none => throwError "Expected `Except.ok`, found {comExpr}"
 
 end MLIR2Simple
 
 open MLIR AST MLIR2Simple in
-def eg₀ : Com Op (Ctxt.ofList []) .int :=
+def eg₀ : Com Op (Ctxt.ofList []) .pure .int :=
   [simple_com| {
     %c2= "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
@@ -154,7 +158,7 @@ def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
 
 open MLIR AST MLIR2Simple in
 /-- x + 0 -/
-def lhs : Com Op (Ctxt.ofList [.int]) .int :=
+def lhs : Com Op (Ctxt.ofList [.int]) .pure .int :=
   [simple_com| {
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
@@ -164,7 +168,7 @@ def lhs : Com Op (Ctxt.ofList [.int]) .int :=
 
 open MLIR AST MLIR2Simple in
 /-- x -/
-def rhs : Com Op (Ctxt.ofList [.int]) .int :=
+def rhs : Com Op (Ctxt.ofList [.int]) .pure .int :=
   [simple_com| {
     ^bb0(%x : i32):
       "return" (%x) : (i32) -> (i32)
@@ -192,7 +196,7 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       done
     }
 
-def ex1_rewritePeepholeAt : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
+def ex1_rewritePeepholeAt : Com Op  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
@@ -203,7 +207,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 
-def ex1_rewritePeephole : Com Op  (Ctxt.ofList [.int]) .int := rewritePeephole (fuel := 100) p1 lhs
+def ex1_rewritePeephole : Com Op  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
@@ -267,7 +271,8 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .pure .int :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .pure .int :=
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .impure .int) :
+    Expr Op Γ .pure .int :=
   Expr.mk
     (op := .iterate k)
     (ty_eq := rfl)
@@ -278,14 +283,14 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def lhs : Com Op [.int] .int :=
+def lhs : Com Op [.int] .pure .int :=
   Com.lete (iterate (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def rhs : Com Op [.int] .int :=
+def rhs : Com Op [.int] .pure .int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 attribute [local simp] Ctxt.snoc
