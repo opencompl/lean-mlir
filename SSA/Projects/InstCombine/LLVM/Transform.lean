@@ -54,11 +54,11 @@ class TransformTy (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat) [OpSign
   mkTy   : MLIRType φ → ExceptM Op Ty
 
 class TransformExpr (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat) [OpSignature Op Ty m] [TransformTy Op Ty φ]  where
-  mkExpr   : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ ty, Expr Op Γ eff ty)
+  mkExpr   : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ eff ty, Expr Op Γ eff ty)
 
 class TransformReturn (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat)
   [OpSignature Op Ty m] [TransformTy Op Ty φ] where
-  mkReturn : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ ty, Com Op Γ eff ty)
+  mkReturn : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ eff ty, Com Op Γ eff ty)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
 variable {Op Ty φ} [OpSignature Op Ty m] [DecidableEq Ty] [DecidableEq Op]
@@ -152,21 +152,21 @@ private def declareBindings [TransformTy Op Ty φ] (Γ : Ctxt Ty) (vals : List (
 private def mkComHelper
   [TransformTy Op Ty φ] [instTransformExpr : TransformExpr Op Ty φ] [instTransformReturn : TransformReturn Op Ty φ]
   (Γ : Ctxt Ty) :
-    List (MLIR.AST.Op φ) → BuilderM Op (Σ (ty : _), Com Op Γ eff ty)
+    List (MLIR.AST.Op φ) → BuilderM Op (Σ eff ty, Com Op Γ eff ty)
   | [retStx] => do
       instTransformReturn.mkReturn Γ retStx
   | lete::rest => do
-    let ⟨ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ lete)
+    let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ lete)
     if h : lete.res.length != 1 then
       throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr lete}`"
     else
       let _ ← addValToMapping Γ (lete.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
-      let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
-      return ⟨ty₂, Com.lete expr body⟩
+      let ⟨eff₂, ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
+      return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
 def mkCom [TransformTy Op Ty φ] [TransformExpr Op Ty φ] [TransformReturn Op Ty φ]
-  (reg : MLIR.AST.Region φ) : ExceptM Op  (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ eff ty) :=
+  (reg : MLIR.AST.Region φ) : ExceptM Op  (Σ (Γ : Ctxt Ty) (eff : EffectKind) (ty : Ty), Com Op Γ eff ty) :=
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithEmptyMapping <| do
