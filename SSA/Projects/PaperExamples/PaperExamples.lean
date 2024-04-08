@@ -39,28 +39,30 @@ inductive Op :  Type
   | const : (val : ℤ) → Op
   deriving DecidableEq, Repr
 
-instance : OpSignature Op Ty where
+instance : OpSignature Op Ty Id where
   signature
-    | .const _ => ⟨[], [], .int⟩
-    | .add   => ⟨[.int, .int], [], .int⟩
+    | .const _ => ⟨[], [], .int, .pure⟩
+    | .add   => ⟨[.int, .int], [], .int, .pure⟩
 
 @[reducible]
-instance : OpDenote Op Ty where
+instance : OpDenote Op Ty Id where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .pure .int  :=
   Expr.mk
     (op := .const n)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .pure .int :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
+(eff_le := by constructor)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
@@ -76,7 +78,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Op Ty
 instance instTransformTy : MLIR.AST.TransformTy Op Ty 0 where
   mkTy := mkTy
 
-def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Expr Op Γ ty) := do
+def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Expr Op Γ .pure ty) := do
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
@@ -94,7 +96,7 @@ def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, 
 instance : MLIR.AST.TransformExpr Op Ty 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Com Op Γ ty) :=
+def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Com Op Γ .pure ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
@@ -107,7 +109,7 @@ instance : MLIR.AST.TransformReturn Op Ty 0 where
   mkReturn := mkReturn
 
 def mlir2simple (reg : MLIR.AST.Region 0) :
-    MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ ty) := MLIR.AST.mkCom reg
+    MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ .pure ty) := MLIR.AST.mkCom reg
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[simple_com| " reg:mlir_region "]" : term => do
@@ -232,14 +234,14 @@ inductive Op :  Type
   | iterate (k : ℕ) : Op
   deriving DecidableEq, Repr
 
-instance : OpSignature Op Ty where
+instance : OpSignature Op Ty Id where
   signature
-    | .const _ => ⟨[], [], .int⟩
-    | .add   => ⟨[.int, .int], [], .int⟩
-    | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
+    | .const _ => ⟨[], [], .int, .pure⟩
+    | .add   => ⟨[.int, .int], [], .int, .pure⟩
+    | .iterate _k => ⟨[.int], [([.int], .int)], .int, .pure⟩
 
 @[reducible]
-instance : OpDenote Op Ty where
+instance : OpDenote Op Ty Id where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b
@@ -249,24 +251,27 @@ instance : OpDenote Op Ty where
       -- let f_k := Nat.iterate f' k
       -- f_k x
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .pure .int  :=
   Expr.mk
     (op := .const n)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .pure .int :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
+(eff_le := by constructor)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .int :=
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .pure .int :=
   Expr.mk
     (op := .iterate k)
     (ty_eq := rfl)
+(eff_le := by constructor)
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
