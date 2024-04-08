@@ -795,29 +795,60 @@ theorem FlatCom.denoteLetsRet_eq [OpDenote Op Ty m] (flatCom : FlatCom Op Γ eff
 --TODO: organize this, this seems like it should be somewhere else
 
 /-! ### `castPureToEff` -/
+
+/-- Change the effect of an expression into another effect that is "higher" in the hierarchy.
+Generally used to change a pure expression into an impure one, but it is useful to have this
+phrased more generically -/
+def Expr.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
+    Expr Op Γ eff₁ t → Expr Op Γ eff₂ t
+  | Expr.mk op ty_eq eff_le args regArgs =>
+    have heff : OpSignature.effectKind op ≤ eff₂ := by
+      apply EffectKind.le_trans eff_le h
+    Expr.mk op ty_eq heff args regArgs
+
+/-- Change the effect of a program into another effect that is "higher" in the hierarchy.
+Generally used to change a pure program into an impure one, but it is useful to have this
+phrased more generically -/
+def Com.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
+    Com Op Γ eff₁ t → Com Op Γ eff₂ t := fun com =>
+  Com.rec' (motive := @fun Γ eff t _ => eff ≤ eff₂ → Com Op Γ eff₂ t)
+    /- ret v -/       (fun v _h               => ret v)
+    /- lete e body -/ (fun e _body castBody h => lete (e.changeEffect h) (castBody h))
+    com h
+
+/-- Change the effect of a sequence of lets into another effect that is "higher" in the hierarchy.
+Generally used to change pure into impure, but it is useful to have this phrased more generically -/
+def Lets.changeEffect {eff₁ eff₂ : EffectKind} (h : eff₁ ≤ eff₂) :
+    Lets Op Γ_in eff₁ Γ_out → Lets Op Γ_in eff₂ Γ_out
+  | .nil => .nil
+  | .lete body e => .lete (body.changeEffect h) (e.changeEffect h)
+
 /-- cast a pure Expr into a possibly impure expression -/
--- TODO: generalize/rename to `castLe`
-def Expr.castPureToEff (eff : EffectKind) : Expr Op Γ .pure t → Expr Op Γ eff t
-| Expr.mk op ty_eq eff_le args regArgs =>
-  have heff : OpSignature.effectKind op ≤ eff := by
-    apply EffectKind.le_trans eff_le (EffectKind.pure_le eff)
-  Expr.mk op ty_eq heff args regArgs
+def Expr.castPureToEff (eff : EffectKind) : Expr Op Γ .pure t → Expr Op Γ eff t :=
+  changeEffect (EffectKind.pure_le eff)
 
 def Com.castPureToEff (eff : EffectKind) : Com Op Γ .pure t → Com Op Γ eff t :=
-  Com.recPure (motive := @fun Γ t _ => Com Op Γ eff t)
-    /- ret v -/       (fun v                => ret v)
-    /- lete e body -/ (fun e _body castBody => lete (e.castPureToEff eff) castBody)
+  changeEffect (EffectKind.pure_le eff)
 
 def Lets.castPureToEff (eff : EffectKind) : Lets Op Γ_in .pure Γ_out → Lets Op Γ_in eff Γ_out
   | .nil => .nil
   | .lete body e => .lete (body.castPureToEff eff) (e.castPureToEff eff)
+/-
+NOTE: `Lets.castPureToEff` seems like it could easily be defined in terms of `Lets.changeEffect`,
+but for some reason doing so causes `Lets.castPureToEff_lete` to no longer be def-eq (i.e.,
+  it is no longer provable by `rfl`) -/
 
-#check Com.lete
 
 /-- A wrapper around `Com.lete` that allows for a pure expression to be added to an otherwise
 impure program, using `Expr.castPureToEff` -/
 def Com.letPure (e : Expr Op Γ .pure t) (body : Com Op (Γ.snoc t) eff u) : Com Op Γ eff u :=
   body.lete (e.castPureToEff eff)
+
+/-- `letSup e body` allows us to combine an expression and body with different effects,
+by returning a `Com` whose effect is their join/supremum -/
+def Com.letSup (e : Expr Op Γ eff₁ t) (body : Com Op (Γ.snoc t) eff₂ u) :
+    Com Op Γ (eff₁ ⊔ eff₂) u :=
+  Com.lete (e.changeEffect <| by simp) (body.changeEffect <| by simp)
 
 section Lemmas
 
@@ -869,7 +900,7 @@ section Lemmas
   case pure => rfl
   case impure =>
     funext V
-    simp only [castPureToEff, denote, EffectKind.return_impure_toMonad_eq,
+    simp only [castPureToEff, changeEffect, denote, EffectKind.return_impure_toMonad_eq,
       EffectKind.liftEffect_pure,
       EffectKind.liftEffect_eq_pure_cast (EffectKind.eq_of_le_pure eff_le)]
 
@@ -894,7 +925,7 @@ def Expr.HasPureOp (e : Expr Op Γ eff ty) : Prop :=
 instance (e : Expr Op Γ eff t) : Decidable (e.HasPureOp) := inferInstanceAs (Decidable <| _ = _)
 
 @[simp] lemma Expr.castPureToEff_pure_eq (e : Expr Op Γ .pure t) : e.castPureToEff .pure = e := by
-  cases e; simp [castPureToEff]
+  cases e; simp [castPureToEff, changeEffect]
 
 /-- Attempt to convert a possibly impure expression into a pure expression.
 If the expression's operation is impure, return `none` -/
@@ -974,7 +1005,7 @@ theorem Expr.denote_of_pure {e : Expr Op Γ eff ty} (eff_eq : e.HasPureOp) :
 theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad m] (e : Expr Op Γ .pure t) :
     (e.castPureToEff .impure).denote = fun Γv => return (e.denote Γv) := by
   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
-  simp only [castPureToEff, denote_mk_of_pure (EffectKind.eq_of_le_pure eff_le)]
+  simp only [castPureToEff, changeEffect, denote_mk_of_pure (EffectKind.eq_of_le_pure eff_le)]
 
 theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr Op Γ eff ty} (h : e.toPure?.isSome) :
     e.HasPureOp := by
