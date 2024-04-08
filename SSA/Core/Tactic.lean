@@ -57,7 +57,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
   `(tactic|
       (
       change_mlir_context $ll
-      simp (config := {failIfUnchanged := false, decide := false }) only [
+      simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
@@ -72,7 +72,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         bind_assoc, pairBind,
         $ts,*]
 
-      try simp (config := {failIfUnchanged := false, decide := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+      try simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
       try generalize $ll { val := 0, property := _ } = a;
       try generalize $ll { val := 1, property := _ } = b;
       try generalize $ll { val := 2, property := _ } = c;
