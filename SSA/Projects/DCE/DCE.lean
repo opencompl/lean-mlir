@@ -206,7 +206,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     ⟩
 
 namespace DCE
-variable [TyDenote Ty] [OpSignature Op Ty] [OpDenote Op Ty] [DecidableEq Ty]
+variable [TyDenote Ty] [OpSignature Op Ty m] [OpDenote Op Ty m] [DecidableEq Ty]
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
@@ -236,7 +236,7 @@ def arglistDeleteVar? {Γ: Ctxt Ty} {delv : Γ.Var α} {Γ' : Ctxt Ty} {ts : Lis
         ⟩
 
 /- Try to delete a variable from an Expr -/
-def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr Op Γ t) :
+def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr Op Γ .pure t) :
   Option { e' : Expr Op Γ' t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
   match e with
   | .mk op ty_eq args regArgs =>
