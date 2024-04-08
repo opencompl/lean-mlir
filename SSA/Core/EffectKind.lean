@@ -1,3 +1,5 @@
+import Mathlib.Order.Lattice
+
 /- Kinds of effects, either pure or impure -/
 inductive EffectKind
 | pure -- pure effects.
@@ -46,6 +48,12 @@ def return_pure_toMonad_eq (a : α) : (return a : pure.toMonad m α) = a := rfl
 @[simp]
 def return_impure_toMonad_eq [Monad m] (a : α) : (return a : impure.toMonad m α) = (return a : m α) := rfl
 
+/-!
+## `PartialOrder`
+Establish a partial order on `EffectKind`
+-/
+section PartialOrder
+
 inductive le : EffectKind → EffectKind → Prop
   | pure_le (e) : le .pure e
   | le_impure (e) : le e .impure
@@ -69,7 +77,6 @@ theorem eq_of_le_pure {e : EffectKind}
     (he : e ≤ pure) : e = pure := by
   cases he; rfl
 
-
 @[simp] theorem not_impure_le_pure : ¬(impure ≤ pure) := by
   intro; contradiction
 
@@ -83,20 +90,53 @@ theorem le_trans {e1 e2 e3 : EffectKind} (h12: e1 ≤ e2) (h23: e2 ≤ e3) : e1 
   cases e1 <;> cases e2 <;> cases e3 <;> simp_all
 
 @[simp]
-theorem le_antisym {e1 e2 : EffectKind} (h12: e1 ≤ e2) (h21: e2 ≤ e1) : e1 ≤ e2 := by
+theorem le_antisymm {e1 e2 : EffectKind} (h12: e1 ≤ e2) (h21: e2 ≤ e1) : e1 = e2 := by
   cases e1 <;> cases e2 <;> simp_all
 
 theorem le_of_eq {e1 e2 : EffectKind} (h : e1 = e2) : e1 ≤ e2 := by
   subst h
   cases e1 <;> simp
 
-def union : EffectKind → EffectKind → EffectKind
-| .pure, .pure => .pure
-| _, _ => .impure
+instance : PartialOrder EffectKind where
+  le_refl := le_refl
+  le_trans := @le_trans
+  le_antisymm := @le_antisymm
 
-@[simp] theorem pure_union_pure_eq : union .pure .pure = .pure := rfl
-@[simp] theorem impure_union_eq : union .impure e = .impure := rfl
-@[simp] theorem union_impure_eq : union e .impure = .impure := by cases e <;> rfl
+end PartialOrder
+
+/-!
+### `Lattice`
+`EffectKind` forms a lattice -/
+section Lattice
+
+def sup : EffectKind → EffectKind → EffectKind
+  | .pure, .pure => .pure
+  | _, _ => .impure
+instance : Sup EffectKind := {sup}
+
+def inf : EffectKind → EffectKind → EffectKind
+  | .impure, .impure => .impure
+  | _, _ => .pure
+instance : Inf EffectKind := {inf}
+
+@[simp] theorem pure_sup_pure_eq  : pure ⊔ pure = pure    := rfl
+@[simp] theorem impure_sup_eq     : impure ⊔ e  = impure  := rfl
+@[simp] theorem sup_impure_eq     : e ⊔ impure  = impure  := by cases e <;> rfl
+
+@[simp] theorem impure_inf_impure_eq  : impure ⊓ impure = impure  := rfl
+@[simp] theorem pure_inf_eq           : pure ⊓ e = pure           := rfl
+@[simp] theorem inf_pure_eq           : e ⊓ pure = pure           := by cases e <;> rfl
+
+-- TODO: these proofs are currently quite slow, they could probablye be sped up quite a bit
+instance : Lattice EffectKind where
+  le_sup_left   := by rintro (_|_) (_|_) <;> constructor
+  le_sup_right  := by rintro (_|_) (_|_) <;> constructor
+  sup_le        := by rintro (_|_) (_|_) (_|_) <;> simp
+  inf_le_left   := by rintro (_|_) (_|_) <;> constructor
+  inf_le_right  := by rintro (_|_) (_|_) <;> constructor
+  le_inf        := by rintro (_|_) (_|_) (_|_) <;> simp
+
+end Lattice
 
 /-!
 ## `liftEffect`
