@@ -39,45 +39,12 @@ macro "simp_alive_peephole" : tactic =>
         /- Unfold the meaning of refinement, to access the valuation -/
         dsimp only [Com.Refinement]
         intros Γv
-
-        /- Simplify away the core framework -/
-        simp_peephole at Γv
-
-        /- Simplify away the `InstCombine` specific semantics. -/
-        simp (config := {unfoldPartialApp := true}) only [OpDenote.denote,
-          /- Note that we need `HVector.toPair`, `HVector.toSingle` and `HVector.toTriple`,
-              since they're used in `InstCombine.Op.denote`,
-              and we need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
-          -- TODO: if `HVector.toTuple` is used in the core framework's AST translation, it should
-          --       probably be part of the core `simp_peephole` simp-set
-          InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
-          bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
-          Ctxt.snoc,
-          ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
-          LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
-          LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
-          LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-          LLVM.const?, LLVM.icmp?,
-          HVector.toTuple, List.nthLe, bitvec_minus_one,
-          DialectMorphism.mapTy,
-          InstcombineTransformDialect.instantiateMTy,
-          InstcombineTransformDialect.instantiateMOp,
-          InstcombineTransformDialect.MOp.instantiateCom,
-          InstcombineTransformDialect.instantiateCtxt,
-          ConcreteOrMVar.instantiate, Com.Refinement,
-          DialectMorphism.mapTy]
-
-        /-  At this point, we have should a goal of the form:
-              `∀ (x₁ : Option (BitVec _)) ... (xₙ : Option (BitVec _)), ...`
-            For some unknown number of variables `n` (but assumed to be `n ≤ 5`,
-            as per the hack in `simp_peephole`).
-
-            However, the `none` (i.e., poison) cases are generally trivial.
-            Thus we attempt to introduce some variables (using `try` because the intro might fail
-            if we have less universal quantifiers than `intro`s), case split on them, and simp
-            through the monadic bind on `Option` (in the generally true assumption that the `none`
-            case becomes trivial and is closed by `simp`).
-        -/
+        simp_peephole [InstCombine.Op.denote] at Γv
+        simp (config := {failIfUnchanged := false}) only [
+            BitVec.Refinement, bind, Option.bind, pure,
+            simp_llvm,
+            BitVec.bitvec_minus_one
+          ]
         try intros v0
         try intros v1
         try intros v2

@@ -72,13 +72,14 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       change_mlir_context $Γv
 
       /- unfold the definition of the denotation of a program -/
-      simp (config := {unfoldPartialApp := true, failIfUnchanged := false}) only [
+      simp (config := {failIfUnchanged := false, decide := false }) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
-        Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Valuation.nil, Valuation.snoc_last,
-        Valuation.snoc_eval, Ctxt.ofList, Valuation.snoc_toSnoc,
-        HVector.map, HVector.toPair, HVector.toTuple, OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
+        Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
+        HVector.map, HVector.toSingle, HVector.toPair, HVector.toTuple,
+        OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
         /- `castPureToEff` -/
