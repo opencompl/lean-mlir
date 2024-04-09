@@ -142,7 +142,6 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     intros V
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at *
-    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
     simp[Ctxt.Valuation.eval]
     simp[Deleted.pushforward_Valuation]
     simp[Deleted.pullback_var]
