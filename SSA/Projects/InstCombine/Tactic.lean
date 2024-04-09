@@ -19,12 +19,12 @@ open Ctxt
 
 open MLIR AST in
 /--
-`simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `InstCombine`
+`simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
 programs into statements about just bitvectors.
 
 To wit, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
 That is, goals of of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `,
-where `com₁` and `com₂` are programs in the `InstCombine`/`Alive`/`LLVM` dialect. -/
+where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
