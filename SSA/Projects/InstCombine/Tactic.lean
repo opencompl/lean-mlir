@@ -22,8 +22,8 @@ open MLIR AST in
 `simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
 programs into statements about just bitvectors.
 
-To wit, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
-That is, goals of of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `,
+That is, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
+That is, goals of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `,
 where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
@@ -42,7 +42,7 @@ macro "simp_alive_peephole" : tactic =>
             BitVec.bitvec_minus_one
           ]
 
-        /-  At this point, we have should a goal of the form:
+        /-  At this point, we should have a goal of the form:
               `∀ (x₁ : Option (BitVec _)) ... (xₙ : Option (BitVec _)), ...`
             For some unknown number of variables `n` (but assumed to be `n ≤ 5`,
             as per the hack in `simp_peephole`).
