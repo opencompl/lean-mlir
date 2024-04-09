@@ -50,14 +50,9 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
-  intros Γv
-  simp_peephole at Γv
-  simp (config := {decide := false }) only [OpDenote.denote,
-    InstCombine.Op.denote,
-    HVector.toTuple, HVector.toPair, HVector.toTriple,
-    pairMapM, BitVec.Refinement,
-    simp_llvm,
-    ]
+  simp_alive_ssa
+  simp_alive_undef
+  simp [simp_llvm]
   intro y x c
   cases c
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.

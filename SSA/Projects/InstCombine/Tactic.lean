@@ -21,7 +21,7 @@ into a goal about just `BitVec`s, by doing a case distinction on each `Option`.
 Then, we `simp`lify each goal, following the assumption that the `none` cases
 should generally be trivial, hopefully leaving us with just a single goal:
 the one where each option is `some`. -/
-local macro "simp_alive_case_bash" : tactic =>
+macro "simp_alive_case_bash" : tactic =>
   `(tactic|
     (
       /- Attempt to introduce up to 5 variables (using `try` because the intro might fail if
@@ -55,6 +55,48 @@ local macro "simp_alive_case_bash" : tactic =>
     )
   )
 
+/-- Eliminate the SSA structure of the program
+- We first simplify `Com.refinement` to see the context `Γv`.
+- We `simp_peephole Γv` to simplify context accesses by variables.
+- We simplify the translation overhead.
+-/
+macro "simp_alive_ssa" : tactic =>
+  `(tactic|
+      (
+        /- Unfold the meaning of refinement, to access the valuation -/
+        dsimp only [Com.Refinement]
+        intros Γv
+
+        /- Simplify away the core framework -/
+        simp_peephole [InstCombine.Op.denote] at Γv
+
+        simp (config := {failIfUnchanged := false}) only [
+            InstCombine.Op.denote, HVector.getN, HVector.get
+          ]
+      )
+  )
+
+/-- Unfold into the `undef' statements and eliminates as much as possible. -/
+macro "simp_alive_undef" : tactic =>
+  `(tactic|
+      (
+        simp (config := {failIfUnchanged := false}) only [
+            simp_llvm_option,
+            BitVec.Refinement, bind, Option.bind, pure,
+          ]
+      )
+  )
+
+/- Simplify away the `InstCombine` specific semantics. -/
+macro "simp_alive_ops" : tactic =>
+  `(tactic|
+      (
+        simp (config := {failIfUnchanged := false}) only [
+            simp_llvm, BitVec.bitvec_minus_one
+          ]
+      )
+  )
+
 /--
 `simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
 programs into statements about just bitvectors.
@@ -65,20 +107,9 @@ where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
-        /- Unfold the meaning of refinement, to access the valuation -/
-        dsimp only [Com.Refinement]
-        intros Γv
-
-        /- Simplify away the core framework -/
-        simp_peephole [InstCombine.Op.denote] at Γv
-
-        /- Simplify away the `InstCombine` specific semantics. -/
-        simp (config := {failIfUnchanged := false}) only [
-            BitVec.Refinement, bind, Option.bind, pure,
-            simp_llvm,
-            BitVec.bitvec_minus_one
-          ]
-
+        simp_alive_ssa
+        simp_alive_undef
+        simp_alive_ops
         /- Attempt to case bash each `Option`, since the `none` cases are generally trivial -/
         simp_alive_case_bash
       )
