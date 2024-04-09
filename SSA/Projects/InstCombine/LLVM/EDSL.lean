@@ -14,29 +14,32 @@ open MLIR
 namespace InstcombineTransformDialect
 
 def mkUnaryOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.UnaryOp)
-  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ .pure (.bitvec w) :=
   ⟨
     .unary w op,
     rfl,
+    by constructor,
     .cons e .nil,
     .nil
   ⟩
 
 
 def mkBinOp {Γ : Ctxt (MTy φ)} {w : Width φ} (op : MOp.BinaryOp)
-    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec w) :=
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ .pure (.bitvec w) :=
   ⟨
     .binary w op,
     rfl,
+    by constructor,
     .cons e₁ <| .cons e₂ .nil ,
     .nil
   ⟩
 
 def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
-    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ (.bitvec 1) :=
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MOp φ) Γ .pure (.bitvec 1) :=
   ⟨
     .icmp p w,
     rfl,
+    by constructor,
     .cons e₁ <| .cons e₂ .nil,
     .nil
   ⟩
@@ -44,7 +47,7 @@ def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
 
 def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
     (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) :
-    MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ ty :=
+    MLIR.AST.ExceptM (MOp φ) <| Expr (MOp φ) Γ .pure ty :=
   match ty with
   | .bitvec w =>
     match op with
@@ -52,6 +55,7 @@ def mkSelect {Γ : Ctxt (MTy φ)} {ty : (MTy φ)} (op : MOp φ)
         then return ⟨
           .select w',
           by simp [OpSignature.outTy, signature, h],
+          by constructor,
           .cons c <|.cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
           .nil
         ⟩
@@ -66,7 +70,8 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (MOp φ) (MTy φ)
 instance instTransformTy : MLIR.AST.TransformTy (MOp φ) (MTy φ) φ where
   mkTy := mkTy
 
-def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) (Σ ty, Expr (MOp φ) Γ ty) := do
+def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) :
+    AST.ReaderM (MOp φ) (Σ eff ty, Expr (MOp φ) Γ eff ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::v₃Stx::[] =>
       let ⟨.bitvec w₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -77,7 +82,7 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
         if hw1 : w₁ = 1 then
           if hw23 : w₂  = w₃ then
             let selectOp ← mkSelect (MOp.select w₂) (hw1 ▸ v₁) v₂ (hw23 ▸ v₃)
-            return ⟨.bitvec w₂, selectOp⟩
+            return ⟨.pure, .bitvec w₂, selectOp⟩
           else
             throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
         else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
@@ -117,8 +122,8 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
         | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
         | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
-        | .inl binOp  => ⟨.bitvec w, mkBinOp binOp v₁ v₂⟩
-        | .inr pred   => ⟨.bitvec 1, mkIcmp pred v₁ v₂⟩
+        | .inl binOp  => ⟨_, _, mkBinOp binOp v₁ v₂⟩
+        | .inr pred   => ⟨_, _, mkIcmp pred v₁ v₂⟩
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
@@ -126,7 +131,7 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
         | "llvm.neg"  => pure .neg
         | "llvm.copy" => pure .copy
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
-    return ⟨.bitvec w, mkUnaryOp op v⟩
+    return ⟨_, _, mkUnaryOp op v⟩
   | [] =>
     if opStx.name ==  "llvm.mlir.constant"
     then do
@@ -135,9 +140,10 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
     match att with
       | .int val ty =>
           let opTy@(MTy.bitvec w) ← mkTy ty -- ty.mkTy
-          return ⟨opTy, ⟨
+          return ⟨.pure, opTy, ⟨
             MOp.const w val,
             by simp [OpSignature.outTy, signature, *],
+            by constructor,
             HVector.nil,
             HVector.nil
           ⟩⟩
@@ -149,12 +155,13 @@ def mkExpr (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : AST.ReaderM (MOp φ) 
 instance : AST.TransformExpr (MOp φ) (MTy φ) φ where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : MLIR.AST.ReaderM (MOp φ) (Σ ty, Com (MOp φ) Γ ty) :=
+def mkReturn (Γ : Ctxt (MTy φ)) (opStx : MLIR.AST.Op φ) : MLIR.AST.ReaderM (MOp φ)
+    (Σ eff ty, Com (MOp φ) Γ eff ty) :=
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨ty, _root_.Com.ret v⟩
+    return ⟨.pure, ty, _root_.Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
@@ -187,16 +194,23 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
     have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
     cases op <;>
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
-      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
+      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
+      Signature.mk, Signature.mkEffectful.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
       List.cons.injEq, MTy.bitvec.injEq, and_true, true_and, h1]
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MOp φ) (Vector Nat φ → Σ (Γ : Ctxt InstCombine.Ty) (ty : InstCombine.Ty), Com InstCombine.Op Γ ty) := do
-  let ⟨Γ, ty, com⟩ ← MLIR.AST.mkCom reg
+    MLIR.AST.ExceptM (MOp φ)
+      (Vector Nat φ
+        → Σ (Γ : Ctxt InstCombine.Ty) (eff : _) (ty : InstCombine.Ty),
+            Com InstCombine.Op Γ eff ty) := do
+  let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
   return fun vals =>
-    ⟨instantiateCtxt vals Γ, instantiateMTy vals ty, com.map (MOp.instantiateCom vals)⟩
+    let Γ' := instantiateCtxt vals Γ
+    let ty' := instantiateMTy vals ty
+    let com' := com.map (MOp.instantiateCom vals)
+    ⟨Γ', eff, ty', com'⟩
 
 end InstcombineTransformDialect
 
@@ -216,7 +230,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
   let com := q(InstcombineTransformDialect.mkComInstantiate (φ := $φ) $ast |>.map (· $mvalues))
   synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM (MOp $φ) (Σ (Γ' : Ctxt (MTy $φ)) (ty : (MTy $φ)), Com (MOp $φ) Γ' ty)) ←
+  let com : Q(MLIR.AST.ExceptM (MOp $φ) (Σ (Γ' : Ctxt (MTy $φ)) (eff : _) (ty : (MTy $φ)), Com (MOp $φ) Γ' eff ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
       withTransparency (mode := TransparencyMode.all) <|
         return ←reduce com
@@ -229,10 +243,20 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
       | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
         match sndexpr.app4? ``Sigma.mk with
         | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
+          match sndexpr.app4? ``Sigma.mk with
+          | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
             return sndexpr
+          | .none => throwError "Found `Except.ok (Sigma.mk _ (Sigma.mk _ WRONG))`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ (Sigma.mk _ _)))"
         | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
       | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
   | .none => throwError "Expected `Except.ok`, found {comExpr}"
+
+/-
+TODO: We currently need to duplicate the above meta code for each dialect.
+It's fine if we need to register a new macro for each dialect, but that macro should just be a thin
+wrapper around common meta-code!
+Also, we should find a better solution to error-handling than the big-blob-of-`match` we currently
+have. -/
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
