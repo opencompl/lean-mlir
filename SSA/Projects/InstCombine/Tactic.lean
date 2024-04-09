@@ -9,13 +9,13 @@ import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt
 
 theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : BitVec w) := by
   change (BitVec.ofInt w (-1) = (-1 : BitVec w))
   ext i
   simp_all only [BitVec.ofInt, Neg.neg, Int.neg, Int.negOfNat]
+  stop
   simp_all only [BitVec.getLsb'_not, BitVec.getLsb'_ofNat_zero, Bool.not_false, BitVec.ofNat_eq_ofNat, BitVec.neg_eq,
     BitVec.getLsb'_neg_ofNat_one]
 
@@ -93,7 +93,7 @@ macro "simp_alive_peephole" : tactic =>
           <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind]
           <;> dsimp[Option.bind, bind, Monad.toBind]
 
-        /--
+        /-
         CAVEAT: This does nothing, the variables `v$i` have been cases on, and the newly introduced
         variables (in the `some` cases) are called `x$i` instead, i'll document the intended behaviour.
         TODO: fix this
