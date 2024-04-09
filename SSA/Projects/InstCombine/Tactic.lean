@@ -12,11 +12,6 @@ open MLIR AST
 open Std (BitVec)
 open Ctxt
 
--- TODO: Do we call this dialect the "Alive" dialect (as hinted by the `simp_alive_peephole` name),
---       or the "InstCombine" dialect (as hinted by the `InstCombine` namespace that everything
---       lives in), or the "LLVM" dialect (as we do in the paper, and the simp-sets,
---       and the `LLVM` namespace)?
-
 open MLIR AST in
 /--
 `simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
