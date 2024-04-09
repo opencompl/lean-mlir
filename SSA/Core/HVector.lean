@@ -49,6 +49,24 @@ def get {as} : HVector A as → (i : Fin as.length) → A (as.get i)
   | .cons x  _, ⟨0,   _⟩  => x
   | .cons _ xs, ⟨i+1, h⟩  => get xs ⟨i, Nat.succ_lt_succ_iff.mp h⟩
 
+/-- To be used as an auto-tactic to prove that the index of getN is within bounds -/
+macro "hvector_get_elem_tactic" : tactic =>
+  `(tactic|
+      (
+      simp [List.length]
+      )
+   )
+
+/-- `x.getN i` indexes into a `HVector` with a `Nat`.
+
+Note that we cannot define a proper instance of `GetElem` for `HVector`,
+since `GetElem` requires us to specify a type `elem` such that `xs[i] : elem`,
+but `elem` is *not* allowed to depend on the concrete index `i`.
+Thus, `GetElem` does not properly support heterogeneous container types like `HVector`
+-/
+abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by hvector_get_elem_tactic) :
+    A (as.get ⟨i, hi⟩) :=
+  x.get ⟨i, hi⟩
 
 def ToTupleType (A : α → Type*) : List α → Type _
   | [] => PUnit
