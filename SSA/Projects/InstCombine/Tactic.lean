@@ -55,7 +55,6 @@ local macro "simp_alive_case_bash" : tactic =>
     )
   )
 
-open MLIR AST in
 /--
 `simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
 programs into statements about just bitvectors.
