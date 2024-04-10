@@ -34,13 +34,13 @@ local macro "simp_alive_case_bash" : tactic =>
 
       /- Then, case split on each variable, and `simp` through the monadic bind on `Option`
          (in the hope that the `none` case becomes trivial and is immediately closed) -/
-      try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v3 with x3 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v4 with x4 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> dsimp[Option.bind, bind, Monad.toBind]
+      try cases' v0 with x0 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v1 with x1 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v2 with x2 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v3 with x3 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v4 with x4 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v5 with x5 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> dsimp [Option.bind, bind, Monad.toBind]
 
       /- CAVEAT: The following `revert`s currently have no effect,
          the variables `v$i` have been cases on,
