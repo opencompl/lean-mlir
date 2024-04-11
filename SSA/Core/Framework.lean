@@ -3,6 +3,8 @@
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
 import Mathlib.Data.List.AList
+import Mathlib.Data.Finset.Piecewise
+
 import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 
