@@ -19,7 +19,6 @@ import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
-import Mathlib.Data.Polynomial.RingDivision
 import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation

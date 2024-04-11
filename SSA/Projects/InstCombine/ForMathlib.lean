@@ -12,10 +12,10 @@ theorem ofInt_negSucc (w n : Nat ) :
   split
   · simp_all [Int.negSucc_emod]
     symm
-    rw [← Int.cast_eq_cast_iff_Nat]
+    rw [← Int.natCast_inj]
     rw [Nat.cast_sub]
     rw [Nat.cast_sub]
-    have h : 0 < 2 ^ w := by simp
+    have _ : 0 < 2 ^ w := by simp
     simp_all only [gt_iff_lt, ofNat_pos, pow_pos, cast_pow, Nat.cast_ofNat, cast_one,
       Int.ofNat_emod]
     have h : 0 < 2 ^ w := by simp
@@ -48,4 +48,4 @@ theorem toFin_intCast (z : ℤ) : toFin (z : BitVec w) = z := by
 instance : CommRing (BitVec w) :=
   toFin_injective.commRing _
     toFin_zero toFin_one toFin_add toFin_mul toFin_neg toFin_sub
-    (Function.swap toFin_nsmul) (Function.swap toFin_zsmul) toFin_pow toFin_natCast toFin_intCast
+    toFin_nsmul toFin_zsmul toFin_pow toFin_natCast toFin_intCast
