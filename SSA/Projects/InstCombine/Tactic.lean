@@ -83,7 +83,7 @@ macro "simp_alive_undef" : tactic =>
       (
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
-            BitVec.Refinement, bind, Option.bind, pure,
+            BitVec.Refinement, bind_assoc,
           ]
       )
   )
@@ -93,7 +93,7 @@ macro "simp_alive_ops" : tactic =>
   `(tactic|
       (
         simp (config := {failIfUnchanged := false}) only [
-            simp_llvm, BitVec.bitvec_minus_one
+            simp_llvm, BitVec.bitvec_minus_one, pure_bind
           ]
       )
   )

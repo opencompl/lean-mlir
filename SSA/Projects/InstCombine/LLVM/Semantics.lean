@@ -16,7 +16,7 @@ The ‘and’ instruction returns the bitwise logical and of its two operands.
 -/
 @[simp_llvm]
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x &&& y
+  pure <| x &&& y
 
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
@@ -30,7 +30,7 @@ operands.
 -/
 @[simp_llvm]
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x ||| y
+  pure <| x ||| y
 
 
 @[simp_llvm_option]
@@ -46,7 +46,7 @@ is the “~” operator in C.
 -/
 @[simp_llvm]
 def xor? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x ^^^ y
+  pure <| x ^^^ y
 
 @[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
@@ -61,7 +61,7 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x + y
+  pure <| x + y
 
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) : IntW w := do
@@ -76,7 +76,7 @@ Because LLVM integers use a two’s complement representation, this instruction 
 -/
 @[simp_llvm]
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x - y
+  pure <| x - y
 
 @[simp_llvm_option]
 def sub {w : Nat} (x y : IntW w) : IntW w := do
@@ -97,7 +97,7 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 -/
 @[simp_llvm]
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
-  some <| x * y
+  pure <| x * y
 
 @[simp_llvm_option]
 def mul {w : Nat} (x y : IntW w) : IntW w := do
@@ -114,7 +114,7 @@ Division by zero is undefined behavior.
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
   match y.toNat with
     | 0 => none
-    | _ => some <| BitVec.ofInt w (x.toNat / y.toNat)
+    | _ => pure <| BitVec.ofInt w (x.toNat / y.toNat)
 
 @[simp_llvm_option]
 def udiv {w : Nat} (x y : IntW w) : IntW w := do
@@ -164,7 +164,7 @@ theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
     sdiv? x y =
     if (y = 0) ∨ ((w ≠ 1) ∧ (x = intMin w) ∧ (y = -1))
       then none
-    else some <| BitVec.sdiv x y
+    else pure <| BitVec.sdiv x y
     := by
   simp [sdiv?]; split_ifs <;> try tauto
 
@@ -177,7 +177,7 @@ Taking the remainder of a division by zero is undefined behavior.
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
   if y.toNat = 0
   then none
-  else some <| BitVec.ofNat w (x.toNat % y.toNat)
+  else pure <| BitVec.ofNat w (x.toNat % y.toNat)
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
@@ -233,7 +233,7 @@ bits in op1, this instruction returns a poison value.
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else some (op1 <<< op2)
+  else pure (op1 <<< op2)
 
 
 @[simp_llvm_option]
@@ -250,13 +250,13 @@ the shift.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.ushiftRight` in the `some` case.
+Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else some (op1 >>> op2)
+  else pure (op1 >>> op2)
 
 @[simp_llvm_option]
 def lshr {w : Nat} (x y : IntW w) : IntW w := do
@@ -271,13 +271,13 @@ The most significant bits of the result will be filled with the sign bit of op1.
 If op2 is (statically or dynamically) equal to or larger than the number of bits in op1,
 this instruction returns a poison value.
 
-Corresponds to `Std.BitVec.sshiftRight` in the `some` case.
+Corresponds to `Std.BitVec.sshiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   let bits := op2.toNat -- should this be toInt?
   if bits >= n then .none
-  else some (op1 >>>ₛ op2)
+  else pure (op1 >>>ₛ op2)
 
 @[simp_llvm_option]
 def ashr {w : Nat} (x y : IntW w) : IntW w := do
@@ -379,7 +379,7 @@ The remaining two arguments must be integer. They must also be identical types.
 -/
 @[simp_llvm]
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
-  some ↑(icmp' c x y)
+  pure ↑(icmp' c x y)
 
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
@@ -406,11 +406,11 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 -/
 @[simp_llvm]
 def const? (i : Int): IntW w :=
-  some <| BitVec.ofInt w i
+  pure <| BitVec.ofInt w i
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
-  some (~~~x)
+  pure (~~~x)
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -419,7 +419,7 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 
 @[simp_llvm]
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
-  some <| (-.) x
+  pure <| (-.) x
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
