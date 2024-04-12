@@ -1,6 +1,8 @@
 import SSA.Core.Framework
 import SSA.Core.Util
 import Qq
+import Lean.Meta.KAbstract
+import Lean.Elab.Tactic.ElabTerm
 
 namespace SSA
 
@@ -49,6 +51,36 @@ private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : C
   · intro h; apply h
   · intro h V; rw [Ctxt.Valuation.eq_nil V]; exact h
 
+open Lean Elab Tactic Meta
+
+/--
+Check if an expression is contained in the current goal and fail otherwise.
+This tactic does not modify the goal state.
+ -/
+local elab "contains? " ts:term : tactic => withMainContext do
+  let tgt ← getMainTarget
+  if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
+
+/-- Look for a variable in the context and generalize it, fail otherwise. -/
+local macro "generalize_or_fail" "at" ll:ident : tactic =>
+  `(tactic|
+      (
+        -- We first check with `contains?` if the term is present in the goal.
+        -- This is needed as `generalize` never fails and just introduces a new
+        -- metavariable in case no variable is found. `contains?` will instead
+        -- fail if the term is not present in the goal.
+        contains? ($ll (_ : Var ..))
+        generalize ($ll (_ : Var ..)) = e at *;
+        simp (config := {failIfUnchanged := false}) only [TyDenote.toType] at e
+        revert e
+      )
+  )
+
+/-- `only_goal $t` runs `$t` on the current goal, but only if there is a goal to be solved.
+Essentially, this silences "no goals to be solved" errors -/
+macro "only_goal" t:tacticSeq : tactic =>
+  `(tactic| first | done | $t)
+
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
 leaving behind a bare Lean level proposition to be proven.
@@ -72,27 +104,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         bind_assoc, pairBind,
         $ts,*]
 
-      try simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
-      try generalize $ll { val := 0, property := _ } = a;
-      try generalize $ll { val := 1, property := _ } = b;
-      try generalize $ll { val := 2, property := _ } = c;
-      try generalize $ll { val := 3, property := _ } = d;
-      try generalize $ll { val := 4, property := _ } = e;
-      try generalize $ll { val := 5, property := _ } = f;
-      try simp (config := {failIfUnchanged := false, decide := false, zetaDelta := true}) [TyDenote.toType] at a b c d e f;
-      try clear f;
-      try clear e;
-      try clear d;
-      try clear c;
-      try clear b;
-      try clear a;
-      try revert f;
-      try revert e;
-      try revert d;
-      try revert c;
-      try revert b;
-      try revert a;
-      try clear $ll;
+      -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
+      -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
+      only_goal
+        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+        repeat (generalize_or_fail at $ll)
+        clear $ll
       )
    )
 

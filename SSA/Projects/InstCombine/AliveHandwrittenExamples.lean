@@ -53,7 +53,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp [simp_llvm]
-  intro y x c
+  intro y c x
   cases c
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
   case none => cases x <;> cases y <;> simp

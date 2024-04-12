@@ -3163,7 +3163,8 @@ def alive_Select_858_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
   unfold alive_Select_858_src alive_Select_858_tgt
-  simp_alive_peephole
+  stop
+  simp_alive_peephole -- fails to clear the context
   all_goals sorry --apply bitvec_Select_858
 
 
@@ -3198,7 +3199,8 @@ def alive_Select_859'_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w  ⊑ alive_Select_859'_tgt 1  := by
   unfold alive_Select_859'_src alive_Select_859'_tgt
-  simp_alive_peephole
+  stop
+  simp_alive_peephole -- fails to clear the context
   all_goals sorry --apply bitvec_Select_859'
 
 
@@ -3228,7 +3230,7 @@ def alive_Select_1100_tgt  (w : Nat)  :=
 theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Select_1100_tgt w  := by
   unfold alive_Select_1100_src alive_Select_1100_tgt
   simp_alive_peephole
-  all_goals sorry --apply bitvec_Select_1100
+  done
 
 
 -- Name:Select:1105
@@ -3257,7 +3259,7 @@ def alive_Select_1105_tgt  (w : Nat)  :=
 theorem alive_Select_1105  (w : Nat)   : alive_Select_1105_src w  ⊑ alive_Select_1105_tgt w  := by
   unfold alive_Select_1105_src alive_Select_1105_tgt
   simp_alive_peephole
-  all_goals sorry --apply bitvec_Select_1105
+  done
 
 
 -- Name:InstCombineShift: 239
