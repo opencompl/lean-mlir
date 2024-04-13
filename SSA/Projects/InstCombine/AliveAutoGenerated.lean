@@ -50,7 +50,7 @@ theorem ok  : src 1  ⊑ tgt 1  := by
   simp (config := {failIfUnchanged := false}) only [HVector.map]
   simp (config := {failIfUnchanged := false}) only [List.map_eq_map]
   simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last]
-  simp (config := {failIfUnchanged := false}) only [Valuation.snoc_last]
+  rw [Valuation.snoc_last]
 
   simp (config := {failIfUnchanged := false}) only [OpDenote.denote]
 
@@ -89,7 +89,7 @@ theorem broken  : src_i1 1 ⊑ tgt 1  := by
   simp (config := {failIfUnchanged := false}) only [HVector.map]
   simp (config := {failIfUnchanged := false}) only [List.map_eq_map]
   simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last]
-  simp (config := {failIfUnchanged := false}) only [Valuation.snoc_last] -- <= This one does not fire!
+  rw [Valuation.snoc_last] -- <= This one does not fire!
 
   simp (config := {failIfUnchanged := false}) only [OpDenote.denote]
 
