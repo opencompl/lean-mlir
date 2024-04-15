@@ -62,7 +62,7 @@ local elab "contains? " ts:term : tactic => withMainContext do
   if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
 
 /-- Look for a variable in the context and generalize it, fail otherwise. -/
-macro "generalize_or_fail" "at" ll:ident : tactic =>
+local macro "generalize_or_fail" "at" ll:ident : tactic =>
   `(tactic|
       (
         -- We first check with `contains?` if the term is present in the goal.
@@ -75,6 +75,12 @@ macro "generalize_or_fail" "at" ll:ident : tactic =>
         revert e
       )
   )
+
+/-- `only_goal $t` runs `$t` on the current goal, but only if there is a goal to be solved.
+Essentially, this silences "no goals to be solved" errors -/
+macro "only_goal" t:tacticSeq : tactic =>
+  `(tactic| first | done | $t)
+
 /--
 `simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
 leaving behind a bare Lean level proposition to be proven.
@@ -99,14 +105,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
         bind_assoc, pairBind,
         $ts,*]
 
-      -- `simp` might close trivial goals, so we use `first | done | ...` to ensure we only run
+      -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
-      first
-      | done
-      | simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+      only_goal
+        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
         repeat (generalize_or_fail at $ll)
-        -- As per the note in `generalize_or_fail`, it might close trivial goals
-        -- So, we wrap the next tactic in another `first | done | ...` tactic
+        clear $ll
       )
    )
 
