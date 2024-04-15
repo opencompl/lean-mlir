@@ -62,7 +62,7 @@ local elab "contains? " ts:term : tactic => withMainContext do
   if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
 
 /-- Look for a variable in the context and generalize it, fail otherwise. -/
-local macro "generalize_or_fail" "at" ll:ident : tactic =>
+macro "generalize_or_fail" "at" ll:ident : tactic =>
   `(tactic|
       (
         -- We first check with `contains?` if the term is present in the goal.
