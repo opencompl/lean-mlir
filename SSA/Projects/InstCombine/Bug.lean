@@ -3,10 +3,12 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.InstCombine.ComWrappers
 
 open MLIR AST
 open Std (BitVec)
 open Ctxt (Var)
+open ComWrappers
 
 set_option pp.proofs true
 set_option pp.proofs.withType true
@@ -38,6 +40,11 @@ def src_cw (w : Nat) :
 def src_i1_cw (w : Nat) :
   Com InstCombine.Op [InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
   .ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def tgt_cw (w : Nat) :
+  Com InstCombine.Op [InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  .lete (ComWrappers.mul w 0 0) <|
+  .ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def src_cw_hidden (w : Nat) := src_cw w
 def src_i1_cw_hidden (w : Nat) := src_cw w
