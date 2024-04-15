@@ -48,6 +48,10 @@ def src_i1_cw_hidden (w : Nat) := src_cw w
 #check src_i1 1
 #check tgt 1
 
+theorem ss : src_i1 1 = src 1 := rfl
+theorem sss : src_cw 1 = src 1 := rfl
+theorem ssss : src_i1_cw 1 = src 1 := rfl
+
 open Ctxt
 
 /-- This one does not have the 'snoc' leftover. -/
