@@ -247,30 +247,28 @@ instance : OpSignature (MOp φ) (MTy φ) Id where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
 
 @[simp]
-def Op.denote (o : Op) (arg : HVector TyDenote.toType (OpSignature.sig o)) :
+def Op.denote (o : Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
     (TyDenote.toType <| OpSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
-  | Op.and _ => pairBind and? arg.toPair
-  | Op.or _ => pairBind or? arg.toPair
-  | Op.xor _ => pairBind xor? arg.toPair
-  | Op.shl _ => pairBind shl? arg.toPair
-  | Op.lshr _ => pairBind lshr? arg.toPair
-  | Op.ashr _ => pairBind ashr? arg.toPair
-  | Op.sub _ => pairBind sub?  arg.toPair
-  | Op.add _ => pairBind add? arg.toPair
-  | Op.mul _ => pairBind mul? arg.toPair
-  | Op.sdiv _ => pairBind sdiv? arg.toPair
-  | Op.udiv _ => pairBind udiv? arg.toPair
-  | Op.urem _ => pairBind urem? arg.toPair
-  | Op.srem _ => pairBind srem? arg.toPair
-  | Op.not _ => Option.map (~~~.) arg.toSingle
-  | Op.copy _ => arg.toSingle
-  | Op.neg _ => Option.map (-.) arg.toSingle
-  | Op.select _ =>
-    let (ocond, otrue, ofalse) := arg.toTriple
-    select? ocond otrue ofalse
-  | Op.icmp c _ => pairBind (icmp? c) arg.toPair
+  | Op.copy _      =>             (op.getN 0)
+  | Op.not _       => LLVM.not    (op.getN 0)
+  | Op.neg _       => LLVM.neg    (op.getN 0)
+  | Op.and _       => LLVM.and    (op.getN 0) (op.getN 1)
+  | Op.or _        => LLVM.or     (op.getN 0) (op.getN 1)
+  | Op.xor _       => LLVM.xor    (op.getN 0) (op.getN 1)
+  | Op.shl _       => LLVM.shl    (op.getN 0) (op.getN 1)
+  | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
+  | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
+  | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
+  | Op.add _       => LLVM.add    (op.getN 0) (op.getN 1)
+  | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
+  | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
+  | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
+  | Op.urem _      => LLVM.urem   (op.getN 0) (op.getN 1)
+  | Op.srem _      => LLVM.srem   (op.getN 0) (op.getN 1)
+  | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
+  | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
 
 instance : OpDenote Op Ty Id := ⟨
   fun o args _ => Op.denote o args

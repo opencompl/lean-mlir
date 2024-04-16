@@ -5,6 +5,8 @@ import SSA.Core.HVector
 import SSA.Core.EffectKind
 import Mathlib.Control.Monad.Basic
 import Mathlib.Data.List.AList
+import Mathlib.Data.Finset.Piecewise
+
 import SSA.Projects.MLIRSyntax.AST -- TODO post-merge: bring into Core
 import SSA.Projects.MLIRSyntax.EDSL -- TODO post-merge: bring into Core
 

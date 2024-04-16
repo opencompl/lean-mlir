@@ -1,3 +1,4 @@
+import Mathlib.Algebra.GroupPower.IterateHom
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Linarith
 import SSA.Core.Framework
@@ -445,15 +446,6 @@ def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .pure
   Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-/-- iterated addition-/
-theorem add_iterate (v0 : Int) (b : Int) (a : ℕ) :
-    (fun v => v0 + v)^[a] b = v0 * ↑a + b := by
-  induction a generalizing b v0
-  case zero => simp
-  case succ a' ah =>
-    simp [ah]
-    linarith
-
 abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAddInt
 
 open ScfRegion in
@@ -463,7 +455,7 @@ theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp_peephole at Γv
   intros A B
   rw [ScfRegion.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
-  apply add_iterate
+  simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
 

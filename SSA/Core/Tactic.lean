@@ -1,6 +1,8 @@
 import SSA.Core.Framework
 import SSA.Core.Util
 import Qq
+import Lean.Meta.KAbstract
+import Lean.Elab.Tactic.ElabTerm
 
 namespace SSA
 
@@ -50,6 +52,36 @@ private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : C
   · intro h; apply h
   · intro h V; rw [Ctxt.Valuation.eq_nil V]; exact h
 
+open Lean Elab Tactic Meta
+
+/--
+Check if an expression is contained in the current goal and fail otherwise.
+This tactic does not modify the goal state.
+ -/
+local elab "contains? " ts:term : tactic => withMainContext do
+  let tgt ← getMainTarget
+  if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
+
+/-- Look for a variable in the context and generalize it, fail otherwise. -/
+local macro "generalize_or_fail" "at" ll:ident : tactic =>
+  `(tactic|
+      (
+        -- We first check with `contains?` if the term is present in the goal.
+        -- This is needed as `generalize` never fails and just introduces a new
+        -- metavariable in case no variable is found. `contains?` will instead
+        -- fail if the term is not present in the goal.
+        contains? ($ll (_ : Var ..))
+        generalize ($ll (_ : Var ..)) = e at *;
+        simp (config := {failIfUnchanged := false}) only [TyDenote.toType] at e
+        revert e
+      )
+  )
+
+/-- `only_goal $t` runs `$t` on the current goal, but only if there is a goal to be solved.
+Essentially, this silences "no goals to be solved" errors -/
+macro "only_goal" t:tacticSeq : tactic =>
+  `(tactic| first | done | $t)
+
 /--
 `simp_peephole at ΓV` simplifies away the framework overhead of denotating expressions/programs,
 that are evaluated with the valuation `ΓV`.
@@ -72,13 +104,13 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       change_mlir_context $Γv
 
       /- unfold the definition of the denotation of a program -/
-      simp (config := {failIfUnchanged := false, decide := false }) only [
+      simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
         Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
-        HVector.map, HVector.toSingle, HVector.toPair, HVector.toTuple,
+        HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
         OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
@@ -92,52 +124,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Id.pure_eq, Id.bind_eq, id_eq,
         $ts,*]
 
-      /- Attempt to replace all occurence of a variable accesses `Γ ⟨i, _⟩` with a new (Lean)
-      variable in the local context
-      HACK: for now, we assume no program contains a variable with `i > 5` -/
-      try simp (config := {failIfUnchanged := false, decide := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
-      try generalize $Γv { val := 0, property := _ } = a;
-      try generalize $Γv { val := 1, property := _ } = b;
-      try generalize $Γv { val := 2, property := _ } = c;
-      try generalize $Γv { val := 3, property := _ } = d;
-      try generalize $Γv { val := 4, property := _ } = e;
-      try generalize $Γv { val := 5, property := _ } = f;
-      try simp (config := {failIfUnchanged := false, decide := false, zetaDelta := true}) [TyDenote.toType]
-        at a b c d e f
-      -- ^^^^^^ TODO: This really should be a `simp only`
-
-      /- The previous step will introduce all variables, even if there is no occurence of, say,
-      `Γv ⟨5, _⟩`. Thus, we try to clear each of the newly introduced variables.
-      If the variable does occur in the goal
-      (i.e., there was a `Γv ⟨i, _⟩` in the original, simplified, goal),
-      then clearing will fail (hence the `try`), leaving the variable in the context.
-
-      However, if the variable was redundantly introduced, this will remove it from the context -/
-      try clear f;
-      try clear e;
-      try clear d;
-      try clear c;
-      try clear b;
-      try clear a;
-
-      /- Now, revert each variable, so that the variable from the local context is turned into a
-      universal quantifier (`∀ _, ...`) in the goal statement.
-      We do this primarly because the introduces variables `a`, `b`, etc. are made inaccesible by
-      macro hygiene, and we find a universally quantified goal more aesthetic than one with
-      inaccessible names.
-
-      Note, this will fail if the variable was removed in the previous step, hence we use `try` -/
-      try revert f;
-      try revert e;
-      try revert d;
-      try revert c;
-      try revert b;
-      try revert a;
-
-      /- Finally, try to clear the valuation. This succeeds iff there are no more occurences of
-      `Γv` in the goal, which happens iff the simplified goal contained `Γv` only applied direclty
-      to a variable (with index `i ≤ 5`) -/
-      try clear $Γv;
+      -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
+      -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
+      only_goal
+        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+        repeat (generalize_or_fail at $Γv)
+        clear $Γv
       )
    )
 
