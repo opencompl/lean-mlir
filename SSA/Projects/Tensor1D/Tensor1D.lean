@@ -353,8 +353,8 @@ def Op.regSig : Op → RegionSignature Ty
   | _ => []
 
 
-instance : OpSignature Op Ty where
-  signature op := ⟨op.sig, op.regSig, op.outTy⟩
+instance : OpSignature Op Ty Id where
+  signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy, effectKind := .pure }
 
 /-
 -- Error: unknown free variable: _kernel_fresh.459
