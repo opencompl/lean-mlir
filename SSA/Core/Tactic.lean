@@ -114,6 +114,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         OpDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
+        List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
+        bind_assoc, pairBind,
         /- `castPureToEff` -/
         Com.letPure, Expr.denote_castPureToEff,
         /- Unfold denotation -/
