@@ -122,10 +122,29 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
 
 /-- This one does not have the 'snoc' leftover. -/
 theorem ok : src 1  ⊑ tgt 1  := by
-  unfold tgt
+  --unfold tgt
   dsimp only [Com.Refinement]
-  intros Γv
-  change_mlir_context Γv
+  --intros Γv
+  --change_mlir_context Γv
+  simp only [InstcombineTransformDialect.MOp.instantiateCom]
+  simp only [List.map_eq_map]
+  simp only [DerivedCtxt.snoc]
+  simp only [List.length_singleton, Nat.zero_eq, Fin.zero_eta, empty_eq, List.map_cons,
+    List.map_nil]
+  simp only [SSA.Ctxt.destruct_cons]
+  simp only [SSA.Ctxt.destruct_nil]
+  simp only [InstcombineTransformDialect.instantiateMTy]
+  simp only [ConcreteOrMVar.instantiate]
+  simp only [Vector.get]
+  simp only [List.nthLe]
+  simp only [List.get]
+
+
+
+  -- Current working location
+
+
+
   simp (config := {failIfUnchanged := false}) only [Com.denote]
   simp (config := {failIfUnchanged := false}) only [Expr.denote]
   simp (config := {failIfUnchanged := false}) only [HVector.denote]
@@ -135,15 +154,16 @@ theorem ok : src 1  ⊑ tgt 1  := by
   simp only [Valuation.snoc_last]
   sorry
 
+
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by
-  unfold tgt
   -- ∀ (e : Option (_root_.BitVec 1)),
   -- Com.denote (src_i1 1) Γv✝ ⊑ Ctxt.Valuation.snoc Γv✝ (LLVM.mul e e) { val := 0, property := ⋯ }
   dsimp only [Com.Refinement]
   intros Γv
   change_mlir_context Γv
 
+  unfold tgt
   simp (config := {failIfUnchanged := false}) only [Com.denote]
   simp (config := {failIfUnchanged := false}) only [Expr.denote]
   simp (config := {failIfUnchanged := false}) only [HVector.denote]
