@@ -67,7 +67,5 @@ theorem alive_DivRemOfSelect (w : Nat) :
      . subst h
        simp
      . subst h; simp
-       cases' x with vx <;>
-       cases' y with vy <;> simp [LLVM.udiv?]
 
 end AliveHandwritten
