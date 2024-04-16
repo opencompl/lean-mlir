@@ -118,11 +118,15 @@ def State.snocNewExpr2Cache [DecidableEq Ty] [DecidableEq Op]
                 .some ⟨hβ ▸ Ctxt.Var.last Γ α, by {
                   intros V
                   subst hβ
-                  obtain rfl := by simpa only using exprEq
-                  simp only [Lets.denote_lete_last_pure]
-                  rw [heneedleΓ]
+                  subst exprEq
+                  simp! only [Lets.denote_lete_last_pure]
+                  simp! (config := { unfoldPartialApp := true, decide := true, zetaDelta := true}) [heneedleΓ]
                   congr
-                  done}⟩
+                  -- | The proof below should follow from funext + reduction, but does not anymore.
+                  unfold Deleted.pushforward_Valuation Deleted.pullback_var
+                  funext t v
+                  simp [Lets.denote]
+                }⟩
             | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
  }
 
