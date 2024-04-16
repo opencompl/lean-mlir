@@ -124,13 +124,16 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
 theorem ok : src 1  ⊑ tgt 1  := by
   --unfold tgt
   dsimp only [Com.Refinement]
+
   --intros Γv
   --change_mlir_context Γv
+  simp only [DerivedCtxt.snoc]
+
   simp only [InstcombineTransformDialect.MOp.instantiateCom]
   simp only [List.map_eq_map]
-  simp only [DerivedCtxt.snoc]
-  simp only [List.length_singleton, Nat.zero_eq, Fin.zero_eta, empty_eq, List.map_cons,
-    List.map_nil]
+  simp only [empty_eq]
+  simp only [List.map_cons]
+  simp only [List.map_nil]
   simp only [SSA.Ctxt.destruct_cons]
   simp only [SSA.Ctxt.destruct_nil]
   simp only [InstcombineTransformDialect.instantiateMTy]
@@ -139,9 +142,7 @@ theorem ok : src 1  ⊑ tgt 1  := by
   simp only [List.nthLe]
   simp only [List.get]
 
-
-
-  -- Current working location
+  -- HERE: Current working location
 
 
 
