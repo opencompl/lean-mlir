@@ -91,15 +91,6 @@ def mlir2fhe (reg : MLIR.AST.Region 0) :
 end MkFuns -- we don't want q and i here anymore
 
 open Qq MLIR AST Lean Elab Term Meta in
-/--
-NOTE: Wanting Stuck Terms During Strong Normalization of Com
-
-See that we unfold with `TransparencyMode.all`. We do this so we can expose Com.denote
-fully. This is a crazy hack, and interacts extremely poorly with complex definitions found in FHE.
-
-One neater solution is a `match goal` like tactic to match on the proof state
-and run the correct equation.
--/
 elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
   let ast_stx ← `([mlir_region| $reg])
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)
