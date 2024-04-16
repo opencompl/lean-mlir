@@ -9,62 +9,110 @@ import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt
 
-open MLIR AST in
 /--
+`simp_alive_case_bash` transforms a goal of the form
+  `∀ (x₁ : Option (BitVec _)) ... (xₙ : Option (BitVec _)), ...`
+(for some number of variables `n ≤ 5`, following the hack in `simp_peephole`)
+into a goal about just `BitVec`s, by doing a case distinction on each `Option`.
+
+Then, we `simp`lify each goal, following the assumption that the `none` cases
+should generally be trivial, hopefully leaving us with just a single goal:
+the one where each option is `some`. -/
+macro "simp_alive_case_bash" : tactic =>
+  `(tactic|
+    (
+      /- Attempt to introduce up to 5 variables (using `try` because the intro might fail if
+         the goal has less than 5 universal quantifiers)
+
+        case split on them, and simp
+          through the monadic bind on `Option` (in the generally true assumption that the `none`
+            case becomes trivial and is closed by `simp`). -/
+      try intros v0; try intros v1; try intros v2; try intros v3; try intros v4
+
+      /- Then, case split on each variable, and `simp` through the monadic bind on `Option`
+         (in the hope that the `none` case becomes trivial and is immediately closed) -/
+      try cases' v0 with x0 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v1 with x1 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v2 with x2 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v3 with x3 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v4 with x4 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> try cases' v5 with x5 <;> simp [Option.bind, bind, Monad.toBind]
+          <;> dsimp [Option.bind, bind, Monad.toBind]
+
+      /- Revert the variables introduced in the `some` cases, so that we are left with
+         a universally quantified goal of the form:
+         `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...` -/
+      try revert x5
+      try revert x4
+      try revert x3
+      try revert x2
+      try revert x1
+      try revert x0
+
+      try revert w
+    )
+  )
+
+/-- Eliminate the SSA structure of the program
 - We first simplify `Com.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
 - We simplify the translation overhead.
-- Then we introduce variables, `cases` on the variables to eliminate the `none` cases.
-- We cannot leave it at this state, since then the variables will be inaccessible.
-- So, we revert the variables for the user to re-introduce them as they see fit.
 -/
+macro "simp_alive_ssa" : tactic =>
+  `(tactic|
+      (
+        /- Unfold the meaning of refinement, to access the valuation -/
+        dsimp only [Com.Refinement]
+        intros Γv
+
+        /- Simplify away the core framework -/
+        simp_peephole [InstCombine.Op.denote] at Γv
+
+        simp (config := {failIfUnchanged := false}) only [
+            InstCombine.Op.denote, HVector.getN, HVector.get
+          ]
+      )
+  )
+
+/-- Unfold into the `undef' statements and eliminates as much as possible. -/
+macro "simp_alive_undef" : tactic =>
+  `(tactic|
+      (
+        simp (config := {failIfUnchanged := false}) only [
+            simp_llvm_option,
+            BitVec.Refinement, bind_assoc,
+          ]
+      )
+  )
+
+/- Simplify away the `InstCombine` specific semantics. -/
+macro "simp_alive_ops" : tactic =>
+  `(tactic|
+      (
+        simp (config := {failIfUnchanged := false}) only [
+            simp_llvm, BitVec.bitvec_minus_one, pure_bind
+          ]
+      )
+  )
+
+/--
+`simp_alive_peephole` extends `simp_peephole` to simplify goals about refinement of `LLVM`
+programs into statements about just bitvectors.
+
+That is, the tactic expects a goal of the form: `Com.Refinement com₁ com₂`
+That is, goals of the form `Com.refine, com₁.denote Γv ⊑ com₂.denote Γv `,
+where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
-        dsimp only [Com.Refinement]
-        intros Γv
-        simp_peephole at Γv
-        /- note that we need the `HVector.toPair`, `HVector.toSingle`, `HVector.toTriple` lemmas since it's used in `InstCombine.Op.denote`
-          We need `HVector.toTuple` since it's used in `MLIR.AST.mkOpExpr`. -/
-        simp (config := {failIfUnchanged := false, unfoldPartialApp := true, zetaDelta := true}) only [OpDenote.denote,
-          InstCombine.Op.denote, HVector.toPair, HVector.toTriple, pairMapM, BitVec.Refinement,
-          bind, Option.bind, pure, Ctxt.DerivedCtxt.ofCtxt, Ctxt.DerivedCtxt.snoc,
-          Ctxt.snoc, Valuation.snoc,
-          ConcreteOrMVar.instantiate, Vector.get, HVector.toSingle,
-          LLVM.and?, LLVM.or?, LLVM.xor?, LLVM.add?, LLVM.sub?,
-          LLVM.mul?, LLVM.udiv?, LLVM.sdiv?, LLVM.urem?, LLVM.srem?,
-          LLVM.sshr, LLVM.lshr?, LLVM.ashr?, LLVM.shl?, LLVM.select?,
-          LLVM.const?, LLVM.icmp?,
-          HVector.toTuple, List.nthLe, BitVec.bitvec_minus_one,
-          DialectMorphism.mapTy,
-          InstcombineTransformDialect.instantiateMTy,
-          InstcombineTransformDialect.instantiateMOp,
-          InstcombineTransformDialect.MOp.instantiateCom,
-          InstcombineTransformDialect.instantiateCtxt,
-          ConcreteOrMVar.instantiate, Com.Refinement,
-          DialectMorphism.mapTy]
-        try intros v0
-        try intros v1
-        try intros v2
-        try intros v3
-        try intros v4
-        try intros v5
-        simp (config := {failIfUnchanged := false}) only [Option.bind, bind, Monad.toBind, Var.casesOn, cast, pairBind, Option.bind_eq_bind]
-        try cases' v0 with x0 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v1 with x1 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v2 with x2 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v3 with x3 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v4 with x4 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> try cases' v5 with x5 <;> simp[Option.bind, bind, Monad.toBind]
-          <;> dsimp[Option.bind, bind, Monad.toBind]
-        try revert v5
-        try revert v4
-        try revert v3
-        try revert v2
-        try revert v1
-        try revert v0
+        simp_alive_ssa
+        simp_alive_undef
+        simp_alive_ops
+        /- Attempt to case bash each `Option`, since the `none` cases are generally trivial -/
+        simp_alive_case_bash
+        try intros -- introduce the variables again (as otherwise the 'apply' in
+                   -- AliveAutoGenerated.lean does not work)
       )
    )

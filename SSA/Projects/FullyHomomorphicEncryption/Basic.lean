@@ -9,6 +9,7 @@ For the rationale behind this, see:
  Junfeng Fan and Frederik Vercauteren, Somewhat Practical Fully Homomorphic Encryption
 https://eprint.iacr.org/2012/144
 
+Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
@@ -19,7 +20,6 @@ import Mathlib.Algebra.MonoidAlgebra.Basic
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
-import Mathlib.Data.Polynomial.RingDivision
 import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
@@ -705,8 +705,9 @@ def Op.signature : Op q n → Signature (Ty q n) :=
 
 instance : OpSignature (Op q n) (Ty q n) := ⟨Op.signature q n⟩
 
-noncomputable instance  FHEOpDenote : OpDenote (Op q n) (Ty q n) where
- denote
+@[simp]
+noncomputable instance : OpDenote (Op q n) (Ty q n) where
+    denote
     | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
     | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
     | Op.mul, arg, _ => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
