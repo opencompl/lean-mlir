@@ -333,7 +333,11 @@ unsafe def State.cseRegionArgList
       simp [HVector.map]
     ⟩
   | ⟨Γ, t⟩::ts, .cons region rs =>
-    -- Need to create a fresh state to CSE the region.
+    -- 2023: Need to create a fresh state to CSE the region.
+    -- Apr 2024: Bail out, to not try to CSE on regions since we now impose that all regions are impure.
+    --   Improve this to be able to perform the rewrite when the region can be pure.
+    ⟨.cons region rs, by rfl⟩
+    /-
     let cseState := State.empty Lets.nil
     let ⟨(region' : Com Op Γ .impure t), hr'⟩ :=  cseState.cseCom region
     let ⟨rs', hrs'⟩ := s.cseRegionArgList rs
@@ -344,7 +348,7 @@ unsafe def State.cseRegionArgList
           apply hr'
           apply hrs'
     ⟩
-
+    -/
 /-- lookup an expression in the state and return a corresponding CSE'd variable for it, along with the CSE'd expression
   that was looked up in the map for the variable.  -/
 unsafe def State.cseExpr
