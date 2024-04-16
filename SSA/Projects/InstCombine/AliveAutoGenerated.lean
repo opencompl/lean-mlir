@@ -54,9 +54,20 @@ def alive_AddSub_1043_tgt  (w : Nat)  :=
   %v7 = "llvm.sub" (%RHS,%v2) : (_, _) -> (_)
   "llvm.return" (%v7) : (_) -> ()
 }]
+
+set_option pp.notation false
 theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddSub_1043_tgt w  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
+  simp_alive_ssa
+  simp_alive_undef
+  intros
+  repeat(rw [bind_assoc])
+
+
+  simp_alive_ops
+  simp_alive_case_bash
   simp_alive_peephole
+
   apply bitvec_AddSub_1043
 
 

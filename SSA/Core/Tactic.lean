@@ -38,14 +38,14 @@ elab "change_mlir_context " V:ident : tactic => do
 end
 
 @[simp]
-private theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
+theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
     (∀ V, f V) ↔ (∀ (a : ⟦t⟧) (V : Γ.Valuation), f (V.snoc a)) := by
   constructor
   · intro h a V; apply h
   · intro h V; cases V; apply h
 
 @[simp]
-private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
+theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
     (∀ V, f V) ↔ (f Ctxt.Valuation.nil) := by
   constructor
   · intro h; apply h
@@ -107,7 +107,8 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
-        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+        simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last, Valuation.snoc_last]
+        -- simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
         repeat (generalize_or_fail at $ll)
         clear $ll
       )
