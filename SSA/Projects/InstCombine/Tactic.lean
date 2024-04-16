@@ -9,7 +9,6 @@ import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt
 
 /--
