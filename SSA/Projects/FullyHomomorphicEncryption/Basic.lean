@@ -640,7 +640,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   | integer : Ty q n
   | tensor : Ty q n
   | polynomialLike : Ty q n
-  deriving DecidableEq
+  deriving DecidableEq, Repr
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
 instance : TyDenote (Ty q n) where
