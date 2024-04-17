@@ -4,9 +4,9 @@ import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
 import SSA.Core.Tactic
 import SSA.Core.Util
+import SSA.Core.DSL.MLIRSyntax.AST
+import SSA.Core.DSL.MLIRSyntax.Parser
 import SSA.Projects.InstCombine.LLVM.Transform
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.MLIRSyntax.EDSL
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
