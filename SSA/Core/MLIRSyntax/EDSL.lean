@@ -13,6 +13,21 @@ namespace SSA
 open Qq Lean Meta Elab Term
 open MLIR.AST
 
+/-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
+`comNf` recursively calls `whnf` on the expression and body of a `Com.lete`, resulting in
+  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| ... <| Com.rete _`
+where the arguments to `Expr.mk` are not reduced -/
+partial def comNf {Op Ty : Q(Type)} {Γ : Q(Ctxt $Ty)} {ty : Q($Ty)}
+    {_sig : Q(OpSignature $Op $Ty)}
+    (com : Q(Com $Op $Γ $ty)) : MetaM Q(Com $Op $Γ $ty) := do
+  let com : Q(Com $Op $Γ $ty) ← whnf com
+  match com with
+    | ~q(Com.lete (α:=$eTy) $e $body) =>
+        let e' : Q(Expr $Op $Γ $eTy) ← whnf e
+        let body' ← comNf body
+        return q(Com.lete $e' $body')
+    | as => return as
+
 /--
 `elabIntoCom` is a building block for defining a dialect-specific DSL based on the geneeric MLIR
 syntax parser.
@@ -43,21 +58,20 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)}
       This has the side-effect of also fully reducing the expressions involved.
       We reduce with mode `.default` so that a dialect can prevent reduction of specific parts
       by marking those `irreducible` -/
-  let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := .default) <|
-        return ←reduce com
+  let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf com
   let comExpr : Expr := com
   trace[Meta] com
   trace[Meta] comExpr
 
   match comExpr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, aexpr) =>
-      match aexpr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-        match sndexpr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-            return sndexpr
+  | .some (_εexpr, _αexpr, expr) =>
+      let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
+      match expr.app4? ``Sigma.mk with
+      | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
+        let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+        match expr.app4? ``Sigma.mk with
+        | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
+            comNf com
         | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
+      | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
   | .none => throwError "Expected `Except.ok`, found {comExpr}"
