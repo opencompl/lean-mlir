@@ -26,6 +26,20 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Op q n) (Ty q n)
 instance instTransformTy : MLIR.AST.TransformTy (Op q n) (Ty q n) 0 where
   mkTy := mkTy
 
+def cstInt {Γ : Ctxt _} (z :Int) : Expr (Op q n) Γ .integer  :=
+  Expr.mk
+    (op := .const_int z)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
+def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (Op q n) Γ .index :=
+  Expr.mk
+    (op := .const_idx i)
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+
 def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
     (op := .add)
