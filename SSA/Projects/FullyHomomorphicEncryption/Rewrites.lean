@@ -72,3 +72,80 @@ noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike, .polynomialLik
     }
 
 end ExampleComm
+
+section ExampleModulo
+
+@[irreducible]
+def irreduciblePow (q n : Nat) : Nat := q^n
+infixl:50 "**" => irreduciblePow
+
+
+variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
+
+-- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
+-- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance. 
+noncomputable def lhs := [fhe_com q, n, hq| {
+^bb0(%a : ! R):
+  %one_int = "arith.const" () {value = 1}: () -> (i16)
+  %two_to_the_n = "arith.const" () {value = $((2**n : Int))}: () -> (index)
+  %x2n = "poly.monomial" (%one_int,%two_to_the_n) : (i16, index) -> (! R)
+  %oner = "poly.const" () {value = 1}: () -> (! R)
+  %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
+  %v1 = "poly.add" (%a, %p) : (! R, ! R) -> (! R)
+  "return" (%v1) : (! R) -> ()
+}]
+
+def rhs := [fhe_com q, n, hq | {
+^bb0(%a : ! R):
+  "return" (%a) : (! R) -> ()
+}]
+
+/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice, ROfZComputable_stuck_term] -/
+#guard_msgs in #print axioms lhs
+
+/-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
+open MLIR AST in
+noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLike :=
+  { lhs := lhs,
+     rhs := rhs
+  , correct :=
+    by
+      funext Γv
+      unfold lhs rhs
+       /-
+      Com.denote
+          (Com.lete (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
+            (Com.lete (Expr.mk (Op.const_idx 1) lhs.proof_3 HVector.nil HVector.nil)
+              (Com.lete
+                (Expr.mk Op.monomial lhs.proof_4
+                  ({ val := 1, property := lhs.proof_5 }::ₕ({ val := 0, property := lhs.proof_6 }::ₕHVector.nil)) HVector.nil)
+                (Com.lete
+                  (Expr.mk (Op.const (ROfZComputable_stuck_term 2 3 (Int.ofNat 1))) lhs.proof_7 HVector.nil HVector.nil)
+                  (Com.lete
+                    (Expr.mk Op.add lhs.proof_8
+                      ({ val := 1, property := lhs.proof_9 }::ₕ({ val := 0, property := lhs.proof_10 }::ₕHVector.nil))
+                      HVector.nil)
+                    (Com.lete
+                      (Expr.mk Op.add lhs.proof_8
+                        ({ val := 5, property := lhs.proof_11 }::ₕ({ val := 0, property := lhs.proof_12 }::ₕHVector.nil))
+                        HVector.nil)
+                      (Com.ret { val := 0, property := lhs.proof_13 })))))))
+          Γv =
+        Com.denote (Com.ret { val := 0, property := rhs.proof_2 }) Γv
+       -/
+      simp_peephole [Nat.cast_one, Int.cast_one, ROfZComputable_def] at Γv
+      /- ⊢ ∀ (a : ⟦Ty.polynomialLike⟧), a + (R.monomial q n 1 (2**n) + 1) = a -/
+      simp [R.fromPoly, R.monomial]
+      /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial (2**n)) 1) + 1) = a -/
+      intros a
+      unfold irreduciblePow
+      have hgenerator : f q n - (1 : Polynomial (ZMod q)) = (Polynomial.monomial (R := ZMod q) (2^n : Nat) 1)  := by simp  [f, Polynomial.X_pow_eq_monomial]
+      rw [← hgenerator]
+      have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
+      rw [add_congr_quotient]
+      apply Poly.add_f_eq
+      done
+    }
+/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound, ROfZComputable_stuck_term, ROfZComputable_def] -/
+#guard_msgs in #print axioms p1
+end ExampleModulo
