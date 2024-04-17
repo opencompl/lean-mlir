@@ -1,9 +1,7 @@
 import Qq
 import SSA.Projects.InstCombine.Base
 import Std.Data.BitVec
-import SSA.Core.MLIRSyntax.AST
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.Transform
+import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
@@ -216,23 +214,19 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
   let com := q(InstcombineTransformDialect.mkComInstantiate (φ := $φ) $ast |>.map (· $mvalues))
   synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM (MOp $φ) (Σ (Γ' : Ctxt (MTy $φ)) (ty : (MTy $φ)), Com (MOp $φ) Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.default) <|
-        return ←reduce com
-  let comExpr : Expr := com
-  trace[Meta] com
-  trace[Meta] comExpr
-  match comExpr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, aexpr) =>
-      match aexpr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-        match sndexpr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-            return sndexpr
+  let expr : Q(ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ← whnf com
+  match expr.app3? ``Except.ok with
+  | .some (_εexpr, _αexpr, expr) =>
+      let (expr : Q(Σ Γ ty, Com Op Γ ty)) ← whnf expr
+      match expr.app4? ``Sigma.mk with
+      | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt Ty)), expr) =>
+        let (expr : Q(Σ ty, Com Op $_Γ ty)) ← whnf expr
+        match expr.app4? ``Sigma.mk with
+        | .some (_αexpr, _βexpr, (_ty : Q(Ty)), (com : Q(Com Op $_Γ $_ty))) =>
+            SSA.comNf com
         | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
-  | .none => throwError "Expected `Except.ok`, found {comExpr}"
+      | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
+  | .none => throwError "Expected `Except.ok`, found {expr}"
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
