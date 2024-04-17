@@ -1,10 +1,11 @@
-/-
+/- := rfl
 Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>
 -/
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.FullyHomomorphicEncryption.Basic
+import Mathlib.Tactic.IrreducibleDef
 
 open MLIR AST Ctxt
 open Polynomial -- for R[X] notation
@@ -62,21 +63,6 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
 
 section CstComputable
 
-
-/-- This definition is subtle.
-
-1.  We make this an axiom so we can strongly normalize terms without lean
-  unfolding the definition
-2. We give it an implemented_by so we can use it in computable code that is used
-   to create the expression in Meta code
-3. We give it an equation lemma to make it what we *really* want in proof mode, which is the coe.
-
-This ensures three properties simultaneously:
-1. We can run it at meta time giving us the `ìmplemented_by` value
-2. It strongly normalizes creating stuck term (`ROfZComputable`)
-3. We can then `simp`it to become the value we really want (`coe z`).
--/
-
 def ROfZComputable_impl (z : ℤ) : R q n :=
   let zq : ZMod q := z
   let p : (ZMod q)[X] := {
@@ -105,11 +91,39 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
   }
   R.fromPoly p
 
+/-#
+Explanation of what's going on:
+- We want to have a `cstComputable : Z -> R`, which achieves three properties:
+1. It is computable, since the meta code needs it to be computable for `[fhe_icom|..]` to elaborate.
+2. It is equal to the noncomputable definition `(coe z : R q n)`
+3. It does not unfold when using `simp_peephole`, so we can rewrite using the equation
+     `ROfZComputable_def` after calling `simp_peephole`.
+
+What we really want is to have the following:
+
+```lean
 @[implemented_by ROfZComputable_impl]
-axiom ROfZComputable_stuck_term (q n : Nat) (z : ℤ) : R q n
+irreducible_noncomputable_def ROfZComputable_stuck_term (q n : Nat) (z : ℤ) :=
+  (↑ z : R q n)
 
 @[simp]
-axiom ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n)
+lemma ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n) :=
+  ROfZComputable_stuck_term_def
+```
+
+However, the problem is that `irreducible_noncomputable_def` does not exist, so we fake it,
+by creating a computable `_implemented_by_shim`, and then making this shim an `irreducible_def`.
+-/
+
+@[implemented_by ROfZComputable_impl]
+def ROfZ_computable_stuck_term_implemented_by_shim (q n : Nat) (z : ℤ) := (↑ z : R q n)
+
+irreducible_def ROfZComputable_stuck_term (q n : Nat) (z : ℤ) :=
+  ROfZ_computable_stuck_term_implemented_by_shim q n z
+
+@[simp]
+lemma ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n) := by
+  simp [ROfZComputable_stuck_term, ROfZ_computable_stuck_term_implemented_by_shim]
 
 def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk

@@ -100,7 +100,7 @@ def rhs := [fhe_com q, n, hq | {
   "return" (%a) : (! R) -> ()
 }]
 
-/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice, ROfZComputable_stuck_term] -/
+/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms lhs
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
@@ -146,6 +146,6 @@ noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLik
       apply Poly.add_f_eq
       done
     }
-/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound, ROfZComputable_stuck_term, ROfZComputable_def] -/
+/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms p1
 end ExampleModulo
