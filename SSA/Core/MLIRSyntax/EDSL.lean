@@ -39,7 +39,7 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)}
   synthesizeSyntheticMVarsNoPostponing
   let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <|
+      withTransparency (mode := .default) <|
         return ←reduce com
   let comExpr : Expr := com
   trace[Meta] com

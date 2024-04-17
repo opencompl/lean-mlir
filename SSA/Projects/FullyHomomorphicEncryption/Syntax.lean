@@ -3,9 +3,7 @@ Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>
 -/
-import SSA.Core.MLIRSyntax.Transform
-import SSA.Core.MLIRSyntax.AST
-import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 
 open MLIR AST Ctxt
@@ -173,34 +171,12 @@ def mkReturn (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Op
 instance : MLIR.AST.TransformReturn (Op q n) (Ty q n) 0 where
   mkReturn := mkReturn
 
-def mlir2fhe (reg : MLIR.AST.Region 0) :
-    MLIR.AST.ExceptM (Op q n) (Σ (Γ : Ctxt (Ty q n)) (ty : (Ty q n)), Com (Op q n) Γ ty) := MLIR.AST.mkCom reg
-
 end MkFuns -- we don't want q and i here anymore
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
-  let ast_stx ← `([mlir_region| $reg])
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)
-  let qval : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
-  let nval : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
-  -- We need this for building `R  later
-  -- I would like to synthesize this at elaboration time, not sure how
-  let _factval ← elabTermEnsuringTypeQ hq q(Fact ($qval > 1))
-  let com := q(mlir2fhe (q := $qval) (n := $nval) $ast)
-  synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM (Op 2 3) (Σ (Γ' : Ctxt (Ty 2 3)) (ty : Ty 2 3), Com (Op 2 3) Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.default) <|
-        return ←reduce com
-  let comExpr : Expr := com
-  match comExpr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, aexpr) =>
-      match aexpr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-        match sndexpr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-            return sndexpr
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
-  | .none => throwError "Expected `Except.ok`, found {comExpr}"
+  let q : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
+  let n : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
+  let _factval ← elabTermEnsuringTypeQ hq q(Fact ($q > 1))
+
+  SSA.elabIntoCom reg q(Op $q $n)
