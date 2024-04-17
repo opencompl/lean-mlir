@@ -61,9 +61,85 @@ def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (O
     (args := .cons a <| .cons i .nil)
     (regArgs := .nil)
 
+
+section CstComputable
+
+
+/-- This definition is subtle.
+
+1.  We make this an axiom so we can strongly normalize terms without lean
+  unfolding the definition
+2. We give it an implemented_by so we can use it in computable code that is used
+   to create the expression in Meta code
+3. We give it an equation lemma to make it what we *really* want in proof mode, which is the coe.
+
+This ensures three properties simultaneously:
+1. We can run it at meta time giving us the `ìmplemented_by` value
+2. It strongly normalizes creating stuck term (`ROfZComputable`)
+3. We can then `simp`it to become the value we really want (`coe z`).
+4. The `theorem ROfZComputable_eq` tells us that this is safe to do.
+-/
+
+def ROfZComputable_impl (z : ℤ) : R q n :=
+  let zq : ZMod q := z
+  let p : (ZMod q)[X] := {
+      toFinsupp := Finsupp.mk
+        (support := List.toFinset (if zq = 0 then  [] else [0]))
+        (toFun := fun i => if i = 0 then z else 0)
+        (mem_support_toFun := by
+          intros a
+          constructor
+          · intros ha
+            simp at ha
+            split at ha
+            case mp.inl hz =>
+              simp at ha
+            case mp.inr hz =>
+              simp at ha
+              subst ha
+              simp [hz]
+          · intros hb
+            simp at hb
+            obtain ⟨ha, hz⟩ := hb
+            subst ha
+            simp [hz]
+        )
+      : (ZMod q)[X]
+  }
+  R.fromPoly p
+
+@[implemented_by ROfZComputable_impl]
+axiom ROfZComputable_stuck_term (q n : Nat) (z : ℤ) : R q n
+
+@[simp]
+axiom ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n)
+
+def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
+  Expr.mk
+    (op := Op.const (ROfZComputable_stuck_term q n z))
+    (ty_eq := rfl)
+    (args := .nil)
+    (regArgs := .nil)
+end CstComputable
+
 def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Op q n) (Σ ty, Expr (Op q n) Γ ty) := do
   match opStx.name with
+  | "poly.const" =>
+    match opStx.attrs.find_int "value" with
+    | .some (v, _ty) =>
+      -- throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
+      return ⟨.polynomialLike, cstComputable v⟩
+    | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
+  | "arith.const" =>
+    match opStx.attrs.find_int "value" with
+    | .some (v, vty) => match vty with
+        | .int _ _ => match opStx.res with
+          | [(_,MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _)] => return ⟨.integer, cstInt v⟩
+          | [(_,MLIR.AST.MLIRType.index)] => return ⟨.index, cstIdx v.toNat⟩
+          | _ => throw <| .generic s!"unsupported result type {repr opStx.res} for arith.const"
+        | _ => throw <| .generic s!"unsupported constant type {repr vty} for arith.const"
+    | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "poly.monomial" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
