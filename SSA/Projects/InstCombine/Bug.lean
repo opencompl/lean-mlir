@@ -129,18 +129,18 @@ theorem ok : src 1  ⊑ tgt 1  := by
   --change_mlir_context Γv
   simp only [DerivedCtxt.snoc]
 
-  simp only [InstcombineTransformDialect.MOp.instantiateCom]
-  simp only [List.map_eq_map]
-  simp only [empty_eq]
-  simp only [List.map_cons]
-  simp only [List.map_nil]
-  simp only [SSA.Ctxt.destruct_cons]
-  simp only [SSA.Ctxt.destruct_nil]
-  simp only [InstcombineTransformDialect.instantiateMTy]
-  simp only [ConcreteOrMVar.instantiate]
-  simp only [Vector.get]
-  simp only [List.nthLe]
-  simp only [List.get]
+  rw [InstcombineTransformDialect.MOp.instantiateCom]
+  rw [List.map_eq_map]
+  rw [empty_eq]
+  rw [List.map_cons]
+  rw [List.map_nil]
+  rw [SSA.Ctxt.destruct_cons]
+  rw [SSA.Ctxt.destruct_nil]
+  rw [InstcombineTransformDialect.instantiateMTy]
+  rw [ConcreteOrMVar.instantiate]
+  rw [Vector.get]
+  rw [List.nthLe]
+  rw [List.get]
 
   -- HERE: Current working location
 
