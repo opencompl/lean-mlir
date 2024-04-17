@@ -6,7 +6,7 @@ import Lean.PrettyPrinter
 import Lean.PrettyPrinter.Formatter
 import Lean.Parser
 import Lean.Parser.Extra
-import SSA.Core.DSL.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.AST
 
 /-!
 # MLIR Syntax Parsing

@@ -1,7 +1,7 @@
 -- should replace with Lean import once Pure is upstream
-import SSA.Core.DSL.MLIRSyntax.AST
-import SSA.Core.DSL.Transform.NameMapping
-import SSA.Core.DSL.Transform.TransformError
+import SSA.Core.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.Transform.NameMapping
+import SSA.Core.MLIRSyntax.Transform.TransformError
 import SSA.Core.Framework
 import SSA.Core.ErasedContext
 

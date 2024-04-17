@@ -1,4 +1,4 @@
-import SSA.Core.DSL.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.AST
 
 namespace MLIR.AST
 
