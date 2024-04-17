@@ -77,7 +77,6 @@ This ensures three properties simultaneously:
 1. We can run it at meta time giving us the `ìmplemented_by` value
 2. It strongly normalizes creating stuck term (`ROfZComputable`)
 3. We can then `simp`it to become the value we really want (`coe z`).
-4. The `theorem ROfZComputable_eq` tells us that this is safe to do.
 -/
 
 def ROfZComputable_impl (z : ℤ) : R q n :=
