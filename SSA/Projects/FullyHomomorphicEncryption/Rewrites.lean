@@ -138,11 +138,7 @@ noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLik
       /- ⊢ a + ((Ideal.Quotient.mk (Ideal.span {f q n})) ((Polynomial.monomial (2**n)) 1) + 1) = a -/
       intros a
       unfold irreduciblePow
-      --have hgenerator : f 2 3 = (Polynomial.monomial 8 1) + 1  := by simp [f, Polynomial.X_pow_eq_monomial]
       have hgenerator : f q n - (1 : Polynomial (ZMod q)) = (Polynomial.monomial (R := ZMod q) (2^n : Nat) 1)  := by simp  [f, Polynomial.X_pow_eq_monomial]
-      --set_option pp.all true in
-      -- `rw` bug? or because of the workaround?
-      -- tactic 'rewrite' failed, motive is not type correct
       rw [← hgenerator]
       have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
       rw [add_congr_quotient]
