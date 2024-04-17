@@ -82,7 +82,8 @@ infixl:50 "**" => irreduciblePow
 
 variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
--- code generator does not support recursor 'Decidable.rec' yet, consider using 'match ... with' and/or structural recursion
+-- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
+-- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance. 
 noncomputable def lhs := [fhe_com q, n, hq| {
 ^bb0(%a : ! R):
   %one_int = "arith.const" () {value = 1}: () -> (i16)
