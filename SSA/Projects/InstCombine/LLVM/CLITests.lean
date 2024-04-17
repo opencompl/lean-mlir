@@ -2,7 +2,7 @@ import SSA.Core.Util
 import Std
 import Lean.Environment
 import Cli
-import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.DSL.Transform
 import SSA.Projects.InstCombine.Base
 
 open Lean TyDenote InstCombine

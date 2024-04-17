@@ -1,5 +1,5 @@
 import SSA.Core.DSL.MLIRSyntax.Parser
-import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.DSL.Transform
 import SSA.Projects.InstCombine.LLVM.EDSL
 open MLIR AST
 

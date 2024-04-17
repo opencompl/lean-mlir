@@ -6,7 +6,7 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.DSL.MLIRSyntax.AST
 import SSA.Core.DSL.MLIRSyntax.Parser
-import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.DSL.Transform
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
