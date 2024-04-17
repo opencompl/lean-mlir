@@ -1,8 +1,8 @@
 import Qq
 import SSA.Projects.InstCombine.Base
 import Std.Data.BitVec
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.MLIRSyntax.EDSL
+import SSA.Core.DSL.MLIRSyntax.AST
+import SSA.Core.DSL.MLIRSyntax.Parser
 import SSA.Projects.InstCombine.LLVM.Transform
 import SSA.Projects.InstCombine.LLVM.CLITests
 

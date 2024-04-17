@@ -6,7 +6,16 @@ import Lean.PrettyPrinter
 import Lean.PrettyPrinter.Formatter
 import Lean.Parser
 import Lean.Parser.Extra
-import SSA.Projects.MLIRSyntax.AST
+import SSA.Core.DSL.MLIRSyntax.AST
+
+/-!
+# MLIR Syntax Parsing
+This file uses Lean's parser extensions to parse generic MLIR syntax into datastructures defined
+in `MLIRSyntax.AST`.
+
+Key definitions are the `[mlir_op| ...]` and `[mlir_region| ...]` term elaborators
+
+-/
 
 open Lean
 open Lean.Parser
@@ -102,7 +111,7 @@ partial def balancedBracketsFnAux (startPos: String.Pos)
   | ']' => consumeCloseBracket Bracket.Square startPos i input bs ctx s
   | '>' => consumeCloseBracket Bracket.Angle startPos i input bs ctx s
   | '}' => consumeCloseBracket Bracket.Curly startPos i input bs ctx s
-  | c => balancedBracketsFnAux startPos (input.next i) input bs ctx s
+  | _c => balancedBracketsFnAux startPos (input.next i) input bs ctx s
 
 end
 

@@ -4,8 +4,8 @@ Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
 Authors: Andrés Goens<andres@goens.org>
 -/
 import SSA.Projects.InstCombine.LLVM.Transform
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.MLIRSyntax.EDSL
+import SSA.Core.DSL.MLIRSyntax.AST
+import SSA.Core.DSL.MLIRSyntax.Parser
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 
 open MLIR AST Ctxt

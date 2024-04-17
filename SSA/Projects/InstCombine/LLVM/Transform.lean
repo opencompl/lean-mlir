@@ -1,5 +1,5 @@
 -- should replace with Lean import once Pure is upstream
-import SSA.Projects.MLIRSyntax.AST
+import SSA.Core.DSL.MLIRSyntax.AST
 import SSA.Projects.InstCombine.LLVM.Transform.NameMapping
 import SSA.Projects.InstCombine.LLVM.Transform.TransformError
 import SSA.Core.Framework
