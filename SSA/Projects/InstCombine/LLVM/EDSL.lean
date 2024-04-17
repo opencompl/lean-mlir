@@ -1,9 +1,9 @@
 import Qq
 import SSA.Projects.InstCombine.Base
 import Std.Data.BitVec
-import SSA.Core.DSL.MLIRSyntax.AST
-import SSA.Core.DSL.MLIRSyntax.Parser
-import SSA.Core.DSL.Transform
+import SSA.Core.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
