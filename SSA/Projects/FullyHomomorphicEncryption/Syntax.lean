@@ -128,7 +128,6 @@ def mkExpr (Γ : Ctxt (Ty q n)) (opStx : MLIR.AST.Op 0) :
   | "poly.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, _ty) =>
-      -- throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
       return ⟨.polynomialLike, cstComputable v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "arith.const" =>
