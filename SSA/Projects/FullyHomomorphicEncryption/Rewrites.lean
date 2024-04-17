@@ -99,8 +99,8 @@ def rhs := [fhe_com q, n, hq | {
   "return" (%a) : (! R) -> ()
 }]
 
-/- 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice, ROfZComputable_stuck_term] -/
-#print axioms lhs
+/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice, ROfZComputable_stuck_term] -/
+#guard_msgs in #print axioms lhs
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
 open MLIR AST in
