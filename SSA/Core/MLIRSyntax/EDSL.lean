@@ -49,21 +49,13 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)}
     TermElabM Expr := do
   let ast_stx ← `([mlir_region| $region])
   let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
-  let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) :=
+  let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) :=
     q(MLIR.AST.mkCom $ast)
   synthesizeSyntheticMVarsNoPostponing
-  /-  Now reduce the term. We do this so that the resulting term will be of the form
-        `Com.lete _ <| Com.lete _ <| ... <| Com.ret _`,
-      rather than still containing the `Transform` machinery applied to a raw AST.
-      This has the side-effect of also fully reducing the expressions involved.
-      We reduce with mode `.default` so that a dialect can prevent reduction of specific parts
-      by marking those `irreducible` -/
-  let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf com
-  let comExpr : Expr := com
-  trace[Meta] com
-  trace[Meta] comExpr
-
-  match comExpr.app3? ``Except.ok with
+  /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
+    expression of type `Com ..` -/
+  let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf expr
+  match expr.app3? ``Except.ok with
   | .some (_εexpr, _αexpr, expr) =>
       let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
       match expr.app4? ``Sigma.mk with
@@ -71,7 +63,10 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)}
         let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
         match expr.app4? ``Sigma.mk with
         | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
+            /- Finally, use `comNf` to ensure the resulting expression is of the form
+                `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
+               where the arguments to `Expr.mk` are not reduced -/
             comNf com
         | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
       | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
-  | .none => throwError "Expected `Except.ok`, found {comExpr}"
+  | .none => throwError "Expected `Except.ok`, found {expr}"
