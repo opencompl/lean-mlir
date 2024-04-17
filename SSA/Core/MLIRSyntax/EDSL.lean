@@ -37,6 +37,12 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)}
   let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) :=
     q(MLIR.AST.mkCom $ast)
   synthesizeSyntheticMVarsNoPostponing
+  /-  Now reduce the term. We do this so that the resulting term will be of the form
+        `Com.lete _ <| Com.lete _ <| ... <| Com.ret _`,
+      rather than still containing the `Transform` machinery applied to a raw AST.
+      This has the side-effect of also fully reducing the expressions involved.
+      We reduce with mode `.default` so that a dialect can prevent reduction of specific parts
+      by marking those `irreducible` -/
   let com : Q(MLIR.AST.ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
       withTransparency (mode := .default) <|
