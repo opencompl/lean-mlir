@@ -145,6 +145,6 @@ noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLik
       apply Poly.add_f_eq
       done
     }
-/- 'p1' depends on axioms: [propext, Classical.choice, Quot.sound, ROfZComputable_stuck_term, ROfZComputable_def] -/
-#print axioms p1
+/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound, ROfZComputable_stuck_term, ROfZComputable_def] -/
+#guard_msgs in #print axioms p1
 end ExampleModulo
