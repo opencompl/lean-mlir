@@ -1,11 +1,10 @@
-/- := rfl
+/-
 Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
 
-Authors: Andrés Goens<andres@goens.org>
+Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.FullyHomomorphicEncryption.Basic
-import Mathlib.Tactic.IrreducibleDef
 
 open MLIR AST Ctxt
 open Polynomial -- for R[X] notation
@@ -99,31 +98,22 @@ Explanation of what's going on:
 3. It does not unfold when using `simp_peephole`, so we can rewrite using the equation
      `ROfZComputable_def` after calling `simp_peephole`.
 
-What we really want is to have the following:
+We achieve this by the following means:
 
-```lean
-@[implemented_by ROfZComputable_impl]
-irreducible_noncomputable_def ROfZComputable_stuck_term (q n : Nat) (z : ℤ) :=
+1. computable => implemented_by.
+2. equal to the noncomputable defn => make this the lean definition.
+3. does not unfold => irreducible, allow using the definition with the lemma `ROfZComputable_def`.
+-/
+
+
+@[irreducible, implemented_by ROfZComputable_impl]
+def ROfZComputable_stuck_term (q n : Nat) (z : ℤ) :=
   (↑ z : R q n)
 
 @[simp]
-lemma ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n) :=
-  ROfZComputable_stuck_term_def
-```
-
-However, the problem is that `irreducible_noncomputable_def` does not exist, so we fake it,
-by creating a computable `_implemented_by_shim`, and then making this shim an `irreducible_def`.
--/
-
-@[implemented_by ROfZComputable_impl]
-def ROfZ_computable_stuck_term_implemented_by_shim (q n : Nat) (z : ℤ) := (↑ z : R q n)
-
-irreducible_def ROfZComputable_stuck_term (q n : Nat) (z : ℤ) :=
-  ROfZ_computable_stuck_term_implemented_by_shim q n z
-
-@[simp]
 lemma ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z = (↑ z : R q n) := by
-  simp [ROfZComputable_stuck_term, ROfZ_computable_stuck_term_implemented_by_shim]
+  unfold ROfZComputable_stuck_term
+  rfl
 
 def cstComputable {Γ : Ctxt _} (z : Int) : Expr (Op q n) Γ .polynomialLike :=
   Expr.mk
