@@ -4,9 +4,8 @@ import Mathlib.Logic.Function.Iterate
 import SSA.Core.Framework
 import SSA.Core.Tactic
 import SSA.Core.Util
-import SSA.Projects.InstCombine.LLVM.Transform
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.EDSL
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
@@ -106,34 +105,8 @@ def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty
 instance : MLIR.AST.TransformReturn Op Ty 0 where
   mkReturn := mkReturn
 
-def mlir2simple (reg : MLIR.AST.Region 0) :
-    MLIR.AST.ExceptM Op (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ ty) := MLIR.AST.mkCom reg
-
-open Qq MLIR AST Lean Elab Term Meta in
-elab "[simple_com| " reg:mlir_region "]" : term => do
-  let ast_stx ← `([mlir_region| $reg])
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region 0)
-  let mvalues ← `(⟨[], by rfl⟩)
-  -- let mvalues : Q(Vector Nat 0) ← elabTermEnsuringType mvalues q(Vector Nat 0)
-  let com := q(ToyNoRegion.MLIR2Simple.mlir2simple $ast)
-  synthesizeSyntheticMVarsNoPostponing
-  let com : Q(MLIR.AST.ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ←
-    withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <|
-        return ←reduce com
-  let comExpr : Expr := com
-  trace[Meta] com
-  trace[Meta] comExpr
-  match comExpr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, aexpr) =>
-      match aexpr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-        match sndexpr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, _fstexpr, sndexpr) =>
-            return sndexpr
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Found `Except.ok WRONG`, Expected (Except.ok (Sigma.mk _ _))"
-  | .none => throwError "Expected `Except.ok`, found {comExpr}"
+open Qq in
+elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Op)
 
 end MLIR2Simple
 

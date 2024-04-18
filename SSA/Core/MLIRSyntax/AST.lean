@@ -1,6 +1,11 @@
 import SSA.Core.Util.ConcreteOrMVar
 open Lean PrettyPrinter
 
+/-!
+# MLIR Syntax AST
+This file contains the AST datastructures for generic MLIR syntax
+-/
+
 namespace MLIR.AST
 
 -- variable (MCtxt : Type*)
