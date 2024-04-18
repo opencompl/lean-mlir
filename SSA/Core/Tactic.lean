@@ -49,20 +49,6 @@ elab "change_mlir_context " V:ident : tactic => do
 
 end
 
-@[simp]
-private theorem Ctxt.destruct_cons {Ty} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty} {f : Ctxt.Valuation (t :: Γ) → Prop} :
-    (∀ V, f V) ↔ (∀ (a : ⟦t⟧) (V : Γ.Valuation), f (V.snoc a)) := by
-  constructor
-  · intro h a V; apply h
-  · intro h V; cases V; apply h
-
-@[simp]
-private theorem Ctxt.destruct_nil {Ty} [TyDenote Ty] {f : Ctxt.Valuation ([] : Ctxt Ty) → Prop} :
-    (∀ V, f V) ↔ (f Ctxt.Valuation.nil) := by
-  constructor
-  · intro h; apply h
-  · intro h V; rw [Ctxt.Valuation.eq_nil V]; exact h
-
 open Lean Elab Tactic Meta
 
 /--
