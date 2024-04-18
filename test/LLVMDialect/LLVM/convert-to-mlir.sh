@@ -1,7 +1,6 @@
-/-
-Released under Apache 2.0 license as described in the file LICENSE.
--/
 #!/bin/bash
+# Released under Apache 2.0 license as described in the file LICENSE.
+
 
 #Using LLVM commit 55300991b5ed574812db318742fd0de3887b54dd
 FOLDERS="InstCombine"
