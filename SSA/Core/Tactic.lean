@@ -94,13 +94,28 @@ macro "only_goal" t:tacticSeq : tactic =>
   `(tactic| first | done | $t)
 
 /--
-`simp_peephole [t1, t2, ... tn]` at Γ simplifies the evaluation of the context Γ,
-leaving behind a bare Lean level proposition to be proven.
--/
+`simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
+that are evaluated with the valuation `ΓV`.
+
+In it's bare form, it only simplifies away the core framework definitions (e.g., `Expr.denote`), but
+we can also pass it dialect-specific definitions to unfold, as in:
+`simp_peephole [foo, bar, baz] at ΓV`
+
+After simplifying, the goal state should only contain occurences of valuation `ΓV` directly applied
+to some variable `v : Var Γ ty`. The tactic tries to eliminate the valuation completely,
+by introducing a new universally quantified (Lean) variable to the goal for every
+(object) variable `v`. -/
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
   `(tactic|
       (
+      /- First, massage the type of `Γv`.
+      Generally, `simp_peephole` is expected to be run with the type of `Γv` a
+      (not necessarily reduced) ground-term.
+      After `change_mlir_context`, type of `Γv` should then be `[t₁, t₂, ..., tₙ]`, for some
+      types `t₁`, `t₂`, etc. -/
       change_mlir_context $ll
+
+      /- Then, unfold the definition of the denotation of a program -/
       simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
