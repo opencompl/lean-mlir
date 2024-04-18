@@ -209,14 +209,22 @@ open SSA InstcombineTransformDialect InstCombine in
 elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   have φ : Nat := mvars.getElems.size
   -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
-  let mcom ← SSA.elabIntoCom reg q(MOp $φ)
+  let mcom ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} elabIntoCom") <|
+    SSA.elabIntoCom reg q(MOp $φ)
 
-  let mvalues ← `(⟨[$mvars,*], by rfl⟩)
-  let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
-  let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
-  let com ← mkAppM ``Com.map #[instantiateFun, mcom]
-  synthesizeSyntheticMVarsNoPostponing
-  reduce com
+  let mvalues : Q(Vector Nat $φ) ←
+    withTraceNode `alive_icom (return m!"{exceptEmoji ·} elaborating mvalues") <| do
+      let mvalues ← `(⟨[$mvars,*], by rfl⟩)
+      elabTermEnsuringType mvalues q(Vector Nat $φ)
+
+  let com ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} building final Expr") <| do
+    let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
+    let com ← mkAppM ``Com.map #[instantiateFun, mcom]
+    synthesizeSyntheticMVarsNoPostponing
+    return com
+
+  withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
+    reduce com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
