@@ -105,7 +105,7 @@ After simplifying, the goal state should only contain occurences of valuation `�
 to some variable `v : Var Γ ty`. The tactic tries to eliminate the valuation completely,
 by introducing a new universally quantified (Lean) variable to the goal for every
 (object) variable `v`. -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident : tactic =>
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
   `(tactic|
       (
       /- First, massage the type of `Γv`.
@@ -113,7 +113,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       (not necessarily reduced) ground-term.
       After `change_mlir_context`, type of `Γv` should then be `[t₁, t₂, ..., tₙ]`, for some
       types `t₁`, `t₂`, etc. -/
-      change_mlir_context $ll
+      change_mlir_context $Γv
 
       /- Then, unfold the definition of the denotation of a program -/
       simp (config := {failIfUnchanged := false}) only [
@@ -135,12 +135,12 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" ll:ident :
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
         simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
-        repeat (generalize_or_fail at $ll)
-        clear $ll
+        repeat (generalize_or_fail at $Γv)
+        clear $Γv
       )
    )
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" "at" ll:ident : tactic => `(tactic| simp_peephole [] at $ll)
+macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
 
 end SSA
