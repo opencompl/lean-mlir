@@ -1,4 +1,7 @@
 /-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+/-
 Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>

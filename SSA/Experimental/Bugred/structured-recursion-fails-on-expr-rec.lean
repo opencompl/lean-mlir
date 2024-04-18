@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Tactic.Linarith
 
 inductive Vector (α : Type) : Nat → Type

@@ -1,4 +1,7 @@
 /-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+/-
 This file implements common subexpression elimination for our SSA based IR.
 -/
 import SSA.Core.Framework
