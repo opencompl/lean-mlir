@@ -29,11 +29,11 @@ elab "change_mlir_context " V:ident : tactic => do
   let V : Name := V.getId
   withMainContext do
     let ctx ← getLCtx
-    let Vdecl : LocalDecl ← match ctx.findFromUserName? Γv with
+    let Vdecl : LocalDecl ← match ctx.findFromUserName? V with
       | some decl => pure decl
-      | none => throwError f!"Failed to find variable `{Γv}` in the local context"
+      | none => throwError f!"Failed to find variable `{V}` in the local context"
 
-    -- Assert that the type of `Γv` is `Ctxt.Valuation ?Γ`
+    -- Assert that the type of `V` is `Ctxt.Valuation ?Γ`
     let Ty ← mkFreshExprMVarQ q(Type)
     let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
     let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
