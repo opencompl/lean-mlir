@@ -25,9 +25,6 @@ partial def ctxtNf (as : Expr) : MetaM Expr := do
         mkAppM ``Ctxt.snoc #[as, a]
     | _ => return as
 
-#check Com.lete
-#check Com.ret
-
 /-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
 `comNf` recursively calls `whnf` on the expression and body of a `Com.lete`, resulting in
   `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| ... <| Com.rete _`

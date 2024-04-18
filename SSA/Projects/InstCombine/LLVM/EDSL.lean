@@ -240,13 +240,6 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
     reduce com
 
-/-
-TODO: We currently need to duplicate the above meta code for each dialect.
-It's fine if we need to register a new macro for each dialect, but that macro should just be a thin
-wrapper around common meta-code!
-Also, we should find a better solution to error-handling than the big-blob-of-`match` we currently
-have. -/
-
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
