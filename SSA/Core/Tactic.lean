@@ -1,5 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.Util
+import SSA.Core.MLIRSyntax.EDSL
 import Qq
 import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
@@ -11,18 +12,6 @@ open Ctxt (Var Valuation DerivedCtxt)
 section
 
 open Lean Meta Elab.Tactic Qq
-
-/-- `ctxtNf` reduces an expression of type `Ctxt _` to something in between whnf and normal form.
-`ctxtNf` recursively calls `whnf` on the tail of the list, so that the result is of the form
-  `a₀ :: a₁ :: ... :: aₙ :: [] `
-where each element `aᵢ` is not further reduced -/
-private partial def ctxtNf {α : Q(Type)} (as : Q(Ctxt $α)) : MetaM Q(Ctxt $α) := do
-  let as : Q(List $α) ← whnf as
-  match as with
-    | ~q($a :: $as) =>
-        let as ← ctxtNf as
-        return q($a :: $as)
-    | as => return as
 
 /-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
 elab "change_mlir_context " V:ident : tactic => do
