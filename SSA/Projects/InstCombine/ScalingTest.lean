@@ -124,7 +124,7 @@ theorem and_sequence_20_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
-set_option maxHeartbeats 1400000 in
+set_option maxHeartbeats 1500000 in
 def and_sequence_30_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):
@@ -174,7 +174,7 @@ theorem and_sequence_30_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
-set_option maxHeartbeats 3600000 in
+set_option maxHeartbeats 3800000 in
 set_option maxRecDepth 1500 in
 def and_sequence_40_lhs (w : Nat)   :=
 [alive_icom ( w )| {
