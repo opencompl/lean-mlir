@@ -1,8 +1,7 @@
-/-
-Released under Apache 2.0 license as described in the file LICENSE.
--/
 #!/usr/bin/env python3
 # Generate the file for LLVM
+# Released under Apache 2.0 license as described in the file LICENSE.
+
 import itertools
 from typing import *
 import subprocess
