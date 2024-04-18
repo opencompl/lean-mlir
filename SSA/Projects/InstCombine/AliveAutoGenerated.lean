@@ -59,8 +59,6 @@ theorem alive_AddSub_1043  (w : Nat)   : alive_AddSub_1043_src w  ⊑ alive_AddS
   simp_alive_peephole
   apply bitvec_AddSub_1043
 
-#exit
-
 -- Name:AddSub:1152
 -- precondition: true
 /-

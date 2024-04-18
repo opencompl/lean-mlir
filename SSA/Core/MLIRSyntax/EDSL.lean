@@ -34,12 +34,6 @@ partial def vecMap (vec : Expr) (f : Expr → MetaM Expr) : MetaM Expr := do
         mkAppM ``HVector.cons #[x, xs]
     | _ => return vec
 
--- def argsNf (args : Expr) : MetaM Expr :=
---   vecMap args fun arg => do
---     let arg ← whnf arg
---     match_expr arg with
---       | Subtype.mk
-
 mutual
 
 /-- `exprNf` reduces an expression of type (`SSA.`)`Expr` to something in between whnf and normal form.
@@ -51,7 +45,7 @@ partial def exprNf (expr : Expr) : MetaM Expr := do
         let Γ ← ctxtNf Γ
         let ty ← whnf ty
         let op ← whnf op
-        -- let args ← whnf        -- TODO: this should map `whnf` over each variable
+        let args ← reduceAll args
         let regArgs ← vecMap regArgs comNf
         return mkAppN (.const ``Expr.mk []) #[Op, Ty, inst, Γ, ty, op, ty_eq, args, regArgs]
     | _ => throwError "Expected `Expr.mk ...`, found:\n\t{expr}"
@@ -93,26 +87,31 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)} {�
     (_transformReturn  : Q(TransformReturn $Op $Ty $φ) := by exact q(by infer_instance))
     :
     TermElabM Expr := do
-  let ast_stx ← `([mlir_region| $region])
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
-  let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) :=
-    q(MLIR.AST.mkCom $ast)
-  synthesizeSyntheticMVarsNoPostponing
-  /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
-    expression of type `Com ..` -/
-  let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf expr
-  match expr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, expr) =>
-      let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
-      match expr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
-        let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+  let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
+    withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} building `Com` expression") <| do
+      let ast_stx ← `([mlir_region| $region])
+      let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
+      return q(MLIR.AST.mkCom $ast)
+  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} synthesizingMVars")
+    synthesizeSyntheticMVarsNoPostponing
+
+  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
+    /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
+      expression of type `Com ..` -/
+    let expr : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf expr
+    match expr.app3? ``Except.ok with
+    | .some (_εexpr, _αexpr, expr) =>
+        let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
         match expr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
-            /- Finally, use `comNf` to ensure the resulting expression is of the form
-                `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
-               where the arguments to `Expr.mk` are not reduced -/
-            comNf com
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
-  | .none => throwError "Expected `Except.ok`, found {expr}"
+        | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
+          let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+          match expr.app4? ``Sigma.mk with
+          | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
+              /- Finally, use `comNf` to ensure the resulting expression is of the form
+                  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
+                where the arguments to `Expr.mk` are not reduced -/
+              withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
+                comNf com
+          | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
+        | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
+    | .none => throwError "Expected `Except.ok`, found {expr}"

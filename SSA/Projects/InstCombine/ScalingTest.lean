@@ -110,6 +110,7 @@ theorem and_sequence_20_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
+-- uses about 175000 heartbeats, vs ~215000 in main
 def and_sequence_30_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):

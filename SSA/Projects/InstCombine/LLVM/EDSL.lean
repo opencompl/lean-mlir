@@ -216,7 +216,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
   let com ← mkAppM ``Com.map #[instantiateFun, mcom]
   synthesizeSyntheticMVarsNoPostponing
-  comNf com
+  reduce com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
