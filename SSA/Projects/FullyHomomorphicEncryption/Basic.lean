@@ -1,4 +1,7 @@
 /-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+/-
 This file contains the definition of the MLIR `Poly` dialect as implemented in HEIR, see:
 https://github.com/google/heir/blob/a18d4e8ddc0031e2a0e6dd2dd0d7fe289b9d1651/include/Dialect/Poly/IR/PolyDialect.td
 https://github.com/j2kun/heir/blob/5c5c0e2ff2ae37a7d1ec5791ec6c38046c4115c1/include/Dialect/Poly/IR/PolyOps.td

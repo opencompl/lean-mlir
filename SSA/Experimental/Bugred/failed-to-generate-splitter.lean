@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 /-!
   This file was originally intended to showcase a `failed to generate splitter` error.
   In the process of minimization, that error dissapeared.

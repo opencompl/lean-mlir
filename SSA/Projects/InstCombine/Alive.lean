@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 
 -- Pure math statements needed to prove alive statements.
 -- Include these, as they are reasonably fast to typecheck.

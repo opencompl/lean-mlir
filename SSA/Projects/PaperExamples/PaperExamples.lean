@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Qq
 import Lean
 import Mathlib.Logic.Function.Iterate
