@@ -59,27 +59,31 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)} {�
     (_transformExpr    : Q(TransformExpr $Op $Ty $φ)   := by exact q(by infer_instance))
     (_transformReturn  : Q(TransformReturn $Op $Ty $φ) := by exact q(by infer_instance)) :
     TermElabM Expr := do
-  let ast_stx ← `([mlir_region| $region])
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
-  let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) :=
-    q(MLIR.AST.mkCom $ast)
-  synthesizeSyntheticMVarsNoPostponing
-  /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
-    expression of type `Com ..` -/
-  let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf com
-  match com.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, expr) =>
-      let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
-      match expr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
-        let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+  let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
+    withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} building `Com` expression") <| do
+    let ast_stx ← `([mlir_region| $region])
+    let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
+    return q(MLIR.AST.mkCom $ast)
+  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} synthesizingMVars") <|
+    synthesizeSyntheticMVarsNoPostponing
+
+  withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
+    /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
+      expression of type `Com ..` -/
+    let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf com
+    match com.app3? ``Except.ok with
+    | .some (_εexpr, _αexpr, expr) =>
+        let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
         match expr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
-            /- Finally, use `comNf` to ensure the resulting expression is of the form
-                `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
-              where the arguments to `Expr.mk` are not reduced -/
-            withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
-              comNf com
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
-  | .none => throwError "Expected `Except.ok`, found {com}"
+        | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
+          let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+          match expr.app4? ``Sigma.mk with
+          | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
+              /- Finally, use `comNf` to ensure the resulting expression is of the form
+                  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
+                where the arguments to `Expr.mk` are not reduced -/
+              withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
+                comNf com
+          | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
+        | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
+    | .none => throwError "Expected `Except.ok`, found {com}"
