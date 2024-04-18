@@ -205,28 +205,18 @@ https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20F
 
 Therefore, we choose to match on raw `Expr`.
 -/
-open MLIR.AST InstCombine in
+open SSA InstcombineTransformDialect InstCombine in
 elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
-  let ast_stx ← `([mlir_region| $reg])
-  let φ : Nat := mvars.getElems.size
-  let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
+  have φ : Nat := mvars.getElems.size
+  -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
+  let mcom ← SSA.elabIntoCom reg q(MOp $φ)
+
   let mvalues ← `(⟨[$mvars,*], by rfl⟩)
   let mvalues : Q(Vector Nat $φ) ← elabTermEnsuringType mvalues q(Vector Nat $φ)
-  let com := q(InstcombineTransformDialect.mkComInstantiate (φ := $φ) $ast |>.map (· $mvalues))
+  let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
+  let com ← mkAppM ``Com.map #[instantiateFun, mcom]
   synthesizeSyntheticMVarsNoPostponing
-  let expr : Q(ExceptM Op (Σ (Γ' : Ctxt Ty) (ty : Ty), Com Op Γ' ty)) ← whnf com
-  match expr.app3? ``Except.ok with
-  | .some (_εexpr, _αexpr, expr) =>
-      let (expr : Q(Σ Γ ty, Com Op Γ ty)) ← whnf expr
-      match expr.app4? ``Sigma.mk with
-      | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt Ty)), expr) =>
-        let (expr : Q(Σ ty, Com Op $_Γ ty)) ← whnf expr
-        match expr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, (_ty : Q(Ty)), (com : Q(Com Op $_Γ $_ty))) =>
-            SSA.comNf com
-        | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
-      | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
-  | .none => throwError "Expected `Except.ok`, found {expr}"
+  comNf com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
