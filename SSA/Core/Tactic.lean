@@ -12,10 +12,21 @@ section
 
 open Lean Meta Elab.Tactic Qq
 
-/-- Given a `Γv : Valuation Γ`, fully reduce the context `Γ` in the type of `Γv`.
-This is needed for some simp-lemmas to apply correctly -/
-elab "change_mlir_context " Γv:ident : tactic => do
-  let Γv : Name := Γv.getId
+/-- `ctxtNf` reduces an expression of type `Ctxt _` to something in between whnf and normal form.
+`ctxtNf` recursively calls `whnf` on the tail of the list, so that the result is of the form
+  `a₀ :: a₁ :: ... :: aₙ :: [] `
+where each element `aᵢ` is not further reduced -/
+private partial def ctxtNf {α : Q(Type)} (as : Q(Ctxt $α)) : MetaM Q(Ctxt $α) := do
+  let as : Q(List $α) ← whnf as
+  match as with
+    | ~q($a :: $as) =>
+        let as ← ctxtNf as
+        return q($a :: $as)
+    | as => return as
+
+/-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
+elab "change_mlir_context " V:ident : tactic => do
+  let V : Name := V.getId
   withMainContext do
     let ctx ← getLCtx
     let Vdecl : LocalDecl ← match ctx.findFromUserName? Γv with
@@ -29,7 +40,7 @@ elab "change_mlir_context " Γv:ident : tactic => do
     let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
 
     -- Reduce the context `Γ`
-    let Γr ← reduce Γ
+    let Γr ← ctxtNf Γ
     let Γr : Q(Ctxt $Ty) := Γr
 
     let goal ← getMainGoal

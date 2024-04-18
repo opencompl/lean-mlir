@@ -1,9 +1,9 @@
 import Qq
 import SSA.Projects.InstCombine.Base
 import Std.Data.BitVec
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.MLIRSyntax.EDSL
-import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
@@ -232,7 +232,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   synthesizeSyntheticMVarsNoPostponing
   let com : Q(MLIR.AST.ExceptM (MOp $φ) (Σ (Γ' : Ctxt (MTy $φ)) (eff : _) (ty : (MTy $φ)), Com (MOp $φ) Γ' eff ty)) ←
     withTheReader Core.Context (fun ctx => { ctx with options := ctx.options.setBool `smartUnfolding false }) do
-      withTransparency (mode := TransparencyMode.all) <|
+      withTransparency (mode := TransparencyMode.default) <|
         return ←reduce com
   let comExpr : Expr := com
   trace[Meta] com

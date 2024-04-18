@@ -1,5 +1,5 @@
-import SSA.Projects.MLIRSyntax.EDSL
-import SSA.Projects.InstCombine.LLVM.Transform
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.LLVM.EDSL
 open MLIR AST
 
@@ -138,4 +138,3 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 -/
 example (w Γv) : (GenericWidth w).denote Γv = some (Bitvec.ofNat w 0) := by
   rfl
-

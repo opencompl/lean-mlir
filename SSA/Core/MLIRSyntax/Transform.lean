@@ -1,17 +1,21 @@
 -- should replace with Lean import once Pure is upstream
-import SSA.Projects.MLIRSyntax.AST
-import SSA.Projects.InstCombine.LLVM.Transform.NameMapping
-import SSA.Projects.InstCombine.LLVM.Transform.TransformError
+import SSA.Core.MLIRSyntax.AST
+import SSA.Core.MLIRSyntax.Transform.NameMapping
+import SSA.Core.MLIRSyntax.Transform.TransformError
 import SSA.Core.Framework
 import SSA.Core.ErasedContext
 
-import Std.Data.BitVec
+/-!
+# `Transform*` typeclasses
+This file defines `TransformTy`, `TransformExpr`, and `TransformReturn` typeclasses,
+which dictate how generic MLIR syntax (as defined in `MLIRSyntax.AST`) can be transformed into
+an instance of `Com` or `Expr` for a specific dialect.
+-/
 
 universe u
 
 namespace MLIR.AST
 
-open Std (BitVec)
 open Ctxt
 
 instance {Op Ty : Type} [OpSignature Op Ty m] {t : Ty} {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} :

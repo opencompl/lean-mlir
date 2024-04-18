@@ -9,6 +9,7 @@ For the rationale behind this, see:
  Junfeng Fan and Frederik Vercauteren, Somewhat Practical Fully Homomorphic Encryption
 https://eprint.iacr.org/2012/144
 
+Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
 import Mathlib.RingTheory.Polynomial.Quotient
 import Mathlib.RingTheory.Ideal.Quotient
@@ -639,7 +640,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   | integer : Ty q n
   | tensor : Ty q n
   | polynomialLike : Ty q n
-  deriving DecidableEq
+  deriving DecidableEq, Repr
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
 instance : TyDenote (Ty q n) where
@@ -666,6 +667,9 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | from_tensor : Op q n-- interpret values as coefficients of a representative
   | to_tensor : Op q n-- give back coefficients from `R.representative`
   | const (c : R q n) : Op q n
+  | const_int (c : Int) : Op q n
+  | const_idx (i : Nat) : Op q n
+
 
 open TyDenote (toType)
 
@@ -682,12 +686,17 @@ def Op.sig : Op  q n → List (Ty q n)
 | Op.from_tensor => [Ty.tensor]
 | Op.to_tensor => [Ty.polynomialLike]
 | Op.const _ => []
+| Op.const_int _ => []
+| Op.const_idx _ => []
+
 
 @[simp, reducible]
 def Op.outTy : Op q n → Ty q n
 | Op.add | Op.sub | Op.mul | Op.mul_constant | Op.leading_term | Op.monomial
 | Op.monomial_mul | Op.from_tensor | Op.const _  => Ty.polynomialLike
 | Op.to_tensor => Ty.tensor
+| Op.const_int _ => Ty.integer
+| Op.const_idx _ => Ty.index
 
 @[simp, reducible]
 def Op.signature : Op q n → Signature (Ty q n) :=
@@ -696,17 +705,18 @@ def Op.signature : Op q n → Signature (Ty q n) :=
 instance : OpSignature (Op q n) (Ty q n) Id := ⟨Op.signature q n⟩
 
 @[simp]
-noncomputable def Op.denote (o : Op q n)
-   (arg : HVector toType (OpSignature.sig o))
-   : (toType <| OpSignature.outTy o) :=
-    match o with
-    | Op.add => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
-    | Op.sub => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
-    | Op.mul => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
-    | Op.mul_constant => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
-    | Op.leading_term => R.leadingTerm arg.toSingle
-    | Op.monomial => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
-    | Op.monomial_mul => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
-    | Op.from_tensor => R.fromTensor arg.toSingle
-    | Op.to_tensor => R.toTensor' arg.toSingle
-    | Op.const c => c
+noncomputable instance : OpDenote (Op q n) (Ty q n) where
+    denote
+    | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
+    | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
+    | Op.mul, arg, _ => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
+    | Op.mul_constant, arg, _ => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
+    | Op.leading_term, arg, _ => R.leadingTerm arg.toSingle
+    | Op.monomial, arg, _ => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
+    | Op.monomial_mul, arg, _ => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
+    | Op.from_tensor, arg, _ => R.fromTensor arg.toSingle
+    | Op.to_tensor, arg, _ => R.toTensor' arg.toSingle
+    | Op.const c, _arg, _ => c
+    | Op.const_int c, _, _ => c
+    | Op.const_idx c, _, _ => c
+
