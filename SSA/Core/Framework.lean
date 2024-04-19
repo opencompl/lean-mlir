@@ -525,7 +525,7 @@ variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
 
 def DialectMorphism.preserves_sig (op : Op) :
-    OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
+    OpSignature.sig (f.mapOp op) = (OpSignature.sig op).map f.mapTy  := by
   simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_regSig (op : Op) :
