@@ -45,5 +45,8 @@ def instantiate (as : Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
 
+@[simp]
+def instantiate_concrete_eq (as : Vector α φ) :
+  (ConcreteOrMVar.concrete w).instantiate as = w := by rfl
 
 end ConcreteOrMVar

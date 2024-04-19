@@ -120,6 +120,12 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
 
 #check Lean.Meta.Simp.Config
 
+theorem Ctxt.map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+    map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
+
+theorem Ctxt.map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+    map f ∅ = ∅ := rfl
+
 /-- This one does not have the 'snoc' leftover. -/
 theorem ok : src 1  ⊑ tgt 1  := by
   --unfold tgt
@@ -128,18 +134,15 @@ theorem ok : src 1  ⊑ tgt 1  := by
   --intros Γv
   --change_mlir_context Γv
   simp only [DerivedCtxt.snoc]
-
   simp only [InstcombineTransformDialect.MOp.instantiateCom]
-  simp only [List.map_eq_map]
-  simp only [empty_eq]
-  simp only [List.map_cons]
-  simp only [List.map_nil]
-  rw [SSA.Ctxt.destruct_cons]
-  simp only [SSA.Ctxt.destruct_nil]
+  simp only [Ctxt.map_cons]
+  simp only [Ctxt.map_nil]
+  /-
   simp only [InstcombineTransformDialect.instantiateMTy]
   simp only [ConcreteOrMVar.instantiate]
   simp only [Vector.get]
   simp only [List.nthLe]
+  -/
   simp only [List.get]
 
   -- HERE: Current working location

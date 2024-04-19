@@ -31,6 +31,7 @@ def empty : Ctxt Ty := []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
+-- TODO: write lemmas about what the empty context does.
 @[simp] lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
 
 @[match_pattern]
@@ -52,6 +53,14 @@ def get? : Ctxt Ty → Nat → Option Ty :=
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   List.map f
+
+@[simp]
+lemma map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+  map f ∅ = ∅ := rfl
+
+@[simp]
+lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+  map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
 
 instance : Functor Ctxt where
   map := map
