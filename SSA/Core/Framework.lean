@@ -519,7 +519,7 @@ instance : Functor Signature where
 structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
   mapOp : Op → Op'
   mapTy : Ty → Ty'
-  preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
+  preserves_signature : ∀ op, signature (mapOp op) = (signature op).map mapTy
 
 variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
