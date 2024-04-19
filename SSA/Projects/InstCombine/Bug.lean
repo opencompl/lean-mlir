@@ -158,6 +158,11 @@ theorem ok : src 1  ⊑ tgt 1  := by
 
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by
+  unfold src_i1 tgt
+  simp_alive_peephole
+
+  stop
+
   -- ∀ (e : Option (_root_.BitVec 1)),
   -- Com.denote (src_i1 1) Γv✝ ⊑ Ctxt.Valuation.snoc Γv✝ (LLVM.mul e e) { val := 0, property := ⋯ }
   dsimp only [Com.Refinement]
