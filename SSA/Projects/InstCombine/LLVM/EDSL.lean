@@ -187,7 +187,7 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MOp φ) (InstCo
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
       InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
-      List.cons.injEq, MTy.bitvec.injEq, and_true, true_and, h1]
+      List.cons.injEq, MTy.bitvec.injEq, and_true, true_and, RegionSignature.map, h1]
 
 open InstCombine (Op Ty) in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :

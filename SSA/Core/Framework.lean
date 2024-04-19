@@ -500,8 +500,12 @@ theorem Lets.denote_getExpr {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ Γ�
 
 section Map
 
+def RegionSignature.map (f : Ty → Ty') : RegionSignature Ty → RegionSignature Ty' :=
+  List.map fun ⟨Γ, ty⟩ => (Γ.map f, f ty)
+
+
 instance : Functor RegionSignature where
-  map f := List.map fun (tys, ty) => (f <$> tys, f ty)
+  map := RegionSignature.map
 
 instance : Functor Signature where
   map := fun f ⟨sig, regSig, outTy⟩ =>
@@ -523,9 +527,7 @@ def DialectMorphism.preserves_sig (op : Op) :
   simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_regSig (op : Op) :
-    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
-      fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
-    ) := by
+    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map f.mapTy := by
   simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_outTy (op : Op) :
