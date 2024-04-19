@@ -32,7 +32,9 @@ instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
 -- TODO: write lemmas about what the empty context does.
-@[simp] lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
+-- We remove the @[simp] tag from empty context, to better understand
+-- when we pun between context and list.
+lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
