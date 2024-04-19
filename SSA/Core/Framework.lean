@@ -507,9 +507,11 @@ def RegionSignature.map (f : Ty → Ty') : RegionSignature Ty → RegionSignatur
 instance : Functor RegionSignature where
   map := RegionSignature.map
 
+def Signature.map (f : Ty → Ty') : Signature Ty → Signature Ty' :=
+  fun ⟨sig, regSig, outTy⟩ => ⟨sig.map f, regSig.map f, f outTy⟩
+
 instance : Functor Signature where
-  map := fun f ⟨sig, regSig, outTy⟩ =>
-    ⟨f <$> sig, f <$> regSig, f outTy⟩
+  map := Signature.map
 
 /-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
