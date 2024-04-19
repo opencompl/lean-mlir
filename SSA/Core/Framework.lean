@@ -537,7 +537,7 @@ def DialectMorphism.preserves_outTy (op : Op) :
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
 mutual
-  def Com.map : Com Op Γ ty → Com Op' (f.mapTy <$> Γ) (f.mapTy ty)
+  def Com.map : Com Op Γ ty → Com Op' (Γ.map f.mapTy) (f.mapTy ty)
     | .ret v          => .ret v.toMap
     | .lete body rest => .lete body.map rest.map
 
