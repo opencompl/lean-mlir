@@ -553,7 +553,7 @@ mutual
   /-- Inline of `HVector.map'` for the termination checker -/
   def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
       HVector (fun t => Com Op t.fst t.snd) regSig
-      → HVector (fun t => Com Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
+      → HVector (fun t => Com Op' t.fst t.snd) (regSig.map f.mapTy : RegionSignature _)
     | _, .nil        => .nil
     | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end
