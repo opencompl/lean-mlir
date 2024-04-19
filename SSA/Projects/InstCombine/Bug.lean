@@ -120,13 +120,37 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
 
 #check Lean.Meta.Simp.Config
 
-theorem Ctxt.map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
-    map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
+-- def instantiateMTy (vals : Vector Nat φ) : (MTy φ) → InstCombine.Ty
+--   | .bitvec w => .bitvec <| w.instantiate vals
 
-theorem Ctxt.map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
-    map f ∅ = ∅ := rfl
+@[simp]
+lemma InstcombineTransformDialect.instantiateMTy_eq (vals : Vector Nat φ) :
+    instantiateMTy vals (.bitvec w) = InstCombine.Ty.bitvec (w.instantiate vals) := rfl
 
-/-- This one does not have the 'snoc' leftover. -/
+@[simp]
+lemma ConcreteOrMVar.instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
+    ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
+  simp [instantiate]
+  simp [Vector.get]
+  simp [List.nthLe]
+
+set_option pp.proofs.withType true in
+@[simp]
+lemma ConcreteOrMVar.instantiate_mvar_zero' :
+    (ConcreteOrMVar.mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := by
+  -- simp [instantiate, Vector.head]
+  rfl
+
+@[simp]
+lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := by rfl) (hsucci : i+1 < φ := by linarith):
+    (ConcreteOrMVar.mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
+    (ConcreteOrMVar.mvar ⟨i, by sorry⟩).instantiate (Subtype.mk ws (by rfl)) := by rfl
+
+-- (InstcombineTransformDialect.instantiateMTy { val := [1], property := ⋯ }
+--           (InstCombine.MTy.bitvec (Width.mvar { val := 0, isLt := ⋯ }))
+
+/- This one does not have the 'snoc' leftover. -/
+set_option pp.proofs.withType true in
 theorem ok : src 1  ⊑ tgt 1  := by
   --unfold tgt
   dsimp only [Com.Refinement]
@@ -137,6 +161,9 @@ theorem ok : src 1  ⊑ tgt 1  := by
   simp only [InstcombineTransformDialect.MOp.instantiateCom]
   simp only [Ctxt.map_cons]
   simp only [Ctxt.map_nil]
+  simp only [InstcombineTransformDialect.instantiateMTy_eq]
+  simp only [ConcreteOrMVar.instantiate_mvar_zero']
+
   /-
   simp only [InstcombineTransformDialect.instantiateMTy]
   simp only [ConcreteOrMVar.instantiate]
