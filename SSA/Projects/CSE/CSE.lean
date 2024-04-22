@@ -12,59 +12,6 @@ variable [DecidableEq Ty] [OP_DECEQ : DecidableEq Op] [OpSignature Op Ty m]
 /-- can decide equality on argument vectors. -/
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
 
--- mutual
--- def regionVector.decEq (ts : List (Ctxt Ty × Ty))
---   (as bs : (HVector ((fun t : Ctxt Ty × Ty => Com Op t.1 t.2)) <| ts)) :
---   Decidable (as = bs) :=
---     match as, bs with
---     | .nil, .nil => .isTrue rfl
---     | .cons (a := α) a as', .cons b bs' =>
---       match Com.decEq a b with
---       | .isTrue HD_EQ =>
---         match regionVector.decEq _ as' bs' with
---         | .isTrue TL_EQ => .isTrue (by subst HD_EQ; subst TL_EQ; rfl; done)
---         | .isFalse neq => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---       | .isFalse neq => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
-
--- def Expr.decEq (e e' : Expr Op Γ .pure α) : Decidable (e = e') :=
---   match e, e' with
---   | .mk op ty_eq args regArgs, .mk op' ty_eq' args' regArgs' =>
---     if OP : op = op'
---     then
---       match argVector.decEq args (OP ▸ args') with
---       | .isTrue ARGEQ =>
---         match regionVector.decEq _ regArgs (OP ▸ regArgs') with
---         | .isTrue REGEQ =>
---             .isTrue (by subst ty_eq; subst OP; subst ARGEQ; subst REGEQ; rfl; done)
---         | .isFalse neq =>
---           .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---       | .isFalse neq =>
---         .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---     else .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
-
--- def Com.decEq (c c' : Com Op Γ .pure α) : Decidable (c = c') :=
---   match c, c' with
---   | .ret v, .ret v' =>
---     have VAR_DECEQ : DecidableEq (Ctxt.Var Γ α) := inferInstance
---     match VAR_DECEQ v v' with
---     | .isTrue heq => .isTrue (by simp [heq])
---     | .isFalse f => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---   | .lete (α := α) e body, .lete (α := β) e' body' =>
---     match decEq α β with
---     | .isTrue TY_EQ =>
---       match Expr.decEq e (TY_EQ ▸ e') with
---       | .isFalse neq => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---       | .isTrue EXPR_EQ =>
---         match Com.decEq body (TY_EQ ▸ body') with
---         | .isFalse neq =>  .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---         | .isTrue BODY_EQ =>
---           .isTrue (by subst TY_EQ; subst EXPR_EQ; subst BODY_EQ; rfl)
---     | .isFalse f => .isFalse (fun CONTRA => by rcases CONTRA; . contradiction)
---   | .ret .., .lete .. => .isFalse Com.noConfusion
---   | .lete .., .ret .. => .isFalse Com.noConfusion
--- end
-
--- end DecEqCom
 
 namespace CSE
 
