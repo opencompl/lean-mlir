@@ -195,6 +195,7 @@ theorem ok : src 1  ⊑ tgt 1  := by
   dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
   dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
     InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
+  -- intros Γv
   simp_alive_peephole
   rename_i x
   /- x ⊑ LLVM.mul x x-/

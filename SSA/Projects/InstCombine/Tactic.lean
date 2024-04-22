@@ -57,7 +57,7 @@ macro "simp_alive_ssa" : tactic =>
   `(tactic|
       (
         /- Unfold the meaning of refinement, to access the valuation -/
-        dsimp only [Com.Refinement]
+        -- dsimp only [Com.Refinement]
         intros Γv
 
         /- Simplify away the core framework -/
