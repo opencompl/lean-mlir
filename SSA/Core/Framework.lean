@@ -137,7 +137,7 @@ section DataStructures
 variable (Op : Type) {Ty : Type} {m : Type → Type} [OpSignature Op Ty m]
 
 mutual
-/- An intrinsically typed expression whose effect is *at most* EffectKind -/
+/-- An intrinsically typed expression whose effect is *at most* EffectKind -/
 inductive Expr : (Γ : Ctxt Ty) → (eff : EffectKind) → (ty : Ty) → Type :=
   | mk {Γ} {ty} (op : Op)
     (ty_eq : ty = OpSignature.outTy op)
