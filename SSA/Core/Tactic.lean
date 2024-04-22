@@ -52,7 +52,7 @@ local elab "contains? " ts:term : tactic => withMainContext do
   if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
 
 /-- Look for a variable in the context and generalize it, fail otherwise. -/
-macro "generalize_or_fail" "at" ll:ident : tactic =>
+local macro "generalize_or_fail" "at" ll:ident : tactic =>
   `(tactic|
       (
         -- We first check with `contains?` if the term is present in the goal.
@@ -98,7 +98,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
         Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
-        Ctxt.empty, Ctxt.empty_eq, Ctxt.map_cons, Ctxt.map_nil, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last, Ctxt.map,
+        Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last, Ctxt.map,
         Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
         OpDenote.denote, Expr.op_mk, Expr.args_mk,
