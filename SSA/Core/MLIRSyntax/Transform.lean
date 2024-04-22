@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 -- should replace with Lean import once Pure is upstream
 import SSA.Core.MLIRSyntax.AST
 import SSA.Core.MLIRSyntax.Transform.NameMapping

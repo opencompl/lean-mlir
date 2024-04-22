@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 abbrev Kind := Unit
 abbrev ExprKind :=  Unit
  inductive OpKind : Kind → Kind → Type
