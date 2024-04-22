@@ -2049,7 +2049,7 @@ variable [LawfulMonad m]
 
 section DenoteIntoSubtype
 
-/- TODO: we might not need `denoteIntoSubtype`, if we can proof that `V ∈ supp (lets.denote _)`
+/- TODO: we might not need `denoteIntoSubtype`, if we can prove that `V ∈ supp (lets.denote _)`
 implies `lets.getPureExpr v = some e → e.denote V = V v` -/
 
 /-- `e.IsDenotationForPureE Γv x` holds if `x` is the pure value obtained from `e` under valuation
