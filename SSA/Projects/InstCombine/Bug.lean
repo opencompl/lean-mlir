@@ -11,7 +11,8 @@ open Std (BitVec)
 open Ctxt (Var)
 open ComWrappers
 
-macro "simp_alive_meta" : tactic =>
+@[deprecated]
+macro "simp_alive_meta_old" : tactic =>
   `(tactic|
       (
         simp only [InstcombineTransformDialect.MOp.instantiateCom,
@@ -135,19 +136,24 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
   | `($(f) $_ctxt $ty)  => `($f _ _)
   | _ => throw ()
 
+
 open InstCombine InstcombineTransformDialect MOp ConcreteOrMVar ConcreteOrMVar.Notation BinaryOp in
--- set_option pp.proofs.withType true in
+set_option pp.proofs true in
 theorem ok : src 1  ⊑ tgt 1  := by
   unfold tgt
   unfold src
   simp_alive_peephole
   sorry
 
+-- set_option pp.explicit true in
+set_option pp.proofs true in
+set_option tactic.simp.trace true in
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by
   unfold tgt
   unfold src_i1
-  simp_alive_peephole
+  simp_alive_meta
+  simp_alive_ssa
   sorry
 
 def alive_Select_858_src  (w : Nat)   :=

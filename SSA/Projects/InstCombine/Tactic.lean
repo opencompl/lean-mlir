@@ -59,6 +59,7 @@ macro "simp_alive_meta" : tactic =>
       dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
       dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
         InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
+      dsimp (config := { autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
    )
  )
 
