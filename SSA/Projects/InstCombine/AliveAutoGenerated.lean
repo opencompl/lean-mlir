@@ -3163,7 +3163,6 @@ def alive_Select_858_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
   unfold alive_Select_858_src alive_Select_858_tgt
-  stop
   simp_alive_peephole -- fails to clear the context
   all_goals sorry --apply bitvec_Select_858
 
@@ -3199,7 +3198,6 @@ def alive_Select_859'_tgt  (w : Nat)  :=
 }]
 theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w  ⊑ alive_Select_859'_tgt 1  := by
   unfold alive_Select_859'_src alive_Select_859'_tgt
-  stop
   simp_alive_peephole -- fails to clear the context
   all_goals sorry --apply bitvec_Select_859'
 
