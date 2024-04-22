@@ -141,6 +141,12 @@ lemma ConcreteOrMVar.instantiate_mvar_zero' :
   -- simp [instantiate, Vector.head]
   rfl
 
+set_option pp.proofs.withType true in
+@[simp]
+lemma ConcreteOrMVar.instantiate_mvar_zero'' :
+    (ConcreteOrMVar.mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := by
+  rfl
+
 @[simp]
 lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := by rfl) (hsucci : i+1 < φ := by linarith):
     (ConcreteOrMVar.mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
@@ -155,6 +161,7 @@ lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := 
   | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
   | _ => throw ()
 
+
 -- Note that if we setup elaboration right, this is un-necessary, since the only users for `Fin` are
 -- `Width.mvar`, and `HVector.getN`.
 -- · `Width.mvar` should be removed during framework time, so the user never sees this in their goal state.
@@ -164,44 +171,32 @@ lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := 
   | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
   | _ => throw ()
 
+theorem DerivedCtxt_snoc_ctxt_eq_ctxt_snoc:
+    (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
+  rfl
+
+theorem Ctxt.map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := by
+  rfl
+
+@[app_unexpander Var.last] def unexpandVarLast : Lean.PrettyPrinter.Unexpander
+  | `($(f) $_ctxt $ty)  => `($f _ $ty)
+  | _ => throw ()
+
 open InstCombine InstcombineTransformDialect MOp ConcreteOrMVar ConcreteOrMVar.Notation BinaryOp in
 -- set_option pp.proofs.withType true in
 theorem ok : src 1  ⊑ tgt 1  := by
   --unfold tgt
-  dsimp only [Com.Refinement]
-  --  TODO:
-  --   push the projection of .ctxt in for
-  --   (DerivedCtxt.snoc (DerivedCtxt.ofCtxt ∅) (MTy.bitvec (Width.mvar { val := 0, isLt := ⋯ }))).ctxt)
-  simp only [DerivedCtxt.snoc]
-  simp only [InstcombineTransformDialect.MOp.instantiateCom]
-  simp only [Ctxt.map_cons]
-  simp only [Ctxt.map_nil]
-  simp only [InstcombineTransformDialect.instantiateMTy_eq]
-  simp only [ConcreteOrMVar.instantiate_mvar_zero']
   unfold tgt
-  -- HERE: Current working location
-  simp only [Com.denote]
-  /- TODO:
-      write Expr.denote in terms of args.denote that denotes args, then write theorems for
-      args.denote_cons, args.denote_nil to simplify args.denote application on HVector.
-  -/
-  simp only [Expr.denote]
-  simp only [HVector.denote_nil]
-  simp only [HVector.map]
-  simp only [OpDenote.denote]
-  simp only [Op.denote]
-  /- TODO: make kawaii notation for HVector.get, which will supercede getN. perform auto tactic during macro expansion ala
-     List notation: `xs[1]` -/
-  simp only [HVector.getN_cons_zero]
-  simp only [HVector.getN_cons_succ]
-  simp only [HVector.getN_cons_zero]
-  intros Γv
-  generalize hx:(Γv ⟨0,_⟩) = x
-  simp only [Valuation.snoc_zero]
-
   unfold src
-  simp only [Com.denote_ret]
-  simp only [hx]
+  dsimp only [Com.Refinement]
+  dsimp only [DerivedCtxt_snoc_ctxt_eq_ctxt_snoc]
+  dsimp only [Var.zero_eq_last, List.map] -- @bollu is scared x(
+  unfold Width.mvar -- TODO: write theorems in terms of Width.mvar?
+  dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
+  dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
+    InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
+  simp_alive_peephole
+  rename_i x
   /- x ⊑ LLVM.mul x x-/
   sorry
 
