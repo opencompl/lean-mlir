@@ -1579,7 +1579,6 @@ We use this intuition to explain what `matchVar` does, but first we give a semi-
 of `ExprTree` and its operations.
 -/
 
-#check Expr
 
 mutual
 variable (Op)
