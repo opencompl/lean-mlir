@@ -23,6 +23,12 @@ instance : OfNat (ConcreteOrMVar Nat φ) n := ⟨.concrete n⟩
 
 namespace ConcreteOrMVar
 
+/- Terse notation for concrete and mvar. -/
+namespace Notation
+scoped notation "i" n => ConcreteOrMVar.concrete n
+scoped notation "i?" f => ConcreteOrMVar.mvar f
+end Notation
+
 /-- If there are no meta-variables, `ConcreteOrMVar` is just the concrete type `α` -/
 def toConcrete : ConcreteOrMVar α 0 → α
   | .concrete a => a

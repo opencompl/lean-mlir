@@ -6,9 +6,17 @@ inductive HVector {α : Type*} (f : α → Type*) : List α → Type _
   | nil : HVector f []
   | cons {a : α} : (f a) → HVector f as → HVector f (a :: as)
 
+instance : EmptyCollection (@HVector α f []) := ⟨HVector.nil⟩
+
+@[app_unexpander HVector.nil] def unexpandHVectorNil : Lean.PrettyPrinter.Unexpander
+  | `($(_))  => `(∅)
+
 namespace HVector
 
 variable {A B : α → Type*} {as : List α}
+
+/-- All inhabitants of `HVector []` are equal to `HVector.nil` -/
+theorem nil_eq (x : HVector f []) : x = .nil := by cases x; rfl
 
 /-
   # Definitions
@@ -67,6 +75,15 @@ Thus, `GetElem` does not properly support heterogeneous container types like `HV
 abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by hvector_get_elem_tactic) :
     A (as.get ⟨i, hi⟩) :=
   x.get ⟨i, hi⟩
+
+/-- HVector.getN (.cons x _) 0 = x-/
+lemma getN_cons_zero (x : A a) (xs : HVector A as) : (HVector.cons x xs).getN 0 prf = x := rfl
+
+/-- HVector.getN (.cons _ xs) i+1 = HVector.getN xs i -/
+lemma getN_cons_succ (x : A a) (xs : HVector A as) : (HVector.cons x xs).getN (i+1) prf =
+  xs.getN i (by
+    simp [List.length] at prf
+    exact Nat.succ_lt_succ_iff.mp prf) := rfl
 
 def ToTupleType (A : α → Type*) : List α → Type _
   | [] => PUnit

@@ -146,45 +146,64 @@ lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := 
     (ConcreteOrMVar.mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
     (ConcreteOrMVar.mvar ⟨i, by sorry⟩).instantiate (Subtype.mk ws (by rfl)) := by rfl
 
--- (InstcombineTransformDialect.instantiateMTy { val := [1], property := ⋯ }
---           (InstCombine.MTy.bitvec (Width.mvar { val := 0, isLt := ⋯ }))
+-- Somewhat evil notation for Subtype and Fin, which rewrites them in terms of ⟨..., ...⟩.
+--   This is a bit aggressive, since it affects all subtypes, even those outside our project.
+--   The upshot is that terms look nice, and retains the identity `elab <=< delab =id`.
 
-/- This one does not have the 'snoc' leftover. -/
-set_option pp.proofs.withType true in
+/-- This makes Vars look way prettier than { val := 0, property := ... }, but is aggressive... -/
+@[app_unexpander Subtype.mk] def unexpandSubtypeMk : Lean.PrettyPrinter.Unexpander
+  | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
+  | _ => throw ()
+
+-- Note that if we setup elaboration right, this is un-necessary, since the only users for `Fin` are
+-- `Width.mvar`, and `HVector.getN`.
+-- · `Width.mvar` should be removed during framework time, so the user never sees this in their goal state.
+-- · `HVector.getN` should be replaced by `List.get` style notation, which will be elaborated to `HVector.get`.
+/-- This makes MVars look way prettier than { val := 0, isLt := ... }, but is aggressive... -/
+@[app_unexpander Fin.mk] def unexpandFinMk : Lean.PrettyPrinter.Unexpander
+  | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
+  | _ => throw ()
+
+open InstCombine InstcombineTransformDialect MOp ConcreteOrMVar ConcreteOrMVar.Notation BinaryOp in
+-- set_option pp.proofs.withType true in
 theorem ok : src 1  ⊑ tgt 1  := by
   --unfold tgt
   dsimp only [Com.Refinement]
-
-  --intros Γv
-  --change_mlir_context Γv
+  --  TODO:
+  --   push the projection of .ctxt in for
+  --   (DerivedCtxt.snoc (DerivedCtxt.ofCtxt ∅) (MTy.bitvec (Width.mvar { val := 0, isLt := ⋯ }))).ctxt)
   simp only [DerivedCtxt.snoc]
   simp only [InstcombineTransformDialect.MOp.instantiateCom]
   simp only [Ctxt.map_cons]
   simp only [Ctxt.map_nil]
   simp only [InstcombineTransformDialect.instantiateMTy_eq]
   simp only [ConcreteOrMVar.instantiate_mvar_zero']
-
-  /-
-  simp only [InstcombineTransformDialect.instantiateMTy]
-  simp only [ConcreteOrMVar.instantiate]
-  simp only [Vector.get]
-  simp only [List.nthLe]
-  -/
-  simp only [List.get]
-
+  unfold tgt
   -- HERE: Current working location
+  simp only [Com.denote]
+  /- TODO:
+      write Expr.denote in terms of args.denote that denotes args, then write theorems for
+      args.denote_cons, args.denote_nil to simplify args.denote application on HVector.
+  -/
+  simp only [Expr.denote]
+  simp only [HVector.denote_nil]
+  simp only [HVector.map]
+  simp only [OpDenote.denote]
+  simp only [Op.denote]
+  /- TODO: make kawaii notation for HVector.get, which will supercede getN. perform auto tactic during macro expansion ala
+     List notation: `xs[1]` -/
+  simp only [HVector.getN_cons_zero]
+  simp only [HVector.getN_cons_succ]
+  simp only [HVector.getN_cons_zero]
+  intros Γv
+  generalize hx:(Γv ⟨0,_⟩) = x
+  simp only [Valuation.snoc_zero]
 
-
-
-  simp (config := {failIfUnchanged := false}) only [Com.denote]
-  simp (config := {failIfUnchanged := false}) only [Expr.denote]
-  simp (config := {failIfUnchanged := false}) only [HVector.denote]
-  simp (config := {failIfUnchanged := false}) only [HVector.map]
-  simp (config := {failIfUnchanged := false}) only [List.map_eq_map]
-  simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last]
-  simp only [Valuation.snoc_last]
+  unfold src
+  simp only [Com.denote_ret]
+  simp only [hx]
+  /- x ⊑ LLVM.mul x x-/
   sorry
-
 
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by

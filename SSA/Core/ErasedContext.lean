@@ -247,6 +247,8 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
 
+infixl:50 "::ᵥ" => Valuation.snoc
+
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
