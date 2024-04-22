@@ -64,6 +64,9 @@ lemma map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
 lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
   map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
 
+theorem Ctxt.map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := by
+  rfl
+
 instance : Functor Ctxt where
   map := map
 
@@ -485,6 +488,10 @@ theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := 
 @[simp]
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+
+theorem snoc_ctxt_eq_ctxt_snoc:
+    (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
+  rfl
 
 @[simp]
 instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where

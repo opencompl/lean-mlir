@@ -61,4 +61,28 @@ def instantiate (as : Vector α φ) : ConcreteOrMVar α φ → α
 def instantiate_concrete_eq (as : Vector α φ) :
   (ConcreteOrMVar.concrete w).instantiate as = w := by rfl
 
+@[simp]
+lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
+    ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
+  simp [instantiate]
+  simp [Vector.get]
+  simp [List.nthLe]
+
+@[simp]
+lemma instantiate_mvar_zero' :
+    (mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := by
+  rfl
+
+set_option pp.proofs.withType true in
+@[simp]
+lemma instantiate_mvar_zero'' :
+    (mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := by
+  rfl
+
+
+-- @[simp]
+-- lemma instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := by rfl) (hsucci : i+1 < φ := by omega):
+--     (mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
+--     (mvar ⟨i, by sorry⟩).instantiate (Subtype.mk ws (by rfl)) := by rfl
+
 end ConcreteOrMVar

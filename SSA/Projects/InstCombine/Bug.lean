@@ -118,110 +118,37 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
   simp only [Valuation.snoc_last]
   sorry
 
-#check Lean.Meta.Simp.Config
-
--- def instantiateMTy (vals : Vector Nat φ) : (MTy φ) → InstCombine.Ty
---   | .bitvec w => .bitvec <| w.instantiate vals
-
-@[simp]
-lemma InstcombineTransformDialect.instantiateMTy_eq (vals : Vector Nat φ) :
-    instantiateMTy vals (.bitvec w) = InstCombine.Ty.bitvec (w.instantiate vals) := rfl
-
-@[simp]
-lemma ConcreteOrMVar.instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
-    ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
-  simp [instantiate]
-  simp [Vector.get]
-  simp [List.nthLe]
-
-set_option pp.proofs.withType true in
-@[simp]
-lemma ConcreteOrMVar.instantiate_mvar_zero' :
-    (ConcreteOrMVar.mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := by
-  -- simp [instantiate, Vector.head]
-  rfl
-
-set_option pp.proofs.withType true in
-@[simp]
-lemma ConcreteOrMVar.instantiate_mvar_zero'' :
-    (ConcreteOrMVar.mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := by
-  rfl
-
-@[simp]
-lemma ConcreteOrMVar.instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := by rfl) (hsucci : i+1 < φ := by linarith):
-    (ConcreteOrMVar.mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
-    (ConcreteOrMVar.mvar ⟨i, by sorry⟩).instantiate (Subtype.mk ws (by rfl)) := by rfl
-
--- Somewhat evil notation for Subtype and Fin, which rewrites them in terms of ⟨..., ...⟩.
---   This is a bit aggressive, since it affects all subtypes, even those outside our project.
---   The upshot is that terms look nice, and retains the identity `elab <=< delab =id`.
-
-/-- This makes Vars look way prettier than { val := 0, property := ... }, but is aggressive... -/
-@[app_unexpander Subtype.mk] def unexpandSubtypeMk : Lean.PrettyPrinter.Unexpander
-  | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
-  | _ => throw ()
-
-
 -- Note that if we setup elaboration right, this is un-necessary, since the only users for `Fin` are
 -- `Width.mvar`, and `HVector.getN`.
 -- · `Width.mvar` should be removed during framework time, so the user never sees this in their goal state.
 -- · `HVector.getN` should be replaced by `List.get` style notation, which will be elaborated to `HVector.get`.
 /-- This makes MVars look way prettier than { val := 0, isLt := ... }, but is aggressive... -/
+@[app_unexpander Subtype.mk] def unexpandSubtypeMk : Lean.PrettyPrinter.Unexpander
+  | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
+  | _ => throw ()
+
 @[app_unexpander Fin.mk] def unexpandFinMk : Lean.PrettyPrinter.Unexpander
   | `($(_) $val $prop)  => `(⟨$val, $prop⟩)
   | _ => throw ()
 
-theorem DerivedCtxt_snoc_ctxt_eq_ctxt_snoc:
-    (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
-  rfl
-
-theorem Ctxt.map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := by
-  rfl
-
 @[app_unexpander Var.last] def unexpandVarLast : Lean.PrettyPrinter.Unexpander
-  | `($(f) $_ctxt $ty)  => `($f _ $ty)
+  | `($(f) $_ctxt $ty)  => `($f _ _)
   | _ => throw ()
 
 open InstCombine InstcombineTransformDialect MOp ConcreteOrMVar ConcreteOrMVar.Notation BinaryOp in
 -- set_option pp.proofs.withType true in
 theorem ok : src 1  ⊑ tgt 1  := by
-  --unfold tgt
   unfold tgt
   unfold src
-  dsimp only [Com.Refinement]
-  dsimp only [DerivedCtxt_snoc_ctxt_eq_ctxt_snoc]
-  dsimp only [Var.zero_eq_last, List.map] -- @bollu is scared x(
-  unfold Width.mvar -- TODO: write theorems in terms of Width.mvar?
-  dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
-  dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
-    InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
-  -- intros Γv
   simp_alive_peephole
-  rename_i x
-  /- x ⊑ LLVM.mul x x-/
   sorry
 
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by
-  -- ∀ (e : Option (_root_.BitVec 1)),
-  -- Com.denote (src_i1 1) Γv✝ ⊑ Ctxt.Valuation.snoc Γv✝ (LLVM.mul e e) { val := 0, property := ⋯ }
-  dsimp only [Com.Refinement]
-  intros Γv
-  change_mlir_context Γv
-
   unfold tgt
-  simp (config := {failIfUnchanged := false}) only [Com.denote]
-  simp (config := {failIfUnchanged := false}) only [Expr.denote]
-  simp (config := {failIfUnchanged := false}) only [HVector.denote]
-  simp (config := {failIfUnchanged := false}) only [HVector.map]
-  simp (config := {failIfUnchanged := false}) only [List.map_eq_map]
-  simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last]
-  simp_alive_meta
-  simp [InstcombineTransformDialect.instantiateMTy]
-  --set_option trace.Meta.isDefEq true in
-  rw [Valuation.snoc_last]
+  unfold src_i1
+  simp_alive_peephole
   sorry
-
 
 def alive_Select_858_src  (w : Nat)   :=
 [alive_icom ( w )| {
@@ -243,4 +170,21 @@ def alive_Select_858_tgt  (w : Nat)  :=
 theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select_858_tgt 1  := by
   unfold alive_Select_858_src alive_Select_858_tgt
   simp_alive_peephole -- fails to clear the context
-  all_goals sorry --apply bitvec_Select_858
+  all_goals sorry --apply bitvec_Select_858  -- ∀ (e : Option (_root_.BitVec 1)),
+  -- Com.denote (src_i1 1) Γv✝ ⊑ Ctxt.Valuation.snoc Γv✝ (LLVM.mul e e) { val := 0, property := ⋯ }
+  dsimp only [Com.Refinement]
+  intros Γv
+  change_mlir_context Γv
+
+  unfold tgt
+  simp (config := {failIfUnchanged := false}) only [Com.denote]
+  simp (config := {failIfUnchanged := false}) only [Expr.denote]
+  simp (config := {failIfUnchanged := false}) only [HVector.denote]
+  simp (config := {failIfUnchanged := false}) only [HVector.map]
+  simp (config := {failIfUnchanged := false}) only [List.map_eq_map]
+  simp (config := {failIfUnchanged := false}) only [Var.zero_eq_last]
+  simp_alive_meta
+  simp [InstcombineTransformDialect.instantiateMTy]
+  --set_option trace.Meta.isDefEq true in
+  rw [Valuation.snoc_last]
+  sorry

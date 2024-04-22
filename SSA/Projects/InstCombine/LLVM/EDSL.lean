@@ -168,6 +168,10 @@ instance : AST.TransformReturn (MOp φ) (MTy φ) φ where
 def instantiateMTy (vals : Vector Nat φ) : (MTy φ) → InstCombine.Ty
   | .bitvec w => .bitvec <| w.instantiate vals
 
+@[simp]
+lemma instantiateMTy_eq (vals : Vector Nat φ) :
+    instantiateMTy vals (.bitvec w) = InstCombine.Ty.bitvec (w.instantiate vals) := rfl
+
 def instantiateMOp (vals : Vector Nat φ) : MOp φ → InstCombine.Op
   | .binary w binOp => .binary (w.instantiate vals) binOp
   | .unary w unOp => .unary (w.instantiate vals) unOp

@@ -47,6 +47,20 @@ macro_rules
                                 --   we are left with a universally quantified goal of the form:
                                 --   `∀ (x₁ : BitVec _) ... (xₙ : BitVec _), ...`
     )
+/-- We eliminate our alive framework's metavarible machinery.
+At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
+and all `Width.mvar` should be resolved into `Width.concrete`.  -/
+macro "simp_alive_meta" : tactic =>
+ `(tactic|
+     (dsimp only [Com.Refinement]
+      dsimp only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
+      dsimp only [Var.zero_eq_last, List.map] -- @bollu is scared x(
+      unfold Width.mvar -- TODO: write theorems in terms of Width.mvar?
+      dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
+      dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
+        InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
+   )
+ )
 
 /-- Eliminate the SSA structure of the program
 - We first simplify `Com.refinement` to see the context `Γv`.
@@ -56,8 +70,7 @@ macro_rules
 macro "simp_alive_ssa" : tactic =>
   `(tactic|
       (
-        /- Unfold the meaning of refinement, to access the valuation -/
-        -- dsimp only [Com.Refinement]
+        /- access the valuation -/
         intros Γv
 
         /- Simplify away the core framework -/
@@ -100,6 +113,7 @@ where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
+        simp_alive_meta
         simp_alive_ssa
         simp_alive_undef
         simp_alive_ops
