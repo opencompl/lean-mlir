@@ -265,8 +265,7 @@ theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType
 
 @[simp]
 theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (s.snoc x) (Ctxt.Var.last _ _) = x := by
-  simp [Ctxt.Valuation.snoc]
+    (s.snoc x) (Ctxt.Var.last _ _) = x := rfl
 
 @[simp]
 theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
@@ -275,8 +274,7 @@ theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toT
 
 @[simp]
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
-    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
-  simp [Ctxt.Valuation.snoc]
+    (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := rfl
 
 /-!
 # Helper to simplify context manipulation with toSnoc and variable access.
