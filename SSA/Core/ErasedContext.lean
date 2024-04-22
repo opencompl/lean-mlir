@@ -271,8 +271,7 @@ theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toTy
 @[simp]
 theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     (h : get? (Ctxt.snoc Γ ty) 0 = some ty) :
-    (s.snoc x) ⟨0, h⟩ = x := by
-  simp [Ctxt.Valuation.snoc]
+    (s.snoc x) ⟨0, h⟩ = x := rfl
 
 @[simp]
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
