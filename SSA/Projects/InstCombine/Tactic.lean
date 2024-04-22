@@ -52,14 +52,14 @@ At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be 
 and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
-     (dsimp only [Com.Refinement]
-      dsimp only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      dsimp only [Var.zero_eq_last, List.map] -- @bollu is scared x(
+     (dsimp (config := {failIfUnchanged := false }) only [Com.Refinement]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
+      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last, List.map] -- @bollu is scared x(
       unfold Width.mvar -- TODO: write theorems in terms of Width.mvar?
-      dsimp only [Ctxt.map_snoc, Ctxt.map_nil]
-      dsimp only [InstcombineTransformDialect.MOp.instantiateCom,
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom,
         InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
-      dsimp (config := { autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
+      dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
    )
  )
 
