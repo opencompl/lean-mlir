@@ -247,11 +247,11 @@ def MOp.outTy : MOp φ → MTy φ
 | .icmp _ _ => .bitvec 1
 
 /-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
-def MetaLLVM (φ : Nat) : Dialect where
+abbrev MetaLLVM (φ : Nat) : Dialect where
   Op := MOp φ
   Ty := MTy φ
 
-def LLVM : Dialect where
+abbrev LLVM : Dialect where
   Op := Op
   Ty := Ty
 
@@ -259,8 +259,6 @@ instance {φ} : OpSignature (MetaLLVM φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
 instance : OpSignature LLVM where
   signature op := ⟨op.sig, [], op.outTy⟩
-
-instance : TyDenote (LLVM.Ty) := inferInstanceAs (TyDenote <| Ty)
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
