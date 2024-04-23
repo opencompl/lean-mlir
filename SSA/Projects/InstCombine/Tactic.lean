@@ -63,10 +63,10 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?] -- TODO: added by Tobias ->  double-check.
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom,
-        InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
-      dsimp (config := {failIfUnchanged := false }) only [
-        ConcreteOrMVar.instantiate_mvar_zero''] -- TODO: added by Tobias ->  double-check.
+        InstcombineTransformDialect.instantiateMTy_eq]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
       dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
+      dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [Ctxt.map]
    )
  )
 
