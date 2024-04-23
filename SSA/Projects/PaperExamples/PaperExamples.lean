@@ -41,25 +41,30 @@ inductive Op :  Type
   | const : (val : ℤ) → Op
   deriving DecidableEq, Repr
 
-instance : OpSignature Op Ty where
+/-- `Simple` is a very basic example dialect -/
+abbrev Simple : Dialect where
+  Op := Op
+  Ty := Ty
+
+instance : OpSignature Simple where
   signature
     | .const _ => ⟨[], [], .int⟩
     | .add   => ⟨[.int, .int], [], .int⟩
 
 @[reducible]
-instance : OpDenote Op Ty where
+instance : OpDenote Simple where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .int  :=
   Expr.mk
     (op := .const n)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .int :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
@@ -70,15 +75,15 @@ attribute [local simp] Ctxt.snoc
 
 namespace MLIR2Simple
 
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Op Ty
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Simple Ty
   | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _ => do
     return .int
   | _ => throw .unsupportedType
 
-instance instTransformTy : MLIR.AST.TransformTy Op Ty 0 where
+instance instTransformTy : MLIR.AST.TransformTy Simple 0 where
   mkTy := mkTy
 
-def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Expr Op Γ ty) := do
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ ty, Expr Simple Γ ty) := do
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
@@ -93,10 +98,10 @@ def mkExpr (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, 
     | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
-instance : MLIR.AST.TransformExpr Op Ty 0 where
+instance : MLIR.AST.TransformExpr Simple 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty, Com Op Γ ty) :=
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ ty, Com Simple Γ ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
@@ -105,16 +110,16 @@ def mkReturn (Γ : Ctxt Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Op (Σ ty
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
-instance : MLIR.AST.TransformReturn Op Ty 0 where
+instance : MLIR.AST.TransformReturn Simple 0 where
   mkReturn := mkReturn
 
 open Qq in
-elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Op)
+elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Simple)
 
 end MLIR2Simple
 
 open MLIR AST MLIR2Simple in
-def eg₀ : Com Op (Ctxt.ofList []) .int :=
+def eg₀ : Com Simple (Ctxt.ofList []) .int :=
   [simple_com| {
     %c2= "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
@@ -128,7 +133,7 @@ def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
 
 open MLIR AST MLIR2Simple in
 /-- x + 0 -/
-def lhs : Com Op (Ctxt.ofList [.int]) .int :=
+def lhs : Com Simple (Ctxt.ofList [.int]) .int :=
   [simple_com| {
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
@@ -138,14 +143,14 @@ def lhs : Com Op (Ctxt.ofList [.int]) .int :=
 
 open MLIR AST MLIR2Simple in
 /-- x -/
-def rhs : Com Op (Ctxt.ofList [.int]) .int :=
+def rhs : Com Simple (Ctxt.ofList [.int]) .int :=
   [simple_com| {
     ^bb0(%x : i32):
       "return" (%x) : (i32) -> (i32)
   }]
 
 open MLIR AST MLIR2Simple in
-def p1 : PeepholeRewrite Op [.int] .int :=
+def p1 : PeepholeRewrite Simple [.int] .int :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
@@ -166,7 +171,7 @@ def p1 : PeepholeRewrite Op [.int] .int :=
       done
     }
 
-def ex1_rewritePeepholeAt : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
+def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
@@ -177,7 +182,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 
-def ex1_rewritePeephole : Com Op  (Ctxt.ofList [.int]) .int := rewritePeephole (fuel := 100) p1 lhs
+def ex1_rewritePeephole : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeephole (fuel := 100) p1 lhs
 
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
@@ -208,14 +213,22 @@ inductive Op :  Type
   | iterate (k : ℕ) : Op
   deriving DecidableEq, Repr
 
-instance : OpSignature Op Ty where
+/-- A simple example dialect with regions -/
+abbrev SimpleReg : Dialect where
+  Op := Op
+  Ty := Ty
+
+abbrev SimpleReg.int : SimpleReg.Ty := .int
+open SimpleReg (int)
+
+instance : OpSignature SimpleReg where
   signature
-    | .const _ => ⟨[], [], .int⟩
-    | .add   => ⟨[.int, .int], [], .int⟩
-    | .iterate _k => ⟨[.int], [([.int], .int)], .int⟩
+    | .const _ => ⟨[], [], int⟩
+    | .add   => ⟨[int, int], [], int⟩
+    | .iterate _k => ⟨[int], [([int], int)], int⟩
 
 @[reducible]
-instance : OpDenote Op Ty where
+instance : OpDenote SimpleReg where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b
@@ -225,21 +238,21 @@ instance : OpDenote Op Ty where
       -- let f_k := Nat.iterate f' k
       -- f_k x
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Op Γ .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ int  :=
   Expr.mk
     (op := .const n)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ int :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int] .int) : Expr Op Γ .int :=
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [int] int) : Expr SimpleReg Γ int :=
   Expr.mk
     (op := .iterate k)
     (ty_eq := rfl)
@@ -249,24 +262,27 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Ty.int) (body : Com Op [.int
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def lhs : Com Op [.int] .int :=
+def lhs : Com SimpleReg [int] int :=
   Com.lete (iterate (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
       Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def rhs : Com Op [.int] .int :=
+def rhs : Com SimpleReg [int] int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 attribute [local simp] Ctxt.snoc
-
-set_option pp.proofs false in
+--
+-- set_option trace.Meta.Tactic.simp true in
+open Ctxt (Var Valuation DerivedCtxt) in
+set_option pp.explicit false in
 set_option pp.proofs.withType false in
-def p1 : PeepholeRewrite Op [.int] .int:=
+def p1 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]
       funext Γv
+      simp only [show Ty = SimpleReg.Ty from rfl, show Op = SimpleReg.Op from rfl]
       /-
       Com.denote
         (Com.lete
@@ -277,14 +293,33 @@ def p1 : PeepholeRewrite Op [.int] .int:=
         Γv =
       Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv
       -/
-      simp_peephole [add, iterate] at Γv
+      simp_peephole [add, iterate, (HVector.denote_nil), (HVector.denote_cons)] at Γv
+
+      /-
+        For some reason, `simp only [HVector.denote]` fails (which explains why `simp_peephole`
+        isn't working), while `rw [HVector.denote]` is able to do the rewrite just fine.
+
+        Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358857932) suggests this might be related to typeclass instances:
+          `simp` will synthesize the instance for a lemma, and then try to match the lemma with this
+            canonical instance against the goal, while `rw` does proper unification.
+
+        Indeed, our goal mentions `instTyDenoteTy : TyDenote Ty`, whereas `HVector.denote` has an
+          argument of type `TyDenote (SimpleReg.Ty)`. Now, one would think that `SimpleReg.Ty = Ty`
+          is a def-eq, and indeed it is.
+          Thus, `instTyDenoteTy = (inferInstance : TyDenote SimpleReg.Ty)` is also true by def-eq,
+          yet, `rw [show instTyDenoteTy = (inferInstance : TyDenote SimpleReg.Ty) from rfl]` fails
+          with the claim that `motive is not type correct`
+        Even more curiousl
+
+      -/
+
       /-  ∀ (a : BitVec 32), (fun v => v + v)^[0] a = a -/
       simp [Function.iterate_zero]
       done
   }
 
 /-
-def ex1' : Com Op  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
+def ex1' : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
 
 theorem EX1' : ex1' = (
   -- %c0 = 0
