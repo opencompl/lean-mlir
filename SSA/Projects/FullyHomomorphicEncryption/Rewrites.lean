@@ -54,7 +54,7 @@ def rhs :=
 }]
 
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike, .polynomialLike] .polynomialLike :=
+noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLike] .polynomialLike :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
@@ -86,7 +86,7 @@ infixl:50 "**" => irreduciblePow
 variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 -- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
--- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance. 
+-- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance.
 noncomputable def lhs := [fhe_com q, n, hq| {
 ^bb0(%a : ! R):
   %one_int = "arith.const" () {value = 1}: () -> (i16)
@@ -108,7 +108,7 @@ def rhs := [fhe_com q, n, hq | {
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (Op q n) [.polynomialLike] .polynomialLike :=
+noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLike :=
   { lhs := lhs,
      rhs := rhs
   , correct :=

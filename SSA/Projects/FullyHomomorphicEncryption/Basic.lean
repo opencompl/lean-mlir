@@ -673,6 +673,10 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | const_int (c : Int) : Op q n
   | const_idx (i : Nat) : Op q n
 
+/-- `FHE` is the dialect for fully homomorphic encryption -/
+abbrev FHE (q n : Nat) [Fact (q > 1)] : Dialect where
+  Op := Op q n
+  Ty := Ty q n
 
 open TyDenote (toType)
 
@@ -705,10 +709,10 @@ def Op.outTy : Op q n → Ty q n
 def Op.signature : Op q n → Signature (Ty q n) :=
   fun o => {sig := Op.sig q n o, outTy := Op.outTy q n o, regSig := []}
 
-instance : OpSignature (Op q n) (Ty q n) := ⟨Op.signature q n⟩
+instance : OpSignature (FHE q n) := ⟨Op.signature q n⟩
 
 @[simp]
-noncomputable instance : OpDenote (Op q n) (Ty q n) where
+noncomputable instance : OpDenote (FHE q n) where
     denote
     | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
     | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
@@ -722,4 +726,3 @@ noncomputable instance : OpDenote (Op q n) (Ty q n) where
     | Op.const c, _arg, _ => c
     | Op.const_int c, _, _ => c
     | Op.const_idx c, _, _ => c
-
