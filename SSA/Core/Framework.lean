@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import SSA.Core.ErasedContext
 import SSA.Core.HVector
+import SSA.Core.Framework.Dialect
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Piecewise
 
@@ -14,11 +15,6 @@ open TyDenote (toType)
 /-
   # Classes
 -/
-
-/-- A MLIR `Dialect` is comprised of a type of `Op`erations, and a type of `Ty`pes -/
-structure Dialect where
-  Op : Type
-  Ty : Type
 
 abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
 
