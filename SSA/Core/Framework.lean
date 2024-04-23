@@ -197,10 +197,6 @@ def Com.denote : Com Op Γ ty → (Γv : Valuation Γ) → (toType ty)
 
 end
 
--- Does not follow by rfl. We need to use the fact that an HVector [] is equal to HVector.nil
-theorem HVector.denote_nil (T : HVector (fun (t : Ctxt Ty × Ty) => Com Op t.1 t.2) []) :
-  HVector.denote T = HVector.nil := by simp [HVector.nil_eq]
-
 @[simp]
 theorem Com.denote_lete (e : Expr Op Γ α) (body : Com Op (Γ.snoc α) β) :
   Com.denote (Com.lete e body) = fun Γv => body.denote (Γv.snoc (e.denote Γv)) := by
