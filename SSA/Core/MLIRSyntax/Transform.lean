@@ -9,6 +9,14 @@ import SSA.Core.Framework
 import SSA.Core.ErasedContext
 
 /-!
+# Refactor REGEX
+s/(Expr|Com|Lets) Op/$1 d/
+s/(OpSignature|OpDenote) Op Ty/$1 d/
+s/(?<= )(Ty|Op)\b/d.$1/
+
+-/
+
+/-!
 # `Transform*` typeclasses
 This file defines `TransformTy`, `TransformExpr`, and `TransformReturn` typeclasses,
 which dictate how generic MLIR syntax (as defined in `MLIRSyntax.AST`) can be transformed into
@@ -21,7 +29,7 @@ namespace MLIR.AST
 
 open Ctxt
 
-instance {Op Ty : Type} [OpSignature Op Ty] {t : Ty} {Γ : Ctxt Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr Op Γ t) (Expr Op Γ'.ctxt t) where
+instance {d : Dialect} [OpSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr d Γ t) (Expr d Γ'.ctxt t) where
   coe e := e.changeVars Γ'.diff.toHom
 
 
@@ -34,17 +42,17 @@ section Monads
   errors.
 -/
 
-abbrev ExceptM  Op [OpSignature Op Ty] := Except (TransformError Ty)
-abbrev BuilderM Op [OpSignature Op Ty] := StateT NameMapping (ExceptM Op)
-abbrev ReaderM  Op [OpSignature Op Ty] := ReaderT NameMapping (ExceptM Op)
+abbrev ExceptM  (d : Dialect) := Except (TransformError d.Ty)
+abbrev BuilderM (d : Dialect) := StateT NameMapping (ExceptM d)
+abbrev ReaderM  (d : Dialect) := ReaderT NameMapping (ExceptM d)
 
-instance {Op : Type} [OpSignature Op Ty] : MonadLift (ReaderM Op) (BuilderM Op) where
+instance {d : Dialect} : MonadLift (ReaderM d) (BuilderM d) where
   monadLift x := do (ReaderT.run x (←get) : ExceptM ..)
 
-instance {Op : Type} [OpSignature Op Ty] : MonadLift (ExceptM Op) (ReaderM Op) where
+instance {d : Dialect} : MonadLift (ExceptM d) (ReaderM d) where
   monadLift x := do return ←x
 
-def BuilderM.runWithEmptyMapping {Op : Type} [OpSignature Op Ty] (k : BuilderM Op α) : ExceptM Op α :=
+def BuilderM.runWithEmptyMapping (k : BuilderM d α) : ExceptM d α :=
   Prod.fst <$> StateT.run k []
 
 end Monads
@@ -56,18 +64,17 @@ end Monads
   - Third, using both type and expression conversion, declare how to transform returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
-class TransformTy (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat) [OpSignature Op Ty]  where
-  mkTy   : MLIRType φ → ExceptM Op Ty
+class TransformTy (d : Dialect) (φ : outParam Nat) [OpSignature d]  where
+  mkTy   : MLIRType φ → ExceptM d d.Ty
 
-class TransformExpr (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat) [OpSignature Op Ty] [TransformTy Op Ty φ]  where
-  mkExpr   : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ ty, Expr Op Γ ty)
+class TransformExpr (d : Dialect) (φ : outParam Nat) [OpSignature d] [TransformTy d φ]  where
+  mkExpr   : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Expr d Γ ty)
 
-class TransformReturn (Op : Type) (Ty : outParam (Type)) (φ : outParam Nat)
-  [OpSignature Op Ty] [TransformTy Op Ty φ] where
-  mkReturn : (Γ : List Ty) → (opStx : AST.Op φ) → ReaderM Op (Σ ty, Com Op Γ ty)
+class TransformReturn (d : Dialect) (φ : outParam Nat) [OpSignature d] [TransformTy d φ] where
+  mkReturn : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Com d Γ ty)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
-variable {Op Ty φ} [OpSignature Op Ty] [DecidableEq Ty] [DecidableEq Op]
+variable {d φ} [OpSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
 
 /--
   Add a new variable to the context, and record it's (absolute) index in the name mapping
@@ -75,8 +82,8 @@ variable {Op Ty φ} [OpSignature Op Ty] [DecidableEq Ty] [DecidableEq Op]
   Throws an error if the variable name already exists in the mapping, essentially disallowing
   shadowing
 -/
-def addValToMapping (Γ : Ctxt Ty) (name : String) (ty : Ty) :
-    BuilderM Op (Σ (Γ' : DerivedCtxt Γ), Ctxt.Var Γ'.ctxt ty) := do
+def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
+    BuilderM d (Σ (Γ' : DerivedCtxt Γ), Ctxt.Var Γ'.ctxt ty) := do
   let some nm := (←get).add name
     | throw <| .nameAlreadyDeclared name
   set nm
@@ -88,8 +95,8 @@ def addValToMapping (Γ : Ctxt Ty) (name : String) (ty : Ty) :
   Throws an error if the name is not present in the mapping (this indicates the name may be free),
   or if the type of the variable in the context is different from `expectedType`
 -/
-def getValFromCtxt (Γ : Ctxt Ty) (name : String) (expectedType : Ty) :
-    ReaderM Op (Ctxt.Var Γ expectedType) := do
+def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
+    ReaderM d (Ctxt.Var Γ expectedType) := do
   let index := (←read).lookup name
   let some index := index | throw <| .undeclaredName name
   let n := Γ.length
@@ -104,23 +111,23 @@ def getValFromCtxt (Γ : Ctxt Ty) (name : String) (expectedType : Ty) :
     else
       throw <| .typeError expectedType t
 
-def BuilderM.isOk {α : Type} (x : BuilderM Op α) : Bool :=
+def BuilderM.isOk {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
-def BuilderM.isErr {α : Type} (x : BuilderM Op α) : Bool :=
+def BuilderM.isErr {α : Type} (x : BuilderM d α) : Bool :=
   match x.run [] with
   | Except.ok _ => true
   | Except.error _ => false
 
-def TypedSSAVal.mkTy [TransformTy Op Ty φ] : TypedSSAVal φ → ExceptM Op Ty
+def TypedSSAVal.mkTy [TransformTy d φ] : TypedSSAVal φ → ExceptM d d.Ty
   | (.SSAVal _, ty) => TransformTy.mkTy ty
 
 /-- Translate a `TypedSSAVal` (a name with an expected type), to a variable in the context.
     This expects the name to have already been declared before -/
-def TypedSSAVal.mkVal [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) : TypedSSAVal φ →
-    ReaderM Op (Σ (ty : Ty), Ctxt.Var Γ ty)
+def TypedSSAVal.mkVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
+    ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
@@ -130,8 +137,8 @@ def TypedSSAVal.mkVal [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) : 
     instead of using the typeclass `TransformDialect`.
     This is useful when trying to implement an instance of `TransformDialect` itself,
     to cut infinite regress. -/
-def TypedSSAVal.mkVal' [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) : TypedSSAVal φ →
-    ReaderM Op (Σ (ty : Ty), Ctxt.Var Γ ty)
+def TypedSSAVal.mkVal' [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
+    ReaderM d (Σ (ty : d.Ty), Ctxt.Var Γ ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let var ← getValFromCtxt Γ valStx ty
@@ -139,8 +146,8 @@ def TypedSSAVal.mkVal' [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) :
 
 /-- Declare a new variable,
     by adding the passed name to the name mapping stored in the monad state -/
-def TypedSSAVal.newVal [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) : TypedSSAVal φ →
-    BuilderM Op (Σ (Γ' : DerivedCtxt Γ) (ty : Ty), Ctxt.Var Γ'.ctxt ty)
+def TypedSSAVal.newVal [instTransformTy : TransformTy d φ] (Γ : Ctxt d.Ty) : TypedSSAVal φ →
+    BuilderM d (Σ (Γ' : DerivedCtxt Γ) (ty : d.Ty), Ctxt.Var Γ'.ctxt ty)
 | (.SSAVal valStx, tyStx) => do
     let ty ← instTransformTy.mkTy tyStx
     let ⟨Γ, var⟩ ← addValToMapping Γ valStx ty
@@ -148,17 +155,17 @@ def TypedSSAVal.newVal [instTransformTy : TransformTy Op Ty φ] (Γ : Ctxt Ty) :
 
 /-- Given a list of `TypedSSAVal`s, treat each as a binder and declare a new variable with the
     given name and type -/
-private def declareBindings [TransformTy Op Ty φ] (Γ : Ctxt Ty) (vals : List (TypedSSAVal φ)) :
-    BuilderM Op (DerivedCtxt Γ) := do
+private def declareBindings [TransformTy d φ] (Γ : Ctxt d.Ty) (vals : List (TypedSSAVal φ)) :
+    BuilderM d (DerivedCtxt Γ) := do
   vals.foldlM (fun Γ' ssaVal => do
     let ⟨Γ'', _⟩ ← TypedSSAVal.newVal Γ'.ctxt ssaVal
     return Γ''
   ) (.ofCtxt Γ)
 
 private def mkComHelper
-  [TransformTy Op Ty φ] [instTransformExpr : TransformExpr Op Ty φ] [instTransformReturn : TransformReturn Op Ty φ]
-  (Γ : Ctxt Ty) :
-    List (MLIR.AST.Op φ) → BuilderM Op (Σ (ty : _), Com Op Γ ty)
+  [TransformTy d φ] [instTransformExpr : TransformExpr d φ] [instTransformReturn : TransformReturn d φ]
+  (Γ : Ctxt d.Ty) :
+    List (MLIR.AST.Op φ) → BuilderM d (Σ (ty : _), Com d Γ ty)
   | [retStx] => do
       instTransformReturn.mkReturn Γ retStx
   | lete::rest => do
@@ -171,8 +178,8 @@ private def mkComHelper
       return ⟨ty₂, Com.lete expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
-def mkCom [TransformTy Op Ty φ] [TransformExpr Op Ty φ] [TransformReturn Op Ty φ]
-  (reg : MLIR.AST.Region φ) : ExceptM Op  (Σ (Γ : Ctxt Ty) (ty : Ty), Com Op Γ ty) :=
+def mkCom [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ]
+  (reg : MLIR.AST.Region φ) : ExceptM d  (Σ (Γ : Ctxt d.Ty) (ty : d.Ty), Com d Γ ty) :=
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithEmptyMapping <| do

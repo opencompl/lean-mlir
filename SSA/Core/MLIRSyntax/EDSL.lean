@@ -56,13 +56,13 @@ elab "[foo_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(FooOp)
 --     ^^^^^^^                                                        ^^^^^
 ```
 -/
-def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)} {φ : Q(Nat)}
-    (_opSignature : Q(OpSignature $Op $Ty) := by exact q(by infer_instance))
-    (_transformTy      : Q(TransformTy $Op $Ty $φ)     := by exact q(by infer_instance))
-    (_transformExpr    : Q(TransformExpr $Op $Ty $φ)   := by exact q(by infer_instance))
-    (_transformReturn  : Q(TransformReturn $Op $Ty $φ) := by exact q(by infer_instance)) :
+def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
+    (_opSignature : Q(OpSignature $d) := by exact q(by infer_instance))
+    (_transformTy      : Q(TransformTy $d $φ)     := by exact q(by infer_instance))
+    (_transformExpr    : Q(TransformExpr $d $φ)   := by exact q(by infer_instance))
+    (_transformReturn  : Q(TransformReturn $d $φ) := by exact q(by infer_instance)) :
     TermElabM Expr := do
-  let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ←
+  let com : Q(ExceptM $d (Σ (Γ' : Ctxt ($d).Ty) (ty : ($d).Ty), Com $d Γ' ty)) ←
     withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} building `Com` expression") <| do
     let ast_stx ← `([mlir_region| $region])
     let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
@@ -73,15 +73,15 @@ def elabIntoCom (region : TSyntax `mlir_region) (Op : Q(Type)) {Ty : Q(Type)} {�
   withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
     /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
       expression of type `Com ..` -/
-    let com : Q(ExceptM $Op (Σ (Γ' : Ctxt $Ty) (ty : $Ty), Com $Op Γ' ty)) ← whnf com
+    let com : Q(ExceptM $d (Σ (Γ' : Ctxt ($d).Ty) (ty : ($d).Ty), Com $d Γ' ty)) ← whnf com
     match com.app3? ``Except.ok with
     | .some (_εexpr, _αexpr, expr) =>
-        let (expr : Q(Σ Γ ty, Com $Op Γ ty)) ← whnf expr
+        let (expr : Q(Σ Γ ty, Com $d Γ ty)) ← whnf expr
         match expr.app4? ``Sigma.mk with
-        | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt $Ty)), expr) =>
-          let (expr : Q(Σ ty, Com $Op $_Γ ty)) ← whnf expr
+        | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt ($d).Ty)), expr) =>
+          let (expr : Q(Σ ty, Com $d $_Γ ty)) ← whnf expr
           match expr.app4? ``Sigma.mk with
-          | .some (_αexpr, _βexpr, (_ty : Q($Ty)), (com : Q(Com $Op $_Γ $_ty))) =>
+          | .some (_αexpr, _βexpr, (_ty : Q(($d).Ty)), (com : Q(Com $d $_Γ $_ty))) =>
               /- Finally, use `comNf` to ensure the resulting expression is of the form
                   `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
                 where the arguments to `Expr.mk` are not reduced -/
