@@ -35,14 +35,14 @@ where the arguments to `Expr.mk` are not reduced -/
 partial def comNf (com : Expr) : MetaM Expr := do
   let com ← whnf com
   match_expr com with
-    | Com.lete Op Ty opSig Γ α β e body =>
+    | Com.lete d opSig Γ α β e body =>
         let Γ ← ctxtNf Γ
         let α ← whnf α
         let β ← whnf β
         let e ← whnf e
         let body ← comNf body
-        return mkAppN (.const ``Com.lete []) #[Op, Ty, opSig, Γ, α, β, e, body]
-    | Com.ret _Op _Ty _inst _Γ _t _ => return com
+        return mkAppN (.const ``Com.lete []) #[d, opSig, Γ, α, β, e, body]
+    | Com.ret _d _inst _Γ _t _ => return com
     | _ => throwError "Expected `Com.lete _ _` or `Com.ret _`, found:\n\t{com}"
 
 /--
