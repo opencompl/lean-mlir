@@ -73,19 +73,10 @@ lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
 
 @[simp]
 lemma instantiate_mvar_zero' :
-    (mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := by
-  rfl
+    (mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := rfl
 
-set_option pp.proofs.withType true in
 @[simp]
 lemma instantiate_mvar_zero'' :
-    (mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := by
-  rfl
-
-
--- @[simp]
--- lemma instantiate_mvar_succ (hφ : List.length (w :: ws) = φ := by rfl) (hsucci : i+1 < φ := by omega):
---     (mvar ⟨i+1, hsucci⟩).instantiate (Subtype.mk (w :: ws) hφ) =
---     (mvar ⟨i, by sorry⟩).instantiate (Subtype.mk ws (by rfl)) := by rfl
+    (mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := rfl
 
 end ConcreteOrMVar
