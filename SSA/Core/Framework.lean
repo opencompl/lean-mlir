@@ -506,7 +506,6 @@ section Map
 def RegionSignature.map (f : Ty → Ty') : RegionSignature Ty → RegionSignature Ty' :=
   List.map fun ⟨Γ, ty⟩ => (Γ.map f, f ty)
 
-
 instance : Functor RegionSignature where
   map := RegionSignature.map
 
