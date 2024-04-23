@@ -67,8 +67,7 @@ lemma map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
 lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
   map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
 
-theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := by
-  rfl
+theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
 
 instance : Functor Ctxt where
   map := map
