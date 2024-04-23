@@ -206,13 +206,22 @@ def Com.denote : Com d Γ ty → (Γv : Valuation Γ) → (toType ty)
 
 end
 
-@[simp]
-theorem Com.denote_lete (e : Expr d Γ α) (body : Com d (Γ.snoc α) β) :
+@[simp] lemma HVector.denote_nil {d : Dialect} [OpSignature d] [TyDenote d.Ty] [OpDenote d]
+    (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 t.2) []) :
+    HVector.denote T = HVector.nil := by
+  cases T; simp [HVector.denote]
+
+@[simp] lemma HVector.denote_cons {d : Dialect} [OpSignature d] [TyDenote d.Ty] [OpDenote d]
+    (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
+    (a : Com d t.1 t.2) (as : HVector (fun t => Com d t.1 t.2) ts) :
+    HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
+  simp [HVector.denote]
+
+@[simp] lemma Com.denote_lete (e : Expr d Γ α) (body : Com d (Γ.snoc α) β) :
   Com.denote (Com.lete e body) = fun Γv => body.denote (Γv.snoc (e.denote Γv)) := by
     funext Γv; simp[Com.denote]
 
-@[simp]
-theorem Com.denote_ret (v : Var Γ α)  :
+@[simp] lemma Com.denote_ret (v : Var Γ α)  :
   Com.denote (d:=d) (Com.ret v) = fun Γv => Γv v := by
     funext Γv; simp[Com.denote]
 
