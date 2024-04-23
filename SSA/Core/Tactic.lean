@@ -11,36 +11,6 @@ import Lean.Elab.Tactic.ElabTerm
 namespace SSA
 
 open Ctxt (Var Valuation DerivedCtxt)
-
-section
-
-open Lean Meta Elab.Tactic Qq
-
-/-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
-elab "change_mlir_context " V:ident : tactic => do
-  let V : Name := V.getId
-  withMainContext do
-    let ctx ← getLCtx
-    let Vdecl : LocalDecl ← match ctx.findFromUserName? V with
-      | some decl => pure decl
-      | none => throwError f!"Failed to find variable `{V}` in the local context"
-
-    -- Assert that the type of `V` is `Ctxt.Valuation ?Γ`
-    let Ty ← mkFreshExprMVarQ q(Type)
-    let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
-    let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
-    let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
-
-    -- Reduce the context `Γ`
-    let Γr ← ctxtNf Γ
-    let Γr : Q(Ctxt $Ty) := Γr
-
-    let goal ← getMainGoal
-    let newGoal ← goal.changeLocalDecl Vdecl.fvarId q(Valuation $Γr)
-    replaceMainGoal [newGoal]
-
-end
-
 open Lean Elab Tactic Meta
 
 /--
@@ -86,13 +56,6 @@ by introducing a new universally quantified (Lean) variable to the goal for ever
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
   `(tactic|
       (
-      /- First, massage the type of `Γv`.
-      Generally, `simp_peephole` is expected to be run with the type of `Γv` a
-      (not necessarily reduced) ground-term.
-      After `change_mlir_context`, type of `Γv` should then be `[t₁, t₂, ..., tₙ]`, for some
-      types `t₁`, `t₂`, etc. -/
-      change_mlir_context $Γv
-
       /- Then, unfold the definition of the denotation of a program -/
       simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
