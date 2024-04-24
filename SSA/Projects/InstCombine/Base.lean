@@ -246,12 +246,23 @@ def MOp.outTy : MOp φ → MTy φ
   .bitvec w
 | .icmp _ _ => .bitvec 1
 
-instance : OpSignature (MOp φ) (MTy φ) where
+/-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
+abbrev MetaLLVM (φ : Nat) : Dialect where
+  Op := MOp φ
+  Ty := MTy φ
+
+abbrev LLVM : Dialect where
+  Op := Op
+  Ty := Ty
+
+instance {φ} : DialectSignature (MetaLLVM φ) where
+  signature op := ⟨op.sig, [], op.outTy⟩
+instance : DialectSignature LLVM where
   signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
-def Op.denote (o : Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
-    (TyDenote.toType <| OpSignature.outTy o) :=
+def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
+    (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
   | Op.copy _      =>             (op.getN 0)
@@ -273,7 +284,7 @@ def Op.denote (o : Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
   | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
   | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
 
-instance : OpDenote Op Ty := ⟨
+instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
 ⟩
 

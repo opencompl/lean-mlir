@@ -355,14 +355,17 @@ def Op.regSig : Op → RegionSignature Ty
   | .map1d => [([.int], .int)]
   | _ => []
 
+def Tensor1D : Dialect where
+  Op := Op
+  Ty := Ty
 
-instance : OpSignature Op Ty where
+instance : DialectSignature Tensor1D where
   signature op := ⟨op.sig, op.regSig, op.outTy⟩
 
 /-
 -- Error: unknown free variable: _kernel_fresh.459
 @[reducible]
-instance : OpDenote Op Ty where
+instance : DialectDenote Op Ty where
   denote
   | .const_ix v, _, _ => v
   | .add_int, (.cons x (.cons y nil)), _ =>

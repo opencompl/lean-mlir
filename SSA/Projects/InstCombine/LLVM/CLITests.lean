@@ -25,8 +25,8 @@ instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β
 
 abbrev MContext φ := Ctxt <| MTy φ
 abbrev Context := MContext 0
-abbrev MCom φ := Com (MOp φ)
-abbrev MExpr φ := Expr (MOp φ)
+abbrev MCom φ := Com (MetaLLVM φ)
+abbrev MExpr φ := Expr (MetaLLVM φ)
 
 instance : ToString Context := inferInstanceAs (ToString (List <| MTy 0))
 
