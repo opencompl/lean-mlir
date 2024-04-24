@@ -216,6 +216,9 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mcom ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} elabIntoCom") <|
     SSA.elabIntoCom reg q(MOp $φ)
 
+  let mcom ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} comNf!") <|
+    comNf! mcom
+
   let mvalues : Q(Vector Nat $φ) ←
     withTraceNode `alive_icom (return m!"{exceptEmoji ·} elaborating mvalues") <| do
       let mvalues ← `(⟨[$mvars,*], by rfl⟩)
@@ -228,7 +231,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
     return com
 
   withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <| do
-    let com ← comNf com
+    let com ← comNf! com
     trace[SSA] "{com}"
     return com
 

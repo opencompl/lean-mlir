@@ -112,10 +112,33 @@ partial def exprNf (expr : Expr) : MetaM Expr := do
         let ty ← reduce ty
         let op ← reduce op
         let args ← vecMap args (varNf Γ)
-        let regArgs ← vecMap regArgs comNf
+        let regArgs ← vecMap regArgs comNf!
         let Γ := rebuildMetaCtxt Γ
         return mkAppN (.const ``Expr.mk []) #[Op, Ty, inst, Γ, ty, op, ty_eq, args, regArgs]
     | _ => throwError "Expected `Expr.mk ...`, found:\n\t{expr}"
+
+/-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
+`comNf` recursively calls `whnf` on the expression and body of a `Com.lete`, resulting in
+  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| ... <| Com.rete _`
+where the arguments to `Expr.mk` are not reduced -/
+partial def comNf! (com : Expr) : MetaM Expr := do
+  let com ← whnf com
+  match_expr com with
+    | Com.lete Op Ty opSig Γ α β e body =>
+        let Γ ← ctxtNf Γ
+        let α ← reduce α
+        let β ← reduce β
+        let e ← exprNf e
+        let body ← comNf! body
+        return mkAppN (.const ``Com.lete []) #[Op, Ty, opSig, Γ, α, β, e, body]
+    | Com.ret Op Ty opSig Γ t v =>
+        let Γ ← extractMetaCtxt (Ty:=Ty) Γ
+        let t ← reduce t
+        let v ← varNf Γ v
+        return mkAppN (.const ``Com.ret []) #[Op, Ty, opSig, rebuildMetaCtxt Γ, t, v]
+    | _ => throwError "Expected `Com.lete _ _` or `Com.ret _`, found:\n\t{com}"
+
+end
 
 /-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
 `comNf` recursively calls `whnf` on the expression and body of a `Com.lete`, resulting in
@@ -128,7 +151,7 @@ partial def comNf (com : Expr) : MetaM Expr := do
         let Γ ← ctxtNf Γ
         let α ← reduce α
         let β ← reduce β
-        let e ← exprNf e
+        let e ← whnf e
         let body ← comNf body
         return mkAppN (.const ``Com.lete []) #[Op, Ty, opSig, Γ, α, β, e, body]
     | Com.ret Op Ty opSig Γ t v =>
@@ -137,8 +160,6 @@ partial def comNf (com : Expr) : MetaM Expr := do
         let v ← varNf Γ v
         return mkAppN (.const ``Com.ret []) #[Op, Ty, opSig, rebuildMetaCtxt Γ, t, v]
     | _ => throwError "Expected `Com.lete _ _` or `Com.ret _`, found:\n\t{com}"
-
-end
 
 /--
 `elabIntoCom` is a building block for defining a dialect-specific DSL based on the geneeric MLIR

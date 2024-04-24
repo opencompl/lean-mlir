@@ -12,12 +12,15 @@ import SSA.Core.ErasedContext
 open MLIR AST
 open Std (BitVec)
 open Ctxt (Var DerivedCtxt)
-open InstCombine (MOp)
+open InstCombine (MOp MTy)
 
 namespace AliveHandwritten
 set_option pp.proofs false
 set_option pp.proofs.withType false
 
+attribute [coe] ConcreteOrMVar.concrete
+
+set_option trace.profiler true
 
 /-
 Name: SimplifyDivRemOfSelect
