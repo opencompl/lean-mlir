@@ -355,8 +355,11 @@ def Op.regSig : Op → RegionSignature Ty
   | .map1d => [([.int], .int)]
   | _ => []
 
+def Tensor1D : Dialect where
+  Op := Op
+  Ty := Ty
 
-instance : OpSignature Op Ty where
+instance : OpSignature Tensor1D where
   signature op := ⟨op.sig, op.regSig, op.outTy⟩
 
 /-
