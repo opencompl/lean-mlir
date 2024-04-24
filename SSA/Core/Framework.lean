@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 -- Investigations on asymptotic behavior of representing programs with large explicit contexts
 
 import SSA.Core.ErasedContext
@@ -500,12 +503,17 @@ theorem Lets.denote_getExpr {Γ₁ Γ₂ : Ctxt Ty} : {lets : Lets Op Γ₁ Γ�
 
 section Map
 
+def RegionSignature.map (f : Ty → Ty') : RegionSignature Ty → RegionSignature Ty' :=
+  List.map fun ⟨Γ, ty⟩ => (Γ.map f, f ty)
+
 instance : Functor RegionSignature where
-  map f := List.map fun (tys, ty) => (f <$> tys, f ty)
+  map := RegionSignature.map
+
+def Signature.map (f : Ty → Ty') : Signature Ty → Signature Ty' :=
+  fun ⟨sig, regSig, outTy⟩ => ⟨sig.map f, regSig.map f, f outTy⟩
 
 instance : Functor Signature where
-  map := fun f ⟨sig, regSig, outTy⟩ =>
-    ⟨f <$> sig, f <$> regSig, f outTy⟩
+  map := Signature.map
 
 /-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
@@ -513,19 +521,17 @@ instance : Functor Signature where
 structure DialectMorphism (Op Op' : Type) {Ty Ty' : Type} [OpSignature Op Ty] [OpSignature Op' Ty'] where
   mapOp : Op → Op'
   mapTy : Ty → Ty'
-  preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
+  preserves_signature : ∀ op, signature (mapOp op) = (signature op).map mapTy
 
 variable {Op Op' Ty Ty : Type} [OpSignature Op Ty] [OpSignature Op' Ty']
   (f : DialectMorphism Op Op')
 
 def DialectMorphism.preserves_sig (op : Op) :
-    OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
+    OpSignature.sig (f.mapOp op) = (OpSignature.sig op).map f.mapTy  := by
   simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_regSig (op : Op) :
-    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
-      fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
-    ) := by
+    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map f.mapTy := by
   simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_outTy (op : Op) :
@@ -533,7 +539,7 @@ def DialectMorphism.preserves_outTy (op : Op) :
   simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
 mutual
-  def Com.map : Com Op Γ ty → Com Op' (f.mapTy <$> Γ) (f.mapTy ty)
+  def Com.map : Com Op Γ ty → Com Op' (Γ.map f.mapTy) (f.mapTy ty)
     | .ret v          => .ret v.toMap
     | .lete body rest => .lete body.map rest.map
 
@@ -549,7 +555,7 @@ mutual
   /-- Inline of `HVector.map'` for the termination checker -/
   def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature Ty},
       HVector (fun t => Com Op t.fst t.snd) regSig
-      → HVector (fun t => Com Op' t.fst t.snd) (f.mapTy <$> regSig : RegionSignature _)
+      → HVector (fun t => Com Op' t.fst t.snd) (regSig.map f.mapTy : RegionSignature _)
     | _, .nil        => .nil
     | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
 end

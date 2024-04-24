@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
 import SSA.Core.HVector
@@ -85,7 +88,7 @@ instance : DecidableEq (Var Γ t) := by
 
 @[match_pattern]
 def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
-  ⟨0, by simp [snoc, List.get?]⟩
+  ⟨0, by rfl⟩
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
   fun ⟨_, h⟩ => by
@@ -253,18 +256,18 @@ theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType
 @[simp]
 theorem Valuation.snoc_last {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) (Ctxt.Var.last _ _) = x := by
-  simp [Ctxt.Valuation.snoc]
+  rfl
 
 @[simp]
 theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     (h : get? (Ctxt.snoc Γ ty) 0 = some ty) :
     (s.snoc x) ⟨0, h⟩ = x := by
-  simp [Ctxt.Valuation.snoc]
+  rfl
 
 @[simp]
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
-  simp [Ctxt.Valuation.snoc]
+  rfl
 
 /-!
 # Helper to simplify context manipulation with toSnoc and variable access.
@@ -301,10 +304,10 @@ def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : �
 
 @[simp]
 theorem Valuation.ofPair_fst [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
-  (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by simp⟩ = v₁ := rfl
+  (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by rfl⟩ = v₁ := rfl
 @[simp]
 theorem Valuation.ofPair_snd [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
-  (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by simp⟩ = v₂ := rfl
+  (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by rfl⟩ = v₂ := rfl
 
 /-- transport/pullback a valuation along a context homomorphism. -/
 def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γo Γi) : Γo.Valuation :=

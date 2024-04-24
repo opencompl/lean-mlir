@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 import Std.Data.List.Lemmas
 import Mathlib.Data.List.Basic
@@ -242,7 +245,7 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
     norm_cast
     ring_nf
     rw [ZMod.cast_eq_val]
-    rw [ZMod.val_int_cast]
+    rw [ZMod.val_intCast]
     ring_nf
 
 /- TODO: this should be a theorem that we prove, that the length of anything that comes from `R.toTensor` will be < 2^n -/
@@ -262,7 +265,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.repres
         intro i
         rw [← hCoeff, ← hCoeff]
         rw [toTensor_fromTensor]
-        rw [← ZMod.coe_int_cast]
+        rw [← ZMod.coe_intCast]
         norm_cast
         . simp only [R.toTensor_length]
           have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
