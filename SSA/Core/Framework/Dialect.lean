@@ -10,7 +10,7 @@ Note that you usually want to define your dialect as an `abbrev`, so that typecl
 able to unfold the dialect structure, and return instances defined on the constituent types,
 e.g., when asked for `TyDenote myDialect.Ty`.
 An exception to this is dialect wrappers, e.g., `Scf`, these *have* to be `def`s, so that we can
-define an instance for `OpDenote (Scf FooDialect)` and it will be keyed correctly for typeclass
+define an instance for `DialectDenote (Scf FooDialect)` and it will be keyed correctly for typeclass
 synthesis (see https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Typeclass.20synthesis.20fails.20with.20an.20.60abbrev.60.20involved/near/435178544) -/
 structure Dialect where
   (Op : Type)

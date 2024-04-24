@@ -101,7 +101,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last,
         Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
-        OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
         List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,

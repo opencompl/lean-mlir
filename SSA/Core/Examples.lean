@@ -39,7 +39,7 @@ instance : DialectSignature ExOp ExTy where
     | .cst _  => ⟨[], [], .nat⟩
 
 @[reducible]
-instance : OpDenote ExOp ExTy where
+instance : DialectDenote ExOp ExTy where
   denote
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
@@ -323,7 +323,7 @@ instance : DialectSignature ExOp ExTy where
 
 
 @[reducible]
-instance : OpDenote ExOp ExTy where
+instance : DialectDenote ExOp ExTy where
   denote
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) =>

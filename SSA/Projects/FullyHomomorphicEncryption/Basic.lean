@@ -712,7 +712,7 @@ def Op.signature : Op q n → Signature (Ty q n) :=
 instance : DialectSignature (FHE q n) := ⟨Op.signature q n⟩
 
 @[simp]
-noncomputable instance : OpDenote (FHE q n) where
+noncomputable instance : DialectDenote (FHE q n) where
     denote
     | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
     | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair

@@ -30,31 +30,31 @@ abbrev HasNat (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy
 
 
 /-- only flow operations, parametric over arithmetic from another dialect Op'  -/
-inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Type _
+inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Type _
   | coe (o : d.Op)
   | iterate (k : ℕ) -- fˆk
   | run (inputty : d.Ty)  -- f^k
   | if (inputty retty' : d.Ty)  -- if cond then true_body else false_body
   | for (ty : d.Ty)
 
--- TODO: this probably doesn't need `OpDenote`
-def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Dialect where
+-- TODO: this probably doesn't need `DialectDenote`
+def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Dialect where
   Op := Scf.Op d
   Ty := d.Ty
 
-instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : TyDenote (Scf d).Ty :=
+instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : TyDenote (Scf d).Ty :=
   inferInstanceAs (TyDenote d.Ty)
 
-example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [OpDenote d] :
+example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] :
   DecidableEq (Scf d).Ty := by infer_instance
 
 namespace Scf
 
-instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Coe d.Op (Scf d).Op where
+instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Coe d.Op (Scf d).Op where
   coe o := .coe o
 
 @[reducible]
-instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
+instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
     [B : HasBool d] [N : HasNat d] [I : HasInt d] : DialectSignature (Scf d) where
   signature
     | .coe o => signature (d:=d) o
@@ -203,14 +203,14 @@ def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
 
 end LoopBody.CounterDecorator
 
-variable [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
+variable [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
   [B : HasBool d] [N : HasNat d] [Z : HasInt d]
 
 @[reducible]
-instance : OpDenote (Scf d) where
+instance : DialectDenote (Scf d) where
   denote
     | .coe o', args', regArgs' =>
-        let denote' := OpDenote.denote o'
+        let denote' := DialectDenote.denote o'
         by
          exact denote' args' regArgs'
     | .if t t', (.cons (cond ) (.cons v .nil)),
@@ -272,7 +272,7 @@ instance : DialectSignature Arith where
 
 
 @[reducible]
-instance : OpDenote Arith where
+instance : DialectDenote Arith where
   denote
     | .const n, _, _ => n
     | .const_nat n, _, _ => n

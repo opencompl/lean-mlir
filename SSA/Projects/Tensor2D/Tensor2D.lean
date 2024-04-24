@@ -147,7 +147,7 @@ instance : DialectSignature Tensor2D where
 /-
 -- error: unknown free variable: _kernel_fresh.97
 @[reducible]
-instance : OpDenote Op Ty where
+instance : DialectDenote Op Ty where
   denote
   | .constIx v, _, _ => v
   | .constTensor v, _, _ => v

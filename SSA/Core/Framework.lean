@@ -37,7 +37,7 @@ def DialectSignature.outTy   := Signature.outTy ∘ s.signature
 end
 
 
-class OpDenote (d : Dialect) [TyDenote d.Ty] [DialectSignature d] where
+class DialectDenote (d : Dialect) [TyDenote d.Ty] [DialectSignature d] where
   denote : (op : d.Op) → HVector toType (DialectSignature.sig op) →
     HVector (fun t : Ctxt d.Ty × d.Ty => t.1.Valuation → toType t.2) (DialectSignature.regSig op) →
     (toType <| DialectSignature.outTy op)
@@ -187,7 +187,7 @@ theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = D
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
 -- that might not strictly need them, we can look into making this more fine-grained
-variable [TyDenote d.Ty] [OpDenote d] [DecidableEq d.Ty]
+variable [TyDenote d.Ty] [DialectDenote d] [DecidableEq d.Ty]
 
 mutual
 
@@ -198,7 +198,7 @@ def HVector.denote : {l : List (Ctxt d.Ty × d.Ty)} → (T : HVector (fun t => C
 
 def Expr.denote : {ty : d.Ty} → (e : Expr d Γ ty) → (Γv : Valuation Γ) → (toType ty)
   | _, ⟨op, Eq.refl _, args, regArgs⟩, Γv =>
-    OpDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
+    DialectDenote.denote op (args.map (fun _ v => Γv v)) regArgs.denote
 
 def Com.denote : Com d Γ ty → (Γv : Valuation Γ) → (toType ty)
   | .ret e, Γv => Γv e
@@ -206,12 +206,12 @@ def Com.denote : Com d Γ ty → (Γv : Valuation Γ) → (toType ty)
 
 end
 
-@[simp] lemma HVector.denote_nil {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [OpDenote d]
+@[simp] lemma HVector.denote_nil {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [DialectDenote d]
     (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 t.2) []) :
     HVector.denote T = HVector.nil := by
   cases T; simp [HVector.denote]
 
-@[simp] lemma HVector.denote_cons {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [OpDenote d]
+@[simp] lemma HVector.denote_cons {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [DialectDenote d]
     (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
     (a : Com d t.1 t.2) (as : HVector (fun t => Com d t.1 t.2) ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
@@ -1132,7 +1132,7 @@ theorem denote_rewriteAt (lhs rhs : Com d Γ₁ t₁)
       rintro rfl rfl
       simp
 
-variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [OpDenote d] in
+variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
@@ -1219,7 +1219,7 @@ section Unfoldings
 
 /-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
   of the coercion `ty_eq` and the mutual definition. -/
-theorem Expr.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: OpDenote d]
+theorem Expr.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: DialectDenote d]
     (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
     (args : HVector (Var Γ) <| DialectSignature.sig op)
@@ -1232,7 +1232,7 @@ theorem Expr.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: OpDenote d
 
 /-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
   of the coercion `ty_eq` and the mutual definition. -/
-theorem Com.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: OpDenote d]
+theorem Com.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: DialectDenote d]
     (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
     (args : HVector (Var Γ) <| DialectSignature.sig op)

@@ -52,7 +52,7 @@ instance : DialectSignature Simple where
     | .add   => ⟨[.int, .int], [], .int⟩
 
 @[reducible]
-instance : OpDenote Simple where
+instance : DialectDenote Simple where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
@@ -228,7 +228,7 @@ instance : DialectSignature SimpleReg where
     | .iterate _k => ⟨[int], [([int], int)], int⟩
 
 @[reducible]
-instance : OpDenote SimpleReg where
+instance : DialectDenote SimpleReg where
   denote
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b

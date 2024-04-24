@@ -284,7 +284,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
   | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
 
-instance : OpDenote LLVM := ⟨
+instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
 ⟩
 
