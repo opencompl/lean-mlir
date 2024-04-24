@@ -9,14 +9,6 @@ import SSA.Core.Framework
 import SSA.Core.ErasedContext
 
 /-!
-# Refactor REGEX
-s/(Expr|Com|Lets) Op/$1 d/
-s/(OpSignature|OpDenote) Op Ty/$1 d/
-s/(?<= )(Ty|Op)\b/d.$1/
-
--/
-
-/-!
 # `Transform*` typeclasses
 This file defines `TransformTy`, `TransformExpr`, and `TransformReturn` typeclasses,
 which dictate how generic MLIR syntax (as defined in `MLIRSyntax.AST`) can be transformed into
