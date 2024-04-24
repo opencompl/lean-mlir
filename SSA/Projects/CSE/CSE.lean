@@ -12,7 +12,7 @@ import Mathlib.Data.HashMap
 section DecEqCom
 variable {d : Dialect} [DecidableEq d.Ty]
 variable [OP_DECEQ : DecidableEq d.Op]
-variable [OpSignature d]
+variable [DialectSignature d]
 
 /-- can decide equality on argument vectors. -/
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) :=
@@ -85,19 +85,19 @@ end DecEqCom
 namespace CSE
 
 /-- State stored by CSE pass. -/
-structure State (Op : Type) [TyDenote d.Ty] [OpSignature d] [OpDenote d] (lets : Lets d Γstart Γ) where
+structure State (Op : Type) [TyDenote d.Ty] [DialectSignature d] [OpDenote d] (lets : Lets d Γstart Γ) where
   /-- map variable to its canonical value -/
   var2var : (v : Γ.Var α) → { v' : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v = (lets.denote V) v' }
   /-- map an Expr to its canonical variable -/
   expr2cache : (α : d.Ty) → (e : Expr d Γ α) → Option ({ v : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v = e.denote (lets.denote V) })
 
 /-- The empty CSEing state. -/
-def State.empty [TyDenote d.Ty] [OpSignature d] [OpDenote d] (lets : Lets d Γstart Γ) : State d.Op lets where
+def State.empty [TyDenote d.Ty] [DialectSignature d] [OpDenote d] (lets : Lets d Γstart Γ) : State d.Op lets where
   var2var := fun v => ⟨v, by intros V; rfl⟩
   expr2cache := fun α e => .none
 
 def State.snocNewExpr2Cache
- [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [OpDenote d]
+ [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [OpDenote d]
  {Γ : Ctxt d.Ty} {α : d.Ty}
  {lets : Lets d Γstart Γ}
  (s : State d.Op lets) (e : Expr d Γ α) : State d.Op (Lets.lete lets e) :=
@@ -135,7 +135,7 @@ def State.snocNewExpr2Cache
 
 /-- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
 @[simp]
-theorem Lets.denote_lete [TyDenote d.Ty] [OpSignature d] [OpDenote d]
+theorem Lets.denote_lete [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
   {Γstart Γ : Ctxt d.Ty}
   {lets : Lets d Γstart Γ}
   (e : Expr d Γ α)
@@ -154,7 +154,7 @@ def _root_.Ctxt.Hom.remapLast [TyDenote Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.
     case last => exact var
 
 section RemapVar
-def VarRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [OpDenote d]
+def VarRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [OpDenote d]
   {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
   (lets : Lets d Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -176,7 +176,7 @@ def VarRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignatu
       else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
     else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
 
-def arglistRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [OpDenote d]
+def arglistRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [OpDenote d]
   {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
   (lets : Lets d Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -201,7 +201,7 @@ def arglistRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSig
       done
     ⟩
 
-def ExprRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [OpDenote d]
+def ExprRemapVar [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [OpDenote d]
   {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
   (lets : Lets d Γstart Γ)
   (hom : Ctxt.Hom Γ' Γ)
@@ -234,7 +234,7 @@ s': State d.Op (Lets.lete lets e') := snocNewExpr2Cache s e'
 -/
 
 def State.snocOldExpr2Cache
- [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [OpDenote d]
+ [TyDenote d.Ty] [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [OpDenote d]
  {Γ : Ctxt d.Ty} {α : d.Ty}
  {lets : Lets d Γstart Γ}
  (s : State d.Op lets) (enew : Expr d Γ α) (eold : Expr d Γ α) (henew :
@@ -288,7 +288,7 @@ def State.snocOldExpr2Cache
 
 /-- Replace the variables in `as` with new variables that have the same valuation -/
 def State.cseArgList
- [TyDenote d.Ty] [OpSignature d] [OpDenote d]
+ [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
   {Γstart Γ : Ctxt d.Ty} {lets : Lets d Γstart Γ} (s : State d.Op lets)
   {ts : List d.Ty}
   (as : HVector (Ctxt.Var Γ) <| ts) :
@@ -309,7 +309,7 @@ def State.cseArgList
     ⟩
 
 /-- Default instance for `partial def` to compile. -/
-instance [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Inhabited (
+instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Inhabited (
           {lets : Lets d Γstart Γ} →
           State d.Op lets →
           {ts : List (Ctxt d.Ty × d.Ty)} →
@@ -318,7 +318,7 @@ instance [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Inhabited (
   default := fun _s _ts rs => ⟨rs, rfl⟩
 
 /-- Default instance for `partial def` to compile. -/
-instance [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Inhabited (
+instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Inhabited (
   {lets : Lets d Γstart Γ} →
   State d.Op lets →
   (com: Com d Γ α) →
@@ -328,7 +328,7 @@ instance [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Inhabited (
 
 /- CSE for HVector / Com / Expr. -/
 mutual
-variable [DecidableEq d.Ty] [DecidableEq d.Op] [TyDenote d.Ty] [OpSignature d] [OpDenote d]
+variable [DecidableEq d.Ty] [DecidableEq d.Op] [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
 
 /-- Replace the regions in `rs` with new regions that have the same valuation -/
 unsafe def State.cseRegionArgList
@@ -435,7 +435,7 @@ unsafe def State.cseCom {α : d.Ty}
 end -- mutual.
 
 /-- common subexpression elimination entry point. -/
-unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op] [OpSignature d] [TyDenote d.Ty] [OpDenote d]
+unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op] [DialectSignature d] [TyDenote d.Ty] [OpDenote d]
   {α : d.Ty} {Γ : Ctxt d.Ty} (com: Com d Γ α) :
   { com' : Com d Γ α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
     let ⟨com', hcom'⟩ := State.cseCom (State.empty Lets.nil) com
@@ -469,7 +469,7 @@ abbrev Ex : Dialect where
   Op := ExOp
   Ty := ExTy
 
-instance : OpSignature Ex where
+instance : DialectSignature Ex where
   signature
     | .add    => ⟨[.nat, .nat], [], .nat⟩
     | .beq    => ⟨[.nat, .nat], [], .bool⟩

@@ -52,7 +52,7 @@ def mkSelect {Γ : Ctxt (MetaLLVM φ).Ty} {ty : (MetaLLVM φ).Ty} (op : MOp φ)
         | .select w' => if  h : w = w'
         then return ⟨
           .select w',
-          by simp [OpSignature.outTy, signature, h],
+          by simp [DialectSignature.outTy, signature, h],
           .cons c <|.cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
           .nil
         ⟩
@@ -139,7 +139,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
           let opTy@(.bitvec w) ← mkTy ty -- ty.mkTy
           return ⟨opTy, ⟨
             MOp.const w val,
-            by simp [OpSignature.outTy, signature, *],
+            by simp [DialectSignature.outTy, signature, *],
             HVector.nil,
             HVector.nil
           ⟩⟩

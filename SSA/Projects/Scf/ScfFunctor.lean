@@ -20,17 +20,17 @@ set_option pp.proofs.withType false
 open TyDenote
 
 /-- Describes that the dialect Op' has a type whose denotation is 'DenotedTy -/
-class HasTy (d : Dialect) (DenotedTy : Type) [TyDenote d.Ty] [OpSignature d] where
+class HasTy (d : Dialect) (DenotedTy : Type) [TyDenote d.Ty] [DialectSignature d] where
     ty : d.Ty
     denote_eq : toType ty = DenotedTy := by rfl
 
-abbrev HasBool (d : Dialect) [TyDenote d.Ty] [OpSignature d] : Type := HasTy d Bool
-abbrev HasInt (d : Dialect) [TyDenote d.Ty] [OpSignature d] : Type := HasTy d Int
-abbrev HasNat (d : Dialect) [TyDenote d.Ty] [OpSignature d] : Type := HasTy d Nat
+abbrev HasBool (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Bool
+abbrev HasInt (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Int
+abbrev HasNat (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Nat
 
 
 /-- only flow operations, parametric over arithmetic from another dialect Op'  -/
-inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Type _
+inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Type _
   | coe (o : d.Op)
   | iterate (k : ℕ) -- fˆk
   | run (inputty : d.Ty)  -- f^k
@@ -38,24 +38,24 @@ inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Ty
   | for (ty : d.Ty)
 
 -- TODO: this probably doesn't need `OpDenote`
-def Scf (d : Dialect) [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Dialect where
+def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Dialect where
   Op := Scf.Op d
   Ty := d.Ty
 
-instance [TyDenote d.Ty] [OpSignature d] [OpDenote d] : TyDenote (Scf d).Ty :=
+instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : TyDenote (Scf d).Ty :=
   inferInstanceAs (TyDenote d.Ty)
 
-example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [OpSignature d] [OpDenote d] :
+example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [OpDenote d] :
   DecidableEq (Scf d).Ty := by infer_instance
 
 namespace Scf
 
-instance {d : Dialect} [TyDenote d.Ty] [OpSignature d] [OpDenote d] : Coe d.Op (Scf d).Op where
+instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [OpDenote d] : Coe d.Op (Scf d).Op where
   coe o := .coe o
 
 @[reducible]
-instance [TyDenote d.Ty] [OpSignature d] [OpDenote d]
-    [B : HasBool d] [N : HasNat d] [I : HasInt d] : OpSignature (Scf d) where
+instance [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
+    [B : HasBool d] [N : HasNat d] [I : HasInt d] : DialectSignature (Scf d) where
   signature
     | .coe o => signature (d:=d) o
     | .if t t' => ⟨[B.ty, t], [([t], t'), ([t], t')], t'⟩
@@ -203,7 +203,7 @@ def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
 
 end LoopBody.CounterDecorator
 
-variable [TyDenote d.Ty] [OpSignature d] [OpDenote d]
+variable [TyDenote d.Ty] [DialectSignature d] [OpDenote d]
   [B : HasBool d] [N : HasNat d] [Z : HasInt d]
 
 @[reducible]
@@ -261,7 +261,7 @@ inductive Op
 abbrev Arith : Dialect := {Op, Ty}
 
 @[reducible]
-instance : OpSignature Arith where
+instance : DialectSignature Arith where
   signature
     | .axpy => ⟨[.int, .nat, .int], [], .int⟩
     | .neg => ⟨[.int], [], .int⟩

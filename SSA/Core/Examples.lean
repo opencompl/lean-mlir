@@ -32,7 +32,7 @@ inductive ExOp :  Type
   | cst : ℕ → ExOp
   deriving DecidableEq, Repr
 
-instance : OpSignature ExOp ExTy where
+instance : DialectSignature ExOp ExTy where
   signature
     | .add    => ⟨[.nat, .nat], [], .nat⟩
     | .beq    => ⟨[.nat, .nat], [], .bool⟩
@@ -316,7 +316,7 @@ inductive ExOp :  Type
   | runK : ℕ → ExOp
   deriving DecidableEq, Repr
 
-instance : OpSignature ExOp ExTy where
+instance : DialectSignature ExOp ExTy where
   signature
   | .add    => ⟨[.nat, .nat], [], .nat⟩
   | .runK _ => ⟨[.nat], [([.nat], .nat)], .nat⟩

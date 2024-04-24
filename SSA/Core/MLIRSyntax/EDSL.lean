@@ -57,7 +57,7 @@ elab "[foo_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(FooOp)
 ```
 -/
 def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
-    (_opSignature : Q(OpSignature $d) := by exact q(by infer_instance))
+    (_DialectSignature : Q(DialectSignature $d) := by exact q(by infer_instance))
     (_transformTy      : Q(TransformTy $d $φ)     := by exact q(by infer_instance))
     (_transformExpr    : Q(TransformExpr $d $φ)   := by exact q(by infer_instance))
     (_transformReturn  : Q(TransformReturn $d $φ) := by exact q(by infer_instance)) :

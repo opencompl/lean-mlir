@@ -46,7 +46,7 @@ abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
 
-instance : OpSignature Simple where
+instance : DialectSignature Simple where
   signature
     | .const _ => ⟨[], [], .int⟩
     | .add   => ⟨[.int, .int], [], .int⟩
@@ -221,7 +221,7 @@ abbrev SimpleReg : Dialect where
 abbrev SimpleReg.int : SimpleReg.Ty := .int
 open SimpleReg (int)
 
-instance : OpSignature SimpleReg where
+instance : DialectSignature SimpleReg where
   signature
     | .const _ => ⟨[], [], int⟩
     | .add   => ⟨[int, int], [], int⟩

@@ -23,40 +23,40 @@ structure Signature (Ty : Type) where
   regSig  : RegionSignature Ty
   outTy   : Ty
 
-class OpSignature (d : Dialect) where
+class DialectSignature (d : Dialect) where
   signature : d.Op → Signature d.Ty
-export OpSignature (signature)
+export DialectSignature (signature)
 
 section
-variable {d} [s : OpSignature d]
+variable {d} [s : DialectSignature d]
 
-def OpSignature.sig     := Signature.sig ∘ s.signature
-def OpSignature.regSig  := Signature.regSig ∘ s.signature
-def OpSignature.outTy   := Signature.outTy ∘ s.signature
+def DialectSignature.sig     := Signature.sig ∘ s.signature
+def DialectSignature.regSig  := Signature.regSig ∘ s.signature
+def DialectSignature.outTy   := Signature.outTy ∘ s.signature
 
 end
 
 
-class OpDenote (d : Dialect) [TyDenote d.Ty] [OpSignature d] where
-  denote : (op : d.Op) → HVector toType (OpSignature.sig op) →
-    HVector (fun t : Ctxt d.Ty × d.Ty => t.1.Valuation → toType t.2) (OpSignature.regSig op) →
-    (toType <| OpSignature.outTy op)
+class OpDenote (d : Dialect) [TyDenote d.Ty] [DialectSignature d] where
+  denote : (op : d.Op) → HVector toType (DialectSignature.sig op) →
+    HVector (fun t : Ctxt d.Ty × d.Ty => t.1.Valuation → toType t.2) (DialectSignature.regSig op) →
+    (toType <| DialectSignature.outTy op)
 
 /-
   # Datastructures
 -/
 
-variable (d : Dialect) [OpSignature d]
+variable (d : Dialect) [DialectSignature d]
 
 mutual
 
 /-- A very simple intrinsically typed expression. -/
 inductive Expr : (Γ : Ctxt d.Ty) → (ty : d.Ty) → Type :=
   | mk {Γ} {ty} (op : d.Op)
-    (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) <| OpSignature.sig op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) <| DialectSignature.sig op)
     (regArgs : HVector (fun t : Ctxt d.Ty × d.Ty => Com t.1 t.2)
-      (OpSignature.regSig op)) : Expr Γ ty
+      (DialectSignature.regSig op)) : Expr Γ ty
 
 /-- A very simple intrinsically typed program: a sequence of let bindings. -/
 inductive Com : Ctxt d.Ty → d.Ty → Type where
@@ -67,7 +67,7 @@ end
 
 section
 open Std (Format)
-variable {d} [OpSignature d] [Repr d.Op] [Repr d.Ty]
+variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
   def Expr.repr (prec : Nat) : Expr d Γ t → Format
@@ -86,7 +86,7 @@ end
 --TODO: this should be derived later on when a derive handler is implemented
 mutual
 
-variable {d} [OpSignature d]
+variable {d} [DialectSignature d]
 
 protected instance HVector.decidableEqReg [DecidableEq d.Op] [DecidableEq d.Ty] :
     ∀ {l : List (Ctxt d.Ty × d.Ty)}, DecidableEq (HVector (fun t => Com d t.1 t.2) l)
@@ -140,7 +140,7 @@ instance [Repr d.Op] [Repr d.Ty] : Repr (Lets d Γ_in Γ_out) := ⟨flip Lets.re
   # Definitions
 -/
 
-variable {d : Dialect} [OpSignature d]
+variable {d : Dialect} [DialectSignature d]
 
 @[elab_as_elim]
 def Com.rec' {motive : (a : Ctxt d.Ty) → (a_1 : d.Ty) → Com d a a_1 → Sort u} :
@@ -158,31 +158,31 @@ def Expr.op {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ ty) : d.Op :=
   Expr.casesOn e (fun op _ _ _ => op)
 
 theorem Expr.ty_eq {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ ty) :
-    ty = OpSignature.outTy e.op :=
+    ty = DialectSignature.outTy e.op :=
   Expr.casesOn e (fun _ ty_eq _ _ => ty_eq)
 
 def Expr.args {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ ty) :
-    HVector (Var Γ) (OpSignature.sig e.op) :=
+    HVector (Var Γ) (DialectSignature.sig e.op) :=
   Expr.casesOn e (fun _ _ args _ => args)
 
 def Expr.regArgs {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ ty) :
-    HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 t.2) (OpSignature.regSig e.op) :=
+    HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 t.2) (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ regArgs => regArgs)
 
 /-! Projection equations for `Expr` -/
 @[simp]
-theorem Expr.op_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs):
+theorem Expr.op_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs):
     (Expr.mk op ty_eq args regArgs).op = op := rfl
 
 @[simp]
-theorem Expr.args_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+theorem Expr.args_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs) :
     (Expr.mk op ty_eq args regArgs).args = args := rfl
 
 @[simp]
-theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) (OpSignature.sig op)) (regArgs) :
+theorem Expr.regArgs_mk {Γ : Ctxt d.Ty} {ty : d.Ty} (op : d.Op) (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) (DialectSignature.sig op)) (regArgs) :
     (Expr.mk op ty_eq args regArgs).regArgs = regArgs := rfl
 
 -- TODO: the following `variable` probably means we include these assumptions also in definitions
@@ -206,12 +206,12 @@ def Com.denote : Com d Γ ty → (Γv : Valuation Γ) → (toType ty)
 
 end
 
-@[simp] lemma HVector.denote_nil {d : Dialect} [OpSignature d] [TyDenote d.Ty] [OpDenote d]
+@[simp] lemma HVector.denote_nil {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [OpDenote d]
     (T : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 t.2) []) :
     HVector.denote T = HVector.nil := by
   cases T; simp [HVector.denote]
 
-@[simp] lemma HVector.denote_cons {d : Dialect} [OpSignature d] [TyDenote d.Ty] [OpDenote d]
+@[simp] lemma HVector.denote_cons {d : Dialect} [DialectSignature d] [TyDenote d.Ty] [OpDenote d]
     (t : Ctxt d.Ty × d.Ty) (ts : List (Ctxt d.Ty × d.Ty))
     (a : Com d t.1 t.2) (as : HVector (fun t => Com d t.1 t.2) ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
@@ -289,7 +289,7 @@ theorem Com.denote_changeVars
     cases v using Var.casesOn <;> simp
 
 
-variable (d : Dialect) [OpSignature d] in
+variable (d : Dialect) [DialectSignature d] in
 /-- The result returned by `addProgramToLets` -/
 structure addProgramToLets.Result (Γ_in Γ_out : Ctxt d.Ty) (ty : d.Ty) where
   /-- The new out context -/
@@ -406,7 +406,7 @@ theorem denote_addProgramInMiddle {Γ₁ Γ₂ Γ₃ : Ctxt d.Ty}
   next =>
     apply denote_addProgramToLets_lets
 
-structure FlatCom (d : Dialect) [OpSignature d] (Γ : Ctxt d.Ty) (t : d.Ty) where
+structure FlatCom (d : Dialect) [DialectSignature d] (Γ : Ctxt d.Ty) (t : d.Ty) where
   {Γ_out : Ctxt d.Ty}
   /-- The let bindings of the original program -/
   lets : Lets d Γ Γ_out
@@ -531,26 +531,26 @@ instance : Functor Signature where
 /-- A dialect morphism consists of a map between operations and a map between types,
   such that the signature of operations is respected
 -/
-structure DialectMorphism (d d' : Dialect) [OpSignature d] [OpSignature d'] where
+structure DialectMorphism (d d' : Dialect) [DialectSignature d] [DialectSignature d'] where
   mapOp : d.Op → d'.Op
   mapTy : d.Ty → d'.Ty
   preserves_signature : ∀ op, signature (mapOp op) = mapTy <$> (signature op)
 
-variable {d d'} [OpSignature d] [OpSignature d'] (f : DialectMorphism d d')
+variable {d d'} [DialectSignature d] [DialectSignature d'] (f : DialectMorphism d d')
 
 def DialectMorphism.preserves_sig (op : d.Op) :
-    OpSignature.sig (f.mapOp op) = f.mapTy <$> (OpSignature.sig op) := by
-  simp only [OpSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+    DialectSignature.sig (f.mapOp op) = f.mapTy <$> (DialectSignature.sig op) := by
+  simp only [DialectSignature.sig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_regSig (op : d.Op) :
-    OpSignature.regSig (f.mapOp op) = (OpSignature.regSig op).map (
+    DialectSignature.regSig (f.mapOp op) = (DialectSignature.regSig op).map (
       fun ⟨a, b⟩ => ⟨f.mapTy <$> a, f.mapTy b⟩
     ) := by
-  simp only [OpSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
+  simp only [DialectSignature.regSig, Function.comp_apply, f.preserves_signature, List.map_eq_map]; rfl
 
 def DialectMorphism.preserves_outTy (op : d.Op) :
-    OpSignature.outTy (f.mapOp op) = f.mapTy (OpSignature.outTy op) := by
-  simp only [OpSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
+    DialectSignature.outTy (f.mapOp op) = f.mapTy (DialectSignature.outTy op) := by
+  simp only [DialectSignature.outTy, Function.comp_apply, f.preserves_signature]; rfl
 
 mutual
   def Com.map : Com d Γ ty → Com d' (f.mapTy <$> Γ) (f.mapTy ty)
@@ -1132,7 +1132,7 @@ theorem denote_rewriteAt (lhs rhs : Com d Γ₁ t₁)
       rintro rfl rfl
       simp
 
-variable (d : Dialect) [OpSignature d] [TyDenote d.Ty] [OpDenote d] in
+variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [OpDenote d] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
@@ -1219,10 +1219,10 @@ section Unfoldings
 
 /-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
   of the coercion `ty_eq` and the mutual definition. -/
-theorem Expr.denote_unfold  [OP_SIG : OpSignature d] [OP_DENOTE: OpDenote d]
+theorem Expr.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: OpDenote d]
     (op : d.Op)
-    (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) <| OpSignature.sig op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) <| DialectSignature.sig op)
     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 t.2)
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
@@ -1232,10 +1232,10 @@ theorem Expr.denote_unfold  [OP_SIG : OpSignature d] [OP_DENOTE: OpDenote d]
 
 /-- Equation lemma to unfold `denote`, which does not unfold correctly due to the presence
   of the coercion `ty_eq` and the mutual definition. -/
-theorem Com.denote_unfold  [OP_SIG : OpSignature d] [OP_DENOTE: OpDenote d]
+theorem Com.denote_unfold  [OP_SIG : DialectSignature d] [OP_DENOTE: OpDenote d]
     (op : d.Op)
-    (ty_eq : ty = OpSignature.outTy op)
-    (args : HVector (Var Γ) <| OpSignature.sig op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var Γ) <| DialectSignature.sig op)
     (regArgs : HVector (fun (t : Ctxt d.Ty × d.Ty) => Com d t.1 t.2)
       (OP_SIG.regSig op))
   : ∀(Γv : Γ.Valuation),
@@ -1249,7 +1249,7 @@ end Unfoldings
 
 section TypeProjections
 
-variable {d} [OpSignature d] {Γ : Ctxt d.Ty} {t : d.Ty}
+variable {d} [DialectSignature d] {Γ : Ctxt d.Ty} {t : d.Ty}
 
 def Com.getTy : Com d Γ t → Type      := fun _ => d.Ty
 def Com.ty    : Com d Γ t → d.Ty      := fun _ => t

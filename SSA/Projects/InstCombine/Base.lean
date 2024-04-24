@@ -255,14 +255,14 @@ abbrev LLVM : Dialect where
   Op := Op
   Ty := Ty
 
-instance {φ} : OpSignature (MetaLLVM φ) where
+instance {φ} : DialectSignature (MetaLLVM φ) where
   signature op := ⟨op.sig, [], op.outTy⟩
-instance : OpSignature LLVM where
+instance : DialectSignature LLVM where
   signature op := ⟨op.sig, [], op.outTy⟩
 
 @[simp]
-def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
-    (TyDenote.toType <| OpSignature.outTy o) :=
+def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
+    (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
   | Op.copy _      =>             (op.getN 0)

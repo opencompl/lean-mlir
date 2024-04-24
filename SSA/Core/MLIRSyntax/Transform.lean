@@ -21,7 +21,7 @@ namespace MLIR.AST
 
 open Ctxt
 
-instance {d : Dialect} [OpSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr d Γ t) (Expr d Γ'.ctxt t) where
+instance {d : Dialect} [DialectSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr d Γ t) (Expr d Γ'.ctxt t) where
   coe e := e.changeVars Γ'.diff.toHom
 
 
@@ -56,17 +56,17 @@ end Monads
   - Third, using both type and expression conversion, declare how to transform returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
-class TransformTy (d : Dialect) (φ : outParam Nat) [OpSignature d]  where
+class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 
-class TransformExpr (d : Dialect) (φ : outParam Nat) [OpSignature d] [TransformTy d φ]  where
+class TransformExpr (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ]  where
   mkExpr   : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Expr d Γ ty)
 
-class TransformReturn (d : Dialect) (φ : outParam Nat) [OpSignature d] [TransformTy d φ] where
+class TransformReturn (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ] where
   mkReturn : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Com d Γ ty)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
-variable {d φ} [OpSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
+variable {d φ} [DialectSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
 
 /--
   Add a new variable to the context, and record it's (absolute) index in the name mapping

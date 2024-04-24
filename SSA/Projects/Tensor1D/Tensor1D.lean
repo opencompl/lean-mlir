@@ -359,7 +359,7 @@ def Tensor1D : Dialect where
   Op := Op
   Ty := Ty
 
-instance : OpSignature Tensor1D where
+instance : DialectSignature Tensor1D where
   signature op := ⟨op.sig, op.regSig, op.outTy⟩
 
 /-

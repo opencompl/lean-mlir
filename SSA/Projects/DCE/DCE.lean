@@ -209,7 +209,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     ⟩
 
 namespace DCE
-variable {d : Dialect} [TyDenote d.Ty] [OpSignature d] [OpDenote d] [DecidableEq d.Ty]
+variable {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [OpDenote d] [DecidableEq d.Ty]
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
@@ -317,12 +317,12 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ t) :
    This is necessary so that we can mark the DCE implementation as a `partial def` and ensure that Lean
    does not freak out on us, since it's indeed unclear to Lean that the output type of `dce` is always inhabited.
 -/
-def DCEType [OpSignature d] [OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) : Type :=
+def DCEType [DialectSignature d] [OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) : Type :=
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : Com d Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)}
 
 /-- Show that DCEType in inhabited. -/
-instance [SIG : OpSignature d] [DENOTE : OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
+instance [SIG : DialectSignature d] [DENOTE : OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
     Inhabited (DCEType com) where
   default :=
     ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩
@@ -331,7 +331,7 @@ instance [SIG : OpSignature d] [DENOTE : OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty}
 Note that this is `O(n^2)`, for an easy proofs, as it is written as a forward pass.
 The fast `O(n)` version is a backward pass.
 -/
-partial def dce_ [OpSignature d] [OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
+partial def dce_ [DialectSignature d] [OpDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
     DCEType com :=
   match HCOM: com with
   | .ret v => -- If we have a `ret`, return it.
@@ -381,14 +381,14 @@ decreasing_by {
 
 /-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where we play the `DCEType` trick
 to convince Lean that the output type is in fact inhabited. -/
-def dce [OpSignature d] [OpDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
+def dce [DialectSignature d] [OpDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : Com d Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
   dce_ com
 
 /-- A version of DCE that returns an output program with the same context. It uses the context
    morphism of `dce` to adapt the result of DCE to work with the original context -/
-def dce' [OpSignature d] [OpDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
+def dce' [DialectSignature d] [OpDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
     { com' : Com d Γ t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
   ⟨com'.changeVars hom, by
@@ -421,7 +421,7 @@ abbrev Ex : Dialect where
   Op := ExOp
   Ty := ExTy
 
-instance : OpSignature Ex where
+instance : DialectSignature Ex where
   signature
     | .add    => ⟨[.nat, .nat], [], .nat⟩
     | .beq    => ⟨[.nat, .nat], [], .bool⟩
