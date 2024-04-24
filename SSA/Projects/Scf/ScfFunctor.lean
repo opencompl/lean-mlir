@@ -30,16 +30,17 @@ abbrev HasNat (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy
 
 
 /-- only flow operations, parametric over arithmetic from another dialect Op'  -/
-inductive Scf.Op (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Type _
-  | coe (o : d.Op)
+inductive Scf.Op (Op' Ty' : Type) [TyDenote Ty'] [DialectSignature ⟨Op', Ty'⟩] [DialectDenote ⟨Op', Ty'⟩] : Type _
+  | coe (o : Op')
   | iterate (k : ℕ) -- fˆk
-  | run (inputty : d.Ty)  -- f^k
-  | if (inputty retty' : d.Ty)  -- if cond then true_body else false_body
-  | for (ty : d.Ty)
+  | run (inputty : Ty')  -- f^k
+  | if (inputty retty' : Ty')  -- if cond then true_body else false_body
+  | for (ty : Ty')
+  deriving DecidableEq, Repr
 
 -- TODO: this probably doesn't need `DialectDenote`
 def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Dialect where
-  Op := Scf.Op d
+  Op := Scf.Op d.Op d.Ty
   Ty := d.Ty
 
 instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : TyDenote (Scf d).Ty :=
