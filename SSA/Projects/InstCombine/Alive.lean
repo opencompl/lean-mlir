@@ -14,5 +14,7 @@ import SSA.Projects.InstCombine.AliveHandwrittenExamples
 -- The semantics for the MLIR base dialect
 import SSA.Projects.InstCombine.Base
 
+import SSA.Projects.InstCombine.ComWrappers
+
 -- An tactic for automatically proofing the alive math statements
 import SSA.Projects.InstCombine.TacticAuto
