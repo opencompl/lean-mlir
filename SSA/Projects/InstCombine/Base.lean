@@ -65,7 +65,7 @@ def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : TyDenote Ty where
 toType := fun
-  | .bitvec w => Option <| BitVec w
+  | .bitvec w => LLVM.IntW w
 
 instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
@@ -73,7 +73,7 @@ instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
 
 instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
-    | .bitvec _ => default
+    | .bitvec _ => pure default
 
 instance : Repr (BitVec n) where
   reprPrec
