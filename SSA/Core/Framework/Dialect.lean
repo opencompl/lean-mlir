@@ -1,7 +1,6 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.ErasedContext
 
 
 /-- A MLIR `Dialect` is comprised of a type of `Op`erations, and a type of `Ty`pes.
