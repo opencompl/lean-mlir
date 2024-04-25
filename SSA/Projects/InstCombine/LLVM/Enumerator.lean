@@ -152,8 +152,8 @@ def concreteCliTestRows (test : ConcreteCliTest) : IO <| Array Row := do
         let ty : InstCombine.MTy 0 := test.ty
         match hty : ty with
           | .bitvec (.concrete w) =>
-              let h : TyDenote.toType ty = Option (Std.BitVec w) := by simp [hty, TyDenote.toType]
-              let retv' : Option (Std.BitVec w) := h ▸ retv
+              let h : TyDenote.toType ty = Option (BitVec w) := by simp [hty, TyDenote.toType, LLVM.IntW]
+              let retv' : Option (BitVec w) := h ▸ retv
               let retv := BitVec.outputToString retv'
               let row : Row := {
                 opName := s!"{testNameToRowName test.name.toString}",
