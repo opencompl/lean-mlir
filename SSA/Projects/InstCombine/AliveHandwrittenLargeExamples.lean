@@ -37,7 +37,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
   simp_alive_ssa
   simp_alive_undef
-  simp [simp_llvm]
+  simp only [simp_llvm]
   rintro y (rfl | ⟨vcond, hcond⟩) x
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
   · cases x <;> cases y <;> simp
