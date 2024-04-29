@@ -1,7 +1,7 @@
 import SSA.Projects.InstCombine.ComWrappers
+import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.InstCombine.ForLean
 
 open BitVec
 open MLIR AST
