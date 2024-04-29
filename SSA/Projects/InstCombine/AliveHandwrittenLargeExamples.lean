@@ -105,6 +105,16 @@ def ushr_xor_right_distrib (c1 c2 c3 : BitVec w): (c1 ^^^ c2) >>> c3 = (c1 >>> c
   ext
   simp
 
+def ushr_and_right_distrib (c1 c2 c3 : BitVec w): (c1 &&& c2) >>> c3 = (c1 >>> c3) &&& (c2 >>> c3) := by
+  simp only [HShiftRight.hShiftRight]
+  ext
+  simp
+
+def ushr_or_right_distrib (c1 c2 c3 : BitVec w): (c1 ||| c2) >>> c3 = (c1 >>> c3) ||| (c2 >>> c3) := by
+  simp only [HShiftRight.hShiftRight]
+  ext
+  simp
+
 def ushr_xor_left_distrib (c1 c2 c3 : BitVec w): c1 >>> (c2 ^^^ c3) = (c1 >>> c2) ^^^ (c1 >>> c3) := by
   simp only [HShiftRight.hShiftRight]
   ext
