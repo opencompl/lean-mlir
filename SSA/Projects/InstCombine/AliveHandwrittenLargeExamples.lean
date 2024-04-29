@@ -101,17 +101,14 @@ def AndOrXor2515_rhs (w : ℕ) :
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def ushr_xor_right_distrib (c1 c2 c3 : BitVec w): (c1 ^^^ c2) >>> c3 = (c1 >>> c3) ^^^ (c2 >>> c3) := by
-  unfold HShiftRight.hShiftRight instHShiftRightBitVec
+  simp only [HShiftRight.hShiftRight]
   ext
-  simp only []
-  simp only [getLsb_ushiftRight]
-  simp?
+  simp
 
 def ushr_xor_left_distrib (c1 c2 c3 : BitVec w): c1 >>> (c2 ^^^ c3) = (c1 >>> c2) ^^^ (c1 >>> c3) := by
-  unfold HShiftRight.hShiftRight instHShiftRightBitVec
-  simp only []
+  simp only [HShiftRight.hShiftRight]
   ext
-  simp [getLsb_ushiftRight]
+  simp?
   sorry
 
 #check Nat.right_distrib
