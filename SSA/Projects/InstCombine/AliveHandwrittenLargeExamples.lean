@@ -10,12 +10,6 @@ namespace AliveHandwritten
 
 namespace LLVMTheory
 
-@[simp]
-theorem LLVM.const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
-
-@[simp]
-theorem LLVM.xor?_eq : LLVM.xor? a b  = .some (BitVec.xor a b) := rfl
-
 end LLVMTheory
 
 namespace DivRemOfSelect

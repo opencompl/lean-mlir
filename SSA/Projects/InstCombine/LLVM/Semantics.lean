@@ -21,6 +21,9 @@ The ‘and’ instruction returns the bitwise logical and of its two operands.
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x &&& y
 
+@[simp]
+theorem and?_eq : LLVM.and? a b  = .some (BitVec.and a b) := rfl
+
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
@@ -35,6 +38,8 @@ operands.
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ||| y
 
+@[simp]
+theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 
 @[simp_llvm_option]
 def or {w : Nat} (x y : IntW w) : IntW w := do
@@ -51,6 +56,9 @@ is the “~” operator in C.
 def xor? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ^^^ y
 
+@[simp]
+theorem xor?_eq : LLVM.xor? a b  = .some (BitVec.xor a b) := rfl
+
 @[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
@@ -66,6 +74,9 @@ Because LLVM integers use a two’s complement representation, this instruction 
 def add? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x + y
 
+@[simp]
+theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
+
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
@@ -80,6 +91,9 @@ Because LLVM integers use a two’s complement representation, this instruction 
 @[simp_llvm]
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x - y
+
+@[simp]
+theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
 
 @[simp_llvm_option]
 def sub {w : Nat} (x y : IntW w) : IntW w := do
@@ -101,6 +115,9 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 @[simp_llvm]
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x * y
+
+@[simp]
+theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
 
 @[simp_llvm_option]
 def mul {w : Nat} (x y : IntW w) : IntW w := do
@@ -411,9 +428,15 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 def const? (i : Int): IntW w :=
   pure <| BitVec.ofInt w i
 
+@[simp]
+theorem LLVM.const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
+
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
   pure (~~~x)
+
+@[simp]
+theorem LLVM.not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -423,6 +446,9 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 @[simp_llvm]
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
   pure <| (-.) x
+
+@[simp]
+theorem LLVM.neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
