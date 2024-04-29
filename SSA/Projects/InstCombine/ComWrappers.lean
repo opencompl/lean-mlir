@@ -2,6 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.LLVM.SimpSet
 
 /- Wrapper around Com, Expr constructors to easily hand-write IR -/
 namespace ComWrappers
@@ -9,6 +10,7 @@ namespace ComWrappers
 macro_rules
 | `(tactic| get_elem_tactic_trivial) => `(tactic| simp [Ctxt.snoc])
 
+@[simp_llvm_wrap]
 def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.const w n)
@@ -16,6 +18,7 @@ def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ (InstComb
     (args := .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def not {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic):
@@ -26,6 +29,7 @@ def not {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (args := .cons ⟨l, lp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def neg {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic):
@@ -36,6 +40,7 @@ def neg {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (args := .cons ⟨l, lp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def and {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -48,6 +53,7 @@ def and {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def or {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -60,6 +66,7 @@ def or {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def xor {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -72,6 +79,7 @@ def xor {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def shl {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -84,6 +92,7 @@ def shl {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def lshr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -96,6 +105,7 @@ def lshr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def ashr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -108,6 +118,7 @@ def ashr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def sub {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -120,6 +131,7 @@ def sub {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def add {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -132,6 +144,7 @@ def add {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def mul {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -144,6 +157,7 @@ def mul {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def sdiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -156,6 +170,7 @@ def sdiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def udiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -168,6 +183,7 @@ def udiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def srem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -180,6 +196,7 @@ def srem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def urem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -192,6 +209,7 @@ def urem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def icmp {Γ : Ctxt _} (w : ℕ) (pred : LLVM.IntPredicate) (l r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic)
@@ -204,6 +222,7 @@ def icmp {Γ : Ctxt _} (w : ℕ) (pred : LLVM.IntPredicate) (l r : Nat)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
+@[simp_llvm_wrap]
 def select {Γ : Ctxt _} (w : ℕ) (l m r : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete 1)))
       := by get_elem_tactic)
