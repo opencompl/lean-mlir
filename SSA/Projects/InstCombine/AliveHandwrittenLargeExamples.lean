@@ -38,8 +38,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp [simp_llvm]
-  intro y c x
-  rcases c with (rfl | ⟨vcond, hcond⟩)
+  rintro y (rfl | ⟨vcond, hcond⟩) x
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
   · cases x <;> cases y <;> simp
   · simp at hcond
