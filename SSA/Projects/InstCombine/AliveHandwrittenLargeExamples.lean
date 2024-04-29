@@ -39,19 +39,11 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_undef
   simp [simp_llvm]
   intro y c x
-  cases c
+  rcases c with (rfl | ⟨vcond, hcond⟩)
   -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
-  case none => cases x <;> cases y <;> simp
-  case some cond =>
-     obtain ⟨vcond, hcond⟩ := cond
-     obtain (h | h) : vcond = 1 ∨ vcond = 0 := by
-       norm_num at hcond
-       rcases vcond with zero | vcond <;> simp;
-       rcases vcond with zero | vcond <;> simp;
-       linarith
-     . subst h
-       simp
-     . subst h; simp
+  · cases x <;> cases y <;> simp
+  · simp at hcond
+    (obtain (rfl | rfl) : vcond = 1 ∨ vcond = 0 := by omega) <;> simp
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
 axioms: [propext, Classical.choice, Quot.sound] -/
