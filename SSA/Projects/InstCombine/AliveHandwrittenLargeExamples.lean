@@ -1,6 +1,7 @@
 import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.InstCombine.ForLean
 
 open BitVec
 open MLIR AST
@@ -100,43 +101,6 @@ def AndOrXor2515_rhs (w : ℕ) :
   /- r = -/ Com.lete (xor w /-o-/ 2 /-q-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-def ushr_xor_right_distrib (c1 c2 c3 : BitVec w): (c1 ^^^ c2) >>> c3 = (c1 >>> c3) ^^^ (c2 >>> c3) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-def ushr_and_right_distrib (c1 c2 c3 : BitVec w): (c1 &&& c2) >>> c3 = (c1 >>> c3) &&& (c2 >>> c3) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-def ushr_or_right_distrib (c1 c2 c3 : BitVec w): (c1 ||| c2) >>> c3 = (c1 >>> c3) ||| (c2 >>> c3) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-def ushr_xor_left_distrib (c1 c2 c3 : BitVec w): c1 >>> (c2 ^^^ c3) = (c1 >>> c2) ^^^ (c1 >>> c3) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp?
-  sorry
-
-#check Nat.right_distrib
-#check Nat.left_distrib
-
-def xor_assoc (c1 c2 c3 : BitVec w): c1 ^^^ c2 ^^^ c3 = c1 ^^^ (c2 ^^^ c3) := by
-  ext i
-  simp
-
-def and_assoc (c1 c2 c3 : BitVec w): c1 &&& c2 &&& c3 = c1 &&& (c2 &&& c3) := by
-  ext i
-  simp [Bool.and_assoc]
-
-def or_assoc (c1 c2 c3 : BitVec w): c1 ||| c2 ||| c3 = c1 ||| (c2 ||| c3) := by
-  ext i
-  simp [Bool.or_assoc]
-
-
 def alive_simplifyAndOrXor2515 (w : Nat) :
   AndOrXor2515_lhs w ⊑ AndOrXor2515_rhs w := by
   simp only [AndOrXor2515_lhs, AndOrXor2515_rhs]
@@ -155,7 +119,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   by_cases h : w ≤ BitVec.toNat c2 <;>
   simp only [ge_iff_le, h, ↓reduceIte, Option.bind_eq_bind, Option.none_bind, Option.bind_none,
     Refinement.refl, Option.some_bind, h, Option.pure_def, Option.some_bind, Refinement.some_some]
-  simp only [ushr_xor_right_distrib, xor_assoc]
+  simp only [ushr_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
 axioms: [propext, Classical.choice, Quot.sound] -/
