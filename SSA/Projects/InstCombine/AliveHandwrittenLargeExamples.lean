@@ -97,16 +97,13 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   intros c1 c2 c3 x
-  rcases c1 with none | c1 <;> try simp
-  rcases c2 with none | c2 <;> try simp
-  rcases c3 with none | c3 <;> try simp
-  rcases x with none | x <;> try simp
-  rw [←Option.bind_eq_bind]
+  rcases c1 with rfl | c1 <;> try (simp; done)
+  rcases c2 with rfl | c2 <;> try (simp; done)
+  rcases c3 with rfl | c3 <;> try (simp; done)
+  rcases x with rfl | x <;> try (simp; done)
   simp_alive_ops
   by_cases h : BitVec.toNat c2 ≥ w <;>
-  simp only [ge_iff_le, h, ↓reduceIte, Option.bind_eq_bind, Option.none_bind, Option.bind_none,
-    Refinement.refl, Option.pure_def, Option.some_bind, Refinement.some_some]
-  simp only [ushr_xor_distrib, xor_assoc]
+    simp [h, ushr_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
 axioms: [propext, Classical.choice, Quot.sound] -/
