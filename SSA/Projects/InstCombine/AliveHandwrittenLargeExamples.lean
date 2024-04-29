@@ -8,10 +8,6 @@ open MLIR AST
 
 namespace AliveHandwritten
 
-namespace LLVMTheory
-
-end LLVMTheory
-
 namespace DivRemOfSelect
 
 /--
@@ -70,7 +66,6 @@ Name: AndOrXor:2515   ((X^C1) >> C2)^C3 = (X>>C2) ^ ((C1>>C2)^C3)
 -/
 
 open ComWrappers
-open LLVMTheory
 
 def AndOrXor2515_lhs (w : ℕ):
   Com InstCombine.LLVM
