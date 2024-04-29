@@ -129,7 +129,9 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
     Refinement.refl, Option.some_bind, h, Option.pure_def, Option.some_bind, Refinement.some_some]
   simp only [ushr_xor_right_distrib, xor_assoc]
 
-#print axioms alive_simplifyAndOrXor2515
+/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
+axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms alive_simplifyAndOrXor2515
 
 /-
 Proof:
