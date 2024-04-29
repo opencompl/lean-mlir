@@ -62,9 +62,6 @@ axioms: [propext, Classical.choice, Quot.sound] -/
 end DivRemOfSelect
 
 namespace AndOrXor
-
-open LLVMTheory
-
 /-
 Name: AndOrXor:2515   ((X^C1) >> C2)^C3 = (X>>C2) ^ ((C1>>C2)^C3)
 %e1  = xor %x, C1
@@ -78,6 +75,8 @@ Name: AndOrXor:2515   ((X^C1) >> C2)^C3 = (X>>C2) ^ ((C1>>C2)^C3)
 -/
 
 open ComWrappers
+open LLVMTheory
+
 def AndOrXor2515_lhs (w : ℕ):
   Com InstCombine.LLVM
     [/- C1 -/ InstCombine.Ty.bitvec w,
@@ -109,9 +108,6 @@ def ushr_xor_right_distrib (c1 c2 c3 : BitVec w): (c1 ^^^ c2) >>> c3 = (c1 >>> c
 def xor_assoc (c1 c2 c3 : BitVec w): c1 ^^^ c2 ^^^ c3 = c1 ^^^ (c2 ^^^ c3) := by
   ext i
   simp
-
-def help'' {a b : Nat } : a = b ↔ (↑a : Int) = ↑b := by
-    simp only [Nat.cast_inj]
 
 def alive_simplifyAndOrXor2515 (w : Nat) :
   AndOrXor2515_lhs w ⊑ AndOrXor2515_rhs w := by
