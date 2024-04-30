@@ -90,57 +90,9 @@ def MulDivRem290_rhs (w : ℕ) :
   /- r = -/ Com.lete (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-def rkf (A B : BitVec w):
-    BitVec.toNat (A <<< B) = ((BitVec.toNat A) * (2 ^ (BitVec.toNat B)))
-    % 2 ^w := by
-  unfold HShiftLeft.hShiftLeft
-  unfold instHShiftLeftBitVec
-  simp only [toNat_shiftLeft]
-  rw [Nat.shiftLeft_eq_mul_pow]
-
-def trsa' {A B : BitVec w} (h : BitVec.toNat B < w):
-    1 <<< B * A = A <<< B := by
-  apply BitVec.eq_of_toNat_eq
-  rw [rkf]
-  rw [BitVec.toNat_mul]
-  rw [rkf]
-  by_cases hw : w = 0
-  subst hw
-  simp
-  have hww : 0 < w := by
-    omega
-  clear hw
-  by_cases hw : w = 1
-  subst hw
-  ring_nf
-  have sn : BitVec.toNat A * 2 ^ BitVec.toNat B < 2 := by
-    simp at h
-    simp at hww
-    rw [h]
-    simp
-    omega
-  ·
-    repeat (rw [Nat.mod_eq_of_lt])
-    ring_nf
-    simp [sn]
-    simp at h
-    simp only [h]
-    simp
-    rw [Nat.mod_eq_of_lt]
-    ring_nf
-    simp [sn]
-    simp at h
-    simp [h]
-  · simp
-    ring_nf
-
+-- TODO: How can we get rid of this one?
 def hra :BitVec.ofInt w 1  = 1 := by
   rfl
-
-def trsa {A B : BitVec w} (h : BitVec.toNat B < w):
-    BitVec.ofInt w 1 <<< B * A = A <<< B := by
-  rw [hra]
-  apply trsa' h
 
 def alive_simplifyMulDivRem290 (w : Nat) :
   MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
@@ -153,7 +105,8 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   rcases A with none | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   rcases B with none | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
-  rw [trsa]
+  rw [hra]
+  apply one_shiftLeft_mul_eq_shiftLeft _
   omega
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
