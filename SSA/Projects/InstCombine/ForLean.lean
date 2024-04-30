@@ -36,17 +36,16 @@ def or_assoc (a b c : BitVec w) :
   ext i
   simp [Bool.or_assoc]
 
-def toNat_shiftLeft' (A B : BitVec w) :
+@[simp, bv_toNat]
+lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
   unfold HShiftLeft.hShiftLeft instHShiftLeftBitVec
   simp only [toNat_shiftLeft, Nat.shiftLeft_eq_mul_pow]
 
-def one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} (h : BitVec.toNat B < w):
-    1 <<< B * A = A <<< B := by
+lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} (h : BitVec.toNat B < w):
+    (1 <<< B * A) = (A <<< B) := by
   apply BitVec.eq_of_toNat_eq
-  simp only [toNat_shiftLeft', BitVec.toNat_mul]
-  by_cases w_zero : w = 0; subst w_zero; simp
-  simp
+  simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   ring_nf
 
 end BitVec

@@ -2,7 +2,6 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.Tactic
-
 open BitVec
 open MLIR AST
 
@@ -90,10 +89,6 @@ def MulDivRem290_rhs (w : ℕ) :
   /- r = -/ Com.lete (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
--- TODO: How can we get rid of this one?
-def hra :BitVec.ofInt w 1  = 1 := by
-  rfl
-
 def alive_simplifyMulDivRem290 (w : Nat) :
   MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
   unfold MulDivRem290_lhs MulDivRem290_rhs
@@ -102,12 +97,17 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_undef
   simp_alive_ops
   intros A B
-  rcases A with none | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  rcases B with none | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
-  rw [hra]
-  apply one_shiftLeft_mul_eq_shiftLeft _
-  omega
+  apply BitVec.eq_of_toNat_eq
+  simp [bv_toNat]
+  norm_cast
+  have : (1 % 2^w) = 1 := by
+    apply Nat.mod_eq_of_lt
+    apply Nat.one_lt_pow <;> omega
+  simp [this]
+  ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
 axioms: [propext, Classical.choice, Quot.sound]-/
