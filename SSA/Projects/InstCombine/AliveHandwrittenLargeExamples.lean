@@ -2,7 +2,6 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.Tactic
-
 open BitVec
 open MLIR AST
 
@@ -51,6 +50,70 @@ axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect
+
+namespace MulDivRem
+
+/-
+Name: MulDivRem:290
+
+%poty = shl 1, %Y
+%r = mul %poty, %X
+  =>
+%r = shl %X, %Y
+
+Proof
+======
+  1. Without taking UB into account
+    ⟦LHS₁⟧: (1 << Y) . X = ( 2^Y) X = 2^Y . X
+    ⟦RHS₁⟧: X << Y = X . 2^Y
+    equal by ring.
+
+  2. With UB into account
+    ⟦LHS₂⟧: (1 << Y) . Op1 = Y >= n ? UB : ⟦LHS₁⟧
+    ⟦RHS₂⟧: Op1 << Y = Y >= n ? UB : ⟦RHS₁⟧
+    but ⟦LHS₁⟧ = ⟦ RHS₁⟧ and thus we are done.
+-/
+
+open ComWrappers
+def MulDivRem290_lhs (w : ℕ) :
+  Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w,
+    /- %Y -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  /- c1 = -/ Com.lete (const w 1) <|
+  /- poty = -/ Com.lete (shl w /- c1 -/ 0 /-%Y -/ 1) <|
+  /- r = -/ Com.lete (mul w /- poty -/ 0 /-%X -/ 3) <|
+  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+
+def MulDivRem290_rhs (w : ℕ) :
+  Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  /- r = -/ Com.lete (shl w /-X-/ 1 /-Y-/ 0) <|
+  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+
+def alive_simplifyMulDivRem290 (w : Nat) :
+  MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
+  unfold MulDivRem290_lhs MulDivRem290_rhs
+  simp only [simp_llvm_wrap]
+  simp_alive_ssa
+  simp_alive_undef
+  simp_alive_ops
+  intros A B
+  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  apply BitVec.eq_of_toNat_eq
+  simp [bv_toNat]
+  norm_cast
+  have : (1 % 2^w) = 1 := by
+    apply Nat.mod_eq_of_lt
+    apply Nat.one_lt_pow <;> omega
+  simp [this]
+  ring_nf
+
+/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
+axioms: [propext, Classical.choice, Quot.sound]-/
+#guard_msgs in #print axioms alive_simplifyMulDivRem290
+
+end MulDivRem
 
 namespace AndOrXor
 /-
