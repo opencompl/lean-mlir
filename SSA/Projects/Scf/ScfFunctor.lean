@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Algebra.GroupPower.IterateHom
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Linarith
@@ -17,19 +20,18 @@ set_option pp.proofs.withType false
 open TyDenote
 
 /-- Describes that the dialect Op' has a type whose denotation is 'DenotedTy -/
-class HasTy (Op' : Type) (DenotedTy : Type) [TyDenote Ty'] [OpSignature Op' Ty' m] where
-    ty : Ty'
+class HasTy (d : Dialect) (DenotedTy : Type) [TyDenote d.Ty] [DialectSignature d] where
+    ty : d.Ty
     denote_eq : toType ty = DenotedTy := by rfl
 
-abbrev HasBool (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty' m'] : Type := HasTy Op' Bool
-abbrev HasInt (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty' m'] : Type := HasTy Op' Int
-abbrev HasNat (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty' m'] : Type := HasTy Op' Nat
+abbrev HasBool (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Bool
+abbrev HasInt (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Int
+abbrev HasNat (d : Dialect) [TyDenote d.Ty] [DialectSignature d] : Type := HasTy d Nat
 
-
-namespace ScfRegion
 
 /-- only flow operations, parametric over arithmetic from another dialect Op'  -/
-inductive Op (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty' m'] [OpDenote Op' Ty' m'] : Type _
+inductive Scf.Op (Op' Ty' : Type) (m') [TyDenote Ty'] [DialectSignature ⟨Op', Ty', m'⟩]
+    [DialectDenote ⟨Op', Ty', m'⟩] : Type _
   | coe (o : Op')
   | iterate (k : ℕ) -- fˆk
   | run (inputty : Ty')  -- f^k
@@ -37,14 +39,32 @@ inductive Op (Op' : Type) [TyDenote Ty'] [OpSignature Op' Ty' m'] [OpDenote Op' 
   | for (ty : Ty')
   deriving DecidableEq, Repr
 
-instance [TyDenote Ty'] [OpSignature Op' Ty' m'] [OpDenote Op' Ty' m'] : Coe Op' (Op Op') where
+-- TODO: this probably doesn't need `DialectDenote`
+def Scf (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Dialect where
+  Op := Scf.Op d.Op d.Ty d.m
+  Ty := d.Ty
+  m  := d.m
+
+instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]  [Monad d.m] :
+    Monad (Scf d).m :=
+  inferInstanceAs (Monad d.m)
+
+instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : TyDenote (Scf d).Ty :=
+  inferInstanceAs (TyDenote d.Ty)
+
+example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] :
+  DecidableEq (Scf d).Ty := by infer_instance
+
+namespace Scf
+
+instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Coe d.Op (Scf d).Op where
   coe o := .coe o
 
 @[reducible]
-instance [TyDenote Ty'] [OpSignature Op' Ty' m'] [OpDenote Op' Ty' m']
-    [B : HasBool Op'] [N : HasNat Op'] [I : HasInt Op'] : OpSignature (Op Op') Ty' m' where
-  signature
-   | .coe o => signature o
+instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
+    [B : HasBool d] [N : HasNat d] [I : HasInt d] : DialectSignature (Scf d) where
+   signature
+   | .coe o => signature (d:=d) o
     | .if t t' => ⟨[B.ty, t], [([t], t'), ([t], t')], t', .impure⟩
       --    /----------------------------------------------^^^^^^
       --    | Morally, an `if` should be pure, so long as its regions are pure, and impure otherwise
@@ -195,19 +215,19 @@ def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
 
 end LoopBody.counterDecorator
 
-variable [TyDenote Ty'] [OpSignature Op' Ty' m'] [OpDenote Op' Ty' m']
-  [B : HasBool Op'] [N : HasNat Op'] [Z : HasInt Op']
+variable [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
+  [B : HasBool d] [N : HasNat d] [Z : HasInt d]
 
 open Ctxt (Valuation) in
 @[reducible]
-instance [Monad m'] : OpDenote (Op Op') Ty' m' where
+instance [Monad d.m] : DialectDenote (Scf d) where
   denote
     | .coe o', args', regArgs' =>
-        let denote' := OpDenote.denote o'
+        let denote' := DialectDenote.denote o'
         by
          exact denote' args' regArgs'
     | .if t t', (.cons (cond ) (.cons v .nil)),
-         (.cons (f : Ctxt.Valuation [t] → m' ⟦t'⟧) (.cons (g : _ → _) .nil)) =>
+         (.cons (f : Ctxt.Valuation [t] → d.m ⟦t'⟧) (.cons (g : _ → _) .nil)) =>
          let body := if B.denote_eq ▸ cond then f else g
       body (Ctxt.Valuation.nil.snoc v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
@@ -216,22 +236,22 @@ instance [Monad m'] : OpDenote (Op Op') Ty' m' where
         let istart : ℤ := Z.denote_eq ▸ istart
         let istep : ℤ := Z.denote_eq ▸ istep
         let niter : ℕ := N.denote_eq ▸ niter
-        let f' : LoopBody (m' ⟦ty⟧) := fun i v => do
+        let f' : LoopBody (d.m ⟦ty⟧) := fun i v => do
           let v ← v
           let i := Z.denote_eq.symm ▸ i
           f (Valuation.ofPair i v)
-        let to_iterate := f'.counterDecorator (α := m' ⟦ty⟧) (δ := istep)
+        let to_iterate := f'.counterDecorator (α := d.m ⟦ty⟧) (δ := istep)
         let loop_fn := niter.iterate (op := to_iterate)
         (loop_fn (istart, pure vstart)).2
 
     | .iterate k, (.cons (x) .nil), (.cons (f : _ → _) .nil) =>
       let x : ℤ := Z.denote_eq ▸ x
       let coe : ℤ = toType Z.ty := Z.denote_eq.symm
-      let f' (v : m' ℤ) : m' ℤ := do
+      let f' (v : d.m ℤ) : d.m ℤ := do
         let v ← v
         coe ▸ f (Ctxt.Valuation.nil.snoc (cast coe v))
       Z.denote_eq ▸ (k.iterate f' (pure x))
-end ScfRegion
+end Scf
 
 namespace Arith
 
@@ -255,8 +275,10 @@ inductive Op
   | const : (val : ℤ) → Op
   | const_nat : (val : ℕ) → Op
 
+abbrev Arith : Dialect := {Op, Ty}
+
 @[reducible]
-instance : OpSignature Op Ty Id where
+instance : DialectSignature Arith where
   signature
     | .axpy => ⟨[.int, .nat, .int], [], .int, .pure⟩
     | .neg => ⟨[.int], [], .int, .pure⟩
@@ -267,7 +289,7 @@ instance : OpSignature Op Ty Id where
 
 
 @[reducible]
-instance : OpDenote Op Ty Id where
+instance : DialectDenote Arith where
   denote
     | .const n, _, _ => n
     | .const_nat n, _, _ => n
@@ -277,16 +299,17 @@ instance : OpDenote Op Ty Id where
     | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
 
 
-instance : HasBool Op where ty := .bool
-instance : HasNat Op where ty := .nat
-instance : HasInt Op where ty := .int
+instance : HasBool Arith where ty := .bool
+instance : HasNat Arith where ty := .nat
+instance : HasInt Arith where ty := .int
 
 end Arith
+export Arith (Arith)
 
 /-- Compose Scf on top of Arith -/
-abbrev Op := ScfRegion.Op Arith.Op
+abbrev ScfArith := Scf Arith
 
-def cst (n : ℤ) : Expr Op Γ .pure .int  :=
+def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
   Expr.mk
     (op := .coe <| .const n)
     (ty_eq := rfl)
@@ -294,7 +317,7 @@ def cst (n : ℤ) : Expr Op Γ .pure .int  :=
     (args := .nil)
     (regArgs := .nil)
 
-def cst_nat (n : ℕ) : Expr Op Γ .pure .nat  :=
+def cst_nat (n : ℕ) : Expr ScfArith Γ .pure .nat  :=
   Expr.mk
     (op := .coe <| .const_nat n)
     (ty_eq := rfl)
@@ -302,7 +325,7 @@ def cst_nat (n : ℕ) : Expr Op Γ .pure .nat  :=
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .pure .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .add)
     (ty_eq := rfl)
@@ -310,7 +333,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Op Γ .pure .int :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def add_nat (e₁ e₂ : Var Γ .nat) : Expr Op Γ .pure .nat :=
+def add_nat (e₁ e₂ : Var Γ .nat) : Expr ScfArith Γ .pure .nat :=
   Expr.mk
     (op := .coe <| .add_nat)
     (ty_eq := rfl)
@@ -318,7 +341,7 @@ def add_nat (e₁ e₂ : Var Γ .nat) : Expr Op Γ .pure .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b : Var Γ .int) : Expr Op Γ .pure .int :=
+def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) : Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .axpy)
     (ty_eq := rfl)
@@ -326,7 +349,7 @@ def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b : Var Γ .int) : E
     (args := .cons a <| .cons x <| .cons b .nil)
     (regArgs := .nil)
 
-def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr Op Γ .pure .int :=
+def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .neg)
     (ty_eq := rfl)
@@ -334,8 +357,9 @@ def neg {Γ : Ctxt _} (a : Var Γ .int) : Expr Op Γ .pure .int :=
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int) (body : Com Op [.int] .impure .int) :
-    Expr Op Γ .impure .int :=
+
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int)
+    (body : Com ScfArith [.int] .impure .int) : Expr ScfArith Γ .impure .int :=
   Expr.mk
     (op := .iterate k)
     (ty_eq := rfl)
@@ -344,8 +368,8 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ Arith.Ty.int) (body : Com Op
     (regArgs := HVector.cons body HVector.nil)
 
 def if_ {Γ : Ctxt _} {t t': Arith.Ty}
-    (cond : Var Γ Arith.Ty.bool) (v : Var Γ t) (then_ else_ : Com Op [t] .impure t') :
-    Expr Op Γ .impure t' :=
+  (cond : Var Γ Arith.Ty.bool) (v : Var Γ t) (then_ else_ : Com ScfArith [t] .impure t') :
+    Expr ScfArith Γ .impure t' :=
   Expr.mk
     (op := .if t t')
     (ty_eq := rfl)
@@ -353,8 +377,8 @@ def if_ {Γ : Ctxt _} {t t': Arith.Ty}
     (args := .cons cond <| .cons v .nil)
     (regArgs := HVector.cons then_ <| HVector.cons else_ <| HVector.nil)
 
-def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com Op [t] .impure t) :
-    Expr Op Γ .impure t :=
+def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com ScfArith [t] .impure t) :
+    Expr ScfArith Γ .impure t :=
   Expr.mk
     (op := .run t)
     (ty_eq := rfl)
@@ -364,8 +388,7 @@ def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com Op [t] .impure t
 
 def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (start step : Var Γ Arith.Ty.int)
-    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com Op [.int, t] .impure t) :
-    Expr Op Γ .impure t :=
+    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] t) : Expr ScfArith Γ .pure t :=
   Expr.mk
     (op := .for t)
     (ty_eq := rfl)
@@ -374,6 +397,7 @@ def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (regArgs := HVector.cons body <| HVector.nil)
 
 /-- 'if' condition of a true variable evaluates to the then region body. -/
+<<<<<<< HEAD
 theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = true) (v : Var Γ t)
     (then_ else_ : Com Op [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
@@ -391,12 +415,33 @@ theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond
   simp [Expr.denote, if_, run]
   simp_peephole [hcond] at Γv
   simp [ite_true]
+=======
+theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = true) (v : Var Γ t) (then_ else_ : Com ScfArith [t] t) :
+  Expr.denote (if_ (t := t) cond v then_ else_) Γv =
+  Expr.denote (run (t := t) v then_) Γv := by
+    simp [Expr.denote, if_, run]
+    simp_peephole [hcond] at Γv
+    simp [ite_true]
+-- TODO: make a `PeepholeRewrite` for `if_true`.
+
+/-- 'if' condition of a false variable evaluates to the else region body. -/
+theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com ScfArith [t] t) :
+  Expr.denote (if_ (t := t) cond v then_ else_) Γv =
+  Expr.denote (run (t := t) v else_) Γv := by
+    simp [Expr.denote, if_, run]
+    simp_peephole [hcond] at Γv
+    simp [ite_true]
+>>>>>>> main
 
 -- TODO: make a `PeepholeRewrite` for `if_false`.
 
 
 /-- a region that returns the value immediately -/
+<<<<<<< HEAD
 abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com Op Γ .impure t := .ret v
+=======
+abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com ScfArith Γ t := .ret v
+>>>>>>> main
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/
@@ -404,7 +449,11 @@ theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int) (niters : 
   Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp [Expr.denote, run, for_]
     simp_peephole at Γv
+<<<<<<< HEAD
     simp [ScfRegion.LoopBody.counterDecorator.constant_iterate]
+=======
+    simp [Scf.LoopBody.CounterDecorator.constant_iterate]
+>>>>>>> main
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
@@ -428,9 +477,15 @@ rhs
 -/
 namespace ForAddToMul
 
+<<<<<<< HEAD
 def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .impure .int :=
   /- c0 = -/ Com.letPure (cst 0) <|
   /- loop_step = -/ Com.letPure  (cst 1) <|
+=======
+def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
+  /- c0 = -/ Com.lete (cst 0) <|
+  /- loop_step = -/ Com.lete  (cst 1) <|
+>>>>>>> main
   /- v1 = -/ Com.lete (for_ (t := .int)
                         ⟨/- c0 -/ 1, rfl⟩
                         ⟨/- loop_step -/ 0, rfl⟩
@@ -441,20 +496,29 @@ def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .impu
       <| Com.ret ⟨0, rfl⟩)) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
+<<<<<<< HEAD
 def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .pure .int :=
+=======
+def rhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
+>>>>>>> main
   Com.lete (cst vincrement) <|
   Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAddInt
 
-open ScfRegion in
+open Scf in
 open Arith in
 theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp only [lhs, rhs, for_, axpy, cst]
   simp_peephole at Γv
   intros A B
+<<<<<<< HEAD
   rw [ScfRegion.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
+=======
+  simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
+  rw [Scf.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
+>>>>>>> main
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
 #print axioms correct --  [propext, Classical.choice, Quot.sound]
@@ -466,11 +530,16 @@ end ForAddToMul
 /- ## Reverse a loop, if the loop body does not depend on the loop. -/
 namespace ForReversal
 variable {t : Arith.Ty}
+<<<<<<< HEAD
 variable (rgn : Com Op [Arith.Ty.int, t] .impure t)
+=======
+variable (rgn : Com ScfArith [Arith.Ty.int, t] t)
+>>>>>>> main
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
-variable (hrgn : ScfRegion.LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
+variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
 
+<<<<<<< HEAD
 def lhs :
     let Γ := [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t]
     Com Op Γ .impure t :=
@@ -483,6 +552,18 @@ def lhs :
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] .impure t :=
+=======
+def lhs : Com ScfArith [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t] t :=
+   /- v-/
+   /- v1 = -/ Com.lete (for_ (t := t)
+                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
+                         ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
+                         ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
+                         ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
+   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
+>>>>>>> main
   /- delta * steps + start-/
   Com.letPure (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
   /- -delta -/
@@ -524,6 +605,7 @@ end ForReversal
 namespace ForFusion
 
 
+<<<<<<< HEAD
 variable (rgn : Com Op [.int, t] .impure t)
 variable (niters1 niters2 : ℕ)
 variable (start1 : ℤ)
@@ -532,6 +614,16 @@ def lhs : Com Op [/- v0 -/ t] .impure t :=
   /- niters1 = -/ Com.letPure (cst_nat niters1) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
+=======
+variable (rgn : Com ScfArith [.int, t] t)
+variable (niters1 niters2 : ℕ)
+variable (start1 : ℤ)
+
+def lhs : Com ScfArith [/- v0 -/ t] t :=
+  /- niters1 = -/ Com.lete (cst_nat niters1) <|
+  /- start1 = -/ Com.lete (cst start1) <|
+  /- c1 = -/ Com.lete (cst 1) <|
+>>>>>>> main
   -- start step niter v
   Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   /- niters2 = -/ Com.letPure (cst_nat niters2) <|
@@ -540,16 +632,23 @@ def lhs : Com Op [/- v0 -/ t] .impure t :=
   Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
+<<<<<<< HEAD
 def rhs : Com Op [/- v0 -/ t] .impure t :=
   /- niters1 + niters2 = -/ Com.letPure (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
+=======
+def rhs : Com ScfArith [/- v0 -/ t] t :=
+  /- niters1 + niters2 = -/ Com.lete (cst_nat <| niters1 + niters2) <|
+  /- start1 = -/ Com.lete (cst start1) <|
+  /- c1 = -/ Com.lete (cst 1) <|
+>>>>>>> main
   -- start step niter v
   Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 
-open ScfRegion in
+open Scf in
 theorem correct :
     Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
   simp [lhs, rhs, for_, axpy, cst]
@@ -576,13 +675,21 @@ namespace IterateIdentity
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
+<<<<<<< HEAD
 def lhs : Com Op [.int] .impure .int :=
   Com.lete (iterate (k := 0) ⟨0, by rfl⟩ (
       Com.letPure (add ⟨0, by rfl⟩ ⟨0, by rfl⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by rfl⟩
+=======
+def lhs : Com ScfArith [.int] .int :=
+  Com.lete (iterate (k := 0) ⟨0, by simp [Ctxt.snoc]⟩ (
+      Com.lete (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+>>>>>>> main
   )) <|
   Com.ret ⟨0, by rfl⟩
 
+<<<<<<< HEAD
 def rhs : Com Op [.int] .impure .int :=
   Com.ret ⟨0, by rfl⟩
 
@@ -612,5 +719,31 @@ attribute [local simp] Ctxt.snoc
 --       simp [Function.iterate_zero]
 --       done
 --   }
+=======
+def rhs : Com ScfArith [.int] .int :=
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+attribute [local simp] Ctxt.snoc
+
+noncomputable def p1 : PeepholeRewrite ScfArith [.int] .int:=
+  { lhs := lhs, rhs := rhs, correct := by
+      rw [lhs, rhs]
+      funext Γv
+      /-
+      Com.denote
+        (Com.lete
+          (iterate 0 { val := 0, property := lhs.proof_1 }
+            (Com.lete (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
+              (Com.ret { val := 0, property := lhs.proof_2 })))
+          (Com.ret { val := 0, property := lhs.proof_2 }))
+        Γv =
+      Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv
+      -/
+      simp_peephole [add, iterate] at Γv
+      /-  ∀ (a : ℤ), (fun v => v + v)^[0] a = a -/
+      simp [Function.iterate_zero]
+      done
+  }
+>>>>>>> main
 
 end IterateIdentity

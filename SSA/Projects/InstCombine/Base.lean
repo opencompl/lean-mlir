@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 --import SSA.Core.WellTypedFramework
 import SSA.Core.Framework
 import SSA.Core.Util
@@ -62,7 +65,7 @@ def BitVec.width {n : Nat} (_ : BitVec n) : Nat := n
 
 instance : TyDenote Ty where
 toType := fun
-  | .bitvec w => Option <| BitVec w
+  | .bitvec w => LLVM.IntW w
 
 instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
   coe z := match ty with
@@ -70,7 +73,7 @@ instance (ty : Ty) : Coe ℤ (TyDenote.toType ty) where
 
 instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
-    | .bitvec _ => default
+    | .bitvec _ => pure default
 
 instance : Repr (BitVec n) where
   reprPrec
@@ -243,12 +246,23 @@ def MOp.outTy : MOp φ → MTy φ
   .bitvec w
 | .icmp _ _ => .bitvec 1
 
-instance : OpSignature (MOp φ) (MTy φ) Id where
+/-- `MetaLLVM φ` is the `LLVM` dialect with at most `φ` metavariables -/
+abbrev MetaLLVM (φ : Nat) : Dialect where
+  Op := MOp φ
+  Ty := MTy φ
+
+abbrev LLVM : Dialect where
+  Op := Op
+  Ty := Ty
+
+instance {φ} : DialectSignature (MetaLLVM φ) where
+  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+instance : DialectSignature LLVM where
   signature op := ⟨op.sig, [], op.outTy, .pure⟩
 
 @[simp]
-def Op.denote (o : Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
-    (TyDenote.toType <| OpSignature.outTy o) :=
+def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
+    (TyDenote.toType <| DialectSignature.outTy o) :=
   match o with
   | Op.const _ val => const? val
   | Op.copy _      =>             (op.getN 0)
@@ -270,7 +284,7 @@ def Op.denote (o : Op) (op : HVector TyDenote.toType (OpSignature.sig o)) :
   | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)
   | Op.select _    => LLVM.select (op.getN 0) (op.getN 1) (op.getN 2)
 
-instance : OpDenote Op Ty Id := ⟨
+instance : DialectDenote LLVM := ⟨
   fun o args _ => Op.denote o args
 ⟩
 

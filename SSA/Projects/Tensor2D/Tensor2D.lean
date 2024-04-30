@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import SSA.Core.Framework
 import SSA.Core.Util
 import Mathlib.Tactic.Linarith
@@ -132,15 +135,19 @@ def Op.regSig : Op → RegionSignature Ty
   | .map2d => [([.int], .int)]
   | _ => []
 
+def Tensor2D : Dialect where
+  Op := Op
+  Ty := Ty
+
 @[reducible]
-instance : OpSignature Op Ty Id where
+instance : DialectSignature Tensor2D where
   signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy }
 
 
 /-
 -- error: unknown free variable: _kernel_fresh.97
 @[reducible]
-instance : OpDenote Op Ty where
+instance : DialectDenote Op Ty where
   denote
   | .constIx v, _, _ => v
   | .constTensor v, _, _ => v

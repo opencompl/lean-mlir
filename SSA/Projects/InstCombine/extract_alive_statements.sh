@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# Released under Apache 2.0 license as described in the file LICENSE.
 
 ALIVE_FILE="Alive.lean"
 INST_COMBINE_PREFIX="SSA/Projects/InstCombine"

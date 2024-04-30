@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 -- We create a verified conversion from SSA minus Regions (ie, a sequence
 -- of let bindings) into an expression tree. We prove that this
 -- conversion preserves program semantics.

@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Std.Data.BitVec
 import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic.Cases
@@ -9,7 +12,7 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 namespace LLVM
 
 
-abbrev IntW w := Option <| BitVec w
+def IntW w := Option <| BitVec w
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
@@ -150,7 +153,7 @@ at width 2, -4 / -1 is considered overflow!
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
   if y == 0 || (w != 1 && x == (intMin w) && y == -1)
   then .none
-  else BitVec.sdiv x y
+  else pure (BitVec.sdiv x y)
 
 @[simp_llvm_option]
 def sdiv {w : Nat} (x y : IntW w) : IntW w := do

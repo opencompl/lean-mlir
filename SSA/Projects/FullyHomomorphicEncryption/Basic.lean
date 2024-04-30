@@ -1,4 +1,7 @@
 /-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+/-
 This file contains the definition of the MLIR `Poly` dialect as implemented in HEIR, see:
 https://github.com/google/heir/blob/a18d4e8ddc0031e2a0e6dd2dd0d7fe289b9d1651/include/Dialect/Poly/IR/PolyDialect.td
 https://github.com/j2kun/heir/blob/5c5c0e2ff2ae37a7d1ec5791ec6c38046c4115c1/include/Dialect/Poly/IR/PolyOps.td
@@ -670,6 +673,10 @@ inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
   | const_int (c : Int) : Op q n
   | const_idx (i : Nat) : Op q n
 
+/-- `FHE` is the dialect for fully homomorphic encryption -/
+abbrev FHE (q n : Nat) [Fact (q > 1)] : Dialect where
+  Op := Op q n
+  Ty := Ty q n
 
 open TyDenote (toType)
 
@@ -702,10 +709,10 @@ def Op.outTy : Op q n → Ty q n
 def Op.signature : Op q n → Signature (Ty q n) :=
   fun o => {sig := Op.sig q n o, outTy := Op.outTy q n o, regSig := []}
 
-instance : OpSignature (Op q n) (Ty q n) Id := ⟨Op.signature q n⟩
+instance : DialectSignature (FHE q n) := ⟨Op.signature q n⟩
 
 @[simp]
-noncomputable instance : OpDenote (Op q n) (Ty q n) Id where
+noncomputable instance : DialectDenote (FHE q n) where
     denote
     | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
     | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair

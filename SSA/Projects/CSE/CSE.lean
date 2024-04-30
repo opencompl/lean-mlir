@@ -1,4 +1,7 @@
 /-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+/-
 This file implements common subexpression elimination for our SSA based IR.
 -/
 import SSA.Core.Framework
@@ -7,7 +10,9 @@ import Mathlib.Data.HashMap
 
 /- Decidable Equality for Coms. -/
 section DecEqCom
-variable [DecidableEq Ty] [OP_DECEQ : DecidableEq Op] [OpSignature Op Ty m]
+variable {d : Dialect} [DecidableEq d.Ty]
+variable [OP_DECEQ : DecidableEq d.Op]
+variable [DialectSignature d]
 
 /-- can decide equality on argument vectors. -/
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
@@ -16,26 +21,27 @@ def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
 namespace CSE
 
 /-- State stored by CSE pass. -/
-structure State (Op : Type) [TyDenote Ty] [OpSignature Op Ty m] [OpDenote Op Ty m] [Monad m]
-    (lets : Lets Op Γstart .pure Γ) where
+structure State (d : Dialect) [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] [Monad d.m]
+    {Γstart Γ : Ctxt d.Ty}
+    (lets : Lets d Γstart .pure Γ) where
   /-- map variable to its canonical value -/
   var2var : (v : Γ.Var α) → { v' : Γ.Var α // ∀ (V : Γstart.Valuation),
     (lets.denote V) v = (lets.denote V) v' }
   /-- map an Expr to its canonical variable -/
-  expr2cache : (α : Ty) → (e : Expr Op Γ .pure α) →
+  expr2cache : (α : d.Ty) → (e : Expr d Γ .pure α) →
     Option ({ v : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v = e.denote (lets.denote V) })
 
-variable {Op Ty m} [TyDenote Ty] [OpSignature Op Ty m] [OpDenote Op Ty m] [Monad m]
+variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 
 /-- The empty CSEing state. -/
-def State.empty (lets : Lets Op Γstart .pure Γ) : State Op lets where
+def State.empty (lets : Lets d Γstart .pure Γ) : State d lets where
   var2var := fun v => ⟨v, by intros V; rfl⟩
   expr2cache := fun α e => .none
 
-def State.snocNewExpr2Cache [DecidableEq Ty] [DecidableEq Op]
- {Γ : Ctxt Ty} {α : Ty}
- {lets : Lets Op Γstart .pure Γ}
- (s : State Op lets) (e : Expr Op Γ .pure α) : State Op (Lets.lete lets e) :=
+def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+ {Γ : Ctxt d.Ty} {α : d.Ty}
+ {lets : Lets d Γstart .pure Γ}
+ (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.lete lets e) :=
  {
   var2var := fun v => by
     apply Subtype.mk
@@ -80,24 +86,24 @@ def State.snocNewExpr2Cache [DecidableEq Ty] [DecidableEq Op]
 /-- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
 @[simp]
 theorem Lets.denote_lete
-  {Γstart Γ : Ctxt Ty}
-  {lets : Lets Op Γstart .pure Γ}
-  (e : Expr Op Γ .pure α)
+  {Γstart Γ : Ctxt d.Ty}
+  {lets : Lets d Γstart .pure Γ}
+  (e : Expr d Γ .pure α)
   (V : Ctxt.Valuation Γstart) :
   Lets.denote (Lets.lete lets e) V = (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
   simp [Lets.denote, eq_rec_constant]
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
-def _root_.Ctxt.Hom.remapLast [TyDenote Ty]  {α : Ty} (Γ : Ctxt Ty) (var : Γ.Var α) :
+def _root_.Ctxt.Hom.remapLast [TyDenote d.Ty]  {α : d.Ty} (Γ : Ctxt d.Ty) (var : Γ.Var α) :
   Ctxt.Hom (Γ.snoc α) Γ := fun ty' var' => by
     cases var' using Ctxt.Var.casesOn
     case toSnoc var' => exact var'
     case last => exact var
 
 section RemapVar
-def VarRemapVar [DecidableEq Ty] [DecidableEq Op]
-  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
-  (lets : Lets Op Γstart .pure Γ)
+def VarRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
+  {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
+  (lets : Lets d Γstart .pure Γ)
   (hom : Ctxt.Hom Γ' Γ)
   (vold : Γ.Var α) (vnew : Γ'.Var α)
   (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).comap hom) vnew)
@@ -117,13 +123,13 @@ def VarRemapVar [DecidableEq Ty] [DecidableEq Op]
       else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
     else ⟨hom w', by simp [Ctxt.Valuation.comap]⟩
 
-def arglistRemapVar [DecidableEq Ty] [DecidableEq Op]
-  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
-  (lets : Lets Op Γstart .pure Γ)
+def arglistRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
+  {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
+  (lets : Lets d Γstart .pure Γ)
   (hom : Ctxt.Hom Γ' Γ)
   (vold : Γ.Var α) (vnew : Γ'.Var α)
   (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).comap hom) vnew)
-  {ts : List Ty} (as' : HVector (Ctxt.Var Γ') <| ts) :
+  {ts : List d.Ty} (as' : HVector (Ctxt.Var Γ') <| ts) :
     { as : HVector (Ctxt.Var Γ) <| ts //
       ∀ (Vstart : Γstart.Valuation), as.map (fun t v => (lets.denote Vstart) v) = as'.map (fun t v' => ((lets.denote Vstart).comap hom) v') } :=
   match as' with
@@ -142,14 +148,14 @@ def arglistRemapVar [DecidableEq Ty] [DecidableEq Op]
       done
     ⟩
 
-def ExprRemapVar [DecidableEq Ty] [DecidableEq Op]
-  {Γstart Γ Γ' : Ctxt Ty} {α : Ty}
-  (lets : Lets Op Γstart .pure Γ)
+def ExprRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
+  {Γstart Γ Γ' : Ctxt d.Ty} {α : d.Ty}
+  (lets : Lets d Γstart .pure Γ)
   (hom : Ctxt.Hom Γ' Γ)
   (vold : Γ.Var α) (vnew : Γ'.Var α)
   (VNEW: ∀ (Vstart : Ctxt.Valuation Γstart), (lets.denote Vstart) vold = ((lets.denote Vstart).comap hom) vnew)
-  (e' : Expr Op Γ' .pure β) :
-  { e : Expr Op Γ .pure β  // ∀ (Vstart : Ctxt.Valuation Γstart),
+  (e' : Expr d Γ' .pure β) :
+  { e : Expr d Γ .pure β  // ∀ (Vstart : Ctxt.Valuation Γstart),
     e.denote (lets.denote Vstart) = e'.denote ((lets.denote Vstart).comap hom) } :=
     match e' with
     | ⟨op, ty_eq, eff_le, args, regArgs⟩ =>
@@ -166,21 +172,21 @@ end RemapVar
 
 
 /-
-e: Expr Op Γ .pure α
-body: Com Op (Ctxt.snoc Γ α) α✝
-e': Expr Op Γ .pure α
+e: Expr d Γ .pure α
+body: Com d (Ctxt.snoc Γ α) α✝
+e': Expr d Γ .pure α
 he': Expr.denote e' = Expr.denote e
 v'?: Option { v' // ∀ (V : Ctxt.Valuation Γstart), Lets.denote lets V v' = Expr.denote e (Lets.denote lets V) }
-s': State Op (Lets.lete lets e') := snocNewExpr2Cache s e'
+s': State d.Op (Lets.lete lets e') := snocNewExpr2Cache s e'
 -/
 
-def State.snocOldExpr2Cache [DecidableEq Ty] [DecidableEq Op]
- {Γ : Ctxt Ty} {α : Ty}
- {lets : Lets Op Γstart .pure Γ}
- (s : State Op lets) (enew : Expr Op Γ .pure α) (eold : Expr Op Γ .pure α) (henew :
+def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+ {Γ : Ctxt d.Ty} {α : d.Ty}
+ {lets : Lets d Γstart .pure Γ}
+ (s : State d lets) (enew : Expr d Γ .pure α) (eold : Expr d Γ .pure α) (henew :
     ∀ (V : Γstart.Valuation), enew.denote (lets.denote V) = eold.denote (lets.denote V))
   (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V vold) :
-  State Op (Lets.lete lets enew) := {
+  State d (Lets.lete lets enew) := {
     var2var := fun v => by
       cases v using Ctxt.Var.casesOn
       case toSnoc v => -- old variable, look up 'var2var'
@@ -228,8 +234,9 @@ def State.snocOldExpr2Cache [DecidableEq Ty] [DecidableEq Op]
 
 /-- Replace the variables in `as` with new variables that have the same valuation -/
 def State.cseArgList
-  {Γstart Γ : Ctxt Ty} {lets : Lets Op Γstart .pure Γ} (s : State Op lets)
-  {ts : List Ty}
+ [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
+  {Γstart Γ : Ctxt d.Ty} {lets : Lets d Γstart .pure Γ} (s : State d lets)
+  {ts : List d.Ty}
   (as : HVector (Ctxt.Var Γ) <| ts) :
   { as' : HVector (Ctxt.Var Γ) <| ts // ∀ (V : Γstart.Valuation), as.map (lets.denote V).eval = as'.map (lets.denote V).eval  } :=
   match as with
@@ -249,34 +256,34 @@ def State.cseArgList
 
 /-- Default instance for `partial def` to compile. -/
 instance : Inhabited (
-          {lets : Lets Op Γstart .pure Γ} →
-          State Op lets →
-          {ts : List (Ctxt Ty × Ty)} →
-          (rs : HVector (fun t => Com Op t.1 .impure t.2) ts) →
-          { rs' : HVector (fun t => Com Op t.1 .impure t.2) ts // HVector.denote rs = HVector.denote rs' }) where
+          {lets : Lets d Γstart .pure Γ} →
+          State d lets →
+          {ts : List (Ctxt d.Ty × d.Ty)} →
+          (rs : HVector (fun t => Com d t.1 .impure t.2) ts) →
+          { rs' : HVector (fun t => Com d t.1 .impure t.2) ts // HVector.denote rs = HVector.denote rs' }) where
   default := fun _s _ts rs => ⟨rs, rfl⟩
 
 /-- Default instance for `partial def` to compile. -/
 instance : Inhabited (
-  {lets : Lets Op Γstart .pure Γ} →
-  State Op lets →
-  (com: Com Op Γ .pure α) →
-  { com' : Com Op Γ .pure α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V }) where
+  {lets : Lets d Γstart .pure Γ} →
+  State d lets →
+  (com: Com d Γ .pure α) →
+  { com' : Com d Γ .pure α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V }) where
   default := fun _s com => ⟨com, by intros V; rfl⟩
 
 
 /- CSE for HVector / Com / Expr. -/
 mutual
-variable [DecidableEq Ty] [DecidableEq Op]
+variable [DecidableEq d.Ty] [DecidableEq d.Op]
 
 /-- Replace the regions in `rs` with new regions that have the same valuation -/
 unsafe def State.cseRegionArgList
-  {Γstart Γ : Ctxt Ty}
-  {lets : Lets Op Γstart .pure Γ}
-  (s : State Op lets)
-  {ts : List (Ctxt Ty × Ty)}
-  (rs : HVector ((fun t : Ctxt Ty × Ty => Com Op t.1 .impure t.2)) <| ts) :
-  { rs' : HVector ((fun t : Ctxt Ty × Ty => Com Op t.1 .impure t.2)) <| ts //
+  {Γstart Γ : Ctxt d.Ty}
+  {lets : Lets d Γstart .pure Γ}
+  (s : State d lets)
+  {ts : List (Ctxt d.Ty × d.Ty)}
+  (rs : HVector ((fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)) <| ts) :
+  { rs' : HVector ((fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)) <| ts //
     HVector.denote rs = HVector.denote rs' } :=
   let H := HVector.map (fun _Γα com => Com.denote com) rs
   match ts, rs with
@@ -290,7 +297,7 @@ unsafe def State.cseRegionArgList
     ⟨.cons region rs, by rfl⟩
     /-
     let cseState := State.empty Lets.nil
-    let ⟨(region' : Com Op Γ .impure t), hr'⟩ :=  cseState.cseCom region
+    let ⟨(region' : Com d Γ .impure t), hr'⟩ :=  cseState.cseCom region
     let ⟨rs', hrs'⟩ := s.cseRegionArgList rs
     ⟨.cons region' rs', by
           simp [HVector.denote]
@@ -303,18 +310,18 @@ unsafe def State.cseRegionArgList
 /-- lookup an expression in the state and return a corresponding CSE'd variable for it, along with the CSE'd expression
   that was looked up in the map for the variable.  -/
 unsafe def State.cseExpr
- {Γstart Γ : Ctxt Ty}
- {lets : Lets Op Γstart .pure Γ}
- (s : State Op lets)
- (e : Expr Op Γ .pure α) :
- {e' : Expr Op Γ .pure α //
+ {Γstart Γ : Ctxt d.Ty}
+ {lets : Lets d Γstart .pure Γ}
+ (s : State d lets)
+ (e : Expr d Γ .pure α) :
+ {e' : Expr d Γ .pure α //
   ∀ (V : Γstart.Valuation), e'.denote (lets.denote V) = e.denote (lets.denote V) } × Option ({ v' : Γ.Var α // ∀ (V : Γstart.Valuation), (lets.denote V) v' = e.denote (lets.denote V) }) :=
   match E : e with
   | .mk op ty_eq eff_le args regArgs =>
       let ⟨args', hargs'⟩ := s.cseArgList args
       let regArgs' := s.cseRegionArgList regArgs
       let ⟨regArgs', hregArgs'⟩ := regArgs'
-      let e' : Expr Op Γ .pure α  := .mk op ty_eq eff_le args' regArgs'
+      let e' : Expr d Γ .pure α  := .mk op ty_eq eff_le args' regArgs'
       ⟨⟨e', by {
         intros V
         simp (config := { zetaDelta := true}) [E, hargs', Expr.denote_unfold]
@@ -334,11 +341,11 @@ unsafe def State.cseExpr
         | .none => .none
       ⟩
 
-unsafe def State.cseCom {α : Ty}
-  {lets : Lets Op Γstart .pure Γ}
-  (s : State Op lets)
-  (com: Com Op Γ .pure α) :
-  { com' : Com Op Γ .pure α
+unsafe def State.cseCom {α : d.Ty}
+  {lets : Lets d Γstart .pure Γ}
+  (s : State d lets)
+  (com: Com d Γ .pure α) :
+  { com' : Com d Γ .pure α
     // ∀ (V : Ctxt.Valuation Γstart), com.denote (lets.denote V) = com'.denote (lets.denote V) } :=
   match com with
   | .ret v => ⟨.ret (s.var2var v).val, by
@@ -379,9 +386,9 @@ unsafe def State.cseCom {α : Ty}
 end -- mutual.
 
 /-- common subexpression elimination entry point. -/
-unsafe def cse' [DecidableEq Ty] [DecidableEq Op]
-  {α : Ty} {Γ : Ctxt Ty} (com: Com Op Γ .pure α) :
-  { com' : Com Op Γ .pure α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
+unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
+  {α : d.Ty} {Γ : Ctxt d.Ty} (com: Com d Γ .pure α) :
+  { com' : Com d Γ .pure α // ∀ (V: Ctxt.Valuation Γ), com.denote V = com'.denote V } :=
     let ⟨com', hcom'⟩ := State.cseCom (State.empty Lets.nil) com
     ⟨com', by {
       intros V
@@ -410,20 +417,24 @@ inductive ExOp :  Type
   | cst : ℕ → ExOp
   deriving DecidableEq, Repr
 
-instance : OpSignature ExOp ExTy Id where
+abbrev Ex : Dialect where
+  Op := ExOp
+  Ty := ExTy
+
+instance : DialectSignature Ex where
   signature
     | .add    => ⟨[.nat, .nat], [], .nat, .pure⟩
     | .beq    => ⟨[.nat, .nat], [], .bool, .pure⟩
     | .cst _  => ⟨[], [], .nat, .pure⟩
 
 @[reducible]
-instance : OpDenote ExOp ExTy Id where
+instance : DialectDenote Ex where
   denote
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
 
-def cst {Γ : Ctxt _} (n : ℕ) : Expr ExOp Γ .pure .nat  :=
+def cst {Γ : Ctxt _} (n : ℕ) : Expr Ex Γ .pure .nat  :=
   Expr.mk
     (op := .cst n)
     (ty_eq := rfl)
@@ -431,7 +442,7 @@ def cst {Γ : Ctxt _} (n : ℕ) : Expr ExOp Γ .pure .nat  :=
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr ExOp Γ .pure .nat :=
+def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
@@ -441,7 +452,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr ExOp Γ .pure .nat :
 
 attribute [local simp] Ctxt.snoc
 
-def ex1_pre_cse : Com ExOp ∅ .pure .nat :=
+def ex1_pre_cse : Com Ex ∅ .pure .nat :=
   Com.lete (cst 1) <|
   Com.lete (cst 1) <|
   Com.lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
@@ -449,7 +460,7 @@ def ex1_pre_cse : Com ExOp ∅ .pure .nat :=
 #eval ex1_pre_cse
 
 unsafe def ex1_post_cse :
- { com' : Com ExOp ∅ .pure .nat // ∀ V, ex1_pre_cse.denote V = com'.denote V } :=
+ { com' : Com Ex ∅ .pure .nat // ∀ V, ex1_pre_cse.denote V = com'.denote V } :=
    cse' ex1_pre_cse
 #eval ex1_post_cse
 /-
@@ -460,7 +471,7 @@ return %0
 -/
 
 unsafe def ex1_post_cse_post_dce :
-  { com : Com ExOp ∅ .pure .nat // ∀ V, ex1_post_cse.val.denote V = com.denote V } :=
+  { com : Com Ex ∅ .pure  .nat // ∀ V, ex1_post_cse.val.denote V = com.denote V } :=
     (DCE.dce' ex1_post_cse.val)
 #eval ex1_post_cse_post_dce
 /-

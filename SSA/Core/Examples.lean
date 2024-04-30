@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import SSA.Core.Framework
 import SSA.Core.Tactic
 
@@ -29,14 +32,14 @@ inductive ExOp :  Type
   | cst : ℕ → ExOp
   deriving DecidableEq, Repr
 
-instance : OpSignature ExOp ExTy Id where
+instance : DialectSignature ExOp ExTy where
   signature
     | .add    => ⟨[.nat, .nat], [], .nat, .pure⟩
     | .beq    => ⟨[.nat, .nat], [], .bool, .pure⟩
     | .cst _  => ⟨[], [], .nat, .pure⟩
 
 @[reducible]
-instance : OpDenote ExOp ExTy Id where
+instance : DialectDenote ExOp ExTy where
   denote
     | .cst n, _, _ => n
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
@@ -319,14 +322,14 @@ inductive ExOp :  Type
   | runK : ℕ → ExOp
   deriving DecidableEq, Repr
 
-instance : OpSignature ExOp ExTy Id where
+instance : DialectSignature ExOp ExTy where
   signature
   | .add    => ⟨[.nat, .nat], [], .nat, .pure⟩
   | .runK _ => ⟨[.nat], [([.nat], .nat)], .nat, .pure⟩
 
 
 @[reducible]
-instance : OpDenote ExOp ExTy Id where
+instance : DialectDenote ExOp ExTy where
   denote
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .runK (k : Nat), (.cons (v : Nat) .nil), (.cons rgn _nil) =>
