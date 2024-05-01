@@ -75,10 +75,6 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   simp! only [Lets.denote_lete_last_pure]
                   simp! (config := { unfoldPartialApp := true, decide := true, zetaDelta := true}) [heneedleΓ]
                   congr
-                  -- | The proof below should follow from funext + reduction, but does not anymore.
-                  unfold Deleted.pushforward_Valuation Deleted.pullback_var
-                  funext t v
-                  simp [Lets.denote]
                 }⟩
             | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
  }

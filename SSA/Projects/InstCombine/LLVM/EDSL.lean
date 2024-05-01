@@ -209,7 +209,7 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
   return fun vals =>
     let Γ' := instantiateCtxt vals Γ
     let ty' := instantiateMTy vals ty
-    let com' := com.map (MOp.instantiateCom vals)
+    let com' := com.changeDialect (MOp.instantiateCom vals)
     ⟨Γ', eff, ty', com'⟩
 
 end InstcombineTransformDialect
@@ -235,7 +235,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   let com ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} building final Expr") <| do
     let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
-    let com ← mkAppM ``Com.map #[instantiateFun, mcom]
+    let com ← mkAppM ``Com.changeDialect #[instantiateFun, mcom]
     synthesizeSyntheticMVarsNoPostponing
     return com
 

@@ -1321,32 +1321,32 @@ theorem DialectMorphism.preserves_effectKind (op : d.Op) :
 mutual
 
 -- TODO: `map` is ambiguous, rename it to `changeDialect` (to mirror `changeVars`)
-def Com.map : Com d Γ eff ty → Com d' (f.mapTy <$> Γ) eff (f.mapTy ty)
+def Com.changeDialect : Com d Γ eff ty → Com d' (f.mapTy <$> Γ) eff (f.mapTy ty)
   | .ret v          => .ret v.toMap
-  | .lete body rest => .lete body.map rest.map
+  | .lete body rest => .lete body.changeDialect rest.changeDialect
 
-def Expr.map : Expr d Γ eff ty → Expr d' (Γ.map f.mapTy) eff (f.mapTy ty)
+def Expr.changeDialect : Expr d Γ eff ty → Expr d' (Γ.map f.mapTy) eff (f.mapTy ty)
   | ⟨op, Eq.refl _, effLe, args, regs⟩ => ⟨
       f.mapOp op,
       (f.preserves_outTy _).symm,
       f.preserves_effectKind _ ▸ effLe,
       f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
       f.preserves_regSig _ ▸
-        HVector.mapDialectMorphism regs
+        HVector.changeDialect regs
     ⟩
 
 /-- Inline of `HVector.map'` for the termination checker -/
-def HVector.mapDialectMorphism : ∀ {regSig : RegionSignature d.Ty},
+def HVector.changeDialect : ∀ {regSig : RegionSignature d.Ty},
     HVector (fun t => Com d t.fst eff t.snd) regSig
     → HVector (fun t => Com d' t.fst eff t.snd) (f.mapTy <$> regSig : RegionSignature _)
   | _, .nil        => .nil
-  | t::_, .cons a as  => .cons a.map (HVector.mapDialectMorphism as)
+  | t::_, .cons a as  => .cons a.changeDialect (HVector.changeDialect as)
 
 end
 
-def Lets.map : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
+def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
   | nil => nil
-  | lete body e => lete (map body) (e.map f)
+  | lete body e => lete (changeDialect body) (e.changeDialect f)
 
 end Map
 
@@ -1673,7 +1673,7 @@ variable [PureDialect d]
 expression tree with variables in the input context by following the def-use chain -/
 def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution d Γ_in :=
   Ctxt.Substitution.ofValuation <|
-    (lets.map TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
+    (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
         simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map, List.get?_map,
           Option.map_eq_some'] at h
