@@ -162,11 +162,6 @@ instance (eff : EffectKind) {m} [Monad m] : MonadLiftT (eff.toMonad m) m :=
 @[simp] theorem liftEffect_rfl [Monad m] (hle : eff ≤ eff) :
     liftEffect hle (α := α) (m := m) = id := by cases eff <;> rfl
 
-@[deprecated liftEffect_rfl]
-theorem liftEffect_pure_pure [Monad m] (hle : pure ≤ pure) :
-    liftEffect hle (α := α) (m := m) = id :=
-  rfl
-
 @[simp] theorem liftEffect_pure_impure [Monad m] (hle : pure ≤ impure) :
     liftEffect hle (α := α) (m := m) = Pure.pure :=
   rfl
@@ -177,11 +172,6 @@ theorem liftEffect_eq_pure_cast {m : Type → Type} [Monad m]
     liftEffect eff_le = fun (x : eff.toMonad m α) =>
       Pure.pure (cast (by rw [eff_eq]; rfl) x) := by
   subst eff_eq; rfl
-
-@[deprecated liftEffect_rfl]
-theorem liftEffect_impure_impure [Monad m] (hle : impure ≤ impure) :
-    liftEffect hle (α := α) (m := m) = id :=
-  rfl
 
 @[simp] theorem liftEffect_pure [Monad m] {e} (hle : e ≤ pure) :
     liftEffect hle (α := α) (m := m) = cast (by rw [eq_of_le_pure hle]) := by
@@ -196,7 +186,7 @@ theorem liftEffect_impure_impure [Monad m] (hle : impure ≤ impure) :
 /-- toMonad is functorial: it preserves identity. -/
 @[simp]
 theorem liftEffect_eq_id (hle : eff ≤ eff) [Monad m] :
-    liftEffect hle (α := α) (m := m) = id  := by
+    liftEffect hle (α := α) (m := m) = id := by
   cases eff <;> rfl
 
 /-- toMonad is functorial: it preserves composition. -/
