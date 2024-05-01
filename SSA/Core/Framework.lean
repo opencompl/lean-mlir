@@ -733,27 +733,9 @@ def Com.changeVars : Com d Γ eff ty →
   | .lete _ body  => cast (by simp) <|
       Com.outContext_changeVars_hom (map := map.snocMap) map_inv.snocMap (c := body)
 
--- @[simp] lemma Com.denoteLets_changeVars (map : Γ.Hom Δ) (c : Com d Γ .pure ty) :
---     (c.changeVars map).denoteLets = fun (V : Valuation Δ) =>
---       (c.denoteLets (V.comap map)).comap (fun t' v' => v'.castCtxt (by simp)) := by
---   sorry
-
 @[simp] lemma Com.denoteLets_returnVar_pure (c : Com d Γ .pure ty) (Γv : Valuation Γ) :
     c.denoteLets Γv c.returnVar = c.denote Γv := by
   induction c using Com.recPure <;> simp_all [denoteLets, denote]
-
--- @[simp] lemma Com.comap_denoteLets_pure [LawfulMonad d.m]
---     (map : Γ.Hom Δ) (c : Com d Γ .pure ty) (Δv : Valuation Δ) :
---     Valuation.comap ((c.changeVars map).denoteLets Δv)
---       (c.changeVars map).outContextHom = Δv := by
---   funext t' v'
---   simp only [Valuation.comap]
---   induction c using Com.recPure generalizing Δ Δv
---   case ret => rfl
---   case lete ih =>
---     stop
---     rw [changeVars_lete, outContextHom_lete];
---     simp
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
