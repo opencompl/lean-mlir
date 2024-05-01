@@ -9,9 +9,10 @@ namespace ComWrappers
 macro_rules
 | `(tactic| get_elem_tactic_trivial) => `(tactic| simp [Ctxt.snoc])
 
-def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.const w n)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
@@ -19,9 +20,10 @@ def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ (InstComb
 def not {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic):
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.not w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ .nil)
     (regArgs := .nil)
@@ -29,9 +31,10 @@ def not {Γ : Ctxt _} (w : ℕ) (l : Nat)
 def neg {Γ : Ctxt _} (w : ℕ) (l : Nat)
     (lp : (Ctxt.get? Γ l = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic):
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.neg w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ .nil)
     (regArgs := .nil)
@@ -41,9 +44,10 @@ def and {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.and w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -53,9 +57,10 @@ def or {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.or w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -65,9 +70,10 @@ def xor {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.xor w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -77,9 +83,10 @@ def shl {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.shl w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -89,9 +96,10 @@ def lshr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.lshr w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -101,9 +109,10 @@ def ashr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.ashr w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -113,9 +122,10 @@ def sub {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.sub w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -125,9 +135,10 @@ def add {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.add w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -137,9 +148,10 @@ def mul {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.mul w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -149,9 +161,10 @@ def sdiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.sdiv w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -161,9 +174,10 @@ def udiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.udiv w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -173,9 +187,10 @@ def srem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.srem w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -185,9 +200,10 @@ def urem {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
     (op := InstCombine.MOp.urem w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -197,9 +213,10 @@ def icmp {Γ : Ctxt _} (w : ℕ) (pred : LLVM.IntPredicate) (l r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec 1) :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec 1) :=
   Expr.mk
     (op := InstCombine.MOp.icmp pred w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
@@ -211,15 +228,16 @@ def select {Γ : Ctxt _} (w : ℕ) (l m r : Nat)
       := by get_elem_tactic)
     (rp : (Ctxt.get? Γ r = some (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)))
       := by get_elem_tactic) :
-    Expr InstCombine.LLVM Γ (InstCombine.Ty.bitvec w)  :=
+    Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w)  :=
   Expr.mk
     (op := InstCombine.MOp.select w)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨m, mp⟩ <| .cons ⟨r, rp⟩ .nil)
     (regArgs := .nil)
 
 def test (w : ℕ) :
-    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   .lete (const  w 0  ) <|
   .lete (not    w 0  ) <|
   .lete (neg    w 0  ) <|
