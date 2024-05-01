@@ -14,3 +14,4 @@ synthesis (see https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topi
 structure Dialect where
   (Op : Type)
   (Ty : Type)
+  (m : Type → Type := Id)

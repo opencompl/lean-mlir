@@ -21,7 +21,8 @@ namespace MLIR.AST
 
 open Ctxt
 
-instance {d : Dialect} [DialectSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} : Coe (Expr d Γ t) (Expr d Γ'.ctxt t) where
+instance {d : Dialect} [DialectSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} :
+    Coe (Expr d Γ eff t) (Expr d Γ'.ctxt eff t) where
   coe e := e.changeVars Γ'.diff.toHom
 
 
@@ -60,10 +61,10 @@ class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
   mkTy   : MLIRType φ → ExceptM d d.Ty
 
 class TransformExpr (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ]  where
-  mkExpr   : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Expr d Γ ty)
+  mkExpr   : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Expr d Γ eff ty)
 
 class TransformReturn (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ] where
-  mkReturn : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ ty, Com d Γ ty)
+  mkReturn : (Γ : List d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Com d Γ eff ty)
 
 /- instance of the transform dialect, plus data needed about `Op` and `Ty`. -/
 variable {d φ} [DialectSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
@@ -157,21 +158,22 @@ private def declareBindings [TransformTy d φ] (Γ : Ctxt d.Ty) (vals : List (Ty
 private def mkComHelper
   [TransformTy d φ] [instTransformExpr : TransformExpr d φ] [instTransformReturn : TransformReturn d φ]
   (Γ : Ctxt d.Ty) :
-    List (MLIR.AST.Op φ) → BuilderM d (Σ (ty : _), Com d Γ ty)
+    List (MLIR.AST.Op φ) → BuilderM d (Σ eff ty, Com d Γ eff ty)
   | [retStx] => do
       instTransformReturn.mkReturn Γ retStx
   | lete::rest => do
-    let ⟨ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ lete)
+    let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ lete)
     if h : lete.res.length != 1 then
       throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr lete}`"
     else
       let _ ← addValToMapping Γ (lete.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
-      let ⟨ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
-      return ⟨ty₂, Com.lete expr body⟩
+      let ⟨eff₂, ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
+      return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
 def mkCom [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ]
-  (reg : MLIR.AST.Region φ) : ExceptM d  (Σ (Γ : Ctxt d.Ty) (ty : d.Ty), Com d Γ ty) :=
+  (reg : MLIR.AST.Region φ) :
+  ExceptM d (Σ (Γ : Ctxt d.Ty) (eff : EffectKind) (ty : d.Ty), Com d Γ eff ty) :=
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithEmptyMapping <| do

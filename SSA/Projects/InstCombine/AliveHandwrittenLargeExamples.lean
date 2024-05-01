@@ -78,14 +78,14 @@ open ComWrappers
 def MulDivRem290_lhs (w : ℕ) :
   Com InstCombine.LLVM
     [/- %X -/ InstCombine.Ty.bitvec w,
-    /- %Y -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+    /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- c1 = -/ Com.lete (const w 1) <|
   /- poty = -/ Com.lete (shl w /- c1 -/ 0 /-%Y -/ 1) <|
   /- r = -/ Com.lete (mul w /- poty -/ 0 /-%X -/ 3) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem290_rhs (w : ℕ) :
-  Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- r = -/ Com.lete (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
@@ -135,7 +135,7 @@ def AndOrXor2515_lhs (w : ℕ):
     [/- C1 -/ InstCombine.Ty.bitvec w,
      /- C2 -/ InstCombine.Ty.bitvec w,
      /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- e1  = -/ Com.lete (xor w /-x-/ 0 /-C1-/ 3) <|
   /- op0 = -/ Com.lete (lshr w /-e1-/ 0 /-C2-/ 3) <|
   /- r   = -/ Com.lete (xor w /-op0-/ 0 /-C3-/ 3) <|
@@ -146,7 +146,7 @@ def AndOrXor2515_rhs (w : ℕ) :
     [/- C1 -/ InstCombine.Ty.bitvec w,
      /- C2 -/ InstCombine.Ty.bitvec w,
      /- C3 -/ InstCombine.Ty.bitvec w,
-     /- %X -/ InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+     /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- o = -/ Com.lete (lshr w /-X-/ 0 /-C2-/ 2) <|
   /- p = -/ Com.lete (lshr w /-C1-/ 4 /-C2-/ 3) <|
   /- q = -/ Com.lete (xor w /-p-/ 0 /-C3-/ 3) <|

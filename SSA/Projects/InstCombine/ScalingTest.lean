@@ -6,6 +6,19 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 
+/-!
+This file serves as a canary for when the performance of our elaborator becomes notably worse.
+Tip: when you start getting time-outs, replace
+```
+set_option maxHeartbeats _ in
+```
+with
+```
+count_heartbeats in
+```
+to get a count of how many heartbeats are now needed.
+-/
+
 open MLIR AST
 
 namespace LLVMScaling
@@ -74,6 +87,7 @@ theorem and_sequence_15_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
+set_option maxHeartbeats 500000 in
 def and_sequence_20_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):
@@ -113,6 +127,7 @@ theorem and_sequence_20_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
+set_option maxHeartbeats 1500000 in
 def and_sequence_30_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):
@@ -162,6 +177,8 @@ theorem and_sequence_30_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
+set_option maxHeartbeats 3800000 in
+set_option maxRecDepth 1500 in
 def and_sequence_40_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):
