@@ -751,10 +751,9 @@ An alternative representation of a program as a `Lets` with a return `Var`
 /-- `FlatCom Γ eff Δ ty` represents a program as a sequence `Lets Γ eff Δ` and a `Var Δ ty`.
 This is isomorphic to `Com Γ eff ty`, where `Δ` is `com.outContext` -/
 structure FlatCom (d : Dialect) [DialectSignature d]  (Γ_in : Ctxt d.Ty) (eff : EffectKind)
-    (Γ_out_new : Ctxt d.Ty) (ty : d.Ty) where
---TODO: `Γ_out_new` should be named just `Γ_out`
-  lets : Lets d Γ_in eff Γ_out_new
-  ret : Var Γ_out_new ty
+    (Γ_out : Ctxt d.Ty) (ty : d.Ty) where
+  lets : Lets d Γ_in eff Γ_out
+  ret : Var Γ_out ty
 
 --TODO: should this be a `@[simp] abbrev`, or just nuked altogether?
 /-- Denote the Lets of the FlatICom -/
@@ -762,26 +761,20 @@ def FlatCom.denoteLets (flatCom : FlatCom d Γ eff Γ_out t) (Γv : Γ.Valuation
     eff.toMonad d.m <| Γ_out.Valuation :=
   flatCom.lets.denote Γv
 
---TODO: rename to `FlatCom.denote`
 /-- Denote the lets and the ret of the FlatCom. This is equal to denoting the Com -/
-def FlatCom.denoteLetsRet [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) (Γv : Γ.Valuation) :
+@[simp] abbrev FlatCom.denote [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) (Γv : Γ.Valuation) :
     eff.toMonad d.m (toType t) :=
   flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret)
-
---TODO: deduplicate
-@[simp] abbrev FlatCom.denote [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :=
-  FlatCom.denoteLetsRet flatCom
-
 
 theorem FlatCom.denoteLets_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
     flatCom.denoteLets = fun Γv => flatCom.lets.denote Γv := by
   funext Γv
   simp [denoteLets]
 
-theorem FlatCom.denoteLetsRet_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
-    flatCom.denoteLetsRet = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
+theorem FlatCom.denote_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out t) :
+    flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.ret) := by
   funext Γv
-  simp [denoteLetsRet]
+  simp [denote]
 
 /-!
 ## casting of expressions and purity
