@@ -678,8 +678,6 @@ def Expr.changeVars (varsMap : Γ.Hom Γ') :
   | _, ⟨op, sig_eq, eff_leq, args, regArgs⟩ =>
      ⟨op, sig_eq, eff_leq, args.map varsMap, regArgs⟩
 
--- TODO: figure out what this comment means?
-/-- @alexkeizer: We need this to generate defeqs properly -/
 def Com.changeVars : Com d Γ eff ty →
     (varsMap : Γ.Hom Γ') →
     Com d Γ' eff ty
