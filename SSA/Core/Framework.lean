@@ -923,23 +923,6 @@ def Expr.toPure? (e : Expr d Γ eff ty) : Option (Expr d Γ .pure ty) :=
      | .pure => .some <| Expr.mk op ty_eq (by simp [h]) args regArgs
      | .impure => .none
 
--- lemma Expr.denote_impure_of_effectKind_eq_pure {op : Op}
---     (heff : DialectSignature.effectKind op ≤ .pure) (heff_impure : DialectSignature.effectKind op ≤ .impure)
---     {ty} {ty_eq : ty = _} {args} {regArgs} :
---     denote ⟨op, ty_eq, heff_impure, args, regArgs⟩
---     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
---   sorry
-
--- lemma Expr.denote_impure_of_effectKind_eq_pure (e : Expr d Γ .pure t)
---     {ty} {ty_eq : ty = _} {args} {regArgs} :
---     denote ⟨op, ty_eq, heff_impure, args, regArgs⟩
---     = fun V => pure (denote ⟨op, ty_eq, heff, args, regArgs⟩ V) := by
---   sorry
-
--- lemma EffectKind.liftEffect_pure (h : eff ≤ EffectKind.pure) :
---     EffectKind.liftEffect h (m:=m) f = fun x => f (cast _ x) := by
---   sorry
-
 /-- The operation of a pure expression is necessarily pure -/
 theorem Expr.HasPureOp_of_pure : (e : Expr d Γ .pure t) → e.HasPureOp
   | ⟨_, _, eff_le, _, _⟩ => EffectKind.eq_of_le_pure eff_le
