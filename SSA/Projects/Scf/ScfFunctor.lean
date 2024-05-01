@@ -583,24 +583,13 @@ theorem correct :
   simp [lhs, rhs, for_, axpy, cst]
   simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
   intros a
-  have swap_niters := add_comm (a := niters1) (b := niters2)
-  set arg := ((LoopBody.counterDecorator 1 fun i v =>
-                Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1]
-            (start1, a)).2
-  have H : (LoopBody.counterDecorator 1 fun i v =>
-        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
-    (start1, a) = (LoopBody.counterDecorator 1 fun i v =>
-        Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
-    (start1, a) := by congr
-  /-
+  rw [Nat.add_comm, Function.iterate_add_apply]
   congr
   rw [LoopBody.counterDecorator.iterate_fst_val]
   linarith
-  -/
-  sorry
 
 /-- info:
-'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound, sorryAx]
+'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms correct
 
