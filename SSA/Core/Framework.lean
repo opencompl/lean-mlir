@@ -1477,79 +1477,6 @@ theorem HVector.map_eq_of_eq_on_vars {A : d.Ty → Type*}
       apply h
       simp_all
 
--- theorem Lets.denote_eq_of_eq_on_vars_aux [LawfulMonad d.m] (lets : Lets d Γ_in eff Γ_out)
---     (v : Var Γ_out t)
---     {s₁ s₂ : Valuation Γ_in}
---     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2)
---     {α} (k : Valuation Γ_out → eff.toMonad d.m α) :
---     --   ^ represents arbitrary side effecting kontinuation that may happen in between
---     (do
---       let Γv ← lets.denote s₁
---       let _x ← k Γv
---       return Γv v)
---     = (do
---       let Γv ← lets.denote s₂
---       let _x ← k Γv
---       return Γv v) := by
---   induction lets generalizing t
---   case nil =>
---     simp [vars] at h
---     simp [denote, h, map_pure, Var.denote]
---   case lete Γ_in eff Γ_out lets e body ih =>
---     cases v using Var.casesOn
---     . simp [vars] at h
---       simp [denote]
---       cases eff
---       case pure =>
---         simp_all
---         apply ih
---         simpa
---       case impure =>
---         simp_all [map_pure]
---         sorry
---         -- This needs some thought about side effects. Pretty sure it's true still, but it needs thinking.
---         /-
---         apply ih
---         simpa
---         -/
---     . rcases e with ⟨op, rfl, args⟩
---       sorry
---       sorry
---       /-
---       simp [denote, Expr.denote]
---       congr 1
---       apply HVector.map_eq_of_eq_on_vars
---       intro v h'
---       apply ih
---       intro v' hv'
---       apply h
---       rw [vars, Var.casesOn_last]
---       simp
---       use v.1, v.2
---       -/
-
--- /--
---   Fix a variable v.
---   If the two value1, s2, agree on all of values v uses in v's def-use chain,
---   then the value of v after denoting the program is also equal.
-
---   This means that we never need to look at the whole context, but only the fragment
---   of the context that contains the expression tree of v.
---   TODO: unused theorem?
---   TODO: this theorem is not true in the impure case: the side-effects that occur outside of the
---     def-use chain for variable `v` might depend on some variable of the valuations that is not part
---     of `lets.vars v`, and might thus differ between these valuations.
---     We could fix it by saying the valuations need to agree on all variables that are used in `lets`,
---     but maybe it's not worth it, given that the theorem is unused
---   -/
--- theorem Lets.denote_eq_of_eq_on_vars [LawfulMonad d.m] (lets : Lets d Γ_in eff Γ_out)
---     (v : Var Γ_out t)
---     {s₁ s₂ : Valuation Γ_in}
---     (h : ∀ w, w ∈ lets.vars v → s₁ w.2 = s₂ w.2) :
---     (lets.denote s₁) >>= (fun Γv => return v.denote Γv) =
---     (lets.denote s₂) >>= (fun Γv => return v.denote Γv) := by
---   simpa using denote_eq_of_eq_on_vars_aux lets v h pure
-
 /-!
 ## Expression Trees
 Morally, a pure `Com` can be represented as just a tree of expressions.
@@ -1869,7 +1796,6 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
       (hvarMap := by simp; exact h1)
     apply List.Subset.trans hmut hind
 
-/- TODO: Lean hangs on this proof! -/
 /--
 matchVar only adds new entries:
   if matchVar lets v matchLets w ma = .some varMap,
@@ -1932,7 +1858,6 @@ end
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]
 
--- TODO: No idea what this does.
 theorem denote_matchVar_matchArg
     {Γ_out Δ_in Δ_out : Ctxt d.Ty} {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out} :
@@ -1965,80 +1890,6 @@ theorem denote_matchVar_matchArg
     · exact hmatchVar
 
 variable [LawfulMonad d.m]
-
--- -- TODO: No idea what this does.
--- /- NOTE: Lean hangs on this proof! -/
--- theorem denote_matchVar_of_subset
---     {lets : Lets d Γ_in .impure Γ_out} {v : Var Γ_out t}
---     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
---     {s₁ : Valuation Γ_in}
---     {ma : Mapping Δ_in Γ_out} :
---     {matchLets : Lets d Δ_in .pure Δ_out} → {w : Var Δ_out t} →
---     (h_sub : varMap₁.entries ⊆ varMap₂.entries) →
---     (h_matchVar : varMap₁ ∈ matchVar lets v matchLets w ma) →
---     (f : _ → d.m α) →
---     ((lets.denote s1 >>= (fun Γ_out_lets =>
---       let Γ_in_matchLets : Valuation Δ_in :=
---           fun t' v' =>
---              match varMap₂.lookup ⟨t', v'⟩ with
---              | .some mappedVar => by exact (Γ_out_lets mappedVar)
---              | .none => by exact default
---       return Γ_in_matchLets) >>= (fun Γ_in_matchLets => f <| (matchLets.denote Γ_in_matchLets) w)) =
---      (lets.denote s1 >>= fun Γ_out_lets => f (Γ_out_lets v)))
---   | .nil, w => by
---     simp [Lets.denote, matchVar]
---     intro h_sub h_mv f
---     split at h_mv
---     next x v₂ heq =>
---       split_ifs at h_mv
---       next v_eq_v₂ =>
---         subst v_eq_v₂
---         injection h_mv with h_mv
---         subst h_mv
---         rw [mem_lookup_iff.mpr ?_]
---         apply h_sub
---         apply mem_lookup_iff.mp
---         exact heq
---     next =>
---       rw [mem_lookup_iff.mpr]
---       injection h_mv with h_mv
---       apply h_sub
---       subst h_mv
---       simp
---   | .lete matchLets _, ⟨w+1, h⟩ => by
---     simp [matchVar]
---     -- apply denote_matchVar_of_subset
---     sorry
---   | .lete matchLets matchExpr, ⟨0, h_w⟩ => by
---     rename_i t'
---     have : t = t' := by simp[List.get?] at h_w; apply h_w.symm
---     subst this
---     simp [matchVar, Bind.bind, Option.bind]
---     intro h_sub h_mv
---     sorry
--- /-
---     split at h_mv
---     · simp_all
---     · rename_i e he
---       rcases e with ⟨op₁, rfl, args₁, regArgs₁⟩
---       rcases matchExpr with ⟨op₂, h, args₂, regArgs₂⟩
---       dsimp at h_mv
---       split_ifs at h_mv with hop
---       · rcases hop with ⟨rfl, hop⟩
---         simp [Lets.denote, Expr.denote]
---         rw [← Lets.denote_getExpr he]
---         clear he
---         simp only [Expr.denote]
---         congr 1
---         · apply denote_matchVar_matchArg (hvarMap := h_mv) h_sub
---           · intro t v₁ v₂ ma ma' hmem hma
---             apply denote_matchVar_of_subset hma
---             apply hmem
---           · exact (fun _ _ _ _ _ h => subset_entries_matchVar h)
---         · dsimp at hop
---           subst hop
---           rfl
--- -/
 
 section DenoteIntoSubtype
 
@@ -2095,11 +1946,6 @@ theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv :
 
 
 end DenoteIntoSubtype
-
--- def Lets.rec' {Γ_in : Ctxt d.Ty} {eff : EffectKind}
---     {motive : {Γ_out : Ctxt d.Ty} → Lets d Γ_in eff Γ_out → Sort u}
-
---  :
 
 theorem matchVar_nil {lets : Lets d Γ_in eff Γ_out} :
     matchVar lets v (.nil : Lets d Δ .pure Δ) w ma = some ma' →
@@ -2230,7 +2076,6 @@ macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith 
 mutual
 
 
-/-- NOTE: Lean hands on this proof -/
 theorem mem_matchVar_matchArg
     {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
@@ -2253,10 +2098,7 @@ theorem mem_matchVar_matchArg
         (mem_matchVar (matchLets := matchLets) h₁ h)
     · exact mem_matchVar_matchArg (l := ts) h₂
         (Finset.mem_biUnion.2 ⟨⟨_, _⟩, hab.1, hab.2⟩)
--- termination_by (sizeOf matchLets, sizeOf l)
--- decreasing_by repeat sorry
 
-/- NOTE: Lean hangs on this proof -/
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
@@ -2324,10 +2166,6 @@ theorem mem_matchVar
       rcases h with ⟨rfl, _⟩
       exact hl
 end
--- decreasing_by => sorry
--- termination_by
---   mem_matchVar_matchArg _ _ _ _ _ matchLets args _ _ _ _ _ _ _ => (sizeOf matchLets, sizeOf args)
---   mem_matchVar _ _ _ _ matchLets _ _ _ _ => (sizeOf matchLets, 0)
 
 /-- A version of `matchVar` that returns a `Hom` of `Ctxt`s instead of the `AList`,
 provided every variable in the context appears as a free variable in `matchExpr`. -/
@@ -2352,13 +2190,9 @@ def matchVarMap {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty}
             (hvarMap := by simp; apply hm) (hvars t v'))
       simp_all
 
-
--- Com.denote c.2.2.1 (Valuation.reassignVar Vtop c.2.2.2.snd x)
-/-
-if matchVarMap lets v matchLets w hvars = .some map,
+/-- if matchVarMap lets v matchLets w hvars = .some map,
 then ⟦lets; matchLets⟧ = ⟦lets⟧(v)
 -/
-
 theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
     {t : d.Ty} {v : Var Γ_out t}
