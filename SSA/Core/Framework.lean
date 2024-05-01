@@ -638,8 +638,8 @@ section Lemmas
 @[simp] lemma Lets.denote_nil {Γ : Ctxt d.Ty} :
     (Lets.nil : Lets d Γ eff Γ).denote = (return ·) := by
   funext; simp [denote]
--- TODO: make `[simp]`
-lemma Lets.denote_lete {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
+
+@[simp] lemma Lets.denote_lete {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
     (lets.lete e).denote = fun V_in => (do
       let V_out ← lets.denote V_in
       let x ← e.denote V_out
