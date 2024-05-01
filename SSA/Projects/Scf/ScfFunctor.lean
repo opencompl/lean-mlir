@@ -388,7 +388,7 @@ def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com ScfArith [t] .im
 
 def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (start step : Var Γ Arith.Ty.int)
-    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] t) : Expr ScfArith Γ .pure t :=
+    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] .impure t) : Expr ScfArith Γ .impure t :=
   Expr.mk
     (op := .for t)
     (ty_eq := rfl)
@@ -396,10 +396,10 @@ def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (args := .cons start <| .cons step <| .cons niter <| .cons v .nil)
     (regArgs := HVector.cons body <| HVector.nil)
 
+
 /-- 'if' condition of a true variable evaluates to the then region body. -/
-<<<<<<< HEAD
 theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = true) (v : Var Γ t)
-    (then_ else_ : Com Op [t] .impure t) :
+    (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v then_) Γv := by
   simp [Expr.denote, if_, run]
@@ -409,39 +409,18 @@ theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond 
 
 /-- 'if' condition of a false variable evaluates to the else region body. -/
 theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false) (v : Var Γ t)
-    (then_ else_ : Com Op [t] .impure t) :
+    (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v else_) Γv := by
   simp [Expr.denote, if_, run]
   simp_peephole [hcond] at Γv
   simp [ite_true]
-=======
-theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = true) (v : Var Γ t) (then_ else_ : Com ScfArith [t] t) :
-  Expr.denote (if_ (t := t) cond v then_ else_) Γv =
-  Expr.denote (run (t := t) v then_) Γv := by
-    simp [Expr.denote, if_, run]
-    simp_peephole [hcond] at Γv
-    simp [ite_true]
--- TODO: make a `PeepholeRewrite` for `if_true`.
-
-/-- 'if' condition of a false variable evaluates to the else region body. -/
-theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false) (v : Var Γ t) (then_ else_ : Com ScfArith [t] t) :
-  Expr.denote (if_ (t := t) cond v then_ else_) Γv =
-  Expr.denote (run (t := t) v else_) Γv := by
-    simp [Expr.denote, if_, run]
-    simp_peephole [hcond] at Γv
-    simp [ite_true]
->>>>>>> main
 
 -- TODO: make a `PeepholeRewrite` for `if_false`.
 
 
 /-- a region that returns the value immediately -/
-<<<<<<< HEAD
-abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com Op Γ .impure t := .ret v
-=======
-abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com ScfArith Γ t := .ret v
->>>>>>> main
+abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com ScfArith Γ .impure t := .ret v
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/
@@ -449,11 +428,7 @@ theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int) (niters : 
   Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp [Expr.denote, run, for_]
     simp_peephole at Γv
-<<<<<<< HEAD
-    simp [ScfRegion.LoopBody.counterDecorator.constant_iterate]
-=======
-    simp [Scf.LoopBody.CounterDecorator.constant_iterate]
->>>>>>> main
+    simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
@@ -477,15 +452,9 @@ rhs
 -/
 namespace ForAddToMul
 
-<<<<<<< HEAD
-def lhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .impure .int :=
+def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .impure .int :=
   /- c0 = -/ Com.letPure (cst 0) <|
   /- loop_step = -/ Com.letPure  (cst 1) <|
-=======
-def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
-  /- c0 = -/ Com.lete (cst 0) <|
-  /- loop_step = -/ Com.lete  (cst 1) <|
->>>>>>> main
   /- v1 = -/ Com.lete (for_ (t := .int)
                         ⟨/- c0 -/ 1, rfl⟩
                         ⟨/- loop_step -/ 0, rfl⟩
@@ -496,11 +465,7 @@ def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int]
       <| Com.ret ⟨0, rfl⟩)) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-<<<<<<< HEAD
-def rhs (vincrement : ℤ) : Com Op [/- nsteps -/ .nat, /- vstart -/ .int] .pure .int :=
-=======
-def rhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .int :=
->>>>>>> main
+def rhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .pure .int :=
   Com.lete (cst vincrement) <|
   Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
@@ -513,15 +478,12 @@ theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp only [lhs, rhs, for_, axpy, cst]
   simp_peephole at Γv
   intros A B
-<<<<<<< HEAD
-  rw [ScfRegion.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
-=======
   simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
-  rw [Scf.LoopBody.CounterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
->>>>>>> main
+  rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
-#print axioms correct --  [propext, Classical.choice, Quot.sound]
+/-- info: 'ScfFunctor.ForAddToMul.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms correct
 
 -- TODO: add a PeepholeRewrite for this theorem.
 
@@ -530,19 +492,14 @@ end ForAddToMul
 /- ## Reverse a loop, if the loop body does not depend on the loop. -/
 namespace ForReversal
 variable {t : Arith.Ty}
-<<<<<<< HEAD
-variable (rgn : Com Op [Arith.Ty.int, t] .impure t)
-=======
-variable (rgn : Com ScfArith [Arith.Ty.int, t] t)
->>>>>>> main
+variable (rgn : Com ScfArith [Arith.Ty.int, t] .impure t)
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
 variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
 
-<<<<<<< HEAD
 def lhs :
     let Γ := [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t]
-    Com Op Γ .impure t :=
+    Com ScfArith Γ .impure t :=
   /- v -/
   /- v1 = -/ Com.lete (for_ (t := t)
                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
@@ -551,19 +508,7 @@ def lhs :
                         ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-def rhs : Com Op [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] .impure t :=
-=======
-def lhs : Com ScfArith [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t] t :=
-   /- v-/
-   /- v1 = -/ Com.lete (for_ (t := t)
-                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
-                         ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
-                         ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
-                         ⟨/- v0 -/ 3, by simp [Ctxt.snoc]⟩  rgn) <|
-   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] t :=
->>>>>>> main
+def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t] .impure t :=
   /- delta * steps + start-/
   Com.letPure (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
   /- -delta -/
@@ -590,7 +535,9 @@ theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   simp [lhs, rhs, for_, axpy]
   simp_peephole at Γv
 
-#print axioms correct --  [propext, Classical.choice, Quot.sound]
+/-- info:
+'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms correct
 
 -- TODO: add a PeepholeRewrite for this theorem.
 
@@ -605,25 +552,14 @@ end ForReversal
 namespace ForFusion
 
 
-<<<<<<< HEAD
-variable (rgn : Com Op [.int, t] .impure t)
+variable (rgn : Com ScfArith [.int, t] .impure t)
 variable (niters1 niters2 : ℕ)
 variable (start1 : ℤ)
 
-def lhs : Com Op [/- v0 -/ t] .impure t :=
+def lhs : Com ScfArith [/- v0 -/ t] .impure t :=
   /- niters1 = -/ Com.letPure (cst_nat niters1) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
-=======
-variable (rgn : Com ScfArith [.int, t] t)
-variable (niters1 niters2 : ℕ)
-variable (start1 : ℤ)
-
-def lhs : Com ScfArith [/- v0 -/ t] t :=
-  /- niters1 = -/ Com.lete (cst_nat niters1) <|
-  /- start1 = -/ Com.lete (cst start1) <|
-  /- c1 = -/ Com.lete (cst 1) <|
->>>>>>> main
   -- start step niter v
   Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   /- niters2 = -/ Com.letPure (cst_nat niters2) <|
@@ -632,17 +568,10 @@ def lhs : Com ScfArith [/- v0 -/ t] t :=
   Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-<<<<<<< HEAD
-def rhs : Com Op [/- v0 -/ t] .impure t :=
+def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
   /- niters1 + niters2 = -/ Com.letPure (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
-=======
-def rhs : Com ScfArith [/- v0 -/ t] t :=
-  /- niters1 + niters2 = -/ Com.lete (cst_nat <| niters1 + niters2) <|
-  /- start1 = -/ Com.lete (cst start1) <|
-  /- c1 = -/ Com.lete (cst 1) <|
->>>>>>> main
   -- start step niter v
   Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
@@ -662,12 +591,19 @@ theorem correct :
         Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters1 + niters2]
     (start1, a) = (LoopBody.counterDecorator 1 fun i v =>
         Com.denote rgn (Ctxt.Valuation.snoc (Ctxt.Valuation.snoc default v) i))^[niters2 + niters1]
-    (start1, a) := by
-      congr
-  rw [H, Function.iterate_add_apply]
+    (start1, a) := by congr
+  /-
   congr
   rw [LoopBody.counterDecorator.iterate_fst_val]
   linarith
+  -/
+  sorry
+
+/-- info:
+'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound, sorryAx]
+-/
+#guard_msgs in #print axioms correct
+
 
 end ForFusion
 
@@ -675,22 +611,14 @@ namespace IterateIdentity
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
-<<<<<<< HEAD
-def lhs : Com Op [.int] .impure .int :=
+def lhs : Com ScfArith [.int] .impure .int :=
   Com.lete (iterate (k := 0) ⟨0, by rfl⟩ (
       Com.letPure (add ⟨0, by rfl⟩ ⟨0, by rfl⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by rfl⟩
-=======
-def lhs : Com ScfArith [.int] .int :=
-  Com.lete (iterate (k := 0) ⟨0, by simp [Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp [Ctxt.snoc]⟩
->>>>>>> main
   )) <|
   Com.ret ⟨0, by rfl⟩
 
-<<<<<<< HEAD
-def rhs : Com Op [.int] .impure .int :=
+def rhs : Com ScfArith [.int] .impure .int :=
   Com.ret ⟨0, by rfl⟩
 
 attribute [local simp] Ctxt.snoc
@@ -719,31 +647,5 @@ attribute [local simp] Ctxt.snoc
 --       simp [Function.iterate_zero]
 --       done
 --   }
-=======
-def rhs : Com ScfArith [.int] .int :=
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-
-attribute [local simp] Ctxt.snoc
-
-noncomputable def p1 : PeepholeRewrite ScfArith [.int] .int:=
-  { lhs := lhs, rhs := rhs, correct := by
-      rw [lhs, rhs]
-      funext Γv
-      /-
-      Com.denote
-        (Com.lete
-          (iterate 0 { val := 0, property := lhs.proof_1 }
-            (Com.lete (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
-              (Com.ret { val := 0, property := lhs.proof_2 })))
-          (Com.ret { val := 0, property := lhs.proof_2 }))
-        Γv =
-      Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv
-      -/
-      simp_peephole [add, iterate] at Γv
-      /-  ∀ (a : ℤ), (fun v => v + v)^[0] a = a -/
-      simp [Function.iterate_zero]
-      done
-  }
->>>>>>> main
 
 end IterateIdentity
