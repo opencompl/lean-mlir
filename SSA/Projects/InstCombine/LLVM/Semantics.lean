@@ -414,6 +414,14 @@ def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
 theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
   icmp? .ult a b =  Option.some (BitVec.ofBool (a <ᵤ b)) := rfl
 
+@[simp]
+theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
+  icmp? .slt a b =  Option.some (BitVec.ofBool (a <ₛ b)) := rfl
+
+@[simp]
+theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
+  icmp? .sgt a b =  Option.some (BitVec.ofBool (a >ₛ b)) := rfl
+
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
   let x' ← x
