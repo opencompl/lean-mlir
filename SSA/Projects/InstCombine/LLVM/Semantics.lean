@@ -172,6 +172,15 @@ def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
   then .none
   else pure (BitVec.sdiv x y)
 
+theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
+  LLVM.sdiv? x 0 = none := by
+  simp [LLVM.sdiv?, BitVec.sdiv]
+
+theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
+    (hx : LLVM.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
+  simp [LLVM.sdiv?]
+  tauto
+
 @[simp_llvm_option]
 def sdiv {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
@@ -400,6 +409,10 @@ The remaining two arguments must be integer. They must also be identical types.
 @[simp_llvm]
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
   pure ↑(icmp' c x y)
+
+@[simp]
+theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
+  icmp? .ult a b =  Option.some (BitVec.ofBool (a <ᵤ b)) := rfl
 
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
