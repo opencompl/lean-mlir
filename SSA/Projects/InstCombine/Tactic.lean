@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.LLVM.SimpSet
-import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
