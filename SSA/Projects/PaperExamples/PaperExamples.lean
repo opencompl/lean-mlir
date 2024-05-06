@@ -48,8 +48,8 @@ abbrev Simple : Dialect where
 
 instance : DialectSignature Simple where
   signature
-    | .const _ => ⟨[], [], .int⟩
-    | .add   => ⟨[.int, .int], [], .int⟩
+    | .const _ => ⟨[], [], .int, .pure⟩
+    | .add   => ⟨[.int, .int], [], .int, .pure⟩
 
 @[reducible]
 instance : DialectDenote Simple where
@@ -57,16 +57,18 @@ instance : DialectDenote Simple where
     | .const n, _, _ => BitVec.ofInt 32 n
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ, _ => a + b
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure .int  :=
   Expr.mk
     (op := .const n)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .pure .int :=
   Expr.mk
     (op := .add)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
@@ -83,30 +85,31 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Simple Ty
 instance instTransformTy : MLIR.AST.TransformTy Simple 0 where
   mkTy := mkTy
 
-def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ ty, Expr Simple Γ ty) := do
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ eff ty, Expr Simple Γ eff ty) := do
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
-    | .some (v, _ty) => return ⟨.int, cst v⟩
+    | .some (v, _ty) => return ⟨.pure, .int, cst v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨.int, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨.int, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-      return ⟨.int, add v₁ v₂⟩
+      return ⟨.pure, .int, add v₁ v₂⟩
     | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr Simple 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ ty, Com Simple Γ ty) :=
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM Simple (Σ eff ty, Com Simple Γ eff ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨ty, Com.ret v⟩
+    return ⟨.pure, ty, Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
@@ -119,7 +122,7 @@ elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Simple)
 end MLIR2Simple
 
 open MLIR AST MLIR2Simple in
-def eg₀ : Com Simple (Ctxt.ofList []) .int :=
+def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   [simple_com| {
     %c2= "const"() {value = 2} : () -> i32
     %c4 = "const"() {value = 4} : () -> i32
@@ -133,7 +136,7 @@ def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
 
 open MLIR AST MLIR2Simple in
 /-- x + 0 -/
-def lhs : Com Simple (Ctxt.ofList [.int]) .int :=
+def lhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
   [simple_com| {
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
@@ -143,7 +146,7 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .int :=
 
 open MLIR AST MLIR2Simple in
 /-- x -/
-def rhs : Com Simple (Ctxt.ofList [.int]) .int :=
+def rhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
   [simple_com| {
     ^bb0(%x : i32):
       "return" (%x) : (i32) -> (i32)
@@ -171,7 +174,7 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       done
     }
 
-def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
+def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
@@ -182,7 +185,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 
-def ex1_rewritePeephole : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeephole (fuel := 100) p1 lhs
+def ex1_rewritePeephole : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
@@ -223,9 +226,9 @@ open SimpleReg (int)
 
 instance : DialectSignature SimpleReg where
   signature
-    | .const _ => ⟨[], [], int⟩
-    | .add   => ⟨[int, int], [], int⟩
-    | .iterate _k => ⟨[int], [([int], int)], int⟩
+    | .const _ => ⟨[], [], int, .pure⟩
+    | .add   => ⟨[int, int], [], int, .pure⟩
+    | .iterate _k => ⟨[int], [([int], int)], int, .pure⟩
 
 @[reducible]
 instance : DialectDenote SimpleReg where
@@ -238,23 +241,27 @@ instance : DialectDenote SimpleReg where
       -- let f_k := Nat.iterate f' k
       -- f_k x
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ int  :=
+def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure int  :=
   Expr.mk
     (op := .const n)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ int :=
+def add {Γ : Ctxt _} (e₁ e₂ : Var Γ int) : Expr SimpleReg Γ .pure int :=
   Expr.mk
     (op := .add)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [int] int) : Expr SimpleReg Γ int :=
+def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [int] .impure int) :
+    Expr SimpleReg Γ .pure int :=
   Expr.mk
-    (op := .iterate k)
+    (op := Op.iterate k)
+    (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
@@ -262,14 +269,14 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [
 attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
-def lhs : Com SimpleReg [int] int :=
-  Com.lete (iterate (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+def lhs : Com SimpleReg [int] .pure int :=
+  Com.lete (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
+      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-def rhs : Com SimpleReg [int] int :=
+def rhs : Com SimpleReg [int] .pure int :=
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 attribute [local simp] Ctxt.snoc

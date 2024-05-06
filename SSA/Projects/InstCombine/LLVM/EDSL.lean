@@ -15,29 +15,32 @@ open MLIR
 namespace InstcombineTransformDialect
 
 def mkUnaryOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.UnaryOp)
-  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ (.bitvec w) :=
+  (e : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec w) :=
   ⟨
     .unary w op,
     rfl,
+    by constructor,
     .cons e .nil,
     .nil
   ⟩
 
 
 def mkBinOp {Γ : Ctxt (MetaLLVM φ).Ty} {w : Width φ} (op : MOp.BinaryOp)
-    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ (.bitvec w) :=
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec w) :=
   ⟨
     .binary w op,
     rfl,
+    by constructor,
     .cons e₁ <| .cons e₂ .nil ,
     .nil
   ⟩
 
 def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
-    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ (.bitvec 1) :=
+    (e₁ e₂ : Ctxt.Var Γ (.bitvec w)) : Expr (MetaLLVM φ) Γ .pure (.bitvec 1) :=
   ⟨
     .icmp p w,
     rfl,
+    by constructor,
     .cons e₁ <| .cons e₂ .nil,
     .nil
   ⟩
@@ -45,7 +48,7 @@ def mkIcmp {Γ : Ctxt _} {w : Width φ} (p : LLVM.IntPredicate)
 
 def mkSelect {Γ : Ctxt (MetaLLVM φ).Ty} {ty : (MetaLLVM φ).Ty} (op : MOp φ)
     (c : Ctxt.Var Γ (.bitvec 1)) (e₁ e₂ : Ctxt.Var Γ ty) :
-    MLIR.AST.ExceptM (MetaLLVM φ) <| Expr (MetaLLVM φ) Γ ty :=
+    MLIR.AST.ExceptM (MetaLLVM φ) <| Expr (MetaLLVM φ) Γ .pure ty :=
   match ty with
   | .bitvec w =>
     match op with
@@ -53,6 +56,7 @@ def mkSelect {Γ : Ctxt (MetaLLVM φ).Ty} {ty : (MetaLLVM φ).Ty} (op : MOp φ)
         then return ⟨
           .select w',
           by simp [DialectSignature.outTy, signature, h],
+          by constructor,
           .cons c <|.cons (h ▸ e₁) <| .cons (h ▸ e₂) .nil ,
           .nil
         ⟩
@@ -68,7 +72,7 @@ instance instTransformTy : MLIR.AST.TransformTy (MetaLLVM φ) φ where
   mkTy := mkTy
 
 def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
-    AST.ReaderM (MetaLLVM φ) (Σ ty, Expr (MetaLLVM φ) Γ ty) := do
+    AST.ReaderM (MetaLLVM φ) (Σ eff ty, Expr (MetaLLVM φ) Γ eff ty) := do
   match opStx.args with
   | v₁Stx::v₂Stx::v₃Stx::[] =>
       let ⟨.bitvec w₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -79,7 +83,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         if hw1 : w₁ = 1 then
           if hw23 : w₂  = w₃ then
             let selectOp ← mkSelect (MOp.select w₂) (hw1 ▸ v₁) v₂ (hw23 ▸ v₃)
-            return ⟨.bitvec w₂, selectOp⟩
+            return ⟨.pure, .bitvec w₂, selectOp⟩
           else
             throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
         else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
@@ -119,8 +123,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
         | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
-        | .inl binOp  => ⟨.bitvec w, mkBinOp binOp v₁ v₂⟩
-        | .inr pred   => ⟨.bitvec 1, mkIcmp pred v₁ v₂⟩
+        | .inl binOp  => ⟨_, _, mkBinOp binOp v₁ v₂⟩
+        | .inr pred   => ⟨_, _, mkIcmp pred v₁ v₂⟩
   | vStx::[] =>
     let ⟨.bitvec w, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     let op ← match opStx.name with
@@ -128,7 +132,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.neg"  => pure .neg
         | "llvm.copy" => pure .copy
         | _ => throw <| .generic s!"Unknown (unary) operation syntax {opStx.name}"
-    return ⟨.bitvec w, mkUnaryOp op v⟩
+    return ⟨_, _, mkUnaryOp op v⟩
   | [] =>
     if opStx.name ==  "llvm.mlir.constant"
     then do
@@ -137,9 +141,10 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     match att with
       | .int val ty =>
           let opTy@(.bitvec w) ← mkTy ty -- ty.mkTy
-          return ⟨opTy, ⟨
+          return ⟨.pure, opTy, ⟨
             MOp.const w val,
             by simp [DialectSignature.outTy, signature, *],
+            by constructor,
             HVector.nil,
             HVector.nil
           ⟩⟩
@@ -152,12 +157,12 @@ instance : AST.TransformExpr (MetaLLVM φ) φ where
   mkExpr := mkExpr
 
 def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
-    MLIR.AST.ReaderM (MetaLLVM φ) (Σ ty, Com (MetaLLVM φ) Γ ty) :=
+    MLIR.AST.ReaderM (MetaLLVM φ) (Σ eff ty, Com (MetaLLVM φ) Γ eff ty) :=
   if opStx.name == "llvm.return"
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨ty, _root_.Com.ret v⟩
+    return ⟨.pure, ty, _root_.Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
@@ -191,18 +196,21 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MetaLLVM φ) LL
     have h1 : ∀ (φ : Nat), 1 = ConcreteOrMVar.concrete (φ := φ) 1 := by intros φ; rfl
     cases op <;>
       simp only [instantiateMTy, instantiateMOp, ConcreteOrMVar.instantiate, (· <$> ·), signature,
-      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map, Signature.mk.injEq,
+      InstCombine.MOp.sig, InstCombine.MOp.outTy, Function.comp_apply, List.map,
+      Signature.mk, Signature.mkEffectful.injEq,
       List.map_cons, List.map_nil, and_self, MTy.bitvec,
       List.cons.injEq, MTy.bitvec.injEq, and_true, true_and,
       RegionSignature.map, Signature.map, h1]
 
 open InstCombine in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MetaLLVM φ) (Vector Nat φ → Σ (Γ : Ctxt InstCombine.Ty) (ty : InstCombine.Ty),
-      Com LLVM Γ ty) := do
-  let ⟨Γ, ty, com⟩ ← MLIR.AST.mkCom reg
+    MLIR.AST.ExceptM (MetaLLVM φ) (Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
+  let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
   return fun vals =>
-    ⟨instantiateCtxt vals Γ, instantiateMTy vals ty, com.map (MOp.instantiateCom vals)⟩
+    let Γ' := instantiateCtxt vals Γ
+    let ty' := instantiateMTy vals ty
+    let com' := com.changeDialect (MOp.instantiateCom vals)
+    ⟨Γ', eff, ty', com'⟩
 
 end InstcombineTransformDialect
 
@@ -227,7 +235,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   let com ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} building final Expr") <| do
     let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
-    let com ← mkAppM ``Com.map #[instantiateFun, mcom]
+    let com ← mkAppM ``Com.changeDialect #[instantiateFun, mcom]
     synthesizeSyntheticMVarsNoPostponing
     return com
 

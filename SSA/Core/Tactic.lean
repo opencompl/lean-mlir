@@ -106,6 +106,14 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
         List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
         bind_assoc, pairBind,
+        /- `castPureToEff` -/
+        Com.letPure, Expr.denote_castPureToEff,
+        /- Unfold denotation -/
+        Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
+        /- Effect massaging -/
+        EffectKind.toMonad_pure, EffectKind.toMonad_impure,
+        EffectKind.liftEffect_rfl,
+        Id.pure_eq, Id.bind_eq, id_eq,
         /-
         NOTE (Here Be Dragons 🐉): the parenthesis in `(HVector.denote_cons)` are significant!
         `HVector.denote` has a typeclass assumption `TyDenote (Dialect.Ty d)`, where `d : Dialect`.

@@ -27,38 +27,44 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (FHE q n) (FHE q n).Ty
 instance instTransformTy : MLIR.AST.TransformTy (FHE q n) 0 where
   mkTy := mkTy
 
-def cstInt {Γ : Ctxt _} (z :Int) : Expr (FHE q n) Γ .integer  :=
+def cstInt {Γ : Ctxt _} (z :Int) : Expr (FHE q n) Γ .pure .integer  :=
   Expr.mk
     (op := .const_int z)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 
-def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (FHE q n) Γ .index :=
+def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (FHE q n) Γ .pure .index :=
   Expr.mk
     (op := .const_idx i)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .polynomialLike :=
+def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .polynomialLike :=
+def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := .mul)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) : Expr (FHE q n) Γ .polynomialLike :=
+def mon {Γ : Ctxt (Ty q n)} (a : Var Γ .integer) (i : Var Γ .index) :
+    Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := .monomial)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .cons a <| .cons i .nil)
     (regArgs := .nil)
 
@@ -118,28 +124,31 @@ lemma ROfZComputable_def (q n :Nat) (z : ℤ) : ROfZComputable_stuck_term  q n z
   unfold ROfZComputable_stuck_term
   rfl
 
-def cstComputable {Γ : Ctxt _} (z : Int) : Expr (FHE q n) Γ .polynomialLike :=
+def cstComputable {Γ : Ctxt _} (z : Int) : Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := Op.const (ROfZComputable_stuck_term q n z))
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 end CstComputable
 
-def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
-    MLIR.AST.ReaderM (FHE q n) (Σ ty, Expr (FHE q n) Γ ty) := do
+def mkExpr (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM (FHE q n) (Σ eff ty, Expr (FHE q n) Γ eff ty) := do
   match opStx.name with
   | "poly.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, _ty) =>
-      return ⟨.polynomialLike, cstComputable v⟩
+      return ⟨_, .polynomialLike, cstComputable v⟩
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
   | "arith.const" =>
     match opStx.attrs.find_int "value" with
     | .some (v, vty) => match vty with
         | .int _ _ => match opStx.res with
-          | [(_,MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _)] => return ⟨.integer, cstInt v⟩
-          | [(_,MLIR.AST.MLIRType.index)] => return ⟨.index, cstIdx v.toNat⟩
+          | [(_,MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _)] =>
+              return ⟨_, .integer, cstInt v⟩
+          | [(_,MLIR.AST.MLIRType.index)] =>
+              return ⟨_, .index, cstIdx v.toNat⟩
           | _ => throw <| .generic s!"unsupported result type {repr opStx.res} for arith.const"
         | _ => throw <| .generic s!"unsupported constant type {repr vty} for arith.const"
     | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
@@ -149,7 +158,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂ with
-        | .integer, .index => return ⟨.polynomialLike, mon v₁ v₂⟩
+        | .integer, .index => return ⟨_, .polynomialLike, mon v₁ v₂⟩
         | _, _ => throw <| .generic s!"expected operands to be of types `integer` and `index` for `monomial`. Got: {repr ty₁}, {repr ty₂}"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | "poly.add" =>
@@ -158,7 +167,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂ with
-        | .polynomialLike, .polynomialLike => return ⟨.polynomialLike, add v₁ v₂⟩
+        | .polynomialLike, .polynomialLike => return ⟨_, .polynomialLike, add v₁ v₂⟩
         | _, _ => throw <| .generic s!"expected both operands to be of type 'polynomialLike'"
     | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
@@ -166,12 +175,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
 instance : MLIR.AST.TransformExpr (FHE q n) 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (FHE q n) (Σ ty, Com (FHE q n) Γ ty) :=
+def mkReturn (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (FHE q n)
+    (Σ eff ty, Com (FHE q n) Γ eff ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨ty, Com.ret v⟩
+    return ⟨.pure, ty, Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 

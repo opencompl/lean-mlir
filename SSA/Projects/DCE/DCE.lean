@@ -145,7 +145,6 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     intros V
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at *
-    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
     simp[Ctxt.Valuation.eval]
     simp[Deleted.pushforward_Valuation]
     simp[Deleted.pullback_var]
@@ -210,6 +209,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
 
 namespace DCE
 variable {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] [DecidableEq d.Ty]
+  [Monad d.m] [LawfulMonad d.m]
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
@@ -239,14 +239,14 @@ def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : Γ.Var α} {Γ' : Ctxt d.Ty} {ts :
         ⟩
 
 /- Try to delete a variable from an Expr -/
-def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ t) :
-  Option { e' : Expr d Γ' t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
+def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ .pure t) :
+  Option { e' : Expr d Γ' .pure t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
   match e with
-  | .mk op ty_eq args regArgs =>
+  | .mk op ty_eq eff_le args regArgs =>
     match arglistDeleteVar? DEL args with
     | .none => .none
     | .some args' =>
-      .some ⟨.mk op ty_eq args' regArgs, by
+      .some ⟨.mk op ty_eq eff_le args' regArgs, by
         intros V
         rw[Expr.denote_unfold]
         rw[Expr.denote_unfold]
@@ -289,8 +289,8 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
         | exfalso; linarith
 
 /-- Delete a variable from an Com. -/
-def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ t) :
-  Option { com' : Com d Γ' t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
+def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
+  Option { com' : Com d Γ' .pure t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
   match com with
   | .ret v =>
     match Var.tryDelete? DEL v with
@@ -317,13 +317,13 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ t) :
    This is necessary so that we can mark the DCE implementation as a `partial def` and ensure that Lean
    does not freak out on us, since it's indeed unclear to Lean that the output type of `dce` is always inhabited.
 -/
-def DCEType [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) : Type :=
+def DCEType [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) : Type :=
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
-    { com' : Com d Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)}
+    { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)}
 
 /-- Show that DCEType in inhabited. -/
-instance [SIG : DialectSignature d] [DENOTE : DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
-    Inhabited (DCEType com) where
+instance [SIG : DialectSignature d] [DENOTE : DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty}
+    (com : Com d Γ .pure t) : Inhabited (DCEType com) where
   default :=
     ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩
 
@@ -331,8 +331,8 @@ instance [SIG : DialectSignature d] [DENOTE : DialectDenote d] {Γ : Ctxt d.Ty} 
 Note that this is `O(n^2)`, for an easy proofs, as it is written as a forward pass.
 The fast `O(n)` version is a backward pass.
 -/
-partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
-    DCEType com :=
+partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty}
+    (com : Com d Γ .pure t) : DCEType com :=
   match HCOM: com with
   | .ret v => -- If we have a `ret`, return it.
     ⟨Γ, Ctxt.Hom.id, ⟨.ret v, by
@@ -346,25 +346,24 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
     match Com.deleteVar? DEL body with
     | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-        : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com d Γ' t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
+        : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com d Γ' .pure t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
       let com' := Com.lete (α := α) e (body'.changeVars hom')
       ⟨Γ, Ctxt.Hom.id, com', by
         intros V
         simp (config := {zetaDelta := true}) [Com.denote]
         rw[hbody']
-        rfl
       ⟩
     | .some ⟨body', hbody⟩ =>
       let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-      : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com d Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
+      : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
-          simp[HCOM]
+          simp [HCOM]
           intros V
           apply hbody
         ⟩⟩
       let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
-        :   Σ (Γ'' : Ctxt d.Ty) (hom: Ctxt.Hom Γ'' Γ'), { com'' : Com d Γ'' t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
+        :   Σ (Γ'' : Ctxt d.Ty) (hom : Ctxt.Hom Γ'' Γ'), { com'' : Com d Γ'' .pure t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
         dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
       ⟨Γ'', hom''.comp hom', com'', by
         intros V
@@ -381,21 +380,17 @@ decreasing_by {
 
 /-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where we play the `DCEType` trick
 to convince Lean that the output type is in fact inhabited. -/
-def dce [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
+def dce [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
-    { com' : Com d Γ' t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
+    { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
   dce_ com
 
 /-- A version of DCE that returns an output program with the same context. It uses the context
    morphism of `dce` to adapt the result of DCE to work with the original context -/
-def dce' [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ t) :
-    { com' : Com d Γ t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
+def dce' [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
+    { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
-  ⟨com'.changeVars hom, by
-    intros V
-    rw[hcom']
-    unfold Ctxt.Valuation.comap
-    simp[Ctxt.Valuation.comap]⟩
+  ⟨com'.changeVars hom, by simp [hcom']⟩
 
 namespace Examples
 
@@ -423,9 +418,9 @@ abbrev Ex : Dialect where
 
 instance : DialectSignature Ex where
   signature
-    | .add    => ⟨[.nat, .nat], [], .nat⟩
-    | .beq    => ⟨[.nat, .nat], [], .bool⟩
-    | .cst _  => ⟨[], [], .nat⟩
+    | .add    => ⟨[.nat, .nat], [], .nat, .pure⟩
+    | .beq    => ⟨[.nat, .nat], [], .bool, .pure⟩
+    | .cst _  => ⟨[], [], .nat, .pure⟩
 
 @[reducible]
 instance : DialectDenote Ex where
@@ -434,31 +429,33 @@ instance : DialectDenote Ex where
     | .add, .cons (a : Nat) (.cons b .nil), _ => a + b
     | .beq, .cons (a : Nat) (.cons b .nil), _ => a == b
 
-def cst {Γ : Ctxt _} (n : ℕ) : Expr Ex Γ .nat  :=
+def cst {Γ : Ctxt _} (n : ℕ) : Expr Ex Γ .pure .nat  :=
   Expr.mk
     (op := .cst n)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .nat :=
+def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
+    (eff_le := by constructor)
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
 attribute [local simp] Ctxt.snoc
 
-def ex1_pre_dce : Com Ex ∅ .nat :=
+def ex1_pre_dce : Com Ex ∅ .pure .nat :=
   Com.lete (cst 1) <|
   Com.lete (cst 2) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 /-- TODO: how do we evaluate 'ex1_post_dce' within Lean? :D -/
-def ex1_post_dce : Com Ex ∅ .nat := (dce' ex1_pre_dce).val
+def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 
-def ex1_post_dce_expected : Com Ex ∅ .nat :=
+def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
   Com.lete (cst 1) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 

@@ -256,9 +256,9 @@ abbrev LLVM : Dialect where
   Ty := Ty
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
-  signature op := ⟨op.sig, [], op.outTy⟩
+  signature op := ⟨op.sig, [], op.outTy, .pure⟩
 instance : DialectSignature LLVM where
-  signature op := ⟨op.sig, [], op.outTy⟩
+  signature op := ⟨op.sig, [], op.outTy, .pure⟩
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :

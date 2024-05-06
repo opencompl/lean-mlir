@@ -141,7 +141,7 @@ def Tensor2D : Dialect where
 
 @[reducible]
 instance : DialectSignature Tensor2D where
-  signature op := ⟨op.sig, op.regSig, op.outTy⟩
+  signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy }
 
 
 /-

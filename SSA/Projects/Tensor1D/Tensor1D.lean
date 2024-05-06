@@ -360,7 +360,7 @@ def Tensor1D : Dialect where
   Ty := Ty
 
 instance : DialectSignature Tensor1D where
-  signature op := ⟨op.sig, op.regSig, op.outTy⟩
+  signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy, effectKind := .pure }
 
 /-
 -- Error: unknown free variable: _kernel_fresh.459

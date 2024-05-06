@@ -35,14 +35,15 @@ where the arguments to `Expr.mk` are not reduced -/
 partial def comNf (com : Expr) : MetaM Expr := do
   let com ← whnf com
   match_expr com with
-    | Com.lete d opSig Γ α β e body =>
+    | Com.lete d opSig Γ eff α β e body =>
         let Γ ← ctxtNf Γ
+        let eff ← whnf eff
         let α ← whnf α
         let β ← whnf β
         let e ← whnf e
         let body ← comNf body
-        return mkAppN (.const ``Com.lete []) #[d, opSig, Γ, α, β, e, body]
-    | Com.ret _d _inst _Γ _t _ => return com
+        return mkAppN (.const ``Com.lete []) #[d, opSig, Γ, eff, α, β, e, body]
+    | Com.ret _d _inst _Γ _eff _t _ => return com
     | _ => throwError "Expected `Com.lete _ _` or `Com.ret _`, found:\n\t{com}"
 
 /--
@@ -57,12 +58,12 @@ elab "[foo_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(FooOp)
 ```
 -/
 def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
-    (_DialectSignature : Q(DialectSignature $d) := by exact q(by infer_instance))
+    (_dialectSignature : Q(DialectSignature $d) := by exact q(by infer_instance))
     (_transformTy      : Q(TransformTy $d $φ)     := by exact q(by infer_instance))
     (_transformExpr    : Q(TransformExpr $d $φ)   := by exact q(by infer_instance))
     (_transformReturn  : Q(TransformReturn $d $φ) := by exact q(by infer_instance)) :
     TermElabM Expr := do
-  let com : Q(ExceptM $d (Σ (Γ' : Ctxt ($d).Ty) (ty : ($d).Ty), Com $d Γ' ty)) ←
+  let com : Q(ExceptM $d (Σ Γ' eff ty, Com $d Γ' eff ty)) ←
     withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} building `Com` expression") <| do
     let ast_stx ← `([mlir_region| $region])
     let ast ← elabTermEnsuringTypeQ ast_stx q(Region $φ)
@@ -73,20 +74,23 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
   withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} unwrapping `Com` expression") <| do
     /- Now we repeatedly call `whnf` and then match on the resulting expression, to extract an
       expression of type `Com ..` -/
-    let com : Q(ExceptM $d (Σ (Γ' : Ctxt ($d).Ty) (ty : ($d).Ty), Com $d Γ' ty)) ← whnf com
+    let com : Q(ExceptM $d (Σ Γ' eff ty, Com $d Γ' eff ty)) ← whnf com
     match com.app3? ``Except.ok with
     | .some (_εexpr, _αexpr, expr) =>
-        let (expr : Q(Σ Γ ty, Com $d Γ ty)) ← whnf expr
+        let (expr : Q(Σ Γ eff ty, Com $d Γ eff ty)) ← whnf expr
         match expr.app4? ``Sigma.mk with
         | .some (_αexpr, _βexpr, (_Γ : Q(Ctxt ($d).Ty)), expr) =>
-          let (expr : Q(Σ ty, Com $d $_Γ ty)) ← whnf expr
+          let (expr : Q(Σ eff ty, Com $d $_Γ eff ty)) ← whnf expr
           match expr.app4? ``Sigma.mk with
-          | .some (_αexpr, _βexpr, (_ty : Q(($d).Ty)), (com : Q(Com $d $_Γ $_ty))) =>
-              /- Finally, use `comNf` to ensure the resulting expression is of the form
-                  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
-                where the arguments to `Expr.mk` are not reduced -/
-              withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
-                comNf com
-          | .none => throwError "Found `Except.ok (Sigma.mk _ WRONG)`, Expected (Except.ok (Sigma.mk _ (Sigma.mk _ _))"
+          | .some (_αexpr, _βexpr, (_eff : Q(EffectKind)), expr) =>
+            match expr.app4? ``Sigma.mk with
+            | .some (_αexpr, _βexpr, (_ty : Q(($d).Ty)), (com : Q(Com $d $_Γ $_eff $_ty))) =>
+                /- Finally, use `comNf` to ensure the resulting expression is of the form
+                    `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
+                  where the arguments to `Expr.mk` are not reduced -/
+                withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
+                  comNf com
+            | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
+          | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
         | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
     | .none => throwError "Expected `Except.ok`, found {com}"
