@@ -160,10 +160,6 @@ theorem ofInt_one_eq_ofNat_one (w : Nat) : BitVec.ofInt w 1 = BitVec.ofNat w 1 :
     simp
     norm_cast
 
-lemma allOnes_eq_minus_one (w : Nat) : allOnes w = -1#w := by
-  ext
-  simp
-
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
   simp only [BitVec.sdiv]
@@ -171,7 +167,7 @@ def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
   rw [BitVec.msb_one]
-  simp only [allOnes_eq_minus_one]
+  simp only [negOne_eq_allOnes]
   exact h
 
 theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
@@ -256,7 +252,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
           simp only [_root_.neg_zero]
           assumption
         · rw [neg_neq_iff_neq_neg]
-          rw [BitVec.allOnes_eq_minus_one] at hao
+          rw [← negOne_eq_allOnes] at hao
           assumption
       · simp [BitVec.ofInt_zero_eq]
         apply BitVec.udiv_one_eq_zero
