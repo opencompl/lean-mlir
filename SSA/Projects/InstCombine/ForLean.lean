@@ -1,5 +1,6 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
 import SSA.Projects.InstCombine.Tactic -- TODO: remove and get rid of ring_nf use
+import SSA.Projects.InstCombine.ForMathlib
 
 lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
   simp only [← pow_succ, gt_iff_lt, Nat.ofNat_pos, ne_eq, OfNat.ofNat_ne_one,
@@ -208,14 +209,33 @@ lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ n#w) : a.toNat 
     rw [Nat.mod_eq_of_lt hn]
   contradiction
 
+lemma neg_neg {a : BitVec w} : - - a = a := by
+  by_cases h : a = 0
+  · subst h
+    simp
+  · rw [toNat_eq]
+    rw [toNat_neg]
+    rw [toNat_neg]
+    have h2 : BitVec.toNat a < 2 ^w := BitVec.toNat_lt a
+    rw [toNat_eq] at h
+    simp at h
+    rw [Nat.mod_eq_of_lt]
+    rw [Nat.mod_eq_of_lt]
+    omega
+    omega
+    rw [Nat.mod_eq_of_lt]
+    omega
+    omega
+
 lemma neg_neq_iff_neq_neg {a b : BitVec w} : -a ≠ b ↔ a ≠ -b:= by
   constructor
   · intro h h'
     subst h'
-    simp at h
+    simp [BitVec.neg_neg] at h
   · intro h h'
     subst h'
-    simp at h
+    simp [BitVec.neg_neg] at h
+
 
 lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a > 1 := by
   simp [BitVec.lt_def]
