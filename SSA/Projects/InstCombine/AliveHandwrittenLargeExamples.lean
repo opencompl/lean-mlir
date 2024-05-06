@@ -451,4 +451,97 @@ Proof:
 -/
 end AndOrXor
 
+
+namespace Select
+
+/-
+Name: Select:746
+%c = icmp slt %A, 0
+%minus = sub 0, %A
+%abs = select %c, %A, %minus
+%c2 = icmp sgt %abs, 0
+%minus2 = sub 0, %abs
+%abs2 = select %c2, %abs, %minus2
+  =>
+%c = icmp slt %A, 0
+%minus = sub 0, %A
+%abs = select %c, %A, %minus
+%c3 = icmp sgt %A, 0
+%abs2 = select %c3, %A, %minus
+-/
+
+open ComWrappers
+def Select746_lhs (w : ℕ):
+  Com InstCombine.LLVM
+    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  /- c0     = -/ Com.lete (const w 0) <|
+  /- c      = -/ Com.lete (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
+  /- minus  = -/ Com.lete (sub w /-c0-/ 1 /-A-/ 2) <|
+  /- abs    = -/ Com.lete (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
+  /- c2     = -/ Com.lete (icmp w .sgt /-abs-/ 0 /-c0-/ 3) <|
+  /- minus2 = -/ Com.lete (sub w /-c0-/ 4 /-abs-/ 1) <|
+  /- abs2   = -/ Com.lete (select w /-c2-/ 1/-abs-/ 2 /-minus2-/ 0) <|
+  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+
+def Select746_rhs (w : ℕ):
+  Com InstCombine.LLVM
+    [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  /- c0     = -/ Com.lete (const w 0) <|
+  /- c      = -/ Com.lete (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
+  /- minus  = -/ Com.lete (sub w /-c0-/ 1 /-A-/ 2) <|
+  /- abs    = -/ Com.lete (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
+  /- c3     = -/ Com.lete (icmp w .sgt /-A-/ 4 /-c0-/ 3) <|
+  /- abs2   = -/ Com.lete (select w /-c3-/ 0/-A-/ 5 /-minus-/ 2) <|
+  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+
+def alive_simplifySelect764 (w : Nat) :
+  Select746_lhs w ⊑ Select746_rhs w := by
+  simp only [Select746_lhs, Select746_rhs]
+  simp only [simp_llvm_wrap]
+  simp_alive_ssa
+  simp_alive_undef
+  intros A
+  rcases A with rfl | A  <;> simp [Option.bind, Bind.bind]
+  by_cases zero_sgt_A : BitVec.ofInt w 0 >ₛ A
+  · simp [zero_sgt_A]
+  · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
+    by_cases neg_A_sgt_zero : -A >ₛ BitVec.ofInt w 0
+    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
+      · by_cases A_eq_zero : A = 0
+        simp only [A_eq_zero, ofNat_eq_ofNat, BitVec.neg_zero]
+        by_cases A_eq_intMin : A = intMin w
+        simp only [A_eq_intMin, intMin_eq_neg_intMin]
+        have A_ne_intMin : A ≠ intMin w := by
+          simp [A_eq_intMin]
+        have A_ne_zero : A ≠ 0 := by
+          simp only [ofNat_eq_ofNat] at A_eq_zero
+          simp [A_eq_zero]
+        rw [sgt_zero_eq_not_neg_sgt_zero A A_ne_intMin A_ne_zero] at A_sgt_zero
+        simp only at neg_A_sgt_zero
+        simp [neg_A_sgt_zero] at A_sgt_zero
+      simp [A_sgt_zero]
+    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      · simp [A_sgt_zero]
+      · by_cases A_eq_zero : A = 0
+        simp only [A_eq_zero, ofNat_eq_ofNat, ofInt_zero_eq, sgt_same, ofBool_false,
+          BitVec.neg_zero, Refinement.refl]
+        by_cases A_eq_intMin : A = intMin w
+        · simp [A_eq_intMin, BitVec.ofInt_zero_eq, sgt_same, intMin_not_gt_zero,
+            intMin_eq_neg_intMin]
+        · have neg_not_sgt_zero : ¬(-A >ₛ BitVec.ofInt w 0) = true → (A >ₛ BitVec.ofInt w 0) = true
+            := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
+          apply neg_not_sgt_zero at neg_A_sgt_zero
+          simp only at neg_A_sgt_zero
+          simp only [Bool.not_eq_true] at A_sgt_zero
+          rw [A_sgt_zero] at neg_A_sgt_zero
+          contradiction
+
+/-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms alive_simplifySelect764
+
+end Select
 end AliveHandwritten
