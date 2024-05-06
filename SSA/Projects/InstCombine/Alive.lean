@@ -22,3 +22,6 @@ import SSA.Projects.InstCombine.TacticAuto
 
 -- Theorems to be upstreamed.
 import SSA.Projects.InstCombine.ForLean
+
+-- Theorems about our LLVM-level semantics.
+import SSA.Projects.InstCombine.LLVM.Lemmas
