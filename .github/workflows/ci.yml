@@ -49,6 +49,13 @@ jobs:
           sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
           cd test/bruteforce-correctness && ./run.sh
 
+      - name: Check for changes in AliveStatements
+        run: |
+          lake -R exe cache get
+          lake build
+          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+
 #     - name: Run executable ⚙️
 #       run: |
 #         ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
