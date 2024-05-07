@@ -60,15 +60,46 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,
         DerivedCtxt.ofCtxt_empty, Valuation.snoc_last,
-        Com.denote, Expr.denote, HVector.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
+        Com.denote, Expr.denote, Var.zero_eq_last, Var.succ_eq_toSnoc,
         Ctxt.empty, Ctxt.empty_eq, Ctxt.snoc, Ctxt.Valuation.nil, Ctxt.Valuation.snoc_last, Ctxt.map,
         Ctxt.Valuation.snoc_eval, Ctxt.ofList, Ctxt.Valuation.snoc_toSnoc,
         HVector.map, HVector.getN, HVector.get, HVector.toSingle, HVector.toPair, HVector.toTuple,
-        OpDenote.denote, Expr.op_mk, Expr.args_mk,
+        DialectDenote.denote, Expr.op_mk, Expr.args_mk,
         DialectMorphism.mapOp, DialectMorphism.mapTy, List.map, Ctxt.snoc, List.map,
         Function.comp, Valuation.ofPair, Valuation.ofHVector, Function.uncurry,
         List.length_singleton, Fin.zero_eta, List.map_eq_map, List.map_cons, List.map_nil,
         bind_assoc, pairBind,
+        /- `castPureToEff` -/
+        Com.letPure, Expr.denote_castPureToEff,
+        /- Unfold denotation -/
+        Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
+        /- Effect massaging -/
+        EffectKind.toMonad_pure, EffectKind.toMonad_impure,
+        EffectKind.liftEffect_rfl,
+        Id.pure_eq, Id.bind_eq, id_eq,
+        /-
+        NOTE (Here Be Dragons 🐉): the parenthesis in `(HVector.denote_cons)` are significant!
+        `HVector.denote` has a typeclass assumption `TyDenote (Dialect.Ty d)`, where `d : Dialect`.
+        However, we tend to define `d` as an `abbrev`, so that our goal statement might have
+        `HVector.denote` where the concrete instance is `instTyDenote : TyDenote Ty`,
+          and `Ty` is the expression that `d` was defined with.
+
+        We've observed `simp [HVector.denote]` not working in such situations.
+          Even more surprising, `rw [HVector.denote]` *did* succeed in rewriting.
+        According to Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358861409):
+        > simp [(X)] is a standard trick to fix simp [X] not working
+
+        By default, it seems that `simp` will synthesize typeclass arguments of a lemma, and then
+        use the *default* instance to determine whether a simp-lemma applies to the current goal.
+        Writing `simp [(X)]`, on the other hand, is equivalent to writing `simp [@X _ _ _]`
+          (for as many underscores as `X` takes arguments, implicit or explicit).
+        The parentheses seems to enable `simp` to unify typeclass arguments as well, and thus the
+          simp-lemma applies even for non-standard instances.
+
+        One caveat: `simp [(X)]` only works if `X` is a lemma, *not* if `X` is a definition to be
+        unfolded. Thus, we replace `HVector.denote` with its equation lemmas
+          `(HVector.denote_cons)` and `(HVector.denote_nil)` -/
+        (HVector.denote_cons), (HVector.denote_nil),
         $ts,*]
 
       -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run

@@ -69,7 +69,6 @@ lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
     ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
   simp [instantiate]
   simp [Vector.get]
-  simp [List.nthLe]
 
 @[simp]
 lemma instantiate_mvar_zero' :

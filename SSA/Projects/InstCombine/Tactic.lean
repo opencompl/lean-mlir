@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Projects.InstCombine.LLVM.SimpSet
-import SSA.Projects.InstCombine.AliveStatements
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
@@ -56,6 +55,7 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (dsimp (config := {failIfUnchanged := false }) only [Com.Refinement]
+      dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
       dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc] -- TODO: added by Tobias ->  double-check.
       dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last, List.map] -- @bollu is scared x(
@@ -63,10 +63,11 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?] -- TODO: added by Tobias ->  double-check.
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom,
-        InstcombineTransformDialect.instantiateMTy_eq, ConcreteOrMVar.instantiate_mvar_zero']
+        ConcreteOrMVar.instantiate_mvar_zero']
       dsimp (config := {failIfUnchanged := false }) only [
         ConcreteOrMVar.instantiate_mvar_zero''] -- TODO: added by Tobias ->  double-check.
       dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
+      dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [Ctxt.map, Ctxt.snoc]
    )
  )
 

@@ -25,8 +25,8 @@ instance instParseableTuple [A : Cli.ParseableType α] [B : Cli.ParseableType β
 
 abbrev MContext φ := Ctxt <| MTy φ
 abbrev Context := MContext 0
-abbrev MCom φ := Com (MOp φ)
-abbrev MExpr φ := Expr (MOp φ)
+abbrev MCom φ := Com (MetaLLVM φ)
+abbrev MExpr φ := Expr (MetaLLVM φ)
 
 instance : ToString Context := inferInstanceAs (ToString (List <| MTy 0))
 
@@ -35,7 +35,8 @@ structure CliTest where
   mvars : Nat
   context : MContext mvars
   ty : MTy mvars
-  code : MCom mvars context ty
+  eff : EffectKind
+  code : MCom mvars context eff ty
 
 def CliTest.signature (test : CliTest) :
   List (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
@@ -101,7 +102,8 @@ structure ConcreteCliTest where
   name : Name
   context : Context
   ty : Ty
-  code : MCom 0 context ty
+  -- TODO: add support for impure CLI tests
+  code : MCom 0 context .pure ty
 
 def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars) (hMvars : mvars = 0) : InstCombine.MTy 0 :=
     hMvars ▸ ty

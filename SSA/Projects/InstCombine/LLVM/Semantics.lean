@@ -12,7 +12,7 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 namespace LLVM
 
 
-abbrev IntW w := Option <| BitVec w
+def IntW w := Option <| BitVec w
 
 /--
 The ‘and’ instruction returns the bitwise logical and of its two operands.
@@ -20,6 +20,9 @@ The ‘and’ instruction returns the bitwise logical and of its two operands.
 @[simp_llvm]
 def and? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x &&& y
+
+@[simp_llvm_option]
+theorem and?_eq : LLVM.and? a b  = .some (BitVec.and a b) := rfl
 
 @[simp_llvm_option]
 def and {w : Nat} (x y : IntW w) : IntW w := do
@@ -35,6 +38,8 @@ operands.
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ||| y
 
+@[simp_llvm_option]
+theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 
 @[simp_llvm_option]
 def or {w : Nat} (x y : IntW w) : IntW w := do
@@ -52,6 +57,9 @@ def xor? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ^^^ y
 
 @[simp_llvm_option]
+theorem xor?_eq : LLVM.xor? a b  = .some (BitVec.xor a b) := rfl
+
+@[simp_llvm_option]
 def xor {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -67,6 +75,9 @@ def add? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x + y
 
 @[simp_llvm_option]
+theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
+
+@[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) : IntW w := do
   let x' ← x
   let y' ← y
@@ -80,6 +91,9 @@ Because LLVM integers use a two’s complement representation, this instruction 
 @[simp_llvm]
 def sub? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x - y
+
+@[simp_llvm_option]
+theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
 
 @[simp_llvm_option]
 def sub {w : Nat} (x y : IntW w) : IntW w := do
@@ -101,6 +115,9 @@ sign-extended or zero-extended as appropriate to the width of the full product.
 @[simp_llvm]
 def mul? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x * y
+
+@[simp_llvm_option]
+theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
 
 @[simp_llvm_option]
 def mul {w : Nat} (x y : IntW w) : IntW w := do
@@ -153,7 +170,16 @@ at width 2, -4 / -1 is considered overflow!
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
   if y == 0 || (w != 1 && x == (intMin w) && y == -1)
   then .none
-  else BitVec.sdiv x y
+  else pure (BitVec.sdiv x y)
+
+theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
+  LLVM.sdiv? x 0 = none := by
+  simp [LLVM.sdiv?, BitVec.sdiv]
+
+theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
+    (hx : LLVM.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
+  simp [LLVM.sdiv?]
+  tauto
 
 @[simp_llvm_option]
 def sdiv {w : Nat} (x y : IntW w) : IntW w := do
@@ -384,6 +410,18 @@ The remaining two arguments must be integer. They must also be identical types.
 def icmp? {w : Nat} (c : IntPredicate) (x y : BitVec w) : IntW 1 :=
   pure ↑(icmp' c x y)
 
+@[simp]
+theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
+  icmp? .ult a b =  Option.some (BitVec.ofBool (a <ᵤ b)) := rfl
+
+@[simp]
+theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
+  icmp? .slt a b =  Option.some (BitVec.ofBool (a <ₛ b)) := rfl
+
+@[simp]
+theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
+  icmp? .sgt a b =  Option.some (BitVec.ofBool (a >ₛ b)) := rfl
+
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPredicate) (x y : IntW w) : IntW 1 := do
   let x' ← x
@@ -411,9 +449,15 @@ TODO: double-check that truncating works the same as MLIR (signedness, overflow,
 def const? (i : Int): IntW w :=
   pure <| BitVec.ofInt w i
 
+@[simp_llvm_option]
+theorem LLVM.const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
+
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
   pure (~~~x)
+
+@[simp_llvm_option]
+theorem LLVM.not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -423,6 +467,9 @@ def not {w : Nat} (x : IntW w) : IntW w := do
 @[simp_llvm]
 def neg? {w : Nat} (x : BitVec w) : IntW w := do
   pure <| (-.) x
+
+@[simp_llvm_option]
+theorem LLVM.neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
