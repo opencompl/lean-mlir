@@ -1,6 +1,7 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.Tactic -- TODO: remove and get rid of ring_nf use
 import SSA.Projects.InstCombine.ForMathlib
+import SSA.Projects.InstCombine.LLVM.Semantics
+import Mathlib.Tactic
 
 lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
   simp only [← pow_succ, gt_iff_lt, Nat.ofNat_pos, ne_eq, OfNat.ofNat_ne_one,
