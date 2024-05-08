@@ -292,8 +292,6 @@ def sdiv_one_one' (h : 1 < w) : BitVec.sdiv 1#w 1#w = 1#w := by
   apply BitVec.eq_of_toNat_eq
   simp [hone]
 
-#eval BitVec.sdiv (BitVec.ofInt 1 1) 1#1 = 1#1
-
 def sdiv_one_one : BitVec.sdiv (BitVec.ofInt w 1) 1 = 1 := by
   by_cases w_0 : w = 0; subst w_0; rfl
   by_cases w_1 : w = 1; subst w_1; rfl
