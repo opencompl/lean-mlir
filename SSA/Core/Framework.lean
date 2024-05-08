@@ -590,9 +590,21 @@ so that `simp only` (which we use in `simp_peephole` can find them!)
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
 -/
-#eval Lean.Meta.getEqnsFor? ``HVector.denote
-#eval Lean.Meta.getEqnsFor? ``Expr.denote
-#eval Lean.Meta.getEqnsFor? ``Com.denote
+/--
+info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "HVector") "denote") "_eq_1",
+  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "HVector") "denote") "_eq_2"]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``HVector.denote
+/--
+info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Expr") "denote") "_eq_1"]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``Expr.denote
+/--
+info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_1",
+  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_2",
+  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_3"]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``Com.denote
 
 end Unfoldings
 
@@ -1570,8 +1582,6 @@ instance [p : PureDialect d] : DialectDenote (TermModel d Γ) where
     argsToBranches : {ts : List d.Ty} → HVector _ (TermModelTy.mk <$> ts) → ExprTreeBranches d Γ ts
       | [], .nil          => .nil
       | _::_, .cons a as  => .cons a (argsToBranches as)
-
-#check ExprTree
 
 variable (d) in
 /-- A substitution in context `Γ` maps variables of `Γ` to expression trees in `Δ`,

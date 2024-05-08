@@ -35,8 +35,6 @@ syntax "(" unification_var ":" unification_expr ")" : hyp_matcher
 syntax hyp_matcher+ : hyps_matcher
 
 
-#check RBMap
-
 structure MVar where
   id: MVarId
 
@@ -78,4 +76,3 @@ elab "matchgoal"
 
 
 end MatchGoal
-

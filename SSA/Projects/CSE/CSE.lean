@@ -453,28 +453,38 @@ def ex1_pre_cse : Com Ex ∅ .pure .nat :=
   Com.lete (cst 1) <|
   Com.lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
-#eval ex1_pre_cse
+/--
+info:
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.add[[%0, ,, %1]]
+return %0
+-/
+#guard_msgs in #eval ex1_pre_cse
 
 unsafe def ex1_post_cse :
  { com' : Com Ex ∅ .pure .nat // ∀ V, ex1_pre_cse.denote V = com'.denote V } :=
    cse' ex1_pre_cse
-#eval ex1_post_cse
-/-
-CSE.Examples.ExOp.cst 1[[]] -- %1
-CSE.Examples.ExOp.cst 1[[]] -- %0
-CSE.Examples.ExOp.add[[%1, ,, %1]] -- see that the more recent use is dead.
+/--
+info:
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.cst 1[[]]
+CSE.Examples.ExOp.add[[%1, ,, %1]]
 return %0
 -/
+#guard_msgs in #eval ex1_post_cse
 
 unsafe def ex1_post_cse_post_dce :
   { com : Com Ex ∅ .pure  .nat // ∀ V, ex1_post_cse.val.denote V = com.denote V } :=
     (DCE.dce' ex1_post_cse.val)
-#eval ex1_post_cse_post_dce
-/-
+/--
+info:
 CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.add[[%0, ,, %0]] -- see that the dead use has been killed.
+CSE.Examples.ExOp.add[[%0, ,, %0]]
 return %0
 -/
+#guard_msgs in #eval ex1_post_cse_post_dce
+
 end Examples
 
 end CSE
