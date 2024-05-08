@@ -12,6 +12,13 @@ lean_exe mlirnatural {
   root := `SSA.MLIRNatural
 }
 
+
+lean_exe opt {
+  root := `SSA.Projects.InstCombine.LLVM.Opt
+  -- `supportInterpreter` flag needed to link executable with the Lean frontend
+  supportInterpreter := true
+}
+
 lean_exe ssaLLVMEnumerator {
   root := `SSA.Projects.InstCombine.LLVM.Enumerator
 }
