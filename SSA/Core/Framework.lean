@@ -591,18 +591,15 @@ This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
 -/
 /--
-info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "HVector") "denote") "_eq_1",
-  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "HVector") "denote") "_eq_2"]
+info: some #[`HVector.denote.eq_1, `HVector.denote.eq_2]
 -/
 #guard_msgs in #eval Lean.Meta.getEqnsFor? ``HVector.denote
 /--
-info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Expr") "denote") "_eq_1"]
+info: some #[`Expr.denote.eq_1]
 -/
 #guard_msgs in #eval Lean.Meta.getEqnsFor? ``Expr.denote
 /--
-info: some #[Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_1",
-  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_2",
-  Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkStr (Lean.Name.mkNum `_private.SSA.Core.Framework 0) "Com") "denote") "_eq_3"]
+info: some #[`Com.denote.eq_1, `Com.denote.eq_2, `Com.denote.eq_3]
 -/
 #guard_msgs in #eval Lean.Meta.getEqnsFor? ``Com.denote
 
@@ -739,7 +736,7 @@ def Com.changeVars : Com d Γ eff ty →
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp; rfl
 
-@[simp] lemma Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
+@[simp] def Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
     {c : Com d Γ eff ty} → Ctxt.Hom (outContext (changeVars c map)) (outContext c)
   | .ret _        => cast (by simp) map_inv
   | .lete _ body  => cast (by simp) <|
