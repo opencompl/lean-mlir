@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 -- Script that exhaustive enumerates the our LLVM semantics.
-import Std.Data.BitVec
+import Batteries.Data.BitVec
 import Init.System.IO
 import SSA.Core.Util
 import SSA.Projects.InstCombine.LLVM.Semantics

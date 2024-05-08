@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.Util
-import Std
+import Batteries
 import Lean.Environment
 import Cli
 import SSA.Core.MLIRSyntax.Transform

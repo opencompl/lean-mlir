@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.FullyHomomorphicEncryption.Basic
-import Std.Data.List.Lemmas
+import Batteries.Data.List.Lemmas
 import Mathlib.Data.List.Basic
 
 -- variable {q t : Nat} [ hqgt1 : Fact (q > 1)] {n : Nat}

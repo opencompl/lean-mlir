@@ -621,7 +621,7 @@ def attrVal6Symbol : AttrVal := [mlir_attr_val| @func_foo ]
 #guard_msgs in #reduce attrVal6Symbol
 
 def attrVal7NestedSymbol : AttrVal := [mlir_attr_val| @func_foo::@"func_bar" ]
-/-- info: AttrValue.nestedsymbol (AttrValue.symbol "func_foo") (AttrValue.symbol "func_bar") -/
+/-- info: (AttrValue.symbol "func_foo").nestedsymbol (AttrValue.symbol "func_bar") -/
 #guard_msgs in #reduce attrVal7NestedSymbol
 
 
