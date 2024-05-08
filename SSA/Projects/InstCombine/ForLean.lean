@@ -146,7 +146,10 @@ def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
 theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : BitVec.udiv x (1#w)  = x := by
   simp only [BitVec.udiv, toNat_ofNat]
   cases w
-  case zero => simp
+  case zero =>
+    ring_nf
+    simp [BitVec.eq_nil x]
+    rfl
   case succ w =>
     simp only [ne_eq, Nat.succ_ne_zero, not_false_eq_true,
       Nat.one_mod_two_pow_eq, Nat.div_one]
@@ -186,6 +189,8 @@ theorem udiv_one_eq_zero (a : BitVec w) (h : a > 1)
     : BitVec.udiv 1#w a = 0#w := by
   cases w
   case zero =>
+    simp
+    rw [BitVec.eq_nil a]
     simp
   case succ w' =>
     simp only [BitVec.udiv, toNat_ofNat, ne_eq, Nat.succ_ne_zero, not_false_eq_true,
@@ -244,6 +249,7 @@ lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a >
   cases w
   case zero =>
     simp at ha0 ha1
+    simp [BitVec.eq_nil a] at ha0
   case succ w' =>
     simp [Nat.one_mod_two_pow_eq]
     have ha0' : a.toNat ≠ 0 := toNat_neq_of_neq_ofNat ha0
@@ -254,7 +260,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
     (hao : a ≠ allOnes w) :
     BitVec.sdiv (BitVec.ofInt w 1) a = BitVec.ofInt w 0 := by
   rcases w with ⟨rfl | ⟨rfl | w⟩⟩
-  case zero => simp
+  case zero => simp [BitVec.eq_nil a]
   case succ w' =>
     cases w'
     case zero =>
@@ -449,8 +455,7 @@ private theorem ofInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
     simp
   by_cases w_0 : w = 0
   · subst w_0
-    simp
-  unfold instNegBitVec BitVec.neg
+    simp [BitVec.eq_nil A]
   unfold BitVec.toInt
   have A_gt_zero : 0 < BitVec.toNat A := by
     simp only [ofNat_eq_ofNat, toNat_eq, toNat_ofNat, Nat.zero_mod] at A_zero
@@ -461,16 +466,16 @@ private theorem ofInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
   · omega
   · rw [Nat.cast_sub]
     ring_nf
-    simp [Nat.le_of_lt (toNat_lt A)]
+    simp [Nat.le_of_lt (isLt A)]
   · rw [Nat.cast_sub]
     ring_nf
-    simp [Nat.le_of_lt (toNat_lt A)]
+    simp [Nat.le_of_lt (isLt A)]
   · have is_int_min : BitVec.toNat A * 2 = 2^(w) := by
       ring_nf at a b
       rw [Nat.mul_sub_right_distrib, not_lt, Nat.le_sub_iff_add_le, mul_two,
           mul_two, add_le_add_iff_left, ←mul_two] at a
       simp only [eq_of_ge_of_not_gt a (by simp [b])]
-      simp only [gt_iff_lt, Nat.ofNat_pos, mul_le_mul_right, le_of_lt (toNat_lt A)]
+      simp only [gt_iff_lt, Nat.ofNat_pos, mul_le_mul_right, le_of_lt (isLt A)]
     have is_int_min' : BitVec.toNat A = 2^(w-1) := by
       have h : 2 ^w  = (2 ^(w - 1)) * 2 := by
         rw [two_pow_eq_pow_pred_times_two]
@@ -495,11 +500,13 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
     (A >ₛ BitVec.ofInt w 0) ↔ ¬ ((-A) >ₛ BitVec.ofInt w 0) := by
   by_cases w0 : w = 0
   · subst w0
-    simp at h_ne_zero
+    simp [BitVec.eq_nil A] at h_ne_zero
   simp [BitVec.ofInt_zero_eq]
   rw [neg_sgt_eq_slt_neg h_ne_intMin _]
   unfold BitVec.slt
   simp
+  -- TODO: ⊢ decide (0 < A.toInt) = !decide (A.toInt < 0)
+  -- the decide does not eliminate away?
   apply Iff.intro
   · omega
   · simp [toInt_ne] at h_ne_zero
@@ -643,11 +650,17 @@ We should rebase on mathlib4.
 -/
 lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
   (x >>> y).getLsb' i = x.getLsb (i + y) := by
-  unfold HShiftRight.hShiftRight  BitVec.instHShiftRightBitVecNat  BitVec.ushiftRight
+  unfold HShiftRight.hShiftRight
+  unfold instHShiftRightNat
+  unfold ushiftRight
   simp
   unfold BitVec.getLsb' BitVec.getLsb Nat.testBit
   simp
-  unfold HShiftRight.hShiftRight instHShiftRight ShiftRight.shiftRight Nat.instShiftRightNat
+  unfold HShiftRight.hShiftRight
+  unfold instHShiftRightOfShiftRight
+  simp
+  unfold ShiftRight.shiftRight
+  unfold Nat.instShiftRight
   simp [Nat.shiftRight_eq_div_pow]
   rw [Nat.div_div_eq_div_mul]
   rw [← Nat.pow_add, Nat.add_comm]
@@ -691,6 +704,8 @@ theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :  BitVec.toNa
 
 theorem toInt_eq' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
   cases w <;> simp
+  · case zero =>
+    simp [BitVec.eq_nil x]
   . case succ w' =>
       unfold BitVec.toInt
       simp
@@ -763,10 +778,8 @@ lemma small_of_toInt_pos (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x ≥ 
     case neg h =>
       exfalso
       simp_all
-      have hcontra : BitVec.toNat x < 2 ^ (Nat.succ w') :=
-        x.toFin.2
       norm_cast at hxToInt
-      linarith
+      omega
 
 lemma toInt_pos_of_small (w : Nat) (x : BitVec w) (hxsmall : x.toNat < (2 : Nat) ^ (w - 1)) : BitVec.toInt x ≥ 0 := by
   rcases w with rfl | w'
