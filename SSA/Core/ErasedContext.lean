@@ -65,7 +65,7 @@ instance : LawfulFunctor Ctxt where
   map_const := by simp only [Functor.mapConst, Functor.map, Function.const, forall_const]
 
 /-- Recursion principle for contexts in terms of `Ctxt.nil` and `Ctxt.snoc` -/
-@[elab_as_elim]
+@[elab_as_elim, induction_eliminator]
 def recOn {motive : Ctxt Ty → Sort*}
     (nil  : motive empty)
     (snoc : (Γ : Ctxt Ty) → (t : Ty) → motive Γ → motive (Γ.snoc t)) :
@@ -133,7 +133,7 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
-@[elab_as_elim]
+@[elab_as_elim, cases_eliminator]
 def casesOn
     {motive : (Γ : Ctxt Ty) → (t t' : Ty) → Ctxt.Var (Γ.snoc t') t → Sort _}
     {Γ : Ctxt Ty} {t t' : Ty} (v : (Γ.snoc t').Var t)
@@ -361,7 +361,7 @@ def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
   split_ifs <;> aesop
 
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
-@[elab_as_elim]
+@[elab_as_elim, induction_eliminator]
 def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
     (nil  : motive (Valuation.nil))
     (snoc : ∀ {Γ t} (V : Valuation Γ) (v : ⟦t⟧), motive V → motive (Valuation.snoc V v)) :
@@ -593,7 +593,7 @@ def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
     intro i _ h
     induction Γ
     case nil => exact v.emptyElim
-    case cons Γ _ ih =>
+    case snoc Γ _ ih =>
       cases v using Var.casesOn
       · simp at h ⊢
         apply ih h

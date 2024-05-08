@@ -186,7 +186,7 @@ structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_mid : Ctxt d.Ty) (ty
 
 
 section Repr
-open Batteries (Format)
+open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
@@ -266,7 +266,7 @@ def Com.recAux' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
   | _, _, _, Com.ret v => ret v
   | _, _, _, Com.lete e body => lete e body (Com.recAux' ret lete body)
 
-@[implemented_by Com.recAux', elab_as_elim, eliminator]
+@[implemented_by Com.recAux', elab_as_elim, induction_eliminator]
 -- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
 --      See `Com.recAux'_eq` for a theorem that states these definitions are equal
 def Com.rec' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
@@ -2230,7 +2230,6 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     simp [Valuation.comap]
     split
     . congr
-      dsimp
       split <;> simp_all
     . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
