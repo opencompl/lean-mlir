@@ -283,6 +283,7 @@ syntax ident: mlir_type
 syntax "_" : mlir_type
 
 
+set_option hygiene false in -- allow i to expand
 macro_rules
   | `([mlir_type| $x:ident ]) => do
         let xstr := x.getId.toString
@@ -446,20 +447,18 @@ syntax  "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}"
 syntax "[mlir_region|" mlir_region "]": term
 
 macro_rules
-| `(mlir_region| { ^ $name:ident ( $operands,* ) : $ops }) => do
+| `([mlir_region| { ^ $name:ident ( $operands,* ) : $ops }  ]) => do
    let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
    let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
-| `(mlir_region| {  ^ $name:ident : $ops } ) => do
+| `([mlir_region| {  ^ $name:ident : $ops } ]) => do
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk $(Lean.quote (name.getId.toString)) [] $opsList)
-| `(mlir_region| { $ops:mlir_ops }) => do
+| `([mlir_region| { $ops:mlir_ops } ]) => do
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
 
-macro_rules
-| `([mlir_region| $q:mlir_region ]) => `(mlir_region| $q)
 
 macro_rules
 | `([mlir_region| $$($q) ]) => return q
