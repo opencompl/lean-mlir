@@ -39,7 +39,7 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build AliveScaling
 
-      - name: Compile Executable 🧐
+      - name: Compile `mlirnatural` Executable 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build mlirnatural
@@ -47,7 +47,16 @@ jobs:
       - name: LLVM Exhaustive Enumeration
         run: |
           sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
-          cd test/bruteforce-correctness && ./run.sh
+          (cd test/bruteforce-correctness && ./run.sh)
+
+      - name: Compile `opt` Executable 🧐
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build opt
+
+      - name: LLVM opt round trip test
+        run: |
+          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
 
       - name: Check for changes in AliveStatements
         run: |
