@@ -186,7 +186,7 @@ structure Zipper (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_mid : Ctxt d.Ty) (ty
 
 
 section Repr
-open Std (Format)
+open Batteries (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
