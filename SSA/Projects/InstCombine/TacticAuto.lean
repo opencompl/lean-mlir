@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Tactic.Ring
 import Std.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
+import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Std.Data.BitVec
@@ -70,9 +71,9 @@ macro "alive_auto": tactic =>
   `(tactic|
       (
         intros
-        (try simp (config := {decide := false}) [-Std.BitVec.ofNat_eq_ofNat])
+        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_eq_ofNat)]
         try ring_nf
-        try solve | (ext; simp;
+        try solve | (ext; simp [BitVec.negOne_eq_allOnes];
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;
