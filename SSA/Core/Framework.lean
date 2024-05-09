@@ -190,7 +190,7 @@ open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
-  def Expr.repr (prec : Nat) : Expr d Γ eff t → Format
+  def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
     | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
   def Com.repr (prec : Nat) : Com d eff Γ t → Format
@@ -1759,6 +1759,11 @@ def guard_recompile_2: Int := 42
   This now works, with the obscene heartbeat count, but it is not ideal.
   TODO: figure out why this is so slow
 -/
+
+-- TODO: There seems to be a bug in the unusedVariables linter that shows up in `subset_entries_matchVar`.
+-- It reports `hvarMap` as unused, but it is used (because somehow the tactic does some beta abstraction).
+--  might be worth investigating/reporting.
+set_option linter.unusedVariables false in
 set_option maxHeartbeats 99999999 in
 mutual
 /-
@@ -1860,7 +1865,6 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
           (argsr := (Expr.args matchExpr))
           (hvarMap := by simp; rw [← hvarMap])
 end
-
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]
