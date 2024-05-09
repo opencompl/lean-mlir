@@ -6,7 +6,7 @@ import Mathlib.Tactic.Linarith
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
-  Γ.removeNth v.val
+  Γ.eraseIdx v.val
 
 /-- Witness that Γ' is Γ without v -/
 def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
@@ -15,38 +15,38 @@ def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
 /-- build a `Deleted` for a `(Γ.snoc α) → Γ`-/
 def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var.last Γ α) Γ := rfl
 
-theorem List.removeNth_zero : List.removeNth (List.cons x xs) 0 = xs := rfl
+theorem List.eraseIdx_zero : List.eraseIdx (List.cons x xs) 0 = xs := rfl
 
-theorem List.removeNth_succ : List.removeNth (List.cons x xs) (.succ n) = x :: List.removeNth xs n := rfl
+theorem List.eraseIdx_succ : List.eraseIdx (List.cons x xs) (.succ n) = x :: List.eraseIdx xs n := rfl
 
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
-theorem List.removeNth_eq_len_concat : List.removeNth (xs ++ [x]) xs.length = xs := by
+theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs := by
   induction xs
-  case nil => simp [List.removeNth]
+  case nil => simp [List.eraseIdx]
   case cons x xs' IH =>
-    simp[removeNth_succ]
+    simp[eraseIdx_succ]
     apply IH
 
 /-- removing at any index `≥ xs.length` does not change the list. -/
-theorem List.removeNth_of_length_le (hn : xs.length ≤ n) : List.removeNth xs n = xs := by
+theorem List.eraseIdx_of_length_le (hn : xs.length ≤ n) : List.eraseIdx xs n = xs := by
   induction n generalizing xs
   case zero =>
     induction xs
-    case nil => simp [List.removeNth]
+    case nil => simp [List.eraseIdx]
     case cons x xs' IH => simp at hn
   case succ n' IH' =>
     induction xs
-    case nil => simp[removeNth]
+    case nil => simp[List.eraseIdx]
     case cons x xs' IH =>
-      simp[removeNth_succ]
+      simp[eraseIdx_succ]
       apply IH'
       simp at hn
       linarith
 
 /- removing at index `n` does not change indices `k < n` -/
-theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) k = List.get? xs k := by
+theorem List.get?_eraseIdx_of_lt (hk: k < n) : List.get? (List.eraseIdx xs n) k = List.get? xs k := by
   by_cases N_LEN:(xs.length ≤ n)
-  case pos => simp[removeNth_of_length_le N_LEN]
+  case pos => simp[eraseIdx_of_length_le N_LEN]
   case neg =>
     simp at N_LEN
     induction xs generalizing n k
@@ -55,7 +55,7 @@ theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) 
     cases n
     case zero => simp at hk
     case succ n' =>
-      simp[List.removeNth_succ]
+      simp[List.eraseIdx_succ]
       cases k
       case zero => simp
       case succ k' =>
@@ -66,23 +66,23 @@ theorem List.get?_removeNth_of_lt (hk: k < n) : List.get? (List.removeNth xs n) 
 
 
 /-- Removing index `n` shifts entires of `k ≥ n` by 1. -/
-theorem List.get?_removeNth_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
-  (xs.removeNth n).get? k = xs.get? (k + 1) := by
+theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k) :
+  (xs.eraseIdx n).get? k = xs.get? (k + 1) := by
   induction xs generalizing n k
-  case nil => simp[removeNth, List.get]
+  case nil => simp[List.eraseIdx, List.get]
   case cons hd tl IHxs =>
     simp[List.get];
     cases k
     case zero =>
       simp at hk
       subst hk
-      simp[removeNth]
+      simp[List.eraseIdx]
     case succ k' =>
       cases n
       case zero =>
-        simp[List.removeNth, List.removeNth_succ]
+        simp[List.eraseIdx, List.eraseIdx_succ]
       case succ n' =>
-        simp[List.removeNth_succ]
+        simp[List.eraseIdx_succ]
         apply IHxs
         linarith
 
@@ -94,7 +94,7 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at vproof
-    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := DELV)
+    have H := List.get?_eraseIdx_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := DELV)
     rw[H] at vproof
     exact vproof
   }⟩
@@ -103,7 +103,7 @@ def Deleted.pullback_var (DEL : Deleted Γ delv Γ') (v : Γ'.Var β) : Γ.Var �
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at vproof
-    have H := List.get?_removeNth_of_le (xs := Γ) (n := delv.val) (k := vix) (hk := by linarith)
+    have H := List.get?_eraseIdx_of_le (xs := Γ) (n := delv.val) (k := vix) (hk := by linarith)
     rw[H] at vproof
     exact vproof
   }⟩
@@ -136,7 +136,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     subst DEL
     have ⟨vix, vproof⟩ := v
     simp[Ctxt.delete] at *
-    have H := List.get?_removeNth_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
+    have H := List.get?_eraseIdx_of_lt (xs := Γ) (n := delv.val) (k := vix) (hk := VLT)
     rw[H]
     exact vproof
   }⟩, by
@@ -173,7 +173,7 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     cases VIX:vix
     case zero => subst VIX; contradiction
     case succ vix' =>
-      have H := List.get?_removeNth_of_le (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
+      have H := List.get?_eraseIdx_of_le (xs := Γ) (n := delv.val) (k := vix') (hk := by linarith)
       simp
       rw[H]
       subst VIX
