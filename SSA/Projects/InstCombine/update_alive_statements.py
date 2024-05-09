@@ -75,13 +75,16 @@ def getStatement(preamble: List[str], proof: List[str]) -> str:
     if x.returncode == 0:
         return ""
 
-    error = x.stderr.decode("utf-8")
-    msg = re.sub(".*AliveTest.lean:[0-9]+:[0-9]+: error: ", "", error, flags=re.DOTALL)
-    msg = re.sub("\nerror: external command.*\n", "", msg, re.DOTALL)
+    error = x.stdout.decode("utf-8")
+    msg = re.sub(".*AliveTest.lean:[0-9]+:[0-9]+-[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
+    msg = re.sub("\nerror: Lean.*", "", msg, flags=re.DOTALL)
+    msg = "    " + re.sub("\n", "\n    ", msg, flags=re.DOTALL)
 
     stmt = name
     stmt += msg
     stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash\n  try alive_auto\n  try sorry"
+
+    print(stmt)
 
     return stmt
 
