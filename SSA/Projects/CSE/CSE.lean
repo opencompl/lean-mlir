@@ -276,12 +276,12 @@ variable [DecidableEq d.Ty] [DecidableEq d.Op]
 unsafe def State.cseRegionArgList
   {Γstart Γ : Ctxt d.Ty}
   {lets : Lets d Γstart .pure Γ}
-  (s : State d lets)
+  (_ : State d lets)
   {ts : List (Ctxt d.Ty × d.Ty)}
   (rs : HVector ((fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)) <| ts) :
   { rs' : HVector ((fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2)) <| ts //
     HVector.denote rs = HVector.denote rs' } :=
-  let H := HVector.map (fun _Γα com => Com.denote com) rs
+  let _ := HVector.map (fun _Γα com => Com.denote com) rs
   match ts, rs with
   | _, .nil => ⟨.nil, by
       simp [HVector.map]

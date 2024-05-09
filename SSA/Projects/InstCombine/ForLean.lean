@@ -209,7 +209,7 @@ lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ n#w) : a.toNat 
   intros haeq
   have hn : n < 2 ^ w := by
     rw [← haeq]
-    apply BitVec.toNat_lt
+    apply BitVec.isLt
   have hcontra : a = n#w := by
     apply BitVec.eq_of_toNat_eq
     simp [haeq]
@@ -223,7 +223,7 @@ lemma neg_neg {a : BitVec w} : - - a = a := by
   · rw [toNat_eq]
     rw [toNat_neg]
     rw [toNat_neg]
-    have h2 : BitVec.toNat a < 2 ^w := BitVec.toNat_lt a
+    have h2 : BitVec.toNat a < 2 ^w := BitVec.isLt a
     rw [toNat_eq] at h
     simp at h
     rw [Nat.mod_eq_of_lt]
