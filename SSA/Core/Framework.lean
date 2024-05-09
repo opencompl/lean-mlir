@@ -1170,20 +1170,20 @@ assignment of that variable in the input valuation -/
 
 -- TODO: This theorem is currently not used yet. The hope is that it might replace/simplify the
 --       subtype reasoning (`denoteIntoSubtype`) currently used when reasoning about `matchVar`
-theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
-    {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
-    (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
-            newCom.denote V_mid = V_mid v) :
-    (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
-  rcases zip with ⟨lets, com⟩
-  simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
-    Com.denoteLets_returnVar_pure, denote_mk]
-  unfold Valuation.reassignVar
-  congr; funext V_mid; congr
-  funext t' v'
-  simp only [dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
+-- theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
+--     {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
+--     (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
+--             newCom.denote V_mid = V_mid v) :
+--     (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
+--   rcases zip with ⟨lets, com⟩
+--   simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
+--     Com.denoteLets_returnVar_pure, denote_mk]
+--   unfold Valuation.reassignVar
+--   congr; funext V_mid; congr
+--   funext t' v'
+--   simp only [dite_eq_right_iff, forall_exists_index]
+--   rintro rfl rfl
+--   simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
 
 end DenoteInsert
 
