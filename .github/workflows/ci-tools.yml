@@ -1,4 +1,4 @@
-name: build & test
+name: build & test tools, scaling, and auto-generated statements
 on:
   push:
     branches:
