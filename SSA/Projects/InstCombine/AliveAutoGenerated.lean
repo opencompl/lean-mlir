@@ -3358,6 +3358,7 @@ def alive_InstCombineShift__440_src  (w : Nat)   :=
   "llvm.return" (%v4) : (_) -> ()
 }]
 
+set_option maxHeartbeats 400000 in
 def alive_InstCombineShift__440_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _, %C : _, %C2 : _):
@@ -3403,6 +3404,7 @@ def alive_InstCombineShift__476_src  (w : Nat)   :=
   "llvm.return" (%v4) : (_) -> ()
 }]
 
+set_option maxHeartbeats 400000 in
 def alive_InstCombineShift__476_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _, %C : _, %C2 : _):

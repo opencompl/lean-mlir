@@ -8,7 +8,8 @@ theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b.toNat < w) : LLVM.lshr? a b 
   split_ifs
   case pos contra => linarith
   case neg _ =>
-    simp [BitVec.instHShiftRightBitVec]
+    simp only [HShiftRight.hShiftRight]
+    rfl
 
 /-- Note that this assumes that the input and output bitwidths are the same, which is by far the common case. -/
 @[simp]

@@ -22,7 +22,7 @@ theorem List.removeNth_succ : List.removeNth (List.cons x xs) (.succ n) = x :: L
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
 theorem List.removeNth_eq_len_concat : List.removeNth (xs ++ [x]) xs.length = xs := by
   induction xs
-  case nil => simp
+  case nil => simp [List.removeNth]
   case cons x xs' IH =>
     simp[removeNth_succ]
     apply IH
@@ -32,7 +32,7 @@ theorem List.removeNth_of_length_le (hn : xs.length ≤ n) : List.removeNth xs n
   induction n generalizing xs
   case zero =>
     induction xs
-    case nil => simp
+    case nil => simp [List.removeNth]
     case cons x xs' IH => simp at hn
   case succ n' IH' =>
     induction xs
@@ -80,7 +80,7 @@ theorem List.get?_removeNth_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ 
     case succ k' =>
       cases n
       case zero =>
-        simp[List.removeNth_succ]
+        simp[List.removeNth, List.removeNth_succ]
       case succ n' =>
         simp[List.removeNth_succ]
         apply IHxs

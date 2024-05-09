@@ -145,7 +145,6 @@ theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n
    apply Ideal.Quotient.eq_zero_iff_mem.2
    rw [Ideal.mem_span_singleton]
    simp [Dvd.dvd]
-   use x
 
 /--
 `R.representative` is in fact a representative of the equivalence class.

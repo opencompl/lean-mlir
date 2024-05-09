@@ -2,12 +2,12 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Tactic.Ring
-import Std.Data.BitVec
+import Batteries.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.EDSL
-import Std.Data.BitVec
+import Batteries.Data.BitVec
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
