@@ -190,7 +190,7 @@ open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
-  def Expr.repr (prec : Nat) : Expr d Γ eff t → Format
+  def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
     | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
   def Com.repr (prec : Nat) : Com d eff Γ t → Format
@@ -1170,20 +1170,20 @@ assignment of that variable in the input valuation -/
 
 -- TODO: This theorem is currently not used yet. The hope is that it might replace/simplify the
 --       subtype reasoning (`denoteIntoSubtype`) currently used when reasoning about `matchVar`
-theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
-    {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
-    (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
-            newCom.denote V_mid = V_mid v) :
-    (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
-  rcases zip with ⟨lets, com⟩
-  simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
-    Com.denoteLets_returnVar_pure, denote_mk]
-  unfold Valuation.reassignVar
-  congr; funext V_mid; congr
-  funext t' v'
-  simp only [dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
+-- theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
+--     {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
+--     (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
+--             newCom.denote V_mid = V_mid v) :
+--     (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
+--   rcases zip with ⟨lets, com⟩
+--   simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
+--     Com.denoteLets_returnVar_pure, denote_mk]
+--   unfold Valuation.reassignVar
+--   congr; funext V_mid; congr
+--   funext t' v'
+--   simp only [dite_eq_right_iff, forall_exists_index]
+--   rintro rfl rfl
+--   simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
 
 end DenoteInsert
 
@@ -1759,6 +1759,11 @@ def guard_recompile_2: Int := 42
   This now works, with the obscene heartbeat count, but it is not ideal.
   TODO: figure out why this is so slow
 -/
+
+-- TODO: There seems to be a bug in the unusedVariables linter that shows up in `subset_entries_matchVar`.
+-- It reports `hvarMap` as unused, but it is used (because somehow the tactic does some beta abstraction).
+--  might be worth investigating/reporting.
+set_option linter.unusedVariables false in
 set_option maxHeartbeats 99999999 in
 mutual
 /-
@@ -1860,7 +1865,6 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
           (argsr := (Expr.args matchExpr))
           (hvarMap := by simp; rw [← hvarMap])
 end
-
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]

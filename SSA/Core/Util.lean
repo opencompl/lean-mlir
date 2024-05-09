@@ -85,11 +85,6 @@ def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
       let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
     LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
 
-@[simp]
-theorem finRangeIndex {n : Nat} (i : Fin n) : nth (finRange n) i = i := by
-  match i with
-  | ⟨idx,hidx⟩ => sorry
-
 end LengthIndexedList
 
 elab "print_goal_as_error " : tactic => do

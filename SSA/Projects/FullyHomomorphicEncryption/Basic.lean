@@ -227,7 +227,7 @@ theorem R.representative_zero : R.representative q n 0 = 0 := by
   simp[R.representative]
   obtain ⟨k, hk⟩ := R.representative'_zero_elem q n
   rw[hk]
-  rw[dvd_iff_modByMonic_eq_zero]
+  rw[modByMonic_eq_zero_iff_dvd]
   simp
   exact (f_monic q n)
 
@@ -308,20 +308,20 @@ theorem R.representative_mul [Fact (q > 1)] (a b : R q n) : (a * b).representati
   simp
 
   have H1 : (-(a' * f q n * (b' /ₘ f q n))) %ₘ f q n = 0 := by
-    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    rw[modByMonic_eq_zero_iff_dvd (hq := f_monic q n)]
     rw[dvd_neg]
     apply dvd_mul_of_dvd_left
     apply dvd_mul_of_dvd_right
     apply dvd_rfl
   rw[H1]
   have H2 : b' * f q n * (a' /ₘ f q n) %ₘ f q n = 0 := by
-    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    rw[modByMonic_eq_zero_iff_dvd (hq := f_monic q n)]
     apply dvd_mul_of_dvd_left
     apply dvd_mul_of_dvd_right
     apply dvd_rfl
   rw[H2]
   have H3 : f q n ^ 2 * (b' /ₘ f q n) * (a' /ₘ f q n) %ₘ f q n = 0 := by
-    rw[Polynomial.dvd_iff_modByMonic_eq_zero (hq := f_monic q n)]
+    rw[modByMonic_eq_zero_iff_dvd (hq := f_monic q n)]
     apply dvd_mul_of_dvd_left
     apply dvd_mul_of_dvd_left
     apply dvd_pow_self
