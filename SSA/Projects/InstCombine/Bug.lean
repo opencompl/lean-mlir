@@ -56,15 +56,15 @@ def tgt  (w : Nat)  :=
 }]
 
 def src_i1_cw :
-  Com InstCombine.Op [InstCombine.Ty.bitvec 1] (InstCombine.Ty.bitvec 1) :=
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
   .ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def src_cw (w : Nat) :
-  Com InstCombine.Op [InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   .ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def tgt_cw (w : Nat) :
-  Com InstCombine.Op [InstCombine.Ty.bitvec w] (InstCombine.Ty.bitvec w) :=
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   .lete (ComWrappers.mul w 0 0) <|
   .ret ⟨0, by simp [Ctxt.snoc]⟩
 
