@@ -77,7 +77,8 @@ def or_assoc (a b c : BitVec w) :
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
-  unfold HShiftLeft.hShiftLeft instHShiftLeftBitVec
+  simp only [HShiftLeft.hShiftLeft]
+  simp
   simp only [toNat_shiftLeft, Nat.shiftLeft_eq_mul_pow]
 
 lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
@@ -504,12 +505,11 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   simp [BitVec.ofInt_zero_eq]
   rw [neg_sgt_eq_slt_neg h_ne_intMin _]
   unfold BitVec.slt
-  simp
-  -- TODO: ⊢ decide (0 < A.toInt) = !decide (A.toInt < 0)
-  -- the decide does not eliminate away?
-  apply Iff.intro
-  · omega
-  · simp [toInt_ne] at h_ne_zero
+  by_cases h : A.toInt < 0
+  · simp [h]
+    omega
+  · simp [h]
+    simp [BitVec.toInt_ne] at h_ne_zero
     omega
   simp
   unfold intMin

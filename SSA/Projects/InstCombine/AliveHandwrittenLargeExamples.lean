@@ -120,7 +120,10 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   simp_alive_case_bash
   simp
   cases w
-  case zero => simp [LLVM.sdiv?]
+  case zero =>
+    intros x
+    simp only [BitVec.eq_nil]
+    simp [LLVM.sdiv?]
   case succ w' =>
     intros x
     by_cases hx:(x = 0)
@@ -228,7 +231,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp
   split_ifs with c
   simp
-  by_cases w_0 : w = 0; subst w_0; simp
+  by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
   by_cases h : BitVec.ofInt w 3 >ᵤ BitVec.ofInt w 1 + a
   · simp [h]
     rw [ofInt_eq_ofNat, ofInt_eq_ofNat] at h
