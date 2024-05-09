@@ -22,11 +22,7 @@ theorem List.eraseIdx_succ : List.eraseIdx (List.cons x xs) (.succ n) = x :: Lis
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
 theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs := by
   induction xs
-<<<<<<< HEAD
   case nil => simp [List.eraseIdx]
-=======
-  case nil => simp [List.removeNth]
->>>>>>> origin/main
   case cons x xs' IH =>
     simp[eraseIdx_succ]
     apply IH
@@ -36,11 +32,7 @@ theorem List.eraseIdx_of_length_le (hn : xs.length ≤ n) : List.eraseIdx xs n =
   induction n generalizing xs
   case zero =>
     induction xs
-<<<<<<< HEAD
     case nil => simp [List.eraseIdx]
-=======
-    case nil => simp [List.removeNth]
->>>>>>> origin/main
     case cons x xs' IH => simp at hn
   case succ n' IH' =>
     induction xs
