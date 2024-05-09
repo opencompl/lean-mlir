@@ -46,7 +46,7 @@ end
 Check if an expression is contained in the current goal and fail otherwise.
 This tactic does not modify the goal state.
  -/
-local elab "contains? " ts:term : tactic => withMainContext do
+elab "contains? " ts:term : tactic => withMainContext do
   let tgt ← getMainTarget
   if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
 
@@ -60,7 +60,7 @@ local macro "generalize_or_fail" "at" ll:ident : tactic =>
         -- fail if the term is not present in the goal.
         contains? ($ll (_ : Var ..))
         generalize ($ll (_ : Var ..)) = e at *;
-        simp (config := {failIfUnchanged := false}) only [TyDenote.toType] at e
+        dsimp (config := {failIfUnchanged := false}) only [TyDenote.toType, List.get] at e
         revert e
       )
   )
@@ -104,7 +104,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
         /- Effect massaging -/
         EffectKind.toMonad_pure, EffectKind.toMonad_impure,
-        EffectKind.liftEffect_rfl,
+        EffectKind.liftEffect_rfl, Vector.get,
         Id.pure_eq, Id.bind_eq, id_eq,
         /-
         NOTE (Here Be Dragons 🐉): the parenthesis in `(HVector.denote_cons)` are significant!
@@ -134,7 +134,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
-        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
+        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last, Vector.get]
         repeat (generalize_or_fail at $Γv)
         clear $Γv
       )

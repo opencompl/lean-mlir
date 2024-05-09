@@ -144,14 +144,56 @@ theorem ok : src 1  ⊑ tgt 1  := by
   simp_alive_peephole
   sorry
 
+theorem aaa : DialectSignature.effectKind
+    ((InstcombineTransformDialect.MOp.instantiateCom ⟨[1], Eq.refl [1].length⟩).mapOp
+      (InstCombine.MOp.binary (0)
+        InstCombine.MOp.BinaryOp.mul)) =
+  EffectKind.pure := by
+  rfl
+
 -- set_option pp.explicit true in
 set_option pp.proofs true in
-set_option tactic.simp.trace true in
+--set_option tactic.simp.trace true in
 /-- This one has the 'snoc' leftover. -/
 theorem broken : src_i1 1 ⊑ tgt 1  := by
   unfold tgt
   unfold src_i1
+
+  dsimp (config := {failIfUnchanged := false }) only [Com.Refinement]
+  dsimp (config := {failIfUnchanged := false }) only [Functor.map]
+  dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
+  dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc] -- TODO: added by Tobias ->  double-check.
+  dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last, List.map] -- @bollu is scared x(
+  dsimp (config := {failIfUnchanged := false }) only [Width.mvar] -- TODO: write theorems in terms of Width.mvar?
+  dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
+  dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?] -- TODO: added by Tobias ->  double-check.
+  dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom,
+    ConcreteOrMVar.instantiate_mvar_zero']
+  dsimp (config := {failIfUnchanged := false }) only [
+    ConcreteOrMVar.instantiate_mvar_zero''] -- TODO: added by Tobias ->  double-check.
+  dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
+
+  dsimp [LE.le]
+  simp_alive_ssa
+
+
+
+  simp [Vector.get]
+  rw [aaa]
+  simp_peephole
+
+  dsimp [DialectSignature.effectKind]
+
+
+  intro Γ
+
+
+
+
+
   simp_alive_meta
+  dsimp [DialectMorphism.mapOp]
+
   simp_alive_ssa
   sorry
 
