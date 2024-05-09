@@ -84,8 +84,7 @@ theorem okkk : src_cw 1  ⊑ tgt_cw 1  := by
   unfold tgt_cw
   unfold src_cw
   unfold mul
-  simp_alive_ssa
-  dsimp only [Com.Refinement]
+  --simp_alive_ssa
   intros Γv
   change_mlir_context Γv
 
@@ -105,7 +104,7 @@ theorem okk : src_i1_cw  ⊑ tgt_cw 1  := by
   unfold src_i1_cw
   unfold mul
 
-  simp_alive_ssa
+  simp_alive_meta
   dsimp only [Com.Refinement]
   intros Γv
   change_mlir_context Γv

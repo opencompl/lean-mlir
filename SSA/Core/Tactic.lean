@@ -13,6 +13,35 @@ namespace SSA
 open Ctxt (Var Valuation DerivedCtxt)
 open Lean Elab Tactic Meta
 
+section
+
+open Lean Meta Elab.Tactic Qq
+
+/-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
+elab "change_mlir_context " V:ident : tactic => do
+  let V : Name := V.getId
+  withMainContext do
+    let ctx ← getLCtx
+    let Vdecl : LocalDecl ← match ctx.findFromUserName? V with
+      | some decl => pure decl
+      | none => throwError f!"Failed to find variable `{V}` in the local context"
+
+    -- Assert that the type of `V` is `Ctxt.Valuation ?Γ`
+    let Ty ← mkFreshExprMVarQ q(Type)
+    let Γ  ← mkFreshExprMVarQ q(Ctxt $Ty)
+    let G  ← mkFreshExprMVarQ q(TyDenote $Ty)
+    let _  ← assertDefEqQ Vdecl.type q(@Ctxt.Valuation $Ty $G $Γ)
+
+    -- Reduce the context `Γ`
+    let Γr ← ctxtNf Γ
+    let Γr : Q(Ctxt $Ty) := Γr
+
+    let goal ← getMainGoal
+    let newGoal ← goal.changeLocalDecl Vdecl.fvarId q(Valuation $Γr)
+    replaceMainGoal [newGoal]
+
+end
+
 /--
 Check if an expression is contained in the current goal and fail otherwise.
 This tactic does not modify the goal state.
