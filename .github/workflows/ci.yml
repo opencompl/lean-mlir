@@ -1,4 +1,4 @@
-name: build & test
+name: build & test core library
 on:
   push:
     branches:
@@ -33,38 +33,3 @@ jobs:
         run: |
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build AliveExamples
-
-      - name: Compile Alive Scaling
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveScaling
-
-      - name: Compile `mlirnatural` Executable 🧐
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build mlirnatural
-
-      - name: LLVM Exhaustive Enumeration
-        run: |
-          sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
-          (cd test/bruteforce-correctness && ./run.sh)
-
-      - name: Compile `opt` Executable 🧐
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build opt
-
-      - name: LLVM opt round trip test
-        run: |
-          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
-
-      - name: Check for changes in AliveStatements
-        run: |
-          lake -R exe cache get
-          lake build
-          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
-          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
-
-#     - name: Run executable ⚙️
-#       run: |
-#         ./build/bin/mlirnatural instcombine-test1 "32,2,3" | grep "^some -2$"
