@@ -27,9 +27,9 @@ jobs:
       - name: Compile Library 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
-          lake -R build SSA
+          lake -R build SSA --wfail
 
       - name: Compile Alive Examples
         run: |
           lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveExamples
+          lake -R build AliveExamples --wfail
