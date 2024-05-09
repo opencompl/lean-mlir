@@ -200,7 +200,7 @@ theorem constant (δ : Int) (i : Int) (vstart : α) :
 
 /-- iterate the counterDecorator of a constant function. -/
 theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
-    ((counterDecorator δ (fun (i : Int) (v : α) => v))^[k]) =
+    ((counterDecorator δ (fun (_ : Int) (v : α) => v))^[k]) =
     fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by
   funext ⟨i, v⟩
   induction k generalizing i v
@@ -275,6 +275,7 @@ inductive Op
   | const : (val : ℤ) → Op
   | const_nat : (val : ℕ) → Op
 
+set_option linter.dupNamespace false in
 abbrev Arith : Dialect := {Op, Ty}
 
 @[reducible]
@@ -470,7 +471,8 @@ def rhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int]
   Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
-abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAddInt
+abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧
+  ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAdd
 
 open Scf in
 open Arith in

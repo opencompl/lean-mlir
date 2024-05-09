@@ -1,7 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Std
+import Batteries
 import Lean.Meta.Tactic.Rewrite
 import Lean.Meta.Tactic.Refl
 import Lean.Meta.Tactic.Simp
@@ -34,8 +34,6 @@ syntax term : unification_expr
 syntax "(" unification_var ":" unification_expr ")" : hyp_matcher
 syntax hyp_matcher+ : hyps_matcher
 
-
-#check RBMap
 
 structure MVar where
   id: MVarId
@@ -78,4 +76,3 @@ elab "matchgoal"
 
 
 end MatchGoal
-

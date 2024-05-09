@@ -12,6 +12,13 @@ lean_exe mlirnatural {
   root := `SSA.MLIRNatural
 }
 
+
+lean_exe opt {
+  root := `SSA.Projects.InstCombine.LLVM.Opt
+  -- `supportInterpreter` flag needed to link executable with the Lean frontend
+  supportInterpreter := true
+}
+
 lean_exe ssaLLVMEnumerator {
   root := `SSA.Projects.InstCombine.LLVM.Enumerator
 }
@@ -58,5 +65,5 @@ require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 
 require partax from git "https://github.com/tydeu/lean4-partax" @ "master"
 
-meta if get_config? env = some "dev" then -- dev is so not everyone has to build it
-  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "8bccb92b531248af1b6692d65486e8640c8bcd10"
+meta if get_config? doc = some "on" then -- dev is so not everyone has to build it
+  require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"

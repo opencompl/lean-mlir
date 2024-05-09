@@ -53,6 +53,7 @@ def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
       try simp[A] at right
       -- TODO: how to substitute?
       have LEN : len < t.size := by simp[Index] at *; linarith
+      intros H
       sorry
     }
   }
@@ -355,6 +356,7 @@ def Op.regSig : Op → RegionSignature Ty
   | .map1d => [([.int], .int)]
   | _ => []
 
+set_option linter.dupNamespace false in
 def Tensor1D : Dialect where
   Op := Op
   Ty := Ty

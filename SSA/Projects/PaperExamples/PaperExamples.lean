@@ -9,7 +9,7 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
-import Std.Data.BitVec
+import Batteries.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
 -- import Mathlib.Data.StdBitVec.Lemmas
@@ -132,7 +132,8 @@ def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   }]
 
 def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
-#eval eg₀val -- 0x00000008#32
+/-- info: 0x00000008#32 -/
+#guard_msgs in #eval eg₀val
 
 open MLIR AST MLIR2Simple in
 /-- x + 0 -/

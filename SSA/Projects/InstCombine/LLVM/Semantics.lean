@@ -1,11 +1,11 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Std.Data.BitVec
 import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic.Cases
 import Mathlib.Tactic.SplitIfs
 import Mathlib.Tactic.Tauto
+import Aesop
 import SSA.Projects.InstCombine.LLVM.SimpSet
 
 
@@ -218,9 +218,33 @@ def urem {w : Nat} (x y : IntW w) : IntW w := do
 def _root_.Int.rem (x y : Int) : Int :=
   if x ≥ 0 then (x % y) else ((x % y) - y.natAbs)
 
--- TODO: prove this to make sure it's the right implementation!
 theorem _root_.Int.rem_sign_dividend :
-  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by sorry
+  ∀ x y, Int.rem x y < 0 ↔ x < 0 :=  by
+  intro x y
+  apply Iff.intro
+  <;> simp [Int.rem]; split_ifs <;> by_cases (y = 0) <;> rename_i hx hy
+  · rw [hy, Int.emod_zero]; tauto
+  · intro hcontra; exfalso
+    apply (Int.not_le.2 hcontra)
+    exact Int.emod_nonneg x hy
+  · rw [hy, Int.emod_zero]; simp [Int.natAbs]
+  · rw [Int.not_le] at hx; intro _; exact hx
+  · intro hx
+    have hnx := Int.not_le.2 hx
+    simp [hnx]
+    by_cases (y = 0)
+    case pos hy => simp[hy]; exact hx
+    case neg hy =>
+      suffices hynat : x % y < ↑y.natAbs by omega
+      by_cases (0 < y)
+      case pos hypos =>
+        have hyleq : 0 ≤ y := by omega
+        rw [← Int.eq_natAbs_of_zero_le hyleq]; exact Int.emod_lt_of_pos x hypos
+      case neg hynonneg =>
+        have hmyneg : 0 < -y := by omega
+        have hmynnonpos : 0 ≤ -y := by omega
+        rw [← Int.emod_neg, ← Int.natAbs_neg]
+        rw [← Int.eq_natAbs_of_zero_le hmynnonpos]; exact Int.emod_lt_of_pos x hmyneg
 
 /--
 This instruction returns the remainder of a division (where the result is either zero or has the same sign as the dividend, op1),

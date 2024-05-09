@@ -190,7 +190,7 @@ open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 mutual
-  def Expr.repr (prec : Nat) : Expr d Γ eff t → Format
+  def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
     | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
 
   def Com.repr (prec : Nat) : Com d eff Γ t → Format
@@ -266,7 +266,7 @@ def Com.recAux' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
   | _, _, _, Com.ret v => ret v
   | _, _, _, Com.lete e body => lete e body (Com.recAux' ret lete body)
 
-@[implemented_by Com.recAux', elab_as_elim, eliminator]
+@[implemented_by Com.recAux', elab_as_elim, induction_eliminator]
 -- ^^^^ `Com.rec` is noncomputable, so have a computable version as well
 --      See `Com.recAux'_eq` for a theorem that states these definitions are equal
 def Com.rec' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
@@ -590,9 +590,18 @@ so that `simp only` (which we use in `simp_peephole` can find them!)
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
 args, since there now are equation lemmas for it.
 -/
-#eval Lean.Meta.getEqnsFor? ``HVector.denote
-#eval Lean.Meta.getEqnsFor? ``Expr.denote
-#eval Lean.Meta.getEqnsFor? ``Com.denote
+/--
+info: some #[`HVector.denote.eq_1, `HVector.denote.eq_2]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``HVector.denote
+/--
+info: some #[`Expr.denote.eq_1]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``Expr.denote
+/--
+info: some #[`Com.denote.eq_1, `Com.denote.eq_2, `Com.denote.eq_3]
+-/
+#guard_msgs in #eval Lean.Meta.getEqnsFor? ``Com.denote
 
 end Unfoldings
 
@@ -727,7 +736,7 @@ def Com.changeVars : Com d Γ eff ty →
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp; rfl
 
-@[simp] lemma Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
+@[simp] def Com.outContext_changeVars_hom {map : Γ.Hom Δ} (map_inv : Δ.Hom Γ) :
     {c : Com d Γ eff ty} → Ctxt.Hom (outContext (changeVars c map)) (outContext c)
   | .ret _        => cast (by simp) map_inv
   | .lete _ body  => cast (by simp) <|
@@ -1161,20 +1170,20 @@ assignment of that variable in the input valuation -/
 
 -- TODO: This theorem is currently not used yet. The hope is that it might replace/simplify the
 --       subtype reasoning (`denoteIntoSubtype`) currently used when reasoning about `matchVar`
-theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
-    {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
-    (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
-            newCom.denote V_mid = V_mid v) :
-    (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
-  rcases zip with ⟨lets, com⟩
-  simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
-    Com.denoteLets_returnVar_pure, denote_mk]
-  unfold Valuation.reassignVar
-  congr; funext V_mid; congr
-  funext t' v'
-  simp only [dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
+-- theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
+--     {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
+--     (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
+--             newCom.denote V_mid = V_mid v) :
+--     (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
+--   rcases zip with ⟨lets, com⟩
+--   simp only [denote_insertPureCom, Valuation.comap_with, Valuation.comap_outContextHom_denoteLets,
+--     Com.denoteLets_returnVar_pure, denote_mk]
+--   unfold Valuation.reassignVar
+--   congr; funext V_mid; congr
+--   funext t' v'
+--   simp only [dite_eq_right_iff, forall_exists_index]
+--   rintro rfl rfl
+--   simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
 
 end DenoteInsert
 
@@ -1571,8 +1580,6 @@ instance [p : PureDialect d] : DialectDenote (TermModel d Γ) where
       | [], .nil          => .nil
       | _::_, .cons a as  => .cons a (argsToBranches as)
 
-#check ExprTree
-
 variable (d) in
 /-- A substitution in context `Γ` maps variables of `Γ` to expression trees in `Δ`,
 in a type-preserving manner -/
@@ -1752,6 +1759,11 @@ def guard_recompile_2: Int := 42
   This now works, with the obscene heartbeat count, but it is not ideal.
   TODO: figure out why this is so slow
 -/
+
+-- TODO: There seems to be a bug in the unusedVariables linter that shows up in `subset_entries_matchVar`.
+-- It reports `hvarMap` as unused, but it is used (because somehow the tactic does some beta abstraction).
+--  might be worth investigating/reporting.
+set_option linter.unusedVariables false in
 set_option maxHeartbeats 99999999 in
 mutual
 /-
@@ -1853,7 +1865,6 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
           (argsr := (Expr.args matchExpr))
           (hvarMap := by simp; rw [← hvarMap])
 end
-
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]
@@ -2220,7 +2231,6 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     simp [Valuation.comap]
     split
     . congr
-      dsimp
       split <;> simp_all
     . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all

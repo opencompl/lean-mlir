@@ -127,7 +127,7 @@ theorem and_sequence_20_eq (w : Nat) :
   simp_alive_peephole
   alive_auto
 
-set_option maxHeartbeats 1500000 in
+set_option maxHeartbeats 1700000 in
 def and_sequence_30_lhs (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%C1 : _, %Z : _):
@@ -232,6 +232,7 @@ def and_sequence_40_rhs (w : Nat)  :=
   "llvm.return" (%v1) : (_) -> ()
 }]
 
+set_option maxHeartbeats 800000 in
 theorem and_sequence_40_eq (w : Nat) :
     and_sequence_40_lhs w  ⊑ and_sequence_40_rhs w := by
   unfold and_sequence_40_lhs and_sequence_40_rhs
