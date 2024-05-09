@@ -355,6 +355,7 @@ def Op.regSig : Op → RegionSignature Ty
   | .map1d => [([.int], .int)]
   | _ => []
 
+set_option linter.dupNamespace false in
 def Tensor1D : Dialect where
   Op := Op
   Ty := Ty

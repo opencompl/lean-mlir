@@ -200,7 +200,7 @@ theorem constant (δ : Int) (i : Int) (vstart : α) :
 
 /-- iterate the counterDecorator of a constant function. -/
 theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
-    ((counterDecorator δ (fun (i : Int) (v : α) => v))^[k]) =
+    ((counterDecorator δ (fun (_ : Int) (v : α) => v))^[k]) =
     fun (args : ℤ × α) => (args.fst + k * δ, args.snd) := by
   funext ⟨i, v⟩
   induction k generalizing i v
@@ -275,6 +275,7 @@ inductive Op
   | const : (val : ℤ) → Op
   | const_nat : (val : ℕ) → Op
 
+set_option linter.dupNamespace false in
 abbrev Arith : Dialect := {Op, Ty}
 
 @[reducible]
