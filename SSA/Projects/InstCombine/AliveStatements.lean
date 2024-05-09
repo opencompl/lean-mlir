@@ -775,7 +775,9 @@ theorem bitvec_InstCombineShift__440 :
   try sorry
 
 theorem bitvec_InstCombineShift__476 :
-    unknown constant 'alive_InstCombineShift__476_tgt' := by
+    ∀ (e e_1 e_2 e_3 : LLVM.IntW w),
+      LLVM.shl (LLVM.or (LLVM.and (LLVM.lshr e_3 e_2) e_1) e) e_2 ⊑
+        LLVM.or (LLVM.and e_3 (LLVM.shl e_1 e_2)) (LLVM.shl e e_2) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash

@@ -3358,7 +3358,7 @@ def alive_InstCombineShift__440_src  (w : Nat)   :=
   "llvm.return" (%v4) : (_) -> ()
 }]
 
-set_option maxHeartbeats 400000
+set_option maxHeartbeats 400000 in
 def alive_InstCombineShift__440_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _, %C : _, %C2 : _):
@@ -3371,7 +3371,7 @@ def alive_InstCombineShift__440_tgt  (w : Nat)  :=
   %v7 = "llvm.xor" (%v2,%v3) : (_, _) -> (_)
   "llvm.return" (%v7) : (_) -> ()
 }]
-theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_src w  ⊑ (alive_InstCombineShift__440_tgt w)  := by
+theorem alive_InstCombineShift__440  (w : Nat)   : alive_InstCombineShift__440_src w  ⊑ alive_InstCombineShift__440_tgt w  := by
   unfold alive_InstCombineShift__440_src alive_InstCombineShift__440_tgt
   simp_alive_ssa
   apply bitvec_InstCombineShift__440
@@ -3404,6 +3404,7 @@ def alive_InstCombineShift__476_src  (w : Nat)   :=
   "llvm.return" (%v4) : (_) -> ()
 }]
 
+set_option maxHeartbeats 400000 in
 def alive_InstCombineShift__476_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _, %C : _, %C2 : _):
