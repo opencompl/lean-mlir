@@ -26,33 +26,13 @@ jobs:
 
       - name: Compile Library 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build SSA
-
-      - name: Compile Alive Examples
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveExamples
-
-      - name: Compile Alive Scaling
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveScaling
-
-      - name: Compile `mlirnatural` Executable 🧐
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build mlirnatural
+          lake exe cache get # download cache of mathlib docs.
+          lake build SSA AliveExamples AliveScaling mlirnatural opt
 
       - name: LLVM Exhaustive Enumeration
         run: |
           sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
           (cd test/bruteforce-correctness && ./run.sh)
-
-      - name: Compile `opt` Executable 🧐
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build opt
 
       - name: LLVM opt round trip test
         run: |
@@ -60,8 +40,6 @@ jobs:
 
       - name: Check for changes in AliveStatements
         run: |
-          lake -R exe cache get
-          lake build
           (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
 
