@@ -4,6 +4,9 @@
 import re
 import subprocess
 from typing import *
+from multiprocessing import Pool, TimeoutError
+import time
+import os
 
 alive_statements_preamble = """
 /-
@@ -44,13 +47,13 @@ def getProofs(lines: List[str]) -> Tuple[List[str], List[List[str]]]:
     return proofs[0], proofs[1:]
 
 
-def getStatement(preamble: List[str], proof: List[str]) -> str:
+def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
     """
     Produces the proof state produced by running the `proof`.
     Uses the preamble to create a valid Lean file.
     """
 
-    f = open("AliveTest.lean", "w")
+    f = open("AliveTest_" + str(id) + ".lean", "w")
 
     f.write("".join(preamble))
     rewritten = []
@@ -65,7 +68,7 @@ def getStatement(preamble: List[str], proof: List[str]) -> str:
     f.close()
 
     x = subprocess.run(
-        "(cd ../../../; lake build SSA.Projects.InstCombine.AliveTest)",
+        "(cd ../../../; lake build SSA.Projects.InstCombine.AliveTest_" + str(id) + ")",
         shell=True,
         capture_output=True,
     )
@@ -76,7 +79,7 @@ def getStatement(preamble: List[str], proof: List[str]) -> str:
         return ""
 
     error = x.stdout.decode("utf-8")
-    msg = re.sub(".*AliveTest.lean:[0-9]+:[0-9]+-[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
+    msg = re.sub(".*AliveTest_[0-9]+.lean:[0-9]+:[0-9]+-[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
     msg = re.sub("\nerror: Lean.*", "", msg, flags=re.DOTALL)
     msg = "    " + re.sub("\n", "\n    ", msg, flags=re.DOTALL)
 
@@ -94,13 +97,9 @@ def filterProofs(preamble: List[str], proofs: List[List[str]]) -> List[str]:
     Returns a list of statements, corresponding to each of the proofs.
     """
 
-    statements = []
-    for proof in proofs:
-        print("processing: " + proof[0])
-        stmt = getStatement(preamble, proof)
-        if not stmt:
-            continue
-        statements.append(stmt)
+    with Pool() as pool:
+        async_results = [pool.apply_async(getStatement, args=(preamble, i, proofs[i])) for i in range(len(proofs))]
+        statements = [ar.get() for ar in async_results]
 
     return statements
 
