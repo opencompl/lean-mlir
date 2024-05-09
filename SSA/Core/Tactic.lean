@@ -136,6 +136,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       only_goal
         simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last, Vector.get]
         repeat (generalize_or_fail at $Γv)
+        try clear $Γv
       )
    )
 
