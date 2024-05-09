@@ -236,7 +236,6 @@ theorem _root_.Int.rem_sign_dividend :
     case pos hy => simp[hy]; exact hx
     case neg hy =>
       suffices hynat : x % y < ↑y.natAbs by omega
-      --cases (Int.natAbs_eq y)
       by_cases (0 < y)
       case pos hypos =>
         have hyleq : 0 ≤ y := by omega
