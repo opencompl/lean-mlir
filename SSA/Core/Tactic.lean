@@ -17,7 +17,7 @@ section
 open Lean Meta Elab.Tactic Qq
 
 /-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
-elab "change_mlir_context " V:ident : tactic => do
+local elab "change_mlir_context " V:ident : tactic => do
   let V : Name := V.getId
   withMainContext do
     let ctx ← getLCtx
@@ -61,7 +61,7 @@ local macro "generalize_or_fail" "at" ll:ident : tactic =>
         -- fail if the term is not present in the goal.
         contains? ($ll (_ : Var ..))
         generalize ($ll (_ : Var ..)) = e at *;
-        dsimp (config := {failIfUnchanged := false}) only [TyDenote.toType, List.get] at e
+        simp (config := {failIfUnchanged := false}) only [TyDenote.toType] at e
         revert e
       )
   )
