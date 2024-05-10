@@ -12,8 +12,26 @@ import Mathlib.Data.BitVec.Lemmas
 open LLVM
 open BitVec
 
+theorem bitvec_283 :
+    ∀ (e e_1 : LLVM.IntW 1), LLVM.mul e_1 e ⊑ LLVM.and e_1 e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros a b
+  sorry  -- Homework!
+
+theorem bitvec_AddSub_1556 :
+    ∀ (e e_1 : LLVM.IntW 1), LLVM.sub e_1 e ⊑ LLVM.xor e_1 e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros a b
+  sorry -- Homework!
+
+
 theorem bitvec_275 :
-    ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) e ⊑ LLVM.sub e_1 (LLVM.urem e_1 e) := by
+    ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) e ⊑
+       LLVM.sub e_1 (LLVM.urem e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
