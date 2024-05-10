@@ -53,6 +53,9 @@ theorem and_sequence_10_eq (w : Nat) :
     and_sequence_10_lhs w  ⊑ and_sequence_10_rhs w := by
   unfold and_sequence_10_lhs and_sequence_10_rhs
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 def and_sequence_15_lhs (w : Nat)   :=
@@ -85,6 +88,9 @@ theorem and_sequence_15_eq (w : Nat) :
     and_sequence_15_lhs w  ⊑ and_sequence_15_rhs w := by
   unfold and_sequence_15_lhs and_sequence_15_rhs
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 set_option maxHeartbeats 500000 in
@@ -125,6 +131,9 @@ theorem and_sequence_20_eq (w : Nat) :
     and_sequence_20_lhs w  ⊑ and_sequence_20_rhs w := by
   unfold and_sequence_20_lhs and_sequence_20_rhs
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 set_option maxHeartbeats 1700000 in
@@ -175,6 +184,9 @@ theorem and_sequence_30_eq (w : Nat) :
     and_sequence_30_lhs w  ⊑ and_sequence_30_rhs w := by
   unfold and_sequence_30_lhs and_sequence_30_rhs
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
   alive_auto
 
 set_option maxHeartbeats 3800000 in
@@ -237,4 +249,7 @@ theorem and_sequence_40_eq (w : Nat) :
     and_sequence_40_lhs w  ⊑ and_sequence_40_rhs w := by
   unfold and_sequence_40_lhs and_sequence_40_rhs
   simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
   alive_auto
