@@ -17,7 +17,7 @@ section
 open Lean Meta Elab.Tactic Qq
 
 /-- Given a `V : Valuation Γ`, fully reduce the context `Γ` in the type of `V` -/
-local elab "change_mlir_context " V:ident : tactic => do
+elab "change_mlir_context " V:ident : tactic => do
   let V : Name := V.getId
   withMainContext do
     let ctx ← getLCtx
@@ -47,7 +47,7 @@ open Lean Elab Tactic Meta
 Check if an expression is contained in the current goal and fail otherwise.
 This tactic does not modify the goal state.
  -/
-elab "contains? " ts:term : tactic => withMainContext do
+local elab "contains? " ts:term : tactic => withMainContext do
   let tgt ← getMainTarget
   if (← kabstract tgt (← elabTerm ts none)) == tgt then throwError "pattern not found"
 
