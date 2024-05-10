@@ -34,9 +34,6 @@ def empty : Ctxt Ty := []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
--- TODO: write lemmas about what the empty context does.
--- We remove the @[simp] tag from empty context, to better understand
--- when we pun between context and list.
 lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
 
 @[match_pattern]
@@ -60,7 +57,7 @@ def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   List.map f
 
 @[simp]
-lemma map_nil (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+lemma map_nil (f : Ty → Ty') :
   map f ∅ = ∅ := rfl
 
 @[simp]
