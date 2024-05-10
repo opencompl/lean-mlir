@@ -9,12 +9,6 @@ import Mathlib.Data.Vector.Basic
 /--
   A general type that is either a concrete known value of type `α`, or one of `φ` metavariables
  -/
-  -- TODO: Fin's story of normal forms is complex.
-  -- For example, `(0 : Fin (.succ n))` and `(⟨0, by ...⟩ : Fin n)`,
-  --  are two ways of spelling the same object.
-  -- However, neither is superior, so it's unclear what the normal form should be.
-  -- Rather, let's move the proof into the mvar,
-  -- so that the user and our framework never encounters `Fin`.
 inductive ConcreteOrMVar (α : Type u) (φ : Nat)
   | concrete (a : α)
   | mvar (i : Fin φ)
@@ -31,12 +25,6 @@ instance : Coe α (ConcreteOrMVar α φ) := ⟨.concrete⟩
 instance : OfNat (ConcreteOrMVar Nat φ) n := ⟨.concrete n⟩
 
 namespace ConcreteOrMVar
-
-/- Terse notation for concrete and mvar. -/
-namespace Notation
-scoped notation "i" n => ConcreteOrMVar.concrete n
-scoped notation "i?" f => ConcreteOrMVar.mvar f
-end Notation
 
 /-- If there are no meta-variables, `ConcreteOrMVar` is just the concrete type `α` -/
 def toConcrete : ConcreteOrMVar α 0 → α
