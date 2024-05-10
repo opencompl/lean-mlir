@@ -3187,8 +3187,6 @@ def alive_Select_859'_src  (w : Nat)   :=
   "llvm.return" (%v3) : (i1) -> ()
 }]
 
---def aar : InstcombineTransformDialect.MOp.instantiateCom a.map
-
 def alive_Select_859'_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%a : _, %b : _):
