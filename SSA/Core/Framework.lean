@@ -2404,6 +2404,9 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => simp
     case neg h => simp
 
+/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewritePeepholeAt
+
 /- repeatedly apply peephole on program. -/
 section SimpPeepholeApplier
 
@@ -2436,6 +2439,10 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
     (rewritePeephole fuel pr target).denote = target.denote := by
   simp[rewritePeephole, denote_rewritePeephole_go]
+
+/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewritePeephole
+
 end SimpPeepholeApplier
 
 section TypeProjections
