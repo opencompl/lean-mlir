@@ -22,13 +22,55 @@ theorem bitvec_AddSub_1043 :
   try alive_auto
   try sorry
 
+
+#check BitVec.isLt
+theorem bitvec_width_1_cases (a : BitVec 1) : a = 0 ∨ a = 1 := by
+  obtain ⟨numa, ha⟩ := a
+  simp
+  have hnumcases : numa = 0 ∨ numa = 1 := by
+    omega
+  cases hnumcases
+  case inl hnuma_eq_zero =>
+    subst hnuma_eq_zero
+    left
+    rfl
+  case inr hnuma_eq_one =>
+    subst hnuma_eq_one
+    right
+    rfl
+
 theorem bitvec_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
-  try sorry
+  intros a b
+  unfold BitVec.add
+  unfold BitVec.xor
+  have ha : a = 0 ∨ a = 1 := by
+    apply bitvec_width_1_cases
+  have hb : b = 0 ∨ b = 1 := by
+    apply bitvec_width_1_cases
+  cases ha
+  case inl ha_eq_zero =>
+    subst ha_eq_zero
+    cases hb
+    case inl hb_eq_zero =>
+      subst hb_eq_zero
+      rfl
+    case inr hb_eq_one =>
+      subst hb_eq_one
+      rfl
+  case inr ha_eq_one =>
+    subst ha_eq_one
+    cases hb
+    case inl hb_eq_zero =>
+      subst hb_eq_zero
+      rfl
+    case inr hb_eq_one =>
+      subst hb_eq_one
+      rfl
+#exit
 
 theorem bitvec_AddSub_1156 :
     ∀ (e : LLVM.IntW w), LLVM.add e e ⊑ LLVM.shl e (LLVM.const? ↑1) := by

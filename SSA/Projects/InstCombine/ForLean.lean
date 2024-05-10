@@ -3,6 +3,17 @@ import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic
 
+#check BitVec.sshiftRight
+
+-- a3 a2 a1 a0 >> 2
+-- 0 0 a3 a2  [0]
+lemma BitVec.getLsb_sshiftRight (a : BitVec w) (s : Nat) : (a.sshiftRight s).getLsb i =
+   if (i + s ≥ w) then (a.getMsb 0) else a.getLsb (s + i) :=
+  by sorry
+-- bitvec_AddSub_1152
+
+#print propext
+
 lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
   simp only [← pow_succ, gt_iff_lt, Nat.ofNat_pos, ne_eq, OfNat.ofNat_ne_one,
     not_false_eq_true, pow_right_inj]
