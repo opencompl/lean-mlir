@@ -11,7 +11,6 @@ import Lean.Elab.Tactic.ElabTerm
 namespace SSA
 
 open Ctxt (Var Valuation DerivedCtxt)
-open Lean Elab Tactic Meta
 
 section
 
@@ -41,6 +40,8 @@ elab "change_mlir_context " V:ident : tactic => do
     replaceMainGoal [newGoal]
 
 end
+
+open Lean Elab Tactic Meta
 
 /--
 Check if an expression is contained in the current goal and fail otherwise.
