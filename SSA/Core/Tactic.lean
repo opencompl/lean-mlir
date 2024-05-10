@@ -105,7 +105,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
         /- Effect massaging -/
         EffectKind.toMonad_pure, EffectKind.toMonad_impure,
-        EffectKind.liftEffect_rfl, Vector.get,
+        EffectKind.liftEffect_rfl,
         Id.pure_eq, Id.bind_eq, id_eq,
         /-
         NOTE (Here Be Dragons 🐉): the parenthesis in `(HVector.denote_cons)` are significant!
@@ -135,7 +135,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
       -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
-        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last, Vector.get]
+        simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
         repeat (generalize_or_fail at $Γv)
         try clear $Γv
       )
