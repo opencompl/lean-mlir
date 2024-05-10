@@ -12,6 +12,14 @@ import Mathlib.Data.BitVec.Lemmas
 open LLVM
 open BitVec
 
+theorem bitvec_275 :
+    ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) e ⊑ LLVM.sub e_1 (LLVM.urem e_1 e) := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros a b
+  sorry -- Homework!
+
 
 theorem bitvec_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -696,14 +704,6 @@ theorem bitvec_229 :
 
 theorem bitvec_239 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.mul (LLVM.sub (LLVM.const? 0) e_1) (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.mul e_1 e := by
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  try alive_auto
-  try sorry
-
-theorem bitvec_275 :
-    ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) e ⊑ LLVM.sub e_1 (LLVM.urem e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
