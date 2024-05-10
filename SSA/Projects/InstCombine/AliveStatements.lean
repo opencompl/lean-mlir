@@ -22,21 +22,13 @@ theorem bitvec_AddSub_1043 :
   try alive_auto
   try sorry
 
-
-theorem bitvec_width_1_cases (a : BitVec 1) : a = 0 ∨ a = 1 := by
-  obtain ⟨numa, ha⟩ := a
-  have hnumcases : numa = 0 ∨ numa = 1 := by omega
-  rcases hnumcases with h | h <;> simp [h]
-
 theorem bitvec_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  intros a b
-  have ha : a = 0 ∨ a = 1 := bitvec_width_1_cases _
-  have hb : b = 0 ∨ b = 1 := bitvec_width_1_cases _
-  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
+  try alive_auto
+  try sorry
 
 theorem bitvec_AddSub_1156 :
     ∀ (e : LLVM.IntW w), LLVM.add e e ⊑ LLVM.shl e (LLVM.const? ↑1) := by
