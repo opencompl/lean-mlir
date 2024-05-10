@@ -64,7 +64,8 @@ theorem bitvec_AddSub_1176 :
   try sorry
 
 theorem bitvec_AddSub_1202 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.xor e_1 (LLVM.const? (-1))) e ⊑ LLVM.sub (LLVM.sub e (LLVM.const? ↑1)) e_1 := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.add (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e ⊑ LLVM.sub (LLVM.sub e (LLVM.const? ↑1)) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -112,7 +113,7 @@ theorem bitvec_AddSub_1556 :
   try sorry
 
 theorem bitvec_AddSub_1560 :
-    ∀ (e : LLVM.IntW w), LLVM.sub (LLVM.const? (-1)) e ⊑ LLVM.xor e (LLVM.const? (-1)) := by
+    ∀ (e : LLVM.IntW w), LLVM.sub (LLVM.const? (Int.negSucc 0)) e ⊑ LLVM.xor e (LLVM.const? (Int.negSucc 0)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -120,7 +121,8 @@ theorem bitvec_AddSub_1560 :
   try sorry
 
 theorem bitvec_AddSub_1564 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 (LLVM.xor e (LLVM.const? (-1))) ⊑ LLVM.add e (LLVM.add e_1 (LLVM.const? ↑1)) := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.sub e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) ⊑ LLVM.add e (LLVM.add e_1 (LLVM.const? ↑1)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -238,8 +240,8 @@ theorem bitvec_AndOrXor_887_2 :
 
 theorem bitvec_AndOrXor_1230__A__B___A__B :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) (LLVM.xor e (LLVM.const? (-1))) ⊑
-        LLVM.xor (LLVM.or e_1 e) (LLVM.const? (-1)) := by
+      LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) (LLVM.xor e (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.xor (LLVM.or e_1 e) (LLVM.const? (Int.negSucc 0)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -247,7 +249,8 @@ theorem bitvec_AndOrXor_1230__A__B___A__B :
   try sorry
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1))) ⊑ LLVM.xor e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (Int.negSucc 0))) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -255,7 +258,8 @@ theorem bitvec_AndOrXor_1241_AB__AB__AB :
   try sorry
 
 theorem bitvec_AndOrXor_1247_AB__AB__AB :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1))) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.and (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (Int.negSucc 0))) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -263,7 +267,7 @@ theorem bitvec_AndOrXor_1247_AB__AB__AB :
   try sorry
 
 theorem bitvec_AndOrXor_1253_A__AB___A__B :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.xor e_1 e) e_1 ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.xor e_1 e) e_1 ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -271,7 +275,7 @@ theorem bitvec_AndOrXor_1253_A__AB___A__B :
   try sorry
 
 theorem bitvec_AndOrXor_1280_ABA___AB :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e) e_1 ⊑ LLVM.and e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) e_1 ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -281,7 +285,7 @@ theorem bitvec_AndOrXor_1280_ABA___AB :
 theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
     ∀ (e e_1 e_2 : LLVM.IntW w),
       LLVM.and (LLVM.xor e_2 e_1) (LLVM.xor (LLVM.xor e_1 e) e_2) ⊑
-        LLVM.and (LLVM.xor e_2 e_1) (LLVM.xor e (LLVM.const? (-1))) := by
+        LLVM.and (LLVM.xor e_2 e_1) (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -289,7 +293,8 @@ theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
   try sorry
 
 theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.and e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -318,7 +323,7 @@ theorem bitvec_AndOrXor_1683_2 :
 theorem bitvec_AndOrXor_1704 :
     ∀ (e e_1 : LLVM.IntW w),
       LLVM.or (LLVM.icmp LLVM.IntPredicate.eq e_1 (LLVM.const? 0)) (LLVM.icmp LLVM.IntPredicate.ult e e_1) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? (-1))) e := by
+        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -328,7 +333,7 @@ theorem bitvec_AndOrXor_1704 :
 theorem bitvec_AndOrXor_1705 :
     ∀ (e e_1 : LLVM.IntW w),
       LLVM.or (LLVM.icmp LLVM.IntPredicate.eq e_1 (LLVM.const? 0)) (LLVM.icmp LLVM.IntPredicate.ugt e_1 e) ⊑
-        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? (-1))) e := by
+        LLVM.icmp LLVM.IntPredicate.uge (LLVM.add e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -354,7 +359,7 @@ theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
   try sorry
 
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e) e_1 ⊑ LLVM.or e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) e_1 ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -363,7 +368,8 @@ theorem bitvec_AndOrXor_2113___A__B__A___A__B :
 
 theorem bitvec_AndOrXor_2118___A__B__A___A__B :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.and e_1 e) (LLVM.xor e_1 (LLVM.const? (-1))) ⊑ LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e := by
+      LLVM.or (LLVM.and e_1 e) (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -371,7 +377,8 @@ theorem bitvec_AndOrXor_2118___A__B__A___A__B :
   try sorry
 
 theorem bitvec_AndOrXor_2123___A__B__A__B___A__B :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.xor e_1 e) ⊑ LLVM.xor e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.or (LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0)))) (LLVM.xor e_1 e) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -380,7 +387,9 @@ theorem bitvec_AndOrXor_2123___A__B__A__B___A__B :
 
 theorem bitvec_AndOrXor_2188 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.xor e_1 e := by
+      LLVM.or (LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))))
+          (LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑
+        LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -405,8 +414,8 @@ theorem bitvec_AndOrXor_2243__B__C__A__B___B__A__C :
 
 theorem bitvec_AndOrXor_2247__A__B__A__B :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) (LLVM.xor e (LLVM.const? (-1))) ⊑
-        LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1)) := by
+      LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) (LLVM.xor e (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.xor (LLVM.and e_1 e) (LLVM.const? (Int.negSucc 0)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -423,7 +432,8 @@ theorem bitvec_AndOrXor_2263 :
 
 theorem bitvec_AndOrXor_2264 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or e_1 (LLVM.xor (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.or e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.or e_1 (LLVM.xor (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑
+        LLVM.or e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -440,7 +450,8 @@ theorem bitvec_AndOrXor_2265 :
 
 theorem bitvec_AndOrXor_2284 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or e_1 (LLVM.xor (LLVM.or e_1 e) (LLVM.const? (-1))) ⊑ LLVM.or e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.or e_1 (LLVM.xor (LLVM.or e_1 e) (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.or e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -449,7 +460,8 @@ theorem bitvec_AndOrXor_2284 :
 
 theorem bitvec_AndOrXor_2285 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or e_1 (LLVM.xor (LLVM.xor e_1 e) (LLVM.const? (-1))) ⊑ LLVM.or e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.or e_1 (LLVM.xor (LLVM.xor e_1 e) (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.or e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -458,7 +470,8 @@ theorem bitvec_AndOrXor_2285 :
 
 theorem bitvec_AndOrXor_2297 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.xor (LLVM.xor e_1 (LLVM.const? (-1))) e := by
+      LLVM.or (LLVM.and e_1 e) (LLVM.xor (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑
+        LLVM.xor (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -475,8 +488,8 @@ theorem bitvec_AndOrXor_2367 :
 
 theorem bitvec_AndOrXor_2416 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e) (LLVM.const? (-1)) ⊑
-        LLVM.or e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.xor (LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) (LLVM.const? (Int.negSucc 0)) ⊑
+        LLVM.or e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -485,8 +498,8 @@ theorem bitvec_AndOrXor_2416 :
 
 theorem bitvec_AndOrXor_2417 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e) (LLVM.const? (-1)) ⊑
-        LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.xor (LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) (LLVM.const? (Int.negSucc 0)) ⊑
+        LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -495,8 +508,8 @@ theorem bitvec_AndOrXor_2417 :
 
 theorem bitvec_AndOrXor_2429 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1)) ⊑
-        LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.xor (LLVM.and e_1 e) (LLVM.const? (Int.negSucc 0)) ⊑
+        LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -505,8 +518,8 @@ theorem bitvec_AndOrXor_2429 :
 
 theorem bitvec_AndOrXor_2430 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.or e_1 e) (LLVM.const? (-1)) ⊑
-        LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) (LLVM.xor e (LLVM.const? (-1))) := by
+      LLVM.xor (LLVM.or e_1 e) (LLVM.const? (Int.negSucc 0)) ⊑
+        LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -514,7 +527,8 @@ theorem bitvec_AndOrXor_2430 :
   try sorry
 
 theorem bitvec_AndOrXor_2443 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.ashr (LLVM.xor e_1 (LLVM.const? (-1))) e) (LLVM.const? (-1)) ⊑ LLVM.ashr e_1 e := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.xor (LLVM.ashr (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.ashr e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -523,7 +537,7 @@ theorem bitvec_AndOrXor_2443 :
 
 theorem bitvec_AndOrXor_2453 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.icmp LLVM.IntPredicate.slt e_1 e) (LLVM.const? (-1)) ⊑ LLVM.icmp LLVM.IntPredicate.sge e_1 e := by
+      LLVM.xor (LLVM.icmp LLVM.IntPredicate.slt e_1 e) (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.icmp LLVM.IntPredicate.sge e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -531,7 +545,8 @@ theorem bitvec_AndOrXor_2453 :
   try sorry
 
 theorem bitvec_AndOrXor_2475 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.sub e_1 e) (LLVM.const? (-1)) ⊑ LLVM.add e (LLVM.sub (LLVM.const? (-1)) e_1) := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.xor (LLVM.sub e_1 e) (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.add e (LLVM.sub (LLVM.const? (Int.negSucc 0)) e_1) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -539,7 +554,8 @@ theorem bitvec_AndOrXor_2475 :
   try sorry
 
 theorem bitvec_AndOrXor_2486 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.add e_1 e) (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.sub (LLVM.const? (-1)) e) e_1 := by
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.xor (LLVM.add e_1 e) (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.sub (LLVM.sub (LLVM.const? (Int.negSucc 0)) e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -547,7 +563,7 @@ theorem bitvec_AndOrXor_2486 :
   try sorry
 
 theorem bitvec_AndOrXor_2581__BAB___A__B :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.or e_1 e) e ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1))) := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.or e_1 e) e ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -555,7 +571,7 @@ theorem bitvec_AndOrXor_2581__BAB___A__B :
   try sorry
 
 theorem bitvec_AndOrXor_2587__BAA___B__A :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) e ⊑ LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) e ⊑ LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -572,7 +588,9 @@ theorem bitvec_AndOrXor_2595 :
 
 theorem bitvec_AndOrXor_2607 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.or e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.xor e_1 e := by
+      LLVM.xor (LLVM.or e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))))
+          (LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑
+        LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -581,8 +599,18 @@ theorem bitvec_AndOrXor_2607 :
 
 theorem bitvec_AndOrXor_2617 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑
+      LLVM.xor (LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0))))
+          (LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e) ⊑
         LLVM.xor e_1 e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash <;>
+  try alive_auto <;>
+  try sorry
+
+theorem bitvec_AndOrXor_2627 :
+    ∀ (e e_1 e_2 : LLVM.IntW w),
+      LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.xor (LLVM.and (LLVM.xor e_2 (LLVM.const? (Int.negSucc 0))) e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -599,8 +627,8 @@ theorem bitvec_AndOrXor_2647 :
 
 theorem bitvec_AndOrXor_2658 :
     ∀ (e e_1 : LLVM.IntW w),
-      LLVM.xor (LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.xor e_1 (LLVM.const? (-1))) ⊑
-        LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1)) := by
+      LLVM.xor (LLVM.and e_1 (LLVM.xor e (LLVM.const? (Int.negSucc 0)))) (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.xor (LLVM.and e_1 e) (LLVM.const? (Int.negSucc 0)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -618,7 +646,7 @@ theorem bitvec_AndOrXor_2663 :
   try sorry
 
 theorem bitvec_152 :
-    ∀ (e : LLVM.IntW w), LLVM.mul e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
+    ∀ (e : LLVM.IntW w), LLVM.mul e (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -706,7 +734,7 @@ theorem bitvec_820' :
   try sorry
 
 theorem bitvec_1030 :
-    ∀ (e : LLVM.IntW w), LLVM.sdiv e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
+    ∀ (e : LLVM.IntW w), LLVM.sdiv e (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -715,7 +743,8 @@ theorem bitvec_1030 :
 
 theorem bitvec_Select_858 :
     ∀ (e e_1 : LLVM.IntW 1),
-      LLVM.select e_1 (LLVM.xor e_1 (LLVM.const? (-1))) e ⊑ LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e := by
+      LLVM.select e_1 (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e ⊑
+        LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -724,7 +753,8 @@ theorem bitvec_Select_858 :
 
 theorem bitvec_Select_859' :
     ∀ (e e_1 : LLVM.IntW 1),
-      LLVM.select e_1 e (LLVM.xor e_1 (LLVM.const? (-1))) ⊑ LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e := by
+      LLVM.select e_1 e (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -748,7 +778,7 @@ theorem bitvec_Select_1105 :
   try sorry
 
 theorem bitvec_InstCombineShift__239 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (Int.negSucc 0)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -756,7 +786,7 @@ theorem bitvec_InstCombineShift__239 :
   try sorry
 
 theorem bitvec_InstCombineShift__279 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.shl (LLVM.lshr e_1 e) e ⊑ LLVM.and e_1 (LLVM.shl (LLVM.const? (-1)) e) := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.shl (LLVM.lshr e_1 e) e ⊑ LLVM.and e_1 (LLVM.shl (LLVM.const? (Int.negSucc 0)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>
@@ -800,7 +830,7 @@ theorem bitvec_InstCombineShift__497''' :
   try sorry
 
 theorem bitvec_InstCombineShift__582 :
-    ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
+    ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (Int.negSucc 0)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash <;>

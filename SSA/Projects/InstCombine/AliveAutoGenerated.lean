@@ -2589,9 +2589,8 @@ def alive_AndOrXor_2627_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_2627  (w : Nat)   : alive_AndOrXor_2627_src w  ⊑ alive_AndOrXor_2627_tgt w  := by
   unfold alive_AndOrXor_2627_src alive_AndOrXor_2627_tgt
-  stop
   simp_alive_peephole
-  -- apply bitvec_AndOrXor_2627
+  apply bitvec_AndOrXor_2627
 
 
 -- Name:AndOrXor:2647

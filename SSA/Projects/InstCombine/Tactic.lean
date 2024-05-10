@@ -19,19 +19,23 @@ At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be 
 and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
-     (dsimp (config := {failIfUnchanged := false }) only [Functor.map]
+     (
+      dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
       dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc] -- TODO: added by Tobias ->  double-check.
-      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last, List.map] -- @bollu is scared x(
+      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last]
+      dsimp (config := {failIfUnchanged := false }) only [List.map] -- @bollu is scared x(
       dsimp (config := {failIfUnchanged := false }) only [Width.mvar] -- TODO: write theorems in terms of Width.mvar?
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?] -- TODO: added by Tobias ->  double-check.
-      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom,
-        ConcreteOrMVar.instantiate_mvar_zero']
-      dsimp (config := {failIfUnchanged := false }) only [
-        ConcreteOrMVar.instantiate_mvar_zero''] -- TODO: added by Tobias ->  double-check.
-      dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [ConcreteOrMVar.instantiate_concrete_eq]
-      dsimp (config := {failIfUnchanged := false, autoUnfold := true }) only [Ctxt.map, Ctxt.snoc]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_concrete_eq]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
+      dsimp (config := {failIfUnchanged := false}) only [ConcreteOrMVar.instantiate]
    )
  )
 
@@ -52,10 +56,10 @@ macro "simp_alive_ssa" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get, List.get
           ]
-        simp (config := {failIfUnchanged := false}) only [Int.reduceNegSucc,
-            Int.reduceNeg, Nat.reduceAdd, Fin.cast_eq_self, List.get_cons_zero,
-            Ctxt.get?, Var.zero_eq_last, Ctxt.Valuation.snoc_last
-          ]
+        --simp (config := {failIfUnchanged := false}) only [Int.reduceNegSucc,
+        --    Int.reduceNeg, Nat.reduceAdd, Fin.cast_eq_self, List.get_cons_zero,
+        --    Ctxt.get?, Var.zero_eq_last, Ctxt.Valuation.snoc_last
+        --  ]
       )
   )
 
