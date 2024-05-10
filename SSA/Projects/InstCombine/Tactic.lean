@@ -54,7 +54,7 @@ macro "simp_alive_ssa" : tactic =>
         simp_peephole [InstCombine.Op.denote] at Γv
 
         simp (config := {failIfUnchanged := false}) only [
-            InstCombine.Op.denote, HVector.getN, HVector.get, List.get
+            InstCombine.Op.denote, HVector.getN, HVector.get,
           ]
       )
   )
