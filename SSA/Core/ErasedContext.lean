@@ -34,7 +34,7 @@ def empty : Ctxt Ty := []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
-@[simp] lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
+lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
@@ -55,6 +55,16 @@ def get? : Ctxt Ty → Nat → Option Ty :=
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   List.map f
+
+@[simp]
+lemma map_nil (f : Ty → Ty') :
+  map f ∅ = ∅ := rfl
+
+@[simp]
+lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+  map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
+
+theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
 
 instance : Functor Ctxt where
   map := map
@@ -258,6 +268,8 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   refine Ctxt.Var.casesOn v ?_ ?_
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
+
+infixl:50 "::ᵥ" => Valuation.snoc
 
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -561,6 +573,10 @@ theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := 
 @[simp]
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+
+theorem snoc_ctxt_eq_ctxt_snoc:
+    (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
+  rfl
 
 @[simp]
 instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where
