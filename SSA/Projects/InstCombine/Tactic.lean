@@ -56,10 +56,6 @@ macro "simp_alive_ssa" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get, List.get
           ]
-        --simp (config := {failIfUnchanged := false}) only [Int.reduceNegSucc,
-        --    Int.reduceNeg, Nat.reduceAdd, Fin.cast_eq_self, List.get_cons_zero,
-        --    Ctxt.get?, Var.zero_eq_last, Ctxt.Valuation.snoc_last
-        --  ]
       )
   )
 
