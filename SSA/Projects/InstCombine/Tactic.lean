@@ -22,12 +22,12 @@ macro "simp_alive_meta" : tactic =>
      (
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc] -- TODO: added by Tobias ->  double-check.
+      dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc]
       dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last]
-      dsimp (config := {failIfUnchanged := false }) only [List.map] -- @bollu is scared x(
-      dsimp (config := {failIfUnchanged := false }) only [Width.mvar] -- TODO: write theorems in terms of Width.mvar?
+      dsimp (config := {failIfUnchanged := false }) only [List.map]
+      dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?] -- TODO: added by Tobias ->  double-check.
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
