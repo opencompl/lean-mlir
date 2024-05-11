@@ -35,7 +35,7 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_concrete_eq]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
-      dsimp (config := {failIfUnchanged := false}) only [ConcreteOrMVar.instantiate]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
    )
  )
 
