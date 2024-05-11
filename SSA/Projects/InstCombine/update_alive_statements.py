@@ -85,7 +85,7 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
 
     stmt = name
     stmt += msg
-    stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash <;>\n  try alive_auto <;>\n  try sorry"
+    stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash\n  try alive_auto\n  try sorry\n  try sorry"
 
     print(stmt)
 
