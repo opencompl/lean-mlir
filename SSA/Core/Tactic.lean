@@ -86,13 +86,6 @@ by introducing a new universally quantified (Lean) variable to the goal for ever
 macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
   `(tactic|
       (
-      /- First, massage the type of `Γv`.
-      Generally, `simp_peephole` is expected to be run with the type of `Γv` a
-      (not necessarily reduced) ground-term.
-      After `change_mlir_context`, type of `Γv` should then be `[t₁, t₂, ..., tₙ]`, for some
-      types `t₁`, `t₂`, etc. -/
-      change_mlir_context $Γv
-
       /- Then, unfold the definition of the denotation of a program -/
       simp (config := {failIfUnchanged := false}) only [
         Int.ofNat_eq_coe, Nat.cast_zero, DerivedCtxt.snoc, DerivedCtxt.ofCtxt,

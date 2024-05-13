@@ -608,6 +608,15 @@ theorem bitvec_AndOrXor_2617 :
   try alive_auto
   all_goals sorry
 
+theorem bitvec_AndOrXor_2627 :
+    ∀ (e e_1 e_2 : LLVM.IntW w),
+      LLVM.xor (LLVM.xor e_2 e_1) (LLVM.or e_2 e) ⊑ LLVM.xor (LLVM.and (LLVM.xor e_2 (LLVM.const? (Int.negSucc 0))) e) e_1 := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  all_goals sorry
+
 theorem bitvec_AndOrXor_2647 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
   simp_alive_undef
@@ -726,6 +735,26 @@ theorem bitvec_820' :
 
 theorem bitvec_1030 :
     ∀ (e : LLVM.IntW w), LLVM.sdiv e (LLVM.const? (Int.negSucc 0)) ⊑ LLVM.sub (LLVM.const? 0) e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  all_goals sorry
+
+theorem bitvec_Select_858 :
+    ∀ (e e_1 : LLVM.IntW 1),
+      LLVM.select e_1 (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e ⊑
+        LLVM.and (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  all_goals sorry
+
+theorem bitvec_Select_859' :
+    ∀ (e e_1 : LLVM.IntW 1),
+      LLVM.select e_1 e (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) ⊑
+        LLVM.or (LLVM.xor e_1 (LLVM.const? (Int.negSucc 0))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash

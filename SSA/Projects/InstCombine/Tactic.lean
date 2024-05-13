@@ -14,6 +14,31 @@ import Mathlib.Data.BitVec.Lemmas
 open MLIR AST
 open Ctxt
 
+/-- We eliminate our alive framework's metavarible machinery.
+At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
+and all `Width.mvar` should be resolved into `Width.concrete`.  -/
+macro "simp_alive_meta" : tactic =>
+ `(tactic|
+     (
+      dsimp (config := {failIfUnchanged := false }) only [Functor.map]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
+      dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc]
+      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last]
+      dsimp (config := {failIfUnchanged := false }) only [List.map]
+      dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_concrete_eq]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
+   )
+ )
+
 /-- Eliminate the SSA structure of the program
 - We first simplify `Com.refinement` to see the context `Γv`.
 - We `simp_peephole Γv` to simplify context accesses by variables.
@@ -22,8 +47,7 @@ open Ctxt
 macro "simp_alive_ssa" : tactic =>
   `(tactic|
       (
-        /- Unfold the meaning of refinement, to access the valuation -/
-        dsimp only [Com.Refinement]
+        /- access the valuation -/
         intros Γv
 
         /- Simplify away the core framework -/
@@ -45,6 +69,7 @@ where `com₁` and `com₂` are programs in the `LLVM` dialect. -/
 macro "simp_alive_peephole" : tactic =>
   `(tactic|
       (
+        simp_alive_meta
         simp_alive_ssa
       )
    )
