@@ -53,16 +53,25 @@ set_option checkBinderAnnotations false in
 /-- The coproduct of `α` and `β` in the category of `algebra` is `carrier` -/
 class Coproduct (algebra : Type → Type) (α β : Type)
     (carrier : outParam Type)  where
-  algα : algebra α := by infer_instance
-  algβ : algebra β := by infer_instance
-  algCarrier : algebra carrier := by infer_instance
+  [algα : algebra α]
+  [algβ : algebra β]
+  [algCarrier : algebra carrier]
   inl : α → carrier
   inr : β → carrier
   eva {δ : Type} [algδ : algebra δ] : (α → δ) → (β → δ) → carrier → δ
 
+-- replacing abel:
+-- ===============
+-- Coproduct | (computable)
+-- Free
+-- Reader: Syntax → AST
+
+
+-- Free = adjoint to forgetful.
+-- | injective / projective object.
 set_option checkBinderAnnotations false in
 class Free (algebra : Type → Type) (name : Type) (carrier : outParam Type) where -- free algebra with variables in var
-  alg : algebra carrier := by infer_instance
+  [alg : algebra carrier]
   pvar : name → carrier
   pbind {c : Type} [algc: algebra c] : carrier → (name → c) → c
 
@@ -106,12 +115,32 @@ tlift :: Lift α ⇒ α → Code α
 tlift = liftCode . liftM TExp . lift
 -/
 
+-- Z := < g >
+-- Z/nZ := < g | g^n = 1 >
+-- Z/mZ x Z/nZ := < g1, g2 | g1^m = 1, g2^n = 1, g1 g2 = g2 g1 >
+-- Z/mZ  ⊔ Z/nZ := < g1, g2 | g1^m = 1, g2^n = 1  >  (g1 g2 g1 g2 g1 g2)
+-- G := <g1, ... gn | r1... rn>
+-- H := <h1 ... hn | s1 ... sn >
+-- G ⊔ H := < g1 , ... gn, h1 , .... gn | r1, ... rn, s1, ... sn >
+
+
 /-- The free extension of an `algebra` structure over `α`,
   with variables indexed by `name` -/
 class FreeExt (algebra : Type → Type) (name : Type) (α : Type) (freeExtCarrier : Type) where
   freeCarrier : Type
   [freeInstance : Free algebra name freeCarrier]
   [coprodInstance : Coproduct algebra α freeCarrier freeExtCarrier]
+
+set_option checkBinderAnnotations false
+open Lean
+class FreeExt' (algebra : Type → Type)
+  (dynTy : Type)
+  (staticTy : Type)
+  (freeExtCarrier : outParam Type) where
+  sta : staticTy → freeExtCarrier
+  dyn : dynTy → freeExtCarrier
+  staAlg : algebra staticTy
+  eva {c : Type} [A : algebra c]: (staticTy → c) → (dynTy → c) → freeExtCarrier → c
 
 instance [Free algebra name freeCarier]
   [Coproduct algebra α freeCarier freeExtCarrier] :
@@ -147,7 +176,7 @@ def cd {α : Type} {algebra : Type → Type} [ToExprM α]
     -- The below instance is a total hack, we should
     -- actually be saying that 'post evaluation',
     -- it obeys the algebra.
-    (AME: algebra (MetaM Expr) := by infer_instance)
+    (AME: algebra (MetaM Expr) := by infer_instance) -- g . h
     [FE : FreeExt algebra (MetaM Expr) α freeExtCarrier]
     (x : freeExtCarrier) : MetaM Expr :=
   letI := FE.freeInstance
@@ -305,12 +334,7 @@ instance : Monoid (List x) where
 
 instance : Free Monoid x (List x) where
    pvar x := [x]
-   pbind xs f :=
-    match xs with
-    | [] => 1
-    | [x] => f x
-    | xs =>  -- TODO: check if this is right.
-        List.foldl (fun acc x => acc * (f x)) 1 xs
+   pbind xs f := List.foldl (fun acc x => acc * (f x)) 1 xs
 
 /-
 {-- Coproduct of abelian groups --}
@@ -330,6 +354,7 @@ instance Free Monoid x where
    pvar x = P [x]
    P [] `pbind` f = mempty
    P [x] `pbind` f = f x
+   P xs `pbind` f = Prelude.foldr (mappend . f) mempty xs
    P xs `pbind` f = Prelude.foldr (mappend . f) mempty xs
 
 -- Coproduct of commutative rings
