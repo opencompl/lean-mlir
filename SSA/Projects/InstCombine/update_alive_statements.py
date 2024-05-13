@@ -21,6 +21,8 @@ import Mathlib.Data.BitVec.Lemmas
 
 open LLVM
 open BitVec
+
+set_option linter.unreachableTactic false
 """
 
 

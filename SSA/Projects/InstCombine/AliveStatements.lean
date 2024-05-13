@@ -12,6 +12,8 @@ import Mathlib.Data.BitVec.Lemmas
 open LLVM
 open BitVec
 
+set_option linter.unreachableTactic false
+
 
 theorem bitvec_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
