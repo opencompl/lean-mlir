@@ -206,7 +206,7 @@ theorem udiv_one_eq_zero (a : BitVec w) (h : a > 1)
     rw [Nat.div_eq_zero_iff] <;> omega
 
 @[simp]
-lemma add_eq_xor (a b : BitVec 1) : a.add b = a.xor b := by
+lemma add_eq_xor (a b : BitVec 1) : a + b = a ^^^ b := by
   have ha : a = 0 ∨ a = 1 := width_one_cases _
   have hb : b = 0 ∨ b = 1 := width_one_cases _
   rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
