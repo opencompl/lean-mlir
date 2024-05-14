@@ -810,6 +810,23 @@ lemma toInt_zero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x = 0 ↔ x = 0 := 
 lemma toInt_nonzero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x ≠ 0 ↔ x ≠ 0 := by
   simp [toInt_ne]
 
+@[simp]
+theorem and_add_xor_eq_or {a b : BitVec w} : (b &&& a) + (b ^^^ a) = b ||| a := by
+  ext i
+  rw [getLsb_add (by omega), getLsb_and, getLsb_xor, getLsb_or]
+  have hj : carry (↑i) (b &&& a) (b ^^^ a) false = false := by
+    induction i.val
+    case zero =>
+      simp [carry, Nat.mod_one]
+    case succ v v_h =>
+      simp only [carry_succ, v_h, Bool.atLeastTwo_false_right, getLsb_and,
+        getLsb_xor, Bool.and_eq_false_imp, Bool.and_eq_true, bne_eq_false_iff_eq,
+        and_imp]
+      intros x x'
+      rw [x, x']
+  simp only [Bool.bne_assoc]
+  by_cases h_a : a.getLsb ↑i <;> simp [h_a, hj]
+
 end BitVec
 
 -- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it suffices to consider two cases.
