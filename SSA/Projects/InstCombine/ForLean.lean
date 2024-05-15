@@ -811,21 +811,22 @@ lemma toInt_nonzero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x ≠ 0 ↔ x �
   simp [toInt_ne]
 
 @[simp]
-theorem and_add_xor_eq_or {a b : BitVec w} : (b &&& a) + (b ^^^ a) = b ||| a := by
+lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
+  induction i
+  case zero =>
+    simp [carry, Nat.mod_one]
+  case succ v v_h =>
+    simp only [carry_succ, v_h, Bool.atLeastTwo_false_right, getLsb_and,
+      getLsb_xor, Bool.and_eq_false_imp, Bool.and_eq_true, bne_eq_false_iff_eq,
+      and_imp]
+    intros; simp [*]
+
+@[simp]
+theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := by
   ext i
   rw [getLsb_add (by omega), getLsb_and, getLsb_xor, getLsb_or]
-  have hj : carry (↑i) (b &&& a) (b ^^^ a) false = false := by
-    induction i.val
-    case zero =>
-      simp [carry, Nat.mod_one]
-    case succ v v_h =>
-      simp only [carry_succ, v_h, Bool.atLeastTwo_false_right, getLsb_and,
-        getLsb_xor, Bool.and_eq_false_imp, Bool.and_eq_true, bne_eq_false_iff_eq,
-        and_imp]
-      intros x x'
-      rw [x, x']
   simp only [Bool.bne_assoc]
-  cases a.getLsb ↑i <;> simp [hj]
+  cases a.getLsb ↑i <;> simp [carry_and_xor_false]
 
 end BitVec
 
