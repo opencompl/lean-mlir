@@ -825,7 +825,7 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (b &&& a) + (b ^^^ a) = b ||| a := 
       intros x x'
       rw [x, x']
   simp only [Bool.bne_assoc]
-  by_cases h_a : a.getLsb ↑i <;> simp [h_a, hj]
+  cases a.getLsb ↑i <;> simp [hj]
 
 end BitVec
 
