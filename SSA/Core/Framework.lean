@@ -671,8 +671,9 @@ section Lemmas
 @[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
   funext V; simp [denoteLets]
 
-theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
-  simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_lete]
+theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets Γv = com.toLets.denote Γv := by
+  induction Γ, eff, t, com, Γv using Com.denoteLets.induct
+  <;> simp only [toLets] <;> simp [Lets.denote_lete]
 
 end Lemmas
 
