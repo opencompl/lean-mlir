@@ -15,8 +15,6 @@ def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
 /-- build a `Deleted` for a `(Γ.snoc α) → Γ`-/
 def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var.last Γ α) Γ := rfl
 
-theorem List.eraseIdx_zero : List.eraseIdx (List.cons x xs) 0 = xs := rfl
-
 theorem List.eraseIdx_succ : List.eraseIdx (List.cons x xs) (.succ n) = x :: List.eraseIdx xs n := rfl
 
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
@@ -26,22 +24,6 @@ theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs :
   case cons x xs' IH =>
     simp[eraseIdx_succ]
     apply IH
-
-/-- removing at any index `≥ xs.length` does not change the list. -/
-theorem List.eraseIdx_of_length_le (hn : xs.length ≤ n) : List.eraseIdx xs n = xs := by
-  induction n generalizing xs
-  case zero =>
-    induction xs
-    case nil => simp [List.eraseIdx]
-    case cons x xs' IH => simp at hn
-  case succ n' IH' =>
-    induction xs
-    case nil => simp[eraseIdx]
-    case cons x xs' IH =>
-      simp[eraseIdx_succ]
-      apply IH'
-      simp at hn
-      linarith
 
 /- removing at index `n` does not change indices `k < n` -/
 theorem List.get?_eraseIdx_of_lt (hk: k < n) : List.get? (List.eraseIdx xs n) k = List.get? xs k := by
