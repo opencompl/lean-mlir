@@ -1161,7 +1161,7 @@ assignment of that variable in the input valuation -/
     {vTy} (v : Var Γ vTy) :
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.recPure
-  · rfl
+  · simp
   · rw [outContextHom_lete]; simp [denoteLets, *]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :

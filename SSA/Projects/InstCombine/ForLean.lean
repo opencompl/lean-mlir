@@ -500,9 +500,6 @@ private theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B
 theorem toInt_eq (x y : BitVec n) : x = y ↔ x.toInt = y.toInt :=
   Iff.intro (congrArg BitVec.toInt) eq_of_toInt_eq
 
-theorem toInt_ne (x y : BitVec n) : x ≠ y ↔ x.toInt ≠ y.toInt := by
-  rw [Ne, toInt_eq]
-
 theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w) (h_ne_zero : A ≠ 0):
     (A >ₛ BitVec.ofInt w 0) ↔ ¬ ((-A) >ₛ BitVec.ofInt w 0) := by
   by_cases w0 : w = 0
@@ -515,7 +512,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   · simp [h]
     omega
   · simp [h]
-    simp [BitVec.toInt_ne] at h_ne_zero
+    simp [←BitVec.toInt_ne] at h_ne_zero
     omega
   simp
   unfold intMin
@@ -808,7 +805,7 @@ lemma toInt_zero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x = 0 ↔ x = 0 := 
   simp [toInt_eq]
 
 lemma toInt_nonzero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x ≠ 0 ↔ x ≠ 0 := by
-  simp [toInt_ne]
+  simp [← toInt_ne]
 
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
