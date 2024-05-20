@@ -466,7 +466,7 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n
 /-- fromTensor = R.fromPoly ∘ fromTensor'.
 This permits reasoning about fromTensor directly on the polynomial ring.
 -/
-theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} : R.fromTensor (q := q) (n := n) coeffs =
+theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} : R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensor' q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs
@@ -545,7 +545,7 @@ theorem R.fromTensorFinsupp_concat_monomial {q : ℕ} (c : ℤ) (cs : List ℤ) 
     rw[List.length_map]
 
 /-- show that `fromTensor` is the same as `fromPoly ∘ fromTensorFinsupp`. -/
-theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} : R.fromTensor (q := q) (n := n) coeffs =
+theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List ℤ} : R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs  using List.reverseRecOn
