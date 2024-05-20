@@ -429,7 +429,7 @@ noncomputable def R.fromTensor {q n} (coeffs : List Int) : R q n :=
     res + R.monomial ↑c i
 
 /- `fromTensor (cs ++ [c])` equals `(fromTensor xs) + c X^n` -/
-theorem R.fromTensor_snoc (q n : ℕ) (c : ℤ) (cs : List ℤ) : R.fromTensor (q := q) (n := n) (cs ++ [c])
+theorem R.fromTensor_snoc (q n : Nat) (c : Int) (cs : List Int) : R.fromTensor (q := q) (n := n) (cs ++ [c])
   = (R.fromTensor (q := q) (n := n) cs) + R.monomial c cs.length := by
     induction cs using List.reverseRecOn generalizing c
     case nil =>
@@ -479,7 +479,7 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} : R.fromT
 /-- an equivalent implementation of `fromTensor` that uses `Finsupp`
   to enable reasoning about values using mathlib's notions of
   support, coefficients, etc. -/
-noncomputable def R.fromTensorFinsupp (coeffs : List ℤ) : (ZMod q)[X] :=
+noncomputable def R.fromTensorFinsupp (coeffs : List Int) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
 
 theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
@@ -510,7 +510,7 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
         apply Nat.le_of_lt ha₆
 
 /-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
-theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
+theorem R.fromTensorFinsupp_degree (coeffs : List Int) :
   (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
   rw [fromTensorFinsupp]
   have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
@@ -518,16 +518,16 @@ theorem R.fromTensorFinsupp_degree (coeffs : List ℤ) :
   assumption
 
 /-- the ith coefficient of fromTensorFinsupp is a coercion of the 'coeffs' into the right list. -/
-theorem R.fromTensorFinsupp_coeffs (coeffs : List ℤ) :
+theorem R.fromTensorFinsupp_coeffs (coeffs : List Int) :
   Polynomial.coeff (fromTensorFinsupp q coeffs) i = ↑(List.getD coeffs i 0) := by
   rw [fromTensorFinsupp]
   rw [coeff_ofFinsupp]
   rw [List.toFinsupp_apply]
-  have hzero : (0 : ZMod q) = Int.cast (0 : ℤ) := by norm_num
+  have hzero : (0 : ZMod q) = Int.cast (0 : Int) := by norm_num
   rw [hzero, List.getD_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
-theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
+theorem R.fromTensorFinsupp_concat_finsupp {q : Nat} (c : Int) (cs : List Int) :
     (R.fromTensorFinsupp (q := q) (cs ++ [c])) = (R.fromTensorFinsupp (q := q) cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
     simp only[fromTensorFinsupp]
     simp only[← Polynomial.ofFinsupp_add]
@@ -536,7 +536,7 @@ theorem R.fromTensorFinsupp_concat_finsupp {q : ℕ} (c : ℤ) (cs : List ℤ) :
     simp only[List.length_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a monomial. -/
-theorem R.fromTensorFinsupp_concat_monomial {q : ℕ} (c : ℤ) (cs : List ℤ) :
+theorem R.fromTensorFinsupp_concat_monomial {q : Nat} (c : Int) (cs : List Int) :
     (R.fromTensorFinsupp (q := q) (cs ++ [c])) = (R.fromTensorFinsupp (q := q) cs) + (Polynomial.monomial cs.length (Int.cast c : (ZMod q))) := by
     simp[fromTensorFinsupp]
     rw[← Polynomial.ofFinsupp_single]
@@ -545,7 +545,7 @@ theorem R.fromTensorFinsupp_concat_monomial {q : ℕ} (c : ℤ) (cs : List ℤ) 
     rw[List.length_map]
 
 /-- show that `fromTensor` is the same as `fromPoly ∘ fromTensorFinsupp`. -/
-theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List ℤ} : R.fromTensor (q := q) (n := n) coeffs =
+theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List Int} : R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp[fromTensor, fromTensor']
     induction coeffs  using List.reverseRecOn
@@ -557,14 +557,14 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List ℤ} : R
       congr
 
 /-- `coeff (p % f) = coeff p` if the degree of `p` is less than the degree of `f`. -/
-theorem coeff_modByMonic_degree_lt_f {q n i : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) (DEGREE : p.degree < (f q n).degree) :
+theorem coeff_modByMonic_degree_lt_f {q n i : Nat} [Fact (q > 1)] (p : (ZMod q)[X]) (DEGREE : p.degree < (f q n).degree) :
   (p %ₘ f q n).coeff i = p.coeff i := by
   have H := (modByMonic_eq_self_iff (hq := f_monic q n) (p := p)).mpr DEGREE
   simp[H]
 
 /-- The coefficient of `fromPoly p` is the coefficient of `p` modulo `f q n`. -/
 @[simp]
-theorem R.coeff_fromPoly {q n : ℕ} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
+theorem R.coeff_fromPoly {q n : Nat} [Fact (q > 1)] (p : (ZMod q)[X]) : R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
   unfold R.coeff
   simp [R.coeff]
   have H := R.representative_fromPoly_toFun (a := p) (n := n)
@@ -601,7 +601,7 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (htensorle
         assumption
       apply Nat.lt_of_le_of_lt htrans htensorlen
 
-theorem R.representative_fromTensor_eq_fromTensor' (tensor : List ℤ) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
+theorem R.representative_fromTensor_eq_fromTensor' (tensor : List Int) : R.representative q n (R.fromTensor tensor) = R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp [R.representative]
   rw[fromTensor_eq_fromTensor'_fromPoly];
 
