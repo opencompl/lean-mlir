@@ -11,7 +11,6 @@ import SSA.Core.HVector
   Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
   avoids a universe bump
 -/
-@[reducible]
 class TyDenote (β : Type) : Type 1 where
   toType : β → Type
 open TyDenote (toType) /- make toType publically visible in module. -/
