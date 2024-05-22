@@ -200,7 +200,7 @@ match ctxt, values with
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
-         let newTy : toType (.bitvec (.concrete w)) := Option.map (BitVec.ofInt w) val
+         let newTy : toType (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)) := Option.map (BitVec.ofInt w) val
          Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector (Option Int) test.context.length) :

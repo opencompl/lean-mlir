@@ -111,6 +111,7 @@ def writeOutput(preamble, proofs, filename):
         f.write("".join(preamble))
         for proof in proofs:
             f.write("".join(proof))
+        f.write("\n")
 
 
 if __name__ == "__main__":

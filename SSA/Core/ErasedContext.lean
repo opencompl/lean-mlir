@@ -11,7 +11,6 @@ import SSA.Core.HVector
   Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
   avoids a universe bump
 -/
-@[reducible]
 class TyDenote (β : Type) : Type 1 where
   toType : β → Type
 open TyDenote (toType) /- make toType publically visible in module. -/
@@ -249,10 +248,6 @@ def Valuation (Γ : Ctxt Ty) : Type :=
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
-    VAL v
-
-/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
-def Var.denote {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
     VAL v
 
 /-- Make a valuation for the empty context. -/
