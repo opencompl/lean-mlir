@@ -239,8 +239,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
     synthesizeSyntheticMVarsNoPostponing
     return com
 
-  withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
-    reduce com
+  return com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 
