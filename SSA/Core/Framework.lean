@@ -1359,16 +1359,33 @@ def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in)
 
 section Lemmas
 
-lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t):
-    @Com.changeDialect _ _ _ _ f _ eff _ (Com.ret v) = Com.ret v.toMap := by
-  cases eff
-  <;>
-  rfl
+/-!
+There seems to be a bug with the `rfl` suggestion. When it fails, tt says:
+```
+Try using the reflexivitiy lemma for your relation explicitly, e.g. `exact Eq.rfl`.
+```
+But `Eq.rfl` does not exist, it should be `exact Eq.refl _`
+-/
 
-lemma Com.changeDialect_lete (f : DialectMorphism d d') :
-    @Com.changeDialect d d' _ _ f Γ .pure t (Com.lete e body) =
-      Com.lete (e.changeDialect f) (body.changeDialect f) :=
-  rfl
+@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t):
+    Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
+  cases eff <;> rfl
+
+@[simp] lemma Com.changeDialect_lete (f : DialectMorphism d d')
+    (e : Expr d Γ eff t) (body : Com d _ eff u) :
+    Com.changeDialect f (Com.lete e body)
+      = Com.lete (e.changeDialect f) (body.changeDialect f) := by
+  simp only [List.map_eq_map, changeDialect]
+
+@[simp] lemma Expr.changeDialect_mk (f : DialectMorphism d d') (op ty_eq eff_le args regArgs) :
+    Expr.changeDialect f (⟨op, ty_eq, eff_le, args, regArgs⟩ : Expr d Γ eff t)
+      = ⟨f.mapOp op,
+          ty_eq ▸ (f.preserves_outTy _).symm,
+          f.preserves_effectKind _ ▸ eff_le,
+          f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
+          f.preserves_regSig _ ▸
+            HVector.changeDialect f regArgs⟩ := by
+  subst ty_eq; simp [Expr.changeDialect]
 
 end Lemmas
 
