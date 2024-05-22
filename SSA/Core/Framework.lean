@@ -1394,8 +1394,7 @@ But `Eq.rfl` does not exist, it should be `exact Eq.refl _`
   subst ty_eq; simp [Expr.changeDialect]
 
 @[simp] lemma HVector.changeDialect_nil (f : DialectMorphism d d') :
-    @HVector.changeDialect _ _ _ _ f _ _ (HVector.nil : HVector (fun _ => Com d _ aa _) [])
-      = (HVector.nil : HVector (fun _ => Com d' _ aa _) ([])) := rfl
+    HVector.changeDialect (eff := eff) f nil = nil := rfl
 
 end Lemmas
 
