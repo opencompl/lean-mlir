@@ -250,10 +250,6 @@ def Valuation (Γ : Ctxt Ty) : Type :=
 def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
     VAL v
 
-/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
-def Var.denote {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
-    VAL v
-
 /-- Make a valuation for the empty context. -/
 def Valuation.nil : Ctxt.Valuation ([] : Ctxt Ty) := fun _ v => v.emptyElim
 
