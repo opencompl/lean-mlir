@@ -707,17 +707,8 @@ theorem bitvec_276_2 :
 theorem bitvec_width_1_cases (a : BitVec 1) : a = 0 ∨ a = 1 := by
   obtain ⟨numa, ha⟩ := a
   simp
-  have hnumcases : numa = 0 ∨ numa = 1 := by
-    omega
-  cases hnumcases
-  case inl hnuma_eq_zero =>
-    subst hnuma_eq_zero
-    left
-    rfl
-  case inr hnuma_eq_one =>
-    subst hnuma_eq_one
-    right
-    rfl
+  have hnumcases : numa = 0 ∨ numa = 1 := by omega
+  rcases hnumcases with h | h <;> simp [h]
 
 theorem bitvec_283 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.mul e_1 e ⊑ LLVM.and e_1 e := by
