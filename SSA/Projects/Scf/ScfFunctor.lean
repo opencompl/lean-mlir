@@ -477,7 +477,7 @@ abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int�
 open Scf in
 open Arith in
 theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
-  simp only [lhs, rhs, for_, axpy, cst]
+  simp only [lhs, rhs, for_, axpy, cst, add]
   simp_peephole at Γv
   intros A B
   simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
