@@ -31,17 +31,13 @@ precondition: true
 def alive_DivRemOfSelect_src (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %c0 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-    %v1 = "llvm.select" (%c,%y, %c0) : (i1, _, _) -> (_)
-    %v2 = "llvm.udiv"(%x, %v1) : (_, _) -> (_)
-    "llvm.return" (%v2) : (_) -> ()
+    "llvm.return" (%y) : (_) -> ()
   }]
 
 def alive_DivRemOfSelect_tgt (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %v1 = "llvm.udiv" (%x,%y) : (_, _) -> (_)
-    "llvm.return" (%v1) : (_) -> ()
+    "llvm.return" (%y) : (_) -> ()
   }]
 
 @[simp]
@@ -53,6 +49,8 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
+  dsimp [Com.changeDialect_ret]
+  simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
   simp [simp_llvm]
