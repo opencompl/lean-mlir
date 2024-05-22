@@ -838,4 +838,3 @@ theorem bitvec_InstCombineShift__582 :
   simp_alive_case_bash
   try alive_auto
   all_goals sorry
-
