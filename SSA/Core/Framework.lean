@@ -1327,6 +1327,12 @@ theorem DialectMorphism.preserves_effectKind (op : d.Op) :
     DialectSignature.effectKind (f.mapOp op) = DialectSignature.effectKind op := by
   simp only [DialectSignature.effectKind, Function.comp_apply, f.preserves_signature]; rfl
 
+@[simp] lemma DialectMorphism.mapOp_mk (fOp : d.Op → d'.Op) (fTy) (h) :
+    mapOp ⟨fOp, fTy, h⟩ = fOp := rfl
+
+@[simp] lemma DialectMorphism.mapTy_mk (fOp : d.Op → d'.Op) (fTy) (h) :
+    mapTy ⟨fOp, fTy, h⟩ = fTy := rfl
+
 mutual
 
 -- TODO: `map` is ambiguous, rename it to `changeDialect` (to mirror `changeVars`)
@@ -1386,6 +1392,10 @@ But `Eq.rfl` does not exist, it should be `exact Eq.refl _`
           f.preserves_regSig _ ▸
             HVector.changeDialect f regArgs⟩ := by
   subst ty_eq; simp [Expr.changeDialect]
+
+@[simp] lemma HVector.changeDialect_nil (f : DialectMorphism d d') :
+    @HVector.changeDialect _ _ _ _ f _ _ (HVector.nil : HVector (fun _ => Com d _ aa _) [])
+      = (HVector.nil : HVector (fun _ => Com d' _ aa _) ([])) := rfl
 
 end Lemmas
 

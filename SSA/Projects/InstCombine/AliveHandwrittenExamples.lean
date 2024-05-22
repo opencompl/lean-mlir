@@ -49,10 +49,18 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
   simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
   norm_cast
 
+-- set_option pp.proofs true in
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
-  simp only [Com.changeDialect_ret, Com.changeDialect_lete]
+  simp only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect,
+    (HVector.changeDialect_nil), InstcombineTransformDialect.MOp.instantiateCom]
+  dsimp only [DialectMorphism.mapOp_mk, DialectMorphism.mapTy_mk,
+    InstcombineTransformDialect.MOp.instantiateCom,
+    InstcombineTransformDialect.instantiateMOp,
+    InstcombineTransformDialect.instantiateMTy,
+    HVector.changeDialect_nil]
+
   simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
