@@ -703,44 +703,13 @@ theorem bitvec_276_2 :
   try alive_auto
   all_goals sorry
 
-#check BitVec.isLt
-theorem bitvec_width_1_cases (a : BitVec 1) : a = 0 ∨ a = 1 := by
-  obtain ⟨numa, ha⟩ := a
-  simp
-  have hnumcases : numa = 0 ∨ numa = 1 := by omega
-  rcases hnumcases with h | h <;> simp [h]
-
 theorem bitvec_283 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.mul e_1 e ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  intros a b
-  unfold BitVec.mul
-  unfold BitVec.and
-  have ha : a = 0 ∨ a = 1 := by
-    apply bitvec_width_1_cases
-  have hb : b = 0 ∨ b = 1 := by
-    apply bitvec_width_1_cases
-  cases ha
-  case inl a_eq_zero =>
-    subst a_eq_zero
-    cases hb
-    case inl b_eq_zero =>
-      subst b_eq_zero
-      rfl
-    case inr b_eq_one =>
-      subst b_eq_one
-      rfl
-  case inr a_eq_one =>
-    subst a_eq_one
-    cases hb
-    case inl b_eq_zero =>
-      subst b_eq_zero
-      rfl
-    case inr b_eq_one =>
-      subst b_eq_one
-      rfl
+  try alive_auto
+  all_goals sorry
 
 theorem bitvec_290__292 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.mul (LLVM.shl (LLVM.const? ↑1) e_1) e ⊑ LLVM.shl e e_1 := by
@@ -869,3 +838,4 @@ theorem bitvec_InstCombineShift__582 :
   simp_alive_case_bash
   try alive_auto
   all_goals sorry
+
