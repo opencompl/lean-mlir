@@ -55,7 +55,8 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
     Uses the preamble to create a valid Lean file.
     """
 
-    f = open("AliveTest_" + str(id) + ".lean", "w")
+    filename = "_AliveTest_" + str(id) + ".lean"
+    f = open(filename, "w")
 
     f.write("".join(preamble))
     rewritten = []
@@ -70,10 +71,12 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
     f.close()
 
     x = subprocess.run(
-        "(cd ../../../; lake build SSA.Projects.InstCombine.AliveTest_" + str(id) + ")",
+        "(cd ../../../; lake build SSA.Projects.InstCombine._AliveTest_" + str(id) + ")",
         shell=True,
         capture_output=True,
     )
+
+    os.remove(filename)
 
     name = "\n\ntheorem " + name + " :\n"
 
