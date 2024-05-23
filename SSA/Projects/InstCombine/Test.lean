@@ -43,9 +43,31 @@ def bb0 : Region 0 := [mlir_region|
     %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
     "llvm.return"(%4) : (i32) -> ()
   }]
-#print bb0
-#eval bb0
 
+
+/--
+info: def bb0 : Region 0 :=
+Region.mk "bb0" [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32)]
+  [Op.mk "llvm.mlir.constant" [(SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)] [] []
+      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 8 (MLIRType.int Signedness.Signless 32))]),
+    Op.mk "llvm.mlir.constant" [(SSAVal.SSAVal (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)] [] []
+      (AttrDict.mk [AttrEntry.mk "value" (AttrValue.int 31 (MLIRType.int Signedness.Signless 32))]),
+    Op.mk "llvm.ashr" [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.SSAVal "arg0", MLIRType.int Signedness.Signless 32),
+        (SSAVal.SSAVal (EDSL.IntToString 1), MLIRType.int Signedness.Signless 32)]
+      [] (AttrDict.mk []),
+    Op.mk "llvm.and" [(SSAVal.SSAVal (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32),
+        (SSAVal.SSAVal (EDSL.IntToString 0), MLIRType.int Signedness.Signless 32)]
+      [] (AttrDict.mk []),
+    Op.mk "llvm.add" [(SSAVal.SSAVal (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)]
+      [(SSAVal.SSAVal (EDSL.IntToString 3), MLIRType.int Signedness.Signless 32),
+        (SSAVal.SSAVal (EDSL.IntToString 2), MLIRType.int Signedness.Signless 32)]
+      [] (AttrDict.mk []),
+    Op.mk "llvm.return" [] [(SSAVal.SSAVal (EDSL.IntToString 4), MLIRType.int Signedness.Signless 32)] []
+      (AttrDict.mk [])]
+-/
+#guard_msgs in #print bb0
 
 open InstCombine
 open InstcombineTransformDialect
@@ -64,12 +86,42 @@ def opRet : Op 0 := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
   I've changed them to be consistent with how the current code works,
   please check that the tested behaviour is actually the desired behaviour
 -/
-#eval mkExpr    (Γn 1) op0    ["arg0"]
-#eval mkExpr    (Γn 2) op1    ["0", "arg0"]
-#eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
-#eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
-#eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
-#eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8[[]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31[[]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.ashr)[[%2, ,, %0]]⟩⟩
+    -/
+#guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.and)[[%0, ,, %2]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.add)[[%0, ,, %1]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, return %0⟩⟩
+-/
+#guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
 def ops : List (Op 0) := [mlir_ops|
     %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
@@ -81,16 +133,62 @@ def ops : List (Op 0) := [mlir_ops|
 ]
 def ops' := [op0, op1, op2, op3, op4]
 
-#eval mkExpr    (Γn 1)  (ops.get! 0) ["arg0"]
-#eval mkExpr    (Γn 2)  (ops.get! 1) ["0", "arg0"]
-#eval mkExpr    (Γn 3)  (ops.get! 2) ["1", "0", "arg0"]
-#eval mkExpr    (Γn 4)  (ops.get! 3) ["2", "1", "0", "arg0"]
-#eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
-#eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8[[]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 1)  (ops.get! 0) ["arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31[[]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 2)  (ops.get! 1) ["0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.ashr)[[%2, ,, %0]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 3)  (ops.get! 2) ["1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.and)[[%0, ,, %2]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 4)  (ops.get! 3) ["2", "1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.add)[[%0, ,, %1]]⟩⟩
+-/
+#guard_msgs in #eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
+
+/--
+info: Except.ok ⟨EffectKind.pure, ⟨i32, return %0⟩⟩
+-/
+#guard_msgs in #eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
 
 def com := mkCom (d := InstCombine.MetaLLVM 0) bb0 |>.toOption |>.get (by rfl)
 
-#reduce com
+/--
+info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
+  ⟨EffectKind.pure,
+    ⟨MTy.bitvec (ConcreteOrMVar.concrete 32),
+      Com.lete (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 8)) ⋯ ⋯ HVector.nil HVector.nil)
+        (Com.lete (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 31)) ⋯ ⋯ HVector.nil HVector.nil)
+          (Com.lete
+            (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.ashr) ⋯ ⋯ (⟨2, ⋯⟩::ₕ(⟨0, ⋯⟩::ₕHVector.nil))
+              HVector.nil)
+            (Com.lete
+              (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.and) ⋯ ⋯ (⟨0, ⋯⟩::ₕ(⟨2, ⋯⟩::ₕHVector.nil))
+                HVector.nil)
+              (Com.lete
+                (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.add) ⋯ ⋯
+                  (⟨0, ⋯⟩::ₕ(⟨1, ⋯⟩::ₕHVector.nil)) HVector.nil)
+                (Com.ret ⟨0, ⋯⟩)))))⟩⟩⟩
+-/
+#guard_msgs in #reduce com
 
 theorem com_Γ : com.1 = (Γn 1) := by rfl
 theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
