@@ -17,6 +17,9 @@ import SSA.Projects.InstCombine.Base
 
 import SSA.Projects.InstCombine.ComWrappers
 
+-- Test cases for the pretty syntax.
+import SSA.Projects.InstCombine.Test
+
 -- An tactic for automatically proofing the alive math statements
 import SSA.Projects.InstCombine.TacticAuto
 
