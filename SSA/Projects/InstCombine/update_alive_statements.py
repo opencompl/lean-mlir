@@ -81,7 +81,7 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
         return ""
 
     error = x.stdout.decode("utf-8")
-    msg = re.sub(".*AliveTest_[0-9]+.lean:[0-9]+:[0-9]+-[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
+    msg = re.sub(".*AliveTest_[0-9]+.lean:[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
     msg = re.sub("\nerror: Lean.*", "", msg, flags=re.DOTALL)
     msg = "    " + re.sub("\n", "\n    ", msg, flags=re.DOTALL)
 
