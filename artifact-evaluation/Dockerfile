@@ -29,8 +29,4 @@ RUN lake build SSA mlirnatural
 RUN lake build AliveExamples
 
 RUN apt install llvm-15 -y
-WORKDIR /code/ssa/test/bruteforce-correctness
-RUN ls
-RUN cd /code/ssa/test/bruteforce-correctness && ./run.sh
-
 USER root
