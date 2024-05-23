@@ -124,6 +124,13 @@ by running \texttt{lake build 2>\&1 | grep Axioms} and verify by looking that `s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Full Workflow Example}
 
+\begin{minted}[fontsize=\tiny]{text}
+$ cd /code/ssa
+$ lake build # builds successfully.
+$ cd test/bruteforce-correctness && ./run.sh # brute forcs and runs consistency check with alive semantics upto bitwidth < 4.
+\end{minted}
+
+
 % \begin{minted}[fontsize=\tiny]{text}
 % # Grab docker image from http://doi.org/10.5281/zenodo.5786074
 % $ curl https://zenodo.org/record/5786074/files/cgo22.docker?download=1 > cgo22.docker
