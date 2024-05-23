@@ -1377,8 +1377,20 @@ But `Eq.rfl` does not exist, it should be `exact Eq.refl _`
     Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
   cases eff <;> rfl
 
+@[simp] lemma Com.changeDialect_ret_pure (f : DialectMorphism d d') (v : Var Γ t):
+    Com.changeDialect f (Com.ret v : Com d Γ .pure t) = Com.ret v.toMap := rfl
+
+@[simp] lemma Com.changeDialect_ret_impure (f : DialectMorphism d d') (v : Var Γ t):
+    Com.changeDialect f (Com.ret v : Com d Γ .impure t) = Com.ret v.toMap := rfl
+
 @[simp] lemma Com.changeDialect_lete (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
+    Com.changeDialect f (Com.lete e body)
+      = Com.lete (e.changeDialect f) (body.changeDialect f) := by
+  simp only [List.map_eq_map, changeDialect]
+
+@[simp] lemma Com.changeDialect_lete_pure (f : DialectMorphism d d')
+    (e : Expr d Γ .pure t) (body : Com d _ .pure u) :
     Com.changeDialect f (Com.lete e body)
       = Com.lete (e.changeDialect f) (body.changeDialect f) := by
   simp only [List.map_eq_map, changeDialect]

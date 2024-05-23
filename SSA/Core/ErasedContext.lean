@@ -292,9 +292,16 @@ theorem Valuation.snoc_zero {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toT
   rfl
 
 @[simp]
+theorem Valuation.snoc_n {Γ : Ctxt Ty} {ty : Ty} (s : Γ.Valuation) (x : toType ty)
+    (h : get? (Ctxt.snoc Γ ty) n = some ty) :
+    (s.snoc x) ⟨n, h⟩ = x := by sorry
+    --if n = 0 then x else x := by sorry
+
+@[simp]
 theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x : toType t)
     (v : Γ.Var t') : (s.snoc x) v.toSnoc = s v := by
   rfl
+
 
 /-!
 # Helper to simplify context manipulation with toSnoc and variable access.

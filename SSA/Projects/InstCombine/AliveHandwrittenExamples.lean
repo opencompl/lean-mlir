@@ -30,17 +30,18 @@ precondition: true
 -/
 def alive_DivRemOfSelect_src (w : Nat) :=
   [alive_icom (w)| {
-  ^bb0(%c: i1, %y : _, %x : _):
+  ^bb0():
     %c0 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-    %v1 = "llvm.select" (%c,%y, %c0) : (i1, _, _) -> (_)
-    %v2 = "llvm.udiv"(%x, %v1) : (_, _) -> (_)
-    "llvm.return" (%v2) : (_) -> ()
+    %c1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
+    "llvm.return" (%c0) : (_) -> ()
   }]
 
 def alive_DivRemOfSelect_tgt (w : Nat) :=
   [alive_icom (w)| {
-  ^bb0(%c: i1, %y : _, %x : _):
-    "llvm.return" (%y) : (_) -> ()
+  ^bb0():
+    %c0 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
+    %c1 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
+    "llvm.return" (%c1) : (_) -> ()
   }]
 
 @[simp]
@@ -49,20 +50,105 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
   simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
   norm_cast
 
--- set_option pp.proofs true in
+#check Ctxt.Valuation.snoc_last
+
+
+#check (@Ctxt.Valuation InstCombine.LLVM.Ty _ [])
+
+
+def test {w : ℕ}
+  (Γv : @Ctxt.Valuation InstCombine.LLVM.Ty InstCombine.instTyDenoteTy []) :
+  @Ctxt.Valuation.snoc InstCombine.LLVM.Ty InstCombine.instTyDenoteTy
+  (@List.nil InstCombine.Ty : List InstCombine.Ty)
+  (InstCombine.Ty.bitvec w)
+  Γv
+  (@LLVM.const? w 0) =
+  @Ctxt.Valuation.snoc InstCombine.LLVM.Ty InstCombine.instTyDenoteTy
+  (@List.nil InstCombine.Ty : List InstCombine.Ty)
+  (InstCombine.Ty.bitvec w)
+  Γv
+  (@LLVM.const? w 0) := rfl
+
+--set_option pp.proofs true in
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
+  dsimp [Com.changeDialect_ret_pure]
   simp only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect,
     (HVector.changeDialect_nil), InstcombineTransformDialect.MOp.instantiateCom]
   dsimp only [DialectMorphism.mapOp_mk, DialectMorphism.mapTy_mk,
     InstcombineTransformDialect.MOp.instantiateCom,
     InstcombineTransformDialect.instantiateMOp,
     InstcombineTransformDialect.instantiateMTy,
-    HVector.changeDialect_nil]
-
+    HVector.changeDialect_nil, HVector.map']
   simp_alive_meta
+  dsimp! only [InstCombine.MTy.bitvec]
+  unfold InstcombineTransformDialect.instantiateMTy
+  dsimp only [Ctxt.map_cons, ConcreteOrMVar.instantiate_mvar_zero'', Ctxt.get?, Var.zero_eq_last,
+    List.map_cons, List.map_nil]
+  dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
   simp_alive_ssa
+  simp only [zero_add]
+  simp only [Var.succ_eq_toSnoc]
+  simp only [Var.zero_eq_last]
+  simp only [Ctxt.get?]
+  simp only [Valuation.snoc_last]
+
+
+
+  simp?
+
+
+
+  simp only [Var.succ_eq_toSnoc]
+
+  rw [Valuation.snoc_n]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  simp_peephole
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   simp_alive_undef
   simp [simp_llvm]
   intro y c x
