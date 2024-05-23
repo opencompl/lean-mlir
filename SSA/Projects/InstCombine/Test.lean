@@ -48,7 +48,8 @@ def bb0 : Region 0 := [mlir_region|
 
 
 open InstCombine
-def Γn (n : Nat) : Context φ :=
+open InstcombineTransformDialect
+def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   Ctxt.ofList <| .replicate n (.bitvec 32)
 
 def op0 : Op 0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
@@ -87,19 +88,14 @@ def ops' := [op0, op1, op2, op3, op4]
 #eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
 #eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
 
-#eval (mkCom bb0).toOption
+def com := mkCom (d := InstCombine.MetaLLVM 0) bb0 |>.toOption |>.get (by rfl)
 
-
-#check ExceptT.run
-
-def com := mkCom bb0 |>.toOption |>.get (by rfl)
-
-#eval com
+#reduce com
 
 theorem com_Γ : com.1 = (Γn 1) := by rfl
-theorem com_ty : com.2.1 = .bitvec 32 := by rfl
+theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 
-def bb0IcomConcrete := [mlir_icom|
+def bb0IcomConcrete := [alive_icom ()|
 {
   ^bb0(%arg0: i32):
     %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
@@ -111,14 +107,14 @@ def bb0IcomConcrete := [mlir_icom|
   }]
 
 /-- A simple example of a family of programs, generic over some bitwidth `w` -/
-def GenericWidth (w : Nat) := [mlir_icom (w)|
+def GenericWidth (w : Nat) := [alive_icom (w)|
 {
   ^bb0():
     %0 = "llvm.mlir.constant"() {value = 0 : _} : () -> _
     "llvm.return"(%0) : (_) -> ()
   }]
 
-def bb0IcomGeneric (w : Nat) := [mlir_icom (w)|
+def bb0IcomGeneric (w : Nat) := [alive_icom (w)|
 {
   ^bb0(%arg0: _):
     %0 = "llvm.mlir.constant"() {value = 1 : _} : () -> _
@@ -139,5 +135,4 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = some (Bitvec.ofNat w 0) := by
-  rfl
+example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
