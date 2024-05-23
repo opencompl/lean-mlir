@@ -834,6 +834,22 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
   simp only [Bool.bne_assoc]
   cases a.getLsb ↑i <;> simp [carry_and_xor_false]
 
+@[bv_ofBool]
+theorem ofBool_or {a b : Bool} : BitVec.ofBool a ||| BitVec.ofBool b = ofBool (a || b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_and {a b : Bool} : BitVec.ofBool a &&& BitVec.ofBool b = ofBool (a && b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (a.xor b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[simp]
+theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
+  rcases a <;> rcases b <;> simp [bv_toNat]
+
 end BitVec
 
 -- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it suffices to consider two cases.
