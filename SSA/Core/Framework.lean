@@ -1359,7 +1359,7 @@ def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in)
 
 section Lemmas
 
-@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t):
+@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t) :
     Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
   cases eff <;> rfl
 
