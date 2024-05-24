@@ -12,7 +12,6 @@ import Batteries.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Ctxt
 
 /-- We eliminate our alive framework's metavarible machinery.
 At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
@@ -22,8 +21,8 @@ macro "simp_alive_meta" : tactic =>
      (
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc]
-      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
       dsimp (config := {failIfUnchanged := false }) only [List.map]
       dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
