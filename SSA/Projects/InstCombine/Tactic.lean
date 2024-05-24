@@ -12,7 +12,6 @@ import Batteries.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Ctxt
 
 /-- We eliminate our alive framework's metavarible machinery.
 At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
