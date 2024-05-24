@@ -277,7 +277,6 @@ def one_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
-set_option pp.proofs true in
 def one_inst_macro_proof_noreduce (w : Nat) :
   one_inst_macro_noreduce w ⊑ one_inst_macro_noreduce w := by
   unfold one_inst_macro_noreduce
