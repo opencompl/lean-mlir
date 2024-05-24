@@ -277,6 +277,25 @@ def one_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
+def aa : (instantiateMOp ⟨[w], one_inst_macro_noreduce.proof_1 w⟩ (MOp.unary (Width.mvar (0 : Fin (0 + 1))) MOp.UnaryOp.not)) =
+  (Op.unary w MOp.UnaryOp.not) := rfl
+
+def castA :
+(@Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar ⟨0, one_inst_macro_noreduce.proof_2⟩)]
+  (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, one_inst_macro_noreduce.proof_2⟩)) Ty
+  (instantiateMTy ⟨[w], one_inst_macro_noreduce.proof_1 w⟩)
+  (Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, _⟩))) : (Ctxt.map (instantiateMTy ⟨[w], one_inst_macro_noreduce.proof_1 w⟩)
+      [MTy.bitvec (ConcreteOrMVar.mvar ⟨0, one_inst_macro_noreduce.proof_2⟩)]).Var
+  (instantiateMTy ⟨[w], one_inst_macro_noreduce.proof_1 w⟩
+    (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, one_inst_macro_noreduce.proof_2⟩)))) =
+                (Ctxt.Var.last [] (Ty.bitvec w)) := rfl
+
+def srf : (@Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
+  _ Ty (instantiateMTy ⟨[w], one_inst_macro_noreduce.proof_1 w⟩)
+  (Ctxt.Var.last (MTy.bitvec (ConcreteOrMVar.mvar 0) :: ∅) (MTy.bitvec (ConcreteOrMVar.mvar 0))))
+  = Ctxt.Var.last [Ty.bitvec w] (Ty.bitvec w) := rfl
+
+
 set_option pp.proofs true in
 def one_inst_macro_proof_noreduce (w : Nat) :
   one_inst_macro_noreduce w ⊑ one_inst_macro_noreduce w := by
@@ -284,13 +303,14 @@ def one_inst_macro_proof_noreduce (w : Nat) :
   simp only [Com.changeDialect_ret, Com.changeDialect_lete]
   simp only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect,
     (HVector.changeDialect_nil), InstcombineTransformDialect.MOp.instantiateCom]
-  dsimp! []
   dsimp only [DialectMorphism.mapOp_mk, DialectMorphism.mapTy_mk,
     InstcombineTransformDialect.MOp.instantiateCom,
     InstcombineTransformDialect.instantiateMOp,
     InstcombineTransformDialect.instantiateMTy,
     HVector.changeDialect_nil, HVector.map']
   simp_alive_meta
+  dsimp [castA]
+  rw [srf]
   simp_alive_ssa
   apply one_inst_stmt
 
