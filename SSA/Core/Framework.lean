@@ -1365,8 +1365,7 @@ section Lemmas
 
 @[simp] lemma Com.changeDialect_lete (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
-    Com.changeDialect f (Com.lete e body)
-      = Com.lete (e.changeDialect f) (body.changeDialect f) := by
+    (Com.lete e body).changeDialect f = Com.lete (e.changeDialect f) (body.changeDialect f) := by
   simp only [List.map_eq_map, changeDialect]
 
 end Lemmas
