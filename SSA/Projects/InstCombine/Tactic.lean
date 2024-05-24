@@ -19,10 +19,12 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (
+      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect]
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
       dsimp (config := {failIfUnchanged := false }) only [List.map]
       dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]

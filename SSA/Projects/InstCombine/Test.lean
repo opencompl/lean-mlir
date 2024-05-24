@@ -246,6 +246,14 @@ def one_inst_macro (w: Nat):=
     "llvm.return" (%0) : (_) -> ()
   }]
 
+set_option ssa.alive_icom_reduce false in
+def one_inst_macro_noreduce (w: Nat):=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
+    "llvm.return" (%0) : (_) -> ()
+  }]
+
 def one_inst_com (w : ℕ) :
   Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   Com.lete (not w 0) <|
@@ -265,6 +273,13 @@ def one_inst_com_proof (w : Nat) :
 def one_inst_macro_proof (w : Nat) :
   one_inst_macro w ⊑ one_inst_macro w := by
   unfold one_inst_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_stmt
+
+def one_inst_macro_proof_noreduce (w : Nat) :
+  one_inst_macro_noreduce w ⊑ one_inst_macro_noreduce w := by
+  unfold one_inst_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
   apply one_inst_stmt

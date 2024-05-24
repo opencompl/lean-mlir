@@ -1357,6 +1357,19 @@ def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in)
   | nil => nil
   | lete body e => lete (changeDialect body) (e.changeDialect f)
 
+section Lemmas
+
+@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t) :
+    Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
+  cases eff <;> rfl
+
+@[simp] lemma Com.changeDialect_lete (f : DialectMorphism d d')
+    (e : Expr d Γ eff t) (body : Com d _ eff u) :
+    (Com.lete e body).changeDialect f = Com.lete (e.changeDialect f) (body.changeDialect f) := by
+  simp only [List.map_eq_map, changeDialect]
+
+end Lemmas
+
 end Map
 
 /-!
