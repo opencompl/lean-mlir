@@ -1327,6 +1327,12 @@ theorem DialectMorphism.preserves_effectKind (op : d.Op) :
     DialectSignature.effectKind (f.mapOp op) = DialectSignature.effectKind op := by
   simp only [DialectSignature.effectKind, Function.comp_apply, f.preserves_signature]; rfl
 
+@[simp] lemma DialectMorphism.mapOp_mk (fOp : d.Op → d'.Op) (fTy) (h) :
+    mapOp ⟨fOp, fTy, h⟩ = fOp := rfl
+
+@[simp] lemma DialectMorphism.mapTy_mk (fOp : d.Op → d'.Op) (fTy) (h) :
+    mapTy ⟨fOp, fTy, h⟩ = fTy := rfl
+
 mutual
 
 -- TODO: `map` is ambiguous, rename it to `changeDialect` (to mirror `changeVars`)
@@ -1356,6 +1362,41 @@ end
 def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
   | nil => nil
   | lete body e => lete (changeDialect body) (e.changeDialect f)
+
+section Lemmas
+
+/-!
+There seems to be a bug with the `rfl` suggestion. When it fails, tt says:
+```
+Try using the reflexivitiy lemma for your relation explicitly, e.g. `exact Eq.rfl`.
+```
+But `Eq.rfl` does not exist, it should be `exact Eq.refl _`
+-/
+
+@[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t):
+    Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
+  cases eff <;> rfl
+
+@[simp] lemma Com.changeDialect_lete (f : DialectMorphism d d')
+    (e : Expr d Γ eff t) (body : Com d _ eff u) :
+    Com.changeDialect f (Com.lete e body)
+      = Com.lete (e.changeDialect f) (body.changeDialect f) := by
+  simp only [List.map_eq_map, changeDialect]
+
+@[simp] lemma Expr.changeDialect_mk (f : DialectMorphism d d') (op ty_eq eff_le args regArgs) :
+    Expr.changeDialect f (⟨op, ty_eq, eff_le, args, regArgs⟩ : Expr d Γ eff t)
+      = ⟨f.mapOp op,
+          ty_eq ▸ (f.preserves_outTy _).symm,
+          f.preserves_effectKind _ ▸ eff_le,
+          f.preserves_sig _ ▸ args.map' f.mapTy fun _ => Var.toMap (f:=f.mapTy),
+          f.preserves_regSig _ ▸
+            HVector.changeDialect f regArgs⟩ := by
+  subst ty_eq; simp [Expr.changeDialect]
+
+@[simp] lemma HVector.changeDialect_nil (f : DialectMorphism d d') :
+    HVector.changeDialect (eff := eff) f nil = nil := rfl
+
+end Lemmas
 
 end Map
 
