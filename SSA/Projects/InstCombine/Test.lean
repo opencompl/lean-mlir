@@ -290,23 +290,10 @@ def castA :
     (MTy.bitvec (ConcreteOrMVar.mvar ⟨0, one_inst_macro_noreduce.proof_2⟩)))) =
                 (Ctxt.Var.last [] (Ty.bitvec w)) := rfl
 
-@[simp]
-theorem Ctxt.Var.toMap_last {Γ : Ctxt Ty2} {t : Ty2} : (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
-
 set_option pp.proofs true in
 def one_inst_macro_proof_noreduce (w : Nat) :
   one_inst_macro_noreduce w ⊑ one_inst_macro_noreduce w := by
   unfold one_inst_macro_noreduce
-  simp only [Com.changeDialect_ret, Com.changeDialect_lete]
-  simp only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect,
-    (HVector.changeDialect_nil), InstcombineTransformDialect.MOp.instantiateCom]
-  dsimp only [DialectMorphism.mapOp_mk, DialectMorphism.mapTy_mk,
-    InstcombineTransformDialect.MOp.instantiateCom,
-    InstcombineTransformDialect.instantiateMOp,
-    InstcombineTransformDialect.instantiateMTy,
-    HVector.changeDialect_nil, HVector.map']
-  simp_alive_meta
-  dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
   simp_alive_meta
   simp_alive_ssa
   apply one_inst_stmt
