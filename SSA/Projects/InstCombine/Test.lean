@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.LLVM.EDSL
+import SSA.Projects.InstCombine.ComWrappers
+import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
 /-
@@ -234,3 +236,67 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
   `GenericWidth` represents.
 -/
 example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
+
+open ComWrappers
+
+def one_inst_macro (w: Nat):=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
+    "llvm.return" (%0) : (_) -> ()
+  }]
+
+def one_inst_com (w : ℕ) :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com.lete (not w 0) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def one_inst_stmt (e : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by simp
+
+def one_inst_com_proof (w : Nat) :
+  one_inst_com w ⊑ one_inst_com w := by
+  unfold one_inst_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_stmt
+
+def one_inst_macro_proof (w : Nat) :
+  one_inst_macro w ⊑ one_inst_macro w := by
+  unfold one_inst_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_stmt
+
+def two_inst_macro (w: Nat):=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
+    %1 = "llvm.not" (%arg0) : (_, _) -> (_)
+    "llvm.return" (%0) : (_) -> ()
+  }]
+
+def two_inst_com (w : ℕ) :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com.lete (not w 0) <|
+  Com.lete (not w 1) <|
+  Com.ret ⟨1, by simp [Ctxt.snoc]⟩
+
+def two_inst_stmt (e : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by simp
+
+def two_inst_com_proof (w : Nat) :
+  two_inst_com w ⊑ two_inst_com w := by
+  unfold two_inst_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply two_inst_stmt
+
+def two_inst_macro_proof (w : Nat) :
+  two_inst_macro w ⊑ two_inst_macro w := by
+  unfold two_inst_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply two_inst_stmt
