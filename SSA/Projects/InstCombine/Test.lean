@@ -277,9 +277,19 @@ def one_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
+set_option pp.proofs true in
 def one_inst_macro_proof_noreduce (w : Nat) :
   one_inst_macro_noreduce w ⊑ one_inst_macro_noreduce w := by
   unfold one_inst_macro_noreduce
+  simp only [Com.changeDialect_ret, Com.changeDialect_lete]
+  simp only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect,
+    (HVector.changeDialect_nil), InstcombineTransformDialect.MOp.instantiateCom]
+  dsimp! []
+  dsimp only [DialectMorphism.mapOp_mk, DialectMorphism.mapTy_mk,
+    InstcombineTransformDialect.MOp.instantiateCom,
+    InstcombineTransformDialect.instantiateMOp,
+    InstcombineTransformDialect.instantiateMTy,
+    HVector.changeDialect_nil, HVector.map']
   simp_alive_meta
   simp_alive_ssa
   apply one_inst_stmt
