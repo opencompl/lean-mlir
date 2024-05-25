@@ -16,7 +16,7 @@ set_option pp.proofs false
 set_option pp.proofs.withType false
 set_option linter.deprecated false
 
-set_option ssa.alive_icom_reduce false in
+
 
 -- Name:AddSub:1043
 -- precondition: true
