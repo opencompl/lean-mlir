@@ -297,9 +297,8 @@ def two_inst_macro_noreduce (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%0) : (_) -> (_)
-    %2 = "llvm.not" (%1) : (_) -> (_)
-    "llvm.return" (%2) : (_) -> ()
+    %1 = "llvm.not" (%arg0) : (_) -> (_)
+    "llvm.return" (%0) : (_) -> ()
   }]
 
 def two_inst_com (w : ℕ) :
@@ -332,4 +331,55 @@ def two_inst_macro_noreduc_proof (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   apply two_inst_stmt
-ß
+
+def three_inst_macro (w: Nat):=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
+    %1 = "llvm.not" (%0) : (_) -> (_)
+    %2 = "llvm.not" (%1) : (_) -> (_)
+    "llvm.return" (%2) : (_) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def three_inst_macro_noreduce (w: Nat):=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
+    %1 = "llvm.not" (%0) : (_) -> (_)
+    %2 = "llvm.not" (%1) : (_) -> (_)
+    "llvm.return" (%2) : (_) -> ()
+  }]
+
+def three_inst_com (w : ℕ) :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com.lete (not w 0) <|
+  Com.lete (not w 0) <|
+  Com.lete (not w 0) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def three_inst_stmt (e : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec w) (LLVM.not (LLVM.not (LLVM.not e)))
+    (LLVM.not (LLVM.not (LLVM.not e))) := by simp
+
+def three_inst_com_proof (w : Nat) :
+  three_inst_com w ⊑ three_inst_com w := by
+  unfold three_inst_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_stmt
+
+def three_inst_macro_proof (w : Nat) :
+  three_inst_macro w ⊑ three_inst_macro w := by
+  unfold three_inst_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_stmt
+
+def three_inst_macro_noreduc_proof (w : Nat) :
+  three_inst_macro_noreduce w ⊑ three_inst_macro_noreduce w := by
+  unfold three_inst_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_stmt
