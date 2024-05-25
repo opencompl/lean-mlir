@@ -325,25 +325,9 @@ def two_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
-theorem aa {w : Nat}: @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
-  (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[w], by simp⟩) ⟨0 + 1, by simp⟩ =
-  ⟨1, by simp⟩ := rfl
-
-#reduce @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
-  (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[], _⟩) ⟨0 + 1, _⟩
-
-#reduce @Ctxt.Var.toSnoc (MTy 1) (MTy.bitvec (ConcreteOrMVar.mvar 0) :: ∅) (MTy.bitvec (ConcreteOrMVar.mvar 0))
-  (MTy.bitvec (ConcreteOrMVar.mvar 0)) (Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar 0)))
-
-def two_inst_macro_noreduce_proof (w : Nat) :
+def two_inst_macro_noreduc'_proof (w : Nat) :
   two_inst_macro_noreduce w ⊑ two_inst_macro_noreduce w := by
   unfold two_inst_macro_noreduce
   simp_alive_meta
-  simp only [(HVector.changeDialect_nil)]
-  dsimp only [List.length_singleton, List.map_nil, Fin.zero_eta, instantiateMOp,
-    ConcreteOrMVar.instantiate_mvar_zero'', Nat.zero_eq]
-  unfold Op.unary
-  unfold Ctxt.Var.toMap
-  unfold Ctxt.Var.toSnoc
   simp_alive_ssa
   apply two_inst_stmt
