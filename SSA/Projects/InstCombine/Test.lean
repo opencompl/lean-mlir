@@ -345,6 +345,5 @@ def two_inst_macro_noreduce_proof (w : Nat) :
   unfold Op.unary
   unfold Ctxt.Var.toMap
   unfold Ctxt.Var.toSnoc
-  dsimp! []
   simp_alive_ssa
   apply two_inst_stmt
