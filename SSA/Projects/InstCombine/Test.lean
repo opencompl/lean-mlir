@@ -325,7 +325,7 @@ def two_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
-def two_inst_macro_noreduc'_proof (w : Nat) :
+def two_inst_macro_noreduc_proof (w : Nat) :
   two_inst_macro_noreduce w ⊑ two_inst_macro_noreduce w := by
   unfold two_inst_macro_noreduce
   simp_alive_meta
