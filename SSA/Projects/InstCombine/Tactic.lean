@@ -21,6 +21,7 @@ macro "simp_alive_meta" : tactic =>
      (
       simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect]
       simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
+      dsimp (config := {failIfUnchanged := false }) only [HVector.map']
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
@@ -36,12 +37,15 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [Fin.zero_eta, List.map_cons]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMOp]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_concrete_eq]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
    )
  )
 

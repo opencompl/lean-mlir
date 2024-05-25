@@ -287,8 +287,8 @@ def one_inst_macro_proof_noreduce (w : Nat) :
 def two_inst_macro (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
-    %1 = "llvm.not" (%arg0) : (_, _) -> (_)
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
+    %1 = "llvm.not" (%arg0) : (_) -> (_)
     "llvm.return" (%0) : (_) -> ()
   }]
 
@@ -296,9 +296,10 @@ set_option ssa.alive_icom_reduce false in
 def two_inst_macro_noreduce (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
-    %1 = "llvm.not" (%arg0) : (_, _) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
+    %1 = "llvm.not" (%0) : (_) -> (_)
+    %2 = "llvm.not" (%1) : (_) -> (_)
+    "llvm.return" (%2) : (_) -> ()
   }]
 
 def two_inst_com (w : ℕ) :
@@ -331,3 +332,4 @@ def two_inst_macro_noreduc_proof (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   apply two_inst_stmt
+ß
