@@ -332,6 +332,8 @@ theorem toMap_toMap {Γ : Ctxt Ty0} {t : Ty0} {f : Ty0 → Ty1} {var : (Γ.Var t
 @Ctxt.Var.toMap Ty0 Γ t Ty1 f var =
 @Ctxt.Var.toMap Ty0 Γ t Ty1 f var := rfl
 
+⟨1, ⋯⟩
+
 theorem aa {w : Nat}: @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
   (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[w], by simp⟩) ⟨0 + 1, by simp⟩ =
   ⟨1, by simp⟩ := rfl
@@ -339,31 +341,19 @@ theorem aa {w : Nat}: @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0
 #reduce @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
   (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[], _⟩) ⟨0 + 1, _⟩
 
+#reduce @Ctxt.Var.toSnoc (MTy 1) (MTy.bitvec (ConcreteOrMVar.mvar 0) :: ∅) (MTy.bitvec (ConcreteOrMVar.mvar 0))
+  (MTy.bitvec (ConcreteOrMVar.mvar 0)) (Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar 0)))
+
 def two_inst_macro_noreduce_proof (w : Nat) :
   two_inst_macro_noreduce w ⊑ two_inst_macro_noreduce w := by
   unfold two_inst_macro_noreduce
   simp_alive_meta
   simp only [(HVector.changeDialect_nil)]
-  dsimp [instantiateMOp]
+  dsimp only [List.length_singleton, List.map_nil, Fin.zero_eta, instantiateMOp,
+    ConcreteOrMVar.instantiate_mvar_zero'', Nat.zero_eq]
   unfold Op.unary
-  simp_alive_meta
-  /-
-  @Ctxt.Var.toMap (MTy 1)
-  [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
-  (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[w], ⋯⟩) ⟨0 + 1, ⋯⟩
-  -/
-
-  simp_alive_ssa
-  rw [aa]
-  simp only [Ctxt.map_cons, Ctxt.get?, Ctxt.Valuation.snoc_eval, Ctxt.Var.zero_eq_last, zero_add,
-    Ctxt.Var.succ_eq_toSnoc, implies_true]
-  simp_alive_meta
-  simp_alive_ssa
-  simp_alive_meta
   unfold Ctxt.Var.toMap
-  dsimp only [Ctxt.map_cons, Nat.reduceAdd, Ctxt.get?, Ctxt.Var.succ_eq_toSnoc, List.map_cons,
-    List.map_nil, Ctxt.Var.zero_eq_last, Ctxt.Valuation.snoc_toSnoc]
-  simp_alive_meta
-  unfold Ctxt.Var.last
-  dsimp only [Ctxt.get?, Ctxt.Var.zero_eq_last, Ctxt.Valuation.snoc_last]
+  unfold Ctxt.Var.toSnoc
+  dsimp! []
+  simp_alive_ssa
   apply two_inst_stmt
