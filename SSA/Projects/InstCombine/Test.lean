@@ -325,15 +325,6 @@ def two_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
--- theorem toMap_last {Γ : Ctxt Ty} {t : Ty} :
--- (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
-
-theorem toMap_toMap {Γ : Ctxt Ty0} {t : Ty0} {f : Ty0 → Ty1} {var : (Γ.Var t)}:
-@Ctxt.Var.toMap Ty0 Γ t Ty1 f var =
-@Ctxt.Var.toMap Ty0 Γ t Ty1 f var := rfl
-
-⟨1, ⋯⟩
-
 theorem aa {w : Nat}: @Ctxt.Var.toMap (MTy 1) [MTy.bitvec (ConcreteOrMVar.mvar 0), MTy.bitvec (ConcreteOrMVar.mvar 0)]
   (MTy.bitvec (ConcreteOrMVar.mvar 0)) Ty (instantiateMTy ⟨[w], by simp⟩) ⟨0 + 1, by simp⟩ =
   ⟨1, by simp⟩ := rfl
