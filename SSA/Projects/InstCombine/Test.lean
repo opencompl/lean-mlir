@@ -242,7 +242,7 @@ open ComWrappers
 def one_inst_macro (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
     "llvm.return" (%0) : (_) -> ()
   }]
 
@@ -250,7 +250,7 @@ set_option ssa.alive_icom_reduce false in
 def one_inst_macro_noreduce (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
     "llvm.return" (%0) : (_) -> ()
   }]
 
@@ -287,8 +287,8 @@ def one_inst_macro_proof_noreduce (w : Nat) :
 def two_inst_macro (w: Nat):=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_, _) -> (_)
-    %1 = "llvm.not" (%arg0) : (_, _) -> (_)
+    %0 = "llvm.not" (%arg0) : (_) -> (_)
+    %1 = "llvm.not" (%arg0) : (_) -> (_)
     "llvm.return" (%0) : (_) -> ()
   }]
 
