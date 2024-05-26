@@ -146,6 +146,26 @@ theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.V
 theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t} {f : Ty → Ty₂} :
     var.toSnoc.toMap (Γ := Γ.snoc t) (f := f) = var.toMap.toSnoc := rfl
 
+@[simp]
+theorem toSnoc_toMap' {Γ : Ctxt Ty1} {t1 t2 : Ty1} {var : Ctxt.Var Γ t} {f : Ty1 → Ty2} :
+    var.toSnoc.toSnoc.toMap (Γ := ((Γ.snoc t1).snoc t2)) (f := f) =
+    var.toMap.toSnoc.toSnoc := rfl
+
+@[simp]
+theorem toSnoc_toMap'' {Γ : Ctxt Ty1} {t1 t2 t3: Ty1} {var : Ctxt.Var Γ t} {f : Ty1 → Ty2} :
+    var.toSnoc.toSnoc.toSnoc.toMap (Γ := ((Γ.snoc t1).snoc t2).snoc t3) (f := f) =
+    var.toMap.toSnoc.toSnoc.toSnoc := rfl
+
+@[simp]
+theorem toSnoc_toMap''' {Γ : Ctxt Ty1} {t1 t2 t3 t4: Ty1} {var : Ctxt.Var Γ t} {f : Ty1 → Ty2} :
+    var.toSnoc.toSnoc.toSnoc.toSnoc.toMap (Γ := (((Γ.snoc t1).snoc t2).snoc t3).snoc t4) (f := f) =
+    var.toMap.toSnoc.toSnoc.toSnoc.toSnoc := rfl
+
+@[simp]
+theorem last_toSnoc_toMap {Γ : Ctxt Ty1} {t t2: Ty1} {f : Ty1 → Ty2} :
+    (Ctxt.Var.last Γ t).toSnoc.toMap (f := f) (Γ := ((Γ.snoc t).snoc t2))
+    = (Ctxt.Var.last (Ctxt.map f Γ) (f t)).toSnoc := rfl
+
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
 @[elab_as_elim, cases_eliminator]

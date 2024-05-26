@@ -531,11 +531,6 @@ def three_inst_concrete_macro_noreduc_proof :
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
-@[simp]
-theorem toSnoc_toMap {Γ : Ctxt Ty1} {t1 t2 : Ty1} {var : Ctxt.Var Γ t} {f : Ty1 → Ty2} :
-    var.toSnoc.toSnoc.toMap (Γ := ((Γ.snoc t1).snoc t2)) (f := f) =
-    var.toMap.toSnoc.toSnoc := rfl
-
 set_option ssa.alive_icom_reduce false in
 def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
   [alive_icom (w)|{
@@ -545,12 +540,19 @@ def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
     "llvm.return" (%1) : (i1) -> ()
   }]
 
+def three_inst_concrete_stmt_ne {a b : LLVM.IntW w} :
+  @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne a b)
+    (LLVM.icmp LLVM.IntPredicate.ne a b) := by simp
+
 def three_inst_concrete_macro_noreduc_proof_ne :
-  three_inst_concrete_macro_noreduce_ne w ⊑ three_inst_concrete_macro_noreduce_ne w := by
+  three_inst_concrete_macro_noreduce_ne x ⊑ three_inst_concrete_macro_noreduce_ne x := by
   unfold three_inst_concrete_macro_noreduce_ne
   simp_alive_meta
   -- There remains a 'toMap' in the following expression:
   -- (↑↑(Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar 0)))).toMap
   -- I am unsure why
+  simp only [Ctxt.Var.toSnoc_toMap']
+  simp_alive_meta
   simp_alive_ssa
-  apply three_inst_concrete_stmt
+  intros -- Why do I need an intros?
+  apply three_inst_concrete_stmt_ne

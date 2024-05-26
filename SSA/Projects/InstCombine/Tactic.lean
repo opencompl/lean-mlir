@@ -34,6 +34,7 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toSnoc_toMap]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.last_toSnoc_toMap]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
