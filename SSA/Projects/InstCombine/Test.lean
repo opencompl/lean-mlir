@@ -470,7 +470,7 @@ def two_inst_concrete_macro_proof :
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
-def two_inst_concrete_macro_noreduc_proof  :
+def two_inst_concrete_macro_noreduc_proof :
   two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
   unfold two_inst_concrete_macro_noreduce
   simp_alive_meta
@@ -530,7 +530,7 @@ def three_inst_concrete_macro_noreduc_proof :
   apply three_inst_concrete_stmt
 
 set_option ssa.alive_icom_reduce false in
-def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
+def two_ne_macro_noreduce (w : Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _, %arg1: _):
     %0 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
@@ -538,13 +538,13 @@ def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
     "llvm.return" (%1) : (i1) -> ()
   }]
 
-def three_inst_concrete_stmt_ne (a b : LLVM.IntW w) :
+def two_ne_stmt (a b : LLVM.IntW w) :
   @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
     (LLVM.icmp LLVM.IntPredicate.ne b a) := by simp
 
-def three_inst_concrete_macro_noreduc_proof_ne (w : Nat) :
-  three_inst_concrete_macro_noreduce_ne w ⊑ three_inst_concrete_macro_noreduce_ne w := by
-  unfold three_inst_concrete_macro_noreduce_ne
+def two_ne_macro_noreduc_proof (w : Nat) :
+  two_ne_macro_noreduce w ⊑ two_ne_macro_noreduce w := by
+  unfold two_ne_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
-  apply three_inst_concrete_stmt_ne
+  apply two_ne_stmt
