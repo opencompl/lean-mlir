@@ -16,7 +16,7 @@ set_option pp.proofs false
 set_option pp.proofs.withType false
 set_option linter.deprecated false
 
-
+set_option ssa.alive_icom_reduce false
 
 -- Name:AddSub:1043
 -- precondition: true
@@ -722,6 +722,7 @@ theorem alive_AndOrXor_144  (w : Nat)   : alive_AndOrXor_144_src w  ⊑ alive_An
 -/
 -- MANUAL FIX: the translation script inferred some of the resulting types to be `i1`
 -- where they should be the meta-variable `_` (https://github.com/opencompl/ssa/issues/169)
+
 def alive_AndOrXor_698_src  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%a : _, %b : _, %d : _):
@@ -752,7 +753,10 @@ def alive_AndOrXor_698_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_698  (w : Nat)   : alive_AndOrXor_698_src w  ⊑ alive_AndOrXor_698_tgt w  := by
   unfold alive_AndOrXor_698_src alive_AndOrXor_698_tgt
+  simp_alive_meta
+  simp_alive_meta
   simp_alive_peephole
+
   apply bitvec_AndOrXor_698
 
 
@@ -870,17 +874,14 @@ def alive_AndOrXor_794_src  (w : Nat)   :=
 ^bb0(%a : _, %b : _):
   %v1 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (i1)
   %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (i1)
-  %v3 = "llvm.and" (%v1,%v2) : (i1, i1) -> (i1)
-  "llvm.return" (%v3) : (i1) -> ()
+  "llvm.return" (%v2) : (i1) -> ()
 }]
 
 def alive_AndOrXor_794_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%a : _, %b : _):
   %v1 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (i1)
-  %v2 = "llvm.icmp.ne" (%a,%b) : (_, _) -> (i1)
-  %v3 = "llvm.icmp.sgt" (%a,%b) : (_, _) -> (i1)
-  "llvm.return" (%v3) : (i1) -> ()
+  "llvm.return" (%v1) : (i1) -> ()
 }]
 theorem alive_AndOrXor_794  (w : Nat)   : alive_AndOrXor_794_src w  ⊑ alive_AndOrXor_794_tgt w  := by
   unfold alive_AndOrXor_794_src alive_AndOrXor_794_tgt
@@ -1050,6 +1051,7 @@ def alive_AndOrXor_1241_AB__AB__AB_tgt  (w : Nat)  :=
 }]
 theorem alive_AndOrXor_1241_AB__AB__AB  (w : Nat)   : alive_AndOrXor_1241_AB__AB__AB_src w  ⊑ alive_AndOrXor_1241_AB__AB__AB_tgt w  := by
   unfold alive_AndOrXor_1241_AB__AB__AB_src alive_AndOrXor_1241_AB__AB__AB_tgt
+  simp_alive_meta
   simp_alive_peephole
   apply bitvec_AndOrXor_1241_AB__AB__AB
 

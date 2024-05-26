@@ -121,7 +121,6 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
   rfl
 
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
-@[coe]
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
       simp only [get?, map, List.get?_map, Option.map_eq_some']
@@ -145,7 +144,15 @@ theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.V
 
 @[simp]
 theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
-    @Ctxt.Var.toMap _ (Γ.snoc t) _ _ f var.toSnoc = var.toMap.toSnoc := rfl
+    @Var.toMap _ (Γ.snoc t) _ _ f var.toSnoc = var.toMap.toSnoc := rfl
+
+@[simp]
+theorem toSnoc_toMap' {Γ : Ctxt Ty} {t t': Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
+    @Ctxt.Var.toMap _ ((Γ.snoc t).snoc t') _ _ f var.toSnoc.toSnoc = var.toMap.toSnoc.toSnoc := rfl
+
+@[simp]
+theorem toSnoc_toMap'' {Γ : Ctxt Ty} {t t' t'': Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
+    @Ctxt.Var.toMap _ (((Γ.snoc t).snoc t').snoc t'') _ _ f var.toSnoc.toSnoc.toSnoc = var.toMap.toSnoc.toSnoc.toSnoc := rfl
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
