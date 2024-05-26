@@ -121,7 +121,6 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
   rfl
 
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
-@[coe]
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
       simp only [get?, map, List.get?_map, Option.map_eq_some']
