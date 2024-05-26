@@ -47,6 +47,8 @@ macro "simp_alive_meta" : tactic =>
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      -- How can I avoid the `simp! only`and use a plain `simp only`?
+      simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_list]
    )
  )
 

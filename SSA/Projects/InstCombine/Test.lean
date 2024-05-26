@@ -526,8 +526,6 @@ def three_inst_concrete_macro_noreduc_proof :
   three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
   unfold three_inst_concrete_macro_noreduce
   simp_alive_meta
-  -- How can I avoid the `simp! only`and use a plain `simp only`?
-  simp! only [ConcreteOrMVar.instantiate_list]
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
@@ -547,11 +545,6 @@ def three_inst_concrete_stmt_ne {a b : LLVM.IntW w} :
 def three_inst_concrete_macro_noreduc_proof_ne :
   three_inst_concrete_macro_noreduce_ne x ⊑ three_inst_concrete_macro_noreduce_ne x := by
   unfold three_inst_concrete_macro_noreduce_ne
-  simp_alive_meta
-  -- There remains a 'toMap' in the following expression:
-  -- (↑↑(Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar 0)))).toMap
-  -- I am unsure why
-  simp only [Ctxt.Var.toSnoc_toMap']
   simp_alive_meta
   simp_alive_ssa
   intros -- Why do I need an intros?
