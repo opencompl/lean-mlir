@@ -377,9 +377,154 @@ def three_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply three_inst_stmt
 
-def three_inst_macro_noreduc_proof (w : Nat) :
+def three_inst_macro_noreduc_proof :
   three_inst_macro_noreduce w ⊑ three_inst_macro_noreduce w := by
   unfold three_inst_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
   apply three_inst_stmt
+
+def one_inst_concrete_macro :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    "llvm.return" (%0) : (i1) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def one_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    "llvm.return" (%0) : (i1) -> ()
+  }]
+
+def one_inst_concrete_com :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+  Com.lete (not 1 0) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def one_inst_concrete_stmt :
+  @BitVec.Refinement (BitVec 1) (LLVM.not e) (LLVM.not e) := by simp
+
+def one_inst_concrete_com_proof :
+  one_inst_concrete_com ⊑ one_inst_concrete_com := by
+  unfold one_inst_concrete_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_concrete_stmt
+
+def one_inst_concrete_macro_proof :
+  one_inst_concrete_macro ⊑ one_inst_concrete_macro := by
+  unfold one_inst_concrete_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_concrete_stmt
+
+def one_inst_concrete_macro_proof_noreduce :
+  one_inst_concrete_macro_noreduce ⊑ one_inst_concrete_macro_noreduce := by
+  unfold one_inst_concrete_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply one_inst_concrete_stmt
+
+def two_inst_concrete_macro :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    %1 = "llvm.not" (%arg0) : (i1) -> (i1)
+    "llvm.return" (%0) : (i1) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def two_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    %1 = "llvm.not" (%arg0) : (i1) -> (i1)
+    "llvm.return" (%0) : (i1) -> ()
+  }]
+
+def two_inst_concrete_com (w : ℕ) :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com.lete (not w 0) <|
+  Com.lete (not w 1) <|
+  Com.ret ⟨1, by simp [Ctxt.snoc]⟩
+
+def two_inst_concrete_stmt (e : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by simp
+
+def two_inst_concrete_com_proof :
+  two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
+  unfold two_inst_concrete_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply two_inst_concrete_stmt
+
+def two_inst_concrete_macro_proof :
+  two_inst_concrete_macro ⊑ two_inst_concrete_macro := by
+  unfold two_inst_concrete_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply two_inst_concrete_stmt
+
+def two_inst_concrete_macro_noreduc_proof  :
+  two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
+  unfold two_inst_concrete_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply two_inst_concrete_stmt
+
+def three_inst_concrete_macro :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    %1 = "llvm.not" (%0) : (i1) -> (i1)
+    %2 = "llvm.not" (%1) : (i1) -> (i1)
+    "llvm.return" (%2) : (i1) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def three_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
+    %1 = "llvm.not" (%0) : (i1) -> (i1)
+    %2 = "llvm.not" (%1) : (i1) -> (i1)
+    "llvm.return" (%2) : (i1) -> ()
+  }]
+
+def three_inst_concrete_com (w : ℕ) :
+  Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+  Com.lete (not w 0) <|
+  Com.lete (not w 0) <|
+  Com.lete (not w 0) <|
+  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+
+def three_inst_concrete_stmt (e : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec w) (LLVM.not (LLVM.not (LLVM.not e)))
+    (LLVM.not (LLVM.not (LLVM.not e))) := by simp
+
+def three_inst_concrete_com_proof (w : Nat) :
+  three_inst_concrete_com w ⊑ three_inst_concrete_com w := by
+  unfold three_inst_concrete_com
+  simp only [simp_llvm_wrap]
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_concrete_stmt
+
+def three_inst_concrete_macro_proof (w : Nat) :
+  three_inst_concrete_macro w ⊑ three_inst_concrete_macro w := by
+  unfold three_inst_concrete_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_concrete_stmt
+
+def three_inst_concrete_macro_noreduc_proof (w : Nat) :
+  three_inst_concrete_macro_noreduce w ⊑ three_inst_concrete_macro_noreduce w := by
+  unfold three_inst_concrete_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply three_inst_concrete_stmt
