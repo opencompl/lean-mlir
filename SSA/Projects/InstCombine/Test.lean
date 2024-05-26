@@ -530,3 +530,27 @@ def three_inst_concrete_macro_noreduc_proof :
   simp! only [ConcreteOrMVar.instantiate_list]
   simp_alive_ssa
   apply three_inst_concrete_stmt
+
+@[simp]
+theorem toSnoc_toMap {Γ : Ctxt Ty1} {t1 t2 : Ty1} {var : Ctxt.Var Γ t} {f : Ty1 → Ty2} :
+    var.toSnoc.toSnoc.toMap (Γ := ((Γ.snoc t1).snoc t2)) (f := f) =
+    var.toMap.toSnoc.toSnoc := rfl
+
+set_option ssa.alive_icom_reduce false in
+def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _, %arg1: _):
+    %0 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
+    %1 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
+    "llvm.return" (%1) : (i1) -> ()
+  }]
+
+def three_inst_concrete_macro_noreduc_proof_ne :
+  three_inst_concrete_macro_noreduce_ne w ⊑ three_inst_concrete_macro_noreduce_ne w := by
+  unfold three_inst_concrete_macro_noreduce_ne
+  simp_alive_meta
+  -- There remains a 'toMap' in the following expression:
+  -- (↑↑(Ctxt.Var.last ∅ (MTy.bitvec (ConcreteOrMVar.mvar 0)))).toMap
+  -- I am unsure why
+  simp_alive_ssa
+  apply three_inst_concrete_stmt
