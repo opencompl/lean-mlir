@@ -522,9 +522,15 @@ def three_inst_concrete_macro_proof :
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
+@[simp]
+def ainstantiate_list (x : Nat) (as : List Nat) :
+  ConcreteOrMVar.instantiate ll x = x := rfl
+
+#check ConcreteOrMVar.instantiate_concrete_eq
 def three_inst_concrete_macro_noreduc_proof :
   three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
   unfold three_inst_concrete_macro_noreduce
   simp_alive_meta
+  simp! only [ainstantiate_list]
   simp_alive_ssa
   apply three_inst_concrete_stmt

@@ -53,6 +53,10 @@ def instantiate_concrete_eq (as : Vector α φ) :
   (ConcreteOrMVar.concrete w).instantiate as = w := by rfl
 
 @[simp]
+def instantiate_list (x : Nat) (as : List Nat) :
+  ConcreteOrMVar.instantiate ⟨as, by rfl⟩ x = x := rfl
+
+@[simp]
 lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
     ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
   simp [instantiate]
