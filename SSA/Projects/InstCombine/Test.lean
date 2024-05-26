@@ -377,7 +377,7 @@ def three_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply three_inst_stmt
 
-def three_inst_macro_noreduc_proof :
+def three_inst_macro_noreduc_proof (w : Nat) :
   three_inst_macro_noreduce w ⊑ three_inst_macro_noreduce w := by
   unfold three_inst_macro_noreduce
   simp_alive_meta

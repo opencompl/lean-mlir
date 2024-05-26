@@ -1368,7 +1368,7 @@ section Lemmas
     (Com.lete e body).changeDialect f = Com.lete (e.changeDialect f) (body.changeDialect f) := by
   simp only [List.map_eq_map, changeDialect]
 
-@[simp] lemma HVector.changeDialect_nil (f : DialectMorphism d d') :
+@[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
     HVector.changeDialect (eff := eff) f nil = nil := rfl
 
 end Lemmas

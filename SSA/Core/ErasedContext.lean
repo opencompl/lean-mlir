@@ -143,16 +143,8 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
 
 @[simp]
-theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
-    @Var.toMap _ (Γ.snoc t) _ _ f var.toSnoc = var.toMap.toSnoc := rfl
-
-@[simp]
-theorem toSnoc_toMap' {Γ : Ctxt Ty} {t t': Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
-    @Ctxt.Var.toMap _ ((Γ.snoc t).snoc t') _ _ f var.toSnoc.toSnoc = var.toMap.toSnoc.toSnoc := rfl
-
-@[simp]
-theorem toSnoc_toMap'' {Γ : Ctxt Ty} {t t' t'': Ty } {var : Ctxt.Var Γ t} {f : Ty → Ty2} :
-    @Ctxt.Var.toMap _ (((Γ.snoc t).snoc t').snoc t'') _ _ f var.toSnoc.toSnoc.toSnoc = var.toMap.toSnoc.toSnoc.toSnoc := rfl
+theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t} {f : Ty → Ty₂} :
+    var.toSnoc.toMap (Γ := Γ.snoc t) (f := f) = var.toMap.toSnoc := rfl
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
