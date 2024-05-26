@@ -538,14 +538,13 @@ def three_inst_concrete_macro_noreduce_ne (w : Nat) :=
     "llvm.return" (%1) : (i1) -> ()
   }]
 
-def three_inst_concrete_stmt_ne {a b : LLVM.IntW w} :
-  @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne a b)
-    (LLVM.icmp LLVM.IntPredicate.ne a b) := by simp
+def three_inst_concrete_stmt_ne (a b : LLVM.IntW w) :
+  @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
+    (LLVM.icmp LLVM.IntPredicate.ne b a) := by simp
 
-def three_inst_concrete_macro_noreduc_proof_ne :
-  three_inst_concrete_macro_noreduce_ne x ⊑ three_inst_concrete_macro_noreduce_ne x := by
+def three_inst_concrete_macro_noreduc_proof_ne (w : Nat) :
+  three_inst_concrete_macro_noreduce_ne w ⊑ three_inst_concrete_macro_noreduce_ne w := by
   unfold three_inst_concrete_macro_noreduce_ne
   simp_alive_meta
   simp_alive_ssa
-  intros -- Why do I need an intros?
   apply three_inst_concrete_stmt_ne
