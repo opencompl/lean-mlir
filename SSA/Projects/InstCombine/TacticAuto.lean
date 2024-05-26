@@ -78,5 +78,6 @@ macro "alive_auto": tactic =>
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;)
+        try solve | (simp [bv_ofBool])
       )
    )

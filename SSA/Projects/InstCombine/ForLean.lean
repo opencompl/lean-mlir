@@ -211,6 +211,12 @@ lemma add_eq_xor (a b : BitVec 1) : a + b = a ^^^ b := by
   have hb : b = 0 ∨ b = 1 := width_one_cases _
   rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
 
+@[simp]
+lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
+  have ha : a = 0 ∨ a = 1 := width_one_cases _
+  have hb : b = 0 ∨ b = 1 := width_one_cases _
+  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp[h, h']))
+
 lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ n#w) : a.toNat ≠ n := by
   intros haeq
   have hn : n < 2 ^ w := by
@@ -824,6 +830,22 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
   rw [getLsb_add (by omega), getLsb_and, getLsb_xor, getLsb_or]
   simp only [Bool.bne_assoc]
   cases a.getLsb ↑i <;> simp [carry_and_xor_false]
+
+@[bv_ofBool]
+theorem ofBool_or {a b : Bool} : BitVec.ofBool a ||| BitVec.ofBool b = ofBool (a || b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_and {a b : Bool} : BitVec.ofBool a &&& BitVec.ofBool b = ofBool (a && b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (a.xor b) := by
+  simp [bv_toNat]; rcases a <;> rcases b <;> rfl
+
+@[simp]
+theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
+  rcases a <;> rcases b <;> simp [bv_toNat]
 
 end BitVec
 

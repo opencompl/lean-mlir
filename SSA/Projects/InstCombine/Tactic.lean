@@ -12,7 +12,6 @@ import Batteries.Data.BitVec
 import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
-open Ctxt
 
 /-- We eliminate our alive framework's metavarible machinery.
 At the end of this pass, all `InstcombineTransformDialect.instantiate*` must be eliminated,
@@ -20,23 +19,35 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (
-      simp (config := {failIfUnchanged := false }) only [Com.changeDialect]
+      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect]
+      simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
+      dsimp (config := {failIfUnchanged := false }) only [HVector.map']
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.succ_eq_toSnoc]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.zero_eq_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.DerivedCtxt.snoc_ctxt_eq_ctxt_snoc]
-      dsimp (config := {failIfUnchanged := false }) only [Var.succ_eq_toSnoc]
-      dsimp (config := {failIfUnchanged := false }) only [Var.zero_eq_last]
       dsimp (config := {failIfUnchanged := false }) only [List.map]
       dsimp (config := {failIfUnchanged := false }) only [Width.mvar]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_snoc, Ctxt.map_nil]
       dsimp (config := {failIfUnchanged := false }) only [Ctxt.get?]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toSnoc_toMap]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.Var.toMap_last]
+      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map_cons]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.MOp.instantiateCom]
       dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [Fin.zero_eta, List.map_cons]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMOp]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero']
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_concrete_eq]
-      dsimp (config := {failIfUnchanged := false }) only [Ctxt.map, Ctxt.snoc]
       dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate]
+      dsimp (config := {failIfUnchanged := false }) only [InstcombineTransformDialect.instantiateMTy]
+      dsimp (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_mvar_zero'']
+      -- How can I avoid this `simp! only` and instead use a plain `simp only`?
+      simp! (config := {failIfUnchanged := false }) only [ConcreteOrMVar.instantiate_list]
    )
  )
 

@@ -53,6 +53,7 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
+  simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
   simp [simp_llvm]
