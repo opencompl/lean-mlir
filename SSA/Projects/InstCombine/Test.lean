@@ -239,7 +239,7 @@ example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
 
 open ComWrappers
 
-def one_inst_macro (w: Nat):=
+def one_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
@@ -247,7 +247,7 @@ def one_inst_macro (w: Nat):=
   }]
 
 set_option ssa.alive_icom_reduce false in
-def one_inst_macro_noreduce (w: Nat):=
+def one_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
@@ -284,7 +284,7 @@ def one_inst_macro_proof_noreduce (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
-def two_inst_macro (w: Nat):=
+def two_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
@@ -293,7 +293,7 @@ def two_inst_macro (w: Nat):=
   }]
 
 set_option ssa.alive_icom_reduce false in
-def two_inst_macro_noreduce (w: Nat):=
+def two_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
@@ -332,7 +332,7 @@ def two_inst_macro_noreduc_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
-def three_inst_macro (w: Nat):=
+def three_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
@@ -342,7 +342,7 @@ def three_inst_macro (w: Nat):=
   }]
 
 set_option ssa.alive_icom_reduce false in
-def three_inst_macro_noreduce (w: Nat):=
+def three_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = "llvm.not" (%arg0) : (_) -> (_)
