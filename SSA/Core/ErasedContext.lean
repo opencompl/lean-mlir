@@ -145,7 +145,7 @@ theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.V
 
 @[simp]
 theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t} {f : Ty → Ty₂} :
-    @Ctxt.Var.toMap _ (Γ.snoc t) _ _ f var.toSnoc = var.toMap.toSnoc := rfl
+    var.toSnoc.toMap (Γ := Γ.snoc t) (f := f) = var.toMap.toSnoc := rfl
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
