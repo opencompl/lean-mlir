@@ -1,7 +1,6 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Mathlib.Tactic
 
 lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
   simp only [← pow_succ, gt_iff_lt, Nat.ofNat_pos, ne_eq, OfNat.ofNat_ne_one,
@@ -728,7 +727,7 @@ theorem toInt_eq' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : N
         simp [hle]
         omega
       case inr hgt =>
-        have hgt' : ¬ (BitVec.toNat x < 2 ^ w') := by linarith
+        have hgt' : ¬ (BitVec.toNat x < 2 ^ w') := by omega
         simp at hgt
         simp [hgt, hgt', bne, Nat.cast, NatCast.natCast, BEq.beq, Nat.beq]
         omega
@@ -755,7 +754,7 @@ lemma large_of_toInt_lt_zero (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x 
   case succ =>
     rw [toInt_eq''] at hxToInt
     split_ifs at hxToInt
-    case pos h => linarith
+    case pos h => omega
     case neg h =>
       omega
 
@@ -786,7 +785,7 @@ lemma small_of_toInt_pos (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x ≥ 
   case succ =>
     rw [BitVec.toInt_eq''] at hxToInt
     split_ifs at hxToInt
-    case pos h => linarith
+    case pos h => omega
     case neg h =>
       exfalso
       simp_all
