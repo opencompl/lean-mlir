@@ -403,15 +403,16 @@ def one_inst_concrete_macro_noreduce :=
   }]
 
 def one_inst_concrete_com :
-  Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
+    Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
   Com.lete (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def one_inst_concrete_stmt :
-  @BitVec.Refinement (BitVec 1) (LLVM.not e) (LLVM.not e) := by simp
+    @BitVec.Refinement (BitVec 1) (LLVM.not e) (LLVM.not e) := by
+  simp
 
 def one_inst_concrete_com_proof :
-  one_inst_concrete_com ⊑ one_inst_concrete_com := by
+    one_inst_concrete_com ⊑ one_inst_concrete_com := by
   unfold one_inst_concrete_com
   simp only [simp_llvm_wrap]
   simp_alive_meta
@@ -419,14 +420,14 @@ def one_inst_concrete_com_proof :
   apply one_inst_concrete_stmt
 
 def one_inst_concrete_macro_proof :
-  one_inst_concrete_macro ⊑ one_inst_concrete_macro := by
+    one_inst_concrete_macro ⊑ one_inst_concrete_macro := by
   unfold one_inst_concrete_macro
   simp_alive_meta
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
 def one_inst_concrete_macro_proof_noreduce :
-  one_inst_concrete_macro_noreduce ⊑ one_inst_concrete_macro_noreduce := by
+    one_inst_concrete_macro_noreduce ⊑ one_inst_concrete_macro_noreduce := by
   unfold one_inst_concrete_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
@@ -456,10 +457,11 @@ def two_inst_concrete_com (w : ℕ) :
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def two_inst_concrete_stmt (e : LLVM.IntW w) :
-  @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by simp
+    @BitVec.Refinement (BitVec w) (LLVM.not e) (LLVM.not e) := by
+  simp
 
 def two_inst_concrete_com_proof :
-  two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
+    two_inst_concrete_com w ⊑ two_inst_concrete_com w := by
   unfold two_inst_concrete_com
   simp only [simp_llvm_wrap]
   simp_alive_meta
@@ -467,14 +469,14 @@ def two_inst_concrete_com_proof :
   apply two_inst_concrete_stmt
 
 def two_inst_concrete_macro_proof :
-  two_inst_concrete_macro ⊑ two_inst_concrete_macro := by
+    two_inst_concrete_macro ⊑ two_inst_concrete_macro := by
   unfold two_inst_concrete_macro
   simp_alive_meta
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
 def two_inst_concrete_macro_noreduc_proof :
-  two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
+    two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
   unfold two_inst_concrete_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
@@ -507,11 +509,12 @@ def three_inst_concrete_com :
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def three_inst_concrete_stmt (e : LLVM.IntW 1) :
-  @BitVec.Refinement (BitVec 1) (LLVM.not (LLVM.not (LLVM.not e)))
-    (LLVM.not (LLVM.not (LLVM.not e))) := by simp
+    @BitVec.Refinement (BitVec 1) (LLVM.not (LLVM.not (LLVM.not e)))
+      (LLVM.not (LLVM.not (LLVM.not e))) := by
+  simp
 
 def three_inst_concrete_com_proof :
-  three_inst_concrete_com ⊑ three_inst_concrete_com := by
+    three_inst_concrete_com ⊑ three_inst_concrete_com := by
   unfold three_inst_concrete_com
   simp only [simp_llvm_wrap]
   simp_alive_meta
@@ -519,14 +522,14 @@ def three_inst_concrete_com_proof :
   apply three_inst_concrete_stmt
 
 def three_inst_concrete_macro_proof :
-  three_inst_concrete_macro ⊑ three_inst_concrete_macro := by
+    three_inst_concrete_macro ⊑ three_inst_concrete_macro := by
   unfold three_inst_concrete_macro
   simp_alive_meta
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
 def three_inst_concrete_macro_noreduc_proof :
-  three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
+    three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
   unfold three_inst_concrete_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
@@ -542,11 +545,12 @@ def two_ne_macro_noreduce (w : Nat) :=
   }]
 
 def two_ne_stmt (a b : LLVM.IntW w) :
-  @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
-    (LLVM.icmp LLVM.IntPredicate.ne b a) := by simp
+    @BitVec.Refinement (BitVec 1) (LLVM.icmp LLVM.IntPredicate.ne b a)
+      (LLVM.icmp LLVM.IntPredicate.ne b a) := by
+  simp
 
 def two_ne_macro_noreduc_proof (w : Nat) :
-  two_ne_macro_noreduce w ⊑ two_ne_macro_noreduce w := by
+    two_ne_macro_noreduce w ⊑ two_ne_macro_noreduce w := by
   unfold two_ne_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
