@@ -362,7 +362,8 @@ def three_inst_com (w : ℕ) :
 
 def three_inst_stmt (e : LLVM.IntW w) :
     @BitVec.Refinement (BitVec w) (LLVM.not (LLVM.not (LLVM.not e)))
-      (LLVM.not (LLVM.not (LLVM.not e))) := by simp
+      (LLVM.not (LLVM.not (LLVM.not e))) := by
+  simp
 
 def three_inst_com_proof (w : Nat) :
     three_inst_com w ⊑ three_inst_com w := by
