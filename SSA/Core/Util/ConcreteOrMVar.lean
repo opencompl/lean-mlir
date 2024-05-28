@@ -48,7 +48,7 @@ def instantiate (as : Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
 
-/-- We choose OfNat.ofNat to be our simp normal form. -/
+/-- We choose ConcreteOrMVar.concrete to be our simp normal form. -/
 @[simp]
 def ofNat_eq_concrete (x : Nat) :
     (OfNat.ofNat x) = (ConcreteOrMVar.concrete x : ConcreteOrMVar Nat φ) := rfl
