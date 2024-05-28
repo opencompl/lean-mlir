@@ -15,7 +15,6 @@ lemma two_pow_eq_two_pow_pred_add_two_pow_pred {h : 0 < w} :
 lemma two_pow_gt_two_pow_pred {h : 0 < w} : 2 ^ w > 2 ^ (w - 1) := by
   simp [two_pow_eq_two_pow_pred_add_two_pow_pred (h := h)]
 
-
 lemma two_pow_pred_lt_two_pow {h : 0 < w} : 2 ^ (w - 1) < 2 ^ w := by
   simp [two_pow_eq_pow_pred_times_two, h]
 
