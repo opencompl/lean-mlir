@@ -3,8 +3,7 @@ import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
 lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
-  simp only [← pow_succ, gt_iff_lt, Nat.ofNat_pos, ne_eq, OfNat.ofNat_ne_one,
-    not_false_eq_true, pow_right_inj]
+  simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
   rw [Nat.sub_add_cancel]
   omega
 
@@ -103,11 +102,9 @@ lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [BitVec.msb, getMsb, allOnes]
-  simp only [tsub_zero, getLsb_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
+  simp only [getLsb_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
     decide_eq_true_eq]
-  rw [Nat.sub_lt_iff_lt_add]
-  · simp [h]
-  · omega
+  rw [Nat.sub_lt_iff_lt_add] <;> omega
 
 /-- 1 % 2^n = 1 -/
 -- @[simp]
@@ -134,7 +131,6 @@ def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
 
 -- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
-  apply BitVec.toNat_inj.mp
   simp [bv_toNat]
   cases w
   case zero => rfl
@@ -147,7 +143,6 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : BitVec.udiv x (1#w)  = x := 
   simp only [BitVec.udiv, toNat_ofNat]
   cases w
   case zero =>
-    ring_nf
     simp [BitVec.eq_nil x]
     rfl
   case succ w =>
@@ -427,7 +422,7 @@ theorem intMin_neq_one {w : Nat} (hw : w > 1): LLVM.intMin w ≠ 1 := by
 theorem ofInt_eq_ofNat_mod' {w : ℕ} (n : ℕ) :
     BitVec.ofInt w (OfNat.ofNat n : ℤ) = BitVec.ofNat w n := by
   apply BitVec.eq_of_toNat_eq
-  simp only [toNat_ofInt, Nat.cast_pow, Nat.cast_ofNat, toNat_ofNat]
+  simp only [toNat_ofInt, Nat.cast_ofNat, toNat_ofNat]
   norm_cast
 
 theorem width_one_cases' (x : BitVec 1) :
