@@ -48,9 +48,14 @@ def instantiate (as : Vector α φ) : ConcreteOrMVar α φ → α
   | .concrete w => w
   | .mvar i => as.get i
 
+/-- We choose ConcreteOrMVar.concrete to be our simp normal form. -/
 @[simp]
-def instantiate_concrete_eq (as : Vector α φ) :
-  (ConcreteOrMVar.concrete w).instantiate as = w := by rfl
+def ofNat_eq_concrete (x : Nat) :
+    (OfNat.ofNat x) = (ConcreteOrMVar.concrete x : ConcreteOrMVar Nat φ) := rfl
+
+@[simp]
+def instantiate_ofNat_eq (as : Vector Nat φ) (x : Nat) :
+   ConcreteOrMVar.instantiate as (OfNat.ofNat x) = x := rfl
 
 @[simp]
 lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
