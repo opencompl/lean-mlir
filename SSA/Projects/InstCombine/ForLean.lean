@@ -9,14 +9,13 @@ lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
 
 lemma two_pow_eq_two_pow_pred_add_two_pow_pred {h : 0 < w} :
     2 ^ w = 2^(w-1) + 2^(w-1) := by
-  rw [two_pow_eq_pow_pred_times_two, mul_two]
-  omega
+  rw [two_pow_eq_pow_pred_times_two] <;> omega
 
 lemma two_pow_gt_two_pow_pred {h : 0 < w} : 2 ^ w > 2 ^ (w - 1) := by
   simp [two_pow_eq_two_pow_pred_add_two_pow_pred (h := h)]
 
 lemma two_pow_pred_lt_two_pow {h : 0 < w} : 2 ^ (w - 1) < 2 ^ w := by
-  simp [two_pow_eq_pow_pred_times_two, h]
+  simp [two_pow_gt_two_pow_pred (h := h)]
 
 @[simp]
 lemma two_pow_sub_two_pow_pred_eq_two_pow_pred {h : 0 < w} :
@@ -83,7 +82,7 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
     (1 <<< B * A) = (A <<< B) := by
   apply BitVec.eq_of_toNat_eq
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
-  ring_nf
+  rw [Nat.mul_comm]
 
 def ofInt_zero_eq (w : Nat) : BitVec.ofInt w 0 = 0#w := rfl
 def ofNat_zero_eq (w : Nat) : BitVec.ofNat w 0 = 0#w := rfl
@@ -153,12 +152,7 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : BitVec.udiv x (1#w)  = x := 
 
 -- @[simp]
 theorem ofInt_one_eq_ofNat_one (w : Nat) : BitVec.ofInt w 1 = BitVec.ofNat w 1 := by
-  unfold BitVec.ofInt BitVec.ofNat
-  cases w
-  . rfl
-  case succ w =>
-    simp
-    norm_cast
+  rw [BitVec.ofInt_ofNat]
 
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
@@ -373,7 +367,7 @@ lemma eq_zero_of_toNat_mod_eq_zero {x : BitVec w} (hx : x.toNat % 2^w = 0) : x =
 
 theorem neq_iff_toNat_neq {w : ℕ} {x y : BitVec w} :
   x ≠ y ↔ x.toNat ≠ y.toNat := by
-  simp [BitVec.toNat_inj]
+  simp [BitVec.toNat_eq]
 
 theorem toNat_one (hw : w ≠ 0 := by omega): BitVec.toNat (1 : BitVec w) = 1 := by
   simp [BitVec.toNat_eq]
@@ -757,7 +751,7 @@ lemma toInt_lt_zero_of_large (w : Nat) (x : BitVec w) (hxLarge : x.toNat ≥ (2 
     := by
   rcases w with rfl | w'
   case zero =>
-    simp [BitVec.toNat] at hxLarge
+    simp at hxLarge
   case succ =>
     rw [toInt_eq'']
     split_ifs
