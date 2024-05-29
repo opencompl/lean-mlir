@@ -86,6 +86,10 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
 
 @[simp]
 def ofInt_zero_eq (w : Nat) : BitVec.ofInt w 0 = 0#w := rfl
+
+@[simp]
+def ofInt_one_eq (w : Nat) : BitVec.ofInt w 1 = 1#w := rfl
+
 def ofNat_zero_eq (w : Nat) : BitVec.ofNat w 0 = 0#w := rfl
 def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
  simp [BitVec.toInt]
@@ -95,6 +99,12 @@ def msb_ofInt_one (h : 1 < w): BitVec.msb (BitVec.ofInt w 1) = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
   norm_cast
   simp only [Int.toNat_natCast]
+  rw [Nat.mod_eq_of_lt] <;> simp <;> omega
+
+def msb_ofInt_one' (h : 1 < w): BitVec.msb (1#w) = false := by
+  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
+  norm_cast
+  rw [BitVec.toNat_ofNat]
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
 
 @[simp]
@@ -127,7 +137,8 @@ lemma ofInt_ofNat (w n : Nat) :
 -- @[simp]
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
   rw [← ofInt_ofNat]
-  simp [msb_ofInt_one h]
+  simp
+  simp [msb_ofInt_one' h]
 
 -- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
@@ -282,7 +293,8 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         · rw [neg_neq_iff_neq_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
-      · apply BitVec.udiv_one_eq_zero
+      ·
+        apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
 def sdiv_one_one' (h : 1 < w) : BitVec.sdiv 1#w 1#w = 1#w := by
@@ -305,15 +317,11 @@ def sdiv_one_one : BitVec.sdiv (BitVec.ofInt w 1) 1 = 1 := by
   unfold BitVec.udiv
   simp
   rw [msb_one (by omega)]
-  rw [msb_ofInt_one (by omega)]
   simp
   have ki' : (1) % (2) ^ w = 1 := by
     rw [Nat.mod_eq_of_lt]
     simp
     omega
-  have ki : (1:Int) % (2: Int) ^ w = 1 := by
-    norm_cast
-  simp only [ki]
   simp only [ki']
   simp
   have one : 1 = 1#w := by
