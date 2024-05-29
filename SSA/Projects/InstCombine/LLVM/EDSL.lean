@@ -215,7 +215,7 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
 end InstcombineTransformDialect
 
 register_option ssa.alive_icom_reduce : Bool := {
-  defValue := true
+  defValue := false
   group := "ssa"
   descr := "Controls whether the syntax [alive_icom| ... ] reduces the argument to normal form"
 }
