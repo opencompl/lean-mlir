@@ -71,7 +71,7 @@ macro "alive_auto": tactic =>
   `(tactic|
       (
         intros
-        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_eq_ofNat)]
+        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_negOne_eq_allOnes)]
         try ring_nf
         try solve | (ext; simp [BitVec.negOne_eq_allOnes];
                      try cases BitVec.getLsb _ _ <;> try simp;
