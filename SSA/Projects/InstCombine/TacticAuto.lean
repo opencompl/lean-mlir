@@ -73,7 +73,7 @@ macro "alive_auto": tactic =>
         intros
         simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_eq_ofNat)]
         try ring_nf
-        try solve | (ext; simp [BitVec.negOne_eq_allOnes];
+        try solve | (ext; simp [BitVec.ofInt_negOne_eq_allOnes];
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;
