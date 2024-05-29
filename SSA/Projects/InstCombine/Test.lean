@@ -239,6 +239,7 @@ example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
 
 open ComWrappers
 
+set_option ssa.alive_icom_reduce true in
 def one_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
@@ -285,6 +286,7 @@ def one_inst_macro_proof_noreduce (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
+set_option ssa.alive_icom_reduce true in
 def two_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
@@ -387,6 +389,7 @@ def three_inst_macro_noreduc_proof (w : Nat) :
   simp_alive_ssa
   apply three_inst_stmt
 
+set_option ssa.alive_icom_reduce true in
 def one_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
@@ -433,6 +436,7 @@ def one_inst_concrete_macro_proof_noreduce :
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
+set_option ssa.alive_icom_reduce true in
 def two_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
@@ -482,6 +486,7 @@ def two_inst_concrete_macro_noreduc_proof :
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
+set_option ssa.alive_icom_reduce true in
 def three_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
