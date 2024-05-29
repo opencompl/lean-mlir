@@ -299,13 +299,9 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       have et : _ := @Nat.pow_le_pow_of_le 2 2 w (by simp) (by omega)
       rw [Nat.mod_eq_of_lt (by omega)] at h
       have xx : 1 % (2^w) = 1 := by
-        rw [Nat.mod_eq_of_lt]
-        omega
+        rw [Nat.mod_eq_of_lt (by omega)]
       rw [xx] at h
-      ring_nf at h
-      rw [Nat.add_comm] at h
-      rw [Nat.sub_add_cancel] at h
-      rw [Nat.mod_self] at h
+      rw [Nat.add_comm, Nat.sub_add_cancel, Nat.mod_self] at h
       simp at h
       omega
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
