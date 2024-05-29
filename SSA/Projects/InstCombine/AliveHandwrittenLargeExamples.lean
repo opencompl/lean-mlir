@@ -233,9 +233,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   split_ifs with c
   simp
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
-  by_cases h : BitVec.ofInt w 3 >ᵤ BitVec.ofInt w 1 + a
+  by_cases h : 3#w >ᵤ 1#w + a
   · simp [h]
-    rw [ofInt_eq_ofNat, ofInt_eq_ofNat] at h
     by_cases a_0 : a = 0; subst a_0; simp at c
     by_cases a_1 : a = 1; subst a_1; rw [sdiv_one_one]
     rw [BitVec.toNat_eq] at a_0 a_1
@@ -254,9 +253,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     by_cases a_allones : a = allOnes w
     · have x := sdiv_one_allOnes w_gt_1
       rw [a_allones]
-      have rr : 1#w = BitVec.ofInt w 1 := by rfl
-
-      simp [rr] at x
       simp [x]
     ·
       rw [Nat.add_mod_of_add_mod_lt] at h
@@ -281,13 +277,11 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod, toNat_ofInt, Nat.cast_pow,
         Nat.cast_ofNat, toNat_neg] at c
       norm_cast at c
-      simp only [Int.toNat_natCast] at c
       apply c.elim
       by_cases w_1 : w = 1; subst w_1; simp at h
       have w_gt_1 : 1 < w := by omega;
       simp only [BitVec.ult_toNat, toNat_add, toNat_ofInt, decide_eq_false_iff_not] at h
       norm_cast at h
-      simp only [Int.toNat_natCast] at h
       simp only [
         Nat.mod_eq_of_lt (@Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega)),
         Nat.mod_eq_of_lt, ofNat_eq_ofNat, toNat_ofNat, Nat.add_mod_mod,
@@ -301,12 +295,21 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       norm_cast at h
       simp only [Int.toNat_natCast, toNat_allOnes, Nat.mod_add_mod] at h
       by_cases w_1 : w = 1; subst w_1; simp at h
-      rw [Nat.add_sub_of_le (by omega), Nat.mod_self, nonpos_iff_eq_zero] at h
-      rw [Nat.mod_eq_of_lt] at h
-      simp at h
+      simp only [BitVec.toNat_ofNat] at h
       have et : _ := @Nat.pow_le_pow_of_le 2 2 w (by simp) (by omega)
+      rw [Nat.mod_eq_of_lt (by omega)] at h
+      have xx : 1 % (2^w) = 1 := by
+        rw [Nat.mod_eq_of_lt]
+        omega
+      rw [xx] at h
+      ring_nf at h
+      rw [Nat.add_comm] at h
+      rw [Nat.sub_add_cancel] at h
+      rw [Nat.mod_self] at h
+      simp at h
       omega
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
+    rfl
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
@@ -361,11 +364,6 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
   simp [bv_toNat]
-  norm_cast
-  have : (1 % 2^w) = 1 := by
-    apply Nat.mod_eq_of_lt
-    apply Nat.one_lt_pow <;> omega
-  simp [this]
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
