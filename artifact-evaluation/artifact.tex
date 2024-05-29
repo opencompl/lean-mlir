@@ -140,9 +140,7 @@ stderr
 None
 ---
 + cd ../../
-+ rm 'generated*'
-rm: cannot remove 'generated*': No such file or directory
-+ true
++ rm -f 'generated*'
 + lake build ssaLLVMEnumerator
 Build completed successfully.
 + ../../.lake/build/bin/ssaLLVMEnumerator
