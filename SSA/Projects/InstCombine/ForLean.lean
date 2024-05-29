@@ -84,6 +84,7 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
 
+@[simp]
 def ofInt_zero_eq (w : Nat) : BitVec.ofInt w 0 = 0#w := rfl
 def ofNat_zero_eq (w : Nat) : BitVec.ofNat w 0 = 0#w := rfl
 def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
@@ -272,8 +273,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       unfold BitVec.sdiv
       simp [udiv_one_eq_self, msb_one, ofInt_one_eq_ofNat_one]
       by_cases h : BitVec.msb a <;> simp [h]
-      · simp [BitVec.ofInt_zero_eq]
-        simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
+      · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
         apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1
         · rw [neg_neq_iff_neq_neg]
@@ -282,8 +282,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         · rw [neg_neq_iff_neq_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
-      · simp [BitVec.ofInt_zero_eq]
-        apply BitVec.udiv_one_eq_zero
+      · apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
 def sdiv_one_one' (h : 1 < w) : BitVec.sdiv 1#w 1#w = 1#w := by
