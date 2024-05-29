@@ -120,8 +120,9 @@ theorem Nat.one_mod_two_pow_succ_eq {n : Nat} : 1 % 2 ^ n.succ = 1 := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n :=
-  rfl
+    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n := by rfl
+
+lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 
 -- @[simp]
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
