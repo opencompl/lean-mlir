@@ -329,7 +329,7 @@ def two_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
-def two_inst_macro_noreduc_proof (w : Nat) :
+def two_inst_macro_noreduce_proof (w : Nat) :
     two_inst_macro_noreduce w ⊑ two_inst_macro_noreduce w := by
   unfold two_inst_macro_noreduce
   simp_alive_meta
@@ -382,7 +382,7 @@ def three_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply three_inst_stmt
 
-def three_inst_macro_noreduc_proof (w : Nat) :
+def three_inst_macro_noreduce_proof (w : Nat) :
     three_inst_macro_noreduce w ⊑ three_inst_macro_noreduce w := by
   unfold three_inst_macro_noreduce
   simp_alive_meta
@@ -479,7 +479,7 @@ def two_inst_concrete_macro_proof :
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
-def two_inst_concrete_macro_noreduc_proof :
+def two_inst_concrete_macro_noreduce_proof :
     two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
   unfold two_inst_concrete_macro_noreduce
   simp_alive_meta
@@ -533,7 +533,7 @@ def three_inst_concrete_macro_proof :
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
-def three_inst_concrete_macro_noreduc_proof :
+def three_inst_concrete_macro_noreduce_proof :
     three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
   unfold three_inst_concrete_macro_noreduce
   simp_alive_meta
@@ -554,7 +554,7 @@ def two_ne_stmt (a b : LLVM.IntW w) :
       (LLVM.icmp LLVM.IntPredicate.ne b a) := by
   simp
 
-def two_ne_macro_noreduc_proof (w : Nat) :
+def two_ne_macro_noreduce_proof (w : Nat) :
     two_ne_macro_noreduce w ⊑ two_ne_macro_noreduce w := by
   unfold two_ne_macro_noreduce
   simp_alive_meta
