@@ -133,7 +133,9 @@ theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : _root_.BitVec 
 
 theorem bitvec_minus_one' : BitVec.ofInt w (-1) = (-1 : BitVec w) := by
   have x : -1 = Int.negSucc 0 := by simp
-  simp [x, bitvec_minus_one]
+  rw [x, bitvec_minus_one]
+
+
 
 
   end BitVec
