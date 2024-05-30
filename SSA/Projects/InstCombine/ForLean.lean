@@ -805,10 +805,9 @@ theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (
 theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
   rcases a <;> rcases b <;> simp [bv_toNat]
 
-theorem ofInt_negOne_eq_allOnes : BitVec.ofInt w (-1) = BitVec.allOnes w := by
+theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
   norm_cast
-  rw [BitVec.ofInt_negSucc, ←BitVec.allOnes_sub_eq_not]
-  simp
+  rw [BitVec.negOne_eq_allOnes]
 
 end BitVec
 
