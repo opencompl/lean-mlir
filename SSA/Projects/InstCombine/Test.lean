@@ -8,18 +8,6 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
-def three_inst_concrete_macro :=
-  [alive_icom ()|{
-  ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 8 : i32
-    %1 = llvm.add %0, %arg0 : i32
-    %2 = llvm.mul %1, %arg0 : i32
-    %3 = llvm.not %2 : i32
-    llvm.return %3 : i32
-  }]
-
-#reduce three_inst_concrete_macro
-
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
   in the following
