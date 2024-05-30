@@ -678,7 +678,6 @@ macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
     | .node _ `str ⟨(.atom _ val)::[]⟩ => pure val
     -- ^^^ The `strLit` case
     | _ => Macro.throwUnsupported
-    -- TODO: handle strLit case
   let value ← match val with
     | none      => `(AttrValue.unit)
     | some val  => `([mlir_attr_val| $val])
