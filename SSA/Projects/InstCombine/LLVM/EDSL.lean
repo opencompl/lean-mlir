@@ -248,7 +248,6 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
     if ssa.alive_icom_reduce.get (← getOptions)
     then do
-      logWarningAt reg "simplifying proof state with reduction is deprecated, as it unstable across Lean versions. Recall that reduction in Lean is slow and heuristic based, and the heuristics can change across Lean versions. Suggestion: Find appropriate simp lemmas to simplify the proof state."
       reduce com
     else do
       return com
