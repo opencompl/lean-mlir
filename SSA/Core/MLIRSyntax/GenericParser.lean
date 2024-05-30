@@ -294,16 +294,16 @@ syntax "!" ident : mlir_type
 syntax ident: mlir_type
 syntax "_" : mlir_type
 
-
 macro_rules
   | `([mlir_type| $x:ident ]) => do
-        let xstr := x.getId.toString
+        let (.ident _ xstr _ _) := x.raw | Macro.throwUnsupported
+        -- ^^ We use `rawVal` rather than `val`, so that we're not affected by hygiene
         if xstr == "index"
         then
           `(MLIRType.index)
         else if xstr.front == 'i' || xstr.front == 'f'
         then do
-          let xstr' := xstr.drop 1
+          let xstr' := (xstr.drop 1).toString
           match xstr'.toInt? with
           | some _ =>
             let lit := Lean.Syntax.mkNumLit xstr'
@@ -311,8 +311,8 @@ macro_rules
             then `(MLIRType.int .Signless $lit)
             else `(MLIRType.float $lit)
           | none =>
-              Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr
-        else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr
+              Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr.toString
+        else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr.toString
   | `([mlir_type| ! $x:str ]) => `(MLIRType.undefined $x)
   | `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
   -- Hardcoded meta-variable
