@@ -8,21 +8,64 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
-macro "llvm.return" : mlir_op => `(mlir_op| "llvm.return" (%1) : (i1) -> ())
-macro # = "llvm.add" : mlir_op => `(mlir_op| "")
+macro "[mlir_op|" "llvm.return" : term
+  => `([mlir_op| "llvm.return" (%1) : (i1) -> ()])
+
+section
+open Lean
+
+declare_syntax_cat InstCombine.un_op_name
+declare_syntax_cat InstCombine.bin_op_name
+
+syntax "llvm.return" : InstCombine.un_op_name
+syntax "llvm.not" : InstCombine.un_op_name
+
+syntax "llvm.add" : InstCombine.bin_op_name
+syntax "llvm.mul" : InstCombine.bin_op_name
+
+
+syntax (mlir_op_operand " = ")? InstCombine.un_op_name mlir_op_operand " : " mlir_type : mlir_op
+syntax mlir_op_operand " = " InstCombine.bin_op_name mlir_op_operand ", " mlir_op_operand " : " mlir_type : mlir_op
+
+macro_rules
+  | `([mlir_op| $[$resName =]? $name:InstCombine.un_op_name $x : $t ]) => do
+    let name ← match name.raw with
+      | .node _ _ ⟨.atom _ name :: _⟩ => pure name
+      | _ => Macro.throwErrorAt name s!"Expected an atom, found: {name}" --TODO: better error message
+    let opName := Syntax.mkStrLit name
+    let retTy : TSyntaxArray `mlir_type := match resName with
+      | some _ => #[t]
+      | none => #[]
+    `([mlir_op| $[$resName =]? $opName ($x) : ($t) -> ($retTy:mlir_type,*) ])
+
+macro_rules
+  | `([mlir_op| $resName:mlir_op_operand = $name:InstCombine.bin_op_name $x, $y : $t ]) => do
+    let name ← match name.raw with
+      | .node _ _ ⟨.atom _ name :: _⟩ => pure name
+      | _ => Macro.throwErrorAt name s!"Expected an atom, found: {name}" --TODO: better error message
+    let opName := Syntax.mkStrLit name
+    `([mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) ])
+
+syntax mlir_op_operand " = " "llvm.mlir.constant" num " : " mlir_type : mlir_op
+set_option hygiene false in
+-- TODO: we need hygiene here because `value` is an identifier, which would otherwise be mangled
+macro_rules
+  | `([mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x : $t]) =>
+    `([mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:num : $t} : () -> ($t) ])
+
+end
 
 def three_inst_concrete_macro :=
   [alive_icom ()|{
-  ^bb0(%arg0: i1):
+  ^bb0(%arg0: i32):
     -- %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    -- %1 = "llvm.not" (%arg0) : (i1) -> (i1)
-    -- %2 = "llvm.add" (%0, %1) : (i1, i1) -> (i1)
-    %1 = llvm.add -- %0, %0 : (i1) -> (i1)
-    "llvm.return" (%2) : (i1) -> ()
-    -- %0 = llvm.not %arg0 : (i1) -> (i1)
-    -- %1 = llvm.add %0, %0 : (i1) -> (i1)
-    -- llvm.return -- %1 : (i1) -> ()
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.add %0, %arg0 : i32
+    %2 = llvm.not %1 : i32
+    llvm.return %2 : i32
   }]
+
+#reduce three_inst_concrete_macro
 
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation

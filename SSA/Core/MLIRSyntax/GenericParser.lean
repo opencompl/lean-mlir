@@ -487,6 +487,7 @@ macro_rules
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
 
+-- TODO: see if we can hide the `[mlir_op| ` in the same way as we did here for regions
 macro_rules
 | `([mlir_region| $q:mlir_region ]) => `(mlir_region| $q)
 
@@ -794,6 +795,8 @@ syntax mlir_op_operand "="
   strLit "(" mlir_op_operand,* ")"
          ( "(" mlir_region,* ")" )?
          (mlir_attr_dict)? ":" "(" mlir_type,* ")" "->" mlir_type : mlir_op
+
+#check MacroM
 
 macro_rules
   | `([mlir_op|
