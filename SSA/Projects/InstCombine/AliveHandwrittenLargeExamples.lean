@@ -232,6 +232,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp
   split_ifs with c
   simp
+  -- TODO: This one does not work: simp [(BitVec.ofInt_ofNat)]
+  simp [(BitVec.ofInt_ofNat')]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
   by_cases h : 3#w >ᵤ 1#w + a
   · simp [h]
