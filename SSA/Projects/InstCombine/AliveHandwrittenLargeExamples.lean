@@ -298,7 +298,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       norm_num at h
       omega
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
-    rfl
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
