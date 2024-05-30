@@ -84,12 +84,7 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
 
-@[simp]
 def ofInt_zero_eq (w : Nat) : BitVec.ofInt w 0 = 0#w := rfl
-
-@[simp]
-def ofInt_one_eq (w : Nat) : BitVec.ofInt w 1 = 1#w := rfl
-
 def ofNat_zero_eq (w : Nat) : BitVec.ofNat w 0 = 0#w := rfl
 def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
  simp [BitVec.toInt]
@@ -99,12 +94,6 @@ def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
   norm_cast
   simp only [toNat_ofNat]
-  rw [Nat.mod_eq_of_lt] <;> simp <;> omega
-
-def msb_ofInt_one' (h : 1 < w): BitVec.msb (1#w) = false := by
-  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
-  norm_cast
-  rw [BitVec.toNat_ofNat]
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
 
 @[simp]
@@ -140,7 +129,7 @@ lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
   rw [← ofInt_ofNat]
   simp
-  simp [msb_ofInt_one' h]
+  simp [msb_ofInt_one h]
 
 -- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
