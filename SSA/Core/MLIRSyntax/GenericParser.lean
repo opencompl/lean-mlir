@@ -665,27 +665,24 @@ attrVal10Float
 # MLIR ATTRIBUTE
 -/
 
-declare_syntax_cat mlir_attr_entry
+syntax mlir_attr_key := ident <|> strLit
+syntax mlir_attr_entry := mlir_attr_key (" = " mlir_attr_val)?
 
-syntax ident "=" mlir_attr_val : mlir_attr_entry
-syntax strLit "=" mlir_attr_val : mlir_attr_entry
-syntax ident : mlir_attr_entry
-
-syntax "[mlir_attr_entry|" mlir_attr_entry "]" : term
-
--- | TODO: don't actually write an elaborator for the `ident` case. This forces
--- us to declare predefined identifiers in a controlled fashion.
-macro_rules
-  | `([mlir_attr_entry| $name:ident  = $v:mlir_attr_val]) =>
-     `(AttrEntry.mk $(Lean.quote (name.getId.toString))  [mlir_attr_val| $v])
-  | `([mlir_attr_entry| $name:str  = $v:mlir_attr_val]) =>
-     `(AttrEntry.mk $name [mlir_attr_val| $v])
-
-macro_rules
-  | `([mlir_attr_entry| $name:ident]) =>
-     `(AttrEntry.mk $(Lean.quote (name.getId.toString))  AttrValue.unit)
-
-
+macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
+  let `(mlir_attr_entry| $key $[= $val]?) := entry | Macro.throwUnsupported
+  let key ← match key.raw[0] with
+    | .ident _ key _ _ => pure key.toString
+    --         ^^^ Notice we don't use the `val`, since the name might have been hygiene'd
+    --             Instead, we use `rawVal`, which is documented as being
+    --               "the literal substring from the input file" thus safe from hygiene
+    | .node _ `str ⟨(.atom _ val)::[]⟩ => pure val
+    -- ^^^ The `strLit` case
+    | _ => Macro.throwUnsupported
+    -- TODO: handle strLit case
+  let value ← match val with
+    | none      => `(AttrValue.unit)
+    | some val  => `([mlir_attr_val| $val])
+  `(AttrEntry.mk $(Lean.quote key) $value)
 
 def attr0Str : AttrEntry 0 := [mlir_attr_entry| sym_name = "add"]
 /--
