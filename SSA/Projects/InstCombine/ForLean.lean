@@ -120,7 +120,7 @@ theorem Nat.one_mod_two_pow_succ_eq {n : Nat} : 1 % 2 ^ n.succ = 1 := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n :=
+    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w n :=
   rfl
 
 -- @[simp]
