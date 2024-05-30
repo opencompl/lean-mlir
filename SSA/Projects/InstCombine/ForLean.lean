@@ -90,7 +90,7 @@ def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
  simp [BitVec.toInt]
 def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
 
-def msb_ofInt_one (h : 1 < w): BitVec.msb (1#w) = false := by
+def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
   norm_cast
   simp only [BitVec.toNat_ofNat]
@@ -120,7 +120,8 @@ theorem Nat.one_mod_two_pow_succ_eq {n : Nat} : 1 % 2 ^ n.succ = 1 := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n := by rfl
+    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n :=
+  rfl
 
 lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 
