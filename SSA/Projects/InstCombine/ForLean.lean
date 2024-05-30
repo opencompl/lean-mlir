@@ -93,11 +93,7 @@ def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
 def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
   norm_cast
-<<<<<<< HEAD
-  simp only [BitVec.toNat_ofNat]
-=======
   simp only [toNat_ofNat]
->>>>>>> further_fixes
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
 
 @[simp]
@@ -131,11 +127,7 @@ lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 
 -- @[simp]
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
-<<<<<<< HEAD
-=======
-
   rw [← ofInt_ofNat]
->>>>>>> further_fixes
   simp [msb_ofInt_one h]
 
 -- @[simp]
@@ -267,11 +259,7 @@ lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a >
 
 def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
     (hao : a ≠ allOnes w) :
-<<<<<<< HEAD
-    BitVec.sdiv 1#w a = BitVec.ofInt w 0 := by
-=======
     BitVec.sdiv (1#w) a = 0#w := by
->>>>>>> further_fixes
   rcases w with ⟨rfl | ⟨rfl | w⟩⟩
   case zero => simp [BitVec.eq_nil a]
   case succ w' =>
