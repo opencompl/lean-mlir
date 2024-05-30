@@ -247,9 +247,9 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
     if ssa.alive_icom_reduce.get (← getOptions)
-    then reduce com
+    then do
+      reduce com
     else do
-      logInfoAt reg "reduction disabled"
       return com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])

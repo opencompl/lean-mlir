@@ -241,6 +241,7 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 
 open ComWrappers
 
+set_option ssa.alive_icom_reduce true in
 def one_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
@@ -287,6 +288,7 @@ def one_inst_macro_proof_noreduce (w : Nat) :
   simp_alive_ssa
   apply one_inst_stmt
 
+set_option ssa.alive_icom_reduce true in
 def two_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
@@ -329,7 +331,7 @@ def two_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply two_inst_stmt
 
-def two_inst_macro_noreduc_proof (w : Nat) :
+def two_inst_macro_noreduce_proof (w : Nat) :
     two_inst_macro_noreduce w ⊑ two_inst_macro_noreduce w := by
   unfold two_inst_macro_noreduce
   simp_alive_meta
@@ -382,13 +384,14 @@ def three_inst_macro_proof (w : Nat) :
   simp_alive_ssa
   apply three_inst_stmt
 
-def three_inst_macro_noreduc_proof (w : Nat) :
+def three_inst_macro_noreduce_proof (w : Nat) :
     three_inst_macro_noreduce w ⊑ three_inst_macro_noreduce w := by
   unfold three_inst_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
   apply three_inst_stmt
 
+set_option ssa.alive_icom_reduce true in
 def one_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
@@ -435,6 +438,7 @@ def one_inst_concrete_macro_proof_noreduce :
   simp_alive_ssa
   apply one_inst_concrete_stmt
 
+set_option ssa.alive_icom_reduce true in
 def two_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
@@ -477,13 +481,14 @@ def two_inst_concrete_macro_proof :
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
-def two_inst_concrete_macro_noreduc_proof :
+def two_inst_concrete_macro_noreduce_proof :
     two_inst_concrete_macro_noreduce ⊑ two_inst_concrete_macro_noreduce := by
   unfold two_inst_concrete_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
   apply two_inst_concrete_stmt
 
+set_option ssa.alive_icom_reduce true in
 def three_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
@@ -530,7 +535,7 @@ def three_inst_concrete_macro_proof :
   simp_alive_ssa
   apply three_inst_concrete_stmt
 
-def three_inst_concrete_macro_noreduc_proof :
+def three_inst_concrete_macro_noreduce_proof :
     three_inst_concrete_macro_noreduce ⊑ three_inst_concrete_macro_noreduce := by
   unfold three_inst_concrete_macro_noreduce
   simp_alive_meta
@@ -551,9 +556,63 @@ def two_ne_stmt (a b : LLVM.IntW w) :
       (LLVM.icmp LLVM.IntPredicate.ne b a) := by
   simp
 
-def two_ne_macro_noreduc_proof (w : Nat) :
+def two_ne_macro_noreduce_proof (w : Nat) :
     two_ne_macro_noreduce w ⊑ two_ne_macro_noreduce w := by
   unfold two_ne_macro_noreduce
   simp_alive_meta
   simp_alive_ssa
   apply two_ne_stmt
+
+set_option ssa.alive_icom_reduce true in
+def constant_macro (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0():
+    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
+    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
+    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
+    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
+    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
+    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
+    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
+    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
+    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
+    "llvm.return" (%8) : (_) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def constant_macro_noreduce (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0():
+    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
+    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
+    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
+    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
+    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
+    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
+    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
+    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
+    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
+    "llvm.return" (%8) : (_) -> ()
+  }]
+
+def constant_stmt :
+    @BitVec.Refinement (BitVec w)
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
+        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2)))
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
+        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2))) := by
+  simp
+
+def constant_macro_proof (w : Nat) :
+    constant_macro w ⊑ constant_macro w := by
+  unfold constant_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply constant_stmt
+
+def constant_macro_noreduce_proof (w : Nat) :
+    constant_macro_noreduce w ⊑ constant_macro_noreduce w := by
+  unfold constant_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply constant_stmt
