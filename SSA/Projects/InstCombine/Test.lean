@@ -8,6 +8,22 @@ import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
 
+macro "llvm.return" : mlir_op => `(mlir_op| "llvm.return" (%1) : (i1) -> ())
+macro # = "llvm.add" : mlir_op => `(mlir_op| "")
+
+def three_inst_concrete_macro :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    -- %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
+    -- %1 = "llvm.not" (%arg0) : (i1) -> (i1)
+    -- %2 = "llvm.add" (%0, %1) : (i1, i1) -> (i1)
+    %1 = llvm.add -- %0, %0 : (i1) -> (i1)
+    "llvm.return" (%2) : (i1) -> ()
+    -- %0 = llvm.not %arg0 : (i1) -> (i1)
+    -- %1 = llvm.add %0, %0 : (i1) -> (i1)
+    -- llvm.return -- %1 : (i1) -> ()
+  }]
+
 /-
   TODO: infer the number of meta-variables in an AST, so that we can remove the `Op 0` annotation
   in the following
