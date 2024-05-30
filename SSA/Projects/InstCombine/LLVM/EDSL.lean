@@ -214,6 +214,15 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
 
 end InstcombineTransformDialect
 
+<<<<<<< HEAD
+=======
+register_option ssa.alive_icom_reduce : Bool := {
+  defValue := false
+  group := "ssa"
+  descr := "Controls whether the syntax [alive_icom| ... ] reduces the argument to normal form"
+}
+
+>>>>>>> origin/main
 /-
 https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20Find.20.60Real.2Eadd.60/near/402089561
 > I would recommend avoiding Qq for pattern matching.
