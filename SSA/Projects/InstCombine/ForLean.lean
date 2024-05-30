@@ -128,7 +128,6 @@ lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 -- @[simp]
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
   rw [← ofInt_ofNat]
-  simp
   simp [msb_ofInt_one h]
 
 -- @[simp]
