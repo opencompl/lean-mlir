@@ -93,7 +93,11 @@ def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
 def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
   norm_cast
+<<<<<<< HEAD
   simp only [BitVec.toNat_ofNat]
+=======
+  simp only [toNat_ofNat]
+>>>>>>> further_fixes
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
 
 @[simp]
@@ -120,13 +124,18 @@ theorem Nat.one_mod_two_pow_succ_eq {n : Nat} : 1 % 2 ^ n.succ = 1 := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (OfNat.ofNat n) = BitVec.ofNat w n :=
+    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w n :=
   rfl
 
 lemma ofInt_ofNat' : BitVec.ofInt w (OfNat.ofNat (α := ℤ) x ) = x#w := rfl
 
 -- @[simp]
 def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
+<<<<<<< HEAD
+=======
+
+  rw [← ofInt_ofNat]
+>>>>>>> further_fixes
   simp [msb_ofInt_one h]
 
 -- @[simp]
@@ -258,7 +267,11 @@ lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a >
 
 def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
     (hao : a ≠ allOnes w) :
+<<<<<<< HEAD
     BitVec.sdiv 1#w a = BitVec.ofInt w 0 := by
+=======
+    BitVec.sdiv (1#w) a = 0#w := by
+>>>>>>> further_fixes
   rcases w with ⟨rfl | ⟨rfl | w⟩⟩
   case zero => simp [BitVec.eq_nil a]
   case succ w' =>
@@ -271,8 +284,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       unfold BitVec.sdiv
       simp [udiv_one_eq_self, msb_one, ofInt_one_eq_ofNat_one]
       by_cases h : BitVec.msb a <;> simp [h]
-      · simp [BitVec.ofInt_zero_eq]
-        simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
+      · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
         apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1
         · rw [neg_neq_iff_neq_neg]
@@ -281,8 +293,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         · rw [neg_neq_iff_neq_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
-      · simp [BitVec.ofInt_zero_eq]
-        apply BitVec.udiv_one_eq_zero
+      · apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
 def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
@@ -469,7 +480,7 @@ theorem toInt_ne (x y : BitVec n) : x ≠ y ↔ x.toInt ≠ y.toInt := by
   rw [Ne, toInt_eq]
 
 theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w) (h_ne_zero : A ≠ 0):
-    (A >ₛ BitVec.ofInt w 0) ↔ ¬ ((-A) >ₛ BitVec.ofInt w 0) := by
+    (A >ₛ 0#w) ↔ ¬ ((-A) >ₛ 0#w) := by
   by_cases w0 : w = 0
   · subst w0
     simp [BitVec.eq_nil A] at h_ne_zero

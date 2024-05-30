@@ -133,8 +133,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      rw [BitVec.ofInt_one_eq_ofNat_one]
-      rw [BitVec.ofInt_eq_ofNat_mod']
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
@@ -194,7 +192,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         case h_3 c hugt =>
           clear c
           simp at hugt
-          simp only [ofInt_zero_eq]
           unfold LLVM.sdiv? -- TODO: delete this; write theorem to unfold sdiv?
           split <;> simp
           case inr hsdiv =>
@@ -238,7 +235,11 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   by_cases h : 3#w >ᵤ 1#w + a
   · simp [h]
     by_cases a_0 : a = 0; subst a_0; simp at c
+<<<<<<< HEAD
     by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
+=======
+    by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one];
+>>>>>>> further_fixes
     rw [BitVec.toNat_eq] at a_0 a_1
     simp at a_0 a_1
     by_cases w_1 : w = 1; subst w_1; omega
@@ -256,8 +257,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     · have x := sdiv_one_allOnes w_gt_1
       rw [a_allones]
       simp [x]
-    ·
-      rw [Nat.add_mod_of_add_mod_lt] at h
+    · rw [Nat.add_mod_of_add_mod_lt] at h
       simp [el_one] at h
       omega
       simp [el_one]
@@ -297,8 +297,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       norm_cast at h
       simp only [Int.toNat_natCast, toNat_allOnes, Nat.mod_add_mod] at h
       by_cases w_1 : w = 1; subst w_1; simp at h
-      simp only [BitVec.toNat_ofNat] at h
       have et : _ := @Nat.pow_le_pow_of_le 2 2 w (by simp) (by omega)
+      simp only [BitVec.toNat_ofNat] at h
       rw [Nat.mod_eq_of_lt (by omega), @Nat.mod_eq_of_lt 1 (2^w) (by omega),
         Nat.add_comm, Nat.sub_add_cancel, Nat.mod_self] at h
       norm_num at h
@@ -499,12 +499,12 @@ def alive_simplifySelect764 (w : Nat) :
   simp_alive_undef
   intros A
   rcases A with rfl | A  <;> simp [Option.bind, Bind.bind]
-  by_cases zero_sgt_A : BitVec.ofInt w 0 >ₛ A
+  by_cases zero_sgt_A : 0#w >ₛ A
   · simp [zero_sgt_A]
   · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
-    by_cases neg_A_sgt_zero : -A >ₛ BitVec.ofInt w 0
+    by_cases neg_A_sgt_zero : -A >ₛ 0#w
     · simp [neg_A_sgt_zero, zero_sub_eq_neg]
-      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      by_cases A_sgt_zero : A >ₛ 0#w
       simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
         simp only [A_eq_zero, ofNat_eq_ofNat, BitVec.neg_zero]
@@ -520,7 +520,7 @@ def alive_simplifySelect764 (w : Nat) :
         simp [neg_A_sgt_zero] at A_sgt_zero
       simp [A_sgt_zero]
     · simp [neg_A_sgt_zero, zero_sub_eq_neg]
-      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       · by_cases A_eq_zero : A = 0
         simp only [A_eq_zero, ofNat_eq_ofNat, ofInt_zero_eq, sgt_same, ofBool_false,
@@ -528,7 +528,7 @@ def alive_simplifySelect764 (w : Nat) :
         by_cases A_eq_intMin : A = intMin w
         · simp [A_eq_intMin, BitVec.ofInt_zero_eq, sgt_same, intMin_not_gt_zero,
             intMin_eq_neg_intMin]
-        · have neg_not_sgt_zero : ¬(-A >ₛ BitVec.ofInt w 0) = true → (A >ₛ BitVec.ofInt w 0) = true
+        · have neg_not_sgt_zero : ¬(-A >ₛ 0#w) = true → (A >ₛ 0#w) = true
             := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
           apply neg_not_sgt_zero at neg_A_sgt_zero
           simp only at neg_A_sgt_zero
