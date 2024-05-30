@@ -285,7 +285,9 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
-def sdiv_one_one' (h : 1 < w) : BitVec.sdiv 1#w 1#w = 1#w := by
+def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
+  by_cases w_0 : w = 0; subst w_0; rfl
+  by_cases w_1 : w = 1; subst w_1; rfl
   unfold BitVec.sdiv
   unfold BitVec.udiv
   simp only [toNat_ofNat, neg_eq, toNat_neg]
@@ -297,32 +299,6 @@ def sdiv_one_one' (h : 1 < w) : BitVec.sdiv 1#w 1#w = 1#w := by
     omega
   apply BitVec.eq_of_toNat_eq
   simp [hone]
-
-def sdiv_one_one : BitVec.sdiv 1#w 1 = 1 := by
-  by_cases w_0 : w = 0; subst w_0; rfl
-  by_cases w_1 : w = 1; subst w_1; rfl
-  unfold BitVec.sdiv
-  unfold BitVec.udiv
-  simp
-  rw [msb_one (by omega)]
-  simp
-  have ki' : (1) % (2) ^ w = 1 := by
-    rw [Nat.mod_eq_of_lt]
-    simp
-    omega
-  simp only [ki']
-  simp
-  have one : 1 = 1#w := by
-    simp
-  simp only [← one]
-  unfold BitVec.ofNatLt
-  simp
-  unfold BitVec.ofNat
-  unfold Fin.ofNat'
-  simp
-  rw [Nat.mod_eq_of_lt]
-  simp
-  omega
 
 def ofInt_eq_ofNat {a: Nat} :
     BitVec.ofInt w (@OfNat.ofNat ℤ a _) = BitVec.ofNat w a := by
