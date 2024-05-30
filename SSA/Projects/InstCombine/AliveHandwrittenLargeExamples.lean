@@ -229,17 +229,11 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp
   split_ifs with c
   simp
-  -- TODO: This one does not work: simp [(BitVec.ofInt_ofNat)]
-  simp [(BitVec.ofInt_ofNat')]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
   by_cases h : 3#w >ᵤ 1#w + a
   · simp [h]
     by_cases a_0 : a = 0; subst a_0; simp at c
-<<<<<<< HEAD
     by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
-=======
-    by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one];
->>>>>>> further_fixes
     rw [BitVec.toNat_eq] at a_0 a_1
     simp at a_0 a_1
     by_cases w_1 : w = 1; subst w_1; omega
