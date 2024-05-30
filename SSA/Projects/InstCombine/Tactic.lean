@@ -68,6 +68,9 @@ macro "simp_alive_ssa" : tactic =>
         simp (config := {failIfUnchanged := false}) only [
             InstCombine.Op.denote, HVector.getN, HVector.get
           ]
+
+        -- Fold integers into their canonical form.
+        simp (config := {failIfUnchanged := false }) only [Nat.cast_ofNat, Nat.cast_one, Int.reduceNegSucc, Int.reduceNeg]
       )
   )
 
