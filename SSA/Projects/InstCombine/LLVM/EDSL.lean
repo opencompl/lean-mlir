@@ -214,12 +214,6 @@ def mkComInstantiate (reg : MLIR.AST.Region φ) :
 
 end InstcombineTransformDialect
 
-register_option ssa.alive_icom_reduce : Bool := {
-  defValue := false
-  group := "ssa"
-  descr := "Controls whether the syntax [alive_icom| ... ] reduces the argument to normal form"
-}
-
 /-
 https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20Find.20.60Real.2Eadd.60/near/402089561
 > I would recommend avoiding Qq for pattern matching.
@@ -245,12 +239,7 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
     synthesizeSyntheticMVarsNoPostponing
     return com
 
-  withTraceNode `alive_icom (return m!"{exceptEmoji ·} reduce") <|
-    if ssa.alive_icom_reduce.get (← getOptions)
-    then do
-      reduce com
-    else do
-      return com
+   return com
 
 macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
 

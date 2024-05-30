@@ -69,7 +69,8 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
       let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) := @instParseableTuple Nat (natParams (n + 1)) inst1 instn
       let hn1gt0 : (n + 1) > 0 := by
         rename_i n_1 -- aesop?
-        simp_all only [gt_iff_lt, add_pos_iff, zero_lt_one, or_true]
+        simp_all only [gt_iff_lt, add_pos_iff, or_true]
+        omega
       let hn1eq := natParamsTup (n + 1) hn1gt0
       hn1eq ▸ instTup.parse? str
 
