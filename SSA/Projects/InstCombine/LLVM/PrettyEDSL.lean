@@ -5,11 +5,27 @@ open Lean
 declare_syntax_cat InstCombine.un_op_name
 declare_syntax_cat InstCombine.bin_op_name
 
-syntax "llvm.return" : InstCombine.un_op_name
-syntax "llvm.not" : InstCombine.un_op_name
+syntax "llvm.return"  : InstCombine.un_op_name
+syntax "llvm.copy"    : InstCombine.un_op_name
+syntax "llvm.neg"     : InstCombine.un_op_name
+syntax "llvm.not"     : InstCombine.un_op_name
 
-syntax "llvm.add" : InstCombine.bin_op_name
-syntax "llvm.mul" : InstCombine.bin_op_name
+syntax "llvm.add"     : InstCombine.bin_op_name
+syntax "llvm.and"     : InstCombine.bin_op_name
+syntax "llvm.ashr"    : InstCombine.bin_op_name
+syntax "llvm.lshr"    : InstCombine.bin_op_name
+syntax "llvm.mul"     : InstCombine.bin_op_name
+syntax "llvm.or"      : InstCombine.bin_op_name
+syntax "llvm.sdiv"    : InstCombine.bin_op_name
+syntax "llvm.shl"     : InstCombine.bin_op_name
+syntax "llvm.srem"    : InstCombine.bin_op_name
+syntax "llvm.sub"     : InstCombine.bin_op_name
+syntax "llvm.udiv"    : InstCombine.bin_op_name
+syntax "llvm.urem"    : InstCombine.bin_op_name
+syntax "llvm.xor"     : InstCombine.bin_op_name
+
+-- TODO: does `icmp` need its own case?
+-- TODO: does `select` need its own case?
 
 
 syntax (mlir_op_operand " = ")? InstCombine.un_op_name mlir_op_operand " : " mlir_type : mlir_op
