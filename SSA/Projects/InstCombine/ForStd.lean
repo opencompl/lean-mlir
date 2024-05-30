@@ -131,34 +131,7 @@ theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : _root_.BitVec 
     rw [zeroBitwidth]
     simp
 
-theorem bitvec_minus_one' : BitVec.ofInt w (-1) = (-1 : _root_.BitVec w) := by
-  simp
-  by_cases zeroBitwidth : 0 < w
-  case pos =>
-    apply BitVec.eq_of_toInt_eq
-    simp
-    unfold BitVec.toInt
-    simp
-    have xx : 1 % 2 ^ w = 1 := by
-      rw [Nat.mod_eq_of_lt]
-      simp [Nat.pow_one]
-      omega
-    simp [xx]
-    split
-    · rename_i h
-      rw [Nat.mod_eq_of_lt] at h
-      · have xxx : 2 * (2 ^ w - 1) = 2 * 2 ^ w - 2 * 1 := by omega
-        rw [xxx] at h
-        simp at h
-        omega
-      · omega
-    · simp only [Int.bmod, Int.reduceNeg, Int.natCast_pred_of_pos _ (Nat.two_pow_pos w),
-        Int.neg_emod]
-      omega
-  case neg =>
-    simp_all
-    rw [zeroBitwidth]
-    simp
-
+theorem bitvec_minus_one' : BitVec.ofInt w (-1) = (-1 : BitVec w) := by
+  simp [bitvec_minus_one]
 
   end BitVec

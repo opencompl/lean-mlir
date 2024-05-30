@@ -258,7 +258,7 @@ lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a >
 
 def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
     (hao : a ≠ allOnes w) :
-    BitVec.sdiv (1#w) a = BitVec.ofInt w 0 := by
+    BitVec.sdiv 1#w a = BitVec.ofInt w 0 := by
   rcases w with ⟨rfl | ⟨rfl | w⟩⟩
   case zero => simp [BitVec.eq_nil a]
   case succ w' =>
