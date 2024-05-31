@@ -218,7 +218,6 @@ declare_syntax_cat mlir_op
 declare_syntax_cat mlir_op_args
 declare_syntax_cat mlir_op_successor_args
 declare_syntax_cat mlir_op_type
-declare_syntax_cat mlir_op_operand
 declare_syntax_cat mlir_ops
 declare_syntax_cat mlir_type
 
@@ -227,15 +226,13 @@ declare_syntax_cat mlir_type
 -- EDSL OPERANDS
 -- ==============
 
-syntax "%" numLit : mlir_op_operand
-
-syntax "%" ident : mlir_op_operand
-
-syntax "[mlir_op_operand|" mlir_op_operand "]" : term
-macro_rules
-  | `([mlir_op_operand| $$($q)]) => return q
-  | `([mlir_op_operand| % $x:ident]) => `(SSAVal.SSAVal $(Lean.quote (x.getId.toString)))
-  | `([mlir_op_operand| % $n:num]) => `(SSAVal.SSAVal (IntToString $n))
+syntax mlir_op_operand := "%" noWs (numLit <|> ident)
+macro "[mlir_op_operand|" op:mlir_op_operand "]" : term =>
+  match op with
+    | `(mlir_op_operand| $$($q))    => return q
+    | `(mlir_op_operand| %$x:ident) => `(SSAVal.SSAVal $(Lean.quote (x.getId.toString)))
+    | `(mlir_op_operand| %$n:num)   => `(SSAVal.SSAVal (IntToString $n))
+    | _ => Macro.throwUnsupported
 
 def operand0 := [mlir_op_operand| %x]
 /--
