@@ -218,7 +218,6 @@ declare_syntax_cat mlir_op
 declare_syntax_cat mlir_op_args
 declare_syntax_cat mlir_op_successor_args
 declare_syntax_cat mlir_op_type
-declare_syntax_cat mlir_ops
 declare_syntax_cat mlir_type
 
 
@@ -451,22 +450,19 @@ macro_rules
 
 
 
-syntax (mlir_op)* : mlir_ops
+syntax mlir_ops := (mlir_op)*
 
 syntax "[mlir_op|" mlir_op "]" : term
-syntax "[mlir_ops|" mlir_ops "]" : term
 
-macro_rules
-| `([mlir_ops| $[ $ops ]*  ]) => do
-      let initList: TSyntax `term <- `(@List.nil (MLIR.AST.Op _))
+macro "[mlir_ops|" ops:mlir_ops "]" : term => do
+  match ops with
+    | `(mlir_ops| $$($q))       => `(coe $q)
+    | `(mlir_ops| $[ $ops ]* )  => do
+      let initList : TSyntax `term ← `(@List.nil (MLIR.AST.Op _))
       let l ← ops.foldrM (init := initList)
-        fun x (xs: TSyntax `term) => `([mlir_op|$x] :: $xs)
+        fun x (xs : TSyntax `term) => `([mlir_op|$x] :: $xs)
       return l
-
-macro_rules
-  | `([mlir_ops| $$($q)]) => `(coe $q)
-
-
+    | _ => Macro.throwUnsupported
 
 syntax  "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
