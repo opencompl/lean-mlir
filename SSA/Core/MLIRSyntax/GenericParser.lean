@@ -153,12 +153,6 @@ info: def MLIR.EDSL.testBalancedBrackets : String := "< { xxasdasd } >"
 -/
 #guard_msgs in #print testBalancedBrackets
 
-
-
--- | positive and negative numbers, hex, octal
-declare_syntax_cat mlir_int
-syntax numLit: mlir_int
-
 def IntToString (i: Int): String := i.repr
 
 instance : Quote Int := ⟨fun n => Syntax.mkNumLit <| n.repr⟩
