@@ -212,7 +212,6 @@ macro_rules
 -- EDSL
 -- ====
 
-declare_syntax_cat mlir_bb
 declare_syntax_cat mlir_op
 declare_syntax_cat mlir_op_args
 declare_syntax_cat mlir_op_successor_args
