@@ -295,15 +295,12 @@ theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
 
 -- theorem 4 : tiling
 -- proof obligation for chris :)
-theorem Tensor1d.tile [Inhabited α] (t : Tensor1d α) (SIZE : 4 ∣ t.size) (f : α → α):
+proof_wanted Tensor1d.tile [Inhabited α] (t : Tensor1d α) (_ : 4 ∣ t.size) (f : α → α):
   t.map f = scf.for (t.size / 4) (fun i acc =>
     let tile := t.extract (i * 4) 4
     let mapped_tile := tile.map f
     let out := acc.insertslice (i * 4) mapped_tile
-    out) (Tensor1d.empty) := by {
-    cases t;
-    sorry
-}
+    out) (Tensor1d.empty)
 
 /--
 We make the following simplifying assumptions in the IR:
