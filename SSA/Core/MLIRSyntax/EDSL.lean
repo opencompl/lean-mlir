@@ -15,6 +15,7 @@ namespace SSA
 
 open Qq Lean Meta Elab Term
 open MLIR.AST
+open MLIR.EDSL
 
 /-- `ctxtNf` reduces an expression of type `Ctxt _` to something in between whnf and normal form.
 `ctxtNf` recursively calls `whnf` on the tail of the list, so that the result is of the form
@@ -57,7 +58,7 @@ elab "[foo_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(FooOp)
 --     ^^^^^^^                                                        ^^^^^
 ```
 -/
-def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
+def elabIntoCom (region : TSyntax ``mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
     (_dialectSignature : Q(DialectSignature $d) := by exact q(by infer_instance))
     (_transformTy      : Q(TransformTy $d $φ)     := by exact q(by infer_instance))
     (_transformExpr    : Q(TransformExpr $d $φ)   := by exact q(by infer_instance))

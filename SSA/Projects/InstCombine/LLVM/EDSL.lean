@@ -10,7 +10,7 @@ import SSA.Projects.InstCombine.LLVM.CLITests
 open Qq Lean Meta Elab.Term Elab Command
 open InstCombine (LLVM MetaLLVM MOp Width)
 
-open MLIR
+open MLIR EDSL
 
 namespace InstcombineTransformDialect
 

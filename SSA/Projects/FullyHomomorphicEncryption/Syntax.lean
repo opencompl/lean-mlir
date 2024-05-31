@@ -190,7 +190,7 @@ instance : MLIR.AST.TransformReturn (FHE q n) 0 where
 
 end MkFuns -- we don't want q and i here anymore
 
-open Qq MLIR AST Lean Elab Term Meta in
+open Qq MLIR AST EDSL Lean Elab Term Meta in
 elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
   let q : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
   let n : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
