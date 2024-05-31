@@ -440,7 +440,8 @@ macro "[mlir_ops|" ops:mlir_ops "]" : term => do
     | _ => Macro.throwUnsupported
 
 
-syntax mlir_region := "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}"
+declare_syntax_cat mlir_region
+syntax "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
 
 macro "[mlir_region|" region:mlir_region "]" : term => do
   let `(mlir_region| { $[^ $name:ident $[( $operands,* )]? :]? $ops }) := region | Macro.throwUnsupported
