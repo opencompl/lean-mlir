@@ -174,39 +174,22 @@ def quoteMList (k: List (TSyntax `term)) (ty: TSyntax `term): MacroM (TSyntax `t
 -- AFFINE SYTAX
 -- ============
 
-declare_syntax_cat affine_expr
-declare_syntax_cat affine_tuple
-declare_syntax_cat affine_map
+syntax affine_expr  := ident
+syntax affine_tuple := "(" affine_expr,* ")"
+syntax affine_map   := "affine_map<" affine_tuple "->" affine_tuple ">"
 
+macro "[affine_tuple|" xs:affine_tuple "]" : term => do
+  let `(affine_tuple| ( $[$xs:ident],* )) := xs | Macro.throwUnsupported
+  let init ← `(@List.nil MLIR.AST.AffineExpr)
+  let argsList ← xs.foldrM (init := init) fun x s =>
+    let x := x.getId.toString
+    -- ^^ TODO: figure out if this should use the `rawVal` to avoid hygiene
+    `(AffineExpr.Var $(Lean.quote x) :: $s)
+  `(AffineTuple.mk $argsList)
 
-syntax ident : affine_expr
-syntax "(" sepBy(affine_expr, ",") ")" : affine_tuple
-syntax "affine_map<" affine_tuple "->" affine_tuple ">" : affine_map
-
-syntax "[affine_expr|" affine_expr "]" : term
-syntax "[affine_tuple|" affine_tuple "]" : term
-syntax "[affine_map|" affine_map "]" : term
--- syntax "[affine_map|" affine_map "]" : term
-
-macro_rules
-| `([affine_expr| $xraw:ident ]) => do
-  let xstr := xraw.getId.toString
-  `(AffineExpr.Var $(Lean.quote xstr))
-
-macro_rules
-| `([affine_tuple| ( $xs,* ) ]) => do
-   let initList  <- `(@List.nil MLIR.AST.AffineExpr)
-   let argsList <- xs.getElems.foldrM
-    (init := initList)
-    (fun x xs => `([affine_expr| $x] :: $xs))
-   `(AffineTuple.mk $argsList)
-
-
-macro_rules
-| `([affine_map| affine_map< $xs:affine_tuple -> $ys:affine_tuple >]) => do
-  let xs' <- `([affine_tuple| $xs])
-  let ys' <- `([affine_tuple| $ys])
-  `(AffineMap.mk $xs' $ys' )
+macro "[affine_map|" map:affine_map "]" : term => do
+  let `(affine_map| affine_map< $xs:affine_tuple -> $ys:affine_tuple >) := map | Macro.throwUnsupported
+  `(AffineMap.mk [affine_tuple| $xs] [affine_tuple| $ys])
 
 
 -- EDSL
