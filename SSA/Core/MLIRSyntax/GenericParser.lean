@@ -744,16 +744,19 @@ syntax
   ":" "(" mlir_type,* ")" "->" "("mlir_type,*")" : mlir_op
 
 macro_rules
-  | `([mlir_op| $$($x) ]) => return x
+  | `([mlir_op| $x]) => `(mlir_op| $x)
 
 macro_rules
-  | `([mlir_op|
+  | `([mlir_op| $$($x)]) => return x
+
+macro_rules
+  | `(mlir_op|
         $[ $resName = ]?
         $name:str
         ( $operandsNames,* )
         $[ ( $rgns,* ) ]?
         $[ $attrDict ]?
-        : ( $operandsTypes,* ) -> ( $resTypes,* ) ]) => do
+        : ( $operandsTypes,* ) -> ( $resTypes,* ) ) => do
 
         -- TODO: Needs a consistency check that `resName=none ↔ resType=.unit`
         let res ← match resName with
@@ -792,10 +795,10 @@ syntax mlir_op_operand "="
          (mlir_attr_dict)? ":" "(" mlir_type,* ")" "->" mlir_type : mlir_op
 
 macro_rules
-  | `([mlir_op|
+  | `(mlir_op|
         $resName:mlir_op_operand = $name:str ( $operandsNames,* ) $[ ( $rgns,* ) ]? $[ $attrDict ]?
         : ( $operandsTypes,* ) -> $resType:mlir_type
-      ]) => do
+      ) => do
         let results ← `([([mlir_op_operand| $resName], [mlir_type| $resType])])
         -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
         let operands: List (MacroM <| TSyntax `term) :=
@@ -833,6 +836,12 @@ fun {φ} =>
     [] (AttrDict.mk [])
 -/
 #guard_msgs in #print op2
+
+/--
+TODO: we've attempted to support anti-quotations, but it doesn't actually work, as seen in the
+following example:
+-/
+-- def op2' : Op φ := [mlir_op| $op2]
 
 def bbop1 : SSAVal × MLIRTy φ := [mlir_bb_operand| %x : i32 ]
 /--
