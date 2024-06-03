@@ -487,7 +487,6 @@ macro_rules
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
 
--- TODO: see if we can hide the `[mlir_op| ` in the same way as we did here for regions
 macro_rules
 | `([mlir_region| $q:mlir_region ]) => `(mlir_region| $q)
 
@@ -749,7 +748,7 @@ syntax
   ":" "(" mlir_type,* ")" "->" "("mlir_type,*")" : mlir_op
 
 macro_rules
-  | `(term| [mlir_op| $x]) => `(mlir_op| $x)
+  | `([mlir_op| $x]) => `(mlir_op| $x)
 
 macro_rules
   | `([mlir_op| $$($x)]) => return x
@@ -841,6 +840,12 @@ fun {φ} =>
     [] (AttrDict.mk [])
 -/
 #guard_msgs in #print op2
+
+/--
+TODO: we've attempted to support anti-quotations, but it doesn't actually work, as seen in the
+following example:
+-/
+-- def op2' : Op φ := [mlir_op| $op2]
 
 def bbop1 : SSAVal × MLIRTy φ := [mlir_bb_operand| %x : i32 ]
 /--
