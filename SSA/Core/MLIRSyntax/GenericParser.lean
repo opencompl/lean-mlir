@@ -441,24 +441,22 @@ macro "[mlir_ops|" ops:mlir_ops "]" : term => do
 
 
 declare_syntax_cat mlir_region
-syntax "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
+syntax "{" ("^" ident ("(" mlir_bb_operand,* ")")? ":")? mlir_ops "}" : mlir_region
 
-macro "[mlir_region|" region:mlir_region "]" : term => do
-  let `(mlir_region| { $[^ $name:ident $[( $operands,* )]? :]? $ops }) := region | Macro.throwUnsupported
-  let name := match name with
-    | some id => id.getId.toString -- basic block labels are hygienic!
-    | none    => "entry"           -- if no label is given, it's the entry block
-  let argsList ← match operands with
-    | some (some operands) => do
-        let initList ← `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
-        operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
-    | some none | none     => `([])
-  let opsList ← `([mlir_ops| $ops])
-  `(Region.mk $(Lean.quote name) $argsList $opsList)
-
--- Do we want anti-quotation for whole regions? I'd say we don't
--- macro_rules
--- | `([mlir_region| $$($q) ]) => return q
+syntax "[mlir_region|" mlir_region "]" : term
+macro_rules
+    | `([mlir_region| $$($q)]) => return q
+    | `([mlir_region| { $[^ $name:ident $[( $operands,* )]? :]? $ops }]) => do
+      let name := match name with
+        | some id => id.getId.toString -- basic block labels are hygienic!
+        | none    => "entry"           -- if no label is given, it's the entry block
+      let argsList ← match operands with
+        | some (some operands) => do
+            let initList ← `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
+            operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
+        | some none | none     => `([])
+      let opsList ← `([mlir_ops| $ops])
+      `(Region.mk $(Lean.quote name) $argsList $opsList)
 
 -- MLIR ATTRIBUTE VALUE
 -- ====================
