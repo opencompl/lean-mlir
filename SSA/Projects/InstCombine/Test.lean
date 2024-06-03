@@ -560,3 +560,57 @@ def two_ne_macro_noreduce_proof (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   apply two_ne_stmt
+
+set_option ssa.alive_icom_reduce true in
+def constant_macro (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0():
+    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
+    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
+    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
+    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
+    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
+    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
+    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
+    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
+    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
+    "llvm.return" (%8) : (_) -> ()
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def constant_macro_noreduce (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0():
+    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
+    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
+    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
+    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
+    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
+    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
+    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
+    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
+    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
+    "llvm.return" (%8) : (_) -> ()
+  }]
+
+def constant_stmt :
+    @BitVec.Refinement (BitVec w)
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
+        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2)))
+      (LLVM.add (LLVM.add (LLVM.add (LLVM.add (LLVM.const? 2) (LLVM.const? 1))
+        (LLVM.const? 0)) (LLVM.const? (-1))) (LLVM.const? (-2))) := by
+  simp
+
+def constant_macro_proof (w : Nat) :
+    constant_macro w ⊑ constant_macro w := by
+  unfold constant_macro
+  simp_alive_meta
+  simp_alive_ssa
+  apply constant_stmt
+
+def constant_macro_noreduce_proof (w : Nat) :
+    constant_macro_noreduce w ⊑ constant_macro_noreduce w := by
+  unfold constant_macro_noreduce
+  simp_alive_meta
+  simp_alive_ssa
+  apply constant_stmt
