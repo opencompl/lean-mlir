@@ -294,16 +294,16 @@ syntax "!" ident : mlir_type
 syntax ident: mlir_type
 syntax "_" : mlir_type
 
+
 macro_rules
   | `([mlir_type| $x:ident ]) => do
-        let (.ident _ xstr _ _) := x.raw | Macro.throwUnsupported
-        -- ^^ We use `rawVal` rather than `val`, so that we're not affected by hygiene
+        let xstr := x.getId.toString
         if xstr == "index"
         then
           `(MLIRType.index)
         else if xstr.front == 'i' || xstr.front == 'f'
         then do
-          let xstr' := (xstr.drop 1).toString
+          let xstr' := xstr.drop 1
           match xstr'.toInt? with
           | some _ =>
             let lit := Lean.Syntax.mkNumLit xstr'
@@ -311,8 +311,8 @@ macro_rules
             then `(MLIRType.int .Signless $lit)
             else `(MLIRType.float $lit)
           | none =>
-              Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr.toString
-        else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr.toString
+              Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr
+        else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr
   | `([mlir_type| ! $x:str ]) => `(MLIRType.undefined $x)
   | `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
   -- Hardcoded meta-variable
@@ -666,23 +666,27 @@ attrVal10Float
 # MLIR ATTRIBUTE
 -/
 
-syntax mlir_attr_key := ident <|> strLit
-syntax mlir_attr_entry := mlir_attr_key (" = " mlir_attr_val)?
+declare_syntax_cat mlir_attr_entry
 
-macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
-  let `(mlir_attr_entry| $key $[= $val]?) := entry | Macro.throwUnsupported
-  let key ← match key.raw[0] with
-    | .ident _ key _ _ => pure key.toString
-    --         ^^^ Notice we don't use the `val`, since the name might have been hygiene'd
-    --             Instead, we use `rawVal`, which is documented as being
-    --               "the literal substring from the input file" thus safe from hygiene
-    | .node _ `str ⟨(.atom _ val)::[]⟩ => pure val
-    -- ^^^ The `strLit` case
-    | _ => Macro.throwUnsupported
-  let value ← match val with
-    | none      => `(AttrValue.unit)
-    | some val  => `([mlir_attr_val| $val])
-  `(AttrEntry.mk $(Lean.quote key) $value)
+syntax ident "=" mlir_attr_val : mlir_attr_entry
+syntax strLit "=" mlir_attr_val : mlir_attr_entry
+syntax ident : mlir_attr_entry
+
+syntax "[mlir_attr_entry|" mlir_attr_entry "]" : term
+
+-- | TODO: don't actually write an elaborator for the `ident` case. This forces
+-- us to declare predefined identifiers in a controlled fashion.
+macro_rules
+  | `([mlir_attr_entry| $name:ident  = $v:mlir_attr_val]) =>
+     `(AttrEntry.mk $(Lean.quote (name.getId.toString))  [mlir_attr_val| $v])
+  | `([mlir_attr_entry| $name:str  = $v:mlir_attr_val]) =>
+     `(AttrEntry.mk $name [mlir_attr_val| $v])
+
+macro_rules
+  | `([mlir_attr_entry| $name:ident]) =>
+     `(AttrEntry.mk $(Lean.quote (name.getId.toString))  AttrValue.unit)
+
+
 
 def attr0Str : AttrEntry 0 := [mlir_attr_entry| sym_name = "add"]
 /--
