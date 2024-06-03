@@ -15,6 +15,7 @@ namespace SSA
 
 open Qq Lean Meta Elab Term
 open MLIR.AST
+open MLIR.EDSL
 
 /-- `ctxtNf` reduces an expression of type `Ctxt _` to something in between whnf and normal form.
 `ctxtNf` recursively calls `whnf` on the tail of the list, so that the result is of the form

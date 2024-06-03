@@ -1,3 +1,4 @@
+
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
@@ -116,7 +117,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
 instance : MLIR.AST.TransformReturn Simple 0 where
   mkReturn := mkReturn
 
-open Qq in
+open MLIR.EDSL Qq in
 elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom reg q(Simple)
 
 end MLIR2Simple
