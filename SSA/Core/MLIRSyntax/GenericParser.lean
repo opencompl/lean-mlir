@@ -189,6 +189,7 @@ macro "[affine_map|" map:affine_map "]" : term => do
 -- EDSL
 -- ====
 
+declare_syntax_cat mlir_region
 declare_syntax_cat mlir_op
 declare_syntax_cat mlir_op_args
 declare_syntax_cat mlir_op_successor_args
@@ -439,24 +440,27 @@ macro "[mlir_ops|" ops:mlir_ops "]" : term => do
       return l
     | _ => Macro.throwUnsupported
 
+syntax  "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
+syntax "[mlir_region|" mlir_region "]": term
 
-declare_syntax_cat mlir_region
-syntax "{" ("^" ident ("(" mlir_bb_operand,* ")")? ":")? mlir_ops "}" : mlir_region
-
-syntax "[mlir_region|" mlir_region "]" : term
 macro_rules
-    | `([mlir_region| $$($q)]) => return q
-    | `([mlir_region| { $[^ $name:ident $[( $operands,* )]? :]? $ops }]) => do
-      let name := match name with
-        | some id => id.getId.toString -- basic block labels are hygienic!
-        | none    => "entry"           -- if no label is given, it's the entry block
-      let argsList ← match operands with
-        | some (some operands) => do
-            let initList ← `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
-            operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
-        | some none | none     => `([])
-      let opsList ← `([mlir_ops| $ops])
-      `(Region.mk $(Lean.quote name) $argsList $opsList)
+| `(mlir_region| { ^ $name:ident ( $operands,* ) : $ops }) => do
+   let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
+   let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
+   let opsList <- `([mlir_ops| $ops])
+   `(Region.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
+| `(mlir_region| {  ^ $name:ident : $ops } ) => do
+   let opsList <- `([mlir_ops| $ops])
+   `(Region.mk $(Lean.quote (name.getId.toString)) [] $opsList)
+| `(mlir_region| { $ops:mlir_ops }) => do
+   let opsList <- `([mlir_ops| $ops])
+   `(Region.mk "entry" [] $opsList)
+
+macro_rules
+| `([mlir_region| $q:mlir_region ]) => `(mlir_region| $q)
+
+macro_rules
+| `([mlir_region| $$($q) ]) => return q
 
 -- MLIR ATTRIBUTE VALUE
 -- ====================
