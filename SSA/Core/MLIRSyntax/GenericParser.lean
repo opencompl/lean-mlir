@@ -876,6 +876,13 @@ fun {φ} =>
 -/
 #guard_msgs in #print bb1NoArgs
 
+/-
+TODO: antiquotations for regions don't seem to work, the following fails to compile with error:
+`elaboration function for 'mlir_region.pseudo.antiquot' has not been implemented`
+```lean
+private def bb1NoArgsAntiQuot : Region φ := [mlir_region| $bb1NoArgs]
+``` -/
+
 private def bb2SingleArg : Region φ :=
   [mlir_region| {
      ^entry(%argp : i32):
