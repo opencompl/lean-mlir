@@ -48,7 +48,6 @@ macro resName:mlir_op_operand " = " name:InstCombine.bin_op_name
   let opName := Syntax.mkStrLit name
   `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) )
 
-set_option hygiene false in
 macro res:mlir_op_operand " = " "llvm.mlir.constant" x:num " : " t:mlir_type : mlir_op =>
   `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:num : $t} : () -> ($t) )
 
