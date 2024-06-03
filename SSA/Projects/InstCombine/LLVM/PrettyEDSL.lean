@@ -52,7 +52,8 @@ macro res:mlir_op_operand " = " "llvm.mlir.constant" x:num " : " t:mlir_type : m
   `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:num : $t} : () -> ($t) )
 
 
-def pretty_test :=
+
+private def pretty_test :=
   [alive_icom ()|{
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant 8 : i32
@@ -62,7 +63,7 @@ def pretty_test :=
     llvm.return %3 : i32
   }]
 
-def pretty_test_generic (w : Nat) :=
+private def pretty_test_generic (w : Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant 8 : _
