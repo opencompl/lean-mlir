@@ -146,13 +146,15 @@ macro "[balanced_brackets|" xs:balancedBrackets "]" : term => do
   | .atom _ val => return (Lean.quote val: TSyntax `str)
   | _  => Macro.throwError "expected balanced bracts to have atom"
 
+section Test
 
-def testBalancedBrackets : String := [balanced_brackets| < { xxasdasd } > ]
+private def testBalancedBrackets : String := [balanced_brackets| < { xxasdasd } > ]
 /--
-info: def MLIR.EDSL.testBalancedBrackets : String := "< { xxasdasd } >"
+info: private def MLIR.EDSL.testBalancedBrackets : String := "< { xxasdasd } >"
 -/
 #guard_msgs in #print testBalancedBrackets
 
+end Test
 
 
 -- | positive and negative numbers, hex, octal
@@ -237,26 +239,30 @@ macro_rules
   | `([mlir_op_operand| % $x:ident]) => `(SSAVal.SSAVal $(Lean.quote (x.getId.toString)))
   | `([mlir_op_operand| % $n:num]) => `(SSAVal.SSAVal (IntToString $n))
 
-def operand0 := [mlir_op_operand| %x]
+section Test
+
+private def operand0 := [mlir_op_operand| %x]
 /--
-info: def MLIR.EDSL.operand0 : SSAVal :=
+info: private def MLIR.EDSL.operand0 : SSAVal :=
 SSAVal.SSAVal "x"
 -/
 #guard_msgs in #print operand0
 
-def operand1 := [mlir_op_operand| %x]
+private def operand1 := [mlir_op_operand| %x]
 /--
-info: def MLIR.EDSL.operand1 : SSAVal :=
+info: private def MLIR.EDSL.operand1 : SSAVal :=
 SSAVal.SSAVal "x"
 -/
 #guard_msgs in #print operand1
 
-def operand2 := [mlir_op_operand| %0]
+private def operand2 := [mlir_op_operand| %0]
 /--
-info: def MLIR.EDSL.operand2 : SSAVal :=
+info: private def MLIR.EDSL.operand2 : SSAVal :=
 SSAVal.SSAVal (IntToString 0)
 -/
 #guard_msgs in #print operand2
+
+end Test
 
 
 -- EDSL OP-SUCCESSOR-ARGS
@@ -275,12 +281,16 @@ macro_rules
   | `([mlir_op_successor_arg| ^ $x:ident  ]) =>
       `(BBName.mk $(Lean.quote (x.getId.toString)))
 
-def succ0 :  BBName := ([mlir_op_successor_arg| ^bb])
+section Test
+
+private def succ0 : BBName := ([mlir_op_successor_arg| ^bb])
 /--
-info: def MLIR.EDSL.succ0 : BBName :=
+info: private def MLIR.EDSL.succ0 : BBName :=
 BBName.mk "bb"
 -/
 #guard_msgs in #print succ0
+
+end Test
 
 
 -- EDSL MLIR TYPES
@@ -318,31 +328,33 @@ macro_rules
   -- Hardcoded meta-variable
   | `([mlir_type| _ ]) => `(MLIRType.int (φ := 1) Signedness.Signless (Width.mvar ⟨0, by simp⟩))
 
-def tyIndex : MLIRTy := [mlir_type| index]
+section Test
+
+private def tyIndex : MLIRTy := [mlir_type| index]
 /--
 info: MLIR.AST.MLIRType.index
 -/
 #guard_msgs in #eval tyIndex
 
-def tyUser : MLIRTy := [mlir_type| !"lz.int"]
+private def tyUser : MLIRTy := [mlir_type| !"lz.int"]
 /--
 info: MLIR.AST.MLIRType.undefined "lz.int"
 -/
 #guard_msgs in #eval tyUser
 
-def tyUserIdent : MLIRTy := [mlir_type| !shape.value]
+private def tyUserIdent : MLIRTy := [mlir_type| !shape.value]
 /--
 info: MLIR.AST.MLIRType.undefined "shape.value"
 -/
 #guard_msgs in #eval tyUserIdent
 
-def tyi32NoGap : MLIRTy := [mlir_type| i32]
+private def tyi32NoGap : MLIRTy := [mlir_type| i32]
 /--
 info: MLIR.AST.MLIRType.int (MLIR.AST.Signedness.Signless) (ConcreteOrMVar.concrete 32)
 -/
 #guard_msgs in #eval tyi32NoGap
 
-def tyf32NoGap : MLIRTy := [mlir_type| f32]
+private def tyf32NoGap : MLIRTy := [mlir_type| f32]
 /--
 info: MLIR.AST.MLIRType.float 32
 -/
@@ -355,6 +367,7 @@ info: MLIR.AST.MLIRType.float 32
 --example : MLIRType (Dialect.empty + builtin) := [mlir_type| i32]
 -- More tricky: pushes coercion into the whole construction
 
+end Test
 
 -- === VECTOR TYPE ===
 -- TODO: where is vector type syntax defined?
@@ -389,14 +402,25 @@ macro_rules
         | _ => `((@List.nil Nat))
       `(builtin.vector $fixedDims $scaledDims [mlir_type| $t])
 
-def staticDimList0 : List Nat := [static_dim_list| 1]
+syntax "tensor1d" : mlir_type
+macro_rules
+| `([mlir_type| tensor1d ]) => do
+    `(MLIRType.tensor1d)
+
+syntax "tensor2d" : mlir_type
+macro_rules
+| `([mlir_type| tensor2d ]) => do
+    `(MLIRType.tensor2d)
+
+section Test
+
+private def staticDimList0 : List Nat := [static_dim_list| 1]
 /-- info: [1] -/
 #guard_msgs in #reduce staticDimList0
 
-def staticDimList1 : List Nat := [static_dim_list| 1 × 2]
+private def staticDimList1 : List Nat := [static_dim_list| 1 × 2]
 /-- info: [1, 2] -/
 #guard_msgs in #reduce staticDimList1
-
 
 
 --def vectorTy0 := [mlir_type| vector<i32>]
@@ -408,27 +432,13 @@ def staticDimList1 : List Nat := [static_dim_list| 1 × 2]
 --def vectorTy2 := [mlir_type| vector<2 × 3 × [ 4 ] × i32>]
 --#print vectorTy2
 
+private def tensor1dTest : MLIRTy := [mlir_type| tensor1d]
 
--- | TODO: is this actually necessary?
--- syntax  "<" mlir_dimension_list  ">"  : mlir_type
--- macro_rules
--- | `([mlir_type|  < $dims:mlir_dimension_list  >]) => do
---     let (dims, ty) <- parseTensorDimensionList dims
---     `(MLIRType.vector $dims $ty)
+private def tensor2dTest : MLIRTy := [mlir_type| tensor2d]
 
-syntax "tensor1d" : mlir_type
-macro_rules
-| `([mlir_type| tensor1d ]) => do
-    `(MLIRType.tensor1d)
+end Test
 
-def tensor1dTest : MLIRTy := [mlir_type| tensor1d]
 
-syntax "tensor2d" : mlir_type
-macro_rules
-| `([mlir_type| tensor2d ]) => do
-    `(MLIRType.tensor2d)
-
-def tensor2dTest : MLIRTy := [mlir_type| tensor2d]
 
 -- EDSL MLIR USER ATTRIBUTES
 -- =========================
@@ -450,7 +460,6 @@ macro_rules
 
 -- EDSL MLIR BASIC BLOCKS
 -- ======================
-
 
 
 
@@ -570,15 +579,20 @@ macro_rules
       `(AttrValue.symbol $(Lean.quote x.getId.toString))
 
 macro_rules
-| `([mlir_attr_val_symbol| $x:mlir_attr_val_symbol :: $y:mlir_attr_val_symbol ]) =>
-      `(AttrValue.nestedsymbol [mlir_attr_val_symbol| $x] [mlir_attr_val_symbol| $y])
-
+  | `([mlir_attr_val_symbol| $x:mlir_attr_val_symbol :: $y:mlir_attr_val_symbol ]) =>
+        `(AttrValue.nestedsymbol [mlir_attr_val_symbol| $x] [mlir_attr_val_symbol| $y])
+  | `([mlir_attr_val| $x:mlir_attr_val_symbol ]) => `([mlir_attr_val_symbol| $x])
+  | `([mlir_attr_val| # $a:str]) => `(AttrValue.alias $a)
+  | `([mlir_attr_val| $x:scientific ]) => `(AttrValue.float $(⟨x⟩) (MLIRType.float 64))
+  | `([mlir_attr_val| $x:scientific : $t:mlir_type]) => `(AttrValue.float $(⟨x⟩) [mlir_type| $t])
 
 macro_rules
-| `([mlir_attr_val| $x:mlir_attr_val_symbol ]) => `([mlir_attr_val_symbol| $x])
+  | `([mlir_attr_val| # $a:ident]) =>
+      `(AttrValue.alias $(Lean.quote a.getId.toString))
 
+section Test
 
-def attrVal0Str : AttrVal := [mlir_attr_val| "foo"]
+private def attrVal0Str : AttrVal := [mlir_attr_val| "foo"]
 /-- info: AttrValue.str "foo" -/
 #guard_msgs in #reduce attrVal0Str
 
@@ -588,78 +602,64 @@ example : AttrVal := [mlir_attr_val| "foo"]
 --example : AttrValue (Dialect.empty + builtin) := [mlir_attr_val| "foo"]
 -- Uses dialect coercion after building an AttrValue Dialect.empty
 
-
-def attrVal1bTy : AttrVal := [mlir_attr_val| i32]
+private def attrVal1bTy : AttrVal := [mlir_attr_val| i32]
 /-- info: AttrValue.type (MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 32)) -/
 #guard_msgs in #reduce attrVal1bTy
 
-def attrVal2List : AttrVal := [mlir_attr_val| ["foo", "foo"] ]
+private def attrVal2List : AttrVal := [mlir_attr_val| ["foo", "foo"] ]
 /-- info: AttrValue.list [AttrValue.str "foo", AttrValue.str "foo"] -/
 #guard_msgs in #reduce attrVal2List
 
-def attrVal3AffineMap : AttrVal := [mlir_attr_val| affine_map<(x, y) -> (y)>]
+private def attrVal3AffineMap : AttrVal := [mlir_attr_val| affine_map<(x, y) -> (y)>]
 /--
 info: AttrValue.affine
   (AffineMap.mk (AffineTuple.mk [AffineExpr.Var "x", AffineExpr.Var "y"]) (AffineTuple.mk [AffineExpr.Var "y"]))
 -/
 #guard_msgs in #reduce attrVal3AffineMap
 
-def attrVal4Symbol : AttrVal := [mlir_attr_val| @"foo" ]
+private def attrVal4Symbol : AttrVal := [mlir_attr_val| @"foo" ]
 /-- info: AttrValue.symbol "foo" -/
 #guard_msgs in #reduce attrVal4Symbol
 
-def attrVal5int: AttrVal := [mlir_attr_val| 42 ]
+private def attrVal5int: AttrVal := [mlir_attr_val| 42 ]
 /-- info: AttrValue.int (Int.ofNat 42) (MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64)) -/
 #guard_msgs in #reduce attrVal5int
 
-def attrVal5bint: AttrVal := [mlir_attr_val| -42 ]
+private def attrVal5bint: AttrVal := [mlir_attr_val| -42 ]
 /-- info: AttrValue.int (Int.negSucc 41) (MLIRType.int Signedness.Signed (ConcreteOrMVar.concrete 64)) -/
 #guard_msgs in #reduce attrVal5bint
 
-def attrVal6Symbol : AttrVal := [mlir_attr_val| @func_foo ]
+private def attrVal6Symbol : AttrVal := [mlir_attr_val| @func_foo ]
 /-- info: AttrValue.symbol "func_foo" -/
 #guard_msgs in #reduce attrVal6Symbol
 
-def attrVal7NestedSymbol : AttrVal := [mlir_attr_val| @func_foo::@"func_bar" ]
+private def attrVal7NestedSymbol : AttrVal := [mlir_attr_val| @func_foo::@"func_bar" ]
 /-- info: (AttrValue.symbol "func_foo").nestedsymbol (AttrValue.symbol "func_bar") -/
 #guard_msgs in #reduce attrVal7NestedSymbol
 
-
-macro_rules
-  | `([mlir_attr_val| # $a:str]) =>
-      `(AttrValue.alias $a)
-
-def attrVal8Alias : AttrVal := [mlir_attr_val| #"A" ]
+private def attrVal8Alias : AttrVal := [mlir_attr_val| #"A" ]
 /-- info: AttrValue.alias "A" -/
 #guard_msgs in #reduce attrVal8Alias
 
-macro_rules
-  | `([mlir_attr_val| # $a:ident]) =>
-      `(AttrValue.alias $(Lean.quote a.getId.toString))
-
-def attrVal9Alias : AttrVal := [mlir_attr_val| #a ]
+private def attrVal9Alias : AttrVal := [mlir_attr_val| #a ]
 /-- info: AttrValue.alias "a" -/
 #guard_msgs in #reduce attrVal9Alias
 
-macro_rules
-| `([mlir_attr_val|  $x:scientific ]) => `(AttrValue.float $(⟨x⟩) (MLIRType.float 64))
-| `([mlir_attr_val| $x:scientific : $t:mlir_type]) => `(AttrValue.float $(⟨x⟩) [mlir_type| $t])
-
-
-def attrVal10Float :  AttrVal := [mlir_attr_val| 0.0023 ]
+private def attrVal10Float : AttrVal := [mlir_attr_val| 0.0023 ]
 /--
-info: def MLIR.EDSL.attrVal10Float : AttrVal :=
+info: private def MLIR.EDSL.attrVal10Float : AttrVal :=
 AttrValue.float 23e-4 (MLIRType.float 64)
 -/
 #guard_msgs in #print attrVal10Float
 
-def attrVal11Escape :  AttrVal := [mlir_attr_val| $(attrVal10Float) ]
+private def attrVal11Escape : AttrVal := [mlir_attr_val| $(attrVal10Float) ]
 /--
-info: def MLIR.EDSL.attrVal11Escape : AttrVal :=
-attrVal10Float
+info: private def MLIR.EDSL.attrVal11Escape : AttrVal :=
+MLIR.EDSL.attrVal10Float
 -/
 #guard_msgs in #print attrVal11Escape
 
+end Test
 
 /-!
 # MLIR ATTRIBUTE
@@ -683,6 +683,24 @@ macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
     | some val  => `([mlir_attr_val| $val])
   `(AttrEntry.mk $(Lean.quote key) $value)
 
+declare_syntax_cat mlir_attr_dict
+syntax "{" sepBy(mlir_attr_entry, ",") "}" : mlir_attr_dict
+syntax "[mlir_attr_dict|" mlir_attr_dict "]" : term
+
+macro_rules
+| `([mlir_attr_dict| {  $attrEntries,* } ]) => do
+        let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
+        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
+        `(AttrDict.mk $attrsList)
+
+-- dict attribute val
+syntax mlir_attr_dict : mlir_attr_val
+
+macro_rules
+| `([mlir_attr_val| $v:mlir_attr_dict]) => `(AttrValue.dict [mlir_attr_dict| $v])
+
+section Test
+
 def attr0Str : AttrEntry 0 := [mlir_attr_entry| sym_name = "add"]
 /--
 info: def MLIR.EDSL.attr0Str : AttrEntry 0 :=
@@ -703,26 +721,9 @@ info: AttrEntry.mk "value" (AttrValue.int (Int.negSucc 0) (MLIRType.int Signedne
 -/
 #guard_msgs in #reduce attr4Negative
 
-
-declare_syntax_cat mlir_attr_dict
-syntax "{" sepBy(mlir_attr_entry, ",") "}" : mlir_attr_dict
-syntax "[mlir_attr_dict|" mlir_attr_dict "]" : term
-
-macro_rules
-| `([mlir_attr_dict| {  $attrEntries,* } ]) => do
-        let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
-        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
-        `(AttrDict.mk $attrsList)
-
 def attrDict0 : AttrDict 0 := [mlir_attr_dict| {}]
 def attrDict1 : AttrDict 0 := [mlir_attr_dict| {foo = "bar" }]
 def attrDict2 : AttrDict 0 := [mlir_attr_dict| {foo = "bar", baz = "quux" }]
-
--- dict attribute val
-syntax mlir_attr_dict : mlir_attr_val
-
-macro_rules
-| `([mlir_attr_val| $v:mlir_attr_dict]) => `(AttrValue.dict [mlir_attr_dict| $v])
 
 def nestedAttrDict0 : AttrDict 0 := [mlir_attr_dict| {foo = {bar = "baz"} }]
 /--
@@ -730,6 +731,8 @@ info: def MLIR.EDSL.nestedAttrDict0 : AttrDict 0 :=
 AttrDict.mk [AttrEntry.mk "foo" (AttrValue.dict (AttrDict.mk [AttrEntry.mk "bar" (AttrValue.str "baz")]))]
 -/
 #guard_msgs in #print nestedAttrDict0
+
+end Test
 
 /-!
 # MLIR OPS WITH REGIONS AND ATTRIBUTES AND BASIC BLOCK ARGS
@@ -815,10 +818,12 @@ macro_rules
                     quoteMList rngs.toList (<- `(MLIR.AST.Region _))
         `(Op.mk $name $results $operands $regions $attributes)
 
-def op1 : Op φ :=
+section Test
+
+private def op1 : Op φ :=
   [mlir_op| "foo"(%x, %y) : (i32, i32) -> (i32) ]
 /--
-info: def MLIR.EDSL.op1 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.op1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
   Op.mk "foo" []
     [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
@@ -826,10 +831,10 @@ fun {φ} =>
 -/
 #guard_msgs in #print op1
 
-def op2: Op φ :=
+private def op2 : Op φ :=
   [mlir_op| %z = "foo"(%x, %y) : (i32, i32) -> (i32)]
 /--
-info: def MLIR.EDSL.op2 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.op2 : {φ : ℕ} → Op φ :=
 fun {φ} =>
   Op.mk "foo" [(SSAVal.SSAVal "z", MLIRType.int Signedness.Signless 32)]
     [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
@@ -843,14 +848,14 @@ following example:
 -/
 -- def op2' : Op φ := [mlir_op| $op2]
 
-def bbop1 : SSAVal × MLIRTy φ := [mlir_bb_operand| %x : i32 ]
+private def bbop1 : SSAVal × MLIRTy φ := [mlir_bb_operand| %x : i32 ]
 /--
-info: def MLIR.EDSL.bbop1 : {φ : ℕ} → SSAVal × MLIRTy φ :=
+info: private def MLIR.EDSL.bbop1 : {φ : ℕ} → SSAVal × MLIRTy φ :=
 fun {φ} => (SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32)
 -/
 #guard_msgs in #print bbop1
 
-def bb1NoArgs : Region φ :=
+private def bb1NoArgs : Region φ :=
   [mlir_region| {
      ^entry:
      "foo"(%x, %y) : (i32, i32) -> (i32)
@@ -858,7 +863,7 @@ def bb1NoArgs : Region φ :=
       "std.return"(%x0) : (i42) -> ()
   }]
 /--
-info: def MLIR.EDSL.bb1NoArgs : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.bb1NoArgs : {φ : ℕ} → Region φ :=
 fun {φ} =>
   Region.mk "entry" []
     [Op.mk "foo" []
@@ -871,7 +876,7 @@ fun {φ} =>
 -/
 #guard_msgs in #print bb1NoArgs
 
-def bb2SingleArg : Region φ :=
+private def bb2SingleArg : Region φ :=
   [mlir_region| {
      ^entry(%argp : i32):
      "foo"(%x, %y) : (i32, i32) -> (i32)
@@ -879,7 +884,7 @@ def bb2SingleArg : Region φ :=
       "std.return"(%x0) : (i42) -> ()
   }]
 /--
-info: def MLIR.EDSL.bb2SingleArg : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.bb2SingleArg : {φ : ℕ} → Region φ :=
 fun {φ} =>
   Region.mk "entry" [(SSAVal.SSAVal "argp", MLIRType.int Signedness.Signless 32)]
     [Op.mk "foo" []
@@ -892,7 +897,7 @@ fun {φ} =>
 #guard_msgs in #print bb2SingleArg
 
 
-def bb3MultipleArgs : Region φ :=
+private def bb3MultipleArgs : Region φ :=
   [mlir_region| {
      ^entry(%argp : i32, %argq : i64):
      "foo"(%x, %y) : (i32, i32) -> (i32)
@@ -914,33 +919,33 @@ info: Region.mk "entry"
 #guard_msgs in #reduce bb3MultipleArgs
 
 
-def rgn0 : Region φ := ([mlir_region|  { }])
+private def rgn0 : Region φ := ([mlir_region|  { }])
 /--
-info: def MLIR.EDSL.rgn0 : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.rgn0 : {φ : ℕ} → Region φ :=
 fun {φ} => Region.mk "entry" [] []
 -/
 #guard_msgs in #print rgn0
 
-def rgn1 : Region φ :=
+private def rgn1 : Region φ :=
   [mlir_region|  {
     ^entry:
       "std.return"(%x0) : (i42) -> ()
   }]
 /--
-info: def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
 fun {φ} =>
   Region.mk "entry" []
     [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
 -/
 #guard_msgs in #print rgn1
 
-def rgn2 : Region φ :=
+private def rgn2 : Region φ :=
   [mlir_region|  {
     ^entry:
       "std.return"(%x0) : (i42) -> ()
   }]
 /--
-info: def MLIR.EDSL.rgn2 : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.rgn2 : {φ : ℕ} → Region φ :=
 fun {φ} =>
   Region.mk "entry" []
     [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
@@ -948,13 +953,13 @@ fun {φ} =>
 #guard_msgs in #print rgn2
 
 -- | test what happens if we try to use an entry block with no explicit bb name
-def rgn3 : Region φ :=
+private def rgn3 : Region φ :=
   [mlir_region|  {
       "std.return"(%x0) : (i42) -> ()
   }]
 
 /--
-info: def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
+info: private def MLIR.EDSL.rgn1 : {φ : ℕ} → Region φ :=
 fun {φ} =>
   Region.mk "entry" []
     [Op.mk "std.return" [] [(SSAVal.SSAVal "x0", MLIRType.int Signedness.Signless 42)] [] (AttrDict.mk [])]
@@ -964,9 +969,9 @@ fun {φ} =>
 
 /-! ## test simple ops (no regions) -/
 
-def opcall1 : Op φ := [mlir_op| "foo" (%x, %y) : (i32, i32) -> (i32) ]
+private def opcall1 : Op φ := [mlir_op| "foo" (%x, %y) : (i32, i32) -> (i32) ]
 /--
-info: def MLIR.EDSL.opcall1 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.opcall1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
   Op.mk "foo" []
     [(SSAVal.SSAVal "x", MLIRType.int Signedness.Signless 32), (SSAVal.SSAVal "y", MLIRType.int Signedness.Signless 32)]
@@ -976,7 +981,7 @@ fun {φ} =>
 
 
 
-def oprgn0 : Op φ := [mlir_op|
+private def oprgn0 : Op φ := [mlir_op|
  "func"() ({ ^entry: %x = "foo.add"() : () -> (i64) } ) : () -> ()
 ]
 /--
@@ -989,7 +994,7 @@ info: Op.mk "func" [] []
 #guard_msgs in #reduce oprgn0
 
 -- | note that this is a "full stack" example!
-def opRgnAttr0 : Op φ := [mlir_op|
+private def opRgnAttr0 : Op φ := [mlir_op|
  "module"() ({
   ^entry:
    "func"() ({
@@ -1001,7 +1006,7 @@ def opRgnAttr0 : Op φ := [mlir_op|
  }) : () -> ()
 ]
 /--
-info: def MLIR.EDSL.opRgnAttr0 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.opRgnAttr0 : {φ : ℕ} → Op φ :=
 fun {φ} =>
   Op.mk "module" [] []
     [Region.mk "entry" []
@@ -1021,7 +1026,7 @@ fun {φ} =>
 -/
 #guard_msgs in #print opRgnAttr0
 
-
+end Test
 
 
 -- | Builtins
@@ -1067,20 +1072,24 @@ macro_rules
      let rgn <- `(Region.fromOps $ops)
      `(Op.mk "module" [] [] [$rgn] AttrDict.empty)
 
-def mod1 : Op φ := [mlir_op| module { }]
+section Test
+
+private def mod1 : Op φ := [mlir_op| module { }]
 /--
-info: def MLIR.EDSL.mod1 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.mod1 : {φ : ℕ} → Op φ :=
 fun {φ} => Op.mk "module" [] [] [Region.fromOps [Op.empty "module_terminator"]] AttrDict.empty
 -/
 #guard_msgs in #print mod1
 
-def mod2 : Op φ := [mlir_op| module { "dummy.dummy"(): () -> () }]
+private def mod2 : Op φ := [mlir_op| module { "dummy.dummy"(): () -> () }]
 /--
-info: def MLIR.EDSL.mod2 : {φ : ℕ} → Op φ :=
+info: private def MLIR.EDSL.mod2 : {φ : ℕ} → Op φ :=
 fun {φ} =>
   Op.mk "module" [] [] [Region.fromOps [Op.mk "dummy.dummy" [] [] [] (AttrDict.mk []), Op.empty "module_terminator"]]
     AttrDict.empty
 -/
 #guard_msgs in #print mod2
+
+end Test
 
 end MLIR.EDSL
