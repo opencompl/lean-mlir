@@ -62,3 +62,13 @@ def pretty_test :=
     %3 = llvm.not %2 : i32
     llvm.return %3 : i32
   }]
+
+def pretty_test_generic (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = llvm.mlir.constant 8 : _
+    %1 = llvm.add %0, %arg0 : _
+    %2 = llvm.mul %1, %arg0 : _
+    %3 = llvm.not %2 : _
+    llvm.return %3 : _
+  }]
