@@ -1387,7 +1387,7 @@ theorem alive_AndOrXor_1704  (w : Nat)   : alive_AndOrXor_1704_src w  ⊑ alive_
 def alive_AndOrXor_1705_src  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant 0 : i1
+  %v1 = llvm.mlir.constant 0 : _
   %v2 = llvm.icmp.eq %B, %v1 : _
   %v3 = llvm.icmp.ugt %B, %A : _
   %v4 = llvm.or %v2, %v3 : i1
@@ -1397,7 +1397,7 @@ def alive_AndOrXor_1705_src  (w : Nat)   :=
 def alive_AndOrXor_1705_tgt  (w : Nat)  :=
 [alive_icom ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1 : i1
+  %v1 = llvm.mlir.constant -1 : _
   %v2 = llvm.add %B, %v1 : _
   %v3 = llvm.mlir.constant 0 : _
   %v4 = llvm.icmp.eq %B, %v3 : _
@@ -1429,9 +1429,9 @@ theorem alive_AndOrXor_1705  (w : Nat)   : alive_AndOrXor_1705_src w  ⊑ alive_
 def alive_AndOrXor_1733_src  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant 0 : i1
+  %v1 = llvm.mlir.constant 0 : _
   %v2 = llvm.icmp.ne %A, %v1 : _
-  %v3 = llvm.mlir.constant 0 : i1
+  %v3 = llvm.mlir.constant 0 : _
   %v4 = llvm.icmp.ne %B, %v3 : _
   %v5 = llvm.or %v2, %v4 : i1
   llvm.return %v5 : i1
@@ -1445,7 +1445,7 @@ def alive_AndOrXor_1733_tgt  (w : Nat)  :=
   %v3 = llvm.icmp.ne %A, %v2 : _
   %v4 = llvm.mlir.constant 0 : _
   %v5 = llvm.icmp.ne %B, %v4 : _
-  %v6 = llvm.mlir.constant 0 : i1
+  %v6 = llvm.mlir.constant 0 : _
   %v7 = llvm.icmp.ne %v1, %v6 : _
   llvm.return %v7 : i1
 }]
