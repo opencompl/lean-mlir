@@ -2,6 +2,8 @@ import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Projects.InstCombine.Tactic
 open Lean
 
+namespace MLIR.EDSL
+
 declare_syntax_cat InstCombine.un_op_name
 declare_syntax_cat InstCombine.bin_op_name
 
@@ -63,13 +65,14 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) )
 
-syntax mlir_op_operand " = " "llvm.mlir.constant" num (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
     let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:num : $t} : () -> ($t) )
+    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
 
 
+section Test
 
 private def pretty_test :=
   [alive_icom ()|{
@@ -101,5 +104,13 @@ private def prettier_test_generic (w : Nat) :=
     llvm.return %3
   }]
 
+private def neg_constant (w : Nat) :=
+  [alive_icom (w)| {
+    %0 = llvm.mlir.constant -1
+    llvm.return %0
+  }]
+
 example : pretty_test         = prettier_test_generic 32 := rfl
 example : pretty_test_generic = prettier_test_generic    := rfl
+
+end Test
