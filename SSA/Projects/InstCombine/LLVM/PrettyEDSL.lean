@@ -37,7 +37,6 @@ syntax "llvm.icmp.ugt"     : InstCombine.bin_op_name
 syntax "llvm.icmp.uge"     : InstCombine.bin_op_name
 
 -- TODO: does `icmp` need its own case?
--- TODO: does `select` need its own case?
 
 /-- Given syntax of category `un_op_name` or `bin_op_name`, extract the name of the operation and
 return it as a string literal syntax -/
@@ -71,6 +70,12 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
 
+syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
+    (" : " mlir_type)? : mlir_op
+macro_rules
+  | `(mlir_op| $res:mlir_op_operand = llvm.select $c, $x, $y $[: $t]?) => do
+    let t ← t.getDM `(mlir_type| _)
+    `(mlir_op| $res:mlir_op_operand = "llvm.select" ($c, $x, $y) : (i1, $t, $t) -> ($t))
 
 section Test
 
@@ -108,6 +113,13 @@ private def neg_constant (w : Nat) :=
   [alive_icom (w)| {
     %0 = llvm.mlir.constant -1
     llvm.return %0
+  }]
+
+private def pretty_select (w : Nat) :=
+  [alive_icom (w)| {
+    ^bb0(%arg0: i1, %arg1 : _):
+      %0 = llvm.select %arg0, %arg1, %arg1
+      llvm.return %0
   }]
 
 example : pretty_test         = prettier_test_generic 32 := rfl
