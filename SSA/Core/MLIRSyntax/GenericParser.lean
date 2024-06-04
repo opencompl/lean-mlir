@@ -520,14 +520,16 @@ syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
 
 declare_syntax_cat balanced_parens  -- syntax "#" ident "." ident "<" balanced_parens ">" : mlir_attr_val -- generic user attributes
 
+/-- `neg_num` is a possibly negated numeric literal -/
+syntax neg_num := "-"? num
 
-syntax str: mlir_attr_val
+syntax str : mlir_attr_val
 syntax mlir_type : mlir_attr_val
 syntax affine_map : mlir_attr_val
 syntax mlir_attr_val_symbol : mlir_attr_val
-syntax "-"? num (":" mlir_type)? : mlir_attr_val
+syntax neg_num (":" mlir_type)? : mlir_attr_val
 syntax scientificLit (":" mlir_type)? : mlir_attr_val
-syntax ident: mlir_attr_val
+syntax ident : mlir_attr_val
 
 syntax "[" sepBy(mlir_attr_val, ",") "]" : mlir_attr_val
 syntax "[mlir_attr_val|" mlir_attr_val "]" : term
@@ -536,11 +538,17 @@ syntax "[mlir_attr_val_symbol|" mlir_attr_val_symbol "]" : term
 macro_rules
 | `([mlir_attr_val| $$($x) ]) => `($x)
 
+/-- Convert a possibly negated numeral into a term representing the same value -/
+def negNumToTerm : TSyntax ``neg_num → MacroM Term
+  | `(neg_num| $x:num) => `($x:num)
+  | `(neg_num| -$x:num) => `(-$x:num)
+  | _ => Macro.throwUnsupported
+
 macro_rules
-| `([mlir_attr_val|  $x:num ]) => `(AttrValue.int $x (MLIRType.int .Signless 64))
-| `([mlir_attr_val| $x:num : $t:mlir_type]) => `(AttrValue.int $x [mlir_type| $t])
-| `([mlir_attr_val| - $x:num ]) => `(AttrValue.int (- $x) (MLIRType.int .Signed 64))
-| `([mlir_attr_val| - $x:num : $t:mlir_type]) => `(AttrValue.int (- $x) [mlir_type| $t])
+| `([mlir_attr_val| $x:neg_num ]) => `([mlir_attr_val| $x:neg_num : i64 ])
+| `([mlir_attr_val| $x:neg_num : $t:mlir_type]) => do
+    let x ← negNumToTerm x
+    `(AttrValue.int $x [mlir_type| $t])
 
 macro_rules
 | `([mlir_attr_val| true ]) => `(AttrValue.bool True)
@@ -626,7 +634,7 @@ private def attrVal5int: AttrVal := [mlir_attr_val| 42 ]
 #guard_msgs in #reduce attrVal5int
 
 private def attrVal5bint: AttrVal := [mlir_attr_val| -42 ]
-/-- info: AttrValue.int (Int.negSucc 41) (MLIRType.int Signedness.Signed (ConcreteOrMVar.concrete 64)) -/
+/-- info: AttrValue.int (Int.negSucc 41) (MLIRType.int Signedness.Signless (ConcreteOrMVar.concrete 64)) -/
 #guard_msgs in #reduce attrVal5bint
 
 private def attrVal6Symbol : AttrVal := [mlir_attr_val| @func_foo ]
