@@ -3149,7 +3149,7 @@ def alive_Select_858_src  (w : Nat)   :=
 ^bb0(%a : i1, %b : i1):
   %v1 = llvm.mlir.constant -1 : i1
   %v2 = llvm.xor %a, %v1 : i1
-  %v3 = llvm.select %a,%v2, %b : i1, i1
+  %v3 = llvm.select %a, %v2, %b : i1
   llvm.return %v3 : i1
 }]
 
@@ -3183,7 +3183,7 @@ def alive_Select_859'_src  (w : Nat)   :=
 ^bb0(%a : i1, %b : i1):
   %v1 = llvm.mlir.constant -1 : i1
   %v2 = llvm.xor %a, %v1 : i1
-  %v3 = llvm.select %a,%b, %v2 : i1, i1
+  %v3 = llvm.select %a, %b, %v2 : i1
   llvm.return %v3 : i1
 }]
 
@@ -3213,7 +3213,7 @@ def alive_Select_1100_src  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _):
   %v1 = llvm.mlir.constant 1 : i1
-  %v2 = llvm.select %v1,%X, %Y : i1, _
+  %v2 = llvm.select %v1, %X, %Y : _
   llvm.return %v2 : _
 }]
 
@@ -3242,7 +3242,7 @@ def alive_Select_1105_src  (w : Nat)   :=
 [alive_icom ( w )| {
 ^bb0(%Y : _, %X : _):
   %v1 = llvm.mlir.constant 0 : i1
-  %v2 = llvm.select %v1,%X, %Y : i1, _
+  %v2 = llvm.select %v1, %X, %Y : _
   llvm.return %v2 : _
 }]
 
