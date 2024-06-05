@@ -1,6 +1,6 @@
 import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.ForLean
-import SSA.Projects.InstCombine.LLVM.EDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
@@ -24,17 +24,17 @@ precondition: true
 def alive_DivRemOfSelect_src (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %c0 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-    %v1 = "llvm.select" (%c,%y, %c0) : (i1, _, _) -> (_)
-    %v2 = "llvm.udiv"(%x, %v1) : (_, _) -> (_)
-    "llvm.return" (%v2) : (_) -> ()
+    %c0 = llvm.mlir.constant 0 : _
+    %v1 = llvm.select %c, %y, %c0 : _
+    %v2 = llvm.udiv %x,  %v1 : _
+    llvm.return %v2 : _
   }]
 
 def alive_DivRemOfSelect_tgt (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %v1 = "llvm.udiv" (%x,%y) : (_, _) -> (_)
-    "llvm.return" (%v1) : (_) -> ()
+    %v1 = llvm.udiv %x, %y : _
+    llvm.return %v1 : _
   }]
 
 theorem alive_DivRemOfSelect (w : Nat) :

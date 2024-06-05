@@ -243,16 +243,16 @@ set_option ssa.alive_icom_reduce true in
 def one_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    llvm.return %0 : _
   }]
 
 set_option ssa.alive_icom_reduce false in
 def one_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    llvm.return %0 : _
   }]
 
 def one_inst_com (w : ℕ) :
@@ -290,18 +290,18 @@ set_option ssa.alive_icom_reduce true in
 def two_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    %1 = llvm.not %arg0 : _
+    llvm.return %0 : _
   }]
 
 set_option ssa.alive_icom_reduce false in
 def two_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    %1 = llvm.not %arg0 : _
+    llvm.return %0 : _
   }]
 
 def two_inst_com (w : ℕ) :
@@ -339,20 +339,20 @@ def two_inst_macro_noreduce_proof (w : Nat) :
 def three_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%0) : (_) -> (_)
-    %2 = "llvm.not" (%1) : (_) -> (_)
-    "llvm.return" (%2) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    %1 = llvm.not %0 : _
+    %2 = llvm.not %1 : _
+    llvm.return %2 : _
   }]
 
 set_option ssa.alive_icom_reduce false in
 def three_inst_macro_noreduce (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%0) : (_) -> (_)
-    %2 = "llvm.not" (%1) : (_) -> (_)
-    "llvm.return" (%2) : (_) -> ()
+    %0 = llvm.not %arg0 : _
+    %1 = llvm.not %0 : _
+    %2 = llvm.not %1 : _
+    llvm.return %2 : _
   }]
 
 def three_inst_com (w : ℕ) :
@@ -393,16 +393,16 @@ set_option ssa.alive_icom_reduce true in
 def one_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
 set_option ssa.alive_icom_reduce false in
 def one_inst_concrete_macro_noreduce :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
 def one_inst_concrete_com :
@@ -440,18 +440,18 @@ set_option ssa.alive_icom_reduce true in
 def two_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
 set_option ssa.alive_icom_reduce false in
 def two_inst_concrete_macro_noreduce :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
 def two_inst_concrete_com (w : ℕ) :
@@ -490,20 +490,20 @@ set_option ssa.alive_icom_reduce true in
 def three_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%0) : (i1) -> (i1)
-    %2 = "llvm.not" (%1) : (i1) -> (i1)
-    "llvm.return" (%2) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %0 : i1
+    %2 = llvm.not %1 : i1
+    llvm.return %2 : i1
   }]
 
 set_option ssa.alive_icom_reduce false in
 def three_inst_concrete_macro_noreduce :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%0) : (i1) -> (i1)
-    %2 = "llvm.not" (%1) : (i1) -> (i1)
-    "llvm.return" (%2) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %0 : i1
+    %2 = llvm.not %1 : i1
+    llvm.return %2 : i1
   }]
 
 def three_inst_concrete_com :
@@ -544,9 +544,9 @@ set_option ssa.alive_icom_reduce false in
 def two_ne_macro_noreduce (w : Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _, %arg1: _):
-    %0 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
-    %1 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
-    "llvm.return" (%1) : (i1) -> ()
+    %0 = llvm.icmp.ne %arg0,  %arg1 : _
+    %1 = llvm.icmp.ne %arg0,  %arg1 : _
+    llvm.return %1 : i1
   }]
 
 def two_ne_stmt (a b : LLVM.IntW w) :
@@ -570,11 +570,11 @@ def constant_macro (w : Nat) :=
     %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
     %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
     %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
-    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
-    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
-    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
-    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
-    "llvm.return" (%8) : (_) -> ()
+    %5 = llvm.add %0,  %1 : _
+    %6 = llvm.add %5,  %2 : _
+    %7 = llvm.add %6,  %3 : _
+    %8 = llvm.add %7,  %4 : _
+    llvm.return %8 : _
   }]
 
 set_option ssa.alive_icom_reduce false in
@@ -586,11 +586,11 @@ def constant_macro_noreduce (w : Nat) :=
     %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
     %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
     %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
-    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
-    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
-    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
-    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
-    "llvm.return" (%8) : (_) -> ()
+    %5 = llvm.add %0,  %1 : _
+    %6 = llvm.add %5,  %2 : _
+    %7 = llvm.add %6,  %3 : _
+    %8 = llvm.add %7,  %4 : _
+    llvm.return %8 : _
   }]
 
 def constant_stmt :

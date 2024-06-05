@@ -6,6 +6,7 @@ namespace MLIR.EDSL
 
 declare_syntax_cat InstCombine.un_op_name
 declare_syntax_cat InstCombine.bin_op_name
+declare_syntax_cat InstCombine.cmp_op_name
 
 syntax "llvm.return"  : InstCombine.un_op_name
 syntax "llvm.copy"    : InstCombine.un_op_name
@@ -25,6 +26,17 @@ syntax "llvm.sub"     : InstCombine.bin_op_name
 syntax "llvm.udiv"    : InstCombine.bin_op_name
 syntax "llvm.urem"    : InstCombine.bin_op_name
 syntax "llvm.xor"     : InstCombine.bin_op_name
+
+syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
+syntax "llvm.icmp.ne"  : InstCombine.cmp_op_name
+syntax "llvm.icmp.slt" : InstCombine.cmp_op_name
+syntax "llvm.icmp.sle" : InstCombine.cmp_op_name
+syntax "llvm.icmp.sgt" : InstCombine.cmp_op_name
+syntax "llvm.icmp.sge" : InstCombine.cmp_op_name
+syntax "llvm.icmp.ult" : InstCombine.cmp_op_name
+syntax "llvm.icmp.ule" : InstCombine.cmp_op_name
+syntax "llvm.icmp.ugt" : InstCombine.cmp_op_name
+syntax "llvm.icmp.uge" : InstCombine.cmp_op_name
 
 -- TODO: does `icmp` need its own case?
 
@@ -48,11 +60,20 @@ macro_rules
 syntax mlir_op_operand " = " InstCombine.bin_op_name mlir_op_operand ", " mlir_op_operand
         (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $resName:mlir_op_operand = $name $x, $y $[: $t]?) => do
+  | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.bin_op_name $x, $y $[: $t]?) => do
     let some opName := extractOpName name.raw
       | Macro.throwUnsupported
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) )
+
+syntax mlir_op_operand " = " InstCombine.cmp_op_name mlir_op_operand ", " mlir_op_operand
+        (" : " mlir_type)? : mlir_op
+macro_rules
+  | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.cmp_op_name $x, $y $[: $t]?) => do
+    let some opName := extractOpName name.raw
+      | Macro.throwUnsupported
+    let t ← t.getDM `(mlir_type| _)
+    `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 macro_rules
