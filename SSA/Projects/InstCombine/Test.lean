@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.Transform
-import SSA.Projects.InstCombine.LLVM.EDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST
