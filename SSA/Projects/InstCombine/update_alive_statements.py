@@ -17,7 +17,6 @@ import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 
 open LLVM
 open BitVec

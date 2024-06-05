@@ -10,7 +10,7 @@ open Nat
 theorem ofInt_negSucc (w n : Nat ) :
     BitVec.ofInt w (Int.negSucc n) = ~~~.ofNat w n := by
   simp [BitVec.ofInt]
-  apply BitVec.toNat_injective
+  rw [BitVec.toNat_eq]
   simp only [Int.toNat, toNat_ofNatLt, toNat_not, toNat_ofNat]
   split
   · simp_all [Int.negSucc_emod]
