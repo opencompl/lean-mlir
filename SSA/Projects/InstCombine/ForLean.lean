@@ -56,21 +56,6 @@ def ushr_or_distrib (a b c : BitVec w) :
   ext
   simp
 
-def xor_assoc (a b c : BitVec w) :
-    a ^^^ b ^^^ c = a ^^^ (b ^^^ c) := by
-  ext i
-  simp [Bool.xor_assoc]
-
-def and_assoc (a b c : BitVec w) :
-    a &&& b &&& c = a &&& (b &&& c) := by
-  ext i
-  simp [Bool.and_assoc]
-
-def or_assoc (a b c : BitVec w) :
-    a ||| b ||| c = a ||| (b ||| c) := by
-  ext i
-  simp [Bool.or_assoc]
-
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
@@ -614,12 +599,13 @@ This exists in std4 as of 3 days ago.
 We should rebase on mathlib4.
 -/
 lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
-  (x >>> y).getLsb' i = x.getLsb (i + y) := by
+  (x >>> y).getLsb i = x.getLsb (i + y) := by
   unfold HShiftRight.hShiftRight
   unfold instHShiftRightNat
   unfold ushiftRight
   simp
-  unfold BitVec.getLsb' BitVec.getLsb Nat.testBit
+  unfold BitVec.getLsb
+  unfold Nat.testBit
   simp
   unfold HShiftRight.hShiftRight
   unfold instHShiftRightOfShiftRight
@@ -627,8 +613,7 @@ lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
   unfold ShiftRight.shiftRight
   unfold Nat.instShiftRight
   simp [Nat.shiftRight_eq_div_pow]
-  rw [Nat.div_div_eq_div_mul]
-  rw [← Nat.pow_add, Nat.add_comm]
+  rw [Nat.add_comm]
 
 @[simp]
 theorem ofBool_neq_1 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
