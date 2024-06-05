@@ -38,8 +38,8 @@ syntax "llvm.icmp.ule" : InstCombine.cmp_op_name
 syntax "llvm.icmp.ugt" : InstCombine.cmp_op_name
 syntax "llvm.icmp.uge" : InstCombine.cmp_op_name
 
-/-- Given syntax of category `un_op_name` or `bin_op_name`, extract the name of the operation and
-return it as a string literal syntax -/
+/-- /-- Given syntax of category `un_op_name`, `bin_op_name`, or `cmp_op_name`,
+extract the name of the operation and return it as a string literal syntax. -/
 def extractOpName : Syntax → Option (TSyntax `str)
   | .node _ _ ⟨.atom _ name :: _⟩ => some <| Syntax.mkStrLit name
   | _ => none
