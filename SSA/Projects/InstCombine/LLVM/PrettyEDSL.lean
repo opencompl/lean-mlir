@@ -38,8 +38,6 @@ syntax "llvm.icmp.ule" : InstCombine.cmp_op_name
 syntax "llvm.icmp.ugt" : InstCombine.cmp_op_name
 syntax "llvm.icmp.uge" : InstCombine.cmp_op_name
 
--- TODO: does `icmp` need its own case?
-
 /-- Given syntax of category `un_op_name` or `bin_op_name`, extract the name of the operation and
 return it as a string literal syntax -/
 def extractOpName : Syntax → Option (TSyntax `str)
