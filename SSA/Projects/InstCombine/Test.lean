@@ -16,21 +16,21 @@ def add_mask : Op 0 := [mlir_op|
   "module"() ( {
   "llvm.func"() ( {
   ^bb0(%arg0: i32):
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
-    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
-    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
-    %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
-    "llvm.return"(%4) : (i32) -> ()
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.mlir.constant 31 : i32
+    %2 = llvm.ashr %arg0, %1 : i32
+    %3 = llvm.and %2, %0 : i32
+    %4 = llvm.add %3, %2 : i32
+    llvm.return %4 : i32
   })  : () -> ()
   "llvm.func"() ( {
   ^bb0(%arg0: i32):
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
-    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
-    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
-    %4 = "llvm.add"(%2, %3) : (i32, i32) -> i32
-    "llvm.return"(%4) : (i32) -> ()
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.mlir.constant 31 : i32
+    %2 = llvm.ashr %arg0, %1 : i32
+    %3 = llvm.and %2, %0 : i32
+    %4 = llvm.add %2, %3 : i32
+    llvm.return %4 : i32
   }) : () -> ()
 }) : () -> ()
 ]
@@ -38,12 +38,12 @@ def add_mask : Op 0 := [mlir_op|
 def bb0 : Region 0 := [mlir_region|
 {
   ^bb0(%arg0: i32):
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
-    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
-    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
-    %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
-    "llvm.return"(%4) : (i32) -> ()
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.mlir.constant 31 : i32
+    %2 = llvm.ashr %arg0, %1 : i32
+    %3 = llvm.and %2, %0 : i32
+    %4 = llvm.add %3, %2 : i32
+    llvm.return %4 : i32
   }]
 
 
@@ -76,12 +76,12 @@ open InstcombineTransformDialect
 def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   Ctxt.ofList <| .replicate n (.bitvec 32)
 
-def op0 : Op 0 := [mlir_op| %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32]
-def op1 : Op 0 := [mlir_op| %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32]
-def op2 : Op 0 := [mlir_op| %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32]
-def op3 : Op 0 := [mlir_op| %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32]
-def op4 : Op 0 := [mlir_op| %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32]
-def opRet : Op 0 := [mlir_op| "llvm.return"(%4) : (i32) -> ()]
+def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant 8 : i32
+def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant 31 : i32
+def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32
+def op3 : Op 0 := [mlir_op| %3 = llvm.and %2,  %0 : i32
+def op4 : Op 0 := [mlir_op| %4 = llvm.add %3,  %2 : i32
+def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 
 /-
   TODO: these tests were broken.
@@ -126,12 +126,12 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, return %0⟩⟩
 #guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
 def ops : List (Op 0) := [mlir_ops|
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
-    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
-    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
-    %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
-    "llvm.return"(%4) : (i32) -> ()
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.mlir.constant 31 : i32
+    %2 = llvm.ashr %arg0, %1 : i32
+    %3 = llvm.and %2, %0 : i32
+    %4 = llvm.add %3, %2 : i32
+    llvm.return %4 : i32
 ]
 def ops' := [op0, op1, op2, op3, op4]
 
@@ -198,31 +198,31 @@ theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 def bb0IcomConcrete := [alive_icom ()|
 {
   ^bb0(%arg0: i32):
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 31 : i32} : () -> i32
-    %2 = "llvm.ashr"(%arg0, %1) : (i32, i32) -> i32
-    %3 = "llvm.and"(%2, %0) : (i32, i32) -> i32
-    %4 = "llvm.add"(%3, %2) : (i32, i32) -> i32
-    "llvm.return"(%4) : (i32) -> ()
+    %0 = llvm.mlir.constant 1 : i32
+    %1 = llvm.mlir.constant 31 : i32
+    %2 = llvm.ashr %arg0, %1 : i32
+    %3 = llvm.and %2, %0 : i32
+    %4 = llvm.add %3, %2 : i32
+    llvm.return %4 : i32
   }]
 
 /-- A simple example of a family of programs, generic over some bitwidth `w` -/
 def GenericWidth (w : Nat) := [alive_icom (w)|
 {
   ^bb0():
-    %0 = "llvm.mlir.constant"() {value = 0 : _} : () -> _
-    "llvm.return"(%0) : (_) -> ()
+    %0 = llvm.mlir.constant 0
+    llvm.return %0
   }]
 
 def bb0IcomGeneric (w : Nat) := [alive_icom (w)|
 {
   ^bb0(%arg0: _):
-    %0 = "llvm.mlir.constant"() {value = 1 : _} : () -> _
-    %1 = "llvm.mlir.constant"() {value = 31 : _} : () -> _
-    %2 = "llvm.ashr"(%arg0, %1) : (_, _) -> _
-    %3 = "llvm.and"(%2, %0) : (_, _) -> _
-    %4 = "llvm.add"(%3, %2) : (_, _) -> _
-    "llvm.return"(%4) : (_) -> ()
+    %0 = llvm.mlir.constant 1
+    %1 = llvm.mlir.constant 31
+    %2 = llvm.ashr %arg0, %1
+    %3 = llvm.and %2, %0
+    %4 = llvm.add %3, %2
+    llvm.return %4
   }]
 
 /-- Indeed, the concrete program is an instantiation of the generic program -/
@@ -565,15 +565,15 @@ set_option ssa.alive_icom_reduce true in
 def constant_macro (w : Nat) :=
   [alive_icom (w)|{
   ^bb0():
-    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
-    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
-    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
-    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
-    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
-    %5 = llvm.add %0,  %1
-    %6 = llvm.add %5,  %2
-    %7 = llvm.add %6,  %3
-    %8 = llvm.add %7,  %4
+    %0 = llvm.mlir.constant 2
+    %1 = llvm.mlir.constant 1
+    %2 = llvm.mlir.constant 0
+    %3 = llvm.mlir.constant -1
+    %4 = llvm.mlir.constant -2
+    %5 = llvm.add %0, %1
+    %6 = llvm.add %5, %2
+    %7 = llvm.add %6, %3
+    %8 = llvm.add %7, %4
     llvm.return %8
   }]
 
@@ -581,15 +581,15 @@ set_option ssa.alive_icom_reduce false in
 def constant_macro_noreduce (w : Nat) :=
   [alive_icom (w)|{
   ^bb0():
-    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
-    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
-    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
-    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
-    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
-    %5 = llvm.add %0,  %1
-    %6 = llvm.add %5,  %2
-    %7 = llvm.add %6,  %3
-    %8 = llvm.add %7,  %4
+    %0 = llvm.mlir.constant 2
+    %1 = llvm.mlir.constant 1
+    %2 = llvm.mlir.constant 0
+    %3 = llvm.mlir.constant -1
+    %4 = llvm.mlir.constant -2
+    %5 = llvm.add %0, %1
+    %6 = llvm.add %5, %2
+    %7 = llvm.add %6, %3
+    %8 = llvm.add %7, %4
     llvm.return %8
   }]
 
