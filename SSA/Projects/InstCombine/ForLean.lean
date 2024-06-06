@@ -604,8 +604,7 @@ lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
   unfold instHShiftRightNat
   unfold ushiftRight
   simp
-  unfold BitVec.getLsb
-  unfold Nat.testBit
+  unfold BitVec.getLsb Nat.testBit
   simp
   unfold HShiftRight.hShiftRight
   unfold instHShiftRightOfShiftRight

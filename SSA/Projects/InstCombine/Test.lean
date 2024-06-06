@@ -245,10 +245,21 @@ open ComWrappers
 def one_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0
+    llvm.return %0
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def one_inst_macro_noreduce (w: Nat) :=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = llvm.not %arg0
+    llvm.return %0
+  }]
+
+>>>>>>> bump_4.8.0
 def one_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   Com.lete (not w 0) <|
@@ -276,11 +287,23 @@ def one_inst_macro_proof (w : Nat) :
 def two_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%arg0) : (_) -> (_)
-    "llvm.return" (%0) : (_) -> ()
+    %0 = llvm.not %arg0
+    %1 = llvm.not %arg0
+    llvm.return %0
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def two_inst_macro_noreduce (w: Nat) :=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = llvm.not %arg0
+    %1 = llvm.not %arg0
+    llvm.return %0
+  }]
+
+>>>>>>> bump_4.8.0
 def two_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   Com.lete (not w 0) <|
@@ -309,12 +332,25 @@ def two_inst_macro_proof (w : Nat) :
 def three_inst_macro (w: Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _):
-    %0 = "llvm.not" (%arg0) : (_) -> (_)
-    %1 = "llvm.not" (%0) : (_) -> (_)
-    %2 = "llvm.not" (%1) : (_) -> (_)
-    "llvm.return" (%2) : (_) -> ()
+    %0 = llvm.not %arg0
+    %1 = llvm.not %0
+    %2 = llvm.not %1
+    llvm.return %2
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def three_inst_macro_noreduce (w: Nat) :=
+  [alive_icom (w)|{
+  ^bb0(%arg0: _):
+    %0 = llvm.not %arg0
+    %1 = llvm.not %0
+    %2 = llvm.not %1
+    llvm.return %2
+  }]
+
+>>>>>>> bump_4.8.0
 def three_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   Com.lete (not w 0) <|
@@ -345,10 +381,21 @@ def three_inst_macro_proof (w : Nat) :
 def one_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def one_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
+  }]
+
+>>>>>>> bump_4.8.0
 def one_inst_concrete_com :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
   Com.lete (not 1 0) <|
@@ -376,11 +423,23 @@ def one_inst_concrete_macro_proof :
 def two_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%arg0) : (i1) -> (i1)
-    "llvm.return" (%0) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def two_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %arg0 : i1
+    llvm.return %0 : i1
+  }]
+
+>>>>>>> bump_4.8.0
 def two_inst_concrete_com (w : ℕ) :
   Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   Com.lete (not w 0) <|
@@ -409,12 +468,25 @@ def two_inst_concrete_macro_proof :
 def three_inst_concrete_macro :=
   [alive_icom ()|{
   ^bb0(%arg0: i1):
-    %0 = "llvm.not" (%arg0) : (i1) -> (i1)
-    %1 = "llvm.not" (%0) : (i1) -> (i1)
-    %2 = "llvm.not" (%1) : (i1) -> (i1)
-    "llvm.return" (%2) : (i1) -> ()
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %0 : i1
+    %2 = llvm.not %1 : i1
+    llvm.return %2 : i1
   }]
 
+<<<<<<< HEAD
+=======
+set_option ssa.alive_icom_reduce false in
+def three_inst_concrete_macro_noreduce :=
+  [alive_icom ()|{
+  ^bb0(%arg0: i1):
+    %0 = llvm.not %arg0 : i1
+    %1 = llvm.not %0 : i1
+    %2 = llvm.not %1 : i1
+    llvm.return %2 : i1
+  }]
+
+>>>>>>> bump_4.8.0
 def three_inst_concrete_com :
   Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
   Com.lete (not 1 0) <|
@@ -445,9 +517,9 @@ def three_inst_concrete_macro_proof :
 def two_ne_macro (w : Nat) :=
   [alive_icom (w)|{
   ^bb0(%arg0: _, %arg1: _):
-    %0 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
-    %1 = "llvm.icmp.ne" (%arg0, %arg1) : (_, _) -> (i1)
-    "llvm.return" (%1) : (i1) -> ()
+    %0 = llvm.icmp.ne %arg0,  %arg1
+    %1 = llvm.icmp.ne %arg0,  %arg1
+    llvm.return %1 : i1
   }]
 
 def two_ne_stmt (a b : LLVM.IntW w) :
@@ -470,11 +542,27 @@ def constant_macro (w : Nat) :=
     %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
     %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
     %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
-    %5 = "llvm.add" (%0, %1) : (_, _) -> (_)
-    %6 = "llvm.add" (%5, %2) : (_, _) -> (_)
-    %7 = "llvm.add" (%6, %3) : (_, _) -> (_)
-    %8 = "llvm.add" (%7, %4) : (_, _) -> (_)
-    "llvm.return" (%8) : (_) -> ()
+    %5 = llvm.add %0,  %1
+    %6 = llvm.add %5,  %2
+    %7 = llvm.add %6,  %3
+    %8 = llvm.add %7,  %4
+    llvm.return %8
+  }]
+
+set_option ssa.alive_icom_reduce false in
+def constant_macro_noreduce (w : Nat) :=
+  [alive_icom (w)|{
+  ^bb0():
+    %0 = "llvm.mlir.constant" () { value = 2 : _ } : () -> (_)
+    %1 = "llvm.mlir.constant" () { value = 1 : _ } : () -> (_)
+    %2 = "llvm.mlir.constant" () { value = 0 : _ } : () -> (_)
+    %3 = "llvm.mlir.constant" () { value = -1 : _ } : () -> (_)
+    %4 = "llvm.mlir.constant" () { value = -2 : _ } : () -> (_)
+    %5 = llvm.add %0,  %1
+    %6 = llvm.add %5,  %2
+    %7 = llvm.add %6,  %3
+    %8 = llvm.add %7,  %4
+    llvm.return %8
   }]
 
 def constant_stmt :
