@@ -77,7 +77,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
     cases hDeg : Polynomial.degree (R.representative q n a)
     · apply WithBot.bot_lt_coe
     . simp[hDeg] at h
-      apply WithBot.some_lt_some.2
+      apply WithBot.coe_lt_coe.2
       linarith
     . rw[← hLength] at h
       linarith
