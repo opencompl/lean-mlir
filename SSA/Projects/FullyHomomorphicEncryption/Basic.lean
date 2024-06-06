@@ -588,15 +588,14 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (htensorle
     generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
     rw [f_deg_eq]
     cases tensor_degree
-    case none => norm_cast; apply WithBot.none_lt_some
-    case some tensor_degree =>
+    case bot => norm_cast; apply WithBot.none_lt_some
+    case coe tensor_degree =>
       /- I hate this coercion stuff -/
       norm_cast
       apply WithBot.coe_strictMono
       norm_cast
       have htrans : tensor_degree  ≤ List.length tensor := by
         rw [htensor_degree] at hfromTensorFinsuppDegree
-        rw [WithBot.some_eq_coe] at hfromTensorFinsuppDegree
         rw [← WithBot.coe_le_coe]
         assumption
       apply Nat.lt_of_le_of_lt htrans htensorlen

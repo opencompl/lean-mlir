@@ -208,8 +208,8 @@ theorem toTensor_trimTensor_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor = a.toTensor := by
   unfold R.toTensor
   cases h : Polynomial.degree a.representative with
-  | none => simp [trimTensor, h, R.repLength]
-  | some n  =>
+  | bot => simp [trimTensor, h, R.repLength]
+  | coe n  =>
     simp [R.repLength, h]
     rw [List.range_succ, List.map_append]
     simp
@@ -251,13 +251,13 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
 /- TODO: this should be a theorem that we prove, that the length of anything that comes from `R.toTensor` will be < 2^n -/
 theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor = a := by
   cases h : Polynomial.degree (R.representative q n a) with
-    | none =>
+    | bot =>
         have h' :=  Polynomial.degree_eq_bot.1 h
         rw [← rep_zero] at h'
         have h'' := (eq_iff_rep_eq _ _).1 h'
         simp [R.fromTensor, R.toTensor, R.repLength]; rw [h, h'']
         simp
-    | some deg =>
+    | coe deg =>
         apply (eq_iff_coeff_eq _ _).2
         have hCoeff := R.toTensor_getD' (q := q) (n := n)
         unfold R.coeff at hCoeff
