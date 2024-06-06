@@ -270,7 +270,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     have a_ne_one : a ≠ 1 := by
       intro a_one
       subst a_one
-      simp only [←BitVec.toNat_inj] at c
       simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod, toNat_ofInt, Nat.cast_pow,
         Nat.cast_ofNat, toNat_neg] at c
       norm_cast at c
