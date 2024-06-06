@@ -810,6 +810,17 @@ theorem ofInt_negOne_eq_allOnes : BitVec.ofInt w (-1) = BitVec.allOnes w := by
   rw [BitVec.ofInt_negSucc, ←BitVec.allOnes_sub_eq_not]
   simp
 
+theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
+  apply eq_of_getLsb_eq
+  simp
+
+theorem xor_comm (e e_1: BitVec w) : e ^^^ e_1 = e_1 ^^^ e := by
+  apply eq_of_getLsb_eq
+  intros i
+  simp [getLsb_xor, Bool.xor_comm]
+
+theorem allOnes_sub_eq_xor (x :BitVec w) : (allOnes w) - x = x ^^^ (allOnes w) := by
+  rw [allOnes_sub_eq_not, ← allOnes_xor_eq_not, BitVec.xor_comm]
 end BitVec
 
 -- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it suffices to consider two cases.
