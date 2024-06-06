@@ -69,7 +69,7 @@ macro "simp_alive_ops" : tactic =>
       )
   )
 
-macro "alive_auto": tactic =>
+macro "simp_alive_bitvec": tactic =>
   `(tactic|
       (
         intros
@@ -81,5 +81,15 @@ macro "alive_auto": tactic =>
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;)
         try solve | (simp [bv_ofBool])
+      )
+   )
+
+macro "alive_auto": tactic =>
+  `(tactic|
+      (
+        simp_alive_undef
+        simp_alive_ops
+        simp_alive_case_bash
+        simp_alive_bitvec
       )
    )
