@@ -55,7 +55,7 @@ macro_rules
       | none => #[]
     `([mlir_op| $[$resName =]? $opName ($x) : ($t) -> ($retTy:mlir_type,*) ])
 
-syntax mlir_op_operand " = " (InstCombine.bin_op_name <|> InstCombine.cmp_op_name) mlir_op_operand ", " mlir_op_operand
+syntax mlir_op_operand " = " InstCombine.bin_op_name mlir_op_operand ", " mlir_op_operand
         (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.bin_op_name $x, $y $[: $t]?) => do
@@ -64,6 +64,8 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) )
 
+syntax mlir_op_operand " = " InstCombine.cmp_op_name mlir_op_operand ", " mlir_op_operand
+        (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.cmp_op_name $x, $y $[: $t]?) => do
     let some opName := extractOpName name.raw
