@@ -112,24 +112,13 @@ theorem bitvec_AddSub_1556 :
   try alive_auto
   all_goals sorry
 
-theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
-  apply eq_of_getLsb_eq
-  simp
-
-theorem BitVec.xor_comm : ∀ (e e_1: BitVec w), e ^^^ e_1 = e_1 ^^^ e := by
-  intros a b
-  apply eq_of_getLsb_eq
-  intros i
-  simp [getLsb_xor, Bool.xor_comm]
-
 theorem bitvec_AddSub_1560 :
     ∀ (e : LLVM.IntW w), LLVM.sub (LLVM.const? (-1)) e ⊑ LLVM.xor e (LLVM.const? (-1)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  simp
-  intro a
-  rw [negOne_eq_allOnes, allOnes_sub_eq_not, ← allOnes_xor_eq_not, BitVec.xor_comm]
+  try alive_auto
+  all_goals sorry
 
 theorem bitvec_AddSub_1564 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 (LLVM.xor e (LLVM.const? (-1))) ⊑ LLVM.add e (LLVM.add e_1 (LLVM.const? 1)) := by
