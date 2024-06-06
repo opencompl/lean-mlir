@@ -1,7 +1,6 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
 import SSA.Core.HVector
 
