@@ -26,16 +26,6 @@ syntax "llvm.sub"     : InstCombine.bin_op_name
 syntax "llvm.udiv"    : InstCombine.bin_op_name
 syntax "llvm.urem"    : InstCombine.bin_op_name
 syntax "llvm.xor"     : InstCombine.bin_op_name
-syntax "llvm.icmp.eq"     : InstCombine.bin_op_name
-syntax "llvm.icmp.ne"     : InstCombine.bin_op_name
-syntax "llvm.icmp.slt"     : InstCombine.bin_op_name
-syntax "llvm.icmp.sle"     : InstCombine.bin_op_name
-syntax "llvm.icmp.sgt"     : InstCombine.bin_op_name
-syntax "llvm.icmp.sge"     : InstCombine.bin_op_name
-syntax "llvm.icmp.ult"     : InstCombine.bin_op_name
-syntax "llvm.icmp.ule"     : InstCombine.bin_op_name
-syntax "llvm.icmp.ugt"     : InstCombine.bin_op_name
-syntax "llvm.icmp.uge"     : InstCombine.bin_op_name
 
 syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
 syntax "llvm.icmp.ne"  : InstCombine.cmp_op_name
