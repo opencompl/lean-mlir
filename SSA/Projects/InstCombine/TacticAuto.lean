@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Tactic.Ring
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.EDSL
@@ -62,7 +61,10 @@ macro "simp_alive_ops" : tactic =>
   `(tactic|
       (
         simp (config := {failIfUnchanged := false}) only [
-            simp_llvm, BitVec.bitvec_minus_one, pure_bind
+            simp_llvm, BitVec.bitvec_minus_one,
+            BitVec.bitvec_minus_one',
+            (BitVec.ofInt_ofNat),
+            pure_bind
           ]
       )
   )
@@ -71,7 +73,7 @@ macro "alive_auto": tactic =>
   `(tactic|
       (
         intros
-        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_eq_ofNat)]
+        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_negOne_eq_allOnes)]
         try ring_nf
         try solve | (ext; simp [BitVec.negOne_eq_allOnes];
                      try cases BitVec.getLsb _ _ <;> try simp;
