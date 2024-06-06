@@ -617,12 +617,12 @@ This exists in std4 as of 3 days ago.
 We should rebase on mathlib4.
 -/
 lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
-  (x >>> y).getLsb' i = x.getLsb (i + y) := by
+  (x >>> y).getLsb i = x.getLsb (i + y) := by
   unfold HShiftRight.hShiftRight
   unfold instHShiftRightNat
   unfold ushiftRight
   simp
-  unfold BitVec.getLsb' BitVec.getLsb Nat.testBit
+  unfold BitVec.getLsb Nat.testBit
   simp
   unfold HShiftRight.hShiftRight
   unfold instHShiftRightOfShiftRight
@@ -630,8 +630,7 @@ lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
   unfold ShiftRight.shiftRight
   unfold Nat.instShiftRight
   simp [Nat.shiftRight_eq_div_pow]
-  rw [Nat.div_div_eq_div_mul]
-  rw [← Nat.pow_add, Nat.add_comm]
+  rw [Nat.add_comm]
 
 @[simp]
 theorem ofBool_neq_1 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by

@@ -9,7 +9,6 @@ import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 
 open MLIR AST
 

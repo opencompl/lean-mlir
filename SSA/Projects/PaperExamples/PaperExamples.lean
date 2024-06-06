@@ -10,9 +10,7 @@ import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
--- import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false
 set_option pp.proofs.withType false
@@ -169,8 +167,7 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
-      rw [BitVec.ofInt_zero]
-      ring_nf
+      simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero]
       /- goals accomplished 🎉 -/
       done
     }
