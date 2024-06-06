@@ -76,11 +76,11 @@ open InstcombineTransformDialect
 def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   Ctxt.ofList <| .replicate n (.bitvec 32)
 
-def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant 8 : i32
-def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant 31 : i32
-def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32
-def op3 : Op 0 := [mlir_op| %3 = llvm.and %2,  %0 : i32
-def op4 : Op 0 := [mlir_op| %4 = llvm.add %3,  %2 : i32
+def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant 8 : i32]
+def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant 31 : i32]
+def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32]
+def op3 : Op 0 := [mlir_op| %3 = llvm.and %2, %0 : i32]
+def op4 : Op 0 := [mlir_op| %4 = llvm.add %3, %2 : i32]
 def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 
 /-
