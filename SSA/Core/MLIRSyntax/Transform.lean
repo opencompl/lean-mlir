@@ -161,12 +161,12 @@ private def mkComHelper
     List (MLIR.AST.Op φ) → BuilderM d (Σ eff ty, Com d Γ eff ty)
   | [retStx] => do
       instTransformReturn.mkReturn Γ retStx
-  | lete::rest => do
-    let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ lete)
-    if h : lete.res.length != 1 then
-      throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr lete}`"
+  | var::rest => do
+    let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ var)
+    if h : var.res.length != 1 then
+      throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr var}`"
     else
-      let _ ← addValToMapping Γ (lete.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
+      let _ ← addValToMapping Γ (var.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
       let ⟨eff₂, ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"

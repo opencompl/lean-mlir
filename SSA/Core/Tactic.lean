@@ -73,7 +73,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
         /- `castPureToEff` -/
         Com.letPure, Expr.denote_castPureToEff,
         /- Unfold denotation -/
-        Com.denote_lete, Com.denote_ret, Expr.denote_unfold, HVector.denote,
+        Com.denote_var, Com.denote_ret, Expr.denote_unfold, HVector.denote,
         /- Effect massaging -/
         EffectKind.toMonad_pure, EffectKind.toMonad_impure,
         EffectKind.liftEffect_rfl,
