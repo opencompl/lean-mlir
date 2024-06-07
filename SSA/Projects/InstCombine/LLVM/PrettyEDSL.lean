@@ -89,7 +89,7 @@ macro_rules
 section Test
 
 private def pretty_test :=
-  [alive_icom ()|{
+  [llvm ()|{
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant 8 : i32
     %1 = llvm.add %0, %arg0 : i32
@@ -99,7 +99,7 @@ private def pretty_test :=
   }]
 
 private def pretty_test_generic (w : Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant 8 : _
     %1 = llvm.add %0, %arg0 : _
@@ -109,7 +109,7 @@ private def pretty_test_generic (w : Nat) :=
   }]
 
 private def prettier_test_generic (w : Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant 8
     %1 = llvm.add %0, %arg0
@@ -119,13 +119,13 @@ private def prettier_test_generic (w : Nat) :=
   }]
 
 private def neg_constant (w : Nat) :=
-  [alive_icom (w)| {
+  [llvm (w)| {
     %0 = llvm.mlir.constant -1
     llvm.return %0
   }]
 
 private def pretty_select (w : Nat) :=
-  [alive_icom (w)| {
+  [llvm (w)| {
     ^bb0(%arg0: i1, %arg1 : _):
       %0 = llvm.select %arg0, %arg1, %arg1
       llvm.return %0

@@ -222,18 +222,18 @@ https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/Cannot.20F
 Therefore, we choose to match on raw `Expr`.
 -/
 open SSA InstcombineTransformDialect InstCombine in
-elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
+elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   have φ : Nat := mvars.getElems.size
   -- HACK: QQ needs `φ` to be `have`-bound, rather than `let`-bound, otherwise `elabIntoCom` fails
-  let mcom ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} elabIntoCom") <|
+  let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
     SSA.elabIntoCom reg q(MetaLLVM $φ)
 
   let mvalues : Q(Vector Nat $φ) ←
-    withTraceNode `alive_icom (return m!"{exceptEmoji ·} elaborating mvalues") <| do
+    withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
       let mvalues ← `(⟨[$mvars,*], by rfl⟩)
       elabTermEnsuringType mvalues q(Vector Nat $φ)
 
-  let com ← withTraceNode `alive_icom (return m!"{exceptEmoji ·} building final Expr") <| do
+  let com ← withTraceNode `llvm (return m!"{exceptEmoji ·} building final Expr") <| do
     let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]
     let com ← mkAppM ``Com.changeDialect #[instantiateFun, mcom]
     synthesizeSyntheticMVarsNoPostponing
@@ -241,9 +241,9 @@ elab "[alive_icom (" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
   return com
 
-macro "[alive_icom| " reg:mlir_region "]" : term => `([alive_icom ()| $reg])
+macro "[llvm| " reg:mlir_region "]" : term => `([llvm ()| $reg])
 
 macro "deftest" name:ident " := " test_reg:mlir_region : command => do
   `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
-       let code := [alive_icom ()| $test_reg]
+       let code := [llvm ()| $test_reg]
        { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
