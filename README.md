@@ -1,4 +1,3 @@
-
 ![Core library build status](https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg)
 
 # SSA
