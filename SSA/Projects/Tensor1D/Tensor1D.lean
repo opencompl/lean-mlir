@@ -73,15 +73,15 @@ def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α 
 -- when we are out of bounds, because the side that is (map extract) will have
 -- (f default), while (extract map) will be (default)
 -- theorem 1: extract (map) = map extract
-theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Index) :
-  (t.extract left len).map f = (t.map f).extract left len := by {
-    simp[Tensor1d.extract, Tensor1d.map]
-    funext ix;
-    by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
-    by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
-    have IX_INBOUNDS : ix + left < t.size := by simp[Index] at *; linarith
-    simp[IX_INBOUNDS]
-}
+-- theorem Tensor1d.extract_map [Inhabited α] (t: Tensor1d α) (left len: Index) :
+--   (t.extract left len).map f = (t.map f).extract left len := by {
+--     simp[Tensor1d.extract, Tensor1d.map]
+--     funext ix;
+--     by_cases VALID_EXTRACT : left + len < t.size <;> simp[VALID_EXTRACT]
+--     by_cases VALID_INDEX : ix < len <;> simp[VALID_INDEX]
+--     have IX_INBOUNDS : ix + left < t.size := by simp[Index] at *; linarith
+--     simp[IX_INBOUNDS]
+-- }
 
 def Tensor1d.fill [Inhabited α] (t: Tensor1d α) (v: α) : Tensor1d α where
   size := t.size
