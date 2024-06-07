@@ -69,7 +69,7 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
       let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) := @instParseableTuple Nat (natParams (n + 1)) inst1 instn
       let hn1gt0 : (n + 1) > 0 := by
         rename_i n_1 -- aesop?
-        simp_all only [gt_iff_lt, add_pos_iff, zero_lt_one, or_true]
+        simp_all only [gt_iff_lt, Nat.zero_lt_succ]
       let hn1eq := natParamsTup (n + 1) hn1gt0
       hn1eq ▸ instTup.parse? str
 
@@ -139,7 +139,7 @@ Option <| MContext 0 :=
         let ctxt' := (ctxt.map f)
         let v' : Ctxt.Var ctxt' ty' := v.toMap
         Sigma.mk (ctxt', ty') (Com.ret v')
-     | .lete (α := t) e b =>
+     | .var (α := t) e b =>
         let Sigma.mk (ctxt', ty') e' := Expr.cast_concrete mvars ctxt t e hMvars
         let Sigma.mk (ctxt'', ty'') b' := Com.cast_concrete mvars (t::ctxt) ty b hMvars
         by
@@ -147,7 +147,7 @@ Option <| MContext 0 :=
          simp at b'
          have hTy' : ty'' = ty' := by sorry
          have hCtxt' : ty' :: (ctxt', ty'').1 = ctxt'' := by sorry
-         --exact Sigma.mk (ctxt', ty') <| .lete e' (hTy' ▸ hCtxt' ▸ b')
+         --exact Sigma.mk (ctxt', ty') <| .var e' (hTy' ▸ hCtxt' ▸ b')
          sorry
 
  def Expr.cast_concrete (mvars : Nat) (ctxt : MContext mvars) (ty : MTy mvars)
@@ -200,7 +200,7 @@ match ctxt, values with
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
-         let newTy : toType (.bitvec (.concrete w)) := Option.map (BitVec.ofInt w) val
+         let newTy : toType (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)) := Option.map (BitVec.ofInt w) val
          Ctxt.Valuation.snoc valuation' newTy
 
 def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Vector (Option Int) test.context.length) :

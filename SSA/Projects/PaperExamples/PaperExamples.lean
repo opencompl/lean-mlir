@@ -10,9 +10,7 @@ import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 import Mathlib.Tactic.Ring
--- import Mathlib.Data.StdBitVec.Lemmas
 
 set_option pp.proofs false
 set_option pp.proofs.withType false
@@ -160,8 +158,8 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       rw [lhs, rhs]
       /-:
       Com.denote
-        (Com.lete (cst 0)
-        (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
+        (Com.var (cst 0)
+        (Com.var (add { val := 1, property := _ } { val := 0, property := _ })
         (Com.ret { val := 0, property := ex1.proof_3 }))) =
       Com.denote (Com.ret { val := 0, property := _ })
       -/
@@ -169,8 +167,7 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       simp_peephole [add, cst] at Γv
       /- ⊢ ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
       intros a
-      rw [BitVec.ofInt_zero]
-      ring_nf
+      simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero]
       /- goals accomplished 🎉 -/
       done
     }
@@ -179,9 +176,9 @@ def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewri
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
-  Com.lete (cst 0) <|
+  Com.var (cst 0) <|
   -- %out_dead = %x + %c0
-  Com.lete (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
@@ -190,9 +187,9 @@ def ex1_rewritePeephole : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewrite
 
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
-  Com.lete (cst 0) <|
+  Com.var (cst 0) <|
   -- %out_dead = %x + %c0
-  Com.lete (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
@@ -271,7 +268,7 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com SimpleReg [int] .pure int :=
-  Com.lete (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
+  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
       Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
@@ -293,9 +290,9 @@ def p1 : PeepholeRewrite SimpleReg [int] int:=
       simp only [show Ty = SimpleReg.Ty from rfl, show Op = SimpleReg.Op from rfl]
       /-
       Com.denote
-        (Com.lete
+        (Com.var
           (iterate 0 { val := 0, property := lhs.proof_1 }
-            (Com.lete (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
+            (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
               (Com.ret { val := 0, property := lhs.proof_2 })))
           (Com.ret { val := 0, property := lhs.proof_2 }))
         Γv =
@@ -331,9 +328,9 @@ def ex1' : Com Simple  (Ctxt.ofList [.int]) .int := rewritePeepholeAt p1 1 lhs
 
 theorem EX1' : ex1' = (
   -- %c0 = 0
-  Com.lete (cst 0) <|
+  Com.var (cst 0) <|
   -- %out_dead = %x + %c0
-  Com.lete (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
+  Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl

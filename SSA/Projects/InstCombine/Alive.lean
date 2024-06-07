@@ -25,3 +25,6 @@ import SSA.Projects.InstCombine.ForLean
 
 -- Theorems about our LLVM-level semantics.
 import SSA.Projects.InstCombine.LLVM.Lemmas
+
+-- Test cases
+import SSA.Projects.InstCombine.Test

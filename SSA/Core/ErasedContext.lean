@@ -1,7 +1,6 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Erased
 import Mathlib.Data.Finset.Basic
 import SSA.Core.HVector
 
@@ -11,7 +10,6 @@ import SSA.Core.HVector
   Intuitively, each `b : β` represents a Lean `Type`, but using `β` instead of `Type` directly
   avoids a universe bump
 -/
-@[reducible]
 class TyDenote (β : Type) : Type 1 where
   toType : β → Type
 open TyDenote (toType) /- make toType publically visible in module. -/
@@ -34,7 +32,7 @@ def empty : Ctxt Ty := []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
-@[simp] lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
+lemma empty_eq : (∅ : Ctxt Ty) = [] := rfl
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty :=
@@ -55,6 +53,16 @@ def get? : Ctxt Ty → Nat → Option Ty :=
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   List.map f
+
+@[simp]
+lemma map_nil (f : Ty → Ty') :
+  map f ∅ = ∅ := rfl
+
+@[simp]
+lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
+  map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
+
+theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
 
 instance : Functor Ctxt where
   map := map
@@ -112,7 +120,6 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
   rfl
 
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
-@[coe]
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
       simp only [get?, map, List.get?_map, Option.map_eq_some']
@@ -130,6 +137,13 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 @[simp] lemma castCtxt_rfl (v : Var Γ t) (h : Γ = Γ) : v.castCtxt h = v := rfl
 @[simp] lemma castCtxt_castCtxt (v : Var Γ t) (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
     (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
+
+@[simp]
+theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
+
+@[simp]
+theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t'} {f : Ty → Ty₂} :
+    var.toSnoc.toMap (Γ := Γ.snoc t) (f := f) = var.toMap.toSnoc := rfl
 
 /-- This is an induction principle that case splits on whether or not a variable
 is the last variable in a context. -/
@@ -241,10 +255,6 @@ def Valuation (Γ : Ctxt Ty) : Type :=
 def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
     VAL v
 
-/-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
-def Var.denote {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
-    VAL v
-
 /-- Make a valuation for the empty context. -/
 def Valuation.nil : Ctxt.Valuation ([] : Ctxt Ty) := fun _ v => v.emptyElim
 
@@ -258,6 +268,8 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   refine Ctxt.Var.casesOn v ?_ ?_
   . intro _ _ _ v s _; exact s v
   . intro _ _ _ x; exact x
+
+infixl:50 "::ᵥ" => Valuation.snoc
 
 /-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -561,6 +573,10 @@ theorem ofCtxt_empty : DerivedCtxt.ofCtxt ([] : Ctxt Ty) = ⟨[], .zero _⟩ := 
 @[simp]
 def snoc {Γ : Ctxt Ty} : DerivedCtxt Γ → Ty → DerivedCtxt Γ
   | ⟨ctxt, diff⟩, ty => ⟨ty::ctxt, diff.toSnoc⟩
+
+theorem snoc_ctxt_eq_ctxt_snoc:
+    (DerivedCtxt.snoc Γ ty).ctxt = Ctxt.snoc Γ.ctxt ty := by
+  rfl
 
 @[simp]
 instance {Γ : Ctxt Ty} : CoeHead (DerivedCtxt Γ) (Ctxt Ty) where

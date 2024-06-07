@@ -60,8 +60,8 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLi
       rw [lhs, rhs]
       /-:
       Com.denote
-        (Com.lete (cst 0)
-        (Com.lete (add { val := 1, property := _ } { val := 0, property := _ })
+        (Com.var (cst 0)
+        (Com.var (add { val := 1, property := _ } { val := 0, property := _ })
         (Com.ret { val := 0, property := ex1.proof_3 }))) =
       Com.denote (Com.ret { val := 0, property := _ })
       -/
@@ -117,18 +117,18 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
       unfold lhs rhs
        /-
       Com.denote
-          (Com.lete (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
-            (Com.lete (Expr.mk (Op.const_idx 1) lhs.proof_3 HVector.nil HVector.nil)
-              (Com.lete
+          (Com.var (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
+            (Com.var (Expr.mk (Op.const_idx 1) lhs.proof_3 HVector.nil HVector.nil)
+              (Com.var
                 (Expr.mk Op.monomial lhs.proof_4
                   ({ val := 1, property := lhs.proof_5 }::ₕ({ val := 0, property := lhs.proof_6 }::ₕHVector.nil)) HVector.nil)
-                (Com.lete
+                (Com.var
                   (Expr.mk (Op.const (ROfZComputable_stuck_term 2 3 (Int.ofNat 1))) lhs.proof_7 HVector.nil HVector.nil)
-                  (Com.lete
+                  (Com.var
                     (Expr.mk Op.add lhs.proof_8
                       ({ val := 1, property := lhs.proof_9 }::ₕ({ val := 0, property := lhs.proof_10 }::ₕHVector.nil))
                       HVector.nil)
-                    (Com.lete
+                    (Com.var
                       (Expr.mk Op.add lhs.proof_8
                         ({ val := 5, property := lhs.proof_11 }::ₕ({ val := 0, property := lhs.proof_12 }::ₕHVector.nil))
                         HVector.nil)

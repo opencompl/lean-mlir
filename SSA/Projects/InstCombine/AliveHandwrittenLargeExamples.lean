@@ -1,7 +1,8 @@
 import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.ForLean
-import SSA.Projects.InstCombine.LLVM.EDSL
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
 import Mathlib.Tactic
 
@@ -23,22 +24,23 @@ precondition: true
 def alive_DivRemOfSelect_src (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %c0 = "llvm.mlir.constant" () { value = 0 : _ } :() -> (_)
-    %v1 = "llvm.select" (%c,%y, %c0) : (i1, _, _) -> (_)
-    %v2 = "llvm.udiv"(%x, %v1) : (_, _) -> (_)
-    "llvm.return" (%v2) : (_) -> ()
+    %c0 = llvm.mlir.constant 0
+    %v1 = llvm.select %c, %y, %c0
+    %v2 = llvm.udiv %x,  %v1
+    llvm.return %v2
   }]
 
 def alive_DivRemOfSelect_tgt (w : Nat) :=
   [alive_icom (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %v1 = "llvm.udiv" (%x,%y) : (_, _) -> (_)
-    "llvm.return" (%v1) : (_) -> ()
+    %v1 = llvm.udiv %x, %y
+    llvm.return %v1
   }]
 
 theorem alive_DivRemOfSelect (w : Nat) :
     alive_DivRemOfSelect_src w ⊑ alive_DivRemOfSelect_tgt w := by
   unfold alive_DivRemOfSelect_src alive_DivRemOfSelect_tgt
+  simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
   simp only [simp_llvm]
@@ -97,17 +99,17 @@ Proof:
 -/
 open ComWrappers
 def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- c1 = -/ Com.lete (const w 1) <|
-  /- r = -/ Com.lete (sdiv w /- c1-/ 0 /-%X -/ 1) <|
+  /- c1 = -/ Com.var (const w 1) <|
+  /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- c1 = -/ Com.lete (const w 1) <|
-  /- inc = -/ Com.lete (add w /-c1 -/ 0 /-X-/ 1) <|
-  /- c3 = -/ Com.lete (const w 3) <|
-  /- c = -/ Com.lete (icmp w .ult /-inc -/ 1 /-c3-/ 0) <|
-  /- c0 = -/ Com.lete (const w 0) <|
-  /- r = -/ Com.lete (select w /-%c-/ 1 /-X-/ 5 /-c0-/ 0) <|
+  /- c1 = -/ Com.var (const w 1) <|
+  /- inc = -/ Com.var (add w /-c1 -/ 0 /-X-/ 1) <|
+  /- c3 = -/ Com.var (const w 3) <|
+  /- c = -/ Com.var (icmp w .ult /-inc -/ 1 /-c3-/ 0) <|
+  /- c0 = -/ Com.var (const w 0) <|
+  /- r = -/ Com.var (select w /-%c-/ 1 /-X-/ 5 /-c0-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 open Std (BitVec) in
@@ -132,8 +134,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      rw [BitVec.ofInt_one_eq_ofNat_one]
-      rw [BitVec.ofInt_eq_ofNat_mod']
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
@@ -175,7 +175,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 simp [h1]
                 rw [Nat.mod_eq_of_lt (by omega)]
               subst h1
-              simp [BitVec.sdiv_one_one']
+              simp [BitVec.sdiv_one_one]
             · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
                   1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
                 omega
@@ -193,8 +193,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         case h_3 c hugt =>
           clear c
           simp at hugt
-          simp only [ofInt_zero_eq]
-          unfold LLVM.sdiv? -- TODO: delete this; write theorem to unfold sdiv?
+          unfold LLVM.sdiv? -- TODO: devar this; write theorem to unfold sdiv?
           split <;> simp
           case inr hsdiv =>
             clear hsdiv
@@ -232,11 +231,10 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   split_ifs with c
   simp
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
-  by_cases h : BitVec.ofInt w 3 >ᵤ BitVec.ofInt w 1 + a
+  by_cases h : 3#w >ᵤ 1#w + a
   · simp [h]
-    rw [ofInt_eq_ofNat, ofInt_eq_ofNat] at h
     by_cases a_0 : a = 0; subst a_0; simp at c
-    by_cases a_1 : a = 1; subst a_1; rw [sdiv_one_one]
+    by_cases a_1 : a = 1; subst a_1; simp [sdiv_one_one]
     rw [BitVec.toNat_eq] at a_0 a_1
     simp at a_0 a_1
     by_cases w_1 : w = 1; subst w_1; omega
@@ -253,12 +251,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     by_cases a_allones : a = allOnes w
     · have x := sdiv_one_allOnes w_gt_1
       rw [a_allones]
-      have rr : 1#w = BitVec.ofInt w 1 := by rfl
-
-      simp [rr] at x
       simp [x]
-    ·
-      rw [Nat.add_mod_of_add_mod_lt] at h
+    · rw [Nat.add_mod_of_add_mod_lt] at h
       simp [el_one] at h
       omega
       simp [el_one]
@@ -276,17 +270,14 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     have a_ne_one : a ≠ 1 := by
       intro a_one
       subst a_one
-      simp only [←BitVec.toNat_inj] at c
       simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod, toNat_ofInt, Nat.cast_pow,
         Nat.cast_ofNat, toNat_neg] at c
       norm_cast at c
-      simp only [Int.toNat_natCast] at c
       apply c.elim
       by_cases w_1 : w = 1; subst w_1; simp at h
       have w_gt_1 : 1 < w := by omega;
       simp only [BitVec.ult_toNat, toNat_add, toNat_ofInt, decide_eq_false_iff_not] at h
       norm_cast at h
-      simp only [Int.toNat_natCast] at h
       simp only [
         Nat.mod_eq_of_lt (@Nat.pow_le_pow_of_le 2 2 w (by omega) (by omega)),
         Nat.mod_eq_of_lt, ofNat_eq_ofNat, toNat_ofNat, Nat.add_mod_mod,
@@ -300,10 +291,11 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       norm_cast at h
       simp only [Int.toNat_natCast, toNat_allOnes, Nat.mod_add_mod] at h
       by_cases w_1 : w = 1; subst w_1; simp at h
-      rw [Nat.add_sub_of_le (by omega), Nat.mod_self, nonpos_iff_eq_zero] at h
-      rw [Nat.mod_eq_of_lt] at h
-      simp at h
       have et : _ := @Nat.pow_le_pow_of_le 2 2 w (by simp) (by omega)
+      simp only [BitVec.toNat_ofNat] at h
+      rw [Nat.mod_eq_of_lt (by omega), @Nat.mod_eq_of_lt 1 (2^w) (by omega),
+        Nat.add_comm, Nat.sub_add_cancel, Nat.mod_self] at h
+      norm_num at h
       omega
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
@@ -337,14 +329,14 @@ def MulDivRem290_lhs (w : ℕ) :
   Com InstCombine.LLVM
     [/- %X -/ InstCombine.Ty.bitvec w,
     /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- c1 = -/ Com.lete (const w 1) <|
-  /- poty = -/ Com.lete (shl w /- c1 -/ 0 /-%Y -/ 1) <|
-  /- r = -/ Com.lete (mul w /- poty -/ 0 /-%X -/ 3) <|
+  /- c1 = -/ Com.var (const w 1) <|
+  /- poty = -/ Com.var (shl w /- c1 -/ 0 /-%Y -/ 1) <|
+  /- r = -/ Com.var (mul w /- poty -/ 0 /-%X -/ 3) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem290_rhs (w : ℕ) :
   Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- r = -/ Com.lete (shl w /-X-/ 1 /-Y-/ 0) <|
+  /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def alive_simplifyMulDivRem290 (w : Nat) :
@@ -360,11 +352,6 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
   simp [bv_toNat]
-  norm_cast
-  have : (1 % 2^w) = 1 := by
-    apply Nat.mod_eq_of_lt
-    apply Nat.one_lt_pow <;> omega
-  simp [this]
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
@@ -394,9 +381,9 @@ def AndOrXor2515_lhs (w : ℕ):
      /- C2 -/ InstCombine.Ty.bitvec w,
      /- C3 -/ InstCombine.Ty.bitvec w,
      /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- e1  = -/ Com.lete (xor w /-x-/ 0 /-C1-/ 3) <|
-  /- op0 = -/ Com.lete (lshr w /-e1-/ 0 /-C2-/ 3) <|
-  /- r   = -/ Com.lete (xor w /-op0-/ 0 /-C3-/ 3) <|
+  /- e1  = -/ Com.var (xor w /-x-/ 0 /-C1-/ 3) <|
+  /- op0 = -/ Com.var (lshr w /-e1-/ 0 /-C2-/ 3) <|
+  /- r   = -/ Com.var (xor w /-op0-/ 0 /-C3-/ 3) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def AndOrXor2515_rhs (w : ℕ) :
@@ -405,10 +392,10 @@ def AndOrXor2515_rhs (w : ℕ) :
      /- C2 -/ InstCombine.Ty.bitvec w,
      /- C3 -/ InstCombine.Ty.bitvec w,
      /- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- o = -/ Com.lete (lshr w /-X-/ 0 /-C2-/ 2) <|
-  /- p = -/ Com.lete (lshr w /-C1-/ 4 /-C2-/ 3) <|
-  /- q = -/ Com.lete (xor w /-p-/ 0 /-C3-/ 3) <|
-  /- r = -/ Com.lete (xor w /-o-/ 2 /-q-/ 0) <|
+  /- o = -/ Com.var (lshr w /-X-/ 0 /-C2-/ 2) <|
+  /- p = -/ Com.var (lshr w /-C1-/ 4 /-C2-/ 3) <|
+  /- q = -/ Com.var (xor w /-p-/ 0 /-C3-/ 3) <|
+  /- r = -/ Com.var (xor w /-o-/ 2 /-q-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def alive_simplifyAndOrXor2515 (w : Nat) :
@@ -477,24 +464,24 @@ open ComWrappers
 def Select746_lhs (w : ℕ):
   Com InstCombine.LLVM
     [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- c0     = -/ Com.lete (const w 0) <|
-  /- c      = -/ Com.lete (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
-  /- minus  = -/ Com.lete (sub w /-c0-/ 1 /-A-/ 2) <|
-  /- abs    = -/ Com.lete (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
-  /- c2     = -/ Com.lete (icmp w .sgt /-abs-/ 0 /-c0-/ 3) <|
-  /- minus2 = -/ Com.lete (sub w /-c0-/ 4 /-abs-/ 1) <|
-  /- abs2   = -/ Com.lete (select w /-c2-/ 1/-abs-/ 2 /-minus2-/ 0) <|
+  /- c0     = -/ Com.var (const w 0) <|
+  /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
+  /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|
+  /- abs    = -/ Com.var (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
+  /- c2     = -/ Com.var (icmp w .sgt /-abs-/ 0 /-c0-/ 3) <|
+  /- minus2 = -/ Com.var (sub w /-c0-/ 4 /-abs-/ 1) <|
+  /- abs2   = -/ Com.var (select w /-c2-/ 1/-abs-/ 2 /-minus2-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def Select746_rhs (w : ℕ):
   Com InstCombine.LLVM
     [/- A -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  /- c0     = -/ Com.lete (const w 0) <|
-  /- c      = -/ Com.lete (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
-  /- minus  = -/ Com.lete (sub w /-c0-/ 1 /-A-/ 2) <|
-  /- abs    = -/ Com.lete (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
-  /- c3     = -/ Com.lete (icmp w .sgt /-A-/ 4 /-c0-/ 3) <|
-  /- abs2   = -/ Com.lete (select w /-c3-/ 0/-A-/ 5 /-minus-/ 2) <|
+  /- c0     = -/ Com.var (const w 0) <|
+  /- c      = -/ Com.var (icmp w .slt /-A-/ 1 /-c0-/ 0) <|
+  /- minus  = -/ Com.var (sub w /-c0-/ 1 /-A-/ 2) <|
+  /- abs    = -/ Com.var (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
+  /- c3     = -/ Com.var (icmp w .sgt /-A-/ 4 /-c0-/ 3) <|
+  /- abs2   = -/ Com.var (select w /-c3-/ 0/-A-/ 5 /-minus-/ 2) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def alive_simplifySelect764 (w : Nat) :
@@ -505,12 +492,12 @@ def alive_simplifySelect764 (w : Nat) :
   simp_alive_undef
   intros A
   rcases A with rfl | A  <;> simp [Option.bind, Bind.bind]
-  by_cases zero_sgt_A : BitVec.ofInt w 0 >ₛ A
+  by_cases zero_sgt_A : 0#w >ₛ A
   · simp [zero_sgt_A]
   · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
-    by_cases neg_A_sgt_zero : -A >ₛ BitVec.ofInt w 0
+    by_cases neg_A_sgt_zero : -A >ₛ 0#w
     · simp [neg_A_sgt_zero, zero_sub_eq_neg]
-      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      by_cases A_sgt_zero : A >ₛ 0#w
       simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
         simp only [A_eq_zero, ofNat_eq_ofNat, BitVec.neg_zero]
@@ -526,7 +513,7 @@ def alive_simplifySelect764 (w : Nat) :
         simp [neg_A_sgt_zero] at A_sgt_zero
       simp [A_sgt_zero]
     · simp [neg_A_sgt_zero, zero_sub_eq_neg]
-      by_cases A_sgt_zero : A >ₛ BitVec.ofInt w 0
+      by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       · by_cases A_eq_zero : A = 0
         simp only [A_eq_zero, ofNat_eq_ofNat, ofInt_zero_eq, sgt_same, ofBool_false,
@@ -534,7 +521,7 @@ def alive_simplifySelect764 (w : Nat) :
         by_cases A_eq_intMin : A = intMin w
         · simp [A_eq_intMin, BitVec.ofInt_zero_eq, sgt_same, intMin_not_gt_zero,
             intMin_eq_neg_intMin]
-        · have neg_not_sgt_zero : ¬(-A >ₛ BitVec.ofInt w 0) = true → (A >ₛ BitVec.ofInt w 0) = true
+        · have neg_not_sgt_zero : ¬(-A >ₛ 0#w) = true → (A >ₛ 0#w) = true
             := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
           apply neg_not_sgt_zero at neg_A_sgt_zero
           simp only at neg_A_sgt_zero

@@ -456,7 +456,7 @@ namespace ForAddToMul
 def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .impure .int :=
   /- c0 = -/ Com.letPure (cst 0) <|
   /- loop_step = -/ Com.letPure  (cst 1) <|
-  /- v1 = -/ Com.lete (for_ (t := .int)
+  /- v1 = -/ Com.var (for_ (t := .int)
                         ⟨/- c0 -/ 1, rfl⟩
                         ⟨/- loop_step -/ 0, rfl⟩
                         ⟨/- nsteps -/ 2, rfl⟩
@@ -467,8 +467,8 @@ def lhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int]
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs (vincrement : ℤ) : Com ScfArith [/- nsteps -/ .nat, /- vstart -/ .int] .pure .int :=
-  Com.lete (cst vincrement) <|
-  Com.lete (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
+  Com.var (cst vincrement) <|
+  Com.var (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧
@@ -477,7 +477,7 @@ abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int�
 open Scf in
 open Arith in
 theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
-  simp only [lhs, rhs, for_, axpy, cst]
+  simp only [lhs, rhs, for_, axpy, cst, add]
   simp_peephole at Γv
   intros A B
   simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
@@ -503,7 +503,7 @@ def lhs :
     let Γ := [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t]
     Com ScfArith Γ .impure t :=
   /- v -/
-  /- v1 = -/ Com.lete (for_ (t := t)
+  /- v1 = -/ Com.var (for_ (t := t)
                         ⟨/- start -/ 0, by simp [Ctxt.snoc]⟩
                         ⟨/- delta -/1, by simp [Ctxt.snoc]⟩
                         ⟨/- steps -/ 2, by simp [Ctxt.snoc]⟩
@@ -515,7 +515,7 @@ def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v
   Com.letPure (axpy ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩) <|
   /- -delta -/
   Com.letPure (neg ⟨2, by simp [Ctxt.snoc]⟩) <|
-  Com.lete (for_ (t := t)
+  Com.var (for_ (t := t)
                         ⟨/- end -/ 2, by simp [Ctxt.snoc]⟩
                         ⟨/- -delta -/ 3, by simp [Ctxt.snoc]⟩
                         ⟨/- steps -/ 4, by simp [Ctxt.snoc]⟩
@@ -563,11 +563,11 @@ def lhs : Com ScfArith [/- v0 -/ t] .impure t :=
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   -- start step niter v
-  Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
+  Com.var (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   /- niters2 = -/ Com.letPure (cst_nat niters2) <|
   /- start2 = -/ Com.letPure (cst <| niters1 + start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
-  Com.lete (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
+  Com.var (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
@@ -575,7 +575,7 @@ def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   -- start step niter v
-  Com.lete (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
+  Com.var (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 
@@ -603,7 +603,7 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com ScfArith [.int] .impure .int :=
-  Com.lete (iterate (k := 0) ⟨0, by rfl⟩ (
+  Com.var (iterate (k := 0) ⟨0, by rfl⟩ (
       Com.letPure (add ⟨0, by rfl⟩ ⟨0, by rfl⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by rfl⟩
   )) <|
@@ -625,9 +625,9 @@ attribute [local simp] Ctxt.snoc
 --       funext Γv
 --       /-
 --       Com.denote
---         (Com.lete
+--         (Com.var
 --           (iterate 0 { val := 0, property := lhs.proof_1 }
---             (Com.lete (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
+--             (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
 --               (Com.ret { val := 0, property := lhs.proof_2 })))
 --           (Com.ret { val := 0, property := lhs.proof_2 }))
 --         Γv =

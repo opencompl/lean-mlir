@@ -18,6 +18,48 @@
 \usepackage{hyperref}
 \usepackage{minted}
 
+\usepackage[verbose]{newunicodechar}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{ϵ}{\ensuremath{\epsilon}}
+\newunicodechar{τ}{\ensuremath{\tau}}
+\newunicodechar{ε}{\ensuremath{\epsilon}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+% \newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∧}{\ensuremath{\land}}
+
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ₙ}{\textsubscript{n}}
+\newunicodechar{ₘ}{\textsubscript{m}}
+\newunicodechar{ₕ}{\textsubscript{h}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⟦}{\ensuremath{\llbracket}}
+\newunicodechar{⟧}{\ensuremath{\rrbracket}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+
+% \newunicodechar{⟦}{\ensuremath{\llbracket}}
+% https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
+% TODO FIXME: we gotta fix these parens!
+\newunicodechar{⦃}{\ensuremath{\{\{}}
+\newunicodechar{⦄}{\ensuremath{\}\}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{⊑}{\ensuremath{\sqsubseteq}}
+
 \begin{document}
 
 \special{papersize=8.5in,11in}
@@ -31,9 +73,9 @@
 \section{Artifact Appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Abstract}
+% \subsection{Abstract}
 
-{\em Obligatory}
+% {\em Obligatory}
 
 \subsection{Artifact check-list (meta-information)}
 
@@ -53,7 +95,7 @@
   \item {\bf How much time is needed to complete experiments (approximately)?: } 1hr
   \item {\bf Publicly available?: } Yes
   \item {\bf Code licenses (if publicly available)?: } MIT
-  \item {\bf Archived (provide DOI)?: }
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.11506328
 \end{itemize}
 }
 
@@ -78,10 +120,10 @@ Docker is necessary to run our artifact. The Docker image has all dependencies n
 \subsection{Experiment workflow}
 
 Access the docker image \texttt{opencompl-ssa} from
-(\url{http://doi.org/TODO-TODO-TODO-DOI}), then run:
+\url{https://zenodo.org/records/11506328}
 
 \begin{minted}[fontsize=\scriptsize]{text}
-$ docker load -i opencompl-ssa.docker
+$ docker load -i opencompl-ssa.tar
 $ docker run -it siddudruid/opencompl-ssa
 # | This clears the build cache,
 # | fetches the maths library from the build cache,
@@ -89,17 +131,8 @@ $ docker run -it siddudruid/opencompl-ssa
 $ cd /code/ssa && lake clean && lake exe cache get && lake build
 \end{minted}
 
-
-Upon running \texttt{make -j4 test}, the test output is printed to \texttt{stdout}.
-The scripts \texttt{speedup-time.py} and \texttt{speedup-rgn-time.py},
-produce PDFs \texttt{speedup-time.pdf} and \texttt{speedup-rgn-time.pdf}
-in the directory \texttt{/code/lz/test/lambdapure/compile/bench/}:
-
-\begin{minted}[fontsize=\footnotesize]{text}
-/code/ssa/related-work/alive/compile/bench/speedup-time.pdf
-\end{minted}
-
-To open the pdf file, keep the container running, and in another
+To copy files for inspection from the docker container into the host,
+ keep the container running, and in another
 shell instance, use the \texttt{docker cp}
 command to copy files from within the container out to the host:
 
@@ -116,37 +149,52 @@ For more about \texttt{docker cp}, please see:
 \subsection{Evaluation and expected results}
 
 On running \texttt{lake build}, the build succeeds with no errors.
-On applying the path \texttt{patch -p1 < axioms.diff} and rebuilding with \texttt{lake build},
-one should see the axioms that are used by each theorem. Check that these do not use \texttt{sorry},
-by running \texttt{lake build 2>\&1 | grep Axioms} and verify by looking that `sorry` is never on this list.
+By running \texttt{grep -R "guard\_msgs"}, one should see that every key theorem 
+is guarded by a \texttt{guard\_msgs}, which checks that the axioms used by the theorem does \emph{not}
+include \texttt{sorry}. Check the following core theorems:
 
+\subsubsection{Core Framework Theorems}
+
+\begin{minted}{text}
+SSA/Core/Framework.lean
+2408:#guard_msgs in #print axioms denote_rewritePeepholeAt
+2444:#guard_msgs in #print axioms denote_rewritePeephole
+\end{minted}
+
+\subsubsection{Five Hardest Alive Examples}
+
+\begin{minted}{text}
+SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
+54:#guard_msgs in #print axioms alive_DivRemOfSelect
+219:#guard_msgs in #print axioms alive_simplifyMulDivRem805
+313:#guard_msgs in #print axioms alive_simplifyMulDivRem805'
+373:#guard_msgs in #print axioms alive_simplifyMulDivRem290
+432:#guard_msgs in #print axioms alive_simplifyAndOrXor2515
+548:#guard_msgs in #print axioms alive_simplifySelect764
+\end{minted}
+
+\subsubsection{Example Rewrites Shown in the Paper}
+
+\begin{minted}{text}
+SSA/Projects/PaperExamples/PaperExamples.lean
+136:#guard_msgs in #eval eg₀val
+\end{minted}
+
+\subsubsection{Examples from FHE and Scf dialects}
+
+\begin{minted}{text}
+SSA/Projects/FullyHomomorphicEncryption/Rewrites.lean
+107:#guard_msgs in #print axioms lhs
+153:#guard_msgs in #print axioms p1
+
+SSA/Projects/Scf/ScfFunctor.lean
+488:#guard_msgs in #print axioms correct
+542:#guard_msgs in #print axioms correct
+596:#guard_msgs in #print axioms correct
+\end{minted}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Full Workflow Example}
-
-% \begin{minted}[fontsize=\tiny]{text}
-% # Grab docker image from http://doi.org/10.5281/zenodo.5786074
-% $ curl https://zenodo.org/record/5786074/files/cgo22.docker?download=1 > cgo22.docker
-% $ docker load -i cgo22.docker
-% $ docker run -it siddudruid/cgo21-v4
-% $ su nonroot # switch to non-root user
-% $ export PATH=/code/llvm-project/build/bin:$PATH
-% $ export PATH=/code/lean4/build/release/stage1/bin:$PATH
-% $ export PATH=/code/lz/build/bin:$PATH
-% $ export LEANLIB=/code/lean4/build/release/stage1/lib
-% $ export LD_LIBRARY_PATH=$LEANLIB:$LD_LIBRARY_PATH
-% $ cd /code/lean4/build/release/ && make -j test # NO test failures
-% 100% tests passed, 0 tests failed out of 648
-% 
-% Total Test time (real) = 399.28 sec
-% [100%] Built target test
-% 
-% $ cd /code/lz/test/lambdapure/compile/bench && \
-% ./speedup-time.py --data --plot --nruns 10
-% 
-% $ cd /code/lz/test/lambdapure/compile/bench && \
-% ./speedup-rgn-time.py --data --plot --nruns 10
-% \end{minted}
+% \subsection{Full Workflow Example}
 
 
 

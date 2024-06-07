@@ -1,4 +1,4 @@
-name: build & test tools, scaling, and auto-generated statements
+name: tools, scaling, and auto-generated statements
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: build and test code
+    name: tools, scaling, and auto-generated stmts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️

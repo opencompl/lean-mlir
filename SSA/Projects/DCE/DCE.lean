@@ -15,8 +15,6 @@ def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
 /-- build a `Deleted` for a `(Γ.snoc α) → Γ`-/
 def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var.last Γ α) Γ := rfl
 
-theorem List.eraseIdx_zero : List.eraseIdx (List.cons x xs) 0 = xs := rfl
-
 theorem List.eraseIdx_succ : List.eraseIdx (List.cons x xs) (.succ n) = x :: List.eraseIdx xs n := rfl
 
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
@@ -26,22 +24,6 @@ theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs :
   case cons x xs' IH =>
     simp[eraseIdx_succ]
     apply IH
-
-/-- removing at any index `≥ xs.length` does not change the list. -/
-theorem List.eraseIdx_of_length_le (hn : xs.length ≤ n) : List.eraseIdx xs n = xs := by
-  induction n generalizing xs
-  case zero =>
-    induction xs
-    case nil => simp [List.eraseIdx]
-    case cons x xs' IH => simp at hn
-  case succ n' IH' =>
-    induction xs
-    case nil => simp[eraseIdx]
-    case cons x xs' IH =>
-      simp[eraseIdx_succ]
-      apply IH'
-      simp at hn
-      linarith
 
 /- removing at index `n` does not change indices `k < n` -/
 theorem List.get?_eraseIdx_of_lt (hk: k < n) : List.get? (List.eraseIdx xs n) k = List.get? xs k := by
@@ -297,14 +279,14 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
     | .none => .none
     | .some ⟨v, hv⟩ =>
       .some ⟨.ret v, hv⟩
-  | .lete (α := ω) e body =>
+  | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
     | .none => .none
     | .some ⟨body', hbody'⟩ =>
       match Expr.deleteVar? DEL e with
         | .none => .none
         | .some ⟨e', he'⟩ =>
-          .some ⟨.lete  e' body', by
+          .some ⟨.var e' body', by
             intros V
             simp[Com.denote]
             rw[← he']
@@ -340,7 +322,7 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
       unfold Ctxt.Valuation.comap
       simp[Ctxt.Valuation.comap]
       ⟩⟩
-  | .lete (α := α) e body =>
+  | .var (α := α) e body =>
     let DEL := Deleted.deleteSnoc Γ α
     -- Try to delete the variable α in the body.
     match Com.deleteVar? DEL body with
@@ -348,7 +330,7 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
         : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com d Γ' .pure t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
-      let com' := Com.lete (α := α) e (body'.changeVars hom')
+      let com' := Com.var (α := α) e (body'.changeVars hom')
       ⟨Γ, Ctxt.Hom.id, com', by
         intros V
         simp (config := {zetaDelta := true}) [Com.denote]
@@ -448,15 +430,15 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
 attribute [local simp] Ctxt.snoc
 
 def ex1_pre_dce : Com Ex ∅ .pure .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (cst 2) <|
+  Com.var (cst 1) <|
+  Com.var (cst 2) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 /-- TODO: how do we evaluate 'ex1_post_dce' within Lean? :D -/
 def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 
 def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
-  Com.lete (cst 1) <|
+  Com.var (cst 1) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 

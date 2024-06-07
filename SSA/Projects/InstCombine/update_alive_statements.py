@@ -17,10 +17,11 @@ import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Batteries.Data.BitVec
-import Mathlib.Data.BitVec.Lemmas
 
 open LLVM
 open BitVec
+
+set_option linter.unreachableTactic false
 """
 
 
@@ -53,7 +54,8 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
     Uses the preamble to create a valid Lean file.
     """
 
-    f = open("AliveTest_" + str(id) + ".lean", "w")
+    filename = "_AliveTest_" + str(id) + ".lean"
+    f = open(filename, "w")
 
     f.write("".join(preamble))
     rewritten = []
@@ -68,10 +70,12 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
     f.close()
 
     x = subprocess.run(
-        "(cd ../../../; lake build SSA.Projects.InstCombine.AliveTest_" + str(id) + ")",
+        "(cd ../../../; lake build SSA.Projects.InstCombine._AliveTest_" + str(id) + ")",
         shell=True,
         capture_output=True,
     )
+
+    os.remove(filename)
 
     name = "\n\ntheorem " + name + " :\n"
 
@@ -79,13 +83,13 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
         return ""
 
     error = x.stdout.decode("utf-8")
-    msg = re.sub(".*AliveTest_[0-9]+.lean:[0-9]+:[0-9]+-[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
+    msg = re.sub(".*AliveTest_[0-9]+.lean:[0-9]+:[0-9]+: ", "", error, flags=re.DOTALL)
     msg = re.sub("\nerror: Lean.*", "", msg, flags=re.DOTALL)
     msg = "    " + re.sub("\n", "\n    ", msg, flags=re.DOTALL)
 
     stmt = name
     stmt += msg
-    stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash\n  try alive_auto\n  try sorry"
+    stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash\n  try alive_auto\n  all_goals sorry"
 
     print(stmt)
 
@@ -109,6 +113,7 @@ def writeOutput(preamble, proofs, filename):
         f.write("".join(preamble))
         for proof in proofs:
             f.write("".join(proof))
+        f.write("\n")
 
 
 if __name__ == "__main__":
