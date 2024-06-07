@@ -28,6 +28,8 @@ theorem xor_allOnes_eq_not (x: _root_.BitVec w) :
   ext i
   simp
 
+-- example proof of pure bitvector reasoning.
+-- This is closed automatically by proof automation.
 example (w : Nat) :
   [llvm ( w )| {
   ^bb0(%X : _, %C1 : _, %C2 : _):
@@ -43,6 +45,8 @@ example (w : Nat) :
   llvm.return %v4
   }] := by simp_alive_peephole; alive_auto
 
+-- example proof of add plus xor.
+-- This is an easy alive statement.
 example (w : Nat) :
   [llvm ( w )| {
   ^bb0(%X : _, %Y : _):
@@ -65,3 +69,28 @@ example (w : Nat) :
     rw [BitVec.negOne_eq_allOnes, xor_allOnes_eq_not, ← BitVec.allOnes_sub_eq_not];
     rename_i a b
     ring
+
+-- Example proof of shift + mul, this is one of the hardest alive examples.
+-- (alive_simplifyMulDivRem290)
+example :
+    [llvm (w)| {
+  ^bb0(%X : _, %Y : _):
+    %c1 = llvm.mlir.constant 1
+    %poty = llvm.shl %c1, %Y
+    %r = llvm.mul %poty, %X
+    llvm.return %r
+  }] ⊑  [llvm (w)| {
+  ^bb0(%X : _, %Y : _):
+    %r = llvm.shl %X, %Y
+    llvm.return %r
+  }] := by
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  intros A B
+  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  apply BitVec.eq_of_toNat_eq
+  simp [bv_toNat]
+  ring_nf
