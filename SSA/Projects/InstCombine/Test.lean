@@ -177,15 +177,15 @@ def com := mkCom (d := InstCombine.MetaLLVM 0) bb0 |>.toOption |>.get (by rfl)
 info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
   ⟨EffectKind.pure,
     ⟨MTy.bitvec (ConcreteOrMVar.concrete 32),
-      Com.lete (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 8)) ⋯ ⋯ HVector.nil HVector.nil)
-        (Com.lete (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 31)) ⋯ ⋯ HVector.nil HVector.nil)
-          (Com.lete
+      Com.var (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 8)) ⋯ ⋯ HVector.nil HVector.nil)
+        (Com.var (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 31)) ⋯ ⋯ HVector.nil HVector.nil)
+          (Com.var
             (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.ashr) ⋯ ⋯ (⟨2, ⋯⟩::ₕ(⟨0, ⋯⟩::ₕHVector.nil))
               HVector.nil)
-            (Com.lete
+            (Com.var
               (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.and) ⋯ ⋯ (⟨0, ⋯⟩::ₕ(⟨2, ⋯⟩::ₕHVector.nil))
                 HVector.nil)
-              (Com.lete
+              (Com.var
                 (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.add) ⋯ ⋯
                   (⟨0, ⋯⟩::ₕ(⟨1, ⋯⟩::ₕHVector.nil)) HVector.nil)
                 (Com.ret ⟨0, ⋯⟩)))))⟩⟩⟩
@@ -248,7 +248,7 @@ def one_inst_macro (w: Nat) :=
 
 def one_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  Com.lete (not w 0) <|
+  Com.var (not w 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def one_inst_stmt (e : LLVM.IntW w) :
@@ -280,8 +280,8 @@ def two_inst_macro (w: Nat) :=
 
 def two_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  Com.lete (not w 0) <|
-  Com.lete (not w 1) <|
+  Com.var (not w 0) <|
+  Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def two_inst_stmt (e : LLVM.IntW w) :
@@ -314,9 +314,9 @@ def three_inst_macro (w: Nat) :=
 
 def three_inst_com (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  Com.lete (not w 0) <|
-  Com.lete (not w 0) <|
-  Com.lete (not w 0) <|
+  Com.var (not w 0) <|
+  Com.var (not w 0) <|
+  Com.var (not w 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def three_inst_stmt (e : LLVM.IntW w) :
@@ -348,7 +348,7 @@ def one_inst_concrete_macro :=
 
 def one_inst_concrete_com :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
-  Com.lete (not 1 0) <|
+  Com.var (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def one_inst_concrete_stmt :
@@ -380,8 +380,8 @@ def two_inst_concrete_macro :=
 
 def two_inst_concrete_com (w : ℕ) :
   Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  Com.lete (not w 0) <|
-  Com.lete (not w 1) <|
+  Com.var (not w 0) <|
+  Com.var (not w 1) <|
   Com.ret ⟨1, by simp [Ctxt.snoc]⟩
 
 def two_inst_concrete_stmt (e : LLVM.IntW w) :
@@ -414,9 +414,9 @@ def three_inst_concrete_macro :=
 
 def three_inst_concrete_com :
   Com InstCombine.LLVM [InstCombine.Ty.bitvec 1] .pure (InstCombine.Ty.bitvec 1) :=
-  Com.lete (not 1 0) <|
-  Com.lete (not 1 0) <|
-  Com.lete (not 1 0) <|
+  Com.var (not 1 0) <|
+  Com.var (not 1 0) <|
+  Com.var (not 1 0) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def three_inst_concrete_stmt (e : LLVM.IntW 1) :

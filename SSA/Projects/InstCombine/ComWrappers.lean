@@ -257,24 +257,24 @@ def select {Γ : Ctxt _} (w : ℕ) (l m r : Nat)
 
 def test (w : ℕ) :
     Com InstCombine.LLVM [InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
-  .lete (const  w 0  ) <|
-  .lete (not    w 0  ) <|
-  .lete (neg    w 0  ) <|
-  .lete (and    w 0 0) <|
-  .lete (or     w 0 0) <|
-  .lete (xor    w 0 0) <|
-  .lete (shl    w 0 0) <|
-  .lete (lshr   w 0 0) <|
-  .lete (ashr   w 0 0) <|
-  .lete (sub    w 0 0) <|
-  .lete (add    w 0 0) <|
-  .lete (mul    w 0 0) <|
-  .lete (sdiv   w 0 0) <|
-  .lete (udiv   w 0 0) <|
-  .lete (srem   w 0 0) <|
-  .lete (urem   w 0 0) <|
-  .lete (icmp   w .eq 0 0) <|
-  .lete (select w 0 1 1) <|
+  .var (const  w 0  ) <|
+  .var (not    w 0  ) <|
+  .var (neg    w 0  ) <|
+  .var (and    w 0 0) <|
+  .var (or     w 0 0) <|
+  .var (xor    w 0 0) <|
+  .var (shl    w 0 0) <|
+  .var (lshr   w 0 0) <|
+  .var (ashr   w 0 0) <|
+  .var (sub    w 0 0) <|
+  .var (add    w 0 0) <|
+  .var (mul    w 0 0) <|
+  .var (sdiv   w 0 0) <|
+  .var (udiv   w 0 0) <|
+  .var (srem   w 0 0) <|
+  .var (urem   w 0 0) <|
+  .var (icmp   w .eq 0 0) <|
+  .var (select w 0 1 1) <|
   .ret ⟨0, by simp [Ctxt.snoc]⟩
 
 end ComWrappers
