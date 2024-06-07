@@ -67,23 +67,23 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .nat) : Expr Γ .nat :=
 attribute [local simp] Ctxt.snoc
 
 def ex1 : Com ∅ .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <|
+  Com.var (cst 1) <|
+  Com.var (add ⟨0, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 def ex2 : Com ∅ .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+  Com.var (cst 1) <|
+  Com.var (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  Com.var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  Com.var (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+  Com.var (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
   Com.ret ⟨0, by simp⟩
 
 -- a + b => b + a
 def m : Com (.ofList [.nat, .nat]) .nat :=
-  .lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) (.ret ⟨0, by simp⟩)
+  .var (add ⟨0, by simp⟩ ⟨1, by simp⟩) (.ret ⟨0, by simp⟩)
 def r : Com (.ofList [.nat, .nat]) .nat :=
-  .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
+  .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) (.ret ⟨0, by simp⟩)
 
 open Ctxt (Var Valuation DerivedCtxt) in
 def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat :=
@@ -97,63 +97,63 @@ def p1 : PeepholeRewrite ExOp [.nat, .nat] .nat :=
     }
 
 example : rewritePeepholeAt p1 1 ex1 = (
-  Com.lete (cst 1)  <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
+  Com.var (cst 1)  <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩)  <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩)  <|
      .ret ⟨0, by simp⟩) := by rfl
 
 -- a + b => b + a
 example : rewritePeepholeAt p1 0 ex1 = ex1 := by rfl
 
 example : rewritePeepholeAt p1 1 ex2 = (
-  Com.lete (cst 1)   <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-     .lete (add ⟨2, by simp⟩ ⟨0, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
+  Com.var (cst 1)   <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+     .var (add ⟨2, by simp⟩ ⟨0, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩ ) <|
      .ret ⟨0, by simp⟩) := by rfl
 
 example : rewritePeepholeAt p1 2 ex2 = (
-  Com.lete (cst 1)   <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨2, by simp⟩) <|
-     .lete (add ⟨2, by simp⟩ ⟨2, by simp⟩) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
+  Com.var (cst 1)   <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨2, by simp⟩) <|
+     .var (add ⟨2, by simp⟩ ⟨2, by simp⟩) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩) <|
      .ret ⟨0, by simp⟩) := by rfl
 
 example : rewritePeepholeAt p1 3 ex2 = (
-  Com.lete (cst 1)   <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
+  Com.var (cst 1)   <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
+     .var (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p1 4 ex2 = (
-  Com.lete (cst 1)   <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
+  Com.var (cst 1)   <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨2, by simp⟩ ⟨2, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 def ex2' : Com ∅ .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-  Com.lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  Com.var (cst 1) <|
+  Com.var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+  Com.var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+  Com.var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  Com.var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
   Com.ret ⟨0, by simp⟩
 
 -- a + b => b + (0 + a)
 def r2 : Com (.ofList [.nat, .nat]) .nat :=
-  .lete (cst 0) <|
-  .lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
-  .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
+  .var (cst 0) <|
+  .var (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
+  .var (add ⟨3, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
 def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
@@ -168,54 +168,54 @@ def p2 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
     }
 
 example : rewritePeepholeAt p2 1 ex2' = (
-     .lete (cst 1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (cst 0) <|
-     .lete (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (cst 1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (cst 0) <|
+     .var (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
+     .var (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p2 2 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨3, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p2 3 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p2 4 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 -- a + b => (0 + a) + b
 def r3 : Com (.ofList [.nat, .nat]) .nat :=
-  .lete (cst 0) <|
-  .lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
-  .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
+  .var (cst 0) <|
+  .var (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
+  .var (add ⟨0, by simp⟩ ⟨3, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
 def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
@@ -229,57 +229,57 @@ def p3 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
     }
 
 example : rewritePeepholeAt p3 1 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨2, by simp⟩  ) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p3 2 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p3 3 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
-     .lete (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
+     .var (add ⟨4, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 example : rewritePeepholeAt p3 4 ex2 = (
-  Com.lete (cst  1) <|
-     .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
-     .lete (cst  0) <|
-     .lete (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
-     .lete (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
+  Com.var (cst  1) <|
+     .var (add ⟨0, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨0, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (add ⟨1, by simp⟩ ⟨1, by simp⟩  ) <|
+     .var (cst  0) <|
+     .var (add ⟨0, by simp⟩ ⟨3, by simp⟩  ) <|
+     .var (add ⟨0, by simp⟩ ⟨4, by simp⟩  ) <|
      .ret ⟨0, by simp⟩  ) := by rfl
 
 def ex3 : Com ∅ .nat :=
-  .lete (cst 1) <|
-  .lete (cst 0) <|
-  .lete (cst 2) <|
-  .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <| --here
-  .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  .var (cst 1) <|
+  .var (cst 0) <|
+  .var (cst 2) <|
+  .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .var (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <| --here
+  .var (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩
 
 def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
@@ -293,14 +293,14 @@ def p4 : PeepholeRewrite ExOp [.nat, .nat] .nat:=
     }
 
 example : rewritePeepholeAt p4 5 ex3 = (
-  .lete (cst 1) <|
-  .lete (cst 0) <|
-  .lete (cst 2) <|
-  .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
-  .lete (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
-  .lete (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
+  .var (cst 1) <|
+  .var (cst 0) <|
+  .var (cst 2) <|
+  .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .var (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .var (add ⟨1, by simp⟩ ⟨0, by simp⟩) <|
+  .var (add ⟨3, by simp⟩ ⟨1, by simp⟩) <|
+  .var (add ⟨0, by simp⟩ ⟨0, by simp⟩) <|
   .ret ⟨0, by simp⟩) := rfl
 
 end Examples
@@ -359,8 +359,8 @@ attribute [local simp] Ctxt.snoc
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def ex1_lhs : Com [.nat] .nat :=
-  Com.lete (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+  Com.var (rgn (k := 0) ⟨0, by simp[Ctxt.snoc]⟩ (
+      Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
@@ -388,14 +388,14 @@ return %1
 
 /-- running `f(x) = x + x` 1 times does return `x + x`. -/
 def ex2_lhs : Com [.nat] .nat :=
-  Com.lete (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
-      Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+  Com.var (rgn (k := 1) ⟨0, by simp[Ctxt.snoc]⟩ (
+      Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
       <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def ex2_rhs : Com [.nat] .nat :=
-    Com.lete (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+    Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨0, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
     <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
 def p2 : PeepholeRewrite ExOp [.nat] .nat:=

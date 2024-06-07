@@ -18,7 +18,7 @@ and all `Width.mvar` should be resolved into `Width.concrete`.  -/
 macro "simp_alive_meta" : tactic =>
  `(tactic|
      (
-      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret, Com.changeDialect_lete, Expr.changeDialect]
+      simp (config := {failIfUnchanged := false }) only [Com.changeDialect_ret, Com.changeDialect_var, Expr.changeDialect]
       simp (config := {failIfUnchanged := false }) only [(HVector.changeDialect_nil)]
       dsimp (config := {failIfUnchanged := false }) only [HVector.map']
       dsimp (config := {failIfUnchanged := false }) only [Functor.map]

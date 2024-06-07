@@ -1,4 +1,7 @@
-# SSA ![Core library build status](https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg)
+
+![Core library build status](https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg)
+
+# SSA
 
 
 Theory of static single assignment development in the Lean
