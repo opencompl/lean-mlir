@@ -38,25 +38,26 @@ def Tensor1d.empty [Inhabited α] : Tensor1d α where
 -- [0..[left..left+len)..size)
 -- if the (left + len) is larger than size, then we don't have a valid extract,
 -- so we return a size zero tensor.
-def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
-  (left: Index) (len: Index) : Tensor1d α :=
-  let right := if (left + len) < t.size then left + len else 0
-  let size := right - left
-  { size := size,
-    val := fun ix =>
-    if left + len < t.size
-    then if (ix < len) then t.val (ix + left) else default
-    else default,
-    spec := by {
-      intros ix IX;
-      by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
-      try simp[A] at right
-      -- TODO: how to substitute?
-      have LEN : len < t.size := by simp[Index] at *; linarith
-      intros H
-      sorry
-    }
-  }
+-- def Tensor1d.extract [Inhabited α] (t: Tensor1d α)
+--   (left: Index) (len: Index) : Tensor1d α :=
+--   let right := if (left + len) < t.size then left + len else 0
+--   let size := right - left
+--   { size := size,
+--     val := fun ix =>
+--     if left + len < t.size
+--     then if (ix < len) then t.val (ix + left) else default
+--     else default,
+--     spec := by {
+--       intros ix IX;
+--       by_cases A:(left + len < t.size) <;> simp[A] at right ⊢;
+--       try simp[A] at right
+--       -- TODO: how to substitute?
+--       have LEN : len < t.size := by simp[Index] at *; linarith
+--       intros H
+--       sorry
+--     }
+--   }
+
 def Tensor1d.map [Inhabited α] (f : α → α) (t : Tensor1d α) : Tensor1d α where
   size := t.size
   val := fun ix => if ix < t.size then f (t.val ix) else default
