@@ -47,7 +47,7 @@ example (w : Nat) :
   [llvm ( w )| {
   ^bb0(%X : _, %Y : _):
     %cones = llvm.mlir.constant -1
-    %v1 = llvm.xor %X, %cmin
+    %v1 = llvm.xor %X, %cones
     %v2 = llvm.add %v1, %Y
     llvm.return %v2
   }] ⊑ [llvm ( w )| {
