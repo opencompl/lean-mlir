@@ -530,7 +530,6 @@ syntax mlir_attr_val_symbol : mlir_attr_val
 syntax neg_num (":" mlir_type)? : mlir_attr_val
 syntax scientificLit (":" mlir_type)? : mlir_attr_val
 syntax ident : mlir_attr_val
-syntax "$" noWs "{" ident "| " term "}" (":" mlir_type)? : mlir_attr_val
 
 syntax "[" sepBy(mlir_attr_val, ",") "]" : mlir_attr_val
 syntax "[mlir_attr_val|" mlir_attr_val "]" : term
@@ -600,14 +599,7 @@ macro_rules
       `(AttrValue.alias $(Lean.quote a.getId.toString))
 
 macro_rules
-  | `([mlir_attr_val| ${$ctor| $x:term } $[: $t]?]) => do
-    let (.ident _ ctorName _ _) := ctor.raw | Macro.throwUnsupported
-    let ctorId := mkIdent <| Name.str ``AttrValue ctorName.toString
-    match ctorName with
-      | "int" | "float" =>
-        let t ← t.getDM `(mlir_type| i32)
-        `($ctorId $x [mlir_type| $t])
-      | _               => `($ctorId $x)
+| `([mlir_attr_val| $$($q) ]) => return q
 
 section Test
 

@@ -73,15 +73,18 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
+open MLIR.AST
+
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
-    let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
+      let t ← t.getDM `(mlir_type| _)
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
-    let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = ${int| $x} : $t} : () -> ($t) )
+      let t ← t.getDM `(mlir_type| _)
+      let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value =  $$($x) } : () -> ($t) )
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
