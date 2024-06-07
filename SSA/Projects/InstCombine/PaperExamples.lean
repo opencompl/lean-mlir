@@ -106,8 +106,5 @@ example :
   ^bb0(%X : _, %Y : _):
     llvm.return %Y
   }] := by
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  alive_auto
+    simp_alive_peephole
+    alive_auto
