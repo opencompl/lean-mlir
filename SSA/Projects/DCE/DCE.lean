@@ -339,7 +339,7 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
     | .some ⟨body', hbody⟩ =>
       let ⟨Γ', hom', ⟨com', hcom'⟩⟩
       : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
-        ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we devard the `let` binding.
+        ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
           simp [HCOM]
           intros V
           apply hbody
