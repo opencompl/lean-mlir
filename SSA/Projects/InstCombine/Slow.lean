@@ -6,7 +6,6 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.Base
-import SSA.Projects.InstCombine.AliveStatements
 
 open SSA InstCombine EDSL
 
