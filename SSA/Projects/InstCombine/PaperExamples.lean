@@ -55,9 +55,7 @@ theorem xor_sub :
     simp_alive_peephole
     alive_auto
 
-/--
-info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
--/
+/-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub
 
 
