@@ -144,8 +144,6 @@ example : pretty_test_generic = prettier_test_generic    := rfl
 
 /-! ## antiquotations test -/
 
-set_option pp.rawOnError true
-
 private def antiquot_test (x) := -- antiquotated constant value in generic syntax
   [llvm| {
     %0 = "llvm.mlir.constant"() { value = $(.int (x : Nat) (.i _ 42)) } : () -> (i42)

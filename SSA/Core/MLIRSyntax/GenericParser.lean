@@ -536,7 +536,7 @@ syntax "[mlir_attr_val|" mlir_attr_val "]" : term
 syntax "[mlir_attr_val_symbol|" mlir_attr_val_symbol "]" : term
 
 macro_rules
-| `([mlir_attr_val| $$($x) ]) => `($x)
+  | `([mlir_attr_val| $$($x) ]) => `($x)
 
 /-- Convert a possibly negated numeral into a term representing the same value -/
 def negNumToTerm : TSyntax ``neg_num → MacroM Term
@@ -597,9 +597,6 @@ macro_rules
 macro_rules
   | `([mlir_attr_val| # $a:ident]) =>
       `(AttrValue.alias $(Lean.quote a.getId.toString))
-
-macro_rules
-| `([mlir_attr_val| $$($q) ]) => return q
 
 section Test
 
