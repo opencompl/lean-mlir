@@ -134,4 +134,19 @@ private def pretty_select (w : Nat) :=
 example : pretty_test         = prettier_test_generic 32 := rfl
 example : pretty_test_generic = prettier_test_generic    := rfl
 
+
+/-! ## antiquotations test -/
+
+private def antiquot_test (x) := -- antiquotated constant value in generic syntax
+  [llvm| {
+    %0 = "llvm.mlir.constant"() { value = $(.int (x : Nat) (.i _ 32)) } : () -> (i32)
+    llvm.return %0 : i32
+  }]
+private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in pretty syntax
+  [llvm| {
+    %0 = llvm.mlir.constant $(x) : i32
+    llvm.return %0 : i32
+  }]
+example : antiquot_test = antiquot_test_pretty := rfl
+
 end Test
