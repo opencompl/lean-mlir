@@ -720,35 +720,35 @@ theorem alive_AndOrXor_144  (w : Nat)   : alive_AndOrXor_144_src w  ⊑ alive_An
   %r = icmp eq %a3, 0
 
 -/
-def alive_AndOrXor_698_src   :=
-[alive_icom ()| {
+def alive_AndOrXor_698_src (w : Nat)  :=
+[alive_icom (w)| {
 ^bb0(%a : _, %b : _, %d : _):
-  %v1 = llvm.and %a, %b : i1
-  %v2 = llvm.and %a, %d : i1
+  %v1 = llvm.and %a, %b : _
+  %v2 = llvm.and %a, %d : _
   %v3 = llvm.mlir.constant 0 : _
-  %v4 = llvm.icmp.eq %v1, %v3 : i1
+  %v4 = llvm.icmp.eq %v1, %v3 : _
   %v5 = llvm.mlir.constant 0 : _
-  %v6 = llvm.icmp.eq %v2, %v5 : i1
+  %v6 = llvm.icmp.eq %v2, %v5 : _
   %v7 = llvm.and %v4, %v6 : i1
   llvm.return %v7 : i1
 }]
 
-def alive_AndOrXor_698_tgt  :=
-[alive_icom ()| {
+def alive_AndOrXor_698_tgt (w : Nat) :=
+[alive_icom (w)| {
 ^bb0(%a : _, %b : _, %d : _):
-  %v1 = llvm.or %b, %d : i1
-  %v2 = llvm.and %a, %v1 : i1
+  %v1 = llvm.or %b, %d : _
+  %v2 = llvm.and %a, %v1 : _
   %v3 = llvm.and %a, %b : _
   %v4 = llvm.and %a, %d : _
   %v5 = llvm.mlir.constant 0 : _
-  %v6 = llvm.icmp.eq %v3, %v5 : i1
+  %v6 = llvm.icmp.eq %v3, %v5 : _
   %v7 = llvm.mlir.constant 0 : _
-  %v8 = llvm.icmp.eq %v4, %v7 : i1
+  %v8 = llvm.icmp.eq %v4, %v7 : _
   %v9 = llvm.mlir.constant 0 : _
-  %v10 = llvm.icmp.eq %v2, %v9 : i1
+  %v10 = llvm.icmp.eq %v2, %v9 : _
   llvm.return %v10 : i1
 }]
-theorem alive_AndOrXor_698   : alive_AndOrXor_698_src ⊑ alive_AndOrXor_698_tgt := by
+theorem alive_AndOrXor_698   : alive_AndOrXor_698_src w ⊑ alive_AndOrXor_698_tgt w := by
   unfold alive_AndOrXor_698_src alive_AndOrXor_698_tgt
   simp_alive_peephole
   apply bitvec_AndOrXor_698
