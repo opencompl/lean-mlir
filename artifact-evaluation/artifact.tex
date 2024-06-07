@@ -130,13 +130,13 @@ $ docker run -it siddudruid/opencompl-ssa
 # | fetches the maths library from the build cache,
 # | and builds our framework.
 $ cd /code/ssa && lake clean && lake exe cache get && lake build
-# | This allows to check that the key theorems of our framework are guarded,
-# | and that they do not contain `sorry`s.
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" --context 2 | grep "sorry"
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" --context 2
+# | This allows to check that the key theorems of our framework are
+# |guarded, and that they do not contain `sorry`s.
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2 | grep "sorry"
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
 \end{minted}
 
-\subsection{Full Workflow Example}
+% \subsection{Full Workflow Example}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,15 +146,15 @@ On running \texttt{lake build}, the build succeeds with no errors.
 
 Next, run:
 
-\begin{minted}{text}
-$ rg -g "**/*.lean" "guard_msgs in #print axioms" --context 1 | grep "sorry"
+\begin{minted}[fontsize=\scriptsize]{text}
+$ rg -g "**/*.lean" "guard_msgs in #print axioms" -C2 | grep "sorry"
 \end{minted}
 
 Grep returns no matches, which checks that all guarded theorems do not use the sorry axiom.
 To manually inspect this, run:
 
-\begin{minted}{text}
-$ rg -g "**/*.lean" "#guard_msgs in #print axioms" --context 2
+\begin{minted}[fontsize=\scriptsize]{text}
+$ rg -g "**/*.lean" "#guard_msgs in #print axioms" -C2
 \end{minted}
 
 In the output, observe the following lines, which tells us that, for example, the 
@@ -167,7 +167,7 @@ we are justified in our claims that we have mechanized the key theorem statement
 
 Below, we list the key theorems that we claim to have mechanized, and their 
 guarded verification below. Please inspect the output of 
-\texttt{$ rg -g "**/*.lean" "#guard_msgs in #print axioms" --context 2 | grep "sorry"}
+\texttt{(\$ rg -g "**/*.lean" "\#guard\_msgs in \#print axioms" -C2 | grep "sorry")}
 and confirm that these guarded statements occur, with the guard containing only the axioms \texttt{propext},
 \texttt{Classical.choice}, and \texttt{Quot.sound}.
 
@@ -175,8 +175,8 @@ and confirm that these guarded statements occur, with the guard containing only 
 
 The core correctness claim of the peephole rewriter is guarded below:
 
-\begin{minted}{text}
-  SSA/Core/Framework.lean
+\begin{minted}[fontsize=\tiny]{text}
+SSA/Core/Framework.lean
 2422-
 2423-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 2424:#guard_msgs in #print axioms denote_rewritePeepholeAt
@@ -195,7 +195,7 @@ The core correctness claim of the peephole rewriter is guarded below:
 The correctness claim of the hardest Alive rewrites that time out on an SMT solver, which we verify 
 for arbitrary bitwidth:
 
-\begin{minted}{text}
+\begin{minted}[fontsize=\tiny]{text}
 SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
 53-/--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
 54-axioms: [propext, Classical.choice, Quot.sound] -/
