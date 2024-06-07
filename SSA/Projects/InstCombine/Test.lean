@@ -195,7 +195,7 @@ info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
 theorem com_Γ : com.1 = (Γn 1) := by rfl
 theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 
-def bb0IcomConcrete := [alive_icom ()|
+def bb0IcomConcrete := [llvm ()|
 {
   ^bb0(%arg0: i32):
     %0 = llvm.mlir.constant 1 : i32
@@ -207,14 +207,14 @@ def bb0IcomConcrete := [alive_icom ()|
   }]
 
 /-- A simple example of a family of programs, generic over some bitwidth `w` -/
-def GenericWidth (w : Nat) := [alive_icom (w)|
+def GenericWidth (w : Nat) := [llvm (w)|
 {
   ^bb0():
     %0 = llvm.mlir.constant 0
     llvm.return %0
   }]
 
-def bb0IcomGeneric (w : Nat) := [alive_icom (w)|
+def bb0IcomGeneric (w : Nat) := [llvm (w)|
 {
   ^bb0(%arg0: _):
     %0 = llvm.mlir.constant 1
@@ -240,7 +240,7 @@ example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
 open ComWrappers
 
 def one_inst_macro (w: Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     llvm.return %0
@@ -271,7 +271,7 @@ def one_inst_macro_proof (w : Nat) :
   apply one_inst_stmt
 
 def two_inst_macro (w: Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     %1 = llvm.not %arg0
@@ -304,7 +304,7 @@ def two_inst_macro_proof (w : Nat) :
   apply two_inst_stmt
 
 def three_inst_macro (w: Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _):
     %0 = llvm.not %arg0
     %1 = llvm.not %0
@@ -340,7 +340,7 @@ def three_inst_macro_proof (w : Nat) :
   apply three_inst_stmt
 
 def one_inst_concrete_macro :=
-  [alive_icom ()|{
+  [llvm ()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     llvm.return %0 : i1
@@ -371,7 +371,7 @@ def one_inst_concrete_macro_proof :
   apply one_inst_concrete_stmt
 
 def two_inst_concrete_macro :=
-  [alive_icom ()|{
+  [llvm ()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     %1 = llvm.not %arg0 : i1
@@ -404,7 +404,7 @@ def two_inst_concrete_macro_proof :
   apply two_inst_concrete_stmt
 
 def three_inst_concrete_macro :=
-  [alive_icom ()|{
+  [llvm ()|{
   ^bb0(%arg0: i1):
     %0 = llvm.not %arg0 : i1
     %1 = llvm.not %0 : i1
@@ -440,7 +440,7 @@ def three_inst_concrete_macro_proof :
   apply three_inst_concrete_stmt
 
 def two_ne_macro (w : Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0(%arg0: _, %arg1: _):
     %0 = llvm.icmp.ne %arg0,  %arg1
     %1 = llvm.icmp.ne %arg0,  %arg1
@@ -460,7 +460,7 @@ def two_ne_macro_proof (w : Nat) :
   apply two_ne_stmt
 
 def constant_macro (w : Nat) :=
-  [alive_icom (w)|{
+  [llvm (w)|{
   ^bb0():
     %0 = llvm.mlir.constant 2
     %1 = llvm.mlir.constant 1
