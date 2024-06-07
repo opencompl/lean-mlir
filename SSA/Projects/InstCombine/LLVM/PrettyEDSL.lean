@@ -73,14 +73,15 @@ macro_rules
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
-syntax mlir_op_operand " = " "llvm.mlir.constant" (neg_num <|> ("$" noWs "{" term "}")) (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
     let t ← t.getDM `(mlir_type| _)
     `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
     let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$(.int $x [mlir_type| $t])} : () -> ($t) )
+    `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = ${int| $x} : $t} : () -> ($t) )
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
@@ -144,13 +145,13 @@ set_option pp.rawOnError true
 
 private def antiquot_test (x) := -- antiquotated constant value in generic syntax
   [llvm| {
-    %0 = "llvm.mlir.constant"() { value = $(.int (x : Nat) (.i _ 32)) } : () -> (i32)
-    llvm.return %0 : i32
+    %0 = "llvm.mlir.constant"() { value = $(.int (x : Nat) (.i _ 42)) } : () -> (i42)
+    llvm.return %0 : i42
   }]
 private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in pretty syntax
   [llvm| {
-    %0 = llvm.mlir.constant ${x} : i32
-    llvm.return %0 : i32
+    %0 = llvm.mlir.constant ${x} : i42
+    llvm.return %0 : i42
   }]
 example : antiquot_test = antiquot_test_pretty := rfl
 
