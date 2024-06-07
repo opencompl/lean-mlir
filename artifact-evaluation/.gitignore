@@ -1,3 +1,6 @@
+opencompl-ssa.tar
+*.tar # tarball
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
