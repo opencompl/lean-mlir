@@ -94,3 +94,20 @@ example :
   apply BitVec.eq_of_toNat_eq
   simp [bv_toNat]
   ring_nf
+
+-- Example proof of xor + sub, this is automatically closed by automation.
+example :
+    [llvm (w)| {
+  ^bb0(%X : _, %Y : _):
+    %v1 = llvm.sub %X, %X
+    %r = llvm.xor %v1, %Y
+    llvm.return %r
+  }] ⊑  [llvm (w)| {
+  ^bb0(%X : _, %Y : _):
+    llvm.return %Y
+  }] := by
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  alive_auto
