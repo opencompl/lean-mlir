@@ -13,6 +13,38 @@ open BitVec
 
 set_option linter.unreachableTactic false
 
+theorem getLsb_ofBool (b : Bool) (i : Nat) : (BitVec.ofBool b).getLsb i = ((i = 0) && b) := sorry
+
+theorem bitvec_AndOrXor_2663 :
+    ∀ (e e_1 : LLVM.IntW w),
+      LLVM.xor (LLVM.icmp LLVM.IntPredicate.ule e_1 e) (LLVM.icmp LLVM.IntPredicate.ne e_1 e) ⊑
+        LLVM.icmp LLVM.IntPredicate.uge e_1 e := by
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ext
+  simp
+  simp only [getLsb_ofBool]
+  rename_i x y i
+  simp
+  simp [BitVec.ule]
+  simp [bne]
+  simp [BEq.beq]
+  simp [BitVec.toNat_eq]
+  -- ⊢ (!decide (decide (y.toNat ≤ x.toNat) = !decide (y.toNat = x.toNat)))
+  -- = decide (x.toNat ≤ y.toNat)
+
+
+
+  by_cases hxy : y ≠ x
+  · have hxy' : y.toNat ≠ x.toNat := by
+      exact (toNat_ne y x).mp hxy
+    by_cases h₁ : y.toNat ≤ x.toNat <;>
+    by_cases h₂ : x.toNat ≤ y.toNat <;> simp [h₁, h₂, hxy', hxy] <;> try omega
+  · have hxy : y = x := by
+      simpa using hxy
+    simp [hxy]
 
 theorem bitvec_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -618,7 +650,6 @@ theorem bitvec_AndOrXor_2658 :
   all_goals sorry
 
 
-theorem getLsb_ofBool (b : Bool) (i : Nat) : (BitVec.ofBool b).getLsb i = ((i = 0) && b) := sorry
 
 --@[bv_toNat] theorem toNat_ne (x y : BitVec n) : x != y ↔ x.toNat ≠ y.toNat := sorry
 
@@ -635,8 +666,6 @@ theorem bitvec_AndOrXor_2663 :
   simp
   simp only [getLsb_ofBool]
   simp
-  rw [toNat_ne]
-
   rw [BitVec.toNat_eq]
 
   all_goals sorry
