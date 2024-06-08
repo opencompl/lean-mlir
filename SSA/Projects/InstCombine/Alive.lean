@@ -28,3 +28,5 @@ import SSA.Projects.InstCombine.LLVM.Lemmas
 
 -- Test cases
 import SSA.Projects.InstCombine.Test
+-- Examples for the paper
+import SSA.Projects.InstCombine.PaperExamples
