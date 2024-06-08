@@ -84,7 +84,7 @@ macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
       let t ← t.getDM `(mlir_type| _)
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value =  $$($x) } : () -> ($t) )
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
