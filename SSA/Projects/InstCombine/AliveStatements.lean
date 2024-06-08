@@ -617,6 +617,11 @@ theorem bitvec_AndOrXor_2658 :
   try alive_auto
   all_goals sorry
 
+
+theorem getLsb_ofBool (b : Bool) (i : Nat) : (BitVec.ofBool b).getLsb i = ((i = 0) && b) := sorry
+
+--@[bv_toNat] theorem toNat_ne (x y : BitVec n) : x != y ↔ x.toNat ≠ y.toNat := sorry
+
 theorem bitvec_AndOrXor_2663 :
     ∀ (e e_1 : LLVM.IntW w),
       LLVM.xor (LLVM.icmp LLVM.IntPredicate.ule e_1 e) (LLVM.icmp LLVM.IntPredicate.ne e_1 e) ⊑
@@ -625,6 +630,15 @@ theorem bitvec_AndOrXor_2663 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
+  rename_i x y
+  ext
+  simp
+  simp only [getLsb_ofBool]
+  simp
+  rw [toNat_ne]
+
+  rw [BitVec.toNat_eq]
+
   all_goals sorry
 
 theorem bitvec_152 :
