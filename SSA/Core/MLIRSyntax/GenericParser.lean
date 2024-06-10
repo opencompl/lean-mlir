@@ -144,7 +144,7 @@ def MLIR.EDSL.balancedBracketsParenthesizer : Parenthesizer := pure ()
 macro "[balanced_brackets|" xs:balancedBrackets "]" : term => do
   match xs.raw[0] with
   | .atom _ val => return (Lean.quote val: TSyntax `str)
-  | _  => Macro.throwError "expected balanced bracts to have atom"
+  | _  => Macro.throwErrorAt xs "expected balanced bracts to have atom"
 
 section Test
 
@@ -321,8 +321,8 @@ macro_rules
             then `(MLIRType.int .Signless $lit)
             else `(MLIRType.float $lit)
           | none =>
-              Macro.throwError $ "cannot convert suffix of i/f to int: " ++ xstr.toString
-        else Macro.throwError $ "expected i<int> or f<int>, found: " ++ xstr.toString
+              Macro.throwErrorAt x $ "cannot convert suffix of i/f to int: " ++ xstr.toString
+        else Macro.throwErrorAt x $ "expected i<int> or f<int>, found: " ++ xstr.toString
   | `([mlir_type| ! $x:str ]) => `(MLIRType.undefined $x)
   | `([mlir_type| ! $x:ident ]) => `(MLIRType.undefined $(Lean.quote x.getId.toString))
   -- Hardcoded meta-variable
@@ -774,9 +774,12 @@ macro_rules
         | none => `(@List.nil (MLIR.AST.TypedSSAVal _))
         | some name =>
            match resTypes.getElems with
-           | #[] => Macro.throwError s!"expected to have return type since result '{resName}' exists"
            | #[resType] => `([([mlir_op_operand| $name], [mlir_type| $resType])])
-           | tys => Macro.throwError s!"expected single return type, found multiple '{tys}'"
+           | #[] =>
+              Macro.throwErrorAt name s!"expected to have return type since result '{resName}' exists"
+           | tys =>
+              let ty₁ := (tys : Array _)[1]?.getD (TSyntax.mk .missing) |>.raw
+              Macro.throwErrorAt ty₁ s!"expected single return type, found multiple '{tys}'"
 
 
         -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
