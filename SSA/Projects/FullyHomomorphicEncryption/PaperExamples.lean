@@ -88,7 +88,7 @@ variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 -- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
 -- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance.
-noncomputable def lhs := [fhe_com q, n, hq| {
+noncomputable def a_plus_generator_eq_a := [fhe_com q, n, hq| {
 ^bb0(%a : !R):
   %one_int = arith.const 1 : i16
   %two_to_the_n = arith.const ${2**n} : index
@@ -104,18 +104,18 @@ def rhs := [fhe_com q, n, hq | {
   return %a : !R
 }]
 
-/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice] -/
-#guard_msgs in #print axioms lhs
+/-- info: 'a_plus_generator_eq_a' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+#guard_msgs in #print axioms a_plus_generator_eq_a
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLike :=
-  { lhs := lhs,
+  { lhs := a_plus_generator_eq_a,
      rhs := rhs
   , correct :=
     by
       funext Γv
-      unfold lhs rhs
+      unfold a_plus_generator_eq_a rhs
        /-
       Com.denote
           (Com.var (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
