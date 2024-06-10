@@ -89,19 +89,19 @@ variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 -- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
 -- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance.
 noncomputable def lhs := [fhe_com q, n, hq| {
-^bb0(%a : ! R):
+^bb0(%a : !R):
   %one_int = arith.const 1 : i16
   %two_to_the_n = arith.const ${2**n} : index
-  %x2n = poly.monomial %one_int, %two_to_the_n : (i16, index) -> ! R
-  %oner = poly.const 1 : ! R
-  %p = poly.add %x2n, %oner : ! R
-  %v1 = poly.add %a, %p : ! R
-  return %v1 : ! R
+  %x2n = poly.monomial %one_int, %two_to_the_n : (i16, index) -> !R
+  %oner = poly.const 1 : !R
+  %p = poly.add %x2n, %oner : !R
+  %v1 = poly.add %a, %p : !R
+  return %v1 : !R
 }]
 
 def rhs := [fhe_com q, n, hq | {
-^bb0(%a : ! R):
-  return %a : ! R
+^bb0(%a : !R):
+  return %a : !R
 }]
 
 /--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice] -/

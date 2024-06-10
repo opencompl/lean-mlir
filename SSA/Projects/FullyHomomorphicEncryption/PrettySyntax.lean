@@ -46,17 +46,15 @@ section Test
 variable {q n} [h : Fact (q > 1)]
 
 private def fhe_test_one_lhs := [fhe_com q, n, h | {
-  ^bb0(%a : ! R):
-  --        ^^^ TODO: should `: R` also work here?
+  ^bb0(%a : !R) :
     %one_int = arith.const 1 : i16
     %zero_idx = arith.const 0 : index
     %two_to_the_n = arith.const ${2 ^ n} : index
-    %x2n = poly.monomial %one_int, %two_to_the_n : (i16, index) -> ! R
-    %one_r = poly.monomial %one_int, %zero_idx : (i16, index) -> ! R
-    %p = poly.add %x2n, %one_r : ! R
-    --                           ^^^ TODO: have `: R` also just work
-    %v1 = poly.add %a, %p : ! R
-    return %v1 : ! R
+    %x2n = poly.monomial %one_int, %two_to_the_n : (i16, index) -> !R
+    %one_r = poly.monomial %one_int, %zero_idx : (i16, index) -> !R
+    %p = poly.add %x2n, %one_r : !R
+    %v1 = poly.add %a, %p : !R
+    return %v1 : !R
   }]
 
 /--
