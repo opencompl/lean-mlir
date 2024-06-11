@@ -102,10 +102,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Description}
 
-\subsubsection{Hardware dependencies}
-
-None.
-
 \subsubsection{Software dependencies}
 
 Docker is necessary to run our artifact.
@@ -236,54 +232,17 @@ SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
 
 \subsection{Paper Code Examples}
 
-\subsubsection{Introduction}
-
-The code for Figure 1 lives in \texttt{SSA/Projects/PaperExamples/PaperExamples.lean}.
-Verify that the example code from Figure 1 exists in this file.
-
-
-Figure 2?
-
-\subsubsection{A Framework for Intrinsically Well Typed SSA}
-
-Figure 3, 4 is found in \texttt{SSA/Core/Framework.lean}.
-
-
-\subsubsection{Verified SSA Rewriting With rewritePeephole}
-
-The statement and proof of \texttt{denote_rewritePeephole} 
-
-\subsubsection{DCE & CSE: Folding Over Intrinsically Well Typed SSA}
-
-CSE.lean, DCE.lean
-
-\subsubsection{Proof Automation for Goal State Simplification}
-
-
-\subsubsection{Pure Rewriting in a Side-Effectful World}
-
-All definitions 
-
-\subsubsection{Reasoning About Bitvectors of Arbitrary Width}
-
-
-\subsubsection{Proving Bitvector Rewrites in our Framework}
-
-The two examples are found at \texttt{SSA/Projects/InstCombine/PaperExamples.lean}.
-
-
-
-\subsubsection{Structured Control Flow}
-
-Figure 5 can be found at \texttt{SSA/Projects/Scf/ScfFunctor.lean}.
-
-\subsubsection{Fully Homomorphic Encryption}
-
-All definitions can be found in \texttt{SSA/Projects/Scf/ScfFunctor.lean}.
-All proofs can be found in .
-
-
-
+\begin{itemize}
+\item \emph{Figure 1, 2} is at \texttt{SSA/Projects/FullyHomomorphicEncryption/\\PaperExamples.lean}.
+\item \emph{Figure 3, 4} is at \texttt{SSA/Core/Framework.lean}.
+\item The statement and proof of \texttt{denote\_rewritePeephole} can be found at 
+\texttt{SSA/Core/Framework.lean}. 
+\item The definitions and proofs of DCE can be found in \\
+\texttt{SSA/Projects/DCE/DCE.lean}, and of CSE in \\\texttt{SSA/Projects/CSE/CSE.lean}.
+\item The examples for bitvector rewrites in found at \\\texttt{SSA/Projects/InstCombine/PaperExamples.lean}.
+\item The hand-written examples are found at \\\texttt{SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean}.
+\item All FHE examples can be found in \\\texttt{SSA/Projects/FullyHomomorphicEncryption/PaperExamples.lean}.
+\end{itemize}
 
 \subsection{Miscellanous Docker Usage}
 
