@@ -19,8 +19,8 @@ ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
 # Download & build lean-mlir
-RUN curl -L https://github.com/opencompl/ssa/archive/refs/tags/v0.1.0.tar.gz > /code/ssa.tar.gz # SSA tar file
-RUN tar xf ssa.tar.gz && ls /code/ && mv ssa-0.1.0 ssa # untar
+RUN curl -L https://github.com/opencompl/ssa/archive/refs/tags/v0.1.2.tar.gz > /code/ssa.tar.gz # SSA tar file
+RUN tar xf ssa.tar.gz && ls /code/ && mv ssa-0.1.2 ssa # untar
 WORKDIR /code/ssa
 RUN lake -R exe cache get
 RUN lake build SSA mlirnatural
