@@ -95,7 +95,7 @@
   \item {\bf How much time is needed to complete experiments (approximately)?: } 1hr
   \item {\bf Publicly available?: } Yes
   \item {\bf Code licenses (if publicly available)?: } MIT
-  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.11506328
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.11519739
 \end{itemize}
 }
 
@@ -117,7 +117,7 @@ The Docker image has all dependencies needed to compile our framework with Lean4
 \subsection{Experiment workflow}
 
 Access the docker image \texttt{opencompl-ssa} from
-\url{https://zenodo.org/records/11506328}
+\url{https://zenodo.org/records/11519739}.
 
 \begin{minted}[fontsize=\scriptsize]{text}
 $ docker load -i opencompl-ssa.tar
@@ -245,19 +245,16 @@ SSA/Projects/InstCombine/AliveHandwrittenLargeExamples.lean
 \end{itemize}
 
 \subsection{Miscellanous Docker Usage}
-
 To copy files for inspection from the docker container into the host,
  keep the container running, and in another
 shell instance, use the \texttt{docker cp}
-command to copy files from within the container out to the host:
+command to copy files from within the container out to the host:\footnote{For more about \texttt{docker cp}, please see: (\url{https://docs.docker.com/engine/reference/commandline/cp/})}
 
 \begin{minted}[fontsize=\footnotesize]{text}
 $ docker container ls # find   ID
 $ docker cp <CONTAINERID>:<PATH/INSIDE/CONTAINER> \
             <PATH/OUTSIDE/CONTAINER>
 \end{minted}
-For more about \texttt{docker cp}, please see:
-(\url{https://docs.docker.com/engine/reference/commandline/cp/})
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
