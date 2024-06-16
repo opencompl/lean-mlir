@@ -37,7 +37,7 @@ theorem shift_mul:
   ring_nf
 
 /--
-info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms shift_mul
 
@@ -55,7 +55,7 @@ theorem xor_sub :
     simp_alive_peephole
     alive_auto
 
-/-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms xor_sub
 
 

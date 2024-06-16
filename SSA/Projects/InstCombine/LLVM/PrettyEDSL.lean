@@ -110,14 +110,8 @@ private def pretty_select (w : Nat) :=
       llvm.return %0
   }]
 
--- Why is this broken with:
--- type mismatch
--- rfl
--- has type
---  MLIR.EDSL.pretty_test = MLIR.EDSL.pretty_test : Prop
--- but is expected to have type
---   MLIR.EDSL.pretty_test = MLIR.EDSL.prettier_test_generic 32 : Prop
-example : pretty_test         = prettier_test_generic 32 := rfl
+-- for some reason 'rfl' does not work by 'by rfl' works
+example : pretty_test = prettier_test_generic 32 := by rfl
 example : pretty_test_generic = prettier_test_generic    := rfl
 
 
