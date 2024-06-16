@@ -749,7 +749,7 @@ def Com.changeVars : Com d Γ eff ty →
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
-  simp [changeVars, HVector.map_map]
+  simp only [changeVars, HVector.map_map, mk.injEq, heq_eq_eq, and_true, true_and]
   rfl
 
 /-!
@@ -975,7 +975,7 @@ theorem Expr.denote_of_pure {e : Expr d Γ eff ty} (eff_eq : e.HasPureOp) :
       | .impure => return d
     ) := by
   rcases e with ⟨op, ty_eq, eff_le, args, regArgs⟩
-  simp
+  simp only [op_mk, EffectKind.toMonad_pure, args_mk, regArgs_mk, EffectKind.toMonad_impure]
   rw [Expr.denote_mk_of_pure (by simpa using eff_eq)]
   cases eff <;> rfl
 
@@ -989,8 +989,8 @@ theorem Expr.denote_castPureToEff_impure_eq [LawfulMonad d.m] (e : Expr d Γ .pu
 theorem Expr.hasPureOp_of_toPure?_isSome {e : Expr d Γ eff ty} (h : e.toPure?.isSome) :
     e.HasPureOp := by
   rcases e with ⟨op, _, _, _, _⟩
-  simp [Expr.toPure?, Option.isSome] at h
-  simp [HasPureOp]
+  simp only [Option.isSome, toPure?] at h
+  simp only [HasPureOp, op_mk, le_refl, EffectKind.pure_le]
   cases hop : DialectSignature.effectKind op
   · rfl
   · split at h
@@ -1234,7 +1234,10 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
     (v : Var Γ_out ty₂):
     getPureExpr (lets.var e) (v.toSnoc)
     = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
-  simp [getPureExpr, Function.comp]; rfl
+  simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
+    getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp,
+    Expr.changeVars_changeVars];
+  rfl
 
 theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {t : d.Ty}
     {lets : Lets d Γ₁ eff Γ₂} {v : Var Γ₂ t} {ePure : Expr d _ .pure t}
@@ -1264,7 +1267,10 @@ theorem Lets.denote_getPureExprAux [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty} {
     | last =>
       simp only [getPureExprAux, eq_rec_constant, Var.casesOn_last,
         Option.mem_def, Option.some.injEq] at he
-      simp [denote, Expr.denote_toPure? he]
+      simp only [denote, Expr.denote_toPure? he, EffectKind.toMonad_impure,
+        EffectKind.return_impure_toMonad_eq, Ctxt.dropUntil_last, Ctxt.dropUntilHom_last,
+        bind_assoc, pure_bind, Valuation.comap_snoc_snocRight, Valuation.comap_id,
+        Valuation.snoc_last]
       cases eff <;> simp
 
 theorem Lets.denote_getExpr [LawfulMonad d.m] {Γ₁ Γ₂ : Ctxt d.Ty}
@@ -1399,7 +1405,7 @@ theorem _root_.AList.mem_of_mem_entries {α : Type _} {β : α → Type _} {s : 
     ⟨k, v⟩ ∈ s.entries → k ∈ s := by
   intro h
   rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys] at h ⊢
+  simp only [Membership.mem, keys] at h ⊢
   clear nd
   induction h
   next    => apply List.Mem.head
@@ -1412,7 +1418,7 @@ theorem _root_.AList.mem_entries_of_mem {α : Type _} {β : α → Type _} {s : 
     k ∈ s → ∃ v, ⟨k, v⟩ ∈ s.entries := by
   intro h
   rcases s with ⟨entries, nd⟩
-  simp [(· ∈ ·), keys, List.keys] at h ⊢
+  simp only [Membership.mem, keys, List.keys] at h ⊢
   clear nd;
   induction entries
   next    => contradiction
@@ -1797,11 +1803,11 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
     ma.entries ⊆ varMap.entries :=
   match l, argsl, argsr with
   | [], .nil, .nil =>  by
-    simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
+    simp only [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
     exact Set.Subset.refl _
   | .cons t ts, .cons vl argsl', .cons vr argsr' => by
-    simp [matchArg, bind, pure] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind := subset_entries_matchArg
       (Γ_out := Γ_out)
@@ -1839,7 +1845,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
     ma.entries ⊆ varMap.entries :=
   match matchLets, w with
   | .nil, w => by
-    simp [matchVar] at *
+    simp only [matchVar, Option.mem_def] at *
     intros x hx
     split at hvarMap
     case h_1 p q r _s =>
@@ -1854,7 +1860,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
       . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
   | .var matchLets _, ⟨w+1, h⟩ => by
-    simp [matchVar] at *
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
     apply subset_entries_matchVar
       (varMap := varMap)
@@ -1865,8 +1871,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
       (w := _)
       (hvarMap := by simp; exact hvarMap)
   | .var matchLets matchExpr, ⟨0, _⟩ => by
-    simp [matchVar, Bind.bind, Option.bind] at *
-    -- unfold hvarMap
+    simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
     split at hvarMap
     · simp at hvarMap
     · rename_i e he
@@ -1906,8 +1911,8 @@ theorem denote_matchVar_matchArg
   | _, .nil, .nil, _, _ => by simp [HVector.map]
   | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
     intro h_sub f₁ f₂ hf hmatchVar hvarMap
-    simp [HVector.map]
-    simp [matchArg, pure, bind] at hvarMap
+    simp only [HVector.map, HVector.cons.injEq]
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
     · apply subset_entries_matchArg (d:=d)
@@ -1957,7 +1962,7 @@ def Lets.denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv : Valuation Γ_
 
 theorem Expr.denote_eq_denoteIntoSubtype (e : Expr d Γ eff ty) (Γv : Valuation Γ) :
     e.denote Γv = Subtype.val <$> e.denoteIntoSubtype Γv := by
-  simp [denoteIntoSubtype]
+  simp only [denoteIntoSubtype, EffectKind.return_impure_toMonad_eq]
   split
   next h_pure =>
     simp only [denote_toPure? h_pure, map_pure, EffectKind.return_impure_toMonad_eq]
@@ -1999,7 +2004,7 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
         = some ⟨matchExpr.op, matchExpr.ty_eq, matchExpr.eff_le, args, matchExpr.regArgs⟩
       ∧ matchArg lets matchLets args matchExpr.args ma = some ma' := by
   unfold matchVar
-  simp
+  simp only [Option.bind_eq_bind, Option.bind_eq_some, forall_exists_index, and_imp]
   rintro ⟨op', ty_eq', eff_le', args', regArgs'⟩ h_pure h
   rw [h_pure]
   split_ifs at h with regArgs_eq
@@ -2042,7 +2047,8 @@ theorem denote_matchVar2_of_subset
         | .some mappedVar => by exact (Γ_out_lets mappedVar)
         | .none => by exact default)) w))
     = (lets.denote s₁ >>= fun Γ_out_lets => f Γ_out_lets (Γ_out_lets v)) := by
-  simp [lets.denote_eq_denoteIntoSubtype, map_eq_pure_bind]
+  simp only [lets.denote_eq_denoteIntoSubtype, EffectKind.toMonad_pure, map_eq_pure_bind,
+    EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind]
   congr; funext Vout; congr; next => -- `next` is needed to consume the tags generated by `congr`
   clear s₁ f
 
@@ -2054,7 +2060,8 @@ theorem denote_matchVar2_of_subset
   case var matchLets matchExpr ih =>
     match w with
     | ⟨w+1, h⟩ =>
-      simp [Lets.denote, matchVar_var_succ_eq] at *
+      simp only [Option.mem_def, Ctxt.get?, Var.succ_eq_toSnoc, Lets.denote,
+        EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, Valuation.snoc_toSnoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
       apply ih h_sub h_matchVar
 
@@ -2115,7 +2122,7 @@ theorem mem_matchVar_matchArg
   match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
   | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
   | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
-    simp [matchArg, bind, pure] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
@@ -2138,7 +2145,7 @@ theorem mem_matchVar
   match matchLets, w /- , hvarMap, t', v' -/ with
   | .nil, w /-, h, t', v' -/ => by
     revert hMatchLets
-    simp [Lets.vars]
+    simp only [Lets.vars, VarSet.ofVar, Finset.mem_singleton, Sigma.mk.inj_iff, and_imp]
     rintro ⟨⟩ ⟨⟩
     simp [matchVar] at hvarMap
     split at hvarMap
@@ -2174,22 +2181,22 @@ theorem mem_matchVar
     apply hvarMap'
   | .var matchLets matchE, ⟨0, hw⟩ /-, h, t', v' -/ => by
     revert hMatchLets
-    simp [Ctxt.snoc] at hw
+    simp only [Ctxt.get?, Ctxt.snoc, List.get?_cons_zero, Option.some.injEq] at hw
     subst hw
-    simp [Lets.vars]
+    simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
+      Sigma.exists, forall_exists_index, and_imp]
     intro _ _ hl h_v'
     obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
       unfold matchVar at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
     split_ifs at he₂ with h
-    · dsimp at h
-      dsimp
+    · dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
       apply @mem_matchVar_matchArg (matchLets := matchLets) (hvarMap := he₂)
-      simp
+      simp only [Expr.op_mk, Finset.mem_biUnion, Sigma.exists]
       refine ⟨_, _, ?_, h_v'⟩
       rcases matchE  with ⟨_, _, _⟩
-      dsimp at h
+      dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
       rcases h with ⟨rfl, _⟩
       exact hl
 end
@@ -2238,13 +2245,12 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     rw [← denote_matchVar2 hm]
     simp only [Option.mem_def, Option.some.injEq, pure] at hmap
     subst hmap
-    simp
     congr
     funext Γ_out_v
     rw [← Lets.denotePure]
     congr
     funext t v
-    simp [Valuation.comap]
+    simp only [Valuation.comap]
     split
     . congr
       split <;> simp_all
@@ -2274,20 +2280,18 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     simp only [splitProgramAtAux, Option.mem_def, Option.some.injEq] at hres
     subst hres
     simp only [Lets.denote, eq_rec_constant, Com.denote]
-    simp
+    simp only [EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
-    simp [splitProgramAtAux] at hres
+    simp only [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     cases eff
     case pure =>
       rw [denote_splitProgramAtAux hres s]
-      simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
-      simp
+      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
     case impure =>
       rw [denote_splitProgramAtAux hres s]
-      simp only [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
-      simp
+      simp [Lets.denote, eq_rec_constant, Ctxt.Valuation.snoc]
 
 -- TODO: have `splitProgramAt` return a `Zipper`
 /-- `splitProgramAt pos prog`, will return a `Lets` ending
