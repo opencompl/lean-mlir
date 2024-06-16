@@ -716,7 +716,7 @@ def Com.changeVars : Com d Γ eff ty →
   simp [changeVars]
 
 -- TODO: this is implied by simpler simp-lemmas, do we need it?
-@[simp] lemma Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
+@[simp] lemma Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
   ((Com.ret (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 
 @[simp] lemma Com.denote_changeVars
@@ -1801,7 +1801,7 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
     subst hvarMap
     exact Set.Subset.refl _
   | .cons t ts, .cons vl argsl', .cons vr argsr' => by
-    simp [matchArg, bind, pure] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind := subset_entries_matchArg
       (Γ_out := Γ_out)
@@ -1907,7 +1907,7 @@ theorem denote_matchVar_matchArg
   | _, .cons v₁ T₁, .cons v₂ T₂, ma, varMap₁ => by
     intro h_sub f₁ f₂ hf hmatchVar hvarMap
     simp [HVector.map]
-    simp [matchArg, pure, bind] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     refine ⟨hf _ _ _ _ _ h₁ (List.Subset.trans ?_ h_sub), ?_⟩
     · apply subset_entries_matchArg (d:=d)
@@ -1999,7 +1999,7 @@ theorem matchVar_lete_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d 
         = some ⟨matchExpr.op, matchExpr.ty_eq, matchExpr.eff_le, args, matchExpr.regArgs⟩
       ∧ matchArg lets matchLets args matchExpr.args ma = some ma' := by
   unfold matchVar
-  simp
+  simp only [Option.bind_eq_bind, Option.bind_eq_some, forall_exists_index, and_imp]
   rintro ⟨op', ty_eq', eff_le', args', regArgs'⟩ h_pure h
   rw [h_pure]
   split_ifs at h with regArgs_eq
@@ -2115,7 +2115,7 @@ theorem mem_matchVar_matchArg
   match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
   | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
   | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
-    simp [matchArg, bind, pure] at hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
     simp only [HVector.vars_cons, Finset.biUnion_insert, Finset.mem_union,
       Finset.mem_biUnion, Sigma.exists]
@@ -2178,8 +2178,10 @@ theorem mem_matchVar
     subst hw
     simp [Lets.vars]
     intro _ _ hl h_v'
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
       unfold matchVar at hvarMap
+      simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
     split_ifs at he₂ with h
@@ -2420,7 +2422,7 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => simp
     case neg h => simp
 
-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms denote_rewritePeepholeAt
 
 /- repeatedly apply peephole on program. -/
@@ -2456,7 +2458,7 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (rewritePeephole fuel pr target).denote = target.denote := by
   simp[rewritePeephole, denote_rewritePeephole_go]
 
-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
 end SimpPeepholeApplier

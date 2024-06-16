@@ -83,9 +83,9 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
           · intros ha
             simp at ha
             split at ha
-            case mp.inl hz =>
+            case mp.isTrue hz =>
               simp at ha
-            case mp.inr hz =>
+            case mp.isFalse hz =>
               simp at ha
               subst ha
               simp [hz]

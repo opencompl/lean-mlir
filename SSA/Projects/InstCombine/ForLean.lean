@@ -28,8 +28,7 @@ lemma Nat.eq_one_mod_two_of_ne_zero (n : Nat) (hn : n % 2 != 0) : n % 2 = 1 := b
 
 lemma Nat.sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n = n - x := by
   rcases n with rfl | n <;> simp
-  apply Nat.sub_lt _ hxgt0
-  simp only [Nat.zero_lt_succ]
+  omega
 
 lemma two_pow_pred_mod_eq_two_pred (h : w > 0): 2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
   rw [Nat.mod_eq_of_lt]
@@ -188,12 +187,14 @@ lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
   have hb : b = 0 ∨ b = 1 := width_one_cases _
   rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp[h, h']))
 
-lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ n#w) : a.toNat ≠ n := by
+open BitVec
+
+lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w n) : a.toNat ≠ n := by
   intros haeq
   have hn : n < 2 ^ w := by
     rw [← haeq]
     apply BitVec.isLt
-  have hcontra : a = n#w := by
+  have hcontra : a = BitVec.ofNat w n := by
     apply BitVec.eq_of_toNat_eq
     simp [haeq]
     rw [Nat.mod_eq_of_lt hn]
@@ -388,7 +389,7 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
   have rk : _ := @BitVec.getLsb_ge w x i hi
   apply rk
 
-def intMin (w : Nat) : BitVec w  := (2^(w - 1))#w
+def intMin (w : Nat) : BitVec w  := BitVec.ofNat w (2^(w - 1))
 
 private theorem toNat_intMin (w : Nat) :
     (intMin w).toNat = (if w = 0 then 0 else 2^(w - 1)) := by
@@ -644,8 +645,6 @@ theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :  BitVec.toNa
   apply Nat.mod_eq_of_lt
   obtain ⟨x, hx'⟩ := x
   simp
-  apply Nat.sub_lt
-  apply Nat.two_pow_pos
   apply Nat.pos_of_ne_zero
   cases x
   . contradiction

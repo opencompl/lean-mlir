@@ -149,6 +149,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
       apply Poly.add_f_eq
       done
     }
-/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/--info: 'p1' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms p1
 end ExampleModulo
