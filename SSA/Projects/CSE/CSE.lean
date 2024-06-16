@@ -41,7 +41,7 @@ def State.empty (lets : Lets d Γstart .pure Γ) : State d lets where
 def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
  {Γ : Ctxt d.Ty} {α : d.Ty}
  {lets : Lets d Γstart .pure Γ}
- (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.lete lets e) :=
+ (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.var lets e) :=
  {
   var2var := fun v => by
     apply Subtype.mk
@@ -72,21 +72,21 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   intros V
                   subst hβ
                   subst exprEq
-                  simp! only [Lets.denote_lete_last_pure]
+                  simp! only [Lets.denote_var_last_pure]
                   simp! (config := { unfoldPartialApp := true, decide := true, zetaDelta := true}) [heneedleΓ]
                   congr
                 }⟩
             | .isFalse _neq => .none -- s.expr2cache β eneedleΓ /- different expression, query cache. -/
  }
 
-/-- denoting a `lete` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
+/-- denoting a `var` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
 @[simp]
-theorem Lets.denote_lete
+theorem Lets.denote_var
   {Γstart Γ : Ctxt d.Ty}
   {lets : Lets d Γstart .pure Γ}
   (e : Expr d Γ .pure α)
   (V : Ctxt.Valuation Γstart) :
-  Lets.denote (Lets.lete lets e) V = (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
+  Lets.denote (Lets.var lets e) V = (Ctxt.Valuation.snoc (Lets.denote lets V) (Expr.denote e (Lets.denote lets V))) := by
   simp [Lets.denote, eq_rec_constant]
 
 /-- Remap the last variable in a context, to get a new context without the last variable -/
@@ -173,7 +173,7 @@ body: Com d (Ctxt.snoc Γ α) α✝
 e': Expr d Γ .pure α
 he': Expr.denote e' = Expr.denote e
 v'?: Option { v' // ∀ (V : Ctxt.Valuation Γstart), Lets.denote lets V v' = Expr.denote e (Lets.denote lets V) }
-s': State d.Op (Lets.lete lets e') := snocNewExpr2Cache s e'
+s': State d.Op (Lets.var lets e') := snocNewExpr2Cache s e'
 -/
 
 def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
@@ -182,20 +182,20 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
  (s : State d lets) (enew : Expr d Γ .pure α) (eold : Expr d Γ .pure α) (henew :
     ∀ (V : Γstart.Valuation), enew.denote (lets.denote V) = eold.denote (lets.denote V))
   (vold : Γ.Var α) (hv : ∀ (V : Γstart.Valuation), eold.denote (lets.denote V) = lets.denote V vold) :
-  State d (Lets.lete lets enew) := {
+  State d (Lets.var lets enew) := {
     var2var := fun v => by
       cases v using Ctxt.Var.casesOn
       case toSnoc v => -- old variable, look up 'var2var'
         let ⟨v', hv'⟩ := s.var2var v
         apply (Subtype.mk v'.toSnoc)
         intros V
-        simp [Lets.denote_lete]
+        simp [Lets.denote_var]
         rw [hv']
 
       case last => -- new variable, return the CSE'd variable.
         apply (Subtype.mk vold.toSnoc)
         intros V
-        simp [Lets.denote_lete]
+        simp [Lets.denote_var]
         rw [← hv]
         rw [henew]
     expr2cache := fun β eneedle =>
@@ -349,16 +349,16 @@ unsafe def State.cseCom {α : d.Ty}
       intros VΓ
       simp
       simp [Com.denote, hv']⟩
-  | .lete (α := α) e body =>
+  | .var (α := α) e body =>
       let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e
       match v'? with
       | .none => /- no variable to replace. -/
         let s' := s.snocNewExpr2Cache (e := e') /- add this expression into the cache for the latest variable. -/
         let ⟨body', hbody'⟩ := s'.cseCom body
-        ⟨.lete e' body',  by
+        ⟨.var e' body',  by
             intros VΓ
             simp [Com.denote]
-            simp [Lets.denote_lete] at hbody' ⊢
+            simp [Lets.denote_var] at hbody' ⊢
             rw [← hbody']
             rw [he']
             done⟩
@@ -367,11 +367,11 @@ unsafe def State.cseCom {α : d.Ty}
           (vold := v') (hv := by {intros V; rw [hv'] }) -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
         -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
-        ⟨.lete e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
+        ⟨.var e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
             simp [Com.denote]
-            simp [Lets.denote_lete] at hbody' ⊢
+            simp [Lets.denote_var] at hbody' ⊢
             specialize (hbody' V)
             specialize (he' V)
             rw [he'] at hbody'
@@ -449,9 +449,9 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
 attribute [local simp] Ctxt.snoc
 
 def ex1_pre_cse : Com Ex ∅ .pure .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (cst 1) <|
-  Com.lete (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
+  Com.var (cst 1) <|
+  Com.var (cst 1) <|
+  Com.var (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 /--
 info:

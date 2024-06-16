@@ -29,22 +29,22 @@ partial def ctxtNf (as : Expr) : MetaM Expr := do
     | _ => return as
 
 /-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
-`comNf` recursively calls `whnf` on the expression and body of a `Com.lete`, resulting in
-  `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) <| ... <| Com.rete _`
+`comNf` recursively calls `whnf` on the expression and body of a `Com.var`, resulting in
+  `Com.var (Expr.mk ...) <| Com.var (Expr.mk ...) <| Com.var (Expr.mk ...) <| ... <| Com.rete _`
 where the arguments to `Expr.mk` are not reduced -/
 partial def comNf (com : Expr) : MetaM Expr := do
   let com ← whnf com
   match_expr com with
-    | Com.lete d opSig Γ eff α β e body =>
+    | Com.var d opSig Γ eff α β e body =>
         let Γ ← ctxtNf Γ
         let eff ← whnf eff
         let α ← whnf α
         let β ← whnf β
         let e ← whnf e
         let body ← comNf body
-        return mkAppN (.const ``Com.lete []) #[d, opSig, Γ, eff, α, β, e, body]
+        return mkAppN (.const ``Com.var []) #[d, opSig, Γ, eff, α, β, e, body]
     | Com.ret _d _inst _Γ _eff _t _ => return com
-    | _ => throwError "Expected `Com.lete _ _` or `Com.ret _`, found:\n\t{com}"
+    | _ => throwError "Expected `Com.var _ _` or `Com.ret _`, found:\n\t{com}"
 
 /--
 `elabIntoCom` is a building block for defining a dialect-specific DSL based on the geneeric MLIR
@@ -86,7 +86,7 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
             match expr.app4? ``Sigma.mk with
             | .some (_αexpr, _βexpr, (_ty : Q(($d).Ty)), (com : Q(Com $d $_Γ $_eff $_ty))) =>
                 /- Finally, use `comNf` to ensure the resulting expression is of the form
-                    `Com.lete (Expr.mk ...) <| Com.lete (Expr.mk ...) ... <| Com.rete _`,
+                    `Com.var (Expr.mk ...) <| Com.var (Expr.mk ...) ... <| Com.rete _`,
                   where the arguments to `Expr.mk` are not reduced -/
                 withTraceNode `elabIntoCom (return m!"{exceptEmoji ·} reducing `Com` expression") <|
                   comNf com

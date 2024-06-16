@@ -140,7 +140,7 @@ Option <| MContext 0 :=
         let ctxt' := (ctxt.map f)
         let v' : Ctxt.Var ctxt' ty' := v.toMap
         Sigma.mk (ctxt', ty') (Com.ret v')
-     | .lete (α := t) e b =>
+     | .var (α := t) e b =>
         let Sigma.mk (ctxt', ty') e' := Expr.cast_concrete mvars ctxt t e hMvars
         let Sigma.mk (ctxt'', ty'') b' := Com.cast_concrete mvars (t::ctxt) ty b hMvars
         by
@@ -148,7 +148,7 @@ Option <| MContext 0 :=
          simp at b'
          have hTy' : ty'' = ty' := by sorry
          have hCtxt' : ty' :: (ctxt', ty'').1 = ctxt'' := by sorry
-         --exact Sigma.mk (ctxt', ty') <| .lete e' (hTy' ▸ hCtxt' ▸ b')
+         --exact Sigma.mk (ctxt', ty') <| .var e' (hTy' ▸ hCtxt' ▸ b')
          sorry
 
  def Expr.cast_concrete (mvars : Nat) (ctxt : MContext mvars) (ty : MTy mvars)

@@ -282,14 +282,14 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
         unfold Ctxt.Valuation.eval at hv
         simp [hv]
       ⟩
-  | .lete (α := ω) e body =>
+  | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
     | .none => .none
     | .some ⟨body', hbody'⟩ =>
       match Expr.deleteVar? DEL e with
         | .none => .none
         | .some ⟨e', he'⟩ =>
-          .some ⟨.lete  e' body', by
+          .some ⟨.var e' body', by
             intros V
             simp[Com.denote]
             rw[← he']
@@ -325,7 +325,7 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
       unfold Ctxt.Valuation.comap
       simp[Ctxt.Valuation.comap]
       ⟩⟩
-  | .lete (α := α) e body =>
+  | .var (α := α) e body =>
     let DEL := Deleted.deleteSnoc Γ α
     -- Try to delete the variable α in the body.
     match Com.deleteVar? DEL body with
@@ -333,7 +333,7 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
         : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com d Γ' .pure t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
-      let com' := Com.lete (α := α) e (body'.changeVars hom')
+      let com' := Com.var (α := α) e (body'.changeVars hom')
       ⟨Γ, Ctxt.Hom.id, com', by
         intros V
         simp (config := {zetaDelta := true}) [Com.denote]
@@ -433,15 +433,15 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure .nat :=
 attribute [local simp] Ctxt.snoc
 
 def ex1_pre_dce : Com Ex ∅ .pure .nat :=
-  Com.lete (cst 1) <|
-  Com.lete (cst 2) <|
+  Com.var (cst 1) <|
+  Com.var (cst 2) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 /-- TODO: how do we evaluate 'ex1_post_dce' within Lean? :D -/
 def ex1_post_dce : Com Ex ∅ .pure .nat := (dce' ex1_pre_dce).val
 
 def ex1_post_dce_expected : Com Ex ∅ .pure .nat :=
-  Com.lete (cst 1) <|
+  Com.var (cst 1) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 

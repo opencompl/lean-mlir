@@ -9,6 +9,10 @@ RUN apt-get update -y \
         build-essential \
         cmake \
         git \
+        ripgrep \
+        vim \
+        neovim \
+        emacs \
         ninja-build \
         gdb curl wget
 
@@ -19,14 +23,10 @@ ENV PATH /root/.elan/bin:$PATH
 ENV LIBRARY_PATH /root/.elan/lib:$LIBRARY_PATH
 
 # Download & build lean-mlir
-RUN curl -L https://github.com/opencompl/ssa/archive/refs/tags/v0.1.1.tar.gz > /code/ssa.tar.gz # SSA tar file
-RUN tar xf ssa.tar.gz && ls /code/ && mv ssa-0.1.1 ssa # untar
+RUN curl -L https://github.com/opencompl/ssa/archive/refs/tags/v0.1.3.tar.gz > /code/ssa.tar.gz # SSA tar file
+RUN tar xf ssa.tar.gz && ls /code/ && mv ssa-0.1.3 ssa # untar
 WORKDIR /code/ssa
 RUN lake -R exe cache get
 RUN lake build SSA mlirnatural
 
-# Copy & build Alive examples
-RUN lake build AliveExamples
-
-RUN apt install llvm-15 -y
 USER root
