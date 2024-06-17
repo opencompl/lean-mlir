@@ -1,19 +1,19 @@
-![Core library build status](https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg)
-
-<p align="center">
+<h1>
+Lean-MLIR
 <img src="./images/logo.png"
      alt="LeanMLIR" title="LeanMLIR"
      class="center"
-     width=70% height=70%
+     width=80px height=80px
      style=""/>
-</p>
+
+<img src="https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg" />
+</h1>
+     
 
 
-# SSA
-
-
-Theory of static single assignment development in the Lean
-proof assistant.
+Theory of static single assignment developed in the Lean proof assistant.
+We also build a wealth of tooling to interact closely with the [MLIR compiler ecosystem](https://mlir.llvm.org/),
+to enable workflows that include formal verification in the day-to-day of MLIR development.
 
 - [Link to generated documentation](https://opencompl.github.io/ssa/)
 
