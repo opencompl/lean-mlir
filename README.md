@@ -1,5 +1,14 @@
 ![Core library build status](https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg)
 
+<p align="center">
+<img src="./images/logo.png"
+     alt="LeanMLIR" title="LeanMLIR"
+     class="center"
+     width=70% height=70%
+     style=""/>
+</p>
+
+
 # SSA
 
 
