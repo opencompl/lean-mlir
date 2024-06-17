@@ -4,8 +4,7 @@
 <img src="./images/logo.png"
      alt="LeanMLIR" title="LeanMLIR"
      class="center"
-     width=30vh height=30vh
-     style=""/>
+     style="width: 30vh; height: 30vh"/>
 </p>
 
 
