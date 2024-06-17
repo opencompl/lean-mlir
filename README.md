@@ -3,7 +3,7 @@ Lean-MLIR
 <img src="./images/logo.png"
      alt="LeanMLIR" title="LeanMLIR"
      class="center"
-     width=80px height=80px
+     width=64vh height=64vh
      style=""/>
 
 <img src="https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg" />
