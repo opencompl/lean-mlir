@@ -6,7 +6,7 @@ Lean-MLIR
      width=80 height=80
      style="width: 2.5em; height: 2.5em"/>
 
-<img src="https://github.com/opencompl/ssa/actions/workflows/ci.yml/badge.svg" />
+<img src="https://github.com/opencompl/lean-mlir/actions/workflows/ci.yml/badge.svg" />
 </h1>
      
 
@@ -15,7 +15,7 @@ Theory of static single assignment developed in the Lean proof assistant.
 We also build a wealth of tooling to interact closely with the [MLIR compiler ecosystem](https://mlir.llvm.org/),
 to enable workflows that include formal verification in the day-to-day of MLIR development.
 
-- [Link to generated documentation](https://opencompl.github.io/ssa/)
+- [Link to generated documentation](https://opencompl.github.io/lean-mlir/)
 
 #### Installation
 
@@ -23,7 +23,7 @@ to enable workflows that include formal verification in the day-to-day of MLIR d
 - Next, run:
 
 ```
-git clone https://github.com/opencompl/ssa.git && cd ssa && lake exe cache get && lake build
+git clone https://github.com/opencompl/lean-mlir.git && cd ssa && lake exe cache get && lake build
 ```
 
 #### Core theorems
