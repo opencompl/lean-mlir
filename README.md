@@ -71,4 +71,4 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 
 ##### `artifact-evaluation/`:
 
-> Docker contaniner build for the current version of the library.
+> Docker container build for the current version of the library.
