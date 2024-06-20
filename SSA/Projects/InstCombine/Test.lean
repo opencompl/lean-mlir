@@ -235,10 +235,12 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
--- TODO: Fix this
--- example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
---  simp [Com.denote]
-
+example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
+  unfold GenericWidth
+  revert Γv
+  simp_alive_meta
+  simp_alive_ssa
+  rfl
 
 open ComWrappers
 
