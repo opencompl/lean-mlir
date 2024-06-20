@@ -2186,10 +2186,9 @@ theorem mem_matchVar
     simp only [Lets.vars, Ctxt.get?, Var.zero_eq_last, Var.casesOn_last, Finset.mem_biUnion,
       Sigma.exists, forall_exists_index, and_imp]
     intro _ _ hl h_v'
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
       unfold matchVar at hvarMap
-      simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+      simp only [bind, Option.mem_def, Option.bind_eq_some] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
     split_ifs at he₂ with h
