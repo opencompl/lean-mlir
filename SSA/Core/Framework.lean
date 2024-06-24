@@ -189,36 +189,39 @@ section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
-def Format.parenIfNonempty (l : String) (r : String) (separator : Format) (xs : List Format) : Format :=
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the empty string otherwise. -/
+private def Format.parenIfNonempty (l : String) (r : String) (separator : Format) (xs : List Format) : Format :=
   match xs with
   | [] => ""
   | _  =>  l ++ (Format.joinSep xs separator) ++ r
 
-def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
+/-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
+private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
 
-def formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
-  match Γ with
-  | .nil => []
-  | .cons _ _ =>
-    match args with
-    | .cons a as =>
-        (repr a) :: (formatArgTupleAux as)
+/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
+private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args) where
+  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+    match Γ with
+    | .nil => []
+    | .cons .. =>
+      match args with
+      | .cons a as => (repr a) :: (formatArgTupleAux as)
 
-def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args)
-
-def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+private def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
   Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
     (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
 
-/- These are manifestly terminating, but Lean doesn't seem to see it! -/
 mutual
+  /-- Convert a HVector of region arguments into a List of format strings. -/
   partial def reprRegArgsAux [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
     (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : List Format :=
     match ts with
     | [] => []
-    | (Γ, t) :: ts =>
+    | _ :: _ =>
       match regArgs with
       | .cons regArg regArgs =>
         let regFmt := Com.repr 0 regArg
@@ -232,7 +235,7 @@ mutual
         let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
         f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr outTy})"
 
-
+  /-- Format string for a Com, with the region parentheses and formal argument list. -/
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
     f!"\{" ++ Format.nest 2
     (Format.line ++
@@ -240,6 +243,7 @@ mutual
     (comReprAux prec com))) ++ Format.line ++
     f!"}"
 
+  /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
     | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
     | .var e body =>
