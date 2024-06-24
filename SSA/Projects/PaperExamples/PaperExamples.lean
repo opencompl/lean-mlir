@@ -367,6 +367,9 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
       simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
   }
 
+-- %<arg_number> (block argument names) for regions.
+-- new line after return
+-- %<arg_number> for expressions.
 
 -- example program that has the pattern 'x + 0' both at the top level,
 -- and inside a region in an iterate.

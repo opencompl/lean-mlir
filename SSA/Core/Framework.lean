@@ -216,17 +216,18 @@ mutual
       match regArgs with
       | .cons regArg regArgs =>
         let regFmt :=
-            f!"\{ ^begin" ++ (formatTypeTuple Γ) ++ f!":" ++ Format.line ++
-            (Com.repr 0 regArg) ++
+            f!"\{ ^begin" ++ (formatTypeTuple Γ) ++ f!":" ++ Format.nest 2 (Format.line ++
+            (Com.repr 0 regArg)) ++
             f!"} -> ({repr t})"
         let restFmt := RegArgs.reprRec regArgs
         Format.nest 2 <| regFmt ++ Format.line ++ restFmt
 
   def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
-    | ⟨op, _, _, args, _regArgs⟩ =>
+    | ⟨op, _, _, args, regArgs⟩ =>
         let outTy := DialectSignature.outTy op
         let argTys := DialectSignature.sig op
-        f!"{repr op} {formatArgTuple args} : {formatTypeTuple argTys} -> {repr outTy};"
+        let regArgs := Format.nest 2 <| RegArgs.reprRec regArgs
+        f!"{repr op} {formatArgTuple args} {regArgs} : {formatTypeTuple argTys} -> {repr outTy};"
 
   def Com.repr (prec : Nat) : Com d eff Γ t → Format
     | .ret v => .align false ++ f!"return {reprPrec v prec};"
