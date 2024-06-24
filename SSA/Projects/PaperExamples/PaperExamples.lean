@@ -232,8 +232,6 @@ instance : Inhabited (TyDenote.toType (t : Ty)) where
     cases t
     exact (0#32)
 
-
-
 inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
@@ -386,7 +384,6 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
       simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
   }
 
-
 /--
 example program that has the pattern 'x + 0' both at the top level,
 and inside a region in an iterate. -/
@@ -400,10 +397,40 @@ def egLhs : Com SimpleReg [int] .pure int :=
   )) <|
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
-#eval egLhs
+/--
+info: {
+  ^entry(%0 : ToyRegion.Ty.int):
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %3 = ToyRegion.Op.iterate 0 (%2) ({
+      ^entry(%0 : ToyRegion.Ty.int):
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        return %2 : (ToyRegion.Ty.int) → ()
+    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    return %3 : (ToyRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval egLhs
 
 def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
   (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val
+
+/--
+info: {
+  ^entry(%0 : ToyRegion.Ty.int):
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %3 = ToyRegion.Op.iterate 0 (%0) ({
+      ^entry(%0 : ToyRegion.Ty.int):
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        return %0 : (ToyRegion.Ty.int) → ()
+    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    return %3 : (ToyRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval runRewriteOnLhs
 
 def expectedRhs : Com SimpleReg [int] .pure int :=
   Com.var (cst 0) <|

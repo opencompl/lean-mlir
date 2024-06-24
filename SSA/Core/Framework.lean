@@ -2550,7 +2550,6 @@ def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
       let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
       ⟨.cons com' coms', by simp [hcom', hcoms']⟩
 
-
 def rewritePeepholeRecursivelyExpr (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
     (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
@@ -2589,7 +2588,6 @@ info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice
 #guard_msgs in #print axioms rewritePeepholeRecursively
 
 end SimpPeepholeApplier
-
 
 section TypeProjections
 variable {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
