@@ -2463,92 +2463,87 @@ theorem denote_rewritePeephole (fuel : ℕ)
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
+theorem helper_lemma_1 (op : d.Op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (eff' : DialectSignature.effectKind op ≤ eff)
+    (args : HVector (Var Γ) (DialectSignature.sig op))
+    (regArgs regArgs' : HVector (fun t => Com d t.1 EffectKind.impure t.2) (DialectSignature.regSig op))
+    (hregArgs' : regArgs'.denote = regArgs.denote) :
+  (Expr.mk op ty_eq eff' args regArgs').denote = (Expr.mk op ty_eq eff' args regArgs).denote := by
+  funext Γv
+  cases eff
+  case pure =>
+    subst ty_eq
+    have heff' : DialectSignature.effectKind op = EffectKind.pure := by simp [eff']
+    simp [heff']
+    simp [Expr.denote]
+    simp [hregArgs']
+  case impure =>
+    subst ty_eq
+    simp [Expr.denote]
+    simp [hregArgs']
+
 mutual
 
 def rewritePeepholeRecursivelyHVectorCom (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
     (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
-    : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts :=
+    : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
   match h : ts with
   | .nil =>
     match args with
-    | .nil => HVector.nil
+    | .nil => ⟨HVector.nil, rfl⟩
   | .cons _ _ =>
     match args with
     | .cons com coms =>
-      .cons (rewritePeepholeRecursivelyCom fuel pr com) (rewritePeepholeRecursivelyHVectorCom fuel pr coms)
+      let ⟨com', hcom'⟩ := (rewritePeepholeRecursivelyCom fuel pr com)
+      let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyHVectorCom fuel pr coms)
+      ⟨.cons com' coms',
+        by
+          simp [hcom', hcoms']⟩
+
+
+def rewritePeepholeRecursivelyExpr (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
+    (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
+  match he : e with
+  | Expr.mk op ty eff' args regArgs =>
+    let ⟨regArgs', hregArgs'⟩ := rewritePeepholeRecursivelyHVectorCom fuel pr
+      regArgs
+    ⟨Expr.mk op ty eff' args regArgs', by
+      apply helper_lemma_1 op ty eff' args regArgs regArgs' hregArgs'⟩
+
 
 def rewritePeepholeRecursivelyCom (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) : Com d Γ₂ eff t₂ :=
+    (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
+    { out : Com d Γ₂ eff t₂ // out.denote = target.denote } :=
   match fuel with
-  | 0 => target
+  | 0 => ⟨target, rfl⟩
   | fuel + 1 =>
-    let target := rewritePeephole fuel pr target
-    match target with
-    | .ret v => target
-    | .var e body =>
-      let e' :=
-        match e with
-        | Expr.mk op ty eff args regArgs =>
-          Expr.mk op ty eff args (rewritePeepholeRecursivelyHVectorCom fuel pr regArgs)
-      let body' :=
+    let target' := rewritePeephole fuel pr target
+    have htarget'_denote_eq_htarget : target'.denote = target.denote := by apply denote_rewritePeephole
+    match htarget : target' with
+    | .ret v => ⟨target', by
+      simp [htarget, htarget'_denote_eq_htarget]⟩
+    | .var (α := α) e body =>
+      let ⟨e', he'⟩ :=
+        rewritePeepholeRecursivelyExpr fuel pr (eff := eff) (ty := α) e
+      let ⟨body', hbody'⟩ :=
         -- decreases because 'body' is smaller.
         rewritePeepholeRecursivelyCom fuel pr body
-      .var e' body'
-end
-
-mutual
-theorem denote_rewritePeepholeRecursivelyHVectorCom (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
-    (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
-    : (rewritePeepholeRecursivelyHVectorCom fuel pr args).denote = args.denote := by
-  induction ts
-  case nil =>
-    simp [rewritePeepholeRecursivelyHVectorCom]
-  case cons ts' hts =>
-    simp [rewritePeepholeRecursivelyHVectorCom, denote_rewritePeepholeRecursivelyCom, hts]
-    cases args
-    case cons com coms =>
-      simp [rewritePeepholeRecursivelyHVectorCom, denote_rewritePeepholeRecursivelyCom, hts]
-
-
-theorem denote_rewritePeepholeRecursivelyCom (fuel : ℕ) (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
-    (rewritePeepholeRecursivelyCom fuel pr target).denote = target.denote := by
-  induction fuel generalizing target
-  case zero =>
-    simp [rewritePeepholeRecursivelyCom]
-  case succ fuel' hfuel =>
-    induction target generalizing Γ
-    case ret u v w ty effKind v =>
-      simp [rewritePeepholeRecursivelyCom]
-      cases htarget : rewritePeephole fuel' pr (Com.ret v)
-      case ret v' =>
-        have hdenote_eq : (rewritePeephole (eff := effKind) fuel' pr (Com.ret v)).denote = (Com.ret v).denote := by
-          apply denote_rewritePeephole
-        rw [htarget] at hdenote_eq
-        simp only [Com.denote_ret, EffectKind.return_impure_toMonad_eq] at hdenote_eq
-        simp [hdenote_eq]
-      case var e body =>
-        have hdenote_eq : (rewritePeephole (eff := effKind) fuel' pr (Com.ret v)).denote = (Com.ret v).denote := by
-          apply denote_rewritePeephole
-        rw [htarget] at hdenote_eq
-        simp at hdenote_eq
+      ⟨.var e' body', by
+        rw [← htarget'_denote_eq_htarget]
         simp
-        rcases e with ⟨op, ty, eff, args, regArgs⟩
-        subst ty
-        funext Γv
-        simp_all [Expr.denote]
-        simp_all [rewritePeepholeRecursivelyHVectorCom, denote_rewritePeepholeRecursivelyHVectorCom]
-        simp [hfuel body]
-
-        -- this is true, because the denote of rewritePeephole equals
-        -- that of denotePeephole'
-        sorry
-    simp [rewritePeepholeRecursivelyCom, denote_rewritePeephole, hfuel, denote_rewritePeepholeRecursivelyHVectorCom]
-
+        rw [he']
+        rw [hbody']
+        ⟩
 end
-
 end SimpPeepholeApplier
+
+/--
+info: 'rewritePeepholeRecursivelyCom' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms rewritePeepholeRecursivelyCom
 
 section TypeProjections
 variable {d : Dialect} [DialectSignature d] {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
