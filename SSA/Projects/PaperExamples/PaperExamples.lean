@@ -174,8 +174,6 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
 
 def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
--- add type annotation for return
--- fix type arguments for blocks.
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
   Com.var (cst 0) <|
@@ -209,13 +207,6 @@ inductive Ty
 instance : TyDenote Ty where
   toType
     | .int => BitVec 32
-
-instance : Inhabited (TyDenote.toType (t : Ty)) where
-  default := by
-    cases t
-    exact (0#32)
-
-
 
 inductive Op :  Type
   | add : Op
@@ -275,7 +266,6 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [
 
 attribute [local simp] Ctxt.snoc
 
-namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com SimpleReg [int] .pure int :=
   Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
@@ -345,68 +335,5 @@ theorem EX1' : ex1' = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 -/
-
-end P1
-
-namespace P2
-
-/-- running `f(x) = x + 0` 0 times is the identity. -/
-def lhs : Com SimpleReg [int] .pure int :=
-  Com.var (cst 0) <| -- %c0
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def rhs : Com SimpleReg [int] .pure int :=
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-def p2 : PeepholeRewrite SimpleReg [int] int:=
-  { lhs := lhs, rhs := rhs, correct := by
-      rw [lhs, rhs]
-      funext Γv
-      simp_peephole [add, cst] at Γv
-      /-  ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
-      intros a
-      simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
-  }
-
--- example program that has the pattern 'x + 0' both at the top level,
--- and inside a region in an iterate.
-def egLhs : Com SimpleReg [int] .pure int :=
-  Com.var (cst 0) <|
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
-  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
-      Com.letPure (cst 0) <|
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-  )) <| -- %out = %x + %c0
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-open ToyRegion in
-#eval egLhs
-
-
-def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
-  (rewritePeepholeRecursivelyCom (fuel := 100) p2 egLhs).val
-
-def egRhs : Com SimpleReg [int] .pure int :=
-  Com.var (cst 0) <|
-  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
-  -- | note that the argument to 'iterate' is rewritten.
-  Com.var (iterate (k := 0) (⟨2, by simp[Ctxt.snoc]⟩) (
-      Com.letPure (cst 0) <|
-      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
-      -- see that the rewrite has fired, a
-      -- | and we directly return the block argument.
-      <| Com.ret ⟨2, by simp[Ctxt.snoc]⟩
-  )) <| -- %out = %x + %c0
-  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
-
-theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
-  simp [runRewriteOnLhs, lhs]
-  native_decide
-
-theorem rewriteCorrect : runRewriteOnLhs = egRhs := by rfl
-
-end P2
 
 end ToyRegion
