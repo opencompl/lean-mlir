@@ -454,11 +454,13 @@ def ex1_pre_cse : Com Ex ∅ .pure .nat :=
   Com.var (add ⟨0, by simp⟩ ⟨1, by simp⟩) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 /--
-info:
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.add[[%0, ,, %1]]
-return %0
+info: {
+  ^entry():
+    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add (%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    return %2 : (CSE.Examples.ExTy.nat) → ()
+}
 -/
 #guard_msgs in #eval ex1_pre_cse
 
@@ -466,11 +468,13 @@ unsafe def ex1_post_cse :
  { com' : Com Ex ∅ .pure .nat // ∀ V, ex1_pre_cse.denote V = com'.denote V } :=
    cse' ex1_pre_cse
 /--
-info:
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.add[[%1, ,, %1]]
-return %0
+info: {
+  ^entry():
+    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
+    %2 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    return %2 : (CSE.Examples.ExTy.nat) → ()
+}
 -/
 #guard_msgs in #eval ex1_post_cse
 
@@ -478,10 +482,12 @@ unsafe def ex1_post_cse_post_dce :
   { com : Com Ex ∅ .pure  .nat // ∀ V, ex1_post_cse.val.denote V = com.denote V } :=
     (DCE.dce' ex1_post_cse.val)
 /--
-info:
-CSE.Examples.ExOp.cst 1[[]]
-CSE.Examples.ExOp.add[[%0, ,, %0]]
-return %0
+info: {
+  ^entry():
+    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
+    %1 = CSE.Examples.ExOp.add (%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
+    return %1 : (CSE.Examples.ExTy.nat) → ()
+}
 -/
 #guard_msgs in #eval ex1_post_cse_post_dce
 

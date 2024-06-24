@@ -143,6 +143,16 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
       "return" (%out) : (i32) -> (i32)
   }]
 
+/--
+info: {
+  ^entry(%0 : ToyNoRegion.Ty.int):
+    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
+    %2 = ToyNoRegion.Op.add (%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
+    return %2 : (ToyNoRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval lhs
+
 open MLIR AST MLIR2Simple in
 /-- x -/
 def rhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
@@ -150,6 +160,15 @@ def rhs : Com Simple (Ctxt.ofList [.int]) .pure .int :=
     ^bb0(%x : i32):
       "return" (%x) : (i32) -> (i32)
   }]
+
+
+/--
+info: {
+  ^entry(%0 : ToyNoRegion.Ty.int):
+    return %0 : (ToyNoRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval rhs
 
 open MLIR AST MLIR2Simple in
 def p1 : PeepholeRewrite Simple [.int] .int :=
