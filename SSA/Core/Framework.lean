@@ -189,13 +189,48 @@ section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
+def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
+  Format.paren <| Format.joinSep (xs.map (fun t => Repr.reprPrec t 0))  ", "
+def formatArg [Repr Ty] {Γ : Ctxt Ty} (v : Var Γ t) : Format :=
+  Repr.reprPrec v 0
+
+
+def formatArgTuple_ [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+  match Γ with
+  | .nil => []
+  | .cons _ _ =>
+    match args with
+    | .cons a as =>
+        (formatArg a) :: (formatArgTuple_ as)
+
+
+def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.paren <| Format.joinSep (formatArgTuple_ args) ", "
+
 mutual
+  def RegArgs.reprRec [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
+    (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : Format :=
+    match ts with
+    | [] => ""
+    | (Γ, t) :: ts =>
+      match regArgs with
+      | .cons regArg regArgs =>
+        let regFmt :=
+            f!"\{ ^begin" ++ (formatTypeTuple Γ) ++ f!":" ++ Format.line ++
+            (Com.repr 0 regArg) ++
+            f!"} -> ({repr t})"
+        let restFmt := RegArgs.reprRec regArgs
+        Format.nest 2 <| regFmt ++ Format.line ++ restFmt
+
   def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
-    | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
+    | ⟨op, _, _, args, _regArgs⟩ =>
+        let outTy := DialectSignature.outTy op
+        let argTys := DialectSignature.sig op
+        f!"{repr op} {formatArgTuple args} : {formatTypeTuple argTys} -> {repr outTy};"
 
   def Com.repr (prec : Nat) : Com d eff Γ t → Format
-    | .ret v => .align false ++ f!"return {reprPrec v prec}"
-    | .var e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
+    | .ret v => .align false ++ f!"return {reprPrec v prec};"
+    | .var e body => (.align false ++ f!"{e.repr prec}") ++ Format.line ++ body.repr prec
 end
 
 def Lets.repr (prec : Nat) : Lets d eff Γ t → Format
