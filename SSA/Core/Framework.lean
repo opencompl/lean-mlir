@@ -2516,6 +2516,77 @@ theorem denote_rewritePeephole (fuel : ℕ)
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
+theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (eff' : DialectSignature.effectKind op ≤ eff)
+    (args : HVector (Var Γ) (DialectSignature.sig op))
+    (regArgs regArgs' : HVector (fun t => Com d t.1 EffectKind.impure t.2) (DialectSignature.regSig op))
+    (hregArgs' : regArgs'.denote = regArgs.denote) :
+  (Expr.mk op ty_eq eff' args regArgs').denote = (Expr.mk op ty_eq eff' args regArgs).denote := by
+  funext Γv
+  cases eff
+  case pure =>
+    subst ty_eq
+    have heff' : DialectSignature.effectKind op = EffectKind.pure := by simp [eff']
+    simp [heff', Expr.denote, hregArgs']
+  case impure =>
+    subst ty_eq
+    simp [Expr.denote, hregArgs']
+
+mutual
+
+def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
+    (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
+    : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
+  match ts with
+  | .nil =>
+    match args with
+    | .nil => ⟨HVector.nil, rfl⟩
+  | .cons .. =>
+    match args with
+    | .cons com coms =>
+      let ⟨com', hcom'⟩ := (rewritePeepholeRecursively fuel pr com)
+      let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
+      ⟨.cons com' coms', by simp [hcom', hcoms']⟩
+
+def rewritePeepholeRecursivelyExpr (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
+    (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
+  match e with
+  | Expr.mk op ty eff' args regArgs =>
+    let ⟨regArgs', hregArgs'⟩ := rewritePeepholeRecursivelyRegArgs fuel pr regArgs
+    ⟨Expr.mk op ty eff' args regArgs', by
+      apply Expr.denote_eq_of_region_denote_eq op ty eff' args regArgs regArgs' hregArgs'⟩
+
+/-- A peephole rewriter that recurses into regions, allowing
+peephole rewriting into nested code. -/
+def rewritePeepholeRecursively (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
+    { out : Com d Γ₂ eff t₂ // out.denote = target.denote } :=
+  match fuel with
+  | 0 => ⟨target, rfl⟩
+  | fuel + 1 =>
+    let target' := rewritePeephole fuel pr target
+    have htarget'_denote_eq_htarget : target'.denote = target.denote := by apply denote_rewritePeephole
+    match htarget : target' with
+    | .ret v => ⟨target', by
+      simp [htarget, htarget'_denote_eq_htarget]⟩
+    | .var (α := α) e body =>
+      let ⟨e', he'⟩ := rewritePeepholeRecursivelyExpr fuel pr e
+      let ⟨body', hbody'⟩ :=
+        -- decreases because 'body' is smaller.
+        rewritePeepholeRecursively fuel pr body
+      ⟨.var e' body', by
+        rw [← htarget'_denote_eq_htarget]
+        simp [he', hbody']⟩
+end
+
+/--
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms rewritePeepholeRecursively
+
 end SimpPeepholeApplier
 
 section TypeProjections

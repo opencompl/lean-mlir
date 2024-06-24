@@ -227,6 +227,11 @@ instance : TyDenote Ty where
   toType
     | .int => BitVec 32
 
+instance : Inhabited (TyDenote.toType (t : Ty)) where
+  default := by
+    cases t
+    exact (0#32)
+
 inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
@@ -285,6 +290,7 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg [
 
 attribute [local simp] Ctxt.snoc
 
+namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com SimpleReg [int] .pure int :=
   Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
@@ -354,5 +360,98 @@ theorem EX1' : ex1' = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 -/
+
+end P1
+
+namespace P2
+
+/-- running `f(x) = x + 0` 0 times is the identity. -/
+def lhs : Com SimpleReg [int] .pure int :=
+  Com.var (cst 0) <| -- %c0
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def rhs : Com SimpleReg [int] .pure int :=
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+def p2 : PeepholeRewrite SimpleReg [int] int:=
+  { lhs := lhs, rhs := rhs, correct := by
+      rw [lhs, rhs]
+      funext Γv
+      simp_peephole [add, cst] at Γv
+      /-  ∀ (a : BitVec 32), a + BitVec.ofInt 32 0 = a -/
+      intros a
+      simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
+  }
+
+/--
+example program that has the pattern 'x + 0' both at the top level,
+and inside a region in an iterate. -/
+def egLhs : Com SimpleReg [int] .pure int :=
+  Com.var (cst 0) <|
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
+      Com.letPure (cst 0) <|
+      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      <| Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+  )) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+/--
+info: {
+  ^entry(%0 : ToyRegion.Ty.int):
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %3 = ToyRegion.Op.iterate 0 (%2) ({
+      ^entry(%0 : ToyRegion.Ty.int):
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        return %2 : (ToyRegion.Ty.int) → ()
+    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    return %3 : (ToyRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval egLhs
+
+def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
+  (rewritePeepholeRecursively (fuel := 100) p2 egLhs).val
+
+/--
+info: {
+  ^entry(%0 : ToyRegion.Ty.int):
+    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+    %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    %3 = ToyRegion.Op.iterate 0 (%0) ({
+      ^entry(%0 : ToyRegion.Ty.int):
+        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
+        %2 = ToyRegion.Op.add (%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+        return %0 : (ToyRegion.Ty.int) → ()
+    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
+    return %3 : (ToyRegion.Ty.int) → ()
+}
+-/
+#guard_msgs in #eval runRewriteOnLhs
+
+def expectedRhs : Com SimpleReg [int] .pure int :=
+  Com.var (cst 0) <|
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  -- | Note that the argument to 'iterate' is rewritten.
+  -- This is a rewrite that fires at the top level.
+  Com.var (iterate (k := 0) (⟨2, by simp[Ctxt.snoc]⟩) (
+      Com.letPure (cst 0) <|
+      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩)
+      -- | See that the rewrite has fired in the nested region for 'iterate',
+      -- and we directly return the block argument.
+      <| Com.ret ⟨2, by simp[Ctxt.snoc]⟩
+  )) <|
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
+  simp [runRewriteOnLhs, lhs]
+  native_decide
+
+theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by rfl
+
+end P2
 
 end ToyRegion
