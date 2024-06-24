@@ -189,24 +189,24 @@ section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
+def Format.parenIfNonempty (l : String) (r : String) (separator : Format) (xs : List Format) : Format :=
+  match xs with
+  | [] => ""
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
+
 def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
-  Format.paren <| Format.joinSep (xs.map (fun t => Repr.reprPrec t 0))  ", "
+  "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
 
-def formatArg [Repr Ty] {Γ : Ctxt Ty} (v : Var Γ t) : Format :=
-  repr v
-
-def formatArgTuple_ [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+def formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
   match Γ with
   | .nil => []
   | .cons _ _ =>
     match args with
     | .cons a as =>
-        (formatArg a) :: (formatArgTuple_ as)
-
+        (repr a) :: (formatArgTupleAux as)
 
 def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
-  Format.paren <| Format.joinSep (formatArgTuple_ args) ", "
-
+  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args)
 
 def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
   Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
@@ -229,8 +229,8 @@ mutual
     | ⟨op, _, _, args, regArgs⟩ =>
         let outTy := DialectSignature.outTy op
         let argTys := DialectSignature.sig op
-        let regArgs := Format.paren <| Format.joinSep (reprRegArgsAux regArgs) Format.line
-        f!"{repr op} {formatArgTuple args} {regArgs} : {formatTypeTuple argTys} → {repr outTy}"
+        let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
+        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr outTy})"
 
 
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
@@ -241,9 +241,9 @@ mutual
     f!"}"
 
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ();"
+    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
     | .var e body =>
-      f!"%{repr <| Γ.length} = {e.repr prec}" ++ ";" ++ Format.line ++
+      f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body
 end
 

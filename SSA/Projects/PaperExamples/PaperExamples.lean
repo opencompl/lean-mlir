@@ -381,6 +381,7 @@ def egLhs : Com SimpleReg [int] .pure int :=
   )) <| -- %out = %x + %c0
   Com.ret ⟨0, by simp[Ctxt.snoc]⟩
 
+open ToyRegion in
 #eval egLhs
 
 
