@@ -191,9 +191,9 @@ variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
 def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
   Format.paren <| Format.joinSep (xs.map (fun t => Repr.reprPrec t 0))  ", "
-def formatArg [Repr Ty] {Γ : Ctxt Ty} (v : Var Γ t) : Format :=
-  Repr.reprPrec v 0
 
+def formatArg [Repr Ty] {Γ : Ctxt Ty} (v : Var Γ t) : Format :=
+  repr v
 
 def formatArgTuple_ [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
   match Γ with
@@ -207,31 +207,37 @@ def formatArgTuple_ [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂
 def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
   Format.paren <| Format.joinSep (formatArgTuple_ args) ", "
 
+
+def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
+  Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
+    (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
+
 mutual
-  def RegArgs.reprRec [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
-    (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : Format :=
+  def RegArgs.reprRecList [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
+    (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : List Format :=
     match ts with
-    | [] => ""
+    | [] => []
     | (Γ, t) :: ts =>
       match regArgs with
       | .cons regArg regArgs =>
         let regFmt :=
-            f!"\{ ^begin" ++ (formatTypeTuple Γ) ++ f!":" ++ Format.nest 2 (Format.line ++
-            (Com.repr 0 regArg)) ++
-            f!"} -> ({repr t})"
-        let restFmt := RegArgs.reprRec regArgs
-        Format.nest 2 <| regFmt ++ Format.line ++ restFmt
+            f!"\{" ++ Format.nest 2 (Format.line ++
+            " ^begin" ++ (formatFormalArgListTuple Γ) ++ f!":" ++
+            (Com.repr 0 regArg)) ++ Format.line ++
+            f!"}"
+        let restFmt := RegArgs.reprRecList regArgs
+        (regFmt :: restFmt)
 
   def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
     | ⟨op, _, _, args, regArgs⟩ =>
         let outTy := DialectSignature.outTy op
         let argTys := DialectSignature.sig op
-        let regArgs := Format.nest 2 <| RegArgs.reprRec regArgs
-        f!"{repr op} {formatArgTuple args} {regArgs} : {formatTypeTuple argTys} -> {repr outTy};"
+        let regArgs := Format.paren <| Format.joinSep (RegArgs.reprRecList regArgs) Format.line
+        f!"{repr op} {formatArgTuple args} {regArgs} : {formatTypeTuple argTys} -> {repr outTy}"
 
-  def Com.repr (prec : Nat) : Com d eff Γ t → Format
-    | .ret v => .align false ++ f!"return {reprPrec v prec};"
-    | .var e body => (.align false ++ f!"{e.repr prec}") ++ Format.line ++ body.repr prec
+  def Com.repr (prec : Nat) : Com d Γ eff t → Format
+    | .ret v => f!"return {reprPrec v prec} : ({repr t}) -> ();"
+    | .var e body => f!"%{repr <| Γ.length} = {e.repr prec}" ++ ";" ++ Format.line ++ body.repr prec
 end
 
 def Lets.repr (prec : Nat) : Lets d eff Γ t → Format

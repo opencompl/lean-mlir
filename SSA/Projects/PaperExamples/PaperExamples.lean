@@ -174,6 +174,8 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
 
 def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
+-- add type annotation for return
+-- fix type arguments for blocks.
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
   Com.var (cst 0) <|
@@ -366,10 +368,6 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
       intros a
       simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero, BitVec.zero_add]
   }
-
--- %<arg_number> (block argument names) for regions.
--- new line after return
--- %<arg_number> for expressions.
 
 -- example program that has the pattern 'x + 0' both at the top level,
 -- and inside a region in an iterate.
