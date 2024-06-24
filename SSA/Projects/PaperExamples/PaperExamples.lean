@@ -374,8 +374,8 @@ def p2 : PeepholeRewrite SimpleReg [int] int:=
 -- example program that has the pattern 'x + 0' both at the top level,
 -- and inside a region in an iterate.
 def egLhs : Com SimpleReg [int] .pure int :=
-  -- Com.var (cst 0) <|
-  -- Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  Com.var (cst 0) <|
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
   Com.var (iterate (k := 0) (⟨0, by simp[Ctxt.snoc]⟩) (
       Com.letPure (cst 0) <|
       Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
@@ -385,15 +385,28 @@ def egLhs : Com SimpleReg [int] .pure int :=
 
 #eval egLhs
 
+
 def runRewriteOnLhs : Com SimpleReg [int] .pure int :=
   (rewritePeepholeRecursivelyCom (fuel := 100) p2 egLhs).val
 
-#eval runRewriteOnLhs
-theorem t1 : egLhs ≠ runRewriteOnLhs := by
-  simp [egLhs, runRewriteOnLhs]
+def egRhs : Com SimpleReg [int] .pure int :=
+  Com.var (cst 0) <|
+  Com.var (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) <| -- %out = %x + %c0
+  -- | note that the argument to 'iterate' is rewritten.
+  Com.var (iterate (k := 0) (⟨2, by simp[Ctxt.snoc]⟩) (
+      Com.letPure (cst 0) <|
+      Com.letPure (add ⟨0, by simp[Ctxt.snoc]⟩ ⟨1, by simp[Ctxt.snoc]⟩) -- fun x => (x + x)
+      -- see that the rewrite has fired, a
+      -- | and we directly return the block argument.
+      <| Com.ret ⟨2, by simp[Ctxt.snoc]⟩
+  )) <| -- %out = %x + %c0
+  Com.ret ⟨0, by simp[Ctxt.snoc]⟩
+
+theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
+  simp [runRewriteOnLhs, lhs]
   native_decide
 
-#eval runRewriteOnLhs
+theorem rewriteCorrect : runRewriteOnLhs = egRhs := by rfl
 
 end P2
 
