@@ -123,11 +123,9 @@ theorem xor_sub :
     simp_alive_peephole
     alive_auto
 
-
 /-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub
 
-open BitVec in
 theorem bitvec_AddSub_1309 :
   [llvm (w)| {
     ^bb0(%X : _, %Y : _):
@@ -167,3 +165,8 @@ theorem bitvec_AddSub_1309 :
         <;> cases B.getLsb i
         <;> cases carry i B A false
         <;> rfl
+
+/--
+info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms bitvec_AddSub_1309
