@@ -821,6 +821,27 @@ theorem xor_comm (e e_1: BitVec w) : e ^^^ e_1 = e_1 ^^^ e := by
 
 theorem allOnes_sub_eq_xor (x :BitVec w) : (allOnes w) - x = x ^^^ (allOnes w) := by
   rw [allOnes_sub_eq_not, ← allOnes_xor_eq_not, BitVec.xor_comm]
+
+@[simp]
+theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
+  rw [add_eq_adc, add_eq_adc, adc_spec B A]
+  unfold adc
+  rw [iunfoldr_replace (fun i => carry i B A false)]
+  · simp [carry]; omega
+  · intro i
+    simp only [adcb, getLsb_and, getLsb_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
+      BitVec.add_zero, Prod.mk.injEq]
+    constructor
+    · rw [carry_succ]
+      cases A.getLsb i
+      <;> cases B.getLsb i
+      <;> cases carry i B A false
+      <;> rfl
+    · rw [getLsb_add (by omega)]
+      cases A.getLsb i
+      <;> cases B.getLsb i
+      <;> cases carry i B A false
+      <;> rfl
 end BitVec
 
 -- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it suffices to consider two cases.
