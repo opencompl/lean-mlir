@@ -45,7 +45,7 @@ macro_rules
 section Test
 variable {q n} [h : Fact (q > 1)]
 
-private def fhe_test_one_lhs := [fhe_com q, n, h | {
+private def fhe_test_one_lhs := [poly q, n, h | {
   ^bb0(%a : !R) :
     %one_int = arith.const 1 : i16
     %zero_idx = arith.const 0 : index
@@ -64,7 +64,7 @@ info: '_private.SSA.Projects.FullyHomomorphicEncryption.PrettySyntax.0.MLIR.EDSL
 -/
 #guard_msgs in #print axioms fhe_test_one_lhs
 
-private def fhe_test_one_rhs := [fhe_com q, n, h | {
+private def fhe_test_one_rhs := [poly q, n, h | {
   ^bb0(%a : !R):
     return %a : !R
   }]
