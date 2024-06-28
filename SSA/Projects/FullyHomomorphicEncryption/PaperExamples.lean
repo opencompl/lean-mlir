@@ -41,14 +41,14 @@ namespace ExampleComm
 variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 def lhs :=
-[fhe_com q, n, hq| {
+[poly q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%A,%B) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
 }]
 
 def rhs :=
-[fhe_com q, n, hq| {
+[poly q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%B,%A) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
@@ -88,7 +88,7 @@ variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 -- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
 -- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance.
-noncomputable def a_plus_generator_eq_a := [fhe_com q, n, hq| {
+noncomputable def a_plus_generator_eq_a := [poly q, n, hq| {
 ^bb0(%a : !R):
   %one_int = arith.const 1 : i16
   %two_to_the_n = arith.const ${2**n} : index
@@ -99,9 +99,10 @@ noncomputable def a_plus_generator_eq_a := [fhe_com q, n, hq| {
   return %v1 : !R
 }]
 
-def rhs := [fhe_com q, n, hq | {
+def rhs := [poly q, n, hq | {
 ^bb0(%a : !R):
   return %a : !R
+
 }]
 
 /-- info: 'a_plus_generator_eq_a' depends on axioms: [propext, Quot.sound, Classical.choice] -/

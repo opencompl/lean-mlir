@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 /-
-Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
+Syntax definitions for FHE, providing a custom [poly|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
@@ -191,7 +191,7 @@ instance : MLIR.AST.TransformReturn (FHE q n) 0 where
 end MkFuns -- we don't want q and i here anymore
 
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
+elab "[poly" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
   let q : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
   let n : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
   let _factval ← elabTermEnsuringTypeQ hq q(Fact ($q > 1))
