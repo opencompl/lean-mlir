@@ -84,9 +84,6 @@ lemma toFin_nsmul (n : ℕ) (x : BitVec w) : toFin (n • x) = n • x.toFin := 
 lemma toFin_zsmul (z : ℤ) (x : BitVec w) : toFin (z • x) = z • x.toFin := rfl
 lemma toFin_pow (x : BitVec w) (n : ℕ)    : toFin (x ^ n) = x.toFin ^ n := rfl
 
-@[simp] lemma toFin_neg (x : BitVec w) : toFin (-x) = -(toFin x) := by
-  ext; rw [neg_eq_zero_sub]; simp; rfl
-
 instance : CommRing (BitVec w) :=
   toFin_injective.commRing _
     toFin_zero toFin_one toFin_add toFin_mul toFin_neg toFin_sub

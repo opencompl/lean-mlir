@@ -769,7 +769,7 @@ def Com.changeVars : Com d Γ eff ty →
   simp [changeVars]
 
 -- TODO: this is implied by simpler simp-lemmas, do we need it?
-@[simp] lemma Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
+@[simp] lemma Com.outContext_changeVars_ret (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
   ((Com.ret (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 
 @[simp] lemma Com.denote_changeVars
@@ -1214,7 +1214,7 @@ assignment of that variable in the input valuation -/
     {vTy} (v : Var Γ vTy) :
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.recPure
-  · rfl
+  · simp
   · rw [outContextHom_var]; simp [denoteLets, *]
 
 @[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
@@ -1420,7 +1420,7 @@ section Lemmas
 
 @[simp] lemma Com.changeDialect_ret (f : DialectMorphism d d') (v : Var Γ t) :
     Com.changeDialect f (Com.ret v : Com d Γ eff t) = Com.ret v.toMap := by
-  cases eff <;> rfl
+  cases eff <;> simp [changeDialect]
 
 @[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
@@ -1428,7 +1428,7 @@ section Lemmas
   simp only [List.map_eq_map, changeDialect]
 
 @[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
-    HVector.changeDialect (eff := eff) f nil = nil := rfl
+    HVector.changeDialect (eff := eff) f nil = nil := by simp [HVector.changeDialect]
 
 end Lemmas
 
@@ -2241,6 +2241,7 @@ theorem mem_matchVar
     intro _ _ hl h_v'
     obtain ⟨⟨ope, h, args⟩, he₁, he₂⟩ := by
       unfold matchVar at hvarMap
+      simp only [bind, Option.mem_def, Option.bind_eq_some] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
     split_ifs at he₂ with h
@@ -2477,7 +2478,7 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => simp
     case neg h => simp
 
-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms denote_rewritePeepholeAt
 
 /- repeatedly apply peephole on program. -/
@@ -2513,7 +2514,7 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (rewritePeephole fuel pr target).denote = target.denote := by
   simp[rewritePeephole, denote_rewritePeephole_go]
 
-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
 theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
@@ -2583,7 +2584,7 @@ def rewritePeepholeRecursively (fuel : ℕ)
 end
 
 /--
-info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Quot.sound, Classical.choice]
 -/
 #guard_msgs in #print axioms rewritePeepholeRecursively
 

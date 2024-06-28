@@ -51,7 +51,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
     (obtain (rfl | rfl) : vcond = 1 ∨ vcond = 0 := by omega) <;> simp
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-axioms: [propext, Classical.choice, Quot.sound] -/
+axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect
@@ -195,7 +195,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
           simp at hugt
           unfold LLVM.sdiv? -- TODO: devar this; write theorem to unfold sdiv?
           split <;> simp
-          case inr hsdiv =>
+          case isFalse hsdiv =>
             clear hsdiv
             apply BitVec.one_sdiv (ha0 := by assumption)
             · by_contra hone
@@ -213,7 +213,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
               contradiction
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
-[propext, Classical.choice, Quot.sound] -/
+[propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805
 
 open Std (BitVec) in
@@ -300,7 +300,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
-[propext, Classical.choice, Quot.sound] -/
+[propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805'
 
 /-
@@ -355,7 +355,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
-axioms: [propext, Classical.choice, Quot.sound]-/
+axioms: [propext, Quot.sound]-/
 #guard_msgs in #print axioms alive_simplifyMulDivRem290
 
 end MulDivRem
@@ -414,7 +414,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
     simp [h, ushr_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
-axioms: [propext, Classical.choice, Quot.sound] -/
+axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifyAndOrXor2515
 
 /-
@@ -530,7 +530,7 @@ def alive_simplifySelect764 (w : Nat) :
           contradiction
 
 /-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
-[propext, Classical.choice, Quot.sound] -/
+[propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms alive_simplifySelect764
 
 end Select

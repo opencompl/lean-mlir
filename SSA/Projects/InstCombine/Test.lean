@@ -234,14 +234,19 @@ def bb0IcomGeneric (w : Nat) := [llvm (w)|
 /-- Indeed, the concrete program is an instantiation of the generic program -/
 example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 
-/--
+/-
   Simple example of the denotation of `GenericWidth`.
   Note that we only have semantics (in the sense of "an implementation of `OpSemantics`")
   for concrete programs. We thus need to instantiate `GenericWidth` with some width `w` before we
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
+example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
+  unfold GenericWidth
+  revert Γv
+  simp_alive_meta
+  simp_alive_ssa
+  rfl
 
 open ComWrappers
 

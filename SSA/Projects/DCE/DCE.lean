@@ -278,7 +278,10 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
     match Var.tryDelete? DEL v with
     | .none => .none
     | .some ⟨v, hv⟩ =>
-      .some ⟨.ret v, hv⟩
+      .some ⟨.ret v, by
+        unfold Ctxt.Valuation.eval at hv
+        simp [hv]
+      ⟩
   | .var (α := ω) e body =>
     match Com.deleteVar? (Deleted.snoc DEL) body with
     | .none => .none

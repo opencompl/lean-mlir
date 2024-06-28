@@ -484,7 +484,7 @@ theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
-/-- info: 'ScfFunctor.ForAddToMul.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'ScfFunctor.ForAddToMul.correct' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms correct
 
 -- TODO: add a PeepholeRewrite for this theorem.
@@ -538,7 +538,7 @@ theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   simp_peephole at Γv
 
 /-- info:
-'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+'ScfFunctor.ForReversal.correct' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms correct
 
 -- TODO: add a PeepholeRewrite for this theorem.
@@ -591,7 +591,7 @@ theorem correct :
   linarith
 
 /-- info:
-'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ScfFunctor.ForFusion.correct' depends on axioms: [propext, Quot.sound, Classical.choice]
 -/
 #guard_msgs in #print axioms correct
 

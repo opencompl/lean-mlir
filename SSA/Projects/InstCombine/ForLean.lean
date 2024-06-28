@@ -28,8 +28,7 @@ lemma Nat.eq_one_mod_two_of_ne_zero (n : Nat) (hn : n % 2 != 0) : n % 2 = 1 := b
 
 lemma Nat.sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n = n - x := by
   rcases n with rfl | n <;> simp
-  apply Nat.sub_lt _ hxgt0
-  simp only [Nat.zero_lt_succ]
+  omega
 
 lemma two_pow_pred_mod_eq_two_pred (h : w > 0): 2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
   rw [Nat.mod_eq_of_lt]
@@ -55,21 +54,6 @@ def ushr_or_distrib (a b c : BitVec w) :
   simp only [HShiftRight.hShiftRight]
   ext
   simp
-
-def xor_assoc (a b c : BitVec w) :
-    a ^^^ b ^^^ c = a ^^^ (b ^^^ c) := by
-  ext i
-  simp [Bool.xor_assoc]
-
-def and_assoc (a b c : BitVec w) :
-    a &&& b &&& c = a &&& (b &&& c) := by
-  ext i
-  simp [Bool.and_assoc]
-
-def or_assoc (a b c : BitVec w) :
-    a ||| b ||| c = a ||| (b ||| c) := by
-  ext i
-  simp [Bool.or_assoc]
 
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
@@ -203,12 +187,14 @@ lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
   have hb : b = 0 ∨ b = 1 := width_one_cases _
   rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp[h, h']))
 
-lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ n#w) : a.toNat ≠ n := by
+open BitVec
+
+lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w n) : a.toNat ≠ n := by
   intros haeq
   have hn : n < 2 ^ w := by
     rw [← haeq]
     apply BitVec.isLt
-  have hcontra : a = n#w := by
+  have hcontra : a = BitVec.ofNat w n := by
     apply BitVec.eq_of_toNat_eq
     simp [haeq]
     rw [Nat.mod_eq_of_lt hn]
@@ -403,7 +389,7 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
   have rk : _ := @BitVec.getLsb_ge w x i hi
   apply rk
 
-def intMin (w : Nat) : BitVec w  := (2^(w - 1))#w
+def intMin (w : Nat) : BitVec w  := BitVec.ofNat w (2^(w - 1))
 
 private theorem toNat_intMin (w : Nat) :
     (intMin w).toNat = (if w = 0 then 0 else 2^(w - 1)) := by
@@ -462,9 +448,6 @@ private theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B
 theorem toInt_eq (x y : BitVec n) : x = y ↔ x.toInt = y.toInt :=
   Iff.intro (congrArg BitVec.toInt) eq_of_toInt_eq
 
-theorem toInt_ne (x y : BitVec n) : x ≠ y ↔ x.toInt ≠ y.toInt := by
-  rw [Ne, toInt_eq]
-
 theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w) (h_ne_zero : A ≠ 0):
     (A >ₛ 0#w) ↔ ¬ ((-A) >ₛ 0#w) := by
   by_cases w0 : w = 0
@@ -477,7 +460,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   · simp [h]
     omega
   · simp [h]
-    simp [BitVec.toInt_ne] at h_ne_zero
+    simp [←BitVec.toInt_ne] at h_ne_zero
     omega
   simp
   unfold intMin
@@ -662,8 +645,6 @@ theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :  BitVec.toNa
   apply Nat.mod_eq_of_lt
   obtain ⟨x, hx'⟩ := x
   simp
-  apply Nat.sub_lt
-  apply Nat.two_pow_pos
   apply Nat.pos_of_ne_zero
   cases x
   . contradiction
@@ -769,7 +750,7 @@ lemma toInt_zero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x = 0 ↔ x = 0 := 
   simp [toInt_eq]
 
 lemma toInt_nonzero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x ≠ 0 ↔ x ≠ 0 := by
-  simp [toInt_ne]
+  simp [← toInt_ne]
 
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
@@ -805,10 +786,9 @@ theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (
 theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
   rcases a <;> rcases b <;> simp [bv_toNat]
 
-theorem ofInt_negOne_eq_allOnes : BitVec.ofInt w (-1) = BitVec.allOnes w := by
+theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
   norm_cast
-  rw [BitVec.ofInt_negSucc, ←BitVec.allOnes_sub_eq_not]
-  simp
+  rw [BitVec.negOne_eq_allOnes]
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsb_eq
