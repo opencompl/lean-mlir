@@ -189,13 +189,66 @@ section Repr
 open Std (Format)
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty]
 
-mutual
-  def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
-    | ⟨op, _, _, args, _regArgs⟩ => f!"{repr op}{repr args}"
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the empty string otherwise. -/
+private def Format.parenIfNonempty (l : String) (r : String) (separator : Format) (xs : List Format) : Format :=
+  match xs with
+  | [] => ""
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
 
-  def Com.repr (prec : Nat) : Com d eff Γ t → Format
-    | .ret v => .align false ++ f!"return {reprPrec v prec}"
-    | .var e body => (.align false ++ f!"{e.repr prec}") ++ body.repr prec
+/-- Format a sequence of types as `(t₁, ..., tₙ)`. Will always display parentheses. -/
+private def formatTypeTuple [Repr Ty] (xs : List Ty) : Format :=
+  "("  ++ Format.joinSep (xs.map (fun t => Repr.reprPrec t 0)) ", " ++ ")"
+
+/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
+private def formatArgTuple [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.parenIfNonempty " (" ")" ", " (formatArgTupleAux args) where
+  formatArgTupleAux [Repr Ty] {Γ : Ctxt Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+    match Γ with
+    | .nil => []
+    | .cons .. =>
+      match args with
+      | .cons a as => (repr a) :: (formatArgTupleAux as)
+
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+private def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
+  Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
+    (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
+
+mutual
+  /-- Convert a HVector of region arguments into a List of format strings. -/
+  partial def reprRegArgsAux [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
+    (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : List Format :=
+    match ts with
+    | [] => []
+    | _ :: _ =>
+      match regArgs with
+      | .cons regArg regArgs =>
+        let regFmt := Com.repr 0 regArg
+        let restFmt := reprRegArgsAux regArgs
+        (regFmt :: restFmt)
+
+  partial def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
+    | ⟨op, _, _, args, regArgs⟩ =>
+        let outTy := DialectSignature.outTy op
+        let argTys := DialectSignature.sig op
+        let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
+        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr outTy})"
+
+  /-- Format string for a Com, with the region parentheses and formal argument list. -/
+  partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
+    f!"\{" ++ Format.nest 2
+    (Format.line ++
+    "^entry" ++ Format.nest 2 ((formatFormalArgListTuple Γ) ++ f!":" ++ Format.line ++
+    (comReprAux prec com))) ++ Format.line ++
+    f!"}"
+
+  /-- Format string for sequence of assignments and return in a Com. -/
+  partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
+    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
+    | .var e body =>
+      f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
+      comReprAux prec body
 end
 
 def Lets.repr (prec : Nat) : Lets d eff Γ t → Format
@@ -2463,6 +2516,77 @@ theorem denote_rewritePeephole (fuel : ℕ)
 
 /-- info: 'denote_rewritePeephole' depends on axioms: [propext, Quot.sound, Classical.choice] -/
 #guard_msgs in #print axioms denote_rewritePeephole
+
+theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (eff' : DialectSignature.effectKind op ≤ eff)
+    (args : HVector (Var Γ) (DialectSignature.sig op))
+    (regArgs regArgs' : HVector (fun t => Com d t.1 EffectKind.impure t.2) (DialectSignature.regSig op))
+    (hregArgs' : regArgs'.denote = regArgs.denote) :
+  (Expr.mk op ty_eq eff' args regArgs').denote = (Expr.mk op ty_eq eff' args regArgs).denote := by
+  funext Γv
+  cases eff
+  case pure =>
+    subst ty_eq
+    have heff' : DialectSignature.effectKind op = EffectKind.pure := by simp [eff']
+    simp [heff', Expr.denote, hregArgs']
+  case impure =>
+    subst ty_eq
+    simp [Expr.denote, hregArgs']
+
+mutual
+
+def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
+    (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
+    : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
+  match ts with
+  | .nil =>
+    match args with
+    | .nil => ⟨HVector.nil, rfl⟩
+  | .cons .. =>
+    match args with
+    | .cons com coms =>
+      let ⟨com', hcom'⟩ := (rewritePeepholeRecursively fuel pr com)
+      let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
+      ⟨.cons com' coms', by simp [hcom', hcoms']⟩
+
+def rewritePeepholeRecursivelyExpr (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
+    (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
+  match e with
+  | Expr.mk op ty eff' args regArgs =>
+    let ⟨regArgs', hregArgs'⟩ := rewritePeepholeRecursivelyRegArgs fuel pr regArgs
+    ⟨Expr.mk op ty eff' args regArgs', by
+      apply Expr.denote_eq_of_region_denote_eq op ty eff' args regArgs regArgs' hregArgs'⟩
+
+/-- A peephole rewriter that recurses into regions, allowing
+peephole rewriting into nested code. -/
+def rewritePeepholeRecursively (fuel : ℕ)
+    (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
+    { out : Com d Γ₂ eff t₂ // out.denote = target.denote } :=
+  match fuel with
+  | 0 => ⟨target, rfl⟩
+  | fuel + 1 =>
+    let target' := rewritePeephole fuel pr target
+    have htarget'_denote_eq_htarget : target'.denote = target.denote := by apply denote_rewritePeephole
+    match htarget : target' with
+    | .ret v => ⟨target', by
+      simp [htarget, htarget'_denote_eq_htarget]⟩
+    | .var (α := α) e body =>
+      let ⟨e', he'⟩ := rewritePeepholeRecursivelyExpr fuel pr e
+      let ⟨body', hbody'⟩ :=
+        -- decreases because 'body' is smaller.
+        rewritePeepholeRecursively fuel pr body
+      ⟨.var e' body', by
+        rw [← htarget'_denote_eq_htarget]
+        simp [he', hbody']⟩
+end
+
+/--
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms rewritePeepholeRecursively
 
 end SimpPeepholeApplier
 

@@ -429,7 +429,7 @@ theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t'
   rfl
 
 instance : Repr (Var Γ t) where
-  reprPrec v _ := f!"%{v.val}"
+  reprPrec v _ := f!"%{Γ.length - v.val - 1}"
 
 end Var
 
