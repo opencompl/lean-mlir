@@ -82,6 +82,6 @@ theorem bitvec_AddSub_1309 :
     simp
 
 /--
-info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Quot.sound, Classical.choice]
 -/
 #guard_msgs in #print axioms bitvec_AddSub_1309
