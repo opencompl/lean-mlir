@@ -2584,7 +2584,7 @@ def rewritePeepholeRecursively (fuel : ℕ)
 end
 
 /--
-info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Quot.sound, Classical.choice]
 -/
 #guard_msgs in #print axioms rewritePeepholeRecursively
 
