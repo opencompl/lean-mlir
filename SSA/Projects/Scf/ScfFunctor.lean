@@ -13,9 +13,6 @@ open Std (BitVec)
 open Ctxt(Var)
 
 namespace ScfFunctor
-/- disable proofs and types of proofs from showing to make proof states legible -/
-set_option pp.proofs false
-set_option pp.proofs.withType false
 
 open TyDenote
 
