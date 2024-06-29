@@ -484,9 +484,9 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.get?_map, Option.map_eq_some', forall_exists_index, and_imp,
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some', forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂] at h_get_d ⊢
-    exact fun t h => ⟨t, h_get_d h, rfl⟩
+    exact fun t h => ⟨t, h_get_snoc h, rfl⟩
   ⟩
 
 /-!

@@ -127,7 +127,6 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : BitVec.udiv x (1#w)  = x := 
   cases w
   case zero =>
     simp [BitVec.eq_nil x]
-    rfl
   case succ w =>
     simp only [ne_eq, Nat.succ_ne_zero, not_false_eq_true,
       Nat.one_mod_two_pow_eq, Nat.div_one]
@@ -618,23 +617,18 @@ lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
 @[simp]
 theorem ofBool_neq_1 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
   constructor <;> (intros h; cases b <;> simp at h; simp [BitVec.ofBool])
-  · intros h
-    contradiction
-  · contradiction
 
 @[simp]
 theorem ofBool_neq_0 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 0) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 1) := by
-  constructor <;> (intros h; cases b <;> simp at h <;> simp_all [BitVec.ofBool, h] <;> try contradiction)
-  · intros h
-    contradiction
+  constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
 
 @[simp]
 theorem ofBool_eq_1 (b : Bool) : BitVec.ofBool b = (BitVec.ofNat 1 1) ↔ b = True := by
-  constructor <;> (intros h; cases b <;> simp at h <;> simp_all [BitVec.ofBool, h] <;> contradiction)
+  constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
 
 @[simp]
 theorem ofBool_eq_0 (b : Bool) : BitVec.ofBool b = (BitVec.ofNat 1 0) ↔ b = False := by
-  constructor <;> (intros h; cases b <;> simp at h <;> simp [BitVec.ofBool] <;> contradiction)
+  constructor <;> (intros h; cases b <;> simp at h ; simp [BitVec.ofBool])
 
 @[simp]
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
