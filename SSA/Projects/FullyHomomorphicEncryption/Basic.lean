@@ -488,10 +488,8 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
     cases xs
     case nil => simp [degree]
     case cons x xs =>
-      simp [degree]
-      simp [List.toFinsupp]
-      simp [Finset.range_succ]
-      apply Finset.max_le
+      simp only [degree, support_ofFinsupp, List.length_cons, Nat.succ_eq_add_one, Nat.cast_add,
+        Nat.cast_one, Finset.max_le_iff, Finsupp.mem_support_iff, List.toFinsupp_apply, ne_eq]
       intros a ha
       obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
       have ha₃ := Finset.mem_insert.mp ha₁
