@@ -29,6 +29,7 @@ instance decidableEvalEq (t₁ t₂ : Term) :
     rw [PropagateStruc.eval, h]
     exact i.2 }
 
+
 def decide (t₁ t₂ : Term) : Bool :=
   t₁.eval = t₂.eval
 
