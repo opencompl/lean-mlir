@@ -428,7 +428,7 @@ theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α}
   refine le_trans ?_ (List.length_le_of_sublist (List.dedup_sublist l₂))
   rw [← List.dedup_eq_self.2 hnd]
   rw [← List.card_toFinset, ← List.card_toFinset]
-  refine Finset.card_le_of_subset ?_
+  refine Finset.card_le_card ?_A
   intro x
   simpa using @hs x
 
@@ -711,7 +711,7 @@ def nonemptyAux [DecidableEq α] :
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]
-        dsimp! only [eval_assignVars]
+        simp! only [(eval_assignVars)]
         constructor
         . rintro ⟨x, hx⟩
           cases hi : x i
@@ -733,7 +733,7 @@ def nonemptyAux [DecidableEq α] :
           rcases h with ⟨x, hx⟩ | ⟨x, hx⟩
           . refine ⟨_, hx⟩
           . refine ⟨_, hx⟩⟩
-termination_by nonemptyAux c l hL => c.varsFinset.card
+termination_by c l _ => c.varsFinset.card
 
 def nonempty [DecidableEq α] (c : Circuit α) : Bool :=
   (nonemptyAux c c.vars rfl).1
