@@ -1,5 +1,4 @@
 set -o xtrace
 set -e
-lake -Kenv=dev update
-lake exe cache get # load mathlib from cache
-lake -Kenv=dev build SSA:docs # Alive depends on SSA.
+lake -R exe cache get # load mathlib from cache
+lake -R -Kdoc=on build SSA:docs

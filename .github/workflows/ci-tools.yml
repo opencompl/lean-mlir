@@ -1,0 +1,56 @@
+name: tools, scaling, and auto-generated statements
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: tools, scaling, and auto-generated stmts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Compile `mlirnatural` Executable 🧐
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build mlirnatural
+
+      - name: LLVM Exhaustive Enumeration
+        run: |
+          sudo apt install llvm-15 # for opt-15, used to simplify LLVM for reference semantics.
+          (cd test/bruteforce-correctness && ./run.sh)
+
+      - name: Compile `opt` Executable 🧐
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build opt
+
+      - name: LLVM opt round trip test
+        run: |
+          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+
+      - name: Compile Alive Scaling
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build AliveScaling
+
+      - name: Check for changes in AliveStatements
+        run: |
+          lake -R exe cache get
+          lake build
+          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash

@@ -1,18 +1,25 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+
 -- Core
 -- ====
-
-import SSA.Core.Framework
-import SSA.Core.WellTypedFramework
+import SSA.Core
 
 
 -- Projects
 -- ========
 
 -- Eventually, all projects must be imported.
-import SSA.Projects.InstCombine.InstCombinePeepholeRewrites
-import SSA.Projects.InstCombine.InstCombineAlive
+import SSA.Projects.InstCombine.Alive
+import SSA.Projects.FullyHomomorphicEncryption
 import SSA.Projects.Tensor1D.Tensor1D
 import SSA.Projects.Tensor2D.Tensor2D
+import SSA.Projects.Holor.Holor
+import SSA.Projects.DCE.DCE
+import SSA.Projects.CSE.CSE
+import SSA.Projects.PaperExamples.PaperExamples
+import SSA.Projects.Scf.ScfFunctor
 
 
 -- EXPERIMENTAL

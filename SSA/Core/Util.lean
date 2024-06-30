@@ -1,4 +1,9 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Data.Fin.Basic
+import Mathlib.Data.Vector.Basic
+import Cli
 import Lean
 
 @[simp]
@@ -9,6 +14,12 @@ def pairBind [Monad m] (f : α → β → m γ) (pair : (m α × m β)) : m γ :
   let fst ← pair.fst
   let snd ← pair.snd
   f fst snd
+
+@[simp]
+def tripleBind [Monad m] (f : α → β → γ → m δ) (triple : (m α × m β × m γ)) : m δ := do
+  let (fstM,sndM,trdM) := triple
+  let (fst,snd,trd) := (← fstM,← sndM,← trdM)
+  f fst snd trd
 
 @[simp]
 def pairMapM [Monad m] (f : α → β → γ) (pair : (m α × m β)) : m γ := do
@@ -74,14 +85,49 @@ def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
       let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
     LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
 
-@[simp]
-theorem finRangeIndex {n : Nat} (i : Fin n) : nth (finRange n) i = i := by
-  match i with
-  | ⟨idx,hidx⟩ => sorry
-
 end LengthIndexedList
 
 elab "print_goal_as_error " : tactic => do
   let target ← Lean.Elab.Tactic.getMainTarget
   throwError target
   pure ()
+
+-- TODO: should these go into Std?
+def Vector.ofList {α : Type u} (l : List α) : Vector α l.length :=
+⟨l, rfl⟩
+
+def Vector.ofArray {α : Type u} (a : Array α) : Vector α a.size :=
+ Vector.ofList a.data
+
+instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ n) where
+  name := s!"Vector ({inst.name}) {n}"
+  parse? str := do
+    let arr : Array τ ← Cli.ParseableType.parse? str
+    if h : arr.size = n then
+      return h ▸ Vector.ofArray arr
+    else
+      none
+
+/-- productsList [xs, ys] = [(x, y) for x in xs for y in ys],
+extended to arbitary number of arrays. -/
+def productsList : List (List α) -> List (List α)
+| [] => [[]] -- empty product returns empty tuple.
+| (xs::xss) => Id.run do
+  let mut out := []
+  let xss' := productsList xss -- make tuples of the other columns.
+  for x in xs do  -- for every element in this column, take product with all other tuples.
+    out := out.append (xss'.map (fun xs => x :: xs))
+  return out
+
+example : productsList [["a"], ["x", "y", "z"]] = [["a", "x"], ["a", "y"], ["a", "z"]] := rfl
+example : productsList [["a"], ["p", "q"], ["x", "y", "z"]] =
+  [["a", "p", "x"], ["a", "p", "y"], ["a", "p", "z"],
+   ["a", "q", "x"], ["a", "q", "y"], ["a", "q", "z"]] := rfl
+
+/-- Builds the cartesian product of all arrays in the input.
+    Pretty inefficient right now, as it converts back and forth to lists... -/
+def productsArr : Array (Array α) -> Array (Array α) :=
+  fun arr =>
+     let ls : List (List α) := List.map Array.toList ∘ Array.toList <| arr
+     let prods := productsList ls
+     List.map List.toArray prods |>.toArray

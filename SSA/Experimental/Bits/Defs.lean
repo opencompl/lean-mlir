@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
 
@@ -107,8 +110,8 @@ def Term.eval : ∀ (_ : Term) (_ : Nat → Nat → Bool), Nat → Bool
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
-instance : One Term := ⟨one⟩
-instance : Zero Term := ⟨zero⟩
+--instance : One Term := ⟨one⟩
+--instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
 
 @[simp] def Term.arity : Term → ℕ
