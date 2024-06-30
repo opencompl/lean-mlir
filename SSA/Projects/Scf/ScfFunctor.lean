@@ -138,10 +138,9 @@ theorem iterate {f : LoopBody t}
   induction k generalizing i₀ v₀
   case zero => simp
   case succ i hi =>
-    simp
+    simp only [Function.iterate_succ, Function.comp_apply, Nat.cast_add, Nat.cast_one]
     rw [hi]
-    simp [counterDecorator]
-    simp [eval' hf]
+    simp only [counterDecorator, eval' hf, Prod.mk.injEq, and_true]
     linarith
 
 /-- the first component of iterating a loop invariant function -/
@@ -168,9 +167,7 @@ theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k 
   induction k generalizing i₀ v₀
   case zero => simp
   case succ i hi =>
-    simp
-    rw [hi]
-    simp [counterDecorator]
+    simp only [Function.iterate_succ, Function.comp_apply, Nat.cast_add, Nat.cast_one, hi, counterDecorator]
     linarith
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
@@ -204,7 +201,8 @@ theorem constant_iterate {α : Type} (k : ℕ) (δ : Int) :
   case h.zero =>
     simp
   case h.succ n ihn =>
-    simp [ihn]
+    simp only [Function.iterate_succ, Function.comp_apply, constant, ihn, Nat.cast_add,
+      Nat.cast_one, Prod.mk.injEq, and_true]
     linarith
 
 def to_loop_run (δ : Int) (f : LoopBody α) (niters : ℕ) (val : α) : α :=
@@ -400,7 +398,8 @@ theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond 
     (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v then_) Γv := by
-  simp [Expr.denote, if_, run]
+  simp only [EffectKind.toMonad_impure, if_, Expr.denote, HVector.denote_cons, HVector.denote_nil,
+    EffectKind.liftEffect_rfl, id_eq, run]
   simp_peephole [hcond] at Γv
   simp [ite_true]
 -- TODO: make a `PeepholeRewrite` for `if_true`.
@@ -410,7 +409,8 @@ theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond
     (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v else_) Γv := by
-  simp [Expr.denote, if_, run]
+  simp only [EffectKind.toMonad_impure, if_, Expr.denote, HVector.denote_cons, HVector.denote_nil,
+    EffectKind.liftEffect_rfl, id_eq, run]
   simp_peephole [hcond] at Γv
   simp [ite_true]
 
@@ -424,7 +424,8 @@ abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com ScfAri
   just fetching the loop variable. -/
 theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int) (niters : Var Γ .nat) (v : Var Γ t) :
   Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
-    simp [Expr.denote, run, for_]
+    simp only [EffectKind.toMonad_impure, for_, Ctxt.get?, Expr.denote, HVector.denote_cons,
+      Com.denote_ret, Id.pure_eq, HVector.denote_nil, EffectKind.liftEffect_rfl, id_eq]
     simp_peephole at Γv
     simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
@@ -531,7 +532,7 @@ theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.V
   simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
-  simp [lhs, rhs, for_, axpy]
+  simp only [EffectKind.toMonad_impure, lhs, for_, Ctxt.get?, Var.zero_eq_last, rhs, axpy]
   simp_peephole at Γv
 
 /-- info:
