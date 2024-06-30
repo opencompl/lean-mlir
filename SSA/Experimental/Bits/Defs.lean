@@ -109,7 +109,6 @@ def Term.eval : ∀ (_ : Term) (_ : Nat → Nat → Bool), Nat → Bool
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
-instance : One Term := ⟨one⟩
-instance : Zero Term := ⟨zero⟩
+--instance : One Term := ⟨one⟩
+--instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
-
