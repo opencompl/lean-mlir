@@ -1665,7 +1665,7 @@ def Ctxt.Substitution (Γ Δ : Ctxt d.Ty) : Type :=
 @[coe] def Ctxt.Substitution.ofValuation
     (V : Valuation (Ty:=(TermModel d Δ).Ty) (TermModelTy.mk <$> Γ)) :
     Γ.Substitution d Δ := fun ⟨v, h⟩ =>
-  V ⟨v, by simp only [get?] at h; simp [h]⟩
+  V ⟨v, by simp only [get?] at h; simp only [List.get?_eq_getElem?] at h; simp [h]⟩
 
 /-- A context homomorphism trivially induces a substitution  -/
 @[coe] def Ctxt.Substitution.ofHom {Γ Δ : Ctxt d.Ty} (f : Γ.Hom Δ) : Γ.Substitution d Δ :=
@@ -1684,8 +1684,9 @@ def Lets.toSubstitution (lets : Lets d Γ_in .pure Γ_out) : Γ_out.Substitution
   Ctxt.Substitution.ofValuation <|
     (lets.changeDialect TermModel.morphism).denote fun ⟨ty⟩ ⟨v, h⟩ =>
       ExprTree.fvar ⟨v, by
-        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map, List.get?_map,
-          Option.map_eq_some'] at h
+        simp only [Ctxt.get?, TermModel.morphism, List.map_eq_map, List.get?_eq_getElem?,
+          List.getElem?_map, Option.map_eq_some'] at h
+        simp only [Ctxt.get?, List.get?_eq_getElem?]
         rcases h with ⟨ty', h_get, h_map⟩
         injection h_map with ty_eq_ty'
         subst ty_eq_ty'
@@ -1803,7 +1804,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
     (w : ℕ)
     (hw : Ctxt.get? Δ_out w = .some t)
     (ma : Mapping Δ_in Γ_out) :
-  matchVar lets v (matchLets := .var matchLets matchE) ⟨w + 1, by simp[Ctxt.snoc]; apply hw⟩ ma =
+  matchVar lets v (matchLets := .var matchLets matchE) ⟨w + 1, by simp only [Ctxt.get?, Ctxt.snoc, List.get?_eq_getElem?, List.getElem?_cons_succ]; simp only [Ctxt.get?, List.get?_eq_getElem?] at hw; apply hw⟩ ma =
   matchVar lets v matchLets ⟨w, hw⟩ ma := by
     conv =>
       lhs
@@ -2478,7 +2479,7 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
         | none => simp
     case neg h => simp
 
-/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+/-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeepholeAt
 
 /- repeatedly apply peephole on program. -/
@@ -2514,7 +2515,7 @@ theorem denote_rewritePeephole (fuel : ℕ)
     (rewritePeephole fuel pr target).denote = target.denote := by
   simp[rewritePeephole, denote_rewritePeephole_go]
 
-/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+/-- info: 'denote_rewritePeephole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeephole
 
 theorem Expr.denote_eq_of_region_denote_eq (op : d.Op)
@@ -2584,7 +2585,7 @@ def rewritePeepholeRecursively (fuel : ℕ)
 end
 
 /--
-info: 'rewritePeepholeRecursively' depends on axioms: [propext, Quot.sound, Classical.choice]
+info: 'rewritePeepholeRecursively' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms rewritePeepholeRecursively
 

@@ -37,11 +37,12 @@ theorem List.get?_eraseIdx_of_lt (hk: k < n) : List.get? (List.eraseIdx xs n) k 
     cases n
     case zero => simp at hk
     case succ n' =>
-      simp[List.eraseIdx_succ]
+      simp? [List.eraseIdx_succ]
       cases k
       case zero => simp
       case succ k' =>
-        simp[List.get?]
+        simp only [getElem?_cons_succ]
+        simp only [get?_eq_getElem?] at IHxs
         apply IHxs
         linarith
         simp at N_LEN; linarith
@@ -64,7 +65,8 @@ theorem List.get?_eraseIdx_of_le {xs : List α} {n : Nat} {k : Nat} (hk: n ≤ k
       case zero =>
         simp[List.eraseIdx, List.eraseIdx_succ]
       case succ n' =>
-        simp[List.eraseIdx_succ]
+        simp only [eraseIdx_cons_succ, getElem?_cons_succ]
+        simp only [get?_eq_getElem?] at IHxs
         apply IHxs
         linarith
 
