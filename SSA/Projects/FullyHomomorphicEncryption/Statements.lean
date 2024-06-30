@@ -158,7 +158,7 @@ theorem R.trimTensor_getD_0 (tensor: List Int) :
   . have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
     rw[List.getD_eq_default (hn := OUT_OF_BOUNDS)]
     rw[List.getD_append_right (h := OUT_OF_BOUNDS)]
-    rw[List.getD_replicate_default_eq]
+    simp
 
 theorem R.trimTensor_trimTensor (tensor : List Int) :
   trimTensor (trimTensor tensor) = trimTensor tensor := by

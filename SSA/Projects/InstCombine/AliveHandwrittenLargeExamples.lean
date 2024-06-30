@@ -216,8 +216,9 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 ofBool_true, ofNat_eq_ofNat] at hugt
               contradiction
 
-/--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
-[propext, Quot.sound, Classical.choice] -/
+/--
+info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805
 
 open Std (BitVec) in
@@ -305,7 +306,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
     rw [one_sdiv a_ne_zero a_ne_one a_ne_allOnes]
 
 /--info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805'' depends on axioms:
-[propext, Quot.sound, Classical.choice] -/
+[propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805'
 
 /-
@@ -359,8 +360,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp [bv_toNat]
   ring_nf
 
-/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on
-axioms: [propext, Quot.sound]-/
+/-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem290
 
 end MulDivRem
@@ -418,8 +418,8 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   by_cases h : BitVec.toNat c2 ≥ w <;>
     simp [h, ushr_xor_distrib, xor_assoc]
 
-/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on
-axioms: [propext, Quot.sound] -/
+/-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifyAndOrXor2515
 
 /-
@@ -535,7 +535,7 @@ def alive_simplifySelect764 (w : Nat) :
           contradiction
 
 /-- info: 'AliveHandwritten.Select.alive_simplifySelect764' depends on axioms:
-[propext, Quot.sound, Classical.choice] -/
+[propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifySelect764
 
 end Select

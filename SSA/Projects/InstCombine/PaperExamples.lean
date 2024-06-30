@@ -60,7 +60,7 @@ theorem xor_sub :
     simp_alive_peephole
     alive_auto
 
-/-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+/-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub
 
 theorem bitvec_AddSub_1309 :
@@ -82,6 +82,6 @@ theorem bitvec_AddSub_1309 :
     simp
 
 /--
-info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Quot.sound, Classical.choice]
+info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms bitvec_AddSub_1309
