@@ -469,7 +469,6 @@ def xor : PropagateStruc Bool :=
   congr
   funext b
   cases b; rfl
-  simp
   congr
   funext i
   cases i <;> simp
@@ -490,7 +489,6 @@ def sub : PropagateStruc Bool :=
   congr
   funext b
   cases b;  rfl
-  simp
   congr
   funext i
   cases i <;> simp
@@ -902,12 +900,6 @@ lemma propagate_eq_zero_iff (init_carry : α → Bool)
 lemma eq_iff_xorSeq_eq_zero (seq₁ seq₂ : ℕ → Bool) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, xorSeq seq₁ seq₂ i = zeroSeq i) := by
   simp [Function.funext_iff, xorSeq, zeroSeq]
-  constructor
-  { intro i _; simp [*] }
-  { intro h a
-    specialize h a
-    revert h
-    cases (seq₁ a) <;> cases (seq₂ a) <;> simp [*] at * }
 
 lemma eval_eq_iff_xorSeq_eq_zero (t₁ t₂ : Term) :
     t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = λ _ => zeroSeq := by
