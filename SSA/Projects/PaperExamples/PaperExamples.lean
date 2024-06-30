@@ -12,9 +12,6 @@ import SSA.Core.MLIRSyntax.EDSL
 import Batteries.Data.BitVec
 import Mathlib.Tactic.Ring
 
-set_option pp.proofs false
-set_option pp.proofs.withType false
-
 open BitVec
 open Ctxt(Var)
 
@@ -306,8 +303,7 @@ attribute [local simp] Ctxt.snoc
 --
 -- set_option trace.Meta.Tactic.simp true in
 open Ctxt (Var Valuation DerivedCtxt) in
-set_option pp.explicit false in
-set_option pp.proofs.withType false in
+
 def p1 : PeepholeRewrite SimpleReg [int] int:=
   { lhs := lhs, rhs := rhs, correct := by
       rw [lhs, rhs]

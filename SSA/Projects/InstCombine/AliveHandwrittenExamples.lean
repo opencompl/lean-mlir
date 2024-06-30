@@ -15,8 +15,6 @@ open Ctxt (Var DerivedCtxt)
 open InstCombine (MOp)
 
 namespace AliveHandwritten
-set_option pp.proofs false
-set_option pp.proofs.withType false
 
 
 /-
