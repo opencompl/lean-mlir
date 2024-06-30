@@ -408,7 +408,6 @@ def xor : PropagateStruc Bool :=
   congr
   funext b
   cases b; rfl
-  simp
   congr
   funext i
   cases i <;> simp
@@ -429,7 +428,6 @@ def sub : PropagateStruc Bool :=
   congr
   funext b
   cases b;  rfl
-  simp
   congr
   funext i
   cases i <;> simp
@@ -836,4 +834,3 @@ lemma propagate_eq_zero_iff (init_carry : α → Bool)
     funext i
     rcases exists_repeat init_carry next_bit seq i with ⟨j, hj, seq2, hseq2⟩
     rw [← hseq2, h seq2 j hj, zeroSeq] }
-

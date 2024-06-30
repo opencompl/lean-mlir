@@ -37,7 +37,7 @@ def xorSeq : ∀ (_ _ : Nat → Bool), Nat → Bool := fun x y n => xor (x n) (y
 def notSeq : ∀ (_ : Nat → Bool), Nat → Bool := fun x n => !(x n)
 
 def lsSeq (b : Bool) (s : Nat → Bool) : Nat → Bool
-  | 0 => b 
+  | 0 => b
   | (n+1) => s n
 
 def addSeqAux (x y : Nat → Bool) : Nat → Bool × Bool
@@ -137,32 +137,31 @@ instance : Neg Term := ⟨neg⟩
 | negOne, _vars => negOneSeq
 | Term.and t₁ t₂, vars =>
   andSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
 | Term.or t₁ t₂, vars =>
   orSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
 | Term.xor t₁ t₂, vars =>
   xorSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
 | not t, vars => notSeq (Term.evalFin t vars)
 | ls b t, vars => lsSeq b (Term.evalFin t vars)
 | add t₁ t₂, vars =>
   addSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
 | sub t₁ t₂, vars =>
   subSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
   (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]) i)))
+    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
 | neg t, vars => negSeq (Term.evalFin t vars)
 | incr t, vars => incrSeq (Term.evalFin t vars)
 | decr t, vars => decrSeq (Term.evalFin t vars)
-
