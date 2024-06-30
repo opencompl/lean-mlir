@@ -518,7 +518,7 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
       (a : α) (ha : a ∈ c.vars) (b : Bool) (hfa : f a ha = Sum.inr b) :
       (c.assignVars f).varsFinset.card < c.varsFinset.card :=
   calc (c.assignVars f).varsFinset.card
-     ≤ _ := Finset.card_le_of_subset (varsFinset_assignVars c f)
+     ≤ _ := Finset.card_le_card (varsFinset_assignVars c f)
    _ = _ := Eq.symm $ Finset.card_map ⟨(Sum.inl : β → β ⊕ Bool), Sum.inl_injective⟩
    _ < (c.varsFinset.image (fun a => if ha : a ∈ c.vars
                   then f a ha else Sum.inr false)).card :=
@@ -527,6 +527,7 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
           Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, forall_exists_index, and_imp,
           Sum.forall, Sum.inl.injEq, IsEmpty.forall_iff, implies_true, Bool.forall_bool, and_true, not_exists, not_and,
           exists_and_left, exists_prop, exists_exists_and_eq_and]
+
         use a
         use mem_varsFinset.2 ha
         simp only [ha, hfa, dite_eq_ite, ite_true, not_false_eq_true, implies_true, true_and]
@@ -564,6 +565,7 @@ lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
 
 def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) : Circuit α :=
+  -- TODO: Fix sorry
   sorry
   --Circuit.bOr (c.sumVarsRight.pi (λ _ => [true, false]))
   --(λ x => Circuit.assignVars c
@@ -572,6 +574,7 @@ def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : α → Bool) :
     c.fst.eval g ↔ ∃ g' : β → Bool, c.eval (Sum.elim g g') := by
+  -- TODO: Fix sorry
   sorry
 --  simp only [fst, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
 --    List.mem_singleton, eval_assignVars]
@@ -595,6 +598,7 @@ theorem eval_fst {α β : Type _} [DecidableEq α] [DecidableEq β]
 
 def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) : Circuit β :=
+  -- TODO: Fix sorry
   sorry
 --  Circuit.bOr (c.sumVarsLeft.pi (λ _ => [true, false]))
 --  (λ x => Circuit.assignVars c
@@ -603,6 +607,7 @@ def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
 theorem eval_snd {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : β → Bool) :
     c.snd.eval g ↔ ∃ g' : α → Bool, c.eval (Sum.elim g' g) := by
+  -- TODO: Fix sorry
   sorry
 --  simp only [snd, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
 --    List.mem_singleton, eval_assignVars]
@@ -691,20 +696,22 @@ def nonemptyAux [DecidableEq α] :
           simp [hv] at hi
         . intro h
           use λ i _ => false
-          exact h⟩
+          ⟩
     | i::l, hv =>
       let c₁ := c.assignVars (λ j _ => if i = j then Sum.inr true else Sum.inl j)
       let c₂ := c.assignVars (λ j _ => if i = j then Sum.inr false else Sum.inl j)
-      have wf₁ : c₁.varsFinset.card < c.varsFinset.card :=
+      let cc₁' := c.assignVars (λ j _ => if i = j then Sum.inr true else Sum.inl j)
+      let cc₂' := c.assignVars (λ j _ => if i = j then Sum.inr false else Sum.inl j)
+      have wf₁ : cc₁'.varsFinset.card < c.varsFinset.card :=
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) true (by simp)
-      have wf₂ : c₂.varsFinset.card < c.varsFinset.card :=
+      have wf₂ : cc₂'.varsFinset.card < c.varsFinset.card :=
         card_varsFinset_assignVars_lt _ _ i (hv ▸ by simp) false (by simp)
       let b₁ := nonemptyAux c₁ c₁.vars rfl
       let b₂ := nonemptyAux c₂ c₂.vars rfl
       ⟨b₁ || b₂, by
         simp only [eval_eq_evalv, Bool.or_eq_true, eq_iff_iff]
         rw [← b₁.prop, ← b₂.prop]
-        simp only [eval_assignVars]
+        dsimp! only [eval_assignVars]
         constructor
         . rintro ⟨x, hx⟩
           cases hi : x i
