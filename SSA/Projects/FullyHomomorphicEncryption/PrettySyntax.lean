@@ -59,8 +59,8 @@ private def fhe_test_one_lhs := [poly q, n, h | {
 
 /--
 info: '_private.SSA.Projects.FullyHomomorphicEncryption.PrettySyntax.0.MLIR.EDSL.Pretty.fhe_test_one_lhs' depends on axioms: [propext,
- Quot.sound,
- Classical.choice]
+ Classical.choice,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms fhe_test_one_lhs
 

@@ -105,7 +105,7 @@ def rhs := [poly q, n, hq | {
 
 }]
 
-/-- info: 'a_plus_generator_eq_a' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+/-- info: 'a_plus_generator_eq_a' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms a_plus_generator_eq_a
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
@@ -151,6 +151,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
       apply Poly.add_f_eq
       done
     }
-/--info: 'p1' depends on axioms: [propext, Quot.sound, Classical.choice] -/
+/--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms p1
 end ExampleModulo

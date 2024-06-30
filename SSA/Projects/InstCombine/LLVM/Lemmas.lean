@@ -36,7 +36,6 @@ theorem LLVM.select?_eq_some {w : Nat} {c : BitVec 1} {x y : Option (BitVec w)} 
     rcases c with rfl | rfl | hcontra <;> simp at hc ⊢
     contradiction
   rcases hc' with rfl | rfl <;> simp
-  · rfl
 
 @[simp]
 theorem LLVM.sdiv?_denom_zero {w : Nat} {a b : BitVec w} (hb : b = 0) : LLVM.sdiv? a b = none :=

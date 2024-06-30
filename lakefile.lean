@@ -35,7 +35,7 @@ lean_lib AliveScaling {
   roots := #[`SSA.Projects.InstCombine.ScalingTest]
 }
 
-require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "master"
+require mathlib from git "https://github.com/leanprover-community/mathlib4" @ "9440e8c"
 require Cli from git "https://github.com/mhuisi/lean4-cli.git" @ "nightly"
 meta if get_config? doc = some "on" then -- dev is so not everyone has to build it
   require «doc-gen4» from git "https://github.com/leanprover/doc-gen4" @ "main"

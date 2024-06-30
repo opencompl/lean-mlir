@@ -122,8 +122,9 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.get?_map, Option.map_eq_some']
-      exact ⟨t, h, rfl⟩
+      simp only [get?, map, List.getElem?_map, Option.map_eq_some']
+      simp only [get?, List.get?_eq_getElem?] at h
+      simp [h]
     ⟩
 
 def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
@@ -484,9 +485,13 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.get?_map, Option.map_eq_some', forall_exists_index, and_imp,
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some', forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂] at h_get_d ⊢
-    exact fun t h => ⟨t, h_get_d h, rfl⟩
+    simp only [List.get?_eq_getElem?] at h_get_d
+    simp only [List.get?_eq_getElem?, List.getElem?_map, Option.map_eq_some', forall_exists_index,
+      and_imp, forall_apply_eq_imp_iff₂]
+    intros a b c
+    simp [h_get_d c]
   ⟩
 
 /-!
@@ -614,7 +619,7 @@ def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
       cases v using Var.casesOn
       · simp only [get?, dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
         apply ih h
-      · simpa using h
+      · simpa! using h
   ⟩
 
 /-- Context homomorphism from `(Γ.dropUntil v)` to `Γ`, see also `dropUntilDiff` -/
