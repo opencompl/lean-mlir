@@ -1,3 +1,6 @@
+/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
 import Mathlib.Data.Fintype.Card
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Data.Fintype.Sigma
@@ -108,7 +111,6 @@ lemma propagateCarry_propagate {δ : β → Type} {β' : Type}
     conv_lhs => simp only [this]
     clear this
     dsimp
-    congr
     ext a
     dsimp
     congr
@@ -405,7 +407,6 @@ def xor : PropagateStruc Bool :=
 @[simp] lemma eval_add (x : Bool → ℕ → Bool) : add.eval x = addSeq (x true) (x false) := by
   dsimp [add, eval]
   rw [add_eq_propagate]
-  congr
   funext b
   cases b; rfl
   congr
@@ -425,7 +426,6 @@ def sub : PropagateStruc Bool :=
 @[simp] lemma eval_sub (x : Bool → ℕ → Bool) : sub.eval x = subSeq (x true) (x false) := by
   dsimp [sub, eval]
   rw [sub_eq_propagate]
-  congr
   funext b
   cases b;  rfl
   congr
@@ -564,7 +564,6 @@ def composeBinary
       (λ b => cond b (t₁.evalFin (fun i => x (Fin.castLE (by simp) i)))
                   (t₂.evalFin (fun i => x (Fin.castLE (by simp) i)))) := by
   rw [composeBinary, PropagateStruc.eval_compose, q₁.good, q₂.good]
-  congr
   ext b
   cases b <;> dsimp <;> congr <;> funext b <;> cases b <;> simp
 
@@ -821,7 +820,6 @@ lemma exists_repeat : ∀ (seq : β → ℕ → Bool)
         ring
         exact le_of_lt h₂
         exact le_of_not_lt hn2 } }
-
 
 lemma propagate_eq_zero_iff (init_carry : α → Bool)
     (next_bit : ∀ (_carry : α → Bool) (_bits : β → Bool), (α → Bool) × Bool) :

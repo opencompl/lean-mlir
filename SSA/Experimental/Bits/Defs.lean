@@ -114,7 +114,7 @@ instance : Sub Term := ⟨sub⟩
 --instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
 
-@[simp] def Term.arity : Term → ℕ
+@[simp] def Term.arity : Term → Nat
 | (var n) => n+1
 | zero => 0
 | one => 0
