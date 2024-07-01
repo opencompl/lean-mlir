@@ -34,7 +34,7 @@ jobs:
       - name: Compile Decide Experiment 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
-          lake -R build SSA.Experimental.Bits.Decide SSA.Experoimental.Bits.Fast.Decide
+          lake -R build SSA.Experimental.Bits.Decide SSA.Experimental.Bits.Fast.Decide
 
       - name: Compile Alive Examples
         run: |
