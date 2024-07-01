@@ -185,7 +185,6 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       intros a
       simp only [ofInt_zero, ofNat_eq_ofNat, BitVec.add_zero]
       /- goals accomplished 🎉 -/
-      done
     }
 
 def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
@@ -341,7 +340,6 @@ def p1 : PeepholeRewrite SimpleReg [int] int:=
 
       /-  ∀ (a : BitVec 32), (fun v => v + v)^[0] a = a -/
       simp [Function.iterate_zero]
-      done
   }
 
 /-

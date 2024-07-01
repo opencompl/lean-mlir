@@ -169,7 +169,6 @@ theorem extractslice_insertslice [Inhabited α]
             simp[spec _ E]
           case pos =>
             try simp
-            norm_num
             by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
             case pos =>
               have CONTRA : False := by simp[Index] at *; linarith;

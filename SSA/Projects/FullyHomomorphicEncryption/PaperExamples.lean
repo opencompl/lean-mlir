@@ -72,7 +72,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLi
       intros a b
       rw [add_comm]
       /- No goals-/
-      done
     }
 
 end ExampleComm
@@ -149,7 +148,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
       have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
       rw [add_congr_quotient]
       apply Poly.add_f_eq
-      done
     }
 /--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms p1

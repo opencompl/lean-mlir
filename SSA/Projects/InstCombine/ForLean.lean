@@ -75,9 +75,8 @@ def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
 def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
 
 def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
-  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt]
-  norm_cast
-  simp only [toNat_ofNat]
+  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt,
+    toNat_ofNat]
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
 
 @[simp]
@@ -89,8 +88,6 @@ def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
     decide_eq_true_eq]
   rw [Nat.sub_lt_iff_lt_add] <;> omega
 
-/-- 1 % 2^n = 1 -/
--- @[simp]
 theorem Nat.one_mod_two_pow_eq {n : Nat} (hn : n ≠ 0 := by omega) : 1 % 2 ^ n = 1 := by
   apply Nat.mod_eq_of_lt
   apply Nat.one_lt_pow
@@ -781,7 +778,6 @@ theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
   rcases a <;> rcases b <;> simp [bv_toNat]
 
 theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
-  norm_cast
   rw [BitVec.negOne_eq_allOnes]
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by

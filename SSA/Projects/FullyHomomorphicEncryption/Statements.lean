@@ -67,8 +67,9 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
     simp
   by_cases (i < R.repLength a)
   case pos h =>
-    rw [← hLength] at h; rw [List.getD_eq_get _ _ h, List.get_map, List.get_range]
-    done
+    rw [← hLength] at h
+    rw [List.getD_eq_get _ _ h]
+    simp
   case neg h =>
     rw [Nat.not_lt] at h
     rw [List.getD_eq_default _, Polynomial.coeff_eq_zero_of_degree_lt]
