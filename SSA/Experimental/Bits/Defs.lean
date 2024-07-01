@@ -110,8 +110,8 @@ def Term.eval : ∀ (_ : Term) (_ : Nat → Nat → Bool), Nat → Bool
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
---instance : One Term := ⟨one⟩
---instance : Zero Term := ⟨zero⟩
+instance : One Term := ⟨one⟩
+instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
 
 @[simp] def Term.arity : Term → Nat
@@ -130,7 +130,7 @@ instance : Neg Term := ⟨neg⟩
 | incr t => arity t
 | decr t => arity t
 
-@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → ℕ → Bool), ℕ → Bool
+@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → Nat → Bool), Nat → Bool
 | var n, vars => vars (Fin.last n)
 | zero, _vars => zeroSeq
 | one, _vars => oneSeq
