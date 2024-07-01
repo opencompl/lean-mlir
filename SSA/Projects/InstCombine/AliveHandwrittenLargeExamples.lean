@@ -278,7 +278,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       subst a_one
       simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod, toNat_ofInt, Nat.cast_pow,
         Nat.cast_ofNat, toNat_neg] at c
-      norm_cast at c
       apply c.elim
       by_cases w_1 : w = 1; subst w_1; simp at h
       have w_gt_1 : 1 < w := by omega;
@@ -294,7 +293,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       intro a_allOnes
       subst a_allOnes
       simp only [BitVec.ult, toNat_add, toNat_ofInt, decide_eq_false_iff_not, not_lt] at h
-      norm_cast at h
       simp only [Int.toNat_natCast, toNat_allOnes, Nat.mod_add_mod] at h
       by_cases w_1 : w = 1; subst w_1; simp at h
       have et : _ := @Nat.pow_le_pow_of_le 2 2 w (by simp) (by omega)
@@ -353,7 +351,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_undef
   simp_alive_ops
   intros A B
-  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases A with rfl | A  <;>
   rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq

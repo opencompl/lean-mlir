@@ -171,7 +171,7 @@ theorem R.fromPoly_rep'_eq_ideal : forall a : (ZMod q)[X], ∃ i ∈ Ideal.span 
   · apply Ideal.Quotient.eq.1
     simp [R.representative', Function.surjInv_eq]
   · ring
-  done
+
 /--
 Characterization theorem for any potential representative (in terms of elements).
 For an  `a : (ZMod q)[X]`, the representative of its equivalence class
@@ -254,7 +254,6 @@ theorem R.representative_fromPoly : forall a : (ZMod q)[X], (R.fromPoly (n:=n) a
   apply Polynomial.modByMonic_eq_of_dvd_sub (f_monic q n)
   ring_nf
   apply Ideal.mem_span_singleton.1 hiI
-  done
 
 /-- Representative is an additive homomorphism -/
 @[simp]
@@ -302,7 +301,6 @@ theorem R.representative_mul [Fact (q > 1)] (a b : R q n) : (a * b).representati
   ring_nf
   repeat rw [Polynomial.add_modByMonic]
   ring_nf
-  repeat rw [sub_modByMonic]
   simp
 
   have H1 : (-(a' * f q n * (b' /ₘ f q n))) %ₘ f q n = 0 := by
