@@ -2307,8 +2307,7 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     funext t v
     simp only [Valuation.comap]
     split
-    . congr
-      split <;> simp_all
+    . split <;> simp_all
     . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
 
@@ -2428,7 +2427,6 @@ theorem denote_rewriteAt [LawfulMonad d.m] (lhs rhs : Com d Γ₁ .pure t₁)
       rw [this1]
       congr; funext Γ_out_v; congr
       apply Valuation.reassignVar_eq_of_lookup
-      done
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--

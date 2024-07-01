@@ -12,6 +12,7 @@ open LLVM
 open BitVec
 
 set_option linter.unreachableTactic false
+set_option linter.unusedTactic false
 
 
 theorem bitvec_AddSub_1043 :

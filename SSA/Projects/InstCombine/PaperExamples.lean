@@ -34,7 +34,7 @@ theorem shift_mul:
   simp_alive_undef
   simp_alive_ops
   intros A B
-  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases A with rfl | A  <;>
   rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
@@ -77,7 +77,6 @@ theorem bitvec_AddSub_1309 :
   }] := by
     simp_alive_peephole
     simp_alive_undef
-    simp_alive_ops
     simp_alive_case_bash
     simp
 
