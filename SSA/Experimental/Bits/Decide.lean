@@ -60,7 +60,7 @@ def y := Term.var 1
 -- #eval decide (x - y) (x + not y).incr
 -- #eval decide (x - y) (xor x y - (and (not x) y).ls)
 -- #eval decide (x - y) (and x (not y) - (and (not x) y))
--- #eval decide (x - y) ((and x (not y)).ls - (xor x y))
+-- #eval decide (x - y) ((and x (not y)).ls false - (xor x y))
 -- #eval decide (xor x y) ((or x y) - (and x y))
 -- #eval decide (and x (not y)) (or x y - y)
 -- #eval decide (and x (not y)) (x - and x y)
@@ -71,4 +71,3 @@ def y := Term.var 1
 -- #eval decide (not (xor x y)) (and x y + not (or x y))
 -- #eval decide (or x y) (and x (not y) + y)
 -- #eval decide (and x y) (or (not x) y - not x)
-
