@@ -40,34 +40,61 @@ def x := Term.var 0
 def y := Term.var 1
 
 -- Checking if the operations satisfy the defining identities
-example: decide (x + -x) 0 := by rfl
-example: decide (incr x) (x + 1) := by rfl
-example: decide (decr x) (x - 1) := by rfl
-example: decide (x + - y) (x - y) := by rfl
-example: decide (neg_one) (-1) := by rfl
-example: decide (x + 0) (var 0) := by rfl
-example: decide (x + y) (y + x) := by rfl
 
--- -- Equalities from Zulip
-example: decide (-x) (not x).incr := by rfl
-example: decide (-x) (not x.decr)
-example: decide (not x) (-x).decr
-example: decide (-not x) x.incr
-example: decide (x + y) (x - not y).decr
-example: decide (x + y) ((xor x y) + (and x y).ls)
-example: decide (x + y) (or x y + and x y)
-example: decide (x + y) ((or x y).ls - (xor x y))
-example: decide (x - y) (x + not y).incr
-example: decide (x - y) (xor x y - (and (not x) y).ls)
-example: decide (x - y) (and x (not y) - (and (not x) y))
-example: decide (x - y) ((and x (not y)).ls false - (xor x y))
-example: decide (xor x y) ((or x y) - (and x y))
-example: decide (and x (not y)) (or x y - y)
-example: decide (and x (not y)) (x - and x y)
+/-- info: true -/
+#guard_msgs in #eval decide (x + -x) 0
+/-- info: true -/
+#guard_msgs in #eval decide (incr x) (x + 1)
+/-- info: true -/
+#guard_msgs in #eval decide (decr x) (x - 1)
+/-- info: true -/
+#guard_msgs in #eval decide (x + -y) (x - y)
+/-- info: true -/
+#guard_msgs in #eval decide (x + 0) (var 0)
+/-- info: true -/
+#guard_msgs in #eval decide (x + y) (y + x)
 
-example: decide (not (x - y)) (y - x).decr
-example: decide (not (x - y)) (not x + y)
-example: decide (not (xor x y)) (and x y - (or x y)).decr
-example: decide (not (xor x y)) (and x y + not (or x y))
-example: decide (or x y) (and x (not y) + y)
-example: decide (and x y) (or (not x) y - not x)
+-- Equalities from Zulip
+
+/-- info: true -/
+#guard_msgs in #eval decide (-x) (not x).incr
+/-- info: true -/
+#guard_msgs in #eval decide (-x) (not x.decr)
+/-- info: true -/
+#guard_msgs in #eval decide (not x) (-x).decr
+/-- info: true -/
+#guard_msgs in #eval decide (-not x) x.incr
+/-- info: true -/
+#guard_msgs in #eval decide (x + y) (x - not y).decr
+/-- info: true -/
+#guard_msgs in #eval decide (x + y) ((xor x y) + (and x y).ls false)
+/-- info: true -/
+#guard_msgs in #eval decide (x + y) (or x y + and x y)
+/-- info: true -/
+#guard_msgs in #eval decide (x + y) ((or x y).ls false - (xor x y))
+/-- info: true -/
+#guard_msgs in #eval decide (x - y) (x + not y).incr
+/-- info: true -/
+#guard_msgs in #eval decide (x - y) (xor x y - (and (not x) y).ls)
+/-- info: true -/
+#guard_msgs in #eval decide (x - y) (and x (not y) - (and (not x) y))
+/-- info: true -/
+#guard_msgs in #eval decide (x - y) ((and x (not y)).ls false - (xor x y))
+/-- info: true -/
+#guard_msgs in #eval decide (xor x y) ((or x y) - (and x y))
+/-- info: true -/
+#guard_msgs in #eval decide (and x (not y)) (or x y - y)
+/-- info: true -/
+#guard_msgs in #eval decide (and x (not y)) (x - and x y)
+
+#guard_msgs in #eval decide (not (x - y)) (y - x).decr
+/-- info: true -/
+#guard_msgs in #eval decide (not (x - y)) (not x + y)
+/-- info: true -/
+#guard_msgs in #eval decide (not (xor x y)) (and x y - (or x y)).decr
+/-- info: true -/
+#guard_msgs in #eval decide (not (xor x y)) (and x y + not (or x y))
+/-- info: true -/
+#guard_msgs in #eval decide (or x y) (and x (not y) + y)
+/-- info: true -/
+#guard_msgs in #eval decide (and x y) (or (not x) y - not x)
