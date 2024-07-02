@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Card
---import Mathlib.Data.List.Pi
+-- import Mathlib.Data.List.Pi
 
 universe u v
 
@@ -523,22 +523,23 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
    _ < (c.varsFinset.image (fun a => if ha : a ∈ c.vars
                   then f a ha else Sum.inr false)).card :=
       Finset.card_lt_card $ by
-        simp only [Finset.ssubset_iff, Finset.mem_map, Finset.mem_biUnion, Function.Embedding.coeFn_mk,
-          Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, forall_exists_index, and_imp,
-          Sum.forall, Sum.inl.injEq, IsEmpty.forall_iff, implies_true, Bool.forall_bool, and_true, not_exists, not_and,
-          exists_and_left, exists_prop, exists_exists_and_eq_and]
-
-        use a
-        use mem_varsFinset.2 ha
-        simp only [ha, hfa, dite_eq_ite, ite_true, not_false_eq_true, implies_true, true_and]
-        rintro b₁ b₂ a' ha' hb₂ rfl
-        simp only [mem_varsFinset.1 ha', dite_true] at hb₂
-        use a'
-        use ha'
-        simp only [mem_varsFinset.1 ha', dite_true, hb₂]
-        split at hb₂
-        . simpa [*, eq_comm] using hb₂
-        . simp at hb₂
+        simp only [Finset.ssubset_iff, Finset.mem_map, Finset.mem_biUnion,
+          Function.Embedding.coeFn_mk, not_exists, not_and, forall_exists_index, and_imp,
+          Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, Sum.forall,
+          Sum.inl.injEq, IsEmpty.forall_iff, implies_true, and_true]
+        use (f a ha)
+        simp only [hfa, not_false_eq_true, implies_true, true_and]
+        constructor
+        · use a
+          simp [ha, varsFinset, hfa]
+        · rintro b₁ b₂ a' ha' hb₂ rfl
+          simp only [mem_varsFinset.1 ha', dite_true] at hb₂
+          use a'
+          use ha'
+          simp only [mem_varsFinset.1 ha', dite_true]
+          split at hb₂
+          . simpa [*, eq_comm] using hb₂
+          . simp at hb₂
    _ ≤ _ := Finset.card_image_le
 
 lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
