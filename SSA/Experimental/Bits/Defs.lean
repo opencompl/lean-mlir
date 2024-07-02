@@ -130,7 +130,7 @@ instance : Neg Term := ⟨neg⟩
 | incr t => arity t
 | decr t => arity t
 
-@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → Nat → Bool), ℕ → Bool
+@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → Nat → Bool), Nat → Bool
 | var n, vars => vars (Fin.last n)
 | zero, _vars => zeroSeq
 | one, _vars => oneSeq
