@@ -3,9 +3,18 @@ import Mathlib.Data.Finset.Card
 
 universe u v
 
+/--
+`Circuit α` is a type of (partly normalized) Boolean circuits,
+where `α` gives the type of free variables in the circuit.
+
+Morally, it represents a function `Bool → ⋯ → Bool`, where the number of `Bool` arguments is equal
+to the arity of `α`. See also `eval` for the explicit conversion of a circuit to a similar function
+-/
 inductive Circuit (α : Type u) : Type u
   | tru : Circuit α
   | fals : Circuit α
+  /-- `var b x` represents literal `x` or the negated literat `¬x`,
+      depending on the value of `b` -/
   | var : Bool → α → Circuit α
   | and : Circuit α → Circuit α → Circuit α
   | or : Circuit α → Circuit α → Circuit α
