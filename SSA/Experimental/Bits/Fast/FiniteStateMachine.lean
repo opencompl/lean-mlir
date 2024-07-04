@@ -55,13 +55,13 @@ def nextBit : (p.α → Bool) → (arity → Bool) → (p.α → Bool) × Bool :
     (p.nextBitCirc none).eval (Sum.elim carry bits))
 
 /-- `p.carry in i` computes the internal carry state at step `i`, given input *streams* `in` -/
-def carry (x : arity → BitStream) : Nat → p.α → Bool
+def carry (x : arity → ℕ → Bool) : ℕ → p.α → Bool
   | 0 => p.initCarry
   | n+1 => (p.nextBit (carry x n) (fun i => x i n)).1
 
 /-- `eval p` morally gives the function `BitStream → ... → BitStream` represented by FSM `p` -/
-def eval (x : arity → BitStream) : BitStream :=
-  fun n => (p.nextBit (p.carry x n) (fun i => x i n)).2
+def eval (x : arity → ℕ → Bool) (n : ℕ) : Bool :=
+  (p.nextBit (p.carry x n) (fun i => x i n)).2
 
 /-- `p.changeInitCarry c` yields  -/
 def changeInitCarry (p : FSM arity) (c : p.α → Bool) : FSM arity :=
@@ -582,7 +582,6 @@ theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
   apply Finset.card_lt_card
   simp [Finset.ssubset_iff, Finset.subset_iff]
   simp only [Circuit.le_def, not_forall, Bool.not_eq_true] at h
-  push_neg at h
   rcases h with ⟨x, hx, h⟩
   use x
   simp [hx, h]
@@ -598,7 +597,7 @@ def decideIfZerosAux {arity : Type _} [DecidableEq arity]
       have _wf : card_compl (c' ||| c) < card_compl c :=
         decideIfZeroAux_wf h
       decideIfZerosAux p (c' ||| c)
-  termination_by decideIfZerosAux p c => card_compl c
+  termination_by card_compl c
 
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
@@ -644,7 +643,6 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
         have := hc₂ _ _ h
         simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
           Circuit.eval_or, this, or_true]
-  termination_by decideIfZerosAux_correct p c hc hc₂ => card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
