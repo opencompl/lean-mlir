@@ -92,6 +92,33 @@ def merge (x y : Brook) : Brook :=
     | none, some y' => (some y', (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
+inductive ConsumeFrom
+  | left
+  | right
+
+/--
+`altMerge x y` is a fully determinate merge which will alternate (`some _`) messages from its two input streams.
+That is, it will deque messages from the left stream, until it encounters a `some _`,
+which it will output and then it switches to dequeing messages from the right stream,
+until it encounters a `some _` again.
+-/
+def altMerge (x y : Brook) : Brook :=
+  Brook.corec (β := Brook × Brook × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
+    match consume with
+      | .left  =>
+        let x0 := x.head
+        let x := x.tail
+        let nextConsume := match x0 with
+          | some _ => .right
+          | none   => .left
+        (x0, x, y, nextConsume)
+      | .right =>
+        let y0 := y.head
+        let y := y.tail
+        let nextConsume := match y0 with
+          | some _ => .left
+          | none   => .right
+        (y0, x, y, nextConsume)
 
 end Brook
 
@@ -274,5 +301,3 @@ def test : Brook :=
 def remNone (lst : List Val) : List Val :=
   lst.filter (fun | some x => true
                   | none => false)
-
-#eval (remNone <| Brook.toList 100 test)
