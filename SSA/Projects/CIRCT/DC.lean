@@ -28,8 +28,11 @@ def Brook.corec₂ {β} (s0 : β) (f : β → (Val × Val × β)) : Brook × Bro
     fun i => (x i).snd,
   )
 
-def Brook.dropFirst (x : Brook) : Brook :=
-  fun ix => x (ix + 1)
+/-- Return the first element of a stream -/
+def Brook.head : Brook → Val   := Stream'.head
+
+/-- Drop the first element of a stream -/
+def Brook.tail : Brook → Brook := Stream'.tail
 
 /-!
 
@@ -63,9 +66,9 @@ def branch (x c  : Brook) : Brook × Brook :=
     fun ⟨x, c⟩ => Id.run <| do
 
       let c₀ := c 0
-      let c' := c.dropFirst
+      let c' := c.tail
       let x₀ := x 0
-      let x' := x.dropFirst
+      let x' := x.tail
 
       match c₀, x₀ with
         | none, _ => (none, none, (x, c'))
@@ -84,10 +87,11 @@ is a token in both streams, because only the left one is left through and the ri
 def merge (x y : Brook) : Brook :=
   Brook.corec (β := Brook × Brook) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some x', some _ => (some x', (x.dropFirst, y))
-    | some x', none => (some x', (x.dropFirst, y.dropFirst))
-    | none, some y' => (some y', (x.dropFirst, y.dropFirst))
-    | none, none => (none, (x.dropFirst, y.dropFirst))
+    | some x', some _ => (some x', (x.tail, y))
+    | some x', none => (some x', (x.tail, y.tail))
+    | none, some y' => (some y', (x.tail, y.tail))
+    | none, none => (none, (x.tail, y.tail))
+
 
 end Brook
 
