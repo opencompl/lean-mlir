@@ -1,6 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
-import Mathlib.Data.Stream.Defs
+import SSA.Projects.CIRCT.DC.Stream
 
 open MLIR AST Ctxt
 
@@ -13,45 +13,11 @@ This file is still in a **highly experimental** state
 namespace DC
 
 
-def Val      := Option (Bool)
-
-/-- `DC` is deterministic, so the semantics operate on simple streams of values -/
-abbrev Brook := Stream' Val
-
-namespace Brook
-
-def corec {β} (s0 : β) (f : β → (Val × β)) : Brook :=
-  Stream'.corec (f · |>.fst) (f · |>.snd) s0
-
-def corec₂ {β} (s0 : β) (f : β → (Val × Val × β)) : Brook × Brook :=
-  let f' := fun b =>
-    let x := f b
-    (x.fst, x.snd.fst)
-  let g := (f · |>.snd.snd)
-  let x := Stream'.corec f' g s0
-  (
-    fun i => (x i).fst,
-    fun i => (x i).snd,
-  )
-
-/-- Return the first element of a stream -/
-def head : Brook → Val   := Stream'.head
-
-/-- Drop the first element of a stream -/
-def tail : Brook → Brook := Stream'.tail
-
-/-- Expand a finite list of values into a stream, by appending an infinte amount of `none`s -/
-def ofList (vals : List Val) : Brook :=
-  fun i => (vals.get? i).join
-
-/-- `toList n x` returns the first `n` messages (including `none`s) as a list -/
-def toList (n : Nat) (x : Brook) : List Val :=
-  List.ofFn (fun (i : Fin n) => x i)
-
 /-!
 ## Operation Semantics
 -/
 section Operations
+namespace Stream
 
 /--
 `branch x c` has two output streams,
@@ -64,9 +30,9 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 
 -/
-def branch (x c  : Brook) : Brook × Brook :=
+def branch (x c  : Stream) : Stream × Stream :=
 
-  Brook.corec₂ (β := Brook × Brook) (x, c)
+  corec₂ (β := Stream × Stream) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
 
       let c₀ := c 0
@@ -88,8 +54,8 @@ def branch (x c  : Brook) : Brook × Brook :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
-def merge (x y : Brook) : Brook :=
-  Brook.corec (β := Brook × Brook) (x, y) fun ⟨x, y⟩ =>
+def merge (x y : Stream) : Stream :=
+  Stream.corec (β := Stream × Stream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some x', (x.tail, y))
     | some x', none => (some x', (x.tail, y.tail))
@@ -134,8 +100,8 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
-def altMerge (x y : Brook) : Brook :=
-  Brook.corec (β := Brook × Brook × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
+def altMerge (x y : Stream) : Stream :=
+  Stream.corec (β := Stream × Stream × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with
       | .left  =>
         let x0 := x.head
@@ -152,8 +118,8 @@ def altMerge (x y : Brook) : Brook :=
           | none   => .right
         (y0, x, y, nextConsume)
 
+end Stream
 end Operations
-end Brook
 
 /-!
 ## LeanMLIR Dialect Definitions
@@ -168,14 +134,14 @@ inductive Op
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
-| brook : Ty
-| brook2 : Ty
+| Stream : Ty
+| Stream2 : Ty
 deriving Inhabited, DecidableEq, Repr
 
 instance : TyDenote Ty where
 toType := fun
-| .brook => Brook
-| .brook2 => Brook × Brook
+| .Stream => Stream
+| .Stream2 => Stream × Stream
 
 
 set_option linter.dupNamespace false in
@@ -189,15 +155,15 @@ open TyDenote (toType)
 
 @[simp, reducible]
 def Op.sig : Op  → List Ty
-| .branch => [Ty.brook, Ty.brook]
-| .merge => [Ty.brook, Ty.brook]
-| .fst | .snd => [Ty.brook2]
+| .branch => [Ty.Stream, Ty.Stream]
+| .merge => [Ty.Stream, Ty.Stream]
+| .fst | .snd => [Ty.Stream2]
 
 @[simp, reducible]
 def Op.outTy : Op → Ty
-  | .branch => Ty.brook2
-  | .merge => Ty.brook
-  | .fst | .snd => Ty.brook
+  | .branch => Ty.Stream2
+  | .merge => Ty.Stream
+  | .fst | .snd => Ty.Stream
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
@@ -208,8 +174,8 @@ instance : DialectSignature DC := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (DC) where
     denote
-    | .branch, arg, _ => Brook.branch (arg.getN 0) (arg.getN 1)
-    | .merge, arg, _  => Brook.merge (arg.getN 0) (arg.getN 1)
+    | .branch, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
+    | .merge, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
     | .fst, arg, _ => (arg.getN 0).fst
     | .snd, arg, _ => (arg.getN 0).snd
 
@@ -226,16 +192,16 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 section Syntax
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
-  | MLIR.AST.MLIRType.undefined "brook" => do
-    return .brook
-  | MLIR.AST.MLIRType.undefined "brook2" => do
-    return .brook2
+  | MLIR.AST.MLIRType.undefined "Stream" => do
+    return .Stream
+  | MLIR.AST.MLIRType.undefined "Stream2" => do
+    return .Stream2
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a b : Var Γ .brook) : Expr (DC) Γ .pure .brook2  :=
+def branch {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream2  :=
   Expr.mk
     (op := .branch)
     (ty_eq := rfl)
@@ -243,7 +209,7 @@ def branch {Γ : Ctxt _} (a b : Var Γ .brook) : Expr (DC) Γ .pure .brook2  :=
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def merge {Γ : Ctxt _} (a b : Var Γ .brook) : Expr (DC) Γ .pure .brook  :=
+def merge {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream  :=
   Expr.mk
     (op := .merge)
     (ty_eq := rfl)
@@ -251,7 +217,7 @@ def merge {Γ : Ctxt _} (a b : Var Γ .brook) : Expr (DC) Γ .pure .brook  :=
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def fst {Γ : Ctxt _} (a : Var Γ .brook2) : Expr (DC) Γ .pure .brook  :=
+def fst {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (DC) Γ .pure .Stream  :=
   Expr.mk
     (op := .fst)
     (ty_eq := rfl)
@@ -259,7 +225,7 @@ def fst {Γ : Ctxt _} (a : Var Γ .brook2) : Expr (DC) Γ .pure .brook  :=
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def snd {Γ : Ctxt _} (a : Var Γ .brook2) : Expr (DC) Γ .pure .brook  :=
+def snd {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (DC) Γ .pure .Stream  :=
   Expr.mk
     (op := .snd)
     (ty_eq := rfl)
@@ -276,8 +242,8 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .brook, .brook, "dc.branch" => return ⟨_, .brook2, branch v₁ v₂⟩
-      | .brook, .brook, "dc.merge"  => return ⟨_, .brook, merge v₁ v₂⟩
+      | .Stream, .Stream, "dc.branch" => return ⟨_, .Stream2, branch v₁ v₂⟩
+      | .Stream, .Stream, "dc.merge"  => return ⟨_, .Stream, merge v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"dc.fst" | op@"dc.snd" =>
@@ -285,8 +251,8 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .brook2, "dc.fst" => return ⟨_, .brook, fst v₁⟩
-      | .brook2, "dc.snd"  => return ⟨_, .brook, snd v₁⟩
+      | .Stream2, "dc.fst" => return ⟨_, .Stream, fst v₁⟩
+      | .Stream2, "dc.snd"  => return ⟨_, .Stream, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
 
@@ -322,12 +288,12 @@ end Syntax
 -/
 namespace Examples
 def BranchEg1 := [dc_com| {
-  ^entry(%0: !brook, %1: !brook):
-    %out = "dc.branch" (%0, %1) : (!brook, !brook) -> (!brook2)
-    %outf = "dc.fst" (%out) : (!brook2) -> (!brook)
-    %outs = "dc.snd" (%out) : (!brook2) -> (!brook)
-    %out2 = "dc.merge" (%outf, %outs) : (!brook, !brook) -> (!brook)
-    "return" (%out2) : (!brook) -> ()
+  ^entry(%0: !Stream, %1: !Stream):
+    %out = "dc.branch" (%0, %1) : (!Stream, !Stream) -> (!Stream2)
+    %outf = "dc.fst" (%out) : (!Stream2) -> (!Stream)
+    %outs = "dc.snd" (%out) : (!Stream2) -> (!Stream)
+    %out2 = "dc.merge" (%outf, %outs) : (!Stream, !Stream) -> (!Stream)
+    "return" (%out2) : (!Stream) -> ()
   }]
 
 #check BranchEg1
@@ -336,10 +302,10 @@ def BranchEg1 := [dc_com| {
 #check BranchEg1.denote
 #print axioms BranchEg1
 
-def x := Brook.ofList [some true, none, some false, some true, some false]
-def c := Brook.ofList [some true, some false, none, some true]
+def x := Stream.ofList [some true, none, some false, some true, some false]
+def c := Stream.ofList [some true, some false, none, some true]
 
-def test : Brook :=
+def test : Stream :=
   BranchEg1.denote (Valuation.ofPair c x)
 
 def remNone (lst : List Val) : List Val :=
