@@ -15,17 +15,15 @@ namespace DC
 
 def Val      := Option (Bool)
 
-/-- `DC` is fully deterministic! -/
+/-- `DC` is deterministic, so the semantics operate on simple streams of values -/
 abbrev Brook := Stream' Val
 
-#check Stream'.corec
-#print Stream'
+namespace Brook
 
-
-def Brook.corec {β} (s0 : β) (f : β → (Val × β)) : Brook :=
+def corec {β} (s0 : β) (f : β → (Val × β)) : Brook :=
   Stream'.corec (f · |>.fst) (f · |>.snd) s0
 
-def Brook.corec₂ {β} (s0 : β) (f : β → (Val × Val × β)) : Brook × Brook :=
+def corec₂ {β} (s0 : β) (f : β → (Val × Val × β)) : Brook × Brook :=
   let f' := fun b =>
     let x := f b
     (x.fst, x.snd.fst)
@@ -37,25 +35,15 @@ def Brook.corec₂ {β} (s0 : β) (f : β → (Val × Val × β)) : Brook × Bro
   )
 
 /-- Return the first element of a stream -/
-def Brook.head : Brook → Val   := Stream'.head
+def head : Brook → Val   := Stream'.head
 
 /-- Drop the first element of a stream -/
-def Brook.tail : Brook → Brook := Stream'.tail
+def tail : Brook → Brook := Stream'.tail
 
 /-!
-
-x : x1 x2 _ x3
-y : y1 _  _ y2
-c : f t f _ f
-
-x : x1 x2 _ x3
-y : _ _ y2
-c : t f _ f
-out : y1
-
+## Operation Semantics
 -/
-
-namespace Brook
+section Operations
 
 /--
 `branch x c` has two output streams,
@@ -100,6 +88,34 @@ def merge (x y : Brook) : Brook :=
     | none, some y' => (some y', (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
+/-!
+Crucially, the `merge` component is *deterministic*, but its output does depend on the presence of
+`none`s in the input.
+
+Consider the following inputs streams, where `_` indicates a `none`
+x | x₀ _  _  x₁ _ _ ...
+y | y₀ y₁ y₂ _  _ _ ...
+
+In this case, the output will be
+  | x₀ y₀ y₁ x₁ y₂
+
+However, if we remove some `none` from the inputs, i.e.:
+x | x₀ x₁ _  _ ...
+y | y₀ y₁ y₂ _
+
+This will give a different output!
+  | x₀ x₁ y₀ y₁ y₂
+
+
+
+One potential response to this situation is to require components be *determinate*.
+That is, by defining our component semantics in such a way that its output does not change
+depending on the presence or absence of (a finite sequence of) `none`s in its input.
+See `altMerge` for an example semantics for a `merge` component that is fully determinate.
+-/
+
+/-- Internal state for `altMerge` component,
+indicating from which stream to consume the next message -/
 inductive ConsumeFrom
   | left
   | right
@@ -128,6 +144,7 @@ def altMerge (x y : Brook) : Brook :=
           | none   => .right
         (y0, x, y, nextConsume)
 
+end Operations
 end Brook
 
 
@@ -149,6 +166,7 @@ toType := fun
 | .brook2 => Brook × Brook
 
 
+set_option linter.dupNamespace false in
 /-- `FHE` is the dialect for fully homomorphic encryption -/
 abbrev DC : Dialect where
   Op := Op
