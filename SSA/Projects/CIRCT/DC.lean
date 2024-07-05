@@ -4,6 +4,14 @@ import Mathlib.Data.Stream.Defs
 
 open MLIR AST Ctxt
 
+/-!
+
+# Semantics for the `DC` Dialect
+This file is still in a **highly experimental** state
+
+-/
+namespace DC
+
 
 def Val      := Option (Bool)
 
