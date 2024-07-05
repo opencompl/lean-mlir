@@ -40,6 +40,14 @@ def head : Brook → Val   := Stream'.head
 /-- Drop the first element of a stream -/
 def tail : Brook → Brook := Stream'.tail
 
+/-- Expand a finite list of values into a stream, by appending an infinte amount of `none`s -/
+def ofList (vals : List Val) : Brook :=
+  fun i => (vals.get? i).join
+
+/-- `toList n x` returns the first `n` messages (including `none`s) as a list -/
+def toList (n : Nat) (x : Brook) : List Val :=
+  List.ofFn (fun (i : Fin n) => x i)
+
 /-!
 ## Operation Semantics
 -/
@@ -147,7 +155,11 @@ def altMerge (x y : Brook) : Brook :=
 end Operations
 end Brook
 
-
+/-!
+## LeanMLIR Dialect Definitions
+Define a `DC` dialect, and connect its semantics to the function defined above
+-/
+section Dialect
 inductive Op
 | merge
 | branch
@@ -201,9 +213,17 @@ instance : DialectDenote (DC) where
     | .fst, arg, _ => (arg.getN 0).fst
     | .snd, arg, _ => (arg.getN 0).snd
 
+end Dialect
 
 
-/-- Syntax -/
+
+/-!
+## LeanMLIR EDSL Syntax for DC
+Implement the necessary typeclasses for the `dc` dialect to
+be recognized by the LeanMLIR generic syntax parser, and
+defines a `[dc_com| ...]` macro to hook into this generic syntax parser
+-/
+section Syntax
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
   | MLIR.AST.MLIRType.undefined "brook" => do
@@ -291,9 +311,16 @@ instance : MLIR.AST.TransformReturn (DC) 0 where
 
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[dc_com" " | " reg:mlir_region "]" : term => do
-
   SSA.elabIntoCom reg q(DC)
 
+end Syntax
+
+
+
+/-!
+## Examples
+-/
+namespace Examples
 def BranchEg1 := [dc_com| {
   ^entry(%0: !brook, %1: !brook):
     %out = "dc.branch" (%0, %1) : (!brook, !brook) -> (!brook2)
@@ -309,15 +336,6 @@ def BranchEg1 := [dc_com| {
 #check BranchEg1.denote
 #print axioms BranchEg1
 
-def Brook.ofList (vals : List Val) : Brook :=
-  fun i => (vals.get? i).join
-
-def Brook.toList (n : Nat) (x : Brook) : List Val :=
-  List.ofFn (fun (i : Fin n) => x i)
-
-
-namespace Test
-
 def x := Brook.ofList [some true, none, some false, some true, some false]
 def c := Brook.ofList [some true, some false, none, some true]
 
@@ -327,3 +345,4 @@ def test : Brook :=
 def remNone (lst : List Val) : List Val :=
   lst.filter (fun | some x => true
                   | none => false)
+end Examples
