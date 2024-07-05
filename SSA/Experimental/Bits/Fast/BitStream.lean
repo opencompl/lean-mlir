@@ -1,4 +1,136 @@
--- open BitVec
+import Mathlib.Tactic.ExtractGoal
+
+-- TODO: upstream the following section
+section UpStream
+
+namespace Int
+
+theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
+    (lower_bound : m/2 ≤ z) (upper_bound : z < m/2) :
+    z.bmod m = z := by
+  omega
+
+theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
+    (↑n : Int).bmod m = ↑(n % m) := by
+  simp only [
+    bmod, ofNat_emod, ite_eq_left_iff,
+    show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
+    Nat.mod_eq_of_lt (by omega : n < m)
+  ]
+  omega
+
+#eval (10 : Int).bmod 2
+#eval (10 : Int).bmod 3
+#eval (10 : Int).bmod 4
+#eval (10 : Int).bmod 5
+#eval (10 : Int).bmod 6
+#eval (10 : Int).bmod 7
+#eval (10 : Int).bmod 8
+#eval (10 : Int).bmod 9
+#eval (10 : Int).bmod 10
+#eval (10 : Int).bmod 11
+#eval (10 : Int).bmod 12
+#eval (10 : Int).bmod 13
+#eval (10 : Int).bmod 14
+#eval (10 : Int).bmod 15
+#eval (10 : Int).bmod 16
+#eval (10 : Int).bmod 17
+#eval (10 : Int).bmod 16
+#eval (10 : Int).bmod 17
+#eval (10 : Int).bmod 18
+#eval (10 : Int).bmod 19
+#eval (10 : Int).bmod 20
+#eval (10 : Int).bmod 21
+
+#eval (10 : Int).bmod 2   |>.bmod 5
+#eval (10 : Int).bmod 3   |>.bmod 5
+#eval (10 : Int).bmod 4   |>.bmod 5
+#eval (10 : Int).bmod 5   |>.bmod 5
+#eval (10 : Int).bmod 6   |>.bmod 5
+#eval (10 : Int).bmod 7   |>.bmod 5
+#eval (10 : Int).bmod 8   |>.bmod 5
+#eval (10 : Int).bmod 9   |>.bmod 5
+#eval (10 : Int).bmod 10  |>.bmod   5
+#eval (10 : Int).bmod 11  |>.bmod   5
+#eval (10 : Int).bmod 12  |>.bmod   5
+#eval (10 : Int).bmod 13  |>.bmod   5
+#eval (10 : Int).bmod 14  |>.bmod   5
+#eval (10 : Int).bmod 15  |>.bmod   5
+#eval (10 : Int).bmod 16  |>.bmod   5
+#eval (10 : Int).bmod 17  |>.bmod   5
+#eval (10 : Int).bmod 16  |>.bmod   5
+#eval (10 : Int).bmod 17  |>.bmod   5
+#eval (10 : Int).bmod 18  |>.bmod   5
+#eval (10 : Int).bmod 19  |>.bmod   5
+#eval (10 : Int).bmod 20  |>.bmod   5
+#eval (10 : Int).bmod 21  |>.bmod   5
+
+theorem bmod_bmod_eq_bmod_min (z : Int) (n m : Nat) :
+    (z.bmod n).bmod m = z.bmod (Nat.min n m) := by
+  simp [bmod]
+
+-- theorem bmod_ofNat_eq_of_not_lt (n m : Nat) (h : ¬n < (m + 1) / 2) :
+--     (↑n : Int).bmod m = ↑(n % m) - m := by
+--   simp only [
+--     bmod, ofNat_emod, ite_eq_left_iff,
+--     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
+--     Nat.mod_eq_of_lt (by omega : n < m)
+--   ]
+--   omega
+
+
+end Int
+
+namespace BitVec
+open BitVec
+
+@[simp] theorem getMsb_not (x : BitVec w) : (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
+  by_cases h : i < w <;> simp [getMsb, h] <;> omega
+
+@[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
+  simp [BitVec.msb]
+
+#check truncate_succ
+#print BitVec.toInt
+
+@[simp] theorem toInt_cons (x : Bool) (xs : BitVec w) :
+    BitVec.toInt (cons x xs) =
+      if x then (xs.toNat : Int) - (2 ^ w : Nat) else (xs.toNat : Int) := by
+  simp only [toInt_eq_msb_cond, msb_cons, toNat_cons]
+  cases x
+  case false => simp
+  case true  =>
+    have : 1 <<< w ||| xs.toNat = 1 <<< w + xs.toNat := sorry
+    simp [this]; omega
+
+-- theorem toInt_gt_or_le (x : BitVec w) :
+--     x
+
+theorem signExtend_succ (i : Nat) (x : BitVec w) :
+    x.signExtend (i+1) = cons (if i ≤ w then x.getLsb i else x.msb) (x.signExtend i) := by
+  apply eq_of_toInt_eq
+  -- conv => {lhs; unfold signExtend; simp}
+  simp [signExtend]
+  -- rcases (Nat.lt_trichotomy .. : i < w ∨ i = w ∨ i > w) with i_lt_w | rfl | i_gt_w
+  by_cases i_le_w : i ≤ w <;> simp only [i_le_w, ↓reduceIte]
+  · simp [toInt_eq_toNat_bmod]
+
+
+    rw [Int.bmod_eq_of_ge_and_le]
+    · sorry
+    · omega
+    · sorry
+  · simp [toInt_eq_toNat_bmod]
+    sorry
+
+
+
+    -- rw [toInt_eq_msb_cond]
+    -- cases h_msb : x.msb <;> simp
+
+
+end BitVec
+end UpStream
 
 def BitStream : Type := Nat → Bool
 
@@ -17,9 +149,9 @@ def tail (x : BitStream) : BitStream := (x <| · + 1)
 /-! # Conversions to and from `BitVec` -/
 section ToBitVec
 
-/-- Zero-extend a finite bitvector `x` to the infinite stream `0^ω ⋅ x`  -/
+/-- Sign-extend a finite bitvector `x` to the infinite stream `(x.msb)^ω ⋅ x`  -/
 abbrev ofBitVec {w} (x : BitVec w) : BitStream :=
-  x.getLsb
+  fun i => if i < w then x.getLsb i else x.msb
 
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
@@ -44,10 +176,10 @@ def printPrefix (x : BitStream) : Nat → String
 section Lemmas
 
 @[simp] theorem toBitVec_ofBitVec (x : BitVec w) (w' : Nat) :
-    toBitVec w' (ofBitVec x) = x.truncate w' := by
+    toBitVec w' (ofBitVec x) = x.signExtend w' := by
   induction w'
   case zero      => simp only [BitVec.eq_nil]
-  case succ w ih => rw [toBitVec, ih, BitVec.truncate_succ, ofBitVec];
+  case succ w ih => rw [toBitVec, ih]; simp [BitVec.signExtend_succ]
 
 theorem toBitVec_eq_of_equalUpTo {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
     x.toBitVec w = y.toBitVec w := by
@@ -88,8 +220,10 @@ variable (x y : BitStream) (i : Nat)
 
 variable (x y : BitVec w)
 
-@[simp] theorem ofBitVec_complement : ofBitVec (~~~x) ={≤w} ~~~(ofBitVec x) := by
-  intro i h; simp [h]
+@[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
+  funext i
+  simp only [ofBitVec, BitVec.getLsb_not, BitVec.msb_not, not_eq]
+  split <;> simp_all
 
 @[simp] theorem ofBitVec_and : ofBitVec (x &&& y) ={≤w} (ofBitVec x) &&& (ofBitVec y) := by
   intro i _; simp
