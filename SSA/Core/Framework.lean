@@ -34,7 +34,6 @@ def DialectSignature.effectKind := Signature.effectKind ∘ s.signature
 
 end
 
-
 class DialectDenote (d : Dialect) [TyDenote d.Ty] [DialectSignature d] where
   denote : (op : d.Op) → HVector toType (DialectSignature.sig op) →
     (HVector (fun t : Ctxt d.Ty × d.Ty => t.1.Valuation → EffectKind.impure.toMonad d.m (toType t.2))
@@ -75,45 +74,6 @@ inductive Lets (Γ_in : Ctxt d.Ty) (eff : EffectKind) :
   | nil : Lets Γ_in eff Γ_in
   | var (body : Lets Γ_in eff Γ_out) (e : Expr d Γ_out eff t) : Lets Γ_in eff (Γ_out.snoc t)
 
-mutual -- DecEq
-
-variable {d} [DialectSignature d]
-
-protected instance HVector.decidableEqReg [DecidableEq d.Op] [DecidableEq d.Ty] :
-    ∀ {l : List (Ctxt d.Ty × d.Ty)}, DecidableEq (HVector (fun t => Com d t.1 .impure t.2) l)
-  | _, .nil, .nil => isTrue rfl
-  | _, .cons x₁ v₁, .cons x₂ v₂ =>
-    letI := HVector.decidableEqReg v₁ v₂
-    letI := Com.decidableEq x₁ x₂
-    decidable_of_iff (x₁ = x₂ ∧ v₁ = v₂) (by simp)
-
-protected instance Expr.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty] :
-    {Γ : Ctxt d.Ty} → {ty : d.Ty} → DecidableEq (Expr d Γ eff ty)
-  | _, _, .mk op₁ rfl eff_le₁ arg₁ regArgs₁, .mk op₂ eq eff_le₂ arg₂ regArgs₂ =>
-    if ho : op₁ = op₂
-    then by
-      subst ho
-      letI := HVector.decidableEq arg₁ arg₂
-      letI := HVector.decidableEqReg regArgs₁ regArgs₂
-      exact decidable_of_iff (arg₁ = arg₂ ∧ regArgs₁ = regArgs₂) (by simp)
-    else isFalse (by simp_all)
-
-protected instance Com.decidableEq [DecidableEq d.Op] [DecidableEq d.Ty]
-    {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} : DecidableEq (Com d Γ eff ty)
-  | .ret v₁, .ret v₂ => decidable_of_iff (v₁ = v₂) (by simp)
-  | .var (α := α₁) e₁ body₁, .var (α := α₂) e₂ body₂ =>
-    if hα : α₁ = α₂
-    then by
-      subst hα
-      letI := Expr.decidableEq e₁ e₂
-      letI := Com.decidableEq body₁ body₂
-      exact decidable_of_iff (e₁ = e₂ ∧ body₁ = body₂) (by simp)
-    else isFalse (by simp_all)
-  | .ret _, .var _ _ => isFalse (fun h => Com.noConfusion h)
-  | .var _ _, .ret _ => isFalse (fun h => Com.noConfusion h)
-
-end -- decEq
-
 end DataStructures
 
 /-
@@ -149,42 +109,11 @@ def Com.rec' {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u}
     (fun e body _ r => var e body r) -- `Com.var` case
     ⟨⟩ (fun _ _ _ _ => ⟨⟩)
 
-@[simp] lemma Com.rec'_ret (v : Var Γ t) {motive eff} {ret var} :
-    (Com.ret (d:=d) (eff := eff) v).rec' (motive:=motive) ret var = ret v :=
-  rfl
-
 @[simp] lemma Com.rec'_var (e : Expr d Γ eff t) (body : Com d _ _ u)
     {motive} {ret var} :
     (Com.var e body).rec' (motive:=motive) ret var
     = var e body (body.rec' ret var) :=
   rfl
-
-theorem Com.recAux'_eq {motive : ∀ {Γ eff t}, Com d Γ eff t → Sort u} :
-    Com.recAux' (motive:=motive) = Com.rec' (motive:=motive) := by
-  funext ret var Γ eff t com
-  induction com
-  next => simp[recAux']
-  next ih => simp [recAux', ih]
-
-def Expr.op {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty} (e : Expr d Γ eff ty) : d.Op :=
-  Expr.casesOn e (fun op _ _ _ _ => op)
-
-theorem Expr.eff_le {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
-  DialectSignature.effectKind e.op ≤ eff :=
-  Expr.casesOn e (fun _ _ eff_le _ _ => eff_le)
-
-theorem Expr.ty_eq {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
-    ty = DialectSignature.outTy e.op :=
-  Expr.casesOn e (fun _ ty_eq _ _ _ => ty_eq)
-
-def Expr.args {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
-    HVector (Var Γ) (DialectSignature.sig e.op) :=
-  Expr.casesOn e (fun _ _ _ args _ => args)
-
-def Expr.regArgs {Γ : Ctxt d.Ty} {ty : d.Ty} (e : Expr d Γ eff ty) :
-    HVector (fun t : Ctxt d.Ty × d.Ty => Com d t.1 .impure t.2) (DialectSignature.regSig e.op) :=
-  Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
-
 
 /-!
 ### `Com` projections and simple conversions
