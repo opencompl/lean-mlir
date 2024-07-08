@@ -71,7 +71,16 @@ theorem bitvec_AddSub_1202 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  all_goals sorry
+  rename_i a b
+  rw [add_comm]
+  simp only [add_right_inj]
+  rw  [← allOnes_sub_eq_xor]
+  simp only [sub_left_inj]
+  symm
+  exact negOne_eq_allOnes'
+
+
+
 
 theorem bitvec_AddSub_1295 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.and e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
