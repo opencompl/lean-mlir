@@ -84,8 +84,12 @@ inductive MOp.UnaryOp : Type
   | neg
   | not
   | copy
-deriving Repr, DecidableEq, Inhabited
-
+deriving  DecidableEq, Inhabited
+instance : Repr (MOp.UnaryOp) := ⟨ fun x _ => match x with
+  | MOp.UnaryOp.neg  => "neg"
+  | MOp.UnaryOp.not => "not"
+  | MOp.UnaryOp.copy  => "copy"
+  ⟩
 /-- Homogeneous, binary operations -/
 inductive MOp.BinaryOp : Type
   | and
@@ -101,8 +105,22 @@ inductive MOp.BinaryOp : Type
   | sub
   | sdiv
   | udiv
-deriving Repr, DecidableEq, Inhabited
-
+deriving  DecidableEq, Inhabited
+instance : Repr (MOp.BinaryOp) := ⟨ fun x _ => match x with
+  | MOp.BinaryOp.and  => "llvm.and"
+  | MOp.BinaryOp.or => "llvm.or"
+  | MOp.BinaryOp.xor  => "llvm.xor"
+  | MOp.BinaryOp.shl  => "llvm.shl"
+  | MOp.BinaryOp.lshr  => "llvm.lshr"
+  | MOp.BinaryOp.ashr  => "llvm.ashr"
+  | MOp.BinaryOp.urem  => "llvm.urem"
+  | MOp.BinaryOp.srem  => "llvm.srem"
+  | MOp.BinaryOp.add  => "llvm.add"
+  | MOp.BinaryOp.mul  => "llvm.mul"
+  | MOp.BinaryOp.sub  => "llvm.sub"
+  | MOp.BinaryOp.sdiv  => "llvm.sdiv"
+  | MOp.BinaryOp.udiv  => "llvm.udiv"
+  ⟩
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
@@ -111,7 +129,14 @@ inductive MOp (φ : Nat) : Type
   | icmp    (c : IntPredicate) (w : Width φ) : MOp φ
   /-- Since the width of the const might not be known, we just store the value as an `Int` -/
   | const (w : Width φ) (val : ℤ) : MOp φ
-deriving Repr, DecidableEq, Inhabited
+deriving  DecidableEq, Inhabited
+instance : Repr (MOp φ) := ⟨ fun x _ => match x with
+  | MOp.unary w op => repr  (op)
+  | MOp.binary w op => repr  (op)
+  | MOp.select w  => "llvm.mlir.select"
+  | MOp.icmp c w => "llvm.mlir.icmp"
+  | MOp.const w val => s!"llvm.mlir.const ⦃value = {val} : i32⦄"
+  ⟩
 
 namespace MOp
 
