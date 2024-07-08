@@ -42,7 +42,6 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 > engineering standards. Code is tested, covered by continuous integration, and
 > should never be broken. Very low tolerance for tech debt.
 > Breaking changes to core code should be accompanied by fixes to affected
->
 > project code. The project owner should assist in identifying potential
 > breakage. No need to fix experimental code.
 
