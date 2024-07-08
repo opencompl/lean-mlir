@@ -91,8 +91,7 @@ macro "simp_alive_bitvec": tactic =>
                      try cases BitVec.getLsb _ _ <;> try simp;
                      try cases BitVec.getLsb _ _ <;> try simp;)
         try solve | (simp [bv_ofBool])
-        try solve | (simp only   [← BitVec.allOnes_sub_eq_xor,  BitVec.negOne_eq_allOnes'];  ring_nf)
-
+        try solve | (simp only [← BitVec.allOnes_sub_eq_xor, BitVec.negOne_eq_allOnes']; ring_nf)
       )
    )
 
