@@ -67,7 +67,11 @@ theorem bitvec_AddSub_1176 :
 
 theorem bitvec_AddSub_1202 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.xor e_1 (LLVM.const? (-1))) e ⊑ LLVM.sub (LLVM.sub e (LLVM.const? 1)) e_1 := by
-  alive_auto
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  all_goals sorry
 
 
 theorem bitvec_AddSub_1295 :

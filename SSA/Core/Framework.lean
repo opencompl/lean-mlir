@@ -233,7 +233,7 @@ mutual
         let outTy := DialectSignature.outTy op
         let argTys := DialectSignature.sig op
         let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
-        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr outTy})"
+        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} -> ({repr outTy})"
 
   /-- Format string for a Com, with the region parentheses and formal argument list. -/
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
@@ -245,7 +245,7 @@ mutual
 
   /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
+    | .ret v => f!"return {reprPrec v prec} : ({repr t}) -> ()"
     | .var e body =>
       f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body

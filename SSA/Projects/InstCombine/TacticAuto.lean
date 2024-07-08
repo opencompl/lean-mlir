@@ -92,7 +92,6 @@ macro "simp_alive_bitvec": tactic =>
                      try cases BitVec.getLsb _ _ <;> try simp;)
         try solve | (simp [bv_ofBool])
         try solve | (simp only   [← BitVec.allOnes_sub_eq_xor,  BitVec.negOne_eq_allOnes'];  ring_nf)
-
       )
    )
 
@@ -104,7 +103,6 @@ macro "alive_auto": tactic =>
         try (
           simp_alive_case_bash
           ensure_only_goal
-
         )
         simp_alive_bitvec
       )
