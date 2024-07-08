@@ -90,38 +90,41 @@ def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 -/
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8[[]]⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31[[]]⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr)[[%2, ,, %0]]⟩⟩
-    -/
+    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
+-/
 #guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.and)[[%0, ,, %2]]⟩⟩
+    (InstCombine.MOp.BinaryOp.and) (%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add)[[%0, ,, %1]]⟩⟩
+    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, return %0⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, {
+    ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
+      return %5 : (i32) → ()
+  }⟩⟩
 -/
 #guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
@@ -136,38 +139,41 @@ def ops : List (Op 0) := [mlir_ops|
 def ops' := [op0, op1, op2, op3, op4]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8[[]]⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1)  (ops.get! 0) ["arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31[[]]⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2)  (ops.get! 1) ["0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr)[[%2, ,, %0]]⟩⟩
+    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops.get! 2) ["1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.and)[[%0, ,, %2]]⟩⟩
+    (InstCombine.MOp.BinaryOp.and) (%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4)  (ops.get! 3) ["2", "1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add)[[%0, ,, %1]]⟩⟩
+    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, return %0⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨i32, {
+    ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
+      return %5 : (i32) → ()
+  }⟩⟩
 -/
 #guard_msgs in #eval mkReturn  (Γn 6)  (ops.get! 5) ["4", "3", "2", "1", "0", "arg0"]
 
@@ -228,14 +234,19 @@ def bb0IcomGeneric (w : Nat) := [llvm (w)|
 /-- Indeed, the concrete program is an instantiation of the generic program -/
 example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
 
-/--
+/-
   Simple example of the denotation of `GenericWidth`.
   Note that we only have semantics (in the sense of "an implementation of `OpSemantics`")
   for concrete programs. We thus need to instantiate `GenericWidth` with some width `w` before we
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := rfl
+example (w Γv) : (GenericWidth w).denote Γv = some (BitVec.ofNat w 0) := by
+  unfold GenericWidth
+  revert Γv
+  simp_alive_meta
+  simp_alive_ssa
+  rfl
 
 open ComWrappers
 

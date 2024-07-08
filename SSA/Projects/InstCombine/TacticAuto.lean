@@ -83,7 +83,7 @@ macro "simp_alive_bitvec": tactic =>
   `(tactic|
       (
         intros
-        simp (config := {failIfUnchanged := false}) [(BitVec.ofInt_negOne_eq_allOnes)]
+        simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
         try ring_nf
         try solve | (ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
                      try cases BitVec.getLsb _ _ <;> try simp;

@@ -122,8 +122,9 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
-      simp only [get?, map, List.get?_map, Option.map_eq_some']
-      exact ⟨t, h, rfl⟩
+      simp only [get?, map, List.getElem?_map, Option.map_eq_some']
+      simp only [get?, List.get?_eq_getElem?] at h
+      simp [h]
     ⟩
 
 def cast {Γ : Ctxt Op} (h_eq : ty₁ = ty₂) : Γ.Var ty₁ → Γ.Var ty₂
@@ -158,7 +159,7 @@ def casesOn
   match v with
     | ⟨0, h⟩ =>
         _root_.cast (by
-          simp [snoc] at h
+          simp only [get?, snoc, List.get?_cons_zero, Option.some.injEq] at h
           subst h
           simp_all only [get?, zero_eq_last]
           ) <| @last Γ t
@@ -196,7 +197,8 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   let ofSnoc : (Γ.snoc t').Var t → Option (Γ.Var t) :=
     fun v => Ctxt.Var.casesOn v some none
   intro x y h
-  simpa (config := {zetaDelta := true}) using congr_arg ofSnoc h
+  simpa (config := { zetaDelta := true }) only [Var.casesOn_toSnoc, Option.some.injEq] using
+    congr_arg ofSnoc h
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
@@ -275,7 +277,7 @@ infixl:50 "::ᵥ" => Valuation.snoc
 theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
     (s.snoc x) = fun t var => match var with
       | ⟨0, hvar⟩ => by
-          simp[Ctxt.snoc] at hvar
+          simp only [get?, Ctxt.snoc, List.get?_cons_zero, Option.some.injEq] at hvar
           exact (hvar ▸ x)
       | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
   funext t' v
@@ -308,7 +310,7 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 @[simp]
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
     (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
-    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp [Ctxt.get?,Ctxt.snoc] at hvar; exact hvar⟩ :=
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp only [get?, Ctxt.snoc, List.get?_cons_succ] at hvar; exact hvar⟩ :=
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
@@ -393,7 +395,7 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
     {Γ : Ctxt Ty} {V : Γ.Valuation} {var : Var Γ t} :
     (V.reassignVar var (V var)) = V := by
   funext t' v
-  simp [reassignVar]
+  simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
   intros h x
   subst h
   subst x
@@ -429,7 +431,7 @@ theorem val_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (v : Γ.Var t) : (@toSnoc _ _ _ t'
   rfl
 
 instance : Repr (Var Γ t) where
-  reprPrec v _ := f!"%{v.val}"
+  reprPrec v _ := f!"%{Γ.length - v.val - 1}"
 
 end Var
 
@@ -460,7 +462,7 @@ def toSnoc (d : Diff Γ₁ Γ₂) : Diff Γ₁ (Γ₂.snoc t) :=
   ⟨d.val + 1, by
     intro i _ h_get_snoc
     rcases d with ⟨d, h_get_d⟩
-    simp[←h_get_d h_get_snoc, snoc, List.get?]
+    simp only [get?, List.get?, Nat.add_eq, ← h_get_d h_get_snoc]
   ⟩
 
 /-- Removing a type from the left context corresponds to incrementing the difference by 1 -/
@@ -469,8 +471,9 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
     intro i t h_get
     rcases d with ⟨d, h_get_d⟩
     specialize @h_get_d (i+1) t
-    simp [snoc, List.get?] at h_get_d
-    rw[←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
+    simp only [get?, List.get?, add_eq_zero, one_ne_zero, and_false, false_and, imp_self,
+      implies_true] at h_get_d
+    rw [←h_get_d h_get, Nat.add_assoc, Nat.add_comm 1, get?]
   ⟩
 
 /-!
@@ -482,9 +485,13 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.get?_map, Option.map_eq_some', forall_exists_index, and_imp,
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some', forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂] at h_get_d ⊢
-    exact fun t h => ⟨t, h_get_d h, rfl⟩
+    simp only [List.get?_eq_getElem?] at h_get_d
+    simp only [List.get?_eq_getElem?, List.getElem?_map, Option.map_eq_some', forall_exists_index,
+      and_imp, forall_apply_eq_imp_iff₂]
+    intros a b c
+    simp [h_get_d c]
   ⟩
 
 /-!
@@ -515,7 +522,6 @@ theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (
   intro i t h_get
   simp [←h_valid h_get, snoc, List.get?]
 
-
 lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
   rfl
@@ -527,7 +533,7 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
 @[simp] lemma toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   unfold unSnoc Var.toSnoc toHom
-  simp
+  simp only [get?, Valid]
   funext x v
   congr 1
   rw [Nat.add_assoc, Nat.add_comm 1]
@@ -611,9 +617,9 @@ def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
     case nil => exact v.emptyElim
     case snoc Γ _ ih =>
       cases v using Var.casesOn
-      · simp at h ⊢
+      · simp only [get?, dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
         apply ih h
-      · simpa using h
+      · simpa! using h
   ⟩
 
 /-- Context homomorphism from `(Γ.dropUntil v)` to `Γ`, see also `dropUntilDiff` -/

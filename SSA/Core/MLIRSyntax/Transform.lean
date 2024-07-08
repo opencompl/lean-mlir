@@ -100,7 +100,7 @@ def getValFromCtxt (Γ : Ctxt d.Ty) (name : String) (expectedType : d.Ty) :
   else
     let t := List.get Γ ⟨index, Nat.lt_of_not_le h⟩
     if h : t = expectedType then
-      return ⟨index, by simp[←h]; rw [←List.get?_eq_get]⟩
+      return ⟨index, by simp only [get?, ← h]; rw [←List.get?_eq_get]⟩
     else
       throw <| .typeError expectedType t
 
@@ -166,7 +166,8 @@ private def mkComHelper
     if h : var.res.length != 1 then
       throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr var}`"
     else
-      let _ ← addValToMapping Γ (var.res[0]'(by simp_all) |>.fst |> SSAValToString) ty₁
+      let _ ← addValToMapping Γ (var.res[0]'(by simp_all only [bne_iff_ne, ne_eq,
+        Decidable.not_not, Nat.lt_succ_self]) |>.fst |> SSAValToString) ty₁
       let ⟨eff₂, ty₂, body⟩ ← mkComHelper (ty₁::Γ) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"

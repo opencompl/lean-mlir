@@ -11,6 +11,7 @@ import SSA.Core.Tactic
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 import SSA.Projects.FullyHomomorphicEncryption.Statements
 import SSA.Projects.FullyHomomorphicEncryption.Syntax
+import SSA.Projects.FullyHomomorphicEncryption.PrettySyntax
 
 open Ctxt (Var Valuation DerivedCtxt)
 
@@ -40,14 +41,14 @@ namespace ExampleComm
 variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 def lhs :=
-[fhe_com q, n, hq| {
+[poly q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%A,%B) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
 }]
 
 def rhs :=
-[fhe_com q, n, hq| {
+[poly q, n, hq| {
 ^bb0(%A : ! R, %B : ! R):
   %v1 = "poly.add" (%B,%A) : (! R, ! R) -> (! R)
   "return" (%v1) : (! R) -> ()
@@ -71,7 +72,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLi
       intros a b
       rw [add_comm]
       /- No goals-/
-      done
     }
 
 end ExampleComm
@@ -87,34 +87,35 @@ variable {q : Nat} {n : Nat} [hq : Fact (q > 1)]
 
 -- We mark this as noncomputable due to the presence of poly.const, which creates a value of type R.
 -- This operation is noncomputable, as we use `coe` from `Int` to `R`, which is a noncomputable instance.
-noncomputable def lhs := [fhe_com q, n, hq| {
-^bb0(%a : ! R):
-  %one_int = "arith.const" () {value = 1}: () -> (i16)
-  %two_to_the_n = "arith.const" () {value = $((2**n : Int))}: () -> (index)
-  %x2n = "poly.monomial" (%one_int,%two_to_the_n) : (i16, index) -> (! R)
-  %oner = "poly.const" () {value = 1}: () -> (! R)
-  %p = "poly.add" (%x2n, %oner) : (! R, ! R) -> (! R)
-  %v1 = "poly.add" (%a, %p) : (! R, ! R) -> (! R)
-  "return" (%v1) : (! R) -> ()
+noncomputable def a_plus_generator_eq_a := [poly q, n, hq| {
+^bb0(%a : !R):
+  %one_int = arith.const 1 : i16
+  %two_to_the_n = arith.const ${2**n} : index
+  %x2n = poly.monomial %one_int, %two_to_the_n : (i16, index) -> !R
+  %oner = poly.const 1 : !R
+  %p = poly.add %x2n, %oner : !R
+  %v1 = poly.add %a, %p : !R
+  return %v1 : !R
 }]
 
-def rhs := [fhe_com q, n, hq | {
-^bb0(%a : ! R):
-  "return" (%a) : (! R) -> ()
+def rhs := [poly q, n, hq | {
+^bb0(%a : !R):
+  return %a : !R
+
 }]
 
-/--info: 'lhs' depends on axioms: [propext, Quot.sound, Classical.choice] -/
-#guard_msgs in #print axioms lhs
+/-- info: 'a_plus_generator_eq_a' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms a_plus_generator_eq_a
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLike :=
-  { lhs := lhs,
+  { lhs := a_plus_generator_eq_a,
      rhs := rhs
   , correct :=
     by
       funext Γv
-      unfold lhs rhs
+      unfold a_plus_generator_eq_a rhs
        /-
       Com.denote
           (Com.var (Expr.mk (Op.const_int (Int.ofNat 1)) lhs.proof_2 HVector.nil HVector.nil)
@@ -147,7 +148,6 @@ noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLi
       have add_congr_quotient : ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n - 1) + 1)  = ((Ideal.Quotient.mk (Ideal.span {f q n})) (f q n )) := by simp
       rw [add_congr_quotient]
       apply Poly.add_f_eq
-      done
     }
 /--info: 'p1' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms p1

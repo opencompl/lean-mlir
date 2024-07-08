@@ -6,10 +6,15 @@ import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.ForLean
+import Init.Data.BitVec.Bitblast
+import Init.Data.BitVec.Lemmas
+import Init.Data.BitVec.Folds
 import Lean
 
 
 namespace AlivePaperExamples
+open BitVec
 
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)
@@ -29,7 +34,7 @@ theorem shift_mul:
   simp_alive_undef
   simp_alive_ops
   intros A B
-  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
+  rcases A with rfl | A  <;>
   rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
@@ -37,7 +42,7 @@ theorem shift_mul:
   ring_nf
 
 /--
-info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Quot.sound]
 -/
 #guard_msgs in #print axioms shift_mul
 
@@ -58,5 +63,24 @@ theorem xor_sub :
 /-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub
 
+theorem bitvec_AddSub_1309 :
+  [llvm (w)| {
+    ^bb0(%X : _, %Y : _):
+      %v1 = llvm.and %X, %Y
+      %v2 = llvm.or %X, %Y
+      %v3 = llvm.add %v1, %v2
+      llvm.return %v3
+  }] ⊑ [llvm (w)| {
+    ^bb0(%X : _, %Y : _):
+      %v3 = llvm.add %X, %Y
+      llvm.return %v3
+  }] := by
+    simp_alive_peephole
+    simp_alive_undef
+    simp_alive_case_bash
+    simp
 
-end AlivePaperExamples
+/--
+info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms bitvec_AddSub_1309

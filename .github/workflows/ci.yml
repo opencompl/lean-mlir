@@ -31,6 +31,11 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA
 
+      - name: Compile Decide Experiment 🧐
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build SSA.Experimental.Bits.Decide
+
       - name: Compile Alive Examples
         run: |
           lake -R exe cache get # download cache of mathlib docs.

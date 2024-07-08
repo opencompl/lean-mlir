@@ -1,32 +1,30 @@
-import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 open Lean
 
 namespace MLIR.EDSL
+open Pretty
 
-declare_syntax_cat InstCombine.un_op_name
-declare_syntax_cat InstCombine.bin_op_name
+syntax "llvm.return"  : MLIR.Pretty.uniform_op
+syntax "llvm.copy"    : MLIR.Pretty.uniform_op
+syntax "llvm.neg"     : MLIR.Pretty.uniform_op
+syntax "llvm.not"     : MLIR.Pretty.uniform_op
+
+syntax "llvm.add"     : MLIR.Pretty.uniform_op
+syntax "llvm.and"     : MLIR.Pretty.uniform_op
+syntax "llvm.ashr"    : MLIR.Pretty.uniform_op
+syntax "llvm.lshr"    : MLIR.Pretty.uniform_op
+syntax "llvm.mul"     : MLIR.Pretty.uniform_op
+syntax "llvm.or"      : MLIR.Pretty.uniform_op
+syntax "llvm.sdiv"    : MLIR.Pretty.uniform_op
+syntax "llvm.shl"     : MLIR.Pretty.uniform_op
+syntax "llvm.srem"    : MLIR.Pretty.uniform_op
+syntax "llvm.sub"     : MLIR.Pretty.uniform_op
+syntax "llvm.udiv"    : MLIR.Pretty.uniform_op
+syntax "llvm.urem"    : MLIR.Pretty.uniform_op
+syntax "llvm.xor"     : MLIR.Pretty.uniform_op
+
 declare_syntax_cat InstCombine.cmp_op_name
-
-syntax "llvm.return"  : InstCombine.un_op_name
-syntax "llvm.copy"    : InstCombine.un_op_name
-syntax "llvm.neg"     : InstCombine.un_op_name
-syntax "llvm.not"     : InstCombine.un_op_name
-
-syntax "llvm.add"     : InstCombine.bin_op_name
-syntax "llvm.and"     : InstCombine.bin_op_name
-syntax "llvm.ashr"    : InstCombine.bin_op_name
-syntax "llvm.lshr"    : InstCombine.bin_op_name
-syntax "llvm.mul"     : InstCombine.bin_op_name
-syntax "llvm.or"      : InstCombine.bin_op_name
-syntax "llvm.sdiv"    : InstCombine.bin_op_name
-syntax "llvm.shl"     : InstCombine.bin_op_name
-syntax "llvm.srem"    : InstCombine.bin_op_name
-syntax "llvm.sub"     : InstCombine.bin_op_name
-syntax "llvm.udiv"    : InstCombine.bin_op_name
-syntax "llvm.urem"    : InstCombine.bin_op_name
-syntax "llvm.xor"     : InstCombine.bin_op_name
-
 syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
 syntax "llvm.icmp.ne"  : InstCombine.cmp_op_name
 syntax "llvm.icmp.slt" : InstCombine.cmp_op_name
@@ -37,32 +35,6 @@ syntax "llvm.icmp.ult" : InstCombine.cmp_op_name
 syntax "llvm.icmp.ule" : InstCombine.cmp_op_name
 syntax "llvm.icmp.ugt" : InstCombine.cmp_op_name
 syntax "llvm.icmp.uge" : InstCombine.cmp_op_name
-
-/-- Given syntax of category `un_op_name`, `bin_op_name`, or `cmp_op_name`,
-extract the name of the operation and return it as a string literal syntax. -/
-def extractOpName : Syntax → Option (TSyntax `str)
-  | .node _ _ ⟨.atom _ name :: _⟩ => some <| Syntax.mkStrLit name
-  | _ => none
-
-syntax (mlir_op_operand " = ")? InstCombine.un_op_name mlir_op_operand (" : " mlir_type)? : mlir_op
-macro_rules
-  | `(mlir_op| $[$resName =]? $name:InstCombine.un_op_name $x $[: $t]? ) => do
-    let some opName := extractOpName name.raw
-      | Macro.throwUnsupported
-    let t ← t.getDM `(mlir_type| _)
-    let retTy : TSyntaxArray `mlir_type := match resName with
-      | some _ => #[t]
-      | none => #[]
-    `([mlir_op| $[$resName =]? $opName ($x) : ($t) -> ($retTy:mlir_type,*) ])
-
-syntax mlir_op_operand " = " InstCombine.bin_op_name mlir_op_operand ", " mlir_op_operand
-        (" : " mlir_type)? : mlir_op
-macro_rules
-  | `(mlir_op| $resName:mlir_op_operand = $name:InstCombine.bin_op_name $x, $y $[: $t]?) => do
-    let some opName := extractOpName name.raw
-      | Macro.throwUnsupported
-    let t ← t.getDM `(mlir_type| _)
-    `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> ($t) )
 
 syntax mlir_op_operand " = " InstCombine.cmp_op_name mlir_op_operand ", " mlir_op_operand
         (" : " mlir_type)? : mlir_op
@@ -138,7 +110,8 @@ private def pretty_select (w : Nat) :=
       llvm.return %0
   }]
 
-example : pretty_test         = prettier_test_generic 32 := rfl
+-- for some reason 'rfl' does not work but 'by rfl' works
+example : pretty_test = prettier_test_generic 32 := by rfl
 example : pretty_test_generic = prettier_test_generic    := rfl
 
 
