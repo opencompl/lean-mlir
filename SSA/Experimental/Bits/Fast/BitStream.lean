@@ -1,4 +1,4 @@
-import Mathlib.Tactic.ExtractGoal
+import Mathlib.Tactic.NormNum
 
 -- TODO: upstream the following section
 section UpStream
@@ -19,64 +19,9 @@ theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
   ]
   omega
 
-#eval (10 : Int).bmod 2
-#eval (10 : Int).bmod 3
-#eval (10 : Int).bmod 4
-#eval (10 : Int).bmod 5
-#eval (10 : Int).bmod 6
-#eval (10 : Int).bmod 7
-#eval (10 : Int).bmod 8
-#eval (10 : Int).bmod 9
-#eval (10 : Int).bmod 10
-#eval (10 : Int).bmod 11
-#eval (10 : Int).bmod 12
-#eval (10 : Int).bmod 13
-#eval (10 : Int).bmod 14
-#eval (10 : Int).bmod 15
-#eval (10 : Int).bmod 16
-#eval (10 : Int).bmod 17
-#eval (10 : Int).bmod 16
-#eval (10 : Int).bmod 17
-#eval (10 : Int).bmod 18
-#eval (10 : Int).bmod 19
-#eval (10 : Int).bmod 20
-#eval (10 : Int).bmod 21
-
-#eval (10 : Int).bmod 2   |>.bmod 5
-#eval (10 : Int).bmod 3   |>.bmod 5
-#eval (10 : Int).bmod 4   |>.bmod 5
-#eval (10 : Int).bmod 5   |>.bmod 5
-#eval (10 : Int).bmod 6   |>.bmod 5
-#eval (10 : Int).bmod 7   |>.bmod 5
-#eval (10 : Int).bmod 8   |>.bmod 5
-#eval (10 : Int).bmod 9   |>.bmod 5
-#eval (10 : Int).bmod 10  |>.bmod   5
-#eval (10 : Int).bmod 11  |>.bmod   5
-#eval (10 : Int).bmod 12  |>.bmod   5
-#eval (10 : Int).bmod 13  |>.bmod   5
-#eval (10 : Int).bmod 14  |>.bmod   5
-#eval (10 : Int).bmod 15  |>.bmod   5
-#eval (10 : Int).bmod 16  |>.bmod   5
-#eval (10 : Int).bmod 17  |>.bmod   5
-#eval (10 : Int).bmod 16  |>.bmod   5
-#eval (10 : Int).bmod 17  |>.bmod   5
-#eval (10 : Int).bmod 18  |>.bmod   5
-#eval (10 : Int).bmod 19  |>.bmod   5
-#eval (10 : Int).bmod 20  |>.bmod   5
-#eval (10 : Int).bmod 21  |>.bmod   5
-
-theorem bmod_bmod_eq_bmod_min (z : Int) (n m : Nat) :
-    (z.bmod n).bmod m = z.bmod (Nat.min n m) := by
-  simp [bmod]
-
--- theorem bmod_ofNat_eq_of_not_lt (n m : Nat) (h : ¬n < (m + 1) / 2) :
---     (↑n : Int).bmod m = ↑(n % m) - m := by
---   simp only [
---     bmod, ofNat_emod, ite_eq_left_iff,
---     show (n : Int) % (m : Int) = ((n % m : Nat) : Int) from rfl,
---     Nat.mod_eq_of_lt (by omega : n < m)
---   ]
---   omega
+theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
+    a % b = b.natAbs + a := by
+  sorry
 
 
 end Int
@@ -106,8 +51,65 @@ open BitVec
 -- theorem toInt_gt_or_le (x : BitVec w) :
 --     x
 
+
+
+variable {α β} [Coe α β] (as : List α)
+#check (as.map (· : α → β))
+
+theorem signExtend_eq_truncate_of_le {i w} (h : i ≤ w) (x : BitVec w) :
+    x.signExtend i = x.truncate i := by
+  sorry
+
+theorem toNat_getLsb_shiftLeft (x : BitVec w) (i : Nat) :
+    (x.getLsb i).toNat <<< i = (x.toNat &&& (1 <<< i)) := by
+  sorry
+
+@[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
+    (x.signExtend i).msb = x.msb := by
+  sorry
+
+
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
-    x.signExtend (i+1) = cons (if i ≤ w then x.getLsb i else x.msb) (x.signExtend i) := by
+    x.signExtend (i+1) = cons (if i < w then x.getLsb i else x.msb) (x.signExtend i) := by
+  by_cases hi : i<w
+  · have hi_le : i ≤ w := by omega
+    simp [signExtend_eq_truncate_of_le hi, truncate_succ, signExtend_eq_truncate_of_le, hi_le, hi]
+  · simp only [hi, ↓reduceIte]
+    have hi_ge : i ≥ w := by omega
+    apply eq_of_toInt_eq
+    rw [toInt_cons, toInt_eq_msb_cond, msb_signExtend_of_ge (by omega)]
+    cases hmsb : x.msb <;> simp only [Bool.false_eq_true, ↓reduceIte, signExtend]
+    · simp only [toNat_ofInt]
+      simp only [toInt_eq_msb_cond, hmsb, Bool.false_eq_true, ↓reduceIte, Nat.cast_pow,
+        Nat.cast_ofNat, Nat.cast_inj]
+      norm_cast
+      have : x.toNat < 2 ^ i := by
+        have := x.isLt
+        apply Nat.lt_of_lt_of_le x.isLt
+        apply Nat.pow_le_pow_of_le
+        · decide
+        · omega
+      rw [Nat.mod_eq_of_lt this, Nat.mod_eq_of_lt (by omega)]
+    · simp
+      simp [toInt_eq_msb_cond, hmsb]
+      rw [Int.emod_eq_of_neg]
+      · sorry
+      · have := x.isLt
+        omega
+        have : 2 ^ (w - 1) ≤ x.toNat := by
+          simpa [msb_eq_decide] using hmsb
+        omega
+      · sorry
+
+
+  stop
+  rw [signExtend]
+  apply eq_of_toNat_eq
+  simp
+
+
+
+  stop
   apply eq_of_toInt_eq
   -- conv => {lhs; unfold signExtend; simp}
   simp [signExtend]
