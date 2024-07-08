@@ -245,7 +245,7 @@ mutual
 
   /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .ret v => f!"llvm.return {reprPrec v prec} : ({repr t}) -> ()"
+    | .ret v => f!"\"llvm.return\"({reprPrec v prec}): ({repr t}) -> ()"
     | .var e body =>
       f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body
