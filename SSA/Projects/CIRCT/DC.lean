@@ -30,9 +30,10 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 
 -/
-def branch (x c  : Stream) : Stream × Stream :=
 
-  corec₂ (β := Stream × Stream) (x, c)
+def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
+
+  corec₂ (β := Stream α × Stream Bool) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
 
       let c₀ := c 0
@@ -54,8 +55,8 @@ def branch (x c  : Stream) : Stream × Stream :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
-def merge (x y : Stream) : Stream :=
-  Stream.corec (β := Stream × Stream) (x, y) fun ⟨x, y⟩ =>
+def merge (x y : Stream α) : Stream α :=
+  Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some x', (x.tail, y))
     | some x', none => (some x', (x.tail, y.tail))
@@ -100,8 +101,8 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
-def altMerge (x y : Stream) : Stream :=
-  Stream.corec (β := Stream × Stream × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
+def altMerge (x y : Stream α) : Stream α :=
+  Stream.corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with
       | .left  =>
         let x0 := x.head
@@ -126,22 +127,35 @@ end Operations
 Define a `DC` dialect, and connect its semantics to the function defined above
 -/
 section Dialect
+
+inductive Ty2
+  | int : Ty2
+  | bool : Ty2
+deriving Inhabited, DecidableEq, Repr
+
 inductive Op
-| merge
-| branch
-| fst
-| snd
+| merge (t₁ : Ty2) (t₂ : Ty2)
+| branch (t₁ : Ty2)
+| fst (t : Ty2)
+| snd (t : Ty2)
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
-| Stream : Ty
-| Stream2 : Ty
+| stream (ty2 : Ty2) : Ty
+| stream2 (ty2 : Ty2) : Ty
 deriving Inhabited, DecidableEq, Repr
 
+
+instance : TyDenote Ty2 where
+toType := fun
+|  Ty2.int => Int
+|  Ty2.bool => Bool
+
+open TyDenote (toType) in
 instance : TyDenote Ty where
 toType := fun
-| .Stream => Stream
-| .Stream2 => Stream × Stream
+| Ty.stream ty2 => Stream (toType ty2)
+| Ty.stream2 ty2 => Stream (toType ty2) × Stream (toType ty2)
 
 
 set_option linter.dupNamespace false in
@@ -155,15 +169,15 @@ open TyDenote (toType)
 
 @[simp, reducible]
 def Op.sig : Op  → List Ty
-| .branch => [Ty.Stream, Ty.Stream]
-| .merge => [Ty.Stream, Ty.Stream]
-| .fst | .snd => [Ty.Stream2]
+| .branch t₁ => [Ty.stream t₁, Ty.stream Ty2.bool]
+| .merge t₁ t₂ => [Ty.stream t₁, Ty.stream t₂]
+| .fst t | .snd t => [Ty.stream2 t]
 
 @[simp, reducible]
 def Op.outTy : Op → Ty
-  | .branch => Ty.Stream2
-  | .merge => Ty.Stream
-  | .fst | .snd => Ty.Stream
+  | .branch (t₁ t₂) => Ty.stream2 ((t₁ t₂) Ty2.bool)
+  | .merge t₁ t₂  => Ty.stream t₁
+  | .fst t | .snd t => Ty.stream
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
@@ -193,15 +207,15 @@ section Syntax
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
   | MLIR.AST.MLIRType.undefined "Stream" => do
-    return .Stream
+    return .stream
   | MLIR.AST.MLIRType.undefined "Stream2" => do
-    return .Stream2
+    return .stream2
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream2  :=
+def branch {Γ : Ctxt _} (a b : Var Γ .stream) : Expr (DC) Γ .pure .stream2  :=
   Expr.mk
     (op := .branch)
     (ty_eq := rfl)
@@ -209,7 +223,7 @@ def branch {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream2  :
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def merge {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream  :=
+def merge {Γ : Ctxt _} (a b : Var Γ .stream) : Expr (DC) Γ .pure .stream  :=
   Expr.mk
     (op := .merge)
     (ty_eq := rfl)
@@ -217,7 +231,7 @@ def merge {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (DC) Γ .pure .Stream  :=
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def fst {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (DC) Γ .pure .Stream  :=
+def fst {Γ : Ctxt _} (a : Var Γ .stream2) : Expr (DC) Γ .pure .stream  :=
   Expr.mk
     (op := .fst)
     (ty_eq := rfl)
@@ -225,7 +239,7 @@ def fst {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (DC) Γ .pure .Stream  :=
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def snd {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (DC) Γ .pure .Stream  :=
+def snd {Γ : Ctxt _} (a : Var Γ .stream2) : Expr (DC) Γ .pure .stream  :=
   Expr.mk
     (op := .snd)
     (ty_eq := rfl)
@@ -242,8 +256,8 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .Stream, .Stream, "dc.branch" => return ⟨_, .Stream2, branch v₁ v₂⟩
-      | .Stream, .Stream, "dc.merge"  => return ⟨_, .Stream, merge v₁ v₂⟩
+      | .stream, .stream, "dc.branch" => return ⟨_, .stream2, branch v₁ v₂⟩
+      | .stream, .stream, "dc.merge"  => return ⟨_, .stream, merge v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"dc.fst" | op@"dc.snd" =>
@@ -251,8 +265,8 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .Stream2, "dc.fst" => return ⟨_, .Stream, fst v₁⟩
-      | .Stream2, "dc.snd"  => return ⟨_, .Stream, snd v₁⟩
+      | .stream2, "dc.fst" => return ⟨_, .stream, fst v₁⟩
+      | .stream2, "dc.snd"  => return ⟨_, .stream, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
 
