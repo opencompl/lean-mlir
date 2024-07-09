@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NormNum
+import Mathlib.Logic.Function.Iterate
 
 -- TODO: upstream the following section
 section UpStream
@@ -46,7 +47,8 @@ open BitVec
   case false => simp
   case true  =>
     have : 1 <<< w ||| xs.toNat = 1 <<< w + xs.toNat := sorry
-    simp [this]; omega
+    simp [this];
+    sorry
 
 -- theorem toInt_gt_or_le (x : BitVec w) :
 --     x
@@ -92,6 +94,7 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
       rw [Nat.mod_eq_of_lt this, Nat.mod_eq_of_lt (by omega)]
     · simp
       simp [toInt_eq_msb_cond, hmsb]
+      stop
       rw [Int.emod_eq_of_neg]
       · sorry
       · have := x.isLt
@@ -102,51 +105,106 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
       · sorry
 
 
-  stop
-  rw [signExtend]
-  apply eq_of_toNat_eq
-  simp
-
-
-
-  stop
-  apply eq_of_toInt_eq
-  -- conv => {lhs; unfold signExtend; simp}
-  simp [signExtend]
-  -- rcases (Nat.lt_trichotomy .. : i < w ∨ i = w ∨ i > w) with i_lt_w | rfl | i_gt_w
-  by_cases i_le_w : i ≤ w <;> simp only [i_le_w, ↓reduceIte]
-  · simp [toInt_eq_toNat_bmod]
-
-
-    rw [Int.bmod_eq_of_ge_and_le]
-    · sorry
-    · omega
-    · sorry
-  · simp [toInt_eq_toNat_bmod]
-    sorry
-
-
 
     -- rw [toInt_eq_msb_cond]
     -- cases h_msb : x.msb <;> simp
 
+@[simp] theorem signExtend_eq (x : BitVec w) :
+    x.signExtend w = x := by
+  apply eq_of_toNat_eq
+  simp only [signExtend, BitVec.ofInt, toInt_eq_toNat_bmod, Int.ofNat_eq_coe, toNat_ofNatLt]
+  rw [Int.bmod_emod]
+  norm_cast
+  simp [toNat_mod_cancel, Int.toNat_ofNat]
+
+@[simp] theorem msb_xor {x y : BitVec w} :
+    (x ^^^ y).msb = xor x.msb y.msb := by
+  simp only [BitVec.msb, getMsb, tsub_zero, getLsb_xor]
+  cases decide (0 < w) <;> rfl
 
 end BitVec
 end UpStream
+
+
+
+
+
+
+/-!
+
+## Reflection
+
+We have a decision procedure which operates on BitStream operations, but we'd like
+
+-/
+
+
+
+
+
+
+
+
+
+
+
+
 
 def BitStream : Type := Nat → Bool
 
 namespace BitStream
 
-def ofNat (x : Nat) : BitStream
-  | 0   => x % 2 == 1
-  | i+1 => ofNat (x/2) i
-
-instance : OfNat BitStream n := ⟨ofNat n⟩
+/-! # Preliminaries -/
+section Basic
 
 def head (x : BitStream) : Bool      := x 0
 def tail (x : BitStream) : BitStream := (x <| · + 1)
 
+/-- Append a single bit to the least significant end of a bitvector.
+That is, the new bit is the least significant bit.
+-/
+def concat (b : Bool) (x : BitStream) : BitStream
+  | 0   => b
+  | i+1 => x i
+
+/-- `map f` maps a (unary) function over a bitstreams -/
+abbrev map (f : Bool → Bool) : BitStream → BitStream :=
+  fun x i => f (x i)
+
+/-- `map₂ f` maps a binary function over two bitstreams -/
+abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStream :=
+  fun x y i => f (x i) (y i)
+
+def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
+  fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
+
+/-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
+while accumulating some state -/
+def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
+  corec (β := α × BitStream × BitStream) (b := (init, x, y)) fun ⟨state, x, y⟩ =>
+    let z := f state x.head y.head
+    (⟨z.fst, x.tail, y.tail⟩, z.snd)
+
+section Lemmas
+
+@[ext]
+theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
+  funext i; exact h i
+
+end Lemmas
+
+end Basic
+
+/-! # OfNat -/
+section OfNat
+
+/-- Zero-extend a natural number to an infinite bitstream -/
+def ofNat (x : Nat) : BitStream :=
+  Nat.testBit x
+
+instance : OfNat BitStream n := ⟨ofNat n⟩
+
+end OfNat
 
 /-! # Conversions to and from `BitVec` -/
 section ToBitVec
@@ -191,20 +249,14 @@ theorem eq_of_ofBitVec_eq (x y : BitVec w) :
     ofBitVec x ={≤w} ofBitVec y → x = y := by
   intro h
   have := toBitVec_eq_of_equalUpTo h
+  simp at this
   simpa
 
 end Lemmas
+end ToBitVec
 
 /-! # Bitwise Operations -/
 section BitwiseOps
-
-/-- `map f` maps a (unary) function over a bitstreams -/
-abbrev map (f : Bool → Bool) : BitStream → BitStream :=
-  fun x i => f (x i)
-
-/-- `map₂ f` maps a binary function over two bitstreams -/
-abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStream :=
-  fun x y i => f (x i) (y i)
 
 instance : Complement BitStream := ⟨map Bool.not⟩
 instance : AndOp BitStream := ⟨map₂ Bool.and⟩
@@ -220,57 +272,169 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem  or_eq : (x ||| y) i = (x i || y i)      := rfl
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
 
-variable (x y : BitVec w)
+variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
   funext i
   simp only [ofBitVec, BitVec.getLsb_not, BitVec.msb_not, not_eq]
   split <;> simp_all
 
-@[simp] theorem ofBitVec_and : ofBitVec (x &&& y) ={≤w} (ofBitVec x) &&& (ofBitVec y) := by
-  intro i _; simp
+@[simp] theorem ofBitVec_and : ofBitVec (x &&& y) = (ofBitVec x) &&& (ofBitVec y) := by
+  funext i
+  simp only [ofBitVec, BitVec.getLsb_and, BitVec.msb_and, and_eq]
+  split <;> simp_all
 
-@[simp] theorem ofBitVec_or : ofBitVec (x ||| y) ={≤w} (ofBitVec x) ||| (ofBitVec y) := by
-  intro i _; simp
+@[simp] theorem ofBitVec_or : ofBitVec (x ||| y) = (ofBitVec x) ||| (ofBitVec y) := by
+  funext i
+  simp only [ofBitVec, BitVec.getLsb_or, BitVec.msb_or, or_eq]
+  split <;> simp_all
 
-@[simp] theorem ofBitVec_xor : ofBitVec (x ^^^ y) ={≤w} (ofBitVec x) ^^^ (ofBitVec y) := by
-  intro i _; simp
+@[simp] theorem ofBitVec_xor : ofBitVec (x ^^^ y) = (ofBitVec x) ^^^ (ofBitVec y) := by
+  funext i
+  simp only [ofBitVec, BitVec.getLsb_xor, xor_eq]
+  split <;> simp_all
 
 end Lemmas
 
 end BitwiseOps
 
-/-! # Addition -/
+/-! # Addition, Subtraction, Negation -/
 section Arith
 
-/-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
-while accumulating some state -/
-def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
-  fun i => (go i).snd
-where
-  go : Nat → α × Bool
-    | 0   => f init (x 0) (y 0)
-    | i+1 =>
-      let ⟨a, _⟩ := go i
-      f a (x <| i + 1) (y <| i + 1)
+def addAux (x y : BitStream) : Nat → Bool × Bool
+  | 0 => BitVec.adcb (x 0) (y 0) false
+  | n+1 =>
+    let carry := (addAux x y n).1
+    let a := x (n + 1)
+    let b := y (n + 1)
+    BitVec.adcb a b carry
 
-instance : Add BitStream := ⟨mapAccum₂ BitVec.adcb false⟩
+def add (x y : BitStream) : BitStream :=
+  fun n => (addAux x y n).2
+
+def subAux (x y : BitStream) : Nat → Bool × Bool
+  | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
+  | n+1 =>
+    let borrow := (subAux x y n).2
+    let a := x (n + 1)
+    let b := y (n + 1)
+    (_root_.xor a (_root_.xor b borrow), !a && b || ((!(_root_.xor a b)) && borrow))
+
+def sub (x y : BitStream) : BitStream :=
+  fun n => (subAux x y n).1
+
+def negAux (x : BitStream) : Nat → Bool × Bool
+  | 0 => (x 0, !(x 0))
+  | n+1 =>
+    let borrow := (negAux x n).2
+    let a := x (n + 1)
+    (_root_.xor (!a) borrow, !a && borrow)
+
+def neg (x : BitStream) : BitStream :=
+  fun n => (negAux x n).1
+
+def incrAux (x : BitStream) : Nat → Bool × Bool
+  | 0 => (!(x 0), x 0)
+  | n+1 =>
+    let carry := (incrAux x n).2
+    let a := x (n + 1)
+    (_root_.xor a carry, a && carry)
+
+def incr (x : BitStream) : BitStream :=
+  fun n => (incrAux x n).1
+
+def decrAux (x : BitStream) : Nat → Bool × Bool
+  | 0 => (!(x 0), !(x 0))
+  | (n+1) =>
+    let borrow := (decrAux x n).2
+    let a := x (n + 1)
+    (_root_.xor a borrow, !a && borrow)
+
+def decr (x : BitStream) : BitStream :=
+  fun n => (decrAux x n).1
+
+def carry (x y : BitStream) : BitStream :=
+  fun n => (addAux x y n).1
+
+instance : Add BitStream := ⟨add⟩
+instance : Neg BitStream := ⟨neg⟩
+instance : Sub BitStream := ⟨sub⟩
+
+/-!
+TODO: We should define addition and `carry` in terms of `mapAccum`.
+For example:
+`def add := mapAccum₂ BitVec.adcb false`
+and
+```
+def carry : BitStream → BitStream → BitStream :=
+  mapAccum₂ (fun c x₀ y₀ =>
+    let c' := Bool.atLeastTwo c x₀ y₀
+    (c', c')
+  ) false
+```
+-/
 
 section Lemmas
-
-theorem mapAccum₂_succ (f) (init : α) (x y) (i) :
-    (mapAccum₂ f init x y) (i + 1)
-    = (f (mapAccum₂.go f init x y i).fst (x (i+1)) (y (i+1))).snd := by
-  simp [mapAccum₂, mapAccum₂.go]
 
 -- theorem add_eq (x y : BitStream) (i : Nat) :
 --     (x + y) i = _
 
-theorem ofBitVec_add {w} (x y : BitVec w) :
-    ofBitVec (x + y) ={≤w} (ofBitVec x) + (ofBitVec y) := by
-  have ⟨h₁, h₂⟩ : True ∧ True := sorry
-  sorry
+/-!
+Following the same pattern as for `ofBitVec_and`, `_or`, etc., we would expect an equality like:
+  `ofBitVec (x + y) = (ofBitVec x) + (ofBitVec y)`
+However, this is not actually true, since the left hand side does addition on the bitvector level,
+thus forgets the extra carry bit, while rhe rhs does addition on streams,
+thus could have a bit set in the `w+1`th position.
+
+Crucially, our decision procedure works by considering which equalities hold for *all* widths,
+
+-/
+-- theorem ofBitVec_add {w} (x y z : ∀ w, BitVec w) :
+--     (∀ w, (x w + y w) = z w) ↔ (∀ w, (ofBitVec (x w)) + (ofBitVec (y w)) ) := by
+--   have ⟨h₁, h₂⟩ : True ∧ True := sorry
+--   sorry
 
 end Lemmas
 
 end Arith
+
+/-! # OfInt
+Using `OfInt` we can convert an `Int` into the infinite bitstream that represents that
+particular constant -/
+section OfInt
+
+open Int in
+/-- Sign-extend an integer to its representation as a 2-adic number
+(morally, an infinite width 2s complement representation) -/
+def ofInt : Int → BitStream
+  | .ofNat n  => ofNat n
+  | -[n+1]    => -(ofNat (n+1))
+
+abbrev zero   : BitStream := fun _ => false
+abbrev one    : BitStream := (· == 0)
+abbrev negOne : BitStream := fun _ => true
+
+section Lemmas
+
+variable (i : Nat)
+
+@[simp] theorem zero_eq : zero i = false    := rfl
+@[simp] theorem one_eq  : one i = (i == 0)  := rfl
+@[simp] theorem negOne_eq : negOne i = true := rfl
+
+end Lemmas
+
+end OfInt
+
+#eval (1 + 1 : BitStream) 0
+#eval (1 + 1 : BitStream) 1
+#eval (1 + 1 : BitStream) 2
+
+#eval (carry 1 1) 0
+#eval (carry 1 1) 1
+#eval (carry 1 1) 2
+
+#eval (addAux 1 1) 0
+#eval (addAux 1 1) 1
+#eval (addAux 1 1) 2
+#eval (addAux 1 1) 3

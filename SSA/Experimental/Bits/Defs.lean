@@ -3,110 +3,70 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Bool.Basic
 import Mathlib.Data.Fin.Basic
+import SSA.Experimental.Bits.Fast.BitStream
 
+/-!
+# Term Language
+This file defines the term language the decision procedure operates on,
+and the denotation of these terms into operations on bitstreams -/
+
+/-- A `Term` is an expression in the language our decision procedure operates on,
+it represent an infinite bitstream (with free variables) -/
 inductive Term : Type
 | var : Nat → Term
+/-- The constant `0` -/
 | zero : Term
+/-- The constant `-1` -/
 | negOne : Term
+/-- The constant `1` -/
 | one : Term
+/-- Bitwise and -/
 | and : Term → Term → Term
+/-- Bitwise or -/
 | or : Term → Term → Term
+/-- Bitwise xor -/
 | xor : Term → Term → Term
+/-- Bitwise complement -/
 | not : Term → Term
+/-- Append a single bit the start (i.e., least-significant end) of the bitstream -/
 | ls (b : Bool) : Term → Term
+/-- Addition -/
 | add : Term → Term → Term
+/-- Subtraction -/
 | sub : Term → Term → Term
+/-- Negation -/
 | neg : Term → Term
+/-- Increment (i.e., add one) -/
 | incr : Term → Term
+/-- Decrement (i.e., subtract one) -/
 | decr : Term → Term
 
 open Term
 
-def zeroSeq : Nat → Bool := fun _ => false
+open BitStream in
+/--
+Evaluate a term `t` to the BitStream it represents,
+given a value for the free variables in `t`.
 
-def oneSeq : Nat → Bool := fun n => n = 0
-
-def negOneSeq : Nat → Bool := fun _ => true
-
-def andSeq : ∀ (_ _ : Nat → Bool), Nat → Bool := fun x y n => x n && y n
-
-def orSeq : ∀ (_ _ : Nat → Bool), Nat → Bool := fun x y n => x n || y n
-
-def xorSeq : ∀ (_ _ : Nat → Bool), Nat → Bool := fun x y n => xor (x n) (y n)
-
-def notSeq : ∀ (_ : Nat → Bool), Nat → Bool := fun x n => !(x n)
-
-def lsSeq (b : Bool) (s : Nat → Bool) : Nat → Bool
-  | 0 => b
-  | (n+1) => s n
-
-def addSeqAux (x y : Nat → Bool) : Nat → Bool × Bool
-  | 0 => (_root_.xor (x 0) (y 0), x 0 && y 0)
-  | n+1 =>
-    let carry := (addSeqAux x y n).2
-    let a := x (n + 1)
-    let b := y (n + 1)
-    (_root_.xor a (_root_.xor b carry), (a && b) || (b && carry) || (a && carry))
-
-def addSeq (x y : Nat → Bool) : Nat → Bool :=
-  fun n => (addSeqAux x y n).1
-
-def subSeqAux (x y : Nat → Bool) : Nat → Bool × Bool
-  | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
-  | n+1 =>
-    let borrow := (subSeqAux x y n).2
-    let a := x (n + 1)
-    let b := y (n + 1)
-    (_root_.xor a (_root_.xor b borrow), !a && b || ((!(_root_.xor a b)) && borrow))
-
-def subSeq (x y : Nat → Bool) : Nat → Bool :=
-  fun n => (subSeqAux x y n).1
-
-def negSeqAux (x : Nat → Bool) : Nat → Bool × Bool
-  | 0 => (x 0, !(x 0))
-  | n+1 =>
-    let borrow := (negSeqAux x n).2
-    let a := x (n + 1)
-    (_root_.xor (!a) borrow, !a && borrow)
-
-def negSeq (x : Nat → Bool) : Nat → Bool :=
-  fun n => (negSeqAux x n).1
-
-def incrSeqAux (x : Nat → Bool) : Nat → Bool × Bool
-  | 0 => (!(x 0), x 0)
-  | n+1 =>
-    let carry := (incrSeqAux x n).2
-    let a := x (n + 1)
-    (_root_.xor a carry, a && carry)
-
-def incrSeq (x : Nat → Bool) : Nat → Bool :=
-  fun n => (incrSeqAux x n).1
-
-def decrSeqAux (x : Nat → Bool) : Nat → Bool × Bool
-  | 0 => (!(x 0), !(x 0))
-  | (n+1) =>
-    let borrow := (decrSeqAux x n).2
-    let a := x (n + 1)
-    (_root_.xor a borrow, !a && borrow)
-
-def decrSeq (x : Nat → Bool) : Nat → Bool :=
-  fun n => (decrSeqAux x n).1
-
-def Term.eval : ∀ (_ : Term) (_ : Nat → Nat → Bool), Nat → Bool
-| var n, vars => vars n
-| zero, _ => zeroSeq
-| one, _ => oneSeq
-| negOne, _ => negOneSeq
-| and t₁ t₂, vars => andSeq (Term.eval t₁ vars) (Term.eval t₂ vars)
-| or t₁ t₂, vars => orSeq (Term.eval t₁ vars) (Term.eval t₂ vars)
-| xor t₁ t₂, vars => xorSeq (Term.eval t₁ vars) (Term.eval t₂ vars)
-| not t, vars => notSeq (Term.eval t vars)
-| ls b t, vars => lsSeq b (Term.eval t vars)
-| add t₁ t₂, vars => addSeq (Term.eval t₁ vars) (Term.eval t₂ vars)
-| sub t₁ t₂, vars => subSeq (Term.eval t₁ vars) (Term.eval t₂ vars)
-| neg t, vars => negSeq (Term.eval t vars)
-| incr t, vars => incrSeq (Term.eval t vars)
-| decr t, vars => decrSeq (Term.eval t vars)
+Note that we don't keep track of how many free variable occur in `t`,
+so eval requires us to give a value for each possible variable.
+-/
+def Term.eval (t : Term) (vars : Nat → BitStream) : BitStream :=
+  match t with
+  | var n     => vars n
+  | zero      => BitStream.zero
+  | one       => BitStream.one
+  | negOne    => BitStream.negOne
+  | and t₁ t₂ => (t₁.eval vars) &&& (t₂.eval vars)
+  | or t₁ t₂  => (t₁.eval vars) ||| (t₂.eval vars)
+  | xor t₁ t₂ => (t₁.eval vars) ^^^ (t₂.eval vars)
+  | not t     => ~~~(t.eval vars)
+  | ls b t    => (Term.eval t vars).concat b
+  | add t₁ t₂ => (Term.eval t₁ vars) + (Term.eval t₂ vars)
+  | sub t₁ t₂ => (Term.eval t₁ vars) - (Term.eval t₂ vars)
+  | neg t     => -(Term.eval t vars)
+  | incr t    => BitStream.incr (Term.eval t vars)
+  | decr t    => BitStream.decr (Term.eval t vars)
 
 instance : Add Term := ⟨add⟩
 instance : Sub Term := ⟨sub⟩
@@ -114,6 +74,11 @@ instance : One Term := ⟨one⟩
 instance : Zero Term := ⟨zero⟩
 instance : Neg Term := ⟨neg⟩
 
+/-- `t.arity` is the max free variable id that occurs in the given term `t`,
+and thus is an upper bound on the number of free variables that occur in `t`.
+
+Note that the upper bound is not perfect:
+a term like `var 10` only has a single free variable, but it's arity will be `11` -/
 @[simp] def Term.arity : Term → Nat
 | (var n) => n+1
 | zero => 0
@@ -130,38 +95,41 @@ instance : Neg Term := ⟨neg⟩
 | incr t => arity t
 | decr t => arity t
 
-@[simp] def Term.evalFin : ∀ (t : Term) (_vars : Fin (arity t) → Nat → Bool), Nat → Bool
-| var n, vars => vars (Fin.last n)
-| zero, _vars => zeroSeq
-| one, _vars => oneSeq
-| negOne, _vars => negOneSeq
-| Term.and t₁ t₂, vars =>
-  andSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
-| Term.or t₁ t₂, vars =>
-  orSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
-| Term.xor t₁ t₂, vars =>
-  xorSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
-| not t, vars => notSeq (Term.evalFin t vars)
-| ls b t, vars => lsSeq b (Term.evalFin t vars)
-| add t₁ t₂, vars =>
-  addSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
-| sub t₁ t₂, vars =>
-  subSeq (Term.evalFin t₁
-    (fun i => vars (Fin.castLE (by simp [arity, Nat.le_max_left]) i)))
-  (Term.evalFin t₂
-    (fun i => vars (Fin.castLE (by simp [arity]; rw [Nat.max_comm]; simp [Nat.le_max_left]) i)))
-| neg t, vars => negSeq (Term.evalFin t vars)
-| incr t, vars => incrSeq (Term.evalFin t vars)
-| decr t, vars => decrSeq (Term.evalFin t vars)
+/--
+Evaluate a term `t` to the BitStream it represents.
+
+This differs from `Term.eval` in that `Term.evalFin` uses `Term.arity` to
+determine the number of free variables that occur in the given term,
+and only require that many bitstream values to be given in `vars`.
+-/
+@[simp] def Term.evalFin (t : Term) (vars : Fin (arity t) → BitStream) : BitStream :=
+  match t with
+  | var n => vars (Fin.last n)
+  | zero    => BitStream.zero
+  | one     => BitStream.one
+  | negOne  => BitStream.negOne
+  | and t₁ t₂ =>
+      let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      x₁ &&& x₂
+  | or t₁ t₂ =>
+      let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      x₁ ||| x₂
+  | xor t₁ t₂ =>
+      let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      x₁ ^^^ x₂
+  | not t     => ~~~(t.evalFin vars)
+  | ls b t    => (t.evalFin vars).concat b
+  | add t₁ t₂ =>
+      let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      x₁ + x₂
+  | sub t₁ t₂ =>
+      let x₁ := t₁.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      let x₂ := t₂.evalFin (fun i => vars (Fin.castLE (by simp [arity]) i))
+      x₁ - x₂
+  | neg t  => -(Term.evalFin t vars)
+  | incr t => BitStream.incr (Term.evalFin t vars)
+  | decr t => BitStream.decr (Term.evalFin t vars)
