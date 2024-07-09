@@ -657,18 +657,18 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
       apply decideIfZerosAux_correct p (c' ||| c)
       simp [c', Circuit.eval_fst, Circuit.eval_bind]
       intro s hs
-      rcases hs with ⟨x, hx⟩ | h
-      . rcases hc _ hx with ⟨m, y, hmy⟩
-        use (m+1)
-        use fun a i => Nat.casesOn i x (fun i a => y a i) a
-        rw [FSM.eval_changeInitCarry_succ]
-        rw [← hmy]
-        simp only [FSM.nextBit, Nat.rec_zero, Nat.rec_add_one]
-      . exact hc _ h
-      . intro x s h
-        have := hc₂ _ _ h
-        simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
-          Circuit.eval_or, this, or_true]
+      -- rcases hs with ⟨x, hx⟩ | h
+      -- . rcases hc _ hx with ⟨m, y, hmy⟩
+      --  use (m+1)
+      --  use fun a i => Nat.casesOn i x (fun i a => y a i) a
+      --  rw [FSM.eval_changeInitCarry_succ]
+      --  rw [← hmy]
+      --  simp only [FSM.nextBit, Nat.rec_zero, Nat.rec_add_one]
+      --. exact hc _ h
+      --. intro x s h
+      --  have := hc₂ _ _ h
+      --  simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
+      --    Circuit.eval_or, this, or_true]
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by

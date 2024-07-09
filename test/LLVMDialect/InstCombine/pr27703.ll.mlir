@@ -1,15 +1,12 @@
-"module"() ( {
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.undef"() : () -> !llvm.ptr<ptr<i8>>
-    "llvm.br"(%0)[^bb1] : (!llvm.ptr<ptr<i8>>) -> ()
-  ^bb1(%1: !llvm.ptr<ptr<i8>>):  // 2 preds: ^bb0, ^bb1
-    %2 = "llvm.load"(%1) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i8>>
-    %4 = "llvm.load"(%3) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    %5 = "llvm.bitcast"(%4) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i8>>
-    "llvm.br"(%5)[^bb1] : (!llvm.ptr<ptr<i8>>) -> ()
-  ^bb2:  // no predecessors
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "mem", type = !llvm.func<void ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @mem() {
+    %0 = llvm.mlir.undef : !llvm.ptr
+    llvm.br ^bb1(%0 : !llvm.ptr)
+  ^bb1(%1: !llvm.ptr):  // 2 preds: ^bb0, ^bb1
+    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %3 = llvm.bitcast %2 : !llvm.ptr to !llvm.ptr
+    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %5 = llvm.bitcast %4 : !llvm.ptr to !llvm.ptr
+    llvm.br ^bb1(%5 : !llvm.ptr)
+  }
+}

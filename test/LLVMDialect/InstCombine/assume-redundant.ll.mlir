@@ -1,65 +1,58 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"struct.s", (ptr<f64>)>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1599 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 1 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 2.000000e+00 : f64} : () -> f64
-    %3 = "llvm.mlir.constant"() {value = 1.000000e+00 : f64} : () -> f64
-    %4 = "llvm.mlir.constant"() {value = 31 : i64} : () -> i64
-    %5 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %6 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %7 = "llvm.getelementptr"(%arg0, %6, %5) : (!llvm.ptr<struct<"struct.s", (ptr<f64>)>>, i64, i32) -> !llvm.ptr<ptr<f64>>
-    %8 = "llvm.load"(%7) : (!llvm.ptr<ptr<f64>>) -> !llvm.ptr<f64>
-    %9 = "llvm.ptrtoint"(%8) : (!llvm.ptr<f64>) -> i64
-    %10 = "llvm.and"(%9, %4) : (i64, i64) -> i64
-    %11 = "llvm.icmp"(%10, %6) {predicate = 0 : i64} : (i64, i64) -> i1
-    "llvm.br"(%6)[^bb1] : (i64) -> ()
-  ^bb1(%12: i64):  // 2 preds: ^bb0, ^bb1
-    "llvm.call"(%11) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    %13 = "llvm.getelementptr"(%8, %12) : (!llvm.ptr<f64>, i64) -> !llvm.ptr<f64>
-    %14 = "llvm.load"(%13) : (!llvm.ptr<f64>) -> f64
-    %15 = "llvm.fadd"(%14, %3) : (f64, f64) -> f64
-    "llvm.call"(%11) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    %16 = "llvm.fmul"(%15, %2) : (f64, f64) -> f64
-    "llvm.store"(%16, %13) : (f64, !llvm.ptr<f64>) -> ()
-    %17 = "llvm.add"(%12, %1) : (i64, i64) -> i64
-    "llvm.call"(%11) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    %18 = "llvm.getelementptr"(%8, %17) : (!llvm.ptr<f64>, i64) -> !llvm.ptr<f64>
-    %19 = "llvm.load"(%18) : (!llvm.ptr<f64>) -> f64
-    %20 = "llvm.fadd"(%19, %3) : (f64, f64) -> f64
-    "llvm.call"(%11) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    %21 = "llvm.fmul"(%20, %2) : (f64, f64) -> f64
-    "llvm.store"(%21, %18) : (f64, !llvm.ptr<f64>) -> ()
-    %22 = "llvm.add"(%17, %1) : (i64, i64) -> i64
-    %23 = "llvm.icmp"(%17, %0) {predicate = 0 : i64} : (i64, i64) -> i1
-    "llvm.cond_br"(%23, %22)[^bb2, ^bb1] {operand_segment_sizes = dense<[1, 0, 1]> : vector<3xi32>} : (i1, i64) -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<i64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.stack_alignment", 128 : i64>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @_Z3fooR1s(%arg0: !llvm.ptr {llvm.dereferenceable = 8 : i64, llvm.nocapture, llvm.readonly}) attributes {passthrough = ["nounwind", ["uwtable", "2"]]} {
+    %0 = llvm.mlir.constant(31 : i64) : i64
+    %1 = llvm.mlir.constant(0 : i64) : i64
+    %2 = llvm.mlir.constant(1.000000e+00 : f64) : f64
+    %3 = llvm.mlir.constant(2.000000e+00 : f64) : f64
+    %4 = llvm.mlir.constant(1 : i64) : i64
+    %5 = llvm.mlir.constant(1599 : i64) : i64
+    %6 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %7 = llvm.ptrtoint %6 : !llvm.ptr to i64
+    %8 = llvm.and %7, %0  : i64
+    %9 = llvm.icmp "eq" %8, %1 : i64
+    llvm.br ^bb1(%1 : i64)
+  ^bb1(%10: i64):  // 2 preds: ^bb0, ^bb1
+    "llvm.intr.assume"(%9) : (i1) -> ()
+    %11 = llvm.getelementptr inbounds %6[%10] : (!llvm.ptr, i64) -> !llvm.ptr, f64
+    %12 = llvm.load %11 {alignment = 16 : i64} : !llvm.ptr -> f64
+    %13 = llvm.fadd %12, %2  : f64
+    "llvm.intr.assume"(%9) : (i1) -> ()
+    %14 = llvm.fmul %13, %3  : f64
+    llvm.store %14, %11 {alignment = 16 : i64} : f64, !llvm.ptr
+    %15 = llvm.add %10, %4 overflow<nsw, nuw>  : i64
+    "llvm.intr.assume"(%9) : (i1) -> ()
+    %16 = llvm.getelementptr inbounds %6[%15] : (!llvm.ptr, i64) -> !llvm.ptr, f64
+    %17 = llvm.load %16 {alignment = 8 : i64} : !llvm.ptr -> f64
+    %18 = llvm.fadd %17, %2  : f64
+    "llvm.intr.assume"(%9) : (i1) -> ()
+    %19 = llvm.fmul %18, %3  : f64
+    llvm.store %19, %16 {alignment = 8 : i64} : f64, !llvm.ptr
+    %20 = llvm.add %15, %4 overflow<nsw, nuw>  : i64
+    %21 = llvm.icmp "eq" %15, %5 : i64
+    llvm.cond_br %21, ^bb2, ^bb1(%20 : i64)
   ^bb2:  // pred: ^bb1
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "_Z3fooR1s", type = !llvm.func<void (ptr<struct<"struct.s", (ptr<f64>)>>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "get", type = !llvm.func<ptr<i8> ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.call"() {callee = @get, fastmathFlags = #llvm.fastmath<>} : () -> !llvm.ptr<i8>
-    %3 = "llvm.ptrtoint"(%2) : (!llvm.ptr<i8>) -> i64
-    %4 = "llvm.and"(%3, %1) : (i64, i64) -> i64
-    %5 = "llvm.icmp"(%4, %0) {predicate = 0 : i64} : (i64, i64) -> i1
-    "llvm.call"(%5) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test1", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %3 = "llvm.alloca"(%2) : (i32) -> !llvm.ptr<i8>
-    %4 = "llvm.ptrtoint"(%3) : (!llvm.ptr<i8>) -> i64
-    %5 = "llvm.and"(%4, %1) : (i64, i64) -> i64
-    %6 = "llvm.icmp"(%5, %0) {predicate = 0 : i64} : (i64, i64) -> i1
-    "llvm.call"(%6) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.assume", type = !llvm.func<void (i1)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    llvm.return
+  }
+  llvm.func @get() -> (!llvm.ptr {llvm.align = 8 : i64})
+  llvm.func @test1() {
+    %0 = llvm.mlir.constant(7 : i64) : i64
+    %1 = llvm.mlir.constant(0 : i64) : i64
+    %2 = llvm.call @get() : () -> !llvm.ptr
+    %3 = llvm.ptrtoint %2 : !llvm.ptr to i64
+    %4 = llvm.and %3, %0  : i64
+    %5 = llvm.icmp "eq" %4, %1 : i64
+    "llvm.intr.assume"(%5) : (i1) -> ()
+    llvm.return
+  }
+  llvm.func @test3() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(7 : i64) : i64
+    %2 = llvm.mlir.constant(0 : i64) : i64
+    %3 = llvm.alloca %0 x i8 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %4 = llvm.ptrtoint %3 : !llvm.ptr to i64
+    %5 = llvm.and %4, %1  : i64
+    %6 = llvm.icmp "eq" %5, %2 : i64
+    "llvm.intr.assume"(%6) : (i1) -> ()
+    llvm.return
+  }
+}

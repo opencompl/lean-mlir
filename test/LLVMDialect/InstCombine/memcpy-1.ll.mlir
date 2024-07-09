@@ -1,33 +1,25 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "memcpy", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<i8>, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memcpy, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify1", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<i8>, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memcpy, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify2", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "get_dest", type = !llvm.func<ptr<i8> ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32):  // no predecessors
-    %0 = "llvm.call"() {callee = @get_dest, fastmathFlags = #llvm.fastmath<>} : () -> !llvm.ptr<i8>
-    %1 = "llvm.call"(%0, %arg0, %arg1) {callee = @memcpy, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%1) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify3", type = !llvm.func<ptr<i8> (ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<i8>, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memcpy, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_incompatible_attr", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<i8>, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memcpy, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify1", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @memcpy(!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+  llvm.func @test_simplify1(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
+    %0 = llvm.call @memcpy(%arg0, %arg1, %arg2) : (!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @test_simplify2(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr attributes {passthrough = ["strictfp"]} {
+    %0 = llvm.call @memcpy(%arg0, %arg1, %arg2) : (!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @get_dest() -> !llvm.ptr
+  llvm.func @test_simplify3(%arg0: !llvm.ptr, %arg1: i32) -> !llvm.ptr {
+    %0 = llvm.call @get_dest() : () -> !llvm.ptr
+    %1 = llvm.call @memcpy(%0, %arg0, %arg1) : (!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test_no_incompatible_attr(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
+    %0 = llvm.call @memcpy(%arg0, %arg1, %arg2) : (!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @test_no_simplify1(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
+    %0 = llvm.call @memcpy(%arg0, %arg1, %arg2) : (!llvm.ptr, !llvm.ptr, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+}
