@@ -1,45 +1,40 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {linkage = 5 : i64, sym_name = "c", type = i8, value = 0 : i8} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {linkage = 5 : i64, sym_name = "a", type = i8, value = 0 : i8} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {linkage = 5 : i64, sym_name = "b", type = i8, value = 0 : i8} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.addressof"() {global_name = @a} : () -> !llvm.ptr<i8>
-    %1 = "llvm.mlir.constant"() {value = 3 : i32} : () -> i32
-    %2 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %3 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %4 = "llvm.mlir.addressof"() {global_name = @a} : () -> !llvm.ptr<i8>
-    %5 = "llvm.mlir.addressof"() {global_name = @b} : () -> !llvm.ptr<i8>
-    %6 = "llvm.mlir.constant"() {value = -1 : i32} : () -> i32
-    %7 = "llvm.mlir.addressof"() {global_name = @a} : () -> !llvm.ptr<i8>
-    %8 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %9 = "llvm.mlir.addressof"() {global_name = @c} : () -> !llvm.ptr<i8>
-    %10 = "llvm.load"(%9) : (!llvm.ptr<i8>) -> i8
-    %11 = "llvm.zext"(%10) : (i8) -> i32
-    %12 = "llvm.or"(%11, %8) : (i32, i32) -> i32
-    %13 = "llvm.trunc"(%12) : (i32) -> i8
-    "llvm.store"(%13, %7) : (i8, !llvm.ptr<i8>) -> ()
-    %14 = "llvm.zext"(%13) : (i8) -> i32
-    %15 = "llvm.xor"(%14, %6) : (i32, i32) -> i32
-    %16 = "llvm.and"(%8, %15) : (i32, i32) -> i32
-    %17 = "llvm.trunc"(%16) : (i32) -> i8
-    "llvm.store"(%17, %5) : (i8, !llvm.ptr<i8>) -> ()
-    %18 = "llvm.load"(%4) : (!llvm.ptr<i8>) -> i8
-    %19 = "llvm.zext"(%18) : (i8) -> i32
-    %20 = "llvm.zext"(%17) : (i8) -> i32
-    %21 = "llvm.icmp"(%19, %3) {predicate = 1 : i64} : (i32, i32) -> i1
-    "llvm.cond_br"(%21, %2)[^bb1, ^bb2] {operand_segment_sizes = dense<[1, 0, 1]> : vector<3xi32>} : (i1, i1) -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global common @c(0 : i8) {addr_space = 0 : i32, alignment = 1 : i64} : i8
+  llvm.mlir.global common @a(0 : i8) {addr_space = 0 : i32, alignment = 1 : i64} : i8
+  llvm.mlir.global common @b(0 : i8) {addr_space = 0 : i32, alignment = 1 : i64} : i8
+  llvm.func @func() attributes {passthrough = ["nounwind", "ssp", ["uwtable", "2"]]} {
+    %0 = llvm.mlir.constant(0 : i8) : i8
+    %1 = llvm.mlir.addressof @c : !llvm.ptr
+    %2 = llvm.mlir.constant(1 : i32) : i32
+    %3 = llvm.mlir.addressof @a : !llvm.ptr
+    %4 = llvm.mlir.constant(-1 : i32) : i32
+    %5 = llvm.mlir.addressof @b : !llvm.ptr
+    %6 = llvm.mlir.constant(0 : i32) : i32
+    %7 = llvm.mlir.constant(false) : i1
+    %8 = llvm.mlir.constant(3 : i32) : i32
+    %9 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    %10 = llvm.zext %9 : i8 to i32
+    %11 = llvm.or %10, %2  : i32
+    %12 = llvm.trunc %11 : i32 to i8
+    llvm.store %12, %3 {alignment = 1 : i64} : i8, !llvm.ptr
+    %13 = llvm.zext %12 : i8 to i32
+    %14 = llvm.xor %13, %4  : i32
+    %15 = llvm.and %2, %14  : i32
+    %16 = llvm.trunc %15 : i32 to i8
+    llvm.store %16, %5 {alignment = 1 : i64} : i8, !llvm.ptr
+    %17 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
+    %18 = llvm.zext %17 : i8 to i32
+    %19 = llvm.zext %16 : i8 to i32
+    %20 = llvm.icmp "ne" %18, %6 : i32
+    llvm.cond_br %20, ^bb1, ^bb2(%7 : i1)
   ^bb1:  // pred: ^bb0
-    %22 = "llvm.icmp"(%20, %3) {predicate = 1 : i64} : (i32, i32) -> i1
-    "llvm.br"(%22)[^bb2] : (i1) -> ()
-  ^bb2(%23: i1):  // 2 preds: ^bb0, ^bb1
-    %24 = "llvm.zext"(%23) : (i1) -> i32
-    %25 = "llvm.mul"(%1, %24) : (i32, i32) -> i32
-    %26 = "llvm.trunc"(%25) : (i32) -> i8
-    "llvm.store"(%26, %0) : (i8, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "func", type = !llvm.func<void ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    %21 = llvm.icmp "ne" %19, %6 : i32
+    llvm.br ^bb2(%21 : i1)
+  ^bb2(%22: i1):  // 2 preds: ^bb0, ^bb1
+    %23 = llvm.zext %22 : i1 to i32
+    %24 = llvm.mul %8, %23 overflow<nsw>  : i32
+    %25 = llvm.trunc %24 : i32 to i8
+    llvm.store %25, %3 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.return
+  }
+}

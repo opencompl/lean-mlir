@@ -1,169 +1,133 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.lifetime.start.p0i8", type = !llvm.func<void (i64, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.lifetime.end.p0i8", type = !llvm.func<void (i64, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "unknown", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "f", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "f2", type = !llvm.func<void (ptr<i8>, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "f3", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_dead", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 4 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %2 = "llvm.alloca"(%1) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%0, %3) {callee = @llvm.lifetime.start.p0i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8>) -> ()
-    "llvm.call"(%3) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.call"(%0, %3) {callee = @llvm.lifetime.end.p0i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_lifetime", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 4 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %2 = "llvm.alloca"(%1) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%0, %3) {callee = @llvm.lifetime.start.p0i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8>) -> ()
-    "llvm.call"() {callee = @unknown, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.call"(%3) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.call"() {callee = @unknown, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.call"(%0, %3) {callee = @llvm.lifetime.end.p0i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_lifetime2", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_dead_readwrite", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    %3 = "llvm.load"(%1) : (!llvm.ptr<i32>) -> i32
-    "llvm.return"(%3) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_read_after", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_infinite_loop", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_throw", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_extra_write", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%3, %4) {callee = @f2, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_unmodeled_write", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<ptr<i8>>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    "llvm.call"(%3, %4) {callee = @f2, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> ()
-    %5 = "llvm.load"(%2) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    %6 = "llvm.bitcast"(%5) : (!llvm.ptr<i8>) -> !llvm.ptr<i32>
-    %7 = "llvm.load"(%6) : (!llvm.ptr<i32>) -> i32
-    "llvm.return"(%7) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_captured_by_call", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<ptr<i8>>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    "llvm.store"(%3, %2) : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> ()
-    "llvm.call"(%3) {callee = @f, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    %5 = "llvm.load"(%2) : (!llvm.ptr<ptr<i8>>) -> !llvm.ptr<i8>
-    %6 = "llvm.bitcast"(%5) : (!llvm.ptr<i8>) -> !llvm.ptr<i32>
-    %7 = "llvm.load"(%6) : (!llvm.ptr<i32>) -> i32
-    "llvm.return"(%7) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_captured_before", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%3, %4) {callee = @f2, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_unreleated_read", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %5 = "llvm.call"(%3, %4) {callee = @f3, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> !llvm.ptr<i8>
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_unrelated_capture", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %3 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%2) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    %5 = "llvm.call"(%3, %4) {callee = @f3, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> !llvm.ptr<i8>
-    %6 = "llvm.load"(%5) : (!llvm.ptr<i8>) -> i8
-    "llvm.return"(%6) : (i8) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_neg_unrelated_capture_used_via_return", type = !llvm.func<i8 ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2, %2) {callee = @f2, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_self_read", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "removable_readnone", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "removable_ro", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    "llvm.call"() {callee = @removable_readnone, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_readnone", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    "llvm.call"() {callee = @removable_readnone, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_readnone_with_deopt", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    "llvm.call"() {callee = @removable_ro, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_readonly", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-    "llvm.call"() {callee = @removable_ro, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_readonly_with_deopt", type = !llvm.func<void ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @unknown()
+  llvm.func @f(!llvm.ptr)
+  llvm.func @f2(!llvm.ptr, !llvm.ptr)
+  llvm.func @f3(!llvm.ptr, !llvm.ptr) -> !llvm.ptr
+  llvm.func @test_dead() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_lifetime() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.intr.lifetime.start 4, %1 : !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.intr.lifetime.end 4, %1 : !llvm.ptr
+    llvm.return
+  }
+  llvm.func @test_lifetime2() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.intr.lifetime.start 4, %1 : !llvm.ptr
+    llvm.call @unknown() : () -> ()
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.call @unknown() : () -> ()
+    llvm.intr.lifetime.end 4, %1 : !llvm.ptr
+    llvm.return
+  }
+  llvm.func @test_dead_readwrite() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_neg_read_after() -> i32 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.return %2 : i32
+  }
+  llvm.func @test_neg_infinite_loop() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_neg_throw() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_neg_extra_write() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_neg_unmodeled_write() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f2(%1, %2) : (!llvm.ptr, !llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_neg_captured_by_call() -> i32 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f2(%1, %2) : (!llvm.ptr, !llvm.ptr) -> ()
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.return %4 : i32
+  }
+  llvm.func @test_neg_captured_before() -> i32 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.call @f(%1) : (!llvm.ptr) -> ()
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.return %4 : i32
+  }
+  llvm.func @test_unreleated_read() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f2(%1, %2) : (!llvm.ptr, !llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @test_unrelated_capture() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.call @f3(%1, %2) : (!llvm.ptr, !llvm.ptr) -> !llvm.ptr
+    llvm.return
+  }
+  llvm.func @test_neg_unrelated_capture_used_via_return() -> i8 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.call @f3(%1, %2) : (!llvm.ptr, !llvm.ptr) -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.return %4 : i8
+  }
+  llvm.func @test_self_read() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @f2(%1, %1) : (!llvm.ptr, !llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @removable_readnone() attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind", "willreturn"]}
+  llvm.func @removable_ro() attributes {memory = #llvm.memory_effects<other = read, argMem = read, inaccessibleMem = read>, passthrough = ["nounwind", "willreturn"]}
+  llvm.func @test_readnone() {
+    llvm.call @removable_readnone() : () -> ()
+    llvm.return
+  }
+  llvm.func @test_readnone_with_deopt() {
+    llvm.call @removable_readnone() : () -> ()
+    llvm.return
+  }
+  llvm.func @test_readonly() {
+    llvm.call @removable_ro() : () -> ()
+    llvm.return
+  }
+  llvm.func @test_readonly_with_deopt() {
+    llvm.call @removable_ro() : () -> ()
+    llvm.return
+  }
+}

@@ -1,18 +1,13 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "hello", type = !llvm.array<12 x i8>, value = "hello world\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "w", type = !llvm.array<2 x i8>, value = "w\00"} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strpbrk", type = !llvm.func<i8 (ptr<i8>, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.addressof"() {global_name = @w} : () -> !llvm.ptr<array<2 x i8>>
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @hello} : () -> !llvm.ptr<array<12 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<12 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %4 = "llvm.getelementptr"(%0, %1, %1) : (!llvm.ptr<array<2 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %5 = "llvm.call"(%3, %4) {callee = @strpbrk, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>) -> i8
-    "llvm.return"(%5) : (i8) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify1", type = !llvm.func<i8 ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external constant @hello("hello world\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @w("w\00") {addr_space = 0 : i32}
+  llvm.func @strpbrk(!llvm.ptr, !llvm.ptr) -> i8
+  llvm.func @test_no_simplify1() -> i8 {
+    %0 = llvm.mlir.constant("hello world\00") : !llvm.array<12 x i8>
+    %1 = llvm.mlir.addressof @hello : !llvm.ptr
+    %2 = llvm.mlir.constant("w\00") : !llvm.array<2 x i8>
+    %3 = llvm.mlir.addressof @w : !llvm.ptr
+    %4 = llvm.call @strpbrk(%1, %3) : (!llvm.ptr, !llvm.ptr) -> i8
+    llvm.return %4 : i8
+  }
+}

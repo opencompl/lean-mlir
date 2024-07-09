@@ -1,69 +1,53 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtol", type = !llvm.func<i32 (ptr<i8>, ptr<ptr<i8>>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtod", type = !llvm.func<f64 (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtof", type = !llvm.func<f32 (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtoul", type = !llvm.func<i64 (ptr<i8>, ptr<ptr<i8>>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtoll", type = !llvm.func<i64 (ptr<i8>, ptr<ptr<i8>>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtold", type = !llvm.func<f64 (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strtoull", type = !llvm.func<i64 (ptr<i8>, ptr<ptr<i8>>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 10 : i32} : () -> i32
-    %1 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %2 = "llvm.call"(%arg0, %1, %0) {callee = @strtol, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>, i32) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify1", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %1 = "llvm.call"(%arg0, %0) {callee = @strtod, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> f64
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify2", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %1 = "llvm.call"(%arg0, %0) {callee = @strtof, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> f32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify3", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 10 : i32} : () -> i32
-    %1 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %2 = "llvm.call"(%arg0, %1, %0) {callee = @strtoul, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>, i32) -> i64
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify4", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 10 : i32} : () -> i32
-    %1 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %2 = "llvm.call"(%arg0, %1, %0) {callee = @strtoll, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>, i32) -> i64
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify5", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %1 = "llvm.call"(%arg0, %0) {callee = @strtold, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> f64
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify6", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 10 : i32} : () -> i32
-    %1 = "llvm.mlir.null"() : () -> !llvm.ptr<ptr<i8>>
-    %2 = "llvm.call"(%arg0, %1, %0) {callee = @strtoull, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>, i32) -> i64
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify7", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 10 : i32} : () -> i32
-    %1 = "llvm.call"(%arg0, %arg1, %0) {callee = @strtol, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>, i32) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify1", type = !llvm.func<void (ptr<i8>, ptr<ptr<i8>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @strtol(!llvm.ptr, !llvm.ptr, i32) -> i32
+  llvm.func @strtod(!llvm.ptr, !llvm.ptr) -> f64
+  llvm.func @strtof(!llvm.ptr, !llvm.ptr) -> f32
+  llvm.func @strtoul(!llvm.ptr, !llvm.ptr, i32) -> i64
+  llvm.func @strtoll(!llvm.ptr, !llvm.ptr, i32) -> i64
+  llvm.func @strtold(!llvm.ptr, !llvm.ptr) -> f64
+  llvm.func @strtoull(!llvm.ptr, !llvm.ptr, i32) -> i64
+  llvm.func @test_simplify1(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.mlir.constant(10 : i32) : i32
+    %2 = llvm.call @strtol(%arg0, %0, %1) : (!llvm.ptr, !llvm.ptr, i32) -> i32
+    llvm.return
+  }
+  llvm.func @test_simplify2(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.call @strtod(%arg0, %0) : (!llvm.ptr, !llvm.ptr) -> f64
+    llvm.return
+  }
+  llvm.func @test_simplify3(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.call @strtof(%arg0, %0) : (!llvm.ptr, !llvm.ptr) -> f32
+    llvm.return
+  }
+  llvm.func @test_simplify4(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.mlir.constant(10 : i32) : i32
+    %2 = llvm.call @strtoul(%arg0, %0, %1) : (!llvm.ptr, !llvm.ptr, i32) -> i64
+    llvm.return
+  }
+  llvm.func @test_simplify5(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.mlir.constant(10 : i32) : i32
+    %2 = llvm.call @strtoll(%arg0, %0, %1) : (!llvm.ptr, !llvm.ptr, i32) -> i64
+    llvm.return
+  }
+  llvm.func @test_simplify6(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.call @strtold(%arg0, %0) : (!llvm.ptr, !llvm.ptr) -> f64
+    llvm.return
+  }
+  llvm.func @test_simplify7(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.mlir.constant(10 : i32) : i32
+    %2 = llvm.call @strtoull(%arg0, %0, %1) : (!llvm.ptr, !llvm.ptr, i32) -> i64
+    llvm.return
+  }
+  llvm.func @test_no_simplify1(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.constant(10 : i32) : i32
+    %1 = llvm.call @strtol(%arg0, %arg1, %0) : (!llvm.ptr, !llvm.ptr, i32) -> i32
+    llvm.return
+  }
+}

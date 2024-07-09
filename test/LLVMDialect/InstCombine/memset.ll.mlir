@@ -1,65 +1,48 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "Unknown", type = i128} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<array<1024 x i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 4 : i32} : () -> i32
-    %2 = "llvm.mlir.constant"() {value = 2 : i32} : () -> i32
-    %3 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %4 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %5 = "llvm.mlir.constant"() {value = 1 : i8} : () -> i8
-    %6 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %7 = "llvm.getelementptr"(%arg0, %6, %6) : (!llvm.ptr<array<1024 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.call"(%7, %5, %6, %4) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.call"(%7, %5, %3, %4) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.call"(%7, %5, %2, %4) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.call"(%7, %5, %1, %4) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.call"(%7, %5, %0, %4) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"(%6) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test", type = !llvm.func<i32 (ptr<array<1024 x i8>>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 16 : i32} : () -> i32
-    %2 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    %3 = "llvm.mlir.addressof"() {global_name = @Unknown} : () -> !llvm.ptr<i128>
-    %4 = "llvm.bitcast"(%3) : (!llvm.ptr<i128>) -> !llvm.ptr<i8>
-    "llvm.call"(%4, %2, %1, %0) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memset_to_constant", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %2 = "llvm.mlir.undef"() : () -> i8
-    "llvm.call"(%arg0, %2, %1, %0) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memset_undef", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = true} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %2 = "llvm.mlir.undef"() : () -> i8
-    "llvm.call"(%arg0, %2, %1, %0) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memset_undef_volatile", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %2 = "llvm.mlir.undef"() : () -> i8
-    "llvm.call"(%arg0, %2, %1, %0) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memset_poison", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = true} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %2 = "llvm.mlir.undef"() : () -> i8
-    "llvm.call"(%arg0, %2, %1, %0) {callee = @llvm.memset.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i8, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memset_poison_volatile", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.memset.p0i8.i32", type = !llvm.func<void (ptr<i8>, i8, i32, i1)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external constant @Unknown() {addr_space = 0 : i32} : i128
+  llvm.func @test(%arg0: !llvm.ptr) -> i32 {
+    %0 = llvm.mlir.constant(1 : i8) : i8
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.mlir.constant(1 : i32) : i32
+    %3 = llvm.mlir.constant(2 : i32) : i32
+    %4 = llvm.mlir.constant(4 : i32) : i32
+    %5 = llvm.mlir.constant(8 : i32) : i32
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    "llvm.intr.memset"(%arg0, %0, %2) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    "llvm.intr.memset"(%arg0, %0, %3) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    "llvm.intr.memset"(%arg0, %0, %4) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    "llvm.intr.memset"(%arg0, %0, %5) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return %1 : i32
+  }
+  llvm.func @memset_to_constant() {
+    %0 = llvm.mlir.addressof @Unknown : !llvm.ptr
+    %1 = llvm.mlir.constant(0 : i8) : i8
+    %2 = llvm.mlir.constant(16 : i32) : i32
+    "llvm.intr.memset"(%0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return
+  }
+  llvm.func @memset_undef(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.undef : i8
+    %1 = llvm.mlir.constant(8 : i32) : i32
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return
+  }
+  llvm.func @memset_undef_volatile(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.undef : i8
+    %1 = llvm.mlir.constant(8 : i32) : i32
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return
+  }
+  llvm.func @memset_poison(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.poison : i8
+    %1 = llvm.mlir.constant(8 : i32) : i32
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return
+  }
+  llvm.func @memset_poison_volatile(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.poison : i8
+    %1 = llvm.mlir.constant(8 : i32) : i32
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()
+    llvm.return
+  }
+}

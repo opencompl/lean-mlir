@@ -1,18 +1,13 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "bar", type = !llvm.func<ptr<i32> ()>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.null"() : () -> !llvm.ptr<f32>
-    %1 = "llvm.mlir.addressof"() {global_name = @bar} : () -> !llvm.ptr<func<ptr<i32> ()>>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<func<ptr<i32> ()>>) -> !llvm.ptr<func<ptr<f32> ()>>
-    %3 = "llvm.invoke"(%2)[^bb1, ^bb2] {operand_segment_sizes = dense<[1, 0, 0]> : vector<3xi32>} : (!llvm.ptr<func<ptr<f32> ()>>) -> !llvm.ptr<f32>
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @bar() -> !llvm.ptr
+  llvm.func @foo() -> !llvm.ptr attributes {personality = @__gxx_personality_v0} {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.invoke @bar() to ^bb1 unwind ^bb2 : () -> !llvm.ptr
   ^bb1:  // pred: ^bb0
-    "llvm.return"(%3) : (!llvm.ptr<f32>) -> ()
+    llvm.return %1 : !llvm.ptr
   ^bb2:  // pred: ^bb0
-    %4 = "llvm.landingpad"() {cleanup} : () -> !llvm.struct<(ptr<i8>, i32)>
-    "llvm.return"(%0) : (!llvm.ptr<f32>) -> ()
-  }) {linkage = 10 : i64, personality = @__gxx_personality_v0, sym_name = "foo", type = !llvm.func<ptr<f32> ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "__gxx_personality_v0", type = !llvm.func<i32 (...)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    %2 = llvm.landingpad cleanup : !llvm.struct<(ptr, i32)>
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @__gxx_personality_v0(...) -> i32
+}
