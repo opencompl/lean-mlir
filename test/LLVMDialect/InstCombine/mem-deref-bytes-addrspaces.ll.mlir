@@ -1,16 +1,12 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "memcmp", type = !llvm.func<i32 (ptr<i8, 1>, ptr<i8, 1>, i64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8, 1>, %arg1: !llvm.ptr<i8, 1>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 16 : i64} : () -> i64
-    %1 = "llvm.call"(%arg0, %arg1, %0) {callee = @memcmp, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8, 1>, !llvm.ptr<i8, 1>, i64) -> i32
-    "llvm.return"(%1) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "memcmp_const_size_update_deref", type = !llvm.func<i32 (ptr<i8, 1>, ptr<i8, 1>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8, 1>, %arg1: !llvm.ptr<i8, 1>, %arg2: i64):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memcmp, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8, 1>, !llvm.ptr<i8, 1>, i64) -> i32
-    "llvm.return"(%0) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "memcmp_nonconst_size_nonnnull", type = !llvm.func<i32 (ptr<i8, 1>, ptr<i8, 1>, i64)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @memcmp(!llvm.ptr<1> {llvm.nocapture}, !llvm.ptr<1> {llvm.nocapture}, i64) -> i32
+  llvm.func @memcmp_const_size_update_deref(%arg0: !llvm.ptr<1> {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr<1> {llvm.nocapture, llvm.readonly}) -> i32 {
+    %0 = llvm.mlir.constant(16 : i64) : i64
+    %1 = llvm.call @memcmp(%arg0, %arg1, %0) : (!llvm.ptr<1>, !llvm.ptr<1>, i64) -> i32
+    llvm.return %1 : i32
+  }
+  llvm.func @memcmp_nonconst_size_nonnnull(%arg0: !llvm.ptr<1> {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr<1> {llvm.nocapture, llvm.readonly}, %arg2: i64) -> i32 {
+    %0 = llvm.call @memcmp(%arg0, %arg1, %arg2) : (!llvm.ptr<1>, !llvm.ptr<1>, i64) -> i32
+    llvm.return %0 : i32
+  }
+}
