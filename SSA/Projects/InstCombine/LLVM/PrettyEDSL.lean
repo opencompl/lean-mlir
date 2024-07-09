@@ -47,13 +47,12 @@ macro_rules
 
 open MLIR.AST
 
-syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant(" neg_num (" : " mlir_type)? ")" (" : " mlir_type) : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant(" ("$" noWs "{" term "}") ")" (" : " mlir_type)?   : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
-      let t ← t.getDM `(mlir_type| _)
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $t]?) : $typ ) => do
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $typ} : () -> ($typ) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( ${ $x:term }) $[: $t]?) => do
       let t ← t.getDM `(mlir_type| _)
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
       `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
@@ -70,7 +69,7 @@ section Test
 private def pretty_test :=
   [llvm ()|{
   ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 8 : i32
+    %0 = llvm.mlir.constant(8)  : i32
     %1 = llvm.add %0, %arg0 : i32
     %2 = llvm.mul %1, %arg0 : i32
     %3 = llvm.not %2 : i32
@@ -80,7 +79,7 @@ private def pretty_test :=
 private def pretty_test_generic (w : Nat) :=
   [llvm (w)|{
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant 8 : _
+    %0 = llvm.mlir.constant(8) : _
     %1 = llvm.add %0, %arg0 : _
     %2 = llvm.mul %1, %arg0 : _
     %3 = llvm.not %2 : _
@@ -90,7 +89,7 @@ private def pretty_test_generic (w : Nat) :=
 private def prettier_test_generic (w : Nat) :=
   [llvm (w)|{
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant 8
+    %0 = llvm.mlir.constant(8) : _
     %1 = llvm.add %0, %arg0
     %2 = llvm.mul %1, %arg0
     %3 = llvm.not %2
@@ -99,7 +98,7 @@ private def prettier_test_generic (w : Nat) :=
 
 private def neg_constant (w : Nat) :=
   [llvm (w)| {
-    %0 = llvm.mlir.constant -1
+    %0 = llvm.mlir.constant(-1) : _
     llvm.return %0
   }]
 
@@ -124,7 +123,7 @@ private def antiquot_test (x) := -- antiquotated constant value in generic synta
   }]
 private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in pretty syntax
   [llvm| {
-    %0 = llvm.mlir.constant ${x} : i42
+    %0 = llvm.mlir.constant(${x}) : i42
     llvm.return %0 : i42
   }]
 example : antiquot_test = antiquot_test_pretty := rfl
