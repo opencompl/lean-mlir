@@ -22,7 +22,6 @@ theorem bitvec_AddSub_1043 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  rename_i a b c
   all_goals sorry
 
 theorem bitvec_AddSub_1152 :
