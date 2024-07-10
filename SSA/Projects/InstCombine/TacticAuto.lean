@@ -102,13 +102,19 @@ macro "simp_alive_bitvec": tactic =>
         try solve | (simp only [← BitVec.allOnes_sub_eq_xor, BitVec.negOne_eq_allOnes']; ring_nf)
       )
    )
+
+  /-
+  This tactic attempts to shift ofBool to the outer-most level,
+  and then convert everything to arithmetic
+  and then solve with the omega tactic.
+  -/
 macro "of_bool_tactic" : tactic =>
   `(tactic|
     (
       repeat (
         first
       | simp [bv_ofBool]
-      | simp [ofBool_eq']
+      | simp [ForLean.ofBool_eq']
       | simp
       | simp only [bne]
       )
