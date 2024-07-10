@@ -22,6 +22,7 @@ theorem bitvec_AddSub_1043 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
+  rename_i a b c
   all_goals sorry
 
 theorem bitvec_AddSub_1152 :
@@ -127,10 +128,6 @@ theorem bitvec_AddSub_1564 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  rename_i a b
-  simp only [←BitVec.allOnes_sub_eq_xor]
-  simp only [←BitVec.negOne_eq_allOnes']
-  ring_nf
   all_goals sorry
 
 theorem bitvec_AddSub_1574 :
