@@ -116,8 +116,12 @@ macro "of_bool_tactic" : tactic =>
         first
       | simp only [BitVec.ule]
       | simp only [BitVec.ult]
+      | simp only [BitVec.sle]
+      | simp only [BitVec.slt]
+      | simp only [BitVec.toInt]
       | simp only [BEq.beq]
       | simp only [← Bool.decide_or]
+      | simp only [← Bool.decide_and]
       | simp only [← decide_not]
       | simp only [decide_eq_decide]
       | simp [of_decide_eq_true]
