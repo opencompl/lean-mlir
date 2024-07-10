@@ -4,7 +4,7 @@ defaultTargets = ["SSA"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "v4.10.0-rc2"
+rev = "nightly-testing-2024-07-09"
 
 [[require]]
 name = "Cli"
