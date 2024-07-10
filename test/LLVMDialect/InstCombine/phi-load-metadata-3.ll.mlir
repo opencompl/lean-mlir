@@ -1,21 +1,17 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "bar", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "baz", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i1, %arg1: !llvm.ptr<ptr<i32>>, %arg2: !llvm.ptr<ptr<i32>>):  // no predecessors
-    "llvm.cond_br"(%arg0)[^bb1, ^bb2] {operand_segment_sizes = dense<[1, 0, 0]> : vector<3xi32>} : (i1) -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @bar()
+  llvm.func @baz()
+  llvm.func @test_phi_combine_load_metadata(%arg0: i1, %arg1: !llvm.ptr {llvm.dereferenceable = 8 : i64}, %arg2: !llvm.ptr {llvm.dereferenceable = 8 : i64}) -> !llvm.ptr {
+    llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    "llvm.call"() {callee = @bar, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    %0 = "llvm.load"(%arg1) : (!llvm.ptr<ptr<i32>>) -> !llvm.ptr<i32>
-    "llvm.br"(%0)[^bb3] : (!llvm.ptr<i32>) -> ()
+    llvm.call @bar() : () -> ()
+    %0 = llvm.load %arg1 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.br ^bb3(%0 : !llvm.ptr)
   ^bb2:  // pred: ^bb0
-    "llvm.call"() {callee = @baz, fastmathFlags = #llvm.fastmath<>} : () -> ()
-    %1 = "llvm.load"(%arg2) : (!llvm.ptr<ptr<i32>>) -> !llvm.ptr<i32>
-    "llvm.br"(%1)[^bb3] : (!llvm.ptr<i32>) -> ()
-  ^bb3(%2: !llvm.ptr<i32>):  // 2 preds: ^bb1, ^bb2
-    "llvm.return"(%2) : (!llvm.ptr<i32>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_phi_combine_load_metadata", type = !llvm.func<ptr<i32> (i1, ptr<ptr<i32>>, ptr<ptr<i32>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    llvm.call @baz() : () -> ()
+    %1 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.br ^bb3(%1 : !llvm.ptr)
+  ^bb3(%2: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
+    llvm.return %2 : !llvm.ptr
+  }
+}

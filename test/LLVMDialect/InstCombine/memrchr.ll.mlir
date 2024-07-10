@@ -1,33 +1,26 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "memrchr", type = !llvm.func<ptr<i8> (ptr<i8>, i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memrchr, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test1", type = !llvm.func<ptr<i8> (ptr<i8>, i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32, %arg2: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0, %arg1, %arg2) {callee = @memrchr, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test2", type = !llvm.func<ptr<i8> (ptr<i8>, i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 5 : i32} : () -> i32
-    %1 = "llvm.call"(%arg0, %arg1, %0) {callee = @memrchr, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%1) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<ptr<i8> (ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 5 : i32} : () -> i32
-    %1 = "llvm.call"(%arg0, %arg1, %0) {callee = @memrchr, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%1) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test4", type = !llvm.func<ptr<i8> (ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.call"(%arg0, %arg1, %0) {callee = @memrchr, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.return"(%1) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test5", type = !llvm.func<ptr<i8> (ptr<i8>, i32)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @memrchr(!llvm.ptr, i32, i32) -> !llvm.ptr
+  llvm.func @test1(%arg0: !llvm.ptr, %arg1: i32, %arg2: i32) -> !llvm.ptr {
+    %0 = llvm.call @memrchr(%arg0, %arg1, %arg2) : (!llvm.ptr, i32, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @test2(%arg0: !llvm.ptr, %arg1: i32, %arg2: i32) -> !llvm.ptr {
+    %0 = llvm.call @memrchr(%arg0, %arg1, %arg2) : (!llvm.ptr, i32, i32) -> !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @test3(%arg0: !llvm.ptr, %arg1: i32) -> !llvm.ptr {
+    %0 = llvm.mlir.constant(5 : i32) : i32
+    %1 = llvm.call @memrchr(%arg0, %arg1, %0) : (!llvm.ptr, i32, i32) -> !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test4(%arg0: !llvm.ptr, %arg1: i32) -> !llvm.ptr attributes {passthrough = ["null_pointer_is_valid"]} {
+    %0 = llvm.mlir.constant(5 : i32) : i32
+    %1 = llvm.call @memrchr(%arg0, %arg1, %0) : (!llvm.ptr, i32, i32) -> !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test5(%arg0: !llvm.ptr, %arg1: i32) -> !llvm.ptr {
+    %0 = llvm.mlir.constant(0 : i32) : i32
+    %1 = llvm.call @memrchr(%arg0, %arg1, %0) : (!llvm.ptr, i32, i32) -> !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+}
