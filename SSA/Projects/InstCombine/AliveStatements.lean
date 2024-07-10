@@ -298,13 +298,6 @@ theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
   try alive_auto
   all_goals sorry
 
-theorem aaa : ((a >ᵤ b) || a == b) = (a ≥ᵤ b) := by
-  simp only [BitVec.ult, BitVec.ule, BEq.beq]
-  simp only [←Bool.decide_or]
-  simp only [BitVec.toNat_eq]
-  rw [decide_eq_decide]
-  omega
-
 theorem bitvec_AndOrXor_1683_1 :
     ∀ (e e_1 : LLVM.IntW w),
       LLVM.or (LLVM.icmp LLVM.IntPredicate.ugt e_1 e) (LLVM.icmp LLVM.IntPredicate.eq e_1 e) ⊑
@@ -313,8 +306,6 @@ theorem bitvec_AndOrXor_1683_1 :
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  simp only [ofBool_or, ofBool_eq']
-  simp [aaa]
   all_goals sorry
 
 theorem bitvec_AndOrXor_1683_2 :
