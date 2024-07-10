@@ -111,6 +111,30 @@ macro "simp_alive_bitvec": tactic =>
             ring_nf
       )
    )
+macro "of_bool_tactic" : tactic =>
+  `(tactic|
+    (
+      repeat (
+        first
+      | simp [bv_ofBool]
+      | simp [ofBool_eq']
+      | simp
+      | simp only [bne]
+      )
+      repeat (
+        first
+      | simp only [BitVec.ule]
+      | simp only [BitVec.ult]
+      | simp only [BEq.beq]
+      | simp only [← Bool.decide_or]
+      | simp only [← decide_not]
+      | simp only [decide_eq_decide]
+      | simp [of_decide_eq_true]
+      | simp only [BitVec.toNat_eq]
+      )
+      try omega
+    )
+  )
 
 macro "alive_auto": tactic =>
   `(tactic|
@@ -122,5 +146,6 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         simp_alive_bitvec
+        of_bool_tactic
       )
    )
