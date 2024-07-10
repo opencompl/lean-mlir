@@ -42,72 +42,26 @@ open BitVec
 @[simp] theorem toInt_cons (x : Bool) (xs : BitVec w) :
     BitVec.toInt (cons x xs) =
       if x then (xs.toNat : Int) - (2 ^ w : Nat) else (xs.toNat : Int) := by
-  simp only [toInt_eq_msb_cond, msb_cons, toNat_cons]
+  simp only [toInt_eq_msb_cond, msb_cons]
   cases x
   case false => simp
   case true  =>
-    have : 1 <<< w ||| xs.toNat = 1 <<< w + xs.toNat := sorry
-    simp [this];
+    simp only [↓reduceIte, toNat_cons, Bool.toNat_true, Nat.cast_pow, Nat.cast_ofNat]
     sorry
 
--- theorem toInt_gt_or_le (x : BitVec w) :
---     x
-
-
-
 variable {α β} [Coe α β] (as : List α)
-#check (as.map (· : α → β))
-
-theorem signExtend_eq_truncate_of_le {i w} (h : i ≤ w) (x : BitVec w) :
-    x.signExtend i = x.truncate i := by
-  sorry
-
-theorem toNat_getLsb_shiftLeft (x : BitVec w) (i : Nat) :
-    (x.getLsb i).toNat <<< i = (x.toNat &&& (1 <<< i)) := by
-  sorry
 
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
-  sorry
-
+  simp [BitVec.msb_eq_getLsb_last]
+  split <;> by_cases (0 < i) <;> simp_all
+  simp [show i = w by omega]
 
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
     x.signExtend (i+1) = cons (if i < w then x.getLsb i else x.msb) (x.signExtend i) := by
-  by_cases hi : i<w
-  · have hi_le : i ≤ w := by omega
-    simp [signExtend_eq_truncate_of_le hi, truncate_succ, signExtend_eq_truncate_of_le, hi_le, hi]
-  · simp only [hi, ↓reduceIte]
-    have hi_ge : i ≥ w := by omega
-    apply eq_of_toInt_eq
-    rw [toInt_cons, toInt_eq_msb_cond, msb_signExtend_of_ge (by omega)]
-    cases hmsb : x.msb <;> simp only [Bool.false_eq_true, ↓reduceIte, signExtend]
-    · simp only [toNat_ofInt]
-      simp only [toInt_eq_msb_cond, hmsb, Bool.false_eq_true, ↓reduceIte, Nat.cast_pow,
-        Nat.cast_ofNat, Nat.cast_inj]
-      norm_cast
-      have : x.toNat < 2 ^ i := by
-        have := x.isLt
-        apply Nat.lt_of_lt_of_le x.isLt
-        apply Nat.pow_le_pow_of_le
-        · decide
-        · omega
-      rw [Nat.mod_eq_of_lt this, Nat.mod_eq_of_lt (by omega)]
-    · simp
-      simp [toInt_eq_msb_cond, hmsb]
-      stop
-      rw [Int.emod_eq_of_neg]
-      · sorry
-      · have := x.isLt
-        omega
-        have : 2 ^ (w - 1) ≤ x.toNat := by
-          simpa [msb_eq_decide] using hmsb
-        omega
-      · sorry
-
-
-
-    -- rw [toInt_eq_msb_cond]
-    -- cases h_msb : x.msb <;> simp
+  ext j
+  simp only [getLsb_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsb_cons]
+  split <;> split <;> simp_all <;> omega
 
 @[simp] theorem signExtend_eq (x : BitVec w) :
     x.signExtend w = x := by
