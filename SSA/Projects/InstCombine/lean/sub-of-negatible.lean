@@ -2376,12 +2376,7 @@ def negate_abs_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.sub %0, %arg0  : i8
     llvm.call @use8(%1) : (i8) -> ()
-    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_negate_abs   : negate_abs_before  ⊑  negate_abs_combined := by
-  unfold negate_abs_before negate_abs_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     %3 = llvm.sub %arg1, %2  : i8
     llvm.return %3 : i8
   }]
@@ -2395,12 +2390,7 @@ def negate_nabs_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.sub %0, %arg0  : i8
     llvm.call @use8(%1) : (i8) -> ()
-    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_negate_nabs   : negate_nabs_before  ⊑  negate_nabs_combined := by
-  unfold negate_nabs_before negate_nabs_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     %3 = llvm.add %2, %arg1  : i8
     llvm.return %3 : i8
   }]

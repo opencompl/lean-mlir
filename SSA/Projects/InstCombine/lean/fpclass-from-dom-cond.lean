@@ -274,12 +274,7 @@ def test1_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     llvm.return %1 : i1
   ^bb2:  // pred: ^bb0
-    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1
     llvm.return %3 : i1
   }]
 
@@ -358,12 +353,7 @@ def test5_combined := [llvmfunc|
   ^bb3:  // pred: ^bb1
     llvm.br ^bb4(%arg0 : f64)
   ^bb4(%4: f64):  // 2 preds: ^bb0, ^bb3
-    %5 = "llvm.intr.is.fpclass"(%4) <{bit = 411 : i32}> : (f64) -> i1]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.is.fpclass"(%4) <{bit = 411 : i32}> : (f64) -> i1
     llvm.return %5 : i1
   }]
 
@@ -393,28 +383,13 @@ theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
   sorry
 def test7_combined := [llvmfunc|
   llvm.func @test7(%arg0: f32) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 345 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 345 : i32}> : (f32) -> i1
     llvm.cond_br %0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %1 = "llvm.intr.is.fpclass"(%arg0) <{bit = 456 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.is.fpclass"(%arg0) <{bit = 456 : i32}> : (f32) -> i1
     llvm.return %1 : i1
   ^bb2:  // pred: ^bb0
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 456 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 456 : i32}> : (f32) -> i1
     llvm.return %2 : i1
   }]
 
@@ -429,20 +404,10 @@ def test8_combined := [llvmfunc|
     %2 = llvm.fcmp "oeq" %1, %0 : f32
     llvm.cond_br %2, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 575 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 575 : i32}> : (f32) -> i1
     llvm.return %3 : i1
   ^bb2:  // pred: ^bb0
-    %4 = "llvm.intr.is.fpclass"(%arg0) <{bit = 575 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.is.fpclass"(%arg0) <{bit = 575 : i32}> : (f32) -> i1
     llvm.return %4 : i1
   }]
 
@@ -515,12 +480,7 @@ def test12_or_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     llvm.return %1 : i1
   ^bb2:  // pred: ^bb0
-    %4 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test12_or   : test12_or_before  ⊑  test12_or_combined := by
-  unfold test12_or_before test12_or_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1
     llvm.return %4 : i1
   }]
 
@@ -539,12 +499,7 @@ def test1_no_dominating_combined := [llvmfunc|
   ^bb2:  // pred: ^bb1
     llvm.return %1 : i1
   ^bb3:  // 2 preds: ^bb0, ^bb1
-    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1]
-
-theorem inst_combine_test1_no_dominating   : test1_no_dominating_before  ⊑  test1_no_dominating_combined := by
-  unfold test1_no_dominating_before test1_no_dominating_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 783 : i32}> : (f32) -> i1
     llvm.return %3 : i1
   }]
 

@@ -427,19 +427,9 @@ def shift_trunc_signbit_test_vec_uses_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-1 : i17) : i17
     %3 = llvm.mlir.constant(dense<-1> : vector<2xi17>) : vector<2xi17>
     %4 = llvm.lshr %arg0, %1  : vector<2xi17>
-    llvm.store %4, %arg1 {alignment = 8 : i64} : vector<2xi17>, !llvm.ptr]
-
-theorem inst_combine_shift_trunc_signbit_test_vec_uses   : shift_trunc_signbit_test_vec_uses_before  ⊑  shift_trunc_signbit_test_vec_uses_combined := by
-  unfold shift_trunc_signbit_test_vec_uses_before shift_trunc_signbit_test_vec_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 8 : i64} : vector<2xi17>, !llvm.ptr
     %5 = llvm.trunc %4 : vector<2xi17> to vector<2xi13>
-    llvm.store %5, %arg2 {alignment = 4 : i64} : vector<2xi13>, !llvm.ptr]
-
-theorem inst_combine_shift_trunc_signbit_test_vec_uses   : shift_trunc_signbit_test_vec_uses_before  ⊑  shift_trunc_signbit_test_vec_uses_combined := by
-  unfold shift_trunc_signbit_test_vec_uses_before shift_trunc_signbit_test_vec_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : vector<2xi13>, !llvm.ptr
     %6 = llvm.icmp "sgt" %arg0, %3 : vector<2xi17>
     llvm.return %6 : vector<2xi1>
   }]

@@ -1284,12 +1284,7 @@ def constantexpr_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i16) : i16
     %3 = llvm.ptrtoint %1 : !llvm.ptr to i16
     %4 = llvm.icmp "ne" %3, %2 : i16
-    %5 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_constantexpr   : constantexpr_before  ⊑  constantexpr_combined := by
-  unfold constantexpr_before constantexpr_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16
     %6 = llvm.lshr %5, %2  : i16
     %7 = llvm.zext %4 : i1 to i16
     %8 = llvm.shl %2, %7 overflow<nsw, nuw>  : i16

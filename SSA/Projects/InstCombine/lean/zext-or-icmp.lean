@@ -349,12 +349,7 @@ def PR51762_combined := [llvmfunc|
     llvm.br ^bb1(%5 : i32)
   ^bb3:  // pred: ^bb1
     %6 = llvm.sext %arg2 : i16 to i64
-    %7 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
-  unfold PR51762_before PR51762_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32
     %8 = llvm.zext %4 : i32 to i64
     %9 = llvm.shl %8, %1 overflow<nuw>  : i64
     %10 = llvm.zext %7 : i32 to i64
@@ -362,36 +357,16 @@ theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
     %12 = llvm.urem %6, %11  : i64
     %13 = llvm.icmp "ne" %12, %2 : i64
     %14 = llvm.zext %13 : i1 to i32
-    %15 = llvm.load %arg4 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
-  unfold PR51762_before PR51762_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %arg4 {alignment = 4 : i64} : !llvm.ptr -> i32
     %16 = llvm.sext %arg2 : i16 to i32
     %17 = llvm.icmp "sge" %15, %16 : i32
     %18 = llvm.zext %17 : i1 to i32
-    %19 = llvm.load %arg5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
-  unfold PR51762_before PR51762_combined
-  simp_alive_peephole
-  sorry
+    %19 = llvm.load %arg5 {alignment = 4 : i64} : !llvm.ptr -> i32
     %20 = llvm.add %19, %18 overflow<nsw>  : i32
-    llvm.store %20, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
-  unfold PR51762_before PR51762_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %20, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
     %21 = llvm.srem %14, %20  : i32
     %22 = llvm.zext %21 : i32 to i64
-    llvm.store %7, %arg4 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR51762   : PR51762_before  ⊑  PR51762_combined := by
-  unfold PR51762_before PR51762_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg4 {alignment = 8 : i64} : i32, !llvm.ptr
     %23 = llvm.icmp "ult" %11, %22 : i64
     "llvm.intr.assume"(%23) : (i1) -> ()
     llvm.return %23 : i1

@@ -141,12 +141,7 @@ def reduce_smin_zext_long_external_use_combined := [llvmfunc|
     %5 = llvm.sext %4 : i1 to i8
     %6 = llvm.extractelement %arg0[%1 : i64] : vector<128xi1>
     %7 = llvm.sext %6 : i1 to i8
-    llvm.store %7, %2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_reduce_smin_zext_long_external_use   : reduce_smin_zext_long_external_use_before  ⊑  reduce_smin_zext_long_external_use_combined := by
-  unfold reduce_smin_zext_long_external_use_before reduce_smin_zext_long_external_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %2 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %5 : i8
   }]
 
@@ -164,12 +159,7 @@ def reduce_smin_zext_external_use_combined := [llvmfunc|
     %5 = llvm.zext %4 : i1 to i64
     %6 = llvm.extractelement %arg0[%1 : i64] : vector<8xi1>
     %7 = llvm.zext %6 : i1 to i64
-    llvm.store %7, %2 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_reduce_smin_zext_external_use   : reduce_smin_zext_external_use_before  ⊑  reduce_smin_zext_external_use_combined := by
-  unfold reduce_smin_zext_external_use_before reduce_smin_zext_external_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %2 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return %5 : i64
   }]
 

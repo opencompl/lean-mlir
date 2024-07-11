@@ -23,19 +23,9 @@ def test_load_store_load_combine_before := [llvmfunc|
 
 def test_load_store_load_combine_combined := [llvmfunc|
   llvm.func @test_load_store_load_combine(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_load_store_load_combine   : test_load_store_load_combine_before  ⊑  test_load_store_load_combine_combined := by
-  unfold test_load_store_load_combine_before test_load_store_load_combine_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
     %1 = llvm.sitofp %0 : i32 to f32
-    llvm.store %1, %arg1 {alignment = 4 : i64, tbaa = [#tbaa_tag1]} : f32, !llvm.ptr]
-
-theorem inst_combine_test_load_store_load_combine   : test_load_store_load_combine_before  ⊑  test_load_store_load_combine_combined := by
-  unfold test_load_store_load_combine_before test_load_store_load_combine_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 4 : i64, tbaa = [#tbaa_tag1]} : f32, !llvm.ptr
     llvm.return %0 : i32
   }]
 

@@ -223,12 +223,7 @@ def storeA_combined := [llvmfunc|
     %3 = llvm.insertvalue %1, %2[0] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %4 = llvm.insertvalue %0, %3[1] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %5 = llvm.mlir.addressof @A__vtblZ : !llvm.ptr
-    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeA   : storeA_before  ⊑  storeA_combined := by
-  unfold storeA_before storeA_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -242,19 +237,9 @@ def storeB_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.mlir.constant(42 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeB   : storeB_before  ⊑  storeB_combined := by
-  unfold storeB_before storeB_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"B", (ptr, i64)>
-    llvm.store %3, %4 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_storeB   : storeB_before  ⊑  storeB_combined := by
-  unfold storeB_before storeB_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %4 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -270,12 +255,7 @@ def storeStructOfA_combined := [llvmfunc|
     %3 = llvm.insertvalue %1, %2[0] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %4 = llvm.insertvalue %0, %3[1] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %5 = llvm.mlir.addressof @A__vtblZ : !llvm.ptr
-    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeStructOfA   : storeStructOfA_before  ⊑  storeStructOfA_combined := by
-  unfold storeStructOfA_before storeStructOfA_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -291,12 +271,7 @@ def storeArrayOfA_combined := [llvmfunc|
     %3 = llvm.insertvalue %1, %2[0] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %4 = llvm.insertvalue %0, %3[1] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %5 = llvm.mlir.addressof @A__vtblZ : !llvm.ptr
-    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeArrayOfA   : storeArrayOfA_before  ⊑  storeArrayOfA_combined := by
-  unfold storeArrayOfA_before storeArrayOfA_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -2316,12 +2291,7 @@ def storeLargeArrayOfA_combined := [llvmfunc|
     %2007 = llvm.insertvalue %0, %2006[1997] : !llvm.array<2000 x struct<"A", (ptr)>> 
     %2008 = llvm.insertvalue %0, %2007[1998] : !llvm.array<2000 x struct<"A", (ptr)>> 
     %2009 = llvm.insertvalue %0, %2008[1999] : !llvm.array<2000 x struct<"A", (ptr)>> 
-    llvm.store %2009, %arg0 {alignment = 8 : i64} : !llvm.array<2000 x struct<"A", (ptr)>>, !llvm.ptr]
-
-theorem inst_combine_storeLargeArrayOfA   : storeLargeArrayOfA_before  ⊑  storeLargeArrayOfA_combined := by
-  unfold storeLargeArrayOfA_before storeLargeArrayOfA_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2009, %arg0 {alignment = 8 : i64} : !llvm.array<2000 x struct<"A", (ptr)>>, !llvm.ptr
     llvm.return
   }]
 
@@ -2337,12 +2307,7 @@ def storeStructOfArrayOfA_combined := [llvmfunc|
     %3 = llvm.insertvalue %1, %2[0] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %4 = llvm.insertvalue %0, %3[1] : !llvm.struct<"A__vtbl", (ptr, ptr)> 
     %5 = llvm.mlir.addressof @A__vtblZ : !llvm.ptr
-    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeStructOfArrayOfA   : storeStructOfArrayOfA_before  ⊑  storeStructOfArrayOfA_combined := by
-  unfold storeStructOfArrayOfA_before storeStructOfArrayOfA_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -2357,37 +2322,17 @@ def storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.extractvalue %arg1[0] : !llvm.array<2 x struct<"B", (ptr, i64)>> 
     %4 = llvm.extractvalue %3[0] : !llvm.struct<"B", (ptr, i64)> 
-    llvm.store %4, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B",    : storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before  ⊑  storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined := by
-  unfold storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %5 = llvm.getelementptr inbounds %arg0[%0, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"B", (ptr, i64)>
     %6 = llvm.extractvalue %3[1] : !llvm.struct<"B", (ptr, i64)> 
-    llvm.store %6, %5 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B",    : storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before  ⊑  storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined := by
-  unfold storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %5 {alignment = 8 : i64} : i64, !llvm.ptr
     %7 = llvm.getelementptr inbounds %arg0[%0, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"B", (ptr, i64)>>
     %8 = llvm.extractvalue %arg1[1] : !llvm.array<2 x struct<"B", (ptr, i64)>> 
     %9 = llvm.extractvalue %8[0] : !llvm.struct<"B", (ptr, i64)> 
-    llvm.store %9, %7 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B",    : storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before  ⊑  storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined := by
-  unfold storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %7 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %10 = llvm.getelementptr inbounds %arg0[%0, %2, 1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"B", (ptr, i64)>>
     %11 = llvm.extractvalue %8[1] : !llvm.struct<"B", (ptr, i64)> 
-    llvm.store %11, %10 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B",    : storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before  ⊑  storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined := by
-  unfold storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _before storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %10 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -2398,12 +2343,7 @@ theorem inst_combine_storeArrayOfB(%arg0: !llvm.ptr, %arg1: !llvm.array<2 x stru
 def loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", _combined := [llvmfunc|
   llvm.func @loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", (ptr)> {
     %0 = llvm.mlir.poison : !llvm.struct<"A", (ptr)>
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A",    : loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", _before  ⊑  loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", _combined := by
-  unfold loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", _before loadA(%arg0: !llvm.ptr) -> !llvm.struct<"A", _combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %2 = llvm.insertvalue %1, %0[0] : !llvm.struct<"A", (ptr)> 
     llvm.return %2 : !llvm.struct<"A", (ptr)>
   }]
@@ -2417,20 +2357,10 @@ def loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := [llvmfunc|
     %0 = llvm.mlir.poison : !llvm.struct<"B", (ptr, i64)>
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.mlir.constant(1 : i32) : i32
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B",    : loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before  ⊑  loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := by
-  unfold loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.insertvalue %3, %0[0] : !llvm.struct<"B", (ptr, i64)> 
     %5 = llvm.getelementptr inbounds %arg0[%1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"B", (ptr, i64)>
-    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B",    : loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before  ⊑  loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := by
-  unfold loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before loadB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr -> i64
     %7 = llvm.insertvalue %6, %4[1] : !llvm.struct<"B", (ptr, i64)> 
     llvm.return %7 : !llvm.struct<"B", (ptr, i64)>
   }]
@@ -2443,12 +2373,7 @@ def loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined := [l
   llvm.func @loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", (ptr)>)> {
     %0 = llvm.mlir.poison : !llvm.struct<"A", (ptr)>
     %1 = llvm.mlir.poison : !llvm.struct<(struct<"A", (ptr)>)>
-    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A",    : loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _before  ⊑  loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined := by
-  unfold loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _before loadStructOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %3 = llvm.insertvalue %2, %0[0] : !llvm.struct<"A", (ptr)> 
     %4 = llvm.insertvalue %3, %1[0] : !llvm.struct<(struct<"A", (ptr)>)> 
     llvm.return %4 : !llvm.struct<(struct<"A", (ptr)>)>
@@ -2462,12 +2387,7 @@ def loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", _combined := [
   llvm.func @loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", (ptr)>> {
     %0 = llvm.mlir.poison : !llvm.struct<"A", (ptr)>
     %1 = llvm.mlir.poison : !llvm.array<1 x struct<"A", (ptr)>>
-    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A",    : loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", _before  ⊑  loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", _combined := by
-  unfold loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", _before loadArrayOfA(%arg0: !llvm.ptr) -> !llvm.array<1 x struct<"A", _combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %3 = llvm.insertvalue %2, %0[0] : !llvm.struct<"A", (ptr)> 
     %4 = llvm.insertvalue %3, %1[0] : !llvm.array<1 x struct<"A", (ptr)>> 
     llvm.return %4 : !llvm.array<1 x struct<"A", (ptr)>>
@@ -2482,12 +2402,7 @@ def loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A"
     %0 = llvm.mlir.poison : !llvm.struct<"A", (ptr)>
     %1 = llvm.mlir.poison : !llvm.array<1 x struct<"A", (ptr)>>
     %2 = llvm.mlir.poison : !llvm.struct<(array<1 x struct<"A", (ptr)>>)>
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A",    : loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A", _before  ⊑  loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A", _combined := by
-  unfold loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A", _before loadStructOfArrayOfA(%arg0: !llvm.ptr) -> !llvm.struct<(array<1 x struct<"A", _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.insertvalue %3, %0[0] : !llvm.struct<"A", (ptr)> 
     %5 = llvm.insertvalue %4, %1[0] : !llvm.array<1 x struct<"A", (ptr)>> 
     %6 = llvm.insertvalue %5, %2[0] : !llvm.struct<(array<1 x struct<"A", (ptr)>>)> 
@@ -2510,12 +2425,7 @@ def structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined := [llvmf
     %7 = llvm.insertvalue %5, %6[0] : !llvm.struct<"A", (ptr)> 
     %8 = llvm.mlir.undef : !llvm.struct<(struct<"A", (ptr)>)>
     %9 = llvm.insertvalue %7, %8[0] : !llvm.struct<(struct<"A", (ptr)>)> 
-    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A",    : structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _before  ⊑  structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined := by
-  unfold structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _before structOfA(%arg0: !llvm.ptr) -> !llvm.struct<(struct<"A", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return %9 : !llvm.struct<(struct<"A", (ptr)>)>
   }]
 
@@ -2532,19 +2442,9 @@ def structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := [llvmfunc|
     %4 = llvm.mlir.undef : !llvm.struct<"B", (ptr, i64)>
     %5 = llvm.insertvalue %0, %4[0] : !llvm.struct<"B", (ptr, i64)> 
     %6 = llvm.insertvalue %3, %5[1] : !llvm.struct<"B", (ptr, i64)> 
-    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_structB(%arg0: !llvm.ptr) -> !llvm.struct<"B",    : structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before  ⊑  structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := by
-  unfold structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %7 = llvm.getelementptr inbounds %arg0[%1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"B", (ptr, i64)>
-    llvm.store %3, %7 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_structB(%arg0: !llvm.ptr) -> !llvm.struct<"B",    : structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before  ⊑  structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined := by
-  unfold structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _before structB(%arg0: !llvm.ptr) -> !llvm.struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %7 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return %6 : !llvm.struct<"B", (ptr, i64)>
   }]
 
@@ -2559,37 +2459,17 @@ def loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined := [
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.mlir.poison : !llvm.array<2 x struct<"B", (ptr, i64)>>
     %4 = llvm.mlir.constant(1 : i64) : i64
-    %5 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B",    : loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before  ⊑  loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined := by
-  unfold loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.insertvalue %5, %0[0] : !llvm.struct<"B", (ptr, i64)> 
     %7 = llvm.getelementptr inbounds %arg0[%1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"B", (ptr, i64)>
-    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B",    : loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before  ⊑  loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined := by
-  unfold loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> i64
     %9 = llvm.insertvalue %8, %6[1] : !llvm.struct<"B", (ptr, i64)> 
     %10 = llvm.insertvalue %9, %3[0] : !llvm.array<2 x struct<"B", (ptr, i64)>> 
     %11 = llvm.getelementptr inbounds %arg0[%1, %4] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"B", (ptr, i64)>>
-    %12 = llvm.load %11 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B",    : loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before  ⊑  loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined := by
-  unfold loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %11 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %13 = llvm.insertvalue %12, %0[0] : !llvm.struct<"B", (ptr, i64)> 
     %14 = llvm.getelementptr inbounds %arg0[%1, %4, 1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"B", (ptr, i64)>>
-    %15 = llvm.load %14 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B",    : loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before  ⊑  loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined := by
-  unfold loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _before loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %14 {alignment = 8 : i64} : !llvm.ptr -> i64
     %16 = llvm.insertvalue %15, %13[1] : !llvm.struct<"B", (ptr, i64)> 
     %17 = llvm.insertvalue %16, %10[1] : !llvm.array<2 x struct<"B", (ptr, i64)>> 
     llvm.return %17 : !llvm.array<2 x struct<"B", (ptr, i64)>>
@@ -2601,12 +2481,7 @@ theorem inst_combine_loadArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2 x struct<"B
   sorry
 def loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", _combined := [llvmfunc|
   llvm.func @loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", (ptr, i64)>> {
-    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.array<2000 x struct<"B", (ptr, i64)>>]
-
-theorem inst_combine_loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B",    : loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", _before  ⊑  loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", _combined := by
-  unfold loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", _before loadLargeArrayOfB(%arg0: !llvm.ptr) -> !llvm.array<2000 x struct<"B", _combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.array<2000 x struct<"B", (ptr, i64)>>
     llvm.return %0 : !llvm.array<2000 x struct<"B", (ptr, i64)>>
   }]
 
@@ -2619,12 +2494,7 @@ def packed_alignment_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(1 : i32) : i32
     %2 = llvm.getelementptr inbounds %arg0[%0, 1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.S", packed (i8, struct<"struct.T", (i32, i32)>)>
-    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_packed_alignment   : packed_alignment_before  ⊑  packed_alignment_combined := by
-  unfold packed_alignment_before packed_alignment_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> i32
     llvm.return %3 : i32
   }]
 
@@ -2643,130 +2513,40 @@ def check_alignment_combined := [llvmfunc|
     %6 = llvm.mlir.constant(6 : i32) : i32
     %7 = llvm.mlir.constant(7 : i32) : i32
     %8 = llvm.mlir.constant(8 : i32) : i32
-    %9 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i8
     %10 = llvm.getelementptr inbounds %arg0[%0, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8
     %12 = llvm.getelementptr inbounds %arg0[%0, 2] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %13 = llvm.load %12 {alignment = 2 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.load %12 {alignment = 2 : i64} : !llvm.ptr -> i8
     %14 = llvm.getelementptr inbounds %arg0[%0, 3] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %15 = llvm.load %14 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %14 {alignment = 1 : i64} : !llvm.ptr -> i8
     %16 = llvm.getelementptr inbounds %arg0[%0, 4] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %17 = llvm.load %16 {alignment = 4 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %17 = llvm.load %16 {alignment = 4 : i64} : !llvm.ptr -> i8
     %18 = llvm.getelementptr inbounds %arg0[%0, 5] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %19 = llvm.load %18 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %19 = llvm.load %18 {alignment = 1 : i64} : !llvm.ptr -> i8
     %20 = llvm.getelementptr inbounds %arg0[%0, 6] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %21 = llvm.load %20 {alignment = 2 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %21 = llvm.load %20 {alignment = 2 : i64} : !llvm.ptr -> i8
     %22 = llvm.getelementptr inbounds %arg0[%0, 7] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %23 = llvm.load %22 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %23 = llvm.load %22 {alignment = 1 : i64} : !llvm.ptr -> i8
     %24 = llvm.getelementptr inbounds %arg0[%0, 8] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    %25 = llvm.load %24 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %arg1 {alignment = 8 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    %25 = llvm.load %24 {alignment = 8 : i64} : !llvm.ptr -> i64
+    llvm.store %9, %arg1 {alignment = 8 : i64} : i8, !llvm.ptr
     %26 = llvm.getelementptr inbounds %arg1[%0, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %11, %26 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %26 {alignment = 1 : i64} : i8, !llvm.ptr
     %27 = llvm.getelementptr inbounds %arg1[%0, 2] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %13, %27 {alignment = 2 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %13, %27 {alignment = 2 : i64} : i8, !llvm.ptr
     %28 = llvm.getelementptr inbounds %arg1[%0, 3] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %15, %28 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %28 {alignment = 1 : i64} : i8, !llvm.ptr
     %29 = llvm.getelementptr inbounds %arg1[%0, 4] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %17, %29 {alignment = 4 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %29 {alignment = 4 : i64} : i8, !llvm.ptr
     %30 = llvm.getelementptr inbounds %arg1[%0, 5] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %19, %30 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %19, %30 {alignment = 1 : i64} : i8, !llvm.ptr
     %31 = llvm.getelementptr inbounds %arg1[%0, 6] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %21, %31 {alignment = 2 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %21, %31 {alignment = 2 : i64} : i8, !llvm.ptr
     %32 = llvm.getelementptr inbounds %arg1[%0, 7] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %23, %32 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %23, %32 {alignment = 1 : i64} : i8, !llvm.ptr
     %33 = llvm.getelementptr inbounds %arg1[%0, 8] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct.U", (i8, i8, i8, i8, i8, i8, i8, i8, i64)>
-    llvm.store %25, %33 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_check_alignment   : check_alignment_before  ⊑  check_alignment_combined := by
-  unfold check_alignment_before check_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %25, %33 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

@@ -707,12 +707,7 @@ def fadd_sel_op0_combined := [llvmfunc|
   llvm.func @fadd_sel_op0(%arg0: i1, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(0xFF800000 : f32) : f32
     %1 = llvm.mlir.constant(0x7F800000 : f32) : f32
-    %2 = llvm.select %arg0, %0, %1 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f32]
-
-theorem inst_combine_fadd_sel_op0   : fadd_sel_op0_before  ⊑  fadd_sel_op0_combined := by
-  unfold fadd_sel_op0_before fadd_sel_op0_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.select %arg0, %0, %1 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f32
     llvm.return %2 : f32
   }]
 
@@ -726,12 +721,7 @@ def fadd_sel_op0_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0x7F800000 : f32) : f32
     %2 = llvm.select %arg0, %0, %1 : i1, f32
     llvm.call @use_f32(%2) : (f32) -> ()
-    %3 = llvm.fadd %2, %arg1  {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_fadd_sel_op0_use   : fadd_sel_op0_use_before  ⊑  fadd_sel_op0_use_combined := by
-  unfold fadd_sel_op0_use_before fadd_sel_op0_use_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %2, %arg1  {fastmathFlags = #llvm.fastmath<nnan>} : f32
     llvm.return %3 : f32
   }]
 
@@ -759,12 +749,7 @@ def fmul_sel_op1_use_combined := [llvmfunc|
     %4 = llvm.fadd %arg1, %0  : vector<2xf16>
     %5 = llvm.select %arg0, %2, %3 : i1, vector<2xf16>
     llvm.call @use_v2f16(%5) : (vector<2xf16>) -> ()
-    %6 = llvm.fmul %4, %5  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf16>]
-
-theorem inst_combine_fmul_sel_op1_use   : fmul_sel_op1_use_before  ⊑  fmul_sel_op1_use_combined := by
-  unfold fmul_sel_op1_use_before fmul_sel_op1_use_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.fmul %4, %5  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf16>
     llvm.return %6 : vector<2xf16>
   }]
 

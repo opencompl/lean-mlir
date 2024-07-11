@@ -22,12 +22,7 @@ def toplevel_before := [llvmfunc|
 def toplevel_combined := [llvmfunc|
   llvm.func @toplevel() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.array<3 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_toplevel   : toplevel_before  ⊑  toplevel_combined := by
-  unfold toplevel_before toplevel_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.array<3 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.intr.dbg.declare #di_local_variable = %1 : !llvm.ptr
     llvm.call @foo(%1) : (!llvm.ptr) -> ()
     llvm.return

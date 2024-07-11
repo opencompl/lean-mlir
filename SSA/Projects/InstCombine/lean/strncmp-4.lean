@@ -133,75 +133,25 @@ def fold_strncmp_Aa_b_combined := [llvmfunc|
     %8 = llvm.mlir.constant(-1 : i32) : i32
     %9 = llvm.mlir.constant(8 : i64) : i64
     %10 = llvm.mlir.constant(9 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %11 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %11 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %11 {alignment = 4 : i64} : i32, !llvm.ptr
     %12 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %12 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %12 {alignment = 4 : i64} : i32, !llvm.ptr
     %13 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %13 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %13 {alignment = 4 : i64} : i32, !llvm.ptr
     %14 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %14 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %14 {alignment = 4 : i64} : i32, !llvm.ptr
     %15 = llvm.getelementptr %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr
     %16 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr
     %17 = llvm.getelementptr %arg0[%7] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %8, %17 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %17 {alignment = 4 : i64} : i32, !llvm.ptr
     %18 = llvm.getelementptr %arg0[%9] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %8, %18 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %18 {alignment = 4 : i64} : i32, !llvm.ptr
     %19 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %8, %19 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Aa_b   : fold_strncmp_Aa_b_before  ⊑  fold_strncmp_Aa_b_combined := by
-  unfold fold_strncmp_Aa_b_before fold_strncmp_Aa_b_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %19 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -218,47 +168,17 @@ def fold_strncmp_Ab_a_combined := [llvmfunc|
     %4 = llvm.mlir.constant(4 : i64) : i64
     %5 = llvm.mlir.constant(1 : i32) : i32
     %6 = llvm.mlir.constant(5 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %7 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %8 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %8 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %8 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %9 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %9 {alignment = 4 : i64} : i32, !llvm.ptr
     %10 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %5, %10 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %10 {alignment = 4 : i64} : i32, !llvm.ptr
     %11 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %5, %11 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_Ab_a   : fold_strncmp_Ab_a_before  ⊑  fold_strncmp_Ab_a_combined := by
-  unfold fold_strncmp_Ab_a_before fold_strncmp_Ab_a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %11 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

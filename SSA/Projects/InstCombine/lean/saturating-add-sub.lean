@@ -2963,12 +2963,7 @@ theorem inst_combine_test_scalar_usub_add   : test_scalar_usub_add_before  ⊑  
 def test_scalar_usub_add_extra_use_combined := [llvmfunc|
   llvm.func @test_scalar_usub_add_extra_use(%arg0: i8, %arg1: i8, %arg2: !llvm.ptr) -> i8 {
     %0 = llvm.intr.usub.sat(%arg0, %arg1)  : (i8, i8) -> i8
-    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_scalar_usub_add_extra_use   : test_scalar_usub_add_extra_use_before  ⊑  test_scalar_usub_add_extra_use_combined := by
-  unfold test_scalar_usub_add_extra_use_before test_scalar_usub_add_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %1 = llvm.add %0, %arg1  : i8
     llvm.return %1 : i8
   }]
@@ -3022,12 +3017,7 @@ theorem inst_combine_test_scalar_usub_sub   : test_scalar_usub_sub_before  ⊑  
 def test_scalar_usub_sub_extra_use_combined := [llvmfunc|
   llvm.func @test_scalar_usub_sub_extra_use(%arg0: i8, %arg1: i8, %arg2: !llvm.ptr) -> i8 {
     %0 = llvm.intr.usub.sat(%arg0, %arg1)  : (i8, i8) -> i8
-    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_scalar_usub_sub_extra_use   : test_scalar_usub_sub_extra_use_before  ⊑  test_scalar_usub_sub_extra_use_combined := by
-  unfold test_scalar_usub_sub_extra_use_before test_scalar_usub_sub_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %1 = llvm.sub %arg0, %0  : i8
     llvm.return %1 : i8
   }]
@@ -3082,12 +3072,7 @@ theorem inst_combine_test_scalar_uadd_sub   : test_scalar_uadd_sub_before  ⊑  
 def test_scalar_uadd_sub_extra_use_combined := [llvmfunc|
   llvm.func @test_scalar_uadd_sub_extra_use(%arg0: i8, %arg1: i8, %arg2: !llvm.ptr) -> i8 {
     %0 = llvm.intr.uadd.sat(%arg0, %arg1)  : (i8, i8) -> i8
-    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_scalar_uadd_sub_extra_use   : test_scalar_uadd_sub_extra_use_before  ⊑  test_scalar_uadd_sub_extra_use_combined := by
-  unfold test_scalar_uadd_sub_extra_use_before test_scalar_uadd_sub_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %1 = llvm.sub %0, %arg1  : i8
     llvm.return %1 : i8
   }]

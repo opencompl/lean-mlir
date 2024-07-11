@@ -29,12 +29,7 @@ def store_before := [llvmfunc|
 
 def load_combined := [llvmfunc|
   llvm.func @load(%arg0: !llvm.ptr) -> !llvm.vec<? x 1 x  i32> {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)>]
-
-theorem inst_combine_load   : load_before  ⊑  load_combined := by
-  unfold load_before load_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)>
     %1 = llvm.extractvalue %0[1] : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)> 
     llvm.return %1 : !llvm.vec<? x 1 x  i32>
   }]
@@ -48,12 +43,7 @@ def store_combined := [llvmfunc|
     %0 = llvm.mlir.undef : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)>
     %1 = llvm.insertvalue %arg1, %0[0] : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)> 
     %2 = llvm.insertvalue %arg2, %1[1] : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)> 
-    llvm.store %2, %arg0 {alignment = 4 : i64} : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)>, !llvm.ptr]
-
-theorem inst_combine_store   : store_before  ⊑  store_combined := by
-  unfold store_before store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 4 : i64} : !llvm.struct<"struct.test", (vec<? x 1 x  i32>, vec<? x 1 x  i32>)>, !llvm.ptr
     llvm.return
   }]
 

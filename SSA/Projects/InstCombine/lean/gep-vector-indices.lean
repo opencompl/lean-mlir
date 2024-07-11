@@ -246,18 +246,8 @@ def vector_indices_nxv2i64_mulitple_use_combined := [llvmfunc|
     %2 = llvm.getelementptr %arg0[%arg1] : (!llvm.ptr, !llvm.vec<? x 2 x  i64>) -> !llvm.vec<? x 2 x  ptr>, i32
     %3 = llvm.extractelement %2[%0 : i64] : !llvm.vec<? x 2 x  ptr>
     %4 = llvm.extractelement %2[%1 : i64] : !llvm.vec<? x 2 x  ptr>
-    llvm.store %3, %arg2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_vector_indices_nxv2i64_mulitple_use   : vector_indices_nxv2i64_mulitple_use_before  ⊑  vector_indices_nxv2i64_mulitple_use_combined := by
-  unfold vector_indices_nxv2i64_mulitple_use_before vector_indices_nxv2i64_mulitple_use_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg3 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_vector_indices_nxv2i64_mulitple_use   : vector_indices_nxv2i64_mulitple_use_before  ⊑  vector_indices_nxv2i64_mulitple_use_combined := by
-  unfold vector_indices_nxv2i64_mulitple_use_before vector_indices_nxv2i64_mulitple_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %4, %arg3 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

@@ -122,12 +122,7 @@ def f_combined := [llvmfunc|
     %5 = llvm.add %3, %0  : i32
     %6 = llvm.sext %3 : i32 to i64
     %7 = llvm.getelementptr %arg2[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %8 = llvm.add %3, %1  : i32
     llvm.cond_br %4, ^bb1(%8 : i32), ^bb2
   ^bb2:  // pred: ^bb1
@@ -149,12 +144,7 @@ def copy_combined := [llvmfunc|
     %5 = llvm.add %3, %0  : i32
     %6 = llvm.sext %3 : i32 to i64
     %7 = llvm.getelementptr %arg2[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_copy   : copy_before  ⊑  copy_combined := by
-  unfold copy_before copy_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %8 = llvm.add %3, %1  : i32
     llvm.cond_br %4, ^bb1(%8 : i32), ^bb2
   ^bb2:  // pred: ^bb1
@@ -185,12 +175,7 @@ def nocopy_combined := [llvmfunc|
     %14 = llvm.add %12, %4  : i32
     %15 = llvm.sext %11 : i32 to i64
     %16 = llvm.getelementptr %arg2[%15] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %14, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_nocopy   : nocopy_before  ⊑  nocopy_combined := by
-  unfold nocopy_before nocopy_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %16 {alignment = 4 : i64} : i32, !llvm.ptr
     %17 = llvm.add %10, %5  : vector<16xi32>
     llvm.cond_br %13, ^bb1(%17 : vector<16xi32>), ^bb2
   ^bb2:  // pred: ^bb1

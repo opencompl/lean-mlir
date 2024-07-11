@@ -101,27 +101,12 @@ def extract2gep_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i32) : i32
     %2 = llvm.mlir.constant(0 : i32) : i32
     %3 = llvm.getelementptr inbounds %arg0[%0, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<(i16, i32)>
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_extract2gep   : extract2gep_before  ⊑  extract2gep_combined := by
-  unfold extract2gep_before extract2gep_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_extract2gep   : extract2gep_before  ⊑  extract2gep_combined := by
-  unfold extract2gep_before extract2gep_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // 2 preds: ^bb0, ^bb1
     %5 = llvm.call @baz(%4) : (i32) -> i32
-    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_extract2gep   : extract2gep_before  ⊑  extract2gep_combined := by
-  unfold extract2gep_before extract2gep_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.icmp "eq" %5, %2 : i32
     llvm.cond_br %6, ^bb2, ^bb1
   ^bb2:  // pred: ^bb1
@@ -137,12 +122,7 @@ def doubleextract2gep_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(1 : i32) : i32
     %2 = llvm.getelementptr inbounds %arg0[%0, 1, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<(i16, struct<(i32, i16)>)>
-    %3 = llvm.load %2 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_doubleextract2gep   : doubleextract2gep_before  ⊑  doubleextract2gep_combined := by
-  unfold doubleextract2gep_before doubleextract2gep_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 2 : i64} : !llvm.ptr -> i16
     llvm.return %3 : i16
   }]
 
@@ -152,12 +132,7 @@ theorem inst_combine_doubleextract2gep   : doubleextract2gep_before  ⊑  double
   sorry
 def "nogep-multiuse"_combined := [llvmfunc|
   llvm.func @"nogep-multiuse"(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load volatile %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<(i32, i32)>]
-
-theorem inst_combine_"nogep-multiuse"   : "nogep-multiuse"_before  ⊑  "nogep-multiuse"_combined := by
-  unfold "nogep-multiuse"_before "nogep-multiuse"_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load volatile %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<(i32, i32)>
     %1 = llvm.extractvalue %0[0] : !llvm.struct<(i32, i32)> 
     %2 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i32)> 
     %3 = llvm.add %1, %2  : i32
@@ -170,12 +145,7 @@ theorem inst_combine_"nogep-multiuse"   : "nogep-multiuse"_before  ⊑  "nogep-m
   sorry
 def "nogep-volatile"_combined := [llvmfunc|
   llvm.func @"nogep-volatile"(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load volatile %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<(i32, i32)>]
-
-theorem inst_combine_"nogep-volatile"   : "nogep-volatile"_before  ⊑  "nogep-volatile"_combined := by
-  unfold "nogep-volatile"_before "nogep-volatile"_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load volatile %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<(i32, i32)>
     %1 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i32)> 
     llvm.return %1 : i32
   }]

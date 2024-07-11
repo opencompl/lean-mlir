@@ -1296,18 +1296,8 @@ def test20_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.addressof @G1 : !llvm.ptr
     %2 = llvm.mlir.addressof @G2 : !llvm.ptr
-    llvm.store %arg1, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test20   : test20_before  ⊑  test20_combined := by
-  unfold test20_before test20_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %arg0, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test20   : test20_before  ⊑  test20_combined := by
-  unfold test20_before test20_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %arg0, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -1580,12 +1570,7 @@ theorem inst_combine_or_xor_commute4   : or_xor_commute4_before  ⊑  or_xor_com
 def or_xor_extra_use_combined := [llvmfunc|
   llvm.func @or_xor_extra_use(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.or %arg0, %arg1  : i32
-    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_or_xor_extra_use   : or_xor_extra_use_before  ⊑  or_xor_extra_use_combined := by
-  unfold or_xor_extra_use_before or_xor_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %1 = llvm.xor %0, %arg1  : i32
     llvm.return %1 : i32
   }]
@@ -1657,12 +1642,7 @@ theorem inst_combine_and_xor_commute4   : and_xor_commute4_before  ⊑  and_xor_
 def and_xor_extra_use_combined := [llvmfunc|
   llvm.func @and_xor_extra_use(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.and %arg0, %arg1  : i32
-    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_and_xor_extra_use   : and_xor_extra_use_before  ⊑  and_xor_extra_use_combined := by
-  unfold and_xor_extra_use_before and_xor_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %1 = llvm.xor %0, %arg1  : i32
     llvm.return %1 : i32
   }]
@@ -1677,12 +1657,7 @@ def xor_or_not_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-8 : i8) : i8
     %2 = llvm.mlir.constant(-13 : i8) : i8
     %3 = llvm.xor %arg0, %0  : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_xor_or_not   : xor_or_not_before  ⊑  xor_or_not_combined := by
-  unfold xor_or_not_before xor_or_not_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %4 = llvm.and %arg0, %1  : i8
     %5 = llvm.xor %4, %2  : i8
     llvm.return %5 : i8
@@ -1699,12 +1674,7 @@ def xor_or_not_uses_combined := [llvmfunc|
     %2 = llvm.mlir.constant(12 : i8) : i8
     %3 = llvm.xor %arg0, %0  : i8
     %4 = llvm.or %3, %1  : i8
-    llvm.store %4, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_xor_or_not_uses   : xor_or_not_uses_before  ⊑  xor_or_not_uses_combined := by
-  unfold xor_or_not_uses_before xor_or_not_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %5 = llvm.xor %4, %2  : i8
     llvm.return %5 : i8
   }]
@@ -1719,12 +1689,7 @@ def xor_and_not_combined := [llvmfunc|
     %1 = llvm.mlir.constant(42 : i8) : i8
     %2 = llvm.mlir.constant(53 : i8) : i8
     %3 = llvm.xor %arg0, %0  : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_xor_and_not   : xor_and_not_before  ⊑  xor_and_not_combined := by
-  unfold xor_and_not_before xor_and_not_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %4 = llvm.and %arg0, %1  : i8
     %5 = llvm.xor %4, %2  : i8
     llvm.return %5 : i8
@@ -1740,12 +1705,7 @@ def xor_and_not_uses_combined := [llvmfunc|
     %1 = llvm.mlir.constant(53 : i8) : i8
     %2 = llvm.and %arg0, %0  : i8
     %3 = llvm.xor %2, %0  : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_xor_and_not_uses   : xor_and_not_uses_before  ⊑  xor_and_not_uses_combined := by
-  unfold xor_and_not_uses_before xor_and_not_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %4 = llvm.xor %2, %1  : i8
     llvm.return %4 : i8
   }]
@@ -2022,12 +1982,7 @@ theorem inst_combine_or_or_xor_commute3   : or_or_xor_commute3_before  ⊑  or_o
 def or_or_xor_use1_combined := [llvmfunc|
   llvm.func @or_or_xor_use1(%arg0: i4, %arg1: i4, %arg2: i4, %arg3: !llvm.ptr) -> i4 {
     %0 = llvm.or %arg2, %arg0  : i4
-    llvm.store %0, %arg3 {alignment = 1 : i64} : i4, !llvm.ptr]
-
-theorem inst_combine_or_or_xor_use1   : or_or_xor_use1_before  ⊑  or_or_xor_use1_combined := by
-  unfold or_or_xor_use1_before or_or_xor_use1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 1 : i64} : i4, !llvm.ptr
     %1 = llvm.or %arg2, %arg1  : i4
     %2 = llvm.xor %0, %1  : i4
     llvm.return %2 : i4
@@ -2041,12 +1996,7 @@ def or_or_xor_use2_combined := [llvmfunc|
   llvm.func @or_or_xor_use2(%arg0: i4, %arg1: i4, %arg2: i4, %arg3: !llvm.ptr) -> i4 {
     %0 = llvm.or %arg2, %arg0  : i4
     %1 = llvm.or %arg2, %arg1  : i4
-    llvm.store %1, %arg3 {alignment = 1 : i64} : i4, !llvm.ptr]
-
-theorem inst_combine_or_or_xor_use2   : or_or_xor_use2_before  ⊑  or_or_xor_use2_combined := by
-  unfold or_or_xor_use2_before or_or_xor_use2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg3 {alignment = 1 : i64} : i4, !llvm.ptr
     %2 = llvm.xor %0, %1  : i4
     llvm.return %2 : i4
   }]
@@ -2332,12 +2282,7 @@ def xor_orn_commute2_1use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-1 : i32) : i32
     %2 = llvm.udiv %0, %arg1  : i32
     %3 = llvm.xor %arg0, %1  : i32
-    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_orn_commute2_1use   : xor_orn_commute2_1use_before  ⊑  xor_orn_commute2_1use_combined := by
-  unfold xor_orn_commute2_1use_before xor_orn_commute2_1use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.and %2, %arg0  : i32
     %5 = llvm.xor %4, %1  : i32
     llvm.return %5 : i32
@@ -2370,12 +2315,7 @@ def xor_orn_commute3_1use_combined := [llvmfunc|
     %3 = llvm.udiv %0, %arg1  : i67
     %4 = llvm.xor %2, %1  : i67
     %5 = llvm.or %3, %4  : i67
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i67, !llvm.ptr]
-
-theorem inst_combine_xor_orn_commute3_1use   : xor_orn_commute3_1use_before  ⊑  xor_orn_commute3_1use_combined := by
-  unfold xor_orn_commute3_1use_before xor_orn_commute3_1use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i67, !llvm.ptr
     %6 = llvm.xor %2, %5  : i67
     llvm.return %6 : i67
   }]
@@ -2388,19 +2328,9 @@ def xor_orn_2use_combined := [llvmfunc|
   llvm.func @xor_orn_2use(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr, %arg3: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.xor %arg0, %0  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_orn_2use   : xor_orn_2use_before  ⊑  xor_orn_2use_combined := by
-  unfold xor_orn_2use_before xor_orn_2use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.or %1, %arg1  : i32
-    llvm.store %2, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_orn_2use   : xor_orn_2use_before  ⊑  xor_orn_2use_combined := by
-  unfold xor_orn_2use_before xor_orn_2use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.xor %2, %arg0  : i32
     llvm.return %3 : i32
   }]
@@ -2411,12 +2341,7 @@ theorem inst_combine_xor_orn_2use   : xor_orn_2use_before  ⊑  xor_orn_2use_com
   sorry
 def ctlz_pow2_combined := [llvmfunc|
   llvm.func @ctlz_pow2(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_pow2   : ctlz_pow2_before  ⊑  ctlz_pow2_combined := by
-  unfold ctlz_pow2_before ctlz_pow2_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -2429,12 +2354,7 @@ def cttz_pow2_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<1> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.shl %0, %arg0 overflow<nuw>  : vector<2xi8>
     %2 = llvm.udiv %1, %arg1  : vector<2xi8>
-    %3 = "llvm.intr.ctlz"(%2) <{is_zero_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_cttz_pow2   : cttz_pow2_before  ⊑  cttz_pow2_combined := by
-  unfold cttz_pow2_before cttz_pow2_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%2) <{is_zero_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %3 : vector<2xi8>
   }]
 
@@ -2448,12 +2368,7 @@ def ctlz_pow2_or_zero_combined := [llvmfunc|
     %1 = llvm.mlir.constant(31 : i32) : i32
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.and %2, %arg0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_pow2_or_zero   : ctlz_pow2_or_zero_before  ⊑  ctlz_pow2_or_zero_combined := by
-  unfold ctlz_pow2_or_zero_before ctlz_pow2_or_zero_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.xor %4, %1  : i32
     llvm.return %5 : i32
   }]
@@ -2468,12 +2383,7 @@ def ctlz_pow2_wrong_const_combined := [llvmfunc|
     %1 = llvm.mlir.constant(30 : i32) : i32
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.and %2, %arg0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_pow2_wrong_const   : ctlz_pow2_wrong_const_before  ⊑  ctlz_pow2_wrong_const_combined := by
-  unfold ctlz_pow2_wrong_const_before ctlz_pow2_wrong_const_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i32) -> i32
     %5 = llvm.xor %4, %1  : i32
     llvm.return %5 : i32
   }]

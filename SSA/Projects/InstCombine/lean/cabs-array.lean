@@ -82,30 +82,10 @@ def fast_cabs_combined := [llvmfunc|
   llvm.func @fast_cabs(%arg0: !llvm.array<2 x f64>) -> f64 {
     %0 = llvm.extractvalue %arg0[0] : !llvm.array<2 x f64> 
     %1 = llvm.extractvalue %arg0[1] : !llvm.array<2 x f64> 
-    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_fast_cabs   : fast_cabs_before  ⊑  fast_cabs_combined := by
-  unfold fast_cabs_before fast_cabs_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_fast_cabs   : fast_cabs_before  ⊑  fast_cabs_combined := by
-  unfold fast_cabs_before fast_cabs_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_fast_cabs   : fast_cabs_before  ⊑  fast_cabs_combined := by
-  unfold fast_cabs_before fast_cabs_combined
-  simp_alive_peephole
-  sorry
-    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_fast_cabs   : fast_cabs_before  ⊑  fast_cabs_combined := by
-  unfold fast_cabs_before fast_cabs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f64
+    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64
+    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f64
+    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
     llvm.return %5 : f64
   }]
 
@@ -117,30 +97,10 @@ def fast_cabsf_combined := [llvmfunc|
   llvm.func @fast_cabsf(%arg0: !llvm.array<2 x f32>) -> f32 {
     %0 = llvm.extractvalue %arg0[0] : !llvm.array<2 x f32> 
     %1 = llvm.extractvalue %arg0[1] : !llvm.array<2 x f32> 
-    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fast_cabsf   : fast_cabsf_before  ⊑  fast_cabsf_combined := by
-  unfold fast_cabsf_before fast_cabsf_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fast_cabsf   : fast_cabsf_before  ⊑  fast_cabsf_combined := by
-  unfold fast_cabsf_before fast_cabsf_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fast_cabsf   : fast_cabsf_before  ⊑  fast_cabsf_combined := by
-  unfold fast_cabsf_before fast_cabsf_combined
-  simp_alive_peephole
-  sorry
-    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_fast_cabsf   : fast_cabsf_before  ⊑  fast_cabsf_combined := by
-  unfold fast_cabsf_before fast_cabsf_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %5 : f32
   }]
 
@@ -152,30 +112,10 @@ def fast_cabsl_combined := [llvmfunc|
   llvm.func @fast_cabsl(%arg0: !llvm.array<2 x f128>) -> f128 {
     %0 = llvm.extractvalue %arg0[0] : !llvm.array<2 x f128> 
     %1 = llvm.extractvalue %arg0[1] : !llvm.array<2 x f128> 
-    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f128]
-
-theorem inst_combine_fast_cabsl   : fast_cabsl_before  ⊑  fast_cabsl_combined := by
-  unfold fast_cabsl_before fast_cabsl_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f128]
-
-theorem inst_combine_fast_cabsl   : fast_cabsl_before  ⊑  fast_cabsl_combined := by
-  unfold fast_cabsl_before fast_cabsl_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f128]
-
-theorem inst_combine_fast_cabsl   : fast_cabsl_before  ⊑  fast_cabsl_combined := by
-  unfold fast_cabsl_before fast_cabsl_combined
-  simp_alive_peephole
-  sorry
-    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f128) -> f128]
-
-theorem inst_combine_fast_cabsl   : fast_cabsl_before  ⊑  fast_cabsl_combined := by
-  unfold fast_cabsl_before fast_cabsl_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f128
+    %3 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<fast>} : f128
+    %4 = llvm.fadd %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : f128
+    %5 = llvm.intr.sqrt(%4)  {fastmathFlags = #llvm.fastmath<fast>} : (f128) -> f128
     llvm.return %5 : f128
   }]
 

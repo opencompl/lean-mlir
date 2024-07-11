@@ -760,18 +760,8 @@ theorem inst_combine_test_simplify6v   : test_simplify6v_before  ⊑  test_simpl
   sorry
 def powf_libcall_half_ninf_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf(%arg0: f32) -> f32 {
-    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf   : powf_libcall_half_ninf_before  ⊑  powf_libcall_half_ninf_combined := by
-  unfold powf_libcall_half_ninf_before powf_libcall_half_ninf_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf   : powf_libcall_half_ninf_before  ⊑  powf_libcall_half_ninf_combined := by
-  unfold powf_libcall_half_ninf_before powf_libcall_half_ninf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -781,18 +771,8 @@ theorem inst_combine_powf_libcall_half_ninf   : powf_libcall_half_ninf_before  �
   sorry
 def powf_libcall_half_ninf_noerrno_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf_noerrno(%arg0: f32) -> f32 {
-    %0 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_noerrno   : powf_libcall_half_ninf_noerrno_before  ⊑  powf_libcall_half_ninf_noerrno_combined := by
-  unfold powf_libcall_half_ninf_noerrno_before powf_libcall_half_ninf_noerrno_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_noerrno   : powf_libcall_half_ninf_noerrno_before  ⊑  powf_libcall_half_ninf_noerrno_combined := by
-  unfold powf_libcall_half_ninf_noerrno_before powf_libcall_half_ninf_noerrno_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -817,18 +797,8 @@ theorem inst_combine_powf_libcall_half_assume_ninf_noerrno   : powf_libcall_half
   sorry
 def powf_libcall_half_ninf_tail_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf_tail(%arg0: f32) -> f32 {
-    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_tail   : powf_libcall_half_ninf_tail_before  ⊑  powf_libcall_half_ninf_tail_combined := by
-  unfold powf_libcall_half_ninf_tail_before powf_libcall_half_ninf_tail_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_tail   : powf_libcall_half_ninf_tail_before  ⊑  powf_libcall_half_ninf_tail_combined := by
-  unfold powf_libcall_half_ninf_tail_before powf_libcall_half_ninf_tail_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -838,18 +808,8 @@ theorem inst_combine_powf_libcall_half_ninf_tail   : powf_libcall_half_ninf_tail
   sorry
 def powf_libcall_half_ninf_tail_noerrno_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf_tail_noerrno(%arg0: f32) -> f32 {
-    %0 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_tail_noerrno   : powf_libcall_half_ninf_tail_noerrno_before  ⊑  powf_libcall_half_ninf_tail_noerrno_combined := by
-  unfold powf_libcall_half_ninf_tail_noerrno_before powf_libcall_half_ninf_tail_noerrno_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_tail_noerrno   : powf_libcall_half_ninf_tail_noerrno_before  ⊑  powf_libcall_half_ninf_tail_noerrno_combined := by
-  unfold powf_libcall_half_ninf_tail_noerrno_before powf_libcall_half_ninf_tail_noerrno_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -860,12 +820,7 @@ theorem inst_combine_powf_libcall_half_ninf_tail_noerrno   : powf_libcall_half_n
 def powf_libcall_half_ninf_musttail_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf_musttail(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(5.000000e-01 : f32) : f32
-    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_musttail   : powf_libcall_half_ninf_musttail_before  ⊑  powf_libcall_half_ninf_musttail_combined := by
-  unfold powf_libcall_half_ninf_musttail_before powf_libcall_half_ninf_musttail_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -876,12 +831,7 @@ theorem inst_combine_powf_libcall_half_ninf_musttail   : powf_libcall_half_ninf_
 def powf_libcall_half_ninf_musttail_noerrno_combined := [llvmfunc|
   llvm.func @powf_libcall_half_ninf_musttail_noerrno(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(5.000000e-01 : f32) : f32
-    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_powf_libcall_half_ninf_musttail_noerrno   : powf_libcall_half_ninf_musttail_noerrno_before  ⊑  powf_libcall_half_ninf_musttail_noerrno_combined := by
-  unfold powf_libcall_half_ninf_musttail_noerrno_before powf_libcall_half_ninf_musttail_noerrno_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -1051,12 +1001,7 @@ theorem inst_combine_pow2_double_strictv   : pow2_double_strictv_before  ⊑  po
   sorry
 def pow2_fast_combined := [llvmfunc|
   llvm.func @pow2_fast(%arg0: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_pow2_fast   : pow2_fast_before  ⊑  pow2_fast_combined := by
-  unfold pow2_fast_before pow2_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1066,12 +1011,7 @@ theorem inst_combine_pow2_fast   : pow2_fast_before  ⊑  pow2_fast_combined := 
   sorry
 def pow2_fast_noerrno_combined := [llvmfunc|
   llvm.func @pow2_fast_noerrno(%arg0: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_pow2_fast_noerrno   : pow2_fast_noerrno_before  ⊑  pow2_fast_noerrno_combined := by
-  unfold pow2_fast_noerrno_before pow2_fast_noerrno_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1115,12 +1055,7 @@ theorem inst_combine_pow_neg1_strictv   : pow_neg1_strictv_before  ⊑  pow_neg1
 def pow_neg1_double_fast_combined := [llvmfunc|
   llvm.func @pow_neg1_double_fast(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_pow_neg1_double_fast   : pow_neg1_double_fast_before  ⊑  pow_neg1_double_fast_combined := by
-  unfold pow_neg1_double_fast_before pow_neg1_double_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %1 : f64
   }]
 
@@ -1131,12 +1066,7 @@ theorem inst_combine_pow_neg1_double_fast   : pow_neg1_double_fast_before  ⊑  
 def pow_neg1_double_fast_noerrno_combined := [llvmfunc|
   llvm.func @pow_neg1_double_fast_noerrno(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_pow_neg1_double_fast_noerrno   : pow_neg1_double_fast_noerrno_before  ⊑  pow_neg1_double_fast_noerrno_combined := by
-  unfold pow_neg1_double_fast_noerrno_before pow_neg1_double_fast_noerrno_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %1 : f64
   }]
 
@@ -1147,12 +1077,7 @@ theorem inst_combine_pow_neg1_double_fast_noerrno   : pow_neg1_double_fast_noerr
 def pow_neg1_double_fastv_combined := [llvmfunc|
   llvm.func @pow_neg1_double_fastv(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(dense<1.000000e+00> : vector<2xf64>) : vector<2xf64>
-    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>]
-
-theorem inst_combine_pow_neg1_double_fastv   : pow_neg1_double_fastv_before  ⊑  pow_neg1_double_fastv_combined := by
-  unfold pow_neg1_double_fastv_before pow_neg1_double_fastv_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 

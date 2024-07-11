@@ -322,12 +322,7 @@ def extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_before := [llvmfunc|
 def extract_load_combined := [llvmfunc|
   llvm.func @extract_load(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(1 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<4xi32>]
-
-theorem inst_combine_extract_load   : extract_load_before  ⊑  extract_load_combined := by
-  unfold extract_load_before extract_load_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<4xi32>
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xi32>
     llvm.return %2 : i32
   }]
@@ -339,12 +334,7 @@ theorem inst_combine_extract_load   : extract_load_before  ⊑  extract_load_com
 def extract_load_fp_combined := [llvmfunc|
   llvm.func @extract_load_fp(%arg0: !llvm.ptr) -> f64 {
     %0 = llvm.mlir.constant(3 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>]
-
-theorem inst_combine_extract_load_fp   : extract_load_fp_before  ⊑  extract_load_fp_combined := by
-  unfold extract_load_fp_before extract_load_fp_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xf64>
     llvm.return %2 : f64
   }]
@@ -356,12 +346,7 @@ theorem inst_combine_extract_load_fp   : extract_load_fp_before  ⊑  extract_lo
 def extract_load_volatile_combined := [llvmfunc|
   llvm.func @extract_load_volatile(%arg0: !llvm.ptr) -> f64 {
     %0 = llvm.mlir.constant(2 : i64) : i64
-    %1 = llvm.load volatile %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>]
-
-theorem inst_combine_extract_load_volatile   : extract_load_volatile_before  ⊑  extract_load_volatile_combined := by
-  unfold extract_load_volatile_before extract_load_volatile_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load volatile %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xf64>
     llvm.return %2 : f64
   }]
@@ -373,19 +358,9 @@ theorem inst_combine_extract_load_volatile   : extract_load_volatile_before  ⊑
 def extract_load_extra_use_combined := [llvmfunc|
   llvm.func @extract_load_extra_use(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> f64 {
     %0 = llvm.mlir.constant(0 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> vector<4xf64>]
-
-theorem inst_combine_extract_load_extra_use   : extract_load_extra_use_before  ⊑  extract_load_extra_use_combined := by
-  unfold extract_load_extra_use_before extract_load_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> vector<4xf64>
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xf64>
-    llvm.store %1, %arg1 {alignment = 32 : i64} : vector<4xf64>, !llvm.ptr]
-
-theorem inst_combine_extract_load_extra_use   : extract_load_extra_use_before  ⊑  extract_load_extra_use_combined := by
-  unfold extract_load_extra_use_before extract_load_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 32 : i64} : vector<4xf64>, !llvm.ptr
     llvm.return %2 : f64
   }]
 
@@ -395,12 +370,7 @@ theorem inst_combine_extract_load_extra_use   : extract_load_extra_use_before  �
   sorry
 def extract_load_variable_index_combined := [llvmfunc|
   llvm.func @extract_load_variable_index(%arg0: !llvm.ptr, %arg1: i32) -> f64 {
-    %0 = llvm.load %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>]
-
-theorem inst_combine_extract_load_variable_index   : extract_load_variable_index_before  ⊑  extract_load_variable_index_combined := by
-  unfold extract_load_variable_index_before extract_load_variable_index_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 32 : i64} : !llvm.ptr -> vector<4xf64>
     %1 = llvm.extractelement %0[%arg1 : i32] : vector<4xf64>
     llvm.return %1 : f64
   }]
@@ -414,29 +384,14 @@ def scalarize_phi_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(2.330000e+00 : f32) : f32
     %2 = llvm.mlir.constant(1 : i32) : i32
-    %3 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_scalarize_phi   : scalarize_phi_before  ⊑  scalarize_phi_combined := by
-  unfold scalarize_phi_before scalarize_phi_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> f32
     llvm.br ^bb1(%3, %0 : f32, i32)
   ^bb1(%4: f32, %5: i32):  // 2 preds: ^bb0, ^bb2
-    %6 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_scalarize_phi   : scalarize_phi_before  ⊑  scalarize_phi_combined := by
-  unfold scalarize_phi_before scalarize_phi_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %7 = llvm.icmp "eq" %5, %6 : i32
     llvm.cond_br %7, ^bb3, ^bb2
   ^bb2:  // pred: ^bb1
-    llvm.store volatile %4, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_scalarize_phi   : scalarize_phi_before  ⊑  scalarize_phi_combined := by
-  unfold scalarize_phi_before scalarize_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr
     %8 = llvm.fmul %4, %1  : f32
     %9 = llvm.add %5, %2 overflow<nsw, nuw>  : i32
     llvm.br ^bb1(%8, %9 : f32, i32)
@@ -573,12 +528,7 @@ theorem inst_combine_extract_element_binop_nonsplat_variable_index   : extract_e
 def extract_element_load_combined := [llvmfunc|
   llvm.func @extract_element_load(%arg0: vector<4xf32>, %arg1: !llvm.ptr) -> f32 {
     %0 = llvm.mlir.constant(2 : i64) : i64
-    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>]
-
-theorem inst_combine_extract_element_load   : extract_element_load_before  ⊑  extract_element_load_combined := by
-  unfold extract_element_load_before extract_element_load_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xf32>
     %3 = llvm.extractelement %arg0[%0 : i64] : vector<4xf32>
     %4 = llvm.fadd %2, %3  : f32
@@ -592,18 +542,8 @@ theorem inst_combine_extract_element_load   : extract_element_load_before  ⊑  
 def extract_element_multi_Use_load_combined := [llvmfunc|
   llvm.func @extract_element_multi_Use_load(%arg0: vector<4xf32>, %arg1: !llvm.ptr, %arg2: !llvm.ptr) -> f32 {
     %0 = llvm.mlir.constant(2 : i64) : i64
-    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>]
-
-theorem inst_combine_extract_element_multi_Use_load   : extract_element_multi_Use_load_before  ⊑  extract_element_multi_Use_load_combined := by
-  unfold extract_element_multi_Use_load_before extract_element_multi_Use_load_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_extract_element_multi_Use_load   : extract_element_multi_Use_load_before  ⊑  extract_element_multi_Use_load_combined := by
-  unfold extract_element_multi_Use_load_before extract_element_multi_Use_load_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>
+    llvm.store %1, %arg2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr
     %2 = llvm.fadd %1, %arg0  : vector<4xf32>
     %3 = llvm.extractelement %2[%0 : i64] : vector<4xf32>
     llvm.return %3 : f32
@@ -629,12 +569,7 @@ def extelt_binop_insertelt_combined := [llvmfunc|
   llvm.func @extelt_binop_insertelt(%arg0: vector<4xf32>, %arg1: vector<4xf32>, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.extractelement %arg1[%0 : i64] : vector<4xf32>
-    %2 = llvm.fmul %1, %arg2  {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_extelt_binop_insertelt   : extelt_binop_insertelt_before  ⊑  extelt_binop_insertelt_combined := by
-  unfold extelt_binop_insertelt_before extelt_binop_insertelt_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %1, %arg2  {fastmathFlags = #llvm.fastmath<nnan>} : f32
     llvm.return %2 : f32
   }]
 
@@ -765,12 +700,7 @@ def extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_combined := [llvmfun
     %0 = llvm.mlir.undef : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.fadd %arg1, %arg2  : vector<2xf32>
-    llvm.store volatile %2, %0 {alignment = 8 : i64} : vector<2xf32>, !llvm.ptr]
-
-theorem inst_combine_extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use   : extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_before  ⊑  extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_combined := by
-  unfold extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_before extractelt_vector_fcmp_not_cheap_to_scalarize_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %2, %0 {alignment = 8 : i64} : vector<2xf32>, !llvm.ptr
     %3 = llvm.fcmp "oeq" %2, %arg0 : vector<2xf32>
     %4 = llvm.extractelement %3[%1 : i64] : vector<2xi1>
     llvm.return %4 : i1

@@ -183,12 +183,7 @@ def test3_combined := [llvmfunc|
   ^bb1:  // 2 preds: ^bb0, ^bb0
     %1 = llvm.sext %arg1 : i32 to i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32
     %4 = llvm.add %3, %arg1 overflow<nsw>  : i32
     llvm.br ^bb2(%4 : i32)
   ^bb2(%5: i32):  // 2 preds: ^bb0, ^bb1
@@ -220,12 +215,7 @@ def test5_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.sext %arg1 : i32 to i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.cond_br %arg2, ^bb1, ^bb2(%3 : i32)
   ^bb1:  // pred: ^bb0
     %4 = llvm.shl %arg1, %0 overflow<nsw>  : i32
@@ -246,12 +236,7 @@ def test6_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     %2 = llvm.sext %arg1 : i32 to i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.switch %arg1 : i32, ^bb2 [
       5: ^bb3(%4 : i32),
       2: ^bb3(%4 : i32)

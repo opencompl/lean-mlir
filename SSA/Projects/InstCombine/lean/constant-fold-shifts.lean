@@ -49,12 +49,7 @@ def ossfuzz_14169_test1_combined := [llvmfunc|
   llvm.func @ossfuzz_14169_test1(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.poison : !llvm.ptr
     %1 = llvm.mlir.undef : !llvm.ptr
-    llvm.store %0, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_ossfuzz_14169_test1   : ossfuzz_14169_test1_before  ⊑  ossfuzz_14169_test1_combined := by
-  unfold ossfuzz_14169_test1_before ossfuzz_14169_test1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -66,12 +61,7 @@ def ossfuzz_14169_test2_combined := [llvmfunc|
   llvm.func @ossfuzz_14169_test2(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.poison : !llvm.ptr
     %1 = llvm.mlir.undef : !llvm.ptr
-    llvm.store %0, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_ossfuzz_14169_test2   : ossfuzz_14169_test2_before  ⊑  ossfuzz_14169_test2_combined := by
-  unfold ossfuzz_14169_test2_before ossfuzz_14169_test2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

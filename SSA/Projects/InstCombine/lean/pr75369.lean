@@ -44,12 +44,7 @@ def main_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.trunc %arg2 : i32 to i8
     %2 = llvm.or %1, %arg1  : i8
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     %3 = llvm.icmp "slt" %arg3, %0 : i8
     "llvm.intr.assume"(%3) : (i1) -> ()
     llvm.return %arg2 : i32

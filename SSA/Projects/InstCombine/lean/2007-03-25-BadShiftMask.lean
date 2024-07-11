@@ -44,25 +44,10 @@ def main_combined := [llvmfunc|
     %2 = llvm.mlir.constant(0 : i64) : i64
     %3 = llvm.mlir.constant(2146435072 : i32) : i32
     %4 = llvm.mlir.constant(0 : i32) : i32
-    %5 = llvm.alloca %0 x !llvm.struct<"struct..1anon", (f64)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %5 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.alloca %0 x !llvm.struct<"struct..1anon", (f64)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %5 {alignment = 8 : i64} : f64, !llvm.ptr
     %6 = llvm.getelementptr inbounds %5[%2, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct..0anon", (i32, i32)>
-    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32
     %8 = llvm.and %7, %3  : i32
     %9 = llvm.icmp "eq" %8, %3 : i32
     llvm.cond_br %9, ^bb2, ^bb1

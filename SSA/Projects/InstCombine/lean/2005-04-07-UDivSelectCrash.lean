@@ -18,3 +18,16 @@ def test_before := [llvmfunc|
     llvm.return %3 : i32
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: i1, %arg1: i32) -> i32 {
+    %0 = llvm.mlir.constant(3 : i32) : i32
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.select %arg0, %0, %1 : i1, i32
+    %3 = llvm.lshr %arg1, %2  : i32
+    llvm.return %3 : i32
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

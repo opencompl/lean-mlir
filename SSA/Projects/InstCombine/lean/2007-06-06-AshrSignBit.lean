@@ -40,27 +40,12 @@ def av_cmp_q_cond_true_combined := [llvmfunc|
   ^bb1:  // pred: ^bb2
     llvm.return
   ^bb2:  // pred: ^bb0
-    %2 = llvm.load %arg2 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_av_cmp_q_cond_true   : av_cmp_q_cond_true_before  ⊑  av_cmp_q_cond_true_combined := by
-  unfold av_cmp_q_cond_true_before av_cmp_q_cond_true_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg2 {alignment = 4 : i64} : !llvm.ptr -> i64
     %3 = llvm.ashr %2, %0  : i64
     %4 = llvm.trunc %3 : i64 to i32
     %5 = llvm.or %4, %1  : i32
-    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_av_cmp_q_cond_true   : av_cmp_q_cond_true_before  ⊑  av_cmp_q_cond_true_combined := by
-  unfold av_cmp_q_cond_true_before av_cmp_q_cond_true_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_av_cmp_q_cond_true   : av_cmp_q_cond_true_before  ⊑  av_cmp_q_cond_true_combined := by
-  unfold av_cmp_q_cond_true_before av_cmp_q_cond_true_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   }]
 

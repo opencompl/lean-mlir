@@ -30,12 +30,7 @@ def f_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-2 : i32) : i32
     %3 = llvm.mlir.constant(-1 : i32) : i32
     %4 = llvm.zext %arg0 : i8 to i32
-    %5 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %6 = llvm.or %5, %2  : i32
     %7 = llvm.xor %4, %3  : i32
     %8 = llvm.icmp "ugt" %6, %7 : i32

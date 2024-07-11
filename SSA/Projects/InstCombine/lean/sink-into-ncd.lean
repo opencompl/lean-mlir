@@ -56,12 +56,7 @@ def test1_combined := [llvmfunc|
   llvm.func @test1(%arg0: !llvm.ptr, %arg1: i1) -> i32 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.mlir.poison : i32
-    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.cond_br %0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     llvm.br ^bb4(%1 : i32)
@@ -86,12 +81,7 @@ def test2_combined := [llvmfunc|
     %2 = llvm.icmp "eq" %arg0, %0 : !llvm.ptr
     llvm.cond_br %2, ^bb5(%1 : i32), ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.cond_br %arg1, ^bb2, ^bb3
   ^bb2:  // pred: ^bb1
     %4 = llvm.call @use(%0) : (!llvm.ptr) -> i32

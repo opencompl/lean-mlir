@@ -341,18 +341,8 @@ theorem inst_combine_fadd   : fadd_before  ⊑  fadd_combined := by
   sorry
 def fsub_combined := [llvmfunc|
   llvm.func @fsub(%arg0: vector<2xf32>, %arg1: vector<2xf32>, %arg2: vector<2xf32>, %arg3: vector<2xf32>) -> vector<4xf32> {
-    %0 = llvm.fsub %arg0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub   : fsub_before  ⊑  fsub_combined := by
-  unfold fsub_before fsub_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fsub %arg1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub   : fsub_before  ⊑  fsub_combined := by
-  unfold fsub_before fsub_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
+    %1 = llvm.fsub %arg1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
     %2 = llvm.shufflevector %0, %1 [0, 1, -1, 3] : vector<2xf32> 
     llvm.return %2 : vector<4xf32>
   }]
@@ -366,12 +356,7 @@ def fmul_combined := [llvmfunc|
     %0 = llvm.shufflevector %arg0, %arg1 [-1, 1, -1, 3] : vector<2xf32> 
     %1 = llvm.shufflevector %arg2, %arg3 [-1, 1, -1, 3] : vector<2xf32> 
     llvm.call @use2(%1) : (vector<4xf32>) -> ()
-    %2 = llvm.fmul %0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : vector<4xf32>]
-
-theorem inst_combine_fmul   : fmul_before  ⊑  fmul_combined := by
-  unfold fmul_before fmul_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : vector<4xf32>
     llvm.return %2 : vector<4xf32>
   }]
 
@@ -381,18 +366,8 @@ theorem inst_combine_fmul   : fmul_before  ⊑  fmul_combined := by
   sorry
 def fdiv_combined := [llvmfunc|
   llvm.func @fdiv(%arg0: vector<2xf32>, %arg1: vector<2xf32>, %arg2: vector<2xf32>, %arg3: vector<2xf32>) -> vector<4xf32> {
-    %0 = llvm.fdiv %arg0, %arg2  {fastmathFlags = #llvm.fastmath<ninf, arcp>} : vector<2xf32>]
-
-theorem inst_combine_fdiv   : fdiv_before  ⊑  fdiv_combined := by
-  unfold fdiv_before fdiv_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fdiv %arg1, %arg3  {fastmathFlags = #llvm.fastmath<ninf, arcp>} : vector<2xf32>]
-
-theorem inst_combine_fdiv   : fdiv_before  ⊑  fdiv_combined := by
-  unfold fdiv_before fdiv_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fdiv %arg0, %arg2  {fastmathFlags = #llvm.fastmath<ninf, arcp>} : vector<2xf32>
+    %1 = llvm.fdiv %arg1, %arg3  {fastmathFlags = #llvm.fastmath<ninf, arcp>} : vector<2xf32>
     %2 = llvm.shufflevector %0, %1 [0, 1, 2, 3] : vector<2xf32> 
     llvm.return %2 : vector<4xf32>
   }]

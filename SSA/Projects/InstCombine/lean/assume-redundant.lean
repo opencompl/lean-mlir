@@ -85,49 +85,24 @@ def _Z3fooR1s_combined := [llvmfunc|
     %4 = llvm.mlir.constant(1 : i64) : i64
     %5 = llvm.mlir.constant(2 : i64) : i64
     %6 = llvm.mlir.constant(1599 : i64) : i64
-    %7 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooR1s   : _Z3fooR1s_before  ⊑  _Z3fooR1s_combined := by
-  unfold _Z3fooR1s_before _Z3fooR1s_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %8 = llvm.ptrtoint %7 : !llvm.ptr to i64
     %9 = llvm.and %8, %0  : i64
     %10 = llvm.icmp "eq" %9, %1 : i64
     llvm.br ^bb1(%1 : i64)
   ^bb1(%11: i64):  // 2 preds: ^bb0, ^bb1
     %12 = llvm.getelementptr inbounds %7[%11] : (!llvm.ptr, i64) -> !llvm.ptr, f64
-    %13 = llvm.load %12 {alignment = 16 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine__Z3fooR1s   : _Z3fooR1s_before  ⊑  _Z3fooR1s_combined := by
-  unfold _Z3fooR1s_before _Z3fooR1s_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.load %12 {alignment = 16 : i64} : !llvm.ptr -> f64
     %14 = llvm.fadd %13, %2  : f64
     %15 = llvm.fmul %14, %3  : f64
-    llvm.store %15, %12 {alignment = 16 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine__Z3fooR1s   : _Z3fooR1s_before  ⊑  _Z3fooR1s_combined := by
-  unfold _Z3fooR1s_before _Z3fooR1s_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %12 {alignment = 16 : i64} : f64, !llvm.ptr
     %16 = llvm.or %11, %4  : i64
     %17 = llvm.getelementptr inbounds %7[%16] : (!llvm.ptr, i64) -> !llvm.ptr, f64
-    %18 = llvm.load %17 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine__Z3fooR1s   : _Z3fooR1s_before  ⊑  _Z3fooR1s_combined := by
-  unfold _Z3fooR1s_before _Z3fooR1s_combined
-  simp_alive_peephole
-  sorry
+    %18 = llvm.load %17 {alignment = 8 : i64} : !llvm.ptr -> f64
     %19 = llvm.fadd %18, %2  : f64
     "llvm.intr.assume"(%10) : (i1) -> ()
     %20 = llvm.fmul %19, %3  : f64
-    llvm.store %20, %17 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine__Z3fooR1s   : _Z3fooR1s_before  ⊑  _Z3fooR1s_combined := by
-  unfold _Z3fooR1s_before _Z3fooR1s_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %20, %17 {alignment = 8 : i64} : f64, !llvm.ptr
     %21 = llvm.add %11, %5 overflow<nsw, nuw>  : i64
     %22 = llvm.icmp "eq" %16, %6 : i64
     llvm.cond_br %22, ^bb2, ^bb1(%21 : i64)

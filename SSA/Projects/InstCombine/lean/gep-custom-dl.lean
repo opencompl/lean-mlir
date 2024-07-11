@@ -179,12 +179,7 @@ def test3_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.addressof @Global : !llvm.ptr
     %3 = llvm.getelementptr inbounds %2[%1, %0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<10 x i8>
-    llvm.store %arg0, %3 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %3 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -199,12 +194,7 @@ def test_evaluate_gep_nested_as_ptrs_combined := [llvmfunc|
     %2 = llvm.mlir.undef : !llvm.struct<"as2_ptr_struct", (ptr<2>)>
     %3 = llvm.insertvalue %1, %2[0] : !llvm.struct<"as2_ptr_struct", (ptr<2>)> 
     %4 = llvm.mlir.addressof @global_as1_as2_ptr : !llvm.ptr<1>
-    llvm.store %arg0, %4 {alignment = 8 : i64} : !llvm.ptr<2>, !llvm.ptr<1>]
-
-theorem inst_combine_test_evaluate_gep_nested_as_ptrs   : test_evaluate_gep_nested_as_ptrs_before  ⊑  test_evaluate_gep_nested_as_ptrs_combined := by
-  unfold test_evaluate_gep_nested_as_ptrs_before test_evaluate_gep_nested_as_ptrs_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %4 {alignment = 8 : i64} : !llvm.ptr<2>, !llvm.ptr<1>
     llvm.return
   }]
 
@@ -224,12 +214,7 @@ def test_evaluate_gep_as_ptrs_array_combined := [llvmfunc|
     %7 = llvm.insertvalue %2, %6[3] : !llvm.array<4 x ptr<2>> 
     %8 = llvm.mlir.addressof @arst : !llvm.ptr<1>
     %9 = llvm.getelementptr inbounds %8[%1, %0] : (!llvm.ptr<1>, i32, i32) -> !llvm.ptr<1>, !llvm.array<4 x ptr<2>>
-    llvm.store %arg0, %9 {alignment = 8 : i64} : !llvm.ptr<2>, !llvm.ptr<1>]
-
-theorem inst_combine_test_evaluate_gep_as_ptrs_array   : test_evaluate_gep_as_ptrs_array_before  ⊑  test_evaluate_gep_as_ptrs_array_combined := by
-  unfold test_evaluate_gep_as_ptrs_array_before test_evaluate_gep_as_ptrs_array_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %9 {alignment = 8 : i64} : !llvm.ptr<2>, !llvm.ptr<1>
     llvm.return
   }]
 

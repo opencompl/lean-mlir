@@ -1743,12 +1743,7 @@ def fsub_constant_op0_combined := [llvmfunc|
     %12 = llvm.mlir.constant(1 : i32) : i32
     %13 = llvm.insertelement %0, %11[%12 : i32] : vector<2xf32>
     %14 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %15 = llvm.fsub %13, %14  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub_constant_op0   : fsub_constant_op0_before  ⊑  fsub_constant_op0_combined := by
-  unfold fsub_constant_op0_before fsub_constant_op0_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.fsub %13, %14  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
     llvm.return %15 : vector<2xf32>
   }]
 
@@ -1768,12 +1763,7 @@ def fsub_constant_op0_not_undef_lane_combined := [llvmfunc|
     %7 = llvm.mlir.constant(1 : i64) : i64
     %8 = llvm.mlir.constant(dense<[4.200000e+01, -4.200000e+01]> : vector<2xf32>) : vector<2xf32>
     %9 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %10 = llvm.fsub %8, %9  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>]
-
-theorem inst_combine_fsub_constant_op0_not_undef_lane   : fsub_constant_op0_not_undef_lane_before  ⊑  fsub_constant_op0_not_undef_lane_combined := by
-  unfold fsub_constant_op0_not_undef_lane_before fsub_constant_op0_not_undef_lane_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.fsub %8, %9  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>
     llvm.return %10 : vector<2xf32>
   }]
 
@@ -1843,12 +1833,7 @@ def fmul_constant_combined := [llvmfunc|
     %12 = llvm.mlir.constant(1 : i32) : i32
     %13 = llvm.insertelement %0, %11[%12 : i32] : vector<2xf32>
     %14 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %15 = llvm.fmul %14, %13  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>]
-
-theorem inst_combine_fmul_constant   : fmul_constant_before  ⊑  fmul_constant_combined := by
-  unfold fmul_constant_before fmul_constant_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.fmul %14, %13  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>
     llvm.return %15 : vector<2xf32>
   }]
 
@@ -1893,12 +1878,7 @@ def fdiv_constant_op0_combined := [llvmfunc|
     %12 = llvm.mlir.constant(1 : i32) : i32
     %13 = llvm.insertelement %8, %11[%12 : i32] : vector<2xf32>
     %14 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %15 = llvm.fdiv %13, %14  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>]
-
-theorem inst_combine_fdiv_constant_op0   : fdiv_constant_op0_before  ⊑  fdiv_constant_op0_combined := by
-  unfold fdiv_constant_op0_before fdiv_constant_op0_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.fdiv %13, %14  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>
     llvm.return %15 : vector<2xf32>
   }]
 
@@ -1918,12 +1898,7 @@ def fdiv_constant_op0_not_undef_lane_combined := [llvmfunc|
     %7 = llvm.mlir.constant(0 : i64) : i64
     %8 = llvm.mlir.constant(dense<[4.200000e+01, -4.200000e+01]> : vector<2xf32>) : vector<2xf32>
     %9 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %10 = llvm.fdiv %8, %9  {fastmathFlags = #llvm.fastmath<ninf>} : vector<2xf32>]
-
-theorem inst_combine_fdiv_constant_op0_not_undef_lane   : fdiv_constant_op0_not_undef_lane_before  ⊑  fdiv_constant_op0_not_undef_lane_combined := by
-  unfold fdiv_constant_op0_not_undef_lane_before fdiv_constant_op0_not_undef_lane_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.fdiv %8, %9  {fastmathFlags = #llvm.fastmath<ninf>} : vector<2xf32>
     llvm.return %10 : vector<2xf32>
   }]
 
@@ -1993,12 +1968,7 @@ def frem_constant_op0_combined := [llvmfunc|
     %12 = llvm.mlir.constant(1 : i32) : i32
     %13 = llvm.insertelement %0, %11[%12 : i32] : vector<2xf32>
     %14 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %15 = llvm.frem %13, %14  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_frem_constant_op0   : frem_constant_op0_before  ⊑  frem_constant_op0_combined := by
-  unfold frem_constant_op0_before frem_constant_op0_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.frem %13, %14  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
     llvm.return %15 : vector<2xf32>
   }]
 
@@ -2043,12 +2013,7 @@ def frem_constant_op1_combined := [llvmfunc|
     %12 = llvm.mlir.constant(1 : i32) : i32
     %13 = llvm.insertelement %8, %11[%12 : i32] : vector<2xf32>
     %14 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %15 = llvm.frem %14, %13  {fastmathFlags = #llvm.fastmath<ninf>} : vector<2xf32>]
-
-theorem inst_combine_frem_constant_op1   : frem_constant_op1_before  ⊑  frem_constant_op1_combined := by
-  unfold frem_constant_op1_before frem_constant_op1_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.frem %14, %13  {fastmathFlags = #llvm.fastmath<ninf>} : vector<2xf32>
     llvm.return %15 : vector<2xf32>
   }]
 
@@ -2068,12 +2033,7 @@ def frem_constant_op1_not_undef_lane_combined := [llvmfunc|
     %7 = llvm.mlir.constant(0 : i64) : i64
     %8 = llvm.mlir.constant(dense<[4.200000e+01, -4.200000e+01]> : vector<2xf32>) : vector<2xf32>
     %9 = llvm.insertelement %arg0, %6[%7 : i64] : vector<2xf32>
-    %10 = llvm.frem %9, %8  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>]
-
-theorem inst_combine_frem_constant_op1_not_undef_lane   : frem_constant_op1_not_undef_lane_before  ⊑  frem_constant_op1_not_undef_lane_combined := by
-  unfold frem_constant_op1_not_undef_lane_before frem_constant_op1_not_undef_lane_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.frem %9, %8  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>
     llvm.return %10 : vector<2xf32>
   }]
 

@@ -96,12 +96,7 @@ def maybenullAfterAddrspacecast_before := [llvmfunc|
 def nonnullAfterBitCast_combined := [llvmfunc|
   llvm.func @nonnullAfterBitCast() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_nonnullAfterBitCast   : nonnullAfterBitCast_before  ⊑  nonnullAfterBitCast_combined := by
-  unfold nonnullAfterBitCast_before nonnullAfterBitCast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @foo(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -159,12 +154,7 @@ theorem inst_combine_nonnullAfterInt2Ptr   : nonnullAfterInt2Ptr_before  ⊑  no
 def nonnullAfterPtr2Int_combined := [llvmfunc|
   llvm.func @nonnullAfterPtr2Int() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_nonnullAfterPtr2Int   : nonnullAfterPtr2Int_before  ⊑  nonnullAfterPtr2Int_combined := by
-  unfold nonnullAfterPtr2Int_before nonnullAfterPtr2Int_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @foo(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -192,12 +182,7 @@ def maybenullAfterPtr2Int_combined := [llvmfunc|
   llvm.func @maybenullAfterPtr2Int() {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(4294967292 : i64) : i64
-    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_maybenullAfterPtr2Int   : maybenullAfterPtr2Int_before  ⊑  maybenullAfterPtr2Int_combined := by
-  unfold maybenullAfterPtr2Int_before maybenullAfterPtr2Int_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %3 = llvm.ptrtoint %2 : !llvm.ptr to i64
     %4 = llvm.and %3, %1  : i64
     %5 = llvm.inttoptr %4 : i64 to !llvm.ptr

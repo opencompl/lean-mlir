@@ -859,12 +859,7 @@ def ashr_add_nuw_combined := [llvmfunc|
     %0 = llvm.mlir.constant(5 : i32) : i32
     %1 = llvm.mlir.constant(-1 : i32) : i32
     %2 = llvm.add %arg0, %0 overflow<nuw>  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_ashr_add_nuw   : ashr_add_nuw_before  ⊑  ashr_add_nuw_combined := by
-  unfold ashr_add_nuw_before ashr_add_nuw_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -1140,12 +1135,7 @@ def shl_nuw_add_negative_splat_uses_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<-2> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.mlir.constant(dense<3> : vector<2xi8>) : vector<2xi8>
     %2 = llvm.add %arg0, %0  : vector<2xi8>
-    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_shl_nuw_add_negative_splat_uses   : shl_nuw_add_negative_splat_uses_before  ⊑  shl_nuw_add_negative_splat_uses_combined := by
-  unfold shl_nuw_add_negative_splat_uses_before shl_nuw_add_negative_splat_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %3 = llvm.shl %1, %arg0 overflow<nuw>  : vector<2xi8>
     llvm.return %3 : vector<2xi8>
   }]

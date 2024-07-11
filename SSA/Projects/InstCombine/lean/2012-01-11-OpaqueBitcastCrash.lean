@@ -16,3 +16,14 @@ def bar_before := [llvmfunc|
     llvm.return
   }]
 
+def bar_combined := [llvmfunc|
+  llvm.func @bar() {
+    %0 = llvm.mlir.addressof @G : !llvm.ptr
+    llvm.call @foo(%0) : (!llvm.ptr) -> ()
+    llvm.return
+  }]
+
+theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
+  unfold bar_before bar_combined
+  simp_alive_peephole
+  sorry

@@ -26,32 +26,12 @@ def PR37526_before := [llvmfunc|
 
 def PR37526_combined := [llvmfunc|
   llvm.func @PR37526(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
-    %0 = llvm.load %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR37526   : PR37526_before  ⊑  PR37526_combined := by
-  unfold PR37526_before PR37526_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR37526   : PR37526_before  ⊑  PR37526_combined := by
-  unfold PR37526_before PR37526_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.icmp "slt" %0, %1 : i32
     %3 = llvm.select %2, %arg1, %arg2 : i1, !llvm.ptr
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_PR37526   : PR37526_before  ⊑  PR37526_combined := by
-  unfold PR37526_before PR37526_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_PR37526   : PR37526_before  ⊑  PR37526_combined := by
-  unfold PR37526_before PR37526_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i64
+    llvm.store %4, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

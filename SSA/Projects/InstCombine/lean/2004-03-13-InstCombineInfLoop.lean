@@ -19,3 +19,13 @@ def test_before := [llvmfunc|
     llvm.return %4 : i1
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: i32, %arg1: i32) -> i1 {
+    %0 = llvm.icmp "eq" %arg1, %arg0 : i32
+    llvm.return %0 : i1
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

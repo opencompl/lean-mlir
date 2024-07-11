@@ -153,12 +153,7 @@ def ossfuzz_27416_combined := [llvmfunc|
     %4 = llvm.insertelement %arg0, %0[%1 : i64] : !llvm.vec<? x 4 x  i32>
     %5 = llvm.shufflevector %4, %0 [0, 0, 0, 0] : !llvm.vec<? x 4 x  i32> 
     %6 = llvm.insertelement %2, %5[%3 : i64] : vector<[4]xi32>
-    llvm.store %6, %arg1 {alignment = 16 : i64} : vector<[4]xi32>, !llvm.ptr]
-
-theorem inst_combine_ossfuzz_27416   : ossfuzz_27416_before  ⊑  ossfuzz_27416_combined := by
-  unfold ossfuzz_27416_before ossfuzz_27416_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg1 {alignment = 16 : i64} : vector<[4]xi32>, !llvm.ptr
     llvm.return
   }]
 

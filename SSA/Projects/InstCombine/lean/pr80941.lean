@@ -27,12 +27,7 @@ def pr80941_before := [llvmfunc|
 def pr80941_combined := [llvmfunc|
   llvm.func @pr80941(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %1 = "llvm.intr.is.fpclass"(%arg0) <{bit = 144 : i32}> : (f32) -> i1]
-
-theorem inst_combine_pr80941   : pr80941_before  ⊑  pr80941_combined := by
-  unfold pr80941_before pr80941_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.is.fpclass"(%arg0) <{bit = 144 : i32}> : (f32) -> i1
     llvm.cond_br %1, ^bb1, ^bb2(%arg0 : f32)
   ^bb1:  // pred: ^bb0
     %2 = llvm.fpext %arg0 : f32 to f64

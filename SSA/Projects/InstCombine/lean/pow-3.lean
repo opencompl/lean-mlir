@@ -73,12 +73,7 @@ def shrink_libcall_combined := [llvmfunc|
   llvm.func @shrink_libcall(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.fpext %arg0 : f32 to f64
     %1 = llvm.fpext %arg1 : f32 to f64
-    %2 = llvm.call @pow(%0, %1) {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64]
-
-theorem inst_combine_shrink_libcall   : shrink_libcall_before  ⊑  shrink_libcall_combined := by
-  unfold shrink_libcall_before shrink_libcall_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.call @pow(%0, %1) {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32
   }]
@@ -91,12 +86,7 @@ def shrink_intrinsic_combined := [llvmfunc|
   llvm.func @shrink_intrinsic(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.fpext %arg0 : f32 to f64
     %1 = llvm.fpext %arg1 : f32 to f64
-    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64]
-
-theorem inst_combine_shrink_intrinsic   : shrink_intrinsic_before  ⊑  shrink_intrinsic_combined := by
-  unfold shrink_intrinsic_before shrink_intrinsic_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32
   }]

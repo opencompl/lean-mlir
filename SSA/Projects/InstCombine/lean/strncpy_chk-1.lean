@@ -79,12 +79,7 @@ def test_simplify1_combined := [llvmfunc|
     %3 = llvm.mlir.constant("abcdefghijk\00") : !llvm.array<12 x i8>
     %4 = llvm.mlir.addressof @".str" : !llvm.ptr
     %5 = llvm.mlir.constant(12 : i32) : i32
-    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %2 : !llvm.ptr
   }]
 
@@ -100,12 +95,7 @@ def test_simplify2_combined := [llvmfunc|
     %3 = llvm.mlir.constant("abcdefghijk\00") : !llvm.array<12 x i8>
     %4 = llvm.mlir.addressof @".str" : !llvm.ptr
     %5 = llvm.mlir.constant(12 : i32) : i32
-    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify2   : test_simplify2_before  ⊑  test_simplify2_combined := by
-  unfold test_simplify2_before test_simplify2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %2 : !llvm.ptr
   }]
 

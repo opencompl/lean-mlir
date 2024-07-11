@@ -176,18 +176,8 @@ def constantexpr2_combined := [llvmfunc|
     %6 = llvm.mlir.addressof @global_constant5 : !llvm.ptr
     %7 = llvm.mlir.constant(-1 : i16) : i16
     %8 = llvm.zext %5 : i1 to i16
-    %9 = llvm.load %6 {alignment = 1 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_constantexpr2   : constantexpr2_before  ⊑  constantexpr2_combined := by
-  unfold constantexpr2_before constantexpr2_combined
-  simp_alive_peephole
-  sorry
-    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_constantexpr2   : constantexpr2_before  ⊑  constantexpr2_combined := by
-  unfold constantexpr2_before constantexpr2_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %6 {alignment = 1 : i64} : !llvm.ptr -> !llvm.ptr
+    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i16
     %11 = llvm.xor %10, %8  : i16
     %12 = llvm.xor %11, %7  : i16
     llvm.return %12 : i16

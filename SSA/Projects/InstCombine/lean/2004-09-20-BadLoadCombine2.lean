@@ -38,43 +38,13 @@ def test_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(2 : i32) : i32
     %2 = llvm.mlir.constant(3 : i32) : i32
-    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %4 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %4 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.select %arg0, %3, %4 : i1, !llvm.ptr
-    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %6 : i32
   }]
 

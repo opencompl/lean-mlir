@@ -60,24 +60,14 @@ def test_combined := [llvmfunc|
     %18 = llvm.mlir.constant(7 : i32) : i32
     %19 = llvm.insertelement %1, %17[%18 : i32] : vector<8xi32>
     %20 = llvm.mlir.constant(7 : i64) : i64
-    %21 = llvm.load %arg1 {alignment = 32 : i64} : !llvm.ptr -> vector<8xf32>]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %21 = llvm.load %arg1 {alignment = 32 : i64} : !llvm.ptr -> vector<8xf32>
     %22 = llvm.fptosi %arg0 : f32 to i32
     %23 = llvm.add %22, %0  : i32
     %24 = llvm.extractelement %21[%23 : i32] : vector<8xf32>
     %25 = llvm.fptosi %24 : f32 to i32
     %26 = llvm.insertelement %25, %19[%20 : i64] : vector<8xi32>
     %27 = llvm.sitofp %26 : vector<8xi32> to vector<8xf32>
-    llvm.store %27, %arg1 {alignment = 32 : i64} : vector<8xf32>, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %27, %arg1 {alignment = 32 : i64} : vector<8xf32>, !llvm.ptr
     llvm.return
   }]
 

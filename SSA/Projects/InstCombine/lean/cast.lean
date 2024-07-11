@@ -2590,12 +2590,7 @@ def test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := [llvm
     %0 = llvm.mlir.constant(12 : i64) : i64
     %1 = llvm.mul %arg1, %0  : i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s",    : test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before  ⊑  test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := by
-  unfold test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before test68(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %3 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2610,12 +2605,7 @@ def test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _com
     %2 = llvm.addrspacecast %arg0 : !llvm.ptr to !llvm.ptr<2>
     %3 = llvm.getelementptr inbounds %2[%1] : (!llvm.ptr<2>, i64) -> !llvm.ptr<2>, i8
     %4 = llvm.addrspacecast %3 : !llvm.ptr<2> to !llvm.ptr
-    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s",    : test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before  ⊑  test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := by
-  unfold test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before test68_addrspacecast(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %5 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2630,12 +2620,7 @@ def test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _c
     %2 = llvm.addrspacecast %arg0 : !llvm.ptr to !llvm.ptr<2>
     %3 = llvm.getelementptr inbounds %2[%1] : (!llvm.ptr<2>, i64) -> !llvm.ptr<2>, i8
     %4 = llvm.addrspacecast %3 : !llvm.ptr<2> to !llvm.ptr<1>
-    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr<1> -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s",    : test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before  ⊑  test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := by
-  unfold test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before test68_addrspacecast_2(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr<1> -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %5 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2648,12 +2633,7 @@ def test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s", _combined :
     %0 = llvm.mlir.constant(12 : i32) : i32
     %1 = llvm.mul %arg1, %0  : i32
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr<1>, i32) -> !llvm.ptr<1>, i8
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<1> -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s",    : test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s", _before  ⊑  test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s", _combined := by
-  unfold test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s", _before test68_as1(%arg0: !llvm.ptr<1>, %arg1: i32) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<1> -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %3 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2666,12 +2646,7 @@ def test69_combined := [llvmfunc|
     %0 = llvm.mlir.constant(3 : i64) : i64
     %1 = llvm.shl %arg1, %0 overflow<nsw>  : i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test69   : test69_before  ⊑  test69_combined := by
-  unfold test69_before test69_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %3 : f64
   }]
 
@@ -2684,12 +2659,7 @@ def test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := [llvm
     %0 = llvm.mlir.constant(36 : i64) : i64
     %1 = llvm.mul %arg1, %0 overflow<nsw>  : i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s",    : test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before  ⊑  test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined := by
-  unfold test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _before test70(%arg0: !llvm.ptr, %arg1: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %3 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2702,12 +2672,7 @@ def test71_combined := [llvmfunc|
     %0 = llvm.mlir.constant(5 : i64) : i64
     %1 = llvm.shl %arg1, %0  : i64
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test71   : test71_before  ⊑  test71_combined := by
-  unfold test71_before test71_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %3 : f64
   }]
 
@@ -2721,12 +2686,7 @@ def test72_combined := [llvmfunc|
     %1 = llvm.shl %arg1, %0 overflow<nsw>  : i32
     %2 = llvm.sext %1 : i32 to i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test72   : test72_before  ⊑  test72_combined := by
-  unfold test72_before test72_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %4 : f64
   }]
 
@@ -2740,12 +2700,7 @@ def test73_combined := [llvmfunc|
     %1 = llvm.trunc %arg1 : i128 to i64
     %2 = llvm.shl %1, %0  : i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test73   : test73_before  ⊑  test73_combined := by
-  unfold test73_before test73_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %4 : f64
   }]
 
@@ -2756,12 +2711,7 @@ theorem inst_combine_test73   : test73_before  ⊑  test73_combined := by
 def test74_combined := [llvmfunc|
   llvm.func @test74(%arg0: !llvm.ptr, %arg1: i64) -> f64 {
     %0 = llvm.getelementptr inbounds %arg0[%arg1] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test74   : test74_before  ⊑  test74_combined := by
-  unfold test74_before test74_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %1 : f64
   }]
 
@@ -2788,12 +2738,7 @@ def test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combi
     %1 = llvm.mul %arg1, %0  : i64
     %2 = llvm.mul %1, %arg2 overflow<nsw>  : i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s",    : test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _before  ⊑  test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combined := by
-  unfold test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _before test76(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %4 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2807,12 +2752,7 @@ def test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combi
     %1 = llvm.mul %arg1, %0 overflow<nsw>  : i64
     %2 = llvm.mul %1, %arg2 overflow<nsw>  : i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s",    : test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _before  ⊑  test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combined := by
-  unfold test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _before test77(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %4 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2832,12 +2772,7 @@ def test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %ar
     %7 = llvm.mul %6, %arg1 overflow<nsw>  : i64
     %8 = llvm.mul %7, %arg2 overflow<nsw>  : i64
     %9 = llvm.getelementptr inbounds %arg0[%8] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %arg5: i128, %arg6: i128) -> !llvm.struct<"s",    : test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %arg5: i128, %arg6: i128) -> !llvm.struct<"s", _before  ⊑  test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %arg5: i128, %arg6: i128) -> !llvm.struct<"s", _combined := by
-  unfold test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %arg5: i128, %arg6: i128) -> !llvm.struct<"s", _before test78(%arg0: !llvm.ptr, %arg1: i64, %arg2: i64, %arg3: i32, %arg4: i32, %arg5: i128, %arg6: i128) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %10 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2853,12 +2788,7 @@ def test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s", _combi
     %3 = llvm.mul %2, %arg2  : i32
     %4 = llvm.sext %3 : i32 to i64
     %5 = llvm.getelementptr inbounds %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>]
-
-theorem inst_combine_test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s",    : test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s", _before  ⊑  test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s", _combined := by
-  unfold test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s", _before test79(%arg0: !llvm.ptr, %arg1: i64, %arg2: i32) -> !llvm.struct<"s", _combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"s", (i32, i32, i16)>
     llvm.return %6 : !llvm.struct<"s", (i32, i32, i16)>
   }]
 
@@ -2872,12 +2802,7 @@ def test80_combined := [llvmfunc|
     %1 = llvm.shl %arg1, %0 overflow<nsw>  : i32
     %2 = llvm.sext %1 : i32 to i64
     %3 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test80   : test80_before  ⊑  test80_combined := by
-  unfold test80_before test80_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %4 : f64
   }]
 
@@ -2893,12 +2818,7 @@ def test80_addrspacecast_combined := [llvmfunc|
     %3 = llvm.sext %1 : i32 to i64
     %4 = llvm.getelementptr %2[%3] : (!llvm.ptr<2>, i64) -> !llvm.ptr<2>, i8
     %5 = llvm.addrspacecast %4 : !llvm.ptr<2> to !llvm.ptr<1>
-    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr<1> -> f64]
-
-theorem inst_combine_test80_addrspacecast   : test80_addrspacecast_before  ⊑  test80_addrspacecast_combined := by
-  unfold test80_addrspacecast_before test80_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr<1> -> f64
     llvm.return %6 : f64
   }]
 
@@ -2914,12 +2834,7 @@ def test80_addrspacecast_2_combined := [llvmfunc|
     %3 = llvm.sext %1 : i32 to i64
     %4 = llvm.getelementptr %2[%3] : (!llvm.ptr<2>, i64) -> !llvm.ptr<2>, i8
     %5 = llvm.addrspacecast %4 : !llvm.ptr<2> to !llvm.ptr<3>
-    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr<3> -> f64]
-
-theorem inst_combine_test80_addrspacecast_2   : test80_addrspacecast_2_before  ⊑  test80_addrspacecast_2_combined := by
-  unfold test80_addrspacecast_2_before test80_addrspacecast_2_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 8 : i64} : !llvm.ptr<3> -> f64
     llvm.return %6 : f64
   }]
 
@@ -2933,12 +2848,7 @@ def test80_as1_combined := [llvmfunc|
     %1 = llvm.shl %arg1, %0 overflow<nsw>  : i16
     %2 = llvm.sext %1 : i16 to i32
     %3 = llvm.getelementptr %arg0[%2] : (!llvm.ptr<1>, i32) -> !llvm.ptr<1>, i8
-    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr<1> -> f64]
-
-theorem inst_combine_test80_as1   : test80_as1_before  ⊑  test80_as1_combined := by
-  unfold test80_as1_before test80_as1_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr<1> -> f64
     llvm.return %4 : f64
   }]
 
@@ -2950,12 +2860,7 @@ def test81_combined := [llvmfunc|
   llvm.func @test81(%arg0: !llvm.ptr, %arg1: f32) -> f64 {
     %0 = llvm.fptosi %arg1 : f32 to i64
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test81   : test81_before  ⊑  test81_combined := by
-  unfold test81_before test81_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.return %2 : f64
   }]
 

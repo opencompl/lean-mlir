@@ -247,132 +247,27 @@ def frob_combined := [llvmfunc|
     %31 = llvm.getelementptr inbounds %10[%11, %12, 0, %12] : (!llvm.ptr, i64, i64, i64) -> !llvm.ptr, !llvm.array<3 x struct<"struct.X", (array<3 x i32>, array<3 x i32>)>>
     %32 = llvm.getelementptr %10[%14, %12, 0, %12] : (!llvm.ptr, i64, i64, i64) -> !llvm.ptr, !llvm.array<3 x struct<"struct.X", (array<3 x i32>, array<3 x i32>)>>
     %33 = llvm.getelementptr %10[%11, %12, 0, %11] : (!llvm.ptr, i64, i64, i64) -> !llvm.ptr, !llvm.array<3 x struct<"struct.X", (array<3 x i32>, array<3 x i32>)>>
-    llvm.store %0, %10 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %13 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %17 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %18 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %19 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %20 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %21 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %22 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %23 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %24 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %25 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %26 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %27 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %28 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %29 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %30 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %31 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %32 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %33 {alignment = 8 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_frob   : frob_before  ⊑  frob_combined := by
-  unfold frob_before frob_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %10 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %13 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %17 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %18 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %19 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %20 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %21 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %22 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %23 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %24 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %25 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %26 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %27 {alignment = 8 : i64} : i32, !llvm.ptr
+    llvm.store %0, %28 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %29 {alignment = 8 : i64} : i32, !llvm.ptr
+    llvm.store %0, %30 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %31 {alignment = 8 : i64} : i32, !llvm.ptr
+    llvm.store %0, %32 {alignment = 8 : i64} : i32, !llvm.ptr
+    llvm.store %0, %33 {alignment = 8 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

@@ -2890,18 +2890,8 @@ def simplify_before_foldAndOfICmps_combined := [llvmfunc|
     %3 = llvm.mlir.constant(0 : i16) : i16
     %4 = llvm.mlir.constant(true) : i1
     %5 = llvm.mlir.zero : !llvm.ptr
-    %6 = llvm.alloca %0 x i16 {alignment = 2 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndOfICmps_before  ⊑  simplify_before_foldAndOfICmps_combined := by
-  unfold simplify_before_foldAndOfICmps_before simplify_before_foldAndOfICmps_combined
-  simp_alive_peephole
-  sorry
-    %7 = llvm.load %6 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndOfICmps_before  ⊑  simplify_before_foldAndOfICmps_combined := by
-  unfold simplify_before_foldAndOfICmps_before simplify_before_foldAndOfICmps_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.alloca %0 x i16 {alignment = 2 : i64} : (i32) -> !llvm.ptr
+    %7 = llvm.load %6 {alignment = 2 : i64} : !llvm.ptr -> i16
     %8 = llvm.icmp "eq" %7, %1 : i16
     %9 = llvm.zext %8 : i1 to i16
     %10 = llvm.icmp "ugt" %7, %9 : i16
@@ -2915,24 +2905,9 @@ theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndO
     %18 = llvm.or %12, %17  : i1
     %19 = llvm.sext %16 : i1 to i64
     %20 = llvm.getelementptr %5[%19] : (!llvm.ptr, i64) -> !llvm.ptr, i1
-    llvm.store %7, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndOfICmps_before  ⊑  simplify_before_foldAndOfICmps_combined := by
-  unfold simplify_before_foldAndOfICmps_before simplify_before_foldAndOfICmps_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %18, %arg0 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndOfICmps_before  ⊑  simplify_before_foldAndOfICmps_combined := by
-  unfold simplify_before_foldAndOfICmps_before simplify_before_foldAndOfICmps_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %20, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_simplify_before_foldAndOfICmps   : simplify_before_foldAndOfICmps_before  ⊑  simplify_before_foldAndOfICmps_combined := by
-  unfold simplify_before_foldAndOfICmps_before simplify_before_foldAndOfICmps_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr
+    llvm.store %18, %arg0 {alignment = 1 : i64} : i1, !llvm.ptr
+    llvm.store %20, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

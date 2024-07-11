@@ -1157,12 +1157,7 @@ def test5_extra_use_not_combined := [llvmfunc|
   llvm.func @test5_extra_use_not(%arg0: i8, %arg1: i8, %arg2: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(-1 : i8) : i8
     %1 = llvm.xor %arg0, %0  : i8
-    llvm.store %1, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test5_extra_use_not   : test5_extra_use_not_before  ⊑  test5_extra_use_not_combined := by
-  unfold test5_extra_use_not_before test5_extra_use_not_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %2 = llvm.and %arg0, %arg1  : i8
     %3 = llvm.xor %2, %0  : i8
     llvm.return %3 : i8
@@ -1176,12 +1171,7 @@ def test5_extra_use_xor_combined := [llvmfunc|
   llvm.func @test5_extra_use_xor(%arg0: i65, %arg1: i65, %arg2: !llvm.ptr) -> i65 {
     %0 = llvm.mlir.constant(-1 : i65) : i65
     %1 = llvm.xor %arg0, %arg1  : i65
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i65, !llvm.ptr]
-
-theorem inst_combine_test5_extra_use_xor   : test5_extra_use_xor_before  ⊑  test5_extra_use_xor_combined := by
-  unfold test5_extra_use_xor_before test5_extra_use_xor_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i65, !llvm.ptr
     %2 = llvm.and %arg0, %arg1  : i65
     %3 = llvm.xor %2, %0  : i65
     llvm.return %3 : i65
@@ -1195,19 +1185,9 @@ def test5_extra_use_not_xor_combined := [llvmfunc|
   llvm.func @test5_extra_use_not_xor(%arg0: i16, %arg1: i16, %arg2: !llvm.ptr, %arg3: !llvm.ptr) -> i16 {
     %0 = llvm.mlir.constant(-1 : i16) : i16
     %1 = llvm.xor %arg0, %arg1  : i16
-    llvm.store %1, %arg3 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test5_extra_use_not_xor   : test5_extra_use_not_xor_before  ⊑  test5_extra_use_not_xor_combined := by
-  unfold test5_extra_use_not_xor_before test5_extra_use_not_xor_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg3 {alignment = 2 : i64} : i16, !llvm.ptr
     %2 = llvm.xor %arg0, %0  : i16
-    llvm.store %2, %arg2 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test5_extra_use_not_xor   : test5_extra_use_not_xor_before  ⊑  test5_extra_use_not_xor_combined := by
-  unfold test5_extra_use_not_xor_before test5_extra_use_not_xor_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg2 {alignment = 2 : i64} : i16, !llvm.ptr
     %3 = llvm.or %1, %2  : i16
     llvm.return %3 : i16
   }]
@@ -1319,12 +1299,7 @@ def test10_extrause_combined := [llvmfunc|
   llvm.func @test10_extrause(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.xor %arg0, %0  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test10_extrause   : test10_extrause_before  ⊑  test10_extrause_combined := by
-  unfold test10_extrause_before test10_extrause_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %0 : i32
   }]
 
@@ -1336,12 +1311,7 @@ def test10_commuted_extrause_combined := [llvmfunc|
   llvm.func @test10_commuted_extrause(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.xor %arg0, %0  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test10_commuted_extrause   : test10_commuted_extrause_before  ⊑  test10_commuted_extrause_combined := by
-  unfold test10_commuted_extrause_before test10_commuted_extrause_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %0 : i32
   }]
 

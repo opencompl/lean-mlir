@@ -274,12 +274,7 @@ def uaddo_1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i8) : i8
     %1 = llvm.mlir.constant(0 : i8) : i8
     %2 = llvm.add %arg0, %0  : i8
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_uaddo_1   : uaddo_1_before  ⊑  uaddo_1_combined := by
-  unfold uaddo_1_before uaddo_1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %3 = llvm.icmp "eq" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -293,12 +288,7 @@ def uaddo_neg1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-1 : i8) : i8
     %1 = llvm.mlir.constant(0 : i8) : i8
     %2 = llvm.add %arg0, %0  : i8
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_uaddo_neg1   : uaddo_neg1_before  ⊑  uaddo_neg1_combined := by
-  unfold uaddo_neg1_before uaddo_neg1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     %3 = llvm.icmp "ne" %arg0, %1 : i8
     llvm.return %3 : i1
   }]

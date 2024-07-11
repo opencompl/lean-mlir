@@ -350,12 +350,7 @@ def shl_mask_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(8 : i32) : i32
     %2 = llvm.and %arg0, %0  : i32
     %3 = llvm.shl %2, %1 overflow<nsw, nuw>  : i32
-    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_shl_mask_extra_use   : shl_mask_extra_use_before  ⊑  shl_mask_extra_use_combined := by
-  unfold shl_mask_extra_use_before shl_mask_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.or %2, %3  : i32
     llvm.return %4 : i32
   }]

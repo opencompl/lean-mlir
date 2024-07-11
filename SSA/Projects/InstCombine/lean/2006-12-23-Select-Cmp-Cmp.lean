@@ -29,3 +29,24 @@ def mng_write_basi_before := [llvmfunc|
     llvm.return
   }]
 
+def mng_write_basi_combined := [llvmfunc|
+  llvm.func @mng_write_basi(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
+    %0 = llvm.mlir.constant(8 : i8) : i8
+    %1 = llvm.mlir.constant(-1 : i16) : i16
+    %2 = llvm.mlir.constant(255 : i16) : i16
+    %3 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
+    %4 = llvm.icmp "ugt" %3, %0 : i8
+    %5 = llvm.load %arg1 {alignment = 2 : i64} : !llvm.ptr -> i16
+    %6 = llvm.select %4, %1, %2 : i1, i16
+    %7 = llvm.icmp "eq" %5, %6 : i16
+    llvm.cond_br %7, ^bb1, ^bb2
+  ^bb1:  // pred: ^bb0
+    llvm.return
+  ^bb2:  // pred: ^bb0
+    llvm.return
+  }]
+
+theorem inst_combine_mng_write_basi   : mng_write_basi_before  ⊑  mng_write_basi_combined := by
+  unfold mng_write_basi_before mng_write_basi_combined
+  simp_alive_peephole
+  sorry

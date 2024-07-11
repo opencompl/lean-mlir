@@ -313,12 +313,7 @@ theorem inst_combine_load_zeromask   : load_zeromask_before  ⊑  load_zeromask_
   sorry
 def load_onemask_combined := [llvmfunc|
   llvm.func @load_onemask(%arg0: !llvm.ptr, %arg1: vector<2xf64>) -> vector<2xf64> {
-    %0 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_load_onemask   : load_onemask_before  ⊑  load_onemask_combined := by
-  unfold load_onemask_before load_onemask_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> vector<2xf64>
     llvm.return %0 : vector<2xf64>
   }]
 
@@ -328,12 +323,7 @@ theorem inst_combine_load_onemask   : load_onemask_before  ⊑  load_onemask_com
   sorry
 def load_undefmask_combined := [llvmfunc|
   llvm.func @load_undefmask(%arg0: !llvm.ptr, %arg1: vector<2xf64>) -> vector<2xf64> {
-    %0 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_load_undefmask   : load_undefmask_before  ⊑  load_undefmask_combined := by
-  unfold load_undefmask_before load_undefmask_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> vector<2xf64>
     llvm.return %0 : vector<2xf64>
   }]
 
@@ -352,12 +342,7 @@ def load_cemask_combined := [llvmfunc|
     %6 = llvm.mlir.constant(1 : i32) : i32
     %7 = llvm.insertelement %1, %5[%6 : i32] : vector<2xi1>
     %8 = llvm.mlir.constant(2 : i32) : i32
-    %9 = llvm.intr.masked.load %arg0, %7, %arg1 {alignment = 2 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_load_cemask   : load_cemask_before  ⊑  load_cemask_combined := by
-  unfold load_cemask_before load_cemask_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.intr.masked.load %arg0, %7, %arg1 {alignment = 2 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %9 : vector<2xf64>
   }]
 
@@ -374,12 +359,7 @@ def load_lane0_combined := [llvmfunc|
     %4 = llvm.mlir.constant(dense<[true, false]> : vector<2xi1>) : vector<2xi1>
     %5 = llvm.mlir.constant(2 : i32) : i32
     %6 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
-    %7 = llvm.intr.masked.load %arg0, %4, %6 {alignment = 2 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_load_lane0   : load_lane0_before  ⊑  load_lane0_combined := by
-  unfold load_lane0_before load_lane0_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.intr.masked.load %arg0, %4, %6 {alignment = 2 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %7 : vector<2xf64>
   }]
 
@@ -408,12 +388,7 @@ def load_all_combined := [llvmfunc|
     %16 = llvm.mlir.poison : vector<4xf64>
     %17 = llvm.mlir.constant(4 : i32) : i32
     %18 = llvm.getelementptr %arg0[%12] : (!llvm.ptr, vector<4xi64>) -> !llvm.vec<4 x ptr>, f64
-    %19 = llvm.intr.masked.gather %18, %15, %16 {alignment = 4 : i32} : (!llvm.vec<4 x ptr>, vector<4xi1>, vector<4xf64>) -> vector<4xf64>]
-
-theorem inst_combine_load_all   : load_all_before  ⊑  load_all_combined := by
-  unfold load_all_before load_all_combined
-  simp_alive_peephole
-  sorry
+    %19 = llvm.intr.masked.gather %18, %15, %16 {alignment = 4 : i32} : (!llvm.vec<4 x ptr>, vector<4xi1>, vector<4xf64>) -> vector<4xf64>
     %20 = llvm.extractelement %19[%1 : i64] : vector<4xf64>
     llvm.return %20 : f64
   }]
@@ -429,12 +404,7 @@ def load_generic_combined := [llvmfunc|
     %2 = llvm.mlir.constant(4 : i32) : i32
     %3 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
     %4 = llvm.shufflevector %3, %0 [0, 0] : vector<2xf64> 
-    %5 = llvm.intr.masked.load %arg0, %arg2, %4 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_load_generic   : load_generic_before  ⊑  load_generic_combined := by
-  unfold load_generic_before load_generic_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.intr.masked.load %arg0, %arg2, %4 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %5 : vector<2xf64>
   }]
 
@@ -448,12 +418,7 @@ def load_speculative_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
     %3 = llvm.shufflevector %2, %0 [0, 0] : vector<2xf64> 
-    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_load_speculative   : load_speculative_before  ⊑  load_speculative_combined := by
-  unfold load_speculative_before load_speculative_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xf64>
     %5 = llvm.select %arg2, %4, %3 : vector<2xi1>, vector<2xf64>
     llvm.return %5 : vector<2xf64>
   }]
@@ -468,12 +433,7 @@ def load_speculative_less_aligned_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
     %3 = llvm.shufflevector %2, %0 [0, 0] : vector<2xf64> 
-    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_load_speculative_less_aligned   : load_speculative_less_aligned_before  ⊑  load_speculative_less_aligned_combined := by
-  unfold load_speculative_less_aligned_before load_speculative_less_aligned_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xf64>
     %5 = llvm.select %arg2, %4, %3 : vector<2xi1>, vector<2xf64>
     llvm.return %5 : vector<2xf64>
   }]
@@ -489,12 +449,7 @@ def load_spec_neg_size_combined := [llvmfunc|
     %2 = llvm.mlir.constant(4 : i32) : i32
     %3 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
     %4 = llvm.shufflevector %3, %0 [0, 0] : vector<2xf64> 
-    %5 = llvm.intr.masked.load %arg0, %arg2, %4 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_load_spec_neg_size   : load_spec_neg_size_before  ⊑  load_spec_neg_size_combined := by
-  unfold load_spec_neg_size_before load_spec_neg_size_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.intr.masked.load %arg0, %arg2, %4 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %5 : vector<2xf64>
   }]
 
@@ -512,12 +467,7 @@ def load_spec_lan0_combined := [llvmfunc|
     %5 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
     %6 = llvm.shufflevector %5, %0 [0, 0] : vector<2xf64> 
     %7 = llvm.insertelement %2, %arg2[%3 : i64] : vector<2xi1>
-    %8 = llvm.intr.masked.load %arg0, %7, %6 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_load_spec_lan0   : load_spec_lan0_before  ⊑  load_spec_lan0_combined := by
-  unfold load_spec_lan0_before load_spec_lan0_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.intr.masked.load %arg0, %7, %6 {alignment = 4 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %8 : vector<2xf64>
   }]
 
@@ -536,12 +486,7 @@ theorem inst_combine_store_zeromask   : store_zeromask_before  ⊑  store_zeroma
   sorry
 def store_onemask_combined := [llvmfunc|
   llvm.func @store_onemask(%arg0: !llvm.ptr, %arg1: vector<2xf64>) {
-    llvm.store %arg1, %arg0 {alignment = 4 : i64} : vector<2xf64>, !llvm.ptr]
-
-theorem inst_combine_store_onemask   : store_onemask_before  ⊑  store_onemask_combined := by
-  unfold store_onemask_before store_onemask_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %arg0 {alignment = 4 : i64} : vector<2xf64>, !llvm.ptr
     llvm.return
   }]
 
@@ -558,12 +503,7 @@ def store_demandedelts_combined := [llvmfunc|
     %4 = llvm.mlir.constant(dense<[true, false]> : vector<2xi1>) : vector<2xi1>
     %5 = llvm.mlir.constant(4 : i32) : i32
     %6 = llvm.insertelement %arg1, %0[%1 : i64] : vector<2xf64>
-    llvm.intr.masked.store %6, %arg0, %4 {alignment = 4 : i32} : vector<2xf64>, vector<2xi1> into !llvm.ptr]
-
-theorem inst_combine_store_demandedelts   : store_demandedelts_before  ⊑  store_demandedelts_combined := by
-  unfold store_demandedelts_before store_demandedelts_combined
-  simp_alive_peephole
-  sorry
+    llvm.intr.masked.store %6, %arg0, %4 {alignment = 4 : i32} : vector<2xf64>, vector<2xi1> into !llvm.ptr
     llvm.return
   }]
 
@@ -574,12 +514,7 @@ theorem inst_combine_store_demandedelts   : store_demandedelts_before  ⊑  stor
 def gather_generic_combined := [llvmfunc|
   llvm.func @gather_generic(%arg0: !llvm.vec<2 x ptr>, %arg1: vector<2xi1>, %arg2: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(4 : i32) : i32
-    %1 = llvm.intr.masked.gather %arg0, %arg1, %arg2 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_gather_generic   : gather_generic_before  ⊑  gather_generic_combined := by
-  unfold gather_generic_before gather_generic_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.masked.gather %arg0, %arg1, %arg2 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -602,12 +537,7 @@ def gather_onemask_combined := [llvmfunc|
     %1 = llvm.mlir.constant(dense<true> : vector<2xi1>) : vector<2xi1>
     %2 = llvm.mlir.poison : vector<2xf64>
     %3 = llvm.mlir.constant(4 : i32) : i32
-    %4 = llvm.intr.masked.gather %arg0, %1, %2 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_gather_onemask   : gather_onemask_before  ⊑  gather_onemask_combined := by
-  unfold gather_onemask_before gather_onemask_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.masked.gather %arg0, %1, %2 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %4 : vector<2xf64>
   }]
 
@@ -637,12 +567,7 @@ def gather_lane2_combined := [llvmfunc|
     %17 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, vector<4xi64>) -> !llvm.vec<4 x ptr>, f64
     %18 = llvm.insertelement %arg1, %11[%12 : i64] : vector<4xf64>
     %19 = llvm.shufflevector %18, %11 [0, 0, -1, 0] : vector<4xf64> 
-    %20 = llvm.intr.masked.gather %17, %15, %19 {alignment = 4 : i32} : (!llvm.vec<4 x ptr>, vector<4xi1>, vector<4xf64>) -> vector<4xf64>]
-
-theorem inst_combine_gather_lane2   : gather_lane2_before  ⊑  gather_lane2_combined := by
-  unfold gather_lane2_before gather_lane2_combined
-  simp_alive_peephole
-  sorry
+    %20 = llvm.intr.masked.gather %17, %15, %19 {alignment = 4 : i32} : (!llvm.vec<4 x ptr>, vector<4xi1>, vector<4xf64>) -> vector<4xf64>
     llvm.return %20 : vector<4xf64>
   }]
 
@@ -662,12 +587,7 @@ def gather_lane0_maybe_combined := [llvmfunc|
     %7 = llvm.insertelement %arg1, %1[%2 : i64] : vector<2xf64>
     %8 = llvm.shufflevector %7, %1 [0, 0] : vector<2xf64> 
     %9 = llvm.insertelement %3, %arg2[%4 : i64] : vector<2xi1>
-    %10 = llvm.intr.masked.gather %6, %9, %8 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_gather_lane0_maybe   : gather_lane0_maybe_before  ⊑  gather_lane0_maybe_combined := by
-  unfold gather_lane0_maybe_before gather_lane0_maybe_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.intr.masked.gather %6, %9, %8 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %10 : vector<2xf64>
   }]
 
@@ -687,12 +607,7 @@ def gather_lane0_maybe_spec_combined := [llvmfunc|
     %7 = llvm.insertelement %arg1, %1[%2 : i64] : vector<2xf64>
     %8 = llvm.shufflevector %7, %1 [0, 0] : vector<2xf64> 
     %9 = llvm.insertelement %3, %arg2[%4 : i64] : vector<2xi1>
-    %10 = llvm.intr.masked.gather %6, %9, %8 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_gather_lane0_maybe_spec   : gather_lane0_maybe_spec_before  ⊑  gather_lane0_maybe_spec_combined := by
-  unfold gather_lane0_maybe_spec_before gather_lane0_maybe_spec_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.intr.masked.gather %6, %9, %8 {alignment = 4 : i32} : (!llvm.vec<2 x ptr>, vector<2xi1>, vector<2xf64>) -> vector<2xf64>
     llvm.return %10 : vector<2xf64>
   }]
 
@@ -725,12 +640,7 @@ def scatter_demandedelts_combined := [llvmfunc|
     %11 = llvm.mlir.constant(8 : i32) : i32
     %12 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, vector<2xi64>) -> !llvm.vec<2 x ptr>, f64
     %13 = llvm.insertelement %arg1, %7[%1 : i64] : vector<2xf64>
-    llvm.intr.masked.scatter %13, %12, %10 {alignment = 8 : i32} : vector<2xf64>, vector<2xi1> into !llvm.vec<2 x ptr>]
-
-theorem inst_combine_scatter_demandedelts   : scatter_demandedelts_before  ⊑  scatter_demandedelts_combined := by
-  unfold scatter_demandedelts_before scatter_demandedelts_combined
-  simp_alive_peephole
-  sorry
+    llvm.intr.masked.scatter %13, %12, %10 {alignment = 8 : i32} : vector<2xf64>, vector<2xi1> into !llvm.vec<2 x ptr>
     llvm.return
   }]
 

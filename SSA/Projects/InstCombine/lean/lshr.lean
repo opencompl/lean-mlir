@@ -1898,12 +1898,7 @@ def negative_and_odd_uses_combined := [llvmfunc|
     %0 = llvm.mlir.constant(2 : i32) : i32
     %1 = llvm.mlir.constant(31 : i32) : i32
     %2 = llvm.srem %arg0, %0  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_and_odd_uses   : negative_and_odd_uses_before  ⊑  negative_and_odd_uses_combined := by
-  unfold negative_and_odd_uses_before negative_and_odd_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.lshr %2, %1  : i32
     llvm.return %3 : i32
   }]

@@ -297,18 +297,8 @@ def min_max_bitcast_combined := [llvmfunc|
     %0 = llvm.fcmp "olt" %arg0, %arg1 : vector<4xf32>
     %1 = llvm.select %0, %arg0, %arg1 : vector<4xi1>, vector<4xf32>
     %2 = llvm.select %0, %arg1, %arg0 : vector<4xi1>, vector<4xf32>
-    llvm.store %1, %arg2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_min_max_bitcast   : min_max_bitcast_before  ⊑  min_max_bitcast_combined := by
-  unfold min_max_bitcast_before min_max_bitcast_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg3 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_min_max_bitcast   : min_max_bitcast_before  ⊑  min_max_bitcast_combined := by
-  unfold min_max_bitcast_before min_max_bitcast_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr
+    llvm.store %2, %arg3 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr
     llvm.return
   }]
 
@@ -355,12 +345,7 @@ theorem inst_combine_t7   : t7_before  ⊑  t7_combined := by
   sorry
 def abs_nabs_x01_combined := [llvmfunc|
   llvm.func @abs_nabs_x01(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_nabs_x01   : abs_nabs_x01_before  ⊑  abs_nabs_x01_combined := by
-  unfold abs_nabs_x01_before abs_nabs_x01_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -370,12 +355,7 @@ theorem inst_combine_abs_nabs_x01   : abs_nabs_x01_before  ⊑  abs_nabs_x01_com
   sorry
 def abs_nabs_x01_vec_combined := [llvmfunc|
   llvm.func @abs_nabs_x01_vec(%arg0: vector<2xi32>) -> vector<2xi32> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_abs_nabs_x01_vec   : abs_nabs_x01_vec_before  ⊑  abs_nabs_x01_vec_combined := by
-  unfold abs_nabs_x01_vec_before abs_nabs_x01_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<2xi32>) -> vector<2xi32>
     llvm.return %0 : vector<2xi32>
   }]
 
@@ -606,12 +586,7 @@ theorem inst_combine_select_ashr   : select_ashr_before  ⊑  select_ashr_combin
 def select_fmul_combined := [llvmfunc|
   llvm.func @select_fmul(%arg0: i1, %arg1: f64, %arg2: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.select %arg0, %arg2, %0 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f64]
-
-theorem inst_combine_select_fmul   : select_fmul_before  ⊑  select_fmul_combined := by
-  unfold select_fmul_before select_fmul_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg0, %arg2, %0 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f64
     %2 = llvm.fmul %1, %arg1  : f64
     llvm.return %2 : f64
   }]
@@ -623,12 +598,7 @@ theorem inst_combine_select_fmul   : select_fmul_before  ⊑  select_fmul_combin
 def select_fdiv_combined := [llvmfunc|
   llvm.func @select_fdiv(%arg0: i1, %arg1: vector<2xf32>, %arg2: vector<2xf32>) -> vector<2xf32> {
     %0 = llvm.mlir.constant(dense<1.000000e+00> : vector<2xf32>) : vector<2xf32>
-    %1 = llvm.select %arg0, %arg2, %0 {fastmathFlags = #llvm.fastmath<nnan>} : i1, vector<2xf32>]
-
-theorem inst_combine_select_fdiv   : select_fdiv_before  ⊑  select_fdiv_combined := by
-  unfold select_fdiv_before select_fdiv_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg0, %arg2, %0 {fastmathFlags = #llvm.fastmath<nnan>} : i1, vector<2xf32>
     %2 = llvm.fdiv %arg1, %1  : vector<2xf32>
     llvm.return %2 : vector<2xf32>
   }]

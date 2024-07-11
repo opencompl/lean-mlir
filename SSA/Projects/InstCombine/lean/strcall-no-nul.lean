@@ -304,19 +304,9 @@ def fold_strcmp_past_end_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(-1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strcmp_past_end   : fold_strcmp_past_end_before  ⊑  fold_strcmp_past_end_combined := by
-  unfold fold_strcmp_past_end_before fold_strcmp_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strcmp_past_end   : fold_strcmp_past_end_before  ⊑  fold_strcmp_past_end_combined := by
-  unfold fold_strcmp_past_end_before fold_strcmp_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -329,19 +319,9 @@ def fold_strncmp_past_end_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(-1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_past_end   : fold_strncmp_past_end_before  ⊑  fold_strncmp_past_end_combined := by
-  unfold fold_strncmp_past_end_before fold_strncmp_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strncmp_past_end   : fold_strncmp_past_end_before  ⊑  fold_strncmp_past_end_combined := by
-  unfold fold_strncmp_past_end_before fold_strncmp_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -365,19 +345,9 @@ def fold_strstr_past_end_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @a5 : !llvm.ptr
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    llvm.store %1, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strstr_past_end   : fold_strstr_past_end_before  ⊑  fold_strstr_past_end_combined := by
-  unfold fold_strstr_past_end_before fold_strstr_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %4 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %3, %4 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strstr_past_end   : fold_strstr_past_end_before  ⊑  fold_strstr_past_end_combined := by
-  unfold fold_strstr_past_end_before fold_strstr_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %4 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -417,12 +387,7 @@ def fold_stpncpy_past_end_combined := [llvmfunc|
   llvm.func @fold_stpncpy_past_end(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(5 : i64) : i64
-    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_fold_stpncpy_past_end   : fold_stpncpy_past_end_before  ⊑  fold_stpncpy_past_end_combined := by
-  unfold fold_stpncpy_past_end_before fold_stpncpy_past_end_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -434,12 +399,7 @@ def fold_strncpy_past_end_combined := [llvmfunc|
   llvm.func @fold_strncpy_past_end(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(5 : i64) : i64
-    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_fold_strncpy_past_end   : fold_strncpy_past_end_before  ⊑  fold_strncpy_past_end_combined := by
-  unfold fold_strncpy_past_end_before fold_strncpy_past_end_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -451,19 +411,9 @@ def fold_strpbrk_past_end_combined := [llvmfunc|
   llvm.func @fold_strpbrk_past_end(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.zero : !llvm.ptr
     %1 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strpbrk_past_end   : fold_strpbrk_past_end_before  ⊑  fold_strpbrk_past_end_combined := by
-  unfold fold_strpbrk_past_end_before fold_strpbrk_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %0, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strpbrk_past_end   : fold_strpbrk_past_end_before  ⊑  fold_strpbrk_past_end_combined := by
-  unfold fold_strpbrk_past_end_before fold_strpbrk_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -475,19 +425,9 @@ def fold_strspn_past_end_combined := [llvmfunc|
   llvm.func @fold_strspn_past_end(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strspn_past_end   : fold_strspn_past_end_before  ⊑  fold_strspn_past_end_combined := by
-  unfold fold_strspn_past_end_before fold_strspn_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %0, %2 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strspn_past_end   : fold_strspn_past_end_before  ⊑  fold_strspn_past_end_combined := by
-  unfold fold_strspn_past_end_before fold_strspn_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -500,19 +440,9 @@ def fold_strcspn_past_end_combined := [llvmfunc|
     %0 = llvm.mlir.constant(2 : i64) : i64
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(0 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strcspn_past_end   : fold_strcspn_past_end_before  ⊑  fold_strcspn_past_end_combined := by
-  unfold fold_strcspn_past_end_before fold_strcspn_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %2, %3 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strcspn_past_end   : fold_strcspn_past_end_before  ⊑  fold_strcspn_past_end_combined := by
-  unfold fold_strcspn_past_end_before fold_strcspn_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -552,52 +482,22 @@ def fold_atol_strtol_past_end_combined := [llvmfunc|
     %12 = llvm.mlir.constant(16 : i32) : i32
     %13 = llvm.mlir.constant(5 : i64) : i64
     %14 = llvm.call @atol(%4) : (!llvm.ptr) -> i64
-    llvm.store %14, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     %15 = llvm.call @atoll(%4) : (!llvm.ptr) -> i64
     %16 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr
     %17 = llvm.call @strtol(%4, %5, %6) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %18 = llvm.getelementptr %arg0[%7] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %17, %18 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %18 {alignment = 4 : i64} : i64, !llvm.ptr
     %19 = llvm.call @strtoul(%4, %5, %8) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %20 = llvm.getelementptr %arg0[%9] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %19, %20 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %19, %20 {alignment = 4 : i64} : i64, !llvm.ptr
     %21 = llvm.call @strtoll(%4, %5, %10) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %22 = llvm.getelementptr %arg0[%11] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %21, %22 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %21, %22 {alignment = 4 : i64} : i64, !llvm.ptr
     %23 = llvm.call @strtoul(%4, %5, %12) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %24 = llvm.getelementptr %arg0[%13] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %23, %24 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_atol_strtol_past_end   : fold_atol_strtol_past_end_before  ⊑  fold_atol_strtol_past_end_combined := by
-  unfold fold_atol_strtol_past_end_before fold_atol_strtol_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %23, %24 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -609,19 +509,9 @@ def fold_sprintf_past_end_combined := [llvmfunc|
   llvm.func @fold_sprintf_past_end(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_sprintf_past_end   : fold_sprintf_past_end_before  ⊑  fold_sprintf_past_end_combined := by
-  unfold fold_sprintf_past_end_before fold_sprintf_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_sprintf_past_end   : fold_sprintf_past_end_before  ⊑  fold_sprintf_past_end_combined := by
-  unfold fold_sprintf_past_end_before fold_sprintf_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -637,20 +527,10 @@ def fold_snprintf_past_end_combined := [llvmfunc|
     %3 = llvm.mlir.addressof @a5 : !llvm.ptr
     %4 = llvm.getelementptr inbounds %3[%1, %0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<5 x i8>
     %5 = llvm.call @snprintf(%arg1, %arg2, %4) vararg(!llvm.func<i32 (ptr, i64, ptr, ...)>) : (!llvm.ptr, i64, !llvm.ptr) -> i32
-    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_past_end   : fold_snprintf_past_end_before  ⊑  fold_snprintf_past_end_combined := by
-  unfold fold_snprintf_past_end_before fold_snprintf_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.call @snprintf(%arg1, %arg2, %3, %4) vararg(!llvm.func<i32 (ptr, i64, ptr, ...)>) : (!llvm.ptr, i64, !llvm.ptr, !llvm.ptr) -> i32
     %7 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_past_end   : fold_snprintf_past_end_before  ⊑  fold_snprintf_past_end_combined := by
-  unfold fold_snprintf_past_end_before fold_snprintf_past_end_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

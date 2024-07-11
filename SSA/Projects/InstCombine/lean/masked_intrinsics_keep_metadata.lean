@@ -46,12 +46,7 @@ def mstore_before := [llvmfunc|
 
 def mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> _combined := [llvmfunc|
   llvm.func @mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> (vector<4xi32> {llvm.inreg}) attributes {passthrough = ["norecurse", "nounwind"]} {
-    %0 = llvm.load %arg0 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> vector<4xi32>]
-
-theorem inst_combine_mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) ->    : mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> _before  ⊑  mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> _combined := by
-  unfold mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> _before mload1(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> _combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> vector<4xi32>
     llvm.return %0 : vector<4xi32>
   }]
 
@@ -65,12 +60,7 @@ def mload2() -> _combined := [llvmfunc|
     %1 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %2 = llvm.mlir.addressof @g0 : !llvm.ptr
     %3 = llvm.mlir.constant(0 : i64) : i64
-    %4 = llvm.load %2 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> vector<4xi32>]
-
-theorem inst_combine_mload2() ->    : mload2() -> _before  ⊑  mload2() -> _combined := by
-  unfold mload2() -> _before mload2() -> _combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %2 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> vector<4xi32>
     %5 = llvm.insertelement %0, %4[%3 : i64] : vector<4xi32>
     llvm.return %5 : vector<4xi32>
   }]
@@ -81,12 +71,7 @@ theorem inst_combine_mload2() ->    : mload2() -> _before  ⊑  mload2() -> _com
   sorry
 def mstore_combined := [llvmfunc|
   llvm.func @mstore(%arg0: vector<4xi32>, %arg1: !llvm.ptr {llvm.nocapture, llvm.readonly}) attributes {passthrough = ["norecurse", "nounwind"]} {
-    llvm.store %arg0, %arg1 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_mstore   : mstore_before  ⊑  mstore_combined := by
-  unfold mstore_before mstore_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %arg1 {alignment = 16 : i64, tbaa = [#tbaa_tag]} : vector<4xi32>, !llvm.ptr
     llvm.return
   }]
 

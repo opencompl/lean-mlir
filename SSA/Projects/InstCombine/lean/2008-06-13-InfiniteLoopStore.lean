@@ -34,21 +34,11 @@ def func_56_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.addressof @g_139 : !llvm.ptr
-    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_func_56   : func_56_before  ⊑  func_56_combined := by
-  unfold func_56_before func_56_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.icmp "eq" %arg0, %1 : i32
     llvm.cond_br %3, ^bb2, ^bb1
   ^bb1:  // 2 preds: ^bb0, ^bb1
-    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_func_56   : func_56_before  ⊑  func_56_combined := by
-  unfold func_56_before func_56_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   ^bb2:  // pred: ^bb0
     llvm.return

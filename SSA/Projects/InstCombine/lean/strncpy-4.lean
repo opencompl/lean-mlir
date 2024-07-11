@@ -115,33 +115,13 @@ def fold_strncpy_s0_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i16) : i16
     %2 = llvm.mlir.constant(9 : i64) : i64
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strncpy_s0   : fold_strncpy_s0_before  ⊑  fold_strncpy_s0_combined := by
-  unfold fold_strncpy_s0_before fold_strncpy_s0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_strncpy_s0   : fold_strncpy_s0_before  ⊑  fold_strncpy_s0_combined := by
-  unfold fold_strncpy_s0_before fold_strncpy_s0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
-    "llvm.intr.memset"(%arg0, %0, %2) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_fold_strncpy_s0   : fold_strncpy_s0_before  ⊑  fold_strncpy_s0_combined := by
-  unfold fold_strncpy_s0_before fold_strncpy_s0_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %2) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
-    "llvm.intr.memset"(%arg0, %0, %arg1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_fold_strncpy_s0   : fold_strncpy_s0_before  ⊑  fold_strncpy_s0_combined := by
-  unfold fold_strncpy_s0_before fold_strncpy_s0_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %arg1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
     llvm.return
   }]
@@ -153,18 +133,8 @@ theorem inst_combine_fold_strncpy_s0   : fold_strncpy_s0_before  ⊑  fold_strnc
 def fold_strncpy_s_combined := [llvmfunc|
   llvm.func @fold_strncpy_s(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i64) {
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strncpy_s   : fold_strncpy_s_before  ⊑  fold_strncpy_s_combined := by
-  unfold fold_strncpy_s_before fold_strncpy_s_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strncpy_s   : fold_strncpy_s_before  ⊑  fold_strncpy_s_combined := by
-  unfold fold_strncpy_s_before fold_strncpy_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %arg0) : (!llvm.ptr, !llvm.ptr) -> ()
     llvm.return
   }]

@@ -47,25 +47,10 @@ def main_combined := [llvmfunc|
     %6 = llvm.mlir.constant(-8 : i32) : i32
     llvm.intr.dbg.value #di_local_variable = %6 : i32
     llvm.intr.dbg.value #di_local_variable1 = %5 : i32
-    %7 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> i8
     %8 = llvm.add %7, %2  : i8
-    llvm.store %8, %1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %3 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %1 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %0, %3 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %4 : i32
   }]
 

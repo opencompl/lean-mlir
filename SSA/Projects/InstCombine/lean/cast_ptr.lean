@@ -383,12 +383,7 @@ theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
 def test6_combined := [llvmfunc|
   llvm.func @test6(%arg0: !llvm.ptr<1>) -> i8 {
     %0 = llvm.addrspacecast %arg0 : !llvm.ptr<1> to !llvm.ptr
-    %1 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.return %1 : i8
   }]
 
@@ -501,12 +496,7 @@ theorem inst_combine_ptr_add_in_int_2   : ptr_add_in_int_2_before  ⊑  ptr_add_
   sorry
 def ptr_add_in_int_nneg_combined := [llvmfunc|
   llvm.func @ptr_add_in_int_nneg(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ptr_add_in_int_nneg   : ptr_add_in_int_nneg_before  ⊑  ptr_add_in_int_nneg_combined := by
-  unfold ptr_add_in_int_nneg_before ptr_add_in_int_nneg_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32
     %1 = llvm.inttoptr %arg0 : i32 to !llvm.ptr
     %2 = llvm.getelementptr inbounds %1[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i8
     %3 = llvm.ptrtoint %2 : !llvm.ptr to i32
@@ -571,12 +561,7 @@ theorem inst_combine_ptr_add_in_int_different_type_4   : ptr_add_in_int_differen
   sorry
 def ptr_add_in_int_not_inbounds_combined := [llvmfunc|
   llvm.func @ptr_add_in_int_not_inbounds(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ptr_add_in_int_not_inbounds   : ptr_add_in_int_not_inbounds_before  ⊑  ptr_add_in_int_not_inbounds_combined := by
-  unfold ptr_add_in_int_not_inbounds_before ptr_add_in_int_not_inbounds_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32
     %1 = llvm.inttoptr %arg0 : i32 to !llvm.ptr
     %2 = llvm.getelementptr %1[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i8
     %3 = llvm.ptrtoint %2 : !llvm.ptr to i32

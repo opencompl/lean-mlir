@@ -405,12 +405,7 @@ theorem inst_combine_test2_intrin   : test2_intrin_before  ⊑  test2_intrin_com
   sorry
 def fmf_test2_combined := [llvmfunc|
   llvm.func @fmf_test2(%arg0: f32, %arg1: f32) -> i1 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32]
-
-theorem inst_combine_fmf_test2   : fmf_test2_before  ⊑  fmf_test2_combined := by
-  unfold fmf_test2_before fmf_test2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32
     %1 = llvm.fcmp "oeq" %0, %arg1 : f32
     llvm.return %1 : i1
   }]
@@ -707,12 +702,7 @@ theorem inst_combine_test14_intrin   : test14_intrin_before  ⊑  test14_intrin_
   sorry
 def test15_combined := [llvmfunc|
   llvm.func @test15(%arg0: f32, %arg1: f32, %arg2: f32) -> i1 {
-    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32]
-
-theorem inst_combine_test15   : test15_before  ⊑  test15_combined := by
-  unfold test15_before test15_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32
     %1 = llvm.fcmp "oeq" %0, %arg2 : f32
     llvm.return %1 : i1
   }]
@@ -723,12 +713,7 @@ theorem inst_combine_test15   : test15_before  ⊑  test15_combined := by
   sorry
 def test16_combined := [llvmfunc|
   llvm.func @test16(%arg0: f32, %arg1: f32, %arg2: f32) -> i1 {
-    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32]
-
-theorem inst_combine_test16   : test16_before  ⊑  test16_combined := by
-  unfold test16_before test16_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32
     %1 = llvm.fcmp "oeq" %0, %arg2 : f32
     llvm.return %1 : i1
   }]
@@ -739,12 +724,7 @@ theorem inst_combine_test16   : test16_before  ⊑  test16_combined := by
   sorry
 def test17_combined := [llvmfunc|
   llvm.func @test17(%arg0: f32, %arg1: f32, %arg2: f32) -> i1 {
-    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32]
-
-theorem inst_combine_test17   : test17_before  ⊑  test17_combined := by
-  unfold test17_before test17_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32
     %1 = llvm.fcmp "oeq" %0, %arg2 : f32
     llvm.return %1 : i1
   }]
@@ -755,12 +735,7 @@ theorem inst_combine_test17   : test17_before  ⊑  test17_combined := by
   sorry
 def test18_combined := [llvmfunc|
   llvm.func @test18(%arg0: f32, %arg1: f32, %arg2: f32) -> i1 {
-    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32]
-
-theorem inst_combine_test18   : test18_before  ⊑  test18_combined := by
-  unfold test18_before test18_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32
     %1 = llvm.fcmp "oeq" %0, %arg2 : f32
     llvm.return %1 : i1
   }]
@@ -783,12 +758,7 @@ theorem inst_combine_test19   : test19_before  ⊑  test19_combined := by
 def test20_combined := [llvmfunc|
   llvm.func @test20(%arg0: f32, %arg1: f32) -> i1 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.intr.minnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32]
-
-theorem inst_combine_test20   : test20_before  ⊑  test20_combined := by
-  unfold test20_before test20_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.minnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f32, f32) -> f32
     %2 = llvm.fcmp "oeq" %1, %arg1 : f32
     llvm.return %2 : i1
   }]
@@ -802,12 +772,7 @@ def test21_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.300000e+00 : f64) : f64
     %1 = llvm.fpext %arg1 : f32 to f64
     %2 = llvm.fpext %arg0 : f32 to f64
-    %3 = llvm.intr.minnum(%2, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f64, f64) -> f64]
-
-theorem inst_combine_test21   : test21_before  ⊑  test21_combined := by
-  unfold test21_before test21_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.intr.minnum(%2, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f64, f64) -> f64
     %4 = llvm.fcmp "oeq" %3, %1 : f64
     llvm.return %4 : i1
   }]

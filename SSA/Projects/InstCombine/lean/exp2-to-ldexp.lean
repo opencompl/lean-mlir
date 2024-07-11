@@ -82,12 +82,7 @@ def exp2_f32_sitofp_i8_flags_combined := [llvmfunc|
   llvm.func @exp2_f32_sitofp_i8_flags(%arg0: i8) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.sext %arg0 : i8 to i32
-    %2 = llvm.call @ldexpf(%0, %1) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, i32) -> f32]
-
-theorem inst_combine_exp2_f32_sitofp_i8_flags   : exp2_f32_sitofp_i8_flags_before  ⊑  exp2_f32_sitofp_i8_flags_combined := by
-  unfold exp2_f32_sitofp_i8_flags_before exp2_f32_sitofp_i8_flags_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.call @ldexpf(%0, %1) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, i32) -> f32
     llvm.return %2 : f32
   }]
 

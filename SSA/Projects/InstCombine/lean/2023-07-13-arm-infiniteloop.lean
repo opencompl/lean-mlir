@@ -45,12 +45,7 @@ def test_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

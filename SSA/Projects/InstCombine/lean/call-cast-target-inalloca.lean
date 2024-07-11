@@ -31,12 +31,7 @@ def f_combined := [llvmfunc|
   llvm.func @f() {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.addressof @takes_i32 : !llvm.ptr
-    %2 = llvm.alloca inalloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca inalloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call %1(%2) : !llvm.ptr, (!llvm.ptr) -> ()
     llvm.return
   }]

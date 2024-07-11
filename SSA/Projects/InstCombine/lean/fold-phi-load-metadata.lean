@@ -52,24 +52,9 @@ def phi_load_metadata_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg0, %arg4 : !llvm.ptr, !llvm.ptr)
   ^bb3(%7: !llvm.ptr, %8: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %9 = llvm.load %8 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_phi_load_metadata   : phi_load_metadata_before  ⊑  phi_load_metadata_combined := by
-  unfold phi_load_metadata_before phi_load_metadata_combined
-  simp_alive_peephole
-  sorry
-    %10 = llvm.load %7 invariant {alias_scopes = [#alias_scope, #alias_scope1, #alias_scope2], alignment = 4 : i64, noalias_scopes = [#alias_scope3], tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_phi_load_metadata   : phi_load_metadata_before  ⊑  phi_load_metadata_combined := by
-  unfold phi_load_metadata_before phi_load_metadata_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %4 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_phi_load_metadata   : phi_load_metadata_before  ⊑  phi_load_metadata_combined := by
-  unfold phi_load_metadata_before phi_load_metadata_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %8 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %10 = llvm.load %7 invariant {alias_scopes = [#alias_scope, #alias_scope1, #alias_scope2], alignment = 4 : i64, noalias_scopes = [#alias_scope3], tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
+    llvm.store %9, %4 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return %10 : i32
   }]
 

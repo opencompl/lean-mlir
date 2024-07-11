@@ -29,12 +29,7 @@ def oof_combined := [llvmfunc|
   llvm.func @oof() -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
-    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_oof   : oof_before  ⊑  oof_combined := by
-  unfold oof_before oof_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %3 = llvm.call @bitmap_clear(%2) vararg(!llvm.func<i32 (...)>) : (!llvm.ptr) -> i32
     llvm.return %1 : i32
   }]

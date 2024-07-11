@@ -66,18 +66,8 @@ def func_combined := [llvmfunc|
   llvm.func @func(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["noinline", "nounwind", "ssp", ["uwtable", "2"]]} {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr
     %3 = llvm.icmp "ugt" %2, %arg0 : !llvm.ptr
     llvm.cond_br %3, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
@@ -103,18 +93,8 @@ def func_logical_combined := [llvmfunc|
   llvm.func @func_logical(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["noinline", "nounwind", "ssp", ["uwtable", "2"]]} {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_func_logical   : func_logical_before  ⊑  func_logical_combined := by
-  unfold func_logical_before func_logical_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_func_logical   : func_logical_before  ⊑  func_logical_combined := by
-  unfold func_logical_before func_logical_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr
     %3 = llvm.icmp "ugt" %2, %arg0 : !llvm.ptr
     llvm.cond_br %3, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0

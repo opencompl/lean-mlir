@@ -449,19 +449,9 @@ def clamp_float_fast_ordered_strict_maxmin_combined := [llvmfunc|
   llvm.func @clamp_float_fast_ordered_strict_maxmin(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_ordered_strict_maxmin   : clamp_float_fast_ordered_strict_maxmin_before  ⊑  clamp_float_fast_ordered_strict_maxmin_combined := by
-  unfold clamp_float_fast_ordered_strict_maxmin_before clamp_float_fast_ordered_strict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
-    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_ordered_strict_maxmin   : clamp_float_fast_ordered_strict_maxmin_before  ⊑  clamp_float_fast_ordered_strict_maxmin_combined := by
-  unfold clamp_float_fast_ordered_strict_maxmin_before clamp_float_fast_ordered_strict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -473,19 +463,9 @@ def clamp_float_fast_ordered_nonstrict_maxmin_combined := [llvmfunc|
   llvm.func @clamp_float_fast_ordered_nonstrict_maxmin(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_ordered_nonstrict_maxmin   : clamp_float_fast_ordered_nonstrict_maxmin_before  ⊑  clamp_float_fast_ordered_nonstrict_maxmin_combined := by
-  unfold clamp_float_fast_ordered_nonstrict_maxmin_before clamp_float_fast_ordered_nonstrict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
-    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_ordered_nonstrict_maxmin   : clamp_float_fast_ordered_nonstrict_maxmin_before  ⊑  clamp_float_fast_ordered_nonstrict_maxmin_combined := by
-  unfold clamp_float_fast_ordered_nonstrict_maxmin_before clamp_float_fast_ordered_nonstrict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -497,19 +477,9 @@ def clamp_float_fast_ordered_strict_minmax_combined := [llvmfunc|
   llvm.func @clamp_float_fast_ordered_strict_minmax(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.550000e+02 : f32) : f32
-    %2 = llvm.fcmp "ogt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_ordered_strict_minmax   : clamp_float_fast_ordered_strict_minmax_before  ⊑  clamp_float_fast_ordered_strict_minmax_combined := by
-  unfold clamp_float_fast_ordered_strict_minmax_before clamp_float_fast_ordered_strict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ogt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
-    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_ordered_strict_minmax   : clamp_float_fast_ordered_strict_minmax_before  ⊑  clamp_float_fast_ordered_strict_minmax_combined := by
-  unfold clamp_float_fast_ordered_strict_minmax_before clamp_float_fast_ordered_strict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -521,19 +491,9 @@ def clamp_float_fast_ordered_nonstrict_minmax_combined := [llvmfunc|
   llvm.func @clamp_float_fast_ordered_nonstrict_minmax(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.550000e+02 : f32) : f32
-    %2 = llvm.fcmp "ogt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_ordered_nonstrict_minmax   : clamp_float_fast_ordered_nonstrict_minmax_before  ⊑  clamp_float_fast_ordered_nonstrict_minmax_combined := by
-  unfold clamp_float_fast_ordered_nonstrict_minmax_before clamp_float_fast_ordered_nonstrict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ogt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
-    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_ordered_nonstrict_minmax   : clamp_float_fast_ordered_nonstrict_minmax_before  ⊑  clamp_float_fast_ordered_nonstrict_minmax_combined := by
-  unfold clamp_float_fast_ordered_nonstrict_minmax_before clamp_float_fast_ordered_nonstrict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -545,24 +505,9 @@ def clamp_float_fast_unordered_strict_maxmin_combined := [llvmfunc|
   llvm.func @clamp_float_fast_unordered_strict_maxmin(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_maxmin   : clamp_float_fast_unordered_strict_maxmin_before  ⊑  clamp_float_fast_unordered_strict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_strict_maxmin_before clamp_float_fast_unordered_strict_maxmin_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_maxmin   : clamp_float_fast_unordered_strict_maxmin_before  ⊑  clamp_float_fast_unordered_strict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_strict_maxmin_before clamp_float_fast_unordered_strict_maxmin_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_maxmin   : clamp_float_fast_unordered_strict_maxmin_before  ⊑  clamp_float_fast_unordered_strict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_strict_maxmin_before clamp_float_fast_unordered_strict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -574,24 +519,9 @@ def clamp_float_fast_unordered_nonstrict_maxmin_combined := [llvmfunc|
   llvm.func @clamp_float_fast_unordered_nonstrict_maxmin(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_maxmin   : clamp_float_fast_unordered_nonstrict_maxmin_before  ⊑  clamp_float_fast_unordered_nonstrict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_maxmin_before clamp_float_fast_unordered_nonstrict_maxmin_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_maxmin   : clamp_float_fast_unordered_nonstrict_maxmin_before  ⊑  clamp_float_fast_unordered_nonstrict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_maxmin_before clamp_float_fast_unordered_nonstrict_maxmin_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_maxmin   : clamp_float_fast_unordered_nonstrict_maxmin_before  ⊑  clamp_float_fast_unordered_nonstrict_maxmin_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_maxmin_before clamp_float_fast_unordered_nonstrict_maxmin_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -603,24 +533,9 @@ def clamp_float_fast_unordered_strict_minmax_combined := [llvmfunc|
   llvm.func @clamp_float_fast_unordered_strict_minmax(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.550000e+02 : f32) : f32
-    %2 = llvm.fcmp "ole" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_minmax   : clamp_float_fast_unordered_strict_minmax_before  ⊑  clamp_float_fast_unordered_strict_minmax_combined := by
-  unfold clamp_float_fast_unordered_strict_minmax_before clamp_float_fast_unordered_strict_minmax_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_minmax   : clamp_float_fast_unordered_strict_minmax_before  ⊑  clamp_float_fast_unordered_strict_minmax_combined := by
-  unfold clamp_float_fast_unordered_strict_minmax_before clamp_float_fast_unordered_strict_minmax_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_unordered_strict_minmax   : clamp_float_fast_unordered_strict_minmax_before  ⊑  clamp_float_fast_unordered_strict_minmax_combined := by
-  unfold clamp_float_fast_unordered_strict_minmax_before clamp_float_fast_unordered_strict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ole" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -632,24 +547,9 @@ def clamp_float_fast_unordered_nonstrict_minmax_combined := [llvmfunc|
   llvm.func @clamp_float_fast_unordered_nonstrict_minmax(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.550000e+02 : f32) : f32
-    %2 = llvm.fcmp "ole" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_minmax   : clamp_float_fast_unordered_nonstrict_minmax_before  ⊑  clamp_float_fast_unordered_nonstrict_minmax_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_minmax_before clamp_float_fast_unordered_nonstrict_minmax_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_minmax   : clamp_float_fast_unordered_nonstrict_minmax_before  ⊑  clamp_float_fast_unordered_nonstrict_minmax_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_minmax_before clamp_float_fast_unordered_nonstrict_minmax_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_float_fast_unordered_nonstrict_minmax   : clamp_float_fast_unordered_nonstrict_minmax_before  ⊑  clamp_float_fast_unordered_nonstrict_minmax_combined := by
-  unfold clamp_float_fast_unordered_nonstrict_minmax_before clamp_float_fast_unordered_nonstrict_minmax_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ole" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.intr.minnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -661,24 +561,9 @@ def clamp_test_1_combined := [llvmfunc|
   llvm.func @clamp_test_1(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_test_1   : clamp_test_1_before  ⊑  clamp_test_1_combined := by
-  unfold clamp_test_1_before clamp_test_1_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_test_1   : clamp_test_1_before  ⊑  clamp_test_1_combined := by
-  unfold clamp_test_1_before clamp_test_1_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_clamp_test_1   : clamp_test_1_before  ⊑  clamp_test_1_combined := by
-  unfold clamp_test_1_before clamp_test_1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.intr.maxnum(%3, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
     llvm.return %4 : f32
   }]
 
@@ -690,24 +575,9 @@ def clamp_negative_wrong_const_combined := [llvmfunc|
   llvm.func @clamp_negative_wrong_const(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(5.120000e+02 : f32) : f32
-    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_negative_wrong_const   : clamp_negative_wrong_const_before  ⊑  clamp_negative_wrong_const_combined := by
-  unfold clamp_negative_wrong_const_before clamp_negative_wrong_const_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_negative_wrong_const   : clamp_negative_wrong_const_before  ⊑  clamp_negative_wrong_const_combined := by
-  unfold clamp_negative_wrong_const_before clamp_negative_wrong_const_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fcmp "ugt" %arg0, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_negative_wrong_const   : clamp_negative_wrong_const_before  ⊑  clamp_negative_wrong_const_combined := by
-  unfold clamp_negative_wrong_const_before clamp_negative_wrong_const_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.fcmp "ugt" %arg0, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %5 = llvm.select %4, %3, %1 : i1, f32
     llvm.return %5 : f32
   }]
@@ -720,24 +590,9 @@ def clamp_negative_same_op_combined := [llvmfunc|
   llvm.func @clamp_negative_same_op(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_negative_same_op   : clamp_negative_same_op_before  ⊑  clamp_negative_same_op_combined := by
-  unfold clamp_negative_same_op_before clamp_negative_same_op_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_clamp_negative_same_op   : clamp_negative_same_op_before  ⊑  clamp_negative_same_op_combined := by
-  unfold clamp_negative_same_op_before clamp_negative_same_op_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fcmp "ult" %arg0, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_negative_same_op   : clamp_negative_same_op_before  ⊑  clamp_negative_same_op_combined := by
-  unfold clamp_negative_same_op_before clamp_negative_same_op_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %3 = llvm.select %2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %4 = llvm.fcmp "ult" %arg0, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %5 = llvm.select %4, %3, %1 : i1, f32
     llvm.return %5 : f32
   }]
@@ -750,12 +605,7 @@ def clamp_float_with_zero1_combined := [llvmfunc|
   llvm.func @clamp_float_with_zero1(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(0.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_with_zero1   : clamp_float_with_zero1_before  ⊑  clamp_float_with_zero1_combined := by
-  unfold clamp_float_with_zero1_before clamp_float_with_zero1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
     %4 = llvm.fcmp "ole" %arg0, %1 : f32
     %5 = llvm.select %4, %1, %3 : i1, f32
@@ -770,12 +620,7 @@ def clamp_float_with_zero2_combined := [llvmfunc|
   llvm.func @clamp_float_with_zero2(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(2.550000e+02 : f32) : f32
     %1 = llvm.mlir.constant(0.000000e+00 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_clamp_float_with_zero2   : clamp_float_with_zero2_before  ⊑  clamp_float_with_zero2_combined := by
-  unfold clamp_float_with_zero2_before clamp_float_with_zero2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
     %3 = llvm.select %2, %arg0, %0 : i1, f32
     %4 = llvm.fcmp "olt" %arg0, %1 : f32
     %5 = llvm.select %4, %1, %3 : i1, f32

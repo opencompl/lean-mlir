@@ -28,12 +28,7 @@ def f_combined := [llvmfunc|
     %2 = llvm.mlir.constant(true) : i1
     %3 = llvm.or %arg1, %0  : i8
     %4 = llvm.add %3, %1 overflow<nsw>  : i8
-    llvm.store %4, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %2 : i1
   }]
 

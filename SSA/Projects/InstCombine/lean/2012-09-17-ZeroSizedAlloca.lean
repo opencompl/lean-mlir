@@ -32,24 +32,9 @@ def f_combined := [llvmfunc|
     %1 = llvm.mlir.zero : !llvm.ptr
     %2 = llvm.mlir.addressof @x : !llvm.ptr
     %3 = llvm.mlir.addressof @y : !llvm.ptr
-    %4 = llvm.alloca %0 x !llvm.array<0 x i8> {alignment = 1024 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %3 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.alloca %0 x !llvm.array<0 x i8> {alignment = 1024 : i64} : (i32) -> !llvm.ptr
+    llvm.store %4, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %4, %3 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

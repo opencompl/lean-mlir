@@ -36,3 +36,19 @@ def f_before := [llvmfunc|
     llvm.return
   }]
 
+def f_combined := [llvmfunc|
+  llvm.func @f(%arg0: i32) {
+    %0 = llvm.mlir.constant(2 : i32) : i32
+    %1 = llvm.mlir.constant(8 : i32) : i32
+    %2 = llvm.shl %arg0, %0  : i32
+    %3 = llvm.add %2, %1  : i32
+    llvm.call @BZALLOC(%3) : (i32) -> ()
+    llvm.br ^bb1
+  ^bb1:  // pred: ^bb0
+    llvm.return
+  }]
+
+theorem inst_combine_f   : f_before  ⊑  f_combined := by
+  unfold f_before f_combined
+  simp_alive_peephole
+  sorry

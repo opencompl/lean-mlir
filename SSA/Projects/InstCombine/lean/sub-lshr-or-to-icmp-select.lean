@@ -139,12 +139,7 @@ def neg_extra_use_or_lshr_i32_combined := [llvmfunc|
     %1 = llvm.sub %0, %arg0  : i32
     %2 = llvm.icmp "ne" %arg0, %0 : i32
     %3 = llvm.zext %2 : i1 to i32
-    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_neg_extra_use_or_lshr_i32   : neg_extra_use_or_lshr_i32_before  ⊑  neg_extra_use_or_lshr_i32_combined := by
-  unfold neg_extra_use_or_lshr_i32_before neg_extra_use_or_lshr_i32_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %3 : i32
   }]
 
@@ -159,12 +154,7 @@ def neg_or_extra_use_lshr_i32_combined := [llvmfunc|
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.or %2, %arg0  : i32
     %4 = llvm.lshr %3, %1  : i32
-    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_neg_or_extra_use_lshr_i32   : neg_or_extra_use_lshr_i32_before  ⊑  neg_or_extra_use_lshr_i32_combined := by
-  unfold neg_or_extra_use_lshr_i32_before neg_or_extra_use_lshr_i32_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %4 : i32
   }]
 

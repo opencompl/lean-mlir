@@ -62,12 +62,7 @@ def y_combined := [llvmfunc|
   ^bb1:  // 3 preds: ^bb0, ^bb1, ^bb2
     llvm.cond_br %0, ^bb1, ^bb3
   ^bb2:  // 2 preds: ^bb3, ^bb4
-    llvm.store %1, %2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_y   : y_before  ⊑  y_combined := by
-  unfold y_before y_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.cond_br %3, ^bb1, ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     llvm.cond_br %0, ^bb4, ^bb2

@@ -275,12 +275,7 @@ def sub_ashr_and_i32_extra_use_sub_combined := [llvmfunc|
   llvm.func @sub_ashr_and_i32_extra_use_sub(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.sub %arg1, %arg0 overflow<nsw>  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_and_i32_extra_use_sub   : sub_ashr_and_i32_extra_use_sub_before  ⊑  sub_ashr_and_i32_extra_use_sub_combined := by
-  unfold sub_ashr_and_i32_extra_use_sub_before sub_ashr_and_i32_extra_use_sub_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.icmp "slt" %1, %0 : i32
     %3 = llvm.select %2, %arg0, %0 : i1, i32
     llvm.return %3 : i32
@@ -295,12 +290,7 @@ def sub_ashr_and_i32_extra_use_and_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.icmp "slt" %arg1, %arg0 : i32
     %2 = llvm.select %1, %arg0, %0 : i1, i32
-    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_and_i32_extra_use_and   : sub_ashr_and_i32_extra_use_and_before  ⊑  sub_ashr_and_i32_extra_use_and_combined := by
-  unfold sub_ashr_and_i32_extra_use_and_before sub_ashr_and_i32_extra_use_and_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %2 : i32
   }]
 
@@ -312,12 +302,7 @@ def sub_ashr_and_i32_extra_use_ashr_combined := [llvmfunc|
   llvm.func @sub_ashr_and_i32_extra_use_ashr(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.icmp "slt" %arg1, %arg0 : i32
     %1 = llvm.sext %0 : i1 to i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_and_i32_extra_use_ashr   : sub_ashr_and_i32_extra_use_ashr_before  ⊑  sub_ashr_and_i32_extra_use_ashr_combined := by
-  unfold sub_ashr_and_i32_extra_use_ashr_before sub_ashr_and_i32_extra_use_ashr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.and %1, %arg0  : i32
     llvm.return %2 : i32
   }]

@@ -54,12 +54,7 @@ theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
 def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(100 : i32) : i32
-    "llvm.intr.memcpy"(%arg0, %arg0, %0) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %arg0, %0) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return
   }]
 
@@ -70,12 +65,7 @@ theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
 def test3_combined := [llvmfunc|
   llvm.func @test3(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
     %0 = llvm.mlir.constant(17179869184 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 

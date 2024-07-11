@@ -336,12 +336,7 @@ def trunc32to16_combined := [llvmfunc|
     %4 = llvm.mlir.constant(91 : i32) : i32
     %5 = llvm.mlir.constant(90 : i32) : i32
     %6 = llvm.mlir.constant(113 : i32) : i32
-    %7 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %8 = llvm.lshr %arg0, %1  : i32
     %9 = llvm.trunc %8 : i32 to i16
     %10 = llvm.xor %9, %2  : i16
@@ -351,44 +346,19 @@ theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combin
       100: ^bb3
     ]
   ^bb1:  // pred: ^bb0
-    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb5
   ^bb2:  // pred: ^bb0
-    llvm.store %4, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb5
   ^bb3:  // pred: ^bb0
-    llvm.store %3, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb5
   ^bb4:  // pred: ^bb0
-    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb5
   ^bb5:  // 4 preds: ^bb1, ^bb2, ^bb3, ^bb4
-    %11 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_trunc32to16   : trunc32to16_before  ⊑  trunc32to16_combined := by
-  unfold trunc32to16_before trunc32to16_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %11 : i32
   }]
 
@@ -407,12 +377,7 @@ def PR29009_combined := [llvmfunc|
     %6 = llvm.mlir.constant(6 : i32) : i32
     llvm.br ^bb1
   ^bb1:  // 2 preds: ^bb0, ^bb6
-    %7 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_PR29009   : PR29009_before  ⊑  PR29009_combined := by
-  unfold PR29009_before PR29009_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %8 = llvm.icmp "eq" %7, %0 : i32
     llvm.cond_br %8, ^bb7, ^bb2
   ^bb2:  // pred: ^bb1
@@ -423,28 +388,13 @@ theorem inst_combine_PR29009   : PR29009_before  ⊑  PR29009_combined := by
       3: ^bb5
     ]
   ^bb3:  // pred: ^bb2
-    llvm.store %6, %4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR29009   : PR29009_before  ⊑  PR29009_combined := by
-  unfold PR29009_before PR29009_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb6
   ^bb4:  // pred: ^bb2
-    llvm.store %5, %4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR29009   : PR29009_before  ⊑  PR29009_combined := by
-  unfold PR29009_before PR29009_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb6
   ^bb5:  // pred: ^bb2
-    llvm.store %3, %4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR29009   : PR29009_before  ⊑  PR29009_combined := by
-  unfold PR29009_before PR29009_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb6
   ^bb6:  // 3 preds: ^bb3, ^bb4, ^bb5
     llvm.br ^bb1

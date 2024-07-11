@@ -177,12 +177,7 @@ def fold_strnlen_ax_1_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_1() -> i64 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_1   : fold_strnlen_ax_1_before  ⊑  fold_strnlen_ax_1_combined := by
-  unfold fold_strnlen_ax_1_before fold_strnlen_ax_1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "ne" %2, %1 : i8
     %4 = llvm.zext %3 : i1 to i64
     llvm.return %4 : i64

@@ -27,19 +27,9 @@ def foo_combined := [llvmfunc|
   llvm.func @foo() {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(-1 : i8) : i8
-    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.call @bar(%2) : (!llvm.ptr) -> ()
-    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @gaz(%2) : (!llvm.ptr) -> ()
     llvm.return
   }]

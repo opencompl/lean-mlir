@@ -162,12 +162,7 @@ def test5_combined := [llvmfunc|
     %2 = llvm.mlir.constant(3 : i7) : i7
     %3 = llvm.and %arg0, %0  : i7
     %4 = llvm.xor %3, %1  : i7
-    llvm.store %4, %arg1 {alignment = 1 : i64} : i7, !llvm.ptr]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : i7, !llvm.ptr
     llvm.return %2 : i7
   }]
 
@@ -233,12 +228,7 @@ def test12_combined := [llvmfunc|
     %2 = llvm.mlir.constant(3 : i117) : i117
     %3 = llvm.and %arg0, %0  : i117
     %4 = llvm.xor %3, %1  : i117
-    llvm.store %4, %arg1 {alignment = 4 : i64} : i117, !llvm.ptr]
-
-theorem inst_combine_test12   : test12_before  ⊑  test12_combined := by
-  unfold test12_before test12_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 4 : i64} : i117, !llvm.ptr
     llvm.return %2 : i117
   }]
 

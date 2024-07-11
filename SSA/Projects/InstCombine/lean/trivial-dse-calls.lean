@@ -241,19 +241,9 @@ theorem inst_combine_test_dead_readwrite   : test_dead_readwrite_before  ⊑  te
 def test_neg_read_after_combined := [llvmfunc|
   llvm.func @test_neg_read_after() -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_read_after   : test_neg_read_after_before  ⊑  test_neg_read_after_combined := by
-  unfold test_neg_read_after_before test_neg_read_after_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f(%1) : (!llvm.ptr) -> ()
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_neg_read_after   : test_neg_read_after_before  ⊑  test_neg_read_after_combined := by
-  unfold test_neg_read_after_before test_neg_read_after_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %2 : i32
   }]
 
@@ -264,12 +254,7 @@ theorem inst_combine_test_neg_read_after   : test_neg_read_after_before  ⊑  te
 def test_neg_infinite_loop_combined := [llvmfunc|
   llvm.func @test_neg_infinite_loop() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_infinite_loop   : test_neg_infinite_loop_before  ⊑  test_neg_infinite_loop_combined := by
-  unfold test_neg_infinite_loop_before test_neg_infinite_loop_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -281,12 +266,7 @@ theorem inst_combine_test_neg_infinite_loop   : test_neg_infinite_loop_before  �
 def test_neg_throw_combined := [llvmfunc|
   llvm.func @test_neg_throw() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_throw   : test_neg_throw_before  ⊑  test_neg_throw_combined := by
-  unfold test_neg_throw_before test_neg_throw_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -298,12 +278,7 @@ theorem inst_combine_test_neg_throw   : test_neg_throw_before  ⊑  test_neg_thr
 def test_neg_extra_write_combined := [llvmfunc|
   llvm.func @test_neg_extra_write() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_extra_write   : test_neg_extra_write_before  ⊑  test_neg_extra_write_combined := by
-  unfold test_neg_extra_write_before test_neg_extra_write_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -315,18 +290,8 @@ theorem inst_combine_test_neg_extra_write   : test_neg_extra_write_before  ⊑  
 def test_neg_unmodeled_write_combined := [llvmfunc|
   llvm.func @test_neg_unmodeled_write() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_unmodeled_write   : test_neg_unmodeled_write_before  ⊑  test_neg_unmodeled_write_combined := by
-  unfold test_neg_unmodeled_write_before test_neg_unmodeled_write_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_unmodeled_write   : test_neg_unmodeled_write_before  ⊑  test_neg_unmodeled_write_combined := by
-  unfold test_neg_unmodeled_write_before test_neg_unmodeled_write_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f2(%1, %2) : (!llvm.ptr, !llvm.ptr) -> ()
     llvm.return
   }]
@@ -338,31 +303,11 @@ theorem inst_combine_test_neg_unmodeled_write   : test_neg_unmodeled_write_befor
 def test_neg_captured_by_call_combined := [llvmfunc|
   llvm.func @test_neg_captured_by_call() -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_captured_by_call   : test_neg_captured_by_call_before  ⊑  test_neg_captured_by_call_combined := by
-  unfold test_neg_captured_by_call_before test_neg_captured_by_call_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_captured_by_call   : test_neg_captured_by_call_before  ⊑  test_neg_captured_by_call_combined := by
-  unfold test_neg_captured_by_call_before test_neg_captured_by_call_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f2(%1, %2) : (!llvm.ptr, !llvm.ptr) -> ()
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_neg_captured_by_call   : test_neg_captured_by_call_before  ⊑  test_neg_captured_by_call_combined := by
-  unfold test_neg_captured_by_call_before test_neg_captured_by_call_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_neg_captured_by_call   : test_neg_captured_by_call_before  ⊑  test_neg_captured_by_call_combined := by
-  unfold test_neg_captured_by_call_before test_neg_captured_by_call_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %4 : i32
   }]
 
@@ -373,19 +318,9 @@ theorem inst_combine_test_neg_captured_by_call   : test_neg_captured_by_call_bef
 def test_neg_captured_before_combined := [llvmfunc|
   llvm.func @test_neg_captured_before() -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_captured_before   : test_neg_captured_before_before  ⊑  test_neg_captured_before_combined := by
-  unfold test_neg_captured_before_before test_neg_captured_before_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @f(%1) : (!llvm.ptr) -> ()
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_neg_captured_before   : test_neg_captured_before_before  ⊑  test_neg_captured_before_combined := by
-  unfold test_neg_captured_before_before test_neg_captured_before_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %2 : i32
   }]
 
@@ -414,25 +349,10 @@ theorem inst_combine_test_unrelated_capture   : test_unrelated_capture_before  �
 def test_neg_unrelated_capture_used_via_return_combined := [llvmfunc|
   llvm.func @test_neg_unrelated_capture_used_via_return() -> i8 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_unrelated_capture_used_via_return   : test_neg_unrelated_capture_used_via_return_before  ⊑  test_neg_unrelated_capture_used_via_return_combined := by
-  unfold test_neg_unrelated_capture_used_via_return_before test_neg_unrelated_capture_used_via_return_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_neg_unrelated_capture_used_via_return   : test_neg_unrelated_capture_used_via_return_before  ⊑  test_neg_unrelated_capture_used_via_return_combined := by
-  unfold test_neg_unrelated_capture_used_via_return_before test_neg_unrelated_capture_used_via_return_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %3 = llvm.call @f3(%1, %2) : (!llvm.ptr, !llvm.ptr) -> !llvm.ptr
-    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_neg_unrelated_capture_used_via_return   : test_neg_unrelated_capture_used_via_return_before  ⊑  test_neg_unrelated_capture_used_via_return_combined := by
-  unfold test_neg_unrelated_capture_used_via_return_before test_neg_unrelated_capture_used_via_return_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.return %4 : i8
   }]
 

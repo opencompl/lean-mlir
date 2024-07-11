@@ -404,12 +404,7 @@ theorem inst_combine_unary_fneg_fptrunc_vec   : unary_fneg_fptrunc_vec_before  �
 def "test4-fast"_combined := [llvmfunc|
   llvm.func @"test4-fast"(%arg0: f32) -> f16 {
     %0 = llvm.fptrunc %arg0 : f32 to f16
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16]
-
-theorem inst_combine_"test4-fast"   : "test4-fast"_before  ⊑  "test4-fast"_combined := by
-  unfold "test4-fast"_before "test4-fast"_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16
     llvm.return %1 : f16
   }]
 
@@ -420,12 +415,7 @@ theorem inst_combine_"test4-fast"   : "test4-fast"_before  ⊑  "test4-fast"_com
 def "test4_unary_fneg-fast"_combined := [llvmfunc|
   llvm.func @"test4_unary_fneg-fast"(%arg0: f32) -> f16 {
     %0 = llvm.fptrunc %arg0 : f32 to f16
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16]
-
-theorem inst_combine_"test4_unary_fneg-fast"   : "test4_unary_fneg-fast"_before  ⊑  "test4_unary_fneg-fast"_combined := by
-  unfold "test4_unary_fneg-fast"_before "test4_unary_fneg-fast"_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16
     llvm.return %1 : f16
   }]
 

@@ -204,12 +204,7 @@ theorem inst_combine_test_simplify5   : test_simplify5_before  ⊑  test_simplif
 def test_simplify6_combined := [llvmfunc|
   llvm.func @test_simplify6(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_test_simplify6   : test_simplify6_before  ⊑  test_simplify6_combined := by
-  unfold test_simplify6_before test_simplify6_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "eq" %1, %0 : i16
     llvm.return %2 : i1
   }]
@@ -231,12 +226,7 @@ theorem inst_combine_test_simplify7   : test_simplify7_before  ⊑  test_simplif
 def test_simplify8_combined := [llvmfunc|
   llvm.func @test_simplify8(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_test_simplify8   : test_simplify8_before  ⊑  test_simplify8_combined := by
-  unfold test_simplify8_before test_simplify8_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 2 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "ne" %1, %0 : i16
     llvm.return %2 : i1
   }]

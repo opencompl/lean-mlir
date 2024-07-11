@@ -23,12 +23,7 @@ def foo_before := [llvmfunc|
 
 def foo_combined := [llvmfunc|
   llvm.func @foo(%arg0: vector<16xi8>, %arg1: vector<16xi8>, %arg2: !llvm.ptr) {
-    llvm.store %arg1, %arg2 {alignment = 4 : i64} : vector<16xi8>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %arg2 {alignment = 4 : i64} : vector<16xi8>, !llvm.ptr
     llvm.return
   }]
 

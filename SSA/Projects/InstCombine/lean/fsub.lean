@@ -708,12 +708,7 @@ theorem inst_combine_test1_unary   : test1_unary_before  ⊑  test1_unary_combin
   sorry
 def neg_sub_nsz_combined := [llvmfunc|
   llvm.func @neg_sub_nsz(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_neg_sub_nsz   : neg_sub_nsz_before  ⊑  neg_sub_nsz_combined := by
-  unfold neg_sub_nsz_before neg_sub_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %0 : f32
   }]
 
@@ -723,12 +718,7 @@ theorem inst_combine_neg_sub_nsz   : neg_sub_nsz_before  ⊑  neg_sub_nsz_combin
   sorry
 def unary_neg_sub_nsz_combined := [llvmfunc|
   llvm.func @unary_neg_sub_nsz(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_unary_neg_sub_nsz   : unary_neg_sub_nsz_before  ⊑  unary_neg_sub_nsz_combined := by
-  unfold unary_neg_sub_nsz_before unary_neg_sub_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %0 : f32
   }]
 
@@ -739,12 +729,7 @@ theorem inst_combine_unary_neg_sub_nsz   : unary_neg_sub_nsz_before  ⊑  unary_
 def neg_sub_nsz_extra_use_combined := [llvmfunc|
   llvm.func @neg_sub_nsz_extra_use(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.fsub %arg0, %arg1  : f32
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_neg_sub_nsz_extra_use   : neg_sub_nsz_extra_use_before  ⊑  neg_sub_nsz_extra_use_combined := by
-  unfold neg_sub_nsz_extra_use_before neg_sub_nsz_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.call @use(%0) : (f32) -> ()
     llvm.return %1 : f32
   }]
@@ -756,12 +741,7 @@ theorem inst_combine_neg_sub_nsz_extra_use   : neg_sub_nsz_extra_use_before  ⊑
 def unary_neg_sub_nsz_extra_use_combined := [llvmfunc|
   llvm.func @unary_neg_sub_nsz_extra_use(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.fsub %arg0, %arg1  : f32
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_unary_neg_sub_nsz_extra_use   : unary_neg_sub_nsz_extra_use_before  ⊑  unary_neg_sub_nsz_extra_use_combined := by
-  unfold unary_neg_sub_nsz_extra_use_before unary_neg_sub_nsz_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.call @use(%0) : (f32) -> ()
     llvm.return %1 : f32
   }]
@@ -772,18 +752,8 @@ theorem inst_combine_unary_neg_sub_nsz_extra_use   : unary_neg_sub_nsz_extra_use
   sorry
 def sub_sub_nsz_combined := [llvmfunc|
   llvm.func @sub_sub_nsz(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_sub_sub_nsz   : sub_sub_nsz_before  ⊑  sub_sub_nsz_combined := by
-  unfold sub_sub_nsz_before sub_sub_nsz_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_sub_sub_nsz   : sub_sub_nsz_before  ⊑  sub_sub_nsz_combined := by
-  unfold sub_sub_nsz_before sub_sub_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg1, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %1 : f32
   }]
 
@@ -794,12 +764,7 @@ theorem inst_combine_sub_sub_nsz   : sub_sub_nsz_before  ⊑  sub_sub_nsz_combin
 def sub_add_neg_x_combined := [llvmfunc|
   llvm.func @sub_add_neg_x(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(-5.000000e+00 : f32) : f32
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_sub_add_neg_x   : sub_add_neg_x_before  ⊑  sub_add_neg_x_combined := by
-  unfold sub_add_neg_x_before sub_add_neg_x_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
     llvm.return %1 : f32
   }]
 
@@ -966,12 +931,7 @@ theorem inst_combine_unary_neg_trunc_op1   : unary_neg_trunc_op1_before  ⊑  un
 def neg_ext_op1_fast_combined := [llvmfunc|
   llvm.func @neg_ext_op1_fast(%arg0: f32, %arg1: f64) -> f64 {
     %0 = llvm.fpext %arg0 : f32 to f64
-    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_neg_ext_op1_fast   : neg_ext_op1_fast_before  ⊑  neg_ext_op1_fast_combined := by
-  unfold neg_ext_op1_fast_before neg_ext_op1_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %1 : f64
   }]
 
@@ -982,12 +942,7 @@ theorem inst_combine_neg_ext_op1_fast   : neg_ext_op1_fast_before  ⊑  neg_ext_
 def unary_neg_ext_op1_fast_combined := [llvmfunc|
   llvm.func @unary_neg_ext_op1_fast(%arg0: f32, %arg1: f64) -> f64 {
     %0 = llvm.fpext %arg0 : f32 to f64
-    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_unary_neg_ext_op1_fast   : unary_neg_ext_op1_fast_before  ⊑  unary_neg_ext_op1_fast_combined := by
-  unfold unary_neg_ext_op1_fast_before unary_neg_ext_op1_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %1 : f64
   }]
 
@@ -1304,12 +1259,7 @@ theorem inst_combine_fsub_fsub   : fsub_fsub_before  ⊑  fsub_fsub_combined := 
 def fsub_fsub_nsz_combined := [llvmfunc|
   llvm.func @fsub_fsub_nsz(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.fsub %arg0, %arg1  : f32
-    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fsub_fsub_nsz   : fsub_fsub_nsz_before  ⊑  fsub_fsub_nsz_combined := by
-  unfold fsub_fsub_nsz_before fsub_fsub_nsz_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1320,12 +1270,7 @@ theorem inst_combine_fsub_fsub_nsz   : fsub_fsub_nsz_before  ⊑  fsub_fsub_nsz_
 def fsub_fsub_reassoc_combined := [llvmfunc|
   llvm.func @fsub_fsub_reassoc(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.fsub %arg0, %arg1  : f32
-    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<reassoc>} : f32]
-
-theorem inst_combine_fsub_fsub_reassoc   : fsub_fsub_reassoc_before  ⊑  fsub_fsub_reassoc_combined := by
-  unfold fsub_fsub_reassoc_before fsub_fsub_reassoc_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<reassoc>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1335,18 +1280,8 @@ theorem inst_combine_fsub_fsub_reassoc   : fsub_fsub_reassoc_before  ⊑  fsub_f
   sorry
 def fsub_fsub_nsz_reassoc_combined := [llvmfunc|
   llvm.func @fsub_fsub_nsz_reassoc(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fsub_nsz_reassoc   : fsub_fsub_nsz_reassoc_before  ⊑  fsub_fsub_nsz_reassoc_combined := by
-  unfold fsub_fsub_nsz_reassoc_before fsub_fsub_nsz_reassoc_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fsub_nsz_reassoc   : fsub_fsub_nsz_reassoc_before  ⊑  fsub_fsub_nsz_reassoc_combined := by
-  unfold fsub_fsub_nsz_reassoc_before fsub_fsub_nsz_reassoc_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1356,18 +1291,8 @@ theorem inst_combine_fsub_fsub_nsz_reassoc   : fsub_fsub_nsz_reassoc_before  ⊑
   sorry
 def fsub_fsub_fast_vec_combined := [llvmfunc|
   llvm.func @fsub_fsub_fast_vec(%arg0: vector<2xf64>, %arg1: vector<2xf64>, %arg2: vector<2xf64>) -> vector<2xf64> {
-    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>]
-
-theorem inst_combine_fsub_fsub_fast_vec   : fsub_fsub_fast_vec_before  ⊑  fsub_fsub_fast_vec_combined := by
-  unfold fsub_fsub_fast_vec_before fsub_fsub_fast_vec_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>]
-
-theorem inst_combine_fsub_fsub_fast_vec   : fsub_fsub_fast_vec_before  ⊑  fsub_fsub_fast_vec_combined := by
-  unfold fsub_fsub_fast_vec_before fsub_fsub_fast_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>
+    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -1379,12 +1304,7 @@ def fsub_fsub_nsz_reassoc_extra_use_combined := [llvmfunc|
   llvm.func @fsub_fsub_nsz_reassoc_extra_use(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.fsub %arg0, %arg1  : f32
     llvm.call @use(%0) : (f32) -> ()
-    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fsub_nsz_reassoc_extra_use   : fsub_fsub_nsz_reassoc_extra_use_before  ⊑  fsub_fsub_nsz_reassoc_extra_use_combined := by
-  unfold fsub_fsub_nsz_reassoc_extra_use_before fsub_fsub_nsz_reassoc_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %0, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1405,18 +1325,8 @@ theorem inst_combine_fneg_fsub   : fneg_fsub_before  ⊑  fneg_fsub_combined := 
   sorry
 def fneg_fsub_nsz_combined := [llvmfunc|
   llvm.func @fneg_fsub_nsz(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fneg_fsub_nsz   : fneg_fsub_nsz_before  ⊑  fneg_fsub_nsz_combined := by
-  unfold fneg_fsub_nsz_before fneg_fsub_nsz_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fneg_fsub_nsz   : fneg_fsub_nsz_before  ⊑  fneg_fsub_nsz_combined := by
-  unfold fneg_fsub_nsz_before fneg_fsub_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1426,18 +1336,8 @@ theorem inst_combine_fneg_fsub_nsz   : fneg_fsub_nsz_before  ⊑  fneg_fsub_nsz_
   sorry
 def fake_fneg_fsub_fast_combined := [llvmfunc|
   llvm.func @fake_fneg_fsub_fast(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fake_fneg_fsub_fast   : fake_fneg_fsub_fast_before  ⊑  fake_fneg_fsub_fast_combined := by
-  unfold fake_fneg_fsub_fast_before fake_fneg_fsub_fast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fake_fneg_fsub_fast   : fake_fneg_fsub_fast_before  ⊑  fake_fneg_fsub_fast_combined := by
-  unfold fake_fneg_fsub_fast_before fake_fneg_fsub_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1449,12 +1349,7 @@ def fake_fneg_fsub_fast_extra_use_combined := [llvmfunc|
   llvm.func @fake_fneg_fsub_fast_extra_use(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.fneg %arg0  : f32
     llvm.call @use(%0) : (f32) -> ()
-    %1 = llvm.fsub %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fake_fneg_fsub_fast_extra_use   : fake_fneg_fsub_fast_extra_use_before  ⊑  fake_fneg_fsub_fast_extra_use_combined := by
-  unfold fake_fneg_fsub_fast_extra_use_before fake_fneg_fsub_fast_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1464,18 +1359,8 @@ theorem inst_combine_fake_fneg_fsub_fast_extra_use   : fake_fneg_fsub_fast_extra
   sorry
 def fake_fneg_fsub_vec_combined := [llvmfunc|
   llvm.func @fake_fneg_fsub_vec(%arg0: vector<2xf32>, %arg1: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>]
-
-theorem inst_combine_fake_fneg_fsub_vec   : fake_fneg_fsub_vec_before  ⊑  fake_fneg_fsub_vec_combined := by
-  unfold fake_fneg_fsub_vec_before fake_fneg_fsub_vec_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>]
-
-theorem inst_combine_fake_fneg_fsub_vec   : fake_fneg_fsub_vec_before  ⊑  fake_fneg_fsub_vec_combined := by
-  unfold fake_fneg_fsub_vec_before fake_fneg_fsub_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 
@@ -1486,12 +1371,7 @@ theorem inst_combine_fake_fneg_fsub_vec   : fake_fneg_fsub_vec_before  ⊑  fake
 def fneg_fsub_constant_combined := [llvmfunc|
   llvm.func @fneg_fsub_constant(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(-4.200000e+01 : f32) : f32
-    %1 = llvm.fsub %0, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fneg_fsub_constant   : fneg_fsub_constant_before  ⊑  fneg_fsub_constant_combined := by
-  unfold fneg_fsub_constant_before fneg_fsub_constant_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %0, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1501,24 +1381,9 @@ theorem inst_combine_fneg_fsub_constant   : fneg_fsub_constant_before  ⊑  fneg
   sorry
 def fsub_fadd_fsub_reassoc_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_reassoc(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: f32) -> f32 {
-    %0 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc   : fsub_fadd_fsub_reassoc_before  ⊑  fsub_fadd_fsub_reassoc_combined := by
-  unfold fsub_fadd_fsub_reassoc_before fsub_fadd_fsub_reassoc_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %arg1, %arg3  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc   : fsub_fadd_fsub_reassoc_before  ⊑  fsub_fadd_fsub_reassoc_combined := by
-  unfold fsub_fadd_fsub_reassoc_before fsub_fadd_fsub_reassoc_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fsub %0, %1  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc   : fsub_fadd_fsub_reassoc_before  ⊑  fsub_fadd_fsub_reassoc_combined := by
-  unfold fsub_fadd_fsub_reassoc_before fsub_fadd_fsub_reassoc_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %1 = llvm.fadd %arg1, %arg3  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %2 = llvm.fsub %0, %1  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
     llvm.return %2 : f32
   }]
 
@@ -1530,24 +1395,9 @@ def fsub_fadd_fsub_reassoc_commute_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_reassoc_commute(%arg0: vector<2xf32>, %arg1: vector<2xf32>, %arg2: vector<2xf32>, %arg3: vector<2xf32>) -> vector<2xf32> {
     %0 = llvm.mlir.constant(dense<[4.200000e+01, -4.200000e+01]> : vector<2xf32>) : vector<2xf32>
     %1 = llvm.fdiv %arg2, %0  : vector<2xf32>
-    %2 = llvm.fadd %1, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_commute   : fsub_fadd_fsub_reassoc_commute_before  ⊑  fsub_fadd_fsub_reassoc_commute_combined := by
-  unfold fsub_fadd_fsub_reassoc_commute_before fsub_fadd_fsub_reassoc_commute_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fadd %arg1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_commute   : fsub_fadd_fsub_reassoc_commute_before  ⊑  fsub_fadd_fsub_reassoc_commute_combined := by
-  unfold fsub_fadd_fsub_reassoc_commute_before fsub_fadd_fsub_reassoc_commute_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fsub %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_commute   : fsub_fadd_fsub_reassoc_commute_before  ⊑  fsub_fadd_fsub_reassoc_commute_combined := by
-  unfold fsub_fadd_fsub_reassoc_commute_before fsub_fadd_fsub_reassoc_commute_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %1, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
+    %3 = llvm.fadd %arg1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
+    %4 = llvm.fsub %2, %3  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf32>
     llvm.return %4 : vector<2xf32>
   }]
 
@@ -1557,30 +1407,10 @@ theorem inst_combine_fsub_fadd_fsub_reassoc_commute   : fsub_fadd_fsub_reassoc_c
   sorry
 def fsub_fadd_fsub_reassoc_twice_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_reassoc_twice(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: f32, %arg4: f32) -> f32 {
-    %0 = llvm.fadd %arg1, %arg4  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_twice   : fsub_fadd_fsub_reassoc_twice_before  ⊑  fsub_fadd_fsub_reassoc_twice_combined := by
-  unfold fsub_fadd_fsub_reassoc_twice_before fsub_fadd_fsub_reassoc_twice_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_twice   : fsub_fadd_fsub_reassoc_twice_before  ⊑  fsub_fadd_fsub_reassoc_twice_combined := by
-  unfold fsub_fadd_fsub_reassoc_twice_before fsub_fadd_fsub_reassoc_twice_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fadd %0, %arg3  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_twice   : fsub_fadd_fsub_reassoc_twice_before  ⊑  fsub_fadd_fsub_reassoc_twice_combined := by
-  unfold fsub_fadd_fsub_reassoc_twice_before fsub_fadd_fsub_reassoc_twice_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fsub %1, %2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_twice   : fsub_fadd_fsub_reassoc_twice_before  ⊑  fsub_fadd_fsub_reassoc_twice_combined := by
-  unfold fsub_fadd_fsub_reassoc_twice_before fsub_fadd_fsub_reassoc_twice_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg1, %arg4  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %1 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %2 = llvm.fadd %0, %arg3  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
+    %3 = llvm.fsub %1, %2  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f32
     llvm.return %3 : f32
   }]
 
@@ -1590,24 +1420,9 @@ theorem inst_combine_fsub_fadd_fsub_reassoc_twice   : fsub_fadd_fsub_reassoc_twi
   sorry
 def fsub_fadd_fsub_not_reassoc_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_not_reassoc(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: f32) -> f32 {
-    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_not_reassoc   : fsub_fadd_fsub_not_reassoc_before  ⊑  fsub_fadd_fsub_not_reassoc_combined := by
-  unfold fsub_fadd_fsub_not_reassoc_before fsub_fadd_fsub_not_reassoc_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_not_reassoc   : fsub_fadd_fsub_not_reassoc_before  ⊑  fsub_fadd_fsub_not_reassoc_combined := by
-  unfold fsub_fadd_fsub_not_reassoc_before fsub_fadd_fsub_not_reassoc_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_not_reassoc   : fsub_fadd_fsub_not_reassoc_before  ⊑  fsub_fadd_fsub_not_reassoc_combined := by
-  unfold fsub_fadd_fsub_not_reassoc_before fsub_fadd_fsub_not_reassoc_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %2 : f32
   }]
 
@@ -1617,25 +1432,10 @@ theorem inst_combine_fsub_fadd_fsub_not_reassoc   : fsub_fadd_fsub_not_reassoc_b
   sorry
 def fsub_fadd_fsub_reassoc_use1_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_reassoc_use1(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: f32) -> f32 {
-    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use1   : fsub_fadd_fsub_reassoc_use1_before  ⊑  fsub_fadd_fsub_reassoc_use1_combined := by
-  unfold fsub_fadd_fsub_reassoc_use1_before fsub_fadd_fsub_reassoc_use1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.call @use(%0) : (f32) -> ()
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use1   : fsub_fadd_fsub_reassoc_use1_before  ⊑  fsub_fadd_fsub_reassoc_use1_combined := by
-  unfold fsub_fadd_fsub_reassoc_use1_before fsub_fadd_fsub_reassoc_use1_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use1   : fsub_fadd_fsub_reassoc_use1_before  ⊑  fsub_fadd_fsub_reassoc_use1_combined := by
-  unfold fsub_fadd_fsub_reassoc_use1_before fsub_fadd_fsub_reassoc_use1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %2 : f32
   }]
 
@@ -1645,25 +1445,10 @@ theorem inst_combine_fsub_fadd_fsub_reassoc_use1   : fsub_fadd_fsub_reassoc_use1
   sorry
 def fsub_fadd_fsub_reassoc_use2_combined := [llvmfunc|
   llvm.func @fsub_fadd_fsub_reassoc_use2(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: f32) -> f32 {
-    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use2   : fsub_fadd_fsub_reassoc_use2_before  ⊑  fsub_fadd_fsub_reassoc_use2_combined := by
-  unfold fsub_fadd_fsub_reassoc_use2_before fsub_fadd_fsub_reassoc_use2_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use2   : fsub_fadd_fsub_reassoc_use2_before  ⊑  fsub_fadd_fsub_reassoc_use2_combined := by
-  unfold fsub_fadd_fsub_reassoc_use2_before fsub_fadd_fsub_reassoc_use2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fsub %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.call @use(%1) : (f32) -> ()
-    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fsub_fadd_fsub_reassoc_use2   : fsub_fadd_fsub_reassoc_use2_before  ⊑  fsub_fadd_fsub_reassoc_use2_combined := by
-  unfold fsub_fadd_fsub_reassoc_use2_before fsub_fadd_fsub_reassoc_use2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fsub %1, %arg3  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %2 : f32
   }]
 
@@ -1686,12 +1471,7 @@ theorem inst_combine_fmul_c1   : fmul_c1_before  ⊑  fmul_c1_combined := by
 def fmul_c1_fmf_combined := [llvmfunc|
   llvm.func @fmul_c1_fmf(%arg0: vector<2xf32>, %arg1: vector<2xf32>) -> vector<2xf32> {
     %0 = llvm.mlir.constant(dense<[4.200000e+01, 5.000000e-01]> : vector<2xf32>) : vector<2xf32>
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<ninf, nsz>} : vector<2xf32>]
-
-theorem inst_combine_fmul_c1_fmf   : fmul_c1_fmf_before  ⊑  fmul_c1_fmf_combined := by
-  unfold fmul_c1_fmf_before fmul_c1_fmf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<ninf, nsz>} : vector<2xf32>
     %2 = llvm.fsub %arg1, %1  : vector<2xf32>
     llvm.return %2 : vector<2xf32>
   }]
@@ -1729,12 +1509,7 @@ def fdiv_c0_fmf_combined := [llvmfunc|
   llvm.func @fdiv_c0_fmf(%arg0: f64, %arg1: f64) -> f64 {
     %0 = llvm.mlir.constant(7.000000e+00 : f64) : f64
     %1 = llvm.fdiv %0, %arg0  : f64
-    %2 = llvm.fsub %arg1, %1  {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : f64]
-
-theorem inst_combine_fdiv_c0_fmf   : fdiv_c0_fmf_before  ⊑  fdiv_c0_fmf_combined := by
-  unfold fdiv_c0_fmf_before fdiv_c0_fmf_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fsub %arg1, %1  {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : f64
     llvm.return %2 : f64
   }]
 
@@ -1757,18 +1532,8 @@ theorem inst_combine_fdiv_c1   : fdiv_c1_before  ⊑  fdiv_c1_combined := by
 def fdiv_c1_fmf_combined := [llvmfunc|
   llvm.func @fdiv_c1_fmf(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(4.270000e+02 : f32) : f32
-    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_fdiv_c1_fmf   : fdiv_c1_fmf_before  ⊑  fdiv_c1_fmf_combined := by
-  unfold fdiv_c1_fmf_before fdiv_c1_fmf_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fsub %arg1, %1  {fastmathFlags = #llvm.fastmath<reassoc>} : f32]
-
-theorem inst_combine_fdiv_c1_fmf   : fdiv_c1_fmf_before  ⊑  fdiv_c1_fmf_combined := by
-  unfold fdiv_c1_fmf_before fdiv_c1_fmf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f32
+    %2 = llvm.fsub %arg1, %1  {fastmathFlags = #llvm.fastmath<reassoc>} : f32
     llvm.return %2 : f32
   }]
 

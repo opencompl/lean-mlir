@@ -130,12 +130,7 @@ def masked_load_and_zero_inactive_1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<4xf32>) : vector<4xf32>
     %2 = llvm.mlir.constant(4 : i32) : i32
-    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xf32>) -> vector<4xf32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_1   : masked_load_and_zero_inactive_1_before  ⊑  masked_load_and_zero_inactive_1_combined := by
-  unfold masked_load_and_zero_inactive_1_before masked_load_and_zero_inactive_1_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xf32>) -> vector<4xf32>
     llvm.return %3 : vector<4xf32>
   }]
 
@@ -148,12 +143,7 @@ def masked_load_and_zero_inactive_2_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %2 = llvm.mlir.constant(4 : i32) : i32
-    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_2   : masked_load_and_zero_inactive_2_before  ⊑  masked_load_and_zero_inactive_2_combined := by
-  unfold masked_load_and_zero_inactive_2_before masked_load_and_zero_inactive_2_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     llvm.return %3 : vector<4xi32>
   }]
 
@@ -166,12 +156,7 @@ def masked_load_and_zero_inactive_3_combined := [llvmfunc|
     %0 = llvm.mlir.constant(4 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
-    %3 = llvm.intr.masked.load %arg0, %arg1, %arg2 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_3   : masked_load_and_zero_inactive_3_before  ⊑  masked_load_and_zero_inactive_3_combined := by
-  unfold masked_load_and_zero_inactive_3_before masked_load_and_zero_inactive_3_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.intr.masked.load %arg0, %arg1, %arg2 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     %4 = llvm.select %arg1, %3, %2 : vector<4xi1>, vector<4xi32>
     llvm.return %4 : vector<4xi32>
   }]
@@ -188,12 +173,7 @@ def masked_load_and_zero_inactive_4_combined := [llvmfunc|
     %3 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %4 = llvm.mlir.constant(4 : i32) : i32
     %5 = llvm.xor %arg1, %1  : vector<4xi1>
-    %6 = llvm.intr.masked.load %arg0, %5, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_4   : masked_load_and_zero_inactive_4_before  ⊑  masked_load_and_zero_inactive_4_combined := by
-  unfold masked_load_and_zero_inactive_4_before masked_load_and_zero_inactive_4_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.intr.masked.load %arg0, %5, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     llvm.return %6 : vector<4xi32>
   }]
 
@@ -209,12 +189,7 @@ def masked_load_and_zero_inactive_5_combined := [llvmfunc|
     %3 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %4 = llvm.mlir.constant(4 : i32) : i32
     %5 = llvm.xor %arg1, %1  : vector<4xi1>
-    %6 = llvm.intr.masked.load %arg0, %5, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_5   : masked_load_and_zero_inactive_5_before  ⊑  masked_load_and_zero_inactive_5_combined := by
-  unfold masked_load_and_zero_inactive_5_before masked_load_and_zero_inactive_5_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.intr.masked.load %arg0, %5, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     llvm.return %6 : vector<4xi32>
   }]
 
@@ -230,12 +205,7 @@ def masked_load_and_zero_inactive_6_combined := [llvmfunc|
     %3 = llvm.mlir.constant(0 : i32) : i32
     %4 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %5 = llvm.xor %arg1, %1  : vector<4xi1>
-    %6 = llvm.intr.masked.load %arg0, %5, %arg2 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_6   : masked_load_and_zero_inactive_6_before  ⊑  masked_load_and_zero_inactive_6_combined := by
-  unfold masked_load_and_zero_inactive_6_before masked_load_and_zero_inactive_6_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.intr.masked.load %arg0, %5, %arg2 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     %7 = llvm.select %arg1, %4, %6 : vector<4xi1>, vector<4xi32>
     llvm.return %7 : vector<4xi32>
   }]
@@ -249,12 +219,7 @@ def masked_load_and_zero_inactive_7_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(dense<0> : vector<4xi32>) : vector<4xi32>
     %2 = llvm.mlir.constant(4 : i32) : i32
-    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_7   : masked_load_and_zero_inactive_7_before  ⊑  masked_load_and_zero_inactive_7_combined := by
-  unfold masked_load_and_zero_inactive_7_before masked_load_and_zero_inactive_7_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.intr.masked.load %arg0, %arg1, %1 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xi32>) -> vector<4xi32>
     %4 = llvm.select %arg2, %1, %3 : vector<4xi1>, vector<4xi32>
     llvm.return %4 : vector<4xi32>
   }]
@@ -272,12 +237,7 @@ def masked_load_and_zero_inactive_8_combined := [llvmfunc|
     %4 = llvm.mlir.constant(4 : i32) : i32
     %5 = llvm.xor %arg1, %1  : vector<4xi1>
     %6 = llvm.and %5, %arg2  : vector<4xi1>
-    %7 = llvm.intr.masked.load %arg0, %6, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xf32>) -> vector<4xf32>]
-
-theorem inst_combine_masked_load_and_zero_inactive_8   : masked_load_and_zero_inactive_8_before  ⊑  masked_load_and_zero_inactive_8_combined := by
-  unfold masked_load_and_zero_inactive_8_before masked_load_and_zero_inactive_8_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.intr.masked.load %arg0, %6, %3 {alignment = 4 : i32} : (!llvm.ptr, vector<4xi1>, vector<4xf32>) -> vector<4xf32>
     llvm.return %7 : vector<4xf32>
   }]
 
@@ -291,12 +251,7 @@ def masked_load_and_scalar_select_cond_combined := [llvmfunc|
     %1 = llvm.mlir.constant(32 : i32) : i32
     %2 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %3 = llvm.mlir.constant(dense<0.000000e+00> : vector<8xf32>) : vector<8xf32>
-    %4 = llvm.intr.masked.load %arg0, %arg1, %0 {alignment = 32 : i32} : (!llvm.ptr, vector<8xi1>, vector<8xf32>) -> vector<8xf32>]
-
-theorem inst_combine_masked_load_and_scalar_select_cond   : masked_load_and_scalar_select_cond_before  ⊑  masked_load_and_scalar_select_cond_combined := by
-  unfold masked_load_and_scalar_select_cond_before masked_load_and_scalar_select_cond_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.intr.masked.load %arg0, %arg1, %0 {alignment = 32 : i32} : (!llvm.ptr, vector<8xi1>, vector<8xf32>) -> vector<8xf32>
     %5 = llvm.select %arg2, %3, %4 : i1, vector<8xf32>
     llvm.return %5 : vector<8xf32>
   }]

@@ -2529,12 +2529,7 @@ def test11_combined := [llvmfunc|
     %2 = llvm.mlir.constant(3 : i32) : i32
     %3 = llvm.and %arg0, %0  : i32
     %4 = llvm.xor %3, %1  : i32
-    llvm.store %4, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test11   : test11_before  ⊑  test11_combined := by
-  unfold test11_before test11_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %2 : i32
   }]
 
@@ -2811,12 +2806,7 @@ def ashr_lowmask_use_splat_combined := [llvmfunc|
   llvm.func @ashr_lowmask_use_splat(%arg0: vector<2xi8>, %arg1: !llvm.ptr) -> vector<2xi8> {
     %0 = llvm.mlir.constant(dense<7> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.ashr %arg0, %0  : vector<2xi8>
-    llvm.store %1, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_ashr_lowmask_use_splat   : ashr_lowmask_use_splat_before  ⊑  ashr_lowmask_use_splat_combined := by
-  unfold ashr_lowmask_use_splat_before ashr_lowmask_use_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %2 = llvm.lshr %arg0, %0  : vector<2xi8>
     llvm.return %2 : vector<2xi8>
   }]
@@ -3737,12 +3727,7 @@ def lowmask_sext_in_reg_splat_combined := [llvmfunc|
     %1 = llvm.mlir.constant(dense<4095> : vector<2xi32>) : vector<2xi32>
     %2 = llvm.shl %arg0, %0  : vector<2xi32>
     %3 = llvm.ashr %2, %0  : vector<2xi32>
-    llvm.store %3, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_lowmask_sext_in_reg_splat   : lowmask_sext_in_reg_splat_before  ⊑  lowmask_sext_in_reg_splat_combined := by
-  unfold lowmask_sext_in_reg_splat_before lowmask_sext_in_reg_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %4 = llvm.and %arg0, %1  : vector<2xi32>
     llvm.return %4 : vector<2xi32>
   }]
@@ -3795,12 +3780,7 @@ def lowmask_add_2_splat_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<-64> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.mlir.constant(dense<63> : vector<2xi8>) : vector<2xi8>
     %2 = llvm.add %arg0, %0  : vector<2xi8>
-    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_lowmask_add_2_splat   : lowmask_add_2_splat_before  ⊑  lowmask_add_2_splat_combined := by
-  unfold lowmask_add_2_splat_before lowmask_add_2_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %3 = llvm.and %arg0, %1  : vector<2xi8>
     llvm.return %3 : vector<2xi8>
   }]
@@ -3842,12 +3822,7 @@ def lowmask_add_splat_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<-64> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.mlir.constant(dense<32> : vector<2xi8>) : vector<2xi8>
     %2 = llvm.add %arg0, %0  : vector<2xi8>
-    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_lowmask_add_splat   : lowmask_add_splat_before  ⊑  lowmask_add_splat_combined := by
-  unfold lowmask_add_splat_before lowmask_add_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %3 = llvm.and %arg0, %1  : vector<2xi8>
     llvm.return %3 : vector<2xi8>
   }]
@@ -3872,12 +3847,7 @@ def lowmask_add_splat_poison_combined := [llvmfunc|
     %11 = llvm.mlir.constant(1 : i32) : i32
     %12 = llvm.insertelement %7, %10[%11 : i32] : vector<2xi8>
     %13 = llvm.add %arg0, %6  : vector<2xi8>
-    llvm.store %13, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_lowmask_add_splat_poison   : lowmask_add_splat_poison_before  ⊑  lowmask_add_splat_poison_combined := by
-  unfold lowmask_add_splat_poison_before lowmask_add_splat_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %13, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %14 = llvm.and %arg0, %12  : vector<2xi8>
     llvm.return %14 : vector<2xi8>
   }]
@@ -3891,12 +3861,7 @@ def lowmask_add_vec_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<[-96, -64]> : vector<2xi8>) : vector<2xi8>
     %1 = llvm.mlir.constant(dense<[16, 32]> : vector<2xi8>) : vector<2xi8>
     %2 = llvm.add %arg0, %0  : vector<2xi8>
-    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_lowmask_add_vec   : lowmask_add_vec_before  ⊑  lowmask_add_vec_combined := by
-  unfold lowmask_add_vec_before lowmask_add_vec_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %3 = llvm.and %2, %1  : vector<2xi8>
     llvm.return %3 : vector<2xi8>
   }]

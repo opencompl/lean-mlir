@@ -218,51 +218,21 @@ def MainKernel_combined := [llvmfunc|
     %3 = llvm.mlir.constant(256 : i64) : i64
     %4 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %5 = llvm.mlir.constant(-4 : i32) : i32
-    %6 = llvm.alloca %0 x !llvm.array<258 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
-    %7 = llvm.alloca %0 x !llvm.array<258 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.alloca %0 x !llvm.array<258 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %7 = llvm.alloca %0 x !llvm.array<258 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %8 = llvm.uitofp %arg0 : i32 to f32
     %9 = llvm.zext %arg1 : i32 to i64
     %10 = llvm.getelementptr inbounds %6[%1, %9] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<258 x f32>
-    llvm.store %8, %10 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %10 {alignment = 4 : i64} : f32, !llvm.ptr
     %11 = llvm.getelementptr inbounds %7[%1, %9] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<258 x f32>
-    llvm.store %8, %11 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %11 {alignment = 4 : i64} : f32, !llvm.ptr
     %12 = llvm.icmp "eq" %arg1, %2 : i32
     llvm.cond_br %12, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %13 = llvm.getelementptr inbounds %6[%1, %3] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<258 x f32>
-    llvm.store %8, %13 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %13 {alignment = 4 : i64} : f32, !llvm.ptr
     %14 = llvm.getelementptr inbounds %7[%1, %3] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<258 x f32>
-    llvm.store %4, %14 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %14 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     %15 = llvm.icmp "sgt" %arg0, %2 : i32
@@ -276,18 +246,8 @@ theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined 
     %24 = llvm.icmp "ult" %18, %arg2 : i32
     llvm.cond_br %19, ^bb4, ^bb5(%16, %17 : f32, f32)
   ^bb4:  // pred: ^bb3
-    %25 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
-    %26 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    %25 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %26 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32
     %27 = llvm.fadd %26, %25  : f32
     %28 = llvm.fadd %27, %16  : f32
     %29 = llvm.fadd %28, %17  : f32
@@ -295,36 +255,16 @@ theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined 
   ^bb5(%30: f32, %31: f32):  // 2 preds: ^bb3, ^bb4
     llvm.cond_br %24, ^bb6, ^bb7
   ^bb6:  // pred: ^bb5
-    llvm.store %31, %10 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %30, %11 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %31, %10 {alignment = 4 : i64} : f32, !llvm.ptr
+    llvm.store %30, %11 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb7
   ^bb7:  // 2 preds: ^bb5, ^bb6
     llvm.cond_br %19, ^bb9, ^bb10(%30, %31 : f32, f32)
   ^bb8:  // 2 preds: ^bb2, ^bb12
     llvm.return
   ^bb9:  // pred: ^bb7
-    %32 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
-    %33 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    %32 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %33 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32
     %34 = llvm.fadd %33, %32  : f32
     %35 = llvm.fadd %34, %30  : f32
     %36 = llvm.fadd %35, %31  : f32
@@ -332,18 +272,8 @@ theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined 
   ^bb10(%37: f32, %38: f32):  // 2 preds: ^bb7, ^bb9
     llvm.cond_br %24, ^bb11, ^bb12
   ^bb11:  // pred: ^bb10
-    llvm.store %38, %10 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %37, %11 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_MainKernel   : MainKernel_before  ⊑  MainKernel_combined := by
-  unfold MainKernel_before MainKernel_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %38, %10 {alignment = 4 : i64} : f32, !llvm.ptr
+    llvm.store %37, %11 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb12
   ^bb12:  // 2 preds: ^bb10, ^bb11
     %39 = llvm.add %18, %5  : i32

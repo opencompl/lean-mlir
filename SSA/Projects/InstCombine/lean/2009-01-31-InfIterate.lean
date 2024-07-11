@@ -31,18 +31,8 @@ def test_combined := [llvmfunc|
   llvm.func @test(%arg0: i64, %arg1: i64, %arg2: i1, %arg3: i128, %arg4: i128, %arg5: !llvm.ptr, %arg6: !llvm.ptr) -> i128 {
     %0 = llvm.trunc %arg3 : i128 to i64
     %1 = llvm.trunc %arg4 : i128 to i64
-    llvm.store %0, %arg5 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg6 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg5 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %1, %arg6 {alignment = 4 : i64} : i64, !llvm.ptr
     %2 = llvm.sub %0, %1  : i64
     %3 = llvm.sext %arg2 : i1 to i64
     %4 = llvm.add %2, %3  : i64

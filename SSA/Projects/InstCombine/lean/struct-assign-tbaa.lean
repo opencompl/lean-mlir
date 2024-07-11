@@ -57,18 +57,8 @@ def test5_multiple_copy_more_than_first_field_before := [llvmfunc|
 
 def test1_combined := [llvmfunc|
   llvm.func @test1(%arg0: !llvm.ptr {llvm.nocapture}, %arg1: !llvm.ptr {llvm.nocapture}) {
-    %0 = llvm.load %arg1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
+    llvm.store %0, %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -80,12 +70,7 @@ def test2_combined := [llvmfunc|
   llvm.func @test2() -> !llvm.ptr {
     %0 = llvm.mlir.constant(true) : i1
     %1 = llvm.mlir.poison : !llvm.ptr
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 
@@ -95,18 +80,8 @@ theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
   sorry
 def test3_multiple_fields_combined := [llvmfunc|
   llvm.func @test3_multiple_fields(%arg0: !llvm.ptr {llvm.nocapture}, %arg1: !llvm.ptr {llvm.nocapture}) {
-    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test3_multiple_fields   : test3_multiple_fields_before  ⊑  test3_multiple_fields_combined := by
-  unfold test3_multiple_fields_before test3_multiple_fields_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test3_multiple_fields   : test3_multiple_fields_before  ⊑  test3_multiple_fields_combined := by
-  unfold test3_multiple_fields_before test3_multiple_fields_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -116,18 +91,8 @@ theorem inst_combine_test3_multiple_fields   : test3_multiple_fields_before  ⊑
   sorry
 def test4_multiple_copy_first_field_combined := [llvmfunc|
   llvm.func @test4_multiple_copy_first_field(%arg0: !llvm.ptr {llvm.nocapture}, %arg1: !llvm.ptr {llvm.nocapture}) {
-    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test4_multiple_copy_first_field   : test4_multiple_copy_first_field_before  ⊑  test4_multiple_copy_first_field_combined := by
-  unfold test4_multiple_copy_first_field_before test4_multiple_copy_first_field_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test4_multiple_copy_first_field   : test4_multiple_copy_first_field_before  ⊑  test4_multiple_copy_first_field_combined := by
-  unfold test4_multiple_copy_first_field_before test4_multiple_copy_first_field_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -137,18 +102,8 @@ theorem inst_combine_test4_multiple_copy_first_field   : test4_multiple_copy_fir
   sorry
 def test5_multiple_copy_more_than_first_field_combined := [llvmfunc|
   llvm.func @test5_multiple_copy_more_than_first_field(%arg0: !llvm.ptr {llvm.nocapture}, %arg1: !llvm.ptr {llvm.nocapture}) {
-    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test5_multiple_copy_more_than_first_field   : test5_multiple_copy_more_than_first_field_before  ⊑  test5_multiple_copy_more_than_first_field_combined := by
-  unfold test5_multiple_copy_more_than_first_field_before test5_multiple_copy_more_than_first_field_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test5_multiple_copy_more_than_first_field   : test5_multiple_copy_more_than_first_field_before  ⊑  test5_multiple_copy_more_than_first_field_combined := by
-  unfold test5_multiple_copy_more_than_first_field_before test5_multiple_copy_more_than_first_field_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

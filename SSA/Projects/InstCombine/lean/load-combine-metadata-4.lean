@@ -26,18 +26,8 @@ def test_load_load_combine_metadata_before := [llvmfunc|
 def test_load_load_combine_metadata_combined := [llvmfunc|
   llvm.func @test_load_load_combine_metadata(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_load_load_combine_metadata   : test_load_load_combine_metadata_before  ⊑  test_load_load_combine_metadata_combined := by
-  unfold test_load_load_combine_metadata_before test_load_load_combine_metadata_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_load_combine_metadata   : test_load_load_combine_metadata_before  ⊑  test_load_load_combine_metadata_combined := by
-  unfold test_load_load_combine_metadata_before test_load_load_combine_metadata_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

@@ -22,3 +22,13 @@ def _Z13func_31585107li_before := [llvmfunc|
     llvm.return %7 : i32
   }]
 
+def _Z13func_31585107li_combined := [llvmfunc|
+  llvm.func @_Z13func_31585107li(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.mlir.poison : i32
+    llvm.return %0 : i32
+  }]
+
+theorem inst_combine__Z13func_31585107li   : _Z13func_31585107li_before  ⊑  _Z13func_31585107li_combined := by
+  unfold _Z13func_31585107li_before _Z13func_31585107li_combined
+  simp_alive_peephole
+  sorry

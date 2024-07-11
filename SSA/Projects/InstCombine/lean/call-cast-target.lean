@@ -141,25 +141,10 @@ def test5_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.addressof @fn5 : !llvm.ptr
-    %3 = llvm.alloca %0 x !llvm.struct<(i32, i32)> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.struct<(i32, i32)> {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     %5 = llvm.getelementptr inbounds %3[%1, 1] : (!llvm.ptr, i32) -> !llvm.ptr, !llvm.struct<(i32, i32)>
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     %7 = llvm.call %2(%4, %6) : !llvm.ptr, (i32, i32) -> i1
     llvm.return %7 : i1
   }]

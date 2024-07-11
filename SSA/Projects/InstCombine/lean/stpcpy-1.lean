@@ -75,12 +75,7 @@ def test_simplify1_combined := [llvmfunc|
     %6 = llvm.mlir.constant(5 : i32) : i32
     %7 = llvm.mlir.constant(0 : i32) : i32
     %8 = llvm.getelementptr inbounds %2[%7, %6] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<32 x i8>
-    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 
@@ -107,12 +102,7 @@ def test_simplify3_combined := [llvmfunc|
     %0 = llvm.mlir.constant("hello\00") : !llvm.array<6 x i8>
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(6 : i32) : i32
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify3   : test_simplify3_before  ⊑  test_simplify3_combined := by
-  unfold test_simplify3_before test_simplify3_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return
   }]
 
@@ -155,12 +145,7 @@ def test_no_incompatible_attr_combined := [llvmfunc|
     %6 = llvm.mlir.constant(5 : i32) : i32
     %7 = llvm.mlir.constant(0 : i32) : i32
     %8 = llvm.getelementptr inbounds %2[%7, %6] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<32 x i8>
-    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_no_incompatible_attr   : test_no_incompatible_attr_before  ⊑  test_no_incompatible_attr_combined := by
-  unfold test_no_incompatible_attr_before test_no_incompatible_attr_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 

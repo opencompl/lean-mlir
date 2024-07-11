@@ -2012,12 +2012,7 @@ def ashr_ugt_0_multiuse_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i4) : i4
     %1 = llvm.ashr %arg0, %0  : i4
     %2 = llvm.icmp "ugt" %arg0, %0 : i4
-    llvm.store %1, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr]
-
-theorem inst_combine_ashr_ugt_0_multiuse   : ashr_ugt_0_multiuse_before  ⊑  ashr_ugt_0_multiuse_combined := by
-  unfold ashr_ugt_0_multiuse_before ashr_ugt_0_multiuse_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr
     llvm.return %2 : i1
   }]
 
@@ -2227,12 +2222,7 @@ def ashr_ult_2_multiuse_combined := [llvmfunc|
     %1 = llvm.mlir.constant(2 : i4) : i4
     %2 = llvm.ashr %arg0, %0  : i4
     %3 = llvm.icmp "ult" %2, %1 : i4
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr]
-
-theorem inst_combine_ashr_ult_2_multiuse   : ashr_ult_2_multiuse_before  ⊑  ashr_ult_2_multiuse_combined := by
-  unfold ashr_ult_2_multiuse_before ashr_ult_2_multiuse_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr
     llvm.return %3 : i1
   }]
 

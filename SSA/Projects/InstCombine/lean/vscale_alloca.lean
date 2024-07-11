@@ -64,18 +64,8 @@ theorem inst_combine_alloca_dead_store   : alloca_dead_store_before  ⊑  alloca
 def alloca_zero_byte_move_first_inst_combined := [llvmfunc|
   llvm.func @alloca_zero_byte_move_first_inst() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.struct<()> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_alloca_zero_byte_move_first_inst   : alloca_zero_byte_move_first_inst_before  ⊑  alloca_zero_byte_move_first_inst_combined := by
-  unfold alloca_zero_byte_move_first_inst_before alloca_zero_byte_move_first_inst_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x !llvm.vec<? x 16 x  i8> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_alloca_zero_byte_move_first_inst   : alloca_zero_byte_move_first_inst_before  ⊑  alloca_zero_byte_move_first_inst_combined := by
-  unfold alloca_zero_byte_move_first_inst_before alloca_zero_byte_move_first_inst_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.struct<()> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x !llvm.vec<? x 16 x  i8> {alignment = 16 : i64} : (i32) -> !llvm.ptr
     llvm.call @use(%2) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.call @use(%1) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.return

@@ -401,18 +401,8 @@ theorem inst_combine_fabs_copysign_vector   : fabs_copysign_vector_before  ⊑  
   sorry
 def fneg_copysign_flags_combined := [llvmfunc|
   llvm.func @fneg_copysign_flags(%arg0: f16, %arg1: f16) -> f16 {
-    %0 = llvm.fneg %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fneg_copysign_flags   : fneg_copysign_flags_before  ⊑  fneg_copysign_flags_combined := by
-  unfold fneg_copysign_flags_before fneg_copysign_flags_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.copysign(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f16, f16) -> f16]
-
-theorem inst_combine_fneg_copysign_flags   : fneg_copysign_flags_before  ⊑  fneg_copysign_flags_combined := by
-  unfold fneg_copysign_flags_before fneg_copysign_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fneg %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f16
+    %1 = llvm.intr.copysign(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nsz>} : (f16, f16) -> f16
     llvm.return %1 : f16
   }]
 
@@ -422,18 +412,8 @@ theorem inst_combine_fneg_copysign_flags   : fneg_copysign_flags_before  ⊑  fn
   sorry
 def fneg_fabs_copysign_flags_combined := [llvmfunc|
   llvm.func @fneg_fabs_copysign_flags(%arg0: f16, %arg1: f16) -> f16 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, afn>} : (f16) -> f16]
-
-theorem inst_combine_fneg_fabs_copysign_flags   : fneg_fabs_copysign_flags_before  ⊑  fneg_fabs_copysign_flags_combined := by
-  unfold fneg_fabs_copysign_flags_before fneg_fabs_copysign_flags_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : f16]
-
-theorem inst_combine_fneg_fabs_copysign_flags   : fneg_fabs_copysign_flags_before  ⊑  fneg_fabs_copysign_flags_combined := by
-  unfold fneg_fabs_copysign_flags_before fneg_fabs_copysign_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, afn>} : (f16) -> f16
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : f16
     llvm.return %1 : f16
   }]
 
@@ -455,12 +435,7 @@ theorem inst_combine_fneg_nsz_copysign   : fneg_nsz_copysign_before  ⊑  fneg_n
 def fneg_fabs_copysign_flags_none_fabs_combined := [llvmfunc|
   llvm.func @fneg_fabs_copysign_flags_none_fabs(%arg0: f16, %arg1: f16) -> f16 {
     %0 = llvm.intr.fabs(%arg0)  : (f16) -> f16
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16]
-
-theorem inst_combine_fneg_fabs_copysign_flags_none_fabs   : fneg_fabs_copysign_flags_none_fabs_before  ⊑  fneg_fabs_copysign_flags_none_fabs_combined := by
-  unfold fneg_fabs_copysign_flags_none_fabs_before fneg_fabs_copysign_flags_none_fabs_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f16
     llvm.return %1 : f16
   }]
 
@@ -470,12 +445,7 @@ theorem inst_combine_fneg_fabs_copysign_flags_none_fabs   : fneg_fabs_copysign_f
   sorry
 def fabs_copysign_flags_combined := [llvmfunc|
   llvm.func @fabs_copysign_flags(%arg0: f16, %arg1: f16) -> f16 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f16) -> f16]
-
-theorem inst_combine_fabs_copysign_flags   : fabs_copysign_flags_before  ⊑  fabs_copysign_flags_combined := by
-  unfold fabs_copysign_flags_before fabs_copysign_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f16) -> f16
     llvm.return %0 : f16
   }]
 
@@ -485,12 +455,7 @@ theorem inst_combine_fabs_copysign_flags   : fabs_copysign_flags_before  ⊑  fa
   sorry
 def fabs_copysign_all_flags_combined := [llvmfunc|
   llvm.func @fabs_copysign_all_flags(%arg0: f16, %arg1: f16) -> f16 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16]
-
-theorem inst_combine_fabs_copysign_all_flags   : fabs_copysign_all_flags_before  ⊑  fabs_copysign_all_flags_combined := by
-  unfold fabs_copysign_all_flags_before fabs_copysign_all_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16
     llvm.return %0 : f16
   }]
 
@@ -501,18 +466,8 @@ theorem inst_combine_fabs_copysign_all_flags   : fabs_copysign_all_flags_before 
 def fabs_copysign_no_flags_copysign_user_combined := [llvmfunc|
   llvm.func @fabs_copysign_no_flags_copysign_user(%arg0: f16, %arg1: f16, %arg2: !llvm.ptr) -> f16 {
     %0 = llvm.intr.copysign(%arg0, %arg1)  : (f16, f16) -> f16
-    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_fabs_copysign_no_flags_copysign_user   : fabs_copysign_no_flags_copysign_user_before  ⊑  fabs_copysign_no_flags_copysign_user_combined := by
-  unfold fabs_copysign_no_flags_copysign_user_before fabs_copysign_no_flags_copysign_user_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16]
-
-theorem inst_combine_fabs_copysign_no_flags_copysign_user   : fabs_copysign_no_flags_copysign_user_before  ⊑  fabs_copysign_no_flags_copysign_user_combined := by
-  unfold fabs_copysign_no_flags_copysign_user_before fabs_copysign_no_flags_copysign_user_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr
+    %1 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16
     llvm.return %1 : f16
   }]
 
@@ -522,18 +477,8 @@ theorem inst_combine_fabs_copysign_no_flags_copysign_user   : fabs_copysign_no_f
   sorry
 def fneg_fabs_copysign_drop_flags_combined := [llvmfunc|
   llvm.func @fneg_fabs_copysign_drop_flags(%arg0: f16, %arg1: f16) -> f16 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f16) -> f16]
-
-theorem inst_combine_fneg_fabs_copysign_drop_flags   : fneg_fabs_copysign_drop_flags_before  ⊑  fneg_fabs_copysign_drop_flags_combined := by
-  unfold fneg_fabs_copysign_drop_flags_before fneg_fabs_copysign_drop_flags_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fneg_fabs_copysign_drop_flags   : fneg_fabs_copysign_drop_flags_before  ⊑  fneg_fabs_copysign_drop_flags_combined := by
-  unfold fneg_fabs_copysign_drop_flags_before fneg_fabs_copysign_drop_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f16) -> f16
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nsz>} : f16
     llvm.return %1 : f16
   }]
 
@@ -544,12 +489,7 @@ theorem inst_combine_fneg_fabs_copysign_drop_flags   : fneg_fabs_copysign_drop_f
 def fneg_copysign_multi_use_combined := [llvmfunc|
   llvm.func @fneg_copysign_multi_use(%arg0: f16, %arg1: f16, %arg2: !llvm.ptr) -> f16 {
     %0 = llvm.intr.copysign(%arg0, %arg1)  : (f16, f16) -> f16
-    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_fneg_copysign_multi_use   : fneg_copysign_multi_use_before  ⊑  fneg_copysign_multi_use_combined := by
-  unfold fneg_copysign_multi_use_before fneg_copysign_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr
     %1 = llvm.fneg %0  : f16
     llvm.return %1 : f16
   }]
@@ -561,12 +501,7 @@ theorem inst_combine_fneg_copysign_multi_use   : fneg_copysign_multi_use_before 
 def fabs_copysign_multi_use_combined := [llvmfunc|
   llvm.func @fabs_copysign_multi_use(%arg0: f16, %arg1: f16, %arg2: !llvm.ptr) -> f16 {
     %0 = llvm.intr.copysign(%arg0, %arg1)  : (f16, f16) -> f16
-    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_fabs_copysign_multi_use   : fabs_copysign_multi_use_before  ⊑  fabs_copysign_multi_use_combined := by
-  unfold fabs_copysign_multi_use_before fabs_copysign_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr
     %1 = llvm.intr.fabs(%arg0)  : (f16) -> f16
     llvm.return %1 : f16
   }]
@@ -578,18 +513,8 @@ theorem inst_combine_fabs_copysign_multi_use   : fabs_copysign_multi_use_before 
 def fabs_flags_copysign_multi_use_combined := [llvmfunc|
   llvm.func @fabs_flags_copysign_multi_use(%arg0: f16, %arg1: f16, %arg2: !llvm.ptr) -> f16 {
     %0 = llvm.intr.copysign(%arg0, %arg1)  : (f16, f16) -> f16
-    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_fabs_flags_copysign_multi_use   : fabs_flags_copysign_multi_use_before  ⊑  fabs_flags_copysign_multi_use_combined := by
-  unfold fabs_flags_copysign_multi_use_before fabs_flags_copysign_multi_use_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f16) -> f16]
-
-theorem inst_combine_fabs_flags_copysign_multi_use   : fabs_flags_copysign_multi_use_before  ⊑  fabs_flags_copysign_multi_use_combined := by
-  unfold fabs_flags_copysign_multi_use_before fabs_flags_copysign_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr
+    %1 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f16) -> f16
     llvm.return %1 : f16
   }]
 
@@ -600,12 +525,7 @@ theorem inst_combine_fabs_flags_copysign_multi_use   : fabs_flags_copysign_multi
 def fneg_fabs_copysign_multi_use_fabs_combined := [llvmfunc|
   llvm.func @fneg_fabs_copysign_multi_use_fabs(%arg0: f16, %arg1: f16, %arg2: !llvm.ptr) -> f16 {
     %0 = llvm.intr.fabs(%arg0)  : (f16) -> f16
-    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_fneg_fabs_copysign_multi_use_fabs   : fneg_fabs_copysign_multi_use_fabs_before  ⊑  fneg_fabs_copysign_multi_use_fabs_combined := by
-  unfold fneg_fabs_copysign_multi_use_fabs_before fneg_fabs_copysign_multi_use_fabs_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 2 : i64} : f16, !llvm.ptr
     llvm.return %0 : f16
   }]
 

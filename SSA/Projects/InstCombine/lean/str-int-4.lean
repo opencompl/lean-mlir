@@ -358,161 +358,41 @@ def fold_strtol_combined := [llvmfunc|
     %53 = llvm.mlir.constant(" 0x7fffffff\00") : !llvm.array<12 x i8>
     %54 = llvm.mlir.addressof @x32max : !llvm.ptr
     %55 = llvm.getelementptr inbounds %54[%1, %48] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<12 x i8>
-    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %56 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %11, %56 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %56 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %57 = llvm.getelementptr %arg0[%12] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %16, %57 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %19, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %16, %57 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %19, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %58 = llvm.getelementptr %arg0[%20] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %21, %58 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %24, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %21, %58 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %24, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %59 = llvm.getelementptr %arg0[%25] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %26, %59 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %30, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %26, %59 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %30, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %60 = llvm.getelementptr %arg0[%31] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %32, %60 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %32, %60 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %36, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %61 = llvm.getelementptr %arg0[%27] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %37, %61 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %41, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %37, %61 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %41, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %62 = llvm.getelementptr %arg0[%42] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %37, %62 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %45, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %37, %62 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %45, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %63 = llvm.getelementptr %arg0[%46] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %37, %63 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %45, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %37, %63 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %45, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %64 = llvm.getelementptr %arg0[%47] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %37, %64 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %51, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %37, %64 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %51, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %65 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %52, %65 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %55, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %52, %65 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %55, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %66 = llvm.getelementptr %arg0[%48] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %52, %66 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtol   : fold_strtol_before  ⊑  fold_strtol_combined := by
-  unfold fold_strtol_before fold_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %52, %66 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -570,124 +450,49 @@ def call_strtol_combined := [llvmfunc|
     %45 = llvm.mlir.constant(256 : i32) : i32
     %46 = llvm.mlir.constant(14 : i64) : i64
     %47 = llvm.call @strtol(%1, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
-    llvm.store %47, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %47, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %48 = llvm.call @strtol(%5, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %49 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %48, %49 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %48, %49 {alignment = 4 : i64} : i32, !llvm.ptr
     %50 = llvm.call @strtol(%8, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %51 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %50, %51 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %50, %51 {alignment = 4 : i64} : i32, !llvm.ptr
     %52 = llvm.call @strtol(%12, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %53 = llvm.getelementptr %arg0[%13] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %52, %53 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %52, %53 {alignment = 4 : i64} : i32, !llvm.ptr
     %54 = llvm.call @strtol(%15, %2, %16) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %55 = llvm.getelementptr %arg0[%17] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %54, %55 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %54, %55 {alignment = 4 : i64} : i32, !llvm.ptr
     %56 = llvm.call @strtol(%19, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %57 = llvm.getelementptr %arg0[%20] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %56, %57 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %56, %57 {alignment = 4 : i64} : i32, !llvm.ptr
     %58 = llvm.call @strtol(%22, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %59 = llvm.getelementptr %arg0[%23] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %58, %59 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %58, %59 {alignment = 4 : i64} : i32, !llvm.ptr
     %60 = llvm.call @strtol(%25, %2, %26) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %61 = llvm.getelementptr %arg0[%27] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %60, %61 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %60, %61 {alignment = 4 : i64} : i32, !llvm.ptr
     %62 = llvm.call @strtol(%29, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %63 = llvm.getelementptr %arg0[%30] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %62, %63 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %62, %63 {alignment = 4 : i64} : i32, !llvm.ptr
     %64 = llvm.call @strtol(%32, %2, %9) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %65 = llvm.getelementptr %arg0[%33] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %64, %65 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %64, %65 {alignment = 4 : i64} : i32, !llvm.ptr
     %66 = llvm.call @strtol(%32, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %67 = llvm.getelementptr %arg0[%34] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %66, %67 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %66, %67 {alignment = 4 : i64} : i32, !llvm.ptr
     %68 = llvm.call @strtol(%36, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %69 = llvm.getelementptr %arg0[%37] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %68, %69 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %68, %69 {alignment = 4 : i64} : i32, !llvm.ptr
     %70 = llvm.call @strtol(%39, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %71 = llvm.getelementptr %arg0[%40] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %70, %71 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %70, %71 {alignment = 4 : i64} : i32, !llvm.ptr
     %72 = llvm.call @strtol(%42, %2, %43) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %73 = llvm.getelementptr %arg0[%44] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %72, %73 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %72, %73 {alignment = 4 : i64} : i32, !llvm.ptr
     %74 = llvm.call @strtol(%42, %2, %45) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %75 = llvm.getelementptr %arg0[%46] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %74, %75 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol   : call_strtol_before  ⊑  call_strtol_combined := by
-  unfold call_strtol_before call_strtol_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %74, %75 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -721,57 +526,17 @@ def fold_strtoll_combined := [llvmfunc|
     %21 = llvm.getelementptr inbounds %20[%1, %18] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<21 x i8>
     %22 = llvm.mlir.constant(3 : i64) : i64
     %23 = llvm.mlir.constant(9223372036854775807 : i64) : i64
-    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %6, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %24 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %11, %24 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %24 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %25 = llvm.getelementptr %arg0[%16] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %17, %25 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %21, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %25 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %21, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %26 = llvm.getelementptr %arg0[%22] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %23, %26 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoll   : fold_strtoll_before  ⊑  fold_strtoll_combined := by
-  unfold fold_strtoll_before fold_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %23, %26 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -796,36 +561,16 @@ def call_strtoll_combined := [llvmfunc|
     %12 = llvm.getelementptr inbounds %8[%11, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<7 x i8>
     %13 = llvm.mlir.constant(3 : i64) : i64
     %14 = llvm.call @strtoll(%1, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
-    llvm.store %14, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoll   : call_strtoll_before  ⊑  call_strtoll_combined := by
-  unfold call_strtoll_before call_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     %15 = llvm.call @strtoll(%5, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %16 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoll   : call_strtoll_before  ⊑  call_strtoll_combined := by
-  unfold call_strtoll_before call_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr
     %17 = llvm.call @strtoll(%8, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %18 = llvm.getelementptr %arg0[%9] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %17, %18 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoll   : call_strtoll_before  ⊑  call_strtoll_combined := by
-  unfold call_strtoll_before call_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %18 {alignment = 4 : i64} : i64, !llvm.ptr
     %19 = llvm.call @strtoll(%12, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %20 = llvm.getelementptr %arg0[%13] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %19, %20 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoll   : call_strtoll_before  ⊑  call_strtoll_combined := by
-  unfold call_strtoll_before call_strtoll_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %19, %20 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -848,28 +593,13 @@ def call_strtol_trailing_space_combined := [llvmfunc|
     %10 = llvm.mlir.constant(3 : i64) : i64
     %11 = llvm.call @strtol(%1, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %12 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %11, %12 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol_trailing_space   : call_strtol_trailing_space_before  ⊑  call_strtol_trailing_space_combined := by
-  unfold call_strtol_trailing_space_before call_strtol_trailing_space_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %12 {alignment = 4 : i64} : i32, !llvm.ptr
     %13 = llvm.call @strtol(%7, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %14 = llvm.getelementptr %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %13, %14 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol_trailing_space   : call_strtol_trailing_space_before  ⊑  call_strtol_trailing_space_combined := by
-  unfold call_strtol_trailing_space_before call_strtol_trailing_space_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %13, %14 {alignment = 4 : i64} : i32, !llvm.ptr
     %15 = llvm.call @strtol(%9, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %16 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %15, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtol_trailing_space   : call_strtol_trailing_space_before  ⊑  call_strtol_trailing_space_combined := by
-  unfold call_strtol_trailing_space_before call_strtol_trailing_space_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %16 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

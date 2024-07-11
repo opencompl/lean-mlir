@@ -77,60 +77,25 @@ def fold_strlen_no_nul_combined := [llvmfunc|
     %8 = llvm.mlir.constant(dense<0> : tensor<0xi8>) : !llvm.array<0 x i8>
     %9 = llvm.mlir.addressof @z0 : !llvm.ptr
     %10 = llvm.mlir.constant(6 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
     %11 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %2, %11 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %11 {alignment = 4 : i64} : i64, !llvm.ptr
     %12 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %2, %12 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %12 {alignment = 4 : i64} : i64, !llvm.ptr
     %13 = llvm.sext %arg1 : i32 to i64
     %14 = llvm.getelementptr %5[%2, %13] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<5 x i8>
     %15 = llvm.call @strlen(%14) : (!llvm.ptr) -> i64
     %16 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %16 {alignment = 4 : i64} : i64, !llvm.ptr
     %17 = llvm.getelementptr %arg0[%7] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %2, %17 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %17 {alignment = 4 : i64} : i64, !llvm.ptr
     %18 = llvm.sext %arg1 : i32 to i64
     %19 = llvm.getelementptr %9[%2, %18] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i8>
     %20 = llvm.call @strlen(%19) : (!llvm.ptr) -> i64
     %21 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %20, %21 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %20, %21 {alignment = 4 : i64} : i64, !llvm.ptr
     %22 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %2, %22 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_no_nul   : fold_strlen_no_nul_before  ⊑  fold_strlen_no_nul_combined := by
-  unfold fold_strlen_no_nul_before fold_strlen_no_nul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %22 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

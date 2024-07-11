@@ -22,12 +22,7 @@ def test_combined := [llvmfunc|
   llvm.func @test(%arg0: !llvm.ptr) -> i32 attributes {passthrough = ["nounwind"]} {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.addrspacecast %arg0 : !llvm.ptr to !llvm.ptr<1>
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr<1>]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr<1>
     llvm.return %0 : i32
   }]
 

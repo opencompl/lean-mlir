@@ -1101,12 +1101,7 @@ def lshr_sub_nsw_extra_use_combined := [llvmfunc|
   llvm.func @lshr_sub_nsw_extra_use(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(31 : i32) : i32
     %1 = llvm.sub %arg0, %arg1 overflow<nsw>  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_lshr_sub_nsw_extra_use   : lshr_sub_nsw_extra_use_before  ⊑  lshr_sub_nsw_extra_use_combined := by
-  unfold lshr_sub_nsw_extra_use_before lshr_sub_nsw_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.lshr %1, %0  : i32
     llvm.return %2 : i32
   }]
@@ -1185,12 +1180,7 @@ def ashr_sub_nsw_extra_use_combined := [llvmfunc|
   llvm.func @ashr_sub_nsw_extra_use(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(31 : i32) : i32
     %1 = llvm.sub %arg0, %arg1 overflow<nsw>  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_ashr_sub_nsw_extra_use   : ashr_sub_nsw_extra_use_before  ⊑  ashr_sub_nsw_extra_use_combined := by
-  unfold ashr_sub_nsw_extra_use_before ashr_sub_nsw_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.ashr %1, %0  : i32
     llvm.return %2 : i32
   }]

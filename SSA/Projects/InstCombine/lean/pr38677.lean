@@ -41,12 +41,7 @@ def foo_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
-    llvm.store %1, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i32
   }]
 

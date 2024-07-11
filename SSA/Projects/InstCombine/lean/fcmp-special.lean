@@ -442,12 +442,7 @@ theorem inst_combine_negative_zero_oeq   : negative_zero_oeq_before  ⊑  negati
 def negative_zero_oge_combined := [llvmfunc|
   llvm.func @negative_zero_oge(%arg0: f64) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %1 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_negative_zero_oge   : negative_zero_oge_before  ⊑  negative_zero_oge_combined := by
-  unfold negative_zero_oge_before negative_zero_oge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f64
     llvm.return %1 : i1
   }]
 
@@ -458,12 +453,7 @@ theorem inst_combine_negative_zero_oge   : negative_zero_oge_before  ⊑  negati
 def negative_zero_uge_combined := [llvmfunc|
   llvm.func @negative_zero_uge(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
-    %1 = llvm.fcmp "uge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f16]
-
-theorem inst_combine_negative_zero_uge   : negative_zero_uge_before  ⊑  negative_zero_uge_combined := by
-  unfold negative_zero_uge_before negative_zero_uge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "uge" %arg0, %0 {fastmathFlags = #llvm.fastmath<fast>} : f16
     llvm.return %1 : i1
   }]
 
@@ -475,12 +465,7 @@ def negative_zero_olt_vec_combined := [llvmfunc|
   llvm.func @negative_zero_olt_vec(%arg0: vector<2xf32>) -> vector<2xi1> {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf32>) : vector<2xf32>
-    %2 = llvm.fcmp "olt" %arg0, %1 {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<2xf32>]
-
-theorem inst_combine_negative_zero_olt_vec   : negative_zero_olt_vec_before  ⊑  negative_zero_olt_vec_combined := by
-  unfold negative_zero_olt_vec_before negative_zero_olt_vec_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %1 {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<2xf32>
     llvm.return %2 : vector<2xi1>
   }]
 
@@ -492,12 +477,7 @@ def negative_zero_une_vec_poison_combined := [llvmfunc|
   llvm.func @negative_zero_une_vec_poison(%arg0: vector<2xf64>) -> vector<2xi1> {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf64>) : vector<2xf64>
-    %2 = llvm.fcmp "une" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf64>]
-
-theorem inst_combine_negative_zero_une_vec_poison   : negative_zero_une_vec_poison_before  ⊑  negative_zero_une_vec_poison_combined := by
-  unfold negative_zero_une_vec_poison_before negative_zero_une_vec_poison_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "une" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf64>
     llvm.return %2 : vector<2xi1>
   }]
 

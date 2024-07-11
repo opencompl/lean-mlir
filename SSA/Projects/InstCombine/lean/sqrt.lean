@@ -205,12 +205,7 @@ theorem inst_combine_<<INVALID EMPTY SYMBOL>>   : <<INVALID EMPTY SYMBOL>>_befor
   sorry
 def sqrt_call_nnan_f32_combined := [llvmfunc|
   llvm.func @sqrt_call_nnan_f32(%arg0: f32) -> f32 {
-    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32]
-
-theorem inst_combine_sqrt_call_nnan_f32   : sqrt_call_nnan_f32_before  ⊑  sqrt_call_nnan_f32_combined := by
-  unfold sqrt_call_nnan_f32_before sqrt_call_nnan_f32_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -220,12 +215,7 @@ theorem inst_combine_sqrt_call_nnan_f32   : sqrt_call_nnan_f32_before  ⊑  sqrt
   sorry
 def sqrt_call_nnan_f64_combined := [llvmfunc|
   llvm.func @sqrt_call_nnan_f64(%arg0: f64) -> f64 {
-    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_call_nnan_f64   : sqrt_call_nnan_f64_before  ⊑  sqrt_call_nnan_f64_combined := by
-  unfold sqrt_call_nnan_f64_before sqrt_call_nnan_f64_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64) -> f64
     llvm.return %0 : f64
   }]
 
@@ -246,18 +236,8 @@ theorem inst_combine_sqrt_call_fabs_f32   : sqrt_call_fabs_f32_before  ⊑  sqrt
   sorry
 def sqrt_exp_combined := [llvmfunc|
   llvm.func @sqrt_exp(%arg0: f64) -> f64 {
-    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp   : sqrt_exp_before  ⊑  sqrt_exp_combined := by
-  unfold sqrt_exp_before sqrt_exp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp   : sqrt_exp_before  ⊑  sqrt_exp_combined := by
-  unfold sqrt_exp_before sqrt_exp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -267,18 +247,8 @@ theorem inst_combine_sqrt_exp   : sqrt_exp_before  ⊑  sqrt_exp_combined := by
   sorry
 def sqrt_exp_2_combined := [llvmfunc|
   llvm.func @sqrt_exp_2(%arg0: f64) -> f64 {
-    %0 = llvm.call @exp(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_2   : sqrt_exp_2_before  ⊑  sqrt_exp_2_combined := by
-  unfold sqrt_exp_2_before sqrt_exp_2_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_2   : sqrt_exp_2_before  ⊑  sqrt_exp_2_combined := by
-  unfold sqrt_exp_2_before sqrt_exp_2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @exp(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -288,18 +258,8 @@ theorem inst_combine_sqrt_exp_2   : sqrt_exp_2_before  ⊑  sqrt_exp_2_combined 
   sorry
 def sqrt_exp2_combined := [llvmfunc|
   llvm.func @sqrt_exp2(%arg0: f64) -> f64 {
-    %0 = llvm.call @exp2(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp2   : sqrt_exp2_before  ⊑  sqrt_exp2_combined := by
-  unfold sqrt_exp2_before sqrt_exp2_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp2   : sqrt_exp2_before  ⊑  sqrt_exp2_combined := by
-  unfold sqrt_exp2_before sqrt_exp2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @exp2(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -309,18 +269,8 @@ theorem inst_combine_sqrt_exp2   : sqrt_exp2_before  ⊑  sqrt_exp2_combined := 
   sorry
 def sqrt_exp10_combined := [llvmfunc|
   llvm.func @sqrt_exp10(%arg0: f64) -> f64 {
-    %0 = llvm.call @exp10(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp10   : sqrt_exp10_before  ⊑  sqrt_exp10_combined := by
-  unfold sqrt_exp10_before sqrt_exp10_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp10   : sqrt_exp10_before  ⊑  sqrt_exp10_combined := by
-  unfold sqrt_exp10_before sqrt_exp10_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @exp10(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -331,12 +281,7 @@ theorem inst_combine_sqrt_exp10   : sqrt_exp10_before  ⊑  sqrt_exp10_combined 
 def sqrt_exp_nofast_1_combined := [llvmfunc|
   llvm.func @sqrt_exp_nofast_1(%arg0: f64) -> f64 {
     %0 = llvm.intr.exp(%arg0)  : (f64) -> f64
-    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_nofast_1   : sqrt_exp_nofast_1_before  ⊑  sqrt_exp_nofast_1_combined := by
-  unfold sqrt_exp_nofast_1_before sqrt_exp_nofast_1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -346,12 +291,7 @@ theorem inst_combine_sqrt_exp_nofast_1   : sqrt_exp_nofast_1_before  ⊑  sqrt_e
   sorry
 def sqrt_exp_nofast_2_combined := [llvmfunc|
   llvm.func @sqrt_exp_nofast_2(%arg0: f64) -> f64 {
-    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_nofast_2   : sqrt_exp_nofast_2_before  ⊑  sqrt_exp_nofast_2_combined := by
-  unfold sqrt_exp_nofast_2_before sqrt_exp_nofast_2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     %1 = llvm.intr.sqrt(%0)  : (f64) -> f64
     llvm.return %1 : f64
   }]
@@ -363,24 +303,9 @@ theorem inst_combine_sqrt_exp_nofast_2   : sqrt_exp_nofast_2_before  ⊑  sqrt_e
 def sqrt_exp_merge_constant_combined := [llvmfunc|
   llvm.func @sqrt_exp_merge_constant(%arg0: f64, %arg1: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+01 : f64) : f64
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f64]
-
-theorem inst_combine_sqrt_exp_merge_constant   : sqrt_exp_merge_constant_before  ⊑  sqrt_exp_merge_constant_combined := by
-  unfold sqrt_exp_merge_constant_before sqrt_exp_merge_constant_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.exp(%1)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_merge_constant   : sqrt_exp_merge_constant_before  ⊑  sqrt_exp_merge_constant_combined := by
-  unfold sqrt_exp_merge_constant_before sqrt_exp_merge_constant_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.intr.sqrt(%2)  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_merge_constant   : sqrt_exp_merge_constant_before  ⊑  sqrt_exp_merge_constant_combined := by
-  unfold sqrt_exp_merge_constant_before sqrt_exp_merge_constant_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : f64
+    %2 = llvm.intr.exp(%1)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %3 = llvm.intr.sqrt(%2)  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : (f64) -> f64
     llvm.return %3 : f64
   }]
 
@@ -390,18 +315,8 @@ theorem inst_combine_sqrt_exp_merge_constant   : sqrt_exp_merge_constant_before 
   sorry
 def sqrt_exp_intr_and_libcall_combined := [llvmfunc|
   llvm.func @sqrt_exp_intr_and_libcall(%arg0: f64) -> f64 {
-    %0 = llvm.call @exp(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_intr_and_libcall   : sqrt_exp_intr_and_libcall_before  ⊑  sqrt_exp_intr_and_libcall_combined := by
-  unfold sqrt_exp_intr_and_libcall_before sqrt_exp_intr_and_libcall_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_intr_and_libcall   : sqrt_exp_intr_and_libcall_before  ⊑  sqrt_exp_intr_and_libcall_combined := by
-  unfold sqrt_exp_intr_and_libcall_before sqrt_exp_intr_and_libcall_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @exp(%arg0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -411,18 +326,8 @@ theorem inst_combine_sqrt_exp_intr_and_libcall   : sqrt_exp_intr_and_libcall_bef
   sorry
 def sqrt_exp_intr_and_libcall_2_combined := [llvmfunc|
   llvm.func @sqrt_exp_intr_and_libcall_2(%arg0: f64) -> f64 {
-    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_intr_and_libcall_2   : sqrt_exp_intr_and_libcall_2_before  ⊑  sqrt_exp_intr_and_libcall_2_combined := by
-  unfold sqrt_exp_intr_and_libcall_2_before sqrt_exp_intr_and_libcall_2_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_sqrt_exp_intr_and_libcall_2   : sqrt_exp_intr_and_libcall_2_before  ⊑  sqrt_exp_intr_and_libcall_2_combined := by
-  unfold sqrt_exp_intr_and_libcall_2_before sqrt_exp_intr_and_libcall_2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
+    %1 = llvm.call @sqrt(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -432,18 +337,8 @@ theorem inst_combine_sqrt_exp_intr_and_libcall_2   : sqrt_exp_intr_and_libcall_2
   sorry
 def sqrt_exp_vec_combined := [llvmfunc|
   llvm.func @sqrt_exp_vec(%arg0: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_sqrt_exp_vec   : sqrt_exp_vec_before  ⊑  sqrt_exp_vec_combined := by
-  unfold sqrt_exp_vec_before sqrt_exp_vec_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_sqrt_exp_vec   : sqrt_exp_vec_before  ⊑  sqrt_exp_vec_combined := by
-  unfold sqrt_exp_vec_before sqrt_exp_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.exp(%arg0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (vector<2xf32>) -> vector<2xf32>
+    %1 = llvm.intr.sqrt(%0)  {fastmathFlags = #llvm.fastmath<reassoc>} : (vector<2xf32>) -> vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 

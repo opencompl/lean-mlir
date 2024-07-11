@@ -34,12 +34,7 @@ def func_56_combined := [llvmfunc|
     %2 = llvm.mlir.addressof @g_127 : !llvm.ptr
     %3 = llvm.mlir.undef : i32
     %4 = llvm.call @rshift_s_s(%arg2, %0) vararg(!llvm.func<i32 (...)>) : (i32, i32) -> i32
-    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_func_56   : func_56_before  ⊑  func_56_combined := by
-  unfold func_56_before func_56_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %3 : i32
   }]
 

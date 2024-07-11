@@ -340,390 +340,70 @@ def foo_combined := [llvmfunc|
     %45 = llvm.mlir.constant(dense<[45, 26, 81, 100]> : vector<4xi32>) : vector<4xi32>
     %46 = llvm.mlir.constant(dense<[37, 75, 31, 17]> : vector<4xi32>) : vector<4xi32>
     %47 = llvm.mlir.constant(dense<[13, 25, 43, 59]> : vector<4xi32>) : vector<4xi32>
-    llvm.store %0, %arg0 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg1 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg2 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %3, %arg3 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg4 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %arg5 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg6 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %7, %arg7 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %8, %arg8 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %arg9 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %10, %arg10 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %11, %arg11 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %12, %arg12 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %13, %arg13 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %14, %arg14 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg15 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg16 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %17, %arg17 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %18, %arg18 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %19, %arg19 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %20, %arg20 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %21, %arg21 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %22, %arg22 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %23, %arg23 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %24, %arg24 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %25, %arg25 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %26, %arg26 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %27, %arg27 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %28, %arg28 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %29, %arg29 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %30, %arg30 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %31, %arg31 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %32, %arg32 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %33, %arg33 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %34, %arg34 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %35, %arg35 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %arg36 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %37, %arg37 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %38, %arg38 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %39, %arg39 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %40, %arg40 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %41, %arg41 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %42, %arg42 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %43, %arg43 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %44, %arg44 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %45, %arg45 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %46, %arg46 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %47, %arg47 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg48 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg49 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg50 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg51 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg52 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg53 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg54 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg55 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg56 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg57 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg58 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg59 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg60 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg61 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg62 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %16, %arg63 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %1, %arg1 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %2, %arg2 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %3, %arg3 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %4, %arg4 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %5, %arg5 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %6, %arg6 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %7, %arg7 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %8, %arg8 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %9, %arg9 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %10, %arg10 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %11, %arg11 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %12, %arg12 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %13, %arg13 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %14, %arg14 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg15 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg16 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %17, %arg17 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %18, %arg18 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %19, %arg19 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %20, %arg20 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %21, %arg21 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %22, %arg22 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %23, %arg23 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %24, %arg24 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %25, %arg25 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %26, %arg26 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %27, %arg27 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %28, %arg28 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %29, %arg29 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %30, %arg30 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %31, %arg31 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %32, %arg32 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %33, %arg33 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %34, %arg34 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %35, %arg35 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %36, %arg36 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %37, %arg37 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %38, %arg38 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %39, %arg39 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %40, %arg40 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %41, %arg41 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %42, %arg42 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %43, %arg43 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %44, %arg44 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %45, %arg45 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %46, %arg46 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %47, %arg47 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg48 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg49 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg50 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg51 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg52 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg53 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg54 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg55 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg56 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg57 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg58 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg59 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg60 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg61 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg62 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
+    llvm.store %16, %arg63 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
     llvm.return
   }]
 

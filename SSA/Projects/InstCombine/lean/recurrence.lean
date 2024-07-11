@@ -131,12 +131,7 @@ def test_or4_combined := [llvmfunc|
   llvm.func @test_or4(%arg0: i64, %arg1: !llvm.ptr) -> i64 {
     llvm.br ^bb1(%arg0 : i64)
   ^bb1(%0: i64):  // 2 preds: ^bb0, ^bb1
-    %1 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test_or4   : test_or4_before  ⊑  test_or4_combined := by
-  unfold test_or4_before test_or4_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64
     %2 = llvm.or %0, %1  : i64
     llvm.call @use(%2) : (i64) -> ()
     llvm.br ^bb1(%2 : i64)
@@ -190,12 +185,7 @@ def test_and4_combined := [llvmfunc|
   llvm.func @test_and4(%arg0: i64, %arg1: !llvm.ptr) -> i64 {
     llvm.br ^bb1(%arg0 : i64)
   ^bb1(%0: i64):  // 2 preds: ^bb0, ^bb1
-    %1 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test_and4   : test_and4_before  ⊑  test_and4_combined := by
-  unfold test_and4_before test_and4_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i64
     %2 = llvm.and %0, %1  : i64
     llvm.call @use(%2) : (i64) -> ()
     llvm.br ^bb1(%2 : i64)

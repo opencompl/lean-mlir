@@ -23,12 +23,7 @@ def _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _before := [llvmfunc|
 def _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _combined := [llvmfunc|
   llvm.func @_Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> (i1 {llvm.zeroext}) {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) ->    : _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _before  ⊑  _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _combined := by
-  unfold _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _before _Z3fooPb(%arg0: !llvm.ptr {llvm.nocapture}) -> _combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.icmp "ne" %1, %0 : i8
     llvm.return %2 : i1
   }]

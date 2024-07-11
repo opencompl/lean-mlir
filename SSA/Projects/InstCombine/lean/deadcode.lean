@@ -55,12 +55,7 @@ theorem inst_combine_test   : test_before  ⊑  test_combined := by
 def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: i32) -> !llvm.ptr {
     %0 = llvm.zext %arg0 : i32 to i64
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i64) -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i64) -> !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 

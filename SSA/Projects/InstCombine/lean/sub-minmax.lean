@@ -761,12 +761,7 @@ theorem inst_combine_sub_umin_commute_vec   : sub_umin_commute_vec_before  ⊑  
 def sub_umin_uses_combined := [llvmfunc|
   llvm.func @sub_umin_uses(%arg0: i5, %arg1: i5, %arg2: !llvm.ptr) -> i5 {
     %0 = llvm.intr.umin(%arg0, %arg1)  : (i5, i5) -> i5
-    llvm.store %0, %arg2 {alignment = 1 : i64} : i5, !llvm.ptr]
-
-theorem inst_combine_sub_umin_uses   : sub_umin_uses_before  ⊑  sub_umin_uses_combined := by
-  unfold sub_umin_uses_before sub_umin_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 1 : i64} : i5, !llvm.ptr
     %1 = llvm.sub %arg0, %0  : i5
     llvm.return %1 : i5
   }]
@@ -1520,12 +1515,7 @@ theorem inst_combine_sub_smin0_sub_nsw_commute   : sub_smin0_sub_nsw_commute_bef
 def sub_max_min_nsw_combined := [llvmfunc|
   llvm.func @sub_max_min_nsw(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_sub_max_min_nsw   : sub_max_min_nsw_before  ⊑  sub_max_min_nsw_combined := by
-  unfold sub_max_min_nsw_before sub_max_min_nsw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -1536,12 +1526,7 @@ theorem inst_combine_sub_max_min_nsw   : sub_max_min_nsw_before  ⊑  sub_max_mi
 def sub_max_min_nuw_combined := [llvmfunc|
   llvm.func @sub_max_min_nuw(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_sub_max_min_nuw   : sub_max_min_nuw_before  ⊑  sub_max_min_nuw_combined := by
-  unfold sub_max_min_nuw_before sub_max_min_nuw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -1552,12 +1537,7 @@ theorem inst_combine_sub_max_min_nuw   : sub_max_min_nuw_before  ⊑  sub_max_mi
 def sub_max_min_nsw_commute_combined := [llvmfunc|
   llvm.func @sub_max_min_nsw_commute(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_sub_max_min_nsw_commute   : sub_max_min_nsw_commute_before  ⊑  sub_max_min_nsw_commute_combined := by
-  unfold sub_max_min_nsw_commute_before sub_max_min_nsw_commute_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -1568,12 +1548,7 @@ theorem inst_combine_sub_max_min_nsw_commute   : sub_max_min_nsw_commute_before 
 def sub_max_min_nuw_commute_combined := [llvmfunc|
   llvm.func @sub_max_min_nuw_commute(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_sub_max_min_nuw_commute   : sub_max_min_nuw_commute_before  ⊑  sub_max_min_nuw_commute_combined := by
-  unfold sub_max_min_nuw_commute_before sub_max_min_nuw_commute_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -1584,12 +1559,7 @@ theorem inst_combine_sub_max_min_nuw_commute   : sub_max_min_nuw_commute_before 
 def sub_max_min_vec_nsw_combined := [llvmfunc|
   llvm.func @sub_max_min_vec_nsw(%arg0: vector<2xi8>, %arg1: vector<2xi8>) -> vector<2xi8> {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : vector<2xi8>
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_sub_max_min_vec_nsw   : sub_max_min_vec_nsw_before  ⊑  sub_max_min_vec_nsw_combined := by
-  unfold sub_max_min_vec_nsw_before sub_max_min_vec_nsw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %1 : vector<2xi8>
   }]
 
@@ -1600,12 +1570,7 @@ theorem inst_combine_sub_max_min_vec_nsw   : sub_max_min_vec_nsw_before  ⊑  su
 def sub_max_min_vec_nuw_combined := [llvmfunc|
   llvm.func @sub_max_min_vec_nuw(%arg0: vector<2xi8>, %arg1: vector<2xi8>) -> vector<2xi8> {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : vector<2xi8>
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_sub_max_min_vec_nuw   : sub_max_min_vec_nuw_before  ⊑  sub_max_min_vec_nuw_combined := by
-  unfold sub_max_min_vec_nuw_before sub_max_min_vec_nuw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %1 : vector<2xi8>
   }]
 
@@ -1616,12 +1581,7 @@ theorem inst_combine_sub_max_min_vec_nuw   : sub_max_min_vec_nuw_before  ⊑  su
 def sub_max_min_vec_nsw_commute_combined := [llvmfunc|
   llvm.func @sub_max_min_vec_nsw_commute(%arg0: vector<2xi8>, %arg1: vector<2xi8>) -> vector<2xi8> {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : vector<2xi8>
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_sub_max_min_vec_nsw_commute   : sub_max_min_vec_nsw_commute_before  ⊑  sub_max_min_vec_nsw_commute_combined := by
-  unfold sub_max_min_vec_nsw_commute_before sub_max_min_vec_nsw_commute_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %1 : vector<2xi8>
   }]
 
@@ -1632,12 +1592,7 @@ theorem inst_combine_sub_max_min_vec_nsw_commute   : sub_max_min_vec_nsw_commute
 def sub_max_min_vec_nuw_commute_combined := [llvmfunc|
   llvm.func @sub_max_min_vec_nuw_commute(%arg0: vector<2xi8>, %arg1: vector<2xi8>) -> vector<2xi8> {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : vector<2xi8>
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_sub_max_min_vec_nuw_commute   : sub_max_min_vec_nuw_commute_before  ⊑  sub_max_min_vec_nuw_commute_combined := by
-  unfold sub_max_min_vec_nuw_commute_before sub_max_min_vec_nuw_commute_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %1 : vector<2xi8>
   }]
 

@@ -44,12 +44,7 @@ def pr59613_combined := [llvmfunc|
   llvm.func @pr59613(%arg0: vector<6xi16>) {
     %0 = llvm.mlir.poison : vector<6xi16>
     %1 = llvm.mlir.zero : !llvm.ptr
-    llvm.store %0, %1 {alignment = 16 : i64} : vector<6xi16>, !llvm.ptr]
-
-theorem inst_combine_pr59613   : pr59613_before  ⊑  pr59613_combined := by
-  unfold pr59613_before pr59613_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 16 : i64} : vector<6xi16>, !llvm.ptr
     llvm.return
   }]
 

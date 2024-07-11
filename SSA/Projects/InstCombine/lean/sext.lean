@@ -336,12 +336,7 @@ theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
   sorry
 def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: i32) -> i64 {
-    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     %1 = llvm.zext %0 : i32 to i64
     llvm.return %1 : i64
   }]
@@ -352,12 +347,7 @@ theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
   sorry
 def test3_combined := [llvmfunc|
   llvm.func @test3(%arg0: i32) -> i64 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     %1 = llvm.zext %0 : i32 to i64
     llvm.return %1 : i64
   }]
@@ -538,12 +528,7 @@ def test11_combined := [llvmfunc|
   llvm.func @test11(%arg0: vector<2xi16>, %arg1: vector<2xi16>, %arg2: !llvm.ptr) {
     %0 = llvm.icmp "eq" %arg1, %arg0 : vector<2xi16>
     %1 = llvm.sext %0 : vector<2xi1> to vector<2xi16>
-    llvm.store %1, %arg2 {alignment = 4 : i64} : vector<2xi16>, !llvm.ptr]
-
-theorem inst_combine_test11   : test11_before  ⊑  test11_combined := by
-  unfold test11_before test11_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : vector<2xi16>, !llvm.ptr
     llvm.return
   }]
 

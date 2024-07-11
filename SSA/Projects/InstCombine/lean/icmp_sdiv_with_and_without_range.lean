@@ -34,12 +34,7 @@ def with_range_before := [llvmfunc|
 def without_range_combined := [llvmfunc|
   llvm.func @without_range(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(2 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_without_range   : without_range_before  ⊑  without_range_combined := by
-  unfold without_range_before without_range_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32
     %2 = llvm.icmp "slt" %1, %0 : i32
     llvm.return %2 : i1
   }]
@@ -51,12 +46,7 @@ theorem inst_combine_without_range   : without_range_before  ⊑  without_range_
 def with_range_combined := [llvmfunc|
   llvm.func @with_range(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(2 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_with_range   : with_range_before  ⊑  with_range_combined := by
-  unfold with_range_before with_range_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i32
     %2 = llvm.icmp "ult" %1, %0 : i32
     llvm.return %2 : i1
   }]

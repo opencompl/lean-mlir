@@ -131,18 +131,8 @@ def test_combined := [llvmfunc|
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xi32>
     %3 = llvm.bitcast %arg0 : vector<16xi8> to vector<4xf32>
     %4 = llvm.extractelement %3[%0 : i64] : vector<4xf32>
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg2 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %4, %arg2 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 

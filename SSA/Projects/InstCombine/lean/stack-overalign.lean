@@ -31,18 +31,8 @@ def foo_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<0> : tensor<1024xi8>) : !llvm.array<1024 x i8>
     %3 = llvm.mlir.addressof @dst : !llvm.ptr
     %4 = llvm.mlir.constant(1024 : i32) : i32
-    %5 = llvm.alloca %0 x !llvm.array<1024 x i8> {alignment = 64 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%3, %5, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.alloca %0 x !llvm.array<1024 x i8> {alignment = 64 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%3, %5, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.call @frob(%5) : (!llvm.ptr) -> ()
     llvm.return
   }]

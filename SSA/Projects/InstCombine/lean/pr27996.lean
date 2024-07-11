@@ -59,19 +59,9 @@ def foo_combined := [llvmfunc|
     %9 = llvm.mlir.addressof @resi : !llvm.ptr
     llvm.br ^bb1(%0 : !llvm.ptr)
   ^bb1(%10: !llvm.ptr):  // 3 preds: ^bb0, ^bb3, ^bb4
-    %11 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32
     %12 = llvm.ashr %11, %3  : i32
-    llvm.store %12, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %12, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     %13 = llvm.icmp "ult" %11, %4 : i32
     llvm.cond_br %13, ^bb5, ^bb2
   ^bb2:  // pred: ^bb1
@@ -83,18 +73,8 @@ theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
   ^bb4:  // pred: ^bb2
     llvm.br ^bb1(%7 : !llvm.ptr)
   ^bb5:  // pred: ^bb1
-    llvm.store %10, %8 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %10, %9 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %10, %8 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %10, %9 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return %1 : i32
   }]
 

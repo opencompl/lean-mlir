@@ -41,3 +41,32 @@ def main_before := [llvmfunc|
     llvm.return %1 : i32
   }]
 
+def main_combined := [llvmfunc|
+  llvm.func @main(%arg0: i32, %arg1: !llvm.ptr) -> i32 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(true) : i1
+    %2 = llvm.mlir.constant(0 : i32) : i32
+    %3 = llvm.mlir.constant(0.000000e+00 : f64) : f64
+    %4 = llvm.mlir.zero : !llvm.ptr
+    %5 = llvm.alloca %0 x !llvm.struct<"struct.Ray", (struct<"struct.Vec", (f64, f64, f64)>, struct<"struct.Vec", (f64, f64, f64)>)> {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.cond_br %1, ^bb4, ^bb6
+  ^bb1:  // pred: ^bb2
+    llvm.store %3, %5 {alignment = 8 : i64} : f64, !llvm.ptr
+    %6 = llvm.call @_Z9ray_traceRK3VecRK3RayRK5Scene(%4, %5, %4) : (!llvm.ptr, !llvm.ptr, !llvm.ptr) -> f64
+    llvm.br ^bb2
+  ^bb2:  // 2 preds: ^bb1, ^bb4
+    llvm.cond_br %1, ^bb1, ^bb3
+  ^bb3:  // pred: ^bb2
+    llvm.return %2 : i32
+  ^bb4:  // pred: ^bb0
+    llvm.cond_br %1, ^bb2, ^bb5
+  ^bb5:  // pred: ^bb4
+    llvm.return %2 : i32
+  ^bb6:  // pred: ^bb0
+    llvm.return %2 : i32
+  }]
+
+theorem inst_combine_main   : main_before  ⊑  main_combined := by
+  unfold main_before main_combined
+  simp_alive_peephole
+  sorry

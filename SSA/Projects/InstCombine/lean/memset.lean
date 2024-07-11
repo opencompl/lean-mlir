@@ -83,30 +83,10 @@ def test_combined := [llvmfunc|
     %2 = llvm.mlir.constant(16843009 : i32) : i32
     %3 = llvm.mlir.constant(72340172838076673 : i64) : i64
     %4 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %3, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %1, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr
+    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %3, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return %4 : i32
   }]
 
@@ -136,12 +116,7 @@ def memset_undef_volatile_combined := [llvmfunc|
   llvm.func @memset_undef_volatile(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.undef : i8
     %1 = llvm.mlir.constant(8 : i32) : i32
-    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()]
-
-theorem inst_combine_memset_undef_volatile   : memset_undef_volatile_before  ⊑  memset_undef_volatile_combined := by
-  unfold memset_undef_volatile_before memset_undef_volatile_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()
     llvm.return
   }]
 
@@ -162,12 +137,7 @@ def memset_poison_volatile_combined := [llvmfunc|
   llvm.func @memset_poison_volatile(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.poison : i8
     %1 = llvm.mlir.constant(8 : i32) : i32
-    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()]
-
-theorem inst_combine_memset_poison_volatile   : memset_poison_volatile_before  ⊑  memset_poison_volatile_combined := by
-  unfold memset_poison_volatile_before memset_poison_volatile_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %0, %1) <{isVolatile = true}> : (!llvm.ptr, i8, i32) -> ()
     llvm.return
   }]
 

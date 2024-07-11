@@ -245,12 +245,7 @@ def sitofp_scalar_intrinsic_with_FMF_combined := [llvmfunc|
   llvm.func @sitofp_scalar_intrinsic_with_FMF(%arg0: i8) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.sext %arg0 : i8 to i32
-    %2 = llvm.call @ldexpf(%0, %1) {fastmathFlags = #llvm.fastmath<nnan>} : (f32, i32) -> f32]
-
-theorem inst_combine_sitofp_scalar_intrinsic_with_FMF   : sitofp_scalar_intrinsic_with_FMF_before  ⊑  sitofp_scalar_intrinsic_with_FMF_combined := by
-  unfold sitofp_scalar_intrinsic_with_FMF_before sitofp_scalar_intrinsic_with_FMF_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.call @ldexpf(%0, %1) {fastmathFlags = #llvm.fastmath<nnan>} : (f32, i32) -> f32
     llvm.return %2 : f32
   }]
 
@@ -261,12 +256,7 @@ theorem inst_combine_sitofp_scalar_intrinsic_with_FMF   : sitofp_scalar_intrinsi
 def sitofp_vector_intrinsic_with_FMF_combined := [llvmfunc|
   llvm.func @sitofp_vector_intrinsic_with_FMF(%arg0: vector<2xi8>) -> vector<2xf32> {
     %0 = llvm.sitofp %arg0 : vector<2xi8> to vector<2xf32>
-    %1 = llvm.intr.exp2(%0)  {fastmathFlags = #llvm.fastmath<nnan>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_sitofp_vector_intrinsic_with_FMF   : sitofp_vector_intrinsic_with_FMF_before  ⊑  sitofp_vector_intrinsic_with_FMF_combined := by
-  unfold sitofp_vector_intrinsic_with_FMF_before sitofp_vector_intrinsic_with_FMF_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.exp2(%0)  {fastmathFlags = #llvm.fastmath<nnan>} : (vector<2xf32>) -> vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 
@@ -310,12 +300,7 @@ theorem inst_combine_test_readonly_exp2l_fp128_of_sitofp   : test_readonly_exp2l
 def test_readonly_exp2f_f32_of_sitofp_flags_combined := [llvmfunc|
   llvm.func @test_readonly_exp2f_f32_of_sitofp_flags(%arg0: i32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.call @ldexpf(%0, %arg0) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, i32) -> f32]
-
-theorem inst_combine_test_readonly_exp2f_f32_of_sitofp_flags   : test_readonly_exp2f_f32_of_sitofp_flags_before  ⊑  test_readonly_exp2f_f32_of_sitofp_flags_combined := by
-  unfold test_readonly_exp2f_f32_of_sitofp_flags_before test_readonly_exp2f_f32_of_sitofp_flags_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @ldexpf(%0, %arg0) {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, i32) -> f32
     llvm.return %1 : f32
   }]
 

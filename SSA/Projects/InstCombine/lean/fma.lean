@@ -833,12 +833,7 @@ theorem inst_combine_fma_fneg_x_fneg_y_vec_poison   : fma_fneg_x_fneg_y_vec_pois
   sorry
 def fma_fneg_x_fneg_y_fast_combined := [llvmfunc|
   llvm.func @fma_fneg_x_fneg_y_fast(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32]
-
-theorem inst_combine_fma_fneg_x_fneg_y_fast   : fma_fneg_x_fneg_y_fast_before  ⊑  fma_fneg_x_fneg_y_fast_combined := by
-  unfold fma_fneg_x_fneg_y_fast_before fma_fneg_x_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -848,12 +843,7 @@ theorem inst_combine_fma_fneg_x_fneg_y_fast   : fma_fneg_x_fneg_y_fast_before  �
   sorry
 def fma_unary_fneg_x_unary_fneg_y_fast_combined := [llvmfunc|
   llvm.func @fma_unary_fneg_x_unary_fneg_y_fast(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32]
-
-theorem inst_combine_fma_unary_fneg_x_unary_fneg_y_fast   : fma_unary_fneg_x_unary_fneg_y_fast_before  ⊑  fma_unary_fneg_x_unary_fneg_y_fast_combined := by
-  unfold fma_unary_fneg_x_unary_fneg_y_fast_before fma_unary_fneg_x_unary_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -937,12 +927,7 @@ theorem inst_combine_fma_fabs_x_fabs_x   : fma_fabs_x_fabs_x_before  ⊑  fma_fa
   sorry
 def fma_fabs_x_fabs_x_fast_combined := [llvmfunc|
   llvm.func @fma_fabs_x_fabs_x_fast(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.intr.fma(%arg0, %arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32]
-
-theorem inst_combine_fma_fabs_x_fabs_x_fast   : fma_fabs_x_fabs_x_fast_before  ⊑  fma_fabs_x_fabs_x_fast_combined := by
-  unfold fma_fabs_x_fabs_x_fast_before fma_fabs_x_fabs_x_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fma(%arg0, %arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -972,18 +957,8 @@ theorem inst_combine_fmuladd_unary_fneg_x_unary_fneg_y   : fmuladd_unary_fneg_x_
   sorry
 def fmuladd_fneg_x_fneg_y_fast_combined := [llvmfunc|
   llvm.func @fmuladd_fneg_x_fneg_y_fast(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_fneg_x_fneg_y_fast   : fmuladd_fneg_x_fneg_y_fast_before  ⊑  fmuladd_fneg_x_fneg_y_fast_combined := by
-  unfold fmuladd_fneg_x_fneg_y_fast_before fmuladd_fneg_x_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_fneg_x_fneg_y_fast   : fmuladd_fneg_x_fneg_y_fast_before  ⊑  fmuladd_fneg_x_fneg_y_fast_combined := by
-  unfold fmuladd_fneg_x_fneg_y_fast_before fmuladd_fneg_x_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -993,12 +968,7 @@ theorem inst_combine_fmuladd_fneg_x_fneg_y_fast   : fmuladd_fneg_x_fneg_y_fast_b
   sorry
 def fmuladd_unfold_combined := [llvmfunc|
   llvm.func @fmuladd_unfold(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.intr.fmuladd(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<contract, reassoc>} : (f32, f32, f32) -> f32]
-
-theorem inst_combine_fmuladd_unfold   : fmuladd_unfold_before  ⊑  fmuladd_unfold_combined := by
-  unfold fmuladd_unfold_before fmuladd_unfold_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fmuladd(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<contract, reassoc>} : (f32, f32, f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -1008,12 +978,7 @@ theorem inst_combine_fmuladd_unfold   : fmuladd_unfold_before  ⊑  fmuladd_unfo
   sorry
 def fmuladd_unfold_vec_combined := [llvmfunc|
   llvm.func @fmuladd_unfold_vec(%arg0: vector<8xf16>, %arg1: vector<8xf16>, %arg2: vector<8xf16>) -> vector<8xf16> {
-    %0 = llvm.intr.fmuladd(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<contract, reassoc>} : (vector<8xf16>, vector<8xf16>, vector<8xf16>) -> vector<8xf16>]
-
-theorem inst_combine_fmuladd_unfold_vec   : fmuladd_unfold_vec_before  ⊑  fmuladd_unfold_vec_combined := by
-  unfold fmuladd_unfold_vec_before fmuladd_unfold_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fmuladd(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<contract, reassoc>} : (vector<8xf16>, vector<8xf16>, vector<8xf16>) -> vector<8xf16>
     llvm.return %0 : vector<8xf16>
   }]
 
@@ -1023,18 +988,8 @@ theorem inst_combine_fmuladd_unfold_vec   : fmuladd_unfold_vec_before  ⊑  fmul
   sorry
 def fmuladd_unary_fneg_x_unary_fneg_y_fast_combined := [llvmfunc|
   llvm.func @fmuladd_unary_fneg_x_unary_fneg_y_fast(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_unary_fneg_x_unary_fneg_y_fast   : fmuladd_unary_fneg_x_unary_fneg_y_fast_before  ⊑  fmuladd_unary_fneg_x_unary_fneg_y_fast_combined := by
-  unfold fmuladd_unary_fneg_x_unary_fneg_y_fast_before fmuladd_unary_fneg_x_unary_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_unary_fneg_x_unary_fneg_y_fast   : fmuladd_unary_fneg_x_unary_fneg_y_fast_before  ⊑  fmuladd_unary_fneg_x_unary_fneg_y_fast_combined := by
-  unfold fmuladd_unary_fneg_x_unary_fneg_y_fast_before fmuladd_unary_fneg_x_unary_fneg_y_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fadd %0, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1118,18 +1073,8 @@ theorem inst_combine_fmuladd_fabs_x_fabs_x   : fmuladd_fabs_x_fabs_x_before  ⊑
   sorry
 def fmuladd_fabs_x_fabs_x_fast_combined := [llvmfunc|
   llvm.func @fmuladd_fabs_x_fabs_x_fast(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_fabs_x_fabs_x_fast   : fmuladd_fabs_x_fabs_x_fast_before  ⊑  fmuladd_fabs_x_fabs_x_fast_combined := by
-  unfold fmuladd_fabs_x_fabs_x_fast_before fmuladd_fabs_x_fabs_x_fast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_fabs_x_fabs_x_fast   : fmuladd_fabs_x_fabs_x_fast_before  ⊑  fmuladd_fabs_x_fabs_x_fast_combined := by
-  unfold fmuladd_fabs_x_fabs_x_fast_before fmuladd_fabs_x_fabs_x_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -1151,12 +1096,7 @@ theorem inst_combine_fma_k_y_z   : fma_k_y_z_before  ⊑  fma_k_y_z_combined := 
 def fma_k_y_z_fast_combined := [llvmfunc|
   llvm.func @fma_k_y_z_fast(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(4.000000e+00 : f32) : f32
-    %1 = llvm.intr.fma(%arg0, %0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32]
-
-theorem inst_combine_fma_k_y_z_fast   : fma_k_y_z_fast_before  ⊑  fma_k_y_z_fast_combined := by
-  unfold fma_k_y_z_fast_before fma_k_y_z_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.fma(%arg0, %0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -1167,18 +1107,8 @@ theorem inst_combine_fma_k_y_z_fast   : fma_k_y_z_fast_before  ⊑  fma_k_y_z_fa
 def fmuladd_k_y_z_fast_combined := [llvmfunc|
   llvm.func @fmuladd_k_y_z_fast(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(4.000000e+00 : f32) : f32
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_k_y_z_fast   : fmuladd_k_y_z_fast_before  ⊑  fmuladd_k_y_z_fast_combined := by
-  unfold fmuladd_k_y_z_fast_before fmuladd_k_y_z_fast_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fadd %1, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_k_y_z_fast   : fmuladd_k_y_z_fast_before  ⊑  fmuladd_k_y_z_fast_combined := by
-  unfold fmuladd_k_y_z_fast_before fmuladd_k_y_z_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %2 = llvm.fadd %1, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %2 : f32
   }]
 
@@ -1229,12 +1159,7 @@ theorem inst_combine_fma_x_1_2_z_v2f32   : fma_x_1_2_z_v2f32_before  ⊑  fma_x_
   sorry
 def fma_x_1_z_fast_combined := [llvmfunc|
   llvm.func @fma_x_1_z_fast(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fma_x_1_z_fast   : fma_x_1_z_fast_before  ⊑  fma_x_1_z_fast_combined := by
-  unfold fma_x_1_z_fast_before fma_x_1_z_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1266,12 +1191,7 @@ theorem inst_combine_fma_x_y_0   : fma_x_y_0_before  ⊑  fma_x_y_0_combined := 
   sorry
 def fma_x_y_0_nsz_combined := [llvmfunc|
   llvm.func @fma_x_y_0_nsz(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fma_x_y_0_nsz   : fma_x_y_0_nsz_before  ⊑  fma_x_y_0_nsz_combined := by
-  unfold fma_x_y_0_nsz_before fma_x_y_0_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1293,12 +1213,7 @@ theorem inst_combine_fma_x_y_0_v   : fma_x_y_0_v_before  ⊑  fma_x_y_0_v_combin
   sorry
 def fma_x_y_0_nsz_v_combined := [llvmfunc|
   llvm.func @fma_x_y_0_nsz_v(%arg0: vector<8xf16>, %arg1: vector<8xf16>) -> vector<8xf16> {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : vector<8xf16>]
-
-theorem inst_combine_fma_x_y_0_nsz_v   : fma_x_y_0_nsz_v_before  ⊑  fma_x_y_0_nsz_v_combined := by
-  unfold fma_x_y_0_nsz_v_before fma_x_y_0_nsz_v_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : vector<8xf16>
     llvm.return %0 : vector<8xf16>
   }]
 
@@ -1319,12 +1234,7 @@ theorem inst_combine_fmuladd_x_y_0   : fmuladd_x_y_0_before  ⊑  fmuladd_x_y_0_
   sorry
 def fmuladd_x_y_0_nsz_combined := [llvmfunc|
   llvm.func @fmuladd_x_y_0_nsz(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_fmuladd_x_y_0_nsz   : fmuladd_x_y_0_nsz_before  ⊑  fmuladd_x_y_0_nsz_combined := by
-  unfold fmuladd_x_y_0_nsz_before fmuladd_x_y_0_nsz_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1364,12 +1274,7 @@ theorem inst_combine_fmuladd_x_y_m0   : fmuladd_x_y_m0_before  ⊑  fmuladd_x_y_
   sorry
 def fmuladd_x_1_z_fast_combined := [llvmfunc|
   llvm.func @fmuladd_x_1_z_fast(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fmuladd_x_1_z_fast   : fmuladd_x_1_z_fast_before  ⊑  fmuladd_x_1_z_fast_combined := by
-  unfold fmuladd_x_1_z_fast_before fmuladd_x_1_z_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 
@@ -1399,12 +1304,7 @@ def fmuladd_a_0_b_missing_flags_combined := [llvmfunc|
   llvm.func @fmuladd_a_0_b_missing_flags(%arg0: vector<2xf64>, %arg1: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf64>) : vector<2xf64>
-    %2 = llvm.intr.fmuladd(%arg0, %1, %arg1)  {fastmathFlags = #llvm.fastmath<nnan>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fmuladd_a_0_b_missing_flags   : fmuladd_a_0_b_missing_flags_before  ⊑  fmuladd_a_0_b_missing_flags_combined := by
-  unfold fmuladd_a_0_b_missing_flags_before fmuladd_a_0_b_missing_flags_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fmuladd(%arg0, %1, %arg1)  {fastmathFlags = #llvm.fastmath<nnan>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %2 : vector<2xf64>
   }]
 
@@ -1434,12 +1334,7 @@ def fma_0_a_b_missing_flags_combined := [llvmfunc|
   llvm.func @fma_0_a_b_missing_flags(%arg0: vector<2xf64>, %arg1: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf64>) : vector<2xf64>
-    %2 = llvm.intr.fma(%arg0, %1, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fma_0_a_b_missing_flags   : fma_0_a_b_missing_flags_before  ⊑  fma_0_a_b_missing_flags_combined := by
-  unfold fma_0_a_b_missing_flags_before fma_0_a_b_missing_flags_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fma(%arg0, %1, %arg1)  {fastmathFlags = #llvm.fastmath<nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %2 : vector<2xf64>
   }]
 
@@ -1449,12 +1344,7 @@ theorem inst_combine_fma_0_a_b_missing_flags   : fma_0_a_b_missing_flags_before 
   sorry
 def fma_sqrt_combined := [llvmfunc|
   llvm.func @fma_sqrt(%arg0: vector<2xf64>, %arg1: vector<2xf64>) -> vector<2xf64> {
-    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>]
-
-theorem inst_combine_fma_sqrt   : fma_sqrt_before  ⊑  fma_sqrt_combined := by
-  unfold fma_sqrt_before fma_sqrt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>
     llvm.return %0 : vector<2xf64>
   }]
 
@@ -1466,12 +1356,7 @@ def fma_const_fmul_combined := [llvmfunc|
   llvm.func @fma_const_fmul(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(dense<[1123123.0099110012, 9999.0000001000008]> : vector<2xf64>) : vector<2xf64>
     %1 = llvm.mlir.constant(dense<[1.291820e-08, 9.123000e-06]> : vector<2xf64>) : vector<2xf64>
-    %2 = llvm.intr.fma(%0, %1, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fma_const_fmul   : fma_const_fmul_before  ⊑  fma_const_fmul_combined := by
-  unfold fma_const_fmul_before fma_const_fmul_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fma(%0, %1, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %2 : vector<2xf64>
   }]
 
@@ -1500,12 +1385,7 @@ theorem inst_combine_fma_const_fmul_zero2   : fma_const_fmul_zero2_before  ⊑  
 def fma_const_fmul_one_combined := [llvmfunc|
   llvm.func @fma_const_fmul_one(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(dense<[1123123.0099110012, 9999.0000001000008]> : vector<2xf64>) : vector<2xf64>
-    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>]
-
-theorem inst_combine_fma_const_fmul_one   : fma_const_fmul_one_before  ⊑  fma_const_fmul_one_combined := by
-  unfold fma_const_fmul_one_before fma_const_fmul_one_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -1516,12 +1396,7 @@ theorem inst_combine_fma_const_fmul_one   : fma_const_fmul_one_before  ⊑  fma_
 def fma_const_fmul_one2_combined := [llvmfunc|
   llvm.func @fma_const_fmul_one2(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(dense<[1123123.0099110012, 9999.0000001000008]> : vector<2xf64>) : vector<2xf64>
-    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>]
-
-theorem inst_combine_fma_const_fmul_one2   : fma_const_fmul_one2_before  ⊑  fma_const_fmul_one2_combined := by
-  unfold fma_const_fmul_one2_before fma_const_fmul_one2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -1598,12 +1473,7 @@ def fma_partial_undef_0_combined := [llvmfunc|
     %4 = llvm.insertelement %1, %2[%3 : i32] : vector<2xf64>
     %5 = llvm.mlir.constant(1 : i32) : i32
     %6 = llvm.insertelement %0, %4[%5 : i32] : vector<2xf64>
-    %7 = llvm.intr.fma(%arg0, %6, %arg1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fma_partial_undef_0   : fma_partial_undef_0_before  ⊑  fma_partial_undef_0_combined := by
-  unfold fma_partial_undef_0_before fma_partial_undef_0_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.intr.fma(%arg0, %6, %arg1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %7 : vector<2xf64>
   }]
 
@@ -1620,12 +1490,7 @@ def fma_partial_undef_1_combined := [llvmfunc|
     %4 = llvm.insertelement %1, %2[%3 : i32] : vector<2xf64>
     %5 = llvm.mlir.constant(1 : i32) : i32
     %6 = llvm.insertelement %0, %4[%5 : i32] : vector<2xf64>
-    %7 = llvm.intr.fma(%arg0, %6, %arg1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fma_partial_undef_1   : fma_partial_undef_1_before  ⊑  fma_partial_undef_1_combined := by
-  unfold fma_partial_undef_1_before fma_partial_undef_1_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.intr.fma(%arg0, %6, %arg1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %7 : vector<2xf64>
   }]
 
@@ -1642,12 +1507,7 @@ def fma_partial_undef_2_combined := [llvmfunc|
     %4 = llvm.insertelement %1, %2[%3 : i32] : vector<2xf64>
     %5 = llvm.mlir.constant(1 : i32) : i32
     %6 = llvm.insertelement %0, %4[%5 : i32] : vector<2xf64>
-    %7 = llvm.intr.fma(%arg0, %arg1, %6)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_fma_partial_undef_2   : fma_partial_undef_2_before  ⊑  fma_partial_undef_2_combined := by
-  unfold fma_partial_undef_2_before fma_partial_undef_2_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.intr.fma(%arg0, %arg1, %6)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<2xf64>, vector<2xf64>, vector<2xf64>) -> vector<2xf64>
     llvm.return %7 : vector<2xf64>
   }]
 
@@ -1688,12 +1548,7 @@ theorem inst_combine_fma_nan_2   : fma_nan_2_before  ⊑  fma_nan_2_combined := 
 def fmuladd_const_fmul_combined := [llvmfunc|
   llvm.func @fmuladd_const_fmul(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(dense<[0.014508727666632295, 0.091220877000912318]> : vector<2xf64>) : vector<2xf64>
-    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>]
-
-theorem inst_combine_fmuladd_const_fmul   : fmuladd_const_fmul_before  ⊑  fmuladd_const_fmul_combined := by
-  unfold fmuladd_const_fmul_before fmuladd_const_fmul_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -1798,12 +1653,7 @@ def fma_unary_shuffle_ops_widening_combined := [llvmfunc|
     %0 = llvm.mlir.poison : vector<2xf32>
     %1 = llvm.shufflevector %arg0, %0 [1, 0, 1] : vector<2xf32> 
     llvm.call @use_vec3(%1) : (vector<3xf32>) -> ()
-    %2 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf32>, vector<2xf32>, vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_fma_unary_shuffle_ops_widening   : fma_unary_shuffle_ops_widening_before  ⊑  fma_unary_shuffle_ops_widening_combined := by
-  unfold fma_unary_shuffle_ops_widening_before fma_unary_shuffle_ops_widening_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf32>, vector<2xf32>, vector<2xf32>) -> vector<2xf32>
     %3 = llvm.shufflevector %2, %0 [1, 0, 1] : vector<2xf32> 
     llvm.return %3 : vector<3xf32>
   }]
@@ -1817,12 +1667,7 @@ def fma_unary_shuffle_ops_narrowing_combined := [llvmfunc|
     %0 = llvm.mlir.poison : vector<3xf32>
     %1 = llvm.shufflevector %arg1, %0 [1, 0] : vector<3xf32> 
     llvm.call @use_vec(%1) : (vector<2xf32>) -> ()
-    %2 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<3xf32>, vector<3xf32>, vector<3xf32>) -> vector<3xf32>]
-
-theorem inst_combine_fma_unary_shuffle_ops_narrowing   : fma_unary_shuffle_ops_narrowing_before  ⊑  fma_unary_shuffle_ops_narrowing_combined := by
-  unfold fma_unary_shuffle_ops_narrowing_before fma_unary_shuffle_ops_narrowing_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fma(%arg0, %arg1, %arg2)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<3xf32>, vector<3xf32>, vector<3xf32>) -> vector<3xf32>
     %3 = llvm.shufflevector %2, %0 [1, 0] : vector<3xf32> 
     llvm.return %3 : vector<2xf32>
   }]

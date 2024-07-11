@@ -514,12 +514,7 @@ def fold_phi_fadd_nnan_combined := [llvmfunc|
     llvm.call @dummy() : () -> ()
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
-    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_fold_phi_fadd_nnan   : fold_phi_fadd_nnan_before  ⊑  fold_phi_fadd_nnan_combined := by
-  unfold fold_phi_fadd_nnan_before fold_phi_fadd_nnan_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nnan>} : f32
     llvm.return %0 : f32
   }]
 

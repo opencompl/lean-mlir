@@ -195,12 +195,7 @@ def test0_combined := [llvmfunc|
     %2 = llvm.icmp "eq" %arg0, %0 : i64
     llvm.cond_br %2, ^bb2(%1 : i32), ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test0   : test0_before  ⊑  test0_combined := by
-  unfold test0_before test0_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     %4 = llvm.trunc %3 : i64 to i32
     llvm.br ^bb2(%4 : i32)
   ^bb2(%5: i32):  // 2 preds: ^bb0, ^bb1
@@ -218,12 +213,7 @@ def test1_combined := [llvmfunc|
     %2 = llvm.icmp "eq" %arg0, %0 : i64
     llvm.cond_br %2, ^bb2(%1 : i32), ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     %4 = llvm.trunc %3 : i64 to i32
     llvm.br ^bb2(%4 : i32)
   ^bb2(%5: i32):  // 2 preds: ^bb0, ^bb1
@@ -244,12 +234,7 @@ def test2_combined := [llvmfunc|
     %5 = llvm.icmp "eq" %4, %2 : i8
     llvm.cond_br %5, ^bb2(%1 : vector<8xi64>), ^bb1
   ^bb1:  // pred: ^bb0
-    %6 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<8xi64>) -> vector<8xi64>]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %6 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<8xi64>) -> vector<8xi64>
     llvm.br ^bb2(%6 : vector<8xi64>)
   ^bb2(%7: vector<8xi64>):  // 2 preds: ^bb0, ^bb1
     llvm.return %7 : vector<8xi64>
@@ -270,12 +255,7 @@ def D60846_miscompile_combined := [llvmfunc|
     llvm.cond_br %4, ^bb3, ^bb2
   ^bb2:  // pred: ^bb1
     %5 = llvm.icmp "eq" %3, %1 : i16
-    llvm.store %5, %arg0 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_D60846_miscompile   : D60846_miscompile_before  ⊑  D60846_miscompile_combined := by
-  unfold D60846_miscompile_before D60846_miscompile_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %6 = llvm.add %3, %1  : i16
@@ -296,12 +276,7 @@ def test_sgt_zero_combined := [llvmfunc|
     %2 = llvm.icmp "sgt" %arg0, %0 : i64
     llvm.cond_br %2, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test_sgt_zero   : test_sgt_zero_before  ⊑  test_sgt_zero_combined := by
-  unfold test_sgt_zero_before test_sgt_zero_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     llvm.return %3 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %1 : i64
@@ -335,12 +310,7 @@ def test_slt_ten_combined := [llvmfunc|
     %2 = llvm.icmp "slt" %arg0, %0 : i64
     llvm.cond_br %2, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64]
-
-theorem inst_combine_test_slt_ten   : test_slt_ten_before  ⊑  test_slt_ten_combined := by
-  unfold test_slt_ten_before test_slt_ten_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64
     llvm.return %3 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %1 : i64
@@ -356,12 +326,7 @@ def test_ugt_unknown_combined := [llvmfunc|
     %1 = llvm.icmp "ugt" %arg0, %arg1 : i64
     llvm.cond_br %1, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %2 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test_ugt_unknown   : test_ugt_unknown_before  ⊑  test_ugt_unknown_combined := by
-  unfold test_ugt_unknown_before test_ugt_unknown_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     llvm.return %2 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %0 : i64
@@ -378,12 +343,7 @@ def test_sle_zero_combined := [llvmfunc|
     %2 = llvm.icmp "slt" %arg0, %0 : i64
     llvm.cond_br %2, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test_sle_zero   : test_sle_zero_before  ⊑  test_sle_zero_combined := by
-  unfold test_sle_zero_before test_sle_zero_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     llvm.return %3 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %1 : i64
@@ -417,12 +377,7 @@ def test_sge_ten_combined := [llvmfunc|
     %2 = llvm.icmp "sgt" %arg0, %0 : i64
     llvm.cond_br %2, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64]
-
-theorem inst_combine_test_sge_ten   : test_sge_ten_before  ⊑  test_sge_ten_combined := by
-  unfold test_sge_ten_before test_sge_ten_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64
     llvm.return %3 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %1 : i64
@@ -438,12 +393,7 @@ def test_ule_unknown_combined := [llvmfunc|
     %1 = llvm.icmp "ugt" %arg0, %arg1 : i64
     llvm.cond_br %1, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %2 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_test_ule_unknown   : test_ule_unknown_before  ⊑  test_ule_unknown_combined := by
-  unfold test_ule_unknown_before test_ule_unknown_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     llvm.return %2 : i64
   ^bb2:  // pred: ^bb0
     llvm.return %0 : i64

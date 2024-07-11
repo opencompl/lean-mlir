@@ -611,19 +611,9 @@ def sub_abs_no_nsw_before := [llvmfunc|
 
 def test_abs_abs_a_mul_b_i8_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_i8(%arg0: i8, %arg1: i8) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i8   : test_abs_abs_a_mul_b_i8_before  ⊑  test_abs_abs_a_mul_b_i8_combined := by
-  unfold test_abs_abs_a_mul_b_i8_before test_abs_abs_a_mul_b_i8_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8
     %1 = llvm.mul %0, %arg1  : i8
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i8   : test_abs_abs_a_mul_b_i8_before  ⊑  test_abs_abs_a_mul_b_i8_combined := by
-  unfold test_abs_abs_a_mul_b_i8_before test_abs_abs_a_mul_b_i8_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %2 : i8
   }]
 
@@ -635,19 +625,9 @@ def test_abs_a_mul_abs_b_i8_combined := [llvmfunc|
   llvm.func @test_abs_a_mul_abs_b_i8(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.mlir.constant(123 : i8) : i8
     %1 = llvm.urem %0, %arg0  : i8
-    %2 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_abs_a_mul_abs_b_i8   : test_abs_a_mul_abs_b_i8_before  ⊑  test_abs_a_mul_abs_b_i8_combined := by
-  unfold test_abs_a_mul_abs_b_i8_before test_abs_a_mul_abs_b_i8_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i8) -> i8
     %3 = llvm.mul %1, %2  : i8
-    %4 = "llvm.intr.abs"(%3) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_abs_a_mul_abs_b_i8   : test_abs_a_mul_abs_b_i8_before  ⊑  test_abs_a_mul_abs_b_i8_combined := by
-  unfold test_abs_a_mul_abs_b_i8_before test_abs_a_mul_abs_b_i8_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.abs"(%3) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %4 : i8
   }]
 
@@ -657,19 +637,9 @@ theorem inst_combine_test_abs_a_mul_abs_b_i8   : test_abs_a_mul_abs_b_i8_before 
   sorry
 def test_abs_abs_a_mul_b_i32_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_i32(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32   : test_abs_abs_a_mul_b_i32_before  ⊑  test_abs_abs_a_mul_b_i32_combined := by
-  unfold test_abs_abs_a_mul_b_i32_before test_abs_abs_a_mul_b_i32_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32
     %1 = llvm.mul %0, %arg1  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32   : test_abs_abs_a_mul_b_i32_before  ⊑  test_abs_abs_a_mul_b_i32_combined := by
-  unfold test_abs_abs_a_mul_b_i32_before test_abs_abs_a_mul_b_i32_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -679,19 +649,9 @@ theorem inst_combine_test_abs_abs_a_mul_b_i32   : test_abs_abs_a_mul_b_i32_befor
   sorry
 def test_abs_abs_a_mul_b_i32_abs_false_true_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_i32_abs_false_true(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_true   : test_abs_abs_a_mul_b_i32_abs_false_true_before  ⊑  test_abs_abs_a_mul_b_i32_abs_false_true_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_false_true_before test_abs_abs_a_mul_b_i32_abs_false_true_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     %1 = llvm.mul %0, %arg1  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_true   : test_abs_abs_a_mul_b_i32_abs_false_true_before  ⊑  test_abs_abs_a_mul_b_i32_abs_false_true_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_false_true_before test_abs_abs_a_mul_b_i32_abs_false_true_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -701,19 +661,9 @@ theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_true   : test_abs_abs_a_
   sorry
 def test_abs_abs_a_mul_b_i32_abs_true_false_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_i32_abs_true_false(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_true_false   : test_abs_abs_a_mul_b_i32_abs_true_false_before  ⊑  test_abs_abs_a_mul_b_i32_abs_true_false_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_true_false_before test_abs_abs_a_mul_b_i32_abs_true_false_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32
     %1 = llvm.mul %0, %arg1  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_true_false   : test_abs_abs_a_mul_b_i32_abs_true_false_before  ⊑  test_abs_abs_a_mul_b_i32_abs_true_false_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_true_false_before test_abs_abs_a_mul_b_i32_abs_true_false_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -723,19 +673,9 @@ theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_true_false   : test_abs_abs_a_
   sorry
 def test_abs_abs_a_mul_b_i32_abs_false_false_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_i32_abs_false_false(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_false   : test_abs_abs_a_mul_b_i32_abs_false_false_before  ⊑  test_abs_abs_a_mul_b_i32_abs_false_false_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_false_false_before test_abs_abs_a_mul_b_i32_abs_false_false_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     %1 = llvm.mul %0, %arg1  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_false   : test_abs_abs_a_mul_b_i32_abs_false_false_before  ⊑  test_abs_abs_a_mul_b_i32_abs_false_false_combined := by
-  unfold test_abs_abs_a_mul_b_i32_abs_false_false_before test_abs_abs_a_mul_b_i32_abs_false_false_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -745,19 +685,9 @@ theorem inst_combine_test_abs_abs_a_mul_b_i32_abs_false_false   : test_abs_abs_a
   sorry
 def test_nsw_with_true_combined := [llvmfunc|
   llvm.func @test_nsw_with_true(%arg0: i8, %arg1: i8) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_test_nsw_with_true   : test_nsw_with_true_before  ⊑  test_nsw_with_true_combined := by
-  unfold test_nsw_with_true_before test_nsw_with_true_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     %1 = llvm.mul %0, %arg1 overflow<nsw>  : i8
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_nsw_with_true   : test_nsw_with_true_before  ⊑  test_nsw_with_true_combined := by
-  unfold test_nsw_with_true_before test_nsw_with_true_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %2 : i8
   }]
 
@@ -767,19 +697,9 @@ theorem inst_combine_test_nsw_with_true   : test_nsw_with_true_before  ⊑  test
   sorry
 def test_nsw_with_false_combined := [llvmfunc|
   llvm.func @test_nsw_with_false(%arg0: i8, %arg1: i8) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_test_nsw_with_false   : test_nsw_with_false_before  ⊑  test_nsw_with_false_combined := by
-  unfold test_nsw_with_false_before test_nsw_with_false_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     %1 = llvm.mul %0, %arg1 overflow<nsw>  : i8
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_test_nsw_with_false   : test_nsw_with_false_before  ⊑  test_nsw_with_false_combined := by
-  unfold test_nsw_with_false_before test_nsw_with_false_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i8) -> i8
     llvm.return %2 : i8
   }]
 
@@ -789,19 +709,9 @@ theorem inst_combine_test_nsw_with_false   : test_nsw_with_false_before  ⊑  te
   sorry
 def test_abs_abs_a_mul_b_more_one_use_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_more_one_use(%arg0: i32, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_more_one_use   : test_abs_abs_a_mul_b_more_one_use_before  ⊑  test_abs_abs_a_mul_b_more_one_use_combined := by
-  unfold test_abs_abs_a_mul_b_more_one_use_before test_abs_abs_a_mul_b_more_one_use_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32
     %1 = llvm.mul %0, %arg1  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_test_abs_abs_a_mul_b_more_one_use   : test_abs_abs_a_mul_b_more_one_use_before  ⊑  test_abs_abs_a_mul_b_more_one_use_combined := by
-  unfold test_abs_abs_a_mul_b_more_one_use_before test_abs_abs_a_mul_b_more_one_use_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.call @use(%1) : (i32) -> ()
     llvm.return %2 : i32
   }]
@@ -812,19 +722,9 @@ theorem inst_combine_test_abs_abs_a_mul_b_more_one_use   : test_abs_abs_a_mul_b_
   sorry
 def test_abs_abs_a_mul_b_vector_i8_combined := [llvmfunc|
   llvm.func @test_abs_abs_a_mul_b_vector_i8(%arg0: vector<2xi8>, %arg1: vector<2xi8>) -> vector<2xi8> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_test_abs_abs_a_mul_b_vector_i8   : test_abs_abs_a_mul_b_vector_i8_before  ⊑  test_abs_abs_a_mul_b_vector_i8_combined := by
-  unfold test_abs_abs_a_mul_b_vector_i8_before test_abs_abs_a_mul_b_vector_i8_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     %1 = llvm.mul %0, %arg1  : vector<2xi8>
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>]
-
-theorem inst_combine_test_abs_abs_a_mul_b_vector_i8   : test_abs_abs_a_mul_b_vector_i8_before  ⊑  test_abs_abs_a_mul_b_vector_i8_combined := by
-  unfold test_abs_abs_a_mul_b_vector_i8_before test_abs_abs_a_mul_b_vector_i8_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (vector<2xi8>) -> vector<2xi8>
     llvm.return %2 : vector<2xi8>
   }]
 
@@ -836,12 +736,7 @@ def abs_trailing_zeros_combined := [llvmfunc|
   llvm.func @abs_trailing_zeros(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(-4 : i32) : i32
     %1 = llvm.and %arg0, %0  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_trailing_zeros   : abs_trailing_zeros_before  ⊑  abs_trailing_zeros_combined := by
-  unfold abs_trailing_zeros_before abs_trailing_zeros_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -853,12 +748,7 @@ def abs_trailing_zeros_vec_combined := [llvmfunc|
   llvm.func @abs_trailing_zeros_vec(%arg0: vector<4xi32>) -> vector<4xi32> {
     %0 = llvm.mlir.constant(dense<[-4, -8, -16, -32]> : vector<4xi32>) : vector<4xi32>
     %1 = llvm.and %arg0, %0  : vector<4xi32>
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_abs_trailing_zeros_vec   : abs_trailing_zeros_vec_before  ⊑  abs_trailing_zeros_vec_combined := by
-  unfold abs_trailing_zeros_vec_before abs_trailing_zeros_vec_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>
     llvm.return %2 : vector<4xi32>
   }]
 
@@ -871,12 +761,7 @@ def abs_trailing_zeros_negative_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-2 : i32) : i32
     %1 = llvm.mlir.constant(-4 : i32) : i32
     %2 = llvm.and %arg0, %0  : i32
-    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_trailing_zeros_negative   : abs_trailing_zeros_negative_before  ⊑  abs_trailing_zeros_negative_combined := by
-  unfold abs_trailing_zeros_negative_before abs_trailing_zeros_negative_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = false}> : (i32) -> i32
     %4 = llvm.and %3, %1  : i32
     llvm.return %4 : i32
   }]
@@ -890,12 +775,7 @@ def abs_trailing_zeros_negative_vec_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<-2> : vector<4xi32>) : vector<4xi32>
     %1 = llvm.mlir.constant(dense<-4> : vector<4xi32>) : vector<4xi32>
     %2 = llvm.and %arg0, %0  : vector<4xi32>
-    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_abs_trailing_zeros_negative_vec   : abs_trailing_zeros_negative_vec_before  ⊑  abs_trailing_zeros_negative_vec_combined := by
-  unfold abs_trailing_zeros_negative_vec_before abs_trailing_zeros_negative_vec_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>
     %4 = llvm.and %3, %1  : vector<4xi32>
     llvm.return %4 : vector<4xi32>
   }]
@@ -907,12 +787,7 @@ theorem inst_combine_abs_trailing_zeros_negative_vec   : abs_trailing_zeros_nega
 def abs_signbits_combined := [llvmfunc|
   llvm.func @abs_signbits(%arg0: i30) -> i32 {
     %0 = llvm.mlir.constant(1 : i30) : i30
-    %1 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i30) -> i30]
-
-theorem inst_combine_abs_signbits   : abs_signbits_before  ⊑  abs_signbits_combined := by
-  unfold abs_signbits_before abs_signbits_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i30) -> i30
     %2 = llvm.add %1, %0 overflow<nuw>  : i30
     %3 = llvm.zext %2 : i30 to i32
     llvm.return %3 : i32
@@ -926,12 +801,7 @@ def abs_signbits_vec_combined := [llvmfunc|
   llvm.func @abs_signbits_vec(%arg0: vector<4xi30>) -> vector<4xi32> {
     %0 = llvm.mlir.constant(1 : i30) : i30
     %1 = llvm.mlir.constant(dense<1> : vector<4xi30>) : vector<4xi30>
-    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi30>) -> vector<4xi30>]
-
-theorem inst_combine_abs_signbits_vec   : abs_signbits_vec_before  ⊑  abs_signbits_vec_combined := by
-  unfold abs_signbits_vec_before abs_signbits_vec_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi30>) -> vector<4xi30>
     %3 = llvm.add %2, %1 overflow<nuw>  : vector<4xi30>
     %4 = llvm.zext %3 : vector<4xi30> to vector<4xi32>
     llvm.return %4 : vector<4xi32>
@@ -943,12 +813,7 @@ theorem inst_combine_abs_signbits_vec   : abs_signbits_vec_before  ⊑  abs_sign
   sorry
 def abs_of_neg_combined := [llvmfunc|
   llvm.func @abs_of_neg(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_of_neg   : abs_of_neg_before  ⊑  abs_of_neg_combined := by
-  unfold abs_of_neg_before abs_of_neg_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -958,12 +823,7 @@ theorem inst_combine_abs_of_neg   : abs_of_neg_before  ⊑  abs_of_neg_combined 
   sorry
 def abs_of_neg_vec_combined := [llvmfunc|
   llvm.func @abs_of_neg_vec(%arg0: vector<4xi32>) -> vector<4xi32> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_abs_of_neg_vec   : abs_of_neg_vec_before  ⊑  abs_of_neg_vec_combined := by
-  unfold abs_of_neg_vec_before abs_of_neg_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>
     llvm.return %0 : vector<4xi32>
   }]
 
@@ -973,12 +833,7 @@ theorem inst_combine_abs_of_neg_vec   : abs_of_neg_vec_before  ⊑  abs_of_neg_v
   sorry
 def abs_of_select_neg_true_val_combined := [llvmfunc|
   llvm.func @abs_of_select_neg_true_val(%arg0: i1, %arg1: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_abs_of_select_neg_true_val   : abs_of_select_neg_true_val_before  ⊑  abs_of_select_neg_true_val_combined := by
-  unfold abs_of_select_neg_true_val_before abs_of_select_neg_true_val_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -988,12 +843,7 @@ theorem inst_combine_abs_of_select_neg_true_val   : abs_of_select_neg_true_val_b
   sorry
 def abs_of_select_neg_false_val_combined := [llvmfunc|
   llvm.func @abs_of_select_neg_false_val(%arg0: vector<4xi1>, %arg1: vector<4xi32>) -> vector<4xi32> {
-    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_abs_of_select_neg_false_val   : abs_of_select_neg_false_val_before  ⊑  abs_of_select_neg_false_val_combined := by
-  unfold abs_of_select_neg_false_val_before abs_of_select_neg_false_val_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg1) <{is_int_min_poison = false}> : (vector<4xi32>) -> vector<4xi32>
     llvm.return %0 : vector<4xi32>
   }]
 
@@ -1165,12 +1015,7 @@ theorem inst_combine_abs_ne_int_min_nopoison   : abs_ne_int_min_nopoison_before 
   sorry
 def abs_sext_combined := [llvmfunc|
   llvm.func @abs_sext(%arg0: i8) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_abs_sext   : abs_sext_before  ⊑  abs_sext_combined := by
-  unfold abs_sext_before abs_sext_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     %1 = llvm.zext %0 : i8 to i32
     llvm.return %1 : i32
   }]
@@ -1181,12 +1026,7 @@ theorem inst_combine_abs_sext   : abs_sext_before  ⊑  abs_sext_combined := by
   sorry
 def abs_nsw_sext_combined := [llvmfunc|
   llvm.func @abs_nsw_sext(%arg0: vector<3xi7>) -> vector<3xi82> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<3xi7>) -> vector<3xi7>]
-
-theorem inst_combine_abs_nsw_sext   : abs_nsw_sext_before  ⊑  abs_nsw_sext_combined := by
-  unfold abs_nsw_sext_before abs_nsw_sext_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<3xi7>) -> vector<3xi7>
     %1 = llvm.zext %0 : vector<3xi7> to vector<3xi82>
     llvm.return %1 : vector<3xi82>
   }]
@@ -1198,18 +1038,8 @@ theorem inst_combine_abs_nsw_sext   : abs_nsw_sext_before  ⊑  abs_nsw_sext_com
 def abs_sext_extra_use_combined := [llvmfunc|
   llvm.func @abs_sext_extra_use(%arg0: i8, %arg1: !llvm.ptr) -> i32 {
     %0 = llvm.sext %arg0 : i8 to i32
-    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_abs_sext_extra_use   : abs_sext_extra_use_before  ⊑  abs_sext_extra_use_combined := by
-  unfold abs_sext_extra_use_before abs_sext_extra_use_combined
-  simp_alive_peephole
-  sorry
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_sext_extra_use   : abs_sext_extra_use_before  ⊑  abs_sext_extra_use_combined := by
-  unfold abs_sext_extra_use_before abs_sext_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %1 : i32
   }]
 
@@ -1219,12 +1049,7 @@ theorem inst_combine_abs_sext_extra_use   : abs_sext_extra_use_before  ⊑  abs_
   sorry
 def trunc_abs_sext_combined := [llvmfunc|
   llvm.func @trunc_abs_sext(%arg0: i8) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_trunc_abs_sext   : trunc_abs_sext_before  ⊑  trunc_abs_sext_combined := by
-  unfold trunc_abs_sext_before trunc_abs_sext_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i8) -> i8
     llvm.return %0 : i8
   }]
 
@@ -1234,12 +1059,7 @@ theorem inst_combine_trunc_abs_sext   : trunc_abs_sext_before  ⊑  trunc_abs_se
   sorry
 def trunc_abs_sext_vec_combined := [llvmfunc|
   llvm.func @trunc_abs_sext_vec(%arg0: vector<4xi8>) -> vector<4xi8> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi8>) -> vector<4xi8>]
-
-theorem inst_combine_trunc_abs_sext_vec   : trunc_abs_sext_vec_before  ⊑  trunc_abs_sext_vec_combined := by
-  unfold trunc_abs_sext_vec_before trunc_abs_sext_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<4xi8>) -> vector<4xi8>
     llvm.return %0 : vector<4xi8>
   }]
 
@@ -1273,12 +1093,7 @@ theorem inst_combine_demand_low_bit_int_min_is_poison   : demand_low_bit_int_min
 def demand_low_bits_combined := [llvmfunc|
   llvm.func @demand_low_bits(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(3 : i32) : i32
-    %1 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_demand_low_bits   : demand_low_bits_before  ⊑  demand_low_bits_combined := by
-  unfold demand_low_bits_before demand_low_bits_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     %2 = llvm.and %1, %0  : i32
     llvm.return %2 : i32
   }]
@@ -1305,12 +1120,7 @@ def srem_by_2_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i82) : i82
     %3 = llvm.mlir.constant(dense<1> : vector<3xi82>) : vector<3xi82>
     %4 = llvm.srem %arg0, %1  : vector<3xi82>
-    llvm.store %4, %arg1 {alignment = 32 : i64} : vector<3xi82>, !llvm.ptr]
-
-theorem inst_combine_srem_by_2   : srem_by_2_before  ⊑  srem_by_2_combined := by
-  unfold srem_by_2_before srem_by_2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 32 : i64} : vector<3xi82>, !llvm.ptr
     %5 = llvm.and %arg0, %3  : vector<3xi82>
     llvm.return %5 : vector<3xi82>
   }]
@@ -1323,12 +1133,7 @@ def srem_by_3_combined := [llvmfunc|
   llvm.func @srem_by_3(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(3 : i32) : i32
     %1 = llvm.srem %arg0, %0  : i32
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_srem_by_3   : srem_by_3_before  ⊑  srem_by_3_combined := by
-  unfold srem_by_3_before srem_by_3_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -1487,12 +1292,7 @@ def sub_abs_wrong_pred_combined := [llvmfunc|
     llvm.cond_br %1, ^bb1, ^bb2(%0 : i32)
   ^bb1:  // pred: ^bb0
     %2 = llvm.sub %arg0, %arg1 overflow<nsw>  : i32
-    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_sub_abs_wrong_pred   : sub_abs_wrong_pred_before  ⊑  sub_abs_wrong_pred_combined := by
-  unfold sub_abs_wrong_pred_before sub_abs_wrong_pred_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.br ^bb2(%3 : i32)
   ^bb2(%4: i32):  // 2 preds: ^bb0, ^bb1
     llvm.return %4 : i32
@@ -1509,12 +1309,7 @@ def sub_abs_no_nsw_combined := [llvmfunc|
     llvm.cond_br %1, ^bb1, ^bb2(%0 : i32)
   ^bb1:  // pred: ^bb0
     %2 = llvm.sub %arg0, %arg1  : i32
-    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_sub_abs_no_nsw   : sub_abs_no_nsw_before  ⊑  sub_abs_no_nsw_combined := by
-  unfold sub_abs_no_nsw_before sub_abs_no_nsw_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.abs"(%2) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.br ^bb2(%3 : i32)
   ^bb2(%4: i32):  // 2 preds: ^bb0, ^bb1
     llvm.return %4 : i32

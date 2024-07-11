@@ -89,50 +89,20 @@ def func_combined := [llvmfunc|
     %16 = llvm.add %15, %11 overflow<nsw, nuw>  : i32
     %17 = llvm.zext %16 : i32 to i64
     %18 = llvm.getelementptr inbounds %arg1[%17] : (!llvm.ptr, i64) -> !llvm.ptr, f64
-    %19 = llvm.load %18 {access_groups = [#access_group], alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    %19 = llvm.load %18 {access_groups = [#access_group], alignment = 8 : i64} : !llvm.ptr -> f64
     %20 = llvm.fadd %19, %19  : f64
-    llvm.call @arg(%20) {access_groups = [#access_group, #access_group1, #access_group2]} : (f64) -> ()]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    llvm.call @arg(%20) {access_groups = [#access_group, #access_group1, #access_group2]} : (f64) -> ()
     %21 = llvm.add %11, %1 overflow<nsw, nuw>  : i32
-    llvm.br ^bb4(%21 : i32) {loop_annotation = #loop_annotation}]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb4(%21 : i32) {loop_annotation = #loop_annotation}
   ^bb6:  // pred: ^bb4
     %22 = llvm.add %8, %1 overflow<nsw, nuw>  : i32
-    llvm.br ^bb3(%22 : i32) {loop_annotation = #loop_annotation1}]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb3(%22 : i32) {loop_annotation = #loop_annotation1}
   ^bb7:  // pred: ^bb3
     %23 = llvm.add %5, %1 overflow<nsw, nuw>  : i32
-    llvm.br ^bb2(%23 : i32) {loop_annotation = #loop_annotation2}]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb2(%23 : i32) {loop_annotation = #loop_annotation2}
   ^bb8:  // pred: ^bb2
     %24 = llvm.add %2, %1 overflow<nsw, nuw>  : i32
-    llvm.br ^bb1(%24 : i32) {loop_annotation = #loop_annotation3}]
-
-theorem inst_combine_func   : func_before  ⊑  func_combined := by
-  unfold func_before func_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb1(%24 : i32) {loop_annotation = #loop_annotation3}
   ^bb9:  // pred: ^bb1
     llvm.return
   }]

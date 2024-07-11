@@ -308,12 +308,7 @@ theorem inst_combine_ctlz_sel_const_true_false   : ctlz_sel_const_true_false_bef
 def ctlz_sel_const_true_combined := [llvmfunc|
   llvm.func @ctlz_sel_const_true(%arg0: i1, %arg1: i32) -> i32 {
     %0 = llvm.mlir.constant(29 : i32) : i32
-    %1 = "llvm.intr.ctlz"(%arg1) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_sel_const_true   : ctlz_sel_const_true_before  ⊑  ctlz_sel_const_true_combined := by
-  unfold ctlz_sel_const_true_before ctlz_sel_const_true_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.ctlz"(%arg1) <{is_zero_poison = false}> : (i32) -> i32
     %2 = llvm.select %arg0, %0, %1 : i1, i32
     llvm.return %2 : i32
   }]
@@ -334,12 +329,7 @@ def ctlz_sel_const_false_combined := [llvmfunc|
     %7 = llvm.insertelement %1, %5[%6 : i32] : vector<3xi17>
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xi17>
-    %10 = "llvm.intr.ctlz"(%arg1) <{is_zero_poison = true}> : (vector<3xi17>) -> vector<3xi17>]
-
-theorem inst_combine_ctlz_sel_const_false   : ctlz_sel_const_false_before  ⊑  ctlz_sel_const_false_combined := by
-  unfold ctlz_sel_const_false_before ctlz_sel_const_false_combined
-  simp_alive_peephole
-  sorry
+    %10 = "llvm.intr.ctlz"(%arg1) <{is_zero_poison = true}> : (vector<3xi17>) -> vector<3xi17>
     %11 = llvm.select %arg0, %10, %9 : vector<3xi1>, vector<3xi17>
     llvm.return %11 : vector<3xi17>
   }]
@@ -354,12 +344,7 @@ def ctlz_sel_const_true_false_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(7 : i32) : i32
     %2 = llvm.select %arg0, %0, %1 : i1, i32
     llvm.call @use(%2) : (i32) -> ()
-    %3 = "llvm.intr.ctlz"(%2) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_sel_const_true_false_extra_use   : ctlz_sel_const_true_false_extra_use_before  ⊑  ctlz_sel_const_true_false_extra_use_combined := by
-  unfold ctlz_sel_const_true_false_extra_use_before ctlz_sel_const_true_false_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%2) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %3 : i32
   }]
 
@@ -382,12 +367,7 @@ theorem inst_combine_cttz_sel_const_true_false   : cttz_sel_const_true_false_bef
 def cttz_sel_const_true_combined := [llvmfunc|
   llvm.func @cttz_sel_const_true(%arg0: i1, %arg1: i32) -> i32 {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = "llvm.intr.cttz"(%arg1) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_cttz_sel_const_true   : cttz_sel_const_true_before  ⊑  cttz_sel_const_true_combined := by
-  unfold cttz_sel_const_true_before cttz_sel_const_true_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.cttz"(%arg1) <{is_zero_poison = true}> : (i32) -> i32
     %2 = llvm.select %arg0, %0, %1 : i1, i32
     llvm.return %2 : i32
   }]
@@ -401,12 +381,7 @@ def cttz_sel_const_false_combined := [llvmfunc|
     %0 = llvm.mlir.constant(5 : i5) : i5
     %1 = llvm.mlir.constant(0 : i5) : i5
     %2 = llvm.mlir.constant(dense<[0, 0, 5]> : vector<3xi5>) : vector<3xi5>
-    %3 = "llvm.intr.cttz"(%arg1) <{is_zero_poison = false}> : (vector<3xi5>) -> vector<3xi5>]
-
-theorem inst_combine_cttz_sel_const_false   : cttz_sel_const_false_before  ⊑  cttz_sel_const_false_combined := by
-  unfold cttz_sel_const_false_before cttz_sel_const_false_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%arg1) <{is_zero_poison = false}> : (vector<3xi5>) -> vector<3xi5>
     %4 = llvm.select %arg0, %3, %2 : vector<3xi1>, vector<3xi5>
     llvm.return %4 : vector<3xi5>
   }]
@@ -421,12 +396,7 @@ def cttz_sel_const_true_false_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-8 : i32) : i32
     %2 = llvm.select %arg0, %0, %1 : i1, i32
     llvm.call @use(%2) : (i32) -> ()
-    %3 = "llvm.intr.cttz"(%2) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_cttz_sel_const_true_false_extra_use   : cttz_sel_const_true_false_extra_use_before  ⊑  cttz_sel_const_true_false_extra_use_combined := by
-  unfold cttz_sel_const_true_false_extra_use_before cttz_sel_const_true_false_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%2) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %3 : i32
   }]
 
@@ -561,12 +531,7 @@ def non_speculatable_combined := [llvmfunc|
     %7 = llvm.mlir.poison : vector<2xi32>
     %8 = llvm.mlir.constant(64 : i32) : i32
     %9 = llvm.select %arg0, %2, %3 : i1, !llvm.ptr
-    %10 = llvm.intr.masked.load %9, %6, %7 {alignment = 64 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_non_speculatable   : non_speculatable_before  ⊑  non_speculatable_combined := by
-  unfold non_speculatable_before non_speculatable_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.intr.masked.load %9, %6, %7 {alignment = 64 : i32} : (!llvm.ptr, vector<2xi1>, vector<2xi32>) -> vector<2xi32>
     llvm.return %10 : vector<2xi32>
   }]
 
@@ -686,12 +651,7 @@ theorem inst_combine_test_fabs_select2   : test_fabs_select2_before  ⊑  test_f
 def test_fabs_select_fmf1_combined := [llvmfunc|
   llvm.func @test_fabs_select_fmf1(%arg0: i1, %arg1: f64) -> f64 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %1 = llvm.select %arg0, %0, %arg1 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : i1, f64]
-
-theorem inst_combine_test_fabs_select_fmf1   : test_fabs_select_fmf1_before  ⊑  test_fabs_select_fmf1_combined := by
-  unfold test_fabs_select_fmf1_before test_fabs_select_fmf1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg0, %0, %arg1 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : i1, f64
     %2 = llvm.intr.fabs(%1)  : (f64) -> f64
     llvm.return %2 : f64
   }]
@@ -704,12 +664,7 @@ def test_fabs_select_fmf2_combined := [llvmfunc|
   llvm.func @test_fabs_select_fmf2(%arg0: i1, %arg1: f64) -> f64 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.select %arg0, %0, %arg1 : i1, f64
-    %2 = llvm.intr.fabs(%1)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64]
-
-theorem inst_combine_test_fabs_select_fmf2   : test_fabs_select_fmf2_before  ⊑  test_fabs_select_fmf2_combined := by
-  unfold test_fabs_select_fmf2_before test_fabs_select_fmf2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.fabs(%1)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64
     llvm.return %2 : f64
   }]
 

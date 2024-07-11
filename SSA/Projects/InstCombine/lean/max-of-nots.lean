@@ -553,12 +553,7 @@ def abs_of_min_of_not_combined := [llvmfunc|
     %2 = llvm.sub %0, %arg1  : i32
     %3 = llvm.intr.smax(%arg0, %2)  : (i32, i32) -> i32
     %4 = llvm.xor %3, %1  : i32
-    %5 = "llvm.intr.abs"(%4) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_abs_of_min_of_not   : abs_of_min_of_not_before  ⊑  abs_of_min_of_not_combined := by
-  unfold abs_of_min_of_not_before abs_of_min_of_not_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.abs"(%4) <{is_int_min_poison = false}> : (i32) -> i32
     llvm.return %5 : i32
   }]
 

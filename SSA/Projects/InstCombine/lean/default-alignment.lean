@@ -18,12 +18,7 @@ def t_before := [llvmfunc|
 
 def t_combined := [llvmfunc|
   llvm.func @t(%arg0: !llvm.ptr) -> i8 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_t   : t_before  ⊑  t_combined := by
-  unfold t_before t_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.return %0 : i8
   }]
 

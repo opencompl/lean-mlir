@@ -207,12 +207,7 @@ def foo_combined := [llvmfunc|
     %6 = llvm.zext %arg2 : i32 to i64
     %7 = llvm.getelementptr inbounds %5[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %8 = llvm.getelementptr inbounds %7[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %9 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %10 = llvm.icmp "eq" %9, %arg3 : i32
     llvm.cond_br %10, ^bb5(%1 : i32), ^bb1
   ^bb1:  // pred: ^bb0
@@ -222,24 +217,14 @@ theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
     %12 = llvm.getelementptr inbounds %arg7[%11] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %13 = llvm.getelementptr inbounds %12[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %14 = llvm.getelementptr inbounds %13[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %15 = llvm.load %14 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %14 {alignment = 4 : i64} : !llvm.ptr -> i32
     %16 = llvm.icmp "eq" %15, %arg3 : i32
     llvm.cond_br %16, ^bb5(%1 : i32), ^bb3(%22, %24 : i32, i32)
   ^bb3(%17: i32, %18: i32):  // 2 preds: ^bb1, ^bb2
     %19 = llvm.and %17, %arg8  : i32
     %20 = llvm.zext %19 : i32 to i64
     %21 = llvm.getelementptr inbounds %arg4[%20] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %22 = llvm.load %21 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %22 = llvm.load %21 {alignment = 4 : i64} : !llvm.ptr -> i32
     %23 = llvm.icmp "ugt" %22, %arg5 : i32
     llvm.cond_br %23, ^bb4, ^bb5(%2 : i32)
   ^bb4:  // pred: ^bb3
@@ -354,12 +339,7 @@ def gep_cross_loop_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %2 = llvm.mlir.constant(17 : i64) : i64
     %3 = llvm.mlir.constant(1 : i64) : i64
-    %4 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_gep_cross_loop   : gep_cross_loop_before  ⊑  gep_cross_loop_combined := by
-  unfold gep_cross_loop_before gep_cross_loop_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %5 = llvm.getelementptr inbounds %arg1[%4] : (!llvm.ptr, i64) -> !llvm.ptr, f32
     llvm.br ^bb1(%0, %1 : i64, f32)
   ^bb1(%6: i64, %7: f32):  // 2 preds: ^bb0, ^bb3
@@ -369,18 +349,8 @@ theorem inst_combine_gep_cross_loop   : gep_cross_loop_before  ⊑  gep_cross_lo
     llvm.return %7 : f32
   ^bb3:  // pred: ^bb1
     %9 = llvm.getelementptr inbounds %5[%6] : (!llvm.ptr, i64) -> !llvm.ptr, f32
-    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_gep_cross_loop   : gep_cross_loop_before  ⊑  gep_cross_loop_combined := by
-  unfold gep_cross_loop_before gep_cross_loop_combined
-  simp_alive_peephole
-  sorry
-    %11 = llvm.fadd %7, %10  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_gep_cross_loop   : gep_cross_loop_before  ⊑  gep_cross_loop_combined := by
-  unfold gep_cross_loop_before gep_cross_loop_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %11 = llvm.fadd %7, %10  {fastmathFlags = #llvm.fastmath<fast>} : f32
     %12 = llvm.add %6, %3 overflow<nsw, nuw>  : i64
     llvm.br ^bb1(%12, %11 : i64, f32)
   }]

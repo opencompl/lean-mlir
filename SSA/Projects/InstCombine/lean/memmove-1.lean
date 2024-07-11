@@ -35,12 +35,7 @@ def test_no_incompatible_attr_before := [llvmfunc|
 
 def test_simplify1_combined := [llvmfunc|
   llvm.func @test_simplify1(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
-    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -50,12 +45,7 @@ theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplif
   sorry
 def test_simplify2_combined := [llvmfunc|
   llvm.func @test_simplify2(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
-    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify2   : test_simplify2_before  ⊑  test_simplify2_combined := by
-  unfold test_simplify2_before test_simplify2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -75,12 +65,7 @@ theorem inst_combine_test_no_simplify1   : test_no_simplify1_before  ⊑  test_n
   sorry
 def test_no_incompatible_attr_combined := [llvmfunc|
   llvm.func @test_no_incompatible_attr(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) -> !llvm.ptr {
-    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_no_incompatible_attr   : test_no_incompatible_attr_before  ⊑  test_no_incompatible_attr_combined := by
-  unfold test_no_incompatible_attr_before test_no_incompatible_attr_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg0, %arg1, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 

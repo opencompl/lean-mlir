@@ -133,12 +133,7 @@ def constprop_load_bitcast_combined := [llvmfunc|
     %33 = llvm.insertelement %0, %31[%32 : i32] : !llvm.vec<? x 16 x  i1>
     %34 = llvm.mlir.constant(0 : i8) : i8
     %35 = llvm.mlir.constant(dense<0> : vector<2xi8>) : vector<2xi8>
-    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i1>, !llvm.ptr]
-
-theorem inst_combine_constprop_load_bitcast   : constprop_load_bitcast_before  ⊑  constprop_load_bitcast_combined := by
-  unfold constprop_load_bitcast_before constprop_load_bitcast_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i1>, !llvm.ptr
     llvm.return %35 : vector<2xi8>
   }]
 
@@ -182,18 +177,8 @@ def constprop_load_bitcast_neg_combined := [llvmfunc|
     %31 = llvm.insertelement %0, %29[%30 : i32] : !llvm.vec<? x 16 x  i1>
     %32 = llvm.mlir.constant(15 : i32) : i32
     %33 = llvm.insertelement %0, %31[%32 : i32] : !llvm.vec<? x 16 x  i1>
-    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i1>, !llvm.ptr]
-
-theorem inst_combine_constprop_load_bitcast_neg   : constprop_load_bitcast_neg_before  ⊑  constprop_load_bitcast_neg_combined := by
-  unfold constprop_load_bitcast_neg_before constprop_load_bitcast_neg_combined
-  simp_alive_peephole
-  sorry
-    %34 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi8>]
-
-theorem inst_combine_constprop_load_bitcast_neg   : constprop_load_bitcast_neg_before  ⊑  constprop_load_bitcast_neg_combined := by
-  unfold constprop_load_bitcast_neg_before constprop_load_bitcast_neg_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i1>, !llvm.ptr
+    %34 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi8>
     llvm.return %34 : vector<8xi8>
   }]
 

@@ -130,18 +130,8 @@ theorem inst_combine_do_not_add_annotation_to_existing_instr   : do_not_add_anno
   sorry
 def copy_1_byte_combined := [llvmfunc|
   llvm.func @copy_1_byte(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_copy_1_byte   : copy_1_byte_before  ⊑  copy_1_byte_combined := by
-  unfold copy_1_byte_before copy_1_byte_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_copy_1_byte   : copy_1_byte_before  ⊑  copy_1_byte_combined := by
-  unfold copy_1_byte_before copy_1_byte_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -151,18 +141,8 @@ theorem inst_combine_copy_1_byte   : copy_1_byte_before  ⊑  copy_1_byte_combin
   sorry
 def libcallcopy_1_byte_combined := [llvmfunc|
   llvm.func @libcallcopy_1_byte(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_libcallcopy_1_byte   : libcallcopy_1_byte_before  ⊑  libcallcopy_1_byte_combined := by
-  unfold libcallcopy_1_byte_before libcallcopy_1_byte_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcallcopy_1_byte   : libcallcopy_1_byte_before  ⊑  libcallcopy_1_byte_combined := by
-  unfold libcallcopy_1_byte_before libcallcopy_1_byte_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -172,18 +152,8 @@ theorem inst_combine_libcallcopy_1_byte   : libcallcopy_1_byte_before  ⊑  libc
   sorry
 def libcallcopy_1_byte_chk_combined := [llvmfunc|
   llvm.func @libcallcopy_1_byte_chk(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_libcallcopy_1_byte_chk   : libcallcopy_1_byte_chk_before  ⊑  libcallcopy_1_byte_chk_combined := by
-  unfold libcallcopy_1_byte_chk_before libcallcopy_1_byte_chk_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcallcopy_1_byte_chk   : libcallcopy_1_byte_chk_before  ⊑  libcallcopy_1_byte_chk_combined := by
-  unfold libcallcopy_1_byte_chk_before libcallcopy_1_byte_chk_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -193,18 +163,8 @@ theorem inst_combine_libcallcopy_1_byte_chk   : libcallcopy_1_byte_chk_before  �
   sorry
 def move_1_byte_combined := [llvmfunc|
   llvm.func @move_1_byte(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_move_1_byte   : move_1_byte_before  ⊑  move_1_byte_combined := by
-  unfold move_1_byte_before move_1_byte_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_move_1_byte   : move_1_byte_before  ⊑  move_1_byte_combined := by
-  unfold move_1_byte_before move_1_byte_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -214,18 +174,8 @@ theorem inst_combine_move_1_byte   : move_1_byte_before  ⊑  move_1_byte_combin
   sorry
 def libcallmove_1_byte_combined := [llvmfunc|
   llvm.func @libcallmove_1_byte(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_libcallmove_1_byte   : libcallmove_1_byte_before  ⊑  libcallmove_1_byte_combined := by
-  unfold libcallmove_1_byte_before libcallmove_1_byte_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcallmove_1_byte   : libcallmove_1_byte_before  ⊑  libcallmove_1_byte_combined := by
-  unfold libcallmove_1_byte_before libcallmove_1_byte_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -235,18 +185,8 @@ theorem inst_combine_libcallmove_1_byte   : libcallmove_1_byte_before  ⊑  libc
   sorry
 def libcallmove_1_byte_chk_combined := [llvmfunc|
   llvm.func @libcallmove_1_byte_chk(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_libcallmove_1_byte_chk   : libcallmove_1_byte_chk_before  ⊑  libcallmove_1_byte_chk_combined := by
-  unfold libcallmove_1_byte_chk_before libcallmove_1_byte_chk_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcallmove_1_byte_chk   : libcallmove_1_byte_chk_before  ⊑  libcallmove_1_byte_chk_combined := by
-  unfold libcallmove_1_byte_chk_before libcallmove_1_byte_chk_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -257,12 +197,7 @@ theorem inst_combine_libcallmove_1_byte_chk   : libcallmove_1_byte_chk_before  �
 def set_1_byte_combined := [llvmfunc|
   llvm.func @set_1_byte(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i8) : i8
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_set_1_byte   : set_1_byte_before  ⊑  set_1_byte_combined := by
-  unfold set_1_byte_before set_1_byte_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -273,12 +208,7 @@ theorem inst_combine_set_1_byte   : set_1_byte_before  ⊑  set_1_byte_combined 
 def libcall_set_1_byte_combined := [llvmfunc|
   llvm.func @libcall_set_1_byte(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i8) : i8
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcall_set_1_byte   : libcall_set_1_byte_before  ⊑  libcall_set_1_byte_combined := by
-  unfold libcall_set_1_byte_before libcall_set_1_byte_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 
@@ -289,12 +219,7 @@ theorem inst_combine_libcall_set_1_byte   : libcall_set_1_byte_before  ⊑  libc
 def libcall_set_1_byte_chk_combined := [llvmfunc|
   llvm.func @libcall_set_1_byte_chk(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i8) : i8
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_libcall_set_1_byte_chk   : libcall_set_1_byte_chk_before  ⊑  libcall_set_1_byte_chk_combined := by
-  unfold libcall_set_1_byte_chk_before libcall_set_1_byte_chk_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 

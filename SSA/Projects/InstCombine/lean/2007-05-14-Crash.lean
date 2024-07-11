@@ -17,3 +17,15 @@ def foo_before := [llvmfunc|
     llvm.return %2 : !llvm.ptr
   }]
 
+def foo_combined := [llvmfunc|
+  llvm.func @foo(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.mlir.constant(0 : i32) : i32
+    %1 = llvm.mlir.constant(1 : i32) : i32
+    %2 = llvm.getelementptr %arg0[%0, 1] : (!llvm.ptr, i32) -> !llvm.ptr, !llvm.struct<"struct.def", (ptr, struct<"struct.abc", (i32, array<32 x i8>)>)>
+    llvm.return %2 : !llvm.ptr
+  }]
+
+theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
+  unfold foo_before foo_combined
+  simp_alive_peephole
+  sorry

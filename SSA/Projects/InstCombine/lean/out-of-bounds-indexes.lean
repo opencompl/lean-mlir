@@ -46,12 +46,7 @@ def test_out_of_bounds_combined := [llvmfunc|
     %0 = llvm.mlir.constant(true) : i1
     %1 = llvm.mlir.poison : !llvm.ptr
     %2 = llvm.mlir.poison : i32
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_test_out_of_bounds   : test_out_of_bounds_before  ⊑  test_out_of_bounds_combined := by
-  unfold test_out_of_bounds_before test_out_of_bounds_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i32
   }]
 
@@ -64,12 +59,7 @@ def test_non64bit_combined := [llvmfunc|
     %0 = llvm.mlir.constant(true) : i1
     %1 = llvm.mlir.poison : !llvm.ptr
     %2 = llvm.mlir.poison : i128
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_test_non64bit   : test_non64bit_before  ⊑  test_non64bit_combined := by
-  unfold test_non64bit_before test_non64bit_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i128
   }]
 

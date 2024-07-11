@@ -55,12 +55,7 @@ def entry_combined := [llvmfunc|
     %4 = llvm.icmp "sgt" %arg2, %0 : i32
     llvm.cond_br %4, ^bb4, ^bb1
   ^bb4:  // pred: ^bb3
-    llvm.store %1, %2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_entry   : entry_before  ⊑  entry_combined := by
-  unfold entry_before entry_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr
     llvm.br ^bb3
   }]
 

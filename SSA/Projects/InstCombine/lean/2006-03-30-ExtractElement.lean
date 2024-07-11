@@ -19,3 +19,14 @@ def test_before := [llvmfunc|
     llvm.return %4 : f32
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: vector<4xf32>) -> f32 {
+    %0 = llvm.mlir.constant(2 : i64) : i64
+    %1 = llvm.extractelement %arg0[%0 : i64] : vector<4xf32>
+    llvm.return %1 : f32
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

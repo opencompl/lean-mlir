@@ -250,30 +250,10 @@ def fixed_array16i32_to_scalable4i32_combined := [llvmfunc|
     %8 = llvm.insertelement %1, %6[%7 : i32] : !llvm.vec<? x 4 x  i32>
     %9 = llvm.mlir.constant(3 : i32) : i32
     %10 = llvm.insertelement %1, %8[%9 : i32] : !llvm.vec<? x 4 x  i32>
-    %11 = llvm.alloca %0 x !llvm.array<16 x i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fixed_array16i32_to_scalable4i32   : fixed_array16i32_to_scalable4i32_before  ⊑  fixed_array16i32_to_scalable4i32_combined := by
-  unfold fixed_array16i32_to_scalable4i32_before fixed_array16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %10, %11 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_fixed_array16i32_to_scalable4i32   : fixed_array16i32_to_scalable4i32_before  ⊑  fixed_array16i32_to_scalable4i32_combined := by
-  unfold fixed_array16i32_to_scalable4i32_before fixed_array16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    %12 = llvm.load volatile %11 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>]
-
-theorem inst_combine_fixed_array16i32_to_scalable4i32   : fixed_array16i32_to_scalable4i32_before  ⊑  fixed_array16i32_to_scalable4i32_combined := by
-  unfold fixed_array16i32_to_scalable4i32_before fixed_array16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %12, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_fixed_array16i32_to_scalable4i32   : fixed_array16i32_to_scalable4i32_before  ⊑  fixed_array16i32_to_scalable4i32_combined := by
-  unfold fixed_array16i32_to_scalable4i32_before fixed_array16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.alloca %0 x !llvm.array<16 x i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %10, %11 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
+    %12 = llvm.load volatile %11 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>
+    llvm.store %12, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
     llvm.return
   }]
 
@@ -286,30 +266,10 @@ def scalable4i32_to_fixed16i32_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(dense<0> : vector<16xi32>) : vector<16xi32>
-    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_scalable4i32_to_fixed16i32   : scalable4i32_to_fixed16i32_before  ⊑  scalable4i32_to_fixed16i32_combined := by
-  unfold scalable4i32_to_fixed16i32_before scalable4i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %3 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr]
-
-theorem inst_combine_scalable4i32_to_fixed16i32   : scalable4i32_to_fixed16i32_before  ⊑  scalable4i32_to_fixed16i32_combined := by
-  unfold scalable4i32_to_fixed16i32_before scalable4i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load volatile %3 {alignment = 16 : i64} : !llvm.ptr -> vector<16xi32>]
-
-theorem inst_combine_scalable4i32_to_fixed16i32   : scalable4i32_to_fixed16i32_before  ⊑  scalable4i32_to_fixed16i32_combined := by
-  unfold scalable4i32_to_fixed16i32_before scalable4i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg0 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr]
-
-theorem inst_combine_scalable4i32_to_fixed16i32   : scalable4i32_to_fixed16i32_before  ⊑  scalable4i32_to_fixed16i32_combined := by
-  unfold scalable4i32_to_fixed16i32_before scalable4i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store %2, %3 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr
+    %4 = llvm.load volatile %3 {alignment = 16 : i64} : !llvm.ptr -> vector<16xi32>
+    llvm.store %4, %arg0 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr
     llvm.return
   }]
 
@@ -330,30 +290,10 @@ def fixed16i32_to_scalable4i32_combined := [llvmfunc|
     %8 = llvm.insertelement %1, %6[%7 : i32] : !llvm.vec<? x 4 x  i32>
     %9 = llvm.mlir.constant(3 : i32) : i32
     %10 = llvm.insertelement %1, %8[%9 : i32] : !llvm.vec<? x 4 x  i32>
-    %11 = llvm.alloca %0 x vector<16xi32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fixed16i32_to_scalable4i32   : fixed16i32_to_scalable4i32_before  ⊑  fixed16i32_to_scalable4i32_combined := by
-  unfold fixed16i32_to_scalable4i32_before fixed16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %10, %11 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_fixed16i32_to_scalable4i32   : fixed16i32_to_scalable4i32_before  ⊑  fixed16i32_to_scalable4i32_combined := by
-  unfold fixed16i32_to_scalable4i32_before fixed16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    %12 = llvm.load volatile %11 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>]
-
-theorem inst_combine_fixed16i32_to_scalable4i32   : fixed16i32_to_scalable4i32_before  ⊑  fixed16i32_to_scalable4i32_combined := by
-  unfold fixed16i32_to_scalable4i32_before fixed16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %12, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_fixed16i32_to_scalable4i32   : fixed16i32_to_scalable4i32_before  ⊑  fixed16i32_to_scalable4i32_combined := by
-  unfold fixed16i32_to_scalable4i32_before fixed16i32_to_scalable4i32_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.alloca %0 x vector<16xi32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %10, %11 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
+    %12 = llvm.load volatile %11 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>
+    llvm.store %12, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
     llvm.return
   }]
 
@@ -366,30 +306,10 @@ def scalable16i32_to_fixed16i32_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(dense<0> : vector<16xi32>) : vector<16xi32>
-    %3 = llvm.alloca %0 x !llvm.vec<? x 16 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_scalable16i32_to_fixed16i32   : scalable16i32_to_fixed16i32_before  ⊑  scalable16i32_to_fixed16i32_combined := by
-  unfold scalable16i32_to_fixed16i32_before scalable16i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %2, %3 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr]
-
-theorem inst_combine_scalable16i32_to_fixed16i32   : scalable16i32_to_fixed16i32_before  ⊑  scalable16i32_to_fixed16i32_combined := by
-  unfold scalable16i32_to_fixed16i32_before scalable16i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load volatile %3 {alignment = 16 : i64} : !llvm.ptr -> vector<16xi32>]
-
-theorem inst_combine_scalable16i32_to_fixed16i32   : scalable16i32_to_fixed16i32_before  ⊑  scalable16i32_to_fixed16i32_combined := by
-  unfold scalable16i32_to_fixed16i32_before scalable16i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg0 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr]
-
-theorem inst_combine_scalable16i32_to_fixed16i32   : scalable16i32_to_fixed16i32_before  ⊑  scalable16i32_to_fixed16i32_combined := by
-  unfold scalable16i32_to_fixed16i32_before scalable16i32_to_fixed16i32_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.vec<? x 16 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %2, %3 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr
+    %4 = llvm.load volatile %3 {alignment = 16 : i64} : !llvm.ptr -> vector<16xi32>
+    llvm.store %4, %arg0 {alignment = 16 : i64} : vector<16xi32>, !llvm.ptr
     llvm.return
   }]
 
@@ -434,30 +354,10 @@ def scalable32i32_to_scalable16i32_combined := [llvmfunc|
     %32 = llvm.insertelement %1, %30[%31 : i32] : !llvm.vec<? x 16 x  i32>
     %33 = llvm.mlir.constant(15 : i32) : i32
     %34 = llvm.insertelement %1, %32[%33 : i32] : !llvm.vec<? x 16 x  i32>
-    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_scalable32i32_to_scalable16i32   : scalable32i32_to_scalable16i32_before  ⊑  scalable32i32_to_scalable16i32_combined := by
-  unfold scalable32i32_to_scalable16i32_before scalable32i32_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i32_to_scalable16i32   : scalable32i32_to_scalable16i32_before  ⊑  scalable32i32_to_scalable16i32_combined := by
-  unfold scalable32i32_to_scalable16i32_before scalable32i32_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>]
-
-theorem inst_combine_scalable32i32_to_scalable16i32   : scalable32i32_to_scalable16i32_before  ⊑  scalable32i32_to_scalable16i32_combined := by
-  unfold scalable32i32_to_scalable16i32_before scalable32i32_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i32_to_scalable16i32   : scalable32i32_to_scalable16i32_before  ⊑  scalable32i32_to_scalable16i32_combined := by
-  unfold scalable32i32_to_scalable16i32_before scalable32i32_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
+    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
+    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>
+    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
     llvm.return
   }]
 
@@ -502,30 +402,10 @@ def scalable32i16_to_scalable16i32_combined := [llvmfunc|
     %32 = llvm.insertelement %1, %30[%31 : i32] : !llvm.vec<? x 16 x  i32>
     %33 = llvm.mlir.constant(15 : i32) : i32
     %34 = llvm.insertelement %1, %32[%33 : i32] : !llvm.vec<? x 16 x  i32>
-    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i16> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32   : scalable32i16_to_scalable16i32_before  ⊑  scalable32i16_to_scalable16i32_combined := by
-  unfold scalable32i16_to_scalable16i32_before scalable32i16_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32   : scalable32i16_to_scalable16i32_before  ⊑  scalable32i16_to_scalable16i32_combined := by
-  unfold scalable32i16_to_scalable16i32_before scalable32i16_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>]
-
-theorem inst_combine_scalable32i16_to_scalable16i32   : scalable32i16_to_scalable16i32_before  ⊑  scalable32i16_to_scalable16i32_combined := by
-  unfold scalable32i16_to_scalable16i32_before scalable32i16_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32   : scalable32i16_to_scalable16i32_before  ⊑  scalable32i16_to_scalable16i32_combined := by
-  unfold scalable32i16_to_scalable16i32_before scalable32i16_to_scalable16i32_combined
-  simp_alive_peephole
-  sorry
+    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i16> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
+    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>
+    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
     llvm.return
   }]
 
@@ -570,42 +450,12 @@ def scalable32i16_to_scalable16i32_multiuse_combined := [llvmfunc|
     %32 = llvm.insertelement %1, %30[%31 : i32] : !llvm.vec<? x 16 x  i32>
     %33 = llvm.mlir.constant(15 : i32) : i32
     %34 = llvm.insertelement %1, %32[%33 : i32] : !llvm.vec<? x 16 x  i32>
-    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i16> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
-    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
-    %37 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 32 x  i16>]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %37, %arg1 {alignment = 16 : i64} : !llvm.vec<? x 32 x  i16>, !llvm.ptr]
-
-theorem inst_combine_scalable32i16_to_scalable16i32_multiuse   : scalable32i16_to_scalable16i32_multiuse_before  ⊑  scalable32i16_to_scalable16i32_multiuse_combined := by
-  unfold scalable32i16_to_scalable16i32_multiuse_before scalable32i16_to_scalable16i32_multiuse_combined
-  simp_alive_peephole
-  sorry
+    %35 = llvm.alloca %0 x !llvm.vec<? x 32 x  i16> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %34, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
+    %36 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 16 x  i32>
+    llvm.store %36, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i32>, !llvm.ptr
+    %37 = llvm.load volatile %35 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 32 x  i16>
+    llvm.store %37, %arg1 {alignment = 16 : i64} : !llvm.vec<? x 32 x  i16>, !llvm.ptr
     llvm.return
   }]
 

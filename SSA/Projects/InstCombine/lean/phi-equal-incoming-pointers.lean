@@ -365,18 +365,8 @@ def test_gep_and_bitcast_combined := [llvmfunc|
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast   : test_gep_and_bitcast_before  ⊑  test_gep_and_bitcast_combined := by
-  unfold test_gep_and_bitcast_before test_gep_and_bitcast_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast   : test_gep_and_bitcast_before  ⊑  test_gep_and_bitcast_combined := by
-  unfold test_gep_and_bitcast_before test_gep_and_bitcast_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.select %arg1, %4, %1 : i1, i32
     llvm.return %5 : i32
   }]
@@ -396,18 +386,8 @@ def test_gep_and_bitcast_arg_combined := [llvmfunc|
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %2 = llvm.getelementptr inbounds %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast_arg   : test_gep_and_bitcast_arg_before  ⊑  test_gep_and_bitcast_arg_combined := by
-  unfold test_gep_and_bitcast_arg_before test_gep_and_bitcast_arg_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast_arg   : test_gep_and_bitcast_arg_before  ⊑  test_gep_and_bitcast_arg_combined := by
-  unfold test_gep_and_bitcast_arg_before test_gep_and_bitcast_arg_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.select %arg2, %3, %1 : i1, i32
     llvm.return %4 : i32
   }]
@@ -437,18 +417,8 @@ def test_gep_and_bitcast_phi_combined := [llvmfunc|
     llvm.br ^bb6
   ^bb6:  // 2 preds: ^bb4, ^bb5
     %7 = llvm.getelementptr inbounds %5[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast_phi   : test_gep_and_bitcast_phi_before  ⊑  test_gep_and_bitcast_phi_combined := by
-  unfold test_gep_and_bitcast_phi_before test_gep_and_bitcast_phi_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast_phi   : test_gep_and_bitcast_phi_before  ⊑  test_gep_and_bitcast_phi_combined := by
-  unfold test_gep_and_bitcast_phi_before test_gep_and_bitcast_phi_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %2, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.select %arg2, %8, %2 : i1, i32
     llvm.return %9 : i32
   }]
@@ -469,18 +439,8 @@ def test_gep_i32ptr_combined := [llvmfunc|
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_i32ptr   : test_gep_i32ptr_before  ⊑  test_gep_i32ptr_combined := by
-  unfold test_gep_i32ptr_before test_gep_i32ptr_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_i32ptr   : test_gep_i32ptr_before  ⊑  test_gep_i32ptr_combined := by
-  unfold test_gep_i32ptr_before test_gep_i32ptr_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.select %arg1, %4, %1 : i1, i32
     llvm.return %5 : i32
   }]
@@ -501,18 +461,8 @@ def test_gep_and_bitcast_gep_base_ptr_combined := [llvmfunc|
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast_gep_base_ptr   : test_gep_and_bitcast_gep_base_ptr_before  ⊑  test_gep_and_bitcast_gep_base_ptr_combined := by
-  unfold test_gep_and_bitcast_gep_base_ptr_before test_gep_and_bitcast_gep_base_ptr_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast_gep_base_ptr   : test_gep_and_bitcast_gep_base_ptr_before  ⊑  test_gep_and_bitcast_gep_base_ptr_combined := by
-  unfold test_gep_and_bitcast_gep_base_ptr_before test_gep_and_bitcast_gep_base_ptr_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.select %arg1, %4, %1 : i1, i32
     llvm.return %5 : i32
   }]
@@ -531,18 +481,8 @@ def test_gep_and_bitcast_same_bb_combined := [llvmfunc|
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast_same_bb   : test_gep_and_bitcast_same_bb_before  ⊑  test_gep_and_bitcast_same_bb_combined := by
-  unfold test_gep_and_bitcast_same_bb_before test_gep_and_bitcast_same_bb_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast_same_bb   : test_gep_and_bitcast_same_bb_before  ⊑  test_gep_and_bitcast_same_bb_combined := by
-  unfold test_gep_and_bitcast_same_bb_before test_gep_and_bitcast_same_bb_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.select %arg1, %4, %1 : i1, i32
     llvm.return %5 : i32
   }]
@@ -563,18 +503,8 @@ def test_gep_and_bitcast_same_bb_and_extra_use_combined := [llvmfunc|
     %4 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.br ^bb2(%4 : !llvm.ptr)
   ^bb2(%5: !llvm.ptr):  // 2 preds: ^bb0, ^bb1
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_gep_and_bitcast_same_bb_and_extra_use   : test_gep_and_bitcast_same_bb_and_extra_use_before  ⊑  test_gep_and_bitcast_same_bb_and_extra_use_combined := by
-  unfold test_gep_and_bitcast_same_bb_and_extra_use_before test_gep_and_bitcast_same_bb_and_extra_use_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_gep_and_bitcast_same_bb_and_extra_use   : test_gep_and_bitcast_same_bb_and_extra_use_before  ⊑  test_gep_and_bitcast_same_bb_and_extra_use_combined := by
-  unfold test_gep_and_bitcast_same_bb_and_extra_use_before test_gep_and_bitcast_same_bb_and_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %1, %5 {alignment = 4 : i64} : i32, !llvm.ptr
     %7 = llvm.select %arg1, %6, %1 : i1, i32
     llvm.return %7 : i32
   }]
@@ -595,18 +525,8 @@ def test_gep_combined := [llvmfunc|
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_gep   : test_gep_before  ⊑  test_gep_combined := by
-  unfold test_gep_before test_gep_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %3 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_gep   : test_gep_before  ⊑  test_gep_combined := by
-  unfold test_gep_before test_gep_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.store %1, %3 {alignment = 1 : i64} : i8, !llvm.ptr
     %5 = llvm.select %arg1, %4, %1 : i1, i8
     llvm.return %5 : i8
   }]
@@ -623,31 +543,16 @@ def test_extra_uses_combined := [llvmfunc|
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses   : test_extra_uses_before  ⊑  test_extra_uses_combined := by
-  unfold test_extra_uses_before test_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%3) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%3, %4 : !llvm.ptr, i32)
   ^bb2:  // pred: ^bb0
     %5 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses   : test_extra_uses_before  ⊑  test_extra_uses_combined := by
-  unfold test_extra_uses_before test_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%5) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%5, %6 : !llvm.ptr, i32)
   ^bb3(%7: !llvm.ptr, %8: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_extra_uses   : test_extra_uses_before  ⊑  test_extra_uses_combined := by
-  unfold test_extra_uses_before test_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.select %arg1, %8, %1 : i1, i32
     llvm.return %9 : i32
   }]
@@ -664,31 +569,16 @@ def test_extra_uses_non_inbounds_combined := [llvmfunc|
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %3 = llvm.getelementptr %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses_non_inbounds   : test_extra_uses_non_inbounds_before  ⊑  test_extra_uses_non_inbounds_combined := by
-  unfold test_extra_uses_non_inbounds_before test_extra_uses_non_inbounds_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%3) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%3, %4 : !llvm.ptr, i32)
   ^bb2:  // pred: ^bb0
     %5 = llvm.getelementptr %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses_non_inbounds   : test_extra_uses_non_inbounds_before  ⊑  test_extra_uses_non_inbounds_combined := by
-  unfold test_extra_uses_non_inbounds_before test_extra_uses_non_inbounds_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%5) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%5, %6 : !llvm.ptr, i32)
   ^bb3(%7: !llvm.ptr, %8: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_extra_uses_non_inbounds   : test_extra_uses_non_inbounds_before  ⊑  test_extra_uses_non_inbounds_combined := by
-  unfold test_extra_uses_non_inbounds_before test_extra_uses_non_inbounds_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.select %arg1, %8, %1 : i1, i32
     llvm.return %9 : i32
   }]
@@ -705,31 +595,16 @@ def test_extra_uses_multiple_geps_combined := [llvmfunc|
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses_multiple_geps   : test_extra_uses_multiple_geps_before  ⊑  test_extra_uses_multiple_geps_combined := by
-  unfold test_extra_uses_multiple_geps_before test_extra_uses_multiple_geps_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%3) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%3, %4 : !llvm.ptr, i32)
   ^bb2:  // pred: ^bb0
     %5 = llvm.getelementptr %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_extra_uses_multiple_geps   : test_extra_uses_multiple_geps_before  ⊑  test_extra_uses_multiple_geps_combined := by
-  unfold test_extra_uses_multiple_geps_before test_extra_uses_multiple_geps_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @foo.i32(%5) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%5, %6 : !llvm.ptr, i32)
   ^bb3(%7: !llvm.ptr, %8: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_extra_uses_multiple_geps   : test_extra_uses_multiple_geps_before  ⊑  test_extra_uses_multiple_geps_combined := by
-  unfold test_extra_uses_multiple_geps_before test_extra_uses_multiple_geps_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.select %arg1, %8, %1 : i1, i32
     llvm.return %9 : i32
   }]
@@ -746,31 +621,16 @@ def test_gep_extra_uses_combined := [llvmfunc|
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %3 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_gep_extra_uses   : test_gep_extra_uses_before  ⊑  test_gep_extra_uses_combined := by
-  unfold test_gep_extra_uses_before test_gep_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.call @foo.i8(%3) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%3, %4 : !llvm.ptr, i8)
   ^bb2:  // pred: ^bb0
     %5 = llvm.getelementptr inbounds %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %6 = llvm.load %5 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_gep_extra_uses   : test_gep_extra_uses_before  ⊑  test_gep_extra_uses_combined := by
-  unfold test_gep_extra_uses_before test_gep_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %5 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.call @foo.i8(%5) : (!llvm.ptr) -> ()
     llvm.br ^bb3(%5, %6 : !llvm.ptr, i8)
   ^bb3(%7: !llvm.ptr, %8: i8):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %7 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_gep_extra_uses   : test_gep_extra_uses_before  ⊑  test_gep_extra_uses_combined := by
-  unfold test_gep_extra_uses_before test_gep_extra_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %7 {alignment = 1 : i64} : i8, !llvm.ptr
     %9 = llvm.select %arg1, %8, %1 : i1, i8
     llvm.return %9 : i8
   }]
@@ -783,50 +643,20 @@ def test_dont_optimize_swifterror_combined := [llvmfunc|
   llvm.func @test_dont_optimize_swifterror(%arg0: i1, %arg1: i1, %arg2: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.zero : !llvm.ptr
-    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.call @takeAddress(%2) : (!llvm.ptr) -> ()
     llvm.call @takeAddress(%3) : (!llvm.ptr) -> ()
-    llvm.store %arg2, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb3(%4 : !llvm.ptr)
   ^bb2:  // pred: ^bb0
-    %5 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb3(%5 : !llvm.ptr)
   ^bb3(%6: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_dont_optimize_swifterror   : test_dont_optimize_swifterror_before  ⊑  test_dont_optimize_swifterror_combined := by
-  unfold test_dont_optimize_swifterror_before test_dont_optimize_swifterror_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %7 = llvm.select %arg1, %6, %1 : i1, !llvm.ptr
     llvm.return %7 : !llvm.ptr
   }]

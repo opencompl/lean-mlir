@@ -21,3 +21,17 @@ def test_before := [llvmfunc|
     llvm.return %6 : i64
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test() -> i64 {
+    %0 = llvm.mlir.constant(3 : i64) : i64
+    %1 = llvm.mlir.constant(5 : i32) : i32
+    %2 = llvm.mlir.addressof @X : !llvm.ptr
+    %3 = llvm.ptrtoint %2 : !llvm.ptr to i64
+    %4 = llvm.add %3, %0  : i64
+    llvm.return %4 : i64
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

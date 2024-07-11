@@ -326,230 +326,75 @@ def _Z3fooRSt6vectorIiSaIiEE_combined := [llvmfunc|
     %3 = llvm.mlir.constant(4 : i32) : i32
     %4 = llvm.mlir.constant(2 : i32) : i32
     %5 = llvm.mlir.constant(-1 : i32) : i32
-    %6 = llvm.alloca %0 x !llvm.struct<"struct.__gnu_cxx::__normal_iterator<int*,std::vector<int, std::allocator<int> > >", (ptr)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %7 = llvm.alloca %0 x !llvm.struct<"struct.__gnu_cxx::__normal_iterator<int*,std::vector<int, std::allocator<int> > >", (ptr)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %8 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %8 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.alloca %0 x !llvm.struct<"struct.__gnu_cxx::__normal_iterator<int*,std::vector<int, std::allocator<int> > >", (ptr)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %7 = llvm.alloca %0 x !llvm.struct<"struct.__gnu_cxx::__normal_iterator<int*,std::vector<int, std::allocator<int> > >", (ptr)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %8 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %8 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.getelementptr %arg0[%2, 1] : (!llvm.ptr, i32) -> !llvm.ptr, !llvm.struct<"struct.std::_Vector_base<int,std::allocator<int> >::_Vector_impl", (ptr, ptr, ptr)>
-    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %11 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %10, %7 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %11 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %10, %7 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %12 = llvm.ptrtoint %10 : !llvm.ptr to i32
     %13 = llvm.ptrtoint %11 : !llvm.ptr to i32
     %14 = llvm.sub %12, %13  : i32
     %15 = llvm.ashr %14, %3  : i32
     llvm.br ^bb10(%15 : i32)
   ^bb1:  // pred: ^bb10
-    %16 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %17 = llvm.load %16 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %18 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %16 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %17 = llvm.load %16 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %18 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %19 = llvm.icmp "eq" %17, %18 : i32
     llvm.cond_br %19, ^bb2, ^bb3
   ^bb2:  // pred: ^bb1
-    %20 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %20 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%20 : !llvm.ptr)
   ^bb3:  // pred: ^bb1
-    %21 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %21 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %22 = llvm.getelementptr %21[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %22, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %23 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %24 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    %23 = llvm.load %22 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %24 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %25 = llvm.icmp "eq" %23, %24 : i32
     llvm.cond_br %25, ^bb4, ^bb5
   ^bb4:  // pred: ^bb3
-    %26 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %26 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%26 : !llvm.ptr)
   ^bb5:  // pred: ^bb3
-    %27 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %27 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %28 = llvm.getelementptr %27[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %28, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %29 = llvm.load %28 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %30 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %28, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    %29 = llvm.load %28 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %30 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %31 = llvm.icmp "eq" %29, %30 : i32
     llvm.cond_br %31, ^bb6, ^bb7
   ^bb6:  // pred: ^bb5
-    %32 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %32 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%32 : !llvm.ptr)
   ^bb7:  // pred: ^bb5
-    %33 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %33 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %34 = llvm.getelementptr %33[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %34, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %35 = llvm.load %34 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %36 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %34, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    %35 = llvm.load %34 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %36 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %37 = llvm.icmp "eq" %35, %36 : i32
     llvm.cond_br %37, ^bb8, ^bb9
   ^bb8:  // pred: ^bb7
-    %38 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %38 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%38 : !llvm.ptr)
   ^bb9:  // pred: ^bb7
-    %39 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %39 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %40 = llvm.getelementptr %39[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %40, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %40, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %41 = llvm.add %42, %5 overflow<nsw>  : i32
     llvm.br ^bb10(%41 : i32)
   ^bb10(%42: i32):  // 2 preds: ^bb0, ^bb9
     %43 = llvm.icmp "sgt" %42, %2 : i32
     llvm.cond_br %43, ^bb1, ^bb11
   ^bb11:  // pred: ^bb10
-    %44 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %44 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %45 = llvm.ptrtoint %44 : !llvm.ptr to i32
-    %46 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %46 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %47 = llvm.ptrtoint %46 : !llvm.ptr to i32
     %48 = llvm.sub %45, %47  : i32
     %49 = llvm.ashr %48, %4  : i32
@@ -559,144 +404,49 @@ theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_befor
       3: ^bb12
     ]
   ^bb12:  // pred: ^bb11
-    %50 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %51 = llvm.load %50 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %52 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %50 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %51 = llvm.load %50 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %52 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %53 = llvm.icmp "eq" %51, %52 : i32
     llvm.cond_br %53, ^bb13, ^bb14
   ^bb13:  // pred: ^bb12
-    %54 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %54 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%54 : !llvm.ptr)
   ^bb14:  // pred: ^bb12
-    %55 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %55 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %56 = llvm.getelementptr %55[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %56, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %56, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb15
   ^bb15:  // 2 preds: ^bb11, ^bb14
-    %57 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %58 = llvm.load %57 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %59 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %57 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %58 = llvm.load %57 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %59 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %60 = llvm.icmp "eq" %58, %59 : i32
     llvm.cond_br %60, ^bb16, ^bb17
   ^bb16:  // pred: ^bb15
-    %61 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %61 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%61 : !llvm.ptr)
   ^bb17:  // pred: ^bb15
-    %62 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %62 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %63 = llvm.getelementptr %62[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %63, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %63, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb18
   ^bb18:  // 2 preds: ^bb11, ^bb17
-    %64 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %65 = llvm.load %64 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
-    %66 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %64 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %65 = llvm.load %64 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %66 = llvm.load %8 {alignment = 4 : i64} : !llvm.ptr -> i32
     %67 = llvm.icmp "eq" %65, %66 : i32
     llvm.cond_br %67, ^bb19, ^bb20
   ^bb19:  // pred: ^bb18
-    %68 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %68 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%68 : !llvm.ptr)
   ^bb20:  // pred: ^bb18
-    %69 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %69 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %70 = llvm.getelementptr %69[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %70, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %70, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb21
   ^bb21:  // 2 preds: ^bb11, ^bb20
-    %71 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine__Z3fooRSt6vectorIiSaIiEE   : _Z3fooRSt6vectorIiSaIiEE_before  ⊑  _Z3fooRSt6vectorIiSaIiEE_combined := by
-  unfold _Z3fooRSt6vectorIiSaIiEE_before _Z3fooRSt6vectorIiSaIiEE_combined
-  simp_alive_peephole
-  sorry
+    %71 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb22(%71 : !llvm.ptr)
   ^bb22(%72: !llvm.ptr):  // 8 preds: ^bb2, ^bb4, ^bb6, ^bb8, ^bb13, ^bb16, ^bb19, ^bb21
     llvm.br ^bb23

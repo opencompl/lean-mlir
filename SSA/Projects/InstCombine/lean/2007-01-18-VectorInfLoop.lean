@@ -17,3 +17,14 @@ def test_before := [llvmfunc|
     llvm.return %2 : vector<4xi32>
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: vector<4xi32>) -> vector<4xi32> {
+    %0 = llvm.mlir.constant(dense<-1> : vector<4xi32>) : vector<4xi32>
+    %1 = llvm.xor %arg0, %0  : vector<4xi32>
+    llvm.return %1 : vector<4xi32>
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

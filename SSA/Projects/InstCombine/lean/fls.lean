@@ -76,12 +76,7 @@ theorem inst_combine_myflsll   : myflsll_before  ⊑  myflsll_combined := by
 def flsnotconst_combined := [llvmfunc|
   llvm.func @flsnotconst(%arg0: i64) -> i32 {
     %0 = llvm.mlir.constant(64 : i32) : i32
-    %1 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64]
-
-theorem inst_combine_flsnotconst   : flsnotconst_before  ⊑  flsnotconst_combined := by
-  unfold flsnotconst_before flsnotconst_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i64) -> i64
     %2 = llvm.trunc %1 : i64 to i32
     %3 = llvm.sub %0, %2 overflow<nsw>  : i32
     llvm.return %3 : i32

@@ -291,33 +291,13 @@ def denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined := [llvmf
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %3 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %4 = llvm.fcmp "oeq" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "oeq" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "oeq" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %7 = llvm.fcmp "oeq" %arg0, %0 : f32
-    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -332,26 +312,11 @@ def denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined := [llvmf
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %3 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %4 = llvm.fcmp "une" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "une" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "une" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -366,26 +331,11 @@ def denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined := [llvmf
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %3 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %4 = llvm.fcmp "one" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "one" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "one" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -400,26 +350,11 @@ def denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined := [llvmf
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %3 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %4 = llvm.fcmp "ueq" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "ueq" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "ueq" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -437,26 +372,11 @@ def denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined :=
     %5 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %6 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %7 = llvm.fcmp "oeq" %arg0, %1 : vector<2xf32>
-    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %8 = llvm.fcmp "oeq" %arg1, %4 : vector<2xf64>
-    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %9 = llvm.fcmp "oeq" %arg2, %6 : vector<2xf16>
-    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     llvm.return
   }]
 
@@ -474,26 +394,11 @@ def denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined :=
     %5 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %6 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %7 = llvm.fcmp "une" %arg0, %1 : vector<2xf32>
-    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %8 = llvm.fcmp "une" %arg1, %4 : vector<2xf64>
-    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %9 = llvm.fcmp "une" %arg2, %6 : vector<2xf16>
-    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_uge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     llvm.return
   }]
 
@@ -511,26 +416,11 @@ def denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined :=
     %5 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %6 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %7 = llvm.fcmp "one" %arg0, %1 : vector<2xf32>
-    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %8 = llvm.fcmp "one" %arg1, %4 : vector<2xf64>
-    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %9 = llvm.fcmp "one" %arg2, %6 : vector<2xf16>
-    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_oge_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     llvm.return
   }]
 
@@ -548,26 +438,11 @@ def denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined :=
     %5 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %6 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %7 = llvm.fcmp "ueq" %arg0, %1 : vector<2xf32>
-    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %8 = llvm.fcmp "ueq" %arg1, %4 : vector<2xf64>
-    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     %9 = llvm.fcmp "ueq" %arg2, %6 : vector<2xf16>
-    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized   : denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before  ⊑  denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined := by
-  unfold denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_before denormal_input_preserve_sign_vector_fcmp_ult_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %2 {alignment = 1 : i64} : vector<2xi1>, !llvm.ptr
     llvm.return
   }]
 
@@ -582,26 +457,11 @@ def denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined := [llvmf
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %3 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %4 = llvm.fcmp "oeq" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_positive_zero_fcmp_olt_smallest_normalized   : denormal_input_positive_zero_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_positive_zero_fcmp_olt_smallest_normalized_before denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "oeq" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_positive_zero_fcmp_olt_smallest_normalized   : denormal_input_positive_zero_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_positive_zero_fcmp_olt_smallest_normalized_before denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "oeq" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_positive_zero_fcmp_olt_smallest_normalized   : denormal_input_positive_zero_fcmp_olt_smallest_normalized_before  ⊑  denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined := by
-  unfold denormal_input_positive_zero_fcmp_olt_smallest_normalized_before denormal_input_positive_zero_fcmp_olt_smallest_normalized_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -617,28 +477,13 @@ def denormal_input_ieee_combined := [llvmfunc|
     %3 = llvm.mlir.constant(6.103520e-05 : f16) : f16
     %4 = llvm.intr.fabs(%arg0)  : (f32) -> f32
     %5 = llvm.fcmp "olt" %4, %0 : f32
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_ieee   : denormal_input_ieee_before  ⊑  denormal_input_ieee_combined := by
-  unfold denormal_input_ieee_before denormal_input_ieee_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.intr.fabs(%arg1)  : (f64) -> f64
     %7 = llvm.fcmp "olt" %6, %2 : f64
-    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_ieee   : denormal_input_ieee_before  ⊑  denormal_input_ieee_combined := by
-  unfold denormal_input_ieee_before denormal_input_ieee_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %8 = llvm.intr.fabs(%arg2)  : (f16) -> f16
     %9 = llvm.fcmp "olt" %8, %3 : f16
-    llvm.store volatile %9, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_ieee   : denormal_input_ieee_before  ⊑  denormal_input_ieee_combined := by
-  unfold denormal_input_ieee_before denormal_input_ieee_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -653,28 +498,13 @@ def denormal_input_preserve_sign_f32_only_combined := [llvmfunc|
     %2 = llvm.mlir.constant(2.2250738585072014E-308 : f64) : f64
     %3 = llvm.mlir.constant(6.103520e-05 : f16) : f16
     %4 = llvm.fcmp "oeq" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_f32_only   : denormal_input_preserve_sign_f32_only_before  ⊑  denormal_input_preserve_sign_f32_only_combined := by
-  unfold denormal_input_preserve_sign_f32_only_before denormal_input_preserve_sign_f32_only_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.intr.fabs(%arg1)  : (f64) -> f64
     %6 = llvm.fcmp "olt" %5, %2 : f64
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_f32_only   : denormal_input_preserve_sign_f32_only_before  ⊑  denormal_input_preserve_sign_f32_only_combined := by
-  unfold denormal_input_preserve_sign_f32_only_before denormal_input_preserve_sign_f32_only_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %7 = llvm.intr.fabs(%arg2)  : (f16) -> f16
     %8 = llvm.fcmp "olt" %7, %3 : f16
-    llvm.store volatile %8, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_denormal_input_preserve_sign_f32_only   : denormal_input_preserve_sign_f32_only_before  ⊑  denormal_input_preserve_sign_f32_only_combined := by
-  unfold denormal_input_preserve_sign_f32_only_before denormal_input_preserve_sign_f32_only_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -690,28 +520,13 @@ def wrong_fcmp_type_ole_combined := [llvmfunc|
     %3 = llvm.mlir.constant(6.103520e-05 : f16) : f16
     %4 = llvm.intr.fabs(%arg0)  : (f32) -> f32
     %5 = llvm.fcmp "ole" %4, %0 : f32
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_wrong_fcmp_type_ole   : wrong_fcmp_type_ole_before  ⊑  wrong_fcmp_type_ole_combined := by
-  unfold wrong_fcmp_type_ole_before wrong_fcmp_type_ole_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.intr.fabs(%arg1)  : (f64) -> f64
     %7 = llvm.fcmp "ole" %6, %2 : f64
-    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_wrong_fcmp_type_ole   : wrong_fcmp_type_ole_before  ⊑  wrong_fcmp_type_ole_combined := by
-  unfold wrong_fcmp_type_ole_before wrong_fcmp_type_ole_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %7, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %8 = llvm.intr.fabs(%arg2)  : (f16) -> f16
     %9 = llvm.fcmp "ole" %8, %3 : f16
-    llvm.store volatile %9, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_wrong_fcmp_type_ole   : wrong_fcmp_type_ole_before  ⊑  wrong_fcmp_type_ole_combined := by
-  unfold wrong_fcmp_type_ole_before wrong_fcmp_type_ole_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %9, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -726,26 +541,11 @@ def missing_fabs_combined := [llvmfunc|
     %2 = llvm.mlir.constant(2.2250738585072014E-308 : f64) : f64
     %3 = llvm.mlir.constant(6.103520e-05 : f16) : f16
     %4 = llvm.fcmp "olt" %arg0, %0 : f32
-    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_missing_fabs   : missing_fabs_before  ⊑  missing_fabs_combined := by
-  unfold missing_fabs_before missing_fabs_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %4, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %5 = llvm.fcmp "olt" %arg1, %2 : f64
-    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_missing_fabs   : missing_fabs_before  ⊑  missing_fabs_combined := by
-  unfold missing_fabs_before missing_fabs_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %5, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     %6 = llvm.fcmp "olt" %arg2, %3 : f16
-    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_missing_fabs   : missing_fabs_before  ⊑  missing_fabs_combined := by
-  unfold missing_fabs_before missing_fabs_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %6, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 

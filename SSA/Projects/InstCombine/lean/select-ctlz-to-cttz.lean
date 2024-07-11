@@ -277,12 +277,7 @@ def PR45762_logical_before := [llvmfunc|
 
 def select_clz_to_ctz_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz   : select_clz_to_ctz_before  ⊑  select_clz_to_ctz_combined := by
-  unfold select_clz_to_ctz_before select_clz_to_ctz_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -292,12 +287,7 @@ theorem inst_combine_select_clz_to_ctz   : select_clz_to_ctz_before  ⊑  select
   sorry
 def select_clz_to_ctz_preserve_flag_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_preserve_flag(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_preserve_flag   : select_clz_to_ctz_preserve_flag_before  ⊑  select_clz_to_ctz_preserve_flag_combined := by
-  unfold select_clz_to_ctz_preserve_flag_before select_clz_to_ctz_preserve_flag_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -307,12 +297,7 @@ theorem inst_combine_select_clz_to_ctz_preserve_flag   : select_clz_to_ctz_prese
   sorry
 def select_clz_to_ctz_constant_for_zero_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_constant_for_zero(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_constant_for_zero   : select_clz_to_ctz_constant_for_zero_before  ⊑  select_clz_to_ctz_constant_for_zero_combined := by
-  unfold select_clz_to_ctz_constant_for_zero_before select_clz_to_ctz_constant_for_zero_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -322,12 +307,7 @@ theorem inst_combine_select_clz_to_ctz_constant_for_zero   : select_clz_to_ctz_c
   sorry
 def select_clz_to_ctz_vec_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_vec(%arg0: vector<2xi32>) -> vector<2xi32> {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_select_clz_to_ctz_vec   : select_clz_to_ctz_vec_before  ⊑  select_clz_to_ctz_vec_combined := by
-  unfold select_clz_to_ctz_vec_before select_clz_to_ctz_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (vector<2xi32>) -> vector<2xi32>
     llvm.return %0 : vector<2xi32>
   }]
 
@@ -337,12 +317,7 @@ theorem inst_combine_select_clz_to_ctz_vec   : select_clz_to_ctz_vec_before  ⊑
   sorry
 def select_clz_to_ctz_extra_use_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_extra_use(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_extra_use   : select_clz_to_ctz_extra_use_before  ⊑  select_clz_to_ctz_extra_use_combined := by
-  unfold select_clz_to_ctz_extra_use_before select_clz_to_ctz_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.call @use(%0) : (i32) -> ()
     llvm.return %0 : i32
   }]
@@ -353,12 +328,7 @@ theorem inst_combine_select_clz_to_ctz_extra_use   : select_clz_to_ctz_extra_use
   sorry
 def select_clz_to_ctz_and_commuted_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_and_commuted(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_and_commuted   : select_clz_to_ctz_and_commuted_before  ⊑  select_clz_to_ctz_and_commuted_combined := by
-  unfold select_clz_to_ctz_and_commuted_before select_clz_to_ctz_and_commuted_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -371,12 +341,7 @@ def select_clz_to_ctz_icmp_ne_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.icmp "ne" %arg0, %0 : i32
     llvm.call @use2(%1) : (i1) -> ()
-    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_icmp_ne   : select_clz_to_ctz_icmp_ne_before  ⊑  select_clz_to_ctz_icmp_ne_combined := by
-  unfold select_clz_to_ctz_icmp_ne_before select_clz_to_ctz_icmp_ne_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %2 : i32
   }]
 
@@ -386,12 +351,7 @@ theorem inst_combine_select_clz_to_ctz_icmp_ne   : select_clz_to_ctz_icmp_ne_bef
   sorry
 def select_clz_to_ctz_i64_combined := [llvmfunc|
   llvm.func @select_clz_to_ctz_i64(%arg0: i64) -> i64 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_select_clz_to_ctz_i64   : select_clz_to_ctz_i64_before  ⊑  select_clz_to_ctz_i64_combined := by
-  unfold select_clz_to_ctz_i64_before select_clz_to_ctz_i64_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     llvm.return %0 : i64
   }]
 
@@ -405,12 +365,7 @@ def select_clz_to_ctz_wrong_sub_combined := [llvmfunc|
     %1 = llvm.mlir.constant(31 : i32) : i32
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.and %2, %arg0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_wrong_sub   : select_clz_to_ctz_wrong_sub_before  ⊑  select_clz_to_ctz_wrong_sub_combined := by
-  unfold select_clz_to_ctz_wrong_sub_before select_clz_to_ctz_wrong_sub_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i32) -> i32
     %5 = llvm.xor %4, %1  : i32
     llvm.return %5 : i32
   }]
@@ -425,12 +380,7 @@ def select_clz_to_ctz_i64_wrong_xor_combined := [llvmfunc|
     %1 = llvm.mlir.constant(64 : i64) : i64
     %2 = llvm.sub %0, %arg0  : i64
     %3 = llvm.and %2, %arg0  : i64
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_select_clz_to_ctz_i64_wrong_xor   : select_clz_to_ctz_i64_wrong_xor_before  ⊑  select_clz_to_ctz_i64_wrong_xor_combined := by
-  unfold select_clz_to_ctz_i64_wrong_xor_before select_clz_to_ctz_i64_wrong_xor_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i64) -> i64
     %5 = llvm.or %4, %1  : i64
     llvm.return %5 : i64
   }]
@@ -444,12 +394,7 @@ def select_clz_to_ctz_i64_wrong_icmp_cst_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.mlir.constant(63 : i64) : i64
     %2 = llvm.icmp "eq" %arg0, %0 : i64
-    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_select_clz_to_ctz_i64_wrong_icmp_cst   : select_clz_to_ctz_i64_wrong_icmp_cst_before  ⊑  select_clz_to_ctz_i64_wrong_icmp_cst_combined := by
-  unfold select_clz_to_ctz_i64_wrong_icmp_cst_before select_clz_to_ctz_i64_wrong_icmp_cst_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i64) -> i64
     %4 = llvm.select %2, %1, %3 : i1, i64
     llvm.return %4 : i64
   }]
@@ -464,12 +409,7 @@ def select_clz_to_ctz_i64_wrong_icmp_pred_combined := [llvmfunc|
     %1 = llvm.mlir.constant(63 : i64) : i64
     %2 = llvm.sub %0, %arg0  : i64
     %3 = llvm.and %2, %arg0  : i64
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i64) -> i64]
-
-theorem inst_combine_select_clz_to_ctz_i64_wrong_icmp_pred   : select_clz_to_ctz_i64_wrong_icmp_pred_before  ⊑  select_clz_to_ctz_i64_wrong_icmp_pred_combined := by
-  unfold select_clz_to_ctz_i64_wrong_icmp_pred_before select_clz_to_ctz_i64_wrong_icmp_pred_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = true}> : (i64) -> i64
     %5 = llvm.icmp "slt" %arg0, %0 : i64
     %6 = llvm.xor %4, %1  : i64
     %7 = llvm.select %5, %4, %6 : i1, i64
@@ -493,12 +433,7 @@ def select_clz_to_ctz_vec_with_undef_combined := [llvmfunc|
     %8 = llvm.insertelement %2, %6[%7 : i32] : vector<2xi32>
     %9 = llvm.sub %1, %arg0  : vector<2xi32>
     %10 = llvm.and %9, %arg0  : vector<2xi32>
-    %11 = "llvm.intr.ctlz"(%10) <{is_zero_poison = true}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_select_clz_to_ctz_vec_with_undef   : select_clz_to_ctz_vec_with_undef_before  ⊑  select_clz_to_ctz_vec_with_undef_combined := by
-  unfold select_clz_to_ctz_vec_with_undef_before select_clz_to_ctz_vec_with_undef_combined
-  simp_alive_peephole
-  sorry
+    %11 = "llvm.intr.ctlz"(%10) <{is_zero_poison = true}> : (vector<2xi32>) -> vector<2xi32>
     %12 = llvm.icmp "eq" %arg0, %1 : vector<2xi32>
     %13 = llvm.xor %11, %8  : vector<2xi32>
     %14 = llvm.select %12, %11, %13 : vector<2xi1>, vector<2xi32>
@@ -515,12 +450,7 @@ def select_clz_to_ctz_wrong_constant_for_zero_combined := [llvmfunc|
     %1 = llvm.mlir.constant(31 : i32) : i32
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.and %2, %arg0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_select_clz_to_ctz_wrong_constant_for_zero   : select_clz_to_ctz_wrong_constant_for_zero_before  ⊑  select_clz_to_ctz_wrong_constant_for_zero_combined := by
-  unfold select_clz_to_ctz_wrong_constant_for_zero_before select_clz_to_ctz_wrong_constant_for_zero_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.icmp "eq" %arg0, %0 : i32
     %6 = llvm.xor %4, %1  : i32
     %7 = llvm.select %5, %1, %6 : i1, i32
@@ -536,12 +466,7 @@ def PR45762_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i4) : i4
     %1 = llvm.mlir.constant(0 : i3) : i3
     %2 = llvm.mlir.constant(-8 : i4) : i4
-    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i3) -> i3]
-
-theorem inst_combine_PR45762   : PR45762_before  ⊑  PR45762_combined := by
-  unfold PR45762_before PR45762_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i3) -> i3
     %4 = llvm.zext %3 : i3 to i4
     %5 = llvm.shl %0, %4 overflow<nuw>  : i4
     %6 = llvm.icmp "eq" %arg0, %1 : i3
@@ -559,12 +484,7 @@ def PR45762_logical_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i4) : i4
     %1 = llvm.mlir.constant(0 : i3) : i3
     %2 = llvm.mlir.constant(-8 : i4) : i4
-    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i3) -> i3]
-
-theorem inst_combine_PR45762_logical   : PR45762_logical_before  ⊑  PR45762_logical_combined := by
-  unfold PR45762_logical_before PR45762_logical_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i3) -> i3
     %4 = llvm.zext %3 : i3 to i4
     %5 = llvm.shl %0, %4 overflow<nuw>  : i4
     %6 = llvm.icmp "eq" %arg0, %1 : i3

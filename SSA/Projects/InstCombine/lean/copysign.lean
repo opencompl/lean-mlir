@@ -91,12 +91,7 @@ def fabs_mag_before := [llvmfunc|
 
 def positive_sign_arg_combined := [llvmfunc|
   llvm.func @positive_sign_arg(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (f32) -> f32]
-
-theorem inst_combine_positive_sign_arg   : positive_sign_arg_before  ⊑  positive_sign_arg_combined := by
-  unfold positive_sign_arg_before positive_sign_arg_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -106,12 +101,7 @@ theorem inst_combine_positive_sign_arg   : positive_sign_arg_before  ⊑  positi
   sorry
 def positive_sign_arg_vec_splat_combined := [llvmfunc|
   llvm.func @positive_sign_arg_vec_splat(%arg0: vector<3xf64>) -> vector<3xf64> {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (vector<3xf64>) -> vector<3xf64>]
-
-theorem inst_combine_positive_sign_arg_vec_splat   : positive_sign_arg_vec_splat_before  ⊑  positive_sign_arg_vec_splat_combined := by
-  unfold positive_sign_arg_vec_splat_before positive_sign_arg_vec_splat_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (vector<3xf64>) -> vector<3xf64>
     llvm.return %0 : vector<3xf64>
   }]
 
@@ -121,18 +111,8 @@ theorem inst_combine_positive_sign_arg_vec_splat   : positive_sign_arg_vec_splat
   sorry
 def negative_sign_arg_combined := [llvmfunc|
   llvm.func @negative_sign_arg(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32]
-
-theorem inst_combine_negative_sign_arg   : negative_sign_arg_before  ⊑  negative_sign_arg_combined := by
-  unfold negative_sign_arg_before negative_sign_arg_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_negative_sign_arg   : negative_sign_arg_before  ⊑  negative_sign_arg_combined := by
-  unfold negative_sign_arg_before negative_sign_arg_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32) -> f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan>} : f32
     llvm.return %1 : f32
   }]
 
@@ -142,18 +122,8 @@ theorem inst_combine_negative_sign_arg   : negative_sign_arg_before  ⊑  negati
   sorry
 def negative_sign_arg_vec_splat_combined := [llvmfunc|
   llvm.func @negative_sign_arg_vec_splat(%arg0: vector<3xf64>) -> vector<3xf64> {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<3xf64>) -> vector<3xf64>]
-
-theorem inst_combine_negative_sign_arg_vec_splat   : negative_sign_arg_vec_splat_before  ⊑  negative_sign_arg_vec_splat_combined := by
-  unfold negative_sign_arg_vec_splat_before negative_sign_arg_vec_splat_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : vector<3xf64>]
-
-theorem inst_combine_negative_sign_arg_vec_splat   : negative_sign_arg_vec_splat_before  ⊑  negative_sign_arg_vec_splat_combined := by
-  unfold negative_sign_arg_vec_splat_before negative_sign_arg_vec_splat_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<3xf64>) -> vector<3xf64>
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : vector<3xf64>
     llvm.return %1 : vector<3xf64>
   }]
 
@@ -163,12 +133,7 @@ theorem inst_combine_negative_sign_arg_vec_splat   : negative_sign_arg_vec_splat
   sorry
 def known_positive_sign_arg_combined := [llvmfunc|
   llvm.func @known_positive_sign_arg(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32]
-
-theorem inst_combine_known_positive_sign_arg   : known_positive_sign_arg_before  ⊑  known_positive_sign_arg_combined := by
-  unfold known_positive_sign_arg_before known_positive_sign_arg_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -178,12 +143,7 @@ theorem inst_combine_known_positive_sign_arg   : known_positive_sign_arg_before 
   sorry
 def known_positive_sign_arg_vec_combined := [llvmfunc|
   llvm.func @known_positive_sign_arg_vec(%arg0: vector<3xf64>, %arg1: vector<3xi32>) -> vector<3xf64> {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (vector<3xf64>) -> vector<3xf64>]
-
-theorem inst_combine_known_positive_sign_arg_vec   : known_positive_sign_arg_vec_before  ⊑  known_positive_sign_arg_vec_combined := by
-  unfold known_positive_sign_arg_vec_before known_positive_sign_arg_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (vector<3xf64>) -> vector<3xf64>
     llvm.return %0 : vector<3xf64>
   }]
 
@@ -195,12 +155,7 @@ def not_known_positive_sign_arg_combined := [llvmfunc|
   llvm.func @not_known_positive_sign_arg(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.intr.maxnum(%arg0, %0)  : (f32, f32) -> f32
-    %2 = llvm.intr.copysign(%arg1, %1)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_not_known_positive_sign_arg   : not_known_positive_sign_arg_before  ⊑  not_known_positive_sign_arg_combined := by
-  unfold not_known_positive_sign_arg_before not_known_positive_sign_arg_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.copysign(%arg1, %1)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %2 : f32
   }]
 
@@ -210,12 +165,7 @@ theorem inst_combine_not_known_positive_sign_arg   : not_known_positive_sign_arg
   sorry
 def copysign_sign_arg_combined := [llvmfunc|
   llvm.func @copysign_sign_arg(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
-    %0 = llvm.intr.copysign(%arg0, %arg2)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_copysign_sign_arg   : copysign_sign_arg_before  ⊑  copysign_sign_arg_combined := by
-  unfold copysign_sign_arg_before copysign_sign_arg_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.copysign(%arg0, %arg2)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %0 : f32
   }]
 

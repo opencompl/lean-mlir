@@ -25,25 +25,10 @@ def test_before := [llvmfunc|
 
 def test_combined := [llvmfunc|
   llvm.func @test(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.intr.umin(%1, %0)  : (i32, i32) -> i32
-    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

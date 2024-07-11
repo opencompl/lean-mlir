@@ -60,48 +60,18 @@ def test_combined := [llvmfunc|
     %9 = llvm.shl %arg2, %2  : i32
     %10 = llvm.and %9, %3  : i32
     %11 = llvm.lshr %8, %2  : i32
-    llvm.store %11, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %12 = llvm.ashr %10, %2  : i32
-    llvm.store %12, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %12, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %13 = llvm.icmp "eq" %arg3, %4 : i32
     llvm.cond_br %13, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %8, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %10, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %10, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %6 : i1
   ^bb2:  // pred: ^bb0
-    llvm.store %8, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %10, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %10, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %5 : i1
   }]
 

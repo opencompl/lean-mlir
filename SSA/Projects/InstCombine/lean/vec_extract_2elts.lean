@@ -26,18 +26,8 @@ def test_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.extractelement %arg0[%0 : i64] : vector<4xi32>
     %2 = llvm.zext %1 : i32 to i64
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg2 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %2, %arg2 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

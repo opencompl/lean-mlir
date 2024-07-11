@@ -167,12 +167,7 @@ def fold_strnlen_ax_1_eqz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_1_eqz() -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_1_eqz   : fold_strnlen_ax_1_eqz_before  ⊑  fold_strnlen_ax_1_eqz_combined := by
-  unfold fold_strnlen_ax_1_eqz_before fold_strnlen_ax_1_eqz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "eq" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -185,12 +180,7 @@ def fold_strnlen_ax_1_lt1_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_1_lt1() -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_1_lt1   : fold_strnlen_ax_1_lt1_before  ⊑  fold_strnlen_ax_1_lt1_combined := by
-  unfold fold_strnlen_ax_1_lt1_before fold_strnlen_ax_1_lt1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "eq" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -203,12 +193,7 @@ def fold_strnlen_ax_1_neqz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_1_neqz() -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_1_neqz   : fold_strnlen_ax_1_neqz_before  ⊑  fold_strnlen_ax_1_neqz_combined := by
-  unfold fold_strnlen_ax_1_neqz_before fold_strnlen_ax_1_neqz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "ne" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -221,12 +206,7 @@ def fold_strnlen_ax_1_gtz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_1_gtz() -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_1_gtz   : fold_strnlen_ax_1_gtz_before  ⊑  fold_strnlen_ax_1_gtz_combined := by
-  unfold fold_strnlen_ax_1_gtz_before fold_strnlen_ax_1_gtz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "ne" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -239,12 +219,7 @@ def fold_strnlen_ax_9_eqz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_9_eqz() -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_9_eqz   : fold_strnlen_ax_9_eqz_before  ⊑  fold_strnlen_ax_9_eqz_combined := by
-  unfold fold_strnlen_ax_9_eqz_before fold_strnlen_ax_9_eqz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "eq" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -270,12 +245,7 @@ def fold_strnlen_ax_nz_eqz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_nz_eqz(%arg0: i64) -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_nz_eqz   : fold_strnlen_ax_nz_eqz_before  ⊑  fold_strnlen_ax_nz_eqz_combined := by
-  unfold fold_strnlen_ax_nz_eqz_before fold_strnlen_ax_nz_eqz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "eq" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -288,12 +258,7 @@ def fold_strnlen_ax_nz_gtz_combined := [llvmfunc|
   llvm.func @fold_strnlen_ax_nz_gtz(%arg0: i64) -> i1 {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i8) : i8
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_ax_nz_gtz   : fold_strnlen_ax_nz_gtz_before  ⊑  fold_strnlen_ax_nz_gtz_combined := by
-  unfold fold_strnlen_ax_nz_gtz_before fold_strnlen_ax_nz_gtz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "ne" %2, %1 : i8
     llvm.return %3 : i1
   }]
@@ -308,12 +273,7 @@ def fold_strnlen_a5_pi_nz_eqz_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.mlir.constant(0 : i8) : i8
     %3 = llvm.getelementptr inbounds %0[%1, %arg0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<5 x i8>
-    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strnlen_a5_pi_nz_eqz   : fold_strnlen_a5_pi_nz_eqz_before  ⊑  fold_strnlen_a5_pi_nz_eqz_combined := by
-  unfold fold_strnlen_a5_pi_nz_eqz_before fold_strnlen_a5_pi_nz_eqz_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i8
     %5 = llvm.icmp "eq" %4, %2 : i8
     llvm.return %5 : i1
   }]

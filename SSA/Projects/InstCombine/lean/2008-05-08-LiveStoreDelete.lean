@@ -40,25 +40,10 @@ def a_combined := [llvmfunc|
     %3 = llvm.mlir.constant(1 : i8) : i8
     %4 = llvm.call @malloc(%0) : (i32) -> !llvm.ptr
     %5 = llvm.getelementptr %4[%1] : (!llvm.ptr, i32) -> !llvm.ptr, i8
-    llvm.store %2, %5 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_a   : a_before  ⊑  a_combined := by
-  unfold a_before a_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %3, %4 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_a   : a_before  ⊑  a_combined := by
-  unfold a_before a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %5 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %3, %4 {alignment = 1 : i64} : i8, !llvm.ptr
     %6 = llvm.call @strlen(%4) : (!llvm.ptr) -> i32
-    llvm.store %2, %4 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_a   : a_before  ⊑  a_combined := by
-  unfold a_before a_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %4 {alignment = 1 : i64} : i8, !llvm.ptr
     %7 = llvm.call @b(%4) vararg(!llvm.func<i32 (...)>) : (!llvm.ptr) -> i32
     llvm.return %6 : i32
   }]

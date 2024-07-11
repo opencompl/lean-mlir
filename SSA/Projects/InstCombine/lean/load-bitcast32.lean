@@ -59,12 +59,7 @@ def test6_before := [llvmfunc|
 
 def test1_combined := [llvmfunc|
   llvm.func @test1(%arg0: !llvm.ptr) -> !llvm.ptr {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64
     %1 = llvm.trunc %0 : i64 to i32
     %2 = llvm.inttoptr %1 : i32 to !llvm.ptr
     llvm.return %2 : !llvm.ptr
@@ -76,12 +71,7 @@ theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
   sorry
 def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: !llvm.ptr) -> !llvm.ptr {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %1 = llvm.inttoptr %0 : i32 to !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
@@ -92,12 +82,7 @@ theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
   sorry
 def test3_combined := [llvmfunc|
   llvm.func @test3(%arg0: !llvm.ptr) -> !llvm.ptr {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %1 = llvm.inttoptr %0 : i32 to !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
@@ -108,12 +93,7 @@ theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
   sorry
 def test4_combined := [llvmfunc|
   llvm.func @test4(%arg0: !llvm.ptr) -> i64 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %1 = llvm.ptrtoint %0 : !llvm.ptr to i32
     %2 = llvm.zext %1 : i32 to i64
     llvm.return %2 : i64
@@ -125,12 +105,7 @@ theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
   sorry
 def test5_combined := [llvmfunc|
   llvm.func @test5(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %1 = llvm.ptrtoint %0 : !llvm.ptr to i32
     llvm.return %1 : i32
   }]
@@ -141,12 +116,7 @@ theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
   sorry
 def test6_combined := [llvmfunc|
   llvm.func @test6(%arg0: !llvm.ptr) -> i64 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %1 = llvm.ptrtoint %0 : !llvm.ptr to i32
     %2 = llvm.zext %1 : i32 to i64
     llvm.return %2 : i64

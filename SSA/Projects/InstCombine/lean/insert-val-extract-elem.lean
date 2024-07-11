@@ -89,18 +89,8 @@ def julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _bef
 
 def julia_2xdouble_combined := [llvmfunc|
   llvm.func @julia_2xdouble(%arg0: !llvm.ptr {llvm.sret = !llvm.array<2 x f64>}, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_julia_2xdouble   : julia_2xdouble_before  ⊑  julia_2xdouble_combined := by
-  unfold julia_2xdouble_before julia_2xdouble_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<2xf64>, !llvm.ptr]
-
-theorem inst_combine_julia_2xdouble   : julia_2xdouble_before  ⊑  julia_2xdouble_combined := by
-  unfold julia_2xdouble_before julia_2xdouble_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<2xf64>
+    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<2xf64>, !llvm.ptr
     llvm.return
   }]
 
@@ -110,18 +100,8 @@ theorem inst_combine_julia_2xdouble   : julia_2xdouble_before  ⊑  julia_2xdoub
   sorry
 def julia_2xi64_combined := [llvmfunc|
   llvm.func @julia_2xi64(%arg0: !llvm.ptr {llvm.sret = !llvm.array<2 x i64>}, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_julia_2xi64   : julia_2xi64_before  ⊑  julia_2xi64_combined := by
-  unfold julia_2xi64_before julia_2xi64_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_julia_2xi64   : julia_2xi64_before  ⊑  julia_2xi64_combined := by
-  unfold julia_2xi64_before julia_2xi64_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<2xi64>
+    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 
@@ -131,18 +111,8 @@ theorem inst_combine_julia_2xi64   : julia_2xi64_before  ⊑  julia_2xi64_combin
   sorry
 def julia_4xfloat_combined := [llvmfunc|
   llvm.func @julia_4xfloat(%arg0: !llvm.ptr {llvm.sret = !llvm.array<4 x f32>}, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>]
-
-theorem inst_combine_julia_4xfloat   : julia_4xfloat_before  ⊑  julia_4xfloat_combined := by
-  unfold julia_4xfloat_before julia_4xfloat_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_julia_4xfloat   : julia_4xfloat_before  ⊑  julia_4xfloat_combined := by
-  unfold julia_4xfloat_before julia_4xfloat_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>
+    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<4xf32>, !llvm.ptr
     llvm.return
   }]
 
@@ -152,18 +122,8 @@ theorem inst_combine_julia_4xfloat   : julia_4xfloat_before  ⊑  julia_4xfloat_
   sorry
 def julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _combined := [llvmfunc|
   llvm.func @julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", (f32, f32, f32, f32)>}, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>]
-
-theorem inst_combine_julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec",    : julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _before  ⊑  julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _combined := by
-  unfold julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _before julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec",    : julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _before  ⊑  julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _combined := by
-  unfold julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _before julia_pseudovec(%arg0: !llvm.ptr {llvm.sret = !llvm.struct<"pseudovec", _combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xf32>
+    llvm.store %0, %arg0 {alignment = 4 : i64} : vector<4xf32>, !llvm.ptr
     llvm.return
   }]
 

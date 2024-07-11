@@ -59,12 +59,7 @@ def cttz_false_bitreverse_before := [llvmfunc|
 
 def ctlz_true_bitreverse_combined := [llvmfunc|
   llvm.func @ctlz_true_bitreverse(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_true_bitreverse   : ctlz_true_bitreverse_before  ⊑  ctlz_true_bitreverse_combined := by
-  unfold ctlz_true_bitreverse_before ctlz_true_bitreverse_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -74,12 +69,7 @@ theorem inst_combine_ctlz_true_bitreverse   : ctlz_true_bitreverse_before  ⊑  
   sorry
 def ctlz_true_bitreverse_vec_combined := [llvmfunc|
   llvm.func @ctlz_true_bitreverse_vec(%arg0: vector<2xi64>) -> vector<2xi64> {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (vector<2xi64>) -> vector<2xi64>]
-
-theorem inst_combine_ctlz_true_bitreverse_vec   : ctlz_true_bitreverse_vec_before  ⊑  ctlz_true_bitreverse_vec_combined := by
-  unfold ctlz_true_bitreverse_vec_before ctlz_true_bitreverse_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (vector<2xi64>) -> vector<2xi64>
     llvm.return %0 : vector<2xi64>
   }]
 
@@ -89,12 +79,7 @@ theorem inst_combine_ctlz_true_bitreverse_vec   : ctlz_true_bitreverse_vec_befor
   sorry
 def ctlz_false_bitreverse_combined := [llvmfunc|
   llvm.func @ctlz_false_bitreverse(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctlz_false_bitreverse   : ctlz_false_bitreverse_before  ⊑  ctlz_false_bitreverse_combined := by
-  unfold ctlz_false_bitreverse_before ctlz_false_bitreverse_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -104,12 +89,7 @@ theorem inst_combine_ctlz_false_bitreverse   : ctlz_false_bitreverse_before  ⊑
   sorry
 def cttz_true_bitreverse_combined := [llvmfunc|
   llvm.func @cttz_true_bitreverse(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_cttz_true_bitreverse   : cttz_true_bitreverse_before  ⊑  cttz_true_bitreverse_combined := by
-  unfold cttz_true_bitreverse_before cttz_true_bitreverse_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -119,12 +99,7 @@ theorem inst_combine_cttz_true_bitreverse   : cttz_true_bitreverse_before  ⊑  
   sorry
 def cttz_true_bitreverse_vec_combined := [llvmfunc|
   llvm.func @cttz_true_bitreverse_vec(%arg0: vector<2xi64>) -> vector<2xi64> {
-    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (vector<2xi64>) -> vector<2xi64>]
-
-theorem inst_combine_cttz_true_bitreverse_vec   : cttz_true_bitreverse_vec_before  ⊑  cttz_true_bitreverse_vec_combined := by
-  unfold cttz_true_bitreverse_vec_before cttz_true_bitreverse_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (vector<2xi64>) -> vector<2xi64>
     llvm.return %0 : vector<2xi64>
   }]
 
@@ -134,12 +109,7 @@ theorem inst_combine_cttz_true_bitreverse_vec   : cttz_true_bitreverse_vec_befor
   sorry
 def cttz_false_bitreverse_combined := [llvmfunc|
   llvm.func @cttz_false_bitreverse(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_cttz_false_bitreverse   : cttz_false_bitreverse_before  ⊑  cttz_false_bitreverse_combined := by
-  unfold cttz_false_bitreverse_before cttz_false_bitreverse_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 

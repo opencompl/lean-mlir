@@ -32,12 +32,7 @@ def qux(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _before := [llvmfunc|
 
 def foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _combined := [llvmfunc|
   llvm.func @foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", (i64)>}) -> i64 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo",    : foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _before  ⊑  foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _combined := by
-  unfold foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _before foo(%arg0: !llvm.ptr {llvm.byval = !llvm.struct<"Foo", _combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64
     llvm.return %0 : i64
   }]
 

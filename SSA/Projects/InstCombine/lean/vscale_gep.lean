@@ -152,19 +152,9 @@ def gep_bitcast_combined := [llvmfunc|
     %32 = llvm.mlir.constant(15 : i32) : i32
     %33 = llvm.insertelement %0, %31[%32 : i32] : !llvm.vec<? x 16 x  i8>
     %34 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i8>, !llvm.ptr]
-
-theorem inst_combine_gep_bitcast   : gep_bitcast_before  ⊑  gep_bitcast_combined := by
-  unfold gep_bitcast_before gep_bitcast_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %33, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i8>, !llvm.ptr
     %35 = llvm.getelementptr %arg0[%34] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.vec<? x 16 x  i8>
-    llvm.store %33, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i8>, !llvm.ptr]
-
-theorem inst_combine_gep_bitcast   : gep_bitcast_before  ⊑  gep_bitcast_combined := by
-  unfold gep_bitcast_before gep_bitcast_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %33, %35 {alignment = 16 : i64} : !llvm.vec<? x 16 x  i8>, !llvm.ptr
     llvm.return
   }]
 
@@ -177,19 +167,9 @@ def gep_alloca_inbounds_vscale_zero_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i64) : i64
     %2 = llvm.mlir.constant(2 : i64) : i64
-    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_gep_alloca_inbounds_vscale_zero   : gep_alloca_inbounds_vscale_zero_before  ⊑  gep_alloca_inbounds_vscale_zero_combined := by
-  unfold gep_alloca_inbounds_vscale_zero_before gep_alloca_inbounds_vscale_zero_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %3[%1, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.vec<? x 4 x  i32>
-    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_gep_alloca_inbounds_vscale_zero   : gep_alloca_inbounds_vscale_zero_before  ⊑  gep_alloca_inbounds_vscale_zero_combined := by
-  unfold gep_alloca_inbounds_vscale_zero_before gep_alloca_inbounds_vscale_zero_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %5 : i32
   }]
 
@@ -202,19 +182,9 @@ def gep_alloca_inbounds_vscale_nonzero_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(2 : i64) : i64
-    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_gep_alloca_inbounds_vscale_nonzero   : gep_alloca_inbounds_vscale_nonzero_before  ⊑  gep_alloca_inbounds_vscale_nonzero_combined := by
-  unfold gep_alloca_inbounds_vscale_nonzero_before gep_alloca_inbounds_vscale_nonzero_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.vec<? x 4 x  i32> {alignment = 16 : i64} : (i32) -> !llvm.ptr
     %4 = llvm.getelementptr %3[%1, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.vec<? x 4 x  i32>
-    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_gep_alloca_inbounds_vscale_nonzero   : gep_alloca_inbounds_vscale_nonzero_before  ⊑  gep_alloca_inbounds_vscale_nonzero_combined := by
-  unfold gep_alloca_inbounds_vscale_nonzero_before gep_alloca_inbounds_vscale_nonzero_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %5 : i32
   }]
 

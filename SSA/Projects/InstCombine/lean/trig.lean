@@ -100,12 +100,7 @@ def coshAcoshInverse_before := [llvmfunc|
 
 def tanAtanInverseFast_combined := [llvmfunc|
   llvm.func @tanAtanInverseFast(%arg0: f32) -> f32 {
-    %0 = llvm.call @atanf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_tanAtanInverseFast   : tanAtanInverseFast_before  ⊑  tanAtanInverseFast_combined := by
-  unfold tanAtanInverseFast_before tanAtanInverseFast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @atanf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %arg0 : f32
   }]
 
@@ -115,18 +110,8 @@ theorem inst_combine_tanAtanInverseFast   : tanAtanInverseFast_before  ⊑  tanA
   sorry
 def atanhTanhInverseFast_combined := [llvmfunc|
   llvm.func @atanhTanhInverseFast(%arg0: f32) -> f32 {
-    %0 = llvm.call @tanhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_atanhTanhInverseFast   : atanhTanhInverseFast_before  ⊑  atanhTanhInverseFast_combined := by
-  unfold atanhTanhInverseFast_before atanhTanhInverseFast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @atanhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_atanhTanhInverseFast   : atanhTanhInverseFast_before  ⊑  atanhTanhInverseFast_combined := by
-  unfold atanhTanhInverseFast_before atanhTanhInverseFast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @tanhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
+    %1 = llvm.call @atanhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -136,18 +121,8 @@ theorem inst_combine_atanhTanhInverseFast   : atanhTanhInverseFast_before  ⊑  
   sorry
 def sinhAsinhInverseFast_combined := [llvmfunc|
   llvm.func @sinhAsinhInverseFast(%arg0: f32) -> f32 {
-    %0 = llvm.call @asinhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_sinhAsinhInverseFast   : sinhAsinhInverseFast_before  ⊑  sinhAsinhInverseFast_combined := by
-  unfold sinhAsinhInverseFast_before sinhAsinhInverseFast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sinhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_sinhAsinhInverseFast   : sinhAsinhInverseFast_before  ⊑  sinhAsinhInverseFast_combined := by
-  unfold sinhAsinhInverseFast_before sinhAsinhInverseFast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @asinhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
+    %1 = llvm.call @sinhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -157,18 +132,8 @@ theorem inst_combine_sinhAsinhInverseFast   : sinhAsinhInverseFast_before  ⊑  
   sorry
 def asinhSinhInverseFast_combined := [llvmfunc|
   llvm.func @asinhSinhInverseFast(%arg0: f32) -> f32 {
-    %0 = llvm.call @sinhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_asinhSinhInverseFast   : asinhSinhInverseFast_before  ⊑  asinhSinhInverseFast_combined := by
-  unfold asinhSinhInverseFast_before asinhSinhInverseFast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @asinhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_asinhSinhInverseFast   : asinhSinhInverseFast_before  ⊑  asinhSinhInverseFast_combined := by
-  unfold asinhSinhInverseFast_before asinhSinhInverseFast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sinhf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
+    %1 = llvm.call @asinhf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -178,18 +143,8 @@ theorem inst_combine_asinhSinhInverseFast   : asinhSinhInverseFast_before  ⊑  
   sorry
 def coshAcoshInverseFast_combined := [llvmfunc|
   llvm.func @coshAcoshInverseFast(%arg0: f32) -> f32 {
-    %0 = llvm.call @acoshf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_coshAcoshInverseFast   : coshAcoshInverseFast_before  ⊑  coshAcoshInverseFast_combined := by
-  unfold coshAcoshInverseFast_before coshAcoshInverseFast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @coshf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_coshAcoshInverseFast   : coshAcoshInverseFast_before  ⊑  coshAcoshInverseFast_combined := by
-  unfold coshAcoshInverseFast_before coshAcoshInverseFast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @acoshf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
+    %1 = llvm.call @coshf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -199,18 +154,8 @@ theorem inst_combine_coshAcoshInverseFast   : coshAcoshInverseFast_before  ⊑  
   sorry
 def indirectTanCall_combined := [llvmfunc|
   llvm.func @indirectTanCall(%arg0: !llvm.ptr) -> f32 {
-    %0 = llvm.call %arg0() {fastmathFlags = #llvm.fastmath<fast>} : !llvm.ptr, () -> f32]
-
-theorem inst_combine_indirectTanCall   : indirectTanCall_before  ⊑  indirectTanCall_combined := by
-  unfold indirectTanCall_before indirectTanCall_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @tanf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_indirectTanCall   : indirectTanCall_before  ⊑  indirectTanCall_combined := by
-  unfold indirectTanCall_before indirectTanCall_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call %arg0() {fastmathFlags = #llvm.fastmath<fast>} : !llvm.ptr, () -> f32
+    %1 = llvm.call @tanf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 

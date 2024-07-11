@@ -549,12 +549,7 @@ def convert_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<1> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.trunc %arg1 : vector<2xi64> to vector<2xi32>
     %2 = llvm.add %1, %0  : vector<2xi32>
-    llvm.store %2, %arg0 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_convert   : convert_before  ⊑  convert_combined := by
-  unfold convert_before convert_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     llvm.return
   }]
 

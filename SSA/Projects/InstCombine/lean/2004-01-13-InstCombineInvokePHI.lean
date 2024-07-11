@@ -28,3 +28,24 @@ def foo_before := [llvmfunc|
     llvm.return %2 : i32
   }]
 
+def foo_combined := [llvmfunc|
+  llvm.func @foo() -> i32 attributes {personality = @__gxx_personality_v0} {
+    %0 = llvm.mlir.constant(true) : i1
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.mlir.poison : !llvm.ptr
+    %3 = llvm.mlir.poison : i32
+    llvm.cond_br %0, ^bb2, ^bb1
+  ^bb1:  // pred: ^bb0
+    %4 = llvm.invoke @test() to ^bb2 unwind ^bb3 : () -> !llvm.ptr
+  ^bb2:  // 2 preds: ^bb0, ^bb1
+    llvm.store %0, %2 {alignment = 1 : i64} : i1, !llvm.ptr
+    llvm.return %3 : i32
+  ^bb3:  // pred: ^bb1
+    %5 = llvm.landingpad cleanup : !llvm.struct<(ptr, i32)>
+    llvm.return %1 : i32
+  }]
+
+theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
+  unfold foo_before foo_combined
+  simp_alive_peephole
+  sorry

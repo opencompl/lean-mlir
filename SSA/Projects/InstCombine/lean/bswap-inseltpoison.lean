@@ -74,12 +74,7 @@ theorem inst_combine_shuf_4bytes   : shuf_4bytes_before  ⊑  shuf_4bytes_combin
   sorry
 def shuf_load_4bytes_combined := [llvmfunc|
   llvm.func @shuf_load_4bytes(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_shuf_load_4bytes   : shuf_load_4bytes_before  ⊑  shuf_load_4bytes_combined := by
-  unfold shuf_load_4bytes_before shuf_load_4bytes_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %1 = llvm.intr.bswap(%0)  : (i32) -> i32
     llvm.return %1 : i32
   }]

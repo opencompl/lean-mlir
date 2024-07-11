@@ -37,33 +37,13 @@ def function_combined := [llvmfunc|
   llvm.func @function(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.addressof @silly : !llvm.ptr
-    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %4 = llvm.add %3, %arg0  : i32
-    llvm.store %4, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
-    %5 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %5 : i32
   }]
 

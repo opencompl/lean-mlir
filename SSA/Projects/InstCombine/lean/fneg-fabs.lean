@@ -273,18 +273,8 @@ theorem inst_combine_select_noFMF_nfabs_lt   : select_noFMF_nfabs_lt_before  ⊑
   sorry
 def select_nsz_nfabs_lt_fmfProp_combined := [llvmfunc|
   llvm.func @select_nsz_nfabs_lt_fmfProp(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nfabs_lt_fmfProp   : select_nsz_nfabs_lt_fmfProp_before  ⊑  select_nsz_nfabs_lt_fmfProp_combined := by
-  unfold select_nsz_nfabs_lt_fmfProp_before select_nsz_nfabs_lt_fmfProp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nfabs_lt_fmfProp   : select_nsz_nfabs_lt_fmfProp_before  ⊑  select_nsz_nfabs_lt_fmfProp_combined := by
-  unfold select_nsz_nfabs_lt_fmfProp_before select_nsz_nfabs_lt_fmfProp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -294,18 +284,8 @@ theorem inst_combine_select_nsz_nfabs_lt_fmfProp   : select_nsz_nfabs_lt_fmfProp
   sorry
 def select_nsz_nnan_nfabs_lt_fmfProp_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_lt_fmfProp(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_lt_fmfProp   : select_nsz_nnan_nfabs_lt_fmfProp_before  ⊑  select_nsz_nnan_nfabs_lt_fmfProp_combined := by
-  unfold select_nsz_nnan_nfabs_lt_fmfProp_before select_nsz_nnan_nfabs_lt_fmfProp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_lt_fmfProp   : select_nsz_nnan_nfabs_lt_fmfProp_before  ⊑  select_nsz_nnan_nfabs_lt_fmfProp_combined := by
-  unfold select_nsz_nnan_nfabs_lt_fmfProp_before select_nsz_nnan_nfabs_lt_fmfProp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -318,12 +298,7 @@ def select_nsz_nfabs_ult_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ult" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_ult   : select_nsz_nfabs_ult_before  ⊑  select_nsz_nfabs_ult_combined := by
-  unfold select_nsz_nfabs_ult_before select_nsz_nfabs_ult_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -333,18 +308,8 @@ theorem inst_combine_select_nsz_nfabs_ult   : select_nsz_nfabs_ult_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_ult_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_ult(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ult   : select_nsz_nnan_nfabs_ult_before  ⊑  select_nsz_nnan_nfabs_ult_combined := by
-  unfold select_nsz_nnan_nfabs_ult_before select_nsz_nnan_nfabs_ult_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ult   : select_nsz_nnan_nfabs_ult_before  ⊑  select_nsz_nnan_nfabs_ult_combined := by
-  unfold select_nsz_nnan_nfabs_ult_before select_nsz_nnan_nfabs_ult_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -357,12 +322,7 @@ def select_nsz_nfabs_ole_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ole" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_ole   : select_nsz_nfabs_ole_before  ⊑  select_nsz_nfabs_ole_combined := by
-  unfold select_nsz_nfabs_ole_before select_nsz_nfabs_ole_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -372,18 +332,8 @@ theorem inst_combine_select_nsz_nfabs_ole   : select_nsz_nfabs_ole_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_ole_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_ole(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ole   : select_nsz_nnan_nfabs_ole_before  ⊑  select_nsz_nnan_nfabs_ole_combined := by
-  unfold select_nsz_nnan_nfabs_ole_before select_nsz_nnan_nfabs_ole_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ole   : select_nsz_nnan_nfabs_ole_before  ⊑  select_nsz_nnan_nfabs_ole_combined := by
-  unfold select_nsz_nnan_nfabs_ole_before select_nsz_nnan_nfabs_ole_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -396,12 +346,7 @@ def select_nsz_nfabs_ule_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ule" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_ule   : select_nsz_nfabs_ule_before  ⊑  select_nsz_nfabs_ule_combined := by
-  unfold select_nsz_nfabs_ule_before select_nsz_nfabs_ule_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %arg0, %2 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -411,18 +356,8 @@ theorem inst_combine_select_nsz_nfabs_ule   : select_nsz_nfabs_ule_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_ule_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_ule(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ule   : select_nsz_nnan_nfabs_ule_before  ⊑  select_nsz_nnan_nfabs_ule_combined := by
-  unfold select_nsz_nnan_nfabs_ule_before select_nsz_nnan_nfabs_ule_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ule   : select_nsz_nnan_nfabs_ule_before  ⊑  select_nsz_nnan_nfabs_ule_combined := by
-  unfold select_nsz_nnan_nfabs_ule_before select_nsz_nnan_nfabs_ule_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -445,18 +380,8 @@ theorem inst_combine_select_noFMF_nfabs_gt   : select_noFMF_nfabs_gt_before  ⊑
   sorry
 def select_nsz_nfabs_gt_fmfProp_combined := [llvmfunc|
   llvm.func @select_nsz_nfabs_gt_fmfProp(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nfabs_gt_fmfProp   : select_nsz_nfabs_gt_fmfProp_before  ⊑  select_nsz_nfabs_gt_fmfProp_combined := by
-  unfold select_nsz_nfabs_gt_fmfProp_before select_nsz_nfabs_gt_fmfProp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nfabs_gt_fmfProp   : select_nsz_nfabs_gt_fmfProp_before  ⊑  select_nsz_nfabs_gt_fmfProp_combined := by
-  unfold select_nsz_nfabs_gt_fmfProp_before select_nsz_nfabs_gt_fmfProp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -466,18 +391,8 @@ theorem inst_combine_select_nsz_nfabs_gt_fmfProp   : select_nsz_nfabs_gt_fmfProp
   sorry
 def select_nsz_nnan_nfabs_gt_fmfProp_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_gt_fmfProp(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_gt_fmfProp   : select_nsz_nnan_nfabs_gt_fmfProp_before  ⊑  select_nsz_nnan_nfabs_gt_fmfProp_combined := by
-  unfold select_nsz_nnan_nfabs_gt_fmfProp_before select_nsz_nnan_nfabs_gt_fmfProp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_gt_fmfProp   : select_nsz_nnan_nfabs_gt_fmfProp_before  ⊑  select_nsz_nnan_nfabs_gt_fmfProp_combined := by
-  unfold select_nsz_nnan_nfabs_gt_fmfProp_before select_nsz_nnan_nfabs_gt_fmfProp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -490,12 +405,7 @@ def select_nsz_nfabs_ogt_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ogt" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_ogt   : select_nsz_nfabs_ogt_before  ⊑  select_nsz_nfabs_ogt_combined := by
-  unfold select_nsz_nfabs_ogt_before select_nsz_nfabs_ogt_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -505,18 +415,8 @@ theorem inst_combine_select_nsz_nfabs_ogt   : select_nsz_nfabs_ogt_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_ogt_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_ogt(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ogt   : select_nsz_nnan_nfabs_ogt_before  ⊑  select_nsz_nnan_nfabs_ogt_combined := by
-  unfold select_nsz_nnan_nfabs_ogt_before select_nsz_nnan_nfabs_ogt_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ogt   : select_nsz_nnan_nfabs_ogt_before  ⊑  select_nsz_nnan_nfabs_ogt_combined := by
-  unfold select_nsz_nnan_nfabs_ogt_before select_nsz_nnan_nfabs_ogt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -529,12 +429,7 @@ def select_nsz_nfabs_ugt_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ugt" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_ugt   : select_nsz_nfabs_ugt_before  ⊑  select_nsz_nfabs_ugt_combined := by
-  unfold select_nsz_nfabs_ugt_before select_nsz_nfabs_ugt_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -544,18 +439,8 @@ theorem inst_combine_select_nsz_nfabs_ugt   : select_nsz_nfabs_ugt_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_ugt_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_ugt(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ugt   : select_nsz_nnan_nfabs_ugt_before  ⊑  select_nsz_nnan_nfabs_ugt_combined := by
-  unfold select_nsz_nnan_nfabs_ugt_before select_nsz_nnan_nfabs_ugt_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_ugt   : select_nsz_nnan_nfabs_ugt_before  ⊑  select_nsz_nnan_nfabs_ugt_combined := by
-  unfold select_nsz_nnan_nfabs_ugt_before select_nsz_nnan_nfabs_ugt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -568,12 +453,7 @@ def select_nsz_nfabs_oge_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "oge" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_oge   : select_nsz_nfabs_oge_before  ⊑  select_nsz_nfabs_oge_combined := by
-  unfold select_nsz_nfabs_oge_before select_nsz_nfabs_oge_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -583,18 +463,8 @@ theorem inst_combine_select_nsz_nfabs_oge   : select_nsz_nfabs_oge_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_oge_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_oge(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_oge   : select_nsz_nnan_nfabs_oge_before  ⊑  select_nsz_nnan_nfabs_oge_combined := by
-  unfold select_nsz_nnan_nfabs_oge_before select_nsz_nnan_nfabs_oge_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_oge   : select_nsz_nnan_nfabs_oge_before  ⊑  select_nsz_nnan_nfabs_oge_combined := by
-  unfold select_nsz_nnan_nfabs_oge_before select_nsz_nnan_nfabs_oge_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -607,12 +477,7 @@ def select_nsz_nfabs_uge_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "uge" %arg0, %0 : f64
     %2 = llvm.fneg %arg0  : f64
-    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64]
-
-theorem inst_combine_select_nsz_nfabs_uge   : select_nsz_nfabs_uge_before  ⊑  select_nsz_nfabs_uge_combined := by
-  unfold select_nsz_nfabs_uge_before select_nsz_nfabs_uge_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.select %1, %2, %arg0 {fastmathFlags = #llvm.fastmath<nsz>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -622,18 +487,8 @@ theorem inst_combine_select_nsz_nfabs_uge   : select_nsz_nfabs_uge_before  ⊑  
   sorry
 def select_nsz_nnan_nfabs_uge_combined := [llvmfunc|
   llvm.func @select_nsz_nnan_nfabs_uge(%arg0: f64) -> f64 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_uge   : select_nsz_nnan_nfabs_uge_before  ⊑  select_nsz_nnan_nfabs_uge_combined := by
-  unfold select_nsz_nnan_nfabs_uge_before select_nsz_nnan_nfabs_uge_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_select_nsz_nnan_nfabs_uge   : select_nsz_nnan_nfabs_uge_before  ⊑  select_nsz_nnan_nfabs_uge_combined := by
-  unfold select_nsz_nnan_nfabs_uge_before select_nsz_nnan_nfabs_uge_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64) -> f64
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %1 : f64
   }]
 
@@ -684,12 +539,7 @@ def select_nsz_fnegfabs_olt_combined := [llvmfunc|
   llvm.func @select_nsz_fnegfabs_olt(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "olt" %arg0, %0 : f64
-    %2 = llvm.fneg %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f64]
-
-theorem inst_combine_select_nsz_fnegfabs_olt   : select_nsz_fnegfabs_olt_before  ⊑  select_nsz_fnegfabs_olt_combined := by
-  unfold select_nsz_fnegfabs_olt_before select_nsz_fnegfabs_olt_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fneg %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f64
     %3 = llvm.select %1, %arg0, %2 : i1, f64
     llvm.return %3 : f64
   }]
@@ -702,12 +552,7 @@ def select_nsz_fnegfabs_ult_combined := [llvmfunc|
   llvm.func @select_nsz_fnegfabs_ult(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.fcmp "ult" %arg0, %0 : f64
-    %2 = llvm.fneg %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f64]
-
-theorem inst_combine_select_nsz_fnegfabs_ult   : select_nsz_fnegfabs_ult_before  ⊑  select_nsz_fnegfabs_ult_combined := by
-  unfold select_nsz_fnegfabs_ult_before select_nsz_fnegfabs_ult_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fneg %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f64
     %3 = llvm.select %1, %arg0, %2 : i1, f64
     llvm.return %3 : f64
   }]

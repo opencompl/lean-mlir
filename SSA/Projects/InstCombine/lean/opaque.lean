@@ -21,3 +21,17 @@ def _TwTkV_before := [llvmfunc|
     llvm.return %2 : !llvm.ptr
   }]
 
+def _TwTkV_combined := [llvmfunc|
+  llvm.func @_TwTkV(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.mlir.constant(40 : i64) : i64
+    %1 = llvm.mlir.constant(0 : i64) : i64
+    %2 = llvm.call @rt_swift_slowAlloc(%0, %1) : (i64, i64) -> !llvm.ptr
+    llvm.store %2, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    "llvm.intr.memcpy"(%2, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return %2 : !llvm.ptr
+  }]
+
+theorem inst_combine__TwTkV   : _TwTkV_before  ⊑  _TwTkV_combined := by
+  unfold _TwTkV_before _TwTkV_combined
+  simp_alive_peephole
+  sorry

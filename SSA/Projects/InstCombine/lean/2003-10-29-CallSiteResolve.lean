@@ -20,3 +20,18 @@ def foo_before := [llvmfunc|
     llvm.return %0 : !llvm.ptr
   }]
 
+def foo_combined := [llvmfunc|
+  llvm.func @foo() -> !llvm.ptr attributes {personality = @__gxx_personality_v0} {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    %1 = llvm.invoke @bar() to ^bb1 unwind ^bb2 : () -> !llvm.ptr
+  ^bb1:  // pred: ^bb0
+    llvm.return %1 : !llvm.ptr
+  ^bb2:  // pred: ^bb0
+    %2 = llvm.landingpad cleanup : !llvm.struct<(ptr, i32)>
+    llvm.return %0 : !llvm.ptr
+  }]
+
+theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
+  unfold foo_before foo_combined
+  simp_alive_peephole
+  sorry

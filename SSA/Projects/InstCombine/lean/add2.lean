@@ -703,12 +703,7 @@ theorem inst_combine_mul_add_to_mul_9   : mul_add_to_mul_9_before  ⊑  mul_add_
 def add_cttz_combined := [llvmfunc|
   llvm.func @add_cttz(%arg0: i16) -> i16 {
     %0 = llvm.mlir.constant(-8 : i16) : i16
-    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16]
-
-theorem inst_combine_add_cttz   : add_cttz_before  ⊑  add_cttz_combined := by
-  unfold add_cttz_before add_cttz_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16
     %2 = llvm.or %1, %0  : i16
     llvm.return %2 : i16
   }]
@@ -720,12 +715,7 @@ theorem inst_combine_add_cttz   : add_cttz_before  ⊑  add_cttz_combined := by
 def add_cttz_2_combined := [llvmfunc|
   llvm.func @add_cttz_2(%arg0: i16) -> i16 {
     %0 = llvm.mlir.constant(-16 : i16) : i16
-    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16]
-
-theorem inst_combine_add_cttz_2   : add_cttz_2_before  ⊑  add_cttz_2_combined := by
-  unfold add_cttz_2_before add_cttz_2_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16
     %2 = llvm.or %1, %0  : i16
     llvm.return %2 : i16
   }]

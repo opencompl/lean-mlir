@@ -57,12 +57,7 @@ def test2() -> _combined := [llvmfunc|
     %4 = llvm.icmp "eq" %3, %1 : !llvm.ptr
     llvm.cond_br %4, ^bb2(%1 : !llvm.ptr), ^bb1
   ^bb1:  // pred: ^bb0
-    llvm.store %2, %3 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test2() ->    : test2() -> _before  ⊑  test2() -> _combined := by
-  unfold test2() -> _before test2() -> _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.br ^bb2(%3 : !llvm.ptr)
   ^bb2(%5: !llvm.ptr):  // 2 preds: ^bb0, ^bb1
     llvm.return %5 : !llvm.ptr

@@ -495,12 +495,7 @@ def PR63321_combined := [llvmfunc|
   llvm.func @PR63321(%arg0: !llvm.ptr, %arg1: i64) -> i64 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(0 : i64) : i64
-    %2 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_PR63321   : PR63321_before  ⊑  PR63321_combined := by
-  unfold PR63321_before PR63321_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.icmp "eq" %2, %0 : i8
     %4 = llvm.select %3, %arg1, %1 : i1, i64
     llvm.return %4 : i64
@@ -513,12 +508,7 @@ theorem inst_combine_PR63321   : PR63321_before  ⊑  PR63321_combined := by
 def and_add_non_bool_combined := [llvmfunc|
   llvm.func @and_add_non_bool(%arg0: !llvm.ptr, %arg1: i64) -> i64 {
     %0 = llvm.mlir.constant(-1 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_and_add_non_bool   : and_add_non_bool_before  ⊑  and_add_non_bool_combined := by
-  unfold and_add_non_bool_before and_add_non_bool_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.zext %1 : i8 to i64
     %3 = llvm.add %2, %0 overflow<nsw>  : i64
     %4 = llvm.and %3, %arg1  : i64

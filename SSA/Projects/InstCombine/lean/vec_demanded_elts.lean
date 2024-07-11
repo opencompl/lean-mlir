@@ -1063,12 +1063,7 @@ def vac_combined := [llvmfunc|
   llvm.func @vac(%arg0: !llvm.ptr {llvm.nocapture}) attributes {passthrough = ["nounwind"]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<4xf32>) : vector<4xf32>
-    llvm.store %1, %arg0 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr]
-
-theorem inst_combine_vac   : vac_before  ⊑  vac_combined := by
-  unfold vac_before vac_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 16 : i64} : vector<4xf32>, !llvm.ptr
     llvm.return
   }]
 
@@ -1625,12 +1620,7 @@ def shuf_fsub_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.fsub %9, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<3xf32>]
-
-theorem inst_combine_shuf_fsub   : shuf_fsub_before  ⊑  shuf_fsub_combined := by
-  unfold shuf_fsub_before shuf_fsub_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.fsub %9, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [-1, 0, 2] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -1652,12 +1642,7 @@ def shuf_fmul_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.fmul %arg0, %9  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<3xf32>]
-
-theorem inst_combine_shuf_fmul   : shuf_fmul_before  ⊑  shuf_fmul_combined := by
-  unfold shuf_fmul_before shuf_fmul_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.fmul %arg0, %9  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [-1, 1, 0] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -1679,12 +1664,7 @@ def shuf_fdiv_const_op0_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.fdiv %9, %arg0  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<3xf32>]
-
-theorem inst_combine_shuf_fdiv_const_op0   : shuf_fdiv_const_op0_before  ⊑  shuf_fdiv_const_op0_combined := by
-  unfold shuf_fdiv_const_op0_before shuf_fdiv_const_op0_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.fdiv %9, %arg0  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [-1, 0, 2] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -1706,12 +1686,7 @@ def shuf_fdiv_const_op1_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.fdiv %arg0, %9  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<3xf32>]
-
-theorem inst_combine_shuf_fdiv_const_op1   : shuf_fdiv_const_op1_before  ⊑  shuf_fdiv_const_op1_combined := by
-  unfold shuf_fdiv_const_op1_before shuf_fdiv_const_op1_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.fdiv %arg0, %9  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [-1, 1, 0] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -1733,12 +1708,7 @@ def shuf_frem_const_op0_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.frem %9, %arg0  {fastmathFlags = #llvm.fastmath<nnan>} : vector<3xf32>]
-
-theorem inst_combine_shuf_frem_const_op0   : shuf_frem_const_op0_before  ⊑  shuf_frem_const_op0_combined := by
-  unfold shuf_frem_const_op0_before shuf_frem_const_op0_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.frem %9, %arg0  {fastmathFlags = #llvm.fastmath<nnan>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [-1, 2, 0] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -1760,12 +1730,7 @@ def shuf_frem_const_op1_combined := [llvmfunc|
     %8 = llvm.mlir.constant(2 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : vector<3xf32>
     %10 = llvm.mlir.poison : vector<3xf32>
-    %11 = llvm.frem %arg0, %9  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<3xf32>]
-
-theorem inst_combine_shuf_frem_const_op1   : shuf_frem_const_op1_before  ⊑  shuf_frem_const_op1_combined := by
-  unfold shuf_frem_const_op1_before shuf_frem_const_op1_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.frem %arg0, %9  {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : vector<3xf32>
     %12 = llvm.shufflevector %11, %10 [1, -1, 2] : vector<3xf32> 
     llvm.return %12 : vector<3xf32>
   }]
@@ -2324,12 +2289,7 @@ def common_binop_demand_via_extelt_op0_commute_combined := [llvmfunc|
     %10 = llvm.fsub %6, %arg0  : vector<2xf32>
     %11 = llvm.fsub %7, %arg1  : vector<2xf32>
     %12 = llvm.shufflevector %10, %8 [0, 0] : vector<2xf32> 
-    %13 = llvm.fmul %11, %12  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>]
-
-theorem inst_combine_common_binop_demand_via_extelt_op0_commute   : common_binop_demand_via_extelt_op0_commute_before  ⊑  common_binop_demand_via_extelt_op0_commute_combined := by
-  unfold common_binop_demand_via_extelt_op0_commute_before common_binop_demand_via_extelt_op0_commute_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.fmul %11, %12  {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xf32>
     %14 = llvm.extractelement %13[%9 : i64] : vector<2xf32>
     llvm.call @use_fp(%13) : (vector<2xf32>) -> ()
     llvm.return %14 : f32

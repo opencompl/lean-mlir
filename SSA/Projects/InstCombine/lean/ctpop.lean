@@ -457,12 +457,7 @@ def mask_one_bit_splat_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<2048> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.mlir.constant(dense<11> : vector<2xi32>) : vector<2xi32>
     %2 = llvm.and %arg0, %0  : vector<2xi32>
-    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_mask_one_bit_splat   : mask_one_bit_splat_before  ⊑  mask_one_bit_splat_combined := by
-  unfold mask_one_bit_splat_before mask_one_bit_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %3 = llvm.lshr %2, %1  : vector<2xi32>
     llvm.return %3 : vector<2xi32>
   }]
@@ -586,12 +581,7 @@ def ctpop_add_no_common_bits_vec_use_combined := [llvmfunc|
     %2 = llvm.intr.ctpop(%1)  : (vector<2xi32>) -> vector<2xi32>
     %3 = llvm.lshr %arg1, %0  : vector<2xi32>
     %4 = llvm.intr.ctpop(%3)  : (vector<2xi32>) -> vector<2xi32>
-    llvm.store %4, %arg2 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_ctpop_add_no_common_bits_vec_use   : ctpop_add_no_common_bits_vec_use_before  ⊑  ctpop_add_no_common_bits_vec_use_combined := by
-  unfold ctpop_add_no_common_bits_vec_use_before ctpop_add_no_common_bits_vec_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg2 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %5 = llvm.add %2, %4 overflow<nsw, nuw>  : vector<2xi32>
     llvm.return %5 : vector<2xi32>
   }]
@@ -605,12 +595,7 @@ def ctpop_add_no_common_bits_vec_use2_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<16> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.shl %arg0, %0  : vector<2xi32>
     %2 = llvm.intr.ctpop(%1)  : (vector<2xi32>) -> vector<2xi32>
-    llvm.store %2, %arg2 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_ctpop_add_no_common_bits_vec_use2   : ctpop_add_no_common_bits_vec_use2_before  ⊑  ctpop_add_no_common_bits_vec_use2_combined := by
-  unfold ctpop_add_no_common_bits_vec_use2_before ctpop_add_no_common_bits_vec_use2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg2 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %3 = llvm.lshr %arg1, %0  : vector<2xi32>
     %4 = llvm.intr.ctpop(%3)  : (vector<2xi32>) -> vector<2xi32>
     %5 = llvm.add %2, %4 overflow<nsw, nuw>  : vector<2xi32>
@@ -692,12 +677,7 @@ def sub_ctpop_vec_extra_use_combined := [llvmfunc|
   llvm.func @sub_ctpop_vec_extra_use(%arg0: vector<2xi32>, %arg1: !llvm.ptr) -> vector<2xi32> {
     %0 = llvm.mlir.constant(dense<32> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.intr.ctpop(%arg0)  : (vector<2xi32>) -> vector<2xi32>
-    llvm.store %1, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_sub_ctpop_vec_extra_use   : sub_ctpop_vec_extra_use_before  ⊑  sub_ctpop_vec_extra_use_combined := by
-  unfold sub_ctpop_vec_extra_use_before sub_ctpop_vec_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %2 = llvm.sub %0, %1 overflow<nsw, nuw>  : vector<2xi32>
     llvm.return %2 : vector<2xi32>
   }]
@@ -731,12 +711,7 @@ theorem inst_combine_zext_ctpop_vec   : zext_ctpop_vec_before  ⊑  zext_ctpop_v
 def zext_ctpop_extra_use_combined := [llvmfunc|
   llvm.func @zext_ctpop_extra_use(%arg0: i16, %arg1: !llvm.ptr) -> i32 {
     %0 = llvm.zext %arg0 : i16 to i32
-    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_zext_ctpop_extra_use   : zext_ctpop_extra_use_before  ⊑  zext_ctpop_extra_use_combined := by
-  unfold zext_ctpop_extra_use_before zext_ctpop_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %1 = llvm.intr.ctpop(%0)  : (i32) -> i32
     llvm.return %1 : i32
   }]

@@ -154,19 +154,9 @@ def fold_strlcpy_s0_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(0 : i8) : i8
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s0   : fold_strlcpy_s0_before  ⊑  fold_strlcpy_s0_combined := by
-  unfold fold_strlcpy_s0_before fold_strlcpy_s0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s0   : fold_strlcpy_s0_before  ⊑  fold_strlcpy_s0_combined := by
-  unfold fold_strlcpy_s0_before fold_strlcpy_s0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
     llvm.return
   }]
@@ -181,33 +171,13 @@ def fold_strlcpy_s1_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i8) : i8
     %2 = llvm.mlir.constant(13312 : i16) : i16
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s1   : fold_strlcpy_s1_before  ⊑  fold_strlcpy_s1_combined := by
-  unfold fold_strlcpy_s1_before fold_strlcpy_s1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s1   : fold_strlcpy_s1_before  ⊑  fold_strlcpy_s1_combined := by
-  unfold fold_strlcpy_s1_before fold_strlcpy_s1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s1   : fold_strlcpy_s1_before  ⊑  fold_strlcpy_s1_combined := by
-  unfold fold_strlcpy_s1_before fold_strlcpy_s1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s1   : fold_strlcpy_s1_before  ⊑  fold_strlcpy_s1_combined := by
-  unfold fold_strlcpy_s1_before fold_strlcpy_s1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
     llvm.return
   }]
@@ -229,75 +199,25 @@ def fold_strlcpy_s5_combined := [llvmfunc|
     %8 = llvm.mlir.constant(3 : i64) : i64
     %9 = llvm.mlir.constant(5 : i64) : i64
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     %10 = llvm.getelementptr inbounds %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %10 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %10 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %4, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 1 : i64} : i16, !llvm.ptr
     %11 = llvm.getelementptr inbounds %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %11 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %11 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %12 = llvm.getelementptr inbounds %arg0[%8] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %12 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %12 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlcpy_s5_combined := by
-  unfold fold_strlcpy_s5_before fold_strlcpy_s5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
     llvm.return
   }]
@@ -309,12 +229,7 @@ theorem inst_combine_fold_strlcpy_s5   : fold_strlcpy_s5_before  ⊑  fold_strlc
 def fold_strlcpy_s_0_combined := [llvmfunc|
   llvm.func @fold_strlcpy_s_0(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i64) {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_s_0   : fold_strlcpy_s_0_before  ⊑  fold_strlcpy_s_0_combined := by
-  unfold fold_strlcpy_s_0_before fold_strlcpy_s_0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     %1 = llvm.call @strlen(%arg1) : (!llvm.ptr) -> i64
     llvm.call @sink(%arg0, %1) : (!llvm.ptr, i64) -> ()
     %2 = llvm.call @strlen(%arg1) : (!llvm.ptr) -> i64
@@ -370,68 +285,23 @@ def fold_strlcpy_a5_combined := [llvmfunc|
     %6 = llvm.mlir.constant("12345") : !llvm.array<5 x i8>
     %7 = llvm.mlir.addressof @a5 : !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     %8 = llvm.getelementptr inbounds %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %8 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %8 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    llvm.store %4, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr
     %9 = llvm.getelementptr inbounds %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %9 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %9 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %10 = llvm.getelementptr inbounds %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %10 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %10 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
-    "llvm.intr.memcpy"(%arg0, %7, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %7, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %11 = llvm.getelementptr inbounds %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %1, %11 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_strlcpy_a5   : fold_strlcpy_a5_before  ⊑  fold_strlcpy_a5_combined := by
-  unfold fold_strlcpy_a5_before fold_strlcpy_a5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %11 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.call @sink(%arg0, %0) : (!llvm.ptr, i64) -> ()
     llvm.return
   }]

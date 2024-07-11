@@ -391,18 +391,8 @@ def fold_strlen_a_s3_S4_to_4_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %1[%3, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_S4_to_4   : fold_strlen_a_s3_S4_to_4_before  ⊑  fold_strlen_a_s3_S4_to_4_combined := by
-  unfold fold_strlen_a_s3_S4_to_4_before fold_strlen_a_s3_S4_to_4_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_S4_to_4   : fold_strlen_a_s3_S4_to_4_before  ⊑  fold_strlen_a_s3_S4_to_4_combined := by
-  unfold fold_strlen_a_s3_S4_to_4_before fold_strlen_a_s3_S4_to_4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -417,18 +407,8 @@ def fold_strlen_a_s3_S4_p1_to_3_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %1[%3, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_S4_p1_to_3   : fold_strlen_a_s3_S4_p1_to_3_before  ⊑  fold_strlen_a_s3_S4_p1_to_3_combined := by
-  unfold fold_strlen_a_s3_S4_p1_to_3_before fold_strlen_a_s3_S4_p1_to_3_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_S4_p1_to_3   : fold_strlen_a_s3_S4_p1_to_3_before  ⊑  fold_strlen_a_s3_S4_p1_to_3_combined := by
-  unfold fold_strlen_a_s3_S4_p1_to_3_before fold_strlen_a_s3_S4_p1_to_3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -443,18 +423,8 @@ def fold_strlen_a_s3_i32_S4_to_4_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %1[%3, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_to_4   : fold_strlen_a_s3_i32_S4_to_4_before  ⊑  fold_strlen_a_s3_i32_S4_to_4_combined := by
-  unfold fold_strlen_a_s3_i32_S4_to_4_before fold_strlen_a_s3_i32_S4_to_4_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_to_4   : fold_strlen_a_s3_i32_S4_to_4_before  ⊑  fold_strlen_a_s3_i32_S4_to_4_combined := by
-  unfold fold_strlen_a_s3_i32_S4_to_4_before fold_strlen_a_s3_i32_S4_to_4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -469,18 +439,8 @@ def fold_strlen_a_s3_i32_S4_p1_to_3_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %1[%3, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p1_to_3   : fold_strlen_a_s3_i32_S4_p1_to_3_before  ⊑  fold_strlen_a_s3_i32_S4_p1_to_3_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p1_to_3_before fold_strlen_a_s3_i32_S4_p1_to_3_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p1_to_3   : fold_strlen_a_s3_i32_S4_p1_to_3_before  ⊑  fold_strlen_a_s3_i32_S4_p1_to_3_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p1_to_3_before fold_strlen_a_s3_i32_S4_p1_to_3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -495,18 +455,8 @@ def fold_strlen_a_s3_i32_S4_p2_to_2_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %1[%3, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p2_to_2   : fold_strlen_a_s3_i32_S4_p2_to_2_before  ⊑  fold_strlen_a_s3_i32_S4_p2_to_2_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p2_to_2_before fold_strlen_a_s3_i32_S4_p2_to_2_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p2_to_2   : fold_strlen_a_s3_i32_S4_p2_to_2_before  ⊑  fold_strlen_a_s3_i32_S4_p2_to_2_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p2_to_2_before fold_strlen_a_s3_i32_S4_p2_to_2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %4 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -520,18 +470,8 @@ def fold_strlen_a_s3_i32_S4_p3_to_1_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @ax : !llvm.ptr
     %2 = llvm.mlir.constant(0 : i64) : i64
     %3 = llvm.getelementptr inbounds %1[%2, %0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p3_to_1   : fold_strlen_a_s3_i32_S4_p3_to_1_before  ⊑  fold_strlen_a_s3_i32_S4_p3_to_1_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p3_to_1_before fold_strlen_a_s3_i32_S4_p3_to_1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %3 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p3_to_1   : fold_strlen_a_s3_i32_S4_p3_to_1_before  ⊑  fold_strlen_a_s3_i32_S4_p3_to_1_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p3_to_1_before fold_strlen_a_s3_i32_S4_p3_to_1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %3 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -545,18 +485,8 @@ def fold_strlen_a_s3_i32_S4_p4_to_0_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @ax : !llvm.ptr
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.getelementptr inbounds %1[%0, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p4_to_0   : fold_strlen_a_s3_i32_S4_p4_to_0_before  ⊑  fold_strlen_a_s3_i32_S4_p4_to_0_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p4_to_0_before fold_strlen_a_s3_i32_S4_p4_to_0_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %3 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_a_s3_i32_S4_p4_to_0   : fold_strlen_a_s3_i32_S4_p4_to_0_before  ⊑  fold_strlen_a_s3_i32_S4_p4_to_0_combined := by
-  unfold fold_strlen_a_s3_i32_S4_p4_to_0_before fold_strlen_a_s3_i32_S4_p4_to_0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %0, %3 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -575,24 +505,9 @@ def fold_strlen_ax_s_combined := [llvmfunc|
     %6 = llvm.mlir.constant(7 : i64) : i64
     %7 = llvm.mlir.constant(2 : i64) : i64
     %8 = llvm.getelementptr inbounds %1[%4, %7] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i64>
-    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_ax_s   : fold_strlen_ax_s_before  ⊑  fold_strlen_ax_s_combined := by
-  unfold fold_strlen_ax_s_before fold_strlen_ax_s_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %5 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_ax_s   : fold_strlen_ax_s_before  ⊑  fold_strlen_ax_s_combined := by
-  unfold fold_strlen_ax_s_before fold_strlen_ax_s_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %8 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strlen_ax_s   : fold_strlen_ax_s_before  ⊑  fold_strlen_ax_s_combined := by
-  unfold fold_strlen_ax_s_before fold_strlen_ax_s_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %2, %5 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %6, %8 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

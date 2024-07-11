@@ -21,18 +21,8 @@ def test_array_alloca_intptr_not_sizet_before := [llvmfunc|
 def test_array_alloca_intptr_not_sizet_combined := [llvmfunc|
   llvm.func @test_array_alloca_intptr_not_sizet(%arg0: i64, %arg1: !llvm.ptr) {
     %0 = llvm.trunc %arg0 : i64 to i32
-    %1 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr<7>]
-
-theorem inst_combine_test_array_alloca_intptr_not_sizet   : test_array_alloca_intptr_not_sizet_before  ⊑  test_array_alloca_intptr_not_sizet_combined := by
-  unfold test_array_alloca_intptr_not_sizet_before test_array_alloca_intptr_not_sizet_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg1 {alignment = 16 : i64} : !llvm.ptr<7>, !llvm.ptr]
-
-theorem inst_combine_test_array_alloca_intptr_not_sizet   : test_array_alloca_intptr_not_sizet_before  ⊑  test_array_alloca_intptr_not_sizet_combined := by
-  unfold test_array_alloca_intptr_not_sizet_before test_array_alloca_intptr_not_sizet_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr<7>
+    llvm.store %1, %arg1 {alignment = 16 : i64} : !llvm.ptr<7>, !llvm.ptr
     llvm.return
   }]
 

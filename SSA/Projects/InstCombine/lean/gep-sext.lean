@@ -63,12 +63,7 @@ def test_combined := [llvmfunc|
   llvm.func @test(%arg0: !llvm.ptr, %arg1: i32) {
     %0 = llvm.sext %arg1 : i32 to i64
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @use(%2) : (i32) -> ()
     llvm.return
   }]
@@ -81,12 +76,7 @@ def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: !llvm.ptr, %arg1: i32) {
     %0 = llvm.zext %arg1 : i32 to i64
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @use(%2) : (i32) -> ()
     llvm.return
   }]
@@ -101,20 +91,10 @@ def test3_combined := [llvmfunc|
     %1 = llvm.mlir.constant(88 : i64) : i64
     %2 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     %5 = llvm.zext %4 : i32 to i64
     %6 = llvm.getelementptr %2[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @use(%7) : (i32) -> ()
     llvm.return
   }]
@@ -129,20 +109,10 @@ def test4_combined := [llvmfunc|
     %1 = llvm.mlir.constant(88 : i64) : i64
     %2 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     %5 = llvm.zext %4 : i32 to i64
     %6 = llvm.getelementptr %2[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.call @use(%7) : (i32) -> ()
     llvm.return
   }]

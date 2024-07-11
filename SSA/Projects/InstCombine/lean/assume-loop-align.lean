@@ -59,20 +59,10 @@ def foo_combined := [llvmfunc|
     llvm.br ^bb1(%1 : i64)
   ^bb1(%11: i64):  // 2 preds: ^bb0, ^bb1
     %12 = llvm.getelementptr inbounds %arg1[%11] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %13 = llvm.load %12 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.load %12 {alignment = 4 : i64} : !llvm.ptr -> i32
     %14 = llvm.add %13, %2 overflow<nsw>  : i32
     %15 = llvm.getelementptr inbounds %arg0[%11] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %14, %15 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %15 {alignment = 4 : i64} : i32, !llvm.ptr
     %16 = llvm.add %11, %3 overflow<nsw, nuw>  : i64
     %17 = llvm.trunc %16 : i64 to i32
     %18 = llvm.icmp "slt" %17, %4 : i32

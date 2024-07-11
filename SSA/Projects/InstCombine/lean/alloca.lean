@@ -180,12 +180,7 @@ def test_inalloca_with_element_count_before := [llvmfunc|
 def test_combined := [llvmfunc|
   llvm.func @test() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.array<0 x i32> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.array<0 x i32> {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @use(%1) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.call @use(%1) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.call @use(%1) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
@@ -218,12 +213,7 @@ theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
 def test4_combined := [llvmfunc|
   llvm.func @test4(%arg0: i32) -> !llvm.ptr {
     %0 = llvm.zext %arg0 : i32 to i64
-    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i64) -> !llvm.ptr]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i64) -> !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 
@@ -244,24 +234,9 @@ def test6_combined := [llvmfunc|
   llvm.func @test6() {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(123 : i32) : i32
-    %2 = llvm.alloca %0 x !llvm.struct<(i32)> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.struct<(i32)> {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store volatile %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.call @f(%3) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -282,12 +257,7 @@ theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
 def test8_combined := [llvmfunc|
   llvm.func @test8() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.array<100 x i32> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.array<100 x i32> {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @use(%1) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -299,24 +269,9 @@ theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
 def test9_combined := [llvmfunc|
   llvm.func @test9(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca inalloca %0 x !llvm.struct<packed (struct<"struct_type", (i32, i32)>)> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca inalloca %0 x !llvm.struct<packed (struct<"struct_type", (i32, i32)>)> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64
+    llvm.store %2, %1 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.call @test9_aux(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -328,24 +283,9 @@ theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
 def test10_combined := [llvmfunc|
   llvm.func @test10() {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test10   : test10_before  ⊑  test10_combined := by
-  unfold test10_before test10_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test10   : test10_before  ⊑  test10_combined := by
-  unfold test10_before test10_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test10   : test10_before  ⊑  test10_combined := by
-  unfold test10_before test10_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.alloca %0 x i1 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.call @use(%1, %2, %3) vararg(!llvm.func<void (...)>) : (!llvm.ptr, !llvm.ptr, !llvm.ptr) -> ()
     llvm.return
   }]
@@ -359,12 +299,7 @@ def test11_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.addressof @int : !llvm.ptr
-    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test11   : test11_before  ⊑  test11_combined := by
-  unfold test11_before test11_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @use(%2) vararg(!llvm.func<void (...)>) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -376,12 +311,7 @@ theorem inst_combine_test11   : test11_before  ⊑  test11_combined := by
 def test_inalloca_with_element_count_combined := [llvmfunc|
   llvm.func @test_inalloca_with_element_count(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca inalloca %0 x !llvm.array<10 x struct<"struct_type", (i32, i32)>> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test_inalloca_with_element_count   : test_inalloca_with_element_count_before  ⊑  test_inalloca_with_element_count_combined := by
-  unfold test_inalloca_with_element_count_before test_inalloca_with_element_count_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca inalloca %0 x !llvm.array<10 x struct<"struct_type", (i32, i32)>> {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.call @test9_aux(%1) : (!llvm.ptr) -> ()
     llvm.return
   }]

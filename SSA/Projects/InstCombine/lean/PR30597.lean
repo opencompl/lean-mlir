@@ -40,12 +40,7 @@ theorem inst_combine_dot_ref_s   : dot_ref_s_before  ⊑  dot_ref_s_combined := 
   sorry
 def function_combined := [llvmfunc|
   llvm.func @function(%arg0: !llvm.ptr {llvm.dereferenceable = 8 : i64, llvm.noalias, llvm.nocapture, llvm.readonly}) -> !llvm.ptr {
-    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %1 = llvm.inttoptr %0 : i64 to !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]

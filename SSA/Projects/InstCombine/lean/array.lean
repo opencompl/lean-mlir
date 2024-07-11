@@ -181,12 +181,7 @@ def test_combined := [llvmfunc|
     %1 = llvm.sext %arg1 : i32 to i64
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
     %3 = llvm.getelementptr %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -200,12 +195,7 @@ def test_add_res_moreoneuse_combined := [llvmfunc|
     %1 = llvm.add %arg1, %0 overflow<nsw>  : i32
     %2 = llvm.sext %1 : i32 to i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_add_res_moreoneuse   : test_add_res_moreoneuse_before  ⊑  test_add_res_moreoneuse_combined := by
-  unfold test_add_res_moreoneuse_before test_add_res_moreoneuse_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -219,12 +209,7 @@ def test_addop_nonsw_flag_combined := [llvmfunc|
     %1 = llvm.add %arg1, %0  : i32
     %2 = llvm.sext %1 : i32 to i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_addop_nonsw_flag   : test_addop_nonsw_flag_before  ⊑  test_addop_nonsw_flag_combined := by
-  unfold test_addop_nonsw_flag_before test_addop_nonsw_flag_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -237,12 +222,7 @@ def test_add_op2_not_constant_combined := [llvmfunc|
     %0 = llvm.add %arg1, %arg2  : i32
     %1 = llvm.sext %0 : i32 to i64
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_add_op2_not_constant   : test_add_op2_not_constant_before  ⊑  test_add_op2_not_constant_combined := by
-  unfold test_add_op2_not_constant_before test_add_op2_not_constant_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -256,12 +236,7 @@ def test_zext_nneg_combined := [llvmfunc|
     %1 = llvm.sext %arg1 : i32 to i64
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
     %3 = llvm.getelementptr %2[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_zext_nneg   : test_zext_nneg_before  ⊑  test_zext_nneg_combined := by
-  unfold test_zext_nneg_before test_zext_nneg_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -275,12 +250,7 @@ def test_zext_missing_nneg_combined := [llvmfunc|
     %1 = llvm.add %arg1, %0 overflow<nsw>  : i32
     %2 = llvm.zext %1 : i32 to i64
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_zext_missing_nneg   : test_zext_missing_nneg_before  ⊑  test_zext_missing_nneg_combined := by
-  unfold test_zext_missing_nneg_before test_zext_missing_nneg_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

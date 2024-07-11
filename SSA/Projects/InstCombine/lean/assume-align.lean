@@ -108,12 +108,7 @@ def f1_combined := [llvmfunc|
     llvm.cond_br %8, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     "llvm.intr.assume"(%3) : (i1) -> ()
-    llvm.store %4, %5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_f1   : f1_before  ⊑  f1_combined := by
-  unfold f1_before f1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     llvm.return
@@ -137,20 +132,10 @@ def f2_combined := [llvmfunc|
     %8 = llvm.icmp "eq" %7, %2 : i64
     llvm.cond_br %8, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %4, %5 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_f2   : f2_before  ⊑  f2_combined := by
-  unfold f2_before f2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %3, %5 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_f2   : f2_before  ⊑  f2_combined := by
-  unfold f2_before f2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %5 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
     llvm.return
@@ -178,12 +163,7 @@ def assume_align_zero_combined := [llvmfunc|
   llvm.func @assume_align_zero(%arg0: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(true) : i1
     "llvm.intr.assume"(%0) : (i1) -> ()
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_assume_align_zero   : assume_align_zero_before  ⊑  assume_align_zero_combined := by
-  unfold assume_align_zero_before assume_align_zero_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.return %1 : i8
   }]
 
@@ -195,12 +175,7 @@ def assume_align_non_pow2_combined := [llvmfunc|
   llvm.func @assume_align_non_pow2(%arg0: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(true) : i1
     "llvm.intr.assume"(%0) : (i1) -> ()
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_assume_align_non_pow2   : assume_align_non_pow2_before  ⊑  assume_align_non_pow2_combined := by
-  unfold assume_align_non_pow2_before assume_align_non_pow2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     llvm.return %1 : i8
   }]
 

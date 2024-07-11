@@ -45,12 +45,7 @@ theorem inst_combine_example   : example_before  ⊑  example_combined := by
 def example2_combined := [llvmfunc|
   llvm.func @example2(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.zero : !llvm.ptr
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_example2   : example2_before  ⊑  example2_combined := by
-  unfold example2_before example2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %2 = llvm.icmp "eq" %1, %0 : !llvm.ptr
     %3 = llvm.select %2, %0, %arg0 : i1, !llvm.ptr
     %4 = llvm.icmp "ne" %3, %0 : !llvm.ptr

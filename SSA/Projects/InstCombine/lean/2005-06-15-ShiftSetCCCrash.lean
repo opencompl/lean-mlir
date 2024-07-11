@@ -18,3 +18,13 @@ def test_before := [llvmfunc|
     llvm.return %3 : i1
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test() -> i1 {
+    %0 = llvm.mlir.poison : i1
+    llvm.return %0 : i1
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

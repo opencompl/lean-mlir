@@ -504,12 +504,7 @@ def non_term_unreachable_combined := [llvmfunc|
     %0 = llvm.mlir.constant(true) : i1
     %1 = llvm.mlir.poison : !llvm.ptr
     llvm.call @dummy() : () -> ()
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_non_term_unreachable   : non_term_unreachable_before  ⊑  non_term_unreachable_combined := by
-  unfold non_term_unreachable_before non_term_unreachable_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return
   }]
 
@@ -524,12 +519,7 @@ def non_term_unreachable_phi_combined := [llvmfunc|
     %2 = llvm.mlir.constant(2 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_non_term_unreachable_phi   : non_term_unreachable_phi_before  ⊑  non_term_unreachable_phi_combined := by
-  unfold non_term_unreachable_phi_before non_term_unreachable_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     llvm.return %2 : i32
@@ -544,12 +534,7 @@ def non_term_unreachable_following_blocks_combined := [llvmfunc|
     %0 = llvm.mlir.constant(true) : i1
     %1 = llvm.mlir.poison : !llvm.ptr
     llvm.call @dummy() : () -> ()
-    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_non_term_unreachable_following_blocks   : non_term_unreachable_following_blocks_before  ⊑  non_term_unreachable_following_blocks_combined := by
-  unfold non_term_unreachable_following_blocks_before non_term_unreachable_following_blocks_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
     llvm.br ^bb2
@@ -698,12 +683,7 @@ def pr64235_combined := [llvmfunc|
     %2 = llvm.mlir.poison : !llvm.ptr
     llvm.cond_br %0, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
-    llvm.store %1, %2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_pr64235   : pr64235_before  ⊑  pr64235_combined := by
-  unfold pr64235_before pr64235_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // 2 preds: ^bb0, ^bb3
     llvm.br ^bb3
@@ -719,20 +699,10 @@ def test_combined := [llvmfunc|
   llvm.func @test(%arg0: i1) attributes {personality = @__gxx_personality_v0} {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.undef : !llvm.ptr
-    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb5
   ^bb1:  // pred: ^bb0
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.invoke @invoke(%2) to ^bb2 unwind ^bb3 : (!llvm.ptr) -> ()
   ^bb2:  // pred: ^bb1
     llvm.invoke @invoke(%2) to ^bb5 unwind ^bb4 : (!llvm.ptr) -> ()

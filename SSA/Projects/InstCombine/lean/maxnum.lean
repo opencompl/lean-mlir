@@ -583,12 +583,7 @@ theorem inst_combine_maxnum_f32_1_maxnum_p0_val_fast   : maxnum_f32_1_maxnum_p0_
 def minnum_f32_1_maxnum_p0_val_fmf1_combined := [llvmfunc|
   llvm.func @minnum_f32_1_maxnum_p0_val_fmf1(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32, f32) -> f32]
-
-theorem inst_combine_minnum_f32_1_maxnum_p0_val_fmf1   : minnum_f32_1_maxnum_p0_val_fmf1_before  ⊑  minnum_f32_1_maxnum_p0_val_fmf1_combined := by
-  unfold minnum_f32_1_maxnum_p0_val_fmf1_before minnum_f32_1_maxnum_p0_val_fmf1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -599,12 +594,7 @@ theorem inst_combine_minnum_f32_1_maxnum_p0_val_fmf1   : minnum_f32_1_maxnum_p0_
 def minnum_f32_1_maxnum_p0_val_fmf2_combined := [llvmfunc|
   llvm.func @minnum_f32_1_maxnum_p0_val_fmf2(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_minnum_f32_1_maxnum_p0_val_fmf2   : minnum_f32_1_maxnum_p0_val_fmf2_before  ⊑  minnum_f32_1_maxnum_p0_val_fmf2_combined := by
-  unfold minnum_f32_1_maxnum_p0_val_fmf2_before minnum_f32_1_maxnum_p0_val_fmf2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -615,12 +605,7 @@ theorem inst_combine_minnum_f32_1_maxnum_p0_val_fmf2   : minnum_f32_1_maxnum_p0_
 def minnum_f32_1_maxnum_p0_val_fmf3_combined := [llvmfunc|
   llvm.func @minnum_f32_1_maxnum_p0_val_fmf3(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_minnum_f32_1_maxnum_p0_val_fmf3   : minnum_f32_1_maxnum_p0_val_fmf3_before  ⊑  minnum_f32_1_maxnum_p0_val_fmf3_combined := by
-  unfold minnum_f32_1_maxnum_p0_val_fmf3_before minnum_f32_1_maxnum_p0_val_fmf3_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -686,18 +671,8 @@ theorem inst_combine_neg_neg   : neg_neg_before  ⊑  neg_neg_combined := by
   sorry
 def neg_neg_vec_fmf_combined := [llvmfunc|
   llvm.func @neg_neg_vec_fmf(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_neg_neg_vec_fmf   : neg_neg_vec_fmf_before  ⊑  neg_neg_vec_fmf_combined := by
-  unfold neg_neg_vec_fmf_before neg_neg_vec_fmf_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_neg_neg_vec_fmf   : neg_neg_vec_fmf_before  ⊑  neg_neg_vec_fmf_combined := by
-  unfold neg_neg_vec_fmf_before neg_neg_vec_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -707,18 +682,8 @@ theorem inst_combine_neg_neg_vec_fmf   : neg_neg_vec_fmf_before  ⊑  neg_neg_ve
   sorry
 def unary_neg_neg_vec_fmf_combined := [llvmfunc|
   llvm.func @unary_neg_neg_vec_fmf(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32]
-
-theorem inst_combine_unary_neg_neg_vec_fmf   : unary_neg_neg_vec_fmf_before  ⊑  unary_neg_neg_vec_fmf_combined := by
-  unfold unary_neg_neg_vec_fmf_before unary_neg_neg_vec_fmf_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_unary_neg_neg_vec_fmf   : unary_neg_neg_vec_fmf_before  ⊑  unary_neg_neg_vec_fmf_combined := by
-  unfold unary_neg_neg_vec_fmf_before unary_neg_neg_vec_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.minnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -818,12 +783,7 @@ theorem inst_combine_reduce_precision   : reduce_precision_before  ⊑  reduce_p
   sorry
 def reduce_precision_fmf_combined := [llvmfunc|
   llvm.func @reduce_precision_fmf(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32, f32) -> f32]
-
-theorem inst_combine_reduce_precision_fmf   : reduce_precision_fmf_before  ⊑  reduce_precision_fmf_combined := by
-  unfold reduce_precision_fmf_before reduce_precision_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.maxnum(%arg0, %arg1)  {fastmathFlags = #llvm.fastmath<nnan>} : (f32, f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -835,12 +795,7 @@ def reduce_precision_multi_use_0_combined := [llvmfunc|
   llvm.func @reduce_precision_multi_use_0(%arg0: f32, %arg1: f32, %arg2: !llvm.ptr) -> f32 {
     %0 = llvm.fpext %arg0 : f32 to f64
     %1 = llvm.fpext %arg1 : f32 to f64
-    llvm.store %0, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_reduce_precision_multi_use_0   : reduce_precision_multi_use_0_before  ⊑  reduce_precision_multi_use_0_combined := by
-  unfold reduce_precision_multi_use_0_before reduce_precision_multi_use_0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr
     %2 = llvm.intr.maxnum(%0, %1)  : (f64, f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32
@@ -854,12 +809,7 @@ def reduce_precision_multi_use_1_combined := [llvmfunc|
   llvm.func @reduce_precision_multi_use_1(%arg0: f32, %arg1: f32, %arg2: !llvm.ptr) -> f32 {
     %0 = llvm.fpext %arg0 : f32 to f64
     %1 = llvm.fpext %arg1 : f32 to f64
-    llvm.store %1, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_reduce_precision_multi_use_1   : reduce_precision_multi_use_1_before  ⊑  reduce_precision_multi_use_1_combined := by
-  unfold reduce_precision_multi_use_1_before reduce_precision_multi_use_1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr
     %2 = llvm.intr.maxnum(%0, %1)  : (f64, f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32
@@ -881,12 +831,7 @@ theorem inst_combine_negated_op   : negated_op_before  ⊑  negated_op_combined 
   sorry
 def negated_op_fmf_commute_vec_combined := [llvmfunc|
   llvm.func @negated_op_fmf_commute_vec(%arg0: vector<2xf64>) -> vector<2xf64> {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_negated_op_fmf_commute_vec   : negated_op_fmf_commute_vec_before  ⊑  negated_op_fmf_commute_vec_combined := by
-  unfold negated_op_fmf_commute_vec_before negated_op_fmf_commute_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : (vector<2xf64>) -> vector<2xf64>
     llvm.return %0 : vector<2xf64>
   }]
 

@@ -169,18 +169,8 @@ def test0_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : i32)
   ^bb3(%0: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test0   : test0_before  ⊑  test0_combined := by
-  unfold test0_before test0_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test0   : test0_before  ⊑  test0_combined := by
-  unfold test0_before test0_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -196,18 +186,8 @@ def test1_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : i32)
   ^bb3(%0: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -223,18 +203,8 @@ def negative_test2_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1, %arg2 : i32, i32)
   ^bb3(%0: i32, %1: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test2   : negative_test2_before  ⊑  negative_test2_combined := by
-  unfold negative_test2_before negative_test2_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test2   : negative_test2_before  ⊑  negative_test2_combined := by
-  unfold negative_test2_before negative_test2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -250,18 +220,8 @@ def negative_test3_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1, %arg2 : i32, i32)
   ^bb3(%0: i32, %1: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test3   : negative_test3_before  ⊑  negative_test3_combined := by
-  unfold negative_test3_before negative_test3_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test3   : negative_test3_before  ⊑  negative_test3_combined := by
-  unfold negative_test3_before negative_test3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -277,18 +237,8 @@ def negative_test4_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : i32)
   ^bb3(%0: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test4   : negative_test4_before  ⊑  negative_test4_combined := by
-  unfold negative_test4_before negative_test4_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negative_test4   : negative_test4_before  ⊑  negative_test4_combined := by
-  unfold negative_test4_before negative_test4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -304,12 +254,7 @@ def test5_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : i32)
   ^bb3(%0: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -325,12 +270,7 @@ def test6_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : i32)
   ^bb3(%0: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -346,24 +286,9 @@ def test7_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg3, %arg1 : i16, i32)
   ^bb3(%0: i16, %1: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
-  unfold test7_before test7_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr
     llvm.return
   }]
 
@@ -379,24 +304,9 @@ def test8_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg3, %arg1 : i16, i32)
   ^bb3(%0: i16, %1: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr
     llvm.return
   }]
 
@@ -412,24 +322,9 @@ def test9_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1, %arg3 : i32, i16)
   ^bb3(%0: i32, %1: i16):  // 2 preds: ^bb1, ^bb2
-    llvm.store %0, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test9   : test9_before  ⊑  test9_combined := by
-  unfold test9_before test9_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg5 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg6 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg7 {alignment = 2 : i64} : i16, !llvm.ptr
     llvm.return
   }]
 

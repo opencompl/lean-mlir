@@ -831,12 +831,7 @@ def lshr8_i32_use_combined := [llvmfunc|
   llvm.func @lshr8_i32_use(%arg0: i32, %arg1: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(12 : i32) : i32
     %1 = llvm.lshr %arg0, %0  : i32
-    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_lshr8_i32_use   : lshr8_i32_use_before  ⊑  lshr8_i32_use_combined := by
-  unfold lshr8_i32_use_before lshr8_i32_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.intr.bswap(%1)  : (i32) -> i32
     llvm.return %2 : i32
   }]
@@ -902,12 +897,7 @@ def shl8_i32_use_combined := [llvmfunc|
   llvm.func @shl8_i32_use(%arg0: i32, %arg1: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(8 : i32) : i32
     %1 = llvm.shl %arg0, %0  : i32
-    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_shl8_i32_use   : shl8_i32_use_before  ⊑  shl8_i32_use_combined := by
-  unfold shl8_i32_use_before shl8_i32_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.intr.bswap(%1)  : (i32) -> i32
     llvm.return %2 : i32
   }]
@@ -1505,12 +1495,7 @@ def bs_and_constexpr_combined := [llvmfunc|
     %2 = llvm.mlir.constant(4095 : i64) : i64
     %3 = llvm.and %1, %2  : i64
     %4 = llvm.intr.bswap(%3)  : (i64) -> i64
-    llvm.store %4, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_bs_and_constexpr   : bs_and_constexpr_before  ⊑  bs_and_constexpr_combined := by
-  unfold bs_and_constexpr_before bs_and_constexpr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -1524,12 +1509,7 @@ def bs_and_bs_constexpr_combined := [llvmfunc|
     %1 = llvm.ptrtoint %0 : !llvm.ptr to i64
     %2 = llvm.mlir.constant(-67835469387268096 : i64) : i64
     %3 = llvm.and %1, %2  : i64
-    llvm.store %3, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_bs_and_bs_constexpr   : bs_and_bs_constexpr_before  ⊑  bs_and_bs_constexpr_combined := by
-  unfold bs_and_bs_constexpr_before bs_and_bs_constexpr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

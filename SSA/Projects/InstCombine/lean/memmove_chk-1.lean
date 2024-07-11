@@ -164,12 +164,7 @@ def test_simplify1_combined := [llvmfunc|
     %12 = llvm.insertvalue %1, %11[2] : !llvm.struct<"struct.T2", (array<100 x i32>, array<100 x i32>, array<1024 x i8>)> 
     %13 = llvm.mlir.addressof @t2 : !llvm.ptr
     %14 = llvm.mlir.constant(1824 : i64) : i64
-    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 
@@ -195,12 +190,7 @@ def test_simplify2_combined := [llvmfunc|
     %13 = llvm.insertvalue %9, %12[2] : !llvm.struct<"struct.T3", (array<100 x i32>, array<100 x i32>, array<2048 x i8>)> 
     %14 = llvm.mlir.addressof @t3 : !llvm.ptr
     %15 = llvm.mlir.constant(1824 : i64) : i64
-    "llvm.intr.memmove"(%8, %14, %15) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_simplify2   : test_simplify2_before  ⊑  test_simplify2_combined := by
-  unfold test_simplify2_before test_simplify2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%8, %14, %15) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 
@@ -225,12 +215,7 @@ def test_simplify3_combined := [llvmfunc|
     %12 = llvm.insertvalue %1, %11[2] : !llvm.struct<"struct.T2", (array<100 x i32>, array<100 x i32>, array<1024 x i8>)> 
     %13 = llvm.mlir.addressof @t2 : !llvm.ptr
     %14 = llvm.mlir.constant(1824 : i64) : i64
-    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_simplify3   : test_simplify3_before  ⊑  test_simplify3_combined := by
-  unfold test_simplify3_before test_simplify3_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 
@@ -319,12 +304,7 @@ def test_no_incompatible_attr_combined := [llvmfunc|
     %12 = llvm.insertvalue %1, %11[2] : !llvm.struct<"struct.T2", (array<100 x i32>, array<100 x i32>, array<1024 x i8>)> 
     %13 = llvm.mlir.addressof @t2 : !llvm.ptr
     %14 = llvm.mlir.constant(1824 : i64) : i64
-    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_no_incompatible_attr   : test_no_incompatible_attr_before  ⊑  test_no_incompatible_attr_combined := by
-  unfold test_no_incompatible_attr_before test_no_incompatible_attr_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%8, %13, %14) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %8 : !llvm.ptr
   }]
 

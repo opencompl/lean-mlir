@@ -37,23 +37,13 @@ def tinkywinky_combined := [llvmfunc|
     %2 = llvm.mlir.addressof @b : !llvm.ptr
     %3 = llvm.icmp "ne" %1, %2 : !llvm.ptr
     %4 = llvm.mlir.constant(2 : i32) : i32
-    %5 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_tinkywinky   : tinkywinky_before  ⊑  tinkywinky_combined := by
-  unfold tinkywinky_before tinkywinky_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> i8
     %6 = llvm.icmp "eq" %5, %0 : i8
     %7 = llvm.zext %6 : i1 to i32
     %8 = llvm.zext %3 : i1 to i32
     %9 = llvm.or %8, %7  : i32
     %10 = llvm.or %9, %4  : i32
-    llvm.store %10, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_tinkywinky   : tinkywinky_before  ⊑  tinkywinky_combined := by
-  unfold tinkywinky_before tinkywinky_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %10, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

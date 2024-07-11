@@ -116,12 +116,7 @@ def test_as0_combined := [llvmfunc|
   llvm.func @test_as0(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_as0   : test_as0_before  ⊑  test_as0_combined := by
-  unfold test_as0_before test_as0_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %2 : i32
   }]
 
@@ -133,12 +128,7 @@ def test_as1_combined := [llvmfunc|
   llvm.func @test_as1(%arg0: !llvm.ptr<1>) -> i32 {
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr<1>, i64) -> !llvm.ptr<1>, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<1> -> i32]
-
-theorem inst_combine_test_as1   : test_as1_before  ⊑  test_as1_combined := by
-  unfold test_as1_before test_as1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<1> -> i32
     llvm.return %2 : i32
   }]
 
@@ -150,12 +140,7 @@ def test_as2_combined := [llvmfunc|
   llvm.func @test_as2(%arg0: !llvm.ptr<2>) -> i32 {
     %0 = llvm.mlir.constant(1 : i8) : i8
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr<2>, i8) -> !llvm.ptr<2>, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<2> -> i32]
-
-theorem inst_combine_test_as2   : test_as2_before  ⊑  test_as2_combined := by
-  unfold test_as2_before test_as2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<2> -> i32
     llvm.return %2 : i32
   }]
 
@@ -167,12 +152,7 @@ def test_as3_combined := [llvmfunc|
   llvm.func @test_as3(%arg0: !llvm.ptr<3>) -> i32 {
     %0 = llvm.mlir.constant(1 : i16) : i16
     %1 = llvm.getelementptr %arg0[%0] : (!llvm.ptr<3>, i16) -> !llvm.ptr<3>, i32
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> i32]
-
-theorem inst_combine_test_as3   : test_as3_before  ⊑  test_as3_combined := by
-  unfold test_as3_before test_as3_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> i32
     llvm.return %2 : i32
   }]
 
@@ -182,12 +162,7 @@ theorem inst_combine_test_as3   : test_as3_before  ⊑  test_as3_combined := by
   sorry
 def test_combine_ptrtoint_combined := [llvmfunc|
   llvm.func @test_combine_ptrtoint(%arg0: !llvm.ptr<2>) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr<2> -> i32]
-
-theorem inst_combine_test_combine_ptrtoint   : test_combine_ptrtoint_before  ⊑  test_combine_ptrtoint_combined := by
-  unfold test_combine_ptrtoint_before test_combine_ptrtoint_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr<2> -> i32
     llvm.return %0 : i32
   }]
 
@@ -208,12 +183,7 @@ def test_combine_vector_ptrtoint_combined := [llvmfunc|
   llvm.func @test_combine_vector_ptrtoint(%arg0: !llvm.vec<2 x ptr<2>>) -> i32 {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.extractelement %arg0[%0 : i64] : !llvm.vec<2 x ptr<2>>
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<2> -> i32]
-
-theorem inst_combine_test_combine_vector_ptrtoint   : test_combine_vector_ptrtoint_before  ⊑  test_combine_vector_ptrtoint_combined := by
-  unfold test_combine_vector_ptrtoint_before test_combine_vector_ptrtoint_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<2> -> i32
     llvm.return %2 : i32
   }]
 

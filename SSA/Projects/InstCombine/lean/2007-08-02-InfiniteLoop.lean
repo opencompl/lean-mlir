@@ -18,3 +18,16 @@ def test_before := [llvmfunc|
     llvm.return %3 : i64
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: i16, %arg1: i16) -> i64 {
+    %0 = llvm.sext %arg0 : i16 to i32
+    %1 = llvm.sext %arg1 : i16 to i32
+    %2 = llvm.add %0, %1 overflow<nsw>  : i32
+    %3 = llvm.sext %2 : i32 to i64
+    llvm.return %3 : i64
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

@@ -1425,12 +1425,7 @@ theorem inst_combine_shuf_4bytes   : shuf_4bytes_before  ⊑  shuf_4bytes_combin
   sorry
 def shuf_load_4bytes_combined := [llvmfunc|
   llvm.func @shuf_load_4bytes(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_shuf_load_4bytes   : shuf_load_4bytes_before  ⊑  shuf_load_4bytes_combined := by
-  unfold shuf_load_4bytes_before shuf_load_4bytes_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %1 = llvm.intr.bswap(%0)  : (i32) -> i32
     llvm.return %1 : i32
   }]
@@ -1522,12 +1517,7 @@ def trunc_bswap_i160_combined := [llvmfunc|
     %1 = llvm.mlir.constant(255 : i16) : i16
     %2 = llvm.mlir.constant(120 : i160) : i160
     %3 = llvm.mlir.constant(-256 : i16) : i16
-    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i160]
-
-theorem inst_combine_trunc_bswap_i160   : trunc_bswap_i160_before  ⊑  trunc_bswap_i160_combined := by
-  unfold trunc_bswap_i160_before trunc_bswap_i160_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i160
     %5 = llvm.lshr %4, %0  : i160
     %6 = llvm.trunc %5 : i160 to i16
     %7 = llvm.and %6, %1  : i16

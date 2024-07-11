@@ -199,12 +199,7 @@ def PR48369_combined := [llvmfunc|
     llvm.br ^bb1(%1 : i1)
   ^bb1(%4: i1):  // pred: ^bb0
     %5 = llvm.select %4, %2, %0 : i1, i32
-    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_PR48369   : PR48369_before  ⊑  PR48369_combined := by
-  unfold PR48369_before PR48369_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // pred: ^bb1
     llvm.return

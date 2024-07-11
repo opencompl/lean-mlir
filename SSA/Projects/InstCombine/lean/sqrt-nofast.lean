@@ -41,12 +41,7 @@ def fake_sqrt_before := [llvmfunc|
 
 def mysqrt_combined := [llvmfunc|
   llvm.func @mysqrt(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_mysqrt   : mysqrt_before  ⊑  mysqrt_combined := by
-  unfold mysqrt_before mysqrt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     %1 = llvm.intr.sqrt(%0)  : (f32) -> f32
     llvm.return %1 : f32
   }]
@@ -57,18 +52,8 @@ theorem inst_combine_mysqrt   : mysqrt_before  ⊑  mysqrt_combined := by
   sorry
 def fake_sqrt_combined := [llvmfunc|
   llvm.func @fake_sqrt(%arg0: f64, %arg1: f64) -> f64 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_fake_sqrt   : fake_sqrt_before  ⊑  fake_sqrt_combined := by
-  unfold fake_sqrt_before fake_sqrt_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.call @sqrtf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_fake_sqrt   : fake_sqrt_before  ⊑  fake_sqrt_combined := by
-  unfold fake_sqrt_before fake_sqrt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f64
+    %1 = llvm.call @sqrtf(%0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 

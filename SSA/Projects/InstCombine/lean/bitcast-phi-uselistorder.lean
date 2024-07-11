@@ -33,20 +33,10 @@ def test_combined := [llvmfunc|
     %2 = llvm.mlir.addressof @Q : !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : f64)
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64
     llvm.br ^bb2(%3 : f64)
   ^bb2(%4: f64):  // 2 preds: ^bb0, ^bb1
-    llvm.store %4, %arg1 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 8 : i64} : f64, !llvm.ptr
     llvm.return %4 : f64
   }]
 

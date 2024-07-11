@@ -77,12 +77,7 @@ def func1_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg2 : f32)
   ^bb3(%0: f32):  // 2 preds: ^bb1, ^bb2
-    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_func1   : func1_before  ⊑  func1_combined := by
-  unfold func1_before func1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %1 : f32
   }]
 
@@ -115,12 +110,7 @@ def func3_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     llvm.br ^bb3(%arg1 : f32)
   ^bb3(%1: f32):  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.fadd %1, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_func3   : func3_before  ⊑  func3_combined := by
-  unfold func3_before func3_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %1, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %2 : f32
   }]
 

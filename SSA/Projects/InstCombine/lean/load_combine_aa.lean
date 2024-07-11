@@ -28,30 +28,10 @@ def test_load_combine_aa_before := [llvmfunc|
 def test_load_combine_aa_combined := [llvmfunc|
   llvm.func @test_load_combine_aa(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr, %arg3: !llvm.ptr {llvm.noalias}) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_load_combine_aa   : test_load_combine_aa_before  ⊑  test_load_combine_aa_combined := by
-  unfold test_load_combine_aa_before test_load_combine_aa_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_combine_aa   : test_load_combine_aa_before  ⊑  test_load_combine_aa_combined := by
-  unfold test_load_combine_aa_before test_load_combine_aa_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_combine_aa   : test_load_combine_aa_before  ⊑  test_load_combine_aa_combined := by
-  unfold test_load_combine_aa_before test_load_combine_aa_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_combine_aa   : test_load_combine_aa_before  ⊑  test_load_combine_aa_combined := by
-  unfold test_load_combine_aa_before test_load_combine_aa_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

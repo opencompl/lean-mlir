@@ -451,12 +451,7 @@ def test_mempcpy_combined := [llvmfunc|
     %4 = llvm.mlir.constant(15 : i64) : i64
     %5 = llvm.mlir.constant(0 : i64) : i64
     %6 = llvm.getelementptr inbounds %2[%5, %4] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<60 x i8>
-    "llvm.intr.memcpy"(%2, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_mempcpy   : test_mempcpy_before  ⊑  test_mempcpy_combined := by
-  unfold test_mempcpy_before test_mempcpy_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %6 : !llvm.ptr
   }]
 
@@ -489,12 +484,7 @@ def test_mempcpy_tail_combined := [llvmfunc|
     %4 = llvm.mlir.constant(15 : i64) : i64
     %5 = llvm.mlir.constant(0 : i64) : i64
     %6 = llvm.getelementptr inbounds %2[%5, %4] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<60 x i8>
-    "llvm.intr.memcpy"(%2, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test_mempcpy_tail   : test_mempcpy_tail_before  ⊑  test_mempcpy_tail_combined := by
-  unfold test_mempcpy_tail_before test_mempcpy_tail_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %6 : !llvm.ptr
   }]
 

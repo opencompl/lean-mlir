@@ -80,27 +80,12 @@ def matching_phi_combined := [llvmfunc|
   ^bb2:  // pred: ^bb0
     %5 = llvm.add %arg0, %1  : i64
     %6 = llvm.inttoptr %5 : i64 to !llvm.ptr
-    llvm.store %2, %6 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_matching_phi   : matching_phi_before  ⊑  matching_phi_combined := by
-  unfold matching_phi_before matching_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %6 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb3(%6 : !llvm.ptr)
   ^bb3(%7: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_matching_phi   : matching_phi_before  ⊑  matching_phi_combined := by
-  unfold matching_phi_before matching_phi_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32
     %9 = llvm.fmul %8, %3  : f32
-    llvm.store %9, %7 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_matching_phi   : matching_phi_before  ⊑  matching_phi_combined := by
-  unfold matching_phi_before matching_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %7 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 
@@ -122,27 +107,12 @@ def no_matching_phi_combined := [llvmfunc|
     llvm.br ^bb3(%5, %6 : !llvm.ptr, !llvm.ptr)
   ^bb2:  // pred: ^bb0
     %7 = llvm.inttoptr %4 : i64 to !llvm.ptr
-    llvm.store %2, %7 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_no_matching_phi   : no_matching_phi_before  ⊑  no_matching_phi_combined := by
-  unfold no_matching_phi_before no_matching_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %7 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb3(%7, %5 : !llvm.ptr, !llvm.ptr)
   ^bb3(%8: !llvm.ptr, %9: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_no_matching_phi   : no_matching_phi_before  ⊑  no_matching_phi_combined := by
-  unfold no_matching_phi_before no_matching_phi_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 4 : i64} : !llvm.ptr -> f32
     %11 = llvm.fmul %10, %3  : f32
-    llvm.store %11, %8 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_no_matching_phi   : no_matching_phi_before  ⊑  no_matching_phi_combined := by
-  unfold no_matching_phi_before no_matching_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %8 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 

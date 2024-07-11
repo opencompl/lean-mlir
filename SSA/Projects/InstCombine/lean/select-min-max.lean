@@ -264,12 +264,7 @@ theorem inst_combine_smax_smax_common_op_01   : smax_smax_common_op_01_before  â
 def umin_umin_common_op_10_combined := [llvmfunc|
   llvm.func @umin_umin_common_op_10(%arg0: i1, %arg1: i5, %arg2: i5, %arg3: i5, %arg4: !llvm.ptr) -> i5 {
     %0 = llvm.intr.umin(%arg1, %arg3)  : (i5, i5) -> i5
-    llvm.store %0, %arg4 {alignment = 1 : i64} : i5, !llvm.ptr]
-
-theorem inst_combine_umin_umin_common_op_10   : umin_umin_common_op_10_before  âŠ‘  umin_umin_common_op_10_combined := by
-  unfold umin_umin_common_op_10_before umin_umin_common_op_10_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 1 : i64} : i5, !llvm.ptr
     %1 = llvm.select %arg0, %arg1, %arg2 : i1, i5
     %2 = llvm.intr.umin(%1, %arg3)  : (i5, i5) -> i5
     llvm.return %2 : i5
@@ -282,12 +277,7 @@ theorem inst_combine_umin_umin_common_op_10   : umin_umin_common_op_10_before  â
 def umax_umax_common_op_11_combined := [llvmfunc|
   llvm.func @umax_umax_common_op_11(%arg0: i1, %arg1: vector<3xi5>, %arg2: vector<3xi5>, %arg3: vector<3xi5>, %arg4: !llvm.ptr) -> vector<3xi5> {
     %0 = llvm.intr.umax(%arg2, %arg3)  : (vector<3xi5>, vector<3xi5>) -> vector<3xi5>
-    llvm.store %0, %arg4 {alignment = 2 : i64} : vector<3xi5>, !llvm.ptr]
-
-theorem inst_combine_umax_umax_common_op_11   : umax_umax_common_op_11_before  âŠ‘  umax_umax_common_op_11_combined := by
-  unfold umax_umax_common_op_11_before umax_umax_common_op_11_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 2 : i64} : vector<3xi5>, !llvm.ptr
     %1 = llvm.select %arg0, %arg1, %arg2 : i1, vector<3xi5>
     %2 = llvm.intr.umax(%1, %arg3)  : (vector<3xi5>, vector<3xi5>) -> vector<3xi5>
     llvm.return %2 : vector<3xi5>
@@ -324,19 +314,9 @@ theorem inst_combine_smin_smin_no_common_op   : smin_smin_no_common_op_before  â
 def umin_umin_common_op_10_uses_combined := [llvmfunc|
   llvm.func @umin_umin_common_op_10_uses(%arg0: i1, %arg1: i5, %arg2: i5, %arg3: i5, %arg4: !llvm.ptr, %arg5: !llvm.ptr) -> i5 {
     %0 = llvm.intr.umin(%arg1, %arg3)  : (i5, i5) -> i5
-    llvm.store %0, %arg4 {alignment = 1 : i64} : i5, !llvm.ptr]
-
-theorem inst_combine_umin_umin_common_op_10_uses   : umin_umin_common_op_10_uses_before  âŠ‘  umin_umin_common_op_10_uses_combined := by
-  unfold umin_umin_common_op_10_uses_before umin_umin_common_op_10_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg4 {alignment = 1 : i64} : i5, !llvm.ptr
     %1 = llvm.intr.umin(%arg3, %arg2)  : (i5, i5) -> i5
-    llvm.store %1, %arg5 {alignment = 1 : i64} : i5, !llvm.ptr]
-
-theorem inst_combine_umin_umin_common_op_10_uses   : umin_umin_common_op_10_uses_before  âŠ‘  umin_umin_common_op_10_uses_combined := by
-  unfold umin_umin_common_op_10_uses_before umin_umin_common_op_10_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg5 {alignment = 1 : i64} : i5, !llvm.ptr
     %2 = llvm.select %arg0, %0, %1 : i1, i5
     llvm.return %2 : i5
   }]

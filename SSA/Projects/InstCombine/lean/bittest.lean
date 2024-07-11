@@ -45,27 +45,12 @@ def _Z12h000007_testv_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-989855744 : i32) : i32
     %2 = llvm.mlir.constant(-973078529 : i32) : i32
     %3 = llvm.mlir.constant(100663295 : i32) : i32
-    %4 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z12h000007_testv   : _Z12h000007_testv_before  ⊑  _Z12h000007_testv_combined := by
-  unfold _Z12h000007_testv_before _Z12h000007_testv_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %5 = llvm.or %4, %1  : i32
     %6 = llvm.and %5, %2  : i32
-    llvm.store %6, %0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z12h000007_testv   : _Z12h000007_testv_before  ⊑  _Z12h000007_testv_combined := by
-  unfold _Z12h000007_testv_before _Z12h000007_testv_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %0 {alignment = 4 : i64} : i32, !llvm.ptr
     %7 = llvm.and %5, %3  : i32
-    llvm.store %7, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z12h000007_testv   : _Z12h000007_testv_before  ⊑  _Z12h000007_testv_combined := by
-  unfold _Z12h000007_testv_before _Z12h000007_testv_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

@@ -126,12 +126,7 @@ def t3_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.000000e+00 : f32) : f32
     %2 = llvm.fcmp "ogt" %arg0, %arg1 : f32
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_t3   : t3_before  ⊑  t3_combined := by
-  unfold t3_before t3_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     %4 = llvm.select %2, %3, %1 : i1, f32
     llvm.return %4 : f32
   }]

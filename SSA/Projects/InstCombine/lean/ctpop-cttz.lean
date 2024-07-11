@@ -118,12 +118,7 @@ def ctpop3v_poison_before := [llvmfunc|
 
 def ctpop1_combined := [llvmfunc|
   llvm.func @ctpop1(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctpop1   : ctpop1_before  ⊑  ctpop1_combined := by
-  unfold ctpop1_before ctpop1_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -134,12 +129,7 @@ theorem inst_combine_ctpop1   : ctpop1_before  ⊑  ctpop1_combined := by
 def ctpop1v_combined := [llvmfunc|
   llvm.func @ctpop1v(%arg0: vector<2xi32>) -> vector<2xi32> {
     %0 = llvm.mlir.constant(dense<32> : vector<2xi32>) : vector<2xi32>
-    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_ctpop1v   : ctpop1v_before  ⊑  ctpop1v_combined := by
-  unfold ctpop1v_before ctpop1v_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>
     %2 = llvm.sub %0, %1 overflow<nsw, nuw>  : vector<2xi32>
     llvm.return %2 : vector<2xi32>
   }]
@@ -166,12 +156,7 @@ theorem inst_combine_ctpop1_multiuse   : ctpop1_multiuse_before  ⊑  ctpop1_mul
   sorry
 def ctpop2_combined := [llvmfunc|
   llvm.func @ctpop2(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctpop2   : ctpop2_before  ⊑  ctpop2_combined := by
-  unfold ctpop2_before ctpop2_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -181,12 +166,7 @@ theorem inst_combine_ctpop2   : ctpop2_before  ⊑  ctpop2_combined := by
   sorry
 def ctpop2v_combined := [llvmfunc|
   llvm.func @ctpop2v(%arg0: vector<2xi32>) -> vector<2xi32> {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_ctpop2v   : ctpop2v_before  ⊑  ctpop2v_combined := by
-  unfold ctpop2v_before ctpop2v_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>
     llvm.return %0 : vector<2xi32>
   }]
 
@@ -200,12 +180,7 @@ def ctpop2_multiuse_combined := [llvmfunc|
     %1 = llvm.xor %arg0, %0  : i32
     %2 = llvm.add %arg0, %0  : i32
     %3 = llvm.and %2, %1  : i32
-    %4 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctpop2_multiuse   : ctpop2_multiuse_before  ⊑  ctpop2_multiuse_combined := by
-  unfold ctpop2_multiuse_before ctpop2_multiuse_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.add %4, %3  : i32
     llvm.return %5 : i32
   }]
@@ -216,12 +191,7 @@ theorem inst_combine_ctpop2_multiuse   : ctpop2_multiuse_before  ⊑  ctpop2_mul
   sorry
 def ctpop3_combined := [llvmfunc|
   llvm.func @ctpop3(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_ctpop3   : ctpop3_before  ⊑  ctpop3_combined := by
-  unfold ctpop3_before ctpop3_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     llvm.return %0 : i32
   }]
 
@@ -231,12 +201,7 @@ theorem inst_combine_ctpop3   : ctpop3_before  ⊑  ctpop3_combined := by
   sorry
 def ctpop3v_combined := [llvmfunc|
   llvm.func @ctpop3v(%arg0: vector<2xi32>) -> vector<2xi32> {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_ctpop3v   : ctpop3v_before  ⊑  ctpop3v_combined := by
-  unfold ctpop3v_before ctpop3v_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>
     llvm.return %0 : vector<2xi32>
   }]
 
@@ -246,12 +211,7 @@ theorem inst_combine_ctpop3v   : ctpop3v_before  ⊑  ctpop3v_combined := by
   sorry
 def ctpop3v_poison_combined := [llvmfunc|
   llvm.func @ctpop3v_poison(%arg0: vector<2xi32>) -> vector<2xi32> {
-    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>]
-
-theorem inst_combine_ctpop3v_poison   : ctpop3v_poison_before  ⊑  ctpop3v_poison_combined := by
-  unfold ctpop3v_poison_before ctpop3v_poison_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = false}> : (vector<2xi32>) -> vector<2xi32>
     llvm.return %0 : vector<2xi32>
   }]
 

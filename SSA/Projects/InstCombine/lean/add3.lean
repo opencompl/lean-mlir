@@ -34,21 +34,11 @@ def test2_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-16 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
     %4 = llvm.inttoptr %3 : i32 to !llvm.ptr
-    llvm.store %1, %4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %4 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.add %arg0, %2  : i32
     %6 = llvm.inttoptr %5 : i32 to !llvm.ptr
     %7 = llvm.getelementptr %6[%1] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32
     %9 = llvm.call @callee(%8) : (i32) -> i32
     llvm.return
   }]

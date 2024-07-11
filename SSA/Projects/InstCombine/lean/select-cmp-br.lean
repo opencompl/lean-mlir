@@ -152,19 +152,9 @@ def test1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(9 : i64) : i64
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%0, 0, 0] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"C", packed (struct<"struct.S", (ptr, i32, i32)>)>
-    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.icmp "eq" %3, %5 : !llvm.ptr
     llvm.cond_br %6, ^bb2, ^bb3
   ^bb1:  // 2 preds: ^bb2, ^bb3
@@ -174,12 +164,7 @@ theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
     llvm.br ^bb1
   ^bb3:  // pred: ^bb0
     %7 = llvm.getelementptr inbounds %3[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %9 = llvm.call %8(%arg0) : !llvm.ptr, (!llvm.ptr) -> i64
     llvm.br ^bb1
   }]
@@ -193,19 +178,9 @@ def test2_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(9 : i64) : i64
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%0, 0, 0] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"C", packed (struct<"struct.S", (ptr, i32, i32)>)>
-    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.icmp "eq" %3, %5 : !llvm.ptr
     llvm.cond_br %6, ^bb3, ^bb2
   ^bb1:  // 2 preds: ^bb2, ^bb3
@@ -215,12 +190,7 @@ theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
     llvm.br ^bb1
   ^bb3:  // pred: ^bb0
     %7 = llvm.getelementptr inbounds %3[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %9 = llvm.call %8(%arg0) : !llvm.ptr, (!llvm.ptr) -> i64
     llvm.br ^bb1
   }]
@@ -234,19 +204,9 @@ def test3_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(9 : i64) : i64
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%0, 0, 0] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"C", packed (struct<"struct.S", (ptr, i32, i32)>)>
-    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.icmp "eq" %3, %5 : !llvm.ptr
     llvm.cond_br %6, ^bb2, ^bb3
   ^bb1:  // 2 preds: ^bb2, ^bb3
@@ -256,12 +216,7 @@ theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
     llvm.br ^bb1
   ^bb3:  // pred: ^bb0
     %7 = llvm.getelementptr inbounds %3[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %9 = llvm.call %8(%arg0) : !llvm.ptr, (!llvm.ptr) -> i64
     llvm.br ^bb1
   }]
@@ -275,19 +230,9 @@ def test4_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i64) : i64
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(9 : i64) : i64
-    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%0, 0, 0] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"C", packed (struct<"struct.S", (ptr, i32, i32)>)>
-    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.icmp "eq" %3, %5 : !llvm.ptr
     llvm.cond_br %6, ^bb3, ^bb2
   ^bb1:  // 2 preds: ^bb2, ^bb3
@@ -297,12 +242,7 @@ theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
     llvm.br ^bb1
   ^bb3:  // pred: ^bb0
     %7 = llvm.getelementptr inbounds %3[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test4   : test4_before  ⊑  test4_combined := by
-  unfold test4_before test4_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %9 = llvm.call %8(%arg0) : !llvm.ptr, (!llvm.ptr) -> i64
     llvm.br ^bb1
   }]

@@ -27,12 +27,7 @@ def foo_combined := [llvmfunc|
     %1 = llvm.mlir.constant(24 : i64) : i64
     %2 = llvm.shl %arg0, %0  : i64
     %3 = llvm.sub %1, %2  : i64
-    %4 = llvm.alloca %3 x i8 {alignment = 4 : i64} : (i64) -> !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.alloca %3 x i8 {alignment = 4 : i64} : (i64) -> !llvm.ptr
     llvm.call @use(%4) : (!llvm.ptr) -> ()
     llvm.return
   }]

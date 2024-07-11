@@ -193,12 +193,7 @@ def maybe_not_positive_combined := [llvmfunc|
   llvm.func @maybe_not_positive(%arg0: i32) -> i1 {
     %0 = llvm.mlir.addressof @g : !llvm.ptr
     %1 = llvm.mlir.constant(0 : i32) : i32
-    %2 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_maybe_not_positive   : maybe_not_positive_before  ⊑  maybe_not_positive_combined := by
-  unfold maybe_not_positive_before maybe_not_positive_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %3 = llvm.intr.smin(%2, %arg0)  : (i32, i32) -> i32
     %4 = llvm.icmp "sgt" %3, %1 : i32
     llvm.return %4 : i1

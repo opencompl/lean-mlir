@@ -53,19 +53,9 @@ def test2_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(123 : i32) : i32
-    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     %4 = llvm.call @bar(%3) vararg(!llvm.func<i32 (...)>) : (!llvm.ptr) -> i32
-    %5 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     %6 = llvm.icmp "eq" %arg0, %1 : i32
     llvm.cond_br %6, ^bb2(%5 : i32), ^bb1
   ^bb1:  // pred: ^bb0

@@ -1490,18 +1490,8 @@ def trunc_shl_31_i32_i64_multi_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(31 : i64) : i64
     %1 = llvm.shl %arg0, %0  : i64
     %2 = llvm.trunc %1 : i64 to i32
-    llvm.store volatile %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr<1>]
-
-theorem inst_combine_trunc_shl_31_i32_i64_multi_use   : trunc_shl_31_i32_i64_multi_use_before  ⊑  trunc_shl_31_i32_i64_multi_use_combined := by
-  unfold trunc_shl_31_i32_i64_multi_use_before trunc_shl_31_i32_i64_multi_use_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %1, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr<1>]
-
-theorem inst_combine_trunc_shl_31_i32_i64_multi_use   : trunc_shl_31_i32_i64_multi_use_before  ⊑  trunc_shl_31_i32_i64_multi_use_combined := by
-  unfold trunc_shl_31_i32_i64_multi_use_before trunc_shl_31_i32_i64_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr<1>
+    llvm.store volatile %1, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr<1>
     llvm.return
   }]
 

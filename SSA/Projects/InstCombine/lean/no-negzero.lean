@@ -45,29 +45,14 @@ def mysqrt_combined := [llvmfunc|
   llvm.func @mysqrt(%arg0: f64) -> f64 attributes {passthrough = ["nounwind"]} {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_mysqrt   : mysqrt_before  ⊑  mysqrt_combined := by
-  unfold mysqrt_before mysqrt_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     %3 = llvm.intr.fabs(%arg0)  : (f64) -> f64
     %4 = llvm.call @sqrt(%3) : (f64) -> f64
     %5 = llvm.fadd %4, %1  : f64
-    llvm.store %5, %2 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_mysqrt   : mysqrt_before  ⊑  mysqrt_combined := by
-  unfold mysqrt_before mysqrt_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %2 {alignment = 8 : i64} : f64, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
-    %6 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_mysqrt   : mysqrt_before  ⊑  mysqrt_combined := by
-  unfold mysqrt_before mysqrt_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f64
     llvm.return %6 : f64
   }]
 

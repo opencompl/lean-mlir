@@ -224,12 +224,7 @@ theorem inst_combine_sdiv_abs_nsw_vec   : sdiv_abs_nsw_vec_before  ⊑  sdiv_abs
   sorry
 def sdiv_abs_combined := [llvmfunc|
   llvm.func @sdiv_abs(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_sdiv_abs   : sdiv_abs_before  ⊑  sdiv_abs_combined := by
-  unfold sdiv_abs_before sdiv_abs_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (i32) -> i32
     %1 = llvm.sdiv %0, %arg0  : i32
     llvm.return %1 : i32
   }]
@@ -240,12 +235,7 @@ theorem inst_combine_sdiv_abs   : sdiv_abs_before  ⊑  sdiv_abs_combined := by
   sorry
 def sdiv_abs_extra_use_combined := [llvmfunc|
   llvm.func @sdiv_abs_extra_use(%arg0: i32) -> i32 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_sdiv_abs_extra_use   : sdiv_abs_extra_use_before  ⊑  sdiv_abs_extra_use_combined := by
-  unfold sdiv_abs_extra_use_before sdiv_abs_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i32) -> i32
     llvm.call @use(%0) : (i32) -> ()
     %1 = llvm.sdiv %0, %arg0  : i32
     llvm.return %1 : i32

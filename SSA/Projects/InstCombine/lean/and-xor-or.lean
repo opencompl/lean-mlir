@@ -3225,12 +3225,7 @@ def and_xor_not_common_op_extrause_combined := [llvmfunc|
   llvm.func @and_xor_not_common_op_extrause(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.xor %arg1, %0  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_and_xor_not_common_op_extrause   : and_xor_not_common_op_extrause_before  ⊑  and_xor_not_common_op_extrause_combined := by
-  unfold and_xor_not_common_op_extrause_before and_xor_not_common_op_extrause_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.and %arg0, %arg1  : i32
     llvm.return %2 : i32
   }]

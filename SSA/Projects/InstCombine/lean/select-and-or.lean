@@ -2042,12 +2042,7 @@ theorem inst_combine_test_or_smax   : test_or_smax_before  ⊑  test_or_smax_com
   sorry
 def test_or_abs_combined := [llvmfunc|
   llvm.func @test_or_abs(%arg0: i8, %arg1: i1) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_test_or_abs   : test_or_abs_before  ⊑  test_or_abs_combined := by
-  unfold test_or_abs_before test_or_abs_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8
     %1 = llvm.select %arg1, %arg0, %0 : i1, i8
     llvm.return %1 : i8
   }]
@@ -2059,12 +2054,7 @@ theorem inst_combine_test_or_abs   : test_or_abs_before  ⊑  test_or_abs_combin
 def test_or_fmaxnum_combined := [llvmfunc|
   llvm.func @test_or_fmaxnum(%arg0: f32, %arg1: f32, %arg2: i1) -> f32 {
     %0 = llvm.mlir.constant(true) : i1
-    %1 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nnan>} : f32]
-
-theorem inst_combine_test_or_fmaxnum   : test_or_fmaxnum_before  ⊑  test_or_fmaxnum_combined := by
-  unfold test_or_fmaxnum_before test_or_fmaxnum_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nnan>} : f32
     %2 = llvm.select %arg2, %0, %1 : i1, i1
     %3 = llvm.select %2, %arg0, %arg1 : i1, f32
     llvm.return %3 : f32

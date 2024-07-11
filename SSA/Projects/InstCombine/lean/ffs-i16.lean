@@ -28,12 +28,7 @@ def fold_ffs_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i16) : i16
     llvm.call @sink(%0) : (i16) -> ()
     llvm.call @sink(%1) : (i16) -> ()
-    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16]
-
-theorem inst_combine_fold_ffs   : fold_ffs_before  ⊑  fold_ffs_combined := by
-  unfold fold_ffs_before fold_ffs_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i16) -> i16
     %3 = llvm.add %2, %1 overflow<nsw, nuw>  : i16
     %4 = llvm.icmp "eq" %arg0, %0 : i16
     %5 = llvm.select %4, %0, %3 : i1, i16

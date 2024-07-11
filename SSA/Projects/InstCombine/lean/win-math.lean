@@ -446,12 +446,7 @@ theorem inst_combine_float_round   : float_round_before  ⊑  float_round_combin
 def float_powsqrt_combined := [llvmfunc|
   llvm.func @float_powsqrt(%arg0: f32) -> f32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind"]} {
     %0 = llvm.mlir.constant(5.000000e-01 : f32) : f32
-    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_float_powsqrt   : float_powsqrt_before  ⊑  float_powsqrt_combined := by
-  unfold float_powsqrt_before float_powsqrt_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @powf(%arg0, %0) {fastmathFlags = #llvm.fastmath<ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 

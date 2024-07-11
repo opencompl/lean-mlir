@@ -95,12 +95,7 @@ def test_simplify1_combined := [llvmfunc|
     %4 = llvm.getelementptr inbounds %3[%1, %0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<14 x i8>
     %5 = llvm.mlir.zero : !llvm.ptr
     %6 = llvm.mlir.addressof @chp : !llvm.ptr
-    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -112,12 +107,7 @@ def test_simplify2_combined := [llvmfunc|
   llvm.func @test_simplify2() {
     %0 = llvm.mlir.zero : !llvm.ptr
     %1 = llvm.mlir.addressof @chp : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_simplify2   : test_simplify2_before  ⊑  test_simplify2_combined := by
-  unfold test_simplify2_before test_simplify2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -134,12 +124,7 @@ def test_simplify3_combined := [llvmfunc|
     %4 = llvm.getelementptr inbounds %3[%1, %0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<14 x i8>
     %5 = llvm.mlir.zero : !llvm.ptr
     %6 = llvm.mlir.addressof @chp : !llvm.ptr
-    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_simplify3   : test_simplify3_before  ⊑  test_simplify3_combined := by
-  unfold test_simplify3_before test_simplify3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -156,12 +141,7 @@ def test_simplify4_combined := [llvmfunc|
     %4 = llvm.getelementptr inbounds %3[%1, %0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<14 x i8>
     %5 = llvm.mlir.zero : !llvm.ptr
     %6 = llvm.mlir.addressof @chp : !llvm.ptr
-    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_simplify4   : test_simplify4_before  ⊑  test_simplify4_combined := by
-  unfold test_simplify4_before test_simplify4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -177,12 +157,7 @@ def test_xform_to_memrchr_combined := [llvmfunc|
     %3 = llvm.mlir.zero : !llvm.ptr
     %4 = llvm.mlir.addressof @chp : !llvm.ptr
     %5 = llvm.call @memrchr(%1, %arg0, %2) : (!llvm.ptr, i32, i32) -> !llvm.ptr
-    llvm.store %5, %4 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_test_xform_to_memrchr   : test_xform_to_memrchr_before  ⊑  test_xform_to_memrchr_combined := by
-  unfold test_xform_to_memrchr_before test_xform_to_memrchr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %4 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

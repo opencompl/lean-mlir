@@ -146,19 +146,9 @@ theorem inst_combine_test_simplify2   : test_simplify2_before  ⊑  test_simplif
   sorry
 def test_simplify3_combined := [llvmfunc|
   llvm.func @test_simplify3(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_simplify3   : test_simplify3_before  ⊑  test_simplify3_combined := by
-  unfold test_simplify3_before test_simplify3_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.zext %0 : i8 to i32
-    %2 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_simplify3   : test_simplify3_before  ⊑  test_simplify3_combined := by
-  unfold test_simplify3_before test_simplify3_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.zext %2 : i8 to i32
     %4 = llvm.sub %1, %3 overflow<nsw>  : i32
     llvm.return %4 : i32

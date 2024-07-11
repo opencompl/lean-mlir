@@ -15,3 +15,13 @@ def f_before := [llvmfunc|
     llvm.return %0 : vector<3xi8>
   }]
 
+def f_combined := [llvmfunc|
+  llvm.func @f(%arg0: vector<3xi8>) -> vector<3xi8> {
+    %0 = llvm.mlir.constant(dense<1> : vector<3xi8>) : vector<3xi8>
+    llvm.return %0 : vector<3xi8>
+  }]
+
+theorem inst_combine_f   : f_before  ⊑  f_combined := by
+  unfold f_before f_combined
+  simp_alive_peephole
+  sorry

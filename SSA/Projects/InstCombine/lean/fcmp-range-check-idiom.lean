@@ -656,18 +656,8 @@ def test_and_olt_fmf_propagation_combined := [llvmfunc|
   llvm.func @test_and_olt_fmf_propagation(%arg0: f32) -> i1 {
     %0 = llvm.mlir.constant(1.08420217E-19 : f32) : f32
     %1 = llvm.mlir.constant(-1.08420217E-19 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f32]
-
-theorem inst_combine_test_and_olt_fmf_propagation   : test_and_olt_fmf_propagation_before  ⊑  test_and_olt_fmf_propagation_combined := by
-  unfold test_and_olt_fmf_propagation_before test_and_olt_fmf_propagation_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fcmp "ogt" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f32]
-
-theorem inst_combine_test_and_olt_fmf_propagation   : test_and_olt_fmf_propagation_before  ⊑  test_and_olt_fmf_propagation_combined := by
-  unfold test_and_olt_fmf_propagation_before test_and_olt_fmf_propagation_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f32
+    %3 = llvm.fcmp "ogt" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan, ninf, nsz>} : f32
     %4 = llvm.and %2, %3  : i1
     llvm.return %4 : i1
   }]
@@ -680,18 +670,8 @@ def test_and_olt_fmf_propagation_union_combined := [llvmfunc|
   llvm.func @test_and_olt_fmf_propagation_union(%arg0: f32) -> i1 {
     %0 = llvm.mlir.constant(1.08420217E-19 : f32) : f32
     %1 = llvm.mlir.constant(-1.08420217E-19 : f32) : f32
-    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan, ninf>} : f32]
-
-theorem inst_combine_test_and_olt_fmf_propagation_union   : test_and_olt_fmf_propagation_union_before  ⊑  test_and_olt_fmf_propagation_union_combined := by
-  unfold test_and_olt_fmf_propagation_union_before test_and_olt_fmf_propagation_union_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fcmp "ogt" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f32]
-
-theorem inst_combine_test_and_olt_fmf_propagation_union   : test_and_olt_fmf_propagation_union_before  ⊑  test_and_olt_fmf_propagation_union_combined := by
-  unfold test_and_olt_fmf_propagation_union_before test_and_olt_fmf_propagation_union_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan, ninf>} : f32
+    %3 = llvm.fcmp "ogt" %arg0, %1 {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f32
     %4 = llvm.and %2, %3  : i1
     llvm.return %4 : i1
   }]

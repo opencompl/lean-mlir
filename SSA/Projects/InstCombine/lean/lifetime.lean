@@ -48,19 +48,9 @@ def bar_before := [llvmfunc|
 def bar_combined := [llvmfunc|
   llvm.func @bar(%arg0: i1) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.array<1 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.array<1 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.intr.dbg.declare #di_local_variable = %1 : !llvm.ptr
-    %2 = llvm.alloca %0 x !llvm.array<1 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<1 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb4
   ^bb1:  // pred: ^bb0
     llvm.br ^bb2

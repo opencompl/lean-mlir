@@ -253,12 +253,7 @@ def PR2341_combined := [llvmfunc|
     %0 = llvm.mlir.addressof @_2E_str : !llvm.ptr
     %1 = llvm.mlir.constant(4 : i32) : i32
     %2 = llvm.mlir.constant(0 : i32) : i32
-    %3 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_PR2341   : PR2341_before  ⊑  PR2341_combined := by
-  unfold PR2341_before PR2341_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.call @memcmp(%3, %0, %1) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %5 = llvm.icmp "eq" %4, %2 : i32
     llvm.return %5 : i1

@@ -83,24 +83,9 @@ def function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := [l
     %16 = llvm.mlir.undef : !llvm.struct<(i64, i64)>
     %17 = llvm.mlir.constant(0 : i32) : i32
     %18 = llvm.mlir.constant(8 : i64) : i64
-    %19 = llvm.alloca %0 x !llvm.struct<"struct._my_struct", packed (array<12 x i8>, array<4 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
-    %20 = llvm.load %7 {alignment = 1 : i64} : !llvm.ptr -> i96]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
-    %21 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    %19 = llvm.alloca %0 x !llvm.struct<"struct._my_struct", packed (array<12 x i8>, array<4 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %20 = llvm.load %7 {alignment = 1 : i64} : !llvm.ptr -> i96
+    %21 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i32
     %22 = llvm.zext %arg0 : i32 to i96
     %23 = llvm.shl %22, %10 overflow<nsw, nuw>  : i96
     %24 = llvm.and %20, %11  : i96
@@ -113,28 +98,13 @@ theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struc
     %31 = llvm.or %27, %28  : i96
     %32 = llvm.or %31, %30  : i96
     %33 = llvm.or %32, %24  : i96
-    llvm.store %33, %19 {alignment = 8 : i64} : i96, !llvm.ptr]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %33, %19 {alignment = 8 : i64} : i96, !llvm.ptr
     %34 = llvm.getelementptr inbounds %19[%8, 1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.struct<"struct._my_struct", packed (array<12 x i8>, array<4 x i8>)>
-    llvm.store %21, %34 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %21, %34 {alignment = 4 : i64} : i32, !llvm.ptr
     %35 = llvm.trunc %33 : i96 to i64
     %36 = llvm.insertvalue %35, %16[0] : !llvm.struct<(i64, i64)> 
     %37 = llvm.getelementptr inbounds %19[%8, 0, %18] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.struct<"struct._my_struct", packed (array<12 x i8>, array<4 x i8>)>
-    %38 = llvm.load %37 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<   : function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before  ⊑  function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined := by
-  unfold function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_before function(%arg0: i32, %arg1: i32, %arg2: i32) -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    %38 = llvm.load %37 {alignment = 8 : i64} : !llvm.ptr -> i64
     %39 = llvm.insertvalue %38, %36[1] : !llvm.struct<(i64, i64)> 
     llvm.return %39 : !llvm.struct<(i64, i64)>
   }]

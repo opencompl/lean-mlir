@@ -40,29 +40,14 @@ def main_combined := [llvmfunc|
     %2 = llvm.mlir.constant(5 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.mlir.constant(10 : i32) : i32
-    %5 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.br ^bb1(%0, %5 : i32, i32)
   ^bb1(%6: i32, %7: i32):  // 2 preds: ^bb0, ^bb1
     %8 = llvm.add %7, %2  : i32
-    llvm.store volatile %8, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %8, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.add %6, %3  : i32
     %10 = llvm.icmp "slt" %9, %4 : i32
-    %11 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load volatile %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.cond_br %10, ^bb1(%9, %11 : i32, i32), ^bb2
   ^bb2:  // pred: ^bb1
     llvm.return %0 : i32

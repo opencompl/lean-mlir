@@ -76,12 +76,7 @@ def n2_before := [llvmfunc|
 
 def t0_combined := [llvmfunc|
   llvm.func @t0(%arg0: i1 {llvm.zeroext}, %arg1: i1 {llvm.zeroext}, %arg2: !llvm.ptr {llvm.nocapture, llvm.readonly}) {
-    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_t0   : t0_before  ⊑  t0_combined := by
-  unfold t0_before t0_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64
     llvm.cond_br %arg0, ^bb1, ^bb4
   ^bb1:  // pred: ^bb0
     llvm.cond_br %arg1, ^bb2, ^bb3
@@ -106,12 +101,7 @@ theorem inst_combine_t0   : t0_before  ⊑  t0_combined := by
   sorry
 def n1_combined := [llvmfunc|
   llvm.func @n1(%arg0: i1 {llvm.zeroext}, %arg1: i1 {llvm.zeroext}, %arg2: !llvm.ptr {llvm.nocapture, llvm.readonly}) {
-    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_n1   : n1_before  ⊑  n1_combined := by
-  unfold n1_before n1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64
     llvm.cond_br %arg0, ^bb1, ^bb4
   ^bb1:  // pred: ^bb0
     llvm.cond_br %arg1, ^bb2, ^bb3
@@ -136,12 +126,7 @@ theorem inst_combine_n1   : n1_before  ⊑  n1_combined := by
   sorry
 def n2_combined := [llvmfunc|
   llvm.func @n2(%arg0: i1 {llvm.zeroext}, %arg1: i1 {llvm.zeroext}, %arg2: !llvm.ptr {llvm.nocapture, llvm.readonly}) {
-    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_n2   : n2_before  ⊑  n2_combined := by
-  unfold n2_before n2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg2 {alignment = 8 : i64} : !llvm.ptr -> i64
     llvm.cond_br %arg0, ^bb1, ^bb4
   ^bb1:  // pred: ^bb0
     llvm.cond_br %arg1, ^bb2, ^bb3

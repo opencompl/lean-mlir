@@ -286,12 +286,7 @@ theorem inst_combine_combine_addrspacecast_types_scalevector   : combine_addrspa
 def canonicalize_addrspacecast_combined := [llvmfunc|
   llvm.func @canonicalize_addrspacecast(%arg0: !llvm.ptr<1>) -> i32 {
     %0 = llvm.addrspacecast %arg0 : !llvm.ptr<1> to !llvm.ptr
-    %1 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_canonicalize_addrspacecast   : canonicalize_addrspacecast_before  ⊑  canonicalize_addrspacecast_combined := by
-  unfold canonicalize_addrspacecast_before canonicalize_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %1 : i32
   }]
 
@@ -313,12 +308,7 @@ def memcpy_addrspacecast_combined := [llvmfunc|
   ^bb1(%8: i32, %9: i32):  // 2 preds: ^bb0, ^bb1
     %10 = llvm.trunc %8 : i32 to i16
     %11 = llvm.getelementptr %5[%10] : (!llvm.ptr<2>, i16) -> !llvm.ptr<2>, i8
-    %12 = llvm.load %11 {alignment = 1 : i64} : !llvm.ptr<2> -> i8]
-
-theorem inst_combine_memcpy_addrspacecast   : memcpy_addrspacecast_before  ⊑  memcpy_addrspacecast_combined := by
-  unfold memcpy_addrspacecast_before memcpy_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %11 {alignment = 1 : i64} : !llvm.ptr<2> -> i8
     %13 = llvm.zext %12 : i8 to i32
     %14 = llvm.add %9, %13  : i32
     %15 = llvm.add %8, %6  : i32
@@ -337,12 +327,7 @@ def constant_fold_null_combined := [llvmfunc|
     %0 = llvm.mlir.constant(7 : i32) : i32
     %1 = llvm.mlir.zero : !llvm.ptr<3>
     %2 = llvm.addrspacecast %1 : !llvm.ptr<3> to !llvm.ptr<4>
-    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr<4>]
-
-theorem inst_combine_constant_fold_null   : constant_fold_null_before  ⊑  constant_fold_null_combined := by
-  unfold constant_fold_null_before constant_fold_null_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr<4>
     llvm.return
   }]
 
@@ -386,12 +371,7 @@ def constant_fold_inttoptr_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-1 : i32) : i32
     %2 = llvm.inttoptr %1 : i32 to !llvm.ptr<3>
     %3 = llvm.addrspacecast %2 : !llvm.ptr<3> to !llvm.ptr<4>
-    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr<4>]
-
-theorem inst_combine_constant_fold_inttoptr   : constant_fold_inttoptr_before  ⊑  constant_fold_inttoptr_combined := by
-  unfold constant_fold_inttoptr_before constant_fold_inttoptr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr<4>
     llvm.return
   }]
 
@@ -405,12 +385,7 @@ def constant_fold_gep_inttoptr_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1274 : i64) : i64
     %2 = llvm.inttoptr %1 : i64 to !llvm.ptr<3>
     %3 = llvm.addrspacecast %2 : !llvm.ptr<3> to !llvm.ptr<4>
-    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr<4>]
-
-theorem inst_combine_constant_fold_gep_inttoptr   : constant_fold_gep_inttoptr_before  ⊑  constant_fold_gep_inttoptr_combined := by
-  unfold constant_fold_gep_inttoptr_before constant_fold_gep_inttoptr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr<4>
     llvm.return
   }]
 

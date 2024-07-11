@@ -64,21 +64,11 @@ def foo_combined := [llvmfunc|
   ^bb1(%6: i64, %7: i64):  // 2 preds: ^bb0, ^bb1
     %8 = llvm.add %6, %arg1  : i64
     %9 = llvm.inttoptr %8 : i64 to !llvm.ptr
-    %10 = llvm.load %9 {alignment = 8 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 8 : i64} : !llvm.ptr -> vector<2xi64>
     %11 = llvm.and %10, %2  : vector<2xi64>
     %12 = llvm.add %6, %arg0  : i64
     %13 = llvm.inttoptr %12 : i64 to !llvm.ptr
-    llvm.store %11, %13 {alignment = 8 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %13 {alignment = 8 : i64} : vector<2xi64>, !llvm.ptr
     %14 = llvm.add %6, %3  : i64
     %15 = llvm.add %7, %4  : i64
     %16 = llvm.icmp "sgt" %15, %5 : i64

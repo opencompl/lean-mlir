@@ -59,12 +59,7 @@ def memcmp_4bytes_one_unaligned_i8_before := [llvmfunc|
 def memcmp_4bytes_unaligned_constant_i8_combined := [llvmfunc|
   llvm.func @memcmp_4bytes_unaligned_constant_i8(%arg0: !llvm.ptr {llvm.align = 4 : i64}) -> i1 {
     %0 = llvm.mlir.constant(16777216 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_memcmp_4bytes_unaligned_constant_i8   : memcmp_4bytes_unaligned_constant_i8_before  ⊑  memcmp_4bytes_unaligned_constant_i8_combined := by
-  unfold memcmp_4bytes_unaligned_constant_i8_before memcmp_4bytes_unaligned_constant_i8_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.icmp "eq" %1, %0 : i32
     llvm.return %2 : i1
   }]
@@ -76,12 +71,7 @@ theorem inst_combine_memcmp_4bytes_unaligned_constant_i8   : memcmp_4bytes_unali
 def memcmp_4bytes_unaligned_constant_i16_combined := [llvmfunc|
   llvm.func @memcmp_4bytes_unaligned_constant_i16(%arg0: !llvm.ptr {llvm.align = 4 : i64}) -> i1 {
     %0 = llvm.mlir.constant(131073 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_memcmp_4bytes_unaligned_constant_i16   : memcmp_4bytes_unaligned_constant_i16_before  ⊑  memcmp_4bytes_unaligned_constant_i16_combined := by
-  unfold memcmp_4bytes_unaligned_constant_i16_before memcmp_4bytes_unaligned_constant_i16_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.icmp "eq" %1, %0 : i32
     llvm.return %2 : i1
   }]

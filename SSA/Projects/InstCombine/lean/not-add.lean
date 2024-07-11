@@ -338,12 +338,7 @@ def pr50370_combined := [llvmfunc|
   llvm.func @pr50370(%arg0: i32) {
     %0 = llvm.mlir.poison : i32
     %1 = llvm.mlir.undef : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_pr50370   : pr50370_before  ⊑  pr50370_combined := by
-  unfold pr50370_before pr50370_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

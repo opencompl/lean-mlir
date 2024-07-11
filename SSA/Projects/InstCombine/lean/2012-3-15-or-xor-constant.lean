@@ -32,12 +32,7 @@ def function_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.inttoptr %1 : i64 to !llvm.ptr
     %3 = llvm.xor %arg0, %0  : i32
-    llvm.store volatile %3, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_function   : function_before  ⊑  function_combined := by
-  unfold function_before function_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %3, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.or %arg0, %0  : i32
     llvm.return %4 : i32
   }]

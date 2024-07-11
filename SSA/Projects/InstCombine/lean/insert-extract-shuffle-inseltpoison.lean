@@ -768,12 +768,7 @@ def pr26354_combined := [llvmfunc|
     %12 = llvm.insertelement %2, %10[%11 : i32] : vector<4xf64>
     %13 = llvm.mlir.constant(3 : i64) : i64
     %14 = llvm.mlir.constant(0 : i64) : i64
-    %15 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<2xf64>]
-
-theorem inst_combine_pr26354   : pr26354_before  ⊑  pr26354_combined := by
-  unfold pr26354_before pr26354_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<2xf64>
     llvm.cond_br %arg1, ^bb1, ^bb2(%0 : vector<4xf64>)
   ^bb1:  // pred: ^bb0
     %16 = llvm.extractelement %15[%1 : i64] : vector<2xf64>
@@ -808,12 +803,7 @@ def PR30923_combined := [llvmfunc|
     %13 = llvm.mlir.constant(2 : i64) : i64
     %14 = llvm.mlir.constant(3 : i64) : i64
     %15 = llvm.extractelement %arg0[%0 : i64] : vector<2xf32>
-    llvm.store %15, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_PR30923   : PR30923_before  ⊑  PR30923_combined := by
-  unfold PR30923_before PR30923_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
     %16 = llvm.extractelement %arg0[%1 : i64] : vector<2xf32>

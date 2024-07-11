@@ -53,12 +53,7 @@ def test_phi_combine_load_metadata_combined := [llvmfunc|
     llvm.call @baz() : () -> ()
     llvm.br ^bb3(%arg2 : !llvm.ptr)
   ^bb3(%0: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_phi_combine_load_metadata   : test_phi_combine_load_metadata_before  ⊑  test_phi_combine_load_metadata_combined := by
-  unfold test_phi_combine_load_metadata_before test_phi_combine_load_metadata_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 
@@ -76,12 +71,7 @@ def test_phi_combine_load_metadata_negative_combined := [llvmfunc|
     llvm.call @baz() : () -> ()
     llvm.br ^bb3(%arg2 : !llvm.ptr)
   ^bb3(%0: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_phi_combine_load_metadata_negative   : test_phi_combine_load_metadata_negative_before  ⊑  test_phi_combine_load_metadata_negative_combined := by
-  unfold test_phi_combine_load_metadata_negative_before test_phi_combine_load_metadata_negative_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 

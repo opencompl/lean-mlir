@@ -51,18 +51,8 @@ def main() -> _combined := [llvmfunc|
     %0 = llvm.mlir.constant(15 : i32) : i32
     %1 = llvm.mlir.addressof @d : !llvm.ptr
     %2 = llvm.mlir.addressof @b : !llvm.ptr
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_main() ->    : main() -> _before  ⊑  main() -> _combined := by
-  unfold main() -> _before main() -> _combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_main() ->    : main() -> _before  ⊑  main() -> _combined := by
-  unfold main() -> _before main() -> _combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %4 : i32
   }]
 

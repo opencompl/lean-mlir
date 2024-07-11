@@ -703,12 +703,7 @@ def fadd_const_incoming1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(5.900000e+01 : f32) : f32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : f32)
   ^bb1:  // pred: ^bb0
-    %1 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_fadd_const_incoming1   : fadd_const_incoming1_before  ⊑  fadd_const_incoming1_combined := by
-  unfold fadd_const_incoming1_before fadd_const_incoming1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %arg1, %arg2  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.br ^bb2(%1 : f32)
   ^bb2(%2: f32):  // 2 preds: ^bb0, ^bb1
     llvm.return %2 : f32
@@ -723,12 +718,7 @@ def fsub_const_incoming1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(2.500000e+01 : f32) : f32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : f32)
   ^bb1:  // pred: ^bb0
-    %1 = llvm.fsub %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : f32]
-
-theorem inst_combine_fsub_const_incoming1   : fsub_const_incoming1_before  ⊑  fsub_const_incoming1_combined := by
-  unfold fsub_const_incoming1_before fsub_const_incoming1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : f32
     llvm.br ^bb2(%1 : f32)
   ^bb2(%2: f32):  // 2 preds: ^bb0, ^bb1
     llvm.return %2 : f32
@@ -743,12 +733,7 @@ def frem_const_incoming1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(8.000000e+00 : f32) : f32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : f32)
   ^bb1:  // pred: ^bb0
-    %1 = llvm.frem %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_frem_const_incoming1   : frem_const_incoming1_before  ⊑  frem_const_incoming1_combined := by
-  unfold frem_const_incoming1_before frem_const_incoming1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.frem %arg1, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     llvm.br ^bb2(%1 : f32)
   ^bb2(%2: f32):  // 2 preds: ^bb0, ^bb1
     llvm.return %2 : f32

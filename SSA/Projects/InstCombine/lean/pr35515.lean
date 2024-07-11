@@ -54,12 +54,7 @@ def func_24_combined := [llvmfunc|
     %9 = llvm.icmp "ugt" %8, %2 : i1
     %10 = llvm.mlir.constant(8388608 : i40) : i40
     %11 = llvm.mlir.constant(0 : i40) : i40
-    %12 = llvm.load %0 {alignment = 2 : i64} : !llvm.ptr -> i40]
-
-theorem inst_combine_func_24   : func_24_before  ⊑  func_24_combined := by
-  unfold func_24_before func_24_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %0 {alignment = 2 : i64} : !llvm.ptr -> i40
     %13 = llvm.and %12, %1  : i40
     %14 = llvm.select %9, %10, %11 : i1, i40
     %15 = llvm.or %13, %14  : i40

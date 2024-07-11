@@ -52,12 +52,7 @@ def func_increase_alignment_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @tlsvar_a4 : !llvm.ptr
     %2 = llvm.mlir.constant(42 : i32) : i32
     %3 = "llvm.intr.threadlocal.address"(%1) : (!llvm.ptr) -> !llvm.ptr
-    llvm.store %2, %3 {alignment = 2 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_func_increase_alignment   : func_increase_alignment_before  ⊑  func_increase_alignment_combined := by
-  unfold func_increase_alignment_before func_increase_alignment_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 2 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

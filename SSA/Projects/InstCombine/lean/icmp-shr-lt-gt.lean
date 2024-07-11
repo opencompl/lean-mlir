@@ -4714,12 +4714,7 @@ def ashrsgt_01_00_multiuse_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i4) : i4
     %2 = llvm.ashr %arg0, %0  : i4
     %3 = llvm.icmp "sgt" %2, %1 : i4
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr]
-
-theorem inst_combine_ashrsgt_01_00_multiuse   : ashrsgt_01_00_multiuse_before  ⊑  ashrsgt_01_00_multiuse_combined := by
-  unfold ashrsgt_01_00_multiuse_before ashrsgt_01_00_multiuse_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i4, !llvm.ptr
     llvm.return %3 : i1
   }]
 
@@ -6419,12 +6414,7 @@ def ashr_00_00_ashr_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(11 : i8) : i8
     %2 = llvm.ashr %arg0, %0  : i8
     %3 = llvm.icmp "ult" %2, %1 : i8
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_ashr_00_00_ashr_extra_use   : ashr_00_00_ashr_extra_use_before  ⊑  ashr_00_00_ashr_extra_use_combined := by
-  unfold ashr_00_00_ashr_extra_use_before ashr_00_00_ashr_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %3 : i1
   }]
 

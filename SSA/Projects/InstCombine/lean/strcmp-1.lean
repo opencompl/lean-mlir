@@ -85,12 +85,7 @@ def test7_before := [llvmfunc|
 def test1_combined := [llvmfunc|
   llvm.func @test1(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.zext %1 : i8 to i32
     %3 = llvm.sub %0, %2 overflow<nsw>  : i32
     llvm.return %3 : i32
@@ -102,12 +97,7 @@ theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
   sorry
 def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: !llvm.ptr) -> i32 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.zext %0 : i8 to i32
     llvm.return %1 : i32
   }]

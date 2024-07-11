@@ -172,12 +172,7 @@ def select_maybe_nan_lhs_combined := [llvmfunc|
   llvm.func @select_maybe_nan_lhs(%arg0: i1, %arg1: f64, %arg2: f64) -> i1 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.fadd %arg2, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_select_maybe_nan_lhs   : select_maybe_nan_lhs_before  ⊑  select_maybe_nan_lhs_combined := by
-  unfold select_maybe_nan_lhs_before select_maybe_nan_lhs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg2, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %3 = llvm.select %arg0, %arg1, %2 : i1, f64
     %4 = llvm.fcmp "ord" %3, %1 : f64
     llvm.return %4 : i1
@@ -191,12 +186,7 @@ def select_maybe_nan_rhs_combined := [llvmfunc|
   llvm.func @select_maybe_nan_rhs(%arg0: i1, %arg1: f64, %arg2: f64) -> i1 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.fadd %arg1, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_select_maybe_nan_rhs   : select_maybe_nan_rhs_before  ⊑  select_maybe_nan_rhs_combined := by
-  unfold select_maybe_nan_rhs_before select_maybe_nan_rhs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg1, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %3 = llvm.select %arg0, %2, %arg2 : i1, f64
     %4 = llvm.fcmp "ord" %3, %1 : f64
     llvm.return %4 : i1
@@ -211,18 +201,8 @@ def nnan_fadd_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.000000e+00 : f64) : f64
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fadd   : nnan_fadd_before  ⊑  nnan_fadd_combined := by
-  unfold nnan_fadd_before nnan_fadd_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fadd   : nnan_fadd_before  ⊑  nnan_fadd_combined := by
-  unfold nnan_fadd_before nnan_fadd_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %5 = llvm.fadd %3, %4  : f64
     %6 = llvm.fcmp "ord" %5, %2 : f64
     llvm.return %6 : i1
@@ -236,12 +216,7 @@ def nnan_fadd_maybe_nan_lhs_combined := [llvmfunc|
   llvm.func @nnan_fadd_maybe_nan_lhs(%arg0: f64, %arg1: f64) -> i1 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.fadd %arg1, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fadd_maybe_nan_lhs   : nnan_fadd_maybe_nan_lhs_before  ⊑  nnan_fadd_maybe_nan_lhs_combined := by
-  unfold nnan_fadd_maybe_nan_lhs_before nnan_fadd_maybe_nan_lhs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg1, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %3 = llvm.fadd %2, %arg0  : f64
     %4 = llvm.fcmp "ord" %3, %1 : f64
     llvm.return %4 : i1
@@ -255,12 +230,7 @@ def nnan_fadd_maybe_nan_rhs_combined := [llvmfunc|
   llvm.func @nnan_fadd_maybe_nan_rhs(%arg0: f64, %arg1: f64) -> i1 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fadd_maybe_nan_rhs   : nnan_fadd_maybe_nan_rhs_before  ⊑  nnan_fadd_maybe_nan_rhs_combined := by
-  unfold nnan_fadd_maybe_nan_rhs_before nnan_fadd_maybe_nan_rhs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %3 = llvm.fadd %2, %arg1  : f64
     %4 = llvm.fcmp "ord" %3, %1 : f64
     llvm.return %4 : i1
@@ -275,18 +245,8 @@ def nnan_fmul_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.000000e+00 : f64) : f64
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fmul   : nnan_fmul_before  ⊑  nnan_fmul_combined := by
-  unfold nnan_fmul_before nnan_fmul_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fmul   : nnan_fmul_before  ⊑  nnan_fmul_combined := by
-  unfold nnan_fmul_before nnan_fmul_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %5 = llvm.fmul %3, %4  : f64
     %6 = llvm.fcmp "ord" %5, %2 : f64
     llvm.return %6 : i1
@@ -301,18 +261,8 @@ def nnan_fsub_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.000000e+00 : f64) : f64
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fsub   : nnan_fsub_before  ⊑  nnan_fsub_combined := by
-  unfold nnan_fsub_before nnan_fsub_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fsub   : nnan_fsub_before  ⊑  nnan_fsub_combined := by
-  unfold nnan_fsub_before nnan_fsub_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %5 = llvm.fsub %3, %4  : f64
     %6 = llvm.fcmp "ord" %5, %2 : f64
     llvm.return %6 : i1
@@ -325,12 +275,7 @@ theorem inst_combine_nnan_fsub   : nnan_fsub_before  ⊑  nnan_fsub_combined := 
 def nnan_fneg_combined := [llvmfunc|
   llvm.func @nnan_fneg() -> i1 {
     %0 = llvm.mlir.constant(true) : i1
-    %1 = llvm.call @func() {fastmathFlags = #llvm.fastmath<nnan>} : () -> f64]
-
-theorem inst_combine_nnan_fneg   : nnan_fneg_before  ⊑  nnan_fneg_combined := by
-  unfold nnan_fneg_before nnan_fneg_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @func() {fastmathFlags = #llvm.fastmath<nnan>} : () -> f64
     llvm.return %0 : i1
   }]
 
@@ -341,12 +286,7 @@ theorem inst_combine_nnan_fneg   : nnan_fneg_before  ⊑  nnan_fneg_combined := 
 def nnan_unary_fneg_combined := [llvmfunc|
   llvm.func @nnan_unary_fneg() -> i1 {
     %0 = llvm.mlir.constant(true) : i1
-    %1 = llvm.call @func() {fastmathFlags = #llvm.fastmath<nnan>} : () -> f64]
-
-theorem inst_combine_nnan_unary_fneg   : nnan_unary_fneg_before  ⊑  nnan_unary_fneg_combined := by
-  unfold nnan_unary_fneg_before nnan_unary_fneg_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @func() {fastmathFlags = #llvm.fastmath<nnan>} : () -> f64
     llvm.return %0 : i1
   }]
 
@@ -382,18 +322,8 @@ def nnan_fdiv_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.000000e+00 : f64) : f64
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fdiv   : nnan_fdiv_before  ⊑  nnan_fdiv_combined := by
-  unfold nnan_fdiv_before nnan_fdiv_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_fdiv   : nnan_fdiv_before  ⊑  nnan_fdiv_combined := by
-  unfold nnan_fdiv_before nnan_fdiv_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %5 = llvm.fdiv %3, %4  : f64
     %6 = llvm.fcmp "ord" %5, %2 : f64
     llvm.return %6 : i1
@@ -408,18 +338,8 @@ def nnan_frem_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.000000e+00 : f64) : f64
     %2 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_frem   : nnan_frem_before  ⊑  nnan_frem_combined := by
-  unfold nnan_frem_before nnan_frem_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_nnan_frem   : nnan_frem_before  ⊑  nnan_frem_combined := by
-  unfold nnan_frem_before nnan_frem_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fadd %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %4 = llvm.fadd %arg0, %1  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     %5 = llvm.frem %3, %4  : f64
     %6 = llvm.fcmp "ord" %5, %2 : f64
     llvm.return %6 : i1

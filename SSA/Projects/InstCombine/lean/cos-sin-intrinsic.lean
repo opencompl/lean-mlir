@@ -213,12 +213,7 @@ theorem inst_combine_unary_fneg_v2f32   : unary_fneg_v2f32_before  ⊑  unary_fn
   sorry
 def fneg_cos_fmf_combined := [llvmfunc|
   llvm.func @fneg_cos_fmf(%arg0: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.intr.cos(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, afn>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_fneg_cos_fmf   : fneg_cos_fmf_before  ⊑  fneg_cos_fmf_combined := by
-  unfold fneg_cos_fmf_before fneg_cos_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.cos(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, afn>} : (vector<2xf32>) -> vector<2xf32>
     llvm.return %0 : vector<2xf32>
   }]
 
@@ -228,12 +223,7 @@ theorem inst_combine_fneg_cos_fmf   : fneg_cos_fmf_before  ⊑  fneg_cos_fmf_com
   sorry
 def unary_fneg_cos_fmf_combined := [llvmfunc|
   llvm.func @unary_fneg_cos_fmf(%arg0: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.intr.cos(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, afn>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_unary_fneg_cos_fmf   : unary_fneg_cos_fmf_before  ⊑  unary_fneg_cos_fmf_combined := by
-  unfold unary_fneg_cos_fmf_before unary_fneg_cos_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.cos(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, afn>} : (vector<2xf32>) -> vector<2xf32>
     llvm.return %0 : vector<2xf32>
   }]
 
@@ -315,18 +305,8 @@ theorem inst_combine_unary_fneg_sin   : unary_fneg_sin_before  ⊑  unary_fneg_s
   sorry
 def fneg_sin_fmf_combined := [llvmfunc|
   llvm.func @fneg_sin_fmf(%arg0: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.intr.sin(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_fneg_sin_fmf   : fneg_sin_fmf_before  ⊑  fneg_sin_fmf_combined := by
-  unfold fneg_sin_fmf_before fneg_sin_fmf_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : vector<2xf32>]
-
-theorem inst_combine_fneg_sin_fmf   : fneg_sin_fmf_before  ⊑  fneg_sin_fmf_combined := by
-  unfold fneg_sin_fmf_before fneg_sin_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.sin(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : (vector<2xf32>) -> vector<2xf32>
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 
@@ -336,18 +316,8 @@ theorem inst_combine_fneg_sin_fmf   : fneg_sin_fmf_before  ⊑  fneg_sin_fmf_com
   sorry
 def unary_fneg_sin_fmf_combined := [llvmfunc|
   llvm.func @unary_fneg_sin_fmf(%arg0: vector<2xf32>) -> vector<2xf32> {
-    %0 = llvm.intr.sin(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : (vector<2xf32>) -> vector<2xf32>]
-
-theorem inst_combine_unary_fneg_sin_fmf   : unary_fneg_sin_fmf_before  ⊑  unary_fneg_sin_fmf_combined := by
-  unfold unary_fneg_sin_fmf_before unary_fneg_sin_fmf_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : vector<2xf32>]
-
-theorem inst_combine_unary_fneg_sin_fmf   : unary_fneg_sin_fmf_before  ⊑  unary_fneg_sin_fmf_combined := by
-  unfold unary_fneg_sin_fmf_before unary_fneg_sin_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.sin(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : (vector<2xf32>) -> vector<2xf32>
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, arcp, afn>} : vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 

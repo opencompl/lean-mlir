@@ -268,12 +268,7 @@ def bit_ceil_32_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.add %arg0, %0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32   : bit_ceil_32_before  ⊑  bit_ceil_32_combined := by
-  unfold bit_ceil_32_before bit_ceil_32_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32
@@ -291,12 +286,7 @@ def bit_ceil_64_combined := [llvmfunc|
     %2 = llvm.mlir.constant(63 : i64) : i64
     %3 = llvm.mlir.constant(1 : i64) : i64
     %4 = llvm.add %arg0, %0  : i64
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i64) -> i64]
-
-theorem inst_combine_bit_ceil_64   : bit_ceil_64_before  ⊑  bit_ceil_64_combined := by
-  unfold bit_ceil_64_before bit_ceil_64_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i64) -> i64
     %6 = llvm.sub %1, %5 overflow<nsw>  : i64
     %7 = llvm.and %6, %2  : i64
     %8 = llvm.shl %3, %7 overflow<nuw>  : i64
@@ -314,12 +304,7 @@ def bit_ceil_32_minus_1_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.add %arg0, %0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_minus_1   : bit_ceil_32_minus_1_before  ⊑  bit_ceil_32_minus_1_combined := by
-  unfold bit_ceil_32_minus_1_before bit_ceil_32_minus_1_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32
@@ -335,12 +320,7 @@ def bit_ceil_32_plus_1_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(31 : i32) : i32
     %2 = llvm.mlir.constant(1 : i32) : i32
-    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_plus_1   : bit_ceil_32_plus_1_before  ⊑  bit_ceil_32_plus_1_combined := by
-  unfold bit_ceil_32_plus_1_before bit_ceil_32_plus_1_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = false}> : (i32) -> i32
     %4 = llvm.sub %0, %3 overflow<nsw>  : i32
     %5 = llvm.and %4, %1  : i32
     %6 = llvm.shl %2, %5 overflow<nuw>  : i32
@@ -357,12 +337,7 @@ def bit_ceil_plus_2_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_plus_2   : bit_ceil_plus_2_before  ⊑  bit_ceil_plus_2_combined := by
-  unfold bit_ceil_plus_2_before bit_ceil_plus_2_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.sub %1, %4 overflow<nsw>  : i32
     %6 = llvm.and %5, %2  : i32
     %7 = llvm.shl %0, %6 overflow<nuw>  : i32
@@ -380,12 +355,7 @@ def bit_ceil_32_neg_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.xor %arg0, %0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_neg   : bit_ceil_32_neg_before  ⊑  bit_ceil_32_neg_combined := by
-  unfold bit_ceil_32_neg_before bit_ceil_32_neg_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32
@@ -403,12 +373,7 @@ def bit_ceil_not_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.sub %0, %arg0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_not   : bit_ceil_not_before  ⊑  bit_ceil_not_combined := by
-  unfold bit_ceil_not_before bit_ceil_not_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32
@@ -425,12 +390,7 @@ def bit_ceil_commuted_operands_combined := [llvmfunc|
     %1 = llvm.mlir.constant(32 : i32) : i32
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_commuted_operands   : bit_ceil_commuted_operands_before  ⊑  bit_ceil_commuted_operands_combined := by
-  unfold bit_ceil_commuted_operands_before bit_ceil_commuted_operands_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.sub %1, %4 overflow<nsw, nuw>  : i32
     %6 = llvm.shl %2, %5 overflow<nuw>  : i32
     llvm.return %6 : i32
@@ -447,12 +407,7 @@ def bit_ceil_wrong_select_constant_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.mlir.constant(2 : i32) : i32
     %4 = llvm.add %arg0, %0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_wrong_select_constant   : bit_ceil_wrong_select_constant_before  ⊑  bit_ceil_wrong_select_constant_combined := by
-  unfold bit_ceil_wrong_select_constant_before bit_ceil_wrong_select_constant_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw, nuw>  : i32
     %7 = llvm.shl %2, %6 overflow<nuw>  : i32
     %8 = llvm.icmp "ult" %arg0, %3 : i32
@@ -471,12 +426,7 @@ def bit_ceil_32_wrong_cond_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.mlir.constant(2 : i32) : i32
     %4 = llvm.add %arg0, %0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_wrong_cond   : bit_ceil_32_wrong_cond_before  ⊑  bit_ceil_32_wrong_cond_combined := by
-  unfold bit_ceil_32_wrong_cond_before bit_ceil_32_wrong_cond_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw, nuw>  : i32
     %7 = llvm.shl %2, %6 overflow<nuw>  : i32
     %8 = llvm.icmp "ugt" %arg0, %3 : i32
@@ -494,12 +444,7 @@ def bit_ceil_wrong_sub_constant_combined := [llvmfunc|
     %1 = llvm.mlir.constant(33 : i32) : i32
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_wrong_sub_constant   : bit_ceil_wrong_sub_constant_before  ⊑  bit_ceil_wrong_sub_constant_combined := by
-  unfold bit_ceil_wrong_sub_constant_before bit_ceil_wrong_sub_constant_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.sub %1, %4 overflow<nsw, nuw>  : i32
     %6 = llvm.shl %2, %5 overflow<nuw>  : i32
     %7 = llvm.icmp "ugt" %arg0, %2 : i32
@@ -517,22 +462,12 @@ def bit_ceil_32_shl_used_twice_combined := [llvmfunc|
     %1 = llvm.mlir.constant(32 : i32) : i32
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_shl_used_twice   : bit_ceil_32_shl_used_twice_before  ⊑  bit_ceil_32_shl_used_twice_combined := by
-  unfold bit_ceil_32_shl_used_twice_before bit_ceil_32_shl_used_twice_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.sub %1, %4 overflow<nsw, nuw>  : i32
     %6 = llvm.shl %2, %5 overflow<nuw>  : i32
     %7 = llvm.icmp "ugt" %arg0, %2 : i32
     %8 = llvm.select %7, %6, %2 : i1, i32
-    llvm.store %6, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_bit_ceil_32_shl_used_twice   : bit_ceil_32_shl_used_twice_before  ⊑  bit_ceil_32_shl_used_twice_combined := by
-  unfold bit_ceil_32_shl_used_twice_before bit_ceil_32_shl_used_twice_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %8 : i32
   }]
 
@@ -546,22 +481,12 @@ def bit_ceil_32_sub_used_twice_combined := [llvmfunc|
     %1 = llvm.mlir.constant(32 : i32) : i32
     %2 = llvm.mlir.constant(1 : i32) : i32
     %3 = llvm.add %arg0, %0  : i32
-    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_bit_ceil_32_sub_used_twice   : bit_ceil_32_sub_used_twice_before  ⊑  bit_ceil_32_sub_used_twice_combined := by
-  unfold bit_ceil_32_sub_used_twice_before bit_ceil_32_sub_used_twice_combined
-  simp_alive_peephole
-  sorry
+    %4 = "llvm.intr.ctlz"(%3) <{is_zero_poison = false}> : (i32) -> i32
     %5 = llvm.sub %1, %4 overflow<nsw, nuw>  : i32
     %6 = llvm.shl %2, %5 overflow<nuw>  : i32
     %7 = llvm.icmp "ugt" %arg0, %2 : i32
     %8 = llvm.select %7, %6, %2 : i1, i32
-    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_bit_ceil_32_sub_used_twice   : bit_ceil_32_sub_used_twice_before  ⊑  bit_ceil_32_sub_used_twice_combined := by
-  unfold bit_ceil_32_sub_used_twice_before bit_ceil_32_sub_used_twice_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %8 : i32
   }]
 
@@ -577,12 +502,7 @@ def bit_ceil_v4i32_combined := [llvmfunc|
     %3 = llvm.mlir.constant(dense<31> : vector<4xi32>) : vector<4xi32>
     %4 = llvm.mlir.constant(dense<1> : vector<4xi32>) : vector<4xi32>
     %5 = llvm.add %arg0, %0  : vector<4xi32>
-    %6 = "llvm.intr.ctlz"(%5) <{is_zero_poison = false}> : (vector<4xi32>) -> vector<4xi32>]
-
-theorem inst_combine_bit_ceil_v4i32   : bit_ceil_v4i32_before  ⊑  bit_ceil_v4i32_combined := by
-  unfold bit_ceil_v4i32_before bit_ceil_v4i32_combined
-  simp_alive_peephole
-  sorry
+    %6 = "llvm.intr.ctlz"(%5) <{is_zero_poison = false}> : (vector<4xi32>) -> vector<4xi32>
     %7 = llvm.sub %2, %6 overflow<nsw>  : vector<4xi32>
     %8 = llvm.and %7, %3  : vector<4xi32>
     %9 = llvm.shl %4, %8 overflow<nuw>  : vector<4xi32>
@@ -600,12 +520,7 @@ def pr91691_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.sub %0, %arg0  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_pr91691   : pr91691_before  ⊑  pr91691_combined := by
-  unfold pr91691_before pr91691_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32
@@ -623,12 +538,7 @@ def pr91691_keep_nsw_combined := [llvmfunc|
     %2 = llvm.mlir.constant(31 : i32) : i32
     %3 = llvm.mlir.constant(1 : i32) : i32
     %4 = llvm.sub %0, %arg0 overflow<nsw>  : i32
-    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32]
-
-theorem inst_combine_pr91691_keep_nsw   : pr91691_keep_nsw_before  ⊑  pr91691_keep_nsw_combined := by
-  unfold pr91691_keep_nsw_before pr91691_keep_nsw_combined
-  simp_alive_peephole
-  sorry
+    %5 = "llvm.intr.ctlz"(%4) <{is_zero_poison = false}> : (i32) -> i32
     %6 = llvm.sub %1, %5 overflow<nsw>  : i32
     %7 = llvm.and %6, %2  : i32
     %8 = llvm.shl %3, %7 overflow<nuw>  : i32

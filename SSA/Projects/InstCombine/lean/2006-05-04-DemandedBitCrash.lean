@@ -62,3 +62,27 @@ def test_before := [llvmfunc|
     llvm.return
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test() {
+    %0 = llvm.mlir.constant(false) : i1
+    llvm.cond_br %0, ^bb6, ^bb1
+  ^bb1:  // pred: ^bb0
+    llvm.cond_br %0, ^bb2, ^bb6
+  ^bb2:  // pred: ^bb1
+    llvm.cond_br %0, ^bb3, ^bb5
+  ^bb3:  // pred: ^bb2
+    llvm.cond_br %0, ^bb4, ^bb5
+  ^bb4:  // pred: ^bb3
+    llvm.br ^bb7
+  ^bb5:  // 2 preds: ^bb2, ^bb3
+    llvm.br ^bb7
+  ^bb6:  // 2 preds: ^bb0, ^bb1
+    llvm.br ^bb7
+  ^bb7:  // 3 preds: ^bb4, ^bb5, ^bb6
+    llvm.return
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

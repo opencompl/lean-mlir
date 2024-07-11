@@ -75,12 +75,7 @@ def test3_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.mlir.constant(dense<0> : tensor<36xi32>) : !llvm.array<36 x i32>
     %3 = llvm.mlir.addressof @rslts32 : !llvm.ptr
-    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

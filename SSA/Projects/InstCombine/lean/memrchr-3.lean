@@ -319,12 +319,7 @@ def fold_memrchr_ax_c_1_combined := [llvmfunc|
   llvm.func @fold_memrchr_ax_c_1(%arg0: i32) -> !llvm.ptr {
     %0 = llvm.mlir.addressof @ax : !llvm.ptr
     %1 = llvm.mlir.zero : !llvm.ptr
-    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_memrchr_ax_c_1   : fold_memrchr_ax_c_1_before  ⊑  fold_memrchr_ax_c_1_combined := by
-  unfold fold_memrchr_ax_c_1_before fold_memrchr_ax_c_1_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %3 = llvm.trunc %arg0 : i32 to i8
     %4 = llvm.icmp "eq" %2, %3 : i8
     %5 = llvm.select %4, %0, %1 : i1, !llvm.ptr

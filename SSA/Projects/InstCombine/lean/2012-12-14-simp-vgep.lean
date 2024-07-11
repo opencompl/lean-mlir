@@ -40,12 +40,7 @@ def foo_combined := [llvmfunc|
     %7 = llvm.insertelement %0, %5[%6 : i32] : !llvm.vec<4 x ptr>
     %8 = llvm.mlir.constant(3 : i32) : i32
     %9 = llvm.insertelement %0, %7[%8 : i32] : !llvm.vec<4 x ptr>
-    %10 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.vec<4 x ptr>]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.vec<4 x ptr>
     %11 = llvm.icmp "eq" %10, %9 : !llvm.vec<4 x ptr>
     %12 = llvm.zext %11 : vector<4xi1> to vector<4xi32>
     llvm.return %12 : vector<4xi32>

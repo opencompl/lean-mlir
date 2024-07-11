@@ -412,12 +412,7 @@ theorem inst_combine_icmp_sge_abs2   : icmp_sge_abs2_before  ⊑  icmp_sge_abs2_
   sorry
 def icmp_sge_abs_mismatched_op_combined := [llvmfunc|
   llvm.func @icmp_sge_abs_mismatched_op(%arg0: i4, %arg1: i4) -> i1 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i4) -> i4]
-
-theorem inst_combine_icmp_sge_abs_mismatched_op   : icmp_sge_abs_mismatched_op_before  ⊑  icmp_sge_abs_mismatched_op_combined := by
-  unfold icmp_sge_abs_mismatched_op_before icmp_sge_abs_mismatched_op_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i4) -> i4
     %1 = llvm.icmp "sge" %0, %arg1 : i4
     llvm.return %1 : i1
   }]

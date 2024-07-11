@@ -29,12 +29,7 @@ def test_combined := [llvmfunc|
     %2 = llvm.mlir.constant(9 : i64) : i64
     %3 = llvm.mlir.constant(0 : i64) : i64
     %4 = llvm.getelementptr inbounds %arg0[%0, 0, %2] : (!llvm.ptr<1>, i64, i64) -> !llvm.ptr<1>, !llvm.struct<"struct.Moves", (array<9 x i8>, i8, i8, i8, array<5 x i8>)>
-    llvm.store %3, %4 {alignment = 1 : i64} : i64, !llvm.ptr<1>]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %4 {alignment = 1 : i64} : i64, !llvm.ptr<1>
     llvm.return %1 : i32
   }]
 

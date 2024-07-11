@@ -127,20 +127,10 @@ def PR33765_combined := [llvmfunc|
   ^bb1:  // 2 preds: ^bb0, ^bb0
     %2 = llvm.zext %arg0 : i8 to i32
     %3 = llvm.mul %2, %2 overflow<nsw, nuw>  : i32
-    %4 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_PR33765   : PR33765_before  ⊑  PR33765_combined := by
-  unfold PR33765_before PR33765_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16
     %5 = llvm.trunc %3 : i32 to i16
     %6 = llvm.and %4, %5  : i16
-    llvm.store %6, %1 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_PR33765   : PR33765_before  ⊑  PR33765_combined := by
-  unfold PR33765_before PR33765_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %1 {alignment = 2 : i64} : i16, !llvm.ptr
     llvm.return
   }]
 

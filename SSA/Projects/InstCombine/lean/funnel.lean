@@ -862,12 +862,7 @@ def fshl_concat_i8_i24_combined := [llvmfunc|
     %3 = llvm.shl %2, %0 overflow<nuw>  : i32
     %4 = llvm.zext %arg1 : i24 to i32
     %5 = llvm.or %3, %4  : i32
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_i8_i24   : fshl_concat_i8_i24_before  ⊑  fshl_concat_i8_i24_combined := by
-  unfold fshl_concat_i8_i24_before fshl_concat_i8_i24_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.intr.fshl(%5, %5, %1)  : (i32, i32, i32) -> i32
     llvm.return %6 : i32
   }]
@@ -884,12 +879,7 @@ def fshl_concat_i8_i8_combined := [llvmfunc|
     %3 = llvm.shl %2, %0 overflow<nsw, nuw>  : i32
     %4 = llvm.zext %arg1 : i8 to i32
     %5 = llvm.or %3, %4  : i32
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_i8_i8   : fshl_concat_i8_i8_before  ⊑  fshl_concat_i8_i8_combined := by
-  unfold fshl_concat_i8_i8_before fshl_concat_i8_i8_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.intr.fshl(%5, %5, %1)  : (i32, i32, i32) -> i32
     llvm.return %6 : i32
   }]
@@ -906,12 +896,7 @@ def fshl_concat_i8_i8_overlap_combined := [llvmfunc|
     %3 = llvm.shl %2, %0  : i32
     %4 = llvm.zext %arg1 : i8 to i32
     %5 = llvm.or %3, %4  : i32
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_i8_i8_overlap   : fshl_concat_i8_i8_overlap_before  ⊑  fshl_concat_i8_i8_overlap_combined := by
-  unfold fshl_concat_i8_i8_overlap_before fshl_concat_i8_i8_overlap_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.shl %4, %1 overflow<nsw, nuw>  : i32
     %7 = llvm.or %6, %2  : i32
     llvm.return %7 : i32
@@ -929,12 +914,7 @@ def fshl_concat_i8_i8_drop_combined := [llvmfunc|
     %3 = llvm.shl %2, %0 overflow<nsw, nuw>  : i32
     %4 = llvm.zext %arg1 : i8 to i32
     %5 = llvm.or %3, %4  : i32
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_i8_i8_drop   : fshl_concat_i8_i8_drop_before  ⊑  fshl_concat_i8_i8_drop_combined := by
-  unfold fshl_concat_i8_i8_drop_before fshl_concat_i8_i8_drop_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.shl %4, %1  : i32
     %7 = llvm.or %6, %2  : i32
     llvm.return %7 : i32
@@ -952,12 +932,7 @@ def fshl_concat_i8_i8_different_slot_combined := [llvmfunc|
     %3 = llvm.shl %2, %0 overflow<nsw, nuw>  : i32
     %4 = llvm.zext %arg1 : i8 to i32
     %5 = llvm.or %3, %4  : i32
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_i8_i8_different_slot   : fshl_concat_i8_i8_different_slot_before  ⊑  fshl_concat_i8_i8_different_slot_combined := by
-  unfold fshl_concat_i8_i8_different_slot_before fshl_concat_i8_i8_different_slot_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.shl %4, %1 overflow<nsw, nuw>  : i32
     %7 = llvm.or %6, %2  : i32
     llvm.return %7 : i32
@@ -972,12 +947,7 @@ def fshl_concat_unknown_source_combined := [llvmfunc|
     %0 = llvm.mlir.constant(16 : i32) : i32
     %1 = llvm.shl %arg0, %0  : i32
     %2 = llvm.or %1, %arg1  : i32
-    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_unknown_source   : fshl_concat_unknown_source_before  ⊑  fshl_concat_unknown_source_combined := by
-  unfold fshl_concat_unknown_source_before fshl_concat_unknown_source_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.shl %arg1, %0  : i32
     %4 = llvm.or %3, %arg0  : i32
     llvm.return %4 : i32
@@ -995,12 +965,7 @@ def fshl_concat_vector_combined := [llvmfunc|
     %3 = llvm.shl %2, %0 overflow<nuw>  : vector<2xi32>
     %4 = llvm.zext %arg1 : vector<2xi24> to vector<2xi32>
     %5 = llvm.or %3, %4  : vector<2xi32>
-    llvm.store %5, %arg2 {alignment = 4 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_fshl_concat_vector   : fshl_concat_vector_before  ⊑  fshl_concat_vector_combined := by
-  unfold fshl_concat_vector_before fshl_concat_vector_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : vector<2xi32>, !llvm.ptr
     %6 = llvm.intr.fshl(%5, %5, %1)  : (vector<2xi32>, vector<2xi32>, vector<2xi32>) -> vector<2xi32>
     llvm.return %6 : vector<2xi32>
   }]

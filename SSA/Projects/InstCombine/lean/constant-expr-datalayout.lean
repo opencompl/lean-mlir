@@ -39,12 +39,7 @@ def OpenFilter_before := [llvmfunc|
 def test1_combined := [llvmfunc|
   llvm.func @test1(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

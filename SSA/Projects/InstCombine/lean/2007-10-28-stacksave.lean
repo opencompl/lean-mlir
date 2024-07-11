@@ -69,24 +69,9 @@ def main_combined := [llvmfunc|
     %10 = llvm.srem %8, %1  : i32
     %11 = llvm.shl %10, %2 overflow<nsw>  : i32
     %12 = llvm.add %11, %3 overflow<nsw>  : i32
-    %13 = llvm.alloca %12 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %13 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %13, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.alloca %12 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %4, %13 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store volatile %13, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %14 = llvm.add %8, %4  : i32
     %15 = llvm.icmp "slt" %14, %7 : i32
     llvm.cond_br %15, ^bb3, ^bb2

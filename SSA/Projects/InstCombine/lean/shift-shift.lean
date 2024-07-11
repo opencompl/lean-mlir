@@ -627,12 +627,7 @@ def pr8547_combined := [llvmfunc|
     %3 = llvm.mlir.constant(5 : i32) : i32
     llvm.br ^bb1(%0 : i32)
   ^bb1(%4: i32):  // 2 preds: ^bb0, ^bb1
-    llvm.store %4, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_pr8547   : pr8547_before  ⊑  pr8547_combined := by
-  unfold pr8547_before pr8547_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.shl %4, %1 overflow<nsw, nuw>  : i32
     %6 = llvm.and %5, %2  : i32
     %7 = llvm.icmp "eq" %6, %0 : i32

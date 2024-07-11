@@ -14,3 +14,12 @@ def test_before := [llvmfunc|
     llvm.return
   }]
 
+def test_combined := [llvmfunc|
+  llvm.func @test(%arg0: !llvm.ptr) {
+    llvm.return
+  }]
+
+theorem inst_combine_test   : test_before  ⊑  test_combined := by
+  unfold test_before test_combined
+  simp_alive_peephole
+  sorry

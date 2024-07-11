@@ -52,25 +52,10 @@ def _ada_c32001b_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(3 : i32) : i32
     %2 = llvm.mlir.constant(4 : i32) : i32
-    %3 = llvm.alloca %0 x !llvm.array<0 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine__ada_c32001b   : _ada_c32001b_before  ⊑  _ada_c32001b_combined := by
-  unfold _ada_c32001b_before _ada_c32001b_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__ada_c32001b   : _ada_c32001b_before  ⊑  _ada_c32001b_combined := by
-  unfold _ada_c32001b_before _ada_c32001b_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x !llvm.array<0 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    %4 = llvm.load %arg1 {alignment = 1 : i64} : !llvm.ptr -> i32
     %5 = llvm.icmp "eq" %4, %1 : i32
-    %6 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__ada_c32001b   : _ada_c32001b_before  ⊑  _ada_c32001b_combined := by
-  unfold _ada_c32001b_before _ada_c32001b_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> i32
     %7 = llvm.icmp "eq" %6, %2 : i32
     %8 = llvm.and %5, %7  : i1
     llvm.cond_br %8, ^bb1, ^bb2

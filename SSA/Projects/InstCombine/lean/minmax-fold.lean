@@ -1863,30 +1863,10 @@ def not_min_of_min_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(2.000000e+00 : f32) : f32
     %2 = llvm.mlir.constant(16 : i8) : i8
-    %3 = llvm.fcmp "oge" %arg1, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_not_min_of_min   : not_min_of_min_before  ⊑  not_min_of_min_combined := by
-  unfold not_min_of_min_before not_min_of_min_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.select %3, %0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_not_min_of_min   : not_min_of_min_before  ⊑  not_min_of_min_combined := by
-  unfold not_min_of_min_before not_min_of_min_combined
-  simp_alive_peephole
-  sorry
-    %5 = llvm.fcmp "oge" %arg1, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_not_min_of_min   : not_min_of_min_before  ⊑  not_min_of_min_combined := by
-  unfold not_min_of_min_before not_min_of_min_combined
-  simp_alive_peephole
-  sorry
-    %6 = llvm.select %5, %1, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_not_min_of_min   : not_min_of_min_before  ⊑  not_min_of_min_combined := by
-  unfold not_min_of_min_before not_min_of_min_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.fcmp "oge" %arg1, %0 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %4 = llvm.select %3, %0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
+    %5 = llvm.fcmp "oge" %arg1, %1 {fastmathFlags = #llvm.fastmath<fast>} : f32
+    %6 = llvm.select %5, %1, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
     %7 = llvm.icmp "ult" %arg0, %2 : i8
     %8 = llvm.select %7, %4, %6 : i1, f32
     llvm.return %8 : f32
@@ -1974,12 +1954,7 @@ def add_umin_extra_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(15 : i32) : i32
     %1 = llvm.mlir.constant(42 : i32) : i32
     %2 = llvm.add %arg0, %0 overflow<nuw>  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_add_umin_extra_use   : add_umin_extra_use_before  ⊑  add_umin_extra_use_combined := by
-  unfold add_umin_extra_use_before add_umin_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.intr.umin(%2, %1)  : (i32, i32) -> i32
     llvm.return %3 : i32
   }]
@@ -2080,12 +2055,7 @@ def add_umax_extra_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(15 : i32) : i32
     %1 = llvm.mlir.constant(42 : i32) : i32
     %2 = llvm.add %arg0, %0 overflow<nuw>  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_add_umax_extra_use   : add_umax_extra_use_before  ⊑  add_umax_extra_use_combined := by
-  unfold add_umax_extra_use_before add_umax_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.intr.umax(%2, %1)  : (i32, i32) -> i32
     llvm.return %3 : i32
   }]
@@ -2212,12 +2182,7 @@ def add_smin_extra_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(15 : i32) : i32
     %1 = llvm.mlir.constant(42 : i32) : i32
     %2 = llvm.add %arg0, %0 overflow<nsw>  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_add_smin_extra_use   : add_smin_extra_use_before  ⊑  add_smin_extra_use_combined := by
-  unfold add_smin_extra_use_before add_smin_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.intr.smin(%2, %1)  : (i32, i32) -> i32
     llvm.return %3 : i32
   }]
@@ -2318,12 +2283,7 @@ def add_smax_extra_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(15 : i32) : i32
     %1 = llvm.mlir.constant(42 : i32) : i32
     %2 = llvm.add %arg0, %0 overflow<nsw>  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_add_smax_extra_use   : add_smax_extra_use_before  ⊑  add_smax_extra_use_combined := by
-  unfold add_smax_extra_use_before add_smax_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.intr.smax(%2, %1)  : (i32, i32) -> i32
     llvm.return %3 : i32
   }]

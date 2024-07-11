@@ -905,12 +905,7 @@ theorem inst_combine_xor_or_xor_common_op_commute8   : xor_or_xor_common_op_comm
 def xor_or_xor_common_op_extra_use1_combined := [llvmfunc|
   llvm.func @xor_or_xor_common_op_extra_use1(%arg0: i32, %arg1: i32, %arg2: i32, %arg3: !llvm.ptr) -> i32 {
     %0 = llvm.xor %arg0, %arg2  : i32
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_or_xor_common_op_extra_use1   : xor_or_xor_common_op_extra_use1_before  ⊑  xor_or_xor_common_op_extra_use1_combined := by
-  unfold xor_or_xor_common_op_extra_use1_before xor_or_xor_common_op_extra_use1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %1 = llvm.or %arg0, %arg1  : i32
     %2 = llvm.xor %0, %1  : i32
     llvm.return %2 : i32
@@ -924,12 +919,7 @@ def xor_or_xor_common_op_extra_use2_combined := [llvmfunc|
   llvm.func @xor_or_xor_common_op_extra_use2(%arg0: i32, %arg1: i32, %arg2: i32, %arg3: !llvm.ptr) -> i32 {
     %0 = llvm.xor %arg0, %arg2  : i32
     %1 = llvm.or %arg0, %arg1  : i32
-    llvm.store %1, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_or_xor_common_op_extra_use2   : xor_or_xor_common_op_extra_use2_before  ⊑  xor_or_xor_common_op_extra_use2_combined := by
-  unfold xor_or_xor_common_op_extra_use2_before xor_or_xor_common_op_extra_use2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.xor %0, %1  : i32
     llvm.return %2 : i32
   }]
@@ -941,19 +931,9 @@ theorem inst_combine_xor_or_xor_common_op_extra_use2   : xor_or_xor_common_op_ex
 def xor_or_xor_common_op_extra_use3_combined := [llvmfunc|
   llvm.func @xor_or_xor_common_op_extra_use3(%arg0: i32, %arg1: i32, %arg2: i32, %arg3: !llvm.ptr, %arg4: !llvm.ptr) -> i32 {
     %0 = llvm.xor %arg0, %arg2  : i32
-    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_or_xor_common_op_extra_use3   : xor_or_xor_common_op_extra_use3_before  ⊑  xor_or_xor_common_op_extra_use3_combined := by
-  unfold xor_or_xor_common_op_extra_use3_before xor_or_xor_common_op_extra_use3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %1 = llvm.or %arg0, %arg1  : i32
-    llvm.store %1, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_xor_or_xor_common_op_extra_use3   : xor_or_xor_common_op_extra_use3_before  ⊑  xor_or_xor_common_op_extra_use3_combined := by
-  unfold xor_or_xor_common_op_extra_use3_before xor_or_xor_common_op_extra_use3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.xor %0, %1  : i32
     llvm.return %2 : i32
   }]

@@ -1872,12 +1872,7 @@ def missed_nonzero_check_on_constant_for_si_fmul_combined := [llvmfunc|
     %4 = llvm.trunc %3 : i32 to i16
     %5 = llvm.sitofp %4 : i16 to f32
     %6 = llvm.fmul %5, %2  : f32
-    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_missed_nonzero_check_on_constant_for_si_fmul   : missed_nonzero_check_on_constant_for_si_fmul_before  ⊑  missed_nonzero_check_on_constant_for_si_fmul_combined := by
-  unfold missed_nonzero_check_on_constant_for_si_fmul_before missed_nonzero_check_on_constant_for_si_fmul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %6 : f32
   }]
 
@@ -1899,12 +1894,7 @@ def missed_nonzero_check_on_constant_for_si_fmul_vec_combined := [llvmfunc|
     %9 = llvm.shufflevector %8, %2 [0, 0] : vector<2xi16> 
     %10 = llvm.sitofp %9 : vector<2xi16> to vector<2xf32>
     %11 = llvm.fmul %10, %5  : vector<2xf32>
-    llvm.store %6, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_missed_nonzero_check_on_constant_for_si_fmul_vec   : missed_nonzero_check_on_constant_for_si_fmul_vec_before  ⊑  missed_nonzero_check_on_constant_for_si_fmul_vec_combined := by
-  unfold missed_nonzero_check_on_constant_for_si_fmul_vec_before missed_nonzero_check_on_constant_for_si_fmul_vec_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %11 : vector<2xf32>
   }]
 
@@ -1921,12 +1911,7 @@ def negzero_check_on_constant_for_si_fmul_combined := [llvmfunc|
     %4 = llvm.trunc %3 : i32 to i16
     %5 = llvm.sitofp %4 : i16 to f32
     %6 = llvm.fmul %5, %2  : f32
-    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_negzero_check_on_constant_for_si_fmul   : negzero_check_on_constant_for_si_fmul_before  ⊑  negzero_check_on_constant_for_si_fmul_combined := by
-  unfold negzero_check_on_constant_for_si_fmul_before negzero_check_on_constant_for_si_fmul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %6 : f32
   }]
 
@@ -1953,12 +1938,7 @@ def nonzero_check_on_constant_for_si_fmul_vec_w_poison_combined := [llvmfunc|
     %14 = llvm.shufflevector %13, %2 [0, 0] : vector<2xi16> 
     %15 = llvm.sitofp %14 : vector<2xi16> to vector<2xf32>
     %16 = llvm.fmul %15, %10  : vector<2xf32>
-    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_nonzero_check_on_constant_for_si_fmul_vec_w_poison   : nonzero_check_on_constant_for_si_fmul_vec_w_poison_before  ⊑  nonzero_check_on_constant_for_si_fmul_vec_w_poison_combined := by
-  unfold nonzero_check_on_constant_for_si_fmul_vec_w_poison_before nonzero_check_on_constant_for_si_fmul_vec_w_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %16 : vector<2xf32>
   }]
 
@@ -1985,12 +1965,7 @@ def nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison_combined := [llvmfunc|
     %14 = llvm.shufflevector %13, %2 [0, 0] : vector<2xi16> 
     %15 = llvm.sitofp %14 : vector<2xi16> to vector<2xf32>
     %16 = llvm.fmul %15, %10  : vector<2xf32>
-    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison   : nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison_before  ⊑  nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison_combined := by
-  unfold nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison_before nonzero_check_on_constant_for_si_fmul_nz_vec_w_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %16 : vector<2xf32>
   }]
 
@@ -2017,12 +1992,7 @@ def nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison_combined := [llvmfun
     %14 = llvm.shufflevector %13, %2 [0, 0] : vector<2xi16> 
     %15 = llvm.sitofp %14 : vector<2xi16> to vector<2xf32>
     %16 = llvm.fmul %15, %10  : vector<2xf32>
-    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison   : nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison_before  ⊑  nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison_combined := by
-  unfold nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison_before nonzero_check_on_constant_for_si_fmul_negz_vec_w_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %16 : vector<2xf32>
   }]
 

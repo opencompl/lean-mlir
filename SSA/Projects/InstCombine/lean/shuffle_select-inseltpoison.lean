@@ -1590,12 +1590,7 @@ theorem inst_combine_fsub   : fsub_before  ⊑  fsub_combined := by
 def fmul_combined := [llvmfunc|
   llvm.func @fmul(%arg0: vector<4xf32>) -> vector<4xf32> {
     %0 = llvm.mlir.constant(dense<[4.100000e+01, 1.000000e+00, 1.000000e+00, 1.000000e+00]> : vector<4xf32>) : vector<4xf32>
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<4xf32>]
-
-theorem inst_combine_fmul   : fmul_before  ⊑  fmul_combined := by
-  unfold fmul_before fmul_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<4xf32>
     llvm.return %1 : vector<4xf32>
   }]
 
@@ -1617,12 +1612,7 @@ def fdiv_constant_op0_combined := [llvmfunc|
     %9 = llvm.insertelement %1, %7[%8 : i32] : vector<4xf64>
     %10 = llvm.mlir.constant(3 : i32) : i32
     %11 = llvm.insertelement %0, %9[%10 : i32] : vector<4xf64>
-    %12 = llvm.fdiv %11, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<4xf64>]
-
-theorem inst_combine_fdiv_constant_op0   : fdiv_constant_op0_before  ⊑  fdiv_constant_op0_combined := by
-  unfold fdiv_constant_op0_before fdiv_constant_op0_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.fdiv %11, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : vector<4xf64>
     %13 = llvm.shufflevector %arg0, %12 [-1, 1, 6, 7] : vector<4xf64> 
     llvm.return %13 : vector<4xf64>
   }]
@@ -1646,12 +1636,7 @@ def fdiv_constant_op1_combined := [llvmfunc|
     %10 = llvm.insertelement %1, %8[%9 : i32] : vector<4xf64>
     %11 = llvm.mlir.constant(3 : i32) : i32
     %12 = llvm.insertelement %0, %10[%11 : i32] : vector<4xf64>
-    %13 = llvm.fdiv %arg0, %12  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<4xf64>]
-
-theorem inst_combine_fdiv_constant_op1   : fdiv_constant_op1_before  ⊑  fdiv_constant_op1_combined := by
-  unfold fdiv_constant_op1_before fdiv_constant_op1_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.fdiv %arg0, %12  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<4xf64>
     llvm.return %13 : vector<4xf64>
   }]
 
@@ -2097,12 +2082,7 @@ theorem inst_combine_fsub_fsub   : fsub_fsub_before  ⊑  fsub_fsub_combined := 
 def fmul_fmul_combined := [llvmfunc|
   llvm.func @fmul_fmul(%arg0: vector<4xf32>) -> vector<4xf32> {
     %0 = llvm.mlir.constant(dense<[1.000000e+00, 6.000000e+00, 7.000000e+00, 8.000000e+00]> : vector<4xf32>) : vector<4xf32>
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<4xf32>]
-
-theorem inst_combine_fmul_fmul   : fmul_fmul_before  ⊑  fmul_fmul_combined := by
-  unfold fmul_fmul_before fmul_fmul_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : vector<4xf32>
     llvm.return %1 : vector<4xf32>
   }]
 
@@ -2125,12 +2105,7 @@ def fdiv_fdiv_combined := [llvmfunc|
     %10 = llvm.insertelement %1, %8[%9 : i32] : vector<4xf64>
     %11 = llvm.mlir.constant(3 : i32) : i32
     %12 = llvm.insertelement %0, %10[%11 : i32] : vector<4xf64>
-    %13 = llvm.fdiv %12, %arg0  {fastmathFlags = #llvm.fastmath<arcp>} : vector<4xf64>]
-
-theorem inst_combine_fdiv_fdiv   : fdiv_fdiv_before  ⊑  fdiv_fdiv_combined := by
-  unfold fdiv_fdiv_before fdiv_fdiv_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.fdiv %12, %arg0  {fastmathFlags = #llvm.fastmath<arcp>} : vector<4xf64>
     llvm.return %13 : vector<4xf64>
   }]
 
@@ -2659,12 +2634,7 @@ def fmul_2_vars_combined := [llvmfunc|
   llvm.func @fmul_2_vars(%arg0: vector<4xf32>, %arg1: vector<4xf32>) -> vector<4xf32> {
     %0 = llvm.mlir.constant(dense<[1.000000e+00, 6.000000e+00, 7.000000e+00, 8.000000e+00]> : vector<4xf32>) : vector<4xf32>
     %1 = llvm.shufflevector %arg0, %arg1 [0, 5, 6, 7] : vector<4xf32> 
-    %2 = llvm.fmul %1, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : vector<4xf32>]
-
-theorem inst_combine_fmul_2_vars   : fmul_2_vars_before  ⊑  fmul_2_vars_combined := by
-  unfold fmul_2_vars_before fmul_2_vars_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %1, %0  {fastmathFlags = #llvm.fastmath<nsz, reassoc>} : vector<4xf32>
     llvm.return %2 : vector<4xf32>
   }]
 

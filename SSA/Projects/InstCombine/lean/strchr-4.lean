@@ -52,12 +52,7 @@ def fold_strchr_a_c_eq_a_before := [llvmfunc|
 
 def fold_strchr_s_c_eq_s_combined := [llvmfunc|
   llvm.func @fold_strchr_s_c_eq_s(%arg0: !llvm.ptr, %arg1: i32) -> i1 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strchr_s_c_eq_s   : fold_strchr_s_c_eq_s_before  ⊑  fold_strchr_s_c_eq_s_combined := by
-  unfold fold_strchr_s_c_eq_s_before fold_strchr_s_c_eq_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.trunc %arg1 : i32 to i8
     %2 = llvm.icmp "eq" %0, %1 : i8
     llvm.return %2 : i1
@@ -69,12 +64,7 @@ theorem inst_combine_fold_strchr_s_c_eq_s   : fold_strchr_s_c_eq_s_before  ⊑  
   sorry
 def fold_strchr_s_c_neq_s_combined := [llvmfunc|
   llvm.func @fold_strchr_s_c_neq_s(%arg0: !llvm.ptr, %arg1: i32) -> i1 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_strchr_s_c_neq_s   : fold_strchr_s_c_neq_s_before  ⊑  fold_strchr_s_c_neq_s_combined := by
-  unfold fold_strchr_s_c_neq_s_before fold_strchr_s_c_neq_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.trunc %arg1 : i32 to i8
     %2 = llvm.icmp "ne" %0, %1 : i8
     llvm.return %2 : i1

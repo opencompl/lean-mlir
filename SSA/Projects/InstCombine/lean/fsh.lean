@@ -1634,40 +1634,20 @@ def fsh_load_rotate_12_combined := [llvmfunc|
     %4 = llvm.mlir.constant(8 : i32) : i32
     %5 = llvm.mlir.constant(3 : i64) : i64
     %6 = llvm.mlir.constant(12 : i32) : i32
-    %7 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_12   : fsh_load_rotate_12_before  ⊑  fsh_load_rotate_12_combined := by
-  unfold fsh_load_rotate_12_before fsh_load_rotate_12_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %8 = llvm.zext %7 : i8 to i32
     %9 = llvm.shl %8, %0 overflow<nuw>  : i32
     %10 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_12   : fsh_load_rotate_12_before  ⊑  fsh_load_rotate_12_combined := by
-  unfold fsh_load_rotate_12_before fsh_load_rotate_12_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8
     %12 = llvm.zext %11 : i8 to i32
     %13 = llvm.shl %12, %2 overflow<nsw, nuw>  : i32
     %14 = llvm.or %13, %9  : i32
     %15 = llvm.getelementptr inbounds %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %16 = llvm.load %15 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_12   : fsh_load_rotate_12_before  ⊑  fsh_load_rotate_12_combined := by
-  unfold fsh_load_rotate_12_before fsh_load_rotate_12_combined
-  simp_alive_peephole
-  sorry
+    %16 = llvm.load %15 {alignment = 1 : i64} : !llvm.ptr -> i8
     %17 = llvm.zext %16 : i8 to i32
     %18 = llvm.shl %17, %4 overflow<nsw, nuw>  : i32
     %19 = llvm.getelementptr inbounds %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %20 = llvm.load %19 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_12   : fsh_load_rotate_12_before  ⊑  fsh_load_rotate_12_combined := by
-  unfold fsh_load_rotate_12_before fsh_load_rotate_12_combined
-  simp_alive_peephole
-  sorry
+    %20 = llvm.load %19 {alignment = 1 : i64} : !llvm.ptr -> i8
     %21 = llvm.zext %20 : i8 to i32
     %22 = llvm.or %18, %21  : i32
     %23 = llvm.or %22, %13  : i32
@@ -1688,41 +1668,21 @@ def fsh_load_rotate_25_combined := [llvmfunc|
     %4 = llvm.mlir.constant(8 : i32) : i32
     %5 = llvm.mlir.constant(3 : i64) : i64
     %6 = llvm.mlir.constant(25 : i32) : i32
-    %7 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_25   : fsh_load_rotate_25_before  ⊑  fsh_load_rotate_25_combined := by
-  unfold fsh_load_rotate_25_before fsh_load_rotate_25_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %8 = llvm.zext %7 : i8 to i32
     %9 = llvm.shl %8, %0 overflow<nuw>  : i32
     %10 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_25   : fsh_load_rotate_25_before  ⊑  fsh_load_rotate_25_combined := by
-  unfold fsh_load_rotate_25_before fsh_load_rotate_25_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %10 {alignment = 1 : i64} : !llvm.ptr -> i8
     %12 = llvm.zext %11 : i8 to i32
     %13 = llvm.shl %12, %2 overflow<nsw, nuw>  : i32
     %14 = llvm.or %13, %9  : i32
     %15 = llvm.getelementptr inbounds %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %16 = llvm.load %15 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_25   : fsh_load_rotate_25_before  ⊑  fsh_load_rotate_25_combined := by
-  unfold fsh_load_rotate_25_before fsh_load_rotate_25_combined
-  simp_alive_peephole
-  sorry
+    %16 = llvm.load %15 {alignment = 1 : i64} : !llvm.ptr -> i8
     %17 = llvm.zext %16 : i8 to i32
     %18 = llvm.shl %17, %4 overflow<nsw, nuw>  : i32
     %19 = llvm.or %14, %18  : i32
     %20 = llvm.getelementptr inbounds %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %21 = llvm.load %20 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fsh_load_rotate_25   : fsh_load_rotate_25_before  ⊑  fsh_load_rotate_25_combined := by
-  unfold fsh_load_rotate_25_before fsh_load_rotate_25_combined
-  simp_alive_peephole
-  sorry
+    %21 = llvm.load %20 {alignment = 1 : i64} : !llvm.ptr -> i8
     %22 = llvm.zext %21 : i8 to i32
     %23 = llvm.or %19, %22  : i32
     %24 = llvm.intr.fshl(%22, %23, %6)  : (i32, i32, i32) -> i32

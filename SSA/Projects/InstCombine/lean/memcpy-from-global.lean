@@ -554,45 +554,25 @@ def test1_combined := [llvmfunc|
     %9 = llvm.and %8, %1  : i32
     %10 = llvm.zext %9 : i32 to i64
     %11 = llvm.getelementptr %3[%4, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<128 x f32>
-    %12 = llvm.load %11 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %11 {alignment = 4 : i64} : !llvm.ptr -> f32
     %13 = llvm.fmul %12, %arg1  : f32
     %14 = llvm.fadd %13, %5  : f32
     %15 = llvm.or %9, %6  : i32
     %16 = llvm.zext %15 : i32 to i64
     %17 = llvm.getelementptr %3[%4, %16] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<128 x f32>
-    %18 = llvm.load %17 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %18 = llvm.load %17 {alignment = 4 : i64} : !llvm.ptr -> f32
     %19 = llvm.fmul %18, %arg2  : f32
     %20 = llvm.fadd %19, %14  : f32
     %21 = llvm.or %9, %0  : i32
     %22 = llvm.zext %21 : i32 to i64
     %23 = llvm.getelementptr %3[%4, %22] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<128 x f32>
-    %24 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %24 = llvm.load %23 {alignment = 4 : i64} : !llvm.ptr -> f32
     %25 = llvm.fmul %24, %arg3  : f32
     %26 = llvm.fadd %25, %20  : f32
     %27 = llvm.or %9, %7  : i32
     %28 = llvm.zext %27 : i32 to i64
     %29 = llvm.getelementptr %3[%4, %28] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<128 x f32>
-    %30 = llvm.load %29 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %30 = llvm.load %29 {alignment = 4 : i64} : !llvm.ptr -> f32
     %31 = llvm.fmul %30, %arg4  : f32
     %32 = llvm.fadd %31, %26  : f32
     llvm.return %32 : f32
@@ -613,18 +593,8 @@ def test2_combined := [llvmfunc|
     %6 = llvm.insertvalue %2, %5[1] : !llvm.struct<"T", (i8, array<123 x i8>)> 
     %7 = llvm.mlir.addressof @G : !llvm.ptr
     %8 = llvm.mlir.constant(124 : i64) : i64
-    %9 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%9, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%9, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%9) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -644,18 +614,8 @@ def test2_no_null_opt_combined := [llvmfunc|
     %6 = llvm.insertvalue %2, %5[1] : !llvm.struct<"T", (i8, array<123 x i8>)> 
     %7 = llvm.mlir.addressof @G : !llvm.ptr
     %8 = llvm.mlir.constant(124 : i64) : i64
-    %9 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test2_no_null_opt   : test2_no_null_opt_before  ⊑  test2_no_null_opt_combined := by
-  unfold test2_no_null_opt_before test2_no_null_opt_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%9, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test2_no_null_opt   : test2_no_null_opt_before  ⊑  test2_no_null_opt_combined := by
-  unfold test2_no_null_opt_before test2_no_null_opt_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%9, %7, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%9) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -676,19 +636,9 @@ def test2_addrspacecast_combined := [llvmfunc|
     %7 = llvm.mlir.addressof @G : !llvm.ptr
     %8 = llvm.addrspacecast %7 : !llvm.ptr to !llvm.ptr<1>
     %9 = llvm.mlir.constant(124 : i64) : i64
-    %10 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test2_addrspacecast   : test2_addrspacecast_before  ⊑  test2_addrspacecast_combined := by
-  unfold test2_addrspacecast_before test2_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
     %11 = llvm.addrspacecast %10 : !llvm.ptr to !llvm.ptr<1>
-    "llvm.intr.memcpy"(%11, %8, %9) <{isVolatile = false}> : (!llvm.ptr<1>, !llvm.ptr<1>, i64) -> ()]
-
-theorem inst_combine_test2_addrspacecast   : test2_addrspacecast_before  ⊑  test2_addrspacecast_combined := by
-  unfold test2_addrspacecast_before test2_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%11, %8, %9) <{isVolatile = false}> : (!llvm.ptr<1>, !llvm.ptr<1>, i64) -> ()
     llvm.call @bar_as1(%11) : (!llvm.ptr<1>) -> ()
     llvm.return
   }]
@@ -825,18 +775,8 @@ def test8_combined := [llvmfunc|
     %13 = llvm.mlir.addressof @H : !llvm.ptr
     %14 = llvm.getelementptr inbounds %13[%2, %1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"U", (i32, i32, i32, i32, i32)>>
     %15 = llvm.mlir.constant(20 : i64) : i64
-    %16 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%16, %14, %15) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    %16 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%16, %14, %15) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%16) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -864,18 +804,8 @@ def test8_addrspacecast_combined := [llvmfunc|
     %14 = llvm.getelementptr inbounds %13[%2, %1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x struct<"U", (i32, i32, i32, i32, i32)>>
     %15 = llvm.addrspacecast %14 : !llvm.ptr to !llvm.ptr<1>
     %16 = llvm.mlir.constant(20 : i64) : i64
-    %17 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test8_addrspacecast   : test8_addrspacecast_before  ⊑  test8_addrspacecast_combined := by
-  unfold test8_addrspacecast_before test8_addrspacecast_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%17, %15, %16) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr<1>, i64) -> ()]
-
-theorem inst_combine_test8_addrspacecast   : test8_addrspacecast_before  ⊑  test8_addrspacecast_combined := by
-  unfold test8_addrspacecast_before test8_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %17 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%17, %15, %16) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr<1>, i64) -> ()
     llvm.call @bar(%17) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -942,24 +872,9 @@ def test9_small_global_combined := [llvmfunc|
     %5 = llvm.mlir.constant(dense<0> : tensor<1000000xi8>) : !llvm.array<1000000 x i8>
     %6 = llvm.mlir.addressof @bbb : !llvm.ptr
     %7 = llvm.mlir.constant(1000000 : i64) : i64
-    %8 = llvm.alloca %0 x !llvm.array<1000000 x i8> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test9_small_global   : test9_small_global_before  ⊑  test9_small_global_combined := by
-  unfold test9_small_global_before test9_small_global_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%8, %2, %3) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test9_small_global   : test9_small_global_before  ⊑  test9_small_global_combined := by
-  unfold test9_small_global_before test9_small_global_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%6, %8, %7) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test9_small_global   : test9_small_global_before  ⊑  test9_small_global_combined := by
-  unfold test9_small_global_before test9_small_global_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.alloca %0 x !llvm.array<1000000 x i8> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%8, %2, %3) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    "llvm.intr.memcpy"(%6, %8, %7) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 
@@ -975,12 +890,7 @@ def test10_same_global_combined := [llvmfunc|
     %3 = llvm.mlir.constant("\01\01\02") : !llvm.array<3 x i8>
     %4 = llvm.mlir.addressof @_ZL3KKK : !llvm.ptr
     %5 = llvm.mlir.constant(3 : i64) : i64
-    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_test10_same_global   : test10_same_global_before  ⊑  test10_same_global_combined := by
-  unfold test10_same_global_before test10_same_global_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%2, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 
@@ -1006,26 +916,11 @@ def test11_volatile_combined := [llvmfunc|
     %3 = llvm.mlir.addressof @I : !llvm.ptr<1>
     %4 = llvm.mlir.constant(16 : i64) : i64
     %5 = llvm.mlir.constant(0 : i64) : i64
-    %6 = llvm.alloca %0 x !llvm.array<4 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_test11_volatile   : test11_volatile_before  ⊑  test11_volatile_combined := by
-  unfold test11_volatile_before test11_volatile_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.alloca %0 x !llvm.array<4 x f32> {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.intr.lifetime.start 16, %6 : !llvm.ptr
-    "llvm.intr.memcpy"(%6, %3, %4) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr<1>, i64) -> ()]
-
-theorem inst_combine_test11_volatile   : test11_volatile_before  ⊑  test11_volatile_combined := by
-  unfold test11_volatile_before test11_volatile_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%6, %3, %4) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr<1>, i64) -> ()
     %7 = llvm.getelementptr inbounds %6[%5, %arg0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<4 x f32>
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test11_volatile   : test11_volatile_before  ⊑  test11_volatile_combined := by
-  unfold test11_volatile_before test11_volatile_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32
     llvm.return %8 : f32
   }]
 
@@ -1047,18 +942,8 @@ def memcpy_from_just_readonly_combined := [llvmfunc|
   llvm.func @memcpy_from_just_readonly(%arg0: !llvm.ptr {llvm.align = 8 : i64, llvm.dereferenceable = 124 : i64, llvm.readonly}) {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(124 : i64) : i64
-    %2 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_memcpy_from_just_readonly   : memcpy_from_just_readonly_before  ⊑  memcpy_from_just_readonly_combined := by
-  unfold memcpy_from_just_readonly_before memcpy_from_just_readonly_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%2, %arg0, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memcpy_from_just_readonly   : memcpy_from_just_readonly_before  ⊑  memcpy_from_just_readonly_combined := by
-  unfold memcpy_from_just_readonly_before memcpy_from_just_readonly_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.struct<"T", (i8, array<123 x i8>)> {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%2, %arg0, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%2) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -1082,18 +967,8 @@ def volatile_memcpy_combined := [llvmfunc|
     %10 = llvm.insertvalue %7, %9[1] : !llvm.array<2 x struct<"U", (i32, i32, i32, i32, i32)>> 
     %11 = llvm.mlir.addressof @H : !llvm.ptr
     %12 = llvm.mlir.constant(20 : i64) : i64
-    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_volatile_memcpy   : volatile_memcpy_before  ⊑  volatile_memcpy_combined := by
-  unfold volatile_memcpy_before volatile_memcpy_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_volatile_memcpy   : volatile_memcpy_before  ⊑  volatile_memcpy_combined := by
-  unfold volatile_memcpy_before volatile_memcpy_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%13) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -1138,18 +1013,8 @@ def memcpy_to_capturing_readonly_combined := [llvmfunc|
     %10 = llvm.insertvalue %7, %9[1] : !llvm.array<2 x struct<"U", (i32, i32, i32, i32, i32)>> 
     %11 = llvm.mlir.addressof @H : !llvm.ptr
     %12 = llvm.mlir.constant(20 : i64) : i64
-    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_memcpy_to_capturing_readonly   : memcpy_to_capturing_readonly_before  ⊑  memcpy_to_capturing_readonly_combined := by
-  unfold memcpy_to_capturing_readonly_before memcpy_to_capturing_readonly_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memcpy_to_capturing_readonly   : memcpy_to_capturing_readonly_before  ⊑  memcpy_to_capturing_readonly_combined := by
-  unfold memcpy_to_capturing_readonly_before memcpy_to_capturing_readonly_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @bar(%13) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -1173,18 +1038,8 @@ def memcpy_to_aliased_nocapture_readonly_combined := [llvmfunc|
     %10 = llvm.insertvalue %7, %9[1] : !llvm.array<2 x struct<"U", (i32, i32, i32, i32, i32)>> 
     %11 = llvm.mlir.addressof @H : !llvm.ptr
     %12 = llvm.mlir.constant(20 : i64) : i64
-    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_memcpy_to_aliased_nocapture_readonly   : memcpy_to_aliased_nocapture_readonly_before  ⊑  memcpy_to_aliased_nocapture_readonly_combined := by
-  unfold memcpy_to_aliased_nocapture_readonly_before memcpy_to_aliased_nocapture_readonly_combined
-  simp_alive_peephole
-  sorry
-    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memcpy_to_aliased_nocapture_readonly   : memcpy_to_aliased_nocapture_readonly_before  ⊑  memcpy_to_aliased_nocapture_readonly_combined := by
-  unfold memcpy_to_aliased_nocapture_readonly_before memcpy_to_aliased_nocapture_readonly_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.alloca %0 x !llvm.struct<"U", (i32, i32, i32, i32, i32)> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%13, %11, %12) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.call @two_params(%13, %13) : (!llvm.ptr, !llvm.ptr) -> ()
     llvm.return
   }]

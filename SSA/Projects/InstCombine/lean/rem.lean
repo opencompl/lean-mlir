@@ -1296,12 +1296,7 @@ def test21_combined := [llvmfunc|
     %1 = llvm.mlir.constant(5 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : i32)
   ^bb1:  // pred: ^bb0
-    %2 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test21   : test21_before  ⊑  test21_combined := by
-  unfold test21_before test21_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %3 = llvm.srem %2, %1  : i32
     llvm.br ^bb2(%3 : i32)
   ^bb2(%4: i32):  // 2 preds: ^bb0, ^bb1
@@ -1325,12 +1320,7 @@ def pr27968_0_combined := [llvmfunc|
     %8 = llvm.mlir.constant(0 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %9 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_pr27968_0   : pr27968_0_before  ⊑  pr27968_0_combined := by
-  unfold pr27968_0_before pr27968_0_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     llvm.cond_br %7, ^bb3, ^bb4
@@ -1351,12 +1341,7 @@ def pr27968_1_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-2147483648 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : i32)
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load volatile %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_pr27968_1   : pr27968_1_before  ⊑  pr27968_1_combined := by
-  unfold pr27968_1_before pr27968_1_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load volatile %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.br ^bb2(%3 : i32)
   ^bb2(%4: i32):  // 2 preds: ^bb0, ^bb1
     llvm.cond_br %arg1, ^bb3, ^bb4
@@ -1384,12 +1369,7 @@ def pr27968_2_combined := [llvmfunc|
     %8 = llvm.mlir.constant(0 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    %9 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_pr27968_2   : pr27968_2_before  ⊑  pr27968_2_combined := by
-  unfold pr27968_2_before pr27968_2_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load volatile %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     llvm.cond_br %7, ^bb3, ^bb4
@@ -1410,12 +1390,7 @@ def pr27968_3_combined := [llvmfunc|
     %2 = llvm.mlir.constant(0 : i32) : i32
     llvm.cond_br %arg0, ^bb1, ^bb2(%0 : i32)
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load volatile %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_pr27968_3   : pr27968_3_before  ⊑  pr27968_3_combined := by
-  unfold pr27968_3_before pr27968_3_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load volatile %arg2 {alignment = 4 : i64} : !llvm.ptr -> i32
     %4 = llvm.and %3, %1  : i32
     llvm.br ^bb2(%4 : i32)
   ^bb2(%5: i32):  // 2 preds: ^bb0, ^bb1
@@ -1528,12 +1503,7 @@ def test27_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-2147483648 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.srem %arg0, %0  : i32
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test27   : test27_before  ⊑  test27_combined := by
-  unfold test27_before test27_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i32, !llvm.ptr
     %3 = llvm.icmp "ne" %2, %1 : i32
     llvm.return %3 : i1
   }]

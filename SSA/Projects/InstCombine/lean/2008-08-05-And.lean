@@ -59,12 +59,7 @@ def f_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-13 : i8) : i8
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_f   : f_before  ⊑  f_combined := by
-  unfold f_before f_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %4 = llvm.add %3, %0  : i8
     %5 = llvm.icmp "ult" %4, %1 : i8
     %6 = llvm.add %3, %2  : i8
@@ -88,12 +83,7 @@ def f_logical_combined := [llvmfunc|
     %2 = llvm.mlir.constant(-13 : i8) : i8
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
-    %3 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_f_logical   : f_logical_before  ⊑  f_logical_combined := by
-  unfold f_logical_before f_logical_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %4 = llvm.add %3, %0  : i8
     %5 = llvm.icmp "ult" %4, %1 : i8
     %6 = llvm.add %3, %2  : i8

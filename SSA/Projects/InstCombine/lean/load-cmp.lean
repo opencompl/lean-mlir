@@ -822,12 +822,7 @@ def test10_struct_noinbounds_combined := [llvmfunc|
     %9 = llvm.mlir.addressof @GS : !llvm.ptr
     %10 = llvm.mlir.constant(0 : i32) : i32
     %11 = llvm.getelementptr %9[%arg0, 0] : (!llvm.ptr, i32) -> !llvm.ptr, !llvm.struct<"Foo", (i32, i32, i32, i32)>
-    %12 = llvm.load %11 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test10_struct_noinbounds   : test10_struct_noinbounds_before  ⊑  test10_struct_noinbounds_combined := by
-  unfold test10_struct_noinbounds_before test10_struct_noinbounds_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %11 {alignment = 4 : i64} : !llvm.ptr -> i32
     %13 = llvm.icmp "eq" %12, %1 : i32
     llvm.return %13 : i1
   }]
@@ -871,12 +866,7 @@ def test10_struct_noinbounds_i16_combined := [llvmfunc|
     %10 = llvm.mlir.constant(0 : i32) : i32
     %11 = llvm.sext %arg0 : i16 to i32
     %12 = llvm.getelementptr %9[%11, 0] : (!llvm.ptr, i32) -> !llvm.ptr, !llvm.struct<"Foo", (i32, i32, i32, i32)>
-    %13 = llvm.load %12 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_test10_struct_noinbounds_i16   : test10_struct_noinbounds_i16_before  ⊑  test10_struct_noinbounds_i16_combined := by
-  unfold test10_struct_noinbounds_i16_before test10_struct_noinbounds_i16_combined
-  simp_alive_peephole
-  sorry
+    %13 = llvm.load %12 {alignment = 4 : i64} : !llvm.ptr -> i32
     %14 = llvm.icmp "eq" %13, %10 : i32
     llvm.return %14 : i1
   }]
@@ -973,12 +963,7 @@ def pr93017_combined := [llvmfunc|
     %8 = llvm.mlir.zero : !llvm.ptr
     %9 = llvm.trunc %arg0 : i64 to i32
     %10 = llvm.getelementptr inbounds %6[%7, %9] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<2 x ptr>
-    %11 = llvm.load %10 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_pr93017   : pr93017_before  ⊑  pr93017_combined := by
-  unfold pr93017_before pr93017_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %10 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     %12 = llvm.icmp "ne" %11, %8 : !llvm.ptr
     llvm.return %12 : i1
   }]

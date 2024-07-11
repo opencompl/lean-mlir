@@ -113,30 +113,10 @@ def _Z3fooi_combined := [llvmfunc|
     %11 = llvm.icmp "slt" %10, %arg0 : i32
     llvm.cond_br %11, ^bb2, ^bb3
   ^bb2:  // pred: ^bb1
-    %12 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
-    %13 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
-    %14 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
-    %15 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %13 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %14 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %15 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32
     %16 = llvm.fmul %12, %14  : f32
     %17 = llvm.fmul %13, %15  : f32
     %18 = llvm.fsub %16, %17  : f32
@@ -148,18 +128,8 @@ theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
     %24 = llvm.add %10, %3 overflow<nsw, nuw>  : i32
     llvm.br ^bb1(%22, %23, %24 : f32, f32, i32)
   ^bb3:  // pred: ^bb1
-    llvm.store %8, %2 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %5 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine__Z3fooi   : _Z3fooi_before  ⊑  _Z3fooi_combined := by
-  unfold _Z3fooi_before _Z3fooi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %2 {alignment = 4 : i64} : f32, !llvm.ptr
+    llvm.store %9, %5 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 
@@ -182,30 +152,10 @@ def multi_phi_combined := [llvmfunc|
     %10 = llvm.icmp "slt" %9, %arg0 : i32
     llvm.cond_br %10, ^bb2, ^bb5
   ^bb2:  // pred: ^bb1
-    %11 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := by
-  unfold multi_phi_before multi_phi_combined
-  simp_alive_peephole
-  sorry
-    %12 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := by
-  unfold multi_phi_before multi_phi_combined
-  simp_alive_peephole
-  sorry
-    %13 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := by
-  unfold multi_phi_before multi_phi_combined
-  simp_alive_peephole
-  sorry
-    %14 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := by
-  unfold multi_phi_before multi_phi_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %12 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %13 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> f32
+    %14 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> f32
     %15 = llvm.fmul %11, %13  : f32
     %16 = llvm.fmul %12, %14  : f32
     %17 = llvm.fsub %15, %16  : f32
@@ -220,12 +170,7 @@ theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := 
   ^bb4(%23: f32):  // 2 preds: ^bb2, ^bb3
     llvm.br ^bb1(%23, %19 : f32, i32)
   ^bb5:  // pred: ^bb1
-    llvm.store %8, %2 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_multi_phi   : multi_phi_before  ⊑  multi_phi_combined := by
-  unfold multi_phi_before multi_phi_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %2 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 

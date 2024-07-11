@@ -881,12 +881,7 @@ def invalid_extractelement_combined := [llvmfunc|
     %2 = llvm.shufflevector %arg0, %0 [0, -1, -1, -1] : vector<2xf64> 
     %3 = llvm.shufflevector %arg1, %2 [0, 1, 4, 3] : vector<4xf64> 
     %4 = llvm.extractelement %arg1[%1 : i64] : vector<4xf64>
-    llvm.store %4, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_invalid_extractelement   : invalid_extractelement_before  ⊑  invalid_extractelement_combined := by
-  unfold invalid_extractelement_before invalid_extractelement_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg2 {alignment = 8 : i64} : f64, !llvm.ptr
     llvm.return %3 : vector<4xf64>
   }]
 
@@ -1360,12 +1355,7 @@ def crash_4b8320_combined := [llvmfunc|
     %5 = llvm.mlir.constant(1 : i32) : i32
     %6 = llvm.insertelement %0, %4[%5 : i32] : vector<2xf32>
     %7 = llvm.mlir.constant(0 : i64) : i64
-    %8 = llvm.fmul %arg0, %6  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>]
-
-theorem inst_combine_crash_4b8320   : crash_4b8320_before  ⊑  crash_4b8320_combined := by
-  unfold crash_4b8320_before crash_4b8320_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.fmul %arg0, %6  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>
     %9 = llvm.extractelement %8[%7 : i64] : vector<2xf32>
     %10 = llvm.extractelement %8[%7 : i64] : vector<2xf32>
     %11 = llvm.fadd %9, %10  : f32

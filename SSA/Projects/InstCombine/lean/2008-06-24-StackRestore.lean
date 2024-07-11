@@ -57,24 +57,9 @@ def main_combined := [llvmfunc|
     %5 = llvm.mlir.constant(1000 : i32) : i32
     %6 = llvm.mlir.constant(999999 : i32) : i32
     %7 = llvm.intr.stacksave : !llvm.ptr
-    %8 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %8 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %8, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %8 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store volatile %8, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb2(%4, %7 : i32, !llvm.ptr)
   ^bb1:  // pred: ^bb2
     llvm.return %4 : i32
@@ -84,31 +69,11 @@ theorem inst_combine_main   : main_before  ⊑  main_combined := by
     %12 = llvm.intr.stacksave : !llvm.ptr
     %13 = llvm.srem %11, %5  : i32
     %14 = llvm.add %13, %0 overflow<nsw>  : i32
-    %15 = llvm.alloca %14 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.alloca %14 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr
     %16 = llvm.getelementptr %15[%13] : (!llvm.ptr, i32) -> !llvm.ptr, i32
-    llvm.store %1, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store volatile %15, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %16 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store volatile %15, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %17 = llvm.icmp "eq" %11, %6 : i32
     llvm.cond_br %17, ^bb1, ^bb2(%11, %12 : i32, !llvm.ptr)
   }]

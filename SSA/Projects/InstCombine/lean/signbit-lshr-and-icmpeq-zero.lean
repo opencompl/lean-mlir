@@ -400,12 +400,7 @@ def scalar_i32_signbit_lshr_and_eq_extra_use_lshr_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.lshr %0, %arg1  : i32
     %3 = llvm.xor %2, %arg2  : i32
-    llvm.store %3, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_scalar_i32_signbit_lshr_and_eq_extra_use_lshr   : scalar_i32_signbit_lshr_and_eq_extra_use_lshr_before  ⊑  scalar_i32_signbit_lshr_and_eq_extra_use_lshr_combined := by
-  unfold scalar_i32_signbit_lshr_and_eq_extra_use_lshr_before scalar_i32_signbit_lshr_and_eq_extra_use_lshr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.and %2, %arg0  : i32
     %5 = llvm.icmp "eq" %4, %1 : i32
     llvm.return %5 : i1
@@ -422,12 +417,7 @@ def scalar_i32_signbit_lshr_and_eq_extra_use_and_combined := [llvmfunc|
     %2 = llvm.lshr %0, %arg1  : i32
     %3 = llvm.and %2, %arg0  : i32
     %4 = llvm.mul %3, %arg2  : i32
-    llvm.store %4, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_scalar_i32_signbit_lshr_and_eq_extra_use_and   : scalar_i32_signbit_lshr_and_eq_extra_use_and_before  ⊑  scalar_i32_signbit_lshr_and_eq_extra_use_and_combined := by
-  unfold scalar_i32_signbit_lshr_and_eq_extra_use_and_before scalar_i32_signbit_lshr_and_eq_extra_use_and_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.icmp "eq" %3, %1 : i32
     llvm.return %5 : i1
   }]
@@ -442,19 +432,9 @@ def scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i32) : i32
     %2 = llvm.lshr %0, %arg1  : i32
     %3 = llvm.and %2, %arg0  : i32
-    llvm.store %3, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and   : scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_before  ⊑  scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_combined := by
-  unfold scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_before scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg3 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.add %2, %arg2  : i32
-    llvm.store %4, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and   : scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_before  ⊑  scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_combined := by
-  unfold scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_before scalar_i32_signbit_lshr_and_eq_extra_use_lshr_and_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     %5 = llvm.icmp "eq" %3, %1 : i32
     llvm.return %5 : i1
   }]

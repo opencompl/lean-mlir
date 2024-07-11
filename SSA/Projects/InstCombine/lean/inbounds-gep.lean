@@ -125,12 +125,7 @@ def alloca_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(4 : i64) : i64
     %2 = llvm.mlir.addressof @use : !llvm.ptr
-    %3 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_alloca   : alloca_before  ⊑  alloca_combined := by
-  unfold alloca_before alloca_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     %4 = llvm.getelementptr inbounds %3[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.call %2(%4) : !llvm.ptr, (!llvm.ptr) -> ()
     llvm.return

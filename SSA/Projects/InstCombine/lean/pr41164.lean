@@ -44,19 +44,9 @@ def _Z8wyhash64v_combined := [llvmfunc|
     %4 = llvm.mlir.constant(64 : i128) : i128
     %5 = llvm.mlir.constant(18446744073709551615 : i128) : i128
     %6 = llvm.mlir.constant(1946526487930394057 : i128) : i128
-    %7 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine__Z8wyhash64v   : _Z8wyhash64v_before  ⊑  _Z8wyhash64v_combined := by
-  unfold _Z8wyhash64v_before _Z8wyhash64v_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> i64
     %8 = llvm.add %7, %2  : i64
-    llvm.store %8, %1 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine__Z8wyhash64v   : _Z8wyhash64v_before  ⊑  _Z8wyhash64v_combined := by
-  unfold _Z8wyhash64v_before _Z8wyhash64v_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %1 {alignment = 8 : i64} : i64, !llvm.ptr
     %9 = llvm.zext %8 : i64 to i128
     %10 = llvm.mul %9, %3 overflow<nuw>  : i128
     %11 = llvm.lshr %10, %4  : i128

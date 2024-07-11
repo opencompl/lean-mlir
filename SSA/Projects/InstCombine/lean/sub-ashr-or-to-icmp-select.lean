@@ -440,12 +440,7 @@ def sub_ashr_or_i32_extra_use_sub_combined := [llvmfunc|
   llvm.func @sub_ashr_or_i32_extra_use_sub(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.sub %arg1, %arg0 overflow<nsw>  : i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_or_i32_extra_use_sub   : sub_ashr_or_i32_extra_use_sub_before  ⊑  sub_ashr_or_i32_extra_use_sub_combined := by
-  unfold sub_ashr_or_i32_extra_use_sub_before sub_ashr_or_i32_extra_use_sub_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.icmp "sgt" %arg0, %arg1 : i32
     %3 = llvm.select %2, %0, %arg0 : i1, i32
     llvm.return %3 : i32
@@ -460,12 +455,7 @@ def sub_ashr_or_i32_extra_use_or_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.icmp "slt" %arg1, %arg0 : i32
     %2 = llvm.select %1, %0, %arg0 : i1, i32
-    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_or_i32_extra_use_or   : sub_ashr_or_i32_extra_use_or_before  ⊑  sub_ashr_or_i32_extra_use_or_combined := by
-  unfold sub_ashr_or_i32_extra_use_or_before sub_ashr_or_i32_extra_use_or_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %2 : i32
   }]
 
@@ -479,12 +469,7 @@ def neg_extra_use_or_ashr_i32_combined := [llvmfunc|
     %1 = llvm.sub %0, %arg0  : i32
     %2 = llvm.icmp "ne" %arg0, %0 : i32
     %3 = llvm.sext %2 : i1 to i32
-    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_neg_extra_use_or_ashr_i32   : neg_extra_use_or_ashr_i32_before  ⊑  neg_extra_use_or_ashr_i32_combined := by
-  unfold neg_extra_use_or_ashr_i32_before neg_extra_use_or_ashr_i32_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %3 : i32
   }]
 
@@ -496,12 +481,7 @@ def sub_ashr_or_i32_extra_use_ashr_combined := [llvmfunc|
   llvm.func @sub_ashr_or_i32_extra_use_ashr(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.icmp "slt" %arg1, %arg0 : i32
     %1 = llvm.sext %0 : i1 to i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_ashr_or_i32_extra_use_ashr   : sub_ashr_or_i32_extra_use_ashr_before  ⊑  sub_ashr_or_i32_extra_use_ashr_combined := by
-  unfold sub_ashr_or_i32_extra_use_ashr_before sub_ashr_or_i32_extra_use_ashr_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.or %1, %arg0  : i32
     llvm.return %2 : i32
   }]
@@ -530,12 +510,7 @@ def neg_or_extra_use_ashr_i32_combined := [llvmfunc|
     %2 = llvm.sub %0, %arg0  : i32
     %3 = llvm.or %2, %arg0  : i32
     %4 = llvm.ashr %3, %1  : i32
-    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_neg_or_extra_use_ashr_i32   : neg_or_extra_use_ashr_i32_before  ⊑  neg_or_extra_use_ashr_i32_combined := by
-  unfold neg_or_extra_use_ashr_i32_before neg_or_extra_use_ashr_i32_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %4 : i32
   }]
 

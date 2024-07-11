@@ -4442,19 +4442,9 @@ def PR41069_logical_combined := [llvmfunc|
   llvm.func @PR41069_logical(%arg0: i1, %arg1: f32, %arg2: f32) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.fcmp "ord" %arg1, %0 {fastmathFlags = #llvm.fastmath<arcp>} : f32]
-
-theorem inst_combine_PR41069_logical   : PR41069_logical_before  ⊑  PR41069_logical_combined := by
-  unfold PR41069_logical_before PR41069_logical_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ord" %arg1, %0 {fastmathFlags = #llvm.fastmath<arcp>} : f32
     %3 = llvm.select %2, %arg0, %1 : i1, i1
-    %4 = llvm.fcmp "ord" %arg2, %0 {fastmathFlags = #llvm.fastmath<afn>} : f32]
-
-theorem inst_combine_PR41069_logical   : PR41069_logical_before  ⊑  PR41069_logical_combined := by
-  unfold PR41069_logical_before PR41069_logical_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.fcmp "ord" %arg2, %0 {fastmathFlags = #llvm.fastmath<afn>} : f32
     %5 = llvm.select %3, %4, %1 : i1, i1
     llvm.return %5 : i1
   }]
@@ -4465,12 +4455,7 @@ theorem inst_combine_PR41069_logical   : PR41069_logical_before  ⊑  PR41069_lo
   sorry
 def PR41069_commute_combined := [llvmfunc|
   llvm.func @PR41069_commute(%arg0: i1, %arg1: f32, %arg2: f32) -> i1 {
-    %0 = llvm.fcmp "ord" %arg2, %arg1 {fastmathFlags = #llvm.fastmath<ninf>} : f32]
-
-theorem inst_combine_PR41069_commute   : PR41069_commute_before  ⊑  PR41069_commute_combined := by
-  unfold PR41069_commute_before PR41069_commute_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ord" %arg2, %arg1 {fastmathFlags = #llvm.fastmath<ninf>} : f32
     %1 = llvm.and %0, %arg0  : i1
     llvm.return %1 : i1
   }]
@@ -4483,18 +4468,8 @@ def PR41069_commute_logical_combined := [llvmfunc|
   llvm.func @PR41069_commute_logical(%arg0: i1, %arg1: f32, %arg2: f32) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.fcmp "ord" %arg1, %0 {fastmathFlags = #llvm.fastmath<ninf>} : f32]
-
-theorem inst_combine_PR41069_commute_logical   : PR41069_commute_logical_before  ⊑  PR41069_commute_logical_combined := by
-  unfold PR41069_commute_logical_before PR41069_commute_logical_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fcmp "ord" %arg2, %0 {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : f32]
-
-theorem inst_combine_PR41069_commute_logical   : PR41069_commute_logical_before  ⊑  PR41069_commute_logical_combined := by
-  unfold PR41069_commute_logical_before PR41069_commute_logical_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ord" %arg1, %0 {fastmathFlags = #llvm.fastmath<ninf>} : f32
+    %3 = llvm.fcmp "ord" %arg2, %0 {fastmathFlags = #llvm.fastmath<ninf, reassoc>} : f32
     %4 = llvm.select %3, %2, %1 : i1, i1
     %5 = llvm.select %4, %arg0, %1 : i1, i1
     llvm.return %5 : i1
@@ -4779,12 +4754,7 @@ theorem inst_combine_auto_gen_5_logical   : auto_gen_5_logical_before  ⊑  auto
   sorry
 def auto_gen_5_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_5_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_5_logical_fmf   : auto_gen_5_logical_fmf_before  ⊑  auto_gen_5_logical_fmf_combined := by
-  unfold auto_gen_5_logical_fmf_before auto_gen_5_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -4844,12 +4814,7 @@ theorem inst_combine_auto_gen_7_logical   : auto_gen_7_logical_before  ⊑  auto
   sorry
 def auto_gen_7_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_7_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_7_logical_fmf   : auto_gen_7_logical_fmf_before  ⊑  auto_gen_7_logical_fmf_combined := by
-  unfold auto_gen_7_logical_fmf_before auto_gen_7_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -4909,12 +4874,7 @@ theorem inst_combine_auto_gen_9_logical   : auto_gen_9_logical_before  ⊑  auto
   sorry
 def auto_gen_9_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_9_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_9_logical_fmf   : auto_gen_9_logical_fmf_before  ⊑  auto_gen_9_logical_fmf_combined := by
-  unfold auto_gen_9_logical_fmf_before auto_gen_9_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5214,12 +5174,7 @@ theorem inst_combine_auto_gen_19_logical   : auto_gen_19_logical_before  ⊑  au
   sorry
 def auto_gen_19_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_19_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_19_logical_fmf   : auto_gen_19_logical_fmf_before  ⊑  auto_gen_19_logical_fmf_combined := by
-  unfold auto_gen_19_logical_fmf_before auto_gen_19_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5339,12 +5294,7 @@ theorem inst_combine_auto_gen_23_logical   : auto_gen_23_logical_before  ⊑  au
   sorry
 def auto_gen_23_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_23_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_23_logical_fmf   : auto_gen_23_logical_fmf_before  ⊑  auto_gen_23_logical_fmf_combined := by
-  unfold auto_gen_23_logical_fmf_before auto_gen_23_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5404,12 +5354,7 @@ theorem inst_combine_auto_gen_25_logical   : auto_gen_25_logical_before  ⊑  au
   sorry
 def auto_gen_25_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_25_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_25_logical_fmf   : auto_gen_25_logical_fmf_before  ⊑  auto_gen_25_logical_fmf_combined := by
-  unfold auto_gen_25_logical_fmf_before auto_gen_25_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5469,12 +5414,7 @@ theorem inst_combine_auto_gen_27_logical   : auto_gen_27_logical_before  ⊑  au
   sorry
 def auto_gen_27_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_27_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_27_logical_fmf   : auto_gen_27_logical_fmf_before  ⊑  auto_gen_27_logical_fmf_combined := by
-  unfold auto_gen_27_logical_fmf_before auto_gen_27_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5534,12 +5474,7 @@ theorem inst_combine_auto_gen_29_logical   : auto_gen_29_logical_before  ⊑  au
   sorry
 def auto_gen_29_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_29_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_29_logical_fmf   : auto_gen_29_logical_fmf_before  ⊑  auto_gen_29_logical_fmf_combined := by
-  unfold auto_gen_29_logical_fmf_before auto_gen_29_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5599,12 +5534,7 @@ theorem inst_combine_auto_gen_31_logical   : auto_gen_31_logical_before  ⊑  au
   sorry
 def auto_gen_31_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_31_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_31_logical_fmf   : auto_gen_31_logical_fmf_before  ⊑  auto_gen_31_logical_fmf_combined := by
-  unfold auto_gen_31_logical_fmf_before auto_gen_31_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5664,12 +5594,7 @@ theorem inst_combine_auto_gen_33_logical   : auto_gen_33_logical_before  ⊑  au
   sorry
 def auto_gen_33_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_33_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_33_logical_fmf   : auto_gen_33_logical_fmf_before  ⊑  auto_gen_33_logical_fmf_combined := by
-  unfold auto_gen_33_logical_fmf_before auto_gen_33_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5789,12 +5714,7 @@ theorem inst_combine_auto_gen_37_logical   : auto_gen_37_logical_before  ⊑  au
   sorry
 def auto_gen_37_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_37_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_37_logical_fmf   : auto_gen_37_logical_fmf_before  ⊑  auto_gen_37_logical_fmf_combined := by
-  unfold auto_gen_37_logical_fmf_before auto_gen_37_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5854,12 +5774,7 @@ theorem inst_combine_auto_gen_39_logical   : auto_gen_39_logical_before  ⊑  au
   sorry
 def auto_gen_39_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_39_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_39_logical_fmf   : auto_gen_39_logical_fmf_before  ⊑  auto_gen_39_logical_fmf_combined := by
-  unfold auto_gen_39_logical_fmf_before auto_gen_39_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5919,12 +5834,7 @@ theorem inst_combine_auto_gen_41_logical   : auto_gen_41_logical_before  ⊑  au
   sorry
 def auto_gen_41_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_41_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_41_logical_fmf   : auto_gen_41_logical_fmf_before  ⊑  auto_gen_41_logical_fmf_combined := by
-  unfold auto_gen_41_logical_fmf_before auto_gen_41_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -5984,12 +5894,7 @@ theorem inst_combine_auto_gen_43_logical   : auto_gen_43_logical_before  ⊑  au
   sorry
 def auto_gen_43_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_43_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_43_logical_fmf   : auto_gen_43_logical_fmf_before  ⊑  auto_gen_43_logical_fmf_combined := by
-  unfold auto_gen_43_logical_fmf_before auto_gen_43_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6109,12 +6014,7 @@ theorem inst_combine_auto_gen_47_logical   : auto_gen_47_logical_before  ⊑  au
   sorry
 def auto_gen_47_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_47_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_47_logical_fmf   : auto_gen_47_logical_fmf_before  ⊑  auto_gen_47_logical_fmf_combined := by
-  unfold auto_gen_47_logical_fmf_before auto_gen_47_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6234,12 +6134,7 @@ theorem inst_combine_auto_gen_51_logical   : auto_gen_51_logical_before  ⊑  au
   sorry
 def auto_gen_51_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_51_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_51_logical_fmf   : auto_gen_51_logical_fmf_before  ⊑  auto_gen_51_logical_fmf_combined := by
-  unfold auto_gen_51_logical_fmf_before auto_gen_51_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6419,12 +6314,7 @@ theorem inst_combine_auto_gen_57_logical   : auto_gen_57_logical_before  ⊑  au
   sorry
 def auto_gen_57_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_57_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_57_logical_fmf   : auto_gen_57_logical_fmf_before  ⊑  auto_gen_57_logical_fmf_combined := by
-  unfold auto_gen_57_logical_fmf_before auto_gen_57_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6544,12 +6434,7 @@ theorem inst_combine_auto_gen_61_logical   : auto_gen_61_logical_before  ⊑  au
   sorry
 def auto_gen_61_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_61_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_61_logical_fmf   : auto_gen_61_logical_fmf_before  ⊑  auto_gen_61_logical_fmf_combined := by
-  unfold auto_gen_61_logical_fmf_before auto_gen_61_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6609,12 +6494,7 @@ theorem inst_combine_auto_gen_63_logical   : auto_gen_63_logical_before  ⊑  au
   sorry
 def auto_gen_63_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_63_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_63_logical_fmf   : auto_gen_63_logical_fmf_before  ⊑  auto_gen_63_logical_fmf_combined := by
-  unfold auto_gen_63_logical_fmf_before auto_gen_63_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6674,12 +6554,7 @@ theorem inst_combine_auto_gen_65_logical   : auto_gen_65_logical_before  ⊑  au
   sorry
 def auto_gen_65_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_65_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "uge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_65_logical_fmf   : auto_gen_65_logical_fmf_before  ⊑  auto_gen_65_logical_fmf_combined := by
-  unfold auto_gen_65_logical_fmf_before auto_gen_65_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "uge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6859,12 +6734,7 @@ theorem inst_combine_auto_gen_71_logical   : auto_gen_71_logical_before  ⊑  au
   sorry
 def auto_gen_71_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_71_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_71_logical_fmf   : auto_gen_71_logical_fmf_before  ⊑  auto_gen_71_logical_fmf_combined := by
-  unfold auto_gen_71_logical_fmf_before auto_gen_71_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -6924,12 +6794,7 @@ theorem inst_combine_auto_gen_73_logical   : auto_gen_73_logical_before  ⊑  au
   sorry
 def auto_gen_73_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_73_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_73_logical_fmf   : auto_gen_73_logical_fmf_before  ⊑  auto_gen_73_logical_fmf_combined := by
-  unfold auto_gen_73_logical_fmf_before auto_gen_73_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7049,12 +6914,7 @@ theorem inst_combine_auto_gen_77_logical   : auto_gen_77_logical_before  ⊑  au
   sorry
 def auto_gen_77_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_77_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_77_logical_fmf   : auto_gen_77_logical_fmf_before  ⊑  auto_gen_77_logical_fmf_combined := by
-  unfold auto_gen_77_logical_fmf_before auto_gen_77_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7114,12 +6974,7 @@ theorem inst_combine_auto_gen_79_logical   : auto_gen_79_logical_before  ⊑  au
   sorry
 def auto_gen_79_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_79_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_79_logical_fmf   : auto_gen_79_logical_fmf_before  ⊑  auto_gen_79_logical_fmf_combined := by
-  unfold auto_gen_79_logical_fmf_before auto_gen_79_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7179,12 +7034,7 @@ theorem inst_combine_auto_gen_81_logical   : auto_gen_81_logical_before  ⊑  au
   sorry
 def auto_gen_81_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_81_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_81_logical_fmf   : auto_gen_81_logical_fmf_before  ⊑  auto_gen_81_logical_fmf_combined := by
-  unfold auto_gen_81_logical_fmf_before auto_gen_81_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7244,12 +7094,7 @@ theorem inst_combine_auto_gen_83_logical   : auto_gen_83_logical_before  ⊑  au
   sorry
 def auto_gen_83_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_83_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_83_logical_fmf   : auto_gen_83_logical_fmf_before  ⊑  auto_gen_83_logical_fmf_combined := by
-  unfold auto_gen_83_logical_fmf_before auto_gen_83_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7309,12 +7154,7 @@ theorem inst_combine_auto_gen_85_logical   : auto_gen_85_logical_before  ⊑  au
   sorry
 def auto_gen_85_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_85_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ule" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_85_logical_fmf   : auto_gen_85_logical_fmf_before  ⊑  auto_gen_85_logical_fmf_combined := by
-  unfold auto_gen_85_logical_fmf_before auto_gen_85_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ule" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7434,12 +7274,7 @@ theorem inst_combine_auto_gen_89_logical   : auto_gen_89_logical_before  ⊑  au
   sorry
 def auto_gen_89_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_89_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_89_logical_fmf   : auto_gen_89_logical_fmf_before  ⊑  auto_gen_89_logical_fmf_combined := by
-  unfold auto_gen_89_logical_fmf_before auto_gen_89_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7559,12 +7394,7 @@ theorem inst_combine_auto_gen_93_logical   : auto_gen_93_logical_before  ⊑  au
   sorry
 def auto_gen_93_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_93_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_93_logical_fmf   : auto_gen_93_logical_fmf_before  ⊑  auto_gen_93_logical_fmf_combined := by
-  unfold auto_gen_93_logical_fmf_before auto_gen_93_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7624,12 +7454,7 @@ theorem inst_combine_auto_gen_95_logical   : auto_gen_95_logical_before  ⊑  au
   sorry
 def auto_gen_95_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_95_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_95_logical_fmf   : auto_gen_95_logical_fmf_before  ⊑  auto_gen_95_logical_fmf_combined := by
-  unfold auto_gen_95_logical_fmf_before auto_gen_95_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7689,12 +7514,7 @@ theorem inst_combine_auto_gen_97_logical   : auto_gen_97_logical_before  ⊑  au
   sorry
 def auto_gen_97_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_97_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_97_logical_fmf   : auto_gen_97_logical_fmf_before  ⊑  auto_gen_97_logical_fmf_combined := by
-  unfold auto_gen_97_logical_fmf_before auto_gen_97_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7814,12 +7634,7 @@ theorem inst_combine_auto_gen_101_logical   : auto_gen_101_logical_before  ⊑  
   sorry
 def auto_gen_101_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_101_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ugt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_101_logical_fmf   : auto_gen_101_logical_fmf_before  ⊑  auto_gen_101_logical_fmf_combined := by
-  unfold auto_gen_101_logical_fmf_before auto_gen_101_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ugt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -7879,12 +7694,7 @@ theorem inst_combine_auto_gen_103_logical   : auto_gen_103_logical_before  ⊑  
   sorry
 def auto_gen_103_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_103_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_103_logical_fmf   : auto_gen_103_logical_fmf_before  ⊑  auto_gen_103_logical_fmf_combined := by
-  unfold auto_gen_103_logical_fmf_before auto_gen_103_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8424,12 +8234,7 @@ theorem inst_combine_auto_gen_121_logical   : auto_gen_121_logical_before  ⊑  
   sorry
 def auto_gen_121_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_121_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_121_logical_fmf   : auto_gen_121_logical_fmf_before  ⊑  auto_gen_121_logical_fmf_combined := by
-  unfold auto_gen_121_logical_fmf_before auto_gen_121_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8459,12 +8264,7 @@ theorem inst_combine_auto_gen_122_logical   : auto_gen_122_logical_before  ⊑  
   sorry
 def auto_gen_122_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_122_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_122_logical_fmf   : auto_gen_122_logical_fmf_before  ⊑  auto_gen_122_logical_fmf_combined := by
-  unfold auto_gen_122_logical_fmf_before auto_gen_122_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ogt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8494,12 +8294,7 @@ theorem inst_combine_auto_gen_123_logical   : auto_gen_123_logical_before  ⊑  
   sorry
 def auto_gen_123_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_123_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_123_logical_fmf   : auto_gen_123_logical_fmf_before  ⊑  auto_gen_123_logical_fmf_combined := by
-  unfold auto_gen_123_logical_fmf_before auto_gen_123_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8529,12 +8324,7 @@ theorem inst_combine_auto_gen_124_logical   : auto_gen_124_logical_before  ⊑  
   sorry
 def auto_gen_124_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_124_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_124_logical_fmf   : auto_gen_124_logical_fmf_before  ⊑  auto_gen_124_logical_fmf_combined := by
-  unfold auto_gen_124_logical_fmf_before auto_gen_124_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "olt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8564,12 +8354,7 @@ theorem inst_combine_auto_gen_125_logical   : auto_gen_125_logical_before  ⊑  
   sorry
 def auto_gen_125_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_125_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_125_logical_fmf   : auto_gen_125_logical_fmf_before  ⊑  auto_gen_125_logical_fmf_combined := by
-  unfold auto_gen_125_logical_fmf_before auto_gen_125_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ole" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8599,12 +8384,7 @@ theorem inst_combine_auto_gen_126_logical   : auto_gen_126_logical_before  ⊑  
   sorry
 def auto_gen_126_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_126_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_126_logical_fmf   : auto_gen_126_logical_fmf_before  ⊑  auto_gen_126_logical_fmf_combined := by
-  unfold auto_gen_126_logical_fmf_before auto_gen_126_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "one" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8664,12 +8444,7 @@ theorem inst_combine_auto_gen_128_logical   : auto_gen_128_logical_before  ⊑  
   sorry
 def auto_gen_128_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_128_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_128_logical_fmf   : auto_gen_128_logical_fmf_before  ⊑  auto_gen_128_logical_fmf_combined := by
-  unfold auto_gen_128_logical_fmf_before auto_gen_128_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8699,12 +8474,7 @@ theorem inst_combine_auto_gen_129_logical   : auto_gen_129_logical_before  ⊑  
   sorry
 def auto_gen_129_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_129_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ugt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_129_logical_fmf   : auto_gen_129_logical_fmf_before  ⊑  auto_gen_129_logical_fmf_combined := by
-  unfold auto_gen_129_logical_fmf_before auto_gen_129_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ugt" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8734,12 +8504,7 @@ theorem inst_combine_auto_gen_130_logical   : auto_gen_130_logical_before  ⊑  
   sorry
 def auto_gen_130_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_130_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "uge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_130_logical_fmf   : auto_gen_130_logical_fmf_before  ⊑  auto_gen_130_logical_fmf_combined := by
-  unfold auto_gen_130_logical_fmf_before auto_gen_130_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "uge" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8769,12 +8534,7 @@ theorem inst_combine_auto_gen_131_logical   : auto_gen_131_logical_before  ⊑  
   sorry
 def auto_gen_131_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_131_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_131_logical_fmf   : auto_gen_131_logical_fmf_before  ⊑  auto_gen_131_logical_fmf_combined := by
-  unfold auto_gen_131_logical_fmf_before auto_gen_131_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ult" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8804,12 +8564,7 @@ theorem inst_combine_auto_gen_132_logical   : auto_gen_132_logical_before  ⊑  
   sorry
 def auto_gen_132_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_132_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "ule" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_132_logical_fmf   : auto_gen_132_logical_fmf_before  ⊑  auto_gen_132_logical_fmf_combined := by
-  unfold auto_gen_132_logical_fmf_before auto_gen_132_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "ule" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8839,12 +8594,7 @@ theorem inst_combine_auto_gen_133_logical   : auto_gen_133_logical_before  ⊑  
   sorry
 def auto_gen_133_logical_fmf_combined := [llvmfunc|
   llvm.func @auto_gen_133_logical_fmf(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "une" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_auto_gen_133_logical_fmf   : auto_gen_133_logical_fmf_before  ⊑  auto_gen_133_logical_fmf_combined := by
-  unfold auto_gen_133_logical_fmf_before auto_gen_133_logical_fmf_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "une" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -8914,12 +8664,7 @@ theorem inst_combine_auto_gen_135_logical_fmf   : auto_gen_135_logical_fmf_befor
   sorry
 def intersect_fmf_1_combined := [llvmfunc|
   llvm.func @intersect_fmf_1(%arg0: f64, %arg1: f64) -> i1 {
-    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_intersect_fmf_1   : intersect_fmf_1_before  ⊑  intersect_fmf_1_combined := by
-  unfold intersect_fmf_1_before intersect_fmf_1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fcmp "oeq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %0 : i1
   }]
 
@@ -9032,12 +8777,7 @@ def clang_builtin_isnormal_inf_check_commute_nsz_combined := [llvmfunc|
   llvm.func @clang_builtin_isnormal_inf_check_commute_nsz(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
     %1 = llvm.intr.fabs(%arg0)  : (f16) -> f16
-    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_clang_builtin_isnormal_inf_check_commute_nsz   : clang_builtin_isnormal_inf_check_commute_nsz_before  ⊑  clang_builtin_isnormal_inf_check_commute_nsz_combined := by
-  unfold clang_builtin_isnormal_inf_check_commute_nsz_before clang_builtin_isnormal_inf_check_commute_nsz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     llvm.return %2 : i1
   }]
 
@@ -9258,12 +8998,7 @@ def clang_builtin_isnormal_inf_check_nsz_combined := [llvmfunc|
   llvm.func @clang_builtin_isnormal_inf_check_nsz(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
     %1 = llvm.intr.fabs(%arg0)  : (f16) -> f16
-    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_clang_builtin_isnormal_inf_check_nsz   : clang_builtin_isnormal_inf_check_nsz_before  ⊑  clang_builtin_isnormal_inf_check_nsz_combined := by
-  unfold clang_builtin_isnormal_inf_check_nsz_before clang_builtin_isnormal_inf_check_nsz_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     llvm.return %2 : i1
   }]
 
@@ -9322,12 +9057,7 @@ def isnormal_logical_select_0_fmf0_combined := [llvmfunc|
   llvm.func @isnormal_logical_select_0_fmf0(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
     %1 = llvm.intr.fabs(%arg0)  : (f16) -> f16
-    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz, arcp, reassoc>} : f16]
-
-theorem inst_combine_isnormal_logical_select_0_fmf0   : isnormal_logical_select_0_fmf0_before  ⊑  isnormal_logical_select_0_fmf0_combined := by
-  unfold isnormal_logical_select_0_fmf0_before isnormal_logical_select_0_fmf0_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "oge" %1, %0 {fastmathFlags = #llvm.fastmath<nsz, arcp, reassoc>} : f16
     llvm.return %2 : i1
   }]
 

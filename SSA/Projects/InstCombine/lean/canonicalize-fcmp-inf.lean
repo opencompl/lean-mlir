@@ -389,12 +389,7 @@ theorem inst_combine_uge_ninf   : uge_ninf_before  ⊑  uge_ninf_combined := by
 def olt_pinf_fmf_combined := [llvmfunc|
   llvm.func @olt_pinf_fmf(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
-    %1 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_olt_pinf_fmf   : olt_pinf_fmf_before  ⊑  olt_pinf_fmf_combined := by
-  unfold olt_pinf_fmf_before olt_pinf_fmf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "olt" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     llvm.return %1 : i1
   }]
 
@@ -405,12 +400,7 @@ theorem inst_combine_olt_pinf_fmf   : olt_pinf_fmf_before  ⊑  olt_pinf_fmf_com
 def oge_pinf_fmf_combined := [llvmfunc|
   llvm.func @oge_pinf_fmf(%arg0: f16) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
-    %1 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f16]
-
-theorem inst_combine_oge_pinf_fmf   : oge_pinf_fmf_before  ⊑  oge_pinf_fmf_combined := by
-  unfold oge_pinf_fmf_before oge_pinf_fmf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "oge" %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f16
     llvm.return %1 : i1
   }]
 

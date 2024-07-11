@@ -294,12 +294,7 @@ theorem inst_combine_test_simplify5   : test_simplify5_before  ⊑  test_simplif
 def test_simplify6_combined := [llvmfunc|
   llvm.func @test_simplify6(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_simplify6   : test_simplify6_before  ⊑  test_simplify6_combined := by
-  unfold test_simplify6_before test_simplify6_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.icmp "eq" %1, %0 : i8
     llvm.return %2 : i1
   }]
@@ -321,12 +316,7 @@ theorem inst_combine_test_simplify7   : test_simplify7_before  ⊑  test_simplif
 def test_simplify8_combined := [llvmfunc|
   llvm.func @test_simplify8(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_test_simplify8   : test_simplify8_before  ⊑  test_simplify8_combined := by
-  unfold test_simplify8_before test_simplify8_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.icmp "ne" %1, %0 : i8
     llvm.return %2 : i1
   }]
@@ -482,12 +472,7 @@ def strlen0_after_write_to_first_byte_global_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<0> : tensor<32xi8>) : !llvm.array<32 x i8>
     %3 = llvm.mlir.addressof @a : !llvm.ptr
     %4 = llvm.mlir.constant(false) : i1
-    llvm.store %0, %3 {alignment = 16 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_strlen0_after_write_to_first_byte_global   : strlen0_after_write_to_first_byte_global_before  ⊑  strlen0_after_write_to_first_byte_global_combined := by
-  unfold strlen0_after_write_to_first_byte_global_before strlen0_after_write_to_first_byte_global_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %3 {alignment = 16 : i64} : i8, !llvm.ptr
     llvm.return %4 : i1
   }]
 
@@ -504,18 +489,8 @@ def strlen0_after_write_to_second_byte_global_combined := [llvmfunc|
     %4 = llvm.mlir.constant(dense<0> : tensor<32xi8>) : !llvm.array<32 x i8>
     %5 = llvm.mlir.addressof @a : !llvm.ptr
     %6 = llvm.getelementptr inbounds %5[%2, %1] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<32 x i8>
-    llvm.store %0, %6 {alignment = 16 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_strlen0_after_write_to_second_byte_global   : strlen0_after_write_to_second_byte_global_before  ⊑  strlen0_after_write_to_second_byte_global_combined := by
-  unfold strlen0_after_write_to_second_byte_global_before strlen0_after_write_to_second_byte_global_combined
-  simp_alive_peephole
-  sorry
-    %7 = llvm.load %5 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_strlen0_after_write_to_second_byte_global   : strlen0_after_write_to_second_byte_global_before  ⊑  strlen0_after_write_to_second_byte_global_combined := by
-  unfold strlen0_after_write_to_second_byte_global_before strlen0_after_write_to_second_byte_global_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %6 {alignment = 16 : i64} : i8, !llvm.ptr
+    %7 = llvm.load %5 {alignment = 1 : i64} : !llvm.ptr -> i8
     %8 = llvm.icmp "eq" %7, %3 : i8
     llvm.return %8 : i1
   }]
@@ -528,12 +503,7 @@ def strlen0_after_write_to_first_byte_combined := [llvmfunc|
   llvm.func @strlen0_after_write_to_first_byte(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(49 : i8) : i8
     %1 = llvm.mlir.constant(false) : i1
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_strlen0_after_write_to_first_byte   : strlen0_after_write_to_first_byte_before  ⊑  strlen0_after_write_to_first_byte_combined := by
-  unfold strlen0_after_write_to_first_byte_before strlen0_after_write_to_first_byte_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %1 : i1
   }]
 
@@ -547,18 +517,8 @@ def strlen0_after_write_to_second_byte_combined := [llvmfunc|
     %1 = llvm.mlir.constant(49 : i8) : i8
     %2 = llvm.mlir.constant(0 : i8) : i8
     %3 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i8
-    llvm.store %1, %3 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_strlen0_after_write_to_second_byte   : strlen0_after_write_to_second_byte_before  ⊑  strlen0_after_write_to_second_byte_combined := by
-  unfold strlen0_after_write_to_second_byte_before strlen0_after_write_to_second_byte_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_strlen0_after_write_to_second_byte   : strlen0_after_write_to_second_byte_before  ⊑  strlen0_after_write_to_second_byte_combined := by
-  unfold strlen0_after_write_to_second_byte_before strlen0_after_write_to_second_byte_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %3 {alignment = 1 : i64} : i8, !llvm.ptr
+    %4 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %5 = llvm.icmp "eq" %4, %2 : i8
     llvm.return %5 : i1
   }]

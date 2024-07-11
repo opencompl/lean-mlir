@@ -557,12 +557,7 @@ theorem inst_combine_test_shrink_libcall_fabs   : test_shrink_libcall_fabs_befor
   sorry
 def test_shrink_libcall_fabs_fast_combined := [llvmfunc|
   llvm.func @test_shrink_libcall_fabs_fast(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_test_shrink_libcall_fabs_fast   : test_shrink_libcall_fabs_fast_before  ⊑  test_shrink_libcall_fabs_fast_combined := by
-  unfold test_shrink_libcall_fabs_fast_before test_shrink_libcall_fabs_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -757,12 +752,7 @@ theorem inst_combine_test_shrink_intrin_trunc_multi_use   : test_shrink_intrin_t
   sorry
 def test_shrink_intrin_fabs_fast_combined := [llvmfunc|
   llvm.func @test_shrink_intrin_fabs_fast(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_test_shrink_intrin_fabs_fast   : test_shrink_intrin_fabs_fast_before  ⊑  test_shrink_intrin_fabs_fast_combined := by
-  unfold test_shrink_intrin_fabs_fast_before test_shrink_intrin_fabs_fast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -850,12 +840,7 @@ theorem inst_combine_test_shrink_intrin_fabs_double_src   : test_shrink_intrin_f
 def test_shrink_intrin_fabs_fast_double_src_combined := [llvmfunc|
   llvm.func @test_shrink_intrin_fabs_fast_double_src(%arg0: f64) -> f32 {
     %0 = llvm.fptrunc %arg0 : f64 to f32
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_test_shrink_intrin_fabs_fast_double_src   : test_shrink_intrin_fabs_fast_double_src_before  ⊑  test_shrink_intrin_fabs_fast_double_src_combined := by
-  unfold test_shrink_intrin_fabs_fast_double_src_before test_shrink_intrin_fabs_fast_double_src_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -1023,12 +1008,7 @@ theorem inst_combine_test_shrink_mismatched_type_intrin_fabs_double_src   : test
 def test_mismatched_type_intrin_fabs_fast_double_src_combined := [llvmfunc|
   llvm.func @test_mismatched_type_intrin_fabs_fast_double_src(%arg0: f64) -> f16 {
     %0 = llvm.fptrunc %arg0 : f64 to f16
-    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16]
-
-theorem inst_combine_test_mismatched_type_intrin_fabs_fast_double_src   : test_mismatched_type_intrin_fabs_fast_double_src_before  ⊑  test_mismatched_type_intrin_fabs_fast_double_src_combined := by
-  unfold test_mismatched_type_intrin_fabs_fast_double_src_before test_mismatched_type_intrin_fabs_fast_double_src_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.fabs(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16
     llvm.return %1 : f16
   }]
 
@@ -1038,12 +1018,7 @@ theorem inst_combine_test_mismatched_type_intrin_fabs_fast_double_src   : test_m
   sorry
 def test_shrink_intrin_floor_fp16_vec_combined := [llvmfunc|
   llvm.func @test_shrink_intrin_floor_fp16_vec(%arg0: vector<2xf16>) -> vector<2xf64> {
-    %0 = llvm.intr.floor(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (vector<2xf16>) -> vector<2xf16>]
-
-theorem inst_combine_test_shrink_intrin_floor_fp16_vec   : test_shrink_intrin_floor_fp16_vec_before  ⊑  test_shrink_intrin_floor_fp16_vec_combined := by
-  unfold test_shrink_intrin_floor_fp16_vec_before test_shrink_intrin_floor_fp16_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.floor(%arg0)  {fastmathFlags = #llvm.fastmath<arcp>} : (vector<2xf16>) -> vector<2xf16>
     %1 = llvm.fpext %0 : vector<2xf16> to vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
@@ -1120,12 +1095,7 @@ theorem inst_combine_test_shrink_intrin_fabs_fp16_src   : test_shrink_intrin_fab
   sorry
 def test_shrink_intrin_fabs_fast_fp16_src_combined := [llvmfunc|
   llvm.func @test_shrink_intrin_fabs_fast_fp16_src(%arg0: f16) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16]
-
-theorem inst_combine_test_shrink_intrin_fabs_fast_fp16_src   : test_shrink_intrin_fabs_fast_fp16_src_before  ⊑  test_shrink_intrin_fabs_fast_fp16_src_combined := by
-  unfold test_shrink_intrin_fabs_fast_fp16_src_before test_shrink_intrin_fabs_fast_fp16_src_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f16) -> f16
     %1 = llvm.fpext %0 : f16 to f32
     llvm.return %1 : f32
   }]
@@ -1138,12 +1108,7 @@ def test_no_shrink_intrin_floor_multi_use_fpext_combined := [llvmfunc|
   llvm.func @test_no_shrink_intrin_floor_multi_use_fpext(%arg0: f16) -> f32 {
     %0 = llvm.mlir.undef : !llvm.ptr
     %1 = llvm.fpext %arg0 : f16 to f64
-    llvm.store volatile %1, %0 {alignment = 4 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_test_no_shrink_intrin_floor_multi_use_fpext   : test_no_shrink_intrin_floor_multi_use_fpext_before  ⊑  test_no_shrink_intrin_floor_multi_use_fpext_combined := by
-  unfold test_no_shrink_intrin_floor_multi_use_fpext_before test_no_shrink_intrin_floor_multi_use_fpext_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %1, %0 {alignment = 4 : i64} : f64, !llvm.ptr
     %2 = llvm.intr.floor(%1)  : (f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32
@@ -1157,12 +1122,7 @@ def test_no_shrink_intrin_fabs_multi_use_fpext_combined := [llvmfunc|
   llvm.func @test_no_shrink_intrin_fabs_multi_use_fpext(%arg0: f16) -> f32 {
     %0 = llvm.mlir.undef : !llvm.ptr
     %1 = llvm.fpext %arg0 : f16 to f64
-    llvm.store volatile %1, %0 {alignment = 4 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_test_no_shrink_intrin_fabs_multi_use_fpext   : test_no_shrink_intrin_fabs_multi_use_fpext_before  ⊑  test_no_shrink_intrin_fabs_multi_use_fpext_combined := by
-  unfold test_no_shrink_intrin_fabs_multi_use_fpext_before test_no_shrink_intrin_fabs_multi_use_fpext_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %1, %0 {alignment = 4 : i64} : f64, !llvm.ptr
     %2 = llvm.intr.fabs(%1)  : (f64) -> f64
     %3 = llvm.fptrunc %2 : f64 to f32
     llvm.return %3 : f32

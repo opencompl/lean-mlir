@@ -43,19 +43,9 @@ def test1_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     llvm.br ^bb2(%arg0, %arg2 : !llvm.ptr, !llvm.ptr)
   ^bb2(%3: !llvm.ptr, %4: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> f32
     %6 = llvm.fmul %5, %0  : f32
-    llvm.store %6, %3 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_test1   : test1_before  ⊑  test1_combined := by
-  unfold test1_before test1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %3 {alignment = 4 : i64} : f32, !llvm.ptr
     %7 = llvm.getelementptr inbounds %4[%1] : (!llvm.ptr, i64) -> !llvm.ptr, f32
     %8 = llvm.getelementptr inbounds %3[%1] : (!llvm.ptr, i64) -> !llvm.ptr, f32
     %9 = llvm.icmp "ult" %8, %arg1 : !llvm.ptr

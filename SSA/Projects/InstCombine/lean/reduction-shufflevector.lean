@@ -286,12 +286,7 @@ theorem inst_combine_reduce_smin   : reduce_smin_before  ⊑  reduce_smin_combin
   sorry
 def reduce_fmax_combined := [llvmfunc|
   llvm.func @reduce_fmax(%arg0: vector<4xf32>) -> f32 {
-    %0 = llvm.intr.vector.reduce.fmax(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<4xf32>) -> f32]
-
-theorem inst_combine_reduce_fmax   : reduce_fmax_before  ⊑  reduce_fmax_combined := by
-  unfold reduce_fmax_before reduce_fmax_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.vector.reduce.fmax(%arg0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (vector<4xf32>) -> f32
     llvm.return %0 : f32
   }]
 
@@ -311,12 +306,7 @@ theorem inst_combine_reduce_fmin   : reduce_fmin_before  ⊑  reduce_fmin_combin
   sorry
 def reduce_fadd_combined := [llvmfunc|
   llvm.func @reduce_fadd(%arg0: f32, %arg1: vector<4xf32>) -> f32 {
-    %0 = "llvm.intr.vector.reduce.fadd"(%arg0, %arg1) <{fastmathFlags = #llvm.fastmath<reassoc>}> : (f32, vector<4xf32>) -> f32]
-
-theorem inst_combine_reduce_fadd   : reduce_fadd_before  ⊑  reduce_fadd_combined := by
-  unfold reduce_fadd_before reduce_fadd_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.vector.reduce.fadd"(%arg0, %arg1) <{fastmathFlags = #llvm.fastmath<reassoc>}> : (f32, vector<4xf32>) -> f32
     llvm.return %0 : f32
   }]
 
@@ -326,12 +316,7 @@ theorem inst_combine_reduce_fadd   : reduce_fadd_before  ⊑  reduce_fadd_combin
   sorry
 def reduce_fmul_combined := [llvmfunc|
   llvm.func @reduce_fmul(%arg0: f32, %arg1: vector<4xf32>) -> f32 {
-    %0 = "llvm.intr.vector.reduce.fmul"(%arg0, %arg1) <{fastmathFlags = #llvm.fastmath<reassoc>}> : (f32, vector<4xf32>) -> f32]
-
-theorem inst_combine_reduce_fmul   : reduce_fmul_before  ⊑  reduce_fmul_combined := by
-  unfold reduce_fmul_before reduce_fmul_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.vector.reduce.fmul"(%arg0, %arg1) <{fastmathFlags = #llvm.fastmath<reassoc>}> : (f32, vector<4xf32>) -> f32
     llvm.return %0 : f32
   }]
 
@@ -472,12 +457,7 @@ def reduce_fadd_failed_combined := [llvmfunc|
   llvm.func @reduce_fadd_failed(%arg0: f32, %arg1: vector<4xf32>) -> f32 {
     %0 = llvm.mlir.poison : vector<4xf32>
     %1 = llvm.shufflevector %arg1, %0 [0, 3, 1, 2] : vector<4xf32> 
-    %2 = "llvm.intr.vector.reduce.fadd"(%arg0, %1) <{fastmathFlags = #llvm.fastmath<none>}> : (f32, vector<4xf32>) -> f32]
-
-theorem inst_combine_reduce_fadd_failed   : reduce_fadd_failed_before  ⊑  reduce_fadd_failed_combined := by
-  unfold reduce_fadd_failed_before reduce_fadd_failed_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.vector.reduce.fadd"(%arg0, %1) <{fastmathFlags = #llvm.fastmath<none>}> : (f32, vector<4xf32>) -> f32
     llvm.return %2 : f32
   }]
 
@@ -489,12 +469,7 @@ def reduce_fmul_failed_combined := [llvmfunc|
   llvm.func @reduce_fmul_failed(%arg0: f32, %arg1: vector<2xf32>) -> f32 {
     %0 = llvm.mlir.poison : vector<2xf32>
     %1 = llvm.shufflevector %arg1, %0 [0, -1, 1, -1] : vector<2xf32> 
-    %2 = "llvm.intr.vector.reduce.fmul"(%arg0, %1) <{fastmathFlags = #llvm.fastmath<none>}> : (f32, vector<4xf32>) -> f32]
-
-theorem inst_combine_reduce_fmul_failed   : reduce_fmul_failed_before  ⊑  reduce_fmul_failed_combined := by
-  unfold reduce_fmul_failed_before reduce_fmul_failed_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.vector.reduce.fmul"(%arg0, %1) <{fastmathFlags = #llvm.fastmath<none>}> : (f32, vector<4xf32>) -> f32
     llvm.return %2 : f32
   }]
 

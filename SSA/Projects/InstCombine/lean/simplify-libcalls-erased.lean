@@ -26,18 +26,8 @@ def pow_exp_before := [llvmfunc|
 
 def pow_exp_combined := [llvmfunc|
   llvm.func @pow_exp(%arg0: f64, %arg1: f64) -> f64 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_pow_exp   : pow_exp_before  ⊑  pow_exp_combined := by
-  unfold pow_exp_before pow_exp_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.intr.exp(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_pow_exp   : pow_exp_before  ⊑  pow_exp_combined := by
-  unfold pow_exp_before pow_exp_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f64
+    %1 = llvm.intr.exp(%0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 

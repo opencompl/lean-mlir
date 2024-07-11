@@ -28,18 +28,8 @@ def mem_combined := [llvmfunc|
     %0 = llvm.mlir.undef : !llvm.ptr
     llvm.br ^bb1(%0 : !llvm.ptr)
   ^bb1(%1: !llvm.ptr):  // 2 preds: ^bb0, ^bb1
-    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_mem   : mem_before  ⊑  mem_combined := by
-  unfold mem_before mem_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_mem   : mem_before  ⊑  mem_combined := by
-  unfold mem_before mem_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    %3 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.br ^bb1(%3 : !llvm.ptr)
   }]
 

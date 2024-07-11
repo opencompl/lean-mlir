@@ -374,12 +374,7 @@ def class_normal_xor_fcmp_oeq_inf_before := [llvmfunc|
 
 def fcmp_oeq_inf_or_class_normal_combined := [llvmfunc|
   llvm.func @fcmp_oeq_inf_or_class_normal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_inf_or_class_normal   : fcmp_oeq_inf_or_class_normal_before  ⊑  fcmp_oeq_inf_or_class_normal_combined := by
-  unfold fcmp_oeq_inf_or_class_normal_before fcmp_oeq_inf_or_class_normal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -389,12 +384,7 @@ theorem inst_combine_fcmp_oeq_inf_or_class_normal   : fcmp_oeq_inf_or_class_norm
   sorry
 def class_normal_or_fcmp_oeq_inf_combined := [llvmfunc|
   llvm.func @class_normal_or_fcmp_oeq_inf(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_or_fcmp_oeq_inf   : class_normal_or_fcmp_oeq_inf_before  ⊑  class_normal_or_fcmp_oeq_inf_combined := by
-  unfold class_normal_or_fcmp_oeq_inf_before class_normal_or_fcmp_oeq_inf_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -404,12 +394,7 @@ theorem inst_combine_class_normal_or_fcmp_oeq_inf   : class_normal_or_fcmp_oeq_i
   sorry
 def fcmp_oeq_inf_or_class_normal_vector_combined := [llvmfunc|
   llvm.func @fcmp_oeq_inf_or_class_normal_vector(%arg0: vector<2xf16>) -> vector<2xi1> {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (vector<2xf16>) -> vector<2xi1>]
-
-theorem inst_combine_fcmp_oeq_inf_or_class_normal_vector   : fcmp_oeq_inf_or_class_normal_vector_before  ⊑  fcmp_oeq_inf_or_class_normal_vector_combined := by
-  unfold fcmp_oeq_inf_or_class_normal_vector_before fcmp_oeq_inf_or_class_normal_vector_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (vector<2xf16>) -> vector<2xi1>
     llvm.return %0 : vector<2xi1>
   }]
 
@@ -421,18 +406,8 @@ def fcmp_oeq_inf_multi_use_or_class_normal_combined := [llvmfunc|
   llvm.func @fcmp_oeq_inf_multi_use_or_class_normal(%arg0: f16, %arg1: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
     %1 = llvm.fcmp "oeq" %arg0, %0 : f16
-    llvm.store %1, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_fcmp_oeq_inf_multi_use_or_class_normal   : fcmp_oeq_inf_multi_use_or_class_normal_before  ⊑  fcmp_oeq_inf_multi_use_or_class_normal_combined := by
-  unfold fcmp_oeq_inf_multi_use_or_class_normal_before fcmp_oeq_inf_multi_use_or_class_normal_combined
-  simp_alive_peephole
-  sorry
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_inf_multi_use_or_class_normal   : fcmp_oeq_inf_multi_use_or_class_normal_before  ⊑  fcmp_oeq_inf_multi_use_or_class_normal_combined := by
-  unfold fcmp_oeq_inf_multi_use_or_class_normal_before fcmp_oeq_inf_multi_use_or_class_normal_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -445,18 +420,8 @@ def fcmp_oeq_inf_or_class_normal_multi_use_combined := [llvmfunc|
   llvm.func @fcmp_oeq_inf_or_class_normal_multi_use(%arg0: f16, %arg1: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0x7C00 : f16) : f16
     %1 = llvm.fcmp "oeq" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_inf_or_class_normal_multi_use   : fcmp_oeq_inf_or_class_normal_multi_use_before  ⊑  fcmp_oeq_inf_or_class_normal_multi_use_combined := by
-  unfold fcmp_oeq_inf_or_class_normal_multi_use_before fcmp_oeq_inf_or_class_normal_multi_use_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_fcmp_oeq_inf_or_class_normal_multi_use   : fcmp_oeq_inf_or_class_normal_multi_use_before  ⊑  fcmp_oeq_inf_or_class_normal_multi_use_combined := by
-  unfold fcmp_oeq_inf_or_class_normal_multi_use_before fcmp_oeq_inf_or_class_normal_multi_use_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -520,12 +485,7 @@ theorem inst_combine_fcmp_ord_and_class_isnan_commute   : fcmp_ord_and_class_isn
   sorry
 def fcmp_isfinite_and_class_subnormal_combined := [llvmfunc|
   llvm.func @fcmp_isfinite_and_class_subnormal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 144 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_isfinite_and_class_subnormal   : fcmp_isfinite_and_class_subnormal_before  ⊑  fcmp_isfinite_and_class_subnormal_combined := by
-  unfold fcmp_isfinite_and_class_subnormal_before fcmp_isfinite_and_class_subnormal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 144 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -571,12 +531,7 @@ theorem inst_combine_class_finite_or_fcmp_issubnormal   : class_finite_or_fcmp_i
   sorry
 def fcmp_issubnormal_and_class_finite_combined := [llvmfunc|
   llvm.func @fcmp_issubnormal_and_class_finite(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 240 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_issubnormal_and_class_finite   : fcmp_issubnormal_and_class_finite_before  ⊑  fcmp_issubnormal_and_class_finite_combined := by
-  unfold fcmp_issubnormal_and_class_finite_before fcmp_issubnormal_and_class_finite_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 240 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -586,12 +541,7 @@ theorem inst_combine_fcmp_issubnormal_and_class_finite   : fcmp_issubnormal_and_
   sorry
 def class_inf_or_fcmp_issubnormal_combined := [llvmfunc|
   llvm.func @class_inf_or_fcmp_issubnormal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 756 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_inf_or_fcmp_issubnormal   : class_inf_or_fcmp_issubnormal_before  ⊑  class_inf_or_fcmp_issubnormal_combined := by
-  unfold class_inf_or_fcmp_issubnormal_before class_inf_or_fcmp_issubnormal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 756 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -613,12 +563,7 @@ theorem inst_combine_class_finite_or_fcmp_issubnormal_vector   : class_finite_or
   sorry
 def fcmp_oeq_zero_or_class_normal_combined := [llvmfunc|
   llvm.func @fcmp_oeq_zero_or_class_normal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 360 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_zero_or_class_normal   : fcmp_oeq_zero_or_class_normal_before  ⊑  fcmp_oeq_zero_or_class_normal_combined := by
-  unfold fcmp_oeq_zero_or_class_normal_before fcmp_oeq_zero_or_class_normal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 360 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -630,12 +575,7 @@ def fcmp_oeq_zero_or_class_normal_daz_combined := [llvmfunc|
   llvm.func @fcmp_oeq_zero_or_class_normal_daz(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,preserve-sign"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "oeq" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_zero_or_class_normal_daz   : fcmp_oeq_zero_or_class_normal_daz_before  ⊑  fcmp_oeq_zero_or_class_normal_daz_combined := by
-  unfold fcmp_oeq_zero_or_class_normal_daz_before fcmp_oeq_zero_or_class_normal_daz_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -649,12 +589,7 @@ def fcmp_oeq_zero_or_class_normal_daz_v2f16_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %2 = llvm.fcmp "oeq" %arg0, %1 : vector<2xf16>
-    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (vector<2xf16>) -> vector<2xi1>]
-
-theorem inst_combine_fcmp_oeq_zero_or_class_normal_daz_v2f16   : fcmp_oeq_zero_or_class_normal_daz_v2f16_before  ⊑  fcmp_oeq_zero_or_class_normal_daz_v2f16_combined := by
-  unfold fcmp_oeq_zero_or_class_normal_daz_v2f16_before fcmp_oeq_zero_or_class_normal_daz_v2f16_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (vector<2xf16>) -> vector<2xi1>
     %4 = llvm.or %2, %3  : vector<2xi1>
     llvm.return %4 : vector<2xi1>
   }]
@@ -667,12 +602,7 @@ def fcmp_oeq_zero_or_class_normal_dynamic_combined := [llvmfunc|
   llvm.func @fcmp_oeq_zero_or_class_normal_dynamic(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,dynamic"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "oeq" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_zero_or_class_normal_dynamic   : fcmp_oeq_zero_or_class_normal_dynamic_before  ⊑  fcmp_oeq_zero_or_class_normal_dynamic_combined := by
-  unfold fcmp_oeq_zero_or_class_normal_dynamic_before fcmp_oeq_zero_or_class_normal_dynamic_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -686,12 +616,7 @@ def fcmp_oeq_zero_or_class_normal_dynamic_v2f16_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<2xf16>) : vector<2xf16>
     %2 = llvm.fcmp "oeq" %arg0, %1 : vector<2xf16>
-    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (vector<2xf16>) -> vector<2xi1>]
-
-theorem inst_combine_fcmp_oeq_zero_or_class_normal_dynamic_v2f16   : fcmp_oeq_zero_or_class_normal_dynamic_v2f16_before  ⊑  fcmp_oeq_zero_or_class_normal_dynamic_v2f16_combined := by
-  unfold fcmp_oeq_zero_or_class_normal_dynamic_v2f16_before fcmp_oeq_zero_or_class_normal_dynamic_v2f16_combined
-  simp_alive_peephole
-  sorry
+    %3 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (vector<2xf16>) -> vector<2xi1>
     %4 = llvm.or %2, %3  : vector<2xi1>
     llvm.return %4 : vector<2xi1>
   }]
@@ -702,12 +627,7 @@ theorem inst_combine_fcmp_oeq_zero_or_class_normal_dynamic_v2f16   : fcmp_oeq_ze
   sorry
 def class_normal_or_fcmp_oeq_zero_combined := [llvmfunc|
   llvm.func @class_normal_or_fcmp_oeq_zero(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 360 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_or_fcmp_oeq_zero   : class_normal_or_fcmp_oeq_zero_before  ⊑  class_normal_or_fcmp_oeq_zero_combined := by
-  unfold class_normal_or_fcmp_oeq_zero_before class_normal_or_fcmp_oeq_zero_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 360 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -717,12 +637,7 @@ theorem inst_combine_class_normal_or_fcmp_oeq_zero   : class_normal_or_fcmp_oeq_
   sorry
 def fcmp_ueq_zero_or_class_normal_combined := [llvmfunc|
   llvm.func @fcmp_ueq_zero_or_class_normal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 363 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_ueq_zero_or_class_normal   : fcmp_ueq_zero_or_class_normal_before  ⊑  fcmp_ueq_zero_or_class_normal_combined := by
-  unfold fcmp_ueq_zero_or_class_normal_before fcmp_ueq_zero_or_class_normal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 363 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -732,12 +647,7 @@ theorem inst_combine_fcmp_ueq_zero_or_class_normal   : fcmp_ueq_zero_or_class_no
   sorry
 def class_normal_or_fcmp_ueq_zero_combined := [llvmfunc|
   llvm.func @class_normal_or_fcmp_ueq_zero(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 363 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_or_fcmp_ueq_zero   : class_normal_or_fcmp_ueq_zero_before  ⊑  class_normal_or_fcmp_ueq_zero_combined := by
-  unfold class_normal_or_fcmp_ueq_zero_before class_normal_or_fcmp_ueq_zero_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 363 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -760,12 +670,7 @@ def fcmp_one_zero_or_class_normal_daz_combined := [llvmfunc|
   llvm.func @fcmp_one_zero_or_class_normal_daz(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,preserve-sign"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "one" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_one_zero_or_class_normal_daz   : fcmp_one_zero_or_class_normal_daz_before  ⊑  fcmp_one_zero_or_class_normal_daz_combined := by
-  unfold fcmp_one_zero_or_class_normal_daz_before fcmp_one_zero_or_class_normal_daz_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -778,12 +683,7 @@ def fcmp_one_zero_or_class_normal_dynamic_combined := [llvmfunc|
   llvm.func @fcmp_one_zero_or_class_normal_dynamic(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,dynamic"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "one" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_one_zero_or_class_normal_dynamic   : fcmp_one_zero_or_class_normal_dynamic_before  ⊑  fcmp_one_zero_or_class_normal_dynamic_combined := by
-  unfold fcmp_one_zero_or_class_normal_dynamic_before fcmp_one_zero_or_class_normal_dynamic_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -829,12 +729,7 @@ def class_normal_or_fcmp_une_zero_daz_combined := [llvmfunc|
   llvm.func @class_normal_or_fcmp_une_zero_daz(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,preserve-sign"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "une" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_or_fcmp_une_zero_daz   : class_normal_or_fcmp_une_zero_daz_before  ⊑  class_normal_or_fcmp_une_zero_daz_combined := by
-  unfold class_normal_or_fcmp_une_zero_daz_before class_normal_or_fcmp_une_zero_daz_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -847,12 +742,7 @@ def class_normal_or_fcmp_une_zero_dynamic_combined := [llvmfunc|
   llvm.func @class_normal_or_fcmp_une_zero_dynamic(%arg0: f16) -> i1 attributes {passthrough = [["denormal-fp-math", "ieee,dynamic"]]} {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "une" %arg0, %0 : f16
-    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_or_fcmp_une_zero_dynamic   : class_normal_or_fcmp_une_zero_dynamic_before  ⊑  class_normal_or_fcmp_une_zero_dynamic_combined := by
-  unfold class_normal_or_fcmp_une_zero_dynamic_before class_normal_or_fcmp_une_zero_dynamic_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.is.fpclass"(%arg0) <{bit = 264 : i32}> : (f16) -> i1
     %3 = llvm.or %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -863,12 +753,7 @@ theorem inst_combine_class_normal_or_fcmp_une_zero_dynamic   : class_normal_or_f
   sorry
 def fcmp_oeq_inf_xor_class_normal_combined := [llvmfunc|
   llvm.func @fcmp_oeq_inf_xor_class_normal(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1]
-
-theorem inst_combine_fcmp_oeq_inf_xor_class_normal   : fcmp_oeq_inf_xor_class_normal_before  ⊑  fcmp_oeq_inf_xor_class_normal_combined := by
-  unfold fcmp_oeq_inf_xor_class_normal_before fcmp_oeq_inf_xor_class_normal_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 
@@ -878,12 +763,7 @@ theorem inst_combine_fcmp_oeq_inf_xor_class_normal   : fcmp_oeq_inf_xor_class_no
   sorry
 def class_normal_xor_fcmp_oeq_inf_combined := [llvmfunc|
   llvm.func @class_normal_xor_fcmp_oeq_inf(%arg0: f16) -> i1 {
-    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1]
-
-theorem inst_combine_class_normal_xor_fcmp_oeq_inf   : class_normal_xor_fcmp_oeq_inf_before  ⊑  class_normal_xor_fcmp_oeq_inf_combined := by
-  unfold class_normal_xor_fcmp_oeq_inf_before class_normal_xor_fcmp_oeq_inf_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.is.fpclass"(%arg0) <{bit = 776 : i32}> : (f16) -> i1
     llvm.return %0 : i1
   }]
 

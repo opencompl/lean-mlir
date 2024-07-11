@@ -1110,12 +1110,7 @@ def rotl_safe_i16_commute_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(15 : i16) : i16
     %2 = llvm.sub %0, %arg1  : i16
     %3 = llvm.and %2, %1  : i16
-    llvm.store %3, %arg2 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_rotl_safe_i16_commute_extra_use   : rotl_safe_i16_commute_extra_use_before  ⊑  rotl_safe_i16_commute_extra_use_combined := by
-  unfold rotl_safe_i16_commute_extra_use_before rotl_safe_i16_commute_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 2 : i64} : i16, !llvm.ptr
     %4 = llvm.intr.fshl(%arg0, %arg0, %arg1)  : (i16, i16, i16) -> i16
     llvm.return %4 : i16
   }]
@@ -1143,12 +1138,7 @@ def rotr_safe_i8_commute_extra_use_combined := [llvmfunc|
     %4 = llvm.and %2, %1  : i8
     %5 = llvm.shl %arg0, %4  : i8
     %6 = llvm.lshr %arg0, %3  : i8
-    llvm.store %6, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_rotr_safe_i8_commute_extra_use   : rotr_safe_i8_commute_extra_use_before  ⊑  rotr_safe_i8_commute_extra_use_combined := by
-  unfold rotr_safe_i8_commute_extra_use_before rotr_safe_i8_commute_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %7 = llvm.or %5, %6  : i8
     llvm.return %7 : i8
   }]

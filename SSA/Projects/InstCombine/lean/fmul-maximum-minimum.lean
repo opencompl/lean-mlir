@@ -119,12 +119,7 @@ theorem inst_combine_test_vect   : test_vect_before  ⊑  test_vect_combined := 
   sorry
 def test_flags_combined := [llvmfunc|
   llvm.func @test_flags(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_test_flags   : test_flags_before  ⊑  test_flags_combined := by
-  unfold test_flags_before test_flags_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 
@@ -134,12 +129,7 @@ theorem inst_combine_test_flags   : test_flags_before  ⊑  test_flags_combined 
   sorry
 def test_flags2_combined := [llvmfunc|
   llvm.func @test_flags2(%arg0: f32, %arg1: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz, arcp, contract, afn, reassoc>} : f32]
-
-theorem inst_combine_test_flags2   : test_flags2_before  ⊑  test_flags2_combined := by
-  unfold test_flags2_before test_flags2_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg1  {fastmathFlags = #llvm.fastmath<nsz, arcp, contract, afn, reassoc>} : f32
     llvm.return %0 : f32
   }]
 

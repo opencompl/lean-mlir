@@ -158,12 +158,7 @@ def PR43233_before := [llvmfunc|
 def test_simplify_3_combined := [llvmfunc|
   llvm.func @test_simplify_3(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(3 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64]
-
-theorem inst_combine_test_simplify_3   : test_simplify_3_before  ⊑  test_simplify_3_combined := by
-  unfold test_simplify_3_before test_simplify_3_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64
     llvm.return %1 : f64
   }]
 
@@ -174,12 +169,7 @@ theorem inst_combine_test_simplify_3   : test_simplify_3_before  ⊑  test_simpl
 def test_simplify_4f_combined := [llvmfunc|
   llvm.func @test_simplify_4f(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(4 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32]
-
-theorem inst_combine_test_simplify_4f   : test_simplify_4f_before  ⊑  test_simplify_4f_combined := by
-  unfold test_simplify_4f_before test_simplify_4f_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -190,12 +180,7 @@ theorem inst_combine_test_simplify_4f   : test_simplify_4f_before  ⊑  test_sim
 def test_simplify_4_combined := [llvmfunc|
   llvm.func @test_simplify_4(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(4 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64]
-
-theorem inst_combine_test_simplify_4   : test_simplify_4_before  ⊑  test_simplify_4_combined := by
-  unfold test_simplify_4_before test_simplify_4_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64
     llvm.return %1 : f64
   }]
 
@@ -206,12 +191,7 @@ theorem inst_combine_test_simplify_4   : test_simplify_4_before  ⊑  test_simpl
 def test_simplify_15_combined := [llvmfunc|
   llvm.func @test_simplify_15(%arg0: vector<2xf32>) -> vector<2xf32> {
     %0 = llvm.mlir.constant(15 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf32>, i32) -> vector<2xf32>]
-
-theorem inst_combine_test_simplify_15   : test_simplify_15_before  ⊑  test_simplify_15_combined := by
-  unfold test_simplify_15_before test_simplify_15_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf32>, i32) -> vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 
@@ -222,12 +202,7 @@ theorem inst_combine_test_simplify_15   : test_simplify_15_before  ⊑  test_sim
 def test_simplify_neg_7_combined := [llvmfunc|
   llvm.func @test_simplify_neg_7(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(-7 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>, i32) -> vector<2xf64>]
-
-theorem inst_combine_test_simplify_neg_7   : test_simplify_neg_7_before  ⊑  test_simplify_neg_7_combined := by
-  unfold test_simplify_neg_7_before test_simplify_neg_7_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>, i32) -> vector<2xf64>
     llvm.return %1 : vector<2xf64>
   }]
 
@@ -238,12 +213,7 @@ theorem inst_combine_test_simplify_neg_7   : test_simplify_neg_7_before  ⊑  te
 def test_simplify_neg_19_combined := [llvmfunc|
   llvm.func @test_simplify_neg_19(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(-19 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32]
-
-theorem inst_combine_test_simplify_neg_19   : test_simplify_neg_19_before  ⊑  test_simplify_neg_19_combined := by
-  unfold test_simplify_neg_19_before test_simplify_neg_19_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -254,12 +224,7 @@ theorem inst_combine_test_simplify_neg_19   : test_simplify_neg_19_before  ⊑  
 def test_simplify_11_23_combined := [llvmfunc|
   llvm.func @test_simplify_11_23(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.123000e+01 : f64) : f64
-    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64]
-
-theorem inst_combine_test_simplify_11_23   : test_simplify_11_23_before  ⊑  test_simplify_11_23_combined := by
-  unfold test_simplify_11_23_before test_simplify_11_23_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -270,12 +235,7 @@ theorem inst_combine_test_simplify_11_23   : test_simplify_11_23_before  ⊑  te
 def test_simplify_32_combined := [llvmfunc|
   llvm.func @test_simplify_32(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(32 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32]
-
-theorem inst_combine_test_simplify_32   : test_simplify_32_before  ⊑  test_simplify_32_combined := by
-  unfold test_simplify_32_before test_simplify_32_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -286,12 +246,7 @@ theorem inst_combine_test_simplify_32   : test_simplify_32_before  ⊑  test_sim
 def test_simplify_33_combined := [llvmfunc|
   llvm.func @test_simplify_33(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(33 : i32) : i32
-    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64]
-
-theorem inst_combine_test_simplify_33   : test_simplify_33_before  ⊑  test_simplify_33_combined := by
-  unfold test_simplify_33_before test_simplify_33_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64
     llvm.return %1 : f64
   }]
 
@@ -302,24 +257,9 @@ theorem inst_combine_test_simplify_33   : test_simplify_33_before  ⊑  test_sim
 def test_simplify_16_5_combined := [llvmfunc|
   llvm.func @test_simplify_16_5(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(16 : i32) : i32
-    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_test_simplify_16_5   : test_simplify_16_5_before  ⊑  test_simplify_16_5_combined := by
-  unfold test_simplify_16_5_before test_simplify_16_5_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64]
-
-theorem inst_combine_test_simplify_16_5   : test_simplify_16_5_before  ⊑  test_simplify_16_5_combined := by
-  unfold test_simplify_16_5_before test_simplify_16_5_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_test_simplify_16_5   : test_simplify_16_5_before  ⊑  test_simplify_16_5_combined := by
-  unfold test_simplify_16_5_before test_simplify_16_5_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
+    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64
+    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %3 : f64
   }]
 
@@ -330,24 +270,9 @@ theorem inst_combine_test_simplify_16_5   : test_simplify_16_5_before  ⊑  test
 def test_simplify_neg_16_5_combined := [llvmfunc|
   llvm.func @test_simplify_neg_16_5(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(-17 : i32) : i32
-    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_test_simplify_neg_16_5   : test_simplify_neg_16_5_before  ⊑  test_simplify_neg_16_5_combined := by
-  unfold test_simplify_neg_16_5_before test_simplify_neg_16_5_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64]
-
-theorem inst_combine_test_simplify_neg_16_5   : test_simplify_neg_16_5_before  ⊑  test_simplify_neg_16_5_combined := by
-  unfold test_simplify_neg_16_5_before test_simplify_neg_16_5_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_test_simplify_neg_16_5   : test_simplify_neg_16_5_before  ⊑  test_simplify_neg_16_5_combined := by
-  unfold test_simplify_neg_16_5_before test_simplify_neg_16_5_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
+    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, i32) -> f64
+    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %3 : f64
   }]
 
@@ -357,12 +282,7 @@ theorem inst_combine_test_simplify_neg_16_5   : test_simplify_neg_16_5_before  �
   sorry
 def test_simplify_0_5_libcall_combined := [llvmfunc|
   llvm.func @test_simplify_0_5_libcall(%arg0: f64) -> f64 {
-    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_test_simplify_0_5_libcall   : test_simplify_0_5_libcall_before  ⊑  test_simplify_0_5_libcall_combined := by
-  unfold test_simplify_0_5_libcall_before test_simplify_0_5_libcall_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
     llvm.return %0 : f64
   }]
 
@@ -373,18 +293,8 @@ theorem inst_combine_test_simplify_0_5_libcall   : test_simplify_0_5_libcall_bef
 def test_simplify_neg_0_5_libcall_combined := [llvmfunc|
   llvm.func @test_simplify_neg_0_5_libcall(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64]
-
-theorem inst_combine_test_simplify_neg_0_5_libcall   : test_simplify_neg_0_5_libcall_before  ⊑  test_simplify_neg_0_5_libcall_combined := by
-  unfold test_simplify_neg_0_5_libcall_before test_simplify_neg_0_5_libcall_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fdiv %0, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64]
-
-theorem inst_combine_test_simplify_neg_0_5_libcall   : test_simplify_neg_0_5_libcall_before  ⊑  test_simplify_neg_0_5_libcall_combined := by
-  unfold test_simplify_neg_0_5_libcall_before test_simplify_neg_0_5_libcall_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f64) -> f64
+    %2 = llvm.fdiv %0, %1  {fastmathFlags = #llvm.fastmath<fast>} : f64
     llvm.return %2 : f64
   }]
 
@@ -395,24 +305,9 @@ theorem inst_combine_test_simplify_neg_0_5_libcall   : test_simplify_neg_0_5_lib
 def test_simplify_neg_8_5_combined := [llvmfunc|
   llvm.func @test_simplify_neg_8_5(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(-9 : i32) : i32
-    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_test_simplify_neg_8_5   : test_simplify_neg_8_5_before  ⊑  test_simplify_neg_8_5_combined := by
-  unfold test_simplify_neg_8_5_before test_simplify_neg_8_5_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32]
-
-theorem inst_combine_test_simplify_neg_8_5   : test_simplify_neg_8_5_before  ⊑  test_simplify_neg_8_5_combined := by
-  unfold test_simplify_neg_8_5_before test_simplify_neg_8_5_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_test_simplify_neg_8_5   : test_simplify_neg_8_5_before  ⊑  test_simplify_neg_8_5_combined := by
-  unfold test_simplify_neg_8_5_before test_simplify_neg_8_5_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
+    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, i32) -> f32
+    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %3 : f32
   }]
 
@@ -423,24 +318,9 @@ theorem inst_combine_test_simplify_neg_8_5   : test_simplify_neg_8_5_before  ⊑
 def test_simplify_7_5_combined := [llvmfunc|
   llvm.func @test_simplify_7_5(%arg0: vector<2xf64>) -> vector<2xf64> {
     %0 = llvm.mlir.constant(7 : i32) : i32
-    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>) -> vector<2xf64>]
-
-theorem inst_combine_test_simplify_7_5   : test_simplify_7_5_before  ⊑  test_simplify_7_5_combined := by
-  unfold test_simplify_7_5_before test_simplify_7_5_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>, i32) -> vector<2xf64>]
-
-theorem inst_combine_test_simplify_7_5   : test_simplify_7_5_before  ⊑  test_simplify_7_5_combined := by
-  unfold test_simplify_7_5_before test_simplify_7_5_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>]
-
-theorem inst_combine_test_simplify_7_5   : test_simplify_7_5_before  ⊑  test_simplify_7_5_combined := by
-  unfold test_simplify_7_5_before test_simplify_7_5_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>) -> vector<2xf64>
+    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<2xf64>, i32) -> vector<2xf64>
+    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : vector<2xf64>
     llvm.return %3 : vector<2xf64>
   }]
 
@@ -451,24 +331,9 @@ theorem inst_combine_test_simplify_7_5   : test_simplify_7_5_before  ⊑  test_s
 def test_simplify_3_5_combined := [llvmfunc|
   llvm.func @test_simplify_3_5(%arg0: vector<4xf32>) -> vector<4xf32> {
     %0 = llvm.mlir.constant(3 : i32) : i32
-    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<4xf32>) -> vector<4xf32>]
-
-theorem inst_combine_test_simplify_3_5   : test_simplify_3_5_before  ⊑  test_simplify_3_5_combined := by
-  unfold test_simplify_3_5_before test_simplify_3_5_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<4xf32>, i32) -> vector<4xf32>]
-
-theorem inst_combine_test_simplify_3_5   : test_simplify_3_5_before  ⊑  test_simplify_3_5_combined := by
-  unfold test_simplify_3_5_before test_simplify_3_5_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : vector<4xf32>]
-
-theorem inst_combine_test_simplify_3_5   : test_simplify_3_5_before  ⊑  test_simplify_3_5_combined := by
-  unfold test_simplify_3_5_before test_simplify_3_5_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.sqrt(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<4xf32>) -> vector<4xf32>
+    %2 = llvm.intr.powi(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (vector<4xf32>, i32) -> vector<4xf32>
+    %3 = llvm.fmul %2, %1  {fastmathFlags = #llvm.fastmath<fast>} : vector<4xf32>
     llvm.return %3 : vector<4xf32>
   }]
 
@@ -478,12 +343,7 @@ theorem inst_combine_test_simplify_3_5   : test_simplify_3_5_before  ⊑  test_s
   sorry
 def shrink_pow_libcall_half_combined := [llvmfunc|
   llvm.func @shrink_pow_libcall_half(%arg0: f32) -> f32 {
-    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_shrink_pow_libcall_half   : shrink_pow_libcall_half_before  ⊑  shrink_pow_libcall_half_combined := by
-  unfold shrink_pow_libcall_half_before shrink_pow_libcall_half_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrtf(%arg0) {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 

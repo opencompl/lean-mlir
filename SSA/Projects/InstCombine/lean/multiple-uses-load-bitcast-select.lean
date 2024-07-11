@@ -34,44 +34,14 @@ def PR35618_before := [llvmfunc|
 def PR35618_combined := [llvmfunc|
   llvm.func @PR35618(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
-    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.alloca %0 x f64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64
+    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> f64
     %5 = llvm.fcmp "olt" %3, %4 : f64
     %6 = llvm.select %5, %3, %4 : i1, f64
-    llvm.store %6, %arg0 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg1 {alignment = 8 : i64} : f64, !llvm.ptr]
-
-theorem inst_combine_PR35618   : PR35618_before  ⊑  PR35618_combined := by
-  unfold PR35618_before PR35618_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg0 {alignment = 8 : i64} : f64, !llvm.ptr
+    llvm.store %6, %arg1 {alignment = 8 : i64} : f64, !llvm.ptr
     llvm.return
   }]
 

@@ -124,28 +124,13 @@ def call_bad_ato_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i64) : i64
     %3 = llvm.mlir.constant(2 : i64) : i64
     %4 = llvm.call @atoi(%1) : (!llvm.ptr) -> !llvm.ptr
-    llvm.store %4, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_bad_ato   : call_bad_ato_before  ⊑  call_bad_ato_combined := by
-  unfold call_bad_ato_before call_bad_ato_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %5 = llvm.call @atol(%1) : (!llvm.ptr) -> !llvm.ptr
     %6 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %5, %6 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_bad_ato   : call_bad_ato_before  ⊑  call_bad_ato_combined := by
-  unfold call_bad_ato_before call_bad_ato_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %6 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %7 = llvm.call @atol(%1) : (!llvm.ptr) -> !llvm.ptr
     %8 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %7, %8 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_bad_ato   : call_bad_ato_before  ⊑  call_bad_ato_combined := by
-  unfold call_bad_ato_before call_bad_ato_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %8 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -234,35 +219,15 @@ def call_bad_strto_combined := [llvmfunc|
     %3 = llvm.mlir.constant(1 : i64) : i64
     %4 = llvm.mlir.constant(3 : i64) : i64
     %5 = llvm.call @strtol(%1, %2) : (!llvm.ptr, !llvm.ptr) -> i32
-    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_bad_strto   : call_bad_strto_before  ⊑  call_bad_strto_combined := by
-  unfold call_bad_strto_before call_bad_strto_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %6 = llvm.call @strtoul(%1, %2) : (!llvm.ptr, !llvm.ptr) -> i32
     %7 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_bad_strto   : call_bad_strto_before  ⊑  call_bad_strto_combined := by
-  unfold call_bad_strto_before call_bad_strto_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     %8 = llvm.call @strtoll(%1, %2) : (!llvm.ptr, !llvm.ptr) -> i64
-    llvm.store %8, %arg1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_bad_strto   : call_bad_strto_before  ⊑  call_bad_strto_combined := by
-  unfold call_bad_strto_before call_bad_strto_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %arg1 {alignment = 4 : i64} : i64, !llvm.ptr
     %9 = llvm.call @strtoull(%1, %2) : (!llvm.ptr, !llvm.ptr) -> i64
     %10 = llvm.getelementptr %arg1[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %9, %10 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_bad_strto   : call_bad_strto_before  ⊑  call_bad_strto_combined := by
-  unfold call_bad_strto_before call_bad_strto_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %10 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

@@ -786,12 +786,7 @@ def lshr_or_extra_use_combined := [llvmfunc|
     %1 = llvm.mlir.constant(7 : i32) : i32
     %2 = llvm.lshr %arg0, %0  : i32
     %3 = llvm.or %2, %arg1  : i32
-    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_lshr_or_extra_use   : lshr_or_extra_use_before  ⊑  lshr_or_extra_use_combined := by
-  unfold lshr_or_extra_use_before lshr_or_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     %4 = llvm.lshr %3, %1  : i32
     llvm.return %4 : i32
   }]

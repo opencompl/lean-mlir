@@ -268,12 +268,7 @@ theorem inst_combine_not_fneg_as_int_f32_castback_wrongconst   : not_fneg_as_int
 def fneg_as_int_f32_castback_multi_use_combined := [llvmfunc|
   llvm.func @fneg_as_int_f32_castback_multi_use(%arg0: f32, %arg1: !llvm.ptr) -> f32 {
     %0 = llvm.fneg %arg0  : f32
-    llvm.store %0, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_fneg_as_int_f32_castback_multi_use   : fneg_as_int_f32_castback_multi_use_before  ⊑  fneg_as_int_f32_castback_multi_use_combined := by
-  unfold fneg_as_int_f32_castback_multi_use_before fneg_as_int_f32_castback_multi_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return %0 : f32
   }]
 

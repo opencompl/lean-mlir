@@ -1712,12 +1712,7 @@ def select_fadd_fcmp_bad_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(-1.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad   : select_fadd_fcmp_bad_before  ⊑  select_fadd_fcmp_bad_combined := by
-  unfold select_fadd_fcmp_bad_before select_fadd_fcmp_bad_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %2, %arg1 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1768,12 +1763,7 @@ def select_fadd_fcmp_bad_5_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad_5(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.fcmp "one" %arg0, %0 : f32
-    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad_5   : select_fadd_fcmp_bad_5_before  ⊑  select_fadd_fcmp_bad_5_combined := by
-  unfold select_fadd_fcmp_bad_5_before select_fadd_fcmp_bad_5_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %arg1, %2 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1786,12 +1776,7 @@ def select_fadd_fcmp_bad_6_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad_6(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad_6   : select_fadd_fcmp_bad_6_before  ⊑  select_fadd_fcmp_bad_6_combined := by
-  unfold select_fadd_fcmp_bad_6_before select_fadd_fcmp_bad_6_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %arg1, %2 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1832,12 +1817,7 @@ def select_fadd_fcmp_bad_9_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad_9(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.fcmp "one" %arg0, %0 : f32
-    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad_9   : select_fadd_fcmp_bad_9_before  ⊑  select_fadd_fcmp_bad_9_combined := by
-  unfold select_fadd_fcmp_bad_9_before select_fadd_fcmp_bad_9_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %arg1, %2 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1891,12 +1871,7 @@ def select_fadd_fcmp_bad_13_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad_13(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad_13   : select_fadd_fcmp_bad_13_before  ⊑  select_fadd_fcmp_bad_13_combined := by
-  unfold select_fadd_fcmp_bad_13_before select_fadd_fcmp_bad_13_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %arg1, %2 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1909,12 +1884,7 @@ def select_fadd_fcmp_bad_14_combined := [llvmfunc|
   llvm.func @select_fadd_fcmp_bad_14(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(-1.000000e+00 : f32) : f32
     %1 = llvm.fcmp "une" %arg0, %0 : f32
-    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fadd_fcmp_bad_14   : select_fadd_fcmp_bad_14_before  ⊑  select_fadd_fcmp_bad_14_combined := by
-  unfold select_fadd_fcmp_bad_14_before select_fadd_fcmp_bad_14_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %arg1, %2 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1927,12 +1897,7 @@ def select_fmul_fcmp_bad_combined := [llvmfunc|
   llvm.func @select_fmul_fcmp_bad(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(3.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fmul %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fmul_fcmp_bad   : select_fmul_fcmp_bad_before  ⊑  select_fmul_fcmp_bad_combined := by
-  unfold select_fmul_fcmp_bad_before select_fmul_fcmp_bad_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %2, %arg1 : i1, f32
     llvm.return %3 : f32
   }]
@@ -1971,12 +1936,7 @@ def select_fmul_icmp_bad_2_combined := [llvmfunc|
   llvm.func @select_fmul_icmp_bad_2(%arg0: f32, %arg1: f32, %arg2: f32, %arg3: i32) -> f32 {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.icmp "eq" %arg3, %0 : i32
-    %2 = llvm.fmul %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fmul_icmp_bad_2   : select_fmul_icmp_bad_2_before  ⊑  select_fmul_icmp_bad_2_combined := by
-  unfold select_fmul_icmp_bad_2_before select_fmul_icmp_bad_2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %2, %arg1 : i1, f32
     llvm.return %3 : f32
   }]
@@ -2002,12 +1962,7 @@ def select_fdiv_fcmp_bad_2_combined := [llvmfunc|
   llvm.func @select_fdiv_fcmp_bad_2(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(3.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fdiv %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fdiv_fcmp_bad_2   : select_fdiv_fcmp_bad_2_before  ⊑  select_fdiv_fcmp_bad_2_combined := by
-  unfold select_fdiv_fcmp_bad_2_before select_fdiv_fcmp_bad_2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fdiv %arg0, %arg2  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %2, %arg1 : i1, f32
     llvm.return %3 : f32
   }]
@@ -2033,12 +1988,7 @@ def select_fsub_fcmp_bad_2_combined := [llvmfunc|
   llvm.func @select_fsub_fcmp_bad_2(%arg0: f32, %arg1: f32, %arg2: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
     %1 = llvm.fcmp "oeq" %arg0, %0 : f32
-    %2 = llvm.fsub %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32]
-
-theorem inst_combine_select_fsub_fcmp_bad_2   : select_fsub_fcmp_bad_2_before  ⊑  select_fsub_fcmp_bad_2_combined := by
-  unfold select_fsub_fcmp_bad_2_before select_fsub_fcmp_bad_2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fsub %arg2, %arg0  {fastmathFlags = #llvm.fastmath<nsz>} : f32
     %3 = llvm.select %1, %2, %arg1 : i1, f32
     llvm.return %3 : f32
   }]

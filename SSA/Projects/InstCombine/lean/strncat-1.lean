@@ -41,26 +41,11 @@ def main_combined := [llvmfunc|
     %3 = llvm.mlir.addressof @hello : !llvm.ptr
     %4 = llvm.mlir.constant(6 : i32) : i32
     %5 = llvm.mlir.constant(0 : i32) : i32
-    %6 = llvm.alloca %0 x !llvm.array<1024 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %6 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.alloca %0 x !llvm.array<1024 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %6 {alignment = 1 : i64} : i8, !llvm.ptr
     %7 = llvm.call @strlen(%6) : (!llvm.ptr) -> i32
     %8 = llvm.getelementptr inbounds %6[%7] : (!llvm.ptr, i32) -> !llvm.ptr, i8
-    "llvm.intr.memcpy"(%8, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%8, %3, %4) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     %9 = llvm.call @puts(%6) : (!llvm.ptr) -> i32
     llvm.return %5 : i32
   }]

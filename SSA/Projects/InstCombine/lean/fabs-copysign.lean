@@ -91,12 +91,7 @@ def fabs_copysign_no_ninf_before := [llvmfunc|
 def fabs_copysign_combined := [llvmfunc|
   llvm.func @fabs_copysign(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64]
-
-theorem inst_combine_fabs_copysign   : fabs_copysign_before  ⊑  fabs_copysign_combined := by
-  unfold fabs_copysign_before fabs_copysign_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -107,12 +102,7 @@ theorem inst_combine_fabs_copysign   : fabs_copysign_before  ⊑  fabs_copysign_
 def fabs_copysign_commuted_combined := [llvmfunc|
   llvm.func @fabs_copysign_commuted(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
-    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64]
-
-theorem inst_combine_fabs_copysign_commuted   : fabs_copysign_commuted_before  ⊑  fabs_copysign_commuted_combined := by
-  unfold fabs_copysign_commuted_before fabs_copysign_commuted_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64
     llvm.return %1 : f64
   }]
 
@@ -123,12 +113,7 @@ theorem inst_combine_fabs_copysign_commuted   : fabs_copysign_commuted_before  �
 def fabs_copysign_vec_combined := [llvmfunc|
   llvm.func @fabs_copysign_vec(%arg0: vector<4xf64>) -> vector<4xf64> {
     %0 = llvm.mlir.constant(dense<1.000000e+00> : vector<4xf64>) : vector<4xf64>
-    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (vector<4xf64>, vector<4xf64>) -> vector<4xf64>]
-
-theorem inst_combine_fabs_copysign_vec   : fabs_copysign_vec_before  ⊑  fabs_copysign_vec_combined := by
-  unfold fabs_copysign_vec_before fabs_copysign_vec_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (vector<4xf64>, vector<4xf64>) -> vector<4xf64>
     llvm.return %1 : vector<4xf64>
   }]
 
@@ -139,12 +124,7 @@ theorem inst_combine_fabs_copysign_vec   : fabs_copysign_vec_before  ⊑  fabs_c
 def fabs_copysign_vec_commuted_combined := [llvmfunc|
   llvm.func @fabs_copysign_vec_commuted(%arg0: vector<4xf64>) -> vector<4xf64> {
     %0 = llvm.mlir.constant(dense<1.000000e+00> : vector<4xf64>) : vector<4xf64>
-    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (vector<4xf64>, vector<4xf64>) -> vector<4xf64>]
-
-theorem inst_combine_fabs_copysign_vec_commuted   : fabs_copysign_vec_commuted_before  ⊑  fabs_copysign_vec_commuted_combined := by
-  unfold fabs_copysign_vec_commuted_before fabs_copysign_vec_commuted_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (vector<4xf64>, vector<4xf64>) -> vector<4xf64>
     llvm.return %1 : vector<4xf64>
   }]
 
@@ -155,12 +135,7 @@ theorem inst_combine_fabs_copysign_vec_commuted   : fabs_copysign_vec_commuted_b
 def fabs_copysignf_combined := [llvmfunc|
   llvm.func @fabs_copysignf(%arg0: f32) -> f32 {
     %0 = llvm.mlir.constant(1.000000e+00 : f32) : f32
-    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, f32) -> f32]
-
-theorem inst_combine_fabs_copysignf   : fabs_copysignf_before  ⊑  fabs_copysignf_combined := by
-  unfold fabs_copysignf_before fabs_copysignf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f32, f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -173,12 +148,7 @@ def fabs_copysign_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.intr.fabs(%arg0)  : (f64) -> f64
     llvm.call @use(%1) : (f64) -> ()
-    %2 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64]
-
-theorem inst_combine_fabs_copysign_use   : fabs_copysign_use_before  ⊑  fabs_copysign_use_combined := by
-  unfold fabs_copysign_use_before fabs_copysign_use_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.copysign(%0, %arg0)  {fastmathFlags = #llvm.fastmath<nnan, ninf>} : (f64, f64) -> f64
     llvm.return %2 : f64
   }]
 
@@ -211,12 +181,7 @@ theorem inst_combine_fabs_copysign_commuted_mismatch   : fabs_copysign_commuted_
 def fabs_copysign_no_nnan_combined := [llvmfunc|
   llvm.func @fabs_copysign_no_nnan(%arg0: f64) -> f64 {
     %0 = llvm.intr.fabs(%arg0)  : (f64) -> f64
-    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<ninf>} : f64]
-
-theorem inst_combine_fabs_copysign_no_nnan   : fabs_copysign_no_nnan_before  ⊑  fabs_copysign_no_nnan_combined := by
-  unfold fabs_copysign_no_nnan_before fabs_copysign_no_nnan_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<ninf>} : f64
     llvm.return %1 : f64
   }]
 
@@ -227,12 +192,7 @@ theorem inst_combine_fabs_copysign_no_nnan   : fabs_copysign_no_nnan_before  ⊑
 def fabs_copysign_no_ninf_combined := [llvmfunc|
   llvm.func @fabs_copysign_no_ninf(%arg0: f64) -> f64 {
     %0 = llvm.intr.fabs(%arg0)  : (f64) -> f64
-    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_fabs_copysign_no_ninf   : fabs_copysign_no_ninf_before  ⊑  fabs_copysign_no_ninf_combined := by
-  unfold fabs_copysign_no_ninf_before fabs_copysign_no_ninf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %arg0, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
     llvm.return %1 : f64
   }]
 

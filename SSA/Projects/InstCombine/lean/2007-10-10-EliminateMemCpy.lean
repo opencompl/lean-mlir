@@ -31,12 +31,7 @@ def foo_before := [llvmfunc|
 def foo_combined := [llvmfunc|
   llvm.func @foo(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(2021227008 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
     llvm.return

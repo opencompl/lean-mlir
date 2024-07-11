@@ -263,12 +263,7 @@ theorem inst_combine_not_masked_sub_i8   : not_masked_sub_i8_before  ⊑  not_ma
 def range_masked_sub_combined := [llvmfunc|
   llvm.func @range_masked_sub(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(31 : i32) : i32
-    %1 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_range_masked_sub   : range_masked_sub_before  ⊑  range_masked_sub_combined := by
-  unfold range_masked_sub_before range_masked_sub_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.ctlz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     %2 = llvm.xor %1, %0  : i32
     llvm.return %2 : i32
   }]

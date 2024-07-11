@@ -81,12 +81,7 @@ def test2_combined := [llvmfunc|
   llvm.func @test2(%arg0: !llvm.ptr, %arg1: i32) {
     %0 = llvm.mlir.constant("panic: restorelist inconsistency\00") : !llvm.array<33 x i8>
     %1 = llvm.mlir.addressof @S : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %arg1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %arg1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return
   }]
 
@@ -100,24 +95,9 @@ def test3_combined := [llvmfunc|
     %1 = llvm.mlir.constant(7103848 : i32) : i32
     %2 = llvm.mlir.constant(33037504440198504 : i64) : i64
     %3 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %2, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test3   : test3_before  ⊑  test3_combined := by
-  unfold test3_before test3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 2 : i64} : i16, !llvm.ptr
+    llvm.store %1, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %2, %arg0 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return %3 : i32
   }]
 

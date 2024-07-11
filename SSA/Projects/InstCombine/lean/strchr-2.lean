@@ -30,12 +30,7 @@ def test_nosimplify1_combined := [llvmfunc|
     %3 = llvm.mlir.constant(0 : i8) : i8
     %4 = llvm.mlir.addressof @chr : !llvm.ptr
     %5 = llvm.call @strchr(%1, %2) : (!llvm.ptr, i32) -> i8
-    llvm.store %5, %4 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_nosimplify1   : test_nosimplify1_before  ⊑  test_nosimplify1_combined := by
-  unfold test_nosimplify1_before test_nosimplify1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %4 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return
   }]
 

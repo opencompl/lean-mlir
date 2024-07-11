@@ -382,12 +382,7 @@ theorem inst_combine_test7   : test7_before  ⊑  test7_combined := by
 def test8_combined := [llvmfunc|
   llvm.func @test8(%arg0: !llvm.ptr, %arg1: i64) -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_test8   : test8_before  ⊑  test8_combined := by
-  unfold test8_before test8_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %2 = llvm.trunc %1 : i64 to i32
     %3 = llvm.inttoptr %2 : i32 to !llvm.ptr
     %4 = llvm.trunc %arg1 : i64 to i32

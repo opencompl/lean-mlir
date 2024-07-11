@@ -19,12 +19,7 @@ def pow_to_sqrt_before := [llvmfunc|
 
 def pow_to_sqrt_combined := [llvmfunc|
   llvm.func @pow_to_sqrt(%arg0: f64) {
-    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<afn>} : (f64) -> f64]
-
-theorem inst_combine_pow_to_sqrt   : pow_to_sqrt_before  ⊑  pow_to_sqrt_combined := by
-  unfold pow_to_sqrt_before pow_to_sqrt_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sqrt(%arg0) {fastmathFlags = #llvm.fastmath<afn>} : (f64) -> f64
     llvm.return
   }]
 

@@ -46,25 +46,10 @@ def _Z5test2RiS__before := [llvmfunc|
 
 def _Z5test1RiS__combined := [llvmfunc|
   llvm.func @_Z5test1RiS_(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z5test1RiS_   : _Z5test1RiS__before  ⊑  _Z5test1RiS__combined := by
-  unfold _Z5test1RiS__before _Z5test1RiS__combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z5test1RiS_   : _Z5test1RiS__before  ⊑  _Z5test1RiS__combined := by
-  unfold _Z5test1RiS__before _Z5test1RiS__combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.intr.smin(%0, %1)  : (i32, i32) -> i32
-    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z5test1RiS_   : _Z5test1RiS__before  ⊑  _Z5test1RiS__combined := by
-  unfold _Z5test1RiS__before _Z5test1RiS__combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -74,25 +59,10 @@ theorem inst_combine__Z5test1RiS_   : _Z5test1RiS__before  ⊑  _Z5test1RiS__com
   sorry
 def _Z5test2RiS__combined := [llvmfunc|
   llvm.func @_Z5test2RiS_(%arg0: !llvm.ptr, %arg1: !llvm.ptr) {
-    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z5test2RiS_   : _Z5test2RiS__before  ⊑  _Z5test2RiS__combined := by
-  unfold _Z5test2RiS__before _Z5test2RiS__combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z5test2RiS_   : _Z5test2RiS__before  ⊑  _Z5test2RiS__combined := by
-  unfold _Z5test2RiS__before _Z5test2RiS__combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.load %arg1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %2 = llvm.intr.smax(%0, %1)  : (i32, i32) -> i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z5test2RiS_   : _Z5test2RiS__before  ⊑  _Z5test2RiS__combined := by
-  unfold _Z5test2RiS__before _Z5test2RiS__combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

@@ -275,12 +275,7 @@ def memccpy_to_memcpy_combined := [llvmfunc|
   llvm.func @memccpy_to_memcpy(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(8245940763182785896 : i64) : i64
     %1 = llvm.mlir.constant(8 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_memccpy_to_memcpy   : memccpy_to_memcpy_before  ⊑  memccpy_to_memcpy_combined := by
-  unfold memccpy_to_memcpy_before memccpy_to_memcpy_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i64, !llvm.ptr
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %2 : !llvm.ptr
   }]
@@ -293,12 +288,7 @@ def memccpy_to_memcpy2_combined := [llvmfunc|
   llvm.func @memccpy_to_memcpy2(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(8245940763182785896 : i64) : i64
     %1 = llvm.mlir.constant(8 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_memccpy_to_memcpy2   : memccpy_to_memcpy2_before  ⊑  memccpy_to_memcpy2_combined := by
-  unfold memccpy_to_memcpy2_before memccpy_to_memcpy2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i64, !llvm.ptr
     %2 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %2 : !llvm.ptr
   }]
@@ -312,12 +302,7 @@ def memccpy_to_memcpy3_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\00") : !llvm.array<11 x i8>
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(5 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy3   : memccpy_to_memcpy3_before  ⊑  memccpy_to_memcpy3_combined := by
-  unfold memccpy_to_memcpy3_before memccpy_to_memcpy3_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 
@@ -330,12 +315,7 @@ def memccpy_to_memcpy3_tail_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\00") : !llvm.array<11 x i8>
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(5 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy3_tail   : memccpy_to_memcpy3_tail_before  ⊑  memccpy_to_memcpy3_tail_combined := by
-  unfold memccpy_to_memcpy3_tail_before memccpy_to_memcpy3_tail_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 
@@ -362,12 +342,7 @@ def memccpy_to_memcpy4_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\00") : !llvm.array<11 x i8>
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(11 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy4   : memccpy_to_memcpy4_before  ⊑  memccpy_to_memcpy4_combined := by
-  unfold memccpy_to_memcpy4_before memccpy_to_memcpy4_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return
   }]
 
@@ -381,12 +356,7 @@ def memccpy_to_memcpy5_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(7 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy5   : memccpy_to_memcpy5_before  ⊑  memccpy_to_memcpy5_combined := by
-  unfold memccpy_to_memcpy5_before memccpy_to_memcpy5_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %3 : !llvm.ptr
   }]
 
@@ -400,12 +370,7 @@ def memccpy_to_memcpy5_tail_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(7 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy5_tail   : memccpy_to_memcpy5_tail_before  ⊑  memccpy_to_memcpy5_tail_combined := by
-  unfold memccpy_to_memcpy5_tail_before memccpy_to_memcpy5_tail_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %3 : !llvm.ptr
   }]
 
@@ -433,12 +398,7 @@ def memccpy_to_memcpy6_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(6 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy6   : memccpy_to_memcpy6_before  ⊑  memccpy_to_memcpy6_combined := by
-  unfold memccpy_to_memcpy6_before memccpy_to_memcpy6_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %3 : !llvm.ptr
   }]
 
@@ -452,12 +412,7 @@ def memccpy_to_memcpy7_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(5 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy7   : memccpy_to_memcpy7_before  ⊑  memccpy_to_memcpy7_combined := by
-  unfold memccpy_to_memcpy7_before memccpy_to_memcpy7_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %3 : !llvm.ptr
   }]
 
@@ -471,12 +426,7 @@ def memccpy_to_memcpy8_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @hello : !llvm.ptr
     %2 = llvm.mlir.constant(11 : i64) : i64
     %3 = llvm.mlir.zero : !llvm.ptr
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy8   : memccpy_to_memcpy8_before  ⊑  memccpy_to_memcpy8_combined := by
-  unfold memccpy_to_memcpy8_before memccpy_to_memcpy8_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %3 : !llvm.ptr
   }]
 
@@ -489,12 +439,7 @@ def memccpy_to_memcpy9_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\00x") : !llvm.array<12 x i8>
     %1 = llvm.mlir.addressof @StopCharAfterNulTerminator : !llvm.ptr
     %2 = llvm.mlir.constant(12 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy9   : memccpy_to_memcpy9_before  ⊑  memccpy_to_memcpy9_combined := by
-  unfold memccpy_to_memcpy9_before memccpy_to_memcpy9_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %3 : !llvm.ptr
   }]
@@ -508,12 +453,7 @@ def memccpy_to_memcpy10_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\FFab\00") : !llvm.array<14 x i8>
     %1 = llvm.mlir.addressof @StringWithEOF : !llvm.ptr
     %2 = llvm.mlir.constant(11 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy10   : memccpy_to_memcpy10_before  ⊑  memccpy_to_memcpy10_combined := by
-  unfold memccpy_to_memcpy10_before memccpy_to_memcpy10_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %3 : !llvm.ptr
   }]
@@ -527,12 +467,7 @@ def memccpy_to_memcpy11_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\FFab\00") : !llvm.array<14 x i8>
     %1 = llvm.mlir.addressof @StringWithEOF : !llvm.ptr
     %2 = llvm.mlir.constant(11 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy11   : memccpy_to_memcpy11_before  ⊑  memccpy_to_memcpy11_combined := by
-  unfold memccpy_to_memcpy11_before memccpy_to_memcpy11_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %3 : !llvm.ptr
   }]
@@ -546,12 +481,7 @@ def memccpy_to_memcpy12_combined := [llvmfunc|
     %0 = llvm.mlir.constant("helloworld\FFab\00") : !llvm.array<14 x i8>
     %1 = llvm.mlir.addressof @StringWithEOF : !llvm.ptr
     %2 = llvm.mlir.constant(11 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memccpy_to_memcpy12   : memccpy_to_memcpy12_before  ⊑  memccpy_to_memcpy12_combined := by
-  unfold memccpy_to_memcpy12_before memccpy_to_memcpy12_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %1, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     %3 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     llvm.return %3 : !llvm.ptr
   }]

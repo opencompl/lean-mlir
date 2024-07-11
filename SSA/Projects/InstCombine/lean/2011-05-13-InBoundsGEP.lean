@@ -39,12 +39,7 @@ def main_combined := [llvmfunc|
     %4 = llvm.mlir.constant(-1 : i32) : i32
     %5 = llvm.add %arg0, %0  : i32
     %6 = llvm.add %arg0, %1  : i32
-    %7 = llvm.alloca %2 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.alloca %2 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
     %8 = llvm.sext %5 : i32 to i64
     %9 = llvm.getelementptr %7[%8] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %10 = llvm.sext %6 : i32 to i64

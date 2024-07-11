@@ -116,12 +116,7 @@ theorem inst_combine_call_memchr_api_c_n_eq_a   : call_memchr_api_c_n_eq_a_befor
   sorry
 def fold_memchr_s_c_15_eq_s_combined := [llvmfunc|
   llvm.func @fold_memchr_s_c_15_eq_s(%arg0: !llvm.ptr, %arg1: i32) -> i1 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_memchr_s_c_15_eq_s   : fold_memchr_s_c_15_eq_s_before  ⊑  fold_memchr_s_c_15_eq_s_combined := by
-  unfold fold_memchr_s_c_15_eq_s_before fold_memchr_s_c_15_eq_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.trunc %arg1 : i32 to i8
     %2 = llvm.icmp "eq" %0, %1 : i8
     llvm.return %2 : i1
@@ -133,12 +128,7 @@ theorem inst_combine_fold_memchr_s_c_15_eq_s   : fold_memchr_s_c_15_eq_s_before 
   sorry
 def fold_memchr_s_c_17_neq_s_combined := [llvmfunc|
   llvm.func @fold_memchr_s_c_17_neq_s(%arg0: !llvm.ptr, %arg1: i32) -> i1 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_memchr_s_c_17_neq_s   : fold_memchr_s_c_17_neq_s_before  ⊑  fold_memchr_s_c_17_neq_s_combined := by
-  unfold fold_memchr_s_c_17_neq_s_before fold_memchr_s_c_17_neq_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.trunc %arg1 : i32 to i8
     %2 = llvm.icmp "ne" %0, %1 : i8
     llvm.return %2 : i1
@@ -150,12 +140,7 @@ theorem inst_combine_fold_memchr_s_c_17_neq_s   : fold_memchr_s_c_17_neq_s_befor
   sorry
 def fold_memchr_s_c_nz_eq_s_combined := [llvmfunc|
   llvm.func @fold_memchr_s_c_nz_eq_s(%arg0: !llvm.ptr, %arg1: i32, %arg2: i64) -> i1 {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_fold_memchr_s_c_nz_eq_s   : fold_memchr_s_c_nz_eq_s_before  ⊑  fold_memchr_s_c_nz_eq_s_combined := by
-  unfold fold_memchr_s_c_nz_eq_s_before fold_memchr_s_c_nz_eq_s_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %1 = llvm.trunc %arg1 : i32 to i8
     %2 = llvm.icmp "eq" %0, %1 : i8
     llvm.return %2 : i1

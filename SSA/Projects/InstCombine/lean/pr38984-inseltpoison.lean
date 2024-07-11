@@ -64,12 +64,7 @@ def PR38984_2_combined := [llvmfunc|
     %5 = llvm.mlir.addressof @a : !llvm.ptr
     %6 = llvm.getelementptr inbounds %5[%4, %3] : (!llvm.ptr, i16, i16) -> !llvm.ptr, !llvm.array<21 x i16>
     %7 = llvm.mlir.zero : !llvm.ptr
-    %8 = llvm.load %0 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_PR38984_2   : PR38984_2_before  ⊑  PR38984_2_combined := by
-  unfold PR38984_2_before PR38984_2_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %0 {alignment = 2 : i64} : !llvm.ptr -> i16
     %9 = llvm.insertelement %8, %1[%2 : i64] : vector<4xi16>
     %10 = llvm.getelementptr %6[%9] : (!llvm.ptr, vector<4xi16>) -> !llvm.vec<4 x ptr>, i16
     %11 = llvm.getelementptr %7[%9] : (!llvm.ptr, vector<4xi16>) -> !llvm.vec<4 x ptr>, i16

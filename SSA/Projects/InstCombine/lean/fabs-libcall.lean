@@ -34,12 +34,7 @@ theorem inst_combine_replace_fabs_call_f80   : replace_fabs_call_f80_before  ⊑
   sorry
 def fmf_replace_fabs_call_f80_combined := [llvmfunc|
   llvm.func @fmf_replace_fabs_call_f80(%arg0: f80) -> f80 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f80) -> f80]
-
-theorem inst_combine_fmf_replace_fabs_call_f80   : fmf_replace_fabs_call_f80_before  ⊑  fmf_replace_fabs_call_f80_combined := by
-  unfold fmf_replace_fabs_call_f80_before fmf_replace_fabs_call_f80_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<nnan>} : (f80) -> f80
     llvm.return %0 : f80
   }]
 

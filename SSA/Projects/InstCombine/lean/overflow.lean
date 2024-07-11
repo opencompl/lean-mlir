@@ -123,12 +123,7 @@ def test2_combined := [llvmfunc|
     %3 = llvm.sext %arg1 : i32 to i64
     %4 = llvm.add %3, %2 overflow<nsw>  : i64
     %5 = llvm.add %4, %0 overflow<nsw>  : i64
-    llvm.store %5, %arg2 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_test2   : test2_before  ⊑  test2_combined := by
-  unfold test2_before test2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg2 {alignment = 4 : i64} : i64, !llvm.ptr
     %6 = llvm.icmp "ugt" %5, %1 : i64
     llvm.cond_br %6, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0

@@ -178,12 +178,7 @@ def masked_scatter1_combined := [llvmfunc|
     %18 = llvm.insertelement %17, %15[%11 : i64] : !llvm.vec<? x 4 x  i1>
     %19 = llvm.shufflevector %18, %15 [0, 0, 0, 0] : !llvm.vec<? x 4 x  i1> 
     %20 = llvm.mlir.constant(4 : i32) : i32
-    llvm.intr.masked.scatter %9, %14, %19 {alignment = 4 : i32} : !llvm.vec<? x 4 x  i32>, vector<[4]xi1> into !llvm.vec<? x 4 x  ptr>]
-
-theorem inst_combine_masked_scatter1   : masked_scatter1_before  ⊑  masked_scatter1_combined := by
-  unfold masked_scatter1_before masked_scatter1_combined
-  simp_alive_peephole
-  sorry
+    llvm.intr.masked.scatter %9, %14, %19 {alignment = 4 : i32} : !llvm.vec<? x 4 x  i32>, vector<[4]xi1> into !llvm.vec<? x 4 x  ptr>
     llvm.return
   }]
 
@@ -195,12 +190,7 @@ def masked_scatter2_combined := [llvmfunc|
   llvm.func @masked_scatter2() {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.addressof @c : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_masked_scatter2   : masked_scatter2_before  ⊑  masked_scatter2_combined := by
-  unfold masked_scatter2_before masked_scatter2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -212,12 +202,7 @@ def masked_scatter3_combined := [llvmfunc|
   llvm.func @masked_scatter3() {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.addressof @c : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_masked_scatter3   : masked_scatter3_before  ⊑  masked_scatter3_combined := by
-  unfold masked_scatter3_before masked_scatter3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -238,12 +223,7 @@ def masked_scatter5_combined := [llvmfunc|
   llvm.func @masked_scatter5() {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.addressof @c : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_masked_scatter5   : masked_scatter5_before  ⊑  masked_scatter5_combined := by
-  unfold masked_scatter5_before masked_scatter5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -255,12 +235,7 @@ def masked_scatter6_combined := [llvmfunc|
   llvm.func @masked_scatter6() {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.addressof @c : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_masked_scatter6   : masked_scatter6_before  ⊑  masked_scatter6_combined := by
-  unfold masked_scatter6_before masked_scatter6_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -286,12 +261,7 @@ def masked_scatter7_combined := [llvmfunc|
     %13 = llvm.mlir.constant(1 : i32) : i32
     %14 = llvm.insertelement %9, %12[%13 : i32] : vector<2xi1>
     %15 = llvm.mlir.constant(4 : i32) : i32
-    llvm.intr.masked.scatter %1, %7, %14 {alignment = 4 : i32} : vector<2xi32>, vector<2xi1> into !llvm.vec<2 x ptr>]
-
-theorem inst_combine_masked_scatter7   : masked_scatter7_before  ⊑  masked_scatter7_combined := by
-  unfold masked_scatter7_before masked_scatter7_combined
-  simp_alive_peephole
-  sorry
+    llvm.intr.masked.scatter %1, %7, %14 {alignment = 4 : i32} : vector<2xi32>, vector<2xi1> into !llvm.vec<2 x ptr>
     llvm.return
   }]
 

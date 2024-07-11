@@ -267,12 +267,7 @@ theorem inst_combine_test_percentage_return_value   : test_percentage_return_val
 def test_correct_copy_combined := [llvmfunc|
   llvm.func @test_correct_copy(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(7500915 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_correct_copy   : test_correct_copy_before  ⊑  test_correct_copy_combined := by
-  unfold test_correct_copy_before test_correct_copy_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -294,12 +289,7 @@ def test_char_small_size_combined := [llvmfunc|
   llvm.func @test_char_small_size(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_char_small_size   : test_char_small_size_before  ⊑  test_char_small_size_combined := by
-  unfold test_char_small_size_before test_char_small_size_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -313,19 +303,9 @@ def test_char_ok_size_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(0 : i8) : i8
     %3 = llvm.mlir.constant(1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_char_ok_size   : test_char_ok_size_before  ⊑  test_char_ok_size_combined := by
-  unfold test_char_ok_size_before test_char_ok_size_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     %4 = llvm.getelementptr inbounds %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %2, %4 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_char_ok_size   : test_char_ok_size_before  ⊑  test_char_ok_size_combined := by
-  unfold test_char_ok_size_before test_char_ok_size_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %4 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %3 : i32
   }]
 
@@ -347,12 +327,7 @@ def test_str_small_size_combined := [llvmfunc|
   llvm.func @test_str_small_size(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(3 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_str_small_size   : test_str_small_size_before  ⊑  test_str_small_size_combined := by
-  unfold test_str_small_size_before test_str_small_size_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -364,12 +339,7 @@ def test_str_ok_size_combined := [llvmfunc|
   llvm.func @test_str_ok_size(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(7500915 : i32) : i32
     %1 = llvm.mlir.constant(3 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_str_ok_size   : test_str_ok_size_before  ⊑  test_str_ok_size_combined := by
-  unfold test_str_ok_size_before test_str_ok_size_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -381,12 +351,7 @@ def test_str_ok_size_tail_combined := [llvmfunc|
   llvm.func @test_str_ok_size_tail(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_test_str_ok_size_tail   : test_str_ok_size_tail_before  ⊑  test_str_ok_size_tail_combined := by
-  unfold test_str_ok_size_tail_before test_str_ok_size_tail_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %1 : i32
   }]
 
@@ -412,12 +377,7 @@ def test_str_ok_size_tail2_combined := [llvmfunc|
   llvm.func @test_str_ok_size_tail2(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(7500915 : i32) : i32
     %1 = llvm.mlir.constant(3 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_str_ok_size_tail2   : test_str_ok_size_tail2_before  ⊑  test_str_ok_size_tail2_combined := by
-  unfold test_str_ok_size_tail2_before test_str_ok_size_tail2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i32, !llvm.ptr
     llvm.return %1 : i32
   }]
 

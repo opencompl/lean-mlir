@@ -64,12 +64,7 @@ def foo_combined := [llvmfunc|
     %0 = llvm.mlir.addressof @stderr : !llvm.ptr
     %1 = llvm.mlir.constant("crash!\0A\00") : !llvm.array<8 x i8>
     %2 = llvm.mlir.addressof @".str" : !llvm.ptr
-    %3 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %4 = llvm.call @fprintf(%3, %2) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr) -> i32
     llvm.return
   }]

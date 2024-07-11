@@ -108,12 +108,7 @@ def static_hem_combined := [llvmfunc|
     %0 = llvm.mlir.constant(7 : i64) : i64
     %1 = llvm.mlir.addressof @x : !llvm.ptr
     %2 = llvm.getelementptr %1[%0] : (!llvm.ptr, i64) -> !llvm.ptr, vector<2xi64>
-    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_static_hem   : static_hem_before  ⊑  static_hem_combined := by
-  unfold static_hem_before static_hem_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>
     llvm.return %3 : vector<2xi64>
   }]
 
@@ -126,12 +121,7 @@ def hem_combined := [llvmfunc|
     %0 = llvm.mlir.addressof @x : !llvm.ptr
     %1 = llvm.sext %arg0 : i32 to i64
     %2 = llvm.getelementptr %0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, vector<2xi64>
-    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_hem   : hem_before  ⊑  hem_combined := by
-  unfold hem_before hem_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>
     llvm.return %3 : vector<2xi64>
   }]
 
@@ -145,12 +135,7 @@ def hem_2d_combined := [llvmfunc|
     %1 = llvm.sext %arg0 : i32 to i64
     %2 = llvm.sext %arg1 : i32 to i64
     %3 = llvm.getelementptr %0[%1, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<13 x vector<2xi64>>
-    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_hem_2d   : hem_2d_before  ⊑  hem_2d_combined := by
-  unfold hem_2d_before hem_2d_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>
     llvm.return %4 : vector<2xi64>
   }]
 
@@ -161,12 +146,7 @@ theorem inst_combine_hem_2d   : hem_2d_before  ⊑  hem_2d_combined := by
 def foo_combined := [llvmfunc|
   llvm.func @foo() -> vector<2xi64> {
     %0 = llvm.mlir.addressof @x : !llvm.ptr
-    %1 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>
     llvm.return %1 : vector<2xi64>
   }]
 
@@ -177,19 +157,9 @@ theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
 def bar_combined := [llvmfunc|
   llvm.func @bar() -> vector<2xi64> {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x vector<2xi64> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x vector<2xi64> {alignment = 16 : i64} : (i32) -> !llvm.ptr
     llvm.call @kip(%1) : (!llvm.ptr) -> ()
-    %2 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 1 : i64} : !llvm.ptr -> vector<2xi64>
     llvm.return %2 : vector<2xi64>
   }]
 
@@ -202,12 +172,7 @@ def static_hem_store_combined := [llvmfunc|
     %0 = llvm.mlir.constant(7 : i64) : i64
     %1 = llvm.mlir.addressof @x : !llvm.ptr
     %2 = llvm.getelementptr %1[%0] : (!llvm.ptr, i64) -> !llvm.ptr, vector<2xi64>
-    llvm.store %arg0, %2 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_static_hem_store   : static_hem_store_before  ⊑  static_hem_store_combined := by
-  unfold static_hem_store_before static_hem_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %2 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 
@@ -220,12 +185,7 @@ def hem_store_combined := [llvmfunc|
     %0 = llvm.mlir.addressof @x : !llvm.ptr
     %1 = llvm.sext %arg0 : i32 to i64
     %2 = llvm.getelementptr %0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, vector<2xi64>
-    llvm.store %arg1, %2 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_hem_store   : hem_store_before  ⊑  hem_store_combined := by
-  unfold hem_store_before hem_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %2 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 
@@ -239,12 +199,7 @@ def hem_2d_store_combined := [llvmfunc|
     %1 = llvm.sext %arg0 : i32 to i64
     %2 = llvm.sext %arg1 : i32 to i64
     %3 = llvm.getelementptr %0[%1, %2] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<13 x vector<2xi64>>
-    llvm.store %arg2, %3 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_hem_2d_store   : hem_2d_store_before  ⊑  hem_2d_store_combined := by
-  unfold hem_2d_store_before hem_2d_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %3 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 
@@ -255,12 +210,7 @@ theorem inst_combine_hem_2d_store   : hem_2d_store_before  ⊑  hem_2d_store_com
 def foo_store_combined := [llvmfunc|
   llvm.func @foo_store(%arg0: vector<2xi64>) {
     %0 = llvm.mlir.addressof @x : !llvm.ptr
-    llvm.store %arg0, %0 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_foo_store   : foo_store_before  ⊑  foo_store_combined := by
-  unfold foo_store_before foo_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %0 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 
@@ -271,19 +221,9 @@ theorem inst_combine_foo_store   : foo_store_before  ⊑  foo_store_combined := 
 def bar_store_combined := [llvmfunc|
   llvm.func @bar_store(%arg0: vector<2xi64>) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x vector<2xi64> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_bar_store   : bar_store_before  ⊑  bar_store_combined := by
-  unfold bar_store_before bar_store_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x vector<2xi64> {alignment = 16 : i64} : (i32) -> !llvm.ptr
     llvm.call @kip(%1) : (!llvm.ptr) -> ()
-    llvm.store %arg0, %1 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr]
-
-theorem inst_combine_bar_store   : bar_store_before  ⊑  bar_store_combined := by
-  unfold bar_store_before bar_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg0, %1 {alignment = 1 : i64} : vector<2xi64>, !llvm.ptr
     llvm.return
   }]
 

@@ -185,18 +185,8 @@ def test_combined := [llvmfunc|
     %2 = llvm.extractelement %1[%0 : i64] : vector<4xi32>
     %3 = llvm.bitcast %arg0 : vector<16xi8> to vector<4xf32>
     %4 = llvm.extractelement %3[%0 : i64] : vector<4xf32>
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg2 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %4, %arg2 {alignment = 4 : i64} : f32, !llvm.ptr
     llvm.return
   }]
 
@@ -344,12 +334,7 @@ def shuf_bitcast_inserti_use1_combined := [llvmfunc|
   llvm.func @shuf_bitcast_inserti_use1(%arg0: vector<2xi8>, %arg1: i8, %arg2: !llvm.ptr) -> vector<2xi4> {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.insertelement %arg1, %arg0[%0 : i64] : vector<2xi8>
-    llvm.store %1, %arg2 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_shuf_bitcast_inserti_use1   : shuf_bitcast_inserti_use1_before  ⊑  shuf_bitcast_inserti_use1_combined := by
-  unfold shuf_bitcast_inserti_use1_before shuf_bitcast_inserti_use1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %2 = llvm.bitcast %arg1 : i8 to vector<2xi4>
     llvm.return %2 : vector<2xi4>
   }]
@@ -362,12 +347,7 @@ def shuf_bitcast_insert_use2_combined := [llvmfunc|
   llvm.func @shuf_bitcast_insert_use2(%arg0: vector<2xi8>, %arg1: i8, %arg2: !llvm.ptr) -> vector<2xi4> {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.insertelement %arg1, %arg0[%0 : i64] : vector<2xi8>
-    llvm.store %1, %arg2 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr]
-
-theorem inst_combine_shuf_bitcast_insert_use2   : shuf_bitcast_insert_use2_before  ⊑  shuf_bitcast_insert_use2_combined := by
-  unfold shuf_bitcast_insert_use2_before shuf_bitcast_insert_use2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 2 : i64} : vector<2xi8>, !llvm.ptr
     %2 = llvm.bitcast %arg1 : i8 to vector<2xi4>
     llvm.return %2 : vector<2xi4>
   }]

@@ -46,18 +46,8 @@ def foo_combined := [llvmfunc|
   llvm.func @foo(%arg0: i32) {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i16) : i16
-    %2 = llvm.alloca %0 x !llvm.array<3 x struct<packed (struct<(struct<(array<2 x struct<(struct<(i32)>)>>, array<2 x i8>, struct<(i16)>, array<2 x i8>, i8, i8)>)>)>> {alignment = 16 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %2 {alignment = 16 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<3 x struct<packed (struct<(struct<(array<2 x struct<(struct<(i32)>)>>, array<2 x i8>, struct<(i16)>, array<2 x i8>, i8, i8)>)>)>> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 16 : i64} : i16, !llvm.ptr
     llvm.call @bar(%2) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -69,12 +59,7 @@ theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
 def foo_as1_combined := [llvmfunc|
   llvm.func @foo_as1(%arg0: i32, %arg1: !llvm.ptr<1>) {
     %0 = llvm.mlir.constant(0 : i16) : i16
-    llvm.store %0, %arg1 {alignment = 16 : i64} : i16, !llvm.ptr<1>]
-
-theorem inst_combine_foo_as1   : foo_as1_before  ⊑  foo_as1_combined := by
-  unfold foo_as1_before foo_as1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 16 : i64} : i16, !llvm.ptr<1>
     llvm.call @bar_as1(%arg1) : (!llvm.ptr<1>) -> ()
     llvm.return
   }]

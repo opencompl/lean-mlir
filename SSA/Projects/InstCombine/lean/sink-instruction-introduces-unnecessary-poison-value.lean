@@ -46,23 +46,13 @@ def "?test@@YAHXZ"() -> _combined := [llvmfunc|
     %3 = llvm.mlir.addressof @"?Two@@3HA" : !llvm.ptr
     %4 = llvm.mlir.poison : i32
     llvm.intr.dbg.value #di_local_variable1 = %4 : i32
-    %5 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_"?test@@YAHXZ"() ->    : "?test@@YAHXZ"() -> _before  ⊑  "?test@@YAHXZ"() -> _combined := by
-  unfold "?test@@YAHXZ"() -> _before "?test@@YAHXZ"() -> _combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.switch %5 : i32, ^bb3(%0 : i32) [
       0: ^bb1,
       2: ^bb2
     ]
   ^bb1:  // pred: ^bb0
-    %6 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_"?test@@YAHXZ"() ->    : "?test@@YAHXZ"() -> _before  ⊑  "?test@@YAHXZ"() -> _combined := by
-  unfold "?test@@YAHXZ"() -> _before "?test@@YAHXZ"() -> _combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.intr.dbg.value #di_local_variable = %6 : i32
     llvm.intr.dbg.value #di_local_variable1 = %6 : i32
     llvm.br ^bb3(%6 : i32)

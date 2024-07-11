@@ -1122,18 +1122,8 @@ def ossfuzz_9880_combined := [llvmfunc|
   llvm.func @ossfuzz_9880(%arg0: i177) -> i177 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(-1 : i177) : i177
-    %2 = llvm.alloca %0 x i177 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_ossfuzz_9880   : ossfuzz_9880_before  ⊑  ossfuzz_9880_combined := by
-  unfold ossfuzz_9880_before ossfuzz_9880_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i177]
-
-theorem inst_combine_ossfuzz_9880   : ossfuzz_9880_before  ⊑  ossfuzz_9880_combined := by
-  unfold ossfuzz_9880_before ossfuzz_9880_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x i177 {alignment = 8 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> i177
     %4 = llvm.icmp "eq" %3, %1 : i177
     %5 = llvm.sext %4 : i1 to i177
     %6 = llvm.add %3, %5  : i177

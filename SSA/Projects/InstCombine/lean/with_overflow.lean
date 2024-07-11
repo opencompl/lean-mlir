@@ -899,12 +899,7 @@ def uaddtest2_combined := [llvmfunc|
     %2 = llvm.and %arg0, %0  : i8
     %3 = llvm.and %arg1, %0  : i8
     %4 = llvm.add %2, %3 overflow<nuw>  : i8
-    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uaddtest2   : uaddtest2_before  ⊑  uaddtest2_combined := by
-  unfold uaddtest2_before uaddtest2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %4 : i8
   }]
 
@@ -919,12 +914,7 @@ def uaddtest3_combined := [llvmfunc|
     %2 = llvm.or %arg0, %0  : i8
     %3 = llvm.or %arg1, %0  : i8
     %4 = llvm.add %2, %3  : i8
-    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uaddtest3   : uaddtest3_before  ⊑  uaddtest3_combined := by
-  unfold uaddtest3_before uaddtest3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %4 : i8
   }]
 
@@ -936,12 +926,7 @@ def uaddtest4_combined := [llvmfunc|
   llvm.func @uaddtest4(%arg0: i8, %arg1: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.mlir.constant(-1 : i8) : i8
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uaddtest4   : uaddtest4_before  ⊑  uaddtest4_combined := by
-  unfold uaddtest4_before uaddtest4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %1 : i8
   }]
 
@@ -952,12 +937,7 @@ theorem inst_combine_uaddtest4   : uaddtest4_before  ⊑  uaddtest4_combined := 
 def uaddtest5_combined := [llvmfunc|
   llvm.func @uaddtest5(%arg0: i8, %arg1: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(false) : i1
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uaddtest5   : uaddtest5_before  ⊑  uaddtest5_combined := by
-  unfold uaddtest5_before uaddtest5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %arg0 : i8
   }]
 
@@ -1137,12 +1117,7 @@ def umultest1_combined := [llvmfunc|
   llvm.func @umultest1(%arg0: i8, %arg1: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.mlir.constant(0 : i8) : i8
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umultest1   : umultest1_before  ⊑  umultest1_combined := by
-  unfold umultest1_before umultest1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %1 : i8
   }]
 
@@ -1153,12 +1128,7 @@ theorem inst_combine_umultest1   : umultest1_before  ⊑  umultest1_combined := 
 def umultest2_combined := [llvmfunc|
   llvm.func @umultest2(%arg0: i8, %arg1: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(false) : i1
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umultest2   : umultest2_before  ⊑  umultest2_combined := by
-  unfold umultest2_before umultest2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %arg0 : i8
   }]
 
@@ -1304,12 +1274,7 @@ def uadd_res_ult_x_combined := [llvmfunc|
   llvm.func @uadd_res_ult_x(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i1 attributes {passthrough = ["nounwind"]} {
     %0 = "llvm.intr.uadd.with.overflow"(%arg0, %arg1) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %1 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ult_x   : uadd_res_ult_x_before  ⊑  uadd_res_ult_x_combined := by
-  unfold uadd_res_ult_x_before uadd_res_ult_x_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     %2 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i1)> 
     llvm.return %2 : i1
   }]
@@ -1322,12 +1287,7 @@ def uadd_res_ult_y_combined := [llvmfunc|
   llvm.func @uadd_res_ult_y(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i1 attributes {passthrough = ["nounwind"]} {
     %0 = "llvm.intr.uadd.with.overflow"(%arg0, %arg1) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %1 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ult_y   : uadd_res_ult_y_before  ⊑  uadd_res_ult_y_combined := by
-  unfold uadd_res_ult_y_before uadd_res_ult_y_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     %2 = llvm.extractvalue %0[1] : !llvm.struct<(i32, i1)> 
     llvm.return %2 : i1
   }]
@@ -1342,12 +1302,7 @@ def uadd_res_ugt_x_combined := [llvmfunc|
     %1 = llvm.urem %0, %arg0  : i32
     %2 = "llvm.intr.uadd.with.overflow"(%1, %arg1) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %3 = llvm.extractvalue %2[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %3, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ugt_x   : uadd_res_ugt_x_before  ⊑  uadd_res_ugt_x_combined := by
-  unfold uadd_res_ugt_x_before uadd_res_ugt_x_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     %4 = llvm.extractvalue %2[1] : !llvm.struct<(i32, i1)> 
     llvm.return %4 : i1
   }]
@@ -1362,12 +1317,7 @@ def uadd_res_ugt_y_combined := [llvmfunc|
     %1 = llvm.urem %0, %arg1  : i32
     %2 = "llvm.intr.uadd.with.overflow"(%arg0, %1) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %3 = llvm.extractvalue %2[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %3, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ugt_y   : uadd_res_ugt_y_before  ⊑  uadd_res_ugt_y_combined := by
-  unfold uadd_res_ugt_y_before uadd_res_ugt_y_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 1 : i64} : i1, !llvm.ptr
     %4 = llvm.extractvalue %2[1] : !llvm.struct<(i32, i1)> 
     llvm.return %4 : i1
   }]
@@ -1381,12 +1331,7 @@ def uadd_res_ult_const_combined := [llvmfunc|
     %0 = llvm.mlir.constant(42 : i32) : i32
     %1 = "llvm.intr.uadd.with.overflow"(%arg0, %0) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %2 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ult_const   : uadd_res_ult_const_before  ⊑  uadd_res_ult_const_combined := by
-  unfold uadd_res_ult_const_before uadd_res_ult_const_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
     llvm.return %3 : i1
   }]
@@ -1400,12 +1345,7 @@ def uadd_res_ult_const_one_combined := [llvmfunc|
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = "llvm.intr.uadd.with.overflow"(%arg0, %0) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %2 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ult_const_one   : uadd_res_ult_const_one_before  ⊑  uadd_res_ult_const_one_combined := by
-  unfold uadd_res_ult_const_one_before uadd_res_ult_const_one_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
     llvm.return %3 : i1
   }]
@@ -1419,12 +1359,7 @@ def uadd_res_ult_const_minus_one_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = "llvm.intr.uadd.with.overflow"(%arg0, %0) : (i32, i32) -> !llvm.struct<(i32, i1)>
     %2 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_uadd_res_ult_const_minus_one   : uadd_res_ult_const_minus_one_before  ⊑  uadd_res_ult_const_minus_one_combined := by
-  unfold uadd_res_ult_const_minus_one_before uadd_res_ult_const_minus_one_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i32, i1)> 
     llvm.return %3 : i1
   }]
@@ -1877,12 +1812,7 @@ def smul_neg1_combined := [llvmfunc|
     %1 = llvm.mlir.constant(-128 : i8) : i8
     %2 = llvm.sub %0, %arg0  : i8
     %3 = llvm.icmp "eq" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_neg1   : smul_neg1_before  ⊑  smul_neg1_combined := by
-  unfold smul_neg1_before smul_neg1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -1897,12 +1827,7 @@ def smul_neg1_vec_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<-128> : vector<4xi8>) : vector<4xi8>
     %3 = llvm.sub %1, %arg0  : vector<4xi8>
     %4 = llvm.icmp "eq" %arg0, %2 : vector<4xi8>
-    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_smul_neg1_vec   : smul_neg1_vec_before  ⊑  smul_neg1_vec_combined := by
-  unfold smul_neg1_vec_before smul_neg1_vec_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %3 : vector<4xi8>
   }]
 
@@ -1917,12 +1842,7 @@ def smul_neg1_vec_poison_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<-128> : vector<4xi8>) : vector<4xi8>
     %3 = llvm.sub %1, %arg0  : vector<4xi8>
     %4 = llvm.icmp "eq" %arg0, %2 : vector<4xi8>
-    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_smul_neg1_vec_poison   : smul_neg1_vec_poison_before  ⊑  smul_neg1_vec_poison_combined := by
-  unfold smul_neg1_vec_poison_before smul_neg1_vec_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %3 : vector<4xi8>
   }]
 
@@ -1936,12 +1856,7 @@ def smul_neg2_combined := [llvmfunc|
     %1 = "llvm.intr.smul.with.overflow"(%arg0, %0) : (i8, i8) -> !llvm.struct<(i8, i1)>
     %2 = llvm.extractvalue %1[0] : !llvm.struct<(i8, i1)> 
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i8, i1)> 
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_neg2   : smul_neg2_before  ⊑  smul_neg2_combined := by
-  unfold smul_neg2_before smul_neg2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -1955,12 +1870,7 @@ def umul_neg1_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i8) : i8
     %2 = llvm.sub %0, %arg0  : i8
     %3 = llvm.icmp "ugt" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_neg1   : umul_neg1_before  ⊑  umul_neg1_combined := by
-  unfold umul_neg1_before umul_neg1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -1975,12 +1885,7 @@ def umul_neg1_vec_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<1> : vector<4xi8>) : vector<4xi8>
     %3 = llvm.sub %1, %arg0  : vector<4xi8>
     %4 = llvm.icmp "ugt" %arg0, %2 : vector<4xi8>
-    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_umul_neg1_vec   : umul_neg1_vec_before  ⊑  umul_neg1_vec_combined := by
-  unfold umul_neg1_vec_before umul_neg1_vec_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %3 : vector<4xi8>
   }]
 
@@ -1995,12 +1900,7 @@ def umul_neg1_vec_poison_combined := [llvmfunc|
     %2 = llvm.mlir.constant(dense<1> : vector<4xi8>) : vector<4xi8>
     %3 = llvm.sub %1, %arg0  : vector<4xi8>
     %4 = llvm.icmp "ugt" %arg0, %2 : vector<4xi8>
-    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_umul_neg1_vec_poison   : umul_neg1_vec_poison_before  ⊑  umul_neg1_vec_poison_combined := by
-  unfold umul_neg1_vec_poison_before umul_neg1_vec_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %3 : vector<4xi8>
   }]
 
@@ -2039,12 +1939,7 @@ def umul_2_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0 : i8) : i8
     %2 = llvm.shl %arg0, %0  : i8
     %3 = llvm.icmp "slt" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_2   : umul_2_before  ⊑  umul_2_combined := by
-  unfold umul_2_before umul_2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -2058,12 +1953,7 @@ def umul_8_combined := [llvmfunc|
     %1 = llvm.mlir.constant(31 : i8) : i8
     %2 = llvm.shl %arg0, %0  : i8
     %3 = llvm.icmp "ugt" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_8   : umul_8_before  ⊑  umul_8_combined := by
-  unfold umul_8_before umul_8_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -2077,12 +1967,7 @@ def umul_64_combined := [llvmfunc|
     %1 = llvm.mlir.constant(3 : i8) : i8
     %2 = llvm.shl %arg0, %0  : i8
     %3 = llvm.icmp "ugt" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_64   : umul_64_before  ⊑  umul_64_combined := by
-  unfold umul_64_before umul_64_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -2094,12 +1979,7 @@ def umul_256_combined := [llvmfunc|
   llvm.func @umul_256(%arg0: i8, %arg1: !llvm.ptr) -> i8 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.mlir.constant(0 : i8) : i8
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_256   : umul_256_before  ⊑  umul_256_combined := by
-  unfold umul_256_before umul_256_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %1 : i8
   }]
 
@@ -2113,12 +1993,7 @@ def umul_4_vec_poison_combined := [llvmfunc|
     %1 = llvm.mlir.constant(dense<63> : vector<4xi8>) : vector<4xi8>
     %2 = llvm.shl %arg0, %0  : vector<4xi8>
     %3 = llvm.icmp "ugt" %arg0, %1 : vector<4xi8>
-    llvm.store %3, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_umul_4_vec_poison   : umul_4_vec_poison_before  ⊑  umul_4_vec_poison_combined := by
-  unfold umul_4_vec_poison_before umul_4_vec_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %2 : vector<4xi8>
   }]
 
@@ -2132,12 +2007,7 @@ def umul_3_combined := [llvmfunc|
     %1 = "llvm.intr.umul.with.overflow"(%arg0, %0) : (i8, i8) -> !llvm.struct<(i8, i1)>
     %2 = llvm.extractvalue %1[0] : !llvm.struct<(i8, i1)> 
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i8, i1)> 
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_umul_3   : umul_3_before  ⊑  umul_3_combined := by
-  unfold umul_3_before umul_3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -2153,12 +2023,7 @@ def smul_4_combined := [llvmfunc|
     %3 = llvm.shl %arg0, %0  : i8
     %4 = llvm.add %arg0, %1  : i8
     %5 = llvm.icmp "ult" %4, %2 : i8
-    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_4   : smul_4_before  ⊑  smul_4_combined := by
-  unfold smul_4_before smul_4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %3 : i8
   }]
 
@@ -2174,12 +2039,7 @@ def smul_16_combined := [llvmfunc|
     %3 = llvm.shl %arg0, %0  : i8
     %4 = llvm.add %arg0, %1  : i8
     %5 = llvm.icmp "ult" %4, %2 : i8
-    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_16   : smul_16_before  ⊑  smul_16_combined := by
-  unfold smul_16_before smul_16_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %3 : i8
   }]
 
@@ -2195,12 +2055,7 @@ def smul_32_combined := [llvmfunc|
     %3 = llvm.shl %arg0, %0  : i8
     %4 = llvm.add %arg0, %1  : i8
     %5 = llvm.icmp "ult" %4, %2 : i8
-    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_32   : smul_32_before  ⊑  smul_32_combined := by
-  unfold smul_32_before smul_32_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %3 : i8
   }]
 
@@ -2214,12 +2069,7 @@ def smul_128_combined := [llvmfunc|
     %1 = llvm.mlir.constant(1 : i8) : i8
     %2 = llvm.shl %arg0, %0  : i8
     %3 = llvm.icmp "ugt" %arg0, %1 : i8
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_128   : smul_128_before  ⊑  smul_128_combined := by
-  unfold smul_128_before smul_128_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 
@@ -2236,12 +2086,7 @@ def smul_2_vec_poison_combined := [llvmfunc|
     %4 = llvm.shl %arg0, %0  : vector<4xi8>
     %5 = llvm.add %arg0, %1  : vector<4xi8>
     %6 = llvm.icmp "slt" %5, %3 : vector<4xi8>
-    llvm.store %6, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr]
-
-theorem inst_combine_smul_2_vec_poison   : smul_2_vec_poison_before  ⊑  smul_2_vec_poison_combined := by
-  unfold smul_2_vec_poison_before smul_2_vec_poison_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg1 {alignment = 1 : i64} : vector<4xi1>, !llvm.ptr
     llvm.return %4 : vector<4xi8>
   }]
 
@@ -2255,12 +2100,7 @@ def smul_7_combined := [llvmfunc|
     %1 = "llvm.intr.smul.with.overflow"(%arg0, %0) : (i8, i8) -> !llvm.struct<(i8, i1)>
     %2 = llvm.extractvalue %1[0] : !llvm.struct<(i8, i1)> 
     %3 = llvm.extractvalue %1[1] : !llvm.struct<(i8, i1)> 
-    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr]
-
-theorem inst_combine_smul_7   : smul_7_before  ⊑  smul_7_combined := by
-  unfold smul_7_before smul_7_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 1 : i64} : i1, !llvm.ptr
     llvm.return %2 : i8
   }]
 

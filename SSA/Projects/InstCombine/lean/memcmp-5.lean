@@ -161,55 +161,25 @@ def fold_memcmp_a_b_n_combined := [llvmfunc|
     %4 = llvm.mlir.constant(3 : i64) : i64
     %5 = llvm.mlir.constant(4 : i64) : i64
     %6 = llvm.mlir.constant(5 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %7 = llvm.icmp "ne" %arg1, %1 : i64
     %8 = llvm.sext %7 : i1 to i32
     %9 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %8, %9 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %9 {alignment = 4 : i64} : i32, !llvm.ptr
     %10 = llvm.icmp "ne" %arg1, %1 : i64
     %11 = llvm.sext %10 : i1 to i32
     %12 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %11, %12 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %12 {alignment = 4 : i64} : i32, !llvm.ptr
     %13 = llvm.icmp "ne" %arg1, %1 : i64
     %14 = llvm.sext %13 : i1 to i32
     %15 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %14, %15 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %15 {alignment = 4 : i64} : i32, !llvm.ptr
     %16 = llvm.getelementptr %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %16 {alignment = 4 : i64} : i32, !llvm.ptr
     %17 = llvm.icmp "ne" %arg1, %1 : i64
     %18 = llvm.sext %17 : i1 to i32
     %19 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %18, %19 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_b_n   : fold_memcmp_a_b_n_before  ⊑  fold_memcmp_a_b_n_combined := by
-  unfold fold_memcmp_a_b_n_before fold_memcmp_a_b_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %18, %19 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -223,12 +193,7 @@ def call_memcmp_a_ax_n_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @a01230123 : !llvm.ptr
     %2 = llvm.mlir.addressof @ax : !llvm.ptr
     %3 = llvm.call @memcmp(%1, %2, %arg1) : (!llvm.ptr, !llvm.ptr, i64) -> i32
-    llvm.store %3, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_memcmp_a_ax_n   : call_memcmp_a_ax_n_before  ⊑  call_memcmp_a_ax_n_combined := by
-  unfold call_memcmp_a_ax_n_before call_memcmp_a_ax_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -247,57 +212,27 @@ def fold_memcmp_a_c_n_combined := [llvmfunc|
     %6 = llvm.mlir.constant(5 : i64) : i64
     %7 = llvm.icmp "ugt" %arg1, %0 : i64
     %8 = llvm.sext %7 : i1 to i32
-    llvm.store %8, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %9 = llvm.icmp "ne" %arg1, %1 : i64
     %10 = llvm.sext %9 : i1 to i32
     %11 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %10, %11 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %10, %11 {alignment = 4 : i64} : i32, !llvm.ptr
     %12 = llvm.icmp "ne" %arg1, %1 : i64
     %13 = llvm.sext %12 : i1 to i32
     %14 = llvm.getelementptr %arg0[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %13, %14 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %13, %14 {alignment = 4 : i64} : i32, !llvm.ptr
     %15 = llvm.icmp "ne" %arg1, %1 : i64
     %16 = llvm.sext %15 : i1 to i32
     %17 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %16, %17 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %16, %17 {alignment = 4 : i64} : i32, !llvm.ptr
     %18 = llvm.icmp "ugt" %arg1, %4 : i64
     %19 = llvm.sext %18 : i1 to i32
     %20 = llvm.getelementptr %arg0[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %19, %20 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %19, %20 {alignment = 4 : i64} : i32, !llvm.ptr
     %21 = llvm.icmp "ugt" %arg1, %4 : i64
     %22 = llvm.sext %21 : i1 to i32
     %23 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %23 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_c_n   : fold_memcmp_a_c_n_before  ⊑  fold_memcmp_a_c_n_combined := by
-  unfold fold_memcmp_a_c_n_before fold_memcmp_a_c_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %23 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -314,35 +249,15 @@ def fold_memcmp_a_d_n_combined := [llvmfunc|
     %4 = llvm.mlir.constant(3 : i64) : i64
     %5 = llvm.icmp "ne" %arg1, %0 : i64
     %6 = llvm.sext %5 : i1 to i32
-    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_d_n   : fold_memcmp_a_d_n_before  ⊑  fold_memcmp_a_d_n_combined := by
-  unfold fold_memcmp_a_d_n_before fold_memcmp_a_d_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %7 = llvm.icmp "ne" %arg1, %0 : i64
     %8 = llvm.sext %7 : i1 to i32
     %9 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %8, %9 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_d_n   : fold_memcmp_a_d_n_before  ⊑  fold_memcmp_a_d_n_combined := by
-  unfold fold_memcmp_a_d_n_before fold_memcmp_a_d_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %8, %9 {alignment = 4 : i64} : i32, !llvm.ptr
     %10 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %3, %10 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_d_n   : fold_memcmp_a_d_n_before  ⊑  fold_memcmp_a_d_n_combined := by
-  unfold fold_memcmp_a_d_n_before fold_memcmp_a_d_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %10 {alignment = 4 : i64} : i32, !llvm.ptr
     %11 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %3, %11 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_d_n   : fold_memcmp_a_d_n_before  ⊑  fold_memcmp_a_d_n_combined := by
-  unfold fold_memcmp_a_d_n_before fold_memcmp_a_d_n_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %11 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -353,12 +268,7 @@ theorem inst_combine_fold_memcmp_a_d_n   : fold_memcmp_a_d_n_before  ⊑  fold_m
 def fold_memcmp_a_d_nz_combined := [llvmfunc|
   llvm.func @fold_memcmp_a_d_nz(%arg0: !llvm.ptr, %arg1: i64) {
     %0 = llvm.mlir.constant(-1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_a_d_nz   : fold_memcmp_a_d_nz_before  ⊑  fold_memcmp_a_d_nz_combined := by
-  unfold fold_memcmp_a_d_nz_before fold_memcmp_a_d_nz_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

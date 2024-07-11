@@ -537,18 +537,8 @@ theorem inst_combine_fcmp_oeq_x_x_and_ult   : fcmp_oeq_x_x_and_ult_before  ⊑  
 def fcmp_ord_and_ueq_preserve_flags_combined := [llvmfunc|
   llvm.func @fcmp_ord_and_ueq_preserve_flags(%arg0: f16, %arg1: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
-    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_flags   : fcmp_ord_and_ueq_preserve_flags_before  ⊑  fcmp_ord_and_ueq_preserve_flags_combined := by
-  unfold fcmp_ord_and_ueq_preserve_flags_before fcmp_ord_and_ueq_preserve_flags_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_flags   : fcmp_ord_and_ueq_preserve_flags_before  ⊑  fcmp_ord_and_ueq_preserve_flags_combined := by
-  unfold fcmp_ord_and_ueq_preserve_flags_before fcmp_ord_and_ueq_preserve_flags_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
+    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     %3 = llvm.and %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -560,18 +550,8 @@ theorem inst_combine_fcmp_ord_and_ueq_preserve_flags   : fcmp_ord_and_ueq_preser
 def fcmp_ord_and_ueq_preserve_subset_flags0_combined := [llvmfunc|
   llvm.func @fcmp_ord_and_ueq_preserve_subset_flags0(%arg0: f16, %arg1: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
-    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags0   : fcmp_ord_and_ueq_preserve_subset_flags0_before  ⊑  fcmp_ord_and_ueq_preserve_subset_flags0_combined := by
-  unfold fcmp_ord_and_ueq_preserve_subset_flags0_before fcmp_ord_and_ueq_preserve_subset_flags0_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<ninf, nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags0   : fcmp_ord_and_ueq_preserve_subset_flags0_before  ⊑  fcmp_ord_and_ueq_preserve_subset_flags0_combined := by
-  unfold fcmp_ord_and_ueq_preserve_subset_flags0_before fcmp_ord_and_ueq_preserve_subset_flags0_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
+    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<ninf, nsz>} : f16
     %3 = llvm.and %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -583,18 +563,8 @@ theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags0   : fcmp_ord_and_ue
 def fcmp_ord_and_ueq_preserve_subset_flags1_combined := [llvmfunc|
   llvm.func @fcmp_ord_and_ueq_preserve_subset_flags1(%arg0: f16, %arg1: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
-    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<ninf, nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags1   : fcmp_ord_and_ueq_preserve_subset_flags1_before  ⊑  fcmp_ord_and_ueq_preserve_subset_flags1_combined := by
-  unfold fcmp_ord_and_ueq_preserve_subset_flags1_before fcmp_ord_and_ueq_preserve_subset_flags1_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags1   : fcmp_ord_and_ueq_preserve_subset_flags1_before  ⊑  fcmp_ord_and_ueq_preserve_subset_flags1_combined := by
-  unfold fcmp_ord_and_ueq_preserve_subset_flags1_before fcmp_ord_and_ueq_preserve_subset_flags1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<ninf, nsz>} : f16
+    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     %3 = llvm.and %1, %2  : i1
     llvm.return %3 : i1
   }]
@@ -606,12 +576,7 @@ theorem inst_combine_fcmp_ord_and_ueq_preserve_subset_flags1   : fcmp_ord_and_ue
 def fcmp_ord_and_ueq_flags_lhs_combined := [llvmfunc|
   llvm.func @fcmp_ord_and_ueq_flags_lhs(%arg0: f16, %arg1: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
-    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_flags_lhs   : fcmp_ord_and_ueq_flags_lhs_before  ⊑  fcmp_ord_and_ueq_flags_lhs_combined := by
-  unfold fcmp_ord_and_ueq_flags_lhs_before fcmp_ord_and_ueq_flags_lhs_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fcmp "ord" %arg0, %0 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     %2 = llvm.fcmp "ueq" %arg0, %arg1 : f16
     %3 = llvm.and %1, %2  : i1
     llvm.return %3 : i1
@@ -625,12 +590,7 @@ def fcmp_ord_and_ueq_flags_rhs_combined := [llvmfunc|
   llvm.func @fcmp_ord_and_ueq_flags_rhs(%arg0: f16, %arg1: f16) -> i1 {
     %0 = llvm.mlir.constant(0.000000e+00 : f16) : f16
     %1 = llvm.fcmp "ord" %arg0, %0 : f16
-    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16]
-
-theorem inst_combine_fcmp_ord_and_ueq_flags_rhs   : fcmp_ord_and_ueq_flags_rhs_before  ⊑  fcmp_ord_and_ueq_flags_rhs_combined := by
-  unfold fcmp_ord_and_ueq_flags_rhs_before fcmp_ord_and_ueq_flags_rhs_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fcmp "ueq" %arg0, %arg1 {fastmathFlags = #llvm.fastmath<nsz>} : f16
     %3 = llvm.and %1, %2  : i1
     llvm.return %3 : i1
   }]

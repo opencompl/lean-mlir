@@ -20,12 +20,7 @@ def bar_before := [llvmfunc|
 
 def bar_combined := [llvmfunc|
   llvm.func @bar(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 

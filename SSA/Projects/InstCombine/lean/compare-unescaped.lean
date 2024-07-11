@@ -343,12 +343,7 @@ def compare_ne_global_maybe_null_combined := [llvmfunc|
     %1 = llvm.mlir.zero : !llvm.ptr
     %2 = llvm.mlir.addressof @gp : !llvm.ptr
     %3 = llvm.call @malloc(%0) : (i64) -> !llvm.ptr
-    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_compare_ne_global_maybe_null   : compare_ne_global_maybe_null_before  ⊑  compare_ne_global_maybe_null_combined := by
-  unfold compare_ne_global_maybe_null_before compare_ne_global_maybe_null_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %5 = llvm.icmp "ne" %4, %3 : !llvm.ptr
     llvm.call @f() : () -> ()
     llvm.return %5 : i1
@@ -365,12 +360,7 @@ def compare_and_call_after_combined := [llvmfunc|
     %2 = llvm.mlir.addressof @gp : !llvm.ptr
     %3 = llvm.mlir.constant(true) : i1
     %4 = llvm.call @malloc(%0) : (i64) -> !llvm.ptr
-    %5 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_compare_and_call_after   : compare_and_call_after_before  ⊑  compare_and_call_after_combined := by
-  unfold compare_and_call_after_before compare_and_call_after_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %6 = llvm.icmp "eq" %4, %5 : !llvm.ptr
     llvm.cond_br %6, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
@@ -429,12 +419,7 @@ def compare_ret_escape_combined := [llvmfunc|
   ^bb1:  // 2 preds: ^bb0, ^bb2
     llvm.return %3 : !llvm.ptr
   ^bb2:  // pred: ^bb0
-    %6 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_compare_ret_escape   : compare_ret_escape_before  ⊑  compare_ret_escape_combined := by
-  unfold compare_ret_escape_before compare_ret_escape_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %7 = llvm.icmp "eq" %3, %6 : !llvm.ptr
     llvm.cond_br %7, ^bb1, ^bb3
   ^bb3:  // pred: ^bb2
@@ -522,12 +507,7 @@ def neg_consistent_fold3_combined := [llvmfunc|
     %1 = llvm.mlir.zero : !llvm.ptr
     %2 = llvm.mlir.addressof @gp : !llvm.ptr
     %3 = llvm.call @malloc(%0) : (i64) -> !llvm.ptr
-    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_neg_consistent_fold3   : neg_consistent_fold3_before  ⊑  neg_consistent_fold3_combined := by
-  unfold neg_consistent_fold3_before neg_consistent_fold3_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %5 = llvm.call @hidden_inttoptr() : () -> !llvm.ptr
     %6 = llvm.icmp "eq" %3, %4 : !llvm.ptr
     %7 = llvm.icmp "eq" %3, %5 : !llvm.ptr

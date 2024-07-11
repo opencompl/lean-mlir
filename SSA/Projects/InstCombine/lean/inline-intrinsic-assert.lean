@@ -32,12 +32,7 @@ def sqr_before := [llvmfunc|
 
 def foo_combined := [llvmfunc|
   llvm.func @foo(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
-  unfold foo_before foo_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -47,12 +42,7 @@ theorem inst_combine_foo   : foo_before  ⊑  foo_combined := by
   sorry
 def bar_combined := [llvmfunc|
   llvm.func @bar(%arg0: f32) -> f32 {
-    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32]
-
-theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
-  unfold bar_before bar_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.intr.fabs(%arg0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -62,12 +52,7 @@ theorem inst_combine_bar   : bar_before  ⊑  bar_combined := by
   sorry
 def sqr_combined := [llvmfunc|
   llvm.func @sqr(%arg0: f32) -> f32 {
-    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32]
-
-theorem inst_combine_sqr   : sqr_before  ⊑  sqr_combined := by
-  unfold sqr_before sqr_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.fmul %arg0, %arg0  {fastmathFlags = #llvm.fastmath<fast>} : f32
     llvm.return %0 : f32
   }]
 

@@ -189,12 +189,7 @@ def reduce_and_zext_long_external_use_combined := [llvmfunc|
     %5 = llvm.sext %4 : i1 to i8
     %6 = llvm.extractelement %arg0[%1 : i64] : vector<128xi1>
     %7 = llvm.sext %6 : i1 to i8
-    llvm.store %7, %2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_reduce_and_zext_long_external_use   : reduce_and_zext_long_external_use_before  ⊑  reduce_and_zext_long_external_use_combined := by
-  unfold reduce_and_zext_long_external_use_before reduce_and_zext_long_external_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %2 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.return %5 : i8
   }]
 
@@ -212,12 +207,7 @@ def reduce_and_zext_external_use_combined := [llvmfunc|
     %5 = llvm.zext %4 : i1 to i64
     %6 = llvm.extractelement %arg0[%1 : i64] : vector<8xi1>
     %7 = llvm.zext %6 : i1 to i64
-    llvm.store %7, %2 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_reduce_and_zext_external_use   : reduce_and_zext_external_use_before  ⊑  reduce_and_zext_external_use_combined := by
-  unfold reduce_and_zext_external_use_before reduce_and_zext_external_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %2 {alignment = 8 : i64} : i64, !llvm.ptr
     llvm.return %5 : i64
   }]
 
@@ -227,18 +217,8 @@ theorem inst_combine_reduce_and_zext_external_use   : reduce_and_zext_external_u
   sorry
 def reduce_and_pointer_cast_combined := [llvmfunc|
   llvm.func @reduce_and_pointer_cast(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i1 {
-    %0 = llvm.load %arg1 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_reduce_and_pointer_cast   : reduce_and_pointer_cast_before  ⊑  reduce_and_pointer_cast_combined := by
-  unfold reduce_and_pointer_cast_before reduce_and_pointer_cast_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_reduce_and_pointer_cast   : reduce_and_pointer_cast_before  ⊑  reduce_and_pointer_cast_combined := by
-  unfold reduce_and_pointer_cast_before reduce_and_pointer_cast_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 8 : i64} : !llvm.ptr -> i64
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %2 = llvm.icmp "eq" %0, %1 : i64
     llvm.return %2 : i1
   }]
@@ -250,18 +230,8 @@ theorem inst_combine_reduce_and_pointer_cast   : reduce_and_pointer_cast_before 
 def reduce_and_pointer_cast_wide_combined := [llvmfunc|
   llvm.func @reduce_and_pointer_cast_wide(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>]
-
-theorem inst_combine_reduce_and_pointer_cast_wide   : reduce_and_pointer_cast_wide_before  ⊑  reduce_and_pointer_cast_wide_combined := by
-  unfold reduce_and_pointer_cast_wide_before reduce_and_pointer_cast_wide_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>]
-
-theorem inst_combine_reduce_and_pointer_cast_wide   : reduce_and_pointer_cast_wide_before  ⊑  reduce_and_pointer_cast_wide_combined := by
-  unfold reduce_and_pointer_cast_wide_before reduce_and_pointer_cast_wide_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>
+    %2 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>
     %3 = llvm.icmp "ne" %1, %2 : vector<8xi16>
     %4 = llvm.bitcast %3 : vector<8xi1> to i8
     %5 = llvm.icmp "eq" %4, %0 : i8
@@ -274,18 +244,8 @@ theorem inst_combine_reduce_and_pointer_cast_wide   : reduce_and_pointer_cast_wi
   sorry
 def reduce_and_pointer_cast_ne_combined := [llvmfunc|
   llvm.func @reduce_and_pointer_cast_ne(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i1 {
-    %0 = llvm.load %arg1 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_reduce_and_pointer_cast_ne   : reduce_and_pointer_cast_ne_before  ⊑  reduce_and_pointer_cast_ne_combined := by
-  unfold reduce_and_pointer_cast_ne_before reduce_and_pointer_cast_ne_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_reduce_and_pointer_cast_ne   : reduce_and_pointer_cast_ne_before  ⊑  reduce_and_pointer_cast_ne_combined := by
-  unfold reduce_and_pointer_cast_ne_before reduce_and_pointer_cast_ne_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg1 {alignment = 8 : i64} : !llvm.ptr -> i64
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %2 = llvm.icmp "ne" %0, %1 : i64
     llvm.return %2 : i1
   }]
@@ -297,18 +257,8 @@ theorem inst_combine_reduce_and_pointer_cast_ne   : reduce_and_pointer_cast_ne_b
 def reduce_and_pointer_cast_ne_wide_combined := [llvmfunc|
   llvm.func @reduce_and_pointer_cast_ne_wide(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(0 : i8) : i8
-    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>]
-
-theorem inst_combine_reduce_and_pointer_cast_ne_wide   : reduce_and_pointer_cast_ne_wide_before  ⊑  reduce_and_pointer_cast_ne_wide_combined := by
-  unfold reduce_and_pointer_cast_ne_wide_before reduce_and_pointer_cast_ne_wide_combined
-  simp_alive_peephole
-  sorry
-    %2 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>]
-
-theorem inst_combine_reduce_and_pointer_cast_ne_wide   : reduce_and_pointer_cast_ne_wide_before  ⊑  reduce_and_pointer_cast_ne_wide_combined := by
-  unfold reduce_and_pointer_cast_ne_wide_before reduce_and_pointer_cast_ne_wide_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg1 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>
+    %2 = llvm.load %arg0 {alignment = 16 : i64} : !llvm.ptr -> vector<8xi16>
     %3 = llvm.icmp "ne" %1, %2 : vector<8xi16>
     %4 = llvm.bitcast %3 : vector<8xi1> to i8
     %5 = llvm.icmp "ne" %4, %0 : i8

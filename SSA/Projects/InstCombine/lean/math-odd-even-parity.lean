@@ -38,12 +38,7 @@ def test_erf_multi_use_before := [llvmfunc|
 def test_erf_combined := [llvmfunc|
   llvm.func @test_erf(%arg0: f64) -> f64 {
     %0 = llvm.fneg %arg0  : f64
-    %1 = llvm.call @erf(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_test_erf   : test_erf_before  ⊑  test_erf_combined := by
-  unfold test_erf_before test_erf_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @erf(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     %2 = llvm.fneg %1  : f64
     llvm.return %2 : f64
   }]
@@ -55,12 +50,7 @@ theorem inst_combine_test_erf   : test_erf_before  ⊑  test_erf_combined := by
 def test_cos_fabs_combined := [llvmfunc|
   llvm.func @test_cos_fabs(%arg0: f64) -> f64 {
     %0 = llvm.intr.fabs(%arg0)  : (f64) -> f64
-    %1 = llvm.call @cos(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64]
-
-theorem inst_combine_test_cos_fabs   : test_cos_fabs_before  ⊑  test_cos_fabs_combined := by
-  unfold test_cos_fabs_before test_cos_fabs_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @cos(%0) {fastmathFlags = #llvm.fastmath<reassoc>} : (f64) -> f64
     llvm.return %1 : f64
   }]
 

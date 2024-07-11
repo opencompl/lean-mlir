@@ -158,12 +158,7 @@ def t3_combined := [llvmfunc|
     llvm.cond_br %arg6, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
     %4 = llvm.select %3, %arg2, %arg1 : i1, i8
-    llvm.store %4, %arg5 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_t3   : t3_before  ⊑  t3_combined := by
-  unfold t3_before t3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg5 {alignment = 1 : i64} : i8, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
     %5 = llvm.select %3, %arg4, %arg3 : i1, i8
@@ -181,12 +176,7 @@ def t4_combined := [llvmfunc|
     %2 = llvm.and %arg0, %0  : i8
     %3 = llvm.icmp "eq" %2, %1 : i8
     %4 = llvm.select %3, %arg2, %arg1 : i1, i8
-    llvm.store %4, %arg5 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_t4   : t4_before  ⊑  t4_combined := by
-  unfold t4_before t4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg5 {alignment = 1 : i64} : i8, !llvm.ptr
     %5 = llvm.select %3, %arg4, %arg3 : i1, i8
     llvm.return %5 : i8
   }]

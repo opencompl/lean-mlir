@@ -130,134 +130,29 @@ def fold_snprintf_fmt_combined := [llvmfunc|
     %22 = llvm.getelementptr %6[%1, %16] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i32>
     %23 = llvm.getelementptr %2[%1, %21] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x ptr>
     %24 = llvm.getelementptr %6[%1, %21] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i32>
-    %25 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %25 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %6 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    %26 = llvm.load %8 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %26 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %9 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    %27 = llvm.load %11 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %27 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %12 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    %28 = llvm.load %14 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %15, %28 {alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
+    %25 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %4, %25 {alignment = 1 : i64} : i32, !llvm.ptr
+    llvm.store %5, %6 {alignment = 4 : i64} : i32, !llvm.ptr
+    %26 = llvm.load %8 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %4, %26 {alignment = 1 : i64} : i32, !llvm.ptr
+    llvm.store %5, %9 {alignment = 4 : i64} : i32, !llvm.ptr
+    %27 = llvm.load %11 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %4, %27 {alignment = 1 : i64} : i32, !llvm.ptr
+    llvm.store %5, %12 {alignment = 4 : i64} : i32, !llvm.ptr
+    %28 = llvm.load %14 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %15, %28 {alignment = 1 : i64} : i16, !llvm.ptr
     %29 = llvm.getelementptr inbounds %28[%16] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %17, %29 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %18 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    %30 = llvm.load %19 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %20, %30 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %29 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %5, %18 {alignment = 4 : i64} : i32, !llvm.ptr
+    %30 = llvm.load %19 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %20, %30 {alignment = 1 : i64} : i8, !llvm.ptr
     %31 = llvm.getelementptr inbounds %30[%21] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    llvm.store %17, %31 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %22 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    %32 = llvm.load %23 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %17, %32 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %24 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %5, %6 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_snprintf_fmt   : fold_snprintf_fmt_before  ⊑  fold_snprintf_fmt_combined := by
-  unfold fold_snprintf_fmt_before fold_snprintf_fmt_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %31 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %5, %22 {alignment = 4 : i64} : i32, !llvm.ptr
+    %32 = llvm.load %23 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
+    llvm.store %17, %32 {alignment = 1 : i64} : i8, !llvm.ptr
+    llvm.store %5, %24 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %5, %6 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -277,32 +172,12 @@ def call_snprintf_fmt_ximax_combined := [llvmfunc|
     %7 = llvm.mlir.addressof @asiz : !llvm.ptr
     %8 = llvm.getelementptr %7[%1, %0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i32>
     %9 = llvm.mlir.constant(2147483648 : i64) : i64
-    %10 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_call_snprintf_fmt_ximax   : call_snprintf_fmt_ximax_before  ⊑  call_snprintf_fmt_ximax_combined := by
-  unfold call_snprintf_fmt_ximax_before call_snprintf_fmt_ximax_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %3 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %11 = llvm.call @snprintf(%10, %4, %6) vararg(!llvm.func<i32 (ptr, i64, ptr, ...)>) : (!llvm.ptr, i64, !llvm.ptr) -> i32
-    llvm.store %11, %8 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_snprintf_fmt_ximax   : call_snprintf_fmt_ximax_before  ⊑  call_snprintf_fmt_ximax_combined := by
-  unfold call_snprintf_fmt_ximax_before call_snprintf_fmt_ximax_combined
-  simp_alive_peephole
-  sorry
-    %12 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_call_snprintf_fmt_ximax   : call_snprintf_fmt_ximax_before  ⊑  call_snprintf_fmt_ximax_combined := by
-  unfold call_snprintf_fmt_ximax_before call_snprintf_fmt_ximax_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %8 {alignment = 4 : i64} : i32, !llvm.ptr
+    %12 = llvm.load %2 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     %13 = llvm.call @snprintf(%12, %9, %6) vararg(!llvm.func<i32 (ptr, i64, ptr, ...)>) : (!llvm.ptr, i64, !llvm.ptr) -> i32
-    llvm.store %13, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_snprintf_fmt_ximax   : call_snprintf_fmt_ximax_before  ⊑  call_snprintf_fmt_ximax_combined := by
-  unfold call_snprintf_fmt_ximax_before call_snprintf_fmt_ximax_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %13, %7 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

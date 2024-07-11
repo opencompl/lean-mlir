@@ -169,12 +169,7 @@ def store_volatile_combined := [llvmfunc|
     %7 = llvm.bitcast %6 : f32 to i32
     llvm.br ^bb1(%7 : i32)
   ^bb3:  // pred: ^bb1
-    llvm.store volatile %3, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_volatile   : store_volatile_before  ⊑  store_volatile_combined := by
-  unfold store_volatile_before store_volatile_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %3, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -195,12 +190,7 @@ def store_address_combined := [llvmfunc|
     %5 = llvm.getelementptr %3[%2] : (!llvm.ptr, i64) -> !llvm.ptr, f32
     llvm.br ^bb1(%5 : !llvm.ptr)
   ^bb3:  // pred: ^bb1
-    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_address   : store_address_before  ⊑  store_address_combined := by
-  unfold store_address_before store_address_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -227,12 +217,7 @@ def multiple_phis_combined := [llvmfunc|
     %9 = llvm.bitcast %8 : f32 to i32
     llvm.br ^bb4(%9 : i32)
   ^bb4(%10: i32):  // 2 preds: ^bb2, ^bb3
-    llvm.store volatile %10, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_multiple_phis   : multiple_phis_before  ⊑  multiple_phis_combined := by
-  unfold multiple_phis_before multiple_phis_combined
-  simp_alive_peephole
-  sorry
+    llvm.store volatile %10, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1(%10 : i32)
   ^bb5:  // pred: ^bb1
     llvm.return %4 : i32

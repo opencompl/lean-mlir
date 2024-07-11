@@ -55,39 +55,19 @@ def fn3_combined := [llvmfunc|
     %6 = llvm.mlir.addressof @a : !llvm.ptr
     %7 = llvm.mlir.constant(false) : i1
     %8 = llvm.mlir.addressof @d : !llvm.ptr
-    %9 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_fn3   : fn3_before  ⊑  fn3_combined := by
-  unfold fn3_before fn3_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     %10 = llvm.icmp "eq" %9, %0 : i32
     llvm.cond_br %10, ^bb1, ^bb2(%2 : i1)
   ^bb1:  // pred: ^bb0
-    %11 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_fn3   : fn3_before  ⊑  fn3_combined := by
-  unfold fn3_before fn3_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     %12 = llvm.icmp "ult" %11, %4 : i32
     llvm.br ^bb2(%12 : i1)
   ^bb2(%13: i1):  // 2 preds: ^bb0, ^bb1
-    %14 = llvm.load %6 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_fn3   : fn3_before  ⊑  fn3_combined := by
-  unfold fn3_before fn3_combined
-  simp_alive_peephole
-  sorry
+    %14 = llvm.load %6 {alignment = 2 : i64} : !llvm.ptr -> i16
     %15 = llvm.icmp "ne" %14, %5 : i16
     %16 = llvm.select %13, %15, %7 : i1, i1
     %17 = llvm.zext %16 : i1 to i32
-    llvm.store %17, %8 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fn3   : fn3_before  ⊑  fn3_combined := by
-  unfold fn3_before fn3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %8 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

@@ -73,29 +73,14 @@ def print_pgm_cond_true_combined := [llvmfunc|
     %5 = llvm.mlir.constant(true) : i1
     llvm.br ^bb3
   ^bb1:  // pred: ^bb3
-    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_print_pgm_cond_true   : print_pgm_cond_true_before  ⊑  print_pgm_cond_true_combined := by
-  unfold print_pgm_cond_true_before print_pgm_cond_true_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %5 : i1
   ^bb2:  // pred: ^bb3
-    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_print_pgm_cond_true   : print_pgm_cond_true_before  ⊑  print_pgm_cond_true_combined := by
-  unfold print_pgm_cond_true_before print_pgm_cond_true_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %4 : i1
   ^bb3:  // pred: ^bb0
     %6 = llvm.getelementptr %0[%1, %arg0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<17 x i32>
-    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_print_pgm_cond_true   : print_pgm_cond_true_before  ⊑  print_pgm_cond_true_combined := by
-  unfold print_pgm_cond_true_before print_pgm_cond_true_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32
     %8 = llvm.add %7, %2  : i32
     %9 = llvm.icmp "ult" %8, %3 : i32
     llvm.cond_br %9, ^bb1, ^bb2
@@ -115,29 +100,14 @@ def print_pgm_cond_true_logical_combined := [llvmfunc|
     %5 = llvm.mlir.constant(true) : i1
     llvm.br ^bb3
   ^bb1:  // pred: ^bb3
-    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_print_pgm_cond_true_logical   : print_pgm_cond_true_logical_before  ⊑  print_pgm_cond_true_logical_combined := by
-  unfold print_pgm_cond_true_logical_before print_pgm_cond_true_logical_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %5 : i1
   ^bb2:  // pred: ^bb3
-    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_print_pgm_cond_true_logical   : print_pgm_cond_true_logical_before  ⊑  print_pgm_cond_true_logical_combined := by
-  unfold print_pgm_cond_true_logical_before print_pgm_cond_true_logical_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %4 : i1
   ^bb3:  // pred: ^bb0
     %6 = llvm.getelementptr %0[%1, %arg0] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<17 x i32>
-    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_print_pgm_cond_true_logical   : print_pgm_cond_true_logical_before  ⊑  print_pgm_cond_true_logical_combined := by
-  unfold print_pgm_cond_true_logical_before print_pgm_cond_true_logical_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> i32
     %8 = llvm.add %7, %2  : i32
     %9 = llvm.icmp "ult" %8, %3 : i32
     llvm.cond_br %9, ^bb1, ^bb2

@@ -243,12 +243,7 @@ def test_simplify13_combined := [llvmfunc|
   llvm.func @test_simplify13(%arg0: i32) -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(0 : i32) : i32
-    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32]
-
-theorem inst_combine_test_simplify13   : test_simplify13_before  ⊑  test_simplify13_combined := by
-  unfold test_simplify13_before test_simplify13_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.cttz"(%arg0) <{is_zero_poison = true}> : (i32) -> i32
     %3 = llvm.add %2, %0 overflow<nsw, nuw>  : i32
     %4 = llvm.icmp "eq" %arg0, %1 : i32
     %5 = llvm.select %4, %1, %3 : i1, i32

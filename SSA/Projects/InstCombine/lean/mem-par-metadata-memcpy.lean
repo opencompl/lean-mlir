@@ -44,27 +44,12 @@ def _Z4testPcl_combined := [llvmfunc|
     %4 = llvm.getelementptr inbounds %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %5 = llvm.getelementptr %arg0[%2] : (!llvm.ptr, i64) -> !llvm.ptr, i8
     %6 = llvm.getelementptr %5[%arg1] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %7 = llvm.load %6 {access_groups = [#access_group], alignment = 1 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine__Z4testPcl   : _Z4testPcl_before  ⊑  _Z4testPcl_combined := by
-  unfold _Z4testPcl_before _Z4testPcl_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %7, %4 {access_groups = [#access_group], alignment = 1 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine__Z4testPcl   : _Z4testPcl_before  ⊑  _Z4testPcl_combined := by
-  unfold _Z4testPcl_before _Z4testPcl_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.load %6 {access_groups = [#access_group], alignment = 1 : i64} : !llvm.ptr -> i16
+    llvm.store %7, %4 {access_groups = [#access_group], alignment = 1 : i64} : i16, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // pred: ^bb2
     %8 = llvm.add %2, %1 overflow<nsw, nuw>  : i64
-    llvm.br ^bb1(%8 : i64) {loop_annotation = #loop_annotation}]
-
-theorem inst_combine__Z4testPcl   : _Z4testPcl_before  ⊑  _Z4testPcl_combined := by
-  unfold _Z4testPcl_before _Z4testPcl_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb1(%8 : i64) {loop_annotation = #loop_annotation}
   ^bb4:  // pred: ^bb1
     llvm.return
   }]

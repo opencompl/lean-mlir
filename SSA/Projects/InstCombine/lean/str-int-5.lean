@@ -299,161 +299,41 @@ def fold_strtoul_combined := [llvmfunc|
     %52 = llvm.mlir.constant(" 4294967295\00") : !llvm.array<12 x i8>
     %53 = llvm.mlir.addressof @ui32max : !llvm.ptr
     %54 = llvm.getelementptr inbounds %53[%1, %39] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<12 x i8>
-    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %6, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %55 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %11, %55 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %55 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %56 = llvm.getelementptr %arg0[%16] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %17, %56 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %20, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %56 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %20, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %57 = llvm.getelementptr %arg0[%21] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %57 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %26, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %57 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %26, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %58 = llvm.getelementptr %arg0[%27] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %58 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %30, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %58 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %30, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %59 = llvm.getelementptr %arg0[%31] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %59 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %34, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %59 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %34, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %60 = llvm.getelementptr %arg0[%35] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %60 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %37, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %60 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %37, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %61 = llvm.getelementptr %arg0[%38] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %61 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %42, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %61 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %42, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %62 = llvm.getelementptr %arg0[%43] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %17, %62 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %46, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %62 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %46, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %63 = llvm.getelementptr %arg0[%47] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %48, %63 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %51, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %48, %63 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %51, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %64 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %22, %64 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %54, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %22, %64 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %54, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %65 = llvm.getelementptr %arg0[%39] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %48, %65 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_strtoul   : fold_strtoul_before  ⊑  fold_strtoul_combined := by
-  unfold fold_strtoul_before fold_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %48, %65 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -478,36 +358,16 @@ def call_strtoul_combined := [llvmfunc|
     %12 = llvm.getelementptr inbounds %8[%11, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<7 x i8>
     %13 = llvm.mlir.constant(3 : i64) : i64
     %14 = llvm.call @strtoul(%1, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
-    llvm.store %14, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtoul   : call_strtoul_before  ⊑  call_strtoul_combined := by
-  unfold call_strtoul_before call_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %15 = llvm.call @strtoul(%5, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %16 = llvm.getelementptr %arg0[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %15, %16 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtoul   : call_strtoul_before  ⊑  call_strtoul_combined := by
-  unfold call_strtoul_before call_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %15, %16 {alignment = 4 : i64} : i32, !llvm.ptr
     %17 = llvm.call @strtoul(%8, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %18 = llvm.getelementptr %arg0[%9] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %17, %18 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtoul   : call_strtoul_before  ⊑  call_strtoul_combined := by
-  unfold call_strtoul_before call_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %18 {alignment = 4 : i64} : i32, !llvm.ptr
     %19 = llvm.call @strtoul(%12, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i32
     %20 = llvm.getelementptr %arg0[%13] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %19, %20 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_call_strtoul   : call_strtoul_before  ⊑  call_strtoul_combined := by
-  unfold call_strtoul_before call_strtoul_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %19, %20 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -574,148 +434,38 @@ def fold_strtoull_combined := [llvmfunc|
     %54 = llvm.mlir.constant(" 0xffffffffffffffff\00") : !llvm.array<20 x i8>
     %55 = llvm.mlir.addressof @x64max : !llvm.ptr
     %56 = llvm.getelementptr inbounds %55[%1, %53] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<20 x i8>
-    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %6, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %6, %arg0 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %9, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %57 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %11, %57 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %11, %57 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %15, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %58 = llvm.getelementptr %arg0[%16] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %17, %58 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %21, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %58 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %21, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %59 = llvm.getelementptr %arg0[%22] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %23, %59 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %27, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %23, %59 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %27, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %60 = llvm.getelementptr %arg0[%28] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %29, %60 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %32, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %29, %60 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %32, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %61 = llvm.getelementptr %arg0[%33] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %29, %61 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %36, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %29, %61 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %36, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %62 = llvm.getelementptr %arg0[%37] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %38, %62 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %42, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %38, %62 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %42, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %63 = llvm.getelementptr %arg0[%43] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %17, %63 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %46, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %63 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %46, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %64 = llvm.getelementptr %arg0[%47] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %38, %64 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %50, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %38, %64 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %50, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %65 = llvm.getelementptr %arg0[%51] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %52, %65 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %56, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %52, %65 {alignment = 4 : i64} : i64, !llvm.ptr
+    llvm.store %56, %5 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %66 = llvm.getelementptr %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %52, %66 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_fold_strtoull   : fold_strtoull_before  ⊑  fold_strtoull_combined := by
-  unfold fold_strtoull_before fold_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %52, %66 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -739,28 +489,13 @@ def call_strtoull_combined := [llvmfunc|
     %11 = llvm.mlir.constant(3 : i64) : i64
     %12 = llvm.call @strtoull(%1, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %13 = llvm.getelementptr %arg0[%4] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %12, %13 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoull   : call_strtoull_before  ⊑  call_strtoull_combined := by
-  unfold call_strtoull_before call_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %12, %13 {alignment = 4 : i64} : i64, !llvm.ptr
     %14 = llvm.call @strtoull(%6, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %15 = llvm.getelementptr %arg0[%7] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %14, %15 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoull   : call_strtoull_before  ⊑  call_strtoull_combined := by
-  unfold call_strtoull_before call_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %15 {alignment = 4 : i64} : i64, !llvm.ptr
     %16 = llvm.call @strtoull(%10, %2, %3) : (!llvm.ptr, !llvm.ptr, i32) -> i64
     %17 = llvm.getelementptr %arg0[%11] : (!llvm.ptr, i64) -> !llvm.ptr, i64
-    llvm.store %16, %17 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_call_strtoull   : call_strtoull_before  ⊑  call_strtoull_combined := by
-  unfold call_strtoull_before call_strtoull_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %16, %17 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 

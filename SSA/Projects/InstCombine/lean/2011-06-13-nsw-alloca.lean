@@ -88,61 +88,21 @@ def fu1_combined := [llvmfunc|
     %2 = llvm.mlir.constant(0 : i32) : i32
     %3 = llvm.mlir.constant(3 : i32) : i32
     %4 = llvm.mlir.constant(2048 : i32) : i32
-    %5 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
-    %6 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %arg0, %5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %6 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %arg0, %5 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %7 = llvm.icmp "eq" %arg0, %2 : i32
     llvm.cond_br %7, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
-    %8 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     %9 = llvm.shl %8, %3 overflow<nuw>  : i32
     %10 = llvm.add %9, %4 overflow<nuw>  : i32
-    %11 = llvm.alloca %10 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.alloca %10 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
-    %12 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fu1   : fu1_before  ⊑  fu1_combined := by
-  unfold fu1_before fu1_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.call @bar(%12) : (!llvm.ptr) -> ()
     llvm.return
   }]
@@ -158,61 +118,21 @@ def fu2_combined := [llvmfunc|
     %2 = llvm.mlir.constant(0 : i32) : i32
     %3 = llvm.mlir.constant(3 : i32) : i32
     %4 = llvm.mlir.constant(2048 : i32) : i32
-    %5 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
-    %6 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %arg0, %5 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %1, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %6 = llvm.alloca %0 x !llvm.ptr {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %arg0, %5 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %1, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     %7 = llvm.icmp "eq" %arg0, %2 : i32
     llvm.cond_br %7, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
-    %8 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %5 {alignment = 4 : i64} : !llvm.ptr -> i32
     %9 = llvm.shl %8, %3 overflow<nuw>  : i32
     %10 = llvm.add %9, %4  : i32
-    %11 = llvm.alloca %10 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
+    %11 = llvm.alloca %10 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %11, %6 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb2
   ^bb2:  // 2 preds: ^bb0, ^bb1
-    %12 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_fu2   : fu2_before  ⊑  fu2_combined := by
-  unfold fu2_before fu2_combined
-  simp_alive_peephole
-  sorry
+    %12 = llvm.load %6 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.call @bar(%12) : (!llvm.ptr) -> ()
     llvm.return
   }]

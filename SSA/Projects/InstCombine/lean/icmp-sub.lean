@@ -1059,12 +1059,7 @@ theorem inst_combine_sub_ne_zero_use   : sub_ne_zero_use_before  ⊑  sub_ne_zer
 def sub_eq_zero_select_combined := [llvmfunc|
   llvm.func @sub_eq_zero_select(%arg0: i32, %arg1: i32, %arg2: !llvm.ptr) -> i32 {
     %0 = llvm.sub %arg0, %arg1  : i32
-    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_sub_eq_zero_select   : sub_eq_zero_select_before  ⊑  sub_eq_zero_select_combined := by
-  unfold sub_eq_zero_select_before sub_eq_zero_select_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %arg1 : i32
   }]
 

@@ -35,12 +35,7 @@ def d_combined := [llvmfunc|
   llvm.func @d(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i16 {
     %0 = llvm.mlir.constant(0 : i16) : i16
     %1 = llvm.mlir.constant(-1 : i16) : i16
-    %2 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_d   : d_before  ⊑  d_combined := by
-  unfold d_before d_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i16
     %3 = llvm.icmp "eq" %2, %0 : i16
     llvm.cond_br %3, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0

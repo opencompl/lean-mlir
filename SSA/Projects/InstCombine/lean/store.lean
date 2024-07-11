@@ -322,12 +322,7 @@ def store_into_undef_combined := [llvmfunc|
   llvm.func @store_into_undef(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(123 : i32) : i32
     %1 = llvm.mlir.undef : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_into_undef   : store_into_undef_before  ⊑  store_into_undef_combined := by
-  unfold store_into_undef_before store_into_undef_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -339,12 +334,7 @@ def store_into_null_combined := [llvmfunc|
   llvm.func @store_into_null(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.poison : i32
     %1 = llvm.mlir.zero : !llvm.ptr
-    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_into_null   : store_into_null_before  ⊑  store_into_null_combined := by
-  unfold store_into_null_before store_into_null_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -366,12 +356,7 @@ def store_at_gep_off_null_inbounds_combined := [llvmfunc|
     %0 = llvm.mlir.zero : !llvm.ptr
     %1 = llvm.mlir.poison : i32
     %2 = llvm.getelementptr inbounds %0[%arg0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_at_gep_off_null_inbounds   : store_at_gep_off_null_inbounds_before  ⊑  store_at_gep_off_null_inbounds_combined := by
-  unfold store_at_gep_off_null_inbounds_before store_at_gep_off_null_inbounds_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -384,12 +369,7 @@ def store_at_gep_off_null_not_inbounds_combined := [llvmfunc|
     %0 = llvm.mlir.zero : !llvm.ptr
     %1 = llvm.mlir.poison : i32
     %2 = llvm.getelementptr %0[%arg0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_at_gep_off_null_not_inbounds   : store_at_gep_off_null_not_inbounds_before  ⊑  store_at_gep_off_null_not_inbounds_combined := by
-  unfold store_at_gep_off_null_not_inbounds_before store_at_gep_off_null_not_inbounds_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -402,12 +382,7 @@ def store_at_gep_off_no_null_opt_combined := [llvmfunc|
     %0 = llvm.mlir.zero : !llvm.ptr
     %1 = llvm.mlir.constant(24 : i32) : i32
     %2 = llvm.getelementptr inbounds %0[%arg0] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_store_at_gep_off_no_null_opt   : store_at_gep_off_no_null_opt_before  ⊑  store_at_gep_off_no_null_opt_combined := by
-  unfold store_at_gep_off_no_null_opt_before store_at_gep_off_no_null_opt_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -455,12 +430,7 @@ def test5_combined := [llvmfunc|
   ^bb1:  // pred: ^bb0
     llvm.br ^bb2(%1 : i32)
   ^bb2(%2: i32):  // 2 preds: ^bb0, ^bb1
-    llvm.store %2, %arg1 {alignment = 1 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 1 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -475,29 +445,14 @@ def test6_combined := [llvmfunc|
     %2 = llvm.mlir.constant(1 : i32) : i32
     llvm.br ^bb1(%0 : i32)
   ^bb1(%3: i32):  // 2 preds: ^bb0, ^bb2
-    llvm.store %3, %arg2 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr
     %4 = llvm.icmp "slt" %3, %arg0 : i32
     llvm.cond_br %4, ^bb2, ^bb3
   ^bb2:  // pred: ^bb1
     %5 = llvm.sext %3 : i32 to i64
     %6 = llvm.getelementptr inbounds %arg1[%5] : (!llvm.ptr, i64) -> !llvm.ptr, f32
-    llvm.store %1, %6 {alignment = 4 : i64, tbaa = [#tbaa_tag1]} : f32, !llvm.ptr]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
-    %7 = llvm.load %arg2 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
-  unfold test6_before test6_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %6 {alignment = 4 : i64, tbaa = [#tbaa_tag1]} : f32, !llvm.ptr
+    %7 = llvm.load %arg2 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
     %8 = llvm.add %7, %2 overflow<nsw>  : i32
     llvm.br ^bb1(%8 : i32)
   ^bb3:  // pred: ^bb1
@@ -511,12 +466,7 @@ theorem inst_combine_test6   : test6_before  ⊑  test6_combined := by
 def dse1_combined := [llvmfunc|
   llvm.func @dse1(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse1   : dse1_before  ⊑  dse1_combined := by
-  unfold dse1_before dse1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -527,12 +477,7 @@ theorem inst_combine_dse1   : dse1_before  ⊑  dse1_combined := by
 def dse2_combined := [llvmfunc|
   llvm.func @dse2(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse2   : dse2_before  ⊑  dse2_combined := by
-  unfold dse2_before dse2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -543,12 +488,7 @@ theorem inst_combine_dse2   : dse2_before  ⊑  dse2_combined := by
 def dse3_combined := [llvmfunc|
   llvm.func @dse3(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse3   : dse3_before  ⊑  dse3_combined := by
-  unfold dse3_before dse3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -559,12 +499,7 @@ theorem inst_combine_dse3   : dse3_before  ⊑  dse3_combined := by
 def dse4_combined := [llvmfunc|
   llvm.func @dse4(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse4   : dse4_before  ⊑  dse4_combined := by
-  unfold dse4_before dse4_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -575,18 +510,8 @@ theorem inst_combine_dse4   : dse4_before  ⊑  dse4_combined := by
 def dse5_combined := [llvmfunc|
   llvm.func @dse5(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
-    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse5   : dse5_before  ⊑  dse5_combined := by
-  unfold dse5_before dse5_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 atomic seq_cst {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_dse5   : dse5_before  ⊑  dse5_combined := by
-  unfold dse5_before dse5_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 atomic unordered {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg0 atomic seq_cst {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -632,18 +557,8 @@ theorem inst_combine_write_back4   : write_back4_before  ⊑  write_back4_combin
   sorry
 def write_back5_combined := [llvmfunc|
   llvm.func @write_back5(%arg0: !llvm.ptr) {
-    %0 = llvm.load %arg0 atomic unordered {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_write_back5   : write_back5_before  ⊑  write_back5_combined := by
-  unfold write_back5_before write_back5_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg0 atomic seq_cst {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_write_back5   : write_back5_before  ⊑  write_back5_combined := by
-  unfold write_back5_before write_back5_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 atomic unordered {alignment = 4 : i64} : !llvm.ptr -> i32
+    llvm.store %0, %arg0 atomic seq_cst {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -653,12 +568,7 @@ theorem inst_combine_write_back5   : write_back5_before  ⊑  write_back5_combin
   sorry
 def write_back6_combined := [llvmfunc|
   llvm.func @write_back6(%arg0: !llvm.ptr) {
-    %0 = llvm.load %arg0 atomic seq_cst {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_write_back6   : write_back6_before  ⊑  write_back6_combined := by
-  unfold write_back6_before write_back6_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 atomic seq_cst {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return
   }]
 
@@ -668,12 +578,7 @@ theorem inst_combine_write_back6   : write_back6_before  ⊑  write_back6_combin
   sorry
 def write_back7_combined := [llvmfunc|
   llvm.func @write_back7(%arg0: !llvm.ptr) {
-    %0 = llvm.load volatile %arg0 atomic seq_cst {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_write_back7   : write_back7_before  ⊑  write_back7_combined := by
-  unfold write_back7_before write_back7_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load volatile %arg0 atomic seq_cst {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return
   }]
 

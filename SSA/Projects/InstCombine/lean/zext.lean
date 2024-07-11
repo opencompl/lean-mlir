@@ -1220,12 +1220,7 @@ theorem inst_combine_zext_icmp_eq_pow2   : zext_icmp_eq_pow2_before  ⊑  zext_i
 def zext_icmp_eq_bool_0_combined := [llvmfunc|
   llvm.func @zext_icmp_eq_bool_0(%arg0: !llvm.ptr) -> i64 {
     %0 = llvm.mlir.constant(1 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_zext_icmp_eq_bool_0   : zext_icmp_eq_bool_0_before  ⊑  zext_icmp_eq_bool_0_combined := by
-  unfold zext_icmp_eq_bool_0_before zext_icmp_eq_bool_0_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %2 = llvm.xor %1, %0  : i64
     llvm.return %2 : i64
   }]
@@ -1236,12 +1231,7 @@ theorem inst_combine_zext_icmp_eq_bool_0   : zext_icmp_eq_bool_0_before  ⊑  ze
   sorry
 def zext_icmp_eq_bool_1_combined := [llvmfunc|
   llvm.func @zext_icmp_eq_bool_1(%arg0: !llvm.ptr) -> i64 {
-    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_zext_icmp_eq_bool_1   : zext_icmp_eq_bool_1_before  ⊑  zext_icmp_eq_bool_1_combined := by
-  unfold zext_icmp_eq_bool_1_before zext_icmp_eq_bool_1_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     llvm.return %0 : i64
   }]
 
@@ -1251,12 +1241,7 @@ theorem inst_combine_zext_icmp_eq_bool_1   : zext_icmp_eq_bool_1_before  ⊑  ze
   sorry
 def zext_icmp_ne_bool_0_combined := [llvmfunc|
   llvm.func @zext_icmp_ne_bool_0(%arg0: !llvm.ptr) -> i64 {
-    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_zext_icmp_ne_bool_0   : zext_icmp_ne_bool_0_before  ⊑  zext_icmp_ne_bool_0_combined := by
-  unfold zext_icmp_ne_bool_0_before zext_icmp_ne_bool_0_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     llvm.return %0 : i64
   }]
 
@@ -1267,12 +1252,7 @@ theorem inst_combine_zext_icmp_ne_bool_0   : zext_icmp_ne_bool_0_before  ⊑  ze
 def zext_icmp_ne_bool_1_combined := [llvmfunc|
   llvm.func @zext_icmp_ne_bool_1(%arg0: !llvm.ptr) -> i64 {
     %0 = llvm.mlir.constant(1 : i64) : i64
-    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_zext_icmp_ne_bool_1   : zext_icmp_ne_bool_1_before  ⊑  zext_icmp_ne_bool_1_combined := by
-  unfold zext_icmp_ne_bool_1_before zext_icmp_ne_bool_1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 8 : i64} : !llvm.ptr -> i64
     %2 = llvm.xor %1, %0  : i64
     llvm.return %2 : i64
   }]
@@ -1284,12 +1264,7 @@ theorem inst_combine_zext_icmp_ne_bool_1   : zext_icmp_ne_bool_1_before  ⊑  ze
 def zext_icmp_eq0_no_shift_combined := [llvmfunc|
   llvm.func @zext_icmp_eq0_no_shift(%arg0: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(1 : i8) : i8
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine_zext_icmp_eq0_no_shift   : zext_icmp_eq0_no_shift_before  ⊑  zext_icmp_eq0_no_shift_combined := by
-  unfold zext_icmp_eq0_no_shift_before zext_icmp_eq0_no_shift_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %2 = llvm.xor %1, %0  : i8
     %3 = llvm.zext %2 : i8 to i32
     llvm.return %3 : i32

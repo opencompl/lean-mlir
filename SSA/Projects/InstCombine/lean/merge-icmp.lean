@@ -303,12 +303,7 @@ def or_wrong_const2_before := [llvmfunc|
 def and_test1_combined := [llvmfunc|
   llvm.func @and_test1(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(17791 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_and_test1   : and_test1_before  ⊑  and_test1_combined := by
-  unfold and_test1_before and_test1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "eq" %1, %0 : i16
     llvm.return %2 : i1
   }]
@@ -320,12 +315,7 @@ theorem inst_combine_and_test1   : and_test1_before  ⊑  and_test1_combined := 
 def and_test1_logical_combined := [llvmfunc|
   llvm.func @and_test1_logical(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(17791 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_and_test1_logical   : and_test1_logical_before  ⊑  and_test1_logical_combined := by
-  unfold and_test1_logical_before and_test1_logical_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "eq" %1, %0 : i16
     llvm.return %2 : i1
   }]
@@ -337,12 +327,7 @@ theorem inst_combine_and_test1_logical   : and_test1_logical_before  ⊑  and_te
 def and_test1_vector_combined := [llvmfunc|
   llvm.func @and_test1_vector(%arg0: !llvm.ptr) -> vector<2xi1> {
     %0 = llvm.mlir.constant(dense<17791> : vector<2xi16>) : vector<2xi16>
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xi16>]
-
-theorem inst_combine_and_test1_vector   : and_test1_vector_before  ⊑  and_test1_vector_combined := by
-  unfold and_test1_vector_before and_test1_vector_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xi16>
     %2 = llvm.icmp "eq" %1, %0 : vector<2xi16>
     llvm.return %2 : vector<2xi1>
   }]
@@ -354,12 +339,7 @@ theorem inst_combine_and_test1_vector   : and_test1_vector_before  ⊑  and_test
 def and_test2_combined := [llvmfunc|
   llvm.func @and_test2(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(32581 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_and_test2   : and_test2_before  ⊑  and_test2_combined := by
-  unfold and_test2_before and_test2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "eq" %1, %0 : i16
     llvm.return %2 : i1
   }]
@@ -371,12 +351,7 @@ theorem inst_combine_and_test2   : and_test2_before  ⊑  and_test2_combined := 
 def and_test2_logical_combined := [llvmfunc|
   llvm.func @and_test2_logical(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(32581 : i16) : i16
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_and_test2_logical   : and_test2_logical_before  ⊑  and_test2_logical_combined := by
-  unfold and_test2_logical_before and_test2_logical_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i16
     %2 = llvm.icmp "eq" %1, %0 : i16
     llvm.return %2 : i1
   }]
@@ -388,12 +363,7 @@ theorem inst_combine_and_test2_logical   : and_test2_logical_before  ⊑  and_te
 def and_test2_vector_combined := [llvmfunc|
   llvm.func @and_test2_vector(%arg0: !llvm.ptr) -> vector<2xi1> {
     %0 = llvm.mlir.constant(dense<32581> : vector<2xi16>) : vector<2xi16>
-    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xi16>]
-
-theorem inst_combine_and_test2_vector   : and_test2_vector_before  ⊑  and_test2_vector_combined := by
-  unfold and_test2_vector_before and_test2_vector_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> vector<2xi16>
     %2 = llvm.icmp "eq" %1, %0 : vector<2xi16>
     llvm.return %2 : vector<2xi1>
   }]

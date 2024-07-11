@@ -24,24 +24,9 @@ def test_load_load_combine_metadata_before := [llvmfunc|
 
 def test_load_load_combine_metadata_combined := [llvmfunc|
   llvm.func @test_load_load_combine_metadata(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
-    %0 = llvm.load %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_test_load_load_combine_metadata   : test_load_load_combine_metadata_before  ⊑  test_load_load_combine_metadata_combined := by
-  unfold test_load_load_combine_metadata_before test_load_load_combine_metadata_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_load_combine_metadata   : test_load_load_combine_metadata_before  ⊑  test_load_load_combine_metadata_combined := by
-  unfold test_load_load_combine_metadata_before test_load_load_combine_metadata_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_load_load_combine_metadata   : test_load_load_combine_metadata_before  ⊑  test_load_load_combine_metadata_combined := by
-  unfold test_load_load_combine_metadata_before test_load_load_combine_metadata_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
+    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %0, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

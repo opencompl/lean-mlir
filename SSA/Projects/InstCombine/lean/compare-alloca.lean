@@ -300,12 +300,7 @@ theorem inst_combine_alloca_argument_compare_derived_ptrs   : alloca_argument_co
 def alloca_argument_compare_escaped_alloca_combined := [llvmfunc|
   llvm.func @alloca_argument_compare_escaped_alloca(%arg0: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_alloca_argument_compare_escaped_alloca   : alloca_argument_compare_escaped_alloca_before  ⊑  alloca_argument_compare_escaped_alloca_combined := by
-  unfold alloca_argument_compare_escaped_alloca_before alloca_argument_compare_escaped_alloca_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.call @escape(%1) : (!llvm.ptr) -> ()
     %2 = llvm.icmp "eq" %1, %arg0 : !llvm.ptr
     llvm.return %2 : i1
@@ -329,20 +324,10 @@ theorem inst_combine_alloca_argument_compare_two_compares   : alloca_argument_co
 def alloca_argument_compare_escaped_through_store_combined := [llvmfunc|
   llvm.func @alloca_argument_compare_escaped_through_store(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_alloca_argument_compare_escaped_through_store   : alloca_argument_compare_escaped_through_store_before  ⊑  alloca_argument_compare_escaped_through_store_combined := by
-  unfold alloca_argument_compare_escaped_through_store_before alloca_argument_compare_escaped_through_store_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     %2 = llvm.icmp "eq" %1, %arg0 : !llvm.ptr
     %3 = llvm.getelementptr inbounds %1[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i64
-    llvm.store %3, %arg1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_alloca_argument_compare_escaped_through_store   : alloca_argument_compare_escaped_through_store_before  ⊑  alloca_argument_compare_escaped_through_store_combined := by
-  unfold alloca_argument_compare_escaped_through_store_before alloca_argument_compare_escaped_through_store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return %2 : i1
   }]
 
@@ -407,12 +392,7 @@ def consistent_fold2_combined := [llvmfunc|
   llvm.func @consistent_fold2() {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_consistent_fold2   : consistent_fold2_before  ⊑  consistent_fold2_combined := by
-  unfold consistent_fold2_before consistent_fold2_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     %3 = llvm.call @hidden_offset(%2) : (!llvm.ptr) -> !llvm.ptr
     llvm.call @witness(%1, %1) : (i1, i1) -> ()
     llvm.return
@@ -449,12 +429,7 @@ def consistent_nocapture_inttoptr_combined := [llvmfunc|
   llvm.func @consistent_nocapture_inttoptr() -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_consistent_nocapture_inttoptr   : consistent_nocapture_inttoptr_before  ⊑  consistent_nocapture_inttoptr_combined := by
-  unfold consistent_nocapture_inttoptr_before consistent_nocapture_inttoptr_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.call @unknown(%2) : (!llvm.ptr) -> ()
     llvm.return %1 : i1
   }]
@@ -467,12 +442,7 @@ def consistent_nocapture_offset_combined := [llvmfunc|
   llvm.func @consistent_nocapture_offset() -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_consistent_nocapture_offset   : consistent_nocapture_offset_before  ⊑  consistent_nocapture_offset_combined := by
-  unfold consistent_nocapture_offset_before consistent_nocapture_offset_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.call @unknown(%2) : (!llvm.ptr) -> ()
     llvm.return %1 : i1
   }]
@@ -485,12 +455,7 @@ def consistent_nocapture_through_global_combined := [llvmfunc|
   llvm.func @consistent_nocapture_through_global() -> i1 {
     %0 = llvm.mlir.constant(1 : i32) : i32
     %1 = llvm.mlir.constant(false) : i1
-    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_consistent_nocapture_through_global   : consistent_nocapture_through_global_before  ⊑  consistent_nocapture_through_global_combined := by
-  unfold consistent_nocapture_through_global_before consistent_nocapture_through_global_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.alloca %0 x !llvm.array<4 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
     llvm.call @unknown(%2) : (!llvm.ptr) -> ()
     llvm.return %1 : i1
   }]
@@ -502,12 +467,7 @@ theorem inst_combine_consistent_nocapture_through_global   : consistent_nocaptur
 def select_alloca_unrelated_ptr_combined := [llvmfunc|
   llvm.func @select_alloca_unrelated_ptr(%arg0: i1, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_select_alloca_unrelated_ptr   : select_alloca_unrelated_ptr_before  ⊑  select_alloca_unrelated_ptr_combined := by
-  unfold select_alloca_unrelated_ptr_before select_alloca_unrelated_ptr_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
     %2 = llvm.icmp "eq" %1, %arg1 : !llvm.ptr
     %3 = llvm.select %arg0, %1, %arg2 : i1, !llvm.ptr
     %4 = llvm.icmp "eq" %3, %arg1 : !llvm.ptr

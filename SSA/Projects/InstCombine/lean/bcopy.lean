@@ -24,18 +24,8 @@ def bcopy_memmove2_before := [llvmfunc|
 
 def bcopy_memmove_combined := [llvmfunc|
   llvm.func @bcopy_memmove(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture}) {
-    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_bcopy_memmove   : bcopy_memmove_before  ⊑  bcopy_memmove_combined := by
-  unfold bcopy_memmove_before bcopy_memmove_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %0, %arg1 {alignment = 1 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_bcopy_memmove   : bcopy_memmove_before  ⊑  bcopy_memmove_combined := by
-  unfold bcopy_memmove_before bcopy_memmove_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i64
+    llvm.store %0, %arg1 {alignment = 1 : i64} : i64, !llvm.ptr
     llvm.return
   }]
 
@@ -45,12 +35,7 @@ theorem inst_combine_bcopy_memmove   : bcopy_memmove_before  ⊑  bcopy_memmove_
   sorry
 def bcopy_memmove2_combined := [llvmfunc|
   llvm.func @bcopy_memmove2(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture}, %arg2: i32) {
-    "llvm.intr.memmove"(%arg1, %arg0, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_bcopy_memmove2   : bcopy_memmove2_before  ⊑  bcopy_memmove2_combined := by
-  unfold bcopy_memmove2_before bcopy_memmove2_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg1, %arg0, %arg2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return
   }]
 

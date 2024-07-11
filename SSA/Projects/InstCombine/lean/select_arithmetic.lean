@@ -195,12 +195,7 @@ def test5_combined := [llvmfunc|
   llvm.func @test5(%arg0: i1 {llvm.zeroext}, %arg1: f32) -> f32 {
     %0 = llvm.mlir.constant(5.000000e+00 : f32) : f32
     %1 = llvm.select %arg0, %arg1, %0 : i1, f32
-    %2 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<contract>} : f32]
-
-theorem inst_combine_test5   : test5_before  ⊑  test5_combined := by
-  unfold test5_before test5_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fmul %1, %1  {fastmathFlags = #llvm.fastmath<contract>} : f32
     llvm.call @use_float(%1) : (f32) -> ()
     llvm.return %2 : f32
   }]
@@ -232,18 +227,8 @@ def fsub_nnan_combined := [llvmfunc|
   llvm.func @fsub_nnan(%arg0: i1, %arg1: f64, %arg2: f64) -> f64 {
     %0 = llvm.mlir.constant(-7.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
-    %2 = llvm.fadd %arg2, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_fsub_nnan   : fsub_nnan_before  ⊑  fsub_nnan_combined := by
-  unfold fsub_nnan_before fsub_nnan_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.select %arg0, %1, %2 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f64]
-
-theorem inst_combine_fsub_nnan   : fsub_nnan_before  ⊑  fsub_nnan_combined := by
-  unfold fsub_nnan_before fsub_nnan_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.fadd %arg2, %0  {fastmathFlags = #llvm.fastmath<nnan>} : f64
+    %3 = llvm.select %arg0, %1, %2 {fastmathFlags = #llvm.fastmath<nnan>} : i1, f64
     llvm.return %3 : f64
   }]
 
@@ -257,12 +242,7 @@ def fdiv_nnan_nsz_combined := [llvmfunc|
     %1 = llvm.mlir.constant(4.200000e+01 : f64) : f64
     %2 = llvm.select %arg0, %arg2, %0 : i1, f64
     %3 = llvm.select %arg0, %1, %arg1 : i1, f64
-    %4 = llvm.fdiv %2, %3  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64]
-
-theorem inst_combine_fdiv_nnan_nsz   : fdiv_nnan_nsz_before  ⊑  fdiv_nnan_nsz_combined := by
-  unfold fdiv_nnan_nsz_before fdiv_nnan_nsz_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.fdiv %2, %3  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : f64
     llvm.return %4 : f64
   }]
 

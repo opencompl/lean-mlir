@@ -91,18 +91,8 @@ def keep_necessary_addrspacecast_combined := [llvmfunc|
     %6 = llvm.addrspacecast %5 : !llvm.ptr<3> to !llvm.ptr
     %7 = llvm.getelementptr %3[%4, %arg0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<256 x f32>
     %8 = llvm.getelementptr %6[%4, %arg0] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x f32>
-    llvm.store %7, %arg1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_keep_necessary_addrspacecast   : keep_necessary_addrspacecast_before  ⊑  keep_necessary_addrspacecast_combined := by
-  unfold keep_necessary_addrspacecast_before keep_necessary_addrspacecast_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %8, %arg2 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_keep_necessary_addrspacecast   : keep_necessary_addrspacecast_before  ⊑  keep_necessary_addrspacecast_combined := by
-  unfold keep_necessary_addrspacecast_before keep_necessary_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg1 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.store %8, %arg2 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -119,21 +109,11 @@ def inbounds_after_addrspacecast() -> !llvm.struct<_combined := [llvmfunc|
     %4 = llvm.mlir.undef : !llvm.struct<(i8, i8)>
     %5 = llvm.insertvalue %3, %4[0] : !llvm.struct<(i8, i8)> 
     %6 = llvm.insertvalue %3, %5[1] : !llvm.struct<(i8, i8)> 
-    %7 = llvm.alloca %0 x i16 {alignment = 2 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_inbounds_after_addrspacecast() -> !llvm.struct<   : inbounds_after_addrspacecast() -> !llvm.struct<_before  ⊑  inbounds_after_addrspacecast() -> !llvm.struct<_combined := by
-  unfold inbounds_after_addrspacecast() -> !llvm.struct<_before inbounds_after_addrspacecast() -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    %7 = llvm.alloca %0 x i16 {alignment = 2 : i64} : (i32) -> !llvm.ptr
     llvm.call @escape_alloca(%7) : (!llvm.ptr) -> ()
     %8 = llvm.addrspacecast %7 : !llvm.ptr to !llvm.ptr<11>
     %9 = llvm.getelementptr inbounds %8[%1, %2] : (!llvm.ptr<11>, i64, i64) -> !llvm.ptr<11>, !llvm.array<2 x i8>
-    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr<11> -> i8]
-
-theorem inst_combine_inbounds_after_addrspacecast() -> !llvm.struct<   : inbounds_after_addrspacecast() -> !llvm.struct<_before  ⊑  inbounds_after_addrspacecast() -> !llvm.struct<_combined := by
-  unfold inbounds_after_addrspacecast() -> !llvm.struct<_before inbounds_after_addrspacecast() -> !llvm.struct<_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr<11> -> i8
     %11 = llvm.insertvalue %10, %6[1] : !llvm.struct<(i8, i8)> 
     llvm.return %11 : !llvm.struct<(i8, i8)>
   }]
@@ -146,12 +126,7 @@ def bitcast_after_gep_combined := [llvmfunc|
   llvm.func @bitcast_after_gep(%arg0: !llvm.ptr) {
     %0 = llvm.addrspacecast %arg0 : !llvm.ptr to !llvm.ptr<3>
     %1 = llvm.call spir_funccc @my_extern_func() : () -> vector<16xi32>
-    llvm.store %1, %0 {alignment = 64 : i64} : vector<16xi32>, !llvm.ptr<3>]
-
-theorem inst_combine_bitcast_after_gep   : bitcast_after_gep_before  ⊑  bitcast_after_gep_combined := by
-  unfold bitcast_after_gep_before bitcast_after_gep_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %0 {alignment = 64 : i64} : vector<16xi32>, !llvm.ptr<3>
     llvm.return
   }]
 

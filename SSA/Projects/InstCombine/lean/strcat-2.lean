@@ -41,12 +41,7 @@ def test_simplify1_combined := [llvmfunc|
     %5 = llvm.mlir.constant(6 : i32) : i32
     %6 = llvm.call @strlen(%2) : (!llvm.ptr) -> i32
     %7 = llvm.getelementptr inbounds %2[%6] : (!llvm.ptr, i32) -> !llvm.ptr, i8
-    "llvm.intr.memcpy"(%7, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()]
-
-theorem inst_combine_test_simplify1   : test_simplify1_before  ⊑  test_simplify1_combined := by
-  unfold test_simplify1_before test_simplify1_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%7, %4, %5) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
     llvm.return
   }]
 

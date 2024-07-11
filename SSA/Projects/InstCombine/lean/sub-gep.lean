@@ -772,22 +772,12 @@ def _gep_phi1_combined := [llvmfunc|
     %5 = llvm.icmp "eq" %arg0, %0 : !llvm.ptr
     llvm.cond_br %5, ^bb4(%1 : i1), ^bb1
   ^bb1:  // pred: ^bb0
-    %6 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__gep_phi1   : _gep_phi1_before  ⊑  _gep_phi1_combined := by
-  unfold _gep_phi1_before _gep_phi1_combined
-  simp_alive_peephole
-  sorry
+    %6 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %7 = llvm.icmp "eq" %6, %2 : i8
     llvm.cond_br %7, ^bb4(%1 : i1), ^bb2(%arg0 : !llvm.ptr)
   ^bb2(%8: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
     %9 = llvm.getelementptr inbounds %8[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__gep_phi1   : _gep_phi1_before  ⊑  _gep_phi1_combined := by
-  unfold _gep_phi1_before _gep_phi1_combined
-  simp_alive_peephole
-  sorry
+    %10 = llvm.load %9 {alignment = 1 : i64} : !llvm.ptr -> i8
     %11 = llvm.icmp "eq" %10, %2 : i8
     llvm.cond_br %11, ^bb3, ^bb2(%9 : !llvm.ptr)
   ^bb3:  // pred: ^bb2
@@ -809,22 +799,12 @@ def _gep_phi2_combined := [llvmfunc|
     %4 = llvm.icmp "eq" %arg0, %0 : !llvm.ptr
     llvm.cond_br %4, ^bb4(%1 : i64), ^bb1
   ^bb1:  // pred: ^bb0
-    %5 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__gep_phi2   : _gep_phi2_before  ⊑  _gep_phi2_combined := by
-  unfold _gep_phi2_before _gep_phi2_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %6 = llvm.icmp "eq" %5, %2 : i8
     llvm.cond_br %6, ^bb4(%1 : i64), ^bb2(%arg0 : !llvm.ptr)
   ^bb2(%7: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
     %8 = llvm.getelementptr inbounds %7[%3] : (!llvm.ptr, i64) -> !llvm.ptr, i8
-    %9 = llvm.load %8 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__gep_phi2   : _gep_phi2_before  ⊑  _gep_phi2_combined := by
-  unfold _gep_phi2_before _gep_phi2_combined
-  simp_alive_peephole
-  sorry
+    %9 = llvm.load %8 {alignment = 1 : i64} : !llvm.ptr -> i8
     %10 = llvm.icmp "eq" %9, %2 : i8
     llvm.cond_br %10, ^bb3, ^bb2(%8 : !llvm.ptr)
   ^bb3:  // pred: ^bb2

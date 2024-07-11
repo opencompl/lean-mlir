@@ -23,12 +23,7 @@ def bork_before := [llvmfunc|
 def bork_combined := [llvmfunc|
   llvm.func @bork(%arg0: !llvm.ptr) -> !llvm.ptr {
     %0 = llvm.mlir.constant(16 : i32) : i32
-    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_bork   : bork_before  ⊑  bork_combined := by
-  unfold bork_before bork_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> !llvm.ptr
     %2 = llvm.ptrtoint %1 : !llvm.ptr to i64
     %3 = llvm.trunc %2 : i64 to i32
     %4 = llvm.add %3, %0  : i32

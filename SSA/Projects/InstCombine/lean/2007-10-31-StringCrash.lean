@@ -26,3 +26,20 @@ def _start_before := [llvmfunc|
     llvm.return
   }]
 
+def _start_combined := [llvmfunc|
+  llvm.func @_start(%arg0: i32, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
+    %0 = llvm.mlir.addressof @__darwin_gcc3_preregister_frame_info : !llvm.ptr
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %3 = llvm.icmp "eq" %2, %1 : i32
+    llvm.cond_br %3, ^bb2, ^bb1
+  ^bb1:  // pred: ^bb0
+    llvm.return
+  ^bb2:  // pred: ^bb0
+    llvm.return
+  }]
+
+theorem inst_combine__start   : _start_before  ⊑  _start_combined := by
+  unfold _start_before _start_combined
+  simp_alive_peephole
+  sorry

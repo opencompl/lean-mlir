@@ -176,12 +176,7 @@ def strtol_endptr_not_null_combined := [llvmfunc|
     %5 = llvm.getelementptr inbounds %4[%2, %1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<3 x i8>
     %6 = llvm.mlir.constant(12 : i32) : i32
     %7 = llvm.getelementptr inbounds %arg0[%0] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %5, %7 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_strtol_endptr_not_null   : strtol_endptr_not_null_before  ⊑  strtol_endptr_not_null_combined := by
-  unfold strtol_endptr_not_null_before strtol_endptr_not_null_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %7 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return %6 : i32
   }]
 

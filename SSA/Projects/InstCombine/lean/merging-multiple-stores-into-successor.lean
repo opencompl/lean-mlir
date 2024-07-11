@@ -283,78 +283,28 @@ def _Z4testv_combined := [llvmfunc|
     %12 = llvm.getelementptr inbounds %7[%11, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i32>
     %13 = llvm.getelementptr inbounds %8[%11, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<0 x i16>
     %14 = llvm.getelementptr inbounds %9[%11, %10] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<8 x i32>
-    %15 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %0 {alignment = 1 : i64} : !llvm.ptr -> i8
     %16 = llvm.icmp "eq" %15, %1 : i8
-    %17 = llvm.load %2 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    %17 = llvm.load %2 {alignment = 2 : i64} : !llvm.ptr -> i16
     llvm.cond_br %16, ^bb2, ^bb1
   ^bb1:  // pred: ^bb0
     llvm.br ^bb3(%3 : i32)
   ^bb2:  // pred: ^bb0
-    %18 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    %18 = llvm.load %4 {alignment = 4 : i64} : !llvm.ptr -> i32
     %19 = llvm.icmp "eq" %18, %5 : i32
-    %20 = llvm.load %6 {alignment = 8 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    %20 = llvm.load %6 {alignment = 8 : i64} : !llvm.ptr -> i64
     %21 = llvm.sext %17 : i16 to i64
     %22 = llvm.select %19, %20, %21 : i1, i64
     %23 = llvm.trunc %22 : i64 to i32
     llvm.br ^bb3(%23 : i32)
   ^bb3(%24: i32):  // 2 preds: ^bb1, ^bb2
-    llvm.store %24, %7 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %17, %8 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %24, %7 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %17, %8 {alignment = 2 : i64} : i16, !llvm.ptr
     %25 = llvm.sext %17 : i16 to i32
-    llvm.store %25, %9 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %24, %12 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %17, %13 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %25, %14 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine__Z4testv   : _Z4testv_before  ⊑  _Z4testv_combined := by
-  unfold _Z4testv_before _Z4testv_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %25, %9 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %24, %12 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store %17, %13 {alignment = 2 : i64} : i16, !llvm.ptr
+    llvm.store %25, %14 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -381,36 +331,16 @@ theorem inst_combine_diff_types_same_width_merge   : diff_types_same_width_merge
 def diff_types_diff_width_no_merge_combined := [llvmfunc|
   llvm.func @diff_types_diff_width_no_merge(%arg0: i1, %arg1: i32, %arg2: i64) -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_diff_types_diff_width_no_merge   : diff_types_diff_width_no_merge_before  ⊑  diff_types_diff_width_no_merge_combined := by
-  unfold diff_types_diff_width_no_merge_before diff_types_diff_width_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %arg1, %1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_diff_types_diff_width_no_merge   : diff_types_diff_width_no_merge_before  ⊑  diff_types_diff_width_no_merge_combined := by
-  unfold diff_types_diff_width_no_merge_before diff_types_diff_width_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %arg2, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_diff_types_diff_width_no_merge   : diff_types_diff_width_no_merge_before  ⊑  diff_types_diff_width_no_merge_combined := by
-  unfold diff_types_diff_width_no_merge_before diff_types_diff_width_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %1 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_diff_types_diff_width_no_merge   : diff_types_diff_width_no_merge_before  ⊑  diff_types_diff_width_no_merge_combined := by
-  unfold diff_types_diff_width_no_merge_before diff_types_diff_width_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.return %2 : i32
   }]
 
@@ -421,36 +351,16 @@ theorem inst_combine_diff_types_diff_width_no_merge   : diff_types_diff_width_no
 def vec_no_merge_combined := [llvmfunc|
   llvm.func @vec_no_merge(%arg0: i1, %arg1: vector<2xi32>, %arg2: vector<4xi32>) -> vector<4xi32> {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_vec_no_merge   : vec_no_merge_before  ⊑  vec_no_merge_combined := by
-  unfold vec_no_merge_before vec_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %arg1, %1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_vec_no_merge   : vec_no_merge_before  ⊑  vec_no_merge_combined := by
-  unfold vec_no_merge_before vec_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %arg2, %1 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr]
-
-theorem inst_combine_vec_no_merge   : vec_no_merge_before  ⊑  vec_no_merge_combined := by
-  unfold vec_no_merge_before vec_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %1 {alignment = 16 : i64} : vector<4xi32>, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.load %1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xi32>]
-
-theorem inst_combine_vec_no_merge   : vec_no_merge_before  ⊑  vec_no_merge_combined := by
-  unfold vec_no_merge_before vec_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 16 : i64} : !llvm.ptr -> vector<4xi32>
     llvm.return %2 : vector<4xi32>
   }]
 
@@ -479,36 +389,16 @@ theorem inst_combine_one_elem_struct_merge(%arg0: i1, %arg1: !llvm.struct<"struc
 def multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined := [llvmfunc|
   llvm.func @multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", (f16, i32)> {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup",    : multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before  ⊑  multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined := by
-  unfold multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i64 {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %arg1, %1 {alignment = 4 : i64} : !llvm.struct<"struct.tup", (f16, i32)>, !llvm.ptr]
-
-theorem inst_combine_multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup",    : multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before  ⊑  multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined := by
-  unfold multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 4 : i64} : !llvm.struct<"struct.tup", (f16, i32)>, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %arg2, %1 {alignment = 2 : i64} : f16, !llvm.ptr]
-
-theorem inst_combine_multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup",    : multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before  ⊑  multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined := by
-  unfold multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %1 {alignment = 2 : i64} : f16, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"struct.tup", (f16, i32)>]
-
-theorem inst_combine_multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup",    : multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before  ⊑  multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined := by
-  unfold multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _before multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"struct.tup", (f16, i32)>, %arg2: f16) -> !llvm.struct<"struct.tup", _combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> !llvm.struct<"struct.tup", (f16, i32)>
     llvm.return %2 : !llvm.struct<"struct.tup", (f16, i32)>
   }]
 
@@ -519,36 +409,16 @@ theorem inst_combine_multi_elem_struct_no_merge(%arg0: i1, %arg1: !llvm.struct<"
 def same_types_diff_align_no_merge_combined := [llvmfunc|
   llvm.func @same_types_diff_align_no_merge(%arg0: i1, %arg1: i16, %arg2: i16) -> i16 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x i16 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_same_types_diff_align_no_merge   : same_types_diff_align_no_merge_before  ⊑  same_types_diff_align_no_merge_combined := by
-  unfold same_types_diff_align_no_merge_before same_types_diff_align_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x i16 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %arg1, %1 {alignment = 8 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_same_types_diff_align_no_merge   : same_types_diff_align_no_merge_before  ⊑  same_types_diff_align_no_merge_combined := by
-  unfold same_types_diff_align_no_merge_before same_types_diff_align_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 8 : i64} : i16, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %arg2, %1 {alignment = 4 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_same_types_diff_align_no_merge   : same_types_diff_align_no_merge_before  ⊑  same_types_diff_align_no_merge_combined := by
-  unfold same_types_diff_align_no_merge_before same_types_diff_align_no_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %1 {alignment = 4 : i64} : i16, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16]
-
-theorem inst_combine_same_types_diff_align_no_merge   : same_types_diff_align_no_merge_before  ⊑  same_types_diff_align_no_merge_combined := by
-  unfold same_types_diff_align_no_merge_before same_types_diff_align_no_merge_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 2 : i64} : !llvm.ptr -> i16
     llvm.return %2 : i16
   }]
 
@@ -559,36 +429,16 @@ theorem inst_combine_same_types_diff_align_no_merge   : same_types_diff_align_no
 def ptrtoint_merge_combined := [llvmfunc|
   llvm.func @ptrtoint_merge(%arg0: i1, %arg1: i64, %arg2: !llvm.ptr) -> i64 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    %1 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_ptrtoint_merge   : ptrtoint_merge_before  ⊑  ptrtoint_merge_combined := by
-  unfold ptrtoint_merge_before ptrtoint_merge_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.alloca %0 x !llvm.ptr {alignment = 8 : i64} : (i32) -> !llvm.ptr
     llvm.cond_br %arg0, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    llvm.store %arg1, %1 {alignment = 4 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_ptrtoint_merge   : ptrtoint_merge_before  ⊑  ptrtoint_merge_combined := by
-  unfold ptrtoint_merge_before ptrtoint_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %1 {alignment = 4 : i64} : i64, !llvm.ptr
     llvm.br ^bb3
   ^bb2:  // pred: ^bb0
-    llvm.store %arg2, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_ptrtoint_merge   : ptrtoint_merge_before  ⊑  ptrtoint_merge_combined := by
-  unfold ptrtoint_merge_before ptrtoint_merge_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.br ^bb3
   ^bb3:  // 2 preds: ^bb1, ^bb2
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i64]
-
-theorem inst_combine_ptrtoint_merge   : ptrtoint_merge_before  ⊑  ptrtoint_merge_combined := by
-  unfold ptrtoint_merge_before ptrtoint_merge_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> i64
     llvm.return %2 : i64
   }]
 
@@ -626,18 +476,8 @@ def pr46688_combined := [llvmfunc|
     %3 = llvm.lshr %2, %arg1  : i32
     %4 = llvm.lshr %3, %arg1  : i32
     %5 = llvm.trunc %4 : i32 to i16
-    llvm.store %5, %arg3 {alignment = 2 : i64} : i16, !llvm.ptr]
-
-theorem inst_combine_pr46688   : pr46688_before  ⊑  pr46688_combined := by
-  unfold pr46688_before pr46688_combined
-  simp_alive_peephole
-  sorry
-    llvm.store %4, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_pr46688   : pr46688_before  ⊑  pr46688_combined := by
-  unfold pr46688_before pr46688_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %5, %arg3 {alignment = 2 : i64} : i16, !llvm.ptr
+    llvm.store %4, %arg4 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

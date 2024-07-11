@@ -32,12 +32,7 @@ def load_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.getelementptr inbounds %arg0[%0, %1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x vec<? x 4 x  i32>>
-    %3 = llvm.load %2 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>]
-
-theorem inst_combine_load   : load_before  ⊑  load_combined := by
-  unfold load_before load_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 16 : i64} : !llvm.ptr -> !llvm.vec<? x 4 x  i32>
     llvm.return %3 : !llvm.vec<? x 4 x  i32>
   }]
 
@@ -49,19 +44,9 @@ def store_combined := [llvmfunc|
   llvm.func @store(%arg0: !llvm.ptr, %arg1: !llvm.vec<? x 4 x  i32>, %arg2: !llvm.vec<? x 4 x  i32>) {
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %arg1, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_store   : store_before  ⊑  store_combined := by
-  unfold store_before store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg1, %arg0 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
     %2 = llvm.getelementptr inbounds %arg0[%0, %1] : (!llvm.ptr, i64, i64) -> !llvm.ptr, !llvm.array<2 x vec<? x 4 x  i32>>
-    llvm.store %arg2, %2 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr]
-
-theorem inst_combine_store   : store_before  ⊑  store_combined := by
-  unfold store_before store_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %arg2, %2 {alignment = 16 : i64} : !llvm.vec<? x 4 x  i32>, !llvm.ptr
     llvm.return
   }]
 

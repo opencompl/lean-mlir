@@ -28,12 +28,7 @@ def test_before := [llvmfunc|
 def test_combined := [llvmfunc|
   llvm.func @test(%arg0: i1, %arg1: !llvm.ptr) -> i32 {
     %0 = llvm.mlir.constant(1 : i32) : i32
-    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.call @test2() : () -> ()
     llvm.return %0 : i32
   }]

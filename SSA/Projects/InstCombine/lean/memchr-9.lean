@@ -251,75 +251,25 @@ def fold_memchr_A_pIb_cst_cst_combined := [llvmfunc|
     %21 = llvm.mlir.constant(10 : i64) : i64
     %22 = llvm.mlir.constant(1 : i32) : i32
     %23 = llvm.getelementptr inbounds %7[%17, %17, 1, %8] : (!llvm.ptr, i64, i64, i64) -> !llvm.ptr, !llvm.array<1 x struct<"struct.A", (array<2 x i16>, array<2 x i16>)>>
-    llvm.store %7, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %7, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %24 = llvm.getelementptr %arg0[%8] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %9, %24 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %24 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %25 = llvm.getelementptr %arg0[%10] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %9, %25 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %25 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %26 = llvm.getelementptr %arg0[%11] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %12, %26 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %12, %26 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %27 = llvm.getelementptr %arg0[%13] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %12, %27 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %12, %27 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %28 = llvm.getelementptr %arg0[%14] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %9, %28 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %28 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %29 = llvm.getelementptr %arg0[%15] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %18, %29 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %18, %29 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %30 = llvm.getelementptr %arg0[%19] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %9, %30 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %30 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %31 = llvm.getelementptr %arg0[%20] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %9, %31 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %9, %31 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %32 = llvm.getelementptr %arg0[%21] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %23, %32 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_cst   : fold_memchr_A_pIb_cst_cst_before  ⊑  fold_memchr_A_pIb_cst_cst_combined := by
-  unfold fold_memchr_A_pIb_cst_cst_before fold_memchr_A_pIb_cst_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %23, %32 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -359,112 +309,47 @@ def fold_memchr_A_pIb_cst_N_combined := [llvmfunc|
     %27 = llvm.mlir.constant(12 : i64) : i64
     %28 = llvm.icmp "eq" %arg0, %0 : i64
     %29 = llvm.select %28, %1, %9 : i1, !llvm.ptr
-    llvm.store %29, %arg1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %29, %arg1 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %30 = llvm.getelementptr %arg1[%10] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %31 = llvm.icmp "ult" %arg0, %11 : i64
     %32 = llvm.select %31, %1, %13 : i1, !llvm.ptr
-    llvm.store %32, %30 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %32, %30 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %33 = llvm.getelementptr %arg1[%14] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %1, %33 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %33 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %34 = llvm.getelementptr %arg1[%11] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %35 = llvm.icmp "eq" %arg0, %0 : i64
     %36 = llvm.select %35, %1, %15 : i1, !llvm.ptr
-    llvm.store %36, %34 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %36, %34 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %37 = llvm.getelementptr %arg1[%16] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %38 = llvm.icmp "ult" %arg0, %14 : i64
     %39 = llvm.select %38, %1, %13 : i1, !llvm.ptr
-    llvm.store %39, %37 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %39, %37 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %40 = llvm.getelementptr %arg1[%17] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %41 = llvm.icmp "ult" %arg0, %16 : i64
     %42 = llvm.select %41, %1, %19 : i1, !llvm.ptr
-    llvm.store %42, %40 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %42, %40 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %43 = llvm.getelementptr %arg1[%20] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %44 = llvm.icmp "ult" %arg0, %20 : i64
     %45 = llvm.select %44, %1, %21 : i1, !llvm.ptr
-    llvm.store %45, %43 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %45, %43 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %46 = llvm.getelementptr %arg1[%22] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %1, %46 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %46 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %47 = llvm.getelementptr %arg1[%23] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %1, %47 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %47 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %48 = llvm.getelementptr %arg1[%24] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %49 = llvm.icmp "eq" %arg0, %0 : i64
     %50 = llvm.select %49, %1, %13 : i1, !llvm.ptr
-    llvm.store %50, %48 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %50, %48 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %51 = llvm.getelementptr %arg1[%25] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %52 = llvm.icmp "ult" %arg0, %11 : i64
     %53 = llvm.select %52, %1, %19 : i1, !llvm.ptr
-    llvm.store %53, %51 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %53, %51 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %54 = llvm.getelementptr %arg1[%26] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %55 = llvm.icmp "ult" %arg0, %17 : i64
     %56 = llvm.select %55, %1, %21 : i1, !llvm.ptr
-    llvm.store %56, %54 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %56, %54 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %57 = llvm.getelementptr %arg1[%27] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
-    llvm.store %1, %57 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_fold_memchr_A_pIb_cst_N   : fold_memchr_A_pIb_cst_N_before  ⊑  fold_memchr_A_pIb_cst_N_combined := by
-  unfold fold_memchr_A_pIb_cst_N_before fold_memchr_A_pIb_cst_N_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %57 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 
@@ -489,28 +374,13 @@ def call_memchr_A_pIb_xs_cst_combined := [llvmfunc|
     %12 = llvm.mlir.constant(2 : i64) : i64
     %13 = llvm.getelementptr inbounds %9[%1, %0, 0, %0] : (!llvm.ptr, i64, i64, i64) -> !llvm.ptr, !llvm.array<1 x struct<"struct.A", (array<2 x i16>, array<2 x i16>)>>
     %14 = llvm.call @memchr(%10, %11, %12) : (!llvm.ptr, i32, i64) -> !llvm.ptr
-    llvm.store %14, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_memchr_A_pIb_xs_cst   : call_memchr_A_pIb_xs_cst_before  ⊑  call_memchr_A_pIb_xs_cst_combined := by
-  unfold call_memchr_A_pIb_xs_cst_before call_memchr_A_pIb_xs_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %14, %arg0 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %15 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %16 = llvm.call @memchr(%10, %11, %12) : (!llvm.ptr, i32, i64) -> !llvm.ptr
-    llvm.store %16, %15 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_memchr_A_pIb_xs_cst   : call_memchr_A_pIb_xs_cst_before  ⊑  call_memchr_A_pIb_xs_cst_combined := by
-  unfold call_memchr_A_pIb_xs_cst_before call_memchr_A_pIb_xs_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %16, %15 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     %17 = llvm.getelementptr %arg0[%12] : (!llvm.ptr, i64) -> !llvm.ptr, !llvm.ptr
     %18 = llvm.call @memchr(%13, %11, %12) : (!llvm.ptr, i32, i64) -> !llvm.ptr
-    llvm.store %18, %17 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr]
-
-theorem inst_combine_call_memchr_A_pIb_xs_cst   : call_memchr_A_pIb_xs_cst_before  ⊑  call_memchr_A_pIb_xs_cst_combined := by
-  unfold call_memchr_A_pIb_xs_cst_before call_memchr_A_pIb_xs_cst_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %18, %17 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
     llvm.return
   }]
 

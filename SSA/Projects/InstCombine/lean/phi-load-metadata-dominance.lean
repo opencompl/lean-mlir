@@ -36,12 +36,7 @@ def test_combine_metadata_dominance_combined := [llvmfunc|
     llvm.call @baz() : () -> ()
     llvm.br ^bb3(%arg2 : !llvm.ptr)
   ^bb3(%0: !llvm.ptr):  // 2 preds: ^bb1, ^bb2
-    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr]
-
-theorem inst_combine_test_combine_metadata_dominance   : test_combine_metadata_dominance_before  ⊑  test_combine_metadata_dominance_combined := by
-  unfold test_combine_metadata_dominance_before test_combine_metadata_dominance_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.load %0 {alignment = 8 : i64} : !llvm.ptr -> !llvm.ptr
     llvm.return %1 : !llvm.ptr
   }]
 

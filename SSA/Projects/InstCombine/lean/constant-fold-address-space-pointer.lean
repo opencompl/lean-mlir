@@ -469,12 +469,7 @@ def constant_fold_bitcast_ftoi_load_combined := [llvmfunc|
   llvm.func @constant_fold_bitcast_ftoi_load() -> f32 {
     %0 = llvm.mlir.constant(89 : i32) : i32
     %1 = llvm.mlir.addressof @g : !llvm.ptr<3>
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> f32]
-
-theorem inst_combine_constant_fold_bitcast_ftoi_load   : constant_fold_bitcast_ftoi_load_before  ⊑  constant_fold_bitcast_ftoi_load_combined := by
-  unfold constant_fold_bitcast_ftoi_load_before constant_fold_bitcast_ftoi_load_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> f32
     llvm.return %2 : f32
   }]
 
@@ -486,12 +481,7 @@ def constant_fold_bitcast_itof_load_combined := [llvmfunc|
   llvm.func @constant_fold_bitcast_itof_load() -> i32 {
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.addressof @g_float_as3 : !llvm.ptr<3>
-    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> i32]
-
-theorem inst_combine_constant_fold_bitcast_itof_load   : constant_fold_bitcast_itof_load_before  ⊑  constant_fold_bitcast_itof_load_combined := by
-  unfold constant_fold_bitcast_itof_load_before constant_fold_bitcast_itof_load_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr<3> -> i32
     llvm.return %2 : i32
   }]
 
@@ -504,12 +494,7 @@ def constant_fold_bitcast_vector_as_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0.000000e+00 : f32) : f32
     %1 = llvm.mlir.constant(dense<0.000000e+00> : vector<4xf32>) : vector<4xf32>
     %2 = llvm.mlir.addressof @g_v4f_as3 : !llvm.ptr<3>
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> vector<4xf32>]
-
-theorem inst_combine_constant_fold_bitcast_vector_as   : constant_fold_bitcast_vector_as_before  ⊑  constant_fold_bitcast_vector_as_combined := by
-  unfold constant_fold_bitcast_vector_as_before constant_fold_bitcast_vector_as_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> vector<4xf32>
     llvm.return %3 : vector<4xf32>
   }]
 
@@ -522,12 +507,7 @@ def test_cast_gep_small_indices_as_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(dense<0> : tensor<10xi32>) : !llvm.array<10 x i32>
     %2 = llvm.mlir.addressof @i32_array_as3 : !llvm.ptr<3>
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> i32]
-
-theorem inst_combine_test_cast_gep_small_indices_as   : test_cast_gep_small_indices_as_before  ⊑  test_cast_gep_small_indices_as_combined := by
-  unfold test_cast_gep_small_indices_as_before test_cast_gep_small_indices_as_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> i32
     llvm.return %3 : i32
   }]
 
@@ -540,12 +520,7 @@ def test_cast_gep_large_indices_as_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(dense<0> : tensor<10xi32>) : !llvm.array<10 x i32>
     %2 = llvm.mlir.addressof @i32_array_as3 : !llvm.ptr<3>
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> i32]
-
-theorem inst_combine_test_cast_gep_large_indices_as   : test_cast_gep_large_indices_as_before  ⊑  test_cast_gep_large_indices_as_combined := by
-  unfold test_cast_gep_large_indices_as_before test_cast_gep_large_indices_as_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr<3> -> i32
     llvm.return %3 : i32
   }]
 
@@ -570,12 +545,7 @@ def test_constant_cast_gep_struct_indices_as_combined := [llvmfunc|
     %12 = llvm.insertvalue %5, %11[3] : !llvm.struct<"struct.foo", (f32, f32, array<4 x i32>, ptr<3>)> 
     %13 = llvm.mlir.addressof @constant_fold_global_ptr : !llvm.ptr<3>
     %14 = llvm.getelementptr inbounds %13[%2, 2, %0] : (!llvm.ptr<3>, i16, i16) -> !llvm.ptr<3>, !llvm.struct<"struct.foo", (f32, f32, array<4 x i32>, ptr<3>)>
-    %15 = llvm.load %14 {alignment = 4 : i64} : !llvm.ptr<3> -> i32]
-
-theorem inst_combine_test_constant_cast_gep_struct_indices_as   : test_constant_cast_gep_struct_indices_as_before  ⊑  test_constant_cast_gep_struct_indices_as_combined := by
-  unfold test_constant_cast_gep_struct_indices_as_before test_constant_cast_gep_struct_indices_as_combined
-  simp_alive_peephole
-  sorry
+    %15 = llvm.load %14 {alignment = 4 : i64} : !llvm.ptr<3> -> i32
     llvm.return %15 : i32
   }]
 
@@ -608,12 +578,7 @@ def canonicalize_addrspacecast_combined := [llvmfunc|
     %0 = llvm.mlir.addressof @shared_mem : !llvm.ptr<3>
     %1 = llvm.addrspacecast %0 : !llvm.ptr<3> to !llvm.ptr
     %2 = llvm.getelementptr inbounds %1[%arg0] : (!llvm.ptr, i32) -> !llvm.ptr, f32
-    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_canonicalize_addrspacecast   : canonicalize_addrspacecast_before  ⊑  canonicalize_addrspacecast_combined := by
-  unfold canonicalize_addrspacecast_before canonicalize_addrspacecast_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.load %2 {alignment = 4 : i64} : !llvm.ptr -> f32
     llvm.return %3 : f32
   }]
 

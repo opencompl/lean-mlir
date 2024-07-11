@@ -968,12 +968,7 @@ def not_sub_extra_use_combined := [llvmfunc|
     %0 = llvm.mlir.constant(123 : i32) : i32
     %1 = llvm.mlir.constant(-124 : i32) : i32
     %2 = llvm.sub %0, %arg0  : i32
-    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_not_sub_extra_use   : not_sub_extra_use_before  ⊑  not_sub_extra_use_combined := by
-  unfold not_sub_extra_use_before not_sub_extra_use_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.add %arg0, %1  : i32
     llvm.return %3 : i32
   }]
@@ -998,12 +993,7 @@ def not_sub_extra_use_splat_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<123> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.mlir.constant(dense<-124> : vector<2xi32>) : vector<2xi32>
     %2 = llvm.sub %0, %arg0  : vector<2xi32>
-    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_not_sub_extra_use_splat   : not_sub_extra_use_splat_before  ⊑  not_sub_extra_use_splat_combined := by
-  unfold not_sub_extra_use_splat_before not_sub_extra_use_splat_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %3 = llvm.add %arg0, %1  : vector<2xi32>
     llvm.return %3 : vector<2xi32>
   }]
@@ -1028,12 +1018,7 @@ def not_sub_extra_use_vec_combined := [llvmfunc|
     %0 = llvm.mlir.constant(dense<[123, 42]> : vector<2xi32>) : vector<2xi32>
     %1 = llvm.mlir.constant(dense<[-124, -43]> : vector<2xi32>) : vector<2xi32>
     %2 = llvm.sub %0, %arg0  : vector<2xi32>
-    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr]
-
-theorem inst_combine_not_sub_extra_use_vec   : not_sub_extra_use_vec_before  ⊑  not_sub_extra_use_vec_combined := by
-  unfold not_sub_extra_use_vec_before not_sub_extra_use_vec_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %arg1 {alignment = 8 : i64} : vector<2xi32>, !llvm.ptr
     %3 = llvm.add %arg0, %1  : vector<2xi32>
     llvm.return %3 : vector<2xi32>
   }]

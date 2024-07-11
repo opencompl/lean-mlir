@@ -139,12 +139,7 @@ def fptrunc_to_bfloat_bitcast_to_half_before := [llvmfunc|
 def fadd_fpext_op0_combined := [llvmfunc|
   llvm.func @fadd_fpext_op0(%arg0: f32, %arg1: f64) -> f32 {
     %0 = llvm.fpext %arg0 : f32 to f64
-    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<reassoc>} : f64]
-
-theorem inst_combine_fadd_fpext_op0   : fadd_fpext_op0_before  ⊑  fadd_fpext_op0_combined := by
-  unfold fadd_fpext_op0_before fadd_fpext_op0_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fadd %0, %arg1  {fastmathFlags = #llvm.fastmath<reassoc>} : f64
     %2 = llvm.fptrunc %1 : f64 to f32
     llvm.return %2 : f32
   }]
@@ -156,12 +151,7 @@ theorem inst_combine_fadd_fpext_op0   : fadd_fpext_op0_before  ⊑  fadd_fpext_o
 def fsub_fpext_op1_combined := [llvmfunc|
   llvm.func @fsub_fpext_op1(%arg0: f16, %arg1: f64) -> f16 {
     %0 = llvm.fpext %arg0 : f16 to f64
-    %1 = llvm.fsub %arg1, %0  {fastmathFlags = #llvm.fastmath<reassoc>} : f64]
-
-theorem inst_combine_fsub_fpext_op1   : fsub_fpext_op1_before  ⊑  fsub_fpext_op1_combined := by
-  unfold fsub_fpext_op1_before fsub_fpext_op1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fsub %arg1, %0  {fastmathFlags = #llvm.fastmath<reassoc>} : f64
     %2 = llvm.fptrunc %1 : f64 to f16
     llvm.return %2 : f16
   }]
@@ -173,12 +163,7 @@ theorem inst_combine_fsub_fpext_op1   : fsub_fpext_op1_before  ⊑  fsub_fpext_o
 def fdiv_constant_op0_combined := [llvmfunc|
   llvm.func @fdiv_constant_op0(%arg0: vector<2xf64>) -> vector<2xf32> {
     %0 = llvm.mlir.constant(dense<[4.210000e+01, -1.000000e-01]> : vector<2xf64>) : vector<2xf64>
-    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf64>]
-
-theorem inst_combine_fdiv_constant_op0   : fdiv_constant_op0_before  ⊑  fdiv_constant_op0_combined := by
-  unfold fdiv_constant_op0_before fdiv_constant_op0_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fdiv %0, %arg0  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf64>
     %2 = llvm.fptrunc %1 : vector<2xf64> to vector<2xf32>
     llvm.return %2 : vector<2xf32>
   }]
@@ -190,12 +175,7 @@ theorem inst_combine_fdiv_constant_op0   : fdiv_constant_op0_before  ⊑  fdiv_c
 def fmul_constant_op1_combined := [llvmfunc|
   llvm.func @fmul_constant_op1(%arg0: vector<2xf32>) -> vector<2xf16> {
     %0 = llvm.mlir.constant(dense<[3.40282347E+38, 5.000000e-01]> : vector<2xf32>) : vector<2xf32>
-    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>]
-
-theorem inst_combine_fmul_constant_op1   : fmul_constant_op1_before  ⊑  fmul_constant_op1_combined := by
-  unfold fmul_constant_op1_before fmul_constant_op1_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.fmul %arg0, %0  {fastmathFlags = #llvm.fastmath<reassoc>} : vector<2xf32>
     %2 = llvm.fptrunc %1 : vector<2xf32> to vector<2xf16>
     llvm.return %2 : vector<2xf16>
   }]
@@ -207,12 +187,7 @@ theorem inst_combine_fmul_constant_op1   : fmul_constant_op1_before  ⊑  fmul_c
 def fptrunc_select_true_val_combined := [llvmfunc|
   llvm.func @fptrunc_select_true_val(%arg0: f32, %arg1: f64, %arg2: i1) -> f32 {
     %0 = llvm.fptrunc %arg1 : f64 to f32
-    %1 = llvm.select %arg2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32]
-
-theorem inst_combine_fptrunc_select_true_val   : fptrunc_select_true_val_before  ⊑  fptrunc_select_true_val_combined := by
-  unfold fptrunc_select_true_val_before fptrunc_select_true_val_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg2, %0, %arg0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f32
     llvm.return %1 : f32
   }]
 
@@ -223,12 +198,7 @@ theorem inst_combine_fptrunc_select_true_val   : fptrunc_select_true_val_before 
 def fptrunc_select_false_val_combined := [llvmfunc|
   llvm.func @fptrunc_select_false_val(%arg0: vector<2xf32>, %arg1: vector<2xf64>, %arg2: vector<2xi1>) -> vector<2xf32> {
     %0 = llvm.fptrunc %arg1 : vector<2xf64> to vector<2xf32>
-    %1 = llvm.select %arg2, %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xi1>, vector<2xf32>]
-
-theorem inst_combine_fptrunc_select_false_val   : fptrunc_select_false_val_before  ⊑  fptrunc_select_false_val_combined := by
-  unfold fptrunc_select_false_val_before fptrunc_select_false_val_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg2, %arg0, %0 {fastmathFlags = #llvm.fastmath<nnan>} : vector<2xi1>, vector<2xf32>
     llvm.return %1 : vector<2xf32>
   }]
 
@@ -241,12 +211,7 @@ def fptrunc_select_true_val_extra_use_combined := [llvmfunc|
     %0 = llvm.fpext %arg0 : f16 to f32
     llvm.call @use(%0) : (f32) -> ()
     %1 = llvm.fptrunc %arg1 : f32 to f16
-    %2 = llvm.select %arg2, %1, %arg0 {fastmathFlags = #llvm.fastmath<ninf>} : i1, f16]
-
-theorem inst_combine_fptrunc_select_true_val_extra_use   : fptrunc_select_true_val_extra_use_before  ⊑  fptrunc_select_true_val_extra_use_combined := by
-  unfold fptrunc_select_true_val_extra_use_before fptrunc_select_true_val_extra_use_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.select %arg2, %1, %arg0 {fastmathFlags = #llvm.fastmath<ninf>} : i1, f16
     llvm.return %2 : f16
   }]
 
@@ -257,12 +222,7 @@ theorem inst_combine_fptrunc_select_true_val_extra_use   : fptrunc_select_true_v
 def fptrunc_select_true_val_extra_use_2_combined := [llvmfunc|
   llvm.func @fptrunc_select_true_val_extra_use_2(%arg0: f16, %arg1: f32, %arg2: i1) -> f16 {
     %0 = llvm.fpext %arg0 : f16 to f32
-    %1 = llvm.select %arg2, %arg1, %0 {fastmathFlags = #llvm.fastmath<ninf>} : i1, f32]
-
-theorem inst_combine_fptrunc_select_true_val_extra_use_2   : fptrunc_select_true_val_extra_use_2_before  ⊑  fptrunc_select_true_val_extra_use_2_combined := by
-  unfold fptrunc_select_true_val_extra_use_2_before fptrunc_select_true_val_extra_use_2_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg2, %arg1, %0 {fastmathFlags = #llvm.fastmath<ninf>} : i1, f32
     llvm.call @use(%1) : (f32) -> ()
     %2 = llvm.fptrunc %1 : f32 to f16
     llvm.return %2 : f16
@@ -287,12 +247,7 @@ theorem inst_combine_fptrunc_select_true_val_type_mismatch   : fptrunc_select_tr
 def fptrunc_select_true_val_type_mismatch_fast_combined := [llvmfunc|
   llvm.func @fptrunc_select_true_val_type_mismatch_fast(%arg0: f16, %arg1: f64, %arg2: i1) -> f32 {
     %0 = llvm.fpext %arg0 : f16 to f64
-    %1 = llvm.select %arg2, %arg1, %0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f64]
-
-theorem inst_combine_fptrunc_select_true_val_type_mismatch_fast   : fptrunc_select_true_val_type_mismatch_fast_before  ⊑  fptrunc_select_true_val_type_mismatch_fast_combined := by
-  unfold fptrunc_select_true_val_type_mismatch_fast_before fptrunc_select_true_val_type_mismatch_fast_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.select %arg2, %arg1, %0 {fastmathFlags = #llvm.fastmath<fast>} : i1, f64
     %2 = llvm.fptrunc %1 : f64 to f32
     llvm.return %2 : f32
   }]

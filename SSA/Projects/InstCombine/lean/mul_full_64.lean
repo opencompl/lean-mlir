@@ -431,12 +431,7 @@ def mul_full_64_variant1_combined := [llvmfunc|
     %15 = llvm.add %14, %8  : i64
     %16 = llvm.lshr %15, %1  : i64
     %17 = llvm.add %13, %16  : i64
-    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_mul_full_64_variant1   : mul_full_64_variant1_before  ⊑  mul_full_64_variant1_combined := by
-  unfold mul_full_64_variant1_before mul_full_64_variant1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr
     %18 = llvm.mul %arg1, %arg0  : i64
     llvm.return %18 : i64
   }]
@@ -465,12 +460,7 @@ def mul_full_64_variant2_combined := [llvmfunc|
     %15 = llvm.add %14, %8  : i64
     %16 = llvm.lshr %15, %1  : i64
     %17 = llvm.add %13, %16  : i64
-    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_mul_full_64_variant2   : mul_full_64_variant2_before  ⊑  mul_full_64_variant2_combined := by
-  unfold mul_full_64_variant2_before mul_full_64_variant2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr
     %18 = llvm.shl %15, %1  : i64
     %19 = llvm.and %9, %0  : i64
     %20 = llvm.or %18, %19  : i64
@@ -501,12 +491,7 @@ def mul_full_64_variant3_combined := [llvmfunc|
     %15 = llvm.add %14, %8  : i64
     %16 = llvm.lshr %15, %1  : i64
     %17 = llvm.add %13, %16  : i64
-    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_mul_full_64_variant3   : mul_full_64_variant3_before  ⊑  mul_full_64_variant3_combined := by
-  unfold mul_full_64_variant3_before mul_full_64_variant3_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %17, %arg2 {alignment = 8 : i64} : i64, !llvm.ptr
     %18 = llvm.add %8, %7  : i64
     %19 = llvm.shl %18, %1  : i64
     %20 = llvm.add %19, %9  : i64

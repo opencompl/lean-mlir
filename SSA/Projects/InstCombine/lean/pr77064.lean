@@ -24,12 +24,7 @@ def main_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.mlir.constant(596 : i64) : i64
     %2 = llvm.call fastcc @opendir(%arg0) : (!llvm.ptr) -> !llvm.ptr
-    "llvm.intr.memset"(%2, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%2, %0, %1) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.return
   }]
 

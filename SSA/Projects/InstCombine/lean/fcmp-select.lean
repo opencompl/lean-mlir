@@ -368,12 +368,7 @@ def test_fcmp_select_var_const_fmf_combined := [llvmfunc|
     %1 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %2 = llvm.fcmp "ogt" %arg0, %0 : f64
     %3 = llvm.select %2, %arg1, %1 : i1, f64
-    %4 = llvm.fcmp "olt" %3, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f64]
-
-theorem inst_combine_test_fcmp_select_var_const_fmf   : test_fcmp_select_var_const_fmf_before  ⊑  test_fcmp_select_var_const_fmf_combined := by
-  unfold test_fcmp_select_var_const_fmf_before test_fcmp_select_var_const_fmf_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.fcmp "olt" %3, %0 {fastmathFlags = #llvm.fastmath<nnan>} : f64
     llvm.return %4 : i1
   }]
 
@@ -415,18 +410,8 @@ def test_fcmp_select_maxnum_combined := [llvmfunc|
   llvm.func @test_fcmp_select_maxnum(%arg0: f64) -> f64 {
     %0 = llvm.mlir.constant(1.000000e+00 : f64) : f64
     %1 = llvm.mlir.constant(2.550000e+02 : f64) : f64
-    %2 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64, f64) -> f64]
-
-theorem inst_combine_test_fcmp_select_maxnum   : test_fcmp_select_maxnum_before  ⊑  test_fcmp_select_maxnum_combined := by
-  unfold test_fcmp_select_maxnum_before test_fcmp_select_maxnum_combined
-  simp_alive_peephole
-  sorry
-    %3 = llvm.intr.minnum(%2, %1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64, f64) -> f64]
-
-theorem inst_combine_test_fcmp_select_maxnum   : test_fcmp_select_maxnum_before  ⊑  test_fcmp_select_maxnum_combined := by
-  unfold test_fcmp_select_maxnum_before test_fcmp_select_maxnum_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.intr.maxnum(%arg0, %0)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64, f64) -> f64
+    %3 = llvm.intr.minnum(%2, %1)  {fastmathFlags = #llvm.fastmath<nnan, nsz>} : (f64, f64) -> f64
     llvm.return %3 : f64
   }]
 

@@ -40,12 +40,7 @@ def fn1_combined := [llvmfunc|
     %4 = llvm.mlir.undef : i32
     llvm.br ^bb1
   ^bb1:  // pred: ^bb0
-    %5 = llvm.load %1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32]
-
-theorem inst_combine_fn1   : fn1_before  ⊑  fn1_combined := by
-  unfold fn1_before fn1_combined
-  simp_alive_peephole
-  sorry
+    %5 = llvm.load %1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : !llvm.ptr -> i32
     %6 = llvm.lshr %5, %2  : i32
     %7 = llvm.lshr %5, %3  : i32
     %8 = llvm.or %6, %7  : i32
@@ -110,12 +105,7 @@ theorem inst_combine_fn1   : fn1_before  ⊑  fn1_combined := by
     %67 = llvm.lshr %65, %3  : i32
     %68 = llvm.or %66, %67  : i32
     %69 = llvm.or %68, %65  : i32
-    llvm.store %69, %1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr]
-
-theorem inst_combine_fn1   : fn1_before  ⊑  fn1_combined := by
-  unfold fn1_before fn1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %69, %1 {alignment = 4 : i64, tbaa = [#tbaa_tag]} : i32, !llvm.ptr
     llvm.return %4 : i32
   }]
 

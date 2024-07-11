@@ -242,12 +242,7 @@ theorem inst_combine_memcmp_nonconst_size   : memcmp_nonconst_size_before  ⊑  
 def memcpy_const_size_set_deref_combined := [llvmfunc|
   llvm.func @memcpy_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> !llvm.ptr {
     %0 = llvm.mlir.constant(64 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memcpy_const_size_set_deref   : memcpy_const_size_set_deref_before  ⊑  memcpy_const_size_set_deref_combined := by
-  unfold memcpy_const_size_set_deref_before memcpy_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -258,12 +253,7 @@ theorem inst_combine_memcpy_const_size_set_deref   : memcpy_const_size_set_deref
 def memmove_const_size_set_deref_combined := [llvmfunc|
   llvm.func @memmove_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> !llvm.ptr {
     %0 = llvm.mlir.constant(64 : i64) : i64
-    "llvm.intr.memmove"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_memmove_const_size_set_deref   : memmove_const_size_set_deref_before  ⊑  memmove_const_size_set_deref_combined := by
-  unfold memmove_const_size_set_deref_before memmove_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -275,12 +265,7 @@ def memset_const_size_set_deref_combined := [llvmfunc|
   llvm.func @memset_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: i32) -> !llvm.ptr {
     %0 = llvm.mlir.constant(64 : i64) : i64
     %1 = llvm.trunc %arg1 : i32 to i8
-    "llvm.intr.memset"(%arg0, %1, %0) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_memset_const_size_set_deref   : memset_const_size_set_deref_before  ⊑  memset_const_size_set_deref_combined := by
-  unfold memset_const_size_set_deref_before memset_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %1, %0) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -302,12 +287,7 @@ theorem inst_combine_memchr_const_size_set_deref   : memchr_const_size_set_deref
 def llvm_memcpy_const_size_set_deref_combined := [llvmfunc|
   llvm.func @llvm_memcpy_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> !llvm.ptr {
     %0 = llvm.mlir.constant(16 : i64) : i64
-    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_llvm_memcpy_const_size_set_deref   : llvm_memcpy_const_size_set_deref_before  ⊑  llvm_memcpy_const_size_set_deref_combined := by
-  unfold llvm_memcpy_const_size_set_deref_before llvm_memcpy_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memcpy"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -318,12 +298,7 @@ theorem inst_combine_llvm_memcpy_const_size_set_deref   : llvm_memcpy_const_size
 def llvm_memmove_const_size_set_deref_combined := [llvmfunc|
   llvm.func @llvm_memmove_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: !llvm.ptr {llvm.nocapture, llvm.readonly}) -> !llvm.ptr {
     %0 = llvm.mlir.constant(16 : i64) : i64
-    "llvm.intr.memmove"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()]
-
-theorem inst_combine_llvm_memmove_const_size_set_deref   : llvm_memmove_const_size_set_deref_before  ⊑  llvm_memmove_const_size_set_deref_combined := by
-  unfold llvm_memmove_const_size_set_deref_before llvm_memmove_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memmove"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 
@@ -334,12 +309,7 @@ theorem inst_combine_llvm_memmove_const_size_set_deref   : llvm_memmove_const_si
 def llvm_memset_const_size_set_deref_combined := [llvmfunc|
   llvm.func @llvm_memset_const_size_set_deref(%arg0: !llvm.ptr {llvm.nocapture, llvm.readonly}, %arg1: i8) -> !llvm.ptr {
     %0 = llvm.mlir.constant(16 : i64) : i64
-    "llvm.intr.memset"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()]
-
-theorem inst_combine_llvm_memset_const_size_set_deref   : llvm_memset_const_size_set_deref_before  ⊑  llvm_memset_const_size_set_deref_combined := by
-  unfold llvm_memset_const_size_set_deref_before llvm_memset_const_size_set_deref_combined
-  simp_alive_peephole
-  sorry
+    "llvm.intr.memset"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, i8, i64) -> ()
     llvm.return %arg0 : !llvm.ptr
   }]
 

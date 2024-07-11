@@ -93,12 +93,7 @@ def test_instbased_f32_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @var32 : !llvm.ptr
     %2 = llvm.mlir.constant(0 : i64) : i64
     %3 = llvm.mlir.constant(1 : i64) : i64
-    %4 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test_instbased_f32   : test_instbased_f32_before  ⊑  test_instbased_f32_combined := by
-  unfold test_instbased_f32_before test_instbased_f32_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> f32
     %5 = llvm.call @__sincospif_stret(%4) : (f32) -> vector<2xf32>
     %6 = llvm.extractelement %5[%2 : i64] : vector<2xf32>
     %7 = llvm.extractelement %5[%3 : i64] : vector<2xf32>
@@ -117,21 +112,11 @@ def test_instbased_f32_other_user_combined := [llvmfunc|
     %1 = llvm.mlir.addressof @var32 : !llvm.ptr
     %2 = llvm.mlir.constant(0 : i64) : i64
     %3 = llvm.mlir.constant(1 : i64) : i64
-    %4 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> f32]
-
-theorem inst_combine_test_instbased_f32_other_user   : test_instbased_f32_other_user_before  ⊑  test_instbased_f32_other_user_combined := by
-  unfold test_instbased_f32_other_user_before test_instbased_f32_other_user_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %1 {alignment = 4 : i64} : !llvm.ptr -> f32
     %5 = llvm.call @__sincospif_stret(%4) : (f32) -> vector<2xf32>
     %6 = llvm.extractelement %5[%2 : i64] : vector<2xf32>
     %7 = llvm.extractelement %5[%3 : i64] : vector<2xf32>
-    llvm.store %4, %arg0 {alignment = 4 : i64} : f32, !llvm.ptr]
-
-theorem inst_combine_test_instbased_f32_other_user   : test_instbased_f32_other_user_before  ⊑  test_instbased_f32_other_user_combined := by
-  unfold test_instbased_f32_other_user_before test_instbased_f32_other_user_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %4, %arg0 {alignment = 4 : i64} : f32, !llvm.ptr
     %8 = llvm.call @__cospif(%4) : (f32) -> f32
     %9 = llvm.fadd %6, %7  : f32
     llvm.return %9 : f32
@@ -162,12 +147,7 @@ def test_instbased_f64_combined := [llvmfunc|
   llvm.func @test_instbased_f64() -> f64 {
     %0 = llvm.mlir.constant(0.000000e+00 : f64) : f64
     %1 = llvm.mlir.addressof @var64 : !llvm.ptr
-    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64]
-
-theorem inst_combine_test_instbased_f64   : test_instbased_f64_before  ⊑  test_instbased_f64_combined := by
-  unfold test_instbased_f64_before test_instbased_f64_combined
-  simp_alive_peephole
-  sorry
+    %2 = llvm.load %1 {alignment = 8 : i64} : !llvm.ptr -> f64
     %3 = llvm.call @__sincospi_stret(%2) : (f64) -> !llvm.struct<(f64, f64)>
     %4 = llvm.extractvalue %3[0] : !llvm.struct<(f64, f64)> 
     %5 = llvm.extractvalue %3[1] : !llvm.struct<(f64, f64)> 

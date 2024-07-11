@@ -2840,12 +2840,7 @@ def test_cvt_icmp1_combined := [llvmfunc|
   llvm.func @test_cvt_icmp1(%arg0: i1, %arg1: i1, %arg2: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.zext %arg0 : i1 to i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_cvt_icmp1   : test_cvt_icmp1_before  ⊑  test_cvt_icmp1_combined := by
-  unfold test_cvt_icmp1_before test_cvt_icmp1_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %0 : i1
   }]
 
@@ -2857,12 +2852,7 @@ def test_cvt_icmp2_combined := [llvmfunc|
   llvm.func @test_cvt_icmp2(%arg0: i1, %arg1: i1, %arg2: !llvm.ptr) -> i1 {
     %0 = llvm.mlir.constant(false) : i1
     %1 = llvm.zext %arg0 : i1 to i32
-    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_test_cvt_icmp2   : test_cvt_icmp2_before  ⊑  test_cvt_icmp2_combined := by
-  unfold test_cvt_icmp2_before test_cvt_icmp2_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %arg2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return %0 : i1
   }]
 
@@ -4050,12 +4040,7 @@ def sum_ugt_op_uses_combined := [llvmfunc|
     %1 = llvm.sdiv %0, %arg0  : i8
     %2 = llvm.sdiv %0, %arg1  : i8
     %3 = llvm.add %1, %2 overflow<nsw>  : i8
-    llvm.store %3, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_sum_ugt_op_uses   : sum_ugt_op_uses_before  ⊑  sum_ugt_op_uses_combined := by
-  unfold sum_ugt_op_uses_before sum_ugt_op_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %3, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %4 = llvm.icmp "ugt" %1, %3 : i8
     llvm.return %4 : i1
   }]
@@ -4098,12 +4083,7 @@ theorem inst_combine_sum_ult_op_commute2   : sum_ult_op_commute2_before  ⊑  su
 def sum_ult_op_uses_combined := [llvmfunc|
   llvm.func @sum_ult_op_uses(%arg0: i8, %arg1: i8, %arg2: !llvm.ptr) -> i1 {
     %0 = llvm.add %arg1, %arg0  : i8
-    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr]
-
-theorem inst_combine_sum_ult_op_uses   : sum_ult_op_uses_before  ⊑  sum_ult_op_uses_combined := by
-  unfold sum_ult_op_uses_before sum_ult_op_uses_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg2 {alignment = 1 : i64} : i8, !llvm.ptr
     %1 = llvm.icmp "ult" %0, %arg0 : i8
     llvm.return %1 : i1
   }]

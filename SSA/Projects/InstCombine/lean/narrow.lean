@@ -233,12 +233,7 @@ def searchArray1_combined := [llvmfunc|
   ^bb1(%4: i32, %5: i8):  // 2 preds: ^bb0, ^bb1
     %6 = llvm.sext %4 : i32 to i64
     %7 = llvm.getelementptr %arg1[%6] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_searchArray1   : searchArray1_before  ⊑  searchArray1_combined := by
-  unfold searchArray1_before searchArray1_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32
     %9 = llvm.icmp "eq" %8, %arg0 : i32
     %10 = llvm.zext %9 : i1 to i8
     %11 = llvm.or %5, %10  : i8
@@ -264,12 +259,7 @@ def searchArray2_combined := [llvmfunc|
     llvm.br ^bb1(%0, %1 : i64, i8)
   ^bb1(%5: i64, %6: i8):  // 2 preds: ^bb0, ^bb1
     %7 = llvm.getelementptr %arg1[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_searchArray2   : searchArray2_before  ⊑  searchArray2_combined := by
-  unfold searchArray2_before searchArray2_combined
-  simp_alive_peephole
-  sorry
+    %8 = llvm.load %7 {alignment = 4 : i64} : !llvm.ptr -> i32
     %9 = llvm.icmp "eq" %8, %arg0 : i32
     %10 = llvm.select %9, %6, %2 : i1, i8
     %11 = llvm.add %5, %3  : i64

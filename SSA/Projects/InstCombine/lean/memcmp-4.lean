@@ -51,19 +51,9 @@ def fold_memcmp_mismatch_too_big_combined := [llvmfunc|
     %0 = llvm.mlir.constant(-1 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
     %2 = llvm.mlir.constant(1 : i32) : i32
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_mismatch_too_big   : fold_memcmp_mismatch_too_big_before  ⊑  fold_memcmp_mismatch_too_big_combined := by
-  unfold fold_memcmp_mismatch_too_big_before fold_memcmp_mismatch_too_big_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %3 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_mismatch_too_big   : fold_memcmp_mismatch_too_big_before  ⊑  fold_memcmp_mismatch_too_big_combined := by
-  unfold fold_memcmp_mismatch_too_big_before fold_memcmp_mismatch_too_big_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %2, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 
@@ -75,19 +65,9 @@ def fold_memcmp_match_too_big_combined := [llvmfunc|
   llvm.func @fold_memcmp_match_too_big(%arg0: !llvm.ptr) {
     %0 = llvm.mlir.constant(0 : i32) : i32
     %1 = llvm.mlir.constant(1 : i64) : i64
-    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_match_too_big   : fold_memcmp_match_too_big_before  ⊑  fold_memcmp_match_too_big_combined := by
-  unfold fold_memcmp_match_too_big_before fold_memcmp_match_too_big_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %arg0 {alignment = 4 : i64} : i32, !llvm.ptr
     %2 = llvm.getelementptr %arg0[%1] : (!llvm.ptr, i64) -> !llvm.ptr, i32
-    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_fold_memcmp_match_too_big   : fold_memcmp_match_too_big_before  ⊑  fold_memcmp_match_too_big_combined := by
-  unfold fold_memcmp_match_too_big_before fold_memcmp_match_too_big_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %2 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.return
   }]
 

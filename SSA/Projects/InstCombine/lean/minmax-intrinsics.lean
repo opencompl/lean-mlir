@@ -2488,12 +2488,7 @@ theorem inst_combine_not_umin_of_not_constant_op   : not_umin_of_not_constant_op
 def smax_negation_combined := [llvmfunc|
   llvm.func @smax_negation(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_smax_negation   : smax_negation_before  ⊑  smax_negation_combined := by
-  unfold smax_negation_before smax_negation_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -2504,12 +2499,7 @@ theorem inst_combine_smax_negation   : smax_negation_before  ⊑  smax_negation_
 def smax_negation_nsw_combined := [llvmfunc|
   llvm.func @smax_negation_nsw(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_smax_negation_nsw   : smax_negation_nsw_before  ⊑  smax_negation_nsw_combined := by
-  unfold smax_negation_nsw_before smax_negation_nsw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -2520,12 +2510,7 @@ theorem inst_combine_smax_negation_nsw   : smax_negation_nsw_before  ⊑  smax_n
 def smax_negation_not_nsw_combined := [llvmfunc|
   llvm.func @smax_negation_not_nsw(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_smax_negation_not_nsw   : smax_negation_not_nsw_before  ⊑  smax_negation_not_nsw_combined := by
-  unfold smax_negation_not_nsw_before smax_negation_not_nsw_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 
@@ -2535,12 +2520,7 @@ theorem inst_combine_smax_negation_not_nsw   : smax_negation_not_nsw_before  ⊑
   sorry
 def smax_negation_vec_combined := [llvmfunc|
   llvm.func @smax_negation_vec(%arg0: vector<3xi8>) -> vector<3xi8> {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<3xi8>) -> vector<3xi8>]
-
-theorem inst_combine_smax_negation_vec   : smax_negation_vec_before  ⊑  smax_negation_vec_combined := by
-  unfold smax_negation_vec_before smax_negation_vec_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = false}> : (vector<3xi8>) -> vector<3xi8>
     llvm.return %0 : vector<3xi8>
   }]
 
@@ -2552,12 +2532,7 @@ def smin_negation_combined := [llvmfunc|
   llvm.func @smin_negation(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.sub %arg0, %arg1  : i8
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_smin_negation   : smin_negation_before  ⊑  smin_negation_combined := by
-  unfold smin_negation_before smin_negation_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = false}> : (i8) -> i8
     %3 = llvm.sub %0, %2  : i8
     llvm.return %3 : i8
   }]
@@ -2570,12 +2545,7 @@ def umax_negation_combined := [llvmfunc|
   llvm.func @umax_negation(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.mlir.constant(0 : i8) : i8
     %1 = llvm.sub %arg0, %arg1 overflow<nsw>  : i8
-    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_umax_negation   : umax_negation_before  ⊑  umax_negation_combined := by
-  unfold umax_negation_before umax_negation_combined
-  simp_alive_peephole
-  sorry
+    %2 = "llvm.intr.abs"(%1) <{is_int_min_poison = true}> : (i8) -> i8
     %3 = llvm.sub %0, %2 overflow<nsw>  : i8
     llvm.return %3 : i8
   }]
@@ -2586,12 +2556,7 @@ theorem inst_combine_umax_negation   : umax_negation_before  ⊑  umax_negation_
   sorry
 def umin_negation_combined := [llvmfunc|
   llvm.func @umin_negation(%arg0: i8) -> i8 {
-    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8]
-
-theorem inst_combine_umin_negation   : umin_negation_before  ⊑  umin_negation_combined := by
-  unfold umin_negation_before umin_negation_combined
-  simp_alive_peephole
-  sorry
+    %0 = "llvm.intr.abs"(%arg0) <{is_int_min_poison = true}> : (i8) -> i8
     llvm.return %0 : i8
   }]
 
@@ -2603,12 +2568,7 @@ def smax_negation_uses_combined := [llvmfunc|
   llvm.func @smax_negation_uses(%arg0: i8, %arg1: i8) -> i8 {
     %0 = llvm.sub %arg1, %arg0  : i8
     llvm.call @use(%0) : (i8) -> ()
-    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8]
-
-theorem inst_combine_smax_negation_uses   : smax_negation_uses_before  ⊑  smax_negation_uses_combined := by
-  unfold smax_negation_uses_before smax_negation_uses_combined
-  simp_alive_peephole
-  sorry
+    %1 = "llvm.intr.abs"(%0) <{is_int_min_poison = false}> : (i8) -> i8
     llvm.return %1 : i8
   }]
 

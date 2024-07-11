@@ -47,39 +47,19 @@ def main_combined := [llvmfunc|
     %1 = llvm.mlir.constant(42 : i32) : i32
     llvm.intr.dbg.value #di_local_variable = %1 : i32
     %2 = llvm.mlir.constant(0 : i32) : i32
-    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %3 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
     llvm.intr.dbg.value #di_local_variable #llvm.di_expression<[DW_OP_deref]> = %3 : !llvm.ptr
     llvm.intr.lifetime.start 4, %3 : !llvm.ptr
-    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %1, %3 {alignment = 4 : i64} : i32, !llvm.ptr
     llvm.br ^bb1
   ^bb1:  // 2 preds: ^bb0, ^bb2
-    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    %4 = llvm.load %3 {alignment = 4 : i64} : !llvm.ptr -> i32
     llvm.intr.dbg.value #di_local_variable = %4 : i32
     %5 = llvm.call @_ZL5emptyi(%4) : (i32) -> i1
     llvm.cond_br %5, ^bb3, ^bb2
   ^bb2:  // pred: ^bb1
     llvm.call @_ZL6escapeRi(%3) : (!llvm.ptr) -> ()
-    llvm.br ^bb1 {loop_annotation = #loop_annotation}]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.br ^bb1 {loop_annotation = #loop_annotation}
   ^bb3:  // pred: ^bb1
     llvm.intr.lifetime.end 4, %3 : !llvm.ptr
     llvm.return %2 : i32

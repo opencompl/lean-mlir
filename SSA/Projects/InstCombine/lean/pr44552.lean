@@ -82,12 +82,7 @@ def main_combined := [llvmfunc|
     %0 = llvm.mlir.constant(0 : i64) : i64
     %1 = llvm.mlir.addressof @csmith_sink_ : !llvm.ptr
     %2 = llvm.mlir.constant(0 : i16) : i16
-    llvm.store %0, %1 {alignment = 1 : i64} : i64, !llvm.ptr]
-
-theorem inst_combine_main   : main_before  ⊑  main_combined := by
-  unfold main_before main_combined
-  simp_alive_peephole
-  sorry
+    llvm.store %0, %1 {alignment = 1 : i64} : i64, !llvm.ptr
     llvm.return %2 : i16
   }]
 

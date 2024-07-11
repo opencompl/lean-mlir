@@ -372,12 +372,7 @@ theorem inst_combine_cosf_unary_negated_arg   : cosf_unary_negated_arg_before  �
   sorry
 def cosf_negated_arg_FMF_combined := [llvmfunc|
   llvm.func @cosf_negated_arg_FMF(%arg0: f32) -> f32 {
-    %0 = llvm.call @cosf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32]
-
-theorem inst_combine_cosf_negated_arg_FMF   : cosf_negated_arg_FMF_before  ⊑  cosf_negated_arg_FMF_combined := by
-  unfold cosf_negated_arg_FMF_before cosf_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @cosf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -387,12 +382,7 @@ theorem inst_combine_cosf_negated_arg_FMF   : cosf_negated_arg_FMF_before  ⊑  
   sorry
 def cosf_unary_negated_arg_FMF_combined := [llvmfunc|
   llvm.func @cosf_unary_negated_arg_FMF(%arg0: f32) -> f32 {
-    %0 = llvm.call @cosf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32]
-
-theorem inst_combine_cosf_unary_negated_arg_FMF   : cosf_unary_negated_arg_FMF_before  ⊑  cosf_unary_negated_arg_FMF_combined := by
-  unfold cosf_unary_negated_arg_FMF_before cosf_unary_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @cosf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32
     llvm.return %0 : f32
   }]
 
@@ -425,12 +415,7 @@ theorem inst_combine_cosf_unary_fabs_arg   : cosf_unary_fabs_arg_before  ⊑  co
 def cosf_unary_fabs_arg_FMF_combined := [llvmfunc|
   llvm.func @cosf_unary_fabs_arg_FMF(%arg0: f32) -> f32 {
     %0 = llvm.intr.fabs(%arg0)  : (f32) -> f32
-    %1 = llvm.call @cosf(%0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32]
-
-theorem inst_combine_cosf_unary_fabs_arg_FMF   : cosf_unary_fabs_arg_FMF_before  ⊑  cosf_unary_fabs_arg_FMF_combined := by
-  unfold cosf_unary_fabs_arg_FMF_before cosf_unary_fabs_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @cosf(%0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -463,12 +448,7 @@ theorem inst_combine_cosf_unary_copysign_arg   : cosf_unary_copysign_arg_before 
 def cosf_copysign_arg_FMF_combined := [llvmfunc|
   llvm.func @cosf_copysign_arg_FMF(%arg0: f32, %arg1: f32) -> f32 {
     %0 = llvm.intr.copysign(%arg0, %arg1)  : (f32, f32) -> f32
-    %1 = llvm.call @cosf(%0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32]
-
-theorem inst_combine_cosf_copysign_arg_FMF   : cosf_copysign_arg_FMF_before  ⊑  cosf_copysign_arg_FMF_combined := by
-  unfold cosf_copysign_arg_FMF_before cosf_copysign_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %1 = llvm.call @cosf(%0) {fastmathFlags = #llvm.fastmath<nnan, reassoc>} : (f32) -> f32
     llvm.return %1 : f32
   }]
 
@@ -533,18 +513,8 @@ theorem inst_combine_sinf_unary_negated_arg   : sinf_unary_negated_arg_before  �
   sorry
 def sinf_negated_arg_FMF_combined := [llvmfunc|
   llvm.func @sinf_negated_arg_FMF(%arg0: f32) -> f32 {
-    %0 = llvm.call @sinf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, afn>} : (f32) -> f32]
-
-theorem inst_combine_sinf_negated_arg_FMF   : sinf_negated_arg_FMF_before  ⊑  sinf_negated_arg_FMF_combined := by
-  unfold sinf_negated_arg_FMF_before sinf_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, afn>} : f32]
-
-theorem inst_combine_sinf_negated_arg_FMF   : sinf_negated_arg_FMF_before  ⊑  sinf_negated_arg_FMF_combined := by
-  unfold sinf_negated_arg_FMF_before sinf_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sinf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, afn>} : (f32) -> f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, afn>} : f32
     llvm.return %1 : f32
   }]
 
@@ -554,18 +524,8 @@ theorem inst_combine_sinf_negated_arg_FMF   : sinf_negated_arg_FMF_before  ⊑  
   sorry
 def sinf_unary_negated_arg_FMF_combined := [llvmfunc|
   llvm.func @sinf_unary_negated_arg_FMF(%arg0: f32) -> f32 {
-    %0 = llvm.call @sinf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, afn>} : (f32) -> f32]
-
-theorem inst_combine_sinf_unary_negated_arg_FMF   : sinf_unary_negated_arg_FMF_before  ⊑  sinf_unary_negated_arg_FMF_combined := by
-  unfold sinf_unary_negated_arg_FMF_before sinf_unary_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
-    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, afn>} : f32]
-
-theorem inst_combine_sinf_unary_negated_arg_FMF   : sinf_unary_negated_arg_FMF_before  ⊑  sinf_unary_negated_arg_FMF_combined := by
-  unfold sinf_unary_negated_arg_FMF_before sinf_unary_negated_arg_FMF_combined
-  simp_alive_peephole
-  sorry
+    %0 = llvm.call @sinf(%arg0) {fastmathFlags = #llvm.fastmath<nnan, afn>} : (f32) -> f32
+    %1 = llvm.fneg %0  {fastmathFlags = #llvm.fastmath<nnan, afn>} : f32
     llvm.return %1 : f32
   }]
 
