@@ -1,52 +1,23 @@
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
-import SSA.Projects.InstCombine.AliveStatements
-import SSA.Projects.InstCombine.Refinement
-import SSA.Projects.InstCombine.Tactic
-open MLIR AST
-open Std (BitVec)
-open Ctxt (Var)
-namespace  2007-05-10-icmp-or
-set_option pp.proofs false
-set_option pp.proofs.withType false
-set_option linter.deprecated false
-def test_before := [llvmfunc|
-  llvm.func @test(%arg0: i32) -> i1 {
-    %0 = llvm.mlir.constant(255 : i32) : i32
-    %1 = llvm.icmp "ugt" %arg0, %0 : i32
-    %2 = llvm.icmp "sgt" %arg0, %0 : i32
-    %3 = llvm.or %1, %2  : i1
-    llvm.return %3 : i1
-  }]
 
-def test_logical_before := [llvmfunc|
-  llvm.func @test_logical(%arg0: i32) -> i1 {
-    %0 = llvm.mlir.constant(255 : i32) : i32
-    %1 = llvm.mlir.constant(true) : i1
-    %2 = llvm.icmp "ugt" %arg0, %0 : i32
-    %3 = llvm.icmp "sgt" %arg0, %0 : i32
-    %4 = llvm.select %2, %1, %3 : i1, i1
-    llvm.return %4 : i1
-  }]
-
-def test_combined := [llvmfunc|
-  llvm.func @test(%arg0: i32) -> i1 {
-    %0 = llvm.mlir.constant(255 : i32) : i32
-    %1 = llvm.icmp "ugt" %arg0, %0 : i32
-    llvm.return %1 : i1
-  }]
-
-theorem inst_combine_test   : test_before  ⊑  test_combined := by
-  unfold test_before test_combined
-  simp_alive_peephole
+def test_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{"value" = 255 : i32}> : () -> i32
+  %1 = "llvm.icmp"(%arg0, %0) <{"predicate" = 8 : i64}> : (i32, i32) -> i1
+  %2 = "llvm.icmp"(%arg0, %0) <{"predicate" = 4 : i64}> : (i32, i32) -> i1
+  %3 = llvm.or %1, %2 : i1
+  "llvm.return"(%3) : (i1) -> ()
+}
+]
+def test_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{"value" = 255 : i32}> : () -> i32
+  %1 = "llvm.icmp"(%arg0, %0) <{"predicate" = 8 : i64}> : (i32, i32) -> i1
+  "llvm.return"(%1) : (i1) -> ()
+}
+]
+theorem test_proof : test_before ⊑ test_after := by
   sorry
-def test_logical_combined := [llvmfunc|
-  llvm.func @test_logical(%arg0: i32) -> i1 {
-    %0 = llvm.mlir.constant(255 : i32) : i32
-    %1 = llvm.icmp "ugt" %arg0, %0 : i32
-    llvm.return %1 : i1
-  }]
 
-theorem inst_combine_test_logical   : test_logical_before  ⊑  test_logical_combined := by
-  unfold test_logical_before test_logical_combined
-  simp_alive_peephole
-  sorry
+
