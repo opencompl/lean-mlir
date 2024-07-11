@@ -232,10 +232,26 @@ def doRegAllocExpr (f : RegisterMap (Γ.snoc s))
 /-- TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
 This might have us actually need to compute liveness anyway to prove correctness.
 -/
-def doRegAllocLets (f : RegisterMap Δ) (p : Pure.Program Γ Δ) : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ :=
+def doRegAllocLets (f : RegisterMap Δ) (p : Pure.Program Γ Δ) :
+  Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ) :=
   match p with
-  | .nil => (.nil, f)
+  | .nil => some (.nil, f)
   | .var ps e (Γ_out := Ξ) (t := t) =>
-    let (er, f) := doRegAllocExpr f e
-    let (psr, f) := doRegAllocLets f ps
-    (.var psr er, f)
+    match doRegAllocExpr f e with
+    | none => none
+    | some (e, f) =>
+      match doRegAllocLets f ps with
+      | none => none
+      | some (psr, f) => some (.var psr e, f)
+
+
+-- theorem doRegAllocLets_correct
+--   (f : RegisterMap Δ)
+--   (p : Pure.Program Γ Δ)
+--   (p' : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ))
+--   (f' : RegisterMap Γ) :
+--   doRegAllocLets f p = some (p', f') →
+--   ∀ (R : RegAlloc.RegisterFile) (V : Γ.Valuation), correspondence V f R →
+--   ∃ R' : RegAlloc.RegisterFile, correspondence V f' R' ∧ RegAlloc.denote p' R = RegAlloc.denote p R'
+
+end RegAlloc
