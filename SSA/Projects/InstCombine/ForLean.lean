@@ -37,19 +37,19 @@ lemma two_pow_pred_mod_eq_two_pred (h : w > 0): 2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1
 
 namespace BitVec
 
-def ushr_xor_distrib (a b c : BitVec w) :
+lemma ushr_xor_distrib (a b c : BitVec w) :
     (a ^^^ b) >>> c = (a >>> c) ^^^ (b >>> c) := by
   simp only [HShiftRight.hShiftRight]
   ext
   simp
 
-def ushr_and_distrib (a b c : BitVec w) :
+lemma ushr_and_distrib (a b c : BitVec w) :
     (a &&& b) >>> c = (a >>> c) &&& (b >>> c) := by
   simp only [HShiftRight.hShiftRight]
   ext
   simp
 
-def ushr_or_distrib (a b c : BitVec w) :
+lemma ushr_or_distrib (a b c : BitVec w) :
     (a ||| b) >>> c = (a >>> c) ||| (b >>> c) := by
   simp only [HShiftRight.hShiftRight]
   ext
