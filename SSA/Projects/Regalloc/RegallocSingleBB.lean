@@ -255,98 +255,56 @@ def doRegAllocExpr (f : RegisterMap (Γ.snoc s))
       let (r₁, f) ← f.lookupOrInsertArg arg
       some (Expr.mk (RegAlloc.Op.increment rout r₁) rfl (by simp) .nil .nil, f.deleteLast)
 
-/-- TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
+
+-- theorem eq_of_doRegAllocExpr_eq (f : RegisterMap Γ.snoc s)
+--   (e : Expr Pure.dialect Γ EffectKind.pure .int)
+
+/--
+TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
 This might have us actually need to compute liveness anyway to prove correctness.
 -/
-def doRegAllocLets (f : RegisterMap Δ) (p : Pure.Program Γ Δ) :
+def doRegAllocLets (p : Pure.Program Γ Δ) (fΔ : RegisterMap Δ) :
   Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ) :=
-  match Γ, Δ, p with
-  | _, _, .nil => some (.nil, f)
-  | _, _,  .var ps e (Γ_out := Ξ) (t := t) => by
-    stop
-    exact match doRegAllocExpr f e with
+  match  p with
+  | .nil => some (.nil, fΔ)
+  | .var ps e (Γ_out := Ξ) (t := t) => by
+    -- stop
+    exact match doRegAllocExpr fΔ e with
     | none => none
-    | some (e, f) =>
-      match doRegAllocLets f ps with
+    | some (er, fΞ) =>
+      match doRegAllocLets ps fΞ with
       | none => none
-      | some (psr, f) => some (.var psr e, f)
+      | some (psr, fΓ) => some (.var psr er, fΓ)
+termination_by structural p
 
-#check Lets.rec
-#check Com.rec'
-#print doRegAllocLets.match_3
-#print Lets.rec
+/-- Equation theorem for doRegAllocLets when argument is nil. -/
+@[simp]
+theorem RegisterMap.doRegAllocLets_nil (f : RegisterMap Γ) : doRegAllocLets .nil f = some (.nil, f) := rfl
 
 
--- Failed to generate equation theorem.
-/-
-failed to generate equational theorem for 'doRegAllocLets'
+/-- Inversion equation theorem for doRegAllocLets when argument is cons. -/
+@[simp]
+theorem RegisterMap.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
+    {fΔ : RegisterMap (Δ.snoc .int)}
+    {fΓ : RegisterMap Γ}
+    {rsout : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx (Δ.snoc .int))}
+    (h : doRegAllocLets (.var ps e) fΔ = some (rsout, fΓ)) :
+    ∃ psr er fΞ, rsout = .var psr er ∧
+       doRegAllocExpr fΔ e = some (er, fΞ) ∧
+       doRegAllocLets ps fΞ = some (psr, fΓ) := by
+  simp [doRegAllocLets] at h
+  split at h
+  case h_1 => simp at h
+  case h_2 a er _ _ =>
+    split at h
+    case h_1 => simp at h
+    case h_2 _ psr _ ih =>
+      simp_all only [Option.some.injEq, Prod.mk.injEq, exists_and_left]
+      simp only [← h.1]
+      exists psr
+      exists er
+      simp [ih]
 
-Γ : Ctxt Pure.Ty
-f_2 : RegisterMap Γ
-⊢ (List.rec
-        ⟨fun {Γ} f p =>
-          (match (motive :=
-              (Δ : Ctxt Pure.Ty) →
-                Pure.Program Γ Δ →
-                  RegisterMap Δ →
-                    List.rec PUnit.{1}
-                        (fun head tail tail_ih =>
-                          PProd
-                            (PProd
-                              ({Γ : Ctxt Pure.Ty} →
-                                RegisterMap tail →
-                                  Pure.Program Γ tail →
-                                    Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx tail) × RegisterMap Γ))
-                              tail_ih)
-                            PUnit.{1})
-                        Δ →
-                      Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ))
-              [], p, f with
-            | .(Γ), Lets.nil, f => fun x => some (Lets.nil, f)
-            | .(Ξ.snoc t), ps.var e, f => fun x =>
-              match doRegAllocExpr f e with
-              | none => none
-              | some (e, f) =>
-                match x.fst.fst f ps with
-                | none => none
-                | some (psr, f) => some (Lets.var psr e, f))
-            PUnit.unit,
-          PUnit.unit⟩
-        (fun head tail tail_ih =>
-          ⟨fun {Γ} f p =>
-            (match (motive :=
-                (Δ : Ctxt Pure.Ty) →
-                  Pure.Program Γ Δ →
-                    RegisterMap Δ →
-                      List.rec PUnit.{1}
-                          (fun head tail tail_ih =>
-                            PProd
-                              (PProd
-                                ({Γ : Ctxt Pure.Ty} →
-                                  RegisterMap tail →
-                                    Pure.Program Γ tail →
-                                      Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx tail) × RegisterMap Γ))
-                                tail_ih)
-                              PUnit.{1})
-                          Δ →
-                        Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ))
-                head :: tail, p, f with
-              | .(Γ), Lets.nil, f => fun x => some (Lets.nil, f)
-              | .(Ξ.snoc t), ps.var e, f => fun x =>
-                match doRegAllocExpr f e with
-                | none => none
-                | some (e, f) =>
-                  match x.fst.fst f ps with
-                  | none => none
-                  | some (psr, f) => some (Lets.var psr e, f))
-              ⟨tail_ih, PUnit.unit⟩,
-            ⟨tail_ih, PUnit.unit⟩⟩)
-        Γ).1
-    f_2 Lets.nil =
-  some (Lets.nil, f_2)
--/
-theorem RegisterMap.doRegAllocLets_nil (f : RegisterMap Γ) : doRegAllocLets f .nil = some (.nil, f) := by
-  simp [doRegAllocLets]
 
 /--
 Build a register allocation valuation for a given context Γ. Really, this just marks every variable as returning (),
@@ -359,9 +317,23 @@ def doRegAllocValuation (Γ : Ctxt Pure.Ty) : (doRegAllocCtx Γ).Valuation :=
 #check Lets
 
 
-theorem Lets.nil_of_eq [DialectSignature d] {Γ : Ctxt d.Ty} (p : Lets d Γ eff Γ) : p = .nil := by sorry
+theorem Lets.nil_of_eq [DialectSignature d] {Γ Δ : Ctxt d.Ty} (p : Lets d Γ eff Δ) (hΔ : Δ = Γ) : p = hΔ ▸ .nil :=
+  match Δ, p with
+  | .(Γ), .nil  => rfl
+  | _, .var body e (Γ_out := Ξ) (t := t) => by
+    have hbody := Lets.nil_of_eq body
+    by_contra hcontra
+    sorry
+
+/-- run a `StateT` program and discard the final result, leaving the stat behind. -/
+def StateT.exec {m : Type u → Type v} [Functor m] (cmd : StateT σ m α) (s : σ) : m σ :=
+  Prod.snd <$> cmd.run s
 
 
+
+/-
+
+-/
 
 /-
 Given a valuation of `V` for a pure program `p` and a register file `R`such that `V ~fΓ~ R`,
@@ -376,23 +348,33 @@ theorem doRegAllocLets_correct
     (fΔ : RegisterMap Δ)
     (q : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ))
     (fΓ : RegisterMap Γ)
-    (hq : doRegAllocLets fΔ p = some (q, fΓ))
+    (hq : doRegAllocLets p fΔ = some (q, fΓ))
     (R : RegAlloc.RegisterFile)
     (V : Γ.Valuation)
     /- When we start out, all values we need are in registers. -/
     (hRV : ValToReg V fΓ R)  :
     /- At the end, All live out registers have the same value -/
-    RegToVal (p.denote V) fΔ ((show StateM _ _ from (q.denote (doRegAllocValuation Γ))).run R).2 :=
-  match hmatch : p, h₁ : fΔ, h₂ : q with
+    RegToVal (p.denote V) fΔ ((show StateM _ _ from (q.denote (doRegAllocValuation Γ))).exec R) :=
+  match hmatch : p, h₁ : fΔ,  q with
   | .nil, f, q => by
-    rename_i h -- where is this 'h' coming from?
+    rename_i h
     subst h
-    simp_all
+    simp_all only [RegisterMap.doRegAllocLets_nil, Option.some.injEq, Prod.mk.injEq, heq_eq_eq,
+      Lets.denote_nil, EffectKind.toMonad_pure, Id.pure_eq]
     subst hmatch
-    have hq := Lets.nil_of_eq q
-    subst hq
+    -- have hq := Lets.nil_of_eq q rfl
     subst h₁
-    simp
-    apply RegToVal.ofValToReg
-    exact hRV
-  | .var .., f, q => sorry
+    simp_all only [hq.1.symm, true_and, Lets.denote_nil, EffectKind.toMonad_impure,
+      EffectKind.return_impure_toMonad_eq, StateT.run_pure, Id.pure_eq]
+    apply RegToVal.ofValToReg hRV
+  | .var body e (Γ_out := Ξ) (t := t), f, q => by
+    rename_i h
+    obtain ⟨psr, er, fΞ, hq, he, hbody⟩ := RegisterMap.eq_of_doRegAllocLets_var_eq_some hq
+    subst hq
+    subst h
+    subst h₁
+    have ih := doRegAllocLets_correct (hq := hbody) R V hRV
+    subst hmatch
+    simp [RegToVal]
+    intros r v hlive
+    sorry
