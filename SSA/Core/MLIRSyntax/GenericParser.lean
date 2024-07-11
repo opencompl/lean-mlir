@@ -715,15 +715,19 @@ macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
   `(AttrEntry.mk $(Lean.quote key) $value)
 
 declare_syntax_cat mlir_attr_dict
-syntax "{" sepBy(mlir_attr_entry, ",") "}" : mlir_attr_dict
+syntax  "<" ? "{" sepBy(mlir_attr_entry, ",") "}" ">" ?  : mlir_attr_dict
 syntax "[mlir_attr_dict|" mlir_attr_dict "]" : term
 
 macro_rules
-| `([mlir_attr_dict| {  $attrEntries,* } ]) => do
+| `([mlir_attr_dict| $[<%$caretLeft]? {  $attrEntries,* } $[>%$caretRight]? ]) => do
+        match caretLeft, caretRight with
+        | none, some y => Macro.throwErrorAt y "Caret closed without being opened"
+        | some x, none => Macro.throwErrorAt x "Caret opened without being closed"
+        | _ , _ =>
+
         let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
         let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
         `(AttrDict.mk $attrsList)
-
 -- dict attribute val
 syntax mlir_attr_dict : mlir_attr_val
 
@@ -755,6 +759,8 @@ info: AttrEntry.mk "value" (AttrValue.int (Int.negSucc 0) (MLIRType.int Signedne
 def attrDict0 : AttrDict 0 := [mlir_attr_dict| {}]
 def attrDict1 : AttrDict 0 := [mlir_attr_dict| {foo = "bar" }]
 def attrDict2 : AttrDict 0 := [mlir_attr_dict| {foo = "bar", baz = "quux" }]
+
+def propDict2 : AttrDict 0 := [mlir_attr_dict| <{foo = "bar", baz = "quux" }>]
 
 def nestedAttrDict0 : AttrDict 0 := [mlir_attr_dict| {foo = {bar = "baz"} }]
 /--
