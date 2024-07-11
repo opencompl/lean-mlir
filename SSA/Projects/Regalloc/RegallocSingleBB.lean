@@ -5,6 +5,8 @@ import Mathlib.Init.Function
 
 namespace Pure
 
+
+
 inductive Op
 | increment
 | const (i : Int)
@@ -77,6 +79,42 @@ def RegisterFile.get (R : RegisterFile) (r : Reg) : Int := R r
  def RegisterFile.set (R : RegisterFile) (r : Reg) (v : Int) : RegisterFile :=
   fun r' => if r = r' then v else R r'
 
+theorem RegisterFile.get_set_of_eq (R : RegisterFile) (r s : Reg) (v : Int) (hs : r = s) :
+  (R.set r v) s = v := by
+  simp [RegisterFile.set, hs]
+
+
+theorem RegisterFile.get_set_of_neq (R : RegisterFile) (r s : Reg) (v : Int) (hs : r ≠ s) :
+  (R.set r v) s = R s := by
+  simp [RegisterFile.set, hs]
+
+@[simp]
+theorem RegisterFile.set_set (R : RegisterFile) (r : Reg) (v w : Int) :
+  (R.set r v).set r w = R.set r w := by
+  ext v
+  unfold RegisterFile.set
+  split <;> simp
+
+@[simp]
+theorem RegisterFile.set_set_eq_set_fst_of_eq (R : RegisterFile) (r s : Reg) (v w : Int) (heq : r = s) :
+    (R.set r v).set s w = R.set r w := by
+  ext v
+  unfold RegisterFile.set
+  subst heq
+  split <;> simp
+
+@[simp]
+theorem RegisterFile.set_set_eq_set_snd_of_eq (R : RegisterFile) (r s : Reg) (v w : Int) (heq : r = s) :
+    (R.set r v).set s w = R.set r w := by
+  subst heq
+  simp
+
+@[simp]
+theorem RegisterFile.get_set_of_eq' (R : RegisterFile) (r : Reg) (v : Int) :
+  (R.set r v) r = v := by
+  simp [RegisterFile.set]
+
+
 inductive Op
 | increment (l out : Reg)
 | const (i : Int) (out : Reg)
@@ -125,7 +163,32 @@ instance : DialectDenote dialect where
   | .const i rout => show StateM _ _ from
      writeRegister rout i
 
+instance : Subsingleton (HVector f []) where
+  allEq := fun x y => by
+    cases x
+    cases y
+    rfl
+
+@[simp]
+theorem HVector.nil_eq {f : Ty → Type} (v : HVector f []) : v = HVector.nil := by
+  cases v
+  rfl
+
  def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .impure Δ
+ @[simp]
+ theorem Expr.const_eq {Γ : Ctxt Ty} {i : Int}
+    {ty_eq : Ty.unit = DialectSignature.outTy (d := dialect) (Op.const i out)}
+    {eff_le : DialectSignature.effectKind (d := dialect) (Op.const i out) ≤ EffectKind.impure}
+    {args : HVector Γ.Var [] }
+    {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.const i out)) } :
+    (Expr.mk (d := dialect) (Γ := Γ) (Op.const i out) (ty := .unit) ty_eq eff_le args regArgs) =
+    (Expr.mk (d := dialect) (Γ := Γ) (eff := EffectKind.impure) (Op.const i out) (ty := .unit) (by rfl) (by simp) .nil .nil) := by
+  unfold DialectSignature.regSig signature Signature.regSig at regArgs
+  simp_all [DialectSignature.regSig, DialectSignature, DialectSignature.regSig, Op.signature]
+  sorry
+
+
+
 
 end RegAlloc
 
@@ -205,7 +268,7 @@ theorem exec_writeRegister:
   simp [RegAlloc.writeRegister, StateT.run, StateT.exec]
 
 @[simp]
-theorem RegAlloc.Expr.const_exec_eq (i : Int) (R : RegAlloc.RegisterFile) :
+theorem RegAlloc.Expr.exec_const_eq {i : Int} {R : RegAlloc.RegisterFile} :
   RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.const i r) rfl (by simp) .nil .nil) R = R.set r i := by
   simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
     (exec_writeRegister)]
@@ -445,9 +508,22 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
       case some val =>
         replace ⟨r, Γs2reg⟩ := val
         simp [hlast] at he
-        simp [he.1.symm, he.2.symm]
-
-    | .increment => sorry
+        simp only  [EffectKind.toMonad_pure, Pure.Expr.denote_const, he.1.symm]
+        rw [RegAlloc.Expr.const_eq, RegAlloc.Expr.exec_const_eq, RegAlloc.Expr.outRegister_const_eq]
+        simp
+    | .increment => by
+      simp [doExpr] at he
+      cases hlast : Δ2Reg.lookupOrInsertResult
+      case none => simp [hlast] at he
+      case some val =>
+        replace ⟨r, Γs2reg⟩ := val
+        simp [hlast] at he
+        simp only [EffectKind.toMonad_pure, Pure.Expr.denote_const]
+        cases hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
+        case none => simp [hvar0] at he
+        case some val =>
+          replace ⟨s, Δs2reg⟩ := val
+          sorry -- HERE HERE HERE
 
 
 
