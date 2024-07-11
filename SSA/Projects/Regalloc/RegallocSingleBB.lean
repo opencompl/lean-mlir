@@ -379,22 +379,11 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
       exists er
       simp [ih]
 
-
-theorem Lets.nil_of_eq [DialectSignature d] {Γ Δ : Ctxt d.Ty} (p : Lets d Γ eff Δ) (hΔ : Δ = Γ) : p = hΔ ▸ .nil :=
-  match Δ, p with
-  | .(Γ), .nil  => rfl
-  | _, .var body e (Γ_out := Ξ) (t := t) => by
-    have hbody := Lets.nil_of_eq body
-    by_contra hcontra
-    sorry
-
-#check sound_mapping
-
 /- Evaluating an expression will return an expression whose value equals the -/
 theorem doExpr_sound {Γs2reg : Var2Reg (Γ.snoc s)}
   {e : Expr Pure.dialect Γ EffectKind.pure .int}
   (h : doExpr Γs2reg e = some (er, Γ2reg)) -- we got an expression
-  : e.denote V = runExpr er R (RegAlloc.Expr.outRegister er) := rfl
+  : e.denote V = (RegAlloc.Expr.exec er R) (RegAlloc.Expr.outRegister er) := sorry
 
 
 
@@ -416,7 +405,7 @@ theorem doRegAllocLets_correct
     /- When we start out, all values we need are in registers. -/
     (hRV : complete_mapping V Γ2reg R)  :
     /- At the end, All live out registers have the same value -/
-    sound_mapping (p.denote V) Δ2reg ((show StateM _ _ from (q.denote (doValuation (doCtxt Γ)))).exec R) :=
+    sound_mapping (p.denote V) Δ2reg (RegAlloc.Program.exec q R) :=
   match hmatch : p, h₁ : Δ2reg,  q with
   | .nil, f, q => by
     rename_i h
@@ -424,7 +413,6 @@ theorem doRegAllocLets_correct
     simp_all only [Var2Reg.doLets_nil, Option.some.injEq, Prod.mk.injEq, heq_eq_eq,
       Lets.denote_nil, EffectKind.toMonad_pure, Id.pure_eq]
     subst hmatch
-    -- have hq := Lets.nil_of_eq q rfl
     subst h₁
     simp_all only [hq.1.symm, true_and, Lets.denote_nil, EffectKind.toMonad_impure,
       EffectKind.return_impure_toMonad_eq, StateT.run_pure, Id.pure_eq]
