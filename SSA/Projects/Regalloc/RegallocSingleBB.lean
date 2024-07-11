@@ -260,15 +260,21 @@ This might have us actually need to compute liveness anyway to prove correctness
 -/
 def doRegAllocLets (f : RegisterMap Δ) (p : Pure.Program Γ Δ) :
   Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ) :=
-  match p with
-  | .nil => some (.nil, f)
-  | .var ps e (Γ_out := Ξ) (t := t) =>
-    match doRegAllocExpr f e with
+  match Γ, Δ, p with
+  | _, _, .nil => some (.nil, f)
+  | _, _,  .var ps e (Γ_out := Ξ) (t := t) => by
+    stop
+    exact match doRegAllocExpr f e with
     | none => none
     | some (e, f) =>
       match doRegAllocLets f ps with
       | none => none
       | some (psr, f) => some (.var psr e, f)
+
+#check Lets.rec
+#check Com.rec'
+#print doRegAllocLets.match_3
+#print Lets.rec
 
 
 -- Failed to generate equation theorem.
@@ -341,6 +347,7 @@ f_2 : RegisterMap Γ
 -/
 theorem RegisterMap.doRegAllocLets_nil (f : RegisterMap Γ) : doRegAllocLets f .nil = some (.nil, f) := by
   simp [doRegAllocLets]
+
 /--
 Build a register allocation valuation for a given context Γ. Really, this just marks every variable as returning (),
 since the semantics is purely side-effecting and nothing flows via the def-use chain.
