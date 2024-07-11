@@ -1836,6 +1836,86 @@ def guard_recompile_2: Int := 42
   TODO: figure out why this is so slow
 -/
 
+section SubsetEntries
+
+variable [DecidableEq d.Op]
+    {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
+    {lets : Lets d Γ_in eff Γ_out}
+    {matchLets : Lets d Δ_in .pure Δ_out}
+    {l : List d.Ty}
+    {argsl : HVector (Var Γ_out) l}
+    {argsr : HVector (Var Δ_out) l}
+    {ma : Mapping Δ_in Γ_out}
+    {varMap : Mapping Δ_in Γ_out}
+
+#print prefix matchArg
+#check matchArg.mutual_induct
+
+theorem subset_entries :
+    (
+     ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
+        (argsl : HVector Γ_out.Var l) (argsr : HVector Δ_out.Var l) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
+    )
+    ∧ (
+      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t) (matchLets : Lets d Δ_in EffectKind.pure Δ_out),
+      ∀ w : Var _ t) (v : _) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
+    ) := by
+
+  /-
+  tactic 'apply' failed, failed to unify
+    (∀ (Γ_in : Ctxt ?d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt ?d.Ty) (inst : DecidableEq ?d.Op)
+        (lets : Lets ?d Γ_in eff Γ_out) (matchLets : Lets ?d Δ_in EffectKind.pure Δ_out) (l : List ?d.Ty)
+        (a : HVector Γ_out.Var l) (a_1 : HVector Δ_out.Var l) (a_2 : Mapping Δ_in Γ_out),
+        ?motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets l a a_1 a_2) ∧
+      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt ?d.Ty) (t : ?d.Ty) (inst : DecidableEq ?d.Op)
+        (lets : Lets ?d Γ_in eff Γ_out) (v : Γ_out.Var t) (matchLets : Lets ?d Δ_in EffectKind.pure Δ_out)
+        (w : Δ_out.Var t) (ma : Mapping Δ_in Γ_out), ?motive2 eff Γ_in Γ_out Δ_in Δ_out t inst lets v matchLets w ma
+  with
+    (∀ {l : List d.Ty} {argsl : HVector Γ_out.Var l} {argsr : HVector Δ_out.Var l} {ma varMap : Mapping Δ_in Γ_out},
+        varMap ∈ matchArg lets matchLets argsl argsr ma → ma.entries ⊆ varMap.entries) ∧
+      ∀ {varMap ma : Mapping Δ_in Γ_out} {lets : Lets d Γ_in eff Γ_out} {v : Γ_out.Var t}
+        {matchLets : Lets d Δ_in EffectKind.pure Δ_out} {w : Δ_out.Var t},
+        varMap ∈ matchVar lets v matchLets w ma → ma.entries ⊆ varMap.entries
+
+  eff : EffectKind
+  d : Dialect
+  inst✝⁶ : DialectSignature d
+  inst✝⁵ : TyDenote d.Ty
+  inst✝⁴ : DialectDenote d
+  inst✝³ : DecidableEq d.Ty
+  inst✝² : Monad d.m
+  inst✝¹ : LawfulMonad d.m
+  inst✝ : DecidableEq d.Op
+  Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty
+  lets : Lets d Γ_in eff Γ_out
+  matchLets : Lets d Δ_in EffectKind.pure Δ_out
+  l : List d.Ty
+  argsl : HVector Γ_out.Var l
+  argsr : HVector Δ_out.Var l
+  ma varMap : Mapping Δ_in Γ_out
+  t : d.Ty
+  ⊢ (∀ {l : List d.Ty} {argsl : HVector Γ_out.Var l} {argsr : HVector Δ_out.Var l} {ma varMap : Mapping Δ_in Γ_out},
+      varMap ∈ matchArg lets matchLets argsl argsr ma → ma.entries ⊆ varMap.entries) ∧
+    ∀ {varMap ma : Mapping Δ_in Γ_out} {lets : Lets d Γ_in eff Γ_out} {v : Γ_out.Var t}
+      {matchLets : Lets d Δ_in EffectKind.pure Δ_out} {w : Δ_out.Var t},
+      varMap ∈ matchVar lets v matchLets w ma → ma.entries ⊆ varMap.entries
+  -/
+  apply matchArg.mutual_induct
+    (motive1 := fun Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets l argsl argsr ma =>
+      ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
+    )
+    (motive2 := fun eff Γ_in Γ_out Δ_in Δ_out t inst lets v matchLets w ma =>
+      ∀ (v : _),
+      ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
+    )
+  <;> sorry
+
+end SubsetEntries
+
 -- TODO: There seems to be a bug in the unusedVariables linter that shows up in `subset_entries_matchVar`.
 -- It reports `hvarMap` as unused, but it is used (because somehow the tactic does some beta abstraction).
 --  might be worth investigating/reporting.
