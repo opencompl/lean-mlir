@@ -178,12 +178,30 @@ def RegAlloc.Expr.outRegister (e : Expr RegAlloc.dialect Γ EffectKind.impure .u
   match e with
   | Expr.mk op .. => RegAlloc.Op.outRegister op
 
+@[simp]
+theorem RegAlloc.Expr.outRegister_const_eq (i : Int) (r : RegAlloc.Reg) :
+  RegAlloc.Expr.outRegister (Expr.mk (Γ := Γ) (RegAlloc.Op.const i r) rfl (by simp) .nil .nil) = r := rfl
+
+@[simp]
+theorem RegAlloc.Expr.outRegister_increment_eq (r₁ r₂ : RegAlloc.Reg) :
+  RegAlloc.Expr.outRegister (Expr.mk (Γ := Γ) (RegAlloc.Op.increment r₁ r₂) rfl (by simp) .nil .nil) = r₂ := rfl
+
+@[simp]
+theorem exec_writeRegister:
+  (StateT.exec (RegAlloc.writeRegister r v) R) = R.set r v := by
+  simp [RegAlloc.writeRegister, StateT.run, StateT.exec]
+
+@[simp]
+theorem RegAlloc.Expr.const_exec_eq (i : Int) (R : RegAlloc.RegisterFile) :
+  RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.const i r) rfl (by simp) .nil .nil) R = R.set r i := by
+  simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote]
+  -- apply exec_writeRegister
+
 -- Evaluating an empty program yields the same register file.
 @[simp]
 def RegAlloc.Program.exec_nil_eq :
     RegAlloc.Program.exec (Γ := Γ) (Δ := Γ) Lets.nil R = R := by
   simp [RegAlloc.Program.exec, StateT.exec]
-
 
 -- Evaluating a register yields a new register file whose value has been modified at R.
 @[simp]
@@ -330,8 +348,6 @@ def doExpr (f : Var2Reg (Γ.snoc s))
       let (r₁, f) ← f.lookupOrInsertArg arg
       some (Expr.mk (RegAlloc.Op.increment rout r₁) rfl (by simp) .nil .nil, f.deleteLast)
 
--- theorem eq_of_doRegAllocExpr_eq (f : Var2Reg Γ.snoc s)
---   (e : Expr Pure.dialect Γ EffectKind.pure .int)
 
 /--
 TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
@@ -379,11 +395,48 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
       exists er
       simp [ih]
 
+/-
+ e : Expr Pure.dialect Ξ EffectKind.pure t
+    bodyr : Lets RegAlloc.dialect (doCtxt Γ) EffectKind.impure (List.map (fun x => RegAlloc.Ty.unit) Ξ)
+    er : Expr RegAlloc.dialect (List.map (fun x => RegAlloc.Ty.unit) Ξ) EffectKind.impure
+      ((fun x => RegAlloc.Ty.unit) Pure.Ty.int)
+    Ξ2reg : Var2Reg Ξ
+    hbody : doLets body Ξ2reg = some (bodyr, Γ2reg)
+    Δ2reg : Var2Reg (Ξ.snoc t)
+    q : RegAlloc.Program (doCtxt Γ) (doCtxt (Ξ.snoc t))
+    he : doExpr Δ2reg e = some (er, Ξ2reg)
+    hq : doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
+    ih : sound_mapping (body.denote V) Ξ2reg (RegAlloc.Program.exec bodyr R)
+    r : RegAlloc.Reg
+    v : (Ξ.snoc t).Var Pure.Ty.int
+    hlive : Δ2reg.toFun v = some r
+    ⊢ RegAlloc.Expr.exec er (RegAlloc.Program.exec bodyr R) r = (body.denote V::ᵥe.denote (body.denote V)) v
+
+-/
+
 /- Evaluating an expression will return an expression whose value equals the -/
-theorem doExpr_sound {Γs2reg : Var2Reg (Γ.snoc s)}
-  {e : Expr Pure.dialect Γ EffectKind.pure .int}
-  (h : doExpr Γs2reg e = some (er, Γ2reg)) -- we got an expression
-  : e.denote V = (RegAlloc.Expr.exec er R) (RegAlloc.Expr.outRegister er) := sorry
+theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
+    {e : Expr Pure.dialect Ξ EffectKind.pure .int}
+    {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
+    {Δ2reg : Var2Reg (Ξ.snoc s)}
+    (hsound : sound_mapping V Ξ2reg R)
+    (he : doExpr Δ2Reg e = some (er, Ξ2reg))
+    : e.denote V = (RegAlloc.Expr.exec er R) (RegAlloc.Expr.outRegister er) :=
+  match e with
+  | Expr.mk op rfl eff_le args regArgs =>
+    match op with
+    | .const i => by
+      simp [doExpr] at he
+      cases hlast : Δ2Reg.lookupOrInsertResult
+      case none => simp [hlast] at he
+      case some val =>
+        replace ⟨r, Γs2reg⟩ := val
+        simp [hlast] at he
+        simp [he.1.symm, he.2.symm]
+
+    | .increment => sorry
+
+
 
 
 
@@ -431,8 +484,6 @@ theorem doRegAllocLets_correct
     -- ih : sound_mapping (body.denote V)  Ξ2reg
     -- V ~Γ2reg~> R
     simp [sound_mapping]
-    intros r v hlive
-    simp [StateT.exec]
     /-
     case intro.intro.intro.intro.intro
     Γ : Ctxt Pure.dialect.Ty
@@ -453,20 +504,10 @@ theorem doRegAllocLets_correct
     q : RegAlloc.Program (doCtxt Γ) (doCtxt (Ξ.snoc t))
     he : doExpr Δ2reg e = some (er, Ξ2reg)
     hq : doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
-    ih : sound_mapping (body.denote V) Ξ2reg
-      (StateT.exec
-        (let_fun this := bodyr.denote (doValuation Γ);
-        this)
-        R)
+    ih : sound_mapping (body.denote V) Ξ2reg (RegAlloc.Program.exec bodyr R)
     r : RegAlloc.Reg
     v : (Ξ.snoc t).Var Pure.Ty.int
     hlive : Δ2reg.toFun v = some r
-    ⊢ StateT.exec
-        (do
-          let V_out ← bodyr.denote (doValuation Γ)
-          let x ← er.denote V_out
-          pure (V_out::ᵥx))
-        R r =
-      (body.denote V::ᵥe.denote (body.denote V)) v
+    ⊢ RegAlloc.Expr.exec er (RegAlloc.Program.exec bodyr R) r = (body.denote V::ᵥe.denote (body.denote V)) v
     -/
-    sorry
+    intros r v hlive
