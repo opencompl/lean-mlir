@@ -170,6 +170,8 @@ inductive Lets (Γ_in : Ctxt d.Ty) (eff : EffectKind) :
   | nil : Lets Γ_in eff Γ_in
   | var (body : Lets Γ_in eff Γ_out) (e : Expr d Γ_out eff t) : Lets Γ_in eff (Γ_out.snoc t)
 
+#check Lets.rec
+
 /-- `Zipper d Γ_in eff Γ_mid ty` represents a particular position in a program, by storing the
 `Lets` that come before this position separately from the `Com` that represents the rest.
 Thus, `Γ_in` is the context of the program as a whole, while `Γ_mid` is the context at the

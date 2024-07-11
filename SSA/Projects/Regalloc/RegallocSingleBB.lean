@@ -111,39 +111,123 @@ instance : DialectDenote dialect where
 
  def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .impure Δ
 
- end RegAlloc
+end RegAlloc
 
+/--
+Convert a pure context to an impure context, where all SSA variables are now side effecting, and thus
+have type ().
+-/
+def doCtxt (ctx : Ctxt ty) : Ctxt RegAlloc.Ty := ctx.map (fun _ => RegAlloc.Ty.unit)
+
+/--
+Build a register allocation valuation for a given context Γ. Really, this just marks every variable as returning (),
+since the semantics is purely side-effecting and nothing flows via the def-use chain.
+-/
+def doValuation (Γ : Ctxt RegAlloc.Ty) : Γ.Valuation :=
+  fun t _v => match t with | .unit => ()
+
+
+instance (t : RegAlloc.Ty): Subsingleton (TyDenote.toType t) where
+  allEq := fun x y => by
+    cases x
+    cases y
+    rfl
+
+instance (Γ : Ctxt RegAlloc.Ty) : Subsingleton (Ctxt.Valuation Γ) where
+  allEq := fun V V' => by
+    simp_all [Ctxt.Valuation]
+    ext t v
+    apply Subsingleton.elim
+
+/-- All valuations for the RegAlloc type are equal, so we canonicalize into `doValuation Γ`-/
+@[simp]
+theorem RegAlloc.doValuation_eq (Γ : Ctxt RegAlloc.Ty) (V : Γ.Valuation) : V = doValuation Γ := by
+  apply Subsingleton.elim
+
+/-- run a `StateT` program and discard the final result, leaving the stat behind. -/
+def StateT.exec {m : Type u → Type v} [Functor m] (cmd : StateT σ m α) (s : σ) : m σ :=
+  Prod.snd <$> cmd.run s
+
+
+
+/-- Evaluating at an arbitrary valuation is the same as evaluating at a 'doValuation'-/
+@[simp]
+def RegAlloc.Expr.denote_eq_denote_doValuation {Γ : Ctxt RegAlloc.Ty} {V: Γ.Valuation}
+  (e : Expr RegAlloc.dialect Γ EffectKind.impure .unit) :
+  (e.denote V) = e.denote (doValuation Γ) := by simp
+
+def RegAlloc.Expr.exec {Γ : Ctxt RegAlloc.Ty}
+  (e : Expr RegAlloc.dialect Γ EffectKind.impure .unit)
+  (R : RegAlloc.RegisterFile) : RegAlloc.RegisterFile :=
+  (StateT.exec <| e.denote (doValuation Γ)) R
+
+def RegAlloc.Program.exec {Γ Δ : Ctxt RegAlloc.Ty}
+    (p : RegAlloc.Program Γ Δ)
+    (R : RegAlloc.RegisterFile) : RegAlloc.RegisterFile :=
+  (StateT.exec <| p.denote (doValuation Γ)) R
+
+
+/-- Get the register into which value is written to. -/
+def RegAlloc.Op.outRegister (op : RegAlloc.Op) : RegAlloc.Reg :=
+  match op with
+  | .increment _ out => out
+  | .const _ out => out
+
+/-- Get the register into which value is written to. -/
+def RegAlloc.Expr.outRegister (e : Expr RegAlloc.dialect Γ EffectKind.impure .unit) : RegAlloc.Reg :=
+  match e with
+  | Expr.mk op .. => RegAlloc.Op.outRegister op
+
+-- Evaluating an empty program yields the same register file.
+@[simp]
+def RegAlloc.Program.exec_nil_eq :
+    RegAlloc.Program.exec (Γ := Γ) (Δ := Γ) Lets.nil R = R := by
+  simp [RegAlloc.Program.exec, StateT.exec]
+
+
+-- Evaluating a register yields a new register file whose value has been modified at R.
+@[simp]
+def RegAlloc.Program.exec_cons_eq (body : Program Γ Δ) (er : Expr RegAlloc.dialect Δ EffectKind.impure .unit) :
+    RegAlloc.Program.exec (Lets.var body er) R = RegAlloc.Expr.exec er (RegAlloc.Program.exec body R) := by
+  simp [RegAlloc.Program.exec, StateT.exec, RegAlloc.Expr.exec]
+
+-- Evaluating a register yields a new register file whose value has been modified at R.
+@[simp]
+def RegAlloc.Program.exec_cons_eq' (body : Program Γ Δ) (er : Expr RegAlloc.dialect Δ EffectKind.impure .unit)
+    (hRmid : body.exec R = Rmid)
+    (hRer : RegAlloc.Expr.exec er Rmid = Rout) :
+    RegAlloc.Program.exec (Lets.var body er) R = Rout := by simp_all
 
 /-- A mapping of variables in a context to a register. -/
-structure RegisterMap (Γ : Ctxt Pure.Ty) where
+structure Var2Reg (Γ : Ctxt Pure.Ty) where
   toFun : Γ.Var Pure.Ty.int → Option RegAlloc.Reg
   dead : List RegAlloc.Reg -- list of dead registers
 
 /-- A register is free if no variable maps to it. -/
-def RegisterMap.registerDead (f : RegisterMap Γ) (r : RegAlloc.Reg) : Prop :=
+def Var2Reg.registerDead (f : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
   ∀ (v : Γ.Var Pure.Ty.int), r ∉ f.toFun v
 
 
 /-- A register is live if some variable maps to the register. -/
-def RegisterMap.registerLive (f : RegisterMap Γ) (r : RegAlloc.Reg) : Prop :=
+def Var2Reg.registerLive (f : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
   ¬ f.registerDead r
 
-structure LawfulRegisterMap (Γ : Ctxt Pure.Ty) extends RegisterMap Γ where
+structure LawfulVar2Reg (Γ : Ctxt Pure.Ty) extends Var2Reg Γ where
   /-- every register in the set of dead registers is in fact dead. -/
-  hdead : ∀ r ∈ dead, toRegisterMap.registerDead r
+  hdead : ∀ r ∈ dead, Var2Reg.registerDead toVar2Reg r
   /-- our mapping from variables to registers is injective. -/
-  hinj : Function.Injective toRegisterMap.toFun
+  hinj : Function.Injective toVar2Reg.toFun
 
  /--
  A correspondence between variables 'v ∈ Γ' and registers in the register file.
  This correspondence is witnessed by 'f'.
  -/
- def ValToReg {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (f : RegisterMap Γ) (R : RegAlloc.RegisterFile) : Prop :=
+ def complete_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (f : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
   ∀ (v : Γ.Var Pure.Ty.int), ∃ r ∈ f.toFun v, R r = V v
 
 /-- All register files correspond to the start of the program. -/
 theorem correspondVar2Reg_nil (R : RegAlloc.RegisterFile) :
-    ValToReg (Γ := []) V f R := by
+    complete_mapping (Γ := []) V f R := by
   intros v
   exact v.emptyElim
 
@@ -151,13 +235,14 @@ theorem correspondVar2Reg_nil (R : RegAlloc.RegisterFile) :
 All live registers correspond to correct values.
 This says that the register file is correct at the start of the program.
 -/
-def RegToVal {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (f : RegisterMap Γ) (R : RegAlloc.RegisterFile) : Prop :=
-  ∀ (r : RegAlloc.Reg) (v : Γ.Var Pure.Ty.int) (hlive : f.toFun v = .some r), R r = V v
+def sound_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (v2reg : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
+  ∀ (r : RegAlloc.Reg) (v : Γ.Var Pure.Ty.int) (hlive : v2reg.toFun v = .some r), R r = V v
 
-theorem RegToVal.ofValToReg {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : RegisterMap Γ} {R : RegAlloc.RegisterFile}
-    (h : ValToReg V f R) : RegToVal V f R := by
+/-- Every complete mapping (which maps every live variable) is also sound (it correctly maps each register soundly.)-/
+theorem sound_mapping.of_complete {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Var2Reg Γ} {R : RegAlloc.RegisterFile}
+  (hcomplete : complete_mapping V f R) : sound_mapping V f R := by
     intros r v hlive
-    obtain ⟨r', hr', hR⟩ := h v
+    obtain ⟨r', hr', hR⟩ := hcomplete v
     rw [hlive] at hr'
     injection hr'
     subst r'
@@ -169,12 +254,12 @@ For example, consider the  mapping that maps every variable to a dead register.
 This satisfies Reg2Val (since trivially, every 'live' register (ie, none of them) maps right), but not Val2Reg.
 -/
 
-structure AllocateDeadRegisterResult (fold : RegisterMap Γ) where
+structure AllocateDeadRegisterResult (fold : Var2Reg Γ) where
   r : RegAlloc.Reg
-  f : RegisterMap Γ
+  f : Var2Reg Γ
   -- hr : f.registerDead r
 
-def RegisterMap.allocateDeadRegister {Γ : Ctxt Pure.Ty} (f : RegisterMap Γ) : Option (AllocateDeadRegisterResult f) :=
+def Var2Reg.allocateDeadRegister {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) : Option (AllocateDeadRegisterResult f) :=
   match hf : f.dead with
   | [] => none
   | r :: rs =>
@@ -186,21 +271,19 @@ def RegisterMap.allocateDeadRegister {Γ : Ctxt Pure.Ty} (f : RegisterMap Γ) : 
       },
     }
 
-
-
 /--
 Consume the allocate dead register result,
 and use this for the variable 'v'.
 -/
 def AllocateDeadRegisterResult.consume {Γ : Ctxt Pure.Ty}
-    {fold : RegisterMap Γ}
-    (f : AllocateDeadRegisterResult fold) {v : Γ.Var t} (hv : fold.toFun v = .none) : RegAlloc.Reg × RegisterMap Γ :=
+    {fold : Var2Reg Γ}
+    (f : AllocateDeadRegisterResult fold) {v : Γ.Var t} (hv : fold.toFun v = .none) : RegAlloc.Reg × Var2Reg Γ :=
   (f.r, {
     toFun := fun v' => if v' = v then .some f.r else fold.toFun v'
     dead := f.f.dead
   })
 
-def RegisterMap.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : RegisterMap Γ) (v : Γ.Var int) : Option (RegAlloc.Reg × RegisterMap Γ) :=
+def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg Γ) :=
   match hv : f.toFun v with
   | .some r => (r, f)
   | .none =>
@@ -210,8 +293,8 @@ def RegisterMap.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : RegisterMap Γ) (v : Γ.
         some (result.consume hv)
 
 /-- Lookup an argument in a register map, where the variable is defined in the register map. -/
-def RegisterMap.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : RegisterMap <| Γ.snoc t) (v : Γ.Var int) :
-  Option (RegAlloc.Reg × RegisterMap (Γ.snoc t)) :=
+def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t) (v : Γ.Var int) :
+  Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
   match hv : f.toFun v with
   | .some r => (r, f)
   | .none =>
@@ -220,31 +303,23 @@ def RegisterMap.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : RegisterMap <| Γ.sno
       | .some result =>
         some (result.consume hv)
 
-def RegisterMap.lookupOrInsertResult {Γ : Ctxt Pure.Ty} (f : RegisterMap (Γ.snoc t)) : Option (RegAlloc.Reg × RegisterMap (Γ.snoc t)) :=
+def Var2Reg.lookupOrInsertResult {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
   f.lookupOrInsert (Ctxt.Var.last Γ t)
 
 /-- Delete the last register from the register map. -/
-def RegisterMap.deleteLast {Γ : Ctxt Pure.Ty} (f : RegisterMap (Γ.snoc t)) : RegisterMap Γ :=
+def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
   let toFun := fun v => f.toFun v.toSnoc
   match f.toFun (Ctxt.Var.last Γ t) with
   | .none => { toFun := toFun, dead := f.dead }
   | .some r =>  { toFun := toFun, dead := f.dead.erase r }
 
-/--
-Convert a pure context to an impure context, where all SSA variables are now side effecting, and thus
-have type ().
--/
-def doRegAllocCtx (ctx : Ctxt Pure.Ty) : Ctxt RegAlloc.Ty := ctx.map (fun _ => RegAlloc.Ty.unit)
 
 @[simp]
-theorem doRegAllocCtx_nil : doRegAllocCtx [] = [] := rfl
+def doRegAllocCtx_cons : doCtxt (Γ.snoc s) = (doCtxt Γ).snoc RegAlloc.Ty.unit := rfl
 
-@[simp]
-def doRegAllocCtx_cons : doRegAllocCtx (Γ.snoc s) = (doRegAllocCtx Γ).snoc RegAlloc.Ty.unit := rfl
-
-def doRegAllocExpr (f : RegisterMap (Γ.snoc s))
+def doExpr (f : Var2Reg (Γ.snoc s))
   (e : Expr Pure.dialect Γ EffectKind.pure .int) :
-  Option (Expr RegAlloc.dialect (doRegAllocCtx Γ) EffectKind.impure .unit × RegisterMap Γ) :=
+  Option (Expr RegAlloc.dialect (doCtxt Γ) EffectKind.impure .unit × Var2Reg Γ) :=
   match e with
   | Expr.mk (.const i) .. => do
       let (rout, f) ← f.lookupOrInsertResult
@@ -255,66 +330,54 @@ def doRegAllocExpr (f : RegisterMap (Γ.snoc s))
       let (r₁, f) ← f.lookupOrInsertArg arg
       some (Expr.mk (RegAlloc.Op.increment rout r₁) rfl (by simp) .nil .nil, f.deleteLast)
 
-
--- theorem eq_of_doRegAllocExpr_eq (f : RegisterMap Γ.snoc s)
+-- theorem eq_of_doRegAllocExpr_eq (f : Var2Reg Γ.snoc s)
 --   (e : Expr Pure.dialect Γ EffectKind.pure .int)
 
 /--
 TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
 This might have us actually need to compute liveness anyway to prove correctness.
 -/
-def doRegAllocLets (p : Pure.Program Γ Δ) (fΔ : RegisterMap Δ) :
-  Option (RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ) × RegisterMap Γ) :=
+def doLets (p : Pure.Program Γ Δ) (fΔ : Var2Reg Δ) :
+  Option (RegAlloc.Program (doCtxt Γ) (doCtxt Δ) × Var2Reg Γ) :=
   match  p with
   | .nil => some (.nil, fΔ)
   | .var ps e (Γ_out := Ξ) (t := t) => by
     -- stop
-    exact match doRegAllocExpr fΔ e with
+    exact match doExpr fΔ e with
     | none => none
     | some (er, fΞ) =>
-      match doRegAllocLets ps fΞ with
+      match doLets ps fΞ with
       | none => none
-      | some (psr, fΓ) => some (.var psr er, fΓ)
+      | some (bodyr, fΓ) => some (.var bodyr er, fΓ)
 termination_by structural p
 
-/-- Equation theorem for doRegAllocLets when argument is nil. -/
+/-- Equation theorem for doLets when argument is nil. -/
 @[simp]
-theorem RegisterMap.doRegAllocLets_nil (f : RegisterMap Γ) : doRegAllocLets .nil f = some (.nil, f) := rfl
+theorem Var2Reg.doLets_nil (f : Var2Reg Γ) : doLets .nil f = some (.nil, f) := rfl
 
 
-/-- Inversion equation theorem for doRegAllocLets when argument is cons. -/
+/-- Inversion equation theorem for doLets when argument is cons. -/
 @[simp]
-theorem RegisterMap.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
-    {fΔ : RegisterMap (Δ.snoc .int)}
-    {fΓ : RegisterMap Γ}
-    {rsout : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx (Δ.snoc .int))}
-    (h : doRegAllocLets (.var ps e) fΔ = some (rsout, fΓ)) :
-    ∃ psr er fΞ, rsout = .var psr er ∧
-       doRegAllocExpr fΔ e = some (er, fΞ) ∧
-       doRegAllocLets ps fΞ = some (psr, fΓ) := by
-  simp [doRegAllocLets] at h
+theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
+    {fΔ : Var2Reg (Δ.snoc .int)}
+    {fΓ : Var2Reg Γ}
+    {rsout : RegAlloc.Program (doCtxt Γ) (doCtxt (Δ.snoc .int))}
+    (h : doLets (.var ps e) fΔ = some (rsout, fΓ)) :
+    ∃ bodyr er fΞ, rsout = .var bodyr er ∧
+       doExpr fΔ e = some (er, fΞ) ∧
+       doLets ps fΞ = some (bodyr, fΓ) := by
+  simp [doLets] at h
   split at h
   case h_1 => simp at h
   case h_2 a er _ _ =>
     split at h
     case h_1 => simp at h
-    case h_2 _ psr _ ih =>
+    case h_2 _ bodyr _ ih =>
       simp_all only [Option.some.injEq, Prod.mk.injEq, exists_and_left]
       simp only [← h.1]
-      exists psr
+      exists bodyr
       exists er
       simp [ih]
-
-
-/--
-Build a register allocation valuation for a given context Γ. Really, this just marks every variable as returning (),
-since the semantics is purely side-effecting and nothing flows via the def-use chain.
--/
-def doRegAllocValuation (Γ : Ctxt Pure.Ty) : (doRegAllocCtx Γ).Valuation :=
-  fun t _v => match t with | .unit => ()
-
-
-#check Lets
 
 
 theorem Lets.nil_of_eq [DialectSignature d] {Γ Δ : Ctxt d.Ty} (p : Lets d Γ eff Δ) (hΔ : Δ = Γ) : p = hΔ ▸ .nil :=
@@ -325,15 +388,15 @@ theorem Lets.nil_of_eq [DialectSignature d] {Γ Δ : Ctxt d.Ty} (p : Lets d Γ e
     by_contra hcontra
     sorry
 
-/-- run a `StateT` program and discard the final result, leaving the stat behind. -/
-def StateT.exec {m : Type u → Type v} [Functor m] (cmd : StateT σ m α) (s : σ) : m σ :=
-  Prod.snd <$> cmd.run s
+#check sound_mapping
+
+/- Evaluating an expression will return an expression whose value equals the -/
+theorem doExpr_sound {Γs2reg : Var2Reg (Γ.snoc s)}
+  {e : Expr Pure.dialect Γ EffectKind.pure .int}
+  (h : doExpr Γs2reg e = some (er, Γ2reg)) -- we got an expression
+  : e.denote V = runExpr er R (RegAlloc.Expr.outRegister er) := rfl
 
 
-
-/-
-
--/
 
 /-
 Given a valuation of `V` for a pure program `p` and a register file `R`such that `V ~fΓ~ R`,
@@ -343,38 +406,79 @@ is in correspondence with the register file after executing the register allocat
 Note that this is not literally true, since a variable that has
 -/
 theorem doRegAllocLets_correct
-    -- (p : Pure.Program Γ Δ)
     (p : Lets Pure.dialect Γ .pure Δ)
-    (fΔ : RegisterMap Δ)
-    (q : RegAlloc.Program (doRegAllocCtx Γ) (doRegAllocCtx Δ))
-    (fΓ : RegisterMap Γ)
-    (hq : doRegAllocLets p fΔ = some (q, fΓ))
+    (Δ2reg : Var2Reg Δ)
+    (q : RegAlloc.Program (doCtxt Γ) (doCtxt Δ))
+    (Γ2reg : Var2Reg Γ)
+    (hq : doLets p Δ2reg = some (q, Γ2reg))
     (R : RegAlloc.RegisterFile)
     (V : Γ.Valuation)
     /- When we start out, all values we need are in registers. -/
-    (hRV : ValToReg V fΓ R)  :
+    (hRV : complete_mapping V Γ2reg R)  :
     /- At the end, All live out registers have the same value -/
-    RegToVal (p.denote V) fΔ ((show StateM _ _ from (q.denote (doRegAllocValuation Γ))).exec R) :=
-  match hmatch : p, h₁ : fΔ,  q with
+    sound_mapping (p.denote V) Δ2reg ((show StateM _ _ from (q.denote (doValuation (doCtxt Γ)))).exec R) :=
+  match hmatch : p, h₁ : Δ2reg,  q with
   | .nil, f, q => by
     rename_i h
     subst h
-    simp_all only [RegisterMap.doRegAllocLets_nil, Option.some.injEq, Prod.mk.injEq, heq_eq_eq,
+    simp_all only [Var2Reg.doLets_nil, Option.some.injEq, Prod.mk.injEq, heq_eq_eq,
       Lets.denote_nil, EffectKind.toMonad_pure, Id.pure_eq]
     subst hmatch
     -- have hq := Lets.nil_of_eq q rfl
     subst h₁
     simp_all only [hq.1.symm, true_and, Lets.denote_nil, EffectKind.toMonad_impure,
       EffectKind.return_impure_toMonad_eq, StateT.run_pure, Id.pure_eq]
-    apply RegToVal.ofValToReg hRV
+    simp [pure, StateT.pure]
+    apply sound_mapping.of_complete hRV
   | .var body e (Γ_out := Ξ) (t := t), f, q => by
     rename_i h
-    obtain ⟨psr, er, fΞ, hq, he, hbody⟩ := RegisterMap.eq_of_doRegAllocLets_var_eq_some hq
+    obtain ⟨bodyr, er, Ξ2reg, hq, he, hbody⟩ := Var2Reg.eq_of_doRegAllocLets_var_eq_some hq
     subst hq
     subst h
     subst h₁
     have ih := doRegAllocLets_correct (hq := hbody) R V hRV
     subst hmatch
-    simp [RegToVal]
+    -- he: doExpr Δ2reg e = (er, Ξ2reg)
+    -- hbody: doLets body Ξ2reg = (bodyr, Γ2reg))
+    -- ih : sound_mapping (body.denote V)  Ξ2reg
+    -- V ~Γ2reg~> R
+    simp [sound_mapping]
     intros r v hlive
+    simp [StateT.exec]
+    /-
+    case intro.intro.intro.intro.intro
+    Γ : Ctxt Pure.dialect.Ty
+    Γ2reg : Var2Reg Γ
+    R : RegAlloc.RegisterFile
+    V : Γ.Valuation
+    hRV : complete_mapping V Γ2reg R
+    Ξ : Ctxt Pure.dialect.Ty
+    t : Pure.dialect.Ty
+    body : Lets Pure.dialect Γ EffectKind.pure Ξ
+    e : Expr Pure.dialect Ξ EffectKind.pure t
+    bodyr : Lets RegAlloc.dialect (doCtxt Γ) EffectKind.impure (List.map (fun x => RegAlloc.Ty.unit) Ξ)
+    er : Expr RegAlloc.dialect (List.map (fun x => RegAlloc.Ty.unit) Ξ) EffectKind.impure
+      ((fun x => RegAlloc.Ty.unit) Pure.Ty.int)
+    Ξ2reg : Var2Reg Ξ
+    hbody : doLets body Ξ2reg = some (bodyr, Γ2reg)
+    Δ2reg : Var2Reg (Ξ.snoc t)
+    q : RegAlloc.Program (doCtxt Γ) (doCtxt (Ξ.snoc t))
+    he : doExpr Δ2reg e = some (er, Ξ2reg)
+    hq : doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
+    ih : sound_mapping (body.denote V) Ξ2reg
+      (StateT.exec
+        (let_fun this := bodyr.denote (doValuation Γ);
+        this)
+        R)
+    r : RegAlloc.Reg
+    v : (Ξ.snoc t).Var Pure.Ty.int
+    hlive : Δ2reg.toFun v = some r
+    ⊢ StateT.exec
+        (do
+          let V_out ← bodyr.denote (doValuation Γ)
+          let x ← er.denote V_out
+          pure (V_out::ᵥx))
+        R r =
+      (body.denote V::ᵥe.denote (body.denote V)) v
+    -/
     sorry
