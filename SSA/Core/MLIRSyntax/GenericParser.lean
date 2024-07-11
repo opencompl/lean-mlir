@@ -478,20 +478,43 @@ macro_rules
 macro_rules
   | `([mlir_ops| $$($q)]) => `(coe $q)
 
+/--
+Reference from the MLIR standard
+https://mlir.llvm.org/docs/LangRef/#identifiers-and-keywords
+// Identifiers
+bare-id ::= (letter|[_]) (letter|digit|[_$.])*
+bare-id-list ::= bare-id (`,` bare-id)*
+value-id ::= `%` suffix-id
+alias-name :: = bare-id
+suffix-id ::= (digit+ | ((letter|id-punct) (letter|id-punct|digit)*))
+
+symbol-ref-id ::= `@` (suffix-id | string-literal) (`::` symbol-ref-id)?
+value-id-list ::= value-id (`,` value-id)*
+
+// Uses of value, e.g. in an operand list to an operation.
+value-use ::= value-id (`#` decimal-literal)?
+value-use-list ::= value-use (`,` value-use)*
+-/
 
 
-syntax  "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
+syntax mlir_suffix_id := num <|> ident
+syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
+def getSuffixId : TSyntax ``mlir_suffix_id → String
+  | `(mlir_suffix_id| $x:ident) => x.getId.toString
+  | `(mlir_suffix_id| $x:num) => toString (x.getNat)
+  | _ => "" -- Should never happen, since `mlir_suffix_id` is a closed syntax definition
+
 macro_rules
-| `(mlir_region| { ^ $name:ident ( $operands,* ) : $ops }) => do
+| `(mlir_region| { ^ $name:mlir_suffix_id ( $operands,* ) : $ops }) => do
    let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
    let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
    let opsList <- `([mlir_ops| $ops])
-   `(Region.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
-| `(mlir_region| {  ^ $name:ident : $ops } ) => do
+   `(Region.mk $(Lean.quote (getSuffixId name)) $argsList $opsList)
+| `(mlir_region| {  ^ $name:mlir_suffix_id : $ops } ) => do
    let opsList <- `([mlir_ops| $ops])
-   `(Region.mk $(Lean.quote (name.getId.toString)) [] $opsList)
+   `(Region.mk $(Lean.quote (getSuffixId name)) [] $opsList)
 | `(mlir_region| { $ops:mlir_ops }) => do
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
