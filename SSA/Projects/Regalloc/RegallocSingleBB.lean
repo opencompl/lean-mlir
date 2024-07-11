@@ -5,7 +5,7 @@ import Lean.Data.HashMap
 namespace Pure
 
 inductive Op
-| add
+| increment
 | const (i : Int)
 
 inductive Ty
@@ -18,8 +18,8 @@ abbrev dialect : Dialect where
  Ty := Ty
 
 def Op.signature : Op → Signature Ty
-| .add => {
-    sig := [.int, .int],
+| .increment => {
+    sig := [.int],
     regSig := .nil,
     outTy := .int
   }
@@ -40,10 +40,9 @@ instance : TyDenote Ty where
 instance : DialectDenote dialect where
   denote := fun op args _ =>
   match op with
-  | .add =>
+  | .increment =>
     let l : Int := args.getN 0
-    let r : Int := args.getN 1
-    l + r
+    l + 1
   | .const i => i
 
  def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .pure Δ
@@ -62,7 +61,7 @@ def RegisterFile.get (R : RegisterFile) (r : Reg) : Int := R r
   fun r' => if r = r' then v else R r'
 
 inductive Op
-| add (l r out : Reg)
+| increment (l out : Reg)
 | const (i : Int) (out : Reg)
 
 inductive Ty
@@ -74,7 +73,7 @@ abbrev dialect : Dialect where
   m := StateM RegisterFile
 
 def Op.signature : Op → Signature Ty
-| .add _ _ _ => {
+| .increment _ _ => {
     sig := [],
     regSig := .nil,
     outTy := .unit,
@@ -103,10 +102,9 @@ def writeRegister (r : Reg) (v : Int) : StateM RegisterFile Unit := fun R => (()
 instance : DialectDenote dialect where
   denote := fun op _ _ =>
   match op with
-  | .add l r rout => show StateM _ _ from
-     readRegister l >>= fun vl =>
+  | .increment r rout => show StateM _ _ from
      readRegister r >>= fun vr =>
-     writeRegister rout (vl + vr)
+     writeRegister rout (vr + 1)
   | .const i rout => show StateM _ _ from
      writeRegister rout i
 
@@ -167,7 +165,7 @@ def doRegAllocExpr (f : RegisterMap (Γ.snoc s))
   | .const i =>
       let (r, f) := f.lookupAndDeleteLast
       (Expr.mk (RegAlloc.Op.const i r) rfl (by simp) .nil .nil, f)
-  | .add => sorry
+  | .increment => sorry
 
 /-- TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
 This might have us actually need to compute liveness anyway to prove correctness.
