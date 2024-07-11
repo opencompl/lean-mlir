@@ -60,10 +60,16 @@ instance : DialectDenote dialect where
     (Expr.mk (d := dialect) (Γ := Γ) (eff := .pure) (Op.const i) (ty := .int) ty_eq eff_le args regArgs).denote V = i := by
   simp [Expr.denote, DialectDenote.denote]
 
+
  @[simp]
- theorem Expr.denote_increment {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ} (v : Γ.Var .int) :
-    (Expr.mk (d := dialect) (Γ := Γ) (eff := EffectKind.pure) (Op.increment) rfl (by rfl) (.cons v .nil) .nil).denote V =
-    (show Int from (V v)) + 1 := by
+ theorem Expr.denote_increment {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ}
+    {ty_eq : Ty.int = DialectSignature.outTy (d := dialect) (Op.const i)}
+    {eff_le : DialectSignature.effectKind (d := dialect) (Op.const i) ≤ EffectKind.pure}
+    {args : HVector Γ.Var [.int] }
+    {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.const i)) } :
+    (Expr.mk (d := dialect) (Γ := Γ) (eff := .pure) (Op.increment) (ty := .int) ty_eq eff_le args regArgs).denote V =
+    (show Int from (V (args.getN 0))) + 1 := by
+  rcases args
   simp [Expr.denote, DialectDenote.denote, HVector.map, HVector.getN, HVector.get]
 
  end Pure
@@ -523,6 +529,7 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
         case none => simp [hvar0] at he
         case some val =>
           replace ⟨s, Δs2reg⟩ := val
+          rw [Pure.Expr.denote_increment]
           sorry -- HERE HERE HERE
 
 
