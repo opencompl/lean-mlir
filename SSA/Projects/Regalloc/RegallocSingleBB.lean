@@ -48,6 +48,22 @@ instance : DialectDenote dialect where
 
  abbrev Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .pure Δ
 
+
+ @[simp]
+ theorem Expr.denote_const {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ} {i : Int}
+    {ty_eq : Ty.int = DialectSignature.outTy (d := dialect) (Op.const i)}
+    {eff_le : DialectSignature.effectKind (d := dialect) (Op.const i) ≤ EffectKind.pure}
+    {args : HVector Γ.Var [] }
+    {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.const i)) } :
+    (Expr.mk (d := dialect) (Γ := Γ) (eff := .pure) (Op.const i) (ty := .int) ty_eq eff_le args regArgs).denote V = i := by
+  simp [Expr.denote, DialectDenote.denote]
+
+ @[simp]
+ theorem Expr.denote_increment {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ} (v : Γ.Var .int) :
+    (Expr.mk (d := dialect) (Γ := Γ) (eff := EffectKind.pure) (Op.increment) rfl (by rfl) (.cons v .nil) .nil).denote V =
+    (show Int from (V v)) + 1 := by
+  simp [Expr.denote, DialectDenote.denote, HVector.map, HVector.getN, HVector.get]
+
  end Pure
 
 
@@ -148,8 +164,6 @@ theorem RegAlloc.doValuation_eq (Γ : Ctxt RegAlloc.Ty) (V : Γ.Valuation) : V =
 def StateT.exec {m : Type u → Type v} [Functor m] (cmd : StateT σ m α) (s : σ) : m σ :=
   Prod.snd <$> cmd.run s
 
-
-
 /-- Evaluating at an arbitrary valuation is the same as evaluating at a 'doValuation'-/
 @[simp]
 def RegAlloc.Expr.denote_eq_denote_doValuation {Γ : Ctxt RegAlloc.Ty} {V: Γ.Valuation}
@@ -165,7 +179,6 @@ def RegAlloc.Program.exec {Γ Δ : Ctxt RegAlloc.Ty}
     (p : RegAlloc.Program Γ Δ)
     (R : RegAlloc.RegisterFile) : RegAlloc.RegisterFile :=
   (StateT.exec <| p.denote (doValuation Γ)) R
-
 
 /-- Get the register into which value is written to. -/
 def RegAlloc.Op.outRegister (op : RegAlloc.Op) : RegAlloc.Reg :=
@@ -194,8 +207,8 @@ theorem exec_writeRegister:
 @[simp]
 theorem RegAlloc.Expr.const_exec_eq (i : Int) (R : RegAlloc.RegisterFile) :
   RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.const i r) rfl (by simp) .nil .nil) R = R.set r i := by
-  simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote]
-  -- apply exec_writeRegister
+  simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
+    (exec_writeRegister)]
 
 -- Evaluating an empty program yields the same register file.
 @[simp]
