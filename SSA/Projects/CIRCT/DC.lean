@@ -2,6 +2,19 @@ import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.DC.Stream
 
+/-!
+-- rationale: we allow local nondeterminism
+-- assumption: a stream with None values is semaqntically the same as the same stream without None values
+
+We will define semantics as deterministic functions over Streams *with* Nones.
+However, semantically, we consider these as non-deterministically operating over the equivalence class of streams equal-up-to nones.
+This is particularly relevant when considering which rewrites should be allowed.
+
+
+
+
+-/
+
 open MLIR AST Ctxt
 
 /-!
