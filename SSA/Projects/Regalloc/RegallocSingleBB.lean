@@ -697,27 +697,15 @@ theorem Var2Reg.toFun_lookupOrInsert
   · case h_2 s _  =>
     simp [toFun_allocateDeadRegister h]
 
-theorem Var2Reg.registerLiveFor_of_lookupOrInsert
+theorem Var2Reg.toFun_lookupOrInsertResult
     {Γ : Ctxt Pure.Ty}
     {Γ2R : Var2Reg (Γ.snoc t)}
-    {r : RegAlloc.Reg}
     {Δ2R : Var2Reg (Γ.snoc t)}
     (h : Γ2R.lookupOrInsertResult = some (r, Δ2R)) :
-    Δ2R.registerLiveFor r (Ctxt.Var.last Γ t) := by
-  simp [Var2Reg.lookupOrInsertResult] at h
-  apply Var2Reg.registerLiveFor_of_toFun_eq
-  simp [toFun_lookupOrInsert h]
-
-theorem Var2Reg.registerLiveFor_of_lookupOrInsertResult
-  {Γ : Ctxt Pure.Ty}
-  {Γ2R : Var2Reg (Γ.snoc t)}
-  {r : RegAlloc.Reg}
-  {Δ2R : Var2Reg (Γ.snoc t)}
-  (h : Γ2R.lookupOrInsertResult = some (r, Δ2R)) :
-  Δ2R.registerLiveFor r (Ctxt.Var.last Γ t) := by
-  simp [Var2Reg.lookupOrInsertResult] at h
-  apply Var2Reg.registerLiveFor_of_toFun_eq
-  simp [toFun_lookupOrInsert h]
+    Δ2R.toFun = fun w => if w = Ctxt.Var.last Γ t then .some r else Γ2R.toFun w := by
+  rw [Var2Reg.lookupOrInsertResult] at h
+  apply Var2Reg.toFun_lookupOrInsert
+  exact h
 
 /-
 Evaluating an expression will return an expression whose values equals
@@ -730,7 +718,7 @@ theorem doExpr_sound
     (he : doExpr Δ2Reg e = some (er, Ξ2reg))
     : e.denote V = (RegAlloc.Expr.exec er R) (RegAlloc.Expr.outRegister er) :=
   match e with
-  | Expr.mk op rfl eff_le args regArgs =>
+  | Expr.mk op rfl _ args _ =>
     match op with
     | .const i => by
       simp [doExpr] at he
@@ -773,12 +761,17 @@ theorem doExpr_sound
           simp
           apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
 
-theorem toFun_doExpr
+/-- Note: this is untrue, because we potentially change the registers
+based on the *arguments* as well.
+This is an incorrect conjecture.
+-/
+theorem toFun_doExpr -- incorrect conjecture.
     {e : Expr Pure.dialect Ξ EffectKind.pure .int}
+    {Δ2Reg : Var2Reg (Ξ.snoc t)}
     {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
-    (he : doExpr Δ2Reg e = some (er, Ξ2reg))
-    (v : Ξ.Var .int) :
-    Ξ2reg.toFun v = sorry := -- HERE HERE HERE
+    (he : doExpr Δ2Reg e = some (er, Ξ2reg)) :
+    Ξ2reg.toFun = (fun (v : Ξ.Var Pure.Ty.int) =>
+    if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun v) :=
   match e with
   | Expr.mk op rfl eff_le args regArgs =>
     match op with
@@ -787,13 +780,14 @@ theorem toFun_doExpr
       cases hlast : Δ2Reg.lookupOrInsertResult
       case none => simp [hlast] at he
       case some val =>
-        replace ⟨r, Γs2reg⟩ := val
         simp [hlast] at he
-        simp only  [EffectKind.toMonad_pure, Pure.Expr.denote_const, he.1.symm]
+        replace ⟨r, Γs2reg⟩ := val
         rw [← he.2]
-        simp
-        -- TODO: is it true that toSnoc can never be equal to last? I think so.
-        sorry
+        simp only [Var2Reg.toFun_deleteLast]
+        rw [Var2Reg.toFun_lookupOrInsertResult hlast]
+        funext v
+        simp only
+        rfl
     | .increment => by
       simp [doExpr] at he
       cases hlast : Δ2Reg.lookupOrInsertResult
@@ -807,34 +801,25 @@ theorem toFun_doExpr
         case some val =>
           simp [hvar0] at he
           replace ⟨s, Δs2reg⟩ := val
-          rw [Pure.Expr.denote_increment]
-          obtain ⟨her, hΞ2reg⟩ := he
-          rw [← her] at *
-          -- TODO: why does this not fire?
-          simp only [(RegAlloc.Expr.exec_increment_eq)]
-          rw [RegAlloc.Expr.outRegister_increment_eq]
+          simp at he
+          simp [← he.2]
+          funext v
+          rw [Var2Reg.toFun_lookupOrInsertArg hvar0]
+          rw [Var2Reg.toFun_lookupOrInsertResult hlast]
           simp
-          simp at hΞ2reg
-          congr
-          symm
-          -- apply eq_of_sound_mapping (f := Ξ2reg)
-          apply eq_of_sound_mapping
-          apply hsound
-          subst hΞ2reg
-          simp
-          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
+          sorry
 
 /-
 If the mapping is sound, and the mapping has arisen from a call of doExpr,
 Then the out register of `er` is the register than is live for the last variable in the context.
 -/
 theorem doExpr_outRegister {Ξ : Ctxt Pure.Ty}
-{r : RegAlloc.Reg}
-{v : (Ξ.snoc t).Var Pure.Ty.int}
-{Δ2reg : Var2Reg (Ξ.snoc Pure.Ty.int)}
-(hlive : Δ2reg.registerLiveFor r v)
-  : r = RegAlloc.Expr.outRegister er := by sorry
-
+    {r : RegAlloc.Reg}
+    {v : (Ξ.snoc t).Var Pure.Ty.int}
+    {Δ2reg : Var2Reg (Ξ.snoc Pure.Ty.int)}
+    (hlive : Δ2reg.registerLiveFor r v)
+    : r = RegAlloc.Expr.outRegister er := by
+  sorry
 
 /-
 Given a valuation of `V` for a pure program `p` and a register file `R`such that `V ~fΓ~ R`,
