@@ -366,3 +366,16 @@ theorem removeNone_eq_of_equiv {x y : Stream} (h_sim : x ~ y) :
     simp only [↓reduceDite, eq_stuck_iff_equiv, and_self]
   · have : b ≠ stuck := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
     simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
+
+def StreamWithoutNones : Type :=
+  Quot Bisim
+
+#print axioms StreamWithoutNones
+
+def StreamWithoutNones.hasStream (x : StreamWithoutNones) : Set Stream :=
+  { y | sorry }
+
+def nondeterminify (f : Stream → Stream) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
+  Quot.lift (fun (a : Stream) =>
+    ({ b | _ } : Set StreamWithoutNones)
+  ) (by sorry) x
