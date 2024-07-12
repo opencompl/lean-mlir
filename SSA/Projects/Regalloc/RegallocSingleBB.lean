@@ -63,10 +63,10 @@ instance : DialectDenote dialect where
 
  @[simp]
  theorem Expr.denote_increment {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ}
-    {ty_eq : Ty.int = DialectSignature.outTy (d := dialect) (Op.const i)}
-    {eff_le : DialectSignature.effectKind (d := dialect) (Op.const i) ≤ EffectKind.pure}
+    {ty_eq : Ty.int = DialectSignature.outTy (d := dialect) (Op.increment)}
+    {eff_le : DialectSignature.effectKind (d := dialect) (Op.increment) ≤ EffectKind.pure}
     {args : HVector Γ.Var [.int] }
-    {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.const i)) } :
+    {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.increment)) } :
     (Expr.mk (d := dialect) (Γ := Γ) (eff := .pure) (Op.increment) (ty := .int) ty_eq eff_le args regArgs).denote V =
     (show Int from (V (args.getN 0))) + 1 := by
   rcases args
@@ -81,8 +81,10 @@ instance : DialectDenote dialect where
  deriving DecidableEq, Repr, Inhabited, BEq
 
 abbrev RegisterFile : Type := Reg → Int
+@[simp]
 def RegisterFile.get (R : RegisterFile) (r : Reg) : Int := R r
- def RegisterFile.set (R : RegisterFile) (r : Reg) (v : Int) : RegisterFile :=
+
+def RegisterFile.set (R : RegisterFile) (r : Reg) (v : Int) : RegisterFile :=
   fun r' => if r = r' then v else R r'
 
 theorem RegisterFile.get_set_of_eq (R : RegisterFile) (r s : Reg) (v : Int) (hs : r = s) :
@@ -303,11 +305,9 @@ theorem RegAlloc.Expr.exec_const_eq {i : Int} {R : RegAlloc.RegisterFile} :
 theorem RegAlloc.Expr.exec_increment_eq {R : RegAlloc.RegisterFile} :
   RegAlloc.Expr.exec (Expr.mk (Γ := Γ)
     (RegAlloc.Op.increment in₁ out) rfl (by simp) .nil .nil) R =
-    R.set out (R.get in₁ + 1) := by
+    R.set out (R in₁ + 1) := by
   simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
     (exec_writeRegister)]
-  rfl
-
 
 -- Evaluating an empty program yields the same register file.
 @[simp]
@@ -334,13 +334,64 @@ structure Var2Reg (Γ : Ctxt Pure.Ty) where
   dead : List RegAlloc.Reg -- list of dead registers
 
 /-- A register is free if no variable maps to it. -/
-def Var2Reg.registerDead (f : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
-  ∀ (v : Γ.Var Pure.Ty.int), r ∉ f.toFun v
+def Var2Reg.registerDead (V2R : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
+  ∀ (v : Γ.Var Pure.Ty.int), r ∉ V2R.toFun v
+
+/-- A register 'r' is live for a variable 'v' if 'v' maps to 'r'. -/
+def Var2Reg.registerLiveFor (V2R : Var2Reg Γ) (r : RegAlloc.Reg) (v : Γ.Var .int) : Prop :=
+  V2R.toFun v = some r
+
+/--
+Prove that a register is live for a value from the fact that the 'f' maps 'v' to 'r'.
+This is a low-level theorem.
+-/
+private theorem Var2Reg.registerLiveFor_of_toFun_eq {f : Var2Reg Γ}
+    {r : RegAlloc.Reg}
+    {v : Γ.Var .int}
+    (heq : f.toFun v = some r) :
+    f.registerLiveFor r v := by
+  simp [Var2Reg.registerLiveFor, heq]
+
+/-- RegisterLiveFor is injective -/
+theorem eq_of_registerLiveFor_of_registerLiveFor {V2R : Var2Reg Γ} {r s : RegAlloc.Reg}
+    {v : Γ.Var .int}
+    (h₁ : V2R.registerLiveFor r v)
+    (h₂ : V2R.registerLiveFor s v) : r = s := by
+  simp [Var2Reg.registerLiveFor] at h₁ h₂
+  rw [h₁] at h₂
+  simpa using h₂
+
+/-
+theorem elim_of_registerLiveFor_of_registerLiveFor_of_neq
+  {V2R : Var2Reg Γ}
+  (h₁ : V2R.registerLiveFor r v)
+  (h₂ : V2R.registerLiveFor r w)
+  (hneq : v ≠ w) : (α : Prop) := by
+  exfalso
+  simp [Var2Reg.registerLiveFor] at h₁ h₂
+  -- TODO: I need injective in the definition of Var2Reg.
+  sorry
+-/
+
+/-- RegisterLiveFor is injective -/
+theorem registerLiveFor_inj {f : Var2Reg Γ} {r s : RegAlloc.Reg}
+    {v : Γ.Var .int}
+    (h₁ : f.registerLiveFor r v)
+    (h₂ : f.registerLiveFor s v) : r = s :=
+  eq_of_registerLiveFor_of_registerLiveFor h₁ h₂
 
 
 /-- A register is live if some variable maps to the register. -/
 def Var2Reg.registerLive (f : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
-  ¬ f.registerDead r
+  ∃ (v : Γ.Var .int), f.registerLiveFor r v
+
+theorem dead_iff_not_live {f : Var2Reg Γ} {r : RegAlloc.Reg} :
+  f.registerDead r ↔ ¬ f.registerLive r := by
+  simp [Var2Reg.registerDead, Var2Reg.registerLive, Var2Reg.registerLiveFor]
+
+theorem live_iff_not_dead {f : Var2Reg Γ} {r : RegAlloc.Reg} :
+  f.registerLive r ↔ ¬ f.registerDead r := by
+  simp [Var2Reg.registerDead, Var2Reg.registerLive, Var2Reg.registerLiveFor]
 
 structure LawfulVar2Reg (Γ : Ctxt Pure.Ty) extends Var2Reg Γ where
   /-- every register in the set of dead registers is in fact dead. -/
@@ -352,8 +403,8 @@ structure LawfulVar2Reg (Γ : Ctxt Pure.Ty) extends Var2Reg Γ where
  A correspondence between variables 'v ∈ Γ' and registers in the register file.
  This correspondence is witnessed by 'f'.
  -/
- def complete_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (f : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
-  ∀ (v : Γ.Var Pure.Ty.int), ∃ r ∈ f.toFun v, R r = V v
+ def complete_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (V2R : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
+  ∀ (v : Γ.Var Pure.Ty.int), ∃ r, V2R.registerLiveFor r v ∧ R r = V v
 
 /-- All register files correspond to the start of the program. -/
 theorem correspondVar2Reg_nil (R : RegAlloc.RegisterFile) :
@@ -365,12 +416,13 @@ theorem correspondVar2Reg_nil (R : RegAlloc.RegisterFile) :
 All live registers correspond to correct values.
 This says that the register file is correct at the start of the program.
 -/
-def sound_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (v2reg : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
-  ∀ (r : RegAlloc.Reg) (v : Γ.Var Pure.Ty.int) (hlive : v2reg.toFun v = .some r), R r = V v
+def sound_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (V2R : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
+  ∀ (r : RegAlloc.Reg) (v : Γ.Var Pure.Ty.int)
+    (_hlive : V2R.registerLiveFor r v), R r = V v
 
-theorem eq_of_sound_mapping {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Var2Reg Γ} {R : RegAlloc.RegisterFile}
-  (hsound : sound_mapping V f R) {r : RegAlloc.Reg} {v : Γ.Var int}
-  (hlive : f.toFun v = .some r) : R r = V v := by
+theorem eq_of_sound_mapping {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {V2R : Var2Reg Γ} {R : RegAlloc.RegisterFile}
+  (hsound : sound_mapping V V2R R) {r : RegAlloc.Reg} {v : Γ.Var int}
+  (hlive : V2R.registerLiveFor r v) : R r = V v := by
   exact hsound r v hlive
 
 /-- Every complete mapping (which maps every live variable) is also sound (it correctly maps each register soundly.)-/
@@ -378,10 +430,9 @@ theorem sound_mapping.of_complete {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Va
   (hcomplete : complete_mapping V f R) : sound_mapping V f R := by
     intros r v hlive
     obtain ⟨r', hr', hR⟩ := hcomplete v
-    rw [hlive] at hr'
-    injection hr'
-    subst r'
-    exact hR
+    have : r = r' := registerLiveFor_inj hlive hr'
+    subst this
+    assumption
 
 /--
 NOTE: Reg2Val does not imply Val2Reg!
@@ -396,7 +447,7 @@ if allocation succeeds.
 def Var2Reg.allocateDeadRegister {Γ : Ctxt Pure.Ty}
   (f : Var2Reg Γ)
   (v : Γ.Var .int): Option (RegAlloc.Reg × Var2Reg Γ) :=
-  match hf : f.dead with
+  match f.dead with
   | [] => none
   | r :: rs =>
     .some ⟨r, {
@@ -417,16 +468,17 @@ theorem eq_of_allocateDeadRegisterResult_eq_of_sound_mapping
   simp [Var2Reg.allocateDeadRegister] at halloc
   split at halloc
   · case h_1 => simp at halloc
-  · case h_2 r rs hdead =>
+  · case h_2 r rs _hdead =>
       simp only [Option.some.injEq, Prod.mk.injEq] at halloc
       obtain ⟨hr, hΓ2R'⟩ := halloc
       subst hr
       subst hΓ2R'
+      apply Var2Reg.registerLiveFor_of_toFun_eq
       simp
 
 def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int) :
   Option (RegAlloc.Reg × Var2Reg Γ) :=
-  match hv : f.toFun v with
+  match f.toFun v with
   | .some r => (r, f)
   | .none => f.allocateDeadRegister v
 
@@ -438,7 +490,7 @@ where we are allocating registers for the arguments of a `let` binding.
 -/
 def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
     (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
-  match hv : f.toFun v with
+  match f.toFun v with
   | .some r => (r, f)
   | .none => f.allocateDeadRegister v
 
@@ -455,8 +507,25 @@ theorem Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping {Γ : Ctxt Pure.Ty}
     subst req
     subst Γ2Req
     apply eq_of_sound_mapping hΓ2R' hv
-  · case h_2 hv =>
+  · case h_2 _hv =>
     apply eq_of_allocateDeadRegisterResult_eq_of_sound_mapping hΓ2R' hlookup
+
+-- theorem Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping_2 {Γ : Ctxt Pure.Ty}
+--     {Γ2R : Var2Reg (Γ.snoc t)} {Γ2R': Var2Reg (Γ.snoc t)} {V : Γ.Valuation} {R : RegAlloc.RegisterFile}
+--     (hΓ2R' : sound_mapping V Γ2R' R) {r : RegAlloc.Reg} {v : Γ.Var int}
+--     (hlookup : Γ2R.lookupOrInsertArg v = some (r, Γ2R'))
+--     : R r = V v.toSnoc := by
+--   unfold lookupOrInsertArg at hlookup
+--   split at hlookup
+--   · case h_1 r hv =>
+--     simp [hv] at hlookup
+--     obtain ⟨req, Γ2Req⟩ := hlookup
+--     subst req
+--     subst Γ2Req
+--     apply eq_of_sound_mapping hΓ2R' hv
+--   · case h_2 hv =>
+--     apply eq_of_allocateDeadRegisterResult_eq_of_sound_mapping hΓ2R' hlookup
+
 
 def Var2Reg.lookupOrInsertResult {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
   f.lookupOrInsert (Ctxt.Var.last Γ t)
@@ -551,6 +620,18 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
     hlive : Δ2reg.toFun v = some r
     ⊢ RegAlloc.Expr.exec er (RegAlloc.Program.exec bodyr R) r = (body.denote V::ᵥe.denote (body.denote V)) v
 
+
+theorem sound_mapping_of_eq_deleteLast_of_sound_mapping {Ξ : Ctxt Pure.Ty}
+    {s : Pure.Ty}
+    {VΞ : Ξ.Valuation}
+    {VΞs : (Ξ.snoc s).Valuation}
+    {Ξ2reg : Var2Reg Ξ}
+    (hsound : sound_mapping VΞ Ξ2reg R)
+    {Δs2reg : Var2Reg (Ξ.snoc s)}
+    (heq : Δs2reg.deleteLast = Ξ2reg)
+    : sound_mapping VΞs Δs2reg R := by
+  sorry
+
 -/
 
 /-
@@ -599,8 +680,45 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
           rw [RegAlloc.Expr.outRegister_increment_eq]
           simp
           simp at hΞ2reg
-          have := Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping hsound hvar0
-          rw [← her]
+          congr
+          symm
+          -- apply eq_of_sound_mapping (f := Ξ2reg)
+          apply eq_of_sound_mapping
+          apply hsound
+          sorry
+          -- I need soundness for Δs2reg, I have soundness for Ξ2reg.
+          -- have := Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping hsound hvar0
+          /-
+          case intro
+          Ξ : Ctxt Pure.dialect.Ty
+          s✝ : Pure.dialect.Ty
+          V : Ξ.Valuation
+          Ξ2reg : Var2Reg Ξ
+          R : RegAlloc.RegisterFile
+          a✝ : Pure.dialect.Ty
+          Δ2Reg : Var2Reg (Ξ.snoc a✝)
+          Ξs2reg : Var2Reg (Ξ.snoc s✝)
+          e : Expr Pure.dialect Ξ EffectKind.pure Pure.Ty.int
+          er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure RegAlloc.Ty.unit
+          Δ2reg : Var2Reg (Ξ.snoc s✝)
+          hsound : sound_mapping V Ξ2reg R
+          op : Pure.dialect.Op
+          eff_le : DialectSignature.effectKind Pure.Op.increment ≤ EffectKind.pure
+          args : HVector Ξ.Var (DialectSignature.sig Pure.Op.increment)
+          regArgs : HVector (fun t => Com Pure.dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig Pure.Op.increment)
+          val✝ : RegAlloc.Reg × Var2Reg (Ξ.snoc a✝)
+          r : RegAlloc.Reg
+          Γs2reg : Var2Reg (Ξ.snoc a✝)
+          hlast : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg)
+          val : RegAlloc.Reg × Var2Reg (Ξ.snoc a✝)
+          s : RegAlloc.Reg
+          Δs2reg : Var2Reg (Ξ.snoc a✝)
+          hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3) = some (s, Δs2reg)
+          her : Expr.mk (RegAlloc.Op.increment (s, Δs2reg).1 r) doExpr.proof_1 ⋯ HVector.nil HVector.nil =
+            Expr.mk (RegAlloc.Op.increment (s, Δs2reg).1 r) doExpr.proof_1 ⋯ HVector.nil HVector.nil
+          hΞ2reg : Δs2reg.deleteLast = Ξ2reg
+          ⊢ V (args.getN 0 ⋯) + 1 = R.get s + 1
+          -/
           -- We gotta weaken the soundness, methinks.
           -- Now we need a theorem to exploit
           -- hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3) = some (s, Δs2reg)
