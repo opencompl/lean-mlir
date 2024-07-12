@@ -379,16 +379,3 @@ variable (i : Nat)
 end Lemmas
 
 end OfInt
-
-#eval (1 + 1 : BitStream) 0
-#eval (1 + 1 : BitStream) 1
-#eval (1 + 1 : BitStream) 2
-
-#eval (carry 1 1) 0
-#eval (carry 1 1) 1
-#eval (carry 1 1) 2
-
-#eval (addAux 1 1) 0
-#eval (addAux 1 1) 1
-#eval (addAux 1 1) 2
-#eval (addAux 1 1) 3

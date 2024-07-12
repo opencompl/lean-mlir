@@ -8,8 +8,6 @@ import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Defs
 import SSA.Experimental.Bits.Fast.Circuit
 
-#check BitVec.add
-
 open Sum
 
 variable {α β α' β' : Type} {γ : β → Type}
