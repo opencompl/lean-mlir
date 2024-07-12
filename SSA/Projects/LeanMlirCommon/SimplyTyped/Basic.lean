@@ -71,8 +71,9 @@ def Lets.ofUnTyped (lets : UnTyped.Lets Op VarName) {Γ_in}
 theorem Lets.Γ_out_eq (l : Lets Op Γ_in Γ_out) : Γ_out = (Lets.outContext l.val Γ_in) := by
   rcases l with ⟨⟨l⟩, h⟩
   induction l generalizing Γ_in
-  stop
-  case nil => exact h
+  case nil =>
+    simp [WellTyped] at h
+    apply h
   case cons e lets ih =>
     simp [WellTyped] at h
     apply ih h.right
@@ -146,7 +147,7 @@ def Body.lete (e : Expr Op Γ eTy) : Body Op (Γ.push e.varName eTy) ty → Body
 ## Eliminators / Induction Principles
 -/
 
-@[elab_as_elim] --, eliminator]
+@[elab_as_elim, induction_eliminator]
 def Expr.recOn {motive : Expr Op Γ ty → Sort u}
     (mk : ∀ varName op ty_eq args regions, motive (Expr.mk varName op ty_eq args regions)) :
     ∀ e, motive e
@@ -159,13 +160,14 @@ def Expr.recOn {motive : Expr Op Γ ty → Sort u}
       --    ^^^^^^ the cast seems redundant, but Lean gives a type-error without it
       --           Similarly, term-mode `rfl` doesn't work, the `by` is needed
 
-@[elab_as_elim] -- , eliminator]
+@[elab_as_elim, induction_eliminator]
 def Lets.recOn {Γ_out} {motive : ∀ {Γ_in}, Lets Op Γ_in Γ_out → Sort u}
     (nil : motive Lets.nil)
     (lete : ∀ {Γ_in ty} (e : Expr Op Γ_in ty) (lets : Lets Op _ Γ_out), motive (Lets.lete e lets)) :
     ∀ {Γ_in} (lets : Lets Op Γ_in Γ_out), motive lets
-  --| Γ_in, ⟨⟨[]⟩, (h : Γ_out = Γ_in)⟩ => h ▸ nil
-  | Γ_in, ⟨⟨[]⟩, _ ⟩ => sorry
+  | Γ_in, ⟨⟨[]⟩, (h /- : Γ_out = Γ_in -/ )⟩ => by
+      simp [WellTyped] at h
+      exact h ▸ nil
   | Γ_in, ⟨⟨e :: lets⟩, h⟩ =>
       have h := by unfold WellTyped at h; simpa only using h
       let e : Expr _ _ (signature e.op).returnType := ⟨e, by exact h.left⟩
