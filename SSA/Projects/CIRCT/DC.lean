@@ -134,8 +134,8 @@ inductive Ty2
 deriving Inhabited, DecidableEq, Repr
 
 inductive Op
-| merge (t₁ : Ty2) (t₂ : Ty2)
-| branch (t₁ : Ty2)
+| merge (t : Ty2)
+| branch (t : Ty2)
 | fst (t : Ty2)
 | snd (t : Ty2)
 deriving Inhabited, DecidableEq, Repr
@@ -166,18 +166,19 @@ abbrev DC : Dialect where
 
 open TyDenote (toType)
 
-
+-- arg type CONF
 @[simp, reducible]
 def Op.sig : Op  → List Ty
 | .branch t₁ => [Ty.stream t₁, Ty.stream Ty2.bool]
-| .merge t₁ t₂ => [Ty.stream t₁, Ty.stream t₂]
+| .merge t₁ => [Ty.stream t₁, Ty.stream t₁]
 | .fst t | .snd t => [Ty.stream2 t]
 
+-- return type CONF
 @[simp, reducible]
 def Op.outTy : Op → Ty
-  | .branch (t₁ t₂) => Ty.stream2 ((t₁ t₂) Ty2.bool)
-  | .merge t₁ t₂  => Ty.stream t₁
-  | .fst t | .snd t => Ty.stream
+  | .branch t₁ => Ty.stream2 t₁
+  | .merge t₁ => Ty.stream t₁
+  | .fst t | .snd t => Ty.stream t
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
@@ -188,10 +189,10 @@ instance : DialectSignature DC := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (DC) where
     denote
-    | .branch, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
-    | .merge, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
-    | .fst, arg, _ => (arg.getN 0).fst
-    | .snd, arg, _ => (arg.getN 0).snd
+    | .branch _, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
+    | .merge _, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
+    | .fst _, arg, _ => (arg.getN 0).fst
+    | .snd _, arg, _ => (arg.getN 0).snd
 
 end Dialect
 
