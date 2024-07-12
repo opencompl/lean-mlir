@@ -229,9 +229,9 @@ instance (Γ : Ctxt RegAlloc.Ty) : Subsingleton (Ctxt.Valuation Γ) where
 theorem RegAlloc.doValuation_eq (Γ : Ctxt RegAlloc.Ty) (V : Γ.Valuation) : V = doValuation Γ := by
   apply Subsingleton.elim
 
-/-- run a `StateT` program and discard the final result, leaving the stat behind. -/
-def StateT.exec {m : Type u → Type v} [Functor m] (cmd : StateT σ m α) (s : σ) : m σ :=
-  Prod.snd <$> cmd.run s
+/-- run a `StateM` program and discard the final result, leaving the stat behind. -/
+def StateM.exec (cmd : StateM σ α) (s : σ) : σ :=
+  (cmd.run s).2
 
 /-- Evaluating at an arbitrary valuation is the same as evaluating at a 'doValuation'-/
 @[simp]
@@ -242,12 +242,12 @@ def RegAlloc.Expr.denote_eq_denote_doValuation {Γ : Ctxt RegAlloc.Ty} {V: Γ.Va
 def RegAlloc.Expr.exec {Γ : Ctxt RegAlloc.Ty}
   (e : Expr RegAlloc.dialect Γ EffectKind.impure .unit)
   (R : RegAlloc.RegisterFile) : RegAlloc.RegisterFile :=
-  (StateT.exec <| e.denote (doValuation Γ)) R
+  (StateM.exec <| e.denote (doValuation Γ)) R
 
 def RegAlloc.Program.exec {Γ Δ : Ctxt RegAlloc.Ty}
     (p : RegAlloc.Program Γ Δ)
     (R : RegAlloc.RegisterFile) : RegAlloc.RegisterFile :=
-  (StateT.exec <| p.denote (doValuation Γ)) R
+  (StateM.exec <| p.denote (doValuation Γ)) R
 
 /-- Get the register into which value is written to. -/
 def RegAlloc.Op.outRegister (op : RegAlloc.Op) : RegAlloc.Reg :=
@@ -270,28 +270,28 @@ theorem RegAlloc.Expr.outRegister_increment_eq (r₁ r₂ : RegAlloc.Reg) :
 
 /-- A continuation based proof of what read register does to the state. -/
 @[simp]
-theorem exec_readRegisterK {k : Int → StateT RegAlloc.RegisterFile Id α}:
-  (StateT.exec ((RegAlloc.readRegister r) >>= k)) R = (StateT.exec (k (R r))) R := by
-  simp [RegAlloc.readRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+theorem exec_readRegisterK {k : Int → StateM RegAlloc.RegisterFile α}:
+  (StateM.exec ((RegAlloc.readRegister r) >>= k)) R = (StateM.exec (k (R r))) R := by
+  simp [RegAlloc.readRegister, StateT.run, StateM.exec, (· >>= ·), StateT.bind]
 
 /-- Executing a read register does nothing to the state. -/
 @[simp]
 theorem exec_readRegister :
-  (StateT.exec ((RegAlloc.readRegister r))) R = R := by
-  simp [RegAlloc.readRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+  (StateM.exec ((RegAlloc.readRegister r))) R = R := by
+  simp [RegAlloc.readRegister, StateT.run, StateM.exec, (· >>= ·), StateT.bind]
 
 /-- A continuation based version of what writing a register does to the state. -/
 @[simp]
-theorem exec_writeRegisterK {k : Unit → StateT RegAlloc.RegisterFile Id α} :
-  (StateT.exec (RegAlloc.writeRegister r v >>= k) R) =
-  StateT.exec (k ()) (R.set r v) := by
-  simp [RegAlloc.writeRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+theorem exec_writeRegisterK {k : Unit → StateM RegAlloc.RegisterFile α} :
+  (StateM.exec (RegAlloc.writeRegister r v >>= k) R) =
+  StateM.exec (k ()) (R.set r v) := by
+  simp [RegAlloc.writeRegister, StateT.run, StateM.exec, (· >>= ·), StateT.bind]
 
 /-- Executing a write register writes the value to the register file. -/
 @[simp]
 theorem exec_writeRegister :
-  (StateT.exec (RegAlloc.writeRegister r v) R) = R.set r v := by
-  simp [RegAlloc.writeRegister, StateT.run, StateT.exec]
+  (StateM.exec (RegAlloc.writeRegister r v) R) = R.set r v := by
+  simp [RegAlloc.writeRegister, StateT.run, StateM.exec, (· >>= ·), StateT.bind]
 
 @[simp]
 theorem RegAlloc.Expr.exec_const_eq {i : Int} {R : RegAlloc.RegisterFile} :
@@ -301,7 +301,8 @@ theorem RegAlloc.Expr.exec_const_eq {i : Int} {R : RegAlloc.RegisterFile} :
 
 @[simp]
 theorem RegAlloc.Expr.exec_increment_eq {R : RegAlloc.RegisterFile} :
-  RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.increment in₁ out) rfl (by simp) .nil .nil) R =
+  RegAlloc.Expr.exec (Expr.mk (Γ := Γ)
+    (RegAlloc.Op.increment in₁ out) rfl (by simp) .nil .nil) R =
     R.set out (R.get in₁ + 1) := by
   simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
     (exec_writeRegister)]
@@ -312,13 +313,13 @@ theorem RegAlloc.Expr.exec_increment_eq {R : RegAlloc.RegisterFile} :
 @[simp]
 def RegAlloc.Program.exec_nil_eq :
     RegAlloc.Program.exec (Γ := Γ) (Δ := Γ) Lets.nil R = R := by
-  simp [RegAlloc.Program.exec, StateT.exec]
+  simp [RegAlloc.Program.exec, StateM.exec]
 
 -- Evaluating a register yields a new register file whose value has been modified at R.
 @[simp]
 def RegAlloc.Program.exec_cons_eq (body : Program Γ Δ) (er : Expr RegAlloc.dialect Δ EffectKind.impure .unit) :
     RegAlloc.Program.exec (Lets.var body er) R = RegAlloc.Expr.exec er (RegAlloc.Program.exec body R) := by
-  simp [RegAlloc.Program.exec, StateT.exec, RegAlloc.Expr.exec]
+  simp [RegAlloc.Program.exec, StateM.exec, RegAlloc.Expr.exec]
 
 -- Evaluating a register yields a new register file whose value has been modified at R.
 @[simp]
@@ -367,6 +368,11 @@ This says that the register file is correct at the start of the program.
 def sound_mapping {Γ : Ctxt Pure.Ty} (V : Γ.Valuation) (v2reg : Var2Reg Γ) (R : RegAlloc.RegisterFile) : Prop :=
   ∀ (r : RegAlloc.Reg) (v : Γ.Var Pure.Ty.int) (hlive : v2reg.toFun v = .some r), R r = V v
 
+theorem eq_of_sound_mapping {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Var2Reg Γ} {R : RegAlloc.RegisterFile}
+  (hsound : sound_mapping V f R) {r : RegAlloc.Reg} {v : Γ.Var int}
+  (hlive : f.toFun v = .some r) : R r = V v := by
+  exact hsound r v hlive
+
 /-- Every complete mapping (which maps every live variable) is also sound (it correctly maps each register soundly.)-/
 theorem sound_mapping.of_complete {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Var2Reg Γ} {R : RegAlloc.RegisterFile}
   (hcomplete : complete_mapping V f R) : sound_mapping V f R := by
@@ -383,57 +389,78 @@ For example, consider the  mapping that maps every variable to a dead register.
 This satisfies Reg2Val (since trivially, every 'live' register (ie, none of them) maps right), but not Val2Reg.
 -/
 
-structure AllocateDeadRegisterResult (fold : Var2Reg Γ) where
-  r : RegAlloc.Reg
-  f : Var2Reg Γ
-  -- hr : f.registerDead r
-
-def Var2Reg.allocateDeadRegister {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) : Option (AllocateDeadRegisterResult f) :=
+/-
+Allocate a dead register to a variable 'v', returning the allocated register
+if allocation succeeds.
+-/
+def Var2Reg.allocateDeadRegister {Γ : Ctxt Pure.Ty}
+  (f : Var2Reg Γ)
+  (v : Γ.Var .int): Option (RegAlloc.Reg × Var2Reg Γ) :=
   match hf : f.dead with
   | [] => none
   | r :: rs =>
-    .some {
-      r := r,
-      f := {
-        toFun := f.toFun,
-        dead := rs,
-      },
-    }
+    .some ⟨r, {
+      toFun := fun v' => if v' = v then .some r else f.toFun v',
+      dead := rs
+    }⟩
 
 /--
-Consume the allocate dead register result,
-and use this for the variable 'v'.
+If allocateDeadRegister works, and the mapping is sound,
+then we get the right value in the register file.
 -/
-def AllocateDeadRegisterResult.consume {Γ : Ctxt Pure.Ty}
-    {fold : Var2Reg Γ}
-    (f : AllocateDeadRegisterResult fold) {v : Γ.Var t} (hv : fold.toFun v = .none) : RegAlloc.Reg × Var2Reg Γ :=
-  (f.r, {
-    toFun := fun v' => if v' = v then .some f.r else fold.toFun v'
-    dead := f.f.dead
-  })
+theorem eq_of_allocateDeadRegisterResult_eq_of_sound_mapping
+    {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {Γ2R Γ2R': Var2Reg Γ} {v : Γ.Var .int}
+    (hsound  : sound_mapping V Γ2R' R)
+    (halloc : Γ2R.allocateDeadRegister v = some (r, Γ2R'))
+    : R r = V v := by
+  apply eq_of_sound_mapping hsound
+  simp [Var2Reg.allocateDeadRegister] at halloc
+  split at halloc
+  · case h_1 => simp at halloc
+  · case h_2 r rs hdead =>
+      simp only [Option.some.injEq, Prod.mk.injEq] at halloc
+      obtain ⟨hr, hΓ2R'⟩ := halloc
+      subst hr
+      subst hΓ2R'
+      simp
 
-def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg Γ) :=
+def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int) :
+  Option (RegAlloc.Reg × Var2Reg Γ) :=
   match hv : f.toFun v with
   | .some r => (r, f)
-  | .none =>
-      match f.allocateDeadRegister with
-      | .none => .none
-      | .some result =>
-        some (result.consume hv)
+  | .none => f.allocateDeadRegister v
 
-/-- Lookup an argument in a register map, where the variable is defined in the register map. -/
-def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t) (v : Γ.Var int) :
-  Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
+/--
+Lookup an argument in a register map, where the variable is defined in the register map.
+See that the variable comes from Γ, but the register map is for (Γ.snoc t).
+This tells us that this is happening at the phase of the algorithm
+where we are allocating registers for the arguments of a `let` binding.
+-/
+def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
+    (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
   match hv : f.toFun v with
   | .some r => (r, f)
-  | .none =>
-      match f.allocateDeadRegister with
-      | .none => .none
-      | .some result =>
-        some (result.consume hv)
+  | .none => f.allocateDeadRegister v
+
+theorem Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping {Γ : Ctxt Pure.Ty}
+    {Γ2R Γ2R': Var2Reg (Γ.snoc t)} {V : (Γ.snoc t).Valuation} {R : RegAlloc.RegisterFile}
+    (hΓ2R' : sound_mapping V Γ2R' R) {r : RegAlloc.Reg} {v : Γ.Var int}
+    (hlookup : Γ2R.lookupOrInsertArg v = some (r, Γ2R')) :
+    R r = V v.toSnoc := by
+  unfold lookupOrInsertArg at hlookup
+  split at hlookup
+  · case h_1 r hv =>
+    simp [hv] at hlookup
+    obtain ⟨req, Γ2Req⟩ := hlookup
+    subst req
+    subst Γ2Req
+    apply eq_of_sound_mapping hΓ2R' hv
+  · case h_2 hv =>
+    apply eq_of_allocateDeadRegisterResult_eq_of_sound_mapping hΓ2R' hlookup
 
 def Var2Reg.lookupOrInsertResult {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
   f.lookupOrInsert (Ctxt.Var.last Γ t)
+
 
 /-- Delete the last register from the register map. -/
 def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
@@ -457,7 +484,8 @@ def doExpr (f : Var2Reg (Γ.snoc s))
       let arg := args.getN 0
       let (rout, f) ← f.lookupOrInsertResult
       let (r₁, f) ← f.lookupOrInsertArg arg
-      some (Expr.mk (RegAlloc.Op.increment rout r₁) rfl (by simp) .nil .nil, f.deleteLast)
+      some (Expr.mk (RegAlloc.Op.increment r₁ rout)
+        rfl (by simp) .nil .nil, f.deleteLast)
 
 
 /--
@@ -566,11 +594,20 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
           rw [Pure.Expr.denote_increment]
           obtain ⟨her, hΞ2reg⟩ := he
           rw [← her] at *
-          rw [RegAlloc.Expr.exec_increment_eq]
+          -- TODO: why does this not fire?
+          simp only [(RegAlloc.Expr.exec_increment_eq)]
           rw [RegAlloc.Expr.outRegister_increment_eq]
           simp
+          simp at hΞ2reg
+          have := Var2Reg.eq_of_lookupOrInsertArg_eq_of_sound_mapping hsound hvar0
+          rw [← her]
+          -- We gotta weaken the soundness, methinks.
+          -- Now we need a theorem to exploit
+          -- hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3) = some (s, Δs2reg)
+          -- to show that (args.getN 0) has the same value as R.get s
+          -- from sound_mapping V Ξ2Reg R
           -- TODO: Check that the registers are in agreement.
-          -- We are here.
+          -- HERE HERE HERE.
           sorry -- HERE HERE HERE
 
 
@@ -604,9 +641,7 @@ theorem doRegAllocLets_correct
       Lets.denote_nil, EffectKind.toMonad_pure, Id.pure_eq]
     subst hmatch
     subst h₁
-    simp_all only [hq.1.symm, true_and, Lets.denote_nil, EffectKind.toMonad_impure,
-      EffectKind.return_impure_toMonad_eq, StateT.run_pure, Id.pure_eq]
-    simp [pure, StateT.pure]
+    simp only [← hq.1, RegAlloc.Program.exec_nil_eq]
     apply sound_mapping.of_complete hRV
   | .var body e (Γ_out := Ξ) (t := t), f, q => by
     rename_i h
