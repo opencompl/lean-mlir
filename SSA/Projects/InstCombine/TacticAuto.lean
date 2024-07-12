@@ -8,6 +8,10 @@ import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Batteries.Data.BitVec
 
+open Lean
+open Lean.Meta
+open Lean.Elab
+open Lean.Elab.Tactic
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
   bind_assoc forall_const
@@ -140,11 +144,12 @@ macro "of_bool_tactic" : tactic =>
       | simp only [← decide_not]
       | simp only [decide_eq_decide]
       | simp [of_decide_eq_true]
-      | simp only [BitVec.toNat_eq]
+      -- | simp only [BitVec.toNat_eq]
       )
       try omega
     )
   )
+
 
 macro "alive_auto": tactic =>
   `(tactic|
