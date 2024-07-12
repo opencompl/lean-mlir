@@ -590,37 +590,6 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
       simp [ih]
 
 /-
- e : Expr Pure.dialect Ξ EffectKind.pure t
-    bodyr : Lets RegAlloc.dialect (doCtxt Γ) EffectKind.impure (List.map (fun x => RegAlloc.Ty.unit) Ξ)
-    er : Expr RegAlloc.dialect (List.map (fun x => RegAlloc.Ty.unit) Ξ) EffectKind.impure
-      ((fun x => RegAlloc.Ty.unit) Pure.Ty.int)
-    Ξ2reg : Var2Reg Ξ
-    hbody : doLets body Ξ2reg = some (bodyr, Γ2reg)
-    Δ2reg : Var2Reg (Ξ.snoc t)
-    q : RegAlloc.Program (doCtxt Γ) (doCtxt (Ξ.snoc t))
-    he : doExpr Δ2reg e = some (er, Ξ2reg)
-    hq : doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
-    ih : sound_mapping (body.denote V) Ξ2reg (RegAlloc.Program.exec bodyr R)
-    r : RegAlloc.Reg
-    v : (Ξ.snoc t).Var Pure.Ty.int
-    hlive : Δ2reg.toFun v = some r
-    ⊢ RegAlloc.Expr.exec er (RegAlloc.Program.exec bodyr R) r = (body.denote V::ᵥe.denote (body.denote V)) v
-
-
-theorem sound_mapping_of_eq_deleteLast_of_sound_mapping {Ξ : Ctxt Pure.Ty}
-    {s : Pure.Ty}
-    {VΞ : Ξ.Valuation}
-    {VΞs : (Ξ.snoc s).Valuation}
-    {Ξ2reg : Var2Reg Ξ}
-    (hsound : sound_mapping VΞ Ξ2reg R)
-    {Δs2reg : Var2Reg (Ξ.snoc s)}
-    (heq : Δs2reg.deleteLast = Ξ2reg)
-    : sound_mapping VΞs Δs2reg R := by
-  sorry
-
--/
-
-/-
 `toFun` of `deleteLast` just invokes the `toFun` of the underlying map.
 -/
 @[simp]
@@ -804,17 +773,12 @@ theorem doExpr_sound
           simp
           apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
 
-/--
-If the mapping is sound, and the mapping has arisen from a call of doExpr,
-Then the out register of `er` is the register than is live for the last variable in the context.
--/
-theorem registerLiveFor_outRegister_last_of_doExpr_eq_some_of_sound_mapping
+theorem toFun_doExpr
     {e : Expr Pure.dialect Ξ EffectKind.pure .int}
     {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
-    {Δ2reg : Var2Reg (Ξ.snoc t)}
-    (hsound : sound_mapping V Ξ2reg R)
-    (he : doExpr Δ2Reg e = some (er, Ξ2reg)) :
-    Δ2reg.registerLiveFor (RegAlloc.Expr.outRegister er) (Ctxt.Var.last Ξ t) :=
+    (he : doExpr Δ2Reg e = some (er, Ξ2reg))
+    (v : Ξ.Var .int) :
+    Ξ2reg.toFun v = sorry := -- HERE HERE HERE
   match e with
   | Expr.mk op rfl eff_le args regArgs =>
     match op with
@@ -825,10 +789,11 @@ theorem registerLiveFor_outRegister_last_of_doExpr_eq_some_of_sound_mapping
       case some val =>
         replace ⟨r, Γs2reg⟩ := val
         simp [hlast] at he
-        simp_all [he.2]
-        simp_all [← he]
-        apply Var2Reg.registerLiveFor_of_toFun_eq
-        sorry -- HERE HERE
+        simp only  [EffectKind.toMonad_pure, Pure.Expr.denote_const, he.1.symm]
+        rw [← he.2]
+        simp
+        -- TODO: is it true that toSnoc can never be equal to last? I think so.
+        sorry
     | .increment => by
       simp [doExpr] at he
       cases hlast : Δ2Reg.lookupOrInsertResult
@@ -842,9 +807,33 @@ theorem registerLiveFor_outRegister_last_of_doExpr_eq_some_of_sound_mapping
         case some val =>
           simp [hvar0] at he
           replace ⟨s, Δs2reg⟩ := val
-          simp_all
-          sorry
+          rw [Pure.Expr.denote_increment]
+          obtain ⟨her, hΞ2reg⟩ := he
+          rw [← her] at *
+          -- TODO: why does this not fire?
+          simp only [(RegAlloc.Expr.exec_increment_eq)]
+          rw [RegAlloc.Expr.outRegister_increment_eq]
+          simp
+          simp at hΞ2reg
+          congr
+          symm
+          -- apply eq_of_sound_mapping (f := Ξ2reg)
+          apply eq_of_sound_mapping
+          apply hsound
+          subst hΞ2reg
+          simp
+          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
 
+/-
+If the mapping is sound, and the mapping has arisen from a call of doExpr,
+Then the out register of `er` is the register than is live for the last variable in the context.
+-/
+theorem doExpr_outRegister {Ξ : Ctxt Pure.Ty}
+{r : RegAlloc.Reg}
+{v : (Ξ.snoc t).Var Pure.Ty.int}
+{Δ2reg : Var2Reg (Ξ.snoc Pure.Ty.int)}
+(hlive : Δ2reg.registerLiveFor r v)
+  : r = RegAlloc.Expr.outRegister er := by sorry
 
 
 /-
@@ -892,13 +881,17 @@ theorem doRegAllocLets_correct
     -- how do I know that 'r' is the outRegister for er?
     -- Since I have doExpr Δ2reg e = some (er, Ξ2reg),
     -- it must be that (Ctxt.Var.Last Ξ .int) ~ er.outRegister.
+    have hsound := doExpr_sound (hsound := ih) he
     cases v using Ctxt.Var.casesOn
     case toSnoc v =>
       simp
+      rw [← ih]
       sorry
     case last =>
       simp
-      sorry
+      rw [hsound]
+      congr
+      sorry -- HERE HERE
     -- by_cases hr : r = RegAlloc.Expr.outRegister er
     -- case pos => sorry
     -- case neg => sorry
