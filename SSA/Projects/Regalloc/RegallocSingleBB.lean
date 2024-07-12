@@ -268,8 +268,28 @@ theorem RegAlloc.Expr.outRegister_const_eq (i : Int) (r : RegAlloc.Reg) :
 theorem RegAlloc.Expr.outRegister_increment_eq (r₁ r₂ : RegAlloc.Reg) :
   RegAlloc.Expr.outRegister (Expr.mk (Γ := Γ) (RegAlloc.Op.increment r₁ r₂) rfl (by simp) .nil .nil) = r₂ := rfl
 
+/-- A continuation based proof of what read register does to the state. -/
 @[simp]
-theorem exec_writeRegister:
+theorem exec_readRegisterK {k : Int → StateT RegAlloc.RegisterFile Id α}:
+  (StateT.exec ((RegAlloc.readRegister r) >>= k)) R = (StateT.exec (k (R r))) R := by
+  simp [RegAlloc.readRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+
+/-- Executing a read register does nothing to the state. -/
+@[simp]
+theorem exec_readRegister :
+  (StateT.exec ((RegAlloc.readRegister r))) R = R := by
+  simp [RegAlloc.readRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+
+/-- A continuation based version of what writing a register does to the state. -/
+@[simp]
+theorem exec_writeRegisterK {k : Unit → StateT RegAlloc.RegisterFile Id α} :
+  (StateT.exec (RegAlloc.writeRegister r v >>= k) R) =
+  StateT.exec (k ()) (R.set r v) := by
+  simp [RegAlloc.writeRegister, StateT.run, StateT.exec, (· >>= ·), StateT.bind]
+
+/-- Executing a write register writes the value to the register file. -/
+@[simp]
+theorem exec_writeRegister :
   (StateT.exec (RegAlloc.writeRegister r v) R) = R.set r v := by
   simp [RegAlloc.writeRegister, StateT.run, StateT.exec]
 
@@ -278,6 +298,15 @@ theorem RegAlloc.Expr.exec_const_eq {i : Int} {R : RegAlloc.RegisterFile} :
   RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.const i r) rfl (by simp) .nil .nil) R = R.set r i := by
   simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
     (exec_writeRegister)]
+
+@[simp]
+theorem RegAlloc.Expr.exec_increment_eq {R : RegAlloc.RegisterFile} :
+  RegAlloc.Expr.exec (Expr.mk (Γ := Γ) (RegAlloc.Op.increment in₁ out) rfl (by simp) .nil .nil) R =
+    R.set out (R.get in₁ + 1) := by
+  simp [RegAlloc.Expr.exec, Expr.denote, DialectDenote.denote,
+    (exec_writeRegister)]
+  rfl
+
 
 -- Evaluating an empty program yields the same register file.
 @[simp]
@@ -496,7 +525,10 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
 
 -/
 
-/- Evaluating an expression will return an expression whose value equals the -/
+/-
+Evaluating an expression will return an expression whose values equals
+the value that we expect at the output register of the expression.
+-/
 theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
     {e : Expr Pure.dialect Ξ EffectKind.pure .int}
     {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
@@ -515,7 +547,8 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
         replace ⟨r, Γs2reg⟩ := val
         simp [hlast] at he
         simp only  [EffectKind.toMonad_pure, Pure.Expr.denote_const, he.1.symm]
-        rw [RegAlloc.Expr.const_eq, RegAlloc.Expr.exec_const_eq, RegAlloc.Expr.outRegister_const_eq]
+        rw [RegAlloc.Expr.const_eq, RegAlloc.Expr.exec_const_eq,
+          RegAlloc.Expr.outRegister_const_eq]
         simp
     | .increment => by
       simp [doExpr] at he
@@ -528,8 +561,16 @@ theorem doExpr_sound {Ξs2reg : Var2Reg (Ξ.snoc s)}
         cases hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
         case none => simp [hvar0] at he
         case some val =>
+          simp [hvar0] at he
           replace ⟨s, Δs2reg⟩ := val
           rw [Pure.Expr.denote_increment]
+          obtain ⟨her, hΞ2reg⟩ := he
+          rw [← her] at *
+          rw [RegAlloc.Expr.exec_increment_eq]
+          rw [RegAlloc.Expr.outRegister_increment_eq]
+          simp
+          -- TODO: Check that the registers are in agreement.
+          -- We are here.
           sorry -- HERE HERE HERE
 
 
