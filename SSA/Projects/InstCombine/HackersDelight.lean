@@ -1,7 +1,6 @@
 import Init.Data.BitVec.Basic
 import Init.Data.BitVec.Lemmas
 import Init.Data.BitVec.Bitblast
-import Mathlib.Data.BitVec
 
 namespace HackersDelight
 
