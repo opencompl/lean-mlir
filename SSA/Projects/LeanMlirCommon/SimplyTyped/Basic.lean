@@ -121,9 +121,6 @@ def Lets.lete (e : Expr Op Γ_in ty) (lets : Lets Op (Γ_in.push e.varName ty) �
 def Body.mk (lets : Lets Op Γ_in Γ_out) (ret : Var Γ_out ty) : Body Op Γ_in ty :=
   ⟨⟨lets.val, ret.val⟩, by
     simpa [WellTyped, lets.Γ_out_eq] using And.intro lets.prop ret.prop
-    -- constructor
-    -- · exact Lets.WellTyped_of_extEq Context.ExtEq.rfl lets.Γ_out_eq lets.prop
-    -- · exact Context.hasType_of_extEq lets.Γ_out_eq.symm ret.prop
   ⟩
 
 /-- Return an empty `Body`, whose terminator is "return `v`" -/

@@ -1864,20 +1864,130 @@ theorem subset_entries :
         (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
       ∀ v, ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
     ) := by
+
+  /-
+  eff : EffectKind
+  d : Dialect
+  inst✝⁶ : DialectSignature d
+  inst✝⁵ : TyDenote d.Ty
+  inst✝⁴ : DialectDenote d
+  inst✝³ : DecidableEq d.Ty
+  inst✝² : Monad d.m
+  inst✝¹ : LawfulMonad d.m
+  inst✝ : DecidableEq d.Op
+  Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty
+  lets : Lets d Γ_in eff Γ_out
+  matchLets : Lets d Δ_in EffectKind.pure Δ_out
+  l : List d.Ty
+  argsl : HVector Γ_out.Var l
+  argsr : HVector Δ_out.Var l
+  ma varMap : Mapping Δ_in Γ_out
+  ⊢ ∀
+    (motive1 :
+      (Γ_in : Ctxt d.Ty) →
+        (eff : EffectKind) →
+          (Γ_out Δ_in Δ_out : Ctxt d.Ty) →
+            DecidableEq d.Op →
+              Lets d Γ_in eff Γ_out →
+                Lets d Δ_in EffectKind.pure Δ_out →
+                  (l : List d.Ty) → HVector Γ_out.Var l → HVector Δ_out.Var l → Mapping Δ_in Γ_out → Prop)
+    (motive2 :
+      (eff : EffectKind) →
+        (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) →
+          (t : d.Ty) →
+            DecidableEq d.Op →
+              Lets d Γ_in eff Γ_out →
+                Γ_out.Var t → Lets d Δ_in EffectKind.pure Δ_out → Δ_out.Var t → Mapping Δ_in Γ_out → Prop),
+
+    (∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out      : Ctxt d.Ty)            (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (ma : Mapping Δ_in Γ_out),
+
+        motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets [] HVector.nil HVector.nil ma) →
+
+    (∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out      : Ctxt d.Ty)            (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (t : d.Ty) (l : List d.Ty)
+          (vₗ : Γ_out.Var t) (vsₗ : HVector Γ_out.Var l) (vᵣ : Δ_out.Var t) (vsᵣ : HVector Δ_out.Var l)
+          (ma : Mapping Δ_in Γ_out),
+          motive2 eff Γ_in Γ_out Δ_in Δ_out t inst lets vₗ matchLets vᵣ ma →
+            (∀ (ma : Mapping Δ_in Γ_out), motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets l vsₗ vsᵣ ma) →
+              motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets (t :: l) (vₗ::ₕvsₗ) (vᵣ::ₕvsᵣ) ma) →
+
+    (∀                   (eff : EffectKind) (Γ_in Γ_out Δ_in        : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t) (a : Ctxt d.Ty) (a_1 : d.Ty)
+            (matchLets : Lets d Δ_in EffectKind.pure a) (e : Expr d a EffectKind.pure a_1) (w : ℕ)
+            (h : (a.snoc a_1).get? (w + 1) = some t) (ma : Mapping Δ_in Γ_out),
+            let w_1 := ⟨w, ⋯⟩;
+            motive2 eff Γ_in Γ_out Δ_in a t inst lets v matchLets w_1 ma →
+              motive2 eff Γ_in Γ_out Δ_in (a.snoc a_1) t inst lets v (matchLets.var e) ⟨w.succ, h⟩ ma) →
+
+    (∀                   (eff : EffectKind) (Γ_in Γ_out Δ_in        : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+       (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t) (Δ_out : Ctxt d.Ty) (t_1 : d.Ty)
+              (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (matchExpr : Expr d Δ_out EffectKind.pure t_1)
+              (property : (Δ_out.snoc t_1).get? 0 = some t) (ma : Mapping Δ_in Γ_out),
+              (∀ (ie : Expr d Γ_out EffectKind.pure t)
+                  (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs),
+                  motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets (DialectSignature.sig ie.op) ie.args
+                    (⋯ ▸ matchExpr.args) ma) →
+                motive2 eff Γ_in Γ_out Δ_in (Δ_out.snoc t_1) t inst lets v (matchLets.var matchExpr) ⟨0, property⟩ ma) →
+
+    (∀                    (eff : EffectKind) (Γ_in Γ_out Δ_in       : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out)
+        (w : Δ_in.Var t) (ma : Mapping Δ_in Γ_out) (v₂ : Γ_out.Var ⟨t, w⟩.fst),
+                lookup ⟨t, w⟩ ma = some v₂ → motive2 eff Γ_in Γ_out Δ_in Δ_in t inst lets v₂ Lets.nil w ma) →
+
+    (∀                    (eff : EffectKind) (Γ_in Γ_out Δ_in       : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t)
+        (w : Δ_in.Var t) (ma : Mapping Δ_in Γ_out)
+                  (v₂ : Γ_out.Var ⟨t, w⟩.fst),
+                  lookup ⟨t, w⟩ ma = some v₂ → ¬v = v₂ → motive2 eff Γ_in Γ_out Δ_in Δ_in t inst lets v Lets.nil w ma) →
+
+    (∀                    (eff : EffectKind) (Γ_in Γ_out Δ_in       : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t)
+        (w : Δ_in.Var t) (ma : Mapping Δ_in Γ_out),
+                    lookup ⟨t, w⟩ ma = none → motive2 eff Γ_in Γ_out Δ_in Δ_in t inst lets v Lets.nil w ma) →
+
+    (∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (     Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out)                   (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
+                      (a : HVector Γ_out.Var l) (a_1 : HVector Δ_out.Var l) (a_2 : Mapping Δ_in Γ_out),
+                      motive1 Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets l a a_1 a_2) ∧
+
+    ∀                     (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t) (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
+        (w : Δ_out.Var t) (ma : Mapping Δ_in Γ_out),
+                      motive2 eff Γ_in Γ_out Δ_in Δ_out t inst lets v matchLets w ma
+  -/
   apply matchArg.mutual_induct (d:=d)
-  <;> intro Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets
-  · intro ma varMap hvarMap
-    simp only [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
+  · intro Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets
+    intro ma varMap hvarMap
+    simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
     exact Set.Subset.refl _
-  · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
+  · intro Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets
+    intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
     simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind : ma'.entries ⊆ _ := ih_matchArg ma' varMap <| by
       simp; exact h2
     have hmut := ih_matchVar vl ma' <| by simp; exact h1
     apply List.Subset.trans hmut hind
-  · sorry
+  · intro eff Γ_in Γ_out Δ_in t inst lets v
+    intro Δ_out t matchLets _ w h ma ih_matchVar varMap hvarMap
+    simp only [matchVar, Option.mem_def] at *
+    intros x hx
+    split at hvarMap
+    case h_1 p q r _s =>
+      split_ifs at hvarMap
+      . simp_all
+    case h_2 a _b c d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
+      rcases x with ⟨x, y⟩
+      simp only [← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, w⟩
+      . subst hx; simp_all
+      . rwa [AList.lookup_insert_ne hx]
+
+    sorry
   · sorry
   · sorry
   · sorry
@@ -1949,6 +2059,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
     ma.entries ⊆ varMap.entries :=
   match matchLets, w with
   | .nil, w => by
+
     simp only [matchVar, Option.mem_def] at *
     intros x hx
     split at hvarMap
