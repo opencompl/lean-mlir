@@ -22,7 +22,7 @@ set_option linter.unusedTactic false
 def test0_before := [llvm|
 {
 ^0(%arg0 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   %1 = llvm.xor %arg0, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -83,7 +83,7 @@ def test2_before := [llvm|
 def test2_after := [llvm|
 {
 ^0(%arg0 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]

@@ -707,7 +707,6 @@ theorem bitvec_820 :
   simp_alive_case_bash
   try alive_auto
   all_goals sorry
-
 theorem bitvec_820' :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.udiv (LLVM.sub e_1 (LLVM.urem e_1 e)) e ⊑ LLVM.udiv e_1 e := by
   simp_alive_undef

@@ -19,7 +19,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
                                                                        
-def add-shl-sdiv-scalar0_before := [llvm|
+def addhshlhsdivhscalar0_before := [llvm|
 {
 ^0(%arg0 : i8):
   %0 = "llvm.mlir.constant"() <{value = -4 : i8}> : () -> i8
@@ -30,7 +30,7 @@ def add-shl-sdiv-scalar0_before := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
-def add-shl-sdiv-scalar0_after := [llvm|
+def addhshlhsdivhscalar0_after := [llvm|
 {
 ^0(%arg0 : i8):
   %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
@@ -38,20 +38,20 @@ def add-shl-sdiv-scalar0_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
-theorem add-shl-sdiv-scalar0_proof : add-shl-sdiv-scalar0_before ⊑ add-shl-sdiv-scalar0_after := by
-  unfold add-shl-sdiv-scalar0_before add-shl-sdiv-scalar0_after
+theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdivhscalar0_after := by
+  unfold addhshlhsdivhscalar0_before addhshlhsdivhscalar0_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  ---BEGIN add-shl-sdiv-scalar0
-  all_goals (try extract_goal ; sorry)
-  ---END add-shl-sdiv-scalar0
+  ---BEGIN addhshlhsdivhscalar0
+  apply addhshlhsdivhscalar0_thm
+  ---END addhshlhsdivhscalar0
 
 
 
-def add-shl-sdiv-scalar1_before := [llvm|
+def addhshlhsdivhscalar1_before := [llvm|
 {
 ^0(%arg0 : i8):
   %0 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
@@ -62,7 +62,7 @@ def add-shl-sdiv-scalar1_before := [llvm|
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
-def add-shl-sdiv-scalar1_after := [llvm|
+def addhshlhsdivhscalar1_after := [llvm|
 {
 ^0(%arg0 : i8):
   %0 = "llvm.mlir.constant"() <{value = 64 : i8}> : () -> i8
@@ -70,20 +70,20 @@ def add-shl-sdiv-scalar1_after := [llvm|
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
-theorem add-shl-sdiv-scalar1_proof : add-shl-sdiv-scalar1_before ⊑ add-shl-sdiv-scalar1_after := by
-  unfold add-shl-sdiv-scalar1_before add-shl-sdiv-scalar1_after
+theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdivhscalar1_after := by
+  unfold addhshlhsdivhscalar1_before addhshlhsdivhscalar1_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  ---BEGIN add-shl-sdiv-scalar1
-  all_goals (try extract_goal ; sorry)
-  ---END add-shl-sdiv-scalar1
+  ---BEGIN addhshlhsdivhscalar1
+  apply  addhshlhsdivhscalar1_thm
+  ---END addhshlhsdivhscalar1
 
 
 
-def add-shl-sdiv-scalar2_before := [llvm|
+def addhshlhsdivhscalar2_before := [llvm|
 {
 ^0(%arg0 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1073741824 : i32}> : () -> i32
@@ -94,7 +94,7 @@ def add-shl-sdiv-scalar2_before := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
-def add-shl-sdiv-scalar2_after := [llvm|
+def addhshlhsdivhscalar2_after := [llvm|
 {
 ^0(%arg0 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1073741824 : i32}> : () -> i32
@@ -102,20 +102,20 @@ def add-shl-sdiv-scalar2_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
-theorem add-shl-sdiv-scalar2_proof : add-shl-sdiv-scalar2_before ⊑ add-shl-sdiv-scalar2_after := by
-  unfold add-shl-sdiv-scalar2_before add-shl-sdiv-scalar2_after
+theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdivhscalar2_after := by
+  unfold addhshlhsdivhscalar2_before addhshlhsdivhscalar2_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  ---BEGIN add-shl-sdiv-scalar2
-  all_goals (try extract_goal ; sorry)
-  ---END add-shl-sdiv-scalar2
+  ---BEGIN addhshlhsdivhscalar2
+  apply addhshlhsdivhscalar2_thm
+  ---END addhshlhsdivhscalar2
 
 
 
-def add-shl-sdiv-negative1_before := [llvm|
+def addhshlhsdivhnegative1_before := [llvm|
 {
 ^0(%arg0 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
@@ -126,7 +126,7 @@ def add-shl-sdiv-negative1_before := [llvm|
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
-def add-shl-sdiv-negative1_after := [llvm|
+def addhshlhsdivhnegative1_after := [llvm|
 {
 ^0(%arg0 : i32):
   %0 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
@@ -134,15 +134,13 @@ def add-shl-sdiv-negative1_after := [llvm|
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
-theorem add-shl-sdiv-negative1_proof : add-shl-sdiv-negative1_before ⊑ add-shl-sdiv-negative1_after := by
-  unfold add-shl-sdiv-negative1_before add-shl-sdiv-negative1_after
+theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshlhsdivhnegative1_after := by
+  unfold addhshlhsdivhnegative1_before addhshlhsdivhnegative1_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
   try alive_auto
-  ---BEGIN add-shl-sdiv-negative1
-  all_goals (try extract_goal ; sorry)
-  ---END add-shl-sdiv-negative1
-
-
+  ---BEGIN addhshlhsdivhnegative1
+  apply   addhshlhsdivhnegative1_thm
+  ---END addhshlhsdivhnegative1

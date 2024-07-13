@@ -55,7 +55,7 @@ def srem_i1_is_zero_before := [llvm|
 def srem_i1_is_zero_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -67,7 +67,7 @@ theorem srem_i1_is_zero_proof : srem_i1_is_zero_before ⊑ srem_i1_is_zero_after
   simp_alive_case_bash
   try alive_auto
   ---BEGIN srem_i1_is_zero
-  all_goals (try extract_goal ; sorry)
+  apply srem_i1_is_zero_thm
   ---END srem_i1_is_zero
 
 
@@ -82,7 +82,7 @@ def urem_i1_is_zero_before := [llvm|
 def urem_i1_is_zero_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]

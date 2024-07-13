@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.lean.gand_proof
+import SSA.Projects.InstComine.lean.gand_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -18,7 +18,7 @@ set_option pp.proofs.withType false
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       
+
 def test_with_even_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -137,7 +137,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
 def test3_before := [llvm|
 {
 ^0(%arg0 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   %1 = llvm.and %arg0, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -145,7 +145,7 @@ def test3_before := [llvm|
 def test3_after := [llvm|
 {
 ^0(%arg0 : i1):
-  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -165,7 +165,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 def test4_before := [llvm|
 {
 ^0(%arg0 : i1):
-  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = 1 : i1}> : () -> i1
   %1 = llvm.and %arg0, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -1154,5 +1154,3 @@ theorem add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_proof : add
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
   apply add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_thm
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
-
-
