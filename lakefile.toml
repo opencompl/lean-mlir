@@ -18,7 +18,7 @@ rev = "main"
 
 [[require]]
 name = "LeanSAT"
-git = "git@github.com:leanprover/leansat.git"
+git = "https://github.com/leanprover/leansat.git"
 rev = "main"
 
 [[lean_lib]]
