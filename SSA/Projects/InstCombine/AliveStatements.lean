@@ -6,10 +6,6 @@ import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
-
-open LLVM
-open BitVec
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
