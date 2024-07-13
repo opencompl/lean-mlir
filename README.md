@@ -26,7 +26,7 @@ to enable workflows that include formal verification in the day-to-day of MLIR d
 - Next, run:
 
 ```
-git clone https://github.com/opencompl/lean-mlir.git && cd ssa && lake exe cache get && lake build
+git clone https://github.com/opencompl/lean-mlir.git && cd lean-mlir && lake exe cache get && lake build
 ```
 
 #### Core theorems
