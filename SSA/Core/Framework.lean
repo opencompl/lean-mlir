@@ -1848,27 +1848,6 @@ variable [DecidableEq d.Op]
     {ma : Mapping Δ_in Γ_out}
     {varMap : Mapping Δ_in Γ_out}
 
-#print prefix matchArg
-#check matchArg.mutual_induct
-
-variable {α : Type u} {β : α → Type v} {l l₁ l₂ : List (Sigma β)}
-variable [DecidableEq α]
-
-@[simp]
-theorem const_kerase_eq {a} {s : Sigma β} {l : List (Sigma β)} :
-   l = l:= by
-  rw [AList.insert_e]
-
-
-  simp [List.kerase, h, List.cons]
-
-
-#check AList.insert
-
---ma.entries ⊆ (AList.insert ⟨t, w⟩ v ma).entries
-
-
-
 theorem subset_entries :
     (
      ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
@@ -2007,16 +1986,29 @@ theorem subset_entries :
       split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
-        have x := Expr.args matchExpr
-        rename_i a b
-        cases a
+        dsimp! at *
+        rename_i aa bb
+        apply motive? (ie := Expr.args matchExpr)
+        rw [hvarMap]
 
-        apply (motive? (ie := matchExpr))
-        rw [← hvarMap]
-        unfold matchArg
-        simp
-        sorry
-        sorry
+
+        --unfold Ctxt.get? at property?
+        have pro := property?
+        have ssss := sss
+        have llll := ll
+        have h : sss.op = matchExpr.op := by
+          rw [Expr.op]
+          dsimp!
+
+
+
+          simp [ssss]
+
+          simp [*]
+
+
+        apply motive
+
         sorry
         -- apply subset_entries_matchArg (lets := lets)
         --  (matchLets := matchLets)
@@ -2168,6 +2160,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
       split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
+        let xx := Expr.args matchExpr
         apply subset_entries_matchArg (lets := lets)
           (matchLets := matchLets)
           (argsl := args')
