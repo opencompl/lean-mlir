@@ -1988,9 +1988,9 @@ theorem subset_entries :
         dsimp at hvarMap
         dsimp! at *
         rename_i aa bb
--- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
--- (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs) (varMap : Mapping Δ_in Γ_out),
--- matchArg lets matchLets ie.args (⋯ ▸ matchExpr.args) ma = some varMap → ma.entries ⊆ varMap.entries
+        -- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
+        -- (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs) (varMap : Mapping Δ_in Γ_out),
+        -- matchArg lets matchLets ie.args (⋯ ▸ matchExpr.args) ma = some varMap → ma.entries ⊆ varMap.entries
         apply motive
         · -- goal:
           -- matchArg lets matchLets ?pos.intro.ie✝.args (⋯ ▸ matchExpr.args) ma = some varMap
