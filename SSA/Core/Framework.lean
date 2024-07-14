@@ -1988,10 +1988,18 @@ theorem subset_entries :
       . rwa [AList.lookup_insert_ne hx]
 
     sorry
-  · sorry
-  · sorry
-  · sorry
-  · sorry
+  · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
+    intro matchExpr property? ma motive? v? b? c?
+    sorry
+  · intro eff Γ_in Γ_out Δ_in t inst lets w ma v₂
+    intro b? c? d? e? f?
+    sorry
+  · intro eff Γ_in Γ_out Δ_in t inst lets v? w ma v₂
+    intro b? c? d? e? f?
+    sorry
+  · intro eff Γ_in Γ_out Δ_in t inst lets a? w ma
+    intro b? c? d? e?
+    sorry
 
 
 end SubsetEntries
@@ -2059,7 +2067,6 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
     ma.entries ⊆ varMap.entries :=
   match matchLets, w with
   | .nil, w => by
-
     simp only [matchVar, Option.mem_def] at *
     intros x hx
     split at hvarMap
