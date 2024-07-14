@@ -1986,19 +1986,30 @@ theorem subset_entries :
       by_cases hx : x = ⟨t, w⟩
       . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
-
     sorry
   · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
-    intro matchExpr property? ma motive? v? b? c?
+    intro matchExpr property? ma motive? v varMap hvarMap
     sorry
   · intro eff Γ_in Γ_out Δ_in t inst lets w ma v₂
-    intro b? c? d? e? f?
-    sorry
+    intro b? v varMap hvarMap x hx
+    simp only [matchVar, Option.mem_def] at *
+    split at hvarMap
+    case h_1 p q r _s =>
+      split_ifs at hvarMap
+      . simp_all
+    case h_2 a _b c d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
+      rcases x with ⟨x, y⟩
+      simp only [← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, w⟩
+      . subst hx; simp_all
+      . rwa [AList.lookup_insert_ne hx]
   · intro eff Γ_in Γ_out Δ_in t inst lets v? w ma v₂
-    intro b? c? d? e? f?
+    intro b? c? v varMap hvarMap
     sorry
   · intro eff Γ_in Γ_out Δ_in t inst lets a? w ma
-    intro b? c? d? e?
+    intro b? v varMap hvarMap
     sorry
 
 
