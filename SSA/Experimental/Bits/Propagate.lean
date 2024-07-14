@@ -9,6 +9,7 @@ import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Defs
 import SSA.Experimental.Bits.Lemmas
+import SSA.Experimental.Bits.Fast.BitStream
 
 open Sum
 
@@ -187,17 +188,17 @@ lemma id_eq_propagate (x : ℕ → Bool) :
   ext n; cases n <;> rfl
 
 lemma zero_eq_propagate :
-    zeroSeq = propagate Empty.elim (λ (_ _ : Empty → Bool) => (Empty.elim, false)) Empty.elim := by
+    BitStream.zero = propagate Empty.elim (λ (_ _ : Empty → Bool) => (Empty.elim, false)) Empty.elim := by
   ext n; cases n <;> rfl
 
 lemma one_eq_propagate :
-    oneSeq = propagate (λ _ : Unit => true)
+    BitStream.one = propagate (λ _ : Unit => true)
       (λ f (_ : Empty → Bool) => (λ _ => false, f ())) Empty.elim := by
   ext n
   match n with
   | 0 => rfl
   | 1 => rfl
-  | n+2 => simp [oneSeq, propagate_succ]
+  | n+2 => simp [propagate_succ]
 
 lemma and_eq_propagate (x y : ℕ → Bool) :
     andSeq x y = propagate Empty.elim
