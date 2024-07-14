@@ -1848,6 +1848,7 @@ variable [DecidableEq d.Op]
     {ma : Mapping Δ_in Γ_out}
     {varMap : Mapping Δ_in Γ_out}
 
+
 theorem subset_entries :
     (
      ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
@@ -1987,7 +1988,7 @@ theorem subset_entries :
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
         dsimp! at *
-        rename_i aa bb
+        rename_i aa bb aaaa
         -- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
         -- (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs) (varMap : Mapping Δ_in Γ_out),
         -- matchArg lets matchLets ie.args (⋯ ▸ matchExpr.args) ma = some varMap → ma.entries ⊆ varMap.entries
@@ -1997,6 +1998,9 @@ theorem subset_entries :
           sorry
         · -- goal:
           -- Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op)
+          --
+          -- does the 'aa' hypothesis help? I am not sure how to get rid of the 'Option'?
+          --   aa:  Option (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
           sorry
         · -- goal
           -- ∃ (h : (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).op = matchExpr.op),
