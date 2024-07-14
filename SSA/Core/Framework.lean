@@ -1849,6 +1849,8 @@ variable [DecidableEq d.Op]
     {varMap : Mapping Δ_in Γ_out}
 
 
+#check matchArg.mutual_induct
+
 theorem subset_entries :
     (
      ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
@@ -1986,7 +1988,29 @@ theorem subset_entries :
       dsimp at hvarMap
       split_ifs at hvarMap with hop
       · rcases hop with ⟨rfl, hop⟩
+
         dsimp at hvarMap
+        rename_i a b
+        cases hhh : a
+        · sorry
+        · rename_i aaaa
+          let x := motive aaaa
+          simp [hop, hhh] at x
+          have xxx := Expr.args matchExpr
+
+          apply x _ _ _ _
+          simp_all
+          sorry
+          sorry
+          simp [← hvarMap]
+          dsimp
+        --(lets := lets)
+          --(matchLets := matchLets)
+          --(argsl := args')
+          --(argsr := (Expr.args matchExpr))
+         -- (hvarMap := by simp; rw [← hvarMap])
+
+        --let x := motive hvarMap
         dsimp! at *
         rename_i aa bb aaaa
         -- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
