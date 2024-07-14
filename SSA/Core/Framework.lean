@@ -1988,15 +1988,14 @@ theorem subset_entries :
       simp; exact h2
     have hmut := ih_matchVar vl ma' <| by simp; exact h1
     apply List.Subset.trans hmut hind
-  · intro eff Γ_in Γ_out Δ_in t inst lets v?
-    intro a? a1? matchLets e? w h ma
-    intro ih_matchVar varMap matchLets
-    intros x hvarMap
+  · intro eff Γ_in Γ_out Δ_in t inst lets w
+    intro Δ_out a1? matchLets matchExpr l h ma
+    intro ih_matchVar motive v
+    intros varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
-    apply varMap
-    rw [← hvarMap]
-    sorry
-    sorry
+    unfold matchVar at hvarMap
+    apply motive (v := v) (varMap := varMap) hvarMap
+
   · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
     intro matchExpr property? ma motive? v varMap hvarMap
     simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
@@ -2009,8 +2008,13 @@ theorem subset_entries :
       · rcases hop with ⟨rfl, hop⟩
         dsimp at hvarMap
         have x := Expr.args matchExpr
-        apply (motive?)
+        rename_i a b
+        cases a
+
+        apply (motive? (ie := matchExpr))
         rw [← hvarMap]
+        unfold matchArg
+        simp
         sorry
         sorry
         sorry
@@ -2143,7 +2147,7 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
       by_cases hx : x = ⟨t, w⟩
       . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
-  | .var matchLets _, ⟨w+1, h⟩ => by
+  | .var matchLets _, ⟨l+1, h⟩ => by
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
     apply subset_entries_matchVar
