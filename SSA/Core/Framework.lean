@@ -1716,6 +1716,8 @@ end TermModel
 
 mutual
 
+variable {Δ_in : Ctxt d.Ty}
+
 /-- `matchArg lets matchLets args matchArgs map` tries to extends the partial substition `map` by
 calling `matchVar lets args[i] matchLets matchArgs[i]` for each pair of corresponding variables,
 returning the final partial substiution, or `none` on conflicting assigments -/
@@ -1727,6 +1729,7 @@ def matchArg [DecidableEq d.Op]
   | t::l, .cons vₗ vsₗ, .cons vᵣ vsᵣ, ma => do
       let ma ← matchVar (t := t) lets vₗ matchLets vᵣ ma
       matchArg lets matchLets vsₗ vsᵣ ma
+  termination_by structural l _ _ => l
 
 
 
@@ -1746,7 +1749,7 @@ This obeys the hypothetical equation: `(matchLets.exprTreeAt w).changeVars map =
 where `exprTreeAt` is a hypothetical definition that gives the expression tree.
 
 NOTE: this only matches on *pure* let bindings in both `matchLets` and `lets`. -/
-def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
+def matchVar {Γ_in Γ_out Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
     (lets : Lets d Γ_in eff Γ_out) (v : Var Γ_out t) :
     (matchLets : Lets d Δ_in .pure Δ_out) →
     (w : Var Δ_out t) →
@@ -1791,6 +1794,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
             then some ma
             else none
       | none => some (AList.insert ⟨_, w⟩ v ma)
+  termination_by structural matchLets _ _ => matchLets
 end
 
 /-- how matchVar behaves on `var` at a successor variable -/
