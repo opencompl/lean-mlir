@@ -1856,10 +1856,16 @@ variable [DecidableEq α]
 
 @[simp]
 theorem const_kerase_eq {a} {s : Sigma β} {l : List (Sigma β)} :
-    s :: (List.kerase a l) := by
+   l = l:= by
+  rw [AList.insert_e]
 
 
   simp [List.kerase, h, List.cons]
+
+
+#check AList.insert
+
+--ma.entries ⊆ (AList.insert ⟨t, w⟩ v ma).entries
 
 
 
@@ -2045,13 +2051,18 @@ theorem subset_entries :
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
-    split_ifs at hvarMap
-    · simp at hvarMap
-      simp [hvarMap]
-    · simp at hvarMap
-      rename_i a b c
-      rw [← hvarMap]
-      sorry
+    case h_1 p q r _s =>
+      split_ifs at hvarMap
+      . simp_all
+    case h_2 a _b c d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
+      intros x hx
+      rcases x with ⟨x, y⟩
+      simp only [← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, w⟩
+      . subst hx; simp_all
+      . rwa [AList.lookup_insert_ne hx]
 
 end SubsetEntries
 
