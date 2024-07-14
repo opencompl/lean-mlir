@@ -1851,6 +1851,18 @@ variable [DecidableEq d.Op]
 #print prefix matchArg
 #check matchArg.mutual_induct
 
+variable {α : Type u} {β : α → Type v} {l l₁ l₂ : List (Sigma β)}
+variable [DecidableEq α]
+
+@[simp]
+theorem const_kerase_eq {a} {s : Sigma β} {l : List (Sigma β)} :
+    s :: (List.kerase a l) := by
+
+
+  simp [List.kerase, h, List.cons]
+
+
+
 theorem subset_entries :
     (
      ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
@@ -1970,26 +1982,37 @@ theorem subset_entries :
       simp; exact h2
     have hmut := ih_matchVar vl ma' <| by simp; exact h1
     apply List.Subset.trans hmut hind
-  · intro eff Γ_in Γ_out Δ_in t inst lets v
-    intro Δ_out t matchLets _ w h ma ih_matchVar varMap hvarMap
-    simp only [matchVar, Option.mem_def] at *
-    intros x hx
-    split at hvarMap
-    case h_1 p q r _s =>
-      split_ifs at hvarMap
-      . simp_all
-    case h_2 a _b c d e f =>
-      simp only [Option.some.injEq] at hvarMap
-      subst hvarMap
-      rcases x with ⟨x, y⟩
-      simp only [← AList.mem_lookup_iff] at *
-      by_cases hx : x = ⟨t, w⟩
-      . subst hx; simp_all
-      . rwa [AList.lookup_insert_ne hx]
+  · intro eff Γ_in Γ_out Δ_in t inst lets v?
+    intro a? a1? matchLets e? w h ma
+    intro ih_matchVar varMap matchLets
+    intros x hvarMap
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    apply varMap
+    rw [← hvarMap]
+    sorry
     sorry
   · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
     intro matchExpr property? ma motive? v varMap hvarMap
-    sorry
+    simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
+    split at hvarMap
+    · simp at hvarMap
+    · rename_i e he
+      rcases e with ⟨op, rfl, effLe, args'⟩
+      dsimp at hvarMap
+      split_ifs at hvarMap with hop
+      · rcases hop with ⟨rfl, hop⟩
+        dsimp at hvarMap
+        have x := Expr.args matchExpr
+        apply (motive?)
+        rw [← hvarMap]
+        sorry
+        sorry
+        sorry
+        -- apply subset_entries_matchArg (lets := lets)
+        --  (matchLets := matchLets)
+        --  (argsl := args')
+        --  (argsr := (Expr.args matchExpr))
+        --  (hvarMap := by simp; rw [← hvarMap])
   · intro eff Γ_in Γ_out Δ_in t inst lets w ma v₂
     intro b? v varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
@@ -2007,11 +2030,28 @@ theorem subset_entries :
       . rwa [AList.lookup_insert_ne hx]
   · intro eff Γ_in Γ_out Δ_in t inst lets v? w ma v₂
     intro b? c? v varMap hvarMap
-    sorry
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    unfold matchVar at hvarMap
+    split at hvarMap
+    split_ifs at hvarMap
+    · simp at hvarMap
+      simp [hvarMap]
+    · simp at hvarMap
+      rename_i a b c
+      rw [c] at b?
+      contradiction
   · intro eff Γ_in Γ_out Δ_in t inst lets a? w ma
     intro b? v varMap hvarMap
-    sorry
-
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    unfold matchVar at hvarMap
+    split at hvarMap
+    split_ifs at hvarMap
+    · simp at hvarMap
+      simp [hvarMap]
+    · simp at hvarMap
+      rename_i a b c
+      rw [← hvarMap]
+      sorry
 
 end SubsetEntries
 
