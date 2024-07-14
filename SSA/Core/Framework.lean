@@ -563,7 +563,7 @@ def Com.denoteImpure : Com d Γ eff ty → (Γv : Valuation Γ) → EffectKind.i
   | .ret e, Γv => pure (Γv e)
   | .var e body, Γv => e.denoteImpure Γv >>= fun x => body.denote (Γv.snoc x)
 
-def Lets.denote [DialectSignature d] [DialectDenote d]
+def Lets.denote [DialectSignature d] [DialectDenote d] {Γ₂}
     (lets : Lets d Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (eff.toMonad d.m <| Valuation Γ₂) :=
   match lets with
   | .nil => return Γ₁'v
@@ -585,7 +585,7 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
 
 --TODO: figure out if we can write this in terms of `liftM`, too
 /-- Denote a `Lets` in an unconditionally impure fashion -/
-def Lets.denoteImpure [DialectSignature d] [DialectDenote d]
+def Lets.denoteImpure [DialectSignature d] [DialectDenote d] {Γ₂}
     (lets : Lets d Γ₁ eff Γ₂) (Γ₁'v : Valuation Γ₁) : (EffectKind.impure.toMonad d.m <| Valuation Γ₂) :=
   match lets with
   | .nil => EffectKind.impure.return Γ₁'v
@@ -1714,9 +1714,6 @@ end TermModel
 
 -/
 
-
-
-set_option maxHeartbeats 9999999 in
 mutual
 
 /-- `matchArg lets matchLets args matchArgs map` tries to extends the partial substition `map` by
