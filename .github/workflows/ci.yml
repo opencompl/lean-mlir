@@ -19,6 +19,10 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Add cadical
+        run: |
+          apt install cadical
+
       - name: Install elan 🕑
         run: |
           set -o pipefail
