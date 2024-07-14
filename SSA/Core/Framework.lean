@@ -1976,7 +1976,7 @@ theorem subset_entries :
     apply motive (v := v) (varMap := varMap) hvarMap
 
   · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
-    intro matchExpr property? ma motive? v varMap hvarMap
+    intro matchExpr property? ma motive v varMap hvarMap
     simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
     split at hvarMap
     · simp at hvarMap
@@ -1988,33 +1988,20 @@ theorem subset_entries :
         dsimp at hvarMap
         dsimp! at *
         rename_i aa bb
-        apply motive? (ie := Expr.args matchExpr)
-        rw [hvarMap]
-
-
-        --unfold Ctxt.get? at property?
-        have pro := property?
-        have ssss := sss
-        have llll := ll
-        have h : sss.op = matchExpr.op := by
-          rw [Expr.op]
-          dsimp!
-
-
-
-          simp [ssss]
-
-          simp [*]
-
-
+-- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
+-- (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs) (varMap : Mapping Δ_in Γ_out),
+-- matchArg lets matchLets ie.args (⋯ ▸ matchExpr.args) ma = some varMap → ma.entries ⊆ varMap.entries
         apply motive
-
-        sorry
-        -- apply subset_entries_matchArg (lets := lets)
-        --  (matchLets := matchLets)
-        --  (argsl := args')
-        --  (argsr := (Expr.args matchExpr))
-        --  (hvarMap := by simp; rw [← hvarMap])
+        · -- goal:
+          -- matchArg lets matchLets ?pos.intro.ie✝.args (⋯ ▸ matchExpr.args) ma = some varMap
+          sorry
+        · -- goal:
+          -- Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op)
+          sorry
+        · -- goal
+          -- ∃ (h : (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).op = matchExpr.op),
+          -- (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).regArgs = ⋯ ▸ matchExpr.regArgs
+          sorry
   · intro eff Γ_in Γ_out Δ_in t inst lets w ma v₂
     intro b? v varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
