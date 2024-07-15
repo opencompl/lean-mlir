@@ -880,3 +880,45 @@ theorem doRegAllocLets_correct
     -- by_cases hr : r = RegAlloc.Expr.outRegister er
     -- case pos => sorry
     -- case neg => sorry
+
+
+/-
+Proof sketch:
+
+given: in registers are *live*: every variable in the in context Γ of
+(Γ lets Δ) has a register.
+proven:
+
+out registers are *sound*: every variable that *has* a register in the context Δ
+is computed correctly.
+
+Vibes based proof
+-----------------
+- empty program: we don't change the context at all, and soundness is weakeer
+  than completeness, so we are done (`sound_mapping.of_complete`)
+- `[Γ body Ξ (let v := e) Δ]`. We want to reason "backwards".
+  IH tells us that if the live-ins are correct at Γ, then the live-outs are correct at Ξ.
+  We then need to show that the live-outs are correct at Δ.
+  We know that we kill the register `r` for `v` that we assign.
+  We also know that we don't intefere with any other registers.
+  Thus, the register mapping that we create at the end of processing this statement
+  is such that we have potentially assigned registers for `e`.
+  From the IH, we get that `R U {e} - {v}` is correct at Ξ. To show that `R U {e}`
+  is correct at Δ, see that everything except `{v}` is correct from IH, and that
+  we compute `v` at this location, and so we are correct for `v` as well.
+
+
+Formal blueprint
+----------------
+
+1) proof for empty program:
+ - (Γ nil Γ): we know that every variable is live in the in context Γ.
+    In the out context Γ, we change no register mappings, and the values
+    of the variables are unchanged. Thus, the every variable that has a register
+    (the live-ins) is computed correctly, since the outs are identical to the ins.
+2) Proof for extension.
+     - `Γ body Ξ (let v := e) Δ`
+     - `IH (Γ body Ξ)`: if all live ins are correct at Γ, then all live outs
+          are correct at `Ξ`.
+
+-/
