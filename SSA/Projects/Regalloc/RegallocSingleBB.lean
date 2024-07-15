@@ -1195,14 +1195,37 @@ theorem doRegAllocLets_correct
     cases w using Ctxt.Var.casesOn
     case toSnoc w =>
       simp
-      have := registerLiveFor_of_doExpr_const_of_registerLiveFor (he := he)
-      -- rw [← ih]
       sorry
     case last =>
       simp
       rw [hsound]
       congr
-      sorry
+      rcases e with ⟨op, ty_eq, heff, args, regArgs⟩
+      cases op
+      case e_a.mk.increment =>
+        simp_all
+        simp [doExpr] at he
+        cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
+        case none =>  simp [hresult₁] at he
+        case some val =>
+          obtain ⟨r, Γs2reg⟩ := val
+          simp [hresult₁] at he
+          cases harg₁ : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
+          case none => simp [harg₁] at he
+          case some val =>
+            obtain ⟨s, Γs2reg⟩ := val
+            simp [harg₁] at he
+            simp [← he]
+            rw [RegAlloc.Expr.outRegister_increment_eq]
+            -- hlive_sw  : Γ₂2Reg.registerLiveFor s (Ctxt.Var.last Γ₁₂ .int)
+            -- hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ Pure.Ty.int) = some (r, Γs2reg✝)
+            have live₁ := Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁ hlive_sw
+            have live₂ := Var2Reg.registerLiveFor_of_lookupOrInsert hresult₁
+            apply registerLiveFor_inj live₁ live₂
+      case e_a.mk.const =>
+        simp_all
+        sorry
+
 
 /-
 Proof sketch:
