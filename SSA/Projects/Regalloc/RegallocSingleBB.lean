@@ -1203,6 +1203,12 @@ theorem doRegAllocLets_correct
       rcases e with ⟨op, ty_eq, heff, args, regArgs⟩
       cases op
       case e_a.mk.increment =>
+        -- Key intuition: we know that 's' is live for 'Var.last',
+        -- and we know that when we allocate, we try to allocate for 'Var.last'.
+        -- by the correctness of 'lookupOrInsert', we know that
+        -- a) lookupOrInsert will keep 's' live for 'Var.last' since it was live after, and
+        -- b) lookupOrInsert will make 'r' alive for 'Var.last'. since we successfully allocated 'Var.last'
+        -- By injectivity of a register being alive, we deduce that 's = r'.
         simp_all
         simp [doExpr] at he
         cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
