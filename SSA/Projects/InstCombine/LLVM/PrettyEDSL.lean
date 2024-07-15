@@ -47,11 +47,13 @@ macro_rules
 
 open MLIR.AST
 
-syntax mlir_op_operand " = " "llvm.mlir.constant(" neg_num (" : " mlir_type)? ")" (" : " mlir_type) : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant(" ("$" noWs "{" term "}") ")" (" : " mlir_type)?   : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(" neg_num (" : " mlir_type)? ")" (" : " mlir_type) : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "(" ("$" noWs "{" term "}") ")" (" : " mlir_type)?   : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $t]?) : $typ ) => do
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $typ} : () -> ($typ) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $t]?) : $other_type ) => do
+      match t with
+        | some given_type => `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $given_type} : () -> ($other_type) )
+        | none  => `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $other_type} : () -> ($other_type) )
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( ${ $x:term }) $[: $t]?) => do
       let t ← t.getDM `(mlir_type| _)
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
