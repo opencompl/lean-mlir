@@ -908,13 +908,22 @@ theorem toFun_const :
   rw [Var2Reg.toFun_lookupOrInsert hresult₁]
   simp
 
--- /--
--- If we started with a sound mapping Δ2Reg,
--- then we will keep the mapping sound after Ξ.
--- -/
--- theorem registerLiveFor_doExpr_const {v : Ξ.Var Pure.Ty.int}
---   (hsound : sound_mapping V Δ2Reg R) :
--- Ξ2reg.registerLiveFor r (Ctxt.Var.last Ξ t) := by -- sorry
+/--
+If we started with a sound mapping Δ2Reg,
+then we will keep the mapping sound after Ξ.
+-/
+theorem sound_mapping_of_doExpr_const_of_sound (hsound : sound_mapping V Γ₁2Reg R) :
+    sound_mapping (V.snoc (t := Pure.Ty.int) i) Γ₂2Reg₁ (R.set r i) := by
+  unfold sound_mapping
+  intros s w hlive
+  simp [doExpr, hresult₁] at he
+  obtain ⟨he₁, he₂⟩ := he
+  have he₂ := he₂.symm
+  subst he₂
+  -- We are characterizing what the result of running an increment looks like.
+  sorry -- HERE HERE HERE
+
+
 -- unfold sound_mapping at hsound ⊢
 -- intros s w hlive
 -- unfold Var2Reg.registerLiveFor at *
@@ -998,8 +1007,8 @@ variable
 
 
 /-
-A add expression changes the register file by
-simply adding a new binding for the out register 'r'.
+A increment expression changes the register file by
+simply adding a new binding for arguments.
 -/
 @[simp]
 theorem toFun_increment :
@@ -1075,11 +1084,7 @@ theorem doRegAllocLets_correct
       simp
       rw [hsound]
       congr
-      sorry -- HERE HERE
-    -- by_cases hr : r = RegAlloc.Expr.outRegister er
-    -- case pos => sorry
-    -- case neg => sorry
-
+      sorry
 
 /-
 Proof sketch:
