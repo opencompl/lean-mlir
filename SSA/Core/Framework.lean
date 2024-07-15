@@ -1955,28 +1955,30 @@ theorem subset_entries :
                       motive2 eff Γ_in Γ_out Δ_in Δ_out t inst lets v matchLets w ma
   -/
   apply matchArg.mutual_induct (d:=d)
-  · intro Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets
-    intro ma varMap hvarMap
+  <;> first
+      | intro (Γ_in : Ctxt _) eff Γ_out Δ_in Δ_out inst lets matchLets
+      | intro (eff : EffectKind) Γ_in Γ_out Δ_in t inst lets w
+  · intro ma varMap hvarMap
     simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
     exact Set.Subset.refl _
-  · intro Γ_in eff Γ_out Δ_in Δ_out inst lets matchLets
-    intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
+
+  · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
     simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind : ma'.entries ⊆ _ := ih_matchArg ma' varMap <| by
       simp; exact h2
     have hmut := ih_matchVar vl ma' <| by simp; exact h1
     apply List.Subset.trans hmut hind
-  · intro eff Γ_in Γ_out Δ_in t inst lets w
-    intro Δ_out a1? matchLets matchExpr l h ma
+
+  · intro Δ_out u matchLets matchExpr l h ma
     intro ih_matchVar motive v
     intros varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
     apply motive (v := v) (varMap := varMap) hvarMap
 
-  · intro eff Γ_in Γ_out Δ_in t inst lets u? Δ_out t_1 matchLets
+  · intro Δ_out t_1 matchLets
     intro matchExpr property? ma motive v varMap hvarMap
     simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
     split at hvarMap
@@ -2006,8 +2008,7 @@ theorem subset_entries :
           -- ∃ (h : (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).op = matchExpr.op),
           -- (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).regArgs = ⋯ ▸ matchExpr.regArgs
           sorry
-  · intro eff Γ_in Γ_out Δ_in t inst lets w ma v₂
-    intro b? v varMap hvarMap x hx
+  · intro ma v₂ b? v varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
     split at hvarMap
     case h_1 p q r _s =>
@@ -2021,7 +2022,7 @@ theorem subset_entries :
       by_cases hx : x = ⟨t, w⟩
       . subst hx; simp_all
       . rwa [AList.lookup_insert_ne hx]
-  · intro eff Γ_in Γ_out Δ_in t inst lets v? w ma v₂
+  · intro w ma v₂
     intro b? c? v varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
@@ -2033,7 +2034,7 @@ theorem subset_entries :
       rename_i a b c
       rw [c] at b?
       contradiction
-  · intro eff Γ_in Γ_out Δ_in t inst lets a? w ma
+  · intro w ma
     intro b? v varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
