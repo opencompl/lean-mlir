@@ -94,7 +94,5 @@ theorem urem_i1_is_zero_proof : urem_i1_is_zero_before ⊑ urem_i1_is_zero_after
   simp_alive_case_bash
   try alive_auto
   ---BEGIN urem_i1_is_zero
-  all_goals (try extract_goal ; sorry)
+  apply  urem_i1_is_zero_thm
   ---END urem_i1_is_zero
-
-
