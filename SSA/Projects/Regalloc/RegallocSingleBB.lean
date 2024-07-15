@@ -1195,6 +1195,8 @@ theorem doRegAllocLets_correct
     cases w using Ctxt.Var.casesOn
     case toSnoc w =>
       simp
+      -- since 's' is alive for 'w', and 'doExpr' does not change liveness, we know that
+      -- 's' will be alive before. We then use hsound.
       sorry
     case last =>
       simp
@@ -1230,9 +1232,16 @@ theorem doRegAllocLets_correct
             apply registerLiveFor_inj live₁ live₂
       case e_a.mk.const =>
         simp_all
-        sorry
-
-
+        simp [doExpr] at he
+        cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
+        case none =>  simp [hresult₁] at he
+        case some val =>
+          obtain ⟨r, Γs2reg⟩ := val
+          simp [hresult₁] at he
+          simp [← he]
+          have live₁ := Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁ hlive_sw
+          have live₂ := Var2Reg.registerLiveFor_of_lookupOrInsert hresult₁
+          apply registerLiveFor_inj live₁ live₂
 /-
 Proof sketch:
 
