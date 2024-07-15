@@ -1,42 +1,35 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-    %0 = "llvm.mlir.null"() : () -> !llvm.ptr<i8>
-    "llvm.return"(%0) : (!llvm.ptr<i8>) -> ()
-  }) {linkage = 4 : i64, sym_name = "p", type = !llvm.ptr<i8>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 999999 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @p} : () -> !llvm.ptr<ptr<i8>>
-    %2 = "llvm.mlir.constant"() {value = 1000 : i32} : () -> i32
-    %3 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %4 = "llvm.mlir.addressof"() {global_name = @p} : () -> !llvm.ptr<ptr<i8>>
-    %5 = "llvm.mlir.constant"() {value = 2 : i32} : () -> i32
-    %6 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %7 = "llvm.call"() {callee = @llvm.stacksave, fastmathFlags = #llvm.fastmath<>} : () -> !llvm.ptr<i8>
-    %8 = "llvm.alloca"(%6) : (i32) -> !llvm.ptr<i32>
-    %9 = "llvm.bitcast"(%8) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.store"(%5, %8) : (i32, !llvm.ptr<i32>) -> ()
-    "llvm.store"(%9, %4) : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> ()
-    "llvm.br"(%3, %7)[^bb2] : (i32, !llvm.ptr<i8>) -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f80, dense<32> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global weak @p() {addr_space = 0 : i32} : !llvm.ptr {
+    %0 = llvm.mlir.zero : !llvm.ptr
+    llvm.return %0 : !llvm.ptr
+  }
+  llvm.func @main() -> i32 attributes {passthrough = ["nounwind"]} {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(2 : i32) : i32
+    %2 = llvm.mlir.zero : !llvm.ptr
+    %3 = llvm.mlir.addressof @p : !llvm.ptr
+    %4 = llvm.mlir.constant(0 : i32) : i32
+    %5 = llvm.mlir.constant(1000 : i32) : i32
+    %6 = llvm.mlir.constant(999999 : i32) : i32
+    %7 = llvm.intr.stacksave : !llvm.ptr
+    %8 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %8 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store volatile %8, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.br ^bb2(%4, %7 : i32, !llvm.ptr)
   ^bb1:  // pred: ^bb2
-    "llvm.return"(%3) : (i32) -> ()
-  ^bb2(%10: i32, %11: !llvm.ptr<i8>):  // 2 preds: ^bb0, ^bb2
-    %12 = "llvm.add"(%10, %6) : (i32, i32) -> i32
-    "llvm.call"(%11) {callee = @llvm.stackrestore, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    %13 = "llvm.call"() {callee = @llvm.stacksave, fastmathFlags = #llvm.fastmath<>} : () -> !llvm.ptr<i8>
-    %14 = "llvm.srem"(%12, %2) : (i32, i32) -> i32
-    %15 = "llvm.add"(%14, %6) : (i32, i32) -> i32
-    %16 = "llvm.alloca"(%15) : (i32) -> !llvm.ptr<i32>
-    %17 = "llvm.bitcast"(%16) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.store"(%6, %16) : (i32, !llvm.ptr<i32>) -> ()
-    %18 = "llvm.getelementptr"(%16, %14) : (!llvm.ptr<i32>, i32) -> !llvm.ptr<i32>
-    "llvm.store"(%5, %18) : (i32, !llvm.ptr<i32>) -> ()
-    "llvm.store"(%17, %1) : (!llvm.ptr<i8>, !llvm.ptr<ptr<i8>>) -> ()
-    %19 = "llvm.icmp"(%12, %0) {predicate = 0 : i64} : (i32, i32) -> i1
-    "llvm.cond_br"(%19, %12, %13)[^bb1, ^bb2] {operand_segment_sizes = dense<[1, 0, 2]> : vector<3xi32>} : (i1, i32, !llvm.ptr<i8>) -> ()
-  }) {linkage = 10 : i64, sym_name = "main", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.stacksave", type = !llvm.func<ptr<i8> ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.stackrestore", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    llvm.return %4 : i32
+  ^bb2(%9: i32, %10: !llvm.ptr):  // 2 preds: ^bb0, ^bb2
+    %11 = llvm.add %9, %0  : i32
+    llvm.intr.stackrestore %10 : !llvm.ptr
+    %12 = llvm.intr.stacksave : !llvm.ptr
+    %13 = llvm.srem %11, %5  : i32
+    %14 = llvm.add %13, %0  : i32
+    %15 = llvm.alloca %14 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.store %0, %15 {alignment = 4 : i64} : i32, !llvm.ptr
+    %16 = llvm.getelementptr %15[%13] : (!llvm.ptr, i32) -> !llvm.ptr, i32
+    llvm.store %1, %16 {alignment = 4 : i64} : i32, !llvm.ptr
+    llvm.store volatile %15, %3 {alignment = 4 : i64} : !llvm.ptr, !llvm.ptr
+    %17 = llvm.icmp "eq" %11, %6 : i32
+    llvm.cond_br %17, ^bb1, ^bb2(%11, %12 : i32, !llvm.ptr)
+  }
+}

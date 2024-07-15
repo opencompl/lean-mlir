@@ -1,21 +1,15 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "main2", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "ctime2", type = !llvm.func<ptr<i7> (ptr<i999>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i999>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @main2} : () -> !llvm.ptr<func<i32 ()>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<func<i32 ()>>) -> !llvm.ptr<func<ptr<i7> ()>>
-    %2 = "llvm.call"(%1) : (!llvm.ptr<func<ptr<i7> ()>>) -> !llvm.ptr<i7>
-    "llvm.return"(%2) : (!llvm.ptr<i7>) -> ()
-  }) {linkage = 10 : i64, sym_name = "ctime", type = !llvm.func<ptr<i7> (ptr<i999>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.addressof"() {global_name = @ctime2} : () -> !llvm.ptr<func<ptr<i7> (ptr<i999>)>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<func<ptr<i7> (ptr<i999>)>>) -> !llvm.ptr<func<i32 (ptr<i99>)>>
-    %2 = "llvm.mlir.null"() : () -> !llvm.ptr<i99>
-    %3 = "llvm.call"(%1, %2) : (!llvm.ptr<func<i32 (ptr<i99>)>>, !llvm.ptr<i99>) -> i32
-    "llvm.return"(%3) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "main", type = !llvm.func<i32 ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @main2() -> i32
+  llvm.func @ctime2(!llvm.ptr) -> !llvm.ptr
+  llvm.func @ctime(%arg0: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.mlir.addressof @main2 : !llvm.ptr
+    %1 = llvm.call %0() : !llvm.ptr, () -> !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @main() -> i32 {
+    %0 = llvm.mlir.addressof @ctime2 : !llvm.ptr
+    %1 = llvm.mlir.zero : !llvm.ptr
+    %2 = llvm.call %0(%1) : !llvm.ptr, (!llvm.ptr) -> i32
+    llvm.return %2 : i32
+  }
+}

@@ -1,22 +1,15 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {linkage = 10 : i64, sym_name = "buffer", type = !llvm.array<64 x f32>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "use", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 64 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 63 : i64} : () -> i64
-    %2 = "llvm.mlir.addressof"() {global_name = @buffer} : () -> !llvm.ptr<array<64 x f32>>
-    %3 = "llvm.ptrtoint"(%2) : (!llvm.ptr<array<64 x f32>>) -> i64
-    %4 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %5 = "llvm.sub"(%4, %3) : (i64, i64) -> i64
-    %6 = "llvm.and"(%5, %1) : (i64, i64) -> i64
-    %7 = "llvm.add"(%6, %0) : (i64, i64) -> i64
-    %8 = "llvm.mlir.addressof"() {global_name = @buffer} : () -> !llvm.ptr<array<64 x f32>>
-    %9 = "llvm.bitcast"(%8) : (!llvm.ptr<array<64 x f32>>) -> !llvm.ptr<i8>
-    %10 = "llvm.getelementptr"(%9, %7) : (!llvm.ptr<i8>, i64) -> !llvm.ptr<i8>
-    "llvm.call"(%10) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "f", type = !llvm.func<void ()>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external @buffer() {addr_space = 0 : i32} : !llvm.array<64 x f32>
+  llvm.func @use(!llvm.ptr)
+  llvm.func @f() {
+    %0 = llvm.mlir.constant(127 : i64) : i64
+    %1 = llvm.mlir.addressof @buffer : !llvm.ptr
+    %2 = llvm.ptrtoint %1 : !llvm.ptr to i64
+    %3 = llvm.mlir.constant(0 : i64) : i64
+    %4 = llvm.sub %3, %2  : i64
+    %5 = llvm.add %4, %0  : i64
+    %6 = llvm.getelementptr %1[%5] : (!llvm.ptr, i64) -> !llvm.ptr, i8
+    llvm.call @use(%6) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+}

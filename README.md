@@ -15,7 +15,10 @@ Theory of static single assignment developed in the Lean proof assistant.
 We also build a wealth of tooling to interact closely with the [MLIR compiler ecosystem](https://mlir.llvm.org/),
 to enable workflows that include formal verification in the day-to-day of MLIR development.
 
-- [Link to generated documentation](https://opencompl.github.io/lean-mlir/)
+#### Documentation
+
+- **Publication: [Verifying Peephole Rewriting In SSA Compiler IRs](https://arxiv.org/abs/2407.03685)**
+- [API Documentation (auto-generated)](https://opencompl.github.io/lean-mlir/)
 
 #### Installation
 
@@ -42,7 +45,6 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 > engineering standards. Code is tested, covered by continuous integration, and
 > should never be broken. Very low tolerance for tech debt.
 > Breaking changes to core code should be accompanied by fixes to affected
->
 > project code. The project owner should assist in identifying potential
 > breakage. No need to fix experimental code.
 

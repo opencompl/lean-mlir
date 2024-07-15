@@ -1,80 +1,69 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "foo", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "bar", type = !llvm.func<void (ptr<i8, 1>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.bitcast"(%1) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "nonnullAfterBitCast", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i8):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2 : i32} : () -> i32
-    %1 = "llvm.zext"(%arg0) : (i8) -> i32
-    %2 = "llvm.add"(%1, %0) : (i32, i32) -> i32
-    %3 = "llvm.sext"(%2) : (i32) -> i64
-    %4 = "llvm.inttoptr"(%3) : (i64) -> !llvm.ptr<i8>
-    "llvm.call"(%4) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "nonnullAfterSExt", type = !llvm.func<void (i8)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i8):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2 : i32} : () -> i32
-    %1 = "llvm.zext"(%arg0) : (i8) -> i32
-    %2 = "llvm.add"(%1, %0) : (i32, i32) -> i32
-    %3 = "llvm.zext"(%2) : (i32) -> i64
-    %4 = "llvm.inttoptr"(%3) : (i64) -> !llvm.ptr<i8>
-    "llvm.call"(%4) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "nonnullAfterZExt", type = !llvm.func<void (i8)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.assume", type = !llvm.func<void (i1)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 100 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 100 : i32} : () -> i32
-    %2 = "llvm.sdiv"(%1, %arg0) : (i32, i32) -> i32
-    %3 = "llvm.inttoptr"(%2) : (i32) -> !llvm.ptr<i8>
-    "llvm.call"(%3) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    %4 = "llvm.sdiv"(%0, %arg1) : (i64, i64) -> i64
-    %5 = "llvm.inttoptr"(%4) : (i64) -> !llvm.ptr<i8>
-    "llvm.call"(%5) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "nonnullAfterInt2Ptr", type = !llvm.func<void (i32, i64)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.ptrtoint"(%1) : (!llvm.ptr<i32>) -> i64
-    %3 = "llvm.inttoptr"(%2) : (i64) -> !llvm.ptr<i8>
-    "llvm.call"(%3) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "nonnullAfterPtr2Int", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i128):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i128} : () -> i128
-    %1 = "llvm.icmp"(%arg0, %0) {predicate = 1 : i64} : (i128, i128) -> i1
-    "llvm.call"(%1) {callee = @llvm.assume, fastmathFlags = #llvm.fastmath<>} : (i1) -> ()
-    %2 = "llvm.inttoptr"(%arg0) : (i128) -> !llvm.ptr<i8>
-    "llvm.call"(%2) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "maybenullAfterInt2Ptr", type = !llvm.func<void (i128)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %1 = "llvm.alloca"(%0) : (i32) -> !llvm.ptr<i32>
-    %2 = "llvm.ptrtoint"(%1) : (!llvm.ptr<i32>) -> i32
-    %3 = "llvm.inttoptr"(%2) : (i32) -> !llvm.ptr<i8>
-    "llvm.call"(%3) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "maybenullAfterPtr2Int", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.addrspacecast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<i8, 1>
-    "llvm.call"(%0) {callee = @bar, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8, 1>) -> ()
-    "llvm.call"(%arg0) {callee = @foo, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "maybenullAfterAddrspacecast", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<"dlti.stack_alignment", 128 : i64>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @foo(!llvm.ptr)
+  llvm.func @bar(!llvm.ptr<1>)
+  llvm.func @nonnullAfterBitCast() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    llvm.call @foo(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @nonnullAfterSExt(%arg0: i8) {
+    %0 = llvm.mlir.constant(2 : i32) : i32
+    %1 = llvm.zext %arg0 : i8 to i32
+    %2 = llvm.add %1, %0 overflow<nsw, nuw>  : i32
+    %3 = llvm.sext %2 : i32 to i64
+    %4 = llvm.inttoptr %3 : i64 to !llvm.ptr
+    llvm.call @foo(%4) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @nonnullAfterZExt(%arg0: i8) {
+    %0 = llvm.mlir.constant(2 : i32) : i32
+    %1 = llvm.zext %arg0 : i8 to i32
+    %2 = llvm.add %1, %0 overflow<nsw, nuw>  : i32
+    %3 = llvm.zext %2 : i32 to i64
+    %4 = llvm.inttoptr %3 : i64 to !llvm.ptr
+    llvm.call @foo(%4) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @nonnullAfterInt2Ptr(%arg0: i32, %arg1: i64) {
+    %0 = llvm.mlir.constant(100 : i32) : i32
+    %1 = llvm.mlir.constant(100 : i64) : i64
+    %2 = llvm.sdiv %0, %arg0  : i32
+    %3 = llvm.inttoptr %2 : i32 to !llvm.ptr
+    llvm.call @foo(%3) : (!llvm.ptr) -> ()
+    %4 = llvm.sdiv %1, %arg1  : i64
+    %5 = llvm.inttoptr %4 : i64 to !llvm.ptr
+    llvm.call @foo(%5) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @nonnullAfterPtr2Int() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.ptrtoint %1 : !llvm.ptr to i64
+    %3 = llvm.inttoptr %2 : i64 to !llvm.ptr
+    llvm.call @foo(%3) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @maybenullAfterInt2Ptr(%arg0: i128) {
+    %0 = llvm.mlir.constant(0 : i128) : i128
+    %1 = llvm.icmp "ne" %arg0, %0 : i128
+    "llvm.intr.assume"(%1) : (i1) -> ()
+    %2 = llvm.inttoptr %arg0 : i128 to !llvm.ptr
+    llvm.call @foo(%2) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @maybenullAfterPtr2Int() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.alloca %0 x i32 {alignment = 4 : i64} : (i32) -> !llvm.ptr
+    %2 = llvm.ptrtoint %1 : !llvm.ptr to i32
+    %3 = llvm.inttoptr %2 : i32 to !llvm.ptr
+    llvm.call @foo(%3) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @maybenullAfterAddrspacecast(%arg0: !llvm.ptr {llvm.nonnull}) {
+    %0 = llvm.addrspacecast %arg0 : !llvm.ptr to !llvm.ptr<1>
+    llvm.call @bar(%0) : (!llvm.ptr<1>) -> ()
+    llvm.call @foo(%arg0) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+}

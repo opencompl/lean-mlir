@@ -1,49 +1,45 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "isdigit", type = !llvm.func<i16 (i16)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "sink", type = !llvm.func<void (i16)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i16):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 32767 : i16} : () -> i16
-    %1 = "llvm.mlir.constant"() {value = 256 : i16} : () -> i16
-    %2 = "llvm.mlir.constant"() {value = 255 : i16} : () -> i16
-    %3 = "llvm.mlir.constant"() {value = 128 : i16} : () -> i16
-    %4 = "llvm.mlir.constant"() {value = 127 : i16} : () -> i16
-    %5 = "llvm.mlir.constant"() {value = 58 : i16} : () -> i16
-    %6 = "llvm.mlir.constant"() {value = 57 : i16} : () -> i16
-    %7 = "llvm.mlir.constant"() {value = 49 : i16} : () -> i16
-    %8 = "llvm.mlir.constant"() {value = 48 : i16} : () -> i16
-    %9 = "llvm.mlir.constant"() {value = 47 : i16} : () -> i16
-    %10 = "llvm.mlir.constant"() {value = 1 : i16} : () -> i16
-    %11 = "llvm.mlir.constant"() {value = 0 : i16} : () -> i16
-    %12 = "llvm.call"(%11) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%12) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %13 = "llvm.call"(%10) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%13) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %14 = "llvm.call"(%9) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%14) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %15 = "llvm.call"(%8) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%15) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %16 = "llvm.call"(%7) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%16) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %17 = "llvm.call"(%6) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%17) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %18 = "llvm.call"(%5) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%18) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %19 = "llvm.call"(%4) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%19) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %20 = "llvm.call"(%3) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%20) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %21 = "llvm.call"(%2) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%21) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %22 = "llvm.call"(%1) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%22) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %23 = "llvm.call"(%0) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%23) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %24 = "llvm.call"(%arg0) {callee = @isdigit, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%24) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "fold_isdigit", type = !llvm.func<void (i16)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @isdigit(i16) -> i16
+  llvm.func @sink(i16)
+  llvm.func @fold_isdigit(%arg0: i16) {
+    %0 = llvm.mlir.constant(0 : i16) : i16
+    %1 = llvm.mlir.constant(1 : i16) : i16
+    %2 = llvm.mlir.constant(47 : i16) : i16
+    %3 = llvm.mlir.constant(48 : i16) : i16
+    %4 = llvm.mlir.constant(49 : i16) : i16
+    %5 = llvm.mlir.constant(57 : i16) : i16
+    %6 = llvm.mlir.constant(58 : i16) : i16
+    %7 = llvm.mlir.constant(127 : i16) : i16
+    %8 = llvm.mlir.constant(128 : i16) : i16
+    %9 = llvm.mlir.constant(255 : i16) : i16
+    %10 = llvm.mlir.constant(256 : i16) : i16
+    %11 = llvm.mlir.constant(32767 : i16) : i16
+    %12 = llvm.call @isdigit(%0) : (i16) -> i16
+    llvm.call @sink(%12) : (i16) -> ()
+    %13 = llvm.call @isdigit(%1) : (i16) -> i16
+    llvm.call @sink(%13) : (i16) -> ()
+    %14 = llvm.call @isdigit(%2) : (i16) -> i16
+    llvm.call @sink(%14) : (i16) -> ()
+    %15 = llvm.call @isdigit(%3) : (i16) -> i16
+    llvm.call @sink(%15) : (i16) -> ()
+    %16 = llvm.call @isdigit(%4) : (i16) -> i16
+    llvm.call @sink(%16) : (i16) -> ()
+    %17 = llvm.call @isdigit(%5) : (i16) -> i16
+    llvm.call @sink(%17) : (i16) -> ()
+    %18 = llvm.call @isdigit(%6) : (i16) -> i16
+    llvm.call @sink(%18) : (i16) -> ()
+    %19 = llvm.call @isdigit(%7) : (i16) -> i16
+    llvm.call @sink(%19) : (i16) -> ()
+    %20 = llvm.call @isdigit(%8) : (i16) -> i16
+    llvm.call @sink(%20) : (i16) -> ()
+    %21 = llvm.call @isdigit(%9) : (i16) -> i16
+    llvm.call @sink(%21) : (i16) -> ()
+    %22 = llvm.call @isdigit(%10) : (i16) -> i16
+    llvm.call @sink(%22) : (i16) -> ()
+    %23 = llvm.call @isdigit(%11) : (i16) -> i16
+    llvm.call @sink(%23) : (i16) -> ()
+    %24 = llvm.call @isdigit(%arg0) : (i16) -> i16
+    llvm.call @sink(%24) : (i16) -> ()
+    llvm.return
+  }
+}

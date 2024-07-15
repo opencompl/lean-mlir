@@ -1,37 +1,33 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "isascii", type = !llvm.func<i16 (i16)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "sink", type = !llvm.func<void (i16)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i16):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = -1 : i16} : () -> i16
-    %1 = "llvm.mlir.constant"() {value = 32767 : i16} : () -> i16
-    %2 = "llvm.mlir.constant"() {value = 256 : i16} : () -> i16
-    %3 = "llvm.mlir.constant"() {value = 255 : i16} : () -> i16
-    %4 = "llvm.mlir.constant"() {value = 128 : i16} : () -> i16
-    %5 = "llvm.mlir.constant"() {value = 127 : i16} : () -> i16
-    %6 = "llvm.mlir.constant"() {value = 1 : i16} : () -> i16
-    %7 = "llvm.mlir.constant"() {value = 0 : i16} : () -> i16
-    %8 = "llvm.call"(%7) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%8) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %9 = "llvm.call"(%6) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%9) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %10 = "llvm.call"(%5) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%10) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %11 = "llvm.call"(%4) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%11) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %12 = "llvm.call"(%3) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%12) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %13 = "llvm.call"(%2) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%13) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %14 = "llvm.call"(%1) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%14) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %15 = "llvm.call"(%0) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%15) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    %16 = "llvm.call"(%arg0) {callee = @isascii, fastmathFlags = #llvm.fastmath<>} : (i16) -> i16
-    "llvm.call"(%16) {callee = @sink, fastmathFlags = #llvm.fastmath<>} : (i16) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "fold_isascii", type = !llvm.func<void (i16)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @isascii(i16) -> i16
+  llvm.func @sink(i16)
+  llvm.func @fold_isascii(%arg0: i16) {
+    %0 = llvm.mlir.constant(0 : i16) : i16
+    %1 = llvm.mlir.constant(1 : i16) : i16
+    %2 = llvm.mlir.constant(127 : i16) : i16
+    %3 = llvm.mlir.constant(128 : i16) : i16
+    %4 = llvm.mlir.constant(255 : i16) : i16
+    %5 = llvm.mlir.constant(256 : i16) : i16
+    %6 = llvm.mlir.constant(32767 : i16) : i16
+    %7 = llvm.mlir.constant(-1 : i16) : i16
+    %8 = llvm.call @isascii(%0) : (i16) -> i16
+    llvm.call @sink(%8) : (i16) -> ()
+    %9 = llvm.call @isascii(%1) : (i16) -> i16
+    llvm.call @sink(%9) : (i16) -> ()
+    %10 = llvm.call @isascii(%2) : (i16) -> i16
+    llvm.call @sink(%10) : (i16) -> ()
+    %11 = llvm.call @isascii(%3) : (i16) -> i16
+    llvm.call @sink(%11) : (i16) -> ()
+    %12 = llvm.call @isascii(%4) : (i16) -> i16
+    llvm.call @sink(%12) : (i16) -> ()
+    %13 = llvm.call @isascii(%5) : (i16) -> i16
+    llvm.call @sink(%13) : (i16) -> ()
+    %14 = llvm.call @isascii(%6) : (i16) -> i16
+    llvm.call @sink(%14) : (i16) -> ()
+    %15 = llvm.call @isascii(%7) : (i16) -> i16
+    llvm.call @sink(%15) : (i16) -> ()
+    %16 = llvm.call @isascii(%arg0) : (i16) -> i16
+    llvm.call @sink(%16) : (i16) -> ()
+    llvm.return
+  }
+}

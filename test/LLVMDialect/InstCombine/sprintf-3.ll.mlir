@@ -1,14 +1,10 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_s", type = !llvm.array<3 x i8>, value = "%s\00"} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "sprintf", type = !llvm.func<i32 (ptr<ptr<i8>>, ptr<i32>, ...)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<ptr<i8>>, %arg1: !llvm.ptr<i32>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @percent_s} : () -> !llvm.ptr<array<3 x i8>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<array<3 x i8>>) -> !llvm.ptr<i32>
-    %2 = "llvm.call"(%arg0, %1, %arg1) {callee = @sprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<ptr<i8>>, !llvm.ptr<i32>, !llvm.ptr<i32>) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "PR51200", type = !llvm.func<i32 (ptr<ptr<i8>>, ptr<i32>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external constant @percent_s("%s\00") {addr_space = 0 : i32}
+  llvm.func @sprintf(!llvm.ptr, !llvm.ptr, ...) -> i32
+  llvm.func @PR51200(%arg0: !llvm.ptr, %arg1: !llvm.ptr) -> i32 {
+    %0 = llvm.mlir.constant("%s\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_s : !llvm.ptr
+    %2 = llvm.call @sprintf(%arg0, %1, %arg1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, !llvm.ptr) -> i32
+    llvm.return %2 : i32
+  }
+}
