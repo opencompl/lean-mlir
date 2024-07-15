@@ -39,7 +39,7 @@ def alive_AddSub_1043_src  (w : Nat)   :=
 ^bb0(%C1 : _, %Z : _, %RHS : _):
   %v1 = llvm.and %Z, %C1
   %v2 = llvm.xor %v1, %C1
-  %v3 = llvm.mlir.constant 1
+  %v3 = llvm.mlir.constant(1) : _
   %v4 = llvm.add %v2, %v3
   %v5 = llvm.add %v4, %RHS
   llvm.return %v5
@@ -52,7 +52,7 @@ def alive_AddSub_1043_tgt  (w : Nat)  :=
   %v2 = llvm.or %Z, %v1
   %v3 = llvm.and %Z, %C1
   %v4 = llvm.xor %v3, %C1
-  %v5 = llvm.mlir.constant 1
+  %v5 = llvm.mlir.constant(1) : _
   %v6 = llvm.add %v4, %v5
   %v7 = llvm.sub %RHS, %v2
   llvm.return %v7
@@ -110,7 +110,7 @@ def alive_AddSub_1156_src  (w : Nat)   :=
 def alive_AddSub_1156_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%b : _):
-  %v1 = llvm.mlir.constant 1
+  %v1 = llvm.mlir.constant(1) : _
   %v2 = llvm.shl %b, %v1
   llvm.return %v2
 }]
@@ -134,7 +134,7 @@ theorem alive_AddSub_1156  (w : Nat)   : alive_AddSub_1156_src w  ⊑ alive_AddS
 def alive_AddSub_1164_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %a
   %v3 = llvm.add %v2, %b
   llvm.return %v3
@@ -143,7 +143,7 @@ def alive_AddSub_1164_src  (w : Nat)   :=
 def alive_AddSub_1164_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %a
   %v3 = llvm.sub %b, %a
   llvm.return %v3
@@ -171,9 +171,9 @@ theorem alive_AddSub_1164  (w : Nat)   : alive_AddSub_1164_src w  ⊑ alive_AddS
 def alive_AddSub_1165_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %a
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.sub %v3, %b
   %v5 = llvm.add %v2, %v4
   llvm.return %v5
@@ -183,11 +183,11 @@ def alive_AddSub_1165_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
   %v1 = llvm.add %a, %b
-  %v2 = llvm.mlir.constant 0
+  %v2 = llvm.mlir.constant(0) : _
   %v3 = llvm.sub %v2, %a
-  %v4 = llvm.mlir.constant 0
+  %v4 = llvm.mlir.constant(0) : _
   %v5 = llvm.sub %v4, %b
-  %v6 = llvm.mlir.constant 0
+  %v6 = llvm.mlir.constant(0) : _
   %v7 = llvm.sub %v6, %v1
   llvm.return %v7
 }]
@@ -211,7 +211,7 @@ theorem alive_AddSub_1165  (w : Nat)   : alive_AddSub_1165_src w  ⊑ alive_AddS
 def alive_AddSub_1176_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %b
   %v3 = llvm.add %a, %v2
   llvm.return %v3
@@ -220,7 +220,7 @@ def alive_AddSub_1176_src  (w : Nat)   :=
 def alive_AddSub_1176_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %b
   %v3 = llvm.sub %a, %b
   llvm.return %v3
@@ -245,7 +245,7 @@ theorem alive_AddSub_1176  (w : Nat)   : alive_AddSub_1176_src w  ⊑ alive_AddS
 def alive_AddSub_1202_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
   %v3 = llvm.add %v2, %C
   llvm.return %v3
@@ -254,9 +254,9 @@ def alive_AddSub_1202_src  (w : Nat)   :=
 def alive_AddSub_1202_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
-  %v3 = llvm.mlir.constant 1
+  %v3 = llvm.mlir.constant(1) : _
   %v4 = llvm.sub %C, %v3
   %v5 = llvm.sub %v4, %x
   llvm.return %v5
@@ -353,7 +353,7 @@ theorem alive_AddSub_1309  (w : Nat)   : alive_AddSub_1309_src w  ⊑ alive_AddS
 def alive_AddSub_1539_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %x : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %a
   %v3 = llvm.sub %x, %v2
   llvm.return %v3
@@ -362,7 +362,7 @@ def alive_AddSub_1539_src  (w : Nat)   :=
 def alive_AddSub_1539_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %x : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %a
   %v3 = llvm.add %x, %a
   llvm.return %v3
@@ -442,7 +442,7 @@ theorem alive_AddSub_1556   : alive_AddSub_1556_src ⊑ alive_AddSub_1556_tgt :=
 def alive_AddSub_1560_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.sub %v1, %a
   llvm.return %v2
 }]
@@ -450,7 +450,7 @@ def alive_AddSub_1560_src  (w : Nat)   :=
 def alive_AddSub_1560_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
   llvm.return %v2
 }]
@@ -474,7 +474,7 @@ theorem alive_AddSub_1560  (w : Nat)   : alive_AddSub_1560_src w  ⊑ alive_AddS
 def alive_AddSub_1564_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
   %v3 = llvm.sub %C, %v2
   llvm.return %v3
@@ -483,9 +483,9 @@ def alive_AddSub_1564_src  (w : Nat)   :=
 def alive_AddSub_1564_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
-  %v3 = llvm.mlir.constant 1
+  %v3 = llvm.mlir.constant(1) : _
   %v4 = llvm.add %C, %v3
   %v5 = llvm.add %x, %v4
   llvm.return %v5
@@ -552,7 +552,7 @@ def alive_AddSub_1614_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
   %v1 = llvm.add %X, %Y
-  %v2 = llvm.mlir.constant 0
+  %v2 = llvm.mlir.constant(0) : _
   %v3 = llvm.sub %v2, %Y
   llvm.return %v3
 }]
@@ -585,7 +585,7 @@ def alive_AddSub_1619_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
   %v1 = llvm.sub %X, %Y
-  %v2 = llvm.mlir.constant 0
+  %v2 = llvm.mlir.constant(0) : _
   %v3 = llvm.sub %v2, %Y
   llvm.return %v3
 }]
@@ -727,9 +727,9 @@ def alive_AndOrXor_698_src  (w : Nat)   :=
 ^bb0(%a : _, %b : _, %d : _):
   %v1 = llvm.and %a, %b
   %v2 = llvm.and %a, %d
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.icmp.eq %v1, %v3
-  %v5 = llvm.mlir.constant 0
+  %v5 = llvm.mlir.constant(0) : _
   %v6 = llvm.icmp.eq %v2, %v5
   %v7 = llvm.and %v4, %v6 : i1
   llvm.return %v7 : i1
@@ -742,11 +742,11 @@ def alive_AndOrXor_698_tgt  (w : Nat)  :=
   %v2 = llvm.and %a, %v1
   %v3 = llvm.and %a, %b
   %v4 = llvm.and %a, %d
-  %v5 = llvm.mlir.constant 0
+  %v5 = llvm.mlir.constant(0) : _
   %v6 = llvm.icmp.eq %v3, %v5
-  %v7 = llvm.mlir.constant 0
+  %v7 = llvm.mlir.constant(0) : _
   %v8 = llvm.icmp.eq %v4, %v7
-  %v9 = llvm.mlir.constant 0
+  %v9 = llvm.mlir.constant(0) : _
   %v10 = llvm.icmp.eq %v2, %v9
   llvm.return %v10 : i1
 }]
@@ -906,9 +906,9 @@ theorem alive_AndOrXor_794  (w : Nat)   : alive_AndOrXor_794_src w  ⊑ alive_An
 def alive_AndOrXor_827_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.icmp.eq %a, %v1
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.icmp.eq %b, %v3
   %v5 = llvm.and %v2, %v4 : i1
   llvm.return %v5 : i1
@@ -918,11 +918,11 @@ def alive_AndOrXor_827_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
   %v1 = llvm.or %a, %b
-  %v2 = llvm.mlir.constant 0
+  %v2 = llvm.mlir.constant(0) : _
   %v3 = llvm.icmp.eq %a, %v2
-  %v4 = llvm.mlir.constant 0
+  %v4 = llvm.mlir.constant(0) : _
   %v5 = llvm.icmp.eq %b, %v4
-  %v6 = llvm.mlir.constant 0
+  %v6 = llvm.mlir.constant(0) : _
   %v7 = llvm.icmp.eq %v1, %v6
   llvm.return %v7 : i1
 }]
@@ -959,7 +959,7 @@ def alive_AndOrXor_887_2_tgt  (w : Nat)  :=
 ^bb0(%a : _, %C1 : _):
   %v1 = llvm.icmp.eq %a, %C1
   %v2 = llvm.icmp.ne %a, %C1
-  %v3 = llvm.mlir.constant 0 :  i1
+  %v3 = llvm.mlir.constant(0 :  i1) : _
   %v4 = llvm.copy %v3 : i1
   llvm.return %v4 : i1
 }]
@@ -986,9 +986,9 @@ theorem alive_AndOrXor_887_2  (w : Nat)   : alive_AndOrXor_887_2_src w  ⊑ aliv
 def alive_AndOrXor_1230__A__B___A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%notOp0 : _, %notOp1 : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %notOp0, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %notOp1, %v3
   %v5 = llvm.and %v2, %v4
   llvm.return %v5
@@ -998,11 +998,11 @@ def alive_AndOrXor_1230__A__B___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%notOp0 : _, %notOp1 : _):
   %v1 = llvm.or %notOp0, %notOp1
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %notOp0, %v2
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %notOp1, %v4
-  %v6 = llvm.mlir.constant -1
+  %v6 = llvm.mlir.constant(-1) : _
   %v7 = llvm.xor %v1, %v6
   llvm.return %v7
 }]
@@ -1032,7 +1032,7 @@ def alive_AndOrXor_1241_AB__AB__AB_src  (w : Nat)   :=
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
   %v2 = llvm.and %A, %B
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %v2, %v3
   %v5 = llvm.and %v1, %v4
   llvm.return %v5
@@ -1043,7 +1043,7 @@ def alive_AndOrXor_1241_AB__AB__AB_tgt  (w : Nat)  :=
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
   %v2 = llvm.and %A, %B
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %v2, %v3
   %v5 = llvm.xor %A, %B
   llvm.return %v5
@@ -1073,7 +1073,7 @@ def alive_AndOrXor_1247_AB__AB__AB_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.and %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   %v4 = llvm.or %A, %B
   %v5 = llvm.and %v3, %v4
@@ -1084,7 +1084,7 @@ def alive_AndOrXor_1247_AB__AB__AB_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.and %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   %v4 = llvm.or %A, %B
   %v5 = llvm.xor %A, %B
@@ -1119,7 +1119,7 @@ def alive_AndOrXor_1253_A__AB___A__B_src  (w : Nat)   :=
 def alive_AndOrXor_1253_A__AB___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
   %v3 = llvm.xor %A, %B
   %v4 = llvm.and %A, %v2
@@ -1147,7 +1147,7 @@ theorem alive_AndOrXor_1253_A__AB___A__B  (w : Nat)   : alive_AndOrXor_1253_A__A
 def alive_AndOrXor_1280_ABA___AB_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.or %v2, %B
   %v4 = llvm.and %v3, %A
@@ -1157,7 +1157,7 @@ def alive_AndOrXor_1280_ABA___AB_src  (w : Nat)   :=
 def alive_AndOrXor_1280_ABA___AB_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.or %v2, %B
   %v4 = llvm.and %A, %B
@@ -1199,7 +1199,7 @@ def alive_AndOrXor_1288_A__B__B__C__A___A__B__C_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %C : _, %B : _):
   %v1 = llvm.xor %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %C, %v2
   %v4 = llvm.xor %B, %C
   %v5 = llvm.xor %v4, %A
@@ -1231,7 +1231,7 @@ def alive_AndOrXor_1294_A__B__A__B___A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %A, %v2
   %v4 = llvm.xor %v3, %B
   %v5 = llvm.and %v1, %v4
@@ -1242,7 +1242,7 @@ def alive_AndOrXor_1294_A__B__A__B___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %A, %v2
   %v4 = llvm.xor %v3, %B
   %v5 = llvm.and %A, %B
@@ -1317,7 +1317,7 @@ def alive_AndOrXor_1683_2_tgt  (w : Nat)  :=
 ^bb0(%a : _, %b : _):
   %v1 = llvm.icmp.uge %a, %b
   %v2 = llvm.icmp.ne %a, %b
-  %v3 = llvm.mlir.constant 1 :  i1
+  %v3 = llvm.mlir.constant(1 :  i1) : _
   %v4 = llvm.copy %v3 : i1
   llvm.return %v4 : i1
 }]
@@ -1345,7 +1345,7 @@ theorem alive_AndOrXor_1683_2  (w : Nat)   : alive_AndOrXor_1683_2_src w  ⊑ al
 def alive_AndOrXor_1704_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.icmp.eq %B, %v1
   %v3 = llvm.icmp.ult %A, %B
   %v4 = llvm.or %v2, %v3 : i1
@@ -1355,9 +1355,9 @@ def alive_AndOrXor_1704_src  (w : Nat)   :=
 def alive_AndOrXor_1704_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.add %B, %v1
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.icmp.eq %B, %v3
   %v5 = llvm.icmp.ult %A, %B
   %v6 = llvm.icmp.uge %v2, %A
@@ -1387,7 +1387,7 @@ theorem alive_AndOrXor_1704  (w : Nat)   : alive_AndOrXor_1704_src w  ⊑ alive_
 def alive_AndOrXor_1705_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.icmp.eq %B, %v1
   %v3 = llvm.icmp.ugt %B, %A
   %v4 = llvm.or %v2, %v3 : i1
@@ -1397,9 +1397,9 @@ def alive_AndOrXor_1705_src  (w : Nat)   :=
 def alive_AndOrXor_1705_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.add %B, %v1
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.icmp.eq %B, %v3
   %v5 = llvm.icmp.ugt %B, %A
   %v6 = llvm.icmp.uge %v2, %A
@@ -1429,9 +1429,9 @@ theorem alive_AndOrXor_1705  (w : Nat)   : alive_AndOrXor_1705_src w  ⊑ alive_
 def alive_AndOrXor_1733_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.icmp.ne %A, %v1
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.icmp.ne %B, %v3
   %v5 = llvm.or %v2, %v4 : i1
   llvm.return %v5 : i1
@@ -1441,11 +1441,11 @@ def alive_AndOrXor_1733_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
-  %v2 = llvm.mlir.constant 0
+  %v2 = llvm.mlir.constant(0) : _
   %v3 = llvm.icmp.ne %A, %v2
-  %v4 = llvm.mlir.constant 0
+  %v4 = llvm.mlir.constant(0) : _
   %v5 = llvm.icmp.ne %B, %v4
-  %v6 = llvm.mlir.constant 0
+  %v6 = llvm.mlir.constant(0) : _
   %v7 = llvm.icmp.ne %v1, %v6
   llvm.return %v7 : i1
 }]
@@ -1507,7 +1507,7 @@ theorem alive_AndOrXor_2063__X__C1__C2____X__C2__C1__C2  (w : Nat)   : alive_And
 def alive_AndOrXor_2113___A__B__A___A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.and %v2, %B
   %v4 = llvm.or %v3, %A
@@ -1517,7 +1517,7 @@ def alive_AndOrXor_2113___A__B__A___A__B_src  (w : Nat)   :=
 def alive_AndOrXor_2113___A__B__A___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.and %v2, %B
   %v4 = llvm.or %A, %B
@@ -1545,7 +1545,7 @@ theorem alive_AndOrXor_2113___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2113_
 def alive_AndOrXor_2118___A__B__A___A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.and %A, %B
   %v4 = llvm.or %v3, %v2
@@ -1555,7 +1555,7 @@ def alive_AndOrXor_2118___A__B__A___A__B_src  (w : Nat)   :=
 def alive_AndOrXor_2118___A__B__A___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.and %A, %B
   %v4 = llvm.or %v2, %B
@@ -1585,7 +1585,7 @@ theorem alive_AndOrXor_2118___A__B__A___A__B  (w : Nat)   : alive_AndOrXor_2118_
 def alive_AndOrXor_2123___A__B__A__B___A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
   %v3 = llvm.and %A, %v2
   %v4 = llvm.xor %A, %B
@@ -1596,7 +1596,7 @@ def alive_AndOrXor_2123___A__B__A__B___A__B_src  (w : Nat)   :=
 def alive_AndOrXor_2123___A__B__A__B___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
   %v3 = llvm.and %A, %v2
   %v4 = llvm.xor %A, %B
@@ -1629,9 +1629,9 @@ theorem alive_AndOrXor_2123___A__B__A__B___A__B  (w : Nat)   : alive_AndOrXor_21
 def alive_AndOrXor_2188_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %D : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %D, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %A, %v3
   %v5 = llvm.and %A, %v2
   %v6 = llvm.and %v4, %D
@@ -1642,9 +1642,9 @@ def alive_AndOrXor_2188_src  (w : Nat)   :=
 def alive_AndOrXor_2188_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %D : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %D, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %A, %v3
   %v5 = llvm.and %A, %v2
   %v6 = llvm.and %v4, %D
@@ -1752,9 +1752,9 @@ theorem alive_AndOrXor_2243__B__C__A__B___B__A__C  (w : Nat)   : alive_AndOrXor_
 def alive_AndOrXor_2247__A__B__A__B_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %B, %v3
   %v5 = llvm.or %v2, %v4
   llvm.return %v5
@@ -1764,11 +1764,11 @@ def alive_AndOrXor_2247__A__B__A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.and %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %A, %v2
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %B, %v4
-  %v6 = llvm.mlir.constant -1
+  %v6 = llvm.mlir.constant(-1) : _
   %v7 = llvm.xor %v1, %v6
   llvm.return %v7
 }]
@@ -1827,7 +1827,7 @@ theorem alive_AndOrXor_2263  (w : Nat)   : alive_AndOrXor_2263_src w  ⊑ alive_
 def alive_AndOrXor_2264_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.xor %v2, %B
   %v4 = llvm.or %A, %v3
@@ -1837,9 +1837,9 @@ def alive_AndOrXor_2264_src  (w : Nat)   :=
 def alive_AndOrXor_2264_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %A, %v3
   %v5 = llvm.xor %v4, %B
   %v6 = llvm.or %A, %v2
@@ -1905,7 +1905,7 @@ def alive_AndOrXor_2284_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.or %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   %v4 = llvm.or %A, %v3
   llvm.return %v4
@@ -1914,10 +1914,10 @@ def alive_AndOrXor_2284_src  (w : Nat)   :=
 def alive_AndOrXor_2284_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
   %v3 = llvm.or %A, %B
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %v3, %v4
   %v6 = llvm.or %A, %v2
   llvm.return %v6
@@ -1946,7 +1946,7 @@ def alive_AndOrXor_2285_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.xor %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   %v4 = llvm.or %A, %v3
   llvm.return %v4
@@ -1955,10 +1955,10 @@ def alive_AndOrXor_2285_src  (w : Nat)   :=
 def alive_AndOrXor_2285_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %B, %v1
   %v3 = llvm.xor %A, %B
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %v3, %v4
   %v6 = llvm.or %A, %v2
   llvm.return %v6
@@ -1988,7 +1988,7 @@ def alive_AndOrXor_2297_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
   %v1 = llvm.and %A, %B
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %A, %v2
   %v4 = llvm.xor %v3, %B
   %v5 = llvm.or %v1, %v4
@@ -1998,7 +1998,7 @@ def alive_AndOrXor_2297_src  (w : Nat)   :=
 def alive_AndOrXor_2297_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%A : _, %B : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %A, %v1
   %v3 = llvm.and %A, %B
   %v4 = llvm.xor %v2, %B
@@ -2062,10 +2062,10 @@ theorem alive_AndOrXor_2367  (w : Nat)   : alive_AndOrXor_2367_src w  ⊑ alive_
 def alive_AndOrXor_2416_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%nx : _, %y : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %nx, %v1
   %v3 = llvm.and %v2, %y
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %v3, %v4
   llvm.return %v5
 }]
@@ -2073,9 +2073,9 @@ def alive_AndOrXor_2416_src  (w : Nat)   :=
 def alive_AndOrXor_2416_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%nx : _, %y : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %y, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %nx, %v3
   %v5 = llvm.and %v4, %y
   %v6 = llvm.or %nx, %v2
@@ -2104,10 +2104,10 @@ theorem alive_AndOrXor_2416  (w : Nat)   : alive_AndOrXor_2416_src w  ⊑ alive_
 def alive_AndOrXor_2417_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%nx : _, %y : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %nx, %v1
   %v3 = llvm.or %v2, %y
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %v3, %v4
   llvm.return %v5
 }]
@@ -2115,9 +2115,9 @@ def alive_AndOrXor_2417_src  (w : Nat)   :=
 def alive_AndOrXor_2417_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%nx : _, %y : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %y, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %nx, %v3
   %v5 = llvm.or %v4, %y
   %v6 = llvm.and %nx, %v2
@@ -2146,7 +2146,7 @@ def alive_AndOrXor_2429_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
   %v1 = llvm.and %x, %y
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   llvm.return %v3
 }]
@@ -2154,9 +2154,9 @@ def alive_AndOrXor_2429_src  (w : Nat)   :=
 def alive_AndOrXor_2429_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %y, %v3
   %v5 = llvm.and %x, %y
   %v6 = llvm.or %v2, %v4
@@ -2185,7 +2185,7 @@ def alive_AndOrXor_2430_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
   %v1 = llvm.or %x, %y
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   llvm.return %v3
 }]
@@ -2193,9 +2193,9 @@ def alive_AndOrXor_2430_src  (w : Nat)   :=
 def alive_AndOrXor_2430_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %y, %v3
   %v5 = llvm.or %x, %y
   %v6 = llvm.and %v2, %v4
@@ -2223,10 +2223,10 @@ theorem alive_AndOrXor_2430  (w : Nat)   : alive_AndOrXor_2430_src w  ⊑ alive_
 def alive_AndOrXor_2443_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
   %v3 = llvm.ashr %v2, %y
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %v3, %v4
   llvm.return %v5
 }]
@@ -2234,7 +2234,7 @@ def alive_AndOrXor_2443_src  (w : Nat)   :=
 def alive_AndOrXor_2443_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %x, %v1
   %v3 = llvm.ashr %v2, %y
   %v4 = llvm.ashr %x, %y
@@ -2262,7 +2262,7 @@ def alive_AndOrXor_2453_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%y : _, %x : _):
   %v1 = llvm.icmp.slt %x, %y
-  %v2 = llvm.mlir.constant -1 :  i1
+  %v2 = llvm.mlir.constant(-1 :  i1) : _
   %v3 = llvm.xor %v1, %v2 : i1
   llvm.return %v3 : i1
 }]
@@ -2295,7 +2295,7 @@ def alive_AndOrXor_2475_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
   %v1 = llvm.sub %C, %x
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   llvm.return %v3
 }]
@@ -2304,7 +2304,7 @@ def alive_AndOrXor_2475_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
   %v1 = llvm.sub %C, %x
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.sub %v2, %C
   %v4 = llvm.add %x, %v3
   llvm.return %v4
@@ -2330,7 +2330,7 @@ def alive_AndOrXor_2486_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
   %v1 = llvm.add %x, %C
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %v1, %v2
   llvm.return %v3
 }]
@@ -2339,7 +2339,7 @@ def alive_AndOrXor_2486_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%x : _, %C : _):
   %v1 = llvm.add %x, %C
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.sub %v2, %C
   %v4 = llvm.sub %v3, %x
   llvm.return %v4
@@ -2373,7 +2373,7 @@ def alive_AndOrXor_2581__BAB___A__B_src  (w : Nat)   :=
 def alive_AndOrXor_2581__BAB___A__B_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %op1 : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %op1, %v1
   %v3 = llvm.or %a, %op1
   %v4 = llvm.and %a, %v2
@@ -2408,7 +2408,7 @@ def alive_AndOrXor_2587__BAA___B__A_src  (w : Nat)   :=
 def alive_AndOrXor_2587__BAA___B__A_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %op1 : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
   %v3 = llvm.and %a, %op1
   %v4 = llvm.and %v2, %op1
@@ -2476,9 +2476,9 @@ theorem alive_AndOrXor_2595  (w : Nat)   : alive_AndOrXor_2595_src w  ⊑ alive_
 def alive_AndOrXor_2607_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %b, %v3
   %v5 = llvm.or %a, %v4
   %v6 = llvm.or %v2, %b
@@ -2489,9 +2489,9 @@ def alive_AndOrXor_2607_src  (w : Nat)   :=
 def alive_AndOrXor_2607_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %b, %v3
   %v5 = llvm.or %a, %v4
   %v6 = llvm.or %v2, %b
@@ -2524,9 +2524,9 @@ theorem alive_AndOrXor_2607  (w : Nat)   : alive_AndOrXor_2607_src w  ⊑ alive_
 def alive_AndOrXor_2617_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %b, %v3
   %v5 = llvm.and %a, %v4
   %v6 = llvm.and %v2, %b
@@ -2537,9 +2537,9 @@ def alive_AndOrXor_2617_src  (w : Nat)   :=
 def alive_AndOrXor_2617_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
-  %v3 = llvm.mlir.constant -1
+  %v3 = llvm.mlir.constant(-1) : _
   %v4 = llvm.xor %b, %v3
   %v5 = llvm.and %a, %v4
   %v6 = llvm.and %v2, %b
@@ -2579,7 +2579,7 @@ def alive_AndOrXor_2627_src  (w : Nat)   :=
 def alive_AndOrXor_2627_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %c : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
   %v3 = llvm.and %v2, %b
   %v4 = llvm.xor %a, %c
@@ -2648,10 +2648,10 @@ theorem alive_AndOrXor_2647  (w : Nat)   : alive_AndOrXor_2647_src w  ⊑ alive_
 def alive_AndOrXor_2658_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %b, %v1
   %v3 = llvm.and %a, %v2
-  %v4 = llvm.mlir.constant -1
+  %v4 = llvm.mlir.constant(-1) : _
   %v5 = llvm.xor %a, %v4
   %v6 = llvm.xor %v3, %v5
   llvm.return %v6
@@ -2661,12 +2661,12 @@ def alive_AndOrXor_2658_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
   %v1 = llvm.and %a, %b
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.xor %b, %v2
   %v4 = llvm.and %a, %v3
-  %v5 = llvm.mlir.constant -1
+  %v5 = llvm.mlir.constant(-1) : _
   %v6 = llvm.xor %a, %v5
-  %v7 = llvm.mlir.constant -1
+  %v7 = llvm.mlir.constant(-1) : _
   %v8 = llvm.xor %v1, %v7
   llvm.return %v8
 }]
@@ -2724,7 +2724,7 @@ theorem alive_AndOrXor_2663  (w : Nat)   : alive_AndOrXor_2663_src w  ⊑ alive_
 def alive_152_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%x : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.mul %x, %v1
   llvm.return %v2
 }]
@@ -2732,7 +2732,7 @@ def alive_152_src  (w : Nat)   :=
 def alive_152_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%x : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %x
   llvm.return %v2
 }]
@@ -2794,9 +2794,9 @@ theorem alive_229  (w : Nat)   : alive_229_src w  ⊑ alive_229_tgt w  := by
 def alive_239_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %X
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.sub %v3, %Y
   %v5 = llvm.mul %v2, %v4
   llvm.return %v5
@@ -2805,9 +2805,9 @@ def alive_239_src  (w : Nat)   :=
 def alive_239_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %X
-  %v3 = llvm.mlir.constant 0
+  %v3 = llvm.mlir.constant(0) : _
   %v4 = llvm.sub %v3, %Y
   %v5 = llvm.mul %X, %Y
   llvm.return %v5
@@ -2905,7 +2905,7 @@ def alive_276_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.sdiv %X, %Y : i5
-  %v2 = llvm.mlir.constant 0 :  i5
+  %v2 = llvm.mlir.constant(0 :  i5) : _
   %v3 = llvm.sub %v2, %Y : i5
   %v4 = llvm.mul %v1, %v3 : i5
   llvm.return %v4 : i5
@@ -2916,7 +2916,7 @@ def alive_276_tgt  (w : Nat)  :=
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.srem %X, %Y : i5
   %v2 = llvm.sdiv %X, %Y : i5
-  %v3 = llvm.mlir.constant 0 :  i5
+  %v3 = llvm.mlir.constant(0 :  i5) : _
   %v4 = llvm.sub %v3, %Y : i5
   %v5 = llvm.sub %v1, %X : i5
   llvm.return %v5 : i5
@@ -2946,7 +2946,7 @@ def alive_276_2_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.udiv %X, %Y : i5
-  %v2 = llvm.mlir.constant 0 :  i5
+  %v2 = llvm.mlir.constant(0 :  i5) : _
   %v3 = llvm.sub %v2, %Y : i5
   %v4 = llvm.mul %v1, %v3 : i5
   llvm.return %v4 : i5
@@ -2957,7 +2957,7 @@ def alive_276_2_tgt  (w : Nat)  :=
 ^bb0(%Y : i5, %X : i5):
   %v1 = llvm.urem %X, %Y : i5
   %v2 = llvm.udiv %X, %Y : i5
-  %v3 = llvm.mlir.constant 0 :  i5
+  %v3 = llvm.mlir.constant(0 :  i5) : _
   %v4 = llvm.sub %v3, %Y : i5
   %v5 = llvm.sub %v1, %X : i5
   llvm.return %v5 : i5
@@ -3010,7 +3010,7 @@ theorem alive_283   : alive_283_src ⊑ alive_283_tgt := by
 def alive_290__292_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : _, %Op1 : _):
-  %v1 = llvm.mlir.constant 1
+  %v1 = llvm.mlir.constant(1) : _
   %v2 = llvm.shl %v1, %Y
   %v3 = llvm.mul %v2, %Op1
   llvm.return %v3
@@ -3019,7 +3019,7 @@ def alive_290__292_src  (w : Nat)   :=
 def alive_290__292_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%Y : _, %Op1 : _):
-  %v1 = llvm.mlir.constant 1
+  %v1 = llvm.mlir.constant(1) : _
   %v2 = llvm.shl %v1, %Y
   %v3 = llvm.shl %Op1, %Y
   llvm.return %v3
@@ -3114,7 +3114,7 @@ theorem alive_820'   : alive_820'_src ⊑ alive_820'_tgt := by
 def alive_1030_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%X : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.sdiv %X, %v1
   llvm.return %v2
 }]
@@ -3122,7 +3122,7 @@ def alive_1030_src  (w : Nat)   :=
 def alive_1030_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%X : _):
-  %v1 = llvm.mlir.constant 0
+  %v1 = llvm.mlir.constant(0) : _
   %v2 = llvm.sub %v1, %X
   llvm.return %v2
 }]
@@ -3147,7 +3147,7 @@ theorem alive_1030  (w : Nat)   : alive_1030_src w  ⊑ alive_1030_tgt w  := by
 def alive_Select_858_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : i1, %b : i1):
-  %v1 = llvm.mlir.constant -1 :  i1
+  %v1 = llvm.mlir.constant(-1 :  i1) : _
   %v2 = llvm.xor %a, %v1 : i1
   %v3 = llvm.select %a,%v2, %b : i1
   llvm.return %v3 : i1
@@ -3156,7 +3156,7 @@ def alive_Select_858_src  (w : Nat)   :=
 def alive_Select_858_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
   %v3 = llvm.and %v2, %b
   llvm.return %v3
@@ -3181,7 +3181,7 @@ theorem alive_Select_858  (w : Nat)   : alive_Select_858_src w  ⊑ alive_Select
 def alive_Select_859'_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%a : i1, %b : i1):
-  %v1 = llvm.mlir.constant -1 :  i1
+  %v1 = llvm.mlir.constant(-1 :  i1) : _
   %v2 = llvm.xor %a, %v1 : i1
   %v3 = llvm.select %a,%b, %v2 : i1
   llvm.return %v3 : i1
@@ -3190,7 +3190,7 @@ def alive_Select_859'_src  (w : Nat)   :=
 def alive_Select_859'_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%a : _, %b : _):
-  %v1 = llvm.mlir.constant -1
+  %v1 = llvm.mlir.constant(-1) : _
   %v2 = llvm.xor %a, %v1
   %v3 = llvm.or %v2, %b
   llvm.return %v3
@@ -3212,7 +3212,7 @@ theorem alive_Select_859'  (w : Nat)   : alive_Select_859'_src w ⊑ alive_Selec
 def alive_Select_1100_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
-  %v1 = llvm.mlir.constant 1 :  i1
+  %v1 = llvm.mlir.constant(1 :  i1) : _
   %v2 = llvm.select %v1, %X, %Y
   llvm.return %v2
 }]
@@ -3241,7 +3241,7 @@ theorem alive_Select_1100  (w : Nat)   : alive_Select_1100_src w  ⊑ alive_Sele
 def alive_Select_1105_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%Y : _, %X : _):
-  %v1 = llvm.mlir.constant 0 :  i1
+  %v1 = llvm.mlir.constant(0 :  i1) : _
   %v2 = llvm.select %v1,%X, %Y
   llvm.return %v2
 }]
@@ -3281,7 +3281,7 @@ def alive_InstCombineShift__239_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%X : _, %C : _):
   %v1 = llvm.shl %X, %C
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.lshr %v2, %C
   %v4 = llvm.and %X, %v3
   llvm.return %v4
@@ -3315,7 +3315,7 @@ def alive_InstCombineShift__279_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%X : _, %C : _):
   %v1 = llvm.lshr %X, %C
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.shl %v2, %C
   %v4 = llvm.and %X, %v3
   llvm.return %v4
@@ -3511,7 +3511,7 @@ def alive_InstCombineShift__582_tgt  (w : Nat)  :=
 [llvm ( w )| {
 ^bb0(%X : _, %C : _):
   %v1 = llvm.shl %X, %C
-  %v2 = llvm.mlir.constant -1
+  %v2 = llvm.mlir.constant(-1) : _
   %v3 = llvm.lshr %v2, %C
   %v4 = llvm.and %X, %v3
   llvm.return %v4
