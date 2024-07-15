@@ -491,6 +491,7 @@ Lookup an argument in a register map, where the variable is defined in the regis
 See that the variable comes from Γ, but the register map is for (Γ.snoc t).
 This tells us that this is happening at the phase of the algorithm
 where we are allocating registers for the arguments of a `let` binding.
+TODO: delete all occurrences of 'Option'.
 -/
 def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
     (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
@@ -769,6 +770,20 @@ theorem effectKind_const :
     (Pure.Op.const i) = EffectKind.pure := rfl
 
 
+/-## Facts about register allocating a 'const' expression. -/
+section DoExprConst
+
+variable
+ {Ξ : Ctxt Pure.Ty}
+  {Δ2Reg : Var2Reg (Ξ.snoc t)}
+  {Ξ2reg : Var2Reg Ξ}
+  {er : _}
+  {heff : _}
+  {r : RegAlloc.Reg} {Γs2reg : _}
+  (hlast : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg))
+  (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) =
+  some (er, Ξ2reg))
+
 /--
 A 'const' expression changes the register file by
 simply adding a new binding for the out register 'r'.
@@ -777,28 +792,46 @@ TODO: think if this is the best way to write the theorem.
   then prove that calling 'do' on the register allocated expression does the right thing? maybe?
 -/
 @[simp]
-theorem toFun_const {Ξ : Ctxt Pure.Ty}
-    {Δ2Reg : Var2Reg (Ξ.snoc t)}
-    {Ξ2reg : Var2Reg Ξ}
-    {r : RegAlloc.Reg}
-    {er : _}
-    {heff : _}
-    (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) =
-      some (er, Ξ2reg)) :
+theorem toFun_const :
     Ξ2reg.toFun = fun (v : Ξ.Var Pure.Ty.int) =>
       (if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun ↑v)  := by
-  simp [doExpr] at he
-  cases hlast : Δ2Reg.lookupOrInsertResult
-  case none => simp [hlast] at he
-  case some val =>
-    simp [hlast] at he
-    replace ⟨r, Γs2reg⟩ := val
-    rw [← he.2]
-    simp only [Var2Reg.toFun_deleteLast]
-    rw [Var2Reg.toFun_lookupOrInsertResult hlast]
-    funext v
-    simp only
-    rfl
+  simp [doExpr, hlast] at he
+  simp [← he]
+  rw [Var2Reg.toFun_lookupOrInsertResult hlast]
+
+-- /--
+-- If we started with a sound mapping Δ2Reg,
+-- then we will keep the mapping sound after Ξ.
+-- -/
+-- theorem registerLiveFor_doExpr_const {v : Ξ.Var Pure.Ty.int}
+--   (hsound : sound_mapping V Δ2Reg R) :
+-- Ξ2reg.registerLiveFor r (Ctxt.Var.last Ξ t) := by -- sorry
+-- unfold sound_mapping at hsound ⊢
+-- intros s w hlive
+-- unfold Var2Reg.registerLiveFor at *
+-- apply hsound
+-- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
+-- rw [this] at hlive
+-- simp at hlive
+-- end DoExprConst
+
+
+-- /--
+-- If we started with a sound mapping Δ2Reg,
+-- then we will keep the mapping sound after Ξ.
+-- -/
+-- theorem sound_mapping_of_doExpr_const {v : Ξ.Var Pure.Ty.int}
+--   (hsound : sound_mapping V Δ2Reg R) :
+-- sound_mapping V Ξ2reg R := by -- sorry
+-- unfold sound_mapping at hsound ⊢
+-- intros s w hlive
+-- unfold Var2Reg.registerLiveFor at *
+-- apply hsound
+-- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
+-- rw [this] at hlive
+-- simp at hlive
+-- end DoExprConst
+
 
 @[simp]
 theorem effectKind_increment :
@@ -856,7 +889,7 @@ theorem toFun_add {Ξ : Ctxt Pure.Ty}
     (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl heff (.cons x .nil) .nil) = some (er, Ξ2reg))
     {hΓs2reg : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg)}
     {Δs2reg : _}
-    { hvar0 : Γs2reg.lookupOrInsertArg x = some (s, Δs2reg)} :
+    {hvar0 : Γs2reg.lookupOrInsertArg x = some (s, Δs2reg)} :
     Ξ2reg.toFun =
     fun (v : Ξ.Var Pure.Ty.int) =>
       if ↑v = ↑x
@@ -872,65 +905,6 @@ theorem toFun_add {Ξ : Ctxt Pure.Ty}
     Var2Reg.toFun_lookupOrInsertResult hΓs2reg]
   simp only [Ctxt.Var.toSnoc_eq_iff_eq]
 
-/-- Note: this is untrue, because we potentially change the registers
-based on the *arguments* as well.
-This is an incorrect conjecture.
--/
-theorem toFun_doExpr -- incorrect conjecture.
-    {e : Expr Pure.dialect Ξ EffectKind.pure .int}
-    {Δ2Reg : Var2Reg (Ξ.snoc t)}
-    {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
-    (he : doExpr Δ2Reg e = some (er, Ξ2reg)) :
-    Ξ2reg.toFun = (fun (v : Ξ.Var Pure.Ty.int) =>
-    if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun v) :=
-  match e with
-  | Expr.mk op rfl eff_le args regArgs =>
-    match op with
-    | .const i => by
-      simp [doExpr] at he
-      cases hlast : Δ2Reg.lookupOrInsertResult
-      case none => simp [hlast] at he
-      case some val =>
-        simp [hlast] at he
-        replace ⟨r, Γs2reg⟩ := val
-        rw [← he.2]
-        simp only [Var2Reg.toFun_deleteLast]
-        rw [Var2Reg.toFun_lookupOrInsertResult hlast]
-        funext v
-        simp only
-        rfl
-    | .increment => by
-      simp [doExpr] at he
-      cases hlast : Δ2Reg.lookupOrInsertResult
-      case none => simp [hlast] at he
-      case some val =>
-        replace ⟨r, Γs2reg⟩ := val
-        simp [hlast] at he
-        simp only [EffectKind.toMonad_pure, Pure.Expr.denote_const]
-        cases hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
-        case none => simp [hvar0] at he
-        case some val =>
-          simp [hvar0] at he
-          replace ⟨s, Δs2reg⟩ := val
-          simp at he
-          simp [← he.2]
-          funext v
-          rw [Var2Reg.toFun_lookupOrInsertArg hvar0]
-          rw [Var2Reg.toFun_lookupOrInsertResult hlast]
-          simp
-          sorry
-
-/-
-If the mapping is sound, and the mapping has arisen from a call of doExpr,
-Then the out register of `er` is the register than is live for the last variable in the context.
--/
-theorem doExpr_outRegister {Ξ : Ctxt Pure.Ty}
-    {r : RegAlloc.Reg}
-    {v : (Ξ.snoc t).Var Pure.Ty.int}
-    {Δ2reg : Var2Reg (Ξ.snoc Pure.Ty.int)}
-    (hlive : Δ2reg.registerLiveFor r v)
-    : r = RegAlloc.Expr.outRegister er := by
-  sorry
 
 /-
 Given a valuation of `V` for a pure program `p` and a register file `R`such that `V ~fΓ~ R`,
@@ -970,7 +944,7 @@ theorem doRegAllocLets_correct
     subst hmatch
     -- I know that er corresponds to e from
     -- doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
-
+    -- note that Ξ2reg is sound for all registers taht came from Δ2reg.
     have ih := doRegAllocLets_correct (hq := hbody) R V hRV
     simp [sound_mapping] at ih ⊢
     intros r v hlive
