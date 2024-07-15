@@ -1,6 +1,6 @@
+import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.Semantics
-
 open LLVM
 
 
@@ -36,4 +36,3 @@ theorem simplify_and_common_op_commute1_thm (x x_1 x_2 : _root_.BitVec 4) : ((x_
 
 theorem simplify_and_common_op_commute2_thm (x x_1 x_2 x_3 : _root_.BitVec 4) :
   ((x_3 ^ 2 ||| (x_2 ||| x_1) ||| x) ^^^ 15#4) &&& x_2 = 0#4 := sorry
-

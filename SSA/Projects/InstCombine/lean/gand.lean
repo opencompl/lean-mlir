@@ -1,4 +1,5 @@
-import SSA.Projects.InstComine.lean.gand_proof
+-- import SSA.Projects.InstComine.lean.gand_proof
+import SSA.Projects.InstCombine.lean.gand_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics

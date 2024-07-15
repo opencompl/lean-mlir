@@ -8,10 +8,6 @@ import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Batteries.Data.BitVec
 
-open Lean
-open Lean.Meta
-open Lean.Elab
-open Lean.Elab.Tactic
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
   bind_assoc forall_const
