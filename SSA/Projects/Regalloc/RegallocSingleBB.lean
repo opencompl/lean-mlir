@@ -584,10 +584,10 @@ def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
 
 /-- The register inserted by lookupOrInsertArg is live. -/
 theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg {Γ : Ctxt Pure.Ty}
-    {Γ₁2R₁ Γ₁2R₂: Var2Reg (Γ.snoc t)} {V : (Γ.snoc t).Valuation} {R₂ : RegAlloc.RegisterFile}
-    (hΓ₁2R₂ : sound_mapping V Γ₁2R₂ R₂) {r : RegAlloc.Reg} {v : Γ.Var int}
+    {Γ₁2R₁ Γ₁2R₂: Var2Reg (Γ.snoc t)}
+    {r : RegAlloc.Reg} {v : Γ.Var int}
     (hlookup : Γ₁2R₁.lookupOrInsertArg v = some (r, Γ₁2R₂)) :
-  Γ₁2R₂.registerLiveFor r v:= by
+  Γ₁2R₂.registerLiveFor r v := by
   unfold lookupOrInsertArg at hlookup
   split at hlookup
   · case h_1 r hv =>
@@ -634,8 +634,6 @@ theorem Var2Reg.lookupOrInsertArg_toFun_self_eq {Γ : Ctxt Pure.Ty}
 --   · case h_2 hv =>
 --     apply sound_mapping_of_allocateDeadRegister_of_sound_mapping hlookup hsound
 
-def Var2Reg.lookupOrInsertResult {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
-  f.lookupOrInsert (Ctxt.Var.last Γ t)
 
 /-- Delete the last register from the register map. -/
 def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
@@ -686,11 +684,11 @@ def doExpr (f : Var2Reg (Γ.snoc s))
   Option (Expr RegAlloc.dialect (doCtxt Γ) EffectKind.impure .unit × Var2Reg Γ) :=
   match e with
   | Expr.mk (.const i) .. => do
-      let (rout, f) ← f.lookupOrInsertResult
+      let (rout, f) ← f.lookupOrInsert (Ctxt.Var.last Γ s)
       some (Expr.mk (RegAlloc.Op.const i rout) rfl (by simp) .nil .nil, f.deleteLast)
   | Expr.mk .increment rfl _heff args .. => do
       let arg := args.getN 0
-      let (rout, f) ← f.lookupOrInsertResult
+      let (rout, f) ← f.lookupOrInsert (Ctxt.Var.last Γ s)
       let (r₁, f) ← f.lookupOrInsertArg arg
       some (Expr.mk (RegAlloc.Op.increment r₁ rout)
         rfl (by simp) .nil .nil, f.deleteLast)
@@ -747,13 +745,13 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ₁ Γ₂}
 
 @[simp]
 theorem Var2Reg.toFun_allocateDeadRegister
-    {Γ : Ctxt Pure.Ty}
-    {Γ2R : Var2Reg Γ}
-    {v : Γ.Var .int}
+    {Γ₁ : Ctxt Pure.Ty}
+    {Γ₁2R₁ : Var2Reg Γ₁}
+    {v : Γ₁.Var .int}
     {r : RegAlloc.Reg}
-    {Δ2R : Var2Reg Γ}
-    (h : Γ2R.allocateDeadRegister v = some (r, Δ2R)) :
-    Δ2R.toFun = fun v' => if v' = v then .some r else Γ2R.toFun v' := by
+    {Γ₁2R₂ : Var2Reg Γ₁}
+    (h : Γ₁2R₁.allocateDeadRegister v = some (r, Γ₁2R₂)) :
+    Γ₁2R₂.toFun = fun v' => if v' = v then .some r else Γ₁2R₁.toFun v' := by
   simp [Var2Reg.allocateDeadRegister] at h
   split at h
   · case h_1 r hv =>
@@ -764,24 +762,24 @@ theorem Var2Reg.toFun_allocateDeadRegister
     simp_all [← h]
 
 theorem Var2Reg.registerLiveFor_of_allocateDeadRegister
-    {Γ : Ctxt Pure.Ty}
-    {Γs2reg : Var2Reg (Γ.snoc t)}
+    {Γ₁ : Ctxt Pure.Ty}
+    {Γ₁2Reg : Var2Reg (Γ₁.snoc t)}
     {s : RegAlloc.Reg}
-    {Δs2reg : Var2Reg (Γ.snoc t)}
-    {v : Γ.Var .int}
-    (h : Γs2reg.allocateDeadRegister ↑v = some (s, Δs2reg)) :
-    Δs2reg.registerLiveFor s v := by
+    {Γ₂2Reg : Var2Reg (Γ₁.snoc t)}
+    {v : Γ₁.Var .int}
+    (h : Γ₁2Reg.allocateDeadRegister ↑v = some (s, Γ₂2Reg)) :
+    Γ₂2Reg.registerLiveFor s v := by
   apply Var2Reg.registerLiveFor_of_toFun_eq
   simp [toFun_allocateDeadRegister h]
 
 theorem Var2Reg.toFun_lookupOrInsertArg
-    {Γ : Ctxt Pure.Ty}
-    {Γs2reg : Var2Reg (Γ.snoc t)}
+    {Γ₁ : Ctxt Pure.Ty}
+    {Γ₁2Reg : Var2Reg (Γ₁.snoc t)}
     {s : RegAlloc.Reg}
-    {Δs2reg : Var2Reg (Γ.snoc t)}
-    {v : Γ.Var .int}
-    (h : Γs2reg.lookupOrInsertArg v = some (s, Δs2reg)) :
-    Δs2reg.toFun = fun v' => if v' = ↑v then .some s else Γs2reg.toFun v' := by
+    {Γ₂2Reg : Var2Reg (Γ₁.snoc t)}
+    {v : Γ₁.Var .int}
+    (h : Γ₁2Reg.lookupOrInsertArg v = some (s, Γ₂2Reg)) :
+    Γ₂2Reg.toFun = fun v' => if v' = ↑v then .some s else Γ₁2Reg.toFun v' := by
   simp [Var2Reg.lookupOrInsertArg] at h
   split at h
   · case h_1 r hv =>
@@ -793,25 +791,13 @@ theorem Var2Reg.toFun_lookupOrInsertArg
   · case h_2 r _  =>
     rw [toFun_allocateDeadRegister h]
 
-theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg
-    {Γ : Ctxt Pure.Ty}
-    {Γs2reg : Var2Reg (Γ.snoc t)}
-    {s : RegAlloc.Reg}
-    {Δs2reg : Var2Reg (Γ.snoc t)}
-    {v : Γ.Var .int}
-    (h : Γs2reg.lookupOrInsertArg v = some (s, Δs2reg)) :
-    Δs2reg.registerLiveFor s v := by
-  apply Var2Reg.registerLiveFor_of_toFun_eq
-  rw [toFun_lookupOrInsertArg h]
-  simp
-
 theorem Var2Reg.toFun_lookupOrInsert
-    {Γ : Ctxt Pure.Ty}
-    {Γ2R : Var2Reg Γ}
-    {v : Γ.Var .int}
-    {Δ2R : Var2Reg Γ}
-    (h : Γ2R.lookupOrInsert v = some (r, Δ2R)) :
-    Δ2R.toFun = fun w => if w = v then .some r else Γ2R.toFun w := by
+    {Γ₁ : Ctxt Pure.Ty}
+    {Γ₁2R : Var2Reg Γ₁}
+    {v : Γ₁.Var .int}
+    {Γ₂2R: Var2Reg Γ₁}
+    (h : Γ₁2R.lookupOrInsert v = some (r, Γ₂2R)) :
+    Γ₂2R.toFun = fun w => if w = v then .some r else Γ₁2R.toFun w := by
   simp [Var2Reg.lookupOrInsert] at h
   split at h
   · case h_1 s hv =>
@@ -820,71 +806,59 @@ theorem Var2Reg.toFun_lookupOrInsert
   · case h_2 s _  =>
     simp [toFun_allocateDeadRegister h]
 
-theorem Var2Reg.toFun_lookupOrInsertResult
-    {Γ : Ctxt Pure.Ty}
-    {Γ2R : Var2Reg (Γ.snoc t)}
-    {Δ2R : Var2Reg (Γ.snoc t)}
-    (h : Γ2R.lookupOrInsertResult = some (r, Δ2R)) :
-    Δ2R.toFun = fun w => if w = Ctxt.Var.last Γ t then .some r else Γ2R.toFun w := by
-  rw [Var2Reg.lookupOrInsertResult] at h
-  apply Var2Reg.toFun_lookupOrInsert
-  exact h
-
 /-
 Evaluating an expression will return an expression whose values equals
 the value that we expect at the output register of the expression.
 TODO: extract into four proofs:
   `{pure, impure} x {const, add}`.
 -/
-theorem doExpr_sound
-    {e : Expr Pure.dialect Ξ EffectKind.pure .int}
-    {er : Expr RegAlloc.dialect (doCtxt Ξ) EffectKind.impure .unit}
-    (hsound : sound_mapping V Ξ2reg R)
-    (he : doExpr Δ2Reg e = some (er, Ξ2reg))
+theorem doExpr_sound {Γ₁ : Ctxt Pure.dialect.Ty} {V: Γ₁.Valuation} {Γ₁2Reg : Var2Reg Γ₁}
+    {Γ₂2Reg : Var2Reg (Γ₁.snoc t)}
+    {e : Expr Pure.dialect Γ₁ EffectKind.pure .int}
+    {er : Expr RegAlloc.dialect (doCtxt Γ₁) EffectKind.impure .unit}
+    (hsound : sound_mapping V Γ₁2Reg R)
+    (he : doExpr Γ₂2Reg e = some (er, Γ₁2Reg))
     : e.denote V = (RegAlloc.Expr.exec er R) (RegAlloc.Expr.outRegister er) :=
   match e with
   | Expr.mk op rfl _ args _ =>
     match op with
     | .const i => by
       simp [doExpr] at he
-      cases hlast : Δ2Reg.lookupOrInsertResult
-      case none => simp [hlast] at he
+      cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁ t)
+      case none => simp [hresult₁] at he
       case some val =>
         replace ⟨r, Γs2reg⟩ := val
-        simp [hlast] at he
+        simp [hresult₁] at he
         simp only  [EffectKind.toMonad_pure, Pure.Expr.denote_const, he.1.symm]
         rw [RegAlloc.Expr.const_eq, RegAlloc.Expr.exec_const_eq,
           RegAlloc.Expr.outRegister_const_eq]
         simp
     | .increment => by
       simp [doExpr] at he
-      cases hlast : Δ2Reg.lookupOrInsertResult
-      case none => simp [hlast] at he
-      case some val =>
-        replace ⟨r, Γs2reg⟩ := val
-        simp [hlast] at he
-        simp only [EffectKind.toMonad_pure, Pure.Expr.denote_const]
-        cases hvar0 : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
-        case none => simp [hvar0] at he
-        case some val =>
-          simp [hvar0] at he
-          replace ⟨s, Δs2reg⟩ := val
+      cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁ t)
+      case none => simp [hresult₁] at he
+      case some result₁ =>
+        simp [hresult₁] at he
+        cases hresult₂ : result₁.2.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
+        case none => simp [hresult₂] at he
+        case some result₂ =>
+          simp [hresult₂] at he
           rw [Pure.Expr.denote_increment]
-          obtain ⟨her, hΞ2reg⟩ := he
+          obtain ⟨her, hΓ₁2Reg⟩ := he
           rw [← her] at *
+          have hΓ₁2Reg := hΓ₁2Reg.symm
+          subst hΓ₁2Reg
           -- TODO: why does this not fire?
           simp only [(RegAlloc.Expr.exec_increment_eq)]
           rw [RegAlloc.Expr.outRegister_increment_eq]
           simp
-          simp at hΞ2reg
           congr
           symm
-          -- apply eq_of_sound_mapping (f := Ξ2reg)
           apply eq_of_sound_mapping_of_registerLiveFor
           apply hsound
-          subst hΞ2reg
           simp
-          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
+          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg
+          rw [hresult₂]
 
 @[simp]
 theorem effectKind_const :
@@ -902,7 +876,7 @@ variable
   {er : _}
   {heff : _}
   {r : RegAlloc.Reg} {Γs2reg : _}
-  (hlast : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg))
+  (hlast : Δ2Reg.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γs2reg))
   (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) =
   some (er, Ξ2reg))
 
@@ -919,7 +893,7 @@ theorem toFun_const :
       (if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun ↑v)  := by
   simp [doExpr, hlast] at he
   simp [← he]
-  rw [Var2Reg.toFun_lookupOrInsertResult hlast]
+  rw [Var2Reg.toFun_lookupOrInsert hlast]
 
 -- /--
 -- If we started with a sound mapping Δ2Reg,
@@ -1009,7 +983,7 @@ theorem toFun_add {Ξ : Ctxt Pure.Ty}
     {er : _}
     {heff : _}
     (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl heff (.cons x .nil) .nil) = some (er, Ξ2reg))
-    {hΓs2reg : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg)}
+    {hΓs2reg : Δ2Reg.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γs2reg)}
     {Δs2reg : _}
     {hvar0 : Γs2reg.lookupOrInsertArg x = some (s, Δs2reg)} :
     Ξ2reg.toFun =
@@ -1024,7 +998,7 @@ theorem toFun_add {Ξ : Ctxt Pure.Ty}
     Prod.mk.injEq] at he
   simp only [← he.2, Var2Reg.toFun_deleteLast]
   rw [Var2Reg.toFun_lookupOrInsertArg hvar0,
-    Var2Reg.toFun_lookupOrInsertResult hΓs2reg]
+    Var2Reg.toFun_lookupOrInsert hΓs2reg]
   simp only [Ctxt.Var.toSnoc_eq_iff_eq]
 
 
