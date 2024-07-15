@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test9_thm (x : _root_.BitVec 64) : x * 18446744073709551615#64 &&& 1#64 = x &&& 1#64 := sorry
 
 theorem test10_thm (x : _root_.BitVec 64) :

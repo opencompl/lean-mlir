@@ -150,7 +150,6 @@ macro "of_bool_tactic" : tactic =>
     )
   )
 
-
 macro "alive_auto": tactic =>
   `(tactic|
       (

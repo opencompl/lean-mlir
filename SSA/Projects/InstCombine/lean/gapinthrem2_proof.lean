@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test1_thm (x : _root_.BitVec 333) :
   BitVec.ofNat 333 (x.toNat % 70368744177664) = x &&& 70368744177663#333 := sorry
 

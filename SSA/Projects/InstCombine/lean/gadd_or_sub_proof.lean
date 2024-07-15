@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem add_or_sub_comb_i32_commuted1_nuw_thm (x : _root_.BitVec 32) : x * 4294967295#32 ||| x = 0#32 := sorry
 
 theorem add_or_sub_comb_i8_commuted2_nsw_thm (x : _root_.BitVec 8) : x ^ 2 + (x ^ 2 * 255#8 ||| x ^ 2) = x ^ 2 + 255#8 &&& x ^ 2 := sorry

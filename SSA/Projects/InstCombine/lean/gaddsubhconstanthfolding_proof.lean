@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem add_const_const_sub_thm (x : _root_.BitVec 32) :
   2#32 + x * 4294967295#32 + 4294967288#32 = x * 4294967295#32 + 4294967290#32 := sorry
 

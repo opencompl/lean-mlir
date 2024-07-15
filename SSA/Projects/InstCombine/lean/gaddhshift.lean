@@ -2,7 +2,6 @@ import SSA.Projects.InstCombine.lean.gaddhshift_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
 open BitVec
@@ -13,8 +12,6 @@ open MLIR AST
 open Std (BitVec)
 open Ctxt (Var)
 
-set_option pp.proofs false
-set_option pp.proofs.withType false
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false

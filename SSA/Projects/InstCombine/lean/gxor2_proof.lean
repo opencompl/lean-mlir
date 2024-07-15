@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test2_thm (x : _root_.BitVec 32) : (x &&& 32#32) + 145#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 := sorry
 
 theorem test3_thm (x : _root_.BitVec 32) : (x ||| 145#32) &&& 177#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 := sorry
@@ -92,4 +87,3 @@ theorem xor_notand_to_or_not3_thm (x x_1 x_2 : _root_.BitVec 3) :
 
 theorem xor_notand_to_or_not4_thm (x x_1 x_2 : _root_.BitVec 3) :
   x_2 &&& x_1 ^^^ 7#3 ^^^ (x ||| x_2) = x_2 &&& x_1 ||| (x ||| x_2) ^^^ 7#3 := sorry
-

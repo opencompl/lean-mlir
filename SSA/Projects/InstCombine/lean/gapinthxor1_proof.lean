@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test1_thm (x x_1 : _root_.BitVec 47) :
   x_1 &&& 70368744177664#47 ^^^ x &&& 70368744177661#47 = x_1 &&& 70368744177664#47 ||| x &&& 70368744177661#47 := sorry
 

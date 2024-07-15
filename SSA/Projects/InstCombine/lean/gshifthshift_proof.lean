@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem shl_shl_thm (x : _root_.BitVec 32) : x <<< 34 = 0#32 := sorry
 
 theorem shl_lshr_demand1_thm (x : _root_.BitVec 8) :

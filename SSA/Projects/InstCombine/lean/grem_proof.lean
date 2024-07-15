@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test1_thm (x : _root_.BitVec 32) : x + x.sdiv 1#32 * 4294967295#32 = 0#32 := sorry
 
 theorem test3_thm (x : _root_.BitVec 32) : BitVec.ofNat 32 (x.toNat % 8) = x &&& 7#32 := sorry

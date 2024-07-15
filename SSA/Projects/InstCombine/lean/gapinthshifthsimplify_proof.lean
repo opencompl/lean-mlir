@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem test0_thm (x x_1 x_2 : _root_.BitVec 41) :
   (Option.bind (if 41 ≤ x_1.toNat then none else some (x_2 <<< x_1)) fun a =>
       Option.bind (if 41 ≤ x_1.toNat then none else some (x <<< x_1)) fun a_1 => some (a &&& a_1)) ⊑

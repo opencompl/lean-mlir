@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem basic_thm (x x_1 : _root_.BitVec 8) : (x_1 ^^^ 255#8) + x ^^^ 255#8 = x * 255#8 + x_1 := sorry
 
 theorem basic_com_add_thm (x x_1 : _root_.BitVec 8) : x_1 + (x ^^^ 255#8) ^^^ 255#8 = x_1 * 255#8 + x := sorry

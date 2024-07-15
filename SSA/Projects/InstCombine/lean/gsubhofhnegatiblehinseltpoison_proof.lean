@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem t2_thm (x x_1 : _root_.BitVec 8) :
   (Option.bind (if 8 ≤ x.toNat then none else some (214#8 <<< x)) fun a => some (x_1 + a * 255#8)) ⊑
     Option.bind (if 8 ≤ x.toNat then none else some (42#8 <<< x)) fun a => some (a + x_1) := sorry

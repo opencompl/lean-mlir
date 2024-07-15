@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem and_signbit_shl_thm (x : _root_.BitVec 32) : (x &&& 4294901760#32) <<< 8 = x <<< 8 &&& 4278190080#32 := sorry
 
 theorem and_nosignbit_shl_thm (x : _root_.BitVec 32) : (x &&& 2147418112#32) <<< 8 = x <<< 8 &&& 4278190080#32 := sorry

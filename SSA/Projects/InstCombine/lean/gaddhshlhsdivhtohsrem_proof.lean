@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 
 theorem addhshlhsdivhscalar0_thm (x : _root_.BitVec 8) : x.sdiv 252#8 <<< 2 + x = x + x.sdiv 4#8 * 252#8 := sorry
 

@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem match_andAsRem_lshrAsDiv_shlAsMul_thm (x : _root_.BitVec 64) :
   (x &&& 63#64) + BitVec.ofNat 64 (x.toNat >>> 6 % 9) <<< 6 = BitVec.ofNat 64 (x.toNat % 576) := sorry
 

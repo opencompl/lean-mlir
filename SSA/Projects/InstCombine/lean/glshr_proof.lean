@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem lshr_exact_thm (x : _root_.BitVec 8) : (x <<< 2 + 4#8) >>> 2 = x + 1#8 &&& 63#8 := sorry
 
 theorem shl_add_thm (x x_1 : _root_.BitVec 8) : (x_1 <<< 2 + x) >>> 2 = x >>> 2 + x_1 &&& 63#8 := sorry

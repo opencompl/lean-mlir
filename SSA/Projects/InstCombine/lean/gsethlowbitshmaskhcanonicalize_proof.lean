@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem shl_add_thm (x : _root_.BitVec 32) :
   (Option.bind (if 32 ≤ x.toNat then none else some (1#32 <<< x)) fun a => some (a + 4294967295#32)) ⊑
     Option.bind (if 32 ≤ x.toNat then none else some (4294967295#32 <<< x)) fun a => some (a ^^^ 4294967295#32) := sorry

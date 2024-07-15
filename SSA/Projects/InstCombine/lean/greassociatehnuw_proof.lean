@@ -1,16 +1,11 @@
 
-import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Batteries.Data.BitVec
 
 open LLVM
-open BitVec
 
 
 
-open MLIR AST
 open Std (BitVec)
-open Ctxt (Var)
 theorem reassoc_x2_add_nuw_thm (x x_1 : _root_.BitVec 32) : x_1 + 4#32 + x + 8#32 = x_1 + x + 12#32 := sorry
 
 theorem reassoc_x2_mul_nuw_thm (x x_1 : _root_.BitVec 32) : x_1 * 5#32 * x * 9#32 = x_1 * x * 45#32 := sorry
