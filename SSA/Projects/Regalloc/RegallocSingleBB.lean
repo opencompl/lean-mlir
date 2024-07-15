@@ -865,35 +865,48 @@ theorem effectKind_const :
   DialectSignature.effectKind (d := Pure.dialect)
     (Pure.Op.const i) = EffectKind.pure := rfl
 
+@[simp]
+theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+    v.toSnoc ≠ Ctxt.Var.last Γ t := by
+  unfold Ctxt.Var.toSnoc Ctxt.Var.last
+  rcases v with ⟨v, hv⟩
+  simp only []
+  have heq : v + 1 ≠ 0 := by omega
+  simp [heq]
+  intros hcontra
+  unfold last at hcontra
+  obtain ⟨h₁, h₂⟩ := hcontra
+
 
 /-## Facts about register allocating a 'const' expression. -/
 section DoExprConst
 
 variable
- {Ξ : Ctxt Pure.Ty}
-  {Δ2Reg : Var2Reg (Ξ.snoc t)}
-  {Ξ2reg : Var2Reg Ξ}
+  {Γ₁ : Ctxt Pure.Ty}
+  {Γ₂2Reg₁ : Var2Reg (Γ₁.snoc t)}
+  {Γ₁2Reg : Var2Reg Γ₁}
   {er : _}
   {heff : _}
-  {r : RegAlloc.Reg} {Γs2reg : _}
-  (hlast : Δ2Reg.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γs2reg))
-  (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) =
-  some (er, Ξ2reg))
+  {r : RegAlloc.Reg} {Γ₂2Reg₂ : _}
+  -- | I can weaken this to being '.isSome', rather than naming it.
+  (hresult₁ : Γ₂2Reg₁.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γ₂2Reg₂))
+  (he : doExpr Γ₂2Reg₁ (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) = some (er, Γ₁2Reg))
 
 /--
-A 'const' expression changes the register file by
-simply adding a new binding for the out register 'r'.
-TODO: think if this is the best way to write the theorem.
-  First have a simp lemma that says what happens when const is register allocated,
-  then prove that calling 'do' on the register allocated expression does the right thing? maybe?
+A 'const' expression does not create new live registers, and only kills the result register.
+This killing is implicit, due to the coercion from `Γ₁` to `Γ₂`.
 -/
 @[simp]
 theorem toFun_const :
-    Ξ2reg.toFun = fun (v : Ξ.Var Pure.Ty.int) =>
-      (if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun ↑v)  := by
-  simp [doExpr, hlast] at he
+    Γ₁2Reg.toFun = fun (v : Γ₁.Var Pure.Ty.int) => Γ₂2Reg₁.toFun ↑v := by
+  simp [doExpr, hresult₁] at he
   simp [← he]
-  rw [Var2Reg.toFun_lookupOrInsert hlast]
+  funext v
+  obtain ⟨he₁, he₂⟩ := he
+  have he₂ := he₂.symm
+  subst he₂
+  rw [Var2Reg.toFun_lookupOrInsert hresult₁]
+  simp
 
 -- /--
 -- If we started with a sound mapping Δ2Reg,
@@ -909,8 +922,6 @@ theorem toFun_const :
 -- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
 -- rw [this] at hlive
 -- simp at hlive
--- end DoExprConst
-
 
 -- /--
 -- If we started with a sound mapping Δ2Reg,
@@ -926,8 +937,11 @@ theorem toFun_const :
 -- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
 -- rw [this] at hlive
 -- simp at hlive
--- end DoExprConst
 
+end DoExprConst
+
+/-## Facts about register allocating a increment expression. -/
+section DoExprIncrement
 
 @[simp]
 theorem effectKind_increment :
@@ -970,37 +984,41 @@ theorem Ctxt.Var.toSnoc_eq_iff_eq {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Va
     subst h
     simp
 
+variable
+  {Γ₁ : Ctxt Pure.Ty}
+  {Γ₂2Reg₁ Γ₂2Reg₂ Γ₂2Reg₃ : Var2Reg (Γ₁.snoc t)}
+  {Γ₁2Reg : Var2Reg Γ₁}
+  {er : _}
+  {heff : _}
+  {arg₁ : Γ₁.Var Pure.Ty.int}
+  {r : RegAlloc.Reg} {Γ₂2Reg₂ : _}
+  (hresult₁ : Γ₂2Reg₁.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γ₂2Reg₂))
+  (harg₁ : Γ₂2Reg₂.lookupOrInsertArg arg₁ = some (s, Γ₂2Reg₃))
+  (he : doExpr Γ₂2Reg₁ (Expr.mk Pure.Op.increment rfl heff (.cons arg₁ .nil) .nil) = some (er, Γ₁2Reg))
+
+
 /-
 A add expression changes the register file by
 simply adding a new binding for the out register 'r'.
 -/
 @[simp]
-theorem toFun_add {Ξ : Ctxt Pure.Ty}
-    {Δ2Reg : Var2Reg (Ξ.snoc t)}
-    {Ξ2reg : Var2Reg Ξ} {Γs2reg : _}
-    {r : RegAlloc.Reg}
-    {x : _}
-    {er : _}
-    {heff : _}
-    (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl heff (.cons x .nil) .nil) = some (er, Ξ2reg))
-    {hΓs2reg : Δ2Reg.lookupOrInsert (Ctxt.Var.last _ _) = some (r, Γs2reg)}
-    {Δs2reg : _}
-    {hvar0 : Γs2reg.lookupOrInsertArg x = some (s, Δs2reg)} :
-    Ξ2reg.toFun =
-    fun (v : Ξ.Var Pure.Ty.int) =>
-      if ↑v = ↑x
+theorem toFun_increment :
+    Γ₁2Reg.toFun =
+    fun (v : Γ₁.Var Pure.Ty.int) =>
+      if ↑v = ↑arg₁
       then some s
-      else if ↑v = Ctxt.Var.last Ξ t
-        then some r
-        else Δ2Reg.toFun ↑v := by
-  simp only [doExpr, hΓs2reg, Fin.zero_eta, Fin.isValue, List.get_eq_getElem, Fin.val_zero,
-    HVector.getN_zero, Option.bind_eq_bind, Option.some_bind, hvar0, Option.some.injEq,
-    Prod.mk.injEq] at he
-  simp only [← he.2, Var2Reg.toFun_deleteLast]
-  rw [Var2Reg.toFun_lookupOrInsertArg hvar0,
-    Var2Reg.toFun_lookupOrInsert hΓs2reg]
-  simp only [Ctxt.Var.toSnoc_eq_iff_eq]
+      else Γ₂2Reg₁.toFun ↑v := by
+  simp [doExpr, hresult₁, harg₁] at he
+  simp [← he]
+  funext v
+  obtain ⟨he₁, he₂⟩ := he
+  have he₂ := he₂.symm
+  subst he₂
+  rw [Var2Reg.toFun_lookupOrInsertArg harg₁]
+  rw [Var2Reg.toFun_lookupOrInsert hresult₁]
+  simp
 
+end DoExprIncrement
 
 /-
 Given a valuation of `V` for a pure program `p` and a register file `R`such that `V ~fΓ~ R`,
