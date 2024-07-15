@@ -187,6 +187,10 @@ theorem HVector.nil_eq {f : Ty → Type} (v : HVector f []) : v = HVector.nil :=
   rfl
 
  def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .impure Δ
+
+@[simp]
+theorem regSig_const : DialectSignature.regSig (d := dialect) (Op.const i out) = [] :=  rfl
+
  @[simp]
  theorem Expr.const_eq {Γ : Ctxt Ty} {i : Int}
     {ty_eq : Ty.unit = DialectSignature.outTy (d := dialect) (Op.const i out)}
@@ -195,12 +199,8 @@ theorem HVector.nil_eq {f : Ty → Type} (v : HVector f []) : v = HVector.nil :=
     {regArgs : HVector (fun t => Com dialect t.1 EffectKind.impure t.2) (DialectSignature.regSig (Op.const i out)) } :
     (Expr.mk (d := dialect) (Γ := Γ) (Op.const i out) (ty := .unit) ty_eq eff_le args regArgs) =
     (Expr.mk (d := dialect) (Γ := Γ) (eff := EffectKind.impure) (Op.const i out) (ty := .unit) (by rfl) (by simp) .nil .nil) := by
-  unfold DialectSignature.regSig signature Signature.regSig at regArgs
-  simp_all [DialectSignature.regSig, DialectSignature, DialectSignature.regSig, Op.signature]
-  sorry
-
-
-
+  simp_all
+  apply Subsingleton.elim
 
 end RegAlloc
 
