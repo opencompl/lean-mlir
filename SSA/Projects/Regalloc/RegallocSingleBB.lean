@@ -710,6 +710,8 @@ theorem Var2Reg.toFun_lookupOrInsertResult
 /-
 Evaluating an expression will return an expression whose values equals
 the value that we expect at the output register of the expression.
+TODO: extract into four proofs:
+  `{pure, impure} x {const, add}`.
 -/
 theorem doExpr_sound
     {e : Expr Pure.dialect Ξ EffectKind.pure .int}
@@ -760,6 +762,99 @@ theorem doExpr_sound
           subst hΞ2reg
           simp
           apply Var2Reg.registerLiveFor_of_lookupOrInsertArg hvar0
+
+@[simp]
+theorem effectKind_const :
+  DialectSignature.effectKind (d := Pure.dialect)
+    (Pure.Op.const i) = EffectKind.pure := rfl
+
+
+/--
+A 'const' expression changes the register file by
+simply adding a new binding for the out register 'r'.
+TODO: think if this is the best way to write the theorem.
+  First have a simp lemma that says what happens when const is register allocated,
+  then prove that calling 'do' on the register allocated expression does the right thing? maybe?
+-/
+@[simp]
+theorem toFun_const {Ξ : Ctxt Pure.Ty}
+    {Δ2Reg : Var2Reg (Ξ.snoc t)}
+    {Ξ2reg : Var2Reg Ξ}
+    {r : RegAlloc.Reg}
+    {er : _}
+    (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl (by simp) .nil .nil) =
+      some (er, Ξ2reg)) :
+    Ξ2reg.toFun = fun (v : Ξ.Var Pure.Ty.int) =>
+      (if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun ↑v)  := by
+  simp [doExpr] at he
+  cases hlast : Δ2Reg.lookupOrInsertResult
+  case none => simp [hlast] at he
+  case some val =>
+    simp [hlast] at he
+    replace ⟨r, Γs2reg⟩ := val
+    rw [← he.2]
+    simp only [Var2Reg.toFun_deleteLast]
+    rw [Var2Reg.toFun_lookupOrInsertResult hlast]
+    funext v
+    simp only
+    rfl
+
+@[simp]
+theorem effectKind_increment :
+  DialectSignature.effectKind (d := Pure.dialect)
+    Pure.Op.increment = EffectKind.pure := rfl
+
+@[simp]
+theorem HVector.getN_zero : (HVector.cons a as).getN 0 = a := by
+  simp [getN, get]
+
+@[simp]
+theorem HVector.getN_succ
+    {α : Type*} {f : α → Type*} {a : α} {as : List α}
+    {xs : HVector f as} {x : f a} {n : Nat}
+    {hn : n < as.length} {hnsucc : n + 1 < as.length + 1}:
+    (HVector.cons x xs).getN (n + 1) hnsucc = xs.getN n hn := by
+  simp [getN, get]
+
+/--
+A 'const' expression changes the register file by
+simply adding a new binding for the out register 'r'.
+-/
+@[simp]
+theorem toFun_add {Ξ : Ctxt Pure.Ty}
+    {Δ2Reg : Var2Reg (Ξ.snoc t)}
+    {Ξ2reg : Var2Reg Ξ}
+    {r : RegAlloc.Reg}
+    {x : _}
+    {er : _}
+    (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl (by simp) (.cons x .nil) .nil) =
+      some (er, Ξ2reg)) :
+    Ξ2reg.toFun =
+    fun (v : Ξ.Var Pure.Ty.int) =>
+      if ↑v = ↑x
+      then some s
+      else if ↑v = Ctxt.Var.last Ξ t
+        then some r
+        else Δ2Reg.toFun ↑v := by
+  simp [doExpr] at he
+  cases hlast : Δ2Reg.lookupOrInsertResult
+  case none => simp [hlast] at he
+  case some val =>
+    replace ⟨r, Γs2reg⟩ := val
+    simp [hlast] at he
+    cases hvar0 : Γs2reg.lookupOrInsertArg x
+    case none => simp [hvar0] at he
+    case some val =>
+      simp [hvar0] at he
+      replace ⟨s, Δs2reg⟩ := val
+      simp at he
+      simp [← he.2]
+      funext v
+      rw [Var2Reg.toFun_lookupOrInsertArg hvar0]
+      rw [Var2Reg.toFun_lookupOrInsertResult hlast]
+      simp
+      sorry
+
 
 /-- Note: this is untrue, because we potentially change the registers
 based on the *arguments* as well.
@@ -905,7 +1000,7 @@ Vibes based proof
   is such that we have potentially assigned registers for `e`.
   From the IH, we get that `R U {e} - {v}` is correct at Ξ. To show that `R U {e}`
   is correct at Δ, see that everything except `{v}` is correct from IH, and that
-  we compute `v` at this location, and so we are correct for `v` as well.
+  we compute `v` at this location, and so we are correct for `v` as
 
 
 Formal blueprint
