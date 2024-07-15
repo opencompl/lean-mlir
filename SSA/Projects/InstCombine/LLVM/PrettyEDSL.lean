@@ -46,15 +46,23 @@ macro_rules
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
 open MLIR.AST
-
-syntax mlir_op_operand " = " "llvm.mlir.constant" "(" neg_num (" : " mlir_type)? ")" (" : " mlir_type) : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant" "(" ("$" noWs "{" term "}") ")" (" : " mlir_type)?   : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("   neg_num (" : " mlir_type)? ")"  (" : " mlir_type) : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("  ("$" noWs "{" term "}") ")"  (" : " mlir_type)?   : mlir_op
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $t]?) : $other_type ) => do
       match t with
         | some given_type => `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $given_type} : () -> ($other_type) )
         | none  => `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $other_type} : () -> ($other_type) )
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( ${ $x:term }) $[: $t]?) => do
+      let t ← t.getDM `(mlir_type| _)
+      let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
+      let t ← t.getDM `(mlir_type| _)
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
       let t ← t.getDM `(mlir_type| _)
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
       `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
@@ -81,7 +89,7 @@ private def pretty_test :=
 private def pretty_test_generic (w : Nat) :=
   [llvm (w)|{
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant(8) : _
+    %0 = llvm.mlir.constant 8 : _
     %1 = llvm.add %0, %arg0 : _
     %2 = llvm.mul %1, %arg0 : _
     %3 = llvm.not %2 : _
