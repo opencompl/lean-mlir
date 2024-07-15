@@ -1824,23 +1824,98 @@ theorem matchVar_var_last_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} 
     lhs
     unfold matchVar
 
-def guard_recompile_2: Int := 42
+section SubsetEntries
 
+theorem subset_entries :
+    (
+     ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
+        (argsl : HVector Γ_out.Var l) (argsr : HVector Δ_out.Var l) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
+    )
+    ∧ (
+      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+        (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t) (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
+        (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
+      ∀ varMap ∈ matchVar lets v matchLets w ma, ma.entries ⊆ varMap.entries
+    ) := by
+  apply matchArg.mutual_induct (d:=d)
+  <;> first
+      | intro (Γ_in : Ctxt _) eff Γ_out Δ_in Δ_out inst lets matchLets
+      | intro (eff : EffectKind) Γ_in Γ_out Δ_in t inst lets w
+  · intro ma varMap hvarMap
+    simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
+    subst hvarMap
+    exact Set.Subset.refl _
 
-/-
-  The termination proof of the mutual block takes a long time.
-  This now works, with the obscene heartbeat count, but it is not ideal.
-  TODO: figure out why this is so slow
--/
+  · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
+    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
+    rcases hvarMap with ⟨ma', h1, h2⟩
+    have hind : ma'.entries ⊆ _ := ih_matchArg ma' varMap <| by
+      simp; exact h2
+    have hmut := ih_matchVar ma' <| by simp; exact h1
+    apply List.Subset.trans hmut hind
 
--- TODO: There seems to be a bug in the unusedVariables linter that shows up in `subset_entries_matchVar`.
--- It reports `hvarMap` as unused, but it is used (because somehow the tactic does some beta abstraction).
---  might be worth investigating/reporting.
-set_option linter.unusedVariables false in
-set_option maxHeartbeats 99999999 in
-mutual
-/-
--/
+  · intro Δ_out u matchLets matchExpr l h ma
+    intro ih_matchVar motive
+    intros varMap hvarMap
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    unfold matchVar at hvarMap
+    apply motive (varMap := varMap) hvarMap
+
+  · intro Δ_out t_1 matchLets
+    intro matchExpr property? ma ih_matchArg varMap ih_matchVar
+    simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
+    split at ih_matchVar
+    next     => contradiction
+    next e _ =>
+      simp only at ih_matchVar
+      split_ifs at ih_matchVar with hop
+      apply ih_matchArg e hop _ ih_matchVar
+  · intro ma v₂ b? varMap hvarMap x hx
+    simp only [matchVar, Option.mem_def] at *
+    split at hvarMap
+    case h_1 _p q r _s =>
+      split_ifs at hvarMap
+      . simp_all
+    case h_2 _a _b _c _d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
+      rcases x with ⟨x, y⟩
+      simp only [← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, w⟩
+      . subst hx; simp_all
+      . rwa [AList.lookup_insert_ne hx]
+  · intro w ma v₂
+    intro b? c? varMap hvarMap
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    unfold matchVar at hvarMap
+    split at hvarMap
+    split_ifs at hvarMap
+    · simp at hvarMap
+      simp [hvarMap]
+    · simp at hvarMap
+      rename_i a b c
+      rw [c] at b?
+      contradiction
+  · intro w ma
+    intro b? varMap hvarMap
+    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
+    unfold matchVar at hvarMap
+    split at hvarMap
+    case h_1 _p q r _s =>
+      split_ifs at hvarMap
+      . simp_all
+    case h_2 _a _b _c _d e f =>
+      simp only [Option.some.injEq] at hvarMap
+      subst hvarMap
+      intros x hx
+      rcases x with ⟨x, y⟩
+      simp only [← AList.mem_lookup_iff] at *
+      by_cases hx : x = ⟨t, w⟩
+      . subst hx; simp_all
+      . rwa [AList.lookup_insert_ne hx]
+
 theorem subset_entries_matchArg [DecidableEq d.Op]
     {Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
@@ -1852,34 +1927,7 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
     {varMap : Mapping Δ_in Γ_out}
     (hvarMap : varMap ∈ matchArg lets matchLets argsl argsr ma) :
     ma.entries ⊆ varMap.entries :=
-  match l, argsl, argsr with
-  | [], .nil, .nil =>  by
-    simp only [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
-    subst hvarMap
-    exact Set.Subset.refl _
-  | .cons t ts, .cons vl argsl', .cons vr argsr' => by
-    simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
-    rcases hvarMap with ⟨ma', h1, h2⟩
-    have hind := subset_entries_matchArg
-      (Γ_out := Γ_out)
-      (Δ_in := Δ_in)
-      (Δ_out := Δ_out)
-      (lets := lets)
-      (matchLets := matchLets)
-      (l := ts)
-      -- (l := l)
-      (argsl := argsl')
-      (argsr := argsr')
-      (ma := ma')
-      (varMap := varMap)
-      (hvarMap := by simp; exact h2)
-    have hmut := subset_entries_matchVar
-      (varMap := ma')
-      (ma := ma)
-      (lets := lets)
-      (v := vl)
-      (hvarMap := by simp; exact h1)
-    apply List.Subset.trans hmut hind
+  subset_entries.1 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
 
 /--
 matchVar only adds new entries:
@@ -1894,49 +1942,10 @@ theorem subset_entries_matchVar [DecidableEq d.Op]
     {w : Var Δ_out t}
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) :
     ma.entries ⊆ varMap.entries :=
-  match matchLets, w with
-  | .nil, w => by
-    simp only [matchVar, Option.mem_def] at *
-    intros x hx
-    split at hvarMap
-    case h_1 p q r _s =>
-      split_ifs at hvarMap
-      . simp_all
-    case h_2 a _b c d e f =>
-      simp only [Option.some.injEq] at hvarMap
-      subst hvarMap
-      rcases x with ⟨x, y⟩
-      simp only [← AList.mem_lookup_iff] at *
-      by_cases hx : x = ⟨t, w⟩
-      . subst hx; simp_all
-      . rwa [AList.lookup_insert_ne hx]
-  | .var matchLets _, ⟨w+1, h⟩ => by
-    simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
-    unfold matchVar at hvarMap
-    apply subset_entries_matchVar
-      (varMap := varMap)
-      (ma := ma)
-      (lets := lets)
-      (v := v)
-      (matchLets := _)
-      (w := _)
-      (hvarMap := by simp; exact hvarMap)
-  | .var matchLets matchExpr, ⟨0, _⟩ => by
-    simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
-    split at hvarMap
-    · simp at hvarMap
-    · rename_i e he
-      rcases e with ⟨op, rfl, effLe, args'⟩
-      dsimp at hvarMap
-      split_ifs at hvarMap with hop
-      · rcases hop with ⟨rfl, hop⟩
-        dsimp at hvarMap
-        apply subset_entries_matchArg (lets := lets)
-          (matchLets := matchLets)
-          (argsl := args')
-          (argsr := (Expr.args matchExpr))
-          (hvarMap := by simp; rw [← hvarMap])
-end
+  subset_entries.2 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
+
+end SubsetEntries
+
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]
