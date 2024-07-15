@@ -507,6 +507,8 @@ A `suffix id` is a notion from the MLIR standard defined as
 ```bnf
 suffix-id ::= (digit+ | ((letter|id-punct) (letter|id-punct|digit)*))
 ```
+See more at
+https://mlir.llvm.org/docs/LangRef/#identifiers-and-keywords
 If the suffix id is a number (the left choice), we convert that number to a string
 If the suffix id is an identifier (the right choice), we convert that identifier to a string
 
