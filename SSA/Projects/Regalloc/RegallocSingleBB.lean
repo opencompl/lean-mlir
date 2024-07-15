@@ -336,6 +336,7 @@ def RegAlloc.Program.exec_cons_eq' (body : Program Γ Δ) (er : Expr RegAlloc.di
 structure Var2Reg (Γ : Ctxt Pure.Ty) where
   toFun : Γ.Var Pure.Ty.int → Option RegAlloc.Reg
   dead : List RegAlloc.Reg -- list of dead registers
+  hdead : ∀ r ∈ dead, ∀ v, r ∉ toFun v := by sorry -- the dead register set is correct, and all registers that are dead cannot be mapped.
 
 /-- A register is free if no variable maps to it. -/
 def Var2Reg.registerDead (V2R : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
@@ -391,6 +392,13 @@ theorem registerLiveFor_inj {f : Var2Reg Γ} {r s : RegAlloc.Reg}
     (h₂ : f.registerLiveFor s v) : r = s :=
   eq_of_registerLiveFor_of_registerLiveFor h₁ h₂
 
+/-- A register that 'r' that is known to be live cannot be in the dead set. -/
+theorem Var2Reg.not_mem_dead_of_registerLiveFor {Γ2R: Var2Reg Γ} {r : RegAlloc.Reg} {v : Γ.Var .int}
+    (hlive : Γ2R.registerLiveFor r v) : r ∉ Γ2R.dead := by
+  intro hmem
+  simp [registerLiveFor] at hlive
+  have hdead := Γ2R.hdead r hmem v
+  contradiction
 
 /-- A register is live if some variable maps to the register. -/
 def Var2Reg.registerLive (f : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
@@ -404,9 +412,19 @@ theorem live_iff_not_dead {f : Var2Reg Γ} {r : RegAlloc.Reg} :
   f.registerLive r ↔ ¬ f.registerDead r := by
   simp [Var2Reg.registerDead, Var2Reg.registerLive, Var2Reg.registerLiveFor]
 
+/-- A register that 'r' that is known to be live cannot be in the dead set. -/
+theorem Var2Reg.not_mem_dead_of_registerLive {Γ2R: Var2Reg Γ} {r : RegAlloc.Reg}
+    (hlive : Γ2R.registerLive r) : r ∉ Γ2R.dead := by
+  intro hmem
+  simp [registerLive] at hlive
+  obtain ⟨w, hlive⟩ := hlive
+  have hdead := Γ2R.hdead r hmem w
+  contradiction
+
+
 structure LawfulVar2Reg (Γ : Ctxt Pure.Ty) extends Var2Reg Γ where
-  /-- every register in the set of dead registers is in fact dead. -/
-  hdead : ∀ r ∈ dead, Var2Reg.registerDead toVar2Reg r
+  /- every register in the set of dead registers is in fact dead. -/
+  -- hdead : ∀ r ∈ dead, Var2Reg.registerDead toVar2Reg r
   /-- our mapping from variables to registers is injective. -/
   hinj : Function.Injective toVar2Reg.toFun
 
@@ -485,25 +503,39 @@ theorem registerLiveFor_of_allocateDeadRegister
     apply Var2Reg.registerLiveFor_of_toFun_eq
     simp
 
+
 /--
-All previously live registers will continue to be live.
+For an already live register, allocateDeadRegister keeps liveness alive.
 -/
 theorem registerLiveFor_of_allocateDeadRegister_of_registerLiveFor
-    {Γ₁ : Ctxt Pure.Ty} {Γ₁2R₁ Γ₁2R₂ : Var2Reg Γ₁} {v : Γ₁.Var .int}
-    {r : RegAlloc.Reg}
+    {Γ₁ : Ctxt Pure.Ty} {Γ₁2R₁ Γ₁2R₂ : Var2Reg Γ₁} {v w : Γ₁.Var .int}
+    {r s : RegAlloc.Reg}
     (halloc : Γ₁2R₁.allocateDeadRegister v = some (r, Γ₁2R₂))
-    (hlive : Γ₁2R₁.registerLiveFor r v) :
-    Γ₁2R₂.registerLiveFor r v := by
+    (hlive : Γ₁2R₁.registerLiveFor s w) :
+    Γ₁2R₂.registerLiveFor s w := by
+  have hdead_Γ₁2R₁ := Γ₁2R₁.hdead
   simp [Var2Reg.allocateDeadRegister] at halloc
   split at halloc
   · case h_1 => simp at halloc
-  · case h_2 r rs _hdead =>
+  · case h_2 r rs hdead =>
     simp only [Option.some.injEq, Prod.mk.injEq] at halloc
     obtain ⟨hr, hΓ2R'⟩ := halloc
     subst hr
     subst hΓ2R'
     apply Var2Reg.registerLiveFor_of_toFun_eq
     simp
+    by_cases hw : w = v
+    · subst hw
+      simp
+      have hcontra₁ : r ∈ Γ₁2R₁.dead := by
+        simp [hdead]
+      have hcontra₂ : r ∉ Γ₁2R₁.dead := by
+        -- apply Γ₁2R₁.not_mem_dead_of_registerLiveFor hlive
+        sorry -- TODO. We need to prove this sorry.
+      contradiction
+      -- this is contradiction, can't have a live register be in the dead set.
+    · simp [hw]
+      assumption
 
 /--
 If a register is live for allocateDeadRegister,
@@ -592,6 +624,26 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsert {Γ : Ctxt Pure.Ty}
   · case h_2 _hv =>
     apply registerLiveFor_of_allocateDeadRegister hlookup
 
+
+/-- The register 'w' that was previously live for 's' continues to be live for 's'. -/
+theorem Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor {Γ : Ctxt Pure.Ty}
+    {Γ₁2R₁ Γ₁2R₂: Var2Reg Γ}
+    {r s : RegAlloc.Reg} {v w : Γ.Var int}
+    (hlookup : Γ₁2R₁.lookupOrInsert v = some (r, Γ₁2R₂))
+    (hlive : Γ₁2R₁.registerLiveFor s w) :
+    Γ₁2R₂.registerLiveFor s w := by
+  unfold lookupOrInsert at hlookup
+  split at hlookup
+  · case h_1 r hv =>
+    simp [hv] at hlookup
+    obtain ⟨req, Γ2Req⟩ := hlookup
+    subst req
+    subst Γ2Req
+    assumption
+  · case h_2 _hv =>
+    apply registerLiveFor_of_allocateDeadRegister_of_registerLiveFor
+      hlookup (by assumption)
+
 /--
 Lookup an argument in a register map, where the variable is defined in the register map.
 See that the variable comes from Γ, but the register map is for (Γ.snoc t).
@@ -640,6 +692,24 @@ theorem Var2Reg.lookupOrInsertArg_toFun_self_eq {Γ : Ctxt Pure.Ty}
   · case h_2 _hv =>
     apply registerLiveFor_of_allocateDeadRegister hlookup
 
+
+/-- The register inserted by lookupOrInsertArg is live. -/
+theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor {Γ : Ctxt Pure.Ty}
+    {Γ₁2R₁ Γ₁2R₂: Var2Reg (Γ.snoc t)}
+    {r s : RegAlloc.Reg} {v w : Γ.Var int}
+    (hlookup : Γ₁2R₁.lookupOrInsertArg v = some (r, Γ₁2R₂))
+    (hlive : Γ₁2R₁.registerLiveFor s w) :
+    Γ₁2R₂.registerLiveFor s w := by
+  unfold lookupOrInsertArg at hlookup
+  split at hlookup
+  · case h_1 r hv =>
+    simp [hv] at hlookup
+    obtain ⟨req, Γ2Req⟩ := hlookup
+    subst req
+    subst Γ2Req
+    assumption
+  · case h_2 _hv =>
+    apply registerLiveFor_of_allocateDeadRegister_of_registerLiveFor hlookup (by assumption)
 
 -- /-- The register map after lookupOrInsertArg is sound. -/
 -- theorem Var2Reg.sound_mapping_of_lookupOrInsertArg_of_sound_mapping {Γ : Ctxt Pure.Ty}
@@ -882,8 +952,7 @@ theorem doExpr_sound {Γ₁ : Ctxt Pure.dialect.Ty} {V: Γ₁.Valuation} {Γ₁2
           apply eq_of_sound_mapping_of_registerLiveFor
           apply hsound
           simp
-          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg
-          rw [hresult₂]
+          apply Var2Reg.registerLiveFor_of_lookupOrInsertArg (by assumption)
 
 @[simp]
 theorem effectKind_const :
@@ -1054,12 +1123,9 @@ theorem registerLiveFor_of_doExpr_increment_of_registerLiveFor {s : RegAlloc.Reg
   have he₂ := he₂.symm
   subst he₂
   apply Var2Reg.registerLiveFor_of_toFun_eq
-  rw [Var2Reg.toFun_lookupOrInsertArg harg₁]
-  rw [Var2Reg.toFun_lookupOrInsert hresult₁]
-  simp
-  -- Note that this is okay: we can prove that because the variable was live at Γ2ℜg1,
-  -- we would not have clobbered it when we did the allocation for lookupOrInsertArg.
-
+  have := Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁ hlive
+  have := Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor harg₁ this
+  assumption
 
 end DoExprIncrement
 
