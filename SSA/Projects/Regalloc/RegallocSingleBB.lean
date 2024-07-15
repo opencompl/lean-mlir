@@ -782,7 +782,8 @@ theorem toFun_const {Ξ : Ctxt Pure.Ty}
     {Ξ2reg : Var2Reg Ξ}
     {r : RegAlloc.Reg}
     {er : _}
-    (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl (by simp) .nil .nil) =
+    {heff : _}
+    (he : doExpr Δ2Reg (Expr.mk (Pure.Op.const i) rfl heff .nil .nil) =
       some (er, Ξ2reg)) :
     Ξ2reg.toFun = fun (v : Ξ.Var Pure.Ty.int) =>
       (if ↑v = Ctxt.Var.last Ξ t then some r else Δ2Reg.toFun ↑v)  := by
@@ -816,19 +817,46 @@ theorem HVector.getN_succ
     (HVector.cons x xs).getN (n + 1) hnsucc = xs.getN n hn := by
   simp [getN, get]
 
-/--
-A 'const' expression changes the register file by
+
+/-- Var.toSnoc is injective. -/
+@[simp]
+theorem Ctxt.Var.toSnoc_injective {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t}
+    (h : (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t)) : v = w := by
+  have h₁ : (↑v : (Γ.snoc t').Var t).1 = (↑w : (Γ.snoc t').Var t).1 := by
+    simp [h]
+  rcases v with ⟨v, hv⟩
+  rcases w with ⟨w, hw⟩
+  simp only [get?, val_toSnoc, add_left_inj] at h₁
+  subst h₁
+  rfl
+
+/-- Two variables are equal iff their toSnoc's are equal. -/
+@[simp]
+theorem Ctxt.Var.toSnoc_eq_iff_eq {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t} :
+    (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t) ↔ v = w := by
+  constructor
+  · intros h
+    simp [Ctxt.Var.toSnoc_injective h]
+  · intros h
+    subst h
+    simp
+
+/-
+A add expression changes the register file by
 simply adding a new binding for the out register 'r'.
 -/
 @[simp]
 theorem toFun_add {Ξ : Ctxt Pure.Ty}
     {Δ2Reg : Var2Reg (Ξ.snoc t)}
-    {Ξ2reg : Var2Reg Ξ}
+    {Ξ2reg : Var2Reg Ξ} {Γs2reg : _}
     {r : RegAlloc.Reg}
     {x : _}
     {er : _}
-    (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl (by simp) (.cons x .nil) .nil) =
-      some (er, Ξ2reg)) :
+    {heff : _}
+    (he : doExpr Δ2Reg (Expr.mk Pure.Op.increment rfl heff (.cons x .nil) .nil) = some (er, Ξ2reg))
+    {hΓs2reg : Δ2Reg.lookupOrInsertResult = some (r, Γs2reg)}
+    {Δs2reg : _}
+    { hvar0 : Γs2reg.lookupOrInsertArg x = some (s, Δs2reg)} :
     Ξ2reg.toFun =
     fun (v : Ξ.Var Pure.Ty.int) =>
       if ↑v = ↑x
@@ -836,25 +864,13 @@ theorem toFun_add {Ξ : Ctxt Pure.Ty}
       else if ↑v = Ctxt.Var.last Ξ t
         then some r
         else Δ2Reg.toFun ↑v := by
-  simp [doExpr] at he
-  cases hlast : Δ2Reg.lookupOrInsertResult
-  case none => simp [hlast] at he
-  case some val =>
-    replace ⟨r, Γs2reg⟩ := val
-    simp [hlast] at he
-    cases hvar0 : Γs2reg.lookupOrInsertArg x
-    case none => simp [hvar0] at he
-    case some val =>
-      simp [hvar0] at he
-      replace ⟨s, Δs2reg⟩ := val
-      simp at he
-      simp [← he.2]
-      funext v
-      rw [Var2Reg.toFun_lookupOrInsertArg hvar0]
-      rw [Var2Reg.toFun_lookupOrInsertResult hlast]
-      simp
-      sorry
-
+  simp only [doExpr, hΓs2reg, Fin.zero_eta, Fin.isValue, List.get_eq_getElem, Fin.val_zero,
+    HVector.getN_zero, Option.bind_eq_bind, Option.some_bind, hvar0, Option.some.injEq,
+    Prod.mk.injEq] at he
+  simp only [← he.2, Var2Reg.toFun_deleteLast]
+  rw [Var2Reg.toFun_lookupOrInsertArg hvar0,
+    Var2Reg.toFun_lookupOrInsertResult hΓs2reg]
+  simp only [Ctxt.Var.toSnoc_eq_iff_eq]
 
 /-- Note: this is untrue, because we potentially change the registers
 based on the *arguments* as well.
