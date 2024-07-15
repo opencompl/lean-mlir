@@ -1981,64 +1981,21 @@ theorem subset_entries :
     apply motive (v := v) (varMap := varMap) hvarMap
 
   · intro Δ_out t_1 matchLets
-    intro matchExpr property? ma motive v varMap hvarMap
+    intro matchExpr property? ma ih_matchArg v varMap ih_matchVar
     simp only [Ctxt.get?, matchVar, bind, Option.bind, Option.mem_def] at *
-    split at hvarMap
-    · simp at hvarMap
-    · rename_i e he
-      rcases e with ⟨op, rfl, effLe, args'⟩
-      dsimp at hvarMap
-      split_ifs at hvarMap with hop
-      · rcases hop with ⟨rfl, hop⟩
-
-        dsimp at hvarMap
-        rename_i a b
-        cases hhh : a
-        · sorry
-        · rename_i aaaa
-          let x := motive aaaa
-          simp [hop, hhh] at x
-          have xxx := Expr.args matchExpr
-
-          apply x _ _ _ _
-          simp_all
-          sorry
-          sorry
-          simp [← hvarMap]
-          dsimp
-        --(lets := lets)
-          --(matchLets := matchLets)
-          --(argsl := args')
-          --(argsr := (Expr.args matchExpr))
-         -- (hvarMap := by simp; rw [← hvarMap])
-
-        --let x := motive hvarMap
-        dsimp! at *
-        rename_i aa bb aaaa
-        -- motive : ∀ (ie : Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
-        -- (hs : ∃ (h : ie.op = matchExpr.op), ie.regArgs = ⋯ ▸ matchExpr.regArgs) (varMap : Mapping Δ_in Γ_out),
-        -- matchArg lets matchLets ie.args (⋯ ▸ matchExpr.args) ma = some varMap → ma.entries ⊆ varMap.entries
-        apply motive
-        · -- goal:
-          -- matchArg lets matchLets ?pos.intro.ie✝.args (⋯ ▸ matchExpr.args) ma = some varMap
-          sorry
-        · -- goal:
-          -- Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op)
-          --
-          -- does the 'aa' hypothesis help? I am not sure how to get rid of the 'Option'?
-          --   aa:  Option (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))
-          sorry
-        · -- goal
-          -- ∃ (h : (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).op = matchExpr.op),
-          -- (sorryAx (Expr d Γ_out EffectKind.pure (DialectSignature.outTy matchExpr.op))).regArgs = ⋯ ▸ matchExpr.regArgs
-          sorry
+    split at ih_matchVar
+    next     => contradiction
+    next e _ =>
+      simp only at ih_matchVar
+      split_ifs at ih_matchVar with hop
+      apply ih_matchArg e hop _ ih_matchVar
   · intro ma v₂ b? v varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
     split at hvarMap
-    case h_1 p q r _s =>
+    case h_1 _p q r _s =>
       split_ifs at hvarMap
       . simp_all
-    case h_2 a _b c d e f =>
+    case h_2 a _b _c _d e f =>
       simp only [Option.some.injEq] at hvarMap
       subst hvarMap
       rcases x with ⟨x, y⟩
@@ -2063,10 +2020,10 @@ theorem subset_entries :
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
     split at hvarMap
-    case h_1 p q r _s =>
+    case h_1 _p q r _s =>
       split_ifs at hvarMap
       . simp_all
-    case h_2 a _b c d e f =>
+    case h_2 _a _b _c _d e f =>
       simp only [Option.some.injEq] at hvarMap
       subst hvarMap
       intros x hx
