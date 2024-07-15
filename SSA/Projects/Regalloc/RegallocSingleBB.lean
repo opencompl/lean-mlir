@@ -699,35 +699,35 @@ def doExpr (f : Var2Reg (Γ.snoc s))
 TODO: we will get stuck in showing that 'nregs > 0' when we decrement it when a variable is defined (ie, dies in reverse order).
 This might have us actually need to compute liveness anyway to prove correctness.
 -/
-def doLets (p : Pure.Program Γ Δ) (fΔ : Var2Reg Δ) :
-  Option (RegAlloc.Program (doCtxt Γ) (doCtxt Δ) × Var2Reg Γ) :=
+def doLets (p : Pure.Program Γ₁ Γ₃) (Γ₃2Reg : Var2Reg Γ₃) :
+  Option (RegAlloc.Program (doCtxt Γ₁) (doCtxt Γ₃) × Var2Reg Γ₁) :=
   match  p with
-  | .nil => some (.nil, fΔ)
-  | .var ps e (Γ_out := Ξ) (t := t) => by
+  | .nil => some (.nil, Γ₃2Reg)
+  | .var ps e (Γ_out := Γ₂) (t := t) => by
     -- stop
-    exact match doExpr fΔ e with
+    exact match doExpr Γ₃2Reg e with
     | none => none
-    | some (er, fΞ) =>
-      match doLets ps fΞ with
+    | some (er, Γ₂2Reg) =>
+      match doLets ps Γ₂2Reg with
       | none => none
-      | some (bodyr, fΓ) => some (.var bodyr er, fΓ)
+      | some (bodyr, Γ₁2Reg) => some (.var bodyr er, Γ₁2Reg)
 termination_by structural p
 
 /-- Equation theorem for doLets when argument is nil. -/
 @[simp]
-theorem Var2Reg.doLets_nil (f : Var2Reg Γ) : doLets .nil f = some (.nil, f) := rfl
+theorem Var2Reg.doLets_nil {Γ2Reg : Var2Reg Γ} : doLets .nil Γ2Reg = some (.nil, Γ2Reg) := rfl
 
 
 /-- Inversion equation theorem for doLets when argument is cons. -/
 @[simp]
-theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
-    {fΔ : Var2Reg (Δ.snoc .int)}
-    {fΓ : Var2Reg Γ}
-    {rsout : RegAlloc.Program (doCtxt Γ) (doCtxt (Δ.snoc .int))}
-    (h : doLets (.var ps e) fΔ = some (rsout, fΓ)) :
-    ∃ bodyr er fΞ, rsout = .var bodyr er ∧
-       doExpr fΔ e = some (er, fΞ) ∧
-       doLets ps fΞ = some (bodyr, fΓ) := by
+theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ₁ Γ₂}
+    {Γ₃2Reg : Var2Reg (Γ₂.snoc .int)}
+    {Γ₁2Reg : Var2Reg Γ₁}
+    {rsout : RegAlloc.Program (doCtxt Γ₁) (doCtxt (Γ₂.snoc .int))}
+    (h : doLets (.var ps e) Γ₃2Reg = some (rsout, Γ₁2Reg)) :
+    ∃ bodyr er Γ₂2Reg, rsout = .var bodyr er ∧
+       doExpr Γ₃2Reg e = some (er, Γ₂2Reg) ∧
+       doLets ps Γ₂2Reg = some (bodyr, Γ₁2Reg) := by
   simp [doLets] at h
   split at h
   case h_1 => simp at h
@@ -739,6 +739,10 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ Δ}
       simp only [← h.1]
       exists bodyr
       exists er
+      have ⟨eq₁, eq₂⟩ := h
+      have eq₂ := eq₂.symm
+      subst eq₂
+      subst eq₁
       simp [ih]
 
 @[simp]
