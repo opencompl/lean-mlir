@@ -501,6 +501,17 @@ syntax mlir_suffix_id := num <|> ident
 syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
+/-
+`getSuffixId` converts the syntax object of a `suffix id` to a string.
+A `suffix id` is a notion from the MLIR standard defined as
+```bnf
+suffix-id ::= (digit+ | ((letter|id-punct) (letter|id-punct|digit)*))
+```
+If the suffix id is a number (the left choice), we convert that number to a string
+If the suffix id is an identifier (the right choice), we convert that identifier to a string
+
+`getSuffixId` is used in parsing the syntax of MLIR to a Lean AST
+-/
 def getSuffixId : TSyntax ``mlir_suffix_id → String
   | `(mlir_suffix_id| $x:ident) => x.getId.toString
   | `(mlir_suffix_id| $x:num) => toString (x.getNat)
@@ -724,10 +735,9 @@ macro_rules
         | none, some y => Macro.throwErrorAt y "Caret closed without being opened"
         | some x, none => Macro.throwErrorAt x "Caret opened without being closed"
         | _ , _ =>
-
-        let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
-        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
-        `(AttrDict.mk $attrsList)
+          let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
+          let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
+          `(AttrDict.mk $attrsList)
 -- dict attribute val
 syntax mlir_attr_dict : mlir_attr_val
 
