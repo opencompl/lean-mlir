@@ -356,6 +356,13 @@ private theorem Var2Reg.registerLiveFor_of_toFun_eq {f : Var2Reg Γ}
     f.registerLiveFor r v := by
   simp [Var2Reg.registerLiveFor, heq]
 
+private theorem Var2Reg.toFun_eq_of_registerLiveFor {f : Var2Reg Γ}
+    {r : RegAlloc.Reg}
+    {v : Γ.Var .int}
+    (heq : f.toFun v = some r) :
+    f.registerLiveFor r v := by
+  simp [Var2Reg.registerLiveFor, heq]
+
 /-- RegisterLiveFor is injective -/
 theorem eq_of_registerLiveFor_of_registerLiveFor {V2R : Var2Reg Γ} {r s : RegAlloc.Reg}
     {v : Γ.Var .int}
@@ -568,6 +575,23 @@ def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int)
   | .some r => (r, f)
   | .none => f.allocateDeadRegister v
 
+/-- The register inserted by lookupOrInsertArg is live. -/
+theorem Var2Reg.registerLiveFor_of_lookupOrInsert {Γ : Ctxt Pure.Ty}
+    {Γ₁2R₁ Γ₁2R₂: Var2Reg Γ}
+    {r : RegAlloc.Reg} {v : Γ.Var int}
+    (hlookup : Γ₁2R₁.lookupOrInsert v = some (r, Γ₁2R₂)) :
+  Γ₁2R₂.registerLiveFor r v := by
+  unfold lookupOrInsert at hlookup
+  split at hlookup
+  · case h_1 r hv =>
+    simp [hv] at hlookup
+    obtain ⟨req, Γ2Req⟩ := hlookup
+    subst req
+    subst Γ2Req
+    apply registerLiveFor_of_toFun_eq hv
+  · case h_2 _hv =>
+    apply registerLiveFor_of_allocateDeadRegister hlookup
+
 /--
 Lookup an argument in a register map, where the variable is defined in the register map.
 See that the variable comes from Γ, but the register map is for (Γ.snoc t).
@@ -724,7 +748,7 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ₁ Γ₂}
     {rsout : RegAlloc.Program (doCtxt Γ₁) (doCtxt (Γ₂.snoc .int))}
     (h : doLets (.var ps e) Γ₃2Reg = some (rsout, Γ₁2Reg)) :
     ∃ bodyr er Γ₂2Reg, rsout = .var bodyr er ∧
-       doExpr Γ₃2Reg e = some (er, Γ₂2Reg) ∧
+       (doExpr Γ₃2Reg e = some (er, Γ₂2Reg)) ∧
        doLets ps Γ₂2Reg = some (bodyr, Γ₁2Reg) := by
   simp [doLets] at h
   split at h
@@ -733,6 +757,7 @@ theorem Var2Reg.eq_of_doRegAllocLets_var_eq_some {ps : Pure.Program Γ₁ Γ₂}
     split at h
     case h_1 => simp at h
     case h_2 _ bodyr _ ih =>
+      -- HERE HERE HERE. PROVING THAT REGISTER LIVE FOR LAST
       simp_all only [Option.some.injEq, Prod.mk.injEq, exists_and_left]
       simp only [← h.1]
       exists bodyr
@@ -909,43 +934,33 @@ theorem toFun_const :
   simp
 
 /--
-If we started with a sound mapping Δ2Reg,
-then we will keep the mapping sound after Ξ.
+If a register was already live, then we keep it live for the same variable
 -/
-theorem sound_mapping_of_doExpr_const_of_sound (hsound : sound_mapping V Γ₁2Reg R) :
-    sound_mapping (V.snoc (t := Pure.Ty.int) i) Γ₂2Reg₁ (R.set r i) := by
-  unfold sound_mapping
-  intros s w hlive
+theorem registerLiveFor_of_doExpr_const_of_registerLiveFor {s : RegAlloc.Reg} {w : Γ₁.Var .int}
+    (hlive : Γ₂2Reg₁.registerLiveFor s w) :
+    Γ₁2Reg.registerLiveFor s w := by
   simp [doExpr, hresult₁] at he
+  simp [← he]
   obtain ⟨he₁, he₂⟩ := he
   have he₂ := he₂.symm
   subst he₂
-  -- We are characterizing what the result of running an increment looks like.
-  sorry -- HERE HERE HERE
+  apply Var2Reg.registerLiveFor_of_toFun_eq
+  rw [Var2Reg.toFun_lookupOrInsert hresult₁]
+  simp
+  assumption
 
+  -- registerLiveFor_of_lookupOrInsert
+-- hbody : doLets body Γ₁₂2Reg = some (regalloc_body, Γ₁2Reg)
+-- s : RegAlloc.Reg
+-- he : doExpr Γ₂2Reg e = some (regalloc_e, Γ₁₂2Reg)
+-- hDoLets : doLets (body.var e) Γ₂2Reg = some (regalloc_body.var regalloc_e, Γ₁2Reg)
+-- ih : sound_mapping (body.denote V₁) Γ₁₂2Reg (RegAlloc.Program.exec regalloc_body R)
+-- hsound : e.denote (body.denote V₁) =
+--   RegAlloc.Expr.exec regalloc_e (RegAlloc.Program.exec regalloc_body R) (RegAlloc.Expr.outRegister regalloc_e)
+-- w : Γ₁₂.Var Pure.Ty.int
+-- hlive_sw : Γ₂2Reg.registerLiveFor s ↑w
+-- ⊢ RegAlloc.Expr.exec regalloc_e (RegAlloc.Program.exec regalloc_body R) s =
 
--- unfold sound_mapping at hsound ⊢
--- intros s w hlive
--- unfold Var2Reg.registerLiveFor at *
--- apply hsound
--- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
--- rw [this] at hlive
--- simp at hlive
-
--- /--
--- If we started with a sound mapping Δ2Reg,
--- then we will keep the mapping sound after Ξ.
--- -/
--- theorem sound_mapping_of_doExpr_const {v : Ξ.Var Pure.Ty.int}
---   (hsound : sound_mapping V Δ2Reg R) :
--- sound_mapping V Ξ2reg R := by -- sorry
--- unfold sound_mapping at hsound ⊢
--- intros s w hlive
--- unfold Var2Reg.registerLiveFor at *
--- apply hsound
--- have := toFun_const (Δ2Reg := Δ2Reg) (Ξ2reg := Ξ2reg) (hlast := hlast) (heff := heff) (er := er) (he := he)
--- rw [this] at hlive
--- simp at hlive
 
 end DoExprConst
 
@@ -1027,6 +1042,25 @@ theorem toFun_increment :
   rw [Var2Reg.toFun_lookupOrInsert hresult₁]
   simp
 
+/--
+If a register was already live, then we keep it live for the same variable
+-/
+theorem registerLiveFor_of_doExpr_increment_of_registerLiveFor {s : RegAlloc.Reg} {w : Γ₁.Var .int}
+    (hlive : Γ₂2Reg₁.registerLiveFor s w) :
+    Γ₁2Reg.registerLiveFor s w := by
+  simp [doExpr, hresult₁, harg₁] at he
+  simp [← he]
+  obtain ⟨he₁, he₂⟩ := he
+  have he₂ := he₂.symm
+  subst he₂
+  apply Var2Reg.registerLiveFor_of_toFun_eq
+  rw [Var2Reg.toFun_lookupOrInsertArg harg₁]
+  rw [Var2Reg.toFun_lookupOrInsert hresult₁]
+  simp
+  -- Note that this is okay: we can prove that because the variable was live at Γ2ℜg1,
+  -- we would not have clobbered it when we did the allocation for lookupOrInsertArg.
+
+
 end DoExprIncrement
 
 /-
@@ -1037,48 +1071,66 @@ is in correspondence with the register file after executing the register allocat
 Note that this is not literally true, since a variable that has
 -/
 theorem doRegAllocLets_correct
-    (p : Lets Pure.dialect Γ .pure Δ)
-    (Δ2reg : Var2Reg Δ)
-    (q : RegAlloc.Program (doCtxt Γ) (doCtxt Δ))
-    (Γ2reg : Var2Reg Γ)
-    (hq : doLets p Δ2reg = some (q, Γ2reg))
+    (pure : Lets Pure.dialect Γ₁ .pure Γ₂)
+    (Γ₂2Reg : Var2Reg Γ₂)
+    (regalloc : RegAlloc.Program (doCtxt Γ₁) (doCtxt Γ₂))
+    (Γ₁2Reg : Var2Reg Γ₁)
+    (hDoLets : doLets pure Γ₂2Reg = some (regalloc, Γ₁2Reg))
     (R : RegAlloc.RegisterFile)
-    (V : Γ.Valuation)
+    (V₁ : Γ₁.Valuation)
     /- When we start out, all values we need are in registers. -/
-    (hRV : complete_mapping V Γ2reg R)  :
+    (hcomplete : complete_mapping V₁ Γ₁2Reg R)  :
     /- At the end, All live out registers have the same value -/
-    sound_mapping (p.denote V) Δ2reg (RegAlloc.Program.exec q R) :=
-  match hmatch : p, h₁ : Δ2reg,  q with
-  | .nil, f, q => by
+    sound_mapping (pure.denote V₁)
+      Γ₂2Reg
+      (RegAlloc.Program.exec regalloc R) :=
+  match hmatch : pure, h₁ : Γ₂2Reg, regalloc with
+  | .nil, _, _ => by
     rename_i h
     subst h
     simp_all only [Var2Reg.doLets_nil, Option.some.injEq, Prod.mk.injEq, heq_eq_eq,
       Lets.denote_nil, EffectKind.toMonad_pure, Id.pure_eq]
     subst hmatch
     subst h₁
-    simp only [← hq.1, RegAlloc.Program.exec_nil_eq]
-    apply sound_mapping.of_complete hRV
-  | .var body e (Γ_out := Ξ) (t := t), f, q => by
+    simp only [← hDoLets.1, RegAlloc.Program.exec_nil_eq]
+    apply sound_mapping.of_complete hcomplete
+  | .var body e (Γ_out := Γ₁₂) (t := t), Γ₂2Reg, regalloc => by
     rename_i h
-    obtain ⟨bodyr, er, Ξ2reg, hq, he, hbody⟩ := Var2Reg.eq_of_doRegAllocLets_var_eq_some hq
-    subst hq
     subst h
-    subst h₁
+    obtain ⟨regalloc_body, regalloc_e, Γ₁₂2Reg, hregalloc, he, hbody⟩ :=
+      Var2Reg.eq_of_doRegAllocLets_var_eq_some (by assumption)
+    subst hregalloc
     subst hmatch
+    subst h₁
     -- I know that er corresponds to e from
     -- doLets (body.var e) Δ2reg = some (bodyr.var er, Γ2reg)
-    -- note that Ξ2reg is sound for all registers taht came from Δ2reg.
-    have ih := doRegAllocLets_correct (hq := hbody) R V hRV
-    simp [sound_mapping] at ih ⊢
-    intros r v hlive
+    -- note that Γ₁₂2Reg is sound for all registers taht came from Δ2reg.
+    have ih := doRegAllocLets_correct
+      (hDoLets := hbody)
+      R
+      V₁
+      hcomplete
+    -- simp [sound_mapping] at ih ⊢
+    intros s w hlive_sw
     -- how do I know that 'r' is the outRegister for er?
     -- Since I have doExpr Δ2reg e = some (er, Ξ2reg),
     -- it must be that (Ctxt.Var.Last Ξ .int) ~ er.outRegister.
-    have hsound := doExpr_sound (hsound := ih) he
-    cases v using Ctxt.Var.casesOn
-    case toSnoc v =>
+    simp_all
+    /- evaluating the expression was sound. -/
+    have hsound := doExpr_sound (e := e)
+      (er := regalloc_e)
+      (Γ₂2Reg := Γ₂2Reg)
+      (Γ₁2Reg := Γ₁₂2Reg)
+      (V := body.denote V₁)
+      (R := RegAlloc.Program.exec regalloc_body R)
+      (hsound := ih)
+      (he := he)
+    /- hbody: evaluating body was sound. -/
+    cases w using Ctxt.Var.casesOn
+    case toSnoc w =>
       simp
-      rw [← ih]
+      have := registerLiveFor_of_doExpr_const_of_registerLiveFor (he := he)
+      -- rw [← ih]
       sorry
     case last =>
       simp
