@@ -86,45 +86,45 @@ def showr(region):
 def size(func):
     return sum(1 for _ in func.walk())
 
-
+def read_file(file_name):
+    with open(file_name, "r") as f:
+        return f.read()
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     print(filename)
     stem = "g" + filename.split(".")[0].replace("-", "h")
     output = ""
-    with open(os.path.join("../vcombined-mlir", filename), "r") as f1:
-        with open(os.path.join("../vbefore-mlir", filename), "r") as f2:
-            data = f1.read()
-            data2 = f2.read()
-            parser = Parser(ctx, data)
+    data1 = read_file(os.path.join("../vcombined-mlir"))
+    data2 = read_file(os.path.join("../vbefore-mlir"))
+    parser = Parser(ctx, data1)
+    try:
+        module = parser.parse_module()
+        parser2 = Parser(ctx, data2)
+        module2 = parser2.parse_module()
+        funcs = [
+            func
+            for func in module.walk()
+            if isinstance(func, FuncOp)
+            and all(allowed(o) for o in func.walk())
+            and size(func) > 1
+        ]
+        for func in funcs:
             try:
-                module = parser.parse_module()
-                parser2 = Parser(ctx, data2)
-                module2 = parser2.parse_module()
-                funcs = [
-                    func
-                    for func in module.walk()
-                    if isinstance(func, FuncOp)
-                    and all(allowed(o) for o in func.walk())
-                    and size(func) > 1
-                ]
-                for func in funcs:
-                    try:
-                        other = next(
-                            f
-                            for f in module2.walk()
-                            if isinstance(f, FuncOp) and f.sym_name == func.sym_name
-                        )
-                        if all(allowed(o) for o in other.walk()):
-                            s1 = showr(func.body)
-                            s2 = showr(other.body)
-                            name = func.sym_name.data
-                            if s1 == s2:
-                                continue
-                            if "vector" in (s1 + s2):
-                                continue
-                            print(f"-----{filename}.{func.sym_name}-----")
-                            o1 = f"""
+                other = next(
+                    f
+                    for f in module2.walk()
+                    if isinstance(f, FuncOp) and f.sym_name == func.sym_name
+                )
+                if all(allowed(o) for o in other.walk()):
+                    s1 = showr(func.body)
+                    s2 = showr(other.body)
+                    name = func.sym_name.data
+                    if s1 == s2:
+                        continue
+                    if "vector" in (s1 + s2):
+                        continue
+                    print(f"-----{filename}.{func.sym_name}-----")
+                    o1 = f"""
 def {name}_before := [llvm|
 {s2}
 ]
@@ -132,29 +132,29 @@ def {name}_after := [llvm|
 {s1}
 ]
 theorem {name}_proof : {name}_before ⊑ {name}_after := by
-  unfold {name}_before {name}_after
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  try alive_auto
-  ---BEGIN {name}
-  all_goals (try extract_goal ; sorry)
-  ---END {name}\n\n\n"""
-                            print(o1)
-                            write_file = os.path.join(
-                                "../lean-mlir",
-                                "SSA",
-                                "Projects",
-                                "InstCombine",
-                                "tests",
-                                "LLVM",
-                                f"{stem}.lean",
-                            )
-                            with open(write_file, "a+") as f3:
-                                if os.stat(write_file).st_size == 0:
-                                    f3.write(
-                                        """
+unfold {name}_before {name}_after
+simp_alive_peephole
+simp_alive_undef
+simp_alive_ops
+simp_alive_case_bash
+try alive_auto
+---BEGIN {name}
+all_goals (try extract_goal ; sorry)
+---END {name}\n\n\n"""
+                    print(o1)
+                    write_file = os.path.join(
+                        "../lean-mlir",
+                        "SSA",
+                        "Projects",
+                        "InstCombine",
+                        "tests",
+                        "LLVM",
+                        f"{stem}.lean",
+                    )
+                    with open(write_file, "a+") as f3:
+                        if os.stat(write_file).st_size == 0:
+                            f3.write(
+                                """
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -168,13 +168,13 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       """
-                                    )
-                                f3.write(o1)
+                                                                """
+                            )
+                        f3.write(o1)
 
-                    except StopIteration as e:
-                        print(
-                            f"Cannot find a function named {func.sym_name} in file {filename}"
-                        )
-            except ParseError as e:
-                print("failed to parse the file")
+            except StopIteration as e:
+                print(
+                    f"Cannot find a function named {func.sym_name} in file {filename}"
+                )
+    except ParseError as e:
+        print("failed to parse the file")
