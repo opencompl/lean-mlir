@@ -1425,7 +1425,11 @@ theorem doRegAllocLets_correct
           simp [← he]
           -- TODO: Somehow, const gets executed automatically by simp, but increment does not.
           -- Debug this.
-          have hneq : result ≠ s := by sorry -- the two don't alias
+          have hneq : result ≠ s := by  -- the two don't alias
+            have hdead_result : Γ₂2Reg.registerDeadOrLiveFor result (Ctxt.Var.last Γ₁₂ Pure.Ty.int) := by
+              apply Var2Reg.registerDeadOrLiveFor_of_lookupOrInsert hresult₁
+            apply Var2Reg.neq_of_registerDeadOrLiveFor_of_registerLiveFor_of_neq hdead_result hlive_sw
+            simp
           rw [RegAlloc.RegisterFile.get_set_of_neq hneq]
           apply ih
           -- flow the lookup forwards, since it doeds not alias with any
