@@ -3,31 +3,6 @@ import re
 import os
 import subprocess
 
-log = """
-warning: ././././SSA/Projects/InstCombine/AliveStatements.lean:813:8: declaration uses 'sorry'
-✖ [2266/2266] Building SSA.Projects.InstCombine.lean.xor
-trace: .> LEAN_PATH=././.lake/packages/batteries/home/atticusk/.elan/toolchains/leanprover--lean4---nightly-2024-07-11/bin/lean ././././SSA/Projects/InstCombine/lean/xor.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/InstCombine/lean/xor.olean -i ././.lake/build/lib/SSA/Projects/InstCombine/lean/xor.ilean -c ././.lake/build/ir/SSA/Projects/InstCombine/lean/xor.c --json
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:49:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:77:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:105:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:133:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:163:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:194:2: ∀ (x : _root_.BitVec 32), (x ||| 123#32) ^^^ 123#32 = x &&& 4294967172#32
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:223:2: no goals to be solved
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:259:2: ∀ (x x_1 : _root_.BitVec 32), x_1 &&& 7#32 ^^^ x &&& 128#32 = x_1 &&& 7#32 ||| x &&& 128#32
-error: ././././SSA/Projects/InstCombine/lean/xor.lean:752:2: ∀ (x : _root_.BitVec 32),
-  (Option.bind (if 32 ≤ x.toNat then none else some ((4294967293#32).sshiftRight x.toNat)) fun a =>
-      Option.bind (if 32 ≤ x.toNat then none else some (5#32 >>> x)) fun a_1 => some (a ^^^ a_1)) ⊑
-    if 32 ≤ x.toNat then none else some ((4294967288#32).sshiftRight x.toNat)
-error: Lean exited with code 1
-Some builds logged failures:
-- SSA.Projects.InstCombine.lean.xor
-error: build failed
-"""
-
-# Print the results
-# for line_number, message in lines:
-#     print(f"Line {line_number}: {message}")
 
 def get_lines(msg):
     # This is a placeholder for your actual get_lines function
@@ -66,7 +41,7 @@ def process_file(file_path):
     for l, n,m in named:
         if 0 <= l - 1 < len(lines):
             lines[l - 1] = f"  apply {n}_thm" + '\n'
-    lines[0] = f"import SSA.Projects.InstCombine.lean.{stem_name}_proof\n"
+    lines[0] = f"import SSA.Projects.InstCombine.tests.LLVM.{stem_name}_proof\n"
     # Write the modified content back to the file
     with open(file_path, 'w') as file:
         file.writelines(lines)
