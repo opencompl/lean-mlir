@@ -99,14 +99,14 @@ for file in os.listdir(directory):
     output = ""
     data1 = read_file(os.path.join("../vcombined-mlir"))
     data2 = read_file(os.path.join("../vbefore-mlir"))
-    parser = Parser(ctx, data1)
+    parser1 = Parser(ctx, data1)
     try:
-        module = parser.parse_module()
+        module1 = parser1.parse_module()
         parser2 = Parser(ctx, data2)
         module2 = parser2.parse_module()
         funcs = [
             func
-            for func in module.walk()
+            for func in module1.walk()
             if isinstance(func, FuncOp)
             and all(allowed(o) for o in func.walk())
             and size(func) > 1
