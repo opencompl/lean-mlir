@@ -91,43 +91,56 @@ def read_file(file_name):
     with open(file_name, "r") as f:
         return f.read()
 
+def parse_module(module):
+    parser = Parser(ctx, data1)
+    try:
+        module = parser1.parse_module()
+        return module
+    except ParserError:
+        print("failed to parse the module")
+
+def parse_from_file(file_name):
+    return parse_module(read_file(file_name))
 
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     print(filename)
     stem = "g" + filename.split(".")[0].replace("-", "h")
     output = ""
-    data1 = read_file(os.path.join("../vcombined-mlir"))
-    data2 = read_file(os.path.join("../vbefore-mlir"))
-    parser1 = Parser(ctx, data1)
-    try:
-        module1 = parser1.parse_module()
-        parser2 = Parser(ctx, data2)
-        module2 = parser2.parse_module()
-        funcs = [
-            func
-            for func in module1.walk()
-            if isinstance(func, FuncOp)
-            and all(allowed(o) for o in func.walk())
-            and size(func) > 1
-        ]
-        for func in funcs:
-            try:
-                other = next(
-                    f
-                    for f in module2.walk()
-                    if isinstance(f, FuncOp) and f.sym_name == func.sym_name
-                )
-                if all(allowed(o) for o in other.walk()):
-                    s1 = showr(func.body)
-                    s2 = showr(other.body)
-                    name = func.sym_name.data
-                    if s1 == s2:
-                        continue
-                    if "vector" in (s1 + s2):
-                        continue
-                    print(f"-----{filename}.{func.sym_name}-----")
-                    o1 = f"""
+    module1 = parse_from_file("../vcombined-mlir")
+    module2 = parse_from_file("../vbefore-mlir")
+    funcs = [
+        func
+        for func in module1.walk()
+        if isinstance(func, FuncOp)
+        and all(allowed(o) for o in func.walk())
+        and size(func) > 1
+    ]
+    funcs2 = {
+        f.sym_name.data: f
+        for f in module2.walk()
+        if isinstance(f, FuncOp)
+        if all(allowed(o) for o in other.walk())
+    }
+    for func in funcs:
+        other  = funcs2.get(func.sym_name.data, None)
+        if other is None:
+            print(f"Cannot function function with sym name {func.sym_name}")
+            continue
+
+        if not all(allowed(o) for o in other.walk()):
+            print(f"{other.sym_name} contains unsupported operations, ignoring")
+            continue
+
+        s1 = showr(func.body)
+        s2 = showr(other.body)
+        name = func.sym_name.data
+        if s1 == s2:
+            continue
+        if "vector" in (s1 + s2):
+            continue
+        print(f"-----{filename}.{func.sym_name}-----")
+        o1 = f"""
 def {name}_before := [llvm|
 {s2}
 ]
@@ -144,20 +157,20 @@ try alive_auto
 ---BEGIN {name}
 all_goals (try extract_goal ; sorry)
 ---END {name}\n\n\n"""
-                    print(o1)
-                    write_file = os.path.join(
-                        "../lean-mlir",
-                        "SSA",
-                        "Projects",
-                        "InstCombine",
-                        "tests",
-                        "LLVM",
-                        f"{stem}.lean",
-                    )
-                    with open(write_file, "a+") as f3:
-                        if os.stat(write_file).st_size == 0:
-                            f3.write(
-                                """
+        print(o1)
+        write_file = os.path.join(
+            "../lean-mlir",
+            "SSA",
+            "Projects",
+            "InstCombine",
+            "tests",
+            "LLVM",
+            f"{stem}.lean",
+        )
+        with open(write_file, "a+") as f3:
+            if os.stat(write_file).st_size == 0:
+                f3.write(
+                    """
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -171,13 +184,6 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                """
-                            )
-                        f3.write(o1)
-
-            except StopIteration as e:
-                print(
-                    f"Cannot find a function named {func.sym_name} in file {filename}"
+                                                    """
                 )
-    except ParseError as e:
-        print("failed to parse the file")
+            f3.write(o1)
