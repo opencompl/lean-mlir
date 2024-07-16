@@ -386,7 +386,7 @@ structure Var2Reg (Γ : Ctxt Pure.Ty) where
   hdead : ∀ r ∈ dead, ∀ v, r ∉ toFun v -- the dead register set is correct, and all registers that are dead cannot be mapped.
   hdeadNoDup : List.Nodup dead
   -- the mappping of variables to registers is injective, so no two variables map to the same register.
-  hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s := sorry
+  hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s
 
 
 def Var2Reg.nil (dead : List RegAlloc.Reg) (hdead : dead.Nodup := by decide) : Var2Reg ∅ where
@@ -399,7 +399,6 @@ def Var2Reg.nil (dead : List RegAlloc.Reg) (hdead : dead.Nodup := by decide) : V
     intros r s v w hr hs hneq
     simp at hr
   hdeadNoDup := hdead
-
 
 /-- A register is free if no variable maps to it. -/
 def Var2Reg.registerDead (V2R : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
@@ -726,6 +725,40 @@ def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int)
           rw [hfdead] at hfdup
           simp at hfdup
           simp [hfdup]
+        hinj := by
+          intros s t w x hs ht hneq
+          simp at hs ht
+          -- have hfinj := f.hinj hs
+          split at hs
+          · case isTrue h =>
+            subst h
+            simp at hs
+            subst hs
+            split at ht
+            · case isTrue h =>
+              subst h
+              simp at ht
+              subst ht
+              contradiction
+            · case isFalse h =>
+              have ht : t ∉ f.dead := Var2Reg.not_mem_dead_of_toFun_eq_some ht
+              rw [hfdead] at ht
+              intros hcontra
+              subst hcontra
+              simp at ht
+          · case isFalse h =>
+            split at ht
+            · case isTrue h =>
+              subst h
+              simp at ht
+              subst ht
+              have hs : s ∉ f.dead := Var2Reg.not_mem_dead_of_toFun_eq_some hs
+              rw [hfdead] at hs
+              simp at hs
+              simp [hs]
+            · case isFalse h =>
+              have hfinj := f.hinj hs ht hneq
+              simp [hfinj]
       }⟩
 
 -- /--
@@ -1044,6 +1077,39 @@ def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
           rw [hfdead] at hfdup
           simp at hfdup
           simp [hfdup]
+        hinj := by -- this is really stupid.
+          intros s t w x hs ht hneq
+          simp at hs ht
+          split at hs
+          · case isTrue h =>
+            subst h
+            simp at hs
+            subst hs
+            split at ht
+            · case isTrue h =>
+              subst h
+              simp at ht
+              subst ht
+              contradiction
+            · case isFalse h =>
+              have ht : t ∉ f.dead := Var2Reg.not_mem_dead_of_toFun_eq_some ht
+              rw [hfdead] at ht
+              intros hcontra
+              subst hcontra
+              simp at ht
+          · case isFalse h =>
+            split at ht
+            · case isTrue h =>
+              subst h
+              simp at ht
+              subst ht
+              have hs : s ∉ f.dead := Var2Reg.not_mem_dead_of_toFun_eq_some hs
+              rw [hfdead] at hs
+              simp at hs
+              simp [hs]
+            · case isFalse h =>
+              have hfinj := f.hinj hs ht hneq
+              simp [hfinj]
       }⟩
 
 /-- The register inserted by lookupOrInsertArg is live. -/
@@ -1145,6 +1211,32 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor {Γ : Ct
 --     apply sound_mapping_of_allocateDeadRegister_of_sound_mapping hlookup hsound
 
 
+/-- Var.toSnoc is injective. -/
+@[simp]
+theorem Ctxt.Var.toSnoc_injective {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t}
+    (h : (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t)) : v = w := by
+  have h₁ : (↑v : (Γ.snoc t').Var t).1 = (↑w : (Γ.snoc t').Var t).1 := by
+    simp [h]
+  rcases v with ⟨v, hv⟩
+  rcases w with ⟨w, hw⟩
+  simp only [get?, val_toSnoc, add_left_inj] at h₁
+  subst h₁
+  rfl
+
+
+/-- Two variables are equal iff their toSnoc's are equal. -/
+@[simp]
+theorem Ctxt.Var.toSnoc_eq_iff_eq {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t} :
+    (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t) ↔ v = w := by
+  constructor
+  · intros h
+    simp [Ctxt.Var.toSnoc_injective h]
+  · intros h
+    subst h
+    simp
+
+
+
 /-- Delete the last register from the register map. -/
 def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
   let toFun := fun v => f.toFun v.toSnoc
@@ -1158,6 +1250,10 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
         apply hdead
         assumption,
       hdeadNoDup := f.hdeadNoDup
+      hinj := by
+        intros r s v w hr hs hneq
+        apply f.hinj hr hs
+        simp [hneq]
     }
   | .some r =>
     { toFun := toFun,
@@ -1180,6 +1276,10 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
         have hfdead := Var2Reg.not_mem_dead_of_toFun_eq_some hflast
         simp [hfdead]
         simp [hfnodup]
+      hinj := by
+        intros r s v w hr hs hneq
+        apply f.hinj hr hs
+        simp [hneq]
     }
 
 /-
@@ -1482,29 +1582,6 @@ theorem HVector.getN_succ
     (HVector.cons x xs).getN (n + 1) hnsucc = xs.getN n hn := by
   simp [getN, get]
 
-
-/-- Var.toSnoc is injective. -/
-@[simp]
-theorem Ctxt.Var.toSnoc_injective {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t}
-    (h : (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t)) : v = w := by
-  have h₁ : (↑v : (Γ.snoc t').Var t).1 = (↑w : (Γ.snoc t').Var t).1 := by
-    simp [h]
-  rcases v with ⟨v, hv⟩
-  rcases w with ⟨w, hw⟩
-  simp only [get?, val_toSnoc, add_left_inj] at h₁
-  subst h₁
-  rfl
-
-/-- Two variables are equal iff their toSnoc's are equal. -/
-@[simp]
-theorem Ctxt.Var.toSnoc_eq_iff_eq {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t} :
-    (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t) ↔ v = w := by
-  constructor
-  · intros h
-    simp [Ctxt.Var.toSnoc_injective h]
-  · intros h
-    subst h
-    simp
 
 variable
   {Γ₁ : Ctxt Pure.Ty}
