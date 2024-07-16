@@ -91,6 +91,7 @@ def read_file(file_name):
     with open(file_name, "r") as f:
         return f.read()
 
+
 def parse_module(module):
     parser = Parser(ctx, module)
     try:
@@ -98,8 +99,10 @@ def parse_module(module):
     except ParserError:
         print("failed to parse the module")
 
+
 def parse_from_file(file_name):
     return parse_module(read_file(file_name))
+
 
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
@@ -115,13 +118,9 @@ for file in os.listdir(directory):
         and all(allowed(o) for o in func.walk())
         and size(func) > 1
     ]
-    funcs2 = {
-        f.sym_name.data: f
-        for f in module2.walk()
-        if isinstance(f, FuncOp)
-    }
+    funcs2 = {f.sym_name.data: f for f in module2.walk() if isinstance(f, FuncOp)}
     for func in funcs:
-        other  = funcs2.get(func.sym_name.data, None)
+        other = funcs2.get(func.sym_name.data, None)
         if other is None:
             print(f"Cannot function function with sym name {func.sym_name}")
             continue
