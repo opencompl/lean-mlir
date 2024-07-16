@@ -140,7 +140,6 @@ macro "of_bool_tactic" : tactic =>
       | simp only [← decide_not]
       | simp only [decide_eq_decide]
       | simp [of_decide_eq_true]
-      -- | simp only [BitVec.toNat_eq]
       )
       try omega
     )
