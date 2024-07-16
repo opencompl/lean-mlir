@@ -193,7 +193,7 @@ theorem HVector.nil_eq {f : Ty → Type} (v : HVector f []) : v = HVector.nil :=
 
 def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .impure Δ
 
-abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .pure Δ Ty.unit
+abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .impure Δ Ty.unit
 
 @[simp]
 theorem regSig_const : DialectSignature.regSig (d := dialect) (Op.const i out) = [] :=  rfl
@@ -216,6 +216,18 @@ Convert a pure context to an impure context, where all SSA variables are now sid
 have type ().
 -/
 def doCtxt (ctx : Ctxt ty) : Ctxt RegAlloc.Ty := ctx.map (fun _ => RegAlloc.Ty.unit)
+
+#check Ctxt.Var
+def doVar {Γ : Ctxt Pure.Ty} (v : Γ.Var Pure.Ty.int) : (doCtxt Γ).Var RegAlloc.Ty.unit :=
+  let ⟨ix, isLt⟩ := v
+  ⟨ix, by
+    simp [doCtxt, Ctxt.map]
+    exists Pure.Ty.int
+    apply List.getElem?_eq_some.mpr
+    obtain ⟨ix₂, ix₂Lt⟩ := List.get?_eq_some.mp isLt
+    exists ix₂
+  ⟩
+
 
 /--
 Build a register allocation valuation for a given context Γ. Really, this just marks every variable as returning (),
@@ -369,6 +381,8 @@ def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2
     obtain ⟨rfl, _⟩ := hs
     intros hcontra
     contradiction
+
+
 
 /-- A register is free if no variable maps to it. -/
 def Var2Reg.registerDead (V2R : Var2Reg Γ) (r : RegAlloc.Reg) : Prop :=
@@ -1420,13 +1434,13 @@ is in correspondence with the register file after executing the register allocat
 Note that this is not literally true, since a variable that has
 -/
 theorem doRegAllocLets_correct
-    (pure : Lets Pure.dialect Γ₁ .pure Γ₂)
-    (Γ₂2Reg : Var2Reg Γ₂)
-    (regalloc : RegAlloc.Program (doCtxt Γ₁) (doCtxt Γ₂))
-    (Γ₁2Reg : Var2Reg Γ₁)
+    {pure : Lets Pure.dialect Γ₁ .pure Γ₂}
+    {Γ₂2Reg : Var2Reg Γ₂}
+    {regalloc : RegAlloc.Program (doCtxt Γ₁) (doCtxt Γ₂)}
+    {Γ₁2Reg : Var2Reg Γ₁}
     (hDoLets : doLets pure Γ₂2Reg = some (regalloc, Γ₁2Reg))
-    (R : RegAlloc.RegisterFile)
-    (V₁ : Γ₁.Valuation)
+    {R : RegAlloc.RegisterFile}
+    {V₁ : Γ₁.Valuation}
     /- When we start out, all values we need are in registers. -/
     (hcomplete : complete_mapping V₁ Γ₁2Reg R)  :
     /- At the end, All live out registers have the same value -/
@@ -1456,8 +1470,6 @@ theorem doRegAllocLets_correct
     -- note that Γ₁₂2Reg is sound for all registers taht came from Δ2reg.
     have ih := doRegAllocLets_correct
       (hDoLets := hbody)
-      R
-      V₁
       hcomplete
     -- simp [sound_mapping] at ih ⊢
     intros s w hlive_sw
@@ -1622,11 +1634,30 @@ Formal blueprint
           are correct at `Ξ`.
 
 -/
-section Example
-def regallocProgramWithRet (p : Pure.ProgramWithRet Γ Δ) :
-    Option (RegAlloc.ProgramWithRet (doCtxt Γ) (doCtxt Δ)) :=
-  match doLets p.lets sorry with
-  | .none => .none
-  | .some q => sorry
 
+section Example
+
+
+/-- Register allocate a program that has no inputs (i.e., is closed.) -/
+def regallocClosedProgramWithRet (p : Pure.ProgramWithRet ∅ Δ) (nregs : Nat := 5):
+    Option (RegAlloc.ProgramWithRet (doCtxt (∅ : Ctxt Pure.Ty)) (doCtxt Δ)) :=
+  match doLets p.lets (Var2Reg.singleton Δ p.ret nregs) with
+  | .none => .none
+  | .some ⟨q, _Γ2Reg⟩ =>
+    .some ({
+        lets := q,
+        ret := doVar p.ret
+    })
+
+theorem sound_mapping_of_regallocProgramWithRet
+    {pure : Pure.ProgramWithRet ∅ Δ}
+    {regalloc : RegAlloc.ProgramWithRet (doCtxt ∅) (doCtxt Δ)}
+    (hregalloc : regalloc ∈ regallocClosedProgramWithRet pure nregs)
+    (R : RegAlloc.RegisterFile) :
+    sound_mapping (pure.denoteLets V)
+      (Var2Reg.singleton Δ pure.ret nregs)
+      (RegAlloc.Program.exec regalloc.lets R) := by
+  apply doRegAllocLets_correct
+  simp [regallocClosedProgramWithRet] at hregalloc
+  split at hregalloc
 end Example
