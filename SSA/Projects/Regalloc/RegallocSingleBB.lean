@@ -359,6 +359,17 @@ structure Var2Reg (Γ : Ctxt Pure.Ty) where
   -- the mappping of variables to registers is injective, so no two variables map to the same register.
   hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s := sorry
 
+
+def Var2Reg.nil (dead : List RegAlloc.Reg): Var2Reg ∅ where
+  toFun := fun v => none
+  dead := dead
+  hdead := by
+    intros r hr v
+    simp
+  hinj := by
+    intros r s v w hr hs hneq
+    simp at hr
+
 /-- Allocate a register mapping data structure to extract the result (v ∈ Γ), with `n` free registers. -/
 def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2Reg Γ where
   toFun := fun w => if w = v then some <| RegAlloc.Reg.ofNat 0 else none
@@ -601,8 +612,8 @@ theorem Var2Reg.not_mem_dead_of_registerLive {Γ2R: Var2Reg Γ} {r : RegAlloc.Re
   ∀ (v : Γ.Var Pure.Ty.int), ∃ r, V2R.registerLiveFor r v ∧ R r = V v
 
 /-- All register files correspond to the start of the program. -/
-theorem correspondVar2Reg_nil (R : RegAlloc.RegisterFile) :
-    complete_mapping (Γ := []) V f R := by
+theorem complete_mapping_nil (R : RegAlloc.RegisterFile) :
+    complete_mapping (Γ := ∅) V f R := by
   intros v
   exact v.emptyElim
 
@@ -1639,16 +1650,20 @@ section Example
 
 
 /-- Register allocate a program that has no inputs (i.e., is closed.) -/
-def regallocClosedProgramWithRet (p : Pure.ProgramWithRet ∅ Δ) (nregs : Nat := 5):
+def regallocClosedProgramWithRet (pure : Pure.ProgramWithRet ∅ Δ) (nregs : Nat := 5):
     Option (RegAlloc.ProgramWithRet (doCtxt (∅ : Ctxt Pure.Ty)) (doCtxt Δ)) :=
-  match doLets p.lets (Var2Reg.singleton Δ p.ret nregs) with
+  match doLets pure.lets (Var2Reg.singleton Δ pure.ret nregs) with
   | .none => .none
-  | .some ⟨q, _Γ2Reg⟩ =>
+  | .some ⟨regalloc, _Γ2Reg⟩ =>
     .some ({
-        lets := q,
-        ret := doVar p.ret
+        lets := regalloc,
+        ret := doVar pure.ret
     })
 
+/--
+The program created with regallocProgramWithRet in fact
+soundly models the pure program.
+-/
 theorem sound_mapping_of_regallocProgramWithRet
     {pure : Pure.ProgramWithRet ∅ Δ}
     {regalloc : RegAlloc.ProgramWithRet (doCtxt ∅) (doCtxt Δ)}
@@ -1657,7 +1672,15 @@ theorem sound_mapping_of_regallocProgramWithRet
     sound_mapping (pure.denoteLets V)
       (Var2Reg.singleton Δ pure.ret nregs)
       (RegAlloc.Program.exec regalloc.lets R) := by
-  apply doRegAllocLets_correct
   simp [regallocClosedProgramWithRet] at hregalloc
-  split at hregalloc
+  cases hregalloc' : doLets pure.lets (Var2Reg.singleton Δ pure.ret nregs)
+  case none => simp [hregalloc'] at hregalloc
+  case some out =>
+    obtain ⟨regalloc, Γ₁2reg⟩ := out
+    simp [hregalloc'] at hregalloc
+    rw [hregalloc.symm]
+    apply doRegAllocLets_correct
+    case hcomplete => apply complete_mapping_nil
+    case hDoLets =>
+        congr
 end Example
