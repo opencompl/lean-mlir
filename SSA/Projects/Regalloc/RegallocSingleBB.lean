@@ -55,6 +55,23 @@ instance : DialectDenote dialect where
 abbrev Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .pure Δ
 abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .pure Δ Ty.int
 
+@[simp]
+theorem effectKind_const :
+  DialectSignature.effectKind (d := Pure.dialect)
+    (Pure.Op.const i) = EffectKind.pure := rfl
+
+def const (i : Int) : Expr dialect Γ .pure Ty.int :=
+  Expr.mk (Op.const i) rfl (by simp) .nil .nil
+
+@[simp]
+theorem effectKind_increment :
+  DialectSignature.effectKind (d := Pure.dialect)
+    (Pure.Op.increment) = EffectKind.pure := rfl
+
+def increment (v : Γ.Var .int) : Expr dialect Γ .pure Ty.int :=
+  Expr.mk Op.increment rfl (by simp) (.cons v .nil) .nil
+
+
  @[simp]
  theorem Expr.denote_const {Γ : Ctxt Ty} {V : Ctxt.Valuation Γ} {i : Int}
     {ty_eq : Ty.int = DialectSignature.outTy (d := dialect) (Op.const i)}
@@ -82,9 +99,13 @@ abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .pure Δ Ty
  namespace RegAlloc
 
  def Reg := Nat
- deriving DecidableEq, Repr, Inhabited, BEq
+ deriving DecidableEq, Inhabited, BEq
 
 def Reg.ofNat (n : Nat) : Reg := n
+
+instance : Repr Reg where
+  reprPrec n _ :=
+    "%r<" ++ repr (show Nat from n) ++ ">"
 
 def Reg.ofNat_eq (n : Nat) : Reg.ofNat n = n := rfl
 
@@ -135,9 +156,11 @@ theorem RegisterFile.get_set_of_eq' (R : RegisterFile) (r : Reg) (v : Int) :
 inductive Op
 | increment (l out : Reg)
 | const (i : Int) (out : Reg)
+deriving Repr
 
 inductive Ty
 | unit : Ty
+deriving Repr
 
 abbrev dialect : Dialect where
   Op := Op
@@ -192,6 +215,11 @@ theorem HVector.nil_eq {f : Ty → Type} (v : HVector f []) : v = HVector.nil :=
   rfl
 
 def Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .impure Δ
+
+def Program.toLets {Γ Δ : Ctxt Ty} (p : Program Γ Δ) : Lets dialect Γ .impure Δ := p
+
+instance : Repr (Program Γ Δ) where
+  reprPrec p n := reprPrec p.toLets n
 
 abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .impure Δ Ty.unit
 
@@ -369,30 +397,6 @@ def Var2Reg.nil (dead : List RegAlloc.Reg): Var2Reg ∅ where
   hinj := by
     intros r s v w hr hs hneq
     simp at hr
-
-/-- Allocate a register mapping data structure to extract the result (v ∈ Γ), with `n` free registers. -/
-def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2Reg Γ where
-  toFun := fun w => if w = v then some <| RegAlloc.Reg.ofNat 0 else none
-  dead := List.range nregs |>.map .succ
-  hdead := by
-    intros r hr w
-    simp [List.mem_range, List.mem_map] at hr
-    obtain ⟨a, ha₁, ha₂⟩ := hr
-    simp
-    intros hw
-    subst hw
-    simp only [RegAlloc.Reg.ofNat_eq]
-    by_contra h
-    subst h
-    simp at ha₂
-  hinj := by
-    intros r s v w hr hs
-    simp only [Option.mem_def, ite_some_none_eq_some] at hr hs
-    obtain ⟨rfl, _⟩ := hr
-    obtain ⟨rfl, _⟩ := hs
-    intros hcontra
-    contradiction
-
 
 
 /-- A register is free if no variable maps to it. -/
@@ -638,6 +642,37 @@ theorem sound_mapping.of_complete {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Va
     have : r = r' := registerLiveFor_inj hlive hr'
     subst this
     assumption
+
+
+/-- Allocate a register mapping data structure to extract the result (v ∈ Γ), with `n` free registers. -/
+def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2Reg Γ where
+  toFun := fun w => if w = v then some <| RegAlloc.Reg.ofNat 0 else none
+  dead := List.range nregs |>.map .succ
+  hdead := by
+    intros r hr w
+    simp [List.mem_range, List.mem_map] at hr
+    obtain ⟨a, ha₁, ha₂⟩ := hr
+    simp
+    intros hw
+    subst hw
+    simp only [RegAlloc.Reg.ofNat_eq]
+    by_contra h
+    subst h
+    simp at ha₂
+  hinj := by
+    intros r s v w hr hs
+    simp only [Option.mem_def, ite_some_none_eq_some] at hr hs
+    obtain ⟨rfl, _⟩ := hr
+    obtain ⟨rfl, _⟩ := hs
+    intros hcontra
+    contradiction
+
+/-- In 'Var2Reg.singleton Γ v', The register 0 is live 'v' for -/
+@[simp]
+theorem Var2Reg.registerLiveFor_singleton {Γ : Ctxt Pure.Ty} {v : Γ.Var .int} :
+    Var2Reg.registerLiveFor (Var2Reg.singleton Γ v nregs)
+      (RegAlloc.Reg.ofNat 0) v := by
+  simp [Var2Reg.registerLiveFor, Var2Reg.singleton]
 
 /--
 NOTE: Reg2Val does not imply Val2Reg!
@@ -1054,7 +1089,7 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
   let toFun := fun v => f.toFun v.toSnoc
   match f.toFun (Ctxt.Var.last Γ t) with
   | .none => { toFun := toFun, dead := f.dead }
-  | .some r =>  { toFun := toFun, dead := f.dead.erase r }
+  | .some r =>  { toFun := toFun, dead := f.dead.insert r }
 
 /-
 `toFun` of `deleteLast` just invokes the `toFun` of the underlying map.
@@ -1256,11 +1291,6 @@ theorem doExpr_sound {Γ₁ : Ctxt Pure.dialect.Ty} {V: Γ₁.Valuation} {Γ₁2
           apply hsound
           simp
           apply Var2Reg.registerLiveFor_of_lookupOrInsertArg (by assumption)
-
-@[simp]
-theorem effectKind_const :
-  DialectSignature.effectKind (d := Pure.dialect)
-    (Pure.Op.const i) = EffectKind.pure := rfl
 
 @[simp]
 theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
@@ -1646,8 +1676,7 @@ Formal blueprint
 
 -/
 
-section Example
-
+section FinalTheorems
 
 /-- Register allocate a program that has no inputs (i.e., is closed.) -/
 def regallocClosedProgramWithRet (pure : Pure.ProgramWithRet ∅ Δ) (nregs : Nat := 5):
@@ -1669,7 +1698,7 @@ theorem sound_mapping_of_regallocProgramWithRet
     {regalloc : RegAlloc.ProgramWithRet (doCtxt ∅) (doCtxt Δ)}
     (hregalloc : regalloc ∈ regallocClosedProgramWithRet pure nregs)
     (R : RegAlloc.RegisterFile) :
-    sound_mapping (pure.denoteLets V)
+    sound_mapping (pure.denoteLets Ctxt.Valuation.nil)
       (Var2Reg.singleton Δ pure.ret nregs)
       (RegAlloc.Program.exec regalloc.lets R) := by
   simp [regallocClosedProgramWithRet] at hregalloc
@@ -1683,4 +1712,45 @@ theorem sound_mapping_of_regallocProgramWithRet
     case hcomplete => apply complete_mapping_nil
     case hDoLets =>
         congr
-end Example
+
+/--
+The program created with regallocProgramWithRet
+has the correct return value at register `0`.
+-/
+theorem ret_eq_of_regallocProgramWithRet
+    {pure : Pure.ProgramWithRet ∅ Δ}
+    {regalloc : RegAlloc.ProgramWithRet (doCtxt ∅) (doCtxt Δ)}
+    (hregalloc : regalloc ∈ regallocClosedProgramWithRet pure nregs)
+    (R : RegAlloc.RegisterFile) :
+      (pure.denoteLets Ctxt.Valuation.nil) pure.ret =
+      /- NOTE: the `0` is currently hardcoded, this should be changed. -/
+      (RegAlloc.Program.exec regalloc.lets R).get (RegAlloc.Reg.ofNat 0) := by
+  have := sound_mapping_of_regallocProgramWithRet hregalloc R
+  symm
+  apply eq_of_sound_mapping_of_registerLiveFor this
+  simp only [Var2Reg.registerLiveFor_singleton]
+
+end FinalTheorems
+
+section Example1
+def eg1 : Pure.ProgramWithRet ∅ [.int, .int, .int, .int] where
+  lets :=
+  .var (.var (.var (.var .nil (Pure.const 42)) (Pure.const 42)) (Pure.const 2)) (Pure.increment ⟨0, by simp⟩)
+  ret := ⟨1, by simp⟩
+
+def eg1_regalloc : RegAlloc.ProgramWithRet ∅ (doCtxt [Pure.Ty.int, Pure.Ty.int, Pure.Ty.int, Pure.Ty.int]) :=
+  (regallocClosedProgramWithRet eg1 5).get (by decide)
+
+/--
+info: {
+  ^entry():
+    %0 = RegAlloc.Op.const 42 %r<0> : () → (RegAlloc.Ty.unit)
+    %1 = RegAlloc.Op.const 42 %r<0> : () → (RegAlloc.Ty.unit)
+    %2 = RegAlloc.Op.const 2 %r<0> : () → (RegAlloc.Ty.unit)
+    %3 = RegAlloc.Op.increment %r<0> %r<1> : () → (RegAlloc.Ty.unit)
+    return %2 : (RegAlloc.Ty.unit) → ()
+}
+-/
+#guard_msgs in #eval eg1_regalloc
+
+end Example1
