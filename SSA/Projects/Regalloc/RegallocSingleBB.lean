@@ -384,7 +384,7 @@ structure Var2Reg (Γ : Ctxt Pure.Ty) where
   toFun : Γ.Var Pure.Ty.int → Option RegAlloc.Reg
   dead : List RegAlloc.Reg -- list of dead registers
   hdead : ∀ r ∈ dead, ∀ v, r ∉ toFun v -- the dead register set is correct, and all registers that are dead cannot be mapped.
-  hdeadNoDup : List.Nodup dead := by sorry
+  hdeadNoDup : List.Nodup dead
   -- the mappping of variables to registers is injective, so no two variables map to the same register.
   hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s := sorry
 
@@ -610,6 +610,12 @@ theorem Var2Reg.not_mem_dead_of_registerLive {Γ2R: Var2Reg Γ} {r : RegAlloc.Re
   have hdead := Γ2R.hdead r hmem w
   contradiction
 
+  theorem Var2Reg.not_mem_dead_of_toFun_eq_some {Γ2R: Var2Reg Γ} {r : RegAlloc.Reg} {v : Γ.Var .int}
+    (heq : Γ2R.toFun v = some r) : r ∉ Γ2R.dead := by
+    intro hmem
+    have hdead := Γ2R.hdead r hmem v
+    contradiction
+
  /--
  A correspondence between variables 'v ∈ Γ' and registers in the register file.
  This correspondence is witnessed by 'f'.
@@ -668,6 +674,10 @@ def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2
     obtain ⟨rfl, _⟩ := hs
     intros hcontra
     contradiction
+  hdeadNoDup := by
+    simp [List.Nodup]
+    simp [List.pairwise_map]
+    sorry -- this needs dealing with List.range
 
 /-- In 'Var2Reg.singleton Γ v', The register 0 is live 'v' for -/
 @[simp]
@@ -710,7 +720,12 @@ def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int)
           case isFalse h =>
             specialize hdead s (by simp [hfdead, ss]) w
             -- contradiction from hw, hdead
-            contradiction
+            contradiction,
+        hdeadNoDup := by
+          have hfdup := f.hdeadNoDup
+          rw [hfdead] at hfdup
+          simp at hfdup
+          simp [hfdup]
       }⟩
 
 -- /--
@@ -1023,7 +1038,12 @@ def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
             contradiction
           case isFalse h =>
             apply hdead₂
-            assumption
+            assumption,
+        hdeadNoDup := by
+          have hfdup := f.hdeadNoDup
+          rw [hfdead] at hfdup
+          simp at hfdup
+          simp [hfdup]
       }⟩
 
 /-- The register inserted by lookupOrInsertArg is live. -/
@@ -1136,7 +1156,8 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
         have hdead := f.hdead
         intros r hr v
         apply hdead
-        assumption
+        assumption,
+      hdeadNoDup := f.hdeadNoDup
     }
   | .some r =>
     { toFun := toFun,
@@ -1153,7 +1174,12 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
           have hfinj := f.hinj h hflast this
           contradiction
         case inr =>
-          apply hfdead _ hs v
+          apply hfdead _ hs v,
+      hdeadNoDup := by
+        have hfnodup := f.hdeadNoDup
+        have hfdead := Var2Reg.not_mem_dead_of_toFun_eq_some hflast
+        simp [hfdead]
+        simp [hfnodup]
     }
 
 /-
