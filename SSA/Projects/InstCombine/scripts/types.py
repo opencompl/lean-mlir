@@ -61,17 +61,18 @@ open Std (BitVec)
 
 
 def main():
-    directory = './SSA/Projects/InstCombine/test/LLVM'
+    directory = "./SSA/Projects/InstCombine/test/LLVM"
     worklist = []
     for root, _, files in os.walk(directory):
         for lean_file in files:
-            if lean_file.endswith('.lean'):  # Assuming the files have a .lean extension
+            if lean_file.endswith(".lean"):  # Assuming the files have a .lean extension
                 file_path = os.path.join(root, lean_file)
                 print(file_path)
                 worklist.append(file_path)
 
     with Pool(5) as p:
         p.map(process_file, worklist)
+
 
 if __name__ == "__main__":
     main()
