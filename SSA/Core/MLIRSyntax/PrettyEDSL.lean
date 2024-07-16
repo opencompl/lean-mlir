@@ -44,3 +44,5 @@ macro_rules
       | some _ => #[t]
       | none => #[]
     `([mlir_op| $[$resName =]? $opName ($xs,*) : ($argTys,*) -> ($retTy:mlir_type,*) ])
+
+end MLIR.EDSL.Pretty

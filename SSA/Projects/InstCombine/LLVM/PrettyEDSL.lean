@@ -130,3 +130,7 @@ private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in 
 example : antiquot_test = antiquot_test_pretty := rfl
 
 end Test
+
+end EDSL
+
+end MLIR
