@@ -84,10 +84,7 @@ def showr(region):
 
 
 def size(func):
-    s = 0
-    for _ in func.walk():
-        s += 1
-    return s
+    return sum(1 for _ in func.walk())
 
 
 for file in os.listdir(directory):
