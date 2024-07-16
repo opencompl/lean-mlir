@@ -650,6 +650,21 @@ theorem sound_mapping.of_complete {Γ : Ctxt Pure.Ty} {V : Γ.Valuation} {f : Va
     subst this
     assumption
 
+@[simp]
+theorem List.pairwise_succ_neq_range (n : Nat):
+    List.Pairwise (fun a b => a ≠ b) (List.range n) := by
+  induction n
+  case zero => simp
+  case succ n ih =>
+    simp
+    rw [List.pairwise_iff_get]
+    intros i ij hij
+    simp
+    omega
+
+theorem List.nondup_range (n : Nat):
+    List.Nodup (List.range n) := by
+  simp [List.Nodup, List.pairwise_succ_neq_range]
 
 /-- Allocate a register mapping data structure to extract the result (v ∈ Γ), with `n` free registers. -/
 def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2Reg Γ where
@@ -676,8 +691,10 @@ def Var2Reg.singleton (Γ : Ctxt Pure.Ty) (v : Γ.Var .int) (nregs : Nat) : Var2
   hdeadNoDup := by
     simp [List.Nodup]
     simp [List.pairwise_map]
-    sorry -- this needs dealing with List.range
-
+    have heq : (fun (a b : Nat) => a + 1 ≠ b + 1) = (fun (a b : Nat) => a ≠ b) := by
+      funext i i
+      simp
+    simp [heq]
 /-- In 'Var2Reg.singleton Γ v', The register 0 is live 'v' for -/
 @[simp]
 theorem Var2Reg.registerLiveFor_singleton {Γ : Ctxt Pure.Ty} {v : Γ.Var .int} :
@@ -1803,6 +1820,10 @@ theorem doRegAllocLets_correct
           have live₁ := Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁ hlive_sw
           have live₂ := Var2Reg.registerLiveFor_of_lookupOrInsert hresult₁
           apply registerLiveFor_inj live₁ live₂
+
+/-- info: 'doRegAllocLets_correct' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms doRegAllocLets_correct
+
 /-
 Proof sketch:
 
@@ -1881,6 +1902,9 @@ theorem sound_mapping_of_regallocProgramWithRet
     case hDoLets =>
         congr
 
+/-- info: 'sound_mapping_of_regallocProgramWithRet' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms sound_mapping_of_regallocProgramWithRet
+
 /--
 The program created with regallocProgramWithRet
 has the correct return value at register `0`.
@@ -1898,6 +1922,9 @@ theorem ret_eq_of_regallocProgramWithRet
   apply eq_of_sound_mapping_of_registerLiveFor this
   simp only [Var2Reg.registerLiveFor_singleton]
 
+/-- info: 'ret_eq_of_regallocProgramWithRet' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms ret_eq_of_regallocProgramWithRet
+
 end FinalTheorems
 
 section Example1
@@ -1908,6 +1935,9 @@ def eg1 : Pure.ProgramWithRet ∅ [.int, .int, .int, .int] where
 
 def eg1_regalloc : RegAlloc.ProgramWithRet ∅ (doCtxt [Pure.Ty.int, Pure.Ty.int, Pure.Ty.int, Pure.Ty.int]) :=
   (regallocClosedProgramWithRet eg1 5).get (by decide)
+
+/-- info: 'eg1_regalloc' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms eg1_regalloc
 
 /--
 info: {

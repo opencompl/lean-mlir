@@ -218,32 +218,6 @@ theorem toSnoc_injective {Γ : Ctxt Ty} {t t' : Ty} :
   simpa (config := { zetaDelta := true }) only [Var.casesOn_toSnoc, Option.some.injEq] using
     congr_arg ofSnoc h
 
-/-- Var.toSnoc is injective. -/
-@[simp]
-theorem Ctxt.Var.toSnoc_injective {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t}
-    (h : (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t)) : v = w := by
-  have h₁ : (↑v : (Γ.snoc t').Var t).1 = (↑w : (Γ.snoc t').Var t).1 := by
-    simp [h]
-  rcases v with ⟨v, hv⟩
-  rcases w with ⟨w, hw⟩
-  simp only [get?, val_toSnoc, add_left_inj] at h₁
-  subst h₁
-  rfl
-
-
-/-- Two variables are equal iff their toSnoc's are equal. -/
-@[simp]
-theorem Ctxt.Var.toSnoc_eq_iff_eq {Γ : Ctxt Ty} {t : Ty} {t' : Ty} {v w : Γ.Var t} :
-    (↑v : (Γ.snoc t').Var t) = (↑w : (Γ.snoc t').Var t) ↔ v = w := by
-  constructor
-  · intros h
-    simp [Ctxt.Var.toSnoc_injective h]
-  · intros h
-    subst h
-    simp
-
-
-
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
 @[simp]
