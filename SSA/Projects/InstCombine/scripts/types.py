@@ -2,6 +2,7 @@
 import re
 import os
 import subprocess
+from multiprocessing import Pool
 
 
 def get_lines(msg):
@@ -60,14 +61,17 @@ open Std (BitVec)
 
 
 def main():
-    directory = "./SSA/Projects/InstCombine/test/LLVM"
+    directory = './SSA/Projects/InstCombine/test/LLVM'
+    worklist = []
     for root, _, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".lean"):  # Assuming the files have a .lean extension
-                file_path = os.path.join(root, file)
+        for lean_file in files:
+            if lean_file.endswith('.lean'):  # Assuming the files have a .lean extension
+                file_path = os.path.join(root, lean_file)
                 print(file_path)
-                process_file(file_path)
+                worklist.append(file_path)
 
+    with Pool(5) as p:
+        p.map(process_file, worklist)
 
 if __name__ == "__main__":
     main()
