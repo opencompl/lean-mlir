@@ -124,7 +124,7 @@ theorem {name}_proof : {name}_before ⊑ {name}_after := by
   all_goals (try extract_goal ; sorry)
   ---END {name}\n\n\n"""
                                                         print(o1)
-                                                        write_file = os.path.join("../lean-mlir" , "SSA", "Projects", "InstCombine", "lean", f"{stem}.lean")
+                                                        write_file = os.path.join("../lean-mlir" , "SSA", "Projects", "InstCombine", "tests", "LLVM", f"{stem}.lean")
                                                         with open(write_file, "a+") as f3:
                                                                 if os.stat(write_file).st_size == 0:
                                                                        f3.write("""
@@ -145,6 +145,6 @@ set_option linter.unusedTactic false
                                                                 f3.write(o1)
 
                                         except StopIteration as e:
-                                            print(f"cannot find {func.sym_name} in {filename}")
+                                            print(f"Cannot find a function named {func.sym_name} in file {filename}")
                         except ParseError as e:
-                               print("failed to parse")
+                               print("failed to parse the file")
