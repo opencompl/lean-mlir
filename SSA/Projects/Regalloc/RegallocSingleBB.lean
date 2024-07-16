@@ -389,7 +389,7 @@ structure Var2Reg (Γ : Ctxt Pure.Ty) where
   hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s := sorry
 
 
-def Var2Reg.nil (dead : List RegAlloc.Reg): Var2Reg ∅ where
+def Var2Reg.nil (dead : List RegAlloc.Reg) (hdead : dead.Nodup := by decide) : Var2Reg ∅ where
   toFun := fun v => none
   dead := dead
   hdead := by
@@ -398,7 +398,7 @@ def Var2Reg.nil (dead : List RegAlloc.Reg): Var2Reg ∅ where
   hinj := by
     intros r s v w hr hs hneq
     simp at hr
-  hdeadNoDup := sorry
+  hdeadNoDup := hdead
 
 
 /-- A register is free if no variable maps to it. -/
@@ -1006,6 +1006,7 @@ def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
         hdead := by
           intros s ss w
           have hdead := f.hdead
+          have hnodup := f.hdeadNoDup
           rw [hfdead] at hdead
           simp at hdead
           obtain ⟨hdead₁, hdead₂⟩ := hdead
@@ -1014,9 +1015,12 @@ def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
           case isTrue h =>
             subst h
             simp
-            -- use fact that duplictates are not allowed, and since
-            -- s ∈ rs, and r ∈ f.dead = r ::rs, we can't have s = r.
-            sorry
+            by_contra heq
+            subst heq
+            rw [hfdead] at hnodup
+            simp at hnodup
+            obtain hnodup := hnodup.1
+            contradiction
           case isFalse h =>
             apply hdead₂
             assumption
@@ -1124,7 +1128,7 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor {Γ : Ct
 /-- Delete the last register from the register map. -/
 def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
   let toFun := fun v => f.toFun v.toSnoc
-  match f.toFun (Ctxt.Var.last Γ t) with
+  match hflast : f.toFun (Ctxt.Var.last Γ t) with
   | .none =>
     { toFun := toFun,
       dead := f.dead,
@@ -1136,8 +1140,20 @@ def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg �
     }
   | .some r =>
     { toFun := toFun,
-      dead := f.dead.insert r,
-      hdead := by sorry
+      dead := r :: f.dead,
+      hdead := by
+        intros s hs v
+        have hfdead := f.hdead
+        simp only [toFun]
+        simp at hs
+        rcases hs with rfl | hs
+        case inl =>
+          have : ↑ v ≠ Ctxt.Var.last Γ t := by simp
+          by_contra h
+          have hfinj := f.hinj h hflast this
+          contradiction
+        case inr =>
+          apply hfdead _ hs v
     }
 
 /-
@@ -1341,23 +1357,23 @@ theorem doExpr_sound {Γ₁ : Ctxt Pure.dialect.Ty} {V: Γ₁.Valuation} {Γ₁2
           simp
           apply Var2Reg.registerLiveFor_of_lookupOrInsertArg (by assumption)
 
-@[simp]
-theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
-    v.toSnoc ≠ Ctxt.Var.last Γ t := by
-  unfold Ctxt.Var.toSnoc Ctxt.Var.last
-  rcases v with ⟨v, hv⟩
-  simp only []
-  have heq : v + 1 ≠ 0 := by omega
-  simp [heq]
-  intros hcontra
-  unfold last at hcontra
-  obtain ⟨h₁, h₂⟩ := hcontra
+-- @[simp]
+-- theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+--     v.toSnoc ≠ Ctxt.Var.last Γ t := by
+--   unfold Ctxt.Var.toSnoc Ctxt.Var.last
+--   rcases v with ⟨v, hv⟩
+--   simp only []
+--   have heq : v + 1 ≠ 0 := by omega
+--   simp [heq]
+--   intros hcontra
+--   unfold last at hcontra
+--   obtain ⟨h₁, h₂⟩ := hcontra
 
-@[simp]
-theorem Ctxt.Var.last_neq_toSnoc {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
-    Ctxt.Var.last Γ t ≠ v.toSnoc := by
-  symm
-  simp
+-- @[simp]
+-- theorem Ctxt.Var.last_neq_toSnoc {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+--     Ctxt.Var.last Γ t ≠ v.toSnoc := by
+--   symm
+--   simp
 
 /-## Facts about register allocating a 'const' expression. -/
 section DoExprConst

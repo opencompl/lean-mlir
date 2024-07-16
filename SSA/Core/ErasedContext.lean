@@ -119,6 +119,24 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
+@[simp]
+theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+    v.toSnoc ≠ Ctxt.Var.last Γ t := by
+  unfold Ctxt.Var.toSnoc Ctxt.Var.last
+  rcases v with ⟨v, hv⟩
+  simp only []
+  have heq : v + 1 ≠ 0 := by omega
+  simp [heq]
+  intros hcontra
+  unfold last at hcontra
+  obtain ⟨h₁, h₂⟩ := hcontra
+
+@[simp]
+theorem Ctxt.Var.last_neq_toSnoc {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+    Ctxt.Var.last Γ t ≠ v.toSnoc := by
+  symm
+  simp
+
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
