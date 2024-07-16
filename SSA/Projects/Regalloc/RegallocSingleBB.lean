@@ -91,12 +91,13 @@ def RegisterFile.get (R : RegisterFile) (r : Reg) : Int := R r
 def RegisterFile.set (R : RegisterFile) (r : Reg) (v : Int) : RegisterFile :=
   fun r' => if r = r' then v else R r'
 
-theorem RegisterFile.get_set_of_eq (R : RegisterFile) (r s : Reg) (v : Int) (hs : r = s) :
+@[simp]
+theorem RegisterFile.get_set_of_eq {R : RegisterFile} {r s : Reg} {v : Int} (hs : r = s := by trivial) :
   (R.set r v) s = v := by
   simp [RegisterFile.set, hs]
 
-
-theorem RegisterFile.get_set_of_neq (R : RegisterFile) (r s : Reg) (v : Int) (hs : r ≠ s) :
+@[simp]
+theorem RegisterFile.get_set_of_neq {R : RegisterFile} {r s : Reg} {v : Int} (hs : r ≠ s := by trivial) :
   (R.set r v) s = R s := by
   simp [RegisterFile.set, hs]
 
@@ -1197,7 +1198,52 @@ theorem doRegAllocLets_correct
       simp
       -- since 's' is alive for 'w', and 'doExpr' does not change liveness, we know that
       -- 's' will be alive before. We then use hsound.
-      sorry
+      rcases e with ⟨op, ty_eq, heff, args, regArgs⟩
+      cases op
+      case increment =>
+        simp_all
+        simp [doExpr] at he
+        cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
+        case none =>  simp [hresult₁] at he
+        case some val =>
+          obtain ⟨result, Γs2reg'⟩ := val -- result computation
+          simp_all [hresult₁]
+          cases harg₁ : Γs2reg'.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
+          case none => simp [harg₁] at he
+          case some val =>
+            obtain ⟨arg, Γs2reg''⟩ := val
+            simp_all [harg₁]
+            simp [← he]
+             -- TODO: Somehow, const gets executed automatically by simp, but increment does not.
+            rw [RegAlloc.Expr.exec_increment_eq]
+            have hneq : result ≠ s := by sorry -- the two don't alias
+            rw [RegAlloc.RegisterFile.get_set_of_neq hneq]
+            apply ih
+            -- flow the lookup forwards, since it doeds not alias with any
+            -- of these operations.
+            apply Var2Reg.registerLiveFor_of_registerLiveFor_deleteLast he.2
+            apply Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor harg₁
+            apply Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁
+            assumption
+      case const =>
+        simp_all
+        simp [doExpr] at he
+        cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
+        case none =>  simp [hresult₁] at he
+        case some val =>
+          obtain ⟨result, Γs2reg'⟩ := val
+          simp [hresult₁] at he
+          simp [← he]
+          -- TODO: Somehow, const gets executed automatically by simp, but increment does not.
+          -- Debug this.
+          have hneq : result ≠ s := by sorry -- the two don't alias
+          rw [RegAlloc.RegisterFile.get_set_of_neq hneq]
+          apply ih
+          -- flow the lookup forwards, since it doeds not alias with any
+          -- of these operations.
+          apply Var2Reg.registerLiveFor_of_registerLiveFor_deleteLast he.2
+          apply Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor hresult₁
+          assumption
     case last =>
       simp
       rw [hsound]
@@ -1216,13 +1262,13 @@ theorem doRegAllocLets_correct
         cases hresult₁ : Γ₂2Reg.lookupOrInsert (Ctxt.Var.last Γ₁₂ .int)
         case none =>  simp [hresult₁] at he
         case some val =>
-          obtain ⟨r, Γs2reg⟩ := val
-          simp [hresult₁] at he
-          cases harg₁ : Γs2reg.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
+          obtain ⟨r, Γs2reg'⟩ := val
+          simp_all [hresult₁]
+          cases harg₁ : Γs2reg'.lookupOrInsertArg (args.getN 0 doExpr.proof_3)
           case none => simp [harg₁] at he
           case some val =>
-            obtain ⟨s, Γs2reg⟩ := val
-            simp [harg₁] at he
+            obtain ⟨arg, Γs2reg⟩ := val
+            simp_all [harg₁]
             simp [← he]
             rw [RegAlloc.Expr.outRegister_increment_eq]
             -- hlive_sw  : Γ₂2Reg.registerLiveFor s (Ctxt.Var.last Γ₁₂ .int)
