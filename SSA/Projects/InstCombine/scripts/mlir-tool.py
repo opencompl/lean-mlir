@@ -86,9 +86,12 @@ def showr(region):
 def size(func):
     return sum(1 for _ in func.walk())
 
+
 def read_file(file_name):
     with open(file_name, "r") as f:
         return f.read()
+
+
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     print(filename)
