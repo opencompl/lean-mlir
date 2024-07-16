@@ -383,7 +383,8 @@ def RegAlloc.Program.exec_cons_eq' (body : Program Γ Δ) (er : Expr RegAlloc.di
 structure Var2Reg (Γ : Ctxt Pure.Ty) where
   toFun : Γ.Var Pure.Ty.int → Option RegAlloc.Reg
   dead : List RegAlloc.Reg -- list of dead registers
-  hdead : ∀ r ∈ dead, ∀ v, r ∉ toFun v := sorry -- the dead register set is correct, and all registers that are dead cannot be mapped.
+  hdead : ∀ r ∈ dead, ∀ v, r ∉ toFun v -- the dead register set is correct, and all registers that are dead cannot be mapped.
+  hdeadNoDup : List.Nodup dead := by sorry
   -- the mappping of variables to registers is injective, so no two variables map to the same register.
   hinj : ∀ {r s : RegAlloc.Reg} {v w : Γ.Var .int} (hr : r ∈ toFun v) (hs : s ∈ toFun w) (hneq : v ≠ w), r ≠ s := sorry
 
@@ -397,6 +398,7 @@ def Var2Reg.nil (dead : List RegAlloc.Reg): Var2Reg ∅ where
   hinj := by
     intros r s v w hr hs hneq
     simp at hr
+  hdeadNoDup := sorry
 
 
 /-- A register is free if no variable maps to it. -/
@@ -682,15 +684,33 @@ This satisfies Reg2Val (since trivially, every 'live' register (ie, none of them
 
 def Var2Reg.lookupOrInsert {Γ : Ctxt Pure.Ty} (f : Var2Reg Γ) (v : Γ.Var int) :
   Option (RegAlloc.Reg × Var2Reg Γ) :=
-  match f.toFun v with
+  match hfv : f.toFun v with
   | .some r => (r, f)
   | .none =>
-    match f.dead with
+    match hfdead : f.dead with
     | [] => none
     | r :: rs =>
       .some ⟨r, {
         toFun := fun v' => if v' = v then .some r else f.toFun v',
-        dead := rs
+        dead := rs,
+        hdead := by
+          intros s ss w hw
+          simp at hw
+          have hdead := f.hdead
+          have hnodup := f.hdeadNoDup
+          split at hw
+          case isTrue h =>
+            subst h
+            simp at hw
+            subst hw
+            rw [hfdead] at hnodup
+            simp at hnodup
+            obtain hcontra := hnodup.1
+            contradiction
+          case isFalse h =>
+            specialize hdead s (by simp [hfdead, ss]) w
+            -- contradiction from hw, hdead
+            contradiction
       }⟩
 
 -- /--
@@ -867,7 +887,7 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsert {Γ : Ctxt Pure.Ty}
     apply registerLiveFor_of_toFun_eq hv
   · case h_2 _hv =>
       split at hlookup
-      case h_1 s ss hdead =>
+      case h_1 s =>
         simp [hdead] at hlookup
       case h_2 s ss hdead =>
         simp [hdead] at hlookup
@@ -893,7 +913,7 @@ theorem Var2Reg.registerDeadOrLiveFor_of_lookupOrInsert {Γ : Ctxt Pure.Ty}
     apply registerDeadOrLiveFor_of_registerLiveFor hv
   · case h_2 _hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 s =>
       simp [hdead] at hlookup
     case h_2 s ss hdead =>
       simp [hdead] at hlookup
@@ -922,7 +942,7 @@ theorem Var2Reg.registerDead_or_registerLiveFor_of_lookupOrInsert {Γ : Ctxt Pur
     apply hv
   · case h_2 _hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 s =>
       simp [hdead] at hlookup
     case h_2 s ss hdead =>
       simp [hdead] at hlookup
@@ -947,7 +967,7 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsert_of_registerLiveFor {Γ : Ctxt 
     assumption
   · case h_2 _hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 s =>
       simp [hdead] at hlookup
     case h_2 t ts hdead =>
       simp [hdead] at hlookup
@@ -974,15 +994,32 @@ TODO: note that this is redundant, we should unify this with lookupOrInsert.
 -/
 def Var2Reg.lookupOrInsertArg {Γ : Ctxt Pure.Ty} (f : Var2Reg <| Γ.snoc t)
     (v : Γ.Var int) : Option (RegAlloc.Reg × Var2Reg (Γ.snoc t)) :=
-  match f.toFun v with
+  match hfv : f.toFun v with
   | .some r => (r, f)
   | .none =>
-    match f.dead with
+    match hfdead : f.dead with
     | [] => none
     | r :: rs =>
       .some ⟨r, {
         toFun := fun v' => if v' = v then .some r else f.toFun v',
-        dead := rs
+        dead := rs,
+        hdead := by
+          intros s ss w
+          have hdead := f.hdead
+          rw [hfdead] at hdead
+          simp at hdead
+          obtain ⟨hdead₁, hdead₂⟩ := hdead
+          simp
+          split
+          case isTrue h =>
+            subst h
+            simp
+            -- use fact that duplictates are not allowed, and since
+            -- s ∈ rs, and r ∈ f.dead = r ::rs, we can't have s = r.
+            sorry
+          case isFalse h =>
+            apply hdead₂
+            assumption
       }⟩
 
 /-- The register inserted by lookupOrInsertArg is live. -/
@@ -1001,7 +1038,7 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg {Γ : Ctxt Pure.Ty}
     apply registerLiveFor_of_toFun_eq hv
   · case h_2 hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 =>
       simp [hdead] at hlookup
     case h_2 s ss hdead =>
       simp [hdead] at hlookup
@@ -1025,7 +1062,7 @@ theorem Var2Reg.lookupOrInsertArg_toFun_self_eq {Γ : Ctxt Pure.Ty}
     apply hv
   · case h_2 hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 s =>
       simp [hdead] at hlookup
     case h_2 s ss hdead =>
       simp [hdead] at hlookup
@@ -1049,7 +1086,7 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor {Γ : Ct
     assumption
   · case h_2 hv =>
     split at hlookup
-    case h_1 s ss hdead =>
+    case h_1 s =>
       simp [hdead] at hlookup
     case h_2 t ts hdead =>
       simp [hdead] at hlookup
@@ -1088,8 +1125,20 @@ theorem Var2Reg.registerLiveFor_of_lookupOrInsertArg_of_registerLiveFor {Γ : Ct
 def Var2Reg.deleteLast {Γ : Ctxt Pure.Ty} (f : Var2Reg (Γ.snoc t)) : Var2Reg Γ :=
   let toFun := fun v => f.toFun v.toSnoc
   match f.toFun (Ctxt.Var.last Γ t) with
-  | .none => { toFun := toFun, dead := f.dead }
-  | .some r =>  { toFun := toFun, dead := f.dead.insert r }
+  | .none =>
+    { toFun := toFun,
+      dead := f.dead,
+      hdead := by
+        have hdead := f.hdead
+        intros r hr v
+        apply hdead
+        assumption
+    }
+  | .some r =>
+    { toFun := toFun,
+      dead := f.dead.insert r,
+      hdead := by sorry
+    }
 
 /-
 `toFun` of `deleteLast` just invokes the `toFun` of the underlying map.
@@ -1208,9 +1257,9 @@ theorem Var2Reg.toFun_lookupOrInsertArg
     subst h
     funext w
     split <;> simp_all
-  · case h_2 r hv  =>
+  · case h_2 r =>
     split at h
-    case h_1 s hdead =>
+    case h_1 s =>
       simp [hdead] at h
     case h_2 s hdead =>
       simp [hdead] at h
@@ -1229,9 +1278,9 @@ theorem Var2Reg.toFun_lookupOrInsert
   · case h_1 s hv =>
     funext w
     split_ifs <;> simp_all
-  · case h_2 s hdead  =>
+  · case h_2 s  =>
     split at h
-    case h_1 s hdead =>
+    case h_1 s =>
       simp [hdead] at h
     case h_2 s hdead =>
       simp [hdead] at h
