@@ -5,7 +5,6 @@ import subprocess
 
 
 def get_lines(msg):
-    # This is a placeholder for your actual get_lines function
     # Define the regex pattern to match error messages with line numbers
     pattern = re.compile(r'info: .+?:(\d+):\d+: (.+?)(?=warning)', flags=re.DOTALL)
     # Find all matches in the log
@@ -46,7 +45,6 @@ def process_file(file_path):
     with open(file_path, 'w') as file:
         file.writelines(lines)
 
-    # isempty =  os.stat(proof_name + ".lean").st_size
     # Append the messages to the end of the file
     with open(proof_name + ".lean", 'a') as file:
         file.write("""
@@ -59,8 +57,7 @@ open Std (BitVec)
             print(thm)
             file.write(thm + '\n')
 def main():
-    # process_file("../lean-mlir/SSA/Projects/InstCombine/lean/xor.lean")
-    directory = './SSA/Projects/InstCombine/lean'
+    directory = './SSA/Projects/InstCombine/test/LLVM'
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith('.lean'):  # Assuming the files have a .lean extension
