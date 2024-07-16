@@ -92,10 +92,9 @@ def read_file(file_name):
         return f.read()
 
 def parse_module(module):
-    parser = Parser(ctx, data1)
+    parser = Parser(ctx, module)
     try:
-        module = parser1.parse_module()
-        return module
+        return parser.parse_module()
     except ParserError:
         print("failed to parse the module")
 
@@ -120,7 +119,6 @@ for file in os.listdir(directory):
         f.sym_name.data: f
         for f in module2.walk()
         if isinstance(f, FuncOp)
-        if all(allowed(o) for o in other.walk())
     }
     for func in funcs:
         other  = funcs2.get(func.sym_name.data, None)
