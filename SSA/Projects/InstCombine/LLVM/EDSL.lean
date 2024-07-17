@@ -99,15 +99,15 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
 
       let (op : (MOp.BinaryOp) ⊕ LLVM.IntPredicate) ← match opStx.name with
         | "llvm.and"    => pure <| Sum.inl .and
-        | "llvm.or"     => pure <| Sum.inl .or
+        -- we do nothing, MLIR does not support this syntax, I don't think
+        | "llvm.or"     => pure <| Sum.inl (.or false)
         | "llvm.xor"    => pure <| Sum.inl .xor
-        | "llvm.shl"    => pure <| Sum.inl .shl
-        | "llvm.lshr"   => pure <| Sum.inl .lshr
-        | "llvm.ashr"   => pure <| Sum.inl .ashr
+        | "llvm.shl"    => pure <| Sum.inl (.shl false false)
+        | "llvm.lshr"   => pure <| Sum.inl (.lshr false)
+        | "llvm.ashr"   => pure <| Sum.inl (.ashr false)
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
         | "llvm.add"    => do
-          -- sorry
           let att := opStx.attrs.getAttr "overflowFlags"
           match att with
             | .none =>  pure <| Sum.inl (MOp.BinaryOp.add false false)
@@ -116,12 +116,26 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
               | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.add false true)
               | (.opaque_ "llvm.overflow" s ) =>throw <| .generic s!"flag {s} not allowed"
               | _ => throw <| .generic s!"flag not allowed"
-          -- sorry
-
-        | "llvm.mul"    => pure <| Sum.inl .mul
-        | "llvm.sub"    => pure <| Sum.inl .sub
-        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
-        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.mul"    =>do
+          let att := opStx.attrs.getAttr "overflowFlags"
+          match att with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add false false)
+            | .some y => match y with
+              | (.opaque_ "llvm.overflow" "nsw") => pure <| Sum.inl (MOp.BinaryOp.mul true false)
+              | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.mul false true)
+              | (.opaque_ "llvm.overflow" s ) =>throw <| .generic s!"flag {s} not allowed"
+              | _ => throw <| .generic s!"flag not allowed"
+        | "llvm.sub"    =>do
+          let att := opStx.attrs.getAttr "overflowFlags"
+          match att with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add false false)
+            | .some y => match y with
+              | (.opaque_ "llvm.overflow" "nsw") => pure <| Sum.inl (MOp.BinaryOp.sub true false)
+              | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.sub false true)
+              | (.opaque_ "llvm.overflow" s ) =>throw <| .generic s!"flag {s} not allowed"
+              | _ => throw <| .generic s!"flag not allowed"
+        | "llvm.sdiv"   => pure <| Sum.inl (.sdiv false)
+        | "llvm.udiv"   => pure <| Sum.inl (.udiv false)
         | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
         | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
         | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt
