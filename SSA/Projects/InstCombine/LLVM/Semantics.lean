@@ -45,7 +45,7 @@ theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 def or {w : Nat} (x y : IntW w) (disjoint : Bool := false) : IntW w := do
   let x' ← x
   let y' ← y
-  if  disjoint ∧ BitVec.toNat ( x' &&&  y') = 0 then
+  if  disjoint ∧  x' &&&  y' ≠ 0 then
     .none
   else
     or? x' y'

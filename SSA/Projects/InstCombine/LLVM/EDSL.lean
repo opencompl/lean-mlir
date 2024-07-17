@@ -97,7 +97,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
     else
       let v₂ : Γ.Var (.bitvec w) := (by simpa using hty) ▸ v₂
 
-      let (op : MOp.BinaryOp ⊕ LLVM.IntPredicate) ← match opStx.name with
+      let (op : (MOp.BinaryOp) ⊕ LLVM.IntPredicate) ← match opStx.name with
         | "llvm.and"    => pure <| Sum.inl .and
         | "llvm.or"     => pure <| Sum.inl .or
         | "llvm.xor"    => pure <| Sum.inl .xor
@@ -106,7 +106,18 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.ashr"   => pure <| Sum.inl .ashr
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
-        | "llvm.add"    => pure <| Sum.inl .add
+        | "llvm.add"    => do
+          -- sorry
+          let att := opStx.attrs.getAttr "overflowFlags"
+          match att with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add false false)
+            | .some y => match y with
+              | (.opaque_ "llvm.overflow" "nsw") => pure <| Sum.inl (MOp.BinaryOp.add true false)
+              | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.add false true)
+              | (.opaque_ "llvm.overflow" s ) =>throw <| .generic s!"flag {s} not allowed"
+              | _ => throw <| .generic s!"flag not allowed"
+          -- sorry
+
         | "llvm.mul"    => pure <| Sum.inl .mul
         | "llvm.sub"    => pure <| Sum.inl .sub
         | "llvm.sdiv"   => pure <| Sum.inl .sdiv
