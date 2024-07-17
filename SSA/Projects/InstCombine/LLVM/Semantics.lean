@@ -34,9 +34,6 @@ def and {w : Nat} (x y : IntW w) : IntW w := do
 The ‘or’ instruction returns the bitwise logical inclusive or of its two
 operands.
 -/
-
-structure OrParams where
-  disjoint : Bool := false
 @[simp_llvm]
 def or? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x ||| y
@@ -45,12 +42,13 @@ def or? {w : Nat} (x y : BitVec w) : IntW w :=
 theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 
 @[simp_llvm_option]
-def or {w : Nat} (x y : IntW w) (params : OrParams := {}) : IntW w := do
+def or {w : Nat} (x y : IntW w) (disjoint : Bool := false) : IntW w := do
   let x' ← x
   let y' ← y
-  let g ← and x y
-  guard (¬params.disjoint ∨ g = 0)
-  or? x' y'
+  if  disjoint ∧ BitVec.toNat ( x' &&&  y') = 0 then
+    .none
+  else
+    or? x' y'
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
@@ -81,7 +79,7 @@ structure AddParams where
   nsw : Bool := false
 
 @[simp_llvm]
-def add? {w : Nat} (x y : BitVec w)  : IntW w :=
+def add? {w : Nat} (x y : BitVec w) : IntW w :=
   pure <| x + y
 
 @[simp_llvm_option]
@@ -91,9 +89,10 @@ theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 def add {w : Nat} (x y : IntW w) (params : AddParams := {}) : IntW w := do
   let x ← x
   let y ← y
-  guard (¬ params.nsw ∨ ¬  ((x.toInt + y.toInt) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w))
-  guard (¬ params.nuw ∨  ¬ ((x.toNat + y.toNat) ≥ 2^w))
-  add? x y
+  if (params.nsw ∧  (x.toInt + y.toInt) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w) ∨ ( params.nuw ∧   (x.toNat + y.toNat) ≥ 2^w) then
+    .none
+  else
+    add? x y
 
 /--
 The value produced is the integer difference of the two operands.
@@ -114,15 +113,13 @@ theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
 def sub {w : Nat} (x y : IntW w) (params : SubParams := {}) : IntW w := do
   let x ← x
   let y ← y
-
   -- Check for unsigned overflow if nuw is set
-  guard (¬params.nuw ∨  x.toNat ≥ y.toNat)
-
   -- Check for signed overflow if nsw is set
-  guard (¬params.nsw ∨
-    ((x.toInt - y.toInt) ≥ -(2^(w-1)) ∧ (x.toInt - y.toInt) < 2^(w-1)))
-
-  sub? x y
+  if (params.nuw ∧   x.toNat ≥ y.toNat) ∨ (params.nsw ∧
+    ((x.toInt - y.toInt) ≥ -(2^(w-1)) ∧ (x.toInt - y.toInt) < 2^(w-1))) then
+    .none
+  else
+    sub? x y
 
 /--
 The value produced is the integer product of the two operands.
@@ -150,17 +147,13 @@ theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
 def mul {w : Nat} (x y : IntW w) (params : MulParams := {}) : IntW w := do
   let x ← x
   let y ← y
-
-  -- Perform the multiplication
-  let result := x * y
-
   -- Check for unsigned overflow if nuw is set
-  guard (¬ params.nuw ∨ ¬((x * y).toNat ≤  (2^w)))
   -- Check for signed overflow if nsw is set
-  guard (¬ params.nsw ∨ ¬((x * y).toNat < (2^(w - 1)) ∧ (x * y).toNat ≥  (2^(w - 1)) ))
-
-  -- Return the result
-  result
+  if (params.nuw ∧  (x * y).toNat ≤  (2^w)) ∨ (params.nsw ∧  (x * y).toNat < (2^(w - 1)) ∧ (x * y).toNat ≥  (2^(w - 1))) then
+    .none
+  else
+    -- Return the result
+    mul? x y
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
@@ -182,8 +175,10 @@ def udiv {w : Nat} (x y : IntW w) (params : UdivParams := {}) : IntW w := do
   let x' ← x
   let y' ← y
   --- If the exact keyword is present, the result value of the udiv is a poison value if %op1 is not a multiple of %op2
-  guard (¬params.exact ∨ (x'.toNat ∣ y'.toNat))
-  udiv? x' y'
+  if params.exact ∧  ¬(x'.toNat ∣  y'.toNat) then
+    .none
+  else
+    udiv? x' y'
 
 def intMin (w : Nat) : BitVec w :=
   - BitVec.ofNat w (2^(w - 1))
@@ -212,34 +207,30 @@ at width 2, -4 / -1 is considered overflow!
 structure SdivParams where
   exact : Bool := false
 @[simp_llvm]
-def sdiv? {w : Nat} (x y : BitVec w) : IntW w := do
-  guard ((y ≠  0) ∧ (w = 1 ∨  x ≠  (intMin w) ∨  y ≠  -1) )
-  BitVec.sdiv x y
+def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
+  if y = 0 ∨  (w ≠  1 ∧  x = (intMin w) ∧  y = -1)
+  then .none
+  else pure (BitVec.sdiv x y)
 
 theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
   LLVM.sdiv? x 0 = none := by
   simp
   simp [LLVM.sdiv?]
-  simp [BitVec.sdiv]
-  simp [guard]
-  simp [failure]
 
 theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
     (hx : LLVM.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
-  simp  only [LLVM.sdiv?]
-  have t  : (y ≠  0  ∧ (w = 1 ∨ ¬x = intMin w ∨ ¬y = -1#w)) := by
-    tauto
-  -- simp only [, ne_eq, Option.bind_eq_bind, Option.pure_def]
-  simp only [ne_eq, t, and_true, Option.bind_eq_bind, Option.pure_def]
-  simp [t]
-  simp [guard]
+  simp [LLVM.sdiv?]
+  tauto
+
 
 @[simp_llvm_option]
 def sdiv {w : Nat} (x y : IntW w) (params : SdivParams := {})  : IntW w := do
   let x' ← x
   let y' ← y
-  guard (¬ params.exact ∨ (x'.toNat ∣ y'.toNat))
-  sdiv? x' y'
+  if (params.exact ∧  ¬ (x'.toNat ∣ y'.toNat)) then
+    .none
+  else
+    sdiv? x' y'
 
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 @[simp_llvm]
@@ -249,13 +240,8 @@ theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
       then none
     else pure <| BitVec.sdiv x y
     := by
-    simp [sdiv?, -BitVec.ofNat_eq_ofNat, -ne_eq, guard, Option.bind]
-    simp
-    split_ifs
-    tauto
-    tauto
-    tauto
-    tauto
+    simp [sdiv?]
+
 
 /--
 This instruction returns the unsigned integer remainder of a division. This instruction always performs an unsigned division to get the remainder.
@@ -356,9 +342,10 @@ def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 def shl {w : Nat} (x y : IntW w)  (params : ShlParams := {}): IntW w := do
   let x ← x
   let y ← y
-  guard (¬ params.nsw ∨  ¬ ((x.toInt *  2 ^ y.toNat) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w))
-  guard (¬ params.nuw ∨  ¬ ((x.toNat * 2 ^ y.toNat) ≥ 2^w))
-  shl? x y
+  if (params.nsw ∧  ¬ ((x.toInt *  2 ^ y.toNat) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w)) ∨  (params.nuw ∧   ¬ ((x.toNat * 2 ^ y.toNat) ≥ 2^w)) then
+    .none
+  else
+    shl? x y
 
 /--
 This instruction always performs a logical shift right operation.
