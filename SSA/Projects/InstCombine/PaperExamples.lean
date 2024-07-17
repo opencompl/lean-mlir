@@ -21,7 +21,7 @@ open BitVec
 theorem shift_mul:
     [llvm (w)| {
   ^bb0(%X : _, %Y : _):
-    %c1 = llvm.mlir.constant 1
+    %c1 = llvm.mlir.constant(1)
     %poty = llvm.shl %c1, %Y
     %r = llvm.mul %poty, %X
     llvm.return %r

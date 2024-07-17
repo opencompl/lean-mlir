@@ -46,17 +46,35 @@ macro_rules
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
 open MLIR.AST
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("   neg_num (" : " mlir_type)? ")"  (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("  ("$" noWs "{" term "}") ")"  (" : " mlir_type)?   : mlir_op
+macro_rules
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $inner_type]?) $[: $outer_type]? ) => do
+      /- We deviate slightly from LLVM by allowing syntax such as `llvm.mlir.constant (10) : i62`.
+          Strictly speaking, the spec mandates that the *inner* type annotation may only be left out
+          if the type is `i64` or `f64`.
+          Since the type in this case is unambiguous, there is no harm in allowing this for other
+          widths as well.
+        If no annotation is given at all, then the width is assumed to be `_`,
+        a symbolic/metavariable width
+      -/
+      let outer_type ← outer_type.getDM `(mlir_type| _)
+      let inner_type := inner_type.getD outer_type
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $inner_type} : () -> ($outer_type) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( ${ $x:term }) $[: $t]?) => do
+      let t ← t.getDM `(mlir_type| _)
+      let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
 
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
 syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) => do
-      let t ← t.getDM `(mlir_type| _)
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $t} : () -> ($t) )
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) => do
-      let t ← t.getDM `(mlir_type| _)
-      let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) =>
+      `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($x $[: $t]?) $[: $t]?)
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant ${ $x:term } $[: $t]?) =>
+      `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($$($x) $[: $t]?) $[: $t]?)
+
+
 
 syntax mlir_op_operand " = " "llvm.select" mlir_op_operand ", " mlir_op_operand ", " mlir_op_operand
     (" : " mlir_type)? : mlir_op
@@ -90,7 +108,7 @@ private def pretty_test_generic (w : Nat) :=
 private def prettier_test_generic (w : Nat) :=
   [llvm (w)|{
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant 8
+    %0 = llvm.mlir.constant(8)
     %1 = llvm.add %0, %arg0
     %2 = llvm.mul %1, %arg0
     %3 = llvm.not %2
@@ -99,7 +117,7 @@ private def prettier_test_generic (w : Nat) :=
 
 private def neg_constant (w : Nat) :=
   [llvm (w)| {
-    %0 = llvm.mlir.constant -1
+    %0 = llvm.mlir.constant(-1)
     llvm.return %0
   }]
 
@@ -124,7 +142,7 @@ private def antiquot_test (x) := -- antiquotated constant value in generic synta
   }]
 private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in pretty syntax
   [llvm| {
-    %0 = llvm.mlir.constant ${x} : i42
+    %0 = llvm.mlir.constant(${x}) : i42
     llvm.return %0 : i42
   }]
 example : antiquot_test = antiquot_test_pretty := rfl
