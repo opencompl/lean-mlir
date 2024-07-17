@@ -501,7 +501,7 @@ syntax mlir_suffix_id := num <|> ident
 syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
-/-
+/--
 `getSuffixId` converts the syntax object of a `suffix id` to a string.
 A `suffix id` is a notion from the MLIR standard defined as
 ```bnf
