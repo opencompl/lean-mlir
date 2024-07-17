@@ -98,7 +98,7 @@ private def pretty_test :=
 private def pretty_test_generic (w : Nat) :=
   [llvm (w)|{
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant 8
+    %0 = llvm.mlir.constant 8 : _
     %1 = llvm.add %0, %arg0 : _
     %2 = llvm.mul %1, %arg0 : _
     %3 = llvm.not %2 : _
@@ -117,7 +117,7 @@ private def prettier_test_generic (w : Nat) :=
 
 private def neg_constant (w : Nat) :=
   [llvm (w)| {
-    %0 = llvm.mlir.constant(-1) : _
+    %0 = llvm.mlir.constant(-1)
     llvm.return %0
   }]
 
