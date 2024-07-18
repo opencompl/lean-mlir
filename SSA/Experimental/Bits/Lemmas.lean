@@ -17,18 +17,20 @@ lemma evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
   induction t <;>
   dsimp [Term.evalFin, Term.eval, arity] at * <;> simp [*]
 
-lemma eq_iff_xorSeq_eq_zero (seq₁ seq₂ : BitStream) :
+lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
   simp [Function.funext_iff]
 
 lemma eval_eq_iff_xorSeq_eq_zero (t₁ t₂ : Term) :
     t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = fun _ => BitStream.zero := by
   simp only [Function.funext_iff, Term.eval, Term.evalFin,
-    ← eq_iff_xorSeq_eq_zero, ← evalFin_eq_eval]
+    ← eq_iff_xor_eq_zero, ← evalFin_eq_eval]
   constructor
   { intro h seq
-    ext n
+    ext j
     simp only [arity.eq_7, BitStream.xor_eq, BitStream.zero_eq, bne_eq_false_iff_eq]
+    apply congr_fun
+    apply h
 
     -- have := h _
     -- have := h (λ j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else λ _ => false) n
