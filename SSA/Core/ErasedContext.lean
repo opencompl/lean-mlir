@@ -419,9 +419,37 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
-
 end Valuation
 
+section CoValuation
+
+variable [TyDenote Ty]
+
+/-- A Covaluation for a context. Provide a value for some type in the context. -/
+structure CoValuation (Γ : Ctxt Ty) where
+  t : Ty
+  var : Γ.Var t
+  val : toType t
+
+/-- Eliminate a CoValuation of an empty context. -/
+@[simp]
+def CoValuation.elim_nil (V : CoValuation (∅ : Ctxt Ty)) : False :=
+  V.var.emptyElim
+
+/-- Build a covaluation for a single type context. -/
+def CoValuation.singleton (t : Ty) (v : toType t) : CoValuation [t] :=
+  ⟨t, Var.last _ _, v⟩
+
+/-- Build a CoValuation from a variable and a value. -/
+def CoValuation.ofVar {Γ : Ctxt Ty} (v : Γ.Var α) (a : toType α) : CoValuation Γ :=
+  ⟨α, v, a⟩
+
+/-
+TODO: write helpers to coerce to a from a value of 'toType Γ.Var α'.
+We suspect that this will come up when reasoning about straight line code.
+-/
+
+end CoValuation
 
 /- ## VarSet -/
 
