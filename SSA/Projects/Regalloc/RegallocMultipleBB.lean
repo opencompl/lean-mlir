@@ -25,6 +25,68 @@ open TyDenote (toType)
 
 namespace Pure
 
+/-- A simple term, consisting of variables, operations, pairs, units, and booleans -/
+inductive Term (Γ : Ctxt Ty) : Ty → Type where
+  | var : {α : Ty} → (v : Γ.Var α) → Term Γ α
+  -- | op : φ → Term φ → Term φ
+  -- | let1 : Term φ → Term φ → Term φ
+  -- | pair : Term φ → Term φ → Term φ
+  -- | unit : Term φ
+  -- | let2 : Term φ → Term φ → Term φ
+  -- | inl : Term φ → Term φ
+  -- | inr : Term φ → Term φ
+  -- | case: Term φ → Term φ → Term φ → Term φ
+  -- | abort : Term φ → Term φ
+
+-- inductive Wf : Ctx α ε → Region φ → LCtx α → Prop
+--   | br : L.Trg n A → a.Wf Γ ⟨A, ⊥⟩ → Wf Γ (br n a) L
+--   | case : a.Wf Γ ⟨Ty.coprod A B, e⟩
+--     → s.Wf (⟨A, ⊥⟩::Γ) L
+--     → t.Wf (⟨B, ⊥⟩::Γ) L
+--     → Wf Γ (case a s t) L
+--   | let1 : a.Wf Γ ⟨A, e⟩ → t.Wf (⟨A, ⊥⟩::Γ) L → (let1 a t).Wf Γ L
+--   | let2 : a.Wf Γ ⟨(Ty.prod A B), e⟩ → t.Wf (⟨B, ⊥⟩::⟨A, ⊥⟩::Γ) L → (let2 a t).Wf Γ L
+--   | cfg (n) {G} (R : LCtx α) :
+--     (hR : R.length = n) → β.Wf Γ (R ++ L) →
+--     (∀i : Fin n, (G i).Wf (⟨R.get (i.cast hR.symm), ⊥⟩::Γ) (R ++ L)) →
+--     Wf Γ (cfg β n G) L
+
+-- def InS.br {Γ : Ctx α ε} {L : LCtx α} (ℓ) (a : Term.InS φ Γ ⟨A, ⊥⟩)
+--   (hℓ : L.Trg ℓ A) : InS φ Γ L
+--   := ⟨Region.br ℓ a, Wf.br hℓ a.2⟩
+
+
+-- | TODO: add a thingie that coerces case into `Bool`.
+-- def InS.case {Γ : Ctx α ε} {L : LCtx α} {A B e}
+--  (a : Term.InS φ Γ ⟨Ty.coprod A B, e⟩) (s : InS φ (⟨A, ⊥⟩::Γ) L) (t : InS φ (⟨B, ⊥⟩::Γ) L) : InS φ Γ L
+
+class TyHasCoprod (Ty : Type) where
+  coprod : Ty → Ty → Ty
+
+instance : Append (Ctxt Ty) where
+  append Γ Δ := Γ.append Δ
+
+
+inductive Region [C : TyHasCoprod Ty] : (Γ : Ctxt Ty) → (L : Ctxt Ty) → Type
+| br (a : Term Γ α) (hl : L.Var α) : Region Γ L
+| case (a : Term Γ (C.coprod α β)) (s : Region (Γ.snoc α) L) (t : Region (Γ.snoc β) L) : Region Γ L
+| let₁ (a : Term Γ α) (t : Region (Γ.snoc α) L) : Region Γ L
+-- | cfg {R L D : Ctxt Ty}
+--     (hD : D = R ++ L)
+--     (t : Region Γ D) -- t for terminator, G for fixpoint graph.
+--     (G : R.Var α → Region (Γ.snoc α) D)
+--    : Region Γ L
+| cfg {R L D : Ctxt Ty}
+    -- (hD : D = R ++ L)
+    (inL : Ctxt.Hom D (R ++ L))
+    (t : Region Γ D) -- t for terminator, G for fixpoint graph.
+    (G : R.Var α → Region (Γ.snoc α) D)
+   : Region Γ L
+
+inductive InS [C : TyHasCoprod Ty] : (Γ : Ctxt Ty) → (L : Ctxt Ty) → Type
+
+
+#print Region
 
 /- # Classes -/
 
@@ -129,8 +191,6 @@ Another option, which would be more complicated, but correct by construction, is
 impurely.
 -/
 
-instance : Union (Ctxt Ty) where
-  union Γ Δ := List.append Γ Δ
 
 /-
 Recall that dominance can be defined as the fixpoint of the dataflow equations:
