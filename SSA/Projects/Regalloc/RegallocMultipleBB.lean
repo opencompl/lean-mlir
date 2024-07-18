@@ -30,11 +30,13 @@ We allow relabellings of variables, and we will say that 'def d' domintes 'use v
 if, as it flows from the def to the use, the variable 'd' is relabelled to 'v'.
 to get the usual definition, we build the pullback square:
 
-Γ ∩ Δ →∃!→ Δ
+```
+Γ∩Δ→→→∃!→→Δ
 ↓         ↓
 ∃!        ↓
 ↓         ↓
-Γ  →∃!→ Γ ∪ Δ
+Γ→→→→→→→→Γ∪Δ
+```
 
 See that this definition precisely lets us walk backward from the top of our BB
 to variables in the predecessor BB.
