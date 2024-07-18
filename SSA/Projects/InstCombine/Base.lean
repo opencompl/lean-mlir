@@ -120,18 +120,18 @@ namespace MOp
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
 
 @[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
-@[match_pattern] def or  (disjoint : Bool)   (w : Width φ) : MOp φ := .binary w (.or disjoint)
+@[match_pattern] def or  (disjoint : Bool := false)   (w : Width φ) : MOp φ := .binary w (.or disjoint)
 @[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
 @[match_pattern] def shl  (nsw : Bool) (nuw : Bool)  (w : Width φ) : MOp φ := .binary w (.shl  nsw nuw)
-@[match_pattern] def lshr (exact : Bool)   (w : Width φ) : MOp φ := .binary w (.lshr exact)
-@[match_pattern] def ashr (exact : Bool)   (w : Width φ) : MOp φ := .binary w (.ashr exact)
+@[match_pattern] def lshr (exact : Bool:= false)   (w : Width φ) : MOp φ := .binary w (.lshr exact)
+@[match_pattern] def ashr (exact : Bool:= false)   (w : Width φ) : MOp φ := .binary w (.ashr exact)
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
-@[match_pattern] def add  (nsw : Bool) (nuw : Bool)  (w : Width φ) : MOp φ := .binary w (.add nsw nuw)
-@[match_pattern] def mul  (nsw : Bool) (nuw : Bool)  (w : Width φ) : MOp φ := .binary w (.mul nsw nuw)
-@[match_pattern] def sub (nsw : Bool) (nuw : Bool)   (w : Width φ) : MOp φ := .binary w (.sub nsw nuw)
-@[match_pattern] def sdiv  (exact : Bool)  (w : Width φ) : MOp φ := .binary w (.sdiv exact)
-@[match_pattern] def udiv  (exact : Bool) (w : Width φ) : MOp φ := .binary w (.udiv exact)
+@[match_pattern] def add  (nsw : Bool:= false) (nuw : Bool:= false)  (w : Width φ) : MOp φ := .binary w (.add nsw nuw)
+@[match_pattern] def mul  (nsw : Bool:= false) (nuw : Bool:= false)  (w : Width φ) : MOp φ := .binary w (.mul nsw nuw)
+@[match_pattern] def sub (nsw : Bool:= false) (nuw : Bool:= false)   (w : Width φ) : MOp φ := .binary w (.sub nsw nuw)
+@[match_pattern] def sdiv  (exact : Bool:= false)  (w : Width φ) : MOp φ := .binary w (.sdiv exact)
+@[match_pattern] def udiv  (exact : Bool:= false) (w : Width φ) : MOp φ := .binary w (.udiv exact)
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
@@ -279,8 +279,8 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
 
   -- | (@MOp.binary (ConcreteOrMVar.concrete _) (@MOp.BinaryOp.add true true)), _ => sorry
   | Op.mul nsw nuw _       => LLVM.mul    (op.getN 0) (op.getN 1) { nsw := nsw , nuw := nuw}
-  | Op.sdiv e _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
-  | Op.udiv e _      => LLVM.udiv   (op.getN 0) (op.getN 1)
+  | Op.sdiv e _      => LLVM.sdiv   (op.getN 0) (op.getN 1) {exact := e}
+  | Op.udiv e _      => LLVM.udiv   (op.getN 0) (op.getN 1) {exact := e}
   | Op.urem _      => LLVM.urem   (op.getN 0) (op.getN 1)
   | Op.srem _      => LLVM.srem   (op.getN 0) (op.getN 1)
   | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)

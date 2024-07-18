@@ -65,7 +65,7 @@ def or {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.or w)
+    (op := InstCombine.MOp.or false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -93,7 +93,7 @@ def shl {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.shl w)
+    (op := InstCombine.MOp.shl false false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -107,7 +107,7 @@ def lshr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.lshr w)
+    (op := InstCombine.MOp.lshr false  w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -121,7 +121,7 @@ def ashr {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.ashr w)
+    (op := InstCombine.MOp.ashr false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -135,7 +135,7 @@ def sub {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.sub w)
+    (op := InstCombine.MOp.sub  false false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -149,7 +149,7 @@ def add {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.add w)
+    (op := InstCombine.MOp.add false false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -163,7 +163,7 @@ def mul {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.mul w)
+    (op := InstCombine.MOp.mul false false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -177,7 +177,7 @@ def sdiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.sdiv w)
+    (op := InstCombine.MOp.sdiv false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)
@@ -191,7 +191,7 @@ def udiv {Γ : Ctxt _} (w : ℕ) (l r : Nat)
       := by get_elem_tactic) :
     Expr InstCombine.LLVM Γ .pure (InstCombine.Ty.bitvec w) :=
   Expr.mk
-    (op := InstCombine.MOp.udiv w)
+    (op := InstCombine.MOp.udiv  false w)
     (eff_le := by constructor)
     (ty_eq := rfl)
     (args := .cons ⟨l, lp⟩ <| .cons ⟨r, rp⟩ .nil)

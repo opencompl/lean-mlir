@@ -89,11 +89,20 @@ theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 def add {w : Nat} (x y : IntW w) (params : AddParams := {}) : IntW w := do
   let x ← x
   let y ← y
-  if (params.nsw ∧  (x.toInt + y.toInt) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w) ∨ ( params.nuw ∧   (x.toNat + y.toNat) ≥ 2^w) then
+  if (params.nsw ∧  (x.toInt + y.toInt) < -(2^(w-1)) ∧ (x.toInt + y.toInt) ≥ 2^w) ∨ ( params.nuw ∧  (x.toNat + y.toNat) ≥ 2^w) then
     .none
   else
     add? x y
 
+set_option allowUnsafeReducibility true
+@[simp, reducible]
+theorem add_reduce (x y : IntW w) :  add x y = match x , y with
+  | .none , _ => .none
+  | _ , .none => none
+  | .some a , .some b  => .some (a + b) := by
+  rcases x
+  all_goals (cases y)
+  all_goals (try simp ; try rfl)
 /--
 The value produced is the integer difference of the two operands.
 If the difference has unsigned overflow, the result returned is the mathematical result modulo 2n, where n is the bit width of the result.
@@ -227,10 +236,10 @@ theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
 def sdiv {w : Nat} (x y : IntW w) (params : SdivParams := {})  : IntW w := do
   let x' ← x
   let y' ← y
-  if (params.exact ∧  ¬ (x'.toNat ∣ y'.toNat)) then
-    .none
-  else
-    sdiv? x' y'
+  -- if (params.exact ∧  ¬ (x'.toNat ∣ y'.toNat)) then
+  --   .none
+  -- else
+  sdiv? x' y'
 
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 @[simp_llvm]
