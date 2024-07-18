@@ -102,10 +102,9 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVa
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.ashr false) (%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
-
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
@@ -113,10 +112,11 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
+
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.add false false) (%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 
@@ -151,7 +151,7 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVa
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.ashr) (%0, %2) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.ashr false) (%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops.get! 2) ["1", "0", "arg0"]
 
@@ -165,7 +165,7 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
-    (InstCombine.MOp.BinaryOp.add) (%4, %3) : (i32, i32) → (i32)⟩⟩
+    (InstCombine.MOp.BinaryOp.add false false) (%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5)  (ops.get! 4) ["3", "2", "1", "0", "arg0"]
 
@@ -186,13 +186,13 @@ info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
       Com.var (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 8)) ⋯ ⋯ HVector.nil HVector.nil)
         (Com.var (Expr.mk (MOp.const (ConcreteOrMVar.concrete 32) (Int.ofNat 31)) ⋯ ⋯ HVector.nil HVector.nil)
           (Com.var
-            (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.ashr) ⋯ ⋯ (⟨2, ⋯⟩::ₕ(⟨0, ⋯⟩::ₕHVector.nil))
-              HVector.nil)
+            (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) (MOp.BinaryOp.ashr false)) ⋯ ⋯
+              (⟨2, ⋯⟩::ₕ(⟨0, ⋯⟩::ₕHVector.nil)) HVector.nil)
             (Com.var
               (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.and) ⋯ ⋯ (⟨0, ⋯⟩::ₕ(⟨2, ⋯⟩::ₕHVector.nil))
                 HVector.nil)
               (Com.var
-                (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.add) ⋯ ⋯
+                (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) (MOp.BinaryOp.add false false)) ⋯ ⋯
                   (⟨0, ⋯⟩::ₕ(⟨1, ⋯⟩::ₕHVector.nil)) HVector.nil)
                 (Com.ret ⟨0, ⋯⟩)))))⟩⟩⟩
 -/
