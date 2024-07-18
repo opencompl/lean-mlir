@@ -2,12 +2,49 @@ import Init.Data.BitVec.Basic
 import Init.Data.BitVec.Lemmas
 import Init.Data.BitVec.Bitblast
 
--- Register allocation for a single basic block program.
+-- 1) RegionTree in Polly, from our work in Polly:
+-- 2) https://github.com/llvm/llvm-project/blob/7b08c2774ca7350b372f70f63135eacc04d739c5/llvm/include/llvm/Analysis/RegionInfo.h#L9-L22
+--      Which is, in turn, based on the program structure Tree: https://en.wikipedia.org/wiki/Program_structure_tree
+-- 3) LLVM's functional API for BB utils,
+--     which we shall provide as a surface level API https://llvm.org/doxygen/BasicBlockUtils_8h.html
+-- 4) Register allocation for a single basic block program.
 import SSA.Core.Framework
 import Lean.Data.HashMap
 import Mathlib.Init.Function
 
 namespace Pure
+
+/-
+First, recall that contexts form a category with (Γ Δ : Ctxt) and Ctxt.Hom Γ Δ,
+where the morphisms are given by substitutions.
+-/
+/-
+Next, recall that dominance essentially says that "the same" variable must exist
+in ones predecessors. However, we are category theorists, and we know that
+thinking upto equality is bad;
+What we actually need is the *pullback* of the predecessor contexts. For
+simplicity, we shall first focus on the use-case where we allow one or two
+predecessors.
+Note that, in this regime, our definition of dominance becomes broader:
+We allow relabellings of variables, and we will say that 'def d' domintes 'use v'
+if, as it flows from the def to the use, the variable 'd' is relabelled to 'v'.
+to get the usual definition, we build the pullback square:
+
+Γ ∩ Δ →∃!→ Δ
+↓         ↓
+∃!        ↓
+↓         ↓
+Γ  →∃!→ Γ ∪ Δ
+
+See that this definition precisely lets us walk backward from the top of our BB
+to variables in the predecessor BB.
+-/
+
+/-
+Now that we have pullbacks, we define a full CFG, where we have basic blocks,
+with live-ins equal to the pullback of the predecessor blocks.
+We must, as usual, work upto iso to be good category theorists.
+-/
 
 /-- The terminator instruction for a control flow graph. -/
 inductive CFGRet (t : Type) (d : Dialect) [DialectSignature d]
