@@ -7,17 +7,200 @@ import Init.Data.BitVec.Bitblast
 --      Which is, in turn, based on the program structure Tree: https://en.wikipedia.org/wiki/Program_structure_tree
 -- 3) LLVM's functional API for BB utils,
 --     which we shall provide as a surface level API https://llvm.org/doxygen/BasicBlockUtils_8h.html
--- 4) Register allocation for a single basic block program.
-import SSA.Core.Framework
+-- import SSA.Core.Framework
 import Lean.Data.HashMap
 import Mathlib.Init.Function
+import Mathlib.CategoryTheory.Category.Basic
+
+import SSA.Core.ErasedContext
+import SSA.Core.HVector
+import SSA.Core.EffectKind
+import Mathlib.Control.Monad.Basic
+import SSA.Core.Framework.Dialect
+import Mathlib.Data.List.AList
+import Mathlib.Data.Finset.Piecewise
+
+open Ctxt (Var VarSet Valuation)
+open TyDenote (toType)
 
 namespace Pure
 
+
+/- # Classes -/
+
+abbrev RegionSignature Ty := List (Ctxt Ty × Ty)
+
+
+abbrev BBIn (Ty : Type) := Ctxt Ty
+abbrev BBOut (Ty : Type) := Ctxt Ty
+abbrev Parents (Ty : Type) := Ctxt Ty
+
+/-- control flow out of Δ into π assigns values to π by relabelling variables in π to variables in Δ. -/
+def BBIn.fromBBOut {Ty : Type} (π : BBIn Ty) (Δ : BBOut Ty) :  Type :=
+  Ctxt.Hom π Δ
+
+
+/-- control flow out of Δ into π assigns values to π by relabelling variables in π to variables in Δ. -/
+def Parents.fromBBOut {Ty : Type} (π : Parents Ty) (Δ : BBOut Ty) :  Type :=
+  Ctxt.Hom π Δ
+
+instance [TyDenote Ty] : TyDenote (Ctxt Ty) where
+  toType Γ := Γ.Valuation
+
+structure BBTy (Ty : Type) where
+  Γ : BBIn Ty -- in context.
+  Δ : BBOut Ty -- out context.
+  π : Parents Ty -- context of parent values.
+
+
+structure Signature (Ty : Type) where
+  mkEffectful ::
+  sig        : List Ty
+  bbSig :    List (BBIn Ty)
+  -- regSig     : RegionSignature Ty
+  outTy      : Ty
+  effectKind : EffectKind := .pure
+
+abbrev Signature.mk (sig : List Ty) (bbSig : List (BBIn Ty)) (outTy : Ty) : Signature Ty :=
+ { sig := sig, bbSig := bbSig,  outTy := outTy }
+
+class DialectSignature (d : Dialect) where
+  signature : d.Op → Signature d.Ty
+export DialectSignature (signature)
+
+section
+variable {d} [s : DialectSignature d]
+
+def DialectSignature.sig        := Signature.sig ∘ s.signature
+def DialectSignature.bbSig        := Signature.bbSig ∘ s.signature
+-- def DialectSignature.regSig     := Signature.regSig ∘ s.signature
+def DialectSignature.outTy      := Signature.outTy ∘ s.signature
+-- def DialectSignature.effectKind := Signature.effectKind ∘ s.signature
+
+end
+
+
+class DialectDenote (d : Dialect) [TyDenote d.Ty] [DialectSignature d] where
+  denoteOp : (op : d.Op) → HVector toType (DialectSignature.sig op) →
+    -- (HVector (fun t : Ctxt d.Ty × d.Ty => t.1.Valuation → EffectKind.impure.toMonad d.m (toType t.2))
+    --         (DialectSignature.regSig op)) →
+    -- ((DialectSignature.effectKind op).toMonad d.m
+     (toType <| DialectSignature.outTy op)
+
 /-
-First, recall that contexts form a category with (Γ Δ : Ctxt) and Ctxt.Hom Γ Δ,
+Some considerations about purity:
+
+We want pure operations to be able to be run in an impure context (but not vice versa, of course).
+
+However, the current definition of `DialectDenote` forces an expressions regions to be of the same purity
+as the operation.
+In particular, a pure operation which has regions requires those regions to be available as pure
+functions `args → result` to be able call `DialectDenote.denote`, whereas an instance of this operation
+with impure regions would have them be `args → d.m result`.
+
+Thus, a change to `DialectDenote.denote` is necessary (eventually), but the main question there is:
+how can we incorporate effect polymorphism without exposing the possibility that a user might
+define semantics for an operation that behave differently when running purely vs when running
+impurely.
+
+One option is to generalize `DialectDenote` to take an effect, like so
+```lean
+class DialectDenote (d) [Goedel Ty] [DialectSignature d] where
+  denote (op : Op) {eff : EffectKind} (heff : DialectSignature.effectKind op ≤ eff)  :
+    HVector toType (DialectSignature.sig op) →
+    (HVector (fun t : Ctxt d.Ty × Ty => t.1.Valuation → eff.toMonad d.m (toType t.2))
+            (DialectSignature.regSig op)) →
+    (eff.toMonad d.m (toType <| DialectSignature.outTy op))
+```
+
+But, then we'd have to enforce that the semantics don't change when a pure operation is being run
+impurely.
+```lean
+class LawfulOpDenote (Op Ty : Type) (m : Type → Type)
+    [Goedel Ty] [DialectSignature d] [DialectDenote d] [Monad d.m] where
+  pure_denote (op : Op) (heff : DialectSignature.effectKind op = .pure) (args) (regions) :
+      pure (DialectDenote.denote op (eff:=.pure) (by simp [heff]) args regions)
+      = DialectDenote.denote op (eff:=.impure) (by simp) args (regions.map fun _ r V => return r V)
+```
+
+Another option, which would be more complicated, but correct by construction, is to have the
+`denote` function be run within a specific `OpDenoteM` monad, whose monadic actions are
+"eval region $x". Assuming the `op` is pure, `OpDenoteM α` could then be evaluated both purely or
+impurely.
+-/
+
+instance : Union (Ctxt Ty) where
+  union Γ Δ := List.append Γ Δ
+
+/-
+Recall that dominance can be defined as the fixpoint of the dataflow equations:
+  entry.Δ ⊆ Φ -- the live out of the entry block is in every block.
+  ∀ p ∈ preds(B), Φ ⊆ p.Δ -- the live-out of a block is the intersection of the live-ins of its predecessors.
+
+Next, recall that if 'A ⊆ B', then there is a function 'f: A -> B' that maps elements of A to elements of B.
+-/
+
+-- instance : Subset (Ctxt Ty) where
+--   union Γ Δ := List.append Γ Δ
+
+/-- A typeclass for type indexes 'Ty' which are pointed with a boolean point β. -/
+class TyDenoteBool (Ty : Type) extends TyDenote Ty where
+    tyBool : Ty
+    hβ : toType β = Bool
+
+/- # Datastructures -/
+section DataStructures
+
+variable (d : Dialect) [DialectSignature d]
+
+inductive BBVar (Γ : Ctxt d.Ty) {t : d.Ty} : Type where
+| var : Γ.Var t → BBVar Γ
+
+mutual
+/-- An intrinsically typed expression. -/
+inductive Expr (π : Parents d.Ty) : (Γ : Ctxt d.Ty) → (ty : d.Ty) → Type :=
+  | mk {Γ} {ty} (op : d.Op)
+    (ty_eq : ty = DialectSignature.outTy op)
+    (args : HVector (Var (π ∪ Γ)) <| DialectSignature.sig op) : Expr π Γ ty
+
+/-- A very intrinsically sequence of lets: a sequence of let bindings. -/
+inductive Lets (π : Parents d.Ty) : BBIn d.Ty → BBOut d.Ty → Type where
+  | ret (v : Var Γ t) : Lets π Γ Γ
+  | var (body : Lets π Γ Δ) (e : Expr π Δ α) : Lets π Γ (Δ.snoc α)
+end
+
+inductive Ret {Ty : Type} [TyDenoteBool Ty] (bbΓ : Ctxt (BBTy Ty)) (Δ : BBOut Ty) (α : Ty)
+| ret (v : Δ.Var α)
+| condbr (b : Δ.Var tyBool) -- make this a custom thing that is coercible to bool.
+      (bb₁ : bbΓ.Var σ)
+      (relabel₁ : σ.Γ.fromBBOut Δ)
+      (bb₂ : bbΓ.Var τ)
+      (relabel₂ : τ.Γ.fromBBOut Δ)
+
+end DataStructures
+
+structure SeaOfBBS (d : Dialect) [DialectSignature d] [TyDenoteBool d.Ty] (bbΓ : Ctxt ((BBTy d.Ty))) where
+  bbs : HVector (fun bbty => Lets d bbty.π  bbty.Γ bbty.Δ) bbΓ
+
+structure CFG (d : Dialect) [DialectSignature d] [TyDenoteBool d.Ty] (bbΓ : Ctxt (BBTy d.Ty)) (α : d.Ty)
+  extends SeaOfBBS d bbΓ where
+  terminators : HVector (fun bbTy => Ret bbΓ bbTy.Δ α) bbΓ
+end Pure
+
+/-
+Note that execution of a CFG executes basic blocks as well as control flow across
+basic blocks *backwards*. The execution of a basic block is recursively backwards,
+since it says:
+- to compute the value for a binding `v`, walk backwards and execute the previous `body`, and then evaluate `v`.
+- In exactly the same fashion, to compute the value for a terminator, walk backwards and execute the previous `body`, and then evaluate the terminator.
+-/
+
+
+/-
+First, recall that contexts form a category with (Γ Δ : Ctxt Ty) and Ctxt.Hom Γ Δ,
 where the morphisms are given by substitutions.
 -/
+
 /-
 Next, recall that dominance essentially says that "the same" variable must exist
 in ones predecessors. However, we are category theorists, and we know that
@@ -43,10 +226,101 @@ to variables in the predecessor BB.
 -/
 
 /-
+Even more morally, what we are actually building is a *sheaf*.
+We have local information, which is per basic block.
+We have a preorder, given by where control flows, (https://en.wikipedia.org/wiki/Category_of_preordered_sets).
+We are trying to glue the basic blocks together, according to the preorder relation.
+This gives us the full control flow graph.
+-/
+
+/-- A pullback of contexts. asserts-/
+structure Ctxt.pullback (Γ Δ : Ctxt Ty) where
+  base : Ctxt Ty
+  projΓ : Ctxt.Hom Γ base
+  projΔ : Ctxt.Hom Δ base
+  -- hproj : universal property of the pullback.
+  -- hprojΓ : ∀ {Γ' : Ctxt Ty} (f : Ctxt.Hom Γ' Γ) (f' : Ctxt.Hom Γ' base), f = f' ∘ projΓ
+
+/-
 Now that we have pullbacks, we define a full CFG, where we have basic blocks,
 with live-ins equal to the pullback of the predecessor blocks.
 We must, as usual, work upto iso to be good category theorists.
 -/
+
+inductive TerminatorKind where
+| ret /- return instruction -/
+
+inductive TerminatorVal : TerminatorKind → Type
+| ret (i : Int) : TerminatorVal .ret
+
+inductive Op
+| increment
+| const (i : Int)
+| ret
+| condbr
+
+inductive Ty
+| int : Ty
+| terminator (k : TerminatorKind) : Ty
+
+abbrev dialect : Dialect where
+ Op := Op
+ Ty := Ty
+
+def Op.signature : Op → Signature Ty
+| .increment => {
+    sig := [.int],
+    regSig := .nil,
+    outTy := .int
+  }
+| .const _x => {
+    sig := []
+    regSig := .nil,
+    outTy := .int
+  }
+| .ret => {
+    sig := [.int],
+    regSig := .nil,
+    outTy := .terminator .ret
+  }
+| .condbr => {
+    sig := [.int],
+    regSig := .nil,
+    outTy := .terminator .ret
+  }
+
+ instance : DialectSignature dialect where
+   signature := Op.signature
+
+instance : TyDenote Ty where
+   toType := fun
+    | .int => Int
+    | .terminator t => TerminatorVal t
+
+ instance : DialectSignature dialect where
+   signature := Op.signature
+
+instance : DialectDenote dialect where
+  denote := fun op args _ =>
+  match op with
+  | .increment =>
+    let l : Int := args.getN 0
+    l + 1
+  | .const i => i
+  | .terminator .ret => TerminatorVal.ret <| args.getN 0
+
+
+structure BBSig where
+  Γ : Ctxt Ty
+  Δ : Ctxt Ty
+
+abbrev BBWithRet (bbΓ : Ctxt BBSig) (sig : BBSig) : Type :=
+  FlatCom dialect sig.Γ .pure sig.Δ (Ty.terminator .ret)
+
+
+structure CFG where
+  bbΓ : Ctxt BBSig
+  bbs : HVector (BBWithRet bbΓ) bbΓ -- A collection of basic blocks, each of which have access to the full BB context.
 
 /-- The terminator instruction for a control flow graph. -/
 inductive CFGRet (t : Type) (d : Dialect) [DialectSignature d]
@@ -65,49 +339,8 @@ structure CFG {Ty : Type} (d : Dialect) [DialectSignature d]
     (bbTys : Ctxt ((Ctxt d.Ty) × (Ctxt d.Ty))) where
   blocks : HVector (fun bbTy => FlatCom d bbTy.1 .pure bbTy.2 ()) bbTys
 
-inductive Op
-| increment
-| const (i : Int)
-
-inductive Ty
--- | int (width : Nat) : Ty
-| int : Ty
 
 
-abbrev dialect : Dialect where
- Op := Op
- Ty := Ty
-
-def Op.signature : Op → Signature Ty
-| .increment => {
-    sig := [.int],
-    regSig := .nil,
-    outTy := .int
-  }
-| .const _x => {
-    sig := []
-    regSig := .nil,
-    outTy := .int
-  }
-
-
-instance : TyDenote Ty where
-   toType := fun
-    | .int => Int
-
- instance : DialectSignature dialect where
-   signature := Op.signature
-
-instance : DialectDenote dialect where
-  denote := fun op args _ =>
-  match op with
-  | .increment =>
-    let l : Int := args.getN 0
-    l + 1
-  | .const i => i
-
-abbrev Program (Γ Δ : Ctxt Ty) : Type := Lets dialect Γ .pure Δ
-abbrev ProgramWithRet (Γ Δ : Ctxt Ty) : Type := FlatCom dialect Γ .pure Δ Ty.int
 
 @[simp]
 theorem effectKind_const :
