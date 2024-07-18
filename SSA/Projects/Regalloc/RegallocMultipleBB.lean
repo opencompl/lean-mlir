@@ -51,6 +51,10 @@ inductive Term (Γ : Ctxt Ty) : Ty → Type where
 --     (∀i : Fin n, (G i).Wf (⟨R.get (i.cast hR.symm), ⊥⟩::Γ) (R ++ L)) →
 --     Wf Γ (cfg β n G) L
 
+def Term.evaluate [TyDenote Ty] {Γ : Ctxt Ty} {ty : Ty} (t : Term Γ ty) (VΓ : Ctxt.Valuation Γ) : toType ty :=
+  match t with
+  | var v => VΓ v
+
 -- def InS.br {Γ : Ctx α ε} {L : LCtx α} (ℓ) (a : Term.InS φ Γ ⟨A, ⊥⟩)
 --   (hℓ : L.Trg ℓ A) : InS φ Γ L
 --   := ⟨Region.br ℓ a, Wf.br hℓ a.2⟩
@@ -83,10 +87,10 @@ inductive Region [C : TyHasCoprod Ty] : (Γ : Ctxt Ty) → (L : Ctxt Ty) → Typ
     (G : R.Var α → Region (Γ.snoc α) D)
    : Region Γ L
 
-inductive InS [C : TyHasCoprod Ty] : (Γ : Ctxt Ty) → (L : Ctxt Ty) → Type
+inductive Region.Evaluated [C : TyHasCoprod Ty] [TyDenote Ty] :
+    (Γ : Ctxt Ty) → (VΓ : Ctxt.Valuation Γ) → (L : Ctxt Ty) → (R : Region Γ L) → (VL' : Ctxt.CoValuation L) → Prop
+| br :  Evaluated Γ VL L (Region.br a hl) (Ctxt.CoValuation.ofVar hl (a.evaluate VΓ))
 
-
-#print Region
 
 /- # Classes -/
 
