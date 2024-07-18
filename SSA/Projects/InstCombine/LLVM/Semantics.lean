@@ -236,11 +236,18 @@ theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
 def sdiv {w : Nat} (x y : IntW w) (params : SdivParams := {})  : IntW w := do
   let x' ← x
   let y' ← y
-  -- if (params.exact ∧  ¬ (x'.toNat ∣ y'.toNat)) then
-  --   .none
-  -- else
-  sdiv? x' y'
-
+  if (params.exact ∧  ¬ (x'.toNat ∣ y'.toNat)) then
+    .none
+  else
+    sdiv? x' y'
+@[simp, reducible]
+theorem sdiv_reduce (x y : IntW w) :  sdiv x y = match x , y with
+  | .none , _ => .none
+  | _ , .none => none
+  | .some a , .some b  => sdiv? a b := by
+  cases x
+  all_goals (cases y)
+  all_goals (try simp ; try rfl)
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 @[simp_llvm]
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :

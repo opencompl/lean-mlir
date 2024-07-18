@@ -230,6 +230,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp only [LLVM.add_reduce]
+  simp only [LLVM.sdiv_reduce]
   simp_alive_undef
   simp_alive_case_bash
   simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
