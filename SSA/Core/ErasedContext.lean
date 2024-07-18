@@ -444,6 +444,14 @@ def CoValuation.singleton (t : Ty) (v : toType t) : CoValuation [t] :=
 def CoValuation.ofVar {Γ : Ctxt Ty} (v : Γ.Var α) (a : toType α) : CoValuation Γ :=
   ⟨α, v, a⟩
 
+/-- transport/pullback a valuation along a context homomorphism. -/
+def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Hom Γi Γo) : Γo.CoValuation where
+  t := Γiv.t
+  var := hom Γiv.var
+  val := Γiv.val
+
+  -- fun _to vo => Γiv (hom vo)
+
 /-
 TODO: write helpers to coerce to a from a value of 'toType Γ.Var α'.
 We suspect that this will come up when reasoning about straight line code.
