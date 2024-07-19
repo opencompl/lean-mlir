@@ -1,0 +1,185 @@
+ℹ [767/768] Replayed SSA.Projects.DataTactics.alex
+info: ././././SSA/Projects/DataTactics/alex.lean:270:0: Lean.Elab.Term.BinderView : Type
+✖ [768/768] Building SSA.Projects.DataTactics.AliveStatements
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/LeanSAT/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/atticusk/.elan/toolchains/leanprover--lean4---nightly-2024-07-11/bin/lean ././././SSA/Projects/DataTactics/AliveStatements.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.olean -i ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.ilean -c ././.lake/build/ir/SSA/Projects/DataTactics/AliveStatements.c --json
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:21:2: x✝.or x✝¹.not is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:28:2: x✝.xor x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:35:2: Equality expected, found:
+some (x✝.add x✝) ⊑ if (1#w).toNat ≥ w then none else some (x✝ <<< 1#w)
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:37:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:44:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:52:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:59:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:71:2: x✝.or x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:78:2: x✝.and x✝¹ is not a ring-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:80:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:92:2: x✝¹.neg is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:99:2: x✝.xor x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:106:2: x✝.xor (-1) is not a ring-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:108:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:115:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:122:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:129:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:141:2: x✝.and x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:148:2: (x✝.and x✝²).xor (x✝¹.and x✝²) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:155:2: (x✝.or (x✝¹.and x✝²)).and x✝² is not a ring-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:157:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:175:2: BitVec.ofBool (x✝.and (x✝¹.or x✝²) == x✝¹.or x✝²) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:185:2: BitVec.ofBool (x✝.and (x✝¹.and x✝²) == x✝) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:194:2: BitVec.ofBool (x✝ >ₛ x✝¹) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:203:2: BitVec.ofBool (x✝.or x✝¹ == 0#w) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:211:2: (BitVec.ofBool (x✝ == x✝¹)).and (BitVec.ofBool (x✝ != x✝¹)) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:220:2: x✝ ||| x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:227:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:234:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:241:2: x✝ &&& -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:248:2: x✝ &&& x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:257:2: (x✝ ^^^ x✝¹) &&& -1#w - x✝² is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:264:2: x✝ &&& x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:273:2: BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:281:2: (BitVec.ofBool (x✝ ≥ᵤ x✝¹)).or (BitVec.ofBool (x✝ != x✝¹)) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:290:2: BitVec.ofBool (x✝.add (-1) ≥ᵤ x✝¹) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:299:2: BitVec.ofBool (x✝.add (-1) ≥ᵤ x✝¹) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:308:2: BitVec.ofBool (x✝.or x✝¹ != 0#w) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:315:2: (x✝.or x✝²).xor (x✝¹.and x✝².not) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:322:2: x✝ ||| x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:330:2: -1#w - x✝ ||| x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:337:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:345:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:352:2: (x✝.xor x✝¹).or x✝² is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:359:2: x✝.or (x✝².and x✝¹) is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:368:2: x✝ &&& x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:375:2: x✝.or x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:383:2: x✝ ||| -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:390:2: x✝.or x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:398:2: x✝ ||| -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:406:2: x✝ ||| -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:414:2: -1#w - x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:421:2: (x✝.or x✝²).or x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:430:2: x✝ ||| -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:439:2: x✝ &&& -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:448:2: -1#w - x✝ ||| -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:457:2: -1#w - x✝ &&& -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:464:2: Equality expected, found:
+(Option.bind (if w ≤ x✝¹.toNat then none else some ((-1#w - x✝).sshiftRight x✝¹.toNat)) fun a => some (-1#w - a)) ⊑
+  if w ≤ x✝¹.toNat then none else some (x✝.sshiftRight x✝¹.toNat)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:472:2: BitVec.ofBool (x✝ ≥ₛ x✝¹) is not a ring-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:474:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:481:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:493:2: x✝ &&& -1#w - x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:500:2: -1#w - x✝ &&& x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:507:2: x✝.xor x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:515:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:524:2: x✝ ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:532:2: -1#w - x✝ &&& x✝² ^^^ x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:539:2: x✝.or x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:548:2: x✝ &&& x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:557:2: BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a ring-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:559:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:566:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:573:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:585:2: Equality expected, found:
+(Option.bind
+    (match x✝¹.toNat with
+    | 0 => none
+    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
+    fun x' => some (x'.mul x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun y' => some (x✝.sub y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:592:2: Equality expected, found:
+(Option.bind (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))
+    fun x' => some (x'.mul x✝¹)) ⊑
+  (Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun y' => some (x✝.sub y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:599:2: Equality expected, found:
+(Option.bind (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))
+    fun x' => some (x'.mul ((0#5).sub x✝¹))) ⊑
+  (Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun a => some (a.sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:606:2: Equality expected, found:
+(Option.bind
+    (match x✝¹.toNat with
+    | 0 => none
+    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
+    fun x' => some (x'.mul ((0#5).sub x✝¹))) ⊑
+  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun a => some (a.sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:613:2: x✝.and x✝¹ is not a ring-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:620:2: Equality expected, found:
+(Option.bind (if x✝.toNat ≥ w then none else some (1#w <<< x✝)) fun x' => some (x'.mul x✝¹)) ⊑
+  if x✝.toNat ≥ w then none else some (x✝¹ <<< x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:627:2: Equality expected, found:
+((Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 9 != 1 && x✝ == LLVM.intMin 9 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun x =>
+    if (x✝¹ == 0 || 9 != 1 && x✝.sub x == LLVM.intMin 9 && x✝¹ == -1) = true then none
+    else some ((x✝.sub x).sdiv x✝¹)) ⊑
+  if (x✝¹ == 0 || 9 != 1 && x✝ == LLVM.intMin 9 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:634:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 9 (x✝.toNat % x✝¹.toNat))) fun x =>
+    match x✝¹.toNat with
+    | 0 => none
+    | x_1 => some (BitVec.ofInt 9 (↑(x✝.sub x).toNat / ↑x✝¹.toNat))) ⊑
+  match x✝¹.toNat with
+  | 0 => none
+  | x => some (BitVec.ofInt 9 (↑x✝.toNat / ↑x✝¹.toNat))
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:641:2: Equality expected, found:
+(if (-1 == 0 || w != 1 && x✝ == LLVM.intMin w && -1 == -1) = true then none else some (x✝.sdiv (-1))) ⊑
+  some ((0#w).sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some (x✝.xor (-1))
+  | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
+  none
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some (x✝.xor (-1))
+  | some { toFin := ⟨0, ⋯⟩ } => some x✝¹) ⊑
+  some ((x✝.xor (-1)).and x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => none
+  | some { toFin := ⟨0, ⋯⟩ } => some (x✝.xor (-1))) ⊑
+  none
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+  | some { toFin := ⟨0, ⋯⟩ } => some (x✝.xor (-1))) ⊑
+  some ((x✝.xor (-1)).or x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:678:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ <<< x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' >>> x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) >>> x✝¹)) fun y' => some (x✝.and y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:685:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ >>> x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' <<< x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) <<< x✝¹)) fun y' => some (x✝.and y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:694:2: Equality expected, found:
+(Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ >>> x✝²)) fun a =>
+    if x✝².toNat ≥ w then none else some (x✝.xor (a.and x✝³) <<< x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝³ <<< x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝ <<< x✝²)) fun y' => some ((x✝¹.and a).xor y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:703:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ >>> x✝¹)) fun a =>
+    if x✝¹.toNat ≥ w then none else some ((a.and x✝²).or x✝³ <<< x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some (x✝² <<< x✝¹)) fun a =>
+    Option.bind (if x✝¹.toNat ≥ w then none else some (x✝³ <<< x✝¹)) fun y' => some ((x✝.and a).or y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:710:2: Equality expected, found:
+(if x✝².toNat ≥ w then none else some (x✝.xor x✝¹ >>> x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝ >>> x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ >>> x✝²)) fun y' => some (a.xor y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:717:2: Equality expected, found:
+(if x✝².toNat ≥ w then none else some (x✝.add x✝¹ <<< x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝ <<< x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ <<< x✝²)) fun y' => some (a.add y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:724:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ <<< x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' >>> x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) >>> x✝¹)) fun y' => some (x✝.and y')
+error: Lean exited with code 1
+Some builds logged failures:
+- SSA.Projects.DataTactics.AliveStatements

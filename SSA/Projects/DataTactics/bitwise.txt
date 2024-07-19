@@ -1,0 +1,186 @@
+ℹ [767/768] Replayed SSA.Projects.DataTactics.alex
+info: ././././SSA/Projects/DataTactics/alex.lean:304:0: Lean.Elab.Term.BinderView : Type
+✖ [768/768] Building SSA.Projects.DataTactics.AliveStatements
+trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/LeanSAT/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/atticusk/.elan/toolchains/leanprover--lean4---nightly-2024-07-11/bin/lean ././././SSA/Projects/DataTactics/AliveStatements.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.olean -i ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.ilean -c ././.lake/build/ir/SSA/Projects/DataTactics/AliveStatements.c --json
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:21:2: x✝².sub (x✝.or x✝¹.not) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:28:2: x✝.add x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:35:2: Equality expected, found:
+some (x✝.add x✝) ⊑ if (1#w).toNat ≥ w then none else some (x✝ <<< 1#w)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:42:2: x✝¹.sub x✝ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:50:2: (0#w).sub (x✝.add x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:57:2: x✝.sub x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:64:2: (x✝¹.sub 1#w).sub x✝ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:71:2: (x✝.and x✝¹).add (x✝.xor x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:78:2: x✝.add x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:85:2: x✝.add x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:92:2: x✝.add x✝¹.neg is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:99:2: x✝.sub x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:106:2: (-1).sub x✝ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:113:2: x✝¹.add (x✝.add 1#w) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:120:2: (x✝.sub x✝²).sub x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:127:2: (0#w).sub x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:134:2: (0#w).sub x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:141:2: (x✝.or x✝¹).sub (x✝.xor x✝¹) is not a bitwise-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:143:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:150:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:157:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:175:2: BitVec.ofBool (x✝.and (x✝¹.or x✝²) == x✝¹.or x✝²) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:185:2: BitVec.ofBool (x✝.and (x✝¹.and x✝²) == x✝) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:194:2: BitVec.ofBool (x✝ >ₛ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:203:2: BitVec.ofBool (x✝.or x✝¹ == 0#w) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:211:2: BitVec.ofBool (x✝ == x✝¹) is not a bitwise-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:213:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:222:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:229:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:236:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:243:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:250:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:259:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:273:2: BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:281:2: BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:290:2: BitVec.ofBool (x✝.add (-1) ≥ᵤ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:299:2: BitVec.ofBool (x✝.add (-1) ≥ᵤ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:308:2: BitVec.ofBool (x✝.or x✝¹ != 0#w) is not a bitwise-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:310:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:317:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:324:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:332:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:339:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:347:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:354:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:361:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:370:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:377:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:385:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:392:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:400:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:408:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:416:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:423:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:432:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:441:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:450:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:464:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some ((x✝.xor (-1)).sshiftRight x✝¹.toNat)) fun x' =>
+    some (x'.xor (-1))) ⊑
+  if x✝¹.toNat ≥ w then none else some (x✝.sshiftRight x✝¹.toNat)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:472:2: BitVec.ofBool (x✝ ≥ₛ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:479:2: x✝¹.add ((-1).sub x✝) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:486:2: ((-1).sub x✝¹).sub x✝ is not a bitwise-only bitvector expression
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:488:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:495:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:502:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:509:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:517:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:526:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:534:8: declaration uses 'sorry'
+warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:541:8: declaration uses 'sorry'
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:557:2: BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:564:2: (0#w).sub x✝ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:571:2: (x✝.mul x✝²).add (x✝¹.mul x✝²) is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:578:2: x✝.mul x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:585:2: Equality expected, found:
+(Option.bind
+    (match x✝¹.toNat with
+    | 0 => none
+    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
+    fun x' => some (x'.mul x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun y' => some (x✝.sub y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:592:2: Equality expected, found:
+(Option.bind (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))
+    fun x' => some (x'.mul x✝¹)) ⊑
+  (Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun y' => some (x✝.sub y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:599:2: Equality expected, found:
+(Option.bind (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))
+    fun x' => some (x'.mul ((0#5).sub x✝¹))) ⊑
+  (Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 5 != 1 && x✝ == LLVM.intMin 5 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun a => some (a.sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:606:2: Equality expected, found:
+(Option.bind
+    (match x✝¹.toNat with
+    | 0 => none
+    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
+    fun x' => some (x'.mul ((0#5).sub x✝¹))) ⊑
+  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun a => some (a.sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:613:2: x✝.mul x✝¹ is not a bitwise-only bitvector expression
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:620:2: Equality expected, found:
+(Option.bind (if x✝.toNat ≥ w then none else some (1#w <<< x✝)) fun x' => some (x'.mul x✝¹)) ⊑
+  if x✝.toNat ≥ w then none else some (x✝¹ <<< x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:627:2: Equality expected, found:
+((Option.map (fun div => x✝ - div * x✝¹)
+        (if (x✝¹ == 0 || 9 != 1 && x✝ == LLVM.intMin 9 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹))).bind
+    fun x =>
+    if (x✝¹ == 0 || 9 != 1 && x✝.sub x == LLVM.intMin 9 && x✝¹ == -1) = true then none
+    else some ((x✝.sub x).sdiv x✝¹)) ⊑
+  if (x✝¹ == 0 || 9 != 1 && x✝ == LLVM.intMin 9 && x✝¹ == -1) = true then none else some (x✝.sdiv x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:634:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 9 (x✝.toNat % x✝¹.toNat))) fun x =>
+    match x✝¹.toNat with
+    | 0 => none
+    | x_1 => some (BitVec.ofInt 9 (↑(x✝.sub x).toNat / ↑x✝¹.toNat))) ⊑
+  match x✝¹.toNat with
+  | 0 => none
+  | x => some (BitVec.ofInt 9 (↑x✝.toNat / ↑x✝¹.toNat))
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:641:2: Equality expected, found:
+(if (-1 == 0 || w != 1 && x✝ == LLVM.intMin w && -1 == -1) = true then none else some (x✝.sdiv (-1))) ⊑
+  some ((0#w).sub x✝)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some (x✝.xor (-1))
+  | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
+  none
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some (x✝.xor (-1))
+  | some { toFin := ⟨0, ⋯⟩ } => some x✝¹) ⊑
+  some ((x✝.xor (-1)).and x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => none
+  | some { toFin := ⟨0, ⋯⟩ } => some (x✝.xor (-1))) ⊑
+  none
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
+(match some x✝ with
+  | none => none
+  | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
+  | some { toFin := ⟨0, ⋯⟩ } => some (x✝.xor (-1))) ⊑
+  some ((x✝.xor (-1)).or x✝¹)
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:678:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ <<< x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' >>> x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) >>> x✝¹)) fun y' => some (x✝.and y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:685:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ >>> x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' <<< x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) <<< x✝¹)) fun y' => some (x✝.and y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:694:2: Equality expected, found:
+(Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ >>> x✝²)) fun a =>
+    if x✝².toNat ≥ w then none else some (x✝.xor (a.and x✝³) <<< x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝³ <<< x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝ <<< x✝²)) fun y' => some ((x✝¹.and a).xor y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:703:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ >>> x✝¹)) fun a =>
+    if x✝¹.toNat ≥ w then none else some ((a.and x✝²).or x✝³ <<< x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some (x✝² <<< x✝¹)) fun a =>
+    Option.bind (if x✝¹.toNat ≥ w then none else some (x✝³ <<< x✝¹)) fun y' => some ((x✝.and a).or y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:710:2: Equality expected, found:
+(if x✝².toNat ≥ w then none else some (x✝.xor x✝¹ >>> x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝ >>> x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ >>> x✝²)) fun y' => some (a.xor y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:717:2: Equality expected, found:
+(if x✝².toNat ≥ w then none else some (x✝.add x✝¹ <<< x✝²)) ⊑
+  Option.bind (if x✝².toNat ≥ w then none else some (x✝ <<< x✝²)) fun a =>
+    Option.bind (if x✝².toNat ≥ w then none else some (x✝¹ <<< x✝²)) fun y' => some (a.add y')
+error: ././././SSA/Projects/DataTactics/AliveStatements.lean:724:2: Equality expected, found:
+(Option.bind (if x✝¹.toNat ≥ w then none else some (x✝ <<< x✝¹)) fun x' =>
+    if x✝¹.toNat ≥ w then none else some (x' >>> x✝¹)) ⊑
+  Option.bind (if x✝¹.toNat ≥ w then none else some ((-1) >>> x✝¹)) fun y' => some (x✝.and y')
+error: Lean exited with code 1
+Some builds logged failures:
+- SSA.Projects.DataTactics.AliveStatements
