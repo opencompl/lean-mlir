@@ -82,6 +82,8 @@ theorem Bisim.symm {a b} : a ~ b → b ~ a := by
   have ⟨n, m, R_drop, get_eq, h_n, h_m⟩ := h_R_isBisim _ _ h_Rxy
   exact ⟨m, n, R_drop, get_eq.symm, h_m, h_n⟩
 
+theorem Bisim.trans {a b} : a ~ b → b ~ c → a ~ c := by sorry
+
 theorem bisim_tail_of_head_eq_none {a : Stream} (h : a.head = none) :
     a ~ a.tail := by
   apply Bisim.fold
@@ -342,7 +344,7 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
       specialize @x_ih xn (by omega) (x.drop (n+1)) (y.drop (m+1)) h_drop ?_ ?_ ?_ ?_
       · sorry
       · sorry
-      · intros i hi; apply x_spec₂; omega
+      · intros i hi; apply x_spec₂; sorry
       stop
       apply x_ih
     · sorry
@@ -367,17 +369,37 @@ theorem removeNone_eq_of_equiv {x y : Stream} (h_sim : x ~ y) :
   · have : b ≠ stuck := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
     simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
 
-def StreamWithoutNones : Type :=
+def StreamWithoutNones' : Type :=
   Quot Bisim
+
+instance StreamSetoid : Setoid Stream where
+  r := Bisim
+  iseqv := Equivalence.mk @Bisim.rfl Bisim.symm Bisim.trans
+
+def StreamWithoutNones : Type :=
+  Quotient StreamSetoid
 
 #print axioms StreamWithoutNones
 
-def remNone (lst : Stream) : StreamWithoutNones := Quot.mk _ lst
+def remNone (lst : Stream) : StreamWithoutNones := Quotient.mk _ lst
 
 def StreamWithoutNones.hasStream (x : StreamWithoutNones) : Set Stream :=
-  { y | x = Quot.mk _ y }
+  { y | x = Quotient.mk _ y }
 
+-- A determinate component 
 def nondeterminify (f : Stream → Stream) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
-  Quot.lift (fun (a : Stream) =>
-    ({ b | _ } : Set StreamWithoutNones)
-  ) (by sorry) x
+  -- Quotient.lift (fun (a : Stream) =>
+  --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
+  -- ) (by sorry) x
+  { Quotient.mk _ (f y) | y ∈ StreamWithoutNones.hasStream x }
+
+#print nondeterminify
+
+def nondeterminify2 (f : Stream → Stream → Stream) (x : StreamWithoutNones × StreamWithoutNones) : Set (StreamWithoutNones) :=
+  -- Quotient.lift (fun (a : Stream) =>
+  --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
+  -- ) (by sorry) x
+  { x1 | ∃ y1 y2, (y1 ∈ StreamWithoutNones.hasStream x.fst) 
+                  ∧ (y2 ∈ StreamWithoutNones.hasStream x.snd) 
+                  ∧ Quotient.mk _ (f y1 y2) = x1 }
+

@@ -12,7 +12,7 @@ We model this as the `DC.Stream` type
 
 -/
 
-def Message := Bool
+abbrev Message := Bool
 
 def Val := Option Message
 

@@ -1,6 +1,8 @@
 import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.DC.Stream
+import SSA.Projects.CIRCT.DC.Stream.WeakBisim
+import SSA.Core.Tactic
 
 /-!
 -- rationale: we allow local nondeterminism
@@ -324,4 +326,31 @@ def test : Stream :=
 def remNone (lst : List Val) : List Val :=
   lst.filter (fun | some x => true
                   | none => false)
+
+theorem equiv_arg1 (x1Stream x2Stream : Stream) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
+  simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
+  let v : Valuation [Ty.Stream, Ty.Stream] := Valuation.ofPair x1Stream x2Stream
+  simp_peephole at v
+  
+
+theorem determinate : 
+  Set.Subsingleton (DC.Stream.nondeterminify2 (fun s1 s2 => BranchEg1.denote (Valuation.ofPair s1 s2)) (s1', s2')) := by
+  intro x Hx y  Hy
+  simp [Stream.nondeterminify2, Stream.StreamWithoutNones.hasStream] at *
+  rcases Hx with ⟨ x1Stream, x1, x2Stream, x2, rfl ⟩
+  rcases Hy with ⟨ y1Stream, y1, y2Stream, y2, rfl ⟩
+  apply Quotient.sound
+  -- simp [BranchEg1]
+  -- simp [Stream.Bisim, Stream.IsBisim]
+  subst s2'; subst s1'
+  have y1' := Quotient.exact y1
+  have y2' := Quotient.exact y2
+  clear y1; clear y2
+  rcases y1' with ⟨ Ry1, HRy1, HBisimy1 ⟩
+  unfold Stream.IsBisim at HBisimy1
+  rcases y2' with ⟨ Ry2, HRy2, HBisimy2 ⟩
+  unfold Stream.IsBisim at HBisimy2
+  refine ⟨ Ry1, ?_, HBisimy1 ⟩
+  
+
 end Examples
