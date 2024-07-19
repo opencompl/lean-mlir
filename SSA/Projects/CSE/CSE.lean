@@ -484,3 +484,5 @@ info: {
 end Examples
 
 end CSE
+
+end DecEqCom

@@ -88,3 +88,5 @@ instance : CommRing (BitVec w) :=
   toFin_injective.commRing _
     toFin_zero toFin_one toFin_add toFin_mul toFin_neg toFin_sub
     toFin_nsmul toFin_zsmul toFin_pow toFin_natCast toFin_intCast
+
+end BitVec

@@ -35,3 +35,7 @@ theorem Expr.WellTyped_of_substitute {e : UnTyped.Expr Op VarName}
   · aesop
 
 end
+
+end SimplyTyped
+
+end MLIR

@@ -175,3 +175,9 @@ def Lets.recOn {Γ_out} {motive : ∀ {Γ_in}, Lets Op Γ_in Γ_out → Sort u}
       cast (by rfl) <| lete e lets
       --    ^^^^^^ the cast seems redundant, but Lean gives a type-error without it
       --           Similarly, term-mode `rfl` doesn't work, the `by` is needed
+
+end
+
+end SimplyTyped
+
+end MLIR
