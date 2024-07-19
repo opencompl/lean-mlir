@@ -331,6 +331,8 @@ theorem equiv_arg1 (x1Stream x2Stream : Stream) : x1Stream ≈ BranchEg1.denote 
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
   let v : Valuation [Ty.Stream, Ty.Stream] := Valuation.ofPair x1Stream x2Stream
   simp_peephole at v
+  unfold Stream.branch
+  unfold Stream.merge
   
 
 theorem determinate : 
@@ -346,11 +348,10 @@ theorem determinate :
   have y1' := Quotient.exact y1
   have y2' := Quotient.exact y2
   clear y1; clear y2
-  rcases y1' with ⟨ Ry1, HRy1, HBisimy1 ⟩
-  unfold Stream.IsBisim at HBisimy1
-  rcases y2' with ⟨ Ry2, HRy2, HBisimy2 ⟩
-  unfold Stream.IsBisim at HBisimy2
-  refine ⟨ Ry1, ?_, HBisimy1 ⟩
-  
+  trans x1Stream
+  apply (equiv_arg1 _ _).symm
+  trans y1Stream
+  · assumption
+  · apply equiv_arg1
 
 end Examples

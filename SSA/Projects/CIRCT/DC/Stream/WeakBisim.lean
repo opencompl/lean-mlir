@@ -75,7 +75,7 @@ theorem isBisim_eq : IsBisim (· = ·) := by
 theorem Bisim.rfl {a} : a ~ a := by
   exact ⟨(· = ·), by rfl, isBisim_eq⟩
 
-theorem Bisim.symm {a b} : a ~ b → b ~ a := by
+@[symm] theorem Bisim.symm {a b} : a ~ b → b ~ a := by
   rintro ⟨R, h_R, h_R_isBisim⟩
   refine ⟨fun x y => R y x, h_R, ?_⟩
   intro x y h_Rxy
