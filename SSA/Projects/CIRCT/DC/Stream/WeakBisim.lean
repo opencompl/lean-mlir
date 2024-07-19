@@ -372,8 +372,10 @@ def StreamWithoutNones : Type :=
 
 #print axioms StreamWithoutNones
 
+def remNone (lst : Stream) : StreamWithoutNones := Quot.mk _ lst
+
 def StreamWithoutNones.hasStream (x : StreamWithoutNones) : Set Stream :=
-  { y | sorry }
+  { y | x = Quot.mk _ y }
 
 def nondeterminify (f : Stream → Stream) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
   Quot.lift (fun (a : Stream) =>
