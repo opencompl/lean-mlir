@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Nat.Bitwise
-import Mathlib.Algebra.Group.Fin
+import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Nat.Bits
 import Mathlib.Data.ZMod.Defs
 import Batteries.Data.BitVec
