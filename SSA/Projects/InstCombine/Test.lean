@@ -16,8 +16,8 @@ def add_mask : Op 0 := [mlir_op|
   "module"() ( {
   "llvm.func"() ( {
   ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 8 : i32
-    %1 = llvm.mlir.constant 31 : i32
+    %0 = llvm.mlir.constant(8) : i32
+    %1 = llvm.mlir.constant(31) : i32
     %2 = llvm.ashr %arg0, %1 : i32
     %3 = llvm.and %2, %0 : i32
     %4 = llvm.add %3, %2 : i32
@@ -25,8 +25,8 @@ def add_mask : Op 0 := [mlir_op|
   })  : () -> ()
   "llvm.func"() ( {
   ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 8 : i32
-    %1 = llvm.mlir.constant 31 : i32
+    %0 = llvm.mlir.constant(8) : i32
+    %1 = llvm.mlir.constant(31) : i32
     %2 = llvm.ashr %arg0, %1 : i32
     %3 = llvm.and %2, %0 : i32
     %4 = llvm.add %2, %3 : i32
@@ -38,8 +38,8 @@ def add_mask : Op 0 := [mlir_op|
 def bb0 : Region 0 := [mlir_region|
 {
   ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 8 : i32
-    %1 = llvm.mlir.constant 31 : i32
+    %0 = llvm.mlir.constant(8) : i32
+    %1 = llvm.mlir.constant(31) : i32
     %2 = llvm.ashr %arg0, %1 : i32
     %3 = llvm.and %2, %0 : i32
     %4 = llvm.add %3, %2 : i32
@@ -76,8 +76,8 @@ open InstcombineTransformDialect
 def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   Ctxt.ofList <| .replicate n (.bitvec 32)
 
-def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant 8 : i32]
-def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant 31 : i32]
+def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant(8) : i32]
+def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant(31) : i32]
 def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32]
 def op3 : Op 0 := [mlir_op| %3 = llvm.and %2, %0 : i32]
 def op4 : Op 0 := [mlir_op| %4 = llvm.add %3, %2 : i32]
@@ -129,8 +129,8 @@ info: Except.ok ⟨EffectKind.pure, ⟨i32, {
 #guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
 
 def ops : List (Op 0) := [mlir_ops|
-    %0 = llvm.mlir.constant 8 : i32
-    %1 = llvm.mlir.constant 31 : i32
+    %0 = llvm.mlir.constant(8) : i32
+    %1 = llvm.mlir.constant(31) : i32
     %2 = llvm.ashr %arg0, %1 : i32
     %3 = llvm.and %2, %0 : i32
     %4 = llvm.add %3, %2 : i32
@@ -204,8 +204,8 @@ theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 def bb0IcomConcrete := [llvm ()|
 {
   ^bb0(%arg0: i32):
-    %0 = llvm.mlir.constant 1 : i32
-    %1 = llvm.mlir.constant 31 : i32
+    %0 = llvm.mlir.constant(1) : i32
+    %1 = llvm.mlir.constant(31) : i32
     %2 = llvm.ashr %arg0, %1 : i32
     %3 = llvm.and %2, %0 : i32
     %4 = llvm.add %3, %2 : i32
@@ -216,15 +216,15 @@ def bb0IcomConcrete := [llvm ()|
 def GenericWidth (w : Nat) := [llvm (w)|
 {
   ^bb0():
-    %0 = llvm.mlir.constant 0
+    %0 = llvm.mlir.constant(0) : _
     llvm.return %0
   }]
 
 def bb0IcomGeneric (w : Nat) := [llvm (w)|
 {
   ^bb0(%arg0: _):
-    %0 = llvm.mlir.constant 1
-    %1 = llvm.mlir.constant 31
+    %0 = llvm.mlir.constant(1) : _
+    %1 = llvm.mlir.constant(31) : _
     %2 = llvm.ashr %arg0, %1
     %3 = llvm.and %2, %0
     %4 = llvm.add %3, %2
@@ -473,11 +473,11 @@ def two_ne_macro_proof (w : Nat) :
 def constant_macro (w : Nat) :=
   [llvm (w)|{
   ^bb0():
-    %0 = llvm.mlir.constant 2
-    %1 = llvm.mlir.constant 1
-    %2 = llvm.mlir.constant 0
-    %3 = llvm.mlir.constant -1
-    %4 = llvm.mlir.constant -2
+    %0 = llvm.mlir.constant(2) : _
+    %1 = llvm.mlir.constant(1) : _
+    %2 = llvm.mlir.constant(0) : _
+    %3 = llvm.mlir.constant(-1) : _
+    %4 = llvm.mlir.constant(-2) : _
     %5 = llvm.add %0, %1
     %6 = llvm.add %5, %2
     %7 = llvm.add %6, %3

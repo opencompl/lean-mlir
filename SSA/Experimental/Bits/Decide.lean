@@ -39,6 +39,12 @@ def decide (t₁ t₂ : Term) : Bool :=
 def x := Term.var 0
 def y := Term.var 1
 
+example : ((and x y) + (or x y)).eval = (x + y).eval := by
+  native_decide
+
+example : ((or x y) - (xor x y)).eval = (and x y).eval := by
+  native_decide
+
 -- Checking if the operations satisfy the defining identities
 
 /-- info: true -/

@@ -1,76 +1,50 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %3 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %4 = "llvm.alloca"(%3) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %5 = "llvm.getelementptr"(%4, %2, %2) : (!llvm.ptr<array<7 x i8>>, i64, i64) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %5, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    %3 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %4 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %5 = "llvm.alloca"(%4) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %6 = "llvm.getelementptr"(%5, %3, %3) : (!llvm.ptr<array<7 x i8>>, i64, i64) -> !llvm.ptr<i8>
-    "llvm.store"(%2, %6) : (i8, !llvm.ptr<i8>) -> ()
-    "llvm.call"(%arg0, %6, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test2", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = true} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %3 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %4 = "llvm.alloca"(%3) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %5 = "llvm.getelementptr"(%4, %2, %2) : (!llvm.ptr<array<7 x i8>>, i64, i64) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %5, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %3 = "llvm.alloca"(%2) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %4 = "llvm.bitcast"(%3) : (!llvm.ptr<array<7 x i8>>) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %4, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test4", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 3 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %3 = "llvm.alloca"(%2) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %4 = "llvm.bitcast"(%3) : (!llvm.ptr<array<7 x i8>>) -> !llvm.ptr<i32>
-    %5 = "llvm.getelementptr"(%4, %2) : (!llvm.ptr<i32>, i32) -> !llvm.ptr<i32>
-    %6 = "llvm.bitcast"(%5) : (!llvm.ptr<i32>) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %6, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test5", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 7 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 42 : i16} : () -> i16
-    %3 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %4 = "llvm.alloca"(%3) : (i32) -> !llvm.ptr<array<7 x i8>>
-    %5 = "llvm.bitcast"(%4) : (!llvm.ptr<array<7 x i8>>) -> !llvm.ptr<i16>
-    %6 = "llvm.getelementptr"(%5, %3) : (!llvm.ptr<i16>, i32) -> !llvm.ptr<i16>
-    "llvm.store"(%2, %6) : (i16, !llvm.ptr<i16>) -> ()
-    %7 = "llvm.bitcast"(%6) : (!llvm.ptr<i16>) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %7, %1, %0) {callee = @llvm.memcpy.p0i8.p0i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i64, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test6", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.memcpy.p0i8.p0i8.i64", type = !llvm.func<void (ptr<i8>, ptr<i8>, i64, i1)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @test(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(7 : i64) : i64
+    %2 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%arg0, %2, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+  llvm.func @test2(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(0 : i8) : i8
+    %2 = llvm.mlir.constant(7 : i64) : i64
+    %3 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %3 {alignment = 1 : i64} : i8, !llvm.ptr
+    "llvm.intr.memcpy"(%arg0, %3, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+  llvm.func @test3(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(7 : i64) : i64
+    %2 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%arg0, %2, %1) <{isVolatile = true}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+  llvm.func @test4(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(7 : i64) : i64
+    %2 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    "llvm.intr.memcpy"(%arg0, %2, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+  llvm.func @test5(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(3 : i64) : i64
+    %2 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    %3 = llvm.getelementptr %2[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i32
+    "llvm.intr.memcpy"(%arg0, %3, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+  llvm.func @test6(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(42 : i16) : i16
+    %2 = llvm.mlir.constant(7 : i64) : i64
+    %3 = llvm.alloca %0 x !llvm.array<7 x i8> {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    %4 = llvm.getelementptr %3[%0] : (!llvm.ptr, i32) -> !llvm.ptr, i16
+    llvm.store %1, %4 {alignment = 2 : i64} : i16, !llvm.ptr
+    "llvm.intr.memcpy"(%arg0, %4, %2) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i64) -> ()
+    llvm.return
+  }
+}

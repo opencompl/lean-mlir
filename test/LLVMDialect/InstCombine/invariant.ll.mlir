@@ -1,32 +1,22 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "g", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "g_addr1", type = !llvm.func<void (ptr<i8, 1>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.invariant.start.p0i8", type = !llvm.func<ptr<struct<()>> (i64, ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.invariant.start.p1i8", type = !llvm.func<ptr<struct<()>> (i64, ptr<i8, 1>)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 1 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    %2 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %3 = "llvm.alloca"(%2) : (i32) -> !llvm.ptr<i8>
-    "llvm.store"(%1, %3) : (i8, !llvm.ptr<i8>) -> ()
-    %4 = "llvm.call"(%0, %3) {callee = @llvm.invariant.start.p0i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8>) -> !llvm.ptr<struct<()>>
-    "llvm.call"(%3) {callee = @g, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    %5 = "llvm.load"(%3) : (!llvm.ptr<i8>) -> i8
-    "llvm.return"(%5) : (i8) -> ()
-  }) {linkage = 10 : i64, sym_name = "f", type = !llvm.func<i8 ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8, 1>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    "llvm.store"(%1, %arg0) : (i8, !llvm.ptr<i8, 1>) -> ()
-    %2 = "llvm.call"(%0, %arg0) {callee = @llvm.invariant.start.p1i8, fastmathFlags = #llvm.fastmath<>} : (i64, !llvm.ptr<i8, 1>) -> !llvm.ptr<struct<()>>
-    "llvm.call"(%arg0) {callee = @g_addr1, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8, 1>) -> ()
-    %3 = "llvm.load"(%arg0) : (!llvm.ptr<i8, 1>) -> i8
-    "llvm.return"(%3) : (i8) -> ()
-  }) {linkage = 10 : i64, sym_name = "f_addrspace1", type = !llvm.func<i8 (ptr<i8, 1>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @g(!llvm.ptr)
+  llvm.func @g_addr1(!llvm.ptr<1>)
+  llvm.func @f() -> i8 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(0 : i8) : i8
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 1 : i64} : i8, !llvm.ptr
+    %3 = llvm.intr.invariant.start 1, %2 : !llvm.ptr
+    llvm.call @g(%2) : (!llvm.ptr) -> ()
+    %4 = llvm.load %2 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.return %4 : i8
+  }
+  llvm.func @f_addrspace1(%arg0: !llvm.ptr<1>) -> i8 {
+    %0 = llvm.mlir.constant(0 : i8) : i8
+    llvm.store %0, %arg0 {alignment = 1 : i64} : i8, !llvm.ptr<1>
+    %1 = llvm.intr.invariant.start 1, %arg0 : !llvm.ptr<1>
+    llvm.call @g_addr1(%arg0) : (!llvm.ptr<1>) -> ()
+    %2 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr<1> -> i8
+    llvm.return %2 : i8
+  }
+}

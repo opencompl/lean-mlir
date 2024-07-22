@@ -1,45 +1,32 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<i64>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<i64>) -> i64
-    %2 = "llvm.inttoptr"(%1) : (i64) -> !llvm.ptr<i64>
-    "llvm.return"(%2) : (!llvm.ptr<i64>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test1", type = !llvm.func<ptr<i64> (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<i32>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<i32>) -> i32
-    %2 = "llvm.inttoptr"(%1) : (i32) -> !llvm.ptr<i32>
-    "llvm.return"(%2) : (!llvm.ptr<i32>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test2", type = !llvm.func<ptr<i32> (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<i32>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<i32>) -> i32
-    %2 = "llvm.inttoptr"(%1) : (i32) -> !llvm.ptr<i64>
-    "llvm.return"(%2) : (!llvm.ptr<i64>) -> ()
-  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<ptr<i64> (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i64>>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<ptr<i64>>) -> !llvm.ptr<i64>
-    %2 = "llvm.ptrtoint"(%1) : (!llvm.ptr<i64>) -> i64
-    "llvm.return"(%2) : (i64) -> ()
-  }) {linkage = 10 : i64, sym_name = "test4", type = !llvm.func<i64 (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i32>>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<ptr<i32>>) -> !llvm.ptr<i32>
-    %2 = "llvm.ptrtoint"(%1) : (!llvm.ptr<i32>) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test5", type = !llvm.func<i32 (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i32>>
-    %1 = "llvm.load"(%0) : (!llvm.ptr<ptr<i32>>) -> !llvm.ptr<i32>
-    %2 = "llvm.ptrtoint"(%1) : (!llvm.ptr<i32>) -> i64
-    "llvm.return"(%2) : (i64) -> ()
-  }) {linkage = 10 : i64, sym_name = "test6", type = !llvm.func<i64 (ptr<i8>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @test1(%arg0: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i64
+    %1 = llvm.inttoptr %0 : i64 to !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test2(%arg0: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.inttoptr %0 : i32 to !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test3(%arg0: !llvm.ptr) -> !llvm.ptr {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %1 = llvm.inttoptr %0 : i32 to !llvm.ptr
+    llvm.return %1 : !llvm.ptr
+  }
+  llvm.func @test4(%arg0: !llvm.ptr) -> i64 {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %1 = llvm.ptrtoint %0 : !llvm.ptr to i64
+    llvm.return %1 : i64
+  }
+  llvm.func @test5(%arg0: !llvm.ptr) -> i32 {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %1 = llvm.ptrtoint %0 : !llvm.ptr to i32
+    llvm.return %1 : i32
+  }
+  llvm.func @test6(%arg0: !llvm.ptr) -> i64 {
+    %0 = llvm.load %arg0 {alignment = 4 : i64} : !llvm.ptr -> !llvm.ptr
+    %1 = llvm.ptrtoint %0 : !llvm.ptr to i64
+    llvm.return %1 : i64
+  }
+}

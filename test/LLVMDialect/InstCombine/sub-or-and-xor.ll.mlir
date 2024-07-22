@@ -1,64 +1,54 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "use", type = !llvm.func<void (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg0, %arg1) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg0, %arg1) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.call"(%2) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i32) -> ()
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_extra_use_sub", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg0, %arg1) : (i32, i32) -> i32
-    "llvm.call"(%1) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i32) -> ()
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_extra_use_and", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    "llvm.call"(%0) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (i32) -> ()
-    %1 = "llvm.and"(%arg0, %arg1) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_extra_use_or", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg1, %arg0) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg0, %arg1) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_or_commuted", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg1, %arg0) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%0, %1) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_and_commuted", type = !llvm.func<i32 (i32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: vector<2xi32>, %arg1: vector<2xi32>):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (vector<2xi32>, vector<2xi32>) -> vector<2xi32>
-    %1 = "llvm.and"(%arg1, %arg0) : (vector<2xi32>, vector<2xi32>) -> vector<2xi32>
-    %2 = "llvm.sub"(%0, %1) : (vector<2xi32>, vector<2xi32>) -> vector<2xi32>
-    "llvm.return"(%2) : (vector<2xi32>) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_vec", type = !llvm.func<vector<2xi32> (vector<2xi32>, vector<2xi32>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: i32, %arg2: i32):  // no predecessors
-    %0 = "llvm.or"(%arg0, %arg1) : (i32, i32) -> i32
-    %1 = "llvm.and"(%arg0, %arg2) : (i32, i32) -> i32
-    %2 = "llvm.sub"(%1, %0) : (i32, i32) -> i32
-    "llvm.return"(%2) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "sub_to_xor_wrong_arg", type = !llvm.func<i32 (i32, i32, i32)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @use(i32)
+  llvm.func @sub_to_xor(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    %1 = llvm.and %arg0, %arg1  : i32
+    %2 = llvm.sub %0, %1  : i32
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_extra_use_sub(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    %1 = llvm.and %arg0, %arg1  : i32
+    %2 = llvm.sub %0, %1  : i32
+    llvm.call @use(%2) : (i32) -> ()
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_extra_use_and(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    %1 = llvm.and %arg0, %arg1  : i32
+    llvm.call @use(%1) : (i32) -> ()
+    %2 = llvm.sub %0, %1  : i32
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_extra_use_or(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    llvm.call @use(%0) : (i32) -> ()
+    %1 = llvm.and %arg0, %arg1  : i32
+    %2 = llvm.sub %0, %1  : i32
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_or_commuted(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg1, %arg0  : i32
+    %1 = llvm.and %arg0, %arg1  : i32
+    %2 = llvm.sub %0, %1  : i32
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_and_commuted(%arg0: i32, %arg1: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    %1 = llvm.and %arg1, %arg0  : i32
+    %2 = llvm.sub %0, %1  : i32
+    llvm.return %2 : i32
+  }
+  llvm.func @sub_to_xor_vec(%arg0: vector<2xi32>, %arg1: vector<2xi32>) -> vector<2xi32> {
+    %0 = llvm.or %arg0, %arg1  : vector<2xi32>
+    %1 = llvm.and %arg1, %arg0  : vector<2xi32>
+    %2 = llvm.sub %0, %1  : vector<2xi32>
+    llvm.return %2 : vector<2xi32>
+  }
+  llvm.func @sub_to_xor_wrong_arg(%arg0: i32, %arg1: i32, %arg2: i32) -> i32 {
+    %0 = llvm.or %arg0, %arg1  : i32
+    %1 = llvm.and %arg0, %arg2  : i32
+    %2 = llvm.sub %1, %0  : i32
+    llvm.return %2 : i32
+  }
+}

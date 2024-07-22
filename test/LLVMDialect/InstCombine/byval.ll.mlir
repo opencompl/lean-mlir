@@ -1,30 +1,18 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "add_byval_callee", type = !llvm.func<void (ptr<f64>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "add_byval_callee_2", type = !llvm.func<void (ptr<f64>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i64>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @add_byval_callee} : () -> !llvm.ptr<func<void (ptr<f64>)>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<func<void (ptr<f64>)>>) -> !llvm.ptr<func<void (ptr<i64>)>>
-    "llvm.call"(%1, %arg0) : (!llvm.ptr<func<void (ptr<i64>)>>, !llvm.ptr<i64>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "add_byval", type = !llvm.func<void (ptr<i64>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i64>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @add_byval_callee_2} : () -> !llvm.ptr<func<void (ptr<f64>)>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<func<void (ptr<f64>)>>) -> !llvm.ptr<func<void (ptr<i64>)>>
-    "llvm.call"(%1, %arg0) : (!llvm.ptr<func<void (ptr<i64>)>>, !llvm.ptr<i64>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "add_byval_2", type = !llvm.func<void (ptr<i64>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.undef"() : () -> i8
-    %1 = "llvm.bitcast"(%arg0) : (!llvm.ptr<i8>) -> !llvm.ptr<struct<"t2", (i8)>>
-    "llvm.call"(%0, %1) {callee = @vararg_callee, fastmathFlags = #llvm.fastmath<>} : (i8, !llvm.ptr<struct<"t2", (i8)>>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "vararg_byval", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "vararg_callee", type = !llvm.func<void (i8, ...)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @add_byval_callee(!llvm.ptr)
+  llvm.func @add_byval_callee_2(!llvm.ptr {llvm.byval = f64})
+  llvm.func @add_byval(%arg0: !llvm.ptr) {
+    llvm.call @add_byval_callee(%arg0) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @add_byval_2(%arg0: !llvm.ptr) {
+    llvm.call @add_byval_callee_2(%arg0) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @vararg_byval(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.undef : i8
+    llvm.call @vararg_callee(%0, %arg0) vararg(!llvm.func<void (i8, ...)>) : (i8, !llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @vararg_callee(i8, ...)
+}

@@ -85,14 +85,65 @@ macro "simp_alive_bitvec": tactic =>
         intros
         simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
         try ring_nf
-        try solve | (ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-                     try cases BitVec.getLsb _ _ <;> try simp;
-                     try cases BitVec.getLsb _ _ <;> try simp;
-                     try cases BitVec.getLsb _ _ <;> try simp;
-                     try cases BitVec.getLsb _ _ <;> try simp;)
-        try solve | (simp [bv_ofBool])
+        /-
+        Solve tries each arm in order, falling through
+        if the goal is not closed.
+        Note that all goals are tried with the original state
+        (i.e. backtracking semantics).
+        -/
+        try solve
+          | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsb _ _ <;> try simp
+          | simp [bv_ofBool]
+          /-
+          There are 2 main kinds of operations on BitVecs
+          1. Boolean operations (^^^, &&&, |||) which can be solved by extensionality.
+          2. Arithmetic operations (+, -) which can be solved by `ring_nf`.
+          The purpose of the below line is to convert boolean
+          operations to arithmetic operations and then
+          solve the arithmetic with the `ring_nf` tactic.
+          -/
+          | simp only [← BitVec.allOnes_sub_eq_xor]
+            simp only [← BitVec.negOne_eq_allOnes']
+            ring_nf
       )
    )
+
+  /-
+  This tactic attempts to shift ofBool to the outer-most level,
+  and then convert everything to arithmetic
+  and then solve with the omega tactic.
+  -/
+macro "of_bool_tactic" : tactic =>
+  `(tactic|
+    (
+      repeat (
+        first
+      | simp [bv_ofBool]
+      | simp [ForLean.ofBool_eq']
+      | simp
+      | simp only [bne]
+      )
+      repeat (
+        first
+      | simp only [BitVec.ule]
+      | simp only [BitVec.ult]
+      | simp only [BitVec.sle]
+      | simp only [BitVec.slt]
+      | simp only [BitVec.toInt]
+      | simp only [BEq.beq]
+      | simp only [← Bool.decide_or]
+      | simp only [← Bool.decide_and]
+      | simp only [← decide_not]
+      | simp only [decide_eq_decide]
+      | simp [of_decide_eq_true]
+      )
+      try omega
+    )
+  )
 
 macro "alive_auto": tactic =>
   `(tactic|
@@ -104,5 +155,6 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         simp_alive_bitvec
+        of_bool_tactic
       )
    )

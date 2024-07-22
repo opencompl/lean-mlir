@@ -1,35 +1,26 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 0 : i64, sym_name = ".str", type = !llvm.array<4 x i8>, value = "abc\00"} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0) {callee = @abs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
-    "llvm.return"(%0) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "_abs", type = !llvm.func<i32 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "abs", type = !llvm.func<i32 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.call"(%arg0) {callee = @labs, fastmathFlags = #llvm.fastmath<>} : (i32) -> i32
-    "llvm.return"(%0) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "_labs", type = !llvm.func<i32 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "labs", type = !llvm.func<i32 (i32)>} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @".str"} : () -> !llvm.ptr<array<4 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<4 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%2) {callee = @strlen, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> i32
-    "llvm.return"(%3) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "_strlen1", type = !llvm.func<i32 ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "strlen", type = !llvm.func<i32 (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.call"(%arg0) {callee = @strlen, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> i32
-    %2 = "llvm.icmp"(%1, %0) {predicate = 1 : i64} : (i32, i32) -> i1
-    "llvm.return"(%2) : (i1) -> ()
-  }) {linkage = 10 : i64, sym_name = "_strlen2", type = !llvm.func<i1 (ptr<i8>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global private unnamed_addr constant @".str"("abc\00") {addr_space = 0 : i32, alignment = 1 : i64, dso_local}
+  llvm.func arm_aapcscc @_abs(%arg0: i32) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind"]} {
+    %0 = llvm.call arm_aapcscc @abs(%arg0) : (i32) -> i32
+    llvm.return %0 : i32
+  }
+  llvm.func arm_aapcscc @abs(i32) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind"]}
+  llvm.func arm_aapcscc @_labs(%arg0: i32) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind"]} {
+    %0 = llvm.call arm_aapcscc @labs(%arg0) : (i32) -> i32
+    llvm.return %0 : i32
+  }
+  llvm.func arm_aapcscc @labs(i32) -> i32 attributes {memory = #llvm.memory_effects<other = none, argMem = none, inaccessibleMem = none>, passthrough = ["nounwind"]}
+  llvm.func arm_aapcscc @_strlen1() -> i32 {
+    %0 = llvm.mlir.constant("abc\00") : !llvm.array<4 x i8>
+    %1 = llvm.mlir.addressof @".str" : !llvm.ptr
+    %2 = llvm.call arm_aapcscc @strlen(%1) : (!llvm.ptr) -> i32
+    llvm.return %2 : i32
+  }
+  llvm.func arm_aapcscc @strlen(!llvm.ptr) -> i32
+  llvm.func arm_aapcscc @_strlen2(%arg0: !llvm.ptr) -> (i1 {llvm.zeroext}) {
+    %0 = llvm.mlir.constant(0 : i32) : i32
+    %1 = llvm.call arm_aapcscc @strlen(%arg0) : (!llvm.ptr) -> i32
+    %2 = llvm.icmp "ne" %1, %0 : i32
+    llvm.return %2 : i1
+  }
+}
