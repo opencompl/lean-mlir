@@ -121,9 +121,7 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
   ))
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" Γv:("at" ident)? : tactic =>
-  match Γv with
-    | none    => `(tactic| simp_peephole [])
-    | some Γv => `(tactic| simp_peephole [] at $(⟨Γv.raw[0]⟩):ident)
+macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
+macro "simp_peephole"               : tactic => `(tactic| simp_peephole [])
 
 end SSA
