@@ -21,7 +21,7 @@ open BitVec
 theorem shift_mul:
     [llvm (w)| {
   ^bb0(%X : _, %Y : _):
-    %c1 = llvm.mlir.constant 1
+    %c1 = llvm.mlir.constant(1)
     %poty = llvm.shl %c1, %Y
     %r = llvm.mul %poty, %X
     llvm.return %r
@@ -84,3 +84,5 @@ theorem bitvec_AddSub_1309 :
 info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms bitvec_AddSub_1309
+
+end AlivePaperExamples

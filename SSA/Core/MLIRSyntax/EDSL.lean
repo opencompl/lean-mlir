@@ -94,3 +94,5 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
           | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
         | .none => throwError "Expected (Sigma.mk _ _), found {expr}"
     | .none => throwError "Expected `Except.ok`, found {com}"
+
+end SSA
