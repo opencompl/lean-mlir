@@ -94,11 +94,11 @@ inductive Region [C : TyHasCoprod Ty] : (Γ : Ctxt Ty) → (L : Ctxt Ty) → Typ
 --     (t : Region Γ D) -- t for terminator, G for fixpoint graph.
 --     (G : R.Var α → Region (Γ.snoc α) D)
 --    : Region Γ L
-| cfg {R L D : Ctxt Ty}
+| cfg {Γ R L D : Ctxt Ty}
     -- (hD : D = R ++ L)
     (inL : Ctxt.Hom D (R ++ L))
     (t : Region Γ D) -- t for terminator, G for fixpoint graph.
-    (G : R.Var α → Region (Γ.snoc α) D)
+    (G : ∀{α}, R.Var α → Region (Γ.snoc α) D)
    : Region Γ L
 
 def _root_.Ctxt.CoValuation.ofAppend {R L : Ctxt Ty} (VRL : Ctxt.CoValuation (R ++ L)) : (Ctxt.CoValuation R)⊕(Ctxt.CoValuation L) :=
@@ -108,7 +108,7 @@ def _root_.Ctxt.CoValuation.ofAppend {R L : Ctxt Ty} (VRL : Ctxt.CoValuation (R 
 /--
 Bigstep operational semantics for evaluation of a control flow graph.
 -/
-inductive Region.Evaluated [C : TyHasCoprod Ty] [TyDenote Ty] [CD : TyHasCoprodDenote Ty]  :
+inductive Region.Evaluated [C : TyHasCoprod Ty] [CD : TyHasCoprodDenote Ty]  :
     (Γ : Ctxt Ty) → (VΓ : Ctxt.Valuation Γ) → (L : Ctxt Ty) → (R : Region Γ L) → (VL' : Ctxt.CoValuation L) → Prop
 | br :  Evaluated Γ VL L (Region.br a hl) (Ctxt.CoValuation.ofVar hl (a.evaluate VΓ))
 | case_inl : (ha : a.evaluate VΓ = CD.inl (α := α) l)
@@ -124,14 +124,14 @@ inductive Region.Evaluated [C : TyHasCoprod Ty] [TyDenote Ty] [CD : TyHasCoprodD
   : Evaluated Γ VΓ D t VL
   → (hVL : (VL.comap inL).ofAppend = Sum.inr S)
   → Evaluated Γ VΓ L (cfg inL t G) S
-| cfg_child {Γ : Ctxt Ty} {VΓ : Γ.Valuation} {L : Ctxt Ty }
+| cfg_child {Γ : Ctxt Ty} {VΓ : Γ.Valuation} {L R D : Ctxt Ty}
   {VL : L.CoValuation} {VD : D.CoValuation} {inL : Ctxt.Hom D (R ++ L)}
   {C : Ctxt.CoValuation R}
   {t : Region Γ D}
   {G : ∀ {α}, R.Var α → Region (Γ.snoc α) D}
   : Evaluated Γ VΓ D t VD
-  -- → (hVL : (VD.comap inL).ofAppend = Sum.inl C)
-  -- → Evaluated Γ VΓ L (cfg inL (let₁ (Term.val C.val) (G C.var)) G) VL
-  → Evaluated Γ VΓ L (cfg inL t G) VL
+  → (hVL : (VD.comap inL).ofAppend = Sum.inl (α := R.CoValuation) (β := L.CoValuation) C)
+  → Evaluated Γ VΓ L (cfg inL (let₁ (Term.val C.val) (G C.var)) G) VL
+  → Evaluated Γ VΓ L (cfg (Γ := Γ) (R := R) (L := L) (D := D) inL t G) VL
 
 end Pure
