@@ -2,18 +2,20 @@ import Lean
 import Init.Data.BitVec.Lemmas
 -- import Init.Data.BitVec.Lemmas
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.ForStd
-import SSA.Projects.InstCombine.ForMathlib
+-- import SSA.Projects.InstCombine.ForStd
+-- import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
-import Mathlib.Tactic.Ring
-import Batteries.Data.BitVec
+-- import Mathlib.Tactic.Ring
+-- import Batteries.Data.BitVec
 import SSA.Projects.InstCombine.ForLean
 import Lean.Meta
 import SSA.Projects.InstCombine.LLVM.EDSL
-import Batteries.Data.BitVec
+-- import Batteries.Data.BitVec
 -- import SSA.Projects.DataTactics.alex
 open Lean Elab Tactic
 
+set_option pp.proofs false
+set_option pp.fullNames false
 set_option linter.unusedTactic false
 /-- `assertBitwiseOnly e` throws an error if `e` contains anything besides:
     bitwise operations, free variables and constants -/
@@ -83,7 +85,8 @@ partial def assertAutomataSolvable  (e : Expr)  : TacticM Unit :=
 `assertRingSolvable e` throws an error if `e` contains
 a non-arithmetic expression
 -/
-partial def assertRingSolvable (e : Expr) : TacticM Unit :=
+partial def assertRingSolvable (e : Expr) : TacticM Unit := do
+  let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
   if e.isFVar ∨ !e.hasFVar then
     return ()
   else
@@ -110,7 +113,22 @@ partial def assertRingSolvable (e : Expr) : TacticM Unit :=
         assertRingSolvable a
         assertRingSolvable b
       | OfNat.ofNat _ _ _ => return ()
-      | _ => throwError m!"{e} is not a ring-only bitvector expression"
+      | _ => throwError m!"{e} not ring-only"
+
+partial def assertOfboolSolvable (e : Expr) : TacticM Unit := do
+  let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
+  if e.isFVar ∨ !e.hasFVar then
+    return ()
+  else
+    match_expr e with
+      | BitVec.ofBool _ => return ()
+      | _ => throwError m!"{name}: {e} not ofbool"
+
+elab tk:"print_lctx" : tactic => do
+  withMainContext do
+    logInfoAt tk <| (← getLCtx).foldl (· ++ ·.userName) "Goal:"
+def removeNewLines (s : String) : String :=
+  s.foldl (fun acc c => if c == '\n' then acc else acc.push c) ""
 
 /--
 `assertGoal assert` throws an error iff the goal is not of the form
@@ -118,22 +136,52 @@ partial def assertRingSolvable (e : Expr) : TacticM Unit :=
 -/
 def assertGoal (assert : Expr → TacticM Unit) := do withMainContext <| do
   let goal ← getMainTarget
+  let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
+  -- let name ←  (← getLCtx).foldl (· ++ s!"{·.userName}\n") ""
+
   match_expr goal with
     | Eq type lhs rhs =>
-        match_expr type with
-        | BitVec _ =>
-          -- dbg_trace "`{lhs}` = `{rhs}`"
+        -- match_expr type with
+        -- | BitVec _ =>
+        assert rhs
+        assert lhs
+        logInfo s!"succeeded"
+        return ()
+        -- | _ => do
+        -- let m := m!"{type}"
+        -- throwError m!"{name}: Equality not on the type of BitVectors. It is instead on another type {type}"
+    | _ => do
+      -- let m := m!"{goal}"
+      throwError m!"{name}: Equality expected, found something else"
 
-          assert rhs
-          assert lhs
-          return ()
-        | _ => throwError "Equality not on the type of BitVectors. It is instead on type {type}"
-    | _ => throwError "Equality expected, found:\n{goal}"
+
+-- def assert_ofbool := do withMainContext <| do
+--   let goal ← getMainTarget
+--   let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
+--   -- let name ←  (← getLCtx).foldl (· ++ s!"{·.userName}\n") ""
+
+--   match_expr goal with
+--     | Iff type lhs rhs =>
+--         match_expr type with
+--         | BitVec _ =>
+--           assertOfboolSolvable rhs
+--           assertOfboolSolvable lhs
+--           logInfo s!"succeeded"
+--           return ()
+--         | _ => do
+--         -- let m := m!"{type}"
+--         throwError m!"{name}: Equality not on the type of BitVectors. It is instead on another type"
+--     | _ => do
+--       -- let m := m!"{goal}"
+--       throwError m!"{name}: Equality expected, found something {goal}"
 
 namespace BitVec.Tactic
 open BitVec
 open Lean.Meta (kabstract)
-
+elab "printIfNoGoals" : tactic => do
+  let goals ← getGoals
+  if goals.isEmpty then
+    logInfo m!"No goals remaining!"
 
 /--
 bitvec_assert_bitwise asserts that the current goal
@@ -154,6 +202,7 @@ because the current goal only contains
 bitwise and arithmetic operations
 -/
 elab "bitvec_assert_automata" : tactic => assertGoal assertAutomataSolvable
+elab "bitvec_assert_ofbool" : tactic => assertGoal assertOfboolSolvable
 
 /--
 Check if an expression is contained in the current goal and fail otherwise.
@@ -187,9 +236,9 @@ macro "bitvec_auto" : tactic => `(tactic|
 macro "data_automata": tactic =>
   `(tactic|
        (
+        intros
         all_goals (
           try (
-            intros
             simp_alive_undef
             simp_alive_ops
             try (
@@ -198,8 +247,9 @@ macro "data_automata": tactic =>
             )
             simp  (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
             -- simp_alive_bitvec2
-            of_bool_tactic
+            -- of_bool_tactic
           )
+          printIfNoGoals
           all_goals bitvec_assert_automata
         )
         all_goals (sorry)
@@ -209,8 +259,8 @@ macro "data_automata": tactic =>
 macro "data_ring": tactic =>
   `(tactic|
        (
+        intros
         all_goals (
-          intros
           try (
             simp_alive_undef
             simp_alive_ops
@@ -224,11 +274,12 @@ macro "data_ring": tactic =>
             simp only [← BitVec.allOnes_sub_eq_xor]
             simp only [← BitVec.negOne_eq_allOnes']
           )
+          printIfNoGoals
           all_goals bitvec_assert_ring
         )
-        all_goals (sorry)
-      )
+        all_goals sorry
    )
+  )
 
 macro "data_bitwise": tactic =>
   `(tactic|
@@ -242,18 +293,47 @@ macro "data_bitwise": tactic =>
               simp_alive_case_bash
               ensure_only_goal
             )
-            simp  (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
+            -- simp  (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
             -- simp_alive_bitvec2
-            of_bool_tactic
-            simp only [BitVec.allOnes_sub_eq_xor]
-            simp only [BitVec.negOne_eq_allOnes']
+            -- of_bool_tactic
+            try simp only [BitVec.allOnes_sub_eq_xor]
+            try simp only [BitVec.negOne_eq_allOnes']
           )
+          printIfNoGoals
           all_goals bitvec_assert_bitwise
         )
         all_goals (sorry)
       )
    )
 
+macro "data_ofbool": tactic =>
+  `(tactic|
+       (
+        all_goals (
+          intros
+          try (
+            simp_alive_undef
+            simp_alive_ops
+            try (
+              simp_alive_case_bash
+              ensure_only_goal
+            )
+            repeat (
+            simp [bv_ofBool, -BitVec.ofBool_eq']
+            )
+            -- simp  (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
+            -- simp_alive_bitvec2
+            -- of_bool_tactic
+            -- try simp only [BitVec.allOnes_sub_eq_xor]
+            -- try simp only [BitVec.negOne_eq_allOnes']
+
+          )
+          printIfNoGoals
+          all_goals bitvec_assert_ofbool
+        )
+        all_goals (sorry)
+      )
+   )
 
 end BitVec.Tactic
 
@@ -267,25 +347,11 @@ open BitVec.Tactic
 --   --  intros
 --   data_automata
 -- Macro to check if the goal is of the form `... = ...` and only uses `+` and `*`
-elab "goal_name" : tactic => do
-  let goal ← getMainGoal
-  let goalName ←  Lean.MVarId.getDecl goal
-  logInfo goalName.userName
--- macro "myMacro" : command => do
---   let some declName ← Lean.Elab.Command.getCurrDecl?
---     | throwError "Not inside a declaration"
---   `(#print $(quote declName.toString))
-elab "printTheoremName" : tactic => do
-  let mvar ← getMainGoal
-  let decl ← Lean.MVarId.getDecl mvar
-  let name := decl.userName
-  logInfo m!"The name of the current theorem is: {name}"
 
 -- Example usage in a theorem
-theorem exampleTheorem : 1 + 1 = 2 := by
-  printTheoremName
-  rfl
-theorem my_theorem : True := by
-  goal_name
-  trivial
-#check Lean.Elab.Term.BinderView
+-- theorem exampleThezorem : 1 + 1 = 2 := by
+--   -- printTheoremName
+--   print_lctx
+--   rfl
+
+-- #check Lean.Elab.Term.BinderView

@@ -10,7 +10,7 @@ import SSA.Projects.DataTactics.alex
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-
+-- set_option  false
 
 theorem bitvec_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -18,28 +18,28 @@ theorem bitvec_AddSub_1043 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1152 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.add e_1 e ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1156 :
     ∀ (e : LLVM.IntW w), LLVM.add e e ⊑ LLVM.shl e (LLVM.const? 1) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1164 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.sub (LLVM.const? 0) e_1) e ⊑ LLVM.sub e e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1165 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -47,112 +47,112 @@ theorem bitvec_AddSub_1165 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1176 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add e_1 (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.sub e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1202 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.xor e_1 (LLVM.const? (-1))) e ⊑ LLVM.sub (LLVM.sub e (LLVM.const? 1)) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1295 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.and e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1309 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.add (LLVM.and e_1 e) (LLVM.or e_1 e) ⊑ LLVM.add e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1539 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.add e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1539_2 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 e ⊑ LLVM.add e_1 (LLVM.neg e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1556 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.sub e_1 e ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1560 :
     ∀ (e : LLVM.IntW w), LLVM.sub (LLVM.const? (-1)) e ⊑ LLVM.xor e (LLVM.const? (-1)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1564 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 (LLVM.xor e (LLVM.const? (-1))) ⊑ LLVM.add e (LLVM.add e_1 (LLVM.const? 1)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1574 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.sub e_2 (LLVM.add e_1 e) ⊑ LLVM.sub (LLVM.sub e_2 e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1614 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub e_1 (LLVM.add e_1 e) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1619 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub (LLVM.sub e_1 e) e_1 ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AddSub_1624 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.sub (LLVM.or e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_135 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.and (LLVM.xor e_2 e_1) e ⊑ LLVM.xor (LLVM.and e_2 e) (LLVM.and e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_144 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.and (LLVM.or e_2 e_1) e ⊑ LLVM.and (LLVM.or e_2 (LLVM.and e_1 e)) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_698 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -162,8 +162,7 @@ theorem bitvec_AndOrXor_698 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  all_goals sorry
-  -- data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_709 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -172,7 +171,7 @@ theorem bitvec_AndOrXor_709 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_716 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -182,7 +181,7 @@ theorem bitvec_AndOrXor_716 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_794 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -191,7 +190,7 @@ theorem bitvec_AndOrXor_794 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_827 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -200,7 +199,7 @@ theorem bitvec_AndOrXor_827 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_887_2 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -208,7 +207,7 @@ theorem bitvec_AndOrXor_887_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1230__A__B___A__B :
     ∀ (e e_1 : LLVM.IntW w),
@@ -217,35 +216,35 @@ theorem bitvec_AndOrXor_1230__A__B___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1241_AB__AB__AB :
     ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1))) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1247_AB__AB__AB :
     ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.xor (LLVM.and e_1 e) (LLVM.const? (-1))) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1253_A__AB___A__B :
     ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.xor e_1 e) e_1 ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1280_ABA___AB :
     ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or (LLVM.xor e_1 (LLVM.const? (-1))) e) e_1 ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -254,14 +253,14 @@ theorem bitvec_AndOrXor_1288_A__B__B__C__A___A__B__C :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1294_A__B__A__B___A__B :
     ∀ (e e_1 : LLVM.IntW w), LLVM.and (LLVM.or e_1 e) (LLVM.xor (LLVM.xor e_1 (LLVM.const? (-1))) e) ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1683_1 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -270,7 +269,7 @@ theorem bitvec_AndOrXor_1683_1 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1683_2 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -278,7 +277,7 @@ theorem bitvec_AndOrXor_1683_2 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1704 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -287,7 +286,7 @@ theorem bitvec_AndOrXor_1704 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1705 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -296,7 +295,7 @@ theorem bitvec_AndOrXor_1705 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_1733 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -305,21 +304,21 @@ theorem bitvec_AndOrXor_1733 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2063__X__C1__C2____X__C2__C1__C2 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.or (LLVM.xor e_2 e_1) e ⊑ LLVM.xor (LLVM.or e_2 e) (LLVM.and e_1 (LLVM.not e)) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2113___A__B__A___A__B :
     ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e) e_1 ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2118___A__B__A___A__B :
     ∀ (e e_1 : LLVM.IntW w),
@@ -327,14 +326,14 @@ theorem bitvec_AndOrXor_2118___A__B__A___A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2123___A__B__A__B___A__B :
     ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1)))) (LLVM.xor e_1 e) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2188 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -342,21 +341,21 @@ theorem bitvec_AndOrXor_2188 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2231__A__B__B__C__A___A__B__C :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.or (LLVM.xor e_2 e_1) (LLVM.xor (LLVM.xor e_1 e) e_2) ⊑ LLVM.or (LLVM.xor e_2 e_1) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2243__B__C__A__B___B__A__C :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.or (LLVM.and (LLVM.or e_2 e_1) e) e_2 ⊑ LLVM.or e_2 (LLVM.and e e_1) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2247__A__B__A__B :
     ∀ (e e_1 : LLVM.IntW w),
@@ -365,14 +364,14 @@ theorem bitvec_AndOrXor_2247__A__B__A__B :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2263 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.or e_1 (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2264 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -380,14 +379,14 @@ theorem bitvec_AndOrXor_2264 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2265 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.or (LLVM.and e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2284 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -395,7 +394,7 @@ theorem bitvec_AndOrXor_2284 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2285 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -403,7 +402,7 @@ theorem bitvec_AndOrXor_2285 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2297 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -411,14 +410,14 @@ theorem bitvec_AndOrXor_2297 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2367 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.or (LLVM.or e_2 e_1) e ⊑ LLVM.or (LLVM.or e_2 e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2416 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -427,7 +426,7 @@ theorem bitvec_AndOrXor_2416 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2417 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -436,7 +435,7 @@ theorem bitvec_AndOrXor_2417 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2429 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -445,7 +444,7 @@ theorem bitvec_AndOrXor_2429 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2430 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -454,14 +453,14 @@ theorem bitvec_AndOrXor_2430 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2443 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.ashr (LLVM.xor e_1 (LLVM.const? (-1))) e) (LLVM.const? (-1)) ⊑ LLVM.ashr e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2453 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -469,42 +468,42 @@ theorem bitvec_AndOrXor_2453 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2475 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.sub e_1 e) (LLVM.const? (-1)) ⊑ LLVM.add e (LLVM.sub (LLVM.const? (-1)) e_1) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2486 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.add e_1 e) (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.sub (LLVM.const? (-1)) e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2581__BAB___A__B :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.or e_1 e) e ⊑ LLVM.and e_1 (LLVM.xor e (LLVM.const? (-1))) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2587__BAA___B__A :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) e ⊑ LLVM.and (LLVM.xor e_1 (LLVM.const? (-1))) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2595 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) (LLVM.or e_1 e) ⊑ LLVM.xor e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2607 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -512,7 +511,7 @@ theorem bitvec_AndOrXor_2607 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2617 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -521,7 +520,7 @@ theorem bitvec_AndOrXor_2617 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2627 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
@@ -529,14 +528,14 @@ theorem bitvec_AndOrXor_2627 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2647 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.xor (LLVM.and e_1 e) (LLVM.xor e_1 e) ⊑ LLVM.or e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2658 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -545,7 +544,7 @@ theorem bitvec_AndOrXor_2658 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_AndOrXor_2663 :
     ∀ (e e_1 : LLVM.IntW w),
@@ -554,91 +553,91 @@ theorem bitvec_AndOrXor_2663 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_152 :
     ∀ (e : LLVM.IntW w), LLVM.mul e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_229 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.mul (LLVM.add e_2 e_1) e ⊑ LLVM.add (LLVM.mul e_2 e) (LLVM.mul e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_239 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.mul (LLVM.sub (LLVM.const? 0) e_1) (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.mul e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_275 :
     ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) e ⊑ LLVM.sub e_1 (LLVM.urem e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_275_2 :
     ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.sdiv e_1 e) e ⊑ LLVM.sub e_1 (LLVM.srem e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_276 :
     ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.sdiv e_1 e) (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.sub (LLVM.srem e_1 e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_276_2 :
     ∀ (e e_1 : LLVM.IntW 5), LLVM.mul (LLVM.udiv e_1 e) (LLVM.sub (LLVM.const? 0) e) ⊑ LLVM.sub (LLVM.urem e_1 e) e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_283 :
     ∀ (e e_1 : LLVM.IntW 1), LLVM.mul e_1 e ⊑ LLVM.and e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_290__292 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.mul (LLVM.shl (LLVM.const? 1) e_1) e ⊑ LLVM.shl e e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_820 :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.sdiv (LLVM.sub e_1 (LLVM.srem e_1 e)) e ⊑ LLVM.sdiv e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_820' :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.udiv (LLVM.sub e_1 (LLVM.urem e_1 e)) e ⊑ LLVM.udiv e_1 e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_1030 :
     ∀ (e : LLVM.IntW w), LLVM.sdiv e (LLVM.const? (-1)) ⊑ LLVM.sub (LLVM.const? 0) e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_Select_858 :
     ∀ (e e_1 : LLVM.IntW 1),
@@ -646,7 +645,7 @@ theorem bitvec_Select_858 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_Select_859' :
     ∀ (e e_1 : LLVM.IntW 1),
@@ -654,35 +653,35 @@ theorem bitvec_Select_859' :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_select_1100 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.select (LLVM.const? 1) e_1 e ⊑ e_1 := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_Select_1105 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.select (LLVM.const? 0) e_1 e ⊑ e := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__239 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__279 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.shl (LLVM.lshr e_1 e) e ⊑ LLVM.and e_1 (LLVM.shl (LLVM.const? (-1)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__440 :
     ∀ (e e_1 e_2 e_3 : LLVM.IntW w),
@@ -691,7 +690,7 @@ theorem bitvec_InstCombineShift__440 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__476 :
     ∀ (e e_1 e_2 e_3 : LLVM.IntW w),
@@ -700,25 +699,25 @@ theorem bitvec_InstCombineShift__476 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__497 :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.lshr (LLVM.xor e_2 e_1) e ⊑ LLVM.xor (LLVM.lshr e_2 e) (LLVM.lshr e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__497''' :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.shl (LLVM.add e_2 e_1) e ⊑ LLVM.add (LLVM.shl e_2 e) (LLVM.shl e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool
 
 theorem bitvec_InstCombineShift__582 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  data_automata
+  data_ofbool

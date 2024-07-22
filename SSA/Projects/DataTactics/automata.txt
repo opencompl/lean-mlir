@@ -1,189 +1,96 @@
-ℹ [767/768] Replayed SSA.Projects.DataTactics.alex
-info: ././././SSA/Projects/DataTactics/alex.lean:270:0: Lean.Elab.Term.BinderView : Type
-✖ [768/768] Building SSA.Projects.DataTactics.AliveStatements
-trace: .> LEAN_PATH=././.lake/packages/batteries/.lake/build/lib:././.lake/packages/Qq/.lake/build/lib:././.lake/packages/aesop/.lake/build/lib:././.lake/packages/proofwidgets/.lake/build/lib:././.lake/packages/Cli/.lake/build/lib:././.lake/packages/importGraph/.lake/build/lib:././.lake/packages/mathlib/.lake/build/lib:././.lake/packages/MD4Lean/.lake/build/lib:././.lake/packages/UnicodeBasic/.lake/build/lib:././.lake/packages/doc-gen4/.lake/build/lib:././.lake/packages/LeanSAT/.lake/build/lib:././.lake/build/lib LD_LIBRARY_PATH= /home/atticusk/.elan/toolchains/leanprover--lean4---nightly-2024-07-11/bin/lean ././././SSA/Projects/DataTactics/AliveStatements.lean -R ./././. -o ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.olean -i ././.lake/build/lib/SSA/Projects/DataTactics/AliveStatements.ilean -c ././.lake/build/ir/SSA/Projects/DataTactics/AliveStatements.c --json
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:15:8: declaration uses 'sorry'
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:35:2: Equality expected, found:
-some (x✝ + x✝) ⊑ if w ≤ 1 % 2 ^ w then none else some (x✝ <<< 1#w)
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:37:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:44:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:52:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:59:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:87:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:94:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:101:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:108:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:115:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:136:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:143:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:150:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:157:8: declaration uses 'sorry'
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:175:2: Equality expected, found:
-x✝ &&& x✝¹ = x✝¹ ∧ x✝ &&& x✝² = x✝² ↔ x✝ &&& (x✝¹ ||| x✝²) = x✝¹ ||| x✝²
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:185:2: Equality expected, found:
-x✝ &&& x✝¹ = x✝ ∧ x✝ &&& x✝² = x✝ ↔ x✝ &&& (x✝¹ &&& x✝²) = x✝
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:194:2: Equality expected, found:
-((if 2 * x✝¹.toNat < 2 ^ w then ↑x✝¹.toNat else ↑x✝¹.toNat - 2 ^ w) <
-    if 2 * x✝.toNat < 2 ^ w then ↑x✝.toNat else ↑x✝.toNat - 2 ^ w) →
-  ¬x✝ = x✝¹
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:203:2: Equality expected, found:
-x✝ = 0#w ∧ x✝¹ = 0#w ↔ x✝ ||| x✝¹ = 0#w
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:213:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:222:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:229:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:236:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:243:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:250:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:259:8: declaration uses 'sorry'
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:273:2: Equality expected, found:
-x✝¹.toNat < x✝.toNat ∨ x✝ = x✝¹ ↔ x✝¹.toNat ≤ x✝.toNat
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:281:2: Equality expected, found:
-x✝¹.toNat ≤ x✝.toNat ∨ ¬x✝ = x✝¹
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:290:2: Equality expected, found:
-x✝ = 0#w ∨ x✝¹.toNat < x✝.toNat ↔ x✝¹.toNat ≤ (x✝.toNat + (2 ^ w - 1)) % 2 ^ w
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:299:2: Equality expected, found:
-x✝ = 0#w ∨ x✝¹.toNat < x✝.toNat ↔ x✝¹.toNat ≤ (x✝.toNat + (2 ^ w - 1)) % 2 ^ w
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:308:2: Equality expected, found:
-¬x✝ = 0#w ∨ ¬x✝¹ = 0#w ↔ ¬x✝ ||| x✝¹ = 0#w
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:310:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:317:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:324:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:332:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:339:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:347:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:354:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:361:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:370:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:377:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:385:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:392:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:400:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:408:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:416:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:423:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:432:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:441:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:450:8: declaration uses 'sorry'
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:464:2: Equality expected, found:
-(Option.bind (if w ≤ x✝¹.toNat then none else some ((x✝ ^^^ BitVec.allOnes w).sshiftRight x✝¹.toNat)) fun a =>
-    some (a ^^^ BitVec.allOnes w)) ⊑
-  if w ≤ x✝¹.toNat then none else some (x✝.sshiftRight x✝¹.toNat)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:472:2: BitVec.ofBool
-  (decide
-    ((if 2 * x✝¹.toNat < 2 ^ w then ↑x✝¹.toNat else ↑x✝¹.toNat - 2 ^ w) ≤
-      if 2 * x✝.toNat < 2 ^ w then ↑x✝.toNat else ↑x✝.toNat - 2 ^ w)) is not a automata expression
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:474:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:481:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:488:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:495:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:502:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:509:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:517:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:526:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:534:8: declaration uses 'sorry'
-warning: ././././SSA/Projects/DataTactics/AliveStatements.lean:541:8: declaration uses 'sorry'
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:557:2: Equality expected, found:
-¬(x✝.toNat ≤ x✝¹.toNat ↔ ¬x✝ = x✝¹) ↔ x✝¹.toNat ≤ x✝.toNat
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:564:2: x✝ * BitVec.allOnes w is not a automata expression
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:571:2: x✝ * x✝² is not a automata expression
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:585:2: Equality expected, found:
-(Option.bind
-    (match x✝¹.toNat with
-    | 0 => none
-    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
-    fun a => some (a * x✝¹)) ⊑
-  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun a => some (x✝ - a)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:592:2: Equality expected, found:
-(Option.bind (if x✝¹ = 0#5 ∨ x✝ = LLVM.intMin 5 ∧ x✝¹ = 31#5 then none else some (x✝.sdiv x✝¹)) fun a =>
-    some (a * x✝¹)) ⊑
-  (Option.map (fun div => x✝ - div * x✝¹)
-        (if x✝¹ = 0#5 ∨ x✝ = LLVM.intMin 5 ∧ x✝¹ = 31#5 then none else some (x✝.sdiv x✝¹))).bind
-    fun a => some (x✝ - a)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:599:2: Equality expected, found:
-(Option.bind (if x✝¹ = 0#5 ∨ x✝ = LLVM.intMin 5 ∧ x✝¹ = 31#5 then none else some (x✝.sdiv x✝¹)) fun a =>
-    some (-(a * x✝¹))) ⊑
-  (Option.map (fun div => x✝ - div * x✝¹)
-        (if x✝¹ = 0#5 ∨ x✝ = LLVM.intMin 5 ∧ x✝¹ = 31#5 then none else some (x✝.sdiv x✝¹))).bind
-    fun a => some (a - x✝)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:606:2: Equality expected, found:
-(Option.bind
-    (match x✝¹.toNat with
-    | 0 => none
-    | x => some (BitVec.ofInt 5 (↑x✝.toNat / ↑x✝¹.toNat)))
-    fun a => some (-(a * x✝¹))) ⊑
-  Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 5 (x✝.toNat % x✝¹.toNat))) fun a => some (a - x✝)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:620:2: Equality expected, found:
-(Option.bind (if w ≤ x✝.toNat then none else some (1#w <<< x✝)) fun a => some (a * x✝¹)) ⊑
-  if w ≤ x✝.toNat then none else some (x✝¹ <<< x✝)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:627:2: Equality expected, found:
-((Option.map (fun div => x✝ - div * x✝¹)
-        (if x✝¹ = 0#9 ∨ x✝ = LLVM.intMin 9 ∧ x✝¹ = 511#9 then none else some (x✝.sdiv x✝¹))).bind
-    fun a => if x✝¹ = 0#9 ∨ x✝ - a = LLVM.intMin 9 ∧ x✝¹ = 511#9 then none else some ((x✝ - a).sdiv x✝¹)) ⊑
-  if x✝¹ = 0#9 ∨ x✝ = LLVM.intMin 9 ∧ x✝¹ = 511#9 then none else some (x✝.sdiv x✝¹)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:634:2: Equality expected, found:
-(Option.bind (if x✝¹.toNat = 0 then none else some (BitVec.ofNat 9 (x✝.toNat % x✝¹.toNat))) fun a =>
-    match x✝¹.toNat with
-    | 0 => none
-    | x => some (BitVec.ofInt 9 ((↑(512 - a.toNat) + ↑x✝.toNat) % 512 / ↑x✝¹.toNat))) ⊑
-  match x✝¹.toNat with
-  | 0 => none
-  | x => some (BitVec.ofInt 9 (↑x✝.toNat / ↑x✝¹.toNat))
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:641:2: Equality expected, found:
-(if BitVec.allOnes w = 0#w ∨ ¬w = 1 ∧ x✝ = LLVM.intMin w then none else some (x✝.sdiv (BitVec.allOnes w))) ⊑ some (-x✝)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
-(match some x✝ with
-  | none => none
-  | some { toFin := ⟨1, ⋯⟩ } => some (x✝ ^^^ 1#1)
-  | some { toFin := ⟨0, ⋯⟩ } => none) ⊑
-  none
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:649:2: Equality expected, found:
-(match some x✝ with
-  | none => none
-  | some { toFin := ⟨1, ⋯⟩ } => some (x✝ ^^^ 1#1)
-  | some { toFin := ⟨0, ⋯⟩ } => some x✝¹) ⊑
-  some ((x✝ ^^^ 1#1) &&& x✝¹)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
-(match some x✝ with
-  | none => none
-  | some { toFin := ⟨1, ⋯⟩ } => none
-  | some { toFin := ⟨0, ⋯⟩ } => some (x✝ ^^^ 1#1)) ⊑
-  none
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:657:2: Equality expected, found:
-(match some x✝ with
-  | none => none
-  | some { toFin := ⟨1, ⋯⟩ } => some x✝¹
-  | some { toFin := ⟨0, ⋯⟩ } => some (x✝ ^^^ 1#1)) ⊑
-  some (x✝ ^^^ 1#1 ||| x✝¹)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:678:2: Equality expected, found:
-(Option.bind (if w ≤ x✝¹.toNat then none else some (x✝ <<< x✝¹)) fun a =>
-    if w ≤ x✝¹.toNat then none else some (a >>> x✝¹)) ⊑
-  Option.bind (if w ≤ x✝¹.toNat then none else some (BitVec.allOnes w >>> x✝¹)) fun a => some (x✝ &&& a)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:685:2: Equality expected, found:
-(Option.bind (if w ≤ x✝¹.toNat then none else some (x✝ >>> x✝¹)) fun a =>
-    if w ≤ x✝¹.toNat then none else some (a <<< x✝¹)) ⊑
-  Option.bind (if w ≤ x✝¹.toNat then none else some (BitVec.allOnes w <<< x✝¹)) fun a => some (x✝ &&& a)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:694:2: Equality expected, found:
-(Option.bind (if w ≤ x✝².toNat then none else some (x✝¹ >>> x✝²)) fun a =>
-    if w ≤ x✝².toNat then none else some ((x✝ ^^^ a &&& x✝³) <<< x✝²)) ⊑
-  Option.bind (if w ≤ x✝².toNat then none else some (x✝³ <<< x✝²)) fun a =>
-    Option.bind (if w ≤ x✝².toNat then none else some (x✝ <<< x✝²)) fun a_1 => some (x✝¹ &&& a ^^^ a_1)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:703:2: Equality expected, found:
-(Option.bind (if w ≤ x✝¹.toNat then none else some (x✝ >>> x✝¹)) fun a =>
-    if w ≤ x✝¹.toNat then none else some ((a &&& x✝² ||| x✝³) <<< x✝¹)) ⊑
-  Option.bind (if w ≤ x✝¹.toNat then none else some (x✝² <<< x✝¹)) fun a =>
-    Option.bind (if w ≤ x✝¹.toNat then none else some (x✝³ <<< x✝¹)) fun a_1 => some (x✝ &&& a ||| a_1)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:710:2: Equality expected, found:
-(if w ≤ x✝².toNat then none else some ((x✝ ^^^ x✝¹) >>> x✝²)) ⊑
-  Option.bind (if w ≤ x✝².toNat then none else some (x✝ >>> x✝²)) fun a =>
-    Option.bind (if w ≤ x✝².toNat then none else some (x✝¹ >>> x✝²)) fun a_1 => some (a ^^^ a_1)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:717:2: Equality expected, found:
-(if w ≤ x✝².toNat then none else some ((x✝ + x✝¹) <<< x✝²)) ⊑
-  Option.bind (if w ≤ x✝².toNat then none else some (x✝ <<< x✝²)) fun a =>
-    Option.bind (if w ≤ x✝².toNat then none else some (x✝¹ <<< x✝²)) fun a_1 => some (a + a_1)
-error: ././././SSA/Projects/DataTactics/AliveStatements.lean:724:2: Equality expected, found:
-(Option.bind (if w ≤ x✝¹.toNat then none else some (x✝ <<< x✝¹)) fun a =>
-    if w ≤ x✝¹.toNat then none else some (a >>> x✝¹)) ⊑
-  Option.bind (if w ≤ x✝¹.toNat then none else some (BitVec.allOnes w >>> x✝¹)) fun a => some (x✝ &&& a)
+ succeeded
+ No goals remaining!
+ bitvec_AddSub_1156wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.1062.1166: Equality expected, found something else
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ No goals remaining!
+ No goals remaining!
+ No goals remaining!
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ No goals remaining!
+ No goals remaining!
+ succeeded
+ succeeded
+ succeeded
+ BitVec.ofBool (x✝ &&& (x✝¹ ||| x✝²) == 0#w) is not a automata expression
+ BitVec.ofBool (x✝ &&& (x✝¹ ||| x✝²) == x✝¹ ||| x✝²) is not a automata expression
+ BitVec.ofBool (x✝ &&& (x✝¹ &&& x✝²) == x✝) is not a automata expression
+ BitVec.ofBool (x✝ >ₛ x✝¹) is not a automata expression
+ BitVec.ofBool (x✝ ||| x✝¹ == 0#w) is not a automata expression
+ BitVec.ofBool (x✝ == x✝¹) is not a automata expression
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a automata expression
+ BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a automata expression
+ BitVec.ofBool (x✝ + BitVec.allOnes w ≥ᵤ x✝¹) is not a automata expression
+ BitVec.ofBool (x✝ + BitVec.allOnes w ≥ᵤ x✝¹) is not a automata expression
+ BitVec.ofBool (x✝ ||| x✝¹ != 0#w) is not a automata expression
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ bitvec_AndOrXor_2443wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.24825.25069x._@.SSA.Projects.DataTactics.AliveStatements._hyg.24952.25070: Equality expected, found something else
+ BitVec.ofBool (x✝ ≥ₛ x✝¹) is not a automata expression
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ succeeded
+ BitVec.ofBool (x✝ ≥ᵤ x✝¹) is not a automata expression
+ x✝ * BitVec.allOnes w is not a automata expression
+ x✝ * x✝² is not a automata expression
+ No goals remaining!
+ bitvec_275x._@.SSA.Projects.DataTactics.AliveStatements._hyg.31355.31614x._@.SSA.Projects.DataTactics.AliveStatements._hyg.31492.31615: Equality expected, found something else
+ bitvec_275_2x._@.SSA.Projects.DataTactics.AliveStatements._hyg.31742.31986x._@.SSA.Projects.DataTactics.AliveStatements._hyg.31869.31987: Equality expected, found something else
+ bitvec_276x._@.SSA.Projects.DataTactics.AliveStatements._hyg.32118.32362x._@.SSA.Projects.DataTactics.AliveStatements._hyg.32245.32363: Equality expected, found something else
+ bitvec_276_2x._@.SSA.Projects.DataTactics.AliveStatements._hyg.32498.32757x._@.SSA.Projects.DataTactics.AliveStatements._hyg.32635.32758: Equality expected, found something else
+ No goals remaining!
+ bitvec_290__292wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.33236.33480x._@.SSA.Projects.DataTactics.AliveStatements._hyg.33363.33481: Equality expected, found something else
+ bitvec_820x._@.SSA.Projects.DataTactics.AliveStatements._hyg.33605.33849x._@.SSA.Projects.DataTactics.AliveStatements._hyg.33732.33850: Equality expected, found something else
+ bitvec_820'x._@.SSA.Projects.DataTactics.AliveStatements._hyg.33978.34269x._@.SSA.Projects.DataTactics.AliveStatements._hyg.34138.34270: Equality expected, found something else
+ bitvec_1030wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.34410.34514: Equality expected, found something else
+ bitvec_Select_858x._@.SSA.Projects.DataTactics.AliveStatements._hyg.34723.34942: Equality expected, found something else
+ bitvec_Select_858x._@.SSA.Projects.DataTactics.AliveStatements._hyg.34661.35015x._@.SSA.Projects.DataTactics.AliveStatements._hyg.34811.35016: Equality expected, found something else
+ bitvec_Select_859'x._@.SSA.Projects.DataTactics.AliveStatements._hyg.35229.35448: Equality expected, found something else
+ bitvec_Select_859'x._@.SSA.Projects.DataTactics.AliveStatements._hyg.35167.35521x._@.SSA.Projects.DataTactics.AliveStatements._hyg.35317.35522: Equality expected, found something else
+ bitvec_InstCombineShift__239wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.36168.36412x._@.SSA.Projects.DataTactics.AliveStatements._hyg.36295.36413: Equality expected, found something else
+ bitvec_InstCombineShift__279wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.36549.36793x._@.SSA.Projects.DataTactics.AliveStatements._hyg.36676.36794: Equality expected, found something else
+ bitvec_InstCombineShift__440wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.36942.37986x._@.SSA.Projects.DataTactics.AliveStatements._hyg.37459.37987x._@.SSA.Projects.DataTactics.AliveStatements._hyg.37716.37988x._@.SSA.Projects.DataTactics.AliveStatements._hyg.37843.37989: Equality expected, found something else
+ bitvec_InstCombineShift__476wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.38137.39181x._@.SSA.Projects.DataTactics.AliveStatements._hyg.38654.39182x._@.SSA.Projects.DataTactics.AliveStatements._hyg.38911.39183x._@.SSA.Projects.DataTactics.AliveStatements._hyg.39038.39184: Equality expected, found something else
+ bitvec_InstCombineShift__497wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.39318.39832x._@.SSA.Projects.DataTactics.AliveStatements._hyg.39575.39833x._@.SSA.Projects.DataTactics.AliveStatements._hyg.39702.39834: Equality expected, found something else
+ bitvec_InstCombineShift__497'''wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.39968.40482x._@.SSA.Projects.DataTactics.AliveStatements._hyg.40225.40483x._@.SSA.Projects.DataTactics.AliveStatements._hyg.40352.40484: Equality expected, found something else
+ bitvec_InstCombineShift__582wx._@.SSA.Projects.DataTactics.AliveStatements._hyg.40620.40864x._@.SSA.Projects.DataTactics.AliveStatements._hyg.40747.40865: Equality expected, found something else
 error: Lean exited with code 1
 Some builds logged failures:
 - SSA.Projects.DataTactics.AliveStatements
