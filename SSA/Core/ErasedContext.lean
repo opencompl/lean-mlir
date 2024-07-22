@@ -2,6 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Data.Finset.Basic
+import Mathlib.Data.List.OfFn
 import SSA.Core.HVector
 
 /--
@@ -19,18 +20,56 @@ notation "⟦" x "⟧" => TyDenote.toType x
 instance : TyDenote Unit where toType := fun _ => Unit
 
 /--
+  Typeclass for a `baseType` which supports products
+-/
+class TyHasProd (β : Type) where
+  prod : {arity : ℕ} → (Fin arity → β) → β
+
+/--
+  Typeclass for a `baseType` which supports Gödel codes for n-ary products
+-/
+class TyHasProdDenote (β : Type) [TyDenote β] [C : TyHasProd β] where
+  pack : {arity : ℕ} → {α : Fin arity → β} → (∀i : Fin arity, ⟦α i⟧) → ⟦C.prod α⟧
+  proj : {arity : ℕ} → {α : Fin arity → β} → ∀i : Fin arity, ⟦C.prod α⟧ → ⟦α i⟧
+
+/--
   Typeclass for a `baseType` which supports coproducts
 -/
 class TyHasCoprod (β : Type) where
-  coprod : β → β → β
+  coprod : {arity : ℕ} → (Fin arity → β) → β
 
 /--
-  Typeclass for a `baseType` which supports Gödel codes for coproducts
+  A special-cased binary coproduct
+-/
+abbrev TyHasCoprod.coprod2 {β : Type} [TyHasCoprod β] (a b : β) : β :=
+  TyHasCoprod.coprod (arity := 2) (Fin.cases a (λ_ => b))
+
+/--
+  Typeclass for a `baseType` which supports Gödel codes for n-ary coproducts
 -/
 class TyHasCoprodDenote (β : Type) [TyDenote β] [C : TyHasCoprod β] where
-  inl : toType a →  toType (C.coprod a b)
-  inr : toType a →  toType (C.coprod a b)
-  elim : (toType a → γ) → (toType b → γ) → toType (C.coprod a b) → γ
+  inj : {arity : ℕ} → {α : Fin arity → β} → (i : Fin arity) → ⟦α i⟧ → ⟦C.coprod α⟧
+  elim : {arity : ℕ} → {α : Fin arity → β} →
+    (∀i : Fin arity, ⟦α i⟧ → c) → ⟦C.coprod α⟧ → c
+
+-- TODO: why is this by exact necessary?
+def TyHasCoprodDenote.inl {β : Type} [TyDenote β] [C : TyHasCoprod β] [TyHasCoprodDenote β]
+  {a b : β} (xa : ⟦a⟧) : ⟦C.coprod2 a b⟧ :=
+  TyHasCoprodDenote.inj (arity := 2) (α := Fin.cases a (λ_ => b)) (i := 0) (by exact xa)
+
+/--
+  Right injection into a binary coproduct
+-/
+def TyHasCoprodDenote.inr {β : Type} [TyDenote β] [C : TyHasCoprod β] [TyHasCoprodDenote β]
+  {a b : β} (xb : ⟦b⟧) : ⟦C.coprod2 a b⟧ :=
+  TyHasCoprodDenote.inj (arity := 2) (α := Fin.cases a (λ_ => b)) (i := 1) (by exact xb)
+
+/--
+  Left injection into a binary coproduct
+-/
+def TyHasCoprodDenote.elim2 {β : Type} [TyDenote β] [C : TyHasCoprod β] [TyHasCoprodDenote β]
+  {a b : β} (f : ⟦a⟧ → c) (g : ⟦b⟧ → c) (x : ⟦C.coprod2 a b⟧) : c :=
+  TyHasCoprodDenote.elim (arity := 2) (α := Fin.cases a (λ_ => b)) (λ| 0 => f | 1 => g) x
 
 /-
 TODO: implement a thing `left? : toType (C.coprod α β) → Option (toType α)` using `elim`. This will
@@ -85,6 +124,9 @@ theorem nil_append (Γ : Ctxt Ty) : ∅ ++ Γ = Γ := List.nil_append Γ
 
 theorem append_assoc (Γ Δ Ξ : Ctxt Ty) : Γ ++ Δ ++ Ξ = Γ ++ (Δ ++ Ξ) := List.append_assoc Γ Δ Ξ
 
+/-- Turn a tuple of types into a context -/
+def ofFn {arity : ℕ} (Γ : Fin arity → Ty) : Ctxt Ty := List.ofFn Γ
+
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   List.map f
@@ -98,6 +140,10 @@ lemma map_cons (Γ : Ctxt Ty) (t : Ty) (f : Ty → Ty') :
   map f (Γ.cons t) = (Γ.map f).cons (f t) := rfl
 
 theorem map_snoc (Γ : Ctxt Ty) : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
+
+@[simp]
+theorem map_ofFn {arity : ℕ} (Γ : Fin arity → Ty) (f : Ty → Ty') :
+  (ofFn Γ).map f = ofFn (f ∘ Γ) := List.map_ofFn Γ f
 
 instance : Functor Ctxt where
   map := map
@@ -225,42 +271,103 @@ def casesOn_toSnoc
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
   rfl
 
-def appendEquiv {Γ Δ : Ctxt Ty} {α : Ty} : (Γ ++ Δ).Var α ≃ Γ.Var α ⊕ Δ.Var α where
-  toFun
-  | ⟨x, hx⟩ => if hx' : x < Γ.length then
-      Sum.inl ⟨x, by
-        simp only [get?, List.get?_eq_getElem?] at hx ⊢
-        rw [<-List.getElem?_append] <;> assumption
-      ⟩
-    else
-      Sum.inr ⟨x - Γ.length, by
-        simp only [get?, List.get?_eq_getElem?] at hx ⊢
-        rw [<-List.getElem?_append_right]
-        · exact hx
-        · omega
-      ⟩
-  invFun
-  | Sum.inl ⟨x, hx⟩ => ⟨x, by
+theorem lt_length {Γ : Ctxt Ty} {t : Ty} : (v : Γ.Var t) → v.1 < Γ.length
+  | ⟨_, hx⟩ => (List.get?_eq_some.mp hx).1
+
+def ix {Γ : Ctxt Ty} (v : Γ.Var α) : Fin Γ.length := ⟨v.1, v.lt_length⟩
+
+theorem get_eq {Γ : Ctxt Ty} {t : Ty} (v : Γ.Var t) : Γ.get v.ix = t :=
+  (List.get?_eq_some.mp v.2).2
+
+def ixOfFn {Γ : Fin arity → Ty} {t : Ty} (v : (ofFn Γ).Var t)
+  : Fin arity := ⟨v.1, by
+    have h := v.lt_length;
+    unfold Ctxt.ofFn at h;
+    rw [List.length_ofFn] at h
+    exact h⟩
+
+theorem get_ofFn_eq {Γ : Fin arity → Ty} {t : Ty} (v : (ofFn Γ).Var t) : Γ v.ixOfFn = t := by
+  have h := (List.get?_eq_some.mp v.2).2;
+  unfold ofFn at h
+  simp only [get?, List.get_eq_getElem, List.getElem_ofFn] at h
+  exact h
+
+def appendOfLeft {Γ Δ : Ctxt Ty} {t : Ty} (v : Γ.Var t) : (Γ ++ Δ).Var t :=
+  ⟨v.1, by
+    have hx := v.2;
     simp only [get?, List.get?_eq_getElem?] at hx ⊢
     rw [List.getElem?_append]
     exact hx
     exact (List.getElem?_eq_some.mp hx).1
   ⟩
-  | Sum.inr ⟨x, hx⟩ => ⟨x + Γ.length, by
+
+def appendOfRight {Γ Δ : Ctxt Ty} {t : Ty} (v : Δ.Var t) : (Γ ++ Δ).Var t :=
+  ⟨v.1 + Γ.length, by
+    have hx := v.2;
     simp only [get?, List.get?_eq_getElem?] at hx ⊢
     rw [List.getElem?_append_right] <;> simp [hx]
   ⟩
+
+def ofAppend {Γ Δ : Ctxt Ty} {t : Ty} (v : (Γ ++ Δ).Var t) : Γ.Var t ⊕ Δ.Var t :=
+  if h : v.1 < Γ.length then
+    Sum.inl ⟨v.1, by
+      have hx := v.2
+      simp only [get?, List.get?_eq_getElem?] at hx ⊢
+      rw [<-List.getElem?_append] <;> assumption
+    ⟩
+  else
+    Sum.inr ⟨v.1 - Γ.length, by
+      have hx := v.2
+      simp only [get?, List.get?_eq_getElem?] at hx ⊢
+      rw [<-List.getElem?_append_right]
+      · exact hx
+      · omega
+    ⟩
+
+@[simp]
+theorem ofAppend_appendOfLeft {Γ Δ : Ctxt Ty} {t : Ty} (v : Γ.Var t) :
+  ofAppend (appendOfLeft (Δ := Δ) v) = Sum.inl v := by
+  simp only [ofAppend, appendOfLeft]
+  split_ifs
+  · rfl
+  · exfalso
+    have h := v.lt_length
+    omega
+
+@[simp]
+theorem ofAppend_appendOfRight {Γ Δ : Ctxt Ty} {t : Ty} (v : Δ.Var t) :
+  ofAppend (appendOfRight (Γ := Γ) v) = Sum.inr v := by
+  simp only [ofAppend, appendOfRight]
+  split_ifs
+  · omega
+  . simp
+
+def appendEquiv {Γ Δ : Ctxt Ty} {α : Ty} : (Γ ++ Δ).Var α ≃ Γ.Var α ⊕ Δ.Var α where
+  toFun := ofAppend
+  invFun := Sum.elim appendOfLeft appendOfRight
   left_inv
   | ⟨x, hx⟩ => by
-    simp only [get?]
+    simp only [ofAppend, get?]
     split_ifs
-    . simp
-    . simp only
+    . simp [appendOfLeft]
+    . simp only [Sum.elim_inr, appendOfRight]
       congr
       omega
   right_inv
-  | Sum.inl ⟨x, hx⟩ => by simp [(List.get?_eq_some.mp hx).1]
-  | Sum.inr ⟨x, hx⟩ => by simp [Nat.not_lt_of_le (Nat.le_add_left _ _)]
+  | Sum.inl ⟨x, hx⟩ => by simp [ofAppend, appendOfLeft, (List.get?_eq_some.mp hx).1]
+  | Sum.inr ⟨x, hx⟩ => by simp [ofAppend, appendOfRight, Nat.not_lt_of_le (Nat.le_add_left _ _)]
+
+theorem coe_appendEquiv {Γ Δ : Ctxt Ty} {α : Ty} :
+    (appendEquiv : (Γ ++ Δ).Var α → (Γ.Var α) ⊕ (Δ.Var α)) = ofAppend := rfl
+
+theorem coe_appendEquiv_symm {Γ Δ : Ctxt Ty} {α : Ty} :
+    (appendEquiv.symm : (Γ.Var α) ⊕ (Δ.Var α) → (Γ ++ Δ).Var α)
+    = Sum.elim appendOfLeft appendOfRight := rfl
+
+@[simp]
+theorem ofAppend_inj {Γ Δ : Ctxt Ty} {t : Ty} {v v' : (Γ ++ Δ).Var t} :
+  ofAppend v = ofAppend v' ↔ v = v' := by
+  simp [<-coe_appendEquiv]
 
 end Var
 
@@ -473,6 +580,29 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
+def Valuation.ofFn [P : TyHasProd Ty] [PD : TyHasProdDenote Ty]
+  {arity : ℕ} {Γ : Fin arity → Ty} (V : ⟦P.prod Γ⟧) : Valuation (Ctxt.ofFn Γ) :=
+  λ_ v => v.get_ofFn_eq ▸ (PD.proj v.ixOfFn V)
+
+/-- A valuation `(Γ ++ Δ)` is a valuation `Γ` and a valuation `Δ` -/
+def Valuation.appendEquiv {Γ Δ : Ctxt Ty}
+  : (Γ ++ Δ).Valuation ≃ Γ.Valuation × Δ.Valuation where
+  toFun c := ⟨
+    λ_ i => c i.appendOfLeft,
+    λ_ i => c i.appendOfRight
+  ⟩
+  invFun | ⟨l, r⟩, _, i => i.ofAppend.elim (@l _) (@r _)
+  left_inv c := by
+    funext t v
+    simp only
+    generalize hv' : v.ofAppend = v'
+    cases v' <;>
+    simp only [<-Var.ofAppend_appendOfLeft, <-Var.ofAppend_appendOfRight, Var.ofAppend_inj] at hv'
+    <;> simp [hv']
+  right_inv
+  | ⟨l, r⟩ => by
+    simp only [Prod.mk.injEq]
+    constructor <;> funext t v <;> simp
 
 end Valuation
 
@@ -500,10 +630,15 @@ def CoValuation.ofVar {Γ : Ctxt Ty} (v : Γ.Var α) (a : toType α) : CoValuati
   ⟨α, v, a⟩
 
 /-- transport/pullback a valuation along a context homomorphism. -/
-def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Hom Γi Γo) : Γo.CoValuation where
+def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Hom Γi Γo)
+  : Γo.CoValuation where
   t := Γiv.t
   var := hom Γiv.var
   val := Γiv.val
+
+def CoValuation.ofFn [C : TyHasCoprod Ty] [CD : TyHasCoprodDenote Ty]
+  {arity : ℕ} {Γ : Fin arity → Ty} (V : ⟦C.coprod Γ⟧) : CoValuation (Ctxt.ofFn Γ) :=
+  CD.elim (λi v => { t := _, var := ⟨i, by simp [Ctxt.ofFn]⟩, val := v }) V
 
 /-- A covaluation `(Γ ++ Δ)` is either a covaluation `Γ` or a covaluation `Δ` -/
 def CoValuation.appendEquiv {Γ Δ : Ctxt Ty}
