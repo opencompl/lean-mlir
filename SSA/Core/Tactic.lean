@@ -43,18 +43,12 @@ macro "only_goal" t:tacticSeq : tactic =>
   `(tactic| first | done | $t)
 
 /--
-`simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
-that are evaluated with the valuation `ΓV`.
+`simp_peephole` simplifies away the framework overhead of denoting expressions/programs.
 
 In it's bare form, it only simplifies away the core framework definitions (e.g., `Expr.denote`), but
 we can also pass it dialect-specific definitions to unfold, as in:
-`simp_peephole [foo, bar, baz] at ΓV`
-
-After simplifying, the goal state should only contain occurences of valuation `ΓV` directly applied
-to some variable `v : Var Γ ty`. The tactic tries to eliminate the valuation completely,
-by introducing a new universally quantified (Lean) variable to the goal for every
-(object) variable `v`. -/
-macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
+`simp_peephole [foo, bar, baz]` -/
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" : tactic =>
   `(tactic|
       (
       /- Then, unfold the definition of the denotation of a program -/
@@ -102,17 +96,34 @@ macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident 
           `(HVector.denote_cons)` and `(HVector.denote_nil)` -/
         (HVector.denote_cons), (HVector.denote_nil),
         $ts,*]
+    ))
 
-      -- `simp` might close trivial goals, so we use `only_goal` to ensure we only run
+/--
+`simp_peephole at ΓV` simplifies away the framework overhead of denoting expressions/programs,
+that are evaluated with the valuation `ΓV`.
+
+The actual simplification happens in the `simp_peephole` tactic defined above.
+After simplifying, the goal state should only contain occurences of valuation `ΓV` directly applied
+to some variable `v : Var Γ ty`.
+The present tactic tries to eliminate the valuation completely,
+by introducing a new universally quantified (Lean) variable to the goal for every
+(object) variable `v`.
+-/
+macro "simp_peephole" "[" ts: Lean.Parser.Tactic.simpLemma,* "]" "at" Γv:ident : tactic =>
+  `(tactic|(
+      simp_peephole [$ts,*]
+      -- `simp_peephole` might close trivial goals, so we use `only_goal` to ensure we only run
       -- more tactics when we still have goals to solve, to avoid 'no goals to be solved' errors.
       only_goal
         simp (config := {failIfUnchanged := false}) only [Ctxt.Var.toSnoc, Ctxt.Var.last]
         repeat (generalize_or_fail at $Γv)
         clear $Γv
-      )
-   )
+  ))
 
 /-- `simp_peephole` with no extra user defined theorems. -/
-macro "simp_peephole" "at" Γv:ident : tactic => `(tactic| simp_peephole [] at $Γv)
+macro "simp_peephole" Γv:("at" ident)? : tactic =>
+  match Γv with
+    | none    => `(tactic| simp_peephole [])
+    | some Γv => `(tactic| simp_peephole [] at $(⟨Γv.raw[0]⟩):ident)
 
 end SSA
