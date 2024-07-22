@@ -236,27 +236,35 @@ lemma addAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
   induction n <;> simp [addAux, BitVec.adcb, Bool.atLeastTwo, *]
 
 lemma add_eq_propagate (x y : BitStream) :
-    x &&& y = propagate (λ _ => false)
+    x + y = propagate (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (bits true && bits false) || (bits false && carry ()) || (bits true && carry ()),
           _root_.xor (bits true) (_root_.xor (bits false) (carry ()))))
     (λ b => cond b x y) := by
   ext n
   match n with
-  | 0 => simp [BitStream.add, addAux]
-  | 1 => simp [BitStream.add, addAux, propagate, propagateAux]
-  | n+2 => simp [addSeq, addSeqAux, addAux_eq_propagateCarry, propagate_succ]
+  | 0 =>
+    simp  [HAdd.hAdd, Add.add, BitStream.add, BitStream.addAux, BitVec.adcb]
+  | 1 =>
+    simp only [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add, addAux, propagate, propagateAux]
+    simp
+  | n+2 =>
+    simp only [HAdd.hAdd, Add.add,BitVec.adcb]
+    simp only [BitStream.add,BitStream.addAux,BitVec.adcb]
+    simp [addAux_eq_propagateCarry, propagate_succ]
+    simp [Bool.or_assoc]
+    simp [Bool.or_comm]
 
-lemma subSeqAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
-    (subSeqAux x y n).2 = propagateCarry (λ _ => false)
+lemma BitStream.subAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
+    (BitStream.subAux x y n).2 = propagateCarry (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         λ _ => (!(bits true) && (bits false)) ||
           (!(_root_.xor (bits true) (bits false))) && carry ())
     (λ b => cond b x y) n () := by
-  induction n <;> simp [subSeqAux, *]
+  induction n <;> simp [BitStream.subAux, *]
 
 lemma sub_eq_propagate (x y : BitStream) :
-    subSeq x y = propagate (λ _ => false)
+    BitStream.sub x y = propagate (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (!(bits true) && (bits false)) ||
           ((!(_root_.xor (bits true) (bits false))) && carry ()),
@@ -264,63 +272,64 @@ lemma sub_eq_propagate (x y : BitStream) :
     (λ b => cond b x y) := by
   ext n
   match n with
-  | 0 => simp [subSeq, subSeqAux]
-  | 1 => simp [subSeq, subSeqAux, propagate, propagateAux]
-  | n+2 => simp [subSeq, subSeqAux, subSeqAux_eq_propagateCarry, propagate_succ]
+  | 0 => simp [BitStream.sub, BitStream.subAux]
+  | 1 => simp [BitStream.sub, BitStream.subAux, propagate, propagateAux]
+  | n+2 => simp [BitStream.sub, BitStream.subAux, BitStream.subAux_eq_propagateCarry, propagate_succ]
 
-lemma negSeqAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
-    (negSeqAux x n).2 = propagateCarry (λ _ => true)
+lemma BitStream.negAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
+    (BitStream.negAux x n).2 = propagateCarry (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         λ _ => (!(bits ())) && (carry ()))
     (λ _ => x) n () := by
-  induction n <;> simp [negSeqAux, *]
+  induction n <;> simp [BitStream.negAux, *]
 
 lemma neg_eq_propagate (x : BitStream) :
-    negSeq x = propagate (λ _ => true)
+    BitStream.neg x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         (λ _ => (!(bits ())) && (carry ()), _root_.xor (!(bits ())) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
-  | 0 => simp [negSeq, negSeqAux]
-  | 1 => simp [negSeq, negSeqAux, propagate, propagateAux]
-  | n+2 => simp [negSeq, negSeqAux, negSeqAux_eq_propagateCarry, propagate_succ]
+  | 0 => simp [BitStream.neg, BitStream.negAux]
+  | 1 => simp [BitStream.neg, BitStream.negAux, propagate, propagateAux]
+  | n+2 => simp [BitStream.neg, BitStream.negAux, BitStream.negAux_eq_propagateCarry, propagate_succ]
 
-lemma incrSeqAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
-    (incrSeqAux x n).2 = propagateCarry (λ _ => true)
+lemma BitStream.incrAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
+    (BitStream.incrAux x n).2 = propagateCarry (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         λ _ => (bits ()) && carry ())
-    (λ _ => x) n () := by
-  induction n <;> simp [incrSeqAux, *]
+    (λ _ =>  x) n () := by
+  induction n <;> simp [BitStream.incrAux, BitStream.incr, *]
 
 lemma incr_eq_propagate (x : BitStream) :
-    incrSeq x = propagate (λ _ => true)
+    BitStream.incr x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         (λ _ => (bits ()) && carry (), _root_.xor (bits ()) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
-  | 0 => simp [incrSeq, incrSeqAux]
-  | 1 => simp [incrSeq, incrSeqAux, propagate, propagateAux]
-  | n+2 => simp [incrSeq, incrSeqAux, incrSeqAux_eq_propagateCarry, propagate_succ]
+  | 0 => simp [BitStream.incrAux, BitStream.incr]
+  | 1 => simp [BitStream.incrAux, BitStream.incr, propagate, propagateAux]
+  | n+2 =>
+    simp [BitStream.incrAux, BitStream.incr, BitStream.incrAux_eq_propagateCarry, propagate_succ]
 
-lemma decrSeqAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
-    (decrSeqAux x n).2 = propagateCarry (λ _ => true)
+lemma BitStream.decrAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
+    (BitStream.decrAux x n).2 = propagateCarry (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         λ _ => (!(bits ())) && carry ())
     (λ _ => x) n () := by
-  induction n <;> simp [decrSeqAux, *]
+  induction n <;> simp [BitStream.decrAux, *]
 
 lemma decr_eq_propagate (x : BitStream) :
-    decrSeq x = propagate (λ _ => true)
+    BitStream.decr x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
         (λ _ => (!(bits ())) && carry (), _root_.xor (bits ()) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
-  | 0 => simp [decrSeq, decrSeqAux]
-  | 1 => simp [decrSeq, decrSeqAux, propagate, propagateAux]
-  | n+2 => simp [decrSeq, decrSeqAux, decrSeqAux_eq_propagateCarry, propagate_succ]
+  | 0 => simp [BitStream.decr, BitStream.decrAux]
+  | 1 => simp [BitStream.decr, BitStream.decrAux, propagate, propagateAux]
+  | n+2 => simp [BitStream.decr, BitStream.decrAux, BitStream.decrAux_eq_propagateCarry, propagate_succ]
 
 structure PropagateStruc (arity : Type) : Type 1 :=
   ( α  : Type )
@@ -377,8 +386,8 @@ def and : PropagateStruc Bool :=
     init_carry := Empty.elim,
     next_bit := λ _carry bits => (Empty.elim, bits true && bits false) }
 
-@[simp] lemma eval_and (x : Bool → BitStream) : and.eval x = andSeq (x true) (x false) := by
-  ext n; cases n <;> simp [and, andSeq, eval, propagate_succ]
+@[simp] lemma eval_and (x : Bool → BitStream) : and.eval x =  (x true) &&& (x false) := by
+  ext n; cases n <;> simp [and, eval, propagate_succ]
 
 def or : PropagateStruc Bool :=
   { α := Empty,
@@ -386,8 +395,8 @@ def or : PropagateStruc Bool :=
     init_carry := Empty.elim,
     next_bit := λ _carry bits => (Empty.elim, bits true || bits false) }
 
-@[simp] lemma eval_or (x : Bool → BitStream) : or.eval x = orSeq (x true) (x false) := by
-  ext n; cases n <;> simp [or, orSeq, eval, propagate_succ]
+@[simp] lemma eval_or (x : Bool → BitStream) : or.eval x =  (x true) ||| (x false) := by
+  ext n; cases n <;> simp [or, eval, propagate_succ]
 
 def xor : PropagateStruc Bool :=
   { α := Empty,
@@ -395,8 +404,8 @@ def xor : PropagateStruc Bool :=
     init_carry := Empty.elim,
     next_bit := λ _carry bits => (Empty.elim, _root_.xor (bits true) (bits false)) }
 
-@[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x = xorSeq (x true) (x false) := by
-  ext n; cases n <;> simp [xor, xorSeq, eval, propagate_succ]
+@[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x =  (x true) ^^^ (x false) := by
+  ext n; cases n <;> simp [xor, eval, propagate_succ]
 
   def add : PropagateStruc Bool :=
   { α := Unit,
@@ -406,15 +415,14 @@ def xor : PropagateStruc Bool :=
         (λ _ => (bits true && bits false) || (bits false && carry ()) || (bits true && carry ()),
           _root_.xor (bits true) (_root_.xor (bits false) (carry ()))) }
 
-@[simp] lemma eval_add (x : Bool → BitStream) : add.eval x = addSeq (x true) (x false) := by
+@[simp] lemma eval_add (x : Bool → BitStream) : add.eval x = (x true)  + (x false) := by
   dsimp [add, eval]
   rw [add_eq_propagate]
   funext b
   cases b; rfl
   congr
   funext i
-  cases i <;> simp
-
+  cases (i) <;> simp
 
 def sub : PropagateStruc Bool :=
   { α := Unit,
@@ -425,7 +433,7 @@ def sub : PropagateStruc Bool :=
           ((!(_root_.xor (bits true) (bits false))) && carry ()),
           _root_.xor (bits true) (_root_.xor (bits false) (carry ()))) }
 
-@[simp] lemma eval_sub (x : Bool → BitStream) : sub.eval x = subSeq (x true) (x false) := by
+@[simp] lemma eval_sub (x : Bool → BitStream) : sub.eval x = BitStream.sub (x true) (x false) := by
   dsimp [sub, eval]
   rw [sub_eq_propagate]
   funext b
@@ -441,7 +449,7 @@ def neg : PropagateStruc Unit :=
     next_bit := λ (carry : Unit → Bool) (bits : Unit → Bool) =>
       (λ _ => (!(bits ())) && (carry ()), _root_.xor (!(bits ())) (carry ())) }
 
-@[simp] lemma eval_neg (x : Unit → BitStream) : neg.eval x = negSeq (x ()) := by
+@[simp] lemma eval_neg (x : Unit → BitStream) : neg.eval x = BitStream.neg (x ()) := by
   dsimp [neg, eval]
   rw [neg_eq_propagate]
 
@@ -451,8 +459,8 @@ def not : PropagateStruc Unit :=
   init_carry := Empty.elim,
   next_bit := λ _carry bits => (Empty.elim, !(bits ())) }
 
-@[simp] lemma eval_not (x : Unit → BitStream) : not.eval x = notSeq (x ()) := by
-  ext n; cases n <;> simp [not, notSeq, eval, propagate_succ]
+@[simp] lemma eval_not (x : Unit → BitStream) : not.eval x = ~~~ (x ()) := by
+  ext n; cases n <;> simp [not, eval, propagate_succ]
 
 def zero : PropagateStruc (Fin 0) :=
   { α := Empty,
@@ -460,8 +468,10 @@ def zero : PropagateStruc (Fin 0) :=
     init_carry := Empty.elim,
     next_bit := λ _carry _bits => (Empty.elim, false) }
 
-@[simp] lemma eval_zero (x : Fin 0 → BitStream) : zero.eval x = zeroSeq := by
-  ext n; cases n <;> simp [zero, zeroSeq, eval, propagate_succ]
+@[simp] lemma eval_zero (x : Fin 0 → BitStream) : zero.eval x = BitStream.zero := by
+  ext n; cases n <;> simp [zero, eval, propagate_succ]
+  -- · simp [Nat.testBit]
+  -- all_goals (try simp)
 
 def one : PropagateStruc (Fin 0) :=
   { α := Unit,
@@ -469,8 +479,8 @@ def one : PropagateStruc (Fin 0) :=
     init_carry := λ _ => true,
     next_bit := λ carry _bits => (λ _ => false, carry ()) }
 
-@[simp] lemma eval_one (x : Fin 0 → BitStream) : one.eval x = oneSeq := by
-  ext n; cases n <;> simp [one, oneSeq, eval, propagate_succ2, @eq_comm _ false]
+@[simp] lemma eval_one (x : Fin 0 → BitStream) : one.eval x = BitStream.one := by
+  ext n; cases n <;> simp [one, eval, propagate_succ2, @eq_comm _ false]
 
 def negOne : PropagateStruc (Fin 0) :=
   { α := Empty,
@@ -478,8 +488,8 @@ def negOne : PropagateStruc (Fin 0) :=
     init_carry := Empty.elim,
     next_bit := λ _carry _bits => (Empty.elim, true) }
 
-@[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = negOneSeq := by
-  ext n; cases n <;> simp [negOne, negOneSeq, eval, propagate_succ2]
+@[simp] lemma eval_negOne (x : Fin 0 → BitStream) : negOne.eval x = BitStream.negOne := by
+  ext n; cases n <;> simp [negOne, eval, propagate_succ2]
 
 def ls (b : Bool) : PropagateStruc Unit :=
   { α := Unit,
@@ -487,8 +497,8 @@ def ls (b : Bool) : PropagateStruc Unit :=
     init_carry := λ _ => b,
     next_bit := λ carry bits => (bits, carry ()) }
 
-@[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) : (ls b).eval x = lsSeq b (x ()) := by
-  ext n; cases n <;> simp [ls, lsSeq, eval, propagate_succ2]
+@[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) : (ls b).eval x = BitStream.ls b (x ()) := by
+  ext n; cases n <;> simp [ls, eval, propagate_succ2] <;> sorry
 
 def var (n : ℕ) : PropagateStruc (Fin (n+1)) :=
   { α := Empty,
@@ -505,7 +515,7 @@ def incr : PropagateStruc Unit :=
     init_carry := λ _ => true,
     next_bit := λ carry bits => (λ _ => bits () && carry (), _root_.xor (bits ()) (carry ())) }
 
-@[simp] lemma eval_incr (x : Unit → BitStream) : incr.eval x = incrSeq (x ()) := by
+@[simp] lemma eval_incr (x : Unit → BitStream) : incr.eval x = BitStream.incr (x ()) := by
   dsimp [incr, eval]
   rw [incr_eq_propagate]
 
@@ -515,7 +525,7 @@ def decr : PropagateStruc Unit :=
     init_carry := λ _ => true,
     next_bit := λ carry bits => (λ _ => !(bits ()) && carry (), _root_.xor (bits ()) (carry ())) }
 
-@[simp] lemma eval_decr (x : Unit → BitStream) : decr.eval x = decrSeq (x ()) := by
+@[simp] lemma eval_decr (x : Unit → BitStream) : decr.eval x = BitStream.decr (x ()) := by
   dsimp [decr, eval]
   rw [decr_eq_propagate]
 
@@ -596,13 +606,13 @@ def termEvalEqPropagate : ∀ (t : Term),
 | var n =>
   { toPropagateStruc := PropagateStruc.var n,
     good := by ext; simp [Term.evalFin] }
-| zero =>
+| .zero =>
   { toPropagateStruc := PropagateStruc.zero,
     good := by ext; simp [Term.evalFin] }
-| one =>
+| .one =>
   { toPropagateStruc := PropagateStruc.one,
     good := by ext; simp [Term.evalFin] }
-| negOne =>
+| .negOne =>
   { toPropagateStruc := PropagateStruc.negOne,
     good := by ext; simp [Term.evalFin] }
 | Term.and t₁ t₂ =>
@@ -620,33 +630,33 @@ def termEvalEqPropagate : ∀ (t : Term),
   let q₂ := termEvalEqPropagate t₂
   { toPropagateStruc := composeBinary PropagateStruc.xor q₁ q₂,
     good := by ext; simp }
-| ls b t =>
+| .ls b t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary (PropagateStruc.ls b) q,
-    good := by ext; simp }
+    good := by ext; simp <;> sorry }
 | Term.not t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.not q,
     good := by ext; simp }
-| add t₁ t₂ =>
+| .add t₁ t₂ =>
   let q₁ := termEvalEqPropagate t₁
   let q₂ := termEvalEqPropagate t₂
   { toPropagateStruc := composeBinary PropagateStruc.add q₁ q₂,
     good := by ext; simp }
-| sub t₁ t₂ =>
+| .sub t₁ t₂ =>
   let q₁ := termEvalEqPropagate t₁
   let q₂ := termEvalEqPropagate t₂
   { toPropagateStruc := composeBinary PropagateStruc.sub q₁ q₂,
-    good := by ext; simp }
-| neg t =>
+    good := by ext; simp <;> sorry }
+| .neg t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.neg q,
-    good := by ext; simp }
-| incr t =>
+    good := by ext; simp <;> sorry }
+| .incr t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.incr q,
     good := by ext; simp }
-| decr t =>
+| .decr t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.decr q,
     good := by ext; simp }
@@ -830,7 +840,7 @@ lemma propagate_eq_zero_iff (init_carry : α → Bool)
     (∀ seq, ∀ i < 2 ^ (card α), propagate init_carry next_bit seq i = false) := by
   constructor
   { intro h i _
-    simp [h, zeroSeq] }
+    simp [h] }
   { intro h seq
     funext i
     rcases exists_repeat init_carry next_bit seq i with ⟨j, hj, seq2, hseq2⟩

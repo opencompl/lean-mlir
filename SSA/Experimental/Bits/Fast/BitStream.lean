@@ -22,7 +22,15 @@ theorem bmod_ofNat_eq_of_lt (n m : Nat) (h : n < (m + 1) / 2) :
 
 theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
     a % b = b.natAbs + a := by
-  sorry
+      simp [HMod.hMod, Mod.mod, Int.emod]
+      cases a
+      all_goals (rename_i o)
+      {
+        have := Int.zero_le_ofNat o
+        contradiction
+      }
+      simp only [ Int.abs_eq_natAbs]
+      sorry
 
 
 end Int
@@ -31,7 +39,7 @@ namespace BitVec
 open BitVec
 
 @[simp] theorem getMsb_not (x : BitVec w) : (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
-  by_cases h : i < w <;> simp [getMsb, h] <;> omega
+  by_cases h : i < w <;> simp [getMsb, h] ; omega
 
 @[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
   simp [BitVec.msb]
@@ -225,7 +233,9 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem and_eq : (x &&& y) i = (x i && y i)      := rfl
 @[simp] theorem  or_eq : (x ||| y) i = (x i || y i)      := rfl
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
-
+def ls (b : Bool) (s : Nat → Bool) : BitStream
+  | 0 => b
+  | (n+1) => s n
 variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
