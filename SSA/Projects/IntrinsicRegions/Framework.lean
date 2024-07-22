@@ -1,3 +1,10 @@
+/-
+We develop the core theory of unstructured control flow that is intrinsically well-typed.
+The key insight to intrinsically well-type a CFG is to realize that a CFG is inductively well-typed
+when performing induction on the *dominator tree*. 
+
+Author: Jad Ghaliyani, Siddharth Bhat
+-/
 import Init.Data.BitVec.Basic
 import Init.Data.BitVec.Lemmas
 import Init.Data.BitVec.Bitblast

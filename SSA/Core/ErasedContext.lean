@@ -505,6 +505,7 @@ def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Ho
   var := hom Γiv.var
   val := Γiv.val
 
+/-- A covaluation `(Γ ++ Δ)` is either a covaluation `Γ` or a covaluation `Δ` -/
 def CoValuation.appendEquiv {Γ Δ : Ctxt Ty}
   : (Γ ++ Δ).CoValuation ≃ Γ.CoValuation ⊕ Δ.CoValuation where
   toFun c := (Var.appendEquiv c.var).elim
