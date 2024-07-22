@@ -18,6 +18,29 @@ notation "⟦" x "⟧" => TyDenote.toType x
 
 instance : TyDenote Unit where toType := fun _ => Unit
 
+/--
+  Typeclass for a `baseType` which supports coproducts
+-/
+class TyHasCoprod (β : Type) where
+  coprod : β → β → β
+
+/--
+  Typeclass for a `baseType` which supports Gödel codes for coproducts
+-/
+class TyHasCoprodDenote (β : Type) [TyDenote β] [C : TyHasCoprod β] where
+  inl : toType a →  toType (C.coprod a b)
+  inr : toType a →  toType (C.coprod a b)
+  elim : (toType a → γ) → (toType b → γ) → toType (C.coprod a b) → γ
+
+/-
+TODO: implement a thing `left? : toType (C.coprod α β) → Option (toType α)` using `elim`. This will
+allow us to cleanup case_inl by writing `(ha : (l : toType  α) ∈ a.evaluate VΓ |>.left?)`
+-/
+
+/-
+TODO: add lawful instance of TyHasCoprodDenote for proving properties about the universal property.
+-/
+
 def Ctxt (Ty : Type) : Type :=
   -- Erased <| List Ty
   List Ty
@@ -49,6 +72,18 @@ def ofList : List Ty → Ctxt Ty :=
 @[simp]
 def get? : Ctxt Ty → Nat → Option Ty :=
   List.get?
+
+/-- Catenation of contexts is just catenation of lists -/
+instance : Append (Ctxt Ty) where
+  append Γ Δ := List.append Γ Δ
+
+@[simp]
+theorem append_nil (Γ : Ctxt Ty) : Γ ++ ∅ = Γ := List.append_nil Γ
+
+@[simp]
+theorem nil_append (Γ : Ctxt Ty) : ∅ ++ Γ = Γ := List.nil_append Γ
+
+theorem append_assoc (Γ Δ Ξ : Ctxt Ty) : Γ ++ Δ ++ Ξ = Γ ++ (Δ ++ Ξ) := List.append_assoc Γ Δ Ξ
 
 /-- Map a function from one type universe to another over a context -/
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
@@ -189,6 +224,43 @@ def casesOn_toSnoc
     (last : {Γ : Ctxt Ty} → {t : Ty} → motive Γ t t (Ctxt.Var.last _ _)) :
       Ctxt.Var.casesOn (motive := motive) (Ctxt.Var.toSnoc (t' := t') v) base last = base v :=
   rfl
+
+def appendEquiv {Γ Δ : Ctxt Ty} {α : Ty} : (Γ ++ Δ).Var α ≃ Γ.Var α ⊕ Δ.Var α where
+  toFun
+  | ⟨x, hx⟩ => if hx' : x < Γ.length then
+      Sum.inl ⟨x, by
+        simp only [get?, List.get?_eq_getElem?] at hx ⊢
+        rw [<-List.getElem?_append] <;> assumption
+      ⟩
+    else
+      Sum.inr ⟨x - Γ.length, by
+        simp only [get?, List.get?_eq_getElem?] at hx ⊢
+        rw [<-List.getElem?_append_right]
+        · exact hx
+        · omega
+      ⟩
+  invFun
+  | Sum.inl ⟨x, hx⟩ => ⟨x, by
+    simp only [get?, List.get?_eq_getElem?] at hx ⊢
+    rw [List.getElem?_append]
+    exact hx
+    exact (List.getElem?_eq_some.mp hx).1
+  ⟩
+  | Sum.inr ⟨x, hx⟩ => ⟨x + Γ.length, by
+    simp only [get?, List.get?_eq_getElem?] at hx ⊢
+    rw [List.getElem?_append_right] <;> simp [hx]
+  ⟩
+  left_inv
+  | ⟨x, hx⟩ => by
+    simp only [get?]
+    split_ifs
+    . simp
+    . simp only
+      congr
+      omega
+  right_inv
+  | Sum.inl ⟨x, hx⟩ => by simp [(List.get?_eq_some.mp hx).1]
+  | Sum.inr ⟨x, hx⟩ => by simp [Nat.not_lt_of_le (Nat.le_add_left _ _)]
 
 end Var
 
@@ -404,6 +476,58 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
 
 end Valuation
 
+section CoValuation
+
+variable [TyDenote Ty]
+
+/-- A Covaluation for a context. Provide a value for some type in the context. -/
+structure CoValuation (Γ : Ctxt Ty) where
+  t : Ty
+  var : Γ.Var t
+  val : toType t
+
+/-- Eliminate a CoValuation of an empty context. -/
+@[simp]
+def CoValuation.elim_nil (V : CoValuation (∅ : Ctxt Ty)) : False :=
+  V.var.emptyElim
+
+/-- Build a covaluation for a single type context. -/
+def CoValuation.singleton (t : Ty) (v : toType t) : CoValuation [t] :=
+  ⟨t, Var.last _ _, v⟩
+
+/-- Build a CoValuation from a variable and a value. -/
+def CoValuation.ofVar {Γ : Ctxt Ty} (v : Γ.Var α) (a : toType α) : CoValuation Γ :=
+  ⟨α, v, a⟩
+
+/-- transport/pullback a valuation along a context homomorphism. -/
+def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Hom Γi Γo) : Γo.CoValuation where
+  t := Γiv.t
+  var := hom Γiv.var
+  val := Γiv.val
+
+def CoValuation.appendEquiv {Γ Δ : Ctxt Ty}
+  : (Γ ++ Δ).CoValuation ≃ Γ.CoValuation ⊕ Δ.CoValuation where
+  toFun c := (Var.appendEquiv c.var).elim
+    (λvar => Sum.inl { var, t := c.t, val := c.val })
+    (λvar => Sum.inr { var, t := c.t, val := c.val })
+  invFun
+    | Sum.inl c => { t := c.t, var := (Var.appendEquiv.symm (Sum.inl c.var)), val := c.val }
+    | Sum.inr c => { t := c.t, var := (Var.appendEquiv.symm (Sum.inr c.var)), val := c.val }
+  left_inv
+    | ⟨t, v, l⟩ => by
+      generalize hv' : Var.appendEquiv v = v'
+      simp only [hv']
+      cases v'
+      <;> simp only [Sum.elim_inl, Sum.elim_inr]
+      <;> simp [<-hv']
+  right_inv c := by cases c <;> simp
+
+/-
+TODO: write helpers to coerce to a from a value of 'toType Γ.Var α'.
+We suspect that this will come up when reasoning about straight line code.
+-/
+
+end CoValuation
 
 /- ## VarSet -/
 
