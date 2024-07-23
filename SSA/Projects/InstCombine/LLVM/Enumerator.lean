@@ -184,7 +184,7 @@ def generateRawSemantics : IO Unit := do
   rows := rows.append (binopRows "and"  (fun w a b => InstCombine.Op.denote (.and w)  [a,b]ₕ))
   rows := rows.append (binopRows "or"   (fun w a b => InstCombine.Op.denote (.or w)   [a,b]ₕ))
   rows := rows.append (binopRows "xor"  (fun w a b => InstCombine.Op.denote (.xor w)  [a,b]ₕ))
-  rows := rows.append (binopRows "add"  (fun w a b => InstCombine.Op.denote (.add w)  [a,b]ₕ))
+  rows := rows.append (binopRows "add"  (fun w a b => InstCombine.Op.denote (.add false false w)  [a,b]ₕ))
   rows := rows.append (binopRows "sub"  (fun w a b => InstCombine.Op.denote (.sub w)  [a,b]ₕ))
   rows := rows.append (binopRows "mul"  (fun w a b => InstCombine.Op.denote (.mul w)  [a,b]ₕ))
   rows := rows.append (binopRows "udiv" (fun w a b => InstCombine.Op.denote (.udiv w) [a,b]ₕ))
