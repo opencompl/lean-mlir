@@ -24,26 +24,26 @@ theorem not_eq_neg_sub_one {x : BitVec w} :
 
 theorem neg_eq_neg_not_one {x : BitVec w} :
     -x = ~~~(x - 1) := by
-  rw[not_eq_neg_sub_one]
+  rw [not_eq_neg_sub_one]
   ring
 
 theorem not_not {x : BitVec w} :
     ~~~ ~~~ x = x := by
-  rw[not_eq_neg_sub_one,not_eq_neg_sub_one]
+  rw [not_eq_neg_sub_one,not_eq_neg_sub_one]
   ring
 
 theorem neg_not_eq_add_one {x : BitVec w} :
     - ~~~ x = x + 1 := by
-  rw[BitVec.neg_eq_not_add, not_not]
+  rw [BitVec.neg_eq_not_add, not_not]
 
 theorem not_neg_eq_sub_one {x : BitVec w} :
     ~~~ (-x) = x - 1 := by
-  rw[not_eq_neg_sub_one]
+  rw [not_eq_neg_sub_one]
   ring
 
 theorem add_eq_sub_not_sub_one {x y : BitVec w} :
     x + y = x - ~~~ y - 1 := by
-  rw[not_eq_neg_sub_one]
+  rw [not_eq_neg_sub_one]
   ring
 
 theorem add_eq_xor_add_mul_and {x y : BitVec w} :
@@ -97,7 +97,7 @@ theorem not_sub_eq_not_add {x y : BitVec w} :
   rw[not_eq_neg_sub_one, not_eq_neg_sub_one]
   ring
 
-theorem or_eq_not_or_sub_not {x y : BitVec w} :
+theorem or_eq_and_not_add {x y : BitVec w} :
     x ||| y = (x &&& ~~~ y) + y := by
   sorry
 
