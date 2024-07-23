@@ -8,7 +8,7 @@ section UpStream
 namespace Int
 
 theorem bmod_eq_of_ge_and_le (z : Int) (m : Nat)
-    (lower_bound : m/2 ≤ z) (upper_bound : z < m/2) :
+    (hlower_bound : m/2 ≤ z) (hupper_bound : z < m/2) :
     z.bmod m = z := by
   omega
 
