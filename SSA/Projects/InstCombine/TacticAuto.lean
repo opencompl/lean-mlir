@@ -87,31 +87,30 @@ and then solve with the omega tactic.
 macro "of_bool_tactic" : tactic =>
   `(tactic|
     (
-      repeat (
-        first
-      | simp [bv_ofBool]
-      | simp [ForLean.ofBool_eq']
-      | simp
-      | simp only [bne]
-      )
-      repeat (
-        first
-      | simp only [BitVec.ule]
-      | simp only [BitVec.ult]
-      | simp only [BitVec.sle]
-      | simp only [BitVec.slt]
-      | simp only [BitVec.toInt]
-      | simp only [BEq.beq]
+    repeat (
+      first
+    | simp only [bv_ofBool]
+    | simp only [BitVec.ule]
+    | simp only [BitVec.ult]
+    | simp only [BitVec.sle]
+    | simp only [BitVec.slt]
+    | simp only [BitVec.toInt]
+    | simp only [BEq.beq]
+    | simp only [bne]
+    )
+    try ext
+    try simp
+    repeat (
+      first
       | simp only [← Bool.decide_or]
       | simp only [← Bool.decide_and]
       | simp only [← decide_not]
       | simp only [decide_eq_decide]
       | simp [of_decide_eq_true]
       | simp only [BitVec.toNat_eq]
-      )
-      try omega
     )
-  )
+    try omega
+    ))
 
 macro "simp_alive_bitvec": tactic =>
   `(tactic|
