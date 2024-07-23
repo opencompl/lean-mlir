@@ -36,6 +36,12 @@ jobs:
           lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA.Experimental.Bits.Decide SSA.Experimental.Bits.Fast.Decide
 
+      - name: Compile Hacker's Delight Theorems 📘💻🧠🔢🔍🖥️⚡️🧮🔧🔨 0️⃣1️⃣🔀
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build SSA.Projects.InstCombine.HackersDelight # compile and check the Hacker's Delight theorems
+
+
       - name: Compile Alive Examples
         run: |
           lake -R exe cache get # download cache of mathlib docs.
