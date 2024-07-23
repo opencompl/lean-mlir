@@ -836,12 +836,14 @@ lemma exists_repeat : ∀ (seq : β → BitStream)
 
 lemma propagate_eq_zero_iff (init_carry : α → Bool)
     (next_bit : ∀ (_carry : α → Bool) (_bits : β → Bool), (α → Bool) × Bool) :
-    (∀ seq, propagate init_carry next_bit seq = zeroSeq) ↔
+    (∀ seq, propagate init_carry next_bit seq = BitStream.zero) ↔
     (∀ seq, ∀ i < 2 ^ (card α), propagate init_carry next_bit seq i = false) := by
   constructor
   { intro h i _
-    simp [h] }
+    simp [h]
+     }
   { intro h seq
     funext i
     rcases exists_repeat init_carry next_bit seq i with ⟨j, hj, seq2, hseq2⟩
-    rw [← hseq2, h seq2 j hj, zeroSeq] }
+    rw [← hseq2, h seq2 j hj]
+     }
