@@ -109,7 +109,7 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.add"    =>  do
           let attr? := opStx.attrs.getAttr "overflowFlags"
           match attr? with
-            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add)
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add false false)
             | .some y => match y with
               | (.opaque_ "llvm.overflow" "nsw") => pure <| Sum.inl (MOp.BinaryOp.add true false)
               | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.add false true)

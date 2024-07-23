@@ -247,7 +247,7 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev add (nsw : Bool := false) (nuw : Bool := false) : Nat → Op := fun w => MOp.add (.concrete w) nsw nuw
+@[match_pattern] abbrev add (w : Nat) (nsw : Bool := false) (nuw : Bool := false) : Op:=  MOp.add (.concrete w) nsw nuw
 @[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
 @[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
@@ -306,7 +306,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add nsw nuw _       => LLVM.add    (op.getN 0) (op.getN 1) nsw nuw
+  | Op.add w nsw nuw       => LLVM.add    (op.getN 0) (op.getN 1) nsw nuw
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
