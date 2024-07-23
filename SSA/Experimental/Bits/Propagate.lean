@@ -498,7 +498,8 @@ def ls (b : Bool) : PropagateStruc Unit :=
     next_bit := λ carry bits => (bits, carry ()) }
 
 @[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) : (ls b).eval x = BitStream.ls b (x ()) := by
-  ext n; cases n <;> simp [ls, eval, propagate_succ2] <;> sorry
+  ext n; cases n <;> simp [ls, eval, propagate_succ2]
+  all_goals (simp [BitStream.ls])
 
 def var (n : ℕ) : PropagateStruc (Fin (n+1)) :=
   { α := Empty,
@@ -633,7 +634,11 @@ def termEvalEqPropagate : ∀ (t : Term),
 | .ls b t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary (PropagateStruc.ls b) q,
-    good := by ext; simp <;> sorry }
+    good := by
+      ext
+      simp
+      simp [concat,BitStream.ls]
+    }
 | Term.not t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.not q,
@@ -647,11 +652,19 @@ def termEvalEqPropagate : ∀ (t : Term),
   let q₁ := termEvalEqPropagate t₁
   let q₂ := termEvalEqPropagate t₂
   { toPropagateStruc := composeBinary PropagateStruc.sub q₁ q₂,
-    good := by ext; simp <;> sorry }
+    good := by
+      ext
+      simp
+      simp [HSub.hSub, Sub.sub, BitStream.sub]
+      }
 | .neg t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.neg q,
-    good := by ext; simp <;> sorry }
+    good := by
+      ext
+      simp
+      simp [Neg.neg, BitStream.neg]
+       }
 | .incr t =>
   let q := termEvalEqPropagate t
   { toPropagateStruc := by dsimp [arity]; exact composeUnary PropagateStruc.incr q,
