@@ -1,5 +1,4 @@
 import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
 
 import Mathlib.Logic.Function.Iterate
 
@@ -32,22 +31,19 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
         contradiction
       }
       simp only [Int.abs_eq_natAbs, subNatNat, HAdd.hAdd, Add.add, Int.add]
-      let e : o.succ = (o.mod b.natAbs).add 1 := by
-        simp only [Nat.mod]
-        simp only [Nat.add]
+      have e : o.succ = (o.mod b.natAbs).add 1 := by
+        simp only [Nat.mod, Nat.add]
         congr
         cases o
         all_goals simp
         rename_i g
         have l : ¬ (b.natAbs ≤ g + 1) := by
-          simp
           have y : g + 2 ≤ ↑b.natAbs := by
-            -- ring_nf at H2
             rw [← Int.ofNat_le]
             rw [Int.add_comm, Int.negSucc_eq] at H2
             omega
           omega
-        simp  [l]
+        simp [l]
       simp only [e]
 
 
@@ -74,6 +70,7 @@ open BitVec
   case false => simp
   case true  =>
     simp only [↓reduceIte, toNat_cons, Bool.toNat_true, Nat.cast_pow, Nat.cast_ofNat]
+
     sorry
 
 variable {α β} [Coe α β] (as : List α)
@@ -224,7 +221,13 @@ section Lemmas
 
 theorem toBitVec_eq_of_equalUpTo {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
     x.toBitVec w = y.toBitVec w := by
-  sorry
+  simp [EqualUpTo] at h
+  induction w
+  all_goals simp [toBitVec]
+  rename_i r f
+  have a := h r (Nat.lt_add_of_pos_right (by decide))
+  have b := f (fun y g => h y (by omega))
+  rw [a,b]
 
 theorem eq_of_ofBitVec_eq (x y : BitVec w) :
     ofBitVec x ={≤w} ofBitVec y → x = y := by
