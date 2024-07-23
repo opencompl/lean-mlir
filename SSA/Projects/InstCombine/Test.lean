@@ -197,7 +197,7 @@ info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
                 (Com.ret ⟨0, ⋯⟩)))))⟩⟩⟩
 -/
 #guard_msgs in #reduce com
-#reduce com
+
 theorem com_Γ : com.1 = (Γn 1) := by rfl
 theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
 
