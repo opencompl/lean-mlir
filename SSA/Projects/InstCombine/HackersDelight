@@ -11,7 +11,7 @@ namespace Ch2Basics
 
 theorem neg_add_eq_neg_sub {x: BitVec w } :
     -(x + y) = -x - y := by
-    ring
+  ring
 
 theorem neg_eq_not_add_one {x : BitVec w} :
     -x = ~~~x + 1 := by
@@ -20,7 +20,7 @@ theorem neg_eq_not_add_one {x : BitVec w} :
 theorem not_eq_neg_sub_one {x : BitVec w} :
     ~~~ x = -x - 1 := by
   apply BitVec.eq_sub_iff_add_eq.mpr
-  rw[BitVec.neg_eq_not_add]
+  rw [BitVec.neg_eq_not_add]
 
 theorem neg_eq_neg_not_one {x : BitVec w} :
     -x = ~~~(x - 1) := by
