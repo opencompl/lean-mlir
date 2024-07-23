@@ -29,7 +29,7 @@ jobs:
       - name: Compile Library 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
-          lake -R build SSA
+          lake -R build SSA --wfail
 
       - name: Compile Decide Experiment 🧐
         run: |
@@ -44,7 +44,7 @@ jobs:
       - name: Compile Alive Examples
         run: |
           lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveExamples 2>&1 | tee out
+          lake -R build AliveExamples --wfail 2>&1 | tee out
           echo `grep theorem SSA/Projects/InstCombine/AliveStatements.lean | wc -l` > all
           grep 'Alive.*sorry' out | wc -l > failed
           x=$((`cat all`  -  `cat failed`)); echo $x > diff
