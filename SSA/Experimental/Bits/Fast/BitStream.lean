@@ -1,4 +1,6 @@
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Ring
+
 import Mathlib.Logic.Function.Iterate
 
 -- TODO: upstream the following section
@@ -29,8 +31,25 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
         have := Int.zero_le_ofNat o
         contradiction
       }
-      simp only [ Int.abs_eq_natAbs]
-      sorry
+      simp only [Int.abs_eq_natAbs, subNatNat, HAdd.hAdd, Add.add, Int.add]
+      let e : o.succ = (o.mod b.natAbs).add 1 := by
+        simp only [Nat.mod]
+        simp only [Nat.add]
+        congr
+        cases o
+        all_goals simp
+        rename_i g
+        have l : ¬ (b.natAbs ≤ g + 1) := by
+          simp
+          have y : g + 2 ≤ ↑b.natAbs := by
+            -- ring_nf at H2
+            rw [← Int.ofNat_le]
+            rw [Int.add_comm, Int.negSucc_eq] at H2
+            omega
+          omega
+        simp  [l]
+      simp only [e]
+
 
 
 end Int
@@ -233,9 +252,6 @@ variable (x y : BitStream) (i : Nat)
 @[simp] theorem and_eq : (x &&& y) i = (x i && y i)      := rfl
 @[simp] theorem  or_eq : (x ||| y) i = (x i || y i)      := rfl
 @[simp] theorem xor_eq : (x ^^^ y) i = (xor (x i) (y i)) := rfl
-def ls (b : Bool) (s : Nat → Bool) : BitStream
-  | 0 => b
-  | (n+1) => s n
 variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by

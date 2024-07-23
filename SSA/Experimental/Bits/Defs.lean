@@ -78,7 +78,7 @@ instance : Neg Term := ⟨neg⟩
 and thus is an upper bound on the number of free variables that occur in `t`.
 
 Note that the upper bound is not perfect:
-a term like `var 10` only has a single free variable, but it's arity will be `11` -/
+a term like `var 10` only has a single free variable, but its arity will be `11` -/
 @[simp] def Term.arity : Term → Nat
 | (var n) => n+1
 | zero => 0

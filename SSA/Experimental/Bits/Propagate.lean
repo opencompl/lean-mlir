@@ -497,9 +497,9 @@ def ls (b : Bool) : PropagateStruc Unit :=
     init_carry := λ _ => b,
     next_bit := λ carry bits => (bits, carry ()) }
 
-@[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) : (ls b).eval x = BitStream.ls b (x ()) := by
+@[simp] lemma eval_ls (b : Bool) (x : Unit → BitStream) : (ls b).eval x = BitStream.concat b (x ()) := by
   ext n; cases n <;> simp [ls, eval, propagate_succ2]
-  all_goals (simp [BitStream.ls])
+  all_goals (simp [BitStream.concat])
 
 def var (n : ℕ) : PropagateStruc (Fin (n+1)) :=
   { α := Empty,
@@ -637,7 +637,6 @@ def termEvalEqPropagate : ∀ (t : Term),
     good := by
       ext
       simp
-      simp [concat,BitStream.ls]
     }
 | Term.not t =>
   let q := termEvalEqPropagate t
