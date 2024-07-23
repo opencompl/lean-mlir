@@ -6,10 +6,10 @@ instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
     (decideIfZeros (termEvalEqFSM (t₁.xor t₂)).toFSM) $ by
   rw [decideIfZeros_correct,
     ← (termEvalEqFSM (t₁.xor t₂)).good]
-  simp only [Function.funext_iff, evalFin_eq_eval,
-    eval_eq_iff_xorSeq_eq_zero, zeroSeq]
-  stop
-  exact forall_swap
+  simp only [eval_eq_iff_xor_eq_zero]
+  rw [forall_swap]
+  simp only [← Function.funext_iff]
+
 
 open Term
 
