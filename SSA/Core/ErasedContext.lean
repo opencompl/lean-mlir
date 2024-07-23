@@ -119,6 +119,24 @@ theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t).get? (w+1) =
     ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
   rfl
 
+@[simp]
+theorem Ctxt.Var.toSnoc_neq_last {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+    v.toSnoc ≠ Ctxt.Var.last Γ t := by
+  unfold Ctxt.Var.toSnoc Ctxt.Var.last
+  rcases v with ⟨v, hv⟩
+  simp only []
+  have heq : v + 1 ≠ 0 := by omega
+  simp [heq]
+  intros hcontra
+  unfold last at hcontra
+  obtain ⟨h₁, h₂⟩ := hcontra
+
+@[simp]
+theorem Ctxt.Var.last_neq_toSnoc {Γ : Ctxt Ty} {t : Ty} {v : Γ.Var t} :
+    Ctxt.Var.last Γ t ≠ v.toSnoc := by
+  symm
+  simp
+
 /-- Transport a variable from `Γ` to any mapped context `Γ.map f` -/
 def toMap : Var Γ t → Var (Γ.map f) (f t)
   | ⟨i, h⟩ => ⟨i, by
@@ -401,9 +419,45 @@ theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
   subst x
   rfl
 
-
 end Valuation
 
+section CoValuation
+
+variable [TyDenote Ty]
+
+/-- A Covaluation for a context. Provide a value for some type in the context. -/
+structure CoValuation (Γ : Ctxt Ty) where
+  t : Ty
+  var : Γ.Var t
+  val : toType t
+
+/-- Eliminate a CoValuation of an empty context. -/
+@[simp]
+def CoValuation.elim_nil (V : CoValuation (∅ : Ctxt Ty)) : False :=
+  V.var.emptyElim
+
+/-- Build a covaluation for a single type context. -/
+def CoValuation.singleton (t : Ty) (v : toType t) : CoValuation [t] :=
+  ⟨t, Var.last _ _, v⟩
+
+/-- Build a CoValuation from a variable and a value. -/
+def CoValuation.ofVar {Γ : Ctxt Ty} (v : Γ.Var α) (a : toType α) : CoValuation Γ :=
+  ⟨α, v, a⟩
+
+/-- transport/pullback a valuation along a context homomorphism. -/
+def CoValuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.CoValuation) (hom : Ctxt.Hom Γi Γo) : Γo.CoValuation where
+  t := Γiv.t
+  var := hom Γiv.var
+  val := Γiv.val
+
+  -- fun _to vo => Γiv (hom vo)
+
+/-
+TODO: write helpers to coerce to a from a value of 'toType Γ.Var α'.
+We suspect that this will come up when reasoning about straight line code.
+-/
+
+end CoValuation
 
 /- ## VarSet -/
 
