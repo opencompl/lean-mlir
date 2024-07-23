@@ -79,6 +79,39 @@ macro "simp_alive_ops" : tactic =>
       )
   )
 
+/-
+This tactic attempts to shift ofBool to the outer-most level,
+and then convert everything to arithmetic
+and then solve with the omega tactic.
+-/
+macro "of_bool_tactic" : tactic =>
+  `(tactic|
+    (
+    repeat (
+      first
+    | simp only [bv_ofBool]
+    | simp only [BitVec.ule]
+    | simp only [BitVec.ult]
+    | simp only [BitVec.sle]
+    | simp only [BitVec.slt]
+    | simp only [BitVec.toInt]
+    | simp only [BEq.beq]
+    | simp only [bne]
+    )
+    try ext
+    try simp
+    repeat (
+      first
+      | simp only [← Bool.decide_or]
+      | simp only [← Bool.decide_and]
+      | simp only [← decide_not]
+      | simp only [decide_eq_decide]
+      | simp [of_decide_eq_true]
+      | simp only [BitVec.toNat_eq]
+    )
+    try omega
+    ))
+
 macro "simp_alive_bitvec": tactic =>
   `(tactic|
       (
@@ -109,41 +142,9 @@ macro "simp_alive_bitvec": tactic =>
           | simp only [← BitVec.allOnes_sub_eq_xor]
             simp only [← BitVec.negOne_eq_allOnes']
             ring_nf
+          | of_bool_tactic
       )
    )
-
-  /-
-  This tactic attempts to shift ofBool to the outer-most level,
-  and then convert everything to arithmetic
-  and then solve with the omega tactic.
-  -/
-macro "of_bool_tactic" : tactic =>
-  `(tactic|
-    (
-      repeat (
-        first
-      | simp [bv_ofBool]
-      | simp [ForLean.ofBool_eq']
-      | simp
-      | simp only [bne]
-      )
-      repeat (
-        first
-      | simp only [BitVec.ule]
-      | simp only [BitVec.ult]
-      | simp only [BitVec.sle]
-      | simp only [BitVec.slt]
-      | simp only [BitVec.toInt]
-      | simp only [BEq.beq]
-      | simp only [← Bool.decide_or]
-      | simp only [← Bool.decide_and]
-      | simp only [← decide_not]
-      | simp only [decide_eq_decide]
-      | simp [of_decide_eq_true]
-      )
-      try omega
-    )
-  )
 
 macro "alive_auto": tactic =>
   `(tactic|
@@ -155,6 +156,5 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         simp_alive_bitvec
-        of_bool_tactic
       )
    )
