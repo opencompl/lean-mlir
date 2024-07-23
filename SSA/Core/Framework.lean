@@ -745,7 +745,7 @@ def Com.changeVars : Com d Γ eff ty →
     Com d Γ' eff ty
   |  .ret e => fun varsMap => .ret (varsMap e)
   |  .var e body => fun varsMap => .var (e.changeVars varsMap)
-      (body.changeVars (fun t v => varsMap.snocMap v))
+      (body.changeVars (fun _ v => varsMap.snocMap v))
 
 /-! simp-lemmas about `changeVars`-/
 

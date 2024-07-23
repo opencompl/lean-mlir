@@ -70,3 +70,9 @@ private def fhe_test_one_rhs := [poly q, n, h | {
   }]
 
 end Test
+
+end Pretty
+
+end EDSL
+
+end MLIR

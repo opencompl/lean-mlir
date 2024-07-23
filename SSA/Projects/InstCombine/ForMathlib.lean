@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Mathlib.Tactic.Ring
 import Mathlib.Data.Nat.Bitwise
-import Mathlib.Algebra.Group.Fin
+import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Nat.Bits
 import Mathlib.Data.ZMod.Defs
 import Batteries.Data.BitVec
@@ -88,3 +88,5 @@ instance : CommRing (BitVec w) :=
   toFin_injective.commRing _
     toFin_zero toFin_one toFin_add toFin_mul toFin_neg toFin_sub
     toFin_nsmul toFin_zsmul toFin_pow toFin_natCast toFin_intCast
+
+end BitVec

@@ -638,3 +638,5 @@ attribute [local simp] Ctxt.snoc
 --   }
 
 end IterateIdentity
+
+end ScfFunctor
