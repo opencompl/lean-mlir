@@ -549,6 +549,13 @@ syntax "@" str : mlir_attr_val_symbol
 syntax "#" ident : mlir_attr_val -- alias
 syntax "#" strLit : mlir_attr_val -- aliass
 
+declare_syntax_cat dialect_attribute_contents
+syntax mlir_attr_val : dialect_attribute_contents
+syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
+syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
+syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents
+syntax "#" ident "<" dialect_attribute_contents ">" : mlir_attr_val -- opaqueAttr
+
 syntax "#" ident "<" strLit ">" : mlir_attr_val -- opaqueAttr
 syntax "#opaque<" ident "," strLit ">" ":" mlir_type : mlir_attr_val -- opaqueElementsAttr
 syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
@@ -595,7 +602,10 @@ macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do
   let dialect := Lean.quote dialect.getId.toString
   `(AttrValue.opaque_ $dialect $opaqueData)
-
+| `([mlir_attr_val| # $dialect:ident < $opaqueData:ident > ]) => do
+  let d := Lean.quote dialect.getId.toString
+  let g : TSyntax `str := Lean.Syntax.mkStrLit (toString opaqueData.getId)
+  `(AttrValue.opaque_ $d $g)
 macro_rules
 | `([mlir_attr_val| #opaque< $dialect:ident, $opaqueData:str> : $t:mlir_type ]) => do
   let dialect := Lean.quote dialect.getId.toString

@@ -96,13 +96,44 @@ inductive MOp.BinaryOp : Type
   | ashr
   | urem
   | srem
+  | add (nsw : Bool := false) (nuw : Bool := false)
+  | mul
+  | sub
+  | sdiv
+  | udiv
+deriving DecidableEq, Inhabited
+/-- Homogeneous, binary operations -/
+inductive g : Type
+  | and
+  | or
+  | xor
+  | shl
+  | lshr
+  | ashr
+  | urem
+  | srem
   | add
   | mul
   | sub
   | sdiv
   | udiv
 deriving Repr, DecidableEq, Inhabited
-
+def aux : MOp.BinaryOp → ℕ → Lean.Format
+  | .and => reprPrec g.and
+  | .or => reprPrec g.or
+  | .xor => reprPrec g.xor
+  | .shl => reprPrec g.shl
+  | .lshr => reprPrec g.lshr
+  | .ashr => reprPrec g.ashr
+  | .urem => reprPrec g.urem
+  | .srem => reprPrec g.srem
+  | .add _ _ => reprPrec g.add
+  | .mul => reprPrec g.mul
+  | .sub => reprPrec g.sub
+  | .sdiv => reprPrec g.sdiv
+  | .udiv => reprPrec g.udiv
+instance : Repr (MOp.BinaryOp) where
+  reprPrec op w := ((toString (aux op w)).replace "InstCombine.g" "InstCombine.MOp.BinaryOp").replace "false" ""
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
@@ -127,7 +158,7 @@ namespace MOp
 @[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
-@[match_pattern] def add    (w : Width φ) : MOp φ := .binary w .add
+@[match_pattern] def add    (w : Width φ) (nsw : Bool := false) (nuw : Bool := false) : MOp φ := .binary w (.add nsw nuw)
 @[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
 @[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
 @[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
@@ -146,7 +177,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (ashr : ∀ {φ} {w : Width φ}, motive (ashr w))
     (urem : ∀ {φ} {w : Width φ}, motive (urem w))
     (srem : ∀ {φ} {w : Width φ}, motive (srem w))
-    (add  : ∀ {φ} {w : Width φ}, motive (add  w))
+    (add  : ∀ {φ nsw nuw} {w : Width φ}, motive (add w nsw nuw))
     (mul  : ∀ {φ} {w : Width φ}, motive (mul  w))
     (sub  : ∀ {φ} {w : Width φ}, motive (sub  w))
     (sdiv : ∀ {φ} {w : Width φ}, motive (sdiv w))
@@ -166,7 +197,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
   | _, .ashr _  => ashr
   | _, .urem _  => urem
   | _, .srem _  => srem
-  | _, .add  _  => add
+  | _, .add _ _ _  => add
   | _, .mul  _  => mul
   | _, .sub  _  => sub
   | _, .sdiv _  => sdiv
@@ -189,7 +220,7 @@ instance : ToString (MOp φ) where
   | .urem _ => "urem"
   | .srem _ => "srem"
   | .select _ => "select"
-  | .add _ => "add"
+  | .add _ _ _ => "add"
   | .mul _ => "mul"
   | .sub _ => "sub"
   | .neg _ => "neg"
@@ -216,7 +247,7 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev add    : Nat → Op := MOp.add    ∘ .concrete
+@[match_pattern] abbrev add (nsw : Bool := false) (nuw : Bool := false) : Nat → Op := fun w => MOp.add (.concrete w) nsw nuw
 @[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
 @[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
@@ -275,7 +306,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add _       => LLVM.add    (op.getN 0) (op.getN 1)
+  | Op.add nsw nuw _       => LLVM.add    (op.getN 0) (op.getN 1) nsw nuw
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)

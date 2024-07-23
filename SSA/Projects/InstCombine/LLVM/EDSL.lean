@@ -106,7 +106,15 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.ashr"   => pure <| Sum.inl .ashr
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
-        | "llvm.add"    => pure <| Sum.inl .add
+        | "llvm.add"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add)
+            | .some y => match y with
+              | (.opaque_ "llvm.overflow" "nsw") => pure <| Sum.inl (MOp.BinaryOp.add true false)
+              | (.opaque_ "llvm.overflow" "nuw") => pure <| Sum.inl (MOp.BinaryOp.add false true)
+              | (.opaque_ "llvm.overflow" s ) =>throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.mul"    => pure <| Sum.inl .mul
         | "llvm.sub"    => pure <| Sum.inl .sub
         | "llvm.sdiv"   => pure <| Sum.inl .sdiv

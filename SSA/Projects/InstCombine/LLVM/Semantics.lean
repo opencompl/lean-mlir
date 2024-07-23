@@ -78,11 +78,23 @@ def add? {w : Nat} (x y : BitVec w) : IntW w :=
 theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 
 @[simp_llvm_option]
-def add {w : Nat} (x y : IntW w) : IntW w := do
+def add {w : Nat} (x y : IntW w) (nsw : Bool := false) (nuw : Bool := false) : IntW w := do
   let x' ← x
   let y' ← y
-  add? x' y'
+  if (nsw ∧  (x'.toInt + y'.toInt) < -(2^(w-1)) ∧ (x'.toInt + y'.toInt) ≥ 2^w) ∨ (nuw ∧  (x'.toNat + y'.toNat) ≥ 2^w) then
+    none
+  else
+    add? x' y'
 
+set_option allowUnsafeReducibility true
+@[simp, reducible]
+theorem add_reduce (x y : IntW w) :  add x y = match x , y with
+  | .none , _ => .none
+  | _ , .none => none
+  | .some a , .some b  => .some (a + b) := by
+  rcases x
+  all_goals (cases y)
+  all_goals (try simp ; try rfl)
 /--
 The value produced is the integer difference of the two operands.
 If the difference has unsigned overflow, the result returned is the mathematical result modulo 2n, where n is the bit width of the result.

@@ -192,7 +192,7 @@ info: ⟨[MTy.bitvec (ConcreteOrMVar.concrete 32)],
               (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.and) ⋯ ⋯ (⟨0, ⋯⟩::ₕ(⟨2, ⋯⟩::ₕHVector.nil))
                 HVector.nil)
               (Com.var
-                (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) MOp.BinaryOp.add) ⋯ ⋯
+                (Expr.mk (MOp.binary (ConcreteOrMVar.concrete 32) (MOp.BinaryOp.add false)) ⋯ ⋯
                   (⟨0, ⋯⟩::ₕ(⟨1, ⋯⟩::ₕHVector.nil)) HVector.nil)
                 (Com.ret ⟨0, ⋯⟩)))))⟩⟩⟩
 -/
