@@ -306,7 +306,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add w nsw nuw       => LLVM.add    (op.getN 0) (op.getN 1) nsw nuw
+  | Op.add w nsw nuw       => LLVM.add    (op.getN 0) (op.getN 1) ⟨ nsw ,  nuw ⟩
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
