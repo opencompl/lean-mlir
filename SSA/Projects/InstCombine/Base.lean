@@ -96,7 +96,7 @@ inductive MOp.BinaryOp : Type
   | ashr
   | urem
   | srem
-  | add (nsw : Bool := false) (nuw : Bool := false)
+  | add (nswnuw  : Bool × Bool := ⟨ false , false ⟩ )
   | mul
   | sub
   | sdiv
@@ -127,7 +127,7 @@ def aux : MOp.BinaryOp → ℕ → Lean.Format
   | .ashr => reprPrec g.ashr
   | .urem => reprPrec g.urem
   | .srem => reprPrec g.srem
-  | .add _ _ => reprPrec g.add
+  | .add _ => reprPrec g.add
   | .mul => reprPrec g.mul
   | .sub => reprPrec g.sub
   | .sdiv => reprPrec g.sdiv
@@ -158,7 +158,7 @@ namespace MOp
 @[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
-@[match_pattern] def add    (w : Width φ) (nsw : Bool := false) (nuw : Bool := false) : MOp φ := .binary w (.add nsw nuw)
+@[match_pattern] def add    (w : Width φ) (nsw : Bool := false) (nuw : Bool := false) : MOp φ := .binary w (.add  ⟨ nsw , nuw ⟩ )
 @[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
 @[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
 @[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
