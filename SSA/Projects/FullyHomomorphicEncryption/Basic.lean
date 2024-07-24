@@ -466,8 +466,8 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} : R.fromT
   R.fromPoly (q := q) (n := n) (R.fromTensor' q coeffs) := by
     simp only [fromTensor, fromTensor']
     induction coeffs
-    . simp [List.enum]
-    . simp only [List.enum_cons]
+    · simp [List.enum]
+    · simp only [List.enum_cons]
       apply fromTensor_eq_fromTensor'_fromPoly_aux
       simp [monomial]
 
@@ -491,11 +491,11 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
       obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
       have ha₃ := Finset.mem_insert.mp ha₁
       cases' ha₃ with ha₄ ha₅
-      . subst ha₄
+      · subst ha₄
         norm_cast
         apply WithBot.coe_le_coe.mpr
         simp [Nat.cast]
-      . have ha₆ := Finset.mem_range.mp ha₅
+      · have ha₆ := Finset.mem_range.mp ha₅
         norm_cast
         apply WithBot.coe_le_coe.mpr
         norm_cast

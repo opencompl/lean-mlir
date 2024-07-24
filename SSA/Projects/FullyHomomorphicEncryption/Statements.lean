@@ -77,10 +77,10 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
     unfold R.repLength at h
     cases hDeg : Polynomial.degree (R.representative q n a)
     · apply WithBot.bot_lt_coe
-    . simp only [hDeg] at h
+    · simp only [hDeg] at h
       apply WithBot.coe_lt_coe.2
       linarith
-    . rw[← hLength] at h
+    · rw[← hLength] at h
       linarith
 
 theorem R.toTensor_getD' [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : ↑(a.toTensor.getD i 0) = a.coeff i := by
@@ -155,8 +155,8 @@ theorem R.trimTensor_getD_0 (tensor: List Int) :
     lhs
     rw[H]
   by_cases INBOUNDS:(i < List.length (trimTensor tensor))
-  . rw[List.getD_append (h := INBOUNDS)]
-  . have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
+  · rw[List.getD_append (h := INBOUNDS)]
+  · have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
     rw[List.getD_eq_default (hn := OUT_OF_BOUNDS)]
     rw[List.getD_append_right (h := OUT_OF_BOUNDS)]
     simp
@@ -186,7 +186,7 @@ namespace Poly
 
 theorem eq_iff_coeff_eq [hqgt1 : Fact (q > 1)] (a b : R q n) : a = b ↔ Polynomial.coeff a.representative = Polynomial.coeff b.representative := by
   constructor
-  .  intro h; rw [h]
+  ·  intro h; rw [h]
   ·  intro h
      apply (eq_iff_rep_eq _ _).1
      apply Polynomial.coeff_inj.1
@@ -271,7 +271,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.repres
         rw [toTensor_fromTensor]
         rw [← ZMod.coe_intCast]
         norm_cast
-        . simp only [R.toTensor_length]
+        · simp only [R.toTensor_length]
           have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
           linarith
 

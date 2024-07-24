@@ -184,8 +184,8 @@ theorem const_index_fn_iterate (δ : Int)
   obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
   rw [IndexInvariant.iterate hf]; simp
   apply And.intro
-  . linarith
-  . rw [hf']
+  · linarith
+  · rw [hf']
 
 /-- counterDecorator on a constant function -/
 @[simp]

@@ -268,8 +268,8 @@ def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
   intro t' v
   revert s x
   refine Ctxt.Var.casesOn v ?_ ?_
-  . intro _ _ _ v s _; exact s v
-  . intro _ _ _ x; exact x
+  · intro _ _ _ v s _; exact s v
+  · intro _ _ _ x; exact x
 
 infixl:50 "::ᵥ" => Valuation.snoc
 

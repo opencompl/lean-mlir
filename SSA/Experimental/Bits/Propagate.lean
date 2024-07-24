@@ -121,8 +121,8 @@ lemma propagateCarry_propagate {δ : β → Type} {β' : Type}
     congr
     dsimp
     induction' n with n ih
-    . simp
-    . simp [ih]
+    · simp
+    · simp [ih]
 
 lemma propagate_propagate {δ : β → Type} {β' : Type}
       (f : ∀ a, δ a → β') : ∀ (n : ℕ) (init_carry : α → Bool)
@@ -153,8 +153,8 @@ lemma propagate_propagate {δ : β → Type} {β' : Type}
     ext
     congr
     induction' n with n ih
-    . simp
-    . simp [ih]
+    · simp
+    · simp [ih]
 
 lemma propagateCarry_changeVars {β' : Type}
     (init_carry : α → Bool)
@@ -166,8 +166,8 @@ lemma propagateCarry_changeVars {β' : Type}
     propagateCarry init_carry (λ (carry : α → Bool) (bits : β' → Bool) =>
       next_bit carry (λ b => bits (changeVars b))) x i := by
   induction i
-  . simp
-  . simp [*]
+  · simp
+  · simp [*]
 
 lemma propagate_changeVars {β' : Type}
     (init_carry : α → Bool)
@@ -179,8 +179,8 @@ lemma propagate_changeVars {β' : Type}
     propagate init_carry (λ (carry : α → Bool) (bits : β' → Bool) =>
       next_bit carry (λ b => bits (changeVars b))) x i := by
   induction' i with i ih
-  . rfl
-  . simp only [propagate_succ, propagateCarry_changeVars, ih]
+  · rfl
+  · simp only [propagate_succ, propagateCarry_changeVars, ih]
 
 open Term
 
@@ -765,10 +765,10 @@ lemma propagate_eq_of_carry_eq (seq₁ seq₂ : β → BitStream)
   { erw [Nat.add_succ, propagate_succ2, propagate_succ2, Nat.add_eq]
     simp [← Nat.succ_eq_add_one, ← Nat.add_succ, h₃ _ _ (le_refl _)]
     congr
-    . apply propagateCarry2_eq_of_carry_eq
-      . assumption
-      . exact λ y b h => h₃ y b (Nat.le_succ_of_le h)
-    . funext i
+    · apply propagateCarry2_eq_of_carry_eq
+      · assumption
+      · exact λ y b h => h₃ y b (Nat.le_succ_of_le h)
+    · funext i
       rw [h₃]
       exact Nat.le_succ _ }
 

@@ -88,11 +88,11 @@ lemma le_def : ∀ (c₁ c₂ : Circuit α), c₁ ≤ c₂ ↔ ∀ f, eval c₁ 
 lemma exists_eval_iff_exists_evalv [DecidableEq α] (c : Circuit α) :
     (∃ x, eval c x) ↔ ∃ x, evalv c x := by
   constructor
-  . rintro ⟨x, hx⟩
+  · rintro ⟨x, hx⟩
     use λ a _ => x a
     rw [eval_eq_evalv] at hx
     exact hx
-  . rintro ⟨x, hx⟩
+  · rintro ⟨x, hx⟩
     refine ⟨λ a => dite (a ∈ c.vars) (x a) (λ _ => false), ?_⟩
     convert hx
     rw [eval_eq_evalv]
@@ -367,16 +367,16 @@ def bOr : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   rw [List.foldl_cons, eval_foldl_or l]
   simp only [eval_or, Bool.or_eq_true, List.mem_cons]
   constructor
-  . intro h
+  · intro h
     rcases h with (h₁ | h₂) | ⟨a, ha⟩
-    . simp [*]
-    . exact Or.inr ⟨_, Or.inl rfl, h₂⟩
-    . exact Or.inr ⟨_, Or.inr ha.1, ha.2⟩
-  . intro h
+    · simp [*]
+    · exact Or.inr ⟨_, Or.inl rfl, h₂⟩
+    · exact Or.inr ⟨_, Or.inr ha.1, ha.2⟩
+  · intro h
     rcases h with h | ⟨a, rfl| ha, h⟩
-    . simp [*]
-    . simp [*]
-    . exact Or.inr ⟨_, ha, h⟩
+    · simp [*]
+    · simp [*]
+    · exact Or.inr ⟨_, ha, h⟩
 
 @[simp] lemma eval_bOr :
   ∀ {s : List α} {f : α → Circuit β} {g : β → Bool},
@@ -399,10 +399,10 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     rw [List.foldl_cons, eval_foldl_and l]
     simp only [eval_and, Bool.and_eq_true, List.mem_cons]
     constructor
-    . intro h
+    · intro h
       rcases h with ⟨⟨h₁, h₂⟩, h⟩
       simpa [*] using h
-    . intro h
+    · intro h
       rcases h with ⟨h₁, h₂⟩
       simp only [h₁, true_and, h₂ a (Or.inl rfl)]
       aesop
@@ -547,8 +547,8 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
           use ha'
           simp only [mem_varsFinset.1 ha', dite_true]
           split at hb₂
-          . simpa [*, eq_comm] using hb₂
-          . simp at hb₂
+          · simpa [*, eq_comm] using hb₂
+          · simp at hb₂
    _ ≤ _ := Finset.card_image_le
 
 lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
@@ -614,7 +614,7 @@ def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
 --  (λ x => Circuit.assignVars c
 --    (λ i => Sum.rec (fun i hi => Sum.inr (x i (by simp [hi]))) (fun i _ => Sum.inl i) i))
 
-theorem eval_snd {α β : Type _} [DecidableEq α] [DecidableEq β]
+theorem eval_sn.d {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : β → Bool) :
     c.snd.eval g ↔ ∃ g' : α → Bool, c.eval (Sum.elim g' g) := by
   -- TODO: Fix sorry
@@ -670,12 +670,12 @@ def single [DecidableEq α] {s : List α} (x : ∀ a ∈ s, Bool) : Circuit α :
   rw [single]
   simp
   constructor
-  . intros h a ha
+  · intros h a ha
     specialize h a ha
     rw [dif_pos ha] at h
     revert h
     cases x a ha <;> simp
-  . intros h a ha
+  · intros h a ha
     rw [dif_pos ha]
     specialize h a ha
     revert h
@@ -699,12 +699,12 @@ def nonemptyAux [DecidableEq α] :
     | [], hv => ⟨eval c (λ _ => false), by
         rw [exists_eval_iff_exists_evalv, eq_iff_iff, eval_eq_evalv]
         constructor
-        . rintro ⟨x, hx⟩
+        · rintro ⟨x, hx⟩
           rw [← hx]
           congr
           funext i hi
           simp [hv] at hi
-        . intro h
+        · intro h
           use λ i _ => false
           ⟩
     | i::l, hv =>
@@ -723,26 +723,26 @@ def nonemptyAux [DecidableEq α] :
         rw [← b₁.prop, ← b₂.prop]
         simp! only [(eval_assignVars)]
         constructor
-        . rintro ⟨x, hx⟩
+        · rintro ⟨x, hx⟩
           cases hi : x i
-          . right
+          · right
             use x
             convert hx
             split_ifs
-            . subst i
+            · subst i
               simp [hi]
-            . simp
-          . left
+            · simp
+          · left
             use x
             convert hx
             split_ifs
-            . subst i
+            · subst i
               simp [hi]
-            . simp
-        . intro h
+            · simp
+        · intro h
           rcases h with ⟨x, hx⟩ | ⟨x, hx⟩
-          . refine ⟨_, hx⟩
-          . refine ⟨_, hx⟩⟩
+          · refine ⟨_, hx⟩
+          · refine ⟨_, hx⟩⟩
 termination_by c l _ => c.varsFinset.card
 
 def nonempty [DecidableEq α] (c : Circuit α) : Bool :=
@@ -764,7 +764,7 @@ lemma always_true_iff [DecidableEq α] (c : Circuit α) :
     always_true c ↔ ∀ x, eval c x := by
   simp [always_true, nonempty_eq_false_iff, not_not]
 
-instance [DecidableEq α] : DecidableRel ((. ≤. ) : Circuit α → Circuit α → Prop) :=
+instance [DecidableEq α] : DecidableRel ((· ≤· ) : Circuit α → Circuit α → Prop) :=
   λ c₁ c₂ => decidable_of_iff (always_true ((~~~ c₁).or c₂)) <|
     by simp [always_true_iff, le_def, or_iff_not_imp_left]
 
