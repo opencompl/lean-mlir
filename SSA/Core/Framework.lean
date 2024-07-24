@@ -1877,15 +1877,15 @@ theorem subset_entries :
     split at hvarMap
     case h_1 _p q r _s =>
       split_ifs at hvarMap
-      . simp_all
+      · simp_all
     case h_2 _a _b _c _d e f =>
       simp only [Option.some.injEq] at hvarMap
       subst hvarMap
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
       by_cases hx : x = ⟨t, w⟩
-      . subst hx; simp_all
-      . rwa [AList.lookup_insert_ne hx]
+      · subst hx; simp_all
+      · rwa [AList.lookup_insert_ne hx]
   · intro w ma v₂
     intro b? c? varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
@@ -1905,7 +1905,7 @@ theorem subset_entries :
     split at hvarMap
     case h_1 _p q r _s =>
       split_ifs at hvarMap
-      . simp_all
+      · simp_all
     case h_2 _a _b _c _d e f =>
       simp only [Option.some.injEq] at hvarMap
       subst hvarMap
@@ -1913,8 +1913,8 @@ theorem subset_entries :
       rcases x with ⟨x, y⟩
       simp only [← AList.mem_lookup_iff] at *
       by_cases hx : x = ⟨t, w⟩
-      . subst hx; simp_all
-      . rwa [AList.lookup_insert_ne hx]
+      · subst hx; simp_all
+      · rwa [AList.lookup_insert_ne hx]
 
 theorem subset_entries_matchArg [DecidableEq d.Op]
     {Γ_out Δ_in Δ_out : Ctxt d.Ty}
@@ -2313,8 +2313,8 @@ theorem denote_matchVarMap2 [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt 
     funext t v
     simp only [Valuation.comap]
     split
-    . split <;> simp_all
-    . have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
+    · split <;> simp_all
+    · have := AList.lookup_isSome.2 (mem_matchVar hm (hvars _ v))
       simp_all
 
 
@@ -2417,8 +2417,8 @@ theorem denote_rewriteAt [LawfulMonad d.m] (lhs rhs : Com d Γ₁ .pure t₁)
     split_ifs at hrew
     subst t₁
     split at hrew
-    . simp at hrew
-    . simp only [Option.some.injEq] at hrew
+    · simp at hrew
+    · simp only [Option.some.injEq] at hrew
       subst hrew
       rename_i _ _ h
       simp only [Zipper.denote_toCom, Zipper.denote_insertPureCom, ← hl,
@@ -2451,13 +2451,13 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
       let v : Var (.ofList Γ) (Γ.get i) := ⟨i, by simp [List.get?_eq_get, Ctxt.ofList]⟩
       ⟨_, v⟩ ∈ lhs.vars) <|  by
   constructor
-  . intro h t v
+  · intro h t v
     rcases v with ⟨i, hi⟩
     try simp only [Erased.out_mk] at hi
     rcases List.get?_eq_some.1 hi with ⟨h', rfl⟩
     simp at h'
     convert h ⟨i, h'⟩
-  . intro h i
+  · intro h i
     apply h
 
 def rewritePeepholeAt (pr : PeepholeRewrite d Γ t)

@@ -139,11 +139,11 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
       -- No way I need this to prove this?
       have H := Nat.lt_trichotomy v.val delv.val
       cases H;
-      . contradiction
-      . case inr H =>
+      · contradiction
+      · case inr H =>
         cases H;
-        . contradiction
-        . linarith
+        · contradiction
+        · linarith
     }
     simp only [Deleted] at DEL
     subst DEL
@@ -163,11 +163,11 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
           -- No way I need this to prove this?
           have H := Nat.lt_trichotomy v.val delv.val
           cases H;
-          . contradiction
-          . case inr H =>
+          · contradiction
+          · case inr H =>
             cases H;
-            . contradiction
-            . linarith
+            · contradiction
+            · linarith
         simp only [Deleted] at DEL
         subst DEL
         have ⟨vix, vproof⟩ := v

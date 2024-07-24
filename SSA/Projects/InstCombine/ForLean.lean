@@ -585,10 +585,10 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
     (x ^^^ y).getLsb i = xor (x.getLsb i) (y.getLsb i) := by
     have hi : i < w ∨ i ≥ w := Nat.lt_or_ge _ _
     rcases hi with h | h
-    . have hi : i = (Fin.mk i h).val := rfl
+    · have hi : i = (Fin.mk i h).val := rfl
       rw [hi]
       simp
-    . simp [getLsb_geX _ h]
+    · simp [getLsb_geX _ h]
 
 /-
 https://github.com/leanprover/std4/commit/ecf1ec23eac8997d5964d480511ba93970fa455b#diff-8f36f4c14ec3f02f7b8ea0a193114c273871d6b0ddad6083cd74090b3befcb1eR227-R229
@@ -638,14 +638,14 @@ theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :  BitVec.toNa
   simp
   apply Nat.pos_of_ne_zero
   cases x
-  . contradiction
-  . simp
+  · contradiction
+  · simp
 
 theorem toInt_eq' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
   cases w <;> simp
   · case zero =>
     simp [BitVec.eq_nil x]
-  . case succ w' =>
+  · case succ w' =>
       unfold BitVec.toInt
       simp
       have hcases : (BitVec.toNat x < 2 ^ w') ∨ (BitVec.toNat x ≥ 2 ^ w') := by
