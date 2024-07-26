@@ -651,7 +651,6 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     · let c' := (c.bind (p.nextBitCirc ∘ some)).fst
       have _wf : card_compl (c' ||| c) < card_compl c :=
         decideIfZeroAux_wf h'
-      stop
       apply decideIfZerosAux_correct p (c' ||| c)
       simp [c', Circuit.eval_fst, Circuit.eval_bind]
       intro s hs
@@ -667,6 +666,7 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
         have := hc₂ _ _ h
         simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
           Circuit.eval_or, this, or_true]
+termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
