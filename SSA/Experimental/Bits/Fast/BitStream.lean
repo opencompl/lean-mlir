@@ -53,25 +53,12 @@ end Int
 namespace BitVec
 open BitVec
 
-@[simp] theorem getMsb_not (x : BitVec w) : (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
+@[simp] theorem getMsb_not (x : BitVec w) :
+    (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
   by_cases h : i < w <;> simp [getMsb, h] ; omega
 
 @[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
   simp [BitVec.msb]
-
-#check truncate_succ
-#print BitVec.toInt
-
-@[simp] theorem toInt_cons (x : Bool) (xs : BitVec w) :
-    BitVec.toInt (cons x xs) =
-      if x then (xs.toNat : Int) - (2 ^ w : Nat) else (xs.toNat : Int) := by
-  simp only [toInt_eq_msb_cond, msb_cons]
-  cases x
-  case false => simp
-  case true  =>
-    simp only [↓reduceIte, toNat_cons, Bool.toNat_true, Nat.cast_pow, Nat.cast_ofNat]
-
-    sorry
 
 variable {α β} [Coe α β] (as : List α)
 
