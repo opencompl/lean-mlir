@@ -98,12 +98,14 @@ Proof:
  Thus, LHS and RHS agree on values.
 -/
 open ComWrappers
-def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- inc = -/ Com.var (add w /-c1 -/ 0 /-X-/ 1) <|
   /- c3 = -/ Com.var (const w 3) <|
@@ -339,7 +341,9 @@ def MulDivRem290_lhs (w : ℕ) :
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem290_rhs (w : ℕ) :
-  Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w]
+    .pure (InstCombine.Ty.bitvec w) :=
   /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
@@ -428,7 +432,8 @@ Proof:
   ----
   (((X^C1) >> C2)^C3))[i]
   = ((X^C1) >> C2)[i] ^ C3[i] [bit-of-lsh r]
-  # NOTE: negative entries will be 0 because it is LOGICAL shift right. This is denoted by the []₀ operator.
+  # NOTE: negative entries will be 0 because it is LOGICAL shift right.
+    This is denoted by the []₀ operator.
   = ((X^C1))[i - C2]₀ ^ C3[i] [bit-of-lshr]
   = (X[i - C2]₀ ^ C1[i - C2]₀) ^ C3[i]  [bit-of-xor]
   = X[i - C2]₀ ^ C1[i - C2]₀ ^ C3[i] [assoc]
