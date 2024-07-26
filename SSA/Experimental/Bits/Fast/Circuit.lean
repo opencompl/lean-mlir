@@ -1,5 +1,5 @@
 import Mathlib.Data.Finset.Card
--- import Mathlib.Data.List.Pi
+import Mathlib.Data.List.Pi
 
 universe u v
 
@@ -575,69 +575,59 @@ lemma eval_assignVars [DecidableEq α] : ∀ {c : Circuit α}
 
 def fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) : Circuit α :=
-  -- TODO: Fix sorry
-  sorry
-  --Circuit.bOr (c.sumVarsRight.pi (λ _ => [true, false]))
-  --(λ x => Circuit.assignVars c
-  --  (λ i => Sum.rec (λ i _ => Sum.inl i) (λ i hi => Sum.inr (x i (by simp [hi]))) i))
+  Circuit.bOr (c.sumVarsRight.pi (λ _ => [true, false]))
+  (λ x => Circuit.assignVars c
+    (λ i => Sum.rec (λ i _ => Sum.inl i) (λ i hi => Sum.inr (x i (by simp [hi]))) i))
 
 theorem eval_fst {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : α → Bool) :
     c.fst.eval g ↔ ∃ g' : β → Bool, c.eval (Sum.elim g g') := by
-  -- TODO: Fix sorry
-  sorry
---  simp only [fst, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
---    List.mem_singleton, eval_assignVars]
---  constructor
---  . rintro ⟨a, ha⟩
---    use (fun i => if hi : i ∈ c.sumVarsRight then a i hi else true)
---    rw [← ha.2, eval_eq_evalv]
---    congr
---    ext i hi
---    cases i <;> simp [hi]
---  . rintro ⟨a, ha⟩
---    use (fun i _ => a i)
---    constructor
---    . intro i hi
---      simp
---      cases a i <;> simp
---    . rw [← ha, eval_eq_evalv]
---      congr
---      ext i hi
---      cases i <;> simp
+  simp only [fst, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
+    List.mem_singleton, eval_assignVars]
+  constructor
+  · rintro ⟨a, ha⟩
+    use (fun i => if hi : i ∈ c.sumVarsRight then a i hi else true)
+    rw [← ha.2, eval_eq_evalv]
+    congr
+    ext i hi
+    cases i <;> simp [hi]
+  · rintro ⟨a, ha⟩
+    use (fun i _ => a i)
+    constructor
+    · intro i _
+      simp
+    · rw [← ha, eval_eq_evalv]
+      congr
+      ext i hi
+      cases i <;> simp
 
 def snd {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) : Circuit β :=
-  -- TODO: Fix sorry
-  sorry
---  Circuit.bOr (c.sumVarsLeft.pi (λ _ => [true, false]))
---  (λ x => Circuit.assignVars c
---    (λ i => Sum.rec (fun i hi => Sum.inr (x i (by simp [hi]))) (fun i _ => Sum.inl i) i))
+  Circuit.bOr (c.sumVarsLeft.pi (λ _ => [true, false]))
+  (λ x => Circuit.assignVars c
+    (λ i => Sum.rec (fun i hi => Sum.inr (x i (by simp [hi]))) (fun i _ => Sum.inl i) i))
 
 theorem eval_sn.d {α β : Type _} [DecidableEq α] [DecidableEq β]
     (c : Circuit (α ⊕ β)) (g : β → Bool) :
     c.snd.eval g ↔ ∃ g' : α → Bool, c.eval (Sum.elim g' g) := by
-  -- TODO: Fix sorry
-  sorry
---  simp only [snd, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
---    List.mem_singleton, eval_assignVars]
---  constructor
---  . rintro ⟨a, ha⟩
---    use (fun i => if hi : i ∈ c.sumVarsLeft then a i hi else true)
---    rw [← ha.2, eval_eq_evalv]
---    congr
---    ext i hi
---    cases i <;> simp [hi]
---  . rintro ⟨a, ha⟩
---    use (fun i _ => a i)
---    constructor
---    . intro i hi
---      simp
---      cases a i <;> simp
---    . rw [← ha, eval_eq_evalv]
---      congr
---      ext i hi
---      cases i <;> simp
+  simp only [snd, eval_bOr, List.mem_pi, List.find?, List.mem_cons,
+    List.mem_singleton, eval_assignVars]
+  constructor
+  · rintro ⟨a, ha⟩
+    use (fun i => if hi : i ∈ c.sumVarsLeft then a i hi else true)
+    rw [← ha.2, eval_eq_evalv]
+    congr
+    ext i hi
+    cases i <;> simp [hi]
+  · rintro ⟨a, ha⟩
+    use (fun i _ => a i)
+    constructor
+    · intro i _
+      simp
+    · rw [← ha, eval_eq_evalv]
+      congr
+      ext i hi
+      cases i <;> simp
 
 def bind : ∀ (_c : Circuit α) (_f : α → Circuit β), Circuit β
   | tru, _ => tru
