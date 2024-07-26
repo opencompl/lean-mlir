@@ -554,9 +554,11 @@ syntax mlir_attr_val : dialect_attribute_contents
 syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
 syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
 syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents
-syntax "#" ident "<" dialect_attribute_contents ">" : mlir_attr_val -- opaqueAttr
+-- syntax mlir_attr_val ","  mlir_attr_val : mlir_attr_val
+syntax "#" ident "<" sepBy(mlir_attr_val, ",")  ">" : mlir_attr_val
+-- syntax "#" ident "<" ident ">" : mlir_attr_val -- opaqueAttr
 
-syntax "#" ident "<" strLit ">" : mlir_attr_val -- opaqueAttr
+-- syntax "#" ident "<" strLit ">" : mlir_attr_val -- opaqueAttr
 syntax "#opaque<" ident "," strLit ">" ":" mlir_type : mlir_attr_val -- opaqueElementsAttr
 syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
 
@@ -597,6 +599,26 @@ macro_rules
 | `([mlir_attr_val| true ]) => `(AttrValue.bool True)
 | `([mlir_attr_val| false ]) => `(AttrValue.bool False)
 
+
+macro_rules
+| `([mlir_attr_val| # $dialect:ident <$xs ,* > ]) => do
+    -- cases xs
+    -- rename_i x
+    -- cases x
+    -- rename_i b
+    -- cases b
+    -- exact `(AttrValue.list [])
+    -- rename_i c d
+    -- let y := [[mlir_attr_val|#$ident< $c >]]
+
+    -- all_goals sorry
+        let initList : TSyntax `term  <- `([])
+        -- match xs with
+        --   |  e => sorry
+        let vals : TSyntax `term <- xs.getElems.foldlM (init := initList) fun (xs : TSyntax `term) (x : TSyntax `mlir_attr_val) =>
+          -- let g : TSyntax `str := Lean.Syntax.mkStrLit (toString x.raw)
+          `([mlir_attr_val| #$dialect<$x>] :: $xs)
+        `(AttrValue.list $vals)
 
 macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do

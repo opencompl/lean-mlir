@@ -77,12 +77,17 @@ def add? {w : Nat} (x y : BitVec w) : IntW w :=
 @[simp_llvm_option]
 theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 
+structure AdditionFlags where
+  nsw : Bool := false
+  nuw : Bool := false
+  deriving DecidableEq
+
 @[simp_llvm_option]
-def add {w : Nat} (x y : IntW w) (nswnuw : Bool × Bool := ⟨ false , false ⟩ ) : IntW w := do
+def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := nswnuw.1
-  let nuw := nswnuw.2
+  let nsw := flags.nsw
+  let nuw := flags.nuw
   if (nsw ∧  (x'.toInt + y'.toInt) < -(2^(w-1)) ∧ (x'.toInt + y'.toInt) ≥ 2^w) ∨ (nuw ∧  (x'.toNat + y'.toNat) ≥ 2^w) then
     none
   else
