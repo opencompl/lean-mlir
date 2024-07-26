@@ -40,7 +40,7 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #guard_msgs in #eval! decide (decr x) (x - 1)
 
 /-- info: true -/
-#guard_msgs in #eval! decide (x + - y) (x - y)
+#guard_msgs in #eval! decide (x + -y) (x - y)
 
 /-- info: true -/
 #guard_msgs in #eval! decide (x + 0) (var 0)
@@ -55,7 +55,7 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 #guard_msgs in #eval! decide (x - x) 0
 
 /-- info: true -/
-#guard_msgs in #eval! decide (x  + 0) x
+#guard_msgs in #eval! decide (x + 0) x
 
 /-- info: true -/
 #guard_msgs in #eval! decide (0 + x) x
