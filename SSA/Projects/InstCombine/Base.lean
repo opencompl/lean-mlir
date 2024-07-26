@@ -247,7 +247,7 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags) : Op:=  MOp.add (.concrete w) flags
+@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags := {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 @[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
 @[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete

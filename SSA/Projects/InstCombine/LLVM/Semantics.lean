@@ -82,26 +82,29 @@ structure AdditionFlags where
   nuw : Bool := false
   deriving DecidableEq
 
+/-- Does the signed addition x + y overflow? -/
+def AddSignedWraps? (x y : BitVec w) : Bool := (x.toInt + y.toInt) < -(2^(w-1)) ∨ (x.toInt + y.toInt) ≥ 2^w
+
+/-- Does the unsigned addition x + y overflow? -/
+def AddUnSignedWraps? (x y : BitVec w) : Bool := (x.toNat + y.toNat) ≥ 2^w
+
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
   let nsw := flags.nsw
   let nuw := flags.nuw
-  if (nsw ∧  (x'.toInt + y'.toInt) < -(2^(w-1)) ∧ (x'.toInt + y'.toInt) ≥ 2^w) ∨ (nuw ∧  (x'.toNat + y'.toNat) ≥ 2^w) then
+  if (nsw ∧  AddSignedWraps? x' y') ∨ (nuw ∧  AddUnSignedWraps? x' y') then
     none
   else
     add? x' y'
 
-set_option allowUnsafeReducibility true
-@[simp, reducible]
-theorem add_reduce (x y : IntW w) :  add x y = match x , y with
-  | .none , _ => .none
-  | _ , .none => none
-  | .some a , .some b  => .some (a + b) := by
-  rcases x
-  all_goals (cases y)
-  all_goals (try simp ; try rfl)
+@[simp]
+theorem add_reduce (x y : IntW w) : add x y = match x, y with
+  | none , _ => none
+  | _ , none => none
+  | some a , some b => .some (a + b) := by cases x <;> cases y <;> (simp ; rfl)
+
 /--
 The value produced is the integer difference of the two operands.
 If the difference has unsigned overflow, the result returned is the mathematical result modulo 2n, where n is the bit width of the result.

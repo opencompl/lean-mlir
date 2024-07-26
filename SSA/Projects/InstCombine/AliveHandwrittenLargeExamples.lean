@@ -119,6 +119,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   unfold MulDivRem805_lhs MulDivRem805_rhs
   simp only [simp_llvm_wrap]
   simp_alive_ssa
+  simp only [LLVM.add_reduce]
   simp_alive_undef
   simp_alive_case_bash
   simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
@@ -135,7 +136,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
-      simp only [add_tsub_cancel_right, false_and, or_self, ↓reduceIte,Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
