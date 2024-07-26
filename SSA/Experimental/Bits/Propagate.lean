@@ -827,7 +827,7 @@ lemma exists_repeat : ∀ (seq : β → BitStream)
         simp [*] at *
         exact hn2 }
       conv_rhs => rw [h2]
-      refine' propagate_eq_of_carry_eq _ _ _ _ _ _ _ _ _
+      apply propagate_eq_of_carry_eq
       { have _h : ↑b + (n - 2 ^ card α) = (a + (n - 2 ^ card α)) + (b - a) := by
         { zify
           rw [Nat.cast_sub, Nat.cast_sub]
