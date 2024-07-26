@@ -666,6 +666,7 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
         have := hc₂ _ _ h
         simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
           Circuit.eval_or, this, or_true]
+termination_by sorry -- This is broken. Anyone knows how to fix this?
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
