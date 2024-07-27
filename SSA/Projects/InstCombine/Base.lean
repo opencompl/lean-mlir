@@ -247,7 +247,6 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags := {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 @[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
 @[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
@@ -257,6 +256,11 @@ namespace Op
 
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
+
+
+/-- Add is seperate from the other operations because it takes in 2 flags: nuw and nsw.-/
+@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags :=
+   {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 
 end Op
 
@@ -306,7 +310,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add w flags       => LLVM.add    (op.getN 0) (op.getN 1) flags
+  | Op.add w flags => LLVM.add    (op.getN 0) (op.getN 1) flags
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
