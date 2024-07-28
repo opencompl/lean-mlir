@@ -15,7 +15,8 @@ def Deleted {α : Ty} (Γ: Ctxt Ty) (v : Γ.Var α) (Γ' : Ctxt Ty) : Prop :=
 /-- build a `Deleted` for a `(Γ.snoc α) → Γ`-/
 def Deleted.deleteSnoc (Γ : Ctxt Ty) (α : Ty) : Deleted (Γ.snoc α) (Ctxt.Var.last Γ α) Γ := rfl
 
-theorem List.eraseIdx_succ : List.eraseIdx (List.cons x xs) (.succ n) = x :: List.eraseIdx xs n := rfl
+theorem List.eraseIdx_succ :
+    List.eraseIdx (List.cons x xs) (.succ n) = x :: List.eraseIdx xs n := rfl
 
 /- removing from `xs ++ [x]` at index `(length xs)` equals `xs`. -/
 theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs := by
@@ -25,7 +26,8 @@ theorem List.eraseIdx_eq_len_concat : List.eraseIdx (xs ++ [x]) xs.length = xs :
     simp [eraseIdx_succ, IH]
 
 /- removing at index `n` does not change indices `k < n` -/
-theorem List.get?_eraseIdx_of_lt (hk: k < n) : List.get? (List.eraseIdx xs n) k = List.get? xs k := by
+theorem List.get?_eraseIdx_of_lt (hk: k < n) :
+    List.get? (List.eraseIdx xs n) k = List.get? xs k := by
   by_cases N_LEN:(xs.length ≤ n)
   case pos => simp [eraseIdx_of_length_le N_LEN]
   case neg =>
@@ -97,7 +99,8 @@ def Deleted.pushforward_Valuation [TyDenote Ty] {α: Ty}  {Γ Γ' : Ctxt Ty} {de
   fun _t' v' => vΓ (DEL.pullback_var v')
 
 -- evaluating a pushforward valuation at a pullback variable returns the same result.
-theorem Deleted.pushforward_Valuation_denote [TyDenote Ty] {α : Ty} {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
+theorem Deleted.pushforward_Valuation_denote [TyDenote Ty] {α : Ty} {Γ Γ' : Ctxt Ty}
+    {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ')
   (vΓ : Γ.Valuation)
   (v' : Γ'.Var α) :
@@ -108,7 +111,8 @@ theorem Deleted.pushforward_Valuation_denote [TyDenote Ty] {α : Ty} {Γ Γ' : C
 /-- Given  `Γ' := Γ/delv`, transport a variable from `Γ` to `Γ', if `v ≠ delv`. -/
 def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
   (DEL : Deleted Γ delv Γ') (v : Γ.Var β) :
-    Option { v' : Γ'.Var β //  ∀ (V : Γ.Valuation), V.eval v = (DEL.pushforward_Valuation V).eval v' } :=
+    Option { v' : Γ'.Var β //  ∀ (V : Γ.Valuation), V.eval v =
+      (DEL.pushforward_Valuation V).eval v' } :=
   if VEQ : v.val = delv.val
   then none -- if it's the deleted variable, then return nothing.
   else
@@ -199,7 +203,8 @@ def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : Γ.Var α} {Γ' : Ctxt d.Ty} {ts :
   (DEL : Deleted Γ delv Γ')
   (as : HVector (Ctxt.Var Γ) <| ts) :
   Option
-    { as' : HVector (Ctxt.Var Γ') <| ts // ∀ (V : Γ.Valuation), as.map V.eval = as'.map (DEL.pushforward_Valuation V).eval  } :=
+    { as' : HVector (Ctxt.Var Γ') <| ts // ∀ (V : Γ.Valuation), as.map V.eval =
+      as'.map (DEL.pushforward_Valuation V).eval  } :=
   match as with
   | .nil => .some ⟨.nil, by
       simp only [HVector.map, implies_true]
@@ -221,7 +226,8 @@ def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : Γ.Var α} {Γ' : Ctxt d.Ty} {ts :
 
 /- Try to delete a variable from an Expr -/
 def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ .pure t) :
-  Option { e' : Expr d Γ' .pure t // ∀ (V : Γ.Valuation), e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
+  Option { e' : Expr d Γ' .pure t // ∀ (V : Γ.Valuation),
+    e.denote V = e'.denote (DEL.pushforward_Valuation V) } :=
   match e with
   | .mk op ty_eq eff_le args regArgs =>
     match arglistDeleteVar? DEL args with
@@ -237,7 +243,8 @@ def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ .pure t) :
       ⟩
 
 /-- snoc an `ω` to both the input and output contexts of `Deleted Γ v Γ'` -/
-def Deleted.snoc {α : d.Ty} {Γ: Ctxt d.Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ') : Deleted (Γ.snoc ω) v.toSnoc (Γ'.snoc ω) := by
+def Deleted.snoc {α : d.Ty} {Γ: Ctxt d.Ty} {v : Γ.Var α} (DEL : Deleted Γ v Γ') :
+    Deleted (Γ.snoc ω) v.toSnoc (Γ'.snoc ω) := by
   simp only [Deleted, Ctxt.delete, Ctxt.get?, Ctxt.Var.val_toSnoc] at DEL ⊢
   subst DEL
   rfl
@@ -270,7 +277,8 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
 
 /-- Delete a variable from an Com. -/
 def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
-  Option { com' : Com d Γ' .pure t // ∀ (V : Γ.Valuation), com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
+  Option { com' : Com d Γ' .pure t // ∀ (V : Γ.Valuation),
+    com.denote V = com'.denote (DEL.pushforward_Valuation V) } :=
   match com with
   | .ret v =>
     match Var.tryDelete? DEL v with
@@ -297,10 +305,12 @@ def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
             ⟩
 
 /-- Declare the type of DCE up-front, so we can declare an `Inhabited` instance.
-   This is necessary so that we can mark the DCE implementation as a `partial def` and ensure that Lean
-   does not freak out on us, since it's indeed unclear to Lean that the output type of `dce` is always inhabited.
+This is necessary so that we can mark the DCE implementation as a `partial def`
+and ensure that Lean does not freak out on us, since it's indeed unclear to Lean
+that the output type of `dce` is always inhabited.
 -/
-def DCEType [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) : Type :=
+def DCEType [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty}
+    {t : d.Ty} (com : Com d Γ .pure t) : Type :=
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)}
 
@@ -310,9 +320,10 @@ instance [SIG : DialectSignature d] [DENOTE : DialectDenote d] {Γ : Ctxt d.Ty} 
   default :=
     ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩
 
-/-- walk the list of bindings, and for each `let`, try to delete the variable defined by the `let` in the body/
-Note that this is `O(n^2)`, for an easy proofs, as it is written as a forward pass.
-The fast `O(n)` version is a backward pass.
+/-- walk the list of bindings, and for each `let`, try to delete the variable
+defined by the `let` in the body/ Note that this is `O(n^2)`, for an easy
+proofs, as it is written as a forward pass.  The fast `O(n)` version is a
+backward pass.
 -/
 partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty}
     (com : Com d Γ .pure t) : DCEType com :=
@@ -329,7 +340,9 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
     match Com.deleteVar? DEL body with
     | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-        : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)), { body' : Com d Γ' .pure t //  ∀ (V : (Γ.snoc α).Valuation), body.denote V = body'.denote (V.comap hom)} :=
+        : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' (Ctxt.snoc Γ α)),
+        { body' : Com d Γ' .pure t //  ∀ (V : (Γ.snoc α).Valuation),
+        body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
       let com' := Com.var (α := α) e (body'.changeVars hom')
       ⟨Γ, Ctxt.Hom.id, com', by
@@ -339,7 +352,9 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
       ⟩
     | .some ⟨body', hbody⟩ =>
       let ⟨Γ', hom', ⟨com', hcom'⟩⟩
-      : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ), { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
+      : Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
+        { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation),
+          com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Ctxt.Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
           simp only [EffectKind.toMonad_pure, HCOM, Com.denote_var, Id.bind_eq,
             Ctxt.Valuation.comap_id]
@@ -347,8 +362,12 @@ partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.
           apply hbody
         ⟩⟩
       let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩
-        :   Σ (Γ'' : Ctxt d.Ty) (hom : Ctxt.Hom Γ'' Γ'), { com'' : Com d Γ'' .pure t //  ∀ (V' : Γ'.Valuation), com'.denote V' = com''.denote (V'.comap hom)} :=
-        dce_ com' -- recurse into `com'`, which contains *just* the `body`, not the `let`, and return this.
+        :   Σ (Γ'' : Ctxt d.Ty) (hom : Ctxt.Hom Γ'' Γ'),
+          { com'' : Com d Γ'' .pure t //  ∀ (V' : Γ'.Valuation),
+            com'.denote V' = com''.denote (V'.comap hom)} :=
+        dce_ com'
+        -- recurse into `com'`, which contains *just* the `body`, not the `let`,
+        -- and return this.
       ⟨Γ'', hom''.comp hom', com'', by
         intros V
         rw [← HCOM]
@@ -362,8 +381,9 @@ decreasing_by {
 }
 -/
 
-/-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where we play the `DCEType` trick
-to convince Lean that the output type is in fact inhabited. -/
+/-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where
+we play the `DCEType` trick to convince Lean that the output type is in fact
+inhabited. -/
 def dce [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
@@ -371,7 +391,8 @@ def dce [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com
 
 /-- A version of DCE that returns an output program with the same context. It uses the context
    morphism of `dce` to adapt the result of DCE to work with the original context -/
-def dce' [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
+def dce' [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty}
+    (com : Com d Γ .pure t) :
     { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
   ⟨com'.changeVars hom, by simp [hcom']⟩

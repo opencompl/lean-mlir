@@ -140,7 +140,8 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
     (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
 
 @[simp]
-theorem toMap_last {Γ : Ctxt Ty} {t : Ty} : (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
+theorem toMap_last {Γ : Ctxt Ty} {t : Ty} :
+    (Ctxt.Var.last Γ t).toMap = Ctxt.Var.last (Γ.map f) (f t) := rfl
 
 @[simp]
 theorem toSnoc_toMap {Γ : Ctxt Ty} {t : Ty} {var : Ctxt.Var Γ t'} {f : Ty → Ty₂} :
@@ -247,7 +248,8 @@ instance {Γ : Ctxt Ty} : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toS
 
 section Valuation
 
-variable [TyDenote Ty] -- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
+-- for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
+variable [TyDenote Ty]
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation (Γ : Ctxt Ty) : Type :=
@@ -310,7 +312,8 @@ theorem Valuation.snoc_toSnoc {Γ : Ctxt Ty} {t t' : Ty} (s : Γ.Valuation) (x :
 @[simp]
 theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦ty⟧)
     (hvar : Ctxt.get? (Ctxt.snoc Γ ty) (n+1) = some var_val) :
-    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by simp only [get?, Ctxt.snoc, List.get?_cons_succ] at hvar; exact hvar⟩ :=
+    (V.snoc v) ⟨n+1, hvar⟩ = V ⟨n, by
+      simp only [get?, Ctxt.snoc, List.get?_cons_succ] at hvar; exact hvar⟩ :=
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
@@ -333,7 +336,8 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
-def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) : Valuation (Ctxt.ofList [t₁, t₂]) :=
+def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+    Valuation (Ctxt.ofList [t₁, t₂]) :=
   Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
 
 @[simp]
@@ -485,8 +489,8 @@ def unSnoc (d : Diff (Γ₁.snoc t) Γ₂) : Diff Γ₁ Γ₂ :=
 def toMap (d : Diff Γ₁ Γ₂) : Diff (Γ₁.map f) (Γ₂.map f) :=
   ⟨d.val, by
     rcases d with ⟨d, h_get_d⟩
-    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some', forall_exists_index, and_imp,
-      forall_apply_eq_imp_iff₂] at h_get_d ⊢
+    simp only [Valid, get?, map, List.getElem?_map, Option.map_eq_some',
+      forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] at h_get_d ⊢
     simp only [List.get?_eq_getElem?] at h_get_d
     simp only [List.get?_eq_getElem?, List.getElem?_map, Option.map_eq_some', forall_exists_index,
       and_imp, forall_apply_eq_imp_iff₂]

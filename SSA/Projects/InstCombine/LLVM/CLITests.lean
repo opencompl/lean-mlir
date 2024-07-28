@@ -66,7 +66,8 @@ def instParseableNatParams {n : Nat} : Cli.ParseableType (natParams n) where
     | (n + 1) + 1 =>
       let inst1 : Cli.ParseableType Nat := inferInstance
       let instn : Cli.ParseableType (natParams (n + 1)) := @instParseableNatParams (n + 1)
-      let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) := @instParseableTuple Nat (natParams (n + 1)) inst1 instn
+      let instTup : Cli.ParseableType (Nat × (natParams <| n + 1)) :=
+        @instParseableTuple Nat (natParams (n + 1)) inst1 instn
       let hn1gt0 : (n + 1) > 0 := by
         rename_i n_1 -- aesop?
         simp_all only [gt_iff_lt, add_pos_iff, or_true]
@@ -106,10 +107,12 @@ structure ConcreteCliTest where
   -- TODO: add support for impure CLI tests
   code : MCom 0 context .pure ty
 
-def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars) (hMvars : mvars = 0) : InstCombine.MTy 0 :=
+def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars)
+    (hMvars : mvars = 0) : InstCombine.MTy 0 :=
     hMvars ▸ ty
 
-def InstCombine.MTy.cast_concrete? (mvars : Nat) (ty : InstCombine.MTy mvars) : Option <| InstCombine.MTy 0 :=
+def InstCombine.MTy.cast_concrete? (mvars : Nat) (ty : InstCombine.MTy mvars) :
+    Option <| InstCombine.MTy 0 :=
   if h : mvars = 0 then
     some <| cast_concrete mvars ty h
    else
@@ -168,11 +171,13 @@ def CliTest.cast_concrete? (test : CliTest)  : Option ConcreteCliTest :=
 
 
 -- TODO: This instantiates the parameters in a test. So far we assume al parameters are `Nat`s.
-def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mvars) : ConcreteCliTest :=
+def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat
+test.mvars) : ConcreteCliTest :=
   if h : test.concrete then
     let context : MLIR.AST.Context 0 := h ▸ test.context
     let ty : InstCombine.MTy 0 := h ▸ test.ty
-    let test' : CliTest := { name := test.name, mvars := 0, context := context, ty := ty, code := test.code}
+    let test' : CliTest := { name := test.name, mvars := 0, context := context,
+    ty := ty, code := test.code}
     -- is this the one that's impossible (becaue of the non-theorem of `HEq.congr`?)
     let hContext : HEq context test.context := by sorry --rfl
     let ty : InstCombine.MTy 0 := h ▸ test.ty
@@ -183,9 +188,11 @@ def CliTest.instantiateParameters (test : CliTest) (params : Vector Nat test.mva
   sorry
 
 
-theorem cast_concrete_len_eq (test : CliTest) (hMvars : test.mvars = 0) : (test.cast_concrete hMvars).context.length = test.context.length := by sorry
+theorem cast_concrete_len_eq (test : CliTest) (hMvars : test.mvars = 0) :
+(test.cast_concrete hMvars).context.length = test.context.length := by sorry
 
-def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMvars : test.mvars = 0 := by rfl) :
+def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length)
+(hMvars : test.mvars = 0 := by rfl) :
  IO ⟦(test.cast_concrete hMvars).ty⟧ := do
    let concrete_test := test.cast_concrete hMvars
    let h := cast_concrete_len_eq test hMvars
@@ -193,7 +200,8 @@ def CliTest.eval (test : CliTest) (values : Vector ℤ test.context.length) (hMv
    concrete_test.eval values'
 -/
 
-def InstCombine.mkValuation (ctxt : MContext 0) (values : Mathlib.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
+def InstCombine.mkValuation (ctxt : MContext 0)
+  (values : Mathlib.Vector (Option Int) ctxt.length): Ctxt.Valuation ctxt :=
 match ctxt, values with
   | [], ⟨[],_⟩ => Ctxt.Valuation.nil
   | ty::tys, ⟨val::vals,hlen⟩ =>
@@ -201,10 +209,12 @@ match ctxt, values with
     let valuation' := mkValuation tys valsVec
     match ty with
       | .bitvec (.concrete w) =>
-         let newTy : toType (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)) := Option.map (BitVec.ofInt w) val
+         let newTy : toType (InstCombine.MTy.bitvec (ConcreteOrMVar.concrete w)) :=
+           Option.map (BitVec.ofInt w) val
          Ctxt.Valuation.snoc valuation' newTy
 
-def ConcreteCliTest.eval (test : ConcreteCliTest) (values : Mathlib.Vector (Option Int) test.context.length) :
+def ConcreteCliTest.eval (test : ConcreteCliTest)
+    (values : Mathlib.Vector (Option Int) test.context.length) :
  IO ⟦test.ty⟧ := do
   let valuesStack := values.reverse -- we reverse values since context is a stack
   let valuation := InstCombine.mkValuation test.context valuesStack
@@ -216,9 +226,11 @@ def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option Int))
       let valuesVec : Mathlib.Vector (Option Int) test.context.length := h ▸ (Vector.ofArray values)
       return Except.ok <| (← test.eval valuesVec)
     else
-      return Except.error s!"Invalid input length: {values} has length {values.size}, required {test.context.length}"
+      return Except.error (s!"Invalid input length: {values} has length {values.size}, " ++
+        s!" required {test.context.length}")
 
-def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) : Cli.ParseableType (Mathlib.Vector Int test.context.length)
+def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) :
+    Cli.ParseableType (Mathlib.Vector Int test.context.length)
   := inferInstance
 
 def CocreteCliTest.signature (test : ConcreteCliTest) :
@@ -261,7 +273,6 @@ private def mkElab (ext : NameExt) (ty : Lean.Expr) : Elab.Term.TermElabM Lean.E
   for (_, n4) in ext.getState (← getEnv) do
     stx := stx.push $ ← `($(mkIdent n4):ident)
   let listStx := (← `([$stx,*]))
-  --let sorted ← `(Array.toList $ Array.qsort ($listStx).toArray (λ x y => Nat.ble x.weightedSize y.weightedSize))
   let list ← `($listStx)
   Elab.Term.elabTerm list (some ty)
 
