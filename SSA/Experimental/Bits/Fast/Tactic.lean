@@ -95,81 +95,81 @@ partial def getVars (e : Expr) : TacticM (List Name) :=
 /--
 Convert a Nat to syntax
 -/
-def NatToSyntax (n : Nat) : (TSyntax `term) :=
+def NatToSyntax (n : Nat) : Lean.Term :=
  match n with
-  | 0 => mkIdent `Term.zero
-  | Nat.succ x => Syntax.mkApp (mkIdent `Term.incr) #[NatToSyntax x]
+  | 0 => mkIdent ``Term.zero
+  | Nat.succ x => Syntax.mkApp (mkIdent ``Term.incr) #[NatToSyntax x]
 
 /--
 Reflect the expression `e` into a Syntax of the terms in the `Term` datatype
 -/
-partial def reflectS (e : _root_.Term) (names : List Name) : TacticM (TSyntax `term) := do
+partial def reflectS (e : _root_.Term) (names : List Name) : TacticM Lean.Term := do
   match e with
     | Term.and a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent `Term.and) #[a,b]
+      return Syntax.mkApp (mkIdent ``Term.and) #[a,b]
     | Term.sub a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent `Term.sub) #[a,b]
+      return Syntax.mkApp (mkIdent ``Term.sub) #[a,b]
     | Term.or a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent `Term.or) #[a,b]
+      return Syntax.mkApp (mkIdent ``Term.or) #[a,b]
     | Term.xor a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent `Term.xor) #[a,b]
+      return Syntax.mkApp (mkIdent ``Term.xor) #[a,b]
     | Term.add a b => do
         let a ← reflectS a names
         let b ← reflectS b names
-        return Syntax.mkApp (mkIdent `Term.add) #[a,b]
+        return Syntax.mkApp (mkIdent ``Term.add) #[a,b]
     | Term.neg a => do
         let a ← reflectS a names
-        return Syntax.mkApp (mkIdent `Term.neg) #[a]
+        return Syntax.mkApp (mkIdent ``Term.neg) #[a]
     | Term.incr a => do
         let a ← reflectS a names
-        return Syntax.mkApp (mkIdent `Term.incr) #[a]
+        return Syntax.mkApp (mkIdent ``Term.incr) #[a]
     | Term.zero => do
-      return mkIdent `Term.zero
+      return mkIdent ``Term.zero
     | Term.var a  => do
-      return Syntax.mkApp (mkIdent `Term.var) #[Lean.quote a]
+      return Syntax.mkApp (mkIdent ``Term.var) #[Lean.quote a]
     | _ => throwError "reflectS: unimplemented case"
 
 /--
 Reflect the expression `e` into a Syntax version of itself
 -/
-partial def reflectS2 (e : _root_.Term) (names : List Name) : TacticM (TSyntax `term) := do
+partial def reflectS2 (e : _root_.Term) (names : List Name) : TacticM Lean.Term := do
   match e with
     | Term.and a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent `HAnd.hAnd) #[a,b]
+      return Syntax.mkApp (mkIdent ``HAnd.hAnd) #[a,b]
     | Term.sub  a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent `HSub.hSub) #[a,b]
+      return Syntax.mkApp (mkIdent ``HSub.hSub) #[a,b]
     | Term.or a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent `HOr.hOr) #[a,b]
+      return Syntax.mkApp (mkIdent ``HOr.hOr) #[a,b]
     | Term.xor a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent `HXor.hXor) #[a,b]
+      return Syntax.mkApp (mkIdent ``HXor.hXor) #[a,b]
     | Term.add a b => do
         let a ← reflectS2 a names
         let b ← reflectS2 b names
-        return Syntax.mkApp (mkIdent `HAdd.hAdd) #[a,b]
+        return Syntax.mkApp (mkIdent ``HAdd.hAdd) #[a,b]
     | Term.neg a => do
         let a ← reflectS2 a names
-        return Syntax.mkApp (mkIdent `Neg.neg) #[a]
+        return Syntax.mkApp (mkIdent ``Neg.neg) #[a]
     | Term.incr a => do
         let a ← reflectS2 a names
-        return Syntax.mkApp (mkIdent `BitStream.incr) #[a]
+        return Syntax.mkApp (mkIdent ``BitStream.incr) #[a]
     | Term.zero => do
-      return mkIdent `BitStream.zero
+      return mkIdent ``BitStream.zero
     | Term.var a  => do
       `(vars $(Lean.quote a))
     | _ => throwError "reflectS2: unimplemented case"
@@ -225,6 +225,7 @@ partial def parseTerm (e : Expr) (names : List Name) : TacticM (_root_.Term) := 
     | _ => match e with
       | Lean.Expr.fvar a => return Term.var (names.indexOf (a.name))
       | _ => throwError s!"reflectS: {e} is not a automata expression"
+
 /--
 Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
 constant-memory operations on bitvectors
@@ -261,17 +262,17 @@ def bvAutomata : TacticM Unit := do withMainContext <| do
           let goal ← getMainGoal
           let hypType: Lean.Expr := Lean.Expr.forallE
             ( .str .anonymous "some function")
-            (Lean.Expr.const `Nat [])
-            (Lean.Expr.const `BitStream [])
+            (Lean.Expr.const ``Nat [])
+            (Lean.Expr.const ``BitStream [])
             (Lean.BinderInfo.default)
-          let someType : Expr := (.app (.const `BitVec []) n)
-          let efvars : Expr := (listExpr (.app (.const `BitVec []) n) fvars)
+          let someType : Expr := (.app (.const ``BitVec []) n)
+          let efvars : Expr := (listExpr (.app (.const ``BitVec []) n) fvars)
           match fvars with
             | [] => throwError "no free variables in the expression"
             | var :: _fun_match =>
               let hypValue : Expr := (Expr.lam `b
-                (.const `Nat [])
-                (.app (.app (.const `BitStream.ofBitVec []) n) (.app (.app (.app (.app (.const ``List.getD [Lean.Level.zero]) someType) efvars) (.bvar 0)) var))
+                (.const ``Nat [])
+                (.app (.app (.const ``BitStream.ofBitVec []) n) (.app (.app (.app (.app (.const ``List.getD [Lean.Level.zero]) someType) efvars) (.bvar 0)) var))
                   ) BinderInfo.default
               let (newGoal) ← goal.define `vars hypType hypValue
               -- Clear the original goal and replace it with the new goal
