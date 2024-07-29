@@ -38,7 +38,7 @@ theorem shift_mul:
   rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
-  simp [bv_toNat]
+  simp only [bv_toNat, Nat.mod_mul_mod]
   ring_nf
 
 /--
