@@ -15,8 +15,6 @@ open Lean.Meta
 open Lean.Elab
 open Lean.Elab.Tactic
 
-
-
 partial def getFVars  (e : Expr)  : TacticM (List Expr) :=
     match_expr e with
       | HAnd.hAnd _ _ _ _ a b => do
@@ -92,6 +90,7 @@ def NatToSyntax (n : Nat) :  (TSyntax `term) :=
  match n with
   | 0 => mkIdent `Term.zero
   | Nat.succ x => Syntax.mkApp (mkIdent `Term.incr) #[NatToSyntax x]
+
 partial def reflectS  (e : Expr) (names : List Name)  : TacticM (TSyntax `term) := do
   match_expr e with
     | HAnd.hAnd _ _ _ _ a b => do
@@ -170,12 +169,6 @@ partial def reflectS2  (e : Expr)  (names : List Name) : TacticM (TSyntax `term)
       | Lean.Expr.fvar (⟨a⟩ ) =>  `(vars  $(Syntax.mkNumLit (toString (names.indexOf (a)))) )
       | _ => throwError s!"reflectS2: {e} is not a automata expression"
 
-def printGoal : TacticM Unit := do
-  let goal ← getMainTarget
-  logInfo (repr goal)
-elab "printGoal" : tactic => printGoal
-
-
 def listExpr (t : Expr) (exprs : List Lean.Expr) : Lean.Expr :=
   let exprType := t
   let nilExpr := mkApp (.const ``List.nil [Lean.Level.zero]) exprType
@@ -194,12 +187,13 @@ def quote (x : _root_.Term) : TSyntax `term :=
     | .xor a b => Syntax.mkApp (mkIdent `Term.xor) #[quote a,quote b]
     | .var a => Syntax.mkApp (mkIdent `Term.var) #[Syntax.mkNumLit (toString a)]
     | _ => Syntax.mkApp (mkIdent `Term.sub) #[]
-def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.sub x y).eval vars = x.eval vars - y.eval vars := sorry
-def add_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.add x y).eval vars = x.eval vars + y.eval vars := sorry
-def neg_eval {x :  _root_.Term} {vars : Nat → BitStream} :(Term.neg x).eval vars = - x.eval vars := sorry
-def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.and x y).eval vars = x.eval vars &&& y.eval vars := sorry
-def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := sorry
-def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval vars = x.eval vars ||| y.eval vars := sorry
+
+def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.sub x y).eval vars = x.eval vars - y.eval vars   := sorry
+def add_eval {x y : _root_.Term}  {vars : Nat → BitStream} : (Term.add x y).eval vars = x.eval vars + y.eval vars   := sorry
+def neg_eval {x : _root_.Term}    {vars : Nat → BitStream} : (Term.neg x).eval   vars = - x.eval vars               := sorry
+def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.and x y).eval vars = x.eval vars &&& y.eval vars := sorry
+def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := sorry
+def or_eval  {x y : _root_.Term}  {vars : Nat → BitStream} : (Term.or x y).eval  vars = x.eval vars ||| y.eval vars := sorry
 
 def assertGoal : TacticM Unit  := do withMainContext <| do
   let goal ← getMainTarget
@@ -288,17 +282,14 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
               intros _ _
               try rfl
               )))
-          logInfo s!"bv automata tactic succeeded"
+          logInfo s!"{name}: bv automata tactic succeeded"
           return ()
         | _ => do
           throwError m!"{name}: Equality not on the type of BitVectors. It is instead on another type {type}"
     | _ => do
       throwError m!"{name}: Equality expected, found {goal}"
 
-
 elab "bv_automata" : tactic => assertGoal
-
-
 
 
 def test1 (x y : BitVec 2):  (x  ||| y) -  (x ^^^ y) =  x &&& y := by bv_automata
