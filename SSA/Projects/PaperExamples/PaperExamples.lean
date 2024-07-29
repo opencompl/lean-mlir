@@ -80,7 +80,8 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Simple Ty
 instance instTransformTy : MLIR.AST.TransformTy Simple 0 where
   mkTy := mkTy
 
-def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ eff ty, Expr Simple Γ eff ty) := do
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM Simple (Σ eff ty, Expr Simple Γ eff ty) := do
   match opStx.name with
   | "const" =>
     match opStx.attrs.find_int "value" with
@@ -92,7 +93,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM Simple (Σ e
       let ⟨.int, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨.int, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       return ⟨.pure, .int, add v₁ v₂⟩
-    | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <| .generic (
+        s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'")
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr Simple 0 where
@@ -105,7 +107,8 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     return ⟨.pure, ty, Com.ret v⟩
-  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
+  | _ => throw <| .generic (
+      s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})")
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : MLIR.AST.TransformReturn Simple 0 where
@@ -187,7 +190,8 @@ def p1 : PeepholeRewrite Simple [.int] .int :=
       /- goals accomplished 🎉 -/
     }
 
-def ex1_rewritePeepholeAt : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
+def ex1_rewritePeepholeAt :
+    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeepholeAt p1 1 lhs
 
 theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   -- %c0 = 0
@@ -198,7 +202,8 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
   := by rfl
 
-def ex1_rewritePeephole : Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
+def ex1_rewritePeephole :
+    Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
@@ -312,8 +317,9 @@ def p1 : PeepholeRewrite SimpleReg [int] int:=
       Com.denote
         (Com.var
           (iterate 0 { val := 0, property := lhs.proof_1 }
-            (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
-              (Com.ret { val := 0, property := lhs.proof_2 })))
+            (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0,
+            property := lhs.proof_1 }) (Com.ret { val := 0, property :=
+            lhs.proof_2 })))
           (Com.ret { val := 0, property := lhs.proof_2 }))
         Γv =
       Com.denote (Com.ret { val := 0, property := rhs.proof_1 }) Γv

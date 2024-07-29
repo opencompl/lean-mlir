@@ -271,7 +271,8 @@ theorem scf.for.zero_n (f: Nat → β → β) (seed : β) :
 -- theorem 3 : arbitrary for peeling
 /-
 theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
-  scf.for.loop f (n + m) ((n + m) - n) (scf.for.loop f n (n - 0) seed) = scf.for.loop f (n + m) (n + m - 0) seed := by {
+  scf.for.loop f (n + m) ((n + m) - n) (scf.for.loop f n (n - 0) seed) =
+  scf.for.loop f (n + m) (n + m - 0) seed := by {
     simp[scf.for.loop]
     revert m;
     induction n;

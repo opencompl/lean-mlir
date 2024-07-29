@@ -1,9 +1,11 @@
 import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic
 
-/-- Note that this assumes that the input and output bitwidths are the same, which is by far the common case. -/
+/-- Note that this assumes that the input and output bitwidths are the same,
+which is by far the common case. -/
 @[simp]
-theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b.toNat < w) : LLVM.lshr? a b = .some (BitVec.ushiftRight a b.toNat) := by
+theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b.toNat < w) :
+    LLVM.lshr? a b = .some (BitVec.ushiftRight a b.toNat) := by
   simp only [LLVM.lshr?]
   split_ifs
   case pos contra => linarith
@@ -11,7 +13,8 @@ theorem LLVM.lshr?_eq_some {a b : BitVec w} (hb : b.toNat < w) : LLVM.lshr? a b 
     simp only [HShiftRight.hShiftRight]
     rfl
 
-/-- Note that this assumes that the input and output bitwidths are the same, which is by far the common case. -/
+/-- Note that this assumes that the input and output bitwidths are the same,
+which is by far the common case. -/
 @[simp]
 theorem LLVM.lshr?_eq_none {a b : BitVec w} (hb : b.toNat ≥ w) : LLVM.lshr? a b = .none := by
   simp only [LLVM.lshr?]
