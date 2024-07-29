@@ -108,33 +108,33 @@ partial def reflectS (e : _root_.Term) (names : List Name) : TacticM Lean.Term :
     | Term.and a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent ``Term.and) #[a,b]
+      `(Term.and $a $b)
     | Term.sub a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent ``Term.sub) #[a,b]
+      `(Term.sub $a $b)
     | Term.or a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent ``Term.or) #[a,b]
+      `(Term.or $a $b)
     | Term.xor a b => do
       let a ← reflectS a names
       let b ← reflectS b names
-      return Syntax.mkApp (mkIdent ``Term.xor) #[a,b]
+      `(Term.xor $a $b)
     | Term.add a b => do
-        let a ← reflectS a names
-        let b ← reflectS b names
-        return Syntax.mkApp (mkIdent ``Term.add) #[a,b]
+      let a ← reflectS a names
+      let b ← reflectS b names
+      `(Term.add $a $b)
     | Term.neg a => do
-        let a ← reflectS a names
-        return Syntax.mkApp (mkIdent ``Term.neg) #[a]
+      let a ← reflectS a names
+      `(Term.neg $a)
     | Term.incr a => do
-        let a ← reflectS a names
-        return Syntax.mkApp (mkIdent ``Term.incr) #[a]
+      let a ← reflectS a names
+      `(Term.incr $a)
     | Term.zero => do
-      return mkIdent ``Term.zero
+      `(Term.zero)
     | Term.var a  => do
-      return Syntax.mkApp (mkIdent ``Term.var) #[Lean.quote a]
+      `(Term.var $(Lean.quote a))
     | _ => throwError "reflectS: unimplemented case"
 
 /--
@@ -145,31 +145,31 @@ partial def reflectS2 (e : _root_.Term) (names : List Name) : TacticM Lean.Term 
     | Term.and a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent ``HAnd.hAnd) #[a,b]
+      `(HAnd.hAnd $a $b)
     | Term.sub  a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent ``HSub.hSub) #[a,b]
+      `(HSub.hSub $a $b)
     | Term.or a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent ``HOr.hOr) #[a,b]
+      `(HOr.hOr $a $b)
     | Term.xor a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
-      return Syntax.mkApp (mkIdent ``HXor.hXor) #[a,b]
+      `(HXor.hXor $a $b)
     | Term.add a b => do
-        let a ← reflectS2 a names
-        let b ← reflectS2 b names
-        return Syntax.mkApp (mkIdent ``HAdd.hAdd) #[a,b]
+      let a ← reflectS2 a names
+      let b ← reflectS2 b names
+      `(HAdd.hAdd $a $b)
     | Term.neg a => do
-        let a ← reflectS2 a names
-        return Syntax.mkApp (mkIdent ``Neg.neg) #[a]
+      let a ← reflectS2 a names
+      `(Neg.neg $a)
     | Term.incr a => do
-        let a ← reflectS2 a names
-        return Syntax.mkApp (mkIdent ``BitStream.incr) #[a]
+      let a ← reflectS2 a names
+      `(BitStream.incr $a)
     | Term.zero => do
-      return mkIdent ``BitStream.zero
+      `(BitStream.zero)
     | Term.var a  => do
       `(vars $(Lean.quote a))
     | _ => throwError "reflectS2: unimplemented case"
@@ -226,6 +226,15 @@ partial def parseTerm (e : Expr) (names : List Name) : TacticM (_root_.Term) := 
       | Lean.Expr.fvar a => return Term.var (names.indexOf (a.name))
       | _ => throwError s!"reflectS: {e} is not a automata expression"
 
+
+def zero_bitstream {w : Nat} : @BitStream.ofBitVec w 0 = BitStream.zero := by
+  unfold BitStream.zero
+  unfold BitStream.ofBitVec
+  funext
+  rename_i b
+  unfold BitVec.getLsb
+  sorry
+
 /--
 Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
 constant-memory operations on bitvectors
@@ -256,6 +265,7 @@ def bvAutomata : TacticM Unit := do withMainContext <| do
             | simp only [BitStream.ofBitVec_and]
             | simp only [BitStream.ofBitVec_add]
             | simp only [BitStream.ofBitVec_neg]
+            | simp only [zero_bitstream]
           )
           )
           ))
@@ -309,9 +319,9 @@ def bvAutomata : TacticM Unit := do withMainContext <| do
               evalTactic (← `(tactic|(
               simp only [vars, List.getD, Option.getD,List.get? ] at rhs
               simp only [vars, List.getD, Option.getD,List.get? ] at lhs
-              try rw [← rhs]
-              try rw [← lhs]
-              try rw [decided]
+              rw [← rhs]
+              rw [← lhs]
+              rw [decided]
               intros _ _
               try rfl
               )))
@@ -331,11 +341,11 @@ elab "bv_automata" : tactic => bvAutomata
 def test1 (x y : BitVec 2) : (x ||| y) - (x ^^^ y) = x &&& y := by
   bv_automata
 
-def test5 (x y : BitVec 2) : (x + -y) = (x - y):= by
+def test5 (x y : BitVec 2) : (x + -y) = (x - y) := by
   bv_automata
 
-def test7 (x y : BitVec 2) : (x + y) = (y + x):= by
+def test7 (x y : BitVec 2) : (x + y) = (y + x) := by
   bv_automata
 
-def test8 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z):= by
+def test8 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
   bv_automata
