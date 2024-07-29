@@ -359,7 +359,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
   by_cases h : w ≤ BitVec.toNat B <;> simp [h]
   apply BitVec.eq_of_toNat_eq
-  simp [bv_toNat]
+  simp only [bv_toNat, Nat.mod_mul_mod]
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -504,7 +504,7 @@ def alive_simplifySelect764 (w : Nat) :
   · simp [zero_sgt_A]
   · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
     by_cases neg_A_sgt_zero : -A >ₛ 0#w
-    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+    · simp only [neg_A_sgt_zero, ofBool_true, ofNat_eq_ofNat]
       by_cases A_sgt_zero : A >ₛ 0#w
       simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
@@ -520,7 +520,7 @@ def alive_simplifySelect764 (w : Nat) :
         simp only at neg_A_sgt_zero
         simp [neg_A_sgt_zero] at A_sgt_zero
       simp [A_sgt_zero]
-    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+    · simp only [neg_A_sgt_zero, ofBool_false, ofNat_eq_ofNat, _root_.neg_neg]
       by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       · by_cases A_eq_zero : A = 0
