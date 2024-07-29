@@ -363,6 +363,10 @@ Crucially, our decision procedure works by considering which equalities hold for
 --     (∀ w, (x w + y w) = z w) ↔ (∀ w, (ofBitVec (x w)) + (ofBitVec (y w)) ) := by
 --   have ⟨h₁, h₂⟩ : True ∧ True := sorry
 --   sorry
+@[simp] theorem ofBitVec_sub : ofBitVec (x - y) = (ofBitVec x) - (ofBitVec y) := sorry
+@[simp] theorem ofBitVec_add : ofBitVec (x + y) = (ofBitVec x) + (ofBitVec y) := sorry
+@[simp] theorem ofBitVec_neg : ofBitVec (- x ) = -(ofBitVec x) := sorry
+-- @[simp] theorem ofBitVec_sub : ofBitVec (x - y) = (ofBitVec x) - (ofBitVec y) := sorry
 
 end Lemmas
 
