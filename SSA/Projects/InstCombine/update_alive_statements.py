@@ -19,6 +19,7 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
+set_option linter.longLine false
 """
 
 
