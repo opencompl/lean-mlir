@@ -7,15 +7,13 @@ import Lean.Meta
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
-
 import SSA.Experimental.Bits.Lemmas
+
 open Lean Elab Tactic
 open Lean
 open Lean.Meta
 open Lean.Elab
 open Lean.Elab.Tactic
--- open SSA.Experimental.Bits.Fast.BitStream.ToBitVec
-set_option linter.longLine false
 
 
 
@@ -132,13 +130,11 @@ partial def reflectS  (e : Expr) (names : List Name)  : TacticM (TSyntax `term) 
       | _ => throwError s!"reflectS: {e} is not a automata expression"
 
 partial def reflectS2  (e : Expr)  (names : List Name) : TacticM (TSyntax `term) := do
-  -- logInfo (repr vars)
   match_expr e with
     | HAnd.hAnd _ _ _ _ a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
       return Syntax.mkApp (mkIdent `HAnd.hAnd) #[a,b]
-      -- return .app (.app  (.const `Term.and []) a) b
     | HSub.hSub _ _ _ _ a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
@@ -207,7 +203,6 @@ def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval 
 
 def assertGoal : TacticM Unit  := do withMainContext <| do
   let goal ← getMainTarget
-  -- simp
   let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
   match_expr goal with
     | Eq type lhs rhs =>
@@ -306,8 +301,7 @@ elab "bv_automata" : tactic => assertGoal
 
 
 
-def test1 (x y : BitVec 2):  (x  ||| y) -  (x ^^^ y) =  x &&& y := by
-  bv_automata
+def test1 (x y : BitVec 2):  (x  ||| y) -  (x ^^^ y) =  x &&& y := by bv_automata
 
 def test5 (x y : BitVec 2) :(x + -y) = (x - y):= by bv_automata
 
