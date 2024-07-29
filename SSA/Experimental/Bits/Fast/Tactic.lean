@@ -15,7 +15,11 @@ open Lean.Meta
 open Lean.Elab
 open Lean.Elab.Tactic
 
-partial def getFVars  (e : Expr)  : TacticM (List Expr) :=
+
+/--
+Get a list of fvars in an automata-only expression
+-/
+partial def getFVars (e : Expr) : TacticM (List Expr) :=
     match_expr e with
       | HAnd.hAnd _ _ _ _ a b => do
         let a ← getFVars a
@@ -50,7 +54,10 @@ partial def getFVars  (e : Expr)  : TacticM (List Expr) :=
         | Lean.Expr.fvar a => return [Lean.Expr.fvar a]
         | _ => throwError s!"getFVars: {e} is not a automata expression"
 
-partial def getVars  (e : Expr)  : TacticM (List Name) :=
+/--
+Get a list of variables in an expression
+-/
+partial def getVars (e : Expr) : TacticM (List Name) :=
     match_expr e with
       | HAnd.hAnd _ _ _ _ a b => do
         let a ← getVars a
@@ -72,7 +79,7 @@ partial def getVars  (e : Expr)  : TacticM (List Name) :=
         let a ← getVars a
         let b ← getVars b
         return a ++ b
-      | HAdd.hAdd _  _ _ _ a b => do
+      | HAdd.hAdd _ _ _ _ a b => do
         let a ← getVars a
         let b ← getVars b
         return a ++ b
@@ -85,117 +92,144 @@ partial def getVars  (e : Expr)  : TacticM (List Name) :=
         | Lean.Expr.fvar a => return [a.name]
         | _ => throwError s!"getVars:{e} is not a automata expression"
 
-
-def NatToSyntax (n : Nat) :  (TSyntax `term) :=
+/--
+Convert a Nat to syntax
+-/
+def NatToSyntax (n : Nat) : (TSyntax `term) :=
  match n with
   | 0 => mkIdent `Term.zero
   | Nat.succ x => Syntax.mkApp (mkIdent `Term.incr) #[NatToSyntax x]
 
-partial def reflectS  (e : Expr) (names : List Name)  : TacticM (TSyntax `term) := do
-  match_expr e with
-    | HAnd.hAnd _ _ _ _ a b => do
+/--
+Reflect the expression `e` into a Syntax of the terms in the `Term` datatype
+-/
+partial def reflectS (e : _root_.Term) (names : List Name) : TacticM (TSyntax `term) := do
+  match e with
+    | Term.and a b => do
       let a ← reflectS a names
       let b ← reflectS b names
       return Syntax.mkApp (mkIdent `Term.and) #[a,b]
-    | HSub.hSub _ _ _ _ a b => do
+    | Term.sub a b => do
       let a ← reflectS a names
       let b ← reflectS b names
       return Syntax.mkApp (mkIdent `Term.sub) #[a,b]
-    | HOr.hOr _ _ _ _ a b => do
+    | Term.or a b => do
       let a ← reflectS a names
       let b ← reflectS b names
       return Syntax.mkApp (mkIdent `Term.or) #[a,b]
-    | HXor.hXor _ _ _ _ a b => do
+    | Term.xor a b => do
       let a ← reflectS a names
       let b ← reflectS b names
       return Syntax.mkApp (mkIdent `Term.xor) #[a,b]
-    | HAdd.hAdd _ _ _ _ a b => do
+    | Term.add a b => do
         let a ← reflectS a names
         let b ← reflectS b names
         return Syntax.mkApp (mkIdent `Term.add) #[a,b]
-    | Neg.neg _ _ a => do
+    | Term.neg a => do
         let a ← reflectS a names
         return Syntax.mkApp (mkIdent `Term.neg) #[a]
-    | OfNat.ofNat _ b _ => do
-      match b  with
-        | Lean.Expr.lit nv =>  do
-          match nv with
-            | Lean.Literal.natVal n  => do
-              return NatToSyntax n
-            | _ => throwError s!"Not a literal natval expression at {repr nv}"
-        | _ => throwError s!"Not a Literal expression at {repr b}"
-    | _ => match e with
-      | Lean.Expr.fvar a => return Syntax.mkApp (mkIdent `Term.var) #[Syntax.mkNumLit (toString (names.indexOf (a.name)))]
-      | _ => throwError s!"reflectS: {e} is not a automata expression"
+    | Term.incr a => do
+        let a ← reflectS a names
+        return Syntax.mkApp (mkIdent `Term.incr) #[a]
+    | Term.zero => do
+      return mkIdent `Term.zero
+    | Term.var a  => do
+      return Syntax.mkApp (mkIdent `Term.var) #[Lean.quote a]
+    | _ => throwError "reflectS: unimplemented case"
 
-partial def reflectS2  (e : Expr)  (names : List Name) : TacticM (TSyntax `term) := do
-  match_expr e with
-    | HAnd.hAnd _ _ _ _ a b => do
+/--
+Reflect the expression `e` into a Syntax version of itself
+-/
+partial def reflectS2 (e : _root_.Term) (names : List Name) : TacticM (TSyntax `term) := do
+  match e with
+    | Term.and a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
       return Syntax.mkApp (mkIdent `HAnd.hAnd) #[a,b]
-    | HSub.hSub _ _ _ _ a b => do
+    | Term.sub  a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
       return Syntax.mkApp (mkIdent `HSub.hSub) #[a,b]
-    | HOr.hOr _ _ _ _ a b => do
+    | Term.or a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
       return Syntax.mkApp (mkIdent `HOr.hOr) #[a,b]
-    | HXor.hXor _ _ _ _ a b => do
+    | Term.xor a b => do
       let a ← reflectS2 a names
       let b ← reflectS2 b names
       return Syntax.mkApp (mkIdent `HXor.hXor) #[a,b]
-    | HAdd.hAdd _ _ _ _  a b => do
+    | Term.add a b => do
         let a ← reflectS2 a names
         let b ← reflectS2 b names
         return Syntax.mkApp (mkIdent `HAdd.hAdd) #[a,b]
-    | Neg.neg _ _ a => do
+    | Term.neg a => do
         let a ← reflectS2 a names
         return Syntax.mkApp (mkIdent `Neg.neg) #[a]
-    | OfNat.ofNat a b _ => do
-      match b  with
-        |  Lean.Expr.lit (Lean.Literal.natVal n ) =>
-          match_expr a with
-          | BitVec h => match_expr h with
-            | OfNat.ofNat _ g _  =>
-              match g with
-                |  Lean.Expr.lit (Lean.Literal.natVal _ ) => `(@OfNat.ofNat (BitStream) $(Lean.quote n) BitStream.instOfNat)
-                | _ => throwError "no"
-            | _ => throwError s!"reflectS2: {h} is not a number literal"
-          | _ => throwError "what"
-        | _ => throwError s!"reflectS2: {b} is not a number"
-    | _ => match e with
-      | Lean.Expr.fvar (⟨a⟩ ) =>  `(vars  $(Syntax.mkNumLit (toString (names.indexOf (a)))) )
-      | _ => throwError s!"reflectS2: {e} is not a automata expression"
+    | Term.incr a => do
+        let a ← reflectS2 a names
+        return Syntax.mkApp (mkIdent `BitStream.incr) #[a]
+    | Term.zero => do
+      return mkIdent `BitStream.zero
+    | Term.var a  => do
+      `(vars $(Lean.quote a))
+    | _ => throwError "reflectS2: unimplemented case"
 
+/--
+Conver a list of expression to an expression
+-/
 def listExpr (t : Expr) (exprs : List Lean.Expr) : Lean.Expr :=
   let exprType := t
   let nilExpr := mkApp (.const ``List.nil [Lean.Level.zero]) exprType
   let consExpr := mkApp (mkConst ``List.cons [Lean.Level.zero]) exprType
   exprs.foldr (fun e acc => mkApp2 consExpr e acc) nilExpr
 
-def natExpr: Nat → Expr
-  | 0     => Expr.const `zero []
-  | n + 1 => .app (.const ``Nat.succ []) (natExpr n)
 
-def quote (x : _root_.Term) : TSyntax `term :=
-  match x with
-    | .sub a b => Syntax.mkApp (mkIdent `Term.sub) #[quote a,quote b]
-    | .and a b => Syntax.mkApp (mkIdent `Term.and) #[quote a,quote b]
-    | .or a b => Syntax.mkApp (mkIdent `Term.or) #[quote a,quote b]
-    | .xor a b => Syntax.mkApp (mkIdent `Term.xor) #[quote a,quote b]
-    | .var a => Syntax.mkApp (mkIdent `Term.var) #[Syntax.mkNumLit (toString a)]
-    | _ => Syntax.mkApp (mkIdent `Term.sub) #[]
+def natToTerm (n : Nat) : _root_.Term :=
+  match n with
+    | 0 => Term.zero
+    | Nat.succ x => Term.incr (natToTerm x)
 
-def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.sub x y).eval vars = x.eval vars - y.eval vars   := sorry
-def add_eval {x y : _root_.Term}  {vars : Nat → BitStream} : (Term.add x y).eval vars = x.eval vars + y.eval vars   := sorry
-def neg_eval {x : _root_.Term}    {vars : Nat → BitStream} : (Term.neg x).eval   vars = - x.eval vars               := sorry
-def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.and x y).eval vars = x.eval vars &&& y.eval vars := sorry
-def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} : (Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := sorry
-def or_eval  {x y : _root_.Term}  {vars : Nat → BitStream} : (Term.or x y).eval  vars = x.eval vars ||| y.eval vars := sorry
-
-def assertGoal : TacticM Unit  := do withMainContext <| do
+partial def parseTerm (e : Expr) (names : List Name) : TacticM (_root_.Term) := do
+  match_expr e with
+    | HAnd.hAnd _ _ _ _ a b => do
+      let a ← parseTerm a names
+      let b ← parseTerm b names
+      return Term.and a b
+    | HSub.hSub _ _ _ _ a b => do
+      let a ← parseTerm a names
+      let b ← parseTerm b names
+      return Term.sub a b
+    | HOr.hOr _ _ _ _ a b => do
+      let a ← parseTerm a names
+      let b ← parseTerm b names
+      return Term.or a b
+    | HXor.hXor _ _ _ _ a b => do
+      let a ← parseTerm a names
+      let b ← parseTerm b names
+      return Term.xor a b
+    | HAdd.hAdd _ _ _ _ a b => do
+        let a ← parseTerm a names
+        let b ← parseTerm b names
+        return Term.add a b
+    | Neg.neg _ _ a => do
+        let a ← parseTerm a names
+        return Term.neg a
+    | OfNat.ofNat _ b _ => do
+      match b with
+        | Lean.Expr.lit nv => do
+          match nv with
+            | Lean.Literal.natVal n => do
+              return natToTerm n
+            | _ => throwError s!"Not a literal natval expression at {repr nv}"
+        | _ => throwError s!"Not a Literal expression at {repr b}"
+    | _ => match e with
+      | Lean.Expr.fvar a => return Term.var (names.indexOf (a.name))
+      | _ => throwError s!"reflectS: {e} is not a automata expression"
+/--
+Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
+constant-memory operations on bitvectors
+-/
+def bvAutomata : TacticM Unit := do withMainContext <| do
   let goal ← getMainTarget
   let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
   match_expr goal with
@@ -204,10 +238,12 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
         | BitVec n =>
           let vars ← getVars goal
           let fvars ← getFVars goal
-          let ql ← reflectS lhs vars
-          let qr ← reflectS rhs vars
-          let l2 ← reflectS2 lhs vars
-          let r2 ← reflectS2 rhs vars
+          let parsedLeft ← parseTerm lhs vars
+          let parsedRight ← parseTerm rhs vars
+          let ql ← reflectS parsedLeft vars
+          let qr ← reflectS parsedRight vars
+          let l2 ← reflectS2 parsedLeft vars
+          let r2 ← reflectS2 parsedRight vars
           evalTactic (← `(tactic|
           (
           apply BitStream.eq_of_ofBitVec_eq
@@ -224,20 +260,20 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
           ))
           let goal ← getMainGoal
           let hypType: Lean.Expr := Lean.Expr.forallE
-            ( .str .anonymous "some function"  )
+            ( .str .anonymous "some function")
             (Lean.Expr.const `Nat [])
             (Lean.Expr.const `BitStream [])
             (Lean.BinderInfo.default)
           let someType : Expr := (.app (.const `BitVec []) n)
-          let efvars : Expr  := (listExpr (.app (.const `BitVec []) n) fvars)
+          let efvars : Expr := (listExpr (.app (.const `BitVec []) n) fvars)
           match fvars with
             | [] => throwError "no free variables in the expression"
             | var :: _fun_match =>
-              let hypValue : Expr := (Expr.lam  `b
+              let hypValue : Expr := (Expr.lam `b
                 (.const `Nat [])
-                (.app (.app (.const `BitStream.ofBitVec []) n) (.app  (.app (.app (.app (.const ``List.getD [Lean.Level.zero]) someType) efvars) (.bvar 0)) var))
+                (.app (.app (.const `BitStream.ofBitVec []) n) (.app (.app (.app (.app (.const ``List.getD [Lean.Level.zero]) someType) efvars) (.bvar 0)) var))
                   ) BinderInfo.default
-              let (newGoal) ←  goal.define `vars hypType  hypValue
+              let (newGoal) ← goal.define `vars hypType hypValue
               -- Clear the original goal and replace it with the new goal
               replaceMainGoal [newGoal]
               evalTactic (← `(tactic|(
@@ -247,28 +283,24 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
               have decided : ($ql).eval = ($qr).eval := by
                 native_decide
               )))
+              logInfo (← `(tactic|(
+              have decided : ($ql).eval = ($qr).eval := by
+                native_decide
+              )))
               evalTactic (← `(tactic|(
               have lhs : ($ql).eval vars = ($l2) := by
-                simp only [vars, List.getD, Option.getD,List.get? ]
+                simp only [vars, List.getD, Option.getD,List.get?]
                 repeat (
-                  first
-                    | simp only [sub_eval]
-                    | simp only [xor_eval]
-                    | simp only [and_eval]
-                    | simp only [or_eval]
+                  simp only [Term.eval]
                 )
                 simp [ite]
                 try rfl
               )))
               evalTactic (← `(tactic|(
               have rhs : ($qr).eval vars = ($r2) := by
-                simp only [vars, List.getD, Option.getD,List.get? ]
+                simp only [vars, List.getD, Option.getD,List.get?]
                 repeat (
-                  first
-                    | simp only [sub_eval]
-                    | simp only [xor_eval]
-                    | simp only [and_eval]
-                    | simp only [or_eval]
+                  simp only [Term.eval]
                 )
                 simp [ite]
                 try rfl
@@ -289,13 +321,20 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
     | _ => do
       throwError m!"{name}: Equality expected, found {goal}"
 
-elab "bv_automata" : tactic => assertGoal
+/--
+Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
+constant-memory operations on bitvectors
+-/
+elab "bv_automata" : tactic => bvAutomata
 
+def test1 (x y : BitVec 2) : (x ||| y) - (x ^^^ y) = x &&& y := by
+  bv_automata
 
-def test1 (x y : BitVec 2):  (x  ||| y) -  (x ^^^ y) =  x &&& y := by bv_automata
+def test5 (x y : BitVec 2) : (x + -y) = (x - y):= by
+  bv_automata
 
-def test5 (x y : BitVec 2) :(x + -y) = (x - y):= by bv_automata
+def test7 (x y : BitVec 2) : (x + y) = (y + x):= by
+  bv_automata
 
-def test7 (x y : BitVec 2) : (x + y) = (y + x):= by bv_automata
-
-def test8 (x y z : BitVec 2) :(x + (y + z)) = (x + y + z):= by bv_automata
+def test8 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z):= by
+  bv_automata
