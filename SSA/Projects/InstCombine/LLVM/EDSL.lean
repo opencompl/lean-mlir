@@ -86,7 +86,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
             return ⟨.pure, .bitvec w₂, selectOp⟩
           else
             throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
-        else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
+        else throw <|
+          .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
       | op => throw <| .unsupportedOp s!"Unsuported ternary operation or invalid arguments '{op}'"
   | v₁Stx::v₂Stx::[] =>
     let ⟨.bitvec w,  v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -121,7 +122,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
         | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
         | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
-        | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
+        | opstr => throw <|
+          .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
         | .inl binOp  => ⟨_, _, mkBinOp binOp v₁ v₂⟩
         | .inr pred   => ⟨_, _, mkIcmp pred v₁ v₂⟩
@@ -163,7 +165,8 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     return ⟨.pure, ty, _root_.Com.ret v⟩
-  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
+  | _ => throw <|
+    .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : AST.TransformReturn (MetaLLVM φ) φ where
@@ -185,7 +188,8 @@ def instantiateMOp (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
 
-def instantiateCtxt (vals : Mathlib.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) : Ctxt InstCombine.Ty :=
+def instantiateCtxt (vals : Mathlib.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
+    Ctxt InstCombine.Ty :=
   Γ.map (instantiateMTy vals)
 
 open InstCombine in

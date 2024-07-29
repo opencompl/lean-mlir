@@ -54,7 +54,8 @@ end Monads
   These typeclasses provide a natural flow to how users should implement `TransformDialect`.
   - First declare how to transform types with `TransformTy`.
   - Second, using `TransformTy`, declare how to transform expressions with `TransformExpr`.
-  - Third, using both type and expression conversion, declare how to transform returns with `TransformReturn`.
+  - Third, using both type and expression conversion, declare how to transform
+  returns with `TransformReturn`.
   - These three automatically give an instance of `TransformDialect`.
 -/
 class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
@@ -156,7 +157,8 @@ private def declareBindings [TransformTy d φ] (Γ : Ctxt d.Ty) (vals : List (Ty
   ) (.ofCtxt Γ)
 
 private def mkComHelper
-  [TransformTy d φ] [instTransformExpr : TransformExpr d φ] [instTransformReturn : TransformReturn d φ]
+  [TransformTy d φ] [instTransformExpr : TransformExpr d φ] [instTransformReturn :
+    TransformReturn d φ]
   (Γ : Ctxt d.Ty) :
     List (MLIR.AST.Op φ) → BuilderM d (Σ eff ty, Com d Γ eff ty)
   | [retStx] => do
@@ -164,7 +166,10 @@ private def mkComHelper
   | var::rest => do
     let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ var)
     if h : var.res.length != 1 then
-      throw <| .generic s!"Each let-binding must have exactly one name on the left-hand side. Operations with multiple, or no, results are not yet supported.\n\tExpected a list of length one, found `{repr var}`"
+      throw <| .generic
+        (s!"Each let-binding must have exactly one name on the left-hand side." ++
+        s!"Operations with multiple, or no, results are not yet supported.\n\t" ++
+        s!"Expected a list of length one, found `{repr var}`")
     else
       let _ ← addValToMapping Γ (var.res[0]'(by simp_all only [bne_iff_ne, ne_eq,
         Decidable.not_not, Nat.lt_succ_self]) |>.fst |> SSAValToString) ty₁
