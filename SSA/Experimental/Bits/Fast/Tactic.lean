@@ -95,13 +95,11 @@ def NatToSyntax (n : Nat) :  (TSyntax `term) :=
   | 0 => mkIdent `Term.zero
   | Nat.succ x => Syntax.mkApp (mkIdent `Term.incr) #[NatToSyntax x]
 partial def reflectS  (e : Expr) (names : List Name)  : TacticM (TSyntax `term) := do
-  -- logInfo (repr vars)
   match_expr e with
     | HAnd.hAnd _ _ _ _ a b => do
       let a ← reflectS a names
       let b ← reflectS b names
       return Syntax.mkApp (mkIdent `Term.and) #[a,b]
-      -- return .app (.app  (.const `Term.and []) a) b
     | HSub.hSub _ _ _ _ a b => do
       let a ← reflectS a names
       let b ← reflectS b names
@@ -127,7 +125,6 @@ partial def reflectS  (e : Expr) (names : List Name)  : TacticM (TSyntax `term) 
           match nv with
             | Lean.Literal.natVal n  => do
               return NatToSyntax n
-              -- sorry
             | _ => throwError s!"Not a literal natval expression at {repr nv}"
         | _ => throwError s!"Not a Literal expression at {repr b}"
     | _ => match e with
@@ -161,14 +158,14 @@ partial def reflectS2  (e : Expr)  (names : List Name) : TacticM (TSyntax `term)
     | Neg.neg _ _ a => do
         let a ← reflectS2 a names
         return Syntax.mkApp (mkIdent `Neg.neg) #[a]
-    | OfNat.ofNat a b c => do
+    | OfNat.ofNat a b _ => do
       match b  with
         |  Lean.Expr.lit (Lean.Literal.natVal n ) =>
           match_expr a with
           | BitVec h => match_expr h with
             | OfNat.ofNat _ g _  =>
               match g with
-                |  Lean.Expr.lit (Lean.Literal.natVal ng ) => `(@OfNat.ofNat (BitStream) $(Lean.quote n) BitStream.instOfNat)
+                |  Lean.Expr.lit (Lean.Literal.natVal _ ) => `(@OfNat.ofNat (BitStream) $(Lean.quote n) BitStream.instOfNat)
                 | _ => throwError "no"
             | _ => throwError s!"reflectS2: {h} is not a number literal"
           | _ => throwError "what"
@@ -273,7 +270,6 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
                 )
                 simp [ite]
                 try rfl
-                all_goals sorry
               )))
               evalTactic (← `(tactic|(
               have rhs : ($qr).eval vars = ($r2) := by
@@ -287,7 +283,6 @@ def assertGoal : TacticM Unit  := do withMainContext <| do
                 )
                 simp [ite]
                 try rfl
-                all_goals sorry
               )))
               evalTactic (← `(tactic|(
               simp only [vars, List.getD, Option.getD,List.get? ] at rhs

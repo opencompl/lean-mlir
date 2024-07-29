@@ -27,12 +27,8 @@ def z := Term.var 2
 example : ((and x y) + (or x y)).eval = (x + y).eval := by
   native_decide
 
-example  : ((or x y) - (xor x y)).eval = (and x y).eval := by
+example : ((or x y) - (xor x y)).eval = (and x y).eval := by
   native_decide
-def gh  : Bool :=  (((or x y) - (xor x y)).eval = (and x y).eval)
-
-
-#print gh
 
 /-- info: true -/
 #guard_msgs in #eval decide (x + -x) 0
