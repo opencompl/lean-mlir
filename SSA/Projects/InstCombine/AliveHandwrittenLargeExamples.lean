@@ -51,7 +51,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
     (obtain (rfl | rfl) : vcond = 1 ∨ vcond = 0 := by omega) <;> simp
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-axioms: [propext, Quot.sound] -/
+axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect
