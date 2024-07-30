@@ -14,7 +14,8 @@ theorem not_eq_neg_sub_one {x : BitVec w} :
   apply BitVec.eq_sub_iff_add_eq.mpr
   rw [BitVec.neg_eq_not_add]
 
-theorem not_and_eq_not_or_not {x y : BitVec w} :
+variable {x y : BitVec w}
+theorem not_and_eq_not_or_not :
     ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
   sorry
 
@@ -24,7 +25,7 @@ theorem not_or_eq_not_and_not {x y : BitVec w} :
 
 theorem not_add_eq_not_sub_one {x : BitVec w} :
     ~~~ (x + 1) = ~~~ x - 1 := by
-  repeat rw [not_eq_neg_sub_one]
+  simp only [not_eq_neg_sub_one]
   ring
 
 theorem not_sub_eq_not_add_one {x : BitVec w} :
@@ -41,7 +42,7 @@ theorem not_add_eq_not_sub {x y : BitVec w} :
   repeat rw [not_eq_neg_sub_one]
   ring
 
-theorem not_neg_eq_not_add {x y : BitVec w} :
+theorem not_sub_eq_not_add {x y : BitVec w} :
     ~~~ (x - y) = ~~~ x + y := by
   repeat rw [not_eq_neg_sub_one]
   ring
@@ -145,15 +146,19 @@ theorem and_le_not_xor {x y : BitVec w} :
     x &&& y ≤ ~~~(x ^^^ y) := by
   sorry
 
-theorem or_le_add {x y : BitVec w} (h : x.toFin + y.toFin < 2^w) :
+def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
+
+theorem or_le_add  (h : AdditionNoOverflows? x y) :
+    x ||| y ≤ x + y := by
+  sorry
     x ||| y ≤ x + y := by
   sorry
 
-theorem add_l_or {x y : BitVec w} (h : x.toFin + y.toFin ≥ 2^w) :
+theorem add_lt_or {x y : BitVec w} (h : x.toFin + y.toFin ≥ 2^w) :
     x + y < x ||| y := by
   sorry
 
-theorem eq_imp_abs_sub_sub {x y : BitVec w} :
+theorem eq_iff_abs_sub_sub {x y : BitVec w} :
     x = y ↔ ((x - y).abs - 1).getMsb 0 := by
   sorry
 
