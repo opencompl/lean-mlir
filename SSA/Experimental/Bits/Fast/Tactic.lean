@@ -12,11 +12,11 @@ def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.sub x y).eva
 def add_eval {x y : _root_.Term} {vars : Nat → BitStream}:
     (Term.add x y).eval vars = x.eval vars + y.eval vars := by
   simp only [Term.eval]
-  
+
 def neg_eval {x : _root_.Term} {vars : Nat → BitStream}:
     (Term.neg x).eval vars = - x.eval vars := by
   simp only [Term.eval]
-  
+
 def not_eval {x : _root_.Term} {vars : Nat → BitStream}:
     (Term.not x).eval vars = ~~~ x.eval vars := by
   simp only [Term.eval]
@@ -24,19 +24,19 @@ def not_eval {x : _root_.Term} {vars : Nat → BitStream}:
 def and_eval {x y : _root_.Term} {vars : Nat → BitStream}:
     (Term.and x y).eval vars = x.eval vars &&& y.eval vars := by
   simp only [Term.eval]
-  
+
 def xor_eval {x y : _root_.Term} {vars : Nat → BitStream}:
     (Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by
   simp only [Term.eval]
-  
+
 def or_eval {x y : _root_.Term} {vars : Nat → BitStream}:
     (Term.or x y).eval vars = x.eval vars ||| y.eval vars := by
   simp only [Term.eval]
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 /--
-Simplify BitStream.ofBitVec x where x is an FVar.
- -/
+simplify BitStream.ofBitVec x where x is an FVar.
+-/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let y ← getLCtx
   let l := y.getFVarIds.size - 1
@@ -115,7 +115,7 @@ def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
 
 def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
   bv_automata
-  
+
 def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
   bv_automata
 
