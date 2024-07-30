@@ -24,8 +24,10 @@ instance [Repr Ty] : Repr (TransformError Ty) where
     | nameAlreadyDeclared var => f!"Already declared {var}, shadowing is not allowed"
     | undeclaredName name => f!"Undeclared name '{name}'"
     | indexOutOfBounds name index len =>
-        f!"Index of '{name}' out of bounds of the given context (index was {index}, but context has length {len})"
-    | typeError expected got => f!"Type mismatch: expected '{repr expected}', but 'name' has type '{repr got}'"
+        f!"Index of '{name}' out of bounds of the given context " ++
+        f!"(index was {index}, but context has length {len})"
+    | typeError expected got =>
+        f!"Type mismatch: expected '{repr expected}', but 'name' has type '{repr got}'"
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
     | unsupportedUnaryOp => f!"Unsuported unary operation"
     | unsupportedBinaryOp err => f!"Unsuported binary operation 's!{err}'"

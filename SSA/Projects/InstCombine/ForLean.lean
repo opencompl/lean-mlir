@@ -444,8 +444,8 @@ private theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B
 theorem toInt_eq (x y : BitVec n) : x = y ↔ x.toInt = y.toInt :=
   Iff.intro (congrArg BitVec.toInt) eq_of_toInt_eq
 
-theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w) (h_ne_zero : A ≠ 0):
-    (A >ₛ 0#w) ↔ ¬ ((-A) >ₛ 0#w) := by
+theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w)
+    (h_ne_zero : A ≠ 0) : (A >ₛ 0#w) ↔ ¬ ((-A) >ₛ 0#w) := by
   by_cases w0 : w = 0
   · subst w0
     simp [BitVec.eq_nil A] at h_ne_zero
@@ -585,10 +585,10 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
     (x ^^^ y).getLsb i = xor (x.getLsb i) (y.getLsb i) := by
     have hi : i < w ∨ i ≥ w := Nat.lt_or_ge _ _
     rcases hi with h | h
-    . have hi : i = (Fin.mk i h).val := rfl
+    · have hi : i = (Fin.mk i h).val := rfl
       rw [hi]
       simp
-    . simp [getLsb_geX _ h]
+    · simp [getLsb_geX _ h]
 
 /-
 https://github.com/leanprover/std4/commit/ecf1ec23eac8997d5964d480511ba93970fa455b#diff-8f36f4c14ec3f02f7b8ea0a193114c273871d6b0ddad6083cd74090b3befcb1eR227-R229
@@ -612,40 +612,46 @@ lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
   rw [Nat.add_comm]
 
 @[simp]
-theorem ofBool_neq_1 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
+theorem ofBool_neq_1 (b : Bool) :
+    BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
   constructor <;> (intros h; cases b <;> simp at h; simp [BitVec.ofBool])
 
 @[simp]
-theorem ofBool_neq_0 (b : Bool) : BitVec.ofBool b ≠ (BitVec.ofNat 1 0) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 1) := by
+theorem ofBool_neq_0 (b : Bool) :
+    BitVec.ofBool b ≠ (BitVec.ofNat 1 0) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 1) := by
   constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
 
 @[simp]
-theorem ofBool_eq_1 (b : Bool) : BitVec.ofBool b = (BitVec.ofNat 1 1) ↔ b = True := by
+theorem ofBool_eq_1 (b : Bool) :
+    BitVec.ofBool b = (BitVec.ofNat 1 1) ↔ b = True := by
   constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
 
 @[simp]
-theorem ofBool_eq_0 (b : Bool) : BitVec.ofBool b = (BitVec.ofNat 1 0) ↔ b = False := by
+theorem ofBool_eq_0 (b : Bool) :
+    BitVec.ofBool b = (BitVec.ofNat 1 0) ↔ b = False := by
   constructor <;> (intros h; cases b <;> simp at h ; simp [BitVec.ofBool])
 
 @[simp]
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
 
-theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :  BitVec.toNat (-x) = (2 ^ n - BitVec.toNat x) := by
+theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :
+    BitVec.toNat (-x) = (2 ^ n - BitVec.toNat x) := by
   rw [toNat_neg]
   apply Nat.mod_eq_of_lt
   obtain ⟨x, hx'⟩ := x
   simp
   apply Nat.pos_of_ne_zero
   cases x
-  . contradiction
-  . simp
+  · contradiction
+  · simp
 
-theorem toInt_eq' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
+theorem toInt_eq' (w : Nat) (x : BitVec w) :
+    BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
   cases w <;> simp
   · case zero =>
     simp [BitVec.eq_nil x]
-  . case succ w' =>
+  · case succ w' =>
       unfold BitVec.toInt
       simp
       have hcases : (BitVec.toNat x < 2 ^ w') ∨ (BitVec.toNat x ≥ 2 ^ w') := by
@@ -660,7 +666,9 @@ theorem toInt_eq' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : N
         simp [hgt, hgt', bne, Nat.cast, NatCast.natCast, BEq.beq, Nat.beq]
         omega
 
-theorem toInt_eq'' (w : Nat) (x : BitVec w): BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then (x.toNat : ℤ) else (x.toNat : ℤ) - 2^w := by
+theorem toInt_eq'' (w : Nat) (x : BitVec w) :
+    BitVec.toInt x =
+    if x.toNat < (2 : Nat)^(w - 1) then (x.toNat : ℤ) else (x.toNat : ℤ) - 2^w := by
   cases w <;> simp
   split_ifs
   unfold BitVec.toInt
@@ -686,8 +694,8 @@ lemma large_of_toInt_lt_zero (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x 
     case neg h =>
       omega
 
-lemma toInt_lt_zero_of_large (w : Nat) (x : BitVec w) (hxLarge : x.toNat ≥ (2 : Nat) ^ (w - 1)) : BitVec.toInt x < 0
-    := by
+lemma toInt_lt_zero_of_large (w : Nat) (x : BitVec w)
+    (hxLarge : x.toNat ≥ (2 : Nat) ^ (w - 1)) : BitVec.toInt x < 0 := by
   rcases w with rfl | w'
   case zero =>
     simp at hxLarge
@@ -700,7 +708,8 @@ lemma toInt_lt_zero_of_large (w : Nat) (x : BitVec w) (hxLarge : x.toNat ≥ (2 
       rw [Int.subNatNat_eq_coe]
       omega
 
-lemma toInt_lt_zero_iff_large (w : Nat) (x : BitVec w) : BitVec.toInt x < 0 ↔ x.toNat ≥ (2 : Nat) ^ (w - 1) := by
+lemma toInt_lt_zero_iff_large (w : Nat) (x : BitVec w) :
+    BitVec.toInt x < 0 ↔ x.toNat ≥ (2 : Nat) ^ (w - 1) := by
   constructor
   apply BitVec.large_of_toInt_lt_zero
   apply BitVec.toInt_lt_zero_of_large
@@ -720,7 +729,8 @@ lemma small_of_toInt_pos (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x ≥ 
       norm_cast at hxToInt
       omega
 
-lemma toInt_pos_of_small (w : Nat) (x : BitVec w) (hxsmall : x.toNat < (2 : Nat) ^ (w - 1)) : BitVec.toInt x ≥ 0 := by
+lemma toInt_pos_of_small (w : Nat) (x : BitVec w)
+    (hxsmall : x.toNat < (2 : Nat) ^ (w - 1)) : BitVec.toInt x ≥ 0 := by
   rcases w with rfl | w'
   case zero => simp
   case succ =>
@@ -729,12 +739,14 @@ lemma toInt_pos_of_small (w : Nat) (x : BitVec w) (hxsmall : x.toNat < (2 : Nat)
     norm_cast
     simp
 
-lemma toInt_pos_iff_small (w : Nat) (x : BitVec w) : x.toNat < (2 : Nat) ^ (w - 1) ↔ BitVec.toInt x ≥ 0 := by
+lemma toInt_pos_iff_small (w : Nat) (x : BitVec w) :
+    x.toNat < (2 : Nat) ^ (w - 1) ↔ BitVec.toInt x ≥ 0 := by
   constructor
   apply BitVec.toInt_pos_of_small
   apply BitVec.small_of_toInt_pos
 
-lemma toInt_pos_iff_small' (w : Nat) (x : BitVec (w + 1)) : x.toNat < (2 : Nat) ^ w ↔ BitVec.toInt x ≥ 0 := by
+lemma toInt_pos_iff_small' (w : Nat) (x : BitVec (w + 1)) :
+    x.toNat < (2 : Nat) ^ w ↔ BitVec.toInt x ≥ 0 := by
   apply BitVec.toInt_pos_iff_small
 
 lemma toInt_zero_iff (w : Nat) (x : BitVec w) : BitVec.toInt x = 0 ↔ x = 0 := by
@@ -814,10 +826,12 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> rfl
 end BitVec
 
--- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it suffices to consider two cases.
+-- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it
+-- suffices to consider two cases.
 -- This theorem allows one to case split a '(a + b) % m < k' into two cases
 -- Case 1: if (a + b) < m, then the inequality staightforwardly holds, as (a + b) < k
--- Case 2: if (a + b) ≥ m, then (a + b) % m = (a + b - m), and the inequality holds as (a + b - m) < k
+-- Case 2: if (a + b) ≥ m, then (a + b) % m = (a + b - m), and the inequality
+-- holds as (a + b - m) < k
 lemma Nat.cases_of_lt_mod_add {a b m k : ℕ} (hsum : (a + b) % m < k)  (ha : a < m) (hb : b < m) :
   ((a + b) < m ∧ (a + b) < k) ∨ ((a + b ≥ m) ∧ (a + b) < m + k) := by
   by_cases ha_plus_b_lt_m : (a + b) < m
