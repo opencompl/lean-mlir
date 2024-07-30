@@ -60,7 +60,7 @@ def or_eval :
     (Term.or x y).eval vars = x.eval vars ||| y.eval vars := by
   simp only [Term.eval]
 end EvalLemmas
--- open EvalLemmas
+
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 
 /--
