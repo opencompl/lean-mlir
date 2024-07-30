@@ -22,7 +22,7 @@ def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval 
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 /--
-simplify BitStrea.ofBitVec
+simplify BitStream.ofBitVec x where x is an FVar.
  -/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let y ← getLCtx
