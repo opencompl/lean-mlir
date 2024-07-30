@@ -268,7 +268,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       rw [BitVec.toNat_allOnes] at a_allones
       omega
 
-  · simp [h]
+  · simp only [h, ofBool_false, ofNat_eq_ofNat, Refinement.some_some]
     simp only [Bool.not_eq_true] at h
     have a_ne_zero : a ≠ 0 := by
       intro a_zero
@@ -356,10 +356,14 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ops
   intros A B
   rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;>
+    simp only [ge_iff_le,
+      EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
+      Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
+      Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
   apply BitVec.eq_of_toNat_eq
-  simp only [bv_toNat, Nat.mod_mul_mod]
+  simp only [toNat_mul, toNat_shiftLeft', toNat_ofNat, Nat.mod_mul_mod, one_mul]
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
