@@ -45,22 +45,22 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
 introduce vars which maps variable ids to the variable values
 -/
 def introVars : TacticM Unit := do withMainContext <| do
-  let y ← getLCtx
-  let l := y.getFVarIds.data.drop 1
-  let goal ← getMainGoal
-  let last := l.get! 0
+  let y : LocalContext ← getLCtx
+  let l : List FVarId := y.getFVarIds.data.drop 1
+  let goal : MVarId ← getMainGoal
+  let last : FVarId := l.get! 0
   let hypType: Q(Type) := q(Nat → BitStream)
-  let n :  Q(Nat) := .bvar 0
-  let target ← getMainTarget
+  let n : Q(Nat) := .bvar 0
+  let target : Expr ← getMainTarget
   match_expr target  with
     | BitStream.EqualUpTo a _ _  => do
-      let length : Nat ←  a.nat?
+      let length : Nat ← a.nat?
       let hypValue : Q(BitVec $length)  := l.foldl (fun a b =>
         let b' :  Q(BitVec $length) := .fvar b;
         let bq :  Q(Nat) := quoteFVar b;
         q(ite ($n = $(bq)) $b' $a)) (.fvar last)
       let hyp : Q(Nat → BitStream) := q(fun _ => BitStream.ofBitVec $hypValue)
-      let (newGoal) ← goal.define `vars hypType hyp
+      let newGoal : MVarId ← goal.define `vars hypType hyp
       replaceMainGoal [newGoal]
       return ()
     | _ => throwError "Goal is not of the expected form"
@@ -108,26 +108,26 @@ def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
 def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
   bv_automata
 
-def test15 (x y : BitVec 2) : (x - y)= (( x &&&  (~~~ y)) - ( (~~~ x) &&&  y)) := by
+def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
   bv_automata
 
-def test17 (x y : BitVec 2) : (x ^^^ y) =((x ||| y) - (x &&& y)) := by
+def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
   bv_automata
 
-def test18 (x y : BitVec 2) : (x &&&  (~~~ y))= ((x |||  y) - y) := by
+def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
   bv_automata
 
-def test19 (x y : BitVec 2) : ( x &&&  (~~~ y))= (x -  (x &&& y)) := by
+def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
   bv_automata
 
-def test21 (x y : BitVec 2) : (~~~(x - y)) =(~~~x + y) := by
+def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
   bv_automata
 
-def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) =((x &&& y) + ~~~(x ||| y)) := by
+def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
   bv_automata
 
-def test24 (x y : BitVec 2) : (x ||| y) =(( x &&& (~~~y)) + y) := by
+def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata
 
-def test25 (x y : BitVec 2) : (x &&& y) = (( (~~~x) ||| y) - ~~~x) := by
+def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata
