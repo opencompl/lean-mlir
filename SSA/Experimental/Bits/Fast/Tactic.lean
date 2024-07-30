@@ -4,11 +4,15 @@ import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
 import SSA.Experimental.Bits.Lemmas
 import Qq.Macro
+
 open Lean Elab Tactic
 open Lean Meta
 open scoped Qq
 
-def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.sub x y).eval vars = x.eval vars - y.eval vars := by simp only [Term.eval]
+def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream}:
+    (Term.sub x y).eval vars = x.eval vars - y.eval vars := by
+  simp only [Term.eval]
+
 def add_eval {x y : _root_.Term} {vars : Nat → BitStream}:
     (Term.add x y).eval vars = x.eval vars + y.eval vars := by
   simp only [Term.eval]
@@ -34,8 +38,9 @@ def or_eval {x y : _root_.Term} {vars : Nat → BitStream}:
   simp only [Term.eval]
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
+
 /--
-simplify BitStream.ofBitVec x where x is an FVar.
+Simplify BitStream.ofBitVec x where x is an FVar.
 -/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let y ← getLCtx
@@ -79,6 +84,7 @@ def introVars : TacticM Unit := do withMainContext <| do
     | _ => throwError "Goal is not of the expected form"
 
 elab "introVars" : tactic => introVars
+
 /--
 Create bv_automata tactic which solves equalities on bitvectors.
 -/
