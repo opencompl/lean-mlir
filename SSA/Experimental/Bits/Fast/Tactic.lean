@@ -8,21 +8,34 @@ open Lean Elab Tactic
 open Lean Meta
 open scoped Qq
 
-set_option linter.longLine false
-
-
 def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.sub x y).eval vars = x.eval vars - y.eval vars := by simp only [Term.eval]
-def add_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.add x y).eval vars = x.eval vars + y.eval vars := by simp only [Term.eval]
-def neg_eval {x :  _root_.Term} {vars : Nat → BitStream} :(Term.neg x).eval vars = - x.eval vars := by simp only [Term.eval]
-def not_eval {x :  _root_.Term} {vars : Nat → BitStream} :(Term.not x).eval vars = ~~~ x.eval vars := by simp only [Term.eval]
+def add_eval {x y : _root_.Term} {vars : Nat → BitStream}:
+    (Term.add x y).eval vars = x.eval vars + y.eval vars := by
+  simp only [Term.eval]
+  
+def neg_eval {x : _root_.Term} {vars : Nat → BitStream}:
+    (Term.neg x).eval vars = - x.eval vars := by
+  simp only [Term.eval]
+  
+def not_eval {x : _root_.Term} {vars : Nat → BitStream}:
+    (Term.not x).eval vars = ~~~ x.eval vars := by
+  simp only [Term.eval]
 
-def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.and x y).eval vars = x.eval vars &&& y.eval vars := by simp only [Term.eval]
-def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by simp only [Term.eval]
-def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval vars = x.eval vars ||| y.eval vars := by simp only [Term.eval]
+def and_eval {x y : _root_.Term} {vars : Nat → BitStream}:
+    (Term.and x y).eval vars = x.eval vars &&& y.eval vars := by
+  simp only [Term.eval]
+  
+def xor_eval {x y : _root_.Term} {vars : Nat → BitStream}:
+    (Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by
+  simp only [Term.eval]
+  
+def or_eval {x y : _root_.Term} {vars : Nat → BitStream}:
+    (Term.or x y).eval vars = x.eval vars ||| y.eval vars := by
+  simp only [Term.eval]
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 /--
-simplify BitStream.ofBitVec x where x is an FVar.
+Simplify BitStream.ofBitVec x where x is an FVar.
  -/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let y ← getLCtx
@@ -42,7 +55,7 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
         | _ => throwError s!"{x} is not a nat literal"
 
 /--
-introduce vars which maps variable ids to the variable values
+Introduce vars which maps variable ids to the variable values.
 -/
 def introVars : TacticM Unit := do withMainContext <| do
   let y : LocalContext ← getLCtx
@@ -67,7 +80,7 @@ def introVars : TacticM Unit := do withMainContext <| do
 
 elab "introVars" : tactic => introVars
 /--
-create bv_automata tactic which solves equalities on bitvectors
+Create bv_automata tactic which solves equalities on bitvectors.
 -/
 macro "bv_automata" : tactic =>
   `(tactic| (
@@ -102,6 +115,7 @@ def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
 
 def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
   bv_automata
+  
 def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
   bv_automata
 

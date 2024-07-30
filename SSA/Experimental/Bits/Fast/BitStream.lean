@@ -365,8 +365,8 @@ Crucially, our decision procedure works by considering which equalities hold for
 --   sorry
 @[simp] theorem ofBitVec_sub : ofBitVec (x - y) = (ofBitVec x) - (ofBitVec y) := sorry
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) = (ofBitVec x) + (ofBitVec y) := sorry
-@[simp] theorem ofBitVec_neg : ofBitVec (- x ) = -(ofBitVec x) := sorry
-@[simp] theorem ofBitVec_not : ofBitVec (~~~ x ) = ~~~ (ofBitVec x) := sorry
+@[simp] theorem ofBitVec_neg : ofBitVec (-x) = -(ofBitVec x) := sorry
+@[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := sorry
 
 end Lemmas
 
