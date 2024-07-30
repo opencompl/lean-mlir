@@ -121,11 +121,6 @@ theorem not_sub_eq_sub_sub_one {x y : BitVec w} :
   rw [not_eq_neg_sub_one]
   ring
 
-theorem not_sub_eq_not_add {x y : BitVec w} :
-    ~~~ (x - y) = ~~~ x + y := by
-  rw [not_eq_neg_sub_one, not_eq_neg_sub_one]
-  ring
-
 theorem not_xor_eq_and_sub_or_sub_one {x y : BitVec w} :
     ~~~ (x ^^^ y) = (x &&& y) - (x ||| y) - 1 := by
   sorry
@@ -149,8 +144,6 @@ theorem and_le_not_xor {x y : BitVec w} :
 def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
 
 theorem or_le_add  (h : AdditionNoOverflows? x y) :
-    x ||| y ≤ x + y := by
-  sorry
     x ||| y ≤ x + y := by
   sorry
 
