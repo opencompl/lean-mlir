@@ -83,7 +83,8 @@ def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
     | 0 => LengthIndexedList.nil
     | m + 1 =>
       let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
-    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
+    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩
+      (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
 
 end LengthIndexedList
 

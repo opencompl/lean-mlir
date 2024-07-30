@@ -35,14 +35,18 @@ theorem shift_mul:
   simp_alive_ops
   intros A B
   rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;>
+    simp only [ge_iff_le,
+      EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
+      Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
+      Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
   apply BitVec.eq_of_toNat_eq
-  simp [bv_toNat]
+  simp only [bv_toNat, Nat.mod_mul_mod]
   ring_nf
 
 /--
-info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Quot.sound]
+info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms shift_mul
 

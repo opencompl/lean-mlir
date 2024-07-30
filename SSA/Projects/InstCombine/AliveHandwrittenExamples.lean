@@ -65,8 +65,8 @@ theorem alive_DivRemOfSelect (w : Nat) :
        rcases vcond with zero | vcond <;> simp;
        rcases vcond with zero | vcond <;> simp;
        linarith
-     . subst h
+     · subst h
        simp
-     . subst h; simp
+     · subst h; simp
 
 end AliveHandwritten

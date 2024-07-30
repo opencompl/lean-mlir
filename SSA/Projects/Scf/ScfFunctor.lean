@@ -54,7 +54,8 @@ example {d : Dialect} [DecidableEq d.Ty] [TyDenote d.Ty] [DialectSignature d] [D
 
 namespace Scf
 
-instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] : Coe d.Op (Scf d).Op where
+instance {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] :
+    Coe d.Op (Scf d).Op where
   coe o := .coe o
 
 @[reducible]
@@ -73,13 +74,16 @@ instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
     | .iterate _k => ⟨[I.ty], [([I.ty], I.ty)], I.ty, .impure⟩
 
 
-/-- A loop body receives the current value of the loop induction variable, and the current loop carried value.
-The loop body produces the value of this loop iteration.
+/-- A loop body receives the current value of the loop induction variable, and
+the current loop carried value.  The loop body produces the value of this loop
+iteration.
 
-Consider the loop: `for(int i = 0; i >= -10; i -= 2)`. In this case, the value `i` will be the sequence
-of values `[0, -2, -4, -6, -8, -10]`. The value `i` is the loop induction variable.
+Consider the loop: `for(int i = 0; i >= -10; i -= 2)`. In this case, the value
+`i` will be the sequence of values `[0, -2, -4, -6, -8, -10]`. The value `i` is
+the loop induction variable.
 
-This value is distinct from the *trip count*, which is the number of times the loop body has been executed so far, which is `[0, 1, 2, 3, 4]`.
+This value is distinct from the *trip count*, which is the number of times the
+loop body has been executed so far, which is `[0, 1, 2, 3, 4]`.
 
 The `LoopBody` does *not* provide access to the trip count, only to the loop induction variable.
 -/
@@ -104,7 +108,8 @@ theorem eval (f : LoopBody t) (hf : LoopBody.IndexInvariant f) (i : Int) (v : t)
 /-- Loop invariant functions can be simulated by a simpler function -/
 def atZero (f : LoopBody t) : t → t := fun v => f 0 v
 
-/-- If there exists a function `g : t → t` which agrees with `f`, then `f` is loop index invariant. -/
+/-- If there exists a function `g : t → t` which agrees with `f`, then `f` is
+loop index invariant. -/
 theorem eq_invariant_fn
     (f : LoopBody t) (g : t → t) (hf : ∀ (i : Int) (v : t), f i v = g v) :
     LoopBody.IndexInvariant f ∧ atZero f = g:= by
@@ -127,7 +132,8 @@ theorem eval' {f : LoopBody t} (hf : LoopBody.IndexInvariant f) (i : Int) (v : t
     f i v = f.atZero v := by
   unfold LoopBody.IndexInvariant at hf; rw [LoopBody.atZero, hf]
 
-/-- iterating a loop invariant function gives a well understood answer: the iterates of the function. -/
+/-- iterating a loop invariant function gives a well understood answer: the
+iterates of the function. -/
 @[simp]
 theorem iterate {f : LoopBody t}
     (hf : LoopBody.IndexInvariant f)
@@ -167,7 +173,8 @@ theorem iterate_fst_val (δ: Int) (f : LoopBody α) (i₀ : Int) (v₀ : α) (k 
   induction k generalizing i₀ v₀
   case zero => simp
   case succ i hi =>
-    simp only [Function.iterate_succ, Function.comp_apply, Nat.cast_add, Nat.cast_one, hi, counterDecorator]
+    simp only [Function.iterate_succ, Function.comp_apply, Nat.cast_add, Nat.cast_one,
+      hi, counterDecorator]
     linarith
 
 /-- evaluating a function that does not access the index (const_index_fn) -/
@@ -184,8 +191,8 @@ theorem const_index_fn_iterate (δ : Int)
   obtain ⟨hf, hf'⟩ := f.eq_invariant_fn f' (by intros i v; rw [hf])
   rw [IndexInvariant.iterate hf]; simp
   apply And.intro
-  . linarith
-  . rw [hf']
+  · linarith
+  · rw [hf']
 
 /-- counterDecorator on a constant function -/
 @[simp]
@@ -227,7 +234,8 @@ instance [Monad d.m] : DialectDenote (Scf d) where
       body (Ctxt.Valuation.nil.snoc v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
         f (Ctxt.Valuation.nil.snoc v)
-    | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))), (.cons (f : _  → _) .nil) =>
+    | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))),
+        (.cons (f : _  → _) .nil) =>
         let istart : ℤ := Z.denote_eq ▸ istart
         let istep : ℤ := Z.denote_eq ▸ istep
         let niter : ℕ := N.denote_eq ▸ niter
@@ -337,7 +345,8 @@ def add_nat (e₁ e₂ : Var Γ .nat) : Expr ScfArith Γ .pure .nat :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) : Expr ScfArith Γ .pure .int :=
+def axpy {Γ : Ctxt _} (a : Var Γ .int) (x : Var Γ .nat) (b: Var Γ .int) :
+    Expr ScfArith Γ .pure .int :=
   Expr.mk
     (op := .coe <| .axpy)
     (ty_eq := rfl)
@@ -384,7 +393,8 @@ def run {Γ : Ctxt _} {t : Arith.Ty} (v : Var Γ t) (body : Com ScfArith [t] .im
 
 def for_ {Γ : Ctxt Arith.Ty} {t : Arith.Ty}
     (start step : Var Γ Arith.Ty.int)
-    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] .impure t) : Expr ScfArith Γ .impure t :=
+    (niter : Var Γ Arith.Ty.nat) (v : Var Γ t) (body : Com ScfArith [.int, t] .impure t) :
+      Expr ScfArith Γ .impure t :=
   Expr.mk
     (op := .for t)
     (ty_eq := rfl)
@@ -405,8 +415,8 @@ theorem if_true' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond 
 -- TODO: make a `PeepholeRewrite` for `if_true`.
 
 /-- 'if' condition of a false variable evaluates to the else region body. -/
-theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false) (v : Var Γ t)
-    (then_ else_ : Com ScfArith [t] .impure t) :
+theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond = false)
+    (v : Var Γ t) (then_ else_ : Com ScfArith [t] .impure t) :
     Expr.denote (if_ (t := t) cond v then_ else_) Γv
     = Expr.denote (run (t := t) v else_) Γv := by
   simp only [EffectKind.toMonad_impure, if_, Expr.denote, HVector.denote_cons, HVector.denote_nil,
@@ -418,11 +428,13 @@ theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond
 
 
 /-- a region that returns the value immediately -/
-abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) : Com ScfArith Γ .impure t := .ret v
+abbrev RegionRet (t : Arith.Ty) {Γ : Ctxt Arith.Ty} (v : Var Γ t) :
+    Com ScfArith Γ .impure t := .ret v
 
 /-- a for loop whose body immediately returns the loop variable is the same as
   just fetching the loop variable. -/
-theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int) (niters : Var Γ .nat) (v : Var Γ t) :
+theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
+    (niters : Var Γ .nat) (v : Var Γ t) :
   Expr.denote (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
     simp only [EffectKind.toMonad_impure, for_, Ctxt.get?, Expr.denote, HVector.denote_cons,
       Com.denote_ret, Id.pure_eq, HVector.denote_nil, EffectKind.liftEffect_rfl, id_eq]
@@ -431,9 +443,10 @@ theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int) (niters : 
 
 /-# Repeatedly adding a constant in a loop is replaced with a multiplication.
 
-We keep the increment outside the loop so that we don't need to deal with creating and deleting tuples for the "for" region body,
-since our regions are isolatedFromAbove.
-If we want to deal with creating and removing tuples, we can.
+We keep the increment outside the loop so that we don't need to deal with
+creating and deleting tuples for the "for" region body, since our regions are
+isolatedFromAbove.  If we want to deal with creating and removing tuples, we
+can.
 
 **TODO:** create a tuple for passing the increment variable into the loop
 
@@ -495,10 +508,12 @@ variable {t : Arith.Ty}
 variable (rgn : Com ScfArith [Arith.Ty.int, t] .impure t)
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
-variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <| Ctxt.Valuation.ofPair i v))
+variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <|
+    Ctxt.Valuation.ofPair i v))
 
 def lhs :
-    let Γ := [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int, /- steps -/ Arith.Ty.nat, /- val -/ t]
+    let Γ := [/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int,
+      /- steps -/ Arith.Ty.nat, /- val -/ t]
     Com ScfArith Γ .impure t :=
   /- v -/
   /- v1 = -/ Com.var (for_ (t := t)
@@ -521,14 +536,17 @@ def rhs : Com ScfArith [/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 
-/-- rewrite a variable whose index is '> 0' to a new variable which is the 'snoc' of a smaller variable.
-  this enables rewriting with `Ctxt.Valuation.snoc_toSnoc`. -/
-theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ) {snocval : ⟦snocty⟧}
+/-- rewrite a variable whose index is '> 0' to a new variable which is the
+'snoc' of a smaller variable.  this enables rewriting with
+`Ctxt.Valuation.snoc_toSnoc`. -/
+theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ)
+    {snocval : ⟦snocty⟧}
     {v: ℕ}
     {hvproof : Ctxt.get? Γ v = some ty}
     {var : Γ.Var ty}
     (hvar : var = ⟨v, hvproof⟩) :
-    V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
+    V var = (Ctxt.Valuation.snoc V snocval) ⟨v+1, by
+      simp [Ctxt.snoc] at hvproof; simp [Ctxt.snoc, hvproof]⟩ := by
   simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
@@ -573,13 +591,15 @@ def rhs : Com ScfArith [/- v0 -/ t] .impure t :=
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   -- start step niter v
-  Com.var (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
+  Com.var (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by
+      simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
   Com.ret ⟨0, by simp [Ctxt.snoc]⟩
 
 
 open Scf in
 theorem correct :
-    Com.denote (lhs rgn niters1 niters2 start1) Γv = Com.denote (rhs rgn niters1 niters2 start1) Γv := by
+    Com.denote (lhs rgn niters1 niters2 start1) Γv =
+      Com.denote (rhs rgn niters1 niters2 start1) Γv := by
   simp [lhs, rhs, for_, axpy, cst]
   simp_peephole [add, iterate, for_, axpy, cst, cst_nat] at Γv
   intros a
@@ -625,7 +645,8 @@ attribute [local simp] Ctxt.snoc
 --       Com.denote
 --         (Com.var
 --           (iterate 0 { val := 0, property := lhs.proof_1 }
---             (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0, property := lhs.proof_1 })
+--             (Com.var (add { val := 0, property := lhs.proof_1 } { val := 0,
+--                 property := lhs.proof_1 })
 --               (Com.ret { val := 0, property := lhs.proof_2 })))
 --           (Com.ret { val := 0, property := lhs.proof_2 }))
 --         Γv =

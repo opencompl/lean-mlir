@@ -34,10 +34,13 @@ theorem add_f_eq (a : R q n) : a + (f q n) = a := by
 theorem add_zero_eq : a + 0 = a := by
   ring
 
-theorem eq_iff_rep_eq [Fact (q > 1)] (a b : R q n) : a.representative = b.representative ↔ a = b := by
+theorem eq_iff_rep_eq [Fact (q > 1)] (a b : R q n) :
+    a.representative = b.representative ↔ a = b := by
   constructor
   · intros hRep
-    have hFromPolyRep : R.fromPoly (q := q) (n := n) a.representative = R.fromPoly (q := q) (n := n) b.representative := by
+    have hFromPolyRep :
+        R.fromPoly (q := q) (n := n) a.representative =
+          R.fromPoly (q := q) (n := n) b.representative := by
       rw [hRep]
     rw [R.fromPoly_representative, R.fromPoly_representative] at hFromPolyRep
     assumption
@@ -54,16 +57,20 @@ theorem rep_zero [Fact (q > 1)]: R.representative q n 0 = 0 := by
 
 
 open Polynomial in
-theorem monomial_mul_mul (x y : Nat) : (R.monomial 1 y) * (R.monomial 1 x) = R.monomial 1 (x + y) (q := q) (n := n) := by
+theorem monomial_mul_mul (x y : Nat) :
+    (R.monomial 1 y) * (R.monomial 1 x) = R.monomial 1 (x + y) (q := q) (n := n) := by
   unfold R.monomial
   rw [← map_mul, monomial_mul_monomial, Nat.add_comm]
   simp
 
 end Poly
 
-theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTensor.getD i 0 = (a.coeff i).toInt := by
+theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) :
+    a.toTensor.getD i 0 = (a.coeff i).toInt := by
   simp only [toTensor, coeff]
-  have hLength : (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i)) (List.range (R.repLength a))).length = repLength a := by
+  have hLength :
+      (List.map (fun i => ZMod.toInt q (Polynomial.coeff (R.representative q n a) i))
+        (List.range (R.repLength a))).length = repLength a := by
     simp
   by_cases (i < R.repLength a)
   case pos h =>
@@ -77,13 +84,14 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : a.toTenso
     unfold R.repLength at h
     cases hDeg : Polynomial.degree (R.representative q n a)
     · apply WithBot.bot_lt_coe
-    . simp only [hDeg] at h
+    · simp only [hDeg] at h
       apply WithBot.coe_lt_coe.2
       linarith
-    . rw[← hLength] at h
+    · rw[← hLength] at h
       linarith
 
-theorem R.toTensor_getD' [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) : ↑(a.toTensor.getD i 0) = a.coeff i := by
+theorem R.toTensor_getD' [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) :
+    ↑(a.toTensor.getD i 0) = a.coeff i := by
   rw [R.toTensor_getD]
   simp [ZMod.toInt]
 
@@ -100,7 +108,8 @@ theorem R.fromTensor_eq_concat_zero (tensor : List Int) :
 
 
 theorem R.fromTensor_eq_concat_zeroes (tensor : List Int) (k : Nat) :
-   R.fromTensor (q := q) (n := n) (tensor ++ List.replicate k 0) = R.fromTensor (q := q) (n := n) tensor := by
+   R.fromTensor (q := q) (n := n) (tensor ++ List.replicate k 0) =
+     R.fromTensor (q := q) (n := n) tensor := by
   induction k generalizing tensor with
    | zero => simp
    | succ k ih =>
@@ -112,14 +121,16 @@ theorem R.fromTensor_eq_concat_zeroes (tensor : List Int) (k : Nat) :
        rw [← R.fromTensor_eq_concat_zero]
 
 @[simp]
-theorem R.trimTensor_append_zero_eq (tensor : List Int) :  trimTensor (tensor ++ [0]) = trimTensor tensor := by
+theorem R.trimTensor_append_zero_eq (tensor : List Int) :
+    trimTensor (tensor ++ [0]) = trimTensor tensor := by
   simp only [trimTensor, List.reverse_append, List.reverse_cons, List.reverse_nil, List.nil_append,
     List.singleton_append, List.reverse_inj]
   rw [List.dropWhile]
   simp
 
 @[simp]
-theorem R.trimTensor_append_zeroes_eq (tensor : List Int) (n : Nat) :  trimTensor (tensor ++ List.replicate n 0) = trimTensor tensor := by
+theorem R.trimTensor_append_zeroes_eq (tensor : List Int) (n : Nat) :
+    trimTensor (tensor ++ List.replicate n 0) = trimTensor tensor := by
   induction n with
   | zero => simp
   | succ n ih =>
@@ -155,8 +166,8 @@ theorem R.trimTensor_getD_0 (tensor: List Int) :
     lhs
     rw[H]
   by_cases INBOUNDS:(i < List.length (trimTensor tensor))
-  . rw[List.getD_append (h := INBOUNDS)]
-  . have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
+  · rw[List.getD_append (h := INBOUNDS)]
+  · have OUT_OF_BOUNDS : List.length (trimTensor tensor) ≤ i := by linarith
     rw[List.getD_eq_default (hn := OUT_OF_BOUNDS)]
     rw[List.getD_append_right (h := OUT_OF_BOUNDS)]
     simp
@@ -184,9 +195,10 @@ theorem R.trimTensor_toTensor'_eq_trimTensor_toTensor [hqgt1 : Fact (q > 1)] (a 
 
 namespace Poly
 
-theorem eq_iff_coeff_eq [hqgt1 : Fact (q > 1)] (a b : R q n) : a = b ↔ Polynomial.coeff a.representative = Polynomial.coeff b.representative := by
+theorem eq_iff_coeff_eq [hqgt1 : Fact (q > 1)] (a b : R q n) :
+    a = b ↔ Polynomial.coeff a.representative = Polynomial.coeff b.representative := by
   constructor
-  .  intro h; rw [h]
+  ·  intro h; rw [h]
   ·  intro h
      apply (eq_iff_rep_eq _ _).1
      apply Polynomial.coeff_inj.1
@@ -203,7 +215,8 @@ theorem toTensor_length_eq_f_deg_plus_1 [hqgt1 : Fact (q > 1)] (a : R q n) :
   have h : R.repLength a ≤ 2^n  := Nat.le_of_lt_succ (R.repLength_lt_n_plus_1 q n a)
   calc
        R.repLength a + (2 ^ n - R.repLength a + 1)
-     = R.repLength a + (Nat.succ (2 ^ n) - R.repLength a) := by rw [Nat.add_comm _ 1, ← Nat.add_sub_assoc h, Nat.add_comm 1 (2^n)]
+     = R.repLength a + (Nat.succ (2 ^ n) - R.repLength a) := by rw
+       [Nat.add_comm _ 1, ← Nat.add_sub_assoc h, Nat.add_comm 1 (2^n)]
    _ = 2^n + 1 := by rw [Nat.add_sub_cancel' (Nat.le_succ_of_le h)]
 
 
@@ -229,7 +242,8 @@ theorem R.trim_toTensor'_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
   rw [R.trimTensor_toTensor'_eq_trimTensor_toTensor, toTensor_trimTensor_eq_toTensor]
 
 
-theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat) (htensorlen : List.length tensor < 2 ^ n):
+theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
+  (htensorlen : List.length tensor < 2 ^ n) :
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
   simp only [R.toTensor_getD]
   simp only [ZMod.toInt]
@@ -251,8 +265,11 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
     rw [ZMod.val_intCast]
     ring_nf
 
-/- TODO: this should be a theorem that we prove, that the length of anything that comes from `R.toTensor` will be < 2^n -/
-theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor = a := by
+/- TODO: this should be a theorem that we prove, that the length of anything
+that comes from `R.toTensor` will be < 2^n -/
+theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n)
+    (adeg : (R.representative q n a).natDegree + 1 < 2^n) :
+  R.fromTensor a.toTensor = a := by
   cases h : Polynomial.degree (R.representative q n a) with
     | bot =>
         have h' :=  Polynomial.degree_eq_bot.1 h
@@ -271,11 +288,12 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.repres
         rw [toTensor_fromTensor]
         rw [← ZMod.coe_intCast]
         norm_cast
-        . simp only [R.toTensor_length]
+        · simp only [R.toTensor_length]
           have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
           linarith
 
-theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n) (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor' = a := by
+theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n)
+    (adeg : (R.representative q n a).natDegree + 1 < 2^n) : R.fromTensor a.toTensor' = a := by
   rw [← R.fromTensor_eq_fromTensor_trimTensor, R.trim_toTensor'_eq_toTensor]
   apply fromTensor_toTensor a adeg
 end Poly

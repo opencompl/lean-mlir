@@ -88,7 +88,8 @@ partial def consumeCloseBracket(c: Bracket)
           let parser_fn := Lean.Parser.mkNodeToken `balanced_brackets startPos
           parser_fn ctx (s.setPos (input.next i)) -- consume the input here.
         else balancedBracketsFnAux startPos (input.next i) input bs ctx s
-      else s.mkError $ "| found Opened `" ++ toString b ++ "` expected to close at `" ++ toString c ++ "`"
+      else s.mkError $ "| found Opened `" ++ toString b ++ "` expected to close at `" ++
+      toString c ++ "`"
     | _ => s.mkError $ "| found Closed `" ++ toString c ++ "`, but have no opened brackets on stack"
 
 
@@ -393,7 +394,8 @@ syntax "vector" "<" vector_dim_list mlir_type ">"  : mlir_type
 
 set_option hygiene false in -- allow i to expand
 macro_rules
-| `([mlir_type| vector < $[$fixed?:static_dim_list × $[ [ $scaled?:static_dim_list ] × ]? ]? $t:mlir_type  >]) => do
+| `([mlir_type| vector < $[$fixed?:static_dim_list ×
+      $[ [ $scaled?:static_dim_list ] × ]? ]? $t:mlir_type  >]) => do
       let fixedDims <- match fixed? with
         | some s =>  `([static_dim_list| $s])
         | none => `((@List.nil Nat))
@@ -498,7 +500,8 @@ value-use-list ::= value-use (`,` value-use)*
 
 
 syntax mlir_suffix_id := num <|> ident
-syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
+syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")?
+    ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
 /--
@@ -522,7 +525,8 @@ def getSuffixId : TSyntax ``mlir_suffix_id → String
 macro_rules
 | `(mlir_region| { ^ $name:mlir_suffix_id ( $operands,* ) : $ops }) => do
    let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
-   let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
+   let argsList <- operands.getElems.foldrM (init := initList) fun x xs =>
+       `([mlir_bb_operand| $x] :: $xs)
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk $(Lean.quote (getSuffixId name)) $argsList $opsList)
 | `(mlir_region| {  ^ $name:mlir_suffix_id : $ops } ) => do
@@ -562,7 +566,8 @@ syntax "#opaque<" ident "," strLit ">" ":" mlir_type : mlir_attr_val -- opaqueEl
 syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
 
 
-declare_syntax_cat balanced_parens  -- syntax "#" ident "." ident "<" balanced_parens ">" : mlir_attr_val -- generic user attributes
+-- syntax "#" ident "." ident "<" balanced_parens ">" : mlir_attr_val -- generic user attributes
+declare_syntax_cat balanced_parens
 
 /-- `neg_num` is a possibly negated numeric literal -/
 syntax neg_num := "-"? num
@@ -623,7 +628,8 @@ macro_rules
   | `([mlir_attr_val| $s:str]) => `(AttrValue.str $s)
   | `([mlir_attr_val| [ $xs,* ] ]) => do
         let initList <- `([])
-        let vals <- xs.getElems.foldlM (init := initList) fun xs x => `($xs ++ [[mlir_attr_val| $x]])
+        let vals <- xs.getElems.foldlM (init := initList) fun xs x =>
+            `($xs ++ [[mlir_attr_val| $x]])
         `(AttrValue.list $vals)
   | `([mlir_attr_val| $i:ident]) => `(AttrValue.type [mlir_type| $i:ident])
   | `([mlir_attr_val| $ty:mlir_type]) => `(AttrValue.type [mlir_type| $ty])
@@ -835,7 +841,8 @@ macro_rules
            match resTypes.getElems with
            | #[resType] => `([([mlir_op_operand| $name], [mlir_type| $resType])])
            | #[] =>
-              Macro.throwErrorAt name s!"expected to have return type since result '{resName}' exists"
+              Macro.throwErrorAt name
+                s!"expected to have return type since result '{resName}' exists"
            | tys =>
               let ty₁ := (tys : Array _)[1]?.getD (TSyntax.mk .missing) |>.raw
               Macro.throwErrorAt ty₁ s!"expected single return type, found multiple '{tys}'"
