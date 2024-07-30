@@ -156,6 +156,26 @@ theorem eq_iff_abs_sub_sub :
     x = y ↔ ((x - y).abs - 1).getMsb 0 := by
   sorry
 
+theorem eq_iff_not_sub_or_sub :
+    x = y ↔ (~~~ (x - y ||| y - x)).getMsb 0 := by
+  sorry
+
+theorem neq_iff_sub_or_sub :
+    x ≠ y ↔ (x - y ||| y - x).getMsb 0 := by
+  sorry
+
+theorem lt_iff_sub_xor_xor_and_sub_xor :
+    x < y ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
+  sorry
+
+theorem lt_iff_and_not_or_not_xor_and_sub :
+    x < y ↔ ((x &&& ~~~ y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
+  sorry
+
+theorem le_iff_or_not_and_xor_or_not_sub :
+    x ≤ y ↔ ((x ||| ~~~ y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+  sorry
+
 end Ch2Basics
 
 end HackersDelight
