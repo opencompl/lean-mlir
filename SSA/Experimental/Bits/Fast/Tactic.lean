@@ -1,351 +1,135 @@
-import Lean
-import Init.Data.BitVec.Lemmas
-import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
-import SSA.Projects.InstCombine.ForLean
-import Lean.Meta
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
 import SSA.Experimental.Bits.Lemmas
-
+import Qq.Macro
 open Lean Elab Tactic
-open Lean
-open Lean.Meta
-open Lean.Elab
-open Lean.Elab.Tactic
+open Lean Meta
+open scoped Qq
+
+set_option linter.longLine false
+
+
+def sub_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.sub x y).eval vars = x.eval vars - y.eval vars := by simp only [Term.eval]
+def add_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.add x y).eval vars = x.eval vars + y.eval vars := by simp only [Term.eval]
+def neg_eval {x :  _root_.Term} {vars : Nat → BitStream} :(Term.neg x).eval vars = - x.eval vars := by simp only [Term.eval]
+def not_eval {x :  _root_.Term} {vars : Nat → BitStream} :(Term.not x).eval vars = ~~~ x.eval vars := by simp only [Term.eval]
+
+def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.and x y).eval vars = x.eval vars &&& y.eval vars := by simp only [Term.eval]
+def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by simp only [Term.eval]
+def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval vars = x.eval vars ||| y.eval vars := by simp only [Term.eval]
 
 
 /--
-Get a list of fvars in an automata-only expression
--/
-partial def getFVars (e : Expr) : TacticM (List Expr) :=
-    match_expr e with
-      | HAnd.hAnd _ _ _ _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | HSub.hSub _ _ _ _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | HOr.hOr _ _ _ _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | HXor.hXor _ _ _ _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | Eq _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | HAdd.hAdd _ _ _ _ a b => do
-        let a ← getFVars a
-        let b ← getFVars b
-        return a ++ b
-      | Neg.neg _ _ a => do
-        let a ← getFVars a
-        return a
-      | OfNat.ofNat _ _ _ => do
-        return []
-      | _ => match e with
-        | Lean.Expr.fvar a => return [Lean.Expr.fvar a]
-        | _ => throwError s!"getFVars: {e} is not a automata expression"
+simplify BitStrea.ofBitVec
+ -/
+simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
+  let y ← getLCtx
+  -- let g :=  y.getFVar! (.const `vars [])
+  let l := y.getFVarIds.size - 1
+  let g  ← y.getAt? l
+  let gv : Q(Nat → BitStream) := .fvar g.fvarId
+  match e.appArg! with
+    | .fvar x => do
+      let p : Q(Nat) := mkNatLit (hash x).val
+      return .done { expr := q(Term.eval (Term.var $p) $gv)}
+    |  x => do
+      match x with
+        | .app (.app (.const ``BitVec.ofNat []) _) _ => do
+          let _ := x.natLit!
+          --- warning: number literals are not implemented yet.
+          return .done { expr := q(Term.eval (Term.zero) $gv) }
+        | _ => throwError s!"{x} is not a nat literal"
 
 /--
-Get a list of variables in an expression
+introduce vars which maps variable ids to the variable values
 -/
-partial def getVars (e : Expr) : TacticM (List Name) :=
-    match_expr e with
-      | HAnd.hAnd _ _ _ _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | HSub.hSub _ _ _ _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | HOr.hOr _ _ _ _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | HXor.hXor _ _ _ _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | Eq _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | HAdd.hAdd _ _ _ _ a b => do
-        let a ← getVars a
-        let b ← getVars b
-        return a ++ b
-      | Neg.neg _ _ a => do
-        let a ← getVars a
-        return a
-      | OfNat.ofNat _ _ _ => do
-        return []
-      | _ => match e with
-        | Lean.Expr.fvar a => return [a.name]
-        | _ => throwError s!"getVars:{e} is not a automata expression"
+def introVars : TacticM Unit := do withMainContext <| do
+  let y ← getLCtx
+  let l := y.getFVarIds.data.drop 1
+  let goal ← getMainGoal
+  let last := l.get! 0
+  let hypType: Q(Type) := q(Nat → BitStream)
+  let n :  Q(Nat) := .bvar 0
+  let target ← getMainTarget
+  match_expr target  with
+    | BitStream.EqualUpTo a _ _  => do
+      let length : Nat ←  a.nat?
+      let hypValue : Q(BitVec $length)  := l.foldl (fun a b =>
+        let b' :  Q(BitVec $length) := .fvar b;
+        let bq :  Q(Nat) := mkNatLit (hash b).val;
+        let a' : Q(BitVec $length) := a;
+        q(ite ($n = $(bq)) $b' $a')) (.fvar last)
+      let hyp : Q(Nat → BitStream) := q(fun _ => BitStream.ofBitVec $hypValue)
+      let (newGoal) ← goal.define `vars hypType hyp
+      replaceMainGoal [newGoal]
+      return ()
+    | _ => throwError "Goal is not of the expected form"
 
+elab "introVars" : tactic => introVars
 /--
-Convert a Nat to syntax
+create bv_automata tactic which solves equalities on bitvectors
 -/
-def NatToSyntax (n : Nat) : Lean.Term :=
- match n with
-  | 0 => mkIdent ``Term.zero
-  | Nat.succ x => Syntax.mkApp (mkIdent ``Term.incr) #[NatToSyntax x]
+macro "bv_automata" : tactic =>
+  `(tactic| (
+  apply BitStream.eq_of_ofBitVec_eq
+  simp only [BitStream.ofBitVec_sub,
+  BitStream.ofBitVec_or,
+  BitStream.ofBitVec_xor,
+  BitStream.ofBitVec_and,
+  BitStream.ofBitVec_add,
+  BitStream.ofBitVec_neg]
+  introVars
+  intro vars
+  simp [reduce_bitvec]
+  simp only [← sub_eval, ← add_eval, ← neg_eval, ← and_eval, ← xor_eval, ← or_eval, ← not_eval]
+  intros _ _
+  apply congrFun
+  apply congrFun
+  native_decide
+  ))
 
-/--
-Reflect the expression `e` into a Syntax of the terms in the `Term` datatype
--/
-partial def reflectS (e : _root_.Term) (names : List Name) : TacticM Lean.Term := do
-  match e with
-    | Term.and a b => do
-      let a ← reflectS a names
-      let b ← reflectS b names
-      `(Term.and $a $b)
-    | Term.sub a b => do
-      let a ← reflectS a names
-      let b ← reflectS b names
-      `(Term.sub $a $b)
-    | Term.or a b => do
-      let a ← reflectS a names
-      let b ← reflectS b names
-      `(Term.or $a $b)
-    | Term.xor a b => do
-      let a ← reflectS a names
-      let b ← reflectS b names
-      `(Term.xor $a $b)
-    | Term.add a b => do
-      let a ← reflectS a names
-      let b ← reflectS b names
-      `(Term.add $a $b)
-    | Term.neg a => do
-      let a ← reflectS a names
-      `(Term.neg $a)
-    | Term.incr a => do
-      let a ← reflectS a names
-      `(Term.incr $a)
-    | Term.zero => do
-      `(Term.zero)
-    | Term.var a  => do
-      `(Term.var $(Lean.quote a))
-    | _ => throwError "reflectS: unimplemented case"
-
-/--
-Reflect the expression `e` into a Syntax version of itself
--/
-partial def reflectS2 (e : _root_.Term) (names : List Name) : TacticM Lean.Term := do
-  match e with
-    | Term.and a b => do
-      let a ← reflectS2 a names
-      let b ← reflectS2 b names
-      `(HAnd.hAnd $a $b)
-    | Term.sub  a b => do
-      let a ← reflectS2 a names
-      let b ← reflectS2 b names
-      `(HSub.hSub $a $b)
-    | Term.or a b => do
-      let a ← reflectS2 a names
-      let b ← reflectS2 b names
-      `(HOr.hOr $a $b)
-    | Term.xor a b => do
-      let a ← reflectS2 a names
-      let b ← reflectS2 b names
-      `(HXor.hXor $a $b)
-    | Term.add a b => do
-      let a ← reflectS2 a names
-      let b ← reflectS2 b names
-      `(HAdd.hAdd $a $b)
-    | Term.neg a => do
-      let a ← reflectS2 a names
-      `(Neg.neg $a)
-    | Term.incr a => do
-      let a ← reflectS2 a names
-      `(BitStream.incr $a)
-    | Term.zero => do
-      `(BitStream.zero)
-    | Term.var a  => do
-      `(vars $(Lean.quote a))
-    | _ => throwError "reflectS2: unimplemented case"
-
-/--
-Conver a list of expression to an expression
--/
-def listExpr (t : Expr) (exprs : List Lean.Expr) : Lean.Expr :=
-  let exprType := t
-  let nilExpr := mkApp (.const ``List.nil [Lean.Level.zero]) exprType
-  let consExpr := mkApp (mkConst ``List.cons [Lean.Level.zero]) exprType
-  exprs.foldr (fun e acc => mkApp2 consExpr e acc) nilExpr
-
-
-def natToTerm (n : Nat) : _root_.Term :=
-  match n with
-    | 0 => Term.zero
-    | Nat.succ x => Term.incr (natToTerm x)
-
-partial def parseTerm (e : Expr) (names : List Name) : TacticM (_root_.Term) := do
-  match_expr e with
-    | HAnd.hAnd _ _ _ _ a b => do
-      let a ← parseTerm a names
-      let b ← parseTerm b names
-      return Term.and a b
-    | HSub.hSub _ _ _ _ a b => do
-      let a ← parseTerm a names
-      let b ← parseTerm b names
-      return Term.sub a b
-    | HOr.hOr _ _ _ _ a b => do
-      let a ← parseTerm a names
-      let b ← parseTerm b names
-      return Term.or a b
-    | HXor.hXor _ _ _ _ a b => do
-      let a ← parseTerm a names
-      let b ← parseTerm b names
-      return Term.xor a b
-    | HAdd.hAdd _ _ _ _ a b => do
-        let a ← parseTerm a names
-        let b ← parseTerm b names
-        return Term.add a b
-    | Neg.neg _ _ a => do
-        let a ← parseTerm a names
-        return Term.neg a
-    | OfNat.ofNat _ b _ => do
-      match b with
-        | Lean.Expr.lit nv => do
-          match nv with
-            | Lean.Literal.natVal n => do
-              return natToTerm n
-            | _ => throwError s!"Not a literal natval expression at {repr nv}"
-        | _ => throwError s!"Not a Literal expression at {repr b}"
-    | _ => match e with
-      | Lean.Expr.fvar a => return Term.var (names.indexOf (a.name))
-      | _ => throwError s!"reflectS: {e} is not a automata expression"
-
-
-def zero_bitstream {w : Nat} : @BitStream.ofBitVec w 0 = BitStream.zero := by
-  unfold BitStream.zero
-  unfold BitStream.ofBitVec
-  funext
-  rename_i b
-  unfold BitVec.getLsb
-  sorry
-
-/--
-Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
-constant-memory operations on bitvectors
--/
-def bvAutomata : TacticM Unit := do withMainContext <| do
-  let goal ← getMainTarget
-  let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
-  match_expr goal with
-    | Eq type lhs rhs =>
-        match_expr type with
-        | BitVec n =>
-          let vars ← getVars goal
-          let fvars ← getFVars goal
-          let parsedLeft ← parseTerm lhs vars
-          let parsedRight ← parseTerm rhs vars
-          let ql ← reflectS parsedLeft vars
-          let qr ← reflectS parsedRight vars
-          let l2 ← reflectS2 parsedLeft vars
-          let r2 ← reflectS2 parsedRight vars
-          evalTactic (← `(tactic|
-          (
-          apply BitStream.eq_of_ofBitVec_eq
-          repeat (
-            first
-            | simp only [BitStream.ofBitVec_sub]
-            | simp only [BitStream.ofBitVec_or]
-            | simp only [BitStream.ofBitVec_xor]
-            | simp only [BitStream.ofBitVec_and]
-            | simp only [BitStream.ofBitVec_add]
-            | simp only [BitStream.ofBitVec_neg]
-            | simp only [zero_bitstream]
-          )
-          )
-          ))
-          let goal ← getMainGoal
-          let hypType: Lean.Expr := Lean.Expr.forallE
-            ( .str .anonymous "some function")
-            (Lean.Expr.const ``Nat [])
-            (Lean.Expr.const ``BitStream [])
-            (Lean.BinderInfo.default)
-          let someType : Expr := (.app (.const ``BitVec []) n)
-          let efvars : Expr := (listExpr (.app (.const ``BitVec []) n) fvars)
-          match fvars with
-            | [] => throwError "no free variables in the expression"
-            | var :: _fun_match =>
-              let hypValue : Expr := (Expr.lam `b
-                (.const ``Nat [])
-                (.app (.app (.const ``BitStream.ofBitVec []) n) (.app (.app (.app (.app (.const ``List.getD [Lean.Level.zero]) someType) efvars) (.bvar 0)) var))
-                  ) BinderInfo.default
-              let (newGoal) ← goal.define `vars hypType hypValue
-              -- Clear the original goal and replace it with the new goal
-              replaceMainGoal [newGoal]
-              evalTactic (← `(tactic|(
-              intro vars
-              )))
-              evalTactic (← `(tactic|(
-              have decided : ($ql).eval = ($qr).eval := by
-                native_decide
-              )))
-              logInfo (← `(tactic|(
-              have decided : ($ql).eval = ($qr).eval := by
-                native_decide
-              )))
-              evalTactic (← `(tactic|(
-              have lhs : ($ql).eval vars = ($l2) := by
-                simp only [vars, List.getD, Option.getD,List.get?]
-                repeat (
-                  simp only [Term.eval]
-                )
-                simp [ite]
-                try rfl
-              )))
-              evalTactic (← `(tactic|(
-              have rhs : ($qr).eval vars = ($r2) := by
-                simp only [vars, List.getD, Option.getD,List.get?]
-                repeat (
-                  simp only [Term.eval]
-                )
-                simp [ite]
-                try rfl
-              )))
-              evalTactic (← `(tactic|(
-              simp only [vars, List.getD, Option.getD,List.get? ] at rhs
-              simp only [vars, List.getD, Option.getD,List.get? ] at lhs
-              rw [← rhs]
-              rw [← lhs]
-              rw [decided]
-              intros _ _
-              try rfl
-              )))
-          logInfo s!"{name}: bv automata tactic succeeded"
-          return ()
-        | _ => do
-          throwError m!"{name}: Equality not on the type of BitVectors. It is instead on another type {type}"
-    | _ => do
-      throwError m!"{name}: Equality expected, found {goal}"
-
-/--
-Tactic to solve goals of the form $lhs = $rhs, where $lhs and $rhs contain only
-constant-memory operations on bitvectors
--/
-elab "bv_automata" : tactic => bvAutomata
-
-def test1 (x y : BitVec 2) : (x ||| y) - (x ^^^ y) = x &&& y := by
+def test1 (x y : BitVec 300) : (x ||| y) - (x ^^^ y) = x &&& y := by
   bv_automata
 
-def test5 (x y : BitVec 2) : (x + -y) = (x - y) := by
+def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
   bv_automata
 
-def test7 (x y : BitVec 2) : (x + y) = (y + x) := by
+def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
   bv_automata
 
-def test8 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
+def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
+  bv_automata
+
+def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
+  bv_automata
+def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
+  bv_automata
+
+def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
+  bv_automata
+
+def test15 (x y : BitVec 2) : (x - y)= (( x &&&  (~~~ y)) - ( (~~~ x) &&&  y)) := by
+  bv_automata
+
+def test17 (x y : BitVec 2) : (x ^^^ y) =((x ||| y) - (x &&& y)) := by
+  bv_automata
+
+def test18 (x y : BitVec 2) : (x &&&  (~~~ y))= ((x |||  y) - y) := by
+  bv_automata
+
+def test19 (x y : BitVec 2) : ( x &&&  (~~~ y))= (x -  (x &&& y)) := by
+  bv_automata
+
+def test21 (x y : BitVec 2) : (~~~(x - y)) =(~~~x + y) := by
+  bv_automata
+
+def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) =((x &&& y) + ~~~(x ||| y)) := by
+  bv_automata
+
+def test24 (x y : BitVec 2) : (x ||| y) =(( x &&& (~~~y)) + y) := by
+  bv_automata
+
+def test25 (x y : BitVec 2) : (x &&& y) = (( (~~~x) ||| y) - ~~~x) := by
   bv_automata
