@@ -52,8 +52,8 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
       let p : Q(Nat) := quoteFVar x
       return .done { expr := q(Term.eval (Term.var $p) $gv)}
     |  x => do
-      match x with
-        | .app (.app (.const ``BitVec.ofNat []) _) _ => do
+      match_expr x with
+        | BitVec.ofNat _ _  => do
           let _ := x.natLit!
           --- warning: number literals are not implemented yet.
           return .done { expr := q(Term.eval (Term.zero) $gv) }
