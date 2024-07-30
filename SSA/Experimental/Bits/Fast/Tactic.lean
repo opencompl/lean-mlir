@@ -20,19 +20,18 @@ def and_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.and x y).eva
 def xor_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by simp only [Term.eval]
 def or_eval {x y :  _root_.Term} {vars : Nat → BitStream} :(Term.or x y).eval vars = x.eval vars ||| y.eval vars := by simp only [Term.eval]
 
-
+def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 /--
 simplify BitStrea.ofBitVec
  -/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let y ← getLCtx
-  -- let g :=  y.getFVar! (.const `vars [])
   let l := y.getFVarIds.size - 1
   let g  ← y.getAt? l
   let gv : Q(Nat → BitStream) := .fvar g.fvarId
   match e.appArg! with
     | .fvar x => do
-      let p : Q(Nat) := mkNatLit (hash x).val
+      let p : Q(Nat) := quoteFVar x
       return .done { expr := q(Term.eval (Term.var $p) $gv)}
     |  x => do
       match x with
@@ -58,9 +57,8 @@ def introVars : TacticM Unit := do withMainContext <| do
       let length : Nat ←  a.nat?
       let hypValue : Q(BitVec $length)  := l.foldl (fun a b =>
         let b' :  Q(BitVec $length) := .fvar b;
-        let bq :  Q(Nat) := mkNatLit (hash b).val;
-        let a' : Q(BitVec $length) := a;
-        q(ite ($n = $(bq)) $b' $a')) (.fvar last)
+        let bq :  Q(Nat) := quoteFVar b;
+        q(ite ($n = $(bq)) $b' $a)) (.fvar last)
       let hyp : Q(Nat → BitStream) := q(fun _ => BitStream.ofBitVec $hypValue)
       let (newGoal) ← goal.define `vars hypType hyp
       replaceMainGoal [newGoal]
