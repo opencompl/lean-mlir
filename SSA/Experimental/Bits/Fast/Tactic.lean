@@ -111,12 +111,72 @@ def introduceMapIndexToFVar : TacticM Unit := do withMainContext <| do
   let target : Expr ← getMainTarget
   match_expr target  with
     | BitStream.EqualUpTo a _ _  => do
-      let length : Nat ← a.nat?
-      let hypValue : Q(BitVec $length)  := fVars.foldl (fun accumulator currentFVar =>
-        let quotedCurrentFVar : Q(BitVec $length) := .fvar currentFVar
+      let length : Q(Nat) := _
+      -- let length : Nat ←  a.nat?
+      let hypValue : Q(BitVec sorry)  := fVars.foldl (fun (accumulator : Q(BitVec $«length» )) (currentFVar : FVarId) =>
+        let quotedCurrentFVar : Q(BitVec $«length»):= .fvar currentFVar
         let fVarId : Q(Nat) := quoteFVar currentFVar
-        q(ite ($lastBVar = $fVarId) $quotedCurrentFVar $accumulator)) (.fvar last)
-      let hyp : Q(Nat → BitStream) := q(fun _ => BitStream.ofBitVec $hypValue)
+        --- ite {α : Sort u} (c : Prop) [h : Decidable c] (t e : α) : α :=
+        -- .app
+        --   (.app
+        --     (.app
+        --       (.app
+        --         (.app
+        --           (.const ``ite [])
+        --           (.app
+        --             (.const ``BitVec [])
+        --             length))
+        --         (.app
+        --           (.app
+        --             (.app
+        --               (.const ``Eq [])
+        --               (.const ``Nat []))
+        --             lastBVar)
+        --           fVarId)
+        --       (.const ``Nat.decEq [])
+        --     quotedCurrentFVar) «lastBVar»
+        --   accumulator))
+        -- .app
+        --   (.app
+        --     (.app
+        --       (.app
+        --         (.app
+        --           (.const `ite [Lean.Level.succ (Lean.Level.zero)])
+        --           (.app
+        --             (.const `BitVec [])
+        --             (.app
+        --               (.app (.const `sorryAx [Lean.Level.succ (Lean.Level.zero)]) (.const `Nat []))
+        --               (.const `Bool.false []))))
+        --         (.app
+        --           (.app
+        --             (.app (.const `Eq [Lean.Level.succ (Lean.Level.zero)]) (.const `Nat []))
+        --             (.bvar 0))
+        --           (.app
+        --             (.app
+        --               (.app (.const `OfNat.ofNat [Lean.Level.zero]) (.const `Nat []))
+        --               (.lit (Lean.Literal.natVal 17566323409764659738)))
+        --             (.app
+        --               (.const `instOfNatNat [])
+        --               (.lit (Lean.Literal.natVal 17566323409764659738))))))
+        --       (.app
+        --         (.app (.const `instDecidableEqNat []) (.bvar 0))
+        --         (.app
+        --           (.app
+        --             (.app (.const `OfNat.ofNat [Lean.Level.zero]) (.const `Nat []))
+        --             (.lit (Lean.Literal.natVal 17566323409764659738)))
+        --           (.app
+        --             (.const `instOfNatNat [])
+        --             (.lit (Lean.Literal.natVal 17566323409764659738))))))
+        --     (.fvar (Lean.Name.mkNum `_uniq 7874)))
+        --   (.fvar (Lean.Name.mkNum `_uniq 7874))
+
+        q(ite ($lastBVar = $fVarId)  $quotedCurrentFVar $accumulator)
+        ) (.fvar last)
+      logInfo (repr hypValue)
+      logInfo hypValue
+      -- let hyp : Expr := Expr.lam `n (.const `Nat []) (.app (.app (.const ``BitStream.ofBitVec []) length) hypValue) .default
+      let hyp : Q(Nat  → BitStream) := q(fun (_ : Nat) => @BitStream.ofBitVec sorry $hypValue)
+      logInfo (hyp)
       let newGoal : MVarId ← goal.define `vars hypType hyp
       replaceMainGoal [newGoal]
     | _ => throwError "Goal is not of the expected form"
@@ -155,47 +215,72 @@ macro "bv_automata" : tactic =>
   native_decide
   ))
 
-def test1 (x y : BitVec 300) : (x ||| y) - (x ^^^ y) = x &&& y := by
-  bv_automata
+-- def test1 (x y : BitVec 300) : (x ||| y) - (x ^^^ y) = x &&& y := by
+--   bv_automata
 
-def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
-  bv_automata
+-- def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
+--   bv_automata
 
-def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
-  bv_automata
+-- def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
+--   bv_automata
 
-def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
-  bv_automata
+-- def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
+--   bv_automata
 
-def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
-  bv_automata
+-- def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
+--   bv_automata
 
-def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
-  bv_automata
+-- def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
+--   bv_automata
 
-def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
-  bv_automata
+-- def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
+--   bv_automata
 
-def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
-  bv_automata
+-- def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
+--   bv_automata
 
-def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
-  bv_automata
+-- def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
+--   bv_automata
 
-def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
-  bv_automata
+-- def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
+--   bv_automata
 
-def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
-  bv_automata
+-- def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
+--   bv_automata
 
-def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
-  bv_automata
+-- def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
+--   bv_automata
 
-def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
-  bv_automata
+-- def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
+--   bv_automata
 
-def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
-  bv_automata
+-- def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
+--   bv_automata
 
-def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
-  bv_automata
+def test25 (x : BitVec 2) : x = x := by
+
+  apply BitStream.eq_of_ofBitVec_eq
+  try simp only [
+    BitStream.ofBitVec_sub,
+    BitStream.ofBitVec_or,
+    BitStream.ofBitVec_xor,
+    BitStream.ofBitVec_and,
+    BitStream.ofBitVec_add,
+    BitStream.ofBitVec_neg
+  ]
+  introduceMapIndexToFVar
+  intro mapIndexToFVar
+  -- This simp is non-terminal. I'm not going to do anything about this.
+  simp [
+    ← sub_eval,
+    ← add_eval,
+    ← neg_eval,
+    ← and_eval,
+    ← xor_eval,
+    ← or_eval,
+    ← not_eval,
+    reduce_bitvec
+  ]
+  intros _ _
+  repeat (apply congrFun)
+  native_decide
