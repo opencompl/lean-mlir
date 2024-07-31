@@ -9,7 +9,6 @@ import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 import Batteries.Data.BitVec
-import SSA.Projects.InstCombine.LLVM.Semantics
 
 
 open MLIR AST
@@ -78,10 +77,6 @@ macro "simp_alive_ssa" : tactic =>
         -- Fold integers into their canonical form.
         simp (config := {failIfUnchanged := false }) only [Nat.cast_ofNat,
           Nat.cast_one, Int.reduceNegSucc, Int.reduceNeg]
-        -- Since I introduced the NSW and NUW flags to add, I need to remove them in the case where they are both
-        -- the default value of false.
-        -- I don't know why Lean isn't smart enough to see that False ∧ x = False
-        try simp only [LLVM.add_reduce]
       )
   )
 

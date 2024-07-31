@@ -7,6 +7,7 @@ import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Batteries.Data.BitVec
+import SSA.Projects.InstCombine.LLVM.Semantics
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -59,6 +60,10 @@ macro_rules
 macro "simp_alive_undef" : tactic =>
   `(tactic|
       (
+        -- Since I introduced the NSW and NUW flags to add, I need to remove them in the case where they are both
+        -- the default value of false.
+        -- I don't know why Lean isn't smart enough to see that False ∧ x = False
+        try simp only [LLVM.add_reduce]
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm_option,
             BitVec.Refinement, bind_assoc,
