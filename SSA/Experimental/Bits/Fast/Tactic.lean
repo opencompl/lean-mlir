@@ -28,8 +28,6 @@ The goal of this tactic is to convert expressions of the first kind into the sec
 we have a decision procedure that decides equality on expressions of the second kind.
 -/
 
-
-
 section EvalLemmas
 variable {x y : _root_.Term} {vars : Nat → BitStream}
 def sub_eval :
@@ -77,14 +75,22 @@ BitStream.ofBitVec 1 ====> (Term.one).eval vars
 but this doesn't work for some reason
 -/
 
-def quoteNat (n : Nat) : Q(_root_.Term) :=
+
+def termNat (n : Nat) : _root_.Term :=
   match n with
-  | 0 => q(Term.zero)
-  | x + 1 => q(Term.incr $(quoteNat x))
+  | 0 => Term.zero
+  | x + 1 => Term.incr (termNat x)
 
-def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq (BitStream) (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval ($(quoteNat nat)) $qMapIndexToFVar)) := q(by
-  sorry)
+def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (BitVec.ofNat w n) = (termNat n).eval f := by
+  unfold Term.eval
+  unfold termNat
+  induction n
+  all_goals simp [*]
+  sorry
+  sorry
 
+def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq (BitStream) (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(by
+  exact termNatCorrect $qMapIndexToFVar $w $nat)
 
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let context  ← getLCtx
@@ -104,7 +110,7 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
             | .none => throwError m!"{b} is not a nat literal"
             | .some nat =>   do
               return .done {
-                expr := q(Term.eval ($(quoteNat nat)) $qMapIndexToFVar)
+                expr := q(Term.eval (termNat $(nat)) $qMapIndexToFVar)
                 proof? := .some (quoteThm qMapIndexToFVar length nat)
                 }
         | _ => throwError m!"reduce_bitvec: Expression {x} is not a nat literal"
@@ -121,14 +127,14 @@ def iteE (length : Q(Nat)) (left : Q(Nat)) (right : Q(Nat)) (ifTrue : Expr) (ifF
   ((((((Expr.const `ite [Level.zero.succ]).app (.app (.const ``BitVec []) length)).app
                 (eqE left right)).app
             (((Expr.const `instDecidableEqNat []).app (left)).app (right))).app
-        (ifTrue)).app
-    (ifFalse))
+        ifTrue).app
+    ifFalse)
 
 def funE (length : Q(Nat)) (body : Expr):=
   (Expr.lam `n (Expr.const `Nat [])
     (((Expr.const `BitStream.ofBitVec []).app
-          (length)).app
-      (body))
+          length).app
+      body)
     BinderInfo.default)
 
 /--
