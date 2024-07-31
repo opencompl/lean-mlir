@@ -265,7 +265,7 @@ namespace Op
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
 
-/-- Add is seperate from the other operations because it takes in 2 flags: nuw and nsw.-/
+/-- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
 @[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 
