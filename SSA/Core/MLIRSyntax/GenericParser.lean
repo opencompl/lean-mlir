@@ -551,10 +551,30 @@ declare_syntax_cat mlir_attr_val_symbol
 syntax "@" ident : mlir_attr_val_symbol
 syntax "@" str : mlir_attr_val_symbol
 syntax "#" ident : mlir_attr_val -- alias
-syntax "#" strLit : mlir_attr_val -- aliass
+syntax "#" strLit : mlir_attr_val -- alias
 
 declare_syntax_cat dialect_attribute_contents
 syntax mlir_attr_val : dialect_attribute_contents
+/--
+I got this from https://mlir.llvm.org/docs/LangRef/
+
+```bnf
+dialect-namespace ::= bare-id
+
+dialect-attribute ::= `#` (opaque-dialect-attribute | pretty-dialect-attribute)
+opaque-dialect-attribute ::= dialect-namespace dialect-attribute-body
+pretty-dialect-attribute ::= dialect-namespace `.` pretty-dialect-attribute-lead-ident
+                                              dialect-attribute-body?
+pretty-dialect-attribute-lead-ident ::= `[A-Za-z][A-Za-z0-9._]*`
+
+dialect-attribute-body ::= `<` dialect-attribute-contents+ `>`
+dialect-attribute-contents ::= dialect-attribute-body
+                            | `(` dialect-attribute-contents+ `)`
+                            | `[` dialect-attribute-contents+ `]`
+                            | `{` dialect-attribute-contents+ `}`
+                            | [^\[<({\]>)}\0]+
+```
+-/
 syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
 syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
 syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents

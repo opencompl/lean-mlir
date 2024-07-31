@@ -4,7 +4,6 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.ComWrappers
-import SSA.Projects.InstCombine.LLVM.Semantics
 import Mathlib.Tactic
 
 open BitVec
@@ -121,7 +120,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   unfold MulDivRem805_lhs MulDivRem805_rhs
   simp only [simp_llvm_wrap]
   simp_alive_ssa
-  simp only [LLVM.add_reduce]
+
   simp_alive_undef
   simp_alive_case_bash
   simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
@@ -231,7 +230,6 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   unfold MulDivRem805_lhs MulDivRem805_rhs
   simp only [simp_llvm_wrap]
   simp_alive_ssa
-  simp only [LLVM.add_reduce]
   simp_alive_undef
   simp_alive_case_bash
   simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]

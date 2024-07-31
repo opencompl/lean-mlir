@@ -118,22 +118,29 @@ inductive BinaryOpWithoutFlags : Type
   | sdiv
   | udiv
 deriving Repr, DecidableEq, Inhabited
-def BinaryOpFormatWithoutFlags : MOp.BinaryOp → ℕ → Lean.Format
-  | .and => reprPrec BinaryOpWithoutFlags.and
-  | .or => reprPrec BinaryOpWithoutFlags.or
-  | .xor => reprPrec BinaryOpWithoutFlags.xor
-  | .shl => reprPrec BinaryOpWithoutFlags.shl
-  | .lshr => reprPrec BinaryOpWithoutFlags.lshr
-  | .ashr => reprPrec BinaryOpWithoutFlags.ashr
-  | .urem => reprPrec BinaryOpWithoutFlags.urem
-  | .srem => reprPrec BinaryOpWithoutFlags.srem
-  | .add _ => reprPrec BinaryOpWithoutFlags.add
-  | .mul => reprPrec BinaryOpWithoutFlags.mul
-  | .sub => reprPrec BinaryOpWithoutFlags.sub
-  | .sdiv => reprPrec BinaryOpWithoutFlags.sdiv
-  | .udiv => reprPrec BinaryOpWithoutFlags.udiv
+
+/--
+The reason that I am using the admittedly hacky and ad-hoc method is that I want to preserve the guard_msgs statements, otherwise the build will fail.
+But the default Repr instance has some fancy behavior where depending on the indentation it will sometimes wrap in parentheses.
+I think the only way to replicate this behavior is to have another class and piggy-back off its default Repr class
+-/
+def BinaryOpRemoveFlags : MOp.BinaryOp → BinaryOpWithoutFlags
+  | .and => BinaryOpWithoutFlags.and
+  | .or => BinaryOpWithoutFlags.or
+  | .xor => BinaryOpWithoutFlags.xor
+  | .shl => BinaryOpWithoutFlags.shl
+  | .lshr => BinaryOpWithoutFlags.lshr
+  | .ashr => BinaryOpWithoutFlags.ashr
+  | .urem => BinaryOpWithoutFlags.urem
+  | .srem => BinaryOpWithoutFlags.srem
+  | .add _ => BinaryOpWithoutFlags.add
+  | .mul =>  BinaryOpWithoutFlags.mul
+  | .sub => BinaryOpWithoutFlags.sub
+  | .sdiv => BinaryOpWithoutFlags.sdiv
+  | .udiv => BinaryOpWithoutFlags.udiv
+
 instance : Repr (MOp.BinaryOp) where
-  reprPrec op w := ((toString (BinaryOpFormatWithoutFlags op w)).replace "InstCombine.BinaryOpWithoutFlags" "InstCombine.MOp.BinaryOp").replace "false" ""
+  reprPrec op w := ((toString (reprPrec (BinaryOpRemoveFlags op) w)).replace "InstCombine.BinaryOpWithoutFlags" "InstCombine.MOp.BinaryOp").replace "false" ""
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
@@ -310,7 +317,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add w flags => LLVM.add    (op.getN 0) (op.getN 1) flags
+  | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
