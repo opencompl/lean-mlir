@@ -10,7 +10,6 @@ import SSA.Core.ErasedContext
 import SSA.Core.Tactic
 import Batteries.Data.BitVec
 
-
 open MLIR AST
 
 /-- We eliminate our alive framework's metavarible machinery.
