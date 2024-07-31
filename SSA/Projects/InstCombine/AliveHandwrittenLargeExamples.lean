@@ -120,7 +120,6 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   unfold MulDivRem805_lhs MulDivRem805_rhs
   simp only [simp_llvm_wrap]
   simp_alive_ssa
-
   simp_alive_undef
   simp_alive_case_bash
   simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
