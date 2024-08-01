@@ -15,7 +15,7 @@ There are two ways of expressing BitVec expressions. One is:
 
 
 ```
-(x &&& y) || y + 0
+(x &&& y) ||| y + 0
 ```
 
 the other way is:
@@ -27,8 +27,6 @@ Term.add (Term.or (Term.and (Term.var 0) (Term.var 1)) (Term.var 1)) Term.zero
 The goal of this tactic is to convert expressions of the first kind into the second kind, because
 we have a decision procedure that decides equality on expressions of the second kind.
 -/
-
-
 
 section EvalLemmas
 variable {x y : _root_.Term} {vars : Nat → BitStream}
@@ -63,6 +61,25 @@ end EvalLemmas
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 
+def termNat (n : Nat) : _root_.Term :=
+  match n with
+  | 0 => Term.zero
+  | x + 1 => Term.incr (termNat x)
+
+def incrBit (w n : Nat) :  BitStream.ofBitVec (BitVec.ofNat w n.succ) = (BitStream.ofBitVec (BitVec.ofNat w n)).incr := by
+  sorry
+
+def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (BitVec.ofNat w n) = (termNat n).eval f := by
+  induction n
+  ext i
+  simp only [Term.eval ,termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
+  rename_i n ff
+  simp only [Term.eval ,termNat, ← ff]
+  exact incrBit w n
+
+
+def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq (BitStream) (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
+
 /--
 Simplify BitStream.ofBitVec x where x is an FVar.
 
@@ -73,25 +90,62 @@ where n is the index of variable x
 It should reduce
 BitStream.ofBitVec 0 ====> (Term.zero).eval vars
 BitStream.ofBitVec 1 ====> (Term.one).eval vars
-but this doesn't work for some reason
+but for some reason slows down for larger and larger numbers. I don't know why, just don't
+try any numbers bigger than 2
 -/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let context  ← getLCtx
   let contextLength := context.getFVarIds.size - 1
   let lastFVar  ← context.getAt? contextLength
-  let typeOfMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+  let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
   match e.appArg! with
     | .fvar x => do
       let p : Q(Nat) := quoteFVar x
-      return .done { expr := q(Term.eval (Term.var $p) $typeOfMapIndexToFVar)}
-    |  x => do
+      return .done { expr := q(Term.eval (Term.var $p) $qMapIndexToFVar)}
+    |  x =>
       match_expr x with
-        | BitVec.ofNat _ _  => do
-          --- If x is not a nat literal, the compiler will panic. Oh well.
-          -- let _ := x.natLit!
-          --- warning: number literals are not implemented yet.
-          return .done { expr := q(Term.eval (Term.zero) $typeOfMapIndexToFVar) }
-        | _ => throwError s!"reduce_bitvec: Expression {x} is not a nat literal"
+        | BitVec.ofNat a b  =>
+          let nat := b.nat?
+          let length : Q(Nat) := a
+          match nat with
+            | .none => throwError m!"{b} is not a nat literal"
+            | .some nat =>
+              return .done {
+                expr := q(Term.eval (termNat $nat) $qMapIndexToFVar)
+                proof? := .some (quoteThm qMapIndexToFVar length nat)
+                }
+        | _ => throwError m!"reduce_bitvec: Expression {x} is not a nat literal"
+
+/-!
+# Helper function to construct Exprs
+-/
+
+
+/--
+Helper function to construct an equality expression
+-/
+def eqE (left : Q(Nat)) (right : Q(Nat)) : Q(Prop) :=
+  q($left = $right)
+
+/--
+Helper function to construct an if then else expression
+-/
+def iteE (length : Q(Nat)) (left : Q(Nat)) (right : Q(Nat)) (ifTrue : Expr) (ifFalse : Expr) : Expr :=
+  ((((((Expr.const `ite [Level.zero.succ]).app (.app (.const ``BitVec []) length)).app
+                (eqE left right)).app
+            (((Expr.const `instDecidableEqNat []).app left).app right)).app
+        ifTrue).app
+    ifFalse)
+
+/--
+Helper function to construct a function expression
+-/
+def funE (length : Q(Nat)) (body : Q(BitStream)) : Q(Nat → BitStream):=
+  (Expr.lam `n (Expr.const `Nat [])
+    (((Expr.const `BitStream.ofBitVec []).app
+          length).app
+      body)
+    BinderInfo.default)
 
 /--
 Introduce vars which maps variable ids to the variable values.
@@ -103,21 +157,28 @@ Term.var 1 -- represent the 1st variable
 -/
 def introduceMapIndexToFVar : TacticM Unit := do withMainContext <| do
   let context : LocalContext ← getLCtx
-  let fVars : List FVarId := context.getFVarIds.data.drop 1
+  let fVars : List FVarId :=  (PersistentArray.toList context.decls).filterMap (fun d => match d with
+    | .none => .none
+    | .some (.cdecl _ f _ type _ _) =>  match (type : Q(Type)) with
+      | .app (.const ``BitVec []) _ => .some f
+      | _ => .none
+    | .some (.ldecl _ _ _ _ _ _ _) => .none
+    )
   let goal : MVarId ← getMainGoal
   let last : FVarId := fVars.get! 0
-  let hypType: Q(Type) := q(Nat → BitStream)
+  let mapIndexToFVarType: Q(Type) := q(Nat → BitStream)
   let lastBVar : Q(Nat) := .bvar 0
   let target : Expr ← getMainTarget
   match_expr target  with
     | BitStream.EqualUpTo a _ _  => do
-      let length : Nat ← a.nat?
-      let hypValue : Q(BitVec $length)  := fVars.foldl (fun accumulator currentFVar =>
-        let quotedCurrentFVar : Q(BitVec $length) := .fvar currentFVar
-        let fVarId : Q(Nat) := quoteFVar currentFVar
-        q(ite ($lastBVar = $fVarId) $quotedCurrentFVar $accumulator)) (.fvar last)
-      let hyp : Q(Nat → BitStream) := q(fun _ => BitStream.ofBitVec $hypValue)
-      let newGoal : MVarId ← goal.define `vars hypType hyp
+      let length : Expr := a
+      let hypValue : Expr  := fVars.foldl (fun (accumulator : Expr) (currentFVar : FVarId) =>
+        let quotedCurrentFVar : Expr := .fvar currentFVar
+        let fVarId : Expr := quoteFVar currentFVar
+        iteE length lastBVar fVarId quotedCurrentFVar accumulator
+        ) (.fvar last)
+      let mapIndexToFVar : Expr := funE length hypValue
+      let newGoal : MVarId ← goal.define `vars mapIndexToFVarType mapIndexToFVar
       replaceMainGoal [newGoal]
     | _ => throwError "Goal is not of the expected form"
 
@@ -134,13 +195,13 @@ macro "bv_automata" : tactic =>
     BitStream.ofBitVec_or,
     BitStream.ofBitVec_xor,
     BitStream.ofBitVec_and,
+    BitStream.ofBitVec_not,
     BitStream.ofBitVec_add,
     BitStream.ofBitVec_neg
   ]
   introduceMapIndexToFVar
   intro mapIndexToFVar
-  -- This simp is non-terminal. I'm not going to do anything about this.
-  simp [
+  simp only [
     ← sub_eval,
     ← add_eval,
     ← neg_eval,
@@ -148,14 +209,24 @@ macro "bv_automata" : tactic =>
     ← xor_eval,
     ← or_eval,
     ← not_eval,
-    reduce_bitvec
+    reduce_bitvec,
+    Nat.reduceAdd,
+    BitVec.ofNat_eq_ofNat
   ]
   intros _ _
   repeat (apply congrFun)
   native_decide
   ))
 
-def test1 (x y : BitVec 300) : (x ||| y) - (x ^^^ y) = x &&& y := by
+
+/-!
+# Test Cases
+
+-/
+def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
+  bv_automata
+
+def test1 {w : Nat} (x y : BitVec (w + 1)) : (x ||| y) - (x ^^^ y) = x &&& y := by
   bv_automata
 
 def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
@@ -165,7 +236,7 @@ def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
   bv_automata
 
 def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
-  bv_automata
+ bv_automata
 
 def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
   bv_automata
@@ -199,3 +270,17 @@ def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
 
 def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata
+
+def test26 {w : Nat} (x y : BitVec (w + 1)) : 1 + x + 0 = 1  + x := by
+  bv_automata
+
+def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
+  bv_automata
+
+def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_automata
+
+
+-- This test is commented out because it takes over a minute to run
+-- def broken_test (x y : BitVec 5) : 2 + x  + 2 =  x + 4 := by
+--   bv_automata
