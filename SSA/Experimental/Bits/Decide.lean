@@ -17,7 +17,7 @@ instance decidableEvalEq (t₁ t₂ : Term) :
       (t₁.xor t₂).eval
       (λ i j => if hij : i < ar ∧ j < c
         then seq ⟨i, hij.1⟩ ⟨j, hij.2⟩ else false) i = false) _
-  rw [eval_eq_iff_xorSeq_eq_zero, p.good, PropagateStruc.eval]
+  rw [eval_eq_iff_xor_eq_zero, p.good, PropagateStruc.eval]
   rw [Function.funext_iff, propagate_eq_zero_iff]
   simp only [← evalFin_eq_eval, p.good]
   constructor

@@ -17,9 +17,10 @@ macro_rules
   | `(mlir_op| $v:mlir_op_operand = arith.const ${ $x:term } : $t) => do
       let ctor := mkIdent ``MLIR.AST.AttrValue.int
       let x ← `($ctor $x [mlir_type| i64])
-      --                 ^^^^^^^^^^^^^^^^ This is the type that's carried by the MLIR attribute.
-      --                                  However, this type is ignored by the syntax to EDSL converter,
-      --                                  and it builds the type it wants.
+      --                 ^^^^^^^^^^^^^^^^ This is the type that's carried by the
+      --                 MLIR attribute.  However, this type is ignored by the
+      --                 syntax to EDSL converter, and it builds the type it
+      --                 wants.
       `(mlir_op| $v:mlir_op_operand = "arith.const" () {value = $$($x) } : () -> ($t))
 
 syntax mlir_op_operand " = " "poly.const" "$" noWs "{" term "}" " : " mlir_type : mlir_op
@@ -30,9 +31,10 @@ macro_rules
   | `(mlir_op| $v:mlir_op_operand = poly.const ${ $x:term } : $t) => do
       let ctor := mkIdent ``MLIR.AST.AttrValue.int
       let x ← `($ctor $x [mlir_type| i64])
-      --                 ^^^^^^^^^^^^^^^^ This is the type that's carried by the MLIR attribute.
-      --                                  However, this type is ignored by the syntax to EDSL converter,
-      --                                  and it builds the type it wants.
+      --                 ^^^^^^^^^^^^^^^^ This is the type that's carried by the
+      --                 MLIR attribute.  However, this type is ignored by the
+      --                 syntax to EDSL converter, and it builds the type it
+      --                 wants.
       `(mlir_op| $v:mlir_op_operand = "poly.const" () {value = $$($x) } : () -> ($t))
 
 syntax mlir_op_operand " = " "poly.monomial" mlir_op_operand,*
@@ -70,3 +72,9 @@ private def fhe_test_one_rhs := [poly q, n, h | {
   }]
 
 end Test
+
+end Pretty
+
+end EDSL
+
+end MLIR

@@ -83,12 +83,15 @@ inductive op
 | gelu -- Pointwise fun x => x * 0.5 * (1 + erf(x/sqrt(2)))
 | silu -- Pointwise fun x => x * 1/ (1+exp(-x))
 | norm -- not the sqrt of sum of squares
-| rms_norm -- Don't know yet : Tensor k -> Tensor k rms(a) = sqrt(1/n * sum_i (a_i^2)), rms_norm i = a_i
+| rms_norm -- Don't know yet : Tensor k ->
+  Tensor k rms(a) = sqrt(1/n * sum_i (a_i^2)), rms_norm i = a_i
 | mul_mat -- Matrix multiplication, undefined on stuff that isn't a matrix
 | scale -- Tensor 0 → Tensor k → Tensor k
 | cpy -- identity function
-| reshape -- Tensor → Shape → Tensor --Changes the data to fit new layout of same (linear algebra sense) dimension
-| view1D -- Tensor → (Num_elements : ℕ) → (offset : ℕ) → Tensor --Output at i = input at i+offset output
+| reshape -- Tensor → Shape → Tensor
+  --Changes the data to fit new layout of same (linear algebra sense) dimension
+| view1D -- Tensor → (Num_elements : ℕ) → (offset : ℕ) → Tensor
+  --Output at i = input at i+offset output
 | view2D -- Number of elements in 2 axes and offsets in 2 axes
 | permute4D -- take a permutation of 4 numbers and Return a 4d tesnro with everything permuted
 | transpose -- Matrix transpose

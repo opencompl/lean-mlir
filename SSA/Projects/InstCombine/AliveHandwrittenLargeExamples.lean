@@ -51,7 +51,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
     (obtain (rfl | rfl) : vcond = 1 ∨ vcond = 0 := by omega) <;> simp
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
-axioms: [propext, Quot.sound] -/
+axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_DivRemOfSelect
 
 end DivRemOfSelect
@@ -98,12 +98,14 @@ Proof:
  Thus, LHS and RHS agree on values.
 -/
 open ComWrappers
-def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- inc = -/ Com.var (add w /-c1 -/ 0 /-X-/ 1) <|
   /- c3 = -/ Com.var (const w 3) <|
@@ -266,7 +268,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
       rw [BitVec.toNat_allOnes] at a_allones
       omega
 
-  · simp [h]
+  · simp only [h, ofBool_false, ofNat_eq_ofNat, Refinement.some_some]
     simp only [Bool.not_eq_true] at h
     have a_ne_zero : a ≠ 0 := by
       intro a_zero
@@ -339,7 +341,9 @@ def MulDivRem290_lhs (w : ℕ) :
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
 def MulDivRem290_rhs (w : ℕ) :
-  Com InstCombine.LLVM [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w] .pure (InstCombine.Ty.bitvec w) :=
+    Com InstCombine.LLVM
+    [/- %X -/ InstCombine.Ty.bitvec w, /- %Y -/ InstCombine.Ty.bitvec w]
+    .pure (InstCombine.Ty.bitvec w) :=
   /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
@@ -352,10 +356,14 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ops
   intros A B
   rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;>
+    simp only [ge_iff_le,
+      EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
+      Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
+      Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
   apply BitVec.eq_of_toNat_eq
-  simp [bv_toNat]
+  simp only [toNat_mul, toNat_shiftLeft', toNat_ofNat, Nat.mod_mul_mod, one_mul]
   ring_nf
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
@@ -428,7 +436,8 @@ Proof:
   ----
   (((X^C1) >> C2)^C3))[i]
   = ((X^C1) >> C2)[i] ^ C3[i] [bit-of-lsh r]
-  # NOTE: negative entries will be 0 because it is LOGICAL shift right. This is denoted by the []₀ operator.
+  # NOTE: negative entries will be 0 because it is LOGICAL shift right.
+    This is denoted by the []₀ operator.
   = ((X^C1))[i - C2]₀ ^ C3[i] [bit-of-lshr]
   = (X[i - C2]₀ ^ C1[i - C2]₀) ^ C3[i]  [bit-of-xor]
   = X[i - C2]₀ ^ C1[i - C2]₀ ^ C3[i] [assoc]
@@ -499,7 +508,7 @@ def alive_simplifySelect764 (w : Nat) :
   · simp [zero_sgt_A]
   · simp only [zero_sgt_A, ofBool_false, ofNat_eq_ofNat, sub_sub_cancel]
     by_cases neg_A_sgt_zero : -A >ₛ 0#w
-    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+    · simp only [neg_A_sgt_zero, ofBool_true, ofNat_eq_ofNat]
       by_cases A_sgt_zero : A >ₛ 0#w
       simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
@@ -515,7 +524,7 @@ def alive_simplifySelect764 (w : Nat) :
         simp only at neg_A_sgt_zero
         simp [neg_A_sgt_zero] at A_sgt_zero
       simp [A_sgt_zero]
-    · simp [neg_A_sgt_zero, zero_sub_eq_neg]
+    · simp only [neg_A_sgt_zero, ofBool_false, ofNat_eq_ofNat, _root_.neg_neg]
       by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       · by_cases A_eq_zero : A = 0

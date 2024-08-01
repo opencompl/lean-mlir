@@ -46,10 +46,13 @@ macro_rules
     `(mlir_op| $resName:mlir_op_operand = $opName ($x, $y) : ($t, $t) -> (i1) )
 
 open MLIR.AST
-syntax mlir_op_operand " = " "llvm.mlir.constant" "("   neg_num (" : " mlir_type)? ")"  (" : " mlir_type)? : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant" "("  ("$" noWs "{" term "}") ")"  (" : " mlir_type)?   : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("   neg_num (" : " mlir_type)? ")"
+  (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" "("  ("$" noWs "{" term "}") ")"
+  (" : " mlir_type)?   : mlir_op
 macro_rules
-  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $inner_type]?) $[: $outer_type]? ) => do
+  | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( $x $[: $inner_type]?)
+      $[: $outer_type]? ) => do
       /- We deviate slightly from LLVM by allowing syntax such as `llvm.mlir.constant (10) : i62`.
           Strictly speaking, the spec mandates that the *inner* type annotation may only be left out
           if the type is `i64` or `f64`.
@@ -60,14 +63,16 @@ macro_rules
       -/
       let outer_type ← outer_type.getDM `(mlir_type| _)
       let inner_type := inner_type.getD outer_type
-      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $x:neg_num : $inner_type} : () -> ($outer_type) )
+      `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"()
+          {value = $x:neg_num : $inner_type} : () -> ($outer_type) )
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant( ${ $x:term }) $[: $t]?) => do
       let t ← t.getDM `(mlir_type| _)
       let x ← `(MLIR.AST.AttrValue.int $x [mlir_type| $t])
       `(mlir_op| $res:mlir_op_operand = "llvm.mlir.constant"() {value = $$($x) } : () -> ($t) )
 
 syntax mlir_op_operand " = " "llvm.mlir.constant" neg_num (" : " mlir_type)? : mlir_op
-syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}") (" : " mlir_type)? : mlir_op
+syntax mlir_op_operand " = " "llvm.mlir.constant" ("$" noWs "{" term "}")
+  (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant $x $[: $t]?) =>
       `(mlir_op| $res:mlir_op_operand = llvm.mlir.constant($x $[: $t]?) $[: $t]?)
@@ -148,3 +153,7 @@ private def antiquot_test_pretty (x : Nat) := -- antiquotated constant value in 
 example : antiquot_test = antiquot_test_pretty := rfl
 
 end Test
+
+end EDSL
+
+end MLIR

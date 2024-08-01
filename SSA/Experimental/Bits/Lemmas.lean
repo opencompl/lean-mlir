@@ -8,26 +8,31 @@ import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Defs
+import SSA.Experimental.Bits.Fast.BitStream
 
 open Term
 
-lemma evalFin_eq_eval (t : Term) (vars : ℕ → ℕ → Bool) :
+lemma evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
     Term.evalFin t (fun i => vars i) = Term.eval t vars := by
   induction t <;>
   dsimp [Term.evalFin, Term.eval, arity] at * <;> simp [*]
 
-lemma eq_iff_xorSeq_eq_zero (seq₁ seq₂ : ℕ → Bool) :
-    (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, xorSeq seq₁ seq₂ i = zeroSeq i) := by
-  simp [Function.funext_iff, xorSeq, zeroSeq]
+lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
+    (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
+  simp [Function.funext_iff]
 
-lemma eval_eq_iff_xorSeq_eq_zero (t₁ t₂ : Term) :
-    t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = λ _ => zeroSeq := by
+lemma eval_eq_iff_xor_eq_zero (t₁ t₂ : Term) :
+    t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = fun _ => BitStream.zero := by
   simp only [Function.funext_iff, Term.eval, Term.evalFin,
-    ← eq_iff_xorSeq_eq_zero, ← evalFin_eq_eval]
+    ← eq_iff_xor_eq_zero, ← evalFin_eq_eval]
   constructor
-  { intro h seq n
-    have := h (λ j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else λ _ => false) n
-    simp at this
-    convert this using 1 }
-  { intro h seq m
-    exact h (λ j => seq j) _ }
+  · intro h seq
+    ext j
+    simp only [arity.eq_7, BitStream.xor_eq, BitStream.zero_eq, bne_eq_false_iff_eq]
+    apply congr_fun
+    simpa using h (fun j => if hj : j < (arity (t₁.xor t₂)) then seq ⟨j, hj⟩ else fun _ => false)
+  · intro h seq
+    ext j
+    have := h (seq ·)
+    apply_fun (· j) at this
+    simpa
