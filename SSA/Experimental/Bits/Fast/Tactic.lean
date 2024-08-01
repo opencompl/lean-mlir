@@ -61,21 +61,6 @@ end EvalLemmas
 
 def quoteFVar  (x : FVarId)  : Q(Nat) := mkNatLit (hash x).val
 
-
-/--
-Simplify BitStream.ofBitVec x where x is an FVar.
-
-It reduces
-BitStream.ofBitVec x ====> (Term.var n).eval vars
-where n is the index of variable x
-
-It should reduce
-BitStream.ofBitVec 0 ====> (Term.zero).eval vars
-BitStream.ofBitVec 1 ====> (Term.one).eval vars
-but this doesn't work for some reason
--/
-
-
 def termNat (n : Nat) : _root_.Term :=
   match n with
   | 0 => Term.zero
@@ -95,6 +80,19 @@ def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (Bi
 
 def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq (BitStream) (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
 
+/--
+Simplify BitStream.ofBitVec x where x is an FVar.
+
+It reduces
+BitStream.ofBitVec x ====> (Term.var n).eval vars
+where n is the index of variable x
+
+It should reduce
+BitStream.ofBitVec 0 ====> (Term.zero).eval vars
+BitStream.ofBitVec 1 ====> (Term.one).eval vars
+but for some reason slows down for larger and larger numbers. I don't know why, just don't
+try any numbers bigger than 2
+-/
 simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
   let context  ← getLCtx
   let contextLength := context.getFVarIds.size - 1
@@ -118,12 +116,20 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
                 }
         | _ => throwError m!"reduce_bitvec: Expression {x} is not a nat literal"
 
+/-!
+# Helper function to construct Exprs
+-/
+
+
 /--
-Helper functions to construct Exprs
+Helper function to construct an equality expression
 -/
 def eqE (left : Q(Nat)) (right : Q(Nat)) : Q(Prop) :=
   q($left = $right)
 
+/--
+Helper function to construct an if then else expression
+-/
 def iteE (length : Q(Nat)) (left : Q(Nat)) (right : Q(Nat)) (ifTrue : Expr) (ifFalse : Expr) : Expr :=
   ((((((Expr.const `ite [Level.zero.succ]).app (.app (.const ``BitVec []) length)).app
                 (eqE left right)).app
@@ -131,6 +137,9 @@ def iteE (length : Q(Nat)) (left : Q(Nat)) (right : Q(Nat)) (ifTrue : Expr) (ifF
         ifTrue).app
     ifFalse)
 
+/--
+Helper function to construct a function expression
+-/
 def funE (length : Q(Nat)) (body : Q(BitStream)) : Q(Nat → BitStream):=
   (Expr.lam `n (Expr.const `Nat [])
     (((Expr.const `BitStream.ofBitVec []).app
@@ -210,6 +219,10 @@ macro "bv_automata" : tactic =>
   ))
 
 
+/-!
+# Test Cases
+
+-/
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
 
@@ -266,3 +279,8 @@ def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
 
 def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_automata
+
+
+-- This test is commented out because it takes over a minute to run
+-- def broken_test (x y : BitVec 5) : 2 + x  + 2 =  x + 4 := by
+--   bv_automata
