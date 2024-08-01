@@ -206,17 +206,23 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 -/
 section Syntax
 
+-- is there a more efficient way to write bools/ints/other types?
+
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
-  | MLIR.AST.MLIRType.undefined "Stream" => do
-    return .stream
-  | MLIR.AST.MLIRType.undefined "Stream2" => do
-    return .stream2
+  | MLIR.AST.MLIRType.undefined "Stream int" => do
+    return (.stream .int)
+  | MLIR.AST.MLIRType.undefined "Stream bool" => do
+    return (.stream .bool)
+  | MLIR.AST.MLIRType.undefined "Stream2 int" => do
+    return (.stream2 .int)
+  | MLIR.AST.MLIRType.undefined "Stream2 bool" => do
+    return (.stream2 .bool)
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a b : Var Γ .stream) : Expr (DC) Γ .pure .stream2  :=
+def branch {Γ : Ctxt _} (a b : Var Γ (.stream)) : Expr (DC) Γ .pure (.stream2) :=
   Expr.mk
     (op := .branch)
     (ty_eq := rfl)
