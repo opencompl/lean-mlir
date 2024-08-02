@@ -79,7 +79,8 @@ partial def assertAutomataSolvable  (e : Expr)  : TacticM Unit :=
       | _ => throwError m!"{e} is not a automata expression"
 
 
-
+def x : Bool := Bool.xor true true
+-- #check
 
 /--
 `assertRingSolvable e` throws an error if `e` contains
@@ -113,7 +114,7 @@ partial def assertRingSolvable (e : Expr) : TacticM Unit := do
         assertRingSolvable a
         assertRingSolvable b
       | OfNat.ofNat _ _ _ => return ()
-      | _ => throwError m!"{e} not ring-only"
+      | _ => throwError m!"{e} is not a ring-only expression"
 
 partial def assertOfboolSolvable (e : Expr) : TacticM Unit := do
   let name := (← getLCtx).foldl (· ++ toString ·.userName) ""
@@ -232,7 +233,9 @@ macro "bitvec_auto" : tactic => `(tactic|
     sorry ; trace "solved by automata tactic"
   | fail "Could not solve goal with neither bitvec nor automata" -- TODO: better error
 )
-
+-- @[simp]
+theorem BitVec.shift_left_eq_pow (x : BitVec w) (n : Nat) : x <<< n = x * BitVec.ofNat w (2 ^ n) := by
+  sorry
 macro "data_automata": tactic =>
   `(tactic|
        (
@@ -261,18 +264,20 @@ macro "data_ring": tactic =>
        (
         intros
         all_goals (
-          try (
+          (
             simp_alive_undef
             simp_alive_ops
             try (
               simp_alive_case_bash
               ensure_only_goal
             )
-            simp  (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
+            try simp only [(BitVec.negOne_eq_allOnes')]
             -- simp_alive_bitvec2
-            of_bool_tactic
-            simp only [← BitVec.allOnes_sub_eq_xor]
-            simp only [← BitVec.negOne_eq_allOnes']
+            try solve  | of_bool_tactic
+
+            try simp only [← BitVec.allOnes_sub_eq_xor]
+            try simp only [← BitVec.negOne_eq_allOnes']
+            try simp only [BitVec.ofNat_eq_ofNat, BitVec.shiftLeft_eq', BitVec.shift_left_eq_pow]
           )
           printIfNoGoals
           all_goals bitvec_assert_ring
@@ -353,5 +358,8 @@ open BitVec.Tactic
 --   -- printTheoremName
 --   print_lctx
 --   rfl
-
+-- example (w : Nat) (x  : BitVec w) : x <<< 4 = x * 16 := by
+--   -- simp only [← BitVec.allOnes_sub_eq_xor]
+--   -- simp only [← BitVec.negOne_eq_allOnes']
+--   data_ring
 -- #check Lean.Elab.Term.BinderView

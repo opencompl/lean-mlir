@@ -57,12 +57,15 @@ def process_file(file_path, tactics):
         stdout = stdout.replace("Some builds logged failures:","")
         stdout = stdout.replace("Some required builds logged failures:","")
         stdout = stdout.replace("./././", "")
-        stdout = re.sub(r"✔ \[\d*/\d*\] Built .*\n", "", stdout)
+        stdout = re.sub(r".*\[\d*/\d*\] Built .*\n", "", stdout)
+        stdout = re.sub(r".*\[\d*/\d*\] Replayed .*\n", "", stdout)
+        stdout = re.sub(r".*\[\d*/\d*\] Building .*\n", "", stdout)
+        stdout = stdout.replace('(deterministic) timeout at `elaborator`, maximum number of heartbeats (200000) has been reached\nUse `set_option maxHeartbeats <num>` to set the limit.\nAdditional diagnostic information may be available by using the `set_option diagnostics true` command.', "")
         # print(f"stdout = {stdout}")
-        lines = re.split(r"(info|error)", stdout)
+        lines = re.split(r"(info:|error:)", stdout)
         print(f"lines = {lines}")
         for line in lines:
-            if line == '' or line == "error" or line == "info": continue
+            if line == '' or line == "error:" or line == "info:": continue
             print(f"line = {line}")
             (*name ,  msg ) = line.split(":")
             if i == 0:
@@ -79,7 +82,7 @@ def process_file(file_path, tactics):
     #     # log_file.write(stderr)
     #     log_file.write("\n" + "_"*50 + "\n")
 
-    # os.unlink(temp_file_path)
+    os.unlink(temp_file_path)
     return df
 
 
