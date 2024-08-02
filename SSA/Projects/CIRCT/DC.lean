@@ -207,8 +207,8 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 section Syntax
 
 def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
-  | "int" => return (.int)
-  | "bool" => return (.bool)
+  | "Int" => return (.int)
+  | "Bool" => return (.bool)
   | _ => throw .unsupportedType
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
@@ -279,8 +279,6 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
       | .stream2 r, "dc.snd"  => return ⟨_, .stream r, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-
-
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (DC) 0 where
@@ -312,12 +310,12 @@ end Syntax
 -/
 namespace Examples
 def BranchEg1 := [dc_com| {
-  ^entry(%0: !Stream, %1: !Stream):
-    %out = "dc.branch" (%0, %1) : (!Stream, !Stream) -> (!Stream2)
-    %outf = "dc.fst" (%out) : (!Stream2) -> (!Stream)
-    %outs = "dc.snd" (%out) : (!Stream2) -> (!Stream)
-    %out2 = "dc.merge" (%outf, %outs) : (!Stream, !Stream) -> (!Stream)
-    "return" (%out2) : (!Stream) -> ()
+  ^entry(%0: !StreamInt, %1: !StreamInt):
+    %out = "dc.branch" (%0, %1) : (!StreamInt, !StreamBool) -> (!Stream2Int)
+    %outf = "dc.fst" (%out) : (!Stream2Int) -> (!StreamInt)
+    %outs = "dc.snd" (%out) : (!Stream2Int) -> (!StreamInt)
+    %out2 = "dc.merge" (%outfInt, %outsInt) : (!StreamInt, !StreamInt) -> (!StreamInt)
+    "return" (%out2) : (!StreamInt) -> ()
   }]
 
 #check BranchEg1
