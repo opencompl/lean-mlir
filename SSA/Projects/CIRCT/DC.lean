@@ -206,49 +206,51 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 -/
 section Syntax
 
--- is there a more efficient way to write bools/ints/other types?
+def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
+  | "int" => return (.int)
+  | "bool" => return (.bool)
+  | _ => throw .unsupportedType
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
-  | MLIR.AST.MLIRType.undefined "Stream int" => do
-    return (.stream .int)
-  | MLIR.AST.MLIRType.undefined "Stream bool" => do
-    return (.stream .bool)
-  | MLIR.AST.MLIRType.undefined "Stream2 int" => do
-    return (.stream2 .int)
-  | MLIR.AST.MLIRType.undefined "Stream2 bool" => do
-    return (.stream2 .bool)
+  | MLIR.AST.MLIRType.undefined s => do
+    match s.splitOn with
+    | ["Stream", r] =>
+      return .stream (← mkTy2 r)
+    | ["Stream2", r] =>
+      return .stream (← mkTy2 r)
+    | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a b : Var Γ (.stream)) : Expr (DC) Γ .pure (.stream2) :=
+def branch {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (DC) Γ .pure (.stream2 r) :=
   Expr.mk
-    (op := .branch)
+    (op := .branch r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons c <| .nil)
+    (regArgs := .nil)
+
+def merge {Γ : Ctxt _} (a b : Var Γ (.stream r)) : Expr (DC) Γ .pure (.stream r)  :=
+  Expr.mk
+    (op := .merge r)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def merge {Γ : Ctxt _} (a b : Var Γ .stream) : Expr (DC) Γ .pure .stream  :=
+def fst {Γ : Ctxt _} (a : Var Γ (.stream2 r)) : Expr (DC) Γ .pure (.stream r)  :=
   Expr.mk
-    (op := .merge)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons b <| .nil)
-    (regArgs := .nil)
-
-def fst {Γ : Ctxt _} (a : Var Γ .stream2) : Expr (DC) Γ .pure .stream  :=
-  Expr.mk
-    (op := .fst)
+    (op := .fst r)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def snd {Γ : Ctxt _} (a : Var Γ .stream2) : Expr (DC) Γ .pure .stream  :=
+def snd {Γ : Ctxt _} (a : Var Γ (.stream2 r)) : Expr (DC) Γ .pure (.stream r)  :=
   Expr.mk
-    (op := .snd)
+    (op := .snd r)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
@@ -263,8 +265,9 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .stream, .stream, "dc.branch" => return ⟨_, .stream2, branch v₁ v₂⟩
-      | .stream, .stream, "dc.merge"  => return ⟨_, .stream, merge v₁ v₂⟩
+      | .stream r₁, .stream .bool, "dc.branch" => return ⟨_, .stream2 r₁, branch v₁ v₂⟩
+      -- unsure this is correct
+      | .stream r₁, _, "dc.merge" => return ⟨_, .stream r₁, merge v₁ v₁⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"dc.fst" | op@"dc.snd" =>
@@ -272,8 +275,8 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .stream2, "dc.fst" => return ⟨_, .stream, fst v₁⟩
-      | .stream2, "dc.snd"  => return ⟨_, .stream, snd v₁⟩
+      | .stream2 r, "dc.fst" => return ⟨_, .stream r, fst v₁⟩
+      | .stream2 r, "dc.snd"  => return ⟨_, .stream r, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
 
@@ -326,7 +329,7 @@ def BranchEg1 := [dc_com| {
 def x := Stream.ofList [some true, none, some false, some true, some false]
 def c := Stream.ofList [some true, some false, none, some true]
 
-def test : Stream :=
+def test : Stream r :=
   BranchEg1.denote (Valuation.ofPair c x)
 
 def remNone (lst : List Val) : List Val :=
