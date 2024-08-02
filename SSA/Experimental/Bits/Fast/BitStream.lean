@@ -364,10 +364,14 @@ Crucially, our decision procedure works by considering which equalities hold for
 --   have ⟨h₁, h₂⟩ : True ∧ True := sorry
 --   sorry
 @[simp] theorem ofBitVec_sub : ofBitVec (x - y) = (ofBitVec x) - (ofBitVec y) := sorry
+@[simp] theorem ofBitVec_sub2 {w : Nat} {x y : BitVec w} : EqualUpTo w (ofBitVec (x - y)) ((ofBitVec x) - (ofBitVec y)) := sorry
+
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) = (ofBitVec x) + (ofBitVec y) := sorry
 @[simp] theorem ofBitVec_neg : ofBitVec (-x) = -(ofBitVec x) := sorry
 @[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := sorry
-
+theorem equal_up_to_refl (w : Nat) (e : BitStream) : EqualUpTo w e e := sorry
+theorem sub_congr {w : Nat} {a b c d : BitStream} (e1 : EqualUpTo w a b) (e2 : EqualUpTo w c d) : EqualUpTo w (a - c) (b - d) := sorry
+theorem equal_trans {w : Nat} {a a1 b b1 : BitStream} (e1 : EqualUpTo w a a1) (e2 : EqualUpTo w  b b1)  :EqualUpTo w a b  = EqualUpTo  w a1 b1 := sorry
 end Lemmas
 
 end Arith
