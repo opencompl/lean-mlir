@@ -277,7 +277,7 @@ theorem sle_iff_adc_add_sub_neg_add_sub :
   sorry
 
 theorem sle_iff_adc_not_add_sub_sub :
-    (x ≤ₛ y) ↔ ((BitVec.carry w (y) (~~~ x + 1)) false) ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1) := by
+    (x ≤ₛ y) ↔ ((BitVec.carry w y (~~~ x + 1)) false) ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1) := by
   sorry
 
 theorem ult_iff_not_adc_not_add :
