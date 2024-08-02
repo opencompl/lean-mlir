@@ -213,44 +213,95 @@ theorem neq_zero_iff_neg_abs :
     x ≠ 0 ↔ (-(x.abs)).getMsb 0 := by
   sorry
 
-theorem lt_zero_iff :
+theorem slt_zero_iff :
     (x <ₛ 0) ↔ x.getMsb 0 := by
   sorry
 
-theorem le_zero_iff_or_sub_one :
+theorem sle_zero_iff_or_sub_one :
     (x ≤ₛ 0) ↔ (x ||| (x - 1)).getMsb 0 := by
   sorry
 
-theorem le_zero_iff_or_not_sub :
+theorem sle_zero_iff_or_not_sub :
     (x ≤ₛ 0) ↔ (x ||| ~~~ (-x)).getMsb 0 := by
   sorry
 
-theorem zero_lt_iff_neg_and_not :
+theorem zero_slt_iff_neg_and_not :
     (0 <ₛ x) ↔ (-x &&& ~~~ x).getMsb 0 := by
   sorry
 
-theorem zero_le_iff_neg_and_not :
+theorem zero_sle_iff_neg_and_not :
     (0 ≤ₛ x) ↔ (~~~ x).getMsb 0 := by
   sorry
 
-theorem lt_iff_add_two_pow_lt_add_two_pow :
+theorem slt_iff_add_two_pow_ult_add_two_pow :
     (x <ₛ y) ↔ (x + 2 ^ (w - 1) <ₛ y + 2 ^ (w - 1)) := by
   sorry
 
-theorem lt_iff_sub_two_pow_lt_sub_two_pow :
+theorem ult_iff_sub_two_pow_ult_sub_two_pow :
     (x <ᵤ y) ↔ (x - 2 ^ (w - 1) <ₛ y - 2 ^ (w - 1)) := by
   sorry
 
-theorem lt_iff_not_add_two_pow_ule_add_two_pow :
+theorem slt_iff_not_add_two_pow_ule_add_two_pow :
     (x <ₛ y) ↔ ¬ ((y + 2 ^ (w - 1)) ≤ᵤ (x + 2 ^ (w - 1))) := by
   sorry
 
-theorem le_iff_add_two_pow_ule_add_two_pow :
+theorem sle_iff_add_two_pow_ule_add_two_pow :
     (x ≤ₛ y) ↔ (x + 2 ^ (w - 1)) ≤ᵤ (y + 2 ^ (w - 1)) := by
   sorry
 
 theorem ult_iff_not_ule :
     (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by
+  sorry
+
+theorem eq_iff_adc_not_add :
+    x = y ↔ (BitVec.carry w (x) (~~~ y + 1)) false := by
+  sorry
+
+theorem neq_iff_adc_not :
+    x ≠ y ↔ (BitVec.carry w (x) (~~~ y)) false := by
+  sorry
+
+theorem slt_iff_not_adc_add_sub_neg_add_sub :
+    (x <ₛ y) ↔  ¬ (BitVec.carry w (x + 2 ^ (w - 1)) (~~~ (y + 2 ^ (w - 1)) + 1)) false := by
+  sorry
+
+instance : HXor Bool Bool Bool where
+  hXor := Bool.xor
+
+theorem sle_iff_not_adc_not_add_sub_xor_sub :
+    (x <ₛ y) ↔ !(BitVec.carry w (x) (~~~ y + 1) false ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1)) := by
+  sorry
+
+theorem sle_iff_adc_add_sub_neg_add_sub :
+    (x ≤ₛ y) ↔ (BitVec.carry w (y + 2 ^ (w - 1)) (~~~ (x + 2 ^ (w - 1)) + 1)) false := by
+  sorry
+
+theorem sle_iff_adc_not_add_sub_sub :
+    (x ≤ₛ y) ↔ ((BitVec.carry w (y) (~~~ x + 1)) false) ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1) := by
+  sorry
+
+theorem ult_iff_not_adc_not_add :
+    (x <ᵤ y) ↔ ¬ (BitVec.carry w (x) (~~~ y + 1) false) := by
+  sorry
+
+theorem ult_iff_adc_not_add :
+    (x ≤ᵤ y) ↔ (BitVec.carry w (y) (~~~ x + 1) false) := by
+  sorry
+
+theorem eq_zero_iff_adc_not_add :
+    x = 0 ↔ (BitVec.carry w (~~~ x) 1) false := by
+  sorry
+
+theorem neq_zero_iff_adc_neg :
+    x ≠ 0 ↔ (BitVec.carry w (x) (-1)) false := by
+  sorry
+
+theorem slt_iff_adc :
+    (x <ₛ 0) ↔ (BitVec.carry w (x) (x)) false := by
+  sorry
+
+theorem sle_iff_adc_two_pow_sub_neg_add_two_pow_sub :
+    (x ≤ₛ 0) ↔ (BitVec.carry w (2 ^ (w - 1)) (-(x + 2 ^ (w - 1)))) false := by
   sorry
 
 end Ch2Basics
