@@ -9,6 +9,7 @@ open Lean Elab Tactic
 open Lean Meta
 open scoped Qq
 
+
 /-!
 # BitVec Automata Tactic
 There are two ways of expressing BitVec expressions. One is:
@@ -30,32 +31,33 @@ we have a decision procedure that decides equality on expressions of the second 
 
 section EvalLemmas
 variable {x y : _root_.Term} {vars : Nat → BitStream}
-def sub_eval :
-    (Term.sub x y).eval vars = x.eval vars - y.eval vars := by
+
+lemma eval_sub :
+    (x.sub y).eval vars = x.eval vars - y.eval vars := by
   simp only [Term.eval]
 
-def add_eval :
-    (Term.add x y).eval vars = x.eval vars + y.eval vars := by
+lemma eval_add :
+    (x.add y).eval vars = x.eval vars + y.eval vars := by
   simp only [Term.eval]
 
-def neg_eval :
-    (Term.neg x).eval vars = - x.eval vars := by
+lemma eval_neg :
+    (x.neg).eval vars = - x.eval vars := by
   simp only [Term.eval]
 
-def not_eval :
-    (Term.not x).eval vars = ~~~ x.eval vars := by
+lemma eval_not :
+    (x.not).eval vars = ~~~ x.eval vars := by
   simp only [Term.eval]
 
-def and_eval :
-    (Term.and x y).eval vars = x.eval vars &&& y.eval vars := by
+lemma eval_and :
+    (x.and y).eval vars = x.eval vars &&& y.eval vars := by
   simp only [Term.eval]
 
-def xor_eval :
-    (Term.xor x y).eval vars = x.eval vars ^^^ y.eval vars := by
+lemma eval_xor :
+    (x.xor y).eval vars = x.eval vars ^^^ y.eval vars := by
   simp only [Term.eval]
 
-def or_eval :
-    (Term.or x y).eval vars = x.eval vars ||| y.eval vars := by
+lemma eval_or :
+    (x.or y).eval vars = x.eval vars ||| y.eval vars := by
   simp only [Term.eval]
 end EvalLemmas
 
@@ -118,63 +120,67 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
 
 
 ---def first_rep {w : Nat} (e : Q(BitStream)) : (res : Q(BitStream), Q(EqualUpTo w $e $res))
-def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Σ (res : Q(BitStream)), Expr)  := do
-  -- logInfo (repr e)
-  -- dbg_trace (repr e)
+def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
   match e with
-    -- | ~q(@HSub.hSub BitStream BitStream BitStream _  $a $b) => do
-    --   let ⟨ anext, aproof ⟩ ← first_rep w a
-    --   let ⟨ bnext, bproof ⟩ ←  first_rep w b
-    --   -- dummy implementation, not complete yet
-    --   return ⟨
-    --     q($anext - $bnext),
-    --    sorry
-    --   ⟩
-    -- $x - $y
-    | .app (.app (.app (.app (.app (.app (.const ``HSub.hSub []) _) _) _ ) _ ) a ) b => do
-      dbg_trace "first case"
+    | .app (.app (.app (.app (.app (.app (.const ``HSub.hSub _) _) _) _ ) _ ) a) b => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
-      let ⟨ bnext, bproof ⟩ ←  first_rep w b
-      -- dummy implementation, not complete yet
+      let ⟨ bnext, bproof ⟩ ← first_rep w b
       return ⟨
         q($anext - $bnext),
-        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.EqualUpTo []) w) a) anext) b) bnext) aproof) bproof
+        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.sub_congr []) w) a) anext) b) bnext) aproof) bproof
       ⟩
-    -- BitStream.ofBitVec ($x - $y)
-    | .app (.app (.const ``BitStream.ofBitVec []) w) (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) t1) t2) t3 ) inst ) a ) b) => do
-      dbg_trace "second case"
-      -- let w' : Q(Nat) := w
-      -- let a' : Q(BitVec $(w')) := a
-      -- let b' : Q(BitVec $(w')) := b
-
+    | .app (.app (.const ``BitStream.ofBitVec []) w) (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) _) _) _) _) a ) b) => do
+      let myInst : Q(HSub BitStream BitStream BitStream) := q(instHSub)
       return ⟨
-        -- q(BitStream.ofBitVec $(a')  - BitStream.ofBitVec $b),
-        let myInst : Q(HSub BitStream BitStream BitStream) := q(sorry)
         (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
         .app (.app (.app (.const ``BitStream.ofBitVec_sub2 []) w) a ) b
       ⟩
+    | .app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd _) _) _) _ ) _ ) a) b => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      let ⟨ bnext, bproof ⟩ ← first_rep w b
+      return ⟨
+        q($anext + $bnext),
+        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.add_congr []) w) a) anext) b) bnext) aproof) bproof
+      ⟩
+    | .app (.app (.const ``BitStream.ofBitVec []) w) (.app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd levels) _) _) _) _) a ) b) => do
+      let myInst : Q(HAdd BitStream BitStream BitStream) := q(instHAdd)
+      return ⟨
+        (.app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
+        .app (.app (.app (.const ``BitStream.ofBitVec_add2 []) w) a ) b
+      ⟩
+    | .app (.app (.app (.const ``Neg.neg [])  _ ) _ ) a => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      return ⟨
+        q(-$anext),
+        (.app (.app (.app (.app (.const ``BitStream.neg_congr []) w) a) anext) aproof)
+      ⟩
+    | .app (.app (.const ``BitStream.ofBitVec []) w)  (.app (.app (.app (.const ``Neg.neg _) _) _) a) => do
+      let myExpr : Q(BitStream → BitStream) := q(Neg.neg)
+      return ⟨
+        .app myExpr (.app (.app (.const ``BitStream.ofBitVec []) w)  a)    ,
+        .app (.app (.const ``BitStream.ofBitVec_neg2 []) w) a
+      ⟩
+    | .app (.app (.app (.const ``Complement.complement _) _ ) _ ) a => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      return ⟨
+        q(~~~ $anext),
+        (.app (.app (.app (.app (.const ``BitStream.not_congr []) w) a) anext) aproof)
+      ⟩
     | e =>
-      dbg_trace "third case"
       return ⟨
         e,
         .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
-        ⟩
-    -- throwError "unhandled case in match statement"
+      ⟩
 
 simproc reduce_bitvec2 (BitStream.EqualUpTo (_ : Nat) _ _) := fun e => do
-  -- logInfo e
   match (e : Q(Prop)) with
     | .app (.app (.app (.const ``BitStream.EqualUpTo []) w) l ) r => do
-      logInfo l
       let ⟨ lterm, lproof ⟩ ← first_rep w l
       let ⟨ rterm, rproof ⟩ ← first_rep w r
-      logInfo l
-      dbg_trace l
-      -- log term
-      -- logInfo proof
       return .done {
         expr := .app (.app (.app (.const ``BitStream.EqualUpTo []) w) lterm) rterm
-        proof? := some (.app (.app (.app (.app (.app (.app (.app (.const ``BitStream.equal_trans []) w) l) lterm) r) rterm) lproof) rproof)
+        proof? :=
+        some (.app (.app (.app (.app (.app (.app (.app (.const ``BitStream.equal_trans []) w) l) lterm) r) rterm) lproof) rproof)
       }
     | _ => throwError m!"Expression {e} is not of the expected form. Expected something of the form BitStream.EqualUpTo (w : Nat) (lhs : BitStream) (rhs : BitStream) : Prop"
 
@@ -186,8 +192,7 @@ simproc reduce_bitvec2 (BitStream.EqualUpTo (_ : Nat) _ _) := fun e => do
 /--
 Helper function to construct an equality expression
 -/
-def eqE (left : Q(Nat)) (right : Q(Nat)) : Q(Prop) :=
-  q($left = $right)
+def eqE (left : Q(Nat)) (right : Q(Nat)) : Q(Prop) := q($left = $right)
 
 /--
 Helper function to construct an if then else expression
@@ -252,100 +257,99 @@ Create bv_automata tactic which solves equalities on bitvectors.
 macro "bv_automata" : tactic =>
   `(tactic| (
   apply BitStream.eq_of_ofBitVec_eq
-  try simp only [
-    reduce_bitvec2
+  repeat simp only [
+    reduce_bitvec2,
+    BitStream.ofBitVec_not,
+    BitStream.ofBitVec_xor,
+    BitStream.ofBitVec_and,
+    BitStream.ofBitVec_not,
+    BitStream.ofBitVec_or,
   ]
   introduceMapIndexToFVar
   intro mapIndexToFVar
-  try simp only [
-    ← sub_eval,
-    ← add_eval,
-    ← neg_eval,
-    ← and_eval,
-    ← xor_eval,
-    ← or_eval,
-    ← not_eval,
+
+  simp only [
+    ← eval_sub,
+    ← eval_add,
+    ← eval_neg,
+    ← eval_and,
+    ← eval_xor,
+    ← eval_or,
+    ← eval_not,
     reduce_bitvec,
     Nat.reduceAdd,
     BitVec.ofNat_eq_ofNat
   ]
   intros _ _
-  (apply congrFun)
-  (apply congrFun)
+  apply congrFun
+  apply congrFun
   native_decide
   ))
 
 
 /-!
 # Test Cases
-
 -/
--- def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
---   bv_automata
--- def test_simple2 {w : Nat} (x y : BitVec (w + 1)) : x = x := by
---   bv_automata
-def test_simple {w : Nat} (x y : BitVec (w + 1)) : x - y = x - y := by
-  apply BitStream.eq_of_ofBitVec_eq
-  try simp only [
-    reduce_bitvec2
-  ]
 
-  sorry
--- #print test_simple
--- def test1 {w : Nat} (x y : BitVec (w + 1)) : (x ||| y) - (x ^^^ y) = x &&& y := by
---   bv_automata
+def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
+  bv_automata
 
--- def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
---   bv_automata
+def test_simple2 {w : Nat} (x y : BitVec (w + 1)) : x = x := by
+  bv_automata
 
--- def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
---   bv_automata
+def test1 {w : Nat} (x y : BitVec (w + 1)) : (x ||| y) - (x ^^^ y) = x &&& y := by
+  bv_automata
 
--- def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
---  bv_automata
+def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
+  bv_automata
 
--- def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
---   bv_automata
+def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
+  bv_automata
 
--- def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
---   bv_automata
+def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
+  bv_automata
 
--- def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
---   bv_automata
+def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
+  bv_automata
 
--- def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
---   bv_automata
+def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
+  bv_automata
 
--- def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
---   bv_automata
+def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
+  bv_automata
 
--- def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
---   bv_automata
+def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
+  bv_automata
 
--- def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
---   bv_automata
+def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
+  bv_automata
 
--- def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
---   bv_automata
+def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
+  bv_automata
 
--- def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
---   bv_automata
+def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
+  bv_automata
 
--- def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
---   bv_automata
+def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
+  bv_automata
 
--- def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
---   bv_automata
+def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
+  bv_automata
 
--- def test26 {w : Nat} (x y : BitVec (w + 1)) : 1 + x + 0 = 1  + x := by
---   bv_automata
+def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
+  bv_automata
 
--- def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
---   bv_automata
+def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
+  bv_automata
 
--- def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
---   bv_automata
+def test26 {w : Nat} (x y : BitVec (w + 1)) : 1 + x + 0 = 1  + x := by
+  bv_automata
 
+def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
+  bv_automata
+
+def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_automata
 
 -- This test is commented out because it takes over a minute to run
 -- def broken_test (x y : BitVec 5) : 2 + x  + 2 =  x + 4 := by
