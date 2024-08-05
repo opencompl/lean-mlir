@@ -7,7 +7,6 @@ import SSA.Projects.InstCombine.ForLean
 
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Batteries.Data.BitVec
-import SSA.Projects.InstCombine.LLVM.Semantics
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
