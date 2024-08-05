@@ -104,7 +104,7 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
     | .fvar x => do
       let p : Q(Nat) := quoteFVar x
       return .done { expr := q(Term.eval (Term.var $p) $qMapIndexToFVar)}
-    |  x =>
+    | x =>
       match_expr x with
         | BitVec.ofNat a b  =>
           let nat := b.nat?
@@ -118,8 +118,9 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
                 }
         | _ => throwError m!"reduce_bitvec: Expression {x} is not a nat literal"
 
-
----def first_rep {w : Nat} (e : Q(BitStream)) : (res : Q(BitStream), Q(EqualUpTo w $e $res))
+/--
+Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
+-/
 def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
   match e with
     | .app (.app (.app (.app (.app (.app (.const ``HSub.hSub _) _) _) _ ) _ ) a) b => do
@@ -172,6 +173,9 @@ def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
         .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
       ⟩
 
+/--
+Push all ofBitVecs down to the lowest level
+-/
 simproc reduce_bitvec2 (BitStream.EqualUpTo (_ : Nat) _ _) := fun e => do
   match (e : Q(Prop)) with
     | .app (.app (.app (.const ``BitStream.EqualUpTo []) w) l ) r => do
@@ -183,36 +187,6 @@ simproc reduce_bitvec2 (BitStream.EqualUpTo (_ : Nat) _ _) := fun e => do
         some (.app (.app (.app (.app (.app (.app (.app (.const ``BitStream.equal_trans []) w) l) lterm) r) rterm) lproof) rproof)
       }
     | _ => throwError m!"Expression {e} is not of the expected form. Expected something of the form BitStream.EqualUpTo (w : Nat) (lhs : BitStream) (rhs : BitStream) : Prop"
-
-/-!
-# Helper function to construct Exprs
--/
-
-
-/--
-Helper function to construct an equality expression
--/
-def eqE (left : Q(Nat)) (right : Q(Nat)) : Q(Prop) := q($left = $right)
-
-/--
-Helper function to construct an if then else expression
--/
-def iteE (length : Q(Nat)) (left : Q(Nat)) (right : Q(Nat)) (ifTrue : Expr) (ifFalse : Expr) : Expr :=
-  ((((((Expr.const `ite [Level.zero.succ]).app (.app (.const ``BitVec []) length)).app
-                (eqE left right)).app
-            (((Expr.const `instDecidableEqNat []).app left).app right)).app
-        ifTrue).app
-    ifFalse)
-
-/--
-Helper function to construct a function expression
--/
-def funE (length : Q(Nat)) (body : Q(BitStream)) : Q(Nat → BitStream):=
-  (Expr.lam `n (Expr.const `Nat [])
-    (((Expr.const `BitStream.ofBitVec []).app
-          length).app
-      body)
-    BinderInfo.default)
 
 /--
 Introduce vars which maps variable ids to the variable values.
@@ -241,10 +215,20 @@ def introduceMapIndexToFVar : TacticM Unit := do withMainContext <| do
       let length : Expr := a
       let hypValue : Expr  := fVars.foldl (fun (accumulator : Expr) (currentFVar : FVarId) =>
         let quotedCurrentFVar : Expr := .fvar currentFVar
-        let fVarId : Expr := quoteFVar currentFVar
-        iteE length lastBVar fVarId quotedCurrentFVar accumulator
+        let fVarId : Q(Nat) := quoteFVar currentFVar
+        let eqE : Q(Prop)  := q($lastBVar = $fVarId);
+        ((((((Expr.const `ite [Level.zero.succ]).app (.app (.const ``BitVec []) length)).app
+                        eqE).app
+                    (((Expr.const ``instDecidableEqNat []).app lastBVar).app fVarId)).app
+                quotedCurrentFVar).app
+            accumulator)
         ) (.fvar last)
-      let mapIndexToFVar : Expr := funE length hypValue
+      let mapIndexToFVar : Q(Nat → BitStream):=
+        (Expr.lam `n (Expr.const `Nat [])
+          (((Expr.const `BitStream.ofBitVec []).app
+                length).app
+            hypValue)
+          BinderInfo.default)
       let newGoal : MVarId ← goal.define `vars mapIndexToFVarType mapIndexToFVar
       replaceMainGoal [newGoal]
     | _ => throwError "Goal is not of the expected form"
@@ -262,12 +246,10 @@ macro "bv_automata" : tactic =>
     BitStream.ofBitVec_not,
     BitStream.ofBitVec_xor,
     BitStream.ofBitVec_and,
-    BitStream.ofBitVec_not,
     BitStream.ofBitVec_or,
   ]
   introduceMapIndexToFVar
   intro mapIndexToFVar
-
   simp only [
     ← eval_sub,
     ← eval_add,

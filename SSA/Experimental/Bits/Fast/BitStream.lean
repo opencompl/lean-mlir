@@ -377,10 +377,17 @@ local notation a " ≈  " b  => EqualUpTo w a b
 
 @[simp] theorem ofBitVec_sub2 : ofBitVec (x - y) ≈ (ofBitVec x) - (ofBitVec y)  := sorry
 
+theorem eq_ofBitVec (e : a ≈ b) : toBitVec w a = toBitVec w b := by
+  sorry
+
+theorem eq_toBitVec (e  : toBitVec w a = toBitVec w b) : a ≈ b := by
+  sorry
+
 @[simp] theorem ofBitVec_add2 : ofBitVec (x + y) ≈ (ofBitVec x) + (ofBitVec y)  := sorry
 
-@[simp] theorem ofBitVec_neg2 : ofBitVec (- x) ≈  - (ofBitVec x) := sorry
-
+@[simp] theorem ofBitVec_neg2 : ofBitVec (- x) ≈  - (ofBitVec x) := by
+  intros n a
+  sorry
 
 theorem equal_up_to_refl  : a ≈ a := by
   intros  j _
@@ -390,30 +397,41 @@ theorem equal_up_to_symm (e : a ≈ b)  : b ≈ a := by
   intros j h
   symm
   exact e j h
+
 theorem equal_up_to_trans (e1 : a ≈ b) (e2 : b ≈ c) : a ≈ c := by
-  intros  j h
+  intros j h
   trans (b j)
   exact e1 j h
   exact e2 j h
 
+theorem sub_congr  (e1 : a ≈ b) (e2 : c  ≈ d) : (a - c) ≈ (b - d) := by
+  intros n h
+  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
+    induction n
+    simp only [subAux, Prod.mk.injEq, (e1 0 h),(e2 0 h), and_self]
+    rename_i n ih
+    simp only [subAux, Prod.mk.injEq]
+    simp only [(ih (by omega)), Bool.bne_right_inj, (e1 (n + 1) h),(e2 (n + 1) h), and_self]
+  simp only [HSub.hSub, Sub.sub, BitStream.sub, (sub_congr_lemma)]
 
-theorem sub_congr  (e1 : a ≈ b) (e2 : c  ≈ d) : (a - c) ≈ (b - d) := sorry
-
-theorem add_congr  (e1 : a ≈ b) (e2 : c  ≈ d) : (a + c) ≈ (b + d) := sorry
-
-lemma neg_congr_lemma  (e1 : a ≈ b)  (n : Nat) (h : n < w) : a.negAux n = b.negAux n := by
-  induction n
-  simp only [negAux, Prod.mk.injEq, (e1 0 h), and_self]
-  rename_i n ih
-  simp only [negAux, Prod.mk.injEq]
-  have  ff : n < w := by omega
-  simp only [(ih ff), Bool.bne_right_inj, (e1 (n + 1) h), and_self]
+theorem add_congr  (e1 : a ≈ b) (e2 : c  ≈ d) : (a + c) ≈ (b + d) := by
+  intros n h
+  have add_congr_lemma : a.addAux c n = b.addAux d n := by
+    induction n
+    simp only [addAux, Prod.mk.injEq, (e1 0 h),(e2 0 h), and_self]
+    rename_i n ih
+    simp only [addAux, Prod.mk.injEq]
+    simp only [(ih (by omega)), Bool.bne_right_inj, (e1 (n + 1) h),(e2 (n + 1) h), and_self]
+  simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
 
 theorem neg_congr  (e1 : a ≈ b)  : (-a) ≈ -b := by
-  intros g h
-  have := neg_congr_lemma e1 g h
-  simp only [Neg.neg, BitStream.neg, this]
-
+  intros n h
+  have neg_congr_lemma : a.negAux n = b.negAux n := by
+    induction n
+    all_goals simp only [negAux, Prod.mk.injEq, (e1 _ h), and_self]
+    rename_i n ih
+    simp only [(ih (by omega)), Bool.bne_right_inj, (e1 (n + 1) h), and_self]
+  simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
 theorem not_congr  (e1 : a ≈ b)  : (~~~a) ≈ ~~~b := by
   intros g h
