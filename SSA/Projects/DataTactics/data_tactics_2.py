@@ -11,7 +11,7 @@ def main():
     print(files)
     analyze_files(
         file_paths = files, #["SSA/Projects/InstCombine/HackersDelight.lean"],
-        tactics = [ "data_bitwise", "data_ring", "data_automata"], # Tactics.automata
+        tactics = [ "data_bitwise", "data_ring", "data_automata", "data_automata_or_ring"], # Tactics.automata
         summary_file = "summary.xlsx",
         output_file = "output.xlsx",
     )

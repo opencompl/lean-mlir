@@ -340,13 +340,24 @@ macro "data_ofbool": tactic =>
       )
    )
 
+
+macro "data_automata_or_ring": tactic =>
+  `(tactic|(
+    try data_automata
+    all_goals (data_ring)
+  ))
 end BitVec.Tactic
 
 open BitVec.Tactic
 -- example :x✝
+-- example (x y : BitVec w) : x + ((x ^^^ y) ||| y) = x := by
+--   data_automata_or_ring
+
 -- example (x y : BitVec w) : x + ((x * y) ||| y) = x := by
---   bitvec_assert_automata
---   sorry
+--   data_automata_or_ring
+
+-- example (x y : BitVec w) : x + x = 2 * x := by
+  -- data_automata_or_ring
 -- theorem extracted_1 {w : Nat} (x x_1 x_2 : BitVec w) :
 --   (((x_2.and x_1).xor x_1).add 1#w).add x = x.sub (x_2.or x_1.not) := by
 --   --  intros
