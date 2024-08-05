@@ -578,7 +578,7 @@ dialect-attribute-contents ::= dialect-attribute-body
 syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
 syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
 syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents
-syntax "#" ident "<" sepBy(mlir_attr_val, ",")  ">" : mlir_attr_val
+syntax "#" ident "<" mlir_attr_val,*  ">" : mlir_attr_val
 -- If I un-comment this line, it causes an error. I don't know why. Oh well.
 -- syntax "#" ident "<" ident ">" : mlir_attr_val
 -- syntax "#" ident "<" strLit ">" : mlir_attr_val

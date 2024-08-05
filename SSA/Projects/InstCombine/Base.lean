@@ -102,45 +102,36 @@ inductive MOp.BinaryOp : Type
   | sdiv
   | udiv
 deriving DecidableEq, Inhabited
-/-- Homogeneous, binary operations without flags -/
-inductive BinaryOpWithoutFlags : Type
-  | and
-  | or
-  | xor
-  | shl
-  | lshr
-  | ashr
-  | urem
-  | srem
-  | add
-  | mul
-  | sub
-  | sdiv
-  | udiv
-deriving Repr, DecidableEq, Inhabited
 
+open Std (Format) in
 /--
-The reason that I am using the admittedly hacky and ad-hoc method is that I want to preserve the guard_msgs statements, otherwise the build will fail.
-But the default Repr instance has some fancy behavior where depending on the indentation it will sometimes wrap in parentheses.
-I think the only way to replicate this behavior is to have another class and piggy-back off its default Repr class
+If both the nuw and nsw flags are the default value (false,false),
+then we should not print them. This should be the default
+behavior in Lean, but it isn't
 -/
-def BinaryOpRemoveFlags : MOp.BinaryOp → BinaryOpWithoutFlags
-  | .and => BinaryOpWithoutFlags.and
-  | .or => BinaryOpWithoutFlags.or
-  | .xor => BinaryOpWithoutFlags.xor
-  | .shl => BinaryOpWithoutFlags.shl
-  | .lshr => BinaryOpWithoutFlags.lshr
-  | .ashr => BinaryOpWithoutFlags.ashr
-  | .urem => BinaryOpWithoutFlags.urem
-  | .srem => BinaryOpWithoutFlags.srem
-  | .add _ => BinaryOpWithoutFlags.add
-  | .mul =>  BinaryOpWithoutFlags.mul
-  | .sub => BinaryOpWithoutFlags.sub
-  | .sdiv => BinaryOpWithoutFlags.sdiv
-  | .udiv => BinaryOpWithoutFlags.udiv
+def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
+  let op  : String := match op with
+    | .and    => "and"
+    | .or     => "or"
+    | .xor    => "xor"
+    | .shl    => "shl"
+    | .lshr   => "lshr"
+    | .ashr   => "ashr"
+    | .urem   => "urem"
+    | .srem   => "srem"
+    | .add ⟨false , false ⟩   => "add"
+    | .add ⟨nsw , nuw ⟩   => toString f!"add {nsw} {nuw}"
+    | .mul    => "mul"
+    | .sub    => "sub"
+    | .sdiv   => "sdiv"
+    | .udiv   => "udiv"
+  Repr.addAppParen (Format.group (Format.nest
+    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    prec
 
 instance : Repr (MOp.BinaryOp) where
-  reprPrec op w := ((toString (reprPrec (BinaryOpRemoveFlags op) w)).replace "InstCombine.BinaryOpWithoutFlags" "InstCombine.MOp.BinaryOp").replace "false" ""
+  reprPrec := reprWithoutFlags
+
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
   | unary   (w : Width φ) (op : MOp.UnaryOp) :  MOp φ
@@ -165,12 +156,16 @@ namespace MOp
 @[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
-@[match_pattern] def add    (w : Width φ) (additionFlags: AdditionFlags := {nsw := false , nuw := false}) : MOp φ := .binary w (.add  additionFlags )
+
 @[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
 @[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
 @[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
 @[match_pattern] def udiv   (w : Width φ) : MOp φ := .binary w .udiv
 
+/-- this definition is off by itself because it is different-/
+@[match_pattern] def add    (w : Width φ)
+    (additionFlags: AdditionFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.add  additionFlags )
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg  : ∀ {φ} {w : Width φ}, motive (neg  w))

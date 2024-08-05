@@ -122,7 +122,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
+  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, Option.some_bind]
   cases w
   case zero =>
     intros x
@@ -231,7 +231,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
+  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, Option.some_bind]
   intros a
   simp_alive_ops
   simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,

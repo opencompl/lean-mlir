@@ -80,13 +80,7 @@ theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 structure AdditionFlags where
   nsw : Bool := false
   nuw : Bool := false
-  deriving DecidableEq
-
-/-- Does the signed addition x + y overflow? -/
-def AddSignedWraps? (x y : BitVec w) : Bool := (x.toInt + y.toInt) < -(2^(w-1)) ∨ (x.toInt + y.toInt) ≥ 2^w
-
-/-- Does the unsigned addition x + y overflow? -/
-def AddUnSignedWraps? (x y : BitVec w) : Bool := (x.toNat + y.toNat) ≥ 2^w
+  deriving Repr, DecidableEq
 
 @[simp_llvm_option]
 def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw := false}) : IntW w := do
@@ -94,16 +88,13 @@ def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw :
   let y' ← y
   let nsw := flags.nsw
   let nuw := flags.nuw
-  if (nsw ∧  AddSignedWraps? x' y') ∨ (nuw ∧  AddUnSignedWraps? x' y') then
+  let AddSignedWraps? : Prop := nsw ∧
+    ((x'.toInt + y'.toInt) < -(2^(w-1)) ∨ (x'.toInt + y'.toInt) ≥ 2^w)
+  let AddUnsignedWraps? : Prop := nuw ∧ ((x'.toNat + y'.toNat) ≥ 2^w)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
     none
   else
     add? x' y'
-
-@[simp]
-theorem add_reduce (x y : IntW w) : add x y = match x, y with
-  | none , _ => none
-  | _ , none => none
-  | some a , some b => .some (a + b) := by cases x <;> cases y <;> (simp ; rfl)
 
 /--
 The value produced is the integer difference of the two operands.
