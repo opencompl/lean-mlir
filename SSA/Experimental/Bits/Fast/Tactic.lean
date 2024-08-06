@@ -1,5 +1,5 @@
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs
-import SSA.Experimental.Bits.Fast.FiniteStateMachine
+-- import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
 import SSA.Experimental.Bits.Lemmas
@@ -80,7 +80,7 @@ def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (Bi
   exact incrBit w n
 
 
-def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq (BitStream) (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
+def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq BitStream (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
 
 /--
 Simplify BitStream.ofBitVec x where x is an FVar.
@@ -273,6 +273,7 @@ macro "bv_automata" : tactic =>
 # Test Cases
 -/
 
+
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
 
@@ -291,7 +292,7 @@ def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
 def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
   bv_automata
 
-def test5 (x y : BitVec 2) : (x + y) = (y + x) := by
+def test5 (x y z : BitVec 2) : (x + y + z) = (z + y + x) := by
   bv_automata
 
 def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
