@@ -178,16 +178,6 @@ theorem and_ule_min :
   try alive_auto
   all_goals sorry
 
-theorem xor_ule_or :
-    x ^^^ y ≤ᵤ x ||| y := by
-  try alive_auto
-  all_goals sorry
-
-theorem and_ule_not_xor :
-    x &&& y ≤ᵤ ~~~(x ^^^ y) := by
-  try alive_auto
-  all_goals sorry
-
 def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
 
 theorem or_ule_add  (h : AdditionNoOverflows? x y) :
