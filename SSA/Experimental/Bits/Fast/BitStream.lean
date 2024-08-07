@@ -432,8 +432,23 @@ theorem getLsb_add {w : Nat} {i : Nat} (i_lt : i < w) (x : BitVec w) :
   simp only [HAdd.hAdd, BitStream.add, Add.add]
   rw [← add_lemma]
   simp only [ofBitVec,a,↓reduceIte]
+
+@[simp] theorem ofBitVec_neg4 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  intros n a
+  induction n
+
+  sorry
+  rename_i n ih
+  have ihg  := ih (by omega)
+  unfold ofBitVec
+  simp [a]
+  -- simp [Neg.neg]
+  unfold Neg.neg
+  simp [instNeg, neg, negAux,a]
+  sorry
 @[simp] theorem ofBitVec_neg3 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
   intros n a
+
   have neg_lemma  : ⟨ x.neg.getLsb (n) ,  !x.getLsb (n)  ⟩  = (ofBitVec x).negAux n := by
     induction n
     simp only [BitVec.getLsb, BitVec.neg_eq, BitVec.toNat_neg, Nat.testBit_zero, zero_add, negAux, ofBitVec, a, ↓reduceIte, Prod.mk.injEq, decide_eq_decide]
@@ -441,7 +456,7 @@ theorem getLsb_add {w : Nat} {i : Nat} (i_lt : i < w) (x : BitVec w) :
     -- omega
     -- rw [Int.sub_emod]
     -- omega
-    -- easy, chil
+
     sorry
 
     sorry
@@ -465,14 +480,110 @@ theorem getLsb_add {w : Nat} {i : Nat} (i_lt : i < w) (x : BitVec w) :
   rw [← neg_lemma]
   simp only [ofBitVec,a,↓reduceIte]
 
+
+
+@[simp]
+def f {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
+  | Nat.zero => !x.getLsb 0
+  | Nat.succ y => !x.getLsb (Nat.succ y) && f x y
+
+
+@[simp]
+def f2 {w : Nat} (x : BitVec w) (n : Nat) : Bool := (-x).toNat % 2^ (n + 1) < 2^(n)
+-- def
+theorem stuff {w : Nat} (x : BitVec w) (n : Nat) : (-x).getLsb (n + 1) = xor (!x.getLsb (n + 1)) (f2 x n) := by
+  rw [BitVec.neg_eq_not_add]
+  rw [BitVec.getLsb_add sorry]
+  rw [BitVec.getLsb_not]
+  simp
+  induction n
+  simp [f]
+  -- simp [Neg.neg]
+  -- unfold Neg.neg
+  -- unfold  BitVec.instNeg
+  -- unfold BitVec.neg
+  simp [BitVec.getLsb, ← decide_not, ← Bool.decide_and, BitVec.carry, Bool.xor, xor]
+  congr
+
+  sorry
+
+  sorry
+  rename_i n ih
+  -- simp [f2]
+  congr
+
+  sorry
+  sorry
+
+-- theorem Bool.xor_comm (a b  : Bool) : a.xor b = b.xor a := by sorry
+theorem neg_bit {w : Nat}  (x  : BitVec w) :  (-x).getLsb 0 = x.getLsb 0 := by
+  by_cases 0 < w
+  all_goals (rename_i c )
+  rw [BitVec.neg_eq_not_add]
+  rw [BitVec.getLsb_add c]
+  rw [BitVec.getLsb_not]
+  simp
+  simp [Bool.xor_comm]
+  simp [c]
+  have : w = 0 := by omega
+  simp [this]
+
+@[simp] theorem ofBitVec_neg5 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  intros n a
+  have neg_lemma  : ⟨ x.neg.getLsb n , f2 x n ⟩  = (ofBitVec x).negAux n := by
+    induction n
+    simp [negAux]
+    constructor
+    all_goals simp [ofBitVec,a]
+    exact neg_bit x
+    sorry
+    rename_i n ih
+    have ihg := ih (by omega)
+    unfold negAux
+    simp [← ihg]
+    constructor
+    simp [ofBitVec, a]
+    exact stuff x n
+    congr
+    simp [ofBitVec,a]
+    sorry
+  simp only [Neg.neg]
+  simp only [BitStream.neg]
+  rw [← neg_lemma]
+  simp only [ofBitVec,a,↓reduceIte]
+@[simp] theorem ofBitVec_neg6 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  intros n a
+  rw [BitVec.neg_eq_not_add]
+  simp [ofBitVec,a]
+  rw [BitVec.getLsb_add a]
+  rw [BitVec.getLsb_not]
+  simp only [Neg.neg]
+  simp [BitStream.neg,a]
+  -- rw [← neg_lemma]
+  sorry
+  -- simp only [ofBitVec,a,↓reduceIte]
+
+
+
+
+
+
+
 @[simp] theorem ofBitVec_neg2 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
   intros n a
-  have neg_lemma  : ⟨ x.neg.getLsb n , !x.getLsb (n)  ⟩  = (ofBitVec x).negAux n := by
+  --Bool.xor (!(x.getLsb (n))) (sorryAx (Nat → Bool) false n)
+  have neg_lemma  : ⟨ x.neg.getLsb n , Bool.xor (!(x.getLsb (n))) ( Bool.xor (!(x.getLsb (n + 1))) (x.neg.getLsb (n + 1))) ⟩  = (ofBitVec x).negAux n := by
     induction n
     simp only [BitVec.getLsb, BitVec.neg_eq, BitVec.toNat_neg, Nat.testBit_zero, zero_add, negAux, ofBitVec, a, ↓reduceIte, Prod.mk.injEq, decide_eq_decide]
     constructor
+
     sorry
-    trivial
+    unfold Nat.testBit
+    simp
+    -- simp
+
+    -- trivial
+    sorry
     rename_i n ih
     have ihg := ih (by omega)
     unfold negAux
@@ -483,7 +594,12 @@ theorem getLsb_add {w : Nat} {i : Nat} (i_lt : i < w) (x : BitVec w) :
     rw [← ihg]
     simp
     constructor
+
+    simp [BitVec.getLsb  , Nat.testBit, a]
+
     sorry
+
+    -- simp [a]
     sorry
   simp only [Neg.neg]
   simp only [BitStream.neg]
@@ -512,7 +628,7 @@ theorem sub_congr  (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) :=
     <;> simp only [subAux, Prod.mk.injEq, subAux, Prod.mk.injEq, (e1 _ h),(e2 _ h), and_self]
     rename_i _ ih
     simp only [(ih (by omega)), and_self]
-  simp only [HSub.hSub, Sub.sub, BitStream.sub, (sub_congr_lemma)]
+  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
 
 theorem add_congr  (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
@@ -535,9 +651,8 @@ theorem neg_congr  (e1 : a ≈ʷ b)  : (-a) ≈ʷ -b := by
 
 theorem not_congr  (e1 : a ≈ʷ b)  : (~~~a) ≈ʷ ~~~b := by
   intros g h
-  simp only [not_eq]
-  congr
-  exact e1 g h
+  simp only [not_eq,e1 g h]
+
 
 theorem equal_trans  (e1 :  a ≈ʷ b) (e2 : c ≈ʷ d)  : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
