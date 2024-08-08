@@ -556,7 +556,8 @@ syntax "#" strLit : mlir_attr_val -- alias
 declare_syntax_cat dialect_attribute_contents
 syntax mlir_attr_val : dialect_attribute_contents
 /--
-I got this from https://mlir.llvm.org/docs/LangRef/
+Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`, 
+which is a particular case of an `mlir-attr-val` that is namespaced to a particular dialect
 
 ```bnf
 dialect-namespace ::= bare-id
