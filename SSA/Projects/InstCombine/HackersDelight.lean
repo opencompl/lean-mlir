@@ -143,13 +143,13 @@ theorem and_ule_not_xor :
     x &&& y ≤ᵤ ~~~(x ^^^ y) := by
   sorry
 
-def additionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
+def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
 
-theorem or_ule_add  (h : additionNoOverflows? x y) :
+theorem or_ule_add  (h : AdditionNoOverflows? x y) :
     x ||| y ≤ᵤ x + y := by
   sorry
 
-theorem add_ult_or (h : ¬additionNoOverflows? x y) :
+theorem add_ult_or (h : ¬AdditionNoOverflows? x y) :
     (x + y <ᵤ x ||| y) := by
   sorry
 
@@ -305,57 +305,57 @@ theorem sle_iff_adc_two_pow_sub_neg_add_two_pow_sub :
   sorry
 
 theorem add_iff_not_ult :
-    additionNoOverflows? x y ↔ ~~~ x <ᵤ y := by
+    AdditionNoOverflows? x y ↔ ~~~ x <ᵤ y := by
   sorry
 
 theorem add_iff_add_ult :
-    additionNoOverflows? x y ↔ x + y <ᵤ x := by
+    AdditionNoOverflows? x y ↔ x + y <ᵤ x := by
   sorry
 
 theorem add_add_iff_not_ule :
-    additionNoOverflows? x (y + 1) ↔ ~~~ x ≤ᵤ y := by
+    AdditionNoOverflows? x (y + 1) ↔ ~~~ x ≤ᵤ y := by
   sorry
 
 theorem add_add_iff_add_add_ule :
-    additionNoOverflows? x (y + 1) ↔ x + y + 1 ≤ᵤ x := by
+    AdditionNoOverflows? x (y + 1) ↔ x + y + 1 ≤ᵤ x := by
   sorry
 
 theorem add_not_add_iff_ult :
-    additionNoOverflows? x (~~~ y + 1) ↔ x <ᵤ y := by
+    AdditionNoOverflows? x (~~~ y + 1) ↔ x <ᵤ y := by
   sorry
 
 theorem add_not_add_iff_ult_sub :
-    additionNoOverflows? x (~~~ y + 1) ↔ x <ᵤ x - y := by
+    AdditionNoOverflows? x (~~~ y + 1) ↔ x <ᵤ x - y := by
   sorry
 
 theorem add_not_iff_ult :
-    additionNoOverflows? x (~~~ y) ↔ x ≤ᵤ y := by
+    AdditionNoOverflows? x (~~~ y) ↔ x ≤ᵤ y := by
   sorry
 
 theorem add_not_iff_ule_sub_sub :
-    additionNoOverflows? x (~~~ y) ↔ x ≤ᵤ x - y - 1 := by
+    AdditionNoOverflows? x (~~~ y) ↔ x ≤ᵤ x - y - 1 := by
   sorry
 
-def unsignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toNat * y.toNat > 2 ^ w
-def signedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toInt * y.toInt > 2 ^ (w - 1)
+def UnsignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toNat * y.toNat > 2 ^ w
+def SignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toInt * y.toInt > 2 ^ (w - 1)
 
 def last32Bits (x : BitVec 64) : BitVec 32 := BitVec.ofNat 32 x.toNat
 def first32Bits (x : BitVec 64) : BitVec 32 := BitVec.ofNat 32 (x >>> 32).toNat
 
 theorem unsigned_mul_overflow_iff_mul_neq_zero {x y : BitVec 64} :
-    unsignedMultiplicationOverflows? x y ↔ first32Bits (x * y) ≠ BitVec.ofNat 32 0 := by
+    UnsignedMultiplicationOverflows? x y ↔ first32Bits (x * y) ≠ BitVec.ofNat 32 0 := by
   sorry
 
 theorem signed_mul_overflow_iff_mul_neq_mul_RightShift {x y : BitVec 64} :
-    signedMultiplicationOverflows? x y ↔ first32Bits (x * y) ≠ last32Bits (x * y) >>> 31 := by
+    SignedMultiplicationOverflows? x y ↔ first32Bits (x * y) ≠ last32Bits (x * y) >>> 31 := by
   sorry
 
 theorem mul_div_neq_imp_unsigned_mul_overflow (h : y.toNat ≠ 0) :
-    (x * y) / z ≠ x → unsignedMultiplicationOverflows? x y := by
+    (x * y) / z ≠ x → UnsignedMultiplicationOverflows? x y := by
   sorry
 
 theorem lt_and_eq_neg_pow_two_or_mul_div_neq_imp_unsigned_mul_overflow (h : y.toNat ≠ 0) :
-    (y < 0) ∧ (x.toInt = - 2 ^ 31) ∨ ((x * y) / z ≠ x) → signedMultiplicationOverflows? x y := by
+    (y < 0) ∧ (x.toInt = - 2 ^ 31) ∨ ((x * y) / z ≠ x) → SignedMultiplicationOverflows? x y := by
   sorry
 
 def numberOfLeadingZeros {w : Nat} (x : BitVec w) : Nat :=
@@ -366,25 +366,25 @@ def numberOfLeadingZeros {w : Nat} (x : BitVec w) : Nat :=
   countLeadingZeros w 0
 
 theorem le_nlz_add_nlz_not_unsigned_mul_overflow {x y : BitVec 64} :
-    32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y ↔ ¬ unsignedMultiplicationOverflows? x y := by
+    32 ≤ numberOfLeadingZeros x + numberOfLeadingZeros y ↔ ¬ UnsignedMultiplicationOverflows? x y := by
   sorry
 
 theorem nlz_add_nlz_le_unsigned_mul_overflow {x y : BitVec 64} :
-    numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 ↔ unsignedMultiplicationOverflows? x y := by
+    numberOfLeadingZeros x + numberOfLeadingZeros y ≤ 30 ↔ UnsignedMultiplicationOverflows? x y := by
   sorry
 
-def signedDivisionOverflows? (x y : BitVec w) : Prop := y = 0 ∨ w ≠ 1 ∧ x = (2 ^ (w - 1)) ∧ y = -1
+def SignedDivisionOverflows?? (x y : BitVec w) : Prop := y = 0 ∨ w ≠ 1 ∧ x = (2 ^ (w - 1)) ∧ y = -1
 
 theorem div_overflow_iff_eq_zero_or_eq_neg_pow_two_and_eq_neg :
-    signedDivisionOverflows? x y ↔ y = 0 ∨ ((x.toInt = -2 ^ 31) ∧ y = -1) := by
+    SignedDivisionOverflows?? x y ↔ y = 0 ∨ ((x.toInt = -2 ^ 31) ∧ y = -1) := by
   sorry
 
 theorem div_overflow_iff_neq_and_ult_LeftShift {x : BitVec 64} {y : BitVec 32} :
-    signedDivisionOverflows? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ x < ((y.zeroExtend 64) <<< 32) := by
+    SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ x < ((y.zeroExtend 64) <<< 32) := by
   sorry
 
 theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32} :
-    signedDivisionOverflows? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ (x >>> 32) < (y.zeroExtend 64) := by
+    SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ (x >>> 32) < (y.zeroExtend 64) := by
   sorry
 
 end Ch2Basics
