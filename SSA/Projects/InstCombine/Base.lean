@@ -120,7 +120,7 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .urem   => "urem"
     | .srem   => "srem"
     | .add ⟨false, false⟩ => "add"
-    | .add ⟨nsw, nuw ⟩    => toString f!"add {nsw} {nuw}"
+    | .add ⟨nsw, nuw⟩    => toString f!"add {nsw} {nuw}"
     | .mul    => "mul"
     | .sub    => "sub"
     | .sdiv   => "sdiv"
@@ -162,10 +162,11 @@ namespace MOp
 @[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
 @[match_pattern] def udiv   (w : Width φ) : MOp φ := .binary w .udiv
 
-/-- this definition is off by itself because it is different-/
+/- This definition is off by itself because it is different-/
 @[match_pattern] def add    (w : Width φ)
     (additionFlags: AdditionFlags := {nsw := false , nuw := false}) : MOp φ
       := .binary w (.add  additionFlags )
+
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (neg  : ∀ {φ} {w : Width φ}, motive (neg  w))
@@ -260,7 +261,7 @@ namespace Op
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
 
-/-- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
+/- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
 @[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 
