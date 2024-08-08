@@ -134,7 +134,7 @@ def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
       let myInst : Q(HSub BitStream BitStream BitStream) := q(instHSub)
       return ⟨
         (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
-        .app (.app (.app (.const ``BitStream.ofBitVec_sub2 []) w) a ) b
+        .app (.app (.app (.const ``BitStream.ofBitVec_sub []) w) a ) b
       ⟩
     | .app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd _) _) _) _ ) _ ) a) b => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -147,7 +147,7 @@ def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
       let myInst : Q(HAdd BitStream BitStream BitStream) := q(instHAdd)
       return ⟨
         (.app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
-        .app (.app (.app (.const ``BitStream.ofBitVec_add2 []) w) a ) b
+        .app (.app (.app (.const ``BitStream.ofBitVec_add []) w) a ) b
       ⟩
     | .app (.app (.app (.const ``Neg.neg [])  _ ) _ ) a => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -159,7 +159,7 @@ def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
       let myExpr : Q(BitStream → BitStream) := q(Neg.neg)
       return ⟨
         .app myExpr (.app (.app (.const ``BitStream.ofBitVec []) w)  a)    ,
-        .app (.app (.const ``BitStream.ofBitVec_neg2 []) w) a
+        .app (.app (.const ``BitStream.ofBitVec_neg []) w) a
       ⟩
     | .app (.app (.app (.const ``Complement.complement _) _ ) _ ) a => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
