@@ -374,6 +374,7 @@ variable {w : Nat} { x y : BitVec w} {a b a' b' : BitStream}
 
 local notation a " ≈ʷ  " b  => EqualUpTo w a b
 
+-- TODO: These sorries are difficult, and will be proven in a later Pull Request.
 @[simp] theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
