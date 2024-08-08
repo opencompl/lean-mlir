@@ -77,11 +77,24 @@ def add? {w : Nat} (x y : BitVec w) : IntW w :=
 @[simp_llvm_option]
 theorem add?_eq : LLVM.add? a b  = .some (BitVec.add a b) := rfl
 
+structure AdditionFlags where
+  nsw : Bool := false
+  nuw : Bool := false
+  deriving Repr, DecidableEq
+
 @[simp_llvm_option]
-def add {w : Nat} (x y : IntW w) : IntW w := do
+def add {w : Nat} (x y : IntW w) (flags : AdditionFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  add? x' y'
+  let nsw := flags.nsw
+  let nuw := flags.nuw
+  let AddSignedWraps? : Prop := nsw ∧
+    ((x'.toInt + y'.toInt) < -(2^(w-1)) ∨ (x'.toInt + y'.toInt) ≥ 2^w)
+  let AddUnsignedWraps? : Prop := nuw ∧ ((x'.toNat + y'.toNat) ≥ 2^w)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+    none
+  else
+    add? x' y'
 
 /--
 The value produced is the integer difference of the two operands.

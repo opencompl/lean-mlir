@@ -122,7 +122,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
+  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, Option.some_bind]
   cases w
   case zero =>
     intros x
@@ -231,7 +231,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_case_bash
-  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq]
+  simp only [ofInt_ofNat, add_eq, LLVM.icmp?_ult_eq, false_and, false_or, ite_false, Option.some_bind]
   intros a
   simp_alive_ops
   simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,
@@ -422,7 +422,10 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   rcases x with rfl | x <;> try (simp; done)
   simp_alive_ops
   by_cases h : BitVec.toNat c2 ≥ w <;>
-    simp [h, ushr_xor_distrib, xor_assoc]
+    simp only [xor_eq, ge_iff_le, EffectKind.return_impure_toMonad_eq,
+      Option.pure_def, Option.bind_eq_bind, Option.some_bind, h, ↓reduceIte, Option.none_bind,
+      Option.bind_none, Refinement.refl, Refinement.some_some]
+  simp only [ushr_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/

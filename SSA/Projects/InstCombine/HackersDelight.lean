@@ -2,6 +2,7 @@ import Init.Data.BitVec.Basic
 import Init.Data.BitVec.Lemmas
 import Init.Data.BitVec.Bitblast
 import SSA.Projects.InstCombine.ForMathlib
+import SSA.Projects.InstCombine.ForStd
 import Init.Data.Nat.Bitwise.Basic
 import Init.Data.Nat.Bitwise.Lemmas
 
@@ -134,22 +135,26 @@ theorem and_eq_not_or_sub_not :
     x &&& y = (~~~ x ||| y) - ~~~ x := by
   sorry
 
-theorem xor_le_or :
-    x ^^^ y ≤ x ||| y := by
+theorem xor_ule_or :
+    x ^^^ y ≤ᵤ x ||| y := by
   sorry
 
-theorem and_le_not_xor :
-    x &&& y ≤ ~~~(x ^^^ y) := by
+theorem and_ule_not_xor :
+    x &&& y ≤ᵤ ~~~(x ^^^ y) := by
   sorry
 
 def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
 
-theorem or_le_add  (h : AdditionNoOverflows? x y) :
-    x ||| y ≤ x + y := by
+theorem or_ule_add  (h : AdditionNoOverflows? x y) :
+    x ||| y ≤ᵤ x + y := by
   sorry
 
-theorem add_lt_or (h : ¬AdditionNoOverflows? x y) :
-    x + y < x ||| y := by
+theorem add_ult_or (h : ¬AdditionNoOverflows? x y) :
+    (x + y <ᵤ x ||| y) := by
+  sorry
+
+theorem sub_abs_ule_xor :
+    (x - y).abs ≤ᵤ x ^^^ y := by
   sorry
 
 theorem eq_iff_abs_sub_sub :
@@ -164,16 +169,139 @@ theorem neq_iff_sub_or_sub :
     x ≠ y ↔ (x - y ||| y - x).getMsb 0 := by
   sorry
 
+theorem neq_iff_neg_sub_abs :
+    x ≠ y ↔ (-(x - y).abs).getMsb 0 := by
+  sorry
+
 theorem lt_iff_sub_xor_xor_and_sub_xor :
-    x < y ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
+    (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
   sorry
 
-theorem lt_iff_and_not_or_not_xor_and_sub :
-    x < y ↔ ((x &&& ~~~ y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
+theorem slt_iff_and_not_or_not_xor_and_sub :
+    (x <ₛ y) ↔ ((x &&& ~~~ y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
   sorry
 
-theorem le_iff_or_not_and_xor_or_not_sub :
-    x ≤ y ↔ ((x ||| ~~~ y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+theorem sle_iff_or_not_and_xor_or_not_sub :
+    (x ≤ₛ y) ↔ ((x ||| ~~~ y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+  sorry
+
+theorem ult_iff_not_and_or_not_xor_and_sub :
+    (x <ᵤ y) ↔ ((~~~ x &&& y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
+  sorry
+
+theorem ule_iff_not_or_and_xor_or_not_sub :
+    (x ≤ᵤ y) ↔ ((~~~ x ||| y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+  sorry
+
+theorem eq_zero_iff_abs_sub :
+    x = 0 ↔ (x.abs - 1).getMsb 0 := by
+  sorry
+
+theorem eq_zero_iff_not_or_sub :
+    x = 0 ↔ (~~~ (x ||| -x)).getMsb 0 := by
+  sorry
+
+theorem eq_zero_iff_not_and_sub :
+    x = 0 ↔ (~~~ x &&& x - 1).getMsb 0 := by
+  sorry
+
+theorem neq_zero_iff_or_neg :
+    x ≠ 0 ↔ (x ||| -x).getMsb 0 := by
+  sorry
+
+theorem neq_zero_iff_neg_abs :
+    x ≠ 0 ↔ (-(x.abs)).getMsb 0 := by
+  sorry
+
+theorem slt_zero_iff :
+    (x <ₛ 0) ↔ x.getMsb 0 := by
+  sorry
+
+theorem sle_zero_iff_or_sub_one :
+    (x ≤ₛ 0) ↔ (x ||| (x - 1)).getMsb 0 := by
+  sorry
+
+theorem sle_zero_iff_or_not_sub :
+    (x ≤ₛ 0) ↔ (x ||| ~~~ (-x)).getMsb 0 := by
+  sorry
+
+theorem zero_slt_iff_neg_and_not :
+    (0 <ₛ x) ↔ (-x &&& ~~~ x).getMsb 0 := by
+  sorry
+
+theorem zero_sle_iff_neg_and_not :
+    (0 ≤ₛ x) ↔ (~~~ x).getMsb 0 := by
+  sorry
+
+theorem slt_iff_add_two_pow_ult_add_two_pow :
+    (x <ₛ y) ↔ (x + 2 ^ (w - 1) <ₛ y + 2 ^ (w - 1)) := by
+  sorry
+
+theorem ult_iff_sub_two_pow_ult_sub_two_pow :
+    (x <ᵤ y) ↔ (x - 2 ^ (w - 1) <ₛ y - 2 ^ (w - 1)) := by
+  sorry
+
+theorem slt_iff_not_add_two_pow_ule_add_two_pow :
+    (x <ₛ y) ↔ ¬ ((y + 2 ^ (w - 1)) ≤ᵤ (x + 2 ^ (w - 1))) := by
+  sorry
+
+theorem sle_iff_add_two_pow_ule_add_two_pow :
+    (x ≤ₛ y) ↔ (x + 2 ^ (w - 1)) ≤ᵤ (y + 2 ^ (w - 1)) := by
+  sorry
+
+theorem ult_iff_not_ule :
+    (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by
+  sorry
+
+theorem eq_iff_adc_not_add :
+    x = y ↔ (BitVec.carry w (x) (~~~ y + 1)) false := by
+  sorry
+
+theorem neq_iff_adc_not :
+    x ≠ y ↔ (BitVec.carry w (x) (~~~ y)) false := by
+  sorry
+
+theorem slt_iff_not_adc_add_sub_neg_add_sub :
+    (x <ₛ y) ↔  ¬ (BitVec.carry w (x + 2 ^ (w - 1)) (~~~ (y + 2 ^ (w - 1)) + 1)) false := by
+  sorry
+
+local instance : HXor Bool Bool Bool where
+  hXor := Bool.xor
+
+theorem sle_iff_not_adc_not_add_sub_xor_sub :
+    (x <ₛ y) ↔ !(BitVec.carry w x (~~~ y + 1) false ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1)) := by
+  sorry
+
+theorem sle_iff_adc_add_sub_neg_add_sub :
+    (x ≤ₛ y) ↔ (BitVec.carry w (y + 2 ^ (w - 1)) (~~~ (x + 2 ^ (w - 1)) + 1)) false := by
+  sorry
+
+theorem sle_iff_adc_not_add_sub_sub :
+    (x ≤ₛ y) ↔ ((BitVec.carry w y (~~~ x + 1)) false) ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1) := by
+  sorry
+
+theorem ult_iff_not_adc_not_add :
+    (x <ᵤ y) ↔ ¬ (BitVec.carry w x (~~~ y + 1) false) := by
+  sorry
+
+theorem ult_iff_adc_not_add :
+    (x ≤ᵤ y) ↔ (BitVec.carry w y (~~~ x + 1) false) := by
+  sorry
+
+theorem eq_zero_iff_adc_not_add :
+    x = 0 ↔ (BitVec.carry w (~~~ x) 1) false := by
+  sorry
+
+theorem neq_zero_iff_adc_neg :
+    x ≠ 0 ↔ (BitVec.carry w x (-1)) false := by
+  sorry
+
+theorem slt_iff_adc :
+    (x <ₛ 0) ↔ (BitVec.carry w x x) false := by
+  sorry
+
+theorem sle_iff_adc_two_pow_sub_neg_add_two_pow_sub :
+    (x ≤ₛ 0) ↔ (BitVec.carry w (2 ^ (w - 1)) (-(x + 2 ^ (w - 1)))) false := by
   sorry
 
 end Ch2Basics
