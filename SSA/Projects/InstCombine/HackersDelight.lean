@@ -24,7 +24,6 @@ theorem not_eq_neg_sub_one :
 theorem not_and_eq_not_or_not :
     ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
   try alive_auto
-  all_goals try alive_auto
   all_goals sorry
 
 theorem not_or_eq_not_and_not :
