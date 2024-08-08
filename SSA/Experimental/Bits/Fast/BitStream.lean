@@ -388,7 +388,7 @@ theorem equal_up_to_refl : a ≈ʷ a := by
   intros  j _
   rfl
 
-theorem equal_up_to_symm (e : a ≈ʷ b)  : b ≈ʷ a := by
+theorem equal_up_to_symm (e : a ≈ʷ b) : b ≈ʷ a := by
   intros j h
   symm
   exact e j h
@@ -417,7 +417,7 @@ theorem add_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a + c) ≈ʷ (b + d) := 
     simp only [ih (by omega), Bool.bne_right_inj]
   simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
 
-theorem neg_congr (e1 : a ≈ʷ b)  : (-a) ≈ʷ -b := by
+theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
   intros n h
   have neg_congr_lemma : a.negAux n = b.negAux n := by
     induction n
@@ -426,7 +426,7 @@ theorem neg_congr (e1 : a ≈ʷ b)  : (-a) ≈ʷ -b := by
     simp only [ih (by omega), Bool.bne_right_inj, and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
-theorem not_congr (e1 : a ≈ʷ b)  : (~~~a) ≈ʷ ~~~b := by
+theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
