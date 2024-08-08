@@ -418,14 +418,14 @@ theorem add_not_iff_ule_sub_sub :
   try alive_auto
   all_goals sorry
 
-def UnisignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toNat * y.toNat > 2 ^ w
+def UnsignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toNat * y.toNat > 2 ^ w
 def SignedMultiplicationOverflows? (x y : BitVec w) : Prop := x.toNat * y.toNat > 2 ^ (w - 1)
 
 def Last32Bits (x : BitVec 64) : BitVec 32 := BitVec.ofNat 32 x.toNat
 def First32Bits (x : BitVec 64) : BitVec 32 := BitVec.ofNat 32 (x >>> 32).toNat
 
 theorem unsigned_mul_overflow_iff_mul_neq_zero {x y : BitVec 64} :
-    UnisignedMultiplicationOverflows? x y ↔ First32Bits (x * y) ≠ BitVec.ofNat 32 0 := by
+    UnsignedMultiplicationOverflows? x y ↔ First32Bits (x * y) ≠ BitVec.ofNat 32 0 := by
   try alive_auto
   all_goals sorry
 
@@ -435,7 +435,7 @@ theorem signed_mul_overflow_iff_mul_neq_mul_RightShift {x y : BitVec 64} :
   all_goals sorry
 
 theorem mul_div_neq_imp_unsigned_mul_overflow (h : y.toNat ≠ 0) :
-    (x * y) / z ≠ x → UnisignedMultiplicationOverflows? x y := by
+    (x * y) / z ≠ x → UnsignedMultiplicationOverflows? x y := by
   try alive_auto
   all_goals sorry
 
@@ -447,12 +447,12 @@ theorem lt_and_eq_neg_pow_two_or_mul_div_neq_imp_unsigned_mul_overflow (h : y.to
 def NumberOfLeadingZeros (x : BitVec w) : ℕ := sorry
 
 theorem le_nlz_add_nlz_not_unsigned_mul_overflow {x y : BitVec 64} :
-    32 ≤ NumberOfLeadingZeros x + NumberOfLeadingZeros y ↔ ¬ UnisignedMultiplicationOverflows? x y := by
+    32 ≤ NumberOfLeadingZeros x + NumberOfLeadingZeros y ↔ ¬ UnsignedMultiplicationOverflows? x y := by
   try alive_auto
   all_goals sorry
 
 theorem nlz_add_nlz_le_unsigned_mul_overflow {x y : BitVec 64} :
-    NumberOfLeadingZeros x + NumberOfLeadingZeros y ≤ 30 ↔ UnisignedMultiplicationOverflows? x y := by
+    NumberOfLeadingZeros x + NumberOfLeadingZeros y ≤ 30 ↔ UnsignedMultiplicationOverflows? x y := by
   try alive_auto
   all_goals sorry
 
