@@ -1,5 +1,4 @@
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs
--- import SSA.Experimental.Bits.Fast.FiniteStateMachine
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
 import SSA.Experimental.Bits.Lemmas
@@ -80,7 +79,7 @@ def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (Bi
   exact incrBit w n
 
 
-def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq BitStream (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $(nat)) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
+def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq BitStream (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
 
 /--
 Simplify BitStream.ofBitVec x where x is an FVar.
