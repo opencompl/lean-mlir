@@ -74,7 +74,8 @@ def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
  simp [BitVec.toInt]
 def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
 
-def msb_ofInt_one (h : 1 < w): BitVec.msb 1#w = false := by
+@[simp]
+def msb_one (h : 1 < w) : BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt,
     toNat_ofNat]
   rw [Nat.mod_eq_of_lt] <;> simp <;> omega
@@ -105,11 +106,6 @@ lemma ofInt_ofNat (w n : Nat) :
   rfl
 
 -- @[simp]
-def msb_one (h : 1 < w) : BitVec.msb (1#w) = false := by
-  rw [← ofInt_ofNat]
-  simp [msb_ofInt_one h]
-
--- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
   simp [bv_toNat]
   cases w
@@ -137,7 +133,7 @@ theorem ofInt_one_eq_ofNat_one (w : Nat) : BitVec.ofInt w 1 = BitVec.ofNat w 1 :
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
   simp only [BitVec.sdiv]
-  simp only [msb_ofInt_one h, neg_eq, @msb_allOnes w (by omega)]
+  simp only [msb_one h, neg_eq, @msb_allOnes w (by omega)]
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
   simp only [negOne_eq_allOnes]
