@@ -10,6 +10,7 @@ import SSA.Projects.InstCombine.ForStd
 import SSA.Core.ErasedContext
 
 open MLIR AST
+open Std (BitVec)
 open Ctxt (Var DerivedCtxt)
 open InstCombine (MOp)
 
