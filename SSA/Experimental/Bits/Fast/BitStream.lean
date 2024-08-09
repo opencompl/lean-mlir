@@ -385,69 +385,225 @@ true iff ∀ i < n, x[i] = 0
 and returns false
 iff   ∃ i < n , x[i] = 1
 -/
-@[simp]
-def doesNegCarry? {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
-  | Nat.zero => !x.getLsb 0
-  | Nat.succ y => !x.getLsb (Nat.succ y) && doesNegCarry? x y
+-- @[simp]
+def doesNegCarry? {w : Nat} (x : BitVec w) (n : Nat) : Prop := match n with
+  | Nat.zero => ¬ x.getLsb 0
+  | Nat.succ y => ¬ x.getLsb (Nat.succ y) ∧  doesNegCarry? x y
 
-lemma lemma1 : (-x).getLsb (n + 1 + 1) = (x.getLsb (n + 1 + 1) != (-x).getLsb (n + 1)) := by
-  sorry
+instance decid : Decidable (doesNegCarry? x n)  := sorry
 
-lemma lemma2 (c  : x.getLsb (n + 1)) :  (-x).getLsb (n + 1 + 1) = !x.getLsb (n + 1 + 1) := by
-  sorry
+-- -- instance _ : DecideAb
+-- lemma lemma1 : (-x).getLsb (n + 1) = (x.getLsb (n + 1) != (-x).getLsb n) := by
+--   sorry
 
-lemma lemma3 : decide ((2 ^ w - x.toNat) % 2 ^ w / 2 % 2 = 1) = (decide (x.toNat / 2 % 2 = 1) != decide (x.toNat % 2 = 1)):= by
-  sorry
+-- lemma lemma2 (c  : x.getLsb n) :  (-x).getLsb (n + 1) = !x.getLsb (n + 1) := by
+--   sorry
 
-theorem neg_induction {w : Nat} (x : BitVec w) (n : Nat) : (-x).getLsb (n + 1) = xor (!x.getLsb (n + 1)) (doesNegCarry? x (n )) := by
+-- lemma lemma3 : decide ((2 ^ w - x.toNat) % 2 ^ w / 2 % 2 = 1) = (decide (x.toNat / 2 % 2 = 1) != decide (x.toNat % 2 = 1)):= by
+--   sorry
+
+-- theorem neg_induction {w : Nat} (x : BitVec w) (n : Nat) : (-x).getLsb (n + 1) = ( (¬ x.getLsb (n + 1)) ≠ (doesNegCarry? x n)) := by
+--   induction n
+--   simp only [doesNegCarry?, bne_self_eq_false]
+--   simp [BitVec.getLsb, BitVec.toNat_not, BitVec.toNat_ofNat, Nat.add_mod_mod,
+--     Nat.testBit_add_one, Nat.testBit_zero]
+--   exact lemma3
+--   rename_i n ih
+--   simp [doesNegCarry?]
+--   by_cases c : (x.getLsb (n + 1))
+--   all_goals (simp [c])
+--   exact lemma2 c
+--   simp [c] at ih
+--   have g : (!(-x).getLsb (n + 1)) = doesNegCarry? x n := by simp [ih]
+--   simp [← g]
+--   exact lemma1
+
+-- theorem neg_bit {w : Nat}  (x  : BitVec w) :  (-x).getLsb 0 = x.getLsb 0 := by
+--   by_cases c : 0 < w
+--   rw [BitVec.neg_eq_not_add]
+--   rw [BitVec.getLsb_add c]
+--   rw [BitVec.getLsb_not]
+--   simp
+--   simp [Bool.xor_comm]
+--   simp [c]
+--   have : w = 0 := by omega
+--   simp [this]
+
+-- @[simp] theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+--   intros n a
+--   have neg_lemma  : ⟨ x.neg.getLsb n , decide (doesNegCarry? x n) ⟩  = (ofBitVec x).negAux n := by
+--     induction n
+--     simp only [BitVec.neg_eq, doesNegCarry?, negAux, Prod.mk.injEq]
+--     constructor
+--     all_goals simp [ofBitVec,a]
+--     exact neg_bit x
+--     rename_i n ih
+--     have ihg := ih (by omega)
+--     unfold negAux
+--     simp [← ihg]
+--     constructor
+--     simp [ofBitVec, a]
+--     exact neg_induction x n
+--     congr
+--     simp [ofBitVec,a]
+--   simp only [Neg.neg]
+--   simp only [BitStream.neg]
+--   rw [← neg_lemma]
+--   simp only [ofBitVec,a,↓reduceIte]
+
+def state {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
+  | 0 => false
+  | i + 1 => !decide (doesNegCarry? x i) --sorryAx (Nat → Bool) false i
+
+
+theorem extracted_1 {w : ℕ} {x : BitVec w} (n : ℕ)
+
+   :
+  (!x.getLsb n).atLeastTwo (decide (0 < w) && decide (0 = n)) (state x n) = decide (doesNegCarry? x n) := by
   induction n
-  simp only [doesNegCarry?, bne_self_eq_false]
-  simp [BitVec.getLsb, BitVec.toNat_not, BitVec.toNat_ofNat, Nat.add_mod_mod,
-    Nat.testBit_add_one, Nat.testBit_zero]
-  exact lemma3
-  rename_i n ih
-  simp [doesNegCarry?]
-  by_cases c : (x.getLsb (n + 1))
-  all_goals (simp [c])
-  exact lemma2 c
-  simp [c] at ih
-  have g : (!(-x).getLsb (n + 1)) = doesNegCarry? x n := by simp [ih]
-  simp [← g]
-  exact lemma1
-
-theorem neg_bit {w : Nat}  (x  : BitVec w) :  (-x).getLsb 0 = x.getLsb 0 := by
-  by_cases c : 0 < w
-  rw [BitVec.neg_eq_not_add]
-  rw [BitVec.getLsb_add c]
-  rw [BitVec.getLsb_not]
-  simp
-  simp [Bool.xor_comm]
-  simp [c]
-  have : w = 0 := by omega
-  simp [this]
-
-@[simp] theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  simp [state, doesNegCarry?]
+  sorry
+  sorry
+@[simp] theorem ofBitVec_neg3 : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
   intros n a
-  have neg_lemma  : ⟨ x.neg.getLsb n , doesNegCarry? x (n) ⟩  = (ofBitVec x).negAux n := by
+  have neg_lemma  : ⟨(-x).getLsb n , decide (doesNegCarry? x n) ⟩  = (ofBitVec x).negAux n := by
+    rw [BitVec.neg_eq_not_add]
+    -- rw [BitVec.iunfoldr_replace_snd ?f x.neg]
     induction n
-    simp only [BitVec.neg_eq, doesNegCarry?, negAux, Prod.mk.injEq]
-    constructor
-    all_goals simp [ofBitVec,a]
-    exact neg_bit x
+    all_goals simp
+    simp [negAux,ofBitVec,a,BitVec.getLsb,doesNegCarry?,← decide_not,decide_eq_decide]
+    -- simp [BitVec.iunfoldr]
+    -- simp [BitVec.iunfoldr]
+    sorry
     rename_i n ih
+    simp [BitVec.add_eq_adc]
+    unfold BitVec.adc
     have ihg := ih (by omega)
     unfold negAux
-    simp [← ihg]
+    -- unfl
+    unfold doesNegCarry?
+    simp
     constructor
-    simp [ofBitVec, a]
-    exact neg_induction x n
-    congr
+
+    let t : Fin w := ⟨n+1, a ⟩
+    have xl : (↑(⟨n + 1, a⟩ : Fin w)) = n + 1 := by rfl
+    rw [← xl]
+
+    have gg : false = state x 0 := by
+      rfl
+      -- unfold BitStream.ofBitVec_neg3.state
+      -- sorry
+    rw [gg]
+    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1 ,a ⟩ ]
+
+    rw [← ihg]
+    simp
+    unfold BitVec.adcb
+    unfold Bool.atLeastTwo
+    simp
+    simp [state]
     simp [ofBitVec,a]
+    -- sorry
+    -- simp [BitVec.adcb]
+    -- extract_goal
+    -- exact extracted_1 n
+    -- match n with
+    --   | 0 =>
+    --     have fg : 0 < w := by omega
+    --     simp [fg, state, doesNegCarry?]
+
+    --   | Nat.succ k =>
+    --     simp [state, doesNegCarry?]
+    --     congr
+
+    --     sorry
+    -- by_cases p  : n = 0
+
+    -- all_goals try simp [p]
+    -- sorry
+    -- simp [p]
+    -- have asd : ¬ (0 = n) := by
+    --   intro jr
+    --   symm at jr
+    --   exact p jr
+
+      -- simp [p]
+    -- simp [asd]
+    -- simp [doesNegCarry?]
+
+    sorry
+    intro i
+    induction i.val
+    simp [state, doesNegCarry?, BitVec.adcb, BitVec.getLsb,← decide_not, ← Bool.decide_and]
+    sorry
+    -- simp [state]
+
+    -- sorry
+    -- sorry
+    -- sorry
+    -- sorry
+    -- sorry
+    -- unfold ofBitVec
+
+    sorry
+    simp [ofBitVec,a]
+    congr
+    simp [← ihg]
+    -- sorry
+    -- sorry
+    -- sorry
+    -- sorry
+    -- sorry
+    -- intros i ilew
+    -- unfold ofBitVec
+    -- simp [ilew]
+    -- unfold Neg.neg
+    -- unfold instNeg
+    -- simp [neg]
+
+    -- sorry
   simp only [Neg.neg]
   simp only [BitStream.neg]
   rw [← neg_lemma]
-  simp only [ofBitVec,a,↓reduceIte]
+  simp only [ofBitVec,a,↓reduceIte, Neg.neg]
 
+
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  rw [BitVec.neg_eq_not_add]
+  simp [BitVec.add_eq_adc]
+  unfold BitVec.adc
+  intros i ilew
+  unfold ofBitVec
+  simp [ilew]
+  unfold Neg.neg
+  unfold instNeg
+  simp [neg]
+
+  -- unfold BitVec.adc
+  -- rw [BitVec.iunfoldr_replace_snd ?f ?state]
+  -- unfold NegA
+  sorry
+  -- rw [BitVec.bit_neg_eq_neg]
+  -- rw [BitVec.iunfoldr_replace_snd (fun n => ()) (~~~ x)]
+  -- unfold BitVec.adc
+  -- rw [BitVec.iunfoldr_replace_snd (fun n => true) ?x]
+  -- -- simp [← BitVec.add_eq_adc]
+  -- sorry
+  -- rfl
+  -- intros i
+  -- simp
+
+  -- sorry
+
+  -- sorry
+  -- -- exact (fun n => ())
+  -- -- exact ~~~ x
+  -- rfl
+  -- intro i
+  -- simp only [Prod.mk.injEq, true_and]
+  -- unfold Complement.complement
+  -- unfold  BitVec.instComplement
+  -- simp
 theorem equal_up_to_refl : a ≈ʷ a := by
   intros  j _
   rfl
