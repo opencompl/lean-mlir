@@ -379,9 +379,74 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   sorry
+/--
+This function says returns
+true iff ∀ i < n, x[i] = 0
+and returns false
+iff   ∃ i < n , x[i] = 1
+-/
+@[simp]
+def doesNegCarry? {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
+  | Nat.zero => !x.getLsb 0
+  | Nat.succ y => !x.getLsb (Nat.succ y) && doesNegCarry? x y
+
+lemma lemma1 : (-x).getLsb (n + 1 + 1) = (x.getLsb (n + 1 + 1) != (-x).getLsb (n + 1)) := by
+  sorry
+
+lemma lemma2 (c  : x.getLsb (n + 1)) :  (-x).getLsb (n + 1 + 1) = !x.getLsb (n + 1 + 1) := by
+  sorry
+
+lemma lemma3 : decide ((2 ^ w - x.toNat) % 2 ^ w / 2 % 2 = 1) = (decide (x.toNat / 2 % 2 = 1) != decide (x.toNat % 2 = 1)):= by
+  sorry
+
+theorem neg_induction {w : Nat} (x : BitVec w) (n : Nat) : (-x).getLsb (n + 1) = xor (!x.getLsb (n + 1)) (doesNegCarry? x (n )) := by
+  induction n
+  simp only [doesNegCarry?, bne_self_eq_false]
+  simp [BitVec.getLsb, BitVec.toNat_not, BitVec.toNat_ofNat, Nat.add_mod_mod,
+    Nat.testBit_add_one, Nat.testBit_zero]
+  exact lemma3
+  rename_i n ih
+  simp [doesNegCarry?]
+  by_cases c : (x.getLsb (n + 1))
+  all_goals (simp [c])
+  exact lemma2 c
+  simp [c] at ih
+  have g : (!(-x).getLsb (n + 1)) = doesNegCarry? x n := by simp [ih]
+  simp [← g]
+  exact lemma1
+
+theorem neg_bit {w : Nat}  (x  : BitVec w) :  (-x).getLsb 0 = x.getLsb 0 := by
+  by_cases c : 0 < w
+  rw [BitVec.neg_eq_not_add]
+  rw [BitVec.getLsb_add c]
+  rw [BitVec.getLsb_not]
+  simp
+  simp [Bool.xor_comm]
+  simp [c]
+  have : w = 0 := by omega
+  simp [this]
 
 @[simp] theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
-  sorry
+  intros n a
+  have neg_lemma  : ⟨ x.neg.getLsb n , doesNegCarry? x (n) ⟩  = (ofBitVec x).negAux n := by
+    induction n
+    simp only [BitVec.neg_eq, doesNegCarry?, negAux, Prod.mk.injEq]
+    constructor
+    all_goals simp [ofBitVec,a]
+    exact neg_bit x
+    rename_i n ih
+    have ihg := ih (by omega)
+    unfold negAux
+    simp [← ihg]
+    constructor
+    simp [ofBitVec, a]
+    exact neg_induction x n
+    congr
+    simp [ofBitVec,a]
+  simp only [Neg.neg]
+  simp only [BitStream.neg]
+  rw [← neg_lemma]
+  simp only [ofBitVec,a,↓reduceIte]
 
 theorem equal_up_to_refl : a ≈ʷ a := by
   intros  j _
