@@ -9,7 +9,6 @@ import SSA.Core.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Util
 
-open Std (BitVec)
 open Ctxt(Var)
 
 namespace ScfFunctor
@@ -491,7 +490,7 @@ theorem correct : Com.denote (lhs v0) Γv = Com.denote (rhs v0) Γv := by
   simp only [lhs, rhs, for_, axpy, cst, add]
   simp_peephole at Γv
   intros A B
-  simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, cast_eq]
+  simp only [Ctxt.Valuation.snoc, Var.casesOn, Ctxt.get?, Var.zero_eq_last, BitVec.cast_eq]
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
 
