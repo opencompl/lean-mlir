@@ -130,10 +130,6 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : BitVec.udiv x (1#w)  = x := 
     apply eq_of_toNat_eq
     simp
 
--- @[simp]
-theorem ofInt_one_eq_ofNat_one (w : Nat) : BitVec.ofInt w 1 = BitVec.ofNat w 1 := by
-  rw [BitVec.ofInt_ofNat]
-
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
   simp only [BitVec.sdiv]
@@ -250,7 +246,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       case inr h => subst h; contradiction
     case succ w' =>
       unfold BitVec.sdiv
-      simp [udiv_one_eq_self, msb_one, ofInt_one_eq_ofNat_one]
+      simp only [lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, msb_one, neg_eq]
       by_cases h : BitVec.msb a <;> simp [h]
       · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
         apply BitVec.udiv_one_eq_zero
