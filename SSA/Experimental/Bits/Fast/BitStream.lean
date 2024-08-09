@@ -1,7 +1,6 @@
 import Mathlib.Tactic.NormNum
 
 import Mathlib.Logic.Function.Iterate
-
 -- TODO: upstream the following section
 section UpStream
 
@@ -264,6 +263,12 @@ variable (x y : BitVec (w+1))
   simp only [ofBitVec, BitVec.getLsb_xor, xor_eq]
   split <;> simp_all
 
+@[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := by
+  funext i
+  simp only [ofBitVec, BitVec.getLsb_not, BitVec.msb_not, lt_add_iff_pos_left, add_pos_iff,
+    zero_lt_one, or_true, decide_True, Bool.true_and, not_eq]
+  split <;> simp_all
+
 end Lemmas
 
 end BitwiseOps
@@ -363,10 +368,85 @@ Crucially, our decision procedure works by considering which equalities hold for
 --     (∀ w, (x w + y w) = z w) ↔ (∀ w, (ofBitVec (x w)) + (ofBitVec (y w)) ) := by
 --   have ⟨h₁, h₂⟩ : True ∧ True := sorry
 --   sorry
-@[simp] theorem ofBitVec_sub : ofBitVec (x - y) = (ofBitVec x) - (ofBitVec y) := sorry
-@[simp] theorem ofBitVec_add : ofBitVec (x + y) = (ofBitVec x) + (ofBitVec y) := sorry
-@[simp] theorem ofBitVec_neg : ofBitVec (-x) = -(ofBitVec x) := sorry
-@[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := sorry
+
+variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
+
+local infix:20 " ≈ʷ " => EqualUpTo w
+
+-- TODO: These sorries are difficult, and will be proven in a later Pull Request.
+@[simp] theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
+  sorry
+
+@[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
+  sorry
+
+@[simp] theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+  sorry
+
+theorem equal_up_to_refl : a ≈ʷ a := by
+  intros  j _
+  rfl
+
+theorem equal_up_to_symm (e : a ≈ʷ b) : b ≈ʷ a := by
+  intros j h
+  symm
+  exact e j h
+
+theorem equal_up_to_trans (e1 : a ≈ʷ b) (e2 : b ≈ʷ c) : a ≈ʷ c := by
+  intros j h
+  trans b j
+  exact e1 j h
+  exact e2 j h
+
+instance congr_equiv : Equivalence (EqualUpTo w) := {
+  refl := fun _ => equal_up_to_refl,
+  symm := equal_up_to_symm,
+  trans := equal_up_to_trans
+}
+
+theorem sub_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
+  intros n h
+  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
+    induction n
+    <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
+    rename_i _ ih
+    simp only [ih (by omega), and_self]
+  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
+
+theorem add_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
+  intros n h
+  have add_congr_lemma : a.addAux c n = b.addAux d n := by
+    induction n
+    <;> simp only [addAux, Prod.mk.injEq, e1 _ h, e2 _ h]
+    rename_i _ ih
+    simp only [ih (by omega), Bool.bne_right_inj]
+  simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
+
+theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
+  intros n h
+  have neg_congr_lemma : a.negAux n = b.negAux n := by
+    induction n
+    <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
+    rename_i _ ih
+    simp only [ih (by omega), Bool.bne_right_inj, and_self]
+  simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
+
+theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
+  intros g h
+  simp only [not_eq, e1 g h]
+
+theorem equal_trans  (e1 :  a ≈ʷ b) (e2 : c ≈ʷ d)  : (a ≈ʷ c) = (b ≈ʷ d) := by
+  apply propext
+  constructor
+  <;> intros h
+  · apply equal_up_to_trans _ e2
+    apply equal_up_to_trans _ h
+    apply equal_up_to_symm
+    assumption
+  · apply equal_up_to_trans _
+    apply (equal_up_to_symm e2)
+    apply equal_up_to_trans _ h
+    assumption
 
 end Lemmas
 
