@@ -590,27 +590,6 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
       simp
     · simp [getLsb_geX _ h]
 
-/-
-https://github.com/leanprover/std4/commit/ecf1ec23eac8997d5964d480511ba93970fa455b#diff-8f36f4c14ec3f02f7b8ea0a193114c273871d6b0ddad6083cd74090b3befcb1eR227-R229
-This exists in std4 as of 3 days ago.
-We should rebase on mathlib4.
--/
-lemma getLsb'_ushr (x : BitVec w) (y : Nat) (i : Fin w) :
-  (x >>> y).getLsb i = x.getLsb (i + y) := by
-  unfold HShiftRight.hShiftRight
-  unfold instHShiftRightNat
-  unfold ushiftRight
-  simp
-  unfold BitVec.getLsb Nat.testBit
-  simp
-  unfold HShiftRight.hShiftRight
-  unfold instHShiftRightOfShiftRight
-  simp
-  unfold ShiftRight.shiftRight
-  unfold Nat.instShiftRight
-  simp [Nat.shiftRight_eq_div_pow]
-  rw [Nat.add_comm]
-
 @[simp]
 theorem ofBool_neq_1 (b : Bool) :
     BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
