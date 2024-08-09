@@ -21,7 +21,7 @@ lemma two_pow_sub_two_pow_pred (h : 0 < w) :
     2 ^ w - 2 ^ (w - 1) = 2 ^ (w - 1) := by
   simp [← two_pow_pred_add_two_pow_pred h]
 
-lemma two_pow_pred_mod_two_pred (h : 0 < w):
+lemma two_pow_pred_mod_two_pow (h : 0 < w):
     2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
   rw [Nat.mod_eq_of_lt]
   apply two_pow_pred_lt_two_pow h
@@ -387,8 +387,8 @@ private theorem toNat_intMin (w : Nat) :
   simp only [intMin, toNat_ofNat]
   by_cases w_0 : w = 0
   · simp [w_0]
-  · simp [w_0, ↓reduceIte, @Nat.mod_eq_of_lt (2 ^ (w-1)) (2 ^ w)
-        (by simp [@Nat.pow_lt_pow_of_lt 2 (w-1) w (by omega) (by omega)])]
+  · rw [two_pow_pred_mod_two_pow (by omega)]
+    simp [w_0, ↓reduceIte]
 
 @[simp]
 private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
@@ -456,11 +456,9 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   simp only [ne_eq]
   unfold intMin
   simp only [toNat_eq, toNat_ofNat, Nat.zero_mod]
-  rw [Nat.mod_eq_of_lt]
+  rw [two_pow_pred_mod_two_pow (by omega)]
   have _ : 0 < 2 ^(w - 1) := by
     simp [Nat.pow_pos]
-  omega
-  apply two_pow_pred_lt_two_pow
   omega
 
 theorem intMin_eq_neg_intMin (w : Nat) :
@@ -471,11 +469,8 @@ theorem intMin_eq_neg_intMin (w : Nat) :
   have w_gt_zero : 0 < w := by omega
   simp only [toNat_eq, toNat_neg, toNat_intMin]
   simp only [w_eq_zero, ↓reduceIte]
-  rw [two_pow_sub_two_pow_pred]
-  rw [Nat.mod_eq_of_lt]
-  · apply two_pow_pred_lt_two_pow
-    apply w_gt_zero
-  · apply w_gt_zero
+  simp only [two_pow_sub_two_pow_pred w_gt_zero]
+  simp only [two_pow_pred_mod_two_pow w_gt_zero]
 
 theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
   simp [BitVec.slt]
@@ -488,7 +483,7 @@ private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
   unfold Int.bmod
   simp only [Nat.cast_pow, Nat.cast_ofNat]
   norm_cast
-  simp only [two_pow_pred_mod_two_pred h]
+  simp only [two_pow_pred_mod_two_pow h]
   split_ifs
   · rename_i hh
     norm_cast at hh
