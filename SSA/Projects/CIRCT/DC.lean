@@ -30,16 +30,10 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 
 -/
-<<<<<<< HEAD
 
 def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
 
   corec₂ (β := Stream α × Stream Bool) (x, c)
-=======
-def branch (x c  : Stream) : Stream × Stream :=
-
-  corec₂ (β := Stream × Stream) (x, c)
->>>>>>> main
     fun ⟨x, c⟩ => Id.run <| do
 
       let c₀ := c 0
@@ -61,13 +55,8 @@ def branch (x c  : Stream) : Stream × Stream :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
-<<<<<<< HEAD
 def merge (x y : Stream α) : Stream α :=
   Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
-=======
-def merge (x y : Stream) : Stream :=
-  Stream.corec (β := Stream × Stream) (x, y) fun ⟨x, y⟩ =>
->>>>>>> main
     match x 0, y 0 with
     | some x', some _ => (some x', (x.tail, y))
     | some x', none => (some x', (x.tail, y.tail))
@@ -112,13 +101,8 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
-<<<<<<< HEAD
 def altMerge (x y : Stream α) : Stream α :=
   Stream.corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
-=======
-def altMerge (x y : Stream) : Stream :=
-  Stream.corec (β := Stream × Stream × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
->>>>>>> main
     match consume with
       | .left  =>
         let x0 := x.head
@@ -143,7 +127,6 @@ end Operations
 Define a `DC` dialect, and connect its semantics to the function defined above
 -/
 section Dialect
-<<<<<<< HEAD
 
 inductive Ty2
   | int : Ty2
@@ -173,24 +156,6 @@ instance : TyDenote Ty where
 toType := fun
 | Ty.stream ty2 => Stream (toType ty2)
 | Ty.stream2 ty2 => Stream (toType ty2) × Stream (toType ty2)
-=======
-inductive Op
-| merge
-| branch
-| fst
-| snd
-deriving Inhabited, DecidableEq, Repr
-
-inductive Ty
-| Stream : Ty
-| Stream2 : Ty
-deriving Inhabited, DecidableEq, Repr
-
-instance : TyDenote Ty where
-toType := fun
-| .Stream => Stream
-| .Stream2 => Stream × Stream
->>>>>>> main
 
 
 set_option linter.dupNamespace false in
@@ -201,7 +166,6 @@ abbrev DC : Dialect where
 
 open TyDenote (toType)
 
-<<<<<<< HEAD
 -- arg type CONF
 @[simp, reducible]
 def Op.sig : Op  → List Ty
@@ -215,20 +179,6 @@ def Op.outTy : Op → Ty
   | .branch t₁ => Ty.stream2 t₁
   | .merge t₁ => Ty.stream t₁
   | .fst t | .snd t => Ty.stream t
-=======
-
-@[simp, reducible]
-def Op.sig : Op  → List Ty
-| .branch => [Ty.Stream, Ty.Stream]
-| .merge => [Ty.Stream, Ty.Stream]
-| .fst | .snd => [Ty.Stream2]
-
-@[simp, reducible]
-def Op.outTy : Op → Ty
-  | .branch => Ty.Stream2
-  | .merge => Ty.Stream
-  | .fst | .snd => Ty.Stream
->>>>>>> main
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
@@ -239,17 +189,10 @@ instance : DialectSignature DC := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (DC) where
     denote
-<<<<<<< HEAD
     | .branch _, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
     | .merge _, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
     | .fst _, arg, _ => (arg.getN 0).fst
     | .snd _, arg, _ => (arg.getN 0).snd
-=======
-    | .branch, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
-    | .merge, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
-    | .fst, arg, _ => (arg.getN 0).fst
-    | .snd, arg, _ => (arg.getN 0).snd
->>>>>>> main
 
 end Dialect
 
@@ -263,7 +206,6 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 -/
 section Syntax
 
-<<<<<<< HEAD
 def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
   | "Int" => return (.int)
   | "Bool" => return (.bool)
@@ -277,13 +219,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
     | ["Stream2", r] =>
       return .stream2 (← mkTy2 r)
     | _ => throw .unsupportedType
-=======
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
-  | MLIR.AST.MLIRType.undefined "Stream" => do
-    return .Stream
-  | MLIR.AST.MLIRType.undefined "Stream2" => do
-    return .Stream2
->>>>>>> main
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
@@ -373,33 +308,34 @@ end Syntax
 ## Examples
 -/
 namespace Examples
+
 def BranchEg1 := [dc_com| {
   ^entry(%0: !Stream_Bool, %1: !Stream_Bool):
-    %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
-    %outf = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
-    "return" (%out2) : (!Stream_Bool) -> ()
+    -- %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
+    -- %outf = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    -- %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    -- %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
+    "return" (%0) : (!Stream_Bool) -> ()
   }]
 
 
-#check BranchEg1
-#eval BranchEg1
-#reduce BranchEg1
-#check BranchEg1.denote
-#print axioms BranchEg1
+-- #check BranchEg1
+-- #eval BranchEg1
+-- #reduce BranchEg1
+-- #check BranchEg1.denote
+-- #print axioms BranchEg1
 
-def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+-- def ofList (vals : List (Option α)) : Stream α :=
+--   fun i => (vals.get? i).join
 
-def x : Stream Bool := ofList [some true, none, some false, some true, some false]
-def c : Stream Bool := ofList [some true, some false, none, some true]
+-- def x : Stream Bool := ofList [some true, none, some false, some true, some false]
+-- def c : Stream Bool := ofList [some true, some false, none, some true]
 
-def test : Stream Bool :=
-  BranchEg1.denote (Valuation.ofPair c x)
+-- def test : Stream Bool :=
+--   BranchEg1.denote (Valuation.ofPair c x)
 
-def remNone (lst : List (Option Bool)) : List (Option Bool) :=
-  lst.filter (fun | some x => true
-                  | none => false)
+-- def remNone (lst : List (Option Bool)) : List (Option Bool) :=
+--   lst.filter (fun | some x => true
+--                   | none => false)
 
 end Examples
