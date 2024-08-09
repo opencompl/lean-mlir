@@ -1,7 +1,7 @@
 import Mathlib.Data.Stream.Defs
 import Batteries.Data.List.Basic
 
-namespace DC
+namespace Handshake
 
 /-!
 
@@ -47,3 +47,7 @@ def ofList (vals : List Val) : Stream :=
 /-- `toList n x` returns the first `n` messages (including `none`s) as a list -/
 def toList (n : Nat) (x : Stream) : List Val :=
   List.ofFn (fun (i : Fin n) => x i)
+
+end Stream
+
+end Handshake

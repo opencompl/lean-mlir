@@ -1,16 +1,16 @@
 import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
-import SSA.Projects.CIRCT.DC.Stream
+import SSA.Projects.CIRCT.Handshake.Stream
 
 open MLIR AST Ctxt
 
 /-!
 
-# Semantics for the `DC` Dialect
+# Semantics for the `Handshake` Dialect
 This file is still in a **highly experimental** state
 
 -/
-namespace DC
+namespace Handshake
 
 
 /-!
@@ -30,10 +30,9 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 
 -/
+def branch (x c  : Stream) : Stream × Stream :=
 
-def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
-
-  corec₂ (β := Stream α × Stream Bool) (x, c)
+  corec₂ (β := Stream × Stream) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
 
       let c₀ := c 0
@@ -55,8 +54,8 @@ def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
-def merge (x y : Stream α) : Stream α :=
-  Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+def merge (x y : Stream) : Stream :=
+  Stream.corec (β := Stream × Stream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some x', (x.tail, y))
     | some x', none => (some x', (x.tail, y.tail))
@@ -101,8 +100,8 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
-def altMerge (x y : Stream α) : Stream α :=
-  Stream.corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
+def altMerge (x y : Stream) : Stream :=
+  Stream.corec (β := Stream × Stream × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with
       | .left  =>
         let x0 := x.head
@@ -119,173 +118,160 @@ def altMerge (x y : Stream α) : Stream α :=
           | none   => .right
         (y0, x, y, nextConsume)
 
+-- this is basically the same as the fork in DC
+def fork (x : Stream) : Stream × Stream :=
+  Stream.corec₂ (β := Stream) x
+    fun x => Id.run <| do
+      let x0 := x 0
+      let x' := x.tail
+      (x0, x0, x')
+
 end Stream
 end Operations
 
 /-!
 ## LeanMLIR Dialect Definitions
-Define a `DC` dialect, and connect its semantics to the function defined above
+Define a `Handshake` dialect, and connect its semantics to the function defined above
 -/
 section Dialect
-
-inductive Ty2
-  | int : Ty2
-  | bool : Ty2
-deriving Inhabited, DecidableEq, Repr
-
 inductive Op
-| merge (t : Ty2)
-| branch (t : Ty2)
-| fst (t : Ty2)
-| snd (t : Ty2)
+| merge
+| branch
+| fst
+| snd
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
-| stream (ty2 : Ty2) : Ty
-| stream2 (ty2 : Ty2) : Ty
+| Stream : Ty
+| Stream2 : Ty
 deriving Inhabited, DecidableEq, Repr
 
-
-instance : TyDenote Ty2 where
-toType := fun
-|  Ty2.int => Int
-|  Ty2.bool => Bool
-
-open TyDenote (toType) in
 instance : TyDenote Ty where
 toType := fun
-| Ty.stream ty2 => Stream (toType ty2)
-| Ty.stream2 ty2 => Stream (toType ty2) × Stream (toType ty2)
+| .Stream => Stream
+| .Stream2 => Stream × Stream
 
 
 set_option linter.dupNamespace false in
 /-- `FHE` is the dialect for fully homomorphic encryption -/
-abbrev DC : Dialect where
+abbrev Handshake : Dialect where
   Op := Op
   Ty := Ty
 
 open TyDenote (toType)
 
--- arg type CONF
+
 @[simp, reducible]
 def Op.sig : Op  → List Ty
-| .branch t₁ => [Ty.stream t₁, Ty.stream Ty2.bool]
-| .merge t₁ => [Ty.stream t₁, Ty.stream t₁]
-| .fst t | .snd t => [Ty.stream2 t]
+| .branch => [Ty.Stream, Ty.Stream]
+| .merge => [Ty.Stream, Ty.Stream]
+| .fst | .snd => [Ty.Stream2]
 
--- return type CONF
 @[simp, reducible]
 def Op.outTy : Op → Ty
-  | .branch t₁ => Ty.stream2 t₁
-  | .merge t₁ => Ty.stream t₁
-  | .fst t | .snd t => Ty.stream t
+  | .branch => Ty.Stream2
+  | .merge => Ty.Stream
+  | .fst | .snd => Ty.Stream
 
 @[simp, reducible]
 def Op.signature : Op → Signature (Ty) :=
   fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
-instance : DialectSignature DC := ⟨Op.signature⟩
+instance : DialectSignature Handshake := ⟨Op.signature⟩
 
 @[simp]
-instance : DialectDenote (DC) where
+instance : DialectDenote (Handshake) where
     denote
-    | .branch _, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
-    | .merge _, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
-    | .fst _, arg, _ => (arg.getN 0).fst
-    | .snd _, arg, _ => (arg.getN 0).snd
+    | .branch, arg, _ => Stream.branch (arg.getN 0) (arg.getN 1)
+    | .merge, arg, _  => Stream.merge (arg.getN 0) (arg.getN 1)
+    | .fst, arg, _ => (arg.getN 0).fst
+    | .snd, arg, _ => (arg.getN 0).snd
 
 end Dialect
 
 
 
 /-!
-## LeanMLIR EDSL Syntax for DC
-Implement the necessary typeclasses for the `dc` dialect to
+## LeanMLIR EDSL Syntax for Handshake
+Implement the necessary typeclasses for the `handshake` dialect to
 be recognized by the LeanMLIR generic syntax parser, and
-defines a `[dc_com| ...]` macro to hook into this generic syntax parser
+defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
 section Syntax
 
-def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
-  | "Int" => return (.int)
-  | "Bool" => return (.bool)
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (Handshake) (Handshake).Ty
+  | MLIR.AST.MLIRType.undefined "Stream" => do
+    return .Stream
+  | MLIR.AST.MLIRType.undefined "Stream2" => do
+    return .Stream2
   | _ => throw .unsupportedType
 
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
-  | MLIR.AST.MLIRType.undefined s => do
-    match s.splitOn with
-    | ["Stream", r] =>
-      return .stream (← mkTy2 r)
-    | ["Stream2", r] =>
-      return .stream (← mkTy2 r)
-    | _ => throw .unsupportedType
-  | _ => throw .unsupportedType
-
-instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
+instance instTransformTy : MLIR.AST.TransformTy (Handshake) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (DC) Γ .pure (.stream2 r) :=
+def branch {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (Handshake) Γ .pure .Stream2  :=
   Expr.mk
-    (op := .branch r)
-    (ty_eq := rfl)
-    (eff_le := by constructor)
-    (args := .cons a <| .cons c <| .nil)
-    (regArgs := .nil)
-
-def merge {Γ : Ctxt _} (a b : Var Γ (.stream r)) : Expr (DC) Γ .pure (.stream r)  :=
-  Expr.mk
-    (op := .merge r)
+    (op := .branch)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
-def fst {Γ : Ctxt _} (a : Var Γ (.stream2 r)) : Expr (DC) Γ .pure (.stream r)  :=
+def merge {Γ : Ctxt _} (a b : Var Γ .Stream) : Expr (Handshake) Γ .pure .Stream  :=
   Expr.mk
-    (op := .fst r)
+    (op := .merge)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def fst {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (Handshake) Γ .pure .Stream  :=
+  Expr.mk
+    (op := .fst)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def snd {Γ : Ctxt _} (a : Var Γ (.stream2 r)) : Expr (DC) Γ .pure (.stream r)  :=
+def snd {Γ : Ctxt _} (a : Var Γ .Stream2) : Expr (Handshake) Γ .pure .Stream  :=
   Expr.mk
-    (op := .snd r)
+    (op := .snd)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
-def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
-    MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
+def mkExpr (Γ : Ctxt (Handshake).Ty) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM (Handshake) (Σ eff ty, Expr (Handshake) Γ eff ty) := do
   match opStx.name with
-  | op@"dc.branch" | op@"dc.merge" =>
+  | op@"handshake.branch" | op@"handshake.merge" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .stream r₁, .stream .bool, "dc.branch" => return ⟨_, .stream2 r₁, branch v₁ v₂⟩
-      -- unsure this is correct
-      | .stream r₁, _, "dc.merge" => return ⟨_, .stream r₁, merge v₁ v₁⟩
+      | .Stream, .Stream, "handshake.branch" => return ⟨_, .Stream2, branch v₁ v₂⟩
+      | .Stream, .Stream, "handshake.merge"  => return ⟨_, .Stream, merge v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"dc.fst" | op@"dc.snd" =>
+  | op@"handshake.fst" | op@"handshake.snd" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .stream2 r, "dc.fst" => return ⟨_, .stream r, fst v₁⟩
-      | .stream2 r, "dc.snd"  => return ⟨_, .stream r, snd v₁⟩
+      | .Stream2, "handshake.fst" => return ⟨_, .Stream, fst v₁⟩
+      | .Stream2, "handshake.snd"  => return ⟨_, .Stream, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+
+
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
-instance : MLIR.AST.TransformExpr (DC) 0 where
+instance : MLIR.AST.TransformExpr (Handshake) 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (DC)
-    (Σ eff ty, Com (DC) Γ eff ty) :=
+def mkReturn (Γ : Ctxt (Handshake).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Handshake)
+    (Σ eff ty, Com (Handshake) Γ eff ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
@@ -294,12 +280,12 @@ def mkReturn (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (DC)
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
-instance : MLIR.AST.TransformReturn (DC) 0 where
+instance : MLIR.AST.TransformReturn (Handshake) 0 where
   mkReturn := mkReturn
 
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[dc_com" " | " reg:mlir_region "]" : term => do
-  SSA.elabIntoCom reg q(DC)
+elab "[handshake_com" " | " reg:mlir_region "]" : term => do
+  SSA.elabIntoCom reg q(Handshake)
 
 end Syntax
 
@@ -309,13 +295,13 @@ end Syntax
 ## Examples
 -/
 namespace Examples
-def BranchEg1 := [dc_com| {
-  ^entry(%0: !StreamInt, %1: !StreamInt):
-    %out = "dc.branch" (%0, %1) : (!StreamInt, !StreamBool) -> (!Stream2Int)
-    %outf = "dc.fst" (%out) : (!Stream2Int) -> (!StreamInt)
-    %outs = "dc.snd" (%out) : (!Stream2Int) -> (!StreamInt)
-    %out2 = "dc.merge" (%outfInt, %outsInt) : (!StreamInt, !StreamInt) -> (!StreamInt)
-    "return" (%out2) : (!StreamInt) -> ()
+def BranchEg1 := [handshake_com| {
+  ^entry(%0: !Stream, %1: !Stream):
+    %out = "handshake.branch" (%0, %1) : (!Stream, !Stream) -> (!Stream2)
+    %outf = "handshake.fst" (%out) : (!Stream2) -> (!Stream)
+    %outs = "handshake.snd" (%out) : (!Stream2) -> (!Stream)
+    %out2 = "handshake.merge" (%outf, %outs) : (!Stream, !Stream) -> (!Stream)
+    "return" (%out2) : (!Stream) -> ()
   }]
 
 #check BranchEg1
@@ -327,7 +313,7 @@ def BranchEg1 := [dc_com| {
 def x := Stream.ofList [some true, none, some false, some true, some false]
 def c := Stream.ofList [some true, some false, none, some true]
 
-def test : Stream r :=
+def test : Stream :=
   BranchEg1.denote (Valuation.ofPair c x)
 
 def remNone (lst : List Val) : List Val :=
