@@ -120,47 +120,44 @@ simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
-def first_rep (w : Expr) (e : Q( BitStream)) : SimpM (Q(BitStream) ×  Expr)  :=
+partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  :=
   match e with
-    | .app (.app (.app (.app (.app (.app (.const ``HSub.hSub _) _) _) _ ) _ ) a) b => do
+    | ~q(@HSub.hSub BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
       let ⟨ bnext, bproof ⟩ ← first_rep w b
       return ⟨
-        q($anext - $bnext),
-        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.sub_congr []) w) a) anext) b) bnext) aproof) bproof
+        q(@HSub.hSub BitStream BitStream BitStream _ $anext $bnext),
+        q(@BitStream.sub_congr $w $a $anext $b $bnext $aproof $bproof)
       ⟩
-    | .app (.app (.const ``BitStream.ofBitVec []) w) (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) _) _) _) _) a ) b) => do
-      let myInst : Q(HSub BitStream BitStream BitStream) := q(instHSub)
+    | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
       return ⟨
-        (.app (.app (.app (.app (.app (.app (.const ``HSub.hSub levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
+        q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
         .app (.app (.app (.const ``BitStream.ofBitVec_sub []) w) a ) b
       ⟩
-    | .app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd _) _) _) _ ) _ ) a) b => do
+    | ~q(@HAdd.hAdd BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
       let ⟨ bnext, bproof ⟩ ← first_rep w b
       return ⟨
         q($anext + $bnext),
         .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.add_congr []) w) a) anext) b) bnext) aproof) bproof
       ⟩
-    | .app (.app (.const ``BitStream.ofBitVec []) w) (.app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd levels) _) _) _) _) a ) b) => do
-      let myInst : Q(HAdd BitStream BitStream BitStream) := q(instHAdd)
+    | ~q(@BitStream.ofBitVec $w ($a + $b)) =>
       return ⟨
-        (.app (.app (.app (.app (.app (.app (.const ``HAdd.hAdd levels) (.const ``BitStream [])) (.const ``BitStream [])) (.const ``BitStream []) ) myInst ) (.app (.app (.const ``BitStream.ofBitVec []) w)  a)   ) (.app (.app (.const ``BitStream.ofBitVec []) w)  b)),
+        q(@HAdd.hAdd BitStream BitStream BitStream _ (@BitStream.ofBitVec $w $a) (@BitStream.ofBitVec $w $b)),
         .app (.app (.app (.const ``BitStream.ofBitVec_add []) w) a ) b
       ⟩
-    | .app (.app (.app (.const ``Neg.neg [])  _ ) _ ) a => do
+    | ~q(@Neg.neg BitStream _ $a)=> do
       let ⟨ anext, aproof ⟩ ← first_rep w a
       return ⟨
         q(-$anext),
         (.app (.app (.app (.app (.const ``BitStream.neg_congr []) w) a) anext) aproof)
       ⟩
-    | .app (.app (.const ``BitStream.ofBitVec []) w)  (.app (.app (.app (.const ``Neg.neg _) _) _) a) => do
-      let myExpr : Q(BitStream → BitStream) := q(Neg.neg)
+    | ~q(@BitStream.ofBitVec $w (@Neg.neg (BitVec $w) _ $a)) => do
       return ⟨
-        .app myExpr (.app (.app (.const ``BitStream.ofBitVec []) w)  a)    ,
+        q(@Neg.neg BitStream _ (@BitStream.ofBitVec $w $a)),
         .app (.app (.const ``BitStream.ofBitVec_neg []) w) a
       ⟩
-    | .app (.app (.app (.const ``Complement.complement _) _ ) _ ) a => do
+    | ~q(@Complement.complement BitStream _ $a) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
       return ⟨
         q(~~~ $anext),
