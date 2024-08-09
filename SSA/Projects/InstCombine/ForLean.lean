@@ -2,25 +2,29 @@ import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
-lemma two_pow_eq_pow_pred_times_two {h : 0 < w} : 2 ^ w = 2 ^ (w-1) * 2 := by
+lemma two_pow_pred_mul_two (h : 0 < w) :
+    2 ^ (w - 1) * 2 = 2 ^ w := by
   simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
   rw [Nat.sub_add_cancel]
   omega
 
-lemma two_pow_eq_two_pow_pred_add_two_pow_pred {h : 0 < w} :
-    2 ^ w = 2^(w-1) + 2^(w-1) := by
-  rw [two_pow_eq_pow_pred_times_two] <;> omega
+lemma two_pow_pred_add_two_pow_pred (h : 0 < w) :
+    2 ^ (w - 1) + 2 ^ (w - 1) = 2 ^ w:= by
+  rw [← two_pow_pred_mul_two (w := w) h]
+  omega
 
-lemma two_pow_gt_two_pow_pred {h : 0 < w} : 2 ^ w > 2 ^ (w - 1) := by
-  simp [two_pow_eq_two_pow_pred_add_two_pow_pred (h := h)]
+lemma two_pow_pred_lt_two_pow (h : 0 < w) :
+    2 ^ (w - 1) < 2 ^ w := by
+  simp [← two_pow_pred_add_two_pow_pred h]
 
-lemma two_pow_pred_lt_two_pow {h : 0 < w} : 2 ^ (w - 1) < 2 ^ w := by
-  simp [two_pow_gt_two_pow_pred (h := h)]
-
-@[simp]
-lemma two_pow_sub_two_pow_pred_eq_two_pow_pred {h : 0 < w} :
+lemma two_pow_sub_two_pow_pred (h : 0 < w) :
     2 ^ w - 2 ^ (w - 1) = 2 ^ (w - 1) := by
-  simp [@two_pow_eq_two_pow_pred_add_two_pow_pred w h]
+  simp [← two_pow_pred_add_two_pow_pred h]
+
+lemma two_pow_pred_mod_two_pred (h : 0 < w):
+    2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
+  rw [Nat.mod_eq_of_lt]
+  apply two_pow_pred_lt_two_pow h
 
 lemma Nat.eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
   simp only [bne_iff_ne, ne_eq, mod_two_ne_zero] at h
@@ -30,10 +34,6 @@ lemma Nat.sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % 
   rcases n with rfl | n <;> simp
   omega
 
-lemma two_pow_pred_mod_eq_two_pred (h : w > 0): 2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
-  rw [Nat.mod_eq_of_lt]
-  apply two_pow_pred_lt_two_pow
-  simp [h]
 
 namespace BitVec
 
@@ -424,7 +424,7 @@ private theorem ofInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
       simp only [gt_iff_lt, Nat.ofNat_pos, mul_le_mul_right, le_of_lt (isLt A)]
     have is_int_min' : BitVec.toNat A = 2^(w-1) := by
       have h : 2 ^w  = (2 ^(w - 1)) * 2 := by
-        rw [two_pow_eq_pow_pred_times_two]
+        rw [← two_pow_pred_add_two_pow_pred (by omega)]
         omega
       omega
     simp [ne_eq, toNat_eq, is_int_min', toNat_intMin, w_0, ↓reduceIte,
@@ -471,7 +471,7 @@ theorem intMin_eq_neg_intMin (w : Nat) :
   have w_gt_zero : 0 < w := by omega
   simp only [toNat_eq, toNat_neg, toNat_intMin]
   simp only [w_eq_zero, ↓reduceIte]
-  rw [two_pow_sub_two_pow_pred_eq_two_pow_pred]
+  rw [two_pow_sub_two_pow_pred]
   rw [Nat.mod_eq_of_lt]
   · apply two_pow_pred_lt_two_pow
     apply w_gt_zero
@@ -488,7 +488,7 @@ private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
   unfold Int.bmod
   simp only [Nat.cast_pow, Nat.cast_ofNat]
   norm_cast
-  simp only [two_pow_pred_mod_eq_two_pred h]
+  simp only [two_pow_pred_mod_two_pred h]
   split_ifs
   · rename_i hh
     norm_cast at hh
@@ -496,7 +496,8 @@ private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
       have hhh : ¬ (2 ^ (w - 1) * 2 + 1 < (2 ^ w + 1) / 2 * 2 + 1) := by
         rw [Nat.div_two_mul_two_add_one_of_odd]
         · simp only [add_lt_add_iff_right, not_lt]
-          rw [@two_pow_eq_pow_pred_times_two w h]
+          rw [← two_pow_pred_add_two_pow_pred h]
+          omega
         · apply Even.add_odd
           · apply Even.pow_of_ne_zero
             simp only [even_two]
