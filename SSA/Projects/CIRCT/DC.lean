@@ -213,18 +213,18 @@ def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM (DC) (DC).Ty
   | MLIR.AST.MLIRType.undefined s => do
-    match s.splitOn with
+    match s.splitOn "_" with
     | ["Stream", r] =>
       return .stream (← mkTy2 r)
     | ["Stream2", r] =>
-      return .stream (← mkTy2 r)
+      return .stream2 (← mkTy2 r)
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy (DC) 0 where
   mkTy := mkTy
 
-def branch {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (DC) Γ .pure (.stream2 r) :=
+def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (DC) Γ .pure (.stream2 r) :=
   Expr.mk
     (op := .branch r)
     (ty_eq := rfl)
@@ -265,7 +265,7 @@ def mkExpr (Γ : Ctxt (DC).Ty) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .stream r₁, .stream .bool, "dc.branch" => return ⟨_, .stream2 r₁, branch v₁ v₂⟩
+      | .stream r₁, .stream .bool, "dc.branch" => return ⟨_, .stream2 r₁, @branch r₁ _ v₁ v₂⟩
       -- unsure this is correct
       | .stream r₁, _, "dc.merge" => return ⟨_, .stream r₁, merge v₁ v₁⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
@@ -310,13 +310,14 @@ end Syntax
 -/
 namespace Examples
 def BranchEg1 := [dc_com| {
-  ^entry(%0: !StreamInt, %1: !StreamInt):
-    %out = "dc.branch" (%0, %1) : (!StreamInt, !StreamBool) -> (!Stream2Int)
-    %outf = "dc.fst" (%out) : (!Stream2Int) -> (!StreamInt)
-    %outs = "dc.snd" (%out) : (!Stream2Int) -> (!StreamInt)
-    %out2 = "dc.merge" (%outfInt, %outsInt) : (!StreamInt, !StreamInt) -> (!StreamInt)
-    "return" (%out2) : (!StreamInt) -> ()
+  ^entry(%0: !Stream_Bool, %1: !Stream_Bool):
+    %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
+    %outf = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
+    "return" (%out2) : (!Stream_Bool) -> ()
   }]
+
 
 #check BranchEg1
 #eval BranchEg1
@@ -324,13 +325,17 @@ def BranchEg1 := [dc_com| {
 #check BranchEg1.denote
 #print axioms BranchEg1
 
-def x := Stream.ofList [some true, none, some false, some true, some false]
-def c := Stream.ofList [some true, some false, none, some true]
+def ofList (vals : List (Option α)) : Stream α :=
+  fun i => (vals.get? i).join
 
-def test : Stream r :=
+def x : Stream Bool := ofList [some true, none, some false, some true, some false]
+def c : Stream Bool := ofList [some true, some false, none, some true]
+
+def test : Stream Bool :=
   BranchEg1.denote (Valuation.ofPair c x)
 
-def remNone (lst : List Val) : List Val :=
+def remNone (lst : List (Option Bool)) : List (Option Bool) :=
   lst.filter (fun | some x => true
                   | none => false)
+
 end Examples
