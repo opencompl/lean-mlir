@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 /-
-Syntax definitions for FHE, providing a custom [fhe_com|...] with syntax sugar.
+Syntax definitions for FHE, providing a custom [poly|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
@@ -43,7 +43,8 @@ def cstIdx {Γ : Ctxt _} (i : Nat) : Expr (FHE q n) Γ .pure .index :=
     (args := .nil)
     (regArgs := .nil)
 
-def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .pure .polynomialLike :=
+def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) :
+    Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := .add)
     (ty_eq := rfl)
@@ -51,7 +52,8 @@ def add {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q 
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) : Expr (FHE q n) Γ .pure .polynomialLike :=
+def mul {Γ : Ctxt (Ty q n)} (e₁ e₂ : Var Γ .polynomialLike) :
+    Expr (FHE q n) Γ .pure .polynomialLike :=
   Expr.mk
     (op := .mul)
     (ty_eq := rfl)
@@ -83,9 +85,9 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
           · intros ha
             simp at ha
             split at ha
-            case mp.inl hz =>
+            case mp.isTrue hz =>
               simp at ha
-            case mp.inr hz =>
+            case mp.isFalse hz =>
               simp at ha
               subst ha
               simp [hz]
@@ -159,8 +161,11 @@ def mkExpr (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂ with
         | .integer, .index => return ⟨_, .polynomialLike, mon v₁ v₂⟩
-        | _, _ => throw <| .generic s!"expected operands to be of types `integer` and `index` for `monomial`. Got: {repr ty₁}, {repr ty₂}"
-    | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+        | _, _ => throw <|
+          .generic (s!"expected operands to be of types `integer` and " ++
+            s!"`index` for `monomial`. Got: {repr ty₁}, {repr ty₂}")
+    | _ => throw <| .generic (s!"expected two operands for `monomial`, " ++
+           s!"found #'{opStx.args.length}' in '{repr opStx.args}'")
   | "poly.add" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
@@ -169,7 +174,9 @@ def mkExpr (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) :
       match ty₁, ty₂ with
         | .polynomialLike, .polynomialLike => return ⟨_, .polynomialLike, add v₁ v₂⟩
         | _, _ => throw <| .generic s!"expected both operands to be of type 'polynomialLike'"
-    | _ => throw <| .generic s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    | _ => throw <|
+      .generic (s!"expected two operands for `add`, found #'{opStx.args.length}' " ++
+        s!"in '{repr opStx.args}'")
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 
 instance : MLIR.AST.TransformExpr (FHE q n) 0 where
@@ -182,7 +189,8 @@ def mkReturn (Γ : Ctxt (FHE q n).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     return ⟨.pure, ty, Com.ret v⟩
-  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
+  | _ => throw <| .generic (s!"Ill-formed return statement (wrong arity, expected 1," ++
+    s!" got {opStx.args.length})")
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : MLIR.AST.TransformReturn (FHE q n) 0 where
@@ -191,7 +199,7 @@ instance : MLIR.AST.TransformReturn (FHE q n) 0 where
 end MkFuns -- we don't want q and i here anymore
 
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[fhe_com" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
+elab "[poly" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term => do
   let q : Q(Nat) ← elabTermEnsuringTypeQ qi q(Nat)
   let n : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
   let _factval ← elabTermEnsuringTypeQ hq q(Fact ($q > 1))

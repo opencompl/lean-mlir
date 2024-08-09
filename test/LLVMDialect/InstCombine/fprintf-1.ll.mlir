@@ -1,94 +1,68 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "hello_world", type = !llvm.array<13 x i8>, value = "hello world\0A\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_c", type = !llvm.array<3 x i8>, value = "%c\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_d", type = !llvm.array<3 x i8>, value = "%d\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_f", type = !llvm.array<3 x i8>, value = "%f\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_s", type = !llvm.array<3 x i8>, value = "%s\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "percent_m", type = !llvm.array<3 x i8>, value = "%m\00"} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "fprintf", type = !llvm.func<i32 (ptr<struct<"FILE", ()>>, ptr<i8>, ...)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @hello_world} : () -> !llvm.ptr<array<13 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<13 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%arg0, %2) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify1", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 104 : i8} : () -> i8
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @percent_c} : () -> !llvm.ptr<array<3 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %4 = "llvm.call"(%arg0, %3, %0) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>, i8) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify2", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @hello_world} : () -> !llvm.ptr<array<13 x i8>>
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @percent_s} : () -> !llvm.ptr<array<3 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %4 = "llvm.getelementptr"(%0, %1, %1) : (!llvm.ptr<array<13 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %5 = "llvm.call"(%arg0, %3, %4) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>, !llvm.ptr<i8>) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify3", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 187 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @percent_d} : () -> !llvm.ptr<array<3 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %4 = "llvm.call"(%arg0, %3, %0) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>, i32) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify4", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @hello_world} : () -> !llvm.ptr<array<13 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<13 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%arg0, %2) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_simplify5", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.870000e+00 : f64} : () -> f64
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @percent_f} : () -> !llvm.ptr<array<3 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %4 = "llvm.call"(%arg0, %3, %0) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>, f64) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify1", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>, %arg1: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @percent_f} : () -> !llvm.ptr<array<3 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%arg0, %2, %arg1) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>, f64) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify2", type = !llvm.func<void (ptr<struct<"FILE", ()>>, f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @hello_world} : () -> !llvm.ptr<array<13 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<13 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%arg0, %2) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>) -> i32
-    "llvm.return"(%3) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify3", type = !llvm.func<i32 (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"FILE", ()>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.mlir.addressof"() {global_name = @percent_m} : () -> !llvm.ptr<array<3 x i8>>
-    %2 = "llvm.getelementptr"(%1, %0, %0) : (!llvm.ptr<array<3 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %3 = "llvm.call"(%arg0, %2) {callee = @fprintf, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"FILE", ()>>, !llvm.ptr<i8>) -> i32
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test_no_simplify4", type = !llvm.func<void (ptr<struct<"FILE", ()>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external constant @hello_world("hello world\0A\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @percent_c("%c\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @percent_d("%d\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @percent_f("%f\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @percent_s("%s\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @percent_m("%m\00") {addr_space = 0 : i32}
+  llvm.func @fprintf(!llvm.ptr, !llvm.ptr, ...) -> i32
+  llvm.func @test_simplify1(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("hello world\0A\00") : !llvm.array<13 x i8>
+    %1 = llvm.mlir.addressof @hello_world : !llvm.ptr
+    %2 = llvm.call @fprintf(%arg0, %1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr) -> i32
+    llvm.return
+  }
+  llvm.func @test_simplify2(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("%c\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_c : !llvm.ptr
+    %2 = llvm.mlir.constant(104 : i8) : i8
+    %3 = llvm.call @fprintf(%arg0, %1, %2) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, i8) -> i32
+    llvm.return
+  }
+  llvm.func @test_simplify3(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("%s\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_s : !llvm.ptr
+    %2 = llvm.mlir.constant("hello world\0A\00") : !llvm.array<13 x i8>
+    %3 = llvm.mlir.addressof @hello_world : !llvm.ptr
+    %4 = llvm.call @fprintf(%arg0, %1, %3) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, !llvm.ptr) -> i32
+    llvm.return
+  }
+  llvm.func @test_simplify4(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("%d\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_d : !llvm.ptr
+    %2 = llvm.mlir.constant(187 : i32) : i32
+    %3 = llvm.call @fprintf(%arg0, %1, %2) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, i32) -> i32
+    llvm.return
+  }
+  llvm.func @test_simplify5(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("hello world\0A\00") : !llvm.array<13 x i8>
+    %1 = llvm.mlir.addressof @hello_world : !llvm.ptr
+    %2 = llvm.call @fprintf(%arg0, %1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr) -> i32
+    llvm.return
+  }
+  llvm.func @test_no_simplify1(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("%f\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_f : !llvm.ptr
+    %2 = llvm.mlir.constant(1.870000e+00 : f64) : f64
+    %3 = llvm.call @fprintf(%arg0, %1, %2) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, f64) -> i32
+    llvm.return
+  }
+  llvm.func @test_no_simplify2(%arg0: !llvm.ptr, %arg1: f64) {
+    %0 = llvm.mlir.constant("%f\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_f : !llvm.ptr
+    %2 = llvm.call @fprintf(%arg0, %1, %arg1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr, f64) -> i32
+    llvm.return
+  }
+  llvm.func @test_no_simplify3(%arg0: !llvm.ptr) -> i32 {
+    %0 = llvm.mlir.constant("hello world\0A\00") : !llvm.array<13 x i8>
+    %1 = llvm.mlir.addressof @hello_world : !llvm.ptr
+    %2 = llvm.call @fprintf(%arg0, %1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr) -> i32
+    llvm.return %2 : i32
+  }
+  llvm.func @test_no_simplify4(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant("%m\00") : !llvm.array<3 x i8>
+    %1 = llvm.mlir.addressof @percent_m : !llvm.ptr
+    %2 = llvm.call @fprintf(%arg0, %1) vararg(!llvm.func<i32 (ptr, ptr, ...)>) : (!llvm.ptr, !llvm.ptr) -> i32
+    llvm.return
+  }
+}

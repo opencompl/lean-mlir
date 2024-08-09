@@ -1,23 +1,15 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "g", type = i8, value = -1 : i8} : () -> ()
-  "llvm.func"() ( {
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.addressof"() {global_name = @g} : () -> !llvm.ptr<i8>
-    %2 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %3 = "llvm.alloca"(%2) : (i32) -> !llvm.ptr<i8>
-    %4 = "llvm.bitcast"(%3) : (!llvm.ptr<i8>) -> !llvm.ptr<i4>
-    "llvm.call"(%4) {callee = @bar, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i4>) -> ()
-    %5 = "llvm.bitcast"(%4) : (!llvm.ptr<i4>) -> !llvm.ptr<i8>
-    "llvm.call"(%5, %1, %2, %0) {callee = @llvm.memcpy.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.call"(%5) {callee = @gaz, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "foo", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.memcpy.p0i8.p0i8.i32", type = !llvm.func<void (ptr<i8>, ptr<i8>, i32, i1)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "bar", type = !llvm.func<void (ptr<i4>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "gaz", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global external constant @g(-1 : i8) {addr_space = 0 : i32} : i8
+  llvm.func @foo() {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(-1 : i8) : i8
+    %2 = llvm.mlir.addressof @g : !llvm.ptr
+    %3 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.call @bar(%3) : (!llvm.ptr) -> ()
+    "llvm.intr.memcpy"(%3, %2, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.call @gaz(%3) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @bar(!llvm.ptr)
+  llvm.func @gaz(!llvm.ptr)
+}

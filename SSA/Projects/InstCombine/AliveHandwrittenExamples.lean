@@ -15,8 +15,6 @@ open Ctxt (Var DerivedCtxt)
 open InstCombine (MOp)
 
 namespace AliveHandwritten
-set_option pp.proofs false
-set_option pp.proofs.withType false
 
 
 /-
@@ -31,12 +29,11 @@ precondition: true
 def alive_DivRemOfSelect_src (w : Nat) :=
   [llvm (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
-    %c0 = llvm.mlir.constant 0
+    %c0 = llvm.mlir.constant(0) : _
     %v1 = llvm.select %c, %y, %c0
     %v2 = llvm.udiv %x,  %v1
     llvm.return %v2
   }]
-
 def alive_DivRemOfSelect_tgt (w : Nat) :=
   [llvm (w)| {
   ^bb0(%c: i1, %y : _, %x : _):
@@ -68,8 +65,8 @@ theorem alive_DivRemOfSelect (w : Nat) :
        rcases vcond with zero | vcond <;> simp;
        rcases vcond with zero | vcond <;> simp;
        linarith
-     . subst h
+     · subst h
        simp
-     . subst h; simp
+     · subst h; simp
 
 end AliveHandwritten

@@ -1,290 +1,252 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i31):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i31) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_fast", type = !llvm.func<f64 (i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f64} : () -> f64
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f64
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_double_const_base_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i31):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f64} : () -> f64
-    %1 = "llvm.uitofp"(%arg0) : (i31) -> f64
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_double_const_base_fast", type = !llvm.func<f64 (i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_double_const_base_2_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.600000e+01 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_double_const_base_power_of_2_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i31):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i31) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_2_fast", type = !llvm.func<f64 (i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i31):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.600000e+01 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i31) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_power_of_2_fast", type = !llvm.func<f64 (i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f32, %arg1: i32):  // no predecessors
-    %0 = "llvm.sitofp"(%arg1) : (i32) -> f32
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %2 = "llvm.fpext"(%1) : (f32) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_float_base_fast", type = !llvm.func<f64 (f32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f32, %arg1: i31):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i31) -> f32
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %2 = "llvm.fpext"(%1) : (f32) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_float_base_fast", type = !llvm.func<f64 (f32, i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64, %arg1: i32):  // no predecessors
-    %0 = "llvm.sitofp"(%arg1) : (i32) -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_double_base_fast", type = !llvm.func<f64 (f64, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64, %arg1: i31):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i31) -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_double_base_fast", type = !llvm.func<f64 (f64, i31)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i8):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i8) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_fast_i8", type = !llvm.func<f64 (i8)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i16):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i16) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_fast_i16", type = !llvm.func<f64 (i16)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i8):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i8) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_fast_i8", type = !llvm.func<f64 (i8)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i16):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i16) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_fast_i16", type = !llvm.func<f64 (i16)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 4.000000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const_int_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = -4.000000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const2_int_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_fast_i32", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_2_fast_i32", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.600000e+01 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_power_of_2_fast_i32", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f32, %arg1: i32):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i32) -> f32
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %2 = "llvm.fpext"(%1) : (f32) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_float_base_fast_i32", type = !llvm.func<f64 (f32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64, %arg1: i32):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i32) -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_double_base_fast_i32", type = !llvm.func<f64 (f64, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i64) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_fast_i64", type = !llvm.func<f64 (i64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i64) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_fast_i64", type = !llvm.func<f64 (i64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 7.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2.000000e+00 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_2_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.600000e+01 : f32} : () -> f32
-    %1 = "llvm.sitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_const_base_power_of_2_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 2.000000e+00 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_2_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 1.600000e+01 : f32} : () -> f32
-    %1 = "llvm.uitofp"(%arg0) : (i32) -> f32
-    %2 = "llvm.call"(%0, %1) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %3 = "llvm.fpext"(%2) : (f32) -> f64
-    "llvm.return"(%3) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_const_base_power_of_2_no_fast", type = !llvm.func<f64 (i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f32, %arg1: i32):  // no predecessors
-    %0 = "llvm.sitofp"(%arg1) : (i32) -> f32
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %2 = "llvm.fpext"(%1) : (f32) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_float_base_no_fast", type = !llvm.func<f64 (f32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f32, %arg1: i32):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i32) -> f32
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f32, fastmathFlags = #llvm.fastmath<>} : (f32, f32) -> f32
-    %2 = "llvm.fpext"(%1) : (f32) -> f64
-    "llvm.return"(%2) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_float_base_no_fast", type = !llvm.func<f64 (f32, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64, %arg1: i32):  // no predecessors
-    %0 = "llvm.sitofp"(%arg1) : (i32) -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_sitofp_double_base_no_fast", type = !llvm.func<f64 (f64, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64, %arg1: i32):  // no predecessors
-    %0 = "llvm.uitofp"(%arg1) : (i32) -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "pow_uitofp_double_base_no_fast", type = !llvm.func<f64 (f64, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 4.000000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const_int_no_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 3.750000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const_not_int_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 3.750000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const_not_int_no_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: f64):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = -4.000000e+01 : f64} : () -> f64
-    %1 = "llvm.call"(%arg0, %0) {callee = @llvm.pow.f64, fastmathFlags = #llvm.fastmath<>} : (f64, f64) -> f64
-    "llvm.return"(%1) : (f64) -> ()
-  }) {linkage = 10 : i64, sym_name = "powf_exp_const2_int_no_fast", type = !llvm.func<f64 (f64)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.pow.f32", type = !llvm.func<f32 (f32, f32)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.pow.f64", type = !llvm.func<f64 (f64, f64)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @pow_sitofp_const_base_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_fast(%arg0: i31) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i31 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_double_const_base_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f64) : f64
+    %1 = llvm.sitofp %arg0 : i32 to f64
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f64, f64) -> f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_uitofp_double_const_base_fast(%arg0: i31) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f64) : f64
+    %1 = llvm.uitofp %arg0 : i31 to f64
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f64, f64) -> f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_sitofp_double_const_base_2_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(2.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_double_const_base_power_of_2_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(1.600000e+01 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_2_fast(%arg0: i31) -> f64 {
+    %0 = llvm.mlir.constant(2.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i31 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_power_of_2_fast(%arg0: i31) -> f64 {
+    %0 = llvm.mlir.constant(1.600000e+01 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i31 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_float_base_fast(%arg0: f32, %arg1: i32) -> f64 {
+    %0 = llvm.sitofp %arg1 : i32 to f32
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %2 = llvm.fpext %1 : f32 to f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_uitofp_float_base_fast(%arg0: f32, %arg1: i31) -> f64 {
+    %0 = llvm.uitofp %arg1 : i31 to f32
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %2 = llvm.fpext %1 : f32 to f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_sitofp_double_base_fast(%arg0: f64, %arg1: i32) -> f64 {
+    %0 = llvm.sitofp %arg1 : i32 to f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<afn>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_uitofp_double_base_fast(%arg0: f64, %arg1: i31) -> f64 {
+    %0 = llvm.uitofp %arg1 : i31 to f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<afn>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_sitofp_const_base_fast_i8(%arg0: i8) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i8 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_const_base_fast_i16(%arg0: i16) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i16 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_fast_i8(%arg0: i8) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i8 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_fast_i16(%arg0: i16) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i16 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<afn>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @powf_exp_const_int_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(4.000000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @powf_exp_const2_int_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(-4.000000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_uitofp_const_base_fast_i32(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_2_fast_i32(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(2.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_power_of_2_fast_i32(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(1.600000e+01 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_float_base_fast_i32(%arg0: f32, %arg1: i32) -> f64 {
+    %0 = llvm.uitofp %arg1 : i32 to f32
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %2 = llvm.fpext %1 : f32 to f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_uitofp_double_base_fast_i32(%arg0: f64, %arg1: i32) -> f64 {
+    %0 = llvm.uitofp %arg1 : i32 to f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_sitofp_const_base_fast_i64(%arg0: i64) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i64 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_fast_i64(%arg0: i64) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i64 to f32
+    %2 = llvm.intr.pow(%0, %1)  {fastmathFlags = #llvm.fastmath<fast>} : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_const_base_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(7.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_const_base_2_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(2.000000e+00 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_const_base_power_of_2_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(1.600000e+01 : f32) : f32
+    %1 = llvm.sitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_2_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(2.000000e+00 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_uitofp_const_base_power_of_2_no_fast(%arg0: i32) -> f64 {
+    %0 = llvm.mlir.constant(1.600000e+01 : f32) : f32
+    %1 = llvm.uitofp %arg0 : i32 to f32
+    %2 = llvm.intr.pow(%0, %1)  : (f32, f32) -> f32
+    %3 = llvm.fpext %2 : f32 to f64
+    llvm.return %3 : f64
+  }
+  llvm.func @pow_sitofp_float_base_no_fast(%arg0: f32, %arg1: i32) -> f64 {
+    %0 = llvm.sitofp %arg1 : i32 to f32
+    %1 = llvm.intr.pow(%arg0, %0)  : (f32, f32) -> f32
+    %2 = llvm.fpext %1 : f32 to f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_uitofp_float_base_no_fast(%arg0: f32, %arg1: i32) -> f64 {
+    %0 = llvm.uitofp %arg1 : i32 to f32
+    %1 = llvm.intr.pow(%arg0, %0)  : (f32, f32) -> f32
+    %2 = llvm.fpext %1 : f32 to f64
+    llvm.return %2 : f64
+  }
+  llvm.func @pow_sitofp_double_base_no_fast(%arg0: f64, %arg1: i32) -> f64 {
+    %0 = llvm.sitofp %arg1 : i32 to f64
+    %1 = llvm.intr.pow(%arg0, %0)  : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_uitofp_double_base_no_fast(%arg0: f64, %arg1: i32) -> f64 {
+    %0 = llvm.uitofp %arg1 : i32 to f64
+    %1 = llvm.intr.pow(%arg0, %0)  : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @powf_exp_const_int_no_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(4.000000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @powf_exp_const_not_int_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(3.750000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  {fastmathFlags = #llvm.fastmath<fast>} : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @powf_exp_const_not_int_no_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(3.750000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @powf_exp_const2_int_no_fast(%arg0: f64) -> f64 {
+    %0 = llvm.mlir.constant(-4.000000e+01 : f64) : f64
+    %1 = llvm.intr.pow(%arg0, %0)  : (f64, f64) -> f64
+    llvm.return %1 : f64
+  }
+  llvm.func @pow_sitofp_const_base_2_no_fast_vector(%arg0: vector<2xi8>) -> vector<2xf32> {
+    %0 = llvm.mlir.constant(dense<2.000000e+00> : vector<2xf32>) : vector<2xf32>
+    %1 = llvm.sitofp %arg0 : vector<2xi8> to vector<2xf32>
+    %2 = llvm.intr.pow(%0, %1)  : (vector<2xf32>, vector<2xf32>) -> vector<2xf32>
+    llvm.return %2 : vector<2xf32>
+  }
+}

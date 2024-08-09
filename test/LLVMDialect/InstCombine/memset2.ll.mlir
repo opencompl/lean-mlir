@@ -1,17 +1,12 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"struct.Moves", (array<9 x i8>, i8, i8, i8, array<5 x i8>)>, 1>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 8 : i64} : () -> i64
-    %2 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    %3 = "llvm.mlir.constant"() {value = 9 : i32} : () -> i32
-    %4 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %5 = "llvm.mlir.constant"() {value = 1 : i32} : () -> i32
-    %6 = "llvm.getelementptr"(%arg0, %5, %4, %3) : (!llvm.ptr<struct<"struct.Moves", (array<9 x i8>, i8, i8, i8, array<5 x i8>)>, 1>, i32, i32, i32) -> !llvm.ptr<i8, 1>
-    "llvm.call"(%6, %2, %1, %0) {callee = @llvm.memset.p1i8.i64, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8, 1>, i8, i64, i1) -> ()
-    "llvm.return"(%4) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test", type = !llvm.func<i32 (ptr<struct<"struct.Moves", (array<9 x i8>, i8, i8, i8, array<5 x i8>)>, 1>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.memset.p1i8.i64", type = !llvm.func<void (ptr<i8, 1>, i8, i64, i1)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @test(%arg0: !llvm.ptr<1> {llvm.nocapture}) -> i32 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.mlir.constant(9 : i32) : i32
+    %3 = llvm.mlir.constant(0 : i8) : i8
+    %4 = llvm.mlir.constant(8 : i64) : i64
+    %5 = llvm.getelementptr inbounds %arg0[%0, 0, %2] : (!llvm.ptr<1>, i32, i32) -> !llvm.ptr<1>, !llvm.struct<"struct.Moves", (array<9 x i8>, i8, i8, i8, array<5 x i8>)>
+    "llvm.intr.memset"(%5, %3, %4) <{isVolatile = false}> : (!llvm.ptr<1>, i8, i64) -> ()
+    llvm.return %1 : i32
+  }
+}

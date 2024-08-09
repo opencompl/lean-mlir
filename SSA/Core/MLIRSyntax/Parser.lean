@@ -9,10 +9,12 @@ variable {ParseOutput : Type} [ToString ParseOutput]
 abbrev ParseError := String
 abbrev ParseFun : Type := Lean.Environment → String → EIO ParseError ParseOutput
 
--- We use unification with `isDefEq` to find the synthetic metavariables, and then we synthesize and instantiate them
+-- We use unification with `isDefEq` to find the synthetic metavariables, and
+-- then we synthesize and instantiate them
 -- This lets us instantiate arguments like the `Nat` argument to `MLIR.AST.Region`.
 -- For more info, see: https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Calling.20unification.20from.20meta.20to.20remove.20metavariables
-unsafe def elabIntoTermTactic {α : Type} (expectedType : Expr) (stx : Lean.Syntax) : Elab.Tactic.TacticM α := do
+unsafe def elabIntoTermTactic {α : Type} (expectedType : Expr) (stx : Lean.Syntax) :
+    Elab.Tactic.TacticM α := do
   let expr ← Lean.Elab.Tactic.elabTerm stx none
   let _ ← Meta.isDefEq (← Meta.inferType expr) expectedType
   Elab.Term.synthesizeSyntheticMVarsNoPostponing
@@ -21,7 +23,8 @@ unsafe def elabIntoTermTactic {α : Type} (expectedType : Expr) (stx : Lean.Synt
 
 namespace Lean.Elab.Tactic
 
-@[inline] private def TacticM.runCore (x : TacticM α) (ctx : Context) (s : State) : TermElabM (α × State) :=
+@[inline] private def TacticM.runCore (x : TacticM α) (ctx : Context) (s : State) :
+    TermElabM (α × State) :=
   x ctx |>.run s
 
 @[inline] private def TacticM.runCore' (x : TacticM α) (ctx : Context) (s : State) : TermElabM α :=
@@ -29,7 +32,8 @@ namespace Lean.Elab.Tactic
 
 end Lean.Elab.Tactic
 
-unsafe def elabIntoTermElab {α : Type} (expectedType : Expr) (stx : Lean.Syntax) : Elab.Term.TermElabM α := do
+unsafe def elabIntoTermElab {α : Type} (expectedType : Expr) (stx : Lean.Syntax) :
+    Elab.Term.TermElabM α := do
   elabIntoTermTactic (α := α) expectedType stx  |>.runCore' { elaborator := `ParserHack} default
 
 unsafe def elabIntoMeta {α : Type} (expectedType : Expr) (stx : Lean.Syntax) : MetaM α :=
@@ -42,16 +46,20 @@ def printException : Except Exception α → IO String
   | Except.ok _ => throw <| IO.userError "printException called on Except.ok"
   | Except.error e => e.toMessageData.toString
 
-unsafe def elabIntoEIO {α : Type} (env : Lean.Environment) (typeName : Lean.Expr) (stx : Lean.Syntax) : EIO ParseError α :=
+unsafe def elabIntoEIO {α : Type} (env : Lean.Environment) (typeName : Lean.Expr)
+    (stx : Lean.Syntax) : EIO ParseError α :=
   fun s =>
-    let resE : EIO Exception α := elabIntoCore (α := α) typeName stx |>.run' {fileName := "parserHack", fileMap := default} {env := env}
+    let resE : EIO Exception α :=
+        elabIntoCore (α := α) typeName stx |>.run'
+        {fileName := "parserHack", fileMap := default} {env := env}
     match resE s with
     | .ok a s => .ok a s
     | .error exception s =>
       let errMsgIO : IO String := exception.toMessageData.toString
       match errMsgIO s with
       | .ok errMsg s => .error s!"failed elaboration {stx}. Error: {errMsg}" s
-      | .error e s => .error s!" Failed elaborating {stx}.\nUnable to pretty-print exception at 'elabIntoEIO':\n{e}." s
+      | .error e s => .error (s!" Failed elaborating {stx}.\n" ++
+        s!"Unable to pretty-print exception at 'elabIntoEIO':\n{e}.") s
 
 def region0Expr := (Expr.app (Expr.const `MLIR.AST.Region []) (Expr.const `Nat.zero []))
 
@@ -63,7 +71,8 @@ def op0Expr := (Expr.app (Expr.const `MLIR.AST.Op []) (Expr.const `Nat.zero []))
   It should be safe (if we trust the lean parser) since we ensure that the types match: see
   https://leanprover-community.github.io/mathlib4_docs/Std/Util/TermUnsafe.html#Std.TermUnsafe.termUnsafe_
  -/
-def elabRegion (env : Lean.Environment) (stx : Lean.Syntax) : EIO ParseError (MLIR.AST.Region 0) := do
+def elabRegion (env : Lean.Environment) (stx : Lean.Syntax) :
+    EIO ParseError (MLIR.AST.Region 0) := do
   let reg ← unsafe elabIntoEIO (α := MLIR.AST.Region 0) env region0Expr stx
   return reg
 
@@ -117,7 +126,8 @@ def runParser (parser : @ParseFun ParseOutput) (fileName : String) : IO (Option 
     | .none => []
     | .some colonSeparatedPaths => colonSeparatedPaths.splitOn ":"
   if packagePaths.isEmpty then
-    throw <| IO.userError "Expected `LEAN_PATH` environment variable to be set. Are you running via `lake exec opt`?"
+    throw <| IO.userError ("Expected `LEAN_PATH` environment variable to be set. " ++
+    " Are you running via `lake exec opt`?")
   initSearchPath (← Lean.findSysroot) packagePaths
   let modules : Array Import := #[⟨`SSA.Core.MLIRSyntax.EDSL, false⟩]
   let env ← importModules modules {}

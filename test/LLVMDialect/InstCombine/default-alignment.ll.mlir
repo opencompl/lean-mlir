@@ -1,10 +1,6 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<struct<"Foo", packed (i8, f80)>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %1 = "llvm.getelementptr"(%arg0, %0, %0) : (!llvm.ptr<struct<"Foo", packed (i8, f80)>>, i32, i32) -> !llvm.ptr<i8>
-    %2 = "llvm.load"(%1) : (!llvm.ptr<i8>) -> i8
-    "llvm.return"(%2) : (i8) -> ()
-  }) {linkage = 10 : i64, sym_name = "t", type = !llvm.func<i8 (ptr<struct<"Foo", packed (i8, f80)>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @t(%arg0: !llvm.ptr) -> i8 {
+    %0 = llvm.load %arg0 {alignment = 1 : i64} : !llvm.ptr -> i8
+    llvm.return %0 : i8
+  }
+}

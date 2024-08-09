@@ -83,7 +83,8 @@ def finRange (n : Nat) : LengthIndexedList (Fin n) n :=
     | 0 => LengthIndexedList.nil
     | m + 1 =>
       let coeFun : Fin m → Fin (m + 1) := Fin.coeLt (Nat.le_succ m)
-    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩ (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
+    LengthIndexedList.cons ⟨m, Nat.lt_succ_self m⟩
+      (LengthIndexedList.map coeFun (LengthIndexedList.finRange m))
 
 end LengthIndexedList
 
@@ -93,13 +94,13 @@ elab "print_goal_as_error " : tactic => do
   pure ()
 
 -- TODO: should these go into Std?
-def Vector.ofList {α : Type u} (l : List α) : Vector α l.length :=
+def Vector.ofList {α : Type u} (l : List α) : Mathlib.Vector α l.length :=
 ⟨l, rfl⟩
 
-def Vector.ofArray {α : Type u} (a : Array α) : Vector α a.size :=
+def Vector.ofArray {α : Type u} (a : Array α) : Mathlib.Vector α a.size :=
  Vector.ofList a.data
 
-instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Vector τ n) where
+instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Mathlib.Vector τ n) where
   name := s!"Vector ({inst.name}) {n}"
   parse? str := do
     let arr : Array τ ← Cli.ParseableType.parse? str

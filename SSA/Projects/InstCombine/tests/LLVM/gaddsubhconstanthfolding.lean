@@ -1,0 +1,610 @@
+import SSA.Projects.InstCombine.tests.LLVM.gaddsubhconstanthfolding_proof
+import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+
+open LLVM
+open BitVec
+
+
+
+open MLIR AST
+open Std (BitVec)
+open Ctxt (Var)
+
+set_option linter.deprecated false
+set_option linter.unreachableTactic false
+set_option linter.unusedTactic false
+                                                                       
+def add_const_add_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.add %arg0, %0 : i32
+  %3 = llvm.add %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def add_const_add_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %1 = llvm.add %arg0, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem add_const_add_const_proof : add_const_add_const_before ⊑ add_const_add_const_after := by
+  unfold add_const_add_const_before add_const_add_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_const_add_const
+  all_goals (try extract_goal ; sorry)
+  ---END add_const_add_const
+
+
+
+def add_const_sub_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.add %arg0, %0 : i32
+  %3 = llvm.sub %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def add_const_sub_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = llvm.add %arg0, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem add_const_sub_const_proof : add_const_sub_const_before ⊑ add_const_sub_const_after := by
+  unfold add_const_sub_const_before add_const_sub_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_const_sub_const
+  all_goals (try extract_goal ; sorry)
+  ---END add_const_sub_const
+
+
+
+def add_const_const_sub_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.add %arg0, %0 : i32
+  %3 = llvm.sub %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def add_const_const_sub_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -6 : i32}> : () -> i32
+  %1 = llvm.sub %0, %arg0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem add_const_const_sub_proof : add_const_const_sub_before ⊑ add_const_const_sub_after := by
+  unfold add_const_const_sub_before add_const_const_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_const_const_sub
+  apply add_const_const_sub_thm
+  ---END add_const_const_sub
+
+
+
+def add_nsw_const_const_sub_nsw_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_nsw_const_const_sub_nsw_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_nsw_const_const_sub_nsw_proof : add_nsw_const_const_sub_nsw_before ⊑ add_nsw_const_const_sub_nsw_after := by
+  unfold add_nsw_const_const_sub_nsw_before add_nsw_const_const_sub_nsw_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_nsw_const_const_sub_nsw
+  apply add_nsw_const_const_sub_nsw_thm
+  ---END add_nsw_const_const_sub_nsw
+
+
+
+def add_nsw_const_const_sub_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_nsw_const_const_sub_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_nsw_const_const_sub_proof : add_nsw_const_const_sub_before ⊑ add_nsw_const_const_sub_after := by
+  unfold add_nsw_const_const_sub_before add_nsw_const_const_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_nsw_const_const_sub
+  apply add_nsw_const_const_sub_thm
+  ---END add_nsw_const_const_sub
+
+
+
+def add_const_const_sub_nsw_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_const_const_sub_nsw_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_const_const_sub_nsw_proof : add_const_const_sub_nsw_before ⊑ add_const_const_sub_nsw_after := by
+  unfold add_const_const_sub_nsw_before add_const_const_sub_nsw_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_const_const_sub_nsw
+  apply add_const_const_sub_nsw_thm
+  ---END add_const_const_sub_nsw
+
+
+
+def add_nsw_const_const_sub_nsw_ov_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_nsw_const_const_sub_nsw_ov_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 127 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_nsw_const_const_sub_nsw_ov_proof : add_nsw_const_const_sub_nsw_ov_before ⊑ add_nsw_const_const_sub_nsw_ov_after := by
+  unfold add_nsw_const_const_sub_nsw_ov_before add_nsw_const_const_sub_nsw_ov_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_nsw_const_const_sub_nsw_ov
+  apply add_nsw_const_const_sub_nsw_ov_thm
+  ---END add_nsw_const_const_sub_nsw_ov
+
+
+
+def add_nuw_const_const_sub_nuw_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_nuw_const_const_sub_nuw_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_nuw_const_const_sub_nuw_proof : add_nuw_const_const_sub_nuw_before ⊑ add_nuw_const_const_sub_nuw_after := by
+  unfold add_nuw_const_const_sub_nuw_before add_nuw_const_const_sub_nuw_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_nuw_const_const_sub_nuw
+  apply add_nuw_const_const_sub_nuw_thm
+  ---END add_nuw_const_const_sub_nuw
+
+
+
+def add_nuw_const_const_sub_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_nuw_const_const_sub_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_nuw_const_const_sub_proof : add_nuw_const_const_sub_before ⊑ add_nuw_const_const_sub_after := by
+  unfold add_nuw_const_const_sub_before add_nuw_const_const_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_nuw_const_const_sub
+  apply add_nuw_const_const_sub_thm
+  ---END add_nuw_const_const_sub
+
+
+
+def add_const_const_sub_nuw_before := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
+  %2 = llvm.add %arg0, %0 : i8
+  %3 = llvm.sub %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_const_const_sub_nuw_after := [llvm|
+{
+^0(%arg0 : i8):
+  %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg0 : i8
+  "llvm.return"(%1) : (i8) -> ()
+}
+]
+theorem add_const_const_sub_nuw_proof : add_const_const_sub_nuw_before ⊑ add_const_const_sub_nuw_after := by
+  unfold add_const_const_sub_nuw_before add_const_const_sub_nuw_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN add_const_const_sub_nuw
+  apply add_const_const_sub_nuw_thm
+  ---END add_const_const_sub_nuw
+
+
+
+def sub_const_add_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %arg0, %0 : i32
+  %3 = llvm.add %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def sub_const_add_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -6 : i32}> : () -> i32
+  %1 = llvm.add %arg0, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem sub_const_add_const_proof : sub_const_add_const_before ⊑ sub_const_add_const_after := by
+  unfold sub_const_add_const_before sub_const_add_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN sub_const_add_const
+  all_goals (try extract_goal ; sorry)
+  ---END sub_const_add_const
+
+
+
+def sub_const_sub_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %arg0, %0 : i32
+  %3 = llvm.sub %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def sub_const_sub_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -10 : i32}> : () -> i32
+  %1 = llvm.add %arg0, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem sub_const_sub_const_proof : sub_const_sub_const_before ⊑ sub_const_sub_const_after := by
+  unfold sub_const_sub_const_before sub_const_sub_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN sub_const_sub_const
+  all_goals (try extract_goal ; sorry)
+  ---END sub_const_sub_const
+
+
+
+def sub_const_const_sub_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %arg0, %0 : i32
+  %3 = llvm.sub %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def sub_const_const_sub_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %1 = llvm.sub %0, %arg0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem sub_const_const_sub_proof : sub_const_const_sub_before ⊑ sub_const_const_sub_after := by
+  unfold sub_const_const_sub_before sub_const_const_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN sub_const_const_sub
+  apply sub_const_const_sub_thm
+  ---END sub_const_const_sub
+
+
+
+def const_sub_add_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg0 : i32
+  %3 = llvm.add %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def const_sub_add_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
+  %1 = llvm.sub %0, %arg0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem const_sub_add_const_proof : const_sub_add_const_before ⊑ const_sub_add_const_after := by
+  unfold const_sub_add_const_before const_sub_add_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN const_sub_add_const
+  apply const_sub_add_const_thm
+  ---END const_sub_add_const
+
+
+
+def const_sub_sub_const_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg0 : i32
+  %3 = llvm.sub %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def const_sub_sub_const_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
+  %1 = llvm.sub %0, %arg0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem const_sub_sub_const_proof : const_sub_sub_const_before ⊑ const_sub_sub_const_after := by
+  unfold const_sub_sub_const_before const_sub_sub_const_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN const_sub_sub_const
+  apply const_sub_sub_const_thm
+  ---END const_sub_sub_const
+
+
+
+def const_sub_const_sub_before := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 8 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg0 : i32
+  %3 = llvm.sub %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def const_sub_const_sub_after := [llvm|
+{
+^0(%arg0 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -6 : i32}> : () -> i32
+  %1 = llvm.add %arg0, %0 : i32
+  "llvm.return"(%1) : (i32) -> ()
+}
+]
+theorem const_sub_const_sub_proof : const_sub_const_sub_before ⊑ const_sub_const_sub_after := by
+  unfold const_sub_const_sub_before const_sub_const_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN const_sub_const_sub
+  all_goals (try extract_goal ; sorry)
+  ---END const_sub_const_sub
+
+
+
+def addsub_combine_constants_before := [llvm|
+{
+^0(%arg0 : i7, %arg1 : i7):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i7}> : () -> i7
+  %1 = "llvm.mlir.constant"() <{value = 10 : i7}> : () -> i7
+  %2 = llvm.add %arg0, %0 : i7
+  %3 = llvm.sub %1, %arg1 : i7
+  %4 = llvm.add %2, %3 : i7
+  "llvm.return"(%4) : (i7) -> ()
+}
+]
+def addsub_combine_constants_after := [llvm|
+{
+^0(%arg0 : i7, %arg1 : i7):
+  %0 = "llvm.mlir.constant"() <{value = 52 : i7}> : () -> i7
+  %1 = llvm.sub %arg0, %arg1 : i7
+  %2 = llvm.add %1, %0 : i7
+  "llvm.return"(%2) : (i7) -> ()
+}
+]
+theorem addsub_combine_constants_proof : addsub_combine_constants_before ⊑ addsub_combine_constants_after := by
+  unfold addsub_combine_constants_before addsub_combine_constants_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN addsub_combine_constants
+  all_goals (try extract_goal ; sorry)
+  ---END addsub_combine_constants
+
+
+
+def sub_from_constant_before := [llvm|
+{
+^0(%arg0 : i5, %arg1 : i5):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
+  %1 = llvm.sub %0, %arg0 : i5
+  %2 = llvm.add %1, %arg1 : i5
+  "llvm.return"(%2) : (i5) -> ()
+}
+]
+def sub_from_constant_after := [llvm|
+{
+^0(%arg0 : i5, %arg1 : i5):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
+  %1 = llvm.sub %arg1, %arg0 : i5
+  %2 = llvm.add %1, %0 : i5
+  "llvm.return"(%2) : (i5) -> ()
+}
+]
+theorem sub_from_constant_proof : sub_from_constant_before ⊑ sub_from_constant_after := by
+  unfold sub_from_constant_before sub_from_constant_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN sub_from_constant
+  all_goals (try extract_goal ; sorry)
+  ---END sub_from_constant
+
+
+
+def sub_from_constant_commute_before := [llvm|
+{
+^0(%arg0 : i5, %arg1 : i5):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
+  %1 = llvm.mul %arg1, %arg1 : i5
+  %2 = llvm.sub %0, %arg0 : i5
+  %3 = llvm.add %1, %2 : i5
+  "llvm.return"(%3) : (i5) -> ()
+}
+]
+def sub_from_constant_commute_after := [llvm|
+{
+^0(%arg0 : i5, %arg1 : i5):
+  %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
+  %1 = llvm.mul %arg1, %arg1 : i5
+  %2 = llvm.sub %1, %arg0 : i5
+  %3 = llvm.add %2, %0 : i5
+  "llvm.return"(%3) : (i5) -> ()
+}
+]
+theorem sub_from_constant_commute_proof : sub_from_constant_commute_before ⊑ sub_from_constant_commute_after := by
+  unfold sub_from_constant_commute_before sub_from_constant_commute_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  try alive_auto
+  ---BEGIN sub_from_constant_commute
+  all_goals (try extract_goal ; sorry)
+  ---END sub_from_constant_commute
+
+

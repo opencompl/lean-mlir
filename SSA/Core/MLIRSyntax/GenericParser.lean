@@ -88,7 +88,8 @@ partial def consumeCloseBracket(c: Bracket)
           let parser_fn := Lean.Parser.mkNodeToken `balanced_brackets startPos
           parser_fn ctx (s.setPos (input.next i)) -- consume the input here.
         else balancedBracketsFnAux startPos (input.next i) input bs ctx s
-      else s.mkError $ "| found Opened `" ++ toString b ++ "` expected to close at `" ++ toString c ++ "`"
+      else s.mkError $ "| found Opened `" ++ toString b ++ "` expected to close at `" ++
+      toString c ++ "`"
     | _ => s.mkError $ "| found Closed `" ++ toString c ++ "`, but have no opened brackets on stack"
 
 
@@ -393,7 +394,8 @@ syntax "vector" "<" vector_dim_list mlir_type ">"  : mlir_type
 
 set_option hygiene false in -- allow i to expand
 macro_rules
-| `([mlir_type| vector < $[$fixed?:static_dim_list × $[ [ $scaled?:static_dim_list ] × ]? ]? $t:mlir_type  >]) => do
+| `([mlir_type| vector < $[$fixed?:static_dim_list ×
+      $[ [ $scaled?:static_dim_list ] × ]? ]? $t:mlir_type  >]) => do
       let fixedDims <- match fixed? with
         | some s =>  `([static_dim_list| $s])
         | none => `((@List.nil Nat))
@@ -478,20 +480,58 @@ macro_rules
 macro_rules
   | `([mlir_ops| $$($q)]) => `(coe $q)
 
+/--
+Reference from the MLIR standard
+https://mlir.llvm.org/docs/LangRef/#identifiers-and-keywords
+// Identifiers
+bare-id ::= (letter|[_]) (letter|digit|[_$.])*
+bare-id-list ::= bare-id (`,` bare-id)*
+value-id ::= `%` suffix-id
+alias-name :: = bare-id
+suffix-id ::= (digit+ | ((letter|id-punct) (letter|id-punct|digit)*))
+
+symbol-ref-id ::= `@` (suffix-id | string-literal) (`::` symbol-ref-id)?
+value-id-list ::= value-id (`,` value-id)*
+
+// Uses of value, e.g. in an operand list to an operation.
+value-use ::= value-id (`#` decimal-literal)?
+value-use-list ::= value-use (`,` value-use)*
+-/
 
 
-syntax  "{" ("^" ident ("(" sepBy(mlir_bb_operand, ",") ")")? ":")? mlir_ops "}" : mlir_region
+syntax mlir_suffix_id := num <|> ident
+syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")?
+    ":")? mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
+/--
+`getSuffixId` converts the syntax object of a `suffix id` to a string.
+A `suffix id` is a notion from the MLIR standard defined as
+```bnf
+suffix-id ::= (digit+ | ((letter|id-punct) (letter|id-punct|digit)*))
+```
+See more at
+https://mlir.llvm.org/docs/LangRef/#identifiers-and-keywords
+If the suffix id is a number (the left choice), we convert that number to a string
+If the suffix id is an identifier (the right choice), we convert that identifier to a string
+
+`getSuffixId` is used in parsing the syntax of MLIR to a Lean AST
+-/
+def getSuffixId : TSyntax ``mlir_suffix_id → String
+  | `(mlir_suffix_id| $x:ident) => x.getId.toString
+  | `(mlir_suffix_id| $x:num) => toString (x.getNat)
+  | _ => "" -- Should never happen, since `mlir_suffix_id` is a closed syntax definition
+
 macro_rules
-| `(mlir_region| { ^ $name:ident ( $operands,* ) : $ops }) => do
+| `(mlir_region| { ^ $name:mlir_suffix_id ( $operands,* ) : $ops }) => do
    let initList <- `(@List.nil (MLIR.AST.SSAVal × MLIR.AST.MLIRType _))
-   let argsList <- operands.getElems.foldrM (init := initList) fun x xs => `([mlir_bb_operand| $x] :: $xs)
+   let argsList <- operands.getElems.foldrM (init := initList) fun x xs =>
+       `([mlir_bb_operand| $x] :: $xs)
    let opsList <- `([mlir_ops| $ops])
-   `(Region.mk $(Lean.quote (name.getId.toString)) $argsList $opsList)
-| `(mlir_region| {  ^ $name:ident : $ops } ) => do
+   `(Region.mk $(Lean.quote (getSuffixId name)) $argsList $opsList)
+| `(mlir_region| {  ^ $name:mlir_suffix_id : $ops } ) => do
    let opsList <- `([mlir_ops| $ops])
-   `(Region.mk $(Lean.quote (name.getId.toString)) [] $opsList)
+   `(Region.mk $(Lean.quote (getSuffixId name)) [] $opsList)
 | `(mlir_region| { $ops:mlir_ops }) => do
    let opsList <- `([mlir_ops| $ops])
    `(Region.mk "entry" [] $opsList)
@@ -511,14 +551,44 @@ declare_syntax_cat mlir_attr_val_symbol
 syntax "@" ident : mlir_attr_val_symbol
 syntax "@" str : mlir_attr_val_symbol
 syntax "#" ident : mlir_attr_val -- alias
-syntax "#" strLit : mlir_attr_val -- aliass
+syntax "#" strLit : mlir_attr_val -- alias
 
-syntax "#" ident "<" strLit ">" : mlir_attr_val -- opaqueAttr
+declare_syntax_cat dialect_attribute_contents
+syntax mlir_attr_val : dialect_attribute_contents
+/--
+Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`, 
+which is a particular case of an `mlir-attr-val` that is namespaced to a particular dialect
+
+```bnf
+dialect-namespace ::= bare-id
+
+dialect-attribute ::= `#` (opaque-dialect-attribute | pretty-dialect-attribute)
+opaque-dialect-attribute ::= dialect-namespace dialect-attribute-body
+pretty-dialect-attribute ::= dialect-namespace `.` pretty-dialect-attribute-lead-ident
+                                              dialect-attribute-body?
+pretty-dialect-attribute-lead-ident ::= `[A-Za-z][A-Za-z0-9._]*`
+
+dialect-attribute-body ::= `<` dialect-attribute-contents+ `>`
+dialect-attribute-contents ::= dialect-attribute-body
+                            | `(` dialect-attribute-contents+ `)`
+                            | `[` dialect-attribute-contents+ `]`
+                            | `{` dialect-attribute-contents+ `}`
+                            | [^\[<({\]>)}\0]+
+```
+-/
+syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
+syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
+syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents
+syntax "#" ident "<" mlir_attr_val,*  ">" : mlir_attr_val
+-- If I un-comment this line, it causes an error. I don't know why. Oh well.
+-- syntax "#" ident "<" ident ">" : mlir_attr_val
+-- syntax "#" ident "<" strLit ">" : mlir_attr_val
 syntax "#opaque<" ident "," strLit ">" ":" mlir_type : mlir_attr_val -- opaqueElementsAttr
 syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
 
 
-declare_syntax_cat balanced_parens  -- syntax "#" ident "." ident "<" balanced_parens ">" : mlir_attr_val -- generic user attributes
+-- syntax "#" ident "." ident "<" balanced_parens ">" : mlir_attr_val -- generic user attributes
+declare_syntax_cat balanced_parens
 
 /-- `neg_num` is a possibly negated numeric literal -/
 syntax neg_num := "-"? num
@@ -556,10 +626,20 @@ macro_rules
 
 
 macro_rules
+| `([mlir_attr_val| # $dialect:ident <$xs ,* > ]) => do
+  let initList : TSyntax `term  <- `([])
+  let vals : TSyntax `term <- xs.getElems.foldlM (init := initList) fun (xs : TSyntax `term) (x : TSyntax `mlir_attr_val) =>
+    `([mlir_attr_val| #$dialect<$x>] :: $xs)
+  `(AttrValue.list $vals)
+
+macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do
   let dialect := Lean.quote dialect.getId.toString
   `(AttrValue.opaque_ $dialect $opaqueData)
-
+| `([mlir_attr_val| # $dialect:ident < $opaqueData:ident > ]) => do
+  let d := Lean.quote dialect.getId.toString
+  let g : TSyntax `str := Lean.Syntax.mkStrLit (toString opaqueData.getId)
+  `(AttrValue.opaque_ $d $g)
 macro_rules
 | `([mlir_attr_val| #opaque< $dialect:ident, $opaqueData:str> : $t:mlir_type ]) => do
   let dialect := Lean.quote dialect.getId.toString
@@ -569,7 +649,8 @@ macro_rules
   | `([mlir_attr_val| $s:str]) => `(AttrValue.str $s)
   | `([mlir_attr_val| [ $xs,* ] ]) => do
         let initList <- `([])
-        let vals <- xs.getElems.foldlM (init := initList) fun xs x => `($xs ++ [[mlir_attr_val| $x]])
+        let vals <- xs.getElems.foldlM (init := initList) fun xs x =>
+            `($xs ++ [[mlir_attr_val| $x]])
         `(AttrValue.list $vals)
   | `([mlir_attr_val| $i:ident]) => `(AttrValue.type [mlir_type| $i:ident])
   | `([mlir_attr_val| $ty:mlir_type]) => `(AttrValue.type [mlir_type| $ty])
@@ -692,15 +773,18 @@ macro "[mlir_attr_entry|" entry:mlir_attr_entry "]" : term => do
   `(AttrEntry.mk $(Lean.quote key) $value)
 
 declare_syntax_cat mlir_attr_dict
-syntax "{" sepBy(mlir_attr_entry, ",") "}" : mlir_attr_dict
+syntax  "<" ? "{" sepBy(mlir_attr_entry, ",") "}" ">" ?  : mlir_attr_dict
 syntax "[mlir_attr_dict|" mlir_attr_dict "]" : term
 
 macro_rules
-| `([mlir_attr_dict| {  $attrEntries,* } ]) => do
-        let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
-        let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
-        `(AttrDict.mk $attrsList)
-
+| `([mlir_attr_dict| $[<%$caretLeft]? {  $attrEntries,* } $[>%$caretRight]? ]) => do
+        match caretLeft, caretRight with
+        | none, some y => Macro.throwErrorAt y "Caret closed without being opened"
+        | some x, none => Macro.throwErrorAt x "Caret opened without being closed"
+        | _ , _ =>
+          let attrsList <- attrEntries.getElems.toList.mapM (fun x => `([mlir_attr_entry| $x]))
+          let attrsList <- quoteMList attrsList (<- `(MLIR.AST.AttrEntry _))
+          `(AttrDict.mk $attrsList)
 -- dict attribute val
 syntax mlir_attr_dict : mlir_attr_val
 
@@ -732,6 +816,8 @@ info: AttrEntry.mk "value" (AttrValue.int (Int.negSucc 0) (MLIRType.int Signedne
 def attrDict0 : AttrDict 0 := [mlir_attr_dict| {}]
 def attrDict1 : AttrDict 0 := [mlir_attr_dict| {foo = "bar" }]
 def attrDict2 : AttrDict 0 := [mlir_attr_dict| {foo = "bar", baz = "quux" }]
+
+def propDict2 : AttrDict 0 := [mlir_attr_dict| <{foo = "bar", baz = "quux" }>]
 
 def nestedAttrDict0 : AttrDict 0 := [mlir_attr_dict| {foo = {bar = "baz"} }]
 /--
@@ -776,7 +862,8 @@ macro_rules
            match resTypes.getElems with
            | #[resType] => `([([mlir_op_operand| $name], [mlir_type| $resType])])
            | #[] =>
-              Macro.throwErrorAt name s!"expected to have return type since result '{resName}' exists"
+              Macro.throwErrorAt name
+                s!"expected to have return type since result '{resName}' exists"
            | tys =>
               let ty₁ := (tys : Array _)[1]?.getD (TSyntax.mk .missing) |>.raw
               Macro.throwErrorAt ty₁ s!"expected single return type, found multiple '{tys}'"

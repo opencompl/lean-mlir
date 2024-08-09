@@ -1,21 +1,17 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "__darwin_gcc3_preregister_frame_info", type = !llvm.func<void ()>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: i32, %arg1: !llvm.ptr<ptr<i8>>, %arg2: !llvm.ptr<ptr<i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i8} : () -> i8
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @__darwin_gcc3_preregister_frame_info} : () -> !llvm.ptr<func<void ()>>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<func<void ()>>) -> !llvm.ptr<i32>
-    %4 = "llvm.load"(%3) : (!llvm.ptr<i32>) -> i32
-    %5 = "llvm.icmp"(%4, %1) {predicate = 1 : i64} : (i32, i32) -> i1
-    %6 = "llvm.zext"(%5) : (i1) -> i8
-    %7 = "llvm.icmp"(%6, %0) {predicate = 1 : i64} : (i8, i8) -> i1
-    "llvm.cond_br"(%7)[^bb1, ^bb2] {operand_segment_sizes = dense<[1, 0, 0]> : vector<3xi32>} : (i1) -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<!llvm.ptr, dense<32> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f32, dense<32> : vector<2xi64>>, #dlti.dl_entry<f80, dense<128> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @__darwin_gcc3_preregister_frame_info()
+  llvm.func @_start(%arg0: i32, %arg1: !llvm.ptr, %arg2: !llvm.ptr) {
+    %0 = llvm.mlir.addressof @__darwin_gcc3_preregister_frame_info : !llvm.ptr
+    %1 = llvm.mlir.constant(0 : i32) : i32
+    %2 = llvm.mlir.constant(0 : i8) : i8
+    %3 = llvm.load %0 {alignment = 4 : i64} : !llvm.ptr -> i32
+    %4 = llvm.icmp "ne" %3, %1 : i32
+    %5 = llvm.zext %4 : i1 to i8
+    %6 = llvm.icmp "ne" %5, %2 : i8
+    llvm.cond_br %6, ^bb1, ^bb2
   ^bb1:  // pred: ^bb0
-    "llvm.return"() : () -> ()
+    llvm.return
   ^bb2:  // pred: ^bb0
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "_start", type = !llvm.func<void (i32, ptr<ptr<i8>>, ptr<ptr<i8>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+    llvm.return
+  }
+}

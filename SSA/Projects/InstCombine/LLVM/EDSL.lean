@@ -86,7 +86,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
             return ⟨.pure, .bitvec w₂, selectOp⟩
           else
             throw <| .widthError w₁ w₂ -- s!"mismatched types {ty₁} ≠ {ty₂} in binary op"
-        else throw <| .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
+        else throw <|
+          .unsupportedOp s!"expected select condtion to have width 1, found width '{w₁}'"
       | op => throw <| .unsupportedOp s!"Unsuported ternary operation or invalid arguments '{op}'"
   | v₁Stx::v₂Stx::[] =>
     let ⟨.bitvec w,  v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -106,7 +107,17 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.ashr"   => pure <| Sum.inl .ashr
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
-        | "llvm.add"    => pure <| Sum.inl .add
+        | "llvm.add"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.add)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.add ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.add ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.add ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.add ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.mul"    => pure <| Sum.inl .mul
         | "llvm.sub"    => pure <| Sum.inl .sub
         | "llvm.sdiv"   => pure <| Sum.inl .sdiv
@@ -121,7 +132,8 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.icmp.sge" => pure <| Sum.inr LLVM.IntPredicate.sge
         | "llvm.icmp.slt" => pure <| Sum.inr LLVM.IntPredicate.slt
         | "llvm.icmp.sle" => pure <| Sum.inr LLVM.IntPredicate.sle
-        | opstr => throw <| .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
+        | opstr => throw <|
+          .unsupportedOp s!"Unsuported binary operation or invalid arguments '{opstr}'"
       return match op with
         | .inl binOp  => ⟨_, _, mkBinOp binOp v₁ v₂⟩
         | .inr pred   => ⟨_, _, mkIcmp pred v₁ v₂⟩
@@ -163,7 +175,8 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
     return ⟨.pure, ty, _root_.Com.ret v⟩
-  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
+  | _ => throw <|
+    .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 
 instance : AST.TransformReturn (MetaLLVM φ) φ where
@@ -175,21 +188,22 @@ instance : AST.TransformReturn (MetaLLVM φ) φ where
   Finally, we show how to instantiate a family of programs to a concrete program
 -/
 
-def instantiateMTy (vals : Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
+def instantiateMTy (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Ty → LLVM.Ty
   | .bitvec w => .bitvec <| w.instantiate vals
 
-def instantiateMOp (vals : Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
+def instantiateMOp (vals : Mathlib.Vector Nat φ) : (MetaLLVM φ).Op → LLVM.Op
   | .binary w binOp => .binary (w.instantiate vals) binOp
   | .unary w unOp => .unary (w.instantiate vals) unOp
   | .select w => .select (w.instantiate vals)
   | .icmp c w => .icmp c (w.instantiate vals)
   | .const w val => .const (w.instantiate vals) val
 
-def instantiateCtxt (vals : Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) : Ctxt InstCombine.Ty :=
+def instantiateCtxt (vals : Mathlib.Vector Nat φ) (Γ : Ctxt (MetaLLVM φ).Ty) :
+    Ctxt InstCombine.Ty :=
   Γ.map (instantiateMTy vals)
 
 open InstCombine in
-def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
+def MOp.instantiateCom (vals : Mathlib.Vector Nat φ) : DialectMorphism (MetaLLVM φ) LLVM where
   mapOp := instantiateMOp vals
   mapTy := instantiateMTy vals
   preserves_signature op := by
@@ -204,7 +218,7 @@ def MOp.instantiateCom (vals : Vector Nat φ) : DialectMorphism (MetaLLVM φ) LL
 
 open InstCombine in
 def mkComInstantiate (reg : MLIR.AST.Region φ) :
-    MLIR.AST.ExceptM (MetaLLVM φ) (Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
+    MLIR.AST.ExceptM (MetaLLVM φ) (Mathlib.Vector Nat φ → Σ Γ eff ty, Com LLVM Γ eff ty) := do
   let ⟨Γ, eff, ty, com⟩ ← MLIR.AST.mkCom reg
   return fun vals =>
     let Γ' := instantiateCtxt vals Γ
@@ -228,10 +242,10 @@ elab "[llvm (" mvars:term,* ")| " reg:mlir_region "]" : term => do
   let mcom ← withTraceNode `llvm (return m!"{exceptEmoji ·} elabIntoCom") <|
     SSA.elabIntoCom reg q(MetaLLVM $φ)
 
-  let mvalues : Q(Vector Nat $φ) ←
+  let mvalues : Q(Mathlib.Vector Nat $φ) ←
     withTraceNode `llvm (return m!"{exceptEmoji ·} elaborating mvalues") <| do
       let mvalues ← `(⟨[$mvars,*], by rfl⟩)
-      elabTermEnsuringType mvalues q(Vector Nat $φ)
+      elabTermEnsuringType mvalues q(Mathlib.Vector Nat $φ)
 
   let com ← withTraceNode `llvm (return m!"{exceptEmoji ·} building final Expr") <| do
     let instantiateFun ← mkAppM ``MOp.instantiateCom #[mvalues]

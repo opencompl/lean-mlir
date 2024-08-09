@@ -147,42 +147,36 @@ theorem extractslice_insertslice [Inhabited α]
   (CORRECT: ((t.insertslice sliceix slice).extract sliceix slice.size).size ≠ 0)
   : (t.insertslice sliceix slice).extract sliceix slice.size = slice := by {
     simp[Tensor1d.insertslice, Tensor1d.extract]
-    cases slice ; simp;
-    case mk slicesize sliceval spec => {
-      by_cases A:(t.size < sliceix) <;> simp[A]
-      case pos => {simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT };
-      case neg => {
-        have B : t.size >= sliceix := not_lt_is_geq A
+    cases slice
+    simp;
+    rename_i slicesize sliceval spec
+    by_cases A : (t.size < sliceix) <;> simp[A]
 
-        by_cases C:(sliceix < t.size) <;> simp[C]
-        case neg => {simp[Tensor1d.insertslice, Tensor1d.extract, A, B, C] at CORRECT }
-        case pos => {
-            funext ix
-            by_cases D: (ix < slicesize) <;> simp[D]
-            case neg => {
-              -- here we fail, because we do not know that 'slice' behaves like a
-              -- real tensor that returns 'default' outside of its range.
-              -- This is something we need to add into the spec of a Tensor.
-              have E : ix >= slicesize := by simp[Index] at *; linarith
-              simp[spec _ E]
-            }
-            case pos => {
-              try simp
-              norm_num
-              by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
-              case pos => {
-                have CONTRA : False := by simp[Index] at *; linarith;
-                simp at CONTRA;
-              }
-              case neg => {
-                intros K
-                have CONTRA : False := by simp[Index] at *; linarith
-                simp at CONTRA
-              }
-            }
-        }
-      }
-    }
+    case pos => simp[Tensor1d.insertslice, Tensor1d.extract, A] at CORRECT ;
+    case neg =>
+      have B : t.size >= sliceix := not_lt_is_geq A
+
+      by_cases C:(sliceix < t.size) <;> simp[C]
+      case neg => simp[Tensor1d.insertslice, Tensor1d.extract, A, B, C] at CORRECT
+      case pos =>
+          funext ix
+          by_cases D: (ix < slicesize) <;> simp[D]
+          case neg =>
+            -- here we fail, because we do not know that 'slice' behaves like a
+            -- real tensor that returns 'default' outside of its range.
+            -- This is something we need to add into the spec of a Tensor.
+            have E : ix >= slicesize := by simp[Index] at *; linarith
+            simp[spec _ E]
+          case pos =>
+            try simp
+            by_cases E:(t.size + slicesize <= ix + sliceix) <;> simp[E]
+            case pos =>
+              have CONTRA : False := by simp[Index] at *; linarith;
+              simp at CONTRA;
+            case neg =>
+              intros K
+              have CONTRA : False := by simp[Index] at *; linarith
+              simp at CONTRA
 }
 
 -- | TODO: implement fold
@@ -277,7 +271,8 @@ theorem scf.for.zero_n (f: Nat → β → β) (seed : β) :
 -- theorem 3 : arbitrary for peeling
 /-
 theorem scf.for.peel_add (n m : Nat) (f : Nat → β → β) (seed : β)  :
-  scf.for.loop f (n + m) ((n + m) - n) (scf.for.loop f n (n - 0) seed) = scf.for.loop f (n + m) (n + m - 0) seed := by {
+  scf.for.loop f (n + m) ((n + m) - n) (scf.for.loop f n (n - 0) seed) =
+  scf.for.loop f (n + m) (n + m - 0) seed := by {
     simp[scf.for.loop]
     revert m;
     induction n;

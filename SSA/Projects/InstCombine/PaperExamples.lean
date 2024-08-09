@@ -6,17 +6,22 @@ import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.Base
+import SSA.Projects.InstCombine.ForLean
+import Init.Data.BitVec.Bitblast
+import Init.Data.BitVec.Lemmas
+import Init.Data.BitVec.Folds
 import Lean
 
 
 namespace AlivePaperExamples
+open BitVec
 
 -- Example proof of shift + mul, this is one of the hardest alive examples.
 -- (alive_simplifyMulDivRem290)
 theorem shift_mul:
     [llvm (w)| {
   ^bb0(%X : _, %Y : _):
-    %c1 = llvm.mlir.constant 1
+    %c1 = llvm.mlir.constant(1)
     %poty = llvm.shl %c1, %Y
     %r = llvm.mul %poty, %X
     llvm.return %r
@@ -29,11 +34,15 @@ theorem shift_mul:
   simp_alive_undef
   simp_alive_ops
   intros A B
-  rcases A with rfl | A  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  rcases B with rfl | B  <;> (try (simp [Option.bind, Bind.bind]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;> simp [h]
+  rcases A with rfl | A  <;>
+  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
+  by_cases h : w ≤ BitVec.toNat B <;>
+    simp only [ge_iff_le,
+      EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
+      Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
+      Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
   apply BitVec.eq_of_toNat_eq
-  simp [bv_toNat]
+  simp only [bv_toNat, Nat.mod_mul_mod]
   ring_nf
 
 /--
@@ -58,5 +67,26 @@ theorem xor_sub :
 /-- info: 'AlivePaperExamples.xor_sub' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms xor_sub
 
+theorem bitvec_AddSub_1309 :
+  [llvm (w)| {
+    ^bb0(%X : _, %Y : _):
+      %v1 = llvm.and %X, %Y
+      %v2 = llvm.or %X, %Y
+      %v3 = llvm.add %v1, %v2
+      llvm.return %v3
+  }] ⊑ [llvm (w)| {
+    ^bb0(%X : _, %Y : _):
+      %v3 = llvm.add %X, %Y
+      llvm.return %v3
+  }] := by
+    simp_alive_peephole
+    simp_alive_undef
+    simp_alive_case_bash
+    simp
+
+/--
+info: 'AlivePaperExamples.bitvec_AddSub_1309' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms bitvec_AddSub_1309
 
 end AlivePaperExamples
