@@ -580,16 +580,6 @@ BitVec.toNat (BitVec.ofInt w 0) = 0 := by
   simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
   norm_cast
 
-/-- The usual theorem is stated with nat as the index. -/
-@[simp] lemma getLsb_xor' (x y : BitVec w) (i : Nat) :
-    (x ^^^ y).getLsb i = xor (x.getLsb i) (y.getLsb i) := by
-    have hi : i < w ∨ i ≥ w := Nat.lt_or_ge _ _
-    rcases hi with h | h
-    · have hi : i = (Fin.mk i h).val := rfl
-      rw [hi]
-      simp
-    · simp [getLsb_geX _ h]
-
 @[simp]
 theorem ofBool_neq_1 (b : Bool) :
     BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
