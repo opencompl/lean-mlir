@@ -114,7 +114,6 @@ def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
   /- r = -/ Com.var (select w /-%c-/ 1 /-X-/ 5 /-c0-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-open Std (BitVec) in
 def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
@@ -223,7 +222,6 @@ info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
 -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805
 
-open Std (BitVec) in
 def alive_simplifyMulDivRem805' (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
