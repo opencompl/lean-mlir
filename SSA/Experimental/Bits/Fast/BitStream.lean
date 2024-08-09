@@ -269,7 +269,6 @@ variable (x y : BitVec (w+1))
     zero_lt_one, or_true, decide_True, Bool.true_and, not_eq]
   split <;> simp_all
 
-
 end Lemmas
 
 end BitwiseOps
@@ -372,7 +371,7 @@ Crucially, our decision procedure works by considering which equalities hold for
 
 variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
-local notation a " ≈ʷ  " b  => EqualUpTo w a b
+local infix:20 " ≈ʷ " => EqualUpTo w
 
 -- TODO: These sorries are difficult, and will be proven in a later Pull Request.
 @[simp] theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
@@ -398,6 +397,12 @@ theorem equal_up_to_trans (e1 : a ≈ʷ b) (e2 : b ≈ʷ c) : a ≈ʷ c := by
   trans b j
   exact e1 j h
   exact e2 j h
+
+instance congr_equiv : Equivalence (EqualUpTo w) := {
+  refl := fun _ => equal_up_to_refl,
+  symm := equal_up_to_symm,
+  trans := equal_up_to_trans
+}
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
@@ -434,13 +439,14 @@ theorem equal_trans  (e1 :  a ≈ʷ b) (e2 : c ≈ʷ d)  : (a ≈ʷ c) = (b ≈�
   apply propext
   constructor
   <;> intros h
-  apply equal_up_to_trans _ e2
-  apply equal_up_to_trans _ h
-  apply equal_up_to_symm
-  assumption
-  apply equal_up_to_trans _ (equal_up_to_symm e2)
-  apply equal_up_to_trans _ h
-  assumption
+  · apply equal_up_to_trans _ e2
+    apply equal_up_to_trans _ h
+    apply equal_up_to_symm
+    assumption
+  · apply equal_up_to_trans _
+    apply (equal_up_to_symm e2)
+    apply equal_up_to_trans _ h
+    assumption
 
 end Lemmas
 
