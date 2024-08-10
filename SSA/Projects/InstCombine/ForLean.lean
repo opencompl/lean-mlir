@@ -2,6 +2,16 @@ import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
+@[simp] theorem sub_toNat_mod_cancel {x : BitVec w} (h : ¬ x = 0#w) :
+    (2 ^ w - x.toNat) % 2 ^ w = 2 ^ w - x.toNat := by
+  simp [bv_toNat] at h
+  rw [Nat.mod_eq_of_lt (by omega)]
+
+@[simp] theorem sub_sub_toNat_cancel {x : BitVec w} :
+    2 ^ w - (2 ^ w - x.toNat) = x.toNat := by
+  simp [Nat.sub_sub_eq_min, Nat.min_eq_right]
+  omega
+
 lemma two_pow_pred_mul_two (h : 0 < w) :
     2 ^ (w - 1) * 2 = 2 ^ w := by
   simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
@@ -188,33 +198,17 @@ lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w 
     rw [Nat.mod_eq_of_lt hn]
   contradiction
 
-lemma neg_neg {a : BitVec w} : - - a = a := by
-  by_cases h : a = 0
-  · subst h
-    simp
-  · rw [toNat_eq]
-    rw [toNat_neg]
-    rw [toNat_neg]
-    have h2 : BitVec.toNat a < 2 ^w := BitVec.isLt a
-    rw [toNat_eq] at h
-    simp only [ofNat_eq_ofNat, toNat_ofNat, Nat.zero_mod] at h
-    rw [Nat.mod_eq_of_lt]
-    rw [Nat.mod_eq_of_lt]
-    omega
-    omega
-    rw [Nat.mod_eq_of_lt]
-    omega
-    omega
+@[simp]
+theorem neg_neg {x : BitVec w} : - - x = x := by
+  by_cases h : x = 0#w
+  · simp [h]
+  · simp [bv_toNat, h]
 
-lemma neg_neq_iff_neq_neg {a b : BitVec w} : -a ≠ b ↔ a ≠ -b:= by
+theorem neg_ne_iff_ne_neg {x y : BitVec w} : -x ≠ y ↔ x ≠ -y := by
   constructor
-  · intro h h'
-    subst h'
-    simp only [_root_.neg_neg, ne_eq, not_true_eq_false] at h
-  · intro h h'
-    subst h'
-    simp [BitVec.neg_neg] at h
-
+    <;> intro h h'
+    <;> subst h'
+    <;> simp [BitVec.neg_neg] at h
 
 lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a > 1 := by
   simp only [ofNat_eq_ofNat, gt_iff_lt, lt_def, toNat_ofNat]
@@ -249,10 +243,10 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
         apply BitVec.udiv_one_eq_zero
         apply BitVec.gt_one_of_neq_0_neq_1
-        · rw [neg_neq_iff_neq_neg]
+        · rw [neg_ne_iff_ne_neg]
           simp only [_root_.neg_zero]
           assumption
-        · rw [neg_neq_iff_neq_neg]
+        · rw [neg_ne_iff_ne_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
       · apply BitVec.udiv_one_eq_zero
@@ -597,14 +591,7 @@ theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x :
 
 theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :
     BitVec.toNat (-x) = (2 ^ n - BitVec.toNat x) := by
-  rw [toNat_neg]
-  apply Nat.mod_eq_of_lt
-  obtain ⟨x, hx'⟩ := x
-  simp only [toNat_ofFin, tsub_lt_self_iff, Nat.ofNat_pos, pow_pos, true_and]
-  apply Nat.pos_of_ne_zero
-  cases x
-  · contradiction
-  · simp
+  simp_all [not_false_eq_true, sub_toNat_mod_cancel]
 
 theorem toInt_eq' (w : Nat) (x : BitVec w) :
     BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
