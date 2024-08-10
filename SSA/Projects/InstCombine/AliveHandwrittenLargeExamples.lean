@@ -169,7 +169,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
           rw [LLVM.sdiv?_eq_pure_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
-              (by apply BitVec.toNat_lt_self_mod)
+              (by apply BitVec.isLt)
             rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
             · have h2 : BitVec.toNat x < 2 := by omega
               have hneq0 : BitVec.toNat x ≠ 0 := BitVec.toNat_neq_zero_of_neq_zero hx

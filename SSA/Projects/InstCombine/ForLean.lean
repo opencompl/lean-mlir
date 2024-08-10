@@ -105,11 +105,6 @@ theorem Nat.one_mod_two_pow_eq {n : Nat} (hn : n ≠ 0 := by omega) : 1 % 2 ^ n 
   assumption
   decide
 
--- @[simp]
-theorem Nat.one_mod_two_pow_succ_eq {n : Nat} : 1 % 2 ^ n.succ = 1 := by
-  apply Nat.one_mod_two_pow_eq
-  simp
-
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
     BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w n :=
@@ -267,10 +262,6 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   apply BitVec.eq_of_toNat_eq
   simp [hone]
 
-def ofInt_eq_ofNat {a: Nat} :
-    BitVec.ofInt w (@OfNat.ofNat ℤ a _) = BitVec.ofNat w a := by
-  rfl
-
 lemma udiv_zero {w : ℕ} {x : BitVec w} : BitVec.udiv x 0#w = 0 := by
   simp only [udiv, toNat_ofNat, Nat.zero_mod, Nat.div_zero, ofNat_eq_ofNat]
   rfl
@@ -278,16 +269,6 @@ lemma udiv_zero {w : ℕ} {x : BitVec w} : BitVec.udiv x 0#w = 0 := by
 lemma sdiv_zero {w : ℕ} (x : BitVec w) : BitVec.sdiv x 0#w = 0#w := by
   simp only [sdiv, msb_zero, udiv_zero, ofNat_eq_ofNat, neg_eq, neg_zero]
   split <;> rfl
-
-
--- @simp [bv_toNat]
-lemma toNat_mod_eq_self (x : BitVec w) : x.toNat % 2^w = x.toNat := by
-  simp [bv_toNat]
-
--- @[simp bv_toNat]
-lemma toNat_lt_self_mod (x : BitVec w) : x.toNat < 2^w := by
-  obtain ⟨_, hx⟩ := x
-  exact hx
 
 -- @[simp bv_toNat]
 lemma toNat_neq_zero_of_neq_zero {x : BitVec w} (hx : x ≠ 0) : x.toNat ≠ 0 := by
@@ -438,7 +419,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
   by_cases w0 : w = 0
   · subst w0
     simp [BitVec.eq_nil A] at h_ne_zero
-  simp? [BitVec.ofInt_zero_eq]
+  simp only [Bool.not_eq_true, Bool.coe_true_iff_false]
   rw [neg_sgt_eq_slt_neg h_ne_intMin _]
   unfold BitVec.slt
   by_cases h : A.toInt < 0
@@ -588,10 +569,6 @@ theorem ofBool_eq_0 (b : Bool) :
 @[simp]
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
-
-theorem neg_toNat_nonzero {n : Nat} (x : BitVec n) (hx : x ≠ 0) :
-    BitVec.toNat (-x) = (2 ^ n - BitVec.toNat x) := by
-  simp_all [not_false_eq_true, sub_toNat_mod_cancel]
 
 theorem toInt_eq' (w : Nat) (x : BitVec w) :
     BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
