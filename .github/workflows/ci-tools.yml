@@ -24,6 +24,13 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: ${{ runner.os }}-lake-tools
+
       - name: Compile `mlirnatural` Executable 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.

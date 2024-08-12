@@ -1,12 +1,8 @@
-"module"() ( {
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i16>):  // no predecessors
-    %0 = "llvm.mlir.addressof"() {global_name = @objc_msgSend_stret} : () -> !llvm.ptr<func<ptr<i8> (ptr<i8>, ptr<i8>, ...)>>
-    %1 = "llvm.bitcast"(%0) : (!llvm.ptr<func<ptr<i8> (ptr<i8>, ptr<i8>, ...)>>) -> !llvm.ptr<func<void (ptr<i16>)>>
-    "llvm.call"(%1, %arg0) : (!llvm.ptr<func<void (ptr<i16>)>>, !llvm.ptr<i16>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "blah", type = !llvm.func<void (ptr<i16>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "objc_msgSend_stret", type = !llvm.func<ptr<i8> (ptr<i8>, ptr<i8>, ...)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @blah(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.addressof @objc_msgSend_stret : !llvm.ptr
+    llvm.call %0(%arg0) : !llvm.ptr, (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @objc_msgSend_stret(!llvm.ptr, !llvm.ptr, ...) -> !llvm.ptr
+}

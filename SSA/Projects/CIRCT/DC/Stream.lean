@@ -12,9 +12,13 @@ We model this as the `DC.Stream` type
 
 -/
 
+<<<<<<< HEAD
 abbrev Message := Bool
 
 def Val := Option Message
+=======
+def Val := Option Bool
+>>>>>>> main
 
 /-- A `Stream` in `DC` is an infinite sequence of messages (i.e., *potential* values).
 Note that semantics of `DC` are deterministic -/

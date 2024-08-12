@@ -1,66 +1,49 @@
-"module"() ( {
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 1 : i64, sym_name = "S", type = !llvm.array<33 x i8>, value = "panic: restorelist inconsistency\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "h", type = !llvm.array<2 x i8>, value = "h\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "hel", type = !llvm.array<4 x i8>, value = "hel\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "hello_u", type = !llvm.array<8 x i8>, value = "hello_u\00"} : () -> ()
-  "llvm.mlir.global"() ( {
-  }) {constant, linkage = 10 : i64, sym_name = "UnknownConstant", type = i128} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: !llvm.ptr<i8>, %arg2: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    "llvm.call"(%arg0, %arg1, %1, %0) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test1", type = !llvm.func<void (ptr<i8>, ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>, %arg1: i32):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @S} : () -> !llvm.ptr<array<33 x i8>>
-    %3 = "llvm.getelementptr"(%2, %1, %1) : (!llvm.ptr<array<33 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.call"(%arg0, %3, %arg1, %0) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test2", type = !llvm.func<void (ptr<i8>, i32)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<array<1024 x i8>>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 8 : i32} : () -> i32
-    %1 = "llvm.mlir.constant"() {value = 4 : i32} : () -> i32
-    %2 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %3 = "llvm.mlir.constant"() {value = 2 : i32} : () -> i32
-    %4 = "llvm.mlir.addressof"() {global_name = @hello_u} : () -> !llvm.ptr<array<8 x i8>>
-    %5 = "llvm.mlir.addressof"() {global_name = @hel} : () -> !llvm.ptr<array<4 x i8>>
-    %6 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %7 = "llvm.mlir.addressof"() {global_name = @h} : () -> !llvm.ptr<array<2 x i8>>
-    %8 = "llvm.getelementptr"(%7, %6, %6) : (!llvm.ptr<array<2 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %9 = "llvm.getelementptr"(%5, %6, %6) : (!llvm.ptr<array<4 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %10 = "llvm.getelementptr"(%4, %6, %6) : (!llvm.ptr<array<8 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    %11 = "llvm.getelementptr"(%arg0, %6, %6) : (!llvm.ptr<array<1024 x i8>>, i32, i32) -> !llvm.ptr<i8>
-    "llvm.call"(%11, %8, %3, %2) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.call"(%11, %9, %1, %2) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.call"(%11, %10, %0, %2) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.return"(%6) : (i32) -> ()
-  }) {linkage = 10 : i64, sym_name = "test3", type = !llvm.func<i32 (ptr<array<1024 x i8>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 100 : i32} : () -> i32
-    "llvm.call"(%arg0, %arg0, %1, %0) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "test4", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i8>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = false} : () -> i1
-    %1 = "llvm.mlir.constant"() {value = 16 : i32} : () -> i32
-    %2 = "llvm.mlir.addressof"() {global_name = @UnknownConstant} : () -> !llvm.ptr<i128>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<i128>) -> !llvm.ptr<i8>
-    "llvm.call"(%3, %arg0, %1, %0) {callee = @llvm.memmove.p0i8.p0i8.i32, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<i8>, i32, i1) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "memmove_to_constant", type = !llvm.func<void (ptr<i8>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "llvm.memmove.p0i8.p0i8.i32", type = !llvm.func<void (ptr<i8>, ptr<i8>, i32, i1)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i64, dense<[32, 64]> : vector<2xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.mlir.global internal constant @S("panic: restorelist inconsistency\00") {addr_space = 0 : i32, dso_local}
+  llvm.mlir.global external constant @h("h\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @hel("hel\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @hello_u("hello_u\00") {addr_space = 0 : i32}
+  llvm.mlir.global external constant @UnknownConstant() {addr_space = 0 : i32} : i128
+  llvm.func @test1(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: i32) {
+    %0 = llvm.mlir.constant(0 : i32) : i32
+    "llvm.intr.memmove"(%arg0, %arg1, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.return
+  }
+  llvm.func @test2(%arg0: !llvm.ptr, %arg1: i32) {
+    %0 = llvm.mlir.constant("panic: restorelist inconsistency\00") : !llvm.array<33 x i8>
+    %1 = llvm.mlir.addressof @S : !llvm.ptr
+    "llvm.intr.memmove"(%arg0, %1, %arg1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.return
+  }
+  llvm.func @test3(%arg0: !llvm.ptr) -> i32 {
+    %0 = llvm.mlir.constant("h\00") : !llvm.array<2 x i8>
+    %1 = llvm.mlir.addressof @h : !llvm.ptr
+    %2 = llvm.mlir.constant(0 : i32) : i32
+    %3 = llvm.mlir.constant("hel\00") : !llvm.array<4 x i8>
+    %4 = llvm.mlir.addressof @hel : !llvm.ptr
+    %5 = llvm.mlir.constant("hello_u\00") : !llvm.array<8 x i8>
+    %6 = llvm.mlir.addressof @hello_u : !llvm.ptr
+    %7 = llvm.mlir.constant(2 : i32) : i32
+    %8 = llvm.mlir.constant(4 : i32) : i32
+    %9 = llvm.mlir.constant(8 : i32) : i32
+    %10 = llvm.getelementptr %1[%2, %2] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<2 x i8>
+    %11 = llvm.getelementptr %4[%2, %2] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<4 x i8>
+    %12 = llvm.getelementptr %6[%2, %2] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<8 x i8>
+    %13 = llvm.getelementptr %arg0[%2, %2] : (!llvm.ptr, i32, i32) -> !llvm.ptr, !llvm.array<1024 x i8>
+    "llvm.intr.memmove"(%13, %10, %7) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    "llvm.intr.memmove"(%13, %11, %8) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    "llvm.intr.memmove"(%13, %12, %9) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.return %2 : i32
+  }
+  llvm.func @test4(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(100 : i32) : i32
+    "llvm.intr.memmove"(%arg0, %arg0, %0) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.return
+  }
+  llvm.func @memmove_to_constant(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.addressof @UnknownConstant : !llvm.ptr
+    %1 = llvm.mlir.constant(16 : i32) : i32
+    "llvm.intr.memmove"(%0, %arg0, %1) <{isVolatile = false}> : (!llvm.ptr, !llvm.ptr, i32) -> ()
+    llvm.return
+  }
+}

@@ -1,26 +1,36 @@
-"module"() ( {
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "use", type = !llvm.func<void (ptr<i8>, ptr<ptr<i32>>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i32>):  // no predecessors
-    %0 = "llvm.mlir.undef"() : () -> !llvm.ptr<i32>
-    %1 = "llvm.mlir.constant"() {value = 8 : i64} : () -> i64
-    %2 = "llvm.alloca"(%1) : (i64) -> !llvm.ptr<i8>
-    %3 = "llvm.bitcast"(%2) : (!llvm.ptr<i8>) -> !llvm.ptr<ptr<i32>>
-    "llvm.store"(%0, %3) : (!llvm.ptr<i32>, !llvm.ptr<ptr<i32>>) -> ()
-    "llvm.call"(%2, %3) {callee = @use, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<i8>, !llvm.ptr<ptr<i32>>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 4 : i64, sym_name = "__omp_offloading_802_ea0109_main_l8", type = !llvm.func<void (ptr<i32>)>} : () -> ()
-  "llvm.func"() ( {
-  ^bb0(%arg0: !llvm.ptr<i64>):  // no predecessors
-    %0 = "llvm.mlir.constant"() {value = 0 : i64} : () -> i64
-    %1 = "llvm.mlir.constant"() {value = 0 : i32} : () -> i32
-    %2 = "llvm.alloca"(%1) : (i32) -> !llvm.ptr<array<30 x struct<"struct.widget", (array<8 x i8>)>>>
-    %3 = "llvm.getelementptr"(%2, %0, %0) : (!llvm.ptr<array<30 x struct<"struct.widget", (array<8 x i8>)>>>, i64, i64) -> !llvm.ptr<struct<"struct.widget", (array<8 x i8>)>>
-    "llvm.call"(%3) {callee = @zot, fastmathFlags = #llvm.fastmath<>} : (!llvm.ptr<struct<"struct.widget", (array<8 x i8>)>>) -> ()
-    "llvm.return"() : () -> ()
-  }) {linkage = 10 : i64, sym_name = "spam", type = !llvm.func<void (ptr<i64>)>} : () -> ()
-  "llvm.func"() ( {
-  }) {linkage = 10 : i64, sym_name = "zot", type = !llvm.func<void (ptr<struct<"struct.widget", (array<8 x i8>)>>)>} : () -> ()
-  "module_terminator"() : () -> ()
-}) : () -> ()
+module attributes {dlti.dl_spec = #dlti.dl_spec<#dlti.dl_entry<i64, dense<64> : vector<2xi64>>, #dlti.dl_entry<f128, dense<128> : vector<2xi64>>, #dlti.dl_entry<f64, dense<64> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr<6>, dense<32> : vector<4xi64>>, #dlti.dl_entry<f16, dense<16> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr<7>, dense<[160, 256, 256, 32]> : vector<4xi64>>, #dlti.dl_entry<!llvm.ptr<8>, dense<128> : vector<4xi64>>, #dlti.dl_entry<!llvm.ptr<2>, dense<32> : vector<4xi64>>, #dlti.dl_entry<!llvm.ptr<1>, dense<64> : vector<4xi64>>, #dlti.dl_entry<i16, dense<16> : vector<2xi64>>, #dlti.dl_entry<i8, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr<4>, dense<64> : vector<4xi64>>, #dlti.dl_entry<i32, dense<32> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr<3>, dense<32> : vector<4xi64>>, #dlti.dl_entry<!llvm.ptr<5>, dense<32> : vector<4xi64>>, #dlti.dl_entry<i1, dense<8> : vector<2xi64>>, #dlti.dl_entry<!llvm.ptr, dense<64> : vector<4xi64>>, #dlti.dl_entry<"dlti.stack_alignment", 32 : i64>, #dlti.dl_entry<"dlti.alloca_memory_space", 5 : ui64>, #dlti.dl_entry<"dlti.global_memory_space", 1 : ui64>, #dlti.dl_entry<"dlti.endianness", "little">>} {
+  llvm.func @use(!llvm.ptr)
+  llvm.func @use2(!llvm.ptr, !llvm.ptr)
+  llvm.func weak amdgpu_kernelcc @__omp_offloading_802_ea0109_main_l8(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(8 : i64) : i64
+    %1 = llvm.mlir.undef : !llvm.ptr
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i64) -> !llvm.ptr
+    llvm.store %1, %2 {alignment = 8 : i64} : !llvm.ptr, !llvm.ptr
+    llvm.call @use2(%2, %2) : (!llvm.ptr, !llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @spam(%arg0: !llvm.ptr) {
+    %0 = llvm.mlir.constant(0 : i32) : i32
+    %1 = llvm.alloca %0 x !llvm.array<30 x struct<"struct.widget", (array<8 x i8>)>> {alignment = 16 : i64} : (i32) -> !llvm.ptr
+    llvm.call @zot(%1) : (!llvm.ptr) -> ()
+    llvm.return
+  }
+  llvm.func @alloca_addrspace_0_nonnull() -> i1 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.zero : !llvm.ptr
+    %2 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr
+    llvm.call @use(%2) : (!llvm.ptr) -> ()
+    %3 = llvm.icmp "ne" %2, %1 : !llvm.ptr
+    llvm.return %3 : i1
+  }
+  llvm.func @alloca_addrspace_5_nonnull() -> i1 {
+    %0 = llvm.mlir.constant(1 : i32) : i32
+    %1 = llvm.mlir.addressof @use : !llvm.ptr
+    %2 = llvm.mlir.zero : !llvm.ptr<5>
+    %3 = llvm.alloca %0 x i8 {alignment = 1 : i64} : (i32) -> !llvm.ptr<5>
+    llvm.call %1(%3) : !llvm.ptr, (!llvm.ptr<5>) -> ()
+    %4 = llvm.icmp "ne" %3, %2 : !llvm.ptr<5>
+    llvm.return %4 : i1
+  }
+  llvm.func hidden @zot(!llvm.ptr)
+}
