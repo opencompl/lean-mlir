@@ -381,10 +381,7 @@ local infix:20 " ≈ʷ " => EqualUpTo w
   sorry
 
 /--
-This function says returns
-true iff ∀ i < n, x[i] = 0
-and returns false
-iff   ∃ i < n , x[i] = 1
+Does the nth bit overflow/carry in calculating the negation of x?
 -/
 def doesNegCarry? (x : BitVec w) (n : Nat) : Bool := match n with
   | Nat.zero => !x.getLsb 0
