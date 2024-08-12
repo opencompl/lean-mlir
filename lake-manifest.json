@@ -44,21 +44,14 @@
   {"url": "https://github.com/mhuisi/lean4-cli.git",
    "type": "git",
    "subDir": null,
-<<<<<<< HEAD
-=======
    "scope": "",
->>>>>>> main
    "rev": "bf066c328bcff19aa93adf4d24c4e896c0d4eaca",
    "name": "Cli",
    "manifestFile": "lake-manifest.json",
    "inputRev": "nightly",
    "inherited": false,
    "configFile": "lakefile.toml"},
-<<<<<<< HEAD
-  {"url": "https://github.com/leanprover-community/import-graph.git",
-=======
   {"url": "https://github.com/leanprover-community/import-graph",
->>>>>>> main
    "type": "git",
    "subDir": null,
    "scope": "leanprover-community",
@@ -71,12 +64,6 @@
   {"url": "https://github.com/leanprover-community/mathlib4",
    "type": "git",
    "subDir": null,
-<<<<<<< HEAD
-   "rev": "b5eba595428809e96f3ed113bc7ba776c5f801ac",
-   "name": "mathlib",
-   "manifestFile": "lake-manifest.json",
-   "inputRev": "v4.8.0",
-=======
    "scope": "",
    "rev": "76800560a1efa8663ed89214fc1196c97b89ff89",
    "name": "mathlib",
@@ -122,7 +109,6 @@
    "name": "«doc-gen4»",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
->>>>>>> main
    "inherited": false,
    "configFile": "lakefile.lean"},
   {"url": "https://github.com/leanprover/leansat.git",
