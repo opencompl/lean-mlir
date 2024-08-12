@@ -1,4 +1,5 @@
 import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.SlimCheck
 
 import Mathlib.Logic.Function.Iterate
 -- TODO: upstream the following section
@@ -425,13 +426,15 @@ lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
 lemma pow_mod (a : 0 < w) : 2 ^ w % 2 = 0 := by
   simp only [Nat.pow_mod 2 w 2, Nat.mod_self, Nat.zero_pow a, Nat.zero_mod]
 
-lemma lemma7 {w t : Nat} (a : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
-  sorry
+theorem neg_mod_odd {w t : Nat} (hw : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
+  rcases w with rfl | w
+  · simp at hw
+  · omega
 
-lemma extracted_2 (a : 0 < w) :
+lemma neg_mod_mod_odd (a : 0 < w) :
   (2 ^ w - 1 - x.toNat + 1) % 2 ^ w % 2 = 1 ↔ x.toNat % 2 = 1 := by
   rw [mod_mod (2 ^ w - 1 - x.toNat + 1) w a]
-  exact lemma7 a x.toFin.isLt
+  exact neg_mod_odd a x.toFin.isLt
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   intros n a
@@ -442,7 +445,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
       BitVec.toNat_ofNat, Nat.add_mod_mod, Nat.testBit_zero, doesNegCarry?, ← decide_not,
       Nat.mod_two_ne_one, decide_eq_true_eq, negAux, ofBitVec, a, ↓reduceIte, Prod.mk.injEq,
       decide_eq_decide, and_true]
-    exact extracted_2 a
+    exact neg_mod_mod_odd a
     rename_i n ih
     simp only [BitVec.ofNat_eq_ofNat, BitVec.add_eq_adc, Bool.decide_eq_true]
     unfold BitVec.adc
