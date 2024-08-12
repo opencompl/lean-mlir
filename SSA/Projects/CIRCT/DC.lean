@@ -128,6 +128,7 @@ end Stream
 ## LeanMLIR Dialect Definitions
 Define a `DC` dialect, and connect its semantics to the function defined above
 -/
+section Dialect
 
 inductive Ty2
   | int : Ty2
@@ -195,6 +196,7 @@ instance : DialectDenote (DC) where
     | .fst _, arg, _ => (arg.getN 0).fst
     | .snd _, arg, _ => (arg.getN 0).snd
 
+end Dialect
 
 
 
@@ -207,7 +209,7 @@ defines a `[dc_com| ...]` macro to hook into this generic syntax parser
 
 namespace Syntax
 
-def mkTy2 : String → MLIR.AST.ExceptM DC Ty2
+def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
   | "Int" => return (.int)
   | "Bool" => return (.bool)
   | _ => throw .unsupportedType
@@ -309,18 +311,17 @@ end Syntax
 /-!
 ## Examples
 -/
+namespace Examples
 
-open MLIR AST Syntax in
-
-def BranchEg1 :=
-  [dc_com| {
-    ^bb0(%0 : !Stream_Bool, %1 : !Stream_Bool) :
-      %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
-      %outf = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-      %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-      %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
-      "return" (%0) : (!Stream_Bool) -> ()
+def BranchEg1 := [dc_com| {
+  ^entry(%0: !Stream_Bool, %1: !Stream_Bool):
+    %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
+    %outf = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
+    %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
+    "return" (%0) : (!Stream_Bool) -> ()
   }]
+
 
 #check BranchEg1
 #eval BranchEg1
@@ -341,5 +342,5 @@ def remNone (lst : List (Option Bool)) : List (Option Bool) :=
   lst.filter (fun | some x => true
                   | none => false)
 
-
+end Examples
 end DC
