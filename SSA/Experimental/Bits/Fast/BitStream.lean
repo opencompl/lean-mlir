@@ -401,9 +401,6 @@ lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   simp only [pow_one] at y
   exact Nat.mod_mod_of_dvd x y
 
-lemma pow_mod (a : 0 < w) : 2 ^ w % 2 = 0 := by
-  simp only [Nat.pow_mod 2 w 2, Nat.mod_self, Nat.zero_pow a, Nat.zero_mod]
-
 theorem neg_mod_odd {w t : Nat} (hw : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
   rcases w with rfl | w
   · simp at hw
