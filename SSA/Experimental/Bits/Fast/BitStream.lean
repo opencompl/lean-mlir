@@ -390,7 +390,7 @@ def doesNegCarry? (x : BitVec w) (n : Nat) : Bool := match n with
   | Nat.zero => !x.getLsb 0
   | Nat.succ y => !x.getLsb (Nat.succ y) &&  doesNegCarry? x y
 
-def state (x : BitVec w) (n : Nat) : Bool := match n with
+def iunfolder_state (x : BitVec w) (n : Nat) : Bool := match n with
   | 0 => false
   | i + 1 => doesNegCarry? x i
 
@@ -433,27 +433,27 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
     simp only [BitVec.getLsb_not, Fin.is_lt, decide_True, Bool.true_and, BitVec.getLsb_one,
       Nat.succ_eq_add_one, Prod.mk.injEq]
     constructor
-    rw [show n + 1 = (↑(⟨n + 1, a⟩ : Fin w)) by rfl]
-    rw [show false = state x 0 by rfl]
-    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1, a⟩]
-    rw [← ihg]
+    rw [show n + 1 = (↑(⟨n + 1, a⟩ : Fin w)) by rfl
+      , show false = iunfolder_state x 0 by rfl
+      , BitVec.iunfoldr_getLsb (iunfolder_state x) ⟨n+1, a⟩
+      , ← ihg]
     simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
       Bool.decide_eq_true]
     unfold BitVec.adcb
     unfold Bool.atLeastTwo
-    simp only [Bool.false_bne, state,ofBitVec,a]
+    simp only [Bool.false_bne, iunfolder_state,ofBitVec,a]
     simp only [↓reduceIte]
     intro i
     induction i.val
     simp only [BitVec.adcb, BitVec.getLsb, Nat.testBit_zero, ← decide_not, Nat.mod_two_ne_one,
-      decide_True, Bool.and_true, state, Bool.atLeastTwo_false_right, ← Bool.decide_and,
+      decide_True, Bool.and_true, iunfolder_state, Bool.atLeastTwo_false_right, ← Bool.decide_and,
       Bool.bne_false, doesNegCarry?, decide_eq_decide, and_iff_left_iff_imp]
     intro _
     omega
-    rename_i nn thing
+    rename_i i ih2
     simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
-      state, doesNegCarry?, Nat.succ_eq_add_one]
-    simp only [state] at thing
+      iunfolder_state, doesNegCarry?, Nat.succ_eq_add_one]
+    simp only [iunfolder_state] at ih2
     unfold BitVec.adcb
     simp only [Bool.atLeastTwo_false_mid]
     simp only [ofBitVec, a, ↓reduceIte]
@@ -462,7 +462,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   simp only [Neg.neg]
   simp only [BitStream.neg]
   rw [← neg_lemma]
-  simp only [ofBitVec,a,↓reduceIte, Neg.neg]
+  simp only [ofBitVec, a, ↓reduceIte, Neg.neg]
 
 theorem equal_up_to_refl : a ≈ʷ a := by
   intros j _
