@@ -377,7 +377,28 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 @[simp] theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
+
+def doesAddCarry? ( x y : BitVec w) (n : Nat) : Bool := match n with
+  | 0 =>  (x.getLsb 0) && (y.getLsb 0)
+  | i + 1 => (doesAddCarry? x y i).atLeastTwo (x.getLsb (i + 1)) (y.getLsb (i + 1))
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
+  intros n a
+  have neg_lemma : ⟨ doesAddCarry? x y n, (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+    induction n
+    -- simp
+    unfold addAux
+    simp [BitVec.adcb]
+    constructor
+    simp [doesAddCarry?, ofBitVec,a]
+    -- sorry
+
+    unfold HAdd.hAdd
+    unfold instHAdd
+    simp only  [Add.add, BitVec.add, ofBitVec,a]
+    simp
+    sorry
+    -- simp
+    sorry
   sorry
 
 /--
