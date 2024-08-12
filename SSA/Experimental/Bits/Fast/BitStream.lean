@@ -431,12 +431,9 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
     simp only [BitVec.getLsb_not, Fin.is_lt, decide_True, Bool.true_and, BitVec.getLsb_one,
       Nat.succ_eq_add_one, Prod.mk.injEq]
     constructor
-    have xl : (↑(⟨n + 1, a⟩ : Fin w)) = n + 1 := by rfl
-    rw [← xl]
-    have gg : false = state x 0 := by
-      rfl
-    rw [gg]
-    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1 ,a ⟩]
+    rw [show n + 1 = (↑(⟨n + 1, a⟩ : Fin w)) by rfl]
+    rw [show false = state x 0 by rfl]
+    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1, a⟩]
     rw [← ihg]
     simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
       Bool.decide_eq_true]
