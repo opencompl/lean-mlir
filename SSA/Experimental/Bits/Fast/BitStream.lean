@@ -404,7 +404,7 @@ lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
 lemma pow_mod (a : 0 < w) : 2 ^ w % 2 = 0 := by
   simp only [Nat.pow_mod 2 w 2, Nat.mod_self, Nat.zero_pow a, Nat.zero_mod]
 
-lemma lemma7 {t : Nat} (a : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
+lemma lemma7 {w t : Nat} (a : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
   sorry
 
 lemma extracted_2 (a : 0 < w) :
@@ -414,7 +414,7 @@ lemma extracted_2 (a : 0 < w) :
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   intros n a
-  have neg_lemma : ⟨(-x).getLsb n , decide (doesNegCarry? x n)⟩ = (ofBitVec x).negAux n := by
+  have neg_lemma : ⟨(-x).getLsb n, doesNegCarry? x n⟩ = (ofBitVec x).negAux n := by
     rw [BitVec.neg_eq_not_add]
     induction n
     simp only [BitVec.getLsb, BitVec.ofNat_eq_ofNat, BitVec.toNat_add, BitVec.toNat_not,
