@@ -1,5 +1,4 @@
 import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.SlimCheck
 
 import Mathlib.Logic.Function.Iterate
 -- TODO: upstream the following section
