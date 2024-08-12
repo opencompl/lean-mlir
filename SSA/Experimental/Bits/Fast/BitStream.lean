@@ -1,6 +1,4 @@
 import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-import Mathlib.Data.Fintype.Card
 
 import Mathlib.Logic.Function.Iterate
 -- TODO: upstream the following section
@@ -388,35 +386,35 @@ true iff ∀ i < n, x[i] = 0
 and returns false
 iff   ∃ i < n , x[i] = 1
 -/
-def doesNegCarry? {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
+def doesNegCarry? (x : BitVec w) (n : Nat) : Bool := match n with
   | Nat.zero => !x.getLsb 0
   | Nat.succ y => !x.getLsb (Nat.succ y) &&  doesNegCarry? x y
 
-def state {w : Nat} (x : BitVec w) (n : Nat) : Bool := match n with
+def state (x : BitVec w) (n : Nat) : Bool := match n with
   | 0 => false
-  | i + 1 => doesNegCarry? x i --sorryAx (Nat → Bool) false i
+  | i + 1 => doesNegCarry? x i
 
-lemma modmod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
+lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   -- We need to show that the least significant bit of x % 2 ^ w is the same as the least significant bit of x
   -- Since 2 is a power of 2, the least significant bit of x % 2 ^ w is the same as the least significant bit of x
   have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
   simp only [pow_one] at y
   exact Nat.mod_mod_of_dvd x y
 
-lemma powmod (a : 0 < w) : 2 ^ w % 2 = 0 := by
+lemma pow_mod (a : 0 < w) : 2 ^ w % 2 = 0 := by
   simp only [Nat.pow_mod 2 w 2, Nat.mod_self, Nat.zero_pow a, Nat.zero_mod]
 
-lemma lemma7 {w t : Nat} (a : 0  < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
+lemma lemma7 {t : Nat} (a : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
   sorry
 
-lemma  extracted_2 {w : ℕ} {x : BitVec w} (a : 0 < w) :
+lemma extracted_2 (a : 0 < w) :
   (2 ^ w - 1 - x.toNat + 1) % 2 ^ w % 2 = 1 ↔ x.toNat % 2 = 1 := by
-  rw [modmod (2 ^ w - 1 -  x.toNat + 1) w a]
-  exact lemma7 a (x.toFin.isLt)
+  rw [mod_mod (2 ^ w - 1 - x.toNat + 1) w a]
+  exact lemma7 a x.toFin.isLt
 
-theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   intros n a
-  have neg_lemma  : ⟨(-x).getLsb n , decide (doesNegCarry? x n)⟩  = (ofBitVec x).negAux n := by
+  have neg_lemma : ⟨(-x).getLsb n , decide (doesNegCarry? x n)⟩ = (ofBitVec x).negAux n := by
     rw [BitVec.neg_eq_not_add]
     induction n
     simp only [BitVec.getLsb, BitVec.ofNat_eq_ofNat, BitVec.toNat_add, BitVec.toNat_not,
@@ -438,7 +436,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
     have gg : false = state x 0 := by
       rfl
     rw [gg]
-    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1 ,a ⟩ ]
+    rw [BitVec.iunfoldr_getLsb (state x) ⟨n+1 ,a ⟩]
     rw [← ihg]
     simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
       Bool.decide_eq_true]
@@ -468,7 +466,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
   simp only [ofBitVec,a,↓reduceIte, Neg.neg]
 
 theorem equal_up_to_refl : a ≈ʷ a := by
-  intros  j _
+  intros j _
   rfl
 
 theorem equal_up_to_symm (e : a ≈ʷ b) : b ≈ʷ a := by
@@ -488,7 +486,7 @@ instance congr_equiv : Equivalence (EqualUpTo w) := {
   trans := equal_up_to_trans
 }
 
-theorem sub_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
+theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
   have sub_congr_lemma : a.subAux c n = b.subAux d n := by
     induction n
@@ -497,7 +495,7 @@ theorem sub_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) := 
     simp only [ih (by omega), and_self]
   simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
 
-theorem add_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
+theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
     induction n
@@ -519,7 +517,7 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
-theorem equal_trans  (e1 :  a ≈ʷ b) (e2 : c ≈ʷ d)  : (a ≈ʷ c) = (b ≈ʷ d) := by
+theorem equal_trans  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
   constructor
   <;> intros h
