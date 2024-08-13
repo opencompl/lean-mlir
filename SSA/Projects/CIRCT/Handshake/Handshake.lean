@@ -31,15 +31,12 @@ Note that consuming `none`s is still allowed (and in fact neccessary to make pro
 
 -/
 def branch (x c  : Stream) : Stream × Stream :=
-
   corec₂ (β := Stream × Stream) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
-
       let c₀ := c 0
       let c' := c.tail
       let x₀ := x 0
       let x' := x.tail
-
       match c₀, x₀ with
         | none, _ => (none, none, (x, c'))
         | _, none => (none, none, (x', c))
@@ -54,6 +51,7 @@ def branch (x c  : Stream) : Stream × Stream :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
+
 def merge (x y : Stream) : Stream :=
   Stream.corec (β := Stream × Stream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -100,6 +98,7 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
+
 def altMerge (x y : Stream) : Stream :=
   Stream.corec (β := Stream × Stream × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with
@@ -125,6 +124,39 @@ def fork (x : Stream) : Stream × Stream :=
       let x0 := x 0
       let x' := x.tail
       (x0, x0, x')
+
+-- def controlMerge (x : Stream) : Val × Val × Stream :=
+--     Stream.corec (β :=  Stream) (x)
+--       fun x =>
+--         match x with
+--           | .left  =>
+--             let x0 := x.head
+--             let x := x.tail
+--             let nextConsume := match x0 with
+--               | some _ => .right
+--               | none   => .left
+--             (x0, x, y, nextConsume)
+--           | .right =>
+--             let y0 := y.head
+--             let y := y.tail
+--             let nextConsume := match y0 with
+--               | some _ => .left
+--               | none   => .right
+--             (y0, x, y, nextConsume)
+      -- | .left  =>
+      --   let x0 := x.head
+      --   let x := x.tail
+      --   let nextConsume := match x0 with
+      --     | some _ => .right
+      --     | none   => .left
+      --   (x0, x, y, nextConsume)
+      -- | .right =>
+      --   let y0 := y.head
+      --   let y := y.tail
+      --   let nextConsume := match y0 with
+      --     | some _ => .left
+      --     | none   => .right
+      --   (y0, x, y, nextConsume)
 
 end Stream
 end Operations
