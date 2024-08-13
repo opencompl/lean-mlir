@@ -40,5 +40,6 @@ def remNone (lst : List (Option Bool)) : List (Option Bool) :=
   lst.filter (fun | some x => true
                   | none => false)
 
+
 end Examples
 end DC

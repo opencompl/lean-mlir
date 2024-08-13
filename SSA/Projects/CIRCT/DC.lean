@@ -16,7 +16,6 @@ This file is still in a **highly experimental** state
 -/
 namespace DC
 
-
 /-!
 ## Operation Semantics
 -/
@@ -31,11 +30,9 @@ the first or the second output depending on whether the corresponding token of `
 If only one input stream has a message available, the component will wait,
 not consuming any tokens, until a message becomes available on the other stream as well.
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
-
 -/
 
 def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
-
   corec₂ (β := Stream α × Stream Bool) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
 
@@ -83,8 +80,6 @@ y | y₀ y₁ y₂ _
 
 This will give a different output!
   | x₀ x₁ y₀ y₁ y₂
-
-
 
 One potential response to this situation is to require components be *determinate*.
 That is, by defining our component semantics in such a way that its output does not change
@@ -143,10 +138,9 @@ inductive Op
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
-| stream (ty2 : Ty2) : Ty
-| stream2 (ty2 : Ty2) : Ty
+| stream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
+| stream2 (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
 deriving Inhabited, DecidableEq, Repr
-
 
 instance : TyDenote Ty2 where
 toType := fun
@@ -227,8 +221,6 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
 
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
-
-
 
 def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (DC) Γ .pure (.stream2 r) :=
   Expr.mk
