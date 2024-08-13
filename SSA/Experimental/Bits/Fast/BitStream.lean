@@ -406,7 +406,6 @@ instance congr_equiv : Equivalence (EqualUpTo w) where
   symm := equal_up_to_symm
   trans := equal_up_to_trans
 
-
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
