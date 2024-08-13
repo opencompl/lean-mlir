@@ -426,8 +426,8 @@ lemma neg_eq_not_add : - a = ~~~ a + 1 := by
     induction i
     all_goals simp only [negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_zero, Nat.mod_succ,
       decide_True, Bool.atLeastTwo_false_right, Bool.and_true, Bool.bne_false, Bool.bne_true, Bool.not_not,
-      Prod.swap_prod_mk, negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_add_one, Nat.reduceDiv,
-      Nat.zero_testBit, Bool.atLeastTwo_false_mid, Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
+      Prod.swap_prod_mk, Nat.testBit_add_one, Nat.reduceDiv,
+      Nat.zero_testBit, Bool.atLeastTwo_false_mid,Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
     rename_i i ih
     simp only [ih, Prod.snd_swap]
     constructor
@@ -446,22 +446,22 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
     exact add_congr ofBitVec_not' equal_up_to_refl) (by
     simp only [neg_eq_not_add]
     exact add_congr equal_up_to_refl (by
-        intros n a
-        simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
-          Nat.one_and_eq_mod_two]
-        match n with
-          | 0 =>
-            simp only [decide_True, Bool.and_true, Nat.shiftRight_zero, Nat.mod_succ, Nat.reduceBNe,
-              decide_eq_true_eq, gt_iff_lt]
+      intros n a
+      simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
+        Nat.one_and_eq_mod_two]
+      match n with
+        | 0 =>
+          simp only [decide_True, Bool.and_true, Nat.shiftRight_zero, Nat.mod_succ, Nat.reduceBNe,
+            decide_eq_true_eq, gt_iff_lt]
+          omega
+        | k + 1 =>
+          simp only [show w > 0 by omega, decide_True, self_eq_add_left, add_eq_zero, one_ne_zero, and_false,
+            decide_False, Bool.and_false, Bool.false_eq, bne_eq_false_iff_eq, HShiftRight.hShiftRight, ShiftRight.shiftRight, Nat.shiftRight]
+          have : Nat.shiftRight 1 k ≤ 1 := by
+            induction k
+            <;> simp only [Nat.shiftRight, le_refl]
             omega
-          | k + 1 =>
-            simp only [show w > 0 by omega, decide_True, self_eq_add_left, add_eq_zero, one_ne_zero, and_false,
-              decide_False, Bool.and_false, Bool.false_eq, bne_eq_false_iff_eq, HShiftRight.hShiftRight, ShiftRight.shiftRight, Nat.shiftRight]
-            have : Nat.shiftRight 1 k ≤ 1 := by
-              induction k
-              <;> simp only [Nat.shiftRight, le_refl]
-              omega
-            omega))
+          omega))
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
