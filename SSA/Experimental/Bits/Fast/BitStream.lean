@@ -429,11 +429,31 @@ lemma neg_eq_not_add : - a = ~~~ a + 1 := by
       Prod.swap_prod_mk, Nat.testBit_add_one, Nat.reduceDiv,
       Nat.zero_testBit, Bool.atLeastTwo_false_mid,Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
     rename_i i ih
-    simp only [ih, Prod.snd_swap]
-    constructor
-    all_goals simp only [OfNat.ofNat, ofNat]
+    simp only [ih, OfNat.ofNat, ofNat, Prod.snd_swap, and_self]
   ext i
   simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
+
+lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
+  -- We need to show that the least significant bit of x % 2 ^ w is the same as the least significant bit of x
+  -- Since 2 is a power of 2, the least significant bit of x % 2 ^ w is the same as the least significant bit of x
+  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
+  simp only [pow_one] at y
+  exact Nat.mod_mod_of_dvd x y
+
+lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  intros n a
+  simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
+    Nat.one_and_eq_mod_two]
+  simp [BitVec.getLsb, Nat.testBit,h, HShiftRight.hShiftRight, ShiftRight.shiftRight,Nat.shiftRight]
+  match n with
+    | 0 => simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
+    | k + 1 =>
+      simp [Nat.shiftRight]
+      have : Nat.shiftRight 1 k ≤ 1 := by
+        induction k
+        <;> simp only [Nat.shiftRight, le_refl]
+        omega
+      omega
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   by_cases wz : w = 0
@@ -446,22 +466,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
     exact add_congr ofBitVec_not' equal_up_to_refl) (by
     simp only [neg_eq_not_add]
     exact add_congr equal_up_to_refl (by
-      intros n a
-      simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
-        Nat.one_and_eq_mod_two]
-      match n with
-        | 0 =>
-          simp only [decide_True, Bool.and_true, Nat.shiftRight_zero, Nat.mod_succ, Nat.reduceBNe,
-            decide_eq_true_eq, gt_iff_lt]
-          omega
-        | k + 1 =>
-          simp only [show w > 0 by omega, decide_True, self_eq_add_left, add_eq_zero, one_ne_zero, and_false,
-            decide_False, Bool.and_false, Bool.false_eq, bne_eq_false_iff_eq, HShiftRight.hShiftRight, ShiftRight.shiftRight, Nat.shiftRight]
-          have : Nat.shiftRight 1 k ≤ 1 := by
-            induction k
-            <;> simp only [Nat.shiftRight, le_refl]
-            omega
-          omega))
+      exact ofBitVec_ofNat (by omega)))
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
