@@ -398,15 +398,13 @@ theorem equal_up_to_trans (e1 : a ≈ʷ b) (e2 : b ≈ʷ c) : a ≈ʷ c := by
   exact e1 j h
   exact e2 j h
 
-instance congr_trans : Trans (EqualUpTo w) (EqualUpTo w) (EqualUpTo w) := {
+instance congr_trans : Trans (EqualUpTo w) (EqualUpTo w) (EqualUpTo w) where
   trans := equal_up_to_trans
-}
 
-instance congr_equiv : Equivalence (EqualUpTo w) := {
-  refl := fun _ => equal_up_to_refl,
-  symm := equal_up_to_symm,
+instance congr_equiv : Equivalence (EqualUpTo w) where
+  refl := fun _ => equal_up_to_refl
+  symm := equal_up_to_symm
   trans := equal_up_to_trans
-}
 
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
