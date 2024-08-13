@@ -456,13 +456,12 @@ lemma ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   exact ofBitVec_ofNat' (by omega)
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
-  rw [BitVec.neg_eq_not_add]
-  trans ~~~ ofBitVec x + (ofBitVec (1 : BitVec w ))
-  trans ofBitVec (~~~ x) + (ofBitVec (1 : BitVec w ))
-  exact ofBitVec_add
-  exact add_congr ofBitVec_not' equal_up_to_refl
-  simp only [neg_eq_not_add]
-  exact add_congr equal_up_to_refl ofBitVec_ofNat
+  calc
+  _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
+  _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
+  _ ≈ʷ ~~~ ofBitVec x   + (ofBitVec 1) := add_congr ofBitVec_not' equal_up_to_refl
+  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr equal_up_to_refl ofBitVec_ofNat
+  _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
