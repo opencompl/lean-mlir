@@ -440,7 +440,8 @@ lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   match n with
     | 0 => simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
     | k + 1 =>
-      simp [Nat.shiftRight]
+      simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False,
+        Nat.shiftRight, Bool.false_eq, bne_eq_false_iff_eq]
       have : Nat.shiftRight 1 k ≤ 1 := by
         induction k
         <;> simp only [Nat.shiftRight, le_refl]
