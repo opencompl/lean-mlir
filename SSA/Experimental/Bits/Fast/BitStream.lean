@@ -380,93 +380,18 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   sorry
 
-/--
-Does the nth bit overflow/carry in calculating the negation of x?
--/
-def doesNegCarry? (x : BitVec w) (n : Nat) : Bool := match n with
-  | Nat.zero => !x.getLsb 0
-  | Nat.succ y => !x.getLsb (Nat.succ y) &&  doesNegCarry? x y
-
-def iunfolder_state (x : BitVec w) (n : Nat) : Bool := match n with
-  | 0 => false
-  | i + 1 => doesNegCarry? x i
-
-lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
-  -- We need to show that the least significant bit of x % 2 ^ w is the same as the least significant bit of x
-  -- Since 2 is a power of 2, the least significant bit of x % 2 ^ w is the same as the least significant bit of x
-  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
-  simp only [pow_one] at y
-  exact Nat.mod_mod_of_dvd x y
-
-theorem neg_mod_odd {w t : Nat} (hw : 0 < w) (h : t < 2 ^ w) : (2 ^ w - 1 - t + 1) % 2 = 1 ↔ t % 2 = 1 := by
-  rcases w with rfl | w
-  · simp at hw
-  · omega
-
-lemma neg_mod_mod_odd (a : 0 < w) :
-  (2 ^ w - 1 - x.toNat + 1) % 2 ^ w % 2 = 1 ↔ x.toNat % 2 = 1 := by
-  rw [mod_mod (2 ^ w - 1 - x.toNat + 1) w a]
-  exact neg_mod_odd a x.toFin.isLt
-
-theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
-  intros n a
-  have neg_lemma : ⟨(-x).getLsb n, doesNegCarry? x n⟩ = (ofBitVec x).negAux n := by
-    rw [BitVec.neg_eq_not_add]
-    induction n
-    simp only [BitVec.getLsb, BitVec.ofNat_eq_ofNat, BitVec.toNat_add, BitVec.toNat_not,
-      BitVec.toNat_ofNat, Nat.add_mod_mod, Nat.testBit_zero, doesNegCarry?, ← decide_not,
-      Nat.mod_two_ne_one, decide_eq_true_eq, negAux, ofBitVec, a, ↓reduceIte, Prod.mk.injEq,
-      decide_eq_decide, and_true]
-    exact neg_mod_mod_odd a
-    rename_i n ih
-    simp only [BitVec.ofNat_eq_ofNat, BitVec.add_eq_adc, Bool.decide_eq_true]
-    unfold BitVec.adc
-    have ihg := ih (by omega)
-    unfold negAux
-    unfold doesNegCarry?
-    simp only [BitVec.getLsb_not, Fin.is_lt, decide_True, Bool.true_and, BitVec.getLsb_one,
-      Nat.succ_eq_add_one, Prod.mk.injEq]
-    constructor
-    rw [show n + 1 = (↑(⟨n + 1, a⟩ : Fin w)) by rfl
-      , show false = iunfolder_state x 0 by rfl
-      , BitVec.iunfoldr_getLsb (iunfolder_state x) ⟨n+1, a⟩
-      , ← ihg]
-    simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
-      Bool.decide_eq_true]
-    unfold BitVec.adcb
-    unfold Bool.atLeastTwo
-    simp only [Bool.false_bne, iunfolder_state,ofBitVec,a]
-    simp only [↓reduceIte]
-    intro i
-    induction i.val
-    simp only [BitVec.adcb, BitVec.getLsb, Nat.testBit_zero, ← decide_not, Nat.mod_two_ne_one,
-      decide_True, Bool.and_true, iunfolder_state, Bool.atLeastTwo_false_right, ← Bool.decide_and,
-      Bool.bne_false, doesNegCarry?, decide_eq_decide, and_iff_left_iff_imp]
-    intro _
-    omega
-    rename_i i ih2
-    simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False, Bool.and_false,
-      iunfolder_state, doesNegCarry?, Nat.succ_eq_add_one]
-    simp only [iunfolder_state] at ih2
-    unfold BitVec.adcb
-    simp only [Bool.atLeastTwo_false_mid]
-    simp only [ofBitVec, a, ↓reduceIte]
-    congr
-    simp only [← ihg, BitVec.ofNat_eq_ofNat, Bool.decide_eq_true]
-  simp only [Neg.neg]
-  simp only [BitStream.neg]
-  rw [← neg_lemma]
-  simp only [ofBitVec, a, ↓reduceIte, Neg.neg]
-
+@[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
   intros j _
   rfl
 
+@[symm]
 theorem equal_up_to_symm (e : a ≈ʷ b) : b ≈ʷ a := by
   intros j h
   symm
   exact e j h
 
+@[trans]
 theorem equal_up_to_trans (e1 : a ≈ʷ b) (e2 : b ≈ʷ c) : a ≈ʷ c := by
   intros j h
   trans b j
@@ -479,15 +404,6 @@ instance congr_equiv : Equivalence (EqualUpTo w) := {
   trans := equal_up_to_trans
 }
 
-theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
-  intros n h
-  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
-    induction n
-    <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
-    rename_i _ ih
-    simp only [ih (by omega), and_self]
-  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
-
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
@@ -496,6 +412,65 @@ theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := b
     rename_i _ ih
     simp only [ih (by omega), Bool.bne_right_inj]
   simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
+
+theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
+  intros g h
+  simp only [not_eq, e1 g h]
+
+lemma ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+  intros n a
+  simp only [ofBitVec, a, ↓reduceIte, BitVec.getLsb_not, decide_True, Bool.true_and, not_eq]
+
+lemma neg_eq_not_add : - a = ~~~ a + 1 := by
+  have neg_eq_not_add' (i : Nat) : a.negAux i = Prod.swap ((~~~a).addAux 1 i) := by
+    induction i
+    all_goals simp only [negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_zero, Nat.mod_succ,
+      decide_True, Bool.atLeastTwo_false_right, Bool.and_true, Bool.bne_false, Bool.bne_true, Bool.not_not,
+      Prod.swap_prod_mk, negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_add_one, Nat.reduceDiv,
+      Nat.zero_testBit, Bool.atLeastTwo_false_mid, Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
+    rename_i i ih
+    simp only [ih, Prod.snd_swap]
+    constructor
+    all_goals simp only [OfNat.ofNat, ofNat]
+  ext i
+  simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
+
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
+  by_cases wz : w = 0
+  intros _ a
+  simp only [wz, not_lt_zero'] at a
+  rw [BitVec.neg_eq_not_add]
+  exact equal_up_to_trans (by
+    trans ofBitVec (~~~ x) + (ofBitVec (1 : BitVec w ))
+    exact ofBitVec_add
+    exact add_congr ofBitVec_not' equal_up_to_refl) (by
+    simp only [neg_eq_not_add]
+    exact add_congr equal_up_to_refl (by
+        intros n a
+        simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
+          Nat.one_and_eq_mod_two]
+        match n with
+          | 0 =>
+            simp only [decide_True, Bool.and_true, Nat.shiftRight_zero, Nat.mod_succ, Nat.reduceBNe,
+              decide_eq_true_eq, gt_iff_lt]
+            omega
+          | k + 1 =>
+            simp only [show w > 0 by omega, decide_True, self_eq_add_left, add_eq_zero, one_ne_zero, and_false,
+              decide_False, Bool.and_false, Bool.false_eq, bne_eq_false_iff_eq, HShiftRight.hShiftRight, ShiftRight.shiftRight, Nat.shiftRight]
+            have : Nat.shiftRight 1 k ≤ 1 := by
+              induction k
+              <;> simp only [Nat.shiftRight, le_refl]
+              omega
+            omega))
+
+theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
+  intros n h
+  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
+    induction n
+    <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
+    rename_i _ ih
+    simp only [ih (by omega), and_self]
+  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
 
 theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
   intros n h
@@ -506,9 +481,6 @@ theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
     simp only [ih (by omega), Bool.bne_right_inj, and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
-theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
-  intros g h
-  simp only [not_eq, e1 g h]
 
 theorem equal_trans  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
