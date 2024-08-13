@@ -380,62 +380,104 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 @[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   sorry
 
-@[simp] theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ  - (ofBitVec x) := by
-  sorry
-
+@[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
-  intros  j _
+  intros _ _
   rfl
 
+@[symm]
 theorem equal_up_to_symm (e : a ≈ʷ b) : b ≈ʷ a := by
   intros j h
   symm
   exact e j h
 
+@[trans]
 theorem equal_up_to_trans (e1 : a ≈ʷ b) (e2 : b ≈ʷ c) : a ≈ʷ c := by
   intros j h
   trans b j
   exact e1 j h
   exact e2 j h
 
-instance congr_equiv : Equivalence (EqualUpTo w) := {
-  refl := fun _ => equal_up_to_refl,
-  symm := equal_up_to_symm,
+instance congr_trans : Trans (EqualUpTo w) (EqualUpTo w) (EqualUpTo w) where
   trans := equal_up_to_trans
-}
 
-theorem sub_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
-  intros n h
-  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
-    induction n
-    <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
-    rename_i _ ih
-    simp only [ih (by omega), and_self]
-  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
+instance congr_equiv : Equivalence (EqualUpTo w) where
+  refl := fun _ => equal_up_to_refl
+  symm := equal_up_to_symm
+  trans := equal_up_to_trans
 
-theorem add_congr (e1 : a ≈ʷ b) (e2 : c  ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
+theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
-    induction n
+    induction' n with _ ih
     <;> simp only [addAux, Prod.mk.injEq, e1 _ h, e2 _ h]
-    rename_i _ ih
     simp only [ih (by omega), Bool.bne_right_inj]
   simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
-
-theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
-  intros n h
-  have neg_congr_lemma : a.negAux n = b.negAux n := by
-    induction n
-    <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
-    rename_i _ ih
-    simp only [ih (by omega), Bool.bne_right_inj, and_self]
-  simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
 theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
-theorem equal_trans  (e1 :  a ≈ʷ b) (e2 : c ≈ʷ d)  : (a ≈ʷ c) = (b ≈ʷ d) := by
+lemma ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+  intros n a
+  simp only [ofBitVec, a, ↓reduceIte, BitVec.getLsb_not, decide_True, Bool.true_and, not_eq]
+
+lemma neg_eq_not_add : - a = ~~~ a + 1 := by
+  have neg_eq_not_add' (i : Nat) : a.negAux i = Prod.swap ((~~~a).addAux 1 i) := by
+    induction' i with _ ih
+    <;> simp only [negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_zero, Nat.mod_succ,
+      decide_True, Bool.atLeastTwo_false_right, Bool.and_true, Bool.bne_false, Bool.bne_true, Bool.not_not,
+      Prod.swap_prod_mk, Nat.testBit_add_one, Nat.reduceDiv,
+      Nat.zero_testBit, Bool.atLeastTwo_false_mid,Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
+    simp only [ih, OfNat.ofNat, ofNat, Prod.snd_swap, and_self]
+  ext i
+  simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
+
+lemma ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  intros n a
+  simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
+    Nat.one_and_eq_mod_two, h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
+  cases' n with k
+  simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
+  simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False,
+    Nat.shiftRight, Bool.false_eq, bne_eq_false_iff_eq]
+  have : Nat.shiftRight 1 k ≤ 1 := by
+    induction k
+    <;> simp only [Nat.shiftRight, le_refl]
+    omega
+  omega
+
+lemma ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  by_cases wz : w = 0
+  intros _ a
+  simp only [wz, not_lt_zero'] at a
+  exact ofBitVec_ofNat' (by omega)
+
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
+  calc
+  _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
+  _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
+  _ ≈ʷ ~~~ ofBitVec x   + (ofBitVec 1) := add_congr ofBitVec_not' equal_up_to_refl
+  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr equal_up_to_refl ofBitVec_ofNat
+  _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
+
+theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
+  intros n h
+  have sub_congr_lemma : a.subAux c n = b.subAux d n := by
+    induction' n with _ ih
+    <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
+    simp only [ih (by omega), and_self]
+  simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
+
+theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
+  intros n h
+  have neg_congr_lemma : a.negAux n = b.negAux n := by
+    induction' n with _ ih
+    <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
+    simp only [ih (by omega), Bool.bne_right_inj, and_self]
+  simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
+
+theorem equal_congr_congr  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
   constructor
   <;> intros h
