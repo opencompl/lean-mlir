@@ -411,9 +411,8 @@ instance congr_equiv : Equivalence (EqualUpTo w) := {
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
-    induction n
+    induction' n with _ ih
     <;> simp only [addAux, Prod.mk.injEq, e1 _ h, e2 _ h]
-    rename_i _ ih
     simp only [ih (by omega), Bool.bne_right_inj]
   simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
 
@@ -468,23 +467,20 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
   have sub_congr_lemma : a.subAux c n = b.subAux d n := by
-    induction n
+    induction' n with _ ih
     <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h, and_self]
-    rename_i _ ih
     simp only [ih (by omega), and_self]
   simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
 
 theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
   intros n h
   have neg_congr_lemma : a.negAux n = b.negAux n := by
-    induction n
+    induction' n with _ ih
     <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
-    rename_i _ ih
     simp only [ih (by omega), Bool.bne_right_inj, and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
-
-theorem equal_trans  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
+theorem equal_congr_congr  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
   constructor
   <;> intros h
