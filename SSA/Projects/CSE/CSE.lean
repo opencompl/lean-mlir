@@ -330,7 +330,8 @@ unsafe def State.cseExpr
       let e' : Expr d Γ .pure α  := .mk op ty_eq eff_le args' regArgs'
       ⟨⟨e', by {
         intros V
-        simp (config := { zetaDelta := true}) [E, hargs', Expr.denote_unfold]
+        simp (config := { zetaDelta := true }) only [EffectKind.toMonad_pure, Expr.denote_unfold,
+          EffectKind.liftEffect_pure, eq_rec_inj, cast_inj]
         congr 1
         · unfold Ctxt.Valuation.eval at hargs'
           rw [hargs']
