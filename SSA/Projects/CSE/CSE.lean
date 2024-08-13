@@ -331,9 +331,9 @@ unsafe def State.cseExpr
         intros V
         simp (config := { zetaDelta := true}) [E, hargs', Expr.denote_unfold]
         congr 1
-        unfold Ctxt.Valuation.eval at hargs'
-        rw [hargs']
-        rw [hregArgs']
+        · unfold Ctxt.Valuation.eval at hargs'
+          rw [hargs']
+        · rw [hregArgs']
       }⟩,
         match s.expr2cache _ e with
         | .some ⟨v', hv'⟩ =>
