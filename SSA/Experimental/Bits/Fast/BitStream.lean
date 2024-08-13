@@ -433,13 +433,6 @@ lemma neg_eq_not_add : - a = ~~~ a + 1 := by
   ext i
   simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
 
-lemma mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
-  -- We need to show that the least significant bit of x % 2 ^ w is the same as the least significant bit of x
-  -- Since 2 is a power of 2, the least significant bit of x % 2 ^ w is the same as the least significant bit of x
-  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
-  simp only [pow_one] at y
-  exact Nat.mod_mod_of_dvd x y
-
 lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
   simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
@@ -465,8 +458,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
     exact ofBitVec_add
     exact add_congr ofBitVec_not' equal_up_to_refl) (by
     simp only [neg_eq_not_add]
-    exact add_congr equal_up_to_refl (by
-      exact ofBitVec_ofNat (by omega)))
+    exact add_congr equal_up_to_refl (ofBitVec_ofNat (by omega)))
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
