@@ -58,7 +58,8 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
           .some ⟨v', by {
             intros V
             rw [heneedleΓ]
-            simp [Lets.denote]
+            simp only [Lets.denote, EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq,
+              Ctxt.Valuation.snoc_toSnoc]
             rw [hv' V]
             congr
           }⟩
@@ -72,9 +73,9 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
                   intros V
                   subst hβ
                   subst exprEq
-                  simp! only [Lets.denote_var_last_pure]
-                  simp! (config := { unfoldPartialApp := true, decide := true, zetaDelta := true})
-                    [heneedleΓ]
+                  simp only [Lets.denote_var_last_pure]
+                  simp only [Lets.denote_var,
+                    EffectKind.toMonad_pure, Id.pure_eq, Id.bind_eq, heneedleΓ]
                   congr
                 }⟩
             | .isFalse _neq => .none
@@ -116,7 +117,6 @@ def VarRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
       if H : TY ▸ w' = vnew
       then ⟨TY ▸ vold, by
         subst TY
-        simp at H ⊢
         subst H
         intros Vstart
         rw [VNEW Vstart]⟩
@@ -141,11 +141,11 @@ def arglistRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
     let ⟨as, has⟩ := arglistRemapVar lets hom vold vnew VNEW as'
     ⟨.cons a as, by
       intros Vstart
-      simp [HVector.map]
+      simp only [HVector.map, HVector.cons.injEq]
       rw [ha Vstart]
       rw [has Vstart]
       constructor
-      simp [ha]
+      simp only
       congr
     ⟩
 
@@ -165,7 +165,7 @@ def ExprRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
       ⟨.mk op ty_eq eff_le args' regArgs, by
         intros Vstart
         subst ty_eq
-        simp [Expr.denote]
+        simp only [EffectKind.toMonad_pure, Expr.denote, EffectKind.liftEffect_pure, cast_inj]
         rw [hargs']
       ⟩
     -- TODO: extend to Com.
@@ -196,13 +196,13 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
         let ⟨v', hv'⟩ := s.var2var v
         apply (Subtype.mk v'.toSnoc)
         intros V
-        simp [Lets.denote_var]
+        simp only [Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
         rw [hv']
 
       case last => -- new variable, return the CSE'd variable.
         apply (Subtype.mk vold.toSnoc)
         intros V
-        simp [Lets.denote_var]
+        simp only [Lets.denote_var_last_pure, Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
         rw [← hv]
         rw [henew]
     expr2cache := fun β eneedle =>
@@ -210,14 +210,15 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
       let lastVar := (Ctxt.Var.last Γ α)
       let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by {
         intros Vstart
-        simp (config := {zetaDelta := true}) [Ctxt.Hom.remapLast, Ctxt.Valuation.comap]
+        simp (config := { zetaDelta := true }) only [Ctxt.Valuation.comap, Ctxt.Hom.remapLast,
+          Ctxt.Var.casesOn_last]
       })  eneedle
       match s.expr2cache β eneedle' with
       | .none => .none
       | .some ⟨e', he'⟩ =>
         .some ⟨e', by {
           intros V
-          simp
+          simp only [Lets.denote_var, Ctxt.Valuation.snoc_toSnoc]
           rw [he']
           rw [heneedle']
           congr
@@ -226,7 +227,8 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
           case e_Γv.h.h.toSnoc v =>
             simp (config := {zetaDelta := true}) [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
           case e_Γv.h.h.last =>
-            simp (config := {zetaDelta := true}) [Ctxt.Valuation.comap, Ctxt.Hom.remapLast]
+            simp (config := { zetaDelta := true }) only [Ctxt.Valuation.comap, Ctxt.Hom.remapLast,
+              Ctxt.Var.casesOn_last, Ctxt.Valuation.snoc_last]
             rw [henew]
             rw [hv]
         }⟩
@@ -249,7 +251,7 @@ def State.cseArgList
     let ⟨as', has'⟩ := s.cseArgList as
     ⟨.cons a' as', by
           intros V
-          simp [HVector.map]
+          simp only [HVector.map, HVector.cons.injEq]
           constructor
           apply ha'
           apply has'
@@ -339,8 +341,7 @@ unsafe def State.cseExpr
         | .some ⟨v', hv'⟩ =>
           .some ⟨v', by
             intros V
-            simp [hv']
-            simp [E]
+            simp [hv', E]
           ⟩
         | .none => .none
       ⟩
@@ -355,7 +356,6 @@ unsafe def State.cseCom {α : d.Ty}
   | .ret v => ⟨.ret (s.var2var v).val, by
       let ⟨v', hv'⟩ := s.var2var v
       intros VΓ
-      simp
       simp [Com.denote, hv']⟩
   | .var (α := α) e body =>
       let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e
@@ -366,8 +366,8 @@ unsafe def State.cseCom {α : d.Ty}
         let ⟨body', hbody'⟩ := s'.cseCom body
         ⟨.var e' body',  by
             intros VΓ
-            simp [Com.denote]
-            simp [Lets.denote_var] at hbody' ⊢
+            simp only [EffectKind.toMonad_pure, Com.denote]
+            simp only [EffectKind.toMonad_pure, Lets.denote_var] at hbody' ⊢
             rw [← hbody']
             rw [he']⟩
       | .some ⟨v', hv'⟩ =>
@@ -379,8 +379,8 @@ unsafe def State.cseCom {α : d.Ty}
         ⟨.var e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
-            simp [Com.denote]
-            simp [Lets.denote_var] at hbody' ⊢
+            simp only [EffectKind.toMonad_pure, Com.denote]
+            simp only [EffectKind.toMonad_pure, Lets.denote_var] at hbody' ⊢
             specialize (hbody' V)
             specialize (he' V)
             rw [he'] at hbody'
@@ -397,7 +397,7 @@ unsafe def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp [Lets.denote] at hcom'
+      simp only [EffectKind.toMonad_pure, Lets.denote, Id.pure_eq] at hcom'
       assumption
     }⟩
 
