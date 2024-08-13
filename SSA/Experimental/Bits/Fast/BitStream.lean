@@ -433,7 +433,7 @@ lemma neg_eq_not_add : - a = ~~~ a + 1 := by
   ext i
   simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
 
-lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+lemma ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
   simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
     Nat.one_and_eq_mod_two, h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
@@ -448,17 +448,20 @@ lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
         omega
       omega
 
-theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
+lemma ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   by_cases wz : w = 0
   intros _ a
   simp only [wz, not_lt_zero'] at a
+  exact ofBitVec_ofNat' (by omega)
+
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   rw [BitVec.neg_eq_not_add]
   exact equal_up_to_trans (by
     trans ofBitVec (~~~ x) + (ofBitVec (1 : BitVec w ))
     exact ofBitVec_add
     exact add_congr ofBitVec_not' equal_up_to_refl) (by
     simp only [neg_eq_not_add]
-    exact add_congr equal_up_to_refl (ofBitVec_ofNat (by omega)))
+    exact add_congr equal_up_to_refl ofBitVec_ofNat)
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
