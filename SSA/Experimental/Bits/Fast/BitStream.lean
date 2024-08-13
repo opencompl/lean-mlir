@@ -423,13 +423,11 @@ theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   simp only [ofBitVec, a, ↓reduceIte, BitVec.getLsb_not, decide_True, Bool.true_and, not_eq]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
-  have neg_eq_not_add' (i : Nat) : a.negAux i = Prod.swap ((~~~a).addAux 1 i) := by
+  have neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
     induction' i with _ ih
-    <;> simp only [negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_zero, Nat.mod_succ,
-      decide_True, Bool.atLeastTwo_false_right, Bool.and_true, Bool.bne_false, Bool.bne_true, Bool.not_not,
-      Prod.swap_prod_mk, Nat.testBit_add_one, Nat.reduceDiv,
-      Nat.zero_testBit, Bool.atLeastTwo_false_mid,Bool.false_bne, Prod.swap_prod_mk, Prod.mk.injEq, Bool.bne_left_inj]
-    simp only [ih, OfNat.ofNat, ofNat, Prod.snd_swap, and_self]
+    --- These simps are terminal, no need for "simp only".
+    · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat]
+    · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat, ih]
   ext i
   simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
 
