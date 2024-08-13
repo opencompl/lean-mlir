@@ -418,11 +418,11 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
-lemma ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros n a
   simp only [ofBitVec, a, ↓reduceIte, BitVec.getLsb_not, decide_True, Bool.true_and, not_eq]
 
-lemma neg_eq_not_add : - a = ~~~ a + 1 := by
+theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   have neg_eq_not_add' (i : Nat) : a.negAux i = Prod.swap ((~~~a).addAux 1 i) := by
     induction' i with _ ih
     <;> simp only [negAux, OfNat.ofNat, addAux, BitVec.adcb, not_eq, ofNat, Nat.testBit_zero, Nat.mod_succ,
@@ -433,25 +433,25 @@ lemma neg_eq_not_add : - a = ~~~ a + 1 := by
   ext i
   simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
 
-lemma ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
   simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
     Nat.one_and_eq_mod_two, h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
   cases' n with k
-  simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
-  simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False,
+  · simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
+  · simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False,
     Nat.shiftRight, Bool.false_eq, bne_eq_false_iff_eq]
-  have : Nat.shiftRight 1 k ≤ 1 := by
-    induction k
-    <;> simp only [Nat.shiftRight, le_refl]
+    have : Nat.shiftRight 1 k ≤ 1 := by
+      induction k
+      <;> simp only [Nat.shiftRight, le_refl]
+      omega
     omega
-  omega
 
-lemma ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   by_cases wz : w = 0
-  intros _ a
-  simp only [wz, not_lt_zero'] at a
-  exact ofBitVec_ofNat' (by omega)
+  · intros _ a
+    simp only [wz, not_lt_zero'] at a
+  · exact ofBitVec_ofNat' (by omega)
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
