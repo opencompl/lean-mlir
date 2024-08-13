@@ -374,10 +374,10 @@ variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 local infix:20 " ≈ʷ " => EqualUpTo w
 
 -- TODO: These sorries are difficult, and will be proven in a later Pull Request.
-@[simp] theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
+theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
-@[simp] theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
+theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   sorry
 
 @[refl]
