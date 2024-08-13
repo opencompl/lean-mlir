@@ -9,7 +9,6 @@ import SSA.Core.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Util
 
-open Std (BitVec)
 open Ctxt(Var)
 
 namespace ScfFunctor
