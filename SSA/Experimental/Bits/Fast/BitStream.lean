@@ -437,7 +437,7 @@ lemma ofBitVec_ofNat (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
   simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
     Nat.one_and_eq_mod_two]
-  simp [BitVec.getLsb, Nat.testBit,h, HShiftRight.hShiftRight, ShiftRight.shiftRight,Nat.shiftRight]
+  simp only [h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
   match n with
     | 0 => simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
     | k + 1 =>
