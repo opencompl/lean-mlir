@@ -180,7 +180,7 @@ simproc reduce_bitvec2 (BitStream.EqualUpTo (_ : Nat) _ _) := fun e => do
       return .done {
         expr := .app (.app (.app (.const ``BitStream.EqualUpTo []) w) lterm) rterm
         proof? :=
-        some (.app (.app (.app (.app (.app (.app (.app (.const ``BitStream.equal_trans []) w) l) lterm) r) rterm) lproof) rproof)
+        some (.app (.app (.app (.app (.app (.app (.app (.const ``BitStream.equal_congr_congr []) w) l) lterm) r) rterm) lproof) rproof)
       }
     | _ => throwError m!"Expression {e} is not of the expected form. Expected something of the form BitStream.EqualUpTo (w : Nat) (lhs : BitStream) (rhs : BitStream) : Prop"
 
