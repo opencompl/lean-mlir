@@ -422,32 +422,35 @@ theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros n a
   simp [ofBitVec, a]
 
-theorem neg_eq_not_add : - a = ~~~ a + 1 := by
-  have neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
-    induction' i with _ ih
-    · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat]
-    · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat, ih]
-  ext i
-  simp only [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb, Prod.fst_swap]
+theorem neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
+  induction' i with _ ih
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
 
-theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
-  intros n a
-  simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
-    Nat.one_and_eq_mod_two, h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
-  cases' n with k
+theorem neg_eq_not_add : - a = ~~~ a + 1 := by
+  ext i
+  simp [neg_eq_not_add' i, Neg.neg, neg, negAux, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
+
+theorem one_bit (i : Nat) : (ofNat 1) i = decide (0 = i) := by
+  cases' i with k
+  <;> unfold ofNat
   · simp
   · have : Nat.shiftRight 1 k ≤ 1 := by
       induction k
       <;> simp only [Nat.shiftRight, le_refl]
       omega
     simp [Nat.shiftRight]
-    omega
 
-theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  intros n a
+  simp [one_bit n, ofBitVec, a, h]
+
+ theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   by_cases wz : w = 0
   · intros _ a
     simp only [wz, not_lt_zero'] at a
-  · exact ofBitVec_ofNat' (by omega)
+  · apply ofBitVec_ofNat'
+    omega
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
