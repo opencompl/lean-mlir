@@ -443,19 +443,6 @@ theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
     simp [ofNat_one n, ofBitVec, a]
     omega
 
-/-!
-There are multiple styles/ways to write the proof of ofBitVec_neg
-choose which style you want.
-You can either write the proof without calc (option 1)
-or with calc (option 2).
--/
-theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
-  rw [BitVec.neg_eq_not_add]
-  apply equal_up_to_trans ofBitVec_add
-  apply equal_up_to_trans (add_congr ofBitVec_not_eq_to ofBitVec_ofNat)
-  rw [neg_eq_not_add]
-  exact equal_up_to_refl
-
 theorem ofBitVec_neg2 : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
   _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
