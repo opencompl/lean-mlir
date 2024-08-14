@@ -424,8 +424,8 @@ theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
 
 theorem neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
   induction' i with _ ih
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
+  <;> simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
+  · simp [ih, OfNat.ofNat, ofNat]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext i
