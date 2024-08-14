@@ -422,6 +422,13 @@ theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros _ a
   simp [ofBitVec, a]
 
+/--
+  Clarification: the reason that this theorem (unexpectedly) contains Prod.swap is
+  that in BitStream.negAux, the carry bit is in the left bit of the pair and
+  in BitStream.addAux, the carry bit is in the right bit of the pair.
+
+  TODO: Possibly investigate changing the behavior of BitStream.addAux?
+-/
 theorem negAux_eq_not_addAux : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
