@@ -81,11 +81,6 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
   norm_cast
   simp [toNat_mod_cancel, Int.toNat_ofNat]
 
-@[simp] theorem msb_xor {x y : BitVec w} :
-    (x ^^^ y).msb = xor x.msb y.msb := by
-  simp only [BitVec.msb, getMsb, tsub_zero, getLsb_xor]
-  cases decide (0 < w) <;> rfl
-
 end BitVec
 end UpStream
 
