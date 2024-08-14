@@ -445,12 +445,11 @@ theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
   simp [one_bit n, ofBitVec, a, h]
 
- theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
-  by_cases wz : w = 0
-  · intros _ a
-    simp only [wz, not_lt_zero'] at a
-  · apply ofBitVec_ofNat'
-    omega
+theorem ofBitVec_ofNat {w : Nat} : EqualUpTo w (@ofBitVec w 1) (ofNat 1) := by
+  cases w
+  simp [EqualUpTo]
+  apply ofBitVec_ofNat'
+  simp
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
