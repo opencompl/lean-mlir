@@ -446,8 +446,44 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
+theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+  intros _ a
+  simp [ofBitVec, a]
+
+/--
+  Clarification: the reason that this theorem (unexpectedly) contains Prod.swap is
+  that in BitStream.negAux, the carry bit is in the left bit of the pair and
+  in BitStream.addAux, the carry bit is in the right bit of the pair.
+
+  TODO: Possibly investigate changing the behavior of BitStream.addAux?
+-/
+theorem negAux_eq_not_addAux : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
+  funext i
+  induction' i with _ ih
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
+
+theorem neg_eq_not_add : - a = ~~~ a + 1 := by
+  ext _
+  simp [negAux_eq_not_addAux, Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
+
+theorem ofNat_one (i : Nat) : ofNat 1 i = decide (0 = i) := by
+  cases i
+  <;> simp [ofNat, Nat.shiftRight]
+
+theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  by_cases h : w = 0
+  · simp [EqualUpTo ,h]
+  · intros n a
+    simp [ofNat_one n, ofBitVec, a]
+    omega
+
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
-  sorry
+  calc
+  _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
+  _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
+  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eqTo ofBitVec_one_eqTo_ofNat
+  _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
