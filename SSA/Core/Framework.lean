@@ -522,7 +522,7 @@ end Lemmas
 ## `denote`
 Denote expressions, programs, and sequences of lets
 -/
-variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
+variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 
 mutual
 
@@ -723,6 +723,7 @@ section Lemmas
 
 
 @[simp] lemma Lets.denote_addComToEnd
+    [LawfulMonad d.m]
     {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff t} :
     Lets.denote (lets.addComToEnd com) = fun V => (do
         let Vlets ← lets.denote V
@@ -736,7 +737,7 @@ section Lemmas
 @[simp] lemma Com.denoteLets_ret : (.ret v : Com d Γ eff t).denoteLets = fun V => pure V := by
   funext V; simp [denoteLets]
 
-theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
+theorem Com.denoteLets_eq [LawfulMonad d.m] {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
   simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
 
 end Lemmas
@@ -965,12 +966,12 @@ section Lemmas
       EffectKind.liftEffect_pure,
       EffectKind.liftEffect_eq_pure_cast (EffectKind.eq_of_le_pure eff_le)]
 
-@[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] lemma Com.denote_castPureToEff [LawfulMonad d.m] {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
   funext V; simp only [EffectKind.return_impure_toMonad_eq]
   induction com using Com.recPure <;> simp_all
 
-@[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] lemma Com.denoteLets_castPureToEff [LawfulMonad d.m] {com : Com d Γ .pure ty} :
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
   funext V; induction com using Com.recPure <;> simp_all
