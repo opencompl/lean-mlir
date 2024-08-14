@@ -522,7 +522,7 @@ end Lemmas
 ## `denote`
 Denote expressions, programs, and sequences of lets
 -/
-variable [TyDenote d.Ty] [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m]
+variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
 
 mutual
 
@@ -1112,7 +1112,7 @@ def Zipper.toCom (zip : Zipper d Γ_in eff Γ_mid ty) : Com d Γ_in eff ty :=
 
 /-- Add a `Com` directly before the current position of a zipper, while reassigning every
 occurence of a given free variable (`v`) of `zip.com` to the output of the new `Com`  -/
-def Zipper.insertCom (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
+def Zipper.insertCom [DecidableEq d.Ty] (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
     (newCom : Com d Γ_mid eff newTy) : Zipper d Γ_in eff newCom.outContext ty :=
   let newTop := zip.top.addComToEnd newCom
   --  ^^^^^^ The combination of the previous `top` with the `newCom` inserted
@@ -1127,7 +1127,7 @@ zipper, while r eassigning every occurence of a given free variable (`v`) of
 
 This is a wrapper around `insertCom` (which expects `newCom` to have the same effect as `zip`)
 and `castPureToEff` -/
-def Zipper.insertPureCom (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
+def Zipper.insertPureCom [DecidableEq d.Ty] (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid newTy)
     (newCom : Com d Γ_mid .pure newTy) : Zipper d Γ_in eff newCom.outContext ty :=
   (by simp : (newCom.castPureToEff eff).outContext = newCom.outContext)
     ▸ zip.insertCom v (newCom.castPureToEff eff)
@@ -1178,7 +1178,7 @@ theorem bind_return_applied [LawfulMonad d.m] (ma : d.m a) :
 @[simp] lemma Zipper.denote_mk {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff ty} :
     denote ⟨lets, com⟩ = fun V => (lets.denote V) >>= com.denote := rfl
 
-theorem Zipper.denote_insertCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
+theorem Zipper.denote_insertCom [DecidableEq d.Ty] {zip : Zipper d Γ_in eff Γ_mid ty₁}
     {newCom : Com d _ eff newTy} [LawfulMonad d.m] :
     (zip.insertCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
       let V_mid ← zip.top.denote V_in
@@ -1195,7 +1195,7 @@ theorem Zipper.denote_insertCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
     denote (h ▸ zip) = zip.denote := by
   subst h; rfl
 
-theorem Zipper.denote_insertPureCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
+theorem Zipper.denote_insertPureCom [DecidableEq d.Ty] {zip : Zipper d Γ_in eff Γ_mid ty₁}
     {newCom : Com d _ .pure newTy} [LawfulMonad d.m] :
     (zip.insertPureCom v newCom).denote = (fun (V_in : Valuation Γ_in) => do
       let V_mid ← zip.top.denote V_in
@@ -1511,18 +1511,18 @@ end AListTheorems
 -/
 
 /-- Convert a heterogenous vector of variables into a homogeneous `VarSet` -/
-def HVector.toVarSet : {l : List d.Ty} → (T : HVector (Var Γ) l) → VarSet Γ
+def HVector.toVarSet [DecidableEq d.Ty] : {l : List d.Ty} → (T : HVector (Var Γ) l) → VarSet Γ
   | [], .nil => ∅
   | _::_, .cons v vs => insert ⟨_, v⟩ vs.toVarSet
 
 -- TODO: `HVector.toVarSet` and `HVector.vars` do the same thing, deduplicate
-def HVector.vars {l : List d.Ty} (T : HVector (Var Γ) l) : VarSet Γ :=
+def HVector.vars [DecidableEq d.Ty] {l : List d.Ty} (T : HVector (Var Γ) l) : VarSet Γ :=
   T.foldl (fun _ s a => insert ⟨_, a⟩ s) ∅
 
 --TODO: find a name that better encapsulates that it's the *transitive* closure
 /-- The free variables of `lets` that are (transitively) referred to by some variable `v`.
 Also known as the uses of var. -/
-def Lets.vars : Lets d Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
+def Lets.vars [DecidableEq d.Ty] : Lets d Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
   | .var lets e, v => by
       cases v using Var.casesOn with
@@ -1532,21 +1532,21 @@ def Lets.vars : Lets d Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
 
 /-- `com.vars` is the set of free variables from `Γ` that are (transitively) used by the return
 variable of `com` -/
-def Com.vars : Com d Γ .pure t → VarSet Γ :=
+def Com.vars [DecidableEq d.Ty] : Com d Γ .pure t → VarSet Γ :=
   fun com => com.toFlatCom.lets.vars com.toFlatCom.ret
 
-theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
+theorem Lets.vars_var_eq [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out}
   {t: d.Ty} {e : Expr d Γ_out eff t}
   {w : ℕ} {tw : d.Ty} {wh : Ctxt.get? Γ_out w = some tw} :
   Lets.vars (Lets.var lets e) ⟨w + 1, by simpa [Ctxt.snoc] using wh⟩ =
   Lets.vars lets ⟨w, wh⟩ := by simp [Lets.vars]
 
 
-@[simp] lemma HVector.vars_nil :
+@[simp] lemma HVector.vars_nil [DecidableEq d.Ty] :
     (HVector.nil : HVector (Var Γ) ([] : List d.Ty)).vars = ∅ := by
   simp [HVector.vars, HVector.foldl]
 
-@[simp] lemma HVector.vars_cons {t  : d.Ty} {l : List d.Ty}
+@[simp] lemma HVector.vars_cons [DecidableEq d.Ty] {t  : d.Ty} {l : List d.Ty}
     (v : Var Γ t) (T : HVector (Var Γ) l) :
     (HVector.cons v T).vars = insert ⟨_, v⟩ T.vars := by
   rw [HVector.vars, HVector.vars]
@@ -1566,7 +1566,7 @@ theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
   let s₁ and s₂ be two maps from variables to A t.
   If s₁ and s₂ agree on all variables in T (which is a VarSet),
   then T.map s₁ = T.map s₂ -/
-theorem HVector.map_eq_of_eq_on_vars {A : d.Ty → Type*}
+theorem HVector.map_eq_of_eq_on_vars [DecidableEq d.Ty] {A : d.Ty → Type*}
     {T : HVector (Var Γ) l}
     {s₁ s₂ : ∀ (t), Var Γ t → A t}
     (h : ∀ v, v ∈ T.vars → s₁ _ v.2 = s₂ _ v.2) :
@@ -1740,7 +1740,7 @@ mutual
 /-- `matchArg lets matchLets args matchArgs map` tries to extends the partial substition `map` by
 calling `matchVar lets args[i] matchLets matchArgs[i]` for each pair of corresponding variables,
 returning the final partial substiution, or `none` on conflicting assigments -/
-def matchArg [DecidableEq d.Op]
+def matchArg [DecidableEq d.Ty] [DecidableEq d.Op]
     (lets : Lets d Γ_in eff Γ_out) (matchLets : Lets d Δ_in .pure Δ_out) :
     {l : List d.Ty} → HVector (Var Γ_out) l → HVector (Var Δ_out) l →
     Mapping Δ_in Γ_out → Option (Mapping Δ_in Γ_out)
@@ -1767,7 +1767,7 @@ This obeys the hypothetical equation: `(matchLets.exprTreeAt w).changeVars map =
 where `exprTreeAt` is a hypothetical definition that gives the expression tree.
 
 NOTE: this only matches on *pure* let bindings in both `matchLets` and `lets`. -/
-def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
+def matchVar [DecidableEq d.Ty] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
     (lets : Lets d Γ_in eff Γ_out) (v : Var Γ_out t) :
     (matchLets : Lets d Δ_in .pure Δ_out) →
     (w : Var Δ_out t) →
@@ -1815,7 +1815,7 @@ def matchVar {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.O
 end
 
 /-- how matchVar behaves on `var` at a successor variable -/
-theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.Ty} [DecidableEq d.Op]
+theorem matchVar_var_succ_eq [DecidableEq d.Ty] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.Ty} [DecidableEq d.Op]
     (lets : Lets d Γ_in eff Γ_out) (v : Var Γ_out t)
     (matchLets : Lets d Δ_in .pure Δ_out)
     (matchE : Expr d Δ_out .pure te)
@@ -1831,7 +1831,7 @@ theorem matchVar_var_succ_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t te : d.T
       unfold matchVar
 
 /-- how matchVar behaves on `var` at the last variable. -/
-theorem matchVar_var_last_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
+theorem matchVar_var_last_eq [DecidableEq d.Ty] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} [DecidableEq d.Op]
     (lets : Lets d Γ_in eff Γ_out) (v : Var Γ_out t)
     (matchLets : Lets d Δ_in .pure Δ_out)
     (matchE : Expr d Δ_out .pure t)
@@ -1849,9 +1849,12 @@ theorem matchVar_var_last_eq {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty} {t : d.Ty} 
 
 section SubsetEntries
 
+#check matchArg.mutual_induct
+
 theorem subset_entries :
     (
-     ∀ (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty)
+     ∀  (Γ_in : Ctxt d.Ty) (eff : EffectKind) (Γ_out Δ_in Δ_out : Ctxt d.Ty)
+        (inst' : DecidableEq d.Ty)
         (inst : DecidableEq d.Op)
         (lets : Lets d Γ_in eff Γ_out)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out) (l : List d.Ty)
@@ -1859,7 +1862,10 @@ theorem subset_entries :
       ∀ varMap ∈ matchArg lets matchLets argsl argsr ma, ma.entries ⊆ varMap.entries
     )
     ∧ (
-      ∀ (eff : EffectKind) (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty) (inst : DecidableEq d.Op)
+      ∀ (eff : EffectKind)
+        (inst' : DecidableEq d.Ty)
+        (Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty) (t : d.Ty)
+        (inst : DecidableEq d.Op)
         (lets : Lets d Γ_in eff Γ_out) (v : Γ_out.Var t)
         (matchLets : Lets d Δ_in EffectKind.pure Δ_out)
         (w : Var Δ_out t) (ma : Mapping Δ_in Γ_out),
@@ -1868,13 +1874,13 @@ theorem subset_entries :
   apply matchArg.mutual_induct (d:=d)
   <;> first
       | intro (Γ_in : Ctxt _) eff Γ_out Δ_in Δ_out inst lets matchLets
-      | intro (eff : EffectKind) Γ_in Γ_out Δ_in t inst lets w
-  · intro ma varMap hvarMap
+      | intro (eff : EffectKind) _ Γ_in Γ_out  Δ_in t inst lets w
+  · intro _ ma varMap hvarMap
     simp [matchArg, Option.mem_def, Option.some.injEq] at hvarMap
     subst hvarMap
     exact Set.Subset.refl _
 
-  · intro t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
+  · intro _ t inst vl argsl matchLets argsr ma ih_matchVar ih_matchArg varMap hvarMap
     simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h1, h2⟩
     have hind : ma'.entries ⊆ _ := ih_matchArg ma' varMap <| by
@@ -1942,7 +1948,7 @@ theorem subset_entries :
       · subst hx; simp_all
       · rwa [AList.lookup_insert_ne hx]
 
-theorem subset_entries_matchArg [DecidableEq d.Op]
+theorem subset_entries_matchArg [DecidableEq d.Ty] [DecidableEq d.Op]
     {Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out}
@@ -1953,7 +1959,7 @@ theorem subset_entries_matchArg [DecidableEq d.Op]
     {varMap : Mapping Δ_in Γ_out}
     (hvarMap : varMap ∈ matchArg lets matchLets argsl argsr ma) :
     ma.entries ⊆ varMap.entries :=
-  subset_entries.1 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
+  subset_entries.1 _ _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
 
 /--
 matchVar only adds new entries:
@@ -1961,22 +1967,22 @@ matchVar only adds new entries:
   then ma is a subset of varMap.
 Said differently, The output mapping of `matchVar` extends the input mapping when it succeeds.
 -/
-theorem subset_entries_matchVar [DecidableEq d.Op]
+theorem subset_entries_matchVar [DecidableEq d.Ty] [DecidableEq d.Op]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
     {matchLets : Lets d Δ_in .pure Δ_out}
     {w : Var Δ_out t}
     (hvarMap : varMap ∈ matchVar lets v matchLets w ma) :
     ma.entries ⊆ varMap.entries :=
-  subset_entries.2 _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
+  subset_entries.2 _ _ _ _ _ _ _ _ _ _ _ _ _ _ hvarMap
 
 end SubsetEntries
-
 
 -- TODO: this assumption is too strong, we also want to be able to model non-inhabited types
 variable [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op]
 
 theorem denote_matchVar_matchArg
+    [DecidableEq d.Ty]
     {Γ_out Δ_in Δ_out : Ctxt d.Ty} {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out} :
     {l : List d.Ty} →
@@ -2065,7 +2071,7 @@ theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv :
 
 end DenoteIntoSubtype
 
-theorem matchVar_nil {lets : Lets d Γ_in eff Γ_out} :
+theorem matchVar_nil [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out} :
     matchVar lets v (.nil : Lets d Δ .pure Δ) w ma = some ma' →
     ma'.lookup ⟨_, w⟩ = some v := by
   unfold matchVar
@@ -2082,7 +2088,7 @@ theorem matchVar_nil {lets : Lets d Γ_in eff Γ_out} :
     injection h with h
     simp [← h]
 
-theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d Δ_in .pure Δ_out}
+theorem matchVar_var_last [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d Δ_in .pure Δ_out}
     {matchExpr : Expr d Δ_out .pure ty} :
     matchVar lets v (.var matchLets matchExpr) (Var.last ..) ma = some ma' →
     ∃ args,
@@ -2119,7 +2125,7 @@ theorem matchVar_var_last {lets : Lets d Γ_in eff Γ_out} {matchLets : Lets d �
   subst ty_eq h_regArgs
   rw [denote, denote, h_args]
 
-theorem denote_matchVar2_of_subset
+theorem denote_matchVar2_of_subset [DecidableEq d.Ty]
     {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
     {varMap₁ varMap₂ : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
@@ -2170,7 +2176,7 @@ then informally:
    Γ_in --⟦lets⟧--> Γ_out --comap ma--> Δ_in --⟦matchLets⟧ --> Δ_out --w--> t =
      Γ_in ⟦lets⟧ --> Γ_out --v--> t
 -/
-theorem denote_matchVar2 {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
+theorem denote_matchVar2 [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
     {varMap : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
@@ -2197,6 +2203,7 @@ mutual
 
 
 theorem mem_matchVar_matchArg
+    [DecidableEq d.Ty]
     {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
     {matchLets : Lets d Δ_in .pure Δ_out}
@@ -2221,6 +2228,7 @@ theorem mem_matchVar_matchArg
 
 /-- All variables containing in `matchExpr` are assigned by `matchVar`. -/
 theorem mem_matchVar
+    [DecidableEq d.Ty]
     {varMap : Mapping Δ_in Γ_out} {ma : Mapping Δ_in Γ_out}
     {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t} /- : -/
     {matchLets : Lets d Δ_in .pure Δ_out}  {w : Var Δ_out t}
