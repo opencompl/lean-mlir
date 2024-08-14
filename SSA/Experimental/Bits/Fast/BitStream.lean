@@ -377,8 +377,33 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
+theorem mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
+  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
+  simp only [pow_one] at y
+  exact Nat.mod_mod_of_dvd x y
+
+def doesAddCarry (x y : BitVec w) : Nat → Bool
+  | 0 => x.getLsb 0 && y.getLsb 0
+  | n + 1 => (x.getLsb (n + 1)).atLeastTwo (y.getLsb (n + 1)) (doesAddCarry x y n)
+
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
-  sorry
+  intros n a
+  have add_lemma : ⟨ doesAddCarry x y n , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+    induction' n with n ih
+    simp [doesAddCarry,addAux,BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod]
+
+
+    sorry
+    have ihg := ih (by omega)
+    simp [doesAddCarry, addAux]
+    rw [← ihg]
+    simp [BitVec.adcb, ofBitVec,a]
+
+    sorry
+  simp only [HAdd.hAdd, Add.add, BitStream.add]
+  rw [← add_lemma]
+  simp only [HAdd.hAdd, Add.add, BitStream.add, ofBitVec,a]
+  simp
 
 @[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
