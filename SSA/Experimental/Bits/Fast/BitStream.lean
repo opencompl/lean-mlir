@@ -381,25 +381,28 @@ theorem mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
   simp only [pow_one] at y
   exact Nat.mod_mod_of_dvd x y
+theorem extracted_1 {w : ℕ} {x y : BitVec w} (a : 0 < w) :
+  2 ≤ x.toNat % 2 + y.toNat % 2 ↔ x.toNat % 2 = 1 ∧ y.toNat % 2 = 1 := sorry
 
-def doesAddCarry (x y : BitVec w) : Nat → Bool
-  | 0 => x.getLsb 0 && y.getLsb 0
-  | n + 1 => (x.getLsb (n + 1)).atLeastTwo (y.getLsb (n + 1)) (doesAddCarry x y n)
-
+theorem extracted_2 {w : ℕ} {x y : BitVec w} (a : 0 < w) :
+  (x.toNat + y.toNat) % 2 = 1 ↔ (x.toNat % 2 = 1) ≠ (y.toNat % 2 = 1) := sorry
+theorem xor_decide (p q : Prop) [Decidable p] [Decidable  q] : (decide p).xor (decide q) = decide (p ≠ q) := by sorry
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   intros n a
-  have add_lemma : ⟨ doesAddCarry x y n , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+  have add_lemma : ⟨ BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
-    simp [doesAddCarry,addAux,BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod]
-
-
-    sorry
-    have ihg := ih (by omega)
-    simp [doesAddCarry, addAux]
-    rw [← ihg]
-    simp [BitVec.adcb, ofBitVec,a]
-
-    sorry
+    · simp [addAux,BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide]
+      simp only [xor_decide, decide_eq_decide]
+      constructor
+      · exact extracted_1 a
+      · exact extracted_2 a
+    · have ihg := ih (by omega)
+      simp [addAux]
+      rw [← ihg]
+      simp [BitVec.adcb, ofBitVec,a]
+      constructor
+      · exact BitVec.carry_succ (n + 1) x y false
+      · exact BitVec.getLsb_add a x y
   simp only [HAdd.hAdd, Add.add, BitStream.add]
   rw [← add_lemma]
   simp only [HAdd.hAdd, Add.add, BitStream.add, ofBitVec,a]
