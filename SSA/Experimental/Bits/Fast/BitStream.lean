@@ -443,7 +443,7 @@ theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
     simp [ofNat_one n, ofBitVec, a]
     omega
 
-theorem ofBitVec_neg2 : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
+theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
   _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
