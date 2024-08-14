@@ -1525,6 +1525,10 @@ theorem Lets.vars_var_eq [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out}
   Lets.vars (Lets.var lets e) ⟨w + 1, by simpa [Ctxt.snoc] using wh⟩ =
   Lets.vars lets ⟨w, wh⟩ := by simp [Lets.vars]
 
+@[simp] lemma HVector.vars_nil [DecidableEq d.Ty] :
+  (HVector.nil : HVector (Var Γ) ([] : List d.Ty)).vars = ∅ := by
+simp [HVector.vars, HVector.foldl]
+
 @[simp] lemma HVector.vars_cons [DecidableEq d.Ty] {t  : d.Ty} {l : List d.Ty}
     (v : Var Γ t) (T : HVector (Var Γ) l) :
     (HVector.cons v T).vars = insert ⟨_, v⟩ T.vars := by
@@ -2197,7 +2201,7 @@ theorem mem_matchVar_matchArg
     (hvarMap : varMap ∈ matchArg lets matchLets argsₗ argsᵣ ma)
     {t' v'} : ⟨t', v'⟩ ∈ (argsᵣ.vars).biUnion (fun v => matchLets.vars v.2) → ⟨t', v'⟩ ∈ varMap :=
   match l, argsₗ, argsᵣ/- , ma, varMap, hvarMap -/ with
-  | .nil, .nil, .nil /- , _, varMap, _ -/ => by simp
+  | .nil, .nil, .nil /- , _, varMap, _ -/ => by rw [HVector.vars_nil];simp only [Finset.biUnion_empty];simp only [Finset.not_mem_empty];simp only [false_implies]
   | .cons t ts, .cons vₗ argsₗ, .cons vᵣ args /-, ma, varMap, h -/ => by
     simp only [matchArg, bind, Option.mem_def, Option.bind_eq_some] at hvarMap
     rcases hvarMap with ⟨ma', h₁, h₂⟩
@@ -2526,18 +2530,20 @@ def rewritePeephole [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad 
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   rewritePeephole_go fuel pr 0 target
 
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
 /-- `rewritePeephole_go` preserve semantics -/
-theorem denote_rewritePeephole_go [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (pr : PeepholeRewrite d Γ t)
+theorem denote_rewritePeephole_go [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
     (rewritePeephole_go fuel pr pos target).denote = target.denote := by
   induction fuel generalizing pr pos target
   case zero =>
     simp[rewritePeephole_go, denote_rewritePeepholeAt]
   case succ fuel' hfuel =>
-    simp[rewritePeephole_go, denote_rewritePeepholeAt, hfuel]
+    simp [rewritePeephole_go, hfuel, denote_rewritePeepholeAt]
 
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
 /-- `rewritePeephole` preserves semantics. -/
-theorem denote_rewritePeephole [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
+theorem denote_rewritePeephole [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
     (rewritePeephole fuel pr target).denote = target.denote := by
   simp[rewritePeephole, denote_rewritePeephole_go]
@@ -2563,9 +2569,10 @@ theorem Expr.denote_eq_of_region_denote_eq [DecidableEq d.Op] [TyDenote d.Ty] [M
     subst ty_eq
     simp [Expr.denote, hregArgs']
 
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
 mutual
 
-def rewritePeepholeRecursivelyRegArgs [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
+def rewritePeepholeRecursivelyRegArgs [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
     (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
     : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
@@ -2580,7 +2587,7 @@ def rewritePeepholeRecursivelyRegArgs [DecidableEq d.Op] [TyDenote d.Ty] [Monad 
       let ⟨coms', hcoms'⟩ := (rewritePeepholeRecursivelyRegArgs fuel pr coms)
       ⟨.cons com' coms', by simp [hcom', hcoms']⟩
 
-def rewritePeepholeRecursivelyExpr [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
+def rewritePeepholeRecursivelyExpr [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
     (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
   match e with
@@ -2591,7 +2598,7 @@ def rewritePeepholeRecursivelyExpr [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m
 
 /-- A peephole rewriter that recurses into regions, allowing
 peephole rewriting into nested code. -/
-def rewritePeepholeRecursively [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
+def rewritePeepholeRecursively [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (fuel : ℕ)
     (pr : PeepholeRewrite d Γ t) (target : Com d Γ₂ eff t₂) :
     { out : Com d Γ₂ eff t₂ // out.denote = target.denote } :=
   match fuel with
