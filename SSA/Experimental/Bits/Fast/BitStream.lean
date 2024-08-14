@@ -446,6 +446,8 @@ theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
 /-!
 There are multiple styles/ways to write the proof of ofBitVec_neg
 choose which style you want.
+You can either write the proof without calc (option 1)
+or with calc (option 2).
 -/
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   rw [BitVec.neg_eq_not_add]
