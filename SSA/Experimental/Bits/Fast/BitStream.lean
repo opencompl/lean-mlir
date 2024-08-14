@@ -447,9 +447,9 @@ theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
 
 theorem ofBitVec_ofNat {w : Nat} : EqualUpTo w (@ofBitVec w 1) (ofNat 1) := by
   cases w
-  simp [EqualUpTo]
-  apply ofBitVec_ofNat'
-  simp
+  · simp [EqualUpTo]
+  · apply ofBitVec_ofNat'
+    simp
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
