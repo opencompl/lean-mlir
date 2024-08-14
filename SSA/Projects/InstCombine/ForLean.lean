@@ -189,18 +189,6 @@ lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w 
     rw [Nat.mod_eq_of_lt hn]
   contradiction
 
-@[simp]
-theorem neg_neg {x : BitVec w} : - - x = x := by
-  by_cases h : x = 0#w
-  · simp [h]
-  · simp [bv_toNat, h]
-
-theorem neg_ne_iff_ne_neg {x y : BitVec w} : -x ≠ y ↔ x ≠ -y := by
-  constructor
-    <;> intro h h'
-    <;> subst h'
-    <;> simp [BitVec.neg_neg] at h
-
 lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a > 1 := by
   simp only [ofNat_eq_ofNat, gt_iff_lt, lt_def, toNat_ofNat]
   simp only [ofNat_eq_ofNat, ne_eq] at ha0 ha1
@@ -719,11 +707,6 @@ theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsb_eq
   simp
-
-theorem xor_comm (e e_1: BitVec w) : e ^^^ e_1 = e_1 ^^^ e := by
-  apply eq_of_getLsb_eq
-  intros i
-  simp [getLsb_xor, Bool.xor_comm]
 
 theorem allOnes_sub_eq_xor (x :BitVec w) : (allOnes w) - x = x ^^^ (allOnes w) := by
   rw [allOnes_sub_eq_not, ← allOnes_xor_eq_not, BitVec.xor_comm]
