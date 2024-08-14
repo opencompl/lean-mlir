@@ -432,7 +432,7 @@ theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   simp [neg_eq_not_add' i, Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
 
 theorem one_bit (i : Nat) : (ofNat 1) i = decide (0 = i) := by
-  cases' i with k
+  cases i
   <;> simp [ofNat, Nat.shiftRight]
 
 theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
