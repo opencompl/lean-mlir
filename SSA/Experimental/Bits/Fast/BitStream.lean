@@ -422,14 +422,15 @@ theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros _ a
   simp [ofBitVec, a]
 
-theorem neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
+theorem neg_eq_not_add' : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
+  funext i
   induction' i with _ ih
   · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
   · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
-  ext i
-  simp [neg_eq_not_add' i, Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
+  ext _
+  simp [neg_eq_not_add', Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
 
 theorem one_bit (i : Nat) : (ofNat 1) i = decide (0 = i) := by
   cases i
