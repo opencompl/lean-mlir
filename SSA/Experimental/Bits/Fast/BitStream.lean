@@ -433,13 +433,7 @@ theorem neg_eq_not_add : - a = ~~~ a + 1 := by
 
 theorem one_bit (i : Nat) : (ofNat 1) i = decide (0 = i) := by
   cases' i with k
-  <;> unfold ofNat
-  · simp
-  · have : Nat.shiftRight 1 k ≤ 1 := by
-      induction k
-      <;> simp only [Nat.shiftRight, le_refl]
-      omega
-    simp [Nat.shiftRight]
+  <;> simp [ofNat, Nat.shiftRight]
 
 theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   intros n a
