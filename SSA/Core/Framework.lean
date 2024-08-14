@@ -1150,37 +1150,6 @@ def Zipper.insertPureCom [DecidableEq d.Ty] (zip : Zipper d Γ_in eff Γ_mid ty)
 /-! simp-lemmas -/
 section Lemmas
 
--- TODO: we probably don't need this
-set_option pp.notation false in
-@[local simp]
-theorem bind_bind_eq [Monad d.m] [LawfulMonad d.m] (ma : d.m a) (f : a → d.m b) (g : b → d.m c) :
-    (bind (bind ma f) g) = bind ma (f >=> g) := by
-  unfold Bind.kleisliRight
-  rw [bind_assoc]
-
---TODO: we should be able to get rid of the below simp lemmas
-/-- eta contraction for pure -/
-@[simp]
-theorem pure_applied_eq_pure [Monad d.m] [LawfulMonad d.m] :
-    (fun (x : a) => (pure x : d.m a)) = Pure.pure := rfl
-
-/-- combination of bind_pure and eta contraction for pure -/
-@[simp]
-theorem bind_pure_applied_eq [Monad d.m] [LawfulMonad d.m] (ma : d.m a) :
-    ma >>= (fun (x : a) => (pure x : d.m a)) = ma := by
-  simp
-
-/-- eta contraction for return -/
-@[simp]
-theorem return_applied_eq_return [Monad d.m] [LawfulMonad d.m] :
-    (fun (x : a) => (return x : d.m a)) = Pure.pure := rfl
-
-/-- combination of bind_return and eta contraction for return -/
-@[simp]
-theorem bind_return_applied [Monad d.m] [LawfulMonad d.m] (ma : d.m a) :
-    ma >>= (fun (x : a) => (return x : d.m a)) = ma := by
-  simp
-
 @[simp] lemma Zipper.toCom_nil {com : Com d Γ eff ty} : Zipper.toCom ⟨.nil, com⟩ = com := rfl
 @[simp] lemma Zipper.toCom_var {lets : Lets d Γ_in eff Γ_mid} :
     Zipper.toCom ⟨Lets.var lets e, com⟩ = Zipper.toCom ⟨lets, Com.var e com⟩ := rfl
@@ -1556,11 +1525,6 @@ theorem Lets.vars_var_eq [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out}
   Lets.vars (Lets.var lets e) ⟨w + 1, by simpa [Ctxt.snoc] using wh⟩ =
   Lets.vars lets ⟨w, wh⟩ := by simp [Lets.vars]
 
-
-@[simp] lemma HVector.vars_nil [DecidableEq d.Ty] :
-    (HVector.nil : HVector (Var Γ) ([] : List d.Ty)).vars = ∅ := by
-  simp [HVector.vars, HVector.foldl]
-
 @[simp] lemma HVector.vars_cons [DecidableEq d.Ty] {t  : d.Ty} {l : List d.Ty}
     (v : Var Γ t) (T : HVector (Var Γ) l) :
     (HVector.cons v T).vars = insert ⟨_, v⟩ T.vars := by
@@ -1863,8 +1827,6 @@ theorem matchVar_var_last_eq [DecidableEq d.Ty] {Γ_in Γ_out Δ_in Δ_out : Ctx
     unfold matchVar
 
 section SubsetEntries
-
-#check matchArg.mutual_induct
 
 theorem subset_entries [TyDenote d.Ty] [Monad d.m] :
     (
@@ -2196,7 +2158,7 @@ then informally:
    Γ_in --⟦lets⟧--> Γ_out --comap ma--> Δ_in --⟦matchLets⟧ --> Δ_out --w--> t =
      Γ_in ⟦lets⟧ --> Γ_out --v--> t
 -/
-theorem denote_matchVar2 [DecidableEq d.Op] [Monad d.m] [LawfulMonad d.m] [DialectDenote d] [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
+theorem denote_matchVar2 [Monad d.m] [LawfulMonad d.m] [DialectDenote d] [DecidableEq d.Ty] {lets : Lets d Γ_in eff Γ_out} {v : Var Γ_out t}
     {varMap : Mapping Δ_in Γ_out}
     {s₁ : Valuation Γ_in}
     {ma : Mapping Δ_in Γ_out}
@@ -2220,7 +2182,6 @@ macro_rules | `(tactic| decreasing_trivial) => `(tactic| simp (config := {arith 
 
 
 mutual
-
 
 theorem mem_matchVar_matchArg
     [TyDenote d.Ty]
@@ -2343,10 +2304,11 @@ def matchVarMap [TyDenote d.Ty] [DecidableEq d.Op] [Monad d.m] [LawfulMonad d.m]
             (hvarMap := by simp; apply hm) (hvars t v'))
       simp_all
 
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
 /-- if matchVarMap lets v matchLets w hvars = .some map,
 then ⟦lets; matchLets⟧ = ⟦lets⟧(v)
 -/
-theorem denote_matchVarMap2 [DecidableEq d.Op] [TyDenote d.Ty] [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
+theorem denote_matchVarMap2 [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m] {Γ_in Γ_out Δ_in Δ_out : Ctxt d.Ty}
     {lets : Lets d Γ_in eff Γ_out}
     {t : d.Ty} {v : Var Γ_out t}
     {matchLets : Lets d Δ_in .pure Δ_out}
@@ -2459,7 +2421,8 @@ def rewriteAt [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [
     com.toFlatCom.ret = com.returnVar := by
   simp [toFlatCom]
 
-theorem denote_rewriteAt [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [DecidableEq d.Ty] [DialectDenote d] [LawfulMonad d.m] (lhs rhs : Com d Γ₁ .pure t₁)
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
+theorem denote_rewriteAt [Monad d.m] [DecidableEq d.Ty] [DialectDenote d] [LawfulMonad d.m] (lhs rhs : Com d Γ₁ .pure t₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com d Γ₂ eff t₂)
     (hl : lhs.denote = rhs.denote)
@@ -2528,8 +2491,8 @@ def rewritePeepholeAt [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMona
         | none => target
       else target
 
-
-theorem denote_rewritePeepholeAt [DecidableEq d.Op] [TyDenote d.Ty] [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (pr : PeepholeRewrite d Γ t)
+variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited (toType t)] [DecidableEq d.Op] in
+theorem denote_rewritePeepholeAt [Monad d.m] [LawfulMonad d.m] [DecidableEq d.Ty] [DialectDenote d] (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂  eff t₂) :
     (rewritePeepholeAt pr pos target).denote = target.denote := by
     simp only [rewritePeepholeAt]
