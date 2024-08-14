@@ -47,13 +47,13 @@ theorem eq_iff_rep_eq [Fact (q > 1)] (a b : R q n) :
   · intro h; rw [h]
 
 open Polynomial in
-theorem from_poly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := by
+theorem from_poly_zero {hqgt1 : Fact (q > 1)} : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := by
   have hzero : f q n * 0 = 0 := by simp
   rw [← hzero]
   apply R.fromPoly_kernel_eq_zero
 
-theorem rep_zero [Fact (q > 1)]: R.representative q n 0 = 0 := by
-  rw [← from_poly_zero, R.representative_fromPoly]; simp
+theorem rep_zero [hqgt1: Fact (q > 1)]: R.representative q n 0 = 0 := by
+  rw [← from_poly_zero (hqgt1 := hqgt1), R.representative_fromPoly]; simp
 
 
 open Polynomial in

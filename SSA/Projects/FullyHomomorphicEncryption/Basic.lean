@@ -489,7 +489,7 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n
 /-- fromTensor = R.fromPoly ∘ fromTensor'.
 This permits reasoning about fromTensor directly on the polynomial ring.
 -/
-theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} :
+theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {hqgt1 : Fact (q > 1)} {coeffs : List Int} :
     R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensor' q coeffs) := by
     simp only [fromTensor, fromTensor']
@@ -628,11 +628,11 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
         assumption
       apply Nat.lt_of_le_of_lt htrans htensorlen
 
-theorem R.representative_fromTensor_eq_fromTensor' (tensor : List Int) :
+theorem R.representative_fromTensor_eq_fromTensor' {hqgt1 : Fact (q > 1)} (tensor : List Int) :
     R.representative q n (R.fromTensor tensor) =
       R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp only [representative]
-  rw [fromTensor_eq_fromTensor'_fromPoly];
+  simp [fromTensor_eq_fromTensor'_fromPoly ];
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)
