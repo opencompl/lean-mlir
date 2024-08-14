@@ -418,7 +418,7 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
-theorem ofBitVec_not_eq_to : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros _ a
   simp [ofBitVec, a]
 
@@ -436,7 +436,7 @@ theorem ofNat_one (i : Nat) : ofNat 1 i = decide (0 = i) := by
   cases i
   <;> simp [ofNat, Nat.shiftRight]
 
-theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   by_cases h : w = 0
   · simp [EqualUpTo ,h]
   · intros n a
@@ -447,7 +447,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
   _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
-  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eq_to ofBitVec_ofNat
+  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eqTo ofBitVec_one_eqTo_ofNat
   _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
