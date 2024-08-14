@@ -419,7 +419,7 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   simp only [not_eq, e1 g h]
 
 theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
-  intros n a
+  intros _ a
   simp [ofBitVec, a]
 
 theorem neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
