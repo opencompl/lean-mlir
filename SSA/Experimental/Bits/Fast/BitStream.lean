@@ -420,12 +420,11 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
 
 theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros n a
-  simp only [ofBitVec, a, ↓reduceIte, BitVec.getLsb_not, decide_True, Bool.true_and, not_eq]
+  simp [ofBitVec, a]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   have neg_eq_not_add' (i : Nat) : a.negAux i = ((~~~a).addAux 1 i).swap := by
     induction' i with _ ih
-    --- These simps are terminal, no need for "simp only".
     · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat]
     · simp [negAux,addAux,BitVec.adcb, OfNat.ofNat, ofNat, ih]
   ext i
@@ -436,13 +435,12 @@ theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   simp only [ofBitVec, a, ↓reduceIte, OfNat.ofNat, BitVec.getLsb_one, ofNat, Nat.testBit,
     Nat.one_and_eq_mod_two, h, decide_True, Bool.true_and, HShiftRight.hShiftRight, ShiftRight.shiftRight]
   cases' n with k
-  · simp only [decide_True, Bool.true_eq, bne_iff_ne, ne_eq, not_false_eq_true]
-  · simp only [self_eq_add_left, add_eq_zero, one_ne_zero, and_false, decide_False,
-    Nat.shiftRight, Bool.false_eq, bne_eq_false_iff_eq]
-    have : Nat.shiftRight 1 k ≤ 1 := by
+  · simp
+  · have : Nat.shiftRight 1 k ≤ 1 := by
       induction k
       <;> simp only [Nat.shiftRight, le_refl]
       omega
+    simp [Nat.shiftRight]
     omega
 
 theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
