@@ -418,11 +418,11 @@ theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
 
-theorem ofBitVec_not' : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
+theorem ofBitVec_not_eq_to : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
   intros _ a
   simp [ofBitVec, a]
 
-theorem neg_eq_not_add' : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
+theorem negAux_eq_not_addAux : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
   · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
@@ -430,28 +430,35 @@ theorem neg_eq_not_add' : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
-  simp [neg_eq_not_add', Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
+  simp [negAux_eq_not_addAux, Neg.neg, neg, HAdd.hAdd, Add.add, add, addAux, BitVec.adcb]
 
-theorem one_bit (i : Nat) : (ofNat 1) i = decide (0 = i) := by
+theorem ofNat_one (i : Nat) : ofNat 1 i = decide (0 = i) := by
   cases i
   <;> simp [ofNat, Nat.shiftRight]
 
-theorem ofBitVec_ofNat' (h : 0 < w) : @ofBitVec w 1 ≈ʷ ofNat 1 := by
-  intros n a
-  simp [one_bit n, ofBitVec, a, h]
+theorem ofBitVec_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
+  by_cases h : w = 0
+  · simp [EqualUpTo ,h]
+  · intros n a
+    simp [ofNat_one n, ofBitVec, a]
+    omega
 
-theorem ofBitVec_ofNat {w : Nat} : EqualUpTo w (@ofBitVec w 1) (ofNat 1) := by
-  cases w
-  · simp [EqualUpTo]
-  · apply ofBitVec_ofNat'
-    simp
-
+/-!
+There are multiple styles/ways to write the proof of ofBitVec_neg
+choose which style you want.
+-/
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
+  rw [BitVec.neg_eq_not_add]
+  apply equal_up_to_trans ofBitVec_add
+  apply equal_up_to_trans (add_congr ofBitVec_not_eq_to ofBitVec_ofNat)
+  rw [neg_eq_not_add]
+  exact equal_up_to_refl
+
+theorem ofBitVec_neg2 : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
   _ ≈ʷ ofBitVec (~~~ x + 1)            := by rw [BitVec.neg_eq_not_add]
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
-  _ ≈ʷ ~~~ ofBitVec x   + (ofBitVec 1) := add_congr ofBitVec_not' equal_up_to_refl
-  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr equal_up_to_refl ofBitVec_ofNat
+  _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eq_to ofBitVec_ofNat
   _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
