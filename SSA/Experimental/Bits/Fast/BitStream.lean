@@ -1,7 +1,7 @@
 import Mathlib.Tactic.NormNum
 
 import Mathlib.Logic.Function.Iterate
-import SSA.Experimental.Bits.Fast.ForLean
+import SSA.Projects.InstCombine.ForLean
 -- TODO: upstream the following section
 section UpStream
 
