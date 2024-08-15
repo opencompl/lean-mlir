@@ -780,7 +780,7 @@ theorem Nat.mod_two_pow_mod_two (x : Nat) (w : Nat) (_ : 0 < w) : x % 2 ^ w % 2 
   rw [pow_one 2] at y
   exact Nat.mod_mod_of_dvd x y
 
-theorem Nat.parity_and (n m : Nat) :
+theorem Nat.two_le_add_iff_odd_and_odd (n m : Nat) :
     2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
   omega
 
