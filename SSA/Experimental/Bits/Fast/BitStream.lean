@@ -381,28 +381,36 @@ theorem mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
   simp only [pow_one] at y
   exact Nat.mod_mod_of_dvd x y
-theorem extracted_1 {w : ℕ} {x y : BitVec w} (a : 0 < w) :
-  2 ≤ x.toNat % 2 + y.toNat % 2 ↔ x.toNat % 2 = 1 ∧ y.toNat % 2 = 1 := sorry
 
-theorem extracted_2 {w : ℕ} {x y : BitVec w} (a : 0 < w) :
-  (x.toNat + y.toNat) % 2 = 1 ↔ (x.toNat % 2 = 1) ≠ (y.toNat % 2 = 1) := sorry
-theorem xor_decide (p q : Prop) [Decidable p] [Decidable  q] : (decide p).xor (decide q) = decide (p ≠ q) := by sorry
+theorem Nat.parity_and (n m : Nat):
+    2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
+  omega
+
+theorem Nat.add_odd (n m  : Nat) :
+    (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
+  simp only [Nat.add_mod, dvd_refl, Nat.mod_mod_of_dvd]
+  simp only [dvd_refl, Nat.mod_mod_of_dvd]
+  cases (Nat.mod_two_eq_zero_or_one n)
+  <;> cases (Nat.mod_two_eq_zero_or_one m)
+  <;> (
+    rename_i mparity nparity
+    simp [mparity, nparity]
+  )
+
+theorem xor_decide (p q : Prop) [dp : Decidable p] [dq : Decidable  q] :
+    (decide p).xor (decide q) = decide (p ≠ q) := by
+  cases dp
+  <;> (rename_i pt ; simp [pt])
+
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   intros n a
-  have add_lemma : ⟨ BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+  have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
-    · simp [addAux,BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide]
-      simp only [xor_decide, decide_eq_decide]
-      constructor
-      · exact extracted_1 a
-      · exact extracted_2 a
+    · simp [addAux, BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide, xor_decide, Nat.parity_and x.toNat y.toNat, Nat.add_odd x.toNat y.toNat]
     · have ihg := ih (by omega)
       simp [addAux]
       rw [← ihg]
-      simp [BitVec.adcb, ofBitVec,a]
-      constructor
-      · exact BitVec.carry_succ (n + 1) x y false
-      · exact BitVec.getLsb_add a x y
+      simp [BitVec.adcb, ofBitVec,a, BitVec.carry_succ (n + 1) x y false, BitVec.getLsb_add a x y]
   simp only [HAdd.hAdd, Add.add, BitStream.add]
   rw [← add_lemma]
   simp only [HAdd.hAdd, Add.add, BitStream.add, ofBitVec,a]
