@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test1_thm (x : _root_.BitVec 32) : 
     x + x.sdiv 1#32 * 4294967295#32 = 0#32 := by
   sorry

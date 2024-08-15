@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem neg_mask1_lshr_thm (x : _root_.BitVec 8) : 
     (x >>> 3 &&& 1#8) * 255#8 = (x <<< 4).sshiftRight 7 := by
   sorry

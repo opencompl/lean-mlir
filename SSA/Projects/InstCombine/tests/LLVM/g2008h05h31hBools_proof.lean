@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem foo4_thm (x x_1 : _root_.BitVec 1) : 
     (if x = 0#1 then none else some (x_1.sdiv x)) ⊑ some x_1 := by
   sorry

@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test5_thm (x : _root_.BitVec 32) : 
     (x ||| 123#32) ^^^ 123#32 = x &&& 4294967172#32 := by
   sorry

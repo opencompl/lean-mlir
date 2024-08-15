@@ -6,7 +6,6 @@ import Mathlib.Data.Nat.Bitwise
 import Mathlib.Algebra.Group.Fin.Basic
 import Mathlib.Data.Nat.Bits
 import Mathlib.Data.ZMod.Defs
-import Batteries.Data.BitVec
 
 namespace BitVec
 open Nat

@@ -10,7 +10,6 @@ open BitVec
 
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt (Var)
 
 set_option linter.deprecated false

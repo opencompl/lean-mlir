@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem ashr_C1_add_A_C2_i32_thm (x : _root_.BitVec 32) :
   (if 32 ≤ (5 + (x.toNat &&& 65535)) % 4294967296 then none
     else some ((6#32).sshiftRight ((5 + (x.toNat &&& 65535)) % 4294967296))) ⊑

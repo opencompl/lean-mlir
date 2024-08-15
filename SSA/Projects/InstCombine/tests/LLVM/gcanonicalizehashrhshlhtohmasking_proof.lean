@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem positive_samevar_thm (x x_1 : _root_.BitVec 8) :
   (Option.bind (if 8 ≤ x.toNat then none else some (x_1.sshiftRight x.toNat)) fun a =>
       if 8 ≤ x.toNat then none else some (a <<< x)) ⊑

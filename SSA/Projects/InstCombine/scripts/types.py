@@ -49,7 +49,6 @@ def process_file(file_path):
     with open(proof_name + ".lean", "a") as file:
         file.write(
             """
-open Std (BitVec)
 """
         )
         for _, n, m in named:

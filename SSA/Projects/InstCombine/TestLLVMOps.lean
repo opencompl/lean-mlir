@@ -5,7 +5,6 @@ import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt (Var)
 
 -- Hardcoding the i4 for now, should change to w once I get

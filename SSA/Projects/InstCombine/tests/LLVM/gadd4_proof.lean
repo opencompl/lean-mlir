@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem match_andAsRem_lshrAsDiv_shlAsMul_thm (x : _root_.BitVec 64) :
   (x &&& 63#64) + BitVec.ofNat 64 (x.toNat >>> 6 % 9) <<< 6 = BitVec.ofNat 64 (x.toNat % 576) := by
   sorry
