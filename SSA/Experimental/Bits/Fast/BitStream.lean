@@ -379,10 +379,10 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
 @[simp]
-theorem ofBitVec_getLsb (n : Nat) (h  : n < w) : ofBitVec x n = x.getLsb n := by
+theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
   simp [ofBitVec, h]
 
-theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
+theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
   intros n a
   have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih

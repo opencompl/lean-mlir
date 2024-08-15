@@ -22,7 +22,7 @@ theorem Nat.add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
-theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable  q] :
+theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
   cases' dp with pt pt
   <;> simp [pt]
