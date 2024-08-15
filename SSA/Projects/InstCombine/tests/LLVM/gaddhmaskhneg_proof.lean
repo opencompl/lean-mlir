@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem dec_mask_neg_i32_thm (x : _root_.BitVec 32) :
   4294967295#32 + (x * 4294967295#32 &&& x) = x + 4294967295#32 &&& (x ^^^ 4294967295#32) := by
   sorry

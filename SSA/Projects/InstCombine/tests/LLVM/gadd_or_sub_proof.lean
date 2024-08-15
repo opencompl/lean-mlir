@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem add_or_sub_comb_i32_commuted1_nuw_thm (x : _root_.BitVec 32) : 
     x * 4294967295#32 ||| x = 0#32 := by
   sorry

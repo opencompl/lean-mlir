@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem scalar_thm (x x_1 x_2 : _root_.BitVec 4) :
   (x_2 ^^^ x_1) &&& (x ^^^ 15#4) ^^^ x_1 = (x_2 ^^^ x_1) &&& x ^^^ x_2 := by
   sorry

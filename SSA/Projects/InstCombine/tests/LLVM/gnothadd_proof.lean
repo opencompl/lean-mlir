@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem basic_thm (x x_1 : _root_.BitVec 8) : 
     (x_1 ^^^ 255#8) + x ^^^ 255#8 = x * 255#8 + x_1 := by
   sorry

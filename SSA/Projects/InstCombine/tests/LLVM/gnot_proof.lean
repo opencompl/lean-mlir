@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem not_ashr_not_thm (x x_1 : _root_.BitVec 32) :
   (Option.bind (if 32 ≤ x.toNat then none else some ((x_1 ^^^ 4294967295#32).sshiftRight x.toNat)) fun a =>
       some (a ^^^ 4294967295#32)) ⊑

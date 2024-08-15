@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test1_thm (x : _root_.BitVec 33) : 
     BitVec.ofNat 33 (x.toNat % 4096) = x &&& 4095#33 := by
   sorry

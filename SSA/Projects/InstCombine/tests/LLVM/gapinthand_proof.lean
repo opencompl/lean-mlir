@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test2_thm (x : _root_.BitVec 15) :
     x &&& 32767#15 = x := by
   sorry

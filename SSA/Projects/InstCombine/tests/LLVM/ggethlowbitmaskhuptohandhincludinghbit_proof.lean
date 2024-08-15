@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem t0_thm (x : _root_.BitVec 8) :
   (Option.bind (if 8 ≤ x.toNat then none else some (1#8 <<< x)) fun a =>
       Option.bind (if 8 ≤ x.toNat then none else some (1#8 <<< x)) fun a_1 => some (a + 255#8 ||| a_1)) ⊑
