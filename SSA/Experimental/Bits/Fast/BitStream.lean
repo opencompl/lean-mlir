@@ -405,7 +405,7 @@ theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
     · simp [addAux, BitVec.adcb, ofBitVec,a, BitVec.getLsb, Nat.two_mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide, xor_decide, Nat.parity_and x.toNat y.toNat, Nat.add_odd_iff_neq x.toNat y.toNat]
-    · simp [addAux, ← ih (by omega), BitVec.adcb, ofBitVec,a, BitVec.carry_succ (n + 1) x y false, BitVec.getLsb_add a x y]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, ofBitVec, a, BitVec.carry_succ (n + 1) x y false, BitVec.getLsb_add a x y]
   simp only [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, ofBitVec, a]
   simp
 
