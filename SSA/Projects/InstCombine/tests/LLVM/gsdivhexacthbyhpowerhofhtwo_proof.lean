@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem t0_thm (x : _root_.BitVec 8) : 
     x.sdiv 32#8 = x.sshiftRight 5 := by
   sorry

@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test6_thm (x : _root_.BitVec 55) : 
     x <<< 1 * 3#55 = x * 6#55 := by
   sorry

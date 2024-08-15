@@ -8,7 +8,6 @@ import SSA.Projects.InstCombine.ForStd
 import Mathlib.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Tactic
-import Batteries.Data.BitVec
 
 open MLIR AST
 
