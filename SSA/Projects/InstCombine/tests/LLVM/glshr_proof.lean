@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem lshr_exact_thm (x : _root_.BitVec 8) : 
     (x <<< 2 + 4#8) >>> 2 = x + 1#8 &&& 63#8 := by
   sorry

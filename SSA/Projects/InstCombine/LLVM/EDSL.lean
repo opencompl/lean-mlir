@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Qq
 import SSA.Projects.InstCombine.Base
-import Batteries.Data.BitVec
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.LLVM.CLITests
 

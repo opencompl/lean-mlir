@@ -1,11 +1,6 @@
-import Init.Data.BitVec.Basic
-import Init.Data.BitVec.Lemmas
-import Init.Data.BitVec.Bitblast
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
-import Init.Data.Nat.Bitwise.Basic
-import Init.Data.Nat.Bitwise.Lemmas
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
