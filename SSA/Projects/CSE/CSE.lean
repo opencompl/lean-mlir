@@ -6,7 +6,6 @@ This file implements common subexpression elimination for our SSA based IR.
 -/
 import SSA.Core.Framework
 import SSA.Projects.DCE.DCE
-import Mathlib.Data.HashMap
 
 /- Decidable Equality for Coms. -/
 section DecEqCom
