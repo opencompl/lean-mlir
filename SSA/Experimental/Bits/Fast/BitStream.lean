@@ -373,31 +373,29 @@ variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
 
--- TODO: These sorries are difficult, and will be proven in a later Pull Request.
+-- TODO: This sorry is difficult, and will be proven in a later Pull Request.
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
-theorem mod_mod (x : Nat) (w : Nat) (h : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
+theorem Nat.two_mod_mod (x : Nat) (w : Nat) (_ : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
-  simp only [pow_one] at y
+  rw [pow_one] at y
   exact Nat.mod_mod_of_dvd x y
 
-theorem Nat.parity_and (n m : Nat):
+theorem Nat.parity_and (n m : Nat) :
     2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
   omega
 
-theorem Nat.add_odd (n m  : Nat) :
+theorem Nat.add_odd_iff_neq (n m : Nat) :
     (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
-  simp only [Nat.add_mod, dvd_refl, Nat.mod_mod_of_dvd]
-  simp only [dvd_refl, Nat.mod_mod_of_dvd]
-  cases (Nat.mod_two_eq_zero_or_one n)
-  <;> cases (Nat.mod_two_eq_zero_or_one m)
+  cases Nat.mod_two_eq_zero_or_one n
+  <;> cases Nat.mod_two_eq_zero_or_one m
   <;> (
     rename_i mparity nparity
-    simp [mparity, nparity]
+    simp [mparity, nparity, Nat.add_mod]
   )
 
-theorem xor_decide (p q : Prop) [dp : Decidable p] [dq : Decidable  q] :
+theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable  q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
   cases dp
   <;> (rename_i pt ; simp [pt])
@@ -406,14 +404,9 @@ theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
   intros n a
   have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
-    · simp [addAux, BitVec.adcb, ofBitVec,a, BitVec.getLsb, mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide, xor_decide, Nat.parity_and x.toNat y.toNat, Nat.add_odd x.toNat y.toNat]
-    · have ihg := ih (by omega)
-      simp [addAux]
-      rw [← ihg]
-      simp [BitVec.adcb, ofBitVec,a, BitVec.carry_succ (n + 1) x y false, BitVec.getLsb_add a x y]
-  simp only [HAdd.hAdd, Add.add, BitStream.add]
-  rw [← add_lemma]
-  simp only [HAdd.hAdd, Add.add, BitStream.add, ofBitVec,a]
+    · simp [addAux, BitVec.adcb, ofBitVec,a, BitVec.getLsb, Nat.two_mod_mod, BitVec.carry, ← Bool.decide_and, decide_eq_decide, xor_decide, Nat.parity_and x.toNat y.toNat, Nat.add_odd_iff_neq x.toNat y.toNat]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, ofBitVec,a, BitVec.carry_succ (n + 1) x y false, BitVec.getLsb_add a x y]
+  simp only [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, ofBitVec, a]
   simp
 
 @[refl]
