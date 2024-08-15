@@ -9,8 +9,7 @@ import SSA.Projects.DCE.DCE
 
 /- Decidable Equality for Coms. -/
 section DecEqCom
-variable {d : Dialect} [DecidableEq d.Ty]
-variable [OP_DECEQ : DecidableEq d.Op]
+variable {d : Dialect}
 variable [DialectSignature d]
 
 /-- can decide equality on argument vectors. -/
