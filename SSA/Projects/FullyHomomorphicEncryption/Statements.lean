@@ -5,6 +5,8 @@ import SSA.Projects.FullyHomomorphicEncryption.Basic
 import Batteries.Data.List.Lemmas
 import Mathlib.Data.List.Basic
 
+set_option deprecated.oldSectionVars true
+
 -- variable {q t : Nat} [ hqgt1 : Fact (q > 1)] {n : Nat}
 -- variable (a b : R q n)
 
@@ -52,7 +54,7 @@ theorem from_poly_zero : R.fromPoly (0 : (ZMod q)[X]) (n := n) = (0 : R q n) := 
   rw [← hzero]
   apply R.fromPoly_kernel_eq_zero
 
-theorem rep_zero [hqgt1: Fact (q > 1)]: R.representative q n 0 = 0 := by
+theorem rep_zero [Fact (q > 1)]: R.representative q n 0 = 0 := by
   rw [← from_poly_zero, R.representative_fromPoly]; simp
 
 
