@@ -25,13 +25,15 @@ import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
 import SSA.Core.Framework
 
+set_option deprecated.oldSectionVars true
+
 open Polynomial -- for R[X] notation
 
 /-
 We assume that `q > 1` is a natural number (not necessarily a prime) and `n` is a natural number.
 We will use these to build `ℤ/qℤ[X]/(X^(2^n) + 1)`
 -/
-variable (q n t : Nat)
+variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
 
 -- Can we make this computable?
 -- see: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Way.20to.20recover.20computability.3F/near/322382109
@@ -52,11 +54,8 @@ noncomputable def f : (ZMod q)[X] := X^(2^n) + 1
 --   done
 
 def ZMod.toInt (x : ZMod q) : Int := ZMod.cast x
-
-variable [ hqgt1 : Fact (q > 1)] in
 def ZMod.toFin (x : ZMod q) : Fin q := ZMod.cast x
 
-variable [ hqgt1 : Fact (q > 1)] in
 @[simp]
 theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt ↔ x = y := by
   constructor
@@ -69,7 +68,6 @@ theorem ZMod.toInt_inj {x y : ZMod q} : x.toInt = y.toInt ↔ x = y := by
   · intro h
     rw [h]
 
-variable [ hqgt1 : Fact (q > 1)] in
 def ZMod.toInt_zero_iff_zero (x : ZMod q) : x = 0 ↔ x.toInt = 0 := by
   constructor
   · intro h
@@ -81,14 +79,12 @@ def ZMod.toInt_zero_iff_zero (x : ZMod q) : x = 0 ↔ x.toInt = 0 := by
     apply (ZMod.toInt_inj q).1
     assumption
 
-variable [ hqgt1 : Fact (q > 1)] in
 instance : Nontrivial (ZMod q) where
   exists_pair_ne := by
     exists 0
     exists 1
     norm_num
 
-variable [ hqgt1 : Fact (q > 1)] in
 /-- Charaterizing `f`: `f` has degree `2^n` -/
 theorem f_deg_eq : (f q n).degree = 2^n := by
   simp only [f]
@@ -100,7 +96,6 @@ theorem f_deg_eq : (f q n).degree = 2^n := by
   norm_cast
   exact Fin.size_pos'
 
-variable [ hqgt1 : Fact (q > 1)] in
 /-- Charaterizing `f`: `f` is monic -/
 theorem f_monic : Monic (f q n) := by
   have hn : 2^n = (2^n - 1) + 1 := by rw [Nat.sub_add_cancel (@Nat.one_le_two_pow n)]
@@ -157,7 +152,6 @@ theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n
    rw [Ideal.mem_span_singleton]
    simp [Dvd.dvd]
 
-variable [ hqgt1 : Fact (q > 1)] in
 /--
 `R.representative` is in fact a representative of the equivalence class.
 -/
@@ -245,7 +239,6 @@ theorem R.representative'_zero_elem :
   rw [hk]
   exists k
 
-variable [ hqgt1 : Fact (q > 1)] in
 /-- Representative of (0 : R) is (0 : Z/qZ[X]) -/
 theorem R.representative_zero : R.representative q n 0 = 0 := by
   simp only [representative]
@@ -254,7 +247,6 @@ theorem R.representative_zero : R.representative q n 0 = 0 := by
   simp only [dvd_mul_left]
   exact (f_monic q n)
 
-variable [ hqgt1 : Fact (q > 1)] in
 /--
 Characterization theorem for the representative.
 Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is
@@ -274,7 +266,6 @@ theorem R.representative_fromPoly_toFun :
   ring_nf
   assumption
 
-variable [ hqgt1 : Fact (q > 1)] in
 theorem R.representative_fromPoly :
     forall a : (ZMod q)[X], (R.fromPoly (n:=n) a).representative = a %ₘ (f q n) := by
   intro a
@@ -365,7 +356,6 @@ theorem R.representative'_iff (r : R q n) (p : (ZMod q)[X]) :
   constructor
 -/
 
-variable [ hqgt1 : Fact (q > 1)] in
 /-- Another characterization of the representative: if the degree of x is less than that of (f q n),
 then we recover the same polynomial. -/
 @[simp]
@@ -374,7 +364,6 @@ theorem R.representative_fromPoly_eq (x : (ZMod q)[X]) (DEGREE: x.degree < (f q 
    simp only [R.representative_fromPoly]
    rw [modByMonic_eq_self_iff] <;> simp [DEGREE, f_monic]
 
-variable [ hqgt1 : Fact (q > 1)] in
 /--
 The representative of `a : R q n` is the (unique) reperesntative with degree `< 2^n`.
 -/
@@ -407,7 +396,6 @@ theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
 
 
 
-variable [ hqgt1 : Fact (q > 1)] in
 theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
   simp only [R.repLength, representative]
@@ -646,7 +634,7 @@ theorem R.representative_fromTensor_eq_fromTensor' (tensor : List Int) :
     R.representative q n (R.fromTensor tensor) =
       R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
   simp only [representative]
-  simp [fromTensor_eq_fromTensor'_fromPoly ];
+  rw [fromTensor_eq_fromTensor'_fromPoly];
 
 /--
 Converts an element of `R` into a tensor (modeled as a `List Int`)
@@ -688,10 +676,7 @@ inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
   | polynomialLike : Ty q n
   deriving DecidableEq, Repr
 
-variable [ hqgt1 : Fact (q > 1)] in
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
-
-variable [ hqgt1 : Fact (q > 1)] in
 instance : TyDenote (Ty q n) where
 toType := fun
   | .index => Nat
@@ -729,7 +714,7 @@ abbrev FHE (q n : Nat) [Fact (q > 1)] : Dialect where
 
 open TyDenote (toType)
 
-variable [ hqgt1 : Fact (q > 1)] in
+
 @[simp, reducible]
 def Op.sig : Op  q n → List (Ty q n)
 | Op.add => [Ty.polynomialLike, Ty.polynomialLike]
@@ -745,7 +730,7 @@ def Op.sig : Op  q n → List (Ty q n)
 | Op.const_int _ => []
 | Op.const_idx _ => []
 
-variable [ hqgt1 : Fact (q > 1)] in
+
 @[simp, reducible]
 def Op.outTy : Op q n → Ty q n
 | Op.add | Op.sub | Op.mul | Op.mul_constant | Op.leading_term | Op.monomial
@@ -754,15 +739,12 @@ def Op.outTy : Op q n → Ty q n
 | Op.const_int _ => Ty.integer
 | Op.const_idx _ => Ty.index
 
-variable [ hqgt1 : Fact (q > 1)] in
 @[simp, reducible]
 def Op.signature : Op q n → Signature (Ty q n) :=
   fun o => {sig := Op.sig q n o, outTy := Op.outTy q n o, regSig := []}
 
-variable [ hqgt1 : Fact (q > 1)] in
 instance : DialectSignature (FHE q n) := ⟨Op.signature q n⟩
 
-variable [ hqgt1 : Fact (q > 1)] in
 @[simp]
 noncomputable instance : DialectDenote (FHE q n) where
     denote
