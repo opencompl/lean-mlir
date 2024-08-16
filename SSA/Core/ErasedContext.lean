@@ -336,7 +336,7 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
-def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+def Valuation.ofPair  {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
     Valuation (Ctxt.ofList [t₁, t₂]) :=
   Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
 
