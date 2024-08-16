@@ -5,6 +5,8 @@ import SSA.Projects.FullyHomomorphicEncryption.Basic
 import Batteries.Data.List.Lemmas
 import Mathlib.Data.List.Basic
 
+set_option deprecated.oldSectionVars true
+
 -- variable {q t : Nat} [ hqgt1 : Fact (q > 1)] {n : Nat}
 -- variable (a b : R q n)
 
@@ -75,7 +77,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) :
   by_cases (i < R.repLength a)
   case pos h =>
     rw [← hLength] at h
-    rw [List.getD_eq_get _ _ h]
+    rw [List.getD_eq_getElem _ _ h]
     simp
   case neg h =>
     rw [Nat.not_lt] at h

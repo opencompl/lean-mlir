@@ -11,6 +11,8 @@ import SSA.Core.Framework.Dialect
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Piecewise
 
+set_option deprecated.oldSectionVars true
+
 open Ctxt (Var VarSet Valuation)
 open TyDenote (toType)
 

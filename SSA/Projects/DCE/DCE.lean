@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.Framework
 import Mathlib.Tactic.Linarith
 
+set_option deprecated.oldSectionVars true
+
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
   Γ.eraseIdx v.val

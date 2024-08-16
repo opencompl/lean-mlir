@@ -25,6 +25,8 @@ import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
 import SSA.Core.Framework
 
+set_option deprecated.oldSectionVars true
+
 open Polynomial -- for R[X] notation
 
 /-
