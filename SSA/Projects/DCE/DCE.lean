@@ -223,8 +223,6 @@ theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {del
         | rfl
         | exfalso; linarith
 
-variable [DialectSignature d] [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m]
-
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
   Fails otherwise. -/
@@ -252,6 +250,8 @@ def arglistDeleteVar? {Γ: Ctxt d.Ty} {delv : Γ.Var α} {Γ' : Ctxt d.Ty} {ts :
           apply ha'
           apply has'
         ⟩
+
+variable [DialectSignature d] [DialectDenote d] [Monad d.m]
 
 /- Try to delete a variable from an Expr -/
 def Expr.deleteVar? (DEL : Deleted Γ delv Γ') (e: Expr d Γ .pure t) :
@@ -323,12 +323,13 @@ instance [SIG : DialectSignature d] [DENOTE : DialectDenote d] {Γ : Ctxt d.Ty} 
   default :=
     ⟨Γ, Ctxt.Hom.id, com, by intros V; rfl⟩
 
+variable [LawfulMonad d.m]
 /-- walk the list of bindings, and for each `let`, try to delete the variable
 defined by the `let` in the body/ Note that this is `O(n^2)`, for an easy
 proofs, as it is written as a forward pass.  The fast `O(n)` version is a
 backward pass.
 -/
-partial def dce_ [DialectSignature d] [DialectDenote d] {Γ : Ctxt d.Ty} {t : d.Ty}
+partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
     (com : Com d Γ .pure t) : DCEType com :=
   match HCOM: com with
   | .ret v => -- If we have a `ret`, return it.
@@ -387,14 +388,14 @@ decreasing_by {
 /-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where
 we play the `DCEType` trick to convince Lean that the output type is in fact
 inhabited. -/
-def dce [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
+def dce {Γ : Ctxt d.Ty} {t : d.Ty} (com : Com d Γ .pure t) :
   Σ (Γ' : Ctxt d.Ty) (hom: Ctxt.Hom Γ' Γ),
     { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
   dce_ com
 
 /-- A version of DCE that returns an output program with the same context. It uses the context
    morphism of `dce` to adapt the result of DCE to work with the original context -/
-def dce' [DialectSignature d] [DialectDenote d]  {Γ : Ctxt d.Ty} {t : d.Ty}
+def dce' {Γ : Ctxt d.Ty} {t : d.Ty}
     (com : Com d Γ .pure t) :
     { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
