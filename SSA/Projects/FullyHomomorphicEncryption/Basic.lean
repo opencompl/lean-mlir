@@ -544,7 +544,7 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
         apply Nat.le_of_lt ha₆
 
 /-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
-theorem R.fromTensorFinsupp_degree (coeffs : List Int):
+theorem R.fromTensorFinsupp_degree (q : Nat) (coeffs : List Int):
   (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
   rw [fromTensorFinsupp]
   have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
@@ -627,11 +627,11 @@ theorem R.coeff_fromTensor (tensor : List Int)
     (htensorlen : tensor.length < 2^n) :
     (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
   rw [fromTensor_eq_fromTensorFinsupp_fromPoly]
-  have hfromTensorFinsuppDegree := fromTensorFinsupp_degree (q:=q) tensor
+  have hfromTensorFinsuppDegree := fromTensorFinsupp_degree q tensor
   rw [coeff, representative_fromPoly_eq]
   apply fromTensorFinsupp_coeffs
   case DEGREE =>
-    generalize htensor_degree : degree (fromTensorFinsupp (q:=q) tensor) = tensor_degree
+    generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
     rw [f_deg_eq]
     cases tensor_degree
     case bot => norm_cast; apply WithBot.bot_lt_coe
