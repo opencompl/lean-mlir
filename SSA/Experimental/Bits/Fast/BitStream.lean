@@ -1,6 +1,7 @@
 import Mathlib.Tactic.NormNum
 
 import Mathlib.Logic.Function.Iterate
+import SSA.Projects.InstCombine.ForLean
 -- TODO: upstream the following section
 section UpStream
 
@@ -373,12 +374,22 @@ variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
 
--- TODO: These sorries are difficult, and will be proven in a later Pull Request.
+-- TODO: This sorry is difficult, and will be proven in a later Pull Request.
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   sorry
 
-theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y)  := by
-  sorry
+@[simp]
+theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
+  simp [ofBitVec, h]
+
+theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
+  intros n a
+  have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+    induction' n with n ih
+    · simp [addAux, BitVec.adcb, a, BitVec.getLsb, BitVec.carry, ← Bool.decide_and,
+        Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsb_add]
+  simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
 
 @[refl]
 theorem equal_up_to_refl : a ≈ʷ a := by
