@@ -515,7 +515,7 @@ variable {q n : Nat}
 /-- an equivalent implementation of `fromTensor` that uses `Finsupp`
   to enable reasoning about values using mathlib's notions of
   support, coefficients, etc. -/
-noncomputable def R.fromTensorFinsupp (coeffs : List Int) : (ZMod q)[X] :=
+noncomputable def R.fromTensorFinsupp (q : Nat) (coeffs : List Int) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
 
 theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
@@ -545,7 +545,7 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
 
 /-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
 theorem R.fromTensorFinsupp_degree (coeffs : List Int):
-  (R.fromTensorFinsupp (q := q) coeffs).degree ≤ coeffs.length := by
+  (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
   rw [fromTensorFinsupp]
   have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
   simp only [List.length_map] at hdeg
@@ -553,7 +553,7 @@ theorem R.fromTensorFinsupp_degree (coeffs : List Int):
 
 /-- the ith coefficient of fromTensorFinsupp is a coercion of the 'coeffs' into the right list. -/
 theorem R.fromTensorFinsupp_coeffs (coeffs : List Int) :
-  Polynomial.coeff (fromTensorFinsupp (q:=q) coeffs) i = ↑(List.getD coeffs i 0) := by
+  Polynomial.coeff (fromTensorFinsupp q coeffs) i = ↑(List.getD coeffs i 0) := by
   rw [fromTensorFinsupp]
   rw [coeff_ofFinsupp]
   rw [List.toFinsupp_apply]
@@ -562,8 +562,8 @@ theorem R.fromTensorFinsupp_coeffs (coeffs : List Int) :
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
 theorem R.fromTensorFinsupp_concat_finsupp (c : Int) (cs : List Int) :
-    (R.fromTensorFinsupp (q := q) (cs ++ [c])) =
-      (R.fromTensorFinsupp (q := q) cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
+    (R.fromTensorFinsupp q (cs ++ [c])) =
+      (R.fromTensorFinsupp q cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
     simp only [fromTensorFinsupp]
     simp only [← Polynomial.ofFinsupp_add]
     simp only [List.map_append, List.map]
@@ -572,8 +572,8 @@ theorem R.fromTensorFinsupp_concat_finsupp (c : Int) (cs : List Int) :
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a monomial. -/
 theorem R.fromTensorFinsupp_concat_monomial (c : Int) (cs : List Int) :
-    (R.fromTensorFinsupp (q := q) (cs ++ [c])) =
-      (R.fromTensorFinsupp (q := q) cs) +
+    (R.fromTensorFinsupp q (cs ++ [c])) =
+      (R.fromTensorFinsupp q cs) +
         (Polynomial.monomial cs.length (Int.cast c : (ZMod q))) := by
     simp only [fromTensorFinsupp, List.map_append, List.map_cons, List.map_nil]
     rw [←Polynomial.ofFinsupp_single]
@@ -584,7 +584,7 @@ theorem R.fromTensorFinsupp_concat_monomial (c : Int) (cs : List Int) :
 /-- show that `fromTensor` is the same as `fromPoly ∘ fromTensorFinsupp`. -/
 theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {coeffs : List Int} :
     R.fromTensor (q := q) (n := n) coeffs =
-  R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp (q:=q) coeffs) := by
+  R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp only [fromTensor]
     induction coeffs using List.reverseRecOn
     case nil => simp [List.enum, fromTensorFinsupp]
