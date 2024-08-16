@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Data.Finset.Basic
 import SSA.Core.HVector
 
+set_option deprecated.oldSectionVars true
+
 /--
   Typeclass for a `baseType` which is a Gödel code of Lean types.
 
