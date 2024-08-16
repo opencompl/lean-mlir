@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Core.Framework
 import Mathlib.Tactic.Linarith
 
-set_option deprecated.oldSectionVars true
 
 /-- Delete a variable from a list. -/
 def Ctxt.delete (Γ : Ctxt Ty) (v : Γ.Var α) : Ctxt Ty :=
@@ -195,8 +194,36 @@ def Var.tryDelete? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : Γ.Var α}
     ⟩
 
 namespace DCE
-variable {d : Dialect} [TyDenote d.Ty] [DialectSignature d] [DialectDenote d] [DecidableEq d.Ty]
-  [Monad d.m] [LawfulMonad d.m]
+
+variable {d : Dialect} [TyDenote d.Ty]
+
+/-- pushforward (V :: newv) = (pushforward V) :: newv -/
+theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {delv : Γ.Var α}
+  (DEL : Deleted Γ delv Γ')
+  (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
+  (V : Γ.Valuation) {newv : TyDenote.toType ω} :
+  DELω.pushforward_Valuation (V.snoc newv) =
+  (DEL.pushforward_Valuation V).snoc newv := by
+    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?, Ctxt.Var.val_toSnoc,
+      Ctxt.Var.succ_eq_toSnoc, Ctxt.Valuation.snoc_eq]
+    unfold Deleted.pushforward_Valuation Deleted.pullback_var
+    simp only [Ctxt.get?, Ctxt.Var.val_toSnoc, Ctxt.Var.succ_eq_toSnoc, Nat.succ_eq_add_one]
+    funext t var
+    rcases var with ⟨i, hvar⟩
+    split_ifs with EQN <;> (
+      simp only [Ctxt.get?, Ctxt.Var.toSnoc]
+      cases i <;> simp only
+    )
+    case neg.zero =>
+      exfalso
+      linarith
+    all_goals
+      split_ifs <;>
+        solve
+        | rfl
+        | exfalso; linarith
+
+variable [DialectSignature d] [DialectDenote d] [DecidableEq d.Ty] [Monad d.m] [LawfulMonad d.m]
 
 /-- Try to delete the variable from the argument list.
   Succeeds if variable does not occur in the argument list.
@@ -250,32 +277,6 @@ def Deleted.snoc {α : d.Ty} {Γ: Ctxt d.Ty} {v : Γ.Var α} (DEL : Deleted Γ v
   simp only [Deleted, Ctxt.delete, Ctxt.get?, Ctxt.Var.val_toSnoc] at DEL ⊢
   subst DEL
   rfl
-
-/-- pushforward (V :: newv) = (pushforward V) :: newv -/
-theorem Deleted.pushforward_Valuation_snoc {Γ Γ' : Ctxt d.Ty} {ω : d.Ty} {delv : Γ.Var α}
-  (DEL : Deleted Γ delv Γ')
-  (DELω : Deleted (Ctxt.snoc Γ ω) delv.toSnoc (Ctxt.snoc Γ' ω))
-  (V : Γ.Valuation) {newv : TyDenote.toType ω} :
-  DELω.pushforward_Valuation (V.snoc newv) =
-  (DEL.pushforward_Valuation V).snoc newv := by
-    simp only [Deleted.pushforward_Valuation, Deleted.pullback_var, Ctxt.get?, Ctxt.Var.val_toSnoc,
-      Ctxt.Var.succ_eq_toSnoc, Ctxt.Valuation.snoc_eq]
-    unfold Deleted.pushforward_Valuation Deleted.pullback_var
-    simp only [Ctxt.get?, Ctxt.Var.val_toSnoc, Ctxt.Var.succ_eq_toSnoc, Nat.succ_eq_add_one]
-    funext t var
-    rcases var with ⟨i, hvar⟩
-    split_ifs with EQN <;> (
-      simp only [Ctxt.get?, Ctxt.Var.toSnoc]
-      cases i <;> simp only
-    )
-    case neg.zero =>
-      exfalso
-      linarith
-    all_goals
-      split_ifs <;>
-        solve
-        | rfl
-        | exfalso; linarith
 
 /-- Delete a variable from an Com. -/
 def Com.deleteVar? (DEL : Deleted Γ delv Γ') (com : Com d Γ .pure t) :
