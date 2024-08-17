@@ -47,24 +47,6 @@ lemma Nat.sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % 
 
 namespace BitVec
 
-lemma ushr_xor_distrib (a b c : BitVec w) :
-    (a ^^^ b) >>> c = (a >>> c) ^^^ (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-lemma ushr_and_distrib (a b c : BitVec w) :
-    (a &&& b) >>> c = (a >>> c) &&& (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-lemma ushr_or_distrib (a b c : BitVec w) :
-    (a ||| b) >>> c = (a >>> c) ||| (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
