@@ -457,28 +457,8 @@ theorem toInt_width_zero (x : BitVec 0) : BitVec.toInt x = 0 := by
   simp
 
 @[simp]
-theorem toInt_ofInt_width_one_one : BitVec.toInt (BitVec.ofInt 1 1) = -1 := rfl
-
-@[simp]
 theorem toInt_ofInt_zero : BitVec.toInt (BitVec.ofInt w 0) = 0 := by
   simp [BitVec.msb, BitVec.getMsb, BitVec.getLsb, BitVec.ofInt, BitVec.toInt]
-
-@[simp]
-theorem toInt_ofInt_1_width_zero :
-    BitVec.toInt (BitVec.ofInt (n := 0) 1) = 0 := rfl
-
-@[simp]
-theorem toInt_ofInt_1_width_one :
-    BitVec.toInt (BitVec.ofInt (n := 1) 1) = -1 := rfl
-
--- if w = 0. then value is 0
--- if w = 1, then value is -1.
-
-@[simp]
-theorem toNat_ofInt_one_width_zero : BitVec.toNat (BitVec.ofInt (n := 0) 1) = 0 := rfl
-
-@[simp]
-theorem toNat_ofInt_one_width_one : BitVec.toNat (BitVec.ofInt (n := 1) 1) = 1 := rfl
 
 @[simp]
 theorem ofNat_toNat_zero :
