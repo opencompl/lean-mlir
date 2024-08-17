@@ -276,12 +276,6 @@ theorem intMin_neq_one {w : Nat} (hw : w > 1): LLVM.intMin w ≠ 1 := by
       apply Nat.one_lt_two_pow (by omega)
     omega
 
-theorem ofInt_eq_ofNat_mod' {w : ℕ} (n : ℕ) :
-    BitVec.ofInt w (OfNat.ofNat n : ℤ) = BitVec.ofNat w n := by
-  apply BitVec.eq_of_toNat_eq
-  simp only [toNat_ofInt, Nat.cast_ofNat, toNat_ofNat]
-  norm_cast
-
 theorem width_one_cases' (x : BitVec 1) :
     x = 0 ∨ x = 1 := by
   obtain ⟨x, hx⟩ := x
