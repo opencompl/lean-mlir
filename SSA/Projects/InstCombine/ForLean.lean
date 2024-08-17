@@ -2,16 +2,6 @@ import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
-@[simp] theorem sub_toNat_mod_cancel {x : BitVec w} (h : ¬ x = 0#w) :
-    (2 ^ w - x.toNat) % 2 ^ w = 2 ^ w - x.toNat := by
-  simp [bv_toNat] at h
-  rw [Nat.mod_eq_of_lt (by omega)]
-
-@[simp] theorem sub_sub_toNat_cancel {x : BitVec w} :
-    2 ^ w - (2 ^ w - x.toNat) = x.toNat := by
-  simp [Nat.sub_sub_eq_min, Nat.min_eq_right]
-  omega
-
 lemma two_pow_pred_mul_two (h : 0 < w) :
     2 ^ (w - 1) * 2 = 2 ^ w := by
   simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
