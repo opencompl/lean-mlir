@@ -4,8 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Data.Finset.Basic
 import SSA.Core.HVector
 
-set_option deprecated.oldSectionVars true
-
 /--
   Typeclass for a `baseType` which is a Gödel code of Lean types.
 
@@ -338,15 +336,15 @@ def Valuation.ofHVector {types : List Ty} : HVector toType types → Valuation (
   | .cons x xs => (Valuation.ofHVector xs).snoc x
 
 /-- Build valuation from a vector of values of types `types`. -/
-def Valuation.ofPair [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+def Valuation.ofPair  {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
     Valuation (Ctxt.ofList [t₁, t₂]) :=
   Valuation.ofHVector (.cons v₁ <| .cons v₂ <| .nil )
 
 @[simp]
-theorem Valuation.ofPair_fst [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_fst {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨0, by rfl⟩ = v₁ := rfl
 @[simp]
-theorem Valuation.ofPair_snd [TyDenote Ty] {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
+theorem Valuation.ofPair_snd {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by rfl⟩ = v₂ := rfl
 
 /-- transport/pullback a valuation along a context homomorphism. -/
