@@ -198,7 +198,7 @@ theorem neq_iff_neg_sub_abs :
 
 theorem lt_iff_sub_xor_xor_and_sub_xor :
     (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
-  try alive_auto
+  -- try alive_auto -- this leads to a heartbeat timeout
   all_goals sorry
 
 theorem slt_iff_and_not_or_not_xor_and_sub :
