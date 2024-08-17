@@ -2,16 +2,6 @@ import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
-@[simp] theorem sub_toNat_mod_cancel {x : BitVec w} (h : ¬ x = 0#w) :
-    (2 ^ w - x.toNat) % 2 ^ w = 2 ^ w - x.toNat := by
-  simp [bv_toNat] at h
-  rw [Nat.mod_eq_of_lt (by omega)]
-
-@[simp] theorem sub_sub_toNat_cancel {x : BitVec w} :
-    2 ^ w - (2 ^ w - x.toNat) = x.toNat := by
-  simp [Nat.sub_sub_eq_min, Nat.min_eq_right]
-  omega
-
 lemma two_pow_pred_mul_two (h : 0 < w) :
     2 ^ (w - 1) * 2 = 2 ^ w := by
   simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
@@ -46,24 +36,6 @@ lemma Nat.sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % 
 
 
 namespace BitVec
-
-lemma ushr_xor_distrib (a b c : BitVec w) :
-    (a ^^^ b) >>> c = (a >>> c) ^^^ (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-lemma ushr_and_distrib (a b c : BitVec w) :
-    (a &&& b) >>> c = (a >>> c) &&& (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
-
-lemma ushr_or_distrib (a b c : BitVec w) :
-    (a ||| b) >>> c = (a >>> c) ||| (b >>> c) := by
-  simp only [HShiftRight.hShiftRight]
-  ext
-  simp
 
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
@@ -116,19 +88,6 @@ def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
   case succ w =>
     rw [Nat.sub_sub_self]
     apply Nat.one_le_pow (h := by decide)
-
-theorem udiv_eq {x y : BitVec n} : x.udiv y = BitVec.ofNat n (x.toNat / y.toNat) := by
-  have h : x.toNat / y.toNat < 2 ^ n := by
-    exact Nat.lt_of_le_of_lt (Nat.div_le_self ..) (by omega)
-  simp only [udiv, bv_toNat, toNat_ofNatLt, h, Nat.mod_eq_of_lt]
-
-@[simp, bv_toNat]
-theorem toNat_udiv {x y : BitVec n} : (x.udiv y).toNat = x.toNat / y.toNat := by
-  simp only [udiv_eq]
-  by_cases h : y = 0
-  · simp [h]
-  · rw [toNat_ofNat, Nat.mod_eq_of_lt]
-    exact Nat.lt_of_le_of_lt (Nat.div_le_self ..) (by omega)
 
 theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : x.udiv 1#w = x := by
   by_cases h : w = 0
@@ -188,18 +147,6 @@ lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w 
     simp only [haeq, toNat_ofNat]
     rw [Nat.mod_eq_of_lt hn]
   contradiction
-
-@[simp]
-theorem neg_neg {x : BitVec w} : - - x = x := by
-  by_cases h : x = 0#w
-  · simp [h]
-  · simp [bv_toNat, h]
-
-theorem neg_ne_iff_ne_neg {x y : BitVec w} : -x ≠ y ↔ x ≠ -y := by
-  constructor
-    <;> intro h h'
-    <;> subst h'
-    <;> simp [BitVec.neg_neg] at h
 
 lemma gt_one_of_neq_0_neq_1 (a : BitVec w) (ha0 : a ≠ 0) (ha1 : a ≠ 1) : a > 1 := by
   simp only [ofNat_eq_ofNat, gt_iff_lt, lt_def, toNat_ofNat]
@@ -719,11 +666,6 @@ theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsb_eq
   simp
-
-theorem xor_comm (e e_1: BitVec w) : e ^^^ e_1 = e_1 ^^^ e := by
-  apply eq_of_getLsb_eq
-  intros i
-  simp [getLsb_xor, Bool.xor_comm]
 
 theorem allOnes_sub_eq_xor (x :BitVec w) : (allOnes w) - x = x ^^^ (allOnes w) := by
   rw [allOnes_sub_eq_not, ← allOnes_xor_eq_not, BitVec.xor_comm]

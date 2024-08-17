@@ -423,7 +423,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
     simp only [xor_eq, ge_iff_le, EffectKind.return_impure_toMonad_eq,
       Option.pure_def, Option.bind_eq_bind, Option.some_bind, h, ↓reduceIte, Option.none_bind,
       Option.bind_none, Refinement.refl, Refinement.some_some]
-  simp only [ushr_xor_distrib, xor_assoc]
+  simp only [ushiftRight_eq', ushiftRight_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/
