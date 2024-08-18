@@ -520,27 +520,6 @@ theorem ofBool_eq_0 (b : Bool) :
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
 
-theorem toInt_eq' (w : Nat) (x : BitVec w) :
-    BitVec.toInt x = if x.toNat < (2 : Nat)^(w - 1) then x else x - 2^w := by
-  cases w <;> simp
-  · case zero =>
-    simp [BitVec.eq_nil x]
-  · case succ w' =>
-      unfold BitVec.toInt
-      simp only [Nat.cast_pow, Nat.cast_ofNat, Int.cast_ite, Int.cast_natCast, natCast_eq_ofNat,
-        ofNat_toNat, zeroExtend_eq, Int.cast_sub, Int.cast_pow, Int.cast_ofNat, ofNat_eq_ofNat]
-      have hcases : (BitVec.toNat x < 2 ^ w') ∨ (BitVec.toNat x ≥ 2 ^ w') := by
-        apply lt_or_ge
-      cases hcases
-      case inl hle =>
-        simp only [hle, ↓reduceIte, ite_eq_left_iff, not_lt, sub_eq_self, ofNat_eq_ofNat]
-        omega
-      case inr hgt =>
-        have hgt' : ¬ (BitVec.toNat x < 2 ^ w') := by omega
-        simp only [ge_iff_le] at hgt
-        simp [hgt, hgt', bne, Nat.cast, NatCast.natCast, BEq.beq, Nat.beq]
-        omega
-
 theorem toInt_eq'' (w : Nat) (x : BitVec w) :
     BitVec.toInt x =
     if x.toNat < (2 : Nat)^(w - 1) then (x.toNat : ℤ) else (x.toNat : ℤ) - 2^w := by
