@@ -521,11 +521,11 @@ theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x :
   simp
 
 lemma toInt_lt_zero_iff_large {w : Nat} {x : BitVec w} :
-  BitVec.toInt x < 0 ↔ 2 ^ w ≤ 2 * x.toNat := by
+  x.toInt < 0 ↔ 2 ^ w ≤ 2 * x.toNat := by
   constructor
   · intros h
     rcases w with rfl | w'
-    case zero => simp at h
+    case zero => simp only [toInt_width_zero, lt_self_iff_false] at h
     case succ =>
       rw [toInt_eq_toNat_cond] at h
       split_ifs at h
@@ -547,10 +547,10 @@ lemma toInt_lt_zero_iff_large {w : Nat} {x : BitVec w} :
         omega
 
 lemma toInt_pos_iff_small {w : Nat} {x : BitVec w} :
-    0 ≤ BitVec.toInt x ↔ 2 * x.toNat < 2 ^ w := by
+    0 ≤ x.toInt ↔ 2 * x.toNat < 2 ^ w := by
   constructor
   · rcases w with rfl | w'
-    case zero => simp [BitVec.width_zero_eq_zero]
+    case zero => simp [width_zero_eq_zero]
     case succ =>
       intros h
       rw [toInt_eq_toNat_cond] at h
