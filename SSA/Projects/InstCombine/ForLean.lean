@@ -520,91 +520,53 @@ theorem ofBool_eq_0 (b : Bool) :
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
 
-theorem toInt_eq'' (w : Nat) (x : BitVec w) :
-    BitVec.toInt x =
-    if x.toNat < (2 : Nat)^(w - 1) then (x.toNat : ℤ) else (x.toNat : ℤ) - 2^w := by
-  cases w <;> simp only [toInt_width_zero, toNat_zero_length, zero_le, tsub_eq_zero_of_le, pow_zero,
-    zero_lt_one, ↓reduceIte, Nat.cast_zero, add_tsub_cancel_right]
-  split_ifs
-  unfold BitVec.toInt
-  simp only [Nat.cast_pow, Nat.cast_ofNat, ite_eq_left_iff, not_lt, sub_eq_self, ne_eq, add_eq_zero,
-    one_ne_zero, and_false, not_false_eq_true, pow_eq_zero_iff, OfNat.ofNat_ne_zero, imp_false,
-    not_le]
-  rename_i hh n
-  omega
-  rename_i hh n
-  unfold BitVec.toInt
-  simp only [not_lt] at n
-  simp only [Nat.cast_pow, Nat.cast_ofNat, ite_eq_right_iff]
-  intros a
-  omega
-
-/-- If a bitvec's toInt is negative, then the toNat will be larger than half of the bitwidth. -/
-lemma large_of_toInt_lt_zero (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x < 0) :
-    x.toNat ≥ (2 : Nat) ^ (w - 1) := by
-  rcases w with rfl | w'
-  case zero => simp at hxToInt
-  case succ =>
-    rw [toInt_eq''] at hxToInt
-    split_ifs at hxToInt
-    case pos h => omega
-    case neg h =>
-      omega
-
-lemma toInt_lt_zero_of_large (w : Nat) (x : BitVec w)
-    (hxLarge : x.toNat ≥ (2 : Nat) ^ (w - 1)) : BitVec.toInt x < 0 := by
-  rcases w with rfl | w'
-  case zero =>
-    simp at hxLarge
-  case succ =>
-    rw [toInt_eq'']
-    split_ifs
-    case pos h => omega
-    case neg h =>
-      norm_cast
-      rw [Int.subNatNat_eq_coe]
-      omega
-
-lemma toInt_lt_zero_iff_large (w : Nat) (x : BitVec w) :
-    BitVec.toInt x < 0 ↔ x.toNat ≥ (2 : Nat) ^ (w - 1) := by
+lemma toInt_lt_zero_iff_large {w : Nat} {x : BitVec w} :
+  x.toInt < 0 ↔ 2 ^ w ≤ 2 * x.toNat := by
   constructor
-  apply BitVec.large_of_toInt_lt_zero
-  apply BitVec.toInt_lt_zero_of_large
+  · intros h
+    rcases w with rfl | w'
+    case zero => simp only [toInt_width_zero, lt_self_iff_false] at h
+    case succ =>
+      rw [toInt_eq_toNat_cond] at h
+      split_ifs at h
+      case pos h =>
+        omega
+      case neg h =>
+        omega
+  · rcases w with rfl | w'
+    intros h
+    case zero =>
+      simp at h
+    case succ =>
+      rw [toInt_eq_toNat_cond]
+      split_ifs
+      case pos h => simp at h; omega
+      case neg h =>
+        norm_cast
+        rw [Int.subNatNat_eq_coe]
+        omega
 
-/-- If a bitvec's toInt is negative, then the toNat will be larger than half of the bitwidth. -/
-lemma small_of_toInt_pos (w : Nat) (x : BitVec w) (hxToInt : BitVec.toInt x ≥ 0) :
-    x.toNat < (2 : Nat) ^ (w - 1) := by
-  rcases w with rfl | w'
-  case zero => simp [BitVec.width_zero_eq_zero]
-  case succ =>
-    rw [BitVec.toInt_eq''] at hxToInt
-    split_ifs at hxToInt
-    case pos h => omega
-    case neg h =>
-      exfalso
-      simp_all only [add_tsub_cancel_right, not_lt, ge_iff_le, sub_nonneg]
-      norm_cast at hxToInt
-      omega
-
-lemma toInt_pos_of_small (w : Nat) (x : BitVec w)
-    (hxsmall : x.toNat < (2 : Nat) ^ (w - 1)) : BitVec.toInt x ≥ 0 := by
-  rcases w with rfl | w'
-  case zero => simp
-  case succ =>
-    rw [BitVec.toInt_eq'']
-    split_ifs
-    norm_cast
-    simp
-
-lemma toInt_pos_iff_small (w : Nat) (x : BitVec w) :
-    x.toNat < (2 : Nat) ^ (w - 1) ↔ BitVec.toInt x ≥ 0 := by
+lemma toInt_pos_iff_small {w : Nat} {x : BitVec w} :
+    0 ≤ x.toInt ↔ 2 * x.toNat < 2 ^ w := by
   constructor
-  apply BitVec.toInt_pos_of_small
-  apply BitVec.small_of_toInt_pos
-
-lemma toInt_pos_iff_small' (w : Nat) (x : BitVec (w + 1)) :
-    x.toNat < (2 : Nat) ^ w ↔ BitVec.toInt x ≥ 0 := by
-  apply BitVec.toInt_pos_iff_small
+  · rcases w with rfl | w'
+    case zero => simp [width_zero_eq_zero]
+    case succ =>
+      intros h
+      rw [toInt_eq_toNat_cond] at h
+      split_ifs at h
+      case pos h => omega
+      case neg h =>
+        exfalso
+        simp_all only [add_tsub_cancel_right, not_lt, ge_iff_le, sub_nonneg]
+        omega
+  · rcases w with rfl | w'
+    case zero => simp
+    case succ =>
+      rw [toInt_eq_toNat_cond]
+      split_ifs
+      simp
+      omega
 
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
