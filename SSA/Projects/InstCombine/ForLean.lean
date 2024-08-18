@@ -4,41 +4,81 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 
 namespace Nat
 
-lemma two_pow_pred_mul_two (h : 0 < w) :
+theorem two_pow_pred_mul_two (h : 0 < w) :
     2 ^ (w - 1) * 2 = 2 ^ w := by
   simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
   rw [Nat.sub_add_cancel]
   omega
 
-lemma two_pow_pred_add_two_pow_pred (h : 0 < w) :
+theorem two_pow_pred_add_two_pow_pred (h : 0 < w) :
     2 ^ (w - 1) + 2 ^ (w - 1) = 2 ^ w:= by
   rw [← two_pow_pred_mul_two (w := w) h]
   omega
 
-lemma two_pow_pred_lt_two_pow (h : 0 < w) :
+theorem two_pow_pred_lt_two_pow (h : 0 < w) :
     2 ^ (w - 1) < 2 ^ w := by
   simp [← two_pow_pred_add_two_pow_pred h]
 
-lemma two_pow_sub_two_pow_pred (h : 0 < w) :
+theorem two_pow_sub_two_pow_pred (h : 0 < w) :
     2 ^ w - 2 ^ (w - 1) = 2 ^ (w - 1) := by
   simp [← two_pow_pred_add_two_pow_pred h]
 
-lemma two_pow_pred_mod_two_pow (h : 0 < w):
+theorem two_pow_pred_mod_two_pow (h : 0 < w):
     2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
   rw [Nat.mod_eq_of_lt]
   apply two_pow_pred_lt_two_pow h
 
-lemma eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
+theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
   simp only [bne_iff_ne, ne_eq, mod_two_ne_zero] at h
   assumption
 
-lemma sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n = n - x := by
+theorem sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n = n - x := by
   rcases n with rfl | n <;> simp
   omega
 
 @[simp]
 theorem one_mod_two_pow_eq {n : Nat} (hn : n ≠ 0) : 1 % 2 ^ n = 1 := by
   rw [Nat.mod_eq_of_lt (Nat.one_lt_pow hn (by decide))]
+
+-- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it
+-- suffices to consider two cases.
+-- This theorem allows one to case split a '(a + b) % m < k' into two cases
+-- Case 1: if (a + b) < m, then the inequality staightforwardly holds, as (a + b) < k
+-- Case 2: if (a + b) ≥ m, then (a + b) % m = (a + b - m), and the inequality
+-- holds as (a + b - m) < k
+lemma cases_of_lt_mod_add {a b m k : ℕ} (hsum : (a + b) % m < k)  (ha : a < m) (hb : b < m) :
+  ((a + b) < m ∧ (a + b) < k) ∨ ((a + b ≥ m) ∧ (a + b) < m + k) := by
+  by_cases ha_plus_b_lt_m : (a + b) < m
+  · left
+    constructor
+    · exact ha_plus_b_lt_m
+    · rw [Nat.mod_eq_of_lt ha_plus_b_lt_m] at hsum
+      exact hsum
+  · right
+    constructor
+    · omega
+    · have ha_plus_b_lt_2m : (a + b) < 2 * m := by omega
+      have ha_plus_b_minus_m_lt_m : (a + b) - m < m := by omega
+      have hmod : ((a + b) - m) % m = (a + b) % m := by
+        rw [← Nat.mod_eq_sub_mod (by omega)]
+      rw [Nat.mod_eq_of_lt (by omega)] at hmod
+      omega
+
+@[simp]
+theorem mod_two_pow_mod_two (x : Nat) (w : Nat) (_ : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
+  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
+  rw [pow_one 2] at y
+  exact Nat.mod_mod_of_dvd x y
+
+theorem two_le_add_iff_odd_and_odd (n m : Nat) :
+    2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
+  omega
+
+theorem add_odd_iff_neq (n m : Nat) :
+    (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
+  cases' Nat.mod_two_eq_zero_or_one n with nparity nparity
+  <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
+  <;> simp [mparity, nparity, Nat.add_mod]
 
 end Nat
 
@@ -668,46 +708,6 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> cases carry i B A false
       <;> rfl
 end BitVec
-
--- Given (a, b) that are less than a modulus m, to show (a + b) % m < k, it
--- suffices to consider two cases.
--- This theorem allows one to case split a '(a + b) % m < k' into two cases
--- Case 1: if (a + b) < m, then the inequality staightforwardly holds, as (a + b) < k
--- Case 2: if (a + b) ≥ m, then (a + b) % m = (a + b - m), and the inequality
--- holds as (a + b - m) < k
-lemma Nat.cases_of_lt_mod_add {a b m k : ℕ} (hsum : (a + b) % m < k)  (ha : a < m) (hb : b < m) :
-  ((a + b) < m ∧ (a + b) < k) ∨ ((a + b ≥ m) ∧ (a + b) < m + k) := by
-  by_cases ha_plus_b_lt_m : (a + b) < m
-  · left
-    constructor
-    · exact ha_plus_b_lt_m
-    · rw [Nat.mod_eq_of_lt ha_plus_b_lt_m] at hsum
-      exact hsum
-  · right
-    constructor
-    · omega
-    · have ha_plus_b_lt_2m : (a + b) < 2 * m := by omega
-      have ha_plus_b_minus_m_lt_m : (a + b) - m < m := by omega
-      have hmod : ((a + b) - m) % m = (a + b) % m := by
-        rw [← Nat.mod_eq_sub_mod (by omega)]
-      rw [Nat.mod_eq_of_lt (by omega)] at hmod
-      omega
-
-@[simp]
-theorem Nat.mod_two_pow_mod_two (x : Nat) (w : Nat) (_ : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
-  have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
-  rw [pow_one 2] at y
-  exact Nat.mod_mod_of_dvd x y
-
-theorem Nat.two_le_add_iff_odd_and_odd (n m : Nat) :
-    2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
-  omega
-
-theorem Nat.add_odd_iff_neq (n m : Nat) :
-    (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
-  cases' Nat.mod_two_eq_zero_or_one n with nparity nparity
-  <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
-  <;> simp [mparity, nparity, Nat.add_mod]
 
 theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
