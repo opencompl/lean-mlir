@@ -561,7 +561,47 @@ theorem signed_min_eq_add_sub_and_sub_rightShift :
   try alive_auto
   all_goals sorry
 
+theorem lt_sdoz_or_neg_sdoz :
+    (y <ₛ x) ↔ (signedDifferenceOrZero x y ||| -(signedDifferenceOrZero x y)).getMsb 32 := by
+  try alive_auto
+  all_goals sorry
+
+theorem lt_udoz_or_neg_udoz :
+    (y <ᵤ x) ↔ (unsignedDifferenceOrZero x y ||| -(unsignedDifferenceOrZero x y)).getMsb 32 := by
+  try alive_auto
+  all_goals sorry
+
+theorem carry_iff_udoz_not_or_neg_udoz_not :
+    BitVec.carry w x y false ↔ (unsignedDifferenceOrZero x (~~~ y) ||| - unsignedDifferenceOrZero x (~~~ y)).getMsb 32 := by
+  try alive_auto
+  all_goals sorry
+
 end fixedWidth
+
+theorem abs_sub_sdoz_add_sdoz :
+    (x - y).abs = signedDifferenceOrZero x y + signedDifferenceOrZero y x := by
+  try alive_auto
+  all_goals sorry
+
+theorem abs_sub_udoz_add_udoz :
+    (x - y).abs = unsignedDifferenceOrZero x y + unsignedDifferenceOrZero y x := by
+  try alive_auto
+  all_goals sorry
+
+theorem carry_iff_not_ult :
+    BitVec.carry w x y false ↔ (~~~ y) <ᵤ x := by
+  try alive_auto
+  all_goals sorry
+
+theorem sdoz_not_not_eq_sdoz :
+    signedDifferenceOrZero (~~~ x) (~~~ y) = signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem udoz_not_not_eq_udoz :
+    unsignedDifferenceOrZero (~~~ x) (~~~ y) = unsignedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
 
 end Ch2Basics
 
