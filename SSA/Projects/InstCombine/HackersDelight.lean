@@ -459,6 +459,105 @@ theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32}
   try alive_auto
   all_goals sorry
 
+def signedDifferenceOrZero (x y : BitVec w) : BitVec w :=
+    if (x ≥ₛ y) then (x - y) else 0#w
+
+def unsignedDifferenceOrZero (x y : BitVec w) : BitVec w :=
+    if (x ≥ᵤ y) then (x - y) else 0#w
+
+def uMaxBitVec (x y : BitVec w) : BitVec w :=
+  if x ≥ᵤ y then x else y
+
+def uMinBitVec (x y : BitVec w) : BitVec w :=
+  if x ≤ᵤ y then x else y
+
+def sMaxBitVec (x y : BitVec w) : BitVec w :=
+  if x ≥ₛ y then x else y
+
+def sMinBitVec (x y : BitVec w) : BitVec w :=
+  if x ≤ₛ y then x else y
+
+theorem signed_max_eq_add_doz :
+    sMaxBitVec x y = y + signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_eq_sub_doz :
+    sMinBitVec x y = x - signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_max_eq_add_dozu :
+    uMaxBitVec x y = y + unsignedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_min_eq_sub_dozu :
+    uMinBitVec x y = x - unsignedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+def leBitmask (x y : BitVec w) : BitVec w :=
+  if y ≤ x then BitVec.ofNat w (2^w - 1) else BitVec.ofNat w 0
+
+theorem signedDifferenceOrZero_eq_sub_and_bitmask :
+   signedDifferenceOrZero x y = (x - y) &&& leBitmask x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_max_xor_and_bitmask_xor :
+    sMaxBitVec x y = ((x ^^^ y) &&& leBitmask x y) ^^^ y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_xor_and_bitmask_xor :
+    sMinBitVec x y = ((x ^^^ y) &&& leBitmask y x) ^^^ y := by
+  try alive_auto
+  all_goals sorry
+
+def carryBitmask (x y : BitVec w) : BitVec w :=
+  if BitVec.carry w x ((~~~y + 1) - 1) false then BitVec.ofNat w (2^w - 1) else BitVec.ofNat w 0
+
+theorem unsigned_doz_sub_and_not_carry :
+    unsignedDifferenceOrZero x y = ((x - y) &&& ~~~ carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_max_eq_sub_sub_and_carry :
+    uMaxBitVec x y = x - ((x - y) &&& carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_min_eq_add_sub_and_carry :
+    uMinBitVec x y = y + ((x - y) &&& carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_doz_and_not_xor_xor_and_and_rightShift {x y : BitVec 32} (h : d = x - y) :
+    signedDifferenceOrZero x y = d &&& (~~~ d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_doz_and_not_xor_xor_and_and_rightShift {x y : BitVec 32} (h : d = x - y) :
+    unsignedDifferenceOrZero x y = d &&& ~~~ (((~~~ x &&& y) ||| ~~~ (x ^^^ y) &&& d) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_doz_eq_sub_and_not_sub_rightShift {x y : BitVec 32} :
+    signedDifferenceOrZero x y = (x - y) &&& ~~~ ((x - y) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_max_eq_sub_sub_and_sub_rightShift {x y : BitVec 32} :
+    sMaxBitVec x y = x - ((x - y) &&& ((x - y) >>> 31)) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_eq_add_sub_and_sub_rightShift {x y : BitVec 32} :
+    sMaxBitVec x y = y + ((x - y) &&& ((x - y) >>> 31)) := by
+  try alive_auto
+  all_goals sorry
+
 end Ch2Basics
 
 end HackersDelight
