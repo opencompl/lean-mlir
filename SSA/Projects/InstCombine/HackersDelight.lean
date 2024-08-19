@@ -460,10 +460,10 @@ theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32}
   all_goals sorry
 
 def signedDifferenceOrZero (x y : BitVec w) : BitVec w :=
-    if x ≥ₛ y then x - y else 0#w
+  if x ≥ₛ y then x - y else 0#w
 
 def unsignedDifferenceOrZero (x y : BitVec w) : BitVec w :=
-    if x ≥ᵤ y then x - y else 0#w
+  if x ≥ᵤ y then x - y else 0#w
 
 def unsignedMaxBitVec (x y : BitVec w) : BitVec w :=
   if x ≥ᵤ y then x else y
@@ -562,17 +562,17 @@ theorem signed_min_eq_add_sub_and_sub_rightShift :
   all_goals sorry
 
 theorem lt_sdoz_or_neg_sdoz :
-    (y <ₛ x) ↔ (signedDifferenceOrZero x y ||| -(signedDifferenceOrZero x y)).getMsb 32 := by
+    (y <ₛ x) ↔ (signedDifferenceOrZero x y ||| -(signedDifferenceOrZero x y)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem lt_udoz_or_neg_udoz :
-    (y <ᵤ x) ↔ (unsignedDifferenceOrZero x y ||| -(unsignedDifferenceOrZero x y)).getMsb 32 := by
+    (y <ᵤ x) ↔ (unsignedDifferenceOrZero x y ||| -(unsignedDifferenceOrZero x y)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem carry_iff_udoz_not_or_neg_udoz_not :
-    BitVec.carry w x y false ↔ (unsignedDifferenceOrZero x (~~~ y) ||| - unsignedDifferenceOrZero x (~~~ y)).getMsb 32 := by
+    BitVec.carry w x y false ↔ (unsignedDifferenceOrZero x (~~~ y) ||| - unsignedDifferenceOrZero x (~~~ y)).msb := by
   try alive_auto
   all_goals sorry
 
