@@ -481,36 +481,10 @@ theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
     <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
     simp only [ih (by omega), Bool.bne_right_inj, and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
--- set_option diagnostics true
+
 theorem BitVec.sub_add_neg : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub,Add.add, BitVec.add]
   simp [← BitVec.ofNat_add_ofNat, add_comm, BitVec.ofNat, -BitVec.ofFin_ofNat, Fin.ofNat']
-
-theorem sub_add_lemma (i : Nat) : (a.subAux b (i)) = (a.addAux (fun n => (b.negAux n).1) (i)).swap := by
-  induction' i with i ih
-  · simp only [subAux]
-    simp only [addAux]
-    simp only [BitVec.adcb]
-    simp only [negAux]
-    simp only [Bool.atLeastTwo_false_right]
-    simp only [Bool.bne_false]
-    simp only [Prod.swap_prod_mk, Prod.mk.injEq, true_and]
-
-    sorry
-  · sorry
-
-def negFirst (f g : Bool → Bool → Bool) : Bool × Bool → Bool × Bool
-  | (a , b) => (f a b ,g a b)
-theorem sub_add_one : a - b = a + (~~~ b) + 1 := by
-  sorry
-theorem move : a - b = c ↔ a = b + c := by
-  -- ext i
-  constructor
-  all_goals intro h
-  all_goals ext i
-  simp [HAdd.hAdd,Add.add, BitStream.add]
-  sorry
-  sorry
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   have sub_add_lemma (i : Nat) :
