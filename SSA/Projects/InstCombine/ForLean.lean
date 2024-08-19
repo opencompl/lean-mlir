@@ -520,54 +520,6 @@ theorem ofBool_eq_0 (b : Bool) :
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
 
-lemma toInt_lt_zero_iff_large {w : Nat} {x : BitVec w} :
-  x.toInt < 0 ↔ 2 ^ w ≤ 2 * x.toNat := by
-  constructor
-  · intros h
-    rcases w with rfl | w'
-    case zero => simp only [toInt_width_zero, lt_self_iff_false] at h
-    case succ =>
-      rw [toInt_eq_toNat_cond] at h
-      split_ifs at h
-      case pos h =>
-        omega
-      case neg h =>
-        omega
-  · rcases w with rfl | w'
-    intros h
-    case zero =>
-      simp at h
-    case succ =>
-      rw [toInt_eq_toNat_cond]
-      split_ifs
-      case pos h => simp at h; omega
-      case neg h =>
-        norm_cast
-        rw [Int.subNatNat_eq_coe]
-        omega
-
-lemma toInt_pos_iff_small {w : Nat} {x : BitVec w} :
-    0 ≤ x.toInt ↔ 2 * x.toNat < 2 ^ w := by
-  constructor
-  · rcases w with rfl | w'
-    case zero => simp [width_zero_eq_zero]
-    case succ =>
-      intros h
-      rw [toInt_eq_toNat_cond] at h
-      split_ifs at h
-      case pos h => omega
-      case neg h =>
-        exfalso
-        simp_all only [add_tsub_cancel_right, not_lt, ge_iff_le, sub_nonneg]
-        omega
-  · rcases w with rfl | w'
-    case zero => simp
-    case succ =>
-      rw [toInt_eq_toNat_cond]
-      split_ifs
-      simp
-      omega
-
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
   induction i
