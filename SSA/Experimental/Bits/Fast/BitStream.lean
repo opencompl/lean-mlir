@@ -473,27 +473,68 @@ theorem BitVec.sub_add_neg : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub,Add.add, BitVec.add]
   simp [← BitVec.ofNat_add_ofNat, add_comm, BitVec.ofNat, -BitVec.ofFin_ofNat, Fin.ofNat']
 
+-- @[simp]
+-- theorem not_eq_not_not (x  : Bool) : (x == !(!x))  = false := by
+--   sorry
+-- def f (a b : BitStream) (i : Nat) :  Bool := match i with
+--     | 0 => (! (a 0)) && (b 0)
+--     | i + 1 =>  sorry--(!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && f a b i)
+
+
+def f (a b : BitStream) (i : Nat) :  Bool := (b.negAux i).2 == (a.addAux (fun n => (b.negAux n).1) i).1
+-- theorem f_correct : a.f b i = !(b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1 := by
+--   induction' i with i ih
+--   · simp [f, negAux, addAux, BitVec.adcb]
+--     cases (b 0)
+--     <;> simp
+--     -- sorry
+--     -- sorry
+--   · simp [f, negAux, addAux, BitVec.adcb]
+--     rw [ih]
+--     cases (b (i + 1))
+--     <;> cases a (i + 1)
+--     <;> simp
+--     all_goals sorry
+    -- sorry
+
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
+
+
   have sub_add_lemma (i : Nat) :
       let y := b.negAux
       let x := a.addAux (fun n => (y n).1) i
       -- note: I don't know what function to put here to make this theorem provable
-      a.subAux b i = ⟨x.2, sorryAx (Bool → Bool → Bool × Bool → Bool × Bool →  Bool) (synthetic := false) (a i) (b i) (y i) (x) ⟩
+      -- xor (b i) (((!b (i )) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1)))
+      -- xor (b i) (((!b (i )) != ((y i).2 != x.1)))
+      a.subAux b i = ⟨x.2, f a b i ⟩
+      -- a.subAux b i = ⟨x.2, xor (sorry) (((!b (i )) != ((y i).2 != x.1))) ⟩
        := by
     induction' i with i ih
     · simp [subAux,addAux,negAux, BitVec.adcb]
-      cases (b 0) ;
-      · simp ; sorry
-      · simp ; sorry
+      -- unfold
+      simp [f]
+      -- unfold negAux addAux BitVec.adcb
+      -- simp
+      -- sorry
+      -- cases (b 0) ;
+      -- · simp --; sorry
+      -- · simp --; sorry
     · simp [subAux,addAux,negAux, BitVec.adcb]
+      -- rw [ih]
+      simp [f]
       rw [ih]
-      simp
-      cases a (i + 1)
+
+      -- <;> cases a (i)
+      -- <;> cases b (i)
+      -- <;> simp [subAux,addAux,negAux, BitVec.adcb]
+      <;> cases a (i + 1)
       <;> cases b (i + 1)
       <;> simp
-      <;> constructor
-      <;> try simp [bne]
-      <;> sorry
+
+      -- <;> constructor
+
+      -- <;> try simp [bne]
+      all_goals sorry
   ext i
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub,Add.add, BitStream.add]
   unfold neg
@@ -501,10 +542,10 @@ theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
 
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   calc
-  _ ≈ʷ (@ofBitVec w (x + (- y))) := by rw [BitVec.sub_add_neg]
-  _ ≈ʷ ((@ofBitVec w x) + (@ofBitVec w (-y))) := ofBitVec_add
-  _ ≈ʷ ((@ofBitVec w x) + (- @ofBitVec w (y))) := add_congr equal_up_to_refl ofBitVec_neg
-  _ ≈ʷ (ofBitVec x) - (ofBitVec (y)) := by rw [← sub_add_neg]
+  _ ≈ʷ ofBitVec (x + - y) := by rw [BitVec.sub_add_neg]
+  _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
+  _ ≈ʷ ofBitVec x + - ofBitVec y := add_congr equal_up_to_refl ofBitVec_neg
+  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [← sub_add_neg]
 
 
 theorem equal_congr_congr  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
