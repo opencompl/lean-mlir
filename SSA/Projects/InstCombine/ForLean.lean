@@ -120,7 +120,7 @@ def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w n :=
+    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w (OfNat.ofNat n) := by
   rfl
 
 -- @[simp]
