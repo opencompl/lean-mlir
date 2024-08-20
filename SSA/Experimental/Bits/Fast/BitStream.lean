@@ -272,39 +272,11 @@ end BitwiseOps
 /-! # Addition, Subtraction, Negation -/
 section Arith
 
-/--
-addAux' is the old version of addAux, which is kept around for backward-compatability reasons.
-To use the new version, use addAux
--/
--- def addAux' (x y : BitStream) : Nat → Bool × Bool
---   | 0 => BitVec.adcb (x 0) (y 0) false
---   | n+1 =>
---     let carry := (addAux' x y n).1
---     let a := x (n + 1)
---     let b := y (n + 1)
---     BitVec.adcb a b carry
 def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
   let carry : Bool := match i with
     | 0 => false
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carry)
-  -- | 0 => Prod.swap (BitVec.adcb (x 0) (y 0) false)
-  -- | n+1 =>
-  --   let carry := (addAux' x y n).1
-  --   let a := x (n + 1)
-  --   let b := y (n + 1)
-  --   Prod.swap (BitVec.adcb a b carry)
-/--
-The reason that there is a Prod.swap in the definition of addAux is that
-BitVec.adcb returns the carry bit on the left and the result bit on the right.
-
-In order to preserve the same design as subAux and negAux, we use Prod.swap
-so that the result bit is on the left and the carry bit is on the right.
-
-The un-swapped version is still availiable as addAux'
--/
--- @[simp]
--- def addAux (x y : BitStream) : Nat →  Bool × Bool := Prod.swap ∘ (addAux' x y)
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
@@ -458,8 +430,8 @@ theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
 theorem negAux_eq_not_addAux : a.negAux = (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
-  · simp [negAux, BitVec.adcb, OfNat.ofNat, ofNat, addAux]
-  · simp [negAux, BitVec.adcb, OfNat.ofNat, ofNat, addAux, ih]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
