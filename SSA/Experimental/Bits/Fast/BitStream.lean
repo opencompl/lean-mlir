@@ -272,16 +272,31 @@ end BitwiseOps
 /-! # Addition, Subtraction, Negation -/
 section Arith
 
-def addAux (x y : BitStream) : Nat → Bool × Bool
+def addAux' (x y : BitStream) : Nat → Bool × Bool
   | 0 => BitVec.adcb (x 0) (y 0) false
   | n+1 =>
-    let carry := (addAux x y n).1
+    let carry := (addAux' x y n).1
     let a := x (n + 1)
     let b := y (n + 1)
     BitVec.adcb a b carry
 
+/--
+The reason that there is a Prod.swap in the definition of addAux is that
+BitVec.adcb returns the carry bit on the left and the result bit on the right.
+
+In order to preserve the same design as subAux and negAux, we use Prod.swap
+so that the result bit is on the left and the carry bit is on the right.
+
+The un-swapped version is still availiable as addAux'
+-/
+@[simp]
+def addAux (x y : BitStream) : Nat →  Bool × Bool := Prod.swap ∘ (addAux' x y)
+
+@[simp]
+theorem reduce_addAux : addAux x y = Prod.swap ∘ (addAux' x y) := by rfl
+
 def add (x y : BitStream) : BitStream :=
-  fun n => (addAux x y n).2
+  fun n => (addAux x y n).1
 
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
@@ -379,11 +394,11 @@ theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
 
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
   intros n a
-  have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+  have add_lemma : ⟨BitVec.carry (n + 1) x y false , (x + y).getLsb n⟩ = (ofBitVec x).addAux' (ofBitVec y) n := by
     induction' n with n ih
-    · simp [addAux, BitVec.adcb, a, BitVec.getLsb, BitVec.carry, ← Bool.decide_and,
+    · simp [addAux', BitVec.adcb, a, BitVec.getLsb, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsb_add]
+    · simp [addAux', ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsb_add]
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
 
 @[refl]
@@ -414,11 +429,12 @@ instance congr_equiv : Equivalence (EqualUpTo w) where
 
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
-  have add_congr_lemma : a.addAux c n = b.addAux d n := by
+  have add_congr_lemma : a.addAux' c n = b.addAux' d n := by
     induction' n with _ ih
-    <;> simp only [addAux, Prod.mk.injEq, e1 _ h, e2 _ h]
-    simp only [ih (by omega), Bool.bne_right_inj]
-  simp only [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
+    · simp only [addAux', e1 _ h, e2 _ h]
+    · simp only [addAux', e1 _ h, e2 _ h, ih (by omega)]
+  simp [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma, addAux]
+
 
 theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
@@ -435,11 +451,11 @@ theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
 
   TODO: Possibly investigate changing the behavior of BitStream.addAux?
 -/
-theorem negAux_eq_not_addAux : a.negAux = Prod.swap ∘ (~~~a).addAux 1 := by
+theorem negAux_eq_not_addAux : a.negAux = (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, Prod.swap, addAux']
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, Prod.swap, addAux', ih]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
