@@ -272,7 +272,7 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
   · show Bool.xor _ _ = Bool.xor _ _; simp
   · rw [carry_add_succ]
     conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitVec.adcb]}
-    simp [nextBit, eval, add, BitStream.addAux, BitVec.adcb]
+    simp [nextBit, eval, add]
 /-!
 We don't really need subtraction or negation FSMs,
 given that we can reduce both those operations to just addition and bitwise complement -/

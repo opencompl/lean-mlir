@@ -235,7 +235,6 @@ lemma addAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
     (λ b => cond b x y) n () := by
   induction n <;> simp [addAux, BitVec.adcb, Bool.atLeastTwo, *]
 
-
 lemma add_eq_propagate (x y : BitStream) :
     x + y = propagate (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
