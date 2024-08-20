@@ -253,14 +253,14 @@ def add : FSM Bool :=
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     add.carry x (n+1) =
-      fun _ => (BitStream.addAux' (x true) (x false) n).1 := by
+      fun _ => (BitStream.addAux (x true) (x false) n).2 := by
   ext a; obtain rfl : a = () := rfl
   induction n with
   | zero      =>
-    simp [carry, BitStream.addAux', nextBit, add, BitVec.adcb]
+    simp [carry, BitStream.addAux, nextBit, add, BitVec.adcb]
   | succ n ih =>
     unfold carry
-    simp [nextBit, ih, Circuit.eval, BitStream.addAux', BitVec.adcb]
+    simp [nextBit, ih, Circuit.eval, BitStream.addAux, BitVec.adcb]
 
 @[simp] theorem carry_zero (x : arity → BitStream) : carry p x 0 = p.initCarry := rfl
 @[simp] theorem initCarry_add : add.initCarry = (fun _ => false) := rfl
@@ -271,8 +271,8 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
   cases n
   · show Bool.xor _ _ = Bool.xor _ _; simp
   · rw [carry_add_succ]
-    conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitStream.addAux', BitVec.adcb]}
-    simp [nextBit, eval, add, BitStream.addAux', BitVec.adcb]
+    conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitStream.addAux, BitVec.adcb]}
+    simp [nextBit, eval, add, BitStream.addAux, BitVec.adcb]
 /-!
 We don't really need subtraction or negation FSMs,
 given that we can reduce both those operations to just addition and bitwise complement -/
