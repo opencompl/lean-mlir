@@ -272,6 +272,10 @@ end BitwiseOps
 /-! # Addition, Subtraction, Negation -/
 section Arith
 
+/--
+addAux' is the old version of addAux, which is kept around for backward-compatability reasons.
+To use the new version, use addAux
+-/
 def addAux' (x y : BitStream) : Nat → Bool × Bool
   | 0 => BitVec.adcb (x 0) (y 0) false
   | n+1 =>
@@ -291,9 +295,6 @@ The un-swapped version is still availiable as addAux'
 -/
 @[simp]
 def addAux (x y : BitStream) : Nat →  Bool × Bool := Prod.swap ∘ (addAux' x y)
-
-@[simp]
-theorem reduce_addAux : addAux x y = Prod.swap ∘ (addAux' x y) := by rfl
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
@@ -447,8 +448,8 @@ theorem ofBitVec_not_eqTo : ofBitVec (~~~ x) ≈ʷ ~~~ ofBitVec x := by
 theorem negAux_eq_not_addAux : a.negAux = (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, Prod.swap, addAux']
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, Prod.swap, addAux', ih]
+  · simp [negAux, BitVec.adcb, OfNat.ofNat, ofNat, addAux']
+  · simp [negAux, BitVec.adcb, OfNat.ofNat, ofNat, addAux', ih]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
