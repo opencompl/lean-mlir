@@ -473,123 +473,37 @@ theorem BitVec.sub_add_neg : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub,Add.add, BitVec.add]
   simp [← BitVec.ofNat_add_ofNat, add_comm, BitVec.ofNat, -BitVec.ofFin_ofNat, Fin.ofNat']
 
--- @[simp]
--- theorem not_eq_not_not (x  : Bool) : (x == !(!x))  = false := by
---   sorry
-def f (a b : BitStream) (i : Nat) :  Bool := match i with
-    | 0 => (! (a 0)) && (b 0)
-    | i + 1 => sorryAx (BitStream → BitStream → Nat → Bool) (synthetic := false) a b i
-    -- (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && ((a.addAux (fun n => (b.negAux n).1) i).2, a.f b i).2)
+/--
+g is some unknown auxiliary function that will be useful in proving sub_add_neg
+-/
+def g (a b : BitStream) (i : Nat) : Bool := sorry
 
-     -- sorry--(!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && f a b i)
-
-
--- def f (a b : BitStream) (i : Nat) :  Bool := (b.negAux i).2 == (a.addAux (fun n => (b.negAux n).1) i).1
-theorem f_correct : a.f b i = ((b.negAux i).2 == (a.addAux (fun n => (b.negAux n).1) i).1) := by
-  induction' i with i ih
-  · simp [f, negAux, addAux, BitVec.adcb]
-    cases (b 0)
-    <;> simp
---     -- sorry
---     -- sorry
-  · simp [f, negAux, addAux, BitVec.adcb]
-
-    -- sorry
-    -- rw [ih]
-    -- cases (b (i + 1))
-    -- <;> cases a (i + 1)
-    -- <;> simp
-
-    all_goals sorry
-  -- sorry
-theorem sub_add_neg2 {a b : BitStream} : a - b = a + (-b) := by
-
-  ext i
-  simp [HAdd.hAdd,HSub.hSub ,Neg.neg, Sub.sub,Add.add, BitStream.sub, BitStream.add, BitStream.neg]
-  unfold BitStream.neg
-  induction' i with i ih
-  simp [subAux,addAux,BitVec.adcb ,negAux]
-  -- sorry
-  simp [subAux,addAux,BitVec.adcb ,negAux]
+theorem g_zero {a b : BitStream} :
+    (!a 0 && b 0) = a.g b 0 := by
   sorry
- -- ⊢ xor (b (i + 1)) (a.g b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1))
 
-def g (a b : BitStream) (i : Nat) : Bool :=xor (b (i + 1)) (((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1)))
--- match i with
---   | 0 => ! (a 0) && (b 0)
---   | i + 1 =>   (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && ((a.addAux (fun n => (b.negAux n).1) i).2, a.g b i).2)
-  -- | i + 1 => match (a (i + 1)) , (b (i + 1)) with
-  --   | false, false => a.g b i
-  --   | false, true => true
-  --   | true, false => false
-  --   | true, true => a.g b i
-    -- | false, false, true => a.g b i
-    -- | false, true, true => true
-    -- | true, false, true => false
-    -- | true, true, true => a.g b i
-theorem wat  :  a.g b i = ((b.negAux i).2 == (a.addAux (fun n => (b.negAux n).1) i).1) := by
-  induction' i with i ih
-  simp [g, negAux,addAux, BitVec.adcb]
-  cases (b 0)
-  <;> simp
+theorem g_succ_left {a b : BitStream} (i : ℕ) :
+    xor (b (i + 1)) (a.g b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
+  sorry
 
-
-  simp [g, negAux,addAux, BitVec.adcb]
-  <;> cases a (i + 1)
-  <;> cases b (i + 1)
-  <;> simp
-
-  all_goals sorry
+theorem g_succ_right {a b : BitStream} (i : ℕ)  :
+    (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
+  sorry
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
-
-
   have sub_add_lemma (i : Nat) :
       let y := b.negAux
       let x := a.addAux (fun n => (y n).1) i
-      -- note: I don't know what function to put here to make this theorem provable
-      -- xor (b i) (((!b (i )) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1)))
-      -- ⊢ xor (b (i + 1)) (sorryAx Bool) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1))
-
-      -- xor (b i) (((!b (i )) != ((y i).2 != x.1)))
-      -- a.subAux b i = ⟨x.2, f a b i ⟩
-      -- a.subAux b i = ⟨x.2, xor (b (i)) ((!b (i)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).1)) ⟩
-      a.subAux b i = ⟨x.2, g a b i⟩
-
-       := by
+      a.subAux b i = ⟨x.1, g a b i⟩  := by
     induction' i with i ih
     · simp [subAux,addAux,negAux, BitVec.adcb]
-      -- unfold
-      -- simp [f]
-      -- unfold negAux addAux BitVec.adcb
-      -- simp
-      -- sorry
-      sorry
-      -- cases (b 0) ;
-      -- · simp --; sorry
-      -- · simp --; sorry
+      exact g_zero
     · simp [subAux,addAux,negAux, BitVec.adcb]
-      -- rw [ih]
-      -- simp [f]
       rw [ih]
-      simp [g]
-
-      -- constructor
-
-
-      -- <;> cases a (i)
-      -- <;> cases b (i)
-      -- <;> simp [subAux,addAux,negAux, BitVec.adcb]
-      cases a (i + 1)
-      <;> cases b (i + 1)
-      -- <;> cases a (i + 1)
-      -- <;> cases b (i)
-      <;> simp [bne]
-
-      -- <;> constru ctor
-
-      -- <;> try simp [bne]
-      all_goals sorry
+      simp
+      constructor
+      · exact g_succ_left i
+      · exact g_succ_right i
   ext i
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub,Add.add, BitStream.add]
   unfold neg
