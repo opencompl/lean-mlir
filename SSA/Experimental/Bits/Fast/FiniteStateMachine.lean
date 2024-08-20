@@ -253,7 +253,7 @@ def add : FSM Bool :=
 the carry bit of addition as implemented on bitstreams -/
 theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
     add.carry x (n+1) =
-      fun _ => (BitStream.addAux (x true) (x false) n).1 := by
+      fun _ => (BitStream.addAux (x true) (x false) n).2 := by
   ext a; obtain rfl : a = () := rfl
   induction n with
   | zero      =>
@@ -273,7 +273,6 @@ theorem carry_add_succ (x : Bool → BitStream) (n : ℕ) :
   · rw [carry_add_succ]
     conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitVec.adcb]}
     simp [nextBit, eval, add]
-
 /-!
 We don't really need subtraction or negation FSMs,
 given that we can reduce both those operations to just addition and bitwise complement -/
