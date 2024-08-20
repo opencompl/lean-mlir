@@ -367,8 +367,6 @@ variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
 
-
-
 @[simp]
 theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
   simp [ofBitVec, h]
