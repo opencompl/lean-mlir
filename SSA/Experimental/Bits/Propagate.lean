@@ -290,7 +290,7 @@ lemma neg_eq_propagate (x : BitStream) :
   match n with
   | 0 => simp [BitStream.neg, BitStream.negAux]
   | 1 => simp [BitStream.neg, BitStream.negAux, propagate, propagateAux]
-  | n+2 => simp [BitStream.neg, BitStream.negAux, BitStream.negAux_eq_propagateCarry, BitStream.neg, BitStream.negAux, BitStream.negAux_eq_propagateCarry, propagate_succ]
+  | n+2 => simp [BitStream.neg, BitStream.negAux, BitStream.negAux_eq_propagateCarry, propagate_succ]
 
 lemma BitStream.incrAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
     (BitStream.incrAux x n).2 = propagateCarry (λ _ => true)
