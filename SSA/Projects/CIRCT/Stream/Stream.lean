@@ -1,20 +1,18 @@
 import Mathlib.Data.Stream.Defs
 import Batteries.Data.List.Basic
 
-namespace DC
-
 /-!
 
-# Preliminaries for DC Semantics
+# Preliminaries for DC/Handshake Semantics
 
-In `DC`, components are connected together via FIFO (first-in, first-out) channels.
-We model this as the `DC.Stream` type
+In `DC` and `Handshake`, components are connected together via FIFO (first-in, first-out) channels.
+We model this as the `.Stream` type
 
 -/
+namespace CIRCTStream
 
-
-/-- A `Stream` in `DC` is an infinite sequence of messages (i.e., *potential* values).
-Note that semantics of `DC` are deterministic -/
+/-- A `Stream` in is an infinite sequence of messages (i.e., *potential* values).
+Note that semantics of `DC` and `Handshake` are deterministic -/
 def Stream (β : Type) := Stream' (Option β)
 
 namespace Stream

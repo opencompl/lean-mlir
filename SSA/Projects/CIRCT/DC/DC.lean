@@ -11,7 +11,7 @@ import SSA.Projects.CIRCT.Stream.Stream
 --   %0:2 = fork [2] %arg0 : none
 --   return %0#0, %0#1 : none, none
 -- }
-
+namespace CIRCTStream
 namespace DC
 
 abbrev ValueStream := Stream
@@ -47,5 +47,6 @@ def pack' (x : Option Bool) (stream : TokenStream) : ValueStream α := sorry
 def pack (x : ValueStream α) (stream : TokenStream) : ValueStream α := x
 
 
-
 end DC
+
+end CIRCTStream

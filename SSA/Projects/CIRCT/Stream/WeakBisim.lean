@@ -1,9 +1,9 @@
-import SSA.Projects.CIRCT.DC.Stream
+import SSA.Projects.CIRCT.Stream.Stream
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Data.Stream.Init
 
 /-!
-#  Equivalence for `DC.Stream`
+#  Equivalence for `CIRCT.Stream`
 
 This file establishes a notion of equivalence that allows us to remove any finite sequence of
 `none`s from a stream.
@@ -11,7 +11,8 @@ This file establishes a notion of equivalence that allows us to remove any finit
 -/
 
 
-namespace DC.Stream
+namespace CIRCTStream
+namespace Stream
 
 @[simp] theorem head_corec : head (corec b f) = (f b).fst         := rfl
 
@@ -23,7 +24,7 @@ namespace DC.Stream
   case zero       => rfl
   case succ i ih  => simp only [Stream'.iterate]; congr
 
-def IsBisim (R : Stream → Stream → Prop) : Prop :=
+def IsBisim (R : Stream α → Stream α → Prop) : Prop :=
   ∀ a b, R a b → ∃ n m,
     R (a.drop (n+1)) (b.drop (m+1))
     ∧ a.get n = b.get m
@@ -32,7 +33,7 @@ def IsBisim (R : Stream → Stream → Prop) : Prop :=
 
 /-- Two streams are considered equivalent if they contain the same `some _` messages,
 in the same order. That is, any finite sequence of `none`s may be ignored. -/
-def Bisim (x y : Stream) : Prop :=
+def Bisim (x y : Stream α) : Prop :=
   ∃ R, R x y ∧ IsBisim R
 
 /-! Set up scoped notation `x ~ y` for equivalence -/
@@ -56,7 +57,7 @@ theorem fold
       ∧ (∀ i < n, x.get i = none)
       ∧ (∀ j < m, y.get j = none)) :
     x ~ y := by
-  let R (a b : Stream) := (a ~ b) ∨ (a = x ∧ b = y)
+  let R (a b : Stream α) := (a ~ b) ∨ (a = x ∧ b = y)
   refine ⟨R, Or.inr ⟨rfl, rfl⟩, ?_⟩
   rintro a b (sim | ⟨rfl, rfl⟩)
   · have ⟨n, m, h_drop, h⟩ := unfold sim
@@ -84,7 +85,7 @@ theorem Bisim.rfl {a} : a ~ a := by
 
 theorem Bisim.trans {a b} : a ~ b → b ~ c → a ~ c := by sorry
 
-theorem bisim_tail_of_head_eq_none {a : Stream} (h : a.head = none) :
+theorem bisim_tail_of_head_eq_none {a : Stream α} (h : a.head = none) :
     a ~ a.tail := by
   apply Bisim.fold
   refine  ⟨1, 0, rfl, rfl, ?_, ?_⟩
@@ -372,7 +373,7 @@ theorem removeNone_eq_of_equiv {x y : Stream} (h_sim : x ~ y) :
 def StreamWithoutNones' : Type :=
   Quot Bisim
 
-instance StreamSetoid : Setoid Stream where
+instance StreamSetoid : Setoid Stream α where
   r := Bisim
   iseqv := Equivalence.mk @Bisim.rfl Bisim.symm Bisim.trans
 
@@ -381,13 +382,13 @@ def StreamWithoutNones : Type :=
 
 #print axioms StreamWithoutNones
 
-def remNone (lst : Stream) : StreamWithoutNones := Quotient.mk _ lst
+def remNone (lst : Stream α) : StreamWithoutNones := Quotient.mk _ lst
 
 def StreamWithoutNones.hasStream (x : StreamWithoutNones) : Set Stream :=
   { y | x = Quotient.mk _ y }
 
--- A determinate component 
-def nondeterminify (f : Stream → Stream) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
+-- A determinate component
+def nondeterminify (f : Stream α → Stream α) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
   -- Quotient.lift (fun (a : Stream) =>
   --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
   -- ) (by sorry) x
@@ -399,7 +400,6 @@ def nondeterminify2 (f : Stream → Stream → Stream) (x : StreamWithoutNones �
   -- Quotient.lift (fun (a : Stream) =>
   --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
   -- ) (by sorry) x
-  { x1 | ∃ y1 y2, (y1 ∈ StreamWithoutNones.hasStream x.fst) 
-                  ∧ (y2 ∈ StreamWithoutNones.hasStream x.snd) 
+  { x1 | ∃ y1 y2, (y1 ∈ StreamWithoutNones.hasStream x.fst)
+                  ∧ (y2 ∈ StreamWithoutNones.hasStream x.snd)
                   ∧ Quotient.mk _ (f y1 y2) = x1 }
-
