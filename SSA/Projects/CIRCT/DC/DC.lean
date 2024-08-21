@@ -1,6 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
-import SSA.Projects.CIRCT.DC.Stream
+import SSA.Projects.CIRCT.Stream.Stream
 
 
 -- // CHECK:   hw.module @test_fork(in %[[VAL_0:.*]] : !dc.token, out out0 : !dc.token, out out1 : !dc.token) {
@@ -15,16 +15,16 @@ import SSA.Projects.CIRCT.DC.Stream
 namespace DC
 
 abbrev ValueStream := Stream
-abbrev TokenStream := Stream
+abbrev TokenStream := Stream Unit
 
 def DCToken := Stream' Unit
-def DCValue := Stream' Val
+def DCValue := Stream' Type
 
 
 
 -- take a stream x in input, dequeue x0
-def fork (x : Stream) : Stream × Stream :=
-  Stream.corec₂ (β := Stream) x
+def fork (x : Stream α) : Stream α × Stream α :=
+  Stream.corec₂ (β := Stream α) x
     fun x => Id.run <| do
       let x0 := x 0
       let x' := x.tail
@@ -38,13 +38,13 @@ def fork (x : Stream) : Stream × Stream :=
 -- can we still keep that?
 -- we'd like to have better representation of the separation between control and data
 -- this is most likely wrong but we need to think more
-def unpack (x : ValueStream) : Val × TokenStream := sorry
+def unpack (x : ValueStream α) : Val × TokenStream := sorry
 
 
 -- takes a stream and a value, packs the value into the token
-def pack' (x : Option Bool) (stream : TokenStream) : ValueStream := sorry
+def pack' (x : Option Bool) (stream : TokenStream) : ValueStream α := sorry
 
-def pack (x : ValueStream) (stream : TokenStream) : ValueStream := x
+def pack (x : ValueStream α) (stream : TokenStream) : ValueStream α := x
 
 
 

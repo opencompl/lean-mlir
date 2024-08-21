@@ -1,6 +1,6 @@
 import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
-import SSA.Projects.CIRCT.Handshake.Stream
+import SSA.Projects.CIRCT.Stream.Stream
 
 open MLIR AST Ctxt
 
@@ -30,13 +30,15 @@ not consuming any tokens, until a message becomes available on the other stream 
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
 
 -/
-def branch (x c  : Stream) : Stream × Stream :=
-  corec₂ (β := Stream × Stream) (x, c)
+def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
+  corec₂ (β := Stream α × Stream Bool) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
+
       let c₀ := c 0
       let c' := c.tail
       let x₀ := x 0
       let x' := x.tail
+
       match c₀, x₀ with
         | none, _ => (none, none, (x, c'))
         | _, none => (none, none, (x', c))
@@ -166,6 +168,12 @@ end Operations
 Define a `Handshake` dialect, and connect its semantics to the function defined above
 -/
 section Dialect
+
+inductive Ty2
+  | int : Ty2
+  | bool : Ty2
+deriving Inhabited, DecidableEq, Repr
+
 inductive Op
 | merge
 | branch
@@ -178,10 +186,15 @@ inductive Ty
 | Stream2 : Ty
 deriving Inhabited, DecidableEq, Repr
 
+instance : TyDenote Ty2 where
+toType := fun
+|  Ty2.int => Int
+|  Ty2.bool => Bool
+
 instance : TyDenote Ty where
 toType := fun
-| .Stream => Stream
-| .Stream2 => Stream × Stream
+| Ty.stream ty2 => Stream (toType ty2)
+| Ty.stream2 ty2 => Stream (toType ty2) × Stream (toType ty2)
 
 
 set_option linter.dupNamespace false in
