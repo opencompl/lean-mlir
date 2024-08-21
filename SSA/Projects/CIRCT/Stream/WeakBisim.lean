@@ -14,7 +14,7 @@ This file establishes a notion of equivalence that allows us to remove any finit
 namespace CIRCTStream
 namespace Stream
 
-@[simp] theorem head_corec : head (corec b f) = (f b).fst         := rfl
+@[simp] theorem head_corec : head (corec b f) = (f b).fst := rfl
 
 @[simp] theorem tail_corec : tail (corec b f) = corec (f b).snd f := by
   funext i
@@ -51,13 +51,14 @@ theorem unfold :
   exact ⟨n, m, ⟨R, hdrop, h_sim⟩, h⟩
 
 theorem fold
+-- will require double check on this
     (h : ∃ n m,
-      x.drop (n+1) ~ y.drop (m+1)
+      (Stream'.drop (n+1) (x: Stream' _)) ~ (Stream'.drop (m+1) (y: Stream' _))
       ∧ x.get n = y.get m
       ∧ (∀ i < n, x.get i = none)
       ∧ (∀ j < m, y.get j = none)) :
     x ~ y := by
-  let R (a b : Stream α) := (a ~ b) ∨ (a = x ∧ b = y)
+  let R (a b : Stream _) := (a ~ b) ∨ (a = x ∧ b = y)
   refine ⟨R, Or.inr ⟨rfl, rfl⟩, ?_⟩
   rintro a b (sim | ⟨rfl, rfl⟩)
   · have ⟨n, m, h_drop, h⟩ := unfold sim
@@ -68,15 +69,16 @@ theorem fold
 end Bisim
 open Bisim
 
-theorem isBisim_eq : IsBisim (· = ·) := by
+-- the equality is not defined on stream only but on stream α
+theorem isBisim_eq : IsBisim (λ (a b: Stream α) => a = b) := by
   rintro x _ rfl
   refine ⟨0, 0, rfl, rfl, ?_, ?_,⟩
   <;> (intros; contradiction)
 
-theorem Bisim.rfl {a} : a ~ a := by
+theorem Bisim.rfl {a : Stream α} : a ~ a := by
   exact ⟨(· = ·), by rfl, isBisim_eq⟩
 
-@[symm] theorem Bisim.symm {a b} : a ~ b → b ~ a := by
+@[symm] theorem Bisim.symm {a b : Stream α} : a ~ b → b ~ a := by
   rintro ⟨R, h_R, h_R_isBisim⟩
   refine ⟨fun x y => R y x, h_R, ?_⟩
   intro x y h_Rxy
@@ -96,7 +98,7 @@ theorem bisim_tail_of_head_eq_none {a : Stream α} (h : a.head = none) :
 
 
 
-theorem tail_bisim_of_bisim_of_head_eq {a b} (h_sim : a ~ b) (head_eq : a.head = b.head) :
+theorem tail_bisim_of_bisim_of_head_eq {a b : Stream α} (h_sim : a ~ b) (head_eq : a.head = b.head) :
     a.tail ~ b.tail := by
   apply Bisim.fold
   rcases h_sim.unfold       with ⟨n,  m,  h_sim_drop,  h_eq,  h_n,  h_m⟩
@@ -144,7 +146,7 @@ theorem tail_bisim_of_bisim_of_head_eq {a b} (h_sim : a ~ b) (head_eq : a.head =
             congr 1
             omega
 
-theorem tail_bisim_iff_bisim_of_head {a b} (head_eq : a.head = b.head) :
+theorem tail_bisim_iff_bisim_of_head {a b : Stream α} (head_eq : a.head = b.head) :
     a.tail ~ b.tail ↔ a ~ b := by
   constructor
   · intro sim_tail
@@ -166,12 +168,15 @@ theorem tail_bisim_iff_bisim_of_head {a b} (head_eq : a.head = b.head) :
   · exact (tail_bisim_of_bisim_of_head_eq · head_eq)
 
 /-- `stuck` is the stream with only `none`s -/
-def stuck : Stream := Stream'.const none
+-- had to give stuck a type too otherwise all the other defs would break, is this correct?
+-- stuck still contains `none` elements only
+def stuck (α : Type) : Stream α := Stream'.const none
 
-@[simp] theorem head_stuck : stuck.head = none  := rfl
-@[simp] theorem tail_stuck : stuck.tail = stuck := rfl
+-- objective of the theorem: prove that stuck.head = none by theorem rfl
+@[simp] theorem head_stuck (α : Type) : (stuck α).head = none := rfl
+@[simp] theorem tail_stuck (α : Type) : (stuck α).tail = stuck α := rfl
 
-theorem head_isNone_of_bisim_stuck : x ~ stuck → x.head = none := by
+theorem head_isNone_of_bisim_stuck {α : Type} (x : Stream α) : x ~ stuck α → x.head = none := by
   rintro ⟨R, h_Rx, h_sim⟩
   rcases h_sim _ _ h_Rx with ⟨n, m, h_saturate_drop, (h_eq : _ = none), h_n, -⟩
   simp only [stuck, Stream'.drop_const] at h_saturate_drop
@@ -180,21 +185,20 @@ theorem head_isNone_of_bisim_stuck : x ~ stuck → x.head = none := by
   case succ n => exact h_n 0 (Nat.zero_lt_succ n)
 
 /-- The only stream bisimilar to `stuck` is `stuck` itself -/
-@[simp] theorem eq_stuck_iff_equiv {x} :
-    x ~ stuck ↔ x = stuck := by
+@[simp] theorem eq_stuck_iff_equiv {x}  :
+    x ~ stuck α ↔ x = stuck α:= by
   constructor
   · intro h_sim; funext ind
     induction ind generalizing x with
-    | zero      => exact head_isNone_of_bisim_stuck h_sim
+    | zero      => exact head_isNone_of_bisim_stuck _ h_sim
     | succ _ ih =>
-      have : x.head = stuck.head := head_isNone_of_bisim_stuck h_sim
-      have : x.tail ~ stuck.tail := (tail_bisim_iff_bisim_of_head this |>.mpr h_sim)
+      have : x.head = (stuck α).head := head_isNone_of_bisim_stuck _ h_sim
+      have : x.tail ~ (stuck α).tail := (tail_bisim_iff_bisim_of_head this |>.mpr h_sim)
       apply ih this
   · rintro rfl; exact Bisim.rfl
 
-
-
-noncomputable def nonesUntilSome (not_stuck : x ≠ stuck) : Nat :=
+-- added x here
+noncomputable def nonesUntilSome (x : Stream α) (not_stuck : x ≠ stuck α) : Nat :=
   prop.choose
 where
   prop : ∃ i, (x.drop i).head.isSome ∧ ∀ j < i, x.get j = none := by
@@ -214,13 +218,14 @@ where
         specialize ih j hj1
         contradiction
 
-noncomputable def dropLeadingNones (not_stuck : x ≠ stuck) : Stream :=
-  x.drop (nonesUntilSome not_stuck)
+-- added x here
+noncomputable def dropLeadingNones (x : Stream α) (not_stuck : x ≠ stuck α) : Stream α:=
+  x.drop (nonesUntilSome x not_stuck)
 
-theorem nonesUntilSome_spec (not_stuck : x ≠ stuck) :
-    (dropLeadingNones not_stuck).head.isSome
-    ∧ ∀ j < nonesUntilSome not_stuck, x.get j = none :=
-  (nonesUntilSome.prop (not_stuck)).choose_spec
+theorem nonesUntilSome_spec (x : Stream α) (not_stuck : x ≠ stuck α) :
+    (dropLeadingNones x not_stuck).head.isSome
+    ∧ ∀ j < nonesUntilSome x not_stuck, x.get j = none :=
+  (nonesUntilSome.prop x not_stuck).choose_spec
 
 open Classical in
 /-- `removeNone` will (noncomputably) remove all `none`s *between messages* in a stream.
@@ -231,34 +236,34 @@ and `x.removeNone` will also have such a suffix (but no other `none`s).
 
 This requires examing a potentially unbounded amount of messages into the future
 (to determine if there will ever be another `some _`), thus cannot be computable. -/
-noncomputable def removeNone (x : Stream) : Stream :=
+noncomputable def removeNone (x : Stream α) : Stream α :=
   Stream.corec x fun x =>
-    if h : x ≠ stuck then
+    if h : x ≠ stuck α then
       let x := x.dropLeadingNones h
       (x.head, x.tail)
     else
       (none, x)
 
 open Classical in
-@[simp] theorem head_removeNone (x : Stream) :
+@[simp] theorem head_removeNone (x : Stream α) :
     x.removeNone.head =
-      if h : x ≠ stuck then
+      if h : x ≠ stuck α then
         (x.dropLeadingNones h).head
       else
         none := by
-  by_cases h : x = stuck <;> simp [h, removeNone]
+  by_cases h : x = stuck α <;> simp [h, removeNone]
 
 open Classical in
-@[simp] theorem removeNone_stuck : stuck.removeNone = stuck := by
+@[simp] theorem removeNone_stuck : (stuck α).removeNone = stuck α := by
   simp only [removeNone, corec, Stream'.corec, ne_eq]
   have :
       Stream'.iterate (fun x => Prod.snd <|
-          if h : ¬x = stuck then
-            ((dropLeadingNones h).head, (dropLeadingNones h).tail)
+          if h : ¬x = stuck α then
+            ((dropLeadingNones x h).head, (dropLeadingNones x h).tail)
           else
             (none, x)
-        ) stuck
-      = Stream'.const stuck := by
+        ) (stuck α)
+      = Stream'.const (stuck α) := by
     funext i
     simp only [dite_not, Stream'.const]
     induction i
@@ -269,31 +274,31 @@ open Classical in
   rfl
 
 open Classical in
-@[simp] theorem tail_removeNone (x : Stream) :
+@[simp] theorem tail_removeNone (x : Stream α) :
     x.removeNone.tail =
-      if h : x ≠ stuck then
+      if h : x ≠ stuck α then
         (x.dropLeadingNones h).tail.removeNone
       else
-        stuck := by
-  by_cases h : x = stuck
+        stuck α := by
+  by_cases h : x = stuck α
   · simp [h]
   · simp [h, removeNone]
 
-theorem removeNone_equiv (x : Stream) :
+theorem removeNone_equiv (x : Stream α) :
     x.removeNone ~ x := by
   use (· = ·.removeNone), rfl
   rintro _ x rfl
   · use 0
     simp only [Nat.zero_add, Nat.not_lt_zero, false_implies, implies_true, true_and]
-    by_cases x_eq_stuck : x = stuck
+    by_cases x_eq_stuck : x = stuck α
     case pos =>
       subst x_eq_stuck
       refine ⟨0, ?_, ?_, by intros; contradiction⟩
-      · show tail _ = removeNone stuck.tail; simp
+      · show tail _ = removeNone (stuck α).tail; simp
       · show head _ = none; simp
     case neg =>
-      have ⟨_, h2⟩ := nonesUntilSome_spec x_eq_stuck
-      refine ⟨nonesUntilSome x_eq_stuck, ?_, ?_, h2⟩
+      have ⟨_, h2⟩ := nonesUntilSome_spec x x_eq_stuck
+      refine ⟨nonesUntilSome x x_eq_stuck, ?_, ?_, h2⟩
       · show x.removeNone.tail = removeNone (Stream'.drop _ x)
         have (w) : x.drop (w + 1) = tail (x.drop w) := by simp [tail]
         rw [this]
@@ -306,8 +311,11 @@ theorem removeNone_equiv (x : Stream) :
 
 #print axioms removeNone_equiv
 
+-- doubt
 theorem corec_eq_corec_of
-    (R : β₁ → β₂ → Prop)
+    (R : β₁ → β₂→ Prop)
+    (f₁ : β₁ → (Option α × β₁) )
+    (f₂ : β₂ → (Option α × β₂))
     (h : ∀ b₁ b₂, R b₁ b₂ →
       (f₁ b₁).fst = (f₂ b₂).fst
       ∧ R (f₁ b₁).snd (f₂ b₂).snd)
@@ -324,15 +332,16 @@ theorem corec_eq_corec_of
   case zero       => exact hR
   case succ i ih  => exact (h _ _ (ih hR)).right
 
-theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck)
-    (y_neq_stuck : y ≠ stuck := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
+
+theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
+    (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
     head (x.dropLeadingNones x_neq_stuck) = head (y.dropLeadingNones y_neq_stuck) := by
-  have ⟨x_spec₁, x_spec₂⟩ := nonesUntilSome_spec x_neq_stuck
-  have ⟨y_spec₁, y_spec₂⟩ := nonesUntilSome_spec y_neq_stuck
+  have ⟨x_spec₁, x_spec₂⟩ := nonesUntilSome_spec x x_neq_stuck
+  have ⟨y_spec₁, y_spec₂⟩ := nonesUntilSome_spec y y_neq_stuck
   have ⟨n, m, h_drop, h_eq, hn, hm⟩ := h.unfold
   simp only [head, dropLeadingNones, Stream'.get_drop, Nat.zero_add] at *
-  generalize nonesUntilSome x_neq_stuck = xn at *
-  generalize nonesUntilSome y_neq_stuck = yn at *
+  generalize nonesUntilSome x x_neq_stuck = xn at *
+  generalize nonesUntilSome y y_neq_stuck = yn at *
   clear x_neq_stuck y_neq_stuck
 
   induction xn using Nat.strongInductionOn generalizing x y yn
@@ -351,29 +360,30 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
     · sorry
 
 
-theorem tail_dropLeadingNones_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck)
-    (y_neq_stuck : y ≠ stuck := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
+theorem tail_dropLeadingNones_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
+    (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
     tail (x.dropLeadingNones x_neq_stuck) ~ tail (y.dropLeadingNones y_neq_stuck) := by
   sorry
 
-
+-- doubt
+-- also: why is stream α needed here but not in the function above?
 open Classical in
-theorem removeNone_eq_of_equiv {x y : Stream} (h_sim : x ~ y) :
+theorem removeNone_eq_of_equiv  {x y : Stream α} (h_sim : x ~ y) :
     x.removeNone = y.removeNone := by
-  apply corec_eq_corec_of (· ~ ·) ?_ h_sim
+  apply corec_eq_corec_of (· ~ ·) _ _ _ h_sim
   intro a b h_sim
   simp only [ne_eq, dite_not]
-  by_cases h : a = stuck
+  by_cases h : a = stuck α
   · subst h
-    obtain rfl : b = stuck := eq_stuck_iff_equiv.mp h_sim.symm
+    obtain rfl : b = stuck α := eq_stuck_iff_equiv.mp h_sim.symm
     simp only [↓reduceDite, eq_stuck_iff_equiv, and_self]
-  · have : b ≠ stuck := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
+  · have : b ≠ stuck α := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
     simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
 
 def StreamWithoutNones' : Type :=
   Quot Bisim
 
-instance StreamSetoid : Setoid Stream α where
+instance StreamSetoid : Setoid (Stream α) where
   r := Bisim
   iseqv := Equivalence.mk @Bisim.rfl Bisim.symm Bisim.trans
 
@@ -396,7 +406,7 @@ def nondeterminify (f : Stream α → Stream α) (x : StreamWithoutNones) : Set 
 
 #print nondeterminify
 
-def nondeterminify2 (f : Stream → Stream → Stream) (x : StreamWithoutNones × StreamWithoutNones) : Set (StreamWithoutNones) :=
+def nondeterminify2 (f : Stream α → Stream α → Stream α) (x : StreamWithoutNones × StreamWithoutNones) : Set (StreamWithoutNones) :=
   -- Quotient.lift (fun (a : Stream) =>
   --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
   -- ) (by sorry) x
