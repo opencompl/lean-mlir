@@ -21,7 +21,7 @@ namespace Stream
   simp only [tail, Stream'.tail, Stream'.get, corec, Stream'.corec, Stream'.map, Stream'.iterate]
   congr
   induction i
-  case zero       => rfl
+  case zero => rfl
   case succ i ih  => simp only [Stream'.iterate]; congr
 
 def IsBisim (R : Stream α → Stream α → Prop) : Prop :=
@@ -365,40 +365,42 @@ theorem tail_dropLeadingNones_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck
     tail (x.dropLeadingNones x_neq_stuck) ~ tail (y.dropLeadingNones y_neq_stuck) := by
   sorry
 
--- doubt
+-- very very sus
 -- also: why is stream α needed here but not in the function above?
 open Classical in
-theorem removeNone_eq_of_equiv  {x y : Stream α} (h_sim : x ~ y) :
+theorem removeNone_eq_of_equiv {α : Type} {x y : Stream α} (h_sim : x ~ y) :
     x.removeNone = y.removeNone := by
   apply corec_eq_corec_of (· ~ ·) _ _ _ h_sim
   intro a b h_sim
   simp only [ne_eq, dite_not]
   by_cases h : a = stuck α
-  · subst h
-    obtain rfl : b = stuck α := eq_stuck_iff_equiv.mp h_sim.symm
-    simp only [↓reduceDite, eq_stuck_iff_equiv, and_self]
-  · have : b ≠ stuck α := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
-    simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
+  · sorry
+  · sorry
+  -- · have : a = stuck α := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
+    -- obtain rfl : b = stuck α := eq_stuck_iff_equiv.mp h_sim.symm
+    -- simp only [eq_stuck_iff_equiv, and_self]
+  -- . have : b ≠ stuck α := by rintro rfl ; exact h <| eq_stuck_iff_equiv.mp h_sim
+  --   simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
 
-def StreamWithoutNones' : Type :=
-  Quot Bisim
+--doubt
+def StreamWithoutNones' (α : Type) : Type :=
+  Quot (Bisim : Stream α → Stream α → Prop)
 
-instance StreamSetoid : Setoid (Stream α) where
-  r := Bisim
-  iseqv := Equivalence.mk @Bisim.rfl Bisim.symm Bisim.trans
+instance StreamSetoid (α : Type) : Setoid (Stream α) where
+  iseqv := Equivalence.mk (@Bisim.rfl α) Bisim.symm Bisim.trans
 
-def StreamWithoutNones : Type :=
-  Quotient StreamSetoid
+def StreamWithoutNones (α : Type) : Type :=
+  Quotient (StreamSetoid α)
 
 #print axioms StreamWithoutNones
 
-def remNone (lst : Stream α) : StreamWithoutNones := Quotient.mk _ lst
+def remNone {α : Type} (lst : Stream α) : (StreamWithoutNones α) := Quotient.mk _ lst
 
-def StreamWithoutNones.hasStream (x : StreamWithoutNones) : Set Stream :=
+def StreamWithoutNones.hasStream (x : StreamWithoutNones α) : Set (Stream α):=
   { y | x = Quotient.mk _ y }
 
 -- A determinate component
-def nondeterminify (f : Stream α → Stream α) (x : StreamWithoutNones) : Set (StreamWithoutNones) :=
+def nondeterminify (f : Stream α → Stream α) (x : StreamWithoutNones α) : Set (StreamWithoutNones α) :=
   -- Quotient.lift (fun (a : Stream) =>
   --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
   -- ) (by sorry) x
@@ -406,7 +408,7 @@ def nondeterminify (f : Stream α → Stream α) (x : StreamWithoutNones) : Set 
 
 #print nondeterminify
 
-def nondeterminify2 (f : Stream α → Stream α → Stream α) (x : StreamWithoutNones × StreamWithoutNones) : Set (StreamWithoutNones) :=
+def nondeterminify2 (f : Stream α → Stream α → Stream α) (x : StreamWithoutNones α × StreamWithoutNones α) : Set (StreamWithoutNones α) :=
   -- Quotient.lift (fun (a : Stream) =>
   --   ({ b | (f a) ∈ StreamWithoutNones.hasStream b } : Set StreamWithoutNones)
   -- ) (by sorry) x
