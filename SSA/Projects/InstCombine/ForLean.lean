@@ -23,6 +23,7 @@ theorem two_pow_sub_two_pow_pred (h : 0 < w) :
     2 ^ w - 2 ^ (w - 1) = 2 ^ (w - 1) := by
   simp [← two_pow_pred_add_two_pow_pred h]
 
+@[simp]
 theorem two_pow_pred_mod_two_pow (h : 0 < w):
     2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
   rw [Nat.mod_eq_of_lt]
@@ -120,7 +121,7 @@ def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
 
 @[simp]
 lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w n :=
+    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w (OfNat.ofNat n) := by
   rfl
 
 -- @[simp]
@@ -342,46 +343,35 @@ private theorem toNat_intMin (w : Nat) :
 private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
   simp [toInt_ofNat]
 
-private theorem ofInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
-    BitVec.toInt (-A) = -(BitVec.toInt A) := by
+private theorem toInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
+    BitVec.toInt (-A) = -BitVec.toInt A := by
   by_cases A_zero : A = 0
   · subst A_zero
     simp
   by_cases w_0 : w = 0
   · subst w_0
     simp [BitVec.eq_nil A]
-  unfold BitVec.toInt
+  simp only [BitVec.toInt]
   have A_gt_zero : 0 < BitVec.toNat A := by
-    simp only [ofNat_eq_ofNat, toNat_eq, toNat_ofNat, Nat.zero_mod] at A_zero
+    simp only [bv_toNat, Nat.zero_mod] at A_zero
     omega
   rw [BitVec.toNat_neg, @Nat.mod_eq_of_lt (2 ^ w - BitVec.toNat A) (2 ^ w) (by omega)]
   split_ifs <;>
   rename_i a b
   · omega
-  · rw [Nat.cast_sub]
-    ring_nf
-    simp [Nat.le_of_lt (isLt A)]
-  · rw [Nat.cast_sub]
-    ring_nf
-    simp [Nat.le_of_lt (isLt A)]
-  · have is_int_min : BitVec.toNat A * 2 = 2^(w) := by
-      ring_nf at a b
-      rw [Nat.mul_sub_right_distrib, not_lt, Nat.le_sub_iff_add_le, mul_two,
-          mul_two, add_le_add_iff_left, ←mul_two] at a
-      simp only [eq_of_ge_of_not_gt a (by simp [b])]
-      simp only [gt_iff_lt, Nat.ofNat_pos, mul_le_mul_right, le_of_lt (isLt A)]
-    have is_int_min' : BitVec.toNat A = 2^(w-1) := by
+  · omega
+  · omega
+  · have is_int_min : BitVec.toNat A = 2^(w-1) := by
       have h : 2 ^w  = (2 ^(w - 1)) * 2 := by
         rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
         omega
       omega
-    simp [ne_eq, toNat_eq, is_int_min', toNat_intMin, w_0, ↓reduceIte,
-      not_true_eq_false] at rs
+    simp [bv_toNat, is_int_min, toNat_intMin, w_0] at rs
 
 private theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B ≠ intMin w) :
     (-A >ₛ B) = (A <ₛ -B) := by
   unfold BitVec.slt
-  simp only [decide_eq_decide, ofInt_neg h, ofInt_neg h2]
+  simp only [decide_eq_decide, toInt_neg h, toInt_neg h2]
   omega
 
 theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w)
