@@ -531,6 +531,20 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
     by_cases b3 : b 3 = true <;> simp_all
   sorry
 
+theorem aaaa (b x : Bool) : (xor b (!b != x)) ↔ b = (b != x) := by
+  simp [xor]
+
+theorem bbbb (b x: Bool) : (b = (b != x)) ↔ ¬ x := by
+  by_cases b = true <;>
+  by_cases x = true <;>
+  simp_all
+
+theorem aaa (a b x : Bool) : (xor b a = ((!b) != x)) ↔ a = (b = (b != x)) := by
+  simp [xor]
+  by_cases a = true <;>
+  by_cases b = true <;>
+  by_cases x = true <;>
+  simp_all
 
 theorem hadd_one_one : @HAdd.hAdd ℕ ℕ ℕ instHAdd (i + 1) 1 = i + 2 := by rfl
 
@@ -553,18 +567,76 @@ theorem g_succ_left' {a b : BitStream} (i : Nat) :
     rw [negAux]
     simp [xor]
     simp [Bool.atLeastTwo]
-    -- can we eliminate the xor without unfolding it?
-    -- I feel we should be able to do this both in the goal and in the hypothesis
-    -- then maybe we can turn 'ih' into (a.g b i) = ...
-    -- and insert it into the goal
-    -- and then, can we resolve the goal?
+    rw [aaa] at ih
+    rw [bbbb] at ih
+    rw [aaa]
+    rw [bbbb]
+    simp
+    simp at ih
+    by_cases h : (b.negAux i).2 = (a.addAux (fun n => (b.negAux n).1) i).2 <;>
+    simp [h] at ih
+    unfold g at ih
+    split at ih
+    · rename_i hhh
+      subst  hhh
+      simp
+      rw [← h]
+      by_cases h : (b.negAux 0).2 = true <;>
+      simp [h]
+      by_cases hh : a 1 = true <;>  simp [hh]
+      by_cases hhh : b 1 = true <;>  simp [hhh]
 
+      · unfold g
+        simp
+        intros
+        rename_i aaa
+        simp [aaa] at ih
+        simp [ih]
+        rename_i aaaa
+        rw [h] at aaaa
+        unfold addAux at aaaa
+        simp [BitVec.adcb] at aaaa
+        rw [aaa] at aaaa
+        simp at aaaa
+      · rename_i aaa
+        simp [h] at aaa
+        unfold addAux at aaa
+        simp at aaa
+        simp [BitVec.adcb] at aaa
+        simp [aaa.left] at ih
+      · rename_i aaa
+        simp [h] at aaa
+        unfold addAux at aaa
+        simp at aaa
+        simp [BitVec.adcb] at aaa
+        simp [aaa.left] at ih
+      · rename_i aaa
+        simp [h] at aaa
+        unfold addAux at aaa
+        simp at aaa
+        simp [BitVec.adcb] at aaa
+        by_cases kk : b 1 = true <;> simp [kk]
+        by_cases kk : a 1 = true <;> simp [kk]
+        unfold g
+        simp
+        by_cases kk : a 0 = true <;> simp [kk]
+        simp [kk] at aaa
+        simp [kk] at ih
+        · unfold negAux at h
+          simp at h
+          simp [h]
+        · intros
+          unfold g
+          simp
+          by_cases kk : a 0 = true <;> simp [kk]
+          simp [kk] at ih
+          unfold negAux at h
+          simp at h
+          simp [h]
+    · rename_i asss
+      sorry
+    sorry
 
-    -- These also do not help
-    by_cases a (i + 1) = true <;> simp_all <;>
-    by_cases b (i + 1) = true <;> simp_all <;>
-    by_cases b (i + 2) = true <;> simp_all <;>
-    all_goals sorry
 
 theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
