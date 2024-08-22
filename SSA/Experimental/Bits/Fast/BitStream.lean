@@ -493,19 +493,83 @@ theorem BitVec.sub_add_neg : x - y = x + (- y) := by
 /--
 g is some unknown auxiliary function that will be useful in proving sub_add_neg
 -/
-def g (a b : BitStream) (i : Nat) : Bool := sorry
+def g (a b : BitStream) (i : Nat) : Bool :=
+  if i = 0 then
+    (!a 0 && b 0)
+  else
+    (!a i && b i) || ((!a i != b i) && g a b (i-1))
 
 theorem g_zero {a b : BitStream} :
     (!a 0 && b 0) = a.g b 0 := by
-  sorry
+  simp [g]
 
-theorem g_succ_left {a b : BitStream} (i : ℕ) :
+theorem g_succ_left {a b : BitStream} (i : Nat) :
     xor (b (i + 1)) (a.g b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
-  sorry
+  rw [g]
+  by_cases h: i = 0
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    by_cases h0 : (a 0) = true <;> simp [h0]
+  by_cases h: i = 1
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    rw [g]
+    simp [Bool.atLeastTwo]
+    subst i
+    by_cases a0 : a 0 = true <;> simp_all <;>
+    by_cases a1 : a 1 = true <;> simp_all <;>
+    by_cases b0 : b 0 = true <;> simp_all
+  by_cases h: i = 2
+  · subst i
+    rw [g]
+    rw [g]
+    simp [negAux, addAux, BitVec.adcb, xor, h]
+    simp [Bool.atLeastTwo]
+    by_cases a0 : a 0 = true <;> simp_all <;>
+    by_cases a1 : a 1 = true <;> simp_all <;>
+    by_cases b0 : b 0 = true <;> simp_all <;>
+    by_cases b1 : b 1 = true <;> (try simp_all) <;>
+    by_cases b2 : b 2 = true <;> simp_all <;>
+    by_cases b3 : b 3 = true <;> simp_all <;>
+    by_cases a2 : a 2 = true <;> simp_all
+  by_cases h: i = 3
+  · subst i
+    rw [g]
+    rw [g]
+    rw [g]
+    simp [negAux, addAux, BitVec.adcb, xor, h]
+    simp [Bool.atLeastTwo]
+    by_cases a0 : a 0 = true <;> simp_all <;>
+    by_cases a1 : a 1 = true <;> simp_all <;>
+    by_cases a2 : a 2 = true <;> simp_all <;>
+    by_cases a3 : a 3 = true <;> simp_all <;>
+    by_cases b0 : b 0 = true <;> simp_all <;>
+    by_cases b1 : b 1 = true <;> (try simp_all) <;>
+    by_cases b2 : b 2 = true <;> simp_all <;>
+    by_cases b3 : b 3 = true <;> simp_all <;>
+    by_cases b4 : b 4 = true <;> simp_all
+  by_cases h: i = 4
+  · subst i
+    simp [negAux, addAux, BitVec.adcb, xor, h]
+    simp [Bool.atLeastTwo]
+    sorry
 
 theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
-  sorry
+  by_cases h: i = 0
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    simp [g]
+  by_cases h: i = 1
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    subst i
+    simp [g]
+  by_cases h: i = 2
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    subst i
+    simp [g]
+  by_cases h: i = 2
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    subst i
+    simp [g]
+    sorry
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   have sub_add_lemma (i : Nat) :
@@ -515,7 +579,10 @@ theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
     induction' i with i ih
     · simp [subAux,addAux,negAux, BitVec.adcb]
       exact g_zero
-    · simp [subAux,addAux,negAux, BitVec.adcb]
+    · simp at ih
+      simp
+
+      simp [subAux,addAux,negAux, BitVec.adcb]
       rw [ih]
       simp
       constructor
@@ -524,7 +591,8 @@ theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   ext i
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub,Add.add, BitStream.add]
   unfold neg
-  simp [sub_add_lemma i]
+  simp at sub_add_lemma
+  rw [sub_add_lemma i]
 
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   calc
@@ -532,7 +600,6 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
   _ ≈ʷ ofBitVec x + - ofBitVec y := add_congr equal_up_to_refl ofBitVec_neg
   _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_add_neg]
-
 
 theorem equal_congr_congr  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
