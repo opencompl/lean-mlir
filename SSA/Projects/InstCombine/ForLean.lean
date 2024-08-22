@@ -596,24 +596,31 @@ theorem Bool.xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
   <;> cases b
   <;> simp
 
+@[simp]
 theorem Bool.xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
   cases a
   <;> simp
 
+@[simp]
 theorem Bool.not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
   <;> simp
 
+@[simp]
 theorem Bool.xor_neq_self {a c : Bool} :  xor a ((!a) != c) = !c := by
   cases a
   <;> simp
 
 @[simp]
-theorem Bool.not_eq_and {a b : Bool}: ((!b) == (a && b)) = (!a && b)  := by
+theorem Bool.not_eq_and {a b : Bool} : ((!b) == (a && b)) = (!a && b)  := by
   cases a
   <;> simp
 
 @[simp]
-theorem Bool.not_neq {a b : Bool}:  (!(bne a b)) = (a == b) := by
+theorem Bool.not_neq {a b : Bool} :  (!bne a b) = (a == b) := by
   cases a
   <;> simp
+
+theorem BitVec.sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
+  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
+  simp [BitVec.ofNat, Fin.ofNat', add_comm]

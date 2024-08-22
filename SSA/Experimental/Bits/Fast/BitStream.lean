@@ -412,7 +412,7 @@ theorem subCarries?_correct (i : Nat) :
     <;> cases' @neg_or_add a b i with h h
     <;> simp [h, subCarries?, ih, negAux, addAux, BitVec.adcb, neg, a1, b1]
 
-theorem sub_add_lemma (i : Nat) :
+theorem subAux_inductive_lemma (i : Nat) :
     a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
   induction' i with i ih
   · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
@@ -420,7 +420,7 @@ theorem sub_add_lemma (i : Nat) :
 
 theorem sub_eq_add_neg : a - b = a + (-b) := by
   ext i
-  simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, sub_add_lemma i]
+  simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, subAux_inductive_lemma i]
 
 @[simp]
 theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
@@ -460,10 +460,6 @@ instance congr_equiv : Equivalence (EqualUpTo w) where
   refl := fun _ => equal_up_to_refl
   symm := equal_up_to_symm
   trans := equal_up_to_trans
-
-theorem BitVec.sub_eq_add_neg : x - y = x + (- y) := by
-  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
-  simp [BitVec.ofNat, Fin.ofNat', add_comm]
 
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
