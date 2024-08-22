@@ -138,7 +138,6 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
 
-
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
 def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
@@ -510,10 +509,10 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
 
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   calc
-  _ ≈ʷ ofBitVec (x + - y) := by rw [BitVec.sub_add_neg]
+  _ ≈ʷ ofBitVec (x + -y) := by rw [BitVec.sub_add_neg]
   _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
-  _ ≈ʷ ofBitVec x + -ofBitVec y := add_congr equal_up_to_refl ofBitVec_neg
-  _ ≈ʷ ofBitVec x -ofBitVec y := by rw [sub_add_neg]
+  _ ≈ʷ ofBitVec x + -(ofBitVec y) := add_congr equal_up_to_refl ofBitVec_neg
+  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_add_neg]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
