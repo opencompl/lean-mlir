@@ -590,37 +590,42 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> rfl
 end BitVec
 
-theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
+namespace Bool
+
+theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
   cases' dp with pt pt
   <;> simp [pt]
 
-theorem Bool.xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+@[simp]
+theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
   cases a
   <;> cases b
   <;> simp
 
 @[simp]
-theorem Bool.xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
+theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
+  cases a
+  <;> simp
+
+theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+  cases a
+  <;> cases b
+  <;> simp
+
+@[simp]
+theorem xor_neq_self {a b : Bool} : xor a ((!a) != b) = !b := by
   cases a
   <;> simp
 
 @[simp]
-theorem Bool.not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
+theorem not_eq_and {a b : Bool} : ((!b) == (a && b)) = (!a && b)  := by
   cases a
   <;> simp
 
 @[simp]
-theorem Bool.xor_neq_self {a b : Bool} : xor a ((!a) != b) = !b := by
+theorem not_neq {a b : Bool} : (!bne a b) = (a == b) := by
   cases a
   <;> simp
 
-@[simp]
-theorem Bool.not_eq_and {a b : Bool} : ((!b) == (a && b)) = (!a && b)  := by
-  cases a
-  <;> simp
-
-@[simp]
-theorem Bool.not_neq {a b : Bool} : (!bne a b) = (a == b) := by
-  cases a
-  <;> simp
+end Bool
