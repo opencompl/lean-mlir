@@ -411,16 +411,16 @@ theorem carry_succ_left {a b : BitStream} (i : ℕ) :
     xor (b (i + 1)) (a.subCarries? b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
   simp [Bool.xor_shift, subCarries?_correct i]
 
+theorem sub_add_lemma (i : Nat) :
+    a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩  := by
+  induction' i with i ih
+  · simp [subAux,addAux,negAux, BitVec.adcb, subCarries?, neg]
+  · simp [subAux,addAux,negAux, BitVec.adcb, ih, carry_succ_left i, subCarries?, neg]
+    rfl
+
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
-  have sub_add_lemma (i : Nat) :
-      a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩  := by
-    induction' i with i ih
-    · simp [subAux,addAux,negAux, BitVec.adcb, subCarries?, neg]
-    · simp [subAux,addAux,negAux, BitVec.adcb, ih, carry_succ_left i, subCarries?, neg]
-      unfold neg
-      rfl
   ext i
-  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, sub_add_lemma i]
+  simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, sub_add_lemma i]
 
 @[simp]
 theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
