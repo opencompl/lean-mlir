@@ -531,32 +531,23 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
     by_cases b3 : b 3 = true <;> simp_all
   sorry
 
-theorem g_succ_right {a b : BitStream} (i : ℕ)  :
+theorem hadd_one_one : @HAdd.hAdd ℕ ℕ ℕ instHAdd (i + 1) 1 = i + 2 := by rfl
+
+theorem g_succ_right' {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
-  by_cases h: i = 0
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
+  induction i
+  case zero =>
+    simp [negAux, addAux, BitVec.adcb, xor]
     simp [g]
-  by_cases h: i = 1
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
-    subst i
-    simp [g]
-  by_cases h: i = 2
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
-    subst i
-    simp [g]
-  by_cases h: i = 3
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
-    subst i
-    simp [g]
-  by_cases h: i = 4
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
-    subst i
-    simp [g]
-  by_cases h: i = 5
-  · simp [negAux, addAux, BitVec.adcb, xor, h]
-    subst i
-    simp [g]
-  sorry
+  case succ i ih =>
+    simp [negAux, addAux, BitVec.adcb, xor]
+    simp [hadd_one_one]
+    by_cases a (i + 2) = true <;> simp_all [xor] <;>
+    by_cases b (i + 2) = true <;> simp_all [xor] <;>
+    by_cases a (i + 1) = true <;> simp_all [xor] <;>
+    by_cases b (i + 1) = true <;> simp_all [xor] <;>
+    unfold g <;>
+    simp_all
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   have sub_add_lemma (i : Nat) :
