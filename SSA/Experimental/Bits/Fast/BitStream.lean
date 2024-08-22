@@ -464,9 +464,9 @@ instance congr_equiv : Equivalence (EqualUpTo w) where
   symm := equal_up_to_symm
   trans := equal_up_to_trans
 
-theorem BitVec.sub_add_neg : x - y = x + (- y) := by
-  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub,Add.add, BitVec.add]
-  simp [← BitVec.ofNat_add_ofNat, add_comm, BitVec.ofNat, -BitVec.ofFin_ofNat, Fin.ofNat']
+theorem BitVec.sub_eq_add_neg : x - y = x + (- y) := by
+  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
+  simp [BitVec.ofNat, Fin.ofNat', add_comm]
 
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
@@ -514,7 +514,7 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
 
 theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   calc
-  _ ≈ʷ ofBitVec (x + -y) := by rw [BitVec.sub_add_neg]
+  _ ≈ʷ ofBitVec (x + -y) := by rw [BitVec.sub_eq_add_neg]
   _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
   _ ≈ʷ ofBitVec x + -(ofBitVec y) := add_congr equal_up_to_refl ofBitVec_neg
   _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_eq_add_neg]
