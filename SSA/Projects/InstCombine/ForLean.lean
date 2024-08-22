@@ -596,7 +596,6 @@ theorem Bool.xor_shift {a b c : Bool} : xor a b = c ↔ b = xor a c := by
   <;> cases b
   <;> simp
 
-
 theorem Bool.xor_xor_eq_not {a b : Bool} : xor (!xor a b) b = !a := by
   cases a
   <;> simp
