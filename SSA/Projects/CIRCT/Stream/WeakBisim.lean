@@ -1,7 +1,7 @@
 import SSA.Projects.CIRCT.Stream.Stream
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Data.Stream.Init
-
+import Mathlib
 /-!
 #  Equivalence for `CIRCT.Stream`
 
@@ -197,7 +197,6 @@ theorem head_isNone_of_bisim_stuck {α : Type} (x : Stream α) : x ~ stuck α �
       apply ih this
   · rintro rfl; exact Bisim.rfl
 
--- added x here
 noncomputable def nonesUntilSome (x : Stream α) (not_stuck : x ≠ stuck α) : Nat :=
   prop.choose
 where
@@ -218,7 +217,6 @@ where
         specialize ih j hj1
         contradiction
 
--- added x here
 noncomputable def dropLeadingNones (x : Stream α) (not_stuck : x ≠ stuck α) : Stream α:=
   x.drop (nonesUntilSome x not_stuck)
 
@@ -365,8 +363,7 @@ theorem tail_dropLeadingNones_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck
     tail (x.dropLeadingNones x_neq_stuck) ~ tail (y.dropLeadingNones y_neq_stuck) := by
   sorry
 
--- very very sus
--- also: why is stream α needed here but not in the function above?
+-- doubt
 open Classical in
 theorem removeNone_eq_of_equiv {α : Type} {x y : Stream α} (h_sim : x ~ y) :
     x.removeNone = y.removeNone := by
@@ -374,15 +371,12 @@ theorem removeNone_eq_of_equiv {α : Type} {x y : Stream α} (h_sim : x ~ y) :
   intro a b h_sim
   simp only [ne_eq, dite_not]
   by_cases h : a = stuck α
-  · sorry
-  · sorry
-  -- · have : a = stuck α := by rintro rfl; exact h <| eq_stuck_iff_equiv.mp h_sim
-    -- obtain rfl : b = stuck α := eq_stuck_iff_equiv.mp h_sim.symm
-    -- simp only [eq_stuck_iff_equiv, and_self]
-  -- . have : b ≠ stuck α := by rintro rfl ; exact h <| eq_stuck_iff_equiv.mp h_sim
-  --   simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
+  · subst h
+    obtain rfl : b = stuck α := eq_stuck_iff_equiv.mp h_sim.symm
+    simp [eq_stuck_iff_equiv, and_self]
+  · have : b ≠ stuck α := by rintro rfl ; exact h <| eq_stuck_iff_equiv.mp h_sim
+    simp [h, this, head_dropLeadingNones_eq_of_bisim h_sim, tail_dropLeadingNones_bisim h_sim]
 
---doubt
 def StreamWithoutNones' (α : Type) : Type :=
   Quot (Bisim : Stream α → Stream α → Prop)
 
