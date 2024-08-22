@@ -373,52 +373,55 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, Bool.xor_xor_eq_not, Bool.xor_and_eq_and]
+    · simp [neg, negAux, ih, Bool.xor_xor_eq_not, Bool.xor_and_eq_and, -Bool.not_neq]
   simp [Neg.neg, neg, neg_lemma]
 
+/--
+ Will subAux overflow/carry when computing a - b?
+-/
 def subCarries? (a b : BitStream) (i : Nat) : Bool :=
   let carry : Bool := match i with
   | 0 => false
   | i + 1 => a.subCarries? b i
   (!a i && b i || !xor (a i) (b i) && carry)
 
+/--
+  For any i : ℕ, either the ith bit of -b will not overflow,
+  or the ith bit of (a + -b) will not overflow.
+-/
 theorem neg_or_add (i : Nat) :
-    (b.negAux i).2 = false ∨ (a.addAux (fun n => (b.negAux n).1) i).2 = false := by
+    (b.negAux i).2 = false ∨ (a.addAux b.neg i).2 = false := by
   induction' i with i ih
-  · simp [negAux, addAux, BitVec.adcb]
+  · simp [negAux, addAux, BitVec.adcb, neg]
     cases b 0
     <;> simp
-  · simp [negAux, addAux, BitVec.adcb]
-    cases' ih with l r
-    · simp [l]
-    · cases b (i + 1)
-      <;> cases a (i + 1)
-      <;> simp [r]
-
-theorem subCarries?_correct (i : Nat) :
-    a.subCarries? b i = xor (b (i + 1)) ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
-  induction' i with i ih
-  · by_cases af : a 0
-    <;> simp [subCarries?, negAux, addAux, BitVec.adcb, af]
-  · simp [subCarries?, ih, negAux, addAux, BitVec.adcb]
-    cases a (i + 1)
+  · simp [negAux, addAux, BitVec.adcb, neg]
+    cases' ih with l l
     <;> cases b (i + 1)
-    <;> cases b (i + 2)
-    <;> cases' @neg_or_add a b i with h h
-    <;> simp [h]
+    <;> cases a (i + 1)
+    <;> simp [l]
 
-theorem carry_succ_left {a b : BitStream} (i : ℕ) :
-    xor (b (i + 1)) (a.subCarries? b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
-  simp [Bool.xor_shift, subCarries?_correct i]
+/--
+  Whether a - b will overflow is equivalent to
+  -b overflows = (a + - b) overflows
+-/
+theorem subCarries?_correct (i : Nat) :
+    a.subCarries? b i = ((b.negAux i).2 == (a.addAux b.neg i).2) := by
+  induction' i with i ih
+  · simp [subCarries?, negAux, addAux, BitVec.adcb, neg]
+  · by_cases a1 : a (i + 1)
+    <;> by_cases b1 : b (i + 1)
+    <;> cases' @neg_or_add a b i with h h
+    <;> simp [h, subCarries?, ih, negAux, addAux, BitVec.adcb, neg, a1, b1]
 
 theorem sub_add_lemma (i : Nat) :
-    a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩  := by
+    a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
   induction' i with i ih
-  · simp [subAux,addAux,negAux, BitVec.adcb, subCarries?, neg]
-  · simp [subAux,addAux,negAux, BitVec.adcb, ih, carry_succ_left i, subCarries?, neg]
-    rfl
+  · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
+  · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_neq_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i]
 
-theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
+
+theorem sub_eq_add_neg : a - b = a + (-b) := by
   ext i
   simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, sub_add_lemma i]
 
@@ -514,7 +517,7 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   _ ≈ʷ ofBitVec (x + -y) := by rw [BitVec.sub_add_neg]
   _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
   _ ≈ʷ ofBitVec x + -(ofBitVec y) := add_congr equal_up_to_refl ofBitVec_neg
-  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_add_neg]
+  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_eq_add_neg]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
