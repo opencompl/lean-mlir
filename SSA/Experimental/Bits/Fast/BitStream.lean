@@ -348,23 +348,13 @@ variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
 
-theorem xor_xor_eq_not {a b : Bool} : xor (!xor a b) b = !a := by
-  cases a
-  <;> cases b
-  <;> simp
-
-theorem xor_and_eq_and {a b : Bool} : (!xor a b && b) = (a && b) := by
-  cases a
-  <;> cases b
-  <;> simp
-
 theorem neg_neg : a = - - a := by
   ext i
   have neg_lemma :
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, xor_xor_eq_not, xor_and_eq_and]
+    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self]
   simp [Neg.neg, neg, neg_lemma]
 
 -- TODO: This sorry is difficult, and will be proven in a later Pull Request.

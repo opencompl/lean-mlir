@@ -586,7 +586,23 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> rfl
 end BitVec
 
-theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
+namespace Bool
+
+theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
   cases' dp with pt pt
   <;> simp [pt]
+
+@[simp]
+theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
+  cases a
+  <;> cases b
+  <;> simp
+
+@[simp]
+theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
+  cases a
+  <;> cases b
+  <;> simp
+
+end Bool
