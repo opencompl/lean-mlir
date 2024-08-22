@@ -47,40 +47,6 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
       simp only [e]
 
 end Int
-
-namespace BitVec
-open BitVec
-
-@[simp] theorem getMsb_not (x : BitVec w) :
-    (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
-  by_cases h : i < w <;> simp [getMsb, h] ; omega
-
-@[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
-  simp [BitVec.msb]
-
-variable {α β} [Coe α β] (as : List α)
-
-@[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
-    (x.signExtend i).msb = x.msb := by
-  simp [BitVec.msb_eq_getLsb_last]
-  split <;> by_cases (0 < i) <;> simp_all
-  simp [show i = w by omega]
-
-theorem signExtend_succ (i : Nat) (x : BitVec w) :
-    x.signExtend (i+1) = cons (if i < w then x.getLsb i else x.msb) (x.signExtend i) := by
-  ext j
-  simp only [getLsb_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsb_cons]
-  split <;> split <;> simp_all <;> omega
-
-@[simp] theorem signExtend_eq (x : BitVec w) :
-    x.signExtend w = x := by
-  apply eq_of_toNat_eq
-  simp only [signExtend, BitVec.ofInt, toInt_eq_toNat_bmod, Int.ofNat_eq_coe, toNat_ofNatLt]
-  rw [Int.bmod_emod]
-  norm_cast
-  simp [toNat_mod_cancel, Int.toNat_ofNat]
-
-end BitVec
 end UpStream
 
 /-!
