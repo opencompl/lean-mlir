@@ -531,7 +531,40 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
     by_cases b3 : b 3 = true <;> simp_all
   sorry
 
+
 theorem hadd_one_one : @HAdd.hAdd ℕ ℕ ℕ instHAdd (i + 1) 1 = i + 2 := by rfl
+
+theorem g_succ_left' {a b : BitStream} (i : Nat) :
+    xor (b (i + 1)) (a.g b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
+  induction i
+  case zero =>
+    rw [g]
+    simp [negAux, addAux, BitVec.adcb, xor]
+    by_cases h0 : (a 0) = true <;> simp [h0]
+
+  case succ i ih =>
+    simp [hadd_one_one]
+    rw [g]
+    simp
+    rw [negAux]
+    simp
+    rw [addAux]
+    simp [BitVec.adcb]
+    rw [negAux]
+    simp [xor]
+    simp [Bool.atLeastTwo]
+    -- can we eliminate the xor without unfolding it?
+    -- I feel we should be able to do this both in the goal and in the hypothesis
+    -- then maybe we can turn 'ih' into (a.g b i) = ...
+    -- and insert it into the goal
+    -- and then, can we resolve the goal?
+
+
+    -- These also do not help
+    by_cases a (i + 1) = true <;> simp_all <;>
+    by_cases b (i + 1) = true <;> simp_all <;>
+    by_cases b (i + 2) = true <;> simp_all <;>
+    all_goals sorry
 
 theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
