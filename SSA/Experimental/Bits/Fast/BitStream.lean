@@ -528,7 +528,7 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
     by_cases b0 : b 0 = true <;> simp_all <;>
     by_cases b1 : b 1 = true <;> (try simp_all) <;>
     by_cases b2 : b 2 = true <;> simp_all <;>
-    by_cases b3 : b 3 = true <;> simp_all <;>
+    by_cases b3 : b 3 = true <;> simp_all
   sorry
 
 theorem g_succ_right {a b : BitStream} (i : ℕ)  :
