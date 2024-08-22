@@ -590,3 +590,17 @@ theorem Bool.xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
   cases' dp with pt pt
   <;> simp [pt]
+
+theorem Bool.xor_shift {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+  cases a
+  <;> cases b
+  <;> simp
+
+
+theorem Bool.xor_xor_eq_not {a b : Bool} : xor (!xor a b) b = !a := by
+  cases a
+  <;> simp
+
+theorem Bool.xor_and_eq_and {a b : Bool} : (!xor a b && b) = (a && b) := by
+  cases a
+  <;> simp
