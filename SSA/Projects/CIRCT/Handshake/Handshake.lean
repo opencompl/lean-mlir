@@ -246,8 +246,8 @@ Implement the necessary typeclasses for the `handshake` dialect to
 be recognized by the LeanMLIR generic syntax parser, and
 defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 -/
-section Syntax
 
+namespace MLIR2Handshake
 
 def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
   | "Int" => return (.int)
@@ -255,8 +255,8 @@ def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
   | _ => throw .unsupportedType
 
 
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
-  | MLIR.AST.MLIRType.undefined s => do
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake (Handshake.Ty)
+  | MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["Stream", r] =>
       return .stream (← mkTy2 r)
@@ -265,7 +265,7 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 
-instance instTransformTy : MLIR.AST.TransformTy (Handshake) 0 where
+instance instTransformTy : MLIR.AST.TransformTy Handshake 0 where
   mkTy := mkTy
 
 def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream .bool)) : Expr (Handshake) Γ .pure (.stream2 r) :=
@@ -328,8 +328,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
 instance : MLIR.AST.TransformExpr (Handshake) 0 where
   mkExpr := mkExpr
 
-def mkReturn (Γ : Ctxt (Handshake).Ty) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Handshake)
-    (Σ eff ty, Com (Handshake) Γ eff ty) :=
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Handshake)
+    (Σ eff ty, Com Handshake Γ eff ty) :=
   if opStx.name == "return"
   then match opStx.args with
   | vStx::[] => do
@@ -342,67 +342,7 @@ instance : MLIR.AST.TransformReturn (Handshake) 0 where
   mkReturn := mkReturn
 
 open Qq MLIR AST Lean Elab Term Meta in
-elab "[handshake_com" " | " reg:mlir_region "]" : term => do
+elab "[handshake_com| " reg:mlir_region "]" : term => do
   SSA.elabIntoCom reg q(Handshake)
 
-end Syntax
-
-
-
--- /-!
--- ## Examples
--- -/
--- namespace Examples
--- def BranchEg1 := [handshake_com| {
---   ^entry(%0: !Stream, %1: !Stream):
---     %out = "handshake.branch" (%0, %1) : (!Stream, !Stream) -> (!Stream2)
---     %outf = "handshake.fst" (%out) : (!Stream2) -> (!Stream)
---     %outs = "handshake.snd" (%out) : (!Stream2) -> (!Stream)
---     %out2 = "handshake.merge" (%outf, %outs) : (!Stream, !Stream) -> (!Stream)
---     "return" (%out2) : (!Stream) -> ()
---   }]
-
--- #check BranchEg1
--- #eval BranchEg1
--- #reduce BranchEg1
--- #check BranchEg1.denote
--- #print axioms BranchEg1
-
--- def x := Stream.ofList [some true, none, some false, some true, some false]
--- def c := Stream.ofList [some true, some false, none, some true]
-
--- def test : Stream :=
---   BranchEg1.denote (Valuation.ofPair c x)
-
--- def remNone (lst : List Val) : List Val :=
---   lst.filter (fun | some x => true
---                   | none => false)
-
--- theorem equiv_arg1 (x1Stream x2Stream : Stream) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
---   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
---   let v : Valuation [Ty.Stream, Ty.Stream] := Valuation.ofPair x1Stream x2Stream
---   simp_peephole at v
---   unfold Stream.branch
---   unfold Stream.merge
-
-
--- theorem determinate :
---   Set.Subsingleton (SSA.Projects.CIRCT.Stream.nondeterminify2 (fun s1 s2 => BranchEg1.denote (Valuation.ofPair s1 s2)) (s1', s2')) := by
---   intro x Hx y  Hy
---   simp [Stream.nondeterminify2, Stream.StreamWithoutNones.hasStream] at *
---   rcases Hx with ⟨ x1Stream, x1, x2Stream, x2, rfl ⟩
---   rcases Hy with ⟨ y1Stream, y1, y2Stream, y2, rfl ⟩
---   apply Quotient.sound
---   -- simp [BranchEg1]
---   -- simp [Stream.Bisim, Stream.IsBisim]
---   subst s2'; subst s1'
---   have y1' := Quotient.exact y1
---   have y2' := Quotient.exact y2
---   clear y1; clear y2
---   trans x1Stream
---   apply (equiv_arg1 _ _).symm
---   trans y1Stream
---   · assumption
---   · apply equiv_arg1
-
--- end Examples
+end MLIR2Handshake
