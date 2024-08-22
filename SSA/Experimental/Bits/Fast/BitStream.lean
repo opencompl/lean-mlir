@@ -529,28 +529,7 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
     by_cases b1 : b 1 = true <;> (try simp_all) <;>
     by_cases b2 : b 2 = true <;> simp_all <;>
     by_cases b3 : b 3 = true <;> simp_all <;>
-    by_cases a2 : a 2 = true <;> simp_all
-  by_cases h: i = 3
-  · subst i
-    rw [g]
-    rw [g]
-    rw [g]
-    simp [negAux, addAux, BitVec.adcb, xor, h]
-    simp [Bool.atLeastTwo]
-    by_cases a0 : a 0 = true <;> simp_all <;>
-    by_cases a1 : a 1 = true <;> simp_all <;>
-    by_cases a2 : a 2 = true <;> simp_all <;>
-    by_cases a3 : a 3 = true <;> simp_all <;>
-    by_cases b0 : b 0 = true <;> simp_all <;>
-    by_cases b1 : b 1 = true <;> (try simp_all) <;>
-    by_cases b2 : b 2 = true <;> simp_all <;>
-    by_cases b3 : b 3 = true <;> simp_all <;>
-    by_cases b4 : b 4 = true <;> simp_all
-  by_cases h: i = 4
-  · subst i
-    simp [negAux, addAux, BitVec.adcb, xor, h]
-    simp [Bool.atLeastTwo]
-    sorry
+  sorry
 
 theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
@@ -565,11 +544,19 @@ theorem g_succ_right {a b : BitStream} (i : ℕ)  :
   · simp [negAux, addAux, BitVec.adcb, xor, h]
     subst i
     simp [g]
-  by_cases h: i = 2
+  by_cases h: i = 3
   · simp [negAux, addAux, BitVec.adcb, xor, h]
     subst i
     simp [g]
-    sorry
+  by_cases h: i = 4
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    subst i
+    simp [g]
+  by_cases h: i = 5
+  · simp [negAux, addAux, BitVec.adcb, xor, h]
+    subst i
+    simp [g]
+  sorry
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   have sub_add_lemma (i : Nat) :
