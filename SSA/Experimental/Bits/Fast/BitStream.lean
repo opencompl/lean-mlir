@@ -138,6 +138,7 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
 
+
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
 def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
@@ -369,12 +370,10 @@ local infix:20 " ≈ʷ " => EqualUpTo w
 
 theorem xor_xor_eq_not {a b : Bool} : xor (!xor a b) b = !a := by
   cases a
-  <;> cases b
   <;> simp
 
 theorem xor_and_eq_and {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
-  <;> cases b
   <;> simp
 
 theorem neg_neg : a = - - a := by
@@ -386,9 +385,55 @@ theorem neg_neg : a = - - a := by
     · simp [neg, negAux, ih, xor_xor_eq_not, xor_and_eq_and]
   simp [Neg.neg, neg, neg_lemma]
 
--- TODO: This sorry is difficult, and will be proven in a later Pull Request.
-theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
-  sorry
+def subAddNegCarries? (a b : BitStream) (i : Nat) : Bool := match i with
+  | 0 => (!a 0 && b 0)
+  | i + 1 => (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.subAddNegCarries? b i)
+
+theorem xor_shift {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+  cases a
+  <;> cases b
+  <;> simp
+
+theorem neg_or_add (i : Nat): (b.negAux i).2 = false ∨ (a.addAux (fun n => (b.negAux n).1) i).2 = false := by
+  induction' i with i ih
+  · simp [negAux, addAux, BitVec.adcb]
+    cases b 0
+    <;> simp
+  · simp [negAux, addAux, BitVec.adcb]
+    cases' ih with l r
+    · simp [l]
+    · cases b (i + 1)
+      <;> cases a (i + 1)
+      <;> simp [r]
+
+theorem subAddNegCarries?_correct (i : Nat) : a.subAddNegCarries? b i = xor (b (i + 1)) ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
+  induction' i with i ih
+  · by_cases af : a 0
+    <;> simp [subAddNegCarries?, negAux, addAux, BitVec.adcb, af]
+  · simp [subAddNegCarries?, ih, negAux, addAux, BitVec.adcb]
+    cases a (i + 1)
+    <;> cases b (i + 1)
+    <;> cases b (i + 2)
+    <;> cases @neg_or_add a b i
+    <;> simp [*]
+
+theorem g_succ_left {a b : BitStream} (i : ℕ) :
+    xor (b (i + 1)) (a.subAddNegCarries? b i) = ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
+  simp [xor_shift, subAddNegCarries?_correct i]
+
+theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
+  have sub_add_lemma (i : Nat) :
+      let y := b.negAux
+      let x := a.addAux (fun n => (y n).1) i
+      a.subAux b i = ⟨x.1, subAddNegCarries? a b i⟩  := by
+    induction' i with i ih
+    · simp [subAux,addAux,negAux, BitVec.adcb, subAddNegCarries?]
+    · simp [subAux,addAux,negAux, BitVec.adcb, ih, g_succ_left i, subAddNegCarries?]
+  ext i
+  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add]
+  unfold neg
+  simp [sub_add_lemma i]
+
 
 @[simp]
 theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
@@ -429,6 +474,10 @@ instance congr_equiv : Equivalence (EqualUpTo w) where
   symm := equal_up_to_symm
   trans := equal_up_to_trans
 
+theorem BitVec.sub_add_neg : x - y = x + (- y) := by
+  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub,Add.add, BitVec.add]
+  simp [← BitVec.ofNat_add_ofNat, add_comm, BitVec.ofNat, -BitVec.ofFin_ofNat, Fin.ofNat']
+
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
@@ -436,7 +485,6 @@ theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := b
     · simp only [addAux, e1 _ h, e2 _ h]
     · simp only [addAux, e1 _ h, e2 _ h, ih (by omega)]
   simp [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma, addAux]
-
 
 theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
@@ -473,6 +521,13 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
   _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eqTo ofBitVec_one_eqTo_ofNat
   _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
+
+theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
+  calc
+  _ ≈ʷ ofBitVec (x + - y) := by rw [BitVec.sub_add_neg]
+  _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
+  _ ≈ʷ ofBitVec x + - ofBitVec y := add_congr equal_up_to_refl ofBitVec_neg
+  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_add_neg]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
