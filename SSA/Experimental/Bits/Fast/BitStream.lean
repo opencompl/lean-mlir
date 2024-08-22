@@ -392,7 +392,7 @@ def subCarries? (a b : BitStream) (i : Nat) : Bool :=
 theorem neg_or_add (i : Nat) :
     (b.negAux i).2 = false ∨ (a.addAux b.neg i).2 = false := by
   induction' i with i ih
-  <;> simp [negAux, addAux, BitVec.adcb, neg]
+  <;> simp only [negAux, addAux, BitVec.adcb, neg]
   · cases b 0
     <;> simp
   · cases' ih with l l
