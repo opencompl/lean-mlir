@@ -533,7 +533,7 @@ theorem g_succ_left {a b : BitStream} (i : Nat) :
 
 theorem hadd_one_one : @HAdd.hAdd ℕ ℕ ℕ instHAdd (i + 1) 1 = i + 2 := by rfl
 
-theorem g_succ_right' {a b : BitStream} (i : ℕ)  :
+theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     (!a (i + 1) && b (i + 1) || !xor (a (i + 1)) (b (i + 1)) && a.g b i) = a.g b (i + 1) := by
   induction i
   case zero =>
