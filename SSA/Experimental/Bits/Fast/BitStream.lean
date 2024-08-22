@@ -46,8 +46,6 @@ theorem emod_eq_of_neg {a b : Int} (H1 : a < 0) (H2 : 0 ≤ a + b.natAbs) :
         simp [l]
       simp only [e]
 
-
-
 end Int
 
 namespace BitVec
@@ -85,11 +83,6 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
 end BitVec
 end UpStream
 
-
-
-
-
-
 /-!
 
 ## Reflection
@@ -97,18 +90,6 @@ end UpStream
 We have a decision procedure which operates on BitStream operations, but we'd like
 
 -/
-
-
-
-
-
-
-
-
-
-
-
-
 
 def BitStream : Type := Nat → Bool
 
