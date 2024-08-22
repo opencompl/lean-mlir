@@ -540,14 +540,9 @@ theorem g_succ_right {a b : BitStream} (i : ℕ)  :
     simp [negAux, addAux, BitVec.adcb, xor]
     simp [g]
   case succ i ih =>
-    simp [negAux, addAux, BitVec.adcb, xor]
-    simp [hadd_one_one]
-    by_cases a (i + 2) = true <;> simp_all [xor] <;>
-    by_cases b (i + 2) = true <;> simp_all [xor] <;>
-    by_cases a (i + 1) = true <;> simp_all [xor] <;>
-    by_cases b (i + 1) = true <;> simp_all [xor] <;>
-    unfold g <;>
-    simp_all
+    simp [negAux, addAux, BitVec.adcb, xor, hadd_one_one]
+    unfold g
+    by_cases a (i + 2) = true <;> simp_all
 
 theorem sub_add_neg {a b : BitStream} : a - b = a + (-b) := by
   have sub_add_lemma (i : Nat) :
