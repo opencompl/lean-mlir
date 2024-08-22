@@ -596,11 +596,11 @@ theorem Bool.xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
   <;> cases b
   <;> simp
 
-theorem Bool.xor_xor_eq_not {a b : Bool} : xor (!xor a b) b = !a := by
+theorem Bool.xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
   cases a
   <;> simp
 
-theorem Bool.xor_and_eq_and {a b : Bool} : (!xor a b && b) = (a && b) := by
+theorem Bool.not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
   <;> simp
 

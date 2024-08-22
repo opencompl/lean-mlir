@@ -373,7 +373,7 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, Bool.xor_xor_eq_not, Bool.xor_and_eq_and, -Bool.not_neq]
+    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self, -Bool.not_neq]
   simp [Neg.neg, neg, neg_lemma]
 
 /--
@@ -402,8 +402,7 @@ theorem neg_or_add (i : Nat) :
     <;> simp [l]
 
 /--
-  Whether a - b will overflow is equivalent to
-  -b overflows = (a + - b) overflows
+  Whether a - b will overflow is equivalent to -b overflows = (a + - b) overflows.
 -/
 theorem subCarries?_correct (i : Nat) :
     a.subCarries? b i = ((b.negAux i).2 == (a.addAux b.neg i).2) := by
@@ -419,7 +418,6 @@ theorem sub_add_lemma (i : Nat) :
   induction' i with i ih
   · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
   · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_neq_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i]
-
 
 theorem sub_eq_add_neg : a - b = a + (-b) := by
   ext i
