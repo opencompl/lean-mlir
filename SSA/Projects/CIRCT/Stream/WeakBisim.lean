@@ -1,7 +1,7 @@
 import SSA.Projects.CIRCT.Stream.Stream
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Data.Stream.Init
-import Mathlib
+
 /-!
 #  Equivalence for `CIRCT.Stream`
 
