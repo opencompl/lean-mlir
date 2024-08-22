@@ -382,7 +382,8 @@ def subCarries? (a b : BitStream) (i : Nat) : Bool :=
   | i + 1 => a.subCarries? b i
   (!a i && b i || !xor (a i) (b i) && carry)
 
-theorem neg_or_add (i : Nat): (b.negAux i).2 = false ∨ (a.addAux (fun n => (b.negAux n).1) i).2 = false := by
+theorem neg_or_add (i : Nat) :
+    (b.negAux i).2 = false ∨ (a.addAux (fun n => (b.negAux n).1) i).2 = false := by
   induction' i with i ih
   · simp [negAux, addAux, BitVec.adcb]
     cases b 0
@@ -394,7 +395,8 @@ theorem neg_or_add (i : Nat): (b.negAux i).2 = false ∨ (a.addAux (fun n => (b.
       <;> cases a (i + 1)
       <;> simp [r]
 
-theorem subCarries?_correct (i : Nat) : a.subCarries? b i = xor (b (i + 1)) ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
+theorem subCarries?_correct (i : Nat) :
+    a.subCarries? b i = xor (b (i + 1)) ((!b (i + 1)) != ((b.negAux i).2 != (a.addAux (fun n => (b.negAux n).1) i).2)) := by
   induction' i with i ih
   · by_cases af : a 0
     <;> simp [subCarries?, negAux, addAux, BitVec.adcb, af]
