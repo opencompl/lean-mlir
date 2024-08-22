@@ -606,6 +606,7 @@ theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
 @[simp]
 theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
+  <;> cases b
   <;> simp
 
 theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
