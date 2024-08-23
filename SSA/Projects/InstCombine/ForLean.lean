@@ -615,7 +615,7 @@ theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
   <;> simp
 
 @[simp]
-theorem xor_neq_self {a b : Bool} : xor a ((!a) != b) = !b := by
+theorem xor_ne_self {a b : Bool} : xor a ((!a) != b) = !b := by
   cases a
   <;> simp
 
