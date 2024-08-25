@@ -12,12 +12,12 @@ namespace DC
 namespace Examples
 
 def BranchEg1 := [dc_com| {
-  ^entry(%0: !Stream_Bool, %1: !Stream_Bool):
-    %out = "dc.branch" (%0, %1) : (!Stream_Bool, !Stream_Bool) -> (!Stream2_Bool)
-    %0 = "dc.fst" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %outs = "dc.snd" (%out) : (!Stream2_Bool) -> (!Stream_Bool)
-    %out2 = "dc.merge" (%outf, %outs) : (!Stream_Bool, !Stream_Bool) -> (!Stream_Bool)
-    "return" (%out) : (!Stream_Bool) -> ()
+  ^entry(%0: !Stream_Int, %1: !Stream_Bool):
+    %out = "dc.branch" (%0, %1) : (!Stream_Int, !Stream_Bool) -> (!Stream2_Int)
+    %outf = "dc.fst" (%out) : (!Stream2_Int) -> (!Stream_Int)
+    %outs = "dc.snd" (%out) : (!Stream2_Int) -> (!Stream_Int)
+    %out2 = "dc.merge" (%outs, %outf) : (!Stream_Int, !Stream_Int) -> (!Stream_Int)
+    "return" (%out2) : (!Stream_Int) -> ()
   }]
 
 
@@ -33,8 +33,8 @@ def ofList (vals : List (Option α)) : Stream α :=
 def x : Stream Bool := ofList [some true, none, some false, some true, some false]
 def c : Stream Bool := ofList [some true, some false, none, some true]
 
-def test : Stream Bool :=
-  BranchEg1.denote (Valuation.ofPair c x)
+-- def test : Stream Bool :=
+--   BranchEg1.denote (Valuation.ofPair c x)
 
 def remNone (lst : List (Option Bool)) : List (Option Bool) :=
   lst.filter (fun | some x => true
