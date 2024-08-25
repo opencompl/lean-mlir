@@ -23,8 +23,8 @@ namespace Handshake
 ## Operation Semantics
 -/
 
-/--
-`branch x c` has two output streams,
+/-
+s`branch x c` has two output streams,
 forwarding tokens from `x` to either
 the first or the second output depending on whether the corresponding token of `c` is
 `true`, resp. `false`.
@@ -174,6 +174,7 @@ inductive Ty2
   | bool : Ty2
 deriving Inhabited, DecidableEq, Repr
 
+-- what was this for again?
 inductive Op
 | merge (t : Ty2)
 | branch (t : Ty2)
@@ -199,7 +200,6 @@ toType := fun
 
 
 set_option linter.dupNamespace false in
-/-- `FHE` is the dialect for fully homomorphic encryption -/
 abbrev Handshake : Dialect where
   Op := Op
   Ty := Ty
@@ -245,19 +245,24 @@ defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 
 namespace MLIR2Handshake
 
-def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
-  | "Int" => return (.int)
-  | "Bool" => return (.bool)
+
+def mkTy2 : String → MLIR.AST.ExceptM Handshake Ty2
+  | "Int" => return .int
+  | "Bool" => return .bool
   | _ => throw .unsupportedType
 
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake (Handshake.Ty)
   | MLIRType.undefined s => do
-    match s.splitOn "_" with
-    | ["Stream", r] =>
-      return .stream (← mkTy2 r)
-    | ["Stream2", r] =>
-      return .stream2 (← mkTy2 r)
+    match s with
+    | "Stream_Int" =>
+      return (.stream .int)
+    | "Stream_Bool" =>
+      return (.stream .bool)
+    | "Stream2_Int" =>
+      return (.stream .int)
+    | "Stream2_Bool" =>
+      return (.stream .bool)
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 

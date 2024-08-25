@@ -5,36 +5,20 @@ import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.PaperExamples.PaperExamples
 
-namespace MLIR2Simple
-/-!
-## Examples
--/
-open MLIR AST in
-def lhs :=
-  [simple_com| {
-    ^bb0(%x : i32):
-      %c0 = "const" () { value = 0 : i32 } : () -> i32
-      %out = "add" (%x, %c0) : (i32, i32) -> i32
-      "return" (%out) : (i32) -> (i32)
-  }]
-end MLIR2Simple
+
 
 namespace MLIR2Handshake
 open MLIR AST in
-def branchEg₀ :=
+
+def BranchEg1 :=
   [handshake_com| {
-    ^entry(%0 : i32):
-      "return" (%0) : (i32) -> (i32)
+    ^bb0(%0: !Stream_Int, %1: !Stream_Bool):
+      %out = "handshake.branch" (%0, %1) : (!Stream_Int, !Stream_Bool) -> (!Stream2_Int)
+      -- %outf = "handshake.fst" (%out) : (!Stream2_Int) -> (!Stream_Int)
+      -- %outs = "handshake.snd" (%outf) : (!Stream2_Int) -> (!Stream_Int)
+      -- %out2 = "handshake.merge" (%outf, %outs) : (!Stream_Int, !Stream_Int) -> (!Stream_Int)
+      "return" (%0) : (!Stream_Int) -> ()
   }]
--- def BranchEg1 : Com Handshake (Ctxt.ofList [(.stream .int), (.stream .int)]) .pure (.stream .int) :=
---   [simple_com| {
---     ^entry(%0: i32, %1: i32):
---       -- %out = "handshake.branch" (%0, %1) : (!Stream, !Stream) -> (!Stream2)
---       -- %outf = "handshake.fst" (%out) : (!Stream2) -> (!Stream)
---       -- %outs = "handshake.snd" (%out) : (!Stream2) -> (!Stream)
---       -- %out2 = "handshake.merge" (%outf, %outs) : (!Stream, !Stream) -> (!Stream)
---       "return" (%0) : (i32) -> ()
---   }]
 
 
 -- #check BranchEg1
