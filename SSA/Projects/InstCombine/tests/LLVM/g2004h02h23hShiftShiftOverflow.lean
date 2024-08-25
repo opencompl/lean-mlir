@@ -8,7 +8,6 @@ open LLVM
 
 
 open MLIR AST
-open Std (BitVec)
 open Ctxt (Var)
 
 

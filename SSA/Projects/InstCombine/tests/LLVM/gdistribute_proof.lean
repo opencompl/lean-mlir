@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem factorize_thm (x : _root_.BitVec 32) : 
     (x ||| 1#32) &&& (x ||| 2#32) = x := by
   sorry

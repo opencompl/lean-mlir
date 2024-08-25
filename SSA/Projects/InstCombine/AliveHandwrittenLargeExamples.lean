@@ -114,7 +114,6 @@ def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
   /- r = -/ Com.var (select w /-%c-/ 1 /-X-/ 5 /-c0-/ 0) <|
   Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
 
-open Std (BitVec) in
 def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
@@ -169,7 +168,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
           rw [LLVM.sdiv?_eq_pure_of_neq_allOnes (hy := by tauto)]
           · have hcases := Nat.cases_of_lt_mod_add hugt
               (by simp)
-              (by apply BitVec.toNat_lt_self_mod)
+              (by apply BitVec.isLt)
             rcases hcases with ⟨h1, h2⟩ | ⟨h1, h2⟩
             · have h2 : BitVec.toNat x < 2 := by omega
               have hneq0 : BitVec.toNat x ≠ 0 := BitVec.toNat_neq_zero_of_neq_zero hx
@@ -223,7 +222,6 @@ info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem805' depends on axioms:
 -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem805
 
-open Std (BitVec) in
 def alive_simplifyMulDivRem805' (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
   unfold MulDivRem805_lhs MulDivRem805_rhs
@@ -425,7 +423,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
     simp only [xor_eq, ge_iff_le, EffectKind.return_impure_toMonad_eq,
       Option.pure_def, Option.bind_eq_bind, Option.some_bind, h, ↓reduceIte, Option.none_bind,
       Option.bind_none, Refinement.refl, Refinement.some_some]
-  simp only [ushr_xor_distrib, xor_assoc]
+  simp only [ushiftRight_eq', ushiftRight_xor_distrib, xor_assoc]
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/

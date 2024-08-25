@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem shl_and_thm (x x_1 : _root_.BitVec 8) : 
     (x_1 <<< 3 &&& x) <<< 2 = x_1 <<< 5 &&& x <<< 2 := by
   sorry

@@ -1,11 +1,6 @@
-import Init.Data.BitVec.Basic
-import Init.Data.BitVec.Lemmas
-import Init.Data.BitVec.Bitblast
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
-import Init.Data.Nat.Bitwise.Basic
-import Init.Data.Nat.Bitwise.Lemmas
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
@@ -203,7 +198,7 @@ theorem neq_iff_neg_sub_abs :
 
 theorem lt_iff_sub_xor_xor_and_sub_xor :
     (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
-  try alive_auto
+  -- try alive_auto -- this leads to a heartbeat timeout
   all_goals sorry
 
 theorem slt_iff_and_not_or_not_xor_and_sub :
@@ -461,6 +456,150 @@ theorem div_overflow_iff_neq_and_ult_LeftShift {x : BitVec 64} {y : BitVec 32} :
 
 theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32} :
     SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ (x >>> 32) < (y.zeroExtend 64) := by
+  try alive_auto
+  all_goals sorry
+
+def signedDifferenceOrZero (x y : BitVec w) : BitVec w :=
+  if x ≥ₛ y then x - y else 0#w
+
+def unsignedDifferenceOrZero (x y : BitVec w) : BitVec w :=
+  if x ≥ᵤ y then x - y else 0#w
+
+def unsignedMaxBitVec (x y : BitVec w) : BitVec w :=
+  if x ≥ᵤ y then x else y
+
+def unsignedMinBitVec (x y : BitVec w) : BitVec w :=
+  if x ≤ᵤ y then x else y
+
+def signedMaxBitVec (x y : BitVec w) : BitVec w :=
+  if x ≥ₛ y then x else y
+
+def signedMinBitVec (x y : BitVec w) : BitVec w :=
+  if x ≤ₛ y then x else y
+
+theorem signed_max_eq_add_doz :
+    signedMaxBitVec x y = y + signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_eq_sub_doz :
+    signedMinBitVec x y = x - signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_max_eq_add_dozu :
+    unsignedMaxBitVec x y = y + unsignedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_min_eq_sub_dozu :
+    unsignedMinBitVec x y = x - unsignedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+def leBitmask (x y : BitVec w) : BitVec w :=
+  if y ≤ x then -1#w else 0#w
+
+theorem signed_doz_eq_sub_and_bitmask :
+   signedDifferenceOrZero x y = (x - y) &&& leBitmask x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_max_xor_and_bitmask_xor :
+    signedMaxBitVec x y = ((x ^^^ y) &&& leBitmask x y) ^^^ y := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_xor_and_bitmask_xor :
+    signedMinBitVec x y = ((x ^^^ y) &&& leBitmask y x) ^^^ y := by
+  try alive_auto
+  all_goals sorry
+
+def carryBitmask (x y : BitVec w) : BitVec w :=
+  if BitVec.carry w x (~~~y) false then -1#w else 0#w
+
+theorem unsigned_doz_sub_and_not_carry :
+    unsignedDifferenceOrZero x y = ((x - y) &&& ~~~ carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_max_eq_sub_sub_and_carry :
+    unsignedMaxBitVec x y = x - ((x - y) &&& carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_min_eq_add_sub_and_carry :
+    unsignedMinBitVec x y = y + ((x - y) &&& carryBitmask x y) := by
+  try alive_auto
+  all_goals sorry
+
+section fixedWidth
+variable {x y d : BitVec 32}
+
+theorem signed_doz_and_not_xor_xor_and_and_rightShift (h : d = x - y) :
+    signedDifferenceOrZero x y = d &&& (~~~ d ^^^ ((x ^^^ y) &&& (d ^^^ x)) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem unsigned_doz_and_not_xor_xor_and_and_rightShift (h : d = x - y) :
+    unsignedDifferenceOrZero x y = d &&& ~~~ (((~~~ x &&& y) ||| ~~~ (x ^^^ y) &&& d) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_doz_eq_sub_and_not_sub_rightShift :
+    signedDifferenceOrZero x y = (x - y) &&& ~~~ ((x - y) >>> 31) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_max_eq_sub_sub_and_sub_rightShift :
+    signedMaxBitVec x y = x - ((x - y) &&& ((x - y) >>> 31)) := by
+  try alive_auto
+  all_goals sorry
+
+theorem signed_min_eq_add_sub_and_sub_rightShift :
+    signedMinBitVec x y = y + ((x - y) &&& ((x - y) >>> 31)) := by
+  try alive_auto
+  all_goals sorry
+
+theorem lt_sdoz_or_neg_sdoz :
+    (y <ₛ x) ↔ (signedDifferenceOrZero x y ||| -(signedDifferenceOrZero x y)).msb := by
+  try alive_auto
+  all_goals sorry
+
+theorem lt_udoz_or_neg_udoz :
+    (y <ᵤ x) ↔ (unsignedDifferenceOrZero x y ||| -(unsignedDifferenceOrZero x y)).msb := by
+  try alive_auto
+  all_goals sorry
+
+theorem carry_iff_udoz_not_or_neg_udoz_not :
+    BitVec.carry w x y false ↔ (unsignedDifferenceOrZero x (~~~ y) ||| - unsignedDifferenceOrZero x (~~~ y)).msb := by
+  try alive_auto
+  all_goals sorry
+
+end fixedWidth
+
+theorem abs_sub_sdoz_add_sdoz :
+    (x - y).abs = signedDifferenceOrZero x y + signedDifferenceOrZero y x := by
+  try alive_auto
+  all_goals sorry
+
+theorem abs_sub_udoz_add_udoz :
+    (x - y).abs = unsignedDifferenceOrZero x y + unsignedDifferenceOrZero y x := by
+  try alive_auto
+  all_goals sorry
+
+theorem carry_iff_not_ult :
+    BitVec.carry w x y false ↔ (~~~ y) <ᵤ x := by
+  try alive_auto
+  all_goals sorry
+
+theorem sdoz_not_not_eq_sdoz :
+    signedDifferenceOrZero (~~~ x) (~~~ y) = signedDifferenceOrZero x y := by
+  try alive_auto
+  all_goals sorry
+
+theorem udoz_not_not_eq_udoz :
+    unsignedDifferenceOrZero (~~~ x) (~~~ y) = unsignedDifferenceOrZero x y := by
   try alive_auto
   all_goals sorry
 

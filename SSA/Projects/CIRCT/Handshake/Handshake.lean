@@ -1,5 +1,7 @@
 import Qq
 import Lean
+import Qq
+import Lean
 import SSA.Core.Framework
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Core.MLIRSyntax.GenericParser
@@ -17,7 +19,6 @@ This file is still in a **highly experimental** state
 namespace CIRCTStream
 namespace Handshake
 
-
 /-!
 ## Operation Semantics
 -/
@@ -31,7 +32,6 @@ the first or the second output depending on whether the corresponding token of `
 If only one input stream has a message available, the component will wait,
 not consuming any tokens, until a message becomes available on the other stream as well.
 Note that consuming `none`s is still allowed (and in fact neccessary to make progress).
-
 -/
 
 def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
@@ -58,7 +58,6 @@ def branch (x : Stream α) (c : Stream Bool) : Stream α × Stream α :=
 in which case it tries to dequeue from the right stream.  The only case when no token is consumed is when there
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
-
 def merge (x y : Stream α) : Stream α :=
   Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -85,8 +84,6 @@ y | y₀ y₁ y₂ _
 This will give a different output!
   | x₀ x₁ y₀ y₁ y₂
 
-
-
 One potential response to this situation is to require components be *determinate*.
 That is, by defining our component semantics in such a way that its output does not change
 depending on the presence or absence of (a finite sequence of) `none`s in its input.
@@ -105,7 +102,6 @@ That is, it will deque messages from the left stream, until it encounters a `som
 which it will output and then it switches to dequeing messages from the right stream,
 until it encounters a `some _` again.
 -/
-
 def altMerge (x y : Stream α) : Stream α :=
   Stream.corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with

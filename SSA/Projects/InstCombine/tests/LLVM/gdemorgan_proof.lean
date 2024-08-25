@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem demorgan_or_apint1_thm (x x_1 : _root_.BitVec 43) :
   x_1 ^^^ 8796093022207#43 ||| x ^^^ 8796093022207#43 = x_1 &&& x ^^^ 8796093022207#43 := by
   sorry

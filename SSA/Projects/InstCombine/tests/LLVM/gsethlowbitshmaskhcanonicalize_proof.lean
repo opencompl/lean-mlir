@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem shl_add_thm (x : _root_.BitVec 32) :
   (Option.bind (if 32 ≤ x.toNat then none else some (1#32 <<< x)) fun a => some (a + 4294967295#32)) ⊑
     Option.bind (if 32 ≤ x.toNat then none else some (4294967295#32 <<< x)) fun a => some (a ^^^ 4294967295#32) := by
