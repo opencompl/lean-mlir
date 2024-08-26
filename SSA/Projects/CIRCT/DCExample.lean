@@ -1,5 +1,3 @@
-
-import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Projects.CIRCT.DC
 import SSA.Projects.CIRCT.DC.Stream
 
@@ -9,6 +7,10 @@ import SSA.Projects.CIRCT.DC.Stream
 namespace DC
 namespace Examples
 
+/-
+splitOn is defined using splitOnAux, which is defined by well-founded recursion and thus marked with @[irreducible],
+we need to manually set the it back to semireducible.
+-/
 unseal String.splitOnAux in
 def BranchEg1 := [dc_com| {
   ^entry(%0: !Stream_Int, %1: !Stream_Bool):
@@ -33,10 +35,6 @@ def x : Stream Int := ofList [some 1, some 2, none, some 3]
 
 def test : Stream Int :=
   BranchEg1.denote (Ctxt.Valuation.ofPair c x)
-
-def remNone (lst : List (Option Bool)) : List (Option Bool) :=
-  lst.filter (fun | some x => true
-                  | none => false)
 
 end Examples
 end DC

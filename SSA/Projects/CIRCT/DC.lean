@@ -1,10 +1,5 @@
-import Qq
-import Lean
-import SSA.Core.Framework
 import SSA.Projects.CIRCT.DC.Stream
-import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
-
 
 open MLIR AST Ctxt
 
@@ -155,7 +150,6 @@ toType := fun
 
 
 set_option linter.dupNamespace false in
-/-- `FHE` is the dialect for fully homomorphic encryption -/
 abbrev DC : Dialect where
   Op := Op
   Ty := Ty
