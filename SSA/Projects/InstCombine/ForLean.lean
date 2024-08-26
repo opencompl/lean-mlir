@@ -633,4 +633,10 @@ theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   <;> cases b
   <;> simp
 
+@[simp]
+theorem not_and_self' {a b : Bool} : (a != b && b) = (!a && b) := by
+  by_cases a
+  <;> by_cases b
+  <;> simp [*]
+
 end Bool
