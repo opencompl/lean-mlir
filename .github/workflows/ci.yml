@@ -65,7 +65,6 @@ jobs:
           lake -R build SSA.Projects.CIRCT.DC # compile and check CIRCT's DC Dialect
           lake -R build SSA.Projects.CIRCT.DCExample # test CIRCT's DC Dialect
 
-
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         with:
