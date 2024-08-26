@@ -5,7 +5,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 
 theorem test_with_even_thm (x : _root_.BitVec 32) :
   (Option.bind (if 32 ≤ x.toNat then none else some (4#32 <<< x)) fun a => some (a &&& 1#32)) ⊑ some 0#32 := by

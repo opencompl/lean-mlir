@@ -27,11 +27,12 @@ import SSA.Core.Framework
 
 open Polynomial -- for R[X] notation
 
+section CommRing
 /-
 We assume that `q > 1` is a natural number (not necessarily a prime) and `n` is a natural number.
 We will use these to build `ℤ/qℤ[X]/(X^(2^n) + 1)`
 -/
-variable (q t : Nat) [ hqgt1 : Fact (q > 1)] (n : Nat)
+variable (q t : Nat) [Fact (q > 1)] (n : Nat)
 
 -- Can we make this computable?
 -- see: https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/Way.20to.20recover.20computability.3F/near/322382109
@@ -100,6 +101,8 @@ theorem f_monic : Monic (f q n) := by
   rw [f, hn]
   apply Polynomial.monic_X_pow_add
   simp
+  norm_cast
+  omega
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to
@@ -116,6 +119,11 @@ abbrev R.fromPoly {q n : Nat} : (ZMod q)[X] →+* R q n := Ideal.Quotient.mk (Id
 theorem R.surjective_fromPoly (q n : ℕ) : Function.Surjective (R.fromPoly (q := q) (n := n)) := by
   simp only [fromPoly]
   apply Ideal.Quotient.mk_surjective
+
+end CommRing
+section Representative
+
+variable (q t n : Nat)
 
 private noncomputable def R.representative' :
     R q n → (ZMod q)[X] := Function.surjInv (R.surjective_fromPoly q n)
@@ -154,7 +162,7 @@ theorem R.fromPoly_kernel_eq_zero (x : (ZMod q)[X]) : R.fromPoly (n := n) (f q n
 `R.representative` is in fact a representative of the equivalence class.
 -/
 @[simp]
-theorem R.fromPoly_representative :
+theorem R.fromPoly_representative [Fact (q > 1)]:
     forall a : R q n, (R.fromPoly (n:=n) (R.representative q n a)) = a := by
  intro a
  simp only [representative]
@@ -237,14 +245,30 @@ theorem R.representative'_zero_elem :
   rw [hk]
   exists k
 
+/-- pushing and pulling negation through mod -/
+theorem neg_modByMonic (p mod : (ZMod q)[X]) : (-p) %ₘ mod = - (p %ₘ mod) := by
+    have H : -p = (-1 : ZMod q) • p := by norm_num
+    have H' : - (p %ₘ mod) = (-1 : ZMod q) • (p %ₘ mod) := by norm_num
+    rw [H, H']
+    apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
+
+/-- %ₘ is a subtraction homomorphism (obviously)-/
+@[simp]
+theorem sub_modByMonic (a b mod : (ZMod q)[X]) : (a - b) %ₘ mod = a %ₘ mod - b %ₘ mod := by
+  ring_nf
+  repeat rw [sub_eq_add_neg]
+  simp only [add_modByMonic, add_right_inj]
+  rw [Polynomial.neg_modByMonic]
+
 /-- Representative of (0 : R) is (0 : Z/qZ[X]) -/
-theorem R.representative_zero : R.representative q n 0 = 0 := by
+theorem R.representative_zero [Fact (q > 1)] : R.representative q n 0 = 0 := by
   simp only [representative]
   obtain ⟨k, hk⟩ := R.representative'_zero_elem q n
   rw [hk, modByMonic_eq_zero_iff_dvd]
   simp only [dvd_mul_left]
   exact (f_monic q n)
 
+variable [Fact (q > 1)]
 /--
 Characterization theorem for the representative.
 Taking the representative of the equivalence class of a polynomial  `a : (ZMod q)[X]` is
@@ -276,7 +300,7 @@ theorem R.representative_fromPoly :
 
 /-- Representative is an additive homomorphism -/
 @[simp]
-theorem R.representative_add [Fact (q > 1)](a b : R q n) :
+theorem R.representative_add (a b : R q n) :
     (a + b).representative = a.representative + b.representative := by
   have ⟨a', ha'⟩ := R.surjective_fromPoly q n a
   have ⟨b', hb'⟩ := R.surjective_fromPoly q n b
@@ -289,24 +313,9 @@ theorem R.representative_add [Fact (q > 1)](a b : R q n) :
   repeat rw [R.representative_fromPoly]
   rw [Polynomial.add_modByMonic]
 
-/-- pushing and pulling negation through mod -/
-theorem neg_modByMonic (p mod : (ZMod q)[X]) : (-p) %ₘ mod = - (p %ₘ mod) := by
-    have H : -p = (-1 : ZMod q) • p := by norm_num
-    have H' : - (p %ₘ mod) = (-1 : ZMod q) • (p %ₘ mod) := by norm_num
-    rw [H, H']
-    apply smul_modByMonic (R := (ZMod q)) (c := -1) (p := p) (q := mod)
-
-/-- %ₘ is a subtraction homomorphism (obviously)-/
-@[simp]
-theorem sub_modByMonic (a b mod : (ZMod q)[X]) : (a - b) %ₘ mod = a %ₘ mod - b %ₘ mod := by
-  ring_nf
-  repeat rw [sub_eq_add_neg]
-  simp only [add_modByMonic, add_right_inj]
-  rw [Polynomial.neg_modByMonic]
-
 /-- Representative is an multiplicative homomorphism upto modulo -/
 @[simp]
-theorem R.representative_mul [Fact (q > 1)] (a b : R q n) :
+theorem R.representative_mul (a b : R q n) :
     (a * b).representative = (a.representative * b.representative) %ₘ (f q n) := by
   have ⟨a', ha'⟩ := R.surjective_fromPoly q n a
   have ⟨b', hb'⟩ := R.surjective_fromPoly q n b
@@ -374,11 +383,13 @@ theorem R.rep_degree_lt_n : forall a : R q n, (R.representative q n a).degree < 
 
 /-- The representative `a : R q n` is the (unique) representative with degree
 less than degree of `f`. -/
-theorem R.representative_degree_lt_f_degree {q n : ℕ} [Fact (q > 1)] :
+theorem R.representative_degree_lt_f_degree :
     forall a : R q n, (R.representative q n a).degree < (f q n).degree := by
   rw [f_deg_eq (q := q)]
   intros a
   apply R.rep_degree_lt_n
+
+end Representative
 
 noncomputable def R.repLength {q n} (a : R q n) : Nat := match
   Polynomial.degree a.representative with
@@ -392,9 +403,7 @@ theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
   generalize hdegree : degree (representative q n a) = d
   cases' d with d <;> simp [natDegree, hdegree, WithBot.unbot', WithBot.recBotCoe]
 
-
-
-theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
+theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
   simp only [R.repLength, representative]
   have : Polynomial.degree ( R.representative' q n a %ₘ f q n) < 2^n := by
@@ -410,6 +419,7 @@ theorem R.repLength_lt_n_plus_1 : forall a : R q n, a.repLength < 2^n + 1 := by
     cases VAL
     norm_cast at VAL_EQN
 
+section Coeff
 /--
 This function gets the `i`th coefficient of the polynomial representative
 (with degree `< 2^n`) of an element `a : R q n`. Note that this is not
@@ -489,9 +499,9 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly_aux (coeffs : List Int) (rp : R q n
 /-- fromTensor = R.fromPoly ∘ fromTensor'.
 This permits reasoning about fromTensor directly on the polynomial ring.
 -/
-theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} :
+theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} [Fact (q > 1)] {coeffs : List Int} :
     R.fromTensor (q := q) (n := n) coeffs =
-  R.fromPoly (q := q) (n := n) (R.fromTensor' q coeffs) := by
+  R.fromPoly (q := q) (n := n) (R.fromTensor' coeffs) := by
     simp only [fromTensor, fromTensor']
     induction coeffs
     · simp [List.enum]
@@ -499,11 +509,15 @@ theorem R.fromTensor_eq_fromTensor'_fromPoly {q n} {coeffs : List Int} :
       apply fromTensor_eq_fromTensor'_fromPoly_aux
       simp [monomial]
 
+end Coeff
 
+section FinnSupp
+
+variable {q n : Nat}
 /-- an equivalent implementation of `fromTensor` that uses `Finsupp`
   to enable reasoning about values using mathlib's notions of
   support, coefficients, etc. -/
-noncomputable def R.fromTensorFinsupp (coeffs : List Int) : (ZMod q)[X] :=
+noncomputable def R.fromTensorFinsupp (q : Nat) (coeffs : List Int) : (ZMod q)[X] :=
   Polynomial.ofFinsupp (List.toFinsupp (coeffs.map Int.cast))
 
 theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
@@ -532,7 +546,7 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
         apply Nat.le_of_lt ha₆
 
 /-- degree of fromTensorFinsupp is at most the length of the coefficient list. -/
-theorem R.fromTensorFinsupp_degree (coeffs : List Int) :
+theorem R.fromTensorFinsupp_degree (q : Nat) (coeffs : List Int):
   (R.fromTensorFinsupp q coeffs).degree ≤ coeffs.length := by
   rw [fromTensorFinsupp]
   have hdeg := Polynomial.degree_toFinsupp (List.map (Int.cast (R := ZMod q)) coeffs)
@@ -549,9 +563,9 @@ theorem R.fromTensorFinsupp_coeffs (coeffs : List Int) :
   rw [hzero, List.getD_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a ⟨Finsupp.single⟩. -/
-theorem R.fromTensorFinsupp_concat_finsupp {q : Nat} (c : Int) (cs : List Int) :
-    (R.fromTensorFinsupp (q := q) (cs ++ [c])) =
-      (R.fromTensorFinsupp (q := q) cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
+theorem R.fromTensorFinsupp_concat_finsupp (c : Int) (cs : List Int) :
+    (R.fromTensorFinsupp q (cs ++ [c])) =
+      (R.fromTensorFinsupp q cs) + ⟨Finsupp.single cs.length (Int.cast c : (ZMod q))⟩ := by
     simp only [fromTensorFinsupp]
     simp only [← Polynomial.ofFinsupp_add]
     simp only [List.map_append, List.map]
@@ -559,9 +573,9 @@ theorem R.fromTensorFinsupp_concat_finsupp {q : Nat} (c : Int) (cs : List Int) :
     simp only [List.length_map]
 
 /-- concatenating into a `fromTensorFinsupp` is the same as adding a monomial. -/
-theorem R.fromTensorFinsupp_concat_monomial {q : Nat} (c : Int) (cs : List Int) :
-    (R.fromTensorFinsupp (q := q) (cs ++ [c])) =
-      (R.fromTensorFinsupp (q := q) cs) +
+theorem R.fromTensorFinsupp_concat_monomial (c : Int) (cs : List Int) :
+    (R.fromTensorFinsupp q (cs ++ [c])) =
+      (R.fromTensorFinsupp q cs) +
         (Polynomial.monomial cs.length (Int.cast c : (ZMod q))) := by
     simp only [fromTensorFinsupp, List.map_append, List.map_cons, List.map_nil]
     rw [←Polynomial.ofFinsupp_single]
@@ -570,7 +584,7 @@ theorem R.fromTensorFinsupp_concat_monomial {q : Nat} (c : Int) (cs : List Int) 
     rw [List.length_map]
 
 /-- show that `fromTensor` is the same as `fromPoly ∘ fromTensorFinsupp`. -/
-theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List Int} :
+theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {coeffs : List Int} :
     R.fromTensor (q := q) (n := n) coeffs =
   R.fromPoly (q := q) (n := n) (R.fromTensorFinsupp q coeffs) := by
     simp only [fromTensor]
@@ -582,8 +596,14 @@ theorem R.fromTensor_eq_fromTensorFinsupp_fromPoly {q n} {coeffs : List Int} :
       rw [hcs]
       congr
 
+end FinnSupp
+
+section Tensor
+
+variable {q n : Nat} [Fact (q > 1)]
+
 /-- `coeff (p % f) = coeff p` if the degree of `p` is less than the degree of `f`. -/
-theorem coeff_modByMonic_degree_lt_f {q n i : Nat} [Fact (q > 1)] (p : (ZMod q)[X])
+theorem coeff_modByMonic_degree_lt_f {i : Nat} (p : (ZMod q)[X])
     (DEGREE : p.degree < (f q n).degree) :
   (p %ₘ f q n).coeff i = p.coeff i := by
   have H := (modByMonic_eq_self_iff (hq := f_monic q n) (p := p)).mpr DEGREE
@@ -591,7 +611,7 @@ theorem coeff_modByMonic_degree_lt_f {q n i : Nat} [Fact (q > 1)] (p : (ZMod q)[
 
 /-- The coefficient of `fromPoly p` is the coefficient of `p` modulo `f q n`. -/
 @[simp]
-theorem R.coeff_fromPoly {q n : Nat} [Fact (q > 1)] (p : (ZMod q)[X]) :
+theorem R.coeff_fromPoly (p : (ZMod q)[X]) :
     R.coeff (R.fromPoly (q := q) (n := n) p) = Polynomial.coeff (p %ₘ (f q n)) := by
   unfold R.coeff
   simp [R.coeff]
@@ -605,7 +625,7 @@ theorem R.coeff_fromPoly {q n : Nat} [Fact (q > 1)] (p : (ZMod q)[X]) :
   3.
 -/
 /-- The coefficient of `fromTensor` is the same as the values available in the tensor input. -/
-theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
+theorem R.coeff_fromTensor (tensor : List Int)
     (htensorlen : tensor.length < 2^n) :
     (R.fromTensor (q := q) (n := n) tensor).coeff i = (tensor.getD i 0) := by
   rw [fromTensor_eq_fromTensorFinsupp_fromPoly]
@@ -630,7 +650,7 @@ theorem R.coeff_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int)
 
 theorem R.representative_fromTensor_eq_fromTensor' (tensor : List Int) :
     R.representative q n (R.fromTensor tensor) =
-      R.representative' q n (R.fromTensor' q tensor)  %ₘ (f q n) := by
+      R.representative' q n (R.fromTensor' (q:=q) tensor)  %ₘ (f q n) := by
   simp only [representative]
   rw [fromTensor_eq_fromTensor'_fromPoly];
 
@@ -639,12 +659,12 @@ Converts an element of `R` into a tensor (modeled as a `List Int`)
 with the representatives of the coefficients of the representative.
 The length of the list is the degree of the representative + 1.
 -/
-noncomputable def R.toTensor {q n} [Fact (q > 1)] (a : R q n) : List Int :=
+noncomputable def R.toTensor {q n} (a : R q n) : List Int :=
   List.range a.repLength |>.map fun i =>
         a.coeff i |>.toInt
 
 /-- The length of the tensor `R.toTensor a` equals `a.repLength` -/
-theorem R.toTensor_length {q n} [Fact (q > 1)] (a : R q n) :
+theorem R.toTensor_length {q n} (a : R q n) :
     (R.toTensor a).length = a.repLength := by
   simp only [toTensor, List.length_map, List.length_range]
 
@@ -653,13 +673,18 @@ Converts an element of `R` into a tensor (modeled as a `List Int`)
 with the representatives of the coefficients of the representative.
 The length of the list is the degree of the generator polynomial `f` + 1.
 -/
-noncomputable def R.toTensor' {q n} [Fact (q > 1)] (a : R q n) : List Int :=
+noncomputable def R.toTensor' {q n} (a : R q n) : List Int :=
   let t := a.toTensor
   t ++ List.replicate (2^n - t.length + 1) 0
 
 def trimTensor (tensor : List Int) : List Int
   := tensor.reverse.dropWhile (· = 0) |>.reverse
 
+end Tensor
+
+section Signature
+
+variable [Fact (q > 1)]
 /--
 We define the base type of the representation, which encodes both natural numbers
 and elements in the ring `R q n` (which in FHE are sometimes called 'polynomials'
@@ -667,7 +692,7 @@ and elements in the ring `R q n` (which in FHE are sometimes called 'polynomials
 
  In this context, `Tensor is a 1-D tensor, which we model here as a list of integers.
 -/
-inductive Ty (q : Nat) (n : Nat) [Fact (q > 1)]
+inductive Ty (q : Nat) (n : Nat)
   | index : Ty q n
   | integer : Ty q n
   | tensor : Ty q n
@@ -689,7 +714,7 @@ two parameters `p` and `n` that characterize the ring `R q n`.
 We parametrize the entire type by these since it makes no sense to mix
 operations in different rings.
 -/
-inductive Op (q : Nat) (n : Nat) [Fact (q > 1)]
+inductive Op (q : Nat) (n : Nat)
   | add : Op q n-- Addition in `R q n`
   | sub : Op q n-- Substraction in `R q n`
   | mul : Op q n-- Multiplication in `R q n`
@@ -714,7 +739,7 @@ open TyDenote (toType)
 
 
 @[simp, reducible]
-def Op.sig : Op  q n → List (Ty q n)
+def Op.sig : Op q n → List (Ty q n)
 | Op.add => [Ty.polynomialLike, Ty.polynomialLike]
 | Op.sub => [Ty.polynomialLike, Ty.polynomialLike]
 | Op.mul => [Ty.polynomialLike, Ty.polynomialLike]
@@ -739,9 +764,9 @@ def Op.outTy : Op q n → Ty q n
 
 @[simp, reducible]
 def Op.signature : Op q n → Signature (Ty q n) :=
-  fun o => {sig := Op.sig q n o, outTy := Op.outTy q n o, regSig := []}
+  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
 
-instance : DialectSignature (FHE q n) := ⟨Op.signature q n⟩
+instance : DialectSignature (FHE q n) := ⟨Op.signature⟩
 
 @[simp]
 noncomputable instance : DialectDenote (FHE q n) where

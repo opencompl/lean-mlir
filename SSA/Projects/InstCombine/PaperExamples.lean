@@ -7,9 +7,6 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.ForLean
-import Init.Data.BitVec.Bitblast
-import Init.Data.BitVec.Lemmas
-import Init.Data.BitVec.Folds
 import Lean
 
 

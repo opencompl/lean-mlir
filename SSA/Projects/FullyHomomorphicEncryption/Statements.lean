@@ -5,9 +5,6 @@ import SSA.Projects.FullyHomomorphicEncryption.Basic
 import Batteries.Data.List.Lemmas
 import Mathlib.Data.List.Basic
 
--- variable {q t : Nat} [ hqgt1 : Fact (q > 1)] {n : Nat}
--- variable (a b : R q n)
-
 namespace Poly
 
 theorem mul_comm (a b : R q n) : a * b = b * a := by
@@ -65,7 +62,7 @@ theorem monomial_mul_mul (x y : Nat) :
 
 end Poly
 
-theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) :
+theorem R.toTensor_getD [Fact (q > 1)] (a : R q n) (i : Nat) :
     a.toTensor.getD i 0 = (a.coeff i).toInt := by
   simp only [toTensor, coeff]
   have hLength :
@@ -75,7 +72,7 @@ theorem R.toTensor_getD [hqgt1 : Fact (q > 1)] (a : R q n) (i : Nat) :
   by_cases (i < R.repLength a)
   case pos h =>
     rw [← hLength] at h
-    rw [List.getD_eq_get _ _ h]
+    rw [List.getD_eq_getElem _ _ h]
     simp
   case neg h =>
     rw [Nat.not_lt] at h
@@ -189,7 +186,7 @@ theorem R.fromTensor_eq_fromTensor_trimTensor (tensor : List Int) :
     rw [hn]
   simp [R.fromTensor_eq_concat_zeroes]
 
-theorem R.trimTensor_toTensor'_eq_trimTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
+theorem R.trimTensor_toTensor'_eq_trimTensor_toTensor [Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor' = trimTensor a.toTensor := by
   apply R.trimTensor_append_zeroes_eq
 
@@ -204,15 +201,15 @@ theorem eq_iff_coeff_eq [hqgt1 : Fact (q > 1)] (a b : R q n) :
      apply Polynomial.coeff_inj.1
      exact h
 
-theorem toTensor_length_eq_rep_length [hqgt1 : Fact (q > 1)] (a : R q n) :
+theorem toTensor_length_eq_rep_length [Fact (q > 1)] (a : R q n) :
   a.toTensor.length = a.repLength := by
   simp [R.repLength, R.toTensor]
 
 -- Surely this doesn't need to be this annoying
-theorem toTensor_length_eq_f_deg_plus_1 [hqgt1 : Fact (q > 1)] (a : R q n) :
+theorem toTensor_length_eq_f_deg_plus_1 [Fact (q > 1)] (a : R q n) :
   a.toTensor'.length = 2^n + 1 := by
   rw [R.toTensor', List.length_append, toTensor_length_eq_rep_length, List.length_replicate]
-  have h : R.repLength a ≤ 2^n  := Nat.le_of_lt_succ (R.repLength_lt_n_plus_1 q n a)
+  have h : R.repLength a ≤ 2^n  := Nat.le_of_lt_succ (R.repLength_lt_n_plus_1 a)
   calc
        R.repLength a + (2 ^ n - R.repLength a + 1)
      = R.repLength a + (Nat.succ (2 ^ n) - R.repLength a) := by rw
@@ -220,7 +217,7 @@ theorem toTensor_length_eq_f_deg_plus_1 [hqgt1 : Fact (q > 1)] (a : R q n) :
    _ = 2^n + 1 := by rw [Nat.add_sub_cancel' (Nat.le_succ_of_le h)]
 
 
-theorem toTensor_trimTensor_eq_toTensor [hqgt1 : Fact (q > 1)] (a : R q n) :
+theorem toTensor_trimTensor_eq_toTensor [Fact (q > 1)] (a : R q n) :
   trimTensor a.toTensor = a.toTensor := by
   unfold R.toTensor
   cases h : Polynomial.degree a.representative with
@@ -247,7 +244,7 @@ theorem toTensor_fromTensor [hqgt1 : Fact (q > 1)] (tensor : List Int) (i : Nat)
   (R.fromTensor tensor (q:=q) (n :=n)).toTensor.getD i 0 = (tensor.getD i 0) % q := by
   simp only [R.toTensor_getD]
   simp only [ZMod.toInt]
-  rw [R.coeff_fromTensor (hqgt1 := hqgt1) (htensorlen := htensorlen)]
+  rw [R.coeff_fromTensor (htensorlen := htensorlen)]
   norm_cast
   simp only [Int.cast, ZMod.cast]
   cases q;
@@ -289,7 +286,7 @@ theorem fromTensor_toTensor [hqgt1 : Fact (q > 1)] (a : R q n)
         rw [← ZMod.coe_intCast]
         norm_cast
         · simp only [R.toTensor_length]
-          have hdeg := R.repLength_leq_representative_degree_plus_1 q n a
+          have hdeg := R.repLength_leq_representative_degree_plus_1 a
           linarith
 
 theorem fromTensor_toTensor' [hqgt1 : Fact (q > 1)] (a : R q n)

@@ -9,7 +9,6 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
-import Batteries.Data.BitVec
 import Mathlib.Tactic.Ring
 
 open BitVec

@@ -29,10 +29,10 @@ instance [Repr Ty] : Repr (TransformError Ty) where
     | typeError expected got =>
         f!"Type mismatch: expected '{repr expected}', but 'name' has type '{repr got}'"
     | widthError expected got => f!"Type mismatch: {expected} ≠ {got}"
-    | unsupportedUnaryOp => f!"Unsuported unary operation"
-    | unsupportedBinaryOp err => f!"Unsuported binary operation 's!{err}'"
-    | unsupportedOp err => f!"Unsuported operation 's!{err}'"
-    | unsupportedType => f!"Unsuported type"
+    | unsupportedUnaryOp => f!"Unsupported unary operation"
+    | unsupportedBinaryOp err => f!"Unsupported binary operation 's!{err}'"
+    | unsupportedOp err => f!"Unsupported operation 's!{err}'"
+    | unsupportedType => f!"Unsupported type"
     | generic err => err
 
 end TransformError

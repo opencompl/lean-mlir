@@ -551,9 +551,38 @@ declare_syntax_cat mlir_attr_val_symbol
 syntax "@" ident : mlir_attr_val_symbol
 syntax "@" str : mlir_attr_val_symbol
 syntax "#" ident : mlir_attr_val -- alias
-syntax "#" strLit : mlir_attr_val -- aliass
+syntax "#" strLit : mlir_attr_val -- alias
 
-syntax "#" ident "<" strLit ">" : mlir_attr_val -- opaqueAttr
+declare_syntax_cat dialect_attribute_contents
+syntax mlir_attr_val : dialect_attribute_contents
+/--
+Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`, 
+which is a particular case of an `mlir-attr-val` that is namespaced to a particular dialect
+
+```bnf
+dialect-namespace ::= bare-id
+
+dialect-attribute ::= `#` (opaque-dialect-attribute | pretty-dialect-attribute)
+opaque-dialect-attribute ::= dialect-namespace dialect-attribute-body
+pretty-dialect-attribute ::= dialect-namespace `.` pretty-dialect-attribute-lead-ident
+                                              dialect-attribute-body?
+pretty-dialect-attribute-lead-ident ::= `[A-Za-z][A-Za-z0-9._]*`
+
+dialect-attribute-body ::= `<` dialect-attribute-contents+ `>`
+dialect-attribute-contents ::= dialect-attribute-body
+                            | `(` dialect-attribute-contents+ `)`
+                            | `[` dialect-attribute-contents+ `]`
+                            | `{` dialect-attribute-contents+ `}`
+                            | [^\[<({\]>)}\0]+
+```
+-/
+syntax "(" dialect_attribute_contents + ")" : dialect_attribute_contents
+syntax "[" dialect_attribute_contents + "]": dialect_attribute_contents
+syntax "{" dialect_attribute_contents + "}": dialect_attribute_contents
+syntax "#" ident "<" mlir_attr_val,*  ">" : mlir_attr_val
+-- If I un-comment this line, it causes an error. I don't know why. Oh well.
+-- syntax "#" ident "<" ident ">" : mlir_attr_val
+-- syntax "#" ident "<" strLit ">" : mlir_attr_val
 syntax "#opaque<" ident "," strLit ">" ":" mlir_type : mlir_attr_val -- opaqueElementsAttr
 syntax mlir_attr_val_symbol "::" mlir_attr_val_symbol : mlir_attr_val_symbol
 
@@ -597,10 +626,20 @@ macro_rules
 
 
 macro_rules
+| `([mlir_attr_val| # $dialect:ident <$xs ,* > ]) => do
+  let initList : TSyntax `term  <- `([])
+  let vals : TSyntax `term <- xs.getElems.foldlM (init := initList) fun (xs : TSyntax `term) (x : TSyntax `mlir_attr_val) =>
+    `([mlir_attr_val| #$dialect<$x>] :: $xs)
+  `(AttrValue.list $vals)
+
+macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do
   let dialect := Lean.quote dialect.getId.toString
   `(AttrValue.opaque_ $dialect $opaqueData)
-
+| `([mlir_attr_val| # $dialect:ident < $opaqueData:ident > ]) => do
+  let d := Lean.quote dialect.getId.toString
+  let g : TSyntax `str := Lean.Syntax.mkStrLit (toString opaqueData.getId)
+  `(AttrValue.opaque_ $d $g)
 macro_rules
 | `([mlir_attr_val| #opaque< $dialect:ident, $opaqueData:str> : $t:mlir_type ]) => do
   let dialect := Lean.quote dialect.getId.toString

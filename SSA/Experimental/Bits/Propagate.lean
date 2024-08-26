@@ -229,7 +229,7 @@ lemma ls_eq_propagate (b : Bool) (x : BitStream) :
   | n+2 => simp [propagate_succ, BitStream.concat]
 
 lemma addAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
-    (addAux x y n).1 = propagateCarry (λ _ => false)
+    (addAux x y n).2 = propagateCarry (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         λ _ => (bits true && bits false) || (bits true && carry ()) || (bits false && carry ()) )
     (λ b => cond b x y) n () := by
@@ -246,13 +246,10 @@ lemma add_eq_propagate (x y : BitStream) :
   | 0 =>
     simp  [HAdd.hAdd, Add.add, BitStream.add, BitStream.addAux, BitVec.adcb]
   | 1 =>
-    simp only [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add, addAux, propagate, propagateAux]
-    simp
+    simp [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add, addAux, addAux, propagate, propagateAux,  -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
   | n+2 =>
-    simp only [HAdd.hAdd, Add.add,BitVec.adcb]
-    simp only [BitStream.add,BitStream.addAux,BitVec.adcb]
-    simp [addAux_eq_propagateCarry, propagate_succ]
-    simp [Bool.or_assoc]
+    simp only [HAdd.hAdd, Add.add,BitVec.adcb, BitStream.add
+      , BitVec.adcb, addAux, addAux_eq_propagateCarry, propagate_succ, Bool.or_assoc]
     simp [Bool.or_comm]
 
 lemma BitStream.subAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :

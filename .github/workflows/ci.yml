@@ -26,6 +26,13 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: ${{ runner.os }}-lake
+
       - name: Compile Library 🧐
         run: |
           lake -R exe cache get # download cache of mathlib docs.
@@ -51,6 +58,11 @@ jobs:
           echo "ALIVE_SUCCESS=$(cat diff)" >> $GITHUB_ENV
           echo "ALIVE_ALL=$(cat all)" >> $GITHUB_ENV
           echo "ALIVE_FAILED=$(cat failed)" >> $GITHUB_ENV
+      
+      - name: Compile DC
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
+          lake -R build SSA.Projects.CIRCT.DC # compile and check CIRCT's DC Dialect
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'

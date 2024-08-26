@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 
 theorem addhshlhsdivhscalar0_thm (x : _root_.BitVec 8) : 
     x.sdiv 252#8 <<< 2 + x = x + x.sdiv 4#8 * 252#8 := by

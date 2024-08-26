@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem t7_thm (x : _root_.BitVec 32) :
   (if x = 0#32 ∨ x <<< 2 = LLVM.intMin 32 ∧ x = 4294967295#32 then none else some ((x <<< 2).sdiv x)) ⊑
     some 4#32 := by

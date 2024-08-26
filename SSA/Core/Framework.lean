@@ -11,6 +11,8 @@ import SSA.Core.Framework.Dialect
 import Mathlib.Data.List.AList
 import Mathlib.Data.Finset.Piecewise
 
+set_option deprecated.oldSectionVars true
+
 open Ctxt (Var VarSet Valuation)
 open TyDenote (toType)
 
@@ -1134,37 +1136,6 @@ def Zipper.insertPureCom (zip : Zipper d Γ_in eff Γ_mid ty) (v : Var Γ_mid ne
 
 /-! simp-lemmas -/
 section Lemmas
-
--- TODO: we probably don't need this
-set_option pp.notation false in
-@[local simp]
-theorem bind_bind_eq [Monad d.m] [LawfulMonad d.m] (ma : d.m a) (f : a → d.m b) (g : b → d.m c) :
-    (bind (bind ma f) g) = bind ma (f >=> g) := by
-  unfold Bind.kleisliRight
-  rw [bind_assoc]
-
---TODO: we should be able to get rid of the below simp lemmas
-/-- eta contraction for pure -/
-@[simp]
-theorem pure_applied_eq_pure [LawfulMonad d.m] :
-    (fun (x : a) => (pure x : d.m a)) = Pure.pure := rfl
-
-/-- combination of bind_pure and eta contraction for pure -/
-@[simp]
-theorem bind_pure_applied_eq [LawfulMonad d.m] (ma : d.m a) :
-    ma >>= (fun (x : a) => (pure x : d.m a)) = ma := by
-  simp
-
-/-- eta contraction for return -/
-@[simp]
-theorem return_applied_eq_return [LawfulMonad d.m] :
-    (fun (x : a) => (return x : d.m a)) = Pure.pure := rfl
-
-/-- combination of bind_return and eta contraction for return -/
-@[simp]
-theorem bind_return_applied [LawfulMonad d.m] (ma : d.m a) :
-    ma >>= (fun (x : a) => (return x : d.m a)) = ma := by
-  simp
 
 @[simp] lemma Zipper.toCom_nil {com : Com d Γ eff ty} : Zipper.toCom ⟨.nil, com⟩ = com := rfl
 @[simp] lemma Zipper.toCom_var {lets : Lets d Γ_in eff Γ_mid} :

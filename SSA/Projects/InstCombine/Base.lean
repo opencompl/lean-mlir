@@ -96,12 +96,41 @@ inductive MOp.BinaryOp : Type
   | ashr
   | urem
   | srem
-  | add
+  | add (nswnuw  : AdditionFlags := {nsw := false, nuw := false} )
   | mul
   | sub
   | sdiv
   | udiv
-deriving Repr, DecidableEq, Inhabited
+deriving DecidableEq, Inhabited
+
+open Std (Format) in
+/--
+If both the nuw and nsw flags are the default value (false,false),
+then we should not print them. This should be the default
+behavior in Lean, but it isn't
+-/
+def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
+  let op  : String := match op with
+    | .and    => "and"
+    | .or     => "or"
+    | .xor    => "xor"
+    | .shl    => "shl"
+    | .lshr   => "lshr"
+    | .ashr   => "ashr"
+    | .urem   => "urem"
+    | .srem   => "srem"
+    | .add ⟨false, false⟩ => "add"
+    | .add ⟨nsw, nuw⟩    => toString f!"add {nsw} {nuw}"
+    | .mul    => "mul"
+    | .sub    => "sub"
+    | .sdiv   => "sdiv"
+    | .udiv   => "udiv"
+  Repr.addAppParen (Format.group (Format.nest
+    (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
+    prec
+
+instance : Repr (MOp.BinaryOp) where
+  reprPrec := reprWithoutFlags
 
 -- See: https://releases.llvm.org/14.0.0/docs/LangRef.html#bitwise-binary-operations
 inductive MOp (φ : Nat) : Type
@@ -127,11 +156,16 @@ namespace MOp
 @[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
-@[match_pattern] def add    (w : Width φ) : MOp φ := .binary w .add
+
 @[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
 @[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
 @[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
 @[match_pattern] def udiv   (w : Width φ) : MOp φ := .binary w .udiv
+
+/- This definition is off by itself because it is different-/
+@[match_pattern] def add    (w : Width φ)
+    (additionFlags: AdditionFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.add  additionFlags )
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
@@ -146,7 +180,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (ashr : ∀ {φ} {w : Width φ}, motive (ashr w))
     (urem : ∀ {φ} {w : Width φ}, motive (urem w))
     (srem : ∀ {φ} {w : Width φ}, motive (srem w))
-    (add  : ∀ {φ} {w : Width φ}, motive (add  w))
+    (add  : ∀ {φ additionFlags} {w : Width φ}, motive (add w additionFlags))
     (mul  : ∀ {φ} {w : Width φ}, motive (mul  w))
     (sub  : ∀ {φ} {w : Width φ}, motive (sub  w))
     (sdiv : ∀ {φ} {w : Width φ}, motive (sdiv w))
@@ -166,7 +200,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
   | _, .ashr _  => ashr
   | _, .urem _  => urem
   | _, .srem _  => srem
-  | _, .add  _  => add
+  | _, .add _ _  => add
   | _, .mul  _  => mul
   | _, .sub  _  => sub
   | _, .sdiv _  => sdiv
@@ -189,7 +223,7 @@ instance : ToString (MOp φ) where
   | .urem _ => "urem"
   | .srem _ => "srem"
   | .select _ => "select"
-  | .add _ => "add"
+  | .add _ _ => "add"
   | .mul _ => "mul"
   | .sub _ => "sub"
   | .neg _ => "neg"
@@ -216,7 +250,6 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev add    : Nat → Op := MOp.add    ∘ .concrete
 @[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
 @[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
@@ -226,6 +259,11 @@ namespace Op
 
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
+
+
+/- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
+@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags :=
+   {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 
 end Op
 
@@ -275,7 +313,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
   | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
-  | Op.add _       => LLVM.add    (op.getN 0) (op.getN 1)
+  | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
   | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
   | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
   | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)

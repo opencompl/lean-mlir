@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem test2_thm (x : _root_.BitVec 32) : 
     (x &&& 7#32) + (x &&& 32#32) = x &&& 39#32 := by
   sorry

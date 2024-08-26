@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem reassoc_x2_add_nuw_thm (x x_1 : _root_.BitVec 32) : 
     x_1 + 4#32 + x + 8#32 = x_1 + x + 12#32 := by
   sorry

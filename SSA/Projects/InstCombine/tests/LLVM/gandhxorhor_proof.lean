@@ -6,7 +6,6 @@ open LLVM
 
 
 
-open Std (BitVec)
 theorem and_xor_not_common_op_thm (x x_1 : _root_.BitVec 32) : 
     (x_1 ^^^ (x ^^^ 4294967295#32)) &&& x_1 = x_1 &&& x := by
   sorry
