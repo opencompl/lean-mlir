@@ -208,21 +208,14 @@ def mkTy2 : String → MLIR.AST.ExceptM (DC) Ty2
   | "Bool" => return (.bool)
   | _ => throw .unsupportedType
 
-
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
   | MLIR.AST.MLIRType.undefined s => do
-    match s with
-    | "Stream_Int" =>
-      return (.stream .int)
-    | "Stream_Bool" =>
-      return (.stream .bool)
-    | "Stream2_Int" =>
-      return (.stream2 .int)
-    | "Stream2_Bool" =>
-      return (.stream2 .bool)
+    match s.splitOn "_" with
+    | ["Stream", r] =>
+      return .stream (← mkTy2 r)
+    | ["Stream2", r] =>
+      return .stream2 (← mkTy2 r)
     | _ => throw .unsupportedType
-    -- | ["Stream2", r] =>
-    --   return .stream2 (← mkTy2 r)
   | _ => throw .unsupportedType
 
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where

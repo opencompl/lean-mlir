@@ -9,6 +9,7 @@ import SSA.Projects.CIRCT.DC.Stream
 namespace DC
 namespace Examples
 
+unseal String.splitOnAux in
 def BranchEg1 := [dc_com| {
   ^entry(%0: !Stream_Int, %1: !Stream_Bool):
     %out = "dc.branch" (%0, %1) : (!Stream_Int, !Stream_Bool) -> (!Stream2_Int)
