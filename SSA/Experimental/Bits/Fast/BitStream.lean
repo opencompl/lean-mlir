@@ -320,7 +320,7 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self]
+    · simp [negAux, neg, ih]
   simp [Neg.neg, neg, neg_lemma]
 
 -- TODO: This sorry is difficult, and will be proven in a later Pull Request.
