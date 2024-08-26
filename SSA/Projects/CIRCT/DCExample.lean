@@ -18,7 +18,6 @@ def BranchEg1 := [dc_com| {
     "return" (%out2) : (!Stream_Int) -> ()
   }]
 
-
 #check BranchEg1
 #eval BranchEg1
 #reduce BranchEg1
@@ -37,7 +36,6 @@ def test : Stream Int :=
 def remNone (lst : List (Option Bool)) : List (Option Bool) :=
   lst.filter (fun | some x => true
                   | none => false)
-
 
 end Examples
 end DC
