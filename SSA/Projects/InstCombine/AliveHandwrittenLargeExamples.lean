@@ -135,6 +135,9 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       rw [LLVM.sdiv?_denom_zero_eq_none]
       apply Refinement.none_left
     case neg =>
+      simp only [Bool.false_eq_true, add_tsub_cancel_right, ge_iff_le, false_and, toNat_ofNat,
+        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, or_self,
+        ↓reduceIte, Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
       cases w'
@@ -233,7 +236,8 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   intros a
   simp_alive_ops
   simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,
-    EffectKind.return_impure_toMonad_eq, Option.pure_def]
+    EffectKind.return_impure_toMonad_eq, Option.pure_def, Bool.false_eq_true, ge_iff_le, false_and,
+    toNat_ofNat, or_self, ↓reduceIte, Option.some_bind]
   split_ifs with c
   simp only [Refinement.none_left]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
@@ -511,11 +515,11 @@ def alive_simplifySelect764 (w : Nat) :
     by_cases neg_A_sgt_zero : -A >ₛ 0#w
     · simp only [neg_A_sgt_zero, ofBool_true, ofNat_eq_ofNat]
       by_cases A_sgt_zero : A >ₛ 0#w
-      simp only [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
+      simp [A_sgt_zero, ofBool_true, ofNat_eq_ofNat, Refinement.some_some]
       · by_cases A_eq_zero : A = 0
         simp only [A_eq_zero, ofNat_eq_ofNat, BitVec.neg_zero]
         by_cases A_eq_intMin : A = intMin w
-        simp only [A_eq_intMin, intMin_eq_neg_intMin]
+        simp only [A_eq_intMin, BitVec.neg_intMin]
         have A_ne_intMin : A ≠ intMin w := by
           simp [A_eq_intMin]
         have A_ne_zero : A ≠ 0 := by
@@ -533,7 +537,7 @@ def alive_simplifySelect764 (w : Nat) :
           BitVec.neg_zero, Refinement.refl]
         by_cases A_eq_intMin : A = intMin w
         · simp [A_eq_intMin, BitVec.ofInt_zero_eq, sgt_same, intMin_not_gt_zero,
-            intMin_eq_neg_intMin]
+            BitVec.neg_intMin]
         · have neg_not_sgt_zero : ¬(-A >ₛ 0#w) = true → (A >ₛ 0#w) = true
             := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
           apply neg_not_sgt_zero at neg_A_sgt_zero
