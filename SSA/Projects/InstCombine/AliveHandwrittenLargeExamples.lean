@@ -533,11 +533,10 @@ def alive_simplifySelect764 (w : Nat) :
       by_cases A_sgt_zero : A >ₛ 0#w
       · simp [A_sgt_zero]
       · by_cases A_eq_zero : A = 0
-        simp only [A_eq_zero, ofNat_eq_ofNat, ofInt_zero_eq, sgt_same, ofBool_false,
+        simp only [A_eq_zero, ofNat_eq_ofNat, sgt_same, ofBool_false,
           BitVec.neg_zero, Refinement.refl]
         by_cases A_eq_intMin : A = intMin w
-        · simp [A_eq_intMin, BitVec.ofInt_zero_eq, sgt_same, intMin_not_gt_zero,
-            BitVec.neg_intMin]
+        · simp [A_eq_intMin, sgt_same, intMin_not_gt_zero, BitVec.neg_intMin]
         · have neg_not_sgt_zero : ¬(-A >ₛ 0#w) = true → (A >ₛ 0#w) = true
             := (sgt_zero_eq_not_neg_sgt_zero A A_eq_intMin A_eq_zero).mpr
           apply neg_not_sgt_zero at neg_A_sgt_zero
