@@ -359,6 +359,7 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
 theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
   simp [BitVec.slt]
 
+@[simp]
 theorem toInt_intMin {w : Nat} :
     (intMin w).toInt = -(2 ^ (w - 1) % 2 ^ w) := by
   by_cases h : w = 0
@@ -375,9 +376,10 @@ theorem toInt_intMin {w : Nat} :
 
 private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
   unfold BitVec.slt
-  unfold intMin
-  have h' : w ≠ 0 := by omega
-  simp [ofNat_eq_ofNat, toInt_zero, decide_eq_true_eq, toInt_intMin, h']
+  simp only [toInt_intMin, ofNat_eq_ofNat, toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
+  norm_cast
+  rw [Nat.two_pow_pred_mod_two_pow (by omega)]
+  exact Nat.two_pow_pos (w-1)
 
 private theorem not_gt_eq_le (A B : BitVec w) : (¬ (A >ₛ B)) = (A ≤ₛ B) := by
   simp [BitVec.slt, BitVec.sle]
