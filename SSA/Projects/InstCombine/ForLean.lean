@@ -10,24 +10,6 @@ theorem two_pow_pred_mul_two (h : 0 < w) :
   rw [Nat.sub_add_cancel]
   omega
 
-theorem two_pow_pred_add_two_pow_pred (h : 0 < w) :
-    2 ^ (w - 1) + 2 ^ (w - 1) = 2 ^ w:= by
-  rw [← two_pow_pred_mul_two (w := w) h]
-  omega
-
-theorem two_pow_pred_lt_two_pow (h : 0 < w) :
-    2 ^ (w - 1) < 2 ^ w := by
-  simp [← two_pow_pred_add_two_pow_pred h]
-
-theorem two_pow_sub_two_pow_pred (h : 0 < w) :
-    2 ^ w - 2 ^ (w - 1) = 2 ^ (w - 1) := by
-  simp [← two_pow_pred_add_two_pow_pred h]
-
-theorem two_pow_pred_mod_two_pow (h : 0 < w):
-    2 ^ (w - 1) % 2 ^ w = 2 ^ (w - 1) := by
-  rw [Nat.mod_eq_of_lt]
-  apply two_pow_pred_lt_two_pow h
-
 theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
   simp only [bne_iff_ne, ne_eq, mod_two_ne_zero] at h
   assumption
@@ -35,6 +17,12 @@ theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
 theorem sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n = n - x := by
   rcases n with rfl | n <;> simp
   omega
+
+theorem two_pow_pred_sub_two_pow {w : Nat} (h : 0 < w) :
+    2 ^ (w - 1) - 2 ^ w = - 2 ^ (w - 1) := by
+  norm_cast
+  rw [← Nat.two_pow_pred_add_two_pow_pred h, Int.subNatNat_eq_coe]
+  simp
 
 @[simp]
 theorem one_mod_two_pow_eq {n : Nat} (hn : n ≠ 0) : 1 % 2 ^ n = 1 := by
@@ -117,11 +105,6 @@ def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
   simp only [getLsb_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
     decide_eq_true_eq]
   rw [Nat.sub_lt_iff_lt_add] <;> omega
-
-@[simp]
-lemma ofInt_ofNat (w n : Nat) :
-    BitVec.ofInt w (no_index (OfNat.ofNat n)) = BitVec.ofNat w (OfNat.ofNat n) := by
-  rfl
 
 -- @[simp]
 def neg_allOnes {w : Nat} : -(allOnes w) = (1#w) := by
@@ -279,26 +262,7 @@ theorem toNat_one (hw : w ≠ 0 := by omega): BitVec.toNat (1 : BitVec w) = 1 :=
   apply Nat.mod_eq_of_lt
   apply Nat.one_lt_pow <;> omega
 
-theorem toNat_intMin' (w : ℕ) : BitVec.toNat (LLVM.intMin w) =
-    if w = 0 then 0 else 2^(w-1) := by
-  cases w
-  case zero =>
-    simp [LLVM.intMin]
-  case succ w' =>
-    simp only [LLVM.intMin, add_tsub_cancel_right, toNat_neg, toNat_ofNat, add_eq_zero, one_ne_zero,
-      and_false, ↓reduceIte]
-    have hpow : 2^w' > 0 := by
-      apply Nat.pow_pos (by decide)
-    repeat rw [Nat.pow_succ]
-    conv =>
-      lhs
-      pattern (2^w' % _)
-      rw [Nat.mod_eq_of_lt (by omega)]
-    have hfact (x : Nat) (hx : x > 0) : x * 2 - x = x := by omega
-    rw [hfact _ hpow]
-    rw [Nat.mod_eq_of_lt (by omega)]
-
-theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): LLVM.intMin w = 1 := by
+theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): BitVec.intMin w = 1 := by
   cases w
   · rfl
   · case succ w' =>
@@ -307,14 +271,11 @@ theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): LLVM.intMin w = 1 := by
     · case succ w' =>
       contradiction
 
-theorem intMin_neq_one {w : Nat} (hw : w > 1): LLVM.intMin w ≠ 1 := by
-  cases w
-  · simp at hw
-  · case succ w' =>
-    have hpos : 2^w' > 1 := by
-      apply Nat.one_lt_two_pow (by omega)
-    simp [bv_toNat, toNat_intMin']
-    omega
+theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
+  have h' : w > 0 := by omega
+  simp [bv_toNat, h']
+  rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+  omega
 
 theorem width_one_cases' (x : BitVec 1) :
     x = 0 ∨ x = 1 := by
@@ -331,16 +292,6 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
     BitVec.getLsb x i = false := by
   have rk : _ := @BitVec.getLsb_ge w x i hi
   apply rk
-
-def intMin (w : Nat) : BitVec w  := BitVec.ofNat w (2^(w - 1))
-
-private theorem toNat_intMin (w : Nat) :
-    (intMin w).toNat = (if w = 0 then 0 else 2^(w - 1)) := by
-  simp only [intMin, toNat_ofNat]
-  by_cases w_0 : w = 0
-  · simp [w_0]
-  · rw [Nat.two_pow_pred_mod_two_pow (by omega)]
-    simp [w_0, ↓reduceIte]
 
 @[simp]
 private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
@@ -368,19 +319,16 @@ private theorem ofInt_neg {w : Nat} {A : BitVec w} (rs : A ≠ intMin w) :
   · rw [Nat.cast_sub]
     ring_nf
     simp [Nat.le_of_lt (isLt A)]
-  · have is_int_min : BitVec.toNat A * 2 = 2^(w) := by
-      ring_nf at a b
-      rw [Nat.mul_sub_right_distrib, not_lt, Nat.le_sub_iff_add_le, mul_two,
-          mul_two, add_le_add_iff_left, ←mul_two] at a
-      simp only [eq_of_ge_of_not_gt a (by simp [b])]
-      simp only [gt_iff_lt, Nat.ofNat_pos, mul_le_mul_right, le_of_lt (isLt A)]
-    have is_int_min' : BitVec.toNat A = 2^(w-1) := by
+  · have is_int_min' : BitVec.toNat A = 2^(w-1) := by
       have h : 2 ^w  = (2 ^(w - 1)) * 2 := by
         rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
         omega
       omega
     simp [ne_eq, toNat_eq, is_int_min', toNat_intMin, w_0, ↓reduceIte,
       not_true_eq_false] at rs
+    rw [Nat.two_pow_pred_mod_two_pow (by omega)] at rs
+    omega
+
 
 private theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B ≠ intMin w) :
     (-A >ₛ B) = (A <ₛ -B) := by
@@ -403,61 +351,35 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
     simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
     omega
   simp only [ne_eq]
-  unfold intMin
-  simp only [toNat_eq, toNat_ofNat, Nat.zero_mod]
+  simp only [toNat_eq, toNat_ofNat, Nat.zero_mod, toNat_twoPow]
   rw [Nat.two_pow_pred_mod_two_pow (by omega)]
-  have _ : 0 < 2 ^(w - 1) := by
-    simp [Nat.pow_pos]
+  have two_pow_pos := Nat.two_pow_pos (w-1)
   omega
-
-theorem intMin_eq_neg_intMin (w : Nat) :
-    -intMin w = intMin w := by
-  by_cases w_eq_zero : w = 0
-  · subst w_eq_zero
-    simp [intMin]
-  have w_gt_zero : 0 < w := by omega
-  simp only [toNat_eq, toNat_neg, toNat_intMin]
-  simp only [w_eq_zero, ↓reduceIte]
-  simp only [Nat.two_pow_sub_two_pow_pred w_gt_zero]
-  simp only [Nat.two_pow_pred_mod_two_pow w_gt_zero]
 
 theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
   simp [BitVec.slt]
 
-private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
-  unfold intMin
-  unfold BitVec.slt
-  simp only [ofNat_eq_ofNat, toInt_zero, decide_eq_true_eq]
-  simp [BitVec.toInt_ofNat]
-  unfold Int.bmod
-  simp only [Nat.cast_pow, Nat.cast_ofNat]
-  norm_cast
-  simp only [Nat.two_pow_pred_mod_two_pow h]
-  split_ifs
-  · rename_i hh
-    norm_cast at hh
-    have h_if_nat : ¬ (2 ^ (w - 1) < (2 ^ w + 1) / 2) := by
-      have hhh : ¬ (2 ^ (w - 1) * 2 + 1 < (2 ^ w + 1) / 2 * 2 + 1) := by
-        rw [Nat.div_two_mul_two_add_one_of_odd]
-        · simp only [add_lt_add_iff_right, not_lt]
-          rw [← Nat.two_pow_pred_add_two_pow_pred h]
-          omega
-        · apply Even.add_odd
-          · apply Even.pow_of_ne_zero
-            simp only [even_two]
-            omega
-          · simp
-      omega
-    contradiction
-
-  · rename_i hh
-    rw [Int.subNatNat_eq_coe]
-    norm_cast at hh
-    apply Int.sub_lt_of_sub_lt
-    simp only [Nat.cast_pow, Nat.cast_ofNat, sub_zero]
+@[simp]
+theorem toInt_intMin {w : Nat} :
+    (intMin w).toInt = -(2 ^ (w - 1) % 2 ^ w) := by
+  by_cases h : w = 0
+  · subst h
+    simp [BitVec.toInt]
+  · have w_pos : 0 < w := by omega
+    simp only [BitVec.toInt, toNat_twoPow, w_pos, Nat.two_pow_pred_mod_two_pow, Nat.cast_pow,
+      Nat.cast_ofNat]
+    rw [Nat.mul_comm, Nat.two_pow_pred_mul_two w_pos]
+    simp [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow,
+      Nat.two_pow_pred_mod_two_pow, w_pos]
     norm_cast
-    apply Nat.two_pow_pred_lt_two_pow
-    simp [h]
+    rw [Nat.two_pow_pred_mod_two_pow (by omega)]
+
+private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
+  unfold BitVec.slt
+  simp only [toInt_intMin, ofNat_eq_ofNat, toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
+  norm_cast
+  rw [Nat.two_pow_pred_mod_two_pow (by omega)]
+  exact Nat.two_pow_pos (w-1)
 
 private theorem not_gt_eq_le (A B : BitVec w) : (¬ (A >ₛ B)) = (A ≤ₛ B) := by
   simp [BitVec.slt, BitVec.sle]
@@ -471,8 +393,8 @@ private theorem sge_of_sgt (A B : BitVec w) : (A >ₛ B) → (A ≥ₛ B) := by
 
 theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
   by_cases h : w = 0
-  · rw [h]
-    simp only [h, of_length_zero, reduceSLT, not_false_eq_true]
+  · subst h
+    simp [of_length_zero]
   · simp only [not_gt_eq_le, sge_eq_sle]
     rw [sge_of_sgt]
     apply intMin_lt_zero
@@ -607,14 +529,6 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
   ext j
   simp only [getLsb_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsb_cons]
   split <;> split <;> simp_all <;> omega
-
-@[simp] theorem signExtend_eq (x : BitVec w) :
-    x.signExtend w = x := by
-  apply eq_of_toNat_eq
-  simp only [signExtend, BitVec.ofInt, toInt_eq_toNat_bmod, Int.ofNat_eq_coe, toNat_ofNatLt]
-  rw [Int.bmod_emod]
-  norm_cast
-  simp [toNat_mod_cancel, Int.toNat_ofNat]
 
 end BitVec
 

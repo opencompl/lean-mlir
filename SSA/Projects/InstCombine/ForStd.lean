@@ -43,7 +43,7 @@ theorem none_right {x? : Option α} :
     x? ⊑ none ↔ x? = none := by
   cases x?
   · simp only [none_left]
-  · simp only [iff_false]
+  · simp only [reduceCtorEq, iff_false]
     rintro ⟨⟩
 
 theorem some_left {x : α} {y? : Option α} :

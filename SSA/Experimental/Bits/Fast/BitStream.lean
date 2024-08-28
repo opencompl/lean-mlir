@@ -162,7 +162,7 @@ theorem eq_of_ofBitVec_eq (x y : BitVec w) :
     ofBitVec x ={≤w} ofBitVec y → x = y := by
   intro h
   have := toBitVec_eq_of_equalUpTo h
-  simp at this
+  simp only [toBitVec_ofBitVec, BitVec.signExtend_eq] at this
   simpa
 
 end Lemmas
