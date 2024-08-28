@@ -413,36 +413,6 @@ theorem toInt_width_zero (x : BitVec 0) : BitVec.toInt x = 0 := by
   simp
 
 @[simp]
-theorem toInt_ofInt_zero : BitVec.toInt (BitVec.ofInt w 0) = 0 := by
-  simp [BitVec.msb, BitVec.getMsb, BitVec.getLsb, BitVec.ofInt, BitVec.toInt]
-
-@[simp]
-theorem ofNat_toNat_zero :
-BitVec.toNat (BitVec.ofInt w 0) = 0 := by
-  simp only [BitVec.toNat, BitVec.ofInt, BitVec.toFin, BitVec.ofNat, OfNat.ofNat]
-  norm_cast
-
-@[simp]
-theorem ofBool_neq_1 (b : Bool) :
-    BitVec.ofBool b ≠ (BitVec.ofNat 1 1) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 0) := by
-  constructor <;> (intros h; cases b <;> simp at h; simp [BitVec.ofBool])
-
-@[simp]
-theorem ofBool_neq_0 (b : Bool) :
-    BitVec.ofBool b ≠ (BitVec.ofNat 1 0) ↔ (BitVec.ofBool b) = (BitVec.ofNat 1 1) := by
-  constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
-
-@[simp]
-theorem ofBool_eq_1 (b : Bool) :
-    BitVec.ofBool b = (BitVec.ofNat 1 1) ↔ b = True := by
-  constructor <;> (intros h; cases b <;> simp at h ; simp_all [BitVec.ofBool, h])
-
-@[simp]
-theorem ofBool_eq_0 (b : Bool) :
-    BitVec.ofBool b = (BitVec.ofNat 1 0) ↔ b = False := by
-  constructor <;> (intros h; cases b <;> simp at h ; simp [BitVec.ofBool])
-
-@[simp]
 theorem neg_of_ofNat_0_minus_self (x : BitVec w) : (BitVec.ofNat w 0) - x = -x := by
   simp
 
@@ -479,9 +449,6 @@ theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (
 @[simp]
 theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
   rcases a <;> rcases b <;> simp [bv_toNat]
-
-theorem negOne_eq_allOnes' : -1#w = BitVec.allOnes w := by
-  rw [BitVec.negOne_eq_allOnes]
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
   apply eq_of_getLsb_eq
