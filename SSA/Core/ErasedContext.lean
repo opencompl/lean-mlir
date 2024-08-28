@@ -100,7 +100,7 @@ def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var [] t → α :=
   fun ⟨_, h⟩ => by
-    simp only [get?, EmptyCollection.emptyCollection, empty, List.get?_nil] at h
+    simp only [get?, List.get?_eq_getElem?, List.getElem?_nil, reduceCtorEq] at h
 
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
