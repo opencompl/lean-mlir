@@ -18,6 +18,12 @@ theorem sub_mod_of_lt (n x : Nat) (hxgt0 : x > 0) (hxltn : x < n) : (n - x) % n 
   rcases n with rfl | n <;> simp
   omega
 
+theorem two_pow_pred_sub_two_pow {w : Nat} (h : 0 < w) :
+    2 ^ (w - 1) - 2 ^ w = - 2 ^ (w - 1) := by
+  norm_cast
+  rw [← Nat.two_pow_pred_add_two_pow_pred h, Int.subNatNat_eq_coe]
+  simp
+
 @[simp]
 theorem one_mod_two_pow_eq {n : Nat} (hn : n ≠ 0) : 1 % 2 ^ n = 1 := by
   rw [Nat.mod_eq_of_lt (Nat.one_lt_pow hn (by decide))]
@@ -375,12 +381,6 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
 theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
   simp [BitVec.slt]
 
-theorem two_pow_pred_sub_two_pow {w : Nat} (h : 0 < w) :
-    2 ^ (w - 1) - 2 ^ w = - 2 ^ (w - 1) := by
-  norm_cast
-  rw [← Nat.two_pow_pred_add_two_pow_pred h, Int.subNatNat_eq_coe]
-  simp
-
 theorem toInt_intMin {w : Nat} :
     (intMin w).toInt = if w == 0 then 0 else - 2 ^ (w - 1) := by
   by_cases h : w = 0
@@ -390,7 +390,7 @@ theorem toInt_intMin {w : Nat} :
     simp only [BitVec.toInt, toNat_twoPow, w_pos, Nat.two_pow_pred_mod_two_pow, Nat.cast_pow,
       Nat.cast_ofNat, beq_iff_eq, h, ↓reduceIte]
     rw [Nat.mul_comm, Nat.two_pow_pred_mul_two w_pos]
-    simp only [lt_self_iff_false, ↓reduceIte, two_pow_pred_sub_two_pow w_pos]
+    simp only [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow w_pos]
 
 private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
   unfold BitVec.slt
