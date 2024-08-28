@@ -85,12 +85,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   simp only [bv_toNat, Nat.mod_mul_mod, one_mul]
   rw [Nat.mul_comm]
 
-def ofInt_zero_eq (w : Nat) : BitVec.ofInt w 0 = 0#w := rfl
-def ofNat_zero_eq (w : Nat) : BitVec.ofNat w 0 = 0#w := rfl
-def toInt_zero_eq (w : Nat) : BitVec.toInt 0#w = 0 := by
- simp [BitVec.toInt]
-def toNat_zero_eq (w : Nat) : BitVec.toNat 0#w = 0 := rfl
-
 @[simp]
 def msb_one (h : 1 < w) : BitVec.msb 1#w = false := by
   simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt,
@@ -401,7 +395,7 @@ theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
     omega
 
 theorem zero_sub_eq_neg {w : Nat} { A : BitVec w}: BitVec.ofInt w 0 - A = -A:= by
-  simp [BitVec.ofInt_zero_eq]
+  simp
 
 -- Any bitvec of width 0 is equal to the zero bitvector
 theorem width_zero_eq_zero (x : BitVec 0) : x = BitVec.ofNat 0 0 :=
