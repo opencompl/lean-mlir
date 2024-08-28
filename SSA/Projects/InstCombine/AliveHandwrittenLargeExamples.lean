@@ -199,7 +199,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
         case h_3 c hugt =>
           clear c
           simp only [toNat_add, toNat_ofNat, Nat.mod_add_mod, Nat.reducePow, Fin.zero_eta,
-            Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq, ofBool_eq_0,
+            Fin.isValue, ofFin_ofNat, ofNat_eq_ofNat, Option.some.injEq,
             decide_eq_true_eq, eq_iff_iff, iff_false, not_lt] at hugt
           unfold LLVM.sdiv? -- TODO: devar this; write theorem to unfold sdiv?
           split <;> simp
