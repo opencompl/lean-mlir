@@ -653,7 +653,7 @@ theorem not_eq_and {a b : Bool} : ((!b) == (a && b)) = (!a && b)  := by
   <;> simp
 
 @[simp]
-theorem not_bne {a b : Bool} : (!bne a b) = (a == b) := by
+theorem not_bne' {a b : Bool} : (!bne a b) = (a == b) := by
   cases a
   <;> simp
 

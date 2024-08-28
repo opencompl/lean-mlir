@@ -320,7 +320,7 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self, -Bool.not_bne]
+    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self, -Bool.not_bne',-Bool.not_bne]
   simp [Neg.neg, neg, neg_lemma]
 
 /--
@@ -363,7 +363,7 @@ theorem subAux_inductive_lemma (i : Nat) :
     a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
   induction' i with i ih
   · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
-  · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_ne_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i]
+  · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_ne_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i, -Bool.not_bne]
 
 theorem sub_eq_add_neg : a - b = a + (-b) := by
   ext i
