@@ -262,26 +262,7 @@ theorem toNat_one (hw : w ≠ 0 := by omega): BitVec.toNat (1 : BitVec w) = 1 :=
   apply Nat.mod_eq_of_lt
   apply Nat.one_lt_pow <;> omega
 
-theorem toNat_intMin' (w : ℕ) : BitVec.toNat (LLVM.intMin w) =
-    if w = 0 then 0 else 2^(w-1) := by
-  cases w
-  case zero =>
-    simp [LLVM.intMin]
-  case succ w' =>
-    simp only [LLVM.intMin, add_tsub_cancel_right, toNat_neg, toNat_ofNat, add_eq_zero, one_ne_zero,
-      and_false, ↓reduceIte]
-    have hpow : 2^w' > 0 := by
-      apply Nat.pow_pos (by decide)
-    repeat rw [Nat.pow_succ]
-    conv =>
-      lhs
-      pattern (2^w' % _)
-      rw [Nat.mod_eq_of_lt (by omega)]
-    have hfact (x : Nat) (hx : x > 0) : x * 2 - x = x := by omega
-    rw [hfact _ hpow]
-    rw [Nat.mod_eq_of_lt (by omega)]
-
-theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): LLVM.intMin w = 1 := by
+theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): BitVec.intMin w = 1 := by
   cases w
   · rfl
   · case succ w' =>
@@ -290,14 +271,11 @@ theorem intMin_eq_one {w : Nat} (hw : w ≤ 1): LLVM.intMin w = 1 := by
     · case succ w' =>
       contradiction
 
-theorem intMin_neq_one {w : Nat} (hw : w > 1): LLVM.intMin w ≠ 1 := by
-  cases w
-  · simp at hw
-  · case succ w' =>
-    have hpos : 2^w' > 1 := by
-      apply Nat.one_lt_two_pow (by omega)
-    simp [bv_toNat, toNat_intMin']
-    omega
+theorem intMin_neq_one {w : Nat} (h : w > 1): BitVec.intMin w ≠ 1 := by
+  have h' : w > 0 := by omega
+  simp [bv_toNat, h']
+  rw [← Nat.two_pow_pred_add_two_pow_pred (by omega)]
+  omega
 
 theorem width_one_cases' (x : BitVec 1) :
     x = 0 ∨ x = 1 := by

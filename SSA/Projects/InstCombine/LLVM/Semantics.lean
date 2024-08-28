@@ -155,13 +155,6 @@ def udiv {w : Nat} (x y : IntW w) : IntW w := do
   let y' ← y
   udiv? x' y'
 
-def intMin (w : Nat) : BitVec w :=
-  - BitVec.ofNat w (2^(w - 1))
-
-def intMax (w : Nat) : BitVec w := intMin w - 1
-
-theorem intMin_minus_one {w : Nat} : (intMin w - 1) = intMax w := rfl
-
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
 Note that signed integer division and unsigned integer division are distinct operations; for unsigned integer division, use ‘udiv’.
@@ -181,7 +174,7 @@ at width 2, -4 / -1 is considered overflow!
 -- is no magniture to overflow.
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y == 0 || (w != 1 && x == (intMin w) && y == -1)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1)
   then .none
   else pure (BitVec.sdiv x y)
 
@@ -190,7 +183,7 @@ theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
   simp [LLVM.sdiv?, BitVec.sdiv]
 
 theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
-    (hx : LLVM.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
+    (hx : BitVec.intMin w ≠ x) : LLVM.sdiv? x y = pure (BitVec.sdiv x y) := by
   simp [LLVM.sdiv?]
   tauto
 
@@ -204,7 +197,7 @@ def sdiv {w : Nat} (x y : IntW w) : IntW w := do
 @[simp_llvm]
 theorem sdiv?_eq_div_if {w : Nat} {x y : BitVec w} :
     sdiv? x y =
-    if (y = 0) ∨ ((w ≠ 1) ∧ (x = intMin w) ∧ (y = -1))
+    if (y = 0) ∨ ((w ≠ 1) ∧ (x = BitVec.intMin w) ∧ (y = -1))
       then none
     else pure <| BitVec.sdiv x y
     := by
