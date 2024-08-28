@@ -178,6 +178,10 @@ lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
   have hb : b = 0 ∨ b = 1 := width_one_cases _
   rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
 
+theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
+  simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
+  simp [BitVec.ofNat, Fin.ofNat', add_comm]
+
 open BitVec
 
 lemma toNat_neq_of_neq_ofNat {a : BitVec w} {n : Nat} (h : a ≠ BitVec.ofNat w n) : a.toNat ≠ n := by
@@ -633,10 +637,24 @@ theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   <;> cases b
   <;> simp
 
+theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+  cases a
+  <;> cases b
+  <;> simp
+
 @[simp]
-theorem not_and_self' {a b : Bool} : (a != b && b) = (!a && b) := by
-  by_cases a
-  <;> by_cases b
-  <;> simp [*]
+theorem xor_ne_self {a b : Bool} : xor a ((!a) != b) = !b := by
+  cases a
+  <;> simp
+
+@[simp]
+theorem not_eq_and {a b : Bool} : ((!b) == (a && b)) = (!a && b)  := by
+  cases a
+  <;> simp
+
+@[simp]
+theorem not_bne' {a b : Bool} : (!bne a b) = (a == b) := by
+  cases a
+  <;> simp
 
 end Bool
