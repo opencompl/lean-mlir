@@ -320,12 +320,54 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [negAux, neg, ih]
+    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self, -Bool.not_bne',-Bool.not_bne]
   simp [Neg.neg, neg, neg_lemma]
 
--- TODO: This sorry is difficult, and will be proven in a later Pull Request.
-theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
-  sorry
+/--
+ Will subAux overflow/carry when computing a - b?
+-/
+def subCarries? (a b : BitStream) (i : Nat) : Bool :=
+  let carry : Bool := match i with
+  | 0 => false
+  | i + 1 => a.subCarries? b i
+  (!a i && b i || !xor (a i) (b i) && carry)
+
+/--
+  For any i : ℕ, either the ith bit of -b will not overflow,
+  or the ith bit of (a + -b) will not overflow.
+-/
+theorem neg_or_add (i : Nat) :
+    (b.negAux i).2 = false ∨ (a.addAux b.neg i).2 = false := by
+  induction' i with i ih
+  <;> simp only [negAux, addAux, BitVec.adcb, neg]
+  · cases b 0
+    <;> simp
+  · cases' ih with l l
+    <;> cases b (i + 1)
+    <;> cases a (i + 1)
+    <;> simp [l]
+
+/--
+  Whether a - b will overflow is equivalent to -b overflows = (a + - b) overflows.
+-/
+theorem subCarries?_correct (i : Nat) :
+    a.subCarries? b i = ((b.negAux i).2 == (a.addAux b.neg i).2) := by
+  induction' i with i ih
+  · simp [subCarries?, negAux, addAux, BitVec.adcb, neg]
+  · by_cases a1 : a (i + 1)
+    <;> by_cases b1 : b (i + 1)
+    <;> cases' @neg_or_add a b i with h h
+    <;> simp [h, subCarries?, ih, negAux, addAux, BitVec.adcb, neg, a1, b1]
+
+theorem subAux_inductive_lemma (i : Nat) :
+    a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
+  induction' i with i ih
+  · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
+  · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_ne_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i, -Bool.not_bne]
+
+theorem sub_eq_add_neg : a - b = a + (-b) := by
+  ext i
+  simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, subAux_inductive_lemma i]
 
 @[simp]
 theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
@@ -409,6 +451,13 @@ theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   _ ≈ʷ ofBitVec (~~~ x) + (ofBitVec 1) := ofBitVec_add
   _ ≈ʷ ~~~ ofBitVec x   + 1            := add_congr ofBitVec_not_eqTo ofBitVec_one_eqTo_ofNat
   _ ≈ʷ - (ofBitVec x)                  := by rw [neg_eq_not_add]
+
+theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
+  calc
+  _ ≈ʷ ofBitVec (x + -y) := by rw [BitVec.sub_eq_add_neg]
+  _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
+  _ ≈ʷ ofBitVec x + -(ofBitVec y) := add_congr equal_up_to_refl ofBitVec_neg
+  _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_eq_add_neg]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
