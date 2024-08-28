@@ -8,13 +8,14 @@ def main():
     files.remove("SSA/Projects/InstCombine/tests/LLVM/g2010h11h01hlshrhmask_proof.lean")
     files.remove("SSA/Projects/InstCombine/tests/LLVM/gcanonicalizehshlhlshrhtohmasking_proof.lean")
     files.remove("SSA/Projects/InstCombine/tests/LLVM/gorhshiftedhmasks_proof.lean")
-    print(files)
-    analyze_files(
-        file_paths = files, #["SSA/Projects/InstCombine/HackersDelight.lean"],
-        tactics = [ "data_bitwise", "data_ring", "data_automata", "data_automata_or_ring"], # Tactics.automata
-        summary_file = "summary.xlsx",
-        output_file = "output.xlsx",
-    )
+    # print("\n".join(["import " + f.replace("/", ".")[:-5] for f in files]))
+    print(",\n".join(["`" + f.replace("/", ".")[:-5] for f in files]))
+    # analyze_files(
+    #     file_paths = files, #["SSA/Projects/InstCombine/HackersDelight.lean"],
+    #     tactics = [ "data_bitwise", "data_ring", "data_automata", "data_automata_or_ring"], # Tactics.automata
+    #     summary_file = "summary.xlsx",
+    #     output_file = "output.xlsx",
+    # )
 
 if __name__ == "__main__":
     main()

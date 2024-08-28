@@ -218,7 +218,9 @@ let vars (n : Nat) : BitStream := BitStream.ofBitVec (if n = 0 then v0 else if n
 Term.var 0 -- represent the 0th variable
 Term.var 1 -- represent the 1st variable
 -/
-def introduceMapIndexToFVar : TacticM Unit := do withMainContext <| do
+-- deriving Repr LocalContext
+
+def introduceMapIndexToFVar : TacticM Unit := withMainContext <|  do
   let context : LocalContext ← getLCtx
   let fVars : List FVarId :=  (PersistentArray.toList context.decls).filterMap (fun d => match d with
     | .none => .none
@@ -260,6 +262,7 @@ elab "introduceMapIndexToFVar" : tactic => introduceMapIndexToFVar
 /--
 Create bv_automata tactic which solves equalities on bitvectors.
 -/
+
 macro "bv_automata" : tactic =>
   `(tactic| (
   apply BitStream.eq_of_ofBitVec_eq
@@ -288,7 +291,8 @@ macro "bv_automata" : tactic =>
   apply congrFun
   native_decide
   ))
-
+-- def bv2  : TacticM Unit := by
+--   bv_automata
 
 /-!
 # Test Cases
