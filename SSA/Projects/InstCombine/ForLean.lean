@@ -360,15 +360,18 @@ theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
   simp [BitVec.slt]
 
 theorem toInt_intMin {w : Nat} :
-    (intMin w).toInt = if w == 0 then 0 else - 2 ^ (w - 1) := by
+    (intMin w).toInt = -(2 ^ (w - 1) % 2 ^ w) := by
   by_cases h : w = 0
   · subst h
     simp [BitVec.toInt]
   · have w_pos : 0 < w := by omega
     simp only [BitVec.toInt, toNat_twoPow, w_pos, Nat.two_pow_pred_mod_two_pow, Nat.cast_pow,
-      Nat.cast_ofNat, beq_iff_eq, h, ↓reduceIte]
+      Nat.cast_ofNat]
     rw [Nat.mul_comm, Nat.two_pow_pred_mul_two w_pos]
-    simp only [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow w_pos]
+    simp [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow,
+      Nat.two_pow_pred_mod_two_pow, w_pos]
+    norm_cast
+    rw [Nat.two_pow_pred_mod_two_pow (by omega)]
 
 private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
   unfold BitVec.slt
