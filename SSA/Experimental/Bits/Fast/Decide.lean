@@ -21,7 +21,6 @@ def decide (t₁ t₂ : Term) : IO Bool :=
   (run_decide t₁ t₂)
 
 
--- namespace this section so we prevent the names of x,y,z from leaking out (causes a cryptic error)
 section testDecide
 
 def x := Term.var 0
