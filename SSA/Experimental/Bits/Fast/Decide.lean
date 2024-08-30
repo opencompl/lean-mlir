@@ -20,6 +20,10 @@ def decide (t₁ t₂ : Term) : IO Bool :=
   --timeit "" (run_decide t₁ t₂)
   (run_decide t₁ t₂)
 
+
+-- namespace this section so we prevent the names of x,y,z from leaking out (causes a cryptic error)
+section testDecide
+
 def x := Term.var 0
 def y := Term.var 1
 def z := Term.var 2
@@ -122,3 +126,4 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 
 /-- info: true -/
 #guard_msgs in #eval decide (and x y) (or (not x) y - not x)
+end testDecide
