@@ -1,4 +1,5 @@
 import SSA.Projects.CIRCT.Stream.Stream
+import SSA.Projects.CIRCT.Stream.WeakBisim
 import SSA.Core.MLIRSyntax.EDSL
 
 
@@ -131,7 +132,16 @@ def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
     | none, some y' => (some y', some false, (x.tail, y.tail))
     | none, none => (none, none, (x.tail, y.tail))
 
--- TODO: join, mux, sync, source
+-- TODO: mux, sync, source
+
+def join (x y : Stream α) : Stream Bool :=
+  Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some _, some _ => (true, (x.tail, y.tail))
+    | some _, none   => (false, (x, y.tail))
+    | none, some _   => (false, (x.tail, y))
+    | none, none     => (false, (x.tail, y.tail))
+
 
 
 end Handshake
