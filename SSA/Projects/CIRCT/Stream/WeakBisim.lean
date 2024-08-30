@@ -10,7 +10,6 @@ This file establishes a notion of equivalence that allows us to remove any finit
 
 -/
 
-
 namespace CIRCTStream
 namespace Stream
 
@@ -330,6 +329,7 @@ theorem corec_eq_corec_of
   case zero       => exact hR
   case succ i ih  => exact (h _ _ (ih hR)).right
 
+-- unfold quot stuff to reduce to bisim stuff
 
 theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠ stuck α)
     (y_neq_stuck : y ≠ stuck α := fun h' => x_neq_stuck (eq_stuck_iff_equiv.mp (h' ▸ h))) :
@@ -341,7 +341,6 @@ theorem head_dropLeadingNones_eq_of_bisim {x y} (h : x ~ y) (x_neq_stuck : x ≠
   generalize nonesUntilSome x x_neq_stuck = xn at *
   generalize nonesUntilSome y y_neq_stuck = yn at *
   clear x_neq_stuck y_neq_stuck
-
   induction xn using Nat.strongInductionOn generalizing x y yn
   next xn x_ih =>
     have : n ≤ xn := by

@@ -1,10 +1,4 @@
-import Qq
-import Lean
-import Qq
-import Lean
-import SSA.Core.Framework
 import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
 
 
@@ -128,38 +122,18 @@ def fork (x : Stream α) : Stream α × Stream α :=
       let x' := x.tail
       (x0, x0, x')
 
--- def controlMerge (x : Stream) : Val × Val × Stream :=
---     Stream.corec (β :=  Stream) (x)
---       fun x =>
---         match x with
---           | .left  =>
---             let x0 := x.head
---             let x := x.tail
---             let nextConsume := match x0 with
---               | some _ => .right
---               | none   => .left
---             (x0, x, y, nextConsume)
---           | .right =>
---             let y0 := y.head
---             let y := y.tail
---             let nextConsume := match y0 with
---               | some _ => .left
---               | none   => .right
---             (y0, x, y, nextConsume)
-      -- | .left  =>
-      --   let x0 := x.head
-      --   let x := x.tail
-      --   let nextConsume := match x0 with
-      --     | some _ => .right
-      --     | none   => .left
-      --   (x0, x, y, nextConsume)
-      -- | .right =>
-      --   let y0 := y.head
-      --   let y := y.tail
-      --   let nextConsume := match y0 with
-      --     | some _ => .left
-      --     | none   => .right
-      --   (y0, x, y, nextConsume)
+-- not entirely nondeterministic (still picks left first)
+def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
+  Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some x', some _ => (some x', some true, (x.tail, y))
+    | some x', none => (some x', some true, (x.tail, y.tail))
+    | none, some y' => (some y', some false, (x.tail, y.tail))
+    | none, none => (none, none, (x.tail, y.tail))
+
+-- TODO: join, mux, sync, source
+
+
 end Handshake
 end CIRCTStream
 
@@ -193,7 +167,7 @@ toType := fun
 |  Ty2.bool => Bool
 
 open TyDenote (toType) in
-instance : TyDenote Ty where
+instance instHandshakeTyDenote : TyDenote Ty where
 toType := fun
 | Ty.stream ty2 => CIRCTStream.Stream (toType ty2)
 | Ty.stream2 ty2 => CIRCTStream.Stream (toType ty2) × CIRCTStream.Stream (toType ty2)
@@ -246,23 +220,18 @@ defines a `[handshake_com| ...]` macro to hook into this generic syntax parser
 namespace MLIR2Handshake
 
 
-def mkTy2 : String → MLIR.AST.ExceptM Handshake Ty2
-  | "Int" => return .int
-  | "Bool" => return .bool
+def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
+  | "Int" => return (.int)
+  | "Bool" => return (.bool)
   | _ => throw .unsupportedType
 
-
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake (Handshake.Ty)
-  | MLIRType.undefined s => do
-    match s with
-    | "Stream_Int" =>
-      return (.stream .int)
-    | "Stream_Bool" =>
-      return (.stream .bool)
-    | "Stream2_Int" =>
-      return (.stream .int)
-    | "Stream2_Bool" =>
-      return (.stream .bool)
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
+  | MLIR.AST.MLIRType.undefined s => do
+    match s.splitOn "_" with
+    | ["Stream", r] =>
+      return .stream (← mkTy2 r)
+    | ["Stream2", r] =>
+      return .stream2 (← mkTy2 r)
     | _ => throw .unsupportedType
   | _ => throw .unsupportedType
 

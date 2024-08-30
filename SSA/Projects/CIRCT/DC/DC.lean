@@ -2,15 +2,6 @@ import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.Stream.Stream
 
-
--- // CHECK:   hw.module @test_fork(in %[[VAL_0:.*]] : !dc.token, out out0 : !dc.token, out out1 : !dc.token) {
--- // CHECK:           %[[VAL_1:.*]]:2 = dc.fork [2] %[[VAL_0]]
--- // CHECK:           hw.output %[[VAL_1]]#0, %[[VAL_1]]#1 : !dc.token, !dc.token
--- // CHECK:         }
--- handshake.func @test_fork(%arg0: none) -> (none, none) {
---   %0:2 = fork [2] %arg0 : none
---   return %0#0, %0#1 : none, none
--- }
 namespace CIRCTStream
 namespace DC
 
@@ -30,9 +21,6 @@ def fork (x : Stream α) : Stream α × Stream α :=
       let x' := x.tail
       (x0, x0, x')
 
--- def join(x c : Stream) : Stream := sorry
-
-
 
 -- stream semantics was a nice abstraction to avoid formalizing handshake protocols
 -- can we still keep that?
@@ -42,7 +30,12 @@ def unpack (x : ValueStream α) : Val × TokenStream := sorry
 
 
 -- takes a stream and a value, packs the value into the token
-def pack' (x : Option Bool) (stream : TokenStream) : ValueStream α := sorry
+def pack' (x : α) (stream : TokenStream) : ValueStream α :=
+  Stream.corec (β := TokenStream) (stream)
+    fun t => Id.run <| do
+      match t 0 with
+      | some _ => return (some x, t.tail)
+      | none => return (none, t.tail)
 
 def pack (x : ValueStream α) (stream : TokenStream) : ValueStream α := x
 
