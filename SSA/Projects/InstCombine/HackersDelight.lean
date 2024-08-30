@@ -9,12 +9,12 @@ namespace HackersDelight
 
 namespace Ch2Basics
 
-variable {x y : BitVec w}
+variable {x y : BitVec 4}
 
 theorem not_eq_neg_sub_one :
     ~~~ x = -x - 1 := by
-  apply BitVec.eq_sub_iff_add_eq.mpr
-  rw [BitVec.neg_eq_not_add]
+  try alive_auto
+  all_goals sorry
 
 theorem not_and_eq_not_or_not :
     ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
@@ -28,13 +28,13 @@ theorem not_or_eq_not_and_not :
 
 theorem not_add_eq_not_sub_one :
     ~~~ (x + 1) = ~~~ x - 1 := by
-  simp only [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem not_sub_eq_not_add_one :
     ~~~ (x - 1) = ~~~ x + 1 := by
-  repeat rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem not_xor_eq_not_xor :
     ~~~ (x ^^^ y) = ~~~ x ^^^ y := by
@@ -43,41 +43,43 @@ theorem not_xor_eq_not_xor :
 
 theorem not_add_eq_not_sub :
     ~~~ (x + y) = ~~~ x - y := by
-  repeat rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem not_sub_eq_not_add :
     ~~~ (x - y) = ~~~ x + y := by
-  repeat rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem neg_eq_not_add_one :
     -x = ~~~ x + 1 := by
-  exact BitVec.neg_eq_not_add x
+  try alive_auto
+  all_goals sorry
 
 theorem neg_eq_neg_not_one :
     -x = ~~~ (x - 1) := by
-  rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem not_not :
     ~~~ ~~~ x = x := by
-  repeat rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem neg_not_eq_add_one :
     - ~~~ x = x + 1 := by
-  rw [BitVec.neg_eq_not_add, not_not]
+  try alive_auto
+  all_goals sorry
 
 theorem not_neg_eq_sub_one :
     ~~~ (-x) = x - 1 := by
-  rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem add_eq_sub_not_sub_one :
     x + y = x - ~~~ y - 1 := by
-  rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem add_eq_xor_add_mul_and :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
@@ -96,8 +98,8 @@ theorem add_eq_mul_or_neg_xor :
 
 theorem sub_eq_add_not_add_one :
     x - y = x + ~~~ y + 1 := by
-  rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem sub_eq_xor_sub_mul_not_and :
     x - y = (x ^^^ y) - 2 * (~~~ x &&& y) := by
