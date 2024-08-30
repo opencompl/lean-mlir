@@ -480,14 +480,14 @@ def const? (i : Int): IntW w :=
   pure <| BitVec.ofInt w i
 
 @[simp_llvm_option]
-theorem LLVM.const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
+theorem const?_eq : LLVM.const? i = .some (BitVec.ofInt w i) := rfl
 
 @[simp_llvm]
 def not? {w : Nat} (x : BitVec w) : IntW w := do
   pure (~~~x)
 
 @[simp_llvm_option]
-theorem LLVM.not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
+theorem not?_eq : LLVM.not? a = .some (BitVec.not a) := rfl
 
 @[simp_llvm_option]
 def not {w : Nat} (x : IntW w) : IntW w := do
@@ -499,7 +499,7 @@ def neg? {w : Nat} (x : BitVec w) : IntW w := do
   pure <| (-.) x
 
 @[simp_llvm_option]
-theorem LLVM.neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
+theorem neg?_eq : LLVM.neg? a = .some (BitVec.neg a) := rfl
 
 @[simp_llvm_option]
 def neg {w : Nat} (x : IntW w) : IntW w := do
