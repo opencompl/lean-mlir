@@ -1,6 +1,4 @@
-import SSA.Projects.InstCombine.ForMathlib
-import SSA.Projects.InstCombine.ForStd
-import SSA.Projects.InstCombine.TacticAuto
+import SSA.Experimental.Bits.Fast.Tactic
 
 namespace HackersDelight
 
