@@ -472,22 +472,21 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_eq_add_neg]
 
 theorem incr_add : a + (@ofBitVec w 1) ≈ʷ a.incr := by
-  have lemma_1 (i : Nat) (le : i < w) : a.addAux (@ofBitVec w 1) i = a.incrAux i := by
+  have incr_add_aux {i : Nat} (le : i < w) : a.addAux (@ofBitVec w 1) i = a.incrAux i := by
     induction' i with _ ih
     · simp [incrAux,addAux, BitVec.adcb, BitVec.msb, BitVec.getMsb, ofBitVec, le]
-    · simp only [addAux, incrAux]
-      rw [ih (by omega)]
+    · simp only [addAux, incrAux, ih (by omega)]
       simp [BitVec.adcb, Bool.atLeastTwo, ofBitVec, le]
   intros i le
-  simp only [incr, HAdd.hAdd, Add.add, add, lemma_1 i le]
+  simp only [incr, HAdd.hAdd, Add.add, add, incr_add_aux le]
 
-theorem ofBitVec_incr (n : Nat) : ofBitVec (BitVec.ofNat w n.succ) ≈ʷ  (ofBitVec (BitVec.ofNat w n)).incr := by
+theorem ofBitVec_incr {n : Nat} : ofBitVec (BitVec.ofNat w n.succ) ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := by
   calc
   _ ≈ʷ ofBitVec (BitVec.ofNat w n + BitVec.ofNat w 1) := by intros _ il ; simp [ofBitVec, il, -BitVec.ofNat_eq_ofNat, Nat.testBit, BitVec.getLsb]
   _ ≈ʷ ofBitVec (BitVec.ofNat w n) + ofBitVec 1 := ofBitVec_add
-  _ ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := by intros i il ; rw [incr_add] ; exact il
+  _ ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := incr_add
 
-theorem incr_congr (h  : a ≈ʷ b) : a.incr ≈ʷ b.incr := by
+theorem incr_congr (h : a ≈ʷ b) : a.incr ≈ʷ b.incr := by
   intros i le
   have incr_congr_lemma : a.incrAux i = b.incrAux i := by
     induction' i with n ih

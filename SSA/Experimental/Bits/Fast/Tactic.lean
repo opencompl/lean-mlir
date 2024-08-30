@@ -67,24 +67,24 @@ def termNat (n : Nat) : _root_.Term :=
   | 0 => Term.zero
   | x + 1 => Term.incr (termNat x)
 
-def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.EqualUpTo w (BitStream.ofBitVec (BitVec.ofNat w n))  ((termNat n).eval f) := by
+theorem termNat_correct (f : Nat → BitStream) (w n : Nat) : BitStream.EqualUpTo w (BitStream.ofBitVec (BitVec.ofNat w n)) ((termNat n).eval f) := by
   induction' n with n ih
-  · intros i _
-    simp only [Term.eval ,termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
-  · simp only [Term.eval ,termNat, ← Nat.succ_eq_add_one ]
+  · intros _ _
+    simp only [Term.eval, termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
+  · simp only [Term.eval, termNat, ← Nat.succ_eq_add_one]
     trans (BitStream.ofBitVec (BitVec.ofNat w n)).incr
-    exact BitStream.ofBitVec_incr n
+    exact BitStream.ofBitVec_incr
     exact BitStream.incr_congr ih
 
 
 def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) :
-  Q(@BitStream.EqualUpTo $w (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
+  Q(@BitStream.EqualUpTo $w (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNat_correct $qMapIndexToFVar $w $nat)
 
 
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
-partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  :=
+partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)),  Q(@BitStream.EqualUpTo $w $e $x))  :=
   match e with
     | ~q(@HSub.hSub BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
