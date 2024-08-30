@@ -95,19 +95,17 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       ⟩
     | ~q(BitStream.ofBitVec (OfNat.ofNat $b)) => do
       let ofNat := q(OfNat.ofNat $b)
-      let nat := ofNat.nat?
+      let .some nat := ofNat.nat?
+        | throwError m!"The bv_automata tactic expects {repr ofNat} to be of the form of a nat literal, but it is not"
       let length : Q(Nat) := w
       let context  ← getLCtx
       let contextLength := context.getFVarIds.size - 1
       let lastFVar  ← context.getAt? contextLength
       let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-      match nat with
-        | .some nat =>
-          return ⟨
-            q(Term.eval (termNat $nat) $qMapIndexToFVar),
-            quoteThm qMapIndexToFVar length nat
-          ⟩
-        | .none => throwError m!"The bv_automata tactic expects {repr b} to be of the form of a nat literal, but it is not"
+      return ⟨
+        q(Term.eval (termNat $nat) $qMapIndexToFVar),
+        quoteThm qMapIndexToFVar length nat
+      ⟩
     | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
       return ⟨
         q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
