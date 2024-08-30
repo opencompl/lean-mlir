@@ -416,6 +416,18 @@ theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := b
     · simp only [addAux, e1 _ h, e2 _ h, ih (by omega)]
   simp [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma, addAux]
 
+theorem and_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a &&& c) ≈ʷ (b &&& d) := by
+  intros n h
+  simp [e1 n h, e2 n h]
+
+theorem or_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ||| c) ≈ʷ (b ||| d) := by
+  intros n h
+  simp [e1 n h, e2 n h]
+
+theorem xor_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ^^^ c) ≈ʷ (b ^^^ d) := by
+  intros n h
+  simp [e1 n h, e2 n h]
+
 theorem not_congr (e1 : a ≈ʷ b) : (~~~a) ≈ʷ ~~~b := by
   intros g h
   simp only [not_eq, e1 g h]
@@ -458,6 +470,29 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
   _ ≈ʷ ofBitVec x + ofBitVec (-y) := ofBitVec_add
   _ ≈ʷ ofBitVec x + -(ofBitVec y) := add_congr equal_up_to_refl ofBitVec_neg
   _ ≈ʷ ofBitVec x - ofBitVec y := by rw [sub_eq_add_neg]
+
+theorem incr_add : a + (@ofBitVec w 1) ≈ʷ a.incr := by
+  have incr_add_aux {i : Nat} (le : i < w) : a.addAux (@ofBitVec w 1) i = a.incrAux i := by
+    induction' i with _ ih
+    · simp [incrAux,addAux, BitVec.adcb, BitVec.msb, BitVec.getMsb, ofBitVec, le]
+    · simp only [addAux, incrAux, ih (by omega)]
+      simp [BitVec.adcb, Bool.atLeastTwo, ofBitVec, le]
+  intros i le
+  simp only [incr, HAdd.hAdd, Add.add, add, incr_add_aux le]
+
+theorem ofBitVec_incr {n : Nat} : ofBitVec (BitVec.ofNat w n.succ) ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := by
+  calc
+  _ ≈ʷ ofBitVec (BitVec.ofNat w n + BitVec.ofNat w 1) := by intros _ il ; simp [ofBitVec, il, -BitVec.ofNat_eq_ofNat, Nat.testBit, BitVec.getLsb]
+  _ ≈ʷ ofBitVec (BitVec.ofNat w n) + ofBitVec 1 := ofBitVec_add
+  _ ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := incr_add
+
+theorem incr_congr (h : a ≈ʷ b) : a.incr ≈ʷ b.incr := by
+  intros i le
+  have incr_congr_lemma : a.incrAux i = b.incrAux i := by
+    induction' i with n ih
+    <;> simp only [incrAux, h _ le]
+    simp [ih (by omega)]
+  simp [incr, incr_congr_lemma]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
