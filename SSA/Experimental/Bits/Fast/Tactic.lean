@@ -67,60 +67,25 @@ def termNat (n : Nat) : _root_.Term :=
   | 0 => Term.zero
   | x + 1 => Term.incr (termNat x)
 
-def incrBit (w n : Nat) :  BitStream.ofBitVec (BitVec.ofNat w n.succ) = (BitStream.ofBitVec (BitVec.ofNat w n)).incr := by
-  sorry
-
-def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.ofBitVec (BitVec.ofNat w n) = (termNat n).eval f := by
-  induction n
-  ext i
-  simp only [Term.eval ,termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
-  rename_i n ff
-  simp only [Term.eval ,termNat, ← ff]
-  exact incrBit w n
+def termNatCorrect (f : Nat → BitStream) (w n : Nat) :  BitStream.EqualUpTo w (BitStream.ofBitVec (BitVec.ofNat w n))  ((termNat n).eval f) := by
+  induction' n with n ih
+  · intros i _
+    simp only [Term.eval ,termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
+  · simp only [Term.eval ,termNat, ← Nat.succ_eq_add_one ]
+    trans (BitStream.ofBitVec (BitVec.ofNat w n)).incr
+    exact BitStream.ofBitVec_incr n
+    exact BitStream.incr_congr ih
 
 
-def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) : Q(@Eq BitStream (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
+def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) :
+  Q(@BitStream.EqualUpTo $w (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNatCorrect $qMapIndexToFVar $w $nat)
 
-/--
-Simplify BitStream.ofBitVec x where x is an FVar.
-
-It reduces
-BitStream.ofBitVec x ====> (Term.var n).eval vars
-where n is the index of variable x
-
-It should reduce
-BitStream.ofBitVec 0 ====> (Term.zero).eval vars
-BitStream.ofBitVec 1 ====> (Term.one).eval vars
-but for some reason slows down for larger and larger numbers. I don't know why, just don't
-try any numbers bigger than 2
--/
-simproc reduce_bitvec (BitStream.ofBitVec _) := fun e => do
-  let context  ← getLCtx
-  let contextLength := context.getFVarIds.size - 1
-  let lastFVar  ← context.getAt? contextLength
-  let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-  match e.appArg! with
-    | .fvar x => do
-      let p : Q(Nat) := quoteFVar x
-      return .done { expr := q(Term.eval (Term.var $p) $qMapIndexToFVar)}
-    | x =>
-      match_expr x with
-        | BitVec.ofNat a b  =>
-          let nat := b.nat?
-          let length : Q(Nat) := a
-          match nat with
-            | .none => throwError m!"{b} is not a nat literal"
-            | .some nat =>
-              return .done {
-                expr := q(Term.eval (termNat $nat) $qMapIndexToFVar)
-                proof? := .some (quoteThm qMapIndexToFVar length nat)
-                }
-        | _ => throwError m!"reduce_bitvec: Expression {x} is not a nat literal"
 
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
-partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  :=
+partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  := do
+  -- logInfo m!"checking {e}"
   match e with
     | ~q(@HSub.hSub BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -129,6 +94,22 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         q(@HSub.hSub BitStream BitStream BitStream _ $anext $bnext),
         q(@BitStream.sub_congr $w $a $anext $b $bnext $aproof $bproof)
       ⟩
+    | ~q(BitStream.ofBitVec (OfNat.ofNat $b)) => do
+      let ofNat := q(OfNat.ofNat $b)
+      let nat := ofNat.nat?
+      let length : Q(Nat) := w
+      let context  ← getLCtx
+      let contextLength := context.getFVarIds.size - 1
+      let lastFVar  ← context.getAt? contextLength
+      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+      -- let p : Q(Nat) := quoteFVar x
+      match nat with
+        | .some nat =>
+          return ⟨
+            q(Term.eval (termNat $nat) $qMapIndexToFVar),
+            (quoteThm qMapIndexToFVar length nat)
+          ⟩
+        | .none => throwError m!"{repr b} is not a nat literal"
     | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
       return ⟨
         q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
@@ -140,6 +121,27 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       return ⟨
         q($anext + $bnext),
         .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.add_congr []) w) a) anext) b) bnext) aproof) bproof
+      ⟩
+    | ~q(@HAnd.hAnd BitStream BitStream BitStream _ $a $b) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      let ⟨ bnext, bproof ⟩ ← first_rep w b
+      return ⟨
+        q($anext &&& $bnext),
+        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.and_congr []) w) a) anext) b) bnext) aproof) bproof
+      ⟩
+    | ~q(@HOr.hOr BitStream BitStream BitStream _ $a $b) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      let ⟨ bnext, bproof ⟩ ← first_rep w b
+      return ⟨
+        q($anext ||| $bnext),
+        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.or_congr []) w) a) anext) b) bnext) aproof) bproof
+      ⟩
+    | ~q(@HXor.hXor BitStream BitStream BitStream _ $a $b) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w a
+      let ⟨ bnext, bproof ⟩ ← first_rep w b
+      return ⟨
+        q($anext ^^^ $bnext),
+        .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.xor_congr []) w) a) anext) b) bnext) aproof) bproof
       ⟩
     | ~q(@BitStream.ofBitVec $w ($a + $b)) =>
       return ⟨
@@ -162,6 +164,16 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       return ⟨
         q(~~~ $anext),
         (.app (.app (.app (.app (.const ``BitStream.not_congr []) w) a) anext) aproof)
+      ⟩
+    | .app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x) => do
+      let context  ← getLCtx
+      let contextLength := context.getFVarIds.size - 1
+      let lastFVar  ← context.getAt? contextLength
+      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+      let p : Q(Nat) := quoteFVar x
+      return ⟨
+        q(Term.eval (Term.var $p) $qMapIndexToFVar),
+        .app (.app (.const ``BitStream.equal_up_to_refl []) w) (.app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x))
       ⟩
     | e =>
       return ⟨
@@ -237,6 +249,8 @@ Create bv_automata tactic which solves equalities on bitvectors.
 macro "bv_automata" : tactic =>
   `(tactic| (
   apply BitStream.eq_of_ofBitVec_eq
+  introduceMapIndexToFVar
+  intro mapIndexToFVar
   repeat simp only [
     reduce_bitvec2,
     BitStream.ofBitVec_not,
@@ -244,9 +258,7 @@ macro "bv_automata" : tactic =>
     BitStream.ofBitVec_and,
     BitStream.ofBitVec_or,
   ]
-  introduceMapIndexToFVar
-  intro mapIndexToFVar
-  simp only [
+  try simp only [
     ← eval_sub,
     ← eval_add,
     ← eval_neg,
@@ -254,7 +266,6 @@ macro "bv_automata" : tactic =>
     ← eval_xor,
     ← eval_or,
     ← eval_not,
-    reduce_bitvec,
     Nat.reduceAdd,
     BitVec.ofNat_eq_ofNat
   ]
@@ -273,62 +284,124 @@ macro "bv_automata" : tactic =>
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
 
+/-- info: 'test0' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test0
+
 def test_simple2 {w : Nat} (x y : BitVec (w + 1)) : x = x := by
   bv_automata
+
+/--
+info: 'test_simple2' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+-/
+#guard_msgs in #print axioms test_simple2
 
 def test1 {w : Nat} (x y : BitVec (w + 1)) : (x ||| y) - (x ^^^ y) = x &&& y := by
   bv_automata
 
+/-- info: 'test1' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test1
+
 def test2 (x y : BitVec 300) : (x &&& y) + (x ||| y) = x + y := by
   bv_automata
+
+/-- info: 'test2' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test2
 
 def test3 (x y : BitVec 300) : ((x ||| y) - (x ^^^ y)) = (x &&& y) := by
   bv_automata
 
+/-- info: 'test3' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test3
+
 def test4 (x y : BitVec 2) : (x + -y) = (x - y) := by
   bv_automata
+
+/-- info: 'test4' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test4
 
 def test5 (x y z : BitVec 2) : (x + y + z) = (z + y + x) := by
   bv_automata
 
+/-- info: 'test5' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test5
+
 def test6 (x y z : BitVec 2) : (x + (y + z)) = (x + y + z) := by
   bv_automata
+
+/-- info: 'test6' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test6
 
 def test11 (x y : BitVec 2) : (x + y) = ((x |||  y) +  (x &&&  y)) := by
   bv_automata
 
+/-- info: 'test11' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test11
+
 def test15 (x y : BitVec 2) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
   bv_automata
+
+/-- info: 'test15' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test15
 
 def test17 (x y : BitVec 2) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
   bv_automata
 
+/-- info: 'test17' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test17
+
 def test18 (x y : BitVec 2) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
   bv_automata
+
+/-- info: 'test18' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test18
 
 def test19 (x y : BitVec 2) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
   bv_automata
 
+/-- info: 'test19' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test19
+
 def test21 (x y : BitVec 2) : (~~~(x - y)) = (~~~x + y) := by
   bv_automata
+
+/-- info: 'test21' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test21
 
 def test23 (x y : BitVec 2) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := by
   bv_automata
 
+/-- info: 'test23' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test23
+
 def test24 (x y : BitVec 2) : (x ||| y) = (( x &&& (~~~y)) + y) := by
   bv_automata
+
+/-- info: 'test24' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test24
 
 def test25 (x y : BitVec 2) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
   bv_automata
 
+/-- info: 'test25' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test25
+
 def test26 {w : Nat} (x y : BitVec (w + 1)) : 1 + x + 0 = 1  + x := by
   bv_automata
+
+/-- info: 'test26' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test26
 
 def test27 (x y : BitVec 5) : 2 + x  = 1  + x + 1 := by
   bv_automata
 
+/-- info: 'test27' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test27
+
 def test28 {w : Nat} (x y : BitVec (w + 1)) : x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_automata
+
+/-- info: 'test28' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test28
 
 -- This test is commented out because it takes over a minute to run
 -- def broken_test (x y : BitVec 5) : 2 + x  + 2 =  x + 4 := by
