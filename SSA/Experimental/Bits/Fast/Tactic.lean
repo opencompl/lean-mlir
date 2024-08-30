@@ -84,8 +84,7 @@ def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) :
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
-partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  := do
-  -- logInfo m!"checking {e}"
+partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)) ,  Q(@BitStream.EqualUpTo $w $e $x))  :=
   match e with
     | ~q(@HSub.hSub BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -102,14 +101,13 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       let contextLength := context.getFVarIds.size - 1
       let lastFVar  ← context.getAt? contextLength
       let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
-      -- let p : Q(Nat) := quoteFVar x
       match nat with
         | .some nat =>
           return ⟨
             q(Term.eval (termNat $nat) $qMapIndexToFVar),
-            (quoteThm qMapIndexToFVar length nat)
+            quoteThm qMapIndexToFVar length nat
           ⟩
-        | .none => throwError m!"{repr b} is not a nat literal"
+        | .none => throwError m!"The bv_automata tactic expects {repr b} to be of the form of a nat literal, but it is not"
     | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
       return ⟨
         q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
