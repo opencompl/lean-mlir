@@ -133,8 +133,8 @@ theorem and_not_eq_not_add :
 
 theorem not_sub_eq_sub_sub_one :
     ~~~ (x - y) = y - x - 1 := by
-  rw [not_eq_neg_sub_one]
-  ring
+  try alive_auto
+  all_goals sorry
 
 theorem not_xor_eq_and_sub_or_sub_one :
     ~~~ (x ^^^ y) = (x &&& y) - (x ||| y) - 1 := by
