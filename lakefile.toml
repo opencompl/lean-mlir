@@ -16,11 +16,6 @@ name = "doc-gen4"
 git = "https://github.com/leanprover/doc-gen4"
 rev = "main"
 
-[[require]]
-name = "LeanSAT"
-git = "https://github.com/leanprover/leansat.git"
-rev = "main"
-
 [[lean_lib]]
 name = "SSA"
 
