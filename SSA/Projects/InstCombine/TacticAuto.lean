@@ -5,6 +5,7 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Std.Tactic.BVDecide
+import SSA.Experimental.Bits.Fast.Tactic
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -142,6 +143,7 @@ macro "simp_alive_bitvec": tactic =>
             ring_nf
           | of_bool_tactic
           | bv_decide
+          | bv_automata
       )
    )
 
