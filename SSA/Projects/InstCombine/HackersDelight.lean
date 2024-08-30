@@ -9,7 +9,7 @@ namespace HackersDelight
 
 namespace Ch2Basics
 
-variable {x y : BitVec w}
+variable {x y z : BitVec w}
 
 theorem not_eq_neg_sub_one :
     ~~~ x = -x - 1 := by

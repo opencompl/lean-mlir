@@ -20,6 +20,9 @@ def decide (t₁ t₂ : Term) : IO Bool :=
   --timeit "" (run_decide t₁ t₂)
   (run_decide t₁ t₂)
 
+
+section testDecide
+
 def x := Term.var 0
 def y := Term.var 1
 def z := Term.var 2
@@ -122,3 +125,4 @@ example : ((or x y) - (xor x y)).eval = (and x y).eval := by
 
 /-- info: true -/
 #guard_msgs in #eval decide (and x y) (or (not x) y - not x)
+end testDecide
