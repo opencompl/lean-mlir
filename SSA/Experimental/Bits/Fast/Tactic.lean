@@ -106,6 +106,18 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         q(Term.eval (termNat $nat) $qMapIndexToFVar),
         quoteThm qMapIndexToFVar length nat
       ⟩
+    | ~q(BitStream.ofBitVec (BitVec.ofNat $w $b)) => do
+      let .some nat := b.nat?
+        | throwError m!"The bv_automata tactic expects {b} (representation form: {repr b}) to be of the form of a nat literal, but it is not"
+      let length : Q(Nat) := w
+      let context  ← getLCtx
+      let contextLength := context.getFVarIds.size - 1
+      let lastFVar  ← context.getAt? contextLength
+      let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
+      return ⟨
+        q(Term.eval (termNat $nat) $qMapIndexToFVar),
+        quoteThm qMapIndexToFVar length nat
+      ⟩
     | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
       return ⟨
         q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
@@ -171,11 +183,17 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         q(Term.eval (Term.var $p) $qMapIndexToFVar),
         .app (.app (.const ``BitStream.equal_up_to_refl []) w) (.app (.app (.const ``BitStream.ofBitVec []) w) (.fvar x))
       ⟩
-    | e =>
+    | ~q(Term.eval $t $f) =>
       return ⟨
         e,
         .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
       ⟩
+    | e =>
+      throwError m!"bv_automata does not support the expression {e} (representation is: {repr e})"
+      -- return ⟨
+      --   e,
+      --   .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
+      -- ⟩
 
 /--
 Push all ofBitVecs down to the lowest level
@@ -279,9 +297,16 @@ macro "bv_automata" : tactic =>
 def test_ok (x : BitVec 1) : 1 + x = x + 1 := by
   bv_automata
 
+/-- info: 'test_ok' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test_ok
+
 def test_fail (x : BitVec 1) : 1 + x = x + 1#1 := by
   bv_automata
 
+/--
+info: 'test_fail' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+-/
+#guard_msgs in #print axioms test_fail
 
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
