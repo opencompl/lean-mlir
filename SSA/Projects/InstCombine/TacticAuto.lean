@@ -115,7 +115,11 @@ macro "simp_alive_bitvec": tactic =>
   `(tactic|
       (
         intros
-        simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
+        try (
+          simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul)]
+          bv_automata
+        )
+        try simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
         try ring_nf
         /-
         Solve tries each arm in order, falling through
@@ -142,7 +146,6 @@ macro "simp_alive_bitvec": tactic =>
             simp only [← BitVec.negOne_eq_allOnes]
             ring_nf
           | of_bool_tactic
-          | bv_automata
           | bv_decide
       )
    )
