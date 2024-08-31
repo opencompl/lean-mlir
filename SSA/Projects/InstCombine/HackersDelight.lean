@@ -11,10 +11,9 @@ namespace Ch2Basics
 
 variable {x y z : BitVec w}
 
-theorem not_eq_neg_sub_one :
-    ~~~ x = -x - 1 := by
-  try alive_auto
-  all_goals sorry
+/- 2-1 De Morgan’s Laws Extended -/
+
+namespace DeMorgansLawsExtended
 
 theorem not_and_eq_not_or_not :
     ~~~ (x &&& y) = ~~~ x ||| ~~~ y := by
@@ -26,17 +25,27 @@ theorem not_or_eq_not_and_not :
   try alive_auto
   all_goals sorry
 
-theorem not_add_eq_not_sub_one :
+theorem not_add_one_eq_not_sub_one :
     ~~~ (x + 1) = ~~~ x - 1 := by
   try alive_auto
   all_goals sorry
 
-theorem not_sub_eq_not_add_one :
+theorem not_sub_one_eq_not_add_one :
     ~~~ (x - 1) = ~~~ x + 1 := by
   try alive_auto
   all_goals sorry
 
+theorem not_neg_eq_sub_one :
+    ~~~ (- x) = x - 1 := by
+  try alive_auto
+  all_goals sorry
+
 theorem not_xor_eq_not_xor :
+    ~~~ (x ^^^ y) = ~~~ x ^^^ y := by
+  try alive_auto
+  all_goals sorry
+
+theorem q_not_xor :
     ~~~ (x ^^^ y) = ~~~ x ^^^ y := by
   try alive_auto
   all_goals sorry
@@ -51,6 +60,12 @@ theorem not_sub_eq_not_add :
   try alive_auto
   all_goals sorry
 
+end DeMorgansLawsExtended
+
+/- 2–2 Addition Combined with Logical Operations -/
+
+namespace AdditionCombinedWithLogicalOperations
+
 theorem neg_eq_not_add_one :
     -x = ~~~ x + 1 := by
   try alive_auto
@@ -61,8 +76,8 @@ theorem neg_eq_neg_not_one :
   try alive_auto
   all_goals sorry
 
-theorem not_not :
-    ~~~ ~~~ x = x := by
+theorem not_eq_neg_sub_one :
+    ~~~ x = - x - 1:= by
   try alive_auto
   all_goals sorry
 
@@ -121,13 +136,13 @@ theorem xor_eq_or_sub_and :
   try alive_auto
   all_goals sorry
 
-theorem and_not_eq_or_sub :
+theorem and_not_eq_or_sub:
     x &&& ~~~ y = (x ||| y) - y := by
   try alive_auto
   all_goals sorry
 
-theorem and_not_eq_not_add :
-    x &&& ~~~ y = ~~~ x + y := by
+theorem and_not_eq_sub_add :
+    x &&& ~~~ y = x - (x &&& y) := by
   try alive_auto
   all_goals sorry
 
@@ -136,8 +151,18 @@ theorem not_sub_eq_sub_sub_one :
   try alive_auto
   all_goals sorry
 
+theorem not_sub_eq_not_add :
+    ~~~ (x - y) = ~~~x + y := by
+  try alive_auto
+  all_goals sorry
+
 theorem not_xor_eq_and_sub_or_sub_one :
     ~~~ (x ^^^ y) = (x &&& y) - (x ||| y) - 1 := by
+  try alive_auto
+  all_goals sorry
+
+theorem not_xor_eq_and_add_not_or :
+    ~~~ (x ^^^ y) = (x &&& y) + ~~~ (x ||| y) := by
   try alive_auto
   all_goals sorry
 
@@ -150,6 +175,12 @@ theorem and_eq_not_or_sub_not :
     x &&& y = (~~~ x ||| y) - ~~~ x := by
   try alive_auto
   all_goals sorry
+
+end AdditionCombinedWithLogicalOperations
+
+/- 2–3 Inequalities among Logical and Arithmetic Expressions -/
+
+namespace InequalitiesAmongLogicalAndArithmeticExpressions
 
 theorem xor_ule_or :
     x ^^^ y ≤ᵤ x ||| y := by
