@@ -110,9 +110,9 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       let .some nat := b.nat?
         | throwError m!"The bv_automata tactic expects {b} (representation form: {repr b}) to be of the form of a nat literal, but it is not"
       let length : Q(Nat) := w
-      let context  ← getLCtx
+      let context ← getLCtx
       let contextLength := context.getFVarIds.size - 1
-      let lastFVar  ← context.getAt? contextLength
+      let lastFVar ← context.getAt? contextLength
       let qMapIndexToFVar : Q(Nat → BitStream) := .fvar lastFVar.fvarId
       return ⟨
         q(Term.eval (termNat $nat) $qMapIndexToFVar),
