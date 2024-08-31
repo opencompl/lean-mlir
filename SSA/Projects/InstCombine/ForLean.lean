@@ -487,6 +487,22 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
   simp only [getLsb_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsb_cons]
   split <;> split <;> simp_all <;> omega
 
+theorem two_mul {x : BitVec w} :
+    2 * x = x + x := by
+  by_cases h : w = 0
+  · subst h
+    simp [BitVec.eq_nil x]
+  by_cases h : w = 1
+  · subst h
+    simp [bv_toNat]
+  have xx : 1 < w := by omega
+  simp only [bv_toNat]
+  rw [Nat.mod_eq_of_lt (a := 2)]
+  rw [Nat.two_mul]
+  have ssr := @Nat.pow_lt_pow_iff_right 2 1 w (by omega)
+  rw [ssr]
+  omega
+
 end BitVec
 
 namespace Bool

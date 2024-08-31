@@ -115,8 +115,10 @@ macro "simp_alive_bitvec": tactic =>
   `(tactic|
       (
         intros
-
-        try bv_automata
+        try (
+          simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul)]
+          bv_automata
+        )
         try simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
         try ring_nf
         /-
