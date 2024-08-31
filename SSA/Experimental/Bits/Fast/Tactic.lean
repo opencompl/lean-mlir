@@ -276,6 +276,12 @@ macro "bv_automata" : tactic =>
 # Test Cases
 -/
 
+def test_ok (x : BitVec 1) : 1 + x = x + 1 := by
+  bv_automata
+
+def test_fail (x : BitVec 1) : 1 + x = x + 1#1 := by
+  bv_automata
+
 
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
