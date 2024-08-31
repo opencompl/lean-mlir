@@ -294,19 +294,19 @@ macro "bv_automata" : tactic =>
 # Test Cases
 -/
 
-def test_ok (x : BitVec 1) : 1 + x = x + 1 := by
+def test_OfNat_ofNat (x : BitVec 1) : 1 + x = x + 1 := by
   bv_automata
 
-/-- info: 'test_ok' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
-#guard_msgs in #print axioms test_ok
+/-- info: 'test_OfNat_ofNat' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test_OfNat_ofNat
 
-def test_fail (x : BitVec 1) : 1 + x = x + 1#1 := by
+def test_BitVec_ofNat (x : BitVec 1) : 1 + x = x + 1#1 := by
   bv_automata
 
 /--
-info: 'test_fail' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
+info: 'test_BitVec_ofNat' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound]
 -/
-#guard_msgs in #print axioms test_fail
+#guard_msgs in #print axioms test_BitVec_ofNat
 
 def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
   bv_automata
