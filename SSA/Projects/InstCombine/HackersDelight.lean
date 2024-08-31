@@ -180,8 +180,6 @@ end AdditionCombinedWithLogicalOperations
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
 
-namespace InequalitiesAmongLogicalAndArithmeticExpressions
-
 theorem xor_ule_or :
     x ^^^ y ≤ᵤ x ||| y := by
   try alive_auto
