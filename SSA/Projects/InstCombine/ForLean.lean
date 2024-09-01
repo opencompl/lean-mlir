@@ -488,7 +488,7 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
   split <;> split <;> simp_all <;> omega
 
 theorem two_mul {x : BitVec w} :
-    2 * x = x + x := by
+    2#w * x = x + x := by
   by_cases h : w = 0
   · subst h
     simp [BitVec.eq_nil x]
