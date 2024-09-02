@@ -4,16 +4,23 @@ import Init.Data.BitVec.Lemmas
 import SSA.Projects.InstCombine.TacticAuto
 -- import SSA.Projects.InstCombine.ForStd
 -- import SSA.Projects.InstCombine.ForMathlib
+-- import SSA.Projects.InstCombine.ForStd
+-- import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
+-- import Mathlib.Tactic.Ring
+-- import Batteries.Data.BitVec
 -- import Mathlib.Tactic.Ring
 -- import Batteries.Data.BitVec
 import SSA.Projects.InstCombine.ForLean
 import Lean.Meta
 import SSA.Projects.InstCombine.LLVM.EDSL
 -- import Batteries.Data.BitVec
+-- import Batteries.Data.BitVec
 -- import SSA.Projects.DataTactics.alex
 open Lean Elab Tactic
 
+set_option pp.proofs false
+set_option pp.fullNames false
 set_option pp.proofs false
 set_option pp.fullNames false
 set_option linter.unusedTactic false
