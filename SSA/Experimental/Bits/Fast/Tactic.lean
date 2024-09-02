@@ -318,6 +318,9 @@ def test0 {w : Nat} (x y : BitVec (w + 1)) : x + 0 = x := by
 /-- info: 'test0' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
 #guard_msgs in #print axioms test0
 
+/-- info: 'test0' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms test0
+
 def test_simple2 {w : Nat} (x y : BitVec (w + 1)) : x = x := by
   bv_automata
 

@@ -9,9 +9,7 @@ import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 -- import Mathlib.Tactic.Ring
 -- import Batteries.Data.BitVec
--- import Mathlib.Tactic.Ring
--- import Batteries.Data.BitVec
-import SSA.Projects.InstCombine.ForLean
+
 import Lean.Meta
 import SSA.Projects.InstCombine.LLVM.EDSL
 -- import Batteries.Data.BitVec
@@ -86,7 +84,7 @@ partial def assertAutomataSolvable  (e : Expr)  : TacticM Unit :=
       | _ => throwError m!"{e} is not a automata expression"
 
 
-def x : Bool := Bool.xor true true
+-- def x : Bool := Bool.xor true true
 -- #check
 
 /--
@@ -355,7 +353,7 @@ macro "data_automata_or_ring": tactic =>
   ))
 end BitVec.Tactic
 
-open BitVec.Tactic
+-- open BitVec.Tactic
 -- example :x✝
 -- example (x y : BitVec w) : x + ((x ^^^ y) ||| y) = x := by
 --   data_automata_or_ring

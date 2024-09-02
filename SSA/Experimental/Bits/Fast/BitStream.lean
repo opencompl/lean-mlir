@@ -84,7 +84,7 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
-
+-- def sub_co
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
 def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
@@ -225,9 +225,20 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carry)
 
+def addCorec (x y : BitStream) :  BitStream :=
+  corec (fun (i, carry) =>
+    let (a, b) := BitVec.adcb (x i) (y i) carry
+    ((i + 1, a), b)) (0, false)
+
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
-
+theorem add_eq_corec : addCorec = add := by
+  funext a b
+  ext i
+  unfold add addCorec corec
+  induction' i with i ih
+  · simp [BitVec.adcb, addAux]
+  sorry
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
