@@ -1,6 +1,9 @@
 import Lean.Meta.Basic
 import Batteries.Tactic.OpenPrivate
 import SSA.Experimental.Bits.Fast.Tactic
+import SSA.Projects.InstCombine.TacticAuto
+import Std.Tactic.BVDecide
+
 open Lean Elab Command Meta Tactic
 
 -- Function to check if a theorem can be solved by `bv_automata`
@@ -151,7 +154,7 @@ unsafe def analyzeTheoremsImpl (tac : TacticM Unit) : CommandElabM (Nat × Nat) 
 `SSA.Projects.InstCombine.tests.LLVM.gmisch2002_proof
   ]
   for moduleName in modules do
-    let (solved', unsolved') ← withImportModules #[{module := moduleName}, {module := `SSA.Experimental.Bits.Fast.Tactic}] {} 0 <| fun (env : Environment) => do
+    let (solved', unsolved') ← withImportModules #[⟨ moduleName, false⟩ , ⟨ `SSA.Experimental.Bits.Fast.Tactic , false⟩ ] {} 0 <| fun (env : Environment) => do
       let res := works tac env moduleName
       Prod.fst <$> res.run'.toIO { fileName := "fake", fileMap := default } { env := env }
     solved := solved + solved'
@@ -167,6 +170,12 @@ elab "#analyze_theorems" : command => do
   let (solved, unsolved) ← analyzeTheorems (evalTactic (← `(tactic| bv_automata)))
   logInfo s!"Theorems solved by bv_automata: {solved}"
   logInfo s!"Theorems not solved by bv_automata: {unsolved}"
+  let (solved, unsolved) ← analyzeTheorems (evalTactic (← `(tactic| bv_decide)))
+  logInfo s!"Theorems solved by bv_decide: {solved}"
+  logInfo s!"Theorems not solved by bv_decide: {unsolved}"
+  let (solved, unsolved) ← analyzeTheorems (evalTactic (← `(tactic| alive_auto)))
+  logInfo s!"Theorems solved by alive_auto: {solved}"
+  logInfo s!"Theorems not solved by alive_auto: {unsolved}"
 
 --  run the analysis
--- #analyze_theorems
+#analyze_theorems
