@@ -232,13 +232,7 @@ def addCorec (x y : BitStream) :  BitStream :=
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
-theorem add_eq_corec : addCorec = add := by
-  funext a b
-  ext i
-  unfold add addCorec corec
-  induction' i with i ih
-  · simp [BitVec.adcb, addAux]
-  sorry
+
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
