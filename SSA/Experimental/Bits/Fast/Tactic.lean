@@ -256,7 +256,6 @@ let vars (n : Nat) : BitStream := BitStream.ofBitVec (if n = 0 then v0 else if n
 Term.var 0 -- represent the 0th variable
 Term.var 1 -- represent the 1st variable
 -/
--- deriving Repr LocalContext
 
 def introduceMapIndexToFVar : TacticM Unit := withMainContext <|  do
   let context : LocalContext ← getLCtx
@@ -325,8 +324,6 @@ macro "bv_automata" : tactic =>
   apply congrFun
   native_decide
   ))
--- def bv2  : TacticM Unit := by
---   bv_automata
 
 /-!
 # Test Cases
