@@ -189,11 +189,11 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
       ⟩
     | e =>
-      throwError m!"bv_automata does not support the expression {e} (representation is: {repr e})"
-      -- return ⟨
-      --   e,
-      --   .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
-      -- ⟩
+      -- throwError m!"bv_automata does not support the expression {e} (representation is: {repr e})"
+      return ⟨
+        e,
+        .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
+      ⟩
 
 /--
 Push all ofBitVecs down to the lowest level
@@ -297,6 +297,35 @@ macro "bv_automata" : tactic =>
 /-!
 # Test Cases
 -/
+
+
+def failing_test (w : Nat) (a b c : BitVec (w + 1)) : (a &&& b ^^^ c) + 1#(w + 1) + c = c - (a ||| ~~~b) := by
+  apply BitStream.eq_of_ofBitVec_eq
+  introduceMapIndexToFVar
+  intro mapIndexToFVar
+  repeat simp only [
+    reduce_bitvec2,
+    BitStream.ofBitVec_not,
+    BitStream.ofBitVec_xor,
+    BitStream.ofBitVec_and,
+    BitStream.ofBitVec_or,
+  ]
+  try simp only [
+    ← eval_sub,
+    ← eval_add,
+    ← eval_neg,
+    ← eval_and,
+    ← eval_xor,
+    ← eval_or,
+    ← eval_not,
+    Nat.reduceAdd,
+    BitVec.ofNat_eq_ofNat
+  ]
+  intros _ _
+  apply congrFun
+  apply congrFun
+  native_decide
+
 
 def test_OfNat_ofNat (x : BitVec 1) : 1 + x = x + 1 := by
   bv_automata
