@@ -125,10 +125,10 @@ macro "simp_alive_bitvec": tactic =>
         -/
         try solve
           | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
           | simp [bv_ofBool]
           /-
           There are 2 main kinds of operations on BitVecs

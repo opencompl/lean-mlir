@@ -95,8 +95,8 @@ def msb_one (h : 1 < w) : BitVec.msb 1#w = false := by
 lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
-  simp only [BitVec.msb, getMsb, allOnes]
-  simp only [getLsb_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
+  simp only [BitVec.msb, getMsbD, allOnes]
+  simp only [getLsbD_ofNatLt, Nat.testBit_two_pow_sub_one, Bool.and_eq_true,
     decide_eq_true_eq]
   rw [Nat.sub_lt_iff_lt_add] <;> omega
 
@@ -283,8 +283,8 @@ theorem ult_toNat (x y : BitVec n) :
   simp [BitVec.ult]
 
 theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
-    BitVec.getLsb x i = false := by
-  have rk : _ := @BitVec.getLsb_ge w x i hi
+    BitVec.getLsbD x i = false := by
+  have rk : _ := @BitVec.getLsbD_ge w x i hi
   apply rk
 
 @[simp]
@@ -412,17 +412,17 @@ lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
   case zero =>
     simp [carry, Nat.mod_one]
   case succ v v_h =>
-    simp only [carry_succ, v_h, Bool.atLeastTwo_false_right, getLsb_and,
-      getLsb_xor, Bool.and_eq_false_imp, Bool.and_eq_true, bne_eq_false_iff_eq,
+    simp only [carry_succ, v_h, Bool.atLeastTwo_false_right, getLsbD_and,
+      getLsbD_xor, Bool.and_eq_false_imp, Bool.and_eq_true, bne_eq_false_iff_eq,
       and_imp]
     intros; simp [*]
 
 @[simp]
 theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := by
   ext i
-  rw [getLsb_add (by omega), getLsb_and, getLsb_xor, getLsb_or]
+  rw [getLsbD_add (by omega), getLsbD_and, getLsbD_xor, getLsbD_or]
   simp only [Bool.bne_assoc]
-  cases a.getLsb ↑i <;> simp [carry_and_xor_false]
+  cases a.getLsbD ↑i <;> simp [carry_and_xor_false]
 
 @[bv_ofBool]
 theorem ofBool_or {a b : Bool} : BitVec.ofBool a ||| BitVec.ofBool b = ofBool (a || b) := by
@@ -441,7 +441,7 @@ theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
   rcases a <;> rcases b <;> simp [bv_toNat]
 
 theorem allOnes_xor_eq_not (x : BitVec w) : allOnes w ^^^ x = ~~~x := by
-  apply eq_of_getLsb_eq
+  apply eq_of_getLsbD_eq
   simp
 
 theorem allOnes_sub_eq_xor (x :BitVec w) : (allOnes w) - x = x ^^^ (allOnes w) := by
@@ -454,37 +454,37 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
   rw [iunfoldr_replace (fun i => carry i B A false)]
   · simp [carry]; omega
   · intro i
-    simp only [adcb, getLsb_and, getLsb_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
+    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
       BitVec.add_zero, Prod.mk.injEq]
     constructor
     · rw [carry_succ]
-      cases A.getLsb i
-      <;> cases B.getLsb i
+      cases A.getLsbD i
+      <;> cases B.getLsbD i
       <;> cases carry i B A false
       <;> rfl
-    · rw [getLsb_add (by omega)]
-      cases A.getLsb i
-      <;> cases B.getLsb i
+    · rw [getLsbD_add (by omega)]
+      cases A.getLsbD i
+      <;> cases B.getLsbD i
       <;> cases carry i B A false
       <;> rfl
 
 @[simp] theorem getMsb_not (x : BitVec w) :
-    (~~~x).getMsb i = (decide (i < w) && !(x.getMsb i)) := by
-  by_cases h : i < w <;> simp [getMsb, h] ; omega
+    (~~~x).getMsbD i = (decide (i < w) && !(x.getMsbD i)) := by
+  by_cases h : i < w <;> simp [getMsbD, h] ; omega
 
 @[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
   simp [BitVec.msb]
 
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
-  simp [BitVec.msb_eq_getLsb_last]
+  simp [BitVec.msb_eq_getLsbD_last]
   split <;> by_cases (0 < i) <;> simp_all
   simp [show i = w by omega]
 
 theorem signExtend_succ (i : Nat) (x : BitVec w) :
-    x.signExtend (i+1) = cons (if i < w then x.getLsb i else x.msb) (x.signExtend i) := by
+    x.signExtend (i+1) = cons (if i < w then x.getLsbD i else x.msb) (x.signExtend i) := by
   ext j
-  simp only [getLsb_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsb_cons]
+  simp only [getLsbD_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
 theorem two_mul {x : BitVec w} :
