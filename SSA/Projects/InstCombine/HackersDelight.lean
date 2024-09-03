@@ -9,7 +9,7 @@ namespace HackersDelight
 
 namespace Ch2Basics
 
-variable {x y z : BitVec (w + 1)}
+variable {x y z : BitVec w}
 
 /- 2-1 De Morgan’s Laws Extended -/
 
