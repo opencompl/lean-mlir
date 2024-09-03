@@ -1,3 +1,4 @@
+
 import SSA.Projects.InstCombine.tests.LLVM.g2004h02h23hShiftShiftOverflow
 import SSA.Projects.InstCombine.tests.LLVM.g2004h11h22hMissedhandhfold
 import SSA.Projects.InstCombine.tests.LLVM.g2008h02h16hSDivOverflow2
@@ -42,6 +43,7 @@ import SSA.Projects.InstCombine.tests.LLVM.gapinthxor1
 import SSA.Projects.InstCombine.tests.LLVM.gapinthxor2
 import SSA.Projects.InstCombine.tests.LLVM.gashrhdemand
 import SSA.Projects.InstCombine.tests.LLVM.gashrhlshr
+import SSA.Projects.InstCombine.tests.LLVM.gavghlsb
 import SSA.Projects.InstCombine.tests.LLVM.gbinophandhshifts
 import SSA.Projects.InstCombine.tests.LLVM.gbinophofhdisplacedhshifts
 import SSA.Projects.InstCombine.tests.LLVM.gcanonicalizehashrhshlhtohmasking
@@ -83,6 +85,7 @@ import SSA.Projects.InstCombine.tests.LLVM.gorhxorhxor
 import SSA.Projects.InstCombine.tests.LLVM.gorhxor
 import SSA.Projects.InstCombine.tests.LLVM.gpr14365
 import SSA.Projects.InstCombine.tests.LLVM.gpr53357
+import SSA.Projects.InstCombine.tests.LLVM.gpreservedhanalyses
 import SSA.Projects.InstCombine.tests.LLVM.gpullhbinophthroughhshift
 import SSA.Projects.InstCombine.tests.LLVM.greassociatehnuw
 import SSA.Projects.InstCombine.tests.LLVM.grem
