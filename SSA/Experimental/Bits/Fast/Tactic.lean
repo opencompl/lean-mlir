@@ -76,15 +76,13 @@ theorem termNat_correct (f : Nat → BitStream) (w n : Nat) : BitStream.EqualUpT
     exact BitStream.ofBitVec_incr
     exact BitStream.incr_congr ih
 
-
 def quoteThm (qMapIndexToFVar : Q(Nat → BitStream)) (w : Q(Nat)) (nat: Nat) :
   Q(@BitStream.EqualUpTo $w (BitStream.ofBitVec (@BitVec.ofNat $w $nat)) (@Term.eval (termNat $nat) $qMapIndexToFVar)) := q(termNat_correct $qMapIndexToFVar $w $nat)
-
 
 /--
 Given an Expr e, return a pair e', p where e' is an expression and p is a proof that e and e' are equal on the fist w bits
 -/
-partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)),  Q(@BitStream.EqualUpTo $w $e $x))  :=
+partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStream)),  Q(@BitStream.EqualUpTo $w $e $x))  := do
   match e with
     | ~q(@HSub.hSub BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -118,10 +116,20 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         q(Term.eval (termNat $nat) $qMapIndexToFVar),
         quoteThm qMapIndexToFVar length nat
       ⟩
-    | ~q(@BitStream.ofBitVec $w ($a - $b)) =>
+    | ~q(@BitStream.ofBitVec $w ($a - $b)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let ⟨ bnext, bproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $b)
+      let eproof ← mkAppM ``BitStream.ofBitVec_sub_congr #[aproof, bproof]
       return ⟨
-        q((@BitStream.ofBitVec $w $a) -  (@BitStream.ofBitVec $w $b)),
-        .app (.app (.app (.const ``BitStream.ofBitVec_sub []) w) a ) b
+        q(@HSub.hSub BitStream BitStream BitStream _ $anext $bnext),
+        eproof
+      ⟩
+    | ~q(@BitStream.ofBitVec $w (- $a)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let eproof ← mkAppM ``BitStream.ofBitVec_neg_congr #[aproof]
+      return ⟨
+        q(@Neg.neg BitStream _ $anext),
+        eproof
       ⟩
     | ~q(@HAdd.hAdd BitStream BitStream BitStream _ $a $b) => do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -151,10 +159,44 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
         q($anext ^^^ $bnext),
         .app (.app (.app (.app (.app (.app (.app (.const ``BitStream.xor_congr []) w) a) anext) b) bnext) aproof) bproof
       ⟩
-    | ~q(@BitStream.ofBitVec $w ($a + $b)) =>
+    | ~q(@BitStream.ofBitVec $w ($a + $b)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let ⟨ bnext, bproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $b)
+      let eproof ← mkAppM ``BitStream.ofBitVec_add_congr #[aproof, bproof]
       return ⟨
-        q(@HAdd.hAdd BitStream BitStream BitStream _ (@BitStream.ofBitVec $w $a) (@BitStream.ofBitVec $w $b)),
-        .app (.app (.app (.const ``BitStream.ofBitVec_add []) w) a ) b
+        q(@HAdd.hAdd BitStream BitStream BitStream _ $anext $bnext),
+        eproof
+      ⟩
+    | ~q(@BitStream.ofBitVec $w ($a ^^^ $b)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let ⟨ bnext, bproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $b)
+      let eproof ← mkAppM ``BitStream.ofBitVec_xor_congr #[aproof, bproof]
+      return ⟨
+        q(@HXor.hXor BitStream BitStream BitStream _ $anext $bnext),
+        eproof
+      ⟩
+    | ~q(@BitStream.ofBitVec $w ($a &&& $b)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let ⟨ bnext, bproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $b)
+      let eproof ← mkAppM ``BitStream.ofBitVec_and_congr #[aproof, bproof]
+      return ⟨
+        q(@HAnd.hAnd BitStream BitStream BitStream _ $anext $bnext),
+        eproof
+      ⟩
+    | ~q(@BitStream.ofBitVec $w ($a ||| $b)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let ⟨ bnext, bproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $b)
+      let eproof ← mkAppM ``BitStream.ofBitVec_or_congr #[aproof, bproof]
+      return ⟨
+        q(@HOr.hOr BitStream BitStream BitStream _ $anext $bnext),
+        eproof
+      ⟩
+    | ~q(@BitStream.ofBitVec $w (~~~ $a)) => do
+      let ⟨ anext, aproof ⟩ ← first_rep w q(@BitStream.ofBitVec $w $a)
+      let eproof ← mkAppM ``BitStream.ofBitVec_not_congr #[aproof]
+      return ⟨
+        q(@Complement.complement BitStream _ $anext),
+        eproof
       ⟩
     | ~q(@Neg.neg BitStream _ $a)=> do
       let ⟨ anext, aproof ⟩ ← first_rep w a
@@ -190,10 +232,6 @@ partial def first_rep (w : Q(Nat)) (e : Q( BitStream)) : SimpM (Σ (x : Q(BitStr
       ⟩
     | e =>
       throwError m!"bv_automata does not support the expression {e} (representation is: {repr e})"
-      -- return ⟨
-      --   e,
-      --   .app (.app (.const ``BitStream.equal_up_to_refl []) w) e
-      -- ⟩
 
 /--
 Push all ofBitVecs down to the lowest level
@@ -218,7 +256,8 @@ let vars (n : Nat) : BitStream := BitStream.ofBitVec (if n = 0 then v0 else if n
 Term.var 0 -- represent the 0th variable
 Term.var 1 -- represent the 1st variable
 -/
-def introduceMapIndexToFVar : TacticM Unit := do withMainContext <| do
+
+def introduceMapIndexToFVar : TacticM Unit := withMainContext <|  do
   let context : LocalContext ← getLCtx
   let fVars : List FVarId :=  (PersistentArray.toList context.decls).filterMap (fun d => match d with
     | .none => .none
@@ -260,17 +299,14 @@ elab "introduceMapIndexToFVar" : tactic => introduceMapIndexToFVar
 /--
 Create bv_automata tactic which solves equalities on bitvectors.
 -/
+
 macro "bv_automata" : tactic =>
   `(tactic| (
   apply BitStream.eq_of_ofBitVec_eq
   introduceMapIndexToFVar
   intro mapIndexToFVar
-  repeat simp only [
+  simp only [
     reduce_bitvec2,
-    BitStream.ofBitVec_not,
-    BitStream.ofBitVec_xor,
-    BitStream.ofBitVec_and,
-    BitStream.ofBitVec_or,
   ]
   try simp only [
     ← eval_sub,
@@ -289,10 +325,15 @@ macro "bv_automata" : tactic =>
   native_decide
   ))
 
-
 /-!
 # Test Cases
 -/
+
+def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x = x - (x_2 ||| ~~~x_1) := by
+  bv_automata
+
+/-- info: 'alive_1' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Quot.sound] -/
+#guard_msgs in #print axioms alive_1
 
 def test_OfNat_ofNat (x : BitVec 1) : 1 + x = x + 1 := by
   bv_automata
