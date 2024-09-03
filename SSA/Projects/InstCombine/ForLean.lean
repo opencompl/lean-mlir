@@ -52,6 +52,25 @@ lemma cases_of_lt_mod_add {a b m k : ℕ} (hsum : (a + b) % m < k)  (ha : a < m)
       rw [Nat.mod_eq_of_lt (by omega)] at hmod
       omega
 
+theorem mod_eq_if {a b : Nat} : a % b = if 0 ≤ a ∧ a < b then a else (if b ≤ a ∧ a < 2 * b then a - b else a % b) := by
+  rw [Nat.mod_def a b]
+  simp only [Nat.zero_le, true_and]
+  by_cases h : a < b
+  · simp only [h, ↓reduceIte]
+    have : a / b = 0 := Nat.div_eq_of_lt h
+    simp only [this, Nat.mul_zero, Nat.sub_zero]
+  · simp [h]
+    simp only [show b ≤ a by omega, true_and]
+    by_cases h₂ : a < 2 * b
+    · simp [h₂]
+      have : a / b = 1 := by
+        rw [Nat.div_eq]
+        simp only [show 0 < b by omega, true_and]
+        simp only [show b ≤ a by omega, ↓reduceIte, Nat.reduceEqDiff]
+        apply Nat.div_eq_of_lt (by omega)
+      simp [this]
+    · simp [h₂]
+
 @[simp]
 theorem mod_two_pow_mod_two (x : Nat) (w : Nat) (_ : 0 < w) : x % 2 ^ w % 2 = x % 2 := by
   have y : 2 ^ 1 ∣ 2 ^ w := Nat.pow_dvd_pow 2 (by omega)
