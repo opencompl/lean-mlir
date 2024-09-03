@@ -538,7 +538,7 @@ theorem ofBitVec_or_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : 
   exact or_congr h1 h2
 
 theorem ofBitVec_not_congr (h1 : ofBitVec x ≈ʷ a) : ofBitVec (~~~ x) ≈ʷ ~~~ a := by
-  cases' w with w
+  cases w
   · intros _ le
     simp at le
   · rw [ofBitVec_not]
