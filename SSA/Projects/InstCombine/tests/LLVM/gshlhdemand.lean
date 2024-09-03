@@ -2,11 +2,8 @@ import SSA.Projects.InstCombine.tests.LLVM.gshlhdemand_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-
 open LLVM
 open BitVec
-
-
 
 open MLIR AST
 open Ctxt (Var)
@@ -14,25 +11,134 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       
+section gshlhdemand_statements
+                                                    
+def src_srem_shl_demand_max_signbit_before := [llvm|
+{
+^0(%arg24 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %3 = llvm.srem %arg24, %0 : i32
+  %4 = llvm.shl %3, %1 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def src_srem_shl_demand_max_signbit_after := [llvm|
+{
+^0(%arg24 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %2 = llvm.srem %arg24, %0 : i32
+  %3 = llvm.and %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem src_srem_shl_demand_max_signbit_proof : src_srem_shl_demand_max_signbit_before ⊑ src_srem_shl_demand_max_signbit_after := by
+  unfold src_srem_shl_demand_max_signbit_before src_srem_shl_demand_max_signbit_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN src_srem_shl_demand_max_signbit
+  apply src_srem_shl_demand_max_signbit_thm
+  ---END src_srem_shl_demand_max_signbit
+
+
+
+def src_srem_shl_demand_min_signbit_before := [llvm|
+{
+^0(%arg23 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1073741823 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %3 = llvm.srem %arg23, %0 : i32
+  %4 = llvm.shl %3, %1 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def src_srem_shl_demand_min_signbit_after := [llvm|
+{
+^0(%arg23 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 1073741823 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -2147483648 : i32}> : () -> i32
+  %2 = llvm.srem %arg23, %0 : i32
+  %3 = llvm.and %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem src_srem_shl_demand_min_signbit_proof : src_srem_shl_demand_min_signbit_before ⊑ src_srem_shl_demand_min_signbit_after := by
+  unfold src_srem_shl_demand_min_signbit_before src_srem_shl_demand_min_signbit_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN src_srem_shl_demand_min_signbit
+  apply src_srem_shl_demand_min_signbit_thm
+  ---END src_srem_shl_demand_min_signbit
+
+
+
+def src_srem_shl_demand_max_mask_before := [llvm|
+{
+^0(%arg22 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -4 : i32}> : () -> i32
+  %3 = llvm.srem %arg22, %0 : i32
+  %4 = llvm.shl %3, %1 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def src_srem_shl_demand_max_mask_after := [llvm|
+{
+^0(%arg22 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -4 : i32}> : () -> i32
+  %2 = llvm.srem %arg22, %0 : i32
+  %3 = llvm.and %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem src_srem_shl_demand_max_mask_proof : src_srem_shl_demand_max_mask_before ⊑ src_srem_shl_demand_max_mask_after := by
+  unfold src_srem_shl_demand_max_mask_before src_srem_shl_demand_max_mask_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN src_srem_shl_demand_max_mask
+  apply src_srem_shl_demand_max_mask_thm
+  ---END src_srem_shl_demand_max_mask
+
+
+
 def set_shl_mask_before := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32):
+^0(%arg3 : i32, %arg4 : i32):
   %0 = "llvm.mlir.constant"() <{value = 196609 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 65536 : i32}> : () -> i32
-  %2 = llvm.or %arg0, %0 : i32
-  %3 = llvm.shl %2, %arg1 : i32
+  %2 = llvm.or %arg3, %0 : i32
+  %3 = llvm.shl %2, %arg4 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
 def set_shl_mask_after := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32):
+^0(%arg3 : i32, %arg4 : i32):
   %0 = "llvm.mlir.constant"() <{value = 65537 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 65536 : i32}> : () -> i32
-  %2 = llvm.or %arg0, %0 : i32
-  %3 = llvm.shl %2, %arg1 : i32
+  %2 = llvm.or %arg3, %0 : i32
+  %3 = llvm.shl %2, %arg4 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -43,7 +149,8 @@ theorem set_shl_mask_proof : set_shl_mask_before ⊑ set_shl_mask_after := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN set_shl_mask
   apply set_shl_mask_thm
   ---END set_shl_mask

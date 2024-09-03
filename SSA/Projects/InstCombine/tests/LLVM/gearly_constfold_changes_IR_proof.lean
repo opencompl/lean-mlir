@@ -1,8 +1,6 @@
-import SSA.Projects.InstCombine.ForLean
 
+import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
 
-open LLVM
-
-
-
+section gearly_constfold_changes_IR_proof
