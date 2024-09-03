@@ -1,12 +1,8 @@
-import SSA.Projects.InstCombine.ForLean
 
+import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
 
-open LLVM
-
-
-
-theorem i_thm (x : _root_.BitVec 8) : 
-    (x.sdiv 253#8).sdiv 253#8 = x.sdiv 9#8 := by
-  sorry
+section g2008h02h16hSDivOverflow2_proof
+theorem i_thm (x : BitVec 8) : (x.sdiv 253#8).sdiv 253#8 = x.sdiv 9#8 := sorry
 

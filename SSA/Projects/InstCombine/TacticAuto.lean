@@ -86,19 +86,8 @@ and then solve with the omega tactic.
 macro "of_bool_tactic" : tactic =>
   `(tactic|
     (
-    repeat (
-      first
-    | simp only [bv_ofBool]
-    | simp only [BitVec.ule]
-    | simp only [BitVec.ult]
-    | simp only [BitVec.sle]
-    | simp only [BitVec.slt]
-    | simp only [BitVec.toInt]
-    | simp only [BEq.beq]
-    | simp only [bne]
-    )
+    try simp only [bv_ofBool, BitVec.ule, BitVec.ult, BitVec.sle, BitVec.slt, BitVec.toInt, BEq.beq, bne]
     try ext
-    try simp
     repeat (
       first
       | simp only [← Bool.decide_or]
@@ -108,7 +97,13 @@ macro "of_bool_tactic" : tactic =>
       | simp [of_decide_eq_true]
       | simp only [BitVec.toNat_eq]
     )
-    try omega
+    repeat (
+      first
+      | simp [h]
+      | split
+      | omega
+      | rw [Nat.mod_eq_if]
+    )
     ))
 
 macro "simp_alive_bitvec": tactic =>
@@ -125,10 +120,10 @@ macro "simp_alive_bitvec": tactic =>
         -/
         try solve
           | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
           | simp [bv_ofBool]
           /-
           There are 2 main kinds of operations on BitVecs

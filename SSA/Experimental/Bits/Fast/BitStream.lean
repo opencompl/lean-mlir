@@ -118,7 +118,7 @@ section ToBitVec
 
 /-- Sign-extend a finite bitvector `x` to the infinite stream `(x.msb)^ω ⋅ x`  -/
 abbrev ofBitVec {w} (x : BitVec w) : BitStream :=
-  fun i => if i < w then x.getLsb i else x.msb
+  fun i => if i < w then x.getLsbD i else x.msb
 
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
@@ -188,27 +188,27 @@ variable (x y : BitVec (w+1))
 
 @[simp] theorem ofBitVec_complement : ofBitVec (~~~x) = ~~~(ofBitVec x) := by
   funext i
-  simp only [ofBitVec, BitVec.getLsb_not, BitVec.msb_not, not_eq]
+  simp only [ofBitVec, BitVec.getLsbD_not, BitVec.msb_not, not_eq]
   split <;> simp_all
 
 @[simp] theorem ofBitVec_and : ofBitVec (x &&& y) = (ofBitVec x) &&& (ofBitVec y) := by
   funext i
-  simp only [ofBitVec, BitVec.getLsb_and, BitVec.msb_and, and_eq]
+  simp only [ofBitVec, BitVec.getLsbD_and, BitVec.msb_and, and_eq]
   split <;> simp_all
 
 @[simp] theorem ofBitVec_or : ofBitVec (x ||| y) = (ofBitVec x) ||| (ofBitVec y) := by
   funext i
-  simp only [ofBitVec, BitVec.getLsb_or, BitVec.msb_or, or_eq]
+  simp only [ofBitVec, BitVec.getLsbD_or, BitVec.msb_or, or_eq]
   split <;> simp_all
 
 @[simp] theorem ofBitVec_xor : ofBitVec (x ^^^ y) = (ofBitVec x) ^^^ (ofBitVec y) := by
   funext i
-  simp only [ofBitVec, BitVec.getLsb_xor, xor_eq]
+  simp only [ofBitVec, BitVec.getLsbD_xor, xor_eq]
   split <;> simp_all
 
 @[simp] theorem ofBitVec_not : ofBitVec (~~~ x) = ~~~ (ofBitVec x) := by
   funext i
-  simp only [ofBitVec, BitVec.getLsb_not, BitVec.msb_not, lt_add_iff_pos_left, add_pos_iff,
+  simp only [ofBitVec, BitVec.getLsbD_not, BitVec.msb_not, lt_add_iff_pos_left, add_pos_iff,
     zero_lt_one, or_true, decide_True, Bool.true_and, not_eq]
   split <;> simp_all
 
@@ -381,16 +381,16 @@ theorem sub_eq_add_neg : a - b = a + (-b) := by
   simp [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitStream.sub, Add.add, BitStream.add, subAux_inductive_lemma i]
 
 @[simp]
-theorem ofBitVec_getLsb (n : Nat) (h : n < w) : ofBitVec x n = x.getLsb n := by
+theorem ofBitVec_getLsbD (n : Nat) (h : n < w) : ofBitVec x n = x.getLsbD n := by
   simp [ofBitVec, h]
 
 theorem ofBitVec_add : ofBitVec (x + y) ≈ʷ (ofBitVec x) + (ofBitVec y) := by
   intros n a
-  have add_lemma : ⟨(x + y).getLsb n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
+  have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVec x).addAux (ofBitVec y) n := by
     induction' n with n ih
-    · simp [addAux, BitVec.adcb, a, BitVec.getLsb, BitVec.carry, ← Bool.decide_and,
+    · simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
         Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsb_add]
+    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getLsbD_add]
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq, -Nat.add_def]
 
 @[refl]
@@ -493,7 +493,7 @@ theorem incr_add : a + (@ofBitVec w 1) ≈ʷ a.incr := by
 
 theorem ofBitVec_incr {n : Nat} : ofBitVec (BitVec.ofNat w n.succ) ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := by
   calc
-  _ ≈ʷ ofBitVec (BitVec.ofNat w n + BitVec.ofNat w 1) := by intros _ il ; simp [ofBitVec, il, -BitVec.ofNat_eq_ofNat, Nat.testBit, BitVec.getLsb]
+  _ ≈ʷ ofBitVec (BitVec.ofNat w n + BitVec.ofNat w 1) := by intros _ il ; simp [ofBitVec, il, -BitVec.ofNat_eq_ofNat, Nat.testBit, BitVec.getLsbD]
   _ ≈ʷ ofBitVec (BitVec.ofNat w n) + ofBitVec 1 := ofBitVec_add
   _ ≈ʷ (ofBitVec (BitVec.ofNat w n)).incr := incr_add
 

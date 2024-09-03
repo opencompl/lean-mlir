@@ -70,7 +70,7 @@ def termNat (n : Nat) : _root_.Term :=
 theorem termNat_correct (f : Nat → BitStream) (w n : Nat) : BitStream.EqualUpTo w (BitStream.ofBitVec (BitVec.ofNat w n)) ((termNat n).eval f) := by
   induction' n with n ih
   · intros _ _
-    simp only [Term.eval, termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsb_zero, BitVec.msb_zero, ite_self]
+    simp only [Term.eval, termNat, BitStream.zero_eq, Bool.ite_eq_false_distrib, BitVec.getLsbD_zero, BitVec.msb_zero, ite_self]
   · simp only [Term.eval, termNat, ← Nat.succ_eq_add_one]
     trans (BitStream.ofBitVec (BitVec.ofNat w n)).incr
     exact BitStream.ofBitVec_incr

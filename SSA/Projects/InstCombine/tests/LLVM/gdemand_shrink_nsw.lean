@@ -2,11 +2,8 @@ import SSA.Projects.InstCombine.tests.LLVM.gdemand_shrink_nsw_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-
 open LLVM
 open BitVec
-
-
 
 open MLIR AST
 open Ctxt (Var)
@@ -14,7 +11,8 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       
+section gdemand_shrink_nsw_statements
+                                                    
 def foo_before := [llvm|
 {
 ^0(%arg0 : i32):
@@ -69,9 +67,10 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN foo
-  apply foo_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo
 
 
