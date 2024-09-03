@@ -84,7 +84,7 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
-
+-- def sub_co
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
 def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
@@ -191,17 +191,17 @@ variable (x y : BitVec (w+1))
   simp only [ofBitVec, BitVec.getLsbD_not, BitVec.msb_not, not_eq]
   split <;> simp_all
 
-@[simp] theorem ofBitVec_and : ofBitVec (x &&& y) = (ofBitVec x) &&& (ofBitVec y) := by
+@[simp] theorem ofBitVec_and  {w : Nat} {x y : BitVec w}  : ofBitVec (x &&& y) = (ofBitVec x) &&& (ofBitVec y) := by
   funext i
   simp only [ofBitVec, BitVec.getLsbD_and, BitVec.msb_and, and_eq]
   split <;> simp_all
 
-@[simp] theorem ofBitVec_or : ofBitVec (x ||| y) = (ofBitVec x) ||| (ofBitVec y) := by
+@[simp] theorem ofBitVec_or  {w : Nat} {x y : BitVec w}  : ofBitVec (x ||| y) = (ofBitVec x) ||| (ofBitVec y) := by
   funext i
   simp only [ofBitVec, BitVec.getLsbD_or, BitVec.msb_or, or_eq]
   split <;> simp_all
 
-@[simp] theorem ofBitVec_xor : ofBitVec (x ^^^ y) = (ofBitVec x) ^^^ (ofBitVec y) := by
+@[simp] theorem ofBitVec_xor {w : Nat} {x y : BitVec w} : ofBitVec (x ^^^ y) = (ofBitVec x) ^^^ (ofBitVec y) := by
   funext i
   simp only [ofBitVec, BitVec.getLsbD_xor, xor_eq]
   split <;> simp_all
@@ -225,9 +225,20 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carry)
 
+def addCorec (x y : BitStream) :  BitStream :=
+  corec (fun (i, carry) =>
+    let (a, b) := BitVec.adcb (x i) (y i) carry
+    ((i + 1, a), b)) (0, false)
+
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
-
+theorem add_eq_corec : addCorec = add := by
+  funext a b
+  ext i
+  unfold add addCorec corec
+  induction' i with i ih
+  · simp [BitVec.adcb, addAux]
+  sorry
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
@@ -474,7 +485,7 @@ theorem ofBitVec_sub : ofBitVec (x - y) ≈ʷ (ofBitVec x) - (ofBitVec y)  := by
 theorem incr_add : a + (@ofBitVec w 1) ≈ʷ a.incr := by
   have incr_add_aux {i : Nat} (le : i < w) : a.addAux (@ofBitVec w 1) i = a.incrAux i := by
     induction' i with _ ih
-    · simp [incrAux,addAux, BitVec.adcb, BitVec.msb, BitVec.getMsb, ofBitVec, le]
+    · simp [incrAux,addAux, BitVec.adcb, BitVec.msb, BitVec.getMsbD, ofBitVec, le]
     · simp only [addAux, incrAux, ih (by omega)]
       simp [BitVec.adcb, Bool.atLeastTwo, ofBitVec, le]
   intros i le
@@ -509,6 +520,40 @@ theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
     <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
     simp only [ih (by omega), Bool.bne_right_inj, and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
+
+theorem ofBitVec_add_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : ofBitVec (x + y) ≈ʷ a + b := by
+  calc
+    _ ≈ʷ ofBitVec x + ofBitVec y := ofBitVec_add
+    _ ≈ʷ a + b := add_congr h1 h2
+
+theorem ofBitVec_sub_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : ofBitVec (x - y) ≈ʷ a - b := by
+  calc
+    _ ≈ʷ ofBitVec x - ofBitVec y := ofBitVec_sub
+    _ ≈ʷ a - b := sub_congr h1 h2
+
+theorem ofBitVec_neg_congr (h1 : ofBitVec x ≈ʷ a)  : ofBitVec (- x) ≈ʷ - a  := by
+  calc
+    _ ≈ʷ - ofBitVec x := ofBitVec_neg
+    _ ≈ʷ - a := neg_congr h1
+
+theorem ofBitVec_xor_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : ofBitVec (x ^^^ y) ≈ʷ a ^^^ b := by
+  rw [ofBitVec_xor]
+  exact xor_congr h1 h2
+
+theorem ofBitVec_and_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : ofBitVec (x &&& y) ≈ʷ a &&& b := by
+  rw [ofBitVec_and]
+  exact and_congr h1 h2
+
+theorem ofBitVec_or_congr (h1 : ofBitVec x ≈ʷ a) (h2 : ofBitVec y ≈ʷ b) : ofBitVec (x ||| y) ≈ʷ a ||| b := by
+  rw [ofBitVec_or]
+  exact or_congr h1 h2
+
+theorem ofBitVec_not_congr (h1 : ofBitVec x ≈ʷ a) : ofBitVec (~~~ x) ≈ʷ ~~~ a := by
+  cases' w with w
+  · intros _ le
+    simp at le
+  · rw [ofBitVec_not]
+    exact not_congr h1
 
 theorem equal_congr_congr  (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a ≈ʷ c) = (b ≈ʷ d) := by
   apply propext
