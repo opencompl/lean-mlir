@@ -132,7 +132,6 @@ def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
     | none, some y' => (some y', some false, (x.tail, y.tail))
     | none, none => (none, none, (x.tail, y.tail))
 
--- TODO: mux, sync, source
 
 def join (x y : Stream α) : Stream Unit :=
   Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
@@ -142,7 +141,7 @@ def join (x y : Stream α) : Stream Unit :=
     | none, some _   => (none, (x.tail, y))
     | none, none     => (none, (x.tail, y.tail))
 
--- select stream and two inputs
+-- select stream and two inputs (deterministic mergs)
 def mux (x y : Stream α) (c : Stream Bool) : Stream α :=
   Stream.corec (β := Stream α × Stream α × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
     match x 0, y 0, c 0 with
@@ -151,6 +150,29 @@ def mux (x y : Stream α) (c : Stream Bool) : Stream α :=
       | _, none, some false => (none, (x, y.tail, c)) -- could not pop anything
       | _, some _, some false => (y 0, (x, y.tail, c.tail)) -- pop from y
       | _, _, none => (none, (x, y, c.tail)) -- no pop
+
+-- discards any data: actually this should not return anything
+def sink (x : Stream α) : Stream Unit :=
+  Stream.corec (β := Stream α) (x) fun (x) => (none, x.tail)
+
+-- The source operation represents continuous token source.
+-- The source continously sets a ‘valid’ signal which the successor can consume at any point in time.
+def source (a: α) : Stream α :=
+  Stream.corec (a) fun (a) => (some a, (a))
+
+-- Synchronizes an arbitrary set of inputs.
+-- Synchronization implies applying join semantics in between all in- and output ports.
+def sync (x y : Stream α) : Stream α × Stream α :=
+  Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some x', some y' => (some x', some y', (x.tail, y.tail))
+    | some _, none => (none, none, (x, y.tail))
+    | none, some _ => (none, none, (x.tail, y))
+    | none, none => (none, none, (x.tail, y.tail))
+
+-- The pack operation constructs a tuple from separate values.
+-- The number of operands corresponds to the number of tuple elements.
+-- Similar to join, the output is ready when all inputs are ready.
 
 end Handshake
 end CIRCTStream
