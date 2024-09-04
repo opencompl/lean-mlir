@@ -134,24 +134,23 @@ def controlMerge (x y : Stream α) : Stream α × Stream Bool :=
 
 -- TODO: mux, sync, source
 
-def join (x y : Stream α) : Stream Bool :=
+def join (x y : Stream α) : Stream Unit :=
   Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some _, some _ => (true, (x.tail, y.tail))
-    | some _, none   => (false, (x, y.tail))
-    | none, some _   => (false, (x.tail, y))
-    | none, none     => (false, (x.tail, y.tail))
+    | some _, some _ => (some (), (x.tail, y.tail))
+    | some _, none   => (none, (x, y.tail))
+    | none, some _   => (none, (x.tail, y))
+    | none, none     => (none, (x.tail, y.tail))
 
 -- select stream and two inputs
 def mux (x y : Stream α) (c : Stream Bool) : Stream α :=
   Stream.corec (β := Stream α × Stream α × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
     match x 0, y 0, c 0 with
-      | none, some _, some true => (none, (x, y, c)) -- could not pop anything
-      | some _, _, some true => (x 0, (x.tail, y.tail, c.tail)) -- pop from x
-      | _, none, some false => (none, (x, y, c)) -- could not pop anything
-      | _, some _, some false => (y 0, (x.tail, y.tail, c.tail)) -- pop from y
-      | _, _, none => (none, (x, y, c.tail)) -- pop from y
-      | none, none, some _ => (none, (x, y, c.tail)) -- pop from y
+      | none, _, some true => (none, (x.tail, y, c)) -- could not pop anything
+      | some _, _, some true => (x 0, (x.tail, y, c.tail)) -- pop from x
+      | _, none, some false => (none, (x, y.tail, c)) -- could not pop anything
+      | _, some _, some false => (y 0, (x, y.tail, c.tail)) -- pop from y
+      | _, _, none => (none, (x, y, c.tail)) -- no pop
 
 end Handshake
 end CIRCTStream
