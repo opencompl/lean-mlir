@@ -11,8 +11,6 @@ abbrev TokenStream := Stream Unit
 def DCToken := Stream' Unit
 def DCValue := Stream' Type
 
-
-
 -- take a stream x in input, dequeue x0
 def fork (x : Stream α) : Stream α × Stream α :=
   Stream.corec₂ (β := Stream α) x
@@ -41,5 +39,19 @@ def pack (x : ValueStream α) (stream : TokenStream) : ValueStream α := x
 
 
 end DC
+
+namespace DC'
+
+inductive Token (A : Type _) where
+  | consumed
+  | ready (a : A)
+  | notready
+
+abbrev DCValue A := Token A
+abbrev DCToken := DCValue Unit
+
+def merge : DCToken × DCToken × DCToken → ( → Prop
+-- if a.ready ∧ b.read => change a to consumed, b remains ready, outpt
+end DC'
 
 end CIRCTStream
