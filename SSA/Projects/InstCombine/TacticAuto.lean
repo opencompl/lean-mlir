@@ -106,7 +106,7 @@ macro "of_bool_tactic" : tactic =>
     )
     ))
 
-macro "simp_alive_bitvec": tactic =>
+macro "bv_auto": tactic =>
   `(tactic|
       (
         intros
@@ -155,6 +155,6 @@ macro "alive_auto": tactic =>
           simp_alive_case_bash
           ensure_only_goal
         )
-        simp_alive_bitvec
+        bv_auto
       )
    )
