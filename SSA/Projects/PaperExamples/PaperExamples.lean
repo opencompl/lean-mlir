@@ -9,6 +9,7 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
+import SSA.Projects.InstCombine.Tactic
 import Mathlib.Tactic.Ring
 
 open BitVec
@@ -199,7 +200,15 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by rfl
+  := by
+  unfold ex1_rewritePeepholeAt
+  unfold p1
+  unfold lhs
+  unfold rhs
+  unfold rewritePeepholeAt
+  simp
+  simp_alive_meta
+
 
 def ex1_rewritePeephole :
     Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
