@@ -200,14 +200,7 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by
-  unfold ex1_rewritePeepholeAt
-  unfold p1
-  unfold lhs
-  unfold rhs
-  unfold rewritePeepholeAt
-  simp
-  simp_alive_meta
+  := by decide
 
 
 def ex1_rewritePeephole :
@@ -220,7 +213,7 @@ theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by rfl
+  := by decide
 
 
 end ToyNoRegion
