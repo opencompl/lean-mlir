@@ -28,7 +28,7 @@ def push (Γ : Context Ty) (v : VarName) (ty : Ty) : Context Ty :=
 
 @[simp] theorem hasType_push_of_neq {Γ : Context Ty} (h : w ≠ v) :
     (Γ.push v ty).hasType w ty' ↔ Γ.hasType w ty' := by
-  simp [push, hasType, List.lookup, (beq_eq_false_iff_ne _ _).mpr h]
+  simp [push, hasType, List.lookup, (beq_eq_false_iff_ne).mpr h]
 
 /-! ## `ExtEq`-/
 
