@@ -41,97 +41,97 @@ theorem sub_abs_ule_xor :
   all_goals sorry
 
 theorem eq_iff_abs_sub_sub :
-    x = y ↔ ((x - y).abs - 1).getMsb 0 := by
+    x = y ↔ ((x - y).abs - 1).msb := by
   try alive_auto
   all_goals sorry
 
 theorem eq_iff_not_sub_or_sub :
-    x = y ↔ (~~~ (x - y ||| y - x)).getMsb 0 := by
+    x = y ↔ (~~~ (x - y ||| y - x)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem neq_iff_sub_or_sub :
-    x ≠ y ↔ (x - y ||| y - x).getMsb 0 := by
+    x ≠ y ↔ (x - y ||| y - x).msb := by
   try alive_auto
   all_goals sorry
 
 theorem neq_iff_neg_sub_abs :
-    x ≠ y ↔ (-(x - y).abs).getMsb 0 := by
+    x ≠ y ↔ (-(x - y).abs).msb := by
   try alive_auto
   all_goals sorry
 
 theorem lt_iff_sub_xor_xor_and_sub_xor :
-    (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).getMsb 0 := by
+    (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).msb := by
   -- try alive_auto -- this leads to a heartbeat timeout
   all_goals sorry
 
 theorem slt_iff_and_not_or_not_xor_and_sub :
-    (x <ₛ y) ↔ ((x &&& ~~~ y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
+    (x <ₛ y) ↔ ((x &&& ~~~ y) ||| (~~~ (x ^^^ y) &&& (x - y))).msb := by
   try alive_auto
   all_goals sorry
 
 theorem sle_iff_or_not_and_xor_or_not_sub :
-    (x ≤ₛ y) ↔ ((x ||| ~~~ y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+    (x ≤ₛ y) ↔ ((x ||| ~~~ y) &&& ((x ^^^ y) ||| ~~~ (y - x))).msb := by
   try alive_auto
   all_goals sorry
 
 theorem ult_iff_not_and_or_not_xor_and_sub :
-    (x <ᵤ y) ↔ ((~~~ x &&& y) ||| (~~~ (x ^^^ y) &&& (x - y))).getMsb 0 := by
+    (x <ᵤ y) ↔ ((~~~ x &&& y) ||| (~~~ (x ^^^ y) &&& (x - y))).msb := by
   try alive_auto
   all_goals sorry
 
 theorem ule_iff_not_or_and_xor_or_not_sub :
-    (x ≤ᵤ y) ↔ ((~~~ x ||| y) &&& ((x ^^^ y) ||| ~~~ (y - x))).getMsb 0 := by
+    (x ≤ᵤ y) ↔ ((~~~ x ||| y) &&& ((x ^^^ y) ||| ~~~ (y - x))).msb := by
   try alive_auto
   all_goals sorry
 
 theorem eq_zero_iff_abs_sub :
-    x = 0 ↔ (x.abs - 1).getMsb 0 := by
+    x = 0 ↔ (x.abs - 1).msb := by
   try alive_auto
   all_goals sorry
 
 theorem eq_zero_iff_not_or_sub :
-    x = 0 ↔ (~~~ (x ||| -x)).getMsb 0 := by
+    x = 0 ↔ (~~~ (x ||| -x)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem eq_zero_iff_not_and_sub :
-    x = 0 ↔ (~~~ x &&& x - 1).getMsb 0 := by
+    x = 0 ↔ (~~~ x &&& x - 1).msb := by
   try alive_auto
   all_goals sorry
 
 theorem neq_zero_iff_or_neg :
-    x ≠ 0 ↔ (x ||| -x).getMsb 0 := by
+    x ≠ 0 ↔ (x ||| -x).msb := by
   try alive_auto
   all_goals sorry
 
 theorem neq_zero_iff_neg_abs :
-    x ≠ 0 ↔ (-(x.abs)).getMsb 0 := by
+    x ≠ 0 ↔ (-(x.abs)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem slt_zero_iff :
-    (x <ₛ 0) ↔ x.getMsb 0 := by
+    (x <ₛ 0) ↔ x.msb := by
   try alive_auto
   all_goals sorry
 
 theorem sle_zero_iff_or_sub_one :
-    (x ≤ₛ 0) ↔ (x ||| (x - 1)).getMsb 0 := by
+    (x ≤ₛ 0) ↔ (x ||| (x - 1)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem sle_zero_iff_or_not_sub :
-    (x ≤ₛ 0) ↔ (x ||| ~~~ (-x)).getMsb 0 := by
+    (x ≤ₛ 0) ↔ (x ||| ~~~ (-x)).msb := by
   try alive_auto
   all_goals sorry
 
 theorem zero_slt_iff_neg_and_not :
-    (0 <ₛ x) ↔ (-x &&& ~~~ x).getMsb 0 := by
+    (0 <ₛ x) ↔ (-x &&& ~~~ x).msb := by
   try alive_auto
   all_goals sorry
 
 theorem zero_sle_iff_neg_and_not :
-    (0 ≤ₛ x) ↔ (~~~ x).getMsb 0 := by
+    (0 ≤ₛ x) ↔ (~~~ x).msb := by
   try alive_auto
   all_goals sorry
 
