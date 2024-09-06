@@ -319,7 +319,7 @@ theorem toInt_intMin {w : Nat} :
   · have w_pos : 0 < w := by omega
     simp only [BitVec.toInt, toNat_twoPow, w_pos, Nat.two_pow_pred_mod_two_pow, Nat.cast_pow,
       Nat.cast_ofNat]
-    rw [Nat.mul_comm, Nat.two_pow_pred_mul_two w_pos]
+    rw [Nat.mul_comm]
     simp [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow,
       Nat.two_pow_pred_mod_two_pow, w_pos]
     norm_cast
@@ -344,7 +344,7 @@ theorem toInt_neg {A : BitVec w} (rs : A ≠ intMin w) :
   · rw [Nat.cast_sub]
     simp
     omega
-  · simp only [toNat_ne, toNat_twoPow] at rs
+  · simp [bv_toNat] at rs
     rw [Nat.two_pow_pred_mod_two_pow (by omega)] at rs
     omega
 
@@ -375,8 +375,9 @@ theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin 
     simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
     omega
   simp only [ne_eq]
-  simp only [toNat_eq, toNat_ofNat, Nat.zero_mod, toNat_twoPow]
-  rw [Nat.two_pow_pred_mod_two_pow (by omega)]
+  simp only [bv_toNat]
+  have h : 0 < w := by omega
+  simp only [Nat.zero_mod, h, Nat.two_pow_pred_mod_two_pow, ne_eq]
   have two_pow_pos := Nat.two_pow_pos (w-1)
   omega
 

@@ -232,7 +232,10 @@ def bb0IcomGeneric (w : Nat) := [llvm (w)|
   }]
 
 /-- Indeed, the concrete program is an instantiation of the generic program -/
-example : bb0IcomGeneric 32 = bb0IcomConcrete := by rfl
+example : bb0IcomGeneric 32 = bb0IcomConcrete := by
+  unfold bb0IcomGeneric bb0IcomConcrete
+  simp_alive_meta
+  simp
 
 /-
   Simple example of the denotation of `GenericWidth`.
