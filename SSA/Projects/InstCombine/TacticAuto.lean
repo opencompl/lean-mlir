@@ -88,15 +88,8 @@ macro "of_bool_tactic" : tactic =>
     (
     try simp only [bv_ofBool, BitVec.ule, BitVec.ult, BitVec.sle, BitVec.slt, BitVec.toInt, BEq.beq, bne]
     try ext
-    repeat (
-      first
-      | simp only [← Bool.decide_or]
-      | simp only [← Bool.decide_and]
-      | simp only [← decide_not]
-      | simp only [decide_eq_decide]
-      | simp [of_decide_eq_true]
-      | simp only [BitVec.toNat_eq]
-    )
+    simp only [← Bool.decide_or, ← Bool.decide_and, ← decide_not, decide_eq_decide, of_decide_eq_true,
+      BitVec.toNat_eq]
     repeat (
       first
       | simp [h]
@@ -122,6 +115,8 @@ macro "bv_auto": tactic =>
         try simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
         try ring_nf
         try bv_eliminate_bool
+        repeat (split)
+        <;> try simp (config := {failIfUnchanged := false})
         /-
         Solve tries each arm in order, falling through
         if the goal is not closed.
