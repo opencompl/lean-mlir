@@ -440,7 +440,8 @@ theorem negAux_eq_not_addAux : a.negAux = (~~~a).addAux 1 := by
   funext i
   induction' i with _ ih
   · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih]
+  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih,
+      Nat.testBit_add_one]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
@@ -448,7 +449,7 @@ theorem neg_eq_not_add : - a = ~~~ a + 1 := by
 
 theorem ofNat_one (i : Nat) : ofNat 1 i = decide (0 = i) := by
   cases i
-  <;> simp [ofNat, Nat.shiftRight]
+  <;> simp [ofNat, Nat.shiftRight, Nat.testBit_add_one]
 
 theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   by_cases h : w = 0
