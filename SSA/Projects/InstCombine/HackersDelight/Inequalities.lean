@@ -1,9 +1,6 @@
-import SSA.Projects.InstCombine.ForMathlib
-import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
-
-set_option linter.unusedTactic false
-set_option linter.unreachableTactic false
+import SSA.Projects.InstCombine.HackersDelight.AdditionAndLogicalOps
+import Lean.Meta.Tactic.Simp.BuiltinSimprocs.Nat
 
 namespace HackersDelight
 
@@ -13,22 +10,37 @@ variable {x y z : BitVec w}
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
 
+theorem xor_ule_or' :
+  Decidable.decide ((x ||| y).toNat ≤ ((x ||| y) - (x &&& y)).toNat) := by
+  have h : (x ||| y) ≥ (x ||| y) - (x &&& y) := Nat.sub_le _ _,
+  exact Decidable.of_decide_eq_true (Nat.ble_eq (x ||| y).toNat ((x ||| y) - (x &&& y)).toNat)
+
+#stop
+
 theorem xor_ule_or :
     x ^^^ y ≤ᵤ x ||| y := by
-  try alive_auto
-  all_goals sorry
+    rw [AdditionCombinedWithLogicalOperations.xor_eq_or_sub_and]
+    rw [BitVec.ule.eq_1]
 
 theorem and_ule_not_xor :
     x &&& y ≤ᵤ ~~~(x ^^^ y) := by
   try alive_auto
   all_goals sorry
 
+
 def AdditionNoOverflows? (x y : BitVec w) : Prop := (x.adc y false).1
 
 theorem or_ule_add  (h : AdditionNoOverflows? x y) :
     x ||| y ≤ᵤ x + y := by
-  try alive_auto
-  all_goals sorry
+  -- rw [AdditionCombinedWithLogicalOperations.or_eq_and_not_add]
+  rw [BitVec.ule.eq_1]
+  rw [BitVec.le_def]
+  simp_all
+
+
+
+#exit
+
 
 theorem add_ult_or (h : ¬AdditionNoOverflows? x y) :
     (x + y <ᵤ x ||| y) := by
