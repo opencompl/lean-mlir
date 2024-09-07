@@ -106,12 +106,22 @@ macro "of_bool_tactic" : tactic =>
     )
     ))
 
+macro "bv_eliminate_bool" : tactic =>
+  `(tactic|
+    (
+      try simp only [BitVec.and_eq, BitVec.or_eq, bv_ofBool, BEq.beq, bne,
+        ←Bool.decide_and, ←Bool.decide_or]
+      simp only [decide_eq_decide]
+    )
+   )
+
 macro "bv_auto": tactic =>
   `(tactic|
       (
         intros
         try simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
         try ring_nf
+        try bv_eliminate_bool
         /-
         Solve tries each arm in order, falling through
         if the goal is not closed.
