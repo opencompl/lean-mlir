@@ -529,9 +529,9 @@ theorem one_shiftLeft_mul {x y : BitVec w} :
   simp [←BitVec.mul_twoPow_eq_shiftLeft, BitVec.mul_comm]
 
 @[simp]
-theorem neg_one_mul {x : BitVec w} :
-    x.mul (-1) = (0#w).sub x := by
-  simp [BitVec.mul_comm]
+theorem mul_allOnes {x : BitVec w} :
+    x * BitVec.allOnes w = -x := by
+  simp [← BitVec.negOne_eq_allOnes]
 
 end BitVec
 
