@@ -1,15 +1,11 @@
-
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.ForStd
-import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-
 
 theorem bitvec_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
