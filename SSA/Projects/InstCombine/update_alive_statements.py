@@ -8,19 +8,14 @@ from multiprocessing import Pool, TimeoutError
 import time
 import os
 
-alive_statements_preamble = """
-/-
+alive_statements_preamble = """/-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.ForStd
-import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
 
 set_option linter.unreachableTactic false
-set_option linter.unusedTactic false
-"""
-
+set_option linter.unusedTactic false"""
 
 def getProofs(lines: List[str]) -> Tuple[List[str], List[List[str]]]:
     """
