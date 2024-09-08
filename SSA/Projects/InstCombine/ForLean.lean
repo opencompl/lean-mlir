@@ -523,6 +523,11 @@ theorem two_mul {x : BitVec w} :
   rw [ssr]
   omega
 
+@[simp]
+theorem one_shiftLeft_mul {x y : BitVec w} :
+    1#w <<< x.toNat * y = y <<< x.toNat := by
+  simp [←BitVec.mul_twoPow_eq_shiftLeft, BitVec.mul_comm]
+
 end BitVec
 
 namespace Bool
