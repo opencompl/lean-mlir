@@ -689,8 +689,9 @@ theorem bitvec_290__292 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
-  all_goals sorry
+  alive_auto
+  rw [←BitVec.mul_twoPow_eq_shiftLeft,  ←BitVec.mul_twoPow_eq_shiftLeft]
+  rw [BitVec.mul_comm, BitVec.mul_comm, BitVec.one_mul, BitVec.mul_comm]
 
 theorem bitvec_820 :
     ∀ (e e_1 : LLVM.IntW 9), LLVM.sdiv (LLVM.sub e_1 (LLVM.srem e_1 e)) e ⊑ LLVM.sdiv e_1 e := by
