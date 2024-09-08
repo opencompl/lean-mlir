@@ -528,6 +528,11 @@ theorem one_shiftLeft_mul {x y : BitVec w} :
     1#w <<< x.toNat * y = y <<< x.toNat := by
   simp [←BitVec.mul_twoPow_eq_shiftLeft, BitVec.mul_comm]
 
+@[simp]
+theorem mul_allOnes {x : BitVec w} :
+    x * BitVec.allOnes w = -x := by
+  simp [← BitVec.negOne_eq_allOnes]
+
 end BitVec
 
 namespace Bool
