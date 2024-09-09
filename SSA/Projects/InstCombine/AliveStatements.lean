@@ -512,8 +512,15 @@ theorem bitvec_AndOrXor_2443 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
-  all_goals sorry
+  bv_auto
+  rw [BitVec.sshiftRight_xor_distrib]
+  rw [BitVec.xor_comm, BitVec.allOnes_xor_eq_not]
+  rw [BitVec.xor_comm]
+
+
+
+
+
 
 theorem bitvec_AndOrXor_2453 :
     ∀ (e e_1 : LLVM.IntW w),
