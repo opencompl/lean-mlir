@@ -533,6 +533,42 @@ theorem mul_allOnes {x : BitVec w} :
     x * BitVec.allOnes w = -x := by
   simp [← BitVec.negOne_eq_allOnes]
 
+@[simp]
+theorem xor_xor_self {x y : BitVec w} : x ^^^ y ^^^ y = x := by
+  ext
+  simp
+
+@[simp]
+theorem sshiftRight_allOnes_one :
+  (BitVec.allOnes w).sshiftRight 1 = BitVec.allOnes w := by
+  by_cases h : w = 0
+  . subst h
+    simp
+  . have : 0 < w := by omega
+    ext i
+    simp
+    rw [BitVec.msb_allOnes this]
+    simp
+
+@[simp]
+theorem sshiftRight_one_xor_allOnes {b : BitVec w} :
+    b.sshiftRight 1 ^^^ (BitVec.allOnes w) =
+    (b ^^^ BitVec.allOnes w).sshiftRight 1 := by
+    rw [BitVec.sshiftRight_xor_distrib, sshiftRight_allOnes_one]
+
+@[simp]
+theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
+    (b ^^^ (BitVec.allOnes w)).sshiftRight a.toNat ^^^ (BitVec.allOnes w) =
+    b.sshiftRight a.toNat := by
+  induction a.toNat
+  case zero =>
+    simp
+  case succ n ih =>
+    rw [BitVec.sshiftRight_add]
+    rw [sshiftRight_one_xor_allOnes]
+    rw [ih]
+    rw [BitVec.sshiftRight_add]
+
 end BitVec
 
 namespace Bool
