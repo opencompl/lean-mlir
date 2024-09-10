@@ -1,0 +1,3 @@
+[submodule "related-work/alive/alive"]
+	path = related-work/alive/alive
+	url = git@github.com:opencompl/alive.git
