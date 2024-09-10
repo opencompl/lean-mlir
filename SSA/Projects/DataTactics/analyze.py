@@ -5,7 +5,7 @@ import os
 import subprocess
 import tempfile
 import shutil
-from pandas import DataFrame, ExcelWriter
+from pandas import DataFrame
 import re
 
 # directory = 'SSA/Projects/InstCombine/tests/LLVM/'
@@ -90,29 +90,28 @@ def analyze_files(file_paths, tactics, output_file = None, summary_file = None):
     stdouts = []
     theorems = 0
     not_equalities = 0
-    unsupported_operations  =0
+    unsupported_operations  = 0
     succeeded = 0
-    with ExcelWriter('test.xlsx') as writer:
-        for lean_file in file_paths:
-            # open(lean_file, 'r') as input_file,
-            stdout = process_file(lean_file, tactics)
-            print(stdout)
-            *a, sheet_name = lean_file.split("/")
-            stdout.to_excel(writer, sheet_name=sheet_name, index=True)
-            theorems += len(stdout)
-            # s  = stdout.apply(lambda c : c.str.contains("found something else")  , axis = 0)]
-            # print(f"s = {s}")
-            not_equalities += stdout[stdout.apply(lambda c : c.str.contains("found something else"))].count()
-            unsupported_operations += stdout[stdout.apply(lambda c : c.str.contains("is not"))].count()
-            succeeded += stdout[stdout.apply(lambda c :c.str.contains("succeeded"))].count()
-            print(not_equalities)
-            print(unsupported_operations)
-            # stdout.append(stdout)
-        DataFrame({
-             "theorems": theorems,
-             "theorems failed due to not being an equality": not_equalities,
-             "theorems failed due to unsupported operations": unsupported_operations,
-             "theorems succeeded": succeeded
-         }).to_excel(writer ,sheet_name = "summary", index=True)
-
+    for lean_file in file_paths:
+        # open(lean_file, 'r') as input_file,
+        stdout = process_file(lean_file, tactics)
+        print(stdout)
+        *a, sheet_name = lean_file.split("/")
+        stdout.to_excel(writer, sheet_name=sheet_name, index=True)
+        theorems += len(stdout)
+        # s  = stdout.apply(lambda c : c.str.contains("found something else")  , axis = 0)]
+        # print(f"s = {s}")
+        not_equalities += stdout[stdout.apply(lambda c : c.str.contains("found something else"))].count()
+        unsupported_operations += stdout[stdout.apply(lambda c : c.str.contains("is not"))].count()
+        succeeded += stdout[stdout.apply(lambda c :c.str.contains("succeeded"))].count()
+        print(not_equalities)
+        print(unsupported_operations)
+        # stdout.append(stdout)
+    latex = DataFrame({
+            "theorems": theorems,
+            "theorems failed due to not being an equality": not_equalities,
+            "theorems failed due to unsupported operations": unsupported_operations,
+            "theorems succeeded": succeeded
+        }).to_latex()
+    print(latex)
     # df = DataFrame({'File Path': file_paths, 'stdout': l2})

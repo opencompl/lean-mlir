@@ -6,6 +6,8 @@ import Batteries.Tactic.OpenPrivate
 -- import SSA.Projects.DataTactics.all_proof
 import SSA.Experimental.Bits.Fast.Tactic
 import SSA.Projects.DataTactics.simple
+import  SSA.Projects.InstCombine.TacticAuto
+
 open Lean.Meta
 
 open Lean Meta
@@ -37,8 +39,14 @@ def checkAutomata (env : Environment) (declName : Name) : TermElabM Bool := do
           -- intros
           -- by
           --   bv_automata
-          evalTactic (← `(tactic| bv_automata))
+          evalTactic (← `(tactic|
+          (try simp_alive_undef)
+          ; (try simp_alive_ops)
+          ; (try simp_alive_case_bash)
+          ; (try intros)
+          ; try simp ; try bv_automata))
           )
+
         let result ← instantiateMVars goal
         return !result.hasMVar
       catch e =>
@@ -62,7 +70,8 @@ def analyzeTheorems : CommandElabM (Nat × Nat) := do
   let mut solved := 0
   let mut unsolved := 0
   let modules := [
-    `SSA.Projects.InstCombine.tests.LLVM.gdemorgan_proof
+    `SSA.Projects.InstCombine.AliveStatements
+    -- `SSA.Projects.InstCombine.tests.LLVM.gdemorgan_proof
 --     `SSA.Projects.InstCombine.tests.LLVM.gicmphmul_proof,
 -- `SSA.Projects.InstCombine.tests.LLVM.gsdivhexacthbyhpowerhofhtwo_proof,
 -- `SSA.Projects.InstCombine.tests.LLVM.grem_proof,
@@ -181,7 +190,7 @@ def analyzeTheorems : CommandElabM (Nat × Nat) := do
   ]
 
   for moduleName in modules do
-    let env ← importModules #[{module := moduleName}] {}
+    let env ← importModules #[⟨moduleName, false ⟩ ] {}
     let moduleIdx := Lean.Environment.getModuleIdx?  env moduleName
 
     for (declName, _) in env.constants do

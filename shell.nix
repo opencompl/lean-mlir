@@ -1,15 +1,13 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs;let
   my-python-packages = ps: with ps; [
-    pandas
-    openpyxl
+    pygls
   ];
   my-python = pkgs.python3.withPackages my-python-packages;
 in
 mkShell {
   buildInputs = [
     pkgs.elan
-    pkgs.libreoffice
     my-python
     pkgs.vscode
     (vscode-with-extensions.override {
