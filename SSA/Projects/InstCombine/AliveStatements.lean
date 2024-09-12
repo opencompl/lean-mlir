@@ -794,13 +794,50 @@ theorem bv_InstCombineShift__497 :
   try alive_auto
   all_goals sorry
 
+@[simp]
+theorem tomato (x y: BitVec w) :
+  (x + y) <<< 1 = x <<< 1 + y <<< 1 := by
+  sorry
+
+
+
+@[simp]
+theorem lettuce (x y : BitVec w) (n : Nat) :
+  (x <<< n + y <<< n) <<< 1 = x <<< (n + 1) + y <<< (n + 1) := by
+  induction n
+  case zero =>
+    rw [BitVec.shiftLeft_zero_eq, BitVec.shiftLeft_zero_eq]
+    rw [Nat.add_comm, Nat.add_zero]
+    ext i
+    sorry
+  case succ n ih =>
+    sorry
+
+@[simp]
+theorem potato (x y : BitVec w) (m : Nat) :
+  (x + y) <<< m = x <<< m + y <<< m := by
+  induction m
+  case zero =>
+    bv_decide
+  case succ n ih =>
+    rw [BitVec.shiftLeft_add, ih, BitVec.shiftLeft_add, BitVec.shiftLeft_add]
+    rw [← lettuce]
+    /-
+    w : ℕ
+    x y : BitVec w
+    n : ℕ
+    ih : (x + y) <<< n = x <<< n + y <<< n
+    ⊢ (x <<< n + y <<< n) <<< 1 = (x <<< n + y <<< n) <<< 1
+    -/
+    rw [BitVec.shiftLeft_zero_eq, BitVec.shiftLeft_zero_eq]
+    sorry
+
 theorem bv_InstCombineShift__497''' :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.shl (LLVM.add e_2 e_1) e ⊑ LLVM.add (LLVM.shl e_2 e) (LLVM.shl e_1 e) := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
-  all_goals sorry
+  bv_auto
 
 theorem bv_InstCombineShift__582 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
