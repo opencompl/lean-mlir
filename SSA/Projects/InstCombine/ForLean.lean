@@ -569,6 +569,30 @@ theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
     rw [ih]
     rw [BitVec.sshiftRight_add]
 
+theorem shiftLeft_shiftRight (x : BitVec w) (n : Nat):
+  x >>> n <<< n = x &&& BitVec.allOnes w <<< n := by
+  induction n generalizing x
+  case zero =>
+    simp [bv_toNat]
+  case succ n ih =>
+    rw [BitVec.shiftLeft_add]
+    rw [Nat.add_comm]
+    rw [BitVec.shiftRight_add]
+    rw [ih]
+    rw [Nat.add_comm]
+    rw [BitVec.shiftLeft_add]
+    rw [BitVec.shiftLeft_and_distrib]
+    ext i
+    simp
+    rw [Nat.add_comm]
+    by_cases hw : w = 0
+    · simp [hw]
+    · by_cases h : i.val = 0
+      · simp [h]
+      · rw [Nat.sub_add_cancel]
+        · simp [h]
+        · bv_omega
+
 end BitVec
 
 namespace Bool
