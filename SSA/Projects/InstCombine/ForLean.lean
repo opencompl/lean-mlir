@@ -590,9 +590,8 @@ theorem shiftLeft_shiftRight (x : BitVec w) (n : Nat):
     · simp [hw]
     · by_cases h : i.val = 0
       · simp [h]
-      · rw [Nat.sub_add_cancel]
+      · rw [Nat.sub_add_cancel (by omega)]
         · simp [h]
-        · bv_omega
 
 end BitVec
 
