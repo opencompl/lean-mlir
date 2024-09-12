@@ -576,13 +576,9 @@ theorem shiftLeft_shiftRight (x : BitVec w) (n : Nat):
   case zero =>
     simp [bv_toNat]
   case succ n ih =>
-    rw [BitVec.shiftLeft_add]
-    rw [Nat.add_comm]
-    rw [BitVec.shiftRight_add]
+    rw [BitVec.shiftLeft_add, Nat.add_comm, BitVec.shiftRight_add]
     rw [ih]
-    rw [Nat.add_comm]
-    rw [BitVec.shiftLeft_add]
-    rw [BitVec.shiftLeft_and_distrib]
+    rw [Nat.add_comm, BitVec.shiftLeft_add, BitVec.shiftLeft_and_distrib]
     ext i
     simp
     rw [Nat.add_comm]
