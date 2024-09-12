@@ -293,7 +293,7 @@ def numberOfLeadingZeros {w : Nat} (x : BitVec w) : Nat :=
   let rec countLeadingZeros (i : Nat) (count : Nat) : Nat :=
     match i with
       | Nat.zero => count
-      | Nat.succ i =>  if !x.getLsb i then countLeadingZeros i (count + 1) else count
+      | Nat.succ i =>  if !x.getLsbD i then countLeadingZeros i (count + 1) else count
   countLeadingZeros w 0
 
 theorem le_nlz_add_nlz_not_unsigned_mul_overflow {x y : BitVec 64} :
