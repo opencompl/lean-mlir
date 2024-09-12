@@ -84,13 +84,7 @@ def ROfZComputable_impl (z : ℤ) : R q n :=
           constructor
           · intros ha
             simp at ha
-            split at ha
-            case mp.isTrue hz =>
-              simp at ha
-            case mp.isFalse hz =>
-              simp at ha
-              subst ha
-              simp [hz]
+            simp [ha]
           · intros hb
             simp at hb
             obtain ⟨ha, hz⟩ := hb
