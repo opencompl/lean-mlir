@@ -569,6 +569,7 @@ theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
     rw [ih]
     rw [BitVec.sshiftRight_add]
 
+@[simp]
 theorem shiftLeft_shiftRight (x : BitVec w) (n : Nat):
   x >>> n <<< n = x &&& BitVec.allOnes w <<< n := by
   induction n generalizing x
