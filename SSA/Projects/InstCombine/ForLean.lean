@@ -579,7 +579,8 @@ theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
     rw [BitVec.shiftLeft_add, Nat.add_comm, BitVec.shiftRight_add, ih,
        Nat.add_comm, BitVec.shiftLeft_add, BitVec.shiftLeft_and_distrib]
     ext i
-    simp
+    simp only [getLsbD_and, getLsbD_shiftLeft, Fin.is_lt, decide_True, Nat.lt_one_iff,
+      Bool.true_and, getLsbD_ushiftRight, getLsbD_allOnes]
     rw [Nat.add_comm]
     by_cases hw : w = 0
     · simp [hw]
