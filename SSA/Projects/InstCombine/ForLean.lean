@@ -574,7 +574,7 @@ theorem shiftLeft_shiftRight (x : BitVec w) (n : Nat):
   x >>> n <<< n = x &&& BitVec.allOnes w <<< n := by
   induction n generalizing x
   case zero =>
-    simp [bv_toNat]
+    ext; simp
   case succ n ih =>
     rw [BitVec.shiftLeft_add, Nat.add_comm, BitVec.shiftRight_add]
     rw [ih]
