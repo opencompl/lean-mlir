@@ -71,6 +71,7 @@ macro "simp_alive_ops" : tactic =>
       (
         simp (config := {failIfUnchanged := false}) only [
             simp_llvm,
+            BitVec.ofInt_neg_one,
             (BitVec.ofInt_ofNat),
             pure_bind
           ]
