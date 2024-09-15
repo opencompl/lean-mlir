@@ -39,7 +39,7 @@ theorem ofInt_negSucc (w n : Nat ) :
 
 @[simp] lemma ofFin_ofNat (n : ℕ) :
     ofFin (no_index (OfNat.ofNat n : Fin (2^w))) = OfNat.ofNat n := by
-  simp only [OfNat.ofNat, Fin.ofNat', BitVec.ofNat, Nat.and_pow_two_is_mod]
+  simp only [OfNat.ofNat, Fin.ofNat', BitVec.ofNat, Nat.and_pow_two_sub_one_eq_mod]
 
 theorem toFin_injective {n : Nat} : Function.Injective (toFin : BitVec n → _)
   | ⟨_, _⟩, ⟨_, _⟩, rfl => rfl
@@ -48,7 +48,7 @@ theorem toFin_inj {x y : BitVec w} : x.toFin = y.toFin ↔ x = y :=
   toFin_injective.eq_iff
 
 @[simp] lemma ofFin_natCast (n : ℕ) : ofFin (n : Fin (2^w)) = n := by
-  simp only [Nat.cast, NatCast.natCast, OfNat.ofNat, BitVec.ofNat, Nat.and_pow_two_is_mod]
+  simp only [Nat.cast, NatCast.natCast, OfNat.ofNat, BitVec.ofNat, Nat.and_pow_two_sub_one_eq_mod]
   rfl
 
 lemma toFin_natCast (n : ℕ) : toFin (n : BitVec w) = n := by
