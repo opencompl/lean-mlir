@@ -795,42 +795,55 @@ theorem bv_InstCombineShift__497 :
   all_goals sorry
 
 @[simp]
-theorem tomato (x y: BitVec w) :
-  (x + y) <<< 1 = x <<< 1 + y <<< 1 := by
-  sorry
-
-
-
-@[simp]
-theorem lettuce (x y : BitVec w) (n : Nat) :
-  (x <<< n + y <<< n) <<< 1 = x <<< (n + 1) + y <<< (n + 1) := by
-  induction n
-  case zero =>
-    rw [BitVec.shiftLeft_zero_eq, BitVec.shiftLeft_zero_eq]
-    rw [Nat.add_comm, Nat.add_zero]
-    ext i
-    sorry
-  case succ n ih =>
-    sorry
-
-@[simp]
-theorem potato (x y : BitVec w) (m : Nat) :
-  (x + y) <<< m = x <<< m + y <<< m := by
-  induction m
+theorem shiftLeft_one_getLsbD_add (x y: BitVec w) :
+  (x <<< (↑1 : Nat) + y <<< (↑1 : Nat)).getLsbD 0 = false := by
+  induction w
   case zero =>
     bv_decide
+  case succ =>
+    rw [BitVec.getLsbD_add]
+    simp [bv_toNat]
+    omega
+
+@[simp]
+theorem shiftLeft_distrib_add_one (x y : BitVec w) (h : w > 1) :
+  (x + y) <<< (↑1 : Nat) = x <<< (↑1 : Nat) + y <<< (↑1 : Nat):= by
+  by_cases h' : w = 1
+  · ext i
+    bv_auto
+  · have : 1 < w := by omega
+    ext i
+    by_cases h'' : i.val = 0
+    · simp only [h'', BitVec.getLsbD_shiftLeft, zero_lt_one, decide_True, Bool.not_true,
+      Bool.and_false, zero_le, tsub_eq_zero_of_le, Bool.false_and, shiftLeft_one_getLsbD_add]
+    · have h''' : i.val > 0 := by omega
+      simp only [BitVec.getLsbD_shiftLeft, Fin.is_lt, decide_True, Nat.lt_one_iff, Bool.true_and]
+      rw [BitVec.getLsbD_add]
+      bv_auto
+      · sorry
+      · omega
+
+@[simp]
+theorem shiftLeft_distr_add (x y : BitVec w) (m : Nat) (h1 : m < w) :
+  (x + y) <<< m = x <<< m + y <<< m := by
+  induction m generalizing x y
+  case zero =>
+    bv_auto
   case succ n ih =>
-    rw [BitVec.shiftLeft_add, ih, BitVec.shiftLeft_add, BitVec.shiftLeft_add]
-    rw [← lettuce]
-    /-
-    w : ℕ
-    x y : BitVec w
-    n : ℕ
-    ih : (x + y) <<< n = x <<< n + y <<< n
-    ⊢ (x <<< n + y <<< n) <<< 1 = (x <<< n + y <<< n) <<< 1
-    -/
-    rw [BitVec.shiftLeft_zero_eq, BitVec.shiftLeft_zero_eq]
-    sorry
+    by_cases h' : w = 0
+    · subst h'
+      bv_decide
+    · rw [BitVec.shiftLeft_add, ih]
+      by_cases h'' : n = 0
+      · rw [h'']
+        simp only [BitVec.shiftLeft_zero_eq, zero_add]
+        rw [shiftLeft_distrib_add_one]
+        bv_omega
+      · have : 0 < n := by omega
+        rw [shiftLeft_distrib_add_one]
+        · rw [BitVec.shiftLeft_add, BitVec.shiftLeft_add]
+        · omega
+      · omega
 
 theorem bv_InstCombineShift__497''' :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.shl (LLVM.add e_2 e_1) e ⊑ LLVM.add (LLVM.shl e_2 e) (LLVM.shl e_1 e) := by
@@ -838,6 +851,9 @@ theorem bv_InstCombineShift__497''' :
   simp_alive_ops
   simp_alive_case_bash
   bv_auto
+  rw [shiftLeft_distr_add]
+  omega
+
 
 theorem bv_InstCombineShift__582 :
     ∀ (e e_1 : LLVM.IntW w), LLVM.lshr (LLVM.shl e_1 e) e ⊑ LLVM.and e_1 (LLVM.lshr (LLVM.const? (-1)) e) := by
