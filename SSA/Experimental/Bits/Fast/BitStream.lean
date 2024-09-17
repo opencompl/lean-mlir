@@ -229,12 +229,12 @@ def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
 
 def subAux (x y : BitStream) : Nat → Bool × Bool
-  | 0 => (_root_.xor (x 0) (y 0), !(x 0) && y 0)
+  | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>
     let borrow := (subAux x y n).2
     let a := x (n + 1)
     let b := y (n + 1)
-    (_root_.xor a (_root_.xor b borrow), !a && b || ((!(_root_.xor a b)) && borrow))
+    (xor a (xor b borrow), !a && b || ((!(xor a b)) && borrow))
 
 def sub (x y : BitStream) : BitStream :=
   fun n => (subAux x y n).1
@@ -244,7 +244,7 @@ def negAux (x : BitStream) : Nat → Bool × Bool
   | n+1 =>
     let borrow := (negAux x n).2
     let a := x (n + 1)
-    (_root_.xor (!a) borrow, !a && borrow)
+    (xor (!a) borrow, !a && borrow)
 
 def neg (x : BitStream) : BitStream :=
   fun n => (negAux x n).1
@@ -254,7 +254,7 @@ def incrAux (x : BitStream) : Nat → Bool × Bool
   | n+1 =>
     let carry := (incrAux x n).2
     let a := x (n + 1)
-    (_root_.xor a carry, a && carry)
+    (xor a carry, a && carry)
 
 def incr (x : BitStream) : BitStream :=
   fun n => (incrAux x n).1
@@ -264,7 +264,7 @@ def decrAux (x : BitStream) : Nat → Bool × Bool
   | (n+1) =>
     let borrow := (decrAux x n).2
     let a := x (n + 1)
-    (_root_.xor a borrow, !a && borrow)
+    (xor a borrow, !a && borrow)
 
 def decr (x : BitStream) : BitStream :=
   fun n => (decrAux x n).1
