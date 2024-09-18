@@ -806,25 +806,108 @@ theorem shiftLeft_one_getLsbD_add (x y: BitVec w) :
     omega
 
 @[simp]
-theorem shiftLeft_distrib_add_one (x y : BitVec w) (h : w > 1) :
-  (x + y) <<< (↑1 : Nat) = x <<< (↑1 : Nat) + y <<< (↑1 : Nat):= by
-  by_cases h' : w = 1
-  · ext i
-    bv_auto
-  · have : 1 < w := by omega
-    ext i
-    by_cases h'' : i.val = 0
-    · simp only [h'', BitVec.getLsbD_shiftLeft, zero_lt_one, decide_True, Bool.not_true,
-      Bool.and_false, zero_le, tsub_eq_zero_of_le, Bool.false_and, shiftLeft_one_getLsbD_add]
-    · have h''' : i.val > 0 := by omega
-      simp only [BitVec.getLsbD_shiftLeft, Fin.is_lt, decide_True, Nat.lt_one_iff, Bool.true_and]
-      rw [BitVec.getLsbD_add]
-      bv_auto
-      · sorry
-      · omega
+theorem potato (n : Nat) (h : w > 0)  (h' : m > 0):
+  ((1 + n) % 2 ^ w) <<< m % 2 ^ w = (n % 2 ^ w) <<< m % 2 ^ w := by
+  sorry
 
 @[simp]
-theorem shiftLeft_distr_add (x y : BitVec w) (m : Nat) (h1 : m < w) :
+theorem zero_shiftLeft (m : Nat) :
+  0 <<< m = 0 := by
+  simp
+
+@[simp]
+theorem shiftLeft_distr_add (x y : BitVec w) (m : Nat) (h : m < w):
+  (x + y) <<< m = x <<< m + y <<< m := by
+
+  rw [BitVec.toNat_eq]
+  simp
+  induction x.toNat generalizing y
+  case zero =>
+    simp only [zero_add, BitVec.toNat_mod_cancel, Nat.zero_shiftLeft]
+  case succ n ih =>
+    rw [Nat.add_assoc]
+    rw [Nat.add_comm]
+    rw [Nat.add_assoc]
+    rw [← Nat.mod_add_mod]
+    simp [h]
+    by_cases h' : m = 0
+    · subst h'
+      simp only [Nat.shiftLeft_zero, dvd_refl, Nat.mod_mod_of_dvd]
+      rw [← Nat.add_assoc, Nat.add_comm, ← Nat.add_assoc]
+    · have : m > 0 := by omega
+      by_cases h'' : w = 0
+      · omega
+      · have : 0 < w := by omega
+        rw [potato]
+        · rw [Nat.add_comm, ih]
+          rw [Nat.add_mod (a := (n + 1) <<< m) (b := y.toNat <<< m)]
+
+          rw [Nat.shiftLeft_eq]
+          rw [Nat.shiftLeft_eq]
+          rw [Nat.shiftLeft_eq]
+          rw [Nat.mul_comm (n := (n + 1))]
+          rw [Nat.mul_add]
+          sorry
+        · omega
+        · omega
+
+@[simp]
+theorem pumpkin' (x y : BitVec w) (h : i > 0) (h1 : w > 0):
+  BitVec.carry (i - 1) x y false = BitVec.carry (i) (x <<< 1) (y <<< 1) false := by
+  induction i
+  case zero =>
+    simp
+  case succ n ih =>
+    rw [add_tsub_cancel_right]
+    rw [BitVec.carry_succ]
+    simp [← ih]
+    rw [Nat.one_mod_two_pow]
+    · sorry
+    · sorry
+
+theorem pumpkin (x y : BitVec w) (h : i > 0) (h' : w > 0):
+  BitVec.carry (i - (1 : Nat)) x y false = BitVec.carry (i) (x <<< (1 : Nat)) (y <<< (1 : Nat)) false := by
+  induction i
+  case zero =>
+    simp
+  case succ n ih =>
+    simp only [add_tsub_cancel_right]
+    rw [BitVec.carry_succ, ← ih]
+    rw [BitVec.getLsbD_shiftLeft]
+    rw [BitVec.getLsbD_shiftLeft]
+    bv_auto
+    by_cases h'' : n < w
+    · simp [h'', *]
+      sorry
+    · sorry
+    · sorry
+
+
+@[simp]
+theorem shiftLeft_distrib_add_one (x y : BitVec w) (h : w > 1) :
+  (x + y) <<< (1 : Nat) = x <<< (1 : Nat) + y <<< (1 : Nat):= by
+  ext i
+  by_cases h' : i.val = 0
+  · simp only [h', BitVec.getLsbD_shiftLeft, zero_lt_one, decide_True, Bool.not_true,
+    Bool.and_false, zero_le, tsub_eq_zero_of_le, Bool.false_and, shiftLeft_one_getLsbD_add]
+  · have : i.val > 0 := by omega
+    simp only [BitVec.getLsbD_shiftLeft, Fin.is_lt, decide_True, Nat.lt_one_iff, Bool.true_and, *]
+    simp
+    rw [BitVec.getLsbD_add]
+    rw [BitVec.getLsbD_add]
+    simp [*]
+    · by_cases h'' : i.val = w
+      · omega
+      · have : i.val < w := by omega
+        rw [pumpkin]
+        · omega
+        · omega
+    · omega
+    · omega
+
+
+@[simp]
+theorem shiftLeft_distr_add' (x y : BitVec w) (m : Nat) (h : m < w):
   (x + y) <<< m = x <<< m + y <<< m := by
   induction m generalizing x y
   case zero =>
