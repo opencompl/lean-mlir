@@ -651,7 +651,7 @@ theorem shiftRight_and_or_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
   simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_and_distrib]
 
 @[simp]
-theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
+theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
     (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
   simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
   rw [BitVec.xor_comm]
