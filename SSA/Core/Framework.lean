@@ -1869,7 +1869,7 @@ theorem subset_entries :
       simp only at ih_matchVar
       split_ifs at ih_matchVar with hop
       apply ih_matchArg e hop _ ih_matchVar
-  · intro ma v₂ b? varMap hvarMap x hx
+  · intro w v₂ b? varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
     split at hvarMap
     case h_1 _p q r _s =>
@@ -1895,7 +1895,7 @@ theorem subset_entries :
       rename_i a b c
       rw [c] at b?
       contradiction
-  · intro w ma
+  · intro ma w
     intro b? varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
