@@ -87,6 +87,10 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
+theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
+   subst h
+   simp
+
 end Nat
 
 namespace BitVec
@@ -607,27 +611,16 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     norm_cast
 
 @[simp]
-theorem shiftLeft_one_distr_add {x y : BitVec w} :
-    (x + y) <<< (1 : Nat) = x <<< (1 : Nat) + y <<< (1 : Nat) := by
-    rw [BitVec.toNat_eq]
-    simp only [BitVec.ofNat_eq_ofNat, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
-      BitVec.toNat_shiftLeft, BitVec.toNat_add, Nat.add_mod_mod, Nat.mod_add_mod]
-    rw [Nat.shiftLeft_eq_mul_pow, Nat.shiftLeft_eq_mul_pow, Nat.shiftLeft_eq_mul_pow]
-    simp only [pow_one, Nat.mod_mul_mod]
-    rw [Nat.mul_comm, Nat.mul_add, Nat.mul_comm, Nat.mul_comm, Nat.mul_comm (n := y.toNat)]
-
-@[simp]
 theorem shiftLeft_distr_add (x y : BitVec w) (n : Nat) :
-  (x + y) <<< n = x <<< n + y <<< n := by
-  by_cases h : w = 0
-  · ext i
-    simp [*]
-  · have : 0 < w := by omega
-    induction n
-    case neg.zero =>
-      simp
-    case neg.succ n ih =>
-      rw [BitVec.shiftLeft_add, BitVec.shiftLeft_add, BitVec.shiftLeft_add, ih, shiftLeft_one_distr_add]
+    (x + y) <<< n = x <<< n + y <<< n := by
+  induction n
+  case zero =>
+    simp
+  case succ n ih =>
+    simp only [shiftLeft_add, ih, toNat_eq, toNat_shiftLeft, toNat_add, Nat.shiftLeft_eq_mul_pow,
+      Nat.add_mod_mod, Nat.mod_add_mod, pow_one, Nat.mod_mul_mod]
+    rw [Nat.mod_eq_of_eq]
+    omega
 
 end BitVec
 
