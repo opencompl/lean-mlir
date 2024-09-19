@@ -589,6 +589,29 @@ theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
       · rw [Nat.sub_add_cancel (by omega)]
         simp [h]
 
+@[simp]
+theorem shiftLeft_one_distr_add {x y : BitVec w} :
+    (x + y) <<< (1 : Nat) = x <<< (1 : Nat) + y <<< (1 : Nat) := by
+    rw [BitVec.toNat_eq]
+    simp only [BitVec.ofNat_eq_ofNat, BitVec.shiftLeft_eq', BitVec.toNat_ofNat,
+      BitVec.toNat_shiftLeft, BitVec.toNat_add, Nat.add_mod_mod, Nat.mod_add_mod]
+    rw [Nat.shiftLeft_eq_mul_pow, Nat.shiftLeft_eq_mul_pow, Nat.shiftLeft_eq_mul_pow]
+    simp only [pow_one, Nat.mod_mul_mod]
+    rw [Nat.mul_comm, Nat.mul_add, Nat.mul_comm, Nat.mul_comm, Nat.mul_comm (n := y.toNat)]
+
+@[simp]
+theorem shiftLeft_distr_add (x y : BitVec w) (n : Nat) :
+  (x + y) <<< n = x <<< n + y <<< n := by
+  by_cases h : w = 0
+  · ext i
+    simp [*]
+  · have : 0 < w := by omega
+    induction n
+    case neg.zero =>
+      simp
+    case neg.succ n ih =>
+      rw [BitVec.shiftLeft_add, BitVec.shiftLeft_add, BitVec.shiftLeft_add, ih, shiftLeft_one_distr_add]
+
 end BitVec
 
 namespace Bool
