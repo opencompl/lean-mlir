@@ -642,7 +642,7 @@ theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
   induction n
   case zero =>
     ext; simp
-  case succ n ih =>
+  case succ n _ =>
     simp [BitVec.and_assoc, allOnes_shiftLeft_and_shiftLeft (n := (n + 1)) (x := y)]
 
 @[simp]
