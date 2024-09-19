@@ -611,7 +611,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     norm_cast
 
 @[simp]
-theorem shiftLeft_distr_add (x y : BitVec w) (n : Nat) :
+theorem add_shiftLeft_distrib (x y : BitVec w) (n : Nat) :
     (x + y) <<< n = x <<< n + y <<< n := by
   induction n
   case zero =>
