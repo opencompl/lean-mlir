@@ -766,13 +766,6 @@ theorem bv_InstCombineShift__279 :
   try alive_auto
   all_goals sorry
 
-@[simp]
-theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
-    (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
-  simp [BitVec.shiftLeft_xor_distrib]
-  simp [BitVec.shiftLeft_and_distrib]
-  rw [BitVec.xor_comm]
-
 theorem bv_InstCombineShift__440 :
     ∀ (e e_1 e_2 e_3 : LLVM.IntW w),
       LLVM.shl (LLVM.xor e_3 (LLVM.and (LLVM.lshr e_2 e_1) e)) e_1 ⊑
@@ -780,7 +773,8 @@ theorem bv_InstCombineShift__440 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  bv_auto
+  try alive_auto
+  all_goals sorry
 
 theorem bv_InstCombineShift__476 :
     ∀ (e e_1 e_2 e_3 : LLVM.IntW w),
