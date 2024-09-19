@@ -87,6 +87,10 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
+theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
+   subst h
+   simp
+
 end Nat
 
 namespace BitVec
@@ -605,6 +609,18 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.succ_eq_add_one, zero_add, Nat.cast_one,
       Int.pred_toNat]
     norm_cast
+
+@[simp]
+theorem add_shiftLeft_distrib (x y : BitVec w) (n : Nat) :
+    (x + y) <<< n = x <<< n + y <<< n := by
+  induction n
+  case zero =>
+    simp
+  case succ n ih =>
+    simp only [shiftLeft_add, ih, toNat_eq, toNat_shiftLeft, toNat_add, Nat.shiftLeft_eq_mul_pow,
+      Nat.add_mod_mod, Nat.mod_add_mod, pow_one, Nat.mod_mul_mod]
+    rw [Nat.mod_eq_of_eq]
+    omega
 
 end BitVec
 
