@@ -239,7 +239,7 @@ lemma add_eq_propagate (x y : BitStream) :
     x + y = propagate (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (bits true && bits false) || (bits false && carry ()) || (bits true && carry ()),
-          _root_.xor (bits true) (_root_.xor (bits false) (carry ()))))
+          Bool.xor (bits true) (Bool.xor (bits false) (carry ()))))
     (λ b => cond b x y) := by
   ext n
   match n with
@@ -256,7 +256,7 @@ lemma BitStream.subAux_eq_propagateCarry (x y : BitStream) (n : ℕ) :
     (BitStream.subAux x y n).2 = propagateCarry (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         λ _ => (!(bits true) && (bits false)) ||
-          (!(_root_.xor (bits true) (bits false))) && carry ())
+          (!(Bool.xor (bits true) (bits false))) && carry ())
     (λ b => cond b x y) n () := by
   induction n <;> simp [BitStream.subAux, *]
 
@@ -264,8 +264,8 @@ lemma sub_eq_propagate (x y : BitStream) :
     BitStream.sub x y = propagate (λ _ => false)
       (λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (!(bits true) && (bits false)) ||
-          ((!(_root_.xor (bits true) (bits false))) && carry ()),
-          _root_.xor (bits true) (_root_.xor (bits false) (carry ()))))
+          ((!(Bool.xor (bits true) (bits false))) && carry ()),
+          Bool.xor (bits true) (Bool.xor (bits false) (carry ()))))
     (λ b => cond b x y) := by
   ext n
   match n with
@@ -283,7 +283,7 @@ lemma BitStream.negAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
 lemma neg_eq_propagate (x : BitStream) :
     BitStream.neg x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
-        (λ _ => (!(bits ())) && (carry ()), _root_.xor (!(bits ())) (carry ())))
+        (λ _ => (!(bits ())) && (carry ()), Bool.xor (!(bits ())) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
@@ -301,7 +301,7 @@ lemma BitStream.incrAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
 lemma incr_eq_propagate (x : BitStream) :
     BitStream.incr x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
-        (λ _ => (bits ()) && carry (), _root_.xor (bits ()) (carry ())))
+        (λ _ => (bits ()) && carry (), Bool.xor (bits ()) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
@@ -320,7 +320,7 @@ lemma BitStream.decrAux_eq_propagateCarry (x : BitStream) (n : ℕ) :
 lemma decr_eq_propagate (x : BitStream) :
     BitStream.decr x = propagate (λ _ => true)
       (λ (carry : Unit → Bool) (bits : Unit → Bool) =>
-        (λ _ => (!(bits ())) && carry (), _root_.xor (bits ()) (carry ())))
+        (λ _ => (!(bits ())) && carry (), Bool.xor (bits ()) (carry ())))
     (λ _ => x) := by
   ext n
   match n with
@@ -399,7 +399,7 @@ def xor : PropagateStruc Bool :=
   { α := Empty,
     i := by infer_instance,
     init_carry := Empty.elim,
-    next_bit := λ _carry bits => (Empty.elim, _root_.xor (bits true) (bits false)) }
+    next_bit := λ _carry bits => (Empty.elim, Bool.xor (bits true) (bits false)) }
 
 @[simp] lemma eval_xor (x : Bool → BitStream) : xor.eval x =  (x true) ^^^ (x false) := by
   ext n; cases n <;> simp [xor, eval, propagate_succ]
@@ -410,7 +410,7 @@ def xor : PropagateStruc Bool :=
     init_carry := λ _ => false,
     next_bit := λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (bits true && bits false) || (bits false && carry ()) || (bits true && carry ()),
-          _root_.xor (bits true) (_root_.xor (bits false) (carry ()))) }
+          Bool.xor (bits true) (Bool.xor (bits false) (carry ()))) }
 
 @[simp] lemma eval_add (x : Bool → BitStream) : add.eval x = (x true)  + (x false) := by
   dsimp [add, eval]
@@ -427,8 +427,8 @@ def sub : PropagateStruc Bool :=
     init_carry := λ _ => false,
     next_bit := λ (carry : Unit → Bool) (bits : Bool → Bool) =>
         (λ _ => (!(bits true) && (bits false)) ||
-          ((!(_root_.xor (bits true) (bits false))) && carry ()),
-          _root_.xor (bits true) (_root_.xor (bits false) (carry ()))) }
+          ((!(Bool.xor (bits true) (bits false))) && carry ()),
+          Bool.xor (bits true) (Bool.xor (bits false) (carry ()))) }
 
 @[simp] lemma eval_sub (x : Bool → BitStream) : sub.eval x = BitStream.sub (x true) (x false) := by
   dsimp [sub, eval]
@@ -444,7 +444,7 @@ def neg : PropagateStruc Unit :=
     i := by infer_instance,
     init_carry := λ _ => true,
     next_bit := λ (carry : Unit → Bool) (bits : Unit → Bool) =>
-      (λ _ => (!(bits ())) && (carry ()), _root_.xor (!(bits ())) (carry ())) }
+      (λ _ => (!(bits ())) && (carry ()), Bool.xor (!(bits ())) (carry ())) }
 
 @[simp] lemma eval_neg (x : Unit → BitStream) : neg.eval x = BitStream.neg (x ()) := by
   dsimp [neg, eval]
@@ -511,7 +511,7 @@ def incr : PropagateStruc Unit :=
   { α := Unit,
     i := by infer_instance,
     init_carry := λ _ => true,
-    next_bit := λ carry bits => (λ _ => bits () && carry (), _root_.xor (bits ()) (carry ())) }
+    next_bit := λ carry bits => (λ _ => bits () && carry (), Bool.xor (bits ()) (carry ())) }
 
 @[simp] lemma eval_incr (x : Unit → BitStream) : incr.eval x = BitStream.incr (x ()) := by
   dsimp [incr, eval]
@@ -521,7 +521,7 @@ def decr : PropagateStruc Unit :=
   { α := Unit,
     i := by infer_instance,
     init_carry := λ _ => true,
-    next_bit := λ carry bits => (λ _ => !(bits ()) && carry (), _root_.xor (bits ()) (carry ())) }
+    next_bit := λ carry bits => (λ _ => !(bits ()) && carry (), Bool.xor (bits ()) (carry ())) }
 
 @[simp] lemma eval_decr (x : Unit → BitStream) : decr.eval x = BitStream.decr (x ()) := by
   dsimp [decr, eval]

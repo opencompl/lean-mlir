@@ -49,7 +49,7 @@ def eval : Circuit α → (α → Bool) → Bool
   | var b x, f => if b then f x else !(f x)
   | and c₁ c₂, f => (eval c₁ f) && (eval c₂ f)
   | or c₁ c₂, f => (eval c₁ f) || (eval c₂ f)
-  | xor c₁ c₂, f => _root_.xor (eval c₁ f) (eval c₂ f)
+  | xor c₁ c₂, f => Bool.xor (eval c₁ f) (eval c₂ f)
 
 @[simp] def evalv [DecidableEq α] : ∀ (c : Circuit α), (∀ a ∈ vars c, Bool) → Bool
   | tru, _ => true
@@ -59,7 +59,7 @@ def eval : Circuit α → (α → Bool) → Bool
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
   | or c₁ c₂, f => (evalv c₁ (fun i hi => f i (by simp [hi, vars]))) ||
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
-  | xor c₁ c₂, f => _root_.xor (evalv c₁ (fun i hi => f i (by simp [hi, vars])))
+  | xor c₁ c₂, f => Bool.xor (evalv c₁ (fun i hi => f i (by simp [hi, vars])))
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
 
 lemma eval_eq_evalv [DecidableEq α] : ∀ (c : Circuit α) (f : α → Bool),
@@ -182,13 +182,13 @@ def simplifyXor : Circuit α → Circuit α → Circuit α
   | c₁, c₂ => xor c₁ c₂
 
 theorem _root_.Bool.xor_not_left' (a b : Bool) :
-    _root_.xor (!a) b = !_root_.xor a b := by
+    Bool.xor (!a) b = !Bool.xor a b := by
   cases a <;> cases b <;> rfl
 
 instance : Xor (Circuit α) := ⟨Circuit.simplifyXor⟩
 
 @[simp] lemma eval_xor : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
-    eval (c₁ ^^^ c₂) f = _root_.xor (eval c₁ f) (eval c₂ f) := by
+    eval (c₁ ^^^ c₂) f = Bool.xor (eval c₁ f) (eval c₂ f) := by
   intros c₁ c₂ f
   cases c₁ <;> cases c₂ <;> simp [simplifyXor, Bool.xor_not_left'] <;>
   split_ifs <;> simp [*] at *
@@ -422,7 +422,7 @@ def assignVars [DecidableEq α] :
   | var b x, f =>
     Sum.elim
       (var b)
-      (λ c : Bool => if _root_.xor b c then fals else tru)
+      (λ c : Bool => if Bool.xor b c then fals else tru)
       (f x (by simp [vars]))
   | and c₁ c₂, f => (assignVars c₁ (λ x hx => f x (by simp [hx, vars]))) &&&
                     (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))

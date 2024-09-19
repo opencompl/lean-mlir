@@ -179,7 +179,7 @@ local instance : HXor Bool Bool Bool where
   hXor := Bool.xor
 
 theorem sle_iff_not_adc_not_add_sub_xor_sub :
-    (x <ₛ y) ↔ !(BitVec.carry w x (~~~ y + 1) false ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1)) := by
+    (x <ₛ y) ↔ !(BitVec.carry w x (~~~ y + 1) false ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1)) := by
   try alive_auto
   all_goals sorry
 
@@ -189,7 +189,7 @@ theorem sle_iff_adc_add_sub_neg_add_sub :
   all_goals sorry
 
 theorem sle_iff_adc_not_add_sub_sub :
-    (x ≤ₛ y) ↔ ((BitVec.carry w y (~~~ x + 1)) false) ^^^ x.getMsb (w - 1) ^^^ y.getMsb (w - 1) := by
+    (x ≤ₛ y) ↔ ((BitVec.carry w y (~~~ x + 1)) false) ^^^ x.getMsbD (w - 1) ^^^ y.getMsbD (w - 1) := by
   try alive_auto
   all_goals sorry
 

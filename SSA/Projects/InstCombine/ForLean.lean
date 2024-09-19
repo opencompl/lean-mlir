@@ -589,6 +589,23 @@ theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
       · rw [Nat.sub_add_cancel (by omega)]
         simp [h]
 
+theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
+  simp only [Int.reduceNeg, toNat_eq, toNat_ofInt, Nat.cast_pow, Nat.cast_ofNat, toNat_neg,
+    toNat_ofNat]
+  by_cases h : w = 0
+  · subst h
+    simp
+  · simp only [Int.reduceNeg, ne_eq, h, not_false_eq_true, Nat.one_mod_two_pow_eq,
+    Nat.self_sub_mod]
+    have h' := @Int.add_emod_self (-1) (2^w)
+    rw [← h', ← Int.tmod_eq_emod (by omega) (by omega), Int.tmod_eq_of_lt (by omega) (by omega),
+      Int.add_comm]
+    norm_cast
+    rw [Int.ofNat_add_negSucc, Int.subNatNat_eq_coe]
+    simp only [Nat.cast_pow, Nat.cast_ofNat, Nat.succ_eq_add_one, zero_add, Nat.cast_one,
+      Int.pred_toNat]
+    norm_cast
+
 @[simp]
 theorem shiftLeft_one_distr_add {x y : BitVec w} :
     (x + y) <<< (1 : Nat) = x <<< (1 : Nat) + y <<< (1 : Nat) := by
