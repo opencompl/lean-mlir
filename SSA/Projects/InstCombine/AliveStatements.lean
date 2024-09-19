@@ -815,10 +815,31 @@ theorem zero_shiftLeft (m : Nat) :
   0 <<< m = 0 := by
   simp
 
+
+@[simp]
+theorem carrot (m n : Nat) (h : n > 0) (h' : m < n):
+  2 ^ m % 2 ^ n = 0 := by
+  induction m generalizing n
+  case zero =>
+    simp only [pow_zero, h]
+    rw [Nat.one_mod_two_pow]
+    simp only [one_ne_zero]
+    · bv_auto
+    · sorry
+  case succ n ih =>
+    rw [Nat.pow_succ]
+    rw [Nat.mul_comm, ← ih]
+    · sorry
+    · sorry
+    · sorry
+    · sorry
+
+
+
+
 @[simp]
 theorem shiftLeft_distr_add (x y : BitVec w) (m : Nat) (h : m < w):
   (x + y) <<< m = x <<< m + y <<< m := by
-
   rw [BitVec.toNat_eq]
   simp
   induction x.toNat generalizing y
@@ -841,13 +862,19 @@ theorem shiftLeft_distr_add (x y : BitVec w) (m : Nat) (h : m < w):
         rw [potato]
         · rw [Nat.add_comm, ih]
           rw [Nat.add_mod (a := (n + 1) <<< m) (b := y.toNat <<< m)]
-
           rw [Nat.shiftLeft_eq]
           rw [Nat.shiftLeft_eq]
           rw [Nat.shiftLeft_eq]
           rw [Nat.mul_comm (n := (n + 1))]
           rw [Nat.mul_add]
-          sorry
+          simp [h'']
+          rw [Nat.add_assoc (n := 2 ^ m * n)]
+          rw [Nat.add_left_comm (m := 2 ^ m)]
+          rw [← Nat.mod_add_mod (m := 2 ^ m)]
+          rw [carrot (m := m) (n := w)]
+          · bv_auto
+          · omega
+          · omega
         · omega
         · omega
 
@@ -927,6 +954,63 @@ theorem shiftLeft_distr_add' (x y : BitVec w) (m : Nat) (h : m < w):
         · rw [BitVec.shiftLeft_add, BitVec.shiftLeft_add]
         · omega
       · omega
+
+@[simp]
+theorem mod_one (x : BitVec w) (h : w > 0) :
+  x % 1#w = 0#w := by
+  induction w
+  case zero =>
+    omega
+  case succ n ih =>
+    bv_auto
+    sorry
+
+
+
+@[simp]
+theorem mod_distrib_add (x y : BitVec w) (n : Nat) (h : n > 0):
+  (x + y) % n = ((x % n) + (y % n)) % n := by
+  by_cases h : n = 1
+  · subst h
+    simp
+  · have : 1 < n := by omega
+    rw [BitVec.]
+    sorry
+
+@[simp]
+theorem carbonara (x y : BitVec w) (m : Nat) (h : m < w):
+  (x + y) <<< m = x <<< m + y <<< m := by
+  induction x.toNat generalizing y
+  case zero =>
+    rw [BitVec.toNat_eq]
+    rw [BitVec.toNat_shiftLeft]
+    rw [BitVec.toNat_add]
+
+    sorry
+  case succ n i =>
+    sorry
+/-
+induction m -- i believe this is not the rihgt way to do this
+ih : (x + y) <<< n = x <<< n + y <<< n
+goal : (x + y) <<< (n + 1) = x <<< (n + 1) + y <<< (n + 1)
+
+    (a + b) mod n = [(a mod n) + (b mod n)] mod n.
+    ab mod n = [(a mod n)(b mod n)] mod n.
+
+
+  (x + y) <<< (n + 1) = x <<< (n + 1) + y <<< (n + 1)
+= (x + y) <<< n <<< 1 = x <<< n <<< 1 + y <<< n <<< 1
+  [replace ih]
+= (x <<< n + y <<< n) <<< 1 = x <<< n <<< 1 + y <<< n <<< 1
+= (x <<< n + y <<< n) * 2 % 2 ^ w = (x <<< n) * 2 % 2 ^ w  + (y <<< n) * 2 % 2 ^ w
+= (x <<< n + y <<< n) * 2 % 2 ^ w = (x <<< n) * 2 % 2 ^ w  + (y <<< n) * 2 % 2 ^ w
+= (x <<< n * 2 + y <<< n * 2) % 2 ^ w = (x <<< n) * 2 % 2 ^ w  + (y <<< n) * 2 % 2 ^ w
+  [distrib mod over *]
+= ((x <<< n * 2) % 2 ^ w + (y <<< n * 2) % 2 ^ w) % 2 ^ w =  (x <<< n) * 2 % 2 ^ w  + (y <<< n) * 2 % 2 ^ w
+=
+
+-/
+  sorry
 
 theorem bv_InstCombineShift__497''' :
     ∀ (e e_1 e_2 : LLVM.IntW w), LLVM.shl (LLVM.add e_2 e_1) e ⊑ LLVM.add (LLVM.shl e_2 e) (LLVM.shl e_1 e) := by
