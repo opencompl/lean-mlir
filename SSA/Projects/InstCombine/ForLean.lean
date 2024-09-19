@@ -622,6 +622,36 @@ theorem add_shiftLeft_distrib (x y : BitVec w) (n : Nat) :
     rw [Nat.mod_eq_of_eq]
     omega
 
+@[simp]
+theorem allOnes_and (x : BitVec w) :
+    BitVec.allOnes w &&& x = x := by
+  ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+
+@[simp]
+theorem allOnes_shiftLeft_and_shiftLeft (a : BitVec w) (n : Nat) :
+    BitVec.allOnes w <<< n &&& a <<< n = a <<< n := by
+    induction n
+    case zero =>
+      simp
+    case succ =>
+      simp [BitVec.shiftLeft_add, ← BitVec.shiftLeft_and_distrib]
+
+@[simp]
+theorem and_shiftLeft_allOnes (a c : BitVec w) (b : Nat):
+  a &&& BitVec.allOnes w <<< b &&& c <<< b = a &&& c <<< b := by
+  induction b
+  case zero =>
+    ext; simp
+  case succ n ih =>
+    simp [BitVec.and_assoc, allOnes_shiftLeft_and_shiftLeft (n := (n + 1)) (a := c)]
+
+@[simp]
+theorem shiftRight_and_or_shiftLeft_distrib (a b c d: BitVec w) :
+    (a >>> b.toNat &&& c ||| d) <<< b.toNat = a &&& c <<< b.toNat ||| d <<< b.toNat := by
+  rw [BitVec.shiftLeft_or_distrib]
+  rw [BitVec.shiftLeft_and_distrib]
+  simp
+
 end BitVec
 
 namespace Bool
