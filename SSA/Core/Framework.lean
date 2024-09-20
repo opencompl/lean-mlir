@@ -2248,7 +2248,7 @@ theorem mem_matchVar
       simp only [bind, Option.mem_def, Option.bind_eq_some] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
-    rw [← dite_some_none_eq_some] at he₂
+    rw [← Option.dite_none_right_eq_some] at he₂
     split_ifs at he₂ with h
     · dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
       simp only [Expr.op_mk, Expr.args_mk, Option.some.injEq] at he₂

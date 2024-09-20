@@ -470,7 +470,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
   rw [iunfoldr_replace (fun i => carry i B A false)]
   · simp [carry]; omega
   · intro i
-    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
+    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, BitVec.setWidth_zero,
       BitVec.add_zero, Prod.mk.injEq]
     constructor
     · rw [carry_succ]
