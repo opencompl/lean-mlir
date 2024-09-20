@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .lake
-          key: ${{ runner.os }}-lake-tools
+          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
 
       - name: Compile `mlirnatural` Executable 🧐
         run: |
