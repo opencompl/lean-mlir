@@ -35,7 +35,6 @@ jobs:
 
       - name: Compile Library 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA
 
       - name: Compile Decide Experiment 🧐
