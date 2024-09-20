@@ -630,7 +630,7 @@ theorem allOnes_and {x : BitVec w} :
 @[simp]
 theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
-    rw [← BitVec.shiftLeft_and_distrib, allOnes_and]
+  rw [← BitVec.shiftLeft_and_distrib, allOnes_and]
 
 @[simp]
 theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
