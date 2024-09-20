@@ -87,10 +87,6 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
-theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
-   subst h
-   simp
-
 end Nat
 
 namespace BitVec
@@ -610,7 +606,11 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
       Int.pred_toNat]
     norm_cast
 
-@[simp]
+end BitVec
+
+namespace Bool
+
+theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
 theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
     (x + y) <<< n = x <<< n + y <<< n := by
   induction n
@@ -643,27 +643,21 @@ theorem shiftRight_and_or_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
   simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_and_distrib]
 
 @[simp]
-theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
+theorem shiftLeft_and_distrib_gen {x y : BitVec w} {n m : Nat} (h : n ≤ m) :
+    x <<< n &&& y <<< m = (x &&& y) <<< m := by
+  sorry
+
+@[simp]
+theorem shiftRight_and_xor_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
+    (x >>> n &&& y ^^^ z) <<< n = x &&& y <<< n ^^^ z <<< n := by
+  simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
+
+@[simp]
+theorem shiftRight_xor_and_shiftLeft_distrib' {x y z : BitVec w} {n : Nat} :
     (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
   simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
   rw [BitVec.xor_comm]
 
-end BitVec
-
-namespace Bool
-
-theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
-    (decide p).xor (decide q) = decide (p ≠ q) := by
-  cases' dp with pt pt
-  <;> simp [pt]
-
-@[simp]
-theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
-  cases a
-  <;> cases b
-  <;> simp
-
-@[simp]
 theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
   <;> cases b
