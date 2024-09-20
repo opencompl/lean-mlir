@@ -37,6 +37,7 @@ jobs:
 
       - name: Compile Library 🧐
         run: |
+          XDG_CACHE_HOME=".cache" lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA
 
       - name: Compile Decide Experiment 🧐
