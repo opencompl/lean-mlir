@@ -33,7 +33,7 @@ jobs:
           path: |
             .lake
             .cache
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }} 
+          key: ${{ runner.os }}-lake-2-${{ hashFiles('lake-manifest.json') }} 
 
       - name: Compile Library 🧐
         run: |
