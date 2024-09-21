@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2023 Lean FRO, LLC. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Siddharth Bhat, Tobias Groser
+-/
 import Lean
 open Lean Meta Elab Simp
 
@@ -126,7 +131,6 @@ set_option pp.all true in
      g.withContext (do
         let hyps := (← getLocalHyps).toList
         Lean.Elab.Tactic.Omega.omega hyps g {})
-     let ltProof ← instantiateMVars ltProof
      let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
      trace[debug] "proof: {eqProof}"
      return .done { expr := x, proof? := eqProof : Result }
