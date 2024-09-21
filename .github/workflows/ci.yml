@@ -19,19 +19,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Install elan 🕑
-        run: |
-          set -o pipefail
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
-          ~/.elan/bin/lean --version
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
       - name: Cache `.lake` folder
         id: cache-lake
         uses: actions/cache@v4
         with:
           path: .lake
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Get mathlib cache (only if no cache available) 
         if: steps.cache-lake.outputs.cache-hit != 'true'
