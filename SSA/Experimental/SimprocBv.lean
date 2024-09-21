@@ -111,12 +111,13 @@ set_option pp.all true in
     --  let h : Expr ← mkSorry (type := ← mkFreshExprMVar .none) true -- proof that a < b, to be proven by omega.
     --  trace[debug] "h: '{h}'"
      let instLtNat := mkConst ``instLTNat
-     let proofTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n] -- LT.lt Nat Nat
-     let h : Expr ← mkSorry proofTy true
-     let proof ← mkAppM ``Nat.mod_eq_of_lt #[h]
+     let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n] -- LT.lt Nat Nat
+     let ltProof : Expr ← mkSorry ltTy true
+
+     let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
     --  trace[debug] "h: '{h}'"
-     trace[debug] "proof: {proof}"
-     return .done { expr := x, proof? := proof : Result }
+     trace[debug] "proof: {eqProof}"
+     return .done { expr := x, proof? := eqProof : Result }
   | _ => do
      trace[debug] "no match: '{toString e}'"
      return .done { expr := e  : Result }
