@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .lake
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }} 
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}
 
       - name: Compile Library 🧐
         run: |
