@@ -513,8 +513,7 @@ theorem two_mul {x : BitVec w} :
     simp [bv_toNat]
   have xx : 1 < w := by omega
   simp only [bv_toNat]
-  rw [Nat.mod_eq_of_lt (a := 2)]
-  rw [Nat.two_mul]
+  rw [Nat.mod_eq_of_lt (a := 2), Nat.two_mul]
   have ssr := @Nat.pow_lt_pow_iff_right 2 1 w (by omega)
   rw [ssr]
   omega
