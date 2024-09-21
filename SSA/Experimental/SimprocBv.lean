@@ -6,34 +6,20 @@ Authors: Siddharth Bhat, Tobias Groser
 import Lean
 open Lean Meta Elab Simp
 
-@[inline] def reduceModEqOfLtV3 (e : Expr) : SimpM Step := do
+@[inline] def reduceModEqOfLt (e : Expr) : SimpM Step := do
   match_expr e with
   | HMod.hMod xTy nTy outTy  _inst x n =>
      let natTy := mkConst ``Nat
-     -- x must be a Nat
      if xTy != natTy then
-       trace[debug] "modEqOfLt: xTy:'{xTy}' != Nat"
        return .done { expr := e }
      if nTy != natTy then
-       trace[debug] "modEqOfLt: nTy:'{nTy}' != Nat"
        return .done { expr := e }
      if outTy != natTy then
-       trace[debug] "modEqOfLt: outTy:'{outTy}' != Nat"
        return .done { expr := e }
-     trace[debug] "modEqOfLt: '{x}' % '{n}'"
-    --  let h : Expr ← mkSorry (type := ← mkFreshExprMVar .none) true -- proof that a < b, to be proven by omega.
-    --  trace[debug] "h: '{h}'"
      let instLtNat := mkConst ``instLTNat
-     let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n] -- LT.lt Nat Nat
-     -- general idea:
-     -- 1. create an MVar `m` of type `g` is a goal state: `(... ⊢ g)`.
-     -- when a value of the Mvar `m` is found, that's the proof of `g`.
-     --  let ltProof : Expr ← mkSorry ltTy true
-     -- FIXME: replace with the clean API that actually returns an MVarId.
+     let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n]
      let ltProof : Expr ← mkFreshExprMVar ltTy
-     trace[debug] "ltProof: {ltProof}"
      let ltProofMVar := ltProof.mvarId!
-     trace[debug] "ltProofMVar: {ltProofMVar}"
      let some g ← ltProofMVar.falseOrByContra
        | return .done { expr := e }
      try
@@ -41,18 +27,14 @@ open Lean Meta Elab Simp
           let hyps := (← getLocalHyps).toList
           Lean.Elab.Tactic.Omega.omega hyps g {})
        let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
-       trace[debug] "proof: {eqProof}"
        return .done { expr := x, proof? := eqProof : Result }
-     catch ex =>
+     catch _ =>
        return .done { expr := e }
   | _ => do
-     trace[debug] "no match: '{toString e}'"
      return .done { expr := e  : Result }
 
-simproc↑ reduce_mod_eq_of_lt_v3 (_ % _) := fun e => reduceModEqOfLtV3 e
+simproc↑ reduce_mod_eq_of_lt (_ % _) := fun e => reduceModEqOfLt e
 
--- set_option trace.Debug.Meta.Tactic.simp true in
-set_option trace.debug true in
 theorem eg₁ (x : BitVec w) : x.toNat % 2^w = x.toNat + 0:= by
   simp
 
