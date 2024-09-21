@@ -31,27 +31,29 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .lake
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }} 
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}-4
+
+      - name: Get mathlib cache (only if no cache available) 
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        run: |
+          lake -R exe cache get # download cache of mathlib docs.
 
       - name: Compile Library 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA
 
       - name: Compile Decide Experiment 🧐
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA.Experimental.Bits.Decide SSA.Experimental.Bits.Fast.Decide
 
       - name: Compile Hacker's Delight Theorems 🧮
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA.Projects.InstCombine.HackersDelight # compile and check the Hacker's Delight theorems
 
       - name: Compile Alive Examples
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
-          lake -R build AliveExamples 2>&1 | tee out
+          lake -R build AliveExamples
+          lake -R build AliveStatements 2>&1 | tee out
           echo `grep theorem SSA/Projects/InstCombine/AliveStatements.lean | wc -l` > all
           grep 'Alive.*sorry' out | wc -l > failed
           x=$((`cat all`  -  `cat failed`)); echo $x > diff
@@ -61,7 +63,6 @@ jobs:
       
       - name: Compile DC
         run: |
-          lake -R exe cache get # download cache of mathlib docs.
           lake -R build SSA.Projects.CIRCT.DC # compile and check CIRCT's DC Dialect
           lake -R build SSA.Projects.CIRCT.DCExample # test CIRCT's DC Dialect
 
