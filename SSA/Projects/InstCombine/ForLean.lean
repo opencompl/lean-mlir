@@ -560,10 +560,7 @@ theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
   case zero =>
     simp
   case succ n ih =>
-    rw [BitVec.sshiftRight_add]
-    rw [sshiftRight_one_xor_allOnes]
-    rw [ih]
-    rw [BitVec.sshiftRight_add]
+    simp [BitVec.sshiftRight_add, sshiftRight_one_xor_allOnes, ih]
 
 @[simp]
 theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
