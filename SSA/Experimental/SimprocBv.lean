@@ -161,5 +161,16 @@ theorem eg₂ (x y : BitVec w)  (h : x.toNat + y.toNat < 2^w) :
   simp only [-BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
   -- simp only [BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
 
+
 /-- info: 'eg₂' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms eg₂
+
+theorem eg₃ (x y z : BitVec w)
+  (h₂ : y.toNat + z.toNat < 2^w)
+  (h : x.toNat * (y.toNat + z.toNat) < 2^w) :
+  (x * (y + z)).toNat = x.toNat * (y.toNat + z.toNat) := by
+  simp
+  simp only [BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
+
+/-- info: 'eg₃' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms eg₃
