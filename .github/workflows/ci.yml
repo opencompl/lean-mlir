@@ -25,8 +25,8 @@ jobs:
         with: 
           path: |
             .lake
-            .elan
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}-2
+             $HOME/.elan/
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}-3
 
       - name: Install elan 🕑
         if: steps.cache-lake.outputs.cache-hit != 'true'
