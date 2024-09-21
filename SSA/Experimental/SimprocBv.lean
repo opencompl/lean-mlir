@@ -133,7 +133,10 @@ set_option pp.all true in
   | _ => do
      trace[debug] "no match: '{toString e}'"
      return .done { expr := e  : Result }
+
 simproc↑ reduce_mod_eq_of_lt_v3 (_ % _) := fun e => reduceModEqOfLtV3 e
+
+attribute [simp] reduce_mod_eq_of_lt_v3
 
 #check Lean.Meta.Omega.OmegaConfig
 #check Lean.Elab.Tactic.Omega.OmegaM
@@ -150,3 +153,13 @@ theorem eg₁ (x : BitVec w) : x.toNat % 2^w = x.toNat + 0:= by
 
 /-- info: 'eg₁' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs in #print axioms eg₁
+
+theorem eg₂ (x y : BitVec w)  (h : x.toNat + y.toNat < 2^w) :
+  (x + y).toNat = x.toNat + y.toNat := by
+  simp
+  -- simp [-BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
+  simp only [-BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
+  -- simp only [BitVec.toNat_add, reduce_mod_eq_of_lt_v3]
+
+/-- info: 'eg₂' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms eg₂
