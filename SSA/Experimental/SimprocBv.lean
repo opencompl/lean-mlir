@@ -112,10 +112,22 @@ set_option pp.all true in
     --  trace[debug] "h: '{h}'"
      let instLtNat := mkConst ``instLTNat
      let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n] -- LT.lt Nat Nat
-     let ltProof : Expr ← mkSorry ltTy true
-
+     -- general idea:
+     -- 1. create an MVar `m` of type `g` is a goal state: `(... ⊢ g)`.
+     -- when a value of the Mvar `m` is found, that's the proof of `g`.
+     --  let ltProof : Expr ← mkSorry ltTy true
+     -- FIXME: replace with the clean API that actually returns an MVarId.
+     let ltProof : Expr ← mkFreshExprMVar ltTy
+     trace[debug] "ltProof: {ltProof}"
+     let ltProofMVar := ltProof.mvarId!
+     trace[debug] "ltProofMVar: {ltProofMVar}"
+     let some g ← ltProofMVar.falseOrByContra
+       | return .done { expr := e }
+     g.withContext (do
+        let hyps := (← getLocalHyps).toList
+        Lean.Elab.Tactic.Omega.omega hyps g {})
+     let ltProof ← instantiateMVars ltProof
      let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
-    --  trace[debug] "h: '{h}'"
      trace[debug] "proof: {eqProof}"
      return .done { expr := x, proof? := eqProof : Result }
   | _ => do
@@ -123,9 +135,18 @@ set_option pp.all true in
      return .done { expr := e  : Result }
 simproc↑ reduce_mod_eq_of_lt_v3 (_ % _) := fun e => reduceModEqOfLtV3 e
 
+#check Lean.Meta.Omega.OmegaConfig
+#check Lean.Elab.Tactic.Omega.OmegaM
+#check Lean.Elab.Tactic.Omega.omega
+#check Lean.Elab.Tactic.Omega.omegaTactic
+-- Lean/Elab/Tactic/Omega/OmegaM.lean
+
 
 -- set_option trace.Debug.Meta.Tactic.simp true in
 set_option trace.debug true in
-example (x : BitVec w) : x.toNat % 2^w = x.toNat + 0:= by
+theorem eg₁ (x : BitVec w) : x.toNat % 2^w = x.toNat + 0:= by
   simp only [reduce_mod_eq_of_lt_v3]
   rfl
+
+/-- info: 'eg₁' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms eg₁
