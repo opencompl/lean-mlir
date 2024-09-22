@@ -56,8 +56,8 @@ theorem eg₃ (x y : BitVec w) :
 #guard_msgs in #print axioms eg₂
 
 theorem eg₄ (x y z : BitVec w)
-  (h₂ : y.toNat + z.toNat < 2^w)
-  (h : x.toNat * (y.toNat + z.toNat) < 2^w) :
+  (h₂ : y.toNat + z.toNat < 2 ^ w)
+  (h : x.toNat * (y.toNat + z.toNat) < 2 ^ w) :
   (x * (y + z)).toNat = x.toNat * (y.toNat + z.toNat) := by
   simp
 
