@@ -59,7 +59,7 @@ private def mkSubNat (x y : Expr) : Expr :=
 
 @[inline] def reduceMod (e : Expr) : SimpM Step := do
   match_expr e with
-  | HMod.hMod xTy nTy outTy  _inst x n =>
+  | HMod.hMod xTy nTy outTy _inst x n =>
     let natTy := mkConst ``Nat
     if (xTy != natTy) || (nTy != natTy) || (outTy != natTy) then
       return .continue
