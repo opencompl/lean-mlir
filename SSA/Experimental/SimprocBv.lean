@@ -9,8 +9,7 @@ open Lean Meta Elab Simp
 
 theorem Nat.mod_eq_sub {x y : Nat} (h : x ≥ y) (h' : x - y < y) :
     x % y = x - y := by
-  rw [Nat.mod_eq_sub_mod h]
-  rw [Nat.mod_eq_of_lt h']
+  rw [Nat.mod_eq_sub_mod h, Nat.mod_eq_of_lt h']
 
 private def mkLTNat (x y : Expr) : Expr :=
   mkAppN (.const ``LT.lt [levelZero]) #[mkConst ``Nat, mkConst ``instLTNat, x, y]
