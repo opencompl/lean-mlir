@@ -11,67 +11,70 @@ theorem Nat.mod_eq_sub {x y : Nat} (h : x ≥ y) (h' : x - y < y) :
   rw [Nat.mod_eq_sub_mod h]
   rw [Nat.mod_eq_of_lt h']
 
-@[inline] def reduceModEqOfLt (e : Expr) : SimpM Step := do
+private def mkLTNat (x y : Expr) : Expr :=
+  mkAppN (.const ``LT.lt [levelZero]) #[mkConst ``Nat, mkConst ``instLTNat, x, y]
+
+private def mkLENat (x y : Expr) : Expr :=
+  mkAppN (.const ``LE.le [levelZero]) #[mkConst ``Nat, mkConst ``instLENat, x, y]
+
+private def mkGENat (x y : Expr) : Expr := mkLENat y x
+
+private def mkSubNat (x y : Expr) : Expr :=
+  let lz := levelZero
+  let nat := mkConst ``Nat
+  let instSub := mkConst ``instSubNat
+  let instHSub := mkAppN (mkConst ``instHSub [lz]) #[nat, instSub]
+  mkAppN (mkConst ``HSub.hSub [lz, lz, lz]) #[nat, nat, nat, instHSub, x, y]
+
+@[inline] def proofOmega (ty : Expr) : SimpM Step := do
+  let proof : Expr ← mkFreshExprMVar ty
+  let proofMVar := proof.mvarId!
+  let some g ← proofMVar.falseOrByContra
+    | return .continue
+  try
+    g.withContext (do
+       let hyps := (← getLocalHyps).toList
+       Lean.Elab.Tactic.Omega.omega hyps g {}
+    )
+  catch _ =>
+    return .continue
+  return .done { expr := ty, proof? := proof }
+
+-- x % n = x if x < n
+@[inline] def reduceModOfLt (x : Expr) (n : Expr) : SimpM Step := do
+  let ltTy := mkLTNat x n
+  let Step.done { expr := _, proof? := some p} ← proofOmega ltTy
+    | return .continue
+  let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[p]
+  return .done { expr := x, proof? := eqProof : Result }
+
+-- x % n = x - n if x >= n and x - n < n
+@[inline] def reduceModSub (x : Expr) (n : Expr) : SimpM Step := do
+  let geTy := mkGENat x n
+  let Step.done { expr := _, proof? := some geProof} ← proofOmega geTy
+    | return .continue
+  let subTy := mkSubNat x n
+  let ltTy := mkLTNat subTy n
+  let Step.done { expr := _, proof? := some ltProof} ← proofOmega ltTy
+    | return .continue
+  let eqProof ← mkAppM ``Nat.mod_eq_sub #[geProof, ltProof]
+  return .done { expr := subTy, proof? := eqProof : Result }
+
+@[inline] def reduceMod (e : Expr) : SimpM Step := do
   match_expr e with
   | HMod.hMod xTy nTy outTy  _inst x n =>
     let natTy := mkConst ``Nat
     if (xTy != natTy) || (nTy != natTy) || (outTy != natTy) then
-     return .continue
-    let instLtNat := mkConst ``instLTNat
-    let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n]
-    let ltProof : Expr ← mkFreshExprMVar ltTy
-    let ltProofMVar := ltProof.mvarId!
-    let some g ← ltProofMVar.falseOrByContra
-      | return .continue
-    try
-      g.withContext (do
-         let hyps := (← getLocalHyps).toList
-         Lean.Elab.Tactic.Omega.omega hyps g {})
-      let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
-      return .done { expr := x, proof? := eqProof : Result }
-    catch _ =>
       return .continue
+    if let .done res ← reduceModOfLt x n then
+      return .done res
+    if let .done res ← reduceModSub x n then
+      return .done res
+    return .continue
   | _ => do
      return .continue
 
-simproc↑ reduce_mod_eq_of_lt (_ % _) := fun e => reduceModEqOfLt e
-
-@[inline] def reduceModEqSub (e : Expr) : SimpM Step := do
-  match_expr e with
-  | HMod.hMod xTy nTy outTy  _inst x n =>
-    let natTy := mkConst ``Nat
-    if (xTy != natTy) || (nTy != natTy) || (outTy != natTy) then
-      return .continue
-    let instLENat := mkConst ``instLENat
-    let geTy := mkAppN (mkConst ``GE.ge [levelZero]) #[natTy, instLENat, x, n]
-    let geProof : Expr ← mkFreshExprMVar geTy
-    let geProofMVar := geProof.mvarId!
-    let some gLe ← geProofMVar.falseOrByContra
-      | return .continue
-    try
-      gLe.withContext (do
-         let hyps := (← getLocalHyps).toList
-         Lean.Elab.Tactic.Omega.omega hyps gLe {})
-      let instHSub := mkAppN (mkConst ``instHSub [levelZero]) #[natTy, mkConst ``instSubNat]
-      let subTy := mkAppN (mkConst ``HSub.hSub [levelZero, levelZero, levelZero])
-        #[natTy, natTy, natTy, instHSub, x, n]
-      let instLtNat := mkConst ``instLTNat
-      let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, subTy, n]
-      let ltProof : Expr ← mkFreshExprMVar ltTy
-      let ltProofMVar := ltProof.mvarId!
-      let some gLt ← ltProofMVar.falseOrByContra
-        | return .continue
-      gLt.withContext (do
-         let hyps := (← getLocalHyps).toList
-         Lean.Elab.Tactic.Omega.omega hyps gLt {})
-      let eqProof ← mkAppM ``Nat.mod_eq_sub #[geProof, ltProof]
-      return .done { expr := subTy, proof? := eqProof : Result }
-    catch _ =>
-      return .continue
-  | _ => do
-     return .continue
-
-simproc↑ reduce_mod_eq_sub (_ % _) := fun e => reduceModEqSub e
+simproc↑ reduce_mod_omega (_ % _) := fun e => reduceMod e
 
 theorem eg₁ (x : BitVec w) : x.toNat % 2 ^ w = x.toNat + 0:= by
   simp
