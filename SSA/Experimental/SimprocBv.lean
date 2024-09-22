@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2023 Lean FRO, LLC. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: Siddharth Bhat, Tobias Groser
+Authors: Siddharth Bhat, Tobias Grosser
 -/
 import Lean
 open Lean Meta Elab Simp
