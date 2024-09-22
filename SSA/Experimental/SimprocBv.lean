@@ -35,13 +35,13 @@ open Lean Meta Elab Simp
 
 simproc↑ reduce_mod_eq_of_lt (_ % _) := fun e => reduceModEqOfLt e
 
-theorem eg₁ (x : BitVec w) : x.toNat % 2^w = x.toNat + 0:= by
+theorem eg₁ (x : BitVec w) : x.toNat % 2 ^ w = x.toNat + 0:= by
   simp
 
 /-- info: 'eg₁' depends on axioms: [propext] -/
 #guard_msgs in #print axioms eg₁
 
-theorem eg₂ (x y : BitVec w)  (h : x.toNat + y.toNat < 2^w) :
+theorem eg₂ (x y : BitVec w)  (h : x.toNat + y.toNat < 2 ^ w) :
   (x + y).toNat = x.toNat + y.toNat := by
   simp
 
