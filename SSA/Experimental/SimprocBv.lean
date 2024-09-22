@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddharth Bhat, Tobias Grosser
 -/
 import Lean
+
 open Lean Meta Elab Simp
 
 theorem Nat.mod_eq_sub {x y : Nat} (h : x ≥ y) (h' : x - y < y) :
@@ -108,3 +109,6 @@ theorem eg₄ (x y z : BitVec w)
 theorem eg₅ (x y : BitVec w) (h : x.toNat + y.toNat ≥ 2 ^ w) (h' : (x.toNat + y.toNat) - 2 ^ w < 2 ^ w) :
   (x + y).toNat = x.toNat + y.toNat - 2 ^ w := by
   simp
+
+/-- info: 'eg₅' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in #print axioms eg₅
