@@ -32,7 +32,7 @@ private def mkSubNat (x y : Expr) : Expr :=
   let some g ← proofMVar.falseOrByContra
     | return .continue
   try
-    g.withContext (Lean.Elab.Tactic.Omega.omega (← getLocalHyps).toList g {})
+    g.withContext (do Lean.Elab.Tactic.Omega.omega (← getLocalHyps).toList g {})
   catch _ =>
     return .continue
   return .done { expr := ty, proof? := proof }
