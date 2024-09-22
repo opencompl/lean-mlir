@@ -31,7 +31,7 @@ open Lean Meta Elab Simp
      catch _ =>
        return .visit { expr := e }
   | _ => do
-     return .visit { expr := e  : Result }
+     return .visit { expr := e : Result }
 
 simproc↑ reduce_mod_eq_of_lt (_ % _) := fun e => reduceModEqOfLt e
 
