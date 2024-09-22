@@ -11,17 +11,17 @@ open Lean Meta Elab Simp
   | HMod.hMod xTy nTy outTy  _inst x n =>
      let natTy := mkConst ``Nat
      if xTy != natTy then
-       return .done { expr := e }
+       return .visit { expr := e }
      if nTy != natTy then
-       return .done { expr := e }
+       return .visit { expr := e }
      if outTy != natTy then
-       return .done { expr := e }
+       return .visit { expr := e }
      let instLtNat := mkConst ``instLTNat
      let ltTy := mkAppN (mkConst ``LT.lt [levelZero]) #[natTy, instLtNat, x, n]
      let ltProof : Expr ← mkFreshExprMVar ltTy
      let ltProofMVar := ltProof.mvarId!
      let some g ← ltProofMVar.falseOrByContra
-       | return .done { expr := e }
+       | return .visit { expr := e }
      try
        g.withContext (do
           let hyps := (← getLocalHyps).toList
@@ -29,9 +29,9 @@ open Lean Meta Elab Simp
        let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[ltProof]
        return .done { expr := x, proof? := eqProof : Result }
      catch _ =>
-       return .done { expr := e }
+       return .visit { expr := e }
   | _ => do
-     return .done { expr := e  : Result }
+     return .visit { expr := e  : Result }
 
 simproc↑ reduce_mod_eq_of_lt (_ % _) := fun e => reduceModEqOfLt e
 
