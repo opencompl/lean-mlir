@@ -73,7 +73,7 @@ private def mkSubNat (x y : Expr) : Expr :=
 
 simproc↑ reduce_mod_omega (_ % _) := fun e => reduceMod e
 
-theorem eg₁ (x : BitVec w) : x.toNat % 2 ^ w = x.toNat + 0:= by
+theorem eg₁ (x : BitVec w) : x.toNat % 2 ^ w = x.toNat + 0 := by
   simp
 
 /-- info: 'eg₁' depends on axioms: [propext] -/
