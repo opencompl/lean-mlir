@@ -514,11 +514,6 @@ theorem mul_allOnes {x : BitVec w} :
   simp [← BitVec.negOne_eq_allOnes]
 
 @[simp]
-theorem xor_xor_self {x y : BitVec w} : x ^^^ y ^^^ y = x := by
-  ext
-  simp
-
-@[simp]
 theorem sshiftRight_allOnes_one :
   (BitVec.allOnes w).sshiftRight 1 = BitVec.allOnes w := by
   by_cases h : w = 0
