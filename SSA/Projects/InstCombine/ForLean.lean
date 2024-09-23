@@ -537,15 +537,15 @@ theorem sshiftRight_one_xor_allOnes {b : BitVec w} :
     rw [BitVec.sshiftRight_xor_distrib, sshiftRight_allOnes_one]
 
 @[simp]
-theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
-    (b ^^^ (BitVec.allOnes w)).sshiftRight a.toNat ^^^ (BitVec.allOnes w) =
-    b.sshiftRight a.toNat := by
-  induction a.toNat
-  case zero =>
-    ext
-    simp
-  case succ n ih =>
-    simp only [BitVec.sshiftRight_add, sshiftRight_one_xor_allOnes, ih]
+theorem not_shiftRight_not {x : BitVec w} {n : Nat}:
+    ~~~(~~~x).sshiftRight n = x.sshiftRight n := by
+  ext i
+  simp
+  by_cases h : w ≤ i
+  <;> by_cases h' : n + i < w
+  <;> by_cases h'' : 0 < w
+  <;> simp [h, h', h'']
+  <;> omega
 
 @[simp]
 theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
