@@ -26,7 +26,7 @@ private def mkSubNat (x y : Expr) : Expr :=
   let instHSub := mkAppN (mkConst ``instHSub [lz]) #[nat, instSub]
   mkAppN (mkConst ``HSub.hSub [lz, lz, lz]) #[nat, nat, nat, instHSub, x, y]
 
-/-- Try to build a proof for `ty` by reduction to `omega`.
+/-- Try to build a proof for `ty` by reduction to `omega`. -/
 @[inline] def proveByOmega (ty : Expr) : SimpM Step := do
   let proof : Expr ← mkFreshExprMVar ty
   let g := proof.mvarId!
