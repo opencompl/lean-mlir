@@ -537,8 +537,8 @@ theorem sshiftRight_one_xor_allOnes {b : BitVec w} :
     rw [BitVec.sshiftRight_xor_distrib, sshiftRight_allOnes_one]
 
 @[simp]
-theorem not_shiftRight_not {x : BitVec w} {n : Nat}:
-    ~~~(~~~x).sshiftRight n = x.sshiftRight n := by
+theorem not_sshiftRight_not {x : BitVec w} {n : Nat}:
+    ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
   ext i
   simp
   by_cases h : w ≤ i
