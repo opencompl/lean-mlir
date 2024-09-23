@@ -41,7 +41,7 @@ private def mkSubNat (x y : Expr) : Expr :=
 -- x % n = x if x < n
 @[inline] def reduceModOfLt (x : Expr) (n : Expr) : SimpM Step := do
   let ltTy := mkLTNat x n
-  let Step.done { expr := _, proof? := some p} ← proofOmega ltTy
+  let Step.done { expr := _, proof? := some p} ← proveByOmega ltTy
     | return .continue
   let eqProof ← mkAppM ``Nat.mod_eq_of_lt #[p]
   return .done { expr := x, proof? := eqProof : Result }
