@@ -444,17 +444,9 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
   simp only [Bool.bne_assoc]
   cases a.getLsbD ↑i <;> simp [carry_and_xor_false]
 
-@[bv_ofBool]
-theorem ofBool_or {a b : Bool} : BitVec.ofBool a ||| BitVec.ofBool b = ofBool (a || b) := by
-  simp only [toNat_eq, toNat_or, toNat_ofBool]; rcases a <;> rcases b <;> rfl
-
-@[bv_ofBool]
-theorem ofBool_and {a b : Bool} : BitVec.ofBool a &&& BitVec.ofBool b = ofBool (a && b) := by
-  simp only [toNat_eq, toNat_and, toNat_ofBool]; rcases a <;> rcases b <;> rfl
-
-@[bv_ofBool]
-theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (a.xor b) := by
-  simp only [toNat_eq, toNat_xor, toNat_ofBool]; rcases a <;> rcases b <;> rfl
+attribute [bv_ofBool] ofBool_or_ofBool
+attribute [bv_ofBool] ofBool_and_ofBool
+attribute [bv_ofBool] ofBool_xor_ofBool
 
 @[simp, bv_ofBool]
 theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
@@ -474,7 +466,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
   rw [iunfoldr_replace (fun i => carry i B A false)]
   · simp [carry]; omega
   · intro i
-    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
+    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, BitVec.setWidth_zero,
       BitVec.add_zero, Prod.mk.injEq]
     constructor
     · rw [carry_succ]
