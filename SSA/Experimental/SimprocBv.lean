@@ -49,7 +49,7 @@ private def mkSubNat (x y : Expr) : Expr :=
 -- x % n = x - n if x >= n and x - n < n
 @[inline] def reduceModSub (x : Expr) (n : Expr) : SimpM Step := do
   let geTy := mkGENat x n
-  let Step.done { expr := _, proof? := some geProof} ← proofOmega geTy
+  let Step.done { expr := _, proof? := some geProof} ← proveByOmega geTy
     | return .continue
   let subTy := mkSubNat x n
   let ltTy := mkLTNat subTy n
