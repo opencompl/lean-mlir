@@ -112,11 +112,13 @@ macro "bv_auto": tactic =>
   `(tactic|
       (
         intros
-        try simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes)]
+        try simp (config := {failIfUnchanged := false}) [-Bool.and_iff_left_iff_imp, (BitVec.negOne_eq_allOnes)]
         try ring_nf
         try bv_eliminate_bool
         repeat (split)
+
         <;> try simp (config := {failIfUnchanged := false})
+
         /-
         Solve tries each arm in order, falling through
         if the goal is not closed.
@@ -142,7 +144,6 @@ macro "bv_auto": tactic =>
             simp only [← BitVec.negOne_eq_allOnes]
             ring_nf
           | of_bool_tactic
-
           | (
               simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul)]
               bv_automata
