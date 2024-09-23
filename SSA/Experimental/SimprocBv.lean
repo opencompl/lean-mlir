@@ -53,7 +53,7 @@ private def mkSubNat (x y : Expr) : Expr :=
     | return .continue
   let subTy := mkSubNat x n
   let ltTy := mkLTNat subTy n
-  let Step.done { expr := _, proof? := some ltProof} ← proofOmega ltTy
+  let Step.done { expr := _, proof? := some ltProof} ← proveByOmega ltTy
     | return .continue
   let eqProof ← mkAppM ``Nat.mod_eq_sub #[geProof, ltProof]
   return .done { expr := subTy, proof? := eqProof : Result }
