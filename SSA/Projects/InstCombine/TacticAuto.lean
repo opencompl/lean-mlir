@@ -116,9 +116,7 @@ macro "bv_auto": tactic =>
         try ring_nf
         try bv_eliminate_bool
         repeat (split)
-
         <;> try simp (config := {failIfUnchanged := false})
-
         /-
         Solve tries each arm in order, falling through
         if the goal is not closed.
