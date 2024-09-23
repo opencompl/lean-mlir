@@ -599,7 +599,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
     norm_cast
 
 @[simp]
-theorem add_shiftLeft_distrib {x y : BitVec w} {n : Nat} :
+theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
     (x + y) <<< n = x <<< n + y <<< n := by
   induction n
   case zero =>
@@ -613,25 +613,17 @@ theorem add_shiftLeft_distrib {x y : BitVec w} {n : Nat} :
 @[simp]
 theorem allOnes_and {x : BitVec w} :
     BitVec.allOnes w &&& x = x := by
-  ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
+  ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor]
 
 @[simp]
 theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
-    induction n
-    case zero =>
-      simp
-    case succ =>
-      simp [BitVec.shiftLeft_add, ← BitVec.shiftLeft_and_distrib]
+  simp [← BitVec.shiftLeft_and_distrib]
 
 @[simp]
 theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
   x &&& BitVec.allOnes w <<< n &&& y <<< n = x &&& y <<< n := by
-  induction n
-  case zero =>
-    ext; simp
-  case succ n _ =>
-    simp [BitVec.and_assoc, allOnes_shiftLeft_and_shiftLeft (n := (n + 1)) (x := y)]
+  simp [BitVec.and_assoc]
 
 @[simp]
 theorem shiftRight_and_or_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
