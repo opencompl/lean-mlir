@@ -29,8 +29,8 @@ private def mkSubNat (x y : Expr) : Expr :=
 /-- Try to build a proof for `ty` by reduction to `omega`.
 @[inline] def proveByOmega (ty : Expr) : SimpM Step := do
   let proof : Expr ← mkFreshExprMVar ty
-  let proofMVar := proof.mvarId!
-  let some g ← proofMVar.falseOrByContra
+  let g := proof.mvarId!
+  let some g ← g.falseOrByContra
     | return .continue
   try
     g.withContext (do Lean.Elab.Tactic.Omega.omega (← getLocalHyps).toList g {})
