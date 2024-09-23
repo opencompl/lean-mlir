@@ -143,7 +143,7 @@ macro "bv_auto": tactic =>
             ring_nf
           | of_bool_tactic
           | (
-              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul)]
+              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
               bv_automata
             )
           | bv_decide
