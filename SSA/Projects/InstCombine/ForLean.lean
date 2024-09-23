@@ -87,6 +87,10 @@ theorem add_odd_iff_neq (n m : Nat) :
   <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
+theorem mod_eq_of_eq {a b c : Nat} (h : a = b) : a % c = b % c := by
+   subst h
+   simp
+
 end Nat
 
 namespace BitVec
@@ -444,9 +448,17 @@ theorem and_add_xor_eq_or {a b : BitVec w} : (a &&& b) + (a ^^^ b) = a ||| b := 
   simp only [Bool.bne_assoc]
   cases a.getLsbD ↑i <;> simp [carry_and_xor_false]
 
-attribute [bv_ofBool] ofBool_or_ofBool
-attribute [bv_ofBool] ofBool_and_ofBool
-attribute [bv_ofBool] ofBool_xor_ofBool
+@[bv_ofBool]
+theorem ofBool_or {a b : Bool} : BitVec.ofBool a ||| BitVec.ofBool b = ofBool (a || b) := by
+  simp only [toNat_eq, toNat_or, toNat_ofBool]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_and {a b : Bool} : BitVec.ofBool a &&& BitVec.ofBool b = ofBool (a && b) := by
+  simp only [toNat_eq, toNat_and, toNat_ofBool]; rcases a <;> rcases b <;> rfl
+
+@[bv_ofBool]
+theorem ofBool_xor {a b : Bool} : BitVec.ofBool a ^^^ BitVec.ofBool b = ofBool (a.xor b) := by
+  simp only [toNat_eq, toNat_xor, toNat_ofBool]; rcases a <;> rcases b <;> rfl
 
 @[simp, bv_ofBool]
 theorem ofBool_eq' : ofBool a = ofBool b ↔ a = b:= by
@@ -466,7 +478,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
   rw [iunfoldr_replace (fun i => carry i B A false)]
   · simp [carry]; omega
   · intro i
-    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, BitVec.setWidth_zero,
+    simp only [adcb, getLsbD_and, getLsbD_or, ofBool_false, ofNat_eq_ofNat, zeroExtend_zero,
       BitVec.add_zero, Prod.mk.injEq]
     constructor
     · rw [carry_succ]
@@ -598,11 +610,7 @@ theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
       Int.pred_toNat]
     norm_cast
 
-end BitVec
-
-namespace Bool
-
-theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
+@[simp]
 theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
     (x + y) <<< n = x <<< n + y <<< n := by
   induction n
@@ -635,21 +643,27 @@ theorem shiftRight_and_or_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
   simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_and_distrib]
 
 @[simp]
-theorem shiftLeft_and_distrib_gen {x y : BitVec w} {n m : Nat} (h : n ≤ m) :
-    x <<< n &&& y <<< m = (x &&& y) <<< m := by
-  sorry
-
-@[simp]
-theorem shiftRight_and_xor_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
-    (x >>> n &&& y ^^^ z) <<< n = x &&& y <<< n ^^^ z <<< n := by
-  simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
-
-@[simp]
-theorem shiftRight_xor_and_shiftLeft_distrib' {x y z : BitVec w} {n : Nat} :
+theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
     (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
   simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
   rw [BitVec.xor_comm]
 
+end BitVec
+
+namespace Bool
+
+theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
+    (decide p).xor (decide q) = decide (p ≠ q) := by
+  cases' dp with pt pt
+  <;> simp [pt]
+
+@[simp]
+theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
+  cases a
+  <;> cases b
+  <;> simp
+
+@[simp]
 theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
   cases a
   <;> cases b
