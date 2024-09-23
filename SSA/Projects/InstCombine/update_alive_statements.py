@@ -17,6 +17,14 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false"""
 
+alive_statements_preamble_sorry = """/-
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+import SSA.Projects.InstCombine.LLVM.Semantics
+
+set_option linter.unreachableTactic false
+set_option linter.unusedTactic false"""
+
 def getProofs(lines: List[str]) -> Tuple[List[str], List[List[str]]]:
     """
     Breaks the file apart into subarrays.
@@ -40,7 +48,7 @@ def getProofs(lines: List[str]) -> Tuple[List[str], List[List[str]]]:
     return proofs[0], proofs[1:]
 
 
-def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
+def getStatement(preamble: List[str], id : int, proof: List[str]) -> (str, str):
     """
     Produces the proof state produced by running the `proof`.
     Uses the preamble to create a valid Lean file.
@@ -84,11 +92,12 @@ def getStatement(preamble: List[str], id : int, proof: List[str]) -> str:
 
     stmt = name
     stmt += msg
+    stmt_sorry = stmt + " := by\n  sorry"
     stmt += " := by\n  simp_alive_undef\n  simp_alive_ops\n  simp_alive_case_bash\n  try alive_auto\n  all_goals sorry"
 
     print(stmt)
 
-    return stmt
+    return (stmt, stmt_sorry)
 
 
 def filterProofs(preamble: List[str], proofs: List[List[str]]) -> List[str]:
@@ -103,11 +112,15 @@ def filterProofs(preamble: List[str], proofs: List[List[str]]) -> List[str]:
     return statements
 
 
-def writeOutput(preamble, proofs, filename):
+def writeOutput(preamble, proofs, filename, sorry=False):
     with open(filename, "w") as f:
         f.write("".join(preamble))
         for proof in proofs:
-            f.write("".join(proof))
+            if sorry:
+               proof_full = proof[1]
+            else:
+               proof_full = proof[0]
+            f.write(proof_full)
         f.write("\n")
 
 
@@ -117,3 +130,4 @@ if __name__ == "__main__":
     preamble, proofs = getProofs(lines)
     statements = filterProofs(preamble, proofs)
     writeOutput(alive_statements_preamble, statements, "AliveStatements.lean")
+    writeOutput(alive_statements_preamble_sorry, statements, "AliveStatements_sorry.lean", True)

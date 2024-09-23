@@ -43,12 +43,7 @@ theorem alive_DivRemOfSelect (w : Nat) :
   simp_alive_meta
   simp_alive_ssa
   simp_alive_undef
-  simp only [simp_llvm]
-  rintro y (rfl | ⟨vcond, hcond⟩) x
-  -- | select condition is itself `none`, nothing more to be done. propagate the `none`.
-  · cases x <;> cases y <;> simp
-  · simp only [pow_one] at hcond
-    (obtain (rfl | rfl) : vcond = 1 ∨ vcond = 0 := by omega) <;> simp
+  alive_auto
 
 /--info: 'AliveHandwritten.DivRemOfSelect.alive_DivRemOfSelect' depends on
 axioms: [propext, Classical.choice, Quot.sound] -/
@@ -356,17 +351,7 @@ def alive_simplifyMulDivRem290 (w : Nat) :
   simp_alive_ssa
   simp_alive_undef
   simp_alive_ops
-  intros A B
-  rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;>
-    simp only [ge_iff_le,
-      EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
-      Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
-      Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
-  apply BitVec.eq_of_toNat_eq
-  simp only [toNat_mul, toNat_shiftLeft', toNat_ofNat, Nat.mod_mul_mod, one_mul]
-  ring_nf
+  alive_auto
 
 /-- info: 'AliveHandwritten.MulDivRem.alive_simplifyMulDivRem290' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms alive_simplifyMulDivRem290
@@ -417,17 +402,7 @@ def alive_simplifyAndOrXor2515 (w : Nat) :
   simp only [simp_llvm_wrap]
   simp_alive_ssa
   simp_alive_undef
-  intros c1 c2 c3 x
-  rcases c1 with rfl | c1 <;> try (simp; done)
-  rcases c2 with rfl | c2 <;> try (simp; done)
-  rcases c3 with rfl | c3 <;> try (simp; done)
-  rcases x with rfl | x <;> try (simp; done)
-  simp_alive_ops
-  by_cases h : BitVec.toNat c2 ≥ w <;>
-    simp only [xor_eq, ge_iff_le, EffectKind.return_impure_toMonad_eq,
-      Option.pure_def, Option.bind_eq_bind, Option.some_bind, h, ↓reduceIte, Option.none_bind,
-      Option.bind_none, Refinement.refl, Refinement.some_some]
-  simp only [ushiftRight_eq', ushiftRight_xor_distrib, xor_assoc]
+  alive_auto
 
 /-- info: 'AliveHandwritten.AndOrXor.alive_simplifyAndOrXor2515' depends on axioms:
 [propext, Classical.choice, Quot.sound] -/

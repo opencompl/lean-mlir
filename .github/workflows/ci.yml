@@ -31,7 +31,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .lake
-          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}-4
 
       - name: Get mathlib cache (only if no cache available) 
         if: steps.cache-lake.outputs.cache-hit != 'true'
@@ -52,7 +52,8 @@ jobs:
 
       - name: Compile Alive Examples
         run: |
-          lake -R build AliveExamples 2>&1 | tee out
+          lake -R build AliveExamples
+          lake -R build AliveStatements 2>&1 | tee out
           echo `grep theorem SSA/Projects/InstCombine/AliveStatements.lean | wc -l` > all
           grep 'Alive.*sorry' out | wc -l > failed
           x=$((`cat all`  -  `cat failed`)); echo $x > diff

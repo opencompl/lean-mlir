@@ -521,8 +521,7 @@ theorem two_mul {x : BitVec w} :
     simp [bv_toNat]
   have xx : 1 < w := by omega
   simp only [bv_toNat]
-  rw [Nat.mod_eq_of_lt (a := 2)]
-  rw [Nat.two_mul]
+  rw [Nat.mod_eq_of_lt (a := 2), Nat.two_mul]
   have ssr := @Nat.pow_lt_pow_iff_right 2 1 w (by omega)
   rw [ssr]
   omega
@@ -568,10 +567,7 @@ theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
   case zero =>
     simp
   case succ n ih =>
-    rw [BitVec.sshiftRight_add]
-    rw [sshiftRight_one_xor_allOnes]
-    rw [ih]
-    rw [BitVec.sshiftRight_add]
+    simp [BitVec.sshiftRight_add, sshiftRight_one_xor_allOnes, ih]
 
 @[simp]
 theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
