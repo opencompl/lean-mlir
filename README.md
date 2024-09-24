@@ -9,8 +9,6 @@ Lean-MLIR
 <img src="https://github.com/opencompl/lean-mlir/actions/workflows/ci.yml/badge.svg" />
 </h1>
      
-
-
 Theory of static single assignment developed in the Lean proof assistant.
 We also build a wealth of tooling to interact closely with the [MLIR compiler ecosystem](https://mlir.llvm.org/),
 to enable workflows that include formal verification in the day-to-day of MLIR development.
@@ -19,6 +17,7 @@ to enable workflows that include formal verification in the day-to-day of MLIR d
 
 - **Publication: [Verifying Peephole Rewriting In SSA Compiler IRs](https://arxiv.org/abs/2407.03685)**
 - [API Documentation (auto-generated)](https://opencompl.github.io/lean-mlir/)
+- Play Ground at [lean-mlir.grosser.es](https://lean-mlir.grosser.es)
 
 #### Installation
 

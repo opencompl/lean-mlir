@@ -2,11 +2,8 @@ import SSA.Projects.InstCombine.tests.LLVM.gdivhshift_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-
 open LLVM
 open BitVec
-
-
 
 open MLIR AST
 open Ctxt (Var)
@@ -14,19 +11,20 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       
+section gdivhshift_statements
+                                                    
 def t7_before := [llvm|
 {
-^0(%arg0 : i32):
+^0(%arg209 : i32):
   %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = llvm.shl %arg0, %0 : i32
-  %2 = llvm.sdiv %1, %arg0 : i32
+  %1 = llvm.shl %arg209, %0 : i32
+  %2 = llvm.sdiv %1, %arg209 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def t7_after := [llvm|
 {
-^0(%arg0 : i32):
+^0(%arg209 : i32):
   %0 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
   "llvm.return"(%0) : (i32) -> ()
 }
@@ -37,7 +35,8 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN t7
   apply t7_thm
   ---END t7
@@ -46,17 +45,17 @@ theorem t7_proof : t7_before ⊑ t7_after := by
 
 def t10_before := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32):
-  %0 = llvm.shl %arg0, %arg1 : i32
-  %1 = llvm.sdiv %0, %arg0 : i32
+^0(%arg205 : i32, %arg206 : i32):
+  %0 = llvm.shl %arg205, %arg206 : i32
+  %1 = llvm.sdiv %0, %arg205 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
 def t10_after := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32):
+^0(%arg205 : i32, %arg206 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg1 : i32
+  %1 = llvm.shl %0, %arg206 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -66,7 +65,8 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN t10
   apply t10_thm
   ---END t10
@@ -75,19 +75,19 @@ theorem t10_proof : t10_before ⊑ t10_after := by
 
 def sdiv_mul_shl_nsw_before := [llvm|
 {
-^0(%arg0 : i5, %arg1 : i5, %arg2 : i5):
-  %0 = llvm.mul %arg0, %arg1 : i5
-  %1 = llvm.shl %arg0, %arg2 : i5
+^0(%arg193 : i5, %arg194 : i5, %arg195 : i5):
+  %0 = llvm.mul %arg193, %arg194 : i5
+  %1 = llvm.shl %arg193, %arg195 : i5
   %2 = llvm.sdiv %0, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
 def sdiv_mul_shl_nsw_after := [llvm|
 {
-^0(%arg0 : i5, %arg1 : i5, %arg2 : i5):
+^0(%arg193 : i5, %arg194 : i5, %arg195 : i5):
   %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
-  %1 = llvm.shl %0, %arg2 : i5
-  %2 = llvm.sdiv %arg1, %1 : i5
+  %1 = llvm.shl %0, %arg195 : i5
+  %2 = llvm.sdiv %arg194, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -97,7 +97,8 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_mul_shl_nsw
   apply sdiv_mul_shl_nsw_thm
   ---END sdiv_mul_shl_nsw
@@ -106,19 +107,19 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
 
 def sdiv_mul_shl_nsw_exact_commute1_before := [llvm|
 {
-^0(%arg0 : i5, %arg1 : i5, %arg2 : i5):
-  %0 = llvm.mul %arg1, %arg0 : i5
-  %1 = llvm.shl %arg0, %arg2 : i5
+^0(%arg190 : i5, %arg191 : i5, %arg192 : i5):
+  %0 = llvm.mul %arg191, %arg190 : i5
+  %1 = llvm.shl %arg190, %arg192 : i5
   %2 = llvm.sdiv %0, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
 def sdiv_mul_shl_nsw_exact_commute1_after := [llvm|
 {
-^0(%arg0 : i5, %arg1 : i5, %arg2 : i5):
+^0(%arg190 : i5, %arg191 : i5, %arg192 : i5):
   %0 = "llvm.mlir.constant"() <{value = 1 : i5}> : () -> i5
-  %1 = llvm.shl %0, %arg2 : i5
-  %2 = llvm.sdiv %arg1, %1 : i5
+  %1 = llvm.shl %0, %arg192 : i5
+  %2 = llvm.sdiv %arg191, %1 : i5
   "llvm.return"(%2) : (i5) -> ()
 }
 ]
@@ -128,7 +129,8 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
   apply sdiv_mul_shl_nsw_exact_commute1_thm
   ---END sdiv_mul_shl_nsw_exact_commute1
@@ -137,17 +139,17 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
 
 def sdiv_shl_shl_nsw2_nuw_before := [llvm|
 {
-^0(%arg0 : i8, %arg1 : i8, %arg2 : i8):
-  %0 = llvm.shl %arg0, %arg2 : i8
-  %1 = llvm.shl %arg1, %arg2 : i8
+^0(%arg82 : i8, %arg83 : i8, %arg84 : i8):
+  %0 = llvm.shl %arg82, %arg84 : i8
+  %1 = llvm.shl %arg83, %arg84 : i8
   %2 = llvm.sdiv %0, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
 def sdiv_shl_shl_nsw2_nuw_after := [llvm|
 {
-^0(%arg0 : i8, %arg1 : i8, %arg2 : i8):
-  %0 = llvm.sdiv %arg0, %arg1 : i8
+^0(%arg82 : i8, %arg83 : i8, %arg84 : i8):
+  %0 = llvm.sdiv %arg82, %arg83 : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
@@ -157,7 +159,8 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
   apply sdiv_shl_shl_nsw2_nuw_thm
   ---END sdiv_shl_shl_nsw2_nuw
@@ -166,18 +169,18 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
 
 def sdiv_shl_pair_const_before := [llvm|
 {
-^0(%arg0 : i32):
+^0(%arg47 : i32):
   %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %2 = llvm.shl %arg0, %0 : i32
-  %3 = llvm.shl %arg0, %1 : i32
+  %2 = llvm.shl %arg47, %0 : i32
+  %3 = llvm.shl %arg47, %1 : i32
   %4 = llvm.sdiv %2, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
 def sdiv_shl_pair_const_after := [llvm|
 {
-^0(%arg0 : i32):
+^0(%arg47 : i32):
   %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
   "llvm.return"(%0) : (i32) -> ()
 }
@@ -188,7 +191,8 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_shl_pair_const
   apply sdiv_shl_pair_const_thm
   ---END sdiv_shl_pair_const
@@ -197,19 +201,19 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
 
 def sdiv_shl_pair1_before := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
-  %0 = llvm.shl %arg0, %arg1 : i32
-  %1 = llvm.shl %arg0, %arg2 : i32
+^0(%arg43 : i32, %arg44 : i32, %arg45 : i32):
+  %0 = llvm.shl %arg43, %arg44 : i32
+  %1 = llvm.shl %arg43, %arg45 : i32
   %2 = llvm.sdiv %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def sdiv_shl_pair1_after := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
+^0(%arg43 : i32, %arg44 : i32, %arg45 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg1 : i32
-  %2 = llvm.lshr %1, %arg2 : i32
+  %1 = llvm.shl %0, %arg44 : i32
+  %2 = llvm.lshr %1, %arg45 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -219,7 +223,8 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_shl_pair1
   apply sdiv_shl_pair1_thm
   ---END sdiv_shl_pair1
@@ -228,19 +233,19 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
 
 def sdiv_shl_pair2_before := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
-  %0 = llvm.shl %arg0, %arg1 : i32
-  %1 = llvm.shl %arg0, %arg2 : i32
+^0(%arg40 : i32, %arg41 : i32, %arg42 : i32):
+  %0 = llvm.shl %arg40, %arg41 : i32
+  %1 = llvm.shl %arg40, %arg42 : i32
   %2 = llvm.sdiv %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def sdiv_shl_pair2_after := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
+^0(%arg40 : i32, %arg41 : i32, %arg42 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg1 : i32
-  %2 = llvm.lshr %1, %arg2 : i32
+  %1 = llvm.shl %0, %arg41 : i32
+  %2 = llvm.lshr %1, %arg42 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -250,7 +255,8 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_shl_pair2
   apply sdiv_shl_pair2_thm
   ---END sdiv_shl_pair2
@@ -259,19 +265,19 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
 
 def sdiv_shl_pair3_before := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
-  %0 = llvm.shl %arg0, %arg1 : i32
-  %1 = llvm.shl %arg0, %arg2 : i32
+^0(%arg37 : i32, %arg38 : i32, %arg39 : i32):
+  %0 = llvm.shl %arg37, %arg38 : i32
+  %1 = llvm.shl %arg37, %arg39 : i32
   %2 = llvm.sdiv %0, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
 def sdiv_shl_pair3_after := [llvm|
 {
-^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
+^0(%arg37 : i32, %arg38 : i32, %arg39 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg1 : i32
-  %2 = llvm.lshr %1, %arg2 : i32
+  %1 = llvm.shl %0, %arg38 : i32
+  %2 = llvm.lshr %1, %arg39 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -281,7 +287,8 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN sdiv_shl_pair3
   apply sdiv_shl_pair3_thm
   ---END sdiv_shl_pair3

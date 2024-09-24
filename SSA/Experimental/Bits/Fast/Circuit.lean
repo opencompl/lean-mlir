@@ -49,7 +49,7 @@ def eval : Circuit α → (α → Bool) → Bool
   | var b x, f => if b then f x else !(f x)
   | and c₁ c₂, f => (eval c₁ f) && (eval c₂ f)
   | or c₁ c₂, f => (eval c₁ f) || (eval c₂ f)
-  | xor c₁ c₂, f => _root_.xor (eval c₁ f) (eval c₂ f)
+  | xor c₁ c₂, f => Bool.xor (eval c₁ f) (eval c₂ f)
 
 @[simp] def evalv [DecidableEq α] : ∀ (c : Circuit α), (∀ a ∈ vars c, Bool) → Bool
   | tru, _ => true
@@ -59,7 +59,7 @@ def eval : Circuit α → (α → Bool) → Bool
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
   | or c₁ c₂, f => (evalv c₁ (fun i hi => f i (by simp [hi, vars]))) ||
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
-  | xor c₁ c₂, f => _root_.xor (evalv c₁ (fun i hi => f i (by simp [hi, vars])))
+  | xor c₁ c₂, f => Bool.xor (evalv c₁ (fun i hi => f i (by simp [hi, vars])))
     (evalv c₂ (fun i hi => f i (by simp [hi, vars])))
 
 lemma eval_eq_evalv [DecidableEq α] : ∀ (c : Circuit α) (f : α → Bool),
@@ -182,13 +182,13 @@ def simplifyXor : Circuit α → Circuit α → Circuit α
   | c₁, c₂ => xor c₁ c₂
 
 theorem _root_.Bool.xor_not_left' (a b : Bool) :
-    _root_.xor (!a) b = !_root_.xor a b := by
+    Bool.xor (!a) b = !Bool.xor a b := by
   cases a <;> cases b <;> rfl
 
 instance : Xor (Circuit α) := ⟨Circuit.simplifyXor⟩
 
 @[simp] lemma eval_xor : ∀ (c₁ c₂ : Circuit α) (f : α → Bool),
-    eval (c₁ ^^^ c₂) f = _root_.xor (eval c₁ f) (eval c₂ f) := by
+    eval (c₁ ^^^ c₂) f = Bool.xor (eval c₁ f) (eval c₂ f) := by
   intros c₁ c₂ f
   cases c₁ <;> cases c₂ <;> simp [simplifyXor, Bool.xor_not_left'] <;>
   split_ifs <;> simp [*] at *
@@ -422,7 +422,7 @@ def assignVars [DecidableEq α] :
   | var b x, f =>
     Sum.elim
       (var b)
-      (λ c : Bool => if _root_.xor b c then fals else tru)
+      (λ c : Bool => if Bool.xor b c then fals else tru)
       (f x (by simp [vars]))
   | and c₁ c₂, f => (assignVars c₁ (λ x hx => f x (by simp [hx, vars]))) &&&
                     (assignVars c₂ (λ x hx => f x (by simp [hx, vars])))
@@ -434,7 +434,7 @@ def assignVars [DecidableEq α] :
 theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α}
     (hs : l₁ ⊆ l₂) (hnd : l₁.Nodup) : l₁.length ≤ l₂.length := by
   classical
-  refine le_trans ?_ (List.length_le_of_sublist (List.dedup_sublist l₂))
+  refine le_trans ?_ (List.Sublist.length_le (List.dedup_sublist l₂))
   rw [← List.dedup_eq_self.2 hnd]
   rw [← List.card_toFinset, ← List.card_toFinset]
   refine Finset.card_le_card ?_A
@@ -537,7 +537,8 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
           Finset.subset_iff, Finset.mem_insert, Finset.mem_image, forall_eq_or_imp, Sum.forall,
           Sum.inl.injEq, IsEmpty.forall_iff, implies_true, and_true]
         use (f a ha)
-        simp only [hfa, not_false_eq_true, implies_true, true_and]
+        simp only [hfa, reduceCtorEq, not_false_eq_true, implies_true, false_implies, and_true,
+          true_and]
         constructor
         · use a
           simp [ha, varsFinset, hfa]
@@ -682,7 +683,8 @@ def nonemptyAux [DecidableEq α] :
         simp only [eval, ite_true, eq_iff_iff, iff_true]
         use fun _ => true
       | false => by
-        simp only [eval, ite_false, Bool.not_eq_true', eq_iff_iff, iff_true]
+        simp only [eval, Bool.false_eq_true, ↓reduceIte, Bool.not_eq_true', eq_iff_iff,
+          iff_true]
         use fun _ => false⟩
   | c, l, hl =>
     match l, hl with

@@ -9,6 +9,7 @@ import SSA.Core.Tactic
 import SSA.Core.Util
 import SSA.Core.MLIRSyntax.GenericParser
 import SSA.Core.MLIRSyntax.EDSL
+import SSA.Projects.InstCombine.Tactic
 import Mathlib.Tactic.Ring
 
 open BitVec
@@ -129,7 +130,7 @@ def eg₀ : Com Simple (Ctxt.ofList []) .pure .int :=
   }]
 
 def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
-/-- info: 0x00000008#32 -/
+/-- info: 8 -/
 #guard_msgs in #eval eg₀val
 
 open MLIR AST MLIR2Simple in
@@ -199,11 +200,13 @@ theorem hex1_rewritePeephole : ex1_rewritePeepholeAt = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by rfl
+  := by with_unfolding_all rfl
+
 
 def ex1_rewritePeephole :
     Com Simple  (Ctxt.ofList [.int]) .pure .int := rewritePeephole (fuel := 100) p1 lhs
 
+set_option maxRecDepth 2000 in
 theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   -- %c0 = 0
   Com.var (cst 0) <|
@@ -211,7 +214,7 @@ theorem Hex1_rewritePeephole : ex1_rewritePeephole = (
   Com.var (add ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by simp [Ctxt.snoc]⟩ ) <| -- %out = %x + %c0
   -- ret %c0
   Com.ret ⟨2, by simp [Ctxt.snoc]⟩)
-  := by rfl
+  := by with_unfolding_all rfl
 
 
 end ToyNoRegion
@@ -449,7 +452,8 @@ theorem rewriteDidSomething : runRewriteOnLhs ≠ lhs := by
   simp [runRewriteOnLhs, lhs]
   native_decide
 
-theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by rfl
+set_option maxRecDepth 2000 in
+theorem rewriteCorrect : runRewriteOnLhs = expectedRhs := by with_unfolding_all rfl
 
 end P2
 

@@ -2,11 +2,8 @@ import SSA.Projects.InstCombine.tests.LLVM.gaddnegneg_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
-
 open LLVM
 open BitVec
-
-
 
 open MLIR AST
 open Ctxt (Var)
@@ -14,7 +11,8 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-                                                                       
+section gaddnegneg_statements
+                                                    
 def l_before := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i32, %arg2 : i32, %arg3 : i32):
@@ -40,9 +38,10 @@ theorem l_proof : l_before ⊑ l_after := by
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  try alive_auto
+  intros
+  try simp
   ---BEGIN l
-  all_goals (try extract_goal ; sorry)
+  apply l_thm
   ---END l
 
 

@@ -24,7 +24,10 @@ def process_file(file_path):
     result = subprocess.run(
         ["lake", "build", module_name], capture_output=True, text=True
     )
+    print(result)
     msg = result.stdout
+    if result.stderr:
+        raise Exception(result.stderr)
     print(f"msg = {msg}")
 
     # Get the lines to replace and append
@@ -48,7 +51,12 @@ def process_file(file_path):
     # Append the messages to the end of the file
     with open(proof_name + ".lean", "a") as file:
         file.write(
-            """
+            f"""
+import SSA.Projects.InstCombine.TacticAuto
+import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
+
+section {stem_name}_proof
 """
         )
         for _, n, m in named:
@@ -60,7 +68,7 @@ def process_file(file_path):
 
 
 def main():
-    directory = "./SSA/Projects/InstCombine/test/LLVM"
+    directory = "./SSA/Projects/InstCombine/tests/LLVM"
     worklist = []
     for root, _, files in os.walk(directory):
         for lean_file in files:
@@ -68,10 +76,11 @@ def main():
                 file_path = os.path.join(root, lean_file)
                 print(file_path)
                 worklist.append(file_path)
-
+    print(f"worklist = {worklist}")
     with Pool(5) as p:
         p.map(process_file, worklist)
 
 
 if __name__ == "__main__":
     main()
+    # process_file("./SSA/Projects/InstCombine/tests/LLVM/gand.lean")

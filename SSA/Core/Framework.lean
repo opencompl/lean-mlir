@@ -1158,7 +1158,7 @@ theorem Zipper.denote_insertCom {zip : Zipper d Γ_in eff Γ_mid ty₁}
         (V_newMid.comap <| newCom.outContextHom.with v newCom.returnVar)
       ) := by
   funext V
-  simp [insertCom, Com.denoteLets_eq, Function.comp]
+  simp [insertCom, Com.denoteLets_eq, Function.comp_def]
 
 /-- Casting the intermediate context is not relevant for the denotation -/
 @[simp] lemma Zipper.denoteLets_eqRec_Γ_mid {zip : Zipper d Γ_in eff Γ_mid ty}
@@ -1279,7 +1279,7 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
     getPureExpr (lets.var e) (v.toSnoc)
     = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
   simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
-    getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp,
+    getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
     Expr.changeVars_changeVars];
   rfl
 
@@ -1531,7 +1531,7 @@ theorem Lets.vars_var_eq {lets : Lets d Γ_in eff Γ_out}
     rw [← ih]
     rw [foldl,foldl, foldl]
     congr 1
-    simp [Finset.ext_iff, or_comm, or_assoc]
+    simp [Finset.ext_iff, or_comm, or_assoc, Sigma.forall]
 
 /-- For a vector of variables T,
   let s₁ and s₂ be two maps from variables to A t.
@@ -1869,7 +1869,7 @@ theorem subset_entries :
       simp only at ih_matchVar
       split_ifs at ih_matchVar with hop
       apply ih_matchArg e hop _ ih_matchVar
-  · intro ma v₂ b? varMap hvarMap x hx
+  · intro w v₂ b? varMap hvarMap x hx
     simp only [matchVar, Option.mem_def] at *
     split at hvarMap
     case h_1 _p q r _s =>
@@ -1895,7 +1895,7 @@ theorem subset_entries :
       rename_i a b c
       rw [c] at b?
       contradiction
-  · intro w ma
+  · intro ma w
     intro b? varMap hvarMap
     simp only [Ctxt.get?, Var.succ_eq_toSnoc, Option.mem_def] at *
     unfold matchVar at hvarMap
@@ -2248,8 +2248,10 @@ theorem mem_matchVar
       simp only [bind, Option.mem_def, Option.bind_eq_some] at hvarMap
       simpa [pure, bind] using hvarMap
     subst h
+    rw [← Option.dite_none_right_eq_some] at he₂
     split_ifs at he₂ with h
     · dsimp only [Expr.op_mk, Expr.regArgs_mk] at h
+      simp only [Expr.op_mk, Expr.args_mk, Option.some.injEq] at he₂
       apply @mem_matchVar_matchArg (matchLets := matchLets) (hvarMap := he₂)
       simp only [Expr.op_mk, Finset.mem_biUnion, Sigma.exists]
       refine ⟨_, _, ?_, h_v'⟩
@@ -2340,7 +2342,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] : {pos : ℕ} → {lets : Let
     simp only [Lets.denote, eq_rec_constant, Com.denote]
     simp only [EffectKind.return_impure_toMonad_eq, bind_assoc, pure_bind, Com.denote_var]
   | _+1, _, .ret _, res, hres, s => by
-    simp only [splitProgramAtAux, Option.mem_def] at hres
+    simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
     cases eff

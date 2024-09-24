@@ -133,10 +133,12 @@ private def pretty_select (w : Nat) :=
       llvm.return %0
   }]
 
--- for some reason 'rfl' does not work but 'by rfl' works
-example : pretty_test = prettier_test_generic 32 := by rfl
-example : pretty_test_generic = prettier_test_generic    := rfl
+example : pretty_test = prettier_test_generic 32 := by
+  unfold pretty_test prettier_test_generic
+  simp_alive_meta
+  simp
 
+example : pretty_test_generic = prettier_test_generic    := rfl
 
 /-! ## antiquotations test -/
 

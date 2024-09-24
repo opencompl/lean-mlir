@@ -101,6 +101,8 @@ theorem f_monic : Monic (f q n) := by
   rw [f, hn]
   apply Polynomial.monic_X_pow_add
   simp
+  norm_cast
+  omega
 
 /--
 The basic ring of interest in this dialect is `R q n` which corresponds to

@@ -1,7 +1,5 @@
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.DC.Stream
 import SSA.Core.MLIRSyntax.EDSL
-
 
 open MLIR AST Ctxt
 
@@ -214,7 +212,7 @@ toType := fun
 
 
 set_option linter.dupNamespace false in
-abbrev Handshake : Dialect where
+abbrev DC : Dialect where
   Op := Op
   Ty := Ty
 
@@ -265,7 +263,7 @@ def mkTy2 : String → MLIR.AST.ExceptM (Handshake) Ty2
   | "Bool" => return (.bool)
   | _ => throw .unsupportedType
 
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
+def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
   | MLIR.AST.MLIRType.undefined s => do
     match s.splitOn "_" with
     | ["Stream", r] =>

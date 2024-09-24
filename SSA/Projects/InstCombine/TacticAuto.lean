@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
+import SSA.Experimental.Bits.Fast.Tactic
+import Std.Tactic.BVDecide
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -68,8 +70,8 @@ macro "simp_alive_ops" : tactic =>
   `(tactic|
       (
         simp (config := {failIfUnchanged := false}) only [
-            simp_llvm, BitVec.bitvec_minus_one,
-            BitVec.bitvec_minus_one',
+            simp_llvm,
+            BitVec.ofInt_neg_one,
             (BitVec.ofInt_ofNat),
             pure_bind
           ]
@@ -84,37 +86,46 @@ and then solve with the omega tactic.
 macro "of_bool_tactic" : tactic =>
   `(tactic|
     (
-    repeat (
-      first
-    | simp only [bv_ofBool]
-    | simp only [BitVec.ule]
-    | simp only [BitVec.ult]
-    | simp only [BitVec.sle]
-    | simp only [BitVec.slt]
-    | simp only [BitVec.toInt]
-    | simp only [BEq.beq]
-    | simp only [bne]
-    )
+    try simp only [bv_ofBool, BitVec.ule, BitVec.ult, BitVec.sle, BitVec.slt, BitVec.toInt, BEq.beq, bne]
     try ext
-    try simp
+    simp only [← Bool.decide_or, ← Bool.decide_and, ← decide_not, decide_eq_decide, of_decide_eq_true,
+      BitVec.toNat_eq]
     repeat (
       first
-      | simp only [← Bool.decide_or]
-      | simp only [← Bool.decide_and]
-      | simp only [← decide_not]
-      | simp only [decide_eq_decide]
-      | simp [of_decide_eq_true]
-      | simp only [BitVec.toNat_eq]
+      | simp [h]
+      | split
+      | omega
+      | rw [Nat.mod_eq_if]
     )
-    try omega
     ))
 
-macro "simp_alive_bitvec": tactic =>
+macro "bv_eliminate_bool" : tactic =>
+  `(tactic|
+    (
+      try simp only [BitVec.and_eq, BitVec.or_eq, bv_ofBool, BEq.beq, bne,
+        ←Bool.decide_and, ←Bool.decide_or]
+      simp only [decide_eq_decide]
+    )
+   )
+
+macro "bv_distrib" : tactic =>
+  `(tactic|
+    (
+      try simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_xor_distrib,
+        BitVec.shiftLeft_and_distrib, BitVec.and_assoc, BitVec.or_assoc]
+      try ac_rfl
+    )
+   )
+
+macro "bv_auto": tactic =>
   `(tactic|
       (
         intros
-        simp (config := {failIfUnchanged := false}) [(BitVec.negOne_eq_allOnes')]
+        try simp (config := {failIfUnchanged := false}) [-Bool.and_iff_left_iff_imp, (BitVec.negOne_eq_allOnes)]
         try ring_nf
+        try bv_eliminate_bool
+        repeat (split)
+        <;> try simp (config := {failIfUnchanged := false})
         /-
         Solve tries each arm in order, falling through
         if the goal is not closed.
@@ -123,10 +134,10 @@ macro "simp_alive_bitvec": tactic =>
         -/
         try solve
           | ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor];
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
-            try cases BitVec.getLsb _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
+            try cases BitVec.getLsbD _ _ <;> try simp
           | simp [bv_ofBool]
           /-
           There are 2 main kinds of operations on BitVecs
@@ -137,9 +148,15 @@ macro "simp_alive_bitvec": tactic =>
           solve the arithmetic with the `ring_nf` tactic.
           -/
           | simp only [← BitVec.allOnes_sub_eq_xor]
-            simp only [← BitVec.negOne_eq_allOnes']
+            simp only [← BitVec.negOne_eq_allOnes]
             ring_nf
           | of_bool_tactic
+          | (
+              simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
+              bv_automata
+            )
+          | bv_decide
+          | bv_distrib
       )
    )
 
@@ -152,6 +169,6 @@ macro "alive_auto": tactic =>
           simp_alive_case_bash
           ensure_only_goal
         )
-        simp_alive_bitvec
+        bv_auto
       )
    )

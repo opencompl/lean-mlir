@@ -1,12 +1,8 @@
-import SSA.Projects.InstCombine.ForLean
 
+import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
+open BitVec
 
-open LLVM
-
-
-
-theorem test1_thm (x : _root_.BitVec 17) : 
-    x * 1024#17 = x <<< 10 := by
-  sorry
+section gapinthmul1_proof
+theorem test1_thm (x : BitVec 17) : x * 1024#17 = x <<< 10 := sorry
 

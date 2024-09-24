@@ -43,7 +43,7 @@ theorem none_right {x? : Option α} :
     x? ⊑ none ↔ x? = none := by
   cases x?
   · simp only [none_left]
-  · simp only [iff_false]
+  · simp only [reduceCtorEq, iff_false]
     rintro ⟨⟩
 
 theorem some_left {x : α} {y? : Option α} :
@@ -100,39 +100,4 @@ theorem Int.natCast_pred_of_pos (x : Nat) (h : 0 < x) :
       (-·), Int.neg, Int.negOfNat, Int.subNatNat]
     simp
 
--- This should become a lot simpler, if not obsolete after:
--- https://github.com/leanprover/lean4/pull/3474
-theorem bitvec_minus_one : BitVec.ofInt w (Int.negSucc 0) = (-1 : _root_.BitVec w) := by
-  simp
-  by_cases zeroBitwidth : 0 < w
-  case pos =>
-    apply BitVec.eq_of_toInt_eq
-    simp
-    unfold BitVec.toInt
-    simp
-    have xx : 1 % 2 ^ w = 1 := by
-      rw [Nat.mod_eq_of_lt]
-      simp [Nat.pow_one]
-      omega
-    simp [xx]
-    split
-    · rename_i h
-      rw [Nat.mod_eq_of_lt] at h
-      · have xxx : 2 * (2 ^ w - 1) = 2 * 2 ^ w - 2 * 1 := by omega
-        rw [xxx] at h
-        simp at h
-        omega
-      · omega
-    · simp only [Int.bmod, Int.reduceNeg, Int.natCast_pred_of_pos _ (Nat.two_pow_pos w),
-        Int.neg_emod]
-      omega
-  case neg =>
-    simp_all
-    rw [zeroBitwidth]
-    simp
-
-theorem bitvec_minus_one' : BitVec.ofInt w (-1) = (-1 : BitVec w) := by
-  have x : -1 = Int.negSucc 0 := by simp
-  rw [x, bitvec_minus_one]
-
-  end BitVec
+end BitVec

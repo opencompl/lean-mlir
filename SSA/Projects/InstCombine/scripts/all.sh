@@ -15,7 +15,7 @@ for file in "$DIR"/*.lean; do
     # Extract the filename without the directory path
     filename=$(basename "$file" .lean)
     # Append the import statement to the output file
-    echo "import SSA.Projects.InstCombine.lean.$filename" >> $OUTPUT_FILE
+    echo "import SSA.Projects.InstCombine.tests.LLVM.$filename" >> $OUTPUT_FILE
   fi
 done
 

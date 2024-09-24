@@ -98,7 +98,7 @@ def Vector.ofList {α : Type u} (l : List α) : Mathlib.Vector α l.length :=
 ⟨l, rfl⟩
 
 def Vector.ofArray {α : Type u} (a : Array α) : Mathlib.Vector α a.size :=
- Vector.ofList a.data
+ Vector.ofList a.toList
 
 instance [inst : Cli.ParseableType τ] {n : ℕ} : Cli.ParseableType (Mathlib.Vector τ n) where
   name := s!"Vector ({inst.name}) {n}"
