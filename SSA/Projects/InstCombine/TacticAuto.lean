@@ -156,6 +156,7 @@ macro "bv_auto": tactic =>
               bv_automata
             )
           | bv_decide
+          | bv_distrib
       )
    )
 
