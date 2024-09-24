@@ -157,8 +157,7 @@ theorem sle_iff_add_two_pow_ule_add_two_pow :
 
 theorem ult_iff_not_ule :
     (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by
-  try alive_auto
-  all_goals sorry
+  bv_auto
 
 theorem eq_iff_adc_not_add :
     x = y ↔ (BitVec.carry w (x) (~~~ y + 1)) false := by
