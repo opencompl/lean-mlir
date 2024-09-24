@@ -607,6 +607,11 @@ theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
     omega
 
 @[simp]
+theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
+    x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
+  simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
+
+@[simp]
 theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
   simp [← BitVec.shiftLeft_and_distrib]
