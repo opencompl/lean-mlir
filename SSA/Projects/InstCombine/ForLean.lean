@@ -614,7 +614,12 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 @[simp]
 theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
-  simp [← BitVec.shiftLeft_and_distrib]
+  simp [← shiftLeft_and_distrib]
+
+@[simp]
+theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
+    BitVec.allOnes w <<< n ||| x <<< n = BitVec.allOnes w <<< n := by
+  simp [← shiftLeft_or_distrib, allOnes_or]
 
 @[simp]
 theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
@@ -622,15 +627,9 @@ theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
   simp [BitVec.and_assoc]
 
 @[simp]
-theorem shiftRight_and_or_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
-    (x >>> n &&& y ||| z) <<< n = x &&& y <<< n ||| z <<< n := by
-  simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_and_distrib]
-
-@[simp]
-theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
-    (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
-  simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
-  rw [BitVec.xor_comm]
+theorem or_hiftLeft_allOnes {x y : BitVec w} (n : Nat):
+  x ||| BitVec.allOnes w <<< n &&& y <<< n = x ||| y <<< n := by
+  simp [BitVec.and_assoc]
 
 end BitVec
 

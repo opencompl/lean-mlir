@@ -108,6 +108,15 @@ macro "bv_eliminate_bool" : tactic =>
     )
    )
 
+macro "bv_distrib" : tactic =>
+  `(tactic|
+    (
+      try simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_xor_distrib,
+        BitVec.shiftLeft_and_distrib]
+      try ac_rfl
+    )
+   )
+
 macro "bv_auto": tactic =>
   `(tactic|
       (
