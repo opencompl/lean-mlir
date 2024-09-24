@@ -611,6 +611,11 @@ theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
     omega
 
 @[simp]
+theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
+    x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
+  simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
+
+@[simp]
 theorem allOnes_and {x : BitVec w} :
     BitVec.allOnes w &&& x = x := by
   ext; simp [BitVec.negOne_eq_allOnes, BitVec.allOnes_sub_eq_xor]
@@ -635,6 +640,8 @@ theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
     (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
   simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
   rw [BitVec.xor_comm]
+
+
 
 end BitVec
 
