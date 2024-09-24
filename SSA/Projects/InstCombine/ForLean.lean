@@ -503,21 +503,6 @@ theorem signExtend_succ (i : Nat) (x : BitVec w) :
   simp only [getLsbD_signExtend, Fin.is_lt, decide_True, Bool.true_and, getLsbD_cons]
   split <;> split <;> simp_all <;> omega
 
-theorem two_mul {x : BitVec w} :
-    2#w * x = x + x := by
-  by_cases h : w = 0
-  · subst h
-    simp [BitVec.eq_nil x]
-  by_cases h : w = 1
-  · subst h
-    simp [bv_toNat]
-  have xx : 1 < w := by omega
-  simp only [bv_toNat]
-  rw [Nat.mod_eq_of_lt (a := 2), Nat.two_mul]
-  have ssr := @Nat.pow_lt_pow_iff_right 2 1 w (by omega)
-  rw [ssr]
-  omega
-
 @[simp]
 theorem one_shiftLeft_mul {x y : BitVec w} :
     1#w <<< x.toNat * y = y <<< x.toNat := by
@@ -529,37 +514,48 @@ theorem mul_allOnes {x : BitVec w} :
   simp [← BitVec.negOne_eq_allOnes]
 
 @[simp]
-theorem xor_xor_self {x y : BitVec w} : x ^^^ y ^^^ y = x := by
-  ext
+theorem allOnes_sshiftRight {w n : Nat} :
+  (allOnes w).sshiftRight n = allOnes w := by
+  ext i
+  by_cases h : 0 < w
+  · simp [BitVec.msb_allOnes h]
+  · simp ; omega
+
+@[simp]
+theorem zero_sshiftRight {w n : Nat} :
+  (0#w).sshiftRight n = 0#w := by
+  ext i
+  by_cases h : 0 < w
+  · simp [BitVec.msb_allOnes h]
+  · simp
+
+@[simp]
+theorem zero_ushiftRight {w n : Nat} :
+    0#w >>> n = 0#w := by
+  ext i
+  by_cases h : 0 < w
+  · simp [BitVec.msb_allOnes h]
+  · simp
+
+theorem not_sshiftRight {b : BitVec w} :
+    ~~~b.sshiftRight n = (~~~b).sshiftRight n := by
+  ext i
+  simp
+  by_cases h : w ≤ i
+  <;> by_cases h' : n + i < w
+  <;> by_cases h'' : 0 < w
+  <;> simp [h, h', h'']
+  <;> omega
+
+@[simp]
+theorem not_not {b : BitVec w} : ~~~(~~~b) = b := by
+  ext i
   simp
 
 @[simp]
-theorem sshiftRight_allOnes_one :
-  (BitVec.allOnes w).sshiftRight 1 = BitVec.allOnes w := by
-  by_cases h : w = 0
-  . subst h
-    simp
-  . have : 0 < w := by omega
-    ext i
-    simp
-    rw [BitVec.msb_allOnes this]
-    simp
-
-@[simp]
-theorem sshiftRight_one_xor_allOnes {b : BitVec w} :
-    b.sshiftRight 1 ^^^ (BitVec.allOnes w) =
-    (b ^^^ BitVec.allOnes w).sshiftRight 1 := by
-    rw [BitVec.sshiftRight_xor_distrib, sshiftRight_allOnes_one]
-
-@[simp]
-theorem xor_allOnes_sshiftRight_xor_allOnes {a b : BitVec w} :
-    (b ^^^ (BitVec.allOnes w)).sshiftRight a.toNat ^^^ (BitVec.allOnes w) =
-    b.sshiftRight a.toNat := by
-  induction a.toNat
-  case zero =>
-    simp
-  case succ n ih =>
-    simp [BitVec.sshiftRight_add, sshiftRight_one_xor_allOnes, ih]
+theorem not_sshiftRight_not {x : BitVec w} {n : Nat} :
+    ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
+  simp [not_sshiftRight]
 
 @[simp]
 theorem shiftLeft_shiftRight {x : BitVec w} {n : Nat}:
@@ -623,7 +619,7 @@ theorem allOnes_and {x : BitVec w} :
 @[simp]
 theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
-  simp [← BitVec.shiftLeft_and_distrib]
+  simp only [← BitVec.shiftLeft_and_distrib, allOnes_and]
 
 @[simp]
 theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
@@ -640,8 +636,6 @@ theorem shiftRight_xor_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat} :
     (x ^^^ y >>> n &&& z) <<< n = y &&& z <<< n ^^^ x <<< n := by
   simp [BitVec.shiftLeft_xor_distrib, BitVec.shiftLeft_and_distrib]
   rw [BitVec.xor_comm]
-
-
 
 end BitVec
 

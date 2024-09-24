@@ -131,7 +131,7 @@ def alive_simplifyMulDivRem805 (w : Nat) :
       apply Refinement.none_left
     case neg =>
       simp only [Bool.false_eq_true, add_tsub_cancel_right, ge_iff_le, false_and, toNat_ofNat,
-        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, or_self,
+        lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true, Nat.one_mod_two_pow, _root_.or_self,
         ↓reduceIte, Option.some_bind]
       rw [BitVec.ult_toNat]
       rw [BitVec.toNat_ofNat]
@@ -232,7 +232,7 @@ def alive_simplifyMulDivRem805' (w : Nat) :
   simp_alive_ops
   simp only [ofNat_eq_ofNat, Bool.or_eq_true, beq_iff_eq, Bool.and_eq_true, bne_iff_ne, ne_eq,
     EffectKind.return_impure_toMonad_eq, Option.pure_def, Bool.false_eq_true, ge_iff_le, false_and,
-    toNat_ofNat, or_self, ↓reduceIte, Option.some_bind]
+    toNat_ofNat, _root_.or_self, ↓reduceIte, Option.some_bind]
   split_ifs with c
   simp only [Refinement.none_left]
   by_cases w_0 : w = 0; subst w_0; simp [BitVec.eq_nil a]
