@@ -27,7 +27,7 @@ theorem xor_shiftRight_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
 
 @[simp]
 theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
-  x &&& BitVec.allOnes w <<< n &&& y <<< n = x &&& y <<< n := by
+    x &&& BitVec.allOnes w <<< n &&& y <<< n = x &&& y <<< n := by
   bv_auto
 
 @[simp]
