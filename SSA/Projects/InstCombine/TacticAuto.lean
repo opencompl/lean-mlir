@@ -112,7 +112,7 @@ macro "bv_distrib" : tactic =>
   `(tactic|
     (
       try simp [BitVec.shiftLeft_or_distrib, BitVec.shiftLeft_xor_distrib,
-        BitVec.shiftLeft_and_distrib]
+        BitVec.shiftLeft_and_distrib, BitVec.and_assoc, BitVec.or_assoc]
       try ac_rfl
     )
    )

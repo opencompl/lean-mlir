@@ -621,16 +621,6 @@ theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n ||| x <<< n = BitVec.allOnes w <<< n := by
   simp [← shiftLeft_or_distrib]
 
-@[simp]
-theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
-  x &&& BitVec.allOnes w <<< n &&& y <<< n = x &&& y <<< n := by
-  simp [BitVec.and_assoc]
-
-@[simp]
-theorem or_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
-  x ||| BitVec.allOnes w <<< n &&& y <<< n = x ||| y <<< n := by
-  simp [BitVec.and_assoc]
-
 end BitVec
 
 namespace Bool

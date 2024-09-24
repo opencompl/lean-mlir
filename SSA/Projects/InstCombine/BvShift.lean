@@ -24,3 +24,13 @@ theorem shiftRight_and_xor_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
 theorem xor_shiftRight_and_shiftLeft_distrib {x y z : BitVec w} {n : Nat}:
     (z ^^^ x >>> n &&& y) <<< n = z <<< n ^^^ x &&& y <<< n := by
   bv_distrib
+
+@[simp]
+theorem and_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
+  x &&& BitVec.allOnes w <<< n &&& y <<< n = x &&& y <<< n := by
+  bv_distrib
+
+@[simp]
+theorem or_shiftLeft_allOnes {x y : BitVec w} (n : Nat):
+  x ||| BitVec.allOnes w <<< n &&& y <<< n = x ||| y <<< n := by
+  bv_distrib
