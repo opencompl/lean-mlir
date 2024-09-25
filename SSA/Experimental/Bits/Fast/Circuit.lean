@@ -42,6 +42,8 @@ lemma mem_varsFinset [DecidableEq α] {c : Circuit α} :
     ∀ {x : α}, x ∈ c.varsFinset ↔ x ∈ c.vars := by
   simp [varsFinset]
 
+/-- `eval circuit assignment` will evaluate the circuit given an assignment
+to each free variable of type `α` -/
 @[simp]
 def eval : Circuit α → (α → Bool) → Bool
   | tru, _ => true
