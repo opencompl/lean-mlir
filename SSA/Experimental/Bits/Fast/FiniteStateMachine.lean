@@ -707,5 +707,5 @@ def Predicate.toFSM
 | _ => sorry
 
 theorem Predicate.toFsm_correct
-    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] (p : Predicate α)  :
+    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] (p : Predicate α) :
   decideIfZeros p.toFSM = true ↔ p.denote := by sorry
