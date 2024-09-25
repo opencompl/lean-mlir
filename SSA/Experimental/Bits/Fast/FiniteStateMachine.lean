@@ -681,22 +681,31 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     exact h
 
 inductive Predicate
-| eq (t1 t2 : Term)
-| and (p q : Predicate)
-| or (p q : Predicate)
-| not (p : Predicate)
+  ( α  : Type )
+  [ i : Fintype α ]
+  [ dec_eq : DecidableEq α ] :=
+| eq (t1 t2 : Term )
+| and (p q : Predicate α)
+| or (p q : Predicate α)
+| not (p : Predicate α)
 
 
-def Predicate.denote : Predicate -> Prop
+def Predicate.denote
+    -- Why are `i` and `dec_eq` marked as unused?
+    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] :
+      Predicate α -> Prop
 | eq t1 t2 => t1.eval = t2.eval
 | and p q => p.denote ∧  q.denote
 | or p q => p.denote ∨  q.denote
 | not p => ¬ p.denote
 
 -- write lowerings for predicates into FSMs
-def Predicate.toFSM : Predicate -> FSM α
+def Predicate.toFSM
+    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] :
+      Predicate α -> FSM α
 | eq t1 t2 => sorry
 | _ => sorry
 
-theorem Predicate.toFsm_correct (p : Predicate) :
+theorem Predicate.toFsm_correct
+    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] (p : Predicate α)  :
   decideIfZeros p.toFSM = true ↔ p.denote := by sorry
