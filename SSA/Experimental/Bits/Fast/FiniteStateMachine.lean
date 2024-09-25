@@ -703,7 +703,7 @@ def Predicate.denote
 def Predicate.toFSM
     (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] :
       Predicate α -> FSM α
-| eq t1 t2 => sorry
+| eq t1 t2 => (termEvalEqFSM (Term.xor t1 t2)).toFSM
 | _ => sorry
 
 theorem Predicate.toFsm_correct
