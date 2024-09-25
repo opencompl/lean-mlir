@@ -25,7 +25,8 @@ def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
 
 -- weirdly enough the docs says that c must be a Value type (not token),
 -- but I don't see how this would be useful? I left stream bool now, but I don't like it that much
-def branch (x : TokenStream) (c : Stream Bool): TokenStream × TokenStream  :=
+-- emotionally not a valuestream but can do for now
+def branch (x : TokenStream) (c : ValueStream Bool): TokenStream × TokenStream  :=
   Stream.corec₂ (β := TokenStream × Stream Bool) (x, c) fun ⟨x, c⟩ =>
     Id.run <| do
       match c 0, x 0 with
@@ -109,8 +110,8 @@ inductive Op
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
-| tokenstream
-| tokenstream2
+| tokenstream : Ty
+| tokenstream2 : Ty
 | valuestream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
 | valuetokenstream (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
 deriving Inhabited, DecidableEq, Repr
@@ -179,7 +180,5 @@ instance : DialectDenote (DC) where
     | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0) (arg.getN 1) (arg.getN 2)
     | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0)
     | .source, _, _  => CIRCTStream.DC.source ()
-
-
 
 end Dialect
