@@ -684,7 +684,7 @@ inductive Predicate
   ( α  : Type )
   [ i : Fintype α ]
   [ dec_eq : DecidableEq α ] :=
-| eq (t1 t2 : Term )
+| eq (t1 t2 : Term ) : Predicate (Fin (max t1.arity t2.arity))
 | and (p q : Predicate α)
 | or (p q : Predicate α)
 | not (p : Predicate α)
