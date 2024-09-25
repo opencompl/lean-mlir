@@ -105,7 +105,7 @@ inductive Op
 | sink
 | source
 | pack (t : Ty2)
-| unpack
+| unpack (t : Ty2)
 deriving Inhabited, DecidableEq, Repr
 
 inductive Ty
@@ -144,7 +144,7 @@ def Op.sig : Op  → List Ty
   | .join => [Ty.tokenstream, Ty.tokenstream]
   | .select => [Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool]
   | .sink => [Ty.tokenstream]
-  | .source => (sorry) -- how do i tell her it's a unit
+  | .source => [Ty.tokenstream] -- how do i tell her it's a unit
   | .pack t => [Ty.valuestream t, Ty.tokenstream]
   | .unpack t => [Ty.valuestream t]
 
@@ -159,21 +159,27 @@ def Op.outTy : Op → Ty
   | .sink => Ty.tokenstream
   | .source => Ty.tokenstream -- how do i tell her it's a unit
   | .pack t => Ty.valuestream t
-  | .unpack t => Ty.valuetokenstream t -- [Ty.valuestream t]
+  | .unpack t => Ty.valuetokenstream t
+
+@[simp, reducible]
+def Op.signature : Op → Signature (Ty) :=
+  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
+
+instance : DialectSignature DC := ⟨Op.signature⟩
+
+@[simp]
+instance : DialectDenote (DC) where
+    denote
+    | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0)
+    | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0) (arg.getN 1)
+    | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0) (arg.getN 1)
+    | .fork, arg, _  => CIRCTStream.DC.fork (arg.getN 0)
+    | .join, arg, _  => CIRCTStream.DC.join (arg.getN 0) (arg.getN 1)
+    | .merge, arg, _  => CIRCTStream.DC.merge (arg.getN 0) (arg.getN 1)
+    | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0) (arg.getN 1) (arg.getN 2)
+    | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0)
+    | .source, _, _  => CIRCTStream.DC.source ()
 
 
--- @[simp, reducible]
--- def Op.signature : Op → Signature (Ty) :=
---   fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
-
--- instance : DialectSignature Handshake := ⟨Op.signature⟩
-
--- @[simp]
--- instance : DialectDenote (Handshake) where
---     denote
---     | .branch _, arg, _ => CIRCTStream.Handshake.branch (arg.getN 0) (arg.getN 1)
---     | .merge _, arg, _  => CIRCTStream.Handshake.merge (arg.getN 0) (arg.getN 1)
---     | .fst _, arg, _ => (arg.getN 0).fst
---     | .snd _, arg, _ => (arg.getN 0).snd
 
 end Dialect
