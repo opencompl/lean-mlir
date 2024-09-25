@@ -679,3 +679,24 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     intro x s h
     use x
     exact h
+
+inductive Predicate
+| eq (t1 t2 : Term)
+| and (p q : Predicate)
+| or (p q : Predicate)
+| not (p : Predicate)
+
+
+def Predicate.denote : Predicate -> Prop
+| eq t1 t2 => t1.eval = t2.eval
+| and p q => p.denote ∧  q.denote
+| or p q => p.denote ∨  q.denote
+| not p => ¬ p.denote
+
+-- write lowerings for predicates into FSMs
+def Predicate.toFSM : Predicate -> FSM α
+| eq t1 t2 => sorry
+| _ => sorry
+
+theorem Predicate.toFsm_correct (p : Predicate) :
+  decideIfZeros p.toFSM = true ↔ p.denote := by sorry
