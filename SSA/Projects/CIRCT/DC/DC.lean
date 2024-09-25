@@ -8,14 +8,14 @@ namespace DC
 abbrev ValueStream := Stream
 abbrev TokenStream := Stream Unit
 
-def unpack (x : Stream α) : ValueStream α × TokenStream :=
+def unpack (x : ValueStream α) : ValueStream α × TokenStream :=
   Stream.corec₂ (β := Stream α) (x)
     fun x => Id.run <| do
       match x 0 with
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
 
-def pack (x : ValueStream α) (y : TokenStream) : Stream α :=
+def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
   Stream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x₀, some _ => (x₀, (x.tail, y.tail))
@@ -104,8 +104,76 @@ inductive Op
 | select
 | sink
 | source
-| pack
+| pack (t : Ty2)
 | unpack
 deriving Inhabited, DecidableEq, Repr
+
+inductive Ty
+| tokenstream
+| tokenstream2
+| valuestream (ty2 : Ty2) : Ty -- A stream of values of type `ty2`.
+| valuetokenstream (ty2 : Ty2) : Ty -- A product of streams of values of type `ty2`.
+deriving Inhabited, DecidableEq, Repr
+
+instance : TyDenote Ty2 where
+toType := fun
+| Ty2.int => Int
+| Ty2.bool => Bool
+
+open TyDenote (toType) in
+instance instDCTyDenote : TyDenote Ty where
+toType := fun
+| Ty.tokenstream => CIRCTStream.DC.TokenStream
+| Ty.tokenstream2 => CIRCTStream.DC.TokenStream × CIRCTStream.DC.TokenStream
+| Ty.valuestream ty2 => CIRCTStream.DC.ValueStream (toType ty2)
+| Ty.valuetokenstream ty2 => CIRCTStream.DC.ValueStream (toType ty2) × CIRCTStream.DC.TokenStream
+
+set_option linter.dupNamespace false in
+abbrev DC : Dialect where
+  Op := Op
+  Ty := Ty
+
+open TyDenote (toType)
+
+-- arg type CONF
+@[simp, reducible]
+def Op.sig : Op  → List Ty
+  | .merge => [Ty.tokenstream, Ty.tokenstream]
+  | .branch => [Ty.tokenstream, Ty.valuestream Ty2.bool]
+  | .fork => [Ty.tokenstream]
+  | .join => [Ty.tokenstream, Ty.tokenstream]
+  | .select => [Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool]
+  | .sink => [Ty.tokenstream]
+  | .source => (sorry) -- how do i tell her it's a unit
+  | .pack t => [Ty.valuestream t, Ty.tokenstream]
+  | .unpack t => [Ty.valuestream t]
+
+-- return type CONF
+@[simp, reducible]
+def Op.outTy : Op → Ty
+  | .merge => Ty.tokenstream
+  | .branch => Ty.tokenstream2
+  | .fork => Ty.tokenstream2
+  | .join => Ty.tokenstream
+  | .select => Ty.tokenstream
+  | .sink => Ty.tokenstream
+  | .source => Ty.tokenstream -- how do i tell her it's a unit
+  | .pack t => Ty.valuestream t
+  | .unpack t => Ty.valuetokenstream t -- [Ty.valuestream t]
+
+
+-- @[simp, reducible]
+-- def Op.signature : Op → Signature (Ty) :=
+--   fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
+
+-- instance : DialectSignature Handshake := ⟨Op.signature⟩
+
+-- @[simp]
+-- instance : DialectDenote (Handshake) where
+--     denote
+--     | .branch _, arg, _ => CIRCTStream.Handshake.branch (arg.getN 0) (arg.getN 1)
+--     | .merge _, arg, _  => CIRCTStream.Handshake.merge (arg.getN 0) (arg.getN 1)
+--     | .fst _, arg, _ => (arg.getN 0).fst
+--     | .snd _, arg, _ => (arg.getN 0).snd
 
 end Dialect
