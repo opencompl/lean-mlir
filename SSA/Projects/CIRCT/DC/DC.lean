@@ -339,5 +339,4 @@ open Qq MLIR AST Lean Elab Term Meta in
 elab "[DC_com| " reg:mlir_region "]" : term => do
   SSA.elabIntoCom reg q(DC)
 
-
 end MLIR2DC
