@@ -45,7 +45,7 @@ theorem equiv_arg1 (x1Stream x2Stream : Stream Bool) : x1Stream ≈ BranchEg1.de
   simp_peephole at v
   unfold Handshake.branch
   unfold Handshake.merge
-
+  sorry
 
 theorem determinate :
   Set.Subsingleton (nondeterminify2 (fun s1 s2 => BranchEg1.denote (Ctxt.Valuation.ofPair s1 s2)) (s1', s2')) := by
