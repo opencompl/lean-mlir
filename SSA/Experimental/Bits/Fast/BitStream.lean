@@ -276,6 +276,12 @@ instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
 
+def repeatBit (xs : BitStream) : BitStream :=
+  corec (b := (true, xs)) fun (carry, xs) =>
+    let carry := carry && xs 0
+    let xs := xs.tail
+    ((carry, xs), carry)
+
 /-!
 TODO: We should define addition and `carry` in terms of `mapAccum`.
 For example:
