@@ -621,9 +621,9 @@ theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
     BitVec.allOnes w <<< n ||| x <<< n = BitVec.allOnes w <<< n := by
   simp [← BitVec.shiftLeft_or_distrib]
 
-theorem neg_eq_sub_zero (x : BitVec 1) : - x = 0 - x := by
-  have hx : x = 0 ∨ x = 1 := width_one_cases x
-  rcases hx <;> rfl
+@[simp]
+theorem neg_eq_sub_zero (x : BitVec w) : - x = 0 - x := by
+    simp [bv_toNat]
 
 end BitVec
 
