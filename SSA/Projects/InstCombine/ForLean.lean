@@ -631,24 +631,24 @@ theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
   <;> simp [pt]
 
 @[simp]
-theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
+theorem xor_not_xor {a b : Bool} : ((!(a ^^ b)) ^^ b) = !a := by
   cases a
   <;> cases b
   <;> simp
 
 @[simp]
-theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
+theorem not_xor_and_self {a b : Bool} : (!(a ^^ b) && b) = (a && b) := by
   cases a
   <;> cases b
   <;> simp
 
-theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+theorem xor_inv_left {a b c : Bool} : (a ^^ b) = c ↔ b = (a ^^ c) := by
   cases a
   <;> cases b
   <;> simp
 
 @[simp]
-theorem xor_ne_self {a b : Bool} : xor a ((!a) != b) = !b := by
+theorem xor_ne_self {a b : Bool} : (a ^^ ((!a) != b)) = !b := by
   cases a
   <;> simp
 
