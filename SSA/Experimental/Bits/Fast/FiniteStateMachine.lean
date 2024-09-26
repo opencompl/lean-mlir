@@ -10,6 +10,7 @@ import SSA.Experimental.Bits.Fast.Circuit
 
 open Sum
 
+section FSM
 variable {α β α' β' : Type} {γ : β → Type}
 
 /-- `FSM n` represents a function `BitStream → ⋯ → BitStream → BitStream`,
@@ -590,6 +591,65 @@ def termEvalEqFSM : ∀ (t : Term), FSMSolution t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
 
+/-!
+FSM that implement bitwise-and. Since we use `0` as the good state,
+we keep the invariant that if both inputs are good and our state is `0`, then we produce a `0`.
+If not, we produce an infinite sequence of `1`.
+-/
+def and : FSM Bool :=
+  { α := Unit,
+    initCarry := fun _ => false,
+    nextBitCirc := fun a =>
+      match a with
+      | some () =>
+             -- Only if both are `0` we produce a `0`.
+             (Circuit.var true (inr false)  |||
+             ((Circuit.var false (inr true) ||| 
+              -- But if we have failed and have value `1`, then we produce a `1` from our state.
+              (Circuit.var true (inl ())))))
+      | none => -- must succeed in both arguments, so we are `0` if both are `0`.
+                Circuit.var true (inr true) |||
+                Circuit.var true (inr false)
+                }
+
+/-!
+FSM that implement bitwise-or. Since we use `0` as the good state,
+we keep the invariant that if either inputs is `0` then our state is `0`.
+If not, we produce a `1`.
+-/
+def or : FSM Bool :=
+  { α := Unit,
+    initCarry := fun _ => false,
+    nextBitCirc := fun a =>
+      match a with
+      | some () =>
+             -- If either succeeds, then the full thing succeeds
+             ((Circuit.var true (inr false)  &&&
+             ((Circuit.var false (inr true)) |||
+             -- On the other hand, if we have failed, then propagate failure.
+              (Circuit.var true (inl ())))))
+      | none => -- can succeed in either argument, so we are `0` if either is `0`.
+                Circuit.var true (inr true) &&&
+                Circuit.var true (inr false)
+                }
+
+/-!
+FSM that implement logical not.
+we keep the invariant that if the input ever fails and becomes a `1`, then we produce a `0`.
+IF not, we produce an infinite sequence of `1`.
+
+EDIT: Aha, this doesn't work!
+We need NFA to DFA here (as the presburger book does),
+where we must produce an infinite sequence of`0` iff the input can *ever* become a `1`.
+But here, since we phrase things directly in terms of producing sequences, it's a bit less clear
+what we should do :)
+
+- Alternatively, we need to be able to decide `eventually always zero`.
+- Alternatively, we push negations inside, and decide `⬝ ≠ ⬝` and `⬝ ≰ ⬝`.
+-/
+def lnot : FSM Unit := sorry
+
+
 inductive Result : Type
   | falseAfter (n : ℕ) : Result
   | trueFor (n : ℕ) : Result
@@ -680,30 +740,36 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
-inductive Predicate
-  ( α  : Type )
-  [ i : Fintype α ]
-  [ dec_eq : DecidableEq α ] :=
-| eq (t1 t2 : Term ) : Predicate (Fin (max t1.arity t2.arity))
-| and (p q : Predicate α)
-| or (p q : Predicate α)
-| not (p : Predicate α)
+end FSM
+
+/--
+The fragment of predicate logic that we support in `bv_automata`.
+Currently, we support equality, conjunction, disjunction, and negation.
+This can be expanded to also support arithmetic constraints such as unsigned-less-than.
+-/
+inductive Predicate : Type  → Type _ where
+| eq (t1 t2 : Term) : Predicate (Fin (max t1.arity t2.arity))
+| and  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
+| or  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
+| not (p : Predicate α) : Predicate α 
 
 
-def Predicate.denote
-    -- Why are `i` and `dec_eq` marked as unused?
-    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] :
-      Predicate α -> Prop
+/--
+denote a reflected `predicate` into a `prop.
+-/
+def Predicate.denote : Predicate α → Prop
 | eq t1 t2 => t1.eval = t2.eval
 | and p q => p.denote ∧  q.denote
 | or p q => p.denote ∨  q.denote
 | not p => ¬ p.denote
 
--- write lowerings for predicates into FSMs
-def Predicate.toFSM
-    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] :
-      Predicate α -> FSM α
-| eq t1 t2 => (termEvalEqFSM (Term.xor t1 t2)).toFSM
+/--
+Convert a predicate into a proposition
+-/
+def Predicate.toFSM : Predicate α → FSM α
+| .eq t1 t2 => (termEvalEqFSM (Term.xor t1 t2)).toFSM
+| .and p q => sorry -- compose the FSM of `p, q` with `FSM.and`. FSM.compose _ _ _
+| .or t1 t2 => sorry -- compose the FSM of `p, q` with `FSM.or`. FSM.compose _ _ _
 | _ => sorry
 
 theorem Predicate.toFsm_correct
