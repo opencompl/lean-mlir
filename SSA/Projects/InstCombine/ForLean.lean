@@ -493,7 +493,7 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
 
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
-  simp [BitVec.msb_eq_getLsbD_last]
+  simp [BitVec.msb_eq_getLsbD_last, getLsbD_signExtend]
   split <;> by_cases (0 < i) <;> simp_all
   simp [show i = w by omega]
 
@@ -518,16 +518,16 @@ theorem allOnes_sshiftRight {w n : Nat} :
   (allOnes w).sshiftRight n = allOnes w := by
   ext i
   by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h]
-  · simp ; omega
+  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
+  · simp [getLsbD_sshiftRight]; omega
 
 @[simp]
 theorem zero_sshiftRight {w n : Nat} :
   (0#w).sshiftRight n = 0#w := by
   ext i
   by_cases h : 0 < w
-  · simp [BitVec.msb_allOnes h]
-  · simp
+  · simp [BitVec.msb_allOnes h, getLsbD_sshiftRight]
+  · simp [getLsbD_sshiftRight]
 
 @[simp]
 theorem zero_ushiftRight {w n : Nat} :
@@ -540,7 +540,7 @@ theorem zero_ushiftRight {w n : Nat} :
 theorem not_sshiftRight {b : BitVec w} :
     ~~~b.sshiftRight n = (~~~b).sshiftRight n := by
   ext i
-  simp
+  simp [getLsbD_sshiftRight]
   by_cases h : w ≤ i
   <;> by_cases h' : n + i < w
   <;> by_cases h'' : 0 < w
@@ -631,24 +631,24 @@ theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
   <;> simp [pt]
 
 @[simp]
-theorem xor_not_xor {a b : Bool} : xor (!xor a b) b = !a := by
+theorem xor_not_xor {a b : Bool} : ((!(a ^^ b)) ^^ b) = !a := by
   cases a
   <;> cases b
   <;> simp
 
 @[simp]
-theorem not_xor_and_self {a b : Bool} : (!xor a b && b) = (a && b) := by
+theorem not_xor_and_self {a b : Bool} : (!(a ^^ b) && b) = (a && b) := by
   cases a
   <;> cases b
   <;> simp
 
-theorem xor_inv_left {a b c : Bool} : xor a b = c ↔ b = xor a c := by
+theorem xor_inv_left {a b c : Bool} : (a ^^ b) = c ↔ b = (a ^^ c) := by
   cases a
   <;> cases b
   <;> simp
 
 @[simp]
-theorem xor_ne_self {a b : Bool} : xor a ((!a) != b) = !b := by
+theorem xor_ne_self {a b : Bool} : (a ^^ ((!a) != b)) = !b := by
   cases a
   <;> simp
 
