@@ -210,7 +210,7 @@ def source : Expr (DC) Γ .pure (.tokenstream) :=
     (op := .source)
     (ty_eq := rfl)
     (eff_le := by constructor)
-    (args := sorry)
+    (args := .nil)
     (regArgs := .nil)
 
 def sink {Γ : Ctxt _} (a : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.tokenstream) :=
