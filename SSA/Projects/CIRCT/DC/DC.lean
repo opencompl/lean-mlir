@@ -1,12 +1,14 @@
-import SSA.Core.Framework
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.CIRCT.Stream.Stream
+import SSA.Projects.CIRCT.Stream.WeakBisim
+
 
 namespace CIRCTStream
 namespace DC
 
-abbrev ValueStream := Stream
-abbrev TokenStream := Stream Unit
+def ValueStream := Stream
+
+def TokenStream := Stream Unit
 
 def unpack (x : ValueStream α) : ValueStream α × TokenStream :=
   Stream.corec₂ (β := Stream α) (x)
@@ -23,9 +25,6 @@ def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
     | none, some _ => (none, (x.tail, y)) -- wait to sync with the value stream
     | none, none => (none, (x.tail, y.tail))
 
--- weirdly enough the docs says that c must be a Value type (not token),
--- but I don't see how this would be useful? I left stream bool now, but I don't like it that much
--- emotionally not a valuestream but can do for now
 def branch (x : TokenStream) (c : ValueStream Bool): TokenStream × TokenStream  :=
   Stream.corec₂ (β := TokenStream × Stream Bool) (x, c) fun ⟨x, c⟩ =>
     Id.run <| do
@@ -59,7 +58,6 @@ def merge (x y : TokenStream) : ValueStream Bool :=
     | none, some _ => (some false, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
--- same issue as branch for the condition stream
 def select (x y : TokenStream) (c : Stream Bool): TokenStream :=
   Stream.corec (β := TokenStream × TokenStream × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ =>
     match x 0, y 0, c 0 with
@@ -145,20 +143,20 @@ def Op.sig : Op  → List Ty
   | .join => [Ty.tokenstream, Ty.tokenstream]
   | .select => [Ty.tokenstream, Ty.tokenstream, Ty.valuestream Ty2.bool]
   | .sink => [Ty.tokenstream]
-  | .source => [Ty.tokenstream] -- how do i tell her it's a unit
+  | .source => []
   | .pack t => [Ty.valuestream t, Ty.tokenstream]
   | .unpack t => [Ty.valuestream t]
 
 -- return type CONF
 @[simp, reducible]
 def Op.outTy : Op → Ty
-  | .merge => Ty.tokenstream
+  | .merge => Ty.valuestream Ty2.bool
   | .branch => Ty.tokenstream2
   | .fork => Ty.tokenstream2
   | .join => Ty.tokenstream
   | .select => Ty.tokenstream
   | .sink => Ty.tokenstream
-  | .source => Ty.tokenstream -- how do i tell her it's a unit
+  | .source => Ty.tokenstream
   | .pack t => Ty.valuestream t
   | .unpack t => Ty.valuetokenstream t
 
@@ -179,7 +177,7 @@ instance : DialectDenote (DC) where
     | .merge, arg, _  => CIRCTStream.DC.merge (arg.getN 0) (arg.getN 1)
     | .select, arg, _  => CIRCTStream.DC.select (arg.getN 0) (arg.getN 1) (arg.getN 2)
     | .sink, arg, _  => CIRCTStream.DC.sink (arg.getN 0)
-    | .source, _, _  => CIRCTStream.DC.source ()
+    | .source, _, _  => CIRCTStream.DC.source
 
 end Dialect
 
@@ -207,25 +205,139 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
 
--- | merge
--- | branch
--- | fork
--- | join
--- | select
--- | sink
--- | source
--- | pack (t : Ty2)
--- | unpack (t : Ty2)
+def source : Expr (DC) Γ .pure (.tokenstream) :=
+  Expr.mk
+    (op := .source)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := sorry)
+    (regArgs := .nil)
 
--- def merge {Γ : Ctxt _} (a b : Var Γ (.tokenstream)) : Expr (DC) Γ .pure (.tokenstream) :=
---   Expr.mk
---     (op := .branch)
---     (ty_eq := rfl)
---     (eff_le := by constructor)
---     (args := .cons a <| .cons c <| .nil)
---     (regArgs := .nil)
+def sink {Γ : Ctxt _} (a : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.tokenstream) :=
+  Expr.mk
+    (op := .sink)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
 
--- def branch {Γ : Ctxt _} (a : Var Γ (.tokenstream)) (c : Var Γ (.valuestream .bool)) : Expr (DC) Γ .pure (.tokenstream2 r) :=
---   sorry
+def unpack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) : Expr (DC) Γ .pure (.valuetokenstream r) :=
+  Expr.mk
+    (op := .unpack r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def pack {r} {Γ : Ctxt _} (a : Γ.Var (.valuestream r)) (b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream r) :=
+  Expr.mk
+    (op := .pack r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def branch {Γ : Ctxt _} (a : Γ.Var (.tokenstream)) (b : Γ.Var (.valuestream .bool)) : Expr (DC) Γ .pure (.tokenstream2) :=
+  Expr.mk
+    (op := .branch)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def fork (a : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.tokenstream2) :=
+  Expr.mk
+    (op := .fork)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def join {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.tokenstream) :=
+  Expr.mk
+    (op := .join)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def merge {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) : Expr (DC) Γ .pure (.valuestream .bool) :=
+  Expr.mk
+    (op := .merge)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream .bool)) : Expr (DC) Γ .pure (.tokenstream) :=
+  Expr.mk
+    (op := .select)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .cons c <| .nil)
+    (regArgs := .nil)
+
+def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
+    MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
+  match opStx.name with
+  | op@"DC.source" =>
+    if opStx.args.length > 0 then
+      throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+    else
+      return ⟨_, .tokenstream, source⟩
+  | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" =>
+    match opStx.args with
+    | v₁Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      match ty₁, op with
+      | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
+      | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
+      | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
+      | _, _ => throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.branch" =>
+    match opStx.args with
+    | v₁Stx::v₂Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      match ty₁, ty₂, op with
+      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream .bool, merge v₁ v₂⟩
+      | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
+      | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
+      | .tokenstream, .valuestream .bool, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁ v₂⟩
+      | _, _, _ => throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"DC.select" =>
+    match opStx.args with
+    | v₁Stx::v₂Stx::v₃Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
+      match ty₁, ty₂, ty₃, op with
+      | .tokenstream, .tokenstream, .valuestream .bool, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
+      | _, _, _, _=> throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+
+instance : MLIR.AST.TransformExpr (DC) 0 where
+  mkExpr := mkExpr
+
+def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (DC)
+    (Σ eff ty, Com DC Γ eff ty) :=
+  if opStx.name == "return"
+  then match opStx.args with
+  | vStx::[] => do
+    let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
+    return ⟨.pure, ty, Com.ret v⟩
+  | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
+  else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
+
+instance : MLIR.AST.TransformReturn (DC) 0 where
+  mkReturn := mkReturn
+
+open Qq MLIR AST Lean Elab Term Meta in
+elab "[DC_com| " reg:mlir_region "]" : term => do
+  SSA.elabIntoCom reg q(DC)
+
 
 end MLIR2DC
