@@ -98,6 +98,15 @@ section Lemmas
 theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
   funext i; exact h i
 
+theorem corec_eq_corec {a : α} {b : β} {f g}
+    (R : α → β → Prop)
+    (h : ∀ a b, R a b →
+          let x := f a
+          let y := g b
+          R x.fst y.fst ∧ x.snd = y.snd) :
+    corec f a = corec g b := by
+  sorry
+
 end Lemmas
 
 end Basic
@@ -276,9 +285,13 @@ instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
 
+/-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
+That is, it will be all-zeros iff `xs` is all-zeroes,
+otherwise, there's some number `k` so that after dropping the `k` least
+significant bits, `repeatBit xs` is all-ones. -/
 def repeatBit (xs : BitStream) : BitStream :=
-  corec (b := (true, xs)) fun (carry, xs) =>
-    let carry := carry && xs 0
+  corec (b := (false, xs)) fun (carry, xs) =>
+    let carry := carry || xs 0
     let xs := xs.tail
     ((carry, xs), carry)
 

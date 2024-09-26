@@ -104,6 +104,15 @@ theorem eval_eq_carry (x : arity → BitStream) (n : ℕ) :
     p.eval x n = (p.nextBit (p.carry x n) (fun i => x i n)).2 :=
   rfl
 
+theorem eval_eq_eval' :
+    p.eval x = p.eval' x := by
+  funext i
+  simp only [eval, eval']
+  induction i generalizing p x
+  case zero => rfl
+  case succ i ih =>
+    sorry
+
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/
 def changeVars {arity2 : Type} (changeVars : arity → arity2) : FSM arity2 :=
@@ -476,6 +485,22 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
   rw [eval]
   exact (evalAux_eq_zero_of_set p R hR hi hr1 x n).1
 
+def repeatBit : FSM Unit where
+  α := Unit
+  initCarry := fun () => false
+  nextBitCirc := fun _ =>
+    .or (.var true <| .inl ()) (.var true <| .inr ())
+
+@[simp] theorem eval_repeatBit :
+    repeatBit.eval x = BitStream.repeatBit (x ()) := by
+  unfold BitStream.repeatBit
+  rw [eval_eq_eval', eval']
+  apply BitStream.corec_eq_corec
+    (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
+  intro ⟨y, a⟩ ⟨b, x⟩ h
+  simp only at h
+  simp [h, nextBit, BitStream.head]
+
 end FSM
 
 structure FSMSolution (t : Term) extends FSM (Fin t.arity) :=
@@ -590,6 +615,10 @@ def termEvalEqFSM : ∀ (t : Term), FSMSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
+  | repeatBit t =>
+    let p := termEvalEqFSM t
+    { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
+      good := by ext; simp }
 
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,
@@ -604,7 +633,7 @@ def and : FSM Bool :=
       | some () =>
              -- Only if both are `0` we produce a `0`.
              (Circuit.var true (inr false)  |||
-             ((Circuit.var false (inr true) ||| 
+             ((Circuit.var false (inr true) |||
               -- But if we have failed and have value `1`, then we produce a `1` from our state.
               (Circuit.var true (inl ())))))
       | none => -- must succeed in both arguments, so we are `0` if both are `0`.
@@ -751,7 +780,7 @@ inductive Predicate : Type  → Type _ where
 | eq (t1 t2 : Term) : Predicate (Fin (max t1.arity t2.arity))
 | and  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
 | or  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
-| not (p : Predicate α) : Predicate α 
+| not (p : Predicate α) : Predicate α
 
 
 /--
@@ -767,9 +796,15 @@ def Predicate.denote : Predicate α → Prop
 Convert a predicate into a proposition
 -/
 def Predicate.toFSM : Predicate α → FSM α
-| .eq t1 t2 => (termEvalEqFSM (Term.xor t1 t2)).toFSM
-| .and p q => sorry -- compose the FSM of `p, q` with `FSM.and`. FSM.compose _ _ _
-| .or t1 t2 => sorry -- compose the FSM of `p, q` with `FSM.or`. FSM.compose _ _ _
+| .eq t1 t2 => (termEvalEqFSM (Term.repeatBit <| Term.xor t1 t2)).toFSM
+| .and p q =>
+    let p := toFSM p
+    let q := toFSM q
+    -- composeBinary _ _ _
+    -- ^^^^^^^^^^^^ Doesn't yet work, since `composeBinary` return the arity
+    --              `Fin (max _ _)`, whereas predicate says the arity is `α ⊕ β`
+    sorry -- compose the FSM of `p, q` with `FSM.and`. FSM.compose _ _ _
+| .or p q => sorry -- compose the FSM of `p, q` with `FSM.or`. FSM.compose _ _ _
 | _ => sorry
 
 theorem Predicate.toFsm_correct
