@@ -51,12 +51,12 @@ def join (x y : TokenStream) : TokenStream  :=
     | none, some _ => (none, (x.tail, y))
     | none, none => (none, (x.tail, y.tail))
 
-def merge (x y : TokenStream) : TokenStream :=
+def merge (x y : TokenStream) : ValueStream Bool :=
   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
-    | some _, some _ => (some (), (x.tail, y))
-    | some _, none => (some (), (x.tail, y.tail))
-    | none, some _ => (some (), (x.tail, y.tail))
+    | some _, some _ => (some true, (x.tail, y))
+    | some _, none => (some true, (x.tail, y.tail))
+    | none, some _ => (some false, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
 -- same issue as branch for the condition stream
@@ -84,8 +84,8 @@ def select (x y : TokenStream) (c : Stream Bool): TokenStream :=
 def sink (x : TokenStream) : TokenStream :=
   Stream.corec (β := TokenStream) x fun x => (none, x.tail)
 
-def source (a : Unit) : TokenStream :=
-  Stream.corec a fun a => (some a, a)
+def source : TokenStream :=
+  Stream.corec () fun () => (some (), ())
 
 end DC
 end CIRCTStream
