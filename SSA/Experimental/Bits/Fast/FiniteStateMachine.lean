@@ -530,6 +530,19 @@ def composeBinary
       | true => q₁.toFSM
       | false => q₂.toFSM)
 
+def composeBinary'
+    (p : FSM Bool)
+    {n m : Nat}
+    (q₁ : FSM (Fin n))
+    (q₂ : FSM (Fin m)) :
+    FSM (Fin (max n m)) :=
+  p.compose (Fin (max n m))
+    (λ b => Fin (cond b n m))
+    (λ b i => Fin.castLE (by cases b <;> simp) i)
+    (λ b => match b with
+      | true => q₁
+      | false => q₂)
+
 @[simp] lemma composeUnary_eval
     (p : FSM Unit)
     {t : Term}
@@ -776,11 +789,15 @@ The fragment of predicate logic that we support in `bv_automata`.
 Currently, we support equality, conjunction, disjunction, and negation.
 This can be expanded to also support arithmetic constraints such as unsigned-less-than.
 -/
-inductive Predicate : Type  → Type _ where
-| eq (t1 t2 : Term) : Predicate (Fin (max t1.arity t2.arity))
-| and  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
-| or  (p : Predicate α) (q : Predicate β) : Predicate (α ⊕ β)
-| not (p : Predicate α) : Predicate α
+inductive Predicate : Nat → Type _ where
+| eq (t1 t2 : Term) : Predicate ((max t1.arity t2.arity))
+| and  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
+| or  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
+-- For now, we can't prove `not`, because it needs NFA → DFA conversion
+-- the way Sid knows how to build it, or negation normal form,
+-- both of which is machinery we lack.
+-- | not (p : Predicate n) : Predicate n
+
 
 
 /--
@@ -790,23 +807,21 @@ def Predicate.denote : Predicate α → Prop
 | eq t1 t2 => t1.eval = t2.eval
 | and p q => p.denote ∧  q.denote
 | or p q => p.denote ∨  q.denote
-| not p => ¬ p.denote
+-- | not p => ¬ p.denote
 
 /--
 Convert a predicate into a proposition
 -/
-def Predicate.toFSM : Predicate α → FSM α
+def Predicate.toFSM : Predicate k → FSM (Fin k)
 | .eq t1 t2 => (termEvalEqFSM (Term.repeatBit <| Term.xor t1 t2)).toFSM
 | .and p q =>
     let p := toFSM p
     let q := toFSM q
-    -- composeBinary _ _ _
-    -- ^^^^^^^^^^^^ Doesn't yet work, since `composeBinary` return the arity
-    --              `Fin (max _ _)`, whereas predicate says the arity is `α ⊕ β`
-    sorry -- compose the FSM of `p, q` with `FSM.and`. FSM.compose _ _ _
-| .or p q => sorry -- compose the FSM of `p, q` with `FSM.or`. FSM.compose _ _ _
-| _ => sorry
+    composeBinary' FSM.and p q
+| .or p q => 
+    let p := toFSM p
+    let q := toFSM q
+    composeBinary' FSM.or p q
 
-theorem Predicate.toFsm_correct
-    (α : Type) [ i : Fintype α ] [ dec_eq : DecidableEq α ] (p : Predicate α) :
+theorem Predicate.toFsm_correct {k : Nat} (p : Predicate k) :
   decideIfZeros p.toFSM = true ↔ p.denote := by sorry
