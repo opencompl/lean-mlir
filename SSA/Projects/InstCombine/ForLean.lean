@@ -622,7 +622,7 @@ theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
   simp [← BitVec.shiftLeft_or_distrib]
 
 @[simp]
-theorem zero_sub {x : BitVec w} : 0 - x = - x := by
+theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
 end BitVec
