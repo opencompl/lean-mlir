@@ -623,11 +623,7 @@ theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
 
 theorem neg_eq_sub_zero (x : BitVec 1) : - x = 0 - x := by
   have hx : x = 0 ∨ x = 1 := width_one_cases x
-  cases hx
-  case inl x_eq_zero =>
-    rfl
-  case inr x_eq_one =>
-    rfl
+  rcases hx <;> rfl
 
 end BitVec
 
