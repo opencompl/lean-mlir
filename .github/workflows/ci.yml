@@ -63,8 +63,12 @@ jobs:
       
       - name: Compile DC
         run: |
-          lake -R build SSA.Projects.CIRCT.DC # compile and check CIRCT's DC Dialect
-          lake -R build SSA.Projects.CIRCT.DCExample # test CIRCT's DC Dialect
+          lake -R build SSA.Projects.CIRCT.Handshake.Handshake # compile and check CIRCT's Handshake Dialect
+          lake -R build SSA.Projects.CIRCT.Handshake.HandshakeExample # test CIRCT's Handshake Dialect
+          lake -R build SSA.Projects.CIRCT.DC.DC # compile and check CIRCT's DC Dialect
+          lake -R build SSA.Projects.CIRCT.DC.DCExample # compile and check CIRCT's DC Dialect
+
+
 
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
