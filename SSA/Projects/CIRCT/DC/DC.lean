@@ -57,7 +57,7 @@ def merge (x y : TokenStream) : ValueStream Bool :=
     | none, some _ => (some false, (x.tail, y.tail))
     | none, none => (none, (x.tail, y.tail))
 
-def select (x y : TokenStream) (c : Stream Bool): TokenStream :=
+def select (x y : TokenStream) (c : ValueStream Bool): TokenStream :=
   Stream.corec (β := TokenStream × TokenStream × Stream Bool) (x, y, c) fun ⟨x, y, c⟩ =>
     match x 0, y 0, c 0 with
     | some _, some _, some c₀ =>
@@ -95,6 +95,8 @@ inductive Ty2
 deriving Inhabited, DecidableEq, Repr
 
 inductive Op
+| fst
+| snd
 | merge
 | branch
 | fork
@@ -136,6 +138,8 @@ open TyDenote (toType)
 -- arg type CONF
 @[simp, reducible]
 def Op.sig : Op  → List Ty
+  | .fst => [Ty.tokenstream2]
+  | .snd => [Ty.tokenstream2]
   | .merge => [Ty.tokenstream, Ty.tokenstream]
   | .branch => [Ty.valuestream Ty2.bool]
   | .fork => [Ty.tokenstream]
@@ -149,6 +153,8 @@ def Op.sig : Op  → List Ty
 -- return type CONF
 @[simp, reducible]
 def Op.outTy : Op → Ty
+  | .fst => Ty.tokenstream
+  | .snd => Ty.tokenstream
   | .merge => Ty.valuestream Ty2.bool
   | .branch => Ty.tokenstream2
   | .fork => Ty.tokenstream2
@@ -168,6 +174,8 @@ instance : DialectSignature DC := ⟨Op.signature⟩
 @[simp]
 instance : DialectDenote (DC) where
     denote
+    | .fst, arg, _ => (arg.getN 0).fst
+    | .snd, arg, _ => (arg.getN 0).snd
     | .unpack _, arg, _ => CIRCTStream.DC.unpack (arg.getN 0)
     | .pack _, arg, _  => CIRCTStream.DC.pack (arg.getN 0) (arg.getN 1)
     | .branch, arg, _  => CIRCTStream.DC.branch (arg.getN 0)
@@ -276,6 +284,22 @@ def select {Γ : Ctxt _} (a b : Γ.Var (.tokenstream)) (c : Γ.Var (.valuestream
     (args := .cons a <| .cons b <| .cons c <| .nil)
     (regArgs := .nil)
 
+def fst {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
+  Expr.mk
+    (op := .fst)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokenstream)  :=
+  Expr.mk
+    (op := .snd)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
   match opStx.name with
@@ -284,11 +308,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
     else
       return ⟨_, .tokenstream, source⟩
-  | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" | op@"DC.branch" =>
+  | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" | op@"DC.branch" | op@"DC.fst" | op@"DC.snd" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
+      | .tokenstream2, "DC.fst" => return ⟨_, .tokenstream, fst v₁⟩
+      | .tokenstream2, "DC.snd"  => return ⟨_, .tokenstream, snd v₁⟩
       | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
       | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
       | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
