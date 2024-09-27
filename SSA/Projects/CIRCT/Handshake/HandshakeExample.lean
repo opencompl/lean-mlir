@@ -38,6 +38,7 @@ def test : Stream Bool :=
   BranchEg1.denote (Ctxt.Valuation.ofPair c x)
 
 namespace Stream
+
 open Ctxt in
 theorem equiv_arg1 (x1Stream x2Stream : Stream Bool) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]

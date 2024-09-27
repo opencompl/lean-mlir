@@ -77,6 +77,18 @@ def DCFork := [DC_com| {
 
 /- step 2: denote dc circuit -/
 
+#check DCFork
+#eval DCFork
+#reduce DCFork
 #check DCFork.denote
+#print axioms DCFork
+
+def ofList (vals : List (Option α)) : Stream α :=
+  fun i => (vals.get? i).join
+
+def x : DC.ValueStream Int := ofList [some 1, none, some 2, some 5, none]
+
+def test : DC.ValueStream Int × DC.ValueStream Int :=
+  DCFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 /- step 3: prove equivalence -/
