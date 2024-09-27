@@ -2024,14 +2024,14 @@ theorem Expr.denote_eq_denoteIntoSubtype (e : Expr d Γ eff ty) (Γv : Valuation
   next h_pure =>
     simp only [denote_toPure? h_pure, map_pure, EffectKind.return_impure_toMonad_eq]
     split <;> rfl
-  next => simp [map_eq_pure_bind]
+  next => simp
 
 theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv : Valuation Γ_in) :
     lets.denote Γv = Subtype.val <$> (lets.denoteIntoSubtype Γv) := by
   induction lets
   case nil => simp [denoteIntoSubtype]
   case var body e ih =>
-    simp [denote, denoteIntoSubtype, map_eq_pure_bind, ih, Expr.denote_eq_denoteIntoSubtype]
+    simp [denote, denoteIntoSubtype, ih, Expr.denote_eq_denoteIntoSubtype]
 
 
 end DenoteIntoSubtype
