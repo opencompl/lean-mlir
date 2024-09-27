@@ -92,3 +92,8 @@ def test : DC.ValueStream Int × DC.ValueStream Int :=
   DCFork.denote (Ctxt.Valuation.ofHVector (.cons x <| .nil))
 
 /- step 3: prove equivalence -/
+
+open Ctxt in
+theorem equiv_fork (streamInt : DC.ValueStream Int) :
+  (Handshake.fork streamInt) = DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil)) := by
+  sorry
