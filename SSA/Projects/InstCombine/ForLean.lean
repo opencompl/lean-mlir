@@ -161,6 +161,12 @@ theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
     simp
 
 @[simp]
+lemma sub_eq_xor (a b : BitVec 1) : a - b = a ^^^ b := by
+  have ha : a = 0 ∨ a = 1 := width_one_cases _
+  have hb : b = 0 ∨ b = 1 := width_one_cases _
+  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
+
+@[simp]
 lemma add_eq_xor (a b : BitVec 1) : a + b = a ^^^ b := by
   have ha : a = 0 ∨ a = 1 := width_one_cases _
   have hb : b = 0 ∨ b = 1 := width_one_cases _

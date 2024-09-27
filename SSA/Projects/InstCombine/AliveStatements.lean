@@ -102,8 +102,6 @@ theorem bv_AddSub_1556 :
   simp_alive_undef
   simp_alive_ops
   simp_alive_case_bash
-  stop
-  /-issue 660: https://github.com/opencompl/lean-mlir/issues/660-/
   try alive_auto
   all_goals sorry
 
