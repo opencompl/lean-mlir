@@ -7,7 +7,8 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 
-theorem broken {x y : BitVec w} : y - x = y ^^^ x := by
+theorem broken {x y : BitVec 1} : y - x = y ^^^ x := by
+  --bv_decide -- this will solve the statement
   apply BitStream.eq_of_ofBitVec_eq
   introduceMapIndexToFVar
   intro mapIndexToFVar
