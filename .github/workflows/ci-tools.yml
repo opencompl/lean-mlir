@@ -60,4 +60,4 @@ jobs:
           lake -R exe cache get
           lake build AliveExamples
           (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
-          # Disabled due to https://github.com/opencompl/lean-mlir/issues/660 - bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
