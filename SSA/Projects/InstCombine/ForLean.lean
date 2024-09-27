@@ -4,12 +4,6 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 
 namespace Nat
 
-theorem two_pow_pred_mul_two (h : 0 < w) :
-    2 ^ (w - 1) * 2 = 2 ^ w := by
-  simp only [← pow_succ, gt_iff_lt, ne_eq, not_false_eq_true]
-  rw [Nat.sub_add_cancel]
-  omega
-
 theorem eq_one_mod_two_of_ne_zero (n : Nat) (h : n % 2 != 0) : n % 2 = 1 := by
   simp only [bne_iff_ne, ne_eq, mod_two_ne_zero] at h
   assumption
@@ -314,44 +308,6 @@ theorem getLsb_geX(x : BitVec w) (hi : i ≥ w) :
 private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
   simp [toInt_ofNat]
 
-@[simp]
-theorem toInt_intMin {w : Nat} :
-    (intMin w).toInt = -(2 ^ (w - 1) % 2 ^ w) := by
-  by_cases h : w = 0
-  · subst h
-    simp [BitVec.toInt]
-  · have w_pos : 0 < w := by omega
-    simp only [BitVec.toInt, toNat_twoPow, w_pos, Nat.two_pow_pred_mod_two_pow, Nat.cast_pow,
-      Nat.cast_ofNat]
-    rw [Nat.mul_comm]
-    simp [lt_self_iff_false, ↓reduceIte, Nat.two_pow_pred_sub_two_pow,
-      Nat.two_pow_pred_mod_two_pow, w_pos]
-    norm_cast
-    rw [Nat.two_pow_pred_mod_two_pow (by omega)]
-
-theorem toInt_neg {A : BitVec w} (rs : A ≠ intMin w) :
-    BitVec.toInt (-A) = - BitVec.toInt A := by
-  by_cases A_zero : A = 0
-  · subst A_zero
-    simp
-  by_cases w_0 : w = 0
-  · subst w_0
-    simp [BitVec.eq_nil A]
-  simp only [BitVec.toInt, BitVec.toNat_neg, BitVec.sub_toNat_mod_cancel A_zero]
-  have h := @Nat.two_pow_pred_mul_two w (by omega)
-  split_ifs <;>
-  rename_i a b
-  · omega
-  · rw [Nat.cast_sub]
-    simp
-    omega
-  · rw [Nat.cast_sub]
-    simp
-    omega
-  · simp [bv_toNat] at rs
-    rw [Nat.two_pow_pred_mod_two_pow (by omega)] at rs
-    omega
-
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
   simp only [BitVec.slt, BitVec.toInt_intMin]
@@ -361,7 +317,7 @@ theorem intMin_slt_zero (h : 0 < w) :
 theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B ≠ intMin w) :
     (-A >ₛ B) = (A <ₛ -B) := by
   unfold BitVec.slt
-  simp only [decide_eq_decide, toInt_neg h, toInt_neg h2]
+  simp only [decide_eq_decide, toInt_neg_of_ne_intMin h, toInt_neg_of_ne_intMin h2]
   omega
 
 theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w)
@@ -548,11 +504,6 @@ theorem not_sshiftRight {b : BitVec w} :
   <;> omega
 
 @[simp]
-theorem not_not {b : BitVec w} : ~~~(~~~b) = b := by
-  ext i
-  simp
-
-@[simp]
 theorem not_sshiftRight_not {x : BitVec w} {n : Nat} :
     ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
   simp [not_sshiftRight]
@@ -610,16 +561,6 @@ theorem shiftLeft_add_distrib {x y : BitVec w} {n : Nat} :
 theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
     x <<< n &&& y <<< (m + n) = (x &&& y <<< m) <<< n := by
   simp [BitVec.shiftLeft_and_distrib, BitVec.shiftLeft_add]
-
-@[simp]
-theorem allOnes_shiftLeft_and_shiftLeft {x : BitVec w} (n : Nat) :
-    BitVec.allOnes w <<< n &&& x <<< n = x <<< n := by
-  simp [← BitVec.shiftLeft_and_distrib]
-
-@[simp]
-theorem allOnes_shiftLeft_or_shiftLeft {x : BitVec w} (n : Nat) :
-    BitVec.allOnes w <<< n ||| x <<< n = BitVec.allOnes w <<< n := by
-  simp [← BitVec.shiftLeft_or_distrib]
 
 @[simp]
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
