@@ -29,6 +29,27 @@ theorem broken {x y : BitVec 1} : y - x = y ^^^ x := by
   intros _ _
   apply congrFun
   apply congrFun
+  /-
+  tactic 'decide' failed for proposition
+    ((Term.var 18393643113472299074).sub (Term.var 10180450701911527895)).eval =
+      ((Term.var 18393643113472299074).xor (Term.var 10180450701911527895)).eval
+  since its 'Decidable' instance
+    instDecidableEqForallForallNatBitStreamEval ((Term.var 18393643113472299074).sub (Term.var 10180450701911527895))
+      ((Term.var 18393643113472299074).xor (Term.var 10180450701911527895))
+  did not reduce to 'isTrue' or 'isFalse'.
+
+  After unfolding the instances 'decidable_of_decidable_of_iff', 'decidable_of_iff', 'instDecidableEqBool', 'instDecidableEqForallForallNatBitStreamEval' and 'Bool.decEq', reduction got stuck at the 'Decidable' instance
+    match
+      decideIfZeros
+        (termEvalEqFSM
+            (((Term.var 18393643113472299074).sub (Term.var 10180450701911527895)).xor
+              ((Term.var 18393643113472299074).xor (Term.var 10180450701911527895)))).toFSM,
+      true with
+    | false, false => isTrue ⋯
+    | false, true => isFalse ⋯
+    | true, false => isFalse ⋯
+    | true, true => isTrue ⋯
+  -/
   decide
 
 
