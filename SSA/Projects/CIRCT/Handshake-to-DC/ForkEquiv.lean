@@ -7,7 +7,17 @@ import SSA.Core.Tactic
 namespace CIRCTStream
 namespace Stream.Bisim
 
-theorem corec₂_eq (x : DC.TokenStream):
+theorem corec₂_eq_tok (x : DC.TokenStream):
+  (corec₂ x fun x => Id.run (x 0, x 0, tail x)) = (corec₂ x fun x => Id.run (x 0, x 0, x.tail)) := by
+  apply corec₂_eq_corec₂_of
+  rotate_left 2
+  · exact Eq.refl _
+  · intro b₁ b₂ h
+    simp [h]
+  · intro b₁ b₂ h
+    simp [h]
+
+theorem corec₂_eq_val (x : Stream Int):
   (corec₂ x fun x => Id.run (x 0, x 0, tail x)) = (corec₂ x fun x => Id.run (x 0, x 0, x.tail)) := by
   apply corec₂_eq_corec₂_of
   rotate_left 2
@@ -22,7 +32,7 @@ theorem fork_hs_dc_equiv_fst (x : DC.TokenStream):
   simp [Bisim, DC.fork, Handshake.fork]
   exists Eq
   and_intros
-  · rw [corec₂_eq]
+  · rw [corec₂_eq_tok]
     rfl
   · simp [IsBisim]
     intros a
@@ -41,7 +51,7 @@ theorem fork_hs_dc_equiv_snd (x : DC.TokenStream):
   simp [Bisim, DC.fork, Handshake.fork]
   exists Eq
   and_intros
-  · rw [corec₂_eq]
+  · rw [corec₂_eq_tok]
     rfl
   · simp [IsBisim]
     intros a
@@ -96,4 +106,38 @@ def test : DC.ValueStream Int × DC.ValueStream Int :=
 open Ctxt in
 theorem equiv_fork (streamInt : DC.ValueStream Int) :
   (Handshake.fork streamInt) = DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil)) := by
+  simp [DCFork, Valuation.ofPair, Valuation.ofHVector]
+  simp_peephole
+  unfold Handshake.fork
+  unfold DC.pack
+  unfold DC.unpack
+  unfold DC.fork
+  simp_peephole
+  rw [corec₂_eq_val]
+  rw [corec₂_eq_tok]
   sorry
+
+
+
+
+
+
+
+-- theorem determinate :
+--   Set.Subsingleton (nondeterminify2 (fun s1 s2 => BranchEg1.denote (Ctxt.Valuation.ofPair s1 s2)) (s1', s2')) := by
+--   intro x Hx y  Hy
+--   simp [Stream.nondeterminify2, Stream.StreamWithoutNones.hasStream] at *
+--   rcases Hx with ⟨ x1Stream, x1, x2Stream, x2, rfl ⟩
+--   rcases Hy with ⟨ y1Stream, y1, y2Stream, y2, rfl ⟩
+--   apply Quotient.sound
+--   -- simp [BranchEg1]
+--   -- simp [Stream.Bisim, Stream.IsBisim]
+--   subst s2'; subst s1'
+--   have y1' := Quotient.exact y1
+--   have y2' := Quotient.exact y2
+--   clear y1; clear y2
+--   trans x1Stream
+--   apply (equiv_arg1 _ _).symm
+--   trans y1Stream
+--   · assumption
+--   · apply equiv_arg1
