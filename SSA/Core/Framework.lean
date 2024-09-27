@@ -156,7 +156,6 @@ inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Typ
     (regArgs : HVector (fun t : Ctxt d.Ty × d.Ty => Com t.1 .impure t.2)
       (DialectSignature.regSig op)) : Expr Γ eff ty
 
-
 /-- A very simple intrinsically typed program: a sequence of let bindings.
 Note that the `EffectKind` is uniform: if a `Com` is `pure`, then the expression
 and its body are pure, and if a `Com` is `impure`, then both the expression and
@@ -2610,3 +2609,18 @@ def Expr.ty : Expr d Γ eff t → d.Ty := fun _ => t
 def Expr.ctxt : Expr d Γ eff t → Ctxt d.Ty := fun _ => Γ
 
 end TypeProjections
+
+section FlatComReprInstance
+/-!
+## Repr instance to convert a FlatCom into a zipper.
+-/
+
+/-- Convert a `FlatCom` to a `Zipper` that is at the end of the `FlatCom` -/
+def FlatCom.toZipperAtRet {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
+    (fc : FlatCom d Γ eff Δ t) : Zipper d Γ eff Δ t := ⟨fc.lets, Com.ret fc.ret⟩
+
+instance [DialectSignature d] [Repr d.Op] [Repr d.Ty] :
+    Repr (FlatCom d Γ eff Γ_out ty) where
+  reprPrec flatCom n := reprPrec flatCom.toZipperAtRet.toCom n
+
+end FlatComReprInstance
