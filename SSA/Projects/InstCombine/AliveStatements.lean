@@ -7,6 +7,30 @@ import SSA.Projects.InstCombine.LLVM.Semantics
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 
+theorem broken {x y : BitVec w} : y - x = y ^^^ x := by
+  apply BitStream.eq_of_ofBitVec_eq
+  introduceMapIndexToFVar
+  intro mapIndexToFVar
+  simp only [
+    reduce_bitvec2,
+  ]
+  try simp only [
+    ← eval_sub,
+    ← eval_add,
+    ← eval_neg,
+    ← eval_and,
+    ← eval_xor,
+    ← eval_or,
+    ← eval_not,
+    Nat.reduceAdd,
+    BitVec.ofNat_eq_ofNat
+  ]
+  intros _ _
+  apply congrFun
+  apply congrFun
+  decide
+
+
 theorem bv_AddSub_1043 :
     ∀ (e e_1 e_2 : LLVM.IntW w),
       LLVM.add (LLVM.add (LLVM.xor (LLVM.and e_2 e_1) e_1) (LLVM.const? 1)) e ⊑ LLVM.sub e (LLVM.or e_2 (LLVM.not e_1)) := by
