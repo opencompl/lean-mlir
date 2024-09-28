@@ -508,6 +508,8 @@ theorem not_sshiftRight_not {x : BitVec w} {n : Nat} :
     ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
   simp [not_sshiftRight]
 
+attribute [simp] shiftLeft_ushiftRight
+
 theorem ofInt_neg_one : BitVec.ofInt w (-1) = -1#w := by
   simp only [Int.reduceNeg, toNat_eq, toNat_ofInt, Nat.cast_pow, Nat.cast_ofNat, toNat_neg,
     toNat_ofNat]
