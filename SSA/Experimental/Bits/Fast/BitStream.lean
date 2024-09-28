@@ -98,11 +98,24 @@ section Lemmas
 theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
   funext i; exact h i
 
-theorem compose_first {α: Type u₁} (i : Nat) (a : α ) (f : α → α × Bool) : (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
+/--
+The field projection `.1` distributes over function composition, so we can compute
+the first field of the result of the composition by repeatedly composing the first projection.
+-/
+theorem compose_first {α: Type u₁} (i : Nat) (a : α) 
+    (f : α → α × Bool) : 
+    (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
   match i with
     | 0 => by simp
     | i + 1 => by simp [compose_first i ((f a).1) f]
 
+/--
+Coinduction principle for `corec`.
+To show that `corec f a = corec g b`,
+we must show that:
+- The relation `R a b` is inhabited ["base case"]
+- Given that `R a b` holds, then `R (f a) (g b)` holds [coinductive case]
+-/
 theorem corec_eq_corec {a : α} {b : β} {f g}
     (R : α → β → Prop)
     (thing : R a b)
