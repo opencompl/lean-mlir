@@ -101,9 +101,7 @@ theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
 theorem compose_first {α: Type u₁} (i : Nat) (a : α ) (f : α → α × Bool) : (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
   match i with
     | 0 => by simp
-    | i + 1=>
-      let y:= @compose_first α i ((f a).1) f
-      by simp [y]
+    | i + 1 => by simp [@compose_first α i ((f a).1) f]
 
 theorem corec_eq_corec {a : α} {b : β} {f g}
     (R : α → β → Prop)
@@ -114,18 +112,15 @@ theorem corec_eq_corec {a : α} {b : β} {f g}
           R x.fst y.fst ∧ x.snd = y.snd) :
     corec f a = corec g b := by
   ext i
-  have lem :  R ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) ∧ corec f a i = corec g b i := by
+  have lem : R ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) ∧ corec f a i = corec g b i := by
     induction' i with i ih
-    <;> simp [corec]
+    <;> simp only [Function.iterate_succ, Function.comp_apply, corec]
     · apply h
       exact thing
-    · simp at h
-      simp [corec] at ih
-      have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
+    · have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
       cases' m with l r
-      simp [r]
-      rw [← @compose_first α, ← @compose_first β i]
-      exact l
+      rw [r, ← @compose_first α, ← @compose_first β]
+      simp [l]
   cases lem
   assumption
 
