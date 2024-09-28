@@ -497,9 +497,10 @@ def repeatBit : FSM Unit where
   rw [eval_eq_eval', eval']
   apply BitStream.corec_eq_corec
     (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
-  intro ⟨y, a⟩ ⟨b, x⟩ h
-  simp only at h
-  simp [h, nextBit, BitStream.head]
+  · simp [repeatBit]
+  · intro ⟨y, a⟩ ⟨b, x⟩ h
+    simp at h
+    simp [h, nextBit, BitStream.head]
 
 end FSM
 
@@ -818,7 +819,7 @@ def Predicate.toFSM : Predicate k → FSM (Fin k)
     let p := toFSM p
     let q := toFSM q
     composeBinary' FSM.and p q
-| .or p q => 
+| .or p q =>
     let p := toFSM p
     let q := toFSM q
     composeBinary' FSM.or p q
