@@ -98,14 +98,36 @@ section Lemmas
 theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
   funext i; exact h i
 
+theorem compose_first {α: Type u₁} (i : Nat) (a : α ) (f : α → α × Bool) : (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
+  match i with
+    | 0 => by simp
+    | i + 1=>
+      let y:= @compose_first α i ((f a).1) f
+      by simp [y]
+
 theorem corec_eq_corec {a : α} {b : β} {f g}
     (R : α → β → Prop)
+    (thing : R a b)
     (h : ∀ a b, R a b →
           let x := f a
           let y := g b
           R x.fst y.fst ∧ x.snd = y.snd) :
     corec f a = corec g b := by
-  sorry
+  ext i
+  have lem :  R ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) ∧ corec f a i = corec g b i := by
+    induction' i with i ih
+    <;> simp [corec]
+    · apply h
+      exact thing
+    · simp at h
+      simp [corec] at ih
+      have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
+      cases' m with l r
+      simp [r]
+      rw [← @compose_first α, ← @compose_first β i]
+      exact l
+  cases lem
+  assumption
 
 end Lemmas
 
