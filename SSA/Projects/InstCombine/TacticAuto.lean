@@ -155,7 +155,10 @@ macro "bv_auto": tactic =>
               simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
               bv_automata
             )
-          | bv_decide
+          |
+            simp (config := {failIfUnchanged := false}) only [BitVec.abs_eq_if]
+            try split
+            all_goals bv_decide
           | bv_distrib
       )
    )

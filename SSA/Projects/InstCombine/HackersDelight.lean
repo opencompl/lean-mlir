@@ -1,6 +1,8 @@
 import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
+import Std.Tactic.BVDecide
+
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
@@ -9,7 +11,7 @@ namespace HackersDelight
 
 namespace Ch2Basics
 
-variable {x y z : BitVec w}
+variable {x y z : BitVec 32}
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
 
@@ -62,7 +64,7 @@ theorem neq_iff_neg_sub_abs :
 
 theorem lt_iff_sub_xor_xor_and_sub_xor :
     (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).msb := by
-  -- try alive_auto -- this leads to a heartbeat timeout
+  try alive_auto
   all_goals sorry
 
 theorem slt_iff_and_not_or_not_xor_and_sub :
