@@ -1,5 +1,5 @@
 import SSA.Experimental.Bits.Fast.FiniteStateMachine
-import SSA.Experimental.Bits.Lemmas
+import SSA.Experimental.Bits.Fast.Lemmas
 
 instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
   decidable_of_iff

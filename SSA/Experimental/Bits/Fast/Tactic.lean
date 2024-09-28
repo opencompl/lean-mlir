@@ -1,7 +1,7 @@
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs
 import SSA.Experimental.Bits.Fast.BitStream
 import SSA.Experimental.Bits.Fast.Decide
-import SSA.Experimental.Bits.Lemmas
+import SSA.Experimental.Bits.Fast.Lemmas
 import Qq.Macro
 
 open Lean Elab Tactic
