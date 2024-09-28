@@ -156,8 +156,9 @@ macro "bv_auto": tactic =>
               bv_automata
             )
           |
-            simp (config := {failIfUnchanged := false}) only [BitVec.abs_eq_add_xor']
-            bv_decide
+            simp (config := {failIfUnchanged := false}) only [BitVec.abs_eq_if]
+            try split
+            all_goals bv_decide
           | bv_distrib
       )
    )

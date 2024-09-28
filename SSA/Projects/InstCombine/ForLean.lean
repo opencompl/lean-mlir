@@ -108,10 +108,9 @@ theorem abs_eq_add_xor {x : BitVec w} :
   · simp [h, ← allOnes_sub_eq_not]
   · simp [h]
 
-theorem abs_eq_add_xor' {x : BitVec w} :
-    have y : BitVec w := BitVec.sshiftRight x (w - 1)
-    x.abs = (x + y) ^^^ y := by
-  sorry
+theorem abs_eq_if {x : BitVec w} :
+    x.abs = if x.msb then -x else x := by
+  simp only [BitVec.abs, neg_eq]
 
 @[simp, bv_toNat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
