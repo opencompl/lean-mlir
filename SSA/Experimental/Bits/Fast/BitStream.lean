@@ -101,7 +101,7 @@ theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
 theorem compose_first {α: Type u₁} (i : Nat) (a : α ) (f : α → α × Bool) : (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
   match i with
     | 0 => by simp
-    | i + 1 => by simp [@compose_first α i ((f a).1) f]
+    | i + 1 => by simp [compose_first i ((f a).1) f]
 
 theorem corec_eq_corec {a : α} {b : β} {f g}
     (R : α → β → Prop)
@@ -119,7 +119,7 @@ theorem corec_eq_corec {a : α} {b : β} {f g}
       exact thing
     · have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
       cases' m with l r
-      rw [r, ← @compose_first α, ← @compose_first β]
+      rw [r, ← compose_first, ← @compose_first β]
       simp [l]
   cases lem
   assumption
