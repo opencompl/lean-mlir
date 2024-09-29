@@ -690,8 +690,6 @@ what we should do :)
 - Alternatively, we need to be able to decide `eventually always zero`.
 - Alternatively, we push negations inside, and decide `⬝ ≠ ⬝` and `⬝ ≰ ⬝`.
 -/
--- def lnot : FSM Unit := sorry
-
 
 inductive Result : Type
   | falseAfter (n : ℕ) : Result

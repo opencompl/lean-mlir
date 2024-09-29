@@ -102,8 +102,8 @@ theorem ext {x y : BitStream} (h : ∀ i, x i = y i) : x = y := by
 The field projection `.1` distributes over function composition, so we can compute
 the first field of the result of the composition by repeatedly composing the first projection.
 -/
-theorem compose_first {α: Type u₁} (i : Nat) (a : α) 
-    (f : α → α × Bool) : 
+theorem compose_first {α: Type u₁} (i : Nat) (a : α)
+    (f : α → α × Bool) :
     (f ((Prod.fst ∘ f)^[i] a)).1 = (Prod.fst ∘ f)^[i] (f a).1 :=
   match i with
     | 0 => by simp
@@ -354,11 +354,6 @@ thus could have a bit set in the `w+1`th position.
 Crucially, our decision procedure works by considering which equalities hold for *all* widths,
 
 -/
--- theorem ofBitVec_add {w} (x y z : ∀ w, BitVec w) :
---     (∀ w, (x w + y w) = z w) ↔ (∀ w, (ofBitVec (x w)) + (ofBitVec (y w)) ) := by
---   have ⟨h₁, h₂⟩ : True ∧ True := sorry
---   sorry
-
 variable {w : Nat} {x y : BitVec w} {a b a' b' : BitStream}
 
 local infix:20 " ≈ʷ " => EqualUpTo w
