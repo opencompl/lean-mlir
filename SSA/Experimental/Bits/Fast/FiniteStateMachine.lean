@@ -46,6 +46,9 @@ def BitStreamProd.nthStream (x : BitStreamProd arity) (i : arity) : BitStream :=
 def BitStreamProd.nthBits (x : BitStreamProd arity) (n : Nat) : BoolProd arity :=
   fun i => (x i) n
 
+def BitStreamProd.head (x : BitStreamProd arity) : BoolProd arity :=
+  fun i => (x i).head
+
 def BitStreamProd.tail (x : BitStreamProd arity) : BitStreamProd arity :=
   fun a => (x a).tail
 
@@ -117,8 +120,8 @@ def next (carry : p.State) (inputBits : BoolProd arity) : p.State × Bool :=
 
 def outputStreamAux (s₀ : p.State) (inputStream : BitStreamProd arity) : BitStream := fun n =>
   match n with
-  | 0 => outBit s₀ (inputStream.nthBits 0)
-  | n+1 => outputStreamAux (nextState p s₀ (inputStream.nthBits n)) inputStream.tail n
+  | 0 => outBit s₀ inputStream.head
+  | n+1 => outputStreamAux (nextState p s₀ (inputStream.head)) inputStream.tail n
 
 @[simp]
 theorem outputStreamAux_zero (s₀ : p.State) (inputStream : BitStreamProd arity) :
@@ -127,8 +130,7 @@ theorem outputStreamAux_zero (s₀ : p.State) (inputStream : BitStreamProd arity
 @[simp]
 theorem outputStreamAux_succ (s₀ : p.State) (inputStream : BitStreamProd arity) (n : ℕ) :
     outputStreamAux p s₀ inputStream (n+1) =
-    outputStreamAux p (nextState p s₀ (inputStream.nthBits n)) inputStream.tail n :=
-  rfl
+    outputStreamAux p (p.nextState s₀ (inputStream.head)) inputStream.tail n := by rfl
 
 
 def StateStream (p : FSM arity) := ℕ → p.State
@@ -152,20 +154,40 @@ theorem carryStream_succ (inputStream : BitStreamProd arity) (n : Nat) :
 def eval (x : BitStreamProd arity) : BitStream :=
   p.outputStreamAux p.initCarry x
 
-/-- `eval'` is an alternative definition of `eval`, written in terms of corecursion.
- -/
+def eval'Corec (input : BitStreamProd arity × p.State) :
+    (BitStreamProd arity × p.State) × Bool := -- (fun ⟨x, (carry : p.State)⟩ =>
+  let x := input.1
+  let carry := input.2
+  let x_head  := x.head -- (x · |>.head)
+  let next    := p.next carry x_head
+  let x_tail  :=  x.tail -- (x · |>.tail)
+  ((x_tail, next.fst), next.snd)
+
+/-- `eval'` is an alternative definition of `eval`, written in terms of corecursion.  -/
 def eval' (x : BitStreamProd arity) : BitStream :=
-  BitStream.corec (fun ⟨x, (carry : p.State)⟩ =>
-    let x_head  := (x · |>.head)
-    let next    := p.next carry x_head
-    let x_tail  := (x · |>.tail)
-    ((x_tail, next.fst), next.snd)
-  ) (x, p.initCarry)
+  BitStream.corec (eval'Corec p) (x, (p.initCarry : p.State))
+
+/--
+Generalized hypothesis that shows how the output stream and
+its corecursive definition evolve with an arbitrary input state.
+-/
+theorem eval_eq_eval'_aux (i : Nat) :
+    (p.outputStreamAux state x) i = (BitStream.corec (eval'Corec p) (x, state)) i := by
+  induction i generalizing state x
+  case zero => rfl
+  case succ i ih =>
+    simp [outputStreamAux, eval'Corec, BitStream.corec_succ]
+    rw [← ih]
+    rfl
+
+/-- Show that the two definitions of evaluation are equivalent. -/
+theorem eval_eq_eval' : p.eval x = p.eval' x := by
+  funext i
+  apply eval_eq_eval'_aux
 
 /-- `p.changeInitCarry c` yields an FSM with `c` as the initial state -/
 def changeInitCarry (p : FSM arity) (c : BoolProd p.σ) : FSM arity :=
   { p with initCarry := c }
-
 
 theorem carry_dropBit_succ
     (p : FSM arity) (y : BoolProd p.σ) (hy : y = ) (x : BitStreamProd arity) : ∀ n,
@@ -183,13 +205,7 @@ theorem carry_changeInitCarry_succ
   case succ n ih =>
     rw [carry_succ]
     rw [ih]
-
     repeat rw [ih]
-
-
-
-
-
     simp [next, carry, changeInitCarry]
 
 theorem eval_changeInitCarry_succ
@@ -199,21 +215,6 @@ theorem eval_changeInitCarry_succ
         (fun a i => x a (i+1)) n := by
   rw [eval, carry_changeInitCarry_succ]
   simp [eval, changeInitCarry, next]
-
-/-- unfolds the definition of `eval` -/
-theorem eval_eq_carry (x : BitStreamProd arity) (n : ℕ) :
-    p.eval x n = (p.next (p.carry x n) (fun i => x i n)).2 :=
-  rfl
-
-theorem eval_eq_eval' :
-    p.eval x = p.eval' x := by
-  funext i
-  simp only [eval, eval']
-  induction i generalizing p x
-  case zero => rfl
-  case succ i ih =>
-    rw [carry_succ]
-    sorry
 
 /-- `p.changeVars f` changes the arity of an `FSM`.
 The function `f` determines how the new input bits map to the input expected by `p` -/

@@ -85,6 +85,13 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
 
+
+theorem corec_succ {β} (f : β → β × Bool) (b : β) (i : Nat) :
+    corec f b (i + 1) = (corec f (f b).1) i := by
+  induction' i with i ih
+  · simp [corec]
+  · simp [corec, ih]
+
 /-- `mapAccum₂` ("binary map accumulate") maps a binary function `f` over two streams,
 while accumulating some state -/
 def mapAccum₂ {α} (f : α → Bool → Bool → α × Bool) (init : α) (x y : BitStream) : BitStream :=
