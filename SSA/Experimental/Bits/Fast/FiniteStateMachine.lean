@@ -189,25 +189,6 @@ theorem eval_eq_eval' : p.eval x = p.eval' x := by
 def changeInitCarry (p : FSM arity) (c : BoolProd p.σ) : FSM arity :=
   { p with initCarry := c }
 
-theorem carry_dropBit_succ
-    (p : FSM arity) (y : BoolProd p.σ) (hy : y = ) (x : BitStreamProd arity) : ∀ n,
-    p.carry x (n+1) =
-    (p.changeInitCarry y).carry (x.dropBit) n := sorry
-
-theorem carry_changeInitCarry_succ
-    (p : FSM arity) (c : BoolProd p.σ) (x : BitStreamProd arity) : ∀ n,
-    (p.changeInitCarry c).carry x (n+1) =
-      (p.changeInitCarry (p.next c (x.nthBits 0)).1).carry (x.dropBit) n := by
-  intros n
-  rw [carry_succ]
-  induction n generalizing p c x
-  case zero => rfl
-  case succ n ih =>
-    rw [carry_succ]
-    rw [ih]
-    repeat rw [ih]
-    simp [next, carry, changeInitCarry]
-
 theorem eval_changeInitCarry_succ
     (p : FSM arity) (c : p.σ → Bool) (x : BitStreamProd arity) (n : ℕ) :
     (p.changeInitCarry c).eval x (n+1) =
