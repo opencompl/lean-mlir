@@ -6,6 +6,7 @@ import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Tactic
 import Std.Tactic.BVDecide
+import Leanwuzla
 
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
@@ -173,5 +174,12 @@ macro "alive_auto": tactic =>
           ensure_only_goal
         )
         bv_auto
+      )
+   )
+
+macro "bv_compare'": tactic =>
+  `(tactic|
+      (
+        bv_compare "/usr/local/bin/bitwuzla"
       )
    )
