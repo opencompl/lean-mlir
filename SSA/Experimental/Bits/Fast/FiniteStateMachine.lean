@@ -677,6 +677,14 @@ def or : FSM Bool :=
                 }
 
 /-!
+## Predicate FSMs
+-/
+
+/-- We enforce that a FSM that computes a predicate becomes eventually
+all zeroes or eventually all ones. -/
+def FSM.asPredicate (p ) :
+
+/-!
 FSM that implement logical not.
 we keep the invariant that if the input ever fails and becomes a `1`, then we produce a `0`.
 IF not, we produce an infinite sequence of `1`.
@@ -781,8 +789,28 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
+def FSM.decideIfEventually {arity} (b : Bool) (p : FSM arity) : Bool :=
+  sorry
+
+/--
+`decideIfEventually b p` is true iff for every input streams `xs`,
+  we can drop `k` bits from the output of `p` to get a stream
+  which is all the same bit `b`.
+-/
+theorem FSM.decideIfEventually_correct {arity} (b : Bool) (p : FSM arity) :
+    (p.decideIfEventually b) ↔ (∃ k, ∀ xs i, p.eval xs (i + k) = b) := by
+  sorry
+
 end FSM
 
+
+
+
+/-!
+## Predicates
+-/
+
+-- TODO: predicates should be moved to the `Fast/Defs` file to be together with terms
 /--
 The fragment of predicate logic that we support in `bv_automata`.
 Currently, we support equality, conjunction, disjunction, and negation.
@@ -797,8 +825,6 @@ inductive Predicate : Nat → Type _ where
 -- both of which is machinery we lack.
 -- | not (p : Predicate n) : Predicate n
 
-
-
 /--
 denote a reflected `predicate` into a `prop.
 -/
@@ -807,6 +833,7 @@ def Predicate.denote : Predicate α → Prop
 | and p q => p.denote ∧  q.denote
 | or p q => p.denote ∨  q.denote
 -- | not p => ¬ p.denote
+
 
 /--
 Convert a predicate into a proposition
