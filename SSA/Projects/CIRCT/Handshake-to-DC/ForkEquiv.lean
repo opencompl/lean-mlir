@@ -17,7 +17,7 @@ theorem corec₂_eq_tok (x : DC.TokenStream):
   · intro b₁ b₂ h
     simp [h]
 
-theorem corec₂_eq_val (x : Stream Int):
+theorem corec₂_eq_val (x : Stream α):
   (corec₂ x fun x => Id.run (x 0, x 0, tail x)) = (corec₂ x fun x => Id.run (x 0, x 0, x.tail)) := by
   apply corec₂_eq_corec₂_of
   rotate_left 2
@@ -45,6 +45,8 @@ theorem fork_hs_dc_equiv_fst (x : DC.TokenStream):
       cases h
     · intros i h
       cases h
+
+
 
 theorem fork_hs_dc_equiv_snd (x : DC.TokenStream):
     (DC.fork (x)).snd ~ (Handshake.fork (x)).snd := by
@@ -103,18 +105,38 @@ def test : DC.ValueStream Int × DC.ValueStream Int :=
 
 /- step 3: prove equivalence -/
 
+-- theorem corec_of_corec₂ (streamInt : DC.ValueStream Int):
+-- corec
+--       ((corec₂ streamInt fun x =>
+--             (match x 0 with
+--               | some val => (x 0, some (), x.tail)
+--               | none => (none, none, x.tail)).run).1,
+--         (corec₂
+--             (corec₂ streamInt fun x =>
+--                 (match x 0 with
+--                   | some val => (x 0, some (), x.tail)
+--                   | none => (none, none, x.tail)).run).2
+--             fun x => Id.run (x 0, x 0, tail x)).1)
+--       fun x =>
+--       match x.1 0, x.2 0 with
+--       | some x₀, some val => (some x₀, tail x.1, tail x.2)
+--       | some val, none => (none, x.1, tail x.2)
+--       | none, some val => (none, tail x.1, x.2)
+--       | none, none => (none, tail x.1, tail x.2)
+
 open Ctxt in
 theorem equiv_fork (streamInt : DC.ValueStream Int) :
   (Handshake.fork streamInt) = DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil)) := by
   simp [DCFork, Valuation.ofPair, Valuation.ofHVector]
   simp_peephole
   unfold Handshake.fork
-  unfold DC.pack
-  unfold DC.unpack
-  unfold DC.fork
   simp_peephole
-  rw [corec₂_eq_val]
-  rw [corec₂_eq_tok]
+  unfold DC.pack
+  simp_peephole
+  unfold DC.unpack
+  simp_peephole
+  unfold DC.fork
+
   sorry
 
 
