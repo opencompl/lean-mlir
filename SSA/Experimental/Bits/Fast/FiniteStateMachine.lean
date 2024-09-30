@@ -5,6 +5,7 @@ import Mathlib.Data.Fintype.Pi
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
+
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.Circuit
 
@@ -38,6 +39,19 @@ def appendVector {ws : Fin n → Nat} (xs : (i : Fin n) → BitVec (ws i)) :
     let x := xs 0
     (x ++ (appendVector (fun i => xs i.succ))).cast <| by
       simp [Finset.sum]
+
+/-- `appendVector` appends a family of `n` bitvectors, each of which might have
+a different width, together into a bitvector whose length is the sum of lengths
+-/
+def appendVector' {ws : List Nat} (h : ws.length = n)
+    (xs : (i : Fin n) → BitVec ws[i]) :
+    BitVec (Nat.sum ws) :=
+  match n, ws with
+  | 0, []  => 0#_
+  | n+1, _::ws =>
+    let x := xs 0
+    have h : ws.length = n := by sorry
+    (x ++ (appendVector' h (fun i => xs i.succ)))
 
 /-- Construct a bitvector from a function that maps `i : Fin w` to the
 `i`-th least significant bit -/
