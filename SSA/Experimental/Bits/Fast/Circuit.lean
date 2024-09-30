@@ -221,7 +221,7 @@ def map : ∀ (_c : Circuit α) (_f : α → β), Circuit β
   | or c₁ c₂, f => (map c₁ f) ||| (map c₂ f)
   | xor c₁ c₂, f => (map c₁ f) ^^^ (map c₂ f)
 
-lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
+@[simp] lemma eval_map {c : Circuit α} {f : α → β} {g : β → Bool} :
     eval (map c f) g = eval c (λ x => g (f x)) := by
   induction c <;> simp [*, Circuit.map, eval] at *
 

@@ -85,8 +85,10 @@ abbrev map₂ (f : Bool → Bool → Bool) : BitStream → BitStream → BitStre
 def corec {β} (f : β → β × Bool) (b : β) : BitStream :=
   fun i => f ((Prod.fst ∘ f)^[i] b) |>.snd
 
+@[simp] theorem corec_zero {β} (f : β → β × Bool) (b : β) :
+    corec f b 0 = (f b).2 := rfl
 
-theorem corec_succ {β} (f : β → β × Bool) (b : β) (i : Nat) :
+@[simp] theorem corec_succ {β} (f : β → β × Bool) (b : β) (i : Nat) :
     corec f b (i + 1) = (corec f (f b).1) i := by
   induction' i with i ih
   · simp [corec]
