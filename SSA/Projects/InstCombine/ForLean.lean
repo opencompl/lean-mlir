@@ -469,13 +469,6 @@ theorem and_add_or {A B : BitVec w} : (B &&& A) + (B ||| A) = B + A := by
       <;> cases carry i B A false
       <;> rfl
 
-@[simp] theorem getMsb_not (x : BitVec w) :
-    (~~~x).getMsbD i = (decide (i < w) && !(x.getMsbD i)) := by
-  by_cases h : i < w <;> simp [getMsbD, h] ; omega
-
-@[simp] theorem msb_not (x : BitVec w) : (~~~x).msb = (decide (0 < w) && !x.msb) := by
-  simp [BitVec.msb]
-
 @[simp] theorem msb_signExtend_of_ge {i} (h : i ≥ w) (x : BitVec w) :
     (x.signExtend i).msb = x.msb := by
   simp [BitVec.msb_eq_getLsbD_last, getLsbD_signExtend]
@@ -521,21 +514,6 @@ theorem zero_ushiftRight {w n : Nat} :
   by_cases h : 0 < w
   · simp [BitVec.msb_allOnes h]
   · simp
-
-theorem not_sshiftRight {b : BitVec w} :
-    ~~~b.sshiftRight n = (~~~b).sshiftRight n := by
-  ext i
-  simp [getLsbD_sshiftRight]
-  by_cases h : w ≤ i
-  <;> by_cases h' : n + i < w
-  <;> by_cases h'' : 0 < w
-  <;> simp [h, h', h'']
-  <;> omega
-
-@[simp]
-theorem not_sshiftRight_not {x : BitVec w} {n : Nat} :
-    ~~~((~~~x).sshiftRight n) = x.sshiftRight n := by
-  simp [not_sshiftRight]
 
 attribute [simp] shiftLeft_ushiftRight
 
