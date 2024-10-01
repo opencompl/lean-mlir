@@ -4,7 +4,7 @@ defaultTargets = ["SSA"]
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
-rev = "nightly-testing-2024-09-27"
+rev = "nightly-testing-2024-09-30"
 
 [[require]]
 name = "Cli"
@@ -16,10 +16,10 @@ name = "doc-gen4"
 git = "https://github.com/leanprover/doc-gen4"
 rev = "main"
 
-[[require]]
-name = "leanwuzla"
-git = "https://github.com/hargoniX/Leanwuzla.git"
-rev = "main"
+# [[require]]
+# name = "leanwuzla"
+# git = "https://github.com/hargoniX/Leanwuzla.git"
+# rev = "main"
 
 [[lean_lib]]
 name = "SSA"
