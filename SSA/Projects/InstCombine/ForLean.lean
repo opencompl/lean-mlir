@@ -547,73 +547,34 @@ theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     getMsbD (x.sshiftRight n) i = (!decide (w ≤ i) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
+  have h : i < w
+  have h1 : (w ≤ w - 1 - i)
+  have h2 : (n + (w - 1 - i) < w)
+  have h3 : (w ≤ i)
+  have h4 : (i < n)
+  have h5 : (i - n < w)
   rcases hmsb : x.msb with rfl | rfl
-  · simp [hmsb]
+  · simp only [hmsb, Bool.if_false_right, Bool.if_false_left]
     by_cases h : i < w
-    · simp [h]
-      by_cases h1 : (w ≤ w - 1 - i)
-      · simp [h, h1]
-        omega
-      · simp [h, h1]
-        by_cases h2 : (n + (w - 1 - i) < w)
-        · simp [h, h1, h2]
-          by_cases h3 : (w ≤ i)
-          · simp [h, h1, h2, h3]
-            omega
-          · simp [h, h1, h2, h3]
-            by_cases h4 : (i < n)
-            · simp [h, h1, h2, h3, h4]
-              omega
-            · simp [h, h1, h2, h3, h4]
-              by_cases h5 : (i - n < w)
-              · simp [h, h1, h2, h3, h4, h5]
-                rw [← Nat.add_sub_assoc]
-                · rw [← Nat.add_sub_assoc]
-                  · rw [Nat.add_comm]
-                    rw [Nat.sub_add_comm]
-                    · rw [Nat.sub_add_comm]
-                      · sorry
-                      · omega
-                    · omega
-                  · omega
-                · omega
-              · simp [h, h1, h2, h3, h4, h5]
-                omega
-        · simp [h, h1, h2]
-          omega
-    · simp_all
-  · simp_all
+    · simp [h, h1, h2, h3, h4, h5]
+      congr 1
+      sorry
+    · omega
+      sorry
+  · simp only [hmsb, Bool.if_true_right, Bool.if_true_left]
     by_cases h : i < w
-    · simp [h]
-      by_cases h1 : (w ≤ w - 1 - i)
-      · simp [h, h1]
-        omega
-      · simp [h, h1]
-        by_cases h2 : (n + (w - 1 - i) < w)
-        · simp [h, h1, h2]
-          by_cases h3 : (w ≤ i)
-          · simp [h, h1, h2, h3]
-            omega
-          · simp [h, h1, h2, h3]
-            by_cases h4 : (i < n)
-            · simp [h, h1, h2, h3, h4]
-              omega
-            · simp [h, h1, h2, h3, h4]
-              by_cases h5 : (i - n < w)
+    · by_cases h1 : (w ≤ w - 1 - i)
+      · by_cases h2 : (n + (w - 1 - i) < w)
+        · by_cases h3 : (w ≤ i)
+          · by_cases h4 : (i < n)
+            · by_cases h5 : (i - n < w)
               · simp [h, h1, h2, h3, h4, h5]
-                rw [← Nat.add_sub_assoc]
-                · rw [← Nat.add_sub_assoc]
-                  · rw [Nat.add_comm]
-                    rw [Nat.sub_add_comm]
-                    · sorry
-                    · omega
-                  · omega
-                · omega
-              · simp [h, h1, h2, h3, h4, h5]
-                omega
-        · simp [h, h1, h2]
-          omega
-    · simp_all
+              · omega
+            · omega
+          · omega
+        · omega
+      · sorry
+    · sorry
 
 
 
