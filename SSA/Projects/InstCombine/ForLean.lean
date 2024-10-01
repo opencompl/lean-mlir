@@ -544,9 +544,18 @@ theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
 @[simp]
-theorem potato (a b c d: Nat) :
-    d - a - (b - c) = d - a - b + c := by
-  eq_refl
+theorem sub_sub_eq (a b c : Nat) : a - (b - (c)) = a - b + (c) := by
+  induction c
+  case zero =>
+    simp
+  case succ n ih =>
+    simp only [Nat.add_succ, Nat.sub_succ, ih]
+    -- rw [Nat.sub_add_eq]
+    -- rw [Nat.sub_add]
+    -- rw [← Nat.add_assoc]
+    -- rw [← ih]
+
+    sorry
 
 @[simp] theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
     getMsbD (x.sshiftRight n) i = (!decide (w ≤ i) && if i < n then x.msb else getMsbD x (i - n)) := by
