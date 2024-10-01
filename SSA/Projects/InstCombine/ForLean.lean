@@ -545,16 +545,12 @@ theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
 
 @[simp]
 theorem sub_sub_eq (a b c : Nat) : a - (b - (c)) = a - b + (c) := by
-  induction c
+  induction c generalizing a
   case zero =>
     simp
   case succ n ih =>
-    simp only [Nat.add_succ, Nat.sub_succ, ih]
-    -- rw [Nat.sub_add_eq]
-    -- rw [Nat.sub_add]
-    -- rw [← Nat.add_assoc]
-    -- rw [← ih]
-
+    rw [Nat.add_succ, Nat.sub_succ]
+    simp [ih, ← Nat.add_assoc]
     sorry
 
 @[simp] theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
