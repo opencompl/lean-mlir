@@ -543,6 +543,88 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
+@[simp]
+theorem potato (a b c d: Nat) :
+    d - a - (b - c) = d - a - b + c :=
+  by sorry
+
+@[simp] theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
+    getMsbD (x.sshiftRight n) i = (!decide (w ≤ i) && if i < n then x.msb else getMsbD x (i - n)) := by
+  simp only [getMsbD]
+  rw [BitVec.getLsbD_sshiftRight]
+  rcases hmsb : x.msb with rfl | rfl
+  · simp [hmsb]
+    by_cases h : i < w
+    · simp [h]
+      by_cases h1 : (w ≤ w - 1 - i)
+      · simp [h, h1]
+        omega
+      · simp [h, h1]
+        by_cases h2 : (n + (w - 1 - i) < w)
+        · simp [h, h1, h2]
+          by_cases h3 : (w ≤ i)
+          · simp [h, h1, h2, h3]
+            omega
+          · simp [h, h1, h2, h3]
+            by_cases h4 : (i < n)
+            · simp [h, h1, h2, h3, h4]
+              omega
+            · simp [h, h1, h2, h3, h4]
+              by_cases h5 : (i - n < w)
+              · simp [h, h1, h2, h3, h4, h5]
+                rw [← Nat.add_sub_assoc]
+                · rw [← Nat.add_sub_assoc]
+                  · -- this is just a matter of commutation
+                    rw [Nat.add_comm]
+                    rw [Nat.sub_add_comm]
+                    · rw [Nat.sub_add_comm]
+                      · omega
+                    · omega
+                  · omega
+                · omega
+              · simp [h, h1, h2, h3, h4, h5]
+                omega
+        · simp [h, h1, h2]
+          omega
+    · simp_all
+  · simp_all
+    by_cases h : i < w
+    · simp [h]
+      by_cases h1 : (w ≤ w - 1 - i)
+      · simp [h, h1]
+        omega
+      · simp [h, h1]
+        by_cases h2 : (n + (w - 1 - i) < w)
+        · simp [h, h1, h2]
+          by_cases h3 : (w ≤ i)
+          · simp [h, h1, h2, h3]
+            omega
+          · simp [h, h1, h2, h3]
+            by_cases h4 : (i < n)
+            · simp [h, h1, h2, h3, h4]
+              omega
+            · simp [h, h1, h2, h3, h4]
+              by_cases h5 : (i - n < w)
+              · simp [h, h1, h2, h3, h4, h5]
+                rw [← Nat.add_sub_assoc]
+                · rw [← Nat.add_sub_assoc]
+                  · -- this is just a matter of commutation
+                    rw [Nat.add_comm]
+                    rw [Nat.sub_add_comm]
+                    · rw [Nat.sub_add_comm]
+                      · omega
+                    · omega
+                  · omega
+                · omega
+              · simp [h, h1, h2, h3, h4, h5]
+                omega
+        · simp [h, h1, h2]
+          omega
+    · simp_all
+
+
+
+
 end BitVec
 
 namespace Bool
