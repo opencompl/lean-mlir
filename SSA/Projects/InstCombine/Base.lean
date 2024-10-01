@@ -96,7 +96,7 @@ inductive MOp.BinaryOp : Type
   | ashr
   | urem
   | srem
-  | add (nswnuw  : AdditionFlags := {nsw := false, nuw := false} )
+  | add (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
   | mul
   | sub
   | sdiv
@@ -164,8 +164,8 @@ namespace MOp
 
 /- This definition is off by itself because it is different-/
 @[match_pattern] def add    (w : Width φ)
-    (additionFlags: AdditionFlags := {nsw := false , nuw := false}) : MOp φ
-      := .binary w (.add  additionFlags )
+    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.add  NoWrapFlags )
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
@@ -180,7 +180,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (ashr : ∀ {φ} {w : Width φ}, motive (ashr w))
     (urem : ∀ {φ} {w : Width φ}, motive (urem w))
     (srem : ∀ {φ} {w : Width φ}, motive (srem w))
-    (add  : ∀ {φ additionFlags} {w : Width φ}, motive (add w additionFlags))
+    (add  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (add w NoWrapFlags))
     (mul  : ∀ {φ} {w : Width φ}, motive (mul  w))
     (sub  : ∀ {φ} {w : Width φ}, motive (sub  w))
     (sdiv : ∀ {φ} {w : Width φ}, motive (sdiv w))
@@ -262,7 +262,7 @@ namespace Op
 
 
 /- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
-@[match_pattern] abbrev add (w : Nat) (flags: AdditionFlags :=
+@[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 
 end Op
