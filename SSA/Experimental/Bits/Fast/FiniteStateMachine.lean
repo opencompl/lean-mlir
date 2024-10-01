@@ -453,12 +453,12 @@ def mapCircuit (c : Circuit (Fin n)) : FSM n where
   case zero =>
     simp [eval.next, next, BitVec.zero_width_append _, BitStream.head]
   case succ m ih =>
-
     simp [eval.next]
     specialize ih xs.tails
-
     simp at ih
-    rw [ih (xs.tails)]
+    -- rw [ih (xs.tails)]
+
+    sorry
 
 
 
