@@ -543,16 +543,6 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
-@[simp]
-theorem sub_sub_eq (a b c : Nat) : a - (b - (c)) = a - b + (c) := by
-  induction c generalizing a
-  case zero =>
-    simp
-  case succ n ih =>
-    rw [Nat.add_succ, Nat.sub_succ]
-    simp [ih, ← Nat.add_assoc]
-    sorry
-
 @[simp] theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
     getMsbD (x.sshiftRight n) i = (!decide (w ≤ i) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
@@ -582,6 +572,7 @@ theorem sub_sub_eq (a b c : Nat) : a - (b - (c)) = a - b + (c) := by
                   · rw [Nat.add_comm]
                     rw [Nat.sub_add_comm]
                     · rw [Nat.sub_add_comm]
+                      · sorry
                       · omega
                     · omega
                   · omega
@@ -614,8 +605,7 @@ theorem sub_sub_eq (a b c : Nat) : a - (b - (c)) = a - b + (c) := by
                 · rw [← Nat.add_sub_assoc]
                   · rw [Nat.add_comm]
                     rw [Nat.sub_add_comm]
-                    · rw [Nat.sub_add_comm]
-                      · omega
+                    · sorry
                     · omega
                   · omega
                 · omega
