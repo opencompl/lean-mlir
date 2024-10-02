@@ -279,7 +279,7 @@ namespace Op
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
-/- This operation is separate from the others because in takes in a flag: disjoint. -/
+/- This operation is separate from the others because it takes in a flag: disjoint. -/
 @[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
 
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
