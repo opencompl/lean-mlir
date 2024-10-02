@@ -280,7 +280,7 @@ namespace Op
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
 /- This operation is separate from the others because in takes in a flag: disjoint. -/
-@[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag) : Op := MOp.or (.concrete w) flag
+@[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag := {disjoint := false} ) : Op := MOp.or (.concrete w) flag
 
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
 @[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags :=
