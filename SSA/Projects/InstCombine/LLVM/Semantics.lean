@@ -41,11 +41,21 @@ def or? {w : Nat} (x y : BitVec w) : IntW w :=
 @[simp_llvm_option]
 theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 
+structure DisjointFlag where
+  disjoint : Bool := false
+  deriving Repr, DecidableEq
+
 @[simp_llvm_option]
-def or {w : Nat} (x y : IntW w) : IntW w := do
+def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  or? x' y'
+  let disjoint := flag.disjoint
+  let Disjoint? : Prop := disjoint ∧
+    (x'.toNat ||| y'.toNat != x'.toNat + y'.toNat)
+  if Disjoint? then
+    none
+  else
+    or? x' y'
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
