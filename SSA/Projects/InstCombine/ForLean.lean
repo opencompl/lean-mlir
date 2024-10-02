@@ -549,16 +549,10 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
   rw [BitVec.getLsbD_sshiftRight]
   by_cases h : i < w
   · by_cases h₁ : w ≤ w - 1 - i
-    · by_cases h₂ : n + (w - 1 - i) < w
-      · by_cases h₃ : ¬(i < n)
-        · have h₄ : (n + (w - 1 - i)) = (w - 1 - (i - n)) := by omega
-          simp [h, h₁, h₂, h₃, h₄]
-          intro
-          omega
-        · simp [h, h₁, h₂, h₃]
-          omega
-      · simp [h, h₁, h₂]
-        omega
+    · have h₂ : ¬(i < n) := by omega
+      simp [h, h₁, h₂]
+      intro
+      omega
     · simp [h, h₁]
       by_cases h₂ : ¬(i < n)
       · simp [h, h₁, h₂]
