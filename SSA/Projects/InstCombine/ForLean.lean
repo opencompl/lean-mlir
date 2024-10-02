@@ -553,7 +553,6 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
     · have h₂ : ¬(i < n) := by omega
       simp only [h, decide_True, h₁, Bool.not_true, Bool.false_and, Bool.and_false, h₂, ↓reduceIte,
         Bool.true_and, Bool.false_eq, Bool.and_eq_false_imp, decide_eq_true_eq]
-      intro
       omega
     · simp only [h, decide_True, h₁, decide_False, Bool.not_false, Bool.true_and]
       by_cases h₂ : ¬(i < n)
@@ -600,15 +599,15 @@ theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
     · have h₂ : (i < y.toNat) := by omega
       simp [h₁, h₂]
       omega
-    · simp [h₁]
+    · -- if i only put simp_all it breaks. i am confused
+      simp [h₁]
       simp_all
       by_cases h₂ : y.toNat + (w - 1 - i) < w
       · have h₃ : ¬(i < y.toNat) := by omega
         have h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat)) := by omega
-        simp [h₂, h₃]
-        -- if I put these together it stops working
+        -- if I put h₄ in the simp only it stops working. i am confused again
+        simp only [h, h₁, h₂, ↓reduceIte, h₃, Bool.iff_and_self, decide_eq_true_eq]
         simp [h₄]
-        intro
         omega
       · have h₃ : (i < y.toNat) := by omega
         simp [h₂, h₃]
