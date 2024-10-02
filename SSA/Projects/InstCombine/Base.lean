@@ -97,10 +97,10 @@ inductive MOp.BinaryOp : Type
   | urem
   | srem
   | add (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
-  | mul
-  | sub
-  | sdiv
-  | udiv
+  | mul (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
+  | sub (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
+  | sdiv (exact : ExactFlag := {exact := false} )
+  | udiv (exact : ExactFlag := {exact := false} )
 deriving DecidableEq, Inhabited
 
 open Std (Format) in
@@ -121,10 +121,14 @@ def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
     | .srem   => "srem"
     | .add ⟨false, false⟩ => "add"
     | .add ⟨nsw, nuw⟩    => toString f!"add {nsw} {nuw}"
-    | .mul    => "mul"
-    | .sub    => "sub"
-    | .sdiv   => "sdiv"
-    | .udiv   => "udiv"
+    | .mul ⟨false, false⟩ => "mul"
+    | .mul ⟨nsw, nuw⟩    => toString f!"mul {nsw} {nuw}"
+    | .sub ⟨false, false⟩ => "sub"
+    | .sub ⟨nsw, nuw⟩    => toString f!"sub {nsw} {nuw}"
+    | .sdiv ⟨false⟩ => "sdiv"
+    | .sdiv ⟨true⟩ => "sdiv exact"
+    | .udiv ⟨false⟩  => "udiv"
+    | .udiv ⟨true⟩  => "udiv exact"
   Repr.addAppParen (Format.group (Format.nest
     (if prec >= max_prec then 1 else 2) f!"InstCombine.MOp.BinaryOp.{op}"))
     prec
@@ -157,15 +161,25 @@ namespace MOp
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
 
-@[match_pattern] def mul    (w : Width φ) : MOp φ := .binary w .mul
-@[match_pattern] def sub    (w : Width φ) : MOp φ := .binary w .sub
-@[match_pattern] def sdiv   (w : Width φ) : MOp φ := .binary w .sdiv
-@[match_pattern] def udiv   (w : Width φ) : MOp φ := .binary w .udiv
 
-/- This definition is off by itself because it is different-/
+/- Theses definitions use NoWrapFlags -/
 @[match_pattern] def add    (w : Width φ)
     (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
       := .binary w (.add  NoWrapFlags )
+@[match_pattern] def mul    (w : Width φ)
+    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.mul  NoWrapFlags )
+@[match_pattern] def sub    (w : Width φ)
+    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.sub  NoWrapFlags )
+
+/- Theses definitions use an exact flag -/
+@[match_pattern] def sdiv   (w : Width φ)
+    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+      := .binary w (.sdiv ExactFlag )
+@[match_pattern] def udiv   (w : Width φ)
+    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+      := .binary w (.udiv ExactFlag )
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
@@ -181,10 +195,10 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (urem : ∀ {φ} {w : Width φ}, motive (urem w))
     (srem : ∀ {φ} {w : Width φ}, motive (srem w))
     (add  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (add w NoWrapFlags))
-    (mul  : ∀ {φ} {w : Width φ}, motive (mul  w))
-    (sub  : ∀ {φ} {w : Width φ}, motive (sub  w))
-    (sdiv : ∀ {φ} {w : Width φ}, motive (sdiv w))
-    (udiv : ∀ {φ} {w : Width φ}, motive (udiv w))
+    (mul  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (mul w NoWrapFlags))
+    (sub  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (sub w NoWrapFlags))
+    (sdiv : ∀ {φ ExactFlags} {w : Width φ}, motive (sdiv w ExactFlags))
+    (udiv : ∀ {φ ExactFlags} {w : Width φ}, motive (udiv w ExactFlags))
     (select : ∀ {φ} {w : Width φ}, motive (select w))
     (icmp   : ∀ {φ c} {w : Width φ}, motive (icmp c w))
     (const  : ∀ {φ v} {w : Width φ}, motive (const w v)) :
@@ -201,10 +215,10 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
   | _, .urem _  => urem
   | _, .srem _  => srem
   | _, .add _ _  => add
-  | _, .mul  _  => mul
-  | _, .sub  _  => sub
-  | _, .sdiv _  => sdiv
-  | _, .udiv _  => udiv
+  | _, .mul _ _  => mul
+  | _, .sub _ _  => sub
+  | _, .sdiv _ _ => sdiv
+  | _, .udiv _ _ => udiv
   | _, .select _  => select
   | _, .icmp ..   => icmp
   | _, .const ..  => const
@@ -224,12 +238,12 @@ instance : ToString (MOp φ) where
   | .srem _ => "srem"
   | .select _ => "select"
   | .add _ _ => "add"
-  | .mul _ => "mul"
-  | .sub _ => "sub"
+  | .mul _ _ => "mul"
+  | .sub _ _ => "sub"
   | .neg _ => "neg"
   | .copy _ => "copy"
-  | .sdiv _ => "sdiv"
-  | .udiv _ => "udiv"
+  | .sdiv _ _ => "sdiv"
+  | .udiv _ _ => "udiv"
   | .icmp ty _ => s!"icmp {ty}"
   | .const _ v => s!"const {v}"
 
@@ -250,20 +264,23 @@ namespace Op
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
-@[match_pattern] abbrev mul    : Nat → Op := MOp.mul    ∘ .concrete
-@[match_pattern] abbrev sub    : Nat → Op := MOp.sub    ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → Op := MOp.neg    ∘ .concrete
 @[match_pattern] abbrev copy   : Nat → Op := MOp.copy   ∘ .concrete
-@[match_pattern] abbrev sdiv   : Nat → Op := MOp.sdiv   ∘ .concrete
-@[match_pattern] abbrev udiv   : Nat → Op := MOp.udiv   ∘ .concrete
 
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
-
-/- Add is separate from the other operations because it takes in 2 flags: nuw and nsw.-/
+/- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
 @[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
+@[match_pattern] abbrev mul (w : Nat) (flags: NoWrapFlags :=
+   {nsw := false , nuw := false}) : Op:=  MOp.mul (.concrete w) flags
+@[match_pattern] abbrev sub (w : Nat) (flags: NoWrapFlags :=
+   {nsw := false , nuw := false}) : Op:=  MOp.sub (.concrete w) flags
+
+/- These operations are separate from the others because they take in 1 flag: exact.-/
+@[match_pattern] abbrev sdiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.sdiv (.concrete w) flag
+@[match_pattern] abbrev udiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.udiv (.concrete w) flag
 
 end Op
 
@@ -312,11 +329,11 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.shl _       => LLVM.shl    (op.getN 0) (op.getN 1)
   | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
   | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
-  | Op.sub _       => LLVM.sub    (op.getN 0) (op.getN 1)
+  | Op.sub _ flags => LLVM.sub    (op.getN 0) (op.getN 1) flags
   | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
-  | Op.mul _       => LLVM.mul    (op.getN 0) (op.getN 1)
-  | Op.sdiv _      => LLVM.sdiv   (op.getN 0) (op.getN 1)
-  | Op.udiv _      => LLVM.udiv   (op.getN 0) (op.getN 1)
+  | Op.mul _ flags => LLVM.mul    (op.getN 0) (op.getN 1) flags
+  | Op.sdiv _ flag => LLVM.sdiv   (op.getN 0) (op.getN 1) flag
+  | Op.udiv _ flag => LLVM.udiv   (op.getN 0) (op.getN 1) flag
   | Op.urem _      => LLVM.urem   (op.getN 0) (op.getN 1)
   | Op.srem _      => LLVM.srem   (op.getN 0) (op.getN 1)
   | Op.icmp c _    => LLVM.icmp c (op.getN 0) (op.getN 1)

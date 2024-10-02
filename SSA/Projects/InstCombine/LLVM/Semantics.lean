@@ -109,10 +109,18 @@ def sub? {w : Nat} (x y : BitVec w) : IntW w :=
 theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
 
 @[simp_llvm_option]
-def sub {w : Nat} (x y : IntW w) : IntW w := do
+def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  sub? x' y'
+  let nsw := flags.nsw
+  let nuw := flags.nuw
+  let AddSignedWraps? : Prop := nsw ∧
+    ((x'.toInt - y'.toInt) < -(2^(w-1)) ∨ (x'.toInt - y'.toInt) ≥ 2^w)
+  let AddUnsignedWraps? : Prop := nuw ∧ (x'.toNat < y'.toNat)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+    none
+  else
+    sub? x' y'
 
 /--
 The value produced is the integer product of the two operands.
@@ -133,10 +141,18 @@ def mul? {w : Nat} (x y : BitVec w) : IntW w :=
 theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
 
 @[simp_llvm_option]
-def mul {w : Nat} (x y : IntW w) : IntW w := do
+def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  mul? x' y'
+  let nsw := flags.nsw
+  let nuw := flags.nuw
+  let AddSignedWraps? : Prop := nsw ∧
+    ((x'.toInt * y'.toInt) < -(2^(w-1)) ∨ (x'.toInt * y'.toInt) ≥ 2^w)
+  let AddUnsignedWraps? : Prop := nuw ∧ ((x'.toNat * y'.toNat) ≥ 2^w)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+    none
+  else
+    mul? x' y'
 
 /--
 The value produced is the unsigned integer quotient of the two operands.
@@ -149,11 +165,21 @@ def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
     | 0 => none
     | _ => pure <| BitVec.ofInt w (x.toNat / y.toNat)
 
+structure ExactFlag where
+  exact : Bool := false
+  deriving Repr, DecidableEq
+
 @[simp_llvm_option]
-def udiv {w : Nat} (x y : IntW w) : IntW w := do
+def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  udiv? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    (x'.toNat % y'.toNat != 0)
+  if Exact? then
+    none
+  else
+    udiv? x' y'
 
 /--
 The value produced is the signed integer quotient of the two operands rounded towards zero.
@@ -188,10 +214,16 @@ theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
   tauto
 
 @[simp_llvm_option]
-def sdiv {w : Nat} (x y : IntW w) : IntW w := do
+def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  sdiv? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    (x'.toInt % y'.toInt != 0)
+  if Exact? then
+    none
+  else
+    sdiv? x' y'
 
 -- Probably not a Mathlib worthy name, not sure how you'd mathlibify the precondition
 @[simp_llvm]
