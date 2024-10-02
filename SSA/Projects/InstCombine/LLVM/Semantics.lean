@@ -322,7 +322,7 @@ bits in op1, this instruction returns a poison value.
 -/
 @[simp_llvm]
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
+  let bits := op2.toNat
   if bits >= n then .none
   else pure (op1 <<< op2)
 
