@@ -654,7 +654,7 @@ theorem msb_sshiftRight {x : BitVec w} {n : Nat} :
     (x.sshiftRight n).msb = x.msb := by
   rw [sshiftRight_msb_eq_msb]
 
--- this one i got the proof from sshiftRight_msb_eq_msb
+-- this one has basically the same proof as sshiftRight_msb_eq_msb
 theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   rw [msb_eq_getLsbD_last, getLsbD_sshiftRight', msb_eq_getLsbD_last]
