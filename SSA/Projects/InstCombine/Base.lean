@@ -89,16 +89,16 @@ deriving Repr, DecidableEq, Inhabited
 /-- Homogeneous, binary operations -/
 inductive MOp.BinaryOp : Type
   | and
-  | or
+  | or (disjoint : DisjointFlag := {disjoint := false} )
   | xor
-  | shl
-  | lshr
-  | ashr
+  | shl (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | lshr (exact : ExactFlag := {exact := false} )
+  | ashr (exact : ExactFlag := {exact := false} )
   | urem
   | srem
-  | add (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
-  | mul (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
-  | sub (nswnuw  : NoWrapFlags := {nsw := false, nuw := false} )
+  | add (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | mul (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | sub (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
   | sdiv (exact : ExactFlag := {exact := false} )
   | udiv (exact : ExactFlag := {exact := false} )
 deriving DecidableEq, Inhabited
@@ -111,14 +111,18 @@ behavior in Lean, but it isn't
 -/
 def reprWithoutFlags (op : MOp.BinaryOp) (prec : Nat) : Format :=
   let op  : String := match op with
-    | .and    => "and"
-    | .or     => "or"
-    | .xor    => "xor"
-    | .shl    => "shl"
-    | .lshr   => "lshr"
-    | .ashr   => "ashr"
-    | .urem   => "urem"
-    | .srem   => "srem"
+    | .and                => "and"
+    | .or   ⟨false⟩        => "or"
+    | .or   ⟨true⟩         => "or disjoint"
+    | .xor                => "xor"
+    | .shl  ⟨false, false⟩ => "shl"
+    | .shl  ⟨nsw, nuw⟩     => toString f!"shl {nsw} {nuw}"
+    | .lshr ⟨false⟩        => "lshr"
+    | .lshr ⟨true⟩         => "lshr exact"
+    | .ashr ⟨false⟩        => "ashr"
+    | .ashr ⟨true⟩         => "ashr exact"
+    | .urem               => "urem"
+    | .srem               => "srem"
     | .add  ⟨false, false⟩ => "add"
     | .add  ⟨nsw, nuw⟩     => toString f!"add {nsw} {nuw}"
     | .mul  ⟨false, false⟩ => "mul"
@@ -153,16 +157,19 @@ namespace MOp
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
 
 @[match_pattern] def and    (w : Width φ) : MOp φ := .binary w .and
-@[match_pattern] def or     (w : Width φ) : MOp φ := .binary w .or
 @[match_pattern] def xor    (w : Width φ) : MOp φ := .binary w .xor
-@[match_pattern] def shl    (w : Width φ) : MOp φ := .binary w .shl
-@[match_pattern] def lshr   (w : Width φ) : MOp φ := .binary w .lshr
-@[match_pattern] def ashr   (w : Width φ) : MOp φ := .binary w .ashr
 @[match_pattern] def urem   (w : Width φ) : MOp φ := .binary w .urem
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
 
+/- This definition uses a disjoint flag -/
+@[match_pattern] def or   (w : Width φ)
+    (DisjointFlag : DisjointFlag := {disjoint := false} ) : MOp φ
+      := .binary w (.or DisjointFlag )
 
 /- These definitions use NoWrapFlags -/
+@[match_pattern] def shl    (w : Width φ)
+    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+      := .binary w (.shl  NoWrapFlags )
 @[match_pattern] def add    (w : Width φ)
     (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
       := .binary w (.add  NoWrapFlags )
@@ -174,6 +181,12 @@ namespace MOp
       := .binary w (.sub  NoWrapFlags )
 
 /- These definitions use an exact flag -/
+@[match_pattern] def lshr   (w : Width φ)
+    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+      := .binary w (.lshr ExactFlag )
+@[match_pattern] def ashr   (w : Width φ)
+    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+      := .binary w (.ashr ExactFlag )
 @[match_pattern] def sdiv   (w : Width φ)
     (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
       := .binary w (.sdiv ExactFlag )
@@ -187,18 +200,18 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (not  : ∀ {φ} {w : Width φ}, motive (not  w))
     (copy : ∀ {φ} {w : Width φ}, motive (copy w))
     (and  : ∀ {φ} {w : Width φ}, motive (and  w))
-    (or   : ∀ {φ} {w : Width φ}, motive (or   w))
+    (or   : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
     (xor  : ∀ {φ} {w : Width φ}, motive (xor  w))
-    (shl  : ∀ {φ} {w : Width φ}, motive (shl  w))
-    (lshr : ∀ {φ} {w : Width φ}, motive (lshr w))
-    (ashr : ∀ {φ} {w : Width φ}, motive (ashr w))
+    (shl  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (shl  w NoWrapFlags))
+    (lshr : ∀ {φ ExactFlag} {w : Width φ}, motive (lshr w ExactFlag))
+    (ashr : ∀ {φ ExactFlag} {w : Width φ}, motive (ashr w ExactFlag))
     (urem : ∀ {φ} {w : Width φ}, motive (urem w))
     (srem : ∀ {φ} {w : Width φ}, motive (srem w))
     (add  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (add w NoWrapFlags))
     (mul  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (mul w NoWrapFlags))
     (sub  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (sub w NoWrapFlags))
-    (sdiv : ∀ {φ ExactFlags} {w : Width φ}, motive (sdiv w ExactFlags))
-    (udiv : ∀ {φ ExactFlags} {w : Width φ}, motive (udiv w ExactFlags))
+    (sdiv : ∀ {φ ExactFlag} {w : Width φ}, motive (sdiv w ExactFlag))
+    (udiv : ∀ {φ ExactFlag} {w : Width φ}, motive (udiv w ExactFlag))
     (select : ∀ {φ} {w : Width φ}, motive (select w))
     (icmp   : ∀ {φ c} {w : Width φ}, motive (icmp c w))
     (const  : ∀ {φ v} {w : Width φ}, motive (const w v)) :
@@ -207,11 +220,11 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
   | _, .not _   => not
   | _, .copy _  => copy
   | _, .and _   => and
-  | _, .or _    => or
+  | _, .or _ _    => or
   | _, .xor _   => xor
-  | _, .shl _   => shl
-  | _, .lshr _  => lshr
-  | _, .ashr _  => ashr
+  | _, .shl _ _  => shl
+  | _, .lshr _ _ => lshr
+  | _, .ashr _ _ => ashr
   | _, .urem _  => urem
   | _, .srem _  => srem
   | _, .add _ _  => add
@@ -228,12 +241,12 @@ end MOp
 instance : ToString (MOp φ) where
   toString
   | .and _ => "and"
-  | .or _ => "or"
+  | .or _ _ => "or"
   | .not _ => "not"
   | .xor _ => "xor"
-  | .shl _ => "shl"
-  | .lshr _ => "lshr"
-  | .ashr _ => "ashr"
+  | .shl _ _ => "shl"
+  | .lshr _ _ => "lshr"
+  | .ashr _ _ => "ashr"
   | .urem _ => "urem"
   | .srem _ => "srem"
   | .select _ => "select"
@@ -255,12 +268,8 @@ namespace Op
 @[match_pattern] abbrev binary  (w : Nat) (op : MOp.BinaryOp) : Op := MOp.binary (.concrete w) op
 
 @[match_pattern] abbrev and    : Nat → Op := MOp.and    ∘ .concrete
-@[match_pattern] abbrev or     : Nat → Op := MOp.or     ∘ .concrete
 @[match_pattern] abbrev not    : Nat → Op := MOp.not    ∘ .concrete
 @[match_pattern] abbrev xor    : Nat → Op := MOp.xor    ∘ .concrete
-@[match_pattern] abbrev shl    : Nat → Op := MOp.shl    ∘ .concrete
-@[match_pattern] abbrev lshr   : Nat → Op := MOp.lshr   ∘ .concrete
-@[match_pattern] abbrev ashr   : Nat → Op := MOp.ashr   ∘ .concrete
 @[match_pattern] abbrev urem   : Nat → Op := MOp.urem   ∘ .concrete
 @[match_pattern] abbrev srem   : Nat → Op := MOp.srem   ∘ .concrete
 @[match_pattern] abbrev select : Nat → Op := MOp.select ∘ .concrete
@@ -270,7 +279,12 @@ namespace Op
 @[match_pattern] abbrev icmp (c : IntPredicate)   : Nat → Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : Op        := MOp.const (.concrete w) val
 
+/- This operation is separate from the others because in takes in a flag: disjoint. -/
+@[match_pattern] abbrev or (w : Nat) (flag : DisjointFlag) : Op := MOp.or (.concrete w) flag
+
 /- These operations are separate from the others because they take in 2 flags: nuw and nsw.-/
+@[match_pattern] abbrev shl (w : Nat) (flags: NoWrapFlags :=
+   {nsw := false , nuw := false}) : Op:=  MOp.shl (.concrete w) flags
 @[match_pattern] abbrev add (w : Nat) (flags: NoWrapFlags :=
    {nsw := false , nuw := false}) : Op:=  MOp.add (.concrete w) flags
 @[match_pattern] abbrev mul (w : Nat) (flags: NoWrapFlags :=
@@ -279,6 +293,8 @@ namespace Op
    {nsw := false , nuw := false}) : Op:=  MOp.sub (.concrete w) flags
 
 /- These operations are separate from the others because they take in 1 flag: exact.-/
+@[match_pattern] abbrev lshr (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.lshr (.concrete w) flag
+@[match_pattern] abbrev ashr (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.ashr (.concrete w) flag
 @[match_pattern] abbrev sdiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.sdiv (.concrete w) flag
 @[match_pattern] abbrev udiv (w : Nat) (flag : ExactFlag := {exact := false} ) : Op := MOp.udiv (.concrete w) flag
 
@@ -324,11 +340,11 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.not _       => LLVM.not    (op.getN 0)
   | Op.neg _       => LLVM.neg    (op.getN 0)
   | Op.and _       => LLVM.and    (op.getN 0) (op.getN 1)
-  | Op.or _        => LLVM.or     (op.getN 0) (op.getN 1)
+  | Op.or _ flag        => LLVM.or     (op.getN 0) (op.getN 1) flag
   | Op.xor _       => LLVM.xor    (op.getN 0) (op.getN 1)
-  | Op.shl _       => LLVM.shl    (op.getN 0) (op.getN 1)
-  | Op.lshr _      => LLVM.lshr   (op.getN 0) (op.getN 1)
-  | Op.ashr _      => LLVM.ashr   (op.getN 0) (op.getN 1)
+  | Op.shl _ flags       => LLVM.shl    (op.getN 0) (op.getN 1) flags
+  | Op.lshr _ flag      => LLVM.lshr   (op.getN 0) (op.getN 1) flag
+  | Op.ashr _ flag     => LLVM.ashr   (op.getN 0) (op.getN 1) flag
   | Op.sub _ flags => LLVM.sub    (op.getN 0) (op.getN 1) flags
   | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
   | Op.mul _ flags => LLVM.mul    (op.getN 0) (op.getN 1) flags
