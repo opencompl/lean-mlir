@@ -173,7 +173,7 @@ namespace MOp
     (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
       := .binary w (.sub  NoWrapFlags )
 
-/- Theses definitions use an exact flag -/
+/- These definitions use an exact flag -/
 @[match_pattern] def sdiv   (w : Width φ)
     (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
       := .binary w (.sdiv ExactFlag )
