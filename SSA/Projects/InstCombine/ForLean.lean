@@ -543,7 +543,7 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
-theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
+theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.sshiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
@@ -569,7 +569,7 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
         simp [h₃]
   · simp [h]
 
-theorem getLsbD_sshiftRight' (x y: BitVec w) (i : Nat) :
+theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
     getLsbD (x.sshiftRight' y) i =
       (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
   simp only [BitVec.sshiftRight']
@@ -591,7 +591,7 @@ theorem getLsbD_sshiftRight' (x y: BitVec w) (i : Nat) :
         Nat.not_lt, decide_eq_true_eq]
       omega
 
-theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat}:
+theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
     getMsbD (x.sshiftRight' y) i = (decide (i < w) && if i < y.toNat then x.msb else getMsbD x (i - y.toNat)) := by
   simp only [BitVec.sshiftRight']
   simp only [getMsbD]
@@ -618,7 +618,7 @@ theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat}:
         simp [h₃]
   · simp [h]
 
-theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat}:
+theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.ushiftRight n) i = (decide (i < w) && if i < n then false else getMsbD x (i - n)) := by
   simp only [getMsbD, Bool.if_false_left]
   by_cases h : i < w
@@ -636,6 +636,34 @@ theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat}:
         omega
   · simp [h]
 
+theorem msb_shiftLeft {x : BitVec w} {n : Nat} :
+    (x <<< n).msb = x.getMsbD n := by
+  simp [BitVec.msb]
+
+theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
+    (x.ushiftRight n).msb = if n > 0 then false else x.msb := by
+  induction n
+  case zero =>
+    simp
+  case succ n ih =>
+    simp only [gt_iff_lt, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
+      ↓reduceIte, ih, BitVec.msb, getMsbD_ushiftRight, Bool.and_false]
+
+-- this one exists already but has a different name
+theorem msb_sshiftRight {x : BitVec w} {n : Nat} :
+    (x.sshiftRight n).msb = x.msb := by
+  rw [sshiftRight_msb_eq_msb]
+
+-- this one i got the proof from sshiftRight_msb_eq_msb
+theorem msb_sshiftRight' {x y: BitVec w} :
+    (x.sshiftRight' y).msb = x.msb := by
+  rw [msb_eq_getLsbD_last, getLsbD_sshiftRight', msb_eq_getLsbD_last]
+  by_cases hw₀ : w = 0
+  · simp [hw₀]
+  · simp only [show ¬(w ≤ w - 1) by omega, decide_False, Bool.not_false, Bool.true_and,
+      ite_eq_right_iff]
+    intros h
+    simp [show y.toNat = 0 by omega]
 
 end BitVec
 
