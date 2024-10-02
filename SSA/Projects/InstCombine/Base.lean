@@ -89,16 +89,16 @@ deriving Repr, DecidableEq, Inhabited
 /-- Homogeneous, binary operations -/
 inductive MOp.BinaryOp : Type
   | and
-  | or (disjoint : DisjointFlag := {disjoint := false} )
+  | or   (disjoint : DisjointFlag := {disjoint := false} )
   | xor
-  | shl (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | shl  (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
   | lshr (exact : ExactFlag := {exact := false} )
   | ashr (exact : ExactFlag := {exact := false} )
   | urem
   | srem
-  | add (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
-  | mul (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
-  | sub (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | add  (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | mul  (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
+  | sub  (nswnuw : NoWrapFlags := {nsw := false, nuw := false} )
   | sdiv (exact : ExactFlag := {exact := false} )
   | udiv (exact : ExactFlag := {exact := false} )
 deriving DecidableEq, Inhabited
@@ -162,101 +162,101 @@ namespace MOp
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
 
 /- This definition uses a disjoint flag -/
-@[match_pattern] def or   (w : Width φ)
-    (DisjointFlag : DisjointFlag := {disjoint := false} ) : MOp φ
-      := .binary w (.or DisjointFlag )
+@[match_pattern] def or (w : Width φ)
+  (DisjointFlag : DisjointFlag := {disjoint := false} ) : MOp φ
+    := .binary w (.or DisjointFlag )
 
 /- These definitions use NoWrapFlags -/
-@[match_pattern] def shl    (w : Width φ)
-    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
-      := .binary w (.shl  NoWrapFlags )
-@[match_pattern] def add    (w : Width φ)
-    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
-      := .binary w (.add  NoWrapFlags )
-@[match_pattern] def mul    (w : Width φ)
-    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
-      := .binary w (.mul  NoWrapFlags )
-@[match_pattern] def sub    (w : Width φ)
-    (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
-      := .binary w (.sub  NoWrapFlags )
+@[match_pattern] def shl (w : Width φ)
+  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .binary w (.shl NoWrapFlags )
+@[match_pattern] def add (w : Width φ)
+  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .binary w (.add NoWrapFlags )
+@[match_pattern] def mul (w : Width φ)
+  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .binary w (.mul NoWrapFlags )
+@[match_pattern] def sub (w : Width φ)
+  (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
+    := .binary w (.sub NoWrapFlags )
 
 /- These definitions use an exact flag -/
-@[match_pattern] def lshr   (w : Width φ)
-    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
-      := .binary w (.lshr ExactFlag )
-@[match_pattern] def ashr   (w : Width φ)
-    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
-      := .binary w (.ashr ExactFlag )
-@[match_pattern] def sdiv   (w : Width φ)
-    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
-      := .binary w (.sdiv ExactFlag )
-@[match_pattern] def udiv   (w : Width φ)
-    (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
-      := .binary w (.udiv ExactFlag )
+@[match_pattern] def lshr (w : Width φ)
+  (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+    := .binary w (.lshr ExactFlag )
+@[match_pattern] def ashr (w : Width φ)
+  (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+    := .binary w (.ashr ExactFlag )
+@[match_pattern] def sdiv (w : Width φ)
+  (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+    := .binary w (.sdiv ExactFlag )
+@[match_pattern] def udiv (w : Width φ)
+  (ExactFlag : ExactFlag := {exact := false} ) : MOp φ
+    := .binary w (.udiv ExactFlag )
 
 /-- Recursion principle in terms of individual operations, rather than `unary` or `binary` -/
 def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
-    (neg  : ∀ {φ} {w : Width φ}, motive (neg  w))
-    (not  : ∀ {φ} {w : Width φ}, motive (not  w))
-    (copy : ∀ {φ} {w : Width φ}, motive (copy w))
-    (and  : ∀ {φ} {w : Width φ}, motive (and  w))
-    (or   : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
-    (xor  : ∀ {φ} {w : Width φ}, motive (xor  w))
-    (shl  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (shl  w NoWrapFlags))
-    (lshr : ∀ {φ ExactFlag} {w : Width φ}, motive (lshr w ExactFlag))
-    (ashr : ∀ {φ ExactFlag} {w : Width φ}, motive (ashr w ExactFlag))
-    (urem : ∀ {φ} {w : Width φ}, motive (urem w))
-    (srem : ∀ {φ} {w : Width φ}, motive (srem w))
-    (add  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (add w NoWrapFlags))
-    (mul  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (mul w NoWrapFlags))
-    (sub  : ∀ {φ NoWrapFlags} {w : Width φ}, motive (sub w NoWrapFlags))
-    (sdiv : ∀ {φ ExactFlag} {w : Width φ}, motive (sdiv w ExactFlag))
-    (udiv : ∀ {φ ExactFlag} {w : Width φ}, motive (udiv w ExactFlag))
-    (select : ∀ {φ} {w : Width φ}, motive (select w))
-    (icmp   : ∀ {φ c} {w : Width φ}, motive (icmp c w))
-    (const  : ∀ {φ v} {w : Width φ}, motive (const w v)) :
+    (neg    : ∀ {φ} {w : Width φ},              motive (neg  w))
+    (not    : ∀ {φ} {w : Width φ},              motive (not  w))
+    (copy   : ∀ {φ} {w : Width φ},              motive (copy w))
+    (and    : ∀ {φ} {w : Width φ},              motive (and  w))
+    (or     : ∀ {φ DisjointFlag} {w : Width φ}, motive (or w DisjointFlag))
+    (xor    : ∀ {φ} {w : Width φ},              motive (xor  w))
+    (shl    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (shl  w NoWrapFlags))
+    (lshr   : ∀ {φ ExactFlag} {w : Width φ},    motive (lshr w ExactFlag))
+    (ashr   : ∀ {φ ExactFlag} {w : Width φ},    motive (ashr w ExactFlag))
+    (urem   : ∀ {φ} {w : Width φ},              motive (urem w))
+    (srem   : ∀ {φ} {w : Width φ},              motive (srem w))
+    (add    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (add w NoWrapFlags))
+    (mul    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (mul w NoWrapFlags))
+    (sub    : ∀ {φ NoWrapFlags} {w : Width φ},  motive (sub w NoWrapFlags))
+    (sdiv   : ∀ {φ ExactFlag} {w : Width φ},    motive (sdiv w ExactFlag))
+    (udiv   : ∀ {φ ExactFlag} {w : Width φ},    motive (udiv w ExactFlag))
+    (select : ∀ {φ} {w : Width φ},              motive (select w))
+    (icmp   : ∀ {φ c} {w : Width φ},            motive (icmp c w))
+    (const  : ∀ {φ v} {w : Width φ},            motive (const w v)) :
     ∀ {φ} (op : MOp φ), motive op
-  | _, .neg _   => neg
-  | _, .not _   => not
-  | _, .copy _  => copy
-  | _, .and _   => and
-  | _, .or _ _    => or
-  | _, .xor _   => xor
+  | _, .neg _    => neg
+  | _, .not _    => not
+  | _, .copy _   => copy
+  | _, .and _    => and
+  | _, .or _ _   => or
+  | _, .xor _    => xor
   | _, .shl _ _  => shl
   | _, .lshr _ _ => lshr
   | _, .ashr _ _ => ashr
-  | _, .urem _  => urem
-  | _, .srem _  => srem
+  | _, .urem _   => urem
+  | _, .srem _   => srem
   | _, .add _ _  => add
   | _, .mul _ _  => mul
   | _, .sub _ _  => sub
   | _, .sdiv _ _ => sdiv
   | _, .udiv _ _ => udiv
-  | _, .select _  => select
-  | _, .icmp ..   => icmp
-  | _, .const ..  => const
+  | _, .select _ => select
+  | _, .icmp ..  => icmp
+  | _, .const .. => const
 
 end MOp
 
 instance : ToString (MOp φ) where
   toString
-  | .and _ => "and"
-  | .or _ _ => "or"
-  | .not _ => "not"
-  | .xor _ => "xor"
-  | .shl _ _ => "shl"
-  | .lshr _ _ => "lshr"
-  | .ashr _ _ => "ashr"
-  | .urem _ => "urem"
-  | .srem _ => "srem"
-  | .select _ => "select"
-  | .add _ _ => "add"
-  | .mul _ _ => "mul"
-  | .sub _ _ => "sub"
-  | .neg _ => "neg"
-  | .copy _ => "copy"
-  | .sdiv _ _ => "sdiv"
-  | .udiv _ _ => "udiv"
+  | .and _     => "and"
+  | .or _ _    => "or"
+  | .not _     => "not"
+  | .xor _     => "xor"
+  | .shl _ _   => "shl"
+  | .lshr _ _  => "lshr"
+  | .ashr _ _  => "ashr"
+  | .urem _    => "urem"
+  | .srem _    => "srem"
+  | .select _  => "select"
+  | .add _ _   => "add"
+  | .mul _ _   => "mul"
+  | .sub _ _   => "sub"
+  | .neg _     => "neg"
+  | .copy _    => "copy"
+  | .sdiv _ _  => "sdiv"
+  | .udiv _ _  => "udiv"
   | .icmp ty _ => s!"icmp {ty}"
   | .const _ v => s!"const {v}"
 
@@ -340,11 +340,11 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | Op.not _       => LLVM.not    (op.getN 0)
   | Op.neg _       => LLVM.neg    (op.getN 0)
   | Op.and _       => LLVM.and    (op.getN 0) (op.getN 1)
-  | Op.or _ flag        => LLVM.or     (op.getN 0) (op.getN 1) flag
+  | Op.or _ flag   => LLVM.or     (op.getN 0) (op.getN 1) flag
   | Op.xor _       => LLVM.xor    (op.getN 0) (op.getN 1)
-  | Op.shl _ flags       => LLVM.shl    (op.getN 0) (op.getN 1) flags
-  | Op.lshr _ flag      => LLVM.lshr   (op.getN 0) (op.getN 1) flag
-  | Op.ashr _ flag     => LLVM.ashr   (op.getN 0) (op.getN 1) flag
+  | Op.shl _ flags => LLVM.shl    (op.getN 0) (op.getN 1) flags
+  | Op.lshr _ flag => LLVM.lshr   (op.getN 0) (op.getN 1) flag
+  | Op.ashr _ flag => LLVM.ashr   (op.getN 0) (op.getN 1) flag
   | Op.sub _ flags => LLVM.sub    (op.getN 0) (op.getN 1) flags
   | Op.add _ flags => LLVM.add    (op.getN 0) (op.getN 1) flags
   | Op.mul _ flags => LLVM.mul    (op.getN 0) (op.getN 1) flags
