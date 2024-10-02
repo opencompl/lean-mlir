@@ -38,9 +38,8 @@ theorem shift_mul:
       EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
       Option.bind_eq_bind, Option.none_bind, h, ↓reduceIte, Option.none_bind,
       Option.bind_none, Option.some_bind, Refinement.some_some, Refinement.refl]
-  apply BitVec.eq_of_toNat_eq
-  simp only [bv_toNat, Nat.mod_mul_mod]
-  ring_nf
+  simp only [Bool.false_eq_true, shiftLeft_eq', false_and, toNat_shiftLeft, toNat_ofNat, _root_.or_self,
+  ↓reduceIte, one_shiftLeft_mul, Refinement.refl]
 
 /--
 info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
