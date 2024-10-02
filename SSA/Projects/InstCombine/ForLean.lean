@@ -548,25 +548,27 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
   by_cases h : i < w
-  · simp [h]
-    by_cases h₁ : w ≤ w - 1 - i
-    · simp [h₁]
-      have h₂ : (i < n) := by omega
-      simp [h₂]
-      omega
-    · simp [h₁]
-      simp_all
-      by_cases h₂ : n + (w - 1 - i) < w
-      · simp [h₂]
-        have h₃ : ¬(i < n) := by omega
-        simp [h₃]
-        have h₄ : (n + (w - 1 - i)) = (w - 1 - (i - n)) := by omega
-        simp [h₄]
-        intro
+  · by_cases h₁ : w ≤ w - 1 - i
+    · by_cases h₂ : n + (w - 1 - i) < w
+      · by_cases h₃ : ¬(i < n)
+        · have h₄ : (n + (w - 1 - i)) = (w - 1 - (i - n)) := by omega
+          simp [h, h₁, h₂, h₃, h₄]
+          intro
+          omega
+        · simp [h, h₁, h₂, h₃]
+          omega
+      · simp [h, h₁, h₂]
         omega
-      · simp [h₂]
-        have h₃ : (i < n) := by omega
-        simp [h₃]
+    · simp [h, h₁]
+      by_cases h₂ : ¬(i < n)
+      · simp [h, h₁, h₂]
+        have h₃ : n + (w - 1 - i) < w := by omega
+        have h₄ : i - n < w := by omega
+        simp [h, h₁, h₂, h₃, h₄]
+        congr
+        omega
+      · simp_all
+        omega
   · simp [h]
 
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
