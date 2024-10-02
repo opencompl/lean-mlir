@@ -41,11 +41,21 @@ def or? {w : Nat} (x y : BitVec w) : IntW w :=
 @[simp_llvm_option]
 theorem or?_eq : LLVM.or? a b  = .some (BitVec.or a b) := rfl
 
+structure DisjointFlag where
+  disjoint : Bool := false
+  deriving Repr, DecidableEq
+
 @[simp_llvm_option]
-def or {w : Nat} (x y : IntW w) : IntW w := do
+def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  or? x' y'
+  let disjoint := flag.disjoint
+  let Disjoint? : Prop := disjoint ∧
+    (x'.toNat &&& y'.toNat != 0)
+  if Disjoint? then
+    none
+  else
+    or? x' y'
 
 /--
 The ‘xor’ instruction returns the bitwise logical exclusive or of its two
@@ -328,10 +338,21 @@ def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 
 
 @[simp_llvm_option]
-def shl {w : Nat} (x y : IntW w) : IntW w := do
+def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  shl? x' y'
+  let nsw := flags.nsw
+  let nuw := flags.nuw
+  let AddSignedWraps? : Prop := nsw ∧
+    -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
+    -- So, if x is positive, we simply have to check that no 1 bit reaches the sign bit after the shift.
+    -- If x is negative we swap every bit (by doing a xor with all ones) and then check the above condition.
+    ((x'.toInt ≥ 0 ∧ (x'.toNat <<< y'.toNat) ≥ 2^(w-1)) ∨ (x'.toInt < 0 ∧ (((BitVec.allOnes w).toNat ^^^ x'.toNat) <<< y'.toNat) ≥ 2^(w-1)))
+  let AddUnsignedWraps? : Prop := nuw ∧ (x'.toNat <<< y'.toNat ≥ 2^w)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+    none
+  else
+    shl? x' y'
 
 /--
 This instruction always performs a logical shift right operation.
@@ -345,15 +366,21 @@ Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
+  let bits := op2.toNat
   if bits >= n then .none
   else pure (op1 >>> op2)
 
 @[simp_llvm_option]
-def lshr {w : Nat} (x y : IntW w) : IntW w := do
+def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  lshr? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    ((x'.toNat >>> y'.toNat) <<< y'.toNat != x'.toNat)
+  if Exact? then
+    none
+  else
+    lshr? x' y'
 
 /--
 This instruction always performs an arithmetic shift right operation,
@@ -371,10 +398,16 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   else pure (op1 >>>ₛ op2)
 
 @[simp_llvm_option]
-def ashr {w : Nat} (x y : IntW w) : IntW w := do
+def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  ashr? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    ((x'.toNat >>> y'.toNat) <<< y'.toNat != x'.toNat)
+  if Exact? then
+    none
+  else
+    ashr? x' y'
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
