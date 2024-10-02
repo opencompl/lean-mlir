@@ -599,15 +599,15 @@ theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
     · have h₂ : (i < y.toNat) := by omega
       simp [h₁, h₂]
       omega
-    · -- if i only put simp_all it breaks. i am confused
-      simp [h₁]
+    · simp [h₁]
       simp_all
       by_cases h₂ : y.toNat + (w - 1 - i) < w
       · have h₃ : ¬(i < y.toNat) := by omega
         have h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat)) := by omega
-        -- if I put h₄ in the simp only it stops working. i am confused again
-        simp only [h, h₁, h₂, ↓reduceIte, h₃, Bool.iff_and_self, decide_eq_true_eq]
-        simp [h₄]
+        -- keep separated, otherwise Bool.iff_and_self and decide_eq_true_eq
+        -- conflict with h₄ and it breaks
+        simp only [h₂, ↓reduceIte, h₃]
+        simp only [h₄, Bool.iff_and_self, decide_eq_true_eq]
         omega
       · have h₃ : (i < y.toNat) := by omega
         simp [h₂, h₃]
@@ -617,13 +617,13 @@ theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.ushiftRight n) i = (decide (i < w) && if i < n then false else getMsbD x (i - n)) := by
   simp only [getMsbD, Bool.if_false_left]
   by_cases h : i < w
-  · simp [h]
+  · simp only [h, decide_True, ushiftRight_eq, getLsbD_ushiftRight, Bool.true_and]
     by_cases h₁ : i < n
-    · simp [h₁]
+    · simp only [h₁, decide_True, Bool.not_true, Bool.false_and]
       rw [BitVec.getLsbD_ge]
       omega
     · have h₂ : (i - n < w) := by omega
-      simp [h₁, h₂]
+      simp only [h₁, decide_False, Bool.not_false, h₂, decide_True, Bool.true_and]
       congr
       omega
   · simp [h]
