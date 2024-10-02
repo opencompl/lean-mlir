@@ -328,10 +328,21 @@ def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 
 
 @[simp_llvm_option]
-def shl {w : Nat} (x y : IntW w) : IntW w := do
+def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  shl? x' y'
+  let nsw := flags.nsw
+  let nuw := flags.nuw
+  let AddSignedWraps? : Prop := nsw ∧
+    -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
+    -- So, if x is positive, we simply have to check that no 1 bit reaches the sign bit after the shift.
+    -- If x is negative we swap every bit (by doing a xor with all ones) and then check the above condition.
+    ((x'.toInt ≥ 0 ∧ (x'.toNat <<< y'.toNat) ≥ 2^(w-1)) ∨ (x'.toInt < 0 ∧ (((BitVec.allOnes w).toNat ^^^ x'.toNat) <<< y'.toNat) ≥ 2^(w-1)))
+  let AddUnsignedWraps? : Prop := nuw ∧ (x'.toNat <<< y'.toNat ≥ 2^w)
+  if (AddSignedWraps? ∨ AddUnsignedWraps?) then
+    none
+  else
+    shl? x' y'
 
 /--
 This instruction always performs a logical shift right operation.
