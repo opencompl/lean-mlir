@@ -162,7 +162,7 @@ namespace MOp
 @[match_pattern] def srem   (w : Width φ) : MOp φ := .binary w .srem
 
 
-/- Theses definitions use NoWrapFlags -/
+/- These definitions use NoWrapFlags -/
 @[match_pattern] def add    (w : Width φ)
     (NoWrapFlags: NoWrapFlags := {nsw := false , nuw := false}) : MOp φ
       := .binary w (.add  NoWrapFlags )
