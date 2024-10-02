@@ -37,7 +37,7 @@ theorem shift_mul:
     simp only [Bool.false_eq_true, ge_iff_le, toNat_allOnes, false_and, _root_.or_self, ↓reduceIte,
       shiftLeft_eq', EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
       Option.bind_eq_bind, Option.none_bind, Option.bind_none, Option.some_bind, Refinement.refl, h]
-  simp only [one_shiftLeft_mul, Refinement.refl]
+  simp
 
 /--
 info: 'AlivePaperExamples.shift_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
