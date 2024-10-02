@@ -570,6 +570,32 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
         simp [h₃]
   · simp [h]
 
+@[simp]
+theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat}:
+    getMsbD (x.ushiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
+  simp only [getMsbD, ushiftRight_eq]
+  rw [BitVec.getLsbD_ushiftRight]
+  rcases hmsb : x.msb with rfl | rfl
+  by_cases h : i < w
+  · simp [h]
+    have h₁ : (i - n < w) := by omega
+    simp [h₁]
+    by_cases h₂ : i < n
+    · simp [h₂]
+      by_cases h₃ : n = i
+      · simp [h₃]
+        simp_all
+      · by_cases h₄ : n > i
+        · simp_all
+          simp [BitVec.getLsbD_eq_getMsbD]
+          intro
+          omega
+        · simp_all
+    · simp [h₂]
+      congr
+      omega
+  · simp [h]
+
 end BitVec
 
 namespace Bool
