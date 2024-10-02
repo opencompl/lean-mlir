@@ -51,7 +51,7 @@ def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : 
   let y' ← y
   let disjoint := flag.disjoint
   let Disjoint? : Prop := disjoint ∧
-    (x'.toNat ||| y'.toNat != x'.toNat + y'.toNat)
+    (x'.toNat &&& y'.toNat != 0)
   if Disjoint? then
     none
   else
