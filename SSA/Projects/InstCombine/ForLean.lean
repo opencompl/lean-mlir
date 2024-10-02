@@ -548,23 +548,25 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
   by_cases h : i < w
-  · by_cases h₁ : w ≤ w - 1 - i
+  · simp [h]
+    by_cases h₁ : w ≤ w - 1 - i
     · have h₂ : ¬(i < n) := by omega
-      simp [h, h₁, h₂]
+      simp only [h, decide_True, h₁, Bool.not_true, Bool.false_and, Bool.and_false, h₂, ↓reduceIte,
+        Bool.true_and, Bool.false_eq, Bool.and_eq_false_imp, decide_eq_true_eq]
       intro
       omega
-    · simp [h, h₁]
+    · simp only [h, decide_True, h₁, decide_False, Bool.not_false, Bool.true_and]
       by_cases h₂ : ¬(i < n)
-      · simp [h, h₁, h₂]
-        have h₃ : n + (w - 1 - i) < w := by omega
+      · have h₃ : n + (w - 1 - i) < w := by omega
         have h₄ : i - n < w := by omega
-        simp [h, h₁, h₂, h₃, h₄]
+        simp only [h₃, ↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
         congr
         omega
       · simp_all
         omega
   · simp [h]
 
+-- this was basically copied from the analogous getLsbD_sshiftRight'
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
     getLsbD (x.sshiftRight' y) i =
       (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
@@ -595,23 +597,21 @@ theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
   by_cases h : i < w
   · simp [h]
     by_cases h₁ : w ≤ w - 1 - i
-    · simp [h₁]
-      have h₂ : (i < y.toNat) := by omega
-      simp [h₂]
+    · have h₂ : (i < y.toNat) := by omega
+      simp [h₁, h₂]
       omega
     · simp [h₁]
       simp_all
       by_cases h₂ : y.toNat + (w - 1 - i) < w
-      · simp [h₂]
-        have h₃ : ¬(i < y.toNat) := by omega
-        simp [h₃]
+      · have h₃ : ¬(i < y.toNat) := by omega
         have h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat)) := by omega
+        simp [h₂, h₃]
+        -- if I put these together it stops working
         simp [h₄]
         intro
         omega
-      · simp [h₂]
-        have h₃ : (i < y.toNat) := by omega
-        simp [h₃]
+      · have h₃ : (i < y.toNat) := by omega
+        simp [h₂, h₃]
   · simp [h]
 
 theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
@@ -623,13 +623,10 @@ theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
     · simp [h₁]
       rw [BitVec.getLsbD_ge]
       omega
-    · simp [h₁]
-      by_cases h₂ : (i - n < w)
-      · simp [h₂]
-        congr
-        omega
-      · simp [h₂]
-        omega
+    · have h₂ : (i - n < w) := by omega
+      simp [h₁, h₂]
+      congr
+      omega
   · simp [h]
 
 theorem msb_shiftLeft {x : BitVec w} {n : Nat} :
@@ -642,15 +639,16 @@ theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
   case zero =>
     simp
   case succ n ih =>
+  -- if i remove the only here everything breaks. why?
     simp only [gt_iff_lt, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
       ↓reduceIte, ih, BitVec.msb, getMsbD_ushiftRight, Bool.and_false]
 
--- this one exists already but has a different name
-theorem msb_sshiftRight {x : BitVec w} {n : Nat} :
-    (x.sshiftRight n).msb = x.msb := by
-  rw [sshiftRight_msb_eq_msb]
+-- this one exists already under the name : sshiftRight_msb_eq_msb
+-- theorem msb_sshiftRight {x : BitVec w} {n : Nat} :
+--     (x.sshiftRight n).msb = x.msb := by
+--   rw [sshiftRight_msb_eq_msb]
 
--- this one has basically the same proof as sshiftRight_msb_eq_msb
+-- got the proof from sshiftRight_msb_eq_msb
 theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   rw [msb_eq_getLsbD_last, getLsbD_sshiftRight', msb_eq_getLsbD_last]
