@@ -565,7 +565,7 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
         omega
   · simp [h]
 
--- this was basically copied from the analogous getLsbD_sshiftRight'
+-- basically copied from getLsbD_sshiftRight
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
     getLsbD (x.sshiftRight' y) i =
       (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
@@ -638,16 +638,11 @@ theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
   case zero =>
     simp
   case succ n ih =>
-  -- if i remove the only here everything breaks. why?
-    simp only [gt_iff_lt, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
-      ↓reduceIte, ih, BitVec.msb, getMsbD_ushiftRight, Bool.and_false]
+    simp [ih, ← BitVec.ushiftRight_eq, getMsbD_ushiftRight, BitVec.msb]
 
--- this one exists already under the name : sshiftRight_msb_eq_msb
--- theorem msb_sshiftRight {x : BitVec w} {n : Nat} :
---     (x.sshiftRight n).msb = x.msb := by
---   rw [sshiftRight_msb_eq_msb]
+-- msb_sshiftRight exists already under the name : sshiftRight_msb_eq_msb
 
--- got the proof from sshiftRight_msb_eq_msb
+-- basically copied sshiftRight_msb_eq_msb
 theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   rw [msb_eq_getLsbD_last, getLsbD_sshiftRight', msb_eq_getLsbD_last]
