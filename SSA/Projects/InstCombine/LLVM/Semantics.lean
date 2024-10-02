@@ -356,15 +356,21 @@ Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
+  let bits := op2.toNat
   if bits >= n then .none
   else pure (op1 >>> op2)
 
 @[simp_llvm_option]
-def lshr {w : Nat} (x y : IntW w) : IntW w := do
+def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  lshr? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    ((x'.toNat >>> y'.toNat) <<< y'.toNat != x'.toNat)
+  if Exact? then
+    none
+  else
+    lshr? x' y'
 
 /--
 This instruction always performs an arithmetic shift right operation,
@@ -382,10 +388,16 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
   else pure (op1 >>>ₛ op2)
 
 @[simp_llvm_option]
-def ashr {w : Nat} (x y : IntW w) : IntW w := do
+def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  ashr? x' y'
+  let exact := flag.exact
+  let Exact? : Prop := exact ∧
+    ((x'.toNat >>> y'.toNat) <<< y'.toNat != x'.toNat)
+  if Exact? then
+    none
+  else
+    ashr? x' y'
 
 /--
  If the condition is an i1 and it evaluates to 1, the instruction returns the first value argument; otherwise, it returns the second value argument.
