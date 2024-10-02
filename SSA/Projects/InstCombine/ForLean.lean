@@ -543,41 +543,32 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
-@[simp] theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
-    getMsbD (x.sshiftRight n) i = (!decide (w ≤ i) && if i < n then x.msb else getMsbD x (i - n)) := by
+@[simp]
+theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat}:
+    getMsbD (x.sshiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
-  have h : i < w
-  have h1 : (w ≤ w - 1 - i)
-  have h2 : (n + (w - 1 - i) < w)
-  have h3 : (w ≤ i)
-  have h4 : (i < n)
-  have h5 : (i - n < w)
-  rcases hmsb : x.msb with rfl | rfl
-  · simp only [hmsb, Bool.if_false_right, Bool.if_false_left]
-    by_cases h : i < w
-    · simp [h, h1, h2, h3, h4, h5]
-      congr 1
-      sorry
-    · omega
-      sorry
-  · simp only [hmsb, Bool.if_true_right, Bool.if_true_left]
-    by_cases h : i < w
-    · by_cases h1 : (w ≤ w - 1 - i)
-      · by_cases h2 : (n + (w - 1 - i) < w)
-        · by_cases h3 : (w ≤ i)
-          · by_cases h4 : (i < n)
-            · by_cases h5 : (i - n < w)
-              · simp [h, h1, h2, h3, h4, h5]
-              · omega
-            · omega
-          · omega
-        · omega
-      · sorry
-    · sorry
-
-
-
+  by_cases h : i < w
+  · simp [h]
+    by_cases h₁ : w ≤ w - 1 - i
+    · simp [h₁]
+      have h₂ : (i < n) := by omega
+      simp [h₂]
+      omega
+    · simp [h₁]
+      simp_all
+      by_cases h₂ : n + (w - 1 - i) < w
+      · simp [h₂]
+        have h₃ : ¬(i < n) := by omega
+        simp [h₃]
+        have h₄ : (n + (w - 1 - i)) = (w - 1 - (i - n)) := by omega
+        simp [h₄]
+        intro
+        omega
+      · simp [h₂]
+        have h₃ : (i < n) := by omega
+        simp [h₃]
+  · simp [h]
 
 end BitVec
 
