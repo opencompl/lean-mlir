@@ -547,19 +547,14 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.sshiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
-  by_cases h : i < w <;> by_cases h₁ : w ≤ w - 1 - i <;> by_cases h₂ : ¬(i < n)
+  by_cases h : i < w <;> by_cases h₁ : w ≤ w - 1 - i <;> by_cases h₂ : ¬(i < n) <;> by_cases h₃ : n + (w - 1 - i) < w
   all_goals (simp [h, h₁, h₂]; try omega)
-  · have h₃ : n + (w - 1 - i) < w := by omega
-    have h₄ : i - n < w := by omega
-    simp only [h₃, ↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
+  all_goals (have h₄ : i - n < w := by omega)
+  · simp only [h₃, ↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
     congr
     omega
-  · have h₄ : i - n < w := by omega
-    simp only [↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
-    by_cases h₃ : n + (w - 1 - i) < w
-    · simp [h₃]
-      omega
-    · simp_all
+  · simp only [↓reduceIte, h₂, h₃, decide_True, Bool.true_and]
+    simp_all
 
 
 -- basically copied from getLsbD_sshiftRight
