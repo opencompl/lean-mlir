@@ -547,23 +547,20 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.sshiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
   simp only [getMsbD]
   rw [BitVec.getLsbD_sshiftRight]
-  by_cases h : i < w
-  · simp [h]
-    by_cases h₁ : w ≤ w - 1 - i
-    · have h₂ : ¬(i < n) := by omega
-      simp only [h, decide_True, h₁, Bool.not_true, Bool.false_and, Bool.and_false, h₂, ↓reduceIte,
-        Bool.true_and, Bool.false_eq, Bool.and_eq_false_imp, decide_eq_true_eq]
+  by_cases h : i < w <;> by_cases h₁ : w ≤ w - 1 - i <;> by_cases h₂ : ¬(i < n)
+  all_goals (simp [h, h₁, h₂]; try omega)
+  · have h₃ : n + (w - 1 - i) < w := by omega
+    have h₄ : i - n < w := by omega
+    simp only [h₃, ↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
+    congr
+    omega
+  · have h₄ : i - n < w := by omega
+    simp only [↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
+    by_cases h₃ : n + (w - 1 - i) < w
+    · simp [h₃]
       omega
-    · simp only [h, decide_True, h₁, decide_False, Bool.not_false, Bool.true_and]
-      by_cases h₂ : ¬(i < n)
-      · have h₃ : n + (w - 1 - i) < w := by omega
-        have h₄ : i - n < w := by omega
-        simp only [h₃, ↓reduceIte, h₂, h₄, decide_True, Bool.true_and]
-        congr
-        omega
-      · simp_all
-        omega
-  · simp [h]
+    · simp_all
+
 
 -- basically copied from getLsbD_sshiftRight
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
