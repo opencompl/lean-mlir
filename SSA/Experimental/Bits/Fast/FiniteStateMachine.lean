@@ -64,6 +64,10 @@ def ofFnLsb (f : Fin w → Bool) : BitVec w :=
     (ofFnLsb f)[i.val] = f i := by
   sorry
 
+@[simp] lemma getLsb'_ofFnLsb (f : Fin w → Bool) :
+    (ofFnLsb f).getLsb' = f := by
+  sorry
+
 end BitVec
 
 namespace Fin
@@ -77,8 +81,9 @@ def addToSum (i : Fin (x + y)) : Fin x ⊕ Fin y :=
 @[simp] abbrev addInl (i : Fin x) : Fin (x + y) := castAdd y i
 @[simp] abbrev addInr (i : Fin y) : Fin (x + y) := natAdd x i
 
+@[deprecated addCases]
 def addElim (f : Fin x → α) (g : Fin y → α) : Fin (x + y) → α :=
-  fun i => Sum.elim f g (addToSum i)
+  addCases f g
 
 def sumOfSigma {f : α → Nat} [Fintype α] (i : Σ a, Fin (f a)) : Fin (∑ a, f a) :=
   sorry
@@ -165,7 +170,16 @@ def id {n : Nat} : CircuitProd n n :=
   fun i => Circuit.var true i
 
 @[simp] lemma eval_id {n : Nat} : eval id = (@_root_.id (BitVec n)) := by
+  funext xs
+  simp [eval, id]
   sorry
+
+def map (f : Fin n → Fin m) (cs : CircuitProd n k) : CircuitProd m k :=
+  fun i => (cs i).map f
+
+@[simp] lemma eval_map (f : Fin n → Fin m) (cs : CircuitProd n k) (xs : BitVec m) :
+    eval (cs.map f) xs = eval cs (.ofFnLsb <| (xs[f ·])) := by
+  simp [eval, map]
 
 /-- Re-interpret a family of circuits with `x` variables as a family with
 `x + y` variables -/
@@ -174,6 +188,10 @@ def addInl : CircuitProd x n → CircuitProd (x + y) n :=
 /-- Re-interpret a family of circuits with `y` variables as a family with
 `x + y` variables -/
 def addInr : CircuitProd y n → CircuitProd (x + y) n :=
+  sorry
+
+def sigmaMk {f : Fin x → Nat} {i : Fin x} :
+    CircuitProd (f i) n → CircuitProd (∑ j, f j) n :=
   sorry
 
 def append {vars n m} (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
@@ -187,6 +205,10 @@ instance : HAppend (CircuitProd vars n) (CircuitProd vars m)
     (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BitVec vars) :
     eval (append xs ys) V = (eval xs V) ++ (eval ys V) := by
   sorry
+
+#check Circuit.bind
+
+-- def bind (cs : CircuitProd n k) (f : Fin n → CircuitProd )
 
 instance : Subsingleton (CircuitProd n 0) :=
   inferInstanceAs (Subsingleton (Fin 0 → _))
@@ -359,6 +381,13 @@ theorem eval_withInitialState_succ
 --     _
 --     -- p.nextStateCircuits
 
+-- /-- A product of `n` FSMs with the same arity `arity`  -/
+-- def FSMProd (n arity : Nat) : Type 1 :=
+--   Fin n → FSM arity
+
+-- def FSMProd.outCircuits (ps : FSMProd n arity) : CircuitProd _ _ :=
+--   fun i => (ps i).outCircuit
+
 open Fin in
 /--
 Given an FSM `p` of some `arity`,
@@ -369,46 +398,47 @@ we can compose `p` with `qᵢ` yielding a single FSM of arity `newArity`.
 The input of the composed FSM is given to the FSMs `qᵢ`, each of which computes
 a single bit of the input that is then given to `p`. -/
 def compose {newArity : Nat} {qArity : Fin arity → Nat}
-    (arityLE : ∀ (a : Fin arity), qArity a ≤ newArity)
-    (q : (i : Fin arity) → FSM (qArity i)) :
+    (vars : ∀ {a : Fin arity}, Fin (qArity a) → Fin newArity)
+    (q : (a : Fin arity) → FSM (qArity a)) :
     FSM newArity :=
-  let qOutCircuit : CircuitProd _ arity := fun (i : Fin arity) =>
-    (q i).outCircuit.map <| Fin.addElim
-      (fun j => (addInl (addInr (sumOfSigma ⟨i, j⟩))))
-      (fun j => addInr (j.castLE (arityLE i)))
+  let qOutCircuit : CircuitProd
+      ((p.stateWidth + ∑ i : Fin arity, (q i).stateWidth) + newArity)
+      arity :=
+    fun (i : Fin arity) =>
+      (q i).outCircuit.bind <| CircuitProd.append
+        (CircuitProd.id |>.sigmaMk.addInr.addInl)
+        (CircuitProd.id |>.map vars |>.addInr)
   { stateWidth    := p.stateWidth + (∑ i, (q i).stateWidth),
     initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
     outCircuit :=
-      open Fin in
       p.outCircuit.bind <| CircuitProd.append
         (CircuitProd.id |>.addInl.addInl)
         qOutCircuit
     nextStateCircuits :=
-      open Fin in
-      addCases
-       (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
+      CircuitProd.append
+        (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
           (CircuitProd.id |>.addInl.addInl)
           qOutCircuit
-       )
-       (fun i =>
-        let ⟨i, j⟩ := i.sumToSigma
-        ((q i).nextStateCircuits j).map <| addCases
-          (fun k => addInl (addInr (sumOfSigma ⟨_, k⟩)))
-          (fun k => addInr (k.castLE <| arityLE i))
-      )
+        )
+        (fun i =>
+          let ⟨i, j⟩ := i.sumToSigma
+          ((q i).nextStateCircuits j).map <| Fin.addCases
+            (fun k => addInl (addInr (sumOfSigma ⟨_, k⟩)))
+            (fun k => addInr (vars k))
+        )
   }
 
 lemma stateStream_compose {newArity : Nat} {qArity : Fin arity → Nat}
-    (arityLE : ∀ (i : Fin arity), qArity i ≤ newArity)
+    (vars : ∀ {a : Fin arity}, Fin (qArity a) → Fin newArity)
     (q : ∀ (i : Fin arity), FSM (qArity i))
     (xs : BitStreamProd newArity)
     (n : Nat) :
-    (p.compose arityLE q).stateStream xs n =
+    (p.compose vars q).stateStream xs n =
       let pState := p.stateStream (fun i =>
-        (q i).eval (fun j => xs <| j.castLE (arityLE _))) n
+        (q i).eval (fun j => xs <| vars j)) n
       let qState : BitVec (∑ i, (q i).stateWidth) :=
         BitVec.appendVector fun i =>
-          ((q i).stateStream (xs.castLE <| arityLE _) n)
+          ((q i).stateStream (fun j => xs <| vars j) n)
       pState ++ qState := by
   induction n with
   | zero => simp [stateStream, compose]
