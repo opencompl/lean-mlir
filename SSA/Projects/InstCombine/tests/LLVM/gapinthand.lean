@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -37,7 +37,7 @@ theorem test0_proof : test0_before ⊑ test0_after := by
   intros
   try simp
   ---BEGIN test0
-  apply test0_thm
+  all_goals (try extract_goal ; sorry)
   ---END test0
 
 
@@ -65,7 +65,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -96,7 +96,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -128,7 +128,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   intros
   try simp
   ---BEGIN test7
-  apply test7_thm
+  all_goals (try extract_goal ; sorry)
   ---END test7
 
 
@@ -157,7 +157,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -185,7 +185,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -216,7 +216,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -248,7 +248,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 

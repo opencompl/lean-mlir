@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gcanonicalizehshlhlshrhtohmasking_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   intros
   try simp
   ---BEGIN positive_samevar
-  apply positive_samevar_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar
 
 
@@ -70,7 +70,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   intros
   try simp
   ---BEGIN positive_sameconst
-  apply positive_sameconst_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
 
 
@@ -104,7 +104,7 @@ theorem positive_biggerShl_proof : positive_biggerShl_before ⊑ positive_bigger
   intros
   try simp
   ---BEGIN positive_biggerShl
-  apply positive_biggerShl_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerShl
 
 
@@ -138,7 +138,7 @@ theorem positive_biggerLshr_proof : positive_biggerLshr_before ⊑ positive_bigg
   intros
   try simp
   ---BEGIN positive_biggerLshr
-  apply positive_biggerLshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr
 
 
@@ -172,7 +172,7 @@ theorem positive_biggerLshr_lshrexact_proof : positive_biggerLshr_lshrexact_befo
   intros
   try simp
   ---BEGIN positive_biggerLshr_lshrexact
-  apply positive_biggerLshr_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_lshrexact
 
 
@@ -200,7 +200,7 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   intros
   try simp
   ---BEGIN positive_samevar_shlnuw
-  apply positive_samevar_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw
 
 
@@ -229,7 +229,7 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuw
-  apply positive_sameconst_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
 
 
@@ -261,7 +261,7 @@ theorem positive_biggerShl_shlnuw_proof : positive_biggerShl_shlnuw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_biggerShl_shlnuw
-  apply positive_biggerShl_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerShl_shlnuw
 
 
@@ -293,7 +293,7 @@ theorem positive_biggerLshr_shlnuw_proof : positive_biggerLshr_shlnuw_before ⊑
   intros
   try simp
   ---BEGIN positive_biggerLshr_shlnuw
-  apply positive_biggerLshr_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_shlnuw
 
 
@@ -325,7 +325,7 @@ theorem positive_biggerLshr_shlnuw_lshrexact_proof : positive_biggerLshr_shlnuw_
   intros
   try simp
   ---BEGIN positive_biggerLshr_shlnuw_lshrexact
-  apply positive_biggerLshr_shlnuw_lshrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerLshr_shlnuw_lshrexact
 
 

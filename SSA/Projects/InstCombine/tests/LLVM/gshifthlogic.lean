@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshifthlogic_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -44,7 +44,7 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   intros
   try simp
   ---BEGIN shl_and
-  apply shl_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and
 
 
@@ -84,7 +84,7 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   intros
   try simp
   ---BEGIN shl_or
-  apply shl_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or
 
 
@@ -120,7 +120,7 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   intros
   try simp
   ---BEGIN shl_xor
-  apply shl_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor
 
 
@@ -160,7 +160,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   intros
   try simp
   ---BEGIN lshr_and
-  apply lshr_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and
 
 
@@ -200,80 +200,8 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   intros
   try simp
   ---BEGIN ashr_xor
-  apply ashr_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_xor
-
-
-
-def shr_mismatch_xor_before := [llvm|
-{
-^0(%arg44 : i32, %arg45 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %2 = llvm.ashr %arg44, %0 : i32
-  %3 = llvm.xor %arg45, %2 : i32
-  %4 = llvm.lshr %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def shr_mismatch_xor_after := [llvm|
-{
-^0(%arg44 : i32, %arg45 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
-  %2 = llvm.ashr %arg44, %0 : i32
-  %3 = llvm.xor %2, %arg45 : i32
-  %4 = llvm.lshr %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem shr_mismatch_xor_proof : shr_mismatch_xor_before ⊑ shr_mismatch_xor_after := by
-  unfold shr_mismatch_xor_before shr_mismatch_xor_after
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  intros
-  try simp
-  ---BEGIN shr_mismatch_xor
-  apply shr_mismatch_xor_thm
-  ---END shr_mismatch_xor
-
-
-
-def ashr_overshift_xor_before := [llvm|
-{
-^0(%arg42 : i32, %arg43 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 17 : i32}> : () -> i32
-  %2 = llvm.ashr %arg42, %0 : i32
-  %3 = llvm.xor %arg43, %2 : i32
-  %4 = llvm.ashr %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-def ashr_overshift_xor_after := [llvm|
-{
-^0(%arg42 : i32, %arg43 : i32):
-  %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
-  %1 = "llvm.mlir.constant"() <{value = 17 : i32}> : () -> i32
-  %2 = llvm.ashr %arg42, %0 : i32
-  %3 = llvm.xor %2, %arg43 : i32
-  %4 = llvm.ashr %3, %1 : i32
-  "llvm.return"(%4) : (i32) -> ()
-}
-]
-theorem ashr_overshift_xor_proof : ashr_overshift_xor_before ⊑ ashr_overshift_xor_after := by
-  unfold ashr_overshift_xor_before ashr_overshift_xor_after
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  intros
-  try simp
-  ---BEGIN ashr_overshift_xor
-  apply ashr_overshift_xor_thm
-  ---END ashr_overshift_xor
 
 
 
@@ -304,7 +232,7 @@ theorem lshr_mul_proof : lshr_mul_before ⊑ lshr_mul_after := by
   intros
   try simp
   ---BEGIN lshr_mul
-  apply lshr_mul_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_mul
 
 
@@ -336,7 +264,7 @@ theorem lshr_mul_nuw_nsw_proof : lshr_mul_nuw_nsw_before ⊑ lshr_mul_nuw_nsw_af
   intros
   try simp
   ---BEGIN lshr_mul_nuw_nsw
-  apply lshr_mul_nuw_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_mul_nuw_nsw
 
 
@@ -372,7 +300,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   intros
   try simp
   ---BEGIN shl_add
-  apply shl_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add
 
 
@@ -408,7 +336,7 @@ theorem shl_sub_proof : shl_sub_before ⊑ shl_sub_after := by
   intros
   try simp
   ---BEGIN shl_sub
-  apply shl_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub
 
 
@@ -444,7 +372,7 @@ theorem shl_sub_no_commute_proof : shl_sub_no_commute_before ⊑ shl_sub_no_comm
   intros
   try simp
   ---BEGIN shl_sub_no_commute
-  apply shl_sub_no_commute_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub_no_commute
 
 

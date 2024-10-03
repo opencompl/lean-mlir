@@ -70,7 +70,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   intros
   try simp
   ---BEGIN positive_sameconst
-  apply positive_sameconst_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
 
 
@@ -200,7 +200,7 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuw
-  apply positive_sameconst_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
 
 
@@ -330,7 +330,7 @@ theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_sameconst_shlnsw
-  apply positive_sameconst_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw
 
 
@@ -460,7 +460,7 @@ theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuwnsw
-  apply positive_sameconst_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw
 
 

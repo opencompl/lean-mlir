@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthshift_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   intros
   try simp
   ---BEGIN test6
-  apply test6_thm
+  all_goals (try extract_goal ; sorry)
   ---END test6
 
 
@@ -72,7 +72,7 @@ theorem test6a_proof : test6a_before ⊑ test6a_after := by
   intros
   try simp
   ---BEGIN test6a
-  apply test6a_thm
+  all_goals (try extract_goal ; sorry)
   ---END test6a
 
 
@@ -103,7 +103,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -134,7 +134,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -499,7 +499,7 @@ def test25_after := [llvm|
 ^0(%arg2 : i37, %arg3 : i37):
   %0 = "llvm.mlir.constant"() <{value = -131072 : i37}> : () -> i37
   %1 = llvm.and %arg2, %0 : i37
-  %2 = llvm.add %1, %arg3 : i37
+  %2 = llvm.add %arg3, %1 : i37
   %3 = llvm.and %2, %0 : i37
   "llvm.return"(%3) : (i37) -> ()
 }

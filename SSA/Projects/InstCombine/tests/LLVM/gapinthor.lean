@@ -63,7 +63,7 @@ def test2_after := [llvm|
 ^0(%arg3 : i39, %arg4 : i39):
   %0 = "llvm.mlir.constant"() <{value = -274877906944 : i39}> : () -> i39
   %1 = llvm.and %arg4, %0 : i39
-  %2 = llvm.add %1, %arg3 : i39
+  %2 = llvm.add %arg3, %1 : i39
   "llvm.return"(%2) : (i39) -> ()
 }
 ]
@@ -131,7 +131,7 @@ def test5_after := [llvm|
 ^0(%arg0 : i399, %arg1 : i399):
   %0 = "llvm.mlir.constant"() <{value = 18446742974197923840 : i399}> : () -> i399
   %1 = llvm.and %arg1, %0 : i399
-  %2 = llvm.add %1, %arg0 : i399
+  %2 = llvm.add %arg0, %1 : i399
   "llvm.return"(%2) : (i399) -> ()
 }
 ]

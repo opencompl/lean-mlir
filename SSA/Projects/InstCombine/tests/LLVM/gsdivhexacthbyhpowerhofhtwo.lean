@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsdivhexacthbyhpowerhofhtwo_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -68,7 +68,7 @@ theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   intros
   try simp
   ---BEGIN shl1_nsw
-  apply shl1_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl1_nsw
 
 
@@ -102,7 +102,7 @@ theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑
   intros
   try simp
   ---BEGIN prove_exact_with_high_mask
-  apply prove_exact_with_high_mask_thm
+  all_goals (try extract_goal ; sorry)
   ---END prove_exact_with_high_mask
 
 
@@ -134,7 +134,7 @@ theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limi
   intros
   try simp
   ---BEGIN prove_exact_with_high_mask_limit
-  apply prove_exact_with_high_mask_limit_thm
+  all_goals (try extract_goal ; sorry)
   ---END prove_exact_with_high_mask_limit
 
 

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gdivhi1_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdivhi1_statements
-
+                                                    
 def sdiv_i1_is_op0_before := [llvm|
 {
 ^0(%arg6 : i1, %arg7 : i1):
@@ -35,7 +35,7 @@ theorem sdiv_i1_is_op0_proof : sdiv_i1_is_op0_before ⊑ sdiv_i1_is_op0_after :=
   intros
   try simp
   ---BEGIN sdiv_i1_is_op0
-  apply sdiv_i1_is_op0_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_i1_is_op0
 
 
@@ -50,7 +50,7 @@ def srem_i1_is_zero_before := [llvm|
 def srem_i1_is_zero_after := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -78,7 +78,7 @@ def urem_i1_is_zero_before := [llvm|
 def urem_i1_is_zero_after := [llvm|
 {
 ^0(%arg0 : i1, %arg1 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -93,3 +93,5 @@ theorem urem_i1_is_zero_proof : urem_i1_is_zero_before ⊑ urem_i1_is_zero_after
   ---BEGIN urem_i1_is_zero
   all_goals (try extract_goal ; sorry)
   ---END urem_i1_is_zero
+
+

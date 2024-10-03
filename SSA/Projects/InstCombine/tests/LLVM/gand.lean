@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gand_statements
-
+                                                    
 def test_with_even_before := [llvm|
 {
 ^0(%arg313 : i32):
@@ -39,7 +39,7 @@ theorem test_with_even_proof : test_with_even_before ⊑ test_with_even_after :=
   intros
   try simp
   ---BEGIN test_with_even
-  apply test_with_even_thm
+  all_goals (try extract_goal ; sorry)
   ---END test_with_even
 
 
@@ -70,7 +70,7 @@ theorem test_with_neg_even_proof : test_with_neg_even_before ⊑ test_with_neg_e
   intros
   try simp
   ---BEGIN test_with_neg_even
-  apply test_with_neg_even_thm
+  all_goals (try extract_goal ; sorry)
   ---END test_with_neg_even
 
 
@@ -99,7 +99,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -127,7 +127,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -135,7 +135,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
 def test3_before := [llvm|
 {
 ^0(%arg307 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   %1 = llvm.and %arg307, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -143,7 +143,7 @@ def test3_before := [llvm|
 def test3_after := [llvm|
 {
 ^0(%arg307 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 0 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = false}> : () -> i1
   "llvm.return"(%0) : (i1) -> ()
 }
 ]
@@ -156,7 +156,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -164,7 +164,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
 def test4_before := [llvm|
 {
 ^0(%arg305 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = llvm.and %arg305, %0 : i1
   "llvm.return"(%1) : (i1) -> ()
 }
@@ -184,7 +184,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   intros
   try simp
   ---BEGIN test4
-  apply test4_thm
+  all_goals (try extract_goal ; sorry)
   ---END test4
 
 
@@ -211,7 +211,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   intros
   try simp
   ---BEGIN test5
-  apply test5_thm
+  all_goals (try extract_goal ; sorry)
   ---END test5
 
 
@@ -238,7 +238,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   intros
   try simp
   ---BEGIN test6
-  apply test6_thm
+  all_goals (try extract_goal ; sorry)
   ---END test6
 
 
@@ -268,7 +268,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   intros
   try simp
   ---BEGIN test7
-  apply test7_thm
+  all_goals (try extract_goal ; sorry)
   ---END test7
 
 
@@ -299,7 +299,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -332,7 +332,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -363,7 +363,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   intros
   try simp
   ---BEGIN test15
-  apply test15_thm
+  all_goals (try extract_goal ; sorry)
   ---END test15
 
 
@@ -394,7 +394,7 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   intros
   try simp
   ---BEGIN test16
-  apply test16_thm
+  all_goals (try extract_goal ; sorry)
   ---END test16
 
 
@@ -426,7 +426,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   intros
   try simp
   ---BEGIN test19
-  apply test19_thm
+  all_goals (try extract_goal ; sorry)
   ---END test19
 
 
@@ -458,7 +458,7 @@ theorem test20_proof : test20_before ⊑ test20_after := by
   intros
   try simp
   ---BEGIN test20
-  apply test20_thm
+  all_goals (try extract_goal ; sorry)
   ---END test20
 
 
@@ -492,7 +492,7 @@ theorem test27_proof : test27_before ⊑ test27_after := by
   intros
   try simp
   ---BEGIN test27
-  apply test27_thm
+  all_goals (try extract_goal ; sorry)
   ---END test27
 
 
@@ -524,7 +524,7 @@ theorem ashr_lowmask_proof : ashr_lowmask_before ⊑ ashr_lowmask_after := by
   intros
   try simp
   ---BEGIN ashr_lowmask
-  apply ashr_lowmask_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_lowmask
 
 
@@ -557,7 +557,7 @@ theorem test32_proof : test32_before ⊑ test32_after := by
   intros
   try simp
   ---BEGIN test32
-  apply test32_thm
+  all_goals (try extract_goal ; sorry)
   ---END test32
 
 
@@ -591,7 +591,7 @@ theorem test33_proof : test33_before ⊑ test33_after := by
   intros
   try simp
   ---BEGIN test33
-  apply test33_thm
+  all_goals (try extract_goal ; sorry)
   ---END test33
 
 
@@ -625,7 +625,7 @@ theorem test33b_proof : test33b_before ⊑ test33b_after := by
   intros
   try simp
   ---BEGIN test33b
-  apply test33b_thm
+  all_goals (try extract_goal ; sorry)
   ---END test33b
 
 
@@ -653,7 +653,7 @@ theorem test34_proof : test34_before ⊑ test34_after := by
   intros
   try simp
   ---BEGIN test34
-  apply test34_thm
+  all_goals (try extract_goal ; sorry)
   ---END test34
 
 
@@ -687,7 +687,7 @@ theorem test42_proof : test42_before ⊑ test42_after := by
   intros
   try simp
   ---BEGIN test42
-  apply test42_thm
+  all_goals (try extract_goal ; sorry)
   ---END test42
 
 
@@ -721,7 +721,7 @@ theorem test43_proof : test43_before ⊑ test43_after := by
   intros
   try simp
   ---BEGIN test43
-  apply test43_thm
+  all_goals (try extract_goal ; sorry)
   ---END test43
 
 
@@ -752,7 +752,7 @@ theorem test44_proof : test44_before ⊑ test44_after := by
   intros
   try simp
   ---BEGIN test44
-  apply test44_thm
+  all_goals (try extract_goal ; sorry)
   ---END test44
 
 
@@ -783,7 +783,7 @@ theorem test45_proof : test45_before ⊑ test45_after := by
   intros
   try simp
   ---BEGIN test45
-  apply test45_thm
+  all_goals (try extract_goal ; sorry)
   ---END test45
 
 
@@ -801,7 +801,7 @@ def test46_before := [llvm|
 def test46_after := [llvm|
 {
 ^0(%arg199 : i32, %arg200 : i32):
-  %0 = llvm.and %arg199, %arg200 : i32
+  %0 = llvm.and %arg200, %arg199 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -814,7 +814,7 @@ theorem test46_proof : test46_before ⊑ test46_after := by
   intros
   try simp
   ---BEGIN test46
-  apply test46_thm
+  all_goals (try extract_goal ; sorry)
   ---END test46
 
 
@@ -832,7 +832,7 @@ def test47_before := [llvm|
 def test47_after := [llvm|
 {
 ^0(%arg197 : i32, %arg198 : i32):
-  %0 = llvm.and %arg197, %arg198 : i32
+  %0 = llvm.and %arg198, %arg197 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -845,7 +845,7 @@ theorem test47_proof : test47_before ⊑ test47_after := by
   intros
   try simp
   ---BEGIN test47
-  apply test47_thm
+  all_goals (try extract_goal ; sorry)
   ---END test47
 
 
@@ -877,7 +877,7 @@ theorem lowmask_add_2_proof : lowmask_add_2_before ⊑ lowmask_add_2_after := by
   intros
   try simp
   ---BEGIN lowmask_add_2
-  apply lowmask_add_2_thm
+  all_goals (try extract_goal ; sorry)
   ---END lowmask_add_2
 
 
@@ -909,8 +909,80 @@ theorem flip_masked_bit_proof : flip_masked_bit_before ⊑ flip_masked_bit_after
   intros
   try simp
   ---BEGIN flip_masked_bit
-  apply flip_masked_bit_thm
+  all_goals (try extract_goal ; sorry)
   ---END flip_masked_bit
+
+
+
+def not_ashr_not_bitwidth_mask_before := [llvm|
+{
+^0(%arg97 : i8, %arg98 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.ashr %arg97, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.and %3, %arg98 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def not_ashr_not_bitwidth_mask_after := [llvm|
+{
+^0(%arg97 : i8, %arg98 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.ashr %arg97, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.and %arg98, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem not_ashr_not_bitwidth_mask_proof : not_ashr_not_bitwidth_mask_before ⊑ not_ashr_not_bitwidth_mask_after := by
+  unfold not_ashr_not_bitwidth_mask_before not_ashr_not_bitwidth_mask_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN not_ashr_not_bitwidth_mask
+  all_goals (try extract_goal ; sorry)
+  ---END not_ashr_not_bitwidth_mask
+
+
+
+def not_lshr_bitwidth_mask_before := [llvm|
+{
+^0(%arg95 : i8, %arg96 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.lshr %arg95, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.and %3, %arg96 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def not_lshr_bitwidth_mask_after := [llvm|
+{
+^0(%arg95 : i8, %arg96 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 7 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.lshr %arg95, %0 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.and %arg96, %3 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem not_lshr_bitwidth_mask_proof : not_lshr_bitwidth_mask_before ⊑ not_lshr_bitwidth_mask_after := by
+  unfold not_lshr_bitwidth_mask_before not_lshr_bitwidth_mask_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN not_lshr_bitwidth_mask
+  all_goals (try extract_goal ; sorry)
+  ---END not_lshr_bitwidth_mask
 
 
 
@@ -942,7 +1014,7 @@ theorem shl_lshr_pow2_const_negative_overflow1_proof : shl_lshr_pow2_const_negat
   intros
   try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow1
-  apply shl_lshr_pow2_const_negative_overflow1_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_lshr_pow2_const_negative_overflow1
 
 
@@ -975,7 +1047,7 @@ theorem shl_lshr_pow2_const_negative_overflow2_proof : shl_lshr_pow2_const_negat
   intros
   try simp
   ---BEGIN shl_lshr_pow2_const_negative_overflow2
-  apply shl_lshr_pow2_const_negative_overflow2_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_lshr_pow2_const_negative_overflow2
 
 
@@ -1011,7 +1083,7 @@ theorem lshr_lshr_pow2_const_negative_nopow2_1_proof : lshr_lshr_pow2_const_nega
   intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_1
-  apply lshr_lshr_pow2_const_negative_nopow2_1_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_nopow2_1
 
 
@@ -1047,7 +1119,7 @@ theorem lshr_lshr_pow2_const_negative_nopow2_2_proof : lshr_lshr_pow2_const_nega
   intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_nopow2_2
-  apply lshr_lshr_pow2_const_negative_nopow2_2_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_nopow2_2
 
 
@@ -1080,7 +1152,7 @@ theorem lshr_lshr_pow2_const_negative_overflow_proof : lshr_lshr_pow2_const_nega
   intros
   try simp
   ---BEGIN lshr_lshr_pow2_const_negative_overflow
-  apply lshr_lshr_pow2_const_negative_overflow_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_lshr_pow2_const_negative_overflow
 
 
@@ -1113,7 +1185,7 @@ theorem lshr_shl_pow2_const_overflow_proof : lshr_shl_pow2_const_overflow_before
   intros
   try simp
   ---BEGIN lshr_shl_pow2_const_overflow
-  apply lshr_shl_pow2_const_overflow_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_shl_pow2_const_overflow
 
 
@@ -1147,7 +1219,7 @@ theorem add_constant_equal_with_the_top_bit_of_demandedbits_pass_proof : add_con
   intros
   try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_pass
-  apply add_constant_equal_with_the_top_bit_of_demandedbits_pass_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_pass
 
 
@@ -1183,5 +1255,7 @@ theorem add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_proof : add
   intros
   try simp
   ---BEGIN add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
-  apply add_constant_equal_with_the_top_bit_of_demandedbits_insertpt_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_constant_equal_with_the_top_bit_of_demandedbits_insertpt
+
+

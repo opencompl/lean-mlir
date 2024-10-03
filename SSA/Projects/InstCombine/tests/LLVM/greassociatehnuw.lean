@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.greassociatehnuw_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after
   intros
   try simp
   ---BEGIN reassoc_add_nuw
-  apply reassoc_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_add_nuw
 
 
@@ -72,7 +72,7 @@ theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after
   intros
   try simp
   ---BEGIN reassoc_sub_nuw
-  apply reassoc_sub_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_sub_nuw
 
 
@@ -104,7 +104,7 @@ theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after
   intros
   try simp
   ---BEGIN reassoc_mul_nuw
-  apply reassoc_mul_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_mul_nuw
 
 
@@ -136,7 +136,7 @@ theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_re
   intros
   try simp
   ---BEGIN no_reassoc_add_nuw_none
-  apply no_reassoc_add_nuw_none_thm
+  all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_nuw_none
 
 
@@ -168,7 +168,7 @@ theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_re
   intros
   try simp
   ---BEGIN no_reassoc_add_none_nuw
-  apply no_reassoc_add_none_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END no_reassoc_add_none_nuw
 
 
@@ -202,7 +202,7 @@ theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_
   intros
   try simp
   ---BEGIN reassoc_x2_add_nuw
-  apply reassoc_x2_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_add_nuw
 
 
@@ -236,7 +236,7 @@ theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_
   intros
   try simp
   ---BEGIN reassoc_x2_mul_nuw
-  apply reassoc_x2_mul_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_mul_nuw
 
 
@@ -270,7 +270,7 @@ theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_
   intros
   try simp
   ---BEGIN reassoc_x2_sub_nuw
-  apply reassoc_x2_sub_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END reassoc_x2_sub_nuw
 
 
@@ -301,7 +301,7 @@ theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nu
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw
-  apply tryFactorization_add_nuw_mul_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw
 
 
@@ -332,7 +332,7 @@ theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nu
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_int_max
-  apply tryFactorization_add_nuw_mul_nuw_int_max_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_int_max
 
 
@@ -363,7 +363,7 @@ theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before
   intros
   try simp
   ---BEGIN tryFactorization_add_mul_nuw
-  apply tryFactorization_add_mul_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw
 
 
@@ -394,7 +394,7 @@ theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul
-  apply tryFactorization_add_nuw_mul_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul
 
 
@@ -412,7 +412,7 @@ def tryFactorization_add_nuw_mul_nuw_mul_nuw_var_after := [llvm|
 {
 ^0(%arg9 : i32, %arg10 : i32, %arg11 : i32):
   %0 = llvm.add %arg10, %arg11 : i32
-  %1 = llvm.mul %0, %arg9 : i32
+  %1 = llvm.mul %arg9, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -425,7 +425,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_ad
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_nuw_var
-  apply tryFactorization_add_nuw_mul_nuw_mul_nuw_var_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_nuw_var
 
 
@@ -443,7 +443,7 @@ def tryFactorization_add_nuw_mul_mul_nuw_var_after := [llvm|
 {
 ^0(%arg6 : i32, %arg7 : i32, %arg8 : i32):
   %0 = llvm.add %arg7, %arg8 : i32
-  %1 = llvm.mul %0, %arg6 : i32
+  %1 = llvm.mul %arg6, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -456,7 +456,7 @@ theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nu
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_mul_nuw_var
-  apply tryFactorization_add_nuw_mul_mul_nuw_var_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_mul_nuw_var
 
 
@@ -474,7 +474,7 @@ def tryFactorization_add_nuw_mul_nuw_mul_var_after := [llvm|
 {
 ^0(%arg3 : i32, %arg4 : i32, %arg5 : i32):
   %0 = llvm.add %arg4, %arg5 : i32
-  %1 = llvm.mul %0, %arg3 : i32
+  %1 = llvm.mul %arg3, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -487,7 +487,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nu
   intros
   try simp
   ---BEGIN tryFactorization_add_nuw_mul_nuw_mul_var
-  apply tryFactorization_add_nuw_mul_nuw_mul_var_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_nuw_mul_nuw_mul_var
 
 
@@ -505,7 +505,7 @@ def tryFactorization_add_mul_nuw_mul_var_after := [llvm|
 {
 ^0(%arg0 : i32, %arg1 : i32, %arg2 : i32):
   %0 = llvm.add %arg1, %arg2 : i32
-  %1 = llvm.mul %0, %arg0 : i32
+  %1 = llvm.mul %arg0, %0 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -518,7 +518,7 @@ theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nu
   intros
   try simp
   ---BEGIN tryFactorization_add_mul_nuw_mul_var
-  apply tryFactorization_add_mul_nuw_mul_var_thm
+  all_goals (try extract_goal ; sorry)
   ---END tryFactorization_add_mul_nuw_mul_var
 
 

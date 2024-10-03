@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gmul_fold_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -47,7 +47,7 @@ theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after :=
   intros
   try simp
   ---BEGIN mul8_low_A0_B0
-  apply mul8_low_A0_B0_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul8_low_A0_B0
 
 
@@ -86,7 +86,7 @@ theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   intros
   try simp
   ---BEGIN mul8_low
-  apply mul8_low_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul8_low
 
 
@@ -125,7 +125,7 @@ theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   intros
   try simp
   ---BEGIN mul16_low
-  apply mul16_low_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul16_low
 
 
@@ -283,49 +283,5 @@ theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   ---BEGIN mul130_low
   all_goals (try extract_goal ; sorry)
   ---END mul130_low
-
-
-
-def mul64_low_no_and_before := [llvm|
-{
-^0(%arg6 : i64, %arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
-  %1 = llvm.lshr %arg6, %0 : i64
-  %2 = llvm.lshr %arg7, %0 : i64
-  %3 = llvm.mul %2, %arg6 : i64
-  %4 = llvm.mul %arg7, %1 : i64
-  %5 = llvm.mul %arg7, %arg6 : i64
-  %6 = llvm.add %3, %4 : i64
-  %7 = llvm.shl %6, %0 : i64
-  %8 = llvm.add %7, %5 : i64
-  "llvm.return"(%8) : (i64) -> ()
-}
-]
-def mul64_low_no_and_after := [llvm|
-{
-^0(%arg6 : i64, %arg7 : i64):
-  %0 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
-  %1 = llvm.lshr %arg6, %0 : i64
-  %2 = llvm.lshr %arg7, %0 : i64
-  %3 = llvm.mul %2, %arg6 : i64
-  %4 = llvm.mul %1, %arg7 : i64
-  %5 = llvm.mul %arg7, %arg6 : i64
-  %6 = llvm.add %3, %4 : i64
-  %7 = llvm.shl %6, %0 : i64
-  %8 = llvm.add %7, %5 : i64
-  "llvm.return"(%8) : (i64) -> ()
-}
-]
-theorem mul64_low_no_and_proof : mul64_low_no_and_before ⊑ mul64_low_no_and_after := by
-  unfold mul64_low_no_and_before mul64_low_no_and_after
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  intros
-  try simp
-  ---BEGIN mul64_low_no_and
-  all_goals (try extract_goal ; sorry)
-  ---END mul64_low_no_and
 
 

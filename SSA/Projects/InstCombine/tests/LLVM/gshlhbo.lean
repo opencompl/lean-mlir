@@ -33,7 +33,7 @@ def lshr_add_after := [llvm|
   %2 = "llvm.mlir.constant"() <{value = -32 : i8}> : () -> i8
   %3 = llvm.srem %arg81, %0 : i8
   %4 = llvm.shl %3, %1 : i8
-  %5 = llvm.add %4, %arg82 : i8
+  %5 = llvm.add %arg82, %4 : i8
   %6 = llvm.and %5, %2 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
@@ -71,7 +71,7 @@ def lshr_and_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 6 : i8}> : () -> i8
   %2 = llvm.srem %arg73, %0 : i8
   %3 = llvm.shl %2, %1 : i8
-  %4 = llvm.and %3, %arg74 : i8
+  %4 = llvm.and %arg74, %3 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
@@ -110,7 +110,7 @@ def lshr_or_after := [llvm|
   %3 = llvm.srem %arg69, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg70, %2 : i8
-  %6 = llvm.or %4, %5 : i8
+  %6 = llvm.or %5, %4 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]
@@ -149,7 +149,7 @@ def lshr_xor_after := [llvm|
   %3 = llvm.srem %arg65, %0 : i8
   %4 = llvm.shl %3, %1 : i8
   %5 = llvm.and %arg66, %2 : i8
-  %6 = llvm.xor %4, %5 : i8
+  %6 = llvm.xor %5, %4 : i8
   "llvm.return"(%6) : (i8) -> ()
 }
 ]

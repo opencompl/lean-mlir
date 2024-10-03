@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gandhxorhor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem and_xor_not_common_op_proof : and_xor_not_common_op_before ⊑ and_xor_n
   intros
   try simp
   ---BEGIN and_xor_not_common_op
-  apply and_xor_not_common_op_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_xor_not_common_op
 
 
@@ -70,7 +70,7 @@ theorem and_not_xor_common_op_proof : and_not_xor_common_op_before ⊑ and_not_x
   intros
   try simp
   ---BEGIN and_not_xor_common_op
-  apply and_not_xor_common_op_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_xor_common_op
 
 
@@ -130,40 +130,8 @@ theorem or2_proof : or2_before ⊑ or2_after := by
   intros
   try simp
   ---BEGIN or2
-  apply or2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or2
-
-
-
-def and_xor_or_negative_before := [llvm|
-{
-^0(%arg648 : i64, %arg649 : i64, %arg650 : i64, %arg651 : i64):
-  %0 = llvm.and %arg649, %arg648 : i64
-  %1 = llvm.xor %arg650, %0 : i64
-  %2 = llvm.or %arg651, %1 : i64
-  "llvm.return"(%2) : (i64) -> ()
-}
-]
-def and_xor_or_negative_after := [llvm|
-{
-^0(%arg648 : i64, %arg649 : i64, %arg650 : i64, %arg651 : i64):
-  %0 = llvm.and %arg649, %arg648 : i64
-  %1 = llvm.xor %0, %arg650 : i64
-  %2 = llvm.or %1, %arg651 : i64
-  "llvm.return"(%2) : (i64) -> ()
-}
-]
-theorem and_xor_or_negative_proof : and_xor_or_negative_before ⊑ and_xor_or_negative_after := by
-  unfold and_xor_or_negative_before and_xor_or_negative_after
-  simp_alive_peephole
-  simp_alive_undef
-  simp_alive_ops
-  simp_alive_case_bash
-  intros
-  try simp
-  ---BEGIN and_xor_or_negative
-  apply and_xor_or_negative_thm
-  ---END and_xor_or_negative
 
 
 
@@ -195,7 +163,7 @@ theorem and_shl_proof : and_shl_before ⊑ and_shl_after := by
   intros
   try simp
   ---BEGIN and_shl
-  apply and_shl_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_shl
 
 
@@ -228,7 +196,7 @@ theorem or_shl_proof : or_shl_before ⊑ or_shl_after := by
   intros
   try simp
   ---BEGIN or_shl
-  apply or_shl_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_shl
 
 
@@ -261,7 +229,7 @@ theorem or_lshr_proof : or_lshr_before ⊑ or_lshr_after := by
   intros
   try simp
   ---BEGIN or_lshr
-  apply or_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_lshr
 
 
@@ -294,7 +262,7 @@ theorem xor_lshr_proof : xor_lshr_before ⊑ xor_lshr_after := by
   intros
   try simp
   ---BEGIN xor_lshr
-  apply xor_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_lshr
 
 
@@ -331,7 +299,7 @@ theorem xor_lshr_multiuse_proof : xor_lshr_multiuse_before ⊑ xor_lshr_multiuse
   intros
   try simp
   ---BEGIN xor_lshr_multiuse
-  apply xor_lshr_multiuse_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_lshr_multiuse
 
 
@@ -370,7 +338,7 @@ theorem not_and_and_not_proof : not_and_and_not_before ⊑ not_and_and_not_after
   intros
   try simp
   ---BEGIN not_and_and_not
-  apply not_and_and_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_not
 
 
@@ -392,7 +360,7 @@ def not_and_and_not_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.or %arg562, %arg563 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.and %2, %arg561 : i32
+  %3 = llvm.and %arg561, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -405,7 +373,7 @@ theorem not_and_and_not_commute1_proof : not_and_and_not_commute1_before ⊑ not
   intros
   try simp
   ---BEGIN not_and_and_not_commute1
-  apply not_and_and_not_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_not_commute1
 
 
@@ -444,7 +412,7 @@ theorem not_or_or_not_proof : not_or_or_not_before ⊑ not_or_or_not_after := by
   intros
   try simp
   ---BEGIN not_or_or_not
-  apply not_or_or_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_not
 
 
@@ -466,7 +434,7 @@ def not_or_or_not_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg547, %arg548 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.or %2, %arg546 : i32
+  %3 = llvm.or %arg546, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -479,7 +447,7 @@ theorem not_or_or_not_commute1_proof : not_or_or_not_commute1_before ⊑ not_or_
   intros
   try simp
   ---BEGIN not_or_or_not_commute1
-  apply not_or_or_not_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_not_commute1
 
 
@@ -517,7 +485,7 @@ theorem or_not_and_proof : or_not_and_before ⊑ or_not_and_after := by
   intros
   try simp
   ---BEGIN or_not_and
-  apply or_not_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and
 
 
@@ -559,7 +527,7 @@ theorem or_not_and_commute1_proof : or_not_and_commute1_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute1
-  apply or_not_and_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute1
 
 
@@ -586,7 +554,7 @@ def or_not_and_commute2_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg532 : i32
-  %3 = llvm.xor %2, %arg533 : i32
+  %3 = llvm.xor %arg533, %2 : i32
   %4 = llvm.xor %arg531, %1 : i32
   %5 = llvm.and %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -601,7 +569,7 @@ theorem or_not_and_commute2_proof : or_not_and_commute2_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute2
-  apply or_not_and_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute2
 
 
@@ -639,7 +607,7 @@ theorem or_not_and_commute3_proof : or_not_and_commute3_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute3
-  apply or_not_and_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute3
 
 
@@ -666,7 +634,7 @@ def or_not_and_commute4_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg527 : i32
-  %3 = llvm.xor %2, %arg526 : i32
+  %3 = llvm.xor %arg526, %2 : i32
   %4 = llvm.xor %arg525, %1 : i32
   %5 = llvm.and %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -681,7 +649,7 @@ theorem or_not_and_commute4_proof : or_not_and_commute4_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute4
-  apply or_not_and_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute4
 
 
@@ -710,7 +678,7 @@ def or_not_and_commute5_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg522 : i32
   %3 = llvm.sdiv %0, %arg524 : i32
-  %4 = llvm.xor %3, %arg523 : i32
+  %4 = llvm.xor %arg523, %3 : i32
   %5 = llvm.xor %2, %1 : i32
   %6 = llvm.and %4, %5 : i32
   "llvm.return"(%6) : (i32) -> ()
@@ -725,7 +693,7 @@ theorem or_not_and_commute5_proof : or_not_and_commute5_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute5
-  apply or_not_and_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute5
 
 
@@ -763,7 +731,7 @@ theorem or_not_and_commute6_proof : or_not_and_commute6_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute6
-  apply or_not_and_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute6
 
 
@@ -801,7 +769,7 @@ theorem or_not_and_commute7_proof : or_not_and_commute7_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute7
-  apply or_not_and_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute7
 
 
@@ -845,7 +813,7 @@ theorem or_not_and_commute8_proof : or_not_and_commute8_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute8
-  apply or_not_and_commute8_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute8
 
 
@@ -891,8 +859,92 @@ theorem or_not_and_commute9_proof : or_not_and_commute9_before ⊑ or_not_and_co
   intros
   try simp
   ---BEGIN or_not_and_commute9
-  apply or_not_and_commute9_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_commute9
+
+
+
+def or_not_and_wrong_c_before := [llvm|
+{
+^0(%arg488 : i32, %arg489 : i32, %arg490 : i32, %arg491 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg488, %arg489 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %2, %arg490 : i32
+  %4 = llvm.or %arg488, %arg491 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.and %5, %arg489 : i32
+  %7 = llvm.or %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def or_not_and_wrong_c_after := [llvm|
+{
+^0(%arg488 : i32, %arg489 : i32, %arg490 : i32, %arg491 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg488, %arg489 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %arg490, %2 : i32
+  %4 = llvm.or %arg488, %arg491 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.and %arg489, %5 : i32
+  %7 = llvm.or %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+theorem or_not_and_wrong_c_proof : or_not_and_wrong_c_before ⊑ or_not_and_wrong_c_after := by
+  unfold or_not_and_wrong_c_before or_not_and_wrong_c_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_not_and_wrong_c
+  all_goals (try extract_goal ; sorry)
+  ---END or_not_and_wrong_c
+
+
+
+def or_not_and_wrong_b_before := [llvm|
+{
+^0(%arg484 : i32, %arg485 : i32, %arg486 : i32, %arg487 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg484, %arg485 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %2, %arg486 : i32
+  %4 = llvm.or %arg484, %arg486 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.and %5, %arg487 : i32
+  %7 = llvm.or %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def or_not_and_wrong_b_after := [llvm|
+{
+^0(%arg484 : i32, %arg485 : i32, %arg486 : i32, %arg487 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg484, %arg485 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %arg486, %2 : i32
+  %4 = llvm.or %arg484, %arg486 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.and %arg487, %5 : i32
+  %7 = llvm.or %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+theorem or_not_and_wrong_b_proof : or_not_and_wrong_b_before ⊑ or_not_and_wrong_b_after := by
+  unfold or_not_and_wrong_b_before or_not_and_wrong_b_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_not_and_wrong_b
+  all_goals (try extract_goal ; sorry)
+  ---END or_not_and_wrong_b
 
 
 
@@ -929,7 +981,7 @@ theorem and_not_or_proof : and_not_or_before ⊑ and_not_or_after := by
   intros
   try simp
   ---BEGIN and_not_or
-  apply and_not_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or
 
 
@@ -971,7 +1023,7 @@ theorem and_not_or_commute1_proof : and_not_or_commute1_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute1
-  apply and_not_or_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute1
 
 
@@ -998,7 +1050,7 @@ def and_not_or_commute2_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg476 : i32
-  %3 = llvm.xor %2, %arg477 : i32
+  %3 = llvm.xor %arg477, %2 : i32
   %4 = llvm.and %3, %arg475 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1013,7 +1065,7 @@ theorem and_not_or_commute2_proof : and_not_or_commute2_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute2
-  apply and_not_or_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute2
 
 
@@ -1051,7 +1103,7 @@ theorem and_not_or_commute3_proof : and_not_or_commute3_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute3
-  apply and_not_or_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute3
 
 
@@ -1078,7 +1130,7 @@ def and_not_or_commute4_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg471 : i32
-  %3 = llvm.xor %2, %arg470 : i32
+  %3 = llvm.xor %arg470, %2 : i32
   %4 = llvm.and %3, %arg469 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1093,7 +1145,7 @@ theorem and_not_or_commute4_proof : and_not_or_commute4_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute4
-  apply and_not_or_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute4
 
 
@@ -1122,7 +1174,7 @@ def and_not_or_commute5_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg466 : i32
   %3 = llvm.sdiv %0, %arg468 : i32
-  %4 = llvm.xor %3, %arg467 : i32
+  %4 = llvm.xor %arg467, %3 : i32
   %5 = llvm.and %4, %2 : i32
   %6 = llvm.xor %5, %1 : i32
   "llvm.return"(%6) : (i32) -> ()
@@ -1137,7 +1189,7 @@ theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute5
-  apply and_not_or_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute5
 
 
@@ -1175,7 +1227,7 @@ theorem and_not_or_commute6_proof : and_not_or_commute6_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute6
-  apply and_not_or_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute6
 
 
@@ -1213,7 +1265,7 @@ theorem and_not_or_commute7_proof : and_not_or_commute7_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute7
-  apply and_not_or_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute7
 
 
@@ -1257,7 +1309,7 @@ theorem and_not_or_commute8_proof : and_not_or_commute8_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute8
-  apply and_not_or_commute8_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute8
 
 
@@ -1303,8 +1355,92 @@ theorem and_not_or_commute9_proof : and_not_or_commute9_before ⊑ and_not_or_co
   intros
   try simp
   ---BEGIN and_not_or_commute9
-  apply and_not_or_commute9_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_commute9
+
+
+
+def and_not_or_wrong_c_before := [llvm|
+{
+^0(%arg432 : i32, %arg433 : i32, %arg434 : i32, %arg435 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg432, %arg433 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %2, %arg434 : i32
+  %4 = llvm.and %arg432, %arg435 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.or %5, %arg433 : i32
+  %7 = llvm.and %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def and_not_or_wrong_c_after := [llvm|
+{
+^0(%arg432 : i32, %arg433 : i32, %arg434 : i32, %arg435 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg432, %arg433 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg434, %2 : i32
+  %4 = llvm.and %arg432, %arg435 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.or %arg433, %5 : i32
+  %7 = llvm.and %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+theorem and_not_or_wrong_c_proof : and_not_or_wrong_c_before ⊑ and_not_or_wrong_c_after := by
+  unfold and_not_or_wrong_c_before and_not_or_wrong_c_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_not_or_wrong_c
+  all_goals (try extract_goal ; sorry)
+  ---END and_not_or_wrong_c
+
+
+
+def and_not_or_wrong_b_before := [llvm|
+{
+^0(%arg428 : i32, %arg429 : i32, %arg430 : i32, %arg431 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg428, %arg429 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %2, %arg430 : i32
+  %4 = llvm.and %arg428, %arg430 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.or %5, %arg431 : i32
+  %7 = llvm.and %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+def and_not_or_wrong_b_after := [llvm|
+{
+^0(%arg428 : i32, %arg429 : i32, %arg430 : i32, %arg431 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg428, %arg429 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg430, %2 : i32
+  %4 = llvm.and %arg428, %arg430 : i32
+  %5 = llvm.xor %4, %0 : i32
+  %6 = llvm.or %arg431, %5 : i32
+  %7 = llvm.and %3, %6 : i32
+  "llvm.return"(%7) : (i32) -> ()
+}
+]
+theorem and_not_or_wrong_b_proof : and_not_or_wrong_b_before ⊑ and_not_or_wrong_b_after := by
+  unfold and_not_or_wrong_b_before and_not_or_wrong_b_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_not_or_wrong_b
+  all_goals (try extract_goal ; sorry)
+  ---END and_not_or_wrong_b
 
 
 
@@ -1340,7 +1476,7 @@ theorem or_and_not_not_proof : or_and_not_not_before ⊑ or_and_not_not_after :=
   intros
   try simp
   ---BEGIN or_and_not_not
-  apply or_and_not_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not
 
 
@@ -1366,7 +1502,7 @@ def or_and_not_not_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg423 : i32
-  %3 = llvm.and %2, %arg424 : i32
+  %3 = llvm.and %arg424, %2 : i32
   %4 = llvm.or %3, %arg422 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1381,7 +1517,7 @@ theorem or_and_not_not_commute1_proof : or_and_not_not_commute1_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute1
-  apply or_and_not_not_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute1
 
 
@@ -1418,7 +1554,7 @@ theorem or_and_not_not_commute2_proof : or_and_not_not_commute2_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute2
-  apply or_and_not_not_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute2
 
 
@@ -1455,7 +1591,7 @@ theorem or_and_not_not_commute3_proof : or_and_not_not_commute3_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute3
-  apply or_and_not_not_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute3
 
 
@@ -1492,7 +1628,7 @@ theorem or_and_not_not_commute4_proof : or_and_not_not_commute4_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute4
-  apply or_and_not_not_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute4
 
 
@@ -1529,7 +1665,7 @@ theorem or_and_not_not_commute5_proof : or_and_not_not_commute5_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute5
-  apply or_and_not_not_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute5
 
 
@@ -1555,7 +1691,7 @@ def or_and_not_not_commute6_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg408 : i32
-  %3 = llvm.and %2, %arg409 : i32
+  %3 = llvm.and %arg409, %2 : i32
   %4 = llvm.or %3, %arg407 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1570,7 +1706,7 @@ theorem or_and_not_not_commute6_proof : or_and_not_not_commute6_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute6
-  apply or_and_not_not_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute6
 
 
@@ -1607,8 +1743,88 @@ theorem or_and_not_not_commute7_proof : or_and_not_not_commute7_before ⊑ or_an
   intros
   try simp
   ---BEGIN or_and_not_not_commute7
-  apply or_and_not_not_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_not_not_commute7
+
+
+
+def or_and_not_not_wrong_a_before := [llvm|
+{
+^0(%arg382 : i32, %arg383 : i32, %arg384 : i32, %arg385 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg383, %arg385 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg382, %arg384 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.and %4, %arg383 : i32
+  %6 = llvm.or %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def or_and_not_not_wrong_a_after := [llvm|
+{
+^0(%arg382 : i32, %arg383 : i32, %arg384 : i32, %arg385 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg383, %arg385 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg382, %arg384 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.and %arg383, %4 : i32
+  %6 = llvm.or %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem or_and_not_not_wrong_a_proof : or_and_not_not_wrong_a_before ⊑ or_and_not_not_wrong_a_after := by
+  unfold or_and_not_not_wrong_a_before or_and_not_not_wrong_a_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_and_not_not_wrong_a
+  all_goals (try extract_goal ; sorry)
+  ---END or_and_not_not_wrong_a
+
+
+
+def or_and_not_not_wrong_b_before := [llvm|
+{
+^0(%arg378 : i32, %arg379 : i32, %arg380 : i32, %arg381 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg381, %arg378 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg378, %arg380 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.and %4, %arg379 : i32
+  %6 = llvm.or %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def or_and_not_not_wrong_b_after := [llvm|
+{
+^0(%arg378 : i32, %arg379 : i32, %arg380 : i32, %arg381 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.or %arg381, %arg378 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.or %arg378, %arg380 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.and %arg379, %4 : i32
+  %6 = llvm.or %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem or_and_not_not_wrong_b_proof : or_and_not_not_wrong_b_before ⊑ or_and_not_not_wrong_b_after := by
+  unfold or_and_not_not_wrong_b_before or_and_not_not_wrong_b_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_and_not_not_wrong_b
+  all_goals (try extract_goal ; sorry)
+  ---END or_and_not_not_wrong_b
 
 
 
@@ -1644,7 +1860,7 @@ theorem and_or_not_not_proof : and_or_not_not_before ⊑ and_or_not_not_after :=
   intros
   try simp
   ---BEGIN and_or_not_not
-  apply and_or_not_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not
 
 
@@ -1670,7 +1886,7 @@ def and_or_not_not_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg373 : i32
-  %3 = llvm.or %2, %arg374 : i32
+  %3 = llvm.or %arg374, %2 : i32
   %4 = llvm.and %3, %arg372 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1685,7 +1901,7 @@ theorem and_or_not_not_commute1_proof : and_or_not_not_commute1_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute1
-  apply and_or_not_not_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute1
 
 
@@ -1722,7 +1938,7 @@ theorem and_or_not_not_commute2_proof : and_or_not_not_commute2_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute2
-  apply and_or_not_not_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute2
 
 
@@ -1759,7 +1975,7 @@ theorem and_or_not_not_commute3_proof : and_or_not_not_commute3_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute3
-  apply and_or_not_not_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute3
 
 
@@ -1796,7 +2012,7 @@ theorem and_or_not_not_commute4_proof : and_or_not_not_commute4_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute4
-  apply and_or_not_not_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute4
 
 
@@ -1833,7 +2049,7 @@ theorem and_or_not_not_commute5_proof : and_or_not_not_commute5_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute5
-  apply and_or_not_not_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute5
 
 
@@ -1859,7 +2075,7 @@ def and_or_not_not_commute6_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg358 : i32
-  %3 = llvm.or %2, %arg359 : i32
+  %3 = llvm.or %arg359, %2 : i32
   %4 = llvm.and %3, %arg357 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -1874,7 +2090,7 @@ theorem and_or_not_not_commute6_proof : and_or_not_not_commute6_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute6
-  apply and_or_not_not_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute6
 
 
@@ -1911,7 +2127,7 @@ theorem and_or_not_not_commute7_proof : and_or_not_not_commute7_before ⊑ and_o
   intros
   try simp
   ---BEGIN and_or_not_not_commute7
-  apply and_or_not_not_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_commute7
 
 
@@ -1936,7 +2152,7 @@ def and_or_not_not_wrong_a_after := [llvm|
   %1 = llvm.and %arg333, %arg335 : i32
   %2 = llvm.and %arg332, %arg334 : i32
   %3 = llvm.xor %2, %0 : i32
-  %4 = llvm.or %3, %arg333 : i32
+  %4 = llvm.or %arg333, %3 : i32
   %5 = llvm.xor %1, %4 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -1950,8 +2166,48 @@ theorem and_or_not_not_wrong_a_proof : and_or_not_not_wrong_a_before ⊑ and_or_
   intros
   try simp
   ---BEGIN and_or_not_not_wrong_a
-  apply and_or_not_not_wrong_a_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_or_not_not_wrong_a
+
+
+
+def and_or_not_not_wrong_b_before := [llvm|
+{
+^0(%arg328 : i32, %arg329 : i32, %arg330 : i32, %arg331 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg331, %arg328 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %arg328, %arg330 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.or %4, %arg329 : i32
+  %6 = llvm.and %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def and_or_not_not_wrong_b_after := [llvm|
+{
+^0(%arg328 : i32, %arg329 : i32, %arg330 : i32, %arg331 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg331, %arg328 : i32
+  %2 = llvm.xor %1, %0 : i32
+  %3 = llvm.and %arg328, %arg330 : i32
+  %4 = llvm.xor %3, %0 : i32
+  %5 = llvm.or %arg329, %4 : i32
+  %6 = llvm.and %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_or_not_not_wrong_b_proof : and_or_not_not_wrong_b_before ⊑ and_or_not_not_wrong_b_after := by
+  unfold and_or_not_not_wrong_b_before and_or_not_not_wrong_b_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_or_not_not_wrong_b
+  all_goals (try extract_goal ; sorry)
+  ---END and_or_not_not_wrong_b
 
 
 
@@ -1990,7 +2246,7 @@ theorem and_not_or_or_not_or_xor_proof : and_not_or_or_not_or_xor_before ⊑ and
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor
-  apply and_not_or_or_not_or_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor
 
 
@@ -2030,7 +2286,7 @@ theorem and_not_or_or_not_or_xor_commute1_proof : and_not_or_or_not_or_xor_commu
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute1
-  apply and_not_or_or_not_or_xor_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute1
 
 
@@ -2074,7 +2330,7 @@ theorem and_not_or_or_not_or_xor_commute2_proof : and_not_or_or_not_or_xor_commu
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute2
-  apply and_not_or_or_not_or_xor_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute2
 
 
@@ -2114,7 +2370,7 @@ theorem and_not_or_or_not_or_xor_commute3_proof : and_not_or_or_not_or_xor_commu
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute3
-  apply and_not_or_or_not_or_xor_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute3
 
 
@@ -2158,7 +2414,7 @@ theorem and_not_or_or_not_or_xor_commute4_proof : and_not_or_or_not_or_xor_commu
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute4
-  apply and_not_or_or_not_or_xor_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute4
 
 
@@ -2198,7 +2454,7 @@ theorem and_not_or_or_not_or_xor_commute5_proof : and_not_or_or_not_or_xor_commu
   intros
   try simp
   ---BEGIN and_not_or_or_not_or_xor_commute5
-  apply and_not_or_or_not_or_xor_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_not_or_or_not_or_xor_commute5
 
 
@@ -2223,7 +2479,7 @@ def or_not_and_and_not_and_xor_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg290, %arg291 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.or %2, %arg289 : i32
+  %3 = llvm.or %arg289, %2 : i32
   %4 = llvm.xor %arg290, %arg291 : i32
   %5 = llvm.and %4, %arg289 : i32
   %6 = llvm.xor %5, %3 : i32
@@ -2239,7 +2495,7 @@ theorem or_not_and_and_not_and_xor_proof : or_not_and_and_not_and_xor_before ⊑
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor
-  apply or_not_and_and_not_and_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor
 
 
@@ -2264,7 +2520,7 @@ def or_not_and_and_not_and_xor_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg288, %arg287 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.or %2, %arg286 : i32
+  %3 = llvm.or %arg286, %2 : i32
   %4 = llvm.xor %arg287, %arg288 : i32
   %5 = llvm.and %4, %arg286 : i32
   %6 = llvm.xor %5, %3 : i32
@@ -2280,7 +2536,7 @@ theorem or_not_and_and_not_and_xor_commute1_proof : or_not_and_and_not_and_xor_c
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute1
-  apply or_not_and_and_not_and_xor_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute1
 
 
@@ -2325,7 +2581,7 @@ theorem or_not_and_and_not_and_xor_commute2_proof : or_not_and_and_not_and_xor_c
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute2
-  apply or_not_and_and_not_and_xor_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute2
 
 
@@ -2350,7 +2606,7 @@ def or_not_and_and_not_and_xor_commute3_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg281, %arg282 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.or %2, %arg280 : i32
+  %3 = llvm.or %arg280, %2 : i32
   %4 = llvm.xor %arg282, %arg281 : i32
   %5 = llvm.and %4, %arg280 : i32
   %6 = llvm.xor %5, %3 : i32
@@ -2366,7 +2622,7 @@ theorem or_not_and_and_not_and_xor_commute3_proof : or_not_and_and_not_and_xor_c
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute3
-  apply or_not_and_and_not_and_xor_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute3
 
 
@@ -2411,7 +2667,7 @@ theorem or_not_and_and_not_and_xor_commute4_proof : or_not_and_and_not_and_xor_c
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute4
-  apply or_not_and_and_not_and_xor_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute4
 
 
@@ -2436,7 +2692,7 @@ def or_not_and_and_not_and_xor_commute5_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg275, %arg276 : i32
   %2 = llvm.xor %1, %0 : i32
-  %3 = llvm.or %2, %arg274 : i32
+  %3 = llvm.or %arg274, %2 : i32
   %4 = llvm.xor %arg275, %arg276 : i32
   %5 = llvm.and %4, %arg274 : i32
   %6 = llvm.xor %5, %3 : i32
@@ -2452,7 +2708,7 @@ theorem or_not_and_and_not_and_xor_commute5_proof : or_not_and_and_not_and_xor_c
   intros
   try simp
   ---BEGIN or_not_and_and_not_and_xor_commute5
-  apply or_not_and_and_not_and_xor_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_and_and_not_and_xor_commute5
 
 
@@ -2490,7 +2746,7 @@ theorem not_and_and_or_not_or_or_proof : not_and_and_or_not_or_or_before ⊑ not
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or
-  apply not_and_and_or_not_or_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or
 
 
@@ -2528,7 +2784,7 @@ theorem not_and_and_or_not_or_or_commute1_or_proof : not_and_and_or_not_or_or_co
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_or
-  apply not_and_and_or_not_or_or_commute1_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_or
 
 
@@ -2566,7 +2822,7 @@ theorem not_and_and_or_not_or_or_commute2_or_proof : not_and_and_or_not_or_or_co
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_or
-  apply not_and_and_or_not_or_or_commute2_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_or
 
 
@@ -2604,7 +2860,7 @@ theorem not_and_and_or_not_or_or_commute1_and_proof : not_and_and_or_not_or_or_c
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1_and
-  apply not_and_and_or_not_or_or_commute1_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1_and
 
 
@@ -2642,7 +2898,7 @@ theorem not_and_and_or_not_or_or_commute2_and_proof : not_and_and_or_not_or_or_c
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2_and
-  apply not_and_and_or_not_or_or_commute2_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2_and
 
 
@@ -2680,7 +2936,7 @@ theorem not_and_and_or_not_or_or_commute1_proof : not_and_and_or_not_or_or_commu
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute1
-  apply not_and_and_or_not_or_or_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute1
 
 
@@ -2722,7 +2978,7 @@ theorem not_and_and_or_not_or_or_commute2_proof : not_and_and_or_not_or_or_commu
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute2
-  apply not_and_and_or_not_or_or_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute2
 
 
@@ -2749,7 +3005,7 @@ def not_and_and_or_not_or_or_commute3_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg233 : i32
-  %3 = llvm.xor %2, %arg234 : i32
+  %3 = llvm.xor %arg234, %2 : i32
   %4 = llvm.or %3, %arg232 : i32
   %5 = llvm.xor %4, %1 : i32
   "llvm.return"(%5) : (i32) -> ()
@@ -2764,7 +3020,7 @@ theorem not_and_and_or_not_or_or_commute3_proof : not_and_and_or_not_or_or_commu
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute3
-  apply not_and_and_or_not_or_or_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute3
 
 
@@ -2806,7 +3062,7 @@ theorem not_and_and_or_not_or_or_commute4_proof : not_and_and_or_not_or_or_commu
   intros
   try simp
   ---BEGIN not_and_and_or_not_or_or_commute4
-  apply not_and_and_or_not_or_or_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_not_or_or_commute4
 
 
@@ -2844,7 +3100,7 @@ theorem not_or_or_and_not_and_and_proof : not_or_or_and_not_and_and_before ⊑ n
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and
-  apply not_or_or_and_not_and_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and
 
 
@@ -2882,7 +3138,7 @@ theorem not_or_or_and_not_and_and_commute1_and_proof : not_or_or_and_not_and_and
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_and
-  apply not_or_or_and_not_and_and_commute1_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_and
 
 
@@ -2920,7 +3176,7 @@ theorem not_or_or_and_not_and_and_commute2_and_proof : not_or_or_and_not_and_and
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_and
-  apply not_or_or_and_not_and_and_commute2_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_and
 
 
@@ -2958,7 +3214,7 @@ theorem not_or_or_and_not_and_and_commute1_or_proof : not_or_or_and_not_and_and_
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1_or
-  apply not_or_or_and_not_and_and_commute1_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1_or
 
 
@@ -2996,7 +3252,7 @@ theorem not_or_or_and_not_and_and_commute2_or_proof : not_or_or_and_not_and_and_
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2_or
-  apply not_or_or_and_not_and_and_commute2_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2_or
 
 
@@ -3034,7 +3290,7 @@ theorem not_or_or_and_not_and_and_commute1_proof : not_or_or_and_not_and_and_com
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute1
-  apply not_or_or_and_not_and_and_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute1
 
 
@@ -3076,7 +3332,7 @@ theorem not_or_or_and_not_and_and_commute2_proof : not_or_or_and_not_and_and_com
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute2
-  apply not_or_or_and_not_and_and_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute2
 
 
@@ -3104,7 +3360,7 @@ def not_or_or_and_not_and_and_commute3_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg188 : i32
   %3 = llvm.xor %arg187, %1 : i32
-  %4 = llvm.xor %2, %arg189 : i32
+  %4 = llvm.xor %arg189, %2 : i32
   %5 = llvm.or %4, %3 : i32
   "llvm.return"(%5) : (i32) -> ()
 }
@@ -3118,7 +3374,7 @@ theorem not_or_or_and_not_and_and_commute3_proof : not_or_or_and_not_and_and_com
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute3
-  apply not_or_or_and_not_and_and_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute3
 
 
@@ -3160,7 +3416,7 @@ theorem not_or_or_and_not_and_and_commute4_proof : not_or_or_and_not_and_and_com
   intros
   try simp
   ---BEGIN not_or_or_and_not_and_and_commute4
-  apply not_or_or_and_not_and_and_commute4_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_not_and_and_commute4
 
 
@@ -3184,7 +3440,7 @@ def not_and_and_or_no_or_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg163, %0 : i32
   %2 = llvm.xor %arg164, %0 : i32
-  %3 = llvm.or %2, %arg165 : i32
+  %3 = llvm.or %arg165, %2 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3198,7 +3454,7 @@ theorem not_and_and_or_no_or_proof : not_and_and_or_no_or_before ⊑ not_and_and
   intros
   try simp
   ---BEGIN not_and_and_or_no_or
-  apply not_and_and_or_no_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or
 
 
@@ -3222,7 +3478,7 @@ def not_and_and_or_no_or_commute1_and_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg160, %0 : i32
   %2 = llvm.xor %arg161, %0 : i32
-  %3 = llvm.or %2, %arg162 : i32
+  %3 = llvm.or %arg162, %2 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3236,7 +3492,7 @@ theorem not_and_and_or_no_or_commute1_and_proof : not_and_and_or_no_or_commute1_
   intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute1_and
-  apply not_and_and_or_no_or_commute1_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1_and
 
 
@@ -3260,7 +3516,7 @@ def not_and_and_or_no_or_commute2_and_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg157, %0 : i32
   %2 = llvm.xor %arg158, %0 : i32
-  %3 = llvm.or %2, %arg159 : i32
+  %3 = llvm.or %arg159, %2 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3274,7 +3530,7 @@ theorem not_and_and_or_no_or_commute2_and_proof : not_and_and_or_no_or_commute2_
   intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute2_and
-  apply not_and_and_or_no_or_commute2_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2_and
 
 
@@ -3298,7 +3554,7 @@ def not_and_and_or_no_or_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg154, %0 : i32
   %2 = llvm.xor %arg155, %0 : i32
-  %3 = llvm.or %2, %arg156 : i32
+  %3 = llvm.or %arg156, %2 : i32
   %4 = llvm.and %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3312,7 +3568,7 @@ theorem not_and_and_or_no_or_commute1_proof : not_and_and_or_no_or_commute1_befo
   intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute1
-  apply not_and_and_or_no_or_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute1
 
 
@@ -3340,7 +3596,7 @@ def not_and_and_or_no_or_commute2_after := [llvm|
   %2 = llvm.sdiv %0, %arg152 : i32
   %3 = llvm.xor %arg151, %1 : i32
   %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.or %4, %arg153 : i32
+  %5 = llvm.or %arg153, %4 : i32
   %6 = llvm.and %5, %3 : i32
   "llvm.return"(%6) : (i32) -> ()
 }
@@ -3354,7 +3610,7 @@ theorem not_and_and_or_no_or_commute2_proof : not_and_and_or_no_or_commute2_befo
   intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute2
-  apply not_and_and_or_no_or_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute2
 
 
@@ -3396,7 +3652,7 @@ theorem not_and_and_or_no_or_commute3_proof : not_and_and_or_no_or_commute3_befo
   intros
   try simp
   ---BEGIN not_and_and_or_no_or_commute3
-  apply not_and_and_or_no_or_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_and_and_or_no_or_commute3
 
 
@@ -3420,7 +3676,7 @@ def not_or_or_and_no_and_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg121, %0 : i32
   %2 = llvm.xor %arg122, %0 : i32
-  %3 = llvm.and %2, %arg123 : i32
+  %3 = llvm.and %arg123, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3434,7 +3690,7 @@ theorem not_or_or_and_no_and_proof : not_or_or_and_no_and_before ⊑ not_or_or_a
   intros
   try simp
   ---BEGIN not_or_or_and_no_and
-  apply not_or_or_and_no_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and
 
 
@@ -3458,7 +3714,7 @@ def not_or_or_and_no_and_commute1_or_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg118, %0 : i32
   %2 = llvm.xor %arg119, %0 : i32
-  %3 = llvm.and %2, %arg120 : i32
+  %3 = llvm.and %arg120, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3472,7 +3728,7 @@ theorem not_or_or_and_no_and_commute1_or_proof : not_or_or_and_no_and_commute1_o
   intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute1_or
-  apply not_or_or_and_no_and_commute1_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1_or
 
 
@@ -3496,7 +3752,7 @@ def not_or_or_and_no_and_commute2_or_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg115, %0 : i32
   %2 = llvm.xor %arg116, %0 : i32
-  %3 = llvm.and %2, %arg117 : i32
+  %3 = llvm.and %arg117, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3510,7 +3766,7 @@ theorem not_or_or_and_no_and_commute2_or_proof : not_or_or_and_no_and_commute2_o
   intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute2_or
-  apply not_or_or_and_no_and_commute2_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2_or
 
 
@@ -3534,7 +3790,7 @@ def not_or_or_and_no_and_commute1_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg112, %0 : i32
   %2 = llvm.xor %arg113, %0 : i32
-  %3 = llvm.and %2, %arg114 : i32
+  %3 = llvm.and %arg114, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -3548,7 +3804,7 @@ theorem not_or_or_and_no_and_commute1_proof : not_or_or_and_no_and_commute1_befo
   intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute1
-  apply not_or_or_and_no_and_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute1
 
 
@@ -3576,7 +3832,7 @@ def not_or_or_and_no_and_commute2_after := [llvm|
   %2 = llvm.sdiv %0, %arg110 : i32
   %3 = llvm.xor %arg109, %1 : i32
   %4 = llvm.xor %2, %1 : i32
-  %5 = llvm.and %4, %arg111 : i32
+  %5 = llvm.and %arg111, %4 : i32
   %6 = llvm.or %5, %3 : i32
   "llvm.return"(%6) : (i32) -> ()
 }
@@ -3590,7 +3846,7 @@ theorem not_or_or_and_no_and_commute2_proof : not_or_or_and_no_and_commute2_befo
   intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute2
-  apply not_or_or_and_no_and_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute2
 
 
@@ -3632,7 +3888,7 @@ theorem not_or_or_and_no_and_commute3_proof : not_or_or_and_no_and_commute3_befo
   intros
   try simp
   ---BEGIN not_or_or_and_no_and_commute3
-  apply not_or_or_and_no_and_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_or_and_no_and_commute3
 
 
@@ -3653,7 +3909,7 @@ def and_orn_xor_after := [llvm|
 ^0(%arg80 : i4, %arg81 : i4):
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.xor %arg80, %0 : i4
-  %2 = llvm.and %1, %arg81 : i4
+  %2 = llvm.and %arg81, %1 : i4
   "llvm.return"(%2) : (i4) -> ()
 }
 ]
@@ -3666,7 +3922,7 @@ theorem and_orn_xor_proof : and_orn_xor_before ⊑ and_orn_xor_after := by
   intros
   try simp
   ---BEGIN and_orn_xor
-  apply and_orn_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_orn_xor
 
 
@@ -3704,7 +3960,7 @@ theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor
   intros
   try simp
   ---BEGIN and_orn_xor_commute8
-  apply and_orn_xor_commute8_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_orn_xor_commute8
 
 
@@ -3738,7 +3994,7 @@ theorem canonicalize_logic_first_or0_proof : canonicalize_logic_first_or0_before
   intros
   try simp
   ---BEGIN canonicalize_logic_first_or0
-  apply canonicalize_logic_first_or0_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0
 
 
@@ -3772,7 +4028,7 @@ theorem canonicalize_logic_first_or0_nsw_proof : canonicalize_logic_first_or0_ns
   intros
   try simp
   ---BEGIN canonicalize_logic_first_or0_nsw
-  apply canonicalize_logic_first_or0_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nsw
 
 
@@ -3806,7 +4062,7 @@ theorem canonicalize_logic_first_or0_nswnuw_proof : canonicalize_logic_first_or0
   intros
   try simp
   ---BEGIN canonicalize_logic_first_or0_nswnuw
-  apply canonicalize_logic_first_or0_nswnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_or0_nswnuw
 
 
@@ -3840,7 +4096,7 @@ theorem canonicalize_logic_first_and0_proof : canonicalize_logic_first_and0_befo
   intros
   try simp
   ---BEGIN canonicalize_logic_first_and0
-  apply canonicalize_logic_first_and0_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0
 
 
@@ -3874,7 +4130,7 @@ theorem canonicalize_logic_first_and0_nsw_proof : canonicalize_logic_first_and0_
   intros
   try simp
   ---BEGIN canonicalize_logic_first_and0_nsw
-  apply canonicalize_logic_first_and0_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nsw
 
 
@@ -3908,7 +4164,7 @@ theorem canonicalize_logic_first_and0_nswnuw_proof : canonicalize_logic_first_an
   intros
   try simp
   ---BEGIN canonicalize_logic_first_and0_nswnuw
-  apply canonicalize_logic_first_and0_nswnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_and0_nswnuw
 
 
@@ -3942,7 +4198,7 @@ theorem canonicalize_logic_first_xor_0_proof : canonicalize_logic_first_xor_0_be
   intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0
-  apply canonicalize_logic_first_xor_0_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0
 
 
@@ -3976,7 +4232,7 @@ theorem canonicalize_logic_first_xor_0_nsw_proof : canonicalize_logic_first_xor_
   intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0_nsw
-  apply canonicalize_logic_first_xor_0_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nsw
 
 
@@ -4010,7 +4266,7 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   intros
   try simp
   ---BEGIN canonicalize_logic_first_xor_0_nswnuw
-  apply canonicalize_logic_first_xor_0_nswnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END canonicalize_logic_first_xor_0_nswnuw
 
 

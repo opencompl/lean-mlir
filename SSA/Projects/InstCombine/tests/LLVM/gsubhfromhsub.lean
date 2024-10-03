@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhfromhsub_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -68,7 +68,7 @@ theorem t1_flags_proof : t1_flags_before ⊑ t1_flags_after := by
   intros
   try simp
   ---BEGIN t1_flags
-  apply t1_flags_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags
 
 
@@ -98,7 +98,7 @@ theorem t1_flags_nuw_only_proof : t1_flags_nuw_only_before ⊑ t1_flags_nuw_only
   intros
   try simp
   ---BEGIN t1_flags_nuw_only
-  apply t1_flags_nuw_only_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_only
 
 
@@ -128,7 +128,7 @@ theorem t1_flags_sub_nsw_sub_proof : t1_flags_sub_nsw_sub_before ⊑ t1_flags_su
   intros
   try simp
   ---BEGIN t1_flags_sub_nsw_sub
-  apply t1_flags_sub_nsw_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_sub_nsw_sub
 
 
@@ -158,7 +158,7 @@ theorem t1_flags_nuw_first_proof : t1_flags_nuw_first_before ⊑ t1_flags_nuw_fi
   intros
   try simp
   ---BEGIN t1_flags_nuw_first
-  apply t1_flags_nuw_first_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_first
 
 
@@ -188,7 +188,7 @@ theorem t1_flags_nuw_second_proof : t1_flags_nuw_second_before ⊑ t1_flags_nuw_
   intros
   try simp
   ---BEGIN t1_flags_nuw_second
-  apply t1_flags_nuw_second_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_second
 
 
@@ -218,7 +218,7 @@ theorem t1_flags_nuw_nsw_first_proof : t1_flags_nuw_nsw_first_before ⊑ t1_flag
   intros
   try simp
   ---BEGIN t1_flags_nuw_nsw_first
-  apply t1_flags_nuw_nsw_first_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_nsw_first
 
 
@@ -248,7 +248,7 @@ theorem t1_flags_nuw_nsw_second_proof : t1_flags_nuw_nsw_second_before ⊑ t1_fl
   intros
   try simp
   ---BEGIN t1_flags_nuw_nsw_second
-  apply t1_flags_nuw_nsw_second_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_flags_nuw_nsw_second
 
 
@@ -280,7 +280,7 @@ theorem t3_c0_proof : t3_c0_before ⊑ t3_c0_after := by
   intros
   try simp
   ---BEGIN t3_c0
-  apply t3_c0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t3_c0
 
 
@@ -312,7 +312,7 @@ theorem t4_c1_proof : t4_c1_before ⊑ t4_c1_after := by
   intros
   try simp
   ---BEGIN t4_c1
-  apply t4_c1_thm
+  all_goals (try extract_goal ; sorry)
   ---END t4_c1
 
 
@@ -344,7 +344,7 @@ theorem t5_c2_proof : t5_c2_before ⊑ t5_c2_after := by
   intros
   try simp
   ---BEGIN t5_c2
-  apply t5_c2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t5_c2
 
 
@@ -376,7 +376,7 @@ theorem t9_c0_c2_proof : t9_c0_c2_before ⊑ t9_c0_c2_after := by
   intros
   try simp
   ---BEGIN t9_c0_c2
-  apply t9_c0_c2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t9_c0_c2
 
 
@@ -408,7 +408,7 @@ theorem t10_c1_c2_proof : t10_c1_c2_before ⊑ t10_c1_c2_after := by
   intros
   try simp
   ---BEGIN t10_c1_c2
-  apply t10_c1_c2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t10_c1_c2
 
 

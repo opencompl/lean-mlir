@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gandhorhnot_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem and_to_xor1_proof : and_to_xor1_before ⊑ and_to_xor1_after := by
   intros
   try simp
   ---BEGIN and_to_xor1
-  apply and_to_xor1_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_to_xor1
 
 
@@ -72,7 +72,7 @@ theorem and_to_xor2_proof : and_to_xor2_before ⊑ and_to_xor2_after := by
   intros
   try simp
   ---BEGIN and_to_xor2
-  apply and_to_xor2_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_to_xor2
 
 
@@ -104,7 +104,7 @@ theorem and_to_xor3_proof : and_to_xor3_before ⊑ and_to_xor3_after := by
   intros
   try simp
   ---BEGIN and_to_xor3
-  apply and_to_xor3_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_to_xor3
 
 
@@ -136,7 +136,7 @@ theorem and_to_xor4_proof : and_to_xor4_before ⊑ and_to_xor4_after := by
   intros
   try simp
   ---BEGIN and_to_xor4
-  apply and_to_xor4_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_to_xor4
 
 
@@ -170,7 +170,7 @@ theorem or_to_nxor1_proof : or_to_nxor1_before ⊑ or_to_nxor1_after := by
   intros
   try simp
   ---BEGIN or_to_nxor1
-  apply or_to_nxor1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_to_nxor1
 
 
@@ -204,7 +204,7 @@ theorem or_to_nxor2_proof : or_to_nxor2_before ⊑ or_to_nxor2_after := by
   intros
   try simp
   ---BEGIN or_to_nxor2
-  apply or_to_nxor2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_to_nxor2
 
 
@@ -238,7 +238,7 @@ theorem or_to_nxor3_proof : or_to_nxor3_before ⊑ or_to_nxor3_after := by
   intros
   try simp
   ---BEGIN or_to_nxor3
-  apply or_to_nxor3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_to_nxor3
 
 
@@ -272,7 +272,7 @@ theorem or_to_nxor4_proof : or_to_nxor4_before ⊑ or_to_nxor4_after := by
   intros
   try simp
   ---BEGIN or_to_nxor4
-  apply or_to_nxor4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_to_nxor4
 
 
@@ -302,7 +302,7 @@ theorem xor_to_xor1_proof : xor_to_xor1_before ⊑ xor_to_xor1_after := by
   intros
   try simp
   ---BEGIN xor_to_xor1
-  apply xor_to_xor1_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_to_xor1
 
 
@@ -332,7 +332,7 @@ theorem xor_to_xor2_proof : xor_to_xor2_before ⊑ xor_to_xor2_after := by
   intros
   try simp
   ---BEGIN xor_to_xor2
-  apply xor_to_xor2_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_to_xor2
 
 
@@ -362,7 +362,7 @@ theorem xor_to_xor3_proof : xor_to_xor3_before ⊑ xor_to_xor3_after := by
   intros
   try simp
   ---BEGIN xor_to_xor3
-  apply xor_to_xor3_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_to_xor3
 
 
@@ -392,8 +392,46 @@ theorem xor_to_xor4_proof : xor_to_xor4_before ⊑ xor_to_xor4_after := by
   intros
   try simp
   ---BEGIN xor_to_xor4
-  apply xor_to_xor4_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_to_xor4
+
+
+
+def PR32830_before := [llvm|
+{
+^0(%arg60 : i64, %arg61 : i64, %arg62 : i64):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
+  %1 = llvm.xor %arg60, %0 : i64
+  %2 = llvm.xor %arg61, %0 : i64
+  %3 = llvm.or %2, %arg60 : i64
+  %4 = llvm.or %1, %arg62 : i64
+  %5 = llvm.and %3, %4 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def PR32830_after := [llvm|
+{
+^0(%arg60 : i64, %arg61 : i64, %arg62 : i64):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i64}> : () -> i64
+  %1 = llvm.xor %arg60, %0 : i64
+  %2 = llvm.xor %arg61, %0 : i64
+  %3 = llvm.or %arg60, %2 : i64
+  %4 = llvm.or %arg62, %1 : i64
+  %5 = llvm.and %3, %4 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+theorem PR32830_proof : PR32830_before ⊑ PR32830_after := by
+  unfold PR32830_before PR32830_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN PR32830
+  all_goals (try extract_goal ; sorry)
+  ---END PR32830
 
 
 
@@ -424,7 +462,7 @@ theorem simplify_or_common_op_commute0_proof : simplify_or_common_op_commute0_be
   intros
   try simp
   ---BEGIN simplify_or_common_op_commute0
-  apply simplify_or_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END simplify_or_common_op_commute0
 
 
@@ -456,7 +494,7 @@ theorem simplify_or_common_op_commute1_proof : simplify_or_common_op_commute1_be
   intros
   try simp
   ---BEGIN simplify_or_common_op_commute1
-  apply simplify_or_common_op_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END simplify_or_common_op_commute1
 
 
@@ -490,7 +528,7 @@ theorem simplify_or_common_op_commute2_proof : simplify_or_common_op_commute2_be
   intros
   try simp
   ---BEGIN simplify_or_common_op_commute2
-  apply simplify_or_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END simplify_or_common_op_commute2
 
 
@@ -522,7 +560,7 @@ theorem simplify_and_common_op_commute1_proof : simplify_and_common_op_commute1_
   intros
   try simp
   ---BEGIN simplify_and_common_op_commute1
-  apply simplify_and_common_op_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END simplify_and_common_op_commute1
 
 
@@ -556,7 +594,7 @@ theorem simplify_and_common_op_commute2_proof : simplify_and_common_op_commute2_
   intros
   try simp
   ---BEGIN simplify_and_common_op_commute2
-  apply simplify_and_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END simplify_and_common_op_commute2
 
 
@@ -587,7 +625,7 @@ theorem reduce_xor_common_op_commute0_proof : reduce_xor_common_op_commute0_befo
   intros
   try simp
   ---BEGIN reduce_xor_common_op_commute0
-  apply reduce_xor_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END reduce_xor_common_op_commute0
 
 
@@ -618,7 +656,7 @@ theorem reduce_xor_common_op_commute1_proof : reduce_xor_common_op_commute1_befo
   intros
   try simp
   ---BEGIN reduce_xor_common_op_commute1
-  apply reduce_xor_common_op_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END reduce_xor_common_op_commute1
 
 
@@ -638,7 +676,7 @@ def annihilate_xor_common_op_commute2_after := [llvm|
 {
 ^0(%arg3 : i4, %arg4 : i4, %arg5 : i4, %arg6 : i4):
   %0 = llvm.mul %arg5, %arg5 : i4
-  %1 = llvm.xor %0, %arg4 : i4
+  %1 = llvm.xor %arg4, %0 : i4
   %2 = llvm.xor %1, %arg6 : i4
   "llvm.return"(%2) : (i4) -> ()
 }
@@ -652,7 +690,7 @@ theorem annihilate_xor_common_op_commute2_proof : annihilate_xor_common_op_commu
   intros
   try simp
   ---BEGIN annihilate_xor_common_op_commute2
-  apply annihilate_xor_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END annihilate_xor_common_op_commute2
 
 

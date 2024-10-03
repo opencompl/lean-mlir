@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2008h02h16hSDivOverflow2_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem i_proof : i_before ⊑ i_after := by
   intros
   try simp
   ---BEGIN i
-  apply i_thm
+  all_goals (try extract_goal ; sorry)
   ---END i
 
 

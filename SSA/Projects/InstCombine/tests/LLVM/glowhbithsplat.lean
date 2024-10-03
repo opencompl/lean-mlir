@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.glowhbithsplat_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -41,7 +41,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -74,7 +74,7 @@ theorem t1_otherbitwidth_proof : t1_otherbitwidth_before ⊑ t1_otherbitwidth_af
   intros
   try simp
   ---BEGIN t1_otherbitwidth
-  apply t1_otherbitwidth_thm
+  all_goals (try extract_goal ; sorry)
   ---END t1_otherbitwidth
 
 

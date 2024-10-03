@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsignext_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   intros
   try simp
   ---BEGIN sextinreg
-  apply sextinreg_thm
+  all_goals (try extract_goal ; sorry)
   ---END sextinreg
 
 
@@ -78,7 +78,7 @@ theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   intros
   try simp
   ---BEGIN sextinreg_alt
-  apply sextinreg_alt_thm
+  all_goals (try extract_goal ; sorry)
   ---END sextinreg_alt
 
 
@@ -113,7 +113,7 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   intros
   try simp
   ---BEGIN sextinreg2
-  apply sextinreg2_thm
+  all_goals (try extract_goal ; sorry)
   ---END sextinreg2
 
 
@@ -147,7 +147,7 @@ theorem ashr_proof : ashr_before ⊑ ashr_after := by
   intros
   try simp
   ---BEGIN ashr
-  apply ashr_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr
 
 

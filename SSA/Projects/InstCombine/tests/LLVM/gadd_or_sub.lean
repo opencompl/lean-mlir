@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gadd_or_sub_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -142,5 +142,141 @@ theorem add_or_sub_comb_i64_commuted4_proof : add_or_sub_comb_i64_commuted4_befo
   ---BEGIN add_or_sub_comb_i64_commuted4
   all_goals (try extract_goal ; sorry)
   ---END add_or_sub_comb_i64_commuted4
+
+
+
+def add_or_sub_comb_i8_negative_y_sub_before := [llvm|
+{
+^0(%arg8 : i8, %arg9 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg9 : i8
+  %2 = llvm.or %1, %arg8 : i8
+  %3 = llvm.add %2, %arg8 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_or_sub_comb_i8_negative_y_sub_after := [llvm|
+{
+^0(%arg8 : i8, %arg9 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg9 : i8
+  %2 = llvm.or %arg8, %1 : i8
+  %3 = llvm.add %2, %arg8 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem add_or_sub_comb_i8_negative_y_sub_proof : add_or_sub_comb_i8_negative_y_sub_before ⊑ add_or_sub_comb_i8_negative_y_sub_after := by
+  unfold add_or_sub_comb_i8_negative_y_sub_before add_or_sub_comb_i8_negative_y_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN add_or_sub_comb_i8_negative_y_sub
+  all_goals (try extract_goal ; sorry)
+  ---END add_or_sub_comb_i8_negative_y_sub
+
+
+
+def add_or_sub_comb_i8_negative_y_or_before := [llvm|
+{
+^0(%arg6 : i8, %arg7 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg6 : i8
+  %2 = llvm.or %1, %arg7 : i8
+  %3 = llvm.add %2, %arg6 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_or_sub_comb_i8_negative_y_or_after := [llvm|
+{
+^0(%arg6 : i8, %arg7 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg6 : i8
+  %2 = llvm.or %arg7, %1 : i8
+  %3 = llvm.add %2, %arg6 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem add_or_sub_comb_i8_negative_y_or_proof : add_or_sub_comb_i8_negative_y_or_before ⊑ add_or_sub_comb_i8_negative_y_or_after := by
+  unfold add_or_sub_comb_i8_negative_y_or_before add_or_sub_comb_i8_negative_y_or_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN add_or_sub_comb_i8_negative_y_or
+  all_goals (try extract_goal ; sorry)
+  ---END add_or_sub_comb_i8_negative_y_or
+
+
+
+def add_or_sub_comb_i8_negative_y_add_before := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg4 : i8
+  %2 = llvm.or %1, %arg4 : i8
+  %3 = llvm.add %2, %arg5 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_or_sub_comb_i8_negative_y_add_after := [llvm|
+{
+^0(%arg4 : i8, %arg5 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg4 : i8
+  %2 = llvm.or %arg4, %1 : i8
+  %3 = llvm.add %2, %arg5 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem add_or_sub_comb_i8_negative_y_add_proof : add_or_sub_comb_i8_negative_y_add_before ⊑ add_or_sub_comb_i8_negative_y_add_after := by
+  unfold add_or_sub_comb_i8_negative_y_add_before add_or_sub_comb_i8_negative_y_add_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN add_or_sub_comb_i8_negative_y_add
+  all_goals (try extract_goal ; sorry)
+  ---END add_or_sub_comb_i8_negative_y_add
+
+
+
+def add_or_sub_comb_i8_negative_xor_instead_or_before := [llvm|
+{
+^0(%arg3 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg3 : i8
+  %2 = llvm.xor %1, %arg3 : i8
+  %3 = llvm.add %2, %arg3 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def add_or_sub_comb_i8_negative_xor_instead_or_after := [llvm|
+{
+^0(%arg3 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
+  %1 = llvm.sub %0, %arg3 : i8
+  %2 = llvm.xor %arg3, %1 : i8
+  %3 = llvm.add %2, %arg3 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem add_or_sub_comb_i8_negative_xor_instead_or_proof : add_or_sub_comb_i8_negative_xor_instead_or_before ⊑ add_or_sub_comb_i8_negative_xor_instead_or_after := by
+  unfold add_or_sub_comb_i8_negative_xor_instead_or_before add_or_sub_comb_i8_negative_xor_instead_or_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN add_or_sub_comb_i8_negative_xor_instead_or
+  all_goals (try extract_goal ; sorry)
+  ---END add_or_sub_comb_i8_negative_xor_instead_or
 
 

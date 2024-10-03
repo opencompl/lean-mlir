@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gorhxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -28,7 +28,7 @@ def test1_after := [llvm|
 ^0(%arg232 : i32, %arg233 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg233, %0 : i32
-  %2 = llvm.or %1, %arg232 : i32
+  %2 = llvm.or %arg232, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -41,7 +41,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -61,7 +61,7 @@ def test2_after := [llvm|
 ^0(%arg230 : i32, %arg231 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg230, %0 : i32
-  %2 = llvm.or %1, %arg231 : i32
+  %2 = llvm.or %arg231, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -74,7 +74,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -94,7 +94,7 @@ def test3_after := [llvm|
 ^0(%arg228 : i32, %arg229 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg229, %0 : i32
-  %2 = llvm.or %1, %arg228 : i32
+  %2 = llvm.or %arg228, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -107,7 +107,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -127,7 +127,7 @@ def test4_after := [llvm|
 ^0(%arg226 : i32, %arg227 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg226, %0 : i32
-  %2 = llvm.or %1, %arg227 : i32
+  %2 = llvm.or %arg227, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -140,7 +140,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   intros
   try simp
   ---BEGIN test4
-  apply test4_thm
+  all_goals (try extract_goal ; sorry)
   ---END test4
 
 
@@ -173,7 +173,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   intros
   try simp
   ---BEGIN test5
-  apply test5_thm
+  all_goals (try extract_goal ; sorry)
   ---END test5
 
 
@@ -206,7 +206,7 @@ theorem test5_commuted_x_y_proof : test5_commuted_x_y_before ⊑ test5_commuted_
   intros
   try simp
   ---BEGIN test5_commuted_x_y
-  apply test5_commuted_x_y_thm
+  all_goals (try extract_goal ; sorry)
   ---END test5_commuted_x_y
 
 
@@ -235,7 +235,7 @@ theorem xor_common_op_commute0_proof : xor_common_op_commute0_before ⊑ xor_com
   intros
   try simp
   ---BEGIN xor_common_op_commute0
-  apply xor_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_common_op_commute0
 
 
@@ -268,7 +268,7 @@ theorem xor_common_op_commute2_proof : xor_common_op_commute2_before ⊑ xor_com
   intros
   try simp
   ---BEGIN xor_common_op_commute2
-  apply xor_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_common_op_commute2
 
 
@@ -303,7 +303,7 @@ theorem xor_common_op_commute3_proof : xor_common_op_commute3_before ⊑ xor_com
   intros
   try simp
   ---BEGIN xor_common_op_commute3
-  apply xor_common_op_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_common_op_commute3
 
 
@@ -323,7 +323,7 @@ def test8_after := [llvm|
 ^0(%arg200 : i32, %arg201 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg200, %0 : i32
-  %2 = llvm.or %1, %arg201 : i32
+  %2 = llvm.or %arg201, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -336,7 +336,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   intros
   try simp
   ---BEGIN test8
-  apply test8_thm
+  all_goals (try extract_goal ; sorry)
   ---END test8
 
 
@@ -356,7 +356,7 @@ def test9_after := [llvm|
 ^0(%arg198 : i32, %arg199 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg199, %0 : i32
-  %2 = llvm.or %1, %arg198 : i32
+  %2 = llvm.or %arg198, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -369,7 +369,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -405,7 +405,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -441,7 +441,7 @@ theorem test10_commuted_proof : test10_commuted_before ⊑ test10_commuted_after
   intros
   try simp
   ---BEGIN test10_commuted
-  apply test10_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10_commuted
 
 
@@ -460,7 +460,7 @@ def test11_before := [llvm|
 def test11_after := [llvm|
 {
 ^0(%arg184 : i32, %arg185 : i32):
-  %0 = llvm.and %arg184, %arg185 : i32
+  %0 = llvm.and %arg185, %arg184 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -473,7 +473,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   intros
   try simp
   ---BEGIN test11
-  apply test11_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11
 
 
@@ -492,7 +492,7 @@ def test12_before := [llvm|
 def test12_after := [llvm|
 {
 ^0(%arg182 : i32, %arg183 : i32):
-  %0 = llvm.and %arg182, %arg183 : i32
+  %0 = llvm.and %arg183, %arg182 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -505,7 +505,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   intros
   try simp
   ---BEGIN test12
-  apply test12_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12
 
 
@@ -524,7 +524,7 @@ def test12_commuted_before := [llvm|
 def test12_commuted_after := [llvm|
 {
 ^0(%arg180 : i32, %arg181 : i32):
-  %0 = llvm.and %arg180, %arg181 : i32
+  %0 = llvm.and %arg181, %arg180 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -537,7 +537,7 @@ theorem test12_commuted_proof : test12_commuted_before ⊑ test12_commuted_after
   intros
   try simp
   ---BEGIN test12_commuted
-  apply test12_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12_commuted
 
 
@@ -554,7 +554,7 @@ def test13_before := [llvm|
 def test13_after := [llvm|
 {
 ^0(%arg178 : i32, %arg179 : i32):
-  %0 = llvm.and %arg179, %arg178 : i32
+  %0 = llvm.and %arg178, %arg179 : i32
   "llvm.return"(%0) : (i32) -> ()
 }
 ]
@@ -567,7 +567,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 
@@ -600,7 +600,7 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   intros
   try simp
   ---BEGIN test14
-  apply test14_thm
+  all_goals (try extract_goal ; sorry)
   ---END test14
 
 
@@ -633,7 +633,7 @@ theorem test14_commuted_proof : test14_commuted_before ⊑ test14_commuted_after
   intros
   try simp
   ---BEGIN test14_commuted
-  apply test14_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test14_commuted
 
 
@@ -666,7 +666,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   intros
   try simp
   ---BEGIN test15
-  apply test15_thm
+  all_goals (try extract_goal ; sorry)
   ---END test15
 
 
@@ -699,7 +699,7 @@ theorem test15_commuted_proof : test15_commuted_before ⊑ test15_commuted_after
   intros
   try simp
   ---BEGIN test15_commuted
-  apply test15_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END test15_commuted
 
 
@@ -734,7 +734,7 @@ theorem or_and_xor_not_constant_commute0_proof : or_and_xor_not_constant_commute
   intros
   try simp
   ---BEGIN or_and_xor_not_constant_commute0
-  apply or_and_xor_not_constant_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_xor_not_constant_commute0
 
 
@@ -769,7 +769,7 @@ theorem or_and_xor_not_constant_commute1_proof : or_and_xor_not_constant_commute
   intros
   try simp
   ---BEGIN or_and_xor_not_constant_commute1
-  apply or_and_xor_not_constant_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_xor_not_constant_commute1
 
 
@@ -805,7 +805,7 @@ theorem not_or_xor_proof : not_or_xor_before ⊑ not_or_xor_after := by
   intros
   try simp
   ---BEGIN not_or_xor
-  apply not_or_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_or_xor
 
 
@@ -839,7 +839,7 @@ theorem xor_or_proof : xor_or_before ⊑ xor_or_after := by
   intros
   try simp
   ---BEGIN xor_or
-  apply xor_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or
 
 
@@ -873,7 +873,7 @@ theorem xor_or2_proof : xor_or2_before ⊑ xor_or2_after := by
   intros
   try simp
   ---BEGIN xor_or2
-  apply xor_or2_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or2
 
 
@@ -909,7 +909,7 @@ theorem xor_or_xor_proof : xor_or_xor_before ⊑ xor_or_xor_after := by
   intros
   try simp
   ---BEGIN xor_or_xor
-  apply xor_or_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_or_xor
 
 
@@ -945,7 +945,7 @@ theorem or_xor_or_proof : or_xor_or_before ⊑ or_xor_or_after := by
   intros
   try simp
   ---BEGIN or_xor_or
-  apply or_xor_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_or
 
 
@@ -983,7 +983,7 @@ theorem test17_proof : test17_before ⊑ test17_after := by
   intros
   try simp
   ---BEGIN test17
-  apply test17_thm
+  all_goals (try extract_goal ; sorry)
   ---END test17
 
 
@@ -1021,7 +1021,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   intros
   try simp
   ---BEGIN test18
-  apply test18_thm
+  all_goals (try extract_goal ; sorry)
   ---END test18
 
 
@@ -1056,7 +1056,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   intros
   try simp
   ---BEGIN test19
-  apply test19_thm
+  all_goals (try extract_goal ; sorry)
   ---END test19
 
 
@@ -1091,7 +1091,7 @@ theorem test20_proof : test20_before ⊑ test20_after := by
   intros
   try simp
   ---BEGIN test20
-  apply test20_thm
+  all_goals (try extract_goal ; sorry)
   ---END test20
 
 
@@ -1126,7 +1126,7 @@ theorem test21_proof : test21_before ⊑ test21_after := by
   intros
   try simp
   ---BEGIN test21
-  apply test21_thm
+  all_goals (try extract_goal ; sorry)
   ---END test21
 
 
@@ -1161,7 +1161,7 @@ theorem test22_proof : test22_before ⊑ test22_after := by
   intros
   try simp
   ---BEGIN test22
-  apply test22_thm
+  all_goals (try extract_goal ; sorry)
   ---END test22
 
 
@@ -1196,7 +1196,7 @@ theorem test23_proof : test23_before ⊑ test23_after := by
   intros
   try simp
   ---BEGIN test23
-  apply test23_thm
+  all_goals (try extract_goal ; sorry)
   ---END test23
 
 
@@ -1230,7 +1230,7 @@ theorem PR45977_f1_proof : PR45977_f1_before ⊑ PR45977_f1_after := by
   intros
   try simp
   ---BEGIN PR45977_f1
-  apply PR45977_f1_thm
+  all_goals (try extract_goal ; sorry)
   ---END PR45977_f1
 
 
@@ -1263,7 +1263,7 @@ theorem PR45977_f2_proof : PR45977_f2_before ⊑ PR45977_f2_after := by
   intros
   try simp
   ---BEGIN PR45977_f2
-  apply PR45977_f2_thm
+  all_goals (try extract_goal ; sorry)
   ---END PR45977_f2
 
 
@@ -1294,7 +1294,7 @@ theorem or_xor_common_op_commute0_proof : or_xor_common_op_commute0_before ⊑ o
   intros
   try simp
   ---BEGIN or_xor_common_op_commute0
-  apply or_xor_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_common_op_commute0
 
 
@@ -1325,7 +1325,7 @@ theorem or_xor_common_op_commute5_proof : or_xor_common_op_commute5_before ⊑ o
   intros
   try simp
   ---BEGIN or_xor_common_op_commute5
-  apply or_xor_common_op_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_common_op_commute5
 
 
@@ -1356,7 +1356,7 @@ theorem or_xor_common_op_commute6_proof : or_xor_common_op_commute6_before ⊑ o
   intros
   try simp
   ---BEGIN or_xor_common_op_commute6
-  apply or_xor_common_op_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_common_op_commute6
 
 
@@ -1387,7 +1387,7 @@ theorem or_xor_common_op_commute7_proof : or_xor_common_op_commute7_before ⊑ o
   intros
   try simp
   ---BEGIN or_xor_common_op_commute7
-  apply or_xor_common_op_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_common_op_commute7
 
 
@@ -1409,7 +1409,7 @@ def or_not_xor_common_op_commute0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i4}> : () -> i4
   %1 = llvm.and %arg107, %arg108 : i4
   %2 = llvm.xor %1, %0 : i4
-  %3 = llvm.or %2, %arg109 : i4
+  %3 = llvm.or %arg109, %2 : i4
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
@@ -1422,7 +1422,7 @@ theorem or_not_xor_common_op_commute0_proof : or_not_xor_common_op_commute0_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute0
-  apply or_not_xor_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute0
 
 
@@ -1461,7 +1461,7 @@ theorem or_not_xor_common_op_commute2_proof : or_not_xor_common_op_commute2_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute2
-  apply or_not_xor_common_op_commute2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute2
 
 
@@ -1500,7 +1500,7 @@ theorem or_not_xor_common_op_commute3_proof : or_not_xor_common_op_commute3_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute3
-  apply or_not_xor_common_op_commute3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute3
 
 
@@ -1522,7 +1522,7 @@ def or_not_xor_common_op_commute5_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.and %arg93, %arg92 : i8
   %2 = llvm.xor %1, %0 : i8
-  %3 = llvm.or %2, %arg94 : i8
+  %3 = llvm.or %arg94, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -1535,7 +1535,7 @@ theorem or_not_xor_common_op_commute5_proof : or_not_xor_common_op_commute5_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute5
-  apply or_not_xor_common_op_commute5_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute5
 
 
@@ -1574,7 +1574,7 @@ theorem or_not_xor_common_op_commute6_proof : or_not_xor_common_op_commute6_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute6
-  apply or_not_xor_common_op_commute6_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute6
 
 
@@ -1613,7 +1613,7 @@ theorem or_not_xor_common_op_commute7_proof : or_not_xor_common_op_commute7_befo
   intros
   try simp
   ---BEGIN or_not_xor_common_op_commute7
-  apply or_not_xor_common_op_commute7_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_not_xor_common_op_commute7
 
 
@@ -1648,7 +1648,7 @@ theorem or_nand_xor_common_op_commute0_proof : or_nand_xor_common_op_commute0_be
   intros
   try simp
   ---BEGIN or_nand_xor_common_op_commute0
-  apply or_nand_xor_common_op_commute0_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_nand_xor_common_op_commute0
 
 
@@ -1680,7 +1680,7 @@ theorem PR75692_1_proof : PR75692_1_before ⊑ PR75692_1_after := by
   intros
   try simp
   ---BEGIN PR75692_1
-  apply PR75692_1_thm
+  all_goals (try extract_goal ; sorry)
   ---END PR75692_1
 
 
@@ -1700,7 +1700,7 @@ def or_xor_not_after := [llvm|
 ^0(%arg56 : i32, %arg57 : i32):
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.xor %arg56, %0 : i32
-  %2 = llvm.or %1, %arg57 : i32
+  %2 = llvm.or %arg57, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -1713,7 +1713,7 @@ theorem or_xor_not_proof : or_xor_not_before ⊑ or_xor_not_after := by
   intros
   try simp
   ---BEGIN or_xor_not
-  apply or_xor_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_not
 
 
@@ -1748,7 +1748,7 @@ theorem or_xor_and_commuted1_proof : or_xor_and_commuted1_before ⊑ or_xor_and_
   intros
   try simp
   ---BEGIN or_xor_and_commuted1
-  apply or_xor_and_commuted1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_and_commuted1
 
 
@@ -1785,7 +1785,7 @@ theorem or_xor_and_commuted2_proof : or_xor_and_commuted2_before ⊑ or_xor_and_
   intros
   try simp
   ---BEGIN or_xor_and_commuted2
-  apply or_xor_and_commuted2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_and_commuted2
 
 
@@ -1825,7 +1825,7 @@ theorem or_xor_tree_0000_proof : or_xor_tree_0000_before ⊑ or_xor_tree_0000_af
   intros
   try simp
   ---BEGIN or_xor_tree_0000
-  apply or_xor_tree_0000_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0000
 
 
@@ -1865,7 +1865,7 @@ theorem or_xor_tree_0001_proof : or_xor_tree_0001_before ⊑ or_xor_tree_0001_af
   intros
   try simp
   ---BEGIN or_xor_tree_0001
-  apply or_xor_tree_0001_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0001
 
 
@@ -1905,7 +1905,7 @@ theorem or_xor_tree_0010_proof : or_xor_tree_0010_before ⊑ or_xor_tree_0010_af
   intros
   try simp
   ---BEGIN or_xor_tree_0010
-  apply or_xor_tree_0010_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0010
 
 
@@ -1945,7 +1945,7 @@ theorem or_xor_tree_0011_proof : or_xor_tree_0011_before ⊑ or_xor_tree_0011_af
   intros
   try simp
   ---BEGIN or_xor_tree_0011
-  apply or_xor_tree_0011_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0011
 
 
@@ -1985,7 +1985,7 @@ theorem or_xor_tree_0100_proof : or_xor_tree_0100_before ⊑ or_xor_tree_0100_af
   intros
   try simp
   ---BEGIN or_xor_tree_0100
-  apply or_xor_tree_0100_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0100
 
 
@@ -2025,7 +2025,7 @@ theorem or_xor_tree_0101_proof : or_xor_tree_0101_before ⊑ or_xor_tree_0101_af
   intros
   try simp
   ---BEGIN or_xor_tree_0101
-  apply or_xor_tree_0101_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0101
 
 
@@ -2065,7 +2065,7 @@ theorem or_xor_tree_0110_proof : or_xor_tree_0110_before ⊑ or_xor_tree_0110_af
   intros
   try simp
   ---BEGIN or_xor_tree_0110
-  apply or_xor_tree_0110_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0110
 
 
@@ -2105,7 +2105,7 @@ theorem or_xor_tree_0111_proof : or_xor_tree_0111_before ⊑ or_xor_tree_0111_af
   intros
   try simp
   ---BEGIN or_xor_tree_0111
-  apply or_xor_tree_0111_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_0111
 
 
@@ -2145,7 +2145,7 @@ theorem or_xor_tree_1000_proof : or_xor_tree_1000_before ⊑ or_xor_tree_1000_af
   intros
   try simp
   ---BEGIN or_xor_tree_1000
-  apply or_xor_tree_1000_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1000
 
 
@@ -2185,7 +2185,7 @@ theorem or_xor_tree_1001_proof : or_xor_tree_1001_before ⊑ or_xor_tree_1001_af
   intros
   try simp
   ---BEGIN or_xor_tree_1001
-  apply or_xor_tree_1001_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1001
 
 
@@ -2225,7 +2225,7 @@ theorem or_xor_tree_1010_proof : or_xor_tree_1010_before ⊑ or_xor_tree_1010_af
   intros
   try simp
   ---BEGIN or_xor_tree_1010
-  apply or_xor_tree_1010_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1010
 
 
@@ -2265,7 +2265,7 @@ theorem or_xor_tree_1011_proof : or_xor_tree_1011_before ⊑ or_xor_tree_1011_af
   intros
   try simp
   ---BEGIN or_xor_tree_1011
-  apply or_xor_tree_1011_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1011
 
 
@@ -2305,7 +2305,7 @@ theorem or_xor_tree_1100_proof : or_xor_tree_1100_before ⊑ or_xor_tree_1100_af
   intros
   try simp
   ---BEGIN or_xor_tree_1100
-  apply or_xor_tree_1100_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1100
 
 
@@ -2345,7 +2345,7 @@ theorem or_xor_tree_1101_proof : or_xor_tree_1101_before ⊑ or_xor_tree_1101_af
   intros
   try simp
   ---BEGIN or_xor_tree_1101
-  apply or_xor_tree_1101_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1101
 
 
@@ -2385,7 +2385,7 @@ theorem or_xor_tree_1110_proof : or_xor_tree_1110_before ⊑ or_xor_tree_1110_af
   intros
   try simp
   ---BEGIN or_xor_tree_1110
-  apply or_xor_tree_1110_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1110
 
 
@@ -2425,7 +2425,7 @@ theorem or_xor_tree_1111_proof : or_xor_tree_1111_before ⊑ or_xor_tree_1111_af
   intros
   try simp
   ---BEGIN or_xor_tree_1111
-  apply or_xor_tree_1111_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_tree_1111
 
 

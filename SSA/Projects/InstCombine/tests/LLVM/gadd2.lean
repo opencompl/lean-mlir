@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gadd2_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -41,7 +41,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -77,7 +77,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -106,7 +106,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   intros
   try simp
   ---BEGIN test4
-  apply test4_thm
+  all_goals (try extract_goal ; sorry)
   ---END test4
 
 
@@ -139,7 +139,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -179,7 +179,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
 
 
@@ -215,7 +215,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   intros
   try simp
   ---BEGIN test11
-  apply test11_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11
 
 
@@ -251,7 +251,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   intros
   try simp
   ---BEGIN test12
-  apply test12_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12
 
 
@@ -287,7 +287,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 
@@ -323,7 +323,7 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   intros
   try simp
   ---BEGIN test14
-  apply test14_thm
+  all_goals (try extract_goal ; sorry)
   ---END test14
 
 
@@ -358,7 +358,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   intros
   try simp
   ---BEGIN test15
-  apply test15_thm
+  all_goals (try extract_goal ; sorry)
   ---END test15
 
 
@@ -393,7 +393,7 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   intros
   try simp
   ---BEGIN test16
-  apply test16_thm
+  all_goals (try extract_goal ; sorry)
   ---END test16
 
 
@@ -427,7 +427,7 @@ theorem test17_proof : test17_before ⊑ test17_after := by
   intros
   try simp
   ---BEGIN test17
-  apply test17_thm
+  all_goals (try extract_goal ; sorry)
   ---END test17
 
 
@@ -462,7 +462,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   intros
   try simp
   ---BEGIN test18
-  apply test18_thm
+  all_goals (try extract_goal ; sorry)
   ---END test18
 
 
@@ -492,7 +492,7 @@ theorem add_nsw_mul_nsw_proof : add_nsw_mul_nsw_before ⊑ add_nsw_mul_nsw_after
   intros
   try simp
   ---BEGIN add_nsw_mul_nsw
-  apply add_nsw_mul_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nsw_mul_nsw
 
 
@@ -523,7 +523,7 @@ theorem mul_add_to_mul_1_proof : mul_add_to_mul_1_before ⊑ mul_add_to_mul_1_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_1
-  apply mul_add_to_mul_1_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_1
 
 
@@ -554,7 +554,7 @@ theorem mul_add_to_mul_2_proof : mul_add_to_mul_2_before ⊑ mul_add_to_mul_2_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_2
-  apply mul_add_to_mul_2_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_2
 
 
@@ -587,7 +587,7 @@ theorem mul_add_to_mul_3_proof : mul_add_to_mul_3_before ⊑ mul_add_to_mul_3_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_3
-  apply mul_add_to_mul_3_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_3
 
 
@@ -620,7 +620,7 @@ theorem mul_add_to_mul_4_proof : mul_add_to_mul_4_before ⊑ mul_add_to_mul_4_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_4
-  apply mul_add_to_mul_4_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_4
 
 
@@ -653,7 +653,7 @@ theorem mul_add_to_mul_5_proof : mul_add_to_mul_5_before ⊑ mul_add_to_mul_5_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_5
-  apply mul_add_to_mul_5_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_5
 
 
@@ -686,7 +686,7 @@ theorem mul_add_to_mul_6_proof : mul_add_to_mul_6_before ⊑ mul_add_to_mul_6_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_6
-  apply mul_add_to_mul_6_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_6
 
 
@@ -717,7 +717,7 @@ theorem mul_add_to_mul_7_proof : mul_add_to_mul_7_before ⊑ mul_add_to_mul_7_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_7
-  apply mul_add_to_mul_7_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_7
 
 
@@ -750,7 +750,7 @@ theorem mul_add_to_mul_8_proof : mul_add_to_mul_8_before ⊑ mul_add_to_mul_8_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_8
-  apply mul_add_to_mul_8_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_8
 
 
@@ -782,7 +782,7 @@ theorem mul_add_to_mul_9_proof : mul_add_to_mul_9_before ⊑ mul_add_to_mul_9_af
   intros
   try simp
   ---BEGIN mul_add_to_mul_9
-  apply mul_add_to_mul_9_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_add_to_mul_9
 
 
@@ -1010,7 +1010,7 @@ def add_of_mul_after := [llvm|
 {
 ^0(%arg4 : i8, %arg5 : i8, %arg6 : i8):
   %0 = llvm.add %arg5, %arg6 : i8
-  %1 = llvm.mul %0, %arg4 : i8
+  %1 = llvm.mul %arg4, %0 : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]

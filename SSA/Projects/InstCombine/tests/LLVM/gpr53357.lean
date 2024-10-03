@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gpr53357_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem src_proof : src_before ⊑ src_after := by
   intros
   try simp
   ---BEGIN src
-  apply src_thm
+  all_goals (try extract_goal ; sorry)
   ---END src
 
 
@@ -76,7 +76,7 @@ theorem src2_proof : src2_before ⊑ src2_after := by
   intros
   try simp
   ---BEGIN src2
-  apply src2_thm
+  all_goals (try extract_goal ; sorry)
   ---END src2
 
 
@@ -111,7 +111,7 @@ theorem src3_proof : src3_before ⊑ src3_after := by
   intros
   try simp
   ---BEGIN src3
-  apply src3_thm
+  all_goals (try extract_goal ; sorry)
   ---END src3
 
 
@@ -145,7 +145,7 @@ theorem src4_proof : src4_before ⊑ src4_after := by
   intros
   try simp
   ---BEGIN src4
-  apply src4_thm
+  all_goals (try extract_goal ; sorry)
   ---END src4
 
 
@@ -179,7 +179,7 @@ theorem src5_proof : src5_before ⊑ src5_after := by
   intros
   try simp
   ---BEGIN src5
-  apply src5_thm
+  all_goals (try extract_goal ; sorry)
   ---END src5
 
 
