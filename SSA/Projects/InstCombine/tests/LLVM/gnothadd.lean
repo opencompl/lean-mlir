@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gnothadd_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem basic_proof : basic_before ⊑ basic_after := by
   intros
   try simp
   ---BEGIN basic
-  apply basic_thm
+  all_goals (try extract_goal ; sorry)
   ---END basic
 
 
@@ -70,7 +70,7 @@ theorem basic_com_add_proof : basic_com_add_before ⊑ basic_com_add_after := by
   intros
   try simp
   ---BEGIN basic_com_add
-  apply basic_com_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END basic_com_add
 
 
@@ -101,7 +101,7 @@ theorem basic_preserve_nsw_proof : basic_preserve_nsw_before ⊑ basic_preserve_
   intros
   try simp
   ---BEGIN basic_preserve_nsw
-  apply basic_preserve_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nsw
 
 
@@ -132,7 +132,7 @@ theorem basic_preserve_nuw_proof : basic_preserve_nuw_before ⊑ basic_preserve_
   intros
   try simp
   ---BEGIN basic_preserve_nuw
-  apply basic_preserve_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw
 
 
@@ -163,7 +163,7 @@ theorem basic_preserve_nuw_nsw_proof : basic_preserve_nuw_nsw_before ⊑ basic_p
   intros
   try simp
   ---BEGIN basic_preserve_nuw_nsw
-  apply basic_preserve_nuw_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END basic_preserve_nuw_nsw
 
 

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gfreehinversion_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem lshr_not_nneg2_proof : lshr_not_nneg2_before ⊑ lshr_not_nneg2_after :=
   intros
   try simp
   ---BEGIN lshr_not_nneg2
-  apply lshr_not_nneg2_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_not_nneg2
 
 

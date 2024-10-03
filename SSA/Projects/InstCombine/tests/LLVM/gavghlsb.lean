@@ -29,7 +29,7 @@ def avg_lsb_after := [llvm|
 ^0(%arg4 : i8, %arg5 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = llvm.and %arg4, %0 : i8
-  %2 = llvm.and %1, %arg5 : i8
+  %2 = llvm.and %arg5, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

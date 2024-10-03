@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gmaskedhmergehxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -30,7 +30,7 @@ def p_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg60, %arg62 : i32
   %2 = llvm.xor %arg62, %0 : i32
-  %3 = llvm.and %2, %arg61 : i32
+  %3 = llvm.and %arg61, %2 : i32
   %4 = llvm.or %1, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -44,7 +44,7 @@ theorem p_proof : p_before ⊑ p_after := by
   intros
   try simp
   ---BEGIN p
-  apply p_thm
+  all_goals (try extract_goal ; sorry)
   ---END p
 
 
@@ -80,7 +80,7 @@ theorem p_constmask_proof : p_constmask_before ⊑ p_constmask_after := by
   intros
   try simp
   ---BEGIN p_constmask
-  apply p_constmask_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_constmask
 
 
@@ -116,7 +116,7 @@ theorem p_constmask2_proof : p_constmask2_before ⊑ p_constmask2_after := by
   intros
   try simp
   ---BEGIN p_constmask2
-  apply p_constmask2_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_constmask2
 
 
@@ -138,7 +138,7 @@ def p_commutative0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg34, %arg32 : i32
   %2 = llvm.xor %arg34, %0 : i32
-  %3 = llvm.and %2, %arg33 : i32
+  %3 = llvm.and %arg33, %2 : i32
   %4 = llvm.or %1, %3 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -152,7 +152,7 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   intros
   try simp
   ---BEGIN p_commutative0
-  apply p_commutative0_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_commutative0
 
 
@@ -174,7 +174,7 @@ def p_commutative2_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg27, %arg29 : i32
   %2 = llvm.xor %arg29, %0 : i32
-  %3 = llvm.and %2, %arg28 : i32
+  %3 = llvm.and %arg28, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -188,7 +188,7 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   intros
   try simp
   ---BEGIN p_commutative2
-  apply p_commutative2_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_commutative2
 
 
@@ -210,7 +210,7 @@ def p_commutative4_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = llvm.and %arg24, %arg22 : i32
   %2 = llvm.xor %arg24, %0 : i32
-  %3 = llvm.and %2, %arg23 : i32
+  %3 = llvm.and %arg23, %2 : i32
   %4 = llvm.or %3, %1 : i32
   "llvm.return"(%4) : (i32) -> ()
 }
@@ -224,7 +224,7 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   intros
   try simp
   ---BEGIN p_commutative4
-  apply p_commutative4_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_commutative4
 
 
@@ -260,8 +260,44 @@ theorem p_constmask_commutative_proof : p_constmask_commutative_before ⊑ p_con
   intros
   try simp
   ---BEGIN p_constmask_commutative
-  apply p_constmask_commutative_thm
+  all_goals (try extract_goal ; sorry)
   ---END p_constmask_commutative
+
+
+
+def n2_badmask_before := [llvm|
+{
+^0(%arg4 : i32, %arg5 : i32, %arg6 : i32, %arg7 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg6, %arg4 : i32
+  %2 = llvm.xor %arg7, %0 : i32
+  %3 = llvm.and %2, %arg5 : i32
+  %4 = llvm.xor %1, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def n2_badmask_after := [llvm|
+{
+^0(%arg4 : i32, %arg5 : i32, %arg6 : i32, %arg7 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %1 = llvm.and %arg6, %arg4 : i32
+  %2 = llvm.xor %arg7, %0 : i32
+  %3 = llvm.and %arg5, %2 : i32
+  %4 = llvm.xor %1, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
+  unfold n2_badmask_before n2_badmask_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN n2_badmask
+  all_goals (try extract_goal ; sorry)
+  ---END n2_badmask
 
 
 
@@ -293,7 +329,7 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   intros
   try simp
   ---BEGIN n3_constmask_samemask
-  apply n3_constmask_samemask_thm
+  all_goals (try extract_goal ; sorry)
   ---END n3_constmask_samemask
 
 

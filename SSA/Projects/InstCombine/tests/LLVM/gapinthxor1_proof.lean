@@ -7,10 +7,6 @@ section gapinthxor1_proof
 theorem test1_thm (x x_1 : BitVec 47) :
   x_1 &&& 70368744177664#47 ^^^ x &&& 70368744177661#47 = x_1 &&& 70368744177664#47 ||| x &&& 70368744177661#47 := sorry
 
-theorem test2_thm (x : BitVec 15) : x ^^^ 0#15 = x := sorry
-
-theorem test3_thm (x : BitVec 23) : x ^^^ x = 0#23 := sorry
-
 theorem test4_thm (x : BitVec 37) : x ^^^ (137438953471#37 ^^^ x) = 137438953471#37 := sorry
 
 theorem test5_thm (x : BitVec 7) : (x ||| 23#7) ^^^ 23#7 = x &&& 104#7 := sorry

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthandhxorhmerge_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -26,7 +26,7 @@ def test1_after := [llvm|
 {
 ^0(%arg3 : i57, %arg4 : i57, %arg5 : i57):
   %0 = llvm.xor %arg3, %arg4 : i57
-  %1 = llvm.and %0, %arg5 : i57
+  %1 = llvm.and %arg5, %0 : i57
   "llvm.return"(%1) : (i57) -> ()
 }
 ]
@@ -39,7 +39,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -69,7 +69,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 

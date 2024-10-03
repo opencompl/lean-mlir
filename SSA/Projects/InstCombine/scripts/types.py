@@ -3,7 +3,7 @@ import re
 import os
 import subprocess
 from multiprocessing import Pool
-
+from cfg import *
 
 def get_lines(msg):
     # Define the regex pattern to match error messages with line numbers
@@ -72,7 +72,7 @@ def main():
     worklist = []
     for root, _, files in os.walk(directory):
         for lean_file in files:
-            if lean_file.endswith(".lean"):  # Assuming the files have a .lean extension
+            if lean_file.endswith(".lean") and not lean_file.endswith("_proof.lean"):  # Assuming the files have a .lean extension
                 file_path = os.path.join(root, lean_file)
                 print(file_path)
                 worklist.append(file_path)

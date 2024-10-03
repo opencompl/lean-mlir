@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gicmphmulhand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   intros
   try simp
   ---BEGIN pr40493_neg3
-  apply pr40493_neg3_thm
+  all_goals (try extract_goal ; sorry)
   ---END pr40493_neg3
 
 
@@ -77,7 +77,7 @@ theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_deman
   intros
   try simp
   ---BEGIN pr51551_demand3bits
-  apply pr51551_demand3bits_thm
+  all_goals (try extract_goal ; sorry)
   ---END pr51551_demand3bits
 
 

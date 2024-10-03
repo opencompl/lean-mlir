@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshifthadd_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -41,7 +41,7 @@ theorem ashr_C1_add_A_C2_i32_proof : ashr_C1_add_A_C2_i32_before ⊑ ashr_C1_add
   intros
   try simp
   ---BEGIN ashr_C1_add_A_C2_i32
-  apply ashr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_C1_add_A_C2_i32
 
 
@@ -77,7 +77,7 @@ theorem lshr_C1_add_A_C2_i32_proof : lshr_C1_add_A_C2_i32_before ⊑ lshr_C1_add
   intros
   try simp
   ---BEGIN lshr_C1_add_A_C2_i32
-  apply lshr_C1_add_A_C2_i32_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_C1_add_A_C2_i32
 
 
@@ -109,7 +109,7 @@ theorem shl_add_nuw_proof : shl_add_nuw_before ⊑ shl_add_nuw_after := by
   intros
   try simp
   ---BEGIN shl_add_nuw
-  apply shl_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_nuw
 
 
@@ -140,7 +140,7 @@ theorem shl_nuw_add_nuw_proof : shl_nuw_add_nuw_before ⊑ shl_nuw_add_nuw_after
   intros
   try simp
   ---BEGIN shl_nuw_add_nuw
-  apply shl_nuw_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_nuw_add_nuw
 
 
@@ -172,7 +172,7 @@ theorem shl_nsw_add_nuw_proof : shl_nsw_add_nuw_before ⊑ shl_nsw_add_nuw_after
   intros
   try simp
   ---BEGIN shl_nsw_add_nuw
-  apply shl_nsw_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_nsw_add_nuw
 
 
@@ -204,7 +204,7 @@ theorem lshr_exact_add_nuw_proof : lshr_exact_add_nuw_before ⊑ lshr_exact_add_
   intros
   try simp
   ---BEGIN lshr_exact_add_nuw
-  apply lshr_exact_add_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_exact_add_nuw
 
 

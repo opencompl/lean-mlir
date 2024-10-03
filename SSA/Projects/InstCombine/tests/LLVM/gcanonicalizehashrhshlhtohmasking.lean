@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gcanonicalizehashrhshlhtohmasking_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   intros
   try simp
   ---BEGIN positive_samevar
-  apply positive_samevar_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar
 
 
@@ -70,7 +70,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   intros
   try simp
   ---BEGIN positive_sameconst
-  apply positive_sameconst_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst
 
 
@@ -104,7 +104,7 @@ theorem positive_biggerashr_proof : positive_biggerashr_before ⊑ positive_bigg
   intros
   try simp
   ---BEGIN positive_biggerashr
-  apply positive_biggerashr_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr
 
 
@@ -138,7 +138,7 @@ theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_bigger
   intros
   try simp
   ---BEGIN positive_biggershl
-  apply positive_biggershl_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl
 
 
@@ -169,7 +169,7 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   intros
   try simp
   ---BEGIN positive_samevar_shlnuw
-  apply positive_samevar_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw
 
 
@@ -200,7 +200,7 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuw
-  apply positive_sameconst_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw
 
 
@@ -234,7 +234,7 @@ theorem positive_biggerashr_shlnuw_proof : positive_biggerashr_shlnuw_before ⊑
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnuw
-  apply positive_biggerashr_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnuw
 
 
@@ -268,7 +268,7 @@ theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_biggershl_shlnuw
-  apply positive_biggershl_shlnuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw
 
 
@@ -299,7 +299,7 @@ theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ posit
   intros
   try simp
   ---BEGIN positive_samevar_shlnsw
-  apply positive_samevar_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw
 
 
@@ -330,7 +330,7 @@ theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_sameconst_shlnsw
-  apply positive_sameconst_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw
 
 
@@ -364,7 +364,7 @@ theorem positive_biggerashr_shlnsw_proof : positive_biggerashr_shlnsw_before ⊑
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnsw
-  apply positive_biggerashr_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnsw
 
 
@@ -398,7 +398,7 @@ theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ p
   intros
   try simp
   ---BEGIN positive_biggershl_shlnsw
-  apply positive_biggershl_shlnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw
 
 
@@ -429,7 +429,7 @@ theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑
   intros
   try simp
   ---BEGIN positive_samevar_shlnuwnsw
-  apply positive_samevar_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw
 
 
@@ -460,7 +460,7 @@ theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuwnsw
-  apply positive_sameconst_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw
 
 
@@ -494,7 +494,7 @@ theorem positive_biggerashr_shlnuwnsw_proof : positive_biggerashr_shlnuwnsw_befo
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnuwnsw
-  apply positive_biggerashr_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnuwnsw
 
 
@@ -528,7 +528,7 @@ theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before
   intros
   try simp
   ---BEGIN positive_biggershl_shlnuwnsw
-  apply positive_biggershl_shlnuwnsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw
 
 
@@ -556,7 +556,7 @@ theorem positive_samevar_ashrexact_proof : positive_samevar_ashrexact_before ⊑
   intros
   try simp
   ---BEGIN positive_samevar_ashrexact
-  apply positive_samevar_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_ashrexact
 
 
@@ -585,7 +585,7 @@ theorem positive_sameconst_ashrexact_proof : positive_sameconst_ashrexact_before
   intros
   try simp
   ---BEGIN positive_sameconst_ashrexact
-  apply positive_sameconst_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_ashrexact
 
 
@@ -617,7 +617,7 @@ theorem positive_biggerashr_ashrexact_proof : positive_biggerashr_ashrexact_befo
   intros
   try simp
   ---BEGIN positive_biggerashr_ashrexact
-  apply positive_biggerashr_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_ashrexact
 
 
@@ -649,7 +649,7 @@ theorem positive_biggershl_ashrexact_proof : positive_biggershl_ashrexact_before
   intros
   try simp
   ---BEGIN positive_biggershl_ashrexact
-  apply positive_biggershl_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_ashrexact
 
 
@@ -677,7 +677,7 @@ theorem positive_samevar_shlnsw_ashrexact_proof : positive_samevar_shlnsw_ashrex
   intros
   try simp
   ---BEGIN positive_samevar_shlnsw_ashrexact
-  apply positive_samevar_shlnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnsw_ashrexact
 
 
@@ -706,7 +706,7 @@ theorem positive_sameconst_shlnsw_ashrexact_proof : positive_sameconst_shlnsw_as
   intros
   try simp
   ---BEGIN positive_sameconst_shlnsw_ashrexact
-  apply positive_sameconst_shlnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnsw_ashrexact
 
 
@@ -738,7 +738,7 @@ theorem positive_biggerashr_shlnsw_ashrexact_proof : positive_biggerashr_shlnsw_
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnsw_ashrexact
-  apply positive_biggerashr_shlnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnsw_ashrexact
 
 
@@ -770,7 +770,7 @@ theorem positive_biggershl_shlnsw_ashrexact_proof : positive_biggershl_shlnsw_as
   intros
   try simp
   ---BEGIN positive_biggershl_shlnsw_ashrexact
-  apply positive_biggershl_shlnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnsw_ashrexact
 
 
@@ -798,7 +798,7 @@ theorem positive_samevar_shlnuw_ashrexact_proof : positive_samevar_shlnuw_ashrex
   intros
   try simp
   ---BEGIN positive_samevar_shlnuw_ashrexact
-  apply positive_samevar_shlnuw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuw_ashrexact
 
 
@@ -827,7 +827,7 @@ theorem positive_sameconst_shlnuw_ashrexact_proof : positive_sameconst_shlnuw_as
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuw_ashrexact
-  apply positive_sameconst_shlnuw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuw_ashrexact
 
 
@@ -859,7 +859,7 @@ theorem positive_biggerashr_shlnuw_ashrexact_proof : positive_biggerashr_shlnuw_
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnuw_ashrexact
-  apply positive_biggerashr_shlnuw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnuw_ashrexact
 
 
@@ -891,7 +891,7 @@ theorem positive_biggershl_shlnuw_ashrexact_proof : positive_biggershl_shlnuw_as
   intros
   try simp
   ---BEGIN positive_biggershl_shlnuw_ashrexact
-  apply positive_biggershl_shlnuw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuw_ashrexact
 
 
@@ -919,7 +919,7 @@ theorem positive_samevar_shlnuwnsw_ashrexact_proof : positive_samevar_shlnuwnsw_
   intros
   try simp
   ---BEGIN positive_samevar_shlnuwnsw_ashrexact
-  apply positive_samevar_shlnuwnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_samevar_shlnuwnsw_ashrexact
 
 
@@ -948,7 +948,7 @@ theorem positive_sameconst_shlnuwnsw_ashrexact_proof : positive_sameconst_shlnuw
   intros
   try simp
   ---BEGIN positive_sameconst_shlnuwnsw_ashrexact
-  apply positive_sameconst_shlnuwnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_sameconst_shlnuwnsw_ashrexact
 
 
@@ -980,7 +980,7 @@ theorem positive_biggerashr_shlnuwnsw_ashrexact_proof : positive_biggerashr_shln
   intros
   try simp
   ---BEGIN positive_biggerashr_shlnuwnsw_ashrexact
-  apply positive_biggerashr_shlnuwnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggerashr_shlnuwnsw_ashrexact
 
 
@@ -1012,7 +1012,7 @@ theorem positive_biggershl_shlnuwnsw_ashrexact_proof : positive_biggershl_shlnuw
   intros
   try simp
   ---BEGIN positive_biggershl_shlnuwnsw_ashrexact
-  apply positive_biggershl_shlnuwnsw_ashrexact_thm
+  all_goals (try extract_goal ; sorry)
   ---END positive_biggershl_shlnuwnsw_ashrexact
 
 

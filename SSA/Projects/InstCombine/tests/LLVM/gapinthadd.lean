@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gapinthadd_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,11 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthadd_statements
-
+                                                    
 def test1_before := [llvm|
 {
 ^0(%arg12 : i1):
-  %0 = "llvm.mlir.constant"() <{value = 1 : i1}> : () -> i1
+  %0 = "llvm.mlir.constant"() <{value = true}> : () -> i1
   %1 = llvm.xor %arg12, %0 : i1
   %2 = llvm.add %1, %0 : i1
   "llvm.return"(%2) : (i1) -> ()
@@ -291,3 +291,5 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   ---BEGIN test9
   all_goals (try extract_goal ; sorry)
   ---END test9
+
+

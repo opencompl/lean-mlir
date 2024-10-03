@@ -448,7 +448,7 @@ def negation_of_increment_via_or_with_no_common_bits_set_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %2 = llvm.shl %arg78, %0 : i8
   %3 = llvm.xor %2, %1 : i8
-  %4 = llvm.add %3, %arg77 : i8
+  %4 = llvm.add %arg77, %3 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
 ]
@@ -480,7 +480,7 @@ def negation_of_increment_via_or_disjoint_after := [llvm|
 ^0(%arg71 : i8, %arg72 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg72, %0 : i8
-  %2 = llvm.add %1, %arg71 : i8
+  %2 = llvm.add %arg71, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]

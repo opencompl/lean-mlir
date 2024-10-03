@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gdivhshift_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   intros
   try simp
   ---BEGIN t7
-  apply t7_thm
+  all_goals (try extract_goal ; sorry)
   ---END t7
 
 
@@ -68,7 +68,7 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   intros
   try simp
   ---BEGIN t10
-  apply t10_thm
+  all_goals (try extract_goal ; sorry)
   ---END t10
 
 
@@ -100,7 +100,7 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   intros
   try simp
   ---BEGIN sdiv_mul_shl_nsw
-  apply sdiv_mul_shl_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_mul_shl_nsw
 
 
@@ -132,7 +132,7 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   intros
   try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
-  apply sdiv_mul_shl_nsw_exact_commute1_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_mul_shl_nsw_exact_commute1
 
 
@@ -162,7 +162,7 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   intros
   try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
-  apply sdiv_shl_shl_nsw2_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_shl_nsw2_nuw
 
 
@@ -194,7 +194,7 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   intros
   try simp
   ---BEGIN sdiv_shl_pair_const
-  apply sdiv_shl_pair_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair_const
 
 
@@ -226,7 +226,7 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   intros
   try simp
   ---BEGIN sdiv_shl_pair1
-  apply sdiv_shl_pair1_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair1
 
 
@@ -258,7 +258,7 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   intros
   try simp
   ---BEGIN sdiv_shl_pair2
-  apply sdiv_shl_pair2_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair2
 
 
@@ -290,7 +290,7 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   intros
   try simp
   ---BEGIN sdiv_shl_pair3
-  apply sdiv_shl_pair3_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv_shl_pair3
 
 

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gorhshiftedhmasks_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -52,7 +52,7 @@ theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after :=
   intros
   try simp
   ---BEGIN or_and_shifts1
-  apply or_and_shifts1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_shifts1
 
 
@@ -96,7 +96,7 @@ theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_
   intros
   try simp
   ---BEGIN or_and_shift_shift_and
-  apply or_and_shift_shift_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_and_shift_shift_and
 
 
@@ -147,7 +147,7 @@ theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   intros
   try simp
   ---BEGIN multiuse1
-  apply multiuse1_thm
+  all_goals (try extract_goal ; sorry)
   ---END multiuse1
 
 
@@ -209,7 +209,7 @@ theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   intros
   try simp
   ---BEGIN multiuse2
-  apply multiuse2_thm
+  all_goals (try extract_goal ; sorry)
   ---END multiuse2
 
 
@@ -263,7 +263,7 @@ theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   intros
   try simp
   ---BEGIN multiuse3
-  apply multiuse3_thm
+  all_goals (try extract_goal ; sorry)
   ---END multiuse3
 
 

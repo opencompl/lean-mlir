@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gbinophandhshifts_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -45,7 +45,7 @@ theorem shl_and_and_proof : shl_and_and_before ⊑ shl_and_and_after := by
   intros
   try simp
   ---BEGIN shl_and_and
-  apply shl_and_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_and
 
 
@@ -85,7 +85,7 @@ theorem shl_and_and_fail_proof : shl_and_and_fail_before ⊑ shl_and_and_fail_af
   intros
   try simp
   ---BEGIN shl_and_and_fail
-  apply shl_and_and_fail_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_and_fail
 
 
@@ -122,7 +122,7 @@ theorem shl_add_add_proof : shl_add_add_before ⊑ shl_add_add_after := by
   intros
   try simp
   ---BEGIN shl_add_add
-  apply shl_add_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_add
 
 
@@ -145,7 +145,7 @@ def shl_and_xor_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 10 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %2 = llvm.and %arg158, %0 : i8
-  %3 = llvm.xor %2, %arg159 : i8
+  %3 = llvm.xor %arg159, %2 : i8
   %4 = llvm.shl %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -159,7 +159,7 @@ theorem shl_and_xor_proof : shl_and_xor_before ⊑ shl_and_xor_after := by
   intros
   try simp
   ---BEGIN shl_and_xor
-  apply shl_and_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_xor
 
 
@@ -182,7 +182,7 @@ def shl_and_add_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 59 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %2 = llvm.and %arg157, %0 : i8
-  %3 = llvm.add %2, %arg156 : i8
+  %3 = llvm.add %arg156, %2 : i8
   %4 = llvm.shl %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -196,7 +196,7 @@ theorem shl_and_add_proof : shl_and_add_before ⊑ shl_and_add_after := by
   intros
   try simp
   ---BEGIN shl_and_add
-  apply shl_and_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_add
 
 
@@ -219,7 +219,7 @@ def lshr_or_and_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -64 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
   %2 = llvm.or %arg152, %0 : i8
-  %3 = llvm.and %2, %arg153 : i8
+  %3 = llvm.and %arg153, %2 : i8
   %4 = llvm.lshr %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -233,7 +233,7 @@ theorem lshr_or_and_proof : lshr_or_and_before ⊑ lshr_or_and_after := by
   intros
   try simp
   ---BEGIN lshr_or_and
-  apply lshr_or_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_or_and
 
 
@@ -270,7 +270,7 @@ theorem lshr_or_or_fail_proof : lshr_or_or_fail_before ⊑ lshr_or_or_fail_after
   intros
   try simp
   ---BEGIN lshr_or_or_fail
-  apply lshr_or_or_fail_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_or_or_fail
 
 
@@ -303,7 +303,7 @@ theorem lshr_or_or_no_const_proof : lshr_or_or_no_const_before ⊑ lshr_or_or_no
   intros
   try simp
   ---BEGIN lshr_or_or_no_const
-  apply lshr_or_or_no_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_or_or_no_const
 
 
@@ -336,7 +336,7 @@ theorem shl_xor_xor_no_const_proof : shl_xor_xor_no_const_before ⊑ shl_xor_xor
   intros
   try simp
   ---BEGIN shl_xor_xor_no_const
-  apply shl_xor_xor_no_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_no_const
 
 
@@ -369,7 +369,7 @@ theorem shl_add_add_no_const_proof : shl_add_add_no_const_before ⊑ shl_add_add
   intros
   try simp
   ---BEGIN shl_add_add_no_const
-  apply shl_add_add_no_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_add_no_const
 
 
@@ -406,7 +406,7 @@ theorem lshr_xor_or_good_mask_proof : lshr_xor_or_good_mask_before ⊑ lshr_xor_
   intros
   try simp
   ---BEGIN lshr_xor_or_good_mask
-  apply lshr_xor_or_good_mask_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_xor_or_good_mask
 
 
@@ -443,7 +443,7 @@ theorem shl_xor_xor_good_mask_proof : shl_xor_xor_good_mask_before ⊑ shl_xor_x
   intros
   try simp
   ---BEGIN shl_xor_xor_good_mask
-  apply shl_xor_xor_good_mask_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_good_mask
 
 
@@ -480,7 +480,7 @@ theorem shl_xor_xor_bad_mask_distribute_proof : shl_xor_xor_bad_mask_distribute_
   intros
   try simp
   ---BEGIN shl_xor_xor_bad_mask_distribute
-  apply shl_xor_xor_bad_mask_distribute_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor_xor_bad_mask_distribute
 
 
@@ -503,7 +503,7 @@ def shl_add_and_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 61 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %2 = llvm.add %arg97, %0 : i8
-  %3 = llvm.and %2, %arg96 : i8
+  %3 = llvm.and %arg96, %2 : i8
   %4 = llvm.shl %3, %1 : i8
   "llvm.return"(%4) : (i8) -> ()
 }
@@ -517,7 +517,7 @@ theorem shl_add_and_proof : shl_add_and_before ⊑ shl_add_and_after := by
   intros
   try simp
   ---BEGIN shl_add_and
-  apply shl_add_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_and
 
 
@@ -538,7 +538,7 @@ def and_ashr_not_after := [llvm|
 ^0(%arg81 : i8, %arg82 : i8, %arg83 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg82, %0 : i8
-  %2 = llvm.and %1, %arg81 : i8
+  %2 = llvm.and %arg81, %1 : i8
   %3 = llvm.ashr %2, %arg83 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -552,7 +552,7 @@ theorem and_ashr_not_proof : and_ashr_not_before ⊑ and_ashr_not_after := by
   intros
   try simp
   ---BEGIN and_ashr_not
-  apply and_ashr_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_ashr_not
 
 
@@ -573,7 +573,7 @@ def and_ashr_not_commuted_after := [llvm|
 ^0(%arg78 : i8, %arg79 : i8, %arg80 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg79, %0 : i8
-  %2 = llvm.and %1, %arg78 : i8
+  %2 = llvm.and %arg78, %1 : i8
   %3 = llvm.ashr %2, %arg80 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -587,7 +587,7 @@ theorem and_ashr_not_commuted_proof : and_ashr_not_commuted_before ⊑ and_ashr_
   intros
   try simp
   ---BEGIN and_ashr_not_commuted
-  apply and_ashr_not_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END and_ashr_not_commuted
 
 
@@ -608,7 +608,7 @@ def or_ashr_not_after := [llvm|
 ^0(%arg54 : i8, %arg55 : i8, %arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg55, %0 : i8
-  %2 = llvm.or %1, %arg54 : i8
+  %2 = llvm.or %arg54, %1 : i8
   %3 = llvm.ashr %2, %arg56 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -622,7 +622,7 @@ theorem or_ashr_not_proof : or_ashr_not_before ⊑ or_ashr_not_after := by
   intros
   try simp
   ---BEGIN or_ashr_not
-  apply or_ashr_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_ashr_not
 
 
@@ -643,7 +643,7 @@ def or_ashr_not_commuted_after := [llvm|
 ^0(%arg51 : i8, %arg52 : i8, %arg53 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg52, %0 : i8
-  %2 = llvm.or %1, %arg51 : i8
+  %2 = llvm.or %arg51, %1 : i8
   %3 = llvm.ashr %2, %arg53 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -657,7 +657,7 @@ theorem or_ashr_not_commuted_proof : or_ashr_not_commuted_before ⊑ or_ashr_not
   intros
   try simp
   ---BEGIN or_ashr_not_commuted
-  apply or_ashr_not_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_ashr_not_commuted
 
 
@@ -692,7 +692,7 @@ theorem xor_ashr_not_proof : xor_ashr_not_before ⊑ xor_ashr_not_after := by
   intros
   try simp
   ---BEGIN xor_ashr_not
-  apply xor_ashr_not_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not
 
 
@@ -727,7 +727,7 @@ theorem xor_ashr_not_commuted_proof : xor_ashr_not_commuted_before ⊑ xor_ashr_
   intros
   try simp
   ---BEGIN xor_ashr_not_commuted
-  apply xor_ashr_not_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_commuted
 
 
@@ -763,7 +763,7 @@ theorem xor_ashr_not_fail_lshr_ashr_proof : xor_ashr_not_fail_lshr_ashr_before �
   intros
   try simp
   ---BEGIN xor_ashr_not_fail_lshr_ashr
-  apply xor_ashr_not_fail_lshr_ashr_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_lshr_ashr
 
 
@@ -799,7 +799,7 @@ theorem xor_ashr_not_fail_ashr_lshr_proof : xor_ashr_not_fail_ashr_lshr_before �
   intros
   try simp
   ---BEGIN xor_ashr_not_fail_ashr_lshr
-  apply xor_ashr_not_fail_ashr_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_ashr_lshr
 
 
@@ -834,7 +834,7 @@ theorem xor_ashr_not_fail_invalid_xor_constant_proof : xor_ashr_not_fail_invalid
   intros
   try simp
   ---BEGIN xor_ashr_not_fail_invalid_xor_constant
-  apply xor_ashr_not_fail_invalid_xor_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_ashr_not_fail_invalid_xor_constant
 
 

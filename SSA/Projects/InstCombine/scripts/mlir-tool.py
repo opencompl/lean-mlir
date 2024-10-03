@@ -23,6 +23,7 @@ import subprocess
 from pathlib import Path
 from xdsl.printer import Printer
 from multiprocessing import Pool
+from cfg import *
 
 # Initialize the MLIR context and register the LLVM dialect
 ctx = MLContext(allow_unregistered=True)
@@ -106,25 +107,18 @@ def parse_module(module):
 def parse_from_file(file_name):
     return parse_module(read_file(file_name))
 
-
-# subprocess.run("""
-# cd SSA/Projects/InstCombine/scripts &&
-# rm -rf ./llvm-project-main &&
-# curl -o llvm-project-main.zip https://codeload.github.com/llvm/llvm-project/zip/refs/heads/main &&
-# unzip llvm-project-main.zip
-# """, shell=True)
+rm_tests = "\nrm -r " + test_path + "/*\n"
 
 
-subprocess.run("""
-rm -f SSA/Projects/InstCombine/tests/LLVM/*
-""", shell=True)
+llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
+
+subprocess.run(rm_tests, shell=True)
 
 expensive_files = [
     "pr96012.ll"
 ]
-directory = os.fsencode(
-    "SSA/Projects/InstCombine/scripts/llvm-project-main/llvm/test/Transforms/InstCombine"
-)
+directory = os.fsencode(llvm_test_path)
+
 # for file in os.listdir(directory):
 def process_file(file):
     filename = os.fsdecode(file)
@@ -135,16 +129,16 @@ def process_file(file):
     stem = "g" + filename.split(".")[0].replace("-", "h")
     output = ""
 
-    # module1 = parse_from_file(os.path.join("../vcombined-mlir", filename))
-    full_name = f"SSA/Projects/InstCombine/scripts/llvm-project-main/llvm/test/Transforms/InstCombine/{filename}"
-    print(f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic")
+    full_name = f"{llvm_test_path}/{filename}"
+    run_process1 = f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic"
+    print(run_process1)
     process1 = subprocess.run(
-            f"opt -passes=instcombine -S {full_name} | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic",
+            run_process1,
             shell=True,
             capture_output=True,
             encoding="utf-8"
     )
-    # print(process1)
+    
     module1 = parse_module(
        process1.stdout
     )
@@ -158,7 +152,7 @@ def process_file(file):
     )
     if module1 is None or module2 is None:
         return
-    # module2 = parse_from_file(os.path.join("../vbefore-mlir", filename))
+    
     funcs = [
         func
         for func in module1.walk()
@@ -207,14 +201,7 @@ theorem {name}_proof : {name}_before ⊑ {name}_after := by
   all_goals (try extract_goal ; sorry)
   ---END {name}\n\n\n"""
         print(o1)
-        write_file = os.path.join(
-            "SSA",
-            "Projects",
-            "InstCombine",
-            "tests",
-            "LLVM",
-            f"{stem}.lean",
-        )
+        write_file = f"{test_path}/{stem}.lean"
         with open(write_file, "a+") as f3:
             if os.stat(write_file).st_size == 0:
                 f3.write(
@@ -235,7 +222,6 @@ section {stem}_statements
                                                     """
                 )
             f3.write(o1)
-        # with open(write_file, "a+") as f3:
-        #     f3.write(f"end {stem}_statements")
+        
 with Pool(7) as p:
     p.map(process_file, os.listdir(directory))

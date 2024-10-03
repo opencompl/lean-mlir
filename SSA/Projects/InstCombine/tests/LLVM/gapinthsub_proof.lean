@@ -6,7 +6,7 @@ open BitVec
 section gapinthsub_proof
 theorem test5_thm (x x_1 x_2 : BitVec 19) : x_2 - (x_1 - x) = x - x_1 + x_2 := sorry
 
-theorem test6_thm (x x_1 : BitVec 57) : x_1 - (x_1 &&& x) = (x ^^^ 144115188075855871#57) &&& x_1 := sorry
+theorem test6_thm (x x_1 : BitVec 57) : x_1 - (x_1 &&& x) = x_1 &&& (x ^^^ 144115188075855871#57) := sorry
 
 theorem test7_thm (x : BitVec 77) : 151115727451828646838271#77 - x = x ^^^ 151115727451828646838271#77 := sorry
 

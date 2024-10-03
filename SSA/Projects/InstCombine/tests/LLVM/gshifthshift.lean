@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshifthshift_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem shl_shl_proof : shl_shl_before ⊑ shl_shl_after := by
   intros
   try simp
   ---BEGIN shl_shl
-  apply shl_shl_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_shl
 
 
@@ -70,7 +70,7 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
   intros
   try simp
   ---BEGIN lshr_lshr
-  apply lshr_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_lshr
 
 
@@ -106,7 +106,7 @@ theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_af
   intros
   try simp
   ---BEGIN shl_lshr_demand1
-  apply shl_lshr_demand1_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_lshr_demand1
 
 
@@ -142,7 +142,7 @@ theorem shl_lshr_demand6_proof : shl_lshr_demand6_before ⊑ shl_lshr_demand6_af
   intros
   try simp
   ---BEGIN shl_lshr_demand6
-  apply shl_lshr_demand6_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_lshr_demand6
 
 
@@ -178,7 +178,7 @@ theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_af
   intros
   try simp
   ---BEGIN lshr_shl_demand1
-  apply lshr_shl_demand1_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_shl_demand1
 
 

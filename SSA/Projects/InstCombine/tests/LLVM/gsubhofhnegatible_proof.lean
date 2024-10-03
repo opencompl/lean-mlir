@@ -24,7 +24,7 @@ theorem negate_xor_thm (x : BitVec 4) : -(x ^^^ 5#4) = (x ^^^ 10#4) + 1#4 := sor
 
 theorem negate_shl_xor_thm (x x_1 : BitVec 4) :
   (Option.bind (if 4 ≤ x.toNat then none else some ((x_1 ^^^ 5#4) <<< x.toNat)) fun a => some (-a)) ⊑
-    if 4 ≤ x.toNat then none else some (((x_1 ^^^ 10#4) + 1#4) <<< x.toNat) := sorry
+    if 4 ≤ x.toNat then none else some ((x_1 ^^^ 10#4) <<< x.toNat + 1#4 <<< x.toNat) := sorry
 
 theorem negate_sdiv_thm (x x_1 : BitVec 8) : x_1 - x.sdiv 42#8 = x.sdiv 214#8 + x_1 := sorry
 
@@ -32,9 +32,9 @@ theorem negate_ashr_thm (x x_1 : BitVec 8) : x_1 - x.sshiftRight 7 = x >>> 7 + x
 
 theorem negate_lshr_thm (x x_1 : BitVec 8) : x_1 - x >>> 7 = x.sshiftRight 7 + x_1 := sorry
 
-theorem negation_of_increment_via_or_with_no_common_bits_set_thm (x x_1 : BitVec 8) : x_1 - (x <<< 1 ||| 1#8) = (x <<< 1 ^^^ 255#8) + x_1 := sorry
+theorem negation_of_increment_via_or_with_no_common_bits_set_thm (x x_1 : BitVec 8) : x_1 - (x <<< 1 ||| 1#8) = x_1 + (x <<< 1 ^^^ 255#8) := sorry
 
-theorem negation_of_increment_via_or_disjoint_thm (x x_1 : BitVec 8) : x_1 - (x ||| 1#8) = (x ^^^ 255#8) + x_1 := sorry
+theorem negation_of_increment_via_or_disjoint_thm (x x_1 : BitVec 8) : x_1 - (x ||| 1#8) = x_1 + (x ^^^ 255#8) := sorry
 
 theorem negate_add_with_single_negatible_operand_thm (x : BitVec 8) : 214#8 + -x = 214#8 - x := sorry
 

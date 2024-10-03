@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.glshr_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem lshr_exact_proof : lshr_exact_before ⊑ lshr_exact_after := by
   intros
   try simp
   ---BEGIN lshr_exact
-  apply lshr_exact_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_exact
 
 
@@ -78,7 +78,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   intros
   try simp
   ---BEGIN shl_add
-  apply shl_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add
 
 
@@ -108,7 +108,7 @@ theorem mul_splat_fold_proof : mul_splat_fold_before ⊑ mul_splat_fold_after :=
   intros
   try simp
   ---BEGIN mul_splat_fold
-  apply mul_splat_fold_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold
 
 
@@ -139,7 +139,7 @@ theorem shl_add_lshr_flag_preservation_proof : shl_add_lshr_flag_preservation_be
   intros
   try simp
   ---BEGIN shl_add_lshr_flag_preservation
-  apply shl_add_lshr_flag_preservation_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr_flag_preservation
 
 
@@ -170,7 +170,7 @@ theorem shl_add_lshr_proof : shl_add_lshr_before ⊑ shl_add_lshr_after := by
   intros
   try simp
   ---BEGIN shl_add_lshr
-  apply shl_add_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr
 
 
@@ -203,7 +203,7 @@ theorem shl_add_lshr_comm_proof : shl_add_lshr_comm_before ⊑ shl_add_lshr_comm
   intros
   try simp
   ---BEGIN shl_add_lshr_comm
-  apply shl_add_lshr_comm_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_lshr_comm
 
 
@@ -234,7 +234,7 @@ theorem shl_sub_lshr_proof : shl_sub_lshr_before ⊑ shl_sub_lshr_after := by
   intros
   try simp
   ---BEGIN shl_sub_lshr
-  apply shl_sub_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr
 
 
@@ -265,7 +265,7 @@ theorem shl_sub_lshr_reverse_proof : shl_sub_lshr_reverse_before ⊑ shl_sub_lsh
   intros
   try simp
   ---BEGIN shl_sub_lshr_reverse
-  apply shl_sub_lshr_reverse_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse
 
 
@@ -296,7 +296,7 @@ theorem shl_sub_lshr_reverse_no_nsw_proof : shl_sub_lshr_reverse_no_nsw_before �
   intros
   try simp
   ---BEGIN shl_sub_lshr_reverse_no_nsw
-  apply shl_sub_lshr_reverse_no_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse_no_nsw
 
 
@@ -327,7 +327,7 @@ theorem shl_sub_lshr_reverse_nsw_on_op1_proof : shl_sub_lshr_reverse_nsw_on_op1_
   intros
   try simp
   ---BEGIN shl_sub_lshr_reverse_nsw_on_op1
-  apply shl_sub_lshr_reverse_nsw_on_op1_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_sub_lshr_reverse_nsw_on_op1
 
 
@@ -358,7 +358,7 @@ theorem shl_or_lshr_proof : shl_or_lshr_before ⊑ shl_or_lshr_after := by
   intros
   try simp
   ---BEGIN shl_or_lshr
-  apply shl_or_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_lshr
 
 
@@ -389,7 +389,7 @@ theorem shl_or_disjoint_lshr_proof : shl_or_disjoint_lshr_before ⊑ shl_or_disj
   intros
   try simp
   ---BEGIN shl_or_disjoint_lshr
-  apply shl_or_disjoint_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_disjoint_lshr
 
 
@@ -420,7 +420,7 @@ theorem shl_or_lshr_comm_proof : shl_or_lshr_comm_before ⊑ shl_or_lshr_comm_af
   intros
   try simp
   ---BEGIN shl_or_lshr_comm
-  apply shl_or_lshr_comm_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_lshr_comm
 
 
@@ -451,7 +451,7 @@ theorem shl_or_disjoint_lshr_comm_proof : shl_or_disjoint_lshr_comm_before ⊑ s
   intros
   try simp
   ---BEGIN shl_or_disjoint_lshr_comm
-  apply shl_or_disjoint_lshr_comm_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_disjoint_lshr_comm
 
 
@@ -482,7 +482,7 @@ theorem shl_xor_lshr_proof : shl_xor_lshr_before ⊑ shl_xor_lshr_after := by
   intros
   try simp
   ---BEGIN shl_xor_lshr
-  apply shl_xor_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor_lshr
 
 
@@ -513,7 +513,7 @@ theorem shl_xor_lshr_comm_proof : shl_xor_lshr_comm_before ⊑ shl_xor_lshr_comm
   intros
   try simp
   ---BEGIN shl_xor_lshr_comm
-  apply shl_xor_lshr_comm_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor_lshr_comm
 
 
@@ -544,7 +544,7 @@ theorem shl_and_lshr_proof : shl_and_lshr_before ⊑ shl_and_lshr_after := by
   intros
   try simp
   ---BEGIN shl_and_lshr
-  apply shl_and_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_lshr
 
 
@@ -575,7 +575,7 @@ theorem shl_and_lshr_comm_proof : shl_and_lshr_comm_before ⊑ shl_and_lshr_comm
   intros
   try simp
   ---BEGIN shl_and_lshr_comm
-  apply shl_and_lshr_comm_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and_lshr_comm
 
 
@@ -606,7 +606,7 @@ theorem shl_lshr_and_exact_proof : shl_lshr_and_exact_before ⊑ shl_lshr_and_ex
   intros
   try simp
   ---BEGIN shl_lshr_and_exact
-  apply shl_lshr_and_exact_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_lshr_and_exact
 
 
@@ -626,7 +626,7 @@ def mul_splat_fold_no_nuw_after := [llvm|
 ^0(%arg79 : i32):
   %0 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
   %1 = llvm.lshr %arg79, %0 : i32
-  %2 = llvm.add %1, %arg79 : i32
+  %2 = llvm.add %arg79, %1 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -639,7 +639,7 @@ theorem mul_splat_fold_no_nuw_proof : mul_splat_fold_no_nuw_before ⊑ mul_splat
   intros
   try simp
   ---BEGIN mul_splat_fold_no_nuw
-  apply mul_splat_fold_no_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold_no_nuw
 
 
@@ -669,7 +669,7 @@ theorem mul_splat_fold_too_narrow_proof : mul_splat_fold_too_narrow_before ⊑ m
   intros
   try simp
   ---BEGIN mul_splat_fold_too_narrow
-  apply mul_splat_fold_too_narrow_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_splat_fold_too_narrow
 
 
@@ -702,7 +702,7 @@ theorem negative_and_odd_proof : negative_and_odd_before ⊑ negative_and_odd_af
   intros
   try simp
   ---BEGIN negative_and_odd
-  apply negative_and_odd_thm
+  all_goals (try extract_goal ; sorry)
   ---END negative_and_odd
 
 

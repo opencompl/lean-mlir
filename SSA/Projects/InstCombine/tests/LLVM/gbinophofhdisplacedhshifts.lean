@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gbinophofhdisplacedhshifts_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   intros
   try simp
   ---BEGIN shl_or
-  apply shl_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or
 
 
@@ -78,7 +78,7 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   intros
   try simp
   ---BEGIN lshr_or
-  apply lshr_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_or
 
 
@@ -113,7 +113,7 @@ theorem ashr_or_proof : ashr_or_before ⊑ ashr_or_after := by
   intros
   try simp
   ---BEGIN ashr_or
-  apply ashr_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_or
 
 
@@ -148,7 +148,7 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   intros
   try simp
   ---BEGIN shl_xor
-  apply shl_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_xor
 
 
@@ -183,7 +183,7 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   intros
   try simp
   ---BEGIN lshr_xor
-  apply lshr_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_xor
 
 
@@ -218,7 +218,7 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   intros
   try simp
   ---BEGIN ashr_xor
-  apply ashr_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_xor
 
 
@@ -253,7 +253,7 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   intros
   try simp
   ---BEGIN shl_and
-  apply shl_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_and
 
 
@@ -288,7 +288,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   intros
   try simp
   ---BEGIN lshr_and
-  apply lshr_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and
 
 
@@ -323,7 +323,7 @@ theorem ashr_and_proof : ashr_and_before ⊑ ashr_and_after := by
   intros
   try simp
   ---BEGIN ashr_and
-  apply ashr_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_and
 
 
@@ -358,7 +358,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   intros
   try simp
   ---BEGIN shl_add
-  apply shl_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add
 
 
@@ -393,7 +393,7 @@ theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after
   intros
   try simp
   ---BEGIN shl_or_commuted
-  apply shl_or_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_commuted
 
 
@@ -428,7 +428,7 @@ theorem shl_or_with_or_disjoint_instead_of_add_proof : shl_or_with_or_disjoint_i
   intros
   try simp
   ---BEGIN shl_or_with_or_disjoint_instead_of_add
-  apply shl_or_with_or_disjoint_instead_of_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_or_with_or_disjoint_instead_of_add
 
 
