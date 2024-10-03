@@ -555,7 +555,6 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
   all_goals (simp [h, h₁, h₂, h₃, h₄]; try congr; try omega)
   simp_all
 
--- basically copied from getLsbD_sshiftRight
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
     getLsbD (x.sshiftRight' y) i =
       (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
@@ -597,7 +596,6 @@ theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
 
 -- msb_sshiftRight exists already under the name : sshiftRight_msb_eq_msb
 
--- basically copied sshiftRight_msb_eq_msb
 theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
