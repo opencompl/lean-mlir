@@ -581,43 +581,25 @@ theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
 
 theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
     getMsbD (x.sshiftRight' y) i = (decide (i < w) && if i < y.toNat then x.msb else getMsbD x (i - y.toNat)) := by
-  simp only [BitVec.sshiftRight']
-  simp only [getMsbD]
-  rw [BitVec.getLsbD_sshiftRight]
+  simp only [BitVec.sshiftRight', getMsbD, BitVec.getLsbD_sshiftRight]
   by_cases h : i < w
-  · simp [h]
-    by_cases h₁ : w ≤ w - 1 - i
-    · have h₂ : (i < y.toNat) := by omega
-      simp [h₁, h₂]
-      omega
-    · simp [h₁]
-      simp_all
-      by_cases h₂ : y.toNat + (w - 1 - i) < w
-      · have h₃ : ¬(i < y.toNat) := by omega
-        have h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat)) := by omega
-        -- keep separated, otherwise Bool.iff_and_self and decide_eq_true_eq
-        -- conflict with h₄ and it breaks
-        simp only [h₂, ↓reduceIte, h₃]
-        simp only [h₄, Bool.iff_and_self, decide_eq_true_eq]
-        omega
-      · have h₃ : (i < y.toNat) := by omega
-        simp [h₂, h₃]
-  · simp [h]
+  <;> by_cases h₁ : w ≤ w - 1 - i
+  <;> by_cases h₂ : i < y.toNat
+  <;> by_cases h₃ : y.toNat + (w - 1 - i) < w
+  <;> by_cases h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat))
+  all_goals (simp [h, h₁, h₂, h₃, h₄]; try omega)
+  simp_all
+  omega
 
 theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
     getMsbD (x.ushiftRight n) i = (decide (i < w) && if i < n then false else getMsbD x (i - n)) := by
   simp only [getMsbD, Bool.if_false_left]
   by_cases h : i < w
-  · simp only [h, decide_True, ushiftRight_eq, getLsbD_ushiftRight, Bool.true_and]
-    by_cases h₁ : i < n
-    · simp only [h₁, decide_True, Bool.not_true, Bool.false_and]
-      rw [BitVec.getLsbD_ge]
-      omega
-    · have h₂ : (i - n < w) := by omega
-      simp only [h₁, decide_False, Bool.not_false, h₂, decide_True, Bool.true_and]
-      congr
-      omega
-  · simp [h]
+  <;> by_cases h₁ : i < n
+  <;> by_cases h₂ : i - n < w
+  all_goals (simp [h, h₁, h₂]; try congr; try omega)
+  rw [BitVec.getLsbD_ge]
+  omega
 
 theorem msb_shiftLeft {x : BitVec w} {n : Nat} :
     (x <<< n).msb = x.getMsbD n := by
