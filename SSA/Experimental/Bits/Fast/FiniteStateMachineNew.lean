@@ -21,6 +21,9 @@ axiom portingSorryAx {α : Sort _}  : α
 
 namespace BitVec
 
+/- TODO: upstream. -/
+attribute [simp] getLsbD_eq_getElem
+
 @[simp]
 theorem getLsbD_append_left (x : BitVec v) (y : BitVec w) (i : Nat)
     (h : ¬(i < w)) :
@@ -51,11 +54,11 @@ a different width, together into a bitvector whose length is the sum of lengths
 def appendVector' {ws : List Nat} (h : ws.length = n)
     (xs : (i : Fin n) → BitVec ws[i]) :
     BitVec (Nat.sum ws) :=
-  match n, ws with
-  | 0, []  => 0#_
-  | n+1, _::ws =>
+  match n, ws, h with
+  | 0, [], h  => 0#_
+  | n+1, _::ws, h =>
     let x := xs 0
-    have h : ws.length = n := portingSorryAx
+    have h : ws.length = n := exa
     (x ++ (appendVector' h (fun i => xs i.succ)))
 
 /-- Construct a bitvector from a function that maps `i : Fin w` to the
@@ -71,6 +74,10 @@ def ofFnLsb (f : Fin w → Bool) : BitVec w :=
 
 @[simp] lemma getLsb'_ofFnLsb (f : Fin w → Bool) :
     (ofFnLsb f).getLsb' = f := by
+  exact portingSorryAx
+
+@[simp] lemma getLsbD_ofFnLsb (f : Fin w → Bool) :
+    ((ofFnLsb f).getLsbD i = (if h : i < w then f ⟨i, h⟩ else false)) := by
   exact portingSorryAx
 
 end BitVec
@@ -171,13 +178,15 @@ def eval {vars n : Nat}
   simp [eval]
 
 /-- The identity circuit family on `n` bits -/
-def id {n : Nat} : CircuitProd n n :=
+def id (n : Nat) : CircuitProd n n :=
   fun i => Circuit.var true i
 
-@[simp] lemma eval_id {n : Nat} : eval id = (@_root_.id (BitVec n)) := by
+@[simp] lemma eval_id {n : Nat} : eval (id n) = (@_root_.id (BitVec n)) := by
   funext xs
   simp [eval, id]
-  exact portingSorryAx
+  apply BitVec.eq_of_getLsbD_eq
+  intros i
+  simp;
 
 def map (f : Fin n → Fin m) (cs : CircuitProd n k) : CircuitProd m k :=
   fun i => (cs i).map f
@@ -199,9 +208,12 @@ def sigmaMk {f : Fin x → Nat} {i : Fin x} :
     CircuitProd (f i) n → CircuitProd (∑ j, f j) n :=
   portingSorryAx
 
+#check BitVec.append
+
 def append {vars n m} (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
-    CircuitProd vars (n + m) := by
-  exact portingSorryAx
+    CircuitProd vars (n + m) :=
+  Fin.addCases xs ys ∘ Fin.rev
+
 instance : HAppend (CircuitProd vars n) (CircuitProd vars m)
     (CircuitProd vars (n+m)) where
   hAppend := append
@@ -209,7 +221,9 @@ instance : HAppend (CircuitProd vars n) (CircuitProd vars m)
 @[simp] lemma eval_append {vars n m}
     (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BitVec vars) :
     eval (append xs ys) V = (eval xs V) ++ (eval ys V) := by
-  exact portingSorryAx
+  ext i
+  simp [eval, append, BitVec.getElem_append, Fin.addCases]
+  split <;> simp [*]
 
 #check Circuit.bind
 
@@ -411,18 +425,18 @@ def compose {newArity : Nat} {qArity : Fin arity → Nat}
       arity :=
     fun (i : Fin arity) =>
       (q i).outCircuit.bind <| CircuitProd.append
-        (CircuitProd.id |>.sigmaMk.addInr.addInl)
-        (CircuitProd.id |>.map vars |>.addInr)
+        (CircuitProd.id ((q i).stateWidth) |>.sigmaMk.addInr.addInl)
+        (CircuitProd.id (qArity i) |>.map vars |>.addInr)
   { stateWidth    := p.stateWidth + (∑ i, (q i).stateWidth),
     initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
     outCircuit :=
       p.outCircuit.bind <| CircuitProd.append
-        (CircuitProd.id |>.addInl.addInl)
+        (CircuitProd.id p.stateWidth |>.addInl.addInl)
         qOutCircuit
     nextStateCircuits :=
       CircuitProd.append
         (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
-          (CircuitProd.id |>.addInl.addInl)
+          (CircuitProd.id p.stateWidth |>.addInl.addInl)
           qOutCircuit
         )
         (fun i =>
