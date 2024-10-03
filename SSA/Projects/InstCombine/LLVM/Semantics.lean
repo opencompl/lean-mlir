@@ -98,10 +98,12 @@ def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let y' ← y
   let nsw := flags.nsw
   let nuw := flags.nuw
+  let ex' := BitVec.zeroExtend (w+1) x'
+  let ey' := BitVec.zeroExtend (w+1) y'
   let AddSignedWraps? : Prop := nsw ∧
-    (BitVec.carry w x' y' false != BitVec.carry (w-1) x' y' false)
+    (x'.msb = y'.msb) ∧ ((x' + y').msb ≠ x'.msb)
   let AddUnsignedWraps? : Prop := nuw ∧
-    ((BitVec.zeroExtend (w+1) x') + (BitVec.zeroExtend (w+1) y') ≥ BitVec.ofNat (w+1) (2^w))
+    (ex' + ey').msb
   if (AddSignedWraps? ∨ AddUnsignedWraps?) then
     none
   else
@@ -125,9 +127,11 @@ def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let y' ← y
   let nsw := flags.nsw
   let nuw := flags.nuw
+  let ex' := BitVec.zeroExtend (w+1) x'
+  let ey' := BitVec.zeroExtend (w+1) y'
   let AddSignedWraps? : Prop := nsw ∧
-    ((x'.toInt - y'.toInt) < -(2^(w-1)) ∨ (x'.toInt - y'.toInt) ≥ 2^w)
-  let AddUnsignedWraps? : Prop := nuw ∧ (x'.toNat < y'.toNat)
+    ((ex' - ey').msb ≠ (ex' - ey').getMsbD 1)
+  let AddUnsignedWraps? : Prop := nuw ∧ (x' < y')
   if (AddSignedWraps? ∨ AddUnsignedWraps?) then
     none
   else
