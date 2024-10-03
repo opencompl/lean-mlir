@@ -146,6 +146,31 @@ def eval {vars n : Nat}
     = (c i).eval assignment.getLsb' := by
   simp [eval]
 
+/-- The identity circuit family on `n` bits -/
+def id {n : Nat} : CircuitProd n n :=
+  fun i => Circuit.var true i
+
+@[simp] lemma eval_id {n : Nat} : eval id = (@_root_.id (BitVec n)) := by
+  sorry
+
+/-- Re-interpret a family of circuits with `x` variables as a family with
+`x + y` variables -/
+def addInl : CircuitProd x n → CircuitProd (x + y) n :=
+  sorry
+/-- Re-interpret a family of circuits with `y` variables as a family with
+`x + y` variables -/
+def addInr : CircuitProd y n → CircuitProd (x + y) n :=
+  sorry
+
+def append {vars n m} (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
+    CircuitProd vars (n + m) := by
+  sorry
+
+@[simp] lemma eval_append {vars n m}
+    (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BitVec vars) :
+    eval (append xs ys) V = (eval xs V) ++ (eval ys V) := by
+  sorry
+
 instance : Subsingleton (CircuitProd n 0) :=
   inferInstanceAs (Subsingleton (Fin 0 → _))
 
@@ -330,7 +355,7 @@ def compose {newArity : Nat} {qArity : Fin arity → Nat}
     (arityLE : ∀ (a : Fin arity), qArity a ≤ newArity)
     (q : (i : Fin arity) → FSM (qArity i)) :
     FSM newArity :=
-  let qOutCircuit (i : Fin arity) :=
+  let qOutCircuit : CircuitProd _ arity := fun (i : Fin arity) =>
     (q i).outCircuit.map <| Fin.addElim
       (fun j => (addInl (addInr (sumOfSigma ⟨i, j⟩))))
       (fun j => addInr (j.castLE (arityLE i)))
@@ -338,14 +363,14 @@ def compose {newArity : Nat} {qArity : Fin arity → Nat}
     initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
     outCircuit :=
       open Fin in
-      p.outCircuit.bind <| addCases
-        (fun i => Circuit.var true <| (addInl <| addInl i))
-        qOutCircuit
+      p.outCircuit.bind <|
+        (_ : CircuitProd _ _)
+        ++ qOutCircuit
     nextStateCircuits :=
       open Fin in
       addCases
        (fun i => (p.nextStateCircuits i).bind <| addCases
-          (fun j => Circuit.var true (addInl (addInl j)))
+          (CircuitProd.id |>.addInl.addInl)
           qOutCircuit
        )
        (fun i =>
@@ -355,8 +380,6 @@ def compose {newArity : Nat} {qArity : Fin arity → Nat}
           (fun k => addInr (k.castLE <| arityLE i))
       )
   }
-
-#check FSM.stateStream
 
 lemma stateStream_compose {newArity : Nat} {qArity : Fin arity → Nat}
     (arityLE : ∀ (i : Fin arity), qArity i ≤ newArity)
