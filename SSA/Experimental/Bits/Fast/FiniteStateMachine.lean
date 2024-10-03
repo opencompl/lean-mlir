@@ -179,6 +179,9 @@ def addInr : CircuitProd y n → CircuitProd (x + y) n :=
 def append {vars n m} (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
     CircuitProd vars (n + m) := by
   sorry
+instance : HAppend (CircuitProd vars n) (CircuitProd vars m)
+    (CircuitProd vars (n+m)) where
+  hAppend := append
 
 @[simp] lemma eval_append {vars n m}
     (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BitVec vars) :
@@ -377,13 +380,13 @@ def compose {newArity : Nat} {qArity : Fin arity → Nat}
     initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
     outCircuit :=
       open Fin in
-      p.outCircuit.bind <|
-        (_ : CircuitProd _ _)
-        ++ qOutCircuit
+      p.outCircuit.bind <| CircuitProd.append
+        (CircuitProd.id |>.addInl.addInl)
+        qOutCircuit
     nextStateCircuits :=
       open Fin in
       addCases
-       (fun i => (p.nextStateCircuits i).bind <| addCases
+       (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
           (CircuitProd.id |>.addInl.addInl)
           qOutCircuit
        )
