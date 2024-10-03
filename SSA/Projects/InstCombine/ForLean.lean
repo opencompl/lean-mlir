@@ -555,29 +555,11 @@ theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
   all_goals (simp [h, h₁, h₂, h₃, h₄]; try congr; try omega)
   simp_all
 
-
 -- basically copied from getLsbD_sshiftRight
 theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
     getLsbD (x.sshiftRight' y) i =
       (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
-  simp only [BitVec.sshiftRight']
-  rcases hmsb : x.msb with rfl | rfl
-  · simp only [sshiftRight_eq_of_msb_false hmsb, getLsbD_ushiftRight, Bool.if_false_right]
-    by_cases hi : i ≥ w
-    · simp only [hi, decide_True, Bool.not_true, Bool.false_and]
-      apply getLsbD_ge
-      omega
-    · simp only [hi, decide_False, Bool.not_false, Bool.true_and, Bool.iff_and_self,
-        decide_eq_true_eq]
-      intros hlsb
-      apply BitVec.lt_of_getLsbD hlsb
-  · by_cases hi : i ≥ w
-    · simp [hi]
-    · simp only [sshiftRight_eq_of_msb_true hmsb, getLsbD_not, getLsbD_ushiftRight, Bool.not_and,
-        Bool.not_not, hi, decide_False, Bool.not_false, Bool.if_true_right, Bool.true_and,
-        Bool.and_iff_right_iff_imp, Bool.or_eq_true, Bool.not_eq_true', decide_eq_false_iff_not,
-        Nat.not_lt, decide_eq_true_eq]
-      omega
+  simp only [BitVec.sshiftRight', BitVec.getLsbD_sshiftRight]
 
 theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
     getMsbD (x.sshiftRight' y) i = (decide (i < w) && if i < y.toNat then x.msb else getMsbD x (i - y.toNat)) := by
@@ -618,13 +600,7 @@ theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
 -- basically copied sshiftRight_msb_eq_msb
 theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
-  rw [msb_eq_getLsbD_last, getLsbD_sshiftRight', msb_eq_getLsbD_last]
-  by_cases hw₀ : w = 0
-  · simp [hw₀]
-  · simp only [show ¬(w ≤ w - 1) by omega, decide_False, Bool.not_false, Bool.true_and,
-      ite_eq_right_iff]
-    intros h
-    simp [show y.toNat = 0 by omega]
+  simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
 
 end BitVec
 
