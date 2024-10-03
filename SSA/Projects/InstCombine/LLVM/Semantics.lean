@@ -51,7 +51,7 @@ def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : 
   let y' ← y
   let disjoint := flag.disjoint
   let Disjoint? : Prop := disjoint ∧
-    (x'.toNat &&& y'.toNat != 0)
+    (x' &&& y' != 0#w)
   if Disjoint? then
     none
   else
@@ -99,8 +99,9 @@ def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := 
   let nsw := flags.nsw
   let nuw := flags.nuw
   let AddSignedWraps? : Prop := nsw ∧
-    ((x'.toInt + y'.toInt) < -(2^(w-1)) ∨ (x'.toInt + y'.toInt) ≥ 2^w)
-  let AddUnsignedWraps? : Prop := nuw ∧ ((x'.toNat + y'.toNat) ≥ 2^w)
+    (BitVec.carry w x' y' false != BitVec.carry (w-1) x' y' false)
+  let AddUnsignedWraps? : Prop := nuw ∧
+    ((BitVec.zeroExtend (w+1) x') + (BitVec.zeroExtend (w+1) y') ≥ BitVec.ofNat (w+1) (2^w))
   if (AddSignedWraps? ∨ AddUnsignedWraps?) then
     none
   else
