@@ -19,68 +19,24 @@ def portingSorryImpl {α : Sort _}  : α := sorryAx α
 @[implemented_by portingSorryImpl]
 axiom portingSorryAx {α : Sort _}  : α
 
-namespace BitVec
+def BoolProd (ι : Type) : Type :=
+  ι → Bool
 
-/- TODO: upstream. -/
-attribute [simp] getLsbD_eq_getElem
+namespace BoolProd
 
-@[simp]
-theorem getLsbD_append_left (x : BitVec v) (y : BitVec w) (i : Nat)
-    (h : ¬(i < w)) :
-    getLsbD (x ++ y) i = x.getLsbD (i - w) := by
-  simp [getLsbD_append, h]
+def comap {ι ω : Type} (f : ι → ω) (xs : BoolProd ω) : BoolProd ι :=
+  fun i => xs (f i)
 
-@[simp]
-theorem getLsbD_append_right (x : BitVec v) (y : BitVec w) (i : Nat)
-    (h : i < w) :
-    getLsbD (x ++ y) i = y.getLsbD i := by
-  simp [getLsbD_append, h]
+theorem comap_eq {ι ω : Type} (f : ι → ω) (xs : BoolProd ω) :
+    (comap f xs) = fun i => xs (f i) := by
+  rfl
 
-/-- `appendVector` appends a family of `n` bitvectors, each of which might have
-a different width, together into a bitvector whose length is the sum of lengths
--/
-def appendVector {ws : Fin n → Nat} (xs : (i : Fin n) → BitVec (ws i)) :
-    BitVec (∑ i, ws i) :=
-  match n with
-  | 0   => 0#_
-  | n+1 =>
-    let x := xs 0
-    (x ++ (appendVector (fun i => xs i.succ))).cast <| by
-      simp [Finset.sum]
+instance : HAppend (BoolProd ι) (BoolProd ω) (BoolProd (ι ⊕ ω)) where
+  hAppend := Sum.elim
 
-/-- `appendVector` appends a family of `n` bitvectors, each of which might have
-a different width, together into a bitvector whose length is the sum of lengths
--/
-def appendVector' {ws : List Nat} (h : ws.length = n)
-    (xs : (i : Fin n) → BitVec ws[i]) :
-    BitVec (Nat.sum ws) :=
-  match n, ws, h with
-  | 0, [], h  => 0#_
-  | n+1, _::ws, h =>
-    let x := xs 0
-    have h : ws.length = n := exa
-    (x ++ (appendVector' h (fun i => xs i.succ)))
+def getLsb' (xs : BoolProd ι) (i : ι) : Bool := xs i
 
-/-- Construct a bitvector from a function that maps `i : Fin w` to the
-`i`-th least significant bit -/
-def ofFnLsb (f : Fin w → Bool) : BitVec w :=
-  match w with
-  | 0   => 0#0
-  | _+1 => concat (ofFnLsb (f ∘ Fin.succ)) (f 0)
-
-@[simp] lemma getElem_ofFnLsb (f : Fin w → Bool) (i : Fin w) :
-    (ofFnLsb f)[i.val] = f i := by
-  exact portingSorryAx
-
-@[simp] lemma getLsb'_ofFnLsb (f : Fin w → Bool) :
-    (ofFnLsb f).getLsb' = f := by
-  exact portingSorryAx
-
-@[simp] lemma getLsbD_ofFnLsb (f : Fin w → Bool) :
-    ((ofFnLsb f).getLsbD i = (if h : i < w then f ⟨i, h⟩ else false)) := by
-  exact portingSorryAx
-
-end BitVec
+end BoolProd
 
 namespace Fin
 
@@ -106,37 +62,37 @@ def sumToSigma {f : α → Nat} [Fintype α] (i : Fin (∑ a, f a)) : Σ a, Fin 
 end Fin
 
 /-- An `n`-ary product of `Bitstream`s. -/
-def BitStreamProd (n : Nat) : Type := Fin n → BitStream
+def BitStreamProd (ι : Type) : Type := ι → BitStream
 
 namespace BitStreamProd
 
 /-- Return the `i`-th stream of `x` -/
-def nthStream (x : BitStreamProd n) (i : Fin n) : BitStream := x i
+def nthStream (x : BitStreamProd ι) (i : ι) : BitStream := x i
 
 /-- Get the `i`th least significant bit of each constituent stream -/
-def getLsbs (xs : BitStreamProd n) (i : Nat) : BitVec n :=
-  BitVec.ofFnLsb fun j => xs j i
+def getLsbs (xs : BitStreamProd ι) (i : Nat) : BoolProd ι :=
+  fun j => xs j i
 
 /-- Get the least significant bit of each constituent stream -/
-def heads (xs : BitStreamProd n) : BitVec n :=
-  BitVec.ofFnLsb fun i => (xs i).head
+def heads (xs : BitStreamProd ι) : BoolProd ι :=
+  fun i => (xs i).head
 
 /-- Drop the least significant bit from each constituent stream,
 returning an n-ary product of each streams tail  -/
-def tails (xs : BitStreamProd n) : BitStreamProd n :=
+def tails (xs : BitStreamProd ι) : BitStreamProd ι :=
   fun i => (xs i).tail
 
-def castLE (h : n ≤ m) : BitStreamProd m → BitStreamProd n :=
-  (· ∘ Fin.castLE h)
+def comap (f : ω → ι) : BitStreamProd ι → BitStreamProd ω :=
+  fun xs j => xs (f j)
 
 section Lemmas
 
-@[simp] lemma getElem_heads (xs : BitStreamProd n) (i : Fin n) :
-    xs.heads[i.val] = (xs i).head := by
+@[simp] lemma getElem_heads (xs : BitStreamProd ι) (i : ι) :
+    xs.heads i = (xs i).head := by
   simp [heads]
 
-@[simp] lemma getElem_getLsbs (xs : BitStreamProd n) (i : Nat) (j : Fin n) :
-    (xs.getLsbs i)[j.val] = xs j i := by
+@[simp] lemma getElem_getLsbs (xs : BitStreamProd ι) (i : Nat) (j : ι) :
+    (xs.getLsbs i) j = xs j i := by
   simp [getLsbs]
 
 end Lemmas
@@ -147,17 +103,18 @@ end BitStreamProd
 `CircuitProd vars n` is a collection of `n` Boolean Circuits, each of which can
 refer to at most `vars` variables.
 
-This morally represents a function from `BitVec vars`
+This morally represents a function from `BoolProd vars`
 (i.e., an assignment of a single bit per variable),
-to a `BitVec n` (where each circuit computes a single bit of the output).
+to a `BoolProd ι` (where each circuit computes a single bit of the output).
 See `CircuitProd.eval`.
 -/
-def CircuitProd (vars n : Nat) : Type := Fin n → Circuit (Fin vars)
+def CircuitProd (vars ι : Type) : Type :=
+  ι → Circuit vars
 
 namespace CircuitProd
 
 
-/-- Evaluate a `CircuitProd vars n` to the function `BitVec vars → BitVec n`
+/-- Evaluate a `CircuitProd vars n` to the function `BoolProd vars → BoolProd ι`
 it represents.
 
 By convention, we use Little Endian order, which is to say, the `i`th circuit
@@ -165,127 +122,131 @@ will compute the `i`-th least significant bit of the output, and the variable
 with index `i` derives it's assignment from the `i`-th least signicant bit of
 the input.
 -/
-def eval {vars n : Nat}
-    (circuit : CircuitProd vars n) (assignment : BitVec vars) :
-    BitVec n :=
-  BitVec.ofFnLsb fun i =>
-    (circuit i).eval assignment.getLsb'
+def eval {vars ι : Type}
+    (circuit : CircuitProd vars ι) (assignment : BoolProd vars) :
+    BoolProd ι :=
+  fun i =>
+    (circuit i).eval assignment
 
-@[simp] lemma getLsbD_eval (c : CircuitProd vars n) (assignment : BitVec vars)
-    (i : Fin n) :
-    (c.eval assignment)[i.val]
-    = (c i).eval assignment.getLsb' := by
+@[simp] lemma getLsbD_eval (c : CircuitProd vars ι) (assignment : BoolProd vars)
+    (i : ι) :
+    (c.eval assignment) i = (c i).eval assignment := by
   simp [eval]
 
 /-- The identity circuit family on `n` bits -/
-def id (n : Nat) : CircuitProd n n :=
+def id (ι : Type) : CircuitProd ι ι :=
   fun i => Circuit.var true i
 
-@[simp] lemma eval_id {n : Nat} : eval (id n) = (@_root_.id (BitVec n)) := by
-  funext xs
-  simp [eval, id]
-  apply BitVec.eq_of_getLsbD_eq
-  intros i
-  simp;
+@[simp] lemma eval_id : eval (id ι) = _root_.id := rfl
 
-def map (f : Fin n → Fin m) (cs : CircuitProd n k) : CircuitProd m k :=
+def map (f : ι → ω) (cs : CircuitProd ι k) : CircuitProd ω k :=
   fun i => (cs i).map f
 
-@[simp] lemma eval_map (f : Fin n → Fin m) (cs : CircuitProd n k) (xs : BitVec m) :
-    eval (cs.map f) xs = eval cs (.ofFnLsb <| (xs[f ·])) := by
-  simp [eval, map]
+@[simp] lemma eval_map (f : ι → ω) (cs : CircuitProd ι k) (xs : BoolProd ω) :
+    eval (cs.map f) xs = eval cs (xs.comap f) := by
+  funext i
+  simp [BoolProd.comap_eq, map]
 
 /-- Re-interpret a family of circuits with `x` variables as a family with
 `x + y` variables -/
-def addInl : CircuitProd x n → CircuitProd (x + y) n :=
-  portingSorryAx
+def addInl : CircuitProd ι n → CircuitProd (ι ⊕ ω) n :=
+  map Sum.inl
+
 /-- Re-interpret a family of circuits with `y` variables as a family with
 `x + y` variables -/
-def addInr : CircuitProd y n → CircuitProd (x + y) n :=
-  portingSorryAx
+def addInr : CircuitProd ω n → CircuitProd (ι ⊕ ω) n :=
+  map Sum.inr
 
-def sigmaMk {f : Fin x → Nat} {i : Fin x} :
-    CircuitProd (f i) n → CircuitProd (∑ j, f j) n :=
-  portingSorryAx
+def sigmaMk {f : ι → Type} {i : ι} :
+    CircuitProd (f i) n → CircuitProd (Σ j, f j) n :=
+  map (Sigma.mk i)
 
-#check BitVec.append
-
-def append {vars n m} (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
-    CircuitProd vars (n + m) :=
-  Fin.addCases xs ys ∘ Fin.rev
+def append : (CircuitProd vars n) → (CircuitProd vars m) → (CircuitProd vars (n ⊕ m)) :=
+  Sum.elim
 
 instance : HAppend (CircuitProd vars n) (CircuitProd vars m)
-    (CircuitProd vars (n+m)) where
+    (CircuitProd vars (n ⊕ m)) where
   hAppend := append
 
 @[simp] lemma eval_append {vars n m}
-    (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BitVec vars) :
-    eval (append xs ys) V = (eval xs V) ++ (eval ys V) := by
-  ext i
-  simp [eval, append, BitVec.getElem_append, Fin.addCases]
-  split <;> simp [*]
+    (xs : CircuitProd vars n) (ys : CircuitProd vars m) (V : BoolProd vars) :
+    eval (xs ++ ys) V = (eval xs V) ++ (eval ys V) := by
+  funext i; cases i <;> rfl
 
-#check Circuit.bind
+lemma eval_append_eq {vars n m}
+    (xs : CircuitProd vars n) (ys : CircuitProd vars m) :
+    eval (xs ++ ys) = fun V => (eval xs V) ++ (eval ys V) := by
+  funext V; simp
 
 -- def bind (cs : CircuitProd n k) (f : Fin n → CircuitProd )
 
-instance : Subsingleton (CircuitProd n 0) :=
-  inferInstanceAs (Subsingleton (Fin 0 → _))
+instance : Subsingleton (CircuitProd n Empty) :=
+  inferInstanceAs (Subsingleton (Empty → _))
 
 end CircuitProd
+
+structure Width where
+  α : Type
+  [instFintype : Fintype α]
+  [instDecEq : DecidableEq α]
+
+attribute [instance] Width.instFintype Width.instDecEq
+
+instance : CoeSort Width Type where
+  coe := Width.α
 
 /-- `FSM arity` represents a function `BitStream → ⋯ → BitStream → BitStream`,
 where `arity` is the number of `BitStream` arguments,
 as a finite state machine.
 -/
-structure FSM (arity : Nat) : Type 1 :=
+structure FSM (arity : Type) : Type 1 :=
   /--
   `stateWidth` is the number of bits the state has
   -/
-  (stateWidth : Nat)
+  (stateWidth : Width)
   /--
   `initialState` is the initial state.
   -/
-  (initialState : BitVec stateWidth)
+  (initialState : BoolProd stateWidth)
   /--
   `outCircuit` is a single Boolean circuit,
   which will compute the output bit of the current state,
   given the current state and input bits.
   -/
-  (outCircuit : Circuit (Fin <| stateWidth + arity))
+  (outCircuit : Circuit (stateWidth ⊕ arity))
   /--
   `nextStateCircuit` is a uniform family of `stateWidth` Boolean circuits,
   where each circuit computes one bit of the next state,
   given the current state and input bits.
   -/
-  (nextStateCircuits : CircuitProd (stateWidth + arity) stateWidth)
+  (nextStateCircuits : CircuitProd (stateWidth ⊕ arity) stateWidth)
 
 namespace FSM
 
 /-- A `State` of FSM `p` is just a bitvector with `p.stateWidth` bits -/
-abbrev State (p : FSM arity) : Type := BitVec p.stateWidth
+abbrev State (p : FSM arity) : Type := BoolProd p.stateWidth
 
-@[deprecated BitVec.append]
-def appendInput {p : FSM arity} (s : BitVec p.stateWidth) (x : BitVec arity) :
-    BitVec (p.stateWidth + arity) :=
+@[deprecated HAppend.hAppend]
+def appendInput {p : FSM arity} (s : BoolProd p.stateWidth) (x : BoolProd arity) :
+    BoolProd (p.stateWidth ⊕ arity) :=
   s ++ x
 
-variable {arity : Nat} (p : FSM arity)
+variable {arity} (p : FSM arity)
 
 /-- Return the output bit of FSM `p`, given the current state and input bits. -/
 @[simp]
-def outBit (state : p.State) (input : BitVec arity) : Bool :=
+def outBit (state : p.State) (input : BoolProd arity) : Bool :=
   (p.outCircuit).eval (state ++ input).getLsb'
 
 /-- Return the next state of FSM `p`, given the current state and input bits. -/
 @[simp]
-def nextState (s : p.State) (input : BitVec arity) : p.State :=
+def nextState (s : p.State) (input : BoolProd arity) : p.State :=
   p.nextStateCircuits.eval (s ++ input)
 
 /-- `p.next state in` computes both the next state bits and the output bit,
 where `state` are the *current* state bits, and `in` are the current input bits. -/
 @[simp]
-def next (state : p.State) (inputBits : BitVec arity) : p.State × Bool :=
+def next (state : p.State) (inputBits : BoolProd arity) : p.State × Bool :=
     let newState := p.nextState state inputBits
     let outBit   := p.outBit state inputBits
     (newState, outBit)
@@ -377,9 +338,9 @@ theorem eval_withInitialState_succ
 
 -- /-- `p.changeVars f` changes the arity of an `FSM`.
 -- The function `f` determines how the new input bits map to the input expected by `p` -/
--- def changeVars {newArity : Nat} (changeVars : Fin arity → Fin newArity) :
+-- def changeVars {newArity : Nat} (changeVars : arity → Fin newArity) :
 --     FSM newArity :=
---   let map (x : BitVec newArity) : BitVec arity :=
+--   let map (x : BoolProd ιewArity) : BoolProd arity :=
 --     BitVec.ofFnLsb (fun j => x[changeVars j])
 --   { p with
 --     outCircuit := p.outCircuit.map _
@@ -416,18 +377,20 @@ we can compose `p` with `qᵢ` yielding a single FSM of arity `newArity`.
 
 The input of the composed FSM is given to the FSMs `qᵢ`, each of which computes
 a single bit of the input that is then given to `p`. -/
-def compose {newArity : Nat} {qArity : Fin arity → Nat}
-    (vars : ∀ {a : Fin arity}, Fin (qArity a) → Fin newArity)
-    (q : (a : Fin arity) → FSM (qArity a)) :
+def compose {newArity} {qArity : arity → Type}
+    (vars : ∀ {a : arity}, (qArity a) → newArity)
+    (q : (a : arity) → FSM (qArity a)) :
     FSM newArity :=
   let qOutCircuit : CircuitProd
-      ((p.stateWidth + ∑ i : Fin arity, (q i).stateWidth) + newArity)
+      ((p.stateWidth ⊕ Σ i : arity, (q i).stateWidth) ⊕ newArity)
       arity :=
-    fun (i : Fin arity) =>
+    fun (i : arity) =>
       (q i).outCircuit.bind <| CircuitProd.append
         (CircuitProd.id ((q i).stateWidth) |>.sigmaMk.addInr.addInl)
         (CircuitProd.id (qArity i) |>.map vars |>.addInr)
-  { stateWidth    := p.stateWidth + (∑ i, (q i).stateWidth),
+  { stateWidth    := {
+      α := p.stateWidth ⊕ (Σ i, (q i).stateWidth)
+    },
     initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
     outCircuit :=
       p.outCircuit.bind <| CircuitProd.append
@@ -452,10 +415,10 @@ info: 'FSM.compose' depends on axioms: [portingSorryAx, propext, Classical.choic
 -/
 #guard_msgs in #print axioms compose
 
-lemma stateStream_compose {newArity : Nat} {qArity : Fin arity → Nat}
-    (vars : ∀ {a : Fin arity}, Fin (qArity a) → Fin newArity)
-    (q : ∀ (i : Fin arity), FSM (qArity i))
-    (xs : BitStreamProd newArity)
+lemma stateStream_compose {newArity : Nat} {qArity : arity → Nat}
+    (vars : ∀ {a : arity}, Fin (qArity a) → Fin newArity)
+    (q : ∀ (i : arity), FSM (qArity i))
+    (xs : BitStreamProd ιewArity)
     (n : Nat) :
     (p.compose vars q).stateStream xs n =
       let pState := p.stateStream (fun i =>
@@ -491,10 +454,10 @@ lemma stateStream_compose {newArity : Nat} {qArity : Fin arity → Nat}
         · simp; sorry
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose {newArity : Nat} {qArity : Fin arity → Nat}
-    (arityLE : ∀ (i : Fin arity), qArity i ≤ newArity)
-    (q : ∀ (i : Fin arity), FSM (qArity i))
-    (x : BitStreamProd newArity) :
+lemma eval_compose {newArity : Nat} {qArity : arity → Nat}
+    (arityLE : ∀ (i : arity), qArity i ≤ newArity)
+    (q : ∀ (i : arity), FSM (qArity i))
+    (x : BitStreamProd ιewArity) :
     (p.compose arityLE q).eval x =
       p.eval (λ a => (q a).eval (fun i => x (i.castLE <| arityLE _))) := by
   ext n
@@ -526,7 +489,7 @@ def mapCircuit (c : Circuit (Fin n)) : FSM n where
   outCircuit := c.map (Fin.cast <| by ac_rfl)
   nextStateCircuits := Fin.elim0
 
-@[simp] lemma eval_mapCircuit (c : Circuit (Fin n)) (xs : BitStreamProd n) :
+@[simp] lemma eval_mapCircuit (c : Circuit (Fin n)) (xs : BitStreamProd ι) :
     (mapCircuit c).eval xs = (fun n => c.eval fun j => (xs.getLsbs n)[j.val]) := by
   funext m
   simp only [eval, mapCircuit]
