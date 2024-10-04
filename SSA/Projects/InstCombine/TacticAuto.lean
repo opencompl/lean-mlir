@@ -5,6 +5,8 @@ import Mathlib.Tactic.Ring
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.LLVM.EDSL
 import SSA.Experimental.Bits.Fast.Tactic
+import SSA.Experimental.Bits.AutoStructs.Tactic
+import SSA.Experimental.Bits.AutoStructs.ForLean
 import Std.Tactic.BVDecide
 -- import Leanwuzla
 
@@ -155,6 +157,12 @@ macro "bv_auto": tactic =>
           | (
               simp (config := {failIfUnchanged := false}) only [(BitVec.two_mul), ←BitVec.negOne_eq_allOnes]
               bv_automata
+            )
+          | (
+              simp (config := {failIfUnchanged := false}) only [BitVec.two_mul, ←BitVec.negOne_eq_allOnes, ofBool_0_iff_false, ofBool_1_iff_true]
+              try rw [Bool.eq_iff_iff]
+              simp (config := {failIfUnchanged := false}) [Bool.or_eq_true_iff, Bool.and_eq_true_iff,  beq_iff_eq]
+              bv_automata'
             )
           |
             simp (config := {failIfUnchanged := false}) only [BitVec.abs_eq_if]
