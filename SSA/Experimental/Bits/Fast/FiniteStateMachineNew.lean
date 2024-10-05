@@ -388,40 +388,40 @@ def compose {newArity} {qArity : arity → Type}
       (q i).outCircuit.bind <| CircuitProd.append
         (CircuitProd.id ((q i).stateWidth) |>.sigmaMk.addInr.addInl)
         (CircuitProd.id (qArity i) |>.map vars |>.addInr)
-  { stateWidth := {α := p.stateWidth ⊕ (Σ i, (q i).stateWidth)},
-    initialState  := p.initialState ++ (BitVec.appendVector (q · |>.initialState))
-    outCircuit :=
-      p.outCircuit.bind <| CircuitProd.append
-        (CircuitProd.id p.stateWidth |>.addInl.addInl)
-        qOutCircuit
-    nextStateCircuits :=
-      CircuitProd.append
-        (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
-          (CircuitProd.id p.stateWidth |>.addInl.addInl)
-          qOutCircuit
-        )
-        (fun i =>
-          let ⟨i, j⟩ := i.sumToSigma
-          ((q i).nextStateCircuits j).map <| Fin.addCases
-            (fun k => addInl (addInr (sumOfSigma ⟨_, k⟩)))
-            (fun k => addInr (vars k))
-        )
+  { stateWidth := sorry -- {α := p.stateWidth ⊕ q.stateWidth},
+    initialState  := sorry --p.initialState ++ (q · |>.initialState)
+    outCircuit := sorry
+      -- p.outCircuit.bind <| CircuitProd.append
+      --   (CircuitProd.id p.stateWidth |>.addInl.addInl)
+      --   qOutCircuit
+    nextStateCircuits := sorry
+      -- CircuitProd.append
+      --   (fun i => (p.nextStateCircuits i).bind <| CircuitProd.append
+      --     (CircuitProd.id p.stateWidth |>.addInl.addInl)
+      --     qOutCircuit
+      --   )
+      --   (fun i =>
+      --     let ⟨i, j⟩ := i.sumToSigma
+      --     ((q i).nextStateCircuits j).map <| Fin.addCases
+      --       (fun k => addInl (addInr (sumOfSigma ⟨_, k⟩)))
+      --       (fun k => addInr (vars k))
+      --   )
   }
 
 /--
 info: 'FSM.compose' depends on axioms: [portingSorryAx, propext, Classical.choice, Quot.sound]
 -/
-#guard_msgs in #print axioms compose
+-- #guard_msgs in #print axioms compose
 
 lemma stateStream_compose {newArity : Nat} {qArity : arity → Nat}
-    (vars : ∀ {a : arity}, Fin (qArity a) → Fin newArity)
-    (q : ∀ (i : arity), FSM (qArity i))
-    (xs : BitStreamProd ιewArity)
+    (vars : ∀ {a : arity}, Fin  (qArity a) → Fin newArity)
+    (q : ∀ (i : arity), FSM (Fin (qArity i)))
+    (xs : BitStreamProd (Fin newArity))
     (n : Nat) :
-    (p.compose vars q).stateStream xs n =
+    (p.compose vars q).stateStream xs =
       let pState := p.stateStream (fun i =>
         (q i).eval (fun j => xs <| vars j)) n
-      let qState : BitVec (∑ i, (q i).stateWidth) :=
+      let qState : (∑ i, (q i).stateWidth) :=
         BitVec.appendVector fun i =>
           ((q i).stateStream (fun j => xs <| vars j) n)
       pState ++ qState := by
@@ -480,13 +480,13 @@ From here on out, we start to implement various operations as concrete FSMs
 
 /-! ### Bitwise operations -/
 /-- `mapCircuit` lifts a Boolean circuit into a stateless FSM -/
-def mapCircuit (c : Circuit (Fin n)) : FSM n where
+def mapCircuit (c : Circuit (Fin n)) : FSM arity where
   stateWidth := 0
   initialState := 0#0
   outCircuit := c.map (Fin.cast <| by ac_rfl)
   nextStateCircuits := Fin.elim0
 
-@[simp] lemma eval_mapCircuit (c : Circuit (Fin n)) (xs : BitStreamProd ι) :
+@[simp] lemma eval_mapCircuit (c : Circuit (Fin n)) (xs : BitStreamProd arity) :
     (mapCircuit c).eval xs = (fun n => c.eval fun j => (xs.getLsbs n)[j.val]) := by
   funext m
   simp only [eval, mapCircuit]
@@ -501,32 +501,32 @@ def mapCircuit (c : Circuit (Fin n)) : FSM n where
     sorry
 
 
-def and : FSM ι :=
+def and : FSM arity :=
   mapCircuit (Circuit.and (Circuit.var true _) (Circuit.var true _))
 
-@[simp] lemma eval_and (xs : BitStreamProd ι) :
-    and.eval x = (xs i) &&& (xs i) := by
+@[simp] lemma eval_and (xs : BitStreamProd arity) :
+    and.eval xs = (xs i) &&& (xs j) := by
   ext n;
   cases n <;> simp [eval, and, next]
   · sorry
   · sorry
 
-def or : FSM ι :=
+def or : FSM arity :=
   mapCircuit (Circuit.or
     (Circuit.var true _)
     (Circuit.var true _))
 
-@[simp] lemma eval_or (xs : BitStreamProd ι) : or.eval x = (xs i) ||| (xs i) := by
+@[simp] lemma eval_or (xs : BitStreamProd arity) : or.eval xs = (xs i) ||| (xs j) := by
   ext n; cases n <;> simp [or, eval, next]
   · sorry
   · sorry
 
-def xor : FSM ι :=
+def xor : FSM arity :=
   mapCircuit (Circuit.xor
     (Circuit.var true _)
     (Circuit.var true _))
 
-@[simp] lemma eval_xor (xs : BitStreamProd ι) :
+@[simp] lemma eval_xor (xs : BitStreamProd arity) :
     xor.eval x = (xs i) ^^^ (xs i) := by
   ext n;
   cases n <;> simp [and, eval, next]
@@ -536,7 +536,7 @@ def xor : FSM ι :=
 
 /-! ### Arithmetic -/
 
-def add : FSM ι where
+def add : FSM arity where
   stateWidth := _
   initialState := _
   outCircuit :=
@@ -550,9 +550,9 @@ def add : FSM ι where
 
 /-- The internal state of the `add` FSM agrees with
 the carry bit of addition as implemented on bitstreams -/
-theorem carry_add_succ (xs : BitStreamProd 2) (n : ℕ) :
+theorem carry_add_succ (xs : BitStreamProd ι) (n : ℕ) :
     add.stateStream xs (n+1)
-    = BitVec.ofBool ((BitStream.addAux (xs 1) (xs 0) n).2) := by
+    = add.State (BitStream.addAux (xs i) (xs i) n).2 := by
   ext (a : Fin 1)
   obtain rfl : a = (0 : Fin 1) := Fin.fin_one_eq_zero a
   induction n with
@@ -565,14 +565,16 @@ theorem carry_add_succ (xs : BitStreamProd 2) (n : ℕ) :
 @[simp] theorem carry_zero (x : BitStreamProd arity) : carry p x 0 = p.initialState := rfl
 @[simp] theorem initialState_add : add.initialState = (fun _ => false) := rfl
 
-@[simp] lemma eval_add (x : Bool → BitStream) : add.eval x = (x true) + (x false) := by
+@[simp] lemma eval_add (xs : BitStreamProd arity) : add.eval xs = (xs i) + (xs j) := by
   ext n
   simp only [eval]
   cases n
   · show Bool.xor _ _ = Bool.xor _ _; simp
+    sorry
   · rw [carry_add_succ]
     conv => {rhs; simp only [(· + ·), BitStream.add, Add.add, BitStream.addAux, BitVec.adcb]}
     simp [next, eval, add]
+
 /-!
 We don't really need subtraction or negation FSMs,
 given that we can reduce both those operations to just addition and bitwise complement -/
