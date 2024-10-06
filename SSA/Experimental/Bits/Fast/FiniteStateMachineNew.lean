@@ -91,6 +91,14 @@ section Lemmas
     xs.heads i = (xs i).head := by
   simp [heads]
 
+/-- TODO: rename theorem. -/
+lemma getLsb'_heads_eq_self_head (xs : BitStreamProd ι) (i : ι) :
+    xs.heads.getLsb' i = (xs i).head := rfl
+
+/-- TODO: rename theorem. -/
+lemma getLsb'_heads_eq_self_zero (xs : BitStreamProd ι) (i : ι) :
+    xs.heads.getLsb' i = (xs i 0) := rfl
+
 @[simp] lemma getElem_getLsbs (xs : BitStreamProd ι) (i : Nat) (j : ι) :
     (xs.getLsbs i) j = xs j i := by
   simp [getLsbs]
@@ -185,10 +193,22 @@ instance : Subsingleton (CircuitProd n Empty) :=
 
 end CircuitProd
 
+/-- Width is a type, which has an element `α`.
+Here, the cardinality of `α` is to be thought of as a number that represents the
+width of a bitvector.
+In the FSM, this is used to declare the width of the bitvector that is the internal state.
+-/
 structure Width where
+  /-- The type whose cardinality encodes the width. -/
   α : Type
+  /-- The cardinality of the type is finite -/
   [instFintype : Fintype α]
+  /-- The type can decide equality of its inhabintants. -/
   [instDecEq : DecidableEq α]
+
+/-- A Width whose type is `Fin n`, which has exactly `n` inhabitants -/
+def Width.n (n : Nat) : Width where
+  α := Fin n
 
 attribute [instance] Width.instFintype Width.instDecEq
 
@@ -487,7 +507,7 @@ def mapCircuit (c : Circuit (Fin n)) : FSM arity where
   nextStateCircuits := Fin.elim0
 
 @[simp] lemma eval_mapCircuit (c : Circuit (Fin n)) (xs : BitStreamProd arity) :
-    (mapCircuit c).eval xs = (fun n => c.eval fun j => (xs.getLsbs n)[j.val]) := by
+    (mapCircuit c).eval xs = (fun n => c.eval fun j => (xs.getLsbs n)[j]) := by
   funext m
   simp only [eval, mapCircuit]
   induction m generalizing xs
@@ -496,20 +516,117 @@ def mapCircuit (c : Circuit (Fin n)) : FSM arity where
   case succ m ih =>
     simp [eval.next]
     specialize ih xs.tails
-    simp at ih
     -- rw [ih (xs.tails)]
     sorry
+/-
+Predicates don't take any arguments.
+They produce infinite bitstreams,
+which are eventually always 1 iff the predicate is true.
+Therefore, we assume that the arity of predicates is always `Unit`.
+In theory, this is generalizable to any type `α` that has exactly 1 inhabitant.
+-/
 
 
-def and : FSM arity :=
-  mapCircuit (Circuit.and (Circuit.var true _) (Circuit.var true _))
+-- Fin 2 == Bool, anything with two members
+-- bitwise AND term:
+-- ..1101
+-- ..1001
+-- --------
+-- ..1001
 
-@[simp] lemma eval_and (xs : BitStreamProd arity) :
-    and.eval xs = (xs i) &&& (xs j) := by
+
+/--
+Build a circuit of type `Width.n 0 ⊕ α` from a `Circuit α`.
+This is always canonically possible, because a `Width.n 0` has no inhabintants.
+-/
+def Circuit.widthZero_sum (c : Circuit α) : Circuit (Width.n 0 ⊕ α) :=
+  c.map inj
+  where
+  inj (a : α) : Width.n 0 ⊕ α := Sum.inr a
+
+
+def Width.elim0 {α : Sort _} (x : Width.n 0) : α :=
+  Fin.elim0 x
+  /- Alternative proof:
+  by
+    have := Fin.isLt valWidth0
+    -- this : valWidth0 < 0
+    -- this is a contradiction
+    omega
+  -/
+
+/--
+Build a circuit of type `α` from a `Circuit (Width.n 0 ⊕ α)`.
+This is always canonically possible, because a `Width.n 0` has no inhabintants.
+-/
+def Circuit.of_widthZero_sum (c : Circuit (Width.n 0 ⊕ α)) : Circuit α :=
+  c.map inj
+  where
+  inj (pair : Width.n 0 ⊕ α) : α :=
+    -- Sum.elim Fin.elim0 id pair
+    match pair with
+    | .inl (valWidth0 : Width.n 0) => Width.elim0 valWidth0
+    | .inr (a : α) => a
+
+
+
+/--
+Build a zero-product of circuits, where each circuit has `α` number of variables.
+Since we are producing an empty product, this is the trivial, canonical product.
+
+CircuitProd (Width.n 2) (Width.n 3)
+
+x0  x1
+|    |
++-+--+
+| |  |
+v v  v
+y0 y1 y2
+
+-/
+def CircuitProd.ofWidth0 : CircuitProd α (Width.n 0) :=
+  fun (i : Width.n 0) => Width.elim0 i
+
+-- logical AND predicate:
+-- ...1101
+-- ...1001
+-- --------
+-- 0000001
+-- Two arugments, therefore 'FSM Bool' (where 'Bool' is the arity.)
+-- Requires no state, therefore stateWidth is zero.
+def bitwiseAnd : FSM (Fin 2) where
+  stateWidth := Width.n 0
+  initialState := fun x => x.elim0
+  outCircuit :=
+    let vl := Circuit.var true 0 -- left bit
+    let vr := Circuit.var true 1 -- right bit
+    let circuit := Circuit.and vl vr
+    Circuit.widthZero_sum circuit
+  nextStateCircuits := CircuitProd.ofWidth0
+
+/-- TODO for luisa to prove -/
+theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
+  (x ++ y).getLsb' (inr k) = y.getLsb' k :=
+  sorry
+
+#check BitStream.corec_eq_corec
+
+/--
+1. Unfold  (&&&) as a `corec`.
+2. Unfold `bitwiseAnd.eval` as corec.
+3. This gives us something of the form `corec <stuff> = corec <stuff>`
+4. Apply `BitStream.corec_eq_corec to prove "one step"
+5. We've already proved the "one step" :) Unfold everything! It will just work TM, can copy the existing proof below.
+6. $$$
+-/
+@[simp] lemma eval_bitwiseAnd (xs : BitStreamProd (Fin 2)) :
+    bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
   ext n;
-  cases n <;> simp [eval, and, next]
+  cases n <;> simp [eval, and, next, eval.next,
+    Circuit.widthZero_sum.inj, BoolProd.getLsb'_append_inr]
+  · simp [BitStreamProd.getLsb'_heads_eq_self_zero]
   · sorry
-  · sorry
+
 
 def or : FSM arity :=
   mapCircuit (Circuit.or
