@@ -450,7 +450,7 @@ end Test
 -- ==============================
 
 declare_syntax_cat mlir_bb_operand
-syntax mlir_op_operand ":" mlir_type : mlir_bb_operand
+syntax mlir_op_operand ":" ppSpace mlir_type : mlir_bb_operand
 
 syntax "[mlir_bb_operand|" mlir_bb_operand "]" : term
 
@@ -465,7 +465,7 @@ macro_rules
 
 
 
-syntax (mlir_op)* : mlir_ops
+syntax (mlir_op ppLine)* : mlir_ops
 
 syntax "[mlir_op|" mlir_op "]" : term
 syntax "[mlir_ops|" mlir_ops "]" : term
@@ -500,8 +500,8 @@ value-use-list ::= value-use (`,` value-use)*
 
 
 syntax mlir_suffix_id := num <|> ident
-syntax  "{" ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")?
-    ":")? mlir_ops "}" : mlir_region
+syntax  "{" ppLine ("^" mlir_suffix_id ("(" sepBy(mlir_bb_operand, ",") ")")?
+    ":")? ppLine mlir_ops "}" : mlir_region
 syntax "[mlir_region|" mlir_region "]": term
 
 /--
@@ -556,7 +556,7 @@ syntax "#" strLit : mlir_attr_val -- alias
 declare_syntax_cat dialect_attribute_contents
 syntax mlir_attr_val : dialect_attribute_contents
 /--
-Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`, 
+Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`,
 which is a particular case of an `mlir-attr-val` that is namespaced to a particular dialect
 
 ```bnf
