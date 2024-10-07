@@ -34,7 +34,22 @@ theorem comap_eq {ι ω : Type} (f : ι → ω) (xs : BoolProd ω) :
 instance : HAppend (BoolProd ι) (BoolProd ω) (BoolProd (ι ⊕ ω)) where
   hAppend := Sum.elim
 
+theorem append_def (xs : BoolProd ι) (ys : BoolProd ω) (i : ι ⊕ ω) :
+    (xs ++ ys) i = Sum.elim xs ys i := by rfl
+
+@[simp]
+theorem append_inl (xs : BoolProd ι) (ys : BoolProd ω)  :
+    (xs ++ ys) (Sum.inl i) = (xs i) := by rfl
+@[simp]
+theorem append_inr (xs : BoolProd ι) (ys : BoolProd ω)  :
+    (xs ++ ys) (Sum.inr w) = (ys w) := by rfl
+
 def getLsb' (xs : BoolProd ι) (i : ι) : Bool := xs i
+
+@[simp]
+theorem getLsb_eq (xs : BoolProd ι) (i : ι) :
+    xs.getLsb' i = xs i := by
+  rfl
 
 end BoolProd
 
@@ -645,13 +660,6 @@ instance : Subsingleton (bitwiseAnd.State) := by
   infer_instance
 
 
-/-- TODO for luisa to prove -/
-theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
-  (x ++ y).getLsb' (inr k) = y.getLsb' k :=
-  sorry
-
-#check BitStream.corec_eq_corec
-
 /--
 1. Unfold  (&&&) as a `corec`.
 2. Unfold `bitwiseAnd.eval` as corec.
@@ -664,12 +672,15 @@ theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
     bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
   ext i
   induction i generalizing xs
-  case zero => simp [eval, Circuit.widthZero_sum.inj, BoolProd.getLsb'_append_inr]
+  case zero => simp [eval, Circuit.widthZero_sum.inj]
   case succ i ih =>
     simp [eval.next]
     specialize ih xs.tails
     simp at ih
     rw [← ih]
+
+/-- info: 'FSM.eval_bitwiseAnd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms eval_bitwiseAnd
 
 def or : FSM arity :=
   mapCircuit (Circuit.or
