@@ -682,28 +682,60 @@ instance : Subsingleton (bitwiseAnd.State) := by
 /-- info: 'FSM.eval_bitwiseAnd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms eval_bitwiseAnd
 
-def or : FSM arity :=
-  mapCircuit (Circuit.or
-    (Circuit.var true _)
-    (Circuit.var true _))
+def bitwiseOr : FSM (Fin 2) where
+  stateWidth := Width.n 0
+  initialState := fun x => x.elim0
+  outCircuit :=
+    let vl := Circuit.var true 0 -- left bit
+    let vr := Circuit.var true 1 -- right bit
+    let circuit := Circuit.or vl vr
+    Circuit.widthZero_sum circuit
+  nextStateCircuits := CircuitProd.ofWidth0
 
-@[simp] lemma eval_or (xs : BitStreamProd arity) : or.eval xs = (xs i) ||| (xs j) := by
-  ext n; cases n <;> simp [or, eval, next]
-  · sorry
-  · sorry
+instance : Subsingleton (bitwiseOr.State) := by
+  simp [FSM.State, bitwiseOr]
+  infer_instance
 
-def xor : FSM arity :=
-  mapCircuit (Circuit.xor
-    (Circuit.var true _)
-    (Circuit.var true _))
+@[simp] lemma eval_bitwiseOr (xs : BitStreamProd (Fin 2)) :
+    bitwiseOr.eval xs = (xs 0) ||| (xs 1) := by
+  ext i
+  induction i generalizing xs
+  case zero =>
+    simp [eval, Circuit.widthZero_sum.inj]
+  case succ i ih =>
+    simp [eval.next]
+    specialize ih xs.tails
+    simp at ih
+    simp [← ih]
 
-@[simp] lemma eval_xor (xs : BitStreamProd arity) :
-    xor.eval x = (xs i) ^^^ (xs i) := by
-  ext n;
-  cases n <;> simp [and, eval, next]
-  · simp [eval.next]
-    sorry
-  · sorry
+/-- info: 'FSM.eval_bitwiseOr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms eval_bitwiseOr
+
+def bitwiseXor : FSM (Fin 2) where
+  stateWidth := Width.n 0
+  initialState := fun x => x.elim0
+  outCircuit :=
+    let vl := Circuit.var true 0 -- left bit
+    let vr := Circuit.var true 1 -- right bit
+    let circuit := Circuit.xor vl vr
+    Circuit.widthZero_sum circuit
+  nextStateCircuits := CircuitProd.ofWidth0
+
+instance : Subsingleton (bitwiseXor.State) := by
+  simp [FSM.State, bitwiseXor]
+  infer_instance
+
+@[simp] lemma eval_bitwiseXor (xs : BitStreamProd (Fin 2)) :
+    bitwiseXor.eval xs = (xs 0) ^^^ (xs 1) := by
+  ext i
+  induction i generalizing xs
+  case zero =>
+    simp [eval, Circuit.widthZero_sum.inj]
+  case succ i ih =>
+    simp [eval.next]
+    specialize ih xs.tails
+    simp at ih
+    simp [← ih]
 
 /-! ### Arithmetic -/
 
