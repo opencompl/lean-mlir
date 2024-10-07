@@ -91,6 +91,14 @@ section Lemmas
     xs.heads i = (xs i).head := by
   simp [heads]
 
+/-! ### Note about normal forms for BitStreamProd
+
+We will strive to rewrite everything in terms of 'getElem', and so
+all normalized indexing into a BitSream, BitStreamProd, CircuitProd, etc.
+should always look like `(xs i j)`, with no intervening `getLsb` or `getElem`
+calls.
+-/
+
 /-- TODO: rename theorem. -/
 lemma getLsb'_heads_eq_self_head (xs : BitStreamProd ι) (i : ι) :
     xs.heads.getLsb' i = (xs i).head := rfl
@@ -102,6 +110,16 @@ lemma getLsb'_heads_eq_self_zero (xs : BitStreamProd ι) (i : ι) :
 @[simp] lemma getElem_getLsbs (xs : BitStreamProd ι) (i : Nat) (j : ι) :
     (xs.getLsbs i) j = xs j i := by
   simp [getLsbs]
+
+ @[simp] lemma getElem_tails (xs : BitStreamProd ι) (i : Nat) (j : ι) :
+     xs.tails j i = xs j (i + 1) := by
+   simp [tails, BitStream.getElem_tail]
+
+@[simp] lemma getLsb'_getLsbs (xs : BitStreamProd ι) (i : Nat) (j : ι) :
+    (xs.getLsbs i).getLsb' j = xs j i := by
+  unfold getLsbs
+  unfold BoolProd.getLsb'
+  simp
 
 end Lemmas
 
@@ -542,6 +560,27 @@ def Circuit.widthZero_sum (c : Circuit α) : Circuit (Width.n 0 ⊕ α) :=
   where
   inj (a : α) : Width.n 0 ⊕ α := Sum.inr a
 
+instance : Subsingleton (Width.n 0) :=
+  inferInstanceAs (Subsingleton (Fin 0))
+
+instance : Subsingleton (Width.n 1) :=
+  inferInstanceAs (Subsingleton (Fin 1))
+
+instance : Subsingleton (BoolProd (Width.n 0)) :=
+  inferInstanceAs (Subsingleton (Fin 0 → Bool))
+
+/--
+If the FSM does not have any appreciable state,
+then evaluating from a stream `xs` at index `i` does not actually evolve the state,
+and we can thus directly evaluate the FSM at index `i + 1` without having
+to take into account the evolution of the state the bit `(xs i)` would have induced.
+-/
+@[simp]
+def eval_tails_of_Subsingleton (xs : BitStreamProd arity) (hp : Subsingleton p.State) :
+    (p.eval xs.tails) i = (p.eval xs) (i + 1) := by
+  simp [eval]
+  congr
+  apply Subsingleton.allEq
 
 def Width.elim0 {α : Sort _} (x : Width.n 0) : α :=
   Fin.elim0 x
@@ -565,7 +604,6 @@ def Circuit.of_widthZero_sum (c : Circuit (Width.n 0 ⊕ α)) : Circuit α :=
     match pair with
     | .inl (valWidth0 : Width.n 0) => Width.elim0 valWidth0
     | .inr (a : α) => a
-
 
 
 /--
@@ -602,6 +640,11 @@ def bitwiseAnd : FSM (Fin 2) where
     Circuit.widthZero_sum circuit
   nextStateCircuits := CircuitProd.ofWidth0
 
+instance : Subsingleton (bitwiseAnd.State) := by
+  simp [FSM.State, bitwiseAnd]
+  infer_instance
+
+
 /-- TODO for luisa to prove -/
 theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
   (x ++ y).getLsb' (inr k) = y.getLsb' k :=
@@ -620,15 +663,13 @@ theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
 @[simp] lemma eval_bitwiseAnd (xs : BitStreamProd (Fin 2)) :
     bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
   ext i
-  rw [FSM.eval_withInitialState_succ]
-  rw [BitStream.and_eq]
-  rw [bitwiseAnd, eval]
-  ext n;
-  cases n <;> simp [eval, and, next, eval.next,
-    Circuit.widthZero_sum.inj, BoolProd.getLsb'_append_inr]
-  · simp [BitStreamProd.getLsb'_heads_eq_self_zero]
-  · sorry
-
+  induction i generalizing xs
+  case zero => simp [eval, Circuit.widthZero_sum.inj, BoolProd.getLsb'_append_inr]
+  case succ i ih =>
+    simp [eval.next]
+    specialize ih xs.tails
+    simp at ih
+    rw [← ih]
 
 def or : FSM arity :=
   mapCircuit (Circuit.or
