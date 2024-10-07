@@ -49,10 +49,7 @@ structure DisjointFlag where
 def or {w : Nat} (x y : IntW w)  (flag : DisjointFlag := {disjoint := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let disjoint := flag.disjoint
-  let Disjoint? : Prop := disjoint ∧
-    (x' &&& y' != 0)
-  if Disjoint? then
+  if flag.disjoint ∧ x' &&& y' != 0 then
     none
   else
     or? x' y'
@@ -96,16 +93,9 @@ structure NoWrapFlags where
 def add {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := flags.nsw
-  let nuw := flags.nuw
-  let SignedWrap? : Prop := nsw ∧
-    (x'.msb = y'.msb) ∧ ((x' + y').msb ≠ x'.msb)
-  -- Unsigned extentions
-  let ux' := BitVec.zeroExtend (w+1) x'
-  let uy' := BitVec.zeroExtend (w+1) y'
-  let UnsignedWrap? : Prop := nuw ∧
-    (ux' + uy').msb
-  if (SignedWrap? ∨ UnsignedWrap?) then
+  if flags.nsw ∧ x'.msb = y'.msb ∧ (x' + y').msb ≠ x'.msb then
+    none
+  else if flags.nuw ∧ (x' + y' < x' ∨ x' + y' < y') then
     none
   else
     add? x' y'
@@ -126,16 +116,13 @@ theorem sub?_eq : LLVM.sub? a b  = .some (BitVec.sub a b) := rfl
 def sub {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := flags.nsw
-  let nuw := flags.nuw
-  -- Signed extentions and difference
+  -- Signed extensions and difference
   let sx' := BitVec.signExtend (w+1) x'
   let sy' := BitVec.signExtend (w+1) y'
   let sdiff := sx' - sy'
-  let SignedWrap? : Prop := nsw ∧
-    (sdiff.msb ≠ sdiff.getMsbD 1)
-  let UnsignedWrap? : Prop := nuw ∧ (x' < y')
-  if (SignedWrap? ∨ UnsignedWrap?) then
+  if flags.nsw ∧ (sdiff.msb ≠ sdiff.getMsbD 1) then
+    none
+  else if flags.nuw ∧ (x' < y') then
     none
   else
     sub? x' y'
@@ -162,26 +149,24 @@ theorem mul?_eq : LLVM.mul? a b  = .some (BitVec.mul a b) := rfl
 def mul {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := flags.nsw
-  let nuw := flags.nuw
   let w1 := w-1
   let w2 := 2*w
-  -- For mulitplication, we do the "naive" approach of doubling the size, doing the mulitplication, and comparing to the range.
+  -- For multiplication, we do the "naive" approach of doubling the size, doing the multiplication, and comparing to the range.
   -- Signed Wrap
   let sx' := x'.signExtend w2
   let sy' := y'.signExtend w2
   let smul := sx' * sy'
   let slbound := (BitVec.twoPow w w1).signExtend w2 -- signed lower bound := -2^(w-1)
   let shbound := BitVec.twoPow w2 w1 -- signed higher bound + 1 := 2^(w-1)
-  let SignedWrap? : Prop := nsw ∧
-    (smul < slbound ∨ smul ≥ shbound)
   -- Unsigned Wrap
   let ux' := x'.zeroExtend w2
   let uy' := y'.zeroExtend w2
   let umul := ux' * uy'
   let uhbound := shbound <<< 1
-  let UnsignedWrap? : Prop := nuw ∧ (umul ≥ uhbound)
-  if (SignedWrap? ∨ UnsignedWrap?) then
+
+  if flags.nsw ∧ (smul < slbound ∨ smul ≥ shbound) then
+    none
+  else if flags.nuw ∧ umul ≥ uhbound then
     none
   else
     mul? x' y'
@@ -205,10 +190,7 @@ structure ExactFlag where
 def udiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let exact := flag.exact
-  let Exact? : Prop := exact ∧
-    (x'.umod y' ≠ 0)
-  if Exact? then
+  if flag.exact ∧ x'.umod y' ≠ 0 then
     none
   else
     udiv? x' y'
@@ -229,7 +211,7 @@ at width 2, -4 / -1 is considered overflow!
 -/
 -- only way overflow can happen is (INT_MIN / -1).
 -- but we do not consider overflow when `w=1`, because `w=1` only has a sign bit, so there
--- is no magniture to overflow.
+-- is no magnitude to overflow.
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
   if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1)
@@ -249,10 +231,7 @@ theorem sdiv?_eq_pure_of_neq_allOnes {x y : BitVec w} (hy : y ≠ 0)
 def sdiv {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let exact := flag.exact
-  let Exact? : Prop := exact ∧
-    (x'.smod y' ≠ 0)
-  if Exact? then
+  if flag.exact ∧ x'.smod y' ≠ 0 then
     none
   else
     sdiv? x' y'
@@ -363,12 +342,10 @@ def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 def shl {w : Nat} (x y : IntW w) (flags : NoWrapFlags := {nsw := false , nuw := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let nsw := flags.nsw
-  let nuw := flags.nuw
     -- "If the nsw keyword is present, then the shift produces a poison value if it shifts out any bits that disagree with the resultant sign bit."
-  let SignedWrap? : Prop := nsw ∧ ((x' <<< y') >>>ₛ y' = x')
-  let UnsignedWrap? : Prop := nuw ∧ ((x' <<< y') >>> y' = x')
-  if (SignedWrap? ∨ UnsignedWrap?) then
+  if flags.nsw ∧ ((x' <<< y') >>>ₛ y' = x') then
+    none
+  else if flags.nuw ∧ ((x' <<< y') >>> y' = x') then
     none
   else
     shl? x' y'
@@ -393,10 +370,7 @@ def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 def lshr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let exact := flag.exact
-  let Exact? : Prop := exact ∧
-    ((x' >>> y') <<< y' ≠ x')
-  if Exact? then
+  if flag.exact ∧(x' >>> y') <<< y' ≠ x' then
     none
   else
     lshr? x' y'
@@ -420,10 +394,7 @@ def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
 def ashr {w : Nat} (x y : IntW w) (flag : ExactFlag := {exact := false}) : IntW w := do
   let x' ← x
   let y' ← y
-  let exact := flag.exact
-  let Exact? : Prop := exact ∧
-    ((x' >>> y') <<< y' ≠ x')
-  if Exact? then
+  if flag.exact ∧ (x' >>> y') <<< y' ≠ x' then
     none
   else
     ashr? x' y'
