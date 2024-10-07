@@ -311,8 +311,8 @@ theorem stateStream_succ (inputStream : BitStreamProd arity) (n : Nat) :
   rfl
 
 -- /-- `eval p` morally gives the function `BitStream → ... → BitStream` represented by FSM `p` -/
--- def eval (xs : BitStreamProd arity) : BitStream :=
---   p.outputStreamAux p.initialState xs
+def eval (xs : BitStreamProd arity) : BitStream :=
+   p.outputStreamAux p.initialState xs
 
 def eval.next (xs : BitStreamProd arity × p.State) :
     (BitStreamProd arity × p.State) × Bool := -- (fun ⟨x, (state : p.State)⟩ =>
@@ -323,27 +323,24 @@ def eval.next (xs : BitStreamProd arity × p.State) :
   let x_tail  := x.tails
   ((x_tail, next.fst), next.snd)
 
+
 /-- `eval'` is an alternative definition of `eval`, written in terms of corecursion.  -/
-def eval (x : BitStreamProd arity) : BitStream :=
+def eval' (x : BitStreamProd arity) : BitStream :=
   BitStream.corec (eval.next p) (x, p.initialState)
 
 -- /--
 -- Generalized hypothesis that shows how the output stream and
 -- its corecursive definition evolve with an arbitrary input state.
 -- -/
--- theorem eval_eq_eval'_aux (i : Nat) :
---     (p.outputStreamAux state x) i = (BitStream.corec (eval'Corec p) (x, state)) i := by
---   induction i generalizing state x
---   case zero => rfl
---   case succ i ih =>
---     simp [outputStreamAux, eval'Corec, BitStream.corec_succ]
---     rw [← ih]
---     rfl
 
--- /-- Show that the two definitions of evaluation are equivalent. -/
--- theorem eval_eq_eval' : p.eval x = p.eval' x := by
---   funext i
---   apply eval_eq_eval'_aux
+theorem eval_eq_eval'_aux (i : Nat) :
+    (p.outputStreamAux state x) i = (BitStream.corec (eval.next p) (x, s)) i := by
+  sorry
+
+/-- Show that the two definitions of evaluation are equivalent. -/
+theorem eval_eq_eval' : p.eval x = p.eval' x := by
+  funext i
+  apply eval_eq_eval'_aux
 
 /-- `p.withInitialState s` yields an FSM with `s` as the initial state -/
 def withInitialState (p : FSM arity) (s : p.State) : FSM arity :=
@@ -353,6 +350,7 @@ theorem eval_withInitialState_succ
     (p : FSM arity) (c : p.State) (xs : BitStreamProd arity) (n : ℕ) :
     (p.withInitialState c).eval xs (n+1) =
       (p.withInitialState (p.nextState c xs.heads)).eval (xs.tails) n := by
+  simp [eval_eq_eval']
   simp [eval, withInitialState, next]; rfl
 
 
@@ -621,6 +619,10 @@ theorem BoolProd.getLsb'_append_inr (x : BoolProd α) (y : BoolProd β) :
 -/
 @[simp] lemma eval_bitwiseAnd (xs : BitStreamProd (Fin 2)) :
     bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
+  ext i
+  rw [FSM.eval_withInitialState_succ]
+  rw [BitStream.and_eq]
+  rw [bitwiseAnd, eval]
   ext n;
   cases n <;> simp [eval, and, next, eval.next,
     Circuit.widthZero_sum.inj, BoolProd.getLsb'_append_inr]
