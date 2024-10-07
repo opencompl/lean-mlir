@@ -584,6 +584,13 @@ instance : Subsingleton (Width.n 1) :=
 instance : Subsingleton (BoolProd (Width.n 0)) :=
   inferInstanceAs (Subsingleton (Fin 0 → Bool))
 
+theorem Subsingleton_of_codom_Subsingleton [Subsingleton o] :
+    Subsingleton (i → o) := by
+  constructor
+  intros a b
+  funext o
+  apply Subsingleton.allEq
+
 /--
 If the FSM does not have any appreciable state,
 then evaluating from a stream `xs` at index `i` does not actually evolve the state,
@@ -591,7 +598,7 @@ and we can thus directly evaluate the FSM at index `i + 1` without having
 to take into account the evolution of the state the bit `(xs i)` would have induced.
 -/
 @[simp]
-def eval_tails_of_Subsingleton (xs : BitStreamProd arity) (hp : Subsingleton p.State) :
+def eval_tails_of_Subsingleton (xs : BitStreamProd arity) [hp : Subsingleton p.State] :
     (p.eval xs.tails) i = (p.eval xs) (i + 1) := by
   simp [eval]
   congr
@@ -599,13 +606,6 @@ def eval_tails_of_Subsingleton (xs : BitStreamProd arity) (hp : Subsingleton p.S
 
 def Width.elim0 {α : Sort _} (x : Width.n 0) : α :=
   Fin.elim0 x
-  /- Alternative proof:
-  by
-    have := Fin.isLt valWidth0
-    -- this : valWidth0 < 0
-    -- this is a contradiction
-    omega
-  -/
 
 /--
 Build a circuit of type `α` from a `Circuit (Width.n 0 ⊕ α)`.
