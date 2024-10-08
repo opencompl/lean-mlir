@@ -16,7 +16,9 @@ theorem ofInt_negSucc (w n : Nat ) :
   rw [BitVec.toNat_eq]
   simp only [Int.toNat, toNat_ofNatLt, toNat_not, toNat_ofNat]
   split
-  · simp_all [Int.negSucc_emod]
+  · rename_i a b c
+    simp only [Int.ofNat_eq_coe] at c
+    rw [Int.negSucc_emod] at c
     symm
     rw [← Int.natCast_inj]
     rw [Nat.cast_sub]
@@ -25,8 +27,8 @@ theorem ofInt_negSucc (w n : Nat ) :
     simp_all only [gt_iff_lt, Nat.ofNat_pos, pow_pos, Nat.cast_pow,
       Nat.cast_ofNat, Nat.cast_one, Int.ofNat_emod]
     have h : 0 < 2 ^ w := by simp
-    · sorry
-    · sorry
+    · omega
+    · omega
     · omega
   · have nonneg : Int.negSucc n % 2 ^ w ≥ 0 := by
       simp only [ge_iff_le, ne_eq, pow_eq_zero_iff', OfNat.ofNat_ne_zero, false_and,
