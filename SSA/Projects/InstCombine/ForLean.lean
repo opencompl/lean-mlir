@@ -183,18 +183,6 @@ theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
     subst h
     simp
 
-@[simp]
-lemma add_eq_xor (a b : BitVec 1) : a + b = a ^^^ b := by
-  have ha : a = 0 ∨ a = 1 := width_one_cases _
-  have hb : b = 0 ∨ b = 1 := width_one_cases _
-  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
-
-@[simp]
-lemma mul_eq_and (a b : BitVec 1) : a * b = a &&& b := by
-  have ha : a = 0 ∨ a = 1 := width_one_cases _
-  have hb : b = 0 ∨ b = 1 := width_one_cases _
-  rcases ha with h | h <;> (rcases hb with h' | h' <;> (simp [h, h']))
-
 theorem sub_eq_add_neg {w : Nat} {x y : BitVec w} : x - y = x + (- y) := by
   simp only [HAdd.hAdd, HSub.hSub, Neg.neg, Sub.sub, BitVec.sub, Add.add, BitVec.add]
   simp [BitVec.ofNat, Fin.ofNat', add_comm]
@@ -242,8 +230,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       simp only [BitVec.sdiv, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
         or_true, msb_one, neg_eq]
       by_cases h : a.msb <;> simp [h]
-      · simp only [neg_eq_iff_eq_neg, BitVec.neg_zero]
-        rw [BitVec.udiv_eq_zero]
+      · rw [BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1
         · rw [neg_ne_iff_ne_neg]
           simp only [_root_.neg_zero]
@@ -268,14 +255,6 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
     omega
   apply BitVec.eq_of_toNat_eq
   simp [hone]
-
-lemma udiv_zero {w : ℕ} {x : BitVec w} : BitVec.udiv x 0#w = 0 := by
-  simp only [udiv, toNat_ofNat, Nat.zero_mod, Nat.div_zero, ofNat_eq_ofNat]
-  rfl
-
-lemma sdiv_zero {w : ℕ} (x : BitVec w) : BitVec.sdiv x 0#w = 0#w := by
-  simp only [sdiv, msb_zero, udiv_zero, ofNat_eq_ofNat, neg_eq, neg_zero]
-  split <;> rfl
 
 -- @[simp bv_toNat]
 lemma toNat_neq_zero_of_neq_zero {x : BitVec w} (hx : x ≠ 0) : x.toNat ≠ 0 := by
@@ -333,7 +312,8 @@ private theorem toInt_zero : BitVec.toInt (BitVec.ofNat w 0) = 0 := by
 
 theorem intMin_slt_zero (h : 0 < w) :
     BitVec.slt (intMin w) 0 := by
-  simp only [BitVec.slt, BitVec.toInt_intMin]
+  simp only [BitVec.slt, toInt_intMin, Int.ofNat_emod, Nat.cast_pow, Nat.cast_ofNat, ofNat_eq_ofNat,
+    toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
   norm_cast
   simp [h]
 
