@@ -418,13 +418,17 @@ def var (n : ℕ) : FSM (Fin (n+1)) :=
 @[simp] lemma eval_var (n : ℕ) (x : Fin (n+1) → BitStream) : (var n).eval x = x (Fin.last n) := by
   ext m; cases m <;> simp [var, eval, carry, nextBit]
 
+-- Circuit that increments input by 1.
 def incr : FSM Unit :=
   { α := Unit,
-    initCarry := fun _ => true,
+    initCarry := fun _ => true, -- adding 1
     nextBitCirc := fun x =>
       match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ())) }
+      -- Output is carry bit XOR state bit.
+      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ())) 
+      -- Next carry bit is carry bit AND state bit.
+      | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ()))
+  }
 
 theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
     incr.carry x (n+1) = fun _ => (BitStream.incrAux (x ()) n).2
@@ -440,14 +444,16 @@ theorem carry_incr (x : Unit → BitStream) : ∀ (n : ℕ),
   · simp [eval, incr, nextBit, carry, BitStream.incr, BitStream.incrAux]
   · rw [eval, carry_incr]; rfl
 
+-- Circuit that decrements input by 1.
 def decr : FSM Unit :=
   { α := Unit,
     i := by infer_instance,
-    initCarry := λ _ => true,
+    initCarry := λ _ => true, -- subtracting 1
     nextBitCirc := fun x =>
       match x with
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
-      | some _ => (Circuit.var false (inr ())) &&& (Circuit.var true (inl ())) }
+      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ())) -- output is borrow XOR a[i]
+      | some _ => (Circuit.var false (inr ())) &&& (Circuit.var true (inl ())) -- Next borrow is neg `a[i] & borrow`
+  }
 
 theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) =
     fun _ => (BitStream.decrAux (x ()) n).2
@@ -463,10 +469,21 @@ theorem carry_decr (x : Unit → BitStream) : ∀ (n : ℕ), decr.carry x (n+1) 
   · simp [eval, decr, nextBit, carry, BitStream.decr, BitStream.decrAux]
   · rw [eval, carry_decr]; rfl
 
+/--
+If the set of states R is closed under the inverse image of next state,
+and if every state in the set R produces a true next output,
+and furthermore, if our initial state is not R,
+the the value at the initial state is zero, and furthermore, the state will not enter into R in the next state
+-/
+
 theorem evalAux_eq_zero_of_set {arity : Type _} (p : FSM arity)
-    (R : Set (p.α → Bool)) (hR : ∀ x s, (p.nextBit s x).1 ∈ R → s ∈ R)
-    (hi : p.initCarry ∉ R) (hr1 : ∀ x s, (p.nextBit s x).2 = true → s ∈ R)
-    (x : arity → BitStream) (n : ℕ) : p.eval x n = false ∧ p.carry x n ∉ R := by
+    (R : Set (p.α → Bool)) -- set of state bitvectors (i.e., set of carries)
+    (hR : ∀ x s, (p.nextBit s x).1 ∈ R → s ∈ R) -- if the next state is in R, then s is in R (coinductive inclusion)
+    (hi : p.initCarry ∉ R) -- the initial state is currently not in R.
+    (hr1 : ∀ x s, (p.nextBit s x).2 = true → s ∈ R) -- if the next output is true, then s is in R.
+    (x : arity → BitStream) (n : ℕ) :
+    p.eval x n = false ∧ p.carry x n ∉ R  -- then the current state is false, and the next state is not in R.
+    := by
   simp (config := {singlePass := true}) only [← not_imp_not] at hR hr1
   simp only [Bool.not_eq_true] at hR hr1
   induction n with
@@ -477,6 +494,7 @@ theorem evalAux_eq_zero_of_set {arity : Type _} (p : FSM arity)
     simp only [eval, carry] at ih ⊢
     exact ⟨hr1 _ _ (hR _ _ ih.2), hR _ _ ih.2⟩
 
+/-- Under the same conditions as before, the evaluation of the FSM will be all zeroes -/
 theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
     (R : Set (p.α → Bool)) (hR : ∀ x s, (p.nextBit s x).1 ∈ R → s ∈ R)
     (hi : p.initCarry ∉ R) (hr1 : ∀ x s, (p.nextBit s x).2 = true → s ∈ R) :
@@ -697,11 +715,48 @@ inductive Result : Type
   | trueForall : Result
 deriving Repr, DecidableEq
 
+/--
+Compute the cardinality of the set of inputs where the circuit produces false.
+It builds the set of all bitvectors with `Finset.univ`,
+filters those states where the Circuit evaluates to false ,
+and then returns the cardinality of this set.
+It is the cardinality of the complement of the set of inputs to the circuit that produce 1 as output.
+-/
 def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
   Finset.card $ (@Finset.univ (α → Bool) _).filter (fun a => c.eval a = false)
 
+
+/-
+For any two circuits c, c', we must have that card_compl (c' ||| c) ≤ card_compl c.
+This is because whenever `c' ||| c = 0`, this implies that `c = 0`. 
+Therefore, if `i ∈ card_compl (c' ||| c)` , then it implies that `i ∈ card_compl c`.
+-/
+theorem card_compl_or_le {α : Type _} [Fintype α] [DecidableEq α]
+    {c c' : Circuit α}
+    : card_compl (c' ||| c) ≤  -- the set of inputs where `c' ||| c` is zero, is always ≤
+      card_compl c -- the set of inputs where `c` is zero.
+    := by
+  apply Finset.card_le_card
+  simp [Finset.ssubset_iff, Finset.subset_iff]
+
+/-
+Recall the circuit ordering of L ≤ R:
+  We have L ≤ R iff for every input `i` such that L[i] = 1, we have R[i] = 1.
+  Therefore, L as treated as a function is pointwise less than the function R,
+  under the ordering `0 ≤ 1`.
+
+- We know from `card_compl_or_le` that `card_compl (c' ||| c) ≤ card_compl c.
+- We also know from the hypothesis `¬ c' ≤ c` that there is some input `i` for `c'` where `c'[i] = 1` while
+  c[i] = 0.
+- this tells us that `c' ||| c` is 1 strictly more than `c` is, and thus
+  `card_compl (c' ||| c)` is strict less than `card_compl c`.
+-/
 theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
-    {c c' : Circuit α} (h : ¬c' ≤ c) : card_compl (c' ||| c) < card_compl c := by
+    {c c' : Circuit α}
+    (h : ¬c' ≤ c) -- c' is not less than c, so there is *some* input i where c'[i] = 1, and c[i] = 0.
+    : card_compl (c' ||| c) <  -- the set of inputs where `c' ||| c` is zero, is strictly less than
+      card_compl c -- the set of inputs where `c` is zero.
+    := by
   apply Finset.card_lt_card
   simp [Finset.ssubset_iff, Finset.subset_iff]
   simp only [Circuit.le_def, not_forall, Bool.not_eq_true] at h
@@ -709,37 +764,69 @@ theorem decideIfZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
   use x
   simp [hx, h]
 
+/--
+We check if the circuit, when fed the sequence of states from the FSM, produces all zeroes.
+
+- If the circuit evaluates to true on the initial state of the FSM,
+  then we instantly return false, since the circuit has not produced a zero on the initial state.
+- If the circuit evaluates to false on the current state,
+  we extend the circuit by adjoining the output circuit on top of the next state circuit.
+  We use `Circuit.bind` to perform this operation.
+- We then *decide* if the next state's output circuit can make more inputs true.
+   + If it cannot, then we have saturated, and have established that going to the next state
+     does not add any more zeroes, and thus we are done. we return `true`.
+   + TODO: why does this suffice?
+- If the next state's output circuit can make more inputs true,
+  we then recurse and run our procedure on both the current state and the next state's circuits ORd together.
+   + See that this will mean that on the next step, we will unfold the circuit for TWO steps!
+- Also see that this entire procedure is *crazy* expensive.
+-/
 def decideIfZerosAux {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α) : Bool :=
   if c.eval p.initCarry
   then false
   else
+    -- Funny, we don't even need the FSM here, we can write this in terms of `p.nextBitCirc`.
     have c' := (c.bind (p.nextBitCirc ∘ some)).fst
-    if h : c' ≤ c then true
+    if h : c' ≤ c -- 2^n
+    then true
     else
       have _wf : card_compl (c' ||| c) < card_compl c :=
         decideIfZeroAux_wf h
       decideIfZerosAux p (c' ||| c)
   termination_by card_compl c
 
+/--
+Check if the FSM `p` ever causes the output bit circuit to produce a `1`.
+We do this by invoking `decideIfZeroesAux` on the output bit circuit of the FSM.
+-/
 def decideIfZeros {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : Bool :=
   decideIfZerosAux p (p.nextBitCirc none).fst
 
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
-    (hc : ∀ s, c.eval s = true →
-      ∃ m y, (p.changeInitCarry s).eval y m = true)
-    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
-      (FSM.nextBit p s x).snd = true → Circuit.eval c s = true) :
-    decideIfZerosAux p c = true ↔ ∀ n x, p.eval x n = false := by
+    (hc : ∀ s, c.eval s = true → -- if for a given state, the circuit `c` evaluates to true,
+      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true) 
+      -- ^ then there exists an input `y1,... yn`, on which simulating for `m` steps makes the FSM return true.
+    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool), 
+      (FSM.nextBit p s x).snd = true → -- if the state bit of the FSM at state `s` and input `x1...xn` is true,
+      Circuit.eval c s = true) -- then the circuit `c` evaluates to true.
+    :
+    decideIfZerosAux p c = true ↔ -- if decideIfZerosAux says it's true
+    ∀ n x, p.eval x n = false := -- then for all inputs, it is indeed false.
+  by
   rw [decideIfZerosAux]
   split_ifs with h
-  · simp
-    exact hc p.initCarry h
-  · dsimp
+  · -- c.eval p.initCarry = true
+    simp
+    exact hc p.initCarry h -- initial inpit makes it true.
+  · -- c.eval p.initCarry = false.
+    dsimp
     split_ifs with h'
-    · simp only [true_iff]
+    · -- (c.bind (p.nextBitCirc ∘ some)).fst ≤ c
+      -- next state has strictly fewer 1s than current state.
+      simp only [true_iff]
       intro n x
       rw [p.eval_eq_zero_of_set {x | c.eval x = true}]
       · intro y s
@@ -769,7 +856,9 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
 termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
+    (p : FSM arity) : 
+    decideIfZeros p = true ↔ 
+    ∀ n x, p.eval x n = false := by
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
     intro s x h
