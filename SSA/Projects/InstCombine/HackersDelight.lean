@@ -89,8 +89,9 @@ theorem ule_iff_not_or_and_xor_or_not_sub :
 
 theorem eq_zero_iff_abs_sub :
     x = 0 ↔ (x.abs - 1).msb := by
-  try alive_auto
-  all_goals sorry
+  sorry
+  --try alive_auto
+  --all_goals sorry
 
 theorem eq_zero_iff_not_or_sub :
     x = 0 ↔ (~~~ (x ||| -x)).msb := by
