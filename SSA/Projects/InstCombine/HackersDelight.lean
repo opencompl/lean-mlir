@@ -317,8 +317,7 @@ theorem div_overflow_iff_eq_zero_or_eq_neg_pow_two_and_eq_neg :
 
 theorem div_overflow_iff_neq_and_ult_LeftShift {x : BitVec 64} {y : BitVec 32} :
     SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ x < ((y.zeroExtend 64) <<< 32) := by
-  try alive_auto
-  all_goals sorry
+  sorry
 
 theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32} :
     SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ (x >>> 32) < (y.zeroExtend 64) := by
