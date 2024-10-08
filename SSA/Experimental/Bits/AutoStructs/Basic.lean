@@ -13,6 +13,14 @@ import SSA.Experimental.Bits.Fast.FiniteStateMachine
 abbrev State := Nat
 
 -- where to add the wellformedness conditions? a typeclass?
+-- possible improvements for performance:
+-- 1. change the representation, eg. transitions as
+--       Array (Array (A × State))
+-- as in LASH, or with BDD as in MONA
+-- 2. Use the interleaving technique to reduce the number of transitions:
+-- instead of having the alphabet `BitVec n`, it's simply `Bool` and the
+-- representation of (a00, a01, .., a0k)(a10, a11, .., a1k)...(an0, an1, .., ank)
+-- is (a00 a10 ... an0 a01 a11 ... an1 ...... ank)
 
 structure NFA (A : Type 0) [BEq A] [Hashable A] [DecidableEq A] [FinEnum A] where
   stateMax : State
