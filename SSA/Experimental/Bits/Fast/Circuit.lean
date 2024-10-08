@@ -74,6 +74,11 @@ lemma eval_eq_evalv [DecidableEq α] : ∀ (c : Circuit α) (f : α → Bool),
 @[simp] def ofBool (b : Bool) : Circuit α :=
   if b then tru else fals
 
+/--
+We have L ≤ R iff for every input `i` such that L[i] = 1, we have R[i] = 1.
+Therefore, L as treated as a function is pointwise less than the function R,
+under the ordering `0 ≤ 1`.
+-/
 instance : LE (Circuit α) :=
   ⟨λ c₁ c₂ => ∀ f, eval c₁ f → eval c₂ f⟩
 
