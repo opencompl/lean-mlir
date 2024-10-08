@@ -620,7 +620,6 @@ def Circuit.of_widthZero_sum (c : Circuit (Width.n 0 ⊕ α)) : Circuit α :=
     | .inl (valWidth0 : Width.n 0) => Width.elim0 valWidth0
     | .inr (a : α) => a
 
-
 /--
 Build a zero-product of circuits, where each circuit has `α` number of variables.
 Since we are producing an empty product, this is the trivial, canonical product.
@@ -638,11 +637,7 @@ y0 y1 y2
 def CircuitProd.ofWidth0 : CircuitProd α (Width.n 0) :=
   fun (i : Width.n 0) => Width.elim0 i
 
--- logical AND predicate:
--- ...1101
--- ...1001
--- --------
--- 0000001
+
 -- Two arugments, therefore 'FSM Bool' (where 'Bool' is the arity.)
 -- Requires no state, therefore stateWidth is zero.
 def bitwiseAnd : FSM (Fin 2) where
@@ -678,6 +673,41 @@ instance : Subsingleton (bitwiseAnd.State) := by
     specialize ih xs.tails
     simp at ih
     rw [← ih]
+
+-- logical AND predicate:
+-- ...1101
+-- ...1001
+-- --------
+-- 0000001
+-- not a subsingleton anymore
+-- stateWidth is now 2, since the FSM has two states
+-- stateSpace is 2 × S₁ × S₂ where Sκ is the number of states of k-th automaton
+-- outCircuit is the output bit and is exactly the state we're in
+def and : FSM (Fin 2) where
+  stateWidth := Width.n 2
+  initialState := fun x => true -- initial state is `1`
+  outCircuit :=
+    -- let vl := Circuit.var true (inr true) -- left bit
+    -- let vr := Circuit.var true (inr false) -- right bit
+    -- let circuit :=
+    -- Circuit.and (Circuit.var true (inr true)) (Circuit.var true (inr false))
+
+    sorry
+  nextStateCircuits :=  sorry
+  -- while both bits are true remain in `1`
+
+
+@[simp] lemma eval_and (xs : BitStreamProd (Fin 2)) :
+    and.eval xs = (xs 0) &&& (xs 1) := by
+  ext i
+  induction i generalizing xs
+  case zero => simp [eval, Circuit.widthZero_sum.inj]; sorry
+  case succ i _ =>
+    simp [eval.next]
+    -- specialize ih xs.tails
+    -- simp at ih
+    -- rw [← ih]
+    sorry
 
 /-- info: 'FSM.eval_bitwiseAnd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms eval_bitwiseAnd
