@@ -770,6 +770,20 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
           Circuit.eval_or, this, or_true]
 termination_by card_compl c
 
+def EventuallyAllZeroes {arity : Type _} (p : FSM arity) : Prop :=
+    ∃ (k : Nat), ∀ (x : arity → BitStream) (n : Nat), p.eval x (n + k) = false
+
+def EventuallyAllZeroesLeCard {arity : Type _} (p : FSM arity) : Prop := 
+    ∃ k ≤ Fintype.card p.α, ∀ (args : arity → BitStream) (n : Nat), p.eval args (n + k) = false
+
+theorem EventuallyAllZeroes_of_EventuallyAllZeroesLeCard {arity : Type _} {p : FSM arity} :
+   EventuallyAllZeroesLeCard p → EventuallyAllZeroes p := by
+  unfold EventuallyAllZeroes EventuallyAllZeroesLeCard
+  intros h
+  obtain ⟨k, _hk, h⟩:= h
+  exists k
+
+
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) : decideIfZeros p = true ↔ ∀ n x, p.eval x n = false := by
   apply decideIfZerosAux_correct
@@ -809,6 +823,7 @@ def Predicate.denote : Predicate α → Prop
 | and p q => p.denote ∧  q.denote
 | or p q => p.denote ∨  q.denote
 -- | not p => ¬ p.denote
+
 
 /--
 Convert a predicate into a proposition
