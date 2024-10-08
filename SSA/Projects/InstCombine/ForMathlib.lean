@@ -25,9 +25,9 @@ theorem ofInt_negSucc (w n : Nat ) :
     simp_all only [gt_iff_lt, Nat.ofNat_pos, pow_pos, Nat.cast_pow,
       Nat.cast_ofNat, Nat.cast_one, Int.ofNat_emod]
     have h : 0 < 2 ^ w := by simp
-    sorry
-    sorry
-    omega
+    · sorry
+    · sorry
+    · omega
   · have nonneg : Int.negSucc n % 2 ^ w ≥ 0 := by
       simp only [ge_iff_le, ne_eq, pow_eq_zero_iff', OfNat.ofNat_ne_zero, false_and,
         not_false_eq_true, Int.emod_nonneg (Int.negSucc n) _]
