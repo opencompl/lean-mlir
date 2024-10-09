@@ -425,7 +425,7 @@ def incr : FSM Unit :=
     nextBitCirc := fun x =>
       match x with
       -- Output is carry bit XOR state bit.
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ())) 
+      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
       -- Next carry bit is carry bit AND state bit.
       | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ()))
   }
@@ -728,7 +728,7 @@ def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
 
 /-
 For any two circuits c, c', we must have that card_compl (c' ||| c) ≤ card_compl c.
-This is because whenever `c' ||| c = 0`, this implies that `c = 0`. 
+This is because whenever `c' ||| c = 0`, this implies that `c = 0`.
 Therefore, if `i ∈ card_compl (c' ||| c)` , then it implies that `i ∈ card_compl c`.
 -/
 theorem card_compl_or_le {α : Type _} [Fintype α] [DecidableEq α]
@@ -807,9 +807,9 @@ def decideIfZeros {arity : Type _} [DecidableEq arity]
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
     (hc : ∀ s, c.eval s = true → -- if for a given state, the circuit `c` evaluates to true,
-      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true) 
+      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true)
       -- ^ then there exists an input `y1,... yn`, on which simulating for `m` steps makes the FSM return true.
-    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool), 
+    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
       (FSM.nextBit p s x).snd = true → -- if the state bit of the FSM at state `s` and input `x1...xn` is true,
       Circuit.eval c s = true) -- then the circuit `c` evaluates to true.
     :
@@ -820,7 +820,7 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
   split_ifs with h
   · -- c.eval p.initCarry = true
     simp
-    exact hc p.initCarry h -- initial inpit makes it true.
+    exact hc p.initCarry h -- initial input makes it true.
   · -- c.eval p.initCarry = false.
     dsimp
     split_ifs with h'
@@ -856,8 +856,8 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
 termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : 
-    decideIfZeros p = true ↔ 
+    (p : FSM arity) :
+    decideIfZeros p = true ↔
     ∀ n x, p.eval x n = false := by
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
@@ -870,7 +870,175 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
+
+
+
+/-
+Recall the circuit ordering of L ≤ R:
+  We have L ≤ R iff for every input `i` such that L[i] = 1, we have R[i] = 1.
+  Therefore, L as treated as a function is pointwise less than the function R,
+  under the ordering `0 ≤ 1`.
+
+- We know from `card_compl_or_le` that `card_compl (c' ||| c) ≤ card_compl c.
+- We also know from the hypothesis `¬ c' ≤ c` that there is some input `i` for `c'` where `c'[i] = 1` while
+  c[i] = 0.
+- this tells us that `c' ||| c` is 1 strictly more than `c` is, and thus
+  `card_compl (c' ||| c)` is strict less than `card_compl c`.
+-/
+theorem decideEventuallyZeroAux_wf {α : Type _} [Fintype α] [DecidableEq α]
+    {c c' : Circuit α}
+    (h : ¬c' ≤ c) -- c' is not less than c, so there is *some* input i where c'[i] = 1, and c[i] = 0.
+    : card_compl (c' ||| c) <  -- the set of inputs where `c' ||| c` is zero, is strictly less than
+      card_compl c -- the set of inputs where `c` is zero.
+    := by
+  apply Finset.card_lt_card
+  simp [Finset.ssubset_iff, Finset.subset_iff]
+  simp only [Circuit.le_def, not_forall, Bool.not_eq_true] at h
+  rcases h with ⟨x, hx, h⟩
+  use x
+  simp [hx, h]
+
+/--
+We check if the circuit, when fed the sequence of states from the FSM, produces all zeroes.
+
+- If the circuit evaluates to true on the initial state of the FSM,
+  then we instantly return false, since the circuit has not produced a zero on the initial state.
+- If the circuit evaluates to false on the current state,
+  we extend the circuit by adjoining the output circuit on top of the next state circuit.
+  We use `Circuit.bind` to perform this operation.
+- We then *decide* if the next state's output circuit can make more inputs true.
+   + If it cannot, then we have saturated, and have established that going to the next state
+     does not add any more zeroes, and thus we are done. we return `true`.
+   + TODO: why does this suffice?
+- If the next state's output circuit can make more inputs true,
+  we then recurse and run our procedure on both the current state and the next state's circuits ORd together.
+   + See that this will mean that on the next step, we will unfold the circuit for TWO steps!
+- Also see that this entire procedure is *crazy* expensive.
+-/
+def decideEventuallyZerosAux {arity : Type _} [DecidableEq arity]
+    (depth : Nat)
+    (p : FSM arity) (c : Circuit p.α) : Bool :=
+  -- Funny, we don't even need the FSM here, we can write this in terms of `p.nextBitCirc`.
+  have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+  if c.eval p.initCarry = false ∧ c' ≤ c /- 2^n -/ then
+    true
+  else
+    match depth with
+    | 0 => false
+    | depth+1 => decideEventuallyZerosAux depth p c'
+
+def Circuit.bindN (c : Circuit α) (f : α → Circuit α) (n : Nat) : Circuit α :=
+  (Circuit.bind · f)^[n] c
+
+
+theorem useful (c: Circuit α) (f : α → Circuit α) (v : α → Bool) (hc : c.eval v = false)
+    (hbind : c.bind f ≤ c) : ∀ n, c.bindN f n |>.eval v = false := sorry
+
+#check Circuit.eval_fst
+theorem basecase {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) (c : Circuit p.α)
+    -- (hc : ∀ s, c.eval s = true → -- if for a given state, the circuit `c` evaluates to true,
+    --   ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true)
+    --   -- ^ then there exists an input `y1,... yn`, on which simulating for `m` steps makes the FSM return true.
+    -- (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
+    --   (FSM.nextBit p s x).snd = true → -- if the state bit of the FSM at state `s` and input `x1...xn` is true,
+    --   Circuit.eval c s = true) -- then the circuit `c` evaluates to true.
+    (hc_eq :
+      c = (p.nextBitCirc none).fst
+    )
+    (h : c.eval p.initCarry = false
+         ∧ (c.bind (p.nextBitCirc ∘ some)).fst ≤ c) :
+    ∀ xs, p.eval xs = fun _ => false := by
+  intro xs
+  funext i
+  subst hc_eq
+  obtain ⟨h₁, h₂⟩ := h
+  simp [FSM.eval, FSM.nextBit]
+  simp [(· ≤ ·), Circuit.eval_fst, Circuit.eval_bind] at h₂
+  simp [Circuit.eval_bind] at h₂
+
+
+/--
+Check if the FSM `p` ever causes the output bit circuit to produce a `1`.
+We do this by invoking `decideEventuallyZeroesAux` on the output bit circuit of the FSM.
+-/
+def decideEventuallyZeros {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) : Bool :=
+  decideEventuallyZerosAux p (p.nextBitCirc none).fst
+
+theorem decideEventuallyZerosAux_correct {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) (c : Circuit p.α)
+    (hc : ∀ s, c.eval s = true → -- if for a given state, the circuit `c` evaluates to true,
+      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true)
+      -- ^ then there exists an input `y1,... yn`, on which simulating for `m` steps makes the FSM return true.
+    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
+      (FSM.nextBit p s x).snd = true → -- if the state bit of the FSM at state `s` and input `x1...xn` is true,
+      Circuit.eval c s = true) -- then the circuit `c` evaluates to true.
+    :
+    decideEventuallyZerosAux p c = true ↔ -- if decideEventuallyZerosAux says it's true
+    ∀ n x, p.eval x n = false := -- then for all inputs, it is indeed false.
+  by
+  rw [decideEventuallyZerosAux]
+  split_ifs with h
+  · -- c.eval p.initCarry = true
+    simp
+    exact hc p.initCarry h -- initial input makes it true.
+  · -- c.eval p.initCarry = false.
+    dsimp
+    split_ifs with h'
+    · -- (c.bind (p.nextBitCirc ∘ some)).fst ≤ c
+      -- next state has strictly fewer 1s than current state.
+      simp only [true_iff]
+      intro n x
+      rw [p.eval_eq_zero_of_set {x | c.eval x = true}]
+      · intro y s
+        simp [Circuit.le_def, Circuit.eval_fst, Circuit.eval_bind] at h'
+        simp [Circuit.eval_fst, FSM.nextBit]
+        apply h'
+      · assumption
+      · exact hc₂
+    · let c' := (c.bind (p.nextBitCirc ∘ some)).fst
+      have _wf : card_compl (c' ||| c) < card_compl c :=
+        decideEventuallyZeroAux_wf h'
+      apply decideEventuallyZerosAux_correct p (c' ||| c)
+      simp [c', Circuit.eval_fst, Circuit.eval_bind]
+      intro s hs
+      rcases hs with ⟨x, hx⟩ | h
+      · rcases hc _ hx with ⟨m, y, hmy⟩
+        use (m+1)
+        use fun a i => Nat.casesOn i x (fun i a => y a i) a
+        rw [FSM.eval_changeInitCarry_succ]
+        rw [← hmy]
+        simp only [FSM.nextBit, Nat.rec_zero, Nat.rec_add_one]
+      · exact hc _ h
+      · intro x s h
+        have := hc₂ _ _ h
+        simp only [Circuit.eval_bind, Bool.or_eq_true, Circuit.eval_fst,
+          Circuit.eval_or, this, or_true]
+termination_by card_compl c
+
+theorem decideEventuallyZeros_correct {arity : Type _} [DecidableEq arity]
+    (p : FSM arity) :
+    decideEventuallyZeros p = true ↔
+    ∀ n x, p.eval x n = false := by
+  apply decideEventuallyZerosAux_correct
+  · simp only [Circuit.eval_fst, forall_exists_index]
+    intro s x h
+    use 0
+    use (fun a _ => x a)
+    simpa [FSM.eval, FSM.changeInitCarry, FSM.nextBit, FSM.carry]
+  · simp only [Circuit.eval_fst]
+    intro x s h
+    use x
+    exact h
+
+
+
+
+
+
 end FSM
+
 
 /--
 The fragment of predicate logic that we support in `bv_automata`.
