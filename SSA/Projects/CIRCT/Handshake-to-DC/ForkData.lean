@@ -27,6 +27,11 @@ theorem corec₂_eq_val (x : Stream α):
   · intro b₁ b₂ h
     simp [h]
 
+theorem EqIsBisim {α} : @IsBisim α Eq := by
+  simp [IsBisim]
+  intros a; exists 0; exists 0
+  and_intros; all_goals first | rfl | intros _ h; cases h
+
 theorem fork_hs_dc_equiv_fst (x : DC.TokenStream):
     (DC.fork (x)).fst ~ (Handshake.fork (x)).fst := by
   simp [Bisim, DC.fork, Handshake.fork]
@@ -34,17 +39,7 @@ theorem fork_hs_dc_equiv_fst (x : DC.TokenStream):
   and_intros
   · rw [corec₂_eq_tok]
     rfl
-  · simp [IsBisim]
-    intros a
-    exists 0
-    exists 0
-    and_intros
-    · rfl
-    · rfl
-    · intros i h
-      cases h
-    · intros i h
-      cases h
+  · apply EqIsBisim
 
 theorem fork_hs_dc_equiv_snd (x : DC.TokenStream):
     (DC.fork (x)).snd ~ (Handshake.fork (x)).snd := by
@@ -53,17 +48,7 @@ theorem fork_hs_dc_equiv_snd (x : DC.TokenStream):
   and_intros
   · rw [corec₂_eq_tok]
     rfl
-  · simp [IsBisim]
-    intros a
-    exists 0
-    exists 0
-    and_intros
-    · rfl
-    · rfl
-    · intros i h
-      cases h
-    · intros i h
-      cases h
+  · apply EqIsBisim
 
 
 /- prove that dc fork with a value is eqv to handshake fork -/
@@ -103,95 +88,73 @@ def test : DC.ValueStream Int × DC.ValueStream Int :=
 
 /- step 3: prove equivalence -/
 
-theorem corec₂_corec (streamInt : Stream Int) :
-  (corec₂ streamInt fun x => Id.run (x 0, x 0, x.tail)).1 =
-  (corec streamInt fun x => Id.run (x 0, x.tail)) := by sorry
-
 theorem corec₂_corec1 (s : Stream γ) (f : Stream γ -> Option α × Option β × Stream γ) :
-  (corec₂ s f).1 = corec s (fun s' => let ⟨ a, _, b ⟩ := f s'; (a, b) ) := sorry
+  (corec₂ s f).1 = corec s (fun s' => let ⟨ a, _, b ⟩ := f s'; (a, b) ) := by rfl
 
 theorem corec₂_corec2 (s : Stream γ) (f : Stream γ -> Option α × Option β × Stream γ) :
-  (corec₂ s f).2 = corec s (fun s' => let ⟨ _, a, b ⟩ := f s'; (a, b) ) := sorry
-
+  (corec₂ s f).2 = corec s (fun s' => let ⟨ _, a, b ⟩ := f s'; (a, b) ) := by rfl
 
 -- this function maps a stream α to a stream α × stream unit st stream unit stores
 -- whether the stream has something in there
 def map_to_unit_pair (x : Stream α) (z : Stream α × Stream Unit) : Prop :=
     x = z.1 ∧ x.map (·.map (λ _ => ())) = z.2
 
+theorem tail_iterate'' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n m = s (n + m) := by
+  induction n generalizing m; dsimp [Stream'.iterate]; simp
+  dsimp [Stream'.iterate]
+  rename_i n hn
+  have : (Stream'.iterate Stream'.tail s n).tail m = Stream'.iterate Stream'.tail s n (m + 1) := by rfl
+  rw [this]; rw [hn]; 
+  have : n + (m + 1) = n + 1 + m := by omega
+  rw [this]
+  
+theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n 0 = s n := 
+  tail_iterate''
 
 open Ctxt in
 theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
   (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
   simp [DCFork, Valuation.ofPair, Valuation.ofHVector]
-  unfold Handshake.fork
-  unfold DC.pack
-  unfold DC.unpack
-  unfold DC.fork
-  /-
-  streamInt : DC.ValueStream ℤ
-  ⊢ (corec₂ streamInt fun x => Id.run (x 0, x 0, x.tail)).1 ~
-    corec
-      ((corec₂ streamInt fun x =>
-            (match x 0 with
-              | some val => (x 0, some (), x.tail)
-              | none => (none, none, x.tail)).run).1,
-              -- identity function, map elements to whether they're there or not
-              -- none if none, otherwise elem, !none (some())
-        (corec₂
-            (corec₂ streamInt fun x =>
-                (match x 0 with
-                  | some val => (x 0, some (), x.tail)
-                  | none => (none, none, x.tail)).run).2
-            fun x => Id.run (x 0, x 0, tail x)).1)
-            -- two streams of unit (.2 of the first one and duplicate
-            -- it (fun x.... is the def of fork))
-      fun x =>
-      match x.1 0, x.2 0 with
-      -- x.1 0 is x 0 in the first corec₂ (data)
-      -- x.2 0 is the first element of the fork (control)
-      | some x₀, some val => (some x₀, tail x.1, tail x.2)
-      | some val, none => (none, x.1, tail x.2)
-      | none, some val => (none, tail x.1, x.2)
-      | none, none => (none, tail x.1, tail x.2)
-  -/
+  unfold Handshake.fork DC.pack DC.unpack DC.fork
   simp_peephole
   unfold Bisim; exists Eq
-  rw [corec₂_corec]
+  rw [corec₂_corec1]
   and_intros
   · apply corec_eq_corec_of (R := map_to_unit_pair)
     · intros a b hm
       and_intros
-      · simp [Id.run]
-        cases hm
-        subst a
-        cases hb1 : b.1 0
-        · cases b.2 0
-          · rfl
-          · rfl
-        · cases hb2: b.2 0
-          · simp [hb1, hb2]
-            -- unfold the map but probably doable :)
-            sorry
-          · rfl
-      · sorry
-      · sorry
+      all_goals 
+        unfold CIRCTStream.Stream.tail
+        rcases hm with ⟨ heq, hmap ⟩; subst_vars
+        rcases b with ⟨ b1, b2 ⟩; dsimp only at *
+        rcases hb1 : b1 0 with _ | val <;> cases hb2 : b2 0 
+          <;> first | rfl | simp [Id.run, Stream'.map_tail, hmap]
+        rw [Stream'.ext_iff] at hmap; specialize hmap 0
+        simp_all [Stream'.get, Stream'.map]
     · unfold map_to_unit_pair
       and_intros
-      · simp
-        rw [corec₂_corec1]
+      · simp; rw [corec₂_corec1]
         have h : ((fun s' => match
             Id.run (match s' 0 with
               | some val => (s' 0, some (), s'.tail)
               | none => (none, none, s'.tail)) with
-          | (a, fst, b) => (a, b)) : Stream Int → Option ⟦MLIR2DC.Ty2.int⟧ × Stream Int) =
-          (fun s' => (s' 0, s'.tail)) := by sorry
-        -- set_option pp.explicit true in rw [h]
+          | (a, fst, b) => (a, b)) : Stream Int → Option Int × Stream Int) =
+          (fun s' => (s' 0, s'.tail)) := by
+          ext s' <;> cases h : s' 0 <;> simp_all [Id.run]
+        dsimp [TyDenote.toType, MLIR2DC.Ty2, MLIR2DC.instTyDenoteTy2, MLIR2DC.Ty2.int] at *;
+        unfold DC.unpack.match_1 equiv_fork_fst.match_1 at *
+        rw [h]
+        unfold corec
+        rw [Stream'.ext_iff]; intro n
+        clear h
+        rw [Stream'.corec_def]; simp
+        unfold Stream Stream.tail at *
+        have {α} : ((fun x => x.tail) : Stream' α → Stream' α) = Stream'.tail := by rfl
+        rw [this]; unfold Stream'.get
+        rw [tail_iterate']
+      · simp; rw [corec₂_corec2]
         sorry
-      · simp
-        rw [corec₂_corec2]
-        sorry
-  · sorry
+  · apply EqIsBisim
 
 theorem stream_pair_1 (s : Stream α) (f : Stream α → Option α × Option α × Stream α):
     (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by sorry
