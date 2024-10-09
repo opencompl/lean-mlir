@@ -1,4 +1,5 @@
 import Mathlib.Data.Fintype.Card
+import Mathlib.Data.FinEnum
 import Mathlib.Data.Fintype.Sum
 import Mathlib.Data.Fintype.Sigma
 import Mathlib.Data.Fintype.Pi
@@ -7,6 +8,33 @@ import Mathlib.Tactic.Zify
 import Mathlib.Tactic.Ring
 import SSA.Experimental.Bits.Fast.Defs
 import SSA.Experimental.Bits.Fast.Circuit
+
+instance: FinEnum (BitVec w) where
+  card := 2^w
+  equiv := {
+    toFun := fun x => x.toFin
+    invFun := fun x => BitVec.ofFin x
+    left_inv := by intros bv; simp
+    right_inv := by intros n; simp
+  }
+
+instance : FinEnum Bool where
+  card := 2
+  equiv := { toFun := fun x => if x then 0 else 1, invFun := fun (x : Fin 2 ) => if x == 0 then false else true,
+             left_inv := by sorry, right_inv := by sorry }
+
+instance finEnumUnit : FinEnum Unit where
+  card := 1
+  equiv := { toFun := fun _ => 0, invFun := fun (_ : Fin 1) => (), left_inv := by sorry, right_inv := by sorry }
+
+instance finEnumEmpty : FinEnum Empty where
+  card := 0
+  equiv := {
+    toFun := fun x => Empty.elim x
+    invFun := fun (x : Fin 0) => Fin.elim0 x
+    left_inv := by intros _; simp; sorry
+    right_inv := by sorry }
+
 
 open Sum
 
@@ -22,7 +50,7 @@ structure FSM (arity : Type) : Type 1 :=
   The arity of the (finite) type `α` determines how many bits the internal carry state of this
   FSM has -/
   ( α  : Type )
-  [ i : Fintype α ]
+  [ i : FinEnum α ]
   [ dec_eq : DecidableEq α ]
   /--
   `initCarry` is the value of the initial internal carry state.
@@ -124,7 +152,7 @@ a family of `n` FSMs `qᵢ` of posibly different arities `mᵢ`,
 and given yet another arity `m` such that `mᵢ ≤ m` for all `i`,
 we can compose `p` with `qᵢ` yielding a single FSM of arity `m`,
 such that each FSM `qᵢ` computes the `i`th bit that is fed to the FSM `p`. -/
-def compose [Fintype arity] [DecidableEq arity]
+def compose [FinEnum arity] [DecidableEq arity]
     (new_arity : Type)        -- `new_arity` is the resulting arity
     (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -158,7 +186,7 @@ def compose [Fintype arity] [DecidableEq arity]
               (fun a => inl (inr ⟨_, a⟩))
               (fun a => inr (vars x a))) }
 
-lemma carry_compose [Fintype arity] [DecidableEq arity]
+lemma carry_compose [FinEnum arity] [DecidableEq arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -191,7 +219,7 @@ lemma carry_compose [Fintype arity] [DecidableEq arity]
         · simp
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose [Fintype arity] [DecidableEq arity]
+lemma eval_compose [FinEnum arity] [DecidableEq arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)

@@ -218,15 +218,6 @@ where go n (st : isUniversal.State) : Bool :=
 
 end universality
 
-instance: FinEnum (BitVec w) where
-  card := 2^w
-  equiv := {
-    toFun := fun x => x.toFin
-    invFun := fun x => BitVec.ofFin x
-    left_inv := by intros bv; simp
-    right_inv := by intros n; simp
-  }
-
 instance: Hashable (BitVec n) where
   hash x := Hashable.hash x.toFin
 
@@ -261,9 +252,9 @@ end lift_proj
 
 section fsm
 
-variable {arity : Type} [FinEnum arity]
+abbrev Alphabet (arity: Type) [FinEnum arity] := BitVec (FinEnum.card arity + 1)
 
-abbrev Alphabet := BitVec (FinEnum.card arity + 1)
+variable {arity : Type} [FinEnum arity]
 
 private structure fsm.State (carryLen : Nat) where
   m : NFA $ Alphabet (arity := arity) -- TODO: ugly all over...
@@ -307,34 +298,30 @@ where go (st : fsm.State (arity := arity) (FinEnum.card p.α)) : NFA _ := Id.run
 
 end fsm
 
-instance : FinEnum Bool where
-  card := 2
-  equiv := { toFun := fun x => if x then 0 else 1, invFun := fun (x : Fin 2 ) => if x == 0 then false else true,
-             left_inv := by sorry, right_inv := by sorry }
+section const
 
-instance : FinEnum Unit where
-  card := 1
-  equiv := { toFun := fun _ => 0, invFun := fun (_ : Fin 1) => (), left_inv := by sorry, right_inv := by sorry }
+def NFA.ofConst {w} (bv : BitVec w) : NFA (BitVec 1) :=
+  let m := NFA.empty
+  let (s, m) := m.newState
+  let m := m.addInitial s
+  let (s', m) := (List.range w).foldl (init := (s, m)) fun (s, m) i =>
+    let b := bv[i]?.getD false
+    let (s', m) := m.newState
+    let m := m.addTrans (BitVec.ofBool b) s s'
+    (s', m)
+  m.addFinal s'
+
+end const
 
 
-instance : FinEnum FSM.xor.α where
-  card := 0
-  equiv := {
-    toFun := fun x => Empty.elim x
-    invFun := fun (x : Fin 0) => Fin.elim0 x
-    left_inv := by intros _; simp; sorry
-    right_inv := by sorry }
-
-instance : FinEnum FSM.and.α where
-  card := 0
-  equiv := {
-    toFun := fun x => Empty.elim x
-    invFun := fun (x : Fin 0) => Fin.elim0 x
-    left_inv := by intros _; simp; sorry
-    right_inv := by sorry }
+instance : FinEnum FSM.xor.α := finEnumEmpty
+instance : FinEnum FSM.and.α := finEnumEmpty
+instance : FinEnum FSM.add.α := finEnumUnit
 
 def Rxor : NFA (BitVec 3) := NFA.ofFSM FSM.xor
 def Rand : NFA (BitVec 3) := NFA.ofFSM FSM.and
+def Radd : NFA (BitVec 3) := NFA.ofFSM FSM.add
+#eval! Radd
 
 def test : Fintype (Fin 3) := inferInstance
 
@@ -425,3 +412,54 @@ def wholeform := (Rhyp.inter Req4).proj add23
 -- this checks that the formula is universally true, for all x and y
 /-- info: true -/
 #guard_msgs in #eval! wholeform.isUniversal
+
+def liftMax1 (n m : Nat) : Fin (n + 1) → Fin (max n m + 2) :=
+  fun k => if _ : k = n then Fin.last (max n m) else k.castLE (by omega)
+def liftMax2 (n m : Nat) : Fin (m + 1) → Fin (max n m + 2) :=
+  fun k => if _ : k = n then Fin.last (max n m + 1) else k.castLE (by omega)
+def liftLast2 n : Fin 2 → Fin (n + 2)
+| 0 => n
+| 1 => n + 1
+def liftExcecpt2 n : Fin n → Fin (n + 2) :=
+  fun k => Fin.castLE (by omega) k
+
+@[simp]
+lemma finEnumCardFin n : FinEnum.card (Fin n) = n := by
+  sorry
+
+def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
+  match φ with
+  | .atom .eq t1 t2 =>
+    let m1 := (termEvalEqFSM t1).toFSM |> NFA.ofFSM
+    let m2 := (termEvalEqFSM t2).toFSM |> NFA.ofFSM
+    let f1 := liftMax1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m1' := m1.lift f1
+    let f2 := liftMax2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
+    let m2' := m2.lift f2
+    let meq := Req.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
+    let m := NFA.inter m1' m2' |> NFA.inter meq
+    let mfinal := m.proj (liftExcecpt2 _)
+    have h : (Formula.atom .eq t1 t2).arity = max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)) := by simp [FinEnum.card]
+    h ▸ mfinal
+
+-- -x = ~~~ (x - 1)
+
+def ex_formula_neg_eq_neg_not_one : Formula :=
+  open Term in
+  let x := var 0
+  Formula.atom .eq (neg x) (not $ sub x 1)
+
+/-
+theorem neg_eq_neg_not_one :
+    -x = ~~~ (x - 1) := by
+-/
+#time #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> NFA.isUniversal
+
+-- x &&& ~~~ y = x - (x &&& y)
+
+def ex_formula_and_not_eq_sub_add : Formula :=
+  open Term in
+  let x := var 0
+  let y := var 1
+  Formula.atom .eq (and x (not y)) (sub x (and x y))
+#time #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> NFA.isUniversal
