@@ -995,12 +995,52 @@ def decideEventuallyZerosAux {arity : Type _} [DecidableEq arity]
     | 0 => false
     | depth+1 => decideEventuallyZerosAux depth p c'
 
-def Circuit.bindN (c : Circuit α) (f : α → Circuit α) (n : Nat) : Circuit α :=
+/-- The function decideEventuallyZeroes on depends on the denotation -/
+theorem decideEventuallyZeroes_eq_of_eval_eq {arity : Type _} [DecidableEq arity]
+    (depth : Nat)
+    (p : FSM arity) {c₁ c₂: Circuit p.α} (hc : c₁.eval = c₂.eval) :
+    decideEventuallyZerosAux depth p c = decideEventuallyZerosAux := sorry
+
+-- either we get c' = c, and then we are are stuck, or c' != c, and so
+-- we increase by one each step.
+theorem decideEventuallyZerosAux_eq_decideEventuallyZeroesAux_smaller_depth {arity : Type _} [DecidableEq arity]
+    (depth : Nat)
+    (p : FSM arity) (c : Circuit p.α) : Bool :=
+  -- Funny, we don't even need the FSM here, we can write this in terms of `p.nextBitCirc`.
+  have c' := (c.bind (p.nextBitCirc ∘ some)).fst
+  if c.eval p.initCarry = false ∧ c' ≤ c /- 2^n -/ then
+    true
+  else
+    match depth with
+    | 0 => false
+    | depth+1 => decideEventuallyZerosAux depth p c'
+
+def Circuit.bindN (f : α → Circuit α) (n : Nat) (c : Circuit α) : Circuit α :=
   (Circuit.bind · f)^[n] c
+
+/--
+For `x, y ∈ A`, if the `N`th iterate of `f` at `x` equals `y`,
+then there exists an iterate of `f` at x that equals `y` in `k ≤ |A|` steps`.
+-/
+
+theorem exists_iterate_le_of_exists_iterate [Fintype A] (f : A → A) (x y : A) (N : ℕ) (hy : f^[N](x) = y) :
+  ∃ (z : A), ∃ k ≤ Fintype.card A f^[k](z) = y :=  sorry
+    -- N > Fintype.card A, so we can use the |Fintype A| pigeonholes `a0, ... an ∈ A`
+    -- to place the `N` pigeons `f^(N-1)(x), f^(n-|A|)(x)`
+    -- This will give us two pigeons at the 
 
 
 theorem useful (c: Circuit α) (f : α → Circuit α) (v : α → Bool) (hc : c.eval v = false)
     (hbind : c.bind f ≤ c) : ∀ n, c.bindN f n |>.eval v = false := sorry
+
+-- Key idea of proof: There are only `2^k` many circuits that we can produce upto evaluation,
+-- and as we run the algo for `2^k`
+-- steps and test it for the circuits, if we find that none of them suffice, then there is no circuit
+-- that suffices. This depends on first, knowing that iterating 
+-- `(c.bind (p.nextBitCirc ∘ some)).fst : Circuit α → Circuit α` must repeat itself in `2^k` steps,
+-- (`Circuit.eval`), and if we haven't found a useful circuit in those many steps, then we will
+-- never find one. If we found a useful circuit in those many steps, then such a circuit will suffice.
+
 
 #check Circuit.eval_fst
 theorem basecase {arity : Type _} [DecidableEq arity]
