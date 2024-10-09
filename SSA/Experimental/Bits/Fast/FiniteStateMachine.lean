@@ -485,19 +485,19 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
   rw [eval]
   exact (evalAux_eq_zero_of_set p R hR hi hr1 x n).1
 
-def repeatBit : FSM Unit where
+def scanAnd : FSM Unit where
   α := Unit
-  initCarry := fun () => false
+  initCarry := fun () => true
   nextBitCirc := fun _ =>
-    .or (.var true <| .inl ()) (.var true <| .inr ())
+    .and (.var true <| .inl ()) (.var true <| .inr ())
 
-@[simp] theorem eval_repeatBit :
-    repeatBit.eval x = BitStream.repeatBit (x ()) := by
-  unfold BitStream.repeatBit
+@[simp] theorem eval_scanAnd :
+    scanAnd.eval x = BitStream.scanAnd (x ()) := by
+  unfold BitStream.scanAnd
   rw [eval_eq_eval', eval']
   apply BitStream.corec_eq_corec
     (R := fun a b => a.1 () = b.2 ∧ (a.2 ()) = b.1)
-  · simp [repeatBit]
+  · simp [scanAnd]
   · intro ⟨y, a⟩ ⟨b, x⟩ h
     simp at h
     simp [h, nextBit, BitStream.head]
@@ -629,10 +629,6 @@ def termEvalEqFSM : ∀ (t : Term), FSMSolution t
     let q := termEvalEqFSM t
     { toFSM := by dsimp [arity]; exact composeUnary FSM.decr q,
       good := by ext; simp }
-  | repeatBit t =>
-    let p := termEvalEqFSM t
-    { toFSM := by dsimp [arity]; exact composeUnary FSM.repeatBit p,
-      good := by ext; simp }
 
 /-!
 FSM that implement bitwise-and. Since we use `0` as the good state,
@@ -675,6 +671,29 @@ def or : FSM Bool :=
                 Circuit.var true (inr true) &&&
                 Circuit.var true (inr false)
                 }
+
+/-!
+## Predicate FSMs
+-/
+
+structure PredFSM (arity) extends FSM arity where
+  isInteger_eval : ∀ xs, (toFSM.eval xs).IsInteger
+
+/-- We enforce that a FSM that computes a predicate becomes eventually
+all zeroes or eventually all ones. -/
+def FSM.asPredicate {t : Term} (p : FSM (Fin t.arity)) : PredFSM (Fin t.arity) where
+  toFSM := composeUnary FSM.scanAnd ⟨p, sorry⟩
+  isInteger_eval := by
+    intro xs
+    sorry
+
+-- TODO: define `and` and `or` on FSMPred
+-- def PredFSM.and (p q : PredFSM a) : PredFSM a where
+--   toFSM := composeBinary' FSM.and p.toFSM q.toFSM
+--   isInteger_eval := sorry
+
+-- def PredFSM.or (p q : PredFSM a) : PredFSM a :=
+--   sorry
 
 /-!
 FSM that implement logical not.
@@ -781,8 +800,28 @@ theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
     use x
     exact h
 
+def FSM.decideIfEventually {arity} (b : Bool) (p : FSM arity) : Bool :=
+  sorry
+
+/--
+`decideIfEventually b p` is true iff for every input streams `xs`,
+  we can drop `k` bits from the output of `p` to get a stream
+  which is all the same bit `b`.
+-/
+theorem FSM.decideIfEventually_correct {arity} (b : Bool) (p : FSM arity) :
+    (p.decideIfEventually b) ↔ (∃ k, ∀ xs i, p.eval xs (i + k) = b) := by
+  sorry
+
 end FSM
 
+
+
+
+/-!
+## Predicates
+-/
+
+-- TODO: predicates should be moved to the `Fast/Defs` file to be together with terms
 /--
 The fragment of predicate logic that we support in `bv_automata`.
 Currently, we support equality, conjunction, disjunction, and negation.
@@ -797,8 +836,6 @@ inductive Predicate : Nat → Type _ where
 -- both of which is machinery we lack.
 -- | not (p : Predicate n) : Predicate n
 
-
-
 /--
 denote a reflected `predicate` into a `prop.
 -/
@@ -808,11 +845,12 @@ def Predicate.denote : Predicate α → Prop
 | or p q => p.denote ∨  q.denote
 -- | not p => ¬ p.denote
 
+
 /--
 Convert a predicate into a proposition
 -/
-def Predicate.toFSM : Predicate k → FSM (Fin k)
-| .eq t1 t2 => (termEvalEqFSM (Term.repeatBit <| Term.xor t1 t2)).toFSM
+def Predicate.toFSM : Predicate k → PredFSM (Fin k)
+| .eq t1 t2 => (termEvalEqFSM (Term.scanAnd <| Term.xor t1 t2)).toFSM
 | .and p q =>
     let p := toFSM p
     let q := toFSM q

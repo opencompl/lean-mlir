@@ -315,13 +315,14 @@ instance : Add BitStream := ⟨add⟩
 instance : Neg BitStream := ⟨neg⟩
 instance : Sub BitStream := ⟨sub⟩
 
-/-- `repeatBit xs` will repeat the first bit of `xs` which is `true`.
-That is, it will be all-zeros iff `xs` is all-zeroes,
+-- TODO:
+/-- `scanAnd xs` will repeat the first bit of `xs` which is `false`.
+That is, it will be all-ones iff `xs` is all-ones,
 otherwise, there's some number `k` so that after dropping the `k` least
-significant bits, `repeatBit xs` is all-ones. -/
-def repeatBit (xs : BitStream) : BitStream :=
-  corec (b := (false, xs)) fun (carry, xs) =>
-    let carry := carry || xs 0
+significant bits, `scanAnd xs` is all-zeroes. -/
+def scanAnd (xs : BitStream) : BitStream :=
+  corec (b := (true, xs)) fun (carry, xs) =>
+    let carry := carry && xs 0
     let xs := xs.tail
     ((carry, xs), carry)
 
@@ -633,3 +634,17 @@ variable (i : Nat)
 end Lemmas
 
 end OfInt
+
+def drop (xs : BitStream) (n : Nat) := fun i => xs (i + n)
+
+def replicate (b : Bool) : BitStream := fun _ => b
+
+/-- `xs.EventuallyAlways b` holds iff after dropping some finite prefix of `xs`,
+the rest of the bits are all equal to `b` -/
+def EventuallyAlways (xs : BitStream) (b : Bool) : Prop :=
+    ∃ k, xs.drop k = replicate b
+
+/-- A bitstream `xs` represents an integer iff it is eventually all ones, or
+all zeroes -/
+def IsInteger (xs : BitStream) : Prop :=
+    ∃ b, xs.EventuallyAlways b
