@@ -574,6 +574,53 @@ theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
 
+theorem getLsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x - y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by
+  rw [BitVec.sub_eq_add_neg]
+  simp [getLsbD_add]
+  by_cases h₀ : i < w
+  · simp only [h₀, decide_True, Bool.true_and, testBit_toNat, carry]
+    by_cases h₁ : x.toNat % 2 ^ i + y.toNat % 2 ^ i + false.toNat ≥ 2 ^ i
+    · simp_all
+
+      sorry
+    · simp_all
+      sorry
+  · simp [h₀]
+    omega
+
+theorem getLsbD_neg {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x + y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+
+theorem getLsbD_abs {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x + y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+
+theorem getMsbD_add {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getMsbD (x + y) i =
+      Bool.xor (getMsbD x i) (Bool.xor (getMsbD y i) (carry (w - 1 - i) x y false)) := by
+  simp only [getMsbD]
+  by_cases h₀ : i < w
+  · simp only [h₀, decide_True, Bool.true_and]
+    rw [BitVec.getLsbD_add]
+    omega
+  · simp [h₀]
+    omega
+
+theorem getMsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x + y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+
+theorem getMsbD_neg {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x + y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+
+theorem getMsbD_abs {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+    getLsbD (x + y) i =
+      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+
 end BitVec
 
 namespace Bool
