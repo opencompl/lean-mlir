@@ -103,6 +103,23 @@ def test : DC.ValueStream Int × DC.ValueStream Int :=
 
 /- step 3: prove equivalence -/
 
+theorem corec₂_corec (streamInt : Stream Int) :
+  (corec₂ streamInt fun x => Id.run (x 0, x 0, x.tail)).1 =
+  (corec streamInt fun x => Id.run (x 0, x.tail)) := by sorry
+
+theorem corec₂_corec1 (s : Stream γ) (f : Stream γ -> Option α × Option β × Stream γ) :
+  (corec₂ s f).1 = corec s (fun s' => let ⟨ a, _, b ⟩ := f s'; (a, b) ) := sorry
+
+theorem corec₂_corec2 (s : Stream γ) (f : Stream γ -> Option α × Option β × Stream γ) :
+  (corec₂ s f).2 = corec s (fun s' => let ⟨ _, a, b ⟩ := f s'; (a, b) ) := sorry
+
+
+-- this function maps a stream α to a stream α × stream unit st stream unit stores
+-- whether the stream has something in there
+def map_to_unit_pair (x : Stream α) (z : Stream α × Stream Unit) : Prop :=
+    x = z.1 ∧ x.map (·.map (λ _ => ())) = z.2
+
+
 open Ctxt in
 theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
   (Handshake.fork streamInt).fst ~ (DCFork.denote (Valuation.ofHVector (.cons streamInt <| .nil))).fst := by
@@ -119,21 +136,62 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
             (match x 0 with
               | some val => (x 0, some (), x.tail)
               | none => (none, none, x.tail)).run).1,
+              -- identity function, map elements to whether they're there or not
+              -- none if none, otherwise elem, !none (some())
         (corec₂
             (corec₂ streamInt fun x =>
                 (match x 0 with
                   | some val => (x 0, some (), x.tail)
                   | none => (none, none, x.tail)).run).2
             fun x => Id.run (x 0, x 0, tail x)).1)
+            -- two streams of unit (.2 of the first one and duplicate
+            -- it (fun x.... is the def of fork))
       fun x =>
       match x.1 0, x.2 0 with
+      -- x.1 0 is x 0 in the first corec₂ (data)
+      -- x.2 0 is the first element of the fork (control)
       | some x₀, some val => (some x₀, tail x.1, tail x.2)
       | some val, none => (none, x.1, tail x.2)
       | none, some val => (none, tail x.1, x.2)
       | none, none => (none, tail x.1, tail x.2)
   -/
   simp_peephole
-  sorry
+  unfold Bisim; exists Eq
+  rw [corec₂_corec]
+  and_intros
+  · apply corec_eq_corec_of (R := map_to_unit_pair)
+    · intros a b hm
+      and_intros
+      · simp [Id.run]
+        cases hm
+        subst a
+        cases hb1 : b.1 0
+        · cases b.2 0
+          · rfl
+          · rfl
+        · cases hb2: b.2 0
+          · simp [hb1, hb2]
+            -- unfold the map but probably doable :)
+            sorry
+          · rfl
+      · sorry
+      · sorry
+    · unfold map_to_unit_pair
+      and_intros
+      · simp
+        rw [corec₂_corec1]
+        have h : ((fun s' => match
+            Id.run (match s' 0 with
+              | some val => (s' 0, some (), s'.tail)
+              | none => (none, none, s'.tail)) with
+          | (a, fst, b) => (a, b)) : Stream Int → Option ⟦MLIR2DC.Ty2.int⟧ × Stream Int) =
+          (fun s' => (s' 0, s'.tail)) := by sorry
+        -- set_option pp.explicit true in rw [h]
+        sorry
+      · simp
+        rw [corec₂_corec2]
+        sorry
+  · sorry
 
 theorem stream_pair_1 (s : Stream α) (f : Stream α → Option α × Option α × Stream α):
     (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by sorry
@@ -143,11 +201,22 @@ inductive concrete_bisim (x y : Stream α) : Prop
 -- pb: generate bisim relation defined over streams (a concrete one)
 -- needs to rely on cores
 
+def IsBisim' (R' : Stream α → Stream α → Prop) : Prop :=
+  ∀ a b, R' a b → ∃ n m,
+    R' (a.drop (n+1)) (b.drop (m+1))
+    ∧ a.get n = b.get m
+    ∧ (∀ i < n, a.get i = none)
+    ∧ (∀ j < m, b.get j = none)
+
 def concrete_bisim' (f1 f2 : Stream α → (Option α × Stream α)) (s : Stream α) : Prop :=
     match s 0 with
-    | some x => (f1 s).1 = some x ∧ -- ((f1 s).1 = some ∨ ∃ n : alwaysNoneUntil n ∧ (f1 s ).n = some
-      -- ) ∧  concrete_bisim' f1 f2 s.tail
-    | none => (f1 s).1 = none ∧ (f2)
+    | some x => sorry
+      -- (f1 s).1 = some ∨ ∃ n : alwaysNoneUntil n ∧ (f1 s ).n = some
+      -- ∧ concrete_bisim' f1 f2 s.tail
+      -- sorry
+    | none => sorry
+    -- (f1 s).1 = none ∧ (f2)
+
 
 theorem corec₂_eq_corec_of_corec₂ (streamInt: DC.ValueStream Int) :
     (corec₂ streamInt fun x => (x 0, x 0, x.tail)).1 ≈
