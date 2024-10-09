@@ -575,28 +575,16 @@ theorem msb_sshiftRight' {x y: BitVec w} :
   simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
 
 theorem getLsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x - y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by
-  rw [BitVec.sub_eq_add_neg]
-  simp [getLsbD_add]
-  by_cases h₀ : i < w
-  · simp only [h₀, decide_True, Bool.true_and, testBit_toNat, carry]
-    by_cases h₁ : x.toNat % 2 ^ i + y.toNat % 2 ^ i + false.toNat ≥ 2 ^ i
-    · simp_all
+    (x - y).getLsbD i =
+      (x.getLsbD i ^^ ((~~~y + 1).getLsbD i ^^ carry i x (~~~y + 1) false)) := by
+  rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add]
+  rw [getLsbD_add]
+  omega
 
-      sorry
-    · simp_all
-      sorry
-  · simp [h₀]
-    omega
-
-theorem getLsbD_neg {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x + y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
-
-theorem getLsbD_abs {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x + y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+theorem getLsbD_neg {i : Nat} (i_lt : i < w) (x : BitVec w) :
+    getLsbD (~~~x) i = (getLsbD x i).not := by
+  simp
+  omega
 
 theorem getMsbD_add {i : Nat} (i_lt : i < w) (x y : BitVec w) :
     getMsbD (x + y) i =
@@ -610,16 +598,16 @@ theorem getMsbD_add {i : Nat} (i_lt : i < w) (x y : BitVec w) :
     omega
 
 theorem getMsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x + y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+    (x - y).getMsbD i =
+      (x.getMsbD i ^^ ((~~~y + 1).getMsbD i ^^ carry (w - 1 - i) x (~~~y + 1) false)) := by
+  rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add]
+  rw [getMsbD_add]
+  omega
 
 theorem getMsbD_neg {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x + y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
-
-theorem getMsbD_abs {i : Nat} (i_lt : i < w) (x y : BitVec w) :
-    getLsbD (x + y) i =
-      Bool.xor (getLsbD x i) (Bool.xor (getLsbD y i) (carry i x y false)) := by sorry
+    getMsbD (~~~x) i = (getMsbD x i).not := by
+  simp
+  omega
 
 end BitVec
 
