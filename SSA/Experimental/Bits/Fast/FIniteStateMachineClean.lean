@@ -484,6 +484,7 @@ Two arguments, therefore 'FSM Bool' (where 'Bool' is the arity.)
 Fin 2 == Bool, anything with two members
 Requires no state, therefore stateWidth is zero.
 -/
+
 def bitwiseAnd : FSM (Fin 2) where
   stateWidth := Width.n 0
   initialState := fun x => x.elim0
@@ -592,7 +593,6 @@ def CircuitProd.ofWidth1 (c : Circuit α) :
 
 def Circuit.inr (c : Circuit β) : Circuit (α ⊕ β) := c.map Sum.inr
 
-
 /--
 `predicateAtBit` is a circuit that computes the predicate at the current bit.
 We need to enforce the behaviour that if `predicateAtBit[i] = 0`, then
@@ -627,3 +627,22 @@ def or' : FSM (Fin 2) :=
   let vl := Circuit.var true 0
   let vr := Circuit.var true 1
   mkBinaryPredicate (Circuit.or vl vr)
+
+
+-- @[simp] lemma eval_bitwiseAnd' (xs : BitStreamProd (Fin 2)) :
+--     bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
+--   ext i
+--   induction i generalizing xs
+--   case zero => simp [eval, Circuit.widthZero_sum.inj]
+--   case succ i ih =>
+--     simp [eval.next]
+
+@[simp]
+lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) : and'.eval xs i = BitStream.EqualUpTo (i - 1) (xs 0) (xs 1) :=  by
+  unfold BitStream.EqualUpTo
+  induction i generalizing xs
+  case zero =>
+    simp only [zero_le, tsub_eq_zero_of_le, not_lt_zero', Fin.isValue, false_implies, implies_true,
+      eq_iff_iff, iff_true]
+    · sorry
+  case succ => sorry

@@ -425,7 +425,7 @@ def incr : FSM Unit :=
     nextBitCirc := fun x =>
       match x with
       -- Output is carry bit XOR state bit.
-      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ())) 
+      | none => (Circuit.var true (inr ())) ^^^ (Circuit.var true (inl ()))
       -- Next carry bit is carry bit AND state bit.
       | some _ => (Circuit.var true (inr ())) &&& (Circuit.var true (inl ()))
   }
@@ -728,7 +728,7 @@ def card_compl [Fintype α] [DecidableEq α] (c : Circuit α) : ℕ :=
 
 /-
 For any two circuits c, c', we must have that card_compl (c' ||| c) ≤ card_compl c.
-This is because whenever `c' ||| c = 0`, this implies that `c = 0`. 
+This is because whenever `c' ||| c = 0`, this implies that `c = 0`.
 Therefore, if `i ∈ card_compl (c' ||| c)` , then it implies that `i ∈ card_compl c`.
 -/
 theorem card_compl_or_le {α : Type _} [Fintype α] [DecidableEq α]
@@ -807,9 +807,9 @@ def decideIfZeros {arity : Type _} [DecidableEq arity]
 theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
     (p : FSM arity) (c : Circuit p.α)
     (hc : ∀ s, c.eval s = true → -- if for a given state, the circuit `c` evaluates to true,
-      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true) 
+      ∃ (m : ℕ) (y : arity → BitStream), (p.changeInitCarry s).eval y m = true)
       -- ^ then there exists an input `y1,... yn`, on which simulating for `m` steps makes the FSM return true.
-    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool), 
+    (hc₂ : ∀ (x : arity → Bool) (s : p.α → Bool),
       (FSM.nextBit p s x).snd = true → -- if the state bit of the FSM at state `s` and input `x1...xn` is true,
       Circuit.eval c s = true) -- then the circuit `c` evaluates to true.
     :
@@ -856,8 +856,8 @@ theorem decideIfZerosAux_correct {arity : Type _} [DecidableEq arity]
 termination_by card_compl c
 
 theorem decideIfZeros_correct {arity : Type _} [DecidableEq arity]
-    (p : FSM arity) : 
-    decideIfZeros p = true ↔ 
+    (p : FSM arity) :
+    decideIfZeros p = true ↔
     ∀ n x, p.eval x n = false := by
   apply decideIfZerosAux_correct
   · simp only [Circuit.eval_fst, forall_exists_index]
