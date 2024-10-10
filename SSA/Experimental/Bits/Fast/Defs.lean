@@ -143,3 +143,13 @@ and only require that many bitstream values to be given in `vars`.
   | incr t      => BitStream.incr (Term.evalFin t vars)
   | decr t      => BitStream.decr (Term.evalFin t vars)
   | repeatBit t => BitStream.repeatBit (Term.evalFin t vars)
+
+inductive Relation
+| eq
+| leSigned
+
+inductive Formula : Type
+| atom : Relation → Term → Term → Formula
+
+abbrev Formula.arity : Formula → Nat
+| atom _ t1 t2 => max t1.arity t2.arity
