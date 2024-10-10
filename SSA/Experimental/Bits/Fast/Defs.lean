@@ -146,6 +146,7 @@ and only require that many bitstream values to be given in `vars`.
 
 inductive Relation
 | eq
+| leSigned
 
 inductive Formula : Type
 | atom : Relation → Term → Term → Formula

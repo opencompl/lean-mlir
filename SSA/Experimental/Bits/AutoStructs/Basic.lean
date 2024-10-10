@@ -51,6 +51,9 @@ def NFA.addTrans (m : NFA A) (a : A) (s s' : State) : NFA A :=
   let ns := ns.insert s'
   { m with trans :=  m.trans.insert (s, a) ns }
 
+def NFA.addManyTrans (m : NFA A) (a : List A) (s s' : State) : NFA A :=
+  a.foldl (init := m) fun m a => m.addTrans a s s'
+
 def NFA.addInitial (m : NFA A) (s : State) : NFA A :=
   { m with initials := m.initials.insert s }
 
@@ -192,6 +195,10 @@ where go (st : isUniversal.State) : Bool :=
   else
     true
   decreasing_by sorry
+
+-- TODO: this relies on the fact that all states are reachable!
+def NFA.isEmpty (m : NFA A) : Bool := m.finals.isEmpty
+def NFA.isNotEmpty (m : NFA A) : Bool := !m.finals.isEmpty
 
 def NFA.isUniversal' (n : Nat) (m : NFA A) : Bool :=
   let st := { visited := [], worklist := [m.initials]}
@@ -353,7 +360,7 @@ def Rxy4 : NFA (BitVec 4) := Rxy.lift add4th
 def Ryx4 : NFA (BitVec 4) := Ryx'.lift add3rd
 #eval! Ryx4
 
-def Req : NFA (BitVec 2) :=
+def NFA.autEq : NFA (BitVec 2) :=
   let m := NFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
@@ -361,6 +368,33 @@ def Req : NFA (BitVec 2) :=
   let m := m.addTrans 0 s s
   let m := m.addTrans 3 s s
   m
+
+inductive Ordering'
+| lt
+| le
+
+def NFA.autSignedCmp (cmp: Ordering') : NFA (BitVec 2) :=
+  let m := NFA.empty
+  let (seq, m) := m.newState
+  let (sgt, m) := m.newState
+  let (slt, m) := m.newState
+  let (sgtfin, m) := m.newState
+  let (sltfin, m) := m.newState
+  let m := m.addInitial seq
+  let m := m.addManyTrans [0#2, 3#2] seq seq
+  let m := m.addTrans 1#2 seq sgt
+  let m := m.addTrans 2#2 seq slt
+  let m := m.addManyTrans [0#2, 1#2, 3#2] sgt sgt
+  let m := m.addManyTrans [0#2, 2#2, 3#2] sgt sgtfin
+  let m := m.addTrans 1#2 sgt sltfin
+  let m := m.addTrans 2#2 sgt slt
+  let m := m.addManyTrans [0#2, 2#2, 3#2] slt slt
+  let m := m.addManyTrans [0#2, 1#2, 3#2] slt sltfin
+  let m := m.addTrans 2#2 slt sgtfin
+  let m := m.addTrans 1#2 slt sgt
+  match cmp with
+  | .lt => m.addFinal sltfin
+  | .le => (m.addFinal sltfin).addFinal seq
 
 def add12 (n : Fin 2) : Fin 4 :=
   match n with
@@ -372,7 +406,7 @@ def add23 (n : Fin 2) : Fin 4 :=
   | 0 => 0
   | 1 => 1
 
-def Req4 : NFA (BitVec 4) := Req.lift add12
+def Req4 : NFA (BitVec 4) := NFA.autEq.lift add12
 
 def Rhyp : NFA (BitVec 4) := Rxy4.inter Ryx4
 
@@ -423,24 +457,48 @@ def liftLast2 n : Fin 2 → Fin (n + 2)
 def liftExcecpt2 n : Fin n → Fin (n + 2) :=
   fun k => Fin.castLE (by omega) k
 
+-- TODO(leo): stype? upstream?
 @[simp]
 lemma finEnumCardFin n : FinEnum.card (Fin n) = n := by
-  sorry
+  rw [FinEnum.card, FinEnum.fin, FinEnum.ofList, FinEnum.ofNodupList]
+  simp only
+  rw [List.Nodup.dedup]
+  · simp
+  · apply List.nodup_finRange
 
+def Relation.autOfRelation : Relation → NFA (BitVec 2)
+| .eq => NFA.autEq
+| .leSigned => NFA.autSignedCmp .le
+
+-- TODO(leo) : why is the typchecking so slow?
 def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
   match φ with
-  | .atom .eq t1 t2 =>
+  | .atom rel t1 t2 =>
     let m1 := (termEvalEqFSM t1).toFSM |> NFA.ofFSM
     let m2 := (termEvalEqFSM t2).toFSM |> NFA.ofFSM
     let f1 := liftMax1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m1' := m1.lift f1
     let f2 := liftMax2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m2' := m2.lift f2
-    let meq := Req.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
+    let meq := rel.autOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
     let m := NFA.inter m1' m2' |> NFA.inter meq
     let mfinal := m.proj (liftExcecpt2 _)
     have h : (Formula.atom .eq t1 t2).arity = max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)) := by simp [FinEnum.card]
     h ▸ mfinal
+
+def nfaOfCompareConstants {w : Nat} (a b : BitVec w) : NFA (BitVec 0) :=
+  let m1 := NFA.ofConst a
+  let m2 := NFA.ofConst b
+  let f1 : Fin 1 → Fin 2 := fun 0 => 0
+  let m1' := m1.lift f1
+  let f2 : Fin 1 → Fin 2 := fun 0 => 1
+  let m2' := m2.lift f2
+  let meq := NFA.autSignedCmp .le
+  let m := NFA.inter m1' m2' |> NFA.inter meq
+  let mfinal := m.proj (liftExcecpt2 _)
+  mfinal
+
+#time #eval! nfaOfCompareConstants 100#32 100 |> NFA.isNotEmpty
 
 -- -x = ~~~ (x - 1)
 
@@ -463,3 +521,11 @@ def ex_formula_and_not_eq_sub_add : Formula :=
   let y := var 1
   Formula.atom .eq (and x (not y)) (sub x (and x y))
 #time #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> NFA.isUniversal
+
+/-
+  TODO:
+  1. automaton for unsigned comparison (easy)
+  2. automaton for msb (easy)
+  3. handle all Boolean operations
+  4. clarify what happens with automata over the alphabet `BitVec 0`...
+-/
