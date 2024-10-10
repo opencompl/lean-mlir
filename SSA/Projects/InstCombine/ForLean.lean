@@ -574,19 +574,19 @@ theorem msb_sshiftRight' {x y: BitVec w} :
     (x.sshiftRight' y).msb = x.msb := by
   simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
 
-theorem getLsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+theorem getLsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     (x - y).getLsbD i =
       (x.getLsbD i ^^ ((~~~y + 1).getLsbD i ^^ carry i x (~~~y + 1) false)) := by
   rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add]
   rw [getLsbD_add]
   omega
 
-theorem getLsbD_neg {i : Nat} (i_lt : i < w) (x : BitVec w) :
+theorem getLsbD_neg {i : Nat} {i_lt : i < w} {x : BitVec w} :
     getLsbD (~~~x) i = (getLsbD x i).not := by
   simp
   omega
 
-theorem getMsbD_add {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+theorem getMsbD_add {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     getMsbD (x + y) i =
       Bool.xor (getMsbD x i) (Bool.xor (getMsbD y i) (carry (w - 1 - i) x y false)) := by
   simp only [getMsbD]
@@ -597,14 +597,14 @@ theorem getMsbD_add {i : Nat} (i_lt : i < w) (x y : BitVec w) :
   · simp [h₀]
     omega
 
-theorem getMsbD_sub {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+theorem getMsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     (x - y).getMsbD i =
       (x.getMsbD i ^^ ((~~~y + 1).getMsbD i ^^ carry (w - 1 - i) x (~~~y + 1) false)) := by
   rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add]
   rw [getMsbD_add]
   omega
 
-theorem getMsbD_neg {i : Nat} (i_lt : i < w) (x y : BitVec w) :
+theorem getMsbD_neg {i : Nat} {i_lt : i < w} {x : BitVec w} :
     getMsbD (~~~x) i = (getMsbD x i).not := by
   simp
   omega
