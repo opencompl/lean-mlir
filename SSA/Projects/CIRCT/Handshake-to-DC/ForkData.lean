@@ -104,11 +104,11 @@ theorem tail_iterate'' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail 
   dsimp [Stream'.iterate]
   rename_i n hn
   have : (Stream'.iterate Stream'.tail s n).tail m = Stream'.iterate Stream'.tail s n (m + 1) := by rfl
-  rw [this]; rw [hn]; 
+  rw [this]; rw [hn];
   have : n + (m + 1) = n + 1 + m := by omega
   rw [this]
-  
-theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n 0 = s n := 
+
+theorem tail_iterate' {α} {n} {s : Stream' α} : Stream'.iterate Stream'.tail s n 0 = s n :=
   tail_iterate''
 
 open Ctxt in
@@ -123,11 +123,11 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
   · apply corec_eq_corec_of (R := map_to_unit_pair)
     · intros a b hm
       and_intros
-      all_goals 
+      all_goals
         unfold CIRCTStream.Stream.tail
         rcases hm with ⟨ heq, hmap ⟩; subst_vars
         rcases b with ⟨ b1, b2 ⟩; dsimp only at *
-        rcases hb1 : b1 0 with _ | val <;> cases hb2 : b2 0 
+        rcases hb1 : b1 0 with _ | val <;> cases hb2 : b2 0
           <;> first | rfl | simp [Id.run, Stream'.map_tail, hmap]
         rw [Stream'.ext_iff] at hmap; specialize hmap 0
         simp_all [Stream'.get, Stream'.map]
@@ -153,11 +153,18 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
         rw [this]; unfold Stream'.get
         rw [tail_iterate']
       · simp; rw [corec₂_corec2]
+        rw [corec₂_corec1]
         sorry
   · apply EqIsBisim
 
 theorem stream_pair_1 (s : Stream α) (f : Stream α → Option α × Option α × Stream α):
-    (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by sorry
+    (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by
+  unfold corec
+  unfold corec₂
+  unfold Stream'.corec
+  unfold Stream'.map
+  rfl
+
 
 inductive concrete_bisim (x y : Stream α) : Prop
 
