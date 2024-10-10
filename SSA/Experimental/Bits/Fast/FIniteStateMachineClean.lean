@@ -243,10 +243,33 @@ structure Width where
 def Width.n (n : Nat) : Width where
   α := Fin n
 
+#check Fin.ofNat
+#check Fin.instOfNat
+#synth OfNat (Fin 10) 5
+
+
 attribute [instance] Width.instFintype Width.instDecEq
 
 instance : CoeSort Width Type where
   coe := Width.α
+
+/-- Given an (i : Fin n), convert it to an inhabitant of (Width.n n) -/
+def Width.n.mk {n : Nat} (i : Fin n) : (Width.n n) := i
+
+instance : Coe (Fin n) (Width.n n) where
+  coe := Width.n.mk
+
+/--
+The type `(Width.n n).α` is definitionally equal to `Fin n`,
+so we write a simp lemma to strip the wrapper of `Width.n.mk`.
+We still want the `Width.n.mk` for conceptual clarity,
+to tell us that we can construct a `Width.n` with a `Fin n`.
+This also has the pleasing effect of enabling autocomplete in places where
+we expect a `Width.n n`, allowing us to write `(.mk 10) : Width.n 42`.
+-/
+@[simp]
+theorem Width.n.mk_eq {n : Nat} (i : Fin n) : (Width.n.mk i) = i := rfl
+
 
 /-- `FSM arity` represents a function `BitStream → ⋯ → BitStream → BitStream`,
 where `arity` is the number of `BitStream` arguments,
@@ -559,57 +582,48 @@ instance : Subsingleton (bitwiseXor.State) := by
 
 /-! ### Predicates -/
 
-/- logical AND predicate:
-  ...1101
-  ...1001
-  --------
-  0000001
-  not a subsingleton anymore
-  stateSpace is 2 × S₁ × S₂ where Sκ is the number of states of k-th automaton
-  this means we need one `failure` bit (i.e., stateWidth = 1)
-  to define whether at any point of the input streams
-  the predicate stopped being true.
-  This bit determines the state of the fsa (`true` or `false`).
-  In general, the predicate is true if the so-constructed fsa satisfies
-  "eventuallyAlwaysOne" property
-  In this case, once the comparison between the inputs stops holding,
-  the fsa changes its state to `false` and can never go back to `true`
-  outCircuit is the output bit and is exactly the state we're in
+/--
+To build a `CircuitProd` that produces `1` bit as output with `α as inputs,
+we use a single circuit that produces `1` bit as output with `α` as inputs.
 -/
-def and : FSM (Fin 2) where
+def CircuitProd.ofWidth1 (c : Circuit α) :
+    (CircuitProd α (Width.n 1)) :=
+  fun (_ : Width.n 1) => c
+
+def Circuit.inr (c : Circuit β) : Circuit (α ⊕ β) := c.map Sum.inr
+
+
+/--
+`predicateAtBit` is a circuit that computes the predicate at the current bit.
+We need to enforce the behaviour that if `predicateAtBit[i] = 0`, then
+`(mkBinaryPredicate predicateAtBit)[i + k] = 0` for all `k ∈ ℕ`.
+That is, if the `predicateAtBit` ever becomes `0`,
+then the automata created by `mkBinaryPredicate` will say as zeroes forever.
+
+To achieve this, we use a single bit of state to the automata, which is `0` if
+`predicateAtBit` has ever produced a `0`. -/
+def mkBinaryPredicate (predicateAtBit : Circuit (Fin 2)) : FSM (Fin 2) where
   stateWidth := Width.n 1
-  initialState := fun x => true -- initial state is `1`, always one until the property holds
+  initialState := fun _ => true -- initial state is `1`, always one until the property holds
   outCircuit :=
-    let vl := Circuit.var true (Fin 0) -- left bit
-    let vr := Circuit.var true (Fin 1) -- right bit
-    -- FSM.State
-    -- Circuit ((Width.n 1).α ⊕ Fin 2)
-    -- disjoint union of the two FSMs generating the streams (Fin 2) and
-    -- a type with 1 inhabitant (Width.n 1)
-    -- the output bit of the current state is given by the and of these
-    -- three things
-    -- the current state is defined recursively
-    let currentState := Circuit.var true stateWidth
-    let circuit := Circuit.and currentState (Circuit.and vl vr)
-    circuit
-    -- it is actually the same as the bitwise and, with the only exception
-    -- that once the output is 0 it will always be
-  nextStateCircuits := -- while both bits are true remain in `1`
-    let vl := Circuit.var true 0 -- left bit
-    let vr := Circuit.var true 1 -- right bit
-    sorry
-    -- Circuit.and _ (Circuit.and vl vr)
+    -- | current output.
+    let predTrueSoFar? := Circuit.var true (Sum.inl (Width.n.mk 0))
+    let predTrueNow? := (Circuit.inr predicateAtBit)
+    Circuit.and predTrueSoFar? predTrueNow?
+  nextStateCircuits :=
+    -- | next state, which is the same as the current output,
+    -- since if we produce a `0`, we want to forever produce zeroes,
+    -- and if we produce a `1`, we want to see the next bit.
+    let predTrueSoFar? := Circuit.var true (Sum.inl (Width.n.mk 0))
+    let predTrueNow? := (Circuit.inr predicateAtBit)
+    CircuitProd.ofWidth1 <| Circuit.and predTrueSoFar? predTrueNow?
 
+def and' : FSM (Fin 2) :=
+  let vl := Circuit.var true 0
+  let vr := Circuit.var true 1
+  mkBinaryPredicate (Circuit.and vl vr)
 
-@[simp] lemma eval_and (xs : BitStreamProd (Fin 2)) :
-    and.eval xs = (xs 0) &&& (xs 1) := by -- this is wrong, needs to consider the whole stream
-  unfold and §
-  ext i
-  induction i generalizing xs
-  case zero =>
-    simp [eval, Circuit.widthOne_sum.inj]
-  case succ i ih =>
-    simp [eval.next]
-    specialize ih xs.tails
-    simp at ih
-    simp [← ih]
+def or' : FSM (Fin 2) :=
+  let vl := Circuit.var true 0
+  let vr := Circuit.var true 1
+  mkBinaryPredicate (Circuit.or vl vr)
