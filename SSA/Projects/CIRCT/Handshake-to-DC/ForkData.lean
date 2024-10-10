@@ -153,7 +153,6 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
         rw [this]; unfold Stream'.get
         rw [tail_iterate']
       · simp; rw [corec₂_corec2]
-        rw [corec₂_corec1]
         sorry
   · apply EqIsBisim
 
@@ -177,16 +176,6 @@ def IsBisim' (R' : Stream α → Stream α → Prop) : Prop :=
     ∧ a.get n = b.get m
     ∧ (∀ i < n, a.get i = none)
     ∧ (∀ j < m, b.get j = none)
-
-def concrete_bisim' (f1 f2 : Stream α → (Option α × Stream α)) (s : Stream α) : Prop :=
-    match s 0 with
-    | some x => sorry
-      -- (f1 s).1 = some ∨ ∃ n : alwaysNoneUntil n ∧ (f1 s ).n = some
-      -- ∧ concrete_bisim' f1 f2 s.tail
-      -- sorry
-    | none => sorry
-    -- (f1 s).1 = none ∧ (f2)
-
 
 theorem corec₂_eq_corec_of_corec₂ (streamInt: DC.ValueStream Int) :
     (corec₂ streamInt fun x => (x 0, x 0, x.tail)).1 ≈
@@ -217,15 +206,9 @@ theorem corec₂_eq_corec_of_corec₂ (streamInt: DC.ValueStream Int) :
   unfold Bisim
   simp
   exists Eq
-  sorry
-
-
-  -- apply corec_eq_corec_of (· ≈ ·)
-  -- · sorry
-  -- · sorry
-  -- · sorry
-
-
+  and_intros
+  · sorry
+  · sorry
 
 
 
