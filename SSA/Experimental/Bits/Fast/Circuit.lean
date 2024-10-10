@@ -548,7 +548,7 @@ theorem card_varsFinset_assignVars_lt [DecidableEq α] [DecidableEq β]
           use ha'
           simp only [mem_varsFinset.1 ha', dite_true]
           split at hb₂
-          · simpa [*, eq_comm] using hb₂
+          · simp_all
           · simp at hb₂
    _ ≤ _ := Finset.card_image_le
 
