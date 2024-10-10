@@ -3,7 +3,7 @@ import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
 
-section gsubhofhnegatible_proof
+section gsubhofhnegatiblehinseltpoison_proof
 theorem t0_thm (x : BitVec 8) : x - 214#8 = x + 42#8 := sorry
 
 theorem t2_thm (x x_1 : BitVec 8) :
@@ -33,8 +33,6 @@ theorem negate_ashr_thm (x x_1 : BitVec 8) : x_1 - x.sshiftRight 7 = x >>> 7 + x
 theorem negate_lshr_thm (x x_1 : BitVec 8) : x_1 - x >>> 7 = x.sshiftRight 7 + x_1 := sorry
 
 theorem negation_of_increment_via_or_with_no_common_bits_set_thm (x x_1 : BitVec 8) : x_1 - (x <<< 1 ||| 1#8) = x_1 + (x <<< 1 ^^^ 255#8) := sorry
-
-theorem negation_of_increment_via_or_disjoint_thm (x x_1 : BitVec 8) : x_1 - (x ||| 1#8) = x_1 + (x ^^^ 255#8) := sorry
 
 theorem negate_add_with_single_negatible_operand_thm (x : BitVec 8) : 214#8 + -x = 214#8 - x := sorry
 

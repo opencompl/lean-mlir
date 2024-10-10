@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhorhandhxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem sub_to_xor_proof : sub_to_xor_before ⊑ sub_to_xor_after := by
   intros
   try simp
   ---BEGIN sub_to_xor
-  apply sub_to_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_xor
 
 
@@ -68,7 +68,7 @@ theorem sub_to_xor_or_commuted_proof : sub_to_xor_or_commuted_before ⊑ sub_to_
   intros
   try simp
   ---BEGIN sub_to_xor_or_commuted
-  apply sub_to_xor_or_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_xor_or_commuted
 
 
@@ -98,7 +98,7 @@ theorem sub_to_xor_and_commuted_proof : sub_to_xor_and_commuted_before ⊑ sub_t
   intros
   try simp
   ---BEGIN sub_to_xor_and_commuted
-  apply sub_to_xor_and_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_xor_and_commuted
 
 

@@ -313,8 +313,8 @@ def test19_after := [llvm|
 ^0(%arg76 : i32, %arg77 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %2 = llvm.shl %0, %arg76 : i32
-  %3 = llvm.shl %0, %arg77 : i32
+  %2 = llvm.shl %0, %arg76 overflow<nuw> : i32
+  %3 = llvm.shl %0, %arg77 overflow<nuw> : i32
   %4 = llvm.and %2, %3 : i32
   %5 = llvm.add %4, %2 : i32
   %6 = llvm.add %5, %1 : i32
@@ -353,8 +353,8 @@ def test19_commutative0_after := [llvm|
 ^0(%arg74 : i32, %arg75 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %2 = llvm.shl %0, %arg74 : i32
-  %3 = llvm.shl %0, %arg75 : i32
+  %2 = llvm.shl %0, %arg74 overflow<nuw> : i32
+  %3 = llvm.shl %0, %arg75 overflow<nuw> : i32
   %4 = llvm.and %3, %2 : i32
   %5 = llvm.add %4, %2 : i32
   %6 = llvm.add %5, %1 : i32
@@ -393,8 +393,8 @@ def test19_commutative1_after := [llvm|
 ^0(%arg72 : i32, %arg73 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %2 = llvm.shl %0, %arg72 : i32
-  %3 = llvm.shl %0, %arg73 : i32
+  %2 = llvm.shl %0, %arg72 overflow<nuw> : i32
+  %3 = llvm.shl %0, %arg73 overflow<nuw> : i32
   %4 = llvm.and %2, %3 : i32
   %5 = llvm.add %2, %4 : i32
   %6 = llvm.add %5, %1 : i32
@@ -433,8 +433,8 @@ def test19_commutative2_after := [llvm|
 ^0(%arg70 : i32, %arg71 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %2 = llvm.shl %0, %arg70 : i32
-  %3 = llvm.shl %0, %arg71 : i32
+  %2 = llvm.shl %0, %arg70 overflow<nuw> : i32
+  %3 = llvm.shl %0, %arg71 overflow<nuw> : i32
   %4 = llvm.and %3, %2 : i32
   %5 = llvm.add %2, %4 : i32
   %6 = llvm.add %5, %1 : i32

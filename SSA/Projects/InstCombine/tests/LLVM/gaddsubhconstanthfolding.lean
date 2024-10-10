@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gaddsubhconstanthfolding_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem add_const_add_const_proof : add_const_add_const_before ⊑ add_const_add
   intros
   try simp
   ---BEGIN add_const_add_const
-  apply add_const_add_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_const_add_const
 
 
@@ -72,7 +72,7 @@ theorem add_const_sub_const_proof : add_const_sub_const_before ⊑ add_const_sub
   intros
   try simp
   ---BEGIN add_const_sub_const
-  apply add_const_sub_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_const_sub_const
 
 
@@ -104,7 +104,7 @@ theorem add_const_const_sub_proof : add_const_const_sub_before ⊑ add_const_con
   intros
   try simp
   ---BEGIN add_const_const_sub
-  apply add_const_const_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_const_const_sub
 
 
@@ -114,8 +114,8 @@ def add_nsw_const_const_sub_nsw_before := [llvm|
 ^0(%arg60 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg60, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %2 = llvm.add %arg60, %0 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -123,7 +123,7 @@ def add_nsw_const_const_sub_nsw_after := [llvm|
 {
 ^0(%arg60 : i8):
   %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
-  %1 = llvm.sub %0, %arg60 : i8
+  %1 = llvm.sub %0, %arg60 overflow<nsw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -136,7 +136,7 @@ theorem add_nsw_const_const_sub_nsw_proof : add_nsw_const_const_sub_nsw_before �
   intros
   try simp
   ---BEGIN add_nsw_const_const_sub_nsw
-  apply add_nsw_const_const_sub_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nsw_const_const_sub_nsw
 
 
@@ -146,7 +146,7 @@ def add_nsw_const_const_sub_before := [llvm|
 ^0(%arg59 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg59, %0 : i8
+  %2 = llvm.add %arg59, %0 overflow<nsw> : i8
   %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -168,7 +168,7 @@ theorem add_nsw_const_const_sub_proof : add_nsw_const_const_sub_before ⊑ add_n
   intros
   try simp
   ---BEGIN add_nsw_const_const_sub
-  apply add_nsw_const_const_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nsw_const_const_sub
 
 
@@ -179,7 +179,7 @@ def add_const_const_sub_nsw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
   %2 = llvm.add %arg58, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -200,7 +200,7 @@ theorem add_const_const_sub_nsw_proof : add_const_const_sub_nsw_before ⊑ add_c
   intros
   try simp
   ---BEGIN add_const_const_sub_nsw
-  apply add_const_const_sub_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_const_const_sub_nsw
 
 
@@ -210,8 +210,8 @@ def add_nsw_const_const_sub_nsw_ov_before := [llvm|
 ^0(%arg57 : i8):
   %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg57, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %2 = llvm.add %arg57, %0 overflow<nsw> : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -232,7 +232,7 @@ theorem add_nsw_const_const_sub_nsw_ov_proof : add_nsw_const_const_sub_nsw_ov_be
   intros
   try simp
   ---BEGIN add_nsw_const_const_sub_nsw_ov
-  apply add_nsw_const_const_sub_nsw_ov_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nsw_const_const_sub_nsw_ov
 
 
@@ -242,8 +242,8 @@ def add_nuw_const_const_sub_nuw_before := [llvm|
 ^0(%arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg56, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %2 = llvm.add %arg56, %0 overflow<nuw> : i8
+  %3 = llvm.sub %1, %2 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -251,7 +251,7 @@ def add_nuw_const_const_sub_nuw_after := [llvm|
 {
 ^0(%arg56 : i8):
   %0 = "llvm.mlir.constant"() <{value = -128 : i8}> : () -> i8
-  %1 = llvm.sub %0, %arg56 : i8
+  %1 = llvm.sub %0, %arg56 overflow<nuw> : i8
   "llvm.return"(%1) : (i8) -> ()
 }
 ]
@@ -264,7 +264,7 @@ theorem add_nuw_const_const_sub_nuw_proof : add_nuw_const_const_sub_nuw_before �
   intros
   try simp
   ---BEGIN add_nuw_const_const_sub_nuw
-  apply add_nuw_const_const_sub_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nuw_const_const_sub_nuw
 
 
@@ -274,7 +274,7 @@ def add_nuw_const_const_sub_before := [llvm|
 ^0(%arg55 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
-  %2 = llvm.add %arg55, %0 : i8
+  %2 = llvm.add %arg55, %0 overflow<nuw> : i8
   %3 = llvm.sub %1, %2 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -296,7 +296,7 @@ theorem add_nuw_const_const_sub_proof : add_nuw_const_const_sub_before ⊑ add_n
   intros
   try simp
   ---BEGIN add_nuw_const_const_sub
-  apply add_nuw_const_const_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_nuw_const_const_sub
 
 
@@ -307,7 +307,7 @@ def add_const_const_sub_nuw_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -127 : i8}> : () -> i8
   %2 = llvm.add %arg54, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %3 = llvm.sub %1, %2 overflow<nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -328,7 +328,7 @@ theorem add_const_const_sub_nuw_proof : add_const_const_sub_nuw_before ⊑ add_c
   intros
   try simp
   ---BEGIN add_const_const_sub_nuw
-  apply add_const_const_sub_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END add_const_const_sub_nuw
 
 
@@ -360,7 +360,7 @@ theorem sub_const_add_const_proof : sub_const_add_const_before ⊑ sub_const_add
   intros
   try simp
   ---BEGIN sub_const_add_const
-  apply sub_const_add_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_const_add_const
 
 
@@ -392,7 +392,7 @@ theorem sub_const_sub_const_proof : sub_const_sub_const_before ⊑ sub_const_sub
   intros
   try simp
   ---BEGIN sub_const_sub_const
-  apply sub_const_sub_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_const_sub_const
 
 
@@ -424,7 +424,7 @@ theorem sub_const_const_sub_proof : sub_const_const_sub_before ⊑ sub_const_con
   intros
   try simp
   ---BEGIN sub_const_const_sub
-  apply sub_const_const_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_const_const_sub
 
 
@@ -456,7 +456,7 @@ theorem const_sub_add_const_proof : const_sub_add_const_before ⊑ const_sub_add
   intros
   try simp
   ---BEGIN const_sub_add_const
-  apply const_sub_add_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END const_sub_add_const
 
 
@@ -488,7 +488,7 @@ theorem const_sub_sub_const_proof : const_sub_sub_const_before ⊑ const_sub_sub
   intros
   try simp
   ---BEGIN const_sub_sub_const
-  apply const_sub_sub_const_thm
+  all_goals (try extract_goal ; sorry)
   ---END const_sub_sub_const
 
 
@@ -520,7 +520,7 @@ theorem const_sub_const_sub_proof : const_sub_const_sub_before ⊑ const_sub_con
   intros
   try simp
   ---BEGIN const_sub_const_sub
-  apply const_sub_const_sub_thm
+  all_goals (try extract_goal ; sorry)
   ---END const_sub_const_sub
 
 
@@ -532,7 +532,7 @@ def addsub_combine_constants_before := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 10 : i7}> : () -> i7
   %2 = llvm.add %arg14, %0 : i7
   %3 = llvm.sub %1, %arg15 : i7
-  %4 = llvm.add %2, %3 : i7
+  %4 = llvm.add %2, %3 overflow<nsw> : i7
   "llvm.return"(%4) : (i7) -> ()
 }
 ]
@@ -554,7 +554,7 @@ theorem addsub_combine_constants_proof : addsub_combine_constants_before ⊑ add
   intros
   try simp
   ---BEGIN addsub_combine_constants
-  apply addsub_combine_constants_thm
+  all_goals (try extract_goal ; sorry)
   ---END addsub_combine_constants
 
 
@@ -586,7 +586,7 @@ theorem sub_from_constant_proof : sub_from_constant_before ⊑ sub_from_constant
   intros
   try simp
   ---BEGIN sub_from_constant
-  apply sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant
 
 
@@ -596,8 +596,8 @@ def sub_from_constant_commute_before := [llvm|
 ^0(%arg4 : i5, %arg5 : i5):
   %0 = "llvm.mlir.constant"() <{value = 10 : i5}> : () -> i5
   %1 = llvm.mul %arg5, %arg5 : i5
-  %2 = llvm.sub %0, %arg4 : i5
-  %3 = llvm.add %1, %2 : i5
+  %2 = llvm.sub %0, %arg4 overflow<nsw> : i5
+  %3 = llvm.add %1, %2 overflow<nsw> : i5
   "llvm.return"(%3) : (i5) -> ()
 }
 ]
@@ -620,7 +620,7 @@ theorem sub_from_constant_commute_proof : sub_from_constant_commute_before ⊑ s
   intros
   try simp
   ---BEGIN sub_from_constant_commute
-  apply sub_from_constant_commute_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_commute
 
 

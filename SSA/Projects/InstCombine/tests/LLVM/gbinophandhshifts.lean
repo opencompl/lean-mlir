@@ -127,6 +127,44 @@ theorem shl_add_add_proof : shl_add_add_before ⊑ shl_add_add_after := by
 
 
 
+def shl_add_add_fail_before := [llvm|
+{
+^0(%arg166 : i8, %arg167 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
+  %2 = llvm.lshr %arg166, %0 : i8
+  %3 = llvm.lshr %arg167, %0 : i8
+  %4 = llvm.add %3, %1 : i8
+  %5 = llvm.add %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def shl_add_add_fail_after := [llvm|
+{
+^0(%arg166 : i8, %arg167 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
+  %2 = llvm.lshr %arg166, %0 : i8
+  %3 = llvm.lshr %arg167, %0 : i8
+  %4 = llvm.add %3, %1 overflow<nsw,nuw> : i8
+  %5 = llvm.add %2, %4 overflow<nuw> : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem shl_add_add_fail_proof : shl_add_add_fail_before ⊑ shl_add_add_fail_after := by
+  unfold shl_add_add_fail_before shl_add_add_fail_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl_add_add_fail
+  all_goals (try extract_goal ; sorry)
+  ---END shl_add_add_fail
+
+
+
 def shl_and_xor_before := [llvm|
 {
 ^0(%arg158 : i8, %arg159 : i8):
@@ -519,6 +557,158 @@ theorem shl_add_and_proof : shl_add_and_before ⊑ shl_add_and_after := by
   ---BEGIN shl_add_and
   all_goals (try extract_goal ; sorry)
   ---END shl_add_and
+
+
+
+def lshr_and_add_fail_before := [llvm|
+{
+^0(%arg94 : i8, %arg95 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg94, %0 : i8
+  %3 = llvm.lshr %arg95, %0 : i8
+  %4 = llvm.and %3, %1 : i8
+  %5 = llvm.add %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def lshr_and_add_fail_after := [llvm|
+{
+^0(%arg94 : i8, %arg95 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg94, %0 : i8
+  %3 = llvm.lshr %arg95, %0 : i8
+  %4 = llvm.and %3, %1 : i8
+  %5 = llvm.add %2, %4 overflow<nuw> : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem lshr_and_add_fail_proof : lshr_and_add_fail_before ⊑ lshr_and_add_fail_after := by
+  unfold lshr_and_add_fail_before lshr_and_add_fail_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_and_add_fail
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_and_add_fail
+
+
+
+def lshr_add_or_fail_before := [llvm|
+{
+^0(%arg92 : i8, %arg93 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg92, %0 : i8
+  %3 = llvm.lshr %arg93, %0 : i8
+  %4 = llvm.add %3, %1 : i8
+  %5 = llvm.or %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def lshr_add_or_fail_after := [llvm|
+{
+^0(%arg92 : i8, %arg93 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg92, %0 : i8
+  %3 = llvm.lshr %arg93, %0 : i8
+  %4 = llvm.add %3, %1 overflow<nuw> : i8
+  %5 = llvm.or %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem lshr_add_or_fail_proof : lshr_add_or_fail_before ⊑ lshr_add_or_fail_after := by
+  unfold lshr_add_or_fail_before lshr_add_or_fail_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_add_or_fail
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_add_or_fail
+
+
+
+def lshr_add_xor_fail_before := [llvm|
+{
+^0(%arg90 : i8, %arg91 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg90, %0 : i8
+  %3 = llvm.lshr %arg91, %0 : i8
+  %4 = llvm.add %3, %1 : i8
+  %5 = llvm.xor %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def lshr_add_xor_fail_after := [llvm|
+{
+^0(%arg90 : i8, %arg91 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.lshr %arg90, %0 : i8
+  %3 = llvm.lshr %arg91, %0 : i8
+  %4 = llvm.add %3, %1 overflow<nuw> : i8
+  %5 = llvm.xor %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem lshr_add_xor_fail_proof : lshr_add_xor_fail_before ⊑ lshr_add_xor_fail_after := by
+  unfold lshr_add_xor_fail_before lshr_add_xor_fail_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_add_xor_fail
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_add_xor_fail
+
+
+
+def shl_add_and_fail_mismatch_shift_before := [llvm|
+{
+^0(%arg84 : i8, %arg85 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.shl %arg84, %0 : i8
+  %3 = llvm.lshr %arg85, %0 : i8
+  %4 = llvm.add %3, %1 : i8
+  %5 = llvm.and %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def shl_add_and_fail_mismatch_shift_after := [llvm|
+{
+^0(%arg84 : i8, %arg85 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 123 : i8}> : () -> i8
+  %2 = llvm.shl %arg84, %0 : i8
+  %3 = llvm.lshr %arg85, %0 : i8
+  %4 = llvm.add %3, %1 overflow<nuw> : i8
+  %5 = llvm.and %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem shl_add_and_fail_mismatch_shift_proof : shl_add_and_fail_mismatch_shift_before ⊑ shl_add_and_fail_mismatch_shift_after := by
+  unfold shl_add_and_fail_mismatch_shift_before shl_add_and_fail_mismatch_shift_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl_add_and_fail_mismatch_shift
+  all_goals (try extract_goal ; sorry)
+  ---END shl_add_and_fail_mismatch_shift
 
 
 

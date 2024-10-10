@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gashrhdemand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem srem2_ashr_mask_proof : srem2_ashr_mask_before ⊑ srem2_ashr_mask_after
   intros
   try simp
   ---BEGIN srem2_ashr_mask
-  apply srem2_ashr_mask_thm
+  all_goals (try extract_goal ; sorry)
   ---END srem2_ashr_mask
 
 

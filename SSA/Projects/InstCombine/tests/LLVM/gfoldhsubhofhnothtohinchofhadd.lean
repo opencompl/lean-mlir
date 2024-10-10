@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gfoldhsubhofhnothtohinchofhadd_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem p0_scalar_proof : p0_scalar_before ⊑ p0_scalar_after := by
   intros
   try simp
   ---BEGIN p0_scalar
-  all_goals (try extract_goal ; sorry)
+  apply p0_scalar_thm
   ---END p0_scalar
 
 

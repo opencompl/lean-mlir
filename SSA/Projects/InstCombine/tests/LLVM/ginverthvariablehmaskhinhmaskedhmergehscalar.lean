@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.ginverthvariablehmaskhinhmaskedhmergehscalar_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem scalar_proof : scalar_before ⊑ scalar_after := by
   intros
   try simp
   ---BEGIN scalar
-  all_goals (try extract_goal ; sorry)
+  apply scalar_thm
   ---END scalar
 
 
@@ -74,7 +74,7 @@ theorem in_constant_varx_mone_invmask_proof : in_constant_varx_mone_invmask_befo
   intros
   try simp
   ---BEGIN in_constant_varx_mone_invmask
-  all_goals (try extract_goal ; sorry)
+  apply in_constant_varx_mone_invmask_thm
   ---END in_constant_varx_mone_invmask
 
 
@@ -110,7 +110,7 @@ theorem in_constant_varx_6_invmask_proof : in_constant_varx_6_invmask_before ⊑
   intros
   try simp
   ---BEGIN in_constant_varx_6_invmask
-  all_goals (try extract_goal ; sorry)
+  apply in_constant_varx_6_invmask_thm
   ---END in_constant_varx_6_invmask
 
 
@@ -144,7 +144,7 @@ theorem in_constant_mone_vary_invmask_proof : in_constant_mone_vary_invmask_befo
   intros
   try simp
   ---BEGIN in_constant_mone_vary_invmask
-  all_goals (try extract_goal ; sorry)
+  apply in_constant_mone_vary_invmask_thm
   ---END in_constant_mone_vary_invmask
 
 
@@ -180,7 +180,7 @@ theorem in_constant_6_vary_invmask_proof : in_constant_6_vary_invmask_before ⊑
   intros
   try simp
   ---BEGIN in_constant_6_vary_invmask
-  all_goals (try extract_goal ; sorry)
+  apply in_constant_6_vary_invmask_thm
   ---END in_constant_6_vary_invmask
 
 
@@ -214,7 +214,7 @@ theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   intros
   try simp
   ---BEGIN c_1_0_0
-  all_goals (try extract_goal ; sorry)
+  apply c_1_0_0_thm
   ---END c_1_0_0
 
 
@@ -248,7 +248,7 @@ theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   intros
   try simp
   ---BEGIN c_0_1_0
-  all_goals (try extract_goal ; sorry)
+  apply c_0_1_0_thm
   ---END c_0_1_0
 
 
@@ -282,7 +282,7 @@ theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   intros
   try simp
   ---BEGIN c_1_1_0
-  all_goals (try extract_goal ; sorry)
+  apply c_1_1_0_thm
   ---END c_1_1_0
 
 
@@ -318,7 +318,7 @@ theorem commutativity_constant_varx_6_invmask_proof : commutativity_constant_var
   intros
   try simp
   ---BEGIN commutativity_constant_varx_6_invmask
-  all_goals (try extract_goal ; sorry)
+  apply commutativity_constant_varx_6_invmask_thm
   ---END commutativity_constant_varx_6_invmask
 
 
@@ -354,7 +354,7 @@ theorem commutativity_constant_6_vary_invmask_proof : commutativity_constant_6_v
   intros
   try simp
   ---BEGIN commutativity_constant_6_vary_invmask
-  all_goals (try extract_goal ; sorry)
+  apply commutativity_constant_6_vary_invmask_thm
   ---END commutativity_constant_6_vary_invmask
 
 

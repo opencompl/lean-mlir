@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gicmphmul_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem mul_of_pow2s_proof : mul_of_pow2s_before ⊑ mul_of_pow2s_after := by
   intros
   try simp
   ---BEGIN mul_of_pow2s
-  all_goals (try extract_goal ; sorry)
+  apply mul_of_pow2s_thm
   ---END mul_of_pow2s
 
 

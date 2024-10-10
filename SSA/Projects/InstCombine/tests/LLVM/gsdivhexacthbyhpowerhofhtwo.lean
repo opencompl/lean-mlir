@@ -47,7 +47,7 @@ def shl1_nsw_before := [llvm|
 {
 ^0(%arg14 : i8, %arg15 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg15 : i8
+  %1 = llvm.shl %0, %arg15 overflow<nsw> : i8
   %2 = llvm.sdiv %arg14, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -70,6 +70,38 @@ theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   ---BEGIN shl1_nsw
   all_goals (try extract_goal ; sorry)
   ---END shl1_nsw
+
+
+
+def shl1_nsw_not_exact_before := [llvm|
+{
+^0(%arg10 : i8, %arg11 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg11 overflow<nsw> : i8
+  %2 = llvm.sdiv %arg10, %1 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+def shl1_nsw_not_exact_after := [llvm|
+{
+^0(%arg10 : i8, %arg11 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg11 overflow<nsw,nuw> : i8
+  %2 = llvm.sdiv %arg10, %1 : i8
+  "llvm.return"(%2) : (i8) -> ()
+}
+]
+theorem shl1_nsw_not_exact_proof : shl1_nsw_not_exact_before ⊑ shl1_nsw_not_exact_after := by
+  unfold shl1_nsw_not_exact_before shl1_nsw_not_exact_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl1_nsw_not_exact
+  all_goals (try extract_goal ; sorry)
+  ---END shl1_nsw_not_exact
 
 
 
