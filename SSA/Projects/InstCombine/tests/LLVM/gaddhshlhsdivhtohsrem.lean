@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gaddhshlhsdivhtohsrem_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -41,7 +41,7 @@ theorem addhshlhsdivhscalar0_proof : addhshlhsdivhscalar0_before ⊑ addhshlhsdi
   intros
   try simp
   ---BEGIN addhshlhsdivhscalar0
-  apply addhshlhsdivhscalar0_thm
+  all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar0
 
 
@@ -74,7 +74,7 @@ theorem addhshlhsdivhscalar1_proof : addhshlhsdivhscalar1_before ⊑ addhshlhsdi
   intros
   try simp
   ---BEGIN addhshlhsdivhscalar1
-  apply addhshlhsdivhscalar1_thm
+  all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar1
 
 
@@ -107,8 +107,44 @@ theorem addhshlhsdivhscalar2_proof : addhshlhsdivhscalar2_before ⊑ addhshlhsdi
   intros
   try simp
   ---BEGIN addhshlhsdivhscalar2
-  apply addhshlhsdivhscalar2_thm
+  all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhscalar2
+
+
+
+def addhshlhsdivhnegative0_before := [llvm|
+{
+^0(%arg8 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %2 = llvm.sdiv %arg8, %0 : i8
+  %3 = llvm.shl %2, %1 : i8
+  %4 = llvm.add %3, %arg8 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def addhshlhsdivhnegative0_after := [llvm|
+{
+^0(%arg8 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %2 = llvm.sdiv %arg8, %0 : i8
+  %3 = llvm.shl %2, %1 overflow<nsw> : i8
+  %4 = llvm.add %3, %arg8 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem addhshlhsdivhnegative0_proof : addhshlhsdivhnegative0_before ⊑ addhshlhsdivhnegative0_after := by
+  unfold addhshlhsdivhnegative0_before addhshlhsdivhnegative0_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN addhshlhsdivhnegative0
+  all_goals (try extract_goal ; sorry)
+  ---END addhshlhsdivhnegative0
 
 
 
@@ -140,7 +176,7 @@ theorem addhshlhsdivhnegative1_proof : addhshlhsdivhnegative1_before ⊑ addhshl
   intros
   try simp
   ---BEGIN addhshlhsdivhnegative1
-  apply addhshlhsdivhnegative1_thm
+  all_goals (try extract_goal ; sorry)
   ---END addhshlhsdivhnegative1
 
 

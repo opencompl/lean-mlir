@@ -4004,7 +4004,7 @@ def canonicalize_logic_first_or0_nsw_before := [llvm|
 ^0(%arg39 : i32):
   %0 = "llvm.mlir.constant"() <{value = 112 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
-  %2 = llvm.add %arg39, %0 : i32
+  %2 = llvm.add %arg39, %0 overflow<nsw> : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -4015,7 +4015,7 @@ def canonicalize_logic_first_or0_nsw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 112 : i32}> : () -> i32
   %2 = llvm.or %arg39, %0 : i32
-  %3 = llvm.add %2, %1 : i32
+  %3 = llvm.add %2, %1 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -4038,7 +4038,7 @@ def canonicalize_logic_first_or0_nswnuw_before := [llvm|
 ^0(%arg38 : i32):
   %0 = "llvm.mlir.constant"() <{value = 112 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
-  %2 = llvm.add %arg38, %0 : i32
+  %2 = llvm.add %arg38, %0 overflow<nsw,nuw> : i32
   %3 = llvm.or %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -4049,7 +4049,7 @@ def canonicalize_logic_first_or0_nswnuw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 15 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 112 : i32}> : () -> i32
   %2 = llvm.or %arg38, %0 : i32
-  %3 = llvm.add %2, %1 : i32
+  %3 = llvm.add %2, %1 overflow<nsw,nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -4106,7 +4106,7 @@ def canonicalize_logic_first_and0_nsw_before := [llvm|
 ^0(%arg27 : i8):
   %0 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -10 : i8}> : () -> i8
-  %2 = llvm.add %arg27, %0 : i8
+  %2 = llvm.add %arg27, %0 overflow<nsw> : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -4117,7 +4117,7 @@ def canonicalize_logic_first_and0_nsw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -10 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
   %2 = llvm.and %arg27, %0 : i8
-  %3 = llvm.add %2, %1 : i8
+  %3 = llvm.add %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -4140,7 +4140,7 @@ def canonicalize_logic_first_and0_nswnuw_before := [llvm|
 ^0(%arg26 : i8):
   %0 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = -10 : i8}> : () -> i8
-  %2 = llvm.add %arg26, %0 : i8
+  %2 = llvm.add %arg26, %0 overflow<nsw,nuw> : i8
   %3 = llvm.and %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -4151,7 +4151,7 @@ def canonicalize_logic_first_and0_nswnuw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -10 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 48 : i8}> : () -> i8
   %2 = llvm.and %arg26, %0 : i8
-  %3 = llvm.add %2, %1 : i8
+  %3 = llvm.add %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -4208,7 +4208,7 @@ def canonicalize_logic_first_xor_0_nsw_before := [llvm|
 ^0(%arg16 : i8):
   %0 = "llvm.mlir.constant"() <{value = 96 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
-  %2 = llvm.add %arg16, %0 : i8
+  %2 = llvm.add %arg16, %0 overflow<nsw> : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -4219,7 +4219,7 @@ def canonicalize_logic_first_xor_0_nsw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 96 : i8}> : () -> i8
   %2 = llvm.xor %arg16, %0 : i8
-  %3 = llvm.add %2, %1 : i8
+  %3 = llvm.add %2, %1 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -4242,7 +4242,7 @@ def canonicalize_logic_first_xor_0_nswnuw_before := [llvm|
 ^0(%arg15 : i8):
   %0 = "llvm.mlir.constant"() <{value = 96 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
-  %2 = llvm.add %arg15, %0 : i8
+  %2 = llvm.add %arg15, %0 overflow<nsw,nuw> : i8
   %3 = llvm.xor %2, %1 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -4253,7 +4253,7 @@ def canonicalize_logic_first_xor_0_nswnuw_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 31 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 96 : i8}> : () -> i8
   %2 = llvm.xor %arg15, %0 : i8
-  %3 = llvm.add %2, %1 : i8
+  %3 = llvm.add %2, %1 overflow<nsw,nuw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]

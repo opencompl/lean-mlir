@@ -180,7 +180,7 @@ theorem positive_biggerLshr_lshrexact_proof : positive_biggerLshr_lshrexact_befo
 def positive_samevar_shlnuw_before := [llvm|
 {
 ^0(%arg30 : i32, %arg31 : i32):
-  %0 = llvm.shl %arg30, %arg31 : i32
+  %0 = llvm.shl %arg30, %arg31 overflow<nuw> : i32
   %1 = llvm.lshr %0, %arg31 : i32
   "llvm.return"(%1) : (i32) -> ()
 }
@@ -209,7 +209,7 @@ def positive_sameconst_shlnuw_before := [llvm|
 {
 ^0(%arg29 : i32):
   %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = llvm.shl %arg29, %0 : i32
+  %1 = llvm.shl %arg29, %0 overflow<nuw> : i32
   %2 = llvm.lshr %1, %0 : i32
   "llvm.return"(%2) : (i32) -> ()
 }
@@ -239,7 +239,7 @@ def positive_biggerShl_shlnuw_before := [llvm|
 ^0(%arg28 : i32):
   %0 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %2 = llvm.shl %arg28, %0 : i32
+  %2 = llvm.shl %arg28, %0 overflow<nuw> : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -248,7 +248,7 @@ def positive_biggerShl_shlnuw_after := [llvm|
 {
 ^0(%arg28 : i32):
   %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
-  %1 = llvm.shl %arg28, %0 : i32
+  %1 = llvm.shl %arg28, %0 overflow<nsw,nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -271,7 +271,7 @@ def positive_biggerLshr_shlnuw_before := [llvm|
 ^0(%arg27 : i32):
   %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %2 = llvm.shl %arg27, %0 : i32
+  %2 = llvm.shl %arg27, %0 overflow<nuw> : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -303,7 +303,7 @@ def positive_biggerLshr_shlnuw_lshrexact_before := [llvm|
 ^0(%arg26 : i32):
   %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 10 : i32}> : () -> i32
-  %2 = llvm.shl %arg26, %0 : i32
+  %2 = llvm.shl %arg26, %0 overflow<nuw> : i32
   %3 = llvm.lshr %2, %1 : i32
   "llvm.return"(%3) : (i32) -> ()
 }

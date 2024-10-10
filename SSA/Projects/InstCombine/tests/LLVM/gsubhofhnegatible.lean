@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhofhnegatible_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -70,7 +70,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   intros
   try simp
   ---BEGIN t2
-  apply t2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t2
 
 
@@ -132,7 +132,7 @@ theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg
   intros
   try simp
   ---BEGIN neg_of_sub_from_constant
-  apply neg_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END neg_of_sub_from_constant
 
 
@@ -164,7 +164,7 @@ theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_
   intros
   try simp
   ---BEGIN sub_from_constant_of_sub_from_constant
-  apply sub_from_constant_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_sub_from_constant
 
 
@@ -196,7 +196,7 @@ theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_
   intros
   try simp
   ---BEGIN sub_from_variable_of_sub_from_constant
-  apply sub_from_variable_of_sub_from_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_variable_of_sub_from_constant
 
 
@@ -228,7 +228,7 @@ theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg
   intros
   try simp
   ---BEGIN neg_of_add_with_constant
-  apply neg_of_add_with_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END neg_of_add_with_constant
 
 
@@ -260,7 +260,7 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
   intros
   try simp
   ---BEGIN sub_from_constant_of_add_with_constant
-  apply sub_from_constant_of_add_with_constant_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_from_constant_of_add_with_constant
 
 
@@ -294,7 +294,7 @@ theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   intros
   try simp
   ---BEGIN negate_xor
-  apply negate_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_xor
 
 
@@ -330,7 +330,7 @@ theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after :=
   intros
   try simp
   ---BEGIN negate_shl_xor
-  apply negate_shl_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_shl_xor
 
 
@@ -362,7 +362,7 @@ theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   intros
   try simp
   ---BEGIN negate_sdiv
-  apply negate_sdiv_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_sdiv
 
 
@@ -394,7 +394,7 @@ theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   intros
   try simp
   ---BEGIN negate_ashr
-  apply negate_ashr_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_ashr
 
 
@@ -426,7 +426,7 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   intros
   try simp
   ---BEGIN negate_lshr
-  apply negate_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_lshr
 
 
@@ -461,7 +461,7 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of
   intros
   try simp
   ---BEGIN negation_of_increment_via_or_with_no_common_bits_set
-  apply negation_of_increment_via_or_with_no_common_bits_set_thm
+  all_goals (try extract_goal ; sorry)
   ---END negation_of_increment_via_or_with_no_common_bits_set
 
 
@@ -493,7 +493,7 @@ theorem negation_of_increment_via_or_disjoint_proof : negation_of_increment_via_
   intros
   try simp
   ---BEGIN negation_of_increment_via_or_disjoint
-  apply negation_of_increment_via_or_disjoint_thm
+  all_goals (try extract_goal ; sorry)
   ---END negation_of_increment_via_or_disjoint
 
 
@@ -525,7 +525,7 @@ theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_
   intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand
-  apply negate_add_with_single_negatible_operand_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand
 
 
@@ -559,7 +559,7 @@ theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_
   intros
   try simp
   ---BEGIN negate_add_with_single_negatible_operand_depth2
-  apply negate_add_with_single_negatible_operand_depth2_thm
+  all_goals (try extract_goal ; sorry)
   ---END negate_add_with_single_negatible_operand_depth2
 
 

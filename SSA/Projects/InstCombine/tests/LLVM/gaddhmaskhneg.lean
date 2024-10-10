@@ -67,7 +67,7 @@ def dec_mask_commute_neg_i32_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %2 = llvm.sdiv %0, %arg6 : i32
-  %3 = llvm.add %2, %1 : i32
+  %3 = llvm.add %2, %1 overflow<nsw> : i32
   %4 = llvm.xor %2, %1 : i32
   %5 = llvm.and %3, %4 : i32
   "llvm.return"(%5) : (i32) -> ()

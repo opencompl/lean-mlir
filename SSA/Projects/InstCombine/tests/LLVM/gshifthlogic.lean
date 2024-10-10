@@ -70,7 +70,7 @@ def shl_or_after := [llvm|
   %2 = "llvm.mlir.constant"() <{value = 7 : i16}> : () -> i16
   %3 = llvm.srem %arg68, %0 : i16
   %4 = llvm.shl %arg67, %1 : i16
-  %5 = llvm.shl %3, %2 : i16
+  %5 = llvm.shl %3, %2 overflow<nsw> : i16
   %6 = llvm.or %4, %5 : i16
   "llvm.return"(%6) : (i16) -> ()
 }
@@ -210,7 +210,7 @@ def lshr_mul_before := [llvm|
 ^0(%arg35 : i64):
   %0 = "llvm.mlir.constant"() <{value = 52 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 2 : i64}> : () -> i64
-  %2 = llvm.mul %arg35, %0 : i64
+  %2 = llvm.mul %arg35, %0 overflow<nuw> : i64
   %3 = llvm.lshr %2, %1 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -219,7 +219,7 @@ def lshr_mul_after := [llvm|
 {
 ^0(%arg35 : i64):
   %0 = "llvm.mlir.constant"() <{value = 13 : i64}> : () -> i64
-  %1 = llvm.mul %arg35, %0 : i64
+  %1 = llvm.mul %arg35, %0 overflow<nsw,nuw> : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]
@@ -242,7 +242,7 @@ def lshr_mul_nuw_nsw_before := [llvm|
 ^0(%arg34 : i64):
   %0 = "llvm.mlir.constant"() <{value = 52 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 2 : i64}> : () -> i64
-  %2 = llvm.mul %arg34, %0 : i64
+  %2 = llvm.mul %arg34, %0 overflow<nsw,nuw> : i64
   %3 = llvm.lshr %2, %1 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -251,7 +251,7 @@ def lshr_mul_nuw_nsw_after := [llvm|
 {
 ^0(%arg34 : i64):
   %0 = "llvm.mlir.constant"() <{value = 13 : i64}> : () -> i64
-  %1 = llvm.mul %arg34, %0 : i64
+  %1 = llvm.mul %arg34, %0 overflow<nsw,nuw> : i64
   "llvm.return"(%1) : (i64) -> ()
 }
 ]

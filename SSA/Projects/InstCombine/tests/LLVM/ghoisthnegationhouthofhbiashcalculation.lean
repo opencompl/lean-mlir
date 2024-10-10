@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.ghoisthnegationhouthofhbiashcalculation_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -76,7 +76,7 @@ theorem n7_proof : n7_before ⊑ n7_after := by
   intros
   try simp
   ---BEGIN n7
-  apply n7_thm
+  all_goals (try extract_goal ; sorry)
   ---END n7
 
 

@@ -109,6 +109,40 @@ theorem shl_sub_i64_proof : shl_sub_i64_before ⊑ shl_sub_i64_after := by
 
 
 
+def shl_bad_sub_i32_before := [llvm|
+{
+^0(%arg12 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg12 : i32
+  %3 = llvm.shl %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def shl_bad_sub_i32_after := [llvm|
+{
+^0(%arg12 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+  %2 = llvm.sub %0, %arg12 : i32
+  %3 = llvm.shl %1, %2 overflow<nuw> : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem shl_bad_sub_i32_proof : shl_bad_sub_i32_before ⊑ shl_bad_sub_i32_after := by
+  unfold shl_bad_sub_i32_before shl_bad_sub_i32_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl_bad_sub_i32
+  all_goals (try extract_goal ; sorry)
+  ---END shl_bad_sub_i32
+
+
+
 def shl_bad_sub2_i32_before := [llvm|
 {
 ^0(%arg10 : i32):
@@ -125,7 +159,7 @@ def shl_bad_sub2_i32_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -31 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %2 = llvm.add %arg10, %0 : i32
-  %3 = llvm.shl %1, %2 : i32
+  %3 = llvm.shl %1, %2 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -159,7 +193,7 @@ def bad_shl2_sub_i32_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -31 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %2 = llvm.add %arg9, %0 : i32
-  %3 = llvm.shl %1, %2 : i32
+  %3 = llvm.shl %1, %2 overflow<nuw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -174,6 +208,74 @@ theorem bad_shl2_sub_i32_proof : bad_shl2_sub_i32_before ⊑ bad_shl2_sub_i32_af
   ---BEGIN bad_shl2_sub_i32
   all_goals (try extract_goal ; sorry)
   ---END bad_shl2_sub_i32
+
+
+
+def shl_bad_sub_i8_before := [llvm|
+{
+^0(%arg8 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %2 = llvm.sub %0, %arg8 : i8
+  %3 = llvm.shl %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def shl_bad_sub_i8_after := [llvm|
+{
+^0(%arg8 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %2 = llvm.sub %0, %arg8 : i8
+  %3 = llvm.shl %1, %2 overflow<nuw> : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem shl_bad_sub_i8_proof : shl_bad_sub_i8_before ⊑ shl_bad_sub_i8_after := by
+  unfold shl_bad_sub_i8_before shl_bad_sub_i8_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl_bad_sub_i8
+  all_goals (try extract_goal ; sorry)
+  ---END shl_bad_sub_i8
+
+
+
+def shl_bad_sub_i64_before := [llvm|
+{
+^0(%arg7 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 67 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %2 = llvm.sub %0, %arg7 : i64
+  %3 = llvm.shl %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def shl_bad_sub_i64_after := [llvm|
+{
+^0(%arg7 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 67 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
+  %2 = llvm.sub %0, %arg7 : i64
+  %3 = llvm.shl %1, %2 overflow<nuw> : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem shl_bad_sub_i64_proof : shl_bad_sub_i64_before ⊑ shl_bad_sub_i64_after := by
+  unfold shl_bad_sub_i64_before shl_bad_sub_i64_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN shl_bad_sub_i64
+  all_goals (try extract_goal ; sorry)
+  ---END shl_bad_sub_i64
 
 
 

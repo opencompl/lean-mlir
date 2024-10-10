@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gexact_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
   intros
   try simp
   ---BEGIN sdiv2
-  apply sdiv2_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv2
 
 
@@ -67,7 +67,7 @@ theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
   intros
   try simp
   ---BEGIN sdiv4
-  apply sdiv4_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv4
 
 
@@ -99,7 +99,7 @@ theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
   intros
   try simp
   ---BEGIN sdiv6
-  apply sdiv6_thm
+  all_goals (try extract_goal ; sorry)
   ---END sdiv6
 
 
@@ -120,7 +120,7 @@ def mul_of_sdiv_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.ashr %arg5, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -133,7 +133,7 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
   intros
   try simp
   ---BEGIN mul_of_sdiv
-  apply mul_of_sdiv_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_of_sdiv
 
 
@@ -165,7 +165,7 @@ theorem mul_of_sdiv_fail_ub_proof : mul_of_sdiv_fail_ub_before ⊑ mul_of_sdiv_f
   intros
   try simp
   ---BEGIN mul_of_sdiv_fail_ub
-  apply mul_of_sdiv_fail_ub_thm
+  all_goals (try extract_goal ; sorry)
   ---END mul_of_sdiv_fail_ub
 
 

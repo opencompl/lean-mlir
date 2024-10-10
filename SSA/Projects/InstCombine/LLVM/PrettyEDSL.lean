@@ -1,5 +1,6 @@
 import SSA.Core.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
+import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
 open Lean
 
 namespace MLIR.EDSL
@@ -10,19 +11,20 @@ syntax "llvm.copy"    : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op
 syntax "llvm.not"     : MLIR.Pretty.uniform_op
 
-syntax "llvm.add"     : MLIR.Pretty.uniform_op
 syntax "llvm.and"     : MLIR.Pretty.uniform_op
 syntax "llvm.ashr"    : MLIR.Pretty.uniform_op
-syntax "llvm.lshr"    : MLIR.Pretty.uniform_op
-syntax "llvm.mul"     : MLIR.Pretty.uniform_op
 syntax "llvm.or"      : MLIR.Pretty.uniform_op
 syntax "llvm.sdiv"    : MLIR.Pretty.uniform_op
 syntax "llvm.shl"     : MLIR.Pretty.uniform_op
 syntax "llvm.srem"    : MLIR.Pretty.uniform_op
-syntax "llvm.sub"     : MLIR.Pretty.uniform_op
 syntax "llvm.udiv"    : MLIR.Pretty.uniform_op
 syntax "llvm.urem"    : MLIR.Pretty.uniform_op
 syntax "llvm.xor"     : MLIR.Pretty.uniform_op
+
+syntax "llvm.add"     : MLIR.Pretty.overflow_op
+syntax "llvm.lshr"    : MLIR.Pretty.overflow_op
+syntax "llvm.mul"     : MLIR.Pretty.overflow_op
+syntax "llvm.sub"     : MLIR.Pretty.overflow_op
 
 declare_syntax_cat InstCombine.cmp_op_name
 syntax "llvm.icmp.eq"  : InstCombine.cmp_op_name
@@ -131,6 +133,16 @@ private def pretty_select (w : Nat) :=
     ^bb0(%arg0: i1, %arg1 : _):
       %0 = llvm.select %arg0, %arg1, %arg1
       llvm.return %0
+  }]
+
+private def pretty_test_overflow :=
+  [llvm ()|{
+  ^bb0(%arg0: i32):
+    %0 = llvm.mlir.constant 8 : i32
+    %1 = llvm.add %0, %arg0 overflow<nsw> : i32
+    %2 = llvm.mul %1, %arg0 : i32
+    %3 = llvm.not %2 : i32
+    llvm.return %3 : i32
   }]
 
 example : pretty_test = prettier_test_generic 32 := by

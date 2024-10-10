@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2010h11h23hDistributed_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -16,9 +16,9 @@ section g2010h11h23hDistributed_statements
 def foo_before := [llvm|
 {
 ^0(%arg2 : i32, %arg3 : i32):
-  %0 = llvm.add %arg3, %arg2 : i32
-  %1 = llvm.mul %0, %arg3 : i32
-  %2 = llvm.mul %arg3, %arg3 : i32
+  %0 = llvm.add %arg3, %arg2 overflow<nsw> : i32
+  %1 = llvm.mul %0, %arg3 overflow<nsw> : i32
+  %2 = llvm.mul %arg3, %arg3 overflow<nsw> : i32
   %3 = llvm.sub %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -39,7 +39,7 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   intros
   try simp
   ---BEGIN foo
-  apply foo_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo
 
 

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gshlhbo_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -47,8 +47,46 @@ theorem lshr_add_proof : lshr_add_before ⊑ lshr_add_after := by
   intros
   try simp
   ---BEGIN lshr_add
-  apply lshr_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_add
+
+
+
+def lshr_sub_before := [llvm|
+{
+^0(%arg77 : i8, %arg78 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %2 = llvm.srem %arg77, %0 : i8
+  %3 = llvm.lshr %arg78, %1 : i8
+  %4 = llvm.sub %2, %3 : i8
+  %5 = llvm.shl %4, %1 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def lshr_sub_after := [llvm|
+{
+^0(%arg77 : i8, %arg78 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %2 = llvm.srem %arg77, %0 : i8
+  %3 = llvm.lshr %arg78, %1 : i8
+  %4 = llvm.sub %2, %3 overflow<nsw> : i8
+  %5 = llvm.shl %4, %1 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+theorem lshr_sub_proof : lshr_sub_before ⊑ lshr_sub_after := by
+  unfold lshr_sub_before lshr_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_sub
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_sub
 
 
 
@@ -84,7 +122,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   intros
   try simp
   ---BEGIN lshr_and
-  apply lshr_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and
 
 
@@ -123,7 +161,7 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   intros
   try simp
   ---BEGIN lshr_or
-  apply lshr_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_or
 
 
@@ -162,7 +200,7 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   intros
   try simp
   ---BEGIN lshr_xor
-  apply lshr_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_xor
 
 
@@ -203,8 +241,50 @@ theorem lshr_and_add_proof : lshr_and_add_before ⊑ lshr_and_add_after := by
   intros
   try simp
   ---BEGIN lshr_and_add
-  apply lshr_and_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and_add
+
+
+
+def lshr_and_sub_before := [llvm|
+{
+^0(%arg53 : i8, %arg54 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %2 = "llvm.mlir.constant"() <{value = 13 : i8}> : () -> i8
+  %3 = llvm.srem %arg53, %0 : i8
+  %4 = llvm.lshr %arg54, %1 : i8
+  %5 = llvm.and %4, %2 : i8
+  %6 = llvm.sub %3, %5 : i8
+  %7 = llvm.shl %6, %1 : i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+def lshr_and_sub_after := [llvm|
+{
+^0(%arg53 : i8, %arg54 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 2 : i8}> : () -> i8
+  %2 = "llvm.mlir.constant"() <{value = 13 : i8}> : () -> i8
+  %3 = llvm.srem %arg53, %0 : i8
+  %4 = llvm.lshr %arg54, %1 : i8
+  %5 = llvm.and %4, %2 : i8
+  %6 = llvm.sub %3, %5 overflow<nsw> : i8
+  %7 = llvm.shl %6, %1 : i8
+  "llvm.return"(%7) : (i8) -> ()
+}
+]
+theorem lshr_and_sub_proof : lshr_and_sub_before ⊑ lshr_and_sub_after := by
+  unfold lshr_and_sub_before lshr_and_sub_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_and_sub
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_and_sub
 
 
 
@@ -244,7 +324,7 @@ theorem lshr_and_and_proof : lshr_and_and_before ⊑ lshr_and_and_after := by
   intros
   try simp
   ---BEGIN lshr_and_and
-  apply lshr_and_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and_and
 
 
@@ -285,7 +365,7 @@ theorem lshr_and_or_proof : lshr_and_or_before ⊑ lshr_and_or_after := by
   intros
   try simp
   ---BEGIN lshr_and_or
-  apply lshr_and_or_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and_or
 
 
@@ -326,7 +406,7 @@ theorem lshr_and_or_disjoint_proof : lshr_and_or_disjoint_before ⊑ lshr_and_or
   intros
   try simp
   ---BEGIN lshr_and_or_disjoint
-  apply lshr_and_or_disjoint_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and_or_disjoint
 
 
@@ -367,7 +447,7 @@ theorem ashr_and_or_disjoint_proof : ashr_and_or_disjoint_before ⊑ ashr_and_or
   intros
   try simp
   ---BEGIN ashr_and_or_disjoint
-  apply ashr_and_or_disjoint_thm
+  all_goals (try extract_goal ; sorry)
   ---END ashr_and_or_disjoint
 
 
@@ -408,7 +488,7 @@ theorem lshr_and_xor_proof : lshr_and_xor_before ⊑ lshr_and_xor_after := by
   intros
   try simp
   ---BEGIN lshr_and_xor
-  apply lshr_and_xor_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_and_xor
 
 
@@ -445,7 +525,7 @@ theorem lshr_add_and_shl_proof : lshr_add_and_shl_before ⊑ lshr_add_and_shl_af
   intros
   try simp
   ---BEGIN lshr_add_and_shl
-  apply lshr_add_and_shl_thm
+  all_goals (try extract_goal ; sorry)
   ---END lshr_add_and_shl
 
 
@@ -482,7 +562,7 @@ theorem shl_add_and_lshr_proof : shl_add_and_lshr_before ⊑ shl_add_and_lshr_af
   intros
   try simp
   ---BEGIN shl_add_and_lshr
-  apply shl_add_and_lshr_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_and_lshr
 
 

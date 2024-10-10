@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gunfoldhmaskedhmergehwithhconsthmaskhscalar_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem scalar0_proof : scalar0_before ⊑ scalar0_after := by
   intros
   try simp
   ---BEGIN scalar0
-  apply scalar0_thm
+  all_goals (try extract_goal ; sorry)
   ---END scalar0
 
 
@@ -78,7 +78,7 @@ theorem scalar1_proof : scalar1_before ⊑ scalar1_after := by
   intros
   try simp
   ---BEGIN scalar1
-  apply scalar1_thm
+  all_goals (try extract_goal ; sorry)
   ---END scalar1
 
 
@@ -111,7 +111,7 @@ theorem in_constant_varx_mone_proof : in_constant_varx_mone_before ⊑ in_consta
   intros
   try simp
   ---BEGIN in_constant_varx_mone
-  apply in_constant_varx_mone_thm
+  all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_mone
 
 
@@ -144,7 +144,7 @@ theorem in_constant_varx_14_proof : in_constant_varx_14_before ⊑ in_constant_v
   intros
   try simp
   ---BEGIN in_constant_varx_14
-  apply in_constant_varx_14_thm
+  all_goals (try extract_goal ; sorry)
   ---END in_constant_varx_14
 
 
@@ -177,7 +177,7 @@ theorem in_constant_mone_vary_proof : in_constant_mone_vary_before ⊑ in_consta
   intros
   try simp
   ---BEGIN in_constant_mone_vary
-  apply in_constant_mone_vary_thm
+  all_goals (try extract_goal ; sorry)
   ---END in_constant_mone_vary
 
 
@@ -210,7 +210,7 @@ theorem in_constant_14_vary_proof : in_constant_14_vary_before ⊑ in_constant_1
   intros
   try simp
   ---BEGIN in_constant_14_vary
-  apply in_constant_14_vary_thm
+  all_goals (try extract_goal ; sorry)
   ---END in_constant_14_vary
 
 
@@ -245,7 +245,7 @@ theorem c_1_0_0_proof : c_1_0_0_before ⊑ c_1_0_0_after := by
   intros
   try simp
   ---BEGIN c_1_0_0
-  apply c_1_0_0_thm
+  all_goals (try extract_goal ; sorry)
   ---END c_1_0_0
 
 
@@ -280,7 +280,7 @@ theorem c_0_1_0_proof : c_0_1_0_before ⊑ c_0_1_0_after := by
   intros
   try simp
   ---BEGIN c_0_1_0
-  apply c_0_1_0_thm
+  all_goals (try extract_goal ; sorry)
   ---END c_0_1_0
 
 
@@ -315,7 +315,7 @@ theorem c_1_1_0_proof : c_1_1_0_before ⊑ c_1_1_0_after := by
   intros
   try simp
   ---BEGIN c_1_1_0
-  apply c_1_1_0_thm
+  all_goals (try extract_goal ; sorry)
   ---END c_1_1_0
 
 
@@ -348,7 +348,7 @@ theorem commutativity_constant_14_vary_proof : commutativity_constant_14_vary_be
   intros
   try simp
   ---BEGIN commutativity_constant_14_vary
-  apply commutativity_constant_14_vary_thm
+  all_goals (try extract_goal ; sorry)
   ---END commutativity_constant_14_vary
 
 

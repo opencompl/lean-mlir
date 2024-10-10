@@ -87,7 +87,7 @@ def shl_add_nuw_before := [llvm|
 ^0(%arg69 : i32):
   %0 = "llvm.mlir.constant"() <{value = 5 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 6 : i32}> : () -> i32
-  %2 = llvm.add %arg69, %0 : i32
+  %2 = llvm.add %arg69, %0 overflow<nuw> : i32
   %3 = llvm.shl %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -118,8 +118,8 @@ def shl_nuw_add_nuw_before := [llvm|
 {
 ^0(%arg65 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.add %arg65, %0 : i32
-  %2 = llvm.shl %0, %1 : i32
+  %1 = llvm.add %arg65, %0 overflow<nuw> : i32
+  %2 = llvm.shl %0, %1 overflow<nuw> : i32
   "llvm.return"(%2) : (i32) -> ()
 }
 ]
@@ -127,7 +127,7 @@ def shl_nuw_add_nuw_after := [llvm|
 {
 ^0(%arg65 : i32):
   %0 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg65 : i32
+  %1 = llvm.shl %0, %arg65 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -150,8 +150,8 @@ def shl_nsw_add_nuw_before := [llvm|
 ^0(%arg64 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
-  %2 = llvm.add %arg64, %0 : i32
-  %3 = llvm.shl %1, %2 : i32
+  %2 = llvm.add %arg64, %0 overflow<nuw> : i32
+  %3 = llvm.shl %1, %2 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -159,7 +159,7 @@ def shl_nsw_add_nuw_after := [llvm|
 {
 ^0(%arg64 : i32):
   %0 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg64 : i32
+  %1 = llvm.shl %0, %arg64 overflow<nsw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -182,7 +182,7 @@ def lshr_exact_add_nuw_before := [llvm|
 ^0(%arg63 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 4 : i32}> : () -> i32
-  %2 = llvm.add %arg63, %0 : i32
+  %2 = llvm.add %arg63, %0 overflow<nuw> : i32
   %3 = llvm.lshr %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -214,7 +214,7 @@ def ashr_exact_add_nuw_before := [llvm|
 ^0(%arg62 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -4 : i32}> : () -> i32
-  %2 = llvm.add %arg62, %0 : i32
+  %2 = llvm.add %arg62, %0 overflow<nuw> : i32
   %3 = llvm.ashr %1, %2 : i32
   "llvm.return"(%3) : (i32) -> ()
 }
@@ -311,7 +311,7 @@ def shl_nsw_add_negative_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = 2 : i32}> : () -> i32
   %2 = llvm.add %arg45, %0 : i32
-  %3 = llvm.shl %1, %2 : i32
+  %3 = llvm.shl %1, %2 overflow<nsw> : i32
   "llvm.return"(%3) : (i32) -> ()
 }
 ]
@@ -319,7 +319,7 @@ def shl_nsw_add_negative_after := [llvm|
 {
 ^0(%arg45 : i32):
   %0 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
-  %1 = llvm.shl %0, %arg45 : i32
+  %1 = llvm.shl %0, %arg45 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -343,7 +343,7 @@ def shl_nsw_add_negative_invalid_constant3_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -8 : i4}> : () -> i4
   %1 = "llvm.mlir.constant"() <{value = 2 : i4}> : () -> i4
   %2 = llvm.add %arg39, %0 : i4
-  %3 = llvm.shl %1, %2 : i4
+  %3 = llvm.shl %1, %2 overflow<nsw> : i4
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
@@ -353,7 +353,7 @@ def shl_nsw_add_negative_invalid_constant3_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = -8 : i4}> : () -> i4
   %1 = "llvm.mlir.constant"() <{value = 2 : i4}> : () -> i4
   %2 = llvm.xor %arg39, %0 : i4
-  %3 = llvm.shl %1, %2 : i4
+  %3 = llvm.shl %1, %2 overflow<nsw> : i4
   "llvm.return"(%3) : (i4) -> ()
 }
 ]
@@ -368,6 +368,162 @@ theorem shl_nsw_add_negative_invalid_constant3_proof : shl_nsw_add_negative_inva
   ---BEGIN shl_nsw_add_negative_invalid_constant3
   all_goals (try extract_goal ; sorry)
   ---END shl_nsw_add_negative_invalid_constant3
+
+
+
+def lshr_16_add_known_16_leading_zeroes_before := [llvm|
+{
+^0(%arg29 : i32, %arg30 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %2 = llvm.and %arg29, %0 : i32
+  %3 = llvm.and %arg30, %0 : i32
+  %4 = llvm.add %2, %3 : i32
+  %5 = llvm.lshr %4, %1 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def lshr_16_add_known_16_leading_zeroes_after := [llvm|
+{
+^0(%arg29 : i32, %arg30 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %2 = llvm.and %arg29, %0 : i32
+  %3 = llvm.and %arg30, %0 : i32
+  %4 = llvm.add %2, %3 overflow<nsw,nuw> : i32
+  %5 = llvm.lshr %4, %1 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem lshr_16_add_known_16_leading_zeroes_proof : lshr_16_add_known_16_leading_zeroes_before ⊑ lshr_16_add_known_16_leading_zeroes_after := by
+  unfold lshr_16_add_known_16_leading_zeroes_before lshr_16_add_known_16_leading_zeroes_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_16_add_known_16_leading_zeroes
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_16_add_known_16_leading_zeroes
+
+
+
+def lshr_16_add_not_known_16_leading_zeroes_before := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 131071 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %3 = llvm.and %arg27, %0 : i32
+  %4 = llvm.and %arg28, %1 : i32
+  %5 = llvm.add %3, %4 : i32
+  %6 = llvm.lshr %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def lshr_16_add_not_known_16_leading_zeroes_after := [llvm|
+{
+^0(%arg27 : i32, %arg28 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 131071 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 65535 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = 16 : i32}> : () -> i32
+  %3 = llvm.and %arg27, %0 : i32
+  %4 = llvm.and %arg28, %1 : i32
+  %5 = llvm.add %3, %4 overflow<nsw,nuw> : i32
+  %6 = llvm.lshr %5, %2 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem lshr_16_add_not_known_16_leading_zeroes_proof : lshr_16_add_not_known_16_leading_zeroes_before ⊑ lshr_16_add_not_known_16_leading_zeroes_after := by
+  unfold lshr_16_add_not_known_16_leading_zeroes_before lshr_16_add_not_known_16_leading_zeroes_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_16_add_not_known_16_leading_zeroes
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_16_add_not_known_16_leading_zeroes
+
+
+
+def lshr_32_add_known_32_leading_zeroes_before := [llvm|
+{
+^0(%arg15 : i64, %arg16 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %2 = llvm.and %arg15, %0 : i64
+  %3 = llvm.and %arg16, %0 : i64
+  %4 = llvm.add %2, %3 : i64
+  %5 = llvm.lshr %4, %1 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+def lshr_32_add_known_32_leading_zeroes_after := [llvm|
+{
+^0(%arg15 : i64, %arg16 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %2 = llvm.and %arg15, %0 : i64
+  %3 = llvm.and %arg16, %0 : i64
+  %4 = llvm.add %2, %3 overflow<nsw,nuw> : i64
+  %5 = llvm.lshr %4, %1 : i64
+  "llvm.return"(%5) : (i64) -> ()
+}
+]
+theorem lshr_32_add_known_32_leading_zeroes_proof : lshr_32_add_known_32_leading_zeroes_before ⊑ lshr_32_add_known_32_leading_zeroes_after := by
+  unfold lshr_32_add_known_32_leading_zeroes_before lshr_32_add_known_32_leading_zeroes_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_32_add_known_32_leading_zeroes
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_32_add_known_32_leading_zeroes
+
+
+
+def lshr_32_add_not_known_32_leading_zeroes_before := [llvm|
+{
+^0(%arg13 : i64, %arg14 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 8589934591 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %2 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %3 = llvm.and %arg13, %0 : i64
+  %4 = llvm.and %arg14, %1 : i64
+  %5 = llvm.add %3, %4 : i64
+  %6 = llvm.lshr %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def lshr_32_add_not_known_32_leading_zeroes_after := [llvm|
+{
+^0(%arg13 : i64, %arg14 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 8589934591 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 4294967295 : i64}> : () -> i64
+  %2 = "llvm.mlir.constant"() <{value = 32 : i64}> : () -> i64
+  %3 = llvm.and %arg13, %0 : i64
+  %4 = llvm.and %arg14, %1 : i64
+  %5 = llvm.add %3, %4 overflow<nsw,nuw> : i64
+  %6 = llvm.lshr %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+theorem lshr_32_add_not_known_32_leading_zeroes_proof : lshr_32_add_not_known_32_leading_zeroes_before ⊑ lshr_32_add_not_known_32_leading_zeroes_after := by
+  unfold lshr_32_add_not_known_32_leading_zeroes_before lshr_32_add_not_known_32_leading_zeroes_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_32_add_not_known_32_leading_zeroes
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_32_add_not_known_32_leading_zeroes
 
 
 

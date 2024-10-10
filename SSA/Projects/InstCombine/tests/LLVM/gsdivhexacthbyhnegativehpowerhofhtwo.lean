@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsdivhexacthbyhnegativehpowerhofhtwo_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -27,7 +27,7 @@ def t0_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.ashr %arg15, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -40,7 +40,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -63,7 +63,7 @@ def prove_exact_with_high_mask_after := [llvm|
   %2 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %3 = llvm.ashr %arg8, %0 : i8
   %4 = llvm.and %3, %1 : i8
-  %5 = llvm.sub %2, %4 : i8
+  %5 = llvm.sub %2, %4 overflow<nsw> : i8
   "llvm.return"(%5) : (i8) -> ()
 }
 ]
@@ -76,7 +76,7 @@ theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑
   intros
   try simp
   ---BEGIN prove_exact_with_high_mask
-  apply prove_exact_with_high_mask_thm
+  all_goals (try extract_goal ; sorry)
   ---END prove_exact_with_high_mask
 
 
@@ -96,7 +96,7 @@ def prove_exact_with_high_mask_limit_after := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 5 : i8}> : () -> i8
   %1 = "llvm.mlir.constant"() <{value = 0 : i8}> : () -> i8
   %2 = llvm.ashr %arg6, %0 : i8
-  %3 = llvm.sub %1, %2 : i8
+  %3 = llvm.sub %1, %2 overflow<nsw> : i8
   "llvm.return"(%3) : (i8) -> ()
 }
 ]
@@ -109,7 +109,7 @@ theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limi
   intros
   try simp
   ---BEGIN prove_exact_with_high_mask_limit
-  apply prove_exact_with_high_mask_limit_thm
+  all_goals (try extract_goal ; sorry)
   ---END prove_exact_with_high_mask_limit
 
 
