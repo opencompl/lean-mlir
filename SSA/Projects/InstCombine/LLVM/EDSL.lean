@@ -101,11 +101,23 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
         | "llvm.and"    => pure <| Sum.inl .and
         | "llvm.or"     => pure <| Sum.inl .or
         | "llvm.xor"    => pure <| Sum.inl .xor
-        | "llvm.shl"    => pure <| Sum.inl .shl
         | "llvm.lshr"   => pure <| Sum.inl .lshr
         | "llvm.ashr"   => pure <| Sum.inl .ashr
         | "llvm.urem"   => pure <| Sum.inl .urem
         | "llvm.srem"   => pure <| Sum.inl .srem
+        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
+        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.shl"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.shl)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.shl ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.shl ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.add"    =>  do
           let attr? := opStx.attrs.getAttr "overflowFlags"
           match attr? with
@@ -117,10 +129,28 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
               | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.add ⟨true, true⟩)
               | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
               | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
-        | "llvm.mul"    => pure <| Sum.inl .mul
-        | "llvm.sub"    => pure <| Sum.inl .sub
-        | "llvm.sdiv"   => pure <| Sum.inl .sdiv
-        | "llvm.udiv"   => pure <| Sum.inl .udiv
+        | "llvm.mul"    => do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.mul)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.mul ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.mul ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+        | "llvm.sub"    =>  do
+          let attr? := opStx.attrs.getAttr "overflowFlags"
+          match attr? with
+            | .none =>  pure <| Sum.inl (MOp.BinaryOp.sub)
+            | .some y => match y with
+              | .opaque_ "llvm.overflow" "nsw" => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, false⟩)
+              | .opaque_ "llvm.overflow" "nuw" => pure <| Sum.inl (MOp.BinaryOp.sub ⟨false, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"] => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, true⟩)
+              | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => pure <| Sum.inl (MOp.BinaryOp.sub ⟨true, true⟩)
+              | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+              | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
         | "llvm.icmp.eq"  => pure <| Sum.inr LLVM.IntPredicate.eq
         | "llvm.icmp.ne"  => pure <| Sum.inr LLVM.IntPredicate.ne
         | "llvm.icmp.ugt" => pure <| Sum.inr LLVM.IntPredicate.ugt

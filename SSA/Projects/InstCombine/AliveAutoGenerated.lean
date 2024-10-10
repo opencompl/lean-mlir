@@ -37,6 +37,7 @@ def alive_AddSub_1043_src  (w : Nat)   :=
 [llvm ( w )| {
 ^bb0(%C1 : _, %Z : _, %RHS : _):
   %v1 = llvm.and %Z, %C1
+  -- %v1 = "llvm.add" (%Z, %C1) <{overflowFlags = #llvm.overflow<nsw>}> : (_, _) -> _
   %v2 = llvm.xor %v1, %C1
   %v3 = llvm.mlir.constant 1
   %v4 = llvm.add %v2, %v3
