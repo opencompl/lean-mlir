@@ -609,6 +609,27 @@ theorem getMsbD_neg {i : Nat} {i_lt : i < w} {x : BitVec w} :
   simp
   omega
 
+theorem msb_add {x y: BitVec w} :
+    (x + y).msb = (x.getMsbD (w - 1) ^^ y.getMsbD (w - 1)) := by
+  simp only [BitVec.msb]
+  by_cases h : w = 0
+  · simp [h, BitVec.getMsbD_of_zero_length]
+  · by_cases h₀ : x.getMsbD (w - 1) <;> by_cases h₁ : y.getMsbD (w - 1)
+    · simp [h, h₀, h₁]
+
+      sorry
+    · sorry
+    · sorry
+    · sorry
+
+
+
+theorem msb_sub {x y: BitVec w} : sorry := by sorry
+
+theorem msb_neg {x y: BitVec w} : sorry := by sorry
+
+
+
 end BitVec
 
 namespace Bool
