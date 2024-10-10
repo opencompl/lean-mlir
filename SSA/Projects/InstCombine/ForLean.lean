@@ -230,7 +230,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
       simp only [BitVec.sdiv, lt_add_iff_pos_left, add_pos_iff, zero_lt_one,
         or_true, msb_one, neg_eq]
       by_cases h : a.msb <;> simp [h]
-      · rw [BitVec.udiv_eq_zero]
+      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1
         · rw [neg_ne_iff_ne_neg]
           simp only [_root_.neg_zero]
@@ -238,7 +238,7 @@ def one_sdiv { w : Nat} {a : BitVec w} (ha0 : a ≠ 0) (ha1 : a ≠ 1)
         · rw [neg_ne_iff_ne_neg]
           rw [← negOne_eq_allOnes] at hao
           assumption
-      · rw [BitVec.udiv_eq_zero]
+      · rw [← BitVec.udiv_eq, BitVec.udiv_eq_zero]
         apply BitVec.gt_one_of_neq_0_neq_1 <;> assumption
 
 def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
