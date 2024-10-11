@@ -5,14 +5,20 @@ open Lean
 namespace MLIR.EDSL
 open Pretty
 
+/-!
+# Pretty syntax for overflow flags
 
-declare_syntax_cat MLIR.Pretty.overflow_flag
+This file defines the `MLIR.Pretty.overflow_op` syntax category which, just like `MLIR.Pretty.uniform_op`,
+is a category of MLIR operations where the arguments and return values are all of the same type.
+Additionally, `overflow_op`s may be annotated with overflow flags, which are `nsw` and `nuw`.
+The pretty syntax for these flags is `overflow<flags>`.
+It gets translated to `<{overflowFlags = #llvm.overflow< flags >}>` in the generic syntax.
+-/
 declare_syntax_cat MLIR.Pretty.overflow_op
 
-syntax "nsw" : MLIR.Pretty.overflow_flag
-syntax "nuw" : MLIR.Pretty.overflow_flag
+syntax overflow_flag := "nsw" <|> "nuw"
 
-syntax (mlir_op_operand " = ")? MLIR.Pretty.overflow_op mlir_op_operand,* (" overflow<" MLIR.Pretty.overflow_flag,* "> ")?
+syntax (mlir_op_operand " = ")? MLIR.Pretty.overflow_op mlir_op_operand,* (" overflow<" overflow_flag,* "> ")?
   (" : " mlir_type)? : mlir_op
 macro_rules
   | `(mlir_op| $[$resName =]? $name:MLIR.Pretty.overflow_op $xs,* $[overflow< $[$f],* >]? $[: $t]? ) => do
@@ -23,9 +29,9 @@ macro_rules
       | some _ => #[t]
       | none => #[]
     let ovflags ← f.mapM fun f => f.mapM fun
-      | `(MLIR.Pretty.overflow_flag|nsw) =>
+      | `(overflow_flag|nsw) =>
         `(mlir_attr_val|$(mkIdent `nsw):ident)
-      | `(MLIR.Pretty.overflow_flag|nuw) =>
+      | `(overflow_flag|nuw) =>
         `(mlir_attr_val|$(mkIdent `nuw):ident)
       | _ => Macro.throwUnsupported
     `([mlir_op| $[$resName =]? $opName ($xs,*) $[<{overflowFlags = #llvm.overflow< $ovflags,* >}>]? : ($argTys,*) -> ($retTy:mlir_type,*) ])
