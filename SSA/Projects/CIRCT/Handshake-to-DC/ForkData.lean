@@ -152,16 +152,11 @@ theorem equiv_fork_fst (streamInt : DC.ValueStream Int) :
         have {α} : ((fun x => x.tail) : Stream' α → Stream' α) = Stream'.tail := by rfl
         rw [this]; unfold Stream'.get
         rw [tail_iterate']
-      · simp; rw [corec₂_corec2]
-        sorry
+      · sorry
   · apply EqIsBisim
 
 theorem stream_pair_1 (s : Stream α) (f : Stream α → Option α × Option α × Stream α):
     (corec₂ s f).1 = corec s (fun x => let ⟨f1, _, f2⟩ := f x; (f1, f2)) := by
-  unfold corec
-  unfold corec₂
-  unfold Stream'.corec
-  unfold Stream'.map
   rfl
 
 
