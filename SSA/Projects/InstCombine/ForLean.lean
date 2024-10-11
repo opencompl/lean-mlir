@@ -619,24 +619,15 @@ theorem msb_add {w : Nat} {x y: BitVec w} :
 
 theorem msb_sub {x y: BitVec w} :
     (x - y).msb
-      = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - i) x (~~~y + 1#w) false)) := by
-    simp only [BitVec.msb, BitVec.getMsbD_add]
-    by_cases h₀ : w ≤ 0
-    · simp [h₀, show w = 0 by omega]
-    · rw [BitVec.getMsbD_add]
-      · simp [show 0 < w by omega]
-        rw [←BitVec.msb]
+      = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - 0) x (~~~y + 1#w) false)) := by
+    rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add,
+      msb_add]
+    rfl
 
-        sorry
-      · omega
-
-theorem msb_neg {w : Nat} {x y: BitVec w} :
+theorem msb_neg {w : Nat} {x y: BitVec w} (h : 0 < w):
     (~~~x).msb = (getMsbD x 0).not := by
-    by_cases h : getMsbD x 0
-    · simp [h, show w ≥ 0 by omega]
-      intro
-      sorry
-    · sorry
+  rw [BitVec.msb, BitVec.getMsbD_neg]
+  omega
 
 end BitVec
 
