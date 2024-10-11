@@ -614,16 +614,29 @@ theorem msb_add {w : Nat} {x y: BitVec w} :
       Bool.xor (getMsbD x 0) (Bool.xor (getMsbD y 0) (carry (w - 1) x y false)) := by
   simp only [BitVec.msb, BitVec.getMsbD]
   by_cases h₀ : w ≤ 0
-  · by_cases h₁ : w = 0
-    · simp [h₀, h₁]
-    · omega
+  · simp [h₀, show w = 0 by omega]
   · simp [h₀, getLsbD_add, show w > 0 by omega]
 
+theorem msb_sub {x y: BitVec w} :
+    (x - y).msb
+      = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - i) x (~~~y + 1#w) false)) := by
+    simp only [BitVec.msb, BitVec.getMsbD_add]
+    by_cases h₀ : w ≤ 0
+    · simp [h₀, show w = 0 by omega]
+    · rw [BitVec.getMsbD_add]
+      · simp [show 0 < w by omega]
+        rw [←BitVec.msb]
 
+        sorry
+      · omega
 
-theorem msb_sub {x y: BitVec w} : sorry := by sorry
-
-theorem msb_neg {x y: BitVec w} : sorry := by sorry
+theorem msb_neg {w : Nat} {x y: BitVec w} :
+    (~~~x).msb = (getMsbD x 0).not := by
+    by_cases h : getMsbD x 0
+    · simp [h, show w ≥ 0 by omega]
+      intro
+      sorry
+    · sorry
 
 end BitVec
 
