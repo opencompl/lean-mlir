@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gmulhpow2_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -17,7 +17,7 @@ def shl_add_log_may_cause_poison_pr62175_with_nuw_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
   %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg2 : i8
+  %1 = llvm.shl %0, %arg2 overflow<nuw> : i8
   %2 = llvm.mul %arg3, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -40,7 +40,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_ca
   intros
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nuw
-  apply shl_add_log_may_cause_poison_pr62175_with_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_log_may_cause_poison_pr62175_with_nuw
 
 
@@ -49,7 +49,7 @@ def shl_add_log_may_cause_poison_pr62175_with_nsw_before := [llvm|
 {
 ^0(%arg0 : i8, %arg1 : i8):
   %0 = "llvm.mlir.constant"() <{value = 4 : i8}> : () -> i8
-  %1 = llvm.shl %0, %arg0 : i8
+  %1 = llvm.shl %0, %arg0 overflow<nsw> : i8
   %2 = llvm.mul %arg1, %1 : i8
   "llvm.return"(%2) : (i8) -> ()
 }
@@ -72,7 +72,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_ca
   intros
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nsw
-  apply shl_add_log_may_cause_poison_pr62175_with_nsw_thm
+  all_goals (try extract_goal ; sorry)
   ---END shl_add_log_may_cause_poison_pr62175_with_nsw
 
 

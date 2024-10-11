@@ -53,9 +53,9 @@ def t6_shl_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
   %2 = llvm.sub %0, %arg32 : i32
-  %3 = llvm.shl %arg31, %2 : i32
+  %3 = llvm.shl %arg31, %2 overflow<nuw> : i32
   %4 = llvm.add %arg32, %1 : i32
-  %5 = llvm.shl %3, %4 : i32
+  %5 = llvm.shl %3, %4 overflow<nsw> : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -189,9 +189,9 @@ def t10_shl_nuw_flag_preservation_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
   %2 = llvm.sub %0, %arg24 : i32
-  %3 = llvm.shl %arg23, %2 : i32
+  %3 = llvm.shl %arg23, %2 overflow<nuw> : i32
   %4 = llvm.add %arg24, %1 : i32
-  %5 = llvm.shl %3, %4 : i32
+  %5 = llvm.shl %3, %4 overflow<nsw,nuw> : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -199,7 +199,7 @@ def t10_shl_nuw_flag_preservation_after := [llvm|
 {
 ^0(%arg23 : i32, %arg24 : i32):
   %0 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
-  %1 = llvm.shl %arg23, %0 : i32
+  %1 = llvm.shl %arg23, %0 overflow<nuw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]
@@ -223,9 +223,9 @@ def t11_shl_nsw_flag_preservation_before := [llvm|
   %0 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
   %1 = "llvm.mlir.constant"() <{value = -2 : i32}> : () -> i32
   %2 = llvm.sub %0, %arg22 : i32
-  %3 = llvm.shl %arg21, %2 : i32
+  %3 = llvm.shl %arg21, %2 overflow<nsw> : i32
   %4 = llvm.add %arg22, %1 : i32
-  %5 = llvm.shl %3, %4 : i32
+  %5 = llvm.shl %3, %4 overflow<nsw,nuw> : i32
   "llvm.return"(%5) : (i32) -> ()
 }
 ]
@@ -233,7 +233,7 @@ def t11_shl_nsw_flag_preservation_after := [llvm|
 {
 ^0(%arg21 : i32, %arg22 : i32):
   %0 = "llvm.mlir.constant"() <{value = 30 : i32}> : () -> i32
-  %1 = llvm.shl %arg21, %0 : i32
+  %1 = llvm.shl %arg21, %0 overflow<nsw> : i32
   "llvm.return"(%1) : (i32) -> ()
 }
 ]

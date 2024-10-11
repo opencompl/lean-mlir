@@ -1,3 +1,4 @@
+# The path from lean-mlir to llvm-project
 llvm_path=""
 
 if len(llvm_path) == 0:

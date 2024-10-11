@@ -80,7 +80,7 @@ def basic_preserve_nsw_before := [llvm|
 ^0(%arg15 : i8, %arg16 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg15, %0 : i8
-  %2 = llvm.add %1, %arg16 : i8
+  %2 = llvm.add %1, %arg16 overflow<nsw> : i8
   %3 = llvm.xor %2, %0 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -88,7 +88,7 @@ def basic_preserve_nsw_before := [llvm|
 def basic_preserve_nsw_after := [llvm|
 {
 ^0(%arg15 : i8, %arg16 : i8):
-  %0 = llvm.sub %arg15, %arg16 : i8
+  %0 = llvm.sub %arg15, %arg16 overflow<nsw> : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
@@ -111,7 +111,7 @@ def basic_preserve_nuw_before := [llvm|
 ^0(%arg13 : i8, %arg14 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg13, %0 : i8
-  %2 = llvm.add %1, %arg14 : i8
+  %2 = llvm.add %1, %arg14 overflow<nuw> : i8
   %3 = llvm.xor %2, %0 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -119,7 +119,7 @@ def basic_preserve_nuw_before := [llvm|
 def basic_preserve_nuw_after := [llvm|
 {
 ^0(%arg13 : i8, %arg14 : i8):
-  %0 = llvm.sub %arg13, %arg14 : i8
+  %0 = llvm.sub %arg13, %arg14 overflow<nuw> : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]
@@ -142,7 +142,7 @@ def basic_preserve_nuw_nsw_before := [llvm|
 ^0(%arg11 : i8, %arg12 : i8):
   %0 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
   %1 = llvm.xor %arg11, %0 : i8
-  %2 = llvm.add %1, %arg12 : i8
+  %2 = llvm.add %1, %arg12 overflow<nsw,nuw> : i8
   %3 = llvm.xor %2, %0 : i8
   "llvm.return"(%3) : (i8) -> ()
 }
@@ -150,7 +150,7 @@ def basic_preserve_nuw_nsw_before := [llvm|
 def basic_preserve_nuw_nsw_after := [llvm|
 {
 ^0(%arg11 : i8, %arg12 : i8):
-  %0 = llvm.sub %arg11, %arg12 : i8
+  %0 = llvm.sub %arg11, %arg12 overflow<nsw,nuw> : i8
   "llvm.return"(%0) : (i8) -> ()
 }
 ]

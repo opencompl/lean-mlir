@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gand2_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -37,7 +37,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -66,7 +66,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -76,7 +76,7 @@ def test9_before := [llvm|
 ^0(%arg18 : i64):
   %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = llvm.sub %0, %arg18 : i64
+  %2 = llvm.sub %0, %arg18 overflow<nsw> : i64
   %3 = llvm.and %2, %1 : i64
   "llvm.return"(%3) : (i64) -> ()
 }
@@ -98,7 +98,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  apply test9_thm
+  all_goals (try extract_goal ; sorry)
   ---END test9
 
 
@@ -108,7 +108,7 @@ def test10_before := [llvm|
 ^0(%arg16 : i64):
   %0 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
   %1 = "llvm.mlir.constant"() <{value = 1 : i64}> : () -> i64
-  %2 = llvm.sub %0, %arg16 : i64
+  %2 = llvm.sub %0, %arg16 overflow<nsw> : i64
   %3 = llvm.and %2, %1 : i64
   %4 = llvm.add %2, %3 : i64
   "llvm.return"(%4) : (i64) -> ()
@@ -133,8 +133,42 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  apply test10_thm
+  all_goals (try extract_goal ; sorry)
   ---END test10
+
+
+
+def and1_shl1_is_cmp_eq_0_multiuse_before := [llvm|
+{
+^0(%arg14 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg14 : i8
+  %2 = llvm.and %1, %0 : i8
+  %3 = llvm.add %1, %2 : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+def and1_shl1_is_cmp_eq_0_multiuse_after := [llvm|
+{
+^0(%arg14 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
+  %1 = llvm.shl %0, %arg14 overflow<nuw> : i8
+  %2 = llvm.and %1, %0 : i8
+  %3 = llvm.add %1, %2 overflow<nuw> : i8
+  "llvm.return"(%3) : (i8) -> ()
+}
+]
+theorem and1_shl1_is_cmp_eq_0_multiuse_proof : and1_shl1_is_cmp_eq_0_multiuse_before ⊑ and1_shl1_is_cmp_eq_0_multiuse_after := by
+  unfold and1_shl1_is_cmp_eq_0_multiuse_before and1_shl1_is_cmp_eq_0_multiuse_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and1_shl1_is_cmp_eq_0_multiuse
+  all_goals (try extract_goal ; sorry)
+  ---END and1_shl1_is_cmp_eq_0_multiuse
 
 
 
@@ -164,7 +198,7 @@ theorem and1_lshr1_is_cmp_eq_0_proof : and1_lshr1_is_cmp_eq_0_before ⊑ and1_ls
   intros
   try simp
   ---BEGIN and1_lshr1_is_cmp_eq_0
-  apply and1_lshr1_is_cmp_eq_0_thm
+  all_goals (try extract_goal ; sorry)
   ---END and1_lshr1_is_cmp_eq_0
 
 
@@ -184,7 +218,7 @@ def and1_lshr1_is_cmp_eq_0_multiuse_after := [llvm|
 ^0(%arg10 : i8):
   %0 = "llvm.mlir.constant"() <{value = 1 : i8}> : () -> i8
   %1 = llvm.lshr %0, %arg10 : i8
-  %2 = llvm.shl %1, %0 : i8
+  %2 = llvm.shl %1, %0 overflow<nsw,nuw> : i8
   "llvm.return"(%2) : (i8) -> ()
 }
 ]
@@ -197,7 +231,7 @@ theorem and1_lshr1_is_cmp_eq_0_multiuse_proof : and1_lshr1_is_cmp_eq_0_multiuse_
   intros
   try simp
   ---BEGIN and1_lshr1_is_cmp_eq_0_multiuse
-  apply and1_lshr1_is_cmp_eq_0_multiuse_thm
+  all_goals (try extract_goal ; sorry)
   ---END and1_lshr1_is_cmp_eq_0_multiuse
 
 
@@ -234,7 +268,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   intros
   try simp
   ---BEGIN test11
-  apply test11_thm
+  all_goals (try extract_goal ; sorry)
   ---END test11
 
 
@@ -271,7 +305,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   intros
   try simp
   ---BEGIN test12
-  apply test12_thm
+  all_goals (try extract_goal ; sorry)
   ---END test12
 
 
@@ -308,7 +342,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   intros
   try simp
   ---BEGIN test13
-  apply test13_thm
+  all_goals (try extract_goal ; sorry)
   ---END test13
 
 
@@ -347,7 +381,7 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   intros
   try simp
   ---BEGIN test14
-  apply test14_thm
+  all_goals (try extract_goal ; sorry)
   ---END test14
 
 

@@ -64,7 +64,7 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
   intros
   try simp
   ---BEGIN foo2
-  all_goals (try extract_goal ; sorry)
+  apply foo2_thm
   ---END foo2
 
 

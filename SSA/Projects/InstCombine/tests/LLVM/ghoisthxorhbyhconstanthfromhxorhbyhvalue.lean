@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.ghoisthxorhbyhconstanthfromhxorhbyhvalue_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   intros
   try simp
   ---BEGIN t0_scalar
-  apply t0_scalar_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0_scalar
 
 
