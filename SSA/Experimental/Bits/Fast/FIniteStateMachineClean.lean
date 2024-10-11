@@ -628,7 +628,6 @@ def or' : FSM (Fin 2) :=
   let vr := Circuit.var true 1
   mkBinaryPredicate (Circuit.or vl vr)
 
-
 -- @[simp] lemma eval_bitwiseAnd' (xs : BitStreamProd (Fin 2)) :
 --     bitwiseAnd.eval xs = (xs 0) &&& (xs 1) := by
 --   ext i
@@ -637,12 +636,36 @@ def or' : FSM (Fin 2) :=
 --   case succ i ih =>
 --     simp [eval.next]
 
+-- def eval.next (xs : BitStreamProd arity × p.State) :
+--     (BitStreamProd arity × p.State) × Bool := -- (fun ⟨x, (state : p.State)⟩ =>
+--   let x       := xs.1
+--   let state   := xs.2
+--   let x_head  := x.heads
+--   let next    := p.next state x_head
+--   let x_tail  := x.tails
+--   ((x_tail, next.fst), next.snd)
+
+def eval.initialState (xs : BitStreamProd arity × p.State) :
+    (BitStreamProd arity × p.State) × Bool :=
+  let x       := xs.1
+  let state   := p.initialState
+  let x_head  := x.heads
+  let next    := p.next state x_head
+  let x_tail  := x.tails
+  ((x_tail, next.fst), true)
+
 @[simp]
-lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) : and'.eval xs i = BitStream.EqualUpTo (i - 1) (xs 0) (xs 1) :=  by
+lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) (h : i > 0): and'.eval xs i = BitStream.EqualUpTo (i - 1) (xs 0) (xs 1) :=  by
   unfold BitStream.EqualUpTo
   induction i generalizing xs
   case zero =>
-    simp only [zero_le, tsub_eq_zero_of_le, not_lt_zero', Fin.isValue, false_implies, implies_true,
-      eq_iff_iff, iff_true]
+    omega
+  case succ ii ih =>
+    simp [← ih]
+    let h := stateStream_zero and'
+    unfold eval
+    simp only [outputStreamAux_succ, nextState, Fin.isValue]
+    rw [← stateStream_zero]
+    · simp [h]
+      sorry
     · sorry
-  case succ => sorry
