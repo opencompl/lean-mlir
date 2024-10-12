@@ -620,9 +620,7 @@ theorem msb_add {w : Nat} {x y: BitVec w} :
 theorem msb_sub {x y: BitVec w} :
     (x - y).msb
       = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - 0) x (~~~y + 1#w) false)) := by
-    rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add,
-      msb_add]
-    rfl
+  simp [sub_eq_add_neg, BitVec.neg_eq_not_add, msb_add]
 
 theorem msb_neg {w : Nat} {x y: BitVec w} (h : 0 < w):
     (~~~x).msb = (getMsbD x 0).not := by
