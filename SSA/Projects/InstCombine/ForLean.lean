@@ -613,9 +613,9 @@ theorem msb_add {w : Nat} {x y: BitVec w} :
     (x + y).msb =
       Bool.xor (getMsbD x 0) (Bool.xor (getMsbD y 0) (carry (w - 1) x y false)) := by
   simp only [BitVec.msb, BitVec.getMsbD]
-  by_cases h₀ : w ≤ 0
-  · simp [h₀, show w = 0 by omega]
-  · simp [h₀, getLsbD_add, show w > 0 by omega]
+  by_cases h : w ≤ 0
+  · simp [h, show w = 0 by omega]
+  · simp [h, getLsbD_add, show w > 0 by omega]
 
 theorem msb_sub {x y: BitVec w} :
     (x - y).msb
