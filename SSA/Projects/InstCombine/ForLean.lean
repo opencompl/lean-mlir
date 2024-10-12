@@ -589,13 +589,7 @@ theorem getLsbD_neg {i : Nat} {i_lt : i < w} {x : BitVec w} :
 theorem getMsbD_add {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     getMsbD (x + y) i =
       Bool.xor (getMsbD x i) (Bool.xor (getMsbD y i) (carry (w - 1 - i) x y false)) := by
-  simp only [getMsbD]
-  by_cases h₀ : i < w
-  · simp only [h₀, decide_True, Bool.true_and]
-    rw [BitVec.getLsbD_add]
-    omega
-  · simp [h₀]
-    omega
+  simp [getMsbD, getLsbD_add, i_lt, show w - 1 - i < w by omega]
 
 theorem getMsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     (x - y).getMsbD i =
