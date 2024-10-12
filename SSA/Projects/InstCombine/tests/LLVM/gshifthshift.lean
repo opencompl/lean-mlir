@@ -75,6 +75,40 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 
 
 
+def ashr_shl_constants_before := [llvm|
+{
+^0(%arg25 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -33 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %2 = llvm.ashr %0, %arg25 : i32
+  %3 = llvm.shl %2, %1 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+def ashr_shl_constants_after := [llvm|
+{
+^0(%arg25 : i32):
+  %0 = "llvm.mlir.constant"() <{value = -33 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 3 : i32}> : () -> i32
+  %2 = llvm.ashr %0, %arg25 : i32
+  %3 = llvm.shl %2, %1 overflow<nsw> : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem ashr_shl_constants_proof : ashr_shl_constants_before ⊑ ashr_shl_constants_after := by
+  unfold ashr_shl_constants_before ashr_shl_constants_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN ashr_shl_constants
+  all_goals (try extract_goal ; sorry)
+  ---END ashr_shl_constants
+
+
+
 def shl_lshr_demand1_before := [llvm|
 {
 ^0(%arg20 : i8):
@@ -180,5 +214,41 @@ theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_af
   ---BEGIN lshr_shl_demand1
   all_goals (try extract_goal ; sorry)
   ---END lshr_shl_demand1
+
+
+
+def lshr_shl_demand3_before := [llvm|
+{
+^0(%arg7 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 28 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %2 = llvm.lshr %0, %arg7 : i8
+  %3 = llvm.shl %2, %1 : i8
+  %4 = llvm.or %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+def lshr_shl_demand3_after := [llvm|
+{
+^0(%arg7 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 28 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = 3 : i8}> : () -> i8
+  %2 = llvm.lshr %0, %arg7 : i8
+  %3 = llvm.shl %2, %1 overflow<nuw> : i8
+  %4 = llvm.or %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_after := by
+  unfold lshr_shl_demand3_before lshr_shl_demand3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN lshr_shl_demand3
+  all_goals (try extract_goal ; sorry)
+  ---END lshr_shl_demand3
 
 

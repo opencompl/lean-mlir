@@ -55,7 +55,7 @@ def pr51551_demand3bits_before := [llvm|
   %2 = "llvm.mlir.constant"() <{value = 7 : i32}> : () -> i32
   %3 = llvm.and %arg1, %0 : i32
   %4 = llvm.or %3, %1 : i32
-  %5 = llvm.mul %4, %arg0 : i32
+  %5 = llvm.mul %4, %arg0 overflow<nsw> : i32
   %6 = llvm.and %5, %2 : i32
   "llvm.return"(%6) : (i32) -> ()
 }

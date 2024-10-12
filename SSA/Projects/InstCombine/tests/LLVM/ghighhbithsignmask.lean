@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.ghighhbithsignmask_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   intros
   try simp
   ---BEGIN t0
-  apply t0_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0
 
 
@@ -72,7 +72,7 @@ theorem t0_exact_proof : t0_exact_before ⊑ t0_exact_after := by
   intros
   try simp
   ---BEGIN t0_exact
-  apply t0_exact_thm
+  all_goals (try extract_goal ; sorry)
   ---END t0_exact
 
 
@@ -104,7 +104,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   intros
   try simp
   ---BEGIN t2
-  apply t2_thm
+  all_goals (try extract_goal ; sorry)
   ---END t2
 
 
@@ -136,7 +136,41 @@ theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   intros
   try simp
   ---BEGIN t3_exact
-  apply t3_exact_thm
+  all_goals (try extract_goal ; sorry)
   ---END t3_exact
+
+
+
+def n9_before := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 62 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %2 = llvm.lshr %arg1, %0 : i64
+  %3 = llvm.sub %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+def n9_after := [llvm|
+{
+^0(%arg1 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 62 : i64}> : () -> i64
+  %1 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+  %2 = llvm.lshr %arg1, %0 : i64
+  %3 = llvm.sub %1, %2 overflow<nsw> : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem n9_proof : n9_before ⊑ n9_after := by
+  unfold n9_before n9_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN n9
+  all_goals (try extract_goal ; sorry)
+  ---END n9
 
 

@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gxor2_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -44,7 +44,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
+  apply test2_thm
   ---END test2
 
 
@@ -80,7 +80,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  all_goals (try extract_goal ; sorry)
+  apply test3_thm
   ---END test3
 
 
@@ -120,7 +120,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   intros
   try simp
   ---BEGIN test5
-  all_goals (try extract_goal ; sorry)
+  apply test5_thm
   ---END test5
 
 
@@ -156,7 +156,7 @@ theorem test6_proof : test6_before ⊑ test6_after := by
   intros
   try simp
   ---BEGIN test6
-  all_goals (try extract_goal ; sorry)
+  apply test6_thm
   ---END test6
 
 
@@ -189,7 +189,7 @@ theorem test7_proof : test7_before ⊑ test7_after := by
   intros
   try simp
   ---BEGIN test7
-  all_goals (try extract_goal ; sorry)
+  apply test7_thm
   ---END test7
 
 
@@ -222,7 +222,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   intros
   try simp
   ---BEGIN test8
-  all_goals (try extract_goal ; sorry)
+  apply test8_thm
   ---END test8
 
 
@@ -252,7 +252,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   intros
   try simp
   ---BEGIN test9
-  all_goals (try extract_goal ; sorry)
+  apply test9_thm
   ---END test9
 
 
@@ -282,7 +282,7 @@ theorem test9b_proof : test9b_before ⊑ test9b_after := by
   intros
   try simp
   ---BEGIN test9b
-  all_goals (try extract_goal ; sorry)
+  apply test9b_thm
   ---END test9b
 
 
@@ -312,7 +312,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   intros
   try simp
   ---BEGIN test10
-  all_goals (try extract_goal ; sorry)
+  apply test10_thm
   ---END test10
 
 
@@ -342,7 +342,7 @@ theorem test10b_proof : test10b_before ⊑ test10b_after := by
   intros
   try simp
   ---BEGIN test10b
-  all_goals (try extract_goal ; sorry)
+  apply test10b_thm
   ---END test10b
 
 
@@ -378,7 +378,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   intros
   try simp
   ---BEGIN test11
-  all_goals (try extract_goal ; sorry)
+  apply test11_thm
   ---END test11
 
 
@@ -414,7 +414,7 @@ theorem test11b_proof : test11b_before ⊑ test11b_after := by
   intros
   try simp
   ---BEGIN test11b
-  all_goals (try extract_goal ; sorry)
+  apply test11b_thm
   ---END test11b
 
 
@@ -450,7 +450,7 @@ theorem test11c_proof : test11c_before ⊑ test11c_after := by
   intros
   try simp
   ---BEGIN test11c
-  all_goals (try extract_goal ; sorry)
+  apply test11c_thm
   ---END test11c
 
 
@@ -486,7 +486,7 @@ theorem test11d_proof : test11d_before ⊑ test11d_after := by
   intros
   try simp
   ---BEGIN test11d
-  all_goals (try extract_goal ; sorry)
+  apply test11d_thm
   ---END test11d
 
 
@@ -524,7 +524,7 @@ theorem test11e_proof : test11e_before ⊑ test11e_after := by
   intros
   try simp
   ---BEGIN test11e
-  all_goals (try extract_goal ; sorry)
+  apply test11e_thm
   ---END test11e
 
 
@@ -562,7 +562,7 @@ theorem test11f_proof : test11f_before ⊑ test11f_after := by
   intros
   try simp
   ---BEGIN test11f
-  all_goals (try extract_goal ; sorry)
+  apply test11f_thm
   ---END test11f
 
 
@@ -596,7 +596,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   intros
   try simp
   ---BEGIN test12
-  all_goals (try extract_goal ; sorry)
+  apply test12_thm
   ---END test12
 
 
@@ -630,7 +630,7 @@ theorem test12commuted_proof : test12commuted_before ⊑ test12commuted_after :=
   intros
   try simp
   ---BEGIN test12commuted
-  all_goals (try extract_goal ; sorry)
+  apply test12commuted_thm
   ---END test12commuted
 
 
@@ -664,7 +664,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   intros
   try simp
   ---BEGIN test13
-  all_goals (try extract_goal ; sorry)
+  apply test13_thm
   ---END test13
 
 
@@ -698,7 +698,7 @@ theorem test13commuted_proof : test13commuted_before ⊑ test13commuted_after :=
   intros
   try simp
   ---BEGIN test13commuted
-  all_goals (try extract_goal ; sorry)
+  apply test13commuted_thm
   ---END test13commuted
 
 
@@ -731,7 +731,7 @@ theorem xor_or_xor_common_op_commute1_proof : xor_or_xor_common_op_commute1_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute1
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute1_thm
   ---END xor_or_xor_common_op_commute1
 
 
@@ -764,7 +764,7 @@ theorem xor_or_xor_common_op_commute2_proof : xor_or_xor_common_op_commute2_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute2
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute2_thm
   ---END xor_or_xor_common_op_commute2
 
 
@@ -797,7 +797,7 @@ theorem xor_or_xor_common_op_commute3_proof : xor_or_xor_common_op_commute3_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute3
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute3_thm
   ---END xor_or_xor_common_op_commute3
 
 
@@ -830,7 +830,7 @@ theorem xor_or_xor_common_op_commute4_proof : xor_or_xor_common_op_commute4_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute4
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute4_thm
   ---END xor_or_xor_common_op_commute4
 
 
@@ -863,7 +863,7 @@ theorem xor_or_xor_common_op_commute5_proof : xor_or_xor_common_op_commute5_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute5
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute5_thm
   ---END xor_or_xor_common_op_commute5
 
 
@@ -896,7 +896,7 @@ theorem xor_or_xor_common_op_commute6_proof : xor_or_xor_common_op_commute6_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute6
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute6_thm
   ---END xor_or_xor_common_op_commute6
 
 
@@ -929,7 +929,7 @@ theorem xor_or_xor_common_op_commute7_proof : xor_or_xor_common_op_commute7_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute7
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute7_thm
   ---END xor_or_xor_common_op_commute7
 
 
@@ -962,7 +962,7 @@ theorem xor_or_xor_common_op_commute8_proof : xor_or_xor_common_op_commute8_befo
   intros
   try simp
   ---BEGIN xor_or_xor_common_op_commute8
-  all_goals (try extract_goal ; sorry)
+  apply xor_or_xor_common_op_commute8_thm
   ---END xor_or_xor_common_op_commute8
 
 
@@ -1000,7 +1000,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   intros
   try simp
   ---BEGIN test15
-  all_goals (try extract_goal ; sorry)
+  apply test15_thm
   ---END test15
 
 
@@ -1038,7 +1038,7 @@ theorem test16_proof : test16_before ⊑ test16_after := by
   intros
   try simp
   ---BEGIN test16
-  all_goals (try extract_goal ; sorry)
+  apply test16_thm
   ---END test16
 
 
@@ -1074,7 +1074,7 @@ theorem not_xor_to_or_not1_proof : not_xor_to_or_not1_before ⊑ not_xor_to_or_n
   intros
   try simp
   ---BEGIN not_xor_to_or_not1
-  all_goals (try extract_goal ; sorry)
+  apply not_xor_to_or_not1_thm
   ---END not_xor_to_or_not1
 
 
@@ -1110,7 +1110,7 @@ theorem not_xor_to_or_not2_proof : not_xor_to_or_not2_before ⊑ not_xor_to_or_n
   intros
   try simp
   ---BEGIN not_xor_to_or_not2
-  all_goals (try extract_goal ; sorry)
+  apply not_xor_to_or_not2_thm
   ---END not_xor_to_or_not2
 
 
@@ -1146,7 +1146,7 @@ theorem not_xor_to_or_not3_proof : not_xor_to_or_not3_before ⊑ not_xor_to_or_n
   intros
   try simp
   ---BEGIN not_xor_to_or_not3
-  all_goals (try extract_goal ; sorry)
+  apply not_xor_to_or_not3_thm
   ---END not_xor_to_or_not3
 
 
@@ -1182,7 +1182,7 @@ theorem not_xor_to_or_not4_proof : not_xor_to_or_not4_before ⊑ not_xor_to_or_n
   intros
   try simp
   ---BEGIN not_xor_to_or_not4
-  all_goals (try extract_goal ; sorry)
+  apply not_xor_to_or_not4_thm
   ---END not_xor_to_or_not4
 
 
@@ -1218,7 +1218,7 @@ theorem xor_notand_to_or_not1_proof : xor_notand_to_or_not1_before ⊑ xor_notan
   intros
   try simp
   ---BEGIN xor_notand_to_or_not1
-  all_goals (try extract_goal ; sorry)
+  apply xor_notand_to_or_not1_thm
   ---END xor_notand_to_or_not1
 
 
@@ -1254,7 +1254,7 @@ theorem xor_notand_to_or_not2_proof : xor_notand_to_or_not2_before ⊑ xor_notan
   intros
   try simp
   ---BEGIN xor_notand_to_or_not2
-  all_goals (try extract_goal ; sorry)
+  apply xor_notand_to_or_not2_thm
   ---END xor_notand_to_or_not2
 
 
@@ -1290,7 +1290,7 @@ theorem xor_notand_to_or_not3_proof : xor_notand_to_or_not3_before ⊑ xor_notan
   intros
   try simp
   ---BEGIN xor_notand_to_or_not3
-  all_goals (try extract_goal ; sorry)
+  apply xor_notand_to_or_not3_thm
   ---END xor_notand_to_or_not3
 
 
@@ -1326,7 +1326,7 @@ theorem xor_notand_to_or_not4_proof : xor_notand_to_or_not4_before ⊑ xor_notan
   intros
   try simp
   ---BEGIN xor_notand_to_or_not4
-  all_goals (try extract_goal ; sorry)
+  apply xor_notand_to_or_not4_thm
   ---END xor_notand_to_or_not4
 
 

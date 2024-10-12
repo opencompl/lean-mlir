@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gandhxorhmerge_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -69,7 +69,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  apply test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END test2
 
 
@@ -101,7 +101,7 @@ theorem PR75692_1_proof : PR75692_1_before ⊑ PR75692_1_after := by
   intros
   try simp
   ---BEGIN PR75692_1
-  apply PR75692_1_thm
+  all_goals (try extract_goal ; sorry)
   ---END PR75692_1
 
 

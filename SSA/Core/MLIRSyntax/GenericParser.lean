@@ -556,7 +556,7 @@ syntax "#" strLit : mlir_attr_val -- alias
 declare_syntax_cat dialect_attribute_contents
 syntax mlir_attr_val : dialect_attribute_contents
 /--
-Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`, 
+Following https://mlir.llvm.org/docs/LangRef/, we define a `dialect-attribute`,
 which is a particular case of an `mlir-attr-val` that is namespaced to a particular dialect
 
 ```bnf
@@ -634,15 +634,15 @@ macro_rules
 
 macro_rules
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:str > ]) => do
-  let dialect := Lean.quote dialect.getId.toString
+  let dialect := Lean.quote dialect.getId.eraseMacroScopes.toString
   `(AttrValue.opaque_ $dialect $opaqueData)
 | `([mlir_attr_val| # $dialect:ident < $opaqueData:ident > ]) => do
-  let d := Lean.quote dialect.getId.toString
+  let d := Lean.quote dialect.getId.eraseMacroScopes.toString
   let g : TSyntax `str := Lean.Syntax.mkStrLit (toString opaqueData.getId)
   `(AttrValue.opaque_ $d $g)
 macro_rules
 | `([mlir_attr_val| #opaque< $dialect:ident, $opaqueData:str> : $t:mlir_type ]) => do
-  let dialect := Lean.quote dialect.getId.toString
+  let dialect := Lean.quote dialect.getId.eraseMacroScopes.toString
   `(AttrValue.opaqueElementsAttr $dialect $opaqueData $(⟨t⟩))
 
 macro_rules

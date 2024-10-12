@@ -21,8 +21,8 @@ def test0_before := [llvm|
   %2 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
   %3 = llvm.and %arg3, %0 : i32
   %4 = llvm.xor %3, %1 : i32
-  %5 = llvm.add %4, %2 : i32
-  %6 = llvm.add %arg3, %5 : i32
+  %5 = llvm.add %4, %2 overflow<nsw> : i32
+  %6 = llvm.add %arg3, %5 overflow<nsw> : i32
   "llvm.return"(%6) : (i32) -> ()
 }
 ]
@@ -57,8 +57,8 @@ def test1_before := [llvm|
   %3 = llvm.ashr %arg1, %0 : i32
   %4 = llvm.and %3, %1 : i32
   %5 = llvm.xor %4, %2 : i32
-  %6 = llvm.add %5, %0 : i32
-  %7 = llvm.add %arg1, %6 : i32
+  %6 = llvm.add %5, %0 overflow<nsw> : i32
+  %7 = llvm.add %arg1, %6 overflow<nsw> : i32
   "llvm.return"(%7) : (i32) -> ()
 }
 ]
@@ -69,7 +69,7 @@ def test1_after := [llvm|
   %1 = "llvm.mlir.constant"() <{value = 1431655765 : i32}> : () -> i32
   %2 = llvm.lshr %arg1, %0 : i32
   %3 = llvm.and %2, %1 : i32
-  %4 = llvm.sub %arg1, %3 : i32
+  %4 = llvm.sub %arg1, %3 overflow<nsw> : i32
   "llvm.return"(%4) : (i32) -> ()
 }
 ]
