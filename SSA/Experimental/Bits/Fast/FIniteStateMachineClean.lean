@@ -655,17 +655,17 @@ def eval.initialState (xs : BitStreamProd arity × p.State) :
   ((x_tail, next.fst), true)
 
 @[simp]
-lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) (h : i > 0): and'.eval xs i = BitStream.EqualUpTo (i - 1) (xs 0) (xs 1) :=  by
-  unfold BitStream.EqualUpTo
-  induction i generalizing xs
-  case zero =>
-    omega
-  case succ ii ih =>
-    simp [← ih]
-    let h := stateStream_zero and'
-    unfold eval
-    simp only [outputStreamAux_succ, nextState, Fin.isValue]
-    rw [← stateStream_zero]
-    · simp [h]
-      sorry
-    · sorry
+lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) : and'.eval xs = (xs 0) &&& (xs 1) :=  by
+  -- unfold BitStrand_eqeam.EqualUpTo
+  -- induction i generalizing xs
+  -- case zero =>
+  --   omega
+  -- case succ ii ih =>
+  --   simp [← ih]
+  --   let h := stateStream_zero and'
+  --   unfold eval
+  --   simp only [outputStreamAux_succ, nextState, Fin.isValue]
+  --   rw [← stateStream_zero]
+  --   · simp [h]
+  --     sorry
+  --   · sorry
