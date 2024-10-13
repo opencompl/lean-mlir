@@ -578,6 +578,7 @@ theorem getLsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     (x - y).getLsbD i =
       (x.getLsbD i ^^ ((~~~y + 1).getLsbD i ^^ carry i x (~~~y + 1) false)) := by
   rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add, getLsbD_add]
+  rfl
   omega
 
 theorem getLsbD_neg {i : Nat} {i_lt : i < w} {x : BitVec w} :
