@@ -669,3 +669,6 @@ lemma eval_and (xs : BitStreamProd (Fin 2)) (i : Nat) : and'.eval xs = (xs 0) &&
   --   · simp [h]
   --     sorry
   --   · sorry
+  unfold eval; unfold and'; unfold mkBinaryPredicate
+  simp only [Fin.isValue, Width.n.mk_eq]
+  sorry
