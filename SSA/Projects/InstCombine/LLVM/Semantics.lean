@@ -178,9 +178,10 @@ Division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y = 0
-  then none
-  else pure <| BitVec.ofInt w (x.toNat / y.toNat)
+  if y = 0 then
+    none
+  else
+    pure <| x / y
 
 structure ExactFlag where
   exact : Bool := false
@@ -214,9 +215,10 @@ at width 2, -4 / -1 is considered overflow!
 -- is no magnitude to overflow.
 @[simp_llvm]
 def sdiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1)
-  then .none
-  else pure (BitVec.sdiv x y)
+  if y == 0 || (w != 1 && x == (BitVec.intMin w) && y == -1) then
+    none
+  else
+    pure (x.sdiv y)
 
 theorem sdiv?_denom_zero_eq_none {w : Nat} (x : BitVec w) :
   LLVM.sdiv? x 0 = none := by
@@ -253,9 +255,10 @@ Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y = 0
-  then none
-  else pure <| BitVec.ofNat w (x.toNat % y.toNat)
+  if y = 0 then
+    none
+  else
+    pure <| x % y
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
