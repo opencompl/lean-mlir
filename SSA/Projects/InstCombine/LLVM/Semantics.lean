@@ -178,9 +178,9 @@ Division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  match y with
-    | 0 => none
-    | _ => pure <| BitVec.ofInt w (x.toNat / y.toNat)
+  if y = 0
+  then none
+  else pure <| BitVec.ofInt w (x.toNat / y.toNat)
 
 structure ExactFlag where
   exact : Bool := false
@@ -253,9 +253,9 @@ Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
-  match y with
-    | 0 => none
-    | _ => pure <| BitVec.ofNat w (x.toNat % y.toNat)
+  if y = 0
+  then none
+  else pure <| BitVec.ofNat w (x.toNat % y.toNat)
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
