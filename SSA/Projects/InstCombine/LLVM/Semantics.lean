@@ -178,7 +178,7 @@ Division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def udiv? {w : Nat} (x y : BitVec w) : IntW w :=
-  match y.toNat with
+  match y with
     | 0 => none
     | _ => pure <| BitVec.ofInt w (x.toNat / y.toNat)
 
@@ -253,9 +253,9 @@ Taking the remainder of a division by zero is undefined behavior.
 -/
 @[simp_llvm]
 def urem? {w : Nat} (x y : BitVec w) : IntW w :=
-  if y.toNat = 0
-  then none
-  else pure <| BitVec.ofNat w (x.toNat % y.toNat)
+  match y with
+    | 0 => none
+    | _ => pure <| BitVec.ofNat w (x.toNat % y.toNat)
 
 @[simp_llvm_option]
 def urem {w : Nat} (x y : IntW w) : IntW w := do
@@ -333,8 +333,8 @@ bits in op1, this instruction returns a poison value.
 -/
 @[simp_llvm]
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat
-  if bits >= n then .none
+  if op2 >= BitVec.ofNat n n
+  then .none
   else pure (op1 <<< op2)
 
 
@@ -362,8 +362,8 @@ Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat
-  if bits >= n then .none
+  if op2 >= BitVec.ofNat n n
+  then .none
   else pure (op1 >>> op2)
 
 @[simp_llvm_option]
@@ -386,8 +386,8 @@ Corresponds to `Std.BitVec.sshiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  let bits := op2.toNat -- should this be toInt?
-  if bits >= n then .none
+  if op2 >= BitVec.ofNat n n
+  then .none
   else pure (op1 >>>ₛ op2)
 
 @[simp_llvm_option]
