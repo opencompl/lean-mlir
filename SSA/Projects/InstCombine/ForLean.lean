@@ -517,63 +517,6 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
 
-theorem getMsbD_sshiftRight {x : BitVec w} {i n : Nat} :
-    getMsbD (x.sshiftRight n) i = (decide (i < w) && if i < n then x.msb else getMsbD x (i - n)) := by
-  simp only [getMsbD]
-  rw [BitVec.getLsbD_sshiftRight]
-  by_cases h : i < w
-  <;> by_cases h₁ : w ≤ w - 1 - i
-  <;> by_cases h₂ : ¬(i < n)
-  <;> by_cases h₃ : n + (w - 1 - i) < w
-  <;> by_cases h₄ : i - n < w
-  all_goals (simp [h, h₁, h₂, h₃, h₄]; try congr; try omega)
-  simp_all
-
-theorem getLsbD_sshiftRight' (x y: BitVec w) {i : Nat} :
-    getLsbD (x.sshiftRight' y) i =
-      (!decide (w ≤ i) && if y.toNat + i < w then x.getLsbD (y.toNat + i) else x.msb) := by
-  simp only [BitVec.sshiftRight', BitVec.getLsbD_sshiftRight]
-
-theorem getMsbD_sshiftRight' {x y: BitVec w} {i : Nat} :
-    getMsbD (x.sshiftRight' y) i = (decide (i < w) && if i < y.toNat then x.msb else getMsbD x (i - y.toNat)) := by
-  simp only [BitVec.sshiftRight', getMsbD, BitVec.getLsbD_sshiftRight]
-  by_cases h : i < w
-  <;> by_cases h₁ : w ≤ w - 1 - i
-  <;> by_cases h₂ : i < y.toNat
-  <;> by_cases h₃ : y.toNat + (w - 1 - i) < w
-  <;> by_cases h₄ : (y.toNat + (w - 1 - i)) = (w - 1 - (i - y.toNat))
-  all_goals (simp [h, h₁, h₂, h₃, h₄]; try omega)
-  simp_all
-  omega
-
-theorem getMsbD_ushiftRight {x : BitVec w} {i n : Nat} :
-    getMsbD (x.ushiftRight n) i = (decide (i < w) && if i < n then false else getMsbD x (i - n)) := by
-  simp only [getMsbD, Bool.if_false_left]
-  by_cases h : i < w
-  <;> by_cases h₁ : i < n
-  <;> by_cases h₂ : i - n < w
-  all_goals (simp [h, h₁, h₂]; try congr; try omega)
-  rw [BitVec.getLsbD_ge]
-  omega
-
-theorem msb_shiftLeft {x : BitVec w} {n : Nat} :
-    (x <<< n).msb = x.getMsbD n := by
-  simp [BitVec.msb]
-
-theorem msb_ushiftRight {x : BitVec w} {n : Nat} :
-    (x.ushiftRight n).msb = if n > 0 then false else x.msb := by
-  induction n
-  case zero =>
-    simp
-  case succ n ih =>
-    simp [ih, ← BitVec.ushiftRight_eq, getMsbD_ushiftRight, BitVec.msb]
-
--- msb_sshiftRight exists already under the name : sshiftRight_msb_eq_msb
-
-theorem msb_sshiftRight' {x y: BitVec w} :
-    (x.sshiftRight' y).msb = x.msb := by
-  simp [BitVec.sshiftRight', BitVec.sshiftRight_msb_eq_msb]
-
 theorem getLsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
     (x - y).getLsbD i =
       (x.getLsbD i ^^ ((~~~y + 1).getLsbD i ^^ carry i x (~~~y + 1) false)) := by
