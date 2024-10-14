@@ -181,6 +181,6 @@ macro "bv_compare'": tactic =>
   `(tactic|
       (
         -- bv_compare "/usr/local/bin/bitwuzla"
-        sorry
+        bv_decide
       )
    )
