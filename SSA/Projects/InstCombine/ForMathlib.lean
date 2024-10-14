@@ -10,19 +10,6 @@ import Mathlib.Data.ZMod.Defs
 namespace BitVec
 open Nat
 
-theorem ofInt_negSucc (w n : Nat ) :
-    BitVec.ofInt w (Int.negSucc n) = ~~~.ofNat w n := by
-  simp [BitVec.ofInt, BitVec.toNat_eq, Int.toNat, toNat_ofNatLt, toNat_not, toNat_ofNat]
-  cases h : Int.negSucc n % 2 ^ w
-  · rw [Int.ofNat_eq_coe, Int.negSucc_emod] at h
-    · have _ : 0 < 2 ^ w := pow_pos (by decide) w
-      rw [← Int.natCast_inj, Nat.cast_sub (by omega), Nat.cast_sub (by omega)]
-      simp [h]
-    · omega
-  · have nonneg : Int.negSucc n % 2 ^ w ≥ 0 := by
-      simp [Int.emod_nonneg (Int.negSucc n) _]
-    simp_all
-
 @[simp] lemma ofFin_neg : ofFin (-x) = -(ofFin x) := by
   ext; rw [neg_eq_zero_sub]; simp; rfl
 
@@ -45,7 +32,7 @@ theorem ofFin_intCast (z : ℤ) : ofFin (z : Fin (2^w)) = Int.cast z := by
     unfold Int.castDef
     cases' z with z z
     · rfl
-    · rw [ofInt_negSucc]
+    · rw [ofInt_negSucc_eq_not_ofNat]
       simp only [Nat.cast_add, Nat.cast_one, neg_add_rev]
       rw [← add_ofFin, ofFin_neg, ofFin_ofNat, ofNat_eq_ofNat, ofFin_neg, ofFin_natCast,
         natCast_eq_ofNat, negOne_eq_allOnes, ← sub_toAdd, allOnes_sub_eq_not]
