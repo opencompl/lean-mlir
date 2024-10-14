@@ -32,11 +32,15 @@ theorem shift_mul:
   simp_alive_ops
   intros A B
   rcases A with rfl | A  <;>
-  rcases B with rfl | B  <;> (try (simp only [bind, Option.bind, Refinement.refl]; done)) <;>
-  by_cases h : w ≤ BitVec.toNat B <;>
-    simp only [Bool.false_eq_true, ge_iff_le, toNat_allOnes, false_and, _root_.or_self, ↓reduceIte,
-      shiftLeft_eq', EffectKind.return_impure_toMonad_eq, Option.pure_def, mul_eq,
-      Option.bind_eq_bind, Option.none_bind, Option.bind_none, Option.some_bind, Refinement.refl, h]
+  rcases B with rfl | B  <;> (try (simp only [Bool.false_eq_true, shiftLeft_eq', false_and, ↓reduceIte, ushiftRight_eq', natCast_eq_ofNat,
+  ge_iff_le, EffectKind.return_impure_toMonad_eq, Option.pure_def, truncate_eq_setWidth, ofNat_eq_ofNat, toNat_ofNat,
+  mul_eq, Option.bind_eq_bind, Option.some_bind, Option.none_bind, Option.bind_none, Refinement.refl]; done)) ;
+  by_cases h : (BitVec.ofNat w w) ≤ B <;>
+    simp only [Bool.false_eq_true, shiftLeft_eq', false_and, ↓reduceIte, ushiftRight_eq',
+      natCast_eq_ofNat, ge_iff_le, EffectKind.return_impure_toMonad_eq, Option.pure_def,
+      truncate_eq_setWidth, ofNat_eq_ofNat, toNat_ofNat, mul_eq, Option.bind_eq_bind,
+      Option.some_bind, Refinement.refl, h]
+  simp
   simp
 
 /--
