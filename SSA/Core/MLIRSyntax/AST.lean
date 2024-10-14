@@ -47,7 +47,7 @@ def SSAValToString (s: SSAVal): String :=
 instance : ToString SSAVal where
   toString := SSAValToString
 
-inductive Signedness :=
+inductive Signedness where
   | Signless -- i*
   | Unsigned -- u*
   | Signed   -- si*
@@ -57,7 +57,7 @@ abbrev Width φ := ConcreteOrMVar Nat φ
 abbrev Width.concrete : Nat → Width φ := ConcreteOrMVar.concrete
 abbrev Width.mvar : Fin φ → Width φ := ConcreteOrMVar.mvar
 
-inductive MLIRType (φ : Nat) : Type _ :=
+inductive MLIRType (φ : Nat) : Type _ where
   | int: Signedness -> Width φ -> MLIRType φ
   | float: Nat -> MLIRType φ
   | tensor1d: MLIRType φ -- tensor of int values.
@@ -86,7 +86,7 @@ def MLIRType.i (width : Nat) : MLIRTy φ := MLIRType.int Signedness.Signless wid
 abbrev TypedSSAVal := SSAVal × MLIRType φ
 
 mutual
-inductive AttrValue :=
+inductive AttrValue where
   | symbol: String -> AttrValue -- symbol ref attr
   | str : String -> AttrValue
   | int : Int -> MLIRType φ -> AttrValue
@@ -106,12 +106,12 @@ inductive AttrValue :=
 
 -- https://mlir.llvm.org/docs/LangRef/#attributes
 -- | TODO: add support for mutually inductive records / structures
-inductive AttrEntry  :=
+inductive AttrEntry where
   | mk: (key: String)
       -> (value: AttrValue)
       -> AttrEntry
 
-inductive AttrDict :=
+inductive AttrDict where
   | mk: List AttrEntry -> AttrDict
 
 end

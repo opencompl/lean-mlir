@@ -17,7 +17,7 @@ variable {α β α' β' : Type} {γ : β → Type}
 where `n` is the number of `BitStream` arguments,
 as a finite state machine.
 -/
-structure FSM (arity : Type) : Type 1 :=
+structure FSM (arity : Type) : Type 1 where
   /--
   The arity of the (finite) type `α` determines how many bits the internal carry state of this
   FSM has -/
@@ -504,7 +504,7 @@ def repeatBit : FSM Unit where
 
 end FSM
 
-structure FSMSolution (t : Term) extends FSM (Fin t.arity) :=
+structure FSMSolution (t : Term) extends FSM (Fin t.arity) where
   ( good : t.evalFin = toFSM.eval )
 
 def composeUnary

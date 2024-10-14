@@ -145,7 +145,7 @@ variable (d : Dialect) [DialectSignature d]
 
 mutual
 /-- An intrinsically typed expression whose effect is *at most* EffectKind -/
-inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Type :=
+inductive Expr : (Γ : Ctxt d.Ty) → (eff : EffectKind) → (ty : d.Ty) → Type where
   | mk {Γ} {ty} (op : d.Op)
     (ty_eq : ty = DialectSignature.outTy op)
     (eff_le : DialectSignature.effectKind op ≤ eff)
