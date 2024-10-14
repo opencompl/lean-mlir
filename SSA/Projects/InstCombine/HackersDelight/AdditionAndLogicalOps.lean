@@ -8,7 +8,7 @@ namespace Ch2Basics
 
 namespace AdditionCombinedWithLogicalOperations
 
-variable {x y z : BitVec 128}
+variable {x y z : BitVec 32}
 
 theorem neg_eq_not_add_one :
     -x = ~~~ x + 1 := by
