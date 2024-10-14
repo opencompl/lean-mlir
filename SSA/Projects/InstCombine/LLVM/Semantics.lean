@@ -333,7 +333,7 @@ bits in op1, this instruction returns a poison value.
 -/
 @[simp_llvm]
 def shl? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  if op2 >= BitVec.ofNat n n
+  if op2 >= n
   then .none
   else pure (op1 <<< op2)
 
@@ -362,7 +362,7 @@ Corresponds to `Std.BitVec.ushiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def lshr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  if op2 >= BitVec.ofNat n n
+  if op2 >= n
   then .none
   else pure (op1 >>> op2)
 
@@ -386,7 +386,7 @@ Corresponds to `Std.BitVec.sshiftRight` in the `pure` case.
 -/
 @[simp_llvm]
 def ashr? {n} (op1 : BitVec n) (op2 : BitVec n) : IntW n :=
-  if op2 >= BitVec.ofNat n n
+  if op2 >= n
   then .none
   else pure (op1 >>>ₛ op2)
 
