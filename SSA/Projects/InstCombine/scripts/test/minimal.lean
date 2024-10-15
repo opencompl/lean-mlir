@@ -66,3 +66,15 @@ theorem minimal4 : ∀ (x : BitVec 32),
   simp (config:={failIfUnchanged := false}) only [Option.some_bind]
 
   sorry
+
+-- Changing the type to Nat removes the error
+theorem minimal5 : ∀ (x : ℕ),
+  Refinement (α := ℕ)
+    ((some x).bind fun x =>
+      (if False then none else some (x >>> 1)).bind fun x' =>
+        some (x' >>> 1))
+    (some x) := by
+  intro x
+  simp only [Option.some_bind]
+
+  sorry
