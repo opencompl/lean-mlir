@@ -78,3 +78,14 @@ theorem minimal5 : ∀ (x : ℕ),
   simp only [Option.some_bind]
 
   sorry
+
+-- Replacing the Refinement with an equals does not remove the error
+theorem minimal6 : ∀ (x : BitVec 32),
+  ((some x).bind fun x =>
+    (if False then none else some (x.sshiftRight 1)).bind fun x' =>
+      some (x'.sshiftRight 1))
+  = (some x) := by
+  intro x
+  simp only [Option.some_bind]
+
+  sorry
