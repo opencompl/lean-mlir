@@ -550,11 +550,11 @@ theorem msb_sub {x y: BitVec w} :
       = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - 0) x (~~~y + 1#w) false)) := by
   simp [sub_eq_add_neg, BitVec.neg_eq_not_add, msb_add]
 
-theorem msb_neg  {x : BitVec w} :
+theorem msb_neg {x : BitVec w} :
     (-x).msb = (~~~x + 1#w).msb := by
   rw [neg_eq_not_add]
 
-theorem getLsbD_neg {i : Nat}  {x : BitVec w} :
+theorem getLsbD_neg {i : Nat} {x : BitVec w} :
     getLsbD (-x) i = getLsbD (~~~x + 1#w) i := by
   simp [neg_eq_not_add]
 
@@ -563,7 +563,7 @@ theorem getMsbD_neg {i : Nat} {x : BitVec w} :
   rw [neg_eq_not_add]
 
 theorem getLsbD_abs {i : Nat} {x : BitVec w} :
-    x.abs.getLsbD i = (if x.msb = true then -x else x).getLsbD i := by
+   getLsbD x.abs i = getLsbD (if x.msb = true then -x else x) i := by
   simp [BitVec.abs]
 
 theorem getMsbD_abs {i : Nat} {x : BitVec w} :
