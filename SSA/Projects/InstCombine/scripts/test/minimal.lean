@@ -28,7 +28,18 @@ theorem minimal1 : ∀ (x : BitVec 32),
         some (x'.sshiftRight 1))
     (some x) := by
   intro x
-  simp only [Nat.reduceLeDiff, ↓reduceIte]
+  simp only [↓reduceIte]
+  simp only [Option.some_bind]
+
+  sorry
+
+theorem minimal1bis : ∀ (x : BitVec 32),
+  Refinement (α := BitVec 32)
+    ((some x).bind fun x =>
+      (some (x.sshiftRight 1)).bind fun x' =>
+        some (x'.sshiftRight 1))
+    (some x) := by
+  intro x
   simp only [Option.some_bind]
 
   sorry
