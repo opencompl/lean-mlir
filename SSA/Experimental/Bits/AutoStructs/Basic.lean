@@ -339,6 +339,41 @@ def NFA.neg (m : NFA A) : NFA A := m.determinize.flipFinals
 
 end determinization
 
+section equality
+
+variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+
+private structure isIncluded.State where
+  visited : List (State × Std.HashSet State) := ∅ -- TODO: slow
+  worklist : List (State × Std.HashSet State) := ∅
+
+-- TODO: this function is not correct yet...
+/-- Returns true when `L(m1) ⊆ L(m2)` -/
+def NFA.isIncluded (m1 m2 : NFA A) : Bool :=
+  let st := { visited := [], worklist := m1.initials.fold (init := []) fun res s1 => (s1, m2.initials) :: res }
+  go st
+where go (st : isIncluded.State) : Bool :=
+  if let some ((s1, ss1), worklist) := st.worklist.next? then
+    let st := { st with worklist }
+    if m1.initials.contains s1 ∧ ss1.isDisjoint m2.finals then
+      false
+    else
+      let st := { st with visited := (s1, ss1) :: st.visited }
+      let st := (FinEnum.toList (α := A)).foldl (init := st) fun st a =>
+        let ss2 := m2.transSet ss1 a
+        (m1.trans.getD (s1, a) ∅).fold (init := st) fun st s2 =>
+          if st.worklist.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) ||
+            st.visited.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) then
+            st
+          else
+            { st with worklist := (s2, ss2)::st.worklist }
+      go st
+  else
+    true
+  decreasing_by sorry
+
+end equality
+
 section universality
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]

@@ -224,9 +224,19 @@ def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
     let m2 := (nfaOfFormula φ2).lift $ liftMax2 φ1.arity φ2.arity
     binopNfa op m1 m2
 
+
+/-
+Note: it is important to define this function and not inline it, otherwise
+each call to the tactic will compile a new function, which takes ~350ms on
+my machine. -- Leo
+ -/
+def formulaIsUniversal (f : Formula) : Bool :=
+  let m := nfaOfFormula f
+  m.isUniversal'
+
 -- This is wrong, this is (hopefuly) true only for `w > 0`
 axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) :
-  nfaOfFormula φ |>.isUniversal' → φ.sat' env
+  formulaIsUniversal φ → φ.sat' env
 
 -- For testing the comparison operators.
 def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : NFA (BitVec 0) :=
