@@ -13,7 +13,7 @@ import Std.Tactic.BVDecide
 attribute [simp_llvm_case_bash]
   BitVec.Refinement.refl BitVec.Refinement.some_some BitVec.Refinement.none_left
   bind_assoc forall_const
-  Option.bind_eq_bind Option.none_bind Option.bind_none Option.some_bind Option.pure_def
+  Option.bind_eq_bind Option.none_bind Option.bind_none Option.pure_def
   BitVec.reduceOfInt Nat.cast_one
 /- `reduceOfInt` and `Nat.cast_one` are somewhat questionable additions to this simp-set.
    They are not needed for the case-bashing to succeed, but they are simp-lemmas that were
