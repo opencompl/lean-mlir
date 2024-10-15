@@ -31,6 +31,6 @@ import SSA.Projects.InstCombine.Test
 -- Examples for the paper
 import SSA.Projects.InstCombine.PaperExamples
 -- Proofs from Hackers Delight Book
-import SSA.Projects.InstCombine.HackersDelight.ch-2-1-DeMorgan
-import SSA.Projects.InstCombine.HackersDelight.ch-2-2-AdditionAndLogicalOps
-import SSA.Projects.InstCombine.HackersDelight.ch-2-3-LogicalArithmeticIneq
+import SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan
+import SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps
+import SSA.Projects.InstCombine.HackersDelight.ch2_3LogicalArithmeticIneq
