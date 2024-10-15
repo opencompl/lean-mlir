@@ -49,6 +49,7 @@ allowed_names = {
     "llvm.mul",
     "llvm.sub",
     "llvm.sdiv",
+    "llvm.udiv",
 }
 allowed_unregistered = set()  # {
 
