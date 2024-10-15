@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gsdivhcanonicalize_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑
   intros
   try simp
   ---BEGIN test_sdiv_canonicalize_op0
-  all_goals (try extract_goal ; sorry)
+  apply test_sdiv_canonicalize_op0_thm
   ---END test_sdiv_canonicalize_op0
 
 
@@ -72,7 +72,7 @@ theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exac
   intros
   try simp
   ---BEGIN test_sdiv_canonicalize_op0_exact
-  all_goals (try extract_goal ; sorry)
+  apply test_sdiv_canonicalize_op0_exact_thm
   ---END test_sdiv_canonicalize_op0_exact
 
 

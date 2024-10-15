@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gavghlsb_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   intros
   try simp
   ---BEGIN avg_lsb
-  all_goals (try extract_goal ; sorry)
+  apply avg_lsb_thm
   ---END avg_lsb
 
 

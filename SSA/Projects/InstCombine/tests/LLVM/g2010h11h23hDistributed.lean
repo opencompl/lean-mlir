@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.g2010h11h23hDistributed_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -12,7 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2010h11h23hDistributed_statements
-                                                    
+
 def foo_before := [llvm|
 {
 ^0(%arg2 : i32, %arg3 : i32):
@@ -39,7 +39,5 @@ theorem foo_proof : foo_before ⊑ foo_after := by
   intros
   try simp
   ---BEGIN foo
-  all_goals (try extract_goal ; sorry)
+  apply foo_thm
   ---END foo
-
-

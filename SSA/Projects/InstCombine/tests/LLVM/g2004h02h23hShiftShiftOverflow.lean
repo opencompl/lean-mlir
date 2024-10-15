@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.g2004h02h23hShiftShiftOverflow_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem test_proof : test_before ⊑ test_after := by
   intros
   try simp
   ---BEGIN test
-  all_goals (try extract_goal ; sorry)
+  apply test_thm
   ---END test
 
 
@@ -69,7 +69,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
+  apply test2_thm
   ---END test2
 
 

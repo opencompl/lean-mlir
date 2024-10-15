@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gashrhlshr_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem ashr_known_pos_exact_proof : ashr_known_pos_exact_before ⊑ ashr_known_
   intros
   try simp
   ---BEGIN ashr_known_pos_exact
-  all_goals (try extract_goal ; sorry)
+  apply ashr_known_pos_exact_thm
   ---END ashr_known_pos_exact
 
 
@@ -73,7 +73,7 @@ theorem lshr_mul_times_3_div_2_proof : lshr_mul_times_3_div_2_before ⊑ lshr_mu
   intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_3_div_2_thm
   ---END lshr_mul_times_3_div_2
 
 
@@ -106,7 +106,7 @@ theorem lshr_mul_times_3_div_2_exact_proof : lshr_mul_times_3_div_2_exact_before
   intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2_exact
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_3_div_2_exact_thm
   ---END lshr_mul_times_3_div_2_exact
 
 
@@ -139,7 +139,7 @@ theorem lshr_mul_times_3_div_2_exact_2_proof : lshr_mul_times_3_div_2_exact_2_be
   intros
   try simp
   ---BEGIN lshr_mul_times_3_div_2_exact_2
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_3_div_2_exact_2_thm
   ---END lshr_mul_times_3_div_2_exact_2
 
 
@@ -172,7 +172,7 @@ theorem lshr_mul_times_5_div_4_proof : lshr_mul_times_5_div_4_before ⊑ lshr_mu
   intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_5_div_4_thm
   ---END lshr_mul_times_5_div_4
 
 
@@ -205,7 +205,7 @@ theorem lshr_mul_times_5_div_4_exact_proof : lshr_mul_times_5_div_4_exact_before
   intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4_exact
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_5_div_4_exact_thm
   ---END lshr_mul_times_5_div_4_exact
 
 
@@ -238,7 +238,7 @@ theorem lshr_mul_times_5_div_4_exact_2_proof : lshr_mul_times_5_div_4_exact_2_be
   intros
   try simp
   ---BEGIN lshr_mul_times_5_div_4_exact_2
-  all_goals (try extract_goal ; sorry)
+  apply lshr_mul_times_5_div_4_exact_2_thm
   ---END lshr_mul_times_5_div_4_exact_2
 
 
@@ -271,7 +271,7 @@ theorem ashr_mul_times_3_div_2_proof : ashr_mul_times_3_div_2_before ⊑ ashr_mu
   intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_3_div_2_thm
   ---END ashr_mul_times_3_div_2
 
 
@@ -304,7 +304,7 @@ theorem ashr_mul_times_3_div_2_exact_proof : ashr_mul_times_3_div_2_exact_before
   intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2_exact
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_3_div_2_exact_thm
   ---END ashr_mul_times_3_div_2_exact
 
 
@@ -337,7 +337,7 @@ theorem ashr_mul_times_3_div_2_exact_2_proof : ashr_mul_times_3_div_2_exact_2_be
   intros
   try simp
   ---BEGIN ashr_mul_times_3_div_2_exact_2
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_3_div_2_exact_2_thm
   ---END ashr_mul_times_3_div_2_exact_2
 
 
@@ -370,7 +370,7 @@ theorem ashr_mul_times_5_div_4_proof : ashr_mul_times_5_div_4_before ⊑ ashr_mu
   intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_5_div_4_thm
   ---END ashr_mul_times_5_div_4
 
 
@@ -403,7 +403,7 @@ theorem ashr_mul_times_5_div_4_exact_proof : ashr_mul_times_5_div_4_exact_before
   intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4_exact
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_5_div_4_exact_thm
   ---END ashr_mul_times_5_div_4_exact
 
 
@@ -436,7 +436,7 @@ theorem ashr_mul_times_5_div_4_exact_2_proof : ashr_mul_times_5_div_4_exact_2_be
   intros
   try simp
   ---BEGIN ashr_mul_times_5_div_4_exact_2
-  all_goals (try extract_goal ; sorry)
+  apply ashr_mul_times_5_div_4_exact_2_thm
   ---END ashr_mul_times_5_div_4_exact_2
 
 
@@ -474,7 +474,7 @@ theorem lsb_mask_sign_zext_wrong_cst2_proof : lsb_mask_sign_zext_wrong_cst2_befo
   intros
   try simp
   ---BEGIN lsb_mask_sign_zext_wrong_cst2
-  all_goals (try extract_goal ; sorry)
+  apply lsb_mask_sign_zext_wrong_cst2_thm
   ---END lsb_mask_sign_zext_wrong_cst2
 
 
@@ -512,7 +512,7 @@ theorem lsb_mask_sign_sext_wrong_cst2_proof : lsb_mask_sign_sext_wrong_cst2_befo
   intros
   try simp
   ---BEGIN lsb_mask_sign_sext_wrong_cst2
-  all_goals (try extract_goal ; sorry)
+  apply lsb_mask_sign_sext_wrong_cst2_thm
   ---END lsb_mask_sign_sext_wrong_cst2
 
 

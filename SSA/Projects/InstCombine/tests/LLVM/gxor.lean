@@ -474,6 +474,302 @@ theorem test28_sub_proof : test28_sub_before ⊑ test28_sub_after := by
 
 
 
+def or_xor_commute1_before := [llvm|
+{
+^0(%arg166 : i32, %arg167 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg166 : i32
+  %2 = llvm.udiv %0, %arg167 : i32
+  %3 = llvm.or %2, %1 : i32
+  %4 = llvm.xor %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def or_xor_commute1_after := [llvm|
+{
+^0(%arg166 : i32, %arg167 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg166 : i32
+  %3 = llvm.udiv %0, %arg167 : i32
+  %4 = llvm.xor %3, %1 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem or_xor_commute1_proof : or_xor_commute1_before ⊑ or_xor_commute1_after := by
+  unfold or_xor_commute1_before or_xor_commute1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_xor_commute1
+  all_goals (try extract_goal ; sorry)
+  ---END or_xor_commute1
+
+
+
+def or_xor_commute2_before := [llvm|
+{
+^0(%arg164 : i32, %arg165 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg164 : i32
+  %2 = llvm.udiv %0, %arg165 : i32
+  %3 = llvm.or %1, %2 : i32
+  %4 = llvm.xor %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def or_xor_commute2_after := [llvm|
+{
+^0(%arg164 : i32, %arg165 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg164 : i32
+  %3 = llvm.udiv %0, %arg165 : i32
+  %4 = llvm.xor %3, %1 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem or_xor_commute2_proof : or_xor_commute2_before ⊑ or_xor_commute2_after := by
+  unfold or_xor_commute2_before or_xor_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_xor_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END or_xor_commute2
+
+
+
+def or_xor_commute3_before := [llvm|
+{
+^0(%arg162 : i32, %arg163 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg162 : i32
+  %2 = llvm.udiv %0, %arg163 : i32
+  %3 = llvm.or %2, %1 : i32
+  %4 = llvm.xor %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def or_xor_commute3_after := [llvm|
+{
+^0(%arg162 : i32, %arg163 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg162 : i32
+  %3 = llvm.udiv %0, %arg163 : i32
+  %4 = llvm.xor %3, %1 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem or_xor_commute3_proof : or_xor_commute3_before ⊑ or_xor_commute3_after := by
+  unfold or_xor_commute3_before or_xor_commute3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_xor_commute3
+  all_goals (try extract_goal ; sorry)
+  ---END or_xor_commute3
+
+
+
+def or_xor_commute4_before := [llvm|
+{
+^0(%arg160 : i32, %arg161 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg160 : i32
+  %2 = llvm.udiv %0, %arg161 : i32
+  %3 = llvm.or %1, %2 : i32
+  %4 = llvm.xor %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def or_xor_commute4_after := [llvm|
+{
+^0(%arg160 : i32, %arg161 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg160 : i32
+  %3 = llvm.udiv %0, %arg161 : i32
+  %4 = llvm.xor %3, %1 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem or_xor_commute4_proof : or_xor_commute4_before ⊑ or_xor_commute4_after := by
+  unfold or_xor_commute4_before or_xor_commute4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN or_xor_commute4
+  all_goals (try extract_goal ; sorry)
+  ---END or_xor_commute4
+
+
+
+def and_xor_commute1_before := [llvm|
+{
+^0(%arg155 : i32, %arg156 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg155 : i32
+  %2 = llvm.udiv %0, %arg156 : i32
+  %3 = llvm.and %2, %1 : i32
+  %4 = llvm.xor %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def and_xor_commute1_after := [llvm|
+{
+^0(%arg155 : i32, %arg156 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg155 : i32
+  %3 = llvm.udiv %0, %arg156 : i32
+  %4 = llvm.xor %2, %1 : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem and_xor_commute1_proof : and_xor_commute1_before ⊑ and_xor_commute1_after := by
+  unfold and_xor_commute1_before and_xor_commute1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_commute1
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_commute1
+
+
+
+def and_xor_commute2_before := [llvm|
+{
+^0(%arg153 : i32, %arg154 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg153 : i32
+  %2 = llvm.udiv %0, %arg154 : i32
+  %3 = llvm.and %1, %2 : i32
+  %4 = llvm.xor %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def and_xor_commute2_after := [llvm|
+{
+^0(%arg153 : i32, %arg154 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg153 : i32
+  %3 = llvm.udiv %0, %arg154 : i32
+  %4 = llvm.xor %2, %1 : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem and_xor_commute2_proof : and_xor_commute2_before ⊑ and_xor_commute2_after := by
+  unfold and_xor_commute2_before and_xor_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_commute2
+
+
+
+def and_xor_commute3_before := [llvm|
+{
+^0(%arg151 : i32, %arg152 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg151 : i32
+  %2 = llvm.udiv %0, %arg152 : i32
+  %3 = llvm.and %2, %1 : i32
+  %4 = llvm.xor %3, %2 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def and_xor_commute3_after := [llvm|
+{
+^0(%arg151 : i32, %arg152 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg151 : i32
+  %3 = llvm.udiv %0, %arg152 : i32
+  %4 = llvm.xor %2, %1 : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem and_xor_commute3_proof : and_xor_commute3_before ⊑ and_xor_commute3_after := by
+  unfold and_xor_commute3_before and_xor_commute3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_commute3
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_commute3
+
+
+
+def and_xor_commute4_before := [llvm|
+{
+^0(%arg149 : i32, %arg150 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg149 : i32
+  %2 = llvm.udiv %0, %arg150 : i32
+  %3 = llvm.and %1, %2 : i32
+  %4 = llvm.xor %2, %3 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+def and_xor_commute4_after := [llvm|
+{
+^0(%arg149 : i32, %arg150 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg149 : i32
+  %3 = llvm.udiv %0, %arg150 : i32
+  %4 = llvm.xor %2, %1 : i32
+  %5 = llvm.and %3, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+theorem and_xor_commute4_proof : and_xor_commute4_before ⊑ and_xor_commute4_after := by
+  unfold and_xor_commute4_before and_xor_commute4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_commute4
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_commute4
+
+
+
 def or_or_xor_before := [llvm|
 {
 ^0(%arg106 : i4, %arg107 : i4, %arg108 : i4):
@@ -708,6 +1004,226 @@ theorem ashr_not_proof : ashr_not_before ⊑ ashr_not_after := by
   ---BEGIN ashr_not
   all_goals (try extract_goal ; sorry)
   ---END ashr_not
+
+
+
+def xor_andn_commute2_before := [llvm|
+{
+^0(%arg70 : i33, %arg71 : i33):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i33}> : () -> i33
+  %1 = "llvm.mlir.constant"() <{value = -1 : i33}> : () -> i33
+  %2 = llvm.udiv %0, %arg71 : i33
+  %3 = llvm.xor %arg70, %1 : i33
+  %4 = llvm.and %2, %3 : i33
+  %5 = llvm.xor %4, %arg70 : i33
+  "llvm.return"(%5) : (i33) -> ()
+}
+]
+def xor_andn_commute2_after := [llvm|
+{
+^0(%arg70 : i33, %arg71 : i33):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i33}> : () -> i33
+  %1 = llvm.udiv %0, %arg71 : i33
+  %2 = llvm.or %arg70, %1 : i33
+  "llvm.return"(%2) : (i33) -> ()
+}
+]
+theorem xor_andn_commute2_proof : xor_andn_commute2_before ⊑ xor_andn_commute2_after := by
+  unfold xor_andn_commute2_before xor_andn_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_andn_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END xor_andn_commute2
+
+
+
+def xor_andn_commute3_before := [llvm|
+{
+^0(%arg68 : i32, %arg69 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg68 : i32
+  %3 = llvm.xor %2, %1 : i32
+  %4 = llvm.and %3, %arg69 : i32
+  %5 = llvm.xor %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def xor_andn_commute3_after := [llvm|
+{
+^0(%arg68 : i32, %arg69 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg68 : i32
+  %2 = llvm.or %1, %arg69 : i32
+  "llvm.return"(%2) : (i32) -> ()
+}
+]
+theorem xor_andn_commute3_proof : xor_andn_commute3_before ⊑ xor_andn_commute3_after := by
+  unfold xor_andn_commute3_before xor_andn_commute3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_andn_commute3
+  all_goals (try extract_goal ; sorry)
+  ---END xor_andn_commute3
+
+
+
+def xor_andn_commute4_before := [llvm|
+{
+^0(%arg66 : i32, %arg67 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg66 : i32
+  %3 = llvm.udiv %0, %arg67 : i32
+  %4 = llvm.xor %2, %1 : i32
+  %5 = llvm.and %3, %4 : i32
+  %6 = llvm.xor %2, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+def xor_andn_commute4_after := [llvm|
+{
+^0(%arg66 : i32, %arg67 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = llvm.udiv %0, %arg66 : i32
+  %2 = llvm.udiv %0, %arg67 : i32
+  %3 = llvm.or %1, %2 : i32
+  "llvm.return"(%3) : (i32) -> ()
+}
+]
+theorem xor_andn_commute4_proof : xor_andn_commute4_before ⊑ xor_andn_commute4_after := by
+  unfold xor_andn_commute4_before xor_andn_commute4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_andn_commute4
+  all_goals (try extract_goal ; sorry)
+  ---END xor_andn_commute4
+
+
+
+def xor_orn_commute1_before := [llvm|
+{
+^0(%arg62 : i8, %arg63 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.udiv %0, %arg62 : i8
+  %3 = llvm.xor %2, %1 : i8
+  %4 = llvm.or %3, %arg63 : i8
+  %5 = llvm.xor %2, %4 : i8
+  "llvm.return"(%5) : (i8) -> ()
+}
+]
+def xor_orn_commute1_after := [llvm|
+{
+^0(%arg62 : i8, %arg63 : i8):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i8}> : () -> i8
+  %1 = "llvm.mlir.constant"() <{value = -1 : i8}> : () -> i8
+  %2 = llvm.udiv %0, %arg62 : i8
+  %3 = llvm.and %2, %arg63 : i8
+  %4 = llvm.xor %3, %1 : i8
+  "llvm.return"(%4) : (i8) -> ()
+}
+]
+theorem xor_orn_commute1_proof : xor_orn_commute1_before ⊑ xor_orn_commute1_after := by
+  unfold xor_orn_commute1_before xor_orn_commute1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_orn_commute1
+  all_goals (try extract_goal ; sorry)
+  ---END xor_orn_commute1
+
+
+
+def xor_orn_commute2_before := [llvm|
+{
+^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg60 : i32
+  %3 = llvm.xor %arg59, %1 : i32
+  %4 = llvm.or %2, %3 : i32
+  %5 = llvm.xor %4, %arg59 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def xor_orn_commute2_after := [llvm|
+{
+^0(%arg59 : i32, %arg60 : i32, %arg61 : !llvm.ptr):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg60 : i32
+  %3 = llvm.and %arg59, %2 : i32
+  %4 = llvm.xor %3, %1 : i32
+  "llvm.return"(%4) : (i32) -> ()
+}
+]
+theorem xor_orn_commute2_proof : xor_orn_commute2_before ⊑ xor_orn_commute2_after := by
+  unfold xor_orn_commute2_before xor_orn_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_orn_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END xor_orn_commute2
+
+
+
+def xor_orn_commute3_before := [llvm|
+{
+^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i67}> : () -> i67
+  %1 = "llvm.mlir.constant"() <{value = -1 : i67}> : () -> i67
+  %2 = llvm.udiv %0, %arg53 : i67
+  %3 = llvm.udiv %0, %arg54 : i67
+  %4 = llvm.xor %2, %1 : i67
+  %5 = llvm.or %3, %4 : i67
+  %6 = llvm.xor %2, %5 : i67
+  "llvm.return"(%6) : (i67) -> ()
+}
+]
+def xor_orn_commute3_after := [llvm|
+{
+^0(%arg53 : i67, %arg54 : i67, %arg55 : !llvm.ptr):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i67}> : () -> i67
+  %1 = "llvm.mlir.constant"() <{value = -1 : i67}> : () -> i67
+  %2 = llvm.udiv %0, %arg53 : i67
+  %3 = llvm.udiv %0, %arg54 : i67
+  %4 = llvm.and %2, %3 : i67
+  %5 = llvm.xor %4, %1 : i67
+  "llvm.return"(%5) : (i67) -> ()
+}
+]
+theorem xor_orn_commute3_proof : xor_orn_commute3_before ⊑ xor_orn_commute3_after := by
+  unfold xor_orn_commute3_before xor_orn_commute3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN xor_orn_commute3
+  all_goals (try extract_goal ; sorry)
+  ---END xor_orn_commute3
 
 
 

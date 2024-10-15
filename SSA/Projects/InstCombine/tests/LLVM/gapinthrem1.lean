@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gapinthrem1_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -38,7 +38,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  all_goals (try extract_goal ; sorry)
+  apply test1_thm
   ---END test1
 
 
@@ -70,7 +70,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   intros
   try simp
   ---BEGIN test2
-  all_goals (try extract_goal ; sorry)
+  apply test2_thm
   ---END test2
 
 

@@ -40,6 +40,33 @@ theorem sdiv_i1_is_op0_proof : sdiv_i1_is_op0_before ⊑ sdiv_i1_is_op0_after :=
 
 
 
+def udiv_i1_is_op0_before := [llvm|
+{
+^0(%arg4 : i1, %arg5 : i1):
+  %0 = llvm.udiv %arg4, %arg5 : i1
+  "llvm.return"(%0) : (i1) -> ()
+}
+]
+def udiv_i1_is_op0_after := [llvm|
+{
+^0(%arg4 : i1, %arg5 : i1):
+  "llvm.return"(%arg4) : (i1) -> ()
+}
+]
+theorem udiv_i1_is_op0_proof : udiv_i1_is_op0_before ⊑ udiv_i1_is_op0_after := by
+  unfold udiv_i1_is_op0_before udiv_i1_is_op0_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN udiv_i1_is_op0
+  all_goals (try extract_goal ; sorry)
+  ---END udiv_i1_is_op0
+
+
+
 def srem_i1_is_zero_before := [llvm|
 {
 ^0(%arg2 : i1, %arg3 : i1):

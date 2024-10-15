@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gaddhmaskhneg_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -43,7 +43,7 @@ theorem dec_mask_neg_i32_proof : dec_mask_neg_i32_before ⊑ dec_mask_neg_i32_af
   intros
   try simp
   ---BEGIN dec_mask_neg_i32
-  all_goals (try extract_goal ; sorry)
+  apply dec_mask_neg_i32_thm
   ---END dec_mask_neg_i32
 
 
@@ -82,7 +82,7 @@ theorem dec_mask_commute_neg_i32_proof : dec_mask_commute_neg_i32_before ⊑ dec
   intros
   try simp
   ---BEGIN dec_mask_commute_neg_i32
-  all_goals (try extract_goal ; sorry)
+  apply dec_mask_commute_neg_i32_thm
   ---END dec_mask_commute_neg_i32
 
 
@@ -117,7 +117,7 @@ theorem dec_commute_mask_neg_i32_proof : dec_commute_mask_neg_i32_before ⊑ dec
   intros
   try simp
   ---BEGIN dec_commute_mask_neg_i32
-  all_goals (try extract_goal ; sorry)
+  apply dec_commute_mask_neg_i32_thm
   ---END dec_commute_mask_neg_i32
 
 

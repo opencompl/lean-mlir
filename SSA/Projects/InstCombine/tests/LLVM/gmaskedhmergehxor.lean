@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gmaskedhmergehxor_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -44,7 +44,7 @@ theorem p_proof : p_before ⊑ p_after := by
   intros
   try simp
   ---BEGIN p
-  all_goals (try extract_goal ; sorry)
+  apply p_thm
   ---END p
 
 
@@ -80,7 +80,7 @@ theorem p_constmask_proof : p_constmask_before ⊑ p_constmask_after := by
   intros
   try simp
   ---BEGIN p_constmask
-  all_goals (try extract_goal ; sorry)
+  apply p_constmask_thm
   ---END p_constmask
 
 
@@ -116,7 +116,7 @@ theorem p_constmask2_proof : p_constmask2_before ⊑ p_constmask2_after := by
   intros
   try simp
   ---BEGIN p_constmask2
-  all_goals (try extract_goal ; sorry)
+  apply p_constmask2_thm
   ---END p_constmask2
 
 
@@ -152,7 +152,7 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   intros
   try simp
   ---BEGIN p_commutative0
-  all_goals (try extract_goal ; sorry)
+  apply p_commutative0_thm
   ---END p_commutative0
 
 
@@ -188,7 +188,7 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   intros
   try simp
   ---BEGIN p_commutative2
-  all_goals (try extract_goal ; sorry)
+  apply p_commutative2_thm
   ---END p_commutative2
 
 
@@ -224,7 +224,7 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   intros
   try simp
   ---BEGIN p_commutative4
-  all_goals (try extract_goal ; sorry)
+  apply p_commutative4_thm
   ---END p_commutative4
 
 
@@ -260,7 +260,7 @@ theorem p_constmask_commutative_proof : p_constmask_commutative_before ⊑ p_con
   intros
   try simp
   ---BEGIN p_constmask_commutative
-  all_goals (try extract_goal ; sorry)
+  apply p_constmask_commutative_thm
   ---END p_constmask_commutative
 
 
@@ -296,7 +296,7 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   intros
   try simp
   ---BEGIN n2_badmask
-  all_goals (try extract_goal ; sorry)
+  apply n2_badmask_thm
   ---END n2_badmask
 
 
@@ -329,7 +329,7 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   intros
   try simp
   ---BEGIN n3_constmask_samemask
-  all_goals (try extract_goal ; sorry)
+  apply n3_constmask_samemask_thm
   ---END n3_constmask_samemask
 
 

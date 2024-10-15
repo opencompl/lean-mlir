@@ -1,4 +1,4 @@
-
+import SSA.Projects.InstCombine.tests.LLVM.gshifthsra_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   intros
   try simp
   ---BEGIN ashr_ashr
-  all_goals (try extract_goal ; sorry)
+  apply ashr_ashr_thm
   ---END ashr_ashr
 
 
@@ -72,7 +72,7 @@ theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after :=
   intros
   try simp
   ---BEGIN ashr_overshift
-  all_goals (try extract_goal ; sorry)
+  apply ashr_overshift_thm
   ---END ashr_overshift
 
 
