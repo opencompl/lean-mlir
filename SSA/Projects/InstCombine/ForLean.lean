@@ -564,6 +564,37 @@ theorem msb_neg {w : Nat} {x : BitVec w} (h : 0 < w) :
   rw [BitVec.msb, BitVec.getMsbD_neg]
   omega
 
+-- theorem ofNat_add {n} (x y : Nat) : BitVec.ofNat n (x + y) = BitVec.ofNat n x + BitVec.ofNat n y := by
+--   apply eq_of_toNat_eq
+--   simp [BitVec.ofNat, Fin.ofNat'_add]
+
+
+-- @[simp] theorem mod_add_mod (m n k : Nat) : (m % n + k) % n = (m + k) % n := by
+--   have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm
+--   rwa [Nat.add_right_comm, mod_add_div] at this
+
+@[simp]
+theorem mod_distrib_and4 (a b : Nat) :
+    a % 2 ^ 4 &&& b % 2 ^ 4 = (a &&& b) % 2 ^ 4 := by
+  -- rw [Nat.bitwise]
+  sorry
+
+
+@[simp]
+theorem mod_distrib_and (a b n : Nat) :
+    a % 2 ^ n &&& b % 2 ^ n = (a &&& b) % 2 ^ n := by
+  induction n
+  case zero =>
+    simp [Nat.mod_one]
+  case succ nn ih =>
+    rw [pow_add, pow_one, Nat.mod_mul (x := a &&& b), ← ih]
+    -- rw [← Nat.mod_mul]
+    sorry
+
+theorem ofNat_and {n } {x y : Nat} : BitVec.ofNat n (x &&& y) = BitVec.ofNat n x &&& BitVec.ofNat n y := by
+  apply eq_of_toNat_eq
+  simp
+
 end BitVec
 
 namespace Bool
