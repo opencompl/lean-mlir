@@ -9,6 +9,7 @@ import Mathlib.Data.FinEnum
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Infix
+import Mathlib.Data.List.Perm
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.FinEnum
 
@@ -77,13 +78,14 @@ abbrev inSS : Type := { sa : S // sa ∈ stateSpace }
 private structure worklist.St where
   m : NFA A
   map : Std.HashMap (inSS stateSpace) State := ∅
-  worklist : Array { sa : inSS stateSpace // sa ∈ map.keys} := ∅
+  worklist : Array (inSS stateSpace) := ∅
   worklist_nodup : worklist.toList.Nodup
+  worklist_incl : ∀ sa ∈ worklist, sa ∈ map
+
+attribute [aesop 10% unsafe] worklist.St.worklist_nodup worklist.St.worklist_incl
 
 private def worklist.St.meas (st : worklist.St A stateSpace) : ℕ :=
-  Finset.card $ stateSpace.attach.filter fun x => x ∉ st.map.keys ∨ x ∈ st.worklist.toList.map fun x => x.val
-
-private def worklist.St.addOrCreateState (st : worklist.St A stateSpace) (final? : Bool) (sa : S) : State × worklist.St A stateSpace := sorry
+  Finset.card $ stateSpace.attach.filter fun x => x ∉ st.map.keys ∨ x ∈ st.worklist.toList
 
 theorem List.dropLast_nodup (l : List X) : l.Nodup → l.dropLast.Nodup := by
   have hsl := List.dropLast_sublist l
@@ -96,82 +98,183 @@ theorem List.dropLasnodup (l : List X) : l.Nodup → l.dropLast.Nodup := by
 @[simp]
 theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.pop := by sorry
 
-@[simp]
+/- Upstream? -/
+theorem Array.back?_mem (a : Array X) (x : X) : a.back? = some x → x ∈ a := by sorry
+
 theorem Array.not_elem_back_pop_list (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.toList.dropLast := by sorry
 
-@[simp]
 theorem Array.back_mem (a : Array X) (x : X) : a.back? = some x → x ∈ a := by sorry
+
+/- Upstream? -/
+theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by sorry
+
+theorem Array.mem_push (a : Array α) (x y : α) : x ∈ a.push y → x ∈ a ∨ x = y := by sorry
+
+theorem Std.HashMap.keys_nodup [BEq K] [Hashable K] (m : Std.HashMap K V) : m.keys.Nodup := by sorry
+
+@[simp]
+theorem Std.HashMap.mem_keys_iff_mem [BEq K] [Hashable K] (m : Std.HashMap K V) (k : K) : k ∈ m.keys ↔ k ∈ m := by sorry
+
+@[aesop safe]
+theorem Std.HashMap.mem_keys_insert_new [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k : K) : k ∈ m.insert k v := by
+  apply mem_insert.mpr; aesop
+
+@[aesop 80% unsafe]
+theorem Std.HashMap.mem_keys_insert_old [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k k' : K) : k ∈ m → k ∈ m.insert k' v := by
+  intros _; apply mem_insert.mpr; aesop
+
+@[aesop 50% unsafe]
+theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k : K) : m.get? k = none → k ∉ m := by
+  sorry
+
+theorem List.perm_subset_iff_right {l1 l2 : List α} (hperm : l1.Perm l2) (l : List α) :
+  l ⊆ l1 ↔ l ⊆ l2 := by
+  constructor
+  { intros hincl x hin; apply List.Perm.mem_iff (a := x) at hperm ; apply hperm.mp; apply hincl; assumption }
+  { intros hincl x hin; apply List.Perm.mem_iff (a := x) at hperm ; apply hperm.mpr; apply hincl; assumption }
+
+open List in
+private theorem list_perm_trick (x y a b c : List α) :
+    y ~ b ++ x → x ~ a ++ c → y ~ a ++ b ++ c := by
+  intros h1 h2
+  have hi : b ++ x ~ b ++ (a ++ c) := by apply Perm.append_left; assumption
+  have := perm_append_comm_assoc b a c
+  have := h1.trans (hi.trans this)
+  aesop
+
+private def worklist.St.addOrCreateState (st : worklist.St A stateSpace) (final? : Bool) (sa : inSS stateSpace) : State × worklist.St A stateSpace :=
+  match heq : st.map[sa]? with
+  | some s => (s, st)
+  | none =>
+    let (s, m) := st.m.newState
+    let m := if final? then m.addFinal s else m
+    let map := st.map.insert sa s
+    let worklist := st.worklist.push sa
+    have worklist_nodup : worklist.toList.Nodup := by
+      simp [worklist]; apply List.nodup_middle.mpr; simp; constructor
+      { intros hc; apply Array.Mem.mk at hc; apply st.worklist_incl at hc; simp at hc; apply Std.HashMap.get?_none_not_mem at heq; contradiction }
+      { exact st.worklist_nodup }
+    have worklist_incl : ∀ sa ∈ worklist, sa ∈ map := by
+      simp [worklist, map]; intros sa' hsa' hin; apply Array.mem_push at hin; rcases hin with hin | heq
+      { apply st.worklist_incl at hin; aesop }
+      { aesop }
+    let st' := { st with m, map, worklist, worklist_nodup, worklist_incl }
+    (s, st')
+
+theorem addOrCreateState_grow (st : worklist.St A stateSpace) (b : Bool) (sa : inSS stateSpace) :
+    let (_, st') := st.addOrCreateState _ _ b sa
+    ∃ sas, List.Perm st'.map.keys (sas ++ st.map.keys) ∧ st'.worklist.toList = st.worklist.toList ++ sas := by
+  unfold worklist.St.addOrCreateState
+  simp
+  generalize_proofs pf1 pf2
+  use [] -- TODO
+  -- how does one case splits on the condition of the match?
+  sorry
+
+private def processOneElem (final : S → Bool) (s : State) (st : worklist.St A stateSpace) : A × inSS stateSpace → worklist.St A stateSpace := fun (a', sa') =>
+        let (s', st') := st.addOrCreateState _ _ (final sa') sa'
+        -- have hleq1 : st'.meas ≤ st.meas := by sorry -- should follow from the aux function's properties
+        -- have hgrow1 : ∃ sas, List.Perm st'.map.keys (sas ++ st.map.keys) ∧ st'.worklist.toList = st.worklist.toList ++ sas := by sorry
+        let m := st'.m.addTrans a' s s'
+        { st' with m }
+
+theorem processOneElem_grow (st : worklist.St A stateSpace) (final : S → Bool) (a : A) (sa' : inSS stateSpace) (s : State) :
+      let st' := processOneElem _ _ final s st (a, sa')
+      ∃ sas, List.Perm st'.map.keys (sas ++ st.map.keys) ∧ st'.worklist.toList = st.worklist.toList ++ sas := by
+  simp [processOneElem]
+  have h := addOrCreateState_grow _ _ st (final sa') sa'
+  rcases heq : (worklist.St.addOrCreateState A stateSpace st (final ↑sa') sa') with ⟨x, st'⟩
+  -- (a, b) = (c, d)
+  -- subst heq  -- Q: is there an equivalent
+  simp [heq] at h
+  rcases h with ⟨sas, h1, h2⟩
+  use sas
 
 def worklist.initState (init : inSS stateSpace) : worklist.St A stateSpace :=
   let m := NFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let map : Std.HashMap _ _ := {(init, s)}
-  let init' : { sa : inSS stateSpace // sa ∈ map.keys } := ⟨init, by sorry /- TODO: should be trivial -/⟩
-  let worklist := Array.singleton init'
-  { m, map, worklist, worklist_nodup := by simp [worklist] }
+  let worklist := Array.singleton init
+  { m, map, worklist, worklist_nodup := by simp [worklist], worklist_incl := by simp [map, worklist] }
 
-def worklistRunAux (final : S → Bool) (f : S → Array (A × {sa : S | sa ∈ stateSpace })) (init : inSS stateSpace) : NFA A :=
+def worklistRunAux (final : S → Bool) (f : S → Array (A × inSS stateSpace)) (init : inSS stateSpace) : NFA A :=
   let st0 := worklist.initState _ _ init
   go st0
 where go (st0 : worklist.St A stateSpace) : NFA A :=
   if hemp : st0.worklist.isEmpty then st0.m else
   let sa? := st0.worklist.back?
-  have h1 : match sa? with
-   | none => True
-   | some _ => { st0 with worklist := st0.worklist.pop,  worklist_nodup := by apply List.dropLast_nodup; exact st0.worklist_nodup }.meas < st0.meas := by
-    have hrem : sa? = st0.worklist.back? := by simp
-    rcases sa? with ⟨⟩ | ⟨⟨sa, hsa1⟩, hsa2⟩ <;> simp
-    apply Finset.card_lt_card
-    simp [worklist.St.meas, Finset.ssubset_iff, Finset.subset_iff]
-    use sa
-    use hsa1
-    constructor
-    { constructor; assumption; symm at hrem; apply Array.not_elem_back_pop_list at hrem; intros hc; simp at hrem
-      rw [← List.map_dropLast] at hc
-      apply List.exists_of_mem_map at hc
-      rcases hc with ⟨⟨⟨sa', hsa''⟩, hsa'⟩, hc, heq⟩
-      simp at heq
-      subst heq
-      aesop
-      exact st0.worklist_nodup }
-    constructor
-    { right; use hsa2; symm at hrem; apply Array.back_mem at hrem; apply Array.Mem.val; trivial }
-    rintro sa' hsa' hh; rcases hh with hnin | hin
-    { left; trivial }
-    right
-    rw [← List.map_dropLast] at hin
-    apply List.exists_of_mem_map at hin
-    rcases hin with ⟨⟨⟨sa', hsa''⟩, hsa'⟩, hc, heq⟩
-    simp at heq
-    rcases heq
-    use hsa'
-    apply List.mem_of_mem_dropLast
-    trivial
-
-  match sa? with
+  match heq : sa? with
   | some sa =>
     let wl := st0.worklist.pop
-    let st1 := { st0 with worklist := wl, worklist_nodup := by simp [wl]; apply List.dropLast_nodup; exact st0.worklist_nodup }
+    let st1 := { st0 with worklist := wl,
+                          worklist_nodup := by simp [wl]; apply List.dropLast_nodup; exact st0.worklist_nodup;
+                          worklist_incl := by intros _ hin; apply Array.mem_of_mem_pop at hin; apply st0.worklist_incl; assumption }
     if let some s := st1.map.get? sa then
       let a := f sa
-      let st2 := a.foldl (init := st1) fun st (a', sa') =>
-        let (s', st') := st.addOrCreateState _ _ (final sa') sa'
-        have : st'.meas ≤ st.meas := by sorry -- should follow from the aux function's properties
-        let m := st'.m.addTrans a' s s'
-        { st' with m }
-      have hincl : st1.map.keys ⊆ st2.map.keys := by sorry
-      have : st1.meas < st0.meas := by simp at h1; simp [st1]; assumption
+      let st2 := a.foldl (init := st1) (processOneElem _ _ final s)
+      -- why is ~ not a valid token here?
+      open List in
+      have hgrow : ∃ sas, st2.map.keys ~ (sas ++ st1.map.keys) ∧ st2.worklist.toList = st1.worklist.toList ++ sas := by
+        rcases a with ⟨al⟩
+        unfold st2
+        generalize hst1 : st1 = x; clear hst1; revert x
+        induction al with
+        | nil => simp
+        | cons asa al ih =>
+          simp; simp at ih; intros st
+          let wl' := processOneElem A stateSpace final s st asa
+          rcases ih wl' with ⟨sas', h1', h2'⟩; clear ih
+          rcases processOneElem_grow _ _ st final asa.1 asa.2 s with ⟨sas, h1, h2⟩
+          use (sas ++ sas')
+          constructor
+          { simp [wl'] at h1'; apply list_perm_trick <;> assumption }
+          { simp [wl'] at h2'; rw [h2] at h2'; aesop }
+      have hincl : ∀ k, k ∈ st1.map → k ∈ st2.map := by
+        intros k; rcases hgrow with ⟨sas, hkeys, -⟩;
+        have := @(List.perm_subset_iff_right hkeys st1.map.keys).mpr (by aesop) k; aesop
+      have : st1.meas < st0.meas := by
+        rcases heq' : sa? with ⟨⟩ | ⟨sa, hsa⟩
+        { aesop }
+        apply Finset.card_lt_card
+        simp [worklist.St.meas, Finset.ssubset_iff, Finset.subset_iff]
+        use sa, hsa
+        simp [sa?] at heq'
+        constructor
+        { constructor
+          { apply Array.back?_mem at heq'; apply st0.worklist_incl; assumption }
+          { apply Array.not_elem_back_pop at heq'; simp [Array.pop] at heq'; assumption; exact st0.worklist_nodup } }
+        constructor
+        { right; apply Array.back?_mem at heq'; apply Array.Mem.val; assumption}
+        rintro sa hsa hh; rcases hh with hnin | hin
+        { left; trivial }
+        right
+        apply List.mem_of_mem_dropLast; assumption
       have : st2.meas ≤ st1.meas := by
         apply Finset.card_le_card
         simp [worklist.St.meas, Finset.subset_iff]
         intros sa' hsa' h -- we need to know that map.keys is ever growing too
-        rcases h with hnin | ⟨hsa'', hin⟩
+        rcases h with hnin | hin
         { left; simp [st1] at hincl; intros hc; apply hnin; apply hincl; assumption }
-        by_cases hnew : ⟨sa', hsa'⟩ ∈ st0.map.keys
+        by_cases hnew : ⟨sa', hsa'⟩ ∈ st0.map
         all_goals try (left; trivial)
-        right; use hnew
-        sorry
+        right
+        simp [st1] at hgrow
+        rcases hgrow with ⟨sas, hkeys2, hwl2⟩
+        rw [hwl2] at hin
+        have hnin : ⟨sa', hsa'⟩ ∉ sas := by
+          intros hc
+          have hdisj : st0.map.keys.Disjoint sas := by
+            have : (sas ++ st0.map.keys).Nodup := by
+              apply List.Perm.nodup
+              assumption
+              apply st2.map.keys_nodup
+            apply List.disjoint_of_nodup_append
+            apply List.nodup_append_comm.mp
+            assumption
+          aesop
+        simp at hin
+        rcases hin <;> trivial
       have : st2.meas < st0.meas := by omega
       go st2
     else
@@ -260,23 +363,8 @@ where init (st : product.State (A := A)) : product.State (A := A) :=
             st
         go st
         termination_by st0.measure m1 m2
-        -- for termination, we need to know that worklist ⊆ map.keys ⊆ [0..max1] × [0..max2]
-        -- or something like this
         decreasing_by {
           sorry
-          -- apply List.foldl_lt (fun st : product.State => sizeOf (st.measure m1 m2))
-          -- · simp
-          --   cases (final? (m1.finals.contains s1) (m2.finals.contains s2))
-          --   { simp [product.State.measure, sizeOf]
-          --     apply Multiset.sizeOf_subset
-          --     { sorry }
-          --     { intros contra
-          --       congr contra
-
-          --      }
-          --    }
-          --   { sorry }
-          -- · sorry
         }
 
 
