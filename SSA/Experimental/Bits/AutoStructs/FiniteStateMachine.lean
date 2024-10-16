@@ -678,7 +678,7 @@ we keep the invariant that if the input ever fails and becomes a `1`, then we pr
 IF not, we produce an infinite sequence of `1`.
 
 EDIT: Aha, this doesn't work!
-We need NFA to DFA here (as the presburger book does),
+We need CNFA to DFA here (as the presburger book does),
 where we must produce an infinite sequence of`0` iff the input can *ever* become a `1`.
 But here, since we phrase things directly in terms of producing sequences, it's a bit less clear
 what we should do :)
@@ -788,7 +788,7 @@ inductive Predicate : Nat → Type _ where
 | eq (t1 t2 : Term) : Predicate ((max t1.arity t2.arity))
 | and  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
 | or  (p : Predicate n) (q : Predicate m) : Predicate (max n m)
--- For now, we can't prove `not`, because it needs NFA → DFA conversion
+-- For now, we can't prove `not`, because it needs CNFA → DFA conversion
 -- the way Sid knows how to build it, or negation normal form,
 -- both of which is machinery we lack.
 -- | not (p : Predicate n) : Predicate n

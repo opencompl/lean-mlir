@@ -22,7 +22,7 @@ abbrev Alphabet (arity: Type) [FinEnum arity] := BitVec (FinEnum.card arity + 1)
 variable {arity : Type} [FinEnum arity]
 
 private structure fsm.State (carryLen : Nat) where
-  m : NFA $ Alphabet (arity := arity) -- TODO: ugly all over...
+  m : CNFA $ Alphabet (arity := arity) -- TODO: ugly all over...
   map : Std.HashMap (BitVec carryLen) State := ∅
   worklist : Array (BitVec carryLen) := ∅
 
@@ -32,14 +32,14 @@ def finFunToBitVec (c : carry → Bool) [FinEnum carry] : BitVec (FinEnum.card c
 def bitVecToFinFun [FinEnum ar] (bv : BitVec $ FinEnum.card ar) : ar → Bool := fun c => bv[FinEnum.equiv.toFun c]
 
 /--
-Transforms an `FSM` of arity `k` to an `NFA` of arity `k+1`.
+Transforms an `FSM` of arity `k` to an `CNFA` of arity `k+1`.
 This correponds to transforming a function with `k` inputs and
 one output to a `k+1`-ary relation. By convention, the output
 is the MSB of the alphabet.
 -/
 partial
-def NFA.ofFSM (p : FSM arity) [FinEnum p.α] : NFA (Alphabet (arity := arity)) :=
-  let m := NFA.empty
+def CNFA.ofFSM (p : FSM arity) [FinEnum p.α] : CNFA (Alphabet (arity := arity)) :=
+  let m := CNFA.empty
   let (s, m) := m.newState
   let initState := finFunToBitVec p.initCarry
   let m := m.addInitial s
@@ -47,9 +47,9 @@ def NFA.ofFSM (p : FSM arity) [FinEnum p.α] : NFA (Alphabet (arity := arity)) :
   let worklist := Array.singleton initState
   let st : fsm.State (arity := arity) (FinEnum.card p.α) := { m, map, worklist }
   go st
-where go (st : fsm.State (arity := arity) (FinEnum.card p.α)) : NFA _ := Id.run do
+where go (st : fsm.State (arity := arity) (FinEnum.card p.α)) : CNFA _ := Id.run do
   let some carry := st.worklist.get? (st.worklist.size - 1) | return st.m
-  let some s := st.map.get? carry | return NFA.empty
+  let some s := st.map.get? carry | return CNFA.empty
   let m := st.m.addFinal s
   let st := { st with m, worklist := st.worklist.pop }
   let st := (FinEnum.toList (BitVec (FinEnum.card arity))).foldl (init := st) fun st a =>
@@ -70,11 +70,11 @@ where go (st : fsm.State (arity := arity) (FinEnum.card p.α)) : NFA _ := Id.run
 end fsm
 
 
-/- A bunch of NFAs that implement the relations we care about -/
+/- A bunch of CNFAs that implement the relations we care about -/
 section nfas_relations
 
-def NFA.ofConst {w} (bv : BitVec w) : NFA (BitVec 1) :=
-  let m := NFA.empty
+def CNFA.ofConst {w} (bv : BitVec w) : CNFA (BitVec 1) :=
+  let m := CNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let (s', m) := (List.range w).foldl (init := (s, m)) fun (s, m) i =>
@@ -84,8 +84,8 @@ def NFA.ofConst {w} (bv : BitVec w) : NFA (BitVec 1) :=
     (s', m)
   m.addFinal s'
 
-def NFA.autEq : NFA (BitVec 2) :=
-  let m := NFA.empty
+def CNFA.autEq : CNFA (BitVec 2) :=
+  let m := CNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let m := m.addFinal s
@@ -93,8 +93,8 @@ def NFA.autEq : NFA (BitVec 2) :=
   let m := m.addTrans 3 s s
   m
 
-def NFA.autSignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) :=
-  let m := NFA.empty
+def CNFA.autSignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
+  let m := CNFA.empty
   let (seq, m) := m.newState
   let (sgt, m) := m.newState
   let (slt, m) := m.newState
@@ -120,8 +120,8 @@ def NFA.autSignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) :=
   | .gt => m.addFinal sgtfin
   | .ge => (m.addFinal sgtfin).addFinal seq
 
-def NFA.autUnsignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) :=
-  let m := NFA.empty
+def CNFA.autUnsignedCmp (cmp: RelationOrdering) : CNFA (BitVec 2) :=
+  let m := CNFA.empty
   let (seq, m) := m.newState
   let (sgt, m) := m.newState
   let (slt, m) := m.newState
@@ -139,8 +139,8 @@ def NFA.autUnsignedCmp (cmp: RelationOrdering) : NFA (BitVec 2) :=
   | .gt => m.addFinal sgt
   | .ge => (m.addFinal sgt).addFinal seq
 
-def NFA.autMsbSet : NFA (BitVec 1) :=
-  let m := NFA.empty
+def CNFA.autMsbSet : CNFA (BitVec 1) :=
+  let m := CNFA.empty
   let (si, m) := m.newState
   let (sf, m) := m.newState
   let m := m.addInitial si
@@ -176,19 +176,19 @@ lemma finEnumCardFin n : FinEnum.card (Fin n) = n := by
   · simp
   · apply List.nodup_finRange
 
-def AutoStructs.Relation.autOfRelation : Relation → NFA (BitVec 2)
-| .eq => NFA.autEq
-| .signed ord => NFA.autSignedCmp ord
-| .unsigned ord => NFA.autUnsignedCmp ord
+def AutoStructs.Relation.autOfRelation : Relation → CNFA (BitVec 2)
+| .eq => CNFA.autEq
+| .signed ord => CNFA.autSignedCmp ord
+| .unsigned ord => CNFA.autUnsignedCmp ord
 
 def unopNfa {A} [BEq A] [FinEnum A] [Hashable A]
-  (op : Unop) (m : NFA A) : NFA A :=
+  (op : Unop) (m : CNFA A) : CNFA A :=
   match op with
   | .neg => m.neg
 
 -- TODO(leo) : why is the typchecking so slow?
 def binopNfa {A} [BEq A] [FinEnum A] [Hashable A]
-  (op : Binop) (m1 : NFA A) (m2 : NFA A) : NFA A :=
+  (op : Binop) (m1 : CNFA A) (m2 : CNFA A) : CNFA A :=
   match op with
   | .and => m1.inter m2
   | .or => m1.union m2
@@ -198,26 +198,26 @@ def binopNfa {A} [BEq A] [FinEnum A] [Hashable A]
 
 -- TODO(leo) : why is it so slow? 40 seconds on my machine
 -- the slow part is the compilation apparently
-def nfaOfFormula (φ : Formula) : NFA (BitVec φ.arity) :=
+def nfaOfFormula (φ : Formula) : CNFA (BitVec φ.arity) :=
   match φ with
   | .atom rel t1 t2 =>
-    let m1 := (termEvalEqFSM t1).toFSM |> NFA.ofFSM
-    let m2 := (termEvalEqFSM t2).toFSM |> NFA.ofFSM
+    let m1 := (termEvalEqFSM t1).toFSM |> CNFA.ofFSM
+    let m2 := (termEvalEqFSM t2).toFSM |> CNFA.ofFSM
     let f1 := liftMaxSucc1 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m1' := m1.lift f1
     let f2 := liftMaxSucc2 (FinEnum.card $ Fin t1.arity) (FinEnum.card $ Fin t2.arity)
     let m2' := m2.lift f2
     let meq := rel.autOfRelation.lift $ liftLast2 (max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)))
-    let m := NFA.inter m1' m2' |> NFA.inter meq
+    let m := CNFA.inter m1' m2' |> CNFA.inter meq
     let mfinal := m.proj (liftExcecpt2 _)
     have h : (Formula.atom .eq t1 t2).arity = max (FinEnum.card (Fin t1.arity)) (FinEnum.card (Fin t2.arity)) := by simp [FinEnum.card]
     h ▸ mfinal
   | .msbSet t =>
-    let m := (termEvalEqFSM t).toFSM |> NFA.ofFSM
-    let mMsb := NFA.autMsbSet.lift $ fun _ => Fin.last t.arity
+    let m := (termEvalEqFSM t).toFSM |> CNFA.ofFSM
+    let mMsb := CNFA.autMsbSet.lift $ fun _ => Fin.last t.arity
     have h : t.arity + 1 = FinEnum.card (Fin t.arity) + 1 := by
       simp [FinEnum.card]
-    let m : NFA (BitVec (t.arity + 1)) := h.symm ▸ m
+    let m : CNFA (BitVec (t.arity + 1)) := h.symm ▸ m
     let res := m.inter mMsb
     res.proj $ fun n => n.castLE (by rw [Formula.arity]; omega)
   | .unop op φ => unopNfa op (nfaOfFormula φ)
@@ -241,15 +241,15 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
   formulaIsUniversal φ → φ.sat' env
 
 -- -- For testing the comparison operators.
--- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : NFA (BitVec 0) :=
---   let m1 := NFA.ofConst a
---   let m2 := NFA.ofConst b
+-- def nfaOfCompareConstants (signed : Bool) {w : Nat} (a b : BitVec w) : CNFA (BitVec 0) :=
+--   let m1 := CNFA.ofConst a
+--   let m2 := CNFA.ofConst b
 --   let f1 : Fin 1 → Fin 2 := fun 0 => 0
 --   let m1' := m1.lift f1
 --   let f2 : Fin 1 → Fin 2 := fun 0 => 1
 --   let m2' := m2.lift f2
---   let meq := if signed then NFA.autSignedCmp .lt else NFA.autUnsignedCmp .lt
---   let m := NFA.inter m1' m2' |> NFA.inter meq
+--   let meq := if signed then CNFA.autSignedCmp .lt else CNFA.autUnsignedCmp .lt
+--   let m := CNFA.inter m1' m2' |> CNFA.inter meq
 --   let mfinal := m.proj (liftExcecpt2 _)
 --   mfinal
 
@@ -265,22 +265,22 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --       let bv := BitVec.ofNat w n
 --       let bv' := BitVec.ofNat w m
 --       if (if signed then bv <ₛ bv' else bv <ᵤ bv') ==
---         (nfaOfCompareConstants signed bv bv' |> NFA.isNotEmpty)
+--         (nfaOfCompareConstants signed bv bv' |> CNFA.isNotEmpty)
 --       then none else some (bv, bv')
 -- /-- info: true -/
 -- #guard_msgs in #eval! (testLeq true 4 == none)
 
--- def nfaOfMsb {w : Nat} (a : BitVec w) : NFA (BitVec 0) :=
---   let m := NFA.ofConst a
---   let meq := NFA.autMsbSet
---   let m := m |> NFA.inter meq
+-- def nfaOfMsb {w : Nat} (a : BitVec w) : CNFA (BitVec 0) :=
+--   let m := CNFA.ofConst a
+--   let meq := CNFA.autMsbSet
+--   let m := m |> CNFA.inter meq
 --   let mfinal := m.proj $ fun _ => 0
 --   mfinal
 
 -- def testMsb (w : Nat) : Bool :=
 --   (List.range (2^w)).all fun n =>
 --     let bv := BitVec.ofNat w n
---     (bv.msb == true) == (nfaOfMsb bv |> NFA.isNotEmpty)
+--     (bv.msb == true) == (nfaOfMsb bv |> CNFA.isNotEmpty)
 -- /-- info: true -/
 -- #guard_msgs in #eval! testMsb 8
 
@@ -291,7 +291,7 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --   Formula.atom .eq (neg x) (not $ sub x 1)
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> NFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_neg_eq_neg_not_one |> CNFA.isUniversal
 
 -- -- x &&& ~~~ y = x - (x &&& y)
 -- def ex_formula_and_not_eq_sub_add : Formula :=
@@ -300,7 +300,7 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --   let y := var 1
 --   Formula.atom .eq (and x (not y)) (sub x (and x y))
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> NFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_not_eq_sub_add |> CNFA.isUniversal
 
 -- /- x &&& y ≤ᵤ ~~~(x ^^^ y) -/
 -- def ex_formula_and_ule_not_xor : Formula :=
@@ -310,7 +310,7 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --   .atom (.unsigned .le) (.and x y) (.not (.xor x y))
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> NFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_and_ule_not_xor |> CNFA.isUniversal
 
 -- -- Only true for `w > 0`!
 -- -- x = 0 ↔ (~~~ (x ||| -x)).msb
@@ -322,7 +322,7 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --     (.msbSet (.not (.or x (.neg x))))
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> NFA.isUniversal'
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_eq_zero_iff_not_or_sub |> CNFA.isUniversal'
 
 -- -- (x <ₛ 0) ↔ x.msb := by
 -- def ex_formula_lst_iff : Formula :=
@@ -333,4 +333,4 @@ axiom decision_procedure_is_correct {w} (φ : Formula) (env : Nat → BitVec w) 
 --     (.msbSet x)
 
 -- /-- info: true -/
--- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> NFA.isUniversal
+-- #guard_msgs in #eval! nfaOfFormula ex_formula_lst_iff |> CNFA.isUniversal
