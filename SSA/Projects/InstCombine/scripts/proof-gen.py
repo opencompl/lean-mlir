@@ -46,11 +46,11 @@ def process_file(file_path):
             lines[l - 1] = f"  apply {n}_thm" + "\n"
     lines[0] = f"import SSA.Projects.InstCombine.tests.proofs.{stem_name}_proof\n"
     # Write the modified content to the new file
-    with open(new_file_path, "a") as file:
+    with open(new_file_path, "w") as file:
         file.writelines(lines)
 
     # Append the messages to the end of the file
-    with open(proof_name + ".lean", "a") as file:
+    with open(proof_name + ".lean", "w") as file:
         file.write(
             f"""
 import SSA.Projects.InstCombine.TacticAuto
@@ -70,8 +70,6 @@ section {stem_name}_proof
 
 def main():
     proof_directory = "./SSA/Projects/InstCombine/tests/proofs"
-    rm_proofs = "\nrm -r " + proof_directory + "/*\n"
-    subprocess.run(rm_proofs, shell=True)
     
     directory = "./SSA/Projects/InstCombine/tests/LLVM"
     
