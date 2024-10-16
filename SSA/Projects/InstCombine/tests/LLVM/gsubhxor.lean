@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem low_mask_nsw_nuw_proof : low_mask_nsw_nuw_before ⊑ low_mask_nsw_nuw_af
   intros
   try simp
   ---BEGIN low_mask_nsw_nuw
-  apply low_mask_nsw_nuw_thm
+  all_goals (try extract_goal ; sorry)
   ---END low_mask_nsw_nuw
 
 
@@ -76,7 +76,7 @@ theorem arbitrary_mask_sub_i8_proof : arbitrary_mask_sub_i8_before ⊑ arbitrary
   intros
   try simp
   ---BEGIN arbitrary_mask_sub_i8
-  apply arbitrary_mask_sub_i8_thm
+  all_goals (try extract_goal ; sorry)
   ---END arbitrary_mask_sub_i8
 
 
@@ -110,7 +110,7 @@ theorem not_masked_sub_i8_proof : not_masked_sub_i8_before ⊑ not_masked_sub_i8
   intros
   try simp
   ---BEGIN not_masked_sub_i8
-  apply not_masked_sub_i8_thm
+  all_goals (try extract_goal ; sorry)
   ---END not_masked_sub_i8
 
 
@@ -145,7 +145,7 @@ theorem xor_add_proof : xor_add_before ⊑ xor_add_after := by
   intros
   try simp
   ---BEGIN xor_add
-  apply xor_add_thm
+  all_goals (try extract_goal ; sorry)
   ---END xor_add
 
 

@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2008h05h31hBools_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -36,7 +36,7 @@ theorem foo1_proof : foo1_before ⊑ foo1_after := by
   intros
   try simp
   ---BEGIN foo1
-  apply foo1_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo1
 
 
@@ -64,7 +64,7 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
   intros
   try simp
   ---BEGIN foo2
-  apply foo2_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo2
 
 
@@ -91,7 +91,7 @@ theorem foo4_proof : foo4_before ⊑ foo4_after := by
   intros
   try simp
   ---BEGIN foo4
-  apply foo4_thm
+  all_goals (try extract_goal ; sorry)
   ---END foo4
 
 

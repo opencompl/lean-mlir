@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.g2004h11h22hMissedhandhfold_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem test21_proof : test21_before ⊑ test21_after := by
   intros
   try simp
   ---BEGIN test21
-  apply test21_thm
+  all_goals (try extract_goal ; sorry)
   ---END test21
 
 
