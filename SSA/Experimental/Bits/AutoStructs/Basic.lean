@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Std.Data.HashSet
 import Std.Data.HashMap
 import Std.Data.HashMap.Lemmas
+import Mathlib.Computability.NFA
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.List.Perm
@@ -18,49 +19,124 @@ abbrev State := Nat
 The definition of a computational automaton. It is meant to be more efficient
 than the definition in Mathlib.
  -/
-structure NFA (A : Type 0) [BEq A] [Hashable A] [DecidableEq A] [FinEnum A] where
+structure CNFA (A : Type 0) [BEq A] [Hashable A] [DecidableEq A] [FinEnum A] where
   stateMax : State
   initials : Std.HashSet State
   finals : Std.HashSet State
   trans : Std.HashMap (State × A) (Std.HashSet State)
 deriving Repr
 
+section sim
+
+variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+
+noncomputable def CNFA.states (m : CNFA A) : Finset State := Finset.range m.stateMax
+
+@[simp]
+lemma CNFA.states_lt (m : CNFA A) s : s ∈ m.states → s < m.stateMax := by simp [CNFA.states]
+
+/--
+A simulation between a concrete NFA and an abstract NFA consists in a map from
+concrete to abstract states which satisfies some properties.
+-/
+-- Maybe we'll need to generalize to a relation at some point?
+structure CNFA.Sim (m : CNFA A) (A : NFA A S) where
+  f : m.states → S
+  -- f_inj : Function.Injective f
+  accept s : s.val ∈ m.finals ↔ f s ∈ A.accept
+  initial s : s.val ∈ m.initials ↔ f s ∈ A.start
+  initial_all q : q ∈ A.accept → ∃ s, f s = q ∧ s.val ∈ m.initials
+  trans_match s a q' : q' ∈ A.step (f s) a → ∃ s', f s' = q ∧ s'.val ∈ m.trans.getD (s.val, a) ∅
+
+end sim
+
 section basics
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-def NFA.empty : NFA A := {
+def CNFA.empty : CNFA A := {
   stateMax := 0
   initials := ∅
   finals := ∅
   trans := ∅
 }
 
-def NFA.newState (m : NFA A) : State × NFA A :=
+def CNFA.newState (m : CNFA A) : State × CNFA A :=
   let old := m.stateMax
   let m := { m with stateMax := old + 1 }
   (old, m)
 
-def NFA.addTrans (m : NFA A) (a : A) (s s' : State) : NFA A :=
+def CNFA.addTrans (m : CNFA A) (a : A) (s s' : State) : CNFA A :=
   let ns := m.trans.getD (s, a) ∅
   let ns := ns.insert s'
   { m with trans :=  m.trans.insert (s, a) ns }
 
-def NFA.addManyTrans (m : NFA A) (a : List A) (s s' : State) : NFA A :=
+def CNFA.addManyTrans (m : CNFA A) (a : List A) (s s' : State) : CNFA A :=
   a.foldl (init := m) fun m a => m.addTrans a s s'
 
-def NFA.addInitial (m : NFA A) (s : State) : NFA A :=
+def CNFA.addInitial (m : CNFA A) (s : State) : CNFA A :=
   { m with initials := m.initials.insert s }
 
-def NFA.addFinal (m : NFA A) (s : State) : NFA A :=
+def CNFA.addFinal (m : CNFA A) (s : State) : CNFA A :=
   { m with finals := m.finals.insert s }
 
-def NFA.transSet (m : NFA A) (ss : Std.HashSet State) (a : A) : Std.HashSet State :=
+def CNFA.transSet (m : CNFA A) (ss : Std.HashSet State) (a : A) : Std.HashSet State :=
   ss.fold (init := ∅) fun ss' s =>
     ss'.insertMany $ m.trans.getD (s, a) ∅
 
-instance NFA_Inhabited : Inhabited (NFA A) where
-  default := NFA.empty
+/-
+Computes the set of states of the automaton. This is only meant to be used in proofs
+and is quite horrible. The alternative is to have a dependent type asserting that
+all the states involved are `< stateMax` which may be a better idea...
+-/
+structure CNFA.WF (m : CNFA A) where
+  initials_lt : ∀ s ∈ m.initials, s < m.stateMax
+  -- finals_lt : ∀ s ∈ m.finals, s < m.stateMax
+  trans_src_lt : ∀ s_a ∈ m.trans, s_a.1 < m.stateMax
+  trans_tgt_lt : ∀ (s_a : State × A) ss' s', m.trans[s_a]? = some ss' → s' ∈ ss' → s' < m.stateMax
+  -- or
+  -- trans_tgt_lt : ∀ (s_a : State × A) ss' s', m.trans[s_a]? = some ss' → s' ∈ ss' → s' < m.stateMax
+  -- but there is no lemma about `Std.HashMap.all` :-(
+
+attribute [simp] CNFA.WF.initials_lt CNFA.WF.trans_src_lt CNFA.WF.trans_tgt_lt
+attribute [aesop 50% unsafe] CNFA.WF.initials_lt CNFA.WF.trans_src_lt CNFA.WF.trans_tgt_lt
+
+@[simp, aesop 50% unsafe]
+lemma CNFA.WF.trans_src_lt' {m : CNFA A} (hwf : m.WF) :
+    ∀ s a, (s, a) ∈ m.trans → s < m.stateMax := by
+  intros s a hin; simp [hwf.trans_src_lt _ hin]
+
+@[simp]
+lemma wf_newState (m : CNFA A) (hwf : m.WF) :
+    m.newState.2.WF := by
+  constructor <;> intros <;> apply Nat.lt_add_one_of_lt <;> simp_all [CNFA.newState, CNFA.WF]
+  apply hwf.trans_tgt_lt <;> assumption
+
+@[simp]
+lemma wf_addInitial (m : CNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
+    (m.addInitial s).WF := by
+  constructor <;> intros <;> simp_all [CNFA.addInitial, CNFA.WF]
+  { casesm* _ ∨ _ <;> subst_eqs <;> simp_all }
+  { apply hwf.trans_tgt_lt <;> assumption }
+
+@[simp]
+lemma wf_addTrans [LawfulBEq A] (m : CNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
+    (m.addTrans a s s').WF := by
+  constructor <;> simp_all [CNFA.addTrans, CNFA.WF]
+  { intros s a htin; casesm* _ ∨ _ <;> aesop }
+  { rintro s1 b ss'1 s'1 hsome hmem
+    rw [Std.HashMap.getElem?_insert] at hsome; split at hsome; simp_all
+    { casesm* _ ∧ _; subst_eqs; simp_all; cases_type Or; simp_all
+      by_cases hmem : (s, a) ∈ m.trans
+      { apply Std.HashMap.getElem?_eq_some_getD (fallback := ∅) at hmem
+        apply hwf.trans_tgt_lt _ _ _ hmem; assumption }
+      { have : m.trans.getD (s, a) ∅ = ∅ := by apply Std.HashMap.getD_eq_fallback; assumption
+        simp_all }
+     }
+    { apply hwf.trans_tgt_lt _ _ _ hsome; assumption }}
+
+instance CNFA_Inhabited : Inhabited (CNFA A) where
+  default := CNFA.empty
 
 end basics
 
@@ -74,7 +150,7 @@ variable (stateSpace : Finset S)
 abbrev inSS : Type := { sa : S // sa ∈ stateSpace }
 
 private structure worklist.St where
-  m : NFA A
+  m : CNFA A
   map : Std.HashMap (inSS stateSpace) State := ∅
   worklist : Array (inSS stateSpace) := ∅
   worklist_nodup : worklist.toList.Nodup
@@ -151,17 +227,17 @@ theorem processOneElem_grow (st : worklist.St A stateSpace) (final : S → Bool)
   use sas
 
 def worklist.initState (init : inSS stateSpace) : worklist.St A stateSpace :=
-  let m := NFA.empty
+  let m := CNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let map : Std.HashMap _ _ := {(init, s)}
   let worklist := Array.singleton init
   { m, map, worklist, worklist_nodup := by simp [worklist], worklist_incl := by simp [map, worklist] }
 
-def worklistRunAux (final : S → Bool) (f : S → Array (A × inSS stateSpace)) (init : inSS stateSpace) : NFA A :=
+def worklistRunAux (final : S → Bool) (f : inSS stateSpace → Array (A × inSS stateSpace)) (init : inSS stateSpace) : CNFA A :=
   let st0 := worklist.initState _ _ init
   go st0
-where go (st0 : worklist.St A stateSpace) : NFA A :=
+where go (st0 : worklist.St A stateSpace) : CNFA A :=
   if hemp : st0.worklist.isEmpty then st0.m else
   let sa? := st0.worklist.back?
   match heq : sa? with
@@ -189,7 +265,7 @@ where go (st0 : worklist.St A stateSpace) : NFA A :=
           use (sas ++ sas')
           constructor
           { simp [wl'] at h1'; apply list_perm_trick <;> assumption }
-          { simp [wl'] at h2'; rw [h2] at h2'; aesop }
+          { simp [wl', h2] at h2'; aesop }
       have hincl : ∀ k, k ∈ st1.map → k ∈ st2.map := by
         intros k; rcases hgrow with ⟨sas, hkeys, -⟩;
         have := @(List.perm_subset_iff_right hkeys st1.map.keys).mpr (by aesop) k; aesop
@@ -203,7 +279,7 @@ where go (st0 : worklist.St A stateSpace) : NFA A :=
         constructor
         { constructor
           { apply Array.back?_mem at heq'; apply st0.worklist_incl; assumption }
-          { apply Array.not_elem_back_pop at heq'; simp [Array.pop] at heq'; assumption; exact st0.worklist_nodup } }
+          { apply Array.not_elem_back_pop at heq' <;> simp_all [Array.pop, wl] } }
         constructor
         { right; apply Array.back?_mem at heq'; apply Array.Mem.val; assumption}
         rintro sa hsa hh; rcases hh with hnin | hin
@@ -238,6 +314,13 @@ where go (st0 : worklist.St A stateSpace) : NFA A :=
       st0.m -- never happens
   | none => st0.m -- never happens
   termination_by st0.meas
+
+def worklistRun (final : S → Bool) (f : S → Array (A × S)) (init : S)
+    (hinit : init ∈ stateSpace) (hf : ∀ s ∈ stateSpace, f s |>.all fun (_, s') => s' ∈ stateSpace)
+ : CNFA A :=
+   let f' := fun ⟨s, hs⟩ => (f s).attach.map fun ⟨⟨a, s'⟩, hin⟩ =>
+     (a, ⟨s', Array.all_eq_true_iff_forall_mem.mp (hf s hs) _ hin |> of_decide_eq_true⟩)
+   worklistRunAux _ _ final f' ⟨init, hinit⟩
 
 end worklist
 

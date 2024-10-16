@@ -9,6 +9,7 @@ import Aesop
 /- Question:
 why does `Decidable (s ∈ l)` require `LawfulBEq` if `l` is a list but `DecidableEq` if `l` is an array?
 -/
+-- Practical ways to relate Finsets and HashSets
 
 theorem ofBool_1_iff_true : BitVec.ofBool b = 1#1 ↔ b := by
   cases b <;> simp

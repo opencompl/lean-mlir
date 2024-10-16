@@ -413,6 +413,18 @@ theorem sub_neg_sub : (x - y) = - (y - x) := by bv_automata'
 theorem eq_iff_not_sub_or_sub :
     x = y ↔ (~~~ (x - y ||| y - x)).msb := by bv_automata'
 
+theorem zulip_example :
+  ¬(n <ᵤ ~~~k) ∨
+    (((a + k - a <ᵤ a + k + 1#64 - a) ∧ (a + k - a <ᵤ a + k + 1#64 + n - a)) ∧
+        a + k + 1#64 + n - (a + k + 1#64) <ᵤ a - (a + k + 1#64)) ∧
+      a + k + 1#64 + n - (a + k + 1#64) <ᵤ a + k - (a + k + 1#64) := by
+  bv_automata'
+
+theorem zulip_example' :
+    ¬(n <ᵤ ~~~k) ∨
+    (((k <ᵤ k + 1) ∧ (k <ᵤ k + 1 + n)) ∧ n <ᵤ -k - 1) ∧ n <ᵤ -1 := by
+  bv_automata'
+
 theorem lt_iff_sub_xor_xor_and_sub_xor :
     (x <ₛ y) ↔ ((x - y) ^^^ ((x ^^^ y) &&& ((x - y) ^^^ x))).msb := by
     bv_automata'
