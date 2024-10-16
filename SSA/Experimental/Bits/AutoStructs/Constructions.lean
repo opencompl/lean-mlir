@@ -1,99 +1,136 @@
 import Std.Data.HashSet
 import Std.Data.HashMap
 import Mathlib.Data.FinEnum
+import Mathlib.Data.Fintype.Prod
+import Mathlib.Data.Finset.Powerset
 import SSA.Experimental.Bits.AutoStructs.Basic
 import SSA.Experimental.Bits.AutoStructs.ForLean
 import SSA.Experimental.Bits.AutoStructs.FinEnum
-import Batteries.Data.Fin.Basic
+import SSA.Experimental.Bits.AutoStructs.GoodNFA
 
 section sink
 
 variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-def NFA.addSink (m : NFA A) : NFA A :=
-  let (sink, m) := m.newState
-  -- let m := m.addInitial sink -- TODO(leo) is that right?
-  (List.range m.stateMax).foldl (init := m) fun m s =>
-    (FinEnum.toList (α := A)).foldl (init := m) fun m a =>
-      let stuck := if let some trans := m.trans.get? (s, a) then trans.isEmpty else true
-      if stuck then m.addTrans a s sink else m
 
-def NFA.flipFinals (m : NFA A) : NFA A :=
+def CNFA.addSink (m : CNFA A) : CNFA A := m.createSink.2
+-- def CNFA.addSink (m : CNFA A) : CNFA A :=
+  -- let res := (List.range m.stateMax).foldl (init := (none, m)) fun (sink?, m) s =>
+  --   (FinEnum.toList (α := A)).foldl (init := (sink?, m)) fun (sink?, m) a =>
+  --     let stuck := if let some trans := m.trans.get? (s, a) then trans.isEmpty else true
+  --     if !stuck then (sink?, m) else
+  --       let (sink, m) := match sink? with
+  --                       | some s => (s, m)
+  --                       | none => m.createSink
+  --       (some sink, m.addTrans a s sink)
+  -- res.2
+
+def GoodCNFA.addSink (m : GoodCNFA n) : GoodCNFA n := ⟨m.m.addSink, sorry⟩
+
+lemma addSink_spec (m : GoodCNFA n) (M : GoodNFA n) :
+    m.Sim M →
+    m.addSink.Sim M.complete :=
+  sorry
+
+def CNFA.flipFinals (m : CNFA A) : CNFA A :=
   let oldFinals := m.finals
   let newFinals := (List.range m.stateMax).foldl (init := ∅) fun fins s =>
     if oldFinals.contains s then fins else fins.insert s
   { m with finals := newFinals }
 
+def GoodCNFA.flipFinals (m : GoodCNFA n) : GoodCNFA n := ⟨m.m.flipFinals, by sorry⟩
+
 end sink
 
 section product
 
-variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-private structure product.State where
-  m : NFA A
-  map : Std.HashMap (_root_.State × _root_.State) _root_.State := ∅
-  worklist : Array (_root_.State × _root_.State) := ∅
+omit [LawfulBEq A] in
+lemma CNFA.WF.intitials_states (m : CNFA A) (hwf : m.WF) : ∀ s ∈ m.initials, s ∈ m.states := by
+  simp_all [CNFA.states, hwf]
 
-private def product.State.measure (st : product.State (A := A)) (m1 m2 : NFA A) :=
-  ((Multiset.range m1.stateMax).product (Multiset.range m2.stateMax)).sub
-    ((Multiset.ofList st.map.keys).sub (Multiset.ofList st.worklist.toList))
-
-def product (final? : Bool → Bool → Bool) (m1 m2 : NFA A) : NFA A :=
-  let map : Std.HashMap (State × State) State := ∅
-  let worklist : Array (State × State) := ∅
-  let st : product.State (A := A) := { m := NFA.empty }
-  let st := init st
-  go st
-where init (st : product.State (A := A)) : product.State (A := A) :=
-       m1.initials.fold (init := st) fun st s1 =>
-         m2.initials.fold (init := st) fun st s2 =>
-           let (s, m) := st.m.newState
-           let m := m.addInitial s
-           let map := st.map.insert (s1, s2) s
-           let worklist := st.worklist.push (s1, s2)
-           {m, map, worklist}
-      go (st0 : product.State (A := A)) : NFA A := Id.run do
-        if hne : st0.worklist.size == 0 then
-          return st0.m
-        else
-        let some (s1, s2) := st0.worklist.get? (st0.worklist.size - 1) | return st0.m
-        let st := { st0 with worklist := st0.worklist.pop }
-        let some s := st.map.get? (s1, s2) | return NFA.empty
-        let st := if final? (m1.finals.contains s1) (m2.finals.contains s2) then
-                    { st with m := st.m.addFinal s }
-                  else
-                    st
-        let st := (FinEnum.toList (α := A)).foldl (init := st) fun st a =>
-          if let some s1trans := m1.trans.get? (s1, a) then
-            if let some s2trans := m2.trans.get? (s2, a) then
-              s1trans.fold (init := st) fun st s1' =>
-                s2trans.fold (init := st) fun st s2' =>
-                  if let some s' := st.map.get? (s1', s2') then
-                    let m := st.m.addTrans a s s'
-                    { st with m }
-                  else
-                    let (s', m) := st.m.newState
-                    let worklist := st.worklist.push (s1', s2')
-                    let map := st.map.insert (s1', s2') s'
-                    let m := m.addTrans a s s'
-                    { m, map, worklist }
-            else
-              st
-          else
-            st
-        go st
-        termination_by st0.measure m1 m2
-        decreasing_by {
-          sorry
-        }
+def product (final? : Bool → Bool → Bool) (m1 m2 : GoodCNFA n) : GoodCNFA n :=
+  worklistRun (m1.m.states × m2.m.states) final inits (by sorry /- looks annoying -/) f
+where final (ss : m1.m.states × m2.m.states) := final? (m1.m.finals.contains ss.1) (m2.m.finals.contains ss.2)
+      inits :=
+       let a := Array.mkEmpty <| m1.m.initials.size * m2.m.initials.size
+       m1.m.initials.attachWith _ m1.wf.intitials_states |>.fold (init := a) fun is s1 =>
+         m2.m.initials.attachWith _ m2.wf.intitials_states |>.fold (init := is) fun is s2 =>
+           is.push (s1, s2)
+      f (ss : m1.m.states × m2.m.states) :=
+        let (s1, s2) := ss
+        (FinEnum.toList (α := BitVec n)).foldl (init := Array.empty) fun as a =>
+          let s1trans := m1.m.trans.getD (s1, a) ∅
+          let s2trans := m2.m.trans.getD (s2, a) ∅
+          s1trans.attachWith _ (m1.wf.trans_tgt_lt' s1 a) |>.fold (init := as) fun as s1' =>
+            s2trans.attachWith _ (m2.wf.trans_tgt_lt' s2 a) |>.fold (init := as) fun as s2' =>
+              as.push (a, (s1', s2'))
 
 
-
-def NFA.inter (m1 m2 : NFA A) : NFA A := product (fun b1 b2 => b1 && b2) m1 m2
-def NFA.union (m1 m2 : NFA A) : NFA A :=
+def GoodCNFA.inter (m1 m2 : GoodCNFA n) : GoodCNFA n := product (fun b1 b2 => b1 && b2) m1 m2
+def GoodCNFA.union (m1 m2 : GoodCNFA n) : GoodCNFA n :=
   -- FIXME add a sink state to each automata, or modify product
   product (fun b1 b2 => b1 || b2) m1.addSink m2.addSink
+
+noncomputable def to_prop (f : Bool → Bool → Bool) (p1 p2 : Prop) : Prop :=
+  f (@Decidable.decide p1 (Classical.propDecidable _)) (@Decidable.decide p2 (Classical.propDecidable _))
+
+def GoodCNFA.product_spec (final? : Bool → Bool → Bool) (m1 m2 : GoodCNFA n)
+  {M1 : GoodNFA n} {M2 : GoodNFA n} :
+    m1.Sim M1 →
+    m2.Sim M2 →
+    (product final? m1 m2).Sim (GoodNFA.product (to_prop final?) M1 M2) := by
+  rintro ⟨f1, hsim1⟩ ⟨f2, hsim2⟩
+  apply worklistRun_spec (m1.m.states × m2.m.states)
+    (corr := fun (s1, s2) => (f1 s1, f2 s2))
+  · rintro ⟨s1, s2⟩ ⟨s1', s2'⟩; simp; rintro heqs
+    injection heqs with h1 h2
+    apply hsim1.injective at h1; apply hsim2.injective at h2; simp_all
+  · rintro ⟨s1, s2⟩
+    simp [product.final, GoodNFA.product, NFA.product, to_prop, Set.instMembership, Set.Mem]; congr
+    · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim1.accept
+    · rw [←Bool.coe_iff_coe, ←Std.HashSet.mem_iff_contains]; simp; apply hsim2.accept
+  · rintro ⟨s1, s2⟩ ⟨q1, q2⟩ a hin
+    simp [NFA.product] at hin
+    obtain ⟨hst1, hst2⟩ := hin
+    obtain ⟨s1', hf1, htr1⟩ := hsim1.trans_match₁ s1 a q1 hst1 (by simp) (by simp)
+    obtain ⟨s2', hf2, htr2⟩ := hsim2.trans_match₁ s2 a q2 hst2 (by simp) (by simp)
+    use ⟨s1', s2'⟩; simp_all [product.f]
+    sorry
+  · rintro ⟨s1, s2⟩ a ⟨s1', s2'⟩ hinf
+    dsimp only [GoodNFA.product, NFA.product]
+    simp [to_prop, Set.instMembership, Set.Mem]
+    suffices h : s1'.val ∈ m1.m.trans.getD (s1, a) ∅ ∧ s2'.val ∈ m2.m.trans.getD (s2, a) ∅ by
+      rcases h with ⟨h1, h2⟩
+      obtain ⟨h1, hin1⟩ := hsim1.trans_match₂ _ _ _ h1
+      obtain ⟨h2, hin2⟩ := hsim2.trans_match₂ _ _ _ h2
+      aesop
+    sorry
+
+def GoodCNFA.inter_spec (m1 m2 : GoodCNFA n)
+  {M1 : GoodNFA n} {M2 : GoodNFA n} :
+    m1.Sim M1 →
+    m2.Sim M2 →
+    (m1.inter m2).Sim (M1.inter M2) := by
+  intros h1 h2
+  simp [GoodNFA.inter_eq, GoodCNFA.inter]
+  have heq : And = to_prop (fun x y => x && y) := by
+    ext x y; simp [to_prop]
+  simp [heq]
+  apply product_spec <;> assumption
+
+def GoodCNFA.union_spec (m1 m2 : GoodCNFA n)
+  {M1 : GoodNFA n} {M2 : GoodNFA n} :
+    m1.Sim M1 →
+    m2.Sim M2 →
+    (m1.union m2).Sim (M1.union M2) := by
+  intros h1 h2
+  simp [GoodNFA.union_eq, GoodCNFA.union]
+  have heq : Or = to_prop (fun x y => x || y) := by
+    ext x y; simp [to_prop]
+  simp [heq]
+  apply product_spec <;> apply addSink_spec <;> assumption
 
 end product
 
@@ -108,161 +145,181 @@ def HashSet.areIncluded [BEq A] [Hashable A] (m1 m2 : Std.HashSet A) : Bool :=
 
 section determinization
 
-variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-instance hashableHashSet [Hashable A] : Hashable (Std.HashSet A) where
-  hash s := s.fold (init := 0) fun h x => mixHash h (hash x)
+-- TODO: I'd rather use hashsets, but I don't think the following holds
+-- `Fintype α → Fintype (HashSet α)`
 
-private structure NFA.determinize.St where
-  map : Std.HashMap (Std.HashSet State) State
-  worklist : List (Std.HashSet State)
-  m : NFA A
+def BitVec.any (b : BitVec w) (f : Fin w → Bool → Bool) :=
+  List.finRange w |>.any fun n => f n (b[n])
 
-open NFA.determinize in
-def NFA.determinize (mi : NFA A) : NFA A :=
-  let m : NFA A := NFA.empty
-  let (si, m) := m.newState
-  let m := m.addInitial si
-  let map : Std.HashMap _ _ := { (mi.initials, si) }
-  let st : St := { map, worklist := [mi.initials], m}
-  go st
-where go (st : St) : NFA A := Id.run do
-  if let some (ss, worklist) := st.worklist.next? then
-    let st := { st with worklist }
-    let some s := st.map[ss]? | return NFA.empty
-    let m := if !ss.isDisjoint mi.finals then st.m.addFinal s else st.m
-    let st := (FinEnum.toList A).foldl (init := { st with m }) fun st a =>
-      let ss' := mi.transSet ss a
-      let (s', st) := if let some s' := st.map[ss']? then (s', st) else
-        let (s', m) := st.m.newState
-        let map := st.map.insert ss' s'
-        let worklist := ss' :: st.worklist
-        (s', { map, worklist, m })
-      { st with m := st.m.addTrans a s s'}
-    go st
-  else
-    st.m
-  decreasing_by sorry
+def GoodCNFA.determinize (m : GoodCNFA n) : GoodCNFA n :=
+  worklistRun (BitVec m.m.stateMax)
+    (fun ss => ss.any fun n b => b == true && n ∈ m.m.finals)
+    #[BitVec.ofFn (fun n => n ∈ m.m.initials)]
+    (by apply List.nodup_singleton)
+    fun (ss : BitVec m.m.stateMax) =>
+        (FinEnum.toList (BitVec n)).foldl (init := Array.empty) fun ts a =>
+          let ss' := m.m.transSetBV ss a
+          ts.push (a, ss')
 
-def NFA.neg (m : NFA A) : NFA A := m.determinize.flipFinals
+def GoodNFA.determinize_spec_nonemp (m : GoodCNFA n)  [Nonempty m.m.states]
+  {M : GoodNFA n} (hsim : m.Sim M) :
+    m.determinize.Sim M.determinize := by
+  rcases hsim with ⟨fsim, hsim⟩
+  unfold GoodCNFA.determinize
+  apply worklistRun_spec (BitVec m.m.stateMax)
+    (corr := λ ss q => let i := Function.invFun fsim q; ss[i.val] == true)
+    (M := M.determinize)
+  · intros ss1 ss2; simp; intros heq; ext i
+    rw [funext_iff] at heq
+    specialize heq (fsim ⟨i.val, by simp [CNFA.states]⟩)
+    rw [Function.leftInverse_invFun hsim.injective] at heq
+    simp at heq; exact heq
+  · sorry
+  · sorry
+  · sorry
+
+def GoodNFA.determinize_spec_emp (m : GoodCNFA n) (hemp : m.m.stateMax = 0)
+  {M : GoodNFA n} (hsim : m.Sim M) :
+    m.determinize.Sim M.determinize := by
+  rcases hsim with ⟨fsim, hsim⟩
+  unfold GoodCNFA.determinize
+  apply worklistRun_spec (BitVec m.m.stateMax)
+    (corr := λ ss _ => True)
+    (M := M.determinize)
+  · rw [hemp]; intros ss1 ss2 _; apply BitVec.eq_of_getMsbD_eq; simp
+  · rw [hemp]; rintro ⟨⟨x⟩⟩
+    obtain rfl : x = 0 := by omega
+    simp [BitVec.any, GoodNFA.determinize, NFA.toDFA]
+    intros q _ ha
+    sorry -- need to prove that f is surjective?
+  · sorry
+  · sorry
+
+def GoodNFA.determinize_spec (m : GoodCNFA n)
+  {M : GoodNFA n} (hsim : m.Sim M) :
+    m.determinize.Sim M.determinize := by
+  rcases heq : m.m.stateMax
+  · apply GoodNFA.determinize_spec_emp <;> simp_all
+  · have _ : Nonempty m.m.states := by use 0; simp_all [CNFA.states]
+    apply GoodNFA.determinize_spec_nonemp; simp_all
+
+def GoodCNFA.neg (m : GoodCNFA n) : GoodCNFA n := m.determinize.flipFinals
+
+def GoodCNFA.neg_spec (m : GoodCNFA n)  {M : GoodNFA n} (hsim : m.Sim M) :
+    m.neg.Sim M.neg := by
+  sorry
 
 end determinization
 
 section equality
 
-variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+-- variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-private structure isIncluded.State where
-  visited : List (_root_.State × Std.HashSet _root_.State) := ∅ -- TODO: slow
-  worklist : List (_root_.State × Std.HashSet _root_.State) := ∅
+-- private structure isIncluded.State where
+--   visited : List (_root_.State × Std.HashSet _root_.State) := ∅ -- TODO: slow
+--   worklist : List (_root_.State × Std.HashSet _root_.State) := ∅
 
--- TODO: this function is not correct yet...
-/-- Returns true when `L(m1) ⊆ L(m2)` -/
-def NFA.isIncluded (m1 m2 : NFA A) : Bool :=
-  let st := { visited := [], worklist := m1.initials.fold (init := []) fun res s1 => (s1, m2.initials) :: res }
-  go st
-where go (st : isIncluded.State) : Bool :=
-  if let some ((s1, ss1), worklist) := st.worklist.next? then
-    let st := { st with worklist }
-    if m1.initials.contains s1 ∧ ss1.isDisjoint m2.finals then
-      false
-    else
-      let st := { st with visited := (s1, ss1) :: st.visited }
-      let st := (FinEnum.toList (α := A)).foldl (init := st) fun st a =>
-        let ss2 := m2.transSet ss1 a
-        (m1.trans.getD (s1, a) ∅).fold (init := st) fun st s2 =>
-          if st.worklist.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) ||
-            st.visited.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) then
-            st
-          else
-            { st with worklist := (s2, ss2)::st.worklist }
-      go st
-  else
-    true
-  decreasing_by sorry
+-- TODO: this function is not correct yet... it should be a more optimized
+-- procedure to check that the languages of two automata are included.
+/- Returns true when `L(m1) ⊆ L(m2)` -/
+-- def CNFA.isIncluded (m1 m2 : CNFA A) : Bool :=
+--   let st := { visited := [], worklist := m1.initials.fold (init := []) fun res s1 => (s1, m2.initials) :: res }
+--   go st
+-- where go (st : isIncluded.State) : Bool :=
+--   if let some ((s1, ss1), worklist) := st.worklist.next? then
+--     let st := { st with worklist }
+--     if m1.initials.contains s1 ∧ ss1.isDisjoint m2.finals then
+--       false
+--     else
+--       let st := { st with visited := (s1, ss1) :: st.visited }
+--       let st := (FinEnum.toList (α := A)).foldl (init := st) fun st a =>
+--         let ss2 := m2.transSet ss1 a
+--         (m1.trans.getD (s1, a) ∅).fold (init := st) fun st s2 =>
+--           if st.worklist.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) ||
+--             st.visited.any (fun (s'', ss'') => s'' = s2 && HashSet.areIncluded ss'' ss2) then
+--             st
+--           else
+--             { st with worklist := (s2, ss2)::st.worklist }
+--       go st
+--   else
+--     true
+--   decreasing_by sorry
 
-end equality
+-- end equality
 
-section universality
+section emptiness
 
-variable {A : Type} [BEq A] [Hashable A] [DecidableEq A] [FinEnum A]
+variable {A : Type} [BEq A] [LawfulBEq A] [Hashable A] [DecidableEq A] [FinEnum A]
 
-private structure isUniversal.State where
-  visited : Std.HashSet (Std.HashSet _root_.State) := ∅
-  worklist : Array (Std.HashSet _root_.State) := ∅
+-- TODO: this relies on the fact that all states are reachable!
+-- We should add this to the simulation predicate I think
+def GoodCNFA.isEmpty (m : GoodCNFA n) : Bool := m.m.finals.isEmpty
 
-/-- Returns true when `L(m) = A*` -/
-def NFA.isUniversal (m : NFA A) : Bool :=
-  let st := { visited := ∅, worklist := Array.singleton m.initials}
-  go st
-where go (st : isUniversal.State) : Bool :=
-  match heq : st.worklist.back? with
-  | none => true
-  | some ss =>
-    let worklist := st.worklist.pop
-    let st := { st with worklist }
-    if ss.isDisjoint m.finals then
-      false
-    else
-      let st := { st with visited := st.visited.insert ss }
-      let st := (FinEnum.toList (α := A)).foldl (init := st) fun st a =>
-        let ss' := m.transSet ss a
-        if st.worklist.any (fun ss'' => HashSet.areIncluded ss'' ss') ||
-           st.visited.any (fun ss'' => HashSet.areIncluded ss'' ss') then
-           st
-        else
-           { st with worklist := st.worklist.push ss' }
-      go st
-  decreasing_by sorry
+def GoodCNFA.isUniversal (m : GoodCNFA n) : Bool := m.neg.isEmpty
+
+theorem GoodCNFA.isUniversal_spec {m : GoodCNFA n} {M : GoodNFA n} :
+    m.Sim M → m.isUniversal → M.accepts = ⊤ := by
+  sorry
 
 /-- Recognizes the empty word -/
-def NFA.emptyWord : NFA A :=
-  let m := NFA.empty
+def CNFA.emptyWord : CNFA A :=
+  let m := CNFA.empty
   let (s, m) := m.newState
   let m := m.addInitial s
   let m := m.addFinal s
   m
 
+def GoodCNFA.emptyWord : GoodCNFA n := ⟨CNFA.emptyWord, by sorry⟩
+
 /-- Returns true when `L(m) ∪ {ε} = A*`. This is useful because the
     bitvector of with width zero has strange properties.
  -/
-def NFA.isUniversal' (m : NFA A) : Bool :=
-  m.union NFA.emptyWord |> NFA.isUniversal
+def GoodCNFA.isUniversal' (m : GoodCNFA n) : Bool :=
+  m.union GoodCNFA.emptyWord |> GoodCNFA.isUniversal
 
 -- TODO: this relies on the fact that all states are reachable!
-def NFA.isEmpty (m : NFA A) : Bool := m.finals.isEmpty
-def NFA.isNotEmpty (m : NFA A) : Bool := !m.finals.isEmpty
+-- should derive from the fact that all states of M are reachable.
+def CNFA.isNotEmpty (m : CNFA A) : Bool := !m.finals.isEmpty
 
-end universality
-
-instance: Hashable (BitVec n) where
-  hash x := Hashable.hash x.toFin
+end emptiness
 
 section lift_proj
-
--- Defined as bv'[i] = bv[f i]
-def transport (f : Fin n2 → Fin n1) (bv : BitVec n1) : BitVec n2 :=
-  (Fin.list n2).foldl (init := BitVec.zero n2) fun bv' (i : Fin _) => bv' ||| (BitVec.twoPow n2 i * bv[f i].toNat)
 
 variable {n : Nat}
 
 -- Morally, n2 >= n1
-def NFA.lift (m1: NFA (BitVec n1)) (f : Fin n1 → Fin n2) : NFA (BitVec n2) :=
-  let m2 : NFA (BitVec n2) := { m1 with trans := Std.HashMap.empty }
+def CNFA.lift (m1: CNFA (BitVec n1)) (f : Fin n1 → Fin n2) : CNFA (BitVec n2) :=
+  let m2 : CNFA (BitVec n2) := { m1 with trans := Std.HashMap.empty }
   (List.range m2.stateMax).foldl (init := m2) fun m2 s =>
     (FinEnum.toList (BitVec n2)).foldl (init := m2) fun m2 (bv : BitVec n2) =>
-      let newtrans := m1.trans.getD (s, transport f bv) ∅
+      let newtrans := m1.trans.getD (s, bv.transport f) ∅
       let oldtrans := m2.trans.getD (s, bv) ∅
       let trans := newtrans.union oldtrans
       if trans.isEmpty then m2 else { m2 with trans := m2.trans.insert (s, bv) trans }
 
+def GoodCNFA.lift (m: GoodCNFA n1) (f : Fin n1 → Fin n2) : GoodCNFA n2 :=
+  ⟨m.m.lift f, by sorry⟩
+
+def GoodCNFA.lift_spec (m : GoodCNFA n1) (f : Fin n1 → Fin n2) {M : GoodNFA n1} :
+    m.Sim M → (m.lift f |>.Sim (M.lift f)) := by
+  sorry
+
 -- Morally, n1 >= n2
-def NFA.proj (m1: NFA (BitVec n1)) (f : Fin n2 → Fin n1) : NFA (BitVec n2) :=
-  let m2 : NFA (BitVec n2) := { m1 with trans := Std.HashMap.empty }
+def CNFA.proj (m1: CNFA (BitVec n1)) (f : Fin n2 → Fin n1) : CNFA (BitVec n2) :=
+  let m2 : CNFA (BitVec n2) := { m1 with trans := Std.HashMap.empty }
   m1.trans.keys.foldl (init := m2) fun m2 (s, bv) =>
     let trans := m1.trans.getD (s, bv) ∅
-    let bv' := transport f bv
+    let bv' := bv.transport f
     let oldtrans := m2.trans.getD (s, bv') ∅
     { m2 with trans := m2.trans.insert (s, bv') (trans.union oldtrans) }
+
+def GoodCNFA.proj (m: GoodCNFA n2) (f : Fin n1 → Fin n2) : GoodCNFA n1 :=
+  ⟨m.m.proj f, by sorry⟩
+
+def GoodCNFA.proj_spec (m : GoodCNFA n2) (f : Fin n1 → Fin n2) {M : GoodNFA n2} :
+    m.Sim M → (m.proj f |>.Sim (M.proj f)) := by
+  sorry
 
 end lift_proj
