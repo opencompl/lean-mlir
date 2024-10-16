@@ -38,6 +38,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -72,6 +73,7 @@ theorem t6_shl_proof : t6_shl_before ⊑ t6_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -106,6 +108,7 @@ theorem t7_ashr_proof : t7_ashr_before ⊑ t7_ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -140,6 +143,7 @@ theorem t8_lshr_exact_flag_preservation_proof : t8_lshr_exact_flag_preservation_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -174,6 +178,7 @@ theorem t9_ashr_exact_flag_preservation_proof : t9_ashr_exact_flag_preservation_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -208,6 +213,7 @@ theorem t10_shl_nuw_flag_preservation_proof : t10_shl_nuw_flag_preservation_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -242,6 +248,7 @@ theorem t11_shl_nsw_flag_preservation_proof : t11_shl_nsw_flag_preservation_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

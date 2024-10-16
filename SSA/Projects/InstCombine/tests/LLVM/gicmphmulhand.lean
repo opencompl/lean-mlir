@@ -38,6 +38,7 @@ theorem pr40493_neg3_proof : pr40493_neg3_before ⊑ pr40493_neg3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -73,6 +74,7 @@ theorem pr51551_demand3bits_proof : pr51551_demand3bits_before ⊑ pr51551_deman
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

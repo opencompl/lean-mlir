@@ -33,6 +33,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -64,6 +65,7 @@ theorem not_ashr_not_proof : not_ashr_not_before ⊑ not_ashr_not_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -96,6 +98,7 @@ theorem not_ashr_const_proof : not_ashr_const_before ⊑ not_ashr_const_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -128,6 +131,7 @@ theorem not_lshr_const_proof : not_lshr_const_before ⊑ not_lshr_const_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -160,6 +164,7 @@ theorem not_sub_proof : not_sub_before ⊑ not_sub_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -192,6 +197,7 @@ theorem not_add_proof : not_add_before ⊑ not_add_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -227,6 +233,7 @@ theorem not_or_neg_proof : not_or_neg_before ⊑ not_or_neg_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -262,6 +269,7 @@ theorem test_invert_demorgan_and2_proof : test_invert_demorgan_and2_before ⊑ t
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

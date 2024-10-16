@@ -37,6 +37,7 @@ theorem demorgan_or_apint1_proof : demorgan_or_apint1_before ⊑ demorgan_or_api
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -70,6 +71,7 @@ theorem demorgan_or_apint2_proof : demorgan_or_apint2_before ⊑ demorgan_or_api
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -103,6 +105,7 @@ theorem demorgan_and_apint1_proof : demorgan_and_apint1_before ⊑ demorgan_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -136,6 +139,7 @@ theorem demorgan_and_apint2_proof : demorgan_and_apint2_before ⊑ demorgan_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -169,6 +173,7 @@ theorem demorgan_and_apint3_proof : demorgan_and_apint3_before ⊑ demorgan_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -202,6 +207,7 @@ theorem demorgan_and_apint4_proof : demorgan_and_apint4_before ⊑ demorgan_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -235,6 +241,7 @@ theorem demorgan_and_apint5_proof : demorgan_and_apint5_before ⊑ demorgan_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -267,6 +274,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -300,6 +308,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -332,6 +341,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -364,6 +374,7 @@ theorem test3_apint_proof : test3_apint_before ⊑ test3_apint_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -398,6 +409,7 @@ theorem test4_apint_proof : test4_apint_before ⊑ test4_apint_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -430,6 +442,7 @@ theorem test5_apint_proof : test5_apint_before ⊑ test5_apint_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -463,6 +476,7 @@ theorem demorgan_nand_proof : demorgan_nand_before ⊑ demorgan_nand_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -496,6 +510,7 @@ theorem demorgan_nand_apint1_proof : demorgan_nand_apint1_before ⊑ demorgan_na
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -529,6 +544,7 @@ theorem demorgan_nand_apint2_proof : demorgan_nand_apint2_before ⊑ demorgan_na
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -562,6 +578,7 @@ theorem demorgan_nor_proof : demorgan_nor_before ⊑ demorgan_nor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -602,6 +619,7 @@ theorem demorgan_nor_use2a_proof : demorgan_nor_use2a_before ⊑ demorgan_nor_us
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -641,6 +659,7 @@ theorem demorgan_nor_use2b_proof : demorgan_nor_use2b_before ⊑ demorgan_nor_us
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -681,6 +700,7 @@ theorem demorgan_nor_use2c_proof : demorgan_nor_use2c_before ⊑ demorgan_nor_us
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -727,6 +747,7 @@ theorem demorgan_nor_use2ab_proof : demorgan_nor_use2ab_before ⊑ demorgan_nor_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -773,6 +794,7 @@ theorem demorgan_nor_use2ac_proof : demorgan_nor_use2ac_before ⊑ demorgan_nor_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -817,6 +839,7 @@ theorem demorgan_nor_use2bc_proof : demorgan_nor_use2bc_before ⊑ demorgan_nor_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -850,6 +873,7 @@ theorem demorganize_constant2_proof : demorganize_constant2_before ⊑ demorgani
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -883,6 +907,7 @@ theorem demorgan_plus_and_to_xor_proof : demorgan_plus_and_to_xor_before ⊑ dem
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -917,6 +942,7 @@ theorem PR45984_proof : PR45984_before ⊑ PR45984_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

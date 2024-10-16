@@ -32,6 +32,7 @@ theorem foo1_proof : foo1_before ⊑ foo1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -60,6 +61,7 @@ theorem foo2_proof : foo2_before ⊑ foo2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -87,6 +89,7 @@ theorem foo4_proof : foo4_before ⊑ foo4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

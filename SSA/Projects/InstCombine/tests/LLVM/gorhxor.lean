@@ -37,6 +37,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -70,6 +71,7 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -103,6 +105,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -136,6 +139,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -169,6 +173,7 @@ theorem test5_proof : test5_before ⊑ test5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -202,6 +207,7 @@ theorem test5_commuted_x_y_proof : test5_commuted_x_y_before ⊑ test5_commuted_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -231,6 +237,7 @@ theorem xor_common_op_commute0_proof : xor_common_op_commute0_before ⊑ xor_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -264,6 +271,7 @@ theorem xor_common_op_commute2_proof : xor_common_op_commute2_before ⊑ xor_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -299,6 +307,7 @@ theorem xor_common_op_commute3_proof : xor_common_op_commute3_before ⊑ xor_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -332,6 +341,7 @@ theorem test8_proof : test8_before ⊑ test8_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -365,6 +375,7 @@ theorem test9_proof : test9_before ⊑ test9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -401,6 +412,7 @@ theorem test10_proof : test10_before ⊑ test10_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -437,6 +449,7 @@ theorem test10_commuted_proof : test10_commuted_before ⊑ test10_commuted_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -469,6 +482,7 @@ theorem test11_proof : test11_before ⊑ test11_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -501,6 +515,7 @@ theorem test12_proof : test12_before ⊑ test12_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -533,6 +548,7 @@ theorem test12_commuted_proof : test12_commuted_before ⊑ test12_commuted_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -563,6 +579,7 @@ theorem test13_proof : test13_before ⊑ test13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -596,6 +613,7 @@ theorem test14_proof : test14_before ⊑ test14_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -629,6 +647,7 @@ theorem test14_commuted_proof : test14_commuted_before ⊑ test14_commuted_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -662,6 +681,7 @@ theorem test15_proof : test15_before ⊑ test15_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -695,6 +715,7 @@ theorem test15_commuted_proof : test15_commuted_before ⊑ test15_commuted_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -730,6 +751,7 @@ theorem or_and_xor_not_constant_commute0_proof : or_and_xor_not_constant_commute
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -765,6 +787,7 @@ theorem or_and_xor_not_constant_commute1_proof : or_and_xor_not_constant_commute
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -801,6 +824,7 @@ theorem not_or_xor_proof : not_or_xor_before ⊑ not_or_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -835,6 +859,7 @@ theorem xor_or_proof : xor_or_before ⊑ xor_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -869,6 +894,7 @@ theorem xor_or2_proof : xor_or2_before ⊑ xor_or2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -905,6 +931,7 @@ theorem xor_or_xor_proof : xor_or_xor_before ⊑ xor_or_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -941,6 +968,7 @@ theorem or_xor_or_proof : or_xor_or_before ⊑ or_xor_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -979,6 +1007,7 @@ theorem test17_proof : test17_before ⊑ test17_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1017,6 +1046,7 @@ theorem test18_proof : test18_before ⊑ test18_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1052,6 +1082,7 @@ theorem test19_proof : test19_before ⊑ test19_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1087,6 +1118,7 @@ theorem test20_proof : test20_before ⊑ test20_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1122,6 +1154,7 @@ theorem test21_proof : test21_before ⊑ test21_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1157,6 +1190,7 @@ theorem test22_proof : test22_before ⊑ test22_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1192,6 +1226,7 @@ theorem test23_proof : test23_before ⊑ test23_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1226,6 +1261,7 @@ theorem PR45977_f1_proof : PR45977_f1_before ⊑ PR45977_f1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1259,6 +1295,7 @@ theorem PR45977_f2_proof : PR45977_f2_before ⊑ PR45977_f2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1290,6 +1327,7 @@ theorem or_xor_common_op_commute0_proof : or_xor_common_op_commute0_before ⊑ o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1321,6 +1359,7 @@ theorem or_xor_common_op_commute5_proof : or_xor_common_op_commute5_before ⊑ o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1352,6 +1391,7 @@ theorem or_xor_common_op_commute6_proof : or_xor_common_op_commute6_before ⊑ o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1383,6 +1423,7 @@ theorem or_xor_common_op_commute7_proof : or_xor_common_op_commute7_before ⊑ o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1418,6 +1459,7 @@ theorem or_not_xor_common_op_commute0_proof : or_not_xor_common_op_commute0_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1457,6 +1499,7 @@ theorem or_not_xor_common_op_commute2_proof : or_not_xor_common_op_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1496,6 +1539,7 @@ theorem or_not_xor_common_op_commute3_proof : or_not_xor_common_op_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1531,6 +1575,7 @@ theorem or_not_xor_common_op_commute5_proof : or_not_xor_common_op_commute5_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1570,6 +1615,7 @@ theorem or_not_xor_common_op_commute6_proof : or_not_xor_common_op_commute6_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1609,6 +1655,7 @@ theorem or_not_xor_common_op_commute7_proof : or_not_xor_common_op_commute7_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1644,6 +1691,7 @@ theorem or_nand_xor_common_op_commute0_proof : or_nand_xor_common_op_commute0_be
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1676,6 +1724,7 @@ theorem PR75692_1_proof : PR75692_1_before ⊑ PR75692_1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1709,6 +1758,7 @@ theorem or_xor_not_proof : or_xor_not_before ⊑ or_xor_not_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1744,6 +1794,7 @@ theorem or_xor_and_commuted1_proof : or_xor_and_commuted1_before ⊑ or_xor_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1781,6 +1832,7 @@ theorem or_xor_and_commuted2_proof : or_xor_and_commuted2_before ⊑ or_xor_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1821,6 +1873,7 @@ theorem or_xor_tree_0000_proof : or_xor_tree_0000_before ⊑ or_xor_tree_0000_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1861,6 +1914,7 @@ theorem or_xor_tree_0001_proof : or_xor_tree_0001_before ⊑ or_xor_tree_0001_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1901,6 +1955,7 @@ theorem or_xor_tree_0010_proof : or_xor_tree_0010_before ⊑ or_xor_tree_0010_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1941,6 +1996,7 @@ theorem or_xor_tree_0011_proof : or_xor_tree_0011_before ⊑ or_xor_tree_0011_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1981,6 +2037,7 @@ theorem or_xor_tree_0100_proof : or_xor_tree_0100_before ⊑ or_xor_tree_0100_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2021,6 +2078,7 @@ theorem or_xor_tree_0101_proof : or_xor_tree_0101_before ⊑ or_xor_tree_0101_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2061,6 +2119,7 @@ theorem or_xor_tree_0110_proof : or_xor_tree_0110_before ⊑ or_xor_tree_0110_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2101,6 +2160,7 @@ theorem or_xor_tree_0111_proof : or_xor_tree_0111_before ⊑ or_xor_tree_0111_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2141,6 +2201,7 @@ theorem or_xor_tree_1000_proof : or_xor_tree_1000_before ⊑ or_xor_tree_1000_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2181,6 +2242,7 @@ theorem or_xor_tree_1001_proof : or_xor_tree_1001_before ⊑ or_xor_tree_1001_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2221,6 +2283,7 @@ theorem or_xor_tree_1010_proof : or_xor_tree_1010_before ⊑ or_xor_tree_1010_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2261,6 +2324,7 @@ theorem or_xor_tree_1011_proof : or_xor_tree_1011_before ⊑ or_xor_tree_1011_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2301,6 +2365,7 @@ theorem or_xor_tree_1100_proof : or_xor_tree_1100_before ⊑ or_xor_tree_1100_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2341,6 +2406,7 @@ theorem or_xor_tree_1101_proof : or_xor_tree_1101_before ⊑ or_xor_tree_1101_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2381,6 +2447,7 @@ theorem or_xor_tree_1110_proof : or_xor_tree_1110_before ⊑ or_xor_tree_1110_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2421,6 +2488,7 @@ theorem or_xor_tree_1111_proof : or_xor_tree_1111_before ⊑ or_xor_tree_1111_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

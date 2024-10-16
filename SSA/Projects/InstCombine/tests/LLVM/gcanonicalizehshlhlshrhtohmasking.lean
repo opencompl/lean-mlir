@@ -35,6 +35,7 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -66,6 +67,7 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -100,6 +102,7 @@ theorem positive_biggerShl_proof : positive_biggerShl_before ⊑ positive_bigger
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -134,6 +137,7 @@ theorem positive_biggerLshr_proof : positive_biggerLshr_before ⊑ positive_bigg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -168,6 +172,7 @@ theorem positive_biggerLshr_lshrexact_proof : positive_biggerLshr_lshrexact_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -196,6 +201,7 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -225,6 +231,7 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -257,6 +264,7 @@ theorem positive_biggerShl_shlnuw_proof : positive_biggerShl_shlnuw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -289,6 +297,7 @@ theorem positive_biggerLshr_shlnuw_proof : positive_biggerLshr_shlnuw_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -321,6 +330,7 @@ theorem positive_biggerLshr_shlnuw_lshrexact_proof : positive_biggerLshr_shlnuw_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

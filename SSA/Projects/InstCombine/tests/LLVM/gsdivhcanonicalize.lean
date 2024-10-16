@@ -36,6 +36,7 @@ theorem test_sdiv_canonicalize_op0_proof : test_sdiv_canonicalize_op0_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -68,6 +69,7 @@ theorem test_sdiv_canonicalize_op0_exact_proof : test_sdiv_canonicalize_op0_exac
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

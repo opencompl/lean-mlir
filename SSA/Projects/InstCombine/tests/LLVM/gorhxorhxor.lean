@@ -35,6 +35,7 @@ theorem or_xor_xor_normal_variant1_proof : or_xor_xor_normal_variant1_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -66,6 +67,7 @@ theorem or_xor_xor_normal_variant2_proof : or_xor_xor_normal_variant2_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -97,6 +99,7 @@ theorem or_xor_xor_normal_variant3_proof : or_xor_xor_normal_variant3_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -128,6 +131,7 @@ theorem or_xor_xor_normal_variant4_proof : or_xor_xor_normal_variant4_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -161,6 +165,7 @@ theorem or_xor_xor_normal_binops_proof : or_xor_xor_normal_binops_before ⊑ or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

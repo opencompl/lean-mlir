@@ -38,6 +38,7 @@ theorem t0_lshr_proof : t0_lshr_before ⊑ t0_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -72,6 +73,7 @@ theorem t1_sshr_proof : t1_sshr_before ⊑ t1_sshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -106,6 +108,7 @@ theorem n13_proof : n13_before ⊑ n13_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

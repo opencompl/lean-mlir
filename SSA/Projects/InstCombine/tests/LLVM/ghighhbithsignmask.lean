@@ -36,6 +36,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -68,6 +69,7 @@ theorem t0_exact_proof : t0_exact_before ⊑ t0_exact_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -100,6 +102,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -132,6 +135,7 @@ theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -166,6 +170,7 @@ theorem n9_proof : n9_before ⊑ n9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

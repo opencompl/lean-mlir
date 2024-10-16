@@ -34,6 +34,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -66,6 +67,7 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -96,6 +98,7 @@ theorem t9_proof : t9_before ⊑ t9_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -128,6 +131,7 @@ theorem neg_of_sub_from_constant_proof : neg_of_sub_from_constant_before ⊑ neg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -160,6 +164,7 @@ theorem sub_from_constant_of_sub_from_constant_proof : sub_from_constant_of_sub_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -192,6 +197,7 @@ theorem sub_from_variable_of_sub_from_constant_proof : sub_from_variable_of_sub_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -224,6 +230,7 @@ theorem neg_of_add_with_constant_proof : neg_of_add_with_constant_before ⊑ neg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -256,6 +263,7 @@ theorem sub_from_constant_of_add_with_constant_proof : sub_from_constant_of_add_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -290,6 +298,7 @@ theorem negate_xor_proof : negate_xor_before ⊑ negate_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -326,6 +335,7 @@ theorem negate_shl_xor_proof : negate_shl_xor_before ⊑ negate_shl_xor_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -358,6 +368,7 @@ theorem negate_sdiv_proof : negate_sdiv_before ⊑ negate_sdiv_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -390,6 +401,7 @@ theorem negate_ashr_proof : negate_ashr_before ⊑ negate_ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -422,6 +434,7 @@ theorem negate_lshr_proof : negate_lshr_before ⊑ negate_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -457,6 +470,7 @@ theorem negation_of_increment_via_or_with_no_common_bits_set_proof : negation_of
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -489,6 +503,7 @@ theorem negate_add_with_single_negatible_operand_proof : negate_add_with_single_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -523,6 +538,7 @@ theorem negate_add_with_single_negatible_operand_depth2_proof : negate_add_with_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

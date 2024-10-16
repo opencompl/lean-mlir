@@ -35,6 +35,7 @@ theorem and_xor_not_common_op_proof : and_xor_not_common_op_before ⊑ and_xor_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -66,6 +67,7 @@ theorem and_not_xor_common_op_proof : and_not_xor_common_op_before ⊑ and_not_x
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -96,6 +98,7 @@ theorem or_proof : or_before ⊑ or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -126,6 +129,7 @@ theorem or2_proof : or2_before ⊑ or2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -159,6 +163,7 @@ theorem and_shl_proof : and_shl_before ⊑ and_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -192,6 +197,7 @@ theorem or_shl_proof : or_shl_before ⊑ or_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -225,6 +231,7 @@ theorem or_lshr_proof : or_lshr_before ⊑ or_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -258,6 +265,7 @@ theorem xor_lshr_proof : xor_lshr_before ⊑ xor_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -295,6 +303,7 @@ theorem xor_lshr_multiuse_proof : xor_lshr_multiuse_before ⊑ xor_lshr_multiuse
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -334,6 +343,7 @@ theorem not_and_and_not_proof : not_and_and_not_before ⊑ not_and_and_not_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -369,6 +379,7 @@ theorem not_and_and_not_commute1_proof : not_and_and_not_commute1_before ⊑ not
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -408,6 +419,7 @@ theorem not_or_or_not_proof : not_or_or_not_before ⊑ not_or_or_not_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -443,6 +455,7 @@ theorem not_or_or_not_commute1_proof : not_or_or_not_commute1_before ⊑ not_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -481,6 +494,7 @@ theorem or_not_and_proof : or_not_and_before ⊑ or_not_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -523,6 +537,7 @@ theorem or_not_and_commute1_proof : or_not_and_commute1_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -565,6 +580,7 @@ theorem or_not_and_commute2_proof : or_not_and_commute2_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -603,6 +619,7 @@ theorem or_not_and_commute3_proof : or_not_and_commute3_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -645,6 +662,7 @@ theorem or_not_and_commute4_proof : or_not_and_commute4_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -689,6 +707,7 @@ theorem or_not_and_commute5_proof : or_not_and_commute5_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -727,6 +746,7 @@ theorem or_not_and_commute6_proof : or_not_and_commute6_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -765,6 +785,7 @@ theorem or_not_and_commute7_proof : or_not_and_commute7_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -809,6 +830,7 @@ theorem or_not_and_commute8_proof : or_not_and_commute8_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -855,6 +877,7 @@ theorem or_not_and_commute9_proof : or_not_and_commute9_before ⊑ or_not_and_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -897,6 +920,7 @@ theorem or_not_and_wrong_c_proof : or_not_and_wrong_c_before ⊑ or_not_and_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -939,6 +963,7 @@ theorem or_not_and_wrong_b_proof : or_not_and_wrong_b_before ⊑ or_not_and_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -977,6 +1002,7 @@ theorem and_not_or_proof : and_not_or_before ⊑ and_not_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1019,6 +1045,7 @@ theorem and_not_or_commute1_proof : and_not_or_commute1_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1061,6 +1088,7 @@ theorem and_not_or_commute2_proof : and_not_or_commute2_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1099,6 +1127,7 @@ theorem and_not_or_commute3_proof : and_not_or_commute3_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1141,6 +1170,7 @@ theorem and_not_or_commute4_proof : and_not_or_commute4_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1185,6 +1215,7 @@ theorem and_not_or_commute5_proof : and_not_or_commute5_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1223,6 +1254,7 @@ theorem and_not_or_commute6_proof : and_not_or_commute6_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1261,6 +1293,7 @@ theorem and_not_or_commute7_proof : and_not_or_commute7_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1305,6 +1338,7 @@ theorem and_not_or_commute8_proof : and_not_or_commute8_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1351,6 +1385,7 @@ theorem and_not_or_commute9_proof : and_not_or_commute9_before ⊑ and_not_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1393,6 +1428,7 @@ theorem and_not_or_wrong_c_proof : and_not_or_wrong_c_before ⊑ and_not_or_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1435,6 +1471,7 @@ theorem and_not_or_wrong_b_proof : and_not_or_wrong_b_before ⊑ and_not_or_wron
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1472,6 +1509,7 @@ theorem or_and_not_not_proof : or_and_not_not_before ⊑ or_and_not_not_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1513,6 +1551,7 @@ theorem or_and_not_not_commute1_proof : or_and_not_not_commute1_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1550,6 +1589,7 @@ theorem or_and_not_not_commute2_proof : or_and_not_not_commute2_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1587,6 +1627,7 @@ theorem or_and_not_not_commute3_proof : or_and_not_not_commute3_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1624,6 +1665,7 @@ theorem or_and_not_not_commute4_proof : or_and_not_not_commute4_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1661,6 +1703,7 @@ theorem or_and_not_not_commute5_proof : or_and_not_not_commute5_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1702,6 +1745,7 @@ theorem or_and_not_not_commute6_proof : or_and_not_not_commute6_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1739,6 +1783,7 @@ theorem or_and_not_not_commute7_proof : or_and_not_not_commute7_before ⊑ or_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1779,6 +1824,7 @@ theorem or_and_not_not_wrong_a_proof : or_and_not_not_wrong_a_before ⊑ or_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1819,6 +1865,7 @@ theorem or_and_not_not_wrong_b_proof : or_and_not_not_wrong_b_before ⊑ or_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1856,6 +1903,7 @@ theorem and_or_not_not_proof : and_or_not_not_before ⊑ and_or_not_not_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1897,6 +1945,7 @@ theorem and_or_not_not_commute1_proof : and_or_not_not_commute1_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1934,6 +1983,7 @@ theorem and_or_not_not_commute2_proof : and_or_not_not_commute2_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -1971,6 +2021,7 @@ theorem and_or_not_not_commute3_proof : and_or_not_not_commute3_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2008,6 +2059,7 @@ theorem and_or_not_not_commute4_proof : and_or_not_not_commute4_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2045,6 +2097,7 @@ theorem and_or_not_not_commute5_proof : and_or_not_not_commute5_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2086,6 +2139,7 @@ theorem and_or_not_not_commute6_proof : and_or_not_not_commute6_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2123,6 +2177,7 @@ theorem and_or_not_not_commute7_proof : and_or_not_not_commute7_before ⊑ and_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2162,6 +2217,7 @@ theorem and_or_not_not_wrong_a_proof : and_or_not_not_wrong_a_before ⊑ and_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2202,6 +2258,7 @@ theorem and_or_not_not_wrong_b_proof : and_or_not_not_wrong_b_before ⊑ and_or_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2242,6 +2299,7 @@ theorem and_not_or_or_not_or_xor_proof : and_not_or_or_not_or_xor_before ⊑ and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2282,6 +2340,7 @@ theorem and_not_or_or_not_or_xor_commute1_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2326,6 +2385,7 @@ theorem and_not_or_or_not_or_xor_commute2_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2366,6 +2426,7 @@ theorem and_not_or_or_not_or_xor_commute3_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2410,6 +2471,7 @@ theorem and_not_or_or_not_or_xor_commute4_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2450,6 +2512,7 @@ theorem and_not_or_or_not_or_xor_commute5_proof : and_not_or_or_not_or_xor_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2491,6 +2554,7 @@ theorem or_not_and_and_not_and_xor_proof : or_not_and_and_not_and_xor_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2532,6 +2596,7 @@ theorem or_not_and_and_not_and_xor_commute1_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2577,6 +2642,7 @@ theorem or_not_and_and_not_and_xor_commute2_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2618,6 +2684,7 @@ theorem or_not_and_and_not_and_xor_commute3_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2663,6 +2730,7 @@ theorem or_not_and_and_not_and_xor_commute4_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2704,6 +2772,7 @@ theorem or_not_and_and_not_and_xor_commute5_proof : or_not_and_and_not_and_xor_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2742,6 +2811,7 @@ theorem not_and_and_or_not_or_or_proof : not_and_and_or_not_or_or_before ⊑ not
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2780,6 +2850,7 @@ theorem not_and_and_or_not_or_or_commute1_or_proof : not_and_and_or_not_or_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2818,6 +2889,7 @@ theorem not_and_and_or_not_or_or_commute2_or_proof : not_and_and_or_not_or_or_co
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2856,6 +2928,7 @@ theorem not_and_and_or_not_or_or_commute1_and_proof : not_and_and_or_not_or_or_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2894,6 +2967,7 @@ theorem not_and_and_or_not_or_or_commute2_and_proof : not_and_and_or_not_or_or_c
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2932,6 +3006,7 @@ theorem not_and_and_or_not_or_or_commute1_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -2974,6 +3049,7 @@ theorem not_and_and_or_not_or_or_commute2_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3016,6 +3092,7 @@ theorem not_and_and_or_not_or_or_commute3_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3058,6 +3135,7 @@ theorem not_and_and_or_not_or_or_commute4_proof : not_and_and_or_not_or_or_commu
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3096,6 +3174,7 @@ theorem not_or_or_and_not_and_and_proof : not_or_or_and_not_and_and_before ⊑ n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3134,6 +3213,7 @@ theorem not_or_or_and_not_and_and_commute1_and_proof : not_or_or_and_not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3172,6 +3252,7 @@ theorem not_or_or_and_not_and_and_commute2_and_proof : not_or_or_and_not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3210,6 +3291,7 @@ theorem not_or_or_and_not_and_and_commute1_or_proof : not_or_or_and_not_and_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3248,6 +3330,7 @@ theorem not_or_or_and_not_and_and_commute2_or_proof : not_or_or_and_not_and_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3286,6 +3369,7 @@ theorem not_or_or_and_not_and_and_commute1_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3328,6 +3412,7 @@ theorem not_or_or_and_not_and_and_commute2_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3370,6 +3455,7 @@ theorem not_or_or_and_not_and_and_commute3_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3412,6 +3498,7 @@ theorem not_or_or_and_not_and_and_commute4_proof : not_or_or_and_not_and_and_com
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3450,6 +3537,7 @@ theorem not_and_and_or_no_or_proof : not_and_and_or_no_or_before ⊑ not_and_and
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3488,6 +3576,7 @@ theorem not_and_and_or_no_or_commute1_and_proof : not_and_and_or_no_or_commute1_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3526,6 +3615,7 @@ theorem not_and_and_or_no_or_commute2_and_proof : not_and_and_or_no_or_commute2_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3564,6 +3654,7 @@ theorem not_and_and_or_no_or_commute1_proof : not_and_and_or_no_or_commute1_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3606,6 +3697,7 @@ theorem not_and_and_or_no_or_commute2_proof : not_and_and_or_no_or_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3648,6 +3740,7 @@ theorem not_and_and_or_no_or_commute3_proof : not_and_and_or_no_or_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3686,6 +3779,7 @@ theorem not_or_or_and_no_and_proof : not_or_or_and_no_and_before ⊑ not_or_or_a
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3724,6 +3818,7 @@ theorem not_or_or_and_no_and_commute1_or_proof : not_or_or_and_no_and_commute1_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3762,6 +3857,7 @@ theorem not_or_or_and_no_and_commute2_or_proof : not_or_or_and_no_and_commute2_o
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3800,6 +3896,7 @@ theorem not_or_or_and_no_and_commute1_proof : not_or_or_and_no_and_commute1_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3842,6 +3939,7 @@ theorem not_or_or_and_no_and_commute2_proof : not_or_or_and_no_and_commute2_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3884,6 +3982,7 @@ theorem not_or_or_and_no_and_commute3_proof : not_or_or_and_no_and_commute3_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3918,6 +4017,7 @@ theorem and_orn_xor_proof : and_orn_xor_before ⊑ and_orn_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3956,6 +4056,7 @@ theorem and_orn_xor_commute8_proof : and_orn_xor_commute8_before ⊑ and_orn_xor
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -3990,6 +4091,7 @@ theorem canonicalize_logic_first_or0_proof : canonicalize_logic_first_or0_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4024,6 +4126,7 @@ theorem canonicalize_logic_first_or0_nsw_proof : canonicalize_logic_first_or0_ns
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4058,6 +4161,7 @@ theorem canonicalize_logic_first_or0_nswnuw_proof : canonicalize_logic_first_or0
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4092,6 +4196,7 @@ theorem canonicalize_logic_first_and0_proof : canonicalize_logic_first_and0_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4126,6 +4231,7 @@ theorem canonicalize_logic_first_and0_nsw_proof : canonicalize_logic_first_and0_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4160,6 +4266,7 @@ theorem canonicalize_logic_first_and0_nswnuw_proof : canonicalize_logic_first_an
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4194,6 +4301,7 @@ theorem canonicalize_logic_first_xor_0_proof : canonicalize_logic_first_xor_0_be
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4228,6 +4336,7 @@ theorem canonicalize_logic_first_xor_0_nsw_proof : canonicalize_logic_first_xor_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -4262,6 +4371,7 @@ theorem canonicalize_logic_first_xor_0_nswnuw_proof : canonicalize_logic_first_x
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

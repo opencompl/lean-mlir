@@ -39,6 +39,7 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -74,6 +75,7 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -112,6 +114,7 @@ theorem t9_nocse_proof : t9_nocse_before ⊑ t9_nocse_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -150,6 +153,7 @@ theorem t17_nocse_mismatching_x_proof : t17_nocse_mismatching_x_before ⊑ t17_n
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

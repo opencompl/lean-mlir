@@ -36,6 +36,7 @@ theorem ashr_ashr_proof : ashr_ashr_before ⊑ ashr_ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -68,6 +69,7 @@ theorem ashr_overshift_proof : ashr_overshift_before ⊑ ashr_overshift_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

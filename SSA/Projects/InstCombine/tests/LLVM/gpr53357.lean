@@ -38,6 +38,7 @@ theorem src_proof : src_before ⊑ src_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -72,6 +73,7 @@ theorem src2_proof : src2_before ⊑ src2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -107,6 +109,7 @@ theorem src3_proof : src3_before ⊑ src3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -141,6 +144,7 @@ theorem src4_proof : src4_before ⊑ src4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -175,6 +179,7 @@ theorem src5_proof : src5_before ⊑ src5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

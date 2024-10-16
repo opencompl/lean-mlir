@@ -17,6 +17,6 @@ theorem foo_thm (x x_1 : BitVec 32) :
                   twoPow 64 31 ≤ signExtend 64 x_1 * signExtend 64 x_1 then
               none
             else some (x_1 * x_1)).bind
-          fun a_1 => some (a - a_1)) ⊑
+          fun y' => some (a - y')) ⊑
     some (x * x_1) := sorry
 

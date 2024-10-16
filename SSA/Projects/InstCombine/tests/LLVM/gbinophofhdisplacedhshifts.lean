@@ -39,6 +39,7 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -74,6 +75,7 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -109,6 +111,7 @@ theorem ashr_or_proof : ashr_or_before ⊑ ashr_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -144,6 +147,7 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -179,6 +183,7 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -214,6 +219,7 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -249,6 +255,7 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -284,6 +291,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -319,6 +327,7 @@ theorem ashr_and_proof : ashr_and_before ⊑ ashr_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -354,6 +363,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -394,6 +404,7 @@ theorem lshr_add_fail_proof : lshr_add_fail_before ⊑ lshr_add_fail_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -429,6 +440,7 @@ theorem shl_or_commuted_proof : shl_or_commuted_before ⊑ shl_or_commuted_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -464,6 +476,7 @@ theorem shl_or_with_or_disjoint_instead_of_add_proof : shl_or_with_or_disjoint_i
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

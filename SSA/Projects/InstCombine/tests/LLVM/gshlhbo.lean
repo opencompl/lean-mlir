@@ -43,6 +43,7 @@ theorem lshr_add_proof : lshr_add_before ⊑ lshr_add_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -81,6 +82,7 @@ theorem lshr_sub_proof : lshr_sub_before ⊑ lshr_sub_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -118,6 +120,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -157,6 +160,7 @@ theorem lshr_or_proof : lshr_or_before ⊑ lshr_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -196,6 +200,7 @@ theorem lshr_xor_proof : lshr_xor_before ⊑ lshr_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -237,6 +242,7 @@ theorem lshr_and_add_proof : lshr_and_add_before ⊑ lshr_and_add_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -279,6 +285,7 @@ theorem lshr_and_sub_proof : lshr_and_sub_before ⊑ lshr_and_sub_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -320,6 +327,7 @@ theorem lshr_and_and_proof : lshr_and_and_before ⊑ lshr_and_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -361,6 +369,7 @@ theorem lshr_and_or_proof : lshr_and_or_before ⊑ lshr_and_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -402,6 +411,7 @@ theorem lshr_and_or_disjoint_proof : lshr_and_or_disjoint_before ⊑ lshr_and_or
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -443,6 +453,7 @@ theorem ashr_and_or_disjoint_proof : ashr_and_or_disjoint_before ⊑ ashr_and_or
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -484,6 +495,7 @@ theorem lshr_and_xor_proof : lshr_and_xor_before ⊑ lshr_and_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -521,6 +533,7 @@ theorem lshr_add_and_shl_proof : lshr_add_and_shl_before ⊑ lshr_add_and_shl_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -558,6 +571,7 @@ theorem shl_add_and_lshr_proof : shl_add_and_lshr_before ⊑ shl_add_and_lshr_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

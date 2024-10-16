@@ -36,6 +36,7 @@ theorem test_srem_canonicalize_op0_proof : test_srem_canonicalize_op0_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

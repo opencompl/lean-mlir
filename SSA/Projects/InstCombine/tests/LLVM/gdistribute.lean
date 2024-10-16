@@ -35,6 +35,7 @@ theorem factorize_proof : factorize_before ⊑ factorize_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -66,6 +67,7 @@ theorem factorize2_proof : factorize2_before ⊑ factorize2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -97,6 +99,7 @@ theorem factorize3_proof : factorize3_before ⊑ factorize3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -129,6 +132,7 @@ theorem factorize4_proof : factorize4_before ⊑ factorize4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -161,6 +165,7 @@ theorem factorize5_proof : factorize5_before ⊑ factorize5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -194,6 +199,7 @@ theorem expand_proof : expand_before ⊑ expand_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

@@ -36,6 +36,7 @@ theorem sub_not_proof : sub_not_before ⊑ sub_not_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -68,6 +69,7 @@ theorem dec_sub_proof : dec_sub_before ⊑ dec_sub_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -100,6 +102,7 @@ theorem sub_inc_proof : sub_inc_before ⊑ sub_inc_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -132,6 +135,7 @@ theorem sub_dec_proof : sub_dec_before ⊑ sub_dec_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

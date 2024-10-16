@@ -39,6 +39,7 @@ theorem sextinreg_proof : sextinreg_before ⊑ sextinreg_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -74,6 +75,7 @@ theorem sextinreg_alt_proof : sextinreg_alt_before ⊑ sextinreg_alt_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -109,6 +111,7 @@ theorem sextinreg2_proof : sextinreg2_before ⊑ sextinreg2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -143,6 +146,7 @@ theorem ashr_proof : ashr_before ⊑ ashr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

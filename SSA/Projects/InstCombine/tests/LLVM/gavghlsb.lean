@@ -38,6 +38,7 @@ theorem avg_lsb_proof : avg_lsb_before ⊑ avg_lsb_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

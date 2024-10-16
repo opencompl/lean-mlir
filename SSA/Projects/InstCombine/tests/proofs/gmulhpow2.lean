@@ -36,6 +36,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_ca
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -68,6 +69,7 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_ca
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

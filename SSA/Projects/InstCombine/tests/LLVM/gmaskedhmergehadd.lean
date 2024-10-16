@@ -40,6 +40,7 @@ theorem p_proof : p_before ⊑ p_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -76,6 +77,7 @@ theorem p_constmask_proof : p_constmask_before ⊑ p_constmask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -112,6 +114,7 @@ theorem p_constmask2_proof : p_constmask2_before ⊑ p_constmask2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -148,6 +151,7 @@ theorem p_commutative0_proof : p_commutative0_before ⊑ p_commutative0_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -184,6 +188,7 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -220,6 +225,7 @@ theorem p_commutative4_proof : p_commutative4_before ⊑ p_commutative4_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -256,6 +262,7 @@ theorem p_constmask_commutative_proof : p_constmask_commutative_before ⊑ p_con
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -292,6 +299,7 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -326,6 +334,7 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

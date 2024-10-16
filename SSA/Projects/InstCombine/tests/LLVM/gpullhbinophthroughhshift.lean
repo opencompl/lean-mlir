@@ -38,6 +38,7 @@ theorem and_signbit_shl_proof : and_signbit_shl_before ⊑ and_signbit_shl_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -72,6 +73,7 @@ theorem and_nosignbit_shl_proof : and_nosignbit_shl_before ⊑ and_nosignbit_shl
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -106,6 +108,7 @@ theorem or_signbit_shl_proof : or_signbit_shl_before ⊑ or_signbit_shl_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -140,6 +143,7 @@ theorem or_nosignbit_shl_proof : or_nosignbit_shl_before ⊑ or_nosignbit_shl_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -174,6 +178,7 @@ theorem xor_signbit_shl_proof : xor_signbit_shl_before ⊑ xor_signbit_shl_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -208,6 +213,7 @@ theorem xor_nosignbit_shl_proof : xor_nosignbit_shl_before ⊑ xor_nosignbit_shl
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -242,6 +248,7 @@ theorem add_signbit_shl_proof : add_signbit_shl_before ⊑ add_signbit_shl_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -276,6 +283,7 @@ theorem add_nosignbit_shl_proof : add_nosignbit_shl_before ⊑ add_nosignbit_shl
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -310,6 +318,7 @@ theorem and_signbit_lshr_proof : and_signbit_lshr_before ⊑ and_signbit_lshr_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -344,6 +353,7 @@ theorem and_nosignbit_lshr_proof : and_nosignbit_lshr_before ⊑ and_nosignbit_l
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -378,6 +388,7 @@ theorem or_signbit_lshr_proof : or_signbit_lshr_before ⊑ or_signbit_lshr_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -412,6 +423,7 @@ theorem or_nosignbit_lshr_proof : or_nosignbit_lshr_before ⊑ or_nosignbit_lshr
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -446,6 +458,7 @@ theorem xor_signbit_lshr_proof : xor_signbit_lshr_before ⊑ xor_signbit_lshr_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -480,6 +493,7 @@ theorem xor_nosignbit_lshr_proof : xor_nosignbit_lshr_before ⊑ xor_nosignbit_l
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -514,6 +528,7 @@ theorem and_signbit_ashr_proof : and_signbit_ashr_before ⊑ and_signbit_ashr_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -548,6 +563,7 @@ theorem and_nosignbit_ashr_proof : and_nosignbit_ashr_before ⊑ and_nosignbit_a
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -582,6 +598,7 @@ theorem or_signbit_ashr_proof : or_signbit_ashr_before ⊑ or_signbit_ashr_after
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -616,6 +633,7 @@ theorem or_nosignbit_ashr_proof : or_nosignbit_ashr_before ⊑ or_nosignbit_ashr
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -650,6 +668,7 @@ theorem xor_signbit_ashr_proof : xor_signbit_ashr_before ⊑ xor_signbit_ashr_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -684,6 +703,7 @@ theorem xor_nosignbit_ashr_proof : xor_nosignbit_ashr_before ⊑ xor_nosignbit_a
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

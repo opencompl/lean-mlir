@@ -48,6 +48,7 @@ theorem or_and_shifts1_proof : or_and_shifts1_before ⊑ or_and_shifts1_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -92,6 +93,7 @@ theorem or_and_shift_shift_and_proof : or_and_shift_shift_and_before ⊑ or_and_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -143,6 +145,7 @@ theorem multiuse1_proof : multiuse1_before ⊑ multiuse1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -205,6 +208,7 @@ theorem multiuse2_proof : multiuse2_before ⊑ multiuse2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -259,6 +263,7 @@ theorem multiuse3_proof : multiuse3_before ⊑ multiuse3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -295,6 +300,7 @@ theorem shl_mask_proof : shl_mask_before ⊑ shl_mask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -331,6 +337,7 @@ theorem shl_mask_wrong_shl_const_proof : shl_mask_wrong_shl_const_before ⊑ shl
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -367,6 +374,7 @@ theorem shl_mask_weird_type_proof : shl_mask_weird_type_before ⊑ shl_mask_weir
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -407,6 +415,7 @@ theorem shl_mul_mask_proof : shl_mul_mask_before ⊑ shl_mul_mask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -447,6 +456,7 @@ theorem shl_mul_mask_wrong_mul_const_proof : shl_mul_mask_wrong_mul_const_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

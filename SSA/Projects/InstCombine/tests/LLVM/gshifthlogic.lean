@@ -40,6 +40,7 @@ theorem shl_and_proof : shl_and_before ⊑ shl_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -80,6 +81,7 @@ theorem shl_or_proof : shl_or_before ⊑ shl_or_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -116,6 +118,7 @@ theorem shl_xor_proof : shl_xor_before ⊑ shl_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -156,6 +159,7 @@ theorem lshr_and_proof : lshr_and_before ⊑ lshr_and_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -196,6 +200,7 @@ theorem ashr_xor_proof : ashr_xor_before ⊑ ashr_xor_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -228,6 +233,7 @@ theorem lshr_mul_proof : lshr_mul_before ⊑ lshr_mul_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -260,6 +266,7 @@ theorem lshr_mul_nuw_nsw_proof : lshr_mul_nuw_nsw_before ⊑ lshr_mul_nuw_nsw_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -296,6 +303,7 @@ theorem shl_add_proof : shl_add_before ⊑ shl_add_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -332,6 +340,7 @@ theorem shl_sub_proof : shl_sub_before ⊑ shl_sub_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -368,6 +377,7 @@ theorem shl_sub_no_commute_proof : shl_sub_no_commute_before ⊑ shl_sub_no_comm
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

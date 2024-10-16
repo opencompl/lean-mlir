@@ -34,6 +34,7 @@ theorem do_not_add_annotation_to_existing_instr_proof : do_not_add_annotation_to
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

@@ -36,6 +36,7 @@ theorem flip_add_of_shift_neg_proof : flip_add_of_shift_neg_before ⊑ flip_add_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

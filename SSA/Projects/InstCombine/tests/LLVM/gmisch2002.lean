@@ -38,6 +38,7 @@ theorem missed_const_prop_2002h12h05_proof : missed_const_prop_2002h12h05_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

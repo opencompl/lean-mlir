@@ -40,6 +40,7 @@ theorem oppositesign_proof : oppositesign_before ⊑ oppositesign_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -74,6 +75,7 @@ theorem zero_sign_bit_proof : zero_sign_bit_before ⊑ zero_sign_bit_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -108,6 +110,7 @@ theorem zero_sign_bit2_proof : zero_sign_bit2_before ⊑ zero_sign_bit2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -144,6 +147,7 @@ theorem ripple_nsw1_proof : ripple_nsw1_before ⊑ ripple_nsw1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -180,6 +184,7 @@ theorem ripple_nsw2_proof : ripple_nsw2_before ⊑ ripple_nsw2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -216,6 +221,7 @@ theorem ripple_nsw3_proof : ripple_nsw3_before ⊑ ripple_nsw3_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -252,6 +258,7 @@ theorem ripple_nsw4_proof : ripple_nsw4_before ⊑ ripple_nsw4_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -288,6 +295,7 @@ theorem ripple_nsw5_proof : ripple_nsw5_before ⊑ ripple_nsw5_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -324,6 +332,7 @@ theorem ripple_nsw6_proof : ripple_nsw6_before ⊑ ripple_nsw6_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -360,6 +369,7 @@ theorem ripple_no_nsw2_proof : ripple_no_nsw2_before ⊑ ripple_no_nsw2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -394,6 +404,7 @@ theorem PR38021_proof : PR38021_before ⊑ PR38021_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp

@@ -43,6 +43,7 @@ theorem mul8_low_A0_B0_proof : mul8_low_A0_B0_before ⊑ mul8_low_A0_B0_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -82,6 +83,7 @@ theorem mul8_low_proof : mul8_low_before ⊑ mul8_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -121,6 +123,7 @@ theorem mul16_low_proof : mul16_low_before ⊑ mul16_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -160,6 +163,7 @@ theorem mul32_low_proof : mul32_low_before ⊑ mul32_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -199,6 +203,7 @@ theorem mul64_low_proof : mul64_low_before ⊑ mul64_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -238,6 +243,7 @@ theorem mul128_low_proof : mul128_low_before ⊑ mul128_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -277,6 +283,7 @@ theorem mul130_low_proof : mul130_low_before ⊑ mul130_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -327,6 +334,7 @@ theorem mul9_low_proof : mul9_low_before ⊑ mul9_low_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -377,6 +385,7 @@ theorem mul16_low_miss_shift_amount_proof : mul16_low_miss_shift_amount_before �
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
@@ -427,6 +436,7 @@ theorem mul8_low_miss_half_width_proof : mul8_low_miss_half_width_before ⊑ mul
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+  try simp
   simp_alive_case_bash
   intros
   try simp
