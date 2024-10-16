@@ -10,6 +10,89 @@ import SSA.Experimental.Bits.AutoStructs.FormulaToAuto
 import SSA.Experimental.Bits.SafeNativeDecide
 import Qq.Macro
 
+
+namespace AutoStructs
+
+section EvalLemmas
+variable {x y : Term} {w} {vars : Nat → BitVec w}
+
+lemma eval_sub :
+    (x.sub y).evalNat vars = x.evalNat vars - y.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_add :
+    (x.add y).evalNat vars = x.evalNat vars + y.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_neg :
+    (x.neg).evalNat vars = - x.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_not :
+    (x.not).evalNat vars = ~~~ x.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_and :
+    (x.and y).evalNat vars = x.evalNat vars &&& y.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_xor :
+    (x.xor y).evalNat vars = x.evalNat vars ^^^ y.evalNat vars := by
+  simp only [Term.evalNat]
+
+lemma eval_or :
+    (x.or y).evalNat vars = x.evalNat vars ||| y.evalNat vars := by
+  simp only [Term.evalNat]
+end EvalLemmas
+
+section SatLemmas
+variable {x y : Formula} {w} {vars : Nat → BitVec w}
+
+open Formula
+
+lemma sat_and :
+    (binop .and x y).sat' vars ↔ x.sat' vars ∧ y.sat' vars := by
+  simp only [Formula.sat', evalBinop']
+
+lemma sat_or :
+    (binop .or x y).sat' vars ↔ x.sat' vars ∨ y.sat' vars := by
+  simp only [Formula.sat', evalBinop']
+
+lemma sat_impl :
+    (binop .impl x y).sat' vars ↔ (x.sat' vars → y.sat' vars) := by
+  simp only [Formula.sat', evalBinop']
+
+lemma sat_iff :
+    (binop .equiv x y).sat' vars ↔ (x.sat' vars ↔ y.sat' vars) := by
+  simp only [Formula.sat', evalBinop']
+
+lemma sat_neg :
+    (unop .neg x).sat' vars ↔ (¬ x.sat' vars) := by
+  simp only [Formula.sat', evalBinop']
+
+lemma sat_eq (t1 t2 : Term) :
+    (atom .eq t1 t2).sat' vars ↔ (t1.evalNat vars = t2.evalNat vars) := by
+  simp [Formula.sat', evalRelation]
+
+lemma sat_slt (t1 t2 : Term) :
+    (atom (.signed .lt) t1 t2).sat' vars ↔ (t1.evalNat vars <ₛ t2.evalNat vars) := by
+  simp [Formula.sat', evalRelation]
+
+lemma sat_sle (t1 t2 : Term) :
+    (atom (.signed .le) t1 t2).sat' vars ↔ (t1.evalNat vars ≤ₛ t2.evalNat vars) := by
+  simp [Formula.sat', evalRelation]
+
+lemma sat_ult (t1 t2 : Term) :
+    (atom (.unsigned .lt) t1 t2).sat' vars ↔ (t1.evalNat vars <ᵤ t2.evalNat vars) := by
+  simp [Formula.sat', evalRelation]
+
+lemma sat_ule (t1 t2 : Term) :
+    (atom (.unsigned .le) t1 t2).sat' vars ↔ (t1.evalNat vars ≤ᵤ t2.evalNat vars) := by
+  simp [Formula.sat', evalRelation]
+
+end SatLemmas
+end AutoStructs
+
 open AutoStructs
 
 open Lean Elab Tactic
@@ -251,12 +334,18 @@ def listExprExpr (es : List Expr) (type : Expr) : Expr :=
 def arrayExprExpr (es : Array Expr) (type : Expr) : Expr :=
   mkApp2 (mkConst ``List.toArray [levelZero]) type (listExprExpr es.toList type)
 
+def makeEnv (es : Array Expr) (w : Expr) : MetaM Expr :=
+   withLocalDecl `n BinderInfo.default (.const ``Nat []) λ n => do
+    let bv0 := mkApp (mkConst ``BitVec.zero) w
+    let body ← es.zipWithIndex.foldlM (init := bv0) fun res (e, i) => do
+      mkAppM ``ite #[←mkAppM ``Eq #[n, mkNatLit i], e, res]
+    mkLambdaFVars #[n] body
+
 private def buildEnv (es : Array Expr) : MetaM Expr := do
   let some e0 := es[0]? | throwError "The goal contains no variables"
   let type ← inferType e0
-  let_expr BitVec _ ← type | throwError "Variables must be of BitVector type"
-  let a := arrayExprExpr es.reverse type
-  mkAppM ``envOfArray #[a]
+  let_expr BitVec w ← type | throwError "Variables must be of BitVector type"
+  makeEnv es w
 
 private partial def assertSame (φ : Formula) (st : State) : TacticM Unit:= do
   withMainContext do
@@ -282,8 +371,28 @@ elab "bv_automata_inner" : tactic => do
 
 -- TODO(leo): make the tactic more structured (in Coq `bv_inner; [by simp | by ...])
 macro "bv_automata'" : tactic =>
-  `(tactic|
-      (bv_automata_inner; simp; apply decision_procedure_is_correct; safe_native_decide))
+  `(tactic| (
+     bv_automata_inner
+     { simp only [
+         AutoStructs.sat_and,
+         AutoStructs.sat_or,
+         AutoStructs.sat_impl,
+         AutoStructs.sat_iff,
+         AutoStructs.sat_neg,
+         AutoStructs.sat_eq,
+         AutoStructs.sat_slt,
+         AutoStructs.sat_sle,
+         AutoStructs.sat_ult,
+         AutoStructs.sat_ule,
+         AutoStructs.eval_sub,
+         AutoStructs.eval_add,
+         AutoStructs.eval_neg,
+         AutoStructs.eval_and,
+         AutoStructs.eval_xor,
+         AutoStructs.eval_or,
+         AutoStructs.eval_not]
+       rfl }
+     { apply decision_procedure_is_correct; safe_native_decide } ))
 
 end Tactic
 
