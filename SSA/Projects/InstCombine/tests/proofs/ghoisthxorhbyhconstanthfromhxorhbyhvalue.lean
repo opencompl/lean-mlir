@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthxorhbyhconstanthfromhxorhbyhvalue_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def t0_scalar_before := [llvm|
 {
 ^0(%arg10 : i8, %arg11 : i8):
@@ -36,9 +40,14 @@ theorem t0_scalar_proof : t0_scalar_before ⊑ t0_scalar_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN t0_scalar
   apply t0_scalar_thm

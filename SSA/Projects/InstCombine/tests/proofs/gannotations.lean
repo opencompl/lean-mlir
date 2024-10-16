@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gannotations_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def do_not_add_annotation_to_existing_instr_before := [llvm|
 {
 ^0(%arg15 : i32, %arg16 : i32):
@@ -34,9 +38,14 @@ theorem do_not_add_annotation_to_existing_instr_proof : do_not_add_annotation_to
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN do_not_add_annotation_to_existing_instr
   all_goals (try extract_goal ; sorry)

@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gcanonicalizehlshrhshlhtohmasking_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def positive_samevar_before := [llvm|
 {
 ^0(%arg62 : i8, %arg63 : i8):
@@ -35,9 +39,14 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar
   apply positive_samevar_thm
@@ -67,9 +76,14 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst
   all_goals (try extract_goal ; sorry)
@@ -102,9 +116,14 @@ theorem positive_biggerlshr_proof : positive_biggerlshr_before ⊑ positive_bigg
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr
   apply positive_biggerlshr_thm
@@ -137,9 +156,14 @@ theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_bigger
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl
   apply positive_biggershl_thm
@@ -169,9 +193,14 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnuw
   apply positive_samevar_shlnuw_thm
@@ -201,9 +230,14 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnuw
   apply positive_sameconst_shlnuw_thm
@@ -236,9 +270,14 @@ theorem positive_biggerlshr_shlnuw_proof : positive_biggerlshr_shlnuw_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnuw
   apply positive_biggerlshr_shlnuw_thm
@@ -271,9 +310,14 @@ theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnuw
   apply positive_biggershl_shlnuw_thm
@@ -303,9 +347,14 @@ theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ posit
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnsw
   apply positive_samevar_shlnsw_thm
@@ -335,9 +384,14 @@ theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnsw
   apply positive_sameconst_shlnsw_thm
@@ -370,9 +424,14 @@ theorem positive_biggerlshr_shlnsw_proof : positive_biggerlshr_shlnsw_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnsw
   apply positive_biggerlshr_shlnsw_thm
@@ -405,9 +464,14 @@ theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ p
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnsw
   apply positive_biggershl_shlnsw_thm
@@ -437,9 +501,14 @@ theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnuwnsw
   apply positive_samevar_shlnuwnsw_thm
@@ -469,9 +538,14 @@ theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnuwnsw
   apply positive_sameconst_shlnuwnsw_thm
@@ -504,9 +578,14 @@ theorem positive_biggerlshr_shlnuwnsw_proof : positive_biggerlshr_shlnuwnsw_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnuwnsw
   apply positive_biggerlshr_shlnuwnsw_thm
@@ -539,9 +618,14 @@ theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnuwnsw
   apply positive_biggershl_shlnuwnsw_thm
@@ -568,9 +652,14 @@ theorem positive_samevar_lshrexact_proof : positive_samevar_lshrexact_before ⊑
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_lshrexact
   apply positive_samevar_lshrexact_thm
@@ -598,9 +687,14 @@ theorem positive_sameconst_lshrexact_proof : positive_sameconst_lshrexact_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_lshrexact
   apply positive_sameconst_lshrexact_thm
@@ -631,9 +725,14 @@ theorem positive_biggerlshr_lshrexact_proof : positive_biggerlshr_lshrexact_befo
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_lshrexact
   apply positive_biggerlshr_lshrexact_thm
@@ -664,9 +763,14 @@ theorem positive_biggershl_lshrexact_proof : positive_biggershl_lshrexact_before
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_lshrexact
   apply positive_biggershl_lshrexact_thm
@@ -693,9 +797,14 @@ theorem positive_samevar_shlnsw_lshrexact_proof : positive_samevar_shlnsw_lshrex
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnsw_lshrexact
   apply positive_samevar_shlnsw_lshrexact_thm
@@ -723,9 +832,14 @@ theorem positive_sameconst_shlnsw_lshrexact_proof : positive_sameconst_shlnsw_ls
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnsw_lshrexact
   apply positive_sameconst_shlnsw_lshrexact_thm
@@ -756,9 +870,14 @@ theorem positive_biggerlshr_shlnsw_lshrexact_proof : positive_biggerlshr_shlnsw_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnsw_lshrexact
   apply positive_biggerlshr_shlnsw_lshrexact_thm
@@ -789,9 +908,14 @@ theorem positive_biggershl_shlnsw_lshrexact_proof : positive_biggershl_shlnsw_ls
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnsw_lshrexact
   apply positive_biggershl_shlnsw_lshrexact_thm
@@ -818,9 +942,14 @@ theorem positive_samevar_shlnuw_lshrexact_proof : positive_samevar_shlnuw_lshrex
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnuw_lshrexact
   apply positive_samevar_shlnuw_lshrexact_thm
@@ -848,9 +977,14 @@ theorem positive_sameconst_shlnuw_lshrexact_proof : positive_sameconst_shlnuw_ls
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnuw_lshrexact
   apply positive_sameconst_shlnuw_lshrexact_thm
@@ -881,9 +1015,14 @@ theorem positive_biggerlshr_shlnuw_lshrexact_proof : positive_biggerlshr_shlnuw_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnuw_lshrexact
   apply positive_biggerlshr_shlnuw_lshrexact_thm
@@ -914,9 +1053,14 @@ theorem positive_biggershl_shlnuw_lshrexact_proof : positive_biggershl_shlnuw_ls
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnuw_lshrexact
   apply positive_biggershl_shlnuw_lshrexact_thm
@@ -943,9 +1087,14 @@ theorem positive_samevar_shlnuwnsw_lshrexact_proof : positive_samevar_shlnuwnsw_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_samevar_shlnuwnsw_lshrexact
   apply positive_samevar_shlnuwnsw_lshrexact_thm
@@ -973,9 +1122,14 @@ theorem positive_sameconst_shlnuwnsw_lshrexact_proof : positive_sameconst_shlnuw
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_sameconst_shlnuwnsw_lshrexact
   apply positive_sameconst_shlnuwnsw_lshrexact_thm
@@ -1006,9 +1160,14 @@ theorem positive_biggerlshr_shlnuwnsw_lshrexact_proof : positive_biggerlshr_shln
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggerlshr_shlnuwnsw_lshrexact
   apply positive_biggerlshr_shlnuwnsw_lshrexact_thm
@@ -1039,9 +1198,14 @@ theorem positive_biggershl_shlnuwnsw_lshrexact_proof : positive_biggershl_shlnuw
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN positive_biggershl_shlnuwnsw_lshrexact
   apply positive_biggershl_shlnuwnsw_lshrexact_thm

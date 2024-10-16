@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmaskedhmergehandhofhors_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def p_before := [llvm|
 {
 ^0(%arg73 : i32, %arg74 : i32, %arg75 : i32):
@@ -40,9 +44,14 @@ theorem p_proof : p_before ⊑ p_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN p
   apply p_thm
@@ -77,9 +86,14 @@ theorem p_commutative2_proof : p_commutative2_before ⊑ p_commutative2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN p_commutative2
   apply p_commutative2_thm
@@ -114,9 +128,14 @@ theorem n2_badmask_proof : n2_badmask_before ⊑ n2_badmask_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN n2_badmask
   apply n2_badmask_thm
@@ -148,9 +167,14 @@ theorem n3_constmask_samemask_proof : n3_constmask_samemask_before ⊑ n3_constm
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN n3_constmask_samemask
   apply n3_constmask_samemask_thm

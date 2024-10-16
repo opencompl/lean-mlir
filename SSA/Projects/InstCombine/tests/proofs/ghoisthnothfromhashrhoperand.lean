@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghoisthnothfromhashrhoperand_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def t0_before := [llvm|
 {
 ^0(%arg8 : i8, %arg9 : i8):
@@ -36,9 +40,14 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN t0
   apply t0_thm
@@ -69,9 +78,14 @@ theorem t1_proof : t1_before ⊑ t1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN t1
   apply t1_thm

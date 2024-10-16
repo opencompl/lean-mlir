@@ -12,6 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gdivhshift_statements
+<<<<<<< HEAD
 
 def t5_before := [llvm|
 {
@@ -52,6 +53,9 @@ theorem t5_proof : t5_before ⊑ t5_after := by
 
 
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def t7_before := [llvm|
 {
 ^0(%arg209 : i32):
@@ -73,9 +77,14 @@ theorem t7_proof : t7_before ⊑ t7_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN t7
   apply t7_thm
@@ -104,9 +113,14 @@ theorem t10_proof : t10_before ⊑ t10_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN t10
   apply t10_thm
@@ -114,6 +128,7 @@ theorem t10_proof : t10_before ⊑ t10_after := by
 
 
 
+<<<<<<< HEAD
 def t12_before := [llvm|
 {
 ^0(%arg202 : i32):
@@ -176,6 +191,8 @@ theorem t15_proof : t15_before ⊑ t15_after := by
 
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)
 def sdiv_mul_shl_nsw_before := [llvm|
 {
 ^0(%arg193 : i5, %arg194 : i5, %arg195 : i5):
@@ -199,9 +216,14 @@ theorem sdiv_mul_shl_nsw_proof : sdiv_mul_shl_nsw_before ⊑ sdiv_mul_shl_nsw_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_mul_shl_nsw
   apply sdiv_mul_shl_nsw_thm
@@ -232,9 +254,14 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_mul_shl_nsw_exact_commute1
   apply sdiv_mul_shl_nsw_exact_commute1_thm
@@ -242,6 +269,7 @@ theorem sdiv_mul_shl_nsw_exact_commute1_proof : sdiv_mul_shl_nsw_exact_commute1_
 
 
 
+<<<<<<< HEAD
 def udiv_mul_shl_nuw_before := [llvm|
 {
 ^0(%arg166 : i5, %arg167 : i5, %arg168 : i5):
@@ -434,6 +462,8 @@ theorem udiv_lshr_mul_nuw_proof : udiv_lshr_mul_nuw_before ⊑ udiv_lshr_mul_nuw
 
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)
 def sdiv_shl_shl_nsw2_nuw_before := [llvm|
 {
 ^0(%arg82 : i8, %arg83 : i8, %arg84 : i8):
@@ -455,9 +485,14 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_shl_shl_nsw2_nuw
   apply sdiv_shl_shl_nsw2_nuw_thm
@@ -465,6 +500,7 @@ theorem sdiv_shl_shl_nsw2_nuw_proof : sdiv_shl_shl_nsw2_nuw_before ⊑ sdiv_shl_
 
 
 
+<<<<<<< HEAD
 def udiv_shl_shl_nuw_nsw2_before := [llvm|
 {
 ^0(%arg55 : i8, %arg56 : i8, %arg57 : i8):
@@ -496,6 +532,8 @@ theorem udiv_shl_shl_nuw_nsw2_proof : udiv_shl_shl_nuw_nsw2_before ⊑ udiv_shl_
 
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)
 def sdiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg47 : i32):
@@ -519,9 +557,14 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_shl_pair_const
   apply sdiv_shl_pair_const_thm
@@ -529,6 +572,7 @@ theorem sdiv_shl_pair_const_proof : sdiv_shl_pair_const_before ⊑ sdiv_shl_pair
 
 
 
+<<<<<<< HEAD
 def udiv_shl_pair_const_before := [llvm|
 {
 ^0(%arg46 : i32):
@@ -562,6 +606,8 @@ theorem udiv_shl_pair_const_proof : udiv_shl_pair_const_before ⊑ udiv_shl_pair
 
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)
 def sdiv_shl_pair1_before := [llvm|
 {
 ^0(%arg43 : i32, %arg44 : i32, %arg45 : i32):
@@ -585,9 +631,14 @@ theorem sdiv_shl_pair1_proof : sdiv_shl_pair1_before ⊑ sdiv_shl_pair1_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_shl_pair1
   apply sdiv_shl_pair1_thm
@@ -618,9 +669,14 @@ theorem sdiv_shl_pair2_proof : sdiv_shl_pair2_before ⊑ sdiv_shl_pair2_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_shl_pair2
   apply sdiv_shl_pair2_thm
@@ -651,15 +707,21 @@ theorem sdiv_shl_pair3_proof : sdiv_shl_pair3_before ⊑ sdiv_shl_pair3_after :=
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN sdiv_shl_pair3
   apply sdiv_shl_pair3_thm
   ---END sdiv_shl_pair3
 
 
+<<<<<<< HEAD
 
 def udiv_shl_pair1_before := [llvm|
 {
@@ -759,3 +821,5 @@ theorem udiv_shl_pair3_proof : udiv_shl_pair3_before ⊑ udiv_shl_pair3_after :=
   ---END udiv_shl_pair3
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)

@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gapinthrem2_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def test1_before := [llvm|
 {
 ^0(%arg3 : i333):
@@ -34,9 +38,14 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN test1
   apply test1_thm
@@ -67,15 +76,21 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN test2
   apply test2_thm
   ---END test2
 
 
+<<<<<<< HEAD
 
 def test3_before := [llvm|
 {
@@ -111,3 +126,5 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   ---END test3
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)

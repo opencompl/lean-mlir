@@ -12,6 +12,7 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gmulhpow2_statements
+<<<<<<< HEAD
 
 def mul_selectp2_x_before := [llvm|
 {
@@ -155,6 +156,9 @@ theorem mul_x_selectp2_proof : mul_x_selectp2_before ⊑ mul_x_selectp2_after :=
 
 
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def shl_add_log_may_cause_poison_pr62175_with_nuw_before := [llvm|
 {
 ^0(%arg2 : i8, %arg3 : i8):
@@ -178,9 +182,14 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_ca
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nuw
   apply shl_add_log_may_cause_poison_pr62175_with_nuw_thm
@@ -211,9 +220,14 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_ca
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN shl_add_log_may_cause_poison_pr62175_with_nsw
   apply shl_add_log_may_cause_poison_pr62175_with_nsw_thm

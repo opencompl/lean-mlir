@@ -34,7 +34,11 @@ theorem positive_biggerashr_shlnuw_thm (x : BitVec 8) :
 
 theorem positive_biggershl_shlnuw_thm (x : BitVec 8) :
   (if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
+<<<<<<< HEAD
     (if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun x' => some (x' &&& 192#8) := sorry
+=======
+    (if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun a => some (a &&& 192#8) := sorry
+>>>>>>> 43a49182 (re-ran scripts)
 
 theorem positive_samevar_shlnsw_thm (x x_1 : BitVec 8) :
   (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
@@ -53,7 +57,11 @@ theorem positive_biggerashr_shlnsw_thm (x : BitVec 8) :
 
 theorem positive_biggershl_shlnsw_thm (x : BitVec 8) :
   (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
+<<<<<<< HEAD
     (if (x <<< 3).sshiftRight 3 = x then none else some (x <<< 3)).bind fun x' => some (x' &&& 192#8) := sorry
+=======
+    (if (x <<< 3).sshiftRight 3 = x then none else some (x <<< 3)).bind fun a => some (a &&& 192#8) := sorry
+>>>>>>> 43a49182 (re-ran scripts)
 
 theorem positive_samevar_shlnuwnsw_thm (x x_1 : BitVec 8) :
   (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>
@@ -76,8 +84,13 @@ theorem positive_biggerashr_shlnuwnsw_thm (x : BitVec 8) :
 theorem positive_biggershl_shlnuwnsw_thm (x : BitVec 8) :
   (if (x.sshiftRight 3 <<< 6).sshiftRight 6 = x.sshiftRight 3 then none
     else if x.sshiftRight 3 <<< 6 >>> 6 = x.sshiftRight 3 then none else some (x.sshiftRight 3 <<< 6)) ⊑
+<<<<<<< HEAD
     (if (x <<< 3).sshiftRight 3 = x then none else if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun x' =>
       some (x' &&& 64#8) := sorry
+=======
+    (if (x <<< 3).sshiftRight 3 = x then none else if x <<< 3 >>> 3 = x then none else some (x <<< 3)).bind fun a =>
+      some (a &&& 64#8) := sorry
+>>>>>>> 43a49182 (re-ran scripts)
 
 theorem positive_samevar_ashrexact_thm (x x_1 : BitVec 8) :
   (Option.bind (if 8#8 ≤ x then none else some (x_1.sshiftRight x.toNat)) fun a =>

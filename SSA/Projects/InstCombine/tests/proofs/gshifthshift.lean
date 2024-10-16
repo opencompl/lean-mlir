@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gshifthshift_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 43a49182 (re-ran scripts)
 def shl_shl_before := [llvm|
 {
 ^0(%arg50 : i32):
@@ -35,9 +39,14 @@ theorem shl_shl_proof : shl_shl_before ⊑ shl_shl_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN shl_shl
   apply shl_shl_thm
@@ -67,9 +76,14 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN lshr_lshr
   apply lshr_lshr_thm
@@ -77,6 +91,7 @@ theorem lshr_lshr_proof : lshr_lshr_before ⊑ lshr_lshr_after := by
 
 
 
+<<<<<<< HEAD
 def shl_shl_constants_div_before := [llvm|
 {
 ^0(%arg27 : i32, %arg28 : i32):
@@ -112,6 +127,8 @@ theorem shl_shl_constants_div_proof : shl_shl_constants_div_before ⊑ shl_shl_c
 
 
 
+=======
+>>>>>>> 43a49182 (re-ran scripts)
 def ashr_shl_constants_before := [llvm|
 {
 ^0(%arg25 : i32):
@@ -137,9 +154,14 @@ theorem ashr_shl_constants_proof : ashr_shl_constants_before ⊑ ashr_shl_consta
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN ashr_shl_constants
   apply ashr_shl_constants_thm
@@ -174,9 +196,14 @@ theorem shl_lshr_demand1_proof : shl_lshr_demand1_before ⊑ shl_lshr_demand1_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN shl_lshr_demand1
   apply shl_lshr_demand1_thm
@@ -211,9 +238,14 @@ theorem shl_lshr_demand6_proof : shl_lshr_demand6_before ⊑ shl_lshr_demand6_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN shl_lshr_demand6
   apply shl_lshr_demand6_thm
@@ -248,9 +280,14 @@ theorem lshr_shl_demand1_proof : lshr_shl_demand1_before ⊑ lshr_shl_demand1_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN lshr_shl_demand1
   apply lshr_shl_demand1_thm
@@ -285,9 +322,14 @@ theorem lshr_shl_demand3_proof : lshr_shl_demand3_before ⊑ lshr_shl_demand3_af
   simp_alive_peephole
   simp_alive_undef
   simp_alive_ops
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
+=======
+  simp_alive_case_bash
+  intros
+>>>>>>> 43a49182 (re-ran scripts)
   try simp
   ---BEGIN lshr_shl_demand3
   apply lshr_shl_demand3_thm
