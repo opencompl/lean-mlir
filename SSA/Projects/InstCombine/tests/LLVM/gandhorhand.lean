@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gandhorhand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -42,7 +42,7 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   intros
   try simp
   ---BEGIN test1
-  apply test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END test1
 
 
@@ -74,7 +74,7 @@ theorem test3_proof : test3_before ⊑ test3_after := by
   intros
   try simp
   ---BEGIN test3
-  apply test3_thm
+  all_goals (try extract_goal ; sorry)
   ---END test3
 
 
@@ -107,7 +107,7 @@ theorem test4_proof : test4_before ⊑ test4_after := by
   intros
   try simp
   ---BEGIN test4
-  apply test4_thm
+  all_goals (try extract_goal ; sorry)
   ---END test4
 
 
@@ -137,7 +137,7 @@ theorem or_test1_proof : or_test1_before ⊑ or_test1_after := by
   intros
   try simp
   ---BEGIN or_test1
-  apply or_test1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_test1
 
 
@@ -168,7 +168,7 @@ theorem or_test2_proof : or_test2_before ⊑ or_test2_after := by
   intros
   try simp
   ---BEGIN or_test2
-  apply or_test2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_test2
 
 

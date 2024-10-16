@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gorhxorhxor_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -39,7 +39,7 @@ theorem or_xor_xor_normal_variant1_proof : or_xor_xor_normal_variant1_before ⊑
   intros
   try simp
   ---BEGIN or_xor_xor_normal_variant1
-  apply or_xor_xor_normal_variant1_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant1
 
 
@@ -70,7 +70,7 @@ theorem or_xor_xor_normal_variant2_proof : or_xor_xor_normal_variant2_before ⊑
   intros
   try simp
   ---BEGIN or_xor_xor_normal_variant2
-  apply or_xor_xor_normal_variant2_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant2
 
 
@@ -101,7 +101,7 @@ theorem or_xor_xor_normal_variant3_proof : or_xor_xor_normal_variant3_before ⊑
   intros
   try simp
   ---BEGIN or_xor_xor_normal_variant3
-  apply or_xor_xor_normal_variant3_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant3
 
 
@@ -132,7 +132,7 @@ theorem or_xor_xor_normal_variant4_proof : or_xor_xor_normal_variant4_before ⊑
   intros
   try simp
   ---BEGIN or_xor_xor_normal_variant4
-  apply or_xor_xor_normal_variant4_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_variant4
 
 
@@ -165,7 +165,7 @@ theorem or_xor_xor_normal_binops_proof : or_xor_xor_normal_binops_before ⊑ or_
   intros
   try simp
   ---BEGIN or_xor_xor_normal_binops
-  apply or_xor_xor_normal_binops_thm
+  all_goals (try extract_goal ; sorry)
   ---END or_xor_xor_normal_binops
 
 

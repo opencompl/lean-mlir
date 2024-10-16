@@ -13,6 +13,123 @@ set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhxorhor_statements
                                                     
+def and_xor_common_op_before := [llvm|
+{
+^0(%arg695 : i32, %arg696 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg695 : i32
+  %3 = llvm.udiv %1, %arg696 : i32
+  %4 = llvm.xor %2, %3 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_after := [llvm|
+{
+^0(%arg695 : i32, %arg696 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg695 : i32
+  %4 = llvm.udiv %1, %arg696 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_proof : and_xor_common_op_before ⊑ and_xor_common_op_after := by
+  unfold and_xor_common_op_before and_xor_common_op_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_common_op
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op
+
+
+
+def and_xor_common_op_commute1_before := [llvm|
+{
+^0(%arg693 : i32, %arg694 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg693 : i32
+  %3 = llvm.udiv %1, %arg694 : i32
+  %4 = llvm.xor %3, %2 : i32
+  %5 = llvm.and %2, %4 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_commute1_after := [llvm|
+{
+^0(%arg693 : i32, %arg694 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg693 : i32
+  %4 = llvm.udiv %1, %arg694 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_commute1_proof : and_xor_common_op_commute1_before ⊑ and_xor_common_op_commute1_after := by
+  unfold and_xor_common_op_commute1_before and_xor_common_op_commute1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_common_op_commute1
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op_commute1
+
+
+
+def and_xor_common_op_commute2_before := [llvm|
+{
+^0(%arg691 : i32, %arg692 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = llvm.udiv %0, %arg691 : i32
+  %3 = llvm.udiv %1, %arg692 : i32
+  %4 = llvm.xor %3, %2 : i32
+  %5 = llvm.and %4, %2 : i32
+  "llvm.return"(%5) : (i32) -> ()
+}
+]
+def and_xor_common_op_commute2_after := [llvm|
+{
+^0(%arg691 : i32, %arg692 : i32):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i32}> : () -> i32
+  %1 = "llvm.mlir.constant"() <{value = 43 : i32}> : () -> i32
+  %2 = "llvm.mlir.constant"() <{value = -1 : i32}> : () -> i32
+  %3 = llvm.udiv %0, %arg691 : i32
+  %4 = llvm.udiv %1, %arg692 : i32
+  %5 = llvm.xor %4, %2 : i32
+  %6 = llvm.and %3, %5 : i32
+  "llvm.return"(%6) : (i32) -> ()
+}
+]
+theorem and_xor_common_op_commute2_proof : and_xor_common_op_commute2_before ⊑ and_xor_common_op_commute2_after := by
+  unfold and_xor_common_op_commute2_before and_xor_common_op_commute2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_common_op_commute2
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_common_op_commute2
+
+
+
 def and_xor_not_common_op_before := [llvm|
 {
 ^0(%arg686 : i32, %arg687 : i32):
@@ -132,6 +249,302 @@ theorem or2_proof : or2_before ⊑ or2_after := by
   ---BEGIN or2
   all_goals (try extract_goal ; sorry)
   ---END or2
+
+
+
+def and_xor_or1_before := [llvm|
+{
+^0(%arg673 : i64, %arg674 : i64, %arg675 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg673 : i64
+  %2 = llvm.udiv %0, %arg674 : i64
+  %3 = llvm.udiv %0, %arg675 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or1_after := [llvm|
+{
+^0(%arg673 : i64, %arg674 : i64, %arg675 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg674 : i64
+  %2 = llvm.udiv %0, %arg675 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or1_proof : and_xor_or1_before ⊑ and_xor_or1_after := by
+  unfold and_xor_or1_before and_xor_or1_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or1
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or1
+
+
+
+def and_xor_or2_before := [llvm|
+{
+^0(%arg670 : i64, %arg671 : i64, %arg672 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg670 : i64
+  %2 = llvm.udiv %0, %arg671 : i64
+  %3 = llvm.udiv %0, %arg672 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or2_after := [llvm|
+{
+^0(%arg670 : i64, %arg671 : i64, %arg672 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg671 : i64
+  %2 = llvm.udiv %0, %arg672 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or2_proof : and_xor_or2_before ⊑ and_xor_or2_after := by
+  unfold and_xor_or2_before and_xor_or2_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or2
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or2
+
+
+
+def and_xor_or3_before := [llvm|
+{
+^0(%arg667 : i64, %arg668 : i64, %arg669 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg667 : i64
+  %2 = llvm.udiv %0, %arg668 : i64
+  %3 = llvm.udiv %0, %arg669 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or3_after := [llvm|
+{
+^0(%arg667 : i64, %arg668 : i64, %arg669 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg668 : i64
+  %2 = llvm.udiv %0, %arg669 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or3_proof : and_xor_or3_before ⊑ and_xor_or3_after := by
+  unfold and_xor_or3_before and_xor_or3_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or3
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or3
+
+
+
+def and_xor_or4_before := [llvm|
+{
+^0(%arg664 : i64, %arg665 : i64, %arg666 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg664 : i64
+  %2 = llvm.udiv %0, %arg665 : i64
+  %3 = llvm.udiv %0, %arg666 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %5, %2 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or4_after := [llvm|
+{
+^0(%arg664 : i64, %arg665 : i64, %arg666 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg665 : i64
+  %2 = llvm.udiv %0, %arg666 : i64
+  %3 = llvm.or %2, %1 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or4_proof : and_xor_or4_before ⊑ and_xor_or4_after := by
+  unfold and_xor_or4_before and_xor_or4_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or4
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or4
+
+
+
+def and_xor_or5_before := [llvm|
+{
+^0(%arg661 : i64, %arg662 : i64, %arg663 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg661 : i64
+  %2 = llvm.udiv %0, %arg662 : i64
+  %3 = llvm.udiv %0, %arg663 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or5_after := [llvm|
+{
+^0(%arg661 : i64, %arg662 : i64, %arg663 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg662 : i64
+  %2 = llvm.udiv %0, %arg663 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or5_proof : and_xor_or5_before ⊑ and_xor_or5_after := by
+  unfold and_xor_or5_before and_xor_or5_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or5
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or5
+
+
+
+def and_xor_or6_before := [llvm|
+{
+^0(%arg658 : i64, %arg659 : i64, %arg660 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg658 : i64
+  %2 = llvm.udiv %0, %arg659 : i64
+  %3 = llvm.udiv %0, %arg660 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %4, %3 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or6_after := [llvm|
+{
+^0(%arg658 : i64, %arg659 : i64, %arg660 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg659 : i64
+  %2 = llvm.udiv %0, %arg660 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or6_proof : and_xor_or6_before ⊑ and_xor_or6_after := by
+  unfold and_xor_or6_before and_xor_or6_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or6
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or6
+
+
+
+def and_xor_or7_before := [llvm|
+{
+^0(%arg655 : i64, %arg656 : i64, %arg657 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg655 : i64
+  %2 = llvm.udiv %0, %arg656 : i64
+  %3 = llvm.udiv %0, %arg657 : i64
+  %4 = llvm.and %1, %2 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or7_after := [llvm|
+{
+^0(%arg655 : i64, %arg656 : i64, %arg657 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg656 : i64
+  %2 = llvm.udiv %0, %arg657 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or7_proof : and_xor_or7_before ⊑ and_xor_or7_after := by
+  unfold and_xor_or7_before and_xor_or7_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or7
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or7
+
+
+
+def and_xor_or8_before := [llvm|
+{
+^0(%arg652 : i64, %arg653 : i64, %arg654 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg652 : i64
+  %2 = llvm.udiv %0, %arg653 : i64
+  %3 = llvm.udiv %0, %arg654 : i64
+  %4 = llvm.and %2, %1 : i64
+  %5 = llvm.xor %3, %4 : i64
+  %6 = llvm.or %2, %5 : i64
+  "llvm.return"(%6) : (i64) -> ()
+}
+]
+def and_xor_or8_after := [llvm|
+{
+^0(%arg652 : i64, %arg653 : i64, %arg654 : i64):
+  %0 = "llvm.mlir.constant"() <{value = 42 : i64}> : () -> i64
+  %1 = llvm.udiv %0, %arg653 : i64
+  %2 = llvm.udiv %0, %arg654 : i64
+  %3 = llvm.or %1, %2 : i64
+  "llvm.return"(%3) : (i64) -> ()
+}
+]
+theorem and_xor_or8_proof : and_xor_or8_before ⊑ and_xor_or8_after := by
+  unfold and_xor_or8_before and_xor_or8_after
+  simp_alive_peephole
+  simp_alive_undef
+  simp_alive_ops
+  simp_alive_case_bash
+  intros
+  try simp
+  ---BEGIN and_xor_or8
+  all_goals (try extract_goal ; sorry)
+  ---END and_xor_or8
 
 
 

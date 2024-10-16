@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.tests.LLVM.gsubhxorhorhneghand_proof
+
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -40,7 +40,7 @@ theorem sub_to_and_proof : sub_to_and_before ⊑ sub_to_and_after := by
   intros
   try simp
   ---BEGIN sub_to_and
-  apply sub_to_and_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_and
 
 
@@ -72,7 +72,7 @@ theorem sub_to_and_or_commuted_proof : sub_to_and_or_commuted_before ⊑ sub_to_
   intros
   try simp
   ---BEGIN sub_to_and_or_commuted
-  apply sub_to_and_or_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_and_or_commuted
 
 
@@ -104,7 +104,7 @@ theorem sub_to_and_and_commuted_proof : sub_to_and_and_commuted_before ⊑ sub_t
   intros
   try simp
   ---BEGIN sub_to_and_and_commuted
-  apply sub_to_and_and_commuted_thm
+  all_goals (try extract_goal ; sorry)
   ---END sub_to_and_and_commuted
 
 
