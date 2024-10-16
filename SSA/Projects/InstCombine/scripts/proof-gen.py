@@ -19,14 +19,15 @@ def get_lines(msg):
 def process_file(file_path):
     # Run the `lake build` command and capture the output
     module_name = file_path[2:-5].replace("/", ".")
-    proof_name = file_path[:-5] + "_proof"
+    proof_name = file_path[:-5].replace("/LLVM/", "/proofs/") + "_proof"
     stem_name = file_path.split("/")[-1][:-5]
+    new_file_path = file_path.replace("/LLVM/", "/proofs/")
     result = subprocess.run(
         ["lake", "build", module_name], capture_output=True, text=True
     )
     print(result)
     msg = result.stdout
-    if result.stderr:
+    if result.stderr: 
         raise Exception(result.stderr)
     print(f"msg = {msg}")
 
@@ -43,9 +44,9 @@ def process_file(file_path):
     for l, n, m in named:
         if 0 <= l - 1 < len(lines):
             lines[l - 1] = f"  apply {n}_thm" + "\n"
-    lines[0] = f"import SSA.Projects.InstCombine.tests.LLVM.{stem_name}_proof\n"
-    # Write the modified content back to the file
-    with open(file_path, "w") as file:
+    lines[0] = f"import SSA.Projects.InstCombine.tests.proofs.{stem_name}_proof\n"
+    # Write the modified content to the new file
+    with open(new_file_path, "a") as file:
         file.writelines(lines)
 
     # Append the messages to the end of the file
@@ -68,11 +69,16 @@ section {stem_name}_proof
 
 
 def main():
+    proof_directory = "./SSA/Projects/InstCombine/tests/proofs"
+    rm_proofs = "\nrm -r " + proof_directory + "/*\n"
+    subprocess.run(rm_proofs, shell=True)
+    
     directory = "./SSA/Projects/InstCombine/tests/LLVM"
+    
     worklist = []
     for root, _, files in os.walk(directory):
         for lean_file in files:
-            if lean_file.endswith(".lean") and not lean_file.endswith("_proof.lean"):  # Assuming the files have a .lean extension
+            if lean_file.endswith(".lean"):  # Assuming the files have a .lean extension
                 file_path = os.path.join(root, lean_file)
                 print(file_path)
                 worklist.append(file_path)
