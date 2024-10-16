@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section g2008h02h23hMulSub_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 1011dc2e (re-ran the tests)
 def test_before := [llvm|
 {
 ^0(%arg0 : i26):
@@ -37,7 +41,11 @@ theorem test_proof : test_before ⊑ test_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN test
   apply test_thm

@@ -40,10 +40,14 @@ theorem add_shl_same_amount_proof : add_shl_same_amount_before ⊑ add_shl_same_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -77,10 +81,14 @@ theorem add_shl_same_amount_nuw_proof : add_shl_same_amount_nuw_before ⊑ add_s
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -114,10 +122,14 @@ theorem add_shl_same_amount_partial_nsw1_proof : add_shl_same_amount_partial_nsw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -151,10 +163,14 @@ theorem add_shl_same_amount_partial_nsw2_proof : add_shl_same_amount_partial_nsw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -188,10 +204,14 @@ theorem add_shl_same_amount_partial_nuw1_proof : add_shl_same_amount_partial_nuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -225,10 +245,14 @@ theorem add_shl_same_amount_partial_nuw2_proof : add_shl_same_amount_partial_nuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -262,10 +286,14 @@ theorem sub_shl_same_amount_proof : sub_shl_same_amount_before ⊑ sub_shl_same_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -299,10 +327,14 @@ theorem sub_shl_same_amount_nuw_proof : sub_shl_same_amount_nuw_before ⊑ sub_s
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -336,10 +368,14 @@ theorem sub_shl_same_amount_partial_nsw1_proof : sub_shl_same_amount_partial_nsw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -373,10 +409,14 @@ theorem sub_shl_same_amount_partial_nsw2_proof : sub_shl_same_amount_partial_nsw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -410,10 +450,14 @@ theorem sub_shl_same_amount_partial_nuw1_proof : sub_shl_same_amount_partial_nuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -447,10 +491,14 @@ theorem sub_shl_same_amount_partial_nuw2_proof : sub_shl_same_amount_partial_nuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -486,10 +534,14 @@ theorem add_shl_same_amount_constants_proof : add_shl_same_amount_constants_befo
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)

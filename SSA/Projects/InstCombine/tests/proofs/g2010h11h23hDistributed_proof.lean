@@ -18,9 +18,13 @@ theorem foo_thm (x x_1 : BitVec 32) :
               none
             else some (x_1 * x_1)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
           fun y' => some (a - y')) ⊑
 =======
           fun a_1 => some (a - a_1)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+          fun y' => some (a - y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     some (x * x_1) := sorry
 

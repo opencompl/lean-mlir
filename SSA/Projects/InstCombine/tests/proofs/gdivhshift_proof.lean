@@ -78,6 +78,7 @@ theorem sdiv_mul_shl_nsw_thm (x x_1 x_2 : BitVec 5) :
       (if (x_2 <<< x.toNat).sshiftRight x.toNat = x_2 then none
           else if 5#5 ≤ x then none else some (x_2 <<< x.toNat)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
         fun y' => if y' = 0#5 ∨ a = intMin 5 ∧ y' = 31#5 then none else some (a.sdiv y')) ⊑
     (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind
       fun y' => if y' = 0#5 ∨ x_1 = intMin 5 ∧ y' = 31#5 then none else some (x_1.sdiv y') := sorry
@@ -86,6 +87,11 @@ theorem sdiv_mul_shl_nsw_thm (x x_1 x_2 : BitVec 5) :
     (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind fun a =>
       if a = 0#5 ∨ x_1 = intMin 5 ∧ a = 31#5 then none else some (x_1.sdiv a) := sorry
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+        fun y' => if y' = 0#5 ∨ a = intMin 5 ∧ y' = 31#5 then none else some (a.sdiv y')) ⊑
+    (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind
+      fun y' => if y' = 0#5 ∨ x_1 = intMin 5 ∧ y' = 31#5 then none else some (x_1.sdiv y') := sorry
+>>>>>>> 1011dc2e (re-ran the tests)
 
 theorem sdiv_mul_shl_nsw_exact_commute1_thm (x x_1 x_2 : BitVec 5) :
   ((if
@@ -96,6 +102,7 @@ theorem sdiv_mul_shl_nsw_exact_commute1_thm (x x_1 x_2 : BitVec 5) :
       fun a =>
       (if (x_1 <<< x.toNat).sshiftRight x.toNat = x_1 then none
           else if 5#5 ≤ x then none else some (x_1 <<< x.toNat)).bind
+<<<<<<< HEAD
 <<<<<<< HEAD
         fun y' => if y' = 0#5 ∨ a = intMin 5 ∧ y' = 31#5 then none else some (a.sdiv y')) ⊑
     (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind
@@ -147,6 +154,11 @@ theorem udiv_lshr_mul_nuw_thm (x x_1 x_2 : BitVec 8) :
     (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind fun a =>
       if a = 0#5 ∨ x_2 = intMin 5 ∧ a = 31#5 then none else some (x_2.sdiv a) := sorry
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+        fun y' => if y' = 0#5 ∨ a = intMin 5 ∧ y' = 31#5 then none else some (a.sdiv y')) ⊑
+    (if 1#5 <<< x.toNat >>> x.toNat = 1#5 then none else if 5#5 ≤ x then none else some (1#5 <<< x.toNat)).bind
+      fun y' => if y' = 0#5 ∨ x_2 = intMin 5 ∧ y' = 31#5 then none else some (x_2.sdiv y') := sorry
+>>>>>>> 1011dc2e (re-ran the tests)
 
 theorem sdiv_shl_shl_nsw2_nuw_thm (x x_1 x_2 : BitVec 8) :
   ((if (x_2 <<< x_1.toNat).sshiftRight x_1.toNat = x_2 then none
@@ -155,6 +167,7 @@ theorem sdiv_shl_shl_nsw2_nuw_thm (x x_1 x_2 : BitVec 8) :
       (if (x <<< x_1.toNat).sshiftRight x_1.toNat = x then none
           else
             if x <<< x_1.toNat >>> x_1.toNat = x then none else if 8#8 ≤ x_1 then none else some (x <<< x_1.toNat)).bind
+<<<<<<< HEAD
 <<<<<<< HEAD
         fun y' => if y' = 0#8 ∨ a = intMin 8 ∧ y' = 255#8 then none else some (a.sdiv y')) ⊑
     if x = 0#8 ∨ x_2 = intMin 8 ∧ x = 255#8 then none else some (x_2.sdiv x) := sorry
@@ -181,13 +194,21 @@ theorem udiv_shl_pair_const_thm (x : BitVec 32) :
       (if x <<< 1 >>> 1 = x then none else some (x <<< 1)).bind fun y' => if y' = 0#32 then none else some (a / y')) ⊑
 =======
         fun a_1 => if a_1 = 0#8 ∨ a = intMin 8 ∧ a_1 = 255#8 then none else some (a.sdiv a_1)) ⊑
+=======
+        fun y' => if y' = 0#8 ∨ a = intMin 8 ∧ y' = 255#8 then none else some (a.sdiv y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     if x = 0#8 ∨ x_2 = intMin 8 ∧ x = 255#8 then none else some (x_2.sdiv x) := sorry
 
 theorem sdiv_shl_pair_const_thm (x : BitVec 32) :
   ((if (x <<< 2).sshiftRight 2 = x then none else some (x <<< 2)).bind fun a =>
+<<<<<<< HEAD
       (if (x <<< 1).sshiftRight 1 = x then none else some (x <<< 1)).bind fun a_1 =>
         if a_1 = 0#32 ∨ a = intMin 32 ∧ a_1 = 4294967295#32 then none else some (a.sdiv a_1)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+      (if (x <<< 1).sshiftRight 1 = x then none else some (x <<< 1)).bind fun y' =>
+        if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     some 2#32 := sorry
 
 theorem sdiv_shl_pair1_thm (x x_1 x_2 : BitVec 32) :
@@ -198,10 +219,14 @@ theorem sdiv_shl_pair1_thm (x x_1 x_2 : BitVec 32) :
           else
             if x_2 <<< x.toNat >>> x.toNat = x_2 then none else if 32#32 ≤ x then none else some (x_2 <<< x.toNat)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
         fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
 =======
         fun a_1 => if a_1 = 0#32 ∨ a = intMin 32 ∧ a_1 = 4294967295#32 then none else some (a.sdiv a_1)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+        fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     (if (1#32 <<< x_1.toNat).sshiftRight x_1.toNat = 1#32 then none
         else
           if 1#32 <<< x_1.toNat >>> x_1.toNat = 1#32 then none
@@ -217,10 +242,14 @@ theorem sdiv_shl_pair2_thm (x x_1 x_2 : BitVec 32) :
       (if (x_2 <<< x.toNat).sshiftRight x.toNat = x_2 then none
           else if 32#32 ≤ x then none else some (x_2 <<< x.toNat)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
         fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
 =======
         fun a_1 => if a_1 = 0#32 ∨ a = intMin 32 ∧ a_1 = 4294967295#32 then none else some (a.sdiv a_1)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+        fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     (if (1#32 <<< x_1.toNat).sshiftRight x_1.toNat = 1#32 then none
         else
           if 1#32 <<< x_1.toNat >>> x_1.toNat = 1#32 then none
@@ -233,6 +262,7 @@ theorem sdiv_shl_pair3_thm (x x_1 x_2 : BitVec 32) :
       fun a =>
       (if (x_2 <<< x.toNat).sshiftRight x.toNat = x_2 then none
           else if 32#32 ≤ x then none else some (x_2 <<< x.toNat)).bind
+<<<<<<< HEAD
 <<<<<<< HEAD
         fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
     (if 1#32 <<< x_1.toNat >>> x_1.toNat = 1#32 then none
@@ -272,6 +302,9 @@ theorem udiv_shl_pair3_thm (x x_1 x_2 : BitVec 32) :
 =======
         fun a_1 => if a_1 = 0#32 ∨ a = intMin 32 ∧ a_1 = 4294967295#32 then none else some (a.sdiv a_1)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+        fun y' => if y' = 0#32 ∨ a = intMin 32 ∧ y' = 4294967295#32 then none else some (a.sdiv y')) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     (if 1#32 <<< x_1.toNat >>> x_1.toNat = 1#32 then none
         else if 32#32 ≤ x_1 then none else some (1#32 <<< x_1.toNat)).bind
       fun a => if 32#32 ≤ x then none else some (a >>> x.toNat) := sorry

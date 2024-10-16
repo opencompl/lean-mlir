@@ -183,10 +183,14 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nuw_proof : shl_add_log_may_ca
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -221,10 +225,14 @@ theorem shl_add_log_may_cause_poison_pr62175_with_nsw_proof : shl_add_log_may_ca
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)

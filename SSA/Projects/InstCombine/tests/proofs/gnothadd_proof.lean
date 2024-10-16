@@ -12,20 +12,28 @@ theorem basic_preserve_nsw_thm (x x_1 : BitVec 8) :
   ((if (x_1.msb ^^ (255#8).msb) = x.msb ∧ ¬((x_1 ^^^ 255#8) + x).msb = (x_1.msb ^^ (255#8).msb) then none
         else some ((x_1 ^^^ 255#8) + x)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
       fun x' => some (x' ^^^ 255#8)) ⊑
 =======
       fun a => some (a ^^^ 255#8)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+      fun x' => some (x' ^^^ 255#8)) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     if (signExtend 9 x_1 - signExtend 9 x).msb = (signExtend 9 x_1 - signExtend 9 x).getMsbD 1 then some (x_1 - x)
     else none := sorry
 
 theorem basic_preserve_nuw_thm (x x_1 : BitVec 8) :
   ((if (x_1 ^^^ 255#8) + x < x_1 ^^^ 255#8 ∨ (x_1 ^^^ 255#8) + x < x then none else some ((x_1 ^^^ 255#8) + x)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
       fun x' => some (x' ^^^ 255#8)) ⊑
 =======
       fun a => some (a ^^^ 255#8)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+      fun x' => some (x' ^^^ 255#8)) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     if x_1 < x then none else some (x_1 - x) := sorry
 
 theorem basic_preserve_nuw_nsw_thm (x x_1 : BitVec 8) :
@@ -34,10 +42,14 @@ theorem basic_preserve_nuw_nsw_thm (x x_1 : BitVec 8) :
           if (x_1 ^^^ 255#8) + x < x_1 ^^^ 255#8 ∨ (x_1 ^^^ 255#8) + x < x then none
           else some ((x_1 ^^^ 255#8) + x)).bind
 <<<<<<< HEAD
+<<<<<<< HEAD
       fun x' => some (x' ^^^ 255#8)) ⊑
 =======
       fun a => some (a ^^^ 255#8)) ⊑
 >>>>>>> 43a49182 (re-ran scripts)
+=======
+      fun x' => some (x' ^^^ 255#8)) ⊑
+>>>>>>> 1011dc2e (re-ran the tests)
     if (signExtend 9 x_1 - signExtend 9 x).msb = (signExtend 9 x_1 - signExtend 9 x).getMsbD 1 then
       if x_1 < x then none else some (x_1 - x)
     else none := sorry

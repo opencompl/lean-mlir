@@ -39,10 +39,14 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -75,10 +79,14 @@ theorem shl1_nsw_proof : shl1_nsw_before ⊑ shl1_nsw_after := by
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -113,10 +121,14 @@ theorem shl1_nsw_not_exact_proof : shl1_nsw_not_exact_before ⊑ shl1_nsw_not_ex
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -153,10 +165,14 @@ theorem prove_exact_with_high_mask_proof : prove_exact_with_high_mask_before ⊑
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -191,10 +207,14 @@ theorem prove_exact_with_high_mask_limit_proof : prove_exact_with_high_mask_limi
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)

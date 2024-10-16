@@ -40,10 +40,14 @@ theorem positive_samevar_proof : positive_samevar_before ⊑ positive_samevar_af
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -77,10 +81,14 @@ theorem positive_sameconst_proof : positive_sameconst_before ⊑ positive_sameco
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -117,10 +125,14 @@ theorem positive_biggerashr_proof : positive_biggerashr_before ⊑ positive_bigg
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -157,10 +169,14 @@ theorem positive_biggershl_proof : positive_biggershl_before ⊑ positive_bigger
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -194,10 +210,14 @@ theorem positive_samevar_shlnuw_proof : positive_samevar_shlnuw_before ⊑ posit
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -231,10 +251,14 @@ theorem positive_sameconst_shlnuw_proof : positive_sameconst_shlnuw_before ⊑ p
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -271,10 +295,14 @@ theorem positive_biggerashr_shlnuw_proof : positive_biggerashr_shlnuw_before ⊑
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -311,10 +339,14 @@ theorem positive_biggershl_shlnuw_proof : positive_biggershl_shlnuw_before ⊑ p
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -348,10 +380,14 @@ theorem positive_samevar_shlnsw_proof : positive_samevar_shlnsw_before ⊑ posit
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -385,10 +421,14 @@ theorem positive_sameconst_shlnsw_proof : positive_sameconst_shlnsw_before ⊑ p
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -425,10 +465,14 @@ theorem positive_biggerashr_shlnsw_proof : positive_biggerashr_shlnsw_before ⊑
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -465,10 +509,14 @@ theorem positive_biggershl_shlnsw_proof : positive_biggershl_shlnsw_before ⊑ p
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -502,10 +550,14 @@ theorem positive_samevar_shlnuwnsw_proof : positive_samevar_shlnuwnsw_before ⊑
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -539,10 +591,14 @@ theorem positive_sameconst_shlnuwnsw_proof : positive_sameconst_shlnuwnsw_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -579,10 +635,14 @@ theorem positive_biggerashr_shlnuwnsw_proof : positive_biggerashr_shlnuwnsw_befo
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -619,10 +679,14 @@ theorem positive_biggershl_shlnuwnsw_proof : positive_biggershl_shlnuwnsw_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -653,10 +717,14 @@ theorem positive_samevar_ashrexact_proof : positive_samevar_ashrexact_before ⊑
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -688,10 +756,14 @@ theorem positive_sameconst_ashrexact_proof : positive_sameconst_ashrexact_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -726,10 +798,14 @@ theorem positive_biggerashr_ashrexact_proof : positive_biggerashr_ashrexact_befo
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -764,10 +840,14 @@ theorem positive_biggershl_ashrexact_proof : positive_biggershl_ashrexact_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -798,10 +878,14 @@ theorem positive_samevar_shlnsw_ashrexact_proof : positive_samevar_shlnsw_ashrex
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -833,10 +917,14 @@ theorem positive_sameconst_shlnsw_ashrexact_proof : positive_sameconst_shlnsw_as
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -871,10 +959,14 @@ theorem positive_biggerashr_shlnsw_ashrexact_proof : positive_biggerashr_shlnsw_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -909,10 +1001,14 @@ theorem positive_biggershl_shlnsw_ashrexact_proof : positive_biggershl_shlnsw_as
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -943,10 +1039,14 @@ theorem positive_samevar_shlnuw_ashrexact_proof : positive_samevar_shlnuw_ashrex
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -978,10 +1078,14 @@ theorem positive_sameconst_shlnuw_ashrexact_proof : positive_sameconst_shlnuw_as
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1016,10 +1120,14 @@ theorem positive_biggerashr_shlnuw_ashrexact_proof : positive_biggerashr_shlnuw_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1054,10 +1162,14 @@ theorem positive_biggershl_shlnuw_ashrexact_proof : positive_biggershl_shlnuw_as
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1088,10 +1200,14 @@ theorem positive_samevar_shlnuwnsw_ashrexact_proof : positive_samevar_shlnuwnsw_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1123,10 +1239,14 @@ theorem positive_sameconst_shlnuwnsw_ashrexact_proof : positive_sameconst_shlnuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1161,10 +1281,14 @@ theorem positive_biggerashr_shlnuwnsw_ashrexact_proof : positive_biggerashr_shln
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -1199,10 +1323,14 @@ theorem positive_biggershl_shlnuwnsw_ashrexact_proof : positive_biggershl_shlnuw
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)

@@ -41,10 +41,14 @@ theorem reassoc_add_nuw_proof : reassoc_add_nuw_before ⊑ reassoc_add_nuw_after
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -79,10 +83,14 @@ theorem reassoc_sub_nuw_proof : reassoc_sub_nuw_before ⊑ reassoc_sub_nuw_after
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -117,10 +125,14 @@ theorem reassoc_mul_nuw_proof : reassoc_mul_nuw_before ⊑ reassoc_mul_nuw_after
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -155,10 +167,14 @@ theorem no_reassoc_add_nuw_none_proof : no_reassoc_add_nuw_none_before ⊑ no_re
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -193,10 +209,14 @@ theorem no_reassoc_add_none_nuw_proof : no_reassoc_add_none_nuw_before ⊑ no_re
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -233,10 +253,14 @@ theorem reassoc_x2_add_nuw_proof : reassoc_x2_add_nuw_before ⊑ reassoc_x2_add_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -273,10 +297,14 @@ theorem reassoc_x2_mul_nuw_proof : reassoc_x2_mul_nuw_before ⊑ reassoc_x2_mul_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -313,10 +341,14 @@ theorem reassoc_x2_sub_nuw_proof : reassoc_x2_sub_nuw_before ⊑ reassoc_x2_sub_
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -350,10 +382,14 @@ theorem tryFactorization_add_nuw_mul_nuw_proof : tryFactorization_add_nuw_mul_nu
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -387,10 +423,14 @@ theorem tryFactorization_add_nuw_mul_nuw_int_max_proof : tryFactorization_add_nu
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -424,10 +464,14 @@ theorem tryFactorization_add_mul_nuw_proof : tryFactorization_add_mul_nuw_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -461,10 +505,14 @@ theorem tryFactorization_add_nuw_mul_proof : tryFactorization_add_nuw_mul_before
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -498,10 +546,14 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_proof : tryFactorization_ad
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -535,10 +587,14 @@ theorem tryFactorization_add_nuw_mul_mul_nuw_var_proof : tryFactorization_add_nu
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -572,10 +628,14 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_var_proof : tryFactorization_add_nu
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)
@@ -609,10 +669,14 @@ theorem tryFactorization_add_mul_nuw_mul_var_proof : tryFactorization_add_mul_nu
   simp_alive_undef
   simp_alive_ops
 <<<<<<< HEAD
+<<<<<<< HEAD
   try simp
   simp_alive_case_bash
   try intros
 =======
+=======
+  try simp
+>>>>>>> 1011dc2e (re-ran the tests)
   simp_alive_case_bash
   intros
 >>>>>>> 43a49182 (re-ran scripts)

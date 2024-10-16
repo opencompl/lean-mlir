@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section ghighhbithsignmask_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 1011dc2e (re-ran the tests)
 def t0_before := [llvm|
 {
 ^0(%arg10 : i64):
@@ -38,7 +42,11 @@ theorem t0_proof : t0_before ⊑ t0_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN t0
   apply t0_thm
@@ -71,7 +79,11 @@ theorem t0_exact_proof : t0_exact_before ⊑ t0_exact_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN t0_exact
   apply t0_exact_thm
@@ -104,7 +116,11 @@ theorem t2_proof : t2_before ⊑ t2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN t2
   apply t2_thm
@@ -137,7 +153,11 @@ theorem t3_exact_proof : t3_exact_before ⊑ t3_exact_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN t3_exact
   apply t3_exact_thm
@@ -172,7 +192,11 @@ theorem n9_proof : n9_before ⊑ n9_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN n9
   apply n9_thm

@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gandhxorhmerge_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 1011dc2e (re-ran the tests)
 def test1_before := [llvm|
 {
 ^0(%arg9 : i32, %arg10 : i32, %arg11 : i32):
@@ -37,7 +41,11 @@ theorem test1_proof : test1_before ⊑ test1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN test1
   apply test1_thm
@@ -68,7 +76,11 @@ theorem test2_proof : test2_before ⊑ test2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN test2
   apply test2_thm
@@ -101,7 +113,11 @@ theorem PR75692_1_proof : PR75692_1_before ⊑ PR75692_1_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN PR75692_1
   apply PR75692_1_thm

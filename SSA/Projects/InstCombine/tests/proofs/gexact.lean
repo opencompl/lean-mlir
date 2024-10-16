@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gexact_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 1011dc2e (re-ran the tests)
 def sdiv2_before := [llvm|
 {
 ^0(%arg39 : i32):
@@ -36,7 +40,11 @@ theorem sdiv2_proof : sdiv2_before ⊑ sdiv2_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN sdiv2
   apply sdiv2_thm
@@ -66,7 +74,11 @@ theorem sdiv4_proof : sdiv4_before ⊑ sdiv4_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN sdiv4
   apply sdiv4_thm
@@ -99,7 +111,11 @@ theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN sdiv6
   apply sdiv6_thm
@@ -107,6 +123,7 @@ theorem sdiv6_proof : sdiv6_before ⊑ sdiv6_after := by
 
 
 
+<<<<<<< HEAD
 def udiv1_before := [llvm|
 {
 ^0(%arg32 : i32, %arg33 : i32):
@@ -200,6 +217,8 @@ theorem mul_of_udiv_proof : mul_of_udiv_before ⊑ mul_of_udiv_after := by
 
 
 
+=======
+>>>>>>> 1011dc2e (re-ran the tests)
 def mul_of_sdiv_before := [llvm|
 {
 ^0(%arg5 : i8):
@@ -227,7 +246,11 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN mul_of_sdiv
   apply mul_of_sdiv_thm
@@ -235,6 +258,7 @@ theorem mul_of_sdiv_proof : mul_of_sdiv_before ⊑ mul_of_sdiv_after := by
 
 
 
+<<<<<<< HEAD
 def mul_of_udiv_fail_bad_remainder_before := [llvm|
 {
 ^0(%arg2 : i8):
@@ -270,6 +294,8 @@ theorem mul_of_udiv_fail_bad_remainder_proof : mul_of_udiv_fail_bad_remainder_be
 
 
 
+=======
+>>>>>>> 1011dc2e (re-ran the tests)
 def mul_of_sdiv_fail_ub_before := [llvm|
 {
 ^0(%arg1 : i8):
@@ -295,7 +321,11 @@ theorem mul_of_sdiv_fail_ub_proof : mul_of_sdiv_fail_ub_before ⊑ mul_of_sdiv_f
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN mul_of_sdiv_fail_ub
   apply mul_of_sdiv_fail_ub_thm

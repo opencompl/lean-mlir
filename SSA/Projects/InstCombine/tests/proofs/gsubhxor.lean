@@ -12,7 +12,11 @@ set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
 section gsubhxor_statements
+<<<<<<< HEAD
 
+=======
+                                                    
+>>>>>>> 1011dc2e (re-ran the tests)
 def low_mask_nsw_nuw_before := [llvm|
 {
 ^0(%arg13 : i32):
@@ -40,7 +44,11 @@ theorem low_mask_nsw_nuw_proof : low_mask_nsw_nuw_before ⊑ low_mask_nsw_nuw_af
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN low_mask_nsw_nuw
   apply low_mask_nsw_nuw_thm
@@ -75,7 +83,11 @@ theorem arbitrary_mask_sub_i8_proof : arbitrary_mask_sub_i8_before ⊑ arbitrary
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN arbitrary_mask_sub_i8
   apply arbitrary_mask_sub_i8_thm
@@ -110,7 +122,11 @@ theorem not_masked_sub_i8_proof : not_masked_sub_i8_before ⊑ not_masked_sub_i8
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN not_masked_sub_i8
   apply not_masked_sub_i8_thm
@@ -146,7 +162,11 @@ theorem xor_add_proof : xor_add_before ⊑ xor_add_after := by
   simp_alive_ops
   try simp
   simp_alive_case_bash
+<<<<<<< HEAD
   try intros
+=======
+  intros
+>>>>>>> 1011dc2e (re-ran the tests)
   try simp
   ---BEGIN xor_add
   apply xor_add_thm
