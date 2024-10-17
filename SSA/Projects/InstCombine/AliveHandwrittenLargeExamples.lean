@@ -177,6 +177,8 @@ def alive_simplifyMulDivRem805 (w : Nat) :
                 rw [Nat.mod_eq_of_lt (by omega)]
               subst h1
               simp [BitVec.sdiv_one_one]
+              intro h
+              simp [h]
             · have hcases : (1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') ∨
                   1 + BitVec.toNat x = 2 ^ Nat.succ (Nat.succ w'') + 1) := by
                 omega

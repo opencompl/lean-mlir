@@ -166,7 +166,8 @@ def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
   simp only [negOne_eq_allOnes]
-  sorry
+  have : ¬ (w = 1) := by omega
+  simp [this]
 
 theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
   obtain ⟨a, ha⟩ := a
@@ -241,16 +242,15 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   by_cases w_1 : w = 1; subst w_1; rfl
   unfold BitVec.sdiv
   unfold BitVec.udiv
-  simp only [toNat_ofNat, neg_eq, toNat_neg]
-  sorry
-  -- rw [msb_one (by omega)]
-  -- simp only []
-  -- have hone : 1 % 2 ^ w = 1 := by
-  --   apply Nat.mod_eq_of_lt
-  --   simp
-  --   omega
-  -- apply BitVec.eq_of_toNat_eq
-  -- simp [hone]
+  simp only [msb_one, w_1, decide_False, toNat_ofNat, ne_eq, w_0, not_false_eq_true,
+    Nat.one_mod_two_pow_eq, zero_lt_one, Nat.div_self]
+  apply BitVec.eq_of_toNat_eq
+  simp
+  have hone : 1 % 2 ^ w = 1 := by
+    apply Nat.mod_eq_of_lt
+    simp
+    omega
+  simp [hone]
 
 -- @[simp bv_toNat]
 lemma toNat_neq_zero_of_neq_zero {x : BitVec w} (hx : x ≠ 0) : x.toNat ≠ 0 := by
