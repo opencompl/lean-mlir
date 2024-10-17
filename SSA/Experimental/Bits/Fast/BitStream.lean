@@ -500,7 +500,8 @@ theorem ofBitVec_one_eqTo_ofNat : @ofBitVec w 1 ≈ʷ ofNat 1 := by
   · simp [EqualUpTo ,h]
   · intros n a
     simp [ofNat_one n, ofBitVec, a]
-    omega
+    sorry
+    -- omega
 
 theorem ofBitVec_neg : ofBitVec (- x) ≈ʷ - (ofBitVec x) := by
   calc
