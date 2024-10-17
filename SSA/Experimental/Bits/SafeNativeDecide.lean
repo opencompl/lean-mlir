@@ -26,7 +26,7 @@ private def mkNativeAuxDecl (baseName : Name) (type value : Expr) : TermElabM Na
   pure auxName
 
 elab "safe_native_decide" : tactic =>
-  Lean.Elab.Tactic.closeMainGoalUsing `safeNativeDecide fun expectedType => do
+  Lean.Elab.Tactic.closeMainGoalUsing `safeNativeDecide fun expectedType _ => do
     let expectedType ← preprocessPropToDecide expectedType
     let d ← mkDecide expectedType
     let auxDeclName ← mkNativeAuxDecl `_nativeDecide (Lean.mkConst `Bool) d

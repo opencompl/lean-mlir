@@ -18,7 +18,6 @@ theorem toFin_injective {n : Nat} : Function.Injective (toFin : BitVec n → _)
 
 @[simp] lemma ofFin_natCast (n : ℕ) : ofFin (n : Fin (2^w)) = n := by
   simp only [Nat.cast, NatCast.natCast, OfNat.ofNat, BitVec.ofNat, Nat.and_pow_two_sub_one_eq_mod]
-  rfl
 
 lemma toFin_natCast (n : ℕ) : toFin (n : BitVec w) = n := by
   rw [toFin_inj]; simp only [ofFin_natCast]
