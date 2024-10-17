@@ -8,7 +8,7 @@ instance (t₁ t₂ : Term) : Decidable (t₁.eval = t₂.eval) :=
     ← (termEvalEqFSM (t₁.xor t₂)).good]
   simp only [eval_eq_iff_xor_eq_zero]
   rw [forall_swap]
-  simp only [← Function.funext_iff]
+  simp only [← funext_iff]
 
 
 open Term

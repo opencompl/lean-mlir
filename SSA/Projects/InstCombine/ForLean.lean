@@ -1,6 +1,7 @@
 import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
-import SSA.Projects.InstCombine.ForMathlib
 import SSA.Projects.InstCombine.LLVM.Semantics
+import Mathlib.Tactic.Ring
+import Mathlib.Data.BitVec
 
 namespace Nat
 
@@ -126,12 +127,6 @@ lemma one_shiftLeft_mul_eq_shiftLeft {A B : BitVec w} :
   rw [Nat.mul_comm]
 
 @[simp]
-def msb_one (h : 1 < w) : BitVec.msb 1#w = false := by
-  simp only [BitVec.msb_eq_decide, decide_eq_false_iff_not, not_le, toNat_ofInt,
-    toNat_ofNat]
-  rw [Nat.mod_eq_of_lt] <;> simp <;> omega
-
-@[simp]
 lemma msb_one_of_width_one : BitVec.msb 1#1 = true := rfl
 
 def msb_allOnes {w : Nat} (h : 0 < w) : BitVec.msb (allOnes w) = true := by
@@ -168,10 +163,12 @@ theorem udiv_eq_zero {x y : BitVec w} (h : x < y) : udiv x y = 0#w := by
 def sdiv_one_allOnes {w : Nat} (h : 1 < w) :
     BitVec.sdiv (1#w) (BitVec.allOnes w) = BitVec.allOnes w := by
   simp only [BitVec.sdiv]
-  simp only [msb_one h, neg_eq, @msb_allOnes w (by omega)]
+  simp only [msb_one, neg_eq, @msb_allOnes w (by omega)]
   simp only [neg_allOnes]
   simp only [udiv_one_eq_self]
   simp only [negOne_eq_allOnes]
+  have : ¬ (w = 1) := by omega
+  simp [this]
 
 theorem width_one_cases (a : BitVec 1) : a = 0#1 ∨ a = 1#1 := by
   obtain ⟨a, ha⟩ := a
@@ -246,14 +243,14 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
   by_cases w_1 : w = 1; subst w_1; rfl
   unfold BitVec.sdiv
   unfold BitVec.udiv
-  simp only [toNat_ofNat, neg_eq, toNat_neg]
-  rw [msb_one (by omega)]
-  simp only []
+  simp only [msb_one, w_1, decide_False, toNat_ofNat, ne_eq, w_0, not_false_eq_true,
+    Nat.one_mod_two_pow_eq, zero_lt_one, Nat.div_self]
+  apply BitVec.eq_of_toNat_eq
+  simp
   have hone : 1 % 2 ^ w = 1 := by
     apply Nat.mod_eq_of_lt
     simp
     omega
-  apply BitVec.eq_of_toNat_eq
   simp [hone]
 
 -- @[simp bv_toNat]
@@ -516,39 +513,6 @@ theorem shiftLeft_and_distrib' {x y : BitVec w} {n m : Nat} :
 @[simp]
 theorem zero_sub {x : BitVec w} : 0#w - x = - x := by
     simp [bv_toNat]
-
-theorem getLsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
-    (x - y).getLsbD i =
-      (x.getLsbD i ^^ ((~~~y + 1).getLsbD i ^^ carry i x (~~~y + 1) false)) := by
-  rw [BitVec.sub_eq_add_neg, BitVec.neg_eq_not_add, getLsbD_add]
-  rfl
-  omega
-
-
-theorem getMsbD_add {i : Nat} {i_lt : i < w} {x y : BitVec w} :
-    getMsbD (x + y) i =
-      Bool.xor (getMsbD x i) (Bool.xor (getMsbD y i) (carry (w - 1 - i) x y false)) := by
-  simp [getMsbD, getLsbD_add, i_lt, show w - 1 - i < w by omega]
-
-theorem getMsbD_sub {i : Nat} {i_lt : i < w} {x y : BitVec w} :
-    (x - y).getMsbD i =
-      (x.getMsbD i ^^ ((~~~y + 1).getMsbD i ^^ carry (w - 1 - i) x (~~~y + 1) false)) := by
-  rw [BitVec.sub_eq_add_neg, neg_eq_not_add, getMsbD_add]
-  rfl
-  omega
-
-theorem msb_add {w : Nat} {x y: BitVec w} :
-    (x + y).msb =
-      Bool.xor (getMsbD x 0) (Bool.xor (getMsbD y 0) (carry (w - 1) x y false)) := by
-  simp only [BitVec.msb, BitVec.getMsbD]
-  by_cases h : w ≤ 0
-  · simp [h, show w = 0 by omega]
-  · simp [h, getLsbD_add, show w > 0 by omega]
-
-theorem msb_sub {x y: BitVec w} :
-    (x - y).msb
-      = (x.getMsbD 0 ^^ ((~~~y + 1#w).getMsbD 0 ^^ carry (w - 1 - 0) x (~~~y + 1#w) false)) := by
-  simp [sub_eq_add_neg, BitVec.neg_eq_not_add, msb_add]
 
 theorem msb_neg {x : BitVec w} :
     (-x).msb = (~~~x + 1#w).msb := by
