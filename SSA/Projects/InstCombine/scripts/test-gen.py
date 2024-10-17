@@ -24,6 +24,7 @@ from pathlib import Path
 from xdsl.printer import Printer
 from multiprocessing import Pool
 from cfg import *
+import argparse as arg
 
 # Initialize the MLIR context and register the LLVM dialect
 ctx = MLContext(allow_unregistered=True)
@@ -50,11 +51,9 @@ allowed_names = {
     "llvm.sub",
     "llvm.sdiv",
 }
-allowed_unregistered = set()  # {
+allowed_unregistered = set()  
 
 
-# "llvm.icmp"
-# }
 def allowed(op):
     # we do not support void returns. Someone should look into this!
     if isinstance(op,ReturnOp) and op.arg is None:
@@ -108,11 +107,13 @@ def parse_from_file(file_name):
     return parse_module(read_file(file_name))
 
 rm_tests = "\nrm -r " + test_path + "/*\n"
+rm_logs = "\nrm -r " + log_path + "/*\n"
+subprocess.run(rm_tests, shell=True)
+subprocess.run(rm_logs, shell=True)
 
 
 llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
 
-subprocess.run(rm_tests, shell=True)
 
 expensive_files = [
     "pr96012.ll"
@@ -127,10 +128,10 @@ def process_file(file):
         print("file too expensive, skipping")
         return
     stem = "g" + filename.split(".")[0].replace("-", "h")
-    output = ""
-
     full_name = f"{llvm_test_path}/{filename}"
     run_process1 = f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic"
+    log_file = full_name.replace("LLVM", "logs").replace(".lean", ".txt")
+    log = ["success"]
     print(run_process1)
     process1 = subprocess.run(
             run_process1,
@@ -166,9 +167,18 @@ def process_file(file):
         if other is None:
             print(f"Cannot function function with sym name {func.sym_name}")
             continue
-
-        if not all(allowed(o) for o in other.walk()):
-            print(f"{other.sym_name} contains unsupported operations, ignoring")
+        
+        flag = False
+        for op in other.walk():
+            log.append(op.name + '\n')
+            if not allowed(op) and not flag:
+                flag = True
+                continue
+        
+        with open(log_file, "a+") as l:
+            l.writelines(log)
+            
+        if flag:
             continue
 
         s1 = showr(func.body)
