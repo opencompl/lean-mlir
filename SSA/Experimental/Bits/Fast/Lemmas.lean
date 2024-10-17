@@ -19,11 +19,11 @@ lemma evalFin_eq_eval (t : Term) (vars : Nat → BitStream) :
 
 lemma eq_iff_xor_eq_zero (seq₁ seq₂ : BitStream) :
     (∀ i, seq₁ i = seq₂ i) ↔ (∀ i, (seq₁ ^^^ seq₂) i = BitStream.zero i) := by
-  simp [Function.funext_iff]
+  simp [funext_iff]
 
 lemma eval_eq_iff_xor_eq_zero (t₁ t₂ : Term) :
     t₁.eval = t₂.eval ↔ (t₁.xor t₂).evalFin = fun _ => BitStream.zero := by
-  simp only [Function.funext_iff, Term.eval, Term.evalFin,
+  simp only [funext_iff, Term.eval, Term.evalFin,
     ← eq_iff_xor_eq_zero, ← evalFin_eq_eval]
   constructor
   · intro h seq
