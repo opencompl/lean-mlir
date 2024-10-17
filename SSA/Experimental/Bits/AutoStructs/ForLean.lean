@@ -57,3 +57,16 @@ theorem Std.HashMap.get?_none_not_mem [BEq K] [LawfulBEq K] [Hashable K] [Lawful
 theorem Std.HashMap.insert_keys_perm_new [BEq K] [LawfulBEq K] [Hashable K] [LawfulHashable K] (m : Std.HashMap K V) (k : K) (v : V) :
   k ∉ m → (m.insert k v).keys.Perm (k :: m.keys) := by
   sorry
+
+theorem List.mem_attachWith_mem (l : List α) {P H}(x : α) h : ⟨x, h⟩ ∈ l.attachWith P H → x ∈ l := by
+  induction l
+  case nil => simp
+  case cons x l ih => simp only [attachWith_cons, mem_cons, Subtype.mk.injEq]; intros h; rcases h <;> simp_all
+
+theorem List.attachWith_nodup (l : List α) (hnd : l.Nodup) P H : (l.attachWith P H).Nodup := by
+  induction l
+  case nil => simp
+  case cons x l ih =>
+    simp; constructor
+    · intros h; simp only [nodup_cons] at hnd; rcases hnd; have := l.mem_attachWith_mem x _ h; contradiction
+    · apply ih; simp_all

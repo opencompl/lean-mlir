@@ -40,13 +40,21 @@ A simulation between a concrete NFA and an abstract NFA consists in a map from
 concrete to abstract states which satisfies some properties.
 -/
 -- Maybe we'll need to generalize to a relation at some point?
-structure CNFA.Sim (m : CNFA A) (A : NFA A S) where
+structure CNFA.Sim' (m : CNFA A) (A : NFA A S) (R : Set S) where
   f : m.states → S
   -- f_inj : Function.Injective f
   accept s : s.val ∈ m.finals ↔ f s ∈ A.accept
   initial s : s.val ∈ m.initials ↔ f s ∈ A.start
   initial_all q : q ∈ A.accept → ∃ s, f s = q ∧ s.val ∈ m.initials
-  trans_match s a q' : q' ∈ A.step (f s) a → ∃ s', f s' = q ∧ s'.val ∈ m.trans.getD (s.val, a) ∅
+  trans_match s a q' : q' ∈ A.step (f s) a ∧ q' ∈ R → ∃ s', f s' = q ∧ s'.val ∈ m.trans.getD (s.val, a) ∅
+
+abbrev CNFA.Sim (m : CNFA A) (A : NFA A S) := CNFA.Sim' m A ⊤
+
+def NFA.closed_set (M : NFA α σ) (S : Set σ) := M.start ⊆ S ∧ ∀ a, M.stepSet S a ⊆ S
+
+def sim_closed_set (m : CNFA A) (A : NFA A S) (R : Set S) (hcl: A.closed_set R) :
+    m.Sim' A R → m.Sim A :=
+  sorry
 
 end sim
 
@@ -226,16 +234,31 @@ theorem processOneElem_grow (st : worklist.St A stateSpace) (final : S → Bool)
   rcases h with ⟨sas, h1, h2⟩
   use sas
 
-def worklist.initState (init : inSS stateSpace) : worklist.St A stateSpace :=
-  let m := CNFA.empty
-  let (s, m) := m.newState
-  let m := m.addInitial s
-  let map : Std.HashMap _ _ := {(init, s)}
-  let worklist := Array.singleton init
-  { m, map, worklist, worklist_nodup := by simp [worklist], worklist_incl := by simp [map, worklist] }
+def worklist.initState (inits : Array $ inSS stateSpace) (hinits : inits.toList.Nodup) : worklist.St A stateSpace :=
+  let m := CNFA.empty (A := A)
+  let mapm := inits.foldl (init := (Std.HashMap.empty, m)) fun (map, m) sa =>
+    let (s, m) := m.newState
+    let m := m.addInitial s
+    (map.insert sa s, m)
+  let map := mapm.1
+  let m := mapm.2
+  let worklist_incl : ∀ sa ∈ inits, sa ∈ map := by
+    let mot (n : ℕ) (mapm : Std.HashMap (inSS stateSpace) State × CNFA A) : Prop :=
+      ∀ sa, ∀ k < n, inits[k]? = some sa → sa ∈ mapm.1
+    suffices hccl : mot inits.size mapm by
+      simp_all [mot]; intros sa hsa hin
+      apply Array.getElem_of_mem at hin; rcases hin with ⟨k, hk, heq⟩
+      apply hccl _ _ _ hk (by simp_all [Array.getElem?_eq_getElem])
+    apply Array.foldl_induction; simp [mot]
+    intros i map ih; simp [mot] at ih ⊢
+    intros sa hsa k hk hsome
+    apply Nat.lt_add_one_iff_lt_or_eq.mp at hk; rcases hk with hk | rfl
+    { right; apply ih _ _ _ hk hsome }
+    { left; simp_all [Array.getElem?_eq_getElem]  }
+  { m, map, worklist := inits, worklist_nodup := hinits, worklist_incl }
 
-def worklistRunAux (final : S → Bool) (f : inSS stateSpace → Array (A × inSS stateSpace)) (init : inSS stateSpace) : CNFA A :=
-  let st0 := worklist.initState _ _ init
+def worklistRunAux (final : S → Bool) (f : inSS stateSpace → Array (A × inSS stateSpace)) (inits : Array $ inSS stateSpace) (hinits : inits.toList.Nodup) : CNFA A :=
+  let st0 := worklist.initState _ _ inits hinits
   go st0
 where go (st0 : worklist.St A stateSpace) : CNFA A :=
   if hemp : st0.worklist.isEmpty then st0.m else
@@ -315,12 +338,26 @@ where go (st0 : worklist.St A stateSpace) : CNFA A :=
   | none => st0.m -- never happens
   termination_by st0.meas
 
-def worklistRun (final : S → Bool) (f : S → Array (A × S)) (init : S)
-    (hinit : init ∈ stateSpace) (hf : ∀ s ∈ stateSpace, f s |>.all fun (_, s') => s' ∈ stateSpace)
- : CNFA A :=
-   let f' := fun ⟨s, hs⟩ => (f s).attach.map fun ⟨⟨a, s'⟩, hin⟩ =>
+def worklistRun (final : S → Bool) (f : S → Array (A × S)) (inits : Array S) (hinits : inits.toList.Nodup)
+    (hinits_in : ∀ sa ∈ inits, sa ∈ stateSpace) (hf : ∀ s ∈ stateSpace, f s |>.all fun (_, s') => s' ∈ stateSpace) : CNFA A :=
+  let f' := fun ⟨s, hs⟩ => (f s).attach.map fun ⟨⟨a, s'⟩, hin⟩ =>
      (a, ⟨s', Array.all_eq_true_iff_forall_mem.mp (hf s hs) _ hin |> of_decide_eq_true⟩)
-   worklistRunAux _ _ final f' ⟨init, hinit⟩
+  let inits' : Array (inSS stateSpace) := inits.attach.map fun ⟨sa, hsa⟩ => ⟨sa, hinits_in sa hsa⟩
+  have hinits' : inits'.toList.Nodup := by
+    simp [inits']; apply List.Nodup.map
+    · rintro ⟨_, _⟩ ⟨_, _⟩ h; simp_all
+    · simp_all [List.attachWith_nodup]
+  worklistRunAux _ _ final f' inits' hinits'
+
+
+-- List.Nodup.map
+
+-- Correctness of the algorithm
+
+variable (final : S → Bool) (f : inSS stateSpace → Array (A × inSS stateSpace)) (init : inSS stateSpace)
+variable (A : NFA A σ)
+variable (corr : S → σ)
+variable (hinit : corr init ∈ A.start)
 
 end worklist
 
