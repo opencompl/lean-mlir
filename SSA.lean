@@ -21,6 +21,7 @@ import SSA.Projects.CSE.CSE
 import SSA.Projects.PaperExamples.PaperExamples
 import SSA.Projects.Scf.ScfFunctor
 import SSA.Projects.LeanMlirCommon.LeanMlirCommon
+import SSA.Projects.IntrinsicRegions.Framework
 
 
 -- EXPERIMENTAL
