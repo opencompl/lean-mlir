@@ -213,6 +213,39 @@ def leanSAT_tot_stacked(data, bm, bvw):
     plt.tight_layout()
     plt.savefig(dir+'leanSAT_stacked_'+bm.split(".")[0]+'.pdf', dpi = 500)
 
+def cumul_solving_time_same_bvw(data, tool1, tool2,  bm, bvw):
+    
+
+    cumtime1 = [0]
+    cumtime1.extend(np.cumsum(data[bm][tool1][str(bvw)]))
+    cumtime2 = [0]
+    cumtime2.extend(np.cumsum(data[bm][tool2][str(bvw)]))
+
+    if cumtime1[-1]>cumtime2[-1]:
+        tot_time = cumtime1[-1]
+    else:
+        tot_time = cumtime2[-1]
+
+    plt.figure()
+    plt.plot(cumtime1, np.arange(0, len(data[bm][tool1][str(bvw)])+1), marker = 'o', color=col[2], label = tool1)
+    plt.plot(cumtime2, np.arange(0, len(data[bm][tool2][str(bvw)])+1), marker = 'x', color=col[3], label = tool2)
+
+    # Add labels and title
+    plt.xlabel('Time [ms]')
+    plt.ylabel('Problems solved')
+    plt.title('Problems solved - '+tool1+" vs. "+tool2+" "+bm)
+    if tot_time < 250:
+        step = 50
+    elif tot_time < 750:
+        step = 100
+    elif tot_time < 1250:
+        step = 250
+    else:
+        step = 500
+    plt.xticks(np.arange(0, tot_time+10, step))  # Show ticks for each time point
+    plt.legend()
+    plt.savefig(dir+'cumul_problems_bv'+str(bvw)+'_'+bm.split(".")[0]+'.pdf', dpi = 500)
+
 for file in os.listdir(benchmark_dir):
     if "ch2_3" not in file: # currently discard broken chapter
         for tool in tools:  
@@ -220,5 +253,6 @@ for file in os.listdir(benchmark_dir):
         for bvw in bv_width:
             compare_tools_same_bw(data, file, tools[0], tools[1], bvw)
             leanSAT_tot_stacked(data, file, bvw)
+            cumul_solving_time_same_bvw(data, tools[0], tools[1], file, bvw)
         compare_tools_diff_bw(data, file, tools[1], tools[0])
         
