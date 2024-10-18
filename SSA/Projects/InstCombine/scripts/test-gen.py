@@ -1,57 +1,16 @@
 #!/usr/bin/env python3
-from xdsl.dialects.builtin import ModuleOp
-from xdsl.dialects.llvm import LLVM, ReturnOp
+from xdsl.dialects.llvm import ReturnOp
 from xdsl.utils.exceptions import ParseError
-from xdsl.context import MLContext
-from xdsl.dialects import get_all_dialects
 from xdsl.dialects.llvm import FuncOp
+from xdsl.dialects.builtin import ModuleOp
 from xdsl.parser import Parser
 from xdsl.printer import Printer
-from xdsl.dialects.builtin import (
-    Builtin,
-    IndexType,
-    IntegerAttr,
-    IntegerType,
-    ModuleOp,
-    StringAttr,
-    i32,
-    i64,
-)
 import os
 import io
 import subprocess
-from pathlib import Path
 from xdsl.printer import Printer
 from multiprocessing import Pool
 from cfg import *
-import argparse as arg
-
-# Initialize the MLIR context and register the LLVM dialect
-ctx = MLContext(allow_unregistered=True)
-ctx.load_dialect(LLVM)
-ctx.load_dialect(Builtin)
-
-
-allowed_names = {
-    "llvm.return",
-    "llvm.mul",
-    "llvm.add",
-    "llvm.sub",
-    "llvm.shl",
-    "llvm.and",
-    "llvm.or",
-    "llvm.xor",
-    "llvm.mlir.constant",
-    "llvm.lshr",
-    "llvm.ashr",
-    "llvm.urem",
-    "llvm.srem",
-    "llvm.add",
-    "llvm.mul",
-    "llvm.sub",
-    "llvm.sdiv",
-}
-allowed_unregistered = set()  
 
 
 def allowed(op):
@@ -106,93 +65,14 @@ def parse_module(module):
 def parse_from_file(file_name):
     return parse_module(read_file(file_name))
 
-rm_tests = "\nrm -r " + test_path + "/*\n"
-rm_logs = "\nrm -r " + log_path + "/*\n"
-subprocess.run(rm_tests, shell=True)
-subprocess.run(rm_logs, shell=True)
+def remove():
+    rm_tests = "\nrm -r " + test_path + "/*\n"
+    rm_logs = "\nrm -r " + log_path + "/*\n"
+    subprocess.run(rm_tests, shell=True)
+    subprocess.run(rm_logs, shell=True)
 
-
-llvm_test_path = llvm_path + "/llvm/test/Transforms/InstCombine"
-
-
-expensive_files = [
-    "pr96012.ll"
-]
-directory = os.fsencode(llvm_test_path)
-
-# for file in os.listdir(directory):
-def process_file(file):
-    filename = os.fsdecode(file)
-    print(filename)
-    if filename in expensive_files:
-        print("file too expensive, skipping")
-        return
-    stem = "g" + filename.split(".")[0].replace("-", "h")
-    full_name = f"{llvm_test_path}/{filename}"
-    run_process1 = f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic"
-    log_file = full_name.replace("LLVM", "logs").replace(".lean", ".txt")
-    log = ["success"]
-    print(run_process1)
-    process1 = subprocess.run(
-            run_process1,
-            shell=True,
-            capture_output=True,
-            encoding="utf-8"
-    )
-    
-    module1 = parse_module(
-       process1.stdout
-    )
-    module2 = parse_module(
-        subprocess.run(
-            f"mlir-translate -import-llvm {full_name} | mlir-opt --mlir-print-op-generic",
-            shell=True,
-            capture_output=True,
-            encoding="utf-8"
-        ).stdout
-    )
-    if module1 is None or module2 is None:
-        return
-    
-    funcs = [
-        func
-        for func in module1.walk()
-        if isinstance(func, FuncOp)
-        and all(allowed(o) for o in func.walk())
-        and size(func) > 1
-    ]
-    funcs2 = {f.sym_name.data: f for f in module2.walk() if isinstance(f, FuncOp)}
-    for func in funcs:
-        other = funcs2.get(func.sym_name.data, None)
-        if other is None:
-            print(f"Cannot function function with sym name {func.sym_name}")
-            continue
-        
-        flag = False
-        for op in other.walk():
-            log.append(op.name + '\n')
-            if not allowed(op) and not flag:
-                flag = True
-                continue
-        
-        with open(log_file, "a+") as l:
-            l.writelines(log)
-            
-        if flag:
-            continue
-
-        s1 = showr(func.body)
-        s2 = showr(other.body)
-        # Our parser is bad, someone should really fix this
-        s1 = s1.replace('"value"', 'value')
-        s2 = s2.replace('"value"', 'value')
-        name = func.sym_name.data.replace("-","h")
-        if s1 == s2:
-            continue
-        if "vector" in (s1 + s2):
-            continue
-        print(f"-----{filename}.{func.sym_name}-----")
-        o1 = f"""
+def make_theorem(s1, s2, name):
+    return f"""
 def {name}_before := [llvm|
 {s2}
 ]
@@ -211,12 +91,9 @@ theorem {name}_proof : {name}_before ⊑ {name}_after := by
   ---BEGIN {name}
   all_goals (try extract_goal ; sorry)
   ---END {name}\n\n\n"""
-        print(o1)
-        write_file = f"{test_path}/{stem}.lean"
-        with open(write_file, "a+") as f3:
-            if os.stat(write_file).st_size == 0:
-                f3.write(
-                    f"""
+
+def make_intro(stem):
+    return f"""
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
@@ -229,10 +106,122 @@ open Ctxt (Var)
 set_option linter.deprecated false
 set_option linter.unreachableTactic false
 set_option linter.unusedTactic false
-section {stem}_statements
-                                                    """
-                )
-            f3.write(o1)
+section {stem}_statements\n"""
+
+def print_log(log, log_file):
+    with open(log_file, "a+") as l:
+        l.writelines(log)
+
+def op_name(op):
+    if op.name == "builtin.unregistered":
+        return f"builtin.unregistered: {op.op_name.data}"
+    return op.name
+
+# for file in os.listdir(directory):
+def process_file(file):
+    filename = os.fsdecode(file)
+    print(filename)
+    if filename in expensive_files:
+        print("file too expensive, skipping")
+        return
+    stem = "g" + filename.split(".")[0].replace("-", "h")
+    full_name = f"{llvm_test_path}/{filename}"
+    run_process1 = f"opt -passes=instcombine -S {full_name}  | mlir-translate -import-llvm | mlir-opt --mlir-print-op-generic"
+    log_file = f"{log_path}/{filename}".replace(".ll", ".txt")
+    log = []
+    print(run_process1)
+    
+    process1 = subprocess.run(
+            run_process1,
+            shell=True,
+            capture_output=True,
+            encoding="utf-8"
+    )
+    
+    module1 = parse_module(
+       process1.stdout
+    )
+    
+    process2 = subprocess.run(
+            f"mlir-translate -import-llvm {full_name} | mlir-opt --mlir-print-op-generic",
+            shell=True,
+            capture_output=True,
+            encoding="utf-8"
+    )
+    
+    module2 = parse_module(
+        process2.stdout
+    )
+    
+    if module1 is None or module2 is None:
+        log.append(f"{Msg.E_PARSE.value}: {filename}: parsing has failed\n\n")
+        print_log(log, log_file)
+        return
+    
+    funcs2 = {f.sym_name.data: f for f in module2.walk() if isinstance(f, FuncOp)}
+    for func in module1.walk():
+        if not isinstance(func, FuncOp):
+            # log.append(f"{type(func)}\n")
+            continue
+        func_name = func.sym_name
+        log.append(f"{Msg.FUNC_NAME.value}: {func_name}\n")
         
-with Pool(7) as p:
-    p.map(process_file, os.listdir(directory))
+        flag = False
+        for op in func.walk():
+            if not allowed(op):
+                flag = True
+                log.append(f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operation: {op_name(op)}\n\n")
+                continue
+        if flag:
+            continue
+        
+        if not size(func) > 1:
+            log.append(f"{Msg.E_EMPTY.value}: {func_name} is empty\n\n")
+            continue
+        
+        other = funcs2.get(func.sym_name.data, None)
+        func_name = func.sym_name
+        
+        if other is None:
+            log.append(f"{Msg.E_NOT_FOUND.value}: Cannot find function after optimization with sym name: {func_name}\n\n")
+            continue
+        
+        s1 = showr(func.body)
+        s2 = showr(other.body)
+        # Our parser is bad, someone should really fix this
+        s1 = s1.replace('"value"', 'value')
+        s2 = s2.replace('"value"', 'value')
+        name = func.sym_name.data.replace("-","h")
+        if s1 == s2:
+            log.append(f"{Msg.E_NOT_CHANGED.value}: {func_name} is unchanged by InstCombine\n\n")
+            continue
+        if "vector" in (s1 + s2):
+            log.append(f"{func_name} contains vectors which are unsupported\n\n")
+            continue
+        
+        tmp_log = []
+        flag = False
+        for op in other.walk():
+            tmp_log.append(f"{Msg.OP.value}: {op_name(op)}\n")
+            if not allowed(op):
+                log.append(f"{Msg.E_UNSUPPORTED.value}: {func_name} has unsupported operation after optimization: {op_name(op)}\n\n")
+                flag = True
+        if flag:
+            continue
+        log = log + tmp_log
+        log.append("\n")
+        
+        print(f"-----{filename}.{func_name}-----")
+        o1 = make_theorem(s1, s2, name)
+        print(o1)
+        write_file = f"{test_path}/{stem}.lean"
+        with open(write_file, "a+") as f3:
+            if os.stat(write_file).st_size == 0:
+                f3.write(make_intro(stem))
+            f3.write(o1)
+    print_log(log, log_file)
+    
+if __name__ == "__main__":
+    remove()
+    with Pool(7) as p:
+        p.map(process_file, os.listdir(directory))
