@@ -1,7 +1,5 @@
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.TacticAuto
-import Std.Tactic.BVDecide
-
 
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
@@ -9,7 +7,6 @@ set_option linter.unreachableTactic false
 namespace HackersDelight
 
 namespace Ch2Basics
-
 variable {x y z : BitVec 32}
 
 /- 2–3 Inequalities among Logical and Arithmetic Expressions -/
@@ -88,9 +85,8 @@ theorem ule_iff_not_or_and_xor_or_not_sub :
 
 theorem eq_zero_iff_abs_sub :
     x = 0 ↔ (x.abs - 1).msb := by
-  sorry
-  --try alive_auto
-  --all_goals sorry
+  try alive_auto
+  all_goals sorry
 
 theorem eq_zero_iff_not_or_sub :
     x = 0 ↔ (~~~ (x ||| -x)).msb := by
@@ -159,7 +155,8 @@ theorem sle_iff_add_two_pow_ule_add_two_pow :
 
 theorem ult_iff_not_ule :
     (x <ᵤ y) ↔ ¬ (y ≤ᵤ x) := by
-  bv_auto
+  try alive_auto
+  all_goals sorry
 
 theorem eq_iff_adc_not_add :
     x = y ↔ (BitVec.carry w (x) (~~~ y + 1)) false := by
@@ -316,7 +313,8 @@ theorem div_overflow_iff_eq_zero_or_eq_neg_pow_two_and_eq_neg :
 
 theorem div_overflow_iff_neq_and_ult_LeftShift {x : BitVec 64} {y : BitVec 32} :
     SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ x < ((y.zeroExtend 64) <<< 32) := by
-  sorry
+  try alive_auto
+  all_goals sorry
 
 theorem div_overflow_iff_neq_and_RightShift_lt {x y : BitVec 64} {y : BitVec 32} :
     SignedDivisionOverflows?? x (y.zeroExtend 64) ↔ y ≠ 0 ∧ (x >>> 32) < (y.zeroExtend 64) := by
